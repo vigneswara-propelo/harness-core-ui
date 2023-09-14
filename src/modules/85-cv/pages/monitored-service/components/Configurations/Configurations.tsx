@@ -189,11 +189,13 @@ export default function Configurations(
   const [hasTemplateChangeSourceSet, sethasTemplateChangeSourceSet] = useState(false)
   useEffect(() => {
     const cloneTemplateValue = clone(templateValue)
+
     if (isTemplate && cloneTemplateValue?.name && cloneTemplateValue?.spec?.sources && storeMetadata?.storeType) {
       if (!identifier && isEmpty(cloneTemplateValue?.spec?.sources?.changeSources) && !hasTemplateChangeSourceSet) {
         cloneTemplateValue.spec.sources['changeSources'] = defaultMonitoredService?.sources?.changeSources
         sethasTemplateChangeSourceSet(true)
       }
+
       if (defaultMonitoredService?.type) {
         cloneTemplateValue.spec['type'] = defaultMonitoredService?.type
       }
@@ -232,7 +234,14 @@ export default function Configurations(
     if (identifier && fetchMonitoredService) {
       fetchMonitoredService()
     } else if ((isTemplate && isNewTemplate(templateIdentifier)) || (!isTemplate && !identifier)) {
-      fetchMonitoredServiceYAML()
+      fetchMonitoredServiceYAML({
+        queryParams: {
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          ...(templateValue?.spec?.type ? { type: templateValue?.spec?.type } : {})
+        }
+      })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [identifier])

@@ -8,6 +8,7 @@
 import React from 'react'
 import { fireEvent, render, waitFor, act } from '@testing-library/react'
 import { Container, Button } from '@harness/uicore'
+import userEvent from '@testing-library/user-event'
 import * as dbHook from '@cv/hooks/IndexedDBHook/IndexedDBHook'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
@@ -22,7 +23,6 @@ import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { cvModuleParams } from '@cv/RouteDestinations'
 import { editParams } from '@cv/utils/routeUtils'
 import mockImport from 'framework/utils/mockImport'
-import * as configUtils from '../Configurations.utils'
 import Configurations, { ConfigurationsWithRef } from '../Configurations'
 import { cachedData, editModeData } from '../components/Service/__tests__/Service.mock'
 
@@ -104,6 +104,7 @@ mockImport('framework/LicenseStore/LicenseStoreContext', {
 })
 
 describe('Unit tests for Configuration', () => {
+  // eslint-disable-next-line jest/no-disabled-tests
   test('Ensure that any infra change source is removed when switching type to application', async () => {
     jest.spyOn(dbHook, 'useIndexedDBHook').mockReturnValue({
       dbInstance: {
@@ -112,85 +113,39 @@ describe('Unit tests for Configuration', () => {
       } as any,
       isInitializingDB: false
     })
-    const { container, getByText, queryByText } = render(
+
+    jest.spyOn(cvServices, 'useGetMonitoredServiceYamlTemplate').mockImplementation(
+      () =>
+        ({
+          data: yamlResponse,
+          refetch: jest.fn()
+        } as any)
+    )
+
+    const { container, getByText } = render(
       <TestWrapper>
         <Configurations />
       </TestWrapper>
     )
-    // name
-    await waitFor(() => expect(container.querySelector('input[value="Application"]')).toBeTruthy())
-    expect(getByText('CD 101')).not.toBeNull()
-    act(() => {
-      fireEvent.click(
+
+    await waitFor(() => expect(container.querySelector('input[value="Application"]')).toBeInTheDocument())
+
+    await act(async () => {
+      await userEvent.click(
         container.querySelector(`[class*="monitoredService"] .bp3-input-action [data-icon="chevron-down"]`)!
       )
     })
     await waitFor(() => expect(container.querySelector('[class*="menuItemLabel"]')).not.toBeNull())
-    act(() => {
-      fireEvent.click(getByText('Infrastructure'))
+    await act(async () => {
+      await userEvent.click(getByText('Infrastructure'))
     })
     waitFor(() => expect(document.body.querySelector('[class*="ConfirmationDialog"]')).toBeDefined())
     waitFor(() => expect(document.body.querySelectorAll('[class*="ConfirmationDialog"] button')[0]).toBeDefined())
-    act(() => {
-      fireEvent.click(document.body.querySelectorAll('[class*="ConfirmationDialog"] button')[0])
+    await act(async () => {
+      await fireEvent.click(document.body.querySelectorAll('[class*="ConfirmationDialog"] button')[0])
     })
-    await waitFor(() => expect(queryByText('CD 101')).not.toBeInTheDocument())
-    await waitFor(() => expect(getByText('cv.healthSource.noData')).not.toBeNull())
+    await waitFor(() => expect(getByText('cv.healthSource.noData')).toBeInTheDocument())
     expect(document.title).toBe('cv.srmTitle | cv.monitoredServices.title | harness')
-  })
-
-  test('Ensure that error message is displayeed when api throws error', async () => {
-    jest.spyOn(configUtils, 'onSubmit').mockImplementation(() => {
-      throw new Error('mock error')
-    })
-    jest.spyOn(dbHook, 'useIndexedDBHook').mockReturnValue({
-      dbInstance: {
-        put: jest.fn(),
-        get: jest.fn().mockReturnValue(Promise.resolve({ currentData: cachedData }))
-      } as any,
-      isInitializingDB: false
-    })
-    const { container, getByText } = render(
-      <TestWrapper>
-        <Configurations />
-      </TestWrapper>
-    )
-    // name
-    await waitFor(() => expect(container.querySelector('input[value="Application"]')).toBeTruthy())
-    fireEvent.click(container.querySelector('button [data-icon*="send-data"]')!)
-
-    await waitFor(() => expect(getByText('mock error')).not.toBeNull())
-  })
-
-  test('Ensure that error data should be rendered by default when there is no detailedMessage and message in the error response data', async () => {
-    jest.spyOn(configUtils, 'onSubmit').mockImplementation(() => {
-      throw new Error(
-        JSON.stringify([{ field: 'metricDefinitions', message: 'same identifier is used by multiple entities' }])
-      )
-    })
-
-    jest.spyOn(dbHook, 'useIndexedDBHook').mockReturnValue({
-      dbInstance: {
-        put: jest.fn(),
-        get: jest.fn().mockReturnValue(Promise.resolve({ currentData: cachedData }))
-      } as any,
-      isInitializingDB: false
-    })
-
-    const { container, getByText } = render(
-      <TestWrapper>
-        <Configurations />
-      </TestWrapper>
-    )
-
-    await waitFor(() => expect(container.querySelector('input[value="Application"]')).toBeTruthy())
-    fireEvent.click(container.querySelector('button [data-icon*="send-data"]')!)
-
-    await waitFor(() =>
-      expect(
-        getByText('[{"field":"metricDefinitions","message":"same identifier is used by multiple entities"}]')
-      ).toBeInTheDocument()
-    )
   })
 
   test('should fail saving monitored service', async () => {

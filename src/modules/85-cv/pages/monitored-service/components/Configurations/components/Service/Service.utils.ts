@@ -15,6 +15,72 @@ import type { MonitoredServiceConfig } from '@cv/components/MonitoredServiceList
 import { MonitoredServiceType } from './components/MonitoredServiceOverview/MonitoredServiceOverview.constants'
 import type { MonitoredServiceForm } from './Service.types'
 
+export const getMonitoredServiceType = ({
+  isTemplate,
+  templateValue,
+  defaultMonitoredService
+}: {
+  isTemplate: boolean
+  templateValue?: NGMonitoredServiceTemplateInfoConfig
+  defaultMonitoredService?: MonitoredServiceDTO
+}): MonitoredServiceDTO['type'] => {
+  if (isTemplate) {
+    return templateValue?.spec?.type ?? MonitoredServiceType.APPLICATION
+  }
+
+  return defaultMonitoredService?.type ?? (MonitoredServiceType.APPLICATION as MonitoredServiceForm['type'])
+}
+
+const getEnvironmentRefBasedOnMonitoredServiveType = ({
+  type,
+  environmentRef,
+  environmentRefList
+}: {
+  type: MonitoredServiceDTO['type']
+  environmentRef?: string
+  environmentRefList?: string[]
+}): string | undefined => {
+  if (
+    type === MonitoredServiceType.APPLICATION &&
+    (typeof environmentRef === 'string' || environmentRef === RUNTIME_INPUT_VALUE)
+  ) {
+    return environmentRef
+  }
+
+  if (type === MonitoredServiceType.INFRASTRUCTURE) {
+    if (Array.isArray(environmentRef) || environmentRef === RUNTIME_INPUT_VALUE) {
+      return environmentRef
+    } else if (Array.isArray(environmentRefList)) {
+      return environmentRefList as unknown as MonitoredServiceForm['environmentRef']
+    }
+  }
+
+  return undefined
+}
+
+/**
+ *
+ * This function returns correct data structure for environmentRef
+ * based on the monitored service type
+ *
+ */
+export const getEnvironmentRef = ({
+  templateScope,
+  templateValue
+}: {
+  templateScope?: Scope
+  templateValue: NGMonitoredServiceTemplateInfoConfig
+}): string | undefined => {
+  if (templateScope !== Scope.PROJECT) {
+    return RUNTIME_INPUT_VALUE
+  }
+
+  return getEnvironmentRefBasedOnMonitoredServiveType({
+    type: templateValue?.spec?.type,
+    environmentRef: templateValue?.spec?.environmentRef
+  })
+}
+
 export const getInitFormData = (
   defaultMonitoredService: MonitoredServiceDTO | undefined,
   isEdit: boolean,
@@ -26,6 +92,7 @@ export const getInitFormData = (
 ): MonitoredServiceForm => {
   if (isTemplate) {
     const templateValue = data as NGMonitoredServiceTemplateInfoConfig
+
     return {
       isEdit: false,
       name: templateValue?.name || '',
@@ -33,8 +100,8 @@ export const getInitFormData = (
       description: '',
       tags: templateValue?.tags || {},
       serviceRef: templateScope !== Scope.PROJECT ? RUNTIME_INPUT_VALUE : templateValue?.spec?.serviceRef,
-      type: defaultMonitoredService?.type ?? (MonitoredServiceType.APPLICATION as MonitoredServiceForm['type']),
-      environmentRef: templateScope !== Scope.PROJECT ? RUNTIME_INPUT_VALUE : templateValue?.spec?.environmentRef,
+      type: getMonitoredServiceType({ isTemplate, templateValue, defaultMonitoredService }),
+      environmentRef: getEnvironmentRef({ templateValue, templateScope }),
       environmentRefList: [],
       sources: templateValue?.spec?.sources,
       dependencies: [],
@@ -43,6 +110,7 @@ export const getInitFormData = (
       })
     }
   }
+
   const monitoredServiceData = isEdit ? data : defaultMonitoredService
   const {
     name = '',
@@ -67,7 +135,7 @@ export const getInitFormData = (
     serviceRef,
     type: (type as MonitoredServiceForm['type']) || MonitoredServiceType.APPLICATION,
     notificationRuleRefs,
-    environmentRef,
+    environmentRef: getEnvironmentRefBasedOnMonitoredServiveType({ type, environmentRef, environmentRefList }),
     environmentRefList,
     sources,
     dependencies

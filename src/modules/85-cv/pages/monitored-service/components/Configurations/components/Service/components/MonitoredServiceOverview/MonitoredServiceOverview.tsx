@@ -70,6 +70,13 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
     intent: Intent.WARNING,
     onCloseDialog: (isConfirmed: boolean) => {
       if (isConfirmed) {
+        /*
+         * Resetting environmentRef to undefined will prevent UI from breaking,
+         * as Application and Infrastructure types needs different
+         * data structure for environmentRef
+         */
+
+        formikProps.setFieldValue('environmentRef', undefined)
         onChangeMonitoredServiceType?.(tempServiceType as MonitoredServiceDTO['type'])
       }
     }

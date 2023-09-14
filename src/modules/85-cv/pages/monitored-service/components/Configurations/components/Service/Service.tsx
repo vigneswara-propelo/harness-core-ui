@@ -159,7 +159,7 @@ function Service(
   return (
     <Formik<MonitoredServiceForm>
       formName="MonitoredServiceForm"
-      initialValues={cachedInitialValues || initialValues}
+      initialValues={initialValues}
       onSubmit={noop}
       validationSchema={Yup.object().shape({
         name: Yup.string().nullable().required(getString('cv.monitoredServices.nameValidation')),
