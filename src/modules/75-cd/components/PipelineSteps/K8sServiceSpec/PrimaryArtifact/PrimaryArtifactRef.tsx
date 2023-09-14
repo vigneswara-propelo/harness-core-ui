@@ -139,12 +139,16 @@ function PrimaryArtifactRef({
           )
         }
       }
-    } else if (isEmpty(get(formik?.values, `${path}.artifacts.primary.sources`))) {
+    } else if (isEmpty(serviceInputsFormikValue)) {
       updateStageFormTemplate(undefined, `${path}.artifacts.primary.sources`)
       formik?.setFieldValue(`${path}.artifacts.primary.sources`, undefined)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [artifactSources, artifactSourceResponse?.data?.sourceIdentifierToSourceInputMap])
+  }, [
+    artifactSources,
+    artifactSourceResponse?.data?.sourceIdentifierToSourceInputMap,
+    template?.artifacts?.primary?.sources
+  ])
 
   const onPrimaryArtifactRefChange = (value: SelectOption): void => {
     if (getMultiTypeFromValue(value) !== MultiTypeInputType.FIXED) {
