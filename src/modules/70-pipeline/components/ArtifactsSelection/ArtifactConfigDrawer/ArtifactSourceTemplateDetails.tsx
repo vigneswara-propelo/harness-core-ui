@@ -6,7 +6,17 @@
  */
 
 import React from 'react'
-import { Container, Layout, AllowedTypes, Formik, FormikForm, FormInput, PageError, Heading } from '@harness/uicore'
+import {
+  Container,
+  Layout,
+  AllowedTypes,
+  Formik,
+  FormikForm,
+  FormInput,
+  PageError,
+  Heading,
+  Text
+} from '@harness/uicore'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import * as Yup from 'yup'
@@ -318,9 +328,14 @@ function ArtifactSourceTemplateDetails(
                     )}
                     {!isLoading && !error && templateInputs && allValues && (
                       <Layout.Vertical padding={{ top: 'large', bottom: 'large' }} spacing={'large'}>
-                        <Heading level={5} color={Color.BLACK} margin={{ bottom: 'large' }}>
-                          {getString('pipeline.templateInputs')}
-                        </Heading>
+                        <div>
+                          <Heading level={5} color={Color.BLACK}>
+                            {getString('pipeline.templateInputs')}
+                          </Heading>
+                          <Text font={{ size: 'xsmall' }} color={Color.ORANGE_600} margin={{ bottom: 'large' }}>
+                            {getString('pipeline.templateInputsWarning')}
+                          </Text>
+                        </div>
                         {artifactSource &&
                           artifactSource.renderContent({
                             template: { artifacts: { primary: templateInputs } },

@@ -5397,6 +5397,7 @@ export interface StringsMap {
   'pipeline.templateAlreadyExists.content': string
   'pipeline.templateAlreadyExists.title': string
   'pipeline.templateInputs': string
+  'pipeline.templateInputsWarning': string
   'pipeline.templatePipelineUpdatedWarning': string
   'pipeline.templateReconcileWarning': string
   'pipeline.templateSaved': string

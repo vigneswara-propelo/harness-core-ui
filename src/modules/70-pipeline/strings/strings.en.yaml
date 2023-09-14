@@ -37,6 +37,7 @@ removeTemplateLabel: Remove Template
 openTemplateInNewTabLabel: Open Template in new tab
 previewTemplateLabel: Preview Template YAML
 templateInputs: Template Inputs
+templateInputsWarning: There could be changes in the linked templates and input param values need to be checked
 templatesLibrary:
   stableVersion: '{{ entity }} (Stable)'
   alwaysUseStableVersion: Always use the stable version
