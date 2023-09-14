@@ -107,7 +107,7 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
     return (
       (delegateList && delegateList?.length > 0) ||
       tasks?.length > 0 ||
-      !isUndefined(progressData?.latestDelegateTaskId)
+      !isUndefined(progressData?.latestDelegateTaskId || latestDelegateTaskId)
     )
   }
 
@@ -314,7 +314,7 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
                     <Text font={{ size: 'small', weight: 'bold' }}>
                       <String
                         stringID="common.delegateForTask"
-                        vars={{ taskName: progressData?.taskName }}
+                        vars={{ taskName: progressData?.taskName || delegateTaskName }}
                         useRichText
                       />
                     </Text>{' '}
