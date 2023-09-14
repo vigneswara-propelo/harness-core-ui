@@ -34,3 +34,9 @@ export const initialWebhookModalData = {
 export function processFolderPaths(folderPaths: string[]): { id: string; value: string }[] {
   return [...folderPaths].map(path => ({ id: uuid('', nameSpace()), value: path }))
 }
+
+export enum STATUS {
+  'loading',
+  'error',
+  'ok'
+}

@@ -276,7 +276,6 @@ monitoringSources:
       sampleLogButtonText: Get sample log messages
       sampleLogMessageDrawerTitle: Sample Log Messages
       noSampleAvailable: No sample data available
-      timestamp: Timestamp
       ServiceInstance: Service Instance
       jsonSelectorDrawerTitlePrefix: Select path for
       validationMessage: '{{fieldName}} is required'

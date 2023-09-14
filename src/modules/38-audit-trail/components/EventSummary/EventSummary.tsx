@@ -18,7 +18,7 @@ import { actionToLabelMap, getStringFromSubtitleMap } from '@audit-trail/utils/R
 import YamlDiffButton from './YamlDiffButton'
 import css from './EventSummary.module.scss'
 
-const drawerStates: IDrawerProps = {
+export const drawerStates: IDrawerProps = {
   autoFocus: true,
   canEscapeKeyClose: true,
   canOutsideClickClose: true,

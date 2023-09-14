@@ -105,3 +105,8 @@
   grid-area: content;
   place-self: center;
 }
+
+.dateRange {
+  border: 1px solid var(--primary-5) !important;
+  margin-right: var(--margin-form-field) !important;
+}

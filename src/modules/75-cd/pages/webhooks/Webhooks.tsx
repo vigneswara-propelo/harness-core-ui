@@ -41,7 +41,7 @@ import NoData from '@cd/components/EnvironmentsV2/PageTemplate/NoData'
 import WebhooksTabs from './WebhooksTabs'
 import WebhooksList from './WebhooksList/WebhooksList'
 import NewWebhookModal from './NewWebhookModal'
-import { initialWebhookModalData } from './utils'
+import { STATUS, initialWebhookModalData } from './utils'
 import css from './Webhooks.module.scss'
 
 export function Webhooks(): JSX.Element {
@@ -64,12 +64,6 @@ export function Webhooks(): JSX.Element {
       page: page ? page - 1 : 0
     }
   })
-
-  enum STATUS {
-    'loading',
-    'error',
-    'ok'
-  }
 
   const isLoading = loading || _loading
 

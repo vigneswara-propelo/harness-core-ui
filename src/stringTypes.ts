@@ -7159,6 +7159,12 @@ export interface StringsMap {
   'cd.valuesYamlValidation': string
   'cd.varFile': string
   'cd.varFileDetails': string
+  'cd.webhookEvents.dateTime': string
+  'cd.webhookEvents.eventId': string
+  'cd.webhookEvents.events': string
+  'cd.webhookEvents.payloadDetails': string
+  'cd.webhookEvents.pusher': string
+  'cd.webhookEvents.timestamp': string
   'cd.webhooks.createSubtitle': string
   'cd.webhooks.delete': string
   'cd.webhooks.deleteConfirmation': string
@@ -9798,7 +9804,6 @@ export interface StringsMap {
   'cv.monitoringSources.commonHealthSource.logsTable.sampleLogButtonText': string
   'cv.monitoringSources.commonHealthSource.logsTable.sampleLogMessageDrawerTitle': string
   'cv.monitoringSources.commonHealthSource.logsTable.subTitle': string
-  'cv.monitoringSources.commonHealthSource.logsTable.timestamp': string
   'cv.monitoringSources.commonHealthSource.logsTable.title': string
   'cv.monitoringSources.commonHealthSource.logsTable.validationMessage': string
   'cv.monitoringSources.commonHealthSource.metric': string

@@ -10,6 +10,7 @@ declare const styles: {
   readonly addBtn: string
   readonly addWebhookModalForm: string
   readonly content: string
+  readonly dateRange: string
   readonly dialogStylesWebhook: string
   readonly folderPath: string
   readonly footer: string

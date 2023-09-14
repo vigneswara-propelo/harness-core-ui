@@ -1311,3 +1311,10 @@ webhooks:
   successUpdateMessage: Successfully updated {{name}} Webhook
   successSubtitle: You may now perform push activity in Git and view the list of events in Harness
   deleted: Successfully deleted Webhook {{ name }}
+webhookEvents:
+  events: Webhook Events
+  dateTime: DateTime
+  pusher: Pusher
+  eventId: Event Id
+  payloadDetails: Payload Details
+  timestamp: Timestamp
