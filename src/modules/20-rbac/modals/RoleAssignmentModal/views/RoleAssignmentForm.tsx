@@ -152,7 +152,6 @@ const RoleAssignmentForm: React.FC<RoleAssignmentFormProps> = ({
           name="assignments"
           placeholder={noRoleAssignmentsText}
           insertRowAtBeginning={false}
-          isDeleteOfRowAllowed={row => !(row as Assignment).role.managedRoleAssignment}
           onDeleteOfRow={async row => {
             const deletedAssignmentIndex = formik.values.assignments.findIndex(
               assignment =>

@@ -251,7 +251,7 @@ export const getScopeBasedDefaultAssignment = (
 }
 
 export const isAssignmentFieldDisabled = (value: RoleOption | ResourceGroupOption): boolean => {
-  if (value.assignmentIdentifier || value.managedRoleAssignment) {
+  if (value.assignmentIdentifier) {
     return true
   }
   return false
