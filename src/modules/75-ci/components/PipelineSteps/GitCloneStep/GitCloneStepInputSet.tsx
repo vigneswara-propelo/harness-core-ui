@@ -140,6 +140,10 @@ export const GitCloneStepInputSetBasic: React.FC<GitCloneStepProps> = ({
             MultiTypeInputType.RUNTIME && {
             'spec.build.spec.tag': {}
           }),
+          ...(getMultiTypeFromValue((template?.spec?.build as Build)?.spec?.commitSha as string) ===
+            MultiTypeInputType.RUNTIME && {
+            'spec.build.spec.commitSha': {}
+          }),
           ...(getMultiTypeFromValue(template?.spec?.cloneDirectory) === MultiTypeInputType.RUNTIME && {
             'spec.cloneDirectory': { tooltipId: 'cloneDirectory' }
           })

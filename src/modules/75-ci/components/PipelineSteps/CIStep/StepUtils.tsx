@@ -174,7 +174,8 @@ export const RenderBuild = ({
   const [previousBuildTypeValues, setPreviousBuildTypeValues] = React.useState<Record<string, string>>({
     ...{
       [CodebaseTypes.BRANCH]: '',
-      [CodebaseTypes.TAG]: ''
+      [CodebaseTypes.TAG]: '',
+      [CodebaseTypes.COMMIT]: ''
     },
     [buildTypeValue]: get(formik?.values, `${prefix}spec.build.spec.${buildTypeValue}`) || ''
   })
@@ -193,6 +194,7 @@ export const RenderBuild = ({
     if (newValuesSpec.build?.spec) {
       delete newValuesSpec.build.spec.branch
       delete newValuesSpec.build.spec.tag
+      delete newValuesSpec.build.spec.commitSha
     }
     // persist previous value
     if (persistedValue) {
@@ -227,7 +229,8 @@ export const RenderBuild = ({
             label={getString('filters.executions.buildType')}
             options={[
               { label: radioLabels['branch'], value: CodebaseTypes.BRANCH },
-              { label: radioLabels['tag'], value: CodebaseTypes.TAG }
+              { label: radioLabels['tag'], value: CodebaseTypes.TAG },
+              { label: radioLabels['commitSha'], value: CodebaseTypes.COMMIT }
             ]}
             onChange={handleTypeChange}
             className={cx(
@@ -260,6 +263,18 @@ export const RenderBuild = ({
               })
             : null}
           {buildTypeValue === CodebaseTypes.TAG
+            ? renderBuildTypeInputField({
+                getString,
+                expressions,
+                type: buildTypeValue,
+                readonly,
+                allowableTypes,
+                onChange: setPreviousBuildTypeValues,
+                previousBuildTypeValues,
+                prefix
+              })
+            : null}
+          {buildTypeValue === CodebaseTypes.COMMIT
             ? renderBuildTypeInputField({
                 getString,
                 expressions,

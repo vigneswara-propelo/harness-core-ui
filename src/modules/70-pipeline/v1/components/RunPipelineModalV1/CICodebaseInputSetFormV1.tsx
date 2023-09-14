@@ -56,19 +56,22 @@ export enum ConnectionType {
 export const buildTypeInputNames: Record<string, string> = {
   branch: 'branch',
   tag: 'tag',
-  PR: 'number'
+  PR: 'number',
+  commitSha: 'commitSha'
 }
 
 export const getBuildTypeLabels = (getString: UseStringsReturn['getString']) => ({
   branch: getString('gitBranch'),
   tag: getString('gitTag'),
-  PR: getString('pipeline.gitPullRequest')
+  PR: getString('pipeline.gitPullRequest'),
+  commitSha: getString('common.git.gitSHACommit')
 })
 
 export const getBuildTypeInputLabels = (getString: UseStringsReturn['getString']) => ({
   branch: getString('common.branchName'),
   tag: getString('common.tagName'),
-  PR: getString('pipeline.ciCodebase.pullRequestNumber')
+  PR: getString('pipeline.ciCodebase.pullRequestNumber'),
+  commitSha: getString('common.commitSHA')
 })
 
 function CICodebaseInputSetFormV1Internal({

@@ -190,6 +190,7 @@ export interface StringsMap {
   'common.commentModal.commentLabel': string
   'common.comments': string
   'common.commitId': string
+  'common.commitSHA': string
   'common.community': string
   'common.communityForum': string
   'common.condition': string
@@ -489,6 +490,7 @@ export interface StringsMap {
   'common.git.gitLabUrlPlaceholder': string
   'common.git.gitLabUrlPlaceholderSSH': string
   'common.git.gitRepoUrl': string
+  'common.git.gitSHACommit': string
   'common.git.inlineStoreLabel': string
   'common.git.installationId': string
   'common.git.newBranchCommitLabel': string

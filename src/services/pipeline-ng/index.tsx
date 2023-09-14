@@ -914,7 +914,7 @@ export type BranchBuildSpec = BuildSpec & {
 
 export interface Build {
   spec: BuildSpec
-  type: 'branch' | 'tag' | 'PR' | 'CommitSha'
+  type: 'branch' | 'tag' | 'PR' | 'commitSha'
 }
 
 export interface BuildDetails {

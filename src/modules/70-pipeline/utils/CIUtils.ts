@@ -32,7 +32,8 @@ const cloneCodebaseKeyRef = 'stage.spec.cloneCodebase'
 export enum CodebaseTypes {
   BRANCH = 'branch',
   TAG = 'tag',
-  PR = 'PR'
+  PR = 'PR',
+  COMMIT = 'commitSha'
 }
 
 // TODO: Add singular forms, better using i18n because they have support for it

@@ -68,6 +68,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
     accountId: string
     triggerIdentifier: string
   }>()
+
   const { getString } = useStrings()
   const gitScope = useGitScope()
   const { expressions } = useVariablesExpression()
@@ -353,7 +354,6 @@ export const CIStep: React.FC<CIStepProps> = props => {
           })}
         </Container>
       ) : null}
-
       {get(enableFields, 'spec.build') && formik && (
         <Container className={cx(css.formGroup, stepCss, buildCss)}>
           {RenderBuild({
@@ -380,6 +380,17 @@ export const CIStep: React.FC<CIStepProps> = props => {
           })}
         </Container>
       )}
+      {get(enableFields, 'spec.build.spec.commitSha') && formik && (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          {renderBuildTypeInputField({
+            getString,
+            type: CodebaseTypes.COMMIT,
+            readonly,
+            allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep,
+            prefix
+          })}
+        </Container>
+      )}
       {get(enableFields, 'spec.build.spec.tag') && formik && (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {renderBuildTypeInputField({
@@ -391,7 +402,6 @@ export const CIStep: React.FC<CIStepProps> = props => {
           })}
         </Container>
       )}
-
       {get(enableFields, 'spec.cloneDirectory') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {renderMultiTypeTextField({

@@ -242,6 +242,7 @@ export function getInitialValuesInCorrectFormat<T, U>(
         const buildType = get(initialValues, 'spec.build.type')
         const branchValue = get(initialValues, 'spec.build.spec.branch')
         const tagValue = get(initialValues, 'spec.build.spec.tag')
+        const commitShaValue = get(initialValues, 'spec.build.spec.commitSha')
         if (buildType) {
           set(values, 'spec.build.type', buildType)
         }
@@ -249,6 +250,8 @@ export function getInitialValuesInCorrectFormat<T, U>(
           set(values, 'spec.build.spec.branch', branchValue)
         } else if (tagValue) {
           set(values, 'spec.build.spec.tag', tagValue)
+        } else if (commitShaValue) {
+          set(values, 'spec.build.spec.commitSha', commitShaValue)
         }
       }
     }
@@ -382,6 +385,7 @@ export function getFormValuesInCorrectFormat<T, U>(
       } else {
         const buildType = get(formValues, 'spec.build.type')
         const branchValue = get(formValues, 'spec.build.spec.branch')
+        const commitValue = get(formValues, 'spec.build.spec.commitSha')
         const tagValue = get(formValues, 'spec.build.spec.tag')
         const numberValue = get(formValues, 'spec.build.spec.number')
         if (buildType) {
@@ -391,6 +395,8 @@ export function getFormValuesInCorrectFormat<T, U>(
           set(values, 'spec.build.spec.branch', branchValue)
         } else if (tagValue) {
           set(values, 'spec.build.spec.tag', tagValue)
+        } else if (commitValue) {
+          set(values, 'spec.build.spec.commitSha', commitValue)
         } else if (numberValue) {
           set(values, 'spec.build.spec.number', numberValue)
         }

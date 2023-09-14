@@ -104,19 +104,22 @@ export enum BuildType {
 export enum BuildCodebaseType {
   branch = 'branch',
   tag = 'tag',
-  PR = 'number'
+  PR = 'number',
+  commitSha = 'commitSha'
 }
 
 export const DefaultBuildValues = {
   branch: '<+trigger.branch>',
   tag: '<+trigger.tag>',
-  PR: '<+trigger.prNumber>'
+  PR: '<+trigger.prNumber>',
+  commitSha: '<+trigger.commitSha>'
 }
 
 const placeholderValues = {
   branch: DefaultBuildValues['branch'],
   tag: DefaultBuildValues['tag'],
-  PR: DefaultBuildValues['PR']
+  PR: DefaultBuildValues['PR'],
+  commitSha: DefaultBuildValues['commitSha']
 }
 
 export interface ConnectorRefInterface {
@@ -214,17 +217,20 @@ export const handleCIConnectorRefOnChange = ({
 export const getBuildTypeLabels = (getString: UseStringsReturn['getString']) => ({
   branch: getString('gitBranch'),
   tag: getString('gitTag'),
-  PR: getString('pipeline.gitPullRequest')
+  PR: getString('pipeline.gitPullRequest'),
+  commitSha: getString('common.git.gitSHACommit')
 })
 
 export const getBuildTypeInputLabels = (getString: UseStringsReturn['getString']) => ({
   branch: getString('common.branchName'),
   tag: getString('common.tagName'),
-  PR: getString('pipeline.ciCodebase.pullRequestNumber')
+  PR: getString('pipeline.ciCodebase.pullRequestNumber'),
+  commitSha: getString('common.commitSHA')
 })
 
 export const getCodebaseInputFieldName = (formattedPath: string) => ({
   branch: `${formattedPath}properties.ci.codebase.build.spec.branch`,
+  commitSha: `${formattedPath}properties.ci.codebase.build.spec.commitSha`,
   tag: `${formattedPath}properties.ci.codebase.build.spec.tag`,
   PR: `${formattedPath}properties.ci.codebase.build.spec.number`,
   connectorRef: `${formattedPath}properties.ci.codebase.connectorRef`,
@@ -287,11 +293,14 @@ function CICodebaseInputSetFormInternal({
   const isBranchRuntimeInput = isRuntimeInput(
     (template?.properties || templateInputsProperties)?.ci?.codebase?.build?.spec?.branch
   )
+  const isCommitRuntimeInput = isRuntimeInput(
+    (template?.properties || templateInputsProperties)?.ci?.codebase?.build?.spec?.commitSha
+  )
   const isPRNumberRuntimeInput = isRuntimeInput(
     (template?.properties || templateInputsProperties)?.ci?.codebase?.build?.spec?.number
   )
   const buildIncludesRuntimeInput =
-    isBuildRuntimeInput || isTagRuntimeInput || isBranchRuntimeInput || isPRNumberRuntimeInput
+    isBuildRuntimeInput || isTagRuntimeInput || isBranchRuntimeInput || isPRNumberRuntimeInput || isCommitRuntimeInput
   const isCpuLimitRuntimeInput = (template?.properties || templateInputsProperties)?.ci?.codebase?.resources?.limits
     ?.cpu
   const isMemoryLimitRuntimeInput = (template?.properties || templateInputsProperties)?.ci?.codebase?.resources?.limits
@@ -309,7 +318,8 @@ function CICodebaseInputSetFormInternal({
       {
         branch: '',
         tag: '',
-        PR: ''
+        PR: '',
+        commitSha: ''
       },
       { [buildTypeValue]: previousBuildTypeSpecValue || '' }
     )

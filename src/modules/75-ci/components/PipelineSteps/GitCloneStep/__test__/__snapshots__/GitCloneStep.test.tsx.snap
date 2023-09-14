@@ -327,6 +327,19 @@ exports[`Git Clone Step InputSet View Render should render all fields with valid
                       />
                       gitTag
                     </label>
+                    <label
+                      class="bp3-control bp3-radio"
+                    >
+                      <input
+                        name="spec.build.type"
+                        type="radio"
+                        value="commitSha"
+                      />
+                      <span
+                        class="bp3-control-indicator"
+                      />
+                      common.git.gitSHACommit
+                    </label>
                   </div>
                   <span
                     class="bp3-popover-wrapper MultiTypeInput--wrapper"
@@ -1741,6 +1754,19 @@ exports[`Git Clone Step Step Render initial render 1`] = `
                       />
                       gitTag
                     </label>
+                    <label
+                      class="bp3-control bp3-radio"
+                    >
+                      <input
+                        name="spec.build.type"
+                        type="radio"
+                        value="commitSha"
+                      />
+                      <span
+                        class="bp3-control-indicator"
+                      />
+                      common.git.gitSHACommit
+                    </label>
                   </div>
                   <span
                     class="bp3-popover-wrapper MultiTypeInput--wrapper"
@@ -2405,6 +2431,19 @@ exports[`Git Clone Step Step Render should render onEdit fixed values properly 1
                         class="bp3-control-indicator"
                       />
                       gitTag
+                    </label>
+                    <label
+                      class="bp3-control bp3-radio"
+                    >
+                      <input
+                        name="spec.build.type"
+                        type="radio"
+                        value="commitSha"
+                      />
+                      <span
+                        class="bp3-control-indicator"
+                      />
+                      common.git.gitSHACommit
                     </label>
                   </div>
                   <span
