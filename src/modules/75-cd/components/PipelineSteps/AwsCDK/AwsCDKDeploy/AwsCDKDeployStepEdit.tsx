@@ -71,6 +71,7 @@ const AwsCDKDeployStepEdit = (
       connectorRef: Yup.string().required(
         getString('common.validation.fieldIsRequired', { name: getString('pipelineSteps.connectorLabel') })
       ),
+      image: Yup.string().required(getString('validation.imageRequired')),
       provisionerIdentifier: Yup.string().required(getString('common.validation.provisionerIdentifierIsRequired')),
       envVariables: Yup.array().of(
         Yup.object().shape({
@@ -262,6 +263,32 @@ const AwsCDKDeployStepEdit = (
                     />
                   )}
               </Container>
+              <Container className={stepCss.formGroup}>
+                <FormInput.MultiTextInput
+                  name="spec.appPath"
+                  label={getString('optionalField', { name: getString('pipeline.stepCommonFields.appPath') })}
+                  placeholder={getString('pipeline.stepCommonFields.appPath')}
+                  disabled={readonly}
+                  multiTextInputProps={{
+                    expressions,
+                    disabled: readonly,
+                    allowableTypes
+                  }}
+                />
+                {getMultiTypeFromValue(formik.values.spec?.appPath) === MultiTypeInputType.RUNTIME && !readonly && (
+                  <ConfigureOptions
+                    value={formik.values.spec?.appPath as string}
+                    type="String"
+                    variableName="spec.appPath"
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    onChange={value => {
+                      formik.setFieldValue('spec.appPath', value)
+                    }}
+                    isReadonly={readonly}
+                  />
+                )}
+              </Container>
 
               <Accordion className={stepCss.accordion}>
                 <Accordion.Panel
@@ -278,33 +305,6 @@ const AwsCDKDeployStepEdit = (
                         commandOptionsFieldLabel={getString('cd.steps.awsCdkStep.awsCdkDeployCommandOptions')}
                         stepType={StepType.AwsCdkDeploy}
                       />
-                      <Container className={stepCss.formGroup}>
-                        <FormInput.MultiTextInput
-                          name="spec.appPath"
-                          label={getString('pipeline.stepCommonFields.appPath')}
-                          placeholder={getString('pipeline.stepCommonFields.appPath')}
-                          disabled={readonly}
-                          multiTextInputProps={{
-                            expressions,
-                            disabled: readonly,
-                            allowableTypes
-                          }}
-                        />
-                        {getMultiTypeFromValue(formik.values.spec?.appPath) === MultiTypeInputType.RUNTIME &&
-                          !readonly && (
-                            <ConfigureOptions
-                              value={formik.values.spec?.appPath as string}
-                              type="String"
-                              variableName="spec.appPath"
-                              showRequiredField={false}
-                              showDefaultField={false}
-                              onChange={value => {
-                                formik.setFieldValue('spec.appPath', value)
-                              }}
-                              isReadonly={readonly}
-                            />
-                          )}
-                      </Container>
                     </Container>
                   }
                 />

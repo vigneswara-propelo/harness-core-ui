@@ -62,7 +62,7 @@ export interface AwsCdkStepCommonOptionalFieldsEditProps {
   stepType?: StepType
 }
 
-const StackNamesIncluded = [StepType.AwsCdkDiff, StepType.AwsCdkSynth]
+const StackNamesIncluded = [StepType.AwsCdkDiff, StepType.AwsCdkSynth, StepType.AwsCdkDeploy, StepType.AwsCdkDestroy]
 
 export function AwsCdkCommonOptionalFieldsEdit(props: AwsCdkStepCommonOptionalFieldsEditProps): React.ReactElement {
   const { readonly, allowableTypes, formik, commandOptionsFieldName, commandOptionsFieldLabel, stepType } = props
