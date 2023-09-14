@@ -120,7 +120,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
           <div className={css.verticalSpacingInput}>
             <MultiTypeListOrFileSelectList
               template={template}
-              fieldPath={`${manifestPath}.spec.store.spec.paths`}
+              fieldPath={`${manifestPath}.spec.varsPaths`}
               label={getString('pipeline.manifestType.varsYAMLPath')}
               name={`${path}.${manifestPath}.spec.varsPaths`}
               placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}

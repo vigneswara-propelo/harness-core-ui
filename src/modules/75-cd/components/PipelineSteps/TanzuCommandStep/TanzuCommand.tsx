@@ -43,12 +43,12 @@ import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/S
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
 import { InstanceScriptTypes } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/DeploymentInfraWrapper/DeploymentInfraUtils'
-import { FileSelectList } from '@filestore/components/FileStoreList/FileStoreList'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { FileUsage } from '@filestore/interfaces/FileStore'
-import { SELECT_FILES_TYPE } from '@filestore/utils/constants'
+import { ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import MultiTypeListOrFileSelectList from '../K8sServiceSpec/ManifestSource/MultiTypeListOrFileSelectList'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 import css from './TanzuCommand.module.scss'
@@ -323,20 +323,18 @@ const TanzuCommandInputStep: React.FC<TanzuCommandProps> = props => {
       {getMultiTypeFromValue(inputSetData?.template?.spec?.script?.store?.spec?.files) ===
       MultiTypeInputType.RUNTIME ? (
         <div className={cx(stepCss.formGroup, stepCss.alignStart, stepCss.md)}>
-          <FileSelectList
-            label={
-              <Layout.Vertical>
-                <Label>{getString('common.script')}</Label>
-              </Layout.Vertical>
-            }
+          <MultiTypeListOrFileSelectList
+            fieldPath={`${prefix}spec.script.store.spec.files`}
+            label={getString('common.script')}
             name={`${prefix}spec.script.store.spec.files`}
-            disabled={inputSetData?.readonly}
-            style={{ marginBottom: 'var(--spacing-small)' }}
-            expressions={expressions}
-            isNameOfArrayType
-            type={SELECT_FILES_TYPE.FILE_STORE}
+            placeholder={getString('select')}
+            disabled={!!inputSetData?.readonly}
+            allowableTypes={allowableTypes}
+            stepViewType={stepViewType}
             formik={formik}
+            manifestStoreType={ManifestStoreMap.Harness}
             allowOnlyOne
+            isNameOfArrayType
           />
         </div>
       ) : null}
