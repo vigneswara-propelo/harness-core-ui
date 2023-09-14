@@ -21,6 +21,7 @@ declare const styles: {
   readonly editBtn: string
   readonly fileDropdown: string
   readonly fileSelect: string
+  readonly label: string
   readonly modal: string
   readonly optionalConfigDetails: string
   readonly radioBtns: string

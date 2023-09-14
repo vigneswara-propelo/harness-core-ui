@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Formik, FormInput, getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
+import { Accordion, Formik, FormInput, getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
@@ -33,12 +33,15 @@ import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/S
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { TFRollbackData } from '../Common/Terraform/TerraformInterfaces'
 import type {
   TerragruntRollbackProps,
   TerragruntRollbackVariableStepProps,
   TGRollbackData
 } from '../Common/Terragrunt/TerragruntInterface'
+import CommandFlags from '../Common/CommandFlags/CommandFlags'
+import { processCmdFlags, processTgRollbackInitialValues } from '../Common/Terragrunt/TerragruntHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
@@ -49,6 +52,7 @@ function TerragruntRollbackWidget(
   const { initialValues, onUpdate, onChange, allowableTypes, stepViewType, isNewStep, readonly = false } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { CDS_TERRAGRUNT_CLI_OPTIONS_NG } = useFeatureFlags()
 
   return (
     <>
@@ -61,7 +65,7 @@ function TerragruntRollbackWidget(
           onChange?.(values)
         }}
         formName="terragruntRollback"
-        initialValues={initialValues}
+        initialValues={processTgRollbackInitialValues(initialValues)}
         validationSchema={Yup.object().shape({
           ...getNameAndIdentifierSchema(getString, stepViewType),
           timeout: getDurationValidationSchema({ minimum: '10s' }).required(
@@ -84,6 +88,7 @@ function TerragruntRollbackWidget(
         {(formik: FormikProps<TGRollbackData>) => {
           const { values, setFieldValue } = formik
           setFormikRef(formikRef, formik)
+
           return (
             <>
               {stepViewType !== StepViewType.Template && (
@@ -133,6 +138,23 @@ function TerragruntRollbackWidget(
                   />
                 )}
               </div>
+              {CDS_TERRAGRUNT_CLI_OPTIONS_NG && (
+                <Accordion className={stepCss.accordion}>
+                  <Accordion.Panel
+                    id="step-1"
+                    summary={getString('cd.commandLineOptions')}
+                    details={
+                      <CommandFlags
+                        formik={formik}
+                        stepType="ROLLBACK"
+                        allowableTypes={allowableTypes}
+                        path={'spec.commandFlags'}
+                        isTerragrunt={true}
+                      />
+                    }
+                  />
+                </Accordion>
+              )}
             </>
           )
         }}
@@ -269,6 +291,17 @@ export class TerragruntRollback extends PipelineStep<TGRollbackData> {
 
     return errors
   }
+
+  processFormData(data: TGRollbackData): TGRollbackData {
+    return {
+      ...data,
+      spec: {
+        ...data.spec,
+        commandFlags: processCmdFlags(data.spec?.commandFlags)
+      }
+    }
+  }
+
   renderStep(props: StepProps<TGRollbackData, unknown>): JSX.Element {
     const {
       initialValues,
@@ -304,9 +337,9 @@ export class TerragruntRollback extends PipelineStep<TGRollbackData> {
     }
     return (
       <TerragruntRollbackWidgetWithRef
-        initialValues={initialValues}
-        onUpdate={onUpdate}
-        onChange={onChange}
+        initialValues={processTgRollbackInitialValues(initialValues)}
+        onUpdate={values => onUpdate?.(this.processFormData(values))}
+        onChange={values => onChange?.(this.processFormData(values))}
         allowableTypes={allowableTypes}
         isNewStep={isNewStep}
         stepViewType={stepViewType}

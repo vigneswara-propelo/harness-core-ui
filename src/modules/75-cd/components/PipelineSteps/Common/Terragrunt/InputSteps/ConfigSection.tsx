@@ -6,12 +6,10 @@
  */
 
 import React from 'react'
-import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import { Label } from '@harness/uicore'
 import { connect, FormikContextType } from 'formik'
-import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useQueryParams } from '@common/hooks'
@@ -22,7 +20,7 @@ import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { TerragruntData, TerragruntProps } from '../TerragruntInterface'
 import { getPath } from '../../ConfigFileStore/ConfigFileStoreHelper'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import css from '../../Terraform/TerraformStep.module.scss'
 
 function ConfigSectionRef<T extends TerragruntData>(
   props: TerragruntProps<T> & { formik?: FormikContextType<any> }
@@ -42,29 +40,27 @@ function ConfigSectionRef<T extends TerragruntData>(
   return (
     <>
       {store?.spec && (
-        <Label style={{ color: Color.GREY_900, paddingBottom: 'var(--spacing-medium)' }}>
+        <Label className={css.label}>
           {isBackendConfig ? getString('pipelineSteps.backendConfig') : getString('cd.configurationFile')}
         </Label>
       )}
 
       {isValueRuntimeInput(store?.spec?.connectorRef) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormMultiTypeConnectorField
-            accountIdentifier={accountId}
-            selected={get(initialValues, `${configPath}.store.spec.connectorRef`, '')}
-            projectIdentifier={projectIdentifier}
-            orgIdentifier={orgIdentifier}
-            multiTypeProps={{ allowableTypes, expressions }}
-            width={388}
-            type={store?.type}
-            name={`${path}.${configPath}.store.spec.connectorRef`}
-            label={getString('connector')}
-            placeholder={getString('select')}
-            disabled={readonly}
-            setRefValue
-            gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-          />
-        </div>
+        <FormMultiTypeConnectorField
+          accountIdentifier={accountId}
+          selected={get(initialValues, `${configPath}.store.spec.connectorRef`, '')}
+          projectIdentifier={projectIdentifier}
+          orgIdentifier={orgIdentifier}
+          multiTypeProps={{ allowableTypes, expressions }}
+          width={388}
+          type={store?.type}
+          name={`${path}.${configPath}.store.spec.connectorRef`}
+          label={getString('connector')}
+          placeholder={getString('select')}
+          disabled={readonly}
+          setRefValue
+          gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+        />
       )}
 
       {isRepoRuntime && (
@@ -82,7 +78,6 @@ function ConfigSectionRef<T extends TerragruntData>(
           }}
           template={inputSetData?.template}
           fieldPath={`${configPath}.store.spec.repoName`}
-          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
 
@@ -92,7 +87,6 @@ function ConfigSectionRef<T extends TerragruntData>(
           name={`${path}.${configPath}.store.spec.branch`}
           placeholder={getString('pipeline.manifestType.branchPlaceholder')}
           disabled={readonly}
-          className={cx(stepCss.formGroup, stepCss.md)}
           multiTextInputProps={{
             expressions,
             allowableTypes
@@ -111,7 +105,6 @@ function ConfigSectionRef<T extends TerragruntData>(
           name={`${path}.${configPath}.store.spec.commitId`}
           placeholder={getString('pipeline.manifestType.commitPlaceholder')}
           disabled={readonly}
-          className={cx(stepCss.formGroup, stepCss.md)}
           multiTextInputProps={{
             expressions,
             allowableTypes
@@ -134,7 +127,6 @@ function ConfigSectionRef<T extends TerragruntData>(
             expressions,
             allowableTypes
           }}
-          className={cx(stepCss.formGroup, stepCss.md)}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}

@@ -59,6 +59,7 @@ import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
   ConnectorMap,
   ConnectorTypes,
@@ -72,6 +73,7 @@ import { ConfigFileStoreStepOne } from '../../ConfigFileStore/ConfigFileStoreSte
 import { ConfigFileStoreStepTwo } from '../../ConfigFileStore/ConfigFileStoreStepTwo'
 import { DIALOG_PROPS } from '../TerragruntHelper'
 import VarFileList from '../../VarFile/VarFileList'
+import CommandFlags from '../../CommandFlags/CommandFlags'
 import css from '../../Terraform/TerraformStep.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -139,6 +141,7 @@ export default function TerragruntEditView(
   const [showBackendConfigRemoteWizard, setShowBackendConfigRemoteWizard] = React.useState(false)
   const [connectorView, setConnectorView] = React.useState(false)
   const [selectedConnector, setSelectedConnector] = React.useState<ConnectorTypes | ''>('')
+  const { CDS_TERRAGRUNT_CLI_OPTIONS_NG } = useFeatureFlags()
 
   const { sectionId } = useQueryParams<any>()
 
@@ -416,6 +419,16 @@ export default function TerragruntEditView(
     }
   }
 
+  const renderCommandFlags = (formik: FormikProps<TerragruntData>): React.ReactElement => (
+    <CommandFlags
+      formik={formik}
+      stepType={initialValues.type === StepType.TerragruntDestroy ? 'DESTROY' : 'APPLY'}
+      allowableTypes={allowableTypes}
+      path={'spec.configuration.commandFlags'}
+      isTerragrunt={true}
+    />
+  )
+
   return (
     <>
       <Formik<TerragruntData>
@@ -506,7 +519,7 @@ export default function TerragruntEditView(
                 )}
               </div>
 
-              {formik.values.spec?.configuration?.type === ConfigurationTypes.Inline && (
+              {values.spec?.configuration?.type === ConfigurationTypes.Inline ? (
                 <>
                   <Layout.Vertical>
                     <Label
@@ -761,6 +774,13 @@ export default function TerragruntEditView(
                         </div>
                       }
                     />
+                    {CDS_TERRAGRUNT_CLI_OPTIONS_NG && (
+                      <Accordion.Panel
+                        id="step-2"
+                        summary={getString('cd.commandLineOptions')}
+                        details={renderCommandFlags(formik)}
+                      />
+                    )}
                   </Accordion>
 
                   {showModal && (
@@ -806,6 +826,16 @@ export default function TerragruntEditView(
                     </Dialog>
                   )}
                 </>
+              ) : CDS_TERRAGRUNT_CLI_OPTIONS_NG ? (
+                <Accordion className={stepCss.accordion}>
+                  <Accordion.Panel
+                    id="step-1"
+                    summary={getString('cd.commandLineOptions')}
+                    details={renderCommandFlags(formik)}
+                  />
+                </Accordion>
+              ) : (
+                <></>
               )}
             </>
           )

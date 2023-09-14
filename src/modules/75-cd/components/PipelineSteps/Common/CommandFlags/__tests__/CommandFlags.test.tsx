@@ -9,7 +9,8 @@ import React from 'react'
 import { render, waitFor, fireEvent, getByText, getAllByTestId } from '@testing-library/react'
 import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
-import TerraformCommandFlags from '../TerraformCommandFlags'
+import CommandFlags from '../CommandFlags'
+
 export const commandFlagsMock = {
   status: 'SUCCESS',
   data: ['WORKSPACE', 'INIT', 'PLAN', 'REFRESH'],
@@ -22,15 +23,21 @@ jest.mock('services/cd-ng', () => ({
     return {
       data: commandFlagsMock
     }
+  }),
+  useTerragruntCmdFlags: jest.fn().mockImplementation(() => {
+    return {
+      data: commandFlagsMock
+    }
   })
 }))
+
 jest.mock('@common/components/MonacoTextField/MonacoTextField', () => ({
   MonacoTextField: function MonacoTextField() {
     return <textarea />
   }
 }))
 
-describe('Terraform Command Flags  Test', () => {
+describe('Command Flags  Test', () => {
   test('renders empty command flags panel correctly', () => {
     const { container } = render(
       <TestWrapper>
@@ -43,11 +50,12 @@ describe('Terraform Command Flags  Test', () => {
         >
           {formikProps => {
             return (
-              <TerraformCommandFlags
+              <CommandFlags
                 formik={formikProps}
                 stepType={'PLAN'}
                 configType={'configuration'}
                 path={'spec.configuration.commandFlags'}
+                isTerragrunt={false}
               />
             )
           }}
@@ -68,7 +76,7 @@ describe('Terraform Command Flags  Test', () => {
         >
           {formikProps => {
             return (
-              <TerraformCommandFlags
+              <CommandFlags
                 formik={formikProps}
                 stepType={'PLAN'}
                 configType={'configuration'}

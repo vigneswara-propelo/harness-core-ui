@@ -15,32 +15,52 @@ import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { TerraformCliOptionFlag, useTerraformCmdFlags } from 'services/cd-ng'
+import { TerraformCliOptionFlag, useTerraformCmdFlags, useTerragruntCmdFlags } from 'services/cd-ng'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
-import css from './TerraformCommandFlags.module.scss'
+import css from './CommandFlags.module.scss'
 
-interface TerraformCommandFlagsProps {
+interface CommandFlagsProps {
   formik: FormikValues
-  allowableTypes?: AllowedTypes
   stepType: string
-  configType: string
   path: string
+  allowableTypes?: AllowedTypes
+  configType?: string
+  isTerragrunt?: boolean
 }
 
-function TerraformCommandFlags({
+function CommandFlags({
   formik,
   allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
   stepType,
   configType,
-  path
-}: TerraformCommandFlagsProps): React.ReactElement {
+  path,
+  isTerragrunt = false
+}: CommandFlagsProps): React.ReactElement {
   const { getString } = useStrings()
-  const { data, loading } = useTerraformCmdFlags({
+  const { data: terraformData, loading: terraformLoading } = useTerraformCmdFlags({
     queryParams: {
       stepType: stepType,
-      configType: configType
-    }
+      configType: configType ?? ''
+    },
+    lazy: isTerragrunt
   })
+
+  const { data: terragruntData, loading: terragruntLoading } = useTerragruntCmdFlags({
+    queryParams: {
+      stepType: stepType
+    },
+    lazy: !isTerragrunt
+  })
+
+  const { data, loading } = isTerragrunt
+    ? {
+        data: terragruntData,
+        loading: terragruntLoading
+      }
+    : {
+        data: terraformData,
+        loading: terraformLoading
+      }
 
   const commandFlagOptions = React.useMemo(() => {
     return get(data, 'data', []).map((flag: string) => ({
@@ -136,4 +156,4 @@ function TerraformCommandFlags({
   )
 }
 
-export default TerraformCommandFlags
+export default CommandFlags

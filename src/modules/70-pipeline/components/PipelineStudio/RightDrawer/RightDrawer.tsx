@@ -266,7 +266,12 @@ const processNodeImpl = (
       ) {
         delete node.spec.delegateSelectors
       }
-      if (node.spec?.commandFlags && (!item.commandFlags || item.commandFlags?.length === 0)) {
+
+      if (
+        node.spec?.commandFlags &&
+        (!item.commandFlags || item.commandFlags?.length === 0) &&
+        (!(item as any)?.spec?.commandFlags || (item as any)?.spec?.commandFlags?.length === 0)
+      ) {
         delete node.spec.commandFlags
       }
       if (

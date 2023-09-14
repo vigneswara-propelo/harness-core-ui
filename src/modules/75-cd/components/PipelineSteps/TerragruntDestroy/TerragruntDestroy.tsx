@@ -20,7 +20,7 @@ import type { StringNGVariable } from 'services/pipeline-ng'
 import TerragruntInputStep from '../Common/Terragrunt/InputSteps/TerragruntInputStep'
 import TerragruntEditView from '../Common/Terragrunt/EditView/TerragruntEditView'
 import type { TerragruntData, TerragruntVariableStepProps } from '../Common/Terragrunt/TerragruntInterface'
-import { onSubmitTerragruntData } from '../Common/Terragrunt/TerragruntHelper'
+import { onSubmitTerragruntData, processCmdFlags } from '../Common/Terragrunt/TerragruntHelper'
 import { TerragruntVariableStep } from '../Common/Terragrunt/VariableView/TerragruntVariableView'
 import { ConfigurationTypes } from '../Common/Terraform/TerraformInterfaces'
 
@@ -98,6 +98,7 @@ export class TerragruntDestroy extends PipelineStep<TerragruntData> {
         ...data.spec,
         configuration: {
           ...configData,
+          commandFlags: processCmdFlags(configData?.commandFlags),
           spec: {
             ...configData?.spec,
             moduleConfig: {

@@ -8,13 +8,13 @@
 import React from 'react'
 import { get } from 'lodash-es'
 import { Label } from '@harness/uicore'
-import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { TerragruntVarFileWrapper } from 'services/cd-ng'
 import { TerraformStoreTypes } from '../../Common/Terraform/TerraformInterfaces'
 import RemoteVarSection from './RemoteVarSection'
 import type { TerragruntPlanProps } from '../../Common/Terragrunt/TerragruntInterface'
 import InlineVarFileInputSet from '../../Common/VarFile/InlineVarFileInputSet'
+import css from '../../Common/Terraform/TerraformStep.module.scss'
 
 export default function TgPlanVarFiles(props: TerragruntPlanProps): React.ReactElement {
   const { getString } = useStrings()
@@ -22,9 +22,7 @@ export default function TgPlanVarFiles(props: TerragruntPlanProps): React.ReactE
 
   return (
     <>
-      <Label style={{ color: Color.GREY_900, paddingBottom: 'var(--spacing-medium)' }}>
-        {getString('cd.terraformVarFiles')}
-      </Label>
+      <Label className={css.label}>{getString('cd.terraformVarFiles')}</Label>
       {get(inputSetData?.template, 'spec.configuration.varFiles')?.map(
         (varFile: TerragruntVarFileWrapper, index: number) => {
           const { type } = varFile.varFile

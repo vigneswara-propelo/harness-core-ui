@@ -6,12 +6,10 @@
  */
 
 import React from 'react'
-import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import { Label } from '@harness/uicore'
 import { connect } from 'formik'
-import { Color } from '@harness/design-system'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
@@ -22,7 +20,7 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { TerragruntPlanProps } from '../../Common/Terragrunt/TerragruntInterface'
 import { getPath } from '../../Common/ConfigFileStore/ConfigFileStoreHelper'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import css from '../../Common/Terraform/TerraformStep.module.scss'
 
 function ConfigSectionRef(props: TerragruntPlanProps & { formik?: any }): React.ReactElement {
   const { getString } = useStrings()
@@ -38,7 +36,7 @@ function ConfigSectionRef(props: TerragruntPlanProps & { formik?: any }): React.
   return (
     <>
       {configSpec?.spec && (
-        <Label style={{ color: Color.GREY_900, paddingBottom: 'var(--spacing-medium)' }}>
+        <Label className={css.label}>
           {
             /* istanbul ignore next */ isBackendConfig
               ? getString('pipelineSteps.backendConfig')
@@ -48,26 +46,23 @@ function ConfigSectionRef(props: TerragruntPlanProps & { formik?: any }): React.
       )}
 
       {isValueRuntimeInput(configSpec?.spec?.connectorRef) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormMultiTypeConnectorField
-            accountIdentifier={accountId}
-            selected={get(initialValues, `${configPath}.store.spec.connectorRef`, '')}
-            projectIdentifier={projectIdentifier}
-            orgIdentifier={orgIdentifier}
-            multiTypeProps={{ allowableTypes, expressions }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            width={388}
-            type={configSpec?.type}
-            name={`${path}.${configPath}.store.spec.connectorRef`}
-            label={getString('connector')}
-            placeholder={getString('select')}
-            disabled={readonly}
-            setRefValue
-            gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-          />
-        </div>
+        <FormMultiTypeConnectorField
+          accountIdentifier={accountId}
+          selected={get(initialValues, `${configPath}.store.spec.connectorRef`, '')}
+          projectIdentifier={projectIdentifier}
+          orgIdentifier={orgIdentifier}
+          multiTypeProps={{ allowableTypes, expressions }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          type={configSpec?.type}
+          name={`${path}.${configPath}.store.spec.connectorRef`}
+          label={getString('connector')}
+          placeholder={getString('select')}
+          disabled={readonly}
+          setRefValue
+          gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+        />
       )}
 
       {isValueRuntimeInput(configSpec?.spec?.repoName) && (
@@ -85,7 +80,6 @@ function ConfigSectionRef(props: TerragruntPlanProps & { formik?: any }): React.
           }}
           template={template}
           fieldPath={`${configPath}.store.spec.repoName`}
-          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
 
@@ -104,7 +98,6 @@ function ConfigSectionRef(props: TerragruntPlanProps & { formik?: any }): React.
           }}
           template={template}
           fieldPath={`${configPath}.store.spec.branch`}
-          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
 
@@ -123,7 +116,6 @@ function ConfigSectionRef(props: TerragruntPlanProps & { formik?: any }): React.
           }}
           template={template}
           fieldPath={`${configPath}.store.spec.commitId`}
-          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
 
@@ -140,7 +132,6 @@ function ConfigSectionRef(props: TerragruntPlanProps & { formik?: any }): React.
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
-          className={cx(stepCss.formGroup, stepCss.md)}
           template={template}
           fieldPath={`${configPath}.store.spec.folderPath`}
         />

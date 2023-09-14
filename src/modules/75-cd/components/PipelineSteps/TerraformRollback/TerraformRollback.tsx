@@ -47,7 +47,7 @@ import { FormMultiTypeCheckboxField } from '@common/components'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import type { TerraformCliOptionFlag } from 'services/cd-ng'
 import type { TFRollbackData } from '../Common/Terraform/TerraformInterfaces'
-import TerraformCommandFlags from '../Common/TerraformCommandFlags/TerraformCommandFlags'
+import CommandFlags from '../Common/CommandFlags/CommandFlags'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
@@ -211,7 +211,7 @@ function TerraformRollbackWidget(
                         )}
                       </div>
                       <div>
-                        <TerraformCommandFlags
+                        <CommandFlags
                           formik={formik}
                           stepType="ROLLBACK"
                           configType={'configuration'}

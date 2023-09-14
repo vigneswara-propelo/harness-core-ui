@@ -13,6 +13,7 @@ import type {
   RemoteTerragruntBackendConfigSpec,
   StepElementConfig,
   TerragruntBackendConfig,
+  TerragruntCliOptionFlag,
   TerragruntModuleConfig,
   TerragruntPlanExecutionData,
   TerragruntPlanStepInfo,
@@ -64,6 +65,7 @@ export interface TerragruntData extends StepElementConfig {
     configuration: {
       type: TerragruntStepConfiguration['type']
       spec?: TGDataSpec
+      commandFlags?: TerragruntCliOptionFlag[]
     }
   }
 }

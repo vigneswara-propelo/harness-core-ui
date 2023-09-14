@@ -6,7 +6,6 @@
  */
 
 import React from 'react'
-import cx from 'classnames'
 import { connect, FormikContextType } from 'formik'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
@@ -21,7 +20,6 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { TerragruntPlanProps } from '../../Common/Terragrunt/TerragruntInterface'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 function TgPlanRemoteSectionRef(
   props: TerragruntPlanProps & {
@@ -52,27 +50,24 @@ function TgPlanRemoteSectionRef(
       </Container>
 
       {isValueRuntimeInput(get(remoteVar.varFile, 'spec.store.spec.connectorRef')) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormMultiTypeConnectorField
-            accountIdentifier={accountId}
-            selected={get(
-              initialValues,
-              `${path}.spec.configuration.varFiles[${index}].varFile.spec.store.spec.connectorRef`,
-              ''
-            )}
-            projectIdentifier={projectIdentifier}
-            orgIdentifier={orgIdentifier}
-            width={388}
-            type={[get(remoteVar.varFile, 'spec.store.type')]}
-            name={`${path}.spec.configuration.varFiles[${index}].varFile.spec.store.spec.connectorRef`}
-            label={getString('connector')}
-            placeholder={getString('select')}
-            disabled={readonly}
-            setRefValue
-            gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-            multiTypeProps={{ expressions, allowableTypes }}
-          />
-        </div>
+        <FormMultiTypeConnectorField
+          accountIdentifier={accountId}
+          selected={get(
+            initialValues,
+            `${path}.spec.configuration.varFiles[${index}].varFile.spec.store.spec.connectorRef`,
+            ''
+          )}
+          projectIdentifier={projectIdentifier}
+          orgIdentifier={orgIdentifier}
+          type={[get(remoteVar.varFile, 'spec.store.type')]}
+          name={`${path}.spec.configuration.varFiles[${index}].varFile.spec.store.spec.connectorRef`}
+          label={getString('connector')}
+          placeholder={getString('select')}
+          disabled={readonly}
+          setRefValue
+          gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+          multiTypeProps={{ expressions, allowableTypes }}
+        />
       )}
 
       {isRepoRuntime && (
@@ -90,7 +85,6 @@ function TgPlanRemoteSectionRef(
           }}
           template={inputSetData?.template}
           fieldPath={`spec.configuration.varFiles[${index}].varFile.spec.store.spec.repoName`}
-          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
 
@@ -98,7 +92,6 @@ function TgPlanRemoteSectionRef(
         <TextFieldInputSetView
           name={`${path}.spec.configuration.varFiles[${index}].varFile.spec.store.spec.branch`}
           label={getString('pipelineSteps.deploy.inputSet.branch')}
-          className={cx(stepCss.formGroup, stepCss.md)}
           multiTextInputProps={{
             expressions,
             allowableTypes
@@ -116,7 +109,6 @@ function TgPlanRemoteSectionRef(
           <TextFieldInputSetView
             name={`${path}.spec.configuration.varFiles[${index}].varFile.spec.store.spec.commitId`}
             label={getString('pipeline.manifestType.commitId')}
-            className={cx(stepCss.formGroup, stepCss.md)}
             multiTextInputProps={{
               expressions,
               allowableTypes
@@ -131,15 +123,13 @@ function TgPlanRemoteSectionRef(
         )
       }
       {isValueRuntimeInput(get(remoteVar.varFile, 'spec.store.spec.paths')) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <List
-            label={getString('filePaths')}
-            name={`${path}.spec.configuration.varFiles[${index}].varFile.spec.store.spec.paths`}
-            disabled={readonly}
-            style={{ marginBottom: 'var(--spacing-small)' }}
-            isNameOfArrayType
-          />
-        </div>
+        <List
+          label={getString('filePaths')}
+          name={`${path}.spec.configuration.varFiles[${index}].varFile.spec.store.spec.paths`}
+          disabled={readonly}
+          style={{ marginBottom: 'var(--spacing-small)' }}
+          isNameOfArrayType
+        />
       )}
     </>
   )

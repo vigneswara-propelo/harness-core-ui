@@ -3,7 +3,7 @@
 exports[`<TgVarFile /> tests snapshot test for tg var files 1`] = `
 <div>
   <label
-    class="Label--main"
+    class="Label--main label"
   >
     cd.terraformVarFiles
   </label>

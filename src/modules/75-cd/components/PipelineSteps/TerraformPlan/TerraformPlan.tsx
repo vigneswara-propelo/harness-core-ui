@@ -105,7 +105,7 @@ import { ConfigFileStoreStepOne } from '../Common/ConfigFileStore/ConfigFileStor
 import { AmazonS3Store } from '../Common/ConfigFileStore/AmazonS3Store/AmazonS3Store'
 
 import VarFileList from '../Common/VarFile/VarFileList'
-import TerraformCommandFlags from '../Common/TerraformCommandFlags/TerraformCommandFlags'
+import CommandFlags from '../Common/CommandFlags/CommandFlags'
 import { AmazonS3StoreDataType, formatAmazonS3Data } from '../Common/ConfigFileStore/AmazonS3Store/AmazonS3StoreHelper'
 
 import { ArtifactoryForm } from '../Common/VarFile/ArtifactoryForm'
@@ -915,7 +915,7 @@ function TerraformPlanWidget(
                       )}
 
                       <div>
-                        <TerraformCommandFlags
+                        <CommandFlags
                           formik={formik}
                           stepType="PLAN"
                           configType={fieldPath}

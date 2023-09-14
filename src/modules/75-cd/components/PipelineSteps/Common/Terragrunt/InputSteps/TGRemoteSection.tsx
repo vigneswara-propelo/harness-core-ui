@@ -6,7 +6,6 @@
  */
 
 import React from 'react'
-import cx from 'classnames'
 
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
@@ -22,7 +21,6 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { TerragruntData, TerragruntProps } from '../TerragruntInterface'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 function TgRemoteSectionRef<T extends TerragruntData>(
   props: TerragruntProps<T> & {
@@ -83,7 +81,6 @@ function TgRemoteSectionRef<T extends TerragruntData>(
           }}
           template={template}
           fieldPath={`spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.repoName`}
-          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
 
@@ -98,7 +95,6 @@ function TgRemoteSectionRef<T extends TerragruntData>(
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
-          className={cx(stepCss.formGroup, stepCss.md)}
           template={template}
           fieldPath={`spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.branch`}
         />
@@ -114,21 +110,18 @@ function TgRemoteSectionRef<T extends TerragruntData>(
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
-          className={cx(stepCss.formGroup, stepCss.md)}
           template={template}
           fieldPath={`spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.commitId`}
         />
       )}
       {isValueRuntimeInput(get(remoteVar.varFile, 'spec.store.spec.paths')) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <List
-            label={getString('filePaths')}
-            name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.paths`}
-            disabled={readonly}
-            style={{ marginBottom: 'var(--spacing-small)' }}
-            isNameOfArrayType
-          />
-        </div>
+        <List
+          label={getString('filePaths')}
+          name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.paths`}
+          disabled={readonly}
+          style={{ marginBottom: 'var(--spacing-small)' }}
+          isNameOfArrayType
+        />
       )}
     </>
   )

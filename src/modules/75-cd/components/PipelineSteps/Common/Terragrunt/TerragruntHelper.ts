@@ -6,18 +6,20 @@
  */
 
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-import { unset } from 'lodash-es'
+import { defaultTo, unset, isEmpty } from 'lodash-es'
 import type { IDialogProps } from '@blueprintjs/core'
 import type { ListType } from '@pipeline/components/List/List'
 import type {
+  StoreConfigWrapper,
   StringNGVariable,
+  TerragruntCliOptionFlag,
   TerragruntConfigFilesWrapper,
   TerragruntExecutionData,
   TerragruntModuleConfig,
   TerragruntPlanExecutionData
 } from 'services/cd-ng'
 import { BackendConfigurationTypes } from '../Terraform/TerraformInterfaces'
-import type { TerragruntData, TGPlanFormData } from './TerragruntInterface'
+import type { TerragruntData, TGPlanFormData, TGRollbackData } from './TerragruntInterface'
 
 export const onSubmitTerragruntData = (values: TerragruntData): TerragruntData => {
   const configObject: TerragruntExecutionData = {
@@ -51,6 +53,7 @@ export const onSubmitTerragruntData = (values: TerragruntData): TerragruntData =
   const backendConfigConnectorValue = values.spec.configuration?.spec?.backendConfig?.spec?.store?.spec
     ?.connectorRef as any
   const connectorValue = values.spec.configuration?.spec?.configFiles?.store?.spec?.connectorRef as any
+  const cmdFlags = values.spec.configuration?.commandFlags
 
   if (values.spec.configuration?.type === 'Inline') {
     if (values.spec.configuration?.spec?.backendConfig?.spec?.content) {
@@ -117,7 +120,7 @@ export const onSubmitTerragruntData = (values: TerragruntData): TerragruntData =
         ...values.spec.configuration?.spec?.configFiles,
         store: {
           ...values.spec.configuration?.spec?.configFiles?.store,
-          type: values.spec.configuration?.spec?.configFiles?.store?.type,
+          type: values.spec.configuration?.spec?.configFiles?.store?.type as StoreConfigWrapper['type'],
           spec: {
             ...values.spec.configuration?.spec?.configFiles?.store?.spec,
             connectorRef: values.spec.configuration?.spec?.configFiles?.store?.spec?.connectorRef
@@ -134,6 +137,7 @@ export const onSubmitTerragruntData = (values: TerragruntData): TerragruntData =
     if (values.spec.configuration?.spec?.moduleConfig) {
       configObject['moduleConfig'] = values.spec.configuration.spec?.moduleConfig as TerragruntModuleConfig
     }
+
     return {
       ...values,
       spec: {
@@ -141,6 +145,7 @@ export const onSubmitTerragruntData = (values: TerragruntData): TerragruntData =
         provisionerIdentifier: values.spec.provisionerIdentifier,
         configuration: {
           type: values.spec.configuration?.type,
+          commandFlags: processCmdFlags(cmdFlags),
           spec: {
             ...configObject
           }
@@ -155,7 +160,8 @@ export const onSubmitTerragruntData = (values: TerragruntData): TerragruntData =
       ...values.spec,
       provisionerIdentifier: values.spec.provisionerIdentifier,
       configuration: {
-        type: values.spec.configuration?.type
+        type: values.spec.configuration?.type,
+        commandFlags: processCmdFlags(cmdFlags)
       }
     }
   }
@@ -293,6 +299,10 @@ export const onSubmitTGPlanData = (values: any): TGPlanFormData => {
       : false
   }
 
+  const cmdFlags = values.spec.configuration?.commandFlags
+
+  configObject['commandFlags'] = processCmdFlags(cmdFlags)
+
   return {
     ...values,
     spec: {
@@ -312,4 +322,24 @@ export const DIALOG_PROPS: IDialogProps = {
   canOutsideClickClose: true,
   enforceFocus: false,
   style: { width: 1175, minHeight: 640, borderLeft: 0, paddingBottom: 0, position: 'relative', overflow: 'hidden' }
+}
+
+export const processCmdFlags = (cmdFlags?: TerragruntCliOptionFlag[]): TerragruntCliOptionFlag[] | undefined => {
+  if (cmdFlags?.length && cmdFlags[0].commandType) {
+    const commandFlags = cmdFlags.map((commandFlag: TerragruntCliOptionFlag) => ({
+      commandType: commandFlag.commandType,
+      flag: defaultTo(commandFlag?.flag, '')
+    }))
+    return commandFlags?.filter((currFlag: TerragruntCliOptionFlag) => !isEmpty(currFlag?.commandType))
+  }
+}
+
+export const processTgRollbackInitialValues = (data: TGRollbackData): TGRollbackData => {
+  return {
+    ...data,
+    spec: {
+      ...data.spec,
+      commandFlags: processCmdFlags(data.spec?.commandFlags)
+    }
+  }
 }

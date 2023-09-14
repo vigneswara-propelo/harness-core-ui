@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Terraform Command Flags  Test renders empty command flags panel correctly 1`] = `
+exports[`Command Flags  Test renders empty command flags panel correctly 1`] = `
 <div>
   <div>
     <div

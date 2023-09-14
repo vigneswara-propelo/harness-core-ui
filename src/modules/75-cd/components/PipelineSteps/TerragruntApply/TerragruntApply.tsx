@@ -20,7 +20,7 @@ import type { StringsMap } from 'framework/strings/StringsContext'
 import TerragruntInputStep from '../Common/Terragrunt/InputSteps/TerragruntInputStep'
 import { ConfigurationTypes } from '../Common/Terraform/TerraformInterfaces'
 import type { TerragruntData, TerragruntVariableStepProps } from '../Common/Terragrunt/TerragruntInterface'
-import { onSubmitTerragruntData } from '../Common/Terragrunt/TerragruntHelper'
+import { onSubmitTerragruntData, processCmdFlags } from '../Common/Terragrunt/TerragruntHelper'
 import { TerragruntVariableStep } from '../Common/Terragrunt/VariableView/TerragruntVariableView'
 import TerragruntEditView from '../Common/Terragrunt/EditView/TerragruntEditView'
 
@@ -108,6 +108,7 @@ export class TerragruntApply extends PipelineStep<TerragruntData> {
         ...data.spec,
         configuration: {
           ...configData,
+          commandFlags: processCmdFlags(configData?.commandFlags),
           spec: {
             ...configData?.spec,
             targets: !isTargetRunTime

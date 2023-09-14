@@ -80,6 +80,7 @@ import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/con
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
   ConnectorMap,
   ConnectorTypes,
@@ -95,10 +96,11 @@ import type {
   TGPlanFormData
 } from '../Common/Terragrunt/TerragruntInterface'
 import { BackendConfigurationTypes, CommandTypes } from '../Common/Terraform/TerraformInterfaces'
-import { DIALOG_PROPS, onSubmitTGPlanData } from '../Common/Terragrunt/TerragruntHelper'
+import { DIALOG_PROPS, onSubmitTGPlanData, processCmdFlags } from '../Common/Terragrunt/TerragruntHelper'
 import TerragruntPlanInputStep from './InputSteps/TgPlanInputStep'
 import { TerragruntPlanVariableStep } from './VariableView/TgPlanVariableView'
 import VarFileList from '../Common/VarFile/VarFileList'
+import CommandFlags from '../Common/CommandFlags/CommandFlags'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../Common/Terraform/TerraformStep.module.scss'
 
@@ -117,6 +119,7 @@ function TerragruntPlanWidget(
   const { expressions } = useVariablesExpression()
   const [connectorView, setConnectorView] = useState(false)
   const [selectedConnector, setSelectedConnector] = useState<ConnectorTypes | ''>('')
+  const { CDS_TERRAGRUNT_CLI_OPTIONS_NG } = useFeatureFlags()
 
   const commandTypeOptions: IOptionProps[] = [
     { label: getString('filters.apply'), value: CommandTypes.Apply },
@@ -850,7 +853,7 @@ function TerragruntPlanWidget(
                               <ConfigureOptions
                                 value={(values.spec.configuration?.exportTerragruntPlanJson || '') as string}
                                 type="String"
-                                variableName="spec?.configuration?.exportTerragruntPlanJson"
+                                variableName="spec.configuration.exportTerragruntPlanJson"
                                 showRequiredField={false}
                                 showDefaultField={false}
                                 onChange={
@@ -867,6 +870,23 @@ function TerragruntPlanWidget(
                     </>
                   }
                 />
+                {CDS_TERRAGRUNT_CLI_OPTIONS_NG && (
+                  <Accordion.Panel
+                    id="step-2"
+                    summary={getString('cd.commandLineOptions')}
+                    details={
+                      <>
+                        <CommandFlags
+                          formik={formik}
+                          stepType="PLAN"
+                          allowableTypes={allowableTypes}
+                          path={'spec.configuration.commandFlags'}
+                          isTerragrunt={true}
+                        />
+                      </>
+                    }
+                  />
+                )}
               </Accordion>
             </>
             {
@@ -1031,7 +1051,8 @@ export class TerragruntPlan extends PipelineStep<TGPlanFormData> {
                   id: uuid()
                 }))
               : [{ key: '', value: '', id: uuid() }]
-            : get(configData, 'environmentVariables')
+            : get(configData, 'environmentVariables'),
+          commandFlags: processCmdFlags(configData?.commandFlags)
         }
       }
     }

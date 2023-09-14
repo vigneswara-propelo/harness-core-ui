@@ -87,7 +87,7 @@ import {
   getPath
 } from '../../ConfigFileStore/ConfigFileStoreHelper'
 import VarFileList from '../../VarFile/VarFileList'
-import TerraformCommandFlags from '../../TerraformCommandFlags/TerraformCommandFlags'
+import CommandFlags from '../../CommandFlags/CommandFlags'
 import { AmazonS3Store } from '../../ConfigFileStore/AmazonS3Store/AmazonS3Store'
 import { AmazonS3StoreDataType, formatAmazonS3Data } from '../../ConfigFileStore/AmazonS3Store/AmazonS3StoreHelper'
 import { formatArtifactoryData } from '../../VarFile/helper'
@@ -875,7 +875,7 @@ export default function TerraformEditView(
                         <div className={css.optionalConfigDetails}>
                           {!enableCloudCli && skipRefreshCommandComponent(formik as FormikProps<unknown>)}
                           <div>
-                            <TerraformCommandFlags
+                            <CommandFlags
                               formik={formik}
                               stepType={initialValues?.type === StepType.TerraformDestroy ? 'DESTROY' : 'APPLY'}
                               configType={fieldPath}
@@ -915,7 +915,7 @@ export default function TerraformEditView(
                           skipRefreshCommandComponent(formik as FormikProps<unknown>)}
 
                         <div>
-                          <TerraformCommandFlags
+                          <CommandFlags
                             formik={formik}
                             stepType={initialValues?.type === StepType.TerraformDestroy ? 'DESTROY' : 'APPLY'}
                             configType={fieldPath}
@@ -941,7 +941,7 @@ export default function TerraformEditView(
                           skipRefreshCommandComponent(formik as FormikProps<unknown>)}
 
                         <div>
-                          <TerraformCommandFlags
+                          <CommandFlags
                             formik={formik}
                             stepType={initialValues?.type === StepType.TerraformDestroy ? 'DESTROY' : 'APPLY'}
                             configType={fieldPath}
