@@ -39,7 +39,7 @@ const Authentication: React.FC = () => {
   const params = useParams<AccountPathProps>()
   const { accountId } = params
   const { getString } = useStrings()
-  const { PL_ENABLE_MULTIPLE_IDP_SUPPORT } = useFeatureFlags()
+  const { PL_ENABLE_MULTIPLE_IDP_SUPPORT, PL_ALLOW_TO_SET_PUBLIC_ACCESS } = useFeatureFlags()
   const [updating, setUpdating] = React.useState(false)
 
   const permissionRequest = {
@@ -149,11 +149,13 @@ const Authentication: React.FC = () => {
               canEdit={canEdit}
               setUpdating={setUpdating}
             />
-            <EnablePublicAccess
-              enabled={data.resource.publicAccessEnabled}
-              refetchAuthSettings={refetchAuthSettings}
-              canEdit={canEdit}
-            />
+            {PL_ALLOW_TO_SET_PUBLIC_ACCESS && (
+              <EnablePublicAccess
+                enabled={data.resource.publicAccessEnabled}
+                refetchAuthSettings={refetchAuthSettings}
+                canEdit={canEdit}
+              />
+            )}
             <SessionTimeOut timeout={data.resource.sessionTimeoutInMinutes} />
           </React.Fragment>
         )}
