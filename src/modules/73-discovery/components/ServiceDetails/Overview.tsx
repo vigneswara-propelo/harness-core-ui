@@ -12,7 +12,7 @@ import { useParams } from 'react-router-dom'
 import React from 'react'
 import { useStrings } from 'framework/strings'
 import { useGetServiceFromK8SCustomService, useGetK8SCustomService } from 'services/servicediscovery'
-import type { DiscoveryPathProps } from '@common/interfaces/RouteInterfaces'
+import { DiscoveryPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import ListItems from './ListItems'
 import css from './ServiceDetails.module.scss'
 
@@ -22,7 +22,7 @@ interface OverviewProps {
 }
 
 export default function Overview({ infraId, serviceId }: OverviewProps): React.ReactElement {
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps>()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & DiscoveryPathProps>()
   const { getString } = useStrings()
   const { data: serviceData, loading: getServiceLoading } = useGetServiceFromK8SCustomService({
     agentIdentity: infraId,

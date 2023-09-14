@@ -605,6 +605,7 @@ export interface StringsMap {
   'common.invalidIdentifiers': string
   'common.invalidNames': string
   'common.invite': string
+  'common.ipAddress': string
   'common.isHelpful': string
   'common.jexlCondition': string
   'common.jexlExpression': string
@@ -5922,6 +5923,7 @@ export interface StringsMap {
   'discovery.dataCollectionSettings': string
   'discovery.dataCollectionSettingsDesc': string
   'discovery.detectNetworkTrace': string
+  'discovery.discardNetworkMap': string
   'discovery.discoverServices': string
   'discovery.discoveredBy': string
   'discovery.discoveringSpinnerMessage': string
@@ -5957,10 +5959,12 @@ export interface StringsMap {
   'discovery.networkDetails': string
   'discovery.networkMapCreated': string
   'discovery.networkMapDescription': string
-  'discovery.networkMapNameError': string
   'discovery.networkMapTable.noOfService': string
   'discovery.newNetworkMap': string
   'discovery.noDiscoveryData': string
+  'discovery.noRelatedServiceFound': string
+  'discovery.noServiceSelected': string
+  'discovery.noServiceSelectedDescription': string
   'discovery.nodeAgentSelector': string
   'discovery.notDetected': string
   'discovery.permissions.confirmDeleteDAgent': string
@@ -5974,13 +5978,14 @@ export interface StringsMap {
   'discovery.searchService': string
   'discovery.selectAConnector': string
   'discovery.selectAConnectorDescription': string
+  'discovery.selectAll': string
+  'discovery.selectRelatedServices': string
   'discovery.serviceDrawer.ipFamily': string
   'discovery.serviceDrawer.selector': string
   'discovery.serviceDrawer.workloads': string
   'discovery.tabs.configureRelations': string
   'discovery.tabs.selectServices': string
   'discovery.testConnector': string
-  'discovery.untitledNetworkMap': string
   'discovery.whatIsNetworkMap': string
   'discovery.whatIsServiceDiscovery': string
   'discovery.whatIsServiceDiscoveryDesc': string
@@ -7653,7 +7658,6 @@ export interface StringsMap {
   'ce.co.gatewayAccess.backgroundTasks': string
   'ce.co.gatewayAccess.dnsLink': string
   'ce.co.gatewayAccess.dnsLinkHeader': string
-  'ce.co.gatewayAccess.ip': string
   'ce.co.gatewayAccess.rdp': string
   'ce.co.gatewayAccess.sshRdp': string
   'ce.co.gatewayAccess.subtitle': string

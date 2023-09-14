@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { act, fireEvent, queryByText, render, waitFor } from '@testing-library/react'
 import routes from '@common/RouteDefinitions'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as servicediscovery from 'services/servicediscovery'
@@ -22,7 +22,8 @@ const PATH_PARAMS = {
   accountId: 'accountId',
   orgIdentifier: 'default',
   projectIdentifier: 'Discovery_Test',
-  module: 'chaos'
+  module: 'chaos',
+  dAgentId: 'dAgent-1'
 }
 
 const mockNetworkMapData = {
@@ -120,17 +121,149 @@ jest.mock('services/servicediscovery', () => ({
   }))
 }))
 
-describe('<DiscoveryPage /> tests', () => {
+const getEditButton = (): Element | null => document.body.querySelector('.bp3-menu span[icon="edit"]')
+const getDeleteButton = (): Element | null => document.body.querySelector('.bp3-menu span[icon="trash"]')
+const getMenuIcon = (row: Element): Element | null => {
+  const columns = row.querySelectorAll('[role="cell"]')
+  const lastColumn = columns[columns.length - 1]
+  return lastColumn.querySelector('[data-icon="Options"]')
+}
+
+describe('<NetworkMapTable /> tests with data', () => {
   beforeAll(() => {
     jest.useFakeTimers().setSystemTime(new Date('2023-06-28'))
   })
   test('should match snapshot', async () => {
-    render(
+    const { container } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
         <NetworkMapTable agentName={agentName} connectorID={k8sConnectorID} />
       </TestWrapper>
     )
     expect(useListNetworkMap).toBeCalled()
+    expect(container).toMatchSnapshot()
+  })
+
+  test('open menu and check the options', async () => {
+    const { container } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <NetworkMapTable agentName={agentName} connectorID={k8sConnectorID} />
+      </TestWrapper>
+    )
+
+    const tableRows = Array.from(container.querySelectorAll('div[role="row"]'))
+    tableRows.shift() // remove header row
+
+    const testRow = async (row: Element): Promise<void> => {
+      const menuIcon = getMenuIcon(row)
+      // assert that menu icon exists in the last column
+      expect(menuIcon).toBeTruthy()
+      const checkForMenuState = async (shouldExist = false): Promise<void> => {
+        if (shouldExist) {
+          await waitFor(() => expect(getEditButton()).toBeTruthy())
+          await waitFor(() => expect(getDeleteButton()).toBeTruthy())
+        } else {
+          await waitFor(() => expect(getEditButton()).not.toBeTruthy())
+          await waitFor(() => expect(getDeleteButton()).not.toBeTruthy())
+        }
+      }
+      // menu should not be open by default
+      await checkForMenuState()
+      act(() => {
+        fireEvent.click(menuIcon!)
+      })
+      // menu should open on clicking the options icon
+      await checkForMenuState(true)
+
+      act(() => {
+        fireEvent.mouseDown(document)
+      })
+    }
+    await testRow(tableRows[0])
+  })
+
+  test('Edit and delete methods should be called with correct data', async () => {
+    const { container } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <NetworkMapTable agentName={agentName} connectorID={k8sConnectorID} />
+      </TestWrapper>
+    )
+    const menuIcon = getMenuIcon(container.querySelectorAll('div[role="row"]')[1])
+    act(() => {
+      fireEvent.click(menuIcon!)
+    })
+
+    // Click delete and cancel
+    act(() => {
+      fireEvent.click(getDeleteButton()!)
+    })
+    await waitFor(() =>
+      expect(queryByText(document.body, 'discovery.permissions.confirmDeleteTitleNetworkMap')).toBeTruthy()
+    )
+    act(() => {
+      fireEvent.click(queryByText(document.body.querySelector('.bp3-dialog')! as HTMLElement, 'cancel')!)
+    })
+
+    // Click delete and then confirm
+    act(() => {
+      fireEvent.click(getDeleteButton()!)
+    })
+    act(() => {
+      fireEvent.click(queryByText(document.body.querySelector('.bp3-dialog')! as HTMLElement, 'delete')!)
+    })
+
+    // Click edit
+    act(() => {
+      fireEvent.click(getEditButton()!)
+    })
+    // change once edit support is added
+    expect(container).toMatchSnapshot()
+  })
+
+  test('click on new NetworkMap button', async () => {
+    const { getByText, getByTestId } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <NetworkMapTable agentName={agentName} connectorID={k8sConnectorID} />
+      </TestWrapper>
+    )
+
+    expect(useListNetworkMap).toBeCalled()
+    fireEvent.click(getByText('discovery.newNetworkMap'))
+
+    expect(getByTestId('location')).toMatchInlineSnapshot(`
+      <div
+        data-testid="location"
+      >
+        /account/accountId/home/orgs/default/projects/Discovery_Test/setup/resources/discovery/undefined/network-map-studio/-1
+      </div>
+    `)
+  })
+
+  test('test search functionality', async () => {
+    const { container, getByPlaceholderText } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <NetworkMapTable agentName={agentName} connectorID={k8sConnectorID} />
+      </TestWrapper>
+    )
+
+    const query = 'test-nw-map'
+    const searchInput = getByPlaceholderText('discovery.searchNetworkMap') as HTMLInputElement
+    expect(searchInput).not.toBe(null)
+    if (!searchInput) {
+      throw Error('no search input')
+    }
+    await act(async () => {
+      fireEvent.change(searchInput, { target: { value: query } })
+    })
+    await waitFor(() => expect(searchInput?.value).toBe(query))
+
+    expect(container).toMatchSnapshot()
+  })
+})
+
+describe('<NetworkMapTable /> tests without data', () => {
+  beforeAll(() => {
+    jest.useFakeTimers().setSystemTime(new Date('2023-06-28'))
+    jest.clearAllMocks()
   })
 
   test('should render loading view correctly', async () => {
@@ -141,7 +274,6 @@ describe('<DiscoveryPage /> tests', () => {
       }
     })
 
-    // eslint-disable-next-line @typescript-eslint/no-shadow
     const { container, getByText } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
         <NetworkMapTable agentName={agentName} connectorID={k8sConnectorID} />

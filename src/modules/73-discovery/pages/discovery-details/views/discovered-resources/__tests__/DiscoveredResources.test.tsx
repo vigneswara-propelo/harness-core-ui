@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import * as servicediscovery from 'services/servicediscovery'
 import { TestWrapper } from '@common/utils/testUtils'
 import DiscoveredResources from '../DiscoveredResources'
@@ -69,9 +70,7 @@ describe('DiscoveredResources', () => {
     if (!searchInput) {
       throw Error('no search input')
     }
-    await act(async () => {
-      fireEvent.change(searchInput, { target: { value: query } })
-    })
+    await userEvent.type(searchInput, query)
     await waitFor(() => expect(searchInput?.value).toBe(query))
 
     expect(container).toMatchSnapshot()

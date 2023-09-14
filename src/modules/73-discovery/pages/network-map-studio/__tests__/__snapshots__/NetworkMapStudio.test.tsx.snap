@@ -1,0 +1,2346 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Network Map Creation should call discard function 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+    >
+      <div
+        class="PageHeader--breadcrumbsDiv"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main Breadcrumbs--breadcrumbs StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+                data-icon="chaos-main"
+              >
+                <svg
+                  fill="none"
+                  height="16"
+                  viewBox="0 0 32 32"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M21.662 13.415a1.1 1.1 0 001.55 0 1.087 1.087 0 000-1.543l-5.647-5.62 6.837-3.929c1.6-.918 3.598.23 3.598 2.068v12.006l-8.265 1.968a1.09 1.09 0 10.51 2.122L28 18.641v8.968c0 1.838-1.999 2.986-3.598 2.068L14.89 24.21l1.331-9.568a1.092 1.092 0 00-.935-1.23 1.095 1.095 0 00-1.236.93l-1.209 8.69-8.642-4.966c-1.599-.919-1.599-3.216 0-4.134l11.4-6.551 6.063 6.033z"
+                    fill="url(#chaos-main_svg__a)"
+                    fill-rule="evenodd"
+                  />
+                  <defs>
+                    <lineargradient
+                      gradientUnits="userSpaceOnUse"
+                      id="chaos-main_svg__a"
+                      x1="12.755"
+                      x2="27.888"
+                      y1="6.364"
+                      y2="29.992"
+                    >
+                      <stop
+                        stop-color="#FF61A2"
+                      />
+                      <stop
+                        offset="1"
+                        stop-color="#D8005A"
+                      />
+                    </lineargradient>
+                  </defs>
+                </svg>
+              </span>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                Discovery_Test
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                common.discovery
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery/dAgent-1?tab=Discovered%20Resources"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                dAgent-1
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="networkMapTitle"
+      >
+        common.networkMap
+      </div>
+      <div
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-medium"
+        />
+        <span
+          class="bp3-icon StyledProps--main headerIcon"
+          data-icon="code-edit"
+          data-testid="edit"
+        >
+          <svg
+            fill="none"
+            height="20"
+            viewBox="0 0 20 20"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g
+              stroke="#383946"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M16.3 6.532a2.5 2.5 0 00-2.5-2.5L4.635 13.2v2.5h2.5z"
+              />
+              <path
+                d="M10.833 8.78l2.947-2.947"
+                opacity="0.3"
+              />
+            </g>
+          </svg>
+        </span>
+      </div>
+    </div>
+    <div
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+    >
+      <button
+        aria-label="common.discard"
+        class="bp3-button bp3-disabled bp3-loading Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+        disabled=""
+        tabindex="-1"
+        type="button"
+      >
+        <div
+          class="bp3-spinner bp3-button-spinner"
+        >
+          <div
+            class="bp3-spinner-animation"
+          >
+            <svg
+              height="20"
+              stroke-width="16.00"
+              viewBox="-3.00 -3.00 106.00 106.00"
+              width="20"
+            >
+              <path
+                class="bp3-spinner-track"
+                d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
+              />
+              <path
+                class="bp3-spinner-head"
+                d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
+                pathLength="280"
+                stroke-dasharray="280 280"
+                stroke-dashoffset="210"
+              />
+            </svg>
+          </div>
+        </div>
+        <span
+          class="bp3-button-text"
+        >
+          common.discard
+        </span>
+      </button>
+      <button
+        aria-label="create"
+        class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-success Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
+        disabled=""
+        tabindex="-1"
+        type="button"
+      >
+        <span
+          class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+          data-icon="run-pipeline"
+        >
+          <svg
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <clippath
+              id="run-pipeline_svg__a"
+            >
+              <path
+                d="M7.2 10.6V5.4L10.6 8zm4.4-3.3L7.4 4.1c-.3-.2-.6-.2-.9-.1-.3.2-.5.5-.5.8v6.4c0 .3.2.6.5.8.3.1.6.1.9-.1l4.2-3.2c.2-.2.3-.4.3-.7s-.1-.5-.3-.7zm1.1 5.4c-2.2 2.2-5.7 2.6-8.4.8s-3.6-5.1-2.4-8 4.3-4.6 7.4-4 5.3 3.3 5.3 6.5c.1 1.8-.6 3.4-1.9 4.7zm2.7-7.8C13.8 1.1 9.6-.9 5.7.4 1.7 1.6-.7 5.6.2 9.6s4.5 6.8 8.6 6.4S16 12.2 16 8c0-1.1-.2-2.1-.6-3.1z"
+              />
+            </clippath>
+            <path
+              clip-path="url(#run-pipeline_svg__a)"
+              d="M-5-5h26v26H-5z"
+              fill="#54b610"
+            />
+          </svg>
+        </span>
+        <span
+          class="bp3-button-text"
+        >
+          create
+        </span>
+      </button>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main PageBody--pageBody listBody"
+    data-name="page-body"
+    data-testid="page-body"
+  >
+    <section
+      class="setupShell"
+    >
+      <div
+        class="bp3-tabs Tabs--main Tabs--horizontal"
+      >
+        <div
+          class="bp3-tab-list"
+          role="tablist"
+        >
+          <div
+            class="bp3-tab-indicator-wrapper"
+            style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+          >
+            <div
+              class="bp3-tab-indicator"
+            />
+          </div>
+          <div
+            aria-controls="bp3-tab-panel_networkMapTabs_Select Services"
+            aria-disabled="false"
+            aria-expanded="true"
+            aria-selected="true"
+            class="bp3-tab"
+            data-tab-id="Select Services"
+            id="bp3-tab-title_networkMapTabs_Select Services"
+            role="tab"
+            tabindex="0"
+          >
+            discovery.tabs.selectServices
+          </div>
+          <span
+            class="bp3-icon bp3-icon-chevron-right StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small StyledProps--color StyledProps--color-grey400"
+            icon="chevron-right"
+            style="align-self: center; height: 20px;"
+          >
+            <svg
+              data-icon="chevron-right"
+              height="20"
+              viewBox="0 0 20 20"
+              width="20"
+            >
+              <desc>
+                chevron-right
+              </desc>
+              <path
+                d="M13.71 9.29l-6-6a1.003 1.003 0 00-1.42 1.42l5.3 5.29-5.29 5.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l6-6c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          <div
+            aria-controls="bp3-tab-panel_networkMapTabs_Configure Relations"
+            aria-disabled="true"
+            aria-expanded="false"
+            aria-selected="false"
+            class="bp3-tab"
+            data-tab-id="Configure Relations"
+            id="bp3-tab-title_networkMapTabs_Configure Relations"
+            role="tab"
+          >
+            discovery.tabs.configureRelations
+          </div>
+        </div>
+        <div
+          aria-hidden="false"
+          aria-labelledby="bp3-tab-title_networkMapTabs_Select Services"
+          class="bp3-tab-panel"
+          id="bp3-tab-panel_networkMapTabs_Select Services"
+          role="tabpanel"
+        >
+          <div
+            class="discovery-view-mock"
+          >
+            <p>
+              Select Service
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+`;
+
+exports[`Network Map Creation should call discard function 2`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+    >
+      <div
+        class="PageHeader--breadcrumbsDiv"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main Breadcrumbs--breadcrumbs StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+                data-icon="chaos-main"
+              >
+                <svg
+                  fill="none"
+                  height="16"
+                  viewBox="0 0 32 32"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M21.662 13.415a1.1 1.1 0 001.55 0 1.087 1.087 0 000-1.543l-5.647-5.62 6.837-3.929c1.6-.918 3.598.23 3.598 2.068v12.006l-8.265 1.968a1.09 1.09 0 10.51 2.122L28 18.641v8.968c0 1.838-1.999 2.986-3.598 2.068L14.89 24.21l1.331-9.568a1.092 1.092 0 00-.935-1.23 1.095 1.095 0 00-1.236.93l-1.209 8.69-8.642-4.966c-1.599-.919-1.599-3.216 0-4.134l11.4-6.551 6.063 6.033z"
+                    fill="url(#chaos-main_svg__a)"
+                    fill-rule="evenodd"
+                  />
+                  <defs>
+                    <lineargradient
+                      gradientUnits="userSpaceOnUse"
+                      id="chaos-main_svg__a"
+                      x1="12.755"
+                      x2="27.888"
+                      y1="6.364"
+                      y2="29.992"
+                    >
+                      <stop
+                        stop-color="#FF61A2"
+                      />
+                      <stop
+                        offset="1"
+                        stop-color="#D8005A"
+                      />
+                    </lineargradient>
+                  </defs>
+                </svg>
+              </span>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                Discovery_Test
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                common.discovery
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery/dAgent-1?tab=Discovered%20Resources"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                dAgent-1
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="networkMapTitle"
+      >
+        common.networkMap
+      </div>
+      <div
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-medium"
+        />
+        <span
+          class="bp3-icon StyledProps--main headerIcon"
+          data-icon="code-edit"
+          data-testid="edit"
+        >
+          <svg
+            fill="none"
+            height="20"
+            viewBox="0 0 20 20"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g
+              stroke="#383946"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M16.3 6.532a2.5 2.5 0 00-2.5-2.5L4.635 13.2v2.5h2.5z"
+              />
+              <path
+                d="M10.833 8.78l2.947-2.947"
+                opacity="0.3"
+              />
+            </g>
+          </svg>
+        </span>
+      </div>
+    </div>
+    <div
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+    >
+      <button
+        aria-label="common.discard"
+        class="bp3-button bp3-disabled bp3-loading Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+        disabled=""
+        tabindex="-1"
+        type="button"
+      >
+        <div
+          class="bp3-spinner bp3-button-spinner"
+        >
+          <div
+            class="bp3-spinner-animation"
+          >
+            <svg
+              height="20"
+              stroke-width="16.00"
+              viewBox="-3.00 -3.00 106.00 106.00"
+              width="20"
+            >
+              <path
+                class="bp3-spinner-track"
+                d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
+              />
+              <path
+                class="bp3-spinner-head"
+                d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
+                pathLength="280"
+                stroke-dasharray="280 280"
+                stroke-dashoffset="210"
+              />
+            </svg>
+          </div>
+        </div>
+        <span
+          class="bp3-button-text"
+        >
+          common.discard
+        </span>
+      </button>
+      <button
+        aria-label="create"
+        class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-success Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
+        disabled=""
+        tabindex="-1"
+        type="button"
+      >
+        <span
+          class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+          data-icon="run-pipeline"
+        >
+          <svg
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <clippath
+              id="run-pipeline_svg__a"
+            >
+              <path
+                d="M7.2 10.6V5.4L10.6 8zm4.4-3.3L7.4 4.1c-.3-.2-.6-.2-.9-.1-.3.2-.5.5-.5.8v6.4c0 .3.2.6.5.8.3.1.6.1.9-.1l4.2-3.2c.2-.2.3-.4.3-.7s-.1-.5-.3-.7zm1.1 5.4c-2.2 2.2-5.7 2.6-8.4.8s-3.6-5.1-2.4-8 4.3-4.6 7.4-4 5.3 3.3 5.3 6.5c.1 1.8-.6 3.4-1.9 4.7zm2.7-7.8C13.8 1.1 9.6-.9 5.7.4 1.7 1.6-.7 5.6.2 9.6s4.5 6.8 8.6 6.4S16 12.2 16 8c0-1.1-.2-2.1-.6-3.1z"
+              />
+            </clippath>
+            <path
+              clip-path="url(#run-pipeline_svg__a)"
+              d="M-5-5h26v26H-5z"
+              fill="#54b610"
+            />
+          </svg>
+        </span>
+        <span
+          class="bp3-button-text"
+        >
+          create
+        </span>
+      </button>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main PageBody--pageBody listBody"
+    data-name="page-body"
+    data-testid="page-body"
+  >
+    <section
+      class="setupShell"
+    >
+      <div
+        class="bp3-tabs Tabs--main Tabs--horizontal"
+      >
+        <div
+          class="bp3-tab-list"
+          role="tablist"
+        >
+          <div
+            class="bp3-tab-indicator-wrapper"
+            style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+          >
+            <div
+              class="bp3-tab-indicator"
+            />
+          </div>
+          <div
+            aria-controls="bp3-tab-panel_networkMapTabs_Select Services"
+            aria-disabled="false"
+            aria-expanded="true"
+            aria-selected="true"
+            class="bp3-tab"
+            data-tab-id="Select Services"
+            id="bp3-tab-title_networkMapTabs_Select Services"
+            role="tab"
+            tabindex="0"
+          >
+            discovery.tabs.selectServices
+          </div>
+          <span
+            class="bp3-icon bp3-icon-chevron-right StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small StyledProps--color StyledProps--color-grey400"
+            icon="chevron-right"
+            style="align-self: center; height: 20px;"
+          >
+            <svg
+              data-icon="chevron-right"
+              height="20"
+              viewBox="0 0 20 20"
+              width="20"
+            >
+              <desc>
+                chevron-right
+              </desc>
+              <path
+                d="M13.71 9.29l-6-6a1.003 1.003 0 00-1.42 1.42l5.3 5.29-5.29 5.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l6-6c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          <div
+            aria-controls="bp3-tab-panel_networkMapTabs_Configure Relations"
+            aria-disabled="true"
+            aria-expanded="false"
+            aria-selected="false"
+            class="bp3-tab"
+            data-tab-id="Configure Relations"
+            id="bp3-tab-title_networkMapTabs_Configure Relations"
+            role="tab"
+          >
+            discovery.tabs.configureRelations
+          </div>
+        </div>
+        <div
+          aria-hidden="false"
+          aria-labelledby="bp3-tab-title_networkMapTabs_Select Services"
+          class="bp3-tab-panel"
+          id="bp3-tab-panel_networkMapTabs_Select Services"
+          role="tabpanel"
+        >
+          <div
+            class="discovery-view-mock"
+          >
+            <p>
+              Select Service
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+`;
+
+exports[`Network Map Creation should change tabs 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+    >
+      <div
+        class="PageHeader--breadcrumbsDiv"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main Breadcrumbs--breadcrumbs StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+                data-icon="chaos-main"
+              >
+                <svg
+                  fill="none"
+                  height="16"
+                  viewBox="0 0 32 32"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M21.662 13.415a1.1 1.1 0 001.55 0 1.087 1.087 0 000-1.543l-5.647-5.62 6.837-3.929c1.6-.918 3.598.23 3.598 2.068v12.006l-8.265 1.968a1.09 1.09 0 10.51 2.122L28 18.641v8.968c0 1.838-1.999 2.986-3.598 2.068L14.89 24.21l1.331-9.568a1.092 1.092 0 00-.935-1.23 1.095 1.095 0 00-1.236.93l-1.209 8.69-8.642-4.966c-1.599-.919-1.599-3.216 0-4.134l11.4-6.551 6.063 6.033z"
+                    fill="url(#chaos-main_svg__a)"
+                    fill-rule="evenodd"
+                  />
+                  <defs>
+                    <lineargradient
+                      gradientUnits="userSpaceOnUse"
+                      id="chaos-main_svg__a"
+                      x1="12.755"
+                      x2="27.888"
+                      y1="6.364"
+                      y2="29.992"
+                    >
+                      <stop
+                        stop-color="#FF61A2"
+                      />
+                      <stop
+                        offset="1"
+                        stop-color="#D8005A"
+                      />
+                    </lineargradient>
+                  </defs>
+                </svg>
+              </span>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                Discovery_Test
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                common.discovery
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery/dAgent-1?tab=Discovered%20Resources"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                dAgent-1
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="networkMapTitle"
+      >
+        common.networkMap
+      </div>
+      <div
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-medium"
+        />
+        <span
+          class="bp3-icon StyledProps--main headerIcon"
+          data-icon="code-edit"
+          data-testid="edit"
+        >
+          <svg
+            fill="none"
+            height="20"
+            viewBox="0 0 20 20"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g
+              stroke="#383946"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M16.3 6.532a2.5 2.5 0 00-2.5-2.5L4.635 13.2v2.5h2.5z"
+              />
+              <path
+                d="M10.833 8.78l2.947-2.947"
+                opacity="0.3"
+              />
+            </g>
+          </svg>
+        </span>
+      </div>
+    </div>
+    <div
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+    >
+      <button
+        aria-label="common.discard"
+        class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          common.discard
+        </span>
+      </button>
+      <button
+        aria-label="create"
+        class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-success Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
+        disabled=""
+        tabindex="-1"
+        type="button"
+      >
+        <span
+          class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+          data-icon="run-pipeline"
+        >
+          <svg
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <clippath
+              id="run-pipeline_svg__a"
+            >
+              <path
+                d="M7.2 10.6V5.4L10.6 8zm4.4-3.3L7.4 4.1c-.3-.2-.6-.2-.9-.1-.3.2-.5.5-.5.8v6.4c0 .3.2.6.5.8.3.1.6.1.9-.1l4.2-3.2c.2-.2.3-.4.3-.7s-.1-.5-.3-.7zm1.1 5.4c-2.2 2.2-5.7 2.6-8.4.8s-3.6-5.1-2.4-8 4.3-4.6 7.4-4 5.3 3.3 5.3 6.5c.1 1.8-.6 3.4-1.9 4.7zm2.7-7.8C13.8 1.1 9.6-.9 5.7.4 1.7 1.6-.7 5.6.2 9.6s4.5 6.8 8.6 6.4S16 12.2 16 8c0-1.1-.2-2.1-.6-3.1z"
+              />
+            </clippath>
+            <path
+              clip-path="url(#run-pipeline_svg__a)"
+              d="M-5-5h26v26H-5z"
+              fill="#54b610"
+            />
+          </svg>
+        </span>
+        <span
+          class="bp3-button-text"
+        >
+          create
+        </span>
+      </button>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main PageBody--pageBody listBody"
+    data-name="page-body"
+    data-testid="page-body"
+  >
+    <section
+      class="setupShell"
+    >
+      <div
+        class="bp3-tabs Tabs--main Tabs--horizontal"
+      >
+        <div
+          class="bp3-tab-list"
+          role="tablist"
+        >
+          <div
+            class="bp3-tab-indicator-wrapper"
+            style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+          >
+            <div
+              class="bp3-tab-indicator"
+            />
+          </div>
+          <div
+            aria-controls="bp3-tab-panel_networkMapTabs_Select Services"
+            aria-disabled="false"
+            aria-expanded="true"
+            aria-selected="true"
+            class="bp3-tab"
+            data-tab-id="Select Services"
+            id="bp3-tab-title_networkMapTabs_Select Services"
+            role="tab"
+            tabindex="0"
+          >
+            discovery.tabs.selectServices
+          </div>
+          <span
+            class="bp3-icon bp3-icon-chevron-right StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small StyledProps--color StyledProps--color-grey400"
+            icon="chevron-right"
+            style="align-self: center; height: 20px;"
+          >
+            <svg
+              data-icon="chevron-right"
+              height="20"
+              viewBox="0 0 20 20"
+              width="20"
+            >
+              <desc>
+                chevron-right
+              </desc>
+              <path
+                d="M13.71 9.29l-6-6a1.003 1.003 0 00-1.42 1.42l5.3 5.29-5.29 5.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l6-6c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          <div
+            aria-controls="bp3-tab-panel_networkMapTabs_Configure Relations"
+            aria-disabled="true"
+            aria-expanded="false"
+            aria-selected="false"
+            class="bp3-tab"
+            data-tab-id="Configure Relations"
+            id="bp3-tab-title_networkMapTabs_Configure Relations"
+            role="tab"
+          >
+            discovery.tabs.configureRelations
+          </div>
+        </div>
+        <div
+          aria-hidden="false"
+          aria-labelledby="bp3-tab-title_networkMapTabs_Select Services"
+          class="bp3-tab-panel"
+          id="bp3-tab-panel_networkMapTabs_Select Services"
+          role="tabpanel"
+        >
+          <div
+            class="discovery-view-mock"
+          >
+            <p>
+              Select Service
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+`;
+
+exports[`Network Map Creation should edit name and description 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+    >
+      <div
+        class="PageHeader--breadcrumbsDiv"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main Breadcrumbs--breadcrumbs StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+                data-icon="chaos-main"
+              >
+                <svg
+                  fill="none"
+                  height="16"
+                  viewBox="0 0 32 32"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M21.662 13.415a1.1 1.1 0 001.55 0 1.087 1.087 0 000-1.543l-5.647-5.62 6.837-3.929c1.6-.918 3.598.23 3.598 2.068v12.006l-8.265 1.968a1.09 1.09 0 10.51 2.122L28 18.641v8.968c0 1.838-1.999 2.986-3.598 2.068L14.89 24.21l1.331-9.568a1.092 1.092 0 00-.935-1.23 1.095 1.095 0 00-1.236.93l-1.209 8.69-8.642-4.966c-1.599-.919-1.599-3.216 0-4.134l11.4-6.551 6.063 6.033z"
+                    fill="url(#chaos-main_svg__a)"
+                    fill-rule="evenodd"
+                  />
+                  <defs>
+                    <lineargradient
+                      gradientUnits="userSpaceOnUse"
+                      id="chaos-main_svg__a"
+                      x1="12.755"
+                      x2="27.888"
+                      y1="6.364"
+                      y2="29.992"
+                    >
+                      <stop
+                        stop-color="#FF61A2"
+                      />
+                      <stop
+                        offset="1"
+                        stop-color="#D8005A"
+                      />
+                    </lineargradient>
+                  </defs>
+                </svg>
+              </span>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                Discovery_Test
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                common.discovery
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery/dAgent-1?tab=Discovered%20Resources"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                dAgent-1
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="networkMapTitle"
+      >
+        common.networkMap
+      </div>
+      <div
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-medium"
+        />
+        <span
+          class="bp3-icon StyledProps--main headerIcon"
+          data-icon="code-edit"
+          data-testid="edit"
+        >
+          <svg
+            fill="none"
+            height="20"
+            viewBox="0 0 20 20"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g
+              stroke="#383946"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M16.3 6.532a2.5 2.5 0 00-2.5-2.5L4.635 13.2v2.5h2.5z"
+              />
+              <path
+                d="M10.833 8.78l2.947-2.947"
+                opacity="0.3"
+              />
+            </g>
+          </svg>
+        </span>
+      </div>
+    </div>
+    <div
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+    >
+      <button
+        aria-label="common.discard"
+        class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          common.discard
+        </span>
+      </button>
+      <button
+        aria-label="create"
+        class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-success Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
+        disabled=""
+        tabindex="-1"
+        type="button"
+      >
+        <span
+          class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+          data-icon="run-pipeline"
+        >
+          <svg
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <clippath
+              id="run-pipeline_svg__a"
+            >
+              <path
+                d="M7.2 10.6V5.4L10.6 8zm4.4-3.3L7.4 4.1c-.3-.2-.6-.2-.9-.1-.3.2-.5.5-.5.8v6.4c0 .3.2.6.5.8.3.1.6.1.9-.1l4.2-3.2c.2-.2.3-.4.3-.7s-.1-.5-.3-.7zm1.1 5.4c-2.2 2.2-5.7 2.6-8.4.8s-3.6-5.1-2.4-8 4.3-4.6 7.4-4 5.3 3.3 5.3 6.5c.1 1.8-.6 3.4-1.9 4.7zm2.7-7.8C13.8 1.1 9.6-.9 5.7.4 1.7 1.6-.7 5.6.2 9.6s4.5 6.8 8.6 6.4S16 12.2 16 8c0-1.1-.2-2.1-.6-3.1z"
+              />
+            </clippath>
+            <path
+              clip-path="url(#run-pipeline_svg__a)"
+              d="M-5-5h26v26H-5z"
+              fill="#54b610"
+            />
+          </svg>
+        </span>
+        <span
+          class="bp3-button-text"
+        >
+          create
+        </span>
+      </button>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main PageBody--pageBody listBody"
+    data-name="page-body"
+    data-testid="page-body"
+  >
+    <section
+      class="setupShell"
+    >
+      <div
+        class="bp3-tabs Tabs--main Tabs--horizontal"
+      >
+        <div
+          class="bp3-tab-list"
+          role="tablist"
+        >
+          <div
+            class="bp3-tab-indicator-wrapper"
+            style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+          >
+            <div
+              class="bp3-tab-indicator"
+            />
+          </div>
+          <div
+            aria-controls="bp3-tab-panel_networkMapTabs_Select Services"
+            aria-disabled="false"
+            aria-expanded="true"
+            aria-selected="true"
+            class="bp3-tab"
+            data-tab-id="Select Services"
+            id="bp3-tab-title_networkMapTabs_Select Services"
+            role="tab"
+            tabindex="0"
+          >
+            discovery.tabs.selectServices
+          </div>
+          <span
+            class="bp3-icon bp3-icon-chevron-right StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small StyledProps--color StyledProps--color-grey400"
+            icon="chevron-right"
+            style="align-self: center; height: 20px;"
+          >
+            <svg
+              data-icon="chevron-right"
+              height="20"
+              viewBox="0 0 20 20"
+              width="20"
+            >
+              <desc>
+                chevron-right
+              </desc>
+              <path
+                d="M13.71 9.29l-6-6a1.003 1.003 0 00-1.42 1.42l5.3 5.29-5.29 5.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l6-6c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          <div
+            aria-controls="bp3-tab-panel_networkMapTabs_Configure Relations"
+            aria-disabled="true"
+            aria-expanded="false"
+            aria-selected="false"
+            class="bp3-tab"
+            data-tab-id="Configure Relations"
+            id="bp3-tab-title_networkMapTabs_Configure Relations"
+            role="tab"
+          >
+            discovery.tabs.configureRelations
+          </div>
+        </div>
+        <div
+          aria-hidden="false"
+          aria-labelledby="bp3-tab-title_networkMapTabs_Select Services"
+          class="bp3-tab-panel"
+          id="bp3-tab-panel_networkMapTabs_Select Services"
+          role="tabpanel"
+        >
+          <div
+            class="discovery-view-mock"
+          >
+            <p>
+              Select Service
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+`;
+
+exports[`Network Map Creation should render the component 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+    >
+      <div
+        class="PageHeader--breadcrumbsDiv"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main Breadcrumbs--breadcrumbs StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+                data-icon="chaos-main"
+              >
+                <svg
+                  fill="none"
+                  height="16"
+                  viewBox="0 0 32 32"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M21.662 13.415a1.1 1.1 0 001.55 0 1.087 1.087 0 000-1.543l-5.647-5.62 6.837-3.929c1.6-.918 3.598.23 3.598 2.068v12.006l-8.265 1.968a1.09 1.09 0 10.51 2.122L28 18.641v8.968c0 1.838-1.999 2.986-3.598 2.068L14.89 24.21l1.331-9.568a1.092 1.092 0 00-.935-1.23 1.095 1.095 0 00-1.236.93l-1.209 8.69-8.642-4.966c-1.599-.919-1.599-3.216 0-4.134l11.4-6.551 6.063 6.033z"
+                    fill="url(#chaos-main_svg__a)"
+                    fill-rule="evenodd"
+                  />
+                  <defs>
+                    <lineargradient
+                      gradientUnits="userSpaceOnUse"
+                      id="chaos-main_svg__a"
+                      x1="12.755"
+                      x2="27.888"
+                      y1="6.364"
+                      y2="29.992"
+                    >
+                      <stop
+                        stop-color="#FF61A2"
+                      />
+                      <stop
+                        offset="1"
+                        stop-color="#D8005A"
+                      />
+                    </lineargradient>
+                  </defs>
+                </svg>
+              </span>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                Discovery_Test
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                common.discovery
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery/dAgent-1?tab=Discovered%20Resources"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                dAgent-1
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="networkMapTitle"
+      >
+        common.networkMap
+      </div>
+      <div
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-medium"
+        />
+        <span
+          class="bp3-icon StyledProps--main headerIcon"
+          data-icon="code-edit"
+          data-testid="edit"
+        >
+          <svg
+            fill="none"
+            height="20"
+            viewBox="0 0 20 20"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g
+              stroke="#383946"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M16.3 6.532a2.5 2.5 0 00-2.5-2.5L4.635 13.2v2.5h2.5z"
+              />
+              <path
+                d="M10.833 8.78l2.947-2.947"
+                opacity="0.3"
+              />
+            </g>
+          </svg>
+        </span>
+      </div>
+    </div>
+    <div
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+    >
+      <button
+        aria-label="common.discard"
+        class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          common.discard
+        </span>
+      </button>
+      <button
+        aria-label="create"
+        class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-success Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
+        disabled=""
+        tabindex="-1"
+        type="button"
+      >
+        <span
+          class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+          data-icon="run-pipeline"
+        >
+          <svg
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <clippath
+              id="run-pipeline_svg__a"
+            >
+              <path
+                d="M7.2 10.6V5.4L10.6 8zm4.4-3.3L7.4 4.1c-.3-.2-.6-.2-.9-.1-.3.2-.5.5-.5.8v6.4c0 .3.2.6.5.8.3.1.6.1.9-.1l4.2-3.2c.2-.2.3-.4.3-.7s-.1-.5-.3-.7zm1.1 5.4c-2.2 2.2-5.7 2.6-8.4.8s-3.6-5.1-2.4-8 4.3-4.6 7.4-4 5.3 3.3 5.3 6.5c.1 1.8-.6 3.4-1.9 4.7zm2.7-7.8C13.8 1.1 9.6-.9 5.7.4 1.7 1.6-.7 5.6.2 9.6s4.5 6.8 8.6 6.4S16 12.2 16 8c0-1.1-.2-2.1-.6-3.1z"
+              />
+            </clippath>
+            <path
+              clip-path="url(#run-pipeline_svg__a)"
+              d="M-5-5h26v26H-5z"
+              fill="#54b610"
+            />
+          </svg>
+        </span>
+        <span
+          class="bp3-button-text"
+        >
+          create
+        </span>
+      </button>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main PageBody--pageBody listBody"
+    data-name="page-body"
+    data-testid="page-body"
+  >
+    <section
+      class="setupShell"
+    >
+      <div
+        class="bp3-tabs Tabs--main Tabs--horizontal"
+      >
+        <div
+          class="bp3-tab-list"
+          role="tablist"
+        >
+          <div
+            class="bp3-tab-indicator-wrapper"
+            style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+          >
+            <div
+              class="bp3-tab-indicator"
+            />
+          </div>
+          <div
+            aria-controls="bp3-tab-panel_networkMapTabs_Select Services"
+            aria-disabled="false"
+            aria-expanded="true"
+            aria-selected="true"
+            class="bp3-tab"
+            data-tab-id="Select Services"
+            id="bp3-tab-title_networkMapTabs_Select Services"
+            role="tab"
+            tabindex="0"
+          >
+            discovery.tabs.selectServices
+          </div>
+          <span
+            class="bp3-icon bp3-icon-chevron-right StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small StyledProps--color StyledProps--color-grey400"
+            icon="chevron-right"
+            style="align-self: center; height: 20px;"
+          >
+            <svg
+              data-icon="chevron-right"
+              height="20"
+              viewBox="0 0 20 20"
+              width="20"
+            >
+              <desc>
+                chevron-right
+              </desc>
+              <path
+                d="M13.71 9.29l-6-6a1.003 1.003 0 00-1.42 1.42l5.3 5.29-5.29 5.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l6-6c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          <div
+            aria-controls="bp3-tab-panel_networkMapTabs_Configure Relations"
+            aria-disabled="true"
+            aria-expanded="false"
+            aria-selected="false"
+            class="bp3-tab"
+            data-tab-id="Configure Relations"
+            id="bp3-tab-title_networkMapTabs_Configure Relations"
+            role="tab"
+          >
+            discovery.tabs.configureRelations
+          </div>
+        </div>
+        <div
+          aria-hidden="false"
+          aria-labelledby="bp3-tab-title_networkMapTabs_Select Services"
+          class="bp3-tab-panel"
+          id="bp3-tab-panel_networkMapTabs_Select Services"
+          role="tabpanel"
+        >
+          <div
+            class="discovery-view-mock"
+          >
+            <p>
+              Select Service
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+`;
+
+exports[`Network Map Creation should switch tabs 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+    >
+      <div
+        class="PageHeader--breadcrumbsDiv"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main Breadcrumbs--breadcrumbs StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+                data-icon="chaos-main"
+              >
+                <svg
+                  fill="none"
+                  height="16"
+                  viewBox="0 0 32 32"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M21.662 13.415a1.1 1.1 0 001.55 0 1.087 1.087 0 000-1.543l-5.647-5.62 6.837-3.929c1.6-.918 3.598.23 3.598 2.068v12.006l-8.265 1.968a1.09 1.09 0 10.51 2.122L28 18.641v8.968c0 1.838-1.999 2.986-3.598 2.068L14.89 24.21l1.331-9.568a1.092 1.092 0 00-.935-1.23 1.095 1.095 0 00-1.236.93l-1.209 8.69-8.642-4.966c-1.599-.919-1.599-3.216 0-4.134l11.4-6.551 6.063 6.033z"
+                    fill="url(#chaos-main_svg__a)"
+                    fill-rule="evenodd"
+                  />
+                  <defs>
+                    <lineargradient
+                      gradientUnits="userSpaceOnUse"
+                      id="chaos-main_svg__a"
+                      x1="12.755"
+                      x2="27.888"
+                      y1="6.364"
+                      y2="29.992"
+                    >
+                      <stop
+                        stop-color="#FF61A2"
+                      />
+                      <stop
+                        offset="1"
+                        stop-color="#D8005A"
+                      />
+                    </lineargradient>
+                  </defs>
+                </svg>
+              </span>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                Discovery_Test
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                common.discovery
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery/dAgent-1?tab=Discovered%20Resources"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                dAgent-1
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="networkMapTitle"
+      >
+        common.networkMap
+      </div>
+      <div
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-medium"
+        />
+        <span
+          class="bp3-icon StyledProps--main headerIcon"
+          data-icon="code-edit"
+          data-testid="edit"
+        >
+          <svg
+            fill="none"
+            height="20"
+            viewBox="0 0 20 20"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g
+              stroke="#383946"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M16.3 6.532a2.5 2.5 0 00-2.5-2.5L4.635 13.2v2.5h2.5z"
+              />
+              <path
+                d="M10.833 8.78l2.947-2.947"
+                opacity="0.3"
+              />
+            </g>
+          </svg>
+        </span>
+      </div>
+    </div>
+    <div
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+    >
+      <button
+        aria-label="common.discard"
+        class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          common.discard
+        </span>
+      </button>
+      <button
+        aria-label="create"
+        class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-success Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
+        disabled=""
+        tabindex="-1"
+        type="button"
+      >
+        <span
+          class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+          data-icon="run-pipeline"
+        >
+          <svg
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <clippath
+              id="run-pipeline_svg__a"
+            >
+              <path
+                d="M7.2 10.6V5.4L10.6 8zm4.4-3.3L7.4 4.1c-.3-.2-.6-.2-.9-.1-.3.2-.5.5-.5.8v6.4c0 .3.2.6.5.8.3.1.6.1.9-.1l4.2-3.2c.2-.2.3-.4.3-.7s-.1-.5-.3-.7zm1.1 5.4c-2.2 2.2-5.7 2.6-8.4.8s-3.6-5.1-2.4-8 4.3-4.6 7.4-4 5.3 3.3 5.3 6.5c.1 1.8-.6 3.4-1.9 4.7zm2.7-7.8C13.8 1.1 9.6-.9 5.7.4 1.7 1.6-.7 5.6.2 9.6s4.5 6.8 8.6 6.4S16 12.2 16 8c0-1.1-.2-2.1-.6-3.1z"
+              />
+            </clippath>
+            <path
+              clip-path="url(#run-pipeline_svg__a)"
+              d="M-5-5h26v26H-5z"
+              fill="#54b610"
+            />
+          </svg>
+        </span>
+        <span
+          class="bp3-button-text"
+        >
+          create
+        </span>
+      </button>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main PageBody--pageBody listBody"
+    data-name="page-body"
+    data-testid="page-body"
+  >
+    <section
+      class="setupShell"
+    >
+      <div
+        class="bp3-tabs Tabs--main Tabs--horizontal"
+      >
+        <div
+          class="bp3-tab-list"
+          role="tablist"
+        >
+          <div
+            class="bp3-tab-indicator-wrapper"
+            style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+          >
+            <div
+              class="bp3-tab-indicator"
+            />
+          </div>
+          <div
+            aria-controls="bp3-tab-panel_networkMapTabs_Select Services"
+            aria-disabled="false"
+            aria-expanded="true"
+            aria-selected="true"
+            class="bp3-tab"
+            data-tab-id="Select Services"
+            id="bp3-tab-title_networkMapTabs_Select Services"
+            role="tab"
+            tabindex="0"
+          >
+            discovery.tabs.selectServices
+          </div>
+          <span
+            class="bp3-icon bp3-icon-chevron-right StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small StyledProps--color StyledProps--color-grey400"
+            icon="chevron-right"
+            style="align-self: center; height: 20px;"
+          >
+            <svg
+              data-icon="chevron-right"
+              height="20"
+              viewBox="0 0 20 20"
+              width="20"
+            >
+              <desc>
+                chevron-right
+              </desc>
+              <path
+                d="M13.71 9.29l-6-6a1.003 1.003 0 00-1.42 1.42l5.3 5.29-5.29 5.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l6-6c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          <div
+            aria-controls="bp3-tab-panel_networkMapTabs_Configure Relations"
+            aria-disabled="true"
+            aria-expanded="false"
+            aria-selected="false"
+            class="bp3-tab"
+            data-tab-id="Configure Relations"
+            id="bp3-tab-title_networkMapTabs_Configure Relations"
+            role="tab"
+          >
+            discovery.tabs.configureRelations
+          </div>
+        </div>
+        <div
+          aria-hidden="false"
+          aria-labelledby="bp3-tab-title_networkMapTabs_Select Services"
+          class="bp3-tab-panel"
+          id="bp3-tab-panel_networkMapTabs_Select Services"
+          role="tabpanel"
+        >
+          <div
+            class="discovery-view-mock"
+          >
+            <p>
+              Select Service
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+`;
+
+exports[`Network Map Creation should switch tabs 2`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+    >
+      <div
+        class="PageHeader--breadcrumbsDiv"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main Breadcrumbs--breadcrumbs StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+                data-icon="chaos-main"
+              >
+                <svg
+                  fill="none"
+                  height="16"
+                  viewBox="0 0 32 32"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M21.662 13.415a1.1 1.1 0 001.55 0 1.087 1.087 0 000-1.543l-5.647-5.62 6.837-3.929c1.6-.918 3.598.23 3.598 2.068v12.006l-8.265 1.968a1.09 1.09 0 10.51 2.122L28 18.641v8.968c0 1.838-1.999 2.986-3.598 2.068L14.89 24.21l1.331-9.568a1.092 1.092 0 00-.935-1.23 1.095 1.095 0 00-1.236.93l-1.209 8.69-8.642-4.966c-1.599-.919-1.599-3.216 0-4.134l11.4-6.551 6.063 6.033z"
+                    fill="url(#chaos-main_svg__a)"
+                    fill-rule="evenodd"
+                  />
+                  <defs>
+                    <lineargradient
+                      gradientUnits="userSpaceOnUse"
+                      id="chaos-main_svg__a"
+                      x1="12.755"
+                      x2="27.888"
+                      y1="6.364"
+                      y2="29.992"
+                    >
+                      <stop
+                        stop-color="#FF61A2"
+                      />
+                      <stop
+                        offset="1"
+                        stop-color="#D8005A"
+                      />
+                    </lineargradient>
+                  </defs>
+                </svg>
+              </span>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                Discovery_Test
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                common.discovery
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery/dAgent-1?tab=Discovered%20Resources"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                dAgent-1
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="networkMapTitle"
+      >
+        common.networkMap
+      </div>
+      <div
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-medium"
+        />
+        <span
+          class="bp3-icon StyledProps--main headerIcon"
+          data-icon="code-edit"
+          data-testid="edit"
+        >
+          <svg
+            fill="none"
+            height="20"
+            viewBox="0 0 20 20"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g
+              stroke="#383946"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M16.3 6.532a2.5 2.5 0 00-2.5-2.5L4.635 13.2v2.5h2.5z"
+              />
+              <path
+                d="M10.833 8.78l2.947-2.947"
+                opacity="0.3"
+              />
+            </g>
+          </svg>
+        </span>
+      </div>
+    </div>
+    <div
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+    >
+      <button
+        aria-label="common.discard"
+        class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          common.discard
+        </span>
+      </button>
+      <button
+        aria-label="create"
+        class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-success Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
+        disabled=""
+        tabindex="-1"
+        type="button"
+      >
+        <span
+          class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+          data-icon="run-pipeline"
+        >
+          <svg
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <clippath
+              id="run-pipeline_svg__a"
+            >
+              <path
+                d="M7.2 10.6V5.4L10.6 8zm4.4-3.3L7.4 4.1c-.3-.2-.6-.2-.9-.1-.3.2-.5.5-.5.8v6.4c0 .3.2.6.5.8.3.1.6.1.9-.1l4.2-3.2c.2-.2.3-.4.3-.7s-.1-.5-.3-.7zm1.1 5.4c-2.2 2.2-5.7 2.6-8.4.8s-3.6-5.1-2.4-8 4.3-4.6 7.4-4 5.3 3.3 5.3 6.5c.1 1.8-.6 3.4-1.9 4.7zm2.7-7.8C13.8 1.1 9.6-.9 5.7.4 1.7 1.6-.7 5.6.2 9.6s4.5 6.8 8.6 6.4S16 12.2 16 8c0-1.1-.2-2.1-.6-3.1z"
+              />
+            </clippath>
+            <path
+              clip-path="url(#run-pipeline_svg__a)"
+              d="M-5-5h26v26H-5z"
+              fill="#54b610"
+            />
+          </svg>
+        </span>
+        <span
+          class="bp3-button-text"
+        >
+          create
+        </span>
+      </button>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main PageBody--pageBody listBody"
+    data-name="page-body"
+    data-testid="page-body"
+  >
+    <section
+      class="setupShell"
+    >
+      <div
+        class="bp3-tabs Tabs--main Tabs--horizontal"
+      >
+        <div
+          class="bp3-tab-list"
+          role="tablist"
+        >
+          <div
+            class="bp3-tab-indicator-wrapper"
+            style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+          >
+            <div
+              class="bp3-tab-indicator"
+            />
+          </div>
+          <div
+            aria-controls="bp3-tab-panel_networkMapTabs_Select Services"
+            aria-disabled="false"
+            aria-expanded="true"
+            aria-selected="true"
+            class="bp3-tab"
+            data-tab-id="Select Services"
+            id="bp3-tab-title_networkMapTabs_Select Services"
+            role="tab"
+            tabindex="0"
+          >
+            discovery.tabs.selectServices
+          </div>
+          <span
+            class="bp3-icon bp3-icon-chevron-right StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small StyledProps--color StyledProps--color-grey400"
+            icon="chevron-right"
+            style="align-self: center; height: 20px;"
+          >
+            <svg
+              data-icon="chevron-right"
+              height="20"
+              viewBox="0 0 20 20"
+              width="20"
+            >
+              <desc>
+                chevron-right
+              </desc>
+              <path
+                d="M13.71 9.29l-6-6a1.003 1.003 0 00-1.42 1.42l5.3 5.29-5.29 5.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l6-6c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          <div
+            aria-controls="bp3-tab-panel_networkMapTabs_Configure Relations"
+            aria-disabled="true"
+            aria-expanded="false"
+            aria-selected="false"
+            class="bp3-tab"
+            data-tab-id="Configure Relations"
+            id="bp3-tab-title_networkMapTabs_Configure Relations"
+            role="tab"
+          >
+            discovery.tabs.configureRelations
+          </div>
+        </div>
+        <div
+          aria-hidden="false"
+          aria-labelledby="bp3-tab-title_networkMapTabs_Select Services"
+          class="bp3-tab-panel"
+          id="bp3-tab-panel_networkMapTabs_Select Services"
+          role="tabpanel"
+        >
+          <div
+            class="discovery-view-mock"
+          >
+            <p>
+              Select Service
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+`;

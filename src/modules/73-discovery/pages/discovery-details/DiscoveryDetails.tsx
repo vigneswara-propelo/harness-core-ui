@@ -8,13 +8,20 @@
 import React from 'react'
 import { Color } from '@harness/design-system'
 import { Container, Layout, Page, Tabs, Text } from '@harness/uicore'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import moment from 'moment'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
-import type { DiscoveryPathProps } from '@common/interfaces/RouteInterfaces'
+import type {
+  DiscoveredResourceQueryParams,
+  DiscoveryPathProps,
+  ModulePathParams,
+  ProjectPathProps
+} from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useGetAgent } from 'services/servicediscovery'
 import routes from '@common/RouteDefinitions'
+import { DiscoveryTabs } from '@discovery/interface/discovery'
+import { useQueryParams } from '@common/hooks'
 import NetworkMapTable from './views/network-map/NetworkMapTable'
 import DiscoveryHistory from './views/discovery-history/DiscoveryHistory'
 import Settings from './views/settings/Settings'
@@ -22,11 +29,15 @@ import DiscoveredResources from './views/discovered-resources/DiscoveredResource
 import css from './DiscoveryDetails.module.scss'
 
 const DiscoveryDetails: React.FC = () => {
-  const { accountId, orgIdentifier, projectIdentifier, dAgentId } = useParams<DiscoveryPathProps>()
+  const { accountId, orgIdentifier, projectIdentifier, module, dAgentId } = useParams<
+    ProjectPathProps & ModulePathParams & DiscoveryPathProps
+  >()
+  const { tab } = useQueryParams<DiscoveredResourceQueryParams>()
   const { getString } = useStrings()
+  const history = useHistory()
 
   const { data: discoveryAgentData } = useGetAgent({
-    agentIdentity: dAgentId,
+    agentIdentity: dAgentId ?? '',
     queryParams: {
       accountIdentifier: accountId,
       organizationIdentifier: orgIdentifier,
@@ -38,6 +49,59 @@ const DiscoveryDetails: React.FC = () => {
     ? moment(discoveryAgentData?.installationDetails?.createdAt).format('MMM DD, YYYY hh:mm A')
     : getString('na')
 
+  const handleTabChange = (tabID: DiscoveryTabs): void => {
+    switch (tabID) {
+      case DiscoveryTabs.DISCOVERED_RESOURCES:
+        history.push(
+          routes.toDiscoveredResource({
+            accountId,
+            projectIdentifier,
+            orgIdentifier,
+            module,
+            dAgentId,
+            tab: DiscoveryTabs.DISCOVERED_RESOURCES
+          })
+        )
+        break
+      case DiscoveryTabs.NETWORK_MAP:
+        history.push(
+          routes.toDiscoveredResource({
+            accountId,
+            projectIdentifier,
+            orgIdentifier,
+            module,
+            dAgentId,
+            tab: DiscoveryTabs.NETWORK_MAP
+          })
+        )
+        break
+      case DiscoveryTabs.DISCOVERY_HISTORY:
+        history.push(
+          routes.toDiscoveredResource({
+            accountId,
+            projectIdentifier,
+            orgIdentifier,
+            module,
+            dAgentId,
+            tab: DiscoveryTabs.DISCOVERY_HISTORY
+          })
+        )
+        break
+      case DiscoveryTabs.SETTINGS:
+        history.push(
+          routes.toDiscoveredResource({
+            accountId,
+            projectIdentifier,
+            orgIdentifier,
+            module,
+            dAgentId,
+            tab: DiscoveryTabs.SETTINGS
+          })
+        )
+        break
+    }
+  }
+
   return (
     <>
       <Page.Header
@@ -46,18 +110,18 @@ const DiscoveryDetails: React.FC = () => {
           <NGBreadcrumbs
             links={[
               {
-                url: routes.toDiscovery({ accountId, orgIdentifier, projectIdentifier, module: 'chaos' }),
+                url: routes.toDiscovery({ accountId, orgIdentifier, projectIdentifier, module }),
                 label: getString('common.discovery')
               },
               {
-                url: routes.toDiscoveryDetails({
+                url: routes.toDiscoveredResource({
                   accountId,
                   orgIdentifier,
                   projectIdentifier,
                   dAgentId,
-                  module: 'chaos'
+                  module
                 }),
-                label: dAgentId
+                label: dAgentId ?? ''
               }
             ]}
           />
@@ -106,15 +170,17 @@ const DiscoveryDetails: React.FC = () => {
           <Container width={'100%'}>
             <Tabs
               id={'DiscoveredServiceTab'}
-              defaultSelectedTabId={'discovered services'}
+              defaultSelectedTabId={DiscoveryTabs.DISCOVERED_RESOURCES}
+              selectedTabId={tab}
+              onChange={handleTabChange}
               tabList={[
                 {
-                  id: 'discovered services',
+                  id: DiscoveryTabs.DISCOVERED_RESOURCES,
                   title: getString('discovery.discoveryDetails.tabTitles.resources'),
                   panel: <DiscoveredResources />
                 },
                 {
-                  id: 'network maps',
+                  id: DiscoveryTabs.NETWORK_MAP,
                   title: getString('discovery.discoveryDetails.tabTitles.networkMaps'),
                   panel: (
                     <NetworkMapTable
@@ -124,12 +190,12 @@ const DiscoveryDetails: React.FC = () => {
                   )
                 },
                 {
-                  id: 'discovery history',
+                  id: DiscoveryTabs.DISCOVERY_HISTORY,
                   title: getString('discovery.discoveryDetails.tabTitles.history'),
                   panel: <DiscoveryHistory />
                 },
                 {
-                  id: 'settings',
+                  id: DiscoveryTabs.SETTINGS,
                   title: getString('settingsLabel'),
                   panel: <Settings />
                 }

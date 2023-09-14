@@ -110,7 +110,7 @@ exports[`Discovery Agent Status  render 1`] = `
             style="width: 20%;"
           >
             <a
-              href="/account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery/local-1"
+              href="/account/accountId/home/orgs/default/projects/Discovery_Test/setup/resources/discovery/local-1"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-size-normal StyledProps--font-weight-bold StyledProps--color StyledProps--color-primary7"
@@ -125,7 +125,8 @@ exports[`Discovery Agent Status  render 1`] = `
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-light StyledProps--color StyledProps--color-grey500"
               >
-                ID:
+                common.ID
+                :
               </p>
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main idPill StyledProps--font-size-small StyledProps--font-weight-light"

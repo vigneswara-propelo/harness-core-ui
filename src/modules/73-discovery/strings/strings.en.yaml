@@ -14,7 +14,6 @@ createDiscoveryAgent: Create Discovery Agent
 noDiscoveryData: No Discovery data yet
 dAgentCreateError: Invalid configuration, required fields were not filled
 dAgentName: Discovery Agent Name
-networkMapNameError: Netowrk Map name should not be empty
 dAgentCronError: Cron in minutes should not be less than 15, please choose a value equal to or greater than 15
 dAgentValidation:
   nameStart: Discovery Agent name can not start with -
@@ -84,8 +83,7 @@ serviceDrawer:
   workloads: Workload Information
 detectNetworkTrace: Detect network trace connectivity
 notDetected: Not detected
-untitledNetworkMap: Untitled Network Map
-blacklistedNamespaces: Backlisted Namespaces
+blacklistedNamespaces: Blacklisted Namespaces
 nodeAgentSelector: Add Node Selector
 newNetworkMap: New Network Map
 searchNetworkMap: Search for a network map
@@ -101,3 +99,9 @@ permissions:
   deletedMessageNetworkMap: 'Network Map {{name}} deleted'
   confirmDeleteNetworkMap: Deleting the Network Map '{{name}}' would mean that you are also deleting all the services it is associated with. Are you sure you want to delete the Network Map?
   confirmDeleteTitleNetworkMap: Delete Network Map
+discardNetworkMap: Are you sure you want to discard the current network map?
+noServiceSelected: 'You haven’t selected any services'
+noServiceSelectedDescription: Select services from the left panel and view their dependencies and add them into this network map. You can choose services cross different namespaces.
+selectAll: Select All
+selectRelatedServices: Select all related service
+noRelatedServiceFound: No related service found

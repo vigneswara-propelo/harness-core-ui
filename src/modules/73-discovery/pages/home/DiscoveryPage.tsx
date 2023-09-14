@@ -143,7 +143,7 @@ const DiscoveryPage: React.FC = () => {
           withoutBoxShadow
           onClick={() => setDrawerOpen(false)}
         />
-        <CreateDAgent setDrawerOpen={setDrawerOpen} refetchDagent={refetchListAgent} />
+        <CreateDAgent setDrawerOpen={setDrawerOpen} refetchDAgent={refetchListAgent} />
       </Drawer>
     </Container>
   )

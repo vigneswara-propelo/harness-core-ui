@@ -618,6 +618,8 @@ export interface DatabaseNetworkMapCollection {
 export interface DatabaseNetworkMapEntity {
   id?: string
   kind?: string
+  name?: string
+  namespace?: string
 }
 
 export interface DatabaseNodeCollection {

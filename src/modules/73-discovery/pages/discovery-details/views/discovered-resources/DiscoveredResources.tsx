@@ -18,14 +18,14 @@ import {
 } from '@harness/uicore'
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { DiscoveryPathProps } from '@common/interfaces/RouteInterfaces'
+import { DiscoveryPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useListK8sCustomServiceConnection, useListNamespace } from 'services/servicediscovery'
 import DiscoveredServices from './tableView/DiscoveredServices'
 import DiscoveredResourcesGraph from './graphView/DiscoveredResourcesGraph'
 
 export default function DiscoveredResources(): React.ReactElement {
-  const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps>()
+  const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & DiscoveryPathProps>()
 
   const { getString } = useStrings()
   const [search, setSearch] = React.useState<string>()

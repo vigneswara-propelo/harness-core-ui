@@ -18,7 +18,7 @@ import {
   DatabaseK8SCustomServiceCollection,
   useListK8SCustomService
 } from 'services/servicediscovery'
-import type { DiscoveryPathProps } from '@common/interfaces/RouteInterfaces'
+import { DiscoveryPathProps, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import ServiceDetails from '@discovery/components/ServiceDetails/ServiceDetails'
 import routes from '@common/RouteDefinitions'
@@ -30,10 +30,6 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import TagCount from '@discovery/components/TagCount/TagCount'
 import css from './DiscoveryServices.module.scss'
-
-export interface ConnectionMap {
-  [sourceID: string]: ApiCustomServiceConnection[]
-}
 
 export interface K8SCustomService extends DatabaseK8SCustomServiceCollection {
   relatedServices?: ApiCustomServiceConnection[]
@@ -50,10 +46,12 @@ export default function DiscoveredServices({
   search,
   namespace
 }: DiscoveredServicesProps): React.ReactElement {
-  const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps>()
+  const { dAgentId, accountId, orgIdentifier, projectIdentifier, module } = useParams<
+    ProjectPathProps & DiscoveryPathProps & ModulePathParams
+  >()
   const { getString } = useStrings()
 
-  //States for pagination
+  // States for pagination
   const { page, size } = useQueryParams<CommonPaginationQueryParams>()
 
   const { data: serviceList, loading: serviceListLoader } = useListK8SCustomService({
@@ -77,25 +75,15 @@ export default function DiscoveredServices({
     pageSize: serviceList?.page?.limit ?? DEFAULT_PAGE_SIZE
   })
 
-  const connectionMap: ConnectionMap = {}
+  const connectionMap: Map<string, string[]> = new Map()
 
-  connectionList?.items?.map(connections => {
-    if (connections.sourceID && connections.destinationName) {
-      let destinations = connectionMap[connections.sourceID]
-      if (destinations === undefined) {
-        destinations = [connections]
-      } else {
-        destinations?.push(connections)
-      }
-      connectionMap[connections.sourceID] = destinations
-    }
-  })
+  connectionList?.items?.map(connection => {
+    if (!connection.sourceID || !connection.destinationName) return
 
-  const filteredServices: K8SCustomService[] | undefined = serviceList?.items?.map(services => {
-    const relatedServices = connectionMap[services?.id ?? '']
-    return {
-      ...services,
-      relatedServices: relatedServices
+    if (connectionMap.has(connection.sourceID)) {
+      connectionMap.get(connection.sourceID)?.push(connection.destinationName)
+    } else {
+      connectionMap.set(connection.sourceID, [connection.destinationName])
     }
   })
 
@@ -137,7 +125,7 @@ export default function DiscoveredServices({
     <Layout.Vertical>
       <Layout.Horizontal>
         <Text font={{ size: 'small' }} color={Color.GREY_500}>
-          {getString('ce.co.gatewayAccess.ip')}:
+          {getString('common.ipAddress')}:
         </Text>
         <Text padding={{ left: 'small' }} font={{ size: 'small', weight: 'semi-bold' }} color={Color.PRIMARY_5}>
           {row.original.service?.clusterIP}
@@ -155,12 +143,8 @@ export default function DiscoveredServices({
     </Layout.Vertical>
   )
   const RelatedServices: Renderer<CellProps<K8SCustomService>> = ({ row }) => {
-    const relatedServices: string[] = []
-    row.original.relatedServices?.map(services => {
-      if (services.destinationName) {
-        relatedServices.push(services.destinationName)
-      }
-    })
+    const relatedServices = connectionMap.get(row.original.id ?? '') ?? []
+
     return (
       <Layout.Horizontal flex={{ align: 'center-center', justifyContent: 'flex-start' }}>
         {relatedServices.length ? (
@@ -179,12 +163,6 @@ export default function DiscoveredServices({
 
   const ThreeDotMenu: Renderer<CellProps<K8SCustomService>> = ({ row }) => {
     const history = useHistory()
-    const relatedServices: string[] = []
-    row.original.relatedServices?.map(services => {
-      if (services.destinationName) {
-        relatedServices.push(services.destinationName)
-      }
-    })
 
     return (
       <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
@@ -204,23 +182,21 @@ export default function DiscoveredServices({
             permission: PermissionIdentifier.CREATE_NETWORK_MAP
           }}
           onClick={() => {
-            history.push({
-              pathname: routes.toCreateNetworkMap({
-                dAgentId: dAgentId,
+            history.push(
+              routes.toCreateNetworkMap({
                 accountId,
                 orgIdentifier,
                 projectIdentifier,
-                module: 'chaos'
-              }),
-              search: `?relatedServices=${relatedServices}`
-            })
+                module,
+                dAgentId,
+                relatedServicesOf: row.original.id
+              })
+            )
           }}
         />
       </Layout.Horizontal>
     )
   }
-
-  const discoveryServices: K8SCustomService[] = React.useMemo(() => filteredServices || [], [filteredServices])
 
   const columns: Column<K8SCustomService>[] = React.useMemo(
     () => [
@@ -251,7 +227,7 @@ export default function DiscoveredServices({
       }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [filteredServices]
+    [serviceList?.items]
   )
 
   return (
@@ -261,7 +237,7 @@ export default function DiscoveredServices({
           <PageSpinner message={getString('discovery.discoveringSpinnerMessage')} />
         ) : (
           <Container className={css.tableBody}>
-            <TableV2<K8SCustomService> columns={columns} data={discoveryServices} pagination={paginationProps} />
+            <TableV2<K8SCustomService> columns={columns} data={serviceList?.items ?? []} pagination={paginationProps} />
           </Container>
         )}
       </Page.Body>

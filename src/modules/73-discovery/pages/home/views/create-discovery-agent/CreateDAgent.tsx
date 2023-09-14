@@ -50,10 +50,10 @@ interface FormValues extends ExpressionBreakdownInterface {
 
 export interface DrawerProps {
   setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>
-  refetchDagent?: () => void
+  refetchDAgent?: () => void
 }
 
-const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDrawerOpen, refetchDagent }) => {
+const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDrawerOpen, refetchDAgent }) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -117,7 +117,7 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
           }
         }).then(() => {
           setDrawerOpen(false)
-          refetchDagent?.()
+          refetchDAgent?.()
         })
       }
     } catch (error) {

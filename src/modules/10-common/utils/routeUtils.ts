@@ -37,7 +37,8 @@ import type {
   VariablesPathProps,
   AccountRoutePlacement,
   DiscoveryPathProps,
-  Module
+  Module,
+  NetworkMapPathProps
 } from '@common/interfaces/RouteInterfaces'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
 
@@ -99,6 +100,12 @@ export const variablePathProps: VariablesPathProps = {
 export const discoveryPathProps: DiscoveryPathProps = {
   ...projectPathProps,
   dAgentId: ':dAgentId'
+}
+
+export const networkMapPathProps: NetworkMapPathProps = {
+  ...projectPathProps,
+  dAgentId: ':dAgentId',
+  networkMapId: ':networkMapId'
 }
 
 export const rolePathProps: RolePathProps = {

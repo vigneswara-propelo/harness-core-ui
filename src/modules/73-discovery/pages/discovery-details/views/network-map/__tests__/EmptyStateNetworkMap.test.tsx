@@ -13,7 +13,7 @@ import routes from '@common/RouteDefinitions'
 import { accountPathProps, discoveryPathProps, modulePathProps, projectPathProps } from '@common/utils/routeUtils'
 import EmptyStateNetworkMap from '../EmptyStateNetworkMap'
 
-const PATH = routes.toDiscoveryDetails({
+const PATH = routes.toDiscoveredResource({
   ...accountPathProps,
   ...projectPathProps,
   ...modulePathProps,
@@ -54,7 +54,7 @@ describe('<DiscoveryHistory /> tests', () => {
       <div
         data-testid="location"
       >
-        /account/accountId/home/orgs/default/projects/Discovery_Test/setup/resources/discovery/dAgentId-1/create-network-map
+        /account/accountId/chaos/orgs/default/projects/Discovery_Test/setup/resources/discovery/dAgentId-1/network-map-studio/-1
       </div>
     `)
 

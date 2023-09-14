@@ -13,7 +13,7 @@ import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import { RouteWithLayout } from '@common/router'
 import routes from '@common/RouteDefinitions'
-import { accountPathProps, discoveryPathProps, modulePathProps, projectPathProps } from '@common/utils/routeUtils'
+import { accountPathProps, discoveryPathProps, networkMapPathProps, projectPathProps } from '@common/utils/routeUtils'
 
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
@@ -40,7 +40,10 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       sidebarProps={AccountSideNavProps}
-      path={routes.toDiscoveryDetails({ ...accountPathProps, ...discoveryPathProps, ...modulePathProps })}
+      path={routes.toDiscoveredResource({
+        ...accountPathProps,
+        ...discoveryPathProps
+      })}
       exact
     >
       <React.Suspense fallback={<PageSpinner />}>
@@ -49,7 +52,10 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       sidebarProps={AccountSideNavProps}
-      path={routes.toCreateNetworkMap({ ...accountPathProps, ...discoveryPathProps, ...modulePathProps })}
+      path={routes.toCreateNetworkMap({
+        ...accountPathProps,
+        ...networkMapPathProps
+      })}
       exact
     >
       <React.Suspense fallback={<PageSpinner />}>
@@ -103,10 +109,11 @@ export const DiscoveryRouteDestinations: React.FC<{
         exact
         licenseRedirectData={licenseRedirectData}
         sidebarProps={sidebarProps}
-        path={routes.toDiscoveryDetails({
+        path={routes.toDiscoveredResource({
           ...accountPathProps,
           ...projectPathProps,
-          ...moduleParams
+          ...moduleParams,
+          ...discoveryPathProps
         })}
         pageName={PAGE_NAME.DiscoveryDetails}
       >
@@ -118,7 +125,12 @@ export const DiscoveryRouteDestinations: React.FC<{
         exact
         licenseRedirectData={licenseRedirectData}
         sidebarProps={sidebarProps}
-        path={routes.toCreateNetworkMap({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
+        path={routes.toCreateNetworkMap({
+          ...accountPathProps,
+          ...projectPathProps,
+          ...moduleParams,
+          ...networkMapPathProps
+        })}
         pageName={PAGE_NAME.CreateNetworkMap}
       >
         <React.Suspense fallback={<PageSpinner />}>

@@ -26,6 +26,8 @@
     "CI": ["src/modules/75-ci/**"],
     "CF": ["src/modules/75-cf/**"],
     "CE": ["src/modules/75-ce/**", "src/modules/27-platform/connectors/CreateConnector/CEK8sConnector/**"],
+    "CHAOS": ["src/modules/75-chaos/**", "src/modules/70-pipeline/pages/execution/ResilienceView/**"],
+    "Discovery": ["src/modules/73-discovery/**"],
     "RBAC": ["src/modules/20-rbac/**"],
     "SHARED": ["src/modules/10-common/**", "src/navigation/**"],
     "DASHBOARDS": ["src/modules/45-dashboards/**"],

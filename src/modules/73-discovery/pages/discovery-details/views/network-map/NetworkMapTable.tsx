@@ -27,7 +27,7 @@ import { Color } from '@harness/design-system'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { useHistory, useParams } from 'react-router-dom'
 import { getTimeAgo } from '@pipeline/utils/CIUtils'
-import type { DiscoveryPathProps } from '@common/interfaces/RouteInterfaces'
+import type { DiscoveryPathProps, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { DatabaseNetworkMapCollection, useDeleteNetworkMap, useListNetworkMap } from 'services/servicediscovery'
 import routes from '@common/RouteDefinitions'
 import { useQueryParams } from '@common/hooks'
@@ -42,8 +42,10 @@ interface NetworkMapTableProps {
   connectorID: string | undefined
 }
 
-const NetworkMapTable: React.FC<NetworkMapTableProps> = /* istanbul ignore next */ ({ agentName, connectorID }) => {
-  const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps>()
+const NetworkMapTable: React.FC<NetworkMapTableProps> = ({ agentName, connectorID }) => {
+  const { dAgentId, accountId, orgIdentifier, projectIdentifier, module } = useParams<
+    ProjectPathProps & ModulePathParams & DiscoveryPathProps
+  >()
   const history = useHistory()
   const { getString } = useStrings()
   const { showError, showSuccess } = useToaster()
@@ -162,7 +164,7 @@ const NetworkMapTable: React.FC<NetworkMapTableProps> = /* istanbul ignore next 
               icon="Options"
             />
             <Menu data-testid="options" style={{ backgroundColor: 'unset' }}>
-              <MenuItem icon="edit" text={'Edit'} disabled onClick={() => void 0} className={css.menuItem} />
+              <MenuItem icon="edit" text={getString('edit')} disabled onClick={() => void 0} className={css.menuItem} />
               <MenuItem icon="trash" text={getString('delete')} className={css.menuItem} onClick={handleDelete} />
             </Menu>
           </Popover>
@@ -181,7 +183,7 @@ const NetworkMapTable: React.FC<NetworkMapTableProps> = /* istanbul ignore next 
                   showSuccess(getString('discovery.permissions.deletedMessageNetworkMap', { name: row.original.name }))
                 refetchListNetwork()
               } catch (err) {
-                showError(err?.data?.message || err?.message)
+                /* istanbul ignore next */ showError(err?.data?.message || err?.message)
               }
             } else closeDeleteConfirmation()
           }}
@@ -232,7 +234,7 @@ const NetworkMapTable: React.FC<NetworkMapTableProps> = /* istanbul ignore next 
 
   return (
     <Container>
-      {networkMapList?.items?.length !== 0 ? (
+      {networkMapList?.items && networkMapList.items.length !== 0 ? (
         <>
           <Page.SubHeader>
             <Layout.Horizontal width="100%" flex={{ justifyContent: 'space-between' }}>
@@ -241,14 +243,15 @@ const NetworkMapTable: React.FC<NetworkMapTableProps> = /* istanbul ignore next 
                 icon="plus"
                 variation={ButtonVariation.PRIMARY}
                 onClick={() => {
-                  history.push({
-                    pathname: routes.toCreateNetworkMap({
-                      dAgentId: dAgentId,
+                  history.push(
+                    routes.toCreateNetworkMap({
                       accountId,
                       orgIdentifier,
-                      projectIdentifier
+                      projectIdentifier,
+                      module,
+                      dAgentId
                     })
-                  })
+                  )
                 }}
               />
               <ExpandingSearchInput

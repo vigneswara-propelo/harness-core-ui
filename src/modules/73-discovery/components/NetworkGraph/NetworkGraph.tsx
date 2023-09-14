@@ -70,14 +70,14 @@ export default function NetworkGraph({
       })
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [nodes, edges]
+    [initialNodes, initialEdges, nodes, edges]
   )
 
   // Calculate the initial layout on mount.
   React.useLayoutEffect(() => {
     onLayout({ useInitialNodes: true })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [initialNodes, initialEdges])
 
   return (
     <ReactFlow

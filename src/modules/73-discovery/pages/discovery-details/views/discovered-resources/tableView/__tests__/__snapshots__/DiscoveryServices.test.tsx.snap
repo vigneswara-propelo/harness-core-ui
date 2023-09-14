@@ -158,7 +158,7 @@ exports[`<DiscoveryServices /> tests should match snapshot 1`] = `
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
                       >
-                        ce.co.gatewayAccess.ip
+                        common.ipAddress
                         :
                       </p>
                       <p

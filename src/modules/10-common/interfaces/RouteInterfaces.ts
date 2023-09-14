@@ -15,6 +15,7 @@ import type {
 } from 'services/pipeline-ng'
 import type { Module as ModuleName } from 'framework/types/ModuleName'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 
 export interface AccountPathProps {
   accountId: string
@@ -75,8 +76,12 @@ export interface GitOpsAppPathProps extends ProjectPathProps {
   applicationId: string
 }
 
-export interface DiscoveryPathProps extends ProjectPathProps {
+export interface DiscoveryPathProps {
   dAgentId: string
+}
+
+export interface NetworkMapPathProps extends DiscoveryPathProps {
+  networkMapId: string
 }
 
 export interface GitOpsAppQueryParams {
@@ -294,3 +299,14 @@ export interface GitOpsPathProps {
  * At home dashboard level or account resources(settings) level
  */
 export type AccountRoutePlacement = 'settings' | 'dashboard'
+
+// Discovery Route interfaces
+export interface NetworkMapQueryParams extends CommonPaginationQueryParams {
+  unsavedChanges?: string
+  tab?: string
+  relatedServicesOf: string
+}
+
+export interface DiscoveredResourceQueryParams {
+  tab?: string
+}

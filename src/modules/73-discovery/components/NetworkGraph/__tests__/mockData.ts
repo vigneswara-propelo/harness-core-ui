@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+/* istanbul ignore file */
 import type { Node, Edge } from 'reactflow'
 import { nodeGroupOptions, nodeOptions, NodeTypes } from '@discovery/components/NetworkGraph/constants'
 import type { EdgeData } from '@discovery/components/NetworkGraph/types'
@@ -183,7 +184,9 @@ export const mockElkGraph = {
       type: 'group',
       style: {
         border: '2px dashed var(--purple-600)',
-        background: 'rgba(246, 241, 255, 0.30)'
+        background: 'rgba(246, 241, 255, 0.30)',
+        height: 399.28571428571433,
+        width: 664
       },
       children: [
         {
@@ -633,7 +636,9 @@ export const mockElkGraph = {
       type: 'group',
       style: {
         border: '2px dashed var(--purple-600)',
-        background: 'rgba(246, 241, 255, 0.30)'
+        background: 'rgba(246, 241, 255, 0.30)',
+        height: 244,
+        width: 374
       },
       children: [
         {
@@ -826,6 +831,7 @@ export const mockElkGraph = {
         x: 12,
         y: 287.28571428571433
       },
+      style: {},
       width: 100,
       height: 100,
       type: 'hexagon',
@@ -846,6 +852,7 @@ export const mockElkGraph = {
         x: 162,
         y: 133.4761904761905
       },
+      style: {},
       width: 100,
       height: 100,
       type: 'hexagon',
@@ -866,6 +873,7 @@ export const mockElkGraph = {
         x: 302,
         y: 23
       },
+      style: {},
       width: 100,
       height: 100,
       type: 'hexagon',
@@ -886,6 +894,7 @@ export const mockElkGraph = {
         x: 302,
         y: 143.00000000000003
       },
+      style: {},
       width: 100,
       height: 100,
       type: 'hexagon',
@@ -906,6 +915,7 @@ export const mockElkGraph = {
         x: 302,
         y: 263
       },
+      style: {},
       width: 100,
       height: 100,
       type: 'hexagon',
@@ -926,6 +936,7 @@ export const mockElkGraph = {
         x: 432,
         y: 236.33333333333337
       },
+      style: {},
       width: 100,
       height: 100,
       type: 'hexagon',
@@ -946,6 +957,7 @@ export const mockElkGraph = {
         x: 552,
         y: 229.66666666666669
       },
+      style: {},
       width: 100,
       height: 100,
       type: 'hexagon',
@@ -966,6 +978,7 @@ export const mockElkGraph = {
         x: 12,
         y: 25.33333333333333
       },
+      style: {},
       width: 100,
       height: 100,
       type: 'hexagon',
@@ -986,6 +999,7 @@ export const mockElkGraph = {
         x: 132,
         y: 25.33333333333333
       },
+      style: {},
       width: 100,
       height: 100,
       type: 'hexagon',
@@ -1006,6 +1020,7 @@ export const mockElkGraph = {
         x: 262,
         y: 12
       },
+      style: {},
       width: 100,
       height: 100,
       type: 'hexagon',
@@ -1026,6 +1041,7 @@ export const mockElkGraph = {
         x: 262,
         y: 132
       },
+      style: {},
       width: 100,
       height: 100,
       type: 'hexagon',

@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { useParams, Redirect, useLocation } from 'react-router-dom'
+import { PageSpinner } from '@harness/uicore'
 import AuditTrailsPage from '@audit-trail/pages/AuditTrails/AuditTrailsPage'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import { RouteWithLayout } from '@common/router'
@@ -23,7 +24,9 @@ import {
   secretPathProps,
   userPathProps,
   connectorPathProps,
-  serviceAccountProps
+  serviceAccountProps,
+  discoveryPathProps,
+  networkMapPathProps
 } from '@common/utils/routeUtils'
 
 import ProjectsPage from '@projects-orgs/pages/projects/ProjectsPage'
@@ -79,8 +82,18 @@ import SettingsList from '@default-settings/pages/SettingsList'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 // eslint-disable-next-line no-restricted-imports
 import ExternalTicketSettings from '@sto/components/ExternalTickets/Settings/ExternalTicketSettings'
-import LandingDashboardPage from './pages/LandingDashboardPage/LandingDashboardPage'
 import LandingDashboardPageV2 from './pages/LandingDashboardPageV2/LandingDashboardPageV2'
+import LandingDashboardPage from './pages/LandingDashboardPage/LandingDashboardPage'
+
+const DiscoveryDetails = React.lazy(
+  () => import(/* webpackChunkName: "discoveryDetails"*/ '../73-discovery/pages/discovery-details/DiscoveryDetails')
+)
+const DiscoveryPage = React.lazy(
+  () => import(/* webpackChunkName: "discoveryPage"*/ '../73-discovery/pages/home/DiscoveryPage')
+)
+const NetworkMapStudio = React.lazy(
+  () => import(/* webpackChunkName: "networkMapStudio"*/ '../73-discovery/pages/network-map-studio/NetworkMapStudio')
+)
 
 export const ProjectDetailsSideNavProps: SidebarContext = {
   navComponent: ProjectDetailsSideNav,
@@ -435,6 +448,44 @@ export default (
     >
       <CreateSecretFromYamlPage />
     </RouteWithLayout>
+
+    {/* Discovery Routes */}
+    <RouteWithLayout
+      sidebarProps={ProjectDetailsSideNavProps}
+      path={routes.toDiscovery({ ...accountPathProps, ...projectPathProps })}
+      exact
+    >
+      <React.Suspense fallback={<PageSpinner />}>
+        <DiscoveryPage />
+      </React.Suspense>
+    </RouteWithLayout>
+    <RouteWithLayout
+      sidebarProps={ProjectDetailsSideNavProps}
+      path={routes.toDiscoveredResource({
+        ...accountPathProps,
+        ...projectPathProps,
+        ...discoveryPathProps
+      })}
+      exact
+    >
+      <React.Suspense fallback={<PageSpinner />}>
+        <DiscoveryDetails />
+      </React.Suspense>
+    </RouteWithLayout>
+    <RouteWithLayout
+      sidebarProps={ProjectDetailsSideNavProps}
+      path={routes.toCreateNetworkMap({
+        ...accountPathProps,
+        ...projectPathProps,
+        ...networkMapPathProps
+      })}
+      exact
+    >
+      <React.Suspense fallback={<PageSpinner />}>
+        <NetworkMapStudio />
+      </React.Suspense>
+    </RouteWithLayout>
+
     <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toOrganizations({ ...accountPathProps })} exact>
       <OrganizationsPage />
     </RouteWithLayout>
@@ -502,6 +553,38 @@ export default (
         <SecretReferences />
       </SecretDetailsHomePage>
     </RouteWithLayout>
+
+    {/* Discovery Routes */}
+    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toDiscovery({ ...orgPathProps })} exact>
+      <React.Suspense fallback={<PageSpinner />}>
+        <DiscoveryPage />
+      </React.Suspense>
+    </RouteWithLayout>
+    <RouteWithLayout
+      sidebarProps={AccountSideNavProps}
+      path={routes.toDiscoveredResource({
+        ...orgPathProps,
+        ...discoveryPathProps
+      })}
+      exact
+    >
+      <React.Suspense fallback={<PageSpinner />}>
+        <DiscoveryDetails />
+      </React.Suspense>
+    </RouteWithLayout>
+    <RouteWithLayout
+      sidebarProps={AccountSideNavProps}
+      path={routes.toCreateNetworkMap({
+        ...orgPathProps,
+        ...networkMapPathProps
+      })}
+      exact
+    >
+      <React.Suspense fallback={<PageSpinner />}>
+        <NetworkMapStudio />
+      </React.Suspense>
+    </RouteWithLayout>
+
     <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toFileStore({ ...orgPathProps })} exact>
       <FileStorePage />
     </RouteWithLayout>

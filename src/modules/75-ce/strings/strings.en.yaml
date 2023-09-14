@@ -423,12 +423,11 @@ co:
     dnsLink: 'DNS Link'
     dnsLinkHeader: 'Setup access via DNS Link (HTTP or HTTPS URL) to the underlying application running on the resources managed by this AutoStopping Rule.'
     sshRdp: 'SSH / RDP'
-    ip: 'IP Address'
     rdp: 'RDP'
     backgroundTasks: 'Background Tasks'
   instanceSelector:
     name: 'Name and Id'
-    ipAddress: '{{$.ce.co.gatewayAccess.ip}}'
+    ipAddress: '{{$.common.ipAddress}}'
     launchTime: 'Launch Time'
   gatewayReview:
     nameYourGateway: 'Name your Rule'

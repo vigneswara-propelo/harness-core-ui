@@ -6,11 +6,12 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import * as servicediscovery from 'services/servicediscovery'
-import { accountPathProps, modulePathProps, projectPathProps } from '@common/utils/routeUtils'
+import { accountPathProps, discoveryPathProps, modulePathProps, projectPathProps } from '@common/utils/routeUtils'
+import { DiscoveryTabs } from '@discovery/interface/discovery'
 import DiscoveryDetails from '../DiscoveryDetails'
 
 jest.useFakeTimers({ advanceTimers: true })
@@ -89,12 +90,18 @@ jest.mock('services/servicediscovery', () => ({
   })
 }))
 
-const PATH = routes.toDiscovery({ ...accountPathProps, ...projectPathProps, ...modulePathProps })
+const PATH = routes.toDiscoveredResource({
+  ...accountPathProps,
+  ...projectPathProps,
+  ...modulePathProps,
+  ...discoveryPathProps
+})
 const PATH_PARAMS = {
   accountId: 'accountId',
   orgIdentifier: 'default',
   projectIdentifier: 'Discovery_Test',
-  module: 'chaos'
+  module: 'chaos',
+  dAgentId: 'dAgent-1'
 }
 
 describe('<DiscoveryDetails /> tests', () => {
@@ -150,5 +157,25 @@ describe('<DiscoveryDetails /> tests', () => {
     expect(container).toMatchSnapshot()
 
     expect(getByText('discovery.discoveryDetails.tabTitles.history')).toBeInTheDocument()
+  })
+
+  test('changed discovered details tabs', async () => {
+    const { container } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <DiscoveryDetails />
+      </TestWrapper>
+    )
+
+    fireEvent.click(container.querySelector(`[data-tab-id="${DiscoveryTabs.NETWORK_MAP}"]`)!)
+    expect(container).toMatchSnapshot()
+
+    fireEvent.click(container.querySelector(`[data-tab-id="${DiscoveryTabs.DISCOVERY_HISTORY}"]`)!)
+    expect(container).toMatchSnapshot()
+
+    fireEvent.click(container.querySelector(`[data-tab-id="${DiscoveryTabs.SETTINGS}"]`)!)
+    expect(container).toMatchSnapshot()
+
+    fireEvent.click(container.querySelector(`[data-tab-id="${DiscoveryTabs.DISCOVERED_RESOURCES}"]`)!)
+    expect(container).toMatchSnapshot()
   })
 })

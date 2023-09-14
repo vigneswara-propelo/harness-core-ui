@@ -53,6 +53,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
     CDS_OrgAccountLevelServiceEnvEnvGroup,
     CDS_SERVICE_OVERRIDES_2_0,
     GITOPS_ORG_LEVEL,
+    PL_DISCOVERY_ENABLE,
     PIE_GIT_BI_DIRECTIONAL_SYNC
   } = useFeatureFlags()
 
@@ -194,6 +195,13 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       icon: 'secrets-icon',
       colorClass: css.secrets,
       route: routes.toSecrets({ accountId, orgIdentifier })
+    },
+    {
+      label: <String stringID="common.discovery" />,
+      icon: 'chaos-service-discovery',
+      colorClass: css.secrets,
+      route: routes.toDiscovery({ accountId, orgIdentifier }),
+      hidden: !PL_DISCOVERY_ENABLE
     },
     {
       label: <String stringID="resourcePage.fileStore" />,

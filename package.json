@@ -95,7 +95,7 @@
     "formik": "2.2.9",
     "highcharts": "9.2.0",
     "highcharts-react-official": "3.0.0",
-    "idb": "^5.0.4",
+    "idb": "7.1.1",
     "immer": "^9.0.6",
     "js-yaml": "^4.1.0",
     "jsonschema": "^1.4.1",

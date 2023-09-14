@@ -28,7 +28,7 @@ import { killEvent } from '@common/utils/eventUtils'
 import { getTimeAgo } from '@pipeline/utils/CIUtils'
 import { ApiGetAgentResponse, useDeleteAgent } from 'services/servicediscovery'
 import routes from '@common/RouteDefinitions'
-import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { DiscoveryPathProps, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { PaginationPropsWithDefaults } from '@common/hooks/useDefaultPaginationProps'
 import { useStrings } from 'framework/strings'
 import { DiscoveryAgentStatus } from '../DelegateAgentStatus/DelegateAgentStatus'
@@ -41,16 +41,19 @@ interface DiscoveryAgentTableProps {
 }
 
 const Name: Renderer<CellProps<ApiGetAgentResponse>> = /* istanbul ignore next */ ({ row }) => {
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const { accountId, orgIdentifier, projectIdentifier, module } = useParams<
+    ProjectPathProps & ModulePathParams & DiscoveryPathProps
+  >()
+  const { getString } = useStrings()
   return (
     <>
       <Link
-        to={routes.toDiscoveryDetails({
+        to={routes.toDiscoveredResource({
           accountId,
           orgIdentifier,
           projectIdentifier,
           dAgentId: row.original.identity,
-          module: 'chaos'
+          module
         })}
       >
         <Text font={{ size: 'normal', weight: 'bold' }} color={Color.PRIMARY_7} style={{ cursor: 'pointer' }}>
@@ -59,7 +62,7 @@ const Name: Renderer<CellProps<ApiGetAgentResponse>> = /* istanbul ignore next *
       </Link>
       <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'start' }} margin={{ top: 'xsmall' }}>
         <Text font={{ size: 'small', weight: 'light' }} color={Color.GREY_500}>
-          ID:
+          {getString('common.ID')}:
         </Text>
         <Text
           font={{ size: 'small', weight: 'light' }}

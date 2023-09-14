@@ -55,7 +55,10 @@ import type {
   AccountRoutePlacement,
   ExecutionQueryParams,
   ServiceOverridesQueryParams,
-  DiscoveryPathProps
+  DiscoveryPathProps,
+  NetworkMapQueryParams,
+  NetworkMapPathProps,
+  DiscoveredResourceQueryParams
 } from '@common/interfaces/RouteInterfaces'
 
 const CV_HOME = `/cv/home`
@@ -442,9 +445,17 @@ const routes = {
     }
   ),
 
-  toDiscoveryDetails: withAccountId(
-    ({ orgIdentifier, projectIdentifier, dAgentId, module }: Partial<DiscoveryPathProps & ModulePathParams>) => {
-      const path = `resources/discovery/${dAgentId}`
+  toDiscoveredResource: withAccountId(
+    ({
+      accountId: _accountId,
+      orgIdentifier,
+      projectIdentifier,
+      dAgentId,
+      module,
+      ...rest
+    }: Partial<ProjectPathProps & ModulePathParams & DiscoveryPathProps & DiscoveredResourceQueryParams>) => {
+      const queryString = qs.stringify(rest, { skipNulls: true })
+      const path = `resources/discovery/${dAgentId}?${queryString}`
       return getScopeBasedRoute({
         scope: {
           orgIdentifier,
@@ -457,8 +468,19 @@ const routes = {
   ),
 
   toCreateNetworkMap: withAccountId(
-    ({ orgIdentifier, projectIdentifier, dAgentId, module }: Partial<DiscoveryPathProps & ModulePathParams>) => {
-      const path = `resources/discovery/${dAgentId}/create-network-map`
+    ({
+      accountId: _accountId,
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      dAgentId,
+      networkMapId,
+      ...rest
+    }: Partial<ProjectPathProps & ModulePathParams & NetworkMapPathProps & NetworkMapQueryParams>) => {
+      const queryString = qs.stringify(rest, { skipNulls: true })
+      const path = `resources/discovery/${dAgentId}/network-map-studio/${networkMapId ?? '-1'}${
+        queryString !== '' ? `?${queryString}` : ''
+      }`
       return getScopeBasedRoute({
         scope: {
           orgIdentifier,

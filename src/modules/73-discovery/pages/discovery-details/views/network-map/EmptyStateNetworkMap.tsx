@@ -13,13 +13,15 @@ import CELogo from '@discovery/images/chaos-engineering-logo.svg'
 import NetworkMapVisual from '@discovery/images/network-map-visual.svg'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
-import type { DiscoveryPathProps } from '@common/interfaces/RouteInterfaces'
+import type { DiscoveryPathProps, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './NetworkMapTable.module.scss'
 
 const EmptyStateNetworkMap: React.FC = () => {
   const { getString } = useStrings()
   const history = useHistory()
-  const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps>()
+  const { dAgentId, accountId, orgIdentifier, projectIdentifier, module } = useParams<
+    ProjectPathProps & ModulePathParams & DiscoveryPathProps
+  >()
 
   return (
     <Layout.Horizontal className={css.noNetworkMapDiv} width={'80%'}>
@@ -53,10 +55,11 @@ const EmptyStateNetworkMap: React.FC = () => {
           onClick={() => {
             history.push({
               pathname: routes.toCreateNetworkMap({
-                dAgentId: dAgentId,
                 accountId,
                 orgIdentifier,
-                projectIdentifier
+                projectIdentifier,
+                module,
+                dAgentId
               })
             })
           }}

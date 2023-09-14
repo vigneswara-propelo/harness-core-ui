@@ -10,7 +10,7 @@ import { ReactFlowProvider } from 'reactflow'
 import { useParams } from 'react-router-dom'
 import { Page, PageSpinner } from '@harness/uicore'
 import { ApiListCustomServiceConnection, useListK8SCustomService } from 'services/servicediscovery'
-import type { DiscoveryPathProps } from '@common/interfaces/RouteInterfaces'
+import type { DiscoveryPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   getGraphEdgesFromServiceConnections,
   getGraphNodesFromServiceList
@@ -28,7 +28,7 @@ interface DiscoveredResourcesGraphProps {
 export default function DiscoveredResourcesGraph({
   connectionList
 }: DiscoveredResourcesGraphProps): React.ReactElement {
-  const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps>()
+  const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & DiscoveryPathProps>()
   const { getString } = useStrings()
 
   const { data: serviceList } = useListK8SCustomService({
@@ -43,10 +43,10 @@ export default function DiscoveredResourcesGraph({
     }
   })
 
-  const initialGraphNodes = getGraphNodesFromServiceList(serviceList)
-  const initialGraphEdges = getGraphEdgesFromServiceConnections(connectionList)
+  const graphNodes = getGraphNodesFromServiceList(serviceList)
+  const graphEdges = getGraphEdgesFromServiceConnections(connectionList)
 
-  if (initialGraphNodes.length === 0 || !connectionList) {
+  if (graphNodes.length === 0 || !connectionList) {
     return (
       <Page.Body>
         <PageSpinner message={getString('discovery.discoveringSpinnerMessage')} />
@@ -57,7 +57,7 @@ export default function DiscoveredResourcesGraph({
   return (
     <div className={css.graphContainer}>
       <ReactFlowProvider>
-        <NetworkGraph nodes={initialGraphNodes} edges={initialGraphEdges} />
+        <NetworkGraph nodes={graphNodes} edges={graphEdges} />
       </ReactFlowProvider>
     </div>
   )

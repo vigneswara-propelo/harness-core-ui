@@ -7,7 +7,12 @@
 
 import type { LayoutOptions } from 'elkjs/lib/elk.bundled'
 import type { Node, Edge } from 'reactflow'
-import type { ApiCustomServiceConnection, DatabaseK8SCustomServiceCollection } from 'services/servicediscovery'
+import type {
+  ApiCustomServiceConnection,
+  DatabaseConnection,
+  DatabaseK8SCustomServiceCollection,
+  DatabaseNetworkMapEntity
+} from 'services/servicediscovery'
 
 export interface LayoutedGraph {
   nodes: Node<unknown, string | undefined>[]
@@ -21,3 +26,6 @@ export interface EdgeData {
 
 export type ServiceNodeData = DatabaseK8SCustomServiceCollection
 export type ServiceEdgeData = EdgeData & ApiCustomServiceConnection
+
+export type NetworkMapNodeData = DatabaseNetworkMapEntity
+export type NetworkMapEdgeData = EdgeData & DatabaseConnection

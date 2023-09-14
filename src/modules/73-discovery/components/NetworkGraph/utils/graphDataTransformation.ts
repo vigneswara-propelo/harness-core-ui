@@ -7,8 +7,17 @@
 
 import type { Node, Edge } from 'reactflow'
 import { NodeTypes, nodeGroupOptions, nodeOptions } from '@discovery/components/NetworkGraph/constants'
-import type { ApiListCustomServiceConnection, ApiListK8sCustomService } from 'services/servicediscovery'
-import type { ServiceEdgeData, ServiceNodeData } from '@discovery/components/NetworkGraph/types'
+import type {
+  ApiCreateNetworkMapRequest,
+  ApiListCustomServiceConnection,
+  ApiListK8sCustomService
+} from 'services/servicediscovery'
+import type {
+  NetworkMapEdgeData,
+  NetworkMapNodeData,
+  ServiceEdgeData,
+  ServiceNodeData
+} from '@discovery/components/NetworkGraph/types'
 
 export function getGraphNodesFromServiceList(
   serviceList: ApiListK8sCustomService | null
@@ -57,6 +66,59 @@ export function getGraphEdgesFromServiceConnections(
         source: connection.sourceID,
         target: connection.destinationID,
         data: { parentNode: connection.sourceNamespace, ...connection }
+      })
+  })
+
+  return graphEdges
+}
+
+export function getGraphNodesFromNetworkMap(
+  networkMap: ApiCreateNetworkMapRequest | undefined
+): Node<NetworkMapNodeData, NodeTypes>[] {
+  if (!networkMap) return []
+
+  const namespaces = new Set<string>()
+  const graphNodes: Node<NetworkMapNodeData, NodeTypes>[] = []
+
+  networkMap.resources?.map(service => {
+    if (service.namespace && !namespaces.has(service.namespace)) {
+      namespaces.add(service.namespace)
+    }
+
+    if (service.id)
+      graphNodes.push({
+        id: service.id,
+        data: service,
+        parentNode: service.namespace,
+        ...nodeOptions
+      })
+  })
+
+  namespaces.forEach(value => {
+    graphNodes.push({
+      id: value,
+      data: { name: value },
+      ...nodeGroupOptions
+    })
+  })
+
+  return graphNodes
+}
+
+export function getGraphEdgesFromNetworkMap(
+  networkMap: ApiCreateNetworkMapRequest | undefined
+): Edge<NetworkMapEdgeData>[] {
+  if (!networkMap) return []
+
+  const graphEdges: Edge<NetworkMapEdgeData>[] = []
+
+  networkMap.connections?.map(connection => {
+    if (connection.from?.id && connection.to?.id)
+      graphEdges.push({
+        id: `${connection.from.id}-${connection.to.id}`,
+        source: connection.from.id,
+        target: connection.to.id,
+        data: { parentNode: connection.from.namespace, ...connection }
       })
   })
 

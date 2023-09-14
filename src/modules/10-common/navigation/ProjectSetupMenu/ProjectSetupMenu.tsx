@@ -85,7 +85,7 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
   const showTemplates = isCIorCDorSTO || !module
   const showFileStore = isCIorCD || !module
   // Add more modules as they keep on supporting service discovery feature
-  const showDiscovery = isCHAOS && PL_DISCOVERY_ENABLE
+  const showDiscovery = (isCHAOS || !module) && PL_DISCOVERY_ENABLE
 
   return (
     <NavExpandable
@@ -131,7 +131,7 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
         {module === 'cd' && !isCDGetStartedVisible && (
           <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCD({ ...params, module })} />
         )}
-        {showDiscovery && <SidebarLink label={getString('common.discovery')} to={routes.toDiscovery({ ...params })} />}
+        {showDiscovery && <SidebarLink label={getString('common.discovery')} to={routes.toDiscovery(params)} />}
         {SRM_ET_EXPERIMENTAL && module === 'cv' && (
           <SidebarLink
             label={getString('common.codeErrorsSettings')}

@@ -5,51 +5,116 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
-import { Button, ButtonVariation, Checkbox, Container, Icon, Layout, TableV2, Text, useToaster } from '@harness/uicore'
+import React from 'react'
+import {
+  Button,
+  ButtonVariation,
+  Checkbox,
+  Container,
+  DropDown,
+  ExpandingSearchInput,
+  FlexExpander,
+  Layout,
+  Page,
+  PageSpinner,
+  SelectOption,
+  TableV2,
+  Text
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { useHistory, useParams } from 'react-router-dom'
-import type { CellProps, Column, Renderer, Row } from 'react-table'
+import { useParams } from 'react-router-dom'
+import type { CellProps, Column } from 'react-table'
+import { cloneDeep } from 'lodash-es'
+import { ReactFlowProvider } from 'reactflow'
 import { useStrings } from 'framework/strings'
 import {
   ApiCreateNetworkMapRequest,
-  DatabaseConnection,
-  DatabaseNetworkMapEntity,
   DatabaseServiceCollection,
-  useCreateNetworkMap,
-  useListService
+  useListK8SCustomService,
+  useListK8sCustomServiceConnection,
+  useListNamespace
 } from 'services/servicediscovery'
-import type { DiscoveryPathProps } from '@common/interfaces/RouteInterfaces'
-import routes from '@common/RouteDefinitions'
+import type {
+  NetworkMapPathProps,
+  ModulePathParams,
+  ProjectPathProps,
+  NetworkMapQueryParams
+} from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { CommonPaginationQueryParams, useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@discovery/interface/filters'
-import type { FormValues } from '../../NetworkMapStudio'
+import { StudioTabs } from '@discovery/interface/networkMapStudio'
+import { DiscoveryObjectStoreNames, useDiscoveryIndexedDBHook } from '@discovery/hooks/useDiscoveryIndexedDBHook'
+import {
+  getGraphEdgesFromNetworkMap,
+  getGraphNodesFromNetworkMap
+} from '@discovery/components/NetworkGraph/utils/graphDataTransformation'
+import NetworkGraph from '@discovery/components/NetworkGraph/NetworkGraph'
+import getConnectionsBetweenServicesInNetworkMap from '@discovery/utils/getConnectionsBetweenServicesInNetworkMap'
+import { getRelatedServices } from '@discovery/utils/getRelatedServices'
+import {
+  RenderMenuCell,
+  RenderSelectServiceCheckbox,
+  RenderServiceIPAddress,
+  RenderServiceName,
+  RenderServiceNamespace,
+  RenderServicePort
+} from './SelectServiceTableCells'
+import noServiceIllustration from './images/noServiceIllustration.png'
 import css from './SelectService.module.scss'
 
 export interface Props {
-  details: FormValues | undefined
+  networkMap: ApiCreateNetworkMapRequest | undefined
+  setNetworkMap: React.Dispatch<React.SetStateAction<ApiCreateNetworkMapRequest | undefined>>
+  handleTabChange: (tabID: StudioTabs) => void
 }
 
-const SelectService: React.FC<Props> = /* istanbul ignore next */ ({ details }) => {
+const SelectService: React.FC<Props> = ({ networkMap, setNetworkMap, handleTabChange }) => {
   const { getString } = useStrings()
-  const history = useHistory()
-  const { relatedServices } = useQueryParams<{ relatedServices?: string }>()
-  const { accountId, orgIdentifier, projectIdentifier, dAgentId } = useParams<DiscoveryPathProps>()
-  const [selectedServices, setSelectedServices] = useState<DatabaseServiceCollection[]>([])
-  const { showError, showSuccess } = useToaster()
+  const { accountId, orgIdentifier, projectIdentifier, dAgentId } = useParams<
+    ProjectPathProps & ModulePathParams & NetworkMapPathProps
+  >()
+  const { page, size, relatedServicesOf } = useQueryParams<NetworkMapQueryParams>()
 
-  const { page, size } = useQueryParams<CommonPaginationQueryParams>()
+  const [search, setSearch] = React.useState<string>()
+  const [namespace, selectedNamespace] = React.useState<string>()
 
-  const { data: discoveredServices, loading } = useListService({
+  const { dbInstance } = useDiscoveryIndexedDBHook({
+    clearStoreList: [DiscoveryObjectStoreNames.NETWORK_MAP]
+  })
+
+  const { data: discoveredServices, loading: listServiceLoading } = useListK8SCustomService({
     agentIdentity: dAgentId,
     queryParams: {
       accountIdentifier: accountId,
       organizationIdentifier: orgIdentifier,
       projectIdentifier: projectIdentifier,
-      limit: size ?? 0,
-      page: page ?? 0,
-      all: false
+      namespace: namespace,
+      page: page ?? DEFAULT_PAGE_INDEX,
+      limit: size ?? DEFAULT_PAGE_SIZE,
+      all: false,
+      search: search
+    }
+  })
+
+  const { data: connectionList } = useListK8sCustomServiceConnection({
+    agentIdentity: dAgentId,
+    queryParams: {
+      accountIdentifier: accountId,
+      organizationIdentifier: orgIdentifier,
+      projectIdentifier: projectIdentifier
+    }
+  })
+
+  const { data: namespaceList } = useListNamespace({
+    agentIdentity: dAgentId,
+    queryParams: {
+      accountIdentifier: accountId,
+      organizationIdentifier: orgIdentifier,
+      projectIdentifier: projectIdentifier,
+      all: true,
+      page: 0,
+      limit: 0
     }
   })
 
@@ -57,172 +122,145 @@ const SelectService: React.FC<Props> = /* istanbul ignore next */ ({ details }) 
     pageSize: discoveredServices?.page?.limit ?? DEFAULT_PAGE_SIZE,
     pageIndex: discoveredServices?.page?.index ?? DEFAULT_PAGE_INDEX,
     itemCount: discoveredServices?.page?.totalItems ?? 0,
-    pageCount: discoveredServices?.page?.totalPages ?? 0,
-    showPagination: true
+    pageCount: discoveredServices?.page?.totalPages ?? 1,
+    hidePageNumbers: true
   })
 
-  const { mutate: createNetworkMapMutate } = useCreateNetworkMap({
-    queryParams: {
-      accountIdentifier: accountId,
-      organizationIdentifier: orgIdentifier,
-      projectIdentifier: projectIdentifier
-    },
-    agentIdentity: dAgentId
-  })
+  React.useEffect(() => {
+    if (relatedServicesOf && !networkMap?.resources) handleSelectRelatedServices(relatedServicesOf)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [networkMap, dbInstance])
 
-  const handleSelectChange = (isSelect: boolean, row: Row<DatabaseServiceCollection>): void => {
+  async function handleSelectionChange(isSelect: boolean, service: DatabaseServiceCollection): Promise<void> {
+    // Select or deselect services
+    let selectedServices = cloneDeep(networkMap?.resources) ?? []
     if (isSelect) {
-      setSelectedServices(state => state.concat(row.original))
+      selectedServices?.push({
+        id: service.id,
+        kind: service.kind,
+        name: service.name,
+        namespace: service.namespace
+      })
     } else {
-      setSelectedServices(state => state.filter(service => service.id !== row.original.id))
+      /* istanbul ignore next */ selectedServices = selectedServices?.filter(s => s.id !== service.id)
     }
+
+    const newNetworkMap: ApiCreateNetworkMapRequest = {
+      ...networkMap,
+      resources: selectedServices,
+      connections: getConnectionsBetweenServicesInNetworkMap(selectedServices, connectionList)
+    }
+    setNetworkMap(newNetworkMap)
+    await dbInstance?.put(DiscoveryObjectStoreNames.NETWORK_MAP, newNetworkMap)
   }
 
-  const handleCreateNetworkMap = async (): Promise<void> => {
-    const connections: DatabaseConnection[] = []
-    const resources: DatabaseNetworkMapEntity[] = []
+  const dropdownNamespaceOptions: SelectOption[] = [
+    { value: '', label: 'All' },
+    ...(namespaceList?.items?.map(value => {
+      return {
+        value: value.name ?? '',
+        label: value.name ?? ''
+      }
+    }) ?? [])
+  ]
 
-    if (details?.name === getString('discovery.untitledNetworkMap')) {
-      showError(`${getString('discovery.networkMapNameError')}`)
-      return
-    }
+  const getCheckedStatus = React.useMemo(() => {
+    const listOfServicesOnPage = discoveredServices?.items?.map(item => item.id)
+    const selectedServicesOnPage = networkMap?.resources?.filter(item => listOfServicesOnPage?.includes(item.id))
 
-    // For loop to loop over connections serially, to be removed after graph is introduced
-    for (let index = 0; index < selectedServices.length - 1; index++) {
-      const service = selectedServices[index]
-      const nextService = selectedServices[index + 1]
-      connections.push({
-        from: {
+    if (!listOfServicesOnPage || !selectedServicesOnPage || networkMap?.resources?.length === 0)
+      return { allChecked: false, intermediate: false }
+
+    if (listOfServicesOnPage.length === selectedServicesOnPage.length) return { allChecked: true, intermediate: false }
+
+    if (listOfServicesOnPage.length > selectedServicesOnPage.length) return { allChecked: false, intermediate: true }
+  }, [discoveredServices, networkMap])
+
+  async function handleSelectAll(checked: boolean): Promise<void> {
+    let newNetworkMap: ApiCreateNetworkMapRequest | undefined
+    const listOfServicesOnPage = discoveredServices?.items?.map(item => item.id)
+    const prevSelectedServicesNotOnPage = networkMap?.resources?.filter(
+      item => !listOfServicesOnPage?.includes(item.id)
+    )
+    if (checked) {
+      const selectedServices = [
+        ...(prevSelectedServicesNotOnPage ?? []),
+        ...(discoveredServices?.items?.map(service => ({
           id: service.id,
-          kind: service.kind
-        },
-        port: service.spec && service.spec.ports && service.spec.ports[0].port?.toString(),
-        to: {
-          id: nextService.id,
-          kind: nextService.kind
-        }
-      })
+          kind: service.kind,
+          name: service.name,
+          namespace: service.namespace
+        })) ?? [])
+      ]
+
+      newNetworkMap = {
+        ...networkMap,
+        resources: selectedServices,
+        connections: getConnectionsBetweenServicesInNetworkMap(selectedServices, connectionList)
+      }
+    } else {
+      /* istanbul ignore next */
+      newNetworkMap = {
+        ...networkMap,
+        resources: prevSelectedServicesNotOnPage,
+        connections: getConnectionsBetweenServicesInNetworkMap(prevSelectedServicesNotOnPage, connectionList)
+      }
     }
-    for (let index = 0; index < selectedServices.length - 1; index++) {
-      resources.push({
-        id: selectedServices[index].id,
-        kind: selectedServices[index].kind
-      })
-    }
-    const response: ApiCreateNetworkMapRequest = {
-      connections: connections,
-      identity: details?.identifier,
-      resources,
-      name: details?.name
-    }
-    try {
-      await createNetworkMapMutate({
-        ...response
-      }).then(() => {
-        showSuccess(getString('discovery.networkMapCreated'))
-        history.push(
-          routes.toDiscoveryDetails({
-            accountId,
-            orgIdentifier,
-            projectIdentifier,
-            dAgentId: dAgentId
-          })
-        )
-      })
-    } catch (error) {
-      showError(error.data?.description || error.data?.message)
-    }
+
+    setNetworkMap(newNetworkMap)
+    await dbInstance?.put(DiscoveryObjectStoreNames.NETWORK_MAP, newNetworkMap)
   }
 
-  const RenderSelectServiceCheckbox: Renderer<CellProps<DatabaseServiceCollection>> = ({ row }) => {
-    if (relatedServices)
-      return relatedServices.split(',').map(releatedService => {
-        if (row.original.name === releatedService)
-          return (
-            <Checkbox
-              checked
-              key={row.original.name}
-              margin={{ left: 'medium' }}
-              onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                handleSelectChange(event.currentTarget.checked, row)
-              }}
-            />
-          )
-      })
-    else
-      return (
-        <Checkbox
-          key={row.original.name}
-          margin={{ left: 'medium' }}
-          onChange={(event: React.FormEvent<HTMLInputElement>) => {
-            handleSelectChange(event.currentTarget.checked, row)
-          }}
-        />
-      )
+  // Dev Node: I'm exhausted and the popover won't open in jest env. I give up on this code and life itself.
+  /* istanbul ignore next */
+  async function handleSelectRelatedServices(serviceID: string): Promise<void> {
+    if (!networkMap) return
+
+    const relatedServices = getRelatedServices(serviceID, discoveredServices, connectionList)
+    const additionalServices = relatedServices?.filter(s => !networkMap?.resources?.some(r => r.id === s.id))
+    if (!additionalServices || additionalServices.length === 0) return
+
+    const selectedServices = [
+      ...(networkMap?.resources ?? []),
+      ...(additionalServices?.map(service => ({
+        id: service.id,
+        kind: service.kind,
+        name: service.name,
+        namespace: service.namespace
+      })) ?? [])
+    ]
+    const newNetworkMap: ApiCreateNetworkMapRequest | undefined = {
+      ...networkMap,
+      resources: selectedServices,
+      connections: getConnectionsBetweenServicesInNetworkMap(selectedServices, connectionList)
+    }
+
+    setNetworkMap(newNetworkMap)
+    await dbInstance?.put(DiscoveryObjectStoreNames.NETWORK_MAP, newNetworkMap)
   }
 
-  const RenderServiceName: Renderer<CellProps<DatabaseServiceCollection>> = ({ row }) => (
-    <Layout.Vertical spacing={'small'} margin={{ left: 'small' }}>
-      <Text lineClamp={1} font={{ size: 'normal', weight: 'semi-bold' }} color={Color.PRIMARY_7}>
-        {row.original.name}
-      </Text>
-      <Text lineClamp={1} font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_400}>
-        ID: {row.original.id}
-      </Text>
-    </Layout.Vertical>
-  )
+  const nodes = getGraphNodesFromNetworkMap(networkMap)
+  const edges = getGraphEdgesFromNetworkMap(networkMap)
 
-  const RenderServiceNamespace: Renderer<CellProps<DatabaseServiceCollection>> = ({ row }) => (
-    <Layout.Vertical spacing={'small'}>
-      <Text lineClamp={1} font={{ size: 'normal', weight: 'semi-bold' }} color={Color.BLACK}>
-        Namespace
-      </Text>
-      <Text
-        lineClamp={1}
-        font={{ size: 'small', weight: 'semi-bold' }}
-        color={Color.GREY_600}
-        icon="service-deployment"
-      >
-        {row.original.namespace}
-      </Text>
-    </Layout.Vertical>
-  )
-
-  const RenderServiceIPAddress: Renderer<CellProps<DatabaseServiceCollection>> = ({ row }) => (
-    <Layout.Vertical spacing={'small'}>
-      <Text lineClamp={1} font={{ size: 'normal', weight: 'semi-bold' }} color={Color.BLACK}>
-        IP Address
-      </Text>
-      <Text lineClamp={1} font={{ size: 'small', weight: 'semi-bold' }} color={Color.PRIMARY_7}>
-        {row.original.spec && row.original.spec?.clusterIP}
-      </Text>
-    </Layout.Vertical>
-  )
-
-  const RenderServicePort: Renderer<CellProps<DatabaseServiceCollection>> = ({ row }) => (
-    <Layout.Vertical spacing={'small'}>
-      <Text lineClamp={1} font={{ size: 'normal', weight: 'semi-bold' }} color={Color.BLACK}>
-        Port
-      </Text>
-      <Text lineClamp={1} font={{ size: 'small', weight: 'semi-bold' }} color={Color.PRIMARY_7}>
-        {row.original.spec && row.original.spec?.ports && row.original.spec?.ports[0]?.port}
-      </Text>
-    </Layout.Vertical>
-  )
-
-  const columns: Column<DatabaseServiceCollection>[] = useMemo(
+  const columns: Column<DatabaseServiceCollection>[] = React.useMemo(
     () => [
       {
         Header: '',
-        width: '10%',
+        width: 'fit-content',
         id: 'action',
-        Cell: RenderSelectServiceCheckbox,
+        Cell: (props: CellProps<DatabaseServiceCollection>) => (
+          <RenderSelectServiceCheckbox
+            {...props}
+            networkMap={networkMap}
+            handleSelectionChange={handleSelectionChange}
+          />
+        ),
         disableSortBy: true
       },
       {
         Header: '',
         id: 'name',
-        width: '40%',
+        width: '47%',
         Cell: RenderServiceName
       },
       {
@@ -242,67 +280,97 @@ const SelectService: React.FC<Props> = /* istanbul ignore next */ ({ details }) 
         id: 'port',
         width: '8%',
         Cell: RenderServicePort
+      },
+      {
+        Header: '',
+        id: 'menu',
+        width: 'fit-content',
+        Cell: (props: CellProps<DatabaseServiceCollection>) => (
+          <RenderMenuCell {...props} handleClick={() => handleSelectRelatedServices(props.row.original.id ?? '')} />
+        )
       }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [discoveredServices]
+    [discoveredServices, networkMap, connectionList]
   )
+
+  if (listServiceLoading) {
+    return (
+      <Page.Body>
+        <PageSpinner />
+      </Page.Body>
+    )
+  }
 
   return (
     <Layout.Horizontal width="100%" height="100%">
-      <Container background={Color.PRIMARY_BG} className={css.services}>
-        <Text font={{ variation: FontVariation.H5, weight: 'semi-bold' }} margin={{ top: 'large', left: 'large' }}>
-          {getString('discovery.allDiscoveredServices')} {`(${discoveredServices?.items?.length ?? '0'})`}
-        </Text>
-        <Container>
-          {loading ? (
-            <Container width={'100%'} flex={{ align: 'center-center' }}>
-              <Layout.Vertical spacing={'medium'} style={{ alignItems: 'center' }}>
-                <Icon name="steps-spinner" size={32} color={Color.GREY_600} />
-                <Text font={{ size: 'medium', align: 'center' }} color={Color.GREY_600}>
-                  {getString('loading')}
-                </Text>
-              </Layout.Vertical>
-            </Container>
-          ) : (
-            <Container width="95%" height="75vh" style={{ margin: 'auto' }}>
-              <TableV2<DatabaseServiceCollection>
-                className={css.tableBody}
-                columns={columns}
-                data={discoveredServices?.items ?? []}
-                pagination={paginationProps}
-              />
-            </Container>
-          )}
-        </Container>
-        <Container className={css.bottomNav} padding={'medium'} height="8vh">
-          <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing={'medium'}>
-            <Button
-              variation={ButtonVariation.TERTIARY}
-              text={getString('cancel')}
-              onClick={() =>
-                history.push(
-                  routes.toDiscoveryDetails({
-                    accountId,
-                    orgIdentifier,
-                    projectIdentifier,
-                    dAgentId: dAgentId
-                  })
-                )
-              }
+      <Container width="40%">
+        <Layout.Vertical height="100%" padding="medium" spacing="medium">
+          <Text font={{ variation: FontVariation.H5, weight: 'semi-bold' }}>
+            {getString('discovery.allDiscoveredServices')} ({discoveredServices?.items?.length ?? 0})
+          </Text>
+          <Container width="100%" flex>
+            <DropDown
+              buttonTestId="namespace"
+              width={160}
+              items={dropdownNamespaceOptions ?? []}
+              onChange={option => {
+                selectedNamespace(option.value as string)
+              }}
+              placeholder={getString('common.namespace')}
+              value={namespace}
             />
-            <Button
-              type="submit"
-              variation={ButtonVariation.PRIMARY}
-              text={'Create Network Map'}
-              onClick={() => handleCreateNetworkMap()}
+            <FlexExpander />
+            <ExpandingSearchInput
+              data-testid="searchBox"
+              alwaysExpanded
+              width={232}
+              defaultValue={search}
+              placeholder={getString('discovery.searchService')}
+              throttle={500}
+              onChange={value => setSearch(value)}
             />
-          </Layout.Horizontal>
-        </Container>
+          </Container>
+          <Checkbox
+            labelElement={
+              <Text font={{ variation: FontVariation.FORM_LABEL }}>{getString('discovery.selectAll')}</Text>
+            }
+            width="fit-content"
+            checked={getCheckedStatus?.allChecked}
+            indeterminate={getCheckedStatus?.intermediate}
+            onChange={(event: React.FormEvent<HTMLInputElement>) => {
+              handleSelectAll(event.currentTarget.checked)
+            }}
+          />
+          <TableV2<DatabaseServiceCollection>
+            className={css.tableBody}
+            columns={columns}
+            data={discoveredServices?.items ?? []}
+            pagination={paginationProps}
+            hideHeaders
+          />
+          <Button
+            width={80}
+            variation={ButtonVariation.PRIMARY}
+            text={getString('next')}
+            disabled={!networkMap?.resources}
+            onClick={() => handleTabChange(StudioTabs.CONFIGURE_RELATIONS)}
+          />
+        </Layout.Vertical>
       </Container>
-
-      {/* TODO: Add Graph here */}
-      <div className={css.visualization}></div>
+      <Container width="60%" height="100%">
+        {nodes.length === 0 || !connectionList ? (
+          <Layout.Vertical height="100%" flex={{ align: 'center-center' }} background={Color.WHITE} spacing="medium">
+            <img src={noServiceIllustration} width={250} height={111} />
+            <Text font={{ variation: FontVariation.H5 }}>{getString('discovery.noServiceSelected')}</Text>
+            <Text width="40%">{getString('discovery.noServiceSelectedDescription')}</Text>
+          </Layout.Vertical>
+        ) : (
+          <ReactFlowProvider>
+            <NetworkGraph nodes={nodes} edges={edges} />
+          </ReactFlowProvider>
+        )}
+      </Container>
     </Layout.Horizontal>
   )
 }

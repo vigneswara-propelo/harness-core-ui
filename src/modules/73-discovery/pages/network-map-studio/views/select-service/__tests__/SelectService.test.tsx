@@ -6,86 +6,236 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { act, fireEvent, render, waitFor, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import * as servicediscovery from 'services/servicediscovery'
-import { accountPathProps, modulePathProps, projectPathProps } from '@common/utils/routeUtils'
-import { FormValues } from '@discovery/pages/network-map-studio/NetworkMapStudio'
+import { accountPathProps, modulePathProps, networkMapPathProps, projectPathProps } from '@common/utils/routeUtils'
 import SelectService from '../SelectService'
+import { mockConnections, mockNamespaces, mockNetworkMap, mockServices } from './mocks'
 
 jest.useFakeTimers({ advanceTimers: true })
-const createNetworkMapMutate = jest.fn()
 
-const paginationProps = {
-  all: true,
-  index: 0,
-  totalItems: 1,
-  totalPages: 1
-}
-
-const mockDetails: FormValues = {
-  identifier: 'network-map-1',
-  name: 'network map 1',
-  description: 'Network map'
-}
-
-const mockDiscoveryService: servicediscovery.DatabaseServiceCollection = {
-  agentID: '',
-  apiVersion: 'v1',
-  createdAt: '2023-06-21T13:17:41.491Z',
-  createdBy: 'VgWXxi_6TdqAyplTQMg4CQ',
-  updatedAt: '2023-06-21T13:17:41.491Z',
-  id: '',
-  kind: 'ClusterService',
-  name: 'Test Service',
-  namespace: 'sd1',
-  removed: false,
-  updatedBy: ''
-}
-
-const mockServiceList: servicediscovery.ApiListServiceResponse = {
-  items: [mockDiscoveryService],
-  page: paginationProps
-}
-
-const fetchDiscoveryServices = jest.fn(() => {
-  return Object.create(mockServiceList)
+const PATH = routes.toCreateNetworkMap({
+  ...accountPathProps,
+  ...projectPathProps,
+  ...modulePathProps,
+  ...networkMapPathProps
 })
-
-jest.mock('services/servicediscovery', () => ({
-  useListService: jest.fn().mockImplementation(() => {
-    return { data: mockServiceList, refetch: fetchDiscoveryServices, error: null, loading: false }
-  }),
-  useCreateNetworkMap: jest
-    .fn()
-    .mockImplementation(() => ({ mutate: createNetworkMapMutate as servicediscovery.ApiGetNetworkMapResponse }))
-}))
-
-const PATH = routes.toDiscovery({ ...accountPathProps, ...projectPathProps, ...modulePathProps })
 const PATH_PARAMS = {
   accountId: 'accountId',
   orgIdentifier: 'default',
   projectIdentifier: 'Discovery_Test',
-  module: 'chaos'
+  module: 'chaos',
+  dAgentId: 'dAgent-1',
+  networkMapId: 'testnetworkmap'
 }
 
-describe('<SelectService /> tests', () => {
+jest.mock('@discovery/components/NetworkGraph/NetworkGraph', () => ({
+  ...jest.requireActual('@discovery/components/NetworkGraph/NetworkGraph'),
+  __esModule: true,
+  default: () => {
+    return <div className={'networkGraph'}>Network Graph</div>
+  }
+}))
+
+jest.mock('services/servicediscovery', () => ({
+  useListK8SCustomService: jest.fn().mockImplementation(() => {
+    return { data: mockServices, refetch: jest.fn(), error: null, loading: false }
+  }),
+  useListK8sCustomServiceConnection: jest.fn().mockImplementation(() => {
+    return { data: mockConnections, refetch: jest.fn(), error: null, loading: false }
+  }),
+  useListNamespace: jest.fn().mockImplementation(() => {
+    return { data: mockNamespaces, refetch: jest.fn(), error: null, loading: false }
+  })
+}))
+
+jest.mock('@discovery/hooks/useDiscoveryIndexedDBHook', () => ({
+  useDiscoveryIndexedDBHook: jest.fn().mockReturnValue({
+    isInitializingDB: false,
+    dbInstance: {
+      get: jest.fn(() => Promise.resolve(mockNetworkMap)),
+      put: jest.fn(() => Promise.resolve()),
+      delete: jest.fn(() => Promise.resolve()),
+      transaction: jest.fn().mockReturnValue({
+        objectStore: jest.fn().mockReturnValue({
+          get: jest.fn(() => Promise.resolve(mockNetworkMap)),
+          put: jest.fn(() => Promise.resolve()),
+          delete: jest.fn(() => Promise.resolve())
+        })
+      })
+    }
+  }),
+  DiscoveryObjectStoreNames: {}
+}))
+
+const handleTabChange = jest.fn()
+const setNetworkMap = jest.fn().mockImplementation(() => mockNetworkMap)
+
+const getRowCheckBox = (row: Element): HTMLInputElement => row.querySelector('input[type="checkbox"]')!
+const getSelectRelatedServicesButton = (): Element => document.body.querySelector('.bp3-portal span[data-icon="Edit"]')!
+const getMenuIcon = (row: Element): Element | null => {
+  const columns = row.querySelectorAll('[role="cell"]')
+  const lastColumn = columns[columns.length - 1]
+  return lastColumn.querySelector('[data-icon="Options"]')
+}
+
+describe('<SelectService /> tests with data', () => {
   beforeEach(() => jest.clearAllMocks())
 
-  test('should match snapshot', async () => {
-    const { container } = render(
+  test('should render component and call required APIs', async () => {
+    const { container, getAllByRole } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
-        <SelectService details={mockDetails} />
+        <SelectService networkMap={mockNetworkMap} setNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
       </TestWrapper>
     )
-    expect(servicediscovery.useListService).toBeCalled()
+    expect(servicediscovery.useListK8SCustomService).toBeCalled()
+    expect(servicediscovery.useListK8sCustomServiceConnection).toBeCalled()
+    expect(servicediscovery.useListNamespace).toBeCalled()
 
+    expect(container).toMatchSnapshot()
+
+    const allRows = getAllByRole('row')
+    const firstRow = allRows[0]
+    expect(within(firstRow).getByText('access-control')).toBeInTheDocument()
+    expect(within(firstRow).getByText('discovery.discoveryDetails.id: 64920dc166c663ba792cf3b0')).toBeInTheDocument()
+    expect(within(firstRow).getByText('common.namespace')).toBeInTheDocument()
+    expect(within(firstRow).getByText('chaos-1000')).toBeInTheDocument()
+    expect(within(firstRow).getByText('common.ipAddress')).toBeInTheDocument()
+    expect(within(firstRow).getByText('10.104.11.160')).toBeInTheDocument()
+    expect(within(firstRow).getByText('common.smtp.port')).toBeInTheDocument()
+    expect(within(firstRow).getByText('9006')).toBeInTheDocument()
+  })
+
+  test('should check service on clicking checkbox', async () => {
+    const { container } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <SelectService networkMap={mockNetworkMap} setNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
+      </TestWrapper>
+    )
+
+    const tableRows = Array.from(container.querySelectorAll('div[role="row"]'))
+
+    const testRowCheckboxClick = async (row: Element): Promise<void> => {
+      const checkbox = getRowCheckBox(row)
+
+      expect(checkbox).toBeInTheDocument()
+      expect(checkbox).not.toBeChecked()
+      // select
+      fireEvent.click(checkbox)
+      expect(container).toMatchSnapshot()
+    }
+    await testRowCheckboxClick(tableRows[0])
+  })
+
+  test('should check related services and menu should open and close', async () => {
+    const { container } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <SelectService networkMap={mockNetworkMap} setNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
+      </TestWrapper>
+    )
+
+    const tableRows = Array.from(container.querySelectorAll('div[role="row"]'))
+
+    const testRowMenu = async (row: Element): Promise<void> => {
+      const menuIcon = getMenuIcon(row)
+
+      // assert that menu icon exists in the last column
+      expect(menuIcon).toBeTruthy()
+
+      const checkForMenuState = async (shouldExist = false): Promise<void> => {
+        const selectRelatedServices = getSelectRelatedServicesButton()
+        if (shouldExist) {
+          if (selectRelatedServices)
+            act(() => {
+              fireEvent.click(selectRelatedServices)
+            })
+
+          expect(container).toMatchSnapshot()
+        } else {
+          expect(selectRelatedServices).not.toBeTruthy()
+        }
+      }
+      // menu should not be open by default
+      await checkForMenuState()
+      await userEvent.click(menuIcon!)
+
+      // menu should open on clicking the options icon
+      await checkForMenuState(true)
+
+      act(() => {
+        fireEvent.mouseDown(document)
+      })
+    }
+    await testRowMenu(tableRows[0])
+  })
+
+  test('should select all service on clicking select all', async () => {
+    const { container, getByText } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <SelectService networkMap={mockNetworkMap} setNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
+      </TestWrapper>
+    )
+
+    act(() => {
+      fireEvent.click(getByText('discovery.selectAll'))
+    })
     expect(container).toMatchSnapshot()
   })
 
+  test('should select a namespace and search', async () => {
+    const { container, getByTestId, getByPlaceholderText } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <SelectService networkMap={mockNetworkMap} setNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
+      </TestWrapper>
+    )
+
+    const dropdown = getByTestId('namespace')
+    act(() => {
+      fireEvent.click(dropdown)
+    })
+
+    const listItem = container.getElementsByClassName('DropDown--menuItem')[0]
+    act(() => {
+      fireEvent.click(listItem)
+    })
+    expect(container).toMatchSnapshot()
+
+    const query = 'test'
+    const searchInput = getByPlaceholderText('discovery.searchService') as HTMLInputElement
+    expect(searchInput).not.toBe(null)
+    if (!searchInput) {
+      throw Error('no search input')
+    }
+
+    await userEvent.type(searchInput, query)
+    await waitFor(() => expect(searchInput?.value).toBe(query))
+  })
+
+  test('should change tab on Next button', async () => {
+    const { container, getByText } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <SelectService networkMap={mockNetworkMap} setNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
+      </TestWrapper>
+    )
+
+    const nextButton = getByText('next')
+    act(() => {
+      fireEvent.click(nextButton)
+    })
+    expect(container).toMatchSnapshot()
+  })
+})
+
+describe('<SelectService /> tests without data', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   test('should render loading view correctly', async () => {
-    jest.spyOn(servicediscovery, 'useListService').mockImplementation((): any => {
+    jest.spyOn(servicediscovery, 'useListK8SCustomService').mockImplementation((): any => {
       return {
         data: undefined,
         loading: true
@@ -94,16 +244,33 @@ describe('<SelectService /> tests', () => {
 
     const { container } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
-        <SelectService details={mockDetails} />
+        <SelectService networkMap={mockNetworkMap} setNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
       </TestWrapper>
     )
-    expect(servicediscovery.useListService).toBeCalled()
+    expect(servicediscovery.useListK8SCustomService).toBeCalled()
 
     expect(container).toMatchSnapshot()
   })
 
-  test('should render error view correctly', async () => {
-    jest.spyOn(servicediscovery, 'useListService').mockImplementation((): any => {
+  test('should check for partial data (some fields undefined)', async () => {
+    jest.spyOn(servicediscovery, 'useListK8SCustomService').mockImplementation((): any => {
+      return {
+        data: { ...mockServices, items: [{ ...mockServices.items[0], spec: undefined }] },
+        loading: false
+      }
+    })
+
+    const { container } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <SelectService networkMap={mockNetworkMap} setNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
+      </TestWrapper>
+    )
+
+    expect(container).toMatchSnapshot()
+  })
+
+  test('when namespace data is undefined', async () => {
+    jest.spyOn(servicediscovery, 'useListNamespace').mockImplementation((): any => {
       return {
         data: undefined,
         loading: false,
@@ -112,16 +279,11 @@ describe('<SelectService /> tests', () => {
         }
       }
     })
-
-    const { container, getByText } = render(
+    const { container } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
-        <SelectService details={mockDetails} />
+        <SelectService networkMap={mockNetworkMap} setNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
       </TestWrapper>
     )
-    expect(servicediscovery.useListService).toBeCalled()
-
     expect(container).toMatchSnapshot()
-
-    expect(getByText('Create Network Map')).toBeInTheDocument()
   })
 })
