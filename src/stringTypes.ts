@@ -7167,9 +7167,11 @@ export interface StringsMap {
   'cd.webhookEvents.dateTime': string
   'cd.webhookEvents.eventId': string
   'cd.webhookEvents.events': string
+  'cd.webhookEvents.lastEventDetails': string
   'cd.webhookEvents.payloadDetails': string
   'cd.webhookEvents.pusher': string
   'cd.webhookEvents.timestamp': string
+  'cd.webhookEvents.viewAll': string
   'cd.webhooks.createSubtitle': string
   'cd.webhooks.delete': string
   'cd.webhooks.deleteConfirmation': string

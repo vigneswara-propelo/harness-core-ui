@@ -15,12 +15,13 @@ import {
   Layout,
   Text,
   Container,
-  Dialog
+  Dialog,
+  useToaster
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { useListGitxWebhooksQuery } from '@harnessio/react-ng-manager-client'
+import { useListGitxWebhooksQuery, useUpdateGitxWebhookMutation } from '@harnessio/react-ng-manager-client'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
 import { useStrings } from 'framework/strings'
@@ -38,10 +39,11 @@ import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationPro
 import EmptyContentImg from '@common/images/EmptySearchResults.svg'
 import RbacButton from '@rbac/components/Button/Button'
 import NoData from '@cd/components/EnvironmentsV2/PageTemplate/NoData'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import WebhooksTabs from './WebhooksTabs'
 import WebhooksList from './WebhooksList/WebhooksList'
 import NewWebhookModal from './NewWebhookModal'
-import { STATUS, initialWebhookModalData } from './utils'
+import { STATUS, initialWebhookModalData, Error } from './utils'
 import css from './Webhooks.module.scss'
 
 export function Webhooks(): JSX.Element {
@@ -50,22 +52,40 @@ export function Webhooks(): JSX.Element {
   const { updateQueryParams } = useUpdateQueryParams<Partial<PageQueryParams>>()
   const queryParamOptions = usePageQueryParamOptions()
   const queryParams = useQueryParams<PageQueryParamsWithDefaults>(queryParamOptions)
+  const { showSuccess, showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const { page, size } = queryParams
 
-  const {
-    data,
-    isInitialLoading: loading,
-    isFetching: _loading,
-    error,
-    refetch
-  } = useListGitxWebhooksQuery({
+  const { data, isInitialLoading, isFetching, error, refetch } = useListGitxWebhooksQuery({
     queryParams: {
       limit: size,
       page: page ? page - 1 : 0
     }
   })
 
-  const isLoading = loading || _loading
+  const {
+    data: webhookUpdateData,
+    error: webhookUpdateError,
+    isLoading: loadingUpdateWebhook,
+    mutate: updateWebhook
+  } = useUpdateGitxWebhookMutation({})
+
+  const isLoading = isInitialLoading || isFetching || loadingUpdateWebhook
+
+  React.useEffect(() => {
+    if (webhookUpdateData) {
+      showSuccess(
+        getString('cd.webhooks.successUpdateMessage', {
+          name: webhookUpdateData.content.webhook_identifier
+        })
+      )
+      refetch()
+    }
+    if (webhookUpdateError) {
+      showError(getRBACErrorMessage((webhookUpdateError as Error).message))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [webhookUpdateData, webhookUpdateError])
 
   const state = useMemo<STATUS>(() => {
     if (error) {
@@ -75,7 +95,7 @@ export function Webhooks(): JSX.Element {
     }
 
     return STATUS.ok
-  }, [error, isLoading, STATUS])
+  }, [error, isLoading])
 
   const handlePageIndexChange = /* istanbul ignore next */ (index: number): void =>
     updateQueryParams({ page: index + 1 })
@@ -183,7 +203,7 @@ export function Webhooks(): JSX.Element {
             )}
             {hasData ? (
               <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
-                <WebhooksList response={response} refetch={refetch} />
+                <WebhooksList response={response} refetch={refetch} updateWebhook={updateWebhook} />
               </Container>
             ) : null}
           </>

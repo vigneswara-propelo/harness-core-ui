@@ -1318,3 +1318,5 @@ webhookEvents:
   eventId: Event Id
   payloadDetails: Payload Details
   timestamp: Timestamp
+  viewAll: View All Events
+  lastEventDetails: Last Event Details

@@ -11,12 +11,20 @@ import { Dialog, TableV2, useToaster, Text, Container } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import cx from 'classnames'
 import { FontVariation, Color } from '@harness/design-system'
-import { GitXWebhookResponse, ListGitxWebhooksOkResponse, deleteGitxWebhook } from '@harnessio/react-ng-manager-client'
+import {
+  GitXWebhookResponse,
+  ListGitxWebhooksOkResponse,
+  UpdateGitxWebhookOkResponse,
+  UpdateGitxWebhookProps,
+  deleteGitxWebhook
+} from '@harnessio/react-ng-manager-client'
 import { useModalHook } from '@harness/use-modal'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
+import { UseMutateFunction } from '@tanstack/react-query'
 import { useStrings } from 'framework/strings'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import routes from '@common/RouteDefinitions'
 import {
   Enabled,
   FolderPath,
@@ -32,17 +40,20 @@ import css from '../Webhooks.module.scss'
 
 export default function WebhooksList({
   response,
-  refetch
+  refetch,
+  updateWebhook
 }: {
   response: ListGitxWebhooksOkResponse | undefined
   refetch: () => void
+  updateWebhook: UseMutateFunction<UpdateGitxWebhookOkResponse, unknown, UpdateGitxWebhookProps, unknown>
 }): JSX.Element {
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const { showError, showSuccess } = useToaster()
-  const { orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
   const [rowData, setRowData] = React.useState<GitXWebhookResponse>()
   const [editable, setEditable] = React.useState(false)
+  const history = useHistory()
   const [showCreateModal, hideCreateModal] = useModalHook(
     /* istanbul ignore next */ () => {
       const onClosehandler = (): void => {
@@ -109,6 +120,15 @@ export default function WebhooksList({
     }
   }
 
+  const handleWebhookEnableToggle = (id: string, enabled: boolean): void => {
+    updateWebhook({
+      'gitx-webhook': id,
+      body: {
+        is_enabled: enabled
+      }
+    })
+  }
+
   type CustomColumn<T extends Record<string, any>> = Column<T>
 
   const envColumns: CustomColumn<GitXWebhookResponse>[] = useMemo(
@@ -141,7 +161,10 @@ export default function WebhooksList({
         Header: getString('enabledLabel').toUpperCase(),
         id: 'is_enabled',
         width: '10%',
-        Cell: withWebhook(Enabled)
+        Cell: withWebhook(Enabled),
+        actions: {
+          onToggleEnable: handleWebhookEnableToggle
+        }
       },
       {
         id: 'modifiedBy',
@@ -160,8 +183,13 @@ export default function WebhooksList({
     <TableV2<GitXWebhookResponse>
       columns={envColumns}
       data={response?.content as GitXWebhookResponse[]}
-      onRowClick={() => {
-        // TODO go to webhook details page goes here
+      onRowClick={rowDetails => {
+        history.push(
+          routes.toWebhooksDetails({
+            accountId,
+            webhookIdentifier: defaultTo(rowDetails.webhook_identifier, '')
+          })
+        )
       }}
     />
   )

@@ -1,0 +1,335 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+import React from 'react'
+import { useHistory, useParams } from 'react-router-dom'
+import {
+  Container,
+  Text,
+  Layout,
+  Switch,
+  Page,
+  Button,
+  DetailPageCard,
+  HarnessDocTooltip,
+  ButtonVariation,
+  Content,
+  ContentType,
+  useToaster,
+  Heading,
+  Dialog
+} from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
+import {
+  useGetGitxWebhookQuery,
+  useListGitxWebhookEventsQuery,
+  useUpdateGitxWebhookMutation
+} from '@harnessio/react-ng-manager-client'
+import cx from 'classnames'
+import { defaultTo, get } from 'lodash-es'
+import { useModalHook } from '@harness/use-modal'
+import EmptyContentImg from '@common/images/EmptySearchResults.svg'
+import { ModulePathParams, ProjectPathProps, WebhooksPathProps } from '@common/interfaces/RouteInterfaces'
+import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
+import { UseStringsReturn, useStrings } from 'framework/strings'
+import { getReadableDateTime } from '@common/utils/dateUtils'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import routes from '@common/RouteDefinitions'
+import NewWebhookModal from '../NewWebhookModal'
+import { processFolderPaths, Error } from '../utils'
+import css from './WebhookLandingPage.module.scss'
+
+const loadingHeaderHeight = 43
+
+const getOverviewContent = ({
+  getString,
+  name,
+  identifier,
+  connectorRef,
+  repo
+}: {
+  getString: UseStringsReturn['getString']
+  name?: string
+  identifier?: string
+  connectorRef?: string
+  repo?: string
+}): Content[] => [
+  {
+    label: getString('common.triggerName'),
+    value: name
+  },
+  {
+    label: getString('identifier'),
+    value: identifier
+  },
+  {
+    label: getString('platform.connectors.title.gitConnector'),
+    value: connectorRef
+  },
+  {
+    label: getString('repository'),
+    value: repo
+  }
+]
+const getDetailsContent = ({ folderPaths }: { folderPaths?: string[] }): Content[] => [
+  {
+    label: '',
+    type: ContentType.CUSTOM,
+    value: (
+      <Layout.Vertical>
+        {folderPaths?.map((folderPath, index) => {
+          return (
+            <Text color={Color.BLACK} lineClamp={1} margin={{ bottom: 'small' }} key={folderPath}>
+              {`${index + 1}. ${folderPath}`}
+            </Text>
+          )
+        })}
+      </Layout.Vertical>
+    )
+  }
+]
+export default function WebhookLandingPage(): JSX.Element {
+  const { webhookIdentifier, module, accountId } = useParams<WebhooksPathProps & ProjectPathProps & ModulePathParams>()
+  const { getString } = useStrings()
+  const { getRBACErrorMessage } = useRBACError()
+  const history = useHistory()
+  const { showSuccess, showError } = useToaster()
+
+  const {
+    data: webhookResponse,
+    isInitialLoading: loadingWebhook,
+    isFetching,
+    refetch
+  } = useGetGitxWebhookQuery({
+    'gitx-webhook': webhookIdentifier
+  })
+
+  const {
+    data: webhookUpdateData,
+    error: webhookUpdateError,
+    isLoading: loadingUpdateWebhook,
+    mutate: updateWebhook
+  } = useUpdateGitxWebhookMutation({})
+
+  const {
+    data: webhookEvent,
+    isInitialLoading: loadingWebhookEvent,
+    error: webhookEventError
+  } = useListGitxWebhookEventsQuery({
+    queryParams: {
+      limit: 1,
+      page: 0,
+      webhook_identifier: webhookIdentifier
+    }
+  })
+  const [showCreateModal, hideCreateModal] = useModalHook(
+    /* istanbul ignore next */ () => {
+      const onCloseHandler = (): void => {
+        hideCreateModal()
+        refetch()
+      }
+      return (
+        <Dialog
+          isOpen={true}
+          enforceFocus={false}
+          canEscapeKeyClose
+          canOutsideClickClose
+          onClose={onCloseHandler}
+          title={
+            <>
+              <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'small' }}>
+                {getString('cd.webhooks.editWebhook')}
+              </Text>
+              <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_500}>
+                {getString('cd.webhooks.createSubtitle')}
+              </Text>{' '}
+            </>
+          }
+          isCloseButtonShown
+          className={cx('padded-dialog', css.dialogStylesWebhook)}
+        >
+          <Container>
+            <NewWebhookModal
+              isEdit={true}
+              initialData={{
+                name: defaultTo(webhookResponse?.content?.webhook_name, ''),
+                identifier: defaultTo(webhookResponse?.content?.webhook_identifier, ''),
+                connectorRef: defaultTo(webhookResponse?.content?.connector_ref, ''),
+                repo: defaultTo(webhookResponse?.content?.repo_name, ''),
+                folderPaths: defaultTo(processFolderPaths(defaultTo(webhookResponse?.content?.folder_paths, [])), [])
+              }}
+              closeModal={onCloseHandler}
+            />
+          </Container>
+        </Dialog>
+      )
+    },
+    [webhookResponse]
+  )
+  const time = getReadableDateTime(webhookEvent?.content[0]?.event_trigger_time, 'hh:mm a')
+  const date = getReadableDateTime(webhookEvent?.content[0]?.event_trigger_time, 'MMM DD, YYYY')
+
+  const hasEvents = webhookEvent?.content.length
+
+  const handleViewAllEventsClick = (): void => {
+    history.replace(
+      routes.toWebhooksEvents({
+        accountId,
+        webhookIdentifier
+      })
+    )
+  }
+
+  React.useEffect(() => {
+    if (webhookEventError) {
+      showError(getRBACErrorMessage((webhookEventError as Error).message))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [webhookEventError])
+
+  React.useEffect(() => {
+    if (webhookUpdateData) {
+      showSuccess(
+        getString('cd.webhooks.successUpdateMessage', {
+          name: webhookUpdateData.content.webhook_identifier
+        })
+      )
+      refetch()
+    }
+    if (webhookUpdateError) {
+      showError(getRBACErrorMessage((webhookUpdateError as Error).message))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [webhookUpdateData, webhookUpdateError])
+
+  return (
+    <>
+      <Container
+        border={{ bottom: true, width: 1, color: Color.GREY_200 }}
+        padding={{ top: 'xlarge', left: 'xlarge', bottom: 'medium', right: 'xlarge' }}
+        background={Color.PRIMARY_1}
+      >
+        <Layout.Vertical spacing="medium">
+          <NGBreadcrumbs customPathParams={{ module }} />
+          {(loadingWebhook || loadingUpdateWebhook || isFetching) && <Container height={loadingHeaderHeight} />}
+          {webhookResponse && !loadingWebhook && !isFetching && (
+            <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
+              <Layout.Horizontal spacing="small" data-testid={webhookResponse.content.webhook_identifier} width={'78%'}>
+                <Layout.Vertical padding={{ left: 'small' }}>
+                  <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
+                    <Text style={{ fontSize: 20, fontWeight: 600 }} color={Color.GREY_700}>
+                      {get(webhookResponse.content, 'webhook_name')}
+                    </Text>
+                    <Switch
+                      padding={{ left: 'xxxlarge' }}
+                      label={getString('enabledLabel')}
+                      checked={webhookResponse.content.is_enabled ?? false}
+                      onChange={e => {
+                        updateWebhook({
+                          'gitx-webhook': webhookIdentifier,
+                          body: {
+                            is_enabled: e.currentTarget.checked
+                          }
+                        })
+                      }}
+                    />
+                  </Layout.Horizontal>
+                  <Text>
+                    {getString('common.ID')}: {get(webhookResponse.content, 'webhook_identifier')}
+                  </Text>
+                </Layout.Vertical>
+              </Layout.Horizontal>
+            </Layout.Horizontal>
+          )}
+        </Layout.Vertical>
+      </Container>
+      <Page.Body
+        loading={loadingWebhook || loadingWebhookEvent || isFetching || loadingUpdateWebhook}
+        className={css.main}
+      >
+        <Layout.Horizontal className={css.panel}>
+          <Layout.Vertical spacing="medium" className={css.information}>
+            <Layout.Horizontal flex={{ distribution: 'space-between' }} className={css.editBtn}>
+              <Button
+                variation={ButtonVariation.SECONDARY}
+                icon="edit"
+                onClick={() => {
+                  showCreateModal()
+                }}
+                minimal
+                text={getString('edit')}
+              />
+            </Layout.Horizontal>
+            <Layout.Horizontal spacing="medium">
+              <DetailPageCard
+                title={getString('overview')}
+                content={getOverviewContent({
+                  getString,
+                  name: webhookResponse?.content?.webhook_name,
+                  identifier: webhookResponse?.content?.webhook_identifier,
+                  connectorRef: webhookResponse?.content?.connector_ref,
+                  repo: webhookResponse?.content?.repo_name
+                })}
+              />
+              <DetailPageCard
+                classname={css.inputSet}
+                title={getString('common.git.folderPath')}
+                content={getDetailsContent({
+                  folderPaths: webhookResponse?.content?.folder_paths
+                })}
+              />
+            </Layout.Horizontal>
+          </Layout.Vertical>
+          <Layout.Vertical style={{ flex: 1 }}>
+            <Layout.Horizontal spacing="xxlarge">
+              <Text
+                font={{ size: 'medium', weight: 'bold' }}
+                inline={true}
+                color={Color.GREY_800}
+                padding={{ left: 'large', bottom: 'large' }}
+              >
+                {getString('cd.webhookEvents.lastEventDetails')}
+                <HarnessDocTooltip tooltipId="lastEventDetails" useStandAlone={true} />
+              </Text>
+            </Layout.Horizontal>
+            {!hasEvents ? (
+              <Layout.Vertical padding={{ left: 'large', right: 'large' }}>
+                <Text padding={{ bottom: 'small' }}>{getString('cd.webhookEvents.dateTime')}</Text>
+                <Layout.Horizontal padding={{ bottom: 'large' }}>
+                  <Text color={Color.BLACK}>{time}</Text>
+                  <Text color={Color.BLACK}>{date}</Text>
+                </Layout.Horizontal>
+                <Text padding={{ bottom: 'small' }} color={Color.BLACK}>
+                  {getString('cd.webhookEvents.eventId')}
+                </Text>
+                <Text
+                  padding={{ bottom: 'xxlarge' }}
+                  color={Color.BLACK}
+                  border={{ bottom: true, width: 1, color: Color.GREY_200 }}
+                >
+                  {webhookEvent?.content[0]?.event_identifier}
+                </Text>
+                <Button minimal onClick={handleViewAllEventsClick} className={css.viewAllBtn}>
+                  {getString('cd.webhookEvents.viewAll')}
+                </Button>
+              </Layout.Vertical>
+            ) : (
+              <Container flex={{ align: 'center-center' }} height="40vh">
+                <Layout.Vertical flex={{ alignItems: 'center' }}>
+                  <img src={EmptyContentImg} width={300} height={150} />
+                  <Heading level={2} padding={{ top: 'xxlarge' }} margin={{ bottom: 'large' }}>
+                    {getString('auditTrail.emptyStateMessage')}
+                  </Heading>
+                </Layout.Vertical>
+              </Container>
+            )}
+          </Layout.Vertical>
+        </Layout.Horizontal>
+      </Page.Body>
+    </>
+  )
+}

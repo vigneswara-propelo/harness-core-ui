@@ -58,7 +58,8 @@ import type {
   DiscoveryPathProps,
   NetworkMapQueryParams,
   NetworkMapPathProps,
-  DiscoveredResourceQueryParams
+  DiscoveredResourceQueryParams,
+  WebhooksPathProps
 } from '@common/interfaces/RouteInterfaces'
 
 const CV_HOME = `/cv/home`
@@ -106,9 +107,34 @@ const routes = {
       })
     }
   ),
+  toWebhooksDetails: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      webhookIdentifier
+    }: Partial<ProjectPathProps & ModulePathParams> & WebhooksPathProps) => {
+      const path = `resources/webhooks/${webhookIdentifier}`
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path
+      })
+    }
+  ),
   toWebhooksEvents: withAccountId(
-    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
-      const path = `resources/webhooks/events`
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      webhookIdentifier
+    }: Partial<ProjectPathProps & ModulePathParams & WebhooksPathProps>) => {
+      const path = webhookIdentifier
+        ? `resources/webhooks/events?webhookIdentifier=${webhookIdentifier}`
+        : `resources/webhooks/events`
       return getScopeBasedRoute({
         scope: {
           orgIdentifier,

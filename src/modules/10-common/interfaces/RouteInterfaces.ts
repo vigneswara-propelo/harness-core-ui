@@ -189,6 +189,9 @@ export interface TargetPathProps {
 export interface EnvironmentPathProps {
   environmentIdentifier: string
 }
+export interface WebhooksPathProps {
+  webhookIdentifier: string
+}
 
 export interface EnvironmentQueryParams {
   sectionId?: 'CONFIGURATION' | 'INFRASTRUCTURE' | 'SERVICE_OVERRIDES' | 'GITOPS' | 'SUMMARY' | 'REFERENCED_BY'

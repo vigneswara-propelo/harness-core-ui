@@ -18,7 +18,8 @@ import {
   servicePathProps,
   environmentGroupPathProps,
   environmentPathProps,
-  orgPathProps
+  orgPathProps,
+  webhooksPathProps
 } from '@common/utils/routeUtils'
 import type { ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
@@ -92,6 +93,7 @@ import CDOnboardingWizard from './pages/get-started-with-cd/CDOnboardingWizard'
 import GetStartedWithCDV2 from './pages/get-started-with-cd/GetStartedWithCDv2'
 import WebhookEvents from './pages/webhooks/WebhookEvents/WebhookEvents'
 import { Webhooks } from './pages/webhooks/Webhooks'
+import WebhookLandingPage from './pages/webhooks/WebhookDetails/WebhookLandingPage'
 
 const CDOnboardingWizardWithCLI = React.lazy(
   () => import('./pages/get-started-with-cd/CDOnboardingWizardWithCLI/CDOnboardingWizard')
@@ -689,6 +691,14 @@ export default (
       pageName={PAGE_NAME.WebhookEvents}
     >
       <WebhookEvents />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      sidebarProps={AccountSideNavProps}
+      path={routes.toWebhooksDetails({ ...accountPathProps, ...webhooksPathProps })}
+      pageName={PAGE_NAME.WebhooksDetails}
+    >
+      <WebhookLandingPage />
     </RouteWithLayout>
 
     {

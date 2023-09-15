@@ -38,7 +38,8 @@ import type {
   AccountRoutePlacement,
   DiscoveryPathProps,
   Module,
-  NetworkMapPathProps
+  NetworkMapPathProps,
+  WebhooksPathProps
 } from '@common/interfaces/RouteInterfaces'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
 
@@ -159,6 +160,9 @@ export const buildPathProps: BuildPathProps = {
 
 export const environmentPathProps: EnvironmentPathProps = {
   environmentIdentifier: ':environmentIdentifier'
+}
+export const webhooksPathProps: WebhooksPathProps = {
+  webhookIdentifier: ':webhookIdentifier'
 }
 
 export const environmentGroupPathProps: EnvironmentGroupPathProps = {

@@ -26,6 +26,7 @@ interface WebhookRowColumn {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function withWebhook(Component: any) {
   // eslint-disable-next-line react/display-name
   return (props: WebhookRowColumn) => {
@@ -119,16 +120,25 @@ export function LastActivity({ lastUpdatedAt }: { lastUpdatedAt: number }): JSX.
   )
 }
 
-export function Enabled({ is_enabled: enabled }: { is_enabled: boolean }): JSX.Element {
+export function Enabled({
+  webhook_identifier: identifier,
+  is_enabled: enabled,
+  onToggleEnable
+}: {
+  webhook_identifier: string
+  is_enabled: boolean
+  onToggleEnable: (id: string, enabled: boolean) => void
+}): JSX.Element {
   return (
-    <Switch
-      label=""
-      checked={enabled}
-      // disabled={ TODO handle the disable case here }
-      onChange={() => {
-        // handle the enabled webhook onChange here
-      }}
-    />
+    <div onClick={e => e.stopPropagation()}>
+      <Switch
+        label=""
+        checked={enabled}
+        onChange={e => {
+          onToggleEnable(identifier, e.currentTarget.checked)
+        }}
+      />
+    </div>
   )
 }
 

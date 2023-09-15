@@ -7,6 +7,7 @@
 
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 
 export interface AddWebhookModalData {
   name: string
@@ -39,4 +40,8 @@ export enum STATUS {
   'loading',
   'error',
   'ok'
+}
+
+export interface Error {
+  message: RBACError
 }
