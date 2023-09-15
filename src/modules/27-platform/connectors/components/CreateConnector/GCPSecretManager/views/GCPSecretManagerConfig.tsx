@@ -26,7 +26,6 @@ import {
   setupGCPSecretManagerFormData
 } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type {
   ConnectorDetailsProps,
   GCPSecretManagerFormData,
@@ -44,7 +43,6 @@ import css from './GCPSecretManagerConfig.module.scss'
 const GCPSecretManagerConfig: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> = props => {
   const { accountId, prevStepData, nextStep, previousStep } = props
 
-  const { PL_USE_CREDENTIALS_FROM_DELEGATE_FOR_GCP_SM } = useFeatureFlags()
   const { getString } = useStrings()
 
   const defaultInitialFormData: GCPSecretManagerFormData = {
@@ -69,11 +67,7 @@ const GCPSecretManagerConfig: React.FC<StepProps<StepDetailsProps> & ConnectorDe
   React.useEffect(() => {
     if (loadingConnectorSecrets && props.isEditMode) {
       if (props.connectorInfo) {
-        setupGCPSecretManagerFormData(
-          props.connectorInfo,
-          accountId,
-          !!PL_USE_CREDENTIALS_FROM_DELEGATE_FOR_GCP_SM
-        ).then(data => {
+        setupGCPSecretManagerFormData(props.connectorInfo, accountId).then(data => {
           setInitialValues(data as GCPSecretManagerFormData)
           setLoadingConnectorSecrets(false)
         })
@@ -96,6 +90,7 @@ const GCPSecretManagerConfig: React.FC<StepProps<StepDetailsProps> & ConnectorDe
         projectIdentifier: prevStepData?.projectIdentifier
       }
     : undefined
+
   const validationSchema = Yup.object().shape({
     assumeCredentialsOnDelegate: Yup.boolean(),
     delegateType: Yup.string().required(
@@ -108,9 +103,7 @@ const GCPSecretManagerConfig: React.FC<StepProps<StepDetailsProps> & ConnectorDe
       then: Yup.object().required(getString('platform.connectors.gcpSecretManager.validation.credFileRequired'))
     })
   })
-  const validationSchemaWithoutFeatureFlag = Yup.object().shape({
-    credentialsRef: Yup.object().required(getString('platform.connectors.gcpSecretManager.validation.credFileRequired'))
-  })
+
   return loadingConnectorSecrets ? (
     <PageSpinner />
   ) : (
@@ -125,9 +118,7 @@ const GCPSecretManagerConfig: React.FC<StepProps<StepDetailsProps> & ConnectorDe
           ...prevStepData
         }}
         formName="gcpSecretManagerForm"
-        validationSchema={
-          PL_USE_CREDENTIALS_FROM_DELEGATE_FOR_GCP_SM ? validationSchema : validationSchemaWithoutFeatureFlag
-        }
+        validationSchema={validationSchema}
         onSubmit={formData => {
           trackEvent(ConnectorActions.ConfigSubmit, {
             category: Category.CONNECTOR,
@@ -140,35 +131,30 @@ const GCPSecretManagerConfig: React.FC<StepProps<StepDetailsProps> & ConnectorDe
           return (
             <FormikForm>
               <Container className={css.gcpContainer}>
-                {PL_USE_CREDENTIALS_FROM_DELEGATE_FOR_GCP_SM && (
-                  <ThumbnailSelect
-                    items={DelegateCards.map(card => ({ label: card.info, value: card.type }))}
-                    name="delegateType"
-                    size="large"
-                    onChange={async type => {
-                      await formikProps?.setFieldValue('delegateType', type)
-                      formikProps?.setFieldValue(
-                        'assumeCredentialsOnDelegate',
-                        type === DelegateTypes.DELEGATE_IN_CLUSTER
-                      )
-                      if (type === DelegateTypes.DELEGATE_IN_CLUSTER) {
-                        formikProps?.setFieldValue('credentialsRef', undefined)
-                        formikProps?.setFieldValue('default', false)
-                      }
-                    }}
+                <ThumbnailSelect
+                  items={DelegateCards.map(card => ({ label: card.info, value: card.type }))}
+                  name="delegateType"
+                  size="large"
+                  onChange={async type => {
+                    await formikProps?.setFieldValue('delegateType', type)
+                    formikProps?.setFieldValue(
+                      'assumeCredentialsOnDelegate',
+                      type === DelegateTypes.DELEGATE_IN_CLUSTER
+                    )
+                    if (type === DelegateTypes.DELEGATE_IN_CLUSTER) {
+                      formikProps?.setFieldValue('credentialsRef', undefined)
+                      formikProps?.setFieldValue('default', false)
+                    }
+                  }}
+                />
+                {formikProps.values.delegateType === DelegateTypes.DELEGATE_OUT_CLUSTER ? (
+                  <SecretInput
+                    name="credentialsRef"
+                    label={getString('platform.connectors.gcpSecretManager.gcpSMSecretFile')}
+                    connectorTypeContext={'GcpSecretManager'}
+                    type="SecretFile"
+                    scope={scope}
                   />
-                )}
-                {!PL_USE_CREDENTIALS_FROM_DELEGATE_FOR_GCP_SM ||
-                formikProps.values.delegateType === DelegateTypes.DELEGATE_OUT_CLUSTER ? (
-                  <>
-                    <SecretInput
-                      name="credentialsRef"
-                      label={getString('platform.connectors.gcpSecretManager.gcpSMSecretFile')}
-                      connectorTypeContext={'GcpSecretManager'}
-                      type="SecretFile"
-                      scope={scope}
-                    />
-                  </>
                 ) : null}
                 {
                   // show only when delegateType is selected

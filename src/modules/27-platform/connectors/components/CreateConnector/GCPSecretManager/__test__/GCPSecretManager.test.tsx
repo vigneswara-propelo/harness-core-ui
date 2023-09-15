@@ -50,11 +50,7 @@ jest.mock('services/portal', () => ({
 describe('Create Secret Manager Wizard', () => {
   test('should be able to render first and second step form', async () => {
     const { container } = render(
-      <TestWrapper
-        defaultFeatureFlagValues={{ PL_USE_CREDENTIALS_FROM_DELEGATE_FOR_GCP_SM: true }}
-        path="/account/:accountId/resources/connectors"
-        pathParams={{ accountId: 'dummy' }}
-      >
+      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
         <CreateGCPSecretManager {...commonProps} isEditMode={false} connectorInfo={undefined} />
       </TestWrapper>
     )
@@ -82,11 +78,7 @@ describe('Create Secret Manager Wizard', () => {
   })
   test('Should render previous step for edit', async () => {
     const { container, queryByText } = render(
-      <TestWrapper
-        defaultFeatureFlagValues={{ PL_USE_CREDENTIALS_FROM_DELEGATE_FOR_GCP_SM: true }}
-        path="/account/:accountId/resources/connectors"
-        pathParams={{ accountId: 'dummy' }}
-      >
+      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
         <CreateGCPSecretManager {...commonProps} isEditMode={true} connectorInfo={connectorInfo} mock={mockResponse} />
       </TestWrapper>
     )
@@ -116,11 +108,7 @@ describe('Create Secret Manager Wizard', () => {
 
   test('Should render form for edit', async () => {
     const { container, queryByText } = render(
-      <TestWrapper
-        defaultFeatureFlagValues={{ PL_USE_CREDENTIALS_FROM_DELEGATE_FOR_GCP_SM: true }}
-        path="/account/:accountId/resources/connectors"
-        pathParams={{ accountId: 'dummy' }}
-      >
+      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
         <CreateGCPSecretManager {...commonProps} isEditMode={true} connectorInfo={connectorInfo} mock={mockResponse} />
       </TestWrapper>
     )

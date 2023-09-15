@@ -1208,8 +1208,7 @@ export const setupAzureFormData = async (connectorInfo: ConnectorInfoDTO, accoun
 }
 export const setupGCPSecretManagerFormData = async (
   connectorInfo: ConnectorInfoDTO,
-  accountId: string,
-  useCredentialsOnDelegateFeatureFlag: boolean
+  accountId: string
 ): Promise<FormData> => {
   const connectorInfoSpec = connectorInfo?.spec
   const scopeQueryParams: GetSecretV2QueryParams = {
@@ -1229,10 +1228,8 @@ export const setupGCPSecretManagerFormData = async (
     credentialsRef: credentials || undefined,
     delegate: connectorInfoSpec?.delegateSelectors || undefined,
     default: connectorInfoSpec?.default || false,
-    ...(useCredentialsOnDelegateFeatureFlag && {
-      assumeCredentialsOnDelegate: !!connectorInfoSpec.assumeCredentialsOnDelegate,
-      delegateType
-    })
+    assumeCredentialsOnDelegate: !!connectorInfoSpec.assumeCredentialsOnDelegate,
+    delegateType
   }
 }
 
