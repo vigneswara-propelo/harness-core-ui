@@ -10,7 +10,7 @@ import React, { PropsWithChildren, ReactElement, useCallback, useContext, useEff
 import { Container, Layout, Text, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
-import { Position, Spinner } from '@blueprintjs/core'
+import { PopoverPosition, Position, Spinner } from '@blueprintjs/core'
 import RootFolderIcon from '@filestore/images/root-folder.svg'
 import ClosedFolderIcon from '@filestore/images/closed-folder.svg'
 import OpenFolderIcon from '@filestore/images/open-folder.svg'
@@ -325,22 +325,22 @@ export const FolderNode = React.memo((props: PropsWithChildren<FileStoreNodeDTO>
           handleUnsavedConfirmation(e)
         }}
       >
-        <div style={{ display: 'flex', width: '80%' }} className={css.navItemName}>
+        <Container flex className={css.navItemName}>
           <img src={getNodeIcon(type)} alt={type} />
           <Text
             font={{ size: 'normal' }}
             color={!isActiveNode ? Color.PRIMARY_9 : Color.GREY_0}
-            tooltip={nodeItem.name}
-            style={{
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap'
+            lineClamp={1}
+            tooltipProps={{
+              position: PopoverPosition.RIGHT,
+              hoverCloseDelay: 50,
+              hoverOpenDelay: 50
             }}
             width={'100%'}
           >
             {nodeItem.name}
           </Text>
-        </div>
+        </Container>
         {isActiveNode &&
           (!loading ? (
             <NodeMenuButton items={optionsMenuItems} position={Position.RIGHT_TOP} />

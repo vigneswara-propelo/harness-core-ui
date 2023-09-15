@@ -14,10 +14,11 @@
   :global {
     .StyledProps--main {
       cursor: pointer;
-      padding: var(--spacing-small);
+      margin: var(--spacing-small);
     }
   }
   .navItemName {
+    width: 80%;
     :global(.bp3-popover-wrapper) {
       width: 100% !important;
     }
