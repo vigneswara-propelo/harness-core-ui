@@ -13,10 +13,12 @@ declare const styles: {
   readonly conditionalContent: string
   readonly conditionalContentJexl: string
   readonly criteriaRow: string
+  readonly expandBtn: string
   readonly fetching: string
   readonly formikError: string
   readonly headers: string
   readonly jexlExpression: string
+  readonly jexlExpressionExpanded: string
   readonly multiSelect: string
   readonly selectedTab: string
   readonly tab: string

@@ -11,6 +11,7 @@ import { get, isEmpty } from 'lodash-es'
 import {
   Button,
   FormInput,
+  getMultiTypeFromValue,
   HarnessDocTooltip,
   Layout,
   MultiTypeInputType,
@@ -228,22 +229,45 @@ export function Conditions({
 export function Jexl(props: SnowApprovalRejectionCriteriaProps): JSX.Element {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { mode, readonly, formik } = props
+  const jexlValue = get(formik, `values.spec.${mode}.spec.expression`)
+  const [isExpanded, setExpanded] = useState<boolean>(false)
+  const [isJexlValueFixed, setJexlValueFixed] = useState<boolean>(
+    getMultiTypeFromValue(jexlValue) === MultiTypeInputType.FIXED
+  )
   return (
     <div className={css.conditionalContentJexl}>
       <FormMultiTypeTextAreaField
-        name={`spec.${props.mode}.spec.expression`}
-        disabled={isApprovalStepFieldDisabled(props.readonly)}
+        name={`spec.${mode}.spec.expression`}
+        disabled={isApprovalStepFieldDisabled(readonly)}
         label={
-          props.mode === 'approvalCriteria'
+          mode === 'approvalCriteria'
             ? getString('pipeline.approvalCriteria.jexlExpressionLabelApproval')
             : getString('pipeline.approvalCriteria.jexlExpressionLabelRejection')
         }
-        className={css.jexlExpression}
+        onChange={(value, _valueType, type) => {
+          // eslint-disable-next-line no-direct-runtime-comparision
+          if ((type !== MultiTypeInputType.FIXED && value === '') || type === MultiTypeInputType.RUNTIME) {
+            setJexlValueFixed(false)
+          } else if (type === MultiTypeInputType.FIXED && value === '') {
+            setJexlValueFixed(true)
+          }
+        }}
+        className={isExpanded && isJexlValueFixed ? css.jexlExpressionExpanded : css.jexlExpression}
         placeholder={getString('pipeline.serviceNowApprovalStep.jexlExpressionPlaceholder')}
         multiTypeTextArea={{
           expressions
         }}
       />
+      {isJexlValueFixed && (
+        <Button
+          className={css.expandBtn}
+          icon={isExpanded ? 'main-minimize' : 'main-maximize'}
+          small
+          onClick={() => setExpanded(!isExpanded)}
+          iconProps={{ size: 10 }}
+        />
+      )}
     </div>
   )
 }

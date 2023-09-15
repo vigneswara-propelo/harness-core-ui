@@ -60,6 +60,35 @@
   }
 }
 
+.jexlExpressionExpanded {
+  :global {
+    .bp3-label {
+      margin-bottom: var(--spacing-medium) !important;
+    }
+
+    textarea {
+      line-height: 35px;
+    }
+
+    .bp3-input {
+      height: 300px !important;
+    }
+
+    .MultiTypeInput--btn {
+      height: 30px !important;
+    }
+  }
+}
+
+.expandBtn {
+  position: absolute;
+  right: 60px;
+  top: 64px;
+  z-index: 1;
+  padding: 0 !important;
+  height: auto !important;
+}
+
 .headers {
   display: grid;
   grid-template-columns: 1.5fr 1fr 2fr 30px;
@@ -107,6 +136,7 @@
 .conditionalContentJexl {
   background-color: var(--white);
   padding: var(--spacing-large) var(--spacing-medium);
+  position: relative;
 }
 
 .criteriaRow {
