@@ -52,7 +52,8 @@ export const supportedDeploymentTypesForPostProdRollback: ServiceDefinition['typ
   'TAS',
   'ECS',
   'Asg',
-  'Elastigroup'
+  'Elastigroup',
+  'NativeHelm'
 ]
 
 export const columnWidth = {
