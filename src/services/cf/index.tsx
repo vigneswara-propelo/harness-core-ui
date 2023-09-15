@@ -389,21 +389,6 @@ export type FeatureAvailablePipelines = Pagination & {
   availablePipelines: FeatureAvailablePipeline[]
 }
 
-export interface FeatureConfig {
-  defaultServe: Serve
-  environment: string
-  feature: string
-  kind: 'boolean' | 'int' | 'string' | 'json'
-  offVariation: string
-  prerequisites?: Prerequisite[]
-  project: string
-  rules?: ServingRule[]
-  state: FeatureState
-  variationToTargetMap?: VariationMap[]
-  variations: Variation[]
-  version?: number
-}
-
 export interface FeatureCounts {
   /**
    * The total number of flags with a active status in a project/environment
@@ -888,6 +873,13 @@ export interface ObjectSnapshots {
   objectsnapshots?: ObjectSnapshot[]
 }
 
+/**
+ * A list of SDK/Frameworks/Versions
+ */
+export interface OnboardingSDKs {
+  items?: string[]
+}
+
 export interface Pagination {
   /**
    * The total number of items
@@ -1004,18 +996,6 @@ export interface Projects {
    * A list of projects
    */
   projects?: Project[]
-}
-
-/**
- * TBD
- */
-export type ProxyConfig = Pagination & {
-  environments?: {
-    apiKeys?: string[]
-    featureConfigs?: FeatureConfig[]
-    id?: string
-    segments?: TargetSegment[]
-  }[]
 }
 
 export interface ProxyKey {
@@ -1369,19 +1349,6 @@ export interface TargetMap {
    * The name of the target
    */
   name: string
-}
-
-export interface TargetSegment {
-  excluded?: string[]
-  /**
-   * Unique identifier for the segment.
-   */
-  identifier: string
-  included?: string[]
-  /**
-   * An array of rules that can cause a user to be included in this segment.
-   */
-  rules?: Clause[]
 }
 
 /**
@@ -1739,6 +1706,11 @@ export interface ObjectSnapshotResponseResponse {
 /**
  * OK
  */
+export type OnboardingSDKsResponseResponse = OnboardingSDKs
+
+/**
+ * OK
+ */
 export type ProjectFlagsResponseResponse = ProjectFlags
 
 /**
@@ -1764,18 +1736,13 @@ export interface ProjectsResponseResponse {
 /**
  * OK
  */
-export type ProxyConfigResponseResponse = ProxyConfig
-
-/**
- * OK
- */
 export type ProxyKeyResponseResponse = ProxyKey
 
 /**
  * Created
  */
-export interface ProxyKeysEditResponseResponse {
-  status?: string
+export interface ProxyKeysCreateResponseResponse {
+  key?: string
 }
 
 /**
@@ -3279,6 +3246,10 @@ export interface GetAllFeaturesQueryParams {
    * Returns summary info on flags if set to true
    */
   summary?: boolean
+  /**
+   * Filter for flags based on their tag values
+   */
+  tags?: string[]
 }
 
 export type GetAllFeaturesProps = Omit<
@@ -3731,6 +3702,10 @@ export interface GetFeatureMetricsQueryParams {
    * Filter for flags based on if they are enabled or disabled
    */
   enabled?: boolean
+  /**
+   * Filter for flags based on their tag values
+   */
+  tags?: string[]
 }
 
 export type GetFeatureMetricsProps = Omit<
@@ -4532,6 +4507,10 @@ export interface GetDependentFeaturesQueryParams {
    * Returns summary info on flags if set to true
    */
   summary?: boolean
+  /**
+   * Filter for flags based on their tag values
+   */
+  tags?: string[]
 }
 
 export interface GetDependentFeaturesPathParams {
@@ -5612,6 +5591,89 @@ export const getOSByIDPromise = (
     void,
     GetOSByIDPathParams
   >(getConfig('cf'), `/admin/objects/${identifiers}`, props, signal)
+
+export interface GetSDKDetailsQueryParams {
+  /**
+   * Used to return Frameworks by Language
+   */
+  sdkLanguage?: string
+  /**
+   * Used to return Versions by Frameworks
+   */
+  sdkFramework?: string
+}
+
+export type GetSDKDetailsProps = Omit<
+  GetProps<
+    OnboardingSDKsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetSDKDetailsQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Returns a list of SDK/Framework/Version
+ *
+ * Returns list of SDK/Framework/Version depending on params
+ */
+export const GetSDKDetails = (props: GetSDKDetailsProps) => (
+  <Get<
+    OnboardingSDKsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetSDKDetailsQueryParams,
+    void
+  >
+    path={`/admin/onboarding`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseGetSDKDetailsProps = Omit<
+  UseGetProps<
+    OnboardingSDKsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetSDKDetailsQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Returns a list of SDK/Framework/Version
+ *
+ * Returns list of SDK/Framework/Version depending on params
+ */
+export const useGetSDKDetails = (props: UseGetSDKDetailsProps) =>
+  useGet<
+    OnboardingSDKsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetSDKDetailsQueryParams,
+    void
+  >(`/admin/onboarding`, { base: getConfig('cf'), ...props })
+
+/**
+ * Returns a list of SDK/Framework/Version
+ *
+ * Returns list of SDK/Framework/Version depending on params
+ */
+export const getSDKDetailsPromise = (
+  props: GetUsingFetchProps<
+    OnboardingSDKsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetSDKDetailsQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    OnboardingSDKsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetSDKDetailsQueryParams,
+    void
+  >(getConfig('cf'), `/admin/onboarding`, props, signal)
 
 export interface GetUserFlagOverviewQueryParams {
   /**
@@ -6835,97 +6897,6 @@ export const createGitRepoPromise = (
     CreateGitRepoPathParams
   >('POST', getConfig('cf'), `/admin/projects/${identifier}/git_repo`, props, signal)
 
-export interface GetProxyConfigQueryParams {
-  /**
-   * PageNumber
-   */
-  pageNumber?: number
-  /**
-   * PageSize
-   */
-  pageSize?: number
-  /**
-   * Accepts an EnvironmentID. If this is provided then the endpoint will only return config for this environment. If this is left empty then the Proxy will return config for all environments associated with the Proxy Key.
-   */
-  environment?: string
-  /**
-   * Accpets a Proxy Key.
-   */
-  key: string
-}
-
-export type GetProxyConfigProps = Omit<
-  GetProps<
-    ProxyConfigResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetProxyConfigQueryParams,
-    void
-  >,
-  'path'
->
-
-/**
- * Gets Proxy config for multiple environments
- *
- * Gets Proxy config for multiple environments if the Key query param is provided or gets config for a single environment if an environment query param is provided
- */
-export const GetProxyConfig = (props: GetProxyConfigProps) => (
-  <Get<
-    ProxyConfigResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetProxyConfigQueryParams,
-    void
-  >
-    path={`/admin/proxy/config`}
-    base={getConfig('cf')}
-    {...props}
-  />
-)
-
-export type UseGetProxyConfigProps = Omit<
-  UseGetProps<
-    ProxyConfigResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetProxyConfigQueryParams,
-    void
-  >,
-  'path'
->
-
-/**
- * Gets Proxy config for multiple environments
- *
- * Gets Proxy config for multiple environments if the Key query param is provided or gets config for a single environment if an environment query param is provided
- */
-export const useGetProxyConfig = (props: UseGetProxyConfigProps) =>
-  useGet<
-    ProxyConfigResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetProxyConfigQueryParams,
-    void
-  >(`/admin/proxy/config`, { base: getConfig('cf'), ...props })
-
-/**
- * Gets Proxy config for multiple environments
- *
- * Gets Proxy config for multiple environments if the Key query param is provided or gets config for a single environment if an environment query param is provided
- */
-export const getProxyConfigPromise = (
-  props: GetUsingFetchProps<
-    ProxyConfigResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetProxyConfigQueryParams,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<
-    ProxyConfigResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetProxyConfigQueryParams,
-    void
-  >(getConfig('cf'), `/admin/proxy/config`, props, signal)
-
 export interface CreateProxyKeyQueryParams {
   /**
    * Account Identifier
@@ -6939,7 +6910,7 @@ export interface CreateProxyKeyQueryParams {
 
 export type CreateProxyKeyProps = Omit<
   MutateProps<
-    ProxyKeysEditResponseResponse,
+    ProxyKeysCreateResponseResponse,
     | BadRequestResponse
     | UnauthenticatedResponse
     | UnauthorizedResponse
@@ -6960,7 +6931,7 @@ export type CreateProxyKeyProps = Omit<
  */
 export const CreateProxyKey = (props: CreateProxyKeyProps) => (
   <Mutate<
-    ProxyKeysEditResponseResponse,
+    ProxyKeysCreateResponseResponse,
     | BadRequestResponse
     | UnauthenticatedResponse
     | UnauthorizedResponse
@@ -6980,7 +6951,7 @@ export const CreateProxyKey = (props: CreateProxyKeyProps) => (
 
 export type UseCreateProxyKeyProps = Omit<
   UseMutateProps<
-    ProxyKeysEditResponseResponse,
+    ProxyKeysCreateResponseResponse,
     | BadRequestResponse
     | UnauthenticatedResponse
     | UnauthorizedResponse
@@ -7001,7 +6972,7 @@ export type UseCreateProxyKeyProps = Omit<
  */
 export const useCreateProxyKey = (props: UseCreateProxyKeyProps) =>
   useMutate<
-    ProxyKeysEditResponseResponse,
+    ProxyKeysCreateResponseResponse,
     | BadRequestResponse
     | UnauthenticatedResponse
     | UnauthorizedResponse
@@ -7020,7 +6991,7 @@ export const useCreateProxyKey = (props: UseCreateProxyKeyProps) =>
  */
 export const createProxyKeyPromise = (
   props: MutateUsingFetchProps<
-    ProxyKeysEditResponseResponse,
+    ProxyKeysCreateResponseResponse,
     | BadRequestResponse
     | UnauthenticatedResponse
     | UnauthorizedResponse
@@ -7034,7 +7005,7 @@ export const createProxyKeyPromise = (
   signal?: RequestInit['signal']
 ) =>
   mutateUsingFetch<
-    ProxyKeysEditResponseResponse,
+    ProxyKeysCreateResponseResponse,
     | BadRequestResponse
     | UnauthenticatedResponse
     | UnauthorizedResponse
@@ -7290,7 +7261,7 @@ export interface UpdateProxyKeyPathParams {
 
 export type UpdateProxyKeyProps = Omit<
   MutateProps<
-    ProxyKeysEditResponseResponse,
+    void,
     | BadRequestResponse
     | UnauthenticatedResponse
     | UnauthorizedResponse
@@ -7324,7 +7295,7 @@ export type UpdateProxyKeyProps = Omit<
  */
 export const UpdateProxyKey = ({ identifier, ...props }: UpdateProxyKeyProps) => (
   <Mutate<
-    ProxyKeysEditResponseResponse,
+    void,
     | BadRequestResponse
     | UnauthenticatedResponse
     | UnauthorizedResponse
@@ -7344,7 +7315,7 @@ export const UpdateProxyKey = ({ identifier, ...props }: UpdateProxyKeyProps) =>
 
 export type UseUpdateProxyKeyProps = Omit<
   UseMutateProps<
-    ProxyKeysEditResponseResponse,
+    void,
     | BadRequestResponse
     | UnauthenticatedResponse
     | UnauthorizedResponse
@@ -7378,7 +7349,7 @@ export type UseUpdateProxyKeyProps = Omit<
  */
 export const useUpdateProxyKey = ({ identifier, ...props }: UseUpdateProxyKeyProps) =>
   useMutate<
-    ProxyKeysEditResponseResponse,
+    void,
     | BadRequestResponse
     | UnauthenticatedResponse
     | UnauthorizedResponse
@@ -7416,7 +7387,7 @@ export const updateProxyKeyPromise = (
     identifier,
     ...props
   }: MutateUsingFetchProps<
-    ProxyKeysEditResponseResponse,
+    void,
     | BadRequestResponse
     | UnauthenticatedResponse
     | UnauthorizedResponse
@@ -7435,7 +7406,7 @@ export const updateProxyKeyPromise = (
   signal?: RequestInit['signal']
 ) =>
   mutateUsingFetch<
-    ProxyKeysEditResponseResponse,
+    void,
     | BadRequestResponse
     | UnauthenticatedResponse
     | UnauthorizedResponse
