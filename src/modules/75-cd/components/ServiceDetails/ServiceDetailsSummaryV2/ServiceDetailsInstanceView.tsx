@@ -33,6 +33,7 @@ import {
   InstanceDetailGroupedByPipelineExecution,
   InstanceDetailsDTO,
   NGServiceConfig,
+  ServiceResponseDTO,
   useGetActiveServiceInstanceDetailsGroupedByPipelineExecution
 } from 'services/cd-ng'
 import type {
@@ -52,7 +53,7 @@ import { useServiceContext } from '@cd/context/ServiceContext'
 import { commonActiveInstanceData } from '../ActiveServiceInstances/ActiveServiceInstancePopover'
 
 import PostProdRollbackBtn from './PostProdRollback/PostProdRollbackButton'
-import type { PipelineExecInfoProps } from './ServiceDetailUtils'
+import { PipelineExecInfoProps, shouldShowChartVersion } from './ServiceDetailUtils'
 import { supportedDeploymentTypesForPostProdRollback } from './PostProdRollback/PostProdRollbackUtil'
 import css from './ServiceDetailsSummaryV2.module.scss'
 
@@ -82,6 +83,7 @@ interface InstanceViewProp {
   closeDailog?: () => void
   isEnvView: boolean
   setRollbacking?: React.Dispatch<React.SetStateAction<boolean>>
+  serviceResponse?: ServiceResponseDTO
 }
 
 const ActiveInstanceInfo = (prop: ActiveInstanceInfoProp): React.ReactElement => {
@@ -134,7 +136,7 @@ const ActiveInstanceInfo = (prop: ActiveInstanceInfoProp): React.ReactElement =>
 function InstanceView(prop: InstanceViewProp): React.ReactElement {
   const { getString } = useStrings()
   const { showError } = useToaster()
-  const { instanceData, artifactName, infraName, closeDailog, isEnvView, setRollbacking } = prop
+  const { instanceData, artifactName, infraName, closeDailog, isEnvView, setRollbacking, serviceResponse } = prop
   const pipelineDetailList: PipelineExecInfoProps[] = (instanceData || []).map(pipelineInfo => {
     return {
       pipelineId: pipelineInfo.pipelineId,
@@ -160,7 +162,6 @@ function InstanceView(prop: InstanceViewProp): React.ReactElement {
   const [pipelineExecKey, setPipelineExecKey] = useState<PipelineExecInfoProps | undefined>()
 
   //serviceType
-  const { serviceResponse } = useServiceContext()
   const serviceDataParse = React.useMemo(
     () => yamlParse<NGServiceConfig>(defaultTo(serviceResponse?.yaml, '')),
     [serviceResponse?.yaml]
@@ -313,6 +314,7 @@ export default function ServiceDetailInstanceView(props: ServiceDetailInstanceVi
     isEnvView,
     setRollbacking
   } = props
+  const { selectedDeploymentType, serviceResponse } = useServiceContext()
   const { getString } = useStrings()
   const [searchTermInstance, setSearchTermInstance] = useState('')
   const searchInstanceRef = useRef({} as ExpandingSearchInputHandle)
@@ -361,6 +363,7 @@ export default function ServiceDetailInstanceView(props: ServiceDetailInstanceVi
 
   const noData = !filteredInstanceData?.length
   const searchApplied = !isEmpty(searchTermInstance.trim())
+  const showChartVersion = shouldShowChartVersion(selectedDeploymentType)
 
   return (
     <Container className={css.instanceDetailView}>
@@ -430,15 +433,19 @@ export default function ServiceDetailInstanceView(props: ServiceDetailInstanceVi
             <Text font={{ variation: FontVariation.BODY2 }} lineClamp={1} tooltipProps={{ isDark: true }}>
               {artifact ? artifact : '-'}
             </Text>
-            <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_600}>
-              {' | '}
-            </Text>
-            <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
-              {getString('pipeline.manifestType.http.chartVersion') + ':'}
-            </Text>
-            <Text font={{ variation: FontVariation.BODY2 }} lineClamp={1} tooltipProps={{ isDark: true }}>
-              {chartVersion ? chartVersion : '-'}
-            </Text>
+            {showChartVersion && (
+              <>
+                <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_600}>
+                  {' | '}
+                </Text>
+                <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
+                  {getString('pipeline.manifestType.http.chartVersion') + ':'}
+                </Text>
+                <Text font={{ variation: FontVariation.BODY2 }} lineClamp={1} tooltipProps={{ isDark: true }}>
+                  {chartVersion ? chartVersion : '-'}
+                </Text>
+              </>
+            )}
           </Layout.Horizontal>
           <InstanceView
             instanceData={filteredInstanceData}
@@ -447,6 +454,7 @@ export default function ServiceDetailInstanceView(props: ServiceDetailInstanceVi
             closeDailog={closeDailog}
             isEnvView={isEnvView}
             setRollbacking={setRollbacking}
+            serviceResponse={serviceResponse}
           />
         </>
       )}

@@ -26,7 +26,7 @@ export default function ServiceDetailsSummaryV2(): JSX.Element {
         envIdentifiers: envIdFilter,
         serviceIdentifiers: serviceId && serviceId.length ? serviceId : undefined,
         artifactDisplayNames: artifactNameFilter,
-        chartVersionFilter: chartVersionFilter ? undefined : undefined
+        helmChartVersions: chartVersionFilter
       }
     },
     filterType: 'PipelineExecution'
