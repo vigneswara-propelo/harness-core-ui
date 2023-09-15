@@ -80,7 +80,8 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
   const basePath = path?.length ? `${path}.variables` : 'variables'
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
-  const formikVariables = defaultTo(get(formik?.values, basePath), [])
+  const formikValue = get(formik?.values, basePath)
+  const formikVariables = Array.isArray(formikValue) ? formikValue : []
   // get doesn't return defaultValue if it gets null
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
