@@ -141,6 +141,7 @@ describe('Configure Datadog health source', () => {
 
     cy.get('span[data-icon="Options"]').click()
     cy.contains('div', 'Edit service').click()
+    cy.get('#bp3-tab-title_monitoredServiceConfigurations_healthSource').click()
 
     cy.wait('@monitoredServiceCall')
 

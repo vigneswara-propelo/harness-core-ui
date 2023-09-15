@@ -428,6 +428,7 @@ describe('Edit AppDynamics template', () => {
 
     cy.findByText(/Unsaved changes/i).should('not.exist')
 
+    cy.get('#bp3-tab-title_monitoredServiceConfigurations_healthSource').click()
     cy.contains('div', 'AppDynamics').click()
     cy.wait(1000)
     cy.contains('span', 'Next').click({ force: true })

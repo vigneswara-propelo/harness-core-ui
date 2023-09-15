@@ -10,34 +10,19 @@ import { defaultTo, noop } from 'lodash-es'
 import * as Yup from 'yup'
 import type { FormikContextType } from 'formik'
 import { useParams } from 'react-router-dom'
-import { Container, Formik, Text } from '@harness/uicore'
+import { Formik, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import type { ChangeSourceDTO, MonitoredServiceDTO } from 'services/cv'
+import type { ChangeSourceDTO } from 'services/cv'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import { ChangeSourceDrawer } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer'
 import type { MonitoredServiceConfig } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.types'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
-import SaveAndDiscardButton from '@cv/components/SaveAndDiscardButton/SaveAndDiscardButton'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { MonitoredServiceForm } from './Service.types'
-import {
-  getIsChangeSrcSectionHidden,
-  getIsHealthSrcSectionHidden,
-  getIsNotifcationsSectionHidden,
-  onSave,
-  shouldShowSaveAndDiscard,
-  updateMonitoredServiceDTOOnTypeChange
-} from './Service.utils'
-import { getImperativeHandleRef, isUpdated } from '../../Configurations.utils'
+import { onSave } from './Service.utils'
+import { getImperativeHandleRef } from '../../Configurations.utils'
 import CommonMonitoredServiceConfigurations from './components/CommonMonitoredServiceConfigurations/CommonMonitoredServiceConfigurations'
-import ChangeSourceTableContainer from './components/ChangeSourceTableContainer/ChangeSourceTableContainer'
-import MonitoredServiceNotificationsContainer from './components/MonitoredServiceNotificationsContainer/MonitoredServiceNotificationsContainer'
-import HealthSourceTableContainer from './components/HealthSourceTableContainer/HealthSourceTableContainer'
-import MonitoredServiceOverview from './components/MonitoredServiceOverview/MonitoredServiceOverview'
 import css from './Service.module.scss'
 
 function Service(
@@ -73,16 +58,11 @@ function Service(
   formikRef?: TemplateFormRef
 ): JSX.Element {
   const { getString } = useStrings()
-  const { identifier, serviceIdentifier, environmentIdentifier } = useParams<
+  const { identifier } = useParams<
     ProjectPathProps & { identifier: string; serviceIdentifier?: string; environmentIdentifier?: string }
   >()
   const isEdit = !!identifier
   const ref = useRef<any | null>()
-  const { SRM_COMMON_MONITORED_SERVICE } = useFeatureFlags()
-  const isChangeSrcSectionHidden = getIsChangeSrcSectionHidden(config, identifier)
-  const isHealthSrcSectionHidden = getIsHealthSrcSectionHidden(config, identifier)
-  const { projectIdentifier } = useParams<ProjectPathProps & { identifier: string }>()
-  const isNotificationsSectionHidden = getIsNotifcationsSectionHidden(isTemplate, config, identifier)
 
   React.useImperativeHandle(getImperativeHandleRef(isTemplate, formikRef), () => ({
     resetForm() {
@@ -199,114 +179,27 @@ function Service(
           updateTemplate?.(formik.values)
         }
 
-        if (SRM_COMMON_MONITORED_SERVICE) {
-          return (
-            <CommonMonitoredServiceConfigurations
-              config={config}
-              identifier={identifier}
-              hideDrawer={hideDrawer}
-              showDrawer={showDrawer}
-              openChangeSourceDrawer={openChangeSourceDrawer}
-              onSuccessChangeSource={onSuccessChangeSource}
-              isTemplate={isTemplate}
-              expressions={expressions}
-              onSuccess={onSuccess}
-              initialValues={initialValues}
-              isEdit={isEdit}
-              onChangeMonitoredServiceType={onChangeMonitoredServiceType}
-              onDiscard={onDiscard}
-              cachedInitialValues={cachedInitialValues}
-              setDBData={setDBData}
-              dependencyTabformRef={dependencyTabformRef}
-              onDependencySuccess={onDependencySuccess}
-            />
-          )
-        } else {
-          return (
-            <>
-              <Container className={css.saveDiscardButton}>
-                {shouldShowSaveAndDiscard(isTemplate) ? (
-                  <SaveAndDiscardButton
-                    isUpdated={isUpdated(formik.dirty, initialValues, cachedInitialValues)}
-                    onSave={() => onSave({ formik, onSuccess })}
-                    onDiscard={() => {
-                      formik.resetForm()
-                      onDiscard?.()
-                    }}
-                    RbacPermission={{
-                      permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
-                      resource: {
-                        resourceType: ResourceType.MONITOREDSERVICE,
-                        resourceIdentifier: projectIdentifier
-                      }
-                    }}
-                  />
-                ) : null}
-              </Container>
-              <MonitoredServiceOverview
-                formikProps={formik}
-                isEdit={isEdit}
-                onChangeMonitoredServiceType={(type: MonitoredServiceDTO['type']) => {
-                  if (type === formik.values.type) {
-                    return
-                  }
-                  formik.setFieldValue('type', type)
-                  onChangeMonitoredServiceType({
-                    isEdit,
-                    ...updateMonitoredServiceDTOOnTypeChange(type, formik.values)
-                  })
-                }}
-                config={config}
-                serviceIdentifier={serviceIdentifier}
-                environmentIdentifier={environmentIdentifier}
-              />
-              {!isHealthSrcSectionHidden || !isChangeSrcSectionHidden ? (
-                <Text color={Color.BLACK} className={css.sourceTableLabel}>
-                  {getString('cv.healthSource.defineYourSource')}
-                </Text>
-              ) : null}
-              {isChangeSrcSectionHidden ? null : (
-                <ChangeSourceTableContainer
-                  onEdit={values => {
-                    showDrawer({ ...values, hideDrawer })
-                  }}
-                  onAddNewChangeSource={() => {
-                    openChangeSourceDrawer({ formik, onSuccessChangeSource })
-                  }}
-                  value={formik.values?.sources?.changeSources}
-                  onSuccess={onSuccessChangeSource}
-                />
-              )}
-              {isHealthSrcSectionHidden ? null : (
-                <HealthSourceTableContainer
-                  healthSourceListFromAPI={initialValues.sources?.healthSources}
-                  serviceFormFormik={formik}
-                  isTemplate={isTemplate}
-                  expressions={expressions}
-                  onSave={data => {
-                    onSave({
-                      formik: {
-                        ...formik,
-                        values: {
-                          ...(formik?.values || {}),
-                          sources: { ...formik.values?.sources, healthSources: data }
-                        }
-                      },
-                      onSuccess
-                    })
-                  }}
-                />
-              )}
-              {isNotificationsSectionHidden ? null : (
-                <MonitoredServiceNotificationsContainer
-                  setFieldValue={formik?.setFieldValue}
-                  notificationRuleRefs={formik?.values?.notificationRuleRefs}
-                  identifier={identifier}
-                />
-              )}
-            </>
-          )
-        }
+        return (
+          <CommonMonitoredServiceConfigurations
+            config={config}
+            identifier={identifier}
+            hideDrawer={hideDrawer}
+            showDrawer={showDrawer}
+            openChangeSourceDrawer={openChangeSourceDrawer}
+            onSuccessChangeSource={onSuccessChangeSource}
+            isTemplate={isTemplate}
+            expressions={expressions}
+            onSuccess={onSuccess}
+            initialValues={initialValues}
+            isEdit={isEdit}
+            onChangeMonitoredServiceType={onChangeMonitoredServiceType}
+            onDiscard={onDiscard}
+            cachedInitialValues={cachedInitialValues}
+            setDBData={setDBData}
+            dependencyTabformRef={dependencyTabformRef}
+            onDependencySuccess={onDependencySuccess}
+          />
+        )
       }}
     </Formik>
   )

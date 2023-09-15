@@ -128,6 +128,7 @@ describe('Verify ChangeSource', () => {
       </TestWrapper>
     )
 
+    await userEvent.click(getByText('cv.navLinks.adminSideNavLinks.activitySources'))
     await act(async () => {
       await userEvent.click(getByText('cv.changeSource.addChangeSource'))
     })
@@ -166,6 +167,7 @@ describe('Verify ChangeSource', () => {
       </TestWrapper>
     )
 
+    await userEvent.click(getByText('cv.navLinks.adminSideNavLinks.activitySources'))
     await act(async () => {
       await userEvent.click(getByText('cv.changeSource.addChangeSource'))
     })

@@ -286,6 +286,8 @@ describe('Edit monitored service with old gitSync', () => {
     cy.contains('p', 'Open/Edit Template').click()
     cy.wait('@applyTemplates')
     cy.wait('@listIndv')
+
+    cy.get('#bp3-tab-title_monitoredServiceConfigurations_healthSource').click()
     cy.contains('div', 'NewRelic').click()
     cy.wait(1000)
     cy.contains('span', 'Next').click({ force: true })

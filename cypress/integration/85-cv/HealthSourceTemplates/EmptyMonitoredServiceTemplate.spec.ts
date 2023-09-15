@@ -56,10 +56,14 @@ describe('Create empty monitored service', () => {
     cy.contains('p', '+ Add New').should('be.visible')
     cy.get('[data-testid="environment"] input').click()
     cy.contains('p', '+ Add New').should('be.visible')
-    cy.contains('span', 'Add New Change Source').should('be.visible')
+    cy.setServiceEnvRuntime()
+
+    cy.get('#bp3-tab-title_monitoredServiceConfigurations_healthSource').click()
     cy.contains('span', 'Add New Health Source').should('be.visible')
 
-    cy.setServiceEnvRuntime()
+    cy.get('#bp3-tab-title_monitoredServiceConfigurations_changeSource').click()
+    cy.contains('span', 'Add New Change Source').should('be.visible')
+
     cy.get('button').contains('span', 'Save').click()
     cy.get('[class*=bp3-dialog]').within(() => {
       cy.contains('p', 'Save Empty Monitored Service Template (1)').should('be.visible')

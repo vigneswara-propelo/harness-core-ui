@@ -166,8 +166,6 @@ describe('Unit tests for createting monitored source', () => {
 
     expect(getByText('cv.monitoredServices.monitoredServiceName')).toBeDefined()
 
-    // Table cv.healthSource.defineYourSource
-    expect(getByText('cv.healthSource.defineYourSource')).toBeDefined()
     expect(document.title).toBe('cv.srmTitle | cv.monitoredServices.title | 1234_project | harness')
   })
 
@@ -436,7 +434,7 @@ describe('Unit tests for createting monitored source', () => {
       </TestWrapper>
     )
 
-    expect(getAllByRole('tab').length).toEqual(3)
+    expect(getAllByRole('tab').length).toEqual(8)
 
     expect(container.querySelectorAll('div[role="tab"][aria-disabled="true"]')).toHaveLength(2)
   })

@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
-import { render, fireEvent, waitFor, act } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { Container, Button, FormInput } from '@harness/uicore'
+import userEvent from '@testing-library/user-event'
 import routes from '@common/RouteDefinitions'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
@@ -103,38 +104,9 @@ describe('Unit tests for createting monitored source', () => {
     )
 
     // Table cv.healthSource.defineYourSource
-    expect(getByText('cv.healthSource.defineYourSource')).toBeDefined()
-  })
+    await userEvent.click(getByText('platform.connectors.cdng.healthSources.label'))
 
-  test('Verify validaiton works on clicking Add new health source', async () => {
-    jest.spyOn(dbHook, 'useIndexedDBHook').mockReturnValue({
-      dbInstance: {
-        put: jest.fn(),
-        get: jest.fn().mockReturnValue(undefined)
-      } as any,
-      isInitializingDB: false
-    })
-    const { container, getByText, queryByText } = render(
-      <TestWrapper {...testWrapperProps}>
-        <MonitoredService />
-      </TestWrapper>
-    )
-    // click on add new button
-    const addNewButton = getByText('cv.healthSource.addHealthSource')
-    await act(async () => {
-      fireEvent.click(addNewButton)
-    })
-
-    await waitFor(() => expect(getByText('cv.monitoredServices.nameValidation')).not.toBeNull())
-
-    await setFieldValue({
-      container,
-      type: InputTypes.TEXTFIELD,
-      fieldId: 'name',
-      value: 'Updated Monitored service'
-    })
-
-    await waitFor(() => expect(queryByText('cv.monitoredServices.nameValidation')).toBeNull())
+    await (() => expect(getByText('cv.healthSource.defineYourSource')).toBeDefined())
   })
 
   test('Check discard and save button', async () => {

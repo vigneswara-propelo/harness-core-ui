@@ -165,6 +165,7 @@ describe('Create empty monitored service', () => {
 
     cy.findByText(/Configurations/i).click({ force: true })
 
+    cy.get('#bp3-tab-title_monitoredServiceConfigurations_healthSource').click()
     cy.get('.TableV2--clickable').scrollIntoView().click()
 
     cy.findByText(/Next/i).click()

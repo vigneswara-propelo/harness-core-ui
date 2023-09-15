@@ -246,6 +246,7 @@ describe('Health Source - Google Cloud Operations', () => {
 
     cy.get('span[data-icon="Options"]').click()
     cy.contains('div', 'Edit service').click()
+    cy.get('#bp3-tab-title_monitoredServiceConfigurations_healthSource').click()
 
     cy.contains('div', 'Google Cloud Operations').click()
 
@@ -267,6 +268,7 @@ describe('Health Source - Google Cloud Operations', () => {
 
     cy.get('span[data-icon="Options"]').click()
     cy.contains('div', 'Edit service').click()
+    cy.get('#bp3-tab-title_monitoredServiceConfigurations_healthSource').click()
 
     cy.contains('div', 'GCO Dashboard').click()
 

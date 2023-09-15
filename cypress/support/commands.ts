@@ -387,6 +387,7 @@ Cypress.Commands.add('addingGroupName', name => {
 
 Cypress.Commands.add('populateDefineHealthSource', (connectorType, connectorName, healthSourceName, isVerifyStep) => {
   if (!isVerifyStep) {
+    cy.get('#bp3-tab-title_monitoredServiceConfigurations_healthSource').click()
     cy.contains('span', 'Add New Health Source').click()
   }
   cy.wait(1000)

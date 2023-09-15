@@ -248,6 +248,7 @@ describe('Configure Datadog health source', () => {
     cy.wait(1000)
     cy.get('span[data-icon="Options"]').click()
     cy.contains('div', 'Edit service').click()
+    cy.get('#bp3-tab-title_monitoredServiceConfigurations_healthSource').click()
     cy.wait('@monitoredServiceCall')
 
     cy.contains('div', 'DD Logs').click({ force: true })
@@ -324,6 +325,8 @@ describe('Configure Datadog health source', () => {
 
     cy.get('span[data-icon="Options"]').click()
     cy.contains('div', 'Edit service').click()
+    cy.get('#bp3-tab-title_monitoredServiceConfigurations_healthSource').click()
+
     cy.contains('div', 'DD new').click()
 
     //intercepting calls

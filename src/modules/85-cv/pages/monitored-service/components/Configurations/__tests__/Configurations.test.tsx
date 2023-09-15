@@ -144,7 +144,6 @@ describe('Unit tests for Configuration', () => {
     await act(async () => {
       await fireEvent.click(document.body.querySelectorAll('[class*="ConfirmationDialog"] button')[0])
     })
-    await waitFor(() => expect(getByText('cv.healthSource.noData')).toBeInTheDocument())
     expect(document.title).toBe('cv.srmTitle | cv.monitoredServices.title | harness')
   })
 

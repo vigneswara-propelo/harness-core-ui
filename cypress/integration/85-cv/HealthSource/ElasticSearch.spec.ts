@@ -86,6 +86,7 @@ describe.skip('Health Source - ELK', () => {
 
     cy.get('span[data-icon="Options"]').click()
     cy.contains('div', 'Edit service').click()
+    cy.get('#bp3-tab-title_monitoredServiceConfigurations_healthSource').click()
 
     cy.contains('div', 'es1').click({ force: true })
 

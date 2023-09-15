@@ -43,7 +43,7 @@ describe('Cloud watch health source', () => {
     cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
 
     cy.addNewMonitoredServiceWithServiceAndEnv()
-
+    cy.get('#bp3-tab-title_monitoredServiceConfigurations_healthSource').click()
     cy.contains('span', 'Add New Health Source').click()
 
     cy.findByText(/CloudWatch/).should('exist')

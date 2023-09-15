@@ -8,6 +8,7 @@
 import React from 'react'
 import { fireEvent, render, waitFor, act } from '@testing-library/react'
 import { Container, Button } from '@harness/uicore'
+import userEvent from '@testing-library/user-event'
 import routes from '@common/RouteDefinitions'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { accountPathProps, projectPathProps, modulePathProps } from '@common/utils/routeUtils'
@@ -152,6 +153,7 @@ describe('Verify Service', () => {
     await waitFor(() => expect(getByText('Monitored Service with change source and health source')).toBeTruthy())
 
     // Change Source populates
+    await userEvent.click(getByText('cv.navLinks.adminSideNavLinks.activitySources'))
     await waitFor(() =>
       expect(container.querySelectorAll('.changeSourceTableWrapper .TableV2--body [role="row"]').length).toEqual(1)
     )
@@ -160,6 +162,7 @@ describe('Verify Service', () => {
     await waitFor(() => expect(container.querySelector('span[data-icon="service-pagerduty"]')).toBeTruthy()) // source icon
 
     // Health Source populates
+    await userEvent.click(getByText('platform.connectors.cdng.healthSources.label'))
     await waitFor(() =>
       expect(container.querySelectorAll('.healthSourceTableWrapper .TableV2--body [role="row"]').length).toEqual(1)
     )
@@ -179,6 +182,9 @@ describe('Verify Service', () => {
     await waitFor(() => expect(getByText('save')).toBeTruthy())
 
     // click addChangeSource
+
+    await userEvent.click(getByText('cv.navLinks.adminSideNavLinks.activitySources'))
+
     act(() => {
       fireEvent.click(getByText('cv.changeSource.addChangeSource'))
     })
@@ -240,15 +246,21 @@ describe('Verify Service', () => {
       </TestWrapper>
     )
     // name
+
     await waitFor(() => expect(container.querySelector('input[value="Application"]')).toBeTruthy())
-    expect(getByText('CD 101')).not.toBeNull()
+
+    await userEvent.click(getByText('cv.navLinks.adminSideNavLinks.activitySources'))
+
+    await waitFor(() => expect(getByText('CD 101')).not.toBeNull())
+
+    await userEvent.click(getByText('overview'))
+
     fireEvent.click(
       container.querySelector(`[class*="monitoredService"] .bp3-input-action [data-icon="chevron-down"]`)!
     )
     await waitFor(() => expect(container.querySelector('[class*="menuItemLabel"]')).not.toBeNull())
     fireEvent.click(getByText('Infrastructure'))
     fireEvent.click(getByText('confirm'))
-    await waitFor(() => expect(getByText('cv.healthSource.noData')).not.toBeNull())
     expect(onChangeType).toHaveBeenCalledWith({
       correlationId: 'c910c9e2-5a48-4f4b-9dad-afdeac54d060',
       dependencies: [],

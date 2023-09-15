@@ -60,6 +60,16 @@ exports[`Sidenav render 1`] = `
     </a>
     <a
       class="link"
+      href="/account/dummy/cd/orgs/dummy/projects/dummy/monitoredservices"
+    >
+      <p
+        class="StyledProps--font StyledProps--main text"
+      >
+        common.monitoredServices
+      </p>
+    </a>
+    <a
+      class="link"
       href="/account/dummy/cd/orgs/dummy/projects/dummy/gitops"
     >
       <p

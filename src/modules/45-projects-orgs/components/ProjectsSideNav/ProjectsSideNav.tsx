@@ -27,7 +27,7 @@ export default function ProjectsSideNav(): React.ReactElement {
   const location = useLocation()
   const history = useHistory()
   const { selectedProject, updateAppStore } = useAppStore()
-  const { CDS_SERVICE_OVERRIDES_2_0, SRM_COMMON_MONITORED_SERVICE } = useFeatureFlags()
+  const { CDS_SERVICE_OVERRIDES_2_0 } = useFeatureFlags()
 
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -102,12 +102,10 @@ export default function ProjectsSideNav(): React.ReactElement {
               <SidebarLink label={getString('pipelines')} to={routes.toPipelines(projectDetailsParams)} />
               <SidebarLink label={getString('services')} to={routes.toServices(projectDetailsParams)} />
               <SidebarLink label={getString('environments')} to={routes.toEnvironment(projectDetailsParams)} />
-              {SRM_COMMON_MONITORED_SERVICE ? (
-                <SidebarLink
-                  label={getString('common.monitoredServices')}
-                  to={routes.toMonitoredServices(projectDetailsParams)}
-                />
-              ) : null}
+              <SidebarLink
+                label={getString('common.monitoredServices')}
+                to={routes.toMonitoredServices(projectDetailsParams)}
+              />
               {isServiceOverridesEnabled && (
                 <SidebarLink
                   label={getString('common.overrides')}

@@ -163,6 +163,7 @@ describe('Health Source - Prometheus', () => {
 
     cy.get('span[data-icon="Options"]').click()
     cy.contains('div', 'Edit service').click()
+    cy.get('#bp3-tab-title_monitoredServiceConfigurations_healthSource').click()
 
     cy.contains('div', 'Prometheus').click()
 
@@ -269,6 +270,7 @@ describe('Health Source - Prometheus', () => {
 
     cy.get('span[data-icon="Options"]').click()
     cy.contains('div', 'Edit service').click()
+    cy.get('#bp3-tab-title_monitoredServiceConfigurations_healthSource').click()
 
     cy.contains('div', 'Prometheus').click()
 
@@ -502,6 +504,7 @@ describe('AWS Prometheus', () => {
     cy.intercept('POST', awsConnectorCall).as('awsConnectorCall')
 
     cy.addNewMonitoredServiceWithServiceAndEnv()
+    cy.get('#bp3-tab-title_monitoredServiceConfigurations_healthSource').click()
     cy.contains('span', 'Add New Health Source').click()
 
     cy.contains('span', 'Next').click()
@@ -634,6 +637,7 @@ describe('AWS Prometheus', () => {
 
     cy.get('span[data-icon="Options"]').click()
     cy.contains('div', 'Edit service').click()
+    cy.get('#bp3-tab-title_monitoredServiceConfigurations_healthSource').click()
 
     cy.wait('@monitoredServiceCall')
 
