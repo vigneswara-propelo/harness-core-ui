@@ -11,21 +11,23 @@ import { TabNavigation } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
+import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 
 const SectionToggle = (): ReactElement => {
   const params = useParams<ProjectPathProps & { accountId: string }>()
   const { getString } = useStrings()
+  const { withActiveEnvironment } = useActiveEnvironment()
 
   return (
     <TabNavigation
       links={[
         {
           label: getString('cf.shared.targets'),
-          to: routes.toCFTargets(params)
+          to: withActiveEnvironment(routes.toCFTargets(params))
         },
         {
           label: getString('cf.shared.segments'),
-          to: routes.toCFSegments(params)
+          to: withActiveEnvironment(routes.toCFSegments(params))
         }
       ]}
     />
