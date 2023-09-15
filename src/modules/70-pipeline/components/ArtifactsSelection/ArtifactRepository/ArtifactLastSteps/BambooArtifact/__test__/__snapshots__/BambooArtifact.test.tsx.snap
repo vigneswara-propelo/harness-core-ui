@@ -738,7 +738,7 @@ exports[`Bamboo Artifact tests renders fine for the NEW artifact 1`] = `
                                 autocomplete="off"
                                 class="bp3-input-ghost bp3-multi-select-tag-input-input"
                                 name="spec.artifactPaths"
-                                placeholder="- Select -"
+                                placeholder="- pipeline.selectArtifactPathPlaceholder -"
                                 value=""
                               />
                             </div>
@@ -1673,7 +1673,7 @@ exports[`Bamboo Artifact tests renders fine on the edit mode with runtime values
                                 autocomplete="off"
                                 class="bp3-input-ghost bp3-multi-select-tag-input-input"
                                 name="spec.artifactPaths"
-                                placeholder="- Select -"
+                                placeholder="- pipeline.selectArtifactPathPlaceholder -"
                                 value=""
                               />
                             </div>

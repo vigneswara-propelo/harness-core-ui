@@ -67,7 +67,7 @@ exports[`Bamboo Artifact Source tests Should match snapshot for Sidecar Bamboo a
                           autocomplete="off"
                           class="bp3-input-ghost bp3-multi-select-tag-input-input"
                           name="artifactPaths"
-                          placeholder="- Select -"
+                          placeholder="- common.artifactPaths -"
                           value=""
                         />
                       </div>
@@ -207,7 +207,7 @@ exports[`Bamboo Artifact Source tests Should match snapshot for Sidecar Bamboo a
                           autocomplete="off"
                           class="bp3-input-ghost bp3-multi-select-tag-input-input"
                           name="artifactPaths"
-                          placeholder="- Select -"
+                          placeholder="- common.artifactPaths -"
                           value=""
                         />
                       </div>

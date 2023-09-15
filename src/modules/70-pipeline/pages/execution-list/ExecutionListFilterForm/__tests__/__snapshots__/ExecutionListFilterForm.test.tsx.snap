@@ -125,7 +125,7 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
                         autocomplete="off"
                         class="bp3-input-ghost bp3-multi-select-tag-input-input"
                         name="status"
-                        placeholder="- Select -"
+                        placeholder="- pipeline.jiraUpdateStep.selectStatus -"
                         value=""
                       />
                     </div>
@@ -315,7 +315,7 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
                         autocomplete="off"
                         class="bp3-input-ghost bp3-multi-select-tag-input-input"
                         name="services"
-                        placeholder="- Select -"
+                        placeholder="- pipeline.filters.servicePlaceholder -"
                         value=""
                       />
                     </div>
@@ -366,7 +366,7 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
                         autocomplete="off"
                         class="bp3-input-ghost bp3-multi-select-tag-input-input"
                         name="environments"
-                        placeholder="- Select -"
+                        placeholder="- pipeline.filters.environmentPlaceholder -"
                         value=""
                       />
                     </div>
@@ -449,7 +449,7 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
                         autocomplete="off"
                         class="bp3-input-ghost bp3-multi-select-tag-input-input"
                         name="gitOpsAppIdentifiers"
-                        placeholder="- Select -"
+                        placeholder="- pipeline.selectApplications -"
                         value=""
                       />
                     </div>
