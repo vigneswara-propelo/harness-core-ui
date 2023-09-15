@@ -13,6 +13,7 @@ import MetricsAnalysisContainer from '../MetricsAnalysisContainer'
 import type { MetricsAnalysisProps } from '../MetricsAnalysisContainer.types'
 import { mockedHealthSourcesData } from '../../../__tests__/MetricsAndLogs.mock'
 import { mockedMetricsData, mockedMetricsDataWithDeeplink } from './MetricsAnalysisContainer.mock'
+import { roundOffToMilliseconds } from '../MetricsAnalysisContainer.utils'
 
 const WrapperComponent = (props: MetricsAnalysisProps): JSX.Element => {
   return (
@@ -126,7 +127,7 @@ describe('Unit tests for MetricsAnalysisContainer', () => {
       queryParams: {
         accountId: undefined,
         anomalous: true,
-        endTime: 1630595011443,
+        endTime: 1630595011000,
         filter: undefined,
         healthSources: undefined,
         monitoredServiceIdentifier: 'monitored_service_identifier',
@@ -134,8 +135,15 @@ describe('Unit tests for MetricsAnalysisContainer', () => {
         page: 3,
         projectIdentifier: undefined,
         size: 10,
-        startTime: 1630594988077
+        startTime: 1630594988000
       }
     })
+  })
+
+  test('validate roundOffToMilliseconds', () => {
+    const originalTime = 1694685300882 // Thu Sep 14 2023 15:25:01
+    const expectedTime = 1694685300000 // Thu Sep 14 2023 15:25:00
+    expect(roundOffToMilliseconds(originalTime)).toEqual(expectedTime)
+    expect(roundOffToMilliseconds(0)).toEqual(0)
   })
 })

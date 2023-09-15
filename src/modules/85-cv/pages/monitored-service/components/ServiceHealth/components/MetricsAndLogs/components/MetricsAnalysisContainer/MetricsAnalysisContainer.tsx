@@ -27,7 +27,7 @@ import { VerificationType } from '@cv/components/HealthSourceDropDown/HealthSour
 import noDataImage from '@cv/assets/noData.svg'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { metricTypeOptions, PAGE_SIZE } from './MetricsAnalysisContainer.constants'
-import { generatePointsForTimeSeries } from './MetricsAnalysisContainer.utils'
+import { generatePointsForTimeSeries, roundOffToMilliseconds } from './MetricsAnalysisContainer.utils'
 import { MetricsAnalysisContentProps, MetricsAnalysisProps, MetricTypes } from './MetricsAnalysisContainer.types'
 import MetricAnalysisRow from './components/MetricsAnalysisRow/MetricAnalysisRow'
 import css from './MetricsAnalysisContainer.module.scss'
@@ -135,10 +135,13 @@ const MetricsAnalysisContent: React.FC<MetricsAnalysisContentProps> = ({
 
 const MetricsAnalysisContainer: React.FC<MetricsAnalysisProps> = ({
   monitoredServiceIdentifier,
-  startTime,
-  endTime
+  startTime: metricStartTime,
+  endTime: metricEndTime
 }) => {
   const { getString } = useStrings()
+
+  const startTime = roundOffToMilliseconds(metricStartTime)
+  const endTime = roundOffToMilliseconds(metricEndTime)
 
   const [isAnomalous, setIsAnomalous] = useState<boolean>(true)
   const [healthSource, setHealthSource] = useState<string>()

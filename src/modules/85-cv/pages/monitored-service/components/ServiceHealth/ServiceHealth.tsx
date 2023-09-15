@@ -17,7 +17,8 @@ import {
   useToaster,
   Button,
   ButtonVariation,
-  Dialog
+  Dialog,
+  Heading
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
@@ -31,6 +32,8 @@ import type { ChangesInfoCardData } from '@cv/components/ChangeTimeline/ChangeTi
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import ServiceDependencyGraph from '@cv/pages/monitored-service/CVMonitoredService/components/MonitoredServiceGraphView/MonitoredServiceGraphView'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import {
   calculateLowestHealthScoreBar,
   calculateStartAndEndTimes,
@@ -78,6 +81,7 @@ export default function ServiceHealth({
     label: getString('cv.monitoredServices.serviceHealth.last24Hrs')
   })
 
+  const isAnalyseDeploymentEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_ANALYZE_DEPLOYMENT_STEP)
   const [timestamps, setTimestamps] = useState<number[]>([])
   const [timeRange, setTimeRange] = useState<{ startTime: number; endTime: number }>()
   const [showTimelineSlider, setShowTimelineSlider] = useState(false)
@@ -240,12 +244,14 @@ export default function ServiceHealth({
             setSelectedTimePeriod(option)
           }}
         />
-        <Button
-          className={css.serviceDepedencyButton}
-          text={getString('pipeline.serviceDependenciesText')}
-          variation={ButtonVariation.LINK}
-          onClick={openServiceDepedencyModal}
-        />
+        {isAnalyseDeploymentEnabled && (
+          <Button
+            className={css.serviceDepedencyButton}
+            text={getString('pipeline.serviceDependenciesText')}
+            variation={ButtonVariation.LINK}
+            onClick={openServiceDepedencyModal}
+          />
+        )}
       </Layout.Horizontal>
       <Container className={css.serviceHealthCard}>
         <Card>
@@ -313,7 +319,7 @@ export default function ServiceHealth({
         </Card>
 
         <Layout.Horizontal spacing="medium">
-          <Container width="50%">
+          <Container width={isAnalyseDeploymentEnabled ? '50%' : '60%'}>
             <ChangesTable
               startTime={changesTableAndSourceCardStartAndEndtimeWithSlider[0]}
               endTime={changesTableAndSourceCardStartAndEndtimeWithSlider[1]}
@@ -321,13 +327,26 @@ export default function ServiceHealth({
               monitoredServiceIdentifier={monitoredServiceIdentifier}
             />
           </Container>
-          <Container width="50%">
-            <ReportsTableCard
-              startTime={changesTableAndSourceCardStartAndEndtimeWithSlider[0]}
-              endTime={changesTableAndSourceCardStartAndEndtimeWithSlider[1]}
-              monitoredServiceIdentifier={monitoredServiceIdentifier}
-            />
-          </Container>
+          {isAnalyseDeploymentEnabled ? (
+            <Container width="50%">
+              <ReportsTableCard
+                startTime={changesTableAndSourceCardStartAndEndtimeWithSlider[0]}
+                endTime={changesTableAndSourceCardStartAndEndtimeWithSlider[1]}
+                monitoredServiceIdentifier={monitoredServiceIdentifier}
+              />
+            </Container>
+          ) : (
+            <Container width="40%">
+              <Heading level={2} font={{ variation: FontVariation.H6 }} padding={{ bottom: 'medium' }}>
+                {getString('pipeline.serviceDependenciesText')}
+              </Heading>
+              <Card>
+                <Layout.Vertical height={458}>
+                  <ServiceDependencyGraph monitoredServiceIdentifier={monitoredServiceIdentifier} />
+                </Layout.Vertical>
+              </Card>
+            </Container>
+          )}
         </Layout.Horizontal>
 
         <MetricsAndLogs

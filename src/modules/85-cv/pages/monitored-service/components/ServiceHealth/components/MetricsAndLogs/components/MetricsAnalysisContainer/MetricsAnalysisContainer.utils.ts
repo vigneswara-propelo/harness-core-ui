@@ -52,3 +52,8 @@ export const generatePointsForTimeSeries = (
 
   return _data
 }
+
+export const roundOffToMilliseconds = (time: number) => {
+  const roundedTime = time - (time % 1000)
+  return roundedTime
+}
