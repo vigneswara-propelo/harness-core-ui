@@ -34,14 +34,6 @@ interface Message {
   timestamp?: number
 }
 
-const sampleMessages: Array<Message> = [
-  {
-    author: 'harness',
-    text: 'Hi, I can search the Harness Docs for you. How can I help you?',
-    timestamp: Date.now()
-  }
-]
-
 function DocsChat(): JSX.Element {
   const [userInput, setUserInput] = useState('')
   const { currentUserInfo } = useAppStore()
@@ -50,16 +42,24 @@ function DocsChat(): JSX.Element {
   const messageList = useRef<HTMLDivElement>(null)
   const { mutate: askQuestion, loading } = useHarnessSupportBot({})
   const { trackEvent } = useTelemetry()
-  const { isOpen, close: closeSubmitTicketModal, open: openSubmitTicketModal } = useToggleOpen()
-  const [chatHistory, setChatHistory] = useLocalStorage<Array<Message>>(CHAT_HISTORY_KEY, [], sessionStorage)
-  const [messages, setMessages] = useState<Array<Message>>(chatHistory.length > 0 ? chatHistory : sampleMessages)
-  const [placeholderIndex, setPlaceholderIndex] = useState(0)
+  const sampleMessages: Array<Message> = [
+    {
+      author: 'harness',
+      text: getString('common.csBot.welcomeMessage'),
+      timestamp: Date.now()
+    }
+  ]
   const placeholders = [
     getString('common.csBot.sampleQuestion1'),
     getString('common.csBot.sampleQuestion2'),
     getString('common.csBot.sampleQuestion3'),
     getString('common.csBot.sampleQuestion4')
   ]
+  const { isOpen, close: closeSubmitTicketModal, open: openSubmitTicketModal } = useToggleOpen()
+  const [chatHistory, setChatHistory] = useLocalStorage<Array<Message>>(CHAT_HISTORY_KEY, [], sessionStorage)
+  const [messages, setMessages] = useState<Array<Message>>(chatHistory.length > 0 ? chatHistory : sampleMessages)
+  const [placeholderIndex, setPlaceholderIndex] = useState(0)
+
   const { data: aidaSettingResponse, loading: isAidaSettingLoading } = useGetSettingValue({
     identifier: SettingType.AIDA,
     queryParams: { accountIdentifier: accountId }

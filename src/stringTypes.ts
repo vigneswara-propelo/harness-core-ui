@@ -262,6 +262,7 @@ export interface StringsMap {
   'common.csBot.ticketOnError': string
   'common.csBot.title': string
   'common.csBot.turnOn': string
+  'common.csBot.welcomeMessage': string
   'common.current': string
   'common.currentUTCTime': string
   'common.currentlyAvailable': string

@@ -67,7 +67,7 @@ describe('DocsChat', () => {
 
     const messages = container.querySelectorAll('.' + css.message)
     expect(messages.length).toBe(3)
-    expect(messages[0].textContent?.trim()).toEqual('Hi, I can search the Harness Docs for you. How can I help you?')
+    expect(messages[0].textContent?.trim()).toEqual('common.csBot.welcomeMessage')
     expect(messages[1].textContent?.trim()).toBe('test')
     expect(messages[2].textContent?.trim()).toBe(mockResponse.data.response)
   })
