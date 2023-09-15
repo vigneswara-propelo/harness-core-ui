@@ -2370,6 +2370,17 @@ const routes = {
       return `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/resources`
     }
   ),
+  toIACMPipelineCostEstimation: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      executionIdentifier,
+      source
+    }: PipelineType<ExecutionPathProps>) => {
+      return `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/costs`
+    }
+  ),
   // SSCA
   toSSCA: withAccountId(() => '/ssca'),
   toSSCAOverview: withAccountId(() => '/ssca/overview'),

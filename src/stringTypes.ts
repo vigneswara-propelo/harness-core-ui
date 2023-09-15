@@ -4219,6 +4219,7 @@ export interface StringsMap {
   'pipeline.copilot.possibleSolutions': string
   'pipeline.copilot.remediations': string
   'pipeline.copilot.requestTimedOut': string
+  'pipeline.costChange': string
   'pipeline.createANewPipeline': string
   'pipeline.createPipeline.choosePipelineSetupHeader': string
   'pipeline.createPipeline.learnMore': string

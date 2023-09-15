@@ -159,5 +159,6 @@ export enum PAGE_NAME {
   IDPAdminPage = 'IDPAdminPage',
   CETHomePage = 'CETHomePage',
   CETTrialPage = 'CETTrialPage',
-  SEIHomePage = 'SEIHomePage'
+  SEIHomePage = 'SEIHomePage',
+  IACMCostEstimation = 'IACMCostEstimation'
 }

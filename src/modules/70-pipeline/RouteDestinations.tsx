@@ -84,6 +84,7 @@ import EnvironmentResourceRenderer from './components/RbacResourceTables/Environ
 import EnvironmentAttributeRenderer from './components/RbacResourceTables/EnvironmentAttributeRenderer/EnvironmentAttributeRenderer'
 import { BuildCommits } from './pages/execution/ExecutionLandingPage/Commits/BuildCommits'
 import { getPipelineExecutionEventAdditionalDetails } from './utils/auditTrailUtils'
+import ExecutionIACMCostsEstimationView from './pages/execution/ExecutionIACMCostsEstimationView'
 /**
  * Register RBAC resources
  */
@@ -900,6 +901,22 @@ export function PipelineRouteDestinations({
       >
         <ExecutionLandingPage>
           <ExecutionIACMResourcesView />
+        </ExecutionLandingPage>
+      </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={sidebarProps}
+        layout={MinimalLayout}
+        path={routes.toIACMPipelineCostEstimation({
+          ...accountPathProps,
+          ...executionPathProps,
+          ...moduleParams
+        })}
+        pageName={PAGE_NAME.IACMCostEstimation}
+      >
+        <ExecutionLandingPage>
+          <ExecutionIACMCostsEstimationView />
         </ExecutionLandingPage>
       </RouteWithLayout>
     </>

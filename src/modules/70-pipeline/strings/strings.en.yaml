@@ -1989,3 +1989,4 @@ policyNotConfigured: Policy not configured
 executionFailed: Execution failed
 cacheIntelligence:
   label: Cache Intelligence
+costChange: Cost Change Estimation

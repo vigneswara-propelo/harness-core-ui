@@ -38,7 +38,8 @@ const TAB_ID_MAP = {
   STO_SECURITY: 'sto_security',
   ERROR_TRACKING: 'error_tracking',
   RESILIENCE: 'resilience',
-  IACM: 'iacm'
+  IACM: 'iacm',
+  IACM_COST_ESTIMATION: 'iacm_cost_estimation'
 }
 
 interface ExecutionTabsProps {
@@ -72,6 +73,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
   const isSecurityEnabled = licenseInformation['STO']?.status === 'ACTIVE'
   const isErrorTrackingEnabled = licenseInformation['CET']?.status === 'ACTIVE'
   const isIACMEnabled = useFeatureFlag(FeatureFlag.IACM_ENABLED)
+  const isIACMCostEstimationEnabled = useFeatureFlag(FeatureFlag.IACM_COST_ESTIMATION)
   const isSSCAEnabled = useFeatureFlag(FeatureFlag.SSCA_ENABLED)
   const isCetCdIntegrationEnabled = useFeatureFlag(FeatureFlag.CET_CD_INTEGRATION)
   const canUsePolicyEngine = useAnyEnterpriseLicense()
@@ -163,6 +165,12 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
     if (isIACMView) {
       return setSelectedTabId(TAB_ID_MAP.IACM)
+    }
+    const isIACMCostsView = !!matchPath(location.pathname, {
+      path: routes.toIACMPipelineCostEstimation(routeParams)
+    })
+    if (isIACMCostsView) {
+      return setSelectedTabId(TAB_ID_MAP.IACM_COST_ESTIMATION)
     }
     // Defaults to Pipelines Tab
     return setSelectedTabId(TAB_ID_MAP.PIPELINE)
@@ -329,6 +337,21 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
         </NavLink>
       )
     })
+    if (isIACMCostEstimationEnabled) {
+      tabList.push({
+        id: TAB_ID_MAP.IACM_COST_ESTIMATION,
+        title: (
+          <NavLink
+            to={routes.toIACMPipelineCostEstimation(params) + location.search}
+            className={css.tabLink}
+            activeClassName={css.activeLink}
+          >
+            <Icon name="cost-change" size={16} />
+            <span>{getString('pipeline.costChange')}</span>
+          </NavLink>
+        )
+      })
+    }
   }
 
   return (
