@@ -1,0 +1,61 @@
+# install dependencies
+FROM node:16 AS dependencies
+ARG GITHUB_ACCESS_TOKEN
+RUN mkdir nextgenui 
+COPY package.json nextgenui
+COPY yarn.lock nextgenui
+WORKDIR /nextgenui
+RUN echo @harness:registry=https://npm.pkg.github.com > .npmrc
+RUN echo "//npm.pkg.github.com/:_authToken="${GITHUB_ACCESS_TOKEN} >> .npmrc
+RUN yarn
+RUN yarn upgrade @harness/ng-tooltip
+
+# compile NGUI
+FROM node:16 AS compile
+RUN mkdir nextgenui 
+COPY package.json nextgenui
+COPY yarn.lock nextgenui
+COPY tsconfig.json nextgenui
+WORKDIR /nextgenui
+COPY --from=dependencies /nextgenui/node_modules node_modules
+COPY src src
+COPY configs configs
+COPY scripts scripts
+RUN yarn build
+
+# # upload to cdn
+# FROM gcr.io/google.com/cloudsdktool/google-cloud-cli:443.0.0 AS cdn-upload
+# ARG GCS_CREDENTIALS_SECRET
+# RUN echo "$GCS_CREDENTIALS_SECRET" | base64 -d > KEY_FILE.json
+# RUN gcloud auth activate-service-account --key-file KEY_FILE.json
+# RUN gcloud config set project prod-setup-205416
+# RUN mkdir nextgenui
+# COPY --from=compile /nextgenui/dist nextgenui 
+# # JS
+# RUN gsutil -h "Content-Disposition:inline" cp -n -Z -a public-read /nextgenui/dist/static/*.js gs://harness-ui-static/ng-static/
+# # CSS
+# RUN gsutil -h "Content-Disposition:inline" cp -n -Z -a public-read /nextgenui/dist/static/*.css gs://harness-ui-static/ng-static/
+# # Images & Videos
+# RUN gsutil -h "Content-Disposition:inline" cp -n -z png,svg,gif,ttf,jpg,jpeg -a public-read /nextgenui/dist/static/images/* gs://harness-ui-static/ng-static/images/
+# RUN rm KEY_FILE.json
+
+# create docker image
+FROM registry.access.redhat.com/ubi8/ubi-minimal:8.8 AS dockerize
+# install nginx
+RUN microdnf module enable nginx:1.20
+RUN microdnf install nginx
+# copy dist to serving directory
+COPY --from=compile /nextgenui/dist /opt/nextgenui
+# copy static files 
+COPY src/static /opt/nextgenui/static
+# copy config files
+COPY docker/entrypoint.sh /opt/
+COPY docker/nginx.conf /etc/nginx/
+COPY docker/nginx-ipv6-only.conf /etc/nginx/
+WORKDIR /opt/nextgenui
+RUN chown 65534:65534 -R /opt/nextgenui
+RUN chown 65534:65534 -R /var/log/nginx
+RUN chown 65534:65534 -R /etc/nginx
+USER 65534
+EXPOSE 8080
+ENTRYPOINT ["sh", "/opt/entrypoint.sh"]
