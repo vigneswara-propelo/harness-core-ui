@@ -16,7 +16,6 @@ import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
 import * as auditServices from 'services/audit'
-import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { View } from '@audit-trail/utils/RequestUtil'
 import AuditTrailsPage from '../AuditTrailsPage'
 import { filters } from '../../../components/__tests__/mockData'
@@ -62,9 +61,6 @@ jest.mock('@harness/uicore', () => {
 
 describe('Audit trail Page', () => {
   test('render', async () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      PL_AUDIT_LOG_STREAMING_ENABLED: true
-    })
     const renderObj = render(
       <TestWrapper path={routes.toAuditTrail({ ...accountPathProps })} pathParams={{ accountId: 'testAcc' }}>
         <AuditTrailsPage />
@@ -74,9 +70,6 @@ describe('Audit trail Page', () => {
   })
 
   test('render AuditLogStreaming Page', () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      PL_AUDIT_LOG_STREAMING_ENABLED: true
-    })
     const renderObj = render(
       <TestWrapper
         queryParams={{ view: View.AUDIT_LOG_STREAMING }}

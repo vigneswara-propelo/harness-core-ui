@@ -13,7 +13,6 @@ import { Page } from '@common/exports'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ScopedTitle from '@common/components/Title/ScopedTitle'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
@@ -24,7 +23,6 @@ import css from './AuditTrailsPage.module.scss'
 
 const AuditTrailsPage: React.FC = () => {
   const { getString } = useStrings()
-  const { PL_AUDIT_LOG_STREAMING_ENABLED: isAuditLogStreamingEnabled } = useFeatureFlags()
   const { orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const queryParamOptions = useAuditTrailQueryParamOptions()
   const { view } = useQueryParams(queryParamOptions)
@@ -32,7 +30,7 @@ const AuditTrailsPage: React.FC = () => {
 
   const auditTrailTitle = getString('common.auditTrail')
   const isOrgOrProjectScope = orgIdentifier || projectIdentifier
-  const showAuditLogStreamingTab = isAuditLogStreamingEnabled && !isOrgOrProjectScope
+  const showAuditLogStreamingTab = !isOrgOrProjectScope // show only in account scope
 
   return (
     <>
