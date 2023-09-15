@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { PropsWithChildren, ReactElement, useEffect } from 'react'
+import React, { PropsWithChildren, ReactElement, useEffect, useState } from 'react'
 import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
 
 import { defaultTo, fromPairs } from 'lodash-es'
@@ -28,8 +28,8 @@ import {
   AccountDTO
 } from 'services/cd-ng'
 import { useGetFeatureFlags } from 'services/portal'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import type { FeatureFlag } from '@common/featureFlags'
+import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { FeatureFlag } from '@common/featureFlags'
 import { useTelemetryInstance } from '@common/hooks/useTelemetryInstance'
 import type { Module } from 'framework/types/ModuleName'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
@@ -38,6 +38,7 @@ import type { Error } from 'services/cd-ng'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
 import SecureStorage from 'framework/utils/SecureStorage'
 import { getModuleToDefaultURLMap } from 'framework/LicenseStore/licenseStoreUtil'
+import { ModePathProps, NAV_MODE, getRouteParams } from '@common/utils/routeUtils'
 
 export type FeatureFlagMap = Partial<Record<FeatureFlag, boolean>>
 
@@ -60,6 +61,8 @@ export interface AppStoreContextProps {
   readonly publicAccessEnabled?: boolean
   /** feature flags */
   readonly featureFlags: FeatureFlagMap
+  readonly currentMode?: NAV_MODE
+  readonly currentModule?: string
 
   updateAppStore(
     data: Partial<
@@ -69,6 +72,8 @@ export interface AppStoreContextProps {
       >
     >
   ): void
+
+  setCurrentMode?: (mode: NAV_MODE) => void
 }
 
 export interface SavedProjectDetails {
@@ -84,7 +89,8 @@ export const AppStoreContext = React.createContext<AppStoreContextProps>({
   connectivityMode: undefined,
   accountInfo: undefined,
   updateAppStore: () => void 0,
-  publicAccessEnabled: false
+  publicAccessEnabled: false,
+  setCurrentMode: () => void 0
 })
 
 const MAX_RECENT_PROJECTS_COUNT = 5
@@ -118,6 +124,7 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
     projectIdentifier: projectIdentifierFromPath,
     orgIdentifier: orgIdentifierFromPath
   } = useParams<ProjectPathProps>()
+
   let projectIdentifier = projectIdentifierFromPath
   let orgIdentifier = orgIdentifierFromPath
 
@@ -143,6 +150,22 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
     accountInfo: undefined,
     publicAccessEnabled: window.publicAccessOnAccount
   })
+
+  const { CDS_NAV_2_0 } = state.featureFlags
+
+  const {
+    projectIdentifier: projectNav2,
+    orgIdentifier: orgNav2,
+    module: moduleNav2,
+    mode
+  } = getRouteParams<ProjectPathProps & ModulePathParams & ModePathProps>()
+
+  projectIdentifier = CDS_NAV_2_0 ? projectNav2 : projectIdentifier
+  orgIdentifier = CDS_NAV_2_0 ? orgNav2 : orgIdentifier
+  const modeFromPath = mode
+
+  const [currentMode, setCurrentMode] = useState<NAV_MODE | undefined>(modeFromPath as NAV_MODE)
+  const [currentModule, setCurrentModule] = useState<Module | undefined>(moduleNav2 as Module)
 
   if (!projectIdentifier && !orgIdentifier) {
     const identifiersFromSavedProj = getIdentifiersFromSavedProj(savedProject)
@@ -211,6 +234,17 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
       history.push(routes.toProjects({ accountId }))
     }
   }
+
+  useEffect(() => {
+    if (modeFromPath && currentMode !== modeFromPath && CDS_NAV_2_0) {
+      setCurrentMode(modeFromPath as NAV_MODE)
+    }
+    if (modeFromPath === NAV_MODE.MODULE) {
+      setCurrentModule(moduleNav2 as Module)
+    } else {
+      setCurrentModule(undefined)
+    }
+  }, [modeFromPath, moduleNav2, CDS_NAV_2_0])
 
   useEffect(() => {
     const currentAccount = userInfo?.data?.accounts?.find(account => account.uuid === accountId)
@@ -460,7 +494,10 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
     <AppStoreContext.Provider
       value={{
         ...state,
-        updateAppStore
+        currentMode,
+        currentModule,
+        updateAppStore,
+        setCurrentMode
       }}
     >
       {loadingFeatureFlags || legacyFeatureFlagsLoading || userInfoLoading ? <PageSpinner /> : children}

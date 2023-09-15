@@ -61,7 +61,11 @@ import { EnvironmentGroupListQueryParams, Sort, SortFields } from './utils'
 
 import css from './EnvironmentGroups.module.scss'
 
-export default function EnvironmentGroupsPage(): React.ReactElement {
+export default function EnvironmentGroupsPage({
+  calledFromSettingsPage
+}: {
+  calledFromSettingsPage?: boolean
+}): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -229,7 +233,7 @@ export default function EnvironmentGroupsPage(): React.ReactElement {
             <HarnessDocTooltip tooltipId={'ff_env_group_heading'} useStandAlone />
           </Heading>
         }
-        toolbar={<EnvironmentTabs />}
+        toolbar={<EnvironmentTabs calledFromSettingsPage={calledFromSettingsPage} />}
       />
       <Page.SubHeader>
         <RbacButton
@@ -283,6 +287,7 @@ export default function EnvironmentGroupsPage(): React.ReactElement {
               environmentGroups={response?.content}
               refetch={refetch}
               isForceDeleteEnabled={forceDeleteSettings?.data?.value === 'true'}
+              calledFromSettingsPage={calledFromSettingsPage}
             />
             <Pagination {...paginationProps} />
           </Container>

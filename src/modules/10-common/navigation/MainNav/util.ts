@@ -23,7 +23,10 @@ import {
   SEINavItem
 } from './ModuleLinks'
 
-export const moduleToNavItemsMap: Record<NavModuleName, () => JSX.Element> = {
+export const moduleToNavItemsMap: Record<
+  Exclude<NavModuleName, ModuleName.DASHBOARDS | ModuleName.IDPAdmin>,
+  () => JSX.Element
+> = {
   [ModuleName.CD]: DeploymentsNavItem,
   [ModuleName.CI]: BuildsNavItem,
   [ModuleName.CF]: FeatureFlagsNavItem,

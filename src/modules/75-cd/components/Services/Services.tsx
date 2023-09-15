@@ -21,7 +21,10 @@ import { DeploymentsTimeRangeContext, ServiceStoreContext, useServiceStore } fro
 import { ServicesListPage } from './ServicesListPage/ServicesListPage'
 import { ServicesDashboardPage } from './ServicesDashboardPage/ServicesDashboardPage'
 
-export const Services: React.FC<{ showServicesDashboard?: boolean }> = ({ showServicesDashboard }) => {
+export const Services: React.FC<{ showServicesDashboard?: boolean; calledFromSettingsPage?: boolean }> = ({
+  showServicesDashboard,
+  calledFromSettingsPage
+}) => {
   const { view, setView, fetchDeploymentList, refetchServiceDashboard } = useServiceStore()
   const { getString } = useStrings()
   const isCommunity = useGetCommunity()
@@ -74,6 +77,7 @@ export const Services: React.FC<{ showServicesDashboard?: boolean }> = ({ showSe
           setShowBanner={status => {
             setShowBanner(status)
           }}
+          calledFromSettingsPage={calledFromSettingsPage}
         />
       ) : (
         <DeploymentsTimeRangeContext.Provider value={{ timeRange: resultTimeFilterRange, setTimeRange }}>

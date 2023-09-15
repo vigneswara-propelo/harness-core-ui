@@ -153,7 +153,7 @@ AuditTrailFactory.registerResourceHandler('CHAOS_SECURITY_GOVERNANCE', {
   resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
 
-    return routes.toSecurityGovernanceRuleDetails({
+    return routes.toChaosSecurityGovernanceRuleDetails({
       accountId: accountIdentifier,
       orgIdentifier,
       projectIdentifier,

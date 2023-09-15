@@ -47,6 +47,9 @@ import { ModuleName } from 'framework/types/ModuleName'
 import ETRoutes from '@cet/RouteDestinations'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 
+// eslint-disable-next-line
+import RoutesV2 from 'modules/RouteDestinationsV2'
+
 export const AccountSideNavProps: SidebarContext = {
   navComponent: AccountSideNav,
   icon: 'nav-settings',
@@ -63,7 +66,8 @@ export default function RouteDestinations(): React.ReactElement {
     CET_ENABLED,
     CDB_MFE_ENABLED,
     PL_DISCOVERY_ENABLE,
-    SEI_ENABLED
+    SEI_ENABLED,
+    CDS_NAV_2_0
   } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
@@ -71,6 +75,10 @@ export default function RouteDestinations(): React.ReactElement {
     licenseInformation[ModuleName.CV]?.status === LICENSE_STATE_VALUES.ACTIVE ||
     licenseInformation[ModuleName.CD]?.status === LICENSE_STATE_VALUES.ACTIVE ||
     CVNG_ENABLED
+
+  if (CDS_NAV_2_0) {
+    return <RoutesV2 />
+  }
 
   return (
     <Switch>
@@ -114,6 +122,7 @@ export default function RouteDestinations(): React.ReactElement {
       {IACM_ENABLED ? IACMRoutes().props.children : null}
       {SSCA_ENABLED ? SSCARoutes.props.children : null}
       {CET_ENABLED ? ETRoutes({})?.props.children : null}
+
       <Route path="*">
         <NotFoundPage />
       </Route>

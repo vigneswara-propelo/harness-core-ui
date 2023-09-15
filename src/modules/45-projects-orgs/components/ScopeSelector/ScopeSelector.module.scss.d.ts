@@ -22,7 +22,6 @@ declare const styles: {
   readonly projectSearch: string
   readonly row: string
   readonly scopeLabelText: string
-  readonly scopeText: string
   readonly selectButton: string
   readonly selectContainer: string
   readonly selectedProject: string

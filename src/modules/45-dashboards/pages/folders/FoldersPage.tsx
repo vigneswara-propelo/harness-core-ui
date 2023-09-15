@@ -114,7 +114,7 @@ const FoldersPage: React.FC = () => {
   const [layoutView, setLayoutView] = useState(LayoutViews.GRID)
   const [sortBy, setSortingFilter] = useState<SelectOption>(defaultSortBy)
 
-  const strRefFolders = 'dashboards.homePage.folders'
+  const strRefFolders = 'common.folders'
 
   React.useEffect(() => {
     const script = document.createElement('script')

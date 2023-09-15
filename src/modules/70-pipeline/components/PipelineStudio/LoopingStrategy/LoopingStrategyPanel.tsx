@@ -272,7 +272,7 @@ export function LoopingStrategyPanel(props: LoopingStrategyPanelProps): React.Re
         intent="danger"
         titleText={getString('pipeline.loopingStrategy.toggleTypeModal.title')}
         contentText={getString('pipeline.loopingStrategy.toggleTypeModal.content')}
-        confirmButtonText={getString('pipeline.loopingStrategy.toggleTypeModal.switch')}
+        confirmButtonText={getString('common.switch')}
         cancelButtonText={getString('cancel')}
         isOpen={isToggleTypeConfirmationOpen}
         onClose={handleCloseToggleTypeConfirmation}

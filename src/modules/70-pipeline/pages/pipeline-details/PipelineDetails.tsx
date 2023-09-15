@@ -11,7 +11,8 @@ import { Heading, Layout, TabNavigation, useToaster } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { matchPath, useLocation, useParams, useRouteMatch } from 'react-router-dom'
 import { Page } from '@common/exports'
-import routes from '@common/RouteDefinitions'
+import routesv1 from '@common/RouteDefinitions'
+import routesv2 from '@common/RouteDefinitionsV2'
 import { useGlobalEventListener, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { Error } from 'services/pipeline-ng'
 import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
@@ -55,6 +56,8 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
     gitSyncEnabledOnlyForFF,
     supportingGitSimplification
   } = useAppStore()
+  const { CDS_NAV_2_0 } = useFeatureFlags()
+  const routes = CDS_NAV_2_0 ? routesv2 : routesv1
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const location = useLocation()
   const { trackEvent } = useTelemetry()

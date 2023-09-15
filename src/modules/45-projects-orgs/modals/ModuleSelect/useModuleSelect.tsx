@@ -13,7 +13,7 @@ import { Dialog, IDialogProps } from '@blueprintjs/core'
 import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { Module, ModuleName } from 'framework/types/ModuleName'
-import { getModuleLink } from '@projects-orgs/components/ModuleListCard/ModuleListCard'
+import { getModuleLink, getModuleLinkV2 } from '@projects-orgs/components/ModuleListCard/ModuleListCard'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getModuleDescriptionsForModuleSelectionDialog, getModuleFullLengthTitle } from '@projects-orgs/utils/utils'
@@ -135,6 +135,7 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
+  const { CDS_NAV_2_0 } = useFeatureFlags()
   const FREE_PLAN_ENABLED = !isOnPrem()
   const history = useHistory()
   const { selectedModuleName, projectData } = props
@@ -216,12 +217,19 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
             ))
         ) {
           history.push(
-            getModuleLink({
-              module: selectedModuleName,
-              orgIdentifier: projectData?.orgIdentifier,
-              projectIdentifier: projectData.identifier,
-              accountId
-            })
+            CDS_NAV_2_0
+              ? getModuleLinkV2({
+                  module: selectedModuleName,
+                  orgIdentifier: projectData?.orgIdentifier,
+                  projectIdentifier: projectData.identifier,
+                  accountId
+                })
+              : getModuleLink({
+                  module: selectedModuleName,
+                  orgIdentifier: projectData?.orgIdentifier,
+                  projectIdentifier: projectData.identifier,
+                  accountId
+                })
           )
         } else {
           if (FREE_PLAN_ENABLED) {
@@ -298,6 +306,7 @@ export const useModuleSelectModal = ({
       name: ModuleName.CET
     })
   }
+  const { CDS_NAV_2_0 } = useFeatureFlags()
 
   const [showModal, hideModal] = useModalHook(
     () => (
@@ -371,12 +380,19 @@ export const useModuleSelectModal = ({
   const communityEditionCDHomeRedirect = (projectDataLocal: Project): void => {
     if (projectDataLocal?.orgIdentifier) {
       history.push(
-        getModuleLink({
-          module: ModuleName.CD,
-          orgIdentifier: projectDataLocal?.orgIdentifier,
-          projectIdentifier: projectDataLocal.identifier,
-          accountId
-        })
+        CDS_NAV_2_0
+          ? getModuleLinkV2({
+              module: ModuleName.CD,
+              orgIdentifier: projectDataLocal?.orgIdentifier,
+              projectIdentifier: projectDataLocal.identifier,
+              accountId
+            })
+          : getModuleLink({
+              module: ModuleName.CD,
+              orgIdentifier: projectDataLocal?.orgIdentifier,
+              projectIdentifier: projectDataLocal.identifier,
+              accountId
+            })
       )
     }
   }

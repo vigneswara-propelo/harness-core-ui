@@ -47,6 +47,7 @@ import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { Sort, SortFields } from '@common/utils/listUtils'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { StoreType } from '@common/constants/GitSyncTypes'
+import routesV2 from '@common/RouteDefinitionsV2'
 import ServicesGridView from '../ServicesGridView/ServicesGridView'
 import ServicesListView from '../ServicesListView/ServicesListView'
 import {
@@ -59,12 +60,23 @@ import css from './ServicesListPage.module.scss'
 
 interface ServicesListPageProps {
   setShowBanner?: (status: boolean) => void
+  calledFromSettingsPage?: boolean
 }
 
-export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): React.ReactElement => {
+export const ServicesListPage = ({
+  setShowBanner,
+  calledFromSettingsPage = false
+}: ServicesListPageProps): React.ReactElement => {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const isCommunity = useGetCommunity()
-  const { NG_SVC_ENV_REDESIGN: isSvcEnvEntityEnabled, CDS_V1_EOL_BANNER: isCdsV1EOLEnabled } = useFeatureFlags()
+  // const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+  // const isCdsV1EOLEnabled = useFeatureFlag(FeatureFlag.CDS_V1_EOL_BANNER)
+  const {
+    NG_SVC_ENV_REDESIGN: isSvcEnvEntityEnabled,
+    CDS_V1_EOL_BANNER: isCdsV1EOLEnabled,
+    CDS_NAV_2_0: newLeftNav
+  } = useFeatureFlags()
+
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
@@ -154,14 +166,24 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
             { skipNulls: true }
           )}`
         }
+        const serviceDetailRoute =
+          newLeftNav && calledFromSettingsPage
+            ? routesV2.toSettingsServiceDetails({
+                accountId,
+                orgIdentifier,
+                projectIdentifier,
+                serviceId: selectedService?.identifier,
+                module
+              })
+            : routes.toServiceStudio({
+                accountId,
+                orgIdentifier,
+                projectIdentifier,
+                serviceId: selectedService?.identifier,
+                module
+              })
         history.push({
-          pathname: routes.toServiceStudio({
-            accountId,
-            orgIdentifier,
-            projectIdentifier,
-            serviceId: selectedService?.identifier,
-            module
-          }),
+          pathname: serviceDetailRoute,
           search: isSvcEnvEntityEnabled
             ? `tab=${ServiceTabs.Configuration}${remoteQueryParams}`
             : projectIdentifier
@@ -317,6 +339,7 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
                 onRefresh={() => refetch()}
                 onServiceSelect={async service => goToServiceDetails(service)}
                 isForceDeleteEnabled={isForceDeleteEnabled}
+                calledFromSettingsPage={calledFromSettingsPage}
               />
             ) : (
               <ServicesListView
@@ -325,6 +348,7 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
                 onRefresh={() => refetch()}
                 onServiceSelect={async service => goToServiceDetails(service)}
                 isForceDeleteEnabled={isForceDeleteEnabled}
+                calledFromSettingsPage={calledFromSettingsPage}
               />
             )
           ) : (

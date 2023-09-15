@@ -15,7 +15,8 @@ const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {
     label: 'common.cdAndGitops',
     hasLicense: true,
     homePageUrl: '',
-    color: 'green'
+    color: 'green',
+    shortLabel: 'deploymentsText'
   },
   CE: {
     shouldVisible: true,
@@ -23,7 +24,8 @@ const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {
     label: 'common.cdAndGitops',
     hasLicense: false,
     homePageUrl: '',
-    color: 'green'
+    color: 'green',
+    shortLabel: 'cloudCostsText'
   },
   CF: {
     shouldVisible: true,
@@ -31,7 +33,8 @@ const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {
     label: 'common.cdAndGitops',
     hasLicense: false,
     homePageUrl: '',
-    color: 'green'
+    color: 'green',
+    shortLabel: 'featureFlagsText'
   },
   CHAOS: {
     shouldVisible: true,
@@ -39,7 +42,8 @@ const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {
     label: 'common.cdAndGitops',
     hasLicense: false,
     homePageUrl: '',
-    color: 'green'
+    color: 'green',
+    shortLabel: 'common.purpose.chaos.chaos'
   },
   CI: {
     shouldVisible: true,
@@ -47,7 +51,8 @@ const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {
     label: 'common.cdAndGitops',
     hasLicense: false,
     homePageUrl: '',
-    color: 'green'
+    color: 'green',
+    shortLabel: 'buildsText'
   },
   CV: {
     shouldVisible: true,
@@ -55,7 +60,8 @@ const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {
     label: 'common.cdAndGitops',
     hasLicense: false,
     homePageUrl: '',
-    color: 'green'
+    color: 'green',
+    shortLabel: 'common.purpose.cv.serviceReliability'
   },
   STO: {
     shouldVisible: true,
@@ -63,7 +69,8 @@ const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {
     label: 'common.cdAndGitops',
     hasLicense: false,
     homePageUrl: '',
-    color: 'green'
+    color: 'green',
+    shortLabel: 'common.purpose.sto.continuous'
   },
   CODE: {
     shouldVisible: true,
@@ -71,7 +78,8 @@ const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {
     label: 'common.cdAndGitops',
     hasLicense: false,
     homePageUrl: '',
-    color: 'green'
+    color: 'green',
+    shortLabel: 'common.purpose.code.name'
   },
   // eslint-disable-next-line
   // @ts-ignore
@@ -89,7 +97,8 @@ const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {
     label: 'common.cdAndGitops',
     hasLicense: false,
     homePageUrl: '',
-    color: 'green'
+    color: 'green',
+    shortLabel: 'common.infrastructures'
   },
   SSCA: {
     shouldVisible: true,
@@ -97,7 +106,8 @@ const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {
     label: 'common.cdAndGitops',
     hasLicense: false,
     homePageUrl: '',
-    color: 'green'
+    color: 'green',
+    shortLabel: 'common.ssca'
   },
   IDP: {
     shouldVisible: true,
@@ -105,7 +115,8 @@ const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {
     label: 'common.purpose.idp.shortName',
     hasLicense: false,
     homePageUrl: '',
-    color: 'green'
+    color: 'green',
+    shortLabel: 'common.purpose.idp.name'
   },
   CET: {
     shouldVisible: true,
@@ -113,7 +124,8 @@ const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {
     label: 'common.purpose.errorTracking.title',
     hasLicense: false,
     homePageUrl: '',
-    color: 'green'
+    color: 'green',
+    shortLabel: 'common.purpose.errorTracking.title'
   },
   SEI: {
     shouldVisible: true,
@@ -121,7 +133,8 @@ const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {
     label: 'common.purpose.sei.continuous',
     hasLicense: false,
     homePageUrl: '',
-    color: 'green'
+    color: 'green',
+    shortLabel: 'common.purpose.sei.continuous'
   }
 }
 

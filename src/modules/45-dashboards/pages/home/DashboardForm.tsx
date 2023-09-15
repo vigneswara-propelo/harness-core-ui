@@ -23,7 +23,7 @@ import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import type { FolderModel } from 'services/custom-dashboards'
 import { useStrings } from 'framework/strings'
-import type { DashboardPathProps } from '@common/interfaces/RouteInterfaces'
+import type { DashboardFolderPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './HomePage.module.scss'
 
 const TAGS_SEPARATOR = ','
@@ -60,7 +60,7 @@ const DashboardForm: React.FC<DashboardFormProps> = ({
   mode
 }) => {
   const { getString } = useStrings()
-  const { folderId } = useParams<DashboardPathProps>()
+  const { folderId } = useParams<DashboardFolderPathProps>()
 
   const folderListItems = React.useMemo(() => {
     return editableFolders.map((folder: FolderModel): SelectOption => ({ value: folder?.id, label: folder?.name }))

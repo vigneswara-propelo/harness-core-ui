@@ -11,6 +11,7 @@ declare const styles: {
   readonly getStartedBtnWrapper: string
   readonly image: string
   readonly imageNoPipeline: string
+  readonly leftNav: string
   readonly noExecutions: string
   readonly noExecutionsSubText: string
   readonly noExecutionsText: string

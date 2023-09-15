@@ -54,6 +54,9 @@
     }
     &.default {
       border-color: var(--default-module-border);
+      &.lightContainer {
+        border: 1px solid var(--primary-6) !important;
+      }
     }
   }
 }

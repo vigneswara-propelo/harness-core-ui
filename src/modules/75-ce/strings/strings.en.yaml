@@ -921,7 +921,7 @@ perspectives:
       emailPlaceholder: Enter email IDs/email groups/Slack webhook url
   folders:
     title: Perspective Folder
-    customFolders: '{{ $.dashboards.homePage.folders }}'
+    customFolders: '{{ $.common.folders }}'
     newFolder: New folder
     createNewFolderHeading: Create new Folder for Perspectives
     folderNamePlaceholder: Enter folder name
@@ -979,6 +979,10 @@ overview:
   costPermissionError: You don't have access to View Cost Overview
 sideNav:
   perspective: 'Perspective'
+  sectionTitles:
+    costReporting: Cost reporting
+    costOptimization: Cost optimization
+    costGovernance: Cost governance
 nodeRecommendation:
   gke: 'GCP - GKE'
   aks: 'Azure - AKS'
@@ -1190,7 +1194,7 @@ biDashboard:
   bannerText: 'These are dashboards created by Harness for you. You can head to the Dashboards section and create your own '
   bannerLinkText: '{{ $.dashboards.getStarted.title }}'
 commitmentOrchestration:
-  sideNavLabel: 'Commitment Orchestrator'
+  sideNavLabel: 'Commitments'
   exitSetupBtn: 'Exit Setup'
   filterPanel:
     allAccounts: 'All Accounts'

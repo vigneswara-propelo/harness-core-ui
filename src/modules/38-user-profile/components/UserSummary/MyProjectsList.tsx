@@ -9,16 +9,21 @@ import React from 'react'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import { Text, Layout, Card, Icon, Container, Tag, PageError } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import type { AccountPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useGetUserProjectInfo } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
+import { getRouteParams } from '@common/utils/routeUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './UserSummary.module.scss'
 
 const MyProjectsList: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
+  const { module } = getRouteParams<ModulePathParams>()
   const history = useHistory()
+  const { CDS_NAV_2_0 } = useFeatureFlags()
 
   const {
     data: projects,
@@ -50,13 +55,23 @@ const MyProjectsList: React.FC = () => {
                 className={css.card}
                 interactive
                 onClick={() => {
-                  history.push(
-                    routes.toProjectDetails({
-                      accountId,
-                      orgIdentifier: project.orgIdentifier || 'default',
-                      projectIdentifier: project.identifier
-                    })
-                  )
+                  if (CDS_NAV_2_0) {
+                    history.push(
+                      routesV2.toMode({
+                        orgIdentifier: project.orgIdentifier || 'default',
+                        projectIdentifier: project.identifier,
+                        module
+                      })
+                    )
+                  } else {
+                    history.push(
+                      routes.toProjectDetails({
+                        accountId,
+                        orgIdentifier: project.orgIdentifier || 'default',
+                        projectIdentifier: project.identifier
+                      })
+                    )
+                  }
                 }}
               >
                 <Layout.Vertical flex={{ align: 'center-center' }}>

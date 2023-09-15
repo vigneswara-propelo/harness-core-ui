@@ -30,7 +30,7 @@ apiKey:
   confirmDeleteTitle: Delete API Key
   successMessage: API Key '{{name}}' deleted successfully
 serviceAccounts:
-  label: Service Accounts
+  label: '{{ $.common.serviceAccounts }}'
   email: '@service.harness.io'
   noServiceAccounts: No Service Accounts found
   newServiceAccount: New Service Account

@@ -11,12 +11,28 @@ import { useParams } from 'react-router-dom'
 import { TabNavigation } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
-import routes from '@common/RouteDefinitions'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
-export default function EnvironmentTabs(): React.ReactElement {
+export default function EnvironmentTabs({
+  calledFromSettingsPage
+}: {
+  calledFromSettingsPage?: boolean
+}): React.ReactElement {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
+  const { CDS_NAV_2_0 } = useFeatureFlags()
+  const newLeftNavRoute = CDS_NAV_2_0 && calledFromSettingsPage
+  const routes = CDS_NAV_2_0 ? routesV2 : routesV1
+
+  const queryParams = {
+    accountId,
+    orgIdentifier,
+    projectIdentifier,
+    module
+  }
 
   return (
     <TabNavigation
@@ -24,22 +40,14 @@ export default function EnvironmentTabs(): React.ReactElement {
       links={[
         {
           label: getString('environment'),
-          to: routes.toEnvironment({
-            accountId,
-            orgIdentifier,
-            projectIdentifier,
-            module
-          }),
+          to: newLeftNavRoute ? routesV2.toSettingsEnvironments(queryParams) : routes.toEnvironment(queryParams),
           exact: true
         },
         {
           label: getString('common.environmentGroups.label'),
-          to: routes.toEnvironmentGroups({
-            accountId,
-            orgIdentifier,
-            projectIdentifier,
-            module
-          })
+          to: newLeftNavRoute
+            ? routesV2.toSettingsEnvironmentGroups(queryParams)
+            : routes.toEnvironmentGroups(queryParams)
         }
       ]}
     />

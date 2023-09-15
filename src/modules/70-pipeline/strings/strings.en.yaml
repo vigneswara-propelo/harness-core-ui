@@ -597,7 +597,6 @@ loopingStrategy:
   toggleTypeModal:
     title: Switch looping strategy?
     content: Are you sure you want to switch looping strategy? {{$.pipeline.loopingStrategy.warningText}}
-    switch: Switch
   matrix:
     label: Matrix
     helperText: Matrix gives the ability to execute the same set of tasks multiple times for a bunch of different configurations.

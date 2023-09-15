@@ -61,7 +61,7 @@ const AddResourceModal: React.FC<RoleModalData> = ({
       : getString('rbac.addResourceModal.modalCtaLabelPlural', ctaLabelVars)
   const ctaLabel = `${getString('add')} ${selectedItems.length} ${
     resource === ResourceType['DASHBOARDS']
-      ? getString(resourceHandler.labelOverride || 'dashboards.homePage.folders')
+      ? getString(resourceHandler.labelOverride || 'common.folders')
       : getString(resourceHandler.label)
   } `
   const addModalBody = isAttributeFilter

@@ -51,7 +51,7 @@ describe('DashboardsHeader', () => {
     expect(screen.getAllByText('Dashboards')).toHaveLength(2)
   })
 
-  test('it should include default breadcrumb in breadcrumbs and title', async () => {
+  test('it should include default breadcrumb in breadcrumbs and get started', async () => {
     useDashboardsContextMock.mockReturnValue({
       editableFolders: [],
       modelTags: [],
@@ -64,7 +64,7 @@ describe('DashboardsHeader', () => {
 
     renderComponent()
 
-    expect(screen.getAllByText('common.dashboards')).toHaveLength(2)
+    expect(screen.getAllByText('getStarted')).toHaveLength(1)
   })
 
   test('it should open the getting started sidebar when clicking the getStarted button', async () => {

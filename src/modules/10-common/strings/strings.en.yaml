@@ -5,6 +5,7 @@ help: Help
 copied: 'Copied'
 clear: Clear
 dashboards: Dashboards
+folders: Folders
 setup: Setup
 HelmChartLabel: Helm Chart
 agent: Agent
@@ -692,9 +693,13 @@ at: at
 for: for
 moreRefineSearch: '+{{number}} more (refine search)'
 switchAccount: Switch Account
+switch: Switch
 switchAccountSearch: Search by Account Name
 noteAccountSwitch: 'Note: Switching Account might require re-authentication based on the configured authentication settings.'
 accountOverview: Account Overview
+backToProjects: Back to Projects
+backToOrgs: Back to Orgs
+projectOverview: Project Overview
 accountDetails: Account Details
 addAccountName: Add Account Name
 accountId: Account Id
@@ -709,6 +714,8 @@ harnessNextGeneration: Harness Next Generation
 harnessNextGenerationDescription: Take your software delivery processes to the next level using our Harness modules. Next Generation simplifies the experience with simpler UI Architecture and shared resources across projects.
 changeDefaultAccountTitle: Change Default Account
 changeDefaultAccountMessage: Are you sure you want to set your default account to '{{ name }}'?
+switchAccountMessage: Do you want to switch to '{{ name }}'?
+switchAccountWarning: Switching account might require re-authentication based on the configured authentication settings.
 setAsDefault: Set as Default
 setAsStable: Set as Stable
 stable: Stable
@@ -830,6 +837,10 @@ yearly: Yearly
 billed: Billed
 subtotal: Subtotal
 annually: annually
+ccmSettings:
+  highlightSettingsSectionTitle: Settings mainly used in Cloud Cost Management
+  cloudCostIntegration: 'Integration for <br/>cloud cost'
+  cloudCostCurrency: 'Currency for <br/>cloud cost'
 plans:
   title: Upgrade to get the most out of Harness
   featureComparison: Show All Feature Comparison
@@ -1141,11 +1152,11 @@ moduleConfig:
   customize: Customize your navigation
   selectModules: Select which modules you want readily available on
   selectModulesNav: Select which modules you want available on
-  readOnlyModules: Our modules at a glance...
   your: your
   navigation: navigation
   autoSaved: Changes are automatically saved
   restoreDefault: Restore Default Settings
+  readOnlyModules: Our modules at a glance...
 selectModules: Select Modules
 configureModuleList: Configure Module List
 discovery: Discovery
@@ -1630,3 +1641,48 @@ publicAccess:
   oopsPageNotPublic: Oooops! The page you are trying to access is not public.
   tryOtherOptions: You can try the following option instead to get back on track.
 ipAddress: IP Address
+nav:
+  allModules: All modules
+  allModulesInfo: Work with the modules available in your panel in one single view
+  accountAdmin: Account Administration
+  accountAdminInfo: Focus on managing general resources in your Account, Organizations, and Projects
+  dashboardInfo: Get an end to end visibility of software delivery lifecycle across various Harness product modules
+  configure: Configure
+profileOverview: Profile Overview
+selectAnotherScope: Select Another Scope
+selectScopeSubtitle: Go back and select another scope that you would like to explore
+moduleIntro:
+  deployments: Deliver software faster, with visibility and control
+  featureFlag: Ship more with less risk
+  securityTest: Rapid delivery of secure applications
+  reliabilityManagement: Deploy faster with better reliability
+  chaosEngineering: Confidently deliver software by proactively building resilience
+  continuousErrorTracking: Developer observability for modern applications
+  insights: Improve engineering results with data-driven decisions
+  cloudCosts: Control Cloud Costs with Intelligent Automation
+  softwareSupplyChainAssurance: Artifact Integrity and open-source Governance
+  builds: Build up to 4X faster than other solutions
+modeIntro:
+  accountAdministration: Focus on managing general resources in your account, organizations, and projects
+serviceAccounts: Service Accounts
+settingsPage:
+  title:
+    accountLevelResources: 'Account-level resources'
+    orgLevelResources: 'Organization-level resources'
+    projectLevelResources: 'Project-level resources'
+    securityGovernance: 'Security and Governance'
+    orgSettingsTitleWithName: '[{{ name }}] Organization Settings'
+    orgSettingsTitle: Organization Settings
+    projectSettingsTitleWithName: '[{{ name }}] Project Settings'
+    projectSettingsTitle: Project Settings
+  description:
+    general: 'Manage general configuration of your account.'
+    accountLevelResources: 'These are resource only manageable at the account level. They are shared and available for use within any organization or projects within your account. For better isolation of resources, it is recommended that you create resources at the organization or project levels respectively.'
+    accessControl: "Harness provides Role-Based Access Control (RBAC) that enables you to control user and group access to Harness resources according to the user's role. By using RBAC, you can increase security and improve efficiency."
+    securityGovernance: "Users in Administrator groups can use Authentication Settings to restrict access to an organization's Harness account. The options you choose will apply to all your account's users."
+    orgLevelResources: 'Organization Resources are shared and available for use within any projects within this organization.For better isolation of resources, it is recommended that you create resources at the project level.'
+    subscription: 'View usage and billing or manage your Harness subscription.'
+dataUnavailableInScope: '{{pageName}} data is not available in {{scope}} scope.'
+doInstead: What would you like to do instead?
+viewSettings: 'View {{scope}} Settings'
+viewAndManageSettings: 'View and manage different settings of your {{scope}}.'

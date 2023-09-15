@@ -42,10 +42,31 @@ export const moduleToModuleNameMapping: Record<Module, ModuleName> = {
   iacm: ModuleName.IACM,
   ssca: ModuleName.SSCA,
   idp: ModuleName.IDP,
-  dashboards: ModuleName.DASHBOARDS,
-  'idp-admin': ModuleName.IDPAdmin,
   cet: ModuleName.CET,
-  sei: ModuleName.SEI
+  sei: ModuleName.SEI,
+  dashboards: ModuleName.DASHBOARDS,
+  'idp-admin': ModuleName.IDPAdmin
+}
+
+export const moduleNameToModuleMapping: Record<
+  Exclude<ModuleName, 'COMMON' | 'TEMPLATES' | 'FRAMEWORK' | 'SRM' | 'DX' | 'ET'>,
+  Module
+> = {
+  [ModuleName.CI]: 'ci',
+  [ModuleName.CD]: 'cd',
+  [ModuleName.CE]: 'ce',
+  [ModuleName.CF]: 'cf',
+  [ModuleName.CV]: 'cv',
+  [ModuleName.CODE]: 'code',
+  [ModuleName.STO]: 'sto',
+  [ModuleName.CHAOS]: 'chaos',
+  [ModuleName.IACM]: 'iacm',
+  [ModuleName.SSCA]: 'ssca',
+  [ModuleName.IDP]: 'idp',
+  [ModuleName.IDPAdmin]: 'idp-admin',
+  [ModuleName.CET]: 'cet',
+  [ModuleName.SEI]: 'sei',
+  [ModuleName.DASHBOARDS]: 'dashboards'
 }
 
 export type Module =

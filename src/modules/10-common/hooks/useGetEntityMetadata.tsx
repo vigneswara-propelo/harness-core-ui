@@ -257,7 +257,8 @@ export const useGetEntityMetadata = (
           accountId: accountIdentifier,
           serviceId: identifier,
           orgIdentifier,
-          projectIdentifier
+          projectIdentifier,
+          module
         })}?tab=configuration`
         break
       case 'Template':

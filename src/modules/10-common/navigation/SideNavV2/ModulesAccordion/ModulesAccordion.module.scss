@@ -1,0 +1,113 @@
+.accordion {
+  flex: 1;
+  overflow-y: scroll;
+  .panel {
+    padding: 0px;
+    margin-bottom: var(--spacing-xsmall);
+
+    &[data-open='true'] {
+      .popover {
+        display: none !important;
+      }
+
+      .chevron {
+        transform: rotate(-360deg) !important;
+      }
+    }
+
+    .summary {
+      justify-content: space-between;
+      border-radius: 4px;
+      position: relative;
+
+      & > div {
+        width: 100%;
+
+        :global {
+          .bp3-popover-wrapper {
+            width: 100%;
+          }
+          .bp3-popover-target {
+            width: 100%;
+          }
+        }
+      }
+
+      .container {
+        display: flex;
+        align-items: center;
+        pointer-events: none;
+        width: 100%;
+        padding: var(--spacing-small) var(--spacing-medium);
+
+        &.active {
+          .moduleIcon {
+            svg {
+              path {
+                fill: var(--primary-7);
+              }
+            }
+          }
+        }
+
+        .moduleIcon {
+          svg {
+            path {
+              fill: #7890b2;
+            }
+
+            &:hover {
+              path {
+                fill: inherit !important;
+              }
+            }
+          }
+        }
+      }
+
+      &:hover {
+        background-color: rgba(#0278d5, 0.25);
+
+        .popover {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+
+      .chevron {
+        transform: rotate(-90deg);
+        color: var(--grey-400);
+        height: 10px;
+        width: 10px;
+        position: absolute;
+        right: var(--spacing-small);
+
+        &::before {
+          border-width: 0.5px !important;
+        }
+        &::after {
+          border-width: 0.5px !important;
+        }
+      }
+    }
+  }
+
+  .accordionDetails {
+    margin-left: var(--spacing-xlarge);
+    border-left: 1px solid var(--grey-200);
+  }
+
+  a[data-name='nav-link'] span[data-icon] {
+    display: none;
+  }
+}
+
+.module {
+  > div {
+    padding: 0px !important;
+  }
+
+  a[data-name='nav-link'] {
+    display: flex;
+  }
+}

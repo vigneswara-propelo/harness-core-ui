@@ -151,7 +151,7 @@ exports[`Org Page List Create New Org 1`] = `
     </div>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody orgPage"
+    class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
     data-testid="page-body"
   >

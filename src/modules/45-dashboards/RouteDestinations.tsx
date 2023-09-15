@@ -39,7 +39,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.DASHBOARDS, {
   icon: 'support-account',
   label: 'common.dashboards',
   labelSingular: 'dashboardLabel',
-  labelOverride: 'dashboards.homePage.folders',
+  labelOverride: 'common.folders',
   category: ResourceCategory.SHARED_RESOURCES,
   permissionLabels: {
     [PermissionIdentifier.VIEW_DASHBOARD]: <String stringID="rbac.permissionLabels.view" />,

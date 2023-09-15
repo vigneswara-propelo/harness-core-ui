@@ -34,7 +34,9 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { NavigationCheck } from '@common/exports'
-import routes from '@common/RouteDefinitions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import routesv1 from '@common/RouteDefinitions'
+import routesv2 from '@common/RouteDefinitionsV2'
 import { pipelineModuleParams, projectPathProps, servicePathProps } from '@common/utils/routeUtils'
 import { setNameIDDescription } from '../../utils/ServiceUtils'
 import ServiceStepBasicInfo from './ServiceStepBasicInfo'
@@ -88,6 +90,8 @@ function ServiceConfiguration({
   const { isServiceCreateModalView, isServiceEntityModalView } = useServiceContext()
   const { getString } = useStrings()
   const history = useHistory()
+  const { CDS_NAV_2_0 } = useFeatureFlags()
+  const routes = CDS_NAV_2_0 ? routesv2 : routesv1
 
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()

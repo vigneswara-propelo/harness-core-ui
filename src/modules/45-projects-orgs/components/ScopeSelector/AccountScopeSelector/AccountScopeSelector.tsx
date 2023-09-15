@@ -13,7 +13,11 @@ import { useGetUserAccounts } from 'services/portal'
 import { AccountListView } from './AccountListView'
 import css from './AccountScopeSelector.module.scss'
 
-export const AccountScopeSelector = (): JSX.Element => {
+interface AccountScopeSelectorProps {
+  clickOnLoggedInAccount: () => void
+}
+
+export const AccountScopeSelector: React.FC<AccountScopeSelectorProps> = (props): JSX.Element => {
   const { getString } = useStrings()
 
   const [page, setPage] = useState(0)
@@ -29,25 +33,32 @@ export const AccountScopeSelector = (): JSX.Element => {
     debounce: 300
   })
 
+  const isOnlyOneAccount = data?.resource?.content?.length === 1 ?? false
+
   return (
     <Container>
       <Layout.Horizontal flex={{ alignItems: 'center' }}>
-        <ExpandingSearchInput
-          defaultValue={searchTerm}
-          placeholder={getString('common.switchAccountSearch')}
-          alwaysExpanded
-          autoFocus={true}
-          className={css.accountSearch}
-          onChange={text => {
-            setSearchTerm(text.trim())
-            setPage(0)
-          }}
-        />
+        {!isOnlyOneAccount && !loading && (
+          <ExpandingSearchInput
+            defaultValue={searchTerm}
+            placeholder={getString('common.switchAccountSearch')}
+            alwaysExpanded
+            autoFocus={true}
+            className={css.accountSearch}
+            onChange={text => {
+              setSearchTerm(text.trim())
+              setPage(0)
+            }}
+          />
+        )}
       </Layout.Horizontal>
       {loading && <PageSpinner />}
       {data?.resource?.content?.length ? (
         <Layout.Vertical className={css.accountContainerWrapper}>
-          <AccountListView accounts={defaultTo(data?.resource?.content, [])} />
+          <AccountListView
+            accounts={defaultTo(data?.resource?.content, [])}
+            clickOnLoggedInAccount={props.clickOnLoggedInAccount}
+          />
 
           <Pagination
             className={css.pagination}

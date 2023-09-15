@@ -13,6 +13,10 @@
   padding-bottom: 0px !important;
 }
 
+.warningContainer {
+  background-color: var(--yellow-50) !important;
+}
+
 .accountContainerWrapper {
   height: calc(100vh - 130px);
   justify-content: space-between;

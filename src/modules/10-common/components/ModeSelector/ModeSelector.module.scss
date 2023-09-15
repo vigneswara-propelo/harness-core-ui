@@ -1,0 +1,204 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.gridIconContent {
+  padding: var(--spacing-3) !important;
+  border-radius: 100%;
+  width: 36px;
+  height: 36px;
+
+  &.active {
+    background-color: var(--primary-2) !important;
+    opacity: 0.8;
+  }
+}
+
+.modeSelectorPanel {
+  background-color: var(--white) !important;
+  height: 100vh;
+
+  .nonModuleSections {
+    gap: var(--spacing-7);
+  }
+
+  span[data-icon='customize'] {
+    svg path {
+      fill: var(--primary-7) !important;
+    }
+  }
+
+  .divider {
+    margin-top: var(--spacing-7);
+    margin-bottom: var(--spacing-7);
+    opacity: 0.7;
+  }
+
+  .marginRight12 {
+    margin-right: var(--spacing-4);
+  }
+}
+
+.moduleCardWrapper {
+  background-color: var(--white) !important;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-auto-rows: minmax(60px, auto);
+  gap: var(--spacing-7);
+}
+
+.popover {
+  transform: translate3d(0px, -5px, 0px) !important;
+  border: 0.5px solid var(--primary-3) !important;
+  box-shadow: var(--elevation-2);
+  :global {
+    .bp3-transition-container {
+      z-index: 22;
+    }
+    .bp3-popover {
+      z-index: 22;
+    }
+  }
+}
+
+.modeCard {
+  min-width: 172px;
+  height: 60px;
+  padding-left: var(--spacing-4) !important;
+  overflow: hidden;
+  padding-right: 30px !important;
+  display: flex !important;
+  justify-content: start;
+  align-items: center;
+  cursor: pointer;
+  border: 1px solid transparent;
+  position: relative;
+  text-decoration: none;
+  border-radius: 4px;
+  box-shadow: 0px 2px 4px 0px rgba(96, 97, 112, 0.16), 0px 0px 1px 0px rgba(40, 41, 61, 0.04);
+
+  &:hover,
+  &.active {
+    text-decoration: none;
+    &.cd {
+      border: 1px solid var(--cd-border) !important;
+    }
+    &.ci {
+      border: 1px solid var(--ci-border) !important;
+    }
+    &.ccm {
+      border: 1px solid var(--ccm-border) !important;
+    }
+    &.ff {
+      border: 1px solid var(--ff-border) !important;
+    }
+    &.srm {
+      border: 1px solid var(--srm-border) !important;
+    }
+    &.chaos {
+      border: 1px solid var(--chaos-border) !important;
+    }
+    &.sto {
+      border: 1px solid var(--sto-border) !important;
+    }
+    &.iacm {
+      border: 1px solid var(--iacm-border) !important;
+    }
+    &.ssca {
+      border: 1px solid var(--ssca-border) !important;
+    }
+    &.idp {
+      border: 1px solid var(--idp-border) !important;
+    }
+    &.cet {
+      border: 1px solid var(--cet-border) !important;
+    }
+    &.sei {
+      border: 1px solid var(--sei-border) !important;
+    }
+    &.default {
+      border: 1px solid var(--primary-6) !important;
+    }
+  }
+
+  .modeIcon {
+    svg {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      transform: translate(15%, 20%);
+      opacity: 0.8;
+    }
+    &.active {
+      svg {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.newTabContainer {
+  width: 6px;
+  height: 6px;
+  position: absolute;
+  border-left: 6px solid transparent;
+  border-top: 6px solid var(--primary-7);
+  top: 6px;
+  right: 6px;
+}
+
+.tooltipPopoverStyle {
+  :global {
+    .bp3-popover-arrow-fill {
+      fill: var(--primary-9-dark) !important;
+    }
+    .bp3-popover-content {
+      background-color: var(--primary-9-dark) !important;
+      width: 170px;
+      min-height: 130px;
+      border-radius: 6px;
+      padding: var(--spacing-4);
+      overflow: hidden;
+    }
+  }
+  border-radius: 6px;
+}
+
+.tooltipDetail {
+  display: grid !important;
+  grid-template-rows: 1fr var(--spacing-10);
+
+  .tooltipModeInfoContent {
+    word-break: break-word;
+    font-size: 11px !important;
+    font-weight: 400 !important;
+    line-height: 16px !important;
+    color: var(--primary-light-hover);
+  }
+
+  .tooltipModeIcon {
+    svg {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      transform: translate(20%, 20%);
+      opacity: 0.3;
+    }
+  }
+
+  .learnMore {
+    span[data-icon='code-info'] svg > path {
+      fill: var(--primary-5) !important;
+    }
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+  }
+}

@@ -43,6 +43,7 @@ import {
   OverviewChartsWithToggle
 } from '@common/components/OverviewChartsWithToggle/OverviewChartsWithToggle'
 import routes from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import {
   DeploymentsOverview,
   useGetDeploymentStatsOverview,
@@ -58,6 +59,7 @@ import DashboardNoDataWidget from '@projects-orgs/components/DashboardNoDataWidg
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 
 import { renderTooltipContent } from '@pipeline/utils/DashboardUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './LandingDashboardDeploymentsWidget.module.scss'
 
 export enum TimeRangeGroupByMapping {
@@ -377,12 +379,15 @@ interface LandingDashboardDeploymentsNoContentWidgetProps {
   error: GetDataError<Failure | Error> | null
   count: number | undefined
   accountId: string
+  projectIdentifier: string
+  orgIdentifier: string
   refetch: any
 }
 function LandingDashboardDeploymentsNoContentWidget(
   props: LandingDashboardDeploymentsNoContentWidgetProps
 ): JSX.Element {
-  const { loading, response, error, count, accountId, refetch } = props
+  const { loading, response, error, count, accountId, refetch, projectIdentifier, orgIdentifier } = props
+  const { CDS_NAV_2_0 } = useFeatureFlags()
   if (loading) {
     return (
       <EmptyCard>
@@ -408,7 +413,17 @@ function LandingDashboardDeploymentsNoContentWidget(
               {'No Deployments'}
             </Text>
           }
-          getStartedLink={routes.toCDHome({ accountId })}
+          getStartedLink={
+            CDS_NAV_2_0
+              ? routesV2.toMode({
+                  projectIdentifier,
+                  orgIdentifier,
+                  accountId,
+                  module: 'cd',
+                  mode: 'module'
+                })
+              : routes.toCDHome({ accountId })
+          }
         />
       </EmptyCard>
     )
@@ -611,6 +626,8 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
         count={deploymentsStatsSummaryCount}
         refetch={refetch}
         accountId={accountId}
+        projectIdentifier={projectIdentifier}
+        orgIdentifier={orgIdentifier}
       />
     )
   }

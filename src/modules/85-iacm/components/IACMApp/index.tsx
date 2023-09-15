@@ -6,10 +6,17 @@
  */
 
 /* eslint-disable import/no-unresolved */
-import React, { lazy } from 'react'
+import React, { memo, ReactElement, lazy } from 'react'
 import { customComponents, customFunctions, customHooks } from '@iacm/utils/IACMChildAppUtils'
 import type { IACMCustomMicroFrontendProps } from '@iacm/interfaces/IACMCustomMicroFrontendProps.types'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
+import ExecFactory from '@pipeline/factories/ExecutionFactory'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import type { ConsoleViewStepDetailProps, StepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
+import { String } from 'framework/strings'
+import RbacFactory from '@rbac/factories/RbacFactory'
+import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
 const RemoteIACMApp = lazy(() => import('iacm/MicroFrontendApp'))
 
@@ -46,3 +53,36 @@ export const IACMComponentMounter = <T,>(props: {
     </ChildAppMounter>
   )
 }
+
+RbacFactory.registerResourceCategory(ResourceCategory.IACM, {
+  icon: 'iacm',
+  label: 'common.iacmText'
+})
+
+RbacFactory.registerResourceTypeHandler(ResourceType.IAC_STACK, {
+  icon: 'nav-settings',
+  label: 'iacm.permissions.iacmWorkspaces',
+  labelSingular: 'iacm.permissions.iacmWorkspace',
+  category: ResourceCategory.IACM,
+  permissionLabels: {
+    [PermissionIdentifier.IAC_VIEW_STACK]: <String stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.IAC_EDIT_STACK]: <String stringID="rbac.permissionLabels.createEdit" />,
+    [PermissionIdentifier.IAC_DELETE_STACK]: <String stringID="rbac.permissionLabels.delete" />
+  }
+})
+
+const IACMApproval = (props: StepDetailProps): ReactElement => (
+  <IACMComponentMounter component="RemoteIACMApproval" childProps={props} />
+)
+
+const IACMApprovalLogview = (props: ConsoleViewStepDetailProps): ReactElement => (
+  <IACMComponentMounter component="RemoteIACMApprovalConsoleView" childProps={props} />
+)
+
+ExecFactory.registerStepDetails(StepType.IACMApproval, {
+  component: memo(IACMApproval)
+})
+
+ExecFactory.registerConsoleViewStepDetails(StepType.IACMApproval, {
+  component: memo(IACMApprovalLogview)
+})

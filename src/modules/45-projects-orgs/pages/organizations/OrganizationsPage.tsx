@@ -10,6 +10,7 @@ import { useParams, useHistory } from 'react-router-dom'
 import { ExpandingSearchInput, Layout, Container, ButtonVariation, Pagination } from '@harness/uicore'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import { OrganizationAggregateDTO, useGetOrganizationAggregateDTOList, Error } from 'services/cd-ng'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { useOrganizationModal } from '@projects-orgs/modals/OrganizationModal/useOrganizationModal'
@@ -22,12 +23,14 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './OrganizationsPage.module.scss'
 
 const OrganizationsPage: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
   const [searchParam, setSearchParam] = useState<string>()
   const [page, setPage] = useState(0)
+  const { CDS_NAV_2_0 } = useFeatureFlags()
   const history = useHistory()
   const { getString } = useStrings()
   useDocumentTitle(getString('orgsText'))
@@ -99,7 +102,6 @@ const OrganizationsPage: React.FC = () => {
                 message: getString('projectsOrgs.noOrganizations')
               }
         }
-        className={css.orgPage}
       >
         <Container className={css.masonry}>
           <Layout.Masonry
@@ -116,10 +118,12 @@ const OrganizationsPage: React.FC = () => {
                 reloadOrgs={() => refetch()}
                 onClick={() =>
                   history.push(
-                    routes.toOrganizationDetails({
-                      orgIdentifier: org.organizationResponse.organization.identifier as string,
-                      accountId
-                    })
+                    CDS_NAV_2_0
+                      ? routesV2.toSettings({ orgIdentifier: org.organizationResponse.organization.identifier })
+                      : routes.toOrganizationDetails({
+                          orgIdentifier: org.organizationResponse.organization.identifier as string,
+                          accountId
+                        })
                   )
                 }
               />

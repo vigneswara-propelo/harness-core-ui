@@ -59,9 +59,13 @@ const RenderColumnMenu: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) => 
   )
 }
 
-export const ProjectScopeSelector = (): JSX.Element => {
+interface ProjectScopeSelectorProps {
+  onClick?: (project: ProjectAggregateDTO) => void
+}
+
+export const ProjectScopeSelector: React.FC<ProjectScopeSelectorProps> = ({ onClick }): JSX.Element => {
   const { getString } = useStrings()
-  const { accountId, orgIdentifier } = useParams<OrgPathProps>()
+  const { accountId } = useParams<OrgPathProps>()
   const { selectedProject } = useAppStore()
   const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
     usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.ProjectListing}`)
@@ -78,7 +82,6 @@ export const ProjectScopeSelector = (): JSX.Element => {
   const { data, loading } = useGetProjectAggregateDTOList({
     queryParams: {
       accountIdentifier: accountId,
-      orgIdentifier,
       searchTerm,
       pageIndex: page,
       pageSize: 50,
@@ -175,7 +178,7 @@ export const ProjectScopeSelector = (): JSX.Element => {
                       projectAggregate.projectResponse.project.orgIdentifier === selectedProject?.orgIdentifier
                     }
                     className={cx(css.projectCard, Classes.POPOVER_DISMISS)}
-                    onClick={noop} //integrate click after left-nav framework is done
+                    onClick={() => onClick?.(projectAggregate)} //integrate click after left-nav framework is done
                     hideAddOption={true}
                   />
                 ))}

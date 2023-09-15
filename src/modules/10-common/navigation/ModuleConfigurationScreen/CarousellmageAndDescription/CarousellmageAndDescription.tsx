@@ -38,7 +38,7 @@ const CarouselImageAndDescription: React.FC<CarouselImageAndDescriptionProps> = 
           className={css.primaryText}
           color={Color.PRIMARY_5}
           font={{ variation: FontVariation.H1_SEMI }}
-          padding={{ top: 'xlarge', bottom: 'small', left: 'large', right: 'large' }}
+          padding={{ top: 'xlarge', bottom: 'small', left: 'huge', right: 'huge' }}
         >
           {primaryText}
         </Text>
@@ -48,7 +48,7 @@ const CarouselImageAndDescription: React.FC<CarouselImageAndDescriptionProps> = 
           className={css.secondaryText}
           color={isLightThemed ? Color.GREY_800 : Color.WHITE}
           font={{ variation: FontVariation.BODY1 }}
-          padding={{ left: 'large', right: 'large' }}
+          padding={{ left: 'huge', right: 'huge' }}
         >
           {secondaryText}
         </Text>

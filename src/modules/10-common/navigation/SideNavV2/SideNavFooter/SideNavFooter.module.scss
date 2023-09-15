@@ -1,0 +1,60 @@
+.container {
+  position: relative;
+  height: 90px;
+  bottom: 0px;
+  border-top: 1px solid var(--grey-200);
+  .helpLink {
+    display: flex;
+    padding: var(--spacing-small) var(--spacing-medium) !important;
+    background-color: transparent;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: none;
+      color: var(--primary-8);
+      background-color: rgba(#0278d5, 0.25);
+    }
+  }
+
+  .profileLink {
+    &.active {
+      color: var(--primary-8);
+      background-color: rgba(#0278d5, 0.25);
+    }
+    border-radius: 4px;
+    &:hover {
+      text-decoration: none;
+      color: var(--primary-8);
+      background-color: rgba(#0278d5, 0.25);
+    }
+  }
+}
+
+.userProfileContent {
+  background-color: var(--white);
+  border-radius: 4px;
+
+  .signout {
+    cursor: pointer;
+    svg {
+      path {
+        fill: var(--red-700);
+      }
+    }
+  }
+}
+
+.width100 {
+  width: 100%;
+  display: flex;
+}
+
+.link {
+  padding-left: var(--spacing-small) !important;
+}
+
+.section {
+  border-top: 1px solid var(--grey-200);
+}

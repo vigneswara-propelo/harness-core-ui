@@ -2315,7 +2315,7 @@ const routes = {
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-guard`
   ),
-  toSecurityGovernanceRuleDetails: withAccountId(
+  toChaosSecurityGovernanceRuleDetails: withAccountId(
     ({ orgIdentifier, projectIdentifier, identifier }: Partial<ProjectPathProps> & { identifier: string }) =>
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-guard/rules/${identifier}`
   ),

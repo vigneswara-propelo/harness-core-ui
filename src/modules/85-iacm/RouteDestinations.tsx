@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { memo, ReactElement } from 'react'
+import React from 'react'
 import { Route } from 'react-router-dom'
 import { RouteWithLayout } from '@common/router'
 import routes from '@common/RouteDefinitions'
@@ -22,57 +22,17 @@ import { SecretRouteDestinations } from '@secrets/RouteDestinations'
 import { VariableRouteDestinations } from '@variables/RouteDestinations'
 import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
 import { DelegateRouteDestinations } from '@delegates/RouteDestinations'
-import ExecFactory from '@pipeline/factories/ExecutionFactory'
-import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import type { ConsoleViewStepDetailProps, StepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
-import { String } from 'framework/strings'
-import RbacFactory from '@rbac/factories/RbacFactory'
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
-import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import PipelineStudioV1 from '@pipeline/v1/components/PipelineStudioV1/PipelineStudioV1'
 import { TriggersRouteDestinations } from '@triggers/RouteDestinations'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import type { ResourceDTO } from 'services/audit'
-import { IACMApp, IACMComponentMounter } from './components/IACMApp'
+import { IACMApp } from './components/IACMApp'
 
 const moduleParams: ModulePathParams = {
   module: ':module(iacm)'
 }
-
-RbacFactory.registerResourceCategory(ResourceCategory.IACM, {
-  icon: 'iacm',
-  label: 'common.iacmText'
-})
-
-RbacFactory.registerResourceTypeHandler(ResourceType.IAC_STACK, {
-  icon: 'nav-settings',
-  label: 'iacm.permissions.iacmWorkspaces',
-  labelSingular: 'iacm.permissions.iacmWorkspace',
-  category: ResourceCategory.IACM,
-  permissionLabels: {
-    [PermissionIdentifier.IAC_VIEW_STACK]: <String stringID="rbac.permissionLabels.view" />,
-    [PermissionIdentifier.IAC_EDIT_STACK]: <String stringID="rbac.permissionLabels.createEdit" />,
-    [PermissionIdentifier.IAC_DELETE_STACK]: <String stringID="rbac.permissionLabels.delete" />
-  }
-})
-
-const IACMApproval = (props: StepDetailProps): ReactElement => (
-  <IACMComponentMounter component="RemoteIACMApproval" childProps={props} />
-)
-
-const IACMApprovalLogview = (props: ConsoleViewStepDetailProps): ReactElement => (
-  <IACMComponentMounter component="RemoteIACMApprovalConsoleView" childProps={props} />
-)
-
-ExecFactory.registerStepDetails(StepType.IACMApproval, {
-  component: memo(IACMApproval)
-})
-
-ExecFactory.registerConsoleViewStepDetails(StepType.IACMApproval, {
-  component: memo(IACMApprovalLogview)
-})
 
 function IACMRoutes(): JSX.Element {
   const { IACM_OPA_WORKSPACE_GOVERNANCE } = useFeatureFlags()

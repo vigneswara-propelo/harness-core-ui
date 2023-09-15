@@ -72,14 +72,25 @@ export interface PageTemplateProps {
   createButtonProps: CreateButtonProps
   useGetListHook: any
   emptyContent: ReactNode
-  ListComponent: React.VoidFunctionComponent<{ response: any; refetch: () => void; isForceDeleteEnabled: boolean }>
-  GridComponent: React.VoidFunctionComponent<{ response: any; refetch: () => void; isForceDeleteEnabled: boolean }>
+  ListComponent: React.VoidFunctionComponent<{
+    response: any
+    refetch: () => void
+    isForceDeleteEnabled: boolean
+    calledFromSettingsPage?: boolean
+  }>
+  GridComponent: React.VoidFunctionComponent<{
+    response: any
+    refetch: () => void
+    isForceDeleteEnabled: boolean
+    calledFromSettingsPage?: boolean
+  }>
   sortOptions: SelectOption[]
   defaultSortOption: string[]
   handleCustomSortChange: (value: string) => string[]
   filterType: GetFilterListQueryParams['type']
   FilterComponent: React.VoidFunctionComponent
   isForceDeleteAllowed?: boolean
+  calledFromSettingsPage?: boolean
 }
 
 export default function PageTemplate({
@@ -97,7 +108,8 @@ export default function PageTemplate({
   handleCustomSortChange,
   filterType,
   FilterComponent,
-  isForceDeleteAllowed
+  isForceDeleteAllowed,
+  calledFromSettingsPage
 }: PropsWithChildren<PageTemplateProps>): JSX.Element {
   useDocumentTitle(title)
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
@@ -307,10 +319,20 @@ export default function PageTemplate({
               {hasData ? (
                 view === Views.LIST ? (
                   <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
-                    <ListComponent response={response} refetch={refetch} isForceDeleteEnabled={isForceDeleteEnabled} />
+                    <ListComponent
+                      response={response}
+                      refetch={refetch}
+                      isForceDeleteEnabled={isForceDeleteEnabled}
+                      calledFromSettingsPage={calledFromSettingsPage}
+                    />
                   </Container>
                 ) : (
-                  <GridComponent response={response} refetch={refetch} isForceDeleteEnabled={isForceDeleteEnabled} />
+                  <GridComponent
+                    response={response}
+                    refetch={refetch}
+                    isForceDeleteEnabled={isForceDeleteEnabled}
+                    calledFromSettingsPage={calledFromSettingsPage}
+                  />
                 )
               ) : null}
             </>

@@ -1,0 +1,40 @@
+.dialog {
+  width: unset;
+  position: relative;
+  width: 660px;
+  padding-bottom: var(--spacing-xxlarge);
+  .card {
+    display: flex !important;
+    width: 270px;
+    height: 100px;
+    flex-direction: row;
+    padding: var(--spacing-xlarge) var(--spacing-medium) !important;
+    border-radius: 8px;
+    border: 1px solid var(--grey-200);
+    box-shadow: 0px 4px 8px 0px rgba(96, 97, 112, 0.16), 0px 0px 2px 0px rgba(40, 41, 61, 0.04);
+    cursor: pointer;
+
+    &:hover {
+      border: 1px solid var(--primary-5);
+    }
+
+    &:first-child {
+      margin-right: var(--spacing-large);
+    }
+
+    svg {
+      path {
+        fill: var(--primary-5) !important;
+      }
+    }
+  }
+
+  .flex1 {
+    flex: 1;
+  }
+
+  .scopeIconContainer {
+    opacity: 0.1;
+    width: 30%;
+  }
+}

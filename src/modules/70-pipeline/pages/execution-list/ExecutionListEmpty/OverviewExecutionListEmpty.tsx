@@ -14,6 +14,8 @@ import cdPipelineIllustration from '@pipeline/pages/pipeline-list/images/cd-pipe
 import ciPipelineIllustration from '@pipeline/pages/pipeline-list/images/ci-pipeline-illustration.svg'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps, PipelineType, Module } from '@common/interfaces/RouteInterfaces'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import cdExecutionIllustration from '../images/cd-execution-illustration.svg'
 import ciExecutionIllustration from '../images/ci-execution-illustration.svg'
 import { useExecutionListEmptyAction } from './useExecutionListEmptyAction'
@@ -64,12 +66,14 @@ export function OverviewExecutionListEmpty({
   const { hasNoPipelines, loading, EmptyAction } = useExecutionListEmptyAction(!!isPipelineInvalid, onRunPipeline)
   const { executionLabel, pipelineOperation1, pipelineOperation2, executionIllustration, pipelineIllustration } =
     getEmptyStateText(module)
+
+  const newLeftNav = useFeatureFlag(FeatureFlag.CDS_NAV_2_0)
   return (
     <ModalDialog
       isOpen={true}
       style={{ width: 610 }}
       enforceFocus={false}
-      portalClassName={css.overviewNoExecutions}
+      portalClassName={cx(css.overviewNoExecutions, { [css.leftNav]: newLeftNav })}
       usePortal={true}
       isCloseButtonShown={true}
       onClose={onHide}

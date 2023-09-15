@@ -5,6 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { ModulePathParams } from '@common/interfaces/RouteInterfaces'
+
 export const VerificationJobType: { [key: string]: string } = {
   TEST: 'TEST',
   CANARY: 'CANARY',
@@ -29,3 +31,7 @@ export const EXECUTED_BY = 'executedBy'
 export const UPDATED_BY = 'updatedBy'
 
 export const ThresholdPercentageToShowBanner = 75
+
+export const cvModuleParams: ModulePathParams = {
+  module: ':module(cv)'
+}

@@ -5,6 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { matchPath } from 'react-router-dom'
+
 import type {
   AccountPathProps,
   OrgPathProps,
@@ -39,12 +41,18 @@ import type {
   DiscoveryPathProps,
   Module,
   NetworkMapPathProps,
-  WebhooksPathProps
+  WebhooksPathProps,
+  DashboardFolderPathProps,
+  DashboardEmbedPathProps
 } from '@common/interfaces/RouteInterfaces'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
 
 export const accountPathProps: AccountPathProps = {
   accountId: ':accountId'
+}
+
+export const modePathProps: ModePathProps = {
+  mode: ':mode'
 }
 
 export const orgPathProps: OrgPathProps = {
@@ -129,6 +137,16 @@ export const resourceGroupPathProps: ResourceGroupPathProps = {
   resourceGroupIdentifier: ':resourceGroupIdentifier'
 }
 
+export const dashboardFolderPathProps: DashboardFolderPathProps = {
+  ...accountPathProps,
+  folderId: ':folderId'
+}
+
+export const dashboardEmbedPathProps: DashboardEmbedPathProps = {
+  ...dashboardFolderPathProps,
+  viewId: ':viewId'
+}
+
 export const delegatePathProps: DelegatePathProps = {
   delegateIdentifier: ':delegateIdentifier'
 }
@@ -202,6 +220,22 @@ export function withProjectIdentifier<T>(fn: (args: T) => string) {
     const path = fn(params)
 
     return `/projects/${params.projectIdentifier}/${path.replace(/^\//, '')}`
+  }
+}
+
+export function withMode<T>(fn: (args: T) => string) {
+  return (params: T & { mode: string }): string => {
+    const path = fn(params)
+
+    return `/${params.mode}/${path.replace(/^\//, '')}`
+  }
+}
+
+export function withModule<T>(fn: (args: T) => string) {
+  return (params: T & { module: string }): string => {
+    const path = fn(params)
+
+    return `/${params.module}/${path.replace(/^\//, '')}`
   }
 }
 
@@ -279,4 +313,51 @@ export const getEnvServiceRoute = ({
   } else {
     return window.location.href.includes('settings') ? `settings/resources/${path}` : `${path}`
   }
+}
+
+export const NEW_ROUTE_PATHS = [
+  '/account/:accountId/:mode/:module/orgs/:orgIdentifier/projects/:projectIdentifier',
+  '/account/:accountId/:mode/:module/orgs/:orgIdentifier',
+  '/account/:accountId/:mode/orgs/:orgIdentifier/projects/:projectIdentifier',
+  '/account/:accountId/:mode/orgs/:orgIdentifier',
+  '/account/:accountId/:mode/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|cet|sei)',
+  '/account/:accountId/:mode'
+]
+
+export const getRouteParams = <T>(includePath?: boolean, url?: string): T => {
+  const { params = {} } =
+    matchPath(url || location.pathname, {
+      path: NEW_ROUTE_PATHS.map(path => `${url ? '' : '/ng'}${path}${includePath ? '/:path*' : ''}`)
+    }) || {}
+
+  return params as T
+}
+
+export const MODE_PATH = [
+  `${
+    window.harnessNameSpace || ''
+  }/ng/account/:accountId/:mode/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|cet|sei)`,
+  `${window.harnessNameSpace || ''}/ng/account/:accountId/:mode`
+]
+
+export const MODULE_PATH = [
+  `${
+    window.harnessNameSpace || ''
+  }/ng/account/:accountId/:mode/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|cet|sei)`,
+  `${window.harnessNameSpace || ''}/ng/account/:accountId/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|cet|sei)`
+]
+
+export enum NAV_MODE {
+  ADMIN = 'admin',
+  ALL = 'all',
+  MODULE = 'module',
+  DASHBOARDS = 'dashboards'
+}
+
+export interface ModePathProps {
+  mode: string
+}
+
+export function isNavMode(str: string): boolean {
+  return Object.values(NAV_MODE).includes(str as NAV_MODE)
 }

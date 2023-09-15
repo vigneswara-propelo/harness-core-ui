@@ -18,6 +18,8 @@ import { useModuleInfo } from '@common/hooks/useModuleInfo'
 
 import paths from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import NGBreadcrumbsV2 from './NGBreadcrumbsV2'
 
 export interface NGBreadcrumbsProps extends BreadcrumbsProps {
   orgBreadCrumbOptional: boolean
@@ -38,6 +40,7 @@ export const NGBreadcrumbs: React.FC<Partial<NGBreadcrumbsProps>> = ({
   customPathParams = {},
   baseUrl
 }) => {
+  const { CDS_NAV_2_0 } = useFeatureFlags()
   const { getString } = useStrings()
   const originalParams = useParams<ProjectPathProps & SecretsPathProps & ModulePathParams>()
   const params = defaults(customPathParams, originalParams)
@@ -47,6 +50,18 @@ export const NGBreadcrumbs: React.FC<Partial<NGBreadcrumbsProps>> = ({
   const { pathname } = useLocation()
 
   const resolveUrl = (url: string): string => (baseUrl ? url.replace(new RegExp(`^${baseUrl}`), '') : url)
+
+  if (CDS_NAV_2_0) {
+    return (
+      <NGBreadcrumbsV2
+        links={links}
+        className={className}
+        orgBreadCrumbOptional={orgBreadCrumbOptional}
+        customPathParams={customPathParams}
+        baseUrl={baseUrl}
+      />
+    )
+  }
 
   let moduleBreadCrumb: Breadcrumb = {
     label: getString('common.accountSettings'),

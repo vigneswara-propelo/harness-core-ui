@@ -85,6 +85,8 @@ export interface StringsMap {
   'common.aws': string
   'common.azure': string
   'common.azureConnector': string
+  'common.backToOrgs': string
+  'common.backToProjects': string
   'common.background': string
   'common.banners.email.description': string
   'common.banners.email.resend': string
@@ -150,6 +152,9 @@ export interface StringsMap {
   'common.cardNumber': string
   'common.cardSuccessMessage': string
   'common.category': string
+  'common.ccmSettings.cloudCostCurrency': string
+  'common.ccmSettings.cloudCostIntegration': string
+  'common.ccmSettings.highlightSettingsSectionTitle': string
   'common.cdAndGitops': string
   'common.ce.autostopping': string
   'common.ce.cost': string
@@ -265,6 +270,7 @@ export interface StringsMap {
   'common.daily': string
   'common.dashboards': string
   'common.dataSubmitSuccess': string
+  'common.dataUnavailableInScope': string
   'common.datePickerShortcuts.Last2Days': string
   'common.datePickerShortcuts.Last2Months': string
   'common.datePickerShortcuts.Last3Days': string
@@ -302,6 +308,7 @@ export interface StringsMap {
   'common.discovery': string
   'common.displayName': string
   'common.displayNamePlaceHolder': string
+  'common.doInstead': string
   'common.download': string
   'common.downloadCSV': string
   'common.downloadYaml': string
@@ -414,6 +421,7 @@ export interface StringsMap {
   'common.filters.unsavedFilter': string
   'common.findOutMore': string
   'common.firstGeneration': string
+  'common.folders': string
   'common.for': string
   'common.forMoreInfo': string
   'common.forcedDeleteLabel': string
@@ -642,6 +650,7 @@ export interface StringsMap {
   'common.matchType': string
   'common.member': string
   'common.microservice': string
+  'common.modeIntro.accountAdministration': string
   'common.modified': string
   'common.module.cd': string
   'common.module.ce': string
@@ -700,6 +709,16 @@ export interface StringsMap {
   'common.moduleDetails.sto.expanded.list.three': string
   'common.moduleDetails.sto.expanded.list.two': string
   'common.moduleDetails.sto.expanded.title': string
+  'common.moduleIntro.builds': string
+  'common.moduleIntro.chaosEngineering': string
+  'common.moduleIntro.cloudCosts': string
+  'common.moduleIntro.continuousErrorTracking': string
+  'common.moduleIntro.deployments': string
+  'common.moduleIntro.featureFlag': string
+  'common.moduleIntro.insights': string
+  'common.moduleIntro.reliabilityManagement': string
+  'common.moduleIntro.securityTest': string
+  'common.moduleIntro.softwareSupplyChainAssurance': string
   'common.moduleLabel': string
   'common.moduleList.buildAndTest': string
   'common.moduleList.deployChanges': string
@@ -727,6 +746,12 @@ export interface StringsMap {
   'common.nameOnCard': string
   'common.namePlaceholder': string
   'common.namespace': string
+  'common.nav.accountAdmin': string
+  'common.nav.accountAdminInfo': string
+  'common.nav.allModules': string
+  'common.nav.allModulesInfo': string
+  'common.nav.configure': string
+  'common.nav.dashboardInfo': string
   'common.networkMap': string
   'common.new': string
   'common.newLines': string
@@ -856,6 +881,8 @@ export interface StringsMap {
   'common.previewYAML': string
   'common.previousActionInProgress': string
   'common.production': string
+  'common.profileOverview': string
+  'common.projectOverview': string
   'common.projectSetup': string
   'common.projectViewer': string
   'common.projects': string
@@ -1086,6 +1113,7 @@ export interface StringsMap {
   'common.selectAChannel': string
   'common.selectAVersion.description': string
   'common.selectAVersion.title': string
+  'common.selectAnotherScope': string
   'common.selectBranch': string
   'common.selectDefaultExperience': string
   'common.selectModules': string
@@ -1094,6 +1122,7 @@ export interface StringsMap {
   'common.selectOtherGitProviders': string
   'common.selectProject': string
   'common.selectRepository': string
+  'common.selectScopeSubtitle': string
   'common.selectService': string
   'common.selectServices': string
   'common.selectTimeFrame': string
@@ -1103,6 +1132,7 @@ export interface StringsMap {
   'common.selectWorkload': string
   'common.selectYourRepo': string
   'common.selected': string
+  'common.serviceAccounts': string
   'common.serviceCreated': string
   'common.serviceDetails': string
   'common.serviceId': string
@@ -1133,6 +1163,20 @@ export interface StringsMap {
   'common.setAsDefault': string
   'common.setAsStable': string
   'common.settingCategory.general': string
+  'common.settingsPage.description.accessControl': string
+  'common.settingsPage.description.accountLevelResources': string
+  'common.settingsPage.description.general': string
+  'common.settingsPage.description.orgLevelResources': string
+  'common.settingsPage.description.securityGovernance': string
+  'common.settingsPage.description.subscription': string
+  'common.settingsPage.title.accountLevelResources': string
+  'common.settingsPage.title.orgLevelResources': string
+  'common.settingsPage.title.orgSettingsTitle': string
+  'common.settingsPage.title.orgSettingsTitleWithName': string
+  'common.settingsPage.title.projectLevelResources': string
+  'common.settingsPage.title.projectSettingsTitle': string
+  'common.settingsPage.title.projectSettingsTitleWithName': string
+  'common.settingsPage.title.securityGovernance': string
   'common.setup': string
   'common.sh': string
   'common.shell': string
@@ -1287,9 +1331,12 @@ export interface StringsMap {
   'common.supportText': string
   'common.supportedInFirstGeneration': string
   'common.supportedModals': string
+  'common.switch': string
   'common.switchAccount': string
   'common.switchAccountError': string
+  'common.switchAccountMessage': string
   'common.switchAccountSearch': string
+  'common.switchAccountWarning': string
   'common.switchToBarChart': string
   'common.switchToLineChart': string
   'common.sync': string
@@ -1425,10 +1472,12 @@ export interface StringsMap {
   'common.videoNotSupportedError': string
   'common.viewAll': string
   'common.viewAndExecutePermissions': string
+  'common.viewAndManageSettings': string
   'common.viewContent': string
   'common.viewErrorDetails': string
   'common.viewLatest': string
   'common.viewReferences': string
+  'common.viewSettings': string
   'common.viewText': string
   'common.viewUsage': string
   'common.violations': string
@@ -3694,7 +3743,6 @@ export interface StringsMap {
   'dashboards.homePage.chooseTheFolder': string
   'dashboards.homePage.filterByTags': string
   'dashboards.homePage.folder': string
-  'dashboards.homePage.folders': string
   'dashboards.homePage.noDashboardsAvailable': string
   'dashboards.homePage.noFolderAvailable': string
   'dashboards.homePage.noTags': string
@@ -4749,7 +4797,6 @@ export interface StringsMap {
   'pipeline.loopingStrategy.subTitle': string
   'pipeline.loopingStrategy.title': string
   'pipeline.loopingStrategy.toggleTypeModal.content': string
-  'pipeline.loopingStrategy.toggleTypeModal.switch': string
   'pipeline.loopingStrategy.toggleTypeModal.title': string
   'pipeline.loopingStrategy.warningText': string
   'pipeline.manifestToConnectorLabelMap.AWSLabel': string
@@ -8323,6 +8370,9 @@ export interface StringsMap {
   'ce.serviceDetails.launchType': string
   'ce.serviceDetails.title': string
   'ce.sideNav.perspective': string
+  'ce.sideNav.sectionTitles.costGovernance': string
+  'ce.sideNav.sectionTitles.costOptimization': string
+  'ce.sideNav.sectionTitles.costReporting': string
   'ce.trialCta': string
   'ce.uploadCertiHeader': string
   'cet.continuous': string

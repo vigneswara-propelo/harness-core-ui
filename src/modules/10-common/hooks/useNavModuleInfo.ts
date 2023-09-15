@@ -59,9 +59,11 @@ export interface useNavModuleInfoReturnType {
   color: string
   backgroundColor?: string
   backgroundColorLight?: string
+  shortLabel: StringKeys
+  moduleIntro?: StringKeys
 }
 
-interface ModuleInfo {
+export interface ModuleInfo {
   icon: IconName
   label: StringKeys
   getHomePageUrl: (accountId: string) => string
@@ -69,6 +71,8 @@ interface ModuleInfo {
   color: string
   backgroundColor?: string
   backgroundColorLight?: string
+  shortLabel: StringKeys
+  moduleIntro?: StringKeys
 }
 
 export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
@@ -78,7 +82,9 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     getHomePageUrl: (accountId: string) => routes.toCD({ accountId }),
     color: '--cd-border',
     backgroundColor: '--cd-background',
-    backgroundColorLight: '--cd-background-light'
+    backgroundColorLight: '--cd-background-light',
+    shortLabel: 'deploymentsText',
+    moduleIntro: 'common.moduleIntro.deployments'
   },
   [ModuleName.CI]: {
     icon: 'ci-main',
@@ -86,7 +92,9 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     getHomePageUrl: (accountId: string) => routes.toCI({ accountId }),
     color: '--ci-border',
     backgroundColor: '--ci-background',
-    backgroundColorLight: '--ci-background-light'
+    backgroundColorLight: '--ci-background-light',
+    shortLabel: 'buildsText',
+    moduleIntro: 'common.moduleIntro.builds'
   },
   [ModuleName.CV]: {
     icon: 'cv-main',
@@ -95,7 +103,9 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     featureFlagName: FeatureFlag.CVNG_ENABLED,
     color: '--srm-border',
     backgroundColor: '--srm-background',
-    backgroundColorLight: '--srm-background-light'
+    backgroundColorLight: '--srm-background-light',
+    shortLabel: 'common.purpose.cv.serviceReliability',
+    moduleIntro: 'common.moduleIntro.reliabilityManagement'
   },
   [ModuleName.CF]: {
     icon: 'ff-solid',
@@ -103,7 +113,9 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     getHomePageUrl: (accountId: string) => routes.toCF({ accountId }),
     color: '--ff-border',
     backgroundColor: '--ff-background',
-    backgroundColorLight: '--ff-background-light'
+    backgroundColorLight: '--ff-background-light',
+    shortLabel: 'featureFlagsText',
+    moduleIntro: 'common.moduleIntro.featureFlag'
   },
   [ModuleName.CE]: {
     icon: 'ce-main',
@@ -111,7 +123,9 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     getHomePageUrl: (accountId: string) => routes.toCE({ accountId }),
     color: '--ccm-border',
     backgroundColor: '--ccm-background',
-    backgroundColorLight: '--ccm-background-light'
+    backgroundColorLight: '--ccm-background-light',
+    shortLabel: 'cloudCostsText',
+    moduleIntro: 'common.moduleIntro.cloudCosts'
   },
   [ModuleName.STO]: {
     icon: 'sto-color-filled',
@@ -119,7 +133,9 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     getHomePageUrl: (accountId: string) => routes.toSTO({ accountId }),
     color: '--sto-border',
     backgroundColor: '--sto-background',
-    backgroundColorLight: '--sto-background-light'
+    backgroundColorLight: '--sto-background-light',
+    shortLabel: 'common.purpose.sto.continuous',
+    moduleIntro: 'common.moduleIntro.securityTest'
   },
   [ModuleName.CHAOS]: {
     icon: 'chaos-main',
@@ -127,49 +143,60 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     getHomePageUrl: (accountId: string) => routes.toChaos({ accountId }),
     color: '--chaos-border',
     backgroundColor: '--chaos-background',
-    backgroundColorLight: '--chaos-background-light'
+    backgroundColorLight: '--chaos-background-light',
+    shortLabel: 'common.purpose.chaos.chaos',
+    moduleIntro: 'common.moduleIntro.chaosEngineering'
   },
   [ModuleName.CODE]: {
     icon: 'code',
     label: 'common.purpose.code.name',
     getHomePageUrl: (accountId: string) => routes.toCODE({ accountId }),
     featureFlagName: FeatureFlag.CODE_ENABLED,
-    color: '--default-module-border'
+    color: '--default-module-border',
+    shortLabel: 'common.purpose.code.name'
   },
   [ModuleName.IACM]: {
     icon: 'iacm',
     label: 'common.iacmText',
     getHomePageUrl: (accountId: string) => routes.toIACM({ accountId }),
     featureFlagName: FeatureFlag.IACM_ENABLED,
-    color: '--iacm-border'
+    color: '--iacm-border',
+    shortLabel: 'common.infrastructures'
   },
   [ModuleName.SSCA]: {
     icon: 'ssca-main',
     label: 'common.sscaText',
     getHomePageUrl: (accountId: string) => routes.toSSCA({ accountId }),
     featureFlagName: FeatureFlag.SSCA_ENABLED,
-    color: '--default-module-border'
+    color: '--default-module-border',
+    shortLabel: 'common.ssca',
+    moduleIntro: 'common.moduleIntro.softwareSupplyChainAssurance'
   },
   [ModuleName.IDP]: {
     icon: 'idp',
     label: 'common.purpose.idp.fullName',
     getHomePageUrl: (accountId: string) => routes.toIDPDefaultPath({ accountId }),
     featureFlagName: FeatureFlag.IDP_ENABLED,
-    color: '--default-module-border'
+    color: '--default-module-border',
+    shortLabel: 'common.purpose.idp.name'
   },
   [ModuleName.CET]: {
     icon: 'cet',
     label: 'common.purpose.cet.continuous',
     getHomePageUrl: (accountId: string) => routes.toCET({ accountId }),
     featureFlagName: FeatureFlag.CET_ENABLED,
-    color: '--cet-border'
+    color: '--cet-border',
+    shortLabel: 'common.purpose.errorTracking.title',
+    moduleIntro: 'common.moduleIntro.continuousErrorTracking'
   },
   [ModuleName.SEI]: {
     icon: 'sei-main',
     label: 'common.purpose.sei.fullName',
     getHomePageUrl: (accountId: string) => routes.toSEI({ accountId }),
     featureFlagName: FeatureFlag.SEI_ENABLED,
-    color: '--default-module-border'
+    color: '--default-module-border',
+    shortLabel: 'common.purpose.sei.continuous',
+    moduleIntro: 'common.moduleIntro.insights'
   }
 }
 
@@ -206,7 +233,7 @@ const getModuleInfo = (
   color: string,
   backgroundColor?: string
 ): useNavModuleInfoReturnType => {
-  const { icon: moduleIcon, label, getHomePageUrl } = moduleInfo
+  const { icon: moduleIcon, label, getHomePageUrl, shortLabel, moduleIntro } = moduleInfo
 
   return {
     icon: moduleIcon,
@@ -215,7 +242,9 @@ const getModuleInfo = (
     shouldVisible: shouldVisible,
     hasLicense,
     color,
-    backgroundColor
+    backgroundColor,
+    shortLabel,
+    moduleIntro
   }
 }
 

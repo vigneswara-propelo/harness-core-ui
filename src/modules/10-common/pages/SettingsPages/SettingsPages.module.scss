@@ -1,0 +1,123 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.settingsPage {
+  display: grid !important;
+  grid-template-columns: auto 24px;
+
+  .settingsPageContainer {
+    min-height: calc(100vh - var(--page-header-height));
+    overflow: auto;
+    padding: var(--spacing-7) var(--spacing-5) var(--spacing-7) var(--spacing-9) !important;
+    gap: var(--spacing-9);
+
+    .settingsPageContent {
+      max-height: calc(100vh - var(--page-header-height) - 110px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      gap: var(--spacing-6);
+      padding-bottom: var(--spacing-6);
+    }
+  }
+
+  .resourceTileInfo {
+    padding: var(--spacing-11) var(--spacing-10);
+  }
+}
+
+.tileStyle {
+  display: flex;
+  min-width: 112px;
+  padding: var(--spacing-5);
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--primary-bg);
+  margin-left: var(--spacing-small);
+}
+
+.settingsTileWrapper {
+  display: flex;
+  gap: var(--spacing-7);
+  flex-wrap: wrap;
+}
+
+.tileIcon {
+  svg {
+    path {
+      fill: var(--primary-7) !important;
+    }
+  }
+}
+
+.headDivider {
+  height: 16px;
+  border: 1px solid var(--grey-400);
+}
+
+.divider {
+  width: 100%;
+  opacity: 0.7;
+}
+
+.noDescriptionDivider {
+  height: 1px;
+  background: var(--grey-200);
+  width: 100%;
+  opacity: 0.7;
+}
+
+.listToggle {
+  .stateToggle {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid rgba(11, 11, 13, 0.1); // Grey 900 / 0.1 Opacity
+    border-radius: 4px;
+    overflow: auto;
+
+    .stateCtn {
+      padding: var(--spacing-xsmall) var(--spacing-small);
+      border-right: 1px solid rgba(11, 11, 13, 0.1); // Grey 900 / 0.1 Opacity
+      cursor: pointer;
+      white-space: nowrap;
+
+      &.isSelected {
+        background-color: var(--primary-1);
+        color: var(--primary-7);
+        font-weight: 500;
+      }
+
+      &:last-child {
+        border-right: none;
+      }
+    }
+  }
+}
+
+.pageHeader {
+  background-color: var(--white);
+  .title {
+    max-width: 800px !important;
+  }
+}
+
+.colorBar {
+  width: 54px;
+  height: 6px;
+  border-radius: 8px;
+  transform: matrix(-1, 0, 0, 1, 0, 0);
+}
+
+.stardivider {
+  height: 38px;
+  border: 1px solid var(--grey-200);
+  margin: var(--spacing-6) 0;
+}
+
+.favorite {
+  padding-top: var(--spacing-xlarge) !important;
+}

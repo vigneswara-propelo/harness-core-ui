@@ -1,0 +1,51 @@
+.container {
+  background: #f3f6fa !important; // this color is not in design system, check with ux
+  box-shadow: 0px 4px 8px 0px rgba(96, 97, 112, 0.16), 0px 0px 2px 0px rgba(40, 41, 61, 0.04);
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  padding: var(--spacing-medium);
+  z-index: 12;
+  &.expanded {
+    width: 232px;
+  }
+
+  .section {
+    > * {
+      &:first-child {
+        margin-top: var(--spacing-large) !important;
+      }
+    }
+
+    > a + div[data-name='nav-border'] {
+      display: block;
+    }
+
+    div[data-name='nav-border'] {
+      margin-top: var(--spacing-large) !important;
+      border-bottom: 1px solid var(--grey-200);
+      display: none;
+    }
+
+    .sectionTitle {
+      text-transform: uppercase;
+    }
+
+    &:last-child {
+      div[data-name='nav-border'] {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+.center {
+  flex: 1;
+  overflow: scroll;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+  }
+}

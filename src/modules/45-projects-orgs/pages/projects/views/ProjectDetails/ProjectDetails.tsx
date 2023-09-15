@@ -49,6 +49,7 @@ import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import DeprecatedCallout from '@gitsync/components/DeprecatedCallout/DeprecatedCallout'
 import { isOnPrem } from '@common/utils/utils'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
+import ProjectsHeader from '@common/pages/SettingsPages/ProjectsHeader'
 import useDeleteProjectDialog from '../../DeleteProject'
 import css from './ProjectDetails.module.scss'
 
@@ -60,7 +61,7 @@ const ProjectDetails: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false)
   const { selectedTimeRange } = useLandingDashboardContext()
   const [range] = useState([Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000, Date.now()])
-  const { CVNG_ENABLED } = useFeatureFlags()
+  const { CDS_NAV_2_0, CVNG_ENABLED } = useFeatureFlags()
   const showProjectOverview = !isOnPrem()
   const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
   const invitePermission = {
@@ -168,136 +169,146 @@ const ProjectDetails: React.FC = () => {
   return (
     <>
       {isGitSyncEnabled && <DeprecatedCallout />}
-      <Page.Header
-        size={projectData.description || !isEmpty(projectData.tags) ? 'xxlarge' : 'xlarge'}
-        breadcrumbs={
-          <NGBreadcrumbs
-            links={
-              !showProjectOverview
-                ? [
-                    {
-                      url: routes.toProjects({ accountId }),
-                      label: getString('projectsText')
-                    }
-                  ]
-                : []
-            }
-          />
-        }
-        title={
-          <Layout.Vertical spacing="small" padding={{ top: 'small' }} className={css.title}>
-            <Layout.Horizontal
-              spacing="medium"
-              margin={{ bottom: 'medium' }}
-              flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-            >
-              <div className={css.colorBar} style={{ backgroundColor: projectData.color }} />
-              <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
-                {getString('idLabel', { id: projectData.identifier })}
-              </Text>
-              <div className={css.divider} />
-              <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
-                {getString('orgLabel')}:{' '}
-                <Link
-                  to={routes.toOrganizationDetails({
-                    accountId: accountId,
-                    orgIdentifier: projectData.orgIdentifier as string
-                  })}
-                >
-                  {projectData.orgIdentifier}
-                </Link>
-              </Text>
-              <div className={css.divider} />
-              {data?.data?.projectResponse.lastModifiedAt ? (
-                <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
-                  {`${getString('common.modified')} `}
-                  <ReactTimeago date={data?.data?.projectResponse.lastModifiedAt} />
+      {CDS_NAV_2_0 ? (
+        <ProjectsHeader data={data} refetch={refetch} />
+      ) : (
+        <Page.Header
+          size={projectData.description || !isEmpty(projectData.tags) ? 'xxlarge' : 'xlarge'}
+          breadcrumbs={
+            <NGBreadcrumbs
+              links={
+                !showProjectOverview
+                  ? [
+                      {
+                        url: routes.toProjects({ accountId }),
+                        label: getString('projectsText')
+                      }
+                    ]
+                  : []
+              }
+            />
+          }
+          title={
+            <Layout.Vertical spacing="small" padding={{ top: 'small' }} className={css.title}>
+              <Layout.Horizontal
+                spacing="medium"
+                margin={{ bottom: 'medium' }}
+                flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+              >
+                <div className={css.colorBar} style={{ backgroundColor: projectData.color }} />
+                <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
+                  {getString('idLabel', { id: projectData.identifier })}
+                </Text>
+                <div className={css.divider} />
+                <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
+                  {getString('orgLabel')}:{' '}
+                  <Link
+                    to={routes.toOrganizationDetails({
+                      accountId: accountId,
+                      orgIdentifier: projectData.orgIdentifier as string
+                    })}
+                  >
+                    {projectData.orgIdentifier}
+                  </Link>
+                </Text>
+                <div className={css.divider} />
+                {data?.data?.projectResponse.lastModifiedAt ? (
+                  <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
+                    {`${getString('common.modified')} `}
+                    <ReactTimeago date={data?.data?.projectResponse.lastModifiedAt} />
+                  </Text>
+                ) : null}
+              </Layout.Horizontal>
+              <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+                <Text font={{ variation: FontVariation.H4 }} lineClamp={1} padding={{ right: 'xlarge' }}>
+                  {projectData.name}
+                </Text>
+              </Layout.Horizontal>
+              {projectData.description ? (
+                <Text font="small" color={Color.BLACK} lineClamp={1}>
+                  {projectData.description}
                 </Text>
               ) : null}
-            </Layout.Horizontal>
-            <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-              <Text font={{ variation: FontVariation.H4 }} lineClamp={1} padding={{ right: 'xlarge' }}>
-                {projectData.name}
-              </Text>
-            </Layout.Horizontal>
-            {projectData.description ? (
-              <Text font="small" color={Color.BLACK} lineClamp={1}>
-                {projectData.description}
-              </Text>
-            ) : null}
-            {projectData.tags && !isEmpty(projectData.tags) ? (
-              <Layout.Horizontal padding={{ top: 'medium' }}>
-                <TagsRenderer tags={projectData.tags} length={6} tagClassName={css.tags} />
-              </Layout.Horizontal>
-            ) : null}
-          </Layout.Vertical>
-        }
-        toolbar={
-          <Layout.Vertical
-            padding={{ top: 'small' }}
-            flex={{ justifyContent: 'space-between', alignItems: 'flex-end' }}
-          >
-            <Popover
-              isOpen={menuOpen}
-              onInteraction={nextOpenState => {
-                setMenuOpen(nextOpenState)
-              }}
-              className={Classes.DARK}
-              position={Position.BOTTOM_RIGHT}
+              {projectData.tags && !isEmpty(projectData.tags) ? (
+                <Layout.Horizontal padding={{ top: 'medium' }}>
+                  <TagsRenderer tags={projectData.tags} length={6} tagClassName={css.tags} />
+                </Layout.Horizontal>
+              ) : null}
+            </Layout.Vertical>
+          }
+          toolbar={
+            <Layout.Vertical
+              padding={{ top: 'small' }}
+              flex={{ justifyContent: 'space-between', alignItems: 'flex-end' }}
             >
-              <Button
-                minimal
-                icon="Options"
-                onClick={e => {
-                  e.stopPropagation()
-                  setMenuOpen(true)
+              <Popover
+                isOpen={menuOpen}
+                onInteraction={nextOpenState => {
+                  setMenuOpen(nextOpenState)
                 }}
-              />
-              <ContextMenu
-                project={projectData as Project}
-                reloadProjects={refetch}
-                editProject={showEditProject}
-                collaborators={showCollaborators}
-                setMenuOpen={setMenuOpen}
-                openDialog={openDialog}
-              />
-            </Popover>
-            <Layout.Horizontal padding={{ right: 'huge' }} margin={{ right: 'huge' }}>
-              <Layout.Vertical padding={{ right: 'xlarge' }}>
-                <Text font="xsmall" color={Color.GREY_400} padding={{ left: 'xsmall', bottom: 'small' }}>
-                  {`${getString('adminLabel')} ${data?.data?.admins?.length ? `(${data?.data?.admins?.length})` : ``}`}
-                </Text>
-                <RbacAvatarGroup
-                  className={css.projectDetailsAvatarGroup}
-                  avatars={data?.data?.admins?.length ? data?.data?.admins : [{}]}
-                  onAdd={event => {
-                    event.stopPropagation()
-                    showCollaborators(projectData as Project)
+                className={Classes.DARK}
+                position={Position.BOTTOM_RIGHT}
+              >
+                <Button
+                  minimal
+                  icon="Options"
+                  onClick={e => {
+                    e.stopPropagation()
+                    setMenuOpen(true)
                   }}
-                  restrictLengthTo={6}
-                  permission={invitePermission}
                 />
-              </Layout.Vertical>
-              <Layout.Vertical>
-                <Text font="xsmall" color={Color.GREY_400} padding={{ left: 'xsmall', bottom: 'small' }}>{`${getString(
-                  'collaboratorsLabel'
-                )} ${data?.data?.collaborators?.length ? `(${data?.data?.collaborators?.length})` : ``}`}</Text>
-                <RbacAvatarGroup
-                  className={css.projectDetailsAvatarGroup}
-                  avatars={data?.data?.collaborators?.length ? data?.data?.collaborators : [{}]}
-                  onAdd={event => {
-                    event.stopPropagation()
-                    showCollaborators(projectData as Project)
-                  }}
-                  restrictLengthTo={6}
-                  permission={invitePermission}
+                <ContextMenu
+                  project={projectData as Project}
+                  reloadProjects={refetch}
+                  editProject={showEditProject}
+                  collaborators={showCollaborators}
+                  setMenuOpen={setMenuOpen}
+                  openDialog={openDialog}
                 />
-              </Layout.Vertical>
-            </Layout.Horizontal>
-          </Layout.Vertical>
-        }
-        className={css.header}
-      />
+              </Popover>
+              <Layout.Horizontal padding={{ right: 'huge' }} margin={{ right: 'huge' }}>
+                <Layout.Vertical padding={{ right: 'xlarge' }}>
+                  <Text font="xsmall" color={Color.GREY_400} padding={{ left: 'xsmall', bottom: 'small' }}>
+                    {`${getString('adminLabel')} ${
+                      data?.data?.admins?.length ? `(${data?.data?.admins?.length})` : ``
+                    }`}
+                  </Text>
+                  <RbacAvatarGroup
+                    className={css.projectDetailsAvatarGroup}
+                    avatars={data?.data?.admins?.length ? data?.data?.admins : [{}]}
+                    onAdd={event => {
+                      event.stopPropagation()
+                      showCollaborators(projectData as Project)
+                    }}
+                    restrictLengthTo={6}
+                    permission={invitePermission}
+                  />
+                </Layout.Vertical>
+                <Layout.Vertical>
+                  <Text
+                    font="xsmall"
+                    color={Color.GREY_400}
+                    padding={{ left: 'xsmall', bottom: 'small' }}
+                  >{`${getString('collaboratorsLabel')} ${
+                    data?.data?.collaborators?.length ? `(${data?.data?.collaborators?.length})` : ``
+                  }`}</Text>
+                  <RbacAvatarGroup
+                    className={css.projectDetailsAvatarGroup}
+                    avatars={data?.data?.collaborators?.length ? data?.data?.collaborators : [{}]}
+                    onAdd={event => {
+                      event.stopPropagation()
+                      showCollaborators(projectData as Project)
+                    }}
+                    restrictLengthTo={6}
+                    permission={invitePermission}
+                  />
+                </Layout.Vertical>
+              </Layout.Horizontal>
+            </Layout.Vertical>
+          }
+          className={css.header}
+        />
+      )}
       <Page.Body>
         <Layout.Horizontal>
           <Container padding="xxlarge" className={cx(css.enabledModules, { [css.fullWidth]: showProjectOverview })}>

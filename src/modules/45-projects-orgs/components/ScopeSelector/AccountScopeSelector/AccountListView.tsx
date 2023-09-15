@@ -24,10 +24,13 @@ import SecureStorage from 'framework/utils/SecureStorage'
 import { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetCurrentUserInfo } from 'services/cd-ng'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { Scope } from 'framework/types/types'
+import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
 import css from './AccountScopeSelector.module.scss'
 
 interface AccountListViewProps {
   accounts: Account[]
+  clickOnLoggedInAccount?: (account: Account) => void
 }
 
 const RenderColumnCompanyName: Renderer<CellProps<Account>> = ({ row }) => {
@@ -61,13 +64,17 @@ const RenderColumnLoggedInfo: Renderer<CellProps<Account>> = ({ row }) => {
 }
 
 export const AccountListView = (props: AccountListViewProps): JSX.Element => {
-  const { accounts } = props
+  const { accounts, clickOnLoggedInAccount } = props
   const { getString } = useStrings()
   const history = useHistory()
   const { showError } = useToaster()
   const { accountId } = useParams<AccountPathProps>()
   const [switchAccountId, setSwitchAccountId] = useState<string | undefined>()
   const { currentUserInfo, updateAppStore, ...rest } = useAppStore()
+  const [accountSelected, setAccountSelected] = useState<Account>(accounts.filter(acc => acc.uuid === accountId)[0])
+  const { scope } = useGetSelectedScope()
+
+  const isOnlyOneAccount = accounts.length === 1
 
   const { mutate: switchAccount, loading: switchAccountLoading } = useRestrictedSwitchAccount({})
   const { mutate: setDefaultAccount, loading: settingDefault } = useSetDefaultAccountForCurrentUser({ accountId })
@@ -115,6 +122,38 @@ export const AccountListView = (props: AccountListViewProps): JSX.Element => {
       showError(getString('common.switchAccountError'))
     }
   }
+
+  const ConfirmationText = (): React.ReactElement => (
+    <Layout.Vertical>
+      <Text color={Color.BLACK} margin={{ bottom: 'large' }} font={{ variation: FontVariation.BODY2 }}>
+        {getString('common.switchAccountMessage', { name: accountSelected.accountName })}
+      </Text>
+      <Container className={css.warningContainer} padding="small">
+        <Text
+          intent="warning"
+          icon="warning-outline"
+          iconProps={{ padding: { right: 'small' } }}
+          color={Color.BLACK}
+          font={{ variation: FontVariation.SMALL }}
+        >
+          {getString('common.switchAccountWarning')}
+        </Text>
+      </Container>
+    </Layout.Vertical>
+  )
+
+  const { openDialog: openSwitchAccountConfirmationDialog } = useConfirmationDialog({
+    cancelButtonText: getString('cancel'),
+    confirmButtonText: getString('common.switch'),
+    titleText: getString('common.switchAccount'),
+    contentText: <ConfirmationText />,
+    intent: Intent.WARNING,
+    onCloseDialog: isConfirmed => {
+      if (isConfirmed) {
+        handleSwitchAccount(accountSelected)
+      }
+    }
+  })
 
   const RenderColumnAccountName: Renderer<CellProps<Account>> = ({ row }) => {
     const account = row.original
@@ -166,14 +205,16 @@ export const AccountListView = (props: AccountListViewProps): JSX.Element => {
         flex={{ alignItems: 'center', justifyContent: 'flex-end' }}
       >
         {isDefaultAccount ? (
-          <Text
-            icon="success-tick"
-            iconProps={{ size: 12 }}
-            font={{ variation: FontVariation.TINY_SEMI }}
-            color={Color.GREEN_600}
-          >
-            Default
-          </Text>
+          !isOnlyOneAccount && (
+            <Text
+              icon="success-tick"
+              iconProps={{ size: 12 }}
+              font={{ variation: FontVariation.TINY_SEMI }}
+              color={Color.GREEN_600}
+            >
+              Default
+            </Text>
+          )
         ) : (
           <Text
             icon="tick-circle"
@@ -198,7 +239,7 @@ export const AccountListView = (props: AccountListViewProps): JSX.Element => {
         Header: '',
         id: 'logged',
         width: '18px',
-        Cell: RenderColumnLoggedInfo
+        Cell: !isOnlyOneAccount && RenderColumnLoggedInfo
       },
       {
         Header: getString('common.headerAccountName'),
@@ -242,11 +283,13 @@ export const AccountListView = (props: AccountListViewProps): JSX.Element => {
         className={css.table}
         onRowClick={row => {
           if (row.uuid !== accountId) {
-            handleSwitchAccount(row)
+            setAccountSelected(row)
+            openSwitchAccountConfirmationDialog()
+          } else {
+            clickOnLoggedInAccount?.(row)
           }
-          // else -> scope change
         }}
-        // getRowClassName={row => (row.original.uuid === accountId ? css.selected : '')}
+        getRowClassName={row => (row.original.uuid === accountId && scope === Scope.ACCOUNT ? css.selected : '')}
       />
     </>
   )

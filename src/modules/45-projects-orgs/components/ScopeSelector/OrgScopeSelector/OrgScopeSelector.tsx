@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import {
   Layout,
   Container,
@@ -23,22 +23,21 @@ import {
 
 import { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import { useGetOrganizationAggregateDTOList } from 'services/cd-ng'
+import { Organization, useGetOrganizationAggregateDTOList } from 'services/cd-ng'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
-import routes from '@common/RouteDefinitions'
 import { OrganizationCard } from './OrgCard'
 
 import css from './OrgScopeSelector.module.scss'
 
 interface OrgScopeSelectorProps {
   onClose?: () => void
+  onClick?: (org: Organization) => void
 }
 
 export const OrgScopeSelector = (props: OrgScopeSelectorProps): JSX.Element => {
-  const { onClose } = props
+  const { onClick } = props
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const history = useHistory()
   const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
     usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-orgscopelisting`)
 
@@ -89,13 +88,7 @@ export const OrgScopeSelector = (props: OrgScopeSelectorProps): JSX.Element => {
                 key={`${org.organizationResponse.organization.identifier}`}
                 hideAddOption={true}
                 onClick={() => {
-                  history.push(
-                    routes.toOrganizationDetails({
-                      orgIdentifier: org.organizationResponse.organization.identifier as string,
-                      accountId
-                    })
-                  )
-                  onClose?.()
+                  onClick?.(org.organizationResponse.organization)
                 }}
               />
             ))}

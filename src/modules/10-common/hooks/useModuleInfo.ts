@@ -10,7 +10,9 @@ import { useLocation } from 'react-router-dom'
 import { match } from 'path-to-regexp'
 
 import type { Module } from 'framework/types/ModuleName'
-import { withAccountId } from '@common/utils/routeUtils'
+import { getRouteParams, withAccountId } from '@common/utils/routeUtils'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from './useFeatureFlag'
 
 export interface ModuleInfo {
   module?: Module
@@ -30,6 +32,10 @@ export function useModuleInfo(): UseModuleInfoReturn {
   const { pathname } = useLocation()
 
   const matchModule = useMemo(() => matchModuleFn(pathname), [pathname])
+
+  if (useFeatureFlag(FeatureFlag.CDS_NAV_2_0)) {
+    return getRouteParams<{ module: Module }>()
+  }
 
   return { module: matchModule === false ? undefined : matchModule.params.module }
 }

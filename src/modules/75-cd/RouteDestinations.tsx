@@ -234,11 +234,15 @@ const CDDashboardPageOrRedirect = (): React.ReactElement => {
 
 const RedirectToSubscriptions = RedirectToSubscriptionsFactory(ModuleName.CD)
 
-const EnvironmentsPage = (): React.ReactElement | null => {
+export const EnvironmentsPage = ({
+  calledFromSettingsPage
+}: {
+  calledFromSettingsPage?: boolean
+}): React.ReactElement | null => {
   const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
 
   if (isSvcEnvEntityEnabled) {
-    return <EnvironmentsV2 />
+    return <EnvironmentsV2 calledFromSettingsPage={calledFromSettingsPage} />
   } else {
     return <Environments />
   }

@@ -38,7 +38,7 @@ import EnvironmentsGrid from './EnvironmentsGrid/EnvironmentsGrid'
 import EnvironmentsFilters from './EnvironmentsFilters/EnvironmentsFilters'
 import css from './Environments.module.scss'
 
-export function Environments(): React.ReactElement {
+export function Environments({ calledFromSettingsPage }: { calledFromSettingsPage?: boolean }): React.ReactElement {
   const [view, setView] = useState(Views.LIST)
 
   const { getString } = useStrings()
@@ -129,7 +129,7 @@ export function Environments(): React.ReactElement {
       <PageTemplate
         title={getString('environments')}
         titleTooltipId="ff_env_heading"
-        headerToolbar={<EnvironmentTabs />}
+        headerToolbar={<EnvironmentTabs calledFromSettingsPage={calledFromSettingsPage} />}
         createButtonProps={createButtonProps}
         useGetListHook={useGetEnvironmentListV2}
         emptyContent={
@@ -168,6 +168,7 @@ export function Environments(): React.ReactElement {
         filterType={'Environment'}
         FilterComponent={EnvironmentsFilters}
         isForceDeleteAllowed
+        calledFromSettingsPage={calledFromSettingsPage}
       />
     </PageStoreContext.Provider>
   )

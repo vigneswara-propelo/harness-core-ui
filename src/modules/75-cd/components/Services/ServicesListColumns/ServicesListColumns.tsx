@@ -26,6 +26,7 @@ import { Classes, Intent, Menu, Popover, PopoverInteractionKind, Position } from
 import { useModalHook } from '@harness/use-modal'
 import routes from '@common/RouteDefinitions'
 import { StoreType } from '@common/constants/GitSyncTypes'
+import routesV2 from '@common/RouteDefinitionsV2'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -49,6 +50,7 @@ interface ServiceItemProps {
   data: any
   onRefresh?: () => Promise<void>
   isForceDeleteEnabled: boolean
+  calledFromSettingsPage?: boolean
 }
 
 export enum DeploymentStatus {
@@ -57,7 +59,7 @@ export enum DeploymentStatus {
 }
 
 const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
-  const { data: service, onRefresh, isForceDeleteEnabled } = props
+  const { data: service, onRefresh, isForceDeleteEnabled, calledFromSettingsPage } = props
   const [menuOpen, setMenuOpen] = useState(false)
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { showSuccess, showError } = useToaster()
@@ -65,8 +67,26 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
   const { getString } = useStrings()
   const history = useHistory()
   const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+  const newLeftNav = useFeatureFlag(FeatureFlag.CDS_NAV_2_0)
   const [hideReferencedByButton, setHideReferencedByButton] = useState(false)
   const [customErrorMessage, setCustomErrorMessage] = useState<string | undefined>()
+
+  const serviceDetailRoute =
+    newLeftNav && calledFromSettingsPage
+      ? routesV2.toSettingsServiceDetails({
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          serviceId: service?.identifier,
+          module
+        })
+      : routes.toServiceStudio({
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          serviceId: service?.identifier,
+          module
+        })
 
   const { mutate: deleteService } = useDeleteServiceV2({})
 
@@ -136,13 +156,7 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
 
   const redirectToReferencedBy = (): void => {
     history.push({
-      pathname: routes.toServiceStudio({
-        accountId,
-        orgIdentifier,
-        projectIdentifier,
-        serviceId: service?.identifier,
-        module
-      }),
+      pathname: serviceDetailRoute,
       search: `tab=${ServiceTabs.REFERENCED_BY}`
     })
   }
@@ -176,13 +190,7 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
     setMenuOpen(false)
     if (isSvcEnvEntityEnabled) {
       history.push({
-        pathname: routes.toServiceStudio({
-          accountId,
-          orgIdentifier,
-          projectIdentifier,
-          serviceId: service?.identifier,
-          module
-        }),
+        pathname: serviceDetailRoute,
         search: `tab=${ServiceTabs.Configuration}`
       })
     } else {

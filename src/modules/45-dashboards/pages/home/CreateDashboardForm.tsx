@@ -11,17 +11,17 @@ import { ModalErrorHandlerBinding, Layout, Container, useToaster } from '@harnes
 import { CreateDashboardResponse, FolderModel, useCreateDashboard } from 'services/custom-dashboards'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
-import type { DashboardPathProps } from '@common/interfaces/RouteInterfaces'
+import type { DashboardFolderPathProps } from '@common/interfaces/RouteInterfaces'
 import DashboardForm, { DashboardFormRequestProps } from './DashboardForm'
 
-interface CreateDashboardFormProps {
+export interface CreateDashboardFormProps {
   editableFolders: FolderModel[]
   hideModal: () => void
 }
 
 const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ editableFolders, hideModal }) => {
   const { getString } = useStrings()
-  const { accountId, folderId } = useParams<DashboardPathProps>()
+  const { accountId, folderId } = useParams<DashboardFolderPathProps>()
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
   const history = useHistory()
   const { showSuccess } = useToaster()

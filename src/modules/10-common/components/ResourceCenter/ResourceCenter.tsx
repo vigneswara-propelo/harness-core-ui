@@ -44,14 +44,17 @@ const refinerProjectId = window.refinerProjectToken
 const refinerSurveryId = window.refinerFeedbackToken
 
 interface ResourceCenterProps {
+  hideHelpBtn?: boolean
   link?: boolean
+  isOpen?: boolean
+  onClose?: () => void
 }
 
-export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
+export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link, isOpen: display, onClose, hideHelpBtn }) => {
   const { getString } = useStrings()
   const { currentUserInfo } = useAppStore()
   const [buttonDisabled, setButtonDisabled] = useState(false)
-  const [show, setShow] = useState<boolean>(false)
+  const [show, setShow] = useState<boolean>(Boolean(display))
   const { showModal } = useReleaseNotesModal()
   const { isOpen, open: openSubmitTicketModal, close: closeSubmitTicketModal } = useToggleOpen(false)
 
@@ -73,6 +76,10 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
       }, 6000)
     })
   }, [])
+
+  useEffect(() => {
+    setShow(Boolean(display))
+  }, [display])
 
   const releaseNodeLink = getReleaseNodeLink()
 
@@ -129,38 +136,40 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
     return finalTiles
   }, [currentUserInfo, buttonDisabled])
 
-  if (!show && !link) {
-    return (
-      <Layout.Vertical
-        flex
-        spacing="xsmall"
-        className={css.helpCenterIcon}
-        onClick={e => {
-          e.stopPropagation()
-          e.preventDefault()
-          setShow(true)
-        }}
-      >
-        <Icon name={'nav-help'} size={20} data-testid="question" />
-        <Text font={{ size: 'xsmall', align: 'center' }} color={Color.WHITE}>
-          <String stringID="common.help" />
-        </Text>
-      </Layout.Vertical>
-    )
-  } else if (link && !show) {
-    return (
-      <Button
-        className={css.contactLink}
-        onClick={e => {
-          e.stopPropagation()
-          e.preventDefault()
-          setShow(true)
-        }}
-        variation={ButtonVariation.LINK}
-      >
-        {getString('common.resourceCenter.link')}
-      </Button>
-    )
+  if (!hideHelpBtn) {
+    if (!show && !link) {
+      return (
+        <Layout.Vertical
+          flex
+          spacing="xsmall"
+          className={css.helpCenterIcon}
+          onClick={e => {
+            e.stopPropagation()
+            e.preventDefault()
+            setShow(true)
+          }}
+        >
+          <Icon name={'nav-help'} size={20} data-testid="question" />
+          <Text font={{ size: 'xsmall', align: 'center' }} color={Color.WHITE}>
+            <String stringID="common.help" />
+          </Text>
+        </Layout.Vertical>
+      )
+    } else if (link && !show) {
+      return (
+        <Button
+          className={css.contactLink}
+          onClick={e => {
+            e.stopPropagation()
+            e.preventDefault()
+            setShow(true)
+          }}
+          variation={ButtonVariation.LINK}
+        >
+          {getString('common.resourceCenter.link')}
+        </Button>
+      )
+    }
   }
 
   return (
@@ -175,6 +184,7 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
       isOpen={show}
       onClose={() => {
         setShow(false)
+        onClose?.()
       }}
       className={css.resourceCenter}
     >
@@ -193,6 +203,7 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
                 e.stopPropagation()
                 e.preventDefault()
                 setShow(false)
+                onClose?.()
               }}
             />
           </Layout.Horizontal>

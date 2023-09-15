@@ -10,7 +10,7 @@ import { useParams, useHistory } from 'react-router-dom'
 import type { ModalErrorHandlerBinding } from '@harness/uicore'
 import { useToaster } from '@harness/uicore'
 import routes from '@common/RouteDefinitions'
-import type { DashboardPathProps } from '@common/interfaces/RouteInterfaces'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { FolderModel, UpdateDashboardResponse, useUpdateDashboard } from 'services/custom-dashboards'
 import DashboardForm, { DashboardFormRequestProps } from './DashboardForm'
@@ -34,7 +34,7 @@ const UpdateDashboardForm: React.FC<UpdateDashboardFormProps> = ({
   formData
 }) => {
   const { getString } = useStrings()
-  const { accountId } = useParams<DashboardPathProps>()
+  const { accountId } = useParams<AccountPathProps>()
   const history = useHistory()
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
   const { showSuccess } = useToaster()

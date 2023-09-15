@@ -25,8 +25,12 @@ export interface OrgPathProps extends AccountPathProps {
   orgIdentifier: string
 }
 
-export interface DashboardPathProps extends AccountPathProps {
+export interface DashboardFolderPathProps extends AccountPathProps {
   folderId: string
+}
+
+export interface DashboardEmbedPathProps extends DashboardFolderPathProps {
+  viewId: string
 }
 
 export interface GitQueryParams {
@@ -223,6 +227,10 @@ export interface ServicePathProps {
   serviceId: string
 }
 
+export interface ModePathProps {
+  mode: string
+}
+
 export type ModuleNameMatch =
   | ':module'
   | ':module(ci)'
@@ -295,6 +303,10 @@ export interface GovernancePathProps
 export interface GitOpsPathProps {
   entity: string
   orgIdentifier?: string
+}
+
+export interface IACMPathProps {
+  workspaceIdentifier: string
 }
 
 /**

@@ -258,7 +258,7 @@ describe('<LoopingStrategy /> tests', () => {
     await waitFor(() => findByTextGlobal(document.body, changeTypeModalTitle))
 
     // apply the changes
-    const apply = await findByTextGlobal(document.body, 'pipeline.loopingStrategy.toggleTypeModal.switch')
+    const apply = await findByTextGlobal(document.body, 'common.switch')
     await userEvent.click(apply)
 
     const editor2 = (await findByTestId('editor')) as HTMLTextAreaElement

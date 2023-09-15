@@ -160,5 +160,7 @@ export enum PAGE_NAME {
   CETHomePage = 'CETHomePage',
   CETTrialPage = 'CETTrialPage',
   SEIHomePage = 'SEIHomePage',
-  IACMCostEstimation = 'IACMCostEstimation'
+  IACMCostEstimation = 'IACMCostEstimation',
+  AllModePipelineStudio = 'AllModePipelineStudio',
+  CCMSettingsPage = 'CCMSettingsPage'
 }

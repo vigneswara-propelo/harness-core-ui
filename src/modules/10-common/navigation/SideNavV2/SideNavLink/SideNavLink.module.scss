@@ -1,0 +1,43 @@
+.link {
+  display: flex;
+  padding: var(--spacing-small) var(--spacing-medium) !important;
+  margin-bottom: var(--spacing-tiny) !important;
+  background-color: transparent;
+  border-radius: 4px;
+  text-decoration: none;
+  cursor: pointer;
+  margin-bottom: var(--spacing-xsmall);
+
+  &:hover {
+    text-decoration: none;
+    color: var(--primary-8);
+    background-color: rgba(#0278d5, 0.25);
+  }
+
+  &:last-child {
+    margin-bottom: 0px;
+  }
+
+  &.selected {
+    background-color: rgba(#0278d5, 0.25);
+
+    svg {
+      path {
+        color: var(--primary-8);
+      }
+    }
+
+    p {
+      color: var(--primary-8) !important;
+      font-weight: 500 !important;
+    }
+  }
+}
+
+.section {
+  border-bottom: 1px solid var(--grey-200);
+
+  &:last-child {
+    border: none;
+  }
+}

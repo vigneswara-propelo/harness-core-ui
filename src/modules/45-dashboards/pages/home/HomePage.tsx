@@ -213,9 +213,7 @@ const HomePage: React.FC = () => {
   }
 
   React.useEffect(() => {
-    includeBreadcrumbs(
-      getBreadcrumbLinks(folderDetail || {}, accountId, folderId, getString('dashboards.homePage.folders'))
-    )
+    includeBreadcrumbs(getBreadcrumbLinks(folderDetail || {}, accountId, folderId, getString('common.folders')))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [folderDetail, accountId, folderId])
 

@@ -138,7 +138,7 @@ const DashboardViewContent: React.FC = () => {
     if (folderDetail?.resource) {
       links.push({
         url: routes.toCustomFolderHome({ accountId }),
-        label: getString('dashboards.homePage.folders')
+        label: getString('common.folders')
       })
       links.push({
         url: routes.toViewCustomFolder({ folderId, accountId }),

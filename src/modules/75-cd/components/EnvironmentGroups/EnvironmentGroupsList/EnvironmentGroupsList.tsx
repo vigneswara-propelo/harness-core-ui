@@ -16,10 +16,13 @@ import { useStrings } from 'framework/strings'
 import { EnvironmentGroupResponse, useDeleteEnvironmentGroup } from 'services/cd-ng'
 
 import routes from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import {
   EditOrDeleteCell,
   EnvironmentGroupName,
@@ -35,12 +38,14 @@ export interface EnvironmentGroupsListProps {
   environmentGroups?: EnvironmentGroupResponse[]
   refetch: () => void
   isForceDeleteEnabled: boolean
+  calledFromSettingsPage?: boolean
 }
 
 export default function EnvironmentGroupsList({
   environmentGroups,
   refetch,
-  isForceDeleteEnabled
+  isForceDeleteEnabled,
+  calledFromSettingsPage
 }: EnvironmentGroupsListProps): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const history = useHistory()
@@ -48,17 +53,21 @@ export default function EnvironmentGroupsList({
   const { showSuccess, showError } = useToaster()
   const [expandedSets, setExpandedSets] = useState<Set<string>>(new Set())
   const [curGroupId, setCurGroupId] = useState('')
+  const newLeftNavRoute = useFeatureFlag(FeatureFlag.CDS_NAV_2_0) && calledFromSettingsPage
 
   const onEdit = (environmentGroupIdentifier: string): void => {
+    const queryParams = {
+      orgIdentifier,
+      projectIdentifier,
+      accountId,
+      module,
+      environmentGroupIdentifier,
+      sectionId: EnvironmentGroupDetailsTab.CONFIGURATION
+    }
     history.push(
-      routes.toEnvironmentGroupDetails({
-        orgIdentifier,
-        projectIdentifier,
-        accountId,
-        module,
-        environmentGroupIdentifier,
-        sectionId: EnvironmentGroupDetailsTab.CONFIGURATION
-      })
+      newLeftNavRoute
+        ? routesV2.toSettingsEnvironmentGroupDetails(queryParams)
+        : routes.toEnvironmentGroupDetails(queryParams)
     )
   }
 

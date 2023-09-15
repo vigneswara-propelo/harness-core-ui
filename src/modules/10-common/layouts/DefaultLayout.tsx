@@ -39,7 +39,7 @@ export function DefaultLayout(props: React.PropsWithChildren<DefaultLayoutProps>
   const { trackPage, identifyUser } = useTelemetry()
   const { currentUserInfo } = useAppStore()
   const { isOpen, open, close } = useToggleOpen(false)
-  const { PL_AI_SUPPORT_CHATBOT, PL_EULA_ENABLED } = useFeatureFlags()
+  const { PL_AI_SUPPORT_CHATBOT, PL_EULA_ENABLED, CDS_NAV_2_0 } = useFeatureFlags()
 
   useEffect(() => {
     if (pageName) {
@@ -51,19 +51,23 @@ export function DefaultLayout(props: React.PropsWithChildren<DefaultLayoutProps>
 
   return (
     <div className={cx(css.main, css.flex)} data-layout="default">
-      <MainNav />
-      {NavComponent && (
-        <SideNav
-          title={title}
-          subtitle={subtitle}
-          icon={icon}
-          launchButtonText={launchButtonText}
-          launchButtonRedirectUrl={launchButtonRedirectUrl}
-          data-testid="side-nav"
-        >
-          <NavComponent />
-        </SideNav>
-      )}
+      {!CDS_NAV_2_0 ? (
+        <>
+          <MainNav />
+          {NavComponent && (
+            <SideNav
+              title={title}
+              subtitle={subtitle}
+              icon={icon}
+              launchButtonText={launchButtonText}
+              launchButtonRedirectUrl={launchButtonRedirectUrl}
+              data-testid="side-nav"
+            >
+              <NavComponent />
+            </SideNav>
+          )}
+        </>
+      ) : undefined}
 
       <div className={css.rhs}>
         {module && <TrialLicenseBanner />}

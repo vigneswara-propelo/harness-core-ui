@@ -28,7 +28,7 @@ import css from './home/HomePage.module.scss'
 const DashboardsHeader: React.FC = () => {
   const { getString } = useStrings()
   const { aiTileDetails, breadcrumbs, mode } = useDashboardsContext()
-  const { CDB_AIDA_WIDGET } = useFeatureFlags()
+  const { CDB_AIDA_WIDGET, CDS_NAV_2_0 } = useFeatureFlags()
   const { updateTitle } = useDocumentTitle(getString('common.dashboards'))
   const { accountId, folderId, viewId } = useParams<{ accountId: string; folderId: string; viewId: string }>()
   const [isOpen, setDrawerOpen] = useState(false)
@@ -47,6 +47,28 @@ const DashboardsHeader: React.FC = () => {
 
     updateTitle(titleArray)
   }, [breadcrumbs, getString, updateTitle])
+
+  const dashboard_navigation: React.ReactNode = React.useMemo(() => {
+    if (!CDS_NAV_2_0) {
+      return (
+        <Layout.Horizontal spacing="medium">
+          <NavLink
+            className={css.tags}
+            activeClassName={css.activeTag}
+            to={routes.toCustomDashboardHome({ accountId, folderId })}
+          >
+            {getString('common.dashboards')}
+          </NavLink>
+          <NavLink className={css.tags} activeClassName={css.activeTag} to={routes.toCustomFolderHome({ accountId })}>
+            {getString('common.folders')}
+          </NavLink>
+          <AidaDrawer isOpen={isAidaDrawerOpen} setIsOpen={setAidaDrawerOpen}>
+            <AidaDashboardContent />
+          </AidaDrawer>
+        </Layout.Horizontal>
+      )
+    }
+  }, [accountId, folderId, CDS_NAV_2_0, getString])
 
   React.useEffect(() => {
     setAidaDrawerOpen(false)
@@ -89,23 +111,7 @@ const DashboardsHeader: React.FC = () => {
     <Page.Header
       title={title}
       breadcrumbs={<NGBreadcrumbs links={breadcrumbs} />}
-      content={
-        <Layout.Horizontal spacing="medium">
-          <NavLink
-            className={css.tags}
-            activeClassName={css.activeTag}
-            to={routes.toCustomDashboardHome({ accountId, folderId })}
-          >
-            {getString('common.dashboards')}
-          </NavLink>
-          <NavLink className={css.tags} activeClassName={css.activeTag} to={routes.toCustomFolderHome({ accountId })}>
-            {getString('dashboards.homePage.folders')}
-          </NavLink>
-          <AidaDrawer isOpen={isAidaDrawerOpen} setIsOpen={setAidaDrawerOpen}>
-            <AidaDashboardContent />
-          </AidaDrawer>
-        </Layout.Horizontal>
-      }
+      content={dashboard_navigation}
       toolbar={showAidaButton ? aidaButton : getStarted}
     />
   )

@@ -12,11 +12,30 @@ import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
+import routes2 from '@common/RouteDefinitionsV2'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 const SectionToggle = (): ReactElement => {
   const params = useParams<ProjectPathProps & { accountId: string }>()
   const { getString } = useStrings()
   const { withActiveEnvironment } = useActiveEnvironment()
+  const { CDS_NAV_2_0 } = useFeatureFlags()
+
+  if (CDS_NAV_2_0)
+    return (
+      <TabNavigation
+        links={[
+          {
+            label: getString('cf.shared.targets'),
+            to: routes2.toCFTargets(params)
+          },
+          {
+            label: getString('cf.shared.segments'),
+            to: routes2.toCFSegments(params)
+          }
+        ]}
+      />
+    )
 
   return (
     <TabNavigation

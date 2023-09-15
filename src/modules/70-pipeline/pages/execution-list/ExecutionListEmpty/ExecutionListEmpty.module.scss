@@ -30,6 +30,10 @@
 .overviewNoExecutions {
   z-index: 2 !important;
 
+  &.leftNav {
+    z-index: 13 !important;
+  }
+
   div[data-testid='modaldialog-body'] {
     padding-right: var(--spacing);
     overflow: hidden;

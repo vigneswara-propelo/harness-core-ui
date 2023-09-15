@@ -45,6 +45,7 @@ import { useEnvironmentSelectV2 } from '@cf/hooks/useEnvironmentSelectV2'
 import { useGovernance } from '@cf/hooks/useGovernance'
 import { FFDetailPageTab, getErrorMessage } from '@cf/utils/CFUtils'
 import routes from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import type { FeatureFlagPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
@@ -121,7 +122,7 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
   })
   const { handleError: handleGovernanceError, isGovernanceError } = useGovernance()
 
-  const { FFM_2134_FF_PIPELINES_TRIGGER } = useFeatureFlags()
+  const { FFM_2134_FF_PIPELINES_TRIGGER, CDS_NAV_2_0 } = useFeatureFlags()
 
   const { gitSyncValidationSchema, gitSyncInitialValues } =
     gitSync?.getGitSyncFormMeta(GIT_COMMIT_MESSAGES.UPDATED_FLAG_RULES) || {}
@@ -423,7 +424,9 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
 
   useEffect(() => {
     if (tab !== activeTabId) {
-      history.replace(withActiveEnvironment(routes.toCFFeatureFlagsDetail(pathParams) + `?tab=${activeTabId}`))
+      CDS_NAV_2_0
+        ? history.replace(withActiveEnvironment(routesV2.toCFFeatureFlagsDetail(pathParams) + `?tab=${activeTabId}`))
+        : history.replace(withActiveEnvironment(routes.toCFFeatureFlagsDetail(pathParams) + `?tab=${activeTabId}`))
     }
   }, [activeTabId, history, pathParams, tab, withActiveEnvironment])
 
@@ -440,17 +443,16 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
       <Container flex={{ align: 'center-center' }} height="100%">
         <NoEnvironment
           onCreated={response => {
-            history.replace(
-              withActiveEnvironment(
-                routes.toCFFeatureFlagsDetail({
-                  orgIdentifier,
-                  projectIdentifier: flagData.project,
-                  featureFlagIdentifier: flagData.identifier,
-                  accountId: accountIdentifier
-                }),
-                response?.data?.identifier
-              )
-            )
+            const navigationParams = {
+              orgIdentifier,
+              projectIdentifier: flagData.project,
+              featureFlagIdentifier: flagData.identifier,
+              accountId: accountIdentifier
+            }
+
+            const navigateToRoute = CDS_NAV_2_0 ? routesV2.toCFFeatureFlagsDetail : routes.toCFFeatureFlagsDetail
+
+            history.replace(withActiveEnvironment(navigateToRoute(navigationParams), response?.data?.identifier))
 
             // See https://harness.atlassian.net/browse/FFM-565
             setNewEnvironmentCreateLoading(true)

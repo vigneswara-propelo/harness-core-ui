@@ -43,7 +43,7 @@ const pipelineModuleParams: ModulePathParams = {
   module: ':module(cd)'
 }
 
-const GitOpsPage = (): React.ReactElement | null => {
+export const GitOpsPage = (): React.ReactElement | null => {
   return (
     <ChildAppMounter<GitOpsCustomMicroFrontendProps>
       getLinkForAccountResources={getLinkForAccountResources}

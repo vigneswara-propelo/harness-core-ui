@@ -21,10 +21,13 @@ import { useStrings } from 'framework/strings'
 
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import {
   EnvironmentMenu,
   EnvironmentName,
@@ -37,11 +40,13 @@ import { EnvironmentDetailsTab } from '../utils'
 export default function EnvironmentsList({
   response,
   refetch,
-  isForceDeleteEnabled
+  isForceDeleteEnabled,
+  calledFromSettingsPage
 }: {
   response: PageEnvironmentResponse
   refetch: () => void
   isForceDeleteEnabled: boolean
+  calledFromSettingsPage?: boolean
 }): JSX.Element {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { showSuccess, showError } = useToaster()
@@ -49,6 +54,7 @@ export default function EnvironmentsList({
   const { getString } = useStrings()
   const history = useHistory()
   const [environmentToDelete, setEnvironmentToDelete] = useState<EnvironmentResponseDTO>({})
+  const newLeftNav = useFeatureFlag(FeatureFlag.CDS_NAV_2_0)
 
   const { mutate: deleteItem } = useDeleteEnvironmentV2({
     queryParams: {
@@ -59,15 +65,18 @@ export default function EnvironmentsList({
   })
 
   const handleEnvEdit = (id: string): void => {
+    const envParams = {
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      environmentIdentifier: defaultTo(id, ''),
+      sectionId: EnvironmentDetailsTab.CONFIGURATION
+    }
     history.push(
-      routes.toEnvironmentDetails({
-        accountId,
-        orgIdentifier,
-        projectIdentifier,
-        module,
-        environmentIdentifier: defaultTo(id, ''),
-        sectionId: EnvironmentDetailsTab.CONFIGURATION
-      })
+      newLeftNav && calledFromSettingsPage
+        ? routesV2.toSettingsEnvironmentDetails({ ...envParams })
+        : routes.toEnvironmentDetails({ ...envParams })
     )
   }
 
@@ -154,15 +163,18 @@ export default function EnvironmentsList({
       columns={envColumns}
       data={response.content as EnvironmentResponse[]}
       onRowClick={(row: EnvironmentResponse) => {
+        const envParams = {
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          module,
+          environmentIdentifier: get(row, 'environment.identifier', ''),
+          sectionId: projectIdentifier ? EnvironmentDetailsTab.SUMMARY : EnvironmentDetailsTab.CONFIGURATION
+        }
         history.push(
-          routes.toEnvironmentDetails({
-            accountId,
-            orgIdentifier,
-            projectIdentifier,
-            module,
-            environmentIdentifier: get(row, 'environment.identifier', ''),
-            sectionId: projectIdentifier ? EnvironmentDetailsTab.SUMMARY : EnvironmentDetailsTab.CONFIGURATION
-          })
+          newLeftNav && calledFromSettingsPage
+            ? routesV2.toSettingsEnvironmentDetails({ ...envParams })
+            : routes.toEnvironmentDetails({ ...envParams })
         )
       }}
     />

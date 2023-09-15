@@ -129,7 +129,7 @@ describe('DashboardView', () => {
 
     await waitFor(() =>
       expect(includeBreadcrumbs).toBeCalledWith([
-        { label: 'dashboards.homePage.folders', url: `/account/${accountId}/dashboards/folders` },
+        { label: 'common.folders', url: `/account/${accountId}/dashboards/folders` },
         { label: 'folder name', url: `/account/${accountId}/dashboards/folder/${folderId}` }
       ])
     )

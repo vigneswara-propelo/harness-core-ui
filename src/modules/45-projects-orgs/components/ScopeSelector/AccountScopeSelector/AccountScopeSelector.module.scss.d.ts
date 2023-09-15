@@ -16,5 +16,6 @@ declare const styles: {
   readonly selected: string
   readonly setDefault: string
   readonly table: string
+  readonly warningContainer: string
 }
 export default styles

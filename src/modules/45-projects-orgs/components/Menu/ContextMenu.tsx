@@ -38,8 +38,10 @@ const ContextMenu: React.FC<ContextMenuProps> = props => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
   const { project, editProject, collaborators, setMenuOpen, openDialog } = props
-  const { CVNG_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED, CDS_NAV_2_0 } = useFeatureFlags()
   const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
+
+  if (CDS_NAV_2_0 === true) project.modules = []
 
   const permissionRequest: Optional<PermissionRequest, 'permission'> = {
     resourceScope: {

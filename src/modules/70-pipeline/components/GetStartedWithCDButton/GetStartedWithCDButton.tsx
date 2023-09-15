@@ -8,12 +8,14 @@
 import React from 'react'
 import { Button, ButtonVariation, Container, Layout } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
-import routes from '@common/RouteDefinitions'
+import routesv1 from '@common/RouteDefinitions'
+import routesv2 from '@common/RouteDefinitionsV2'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import orImg from '@common/images/orImg.svg'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 export interface GetStartedWithCDButtonProps {
   hideOrSection?: boolean
@@ -25,6 +27,9 @@ export function GetStartedWithCDButton({ hideOrSection, className = '' }: GetSta
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ServicePathProps>()
+
+  const { CDS_NAV_2_0 } = useFeatureFlags()
+  const routes = CDS_NAV_2_0 ? routesv2 : routesv1
 
   const clickHandler = (): void => {
     trackEvent(CDOnboardingActions.GetStartedClicked, { is_from_secondary_page: true })

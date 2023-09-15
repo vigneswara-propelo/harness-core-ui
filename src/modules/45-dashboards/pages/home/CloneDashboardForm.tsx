@@ -8,7 +8,7 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ModalErrorHandlerBinding, useToaster } from '@harness/uicore'
-import type { DashboardPathProps } from '@common/interfaces/RouteInterfaces'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import type { IDashboardFormData } from '@dashboards/types/DashboardTypes.types'
 import { useStrings } from 'framework/strings'
 import { ClonedDashboardResponse, FolderModel, useCloneDashboard } from 'services/custom-dashboards'
@@ -28,7 +28,7 @@ const CloneDashboardForm: React.FC<CloneDashboardFormProps> = ({
   formData
 }) => {
   const { getString } = useStrings()
-  const { accountId } = useParams<DashboardPathProps>()
+  const { accountId } = useParams<AccountPathProps>()
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
   const { showSuccess } = useToaster()
   const { mutate: cloneDashboard, loading } = useCloneDashboard({

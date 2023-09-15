@@ -15,6 +15,8 @@ import { useStrings } from 'framework/strings'
 
 import { ModuleName } from 'framework/types/ModuleName'
 import routes from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './ModuleListCard.module.scss'
 
 export interface ModuleListCardProps {
@@ -76,10 +78,85 @@ export const getModuleLink = ({ accountId, orgIdentifier, projectIdentifier, mod
   }
   return ''
 }
+
+export const getModuleLinkV2 = ({
+  accountId,
+  orgIdentifier,
+  projectIdentifier,
+  module
+}: ModuleListCardProps): string => {
+  switch (module) {
+    case ModuleName.CD:
+      return routesV2.toMode({
+        projectIdentifier,
+        orgIdentifier,
+        accountId,
+        module: 'cd',
+        mode: 'module'
+      })
+    case ModuleName.CI:
+      return routesV2.toMode({
+        projectIdentifier,
+        orgIdentifier,
+        accountId,
+        module: 'ci',
+        mode: 'module'
+      })
+    case ModuleName.CV:
+      return routesV2.toMode({
+        projectIdentifier,
+        orgIdentifier,
+        accountId,
+        module: 'cv',
+        mode: 'module'
+      })
+    case ModuleName.CF:
+      return routesV2.toMode({
+        projectIdentifier,
+        orgIdentifier,
+        accountId,
+        module: 'cf',
+        mode: 'module'
+      })
+    case ModuleName.CE:
+      return routesV2.toMode({
+        projectIdentifier,
+        orgIdentifier,
+        accountId,
+        module: 'ce',
+        mode: 'module'
+      })
+    case ModuleName.STO:
+      return routesV2.toMode({
+        projectIdentifier,
+        orgIdentifier,
+        accountId,
+        module: 'sto',
+        mode: 'module'
+      })
+    case ModuleName.CHAOS:
+      return routesV2.toMode({
+        projectIdentifier,
+        orgIdentifier,
+        accountId,
+        module: 'chaos',
+        mode: 'module'
+      })
+    case ModuleName.CET:
+      return routesV2.toMode({
+        projectIdentifier,
+        orgIdentifier,
+        accountId,
+        module: 'cet',
+        mode: 'module'
+      })
+  }
+  return ''
+}
 const ModuleListCard: React.FC<ModuleListCardProps> = ({ module, accountId, orgIdentifier, projectIdentifier }) => {
   const { getString } = useStrings()
   const history = useHistory()
-
+  const { CDS_NAV_2_0 } = useFeatureFlags()
   const purpose = getModulePurpose(module)
 
   return (
@@ -87,7 +164,13 @@ const ModuleListCard: React.FC<ModuleListCardProps> = ({ module, accountId, orgI
       <Card
         className={css.card}
         interactive
-        onClick={() => history.push(getModuleLink({ module, accountId, orgIdentifier, projectIdentifier }))}
+        onClick={() =>
+          history.push(
+            CDS_NAV_2_0
+              ? getModuleLinkV2({ module, accountId, orgIdentifier, projectIdentifier })
+              : getModuleLink({ module, accountId, orgIdentifier, projectIdentifier })
+          )
+        }
       >
         <Layout.Horizontal>
           <Container width="100%" flex border={{ right: true, color: Color.WHITE }}>

@@ -28,11 +28,12 @@ interface ServicesListViewProps {
   onRefresh?: () => Promise<void>
   onServiceSelect: (data: any) => Promise<void>
   isForceDeleteEnabled: boolean
+  calledFromSettingsPage?: boolean
 }
 const ServicesListView = (props: ServicesListViewProps): React.ReactElement => {
-  const { data, onServiceSelect, loading, isForceDeleteEnabled } = props
   const { getString } = useStrings()
   const { PL_NEW_PAGE_SIZE, CDS_SERVICE_GITX } = useFeatureFlags()
+  const { data, onServiceSelect, loading, isForceDeleteEnabled, calledFromSettingsPage } = props
   const paginationProps = useDefaultPaginationProps({
     itemCount: data?.data?.totalItems || 0,
     pageSize: data?.data?.pageSize || (PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : SERVICES_DEFAULT_PAGE_SIZE),
@@ -83,6 +84,7 @@ const ServicesListView = (props: ServicesListViewProps): React.ReactElement => {
                   data={row.original}
                   onRefresh={props.onRefresh}
                   isForceDeleteEnabled={isForceDeleteEnabled}
+                  calledFromSettingsPage={calledFromSettingsPage}
                 />
               )
             }

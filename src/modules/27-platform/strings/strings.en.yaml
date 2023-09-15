@@ -1573,7 +1573,7 @@ connectors:
       stepB:
         heading: 'Delivery options'
         step1:
-          p1: 'Configure'
+          p1: '{{ $.common.nav.configure }}'
           p2: 'to create an S3 bucket.'
         step2: 'Provide an S3 bucket name and select Region (preferably US East - N.Virginia).'
         step3:
