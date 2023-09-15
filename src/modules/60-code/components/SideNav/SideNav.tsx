@@ -88,7 +88,7 @@ export default function CODESideNav(): React.ReactElement {
               icon="code-file-light"
               textProps={{
                 iconProps: {
-                  size: 18
+                  size: 16
                 }
               }}
               label={getString('common.files')}
@@ -189,7 +189,7 @@ export default function CODESideNav(): React.ReactElement {
           {repoName && (
             <SidebarLink
               data-code-repo-section="search"
-              className={cx(css.subNav, css.webhooks)}
+              className={cx(css.subNav)}
               icon="main-search"
               textProps={{
                 iconProps: {
@@ -206,11 +206,11 @@ export default function CODESideNav(): React.ReactElement {
           {repoName && (
             <SidebarLink
               data-code-repo-section="settings"
-              className={cx(css.subNav, css.webhooks)}
+              className={cx(css.subNav, css.settings)}
               icon="code-settings"
               textProps={{
                 iconProps: {
-                  size: 20
+                  size: 18
                 }
               }}
               label={getString('settingsLabel')}

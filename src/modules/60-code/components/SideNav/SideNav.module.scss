@@ -46,6 +46,16 @@
       transform: translateX(-4px);
     }
   }
+
+  &.settings {
+    > p {
+      transform: translateX(-2px);
+
+      span {
+        padding-right: 5px !important;
+      }
+    }
+  }
 }
 
 .selected {
