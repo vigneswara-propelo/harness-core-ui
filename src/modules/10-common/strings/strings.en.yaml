@@ -1600,7 +1600,7 @@ csBot:
   name: Harness AIDA
   title: '{{ $.common.csBot.name }} Support'
   beta: BETA
-  subtitle: I can answer any questions about the Harness Software Delivery Platform
+  subtitle: I can answer any questions about the Harness Platform
   errorMessage: Something went wrong. Click here to submit a ticket instead.
   introduction: Introducing Harness AIDA
   ticketOnError: Would you like to create a support ticket?

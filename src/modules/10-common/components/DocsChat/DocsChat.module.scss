@@ -83,10 +83,10 @@
 
     .input {
       width: 100%;
-      padding: 0 var(--spacing-xxxlarge);
-      resize: none;
+      padding: var(--spacing-small) var(--spacing-xxxlarge);
       min-height: var(--spacing-xxxlarge);
       border: 1px solid var(--grey-200);
+      line-height: 18px;
     }
 
     .submitButton {

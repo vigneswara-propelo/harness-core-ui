@@ -93,12 +93,12 @@ function DocsChat(): JSX.Element {
     }
   }
 
-  const handleUserInput: React.ChangeEventHandler<HTMLInputElement> = e => {
+  const handleUserInput: React.ChangeEventHandler<HTMLTextAreaElement> = e => {
     setUserInput(e.target.value)
     e.preventDefault()
   }
 
-  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = e => {
+  const handleKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> = e => {
     if (e.key === 'Enter') {
       e.preventDefault()
       handleSubmit()
@@ -175,10 +175,7 @@ function DocsChat(): JSX.Element {
             <String stringID="common.csBot.beta" />
           </Tag>
         </Layout.Horizontal>
-        <Layout.Horizontal spacing={'xsmall'} style={{ alignItems: 'center' }}>
-          <String stringID="common.csBot.subtitle" />
-          <Icon name="main-share" size={12} />
-        </Layout.Horizontal>
+        <String stringID="common.csBot.subtitle" />
       </Layout.Vertical>
 
       {aidaSettingResponse?.data?.value != 'true' ? (
@@ -252,8 +249,7 @@ function DocsChat(): JSX.Element {
                 <MenuItem text={getString('common.clearHistory')} onClick={clearHistory} />
               </Menu>
             </Popover>
-            <input
-              type="text"
+            <textarea
               autoFocus
               name="user-input"
               className={css.input}
