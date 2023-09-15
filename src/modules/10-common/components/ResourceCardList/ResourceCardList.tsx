@@ -52,7 +52,6 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const {
     CDS_OrgAccountLevelServiceEnvEnvGroup,
     CDS_SERVICE_OVERRIDES_2_0,
-    GITOPS_ORG_LEVEL,
     PL_DISCOVERY_ENABLE,
     PIE_GIT_BI_DIRECTIONAL_SYNC
   } = useFeatureFlags()
@@ -99,10 +98,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
 
   const { isOpen: showGitOpsEntities, toggle: toggleShowGitOpsEntities } = useToggleOpen()
   const { loading, data } = useGetSmtpConfig({ queryParams: { accountId } })
-  let showGitOpsCard = accountId && !orgIdentifier && !projectIdentifier
-  if (GITOPS_ORG_LEVEL) {
-    showGitOpsCard = (accountId || orgIdentifier) && !projectIdentifier
-  }
+  const showGitOpsCard = (accountId || orgIdentifier) && !projectIdentifier
 
   const smtpResource: ResourceOption[] = [
     {
