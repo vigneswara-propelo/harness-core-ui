@@ -316,3 +316,8 @@
 .selectStage {
   width: 250px !important;
 }
+
+.outOfSyncContainer {
+  background: var(--red-50) !important;
+  padding: var(--spacing-small) var(--spacing-xlarge) var(--spacing-small) var(--spacing-xlarge) !important;
+}

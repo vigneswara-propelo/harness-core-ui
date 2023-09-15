@@ -38,6 +38,7 @@ declare const styles: {
   readonly noPipelineInputSetForm: string
   readonly noRuntimeInput: string
   readonly optionBtns: string
+  readonly outOfSyncContainer: string
   readonly pipelineHeader: string
   readonly popoverDisabledTextStyle: string
   readonly preFlightCheckModal: string

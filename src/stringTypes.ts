@@ -5088,6 +5088,7 @@ export interface StringsMap {
   'pipeline.runPipeline.ciCodebaseConfig': string
   'pipeline.runPipelineForm.disallowStageExecution': string
   'pipeline.runPipelineForm.notifyOnlyMe': string
+  'pipeline.runPipelineForm.outOfSync': string
   'pipeline.runstageError': string
   'pipeline.runtimeInputNotSupported': string
   'pipeline.runtimeInputs': string

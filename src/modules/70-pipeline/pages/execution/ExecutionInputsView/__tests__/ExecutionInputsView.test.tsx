@@ -17,6 +17,10 @@ import mock from './mocks/schema.json'
 
 import ExecutionInputsView from '../ExecutionInputsView'
 
+jest.mock('services/pipeline-rq', () => ({
+  useValidateTemplateInputsQuery: jest.fn(() => ({ data: null, refetch: jest.fn() }))
+}))
+
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('@common/utils/YamlUtils', () => ({}))
 jest.mock('services/pipeline-ng', () => ({

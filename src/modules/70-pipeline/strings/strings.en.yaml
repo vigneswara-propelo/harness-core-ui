@@ -1448,6 +1448,7 @@ runFailedStages: Run only failed stages
 runPipelineForm:
   notifyOnlyMe: Notify only me about execution status
   disallowStageExecution: Not allowed for Individual Stage executions
+  outOfSync: Entities referenced in this pipeline have been updated. Please reconcile and save the pipeline to run the latest version.
 singleStageExecution: 'SELECTIVE STAGE EXECUTION:'
 multiStageExecution: 'MULTIPLE STAGES EXECUTION'
 allStages: All Stages

@@ -24,6 +24,9 @@ window.IntersectionObserver = jest.fn().mockImplementation(() => ({
   unobserve: () => null
 }))
 
+jest.mock('services/pipeline-rq', () => ({
+  useValidateTemplateInputsQuery: jest.fn(() => ({ data: null, refetch: jest.fn() }))
+}))
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('@common/utils/YamlUtils', () => ({}))
 jest.mock('services/cd-ng', () => ({

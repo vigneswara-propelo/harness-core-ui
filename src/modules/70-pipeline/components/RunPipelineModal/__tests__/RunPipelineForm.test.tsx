@@ -29,6 +29,7 @@ import { InputTypes, fillAtForm } from '@common/utils/JestFormHelper'
 import { GetInputSetYamlDiffInline } from '@pipeline/components/InputSetErrorHandling/__tests__/InputSetErrorHandlingMocks'
 import { useShouldDisableDeployment } from 'services/cd-ng'
 import * as pipelineNgServices from 'services/pipeline-ng'
+
 import { RunPipelineForm } from '../RunPipelineForm'
 import {
   getMockFor_Generic_useMutate,
@@ -40,7 +41,9 @@ import {
   inputSetYAML,
   mockPostRetryPipeline,
   mockRetryStages,
-  mockRetryStages_Serial
+  mockRetryStages_Serial,
+  mockValidateTemplateInputsInSync,
+  mockValidateTemplateInputsOutOfSync
 } from './mocks'
 
 const commonProps: PipelineType<PipelinePathProps & GitQueryParams> = {
@@ -53,6 +56,11 @@ const commonProps: PipelineType<PipelinePathProps & GitQueryParams> = {
   module: 'ci'
 }
 const successResponse = (): Promise<{ status: string }> => Promise.resolve({ status: 'SUCCESS', data: {} })
+
+const useValidateTemplateInputsQueryMock = jest.fn(() => mockValidateTemplateInputsInSync)
+jest.mock('services/pipeline-rq', () => ({
+  useValidateTemplateInputsQuery: jest.fn(() => useValidateTemplateInputsQueryMock())
+}))
 
 window.IntersectionObserver = jest.fn().mockImplementation(() => ({
   observe: () => null,
@@ -1013,5 +1021,33 @@ describe('Retry Pipeline tests', () => {
     reRunButton.click()
 
     expect(useRetryPipelineHook).toHaveBeenLastCalledWith(getUseRetryPipelineRequest({ isAllowAll: false }))
+  })
+})
+
+describe('Out of sync warning', () => {
+  test('should NOT show out of sync warning', async () => {
+    const useValidateTemplateInputs = jest.fn(() => mockValidateTemplateInputsInSync as any)
+    useValidateTemplateInputsQueryMock.mockImplementation(useValidateTemplateInputs)
+
+    const { queryByText } = render(
+      <TestWrapper>
+        <RunPipelineForm {...commonProps} source="executions" inputSetYAML={inputSetYAML} />
+      </TestWrapper>
+    )
+
+    expect(queryByText('pipeline.runPipelineForm.outOfSync')).toBeFalsy()
+  })
+
+  test('should show out of sync warning', async () => {
+    const useValidateTemplateInputs = jest.fn(() => mockValidateTemplateInputsOutOfSync as any)
+    useValidateTemplateInputsQueryMock.mockImplementation(useValidateTemplateInputs)
+
+    const { getByText } = render(
+      <TestWrapper>
+        <RunPipelineForm {...commonProps} source="executions" inputSetYAML={inputSetYAML} />
+      </TestWrapper>
+    )
+
+    expect(getByText('pipeline.runPipelineForm.outOfSync')).toBeInTheDocument()
   })
 })

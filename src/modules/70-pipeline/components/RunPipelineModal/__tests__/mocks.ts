@@ -7,6 +7,7 @@
 
 import { UseGetMockDataWithMutateAndRefetch } from '@common/utils/testUtils'
 import { ResponsePlanExecutionResponseDto, ResponseRetryInfo } from 'services/pipeline-ng'
+import { ResponseValidateTemplateInputsResponseDto } from 'services/pipeline-rq'
 
 export const getMockFor_useGetPipeline = (): any => ({
   data: {
@@ -349,3 +350,41 @@ export const getUseRetryPipelineRequest = ({ isAllowAll }: { isAllowAll: boolean
     }
   }
 })
+
+export const mockValidateTemplateInputsOutOfSync: UseGetMockDataWithMutateAndRefetch<ResponseValidateTemplateInputsResponseDto> =
+  {
+    loading: false,
+    refetch: jest.fn(),
+    mutate: jest.fn(),
+    data: {
+      status: 'SUCCESS',
+      data: {
+        type: 'TemplateInputsErrorMetadataV2',
+        validYaml: false,
+        errorNodeSummary: {
+          nodeInfo: {
+            identifier: 'stagetplpipeline1',
+            name: 'stage-tpl-pipeline-1'
+          },
+          childrenErrorNodes: []
+        }
+      },
+      correlationId: '61812385-d410-47a0-8857-f1bafcb06b22'
+    }
+  }
+
+export const mockValidateTemplateInputsInSync: UseGetMockDataWithMutateAndRefetch<ResponseValidateTemplateInputsResponseDto> =
+  {
+    loading: false,
+    refetch: jest.fn(),
+    mutate: jest.fn(),
+    data: {
+      status: 'SUCCESS',
+      data: {
+        type: 'TemplateInputsErrorMetadataV2',
+        validYaml: true,
+        errorNodeSummary: {}
+      },
+      correlationId: '61812385-d410-47a0-8857-f1bafcb06b22'
+    }
+  }

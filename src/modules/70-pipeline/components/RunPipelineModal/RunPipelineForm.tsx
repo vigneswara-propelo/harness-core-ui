@@ -115,6 +115,7 @@ import VisualView from './VisualView'
 import { useInputSets } from './useInputSets'
 import { ActiveFreezeWarning } from './ActiveFreezeWarning'
 import { SelectStageToRetryState } from './SelectStageToRetryNew'
+import PipelineOutOfSync from './PipelineOutOfSync'
 import css from './RunPipelineForm.module.scss'
 
 export interface RunPipelineFormProps extends PipelineType<PipelinePathProps & GitQueryParams> {
@@ -165,7 +166,8 @@ function RunPipelineFormBasic({
   executionIdentifier,
   isDebugMode,
   isRetryFromStage = false,
-  preSelectLastStage = false
+  preSelectLastStage = false,
+  storeMetadata
 }: RunPipelineFormProps & InputSetGitQueryParams): React.ReactElement {
   const [skipPreFlightCheck, setSkipPreFlightCheck] = useState<boolean>(false)
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
@@ -1035,6 +1037,13 @@ function RunPipelineFormBasic({
                     refetchTemplate={getTemplateFromPipeline}
                     isRetryFromStage={isRetryFromStage}
                     isRerunPipeline={isRerunPipeline}
+                  />
+                  <PipelineOutOfSync
+                    storeMetadata={storeMetadata}
+                    accountId={accountId}
+                    orgIdentifier={orgIdentifier}
+                    projectIdentifier={projectIdentifier}
+                    pipelineIdentifier={pipelineIdentifier}
                   />
                   <RequiredStagesInfo
                     selectedStageData={selectedStageData}
