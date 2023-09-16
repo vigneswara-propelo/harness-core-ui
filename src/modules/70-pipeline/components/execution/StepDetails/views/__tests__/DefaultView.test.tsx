@@ -39,6 +39,20 @@ jest.mock('@pipeline/components/LogsContent/useLogsContent.tsx', () => ({
   }))
 }))
 
+const aidaMock = {
+  loading: false,
+  data: {
+    data: {
+      valueType: 'Boolean',
+      value: 'true'
+    }
+  }
+}
+
+jest.mock('services/cd-ng', () => ({
+  useGetSettingValue: jest.fn().mockImplementation(() => aidaMock)
+}))
+
 const checkPolicyEnforcementTab = async (): Promise<HTMLElement> => {
   const policyEnforcementTab = await screen.findByRole('tab', {
     name: 'pipeline.policyEnforcement.title'

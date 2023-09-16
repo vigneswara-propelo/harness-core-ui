@@ -23,6 +23,7 @@ import {
 import type { GroupedVirtuosoHandle, VirtuosoHandle } from 'react-virtuoso'
 import { Color } from '@harness/design-system'
 import { defaultTo, merge } from 'lodash-es'
+import { useGetSettingValue } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import { ErrorList, extractInfo } from '@common/components/ErrorHandler/ErrorHandler'
 import { String as StrTemplate, useStrings } from 'framework/strings'
@@ -34,12 +35,13 @@ import type {
   RenderLogsInterface
 } from '@pipeline/factories/ExecutionFactory/types'
 import { showHarnessCoPilot, resolveCurrentStep } from '@pipeline/utils/executionUtils'
-import type { ModulePathParams, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ModulePathParams, ExecutionPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { addHotJarSuppressionAttribute } from '@common/utils/utils'
 import { ExecutionStatus, isExecutionComplete, isExecutionWaitingForInput } from '@pipeline/utils/statusHelpers'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { LinkifyText } from '@common/components/LinkifyText/LinkifyText'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { SettingType } from '@common/constants/Utils'
 import HarnessCopilot from '@pipeline/components/HarnessCopilot/HarnessCopilot'
 import { ErrorScope } from '@pipeline/components/HarnessCopilot/AIDAUtils'
 import { useLogsContent } from './useLogsContent'
@@ -143,6 +145,7 @@ export const logsRenderer = ({ hasLogs, isSingleSectionLogs, virtuosoRef, state,
 
 export function LogsContent(props: LogsContentProps): React.ReactElement {
   const { mode, toConsoleView = '', isWarning, renderLogs = logsRenderer } = props
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const pathParams = useParams<ExecutionPathProps & ModulePathParams>()
   const {
     pipelineStagesMap,
@@ -250,6 +253,11 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
     const formattedLogs = formatLogsForClipboard(rawLogLines)
     copyToClipboard(formattedLogs)
   }
+
+  const { data: aidaSettingResponse } = useGetSettingValue({
+    identifier: SettingType.AIDA,
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+  })
 
   return (
     <div ref={rootRef} className={cx(css.main, { [css.hasErrorMessage]: hasError })} data-mode={mode}>
@@ -378,7 +386,8 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
             selectedStageId,
             pipelineExecutionDetail,
             enableForCI: CI_AI_ENHANCED_REMEDIATIONS,
-            enableForCD: CD_AI_ENHANCED_REMEDIATIONS
+            enableForCD: CD_AI_ENHANCED_REMEDIATIONS,
+            isEULAccepted: aidaSettingResponse?.data?.value === 'true'
           }) ? (
             <Container className={css.copilot} width="40%" flex={{ justifyContent: 'flex-end' }}>
               <HarnessCopilot mode="console-view" scope={ErrorScope.Step} />
@@ -429,6 +438,7 @@ export class LogsContentWithErrorBoundary extends React.Component<LogsContentPro
 }
 
 export function DefaultConsoleViewStepDetails(props: ConsoleViewStepDetailProps): React.ReactElement {
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { errorMessage, isSkipped, renderLogs, step, isStageExecutionInputConfigured, stageErrorMessage } = props
   const { identifier, stepParameters, baseFqn, outcomes, status, stepType } = defaultTo(step, {})
   const { getString } = useStrings()
@@ -458,6 +468,11 @@ export function DefaultConsoleViewStepDetails(props: ConsoleViewStepDetailProps)
   }, [stageErrorMessage])
 
   const hideAIDAButtonForStageLevelErrors = true
+
+  const { data: aidaSettingResponse } = useGetSettingValue({
+    identifier: SettingType.AIDA,
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+  })
 
   return (
     <div className={css.tabs}>
@@ -514,7 +529,8 @@ export function DefaultConsoleViewStepDetails(props: ConsoleViewStepDetailProps)
               selectedStageId,
               pipelineExecutionDetail,
               enableForCI: CI_AI_ENHANCED_REMEDIATIONS,
-              enableForCD: CD_AI_ENHANCED_REMEDIATIONS
+              enableForCD: CD_AI_ENHANCED_REMEDIATIONS,
+              isEULAccepted: aidaSettingResponse?.data?.value === 'true'
             }) ? (
               <Layout.Horizontal flex={{ justifyContent: 'space-between' }} padding={{ right: 'small' }} width="100%">
                 <Layout.Horizontal flex>{renderErrorMssgWrapper()}</Layout.Horizontal>

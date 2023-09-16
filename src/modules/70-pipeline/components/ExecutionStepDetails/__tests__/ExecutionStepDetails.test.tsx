@@ -29,6 +29,20 @@ jest.mock('@common/components/Duration/Duration', () => ({
   }
 }))
 
+const aidaMock = {
+  loading: false,
+  data: {
+    data: {
+      valueType: 'Boolean',
+      value: 'true'
+    }
+  }
+}
+
+jest.mock('services/cd-ng', () => ({
+  useGetSettingValue: jest.fn().mockImplementation(() => aidaMock)
+}))
+
 const TEST_PATH = routes.toExecutionPipelineView({
   ...accountPathProps,
   ...executionPathProps,

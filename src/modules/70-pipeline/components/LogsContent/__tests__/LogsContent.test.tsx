@@ -26,6 +26,20 @@ jest.mock('../components/GroupedLogs', () => ({
   GroupedLogsWithRef: React.forwardRef(() => <div>Grouped logs</div>)
 }))
 
+const aidaMock = {
+  loading: false,
+  data: {
+    data: {
+      valueType: 'Boolean',
+      value: 'true'
+    }
+  }
+}
+
+jest.mock('services/cd-ng', () => ({
+  useGetSettingValue: jest.fn().mockImplementation(() => aidaMock)
+}))
+
 const SELECTED_STEP_SYMBOL = Symbol('SELECTED_STEP_SYMBOL')
 const RETRY_STEP_SYMBOL = Symbol(' RETRY_STEP_SYMBOL')
 const actions: UseActionCreatorReturn = {

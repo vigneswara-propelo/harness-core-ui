@@ -89,6 +89,20 @@ jest.mock('lodash-es', () => ({
   })
 }))
 
+const aidaMock = {
+  loading: false,
+  data: {
+    data: {
+      valueType: 'Boolean',
+      value: 'true'
+    }
+  }
+}
+
+jest.mock('services/cd-ng', () => ({
+  useGetSettingValue: jest.fn().mockImplementation(() => aidaMock)
+}))
+
 describe('ServiceNowImportSet View Test ', () => {
   test('snapshot for displaying import set details', () => {
     const { container } = render(

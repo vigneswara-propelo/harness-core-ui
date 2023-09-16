@@ -29,6 +29,20 @@ const actions: UseActionCreatorReturn = {
   goToPrevSearchResult: jest.fn()
 }
 
+const aidaMock = {
+  loading: false,
+  data: {
+    data: {
+      valueType: 'Boolean',
+      value: 'true'
+    }
+  }
+}
+
+jest.mock('services/cd-ng', () => ({
+  useGetSettingValue: jest.fn().mockImplementation(() => aidaMock)
+}))
+
 jest.mock('@pipeline/components/LogsContent/useLogsContent.tsx', () => ({
   useLogsContent: jest.fn(() => ({
     state: getDefaultReducerState(),

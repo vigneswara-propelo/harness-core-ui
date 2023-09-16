@@ -15,6 +15,20 @@ import { Editions } from '@common/constants/SubscriptionTypes'
 import { ModuleLicenseDTO } from 'services/cd-ng'
 import DashboardsPage from '../DashboardsPage'
 
+const aidaMock = {
+  loading: false,
+  data: {
+    data: {
+      valueType: 'Boolean',
+      value: 'true'
+    }
+  }
+}
+
+jest.mock('services/cd-ng', () => ({
+  useGetSettingValue: jest.fn().mockImplementation(() => aidaMock)
+}))
+
 const defaultLicenseObj: useLicenseStore.LicenseStoreContextProps = {
   versionMap: {},
   CI_LICENSE_STATE: LICENSE_STATE_VALUES.EXPIRED,

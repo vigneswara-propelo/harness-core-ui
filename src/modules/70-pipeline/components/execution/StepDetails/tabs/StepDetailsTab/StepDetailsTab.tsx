@@ -6,11 +6,11 @@
  */
 
 import React from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import cx from 'classnames'
 import qs from 'qs'
 import { Container } from '@harness/uicore'
-import type { ResponseMessage } from 'services/cd-ng'
+import { ResponseMessage, useGetSettingValue } from 'services/cd-ng'
 import type { ExecutionGraph, ExecutionNode } from 'services/pipeline-ng'
 import { String } from 'framework/strings'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
@@ -19,6 +19,8 @@ import { isExecutionSkipped, isExecutionCompletedWithBadState } from '@pipeline/
 import { StepDetails, StepLabels } from '@pipeline/components/execution/StepDetails/common/StepDetails/StepDetails'
 import { useQueryParams } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { SettingType } from '@common/constants/Utils'
+import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ExecutionQueryParams, showHarnessCoPilot } from '@pipeline/utils/executionUtils'
 import HarnessCopilot from '@pipeline/components/HarnessCopilot/HarnessCopilot'
 import { ErrorScope } from '@pipeline/components/HarnessCopilot/AIDAUtils'
@@ -35,6 +37,7 @@ export interface ExecutionStepDetailsTabProps {
 export function StepDetailsTab(props: ExecutionStepDetailsTabProps): React.ReactElement {
   const { step, executionMetadata, labels } = props
   const { pathname } = useLocation()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const queryParams = useQueryParams<ExecutionQueryParams>()
   const { pipelineStagesMap, selectedStageId, pipelineExecutionDetail } = useExecutionContext()
   const { CI_AI_ENHANCED_REMEDIATIONS, CD_AI_ENHANCED_REMEDIATIONS } = useFeatureFlags()
@@ -44,6 +47,11 @@ export function StepDetailsTab(props: ExecutionStepDetailsTabProps): React.React
   const errorMessage = step?.failureInfo?.message || step.executableResponses?.[0]?.skipTask?.message
   const isFailed = isExecutionCompletedWithBadState(step.status)
   const isSkipped = isExecutionSkipped(step.status)
+
+  const { data: aidaSettingResponse } = useGetSettingValue({
+    identifier: SettingType.AIDA,
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+  })
 
   return (
     <div className={css.detailsTab}>
@@ -61,7 +69,8 @@ export function StepDetailsTab(props: ExecutionStepDetailsTabProps): React.React
         selectedStageId,
         pipelineExecutionDetail,
         enableForCI: CI_AI_ENHANCED_REMEDIATIONS,
-        enableForCD: CD_AI_ENHANCED_REMEDIATIONS
+        enableForCD: CD_AI_ENHANCED_REMEDIATIONS,
+        isEULAccepted: aidaSettingResponse?.data?.value === 'true'
       }) ? (
         <Container
           flex={{ justifyContent: 'flex-start' }}

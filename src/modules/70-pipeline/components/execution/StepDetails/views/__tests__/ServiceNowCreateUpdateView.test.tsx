@@ -57,6 +57,20 @@ jest.mock('lodash-es', () => ({
   })
 }))
 
+const aidaMock = {
+  loading: false,
+  data: {
+    data: {
+      valueType: 'Boolean',
+      value: 'true'
+    }
+  }
+}
+
+jest.mock('services/cd-ng', () => ({
+  useGetSettingValue: jest.fn().mockImplementation(() => aidaMock)
+}))
+
 describe('ServiceNowcreateupdate view test ', () => {
   test('snapshot for displaying ticketNumber info', () => {
     jest.spyOn(loadAsh, 'get').mockReturnValue({ ticketNumber: 'ticketNumber', ticketUrl: 'ticketUrl' })

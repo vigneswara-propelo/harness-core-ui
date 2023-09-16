@@ -13,6 +13,20 @@ import * as dashboardsContext from '@dashboards/pages/DashboardsContext'
 import DashboardsHeader from '@dashboards/pages/DashboardsCommonHeaderPage'
 import { DashboardMode } from '@dashboards/types/DashboardTypes.types'
 
+const aidaMock = {
+  loading: false,
+  data: {
+    data: {
+      valueType: 'Boolean',
+      value: 'true'
+    }
+  }
+}
+
+jest.mock('services/cd-ng', () => ({
+  useGetSettingValue: jest.fn().mockImplementation(() => aidaMock)
+}))
+
 const renderComponent = (): RenderResult =>
   render(
     <TestWrapper>

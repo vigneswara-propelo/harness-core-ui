@@ -11,11 +11,13 @@ import { Layout, Button, ButtonVariation, ButtonSize } from '@harness/uicore'
 import { PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { NavLink, useParams } from 'react-router-dom'
+import { useGetSettingValue } from 'services/cd-ng'
 import { Page } from '@common/exports'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import routes from '@common/RouteDefinitions'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { SettingType } from '@common/constants/Utils'
 import AidaDashboardContent from '@dashboards/components/AidaDashboardContent'
 import AidaDrawer from '@dashboards/components/AidaDrawer'
 import AidaToolTip from '@dashboards/components/AidaToolTip'
@@ -74,6 +76,11 @@ const DashboardsHeader: React.FC = () => {
     setAidaDrawerOpen(false)
   }, [aiTileDetails])
 
+  const { data: aidaSettingResponse } = useGetSettingValue({
+    identifier: SettingType.AIDA,
+    queryParams: { accountIdentifier: accountId }
+  })
+
   const getStarted = (
     <>
       <Button
@@ -106,7 +113,13 @@ const DashboardsHeader: React.FC = () => {
     />
   )
 
-  const showAidaButton = mode == DashboardMode.EDIT && viewId && CDB_AIDA_WIDGET && !isAidaDrawerOpen
+  const showAidaButton =
+    aidaSettingResponse?.data?.value === 'true' &&
+    mode == DashboardMode.EDIT &&
+    viewId &&
+    CDB_AIDA_WIDGET &&
+    !isAidaDrawerOpen
+
   return (
     <Page.Header
       title={title}

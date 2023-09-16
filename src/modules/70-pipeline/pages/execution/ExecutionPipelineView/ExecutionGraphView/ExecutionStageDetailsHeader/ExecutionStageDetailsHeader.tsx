@@ -10,6 +10,7 @@ import { defaultTo, find, get, identity, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { ButtonVariation, Container, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
+import { useGetSettingValue } from 'services/cd-ng'
 import { String as StrTemplate, useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
@@ -39,6 +40,7 @@ import { extractInfo } from '@common/components/ErrorHandler/ErrorHandler'
 import type { StoreType } from '@common/constants/GitSyncTypes'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
+import { SettingType } from '@common/constants/Utils'
 import IACMWorkspaceHeader from './IACMWorkspaceHeader'
 import css from './ExecutionStageDetailsHeader.module.scss'
 
@@ -213,6 +215,11 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
     [stage, errorMessage]
   )
 
+  const { data: aidaSettingResponse } = useGetSettingValue({
+    identifier: SettingType.AIDA,
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+  })
+
   return (
     <div className={css.main}>
       <div className={css.stageDetails}>
@@ -338,7 +345,8 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
             selectedStageId,
             pipelineExecutionDetail,
             enableForCI: CI_AI_ENHANCED_REMEDIATIONS,
-            enableForCD: CD_AI_ENHANCED_REMEDIATIONS
+            enableForCD: CD_AI_ENHANCED_REMEDIATIONS,
+            isEULAccepted: aidaSettingResponse?.data?.value === 'true'
           }) ? (
             <Layout.Horizontal flex={{ justifyContent: 'space-between' }} padding={{ right: 'small' }} width="100%">
               <Layout.Horizontal flex>{renderErrorMssgWrapper(true)}</Layout.Horizontal>

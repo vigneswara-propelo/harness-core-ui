@@ -28,6 +28,20 @@ jest.mock('services/logs', () => ({
   logBlobPromise: jest.fn(() => Promise.resolve({}))
 }))
 
+const aidaMock = {
+  loading: false,
+  data: {
+    data: {
+      valueType: 'Boolean',
+      value: 'true'
+    }
+  }
+}
+
+jest.mock('services/cd-ng', () => ({
+  useGetSettingValue: jest.fn().mockImplementation(() => aidaMock)
+}))
+
 const mockData = (
   approvalData: UseGetMockDataWithMutateAndRefetch<ResponseApprovalInstanceResponse>,
   authData: UseGetMockDataWithMutateAndRefetch<ResponseHarnessApprovalInstanceAuthorization>

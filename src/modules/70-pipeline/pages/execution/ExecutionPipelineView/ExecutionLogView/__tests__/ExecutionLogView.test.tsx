@@ -11,12 +11,26 @@ import { TestWrapper, CurrentLocation } from '@common/utils/testUtils'
 import { getPipelineStagesMap } from '@pipeline/utils/executionUtils'
 import ExecutionContext from '@pipeline/context/ExecutionContext'
 import type { ExecutionContextParams } from '@pipeline/context/ExecutionContext'
+import mock from '@pipeline/pages/execution/ExecutionPipelineView/ExecutionGraphView/__tests__/mock.json'
 import ExecutionLogView from '../ExecutionLogView'
-import mock from '../../ExecutionGraphView/__tests__/mock.json'
 
 jest.mock('@pipeline/components/PipelineSteps/PipelineStepFactory', () => ({
   getStepIcon: jest.fn(),
   registerStep: jest.fn()
+}))
+
+const aidaMock = {
+  loading: false,
+  data: {
+    data: {
+      valueType: 'Boolean',
+      value: 'true'
+    }
+  }
+}
+
+jest.mock('services/cd-ng', () => ({
+  useGetSettingValue: jest.fn().mockImplementation(() => aidaMock)
 }))
 
 const contextValue: ExecutionContextParams = {

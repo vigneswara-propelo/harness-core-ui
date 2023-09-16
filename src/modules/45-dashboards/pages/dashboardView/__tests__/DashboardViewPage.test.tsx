@@ -42,6 +42,20 @@ const generateMockSignedUrl = (mockUrl = ''): Promise<customDashboardServices.Si
   })
 }
 
+const aidaMock = {
+  loading: false,
+  data: {
+    data: {
+      valueType: 'Boolean',
+      value: 'true'
+    }
+  }
+}
+
+jest.mock('services/cd-ng', () => ({
+  useGetSettingValue: jest.fn().mockImplementation(() => aidaMock)
+}))
+
 describe('DashboardsPage', () => {
   const useLicenseStoreMock = jest.spyOn(useLicenseStore, 'useLicenseStore')
   const useCreateSignedUrlMock = jest.spyOn(customDashboardServices, 'useCreateSignedUrl')

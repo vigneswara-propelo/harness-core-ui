@@ -1582,10 +1582,12 @@ export const showHarnessCoPilot = ({
   selectedStageId,
   pipelineExecutionDetail,
   enableForCI = false,
-  enableForCD = false
+  enableForCD = false,
+  isEULAccepted
 }: RCAUtilsInterface & {
   enableForCI?: boolean
   enableForCD?: boolean
+  isEULAccepted: boolean
 }): boolean => {
   /* It is possible for a stageId to be not present in "pipelineStagesMap" and be present in "pipelineExecutionSummary.layoutNodeMap" */
   let selectedModule = getSelectedStageModule(pipelineStagesMap, selectedStageId)
@@ -1595,7 +1597,7 @@ export const showHarnessCoPilot = ({
     ) as Map<string, GraphLayoutNode>
     selectedModule = getSelectedStageModule(pipelineStagesMapFromExecutionDetails, selectedStageId)
   }
-  return (enableForCI && 'ci' === selectedModule) || (enableForCD && 'cd' === selectedModule)
+  return isEULAccepted && ((enableForCI && 'ci' === selectedModule) || (enableForCD && 'cd' === selectedModule))
 }
 
 export function resolveCurrentStep(selectedStepId: string, queryParams: ExecutionPageQueryParams): string {

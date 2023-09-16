@@ -411,7 +411,8 @@ describe('ExecutionUtils tests', () => {
       const args = {
         pipelineStagesMap: new Map<string, GraphLayoutNode>([['', {}]]),
         selectedStageId: 'CI_stage_1',
-        pipelineExecutionDetail: {}
+        pipelineExecutionDetail: {},
+        isEULAccepted: true
       }
       /* Testing for modules CI and CD */
       expect(utils.showHarnessCoPilot(args)).toBe(false)
@@ -436,6 +437,7 @@ describe('ExecutionUtils tests', () => {
           pipelineStagesMap: new Map<string, GraphLayoutNode>([['CD_stage_1', nodeLayoutForCDStage]]),
           selectedStageId: 'CD_stage_1',
           enableForCD: true,
+          isEULAccepted: true,
           pipelineExecutionDetail: {}
         })
       ).toBe(true)
@@ -451,6 +453,7 @@ describe('ExecutionUtils tests', () => {
         utils.showHarnessCoPilot({
           selectedStageId: 'PMS_Stage_1',
           pipelineStagesMap: new Map<string, GraphLayoutNode>([['PMS_Stage_1', nodeLayoutForPMS]]),
+          isEULAccepted: true,
           pipelineExecutionDetail: {}
         })
       ).toBe(false)
@@ -465,6 +468,7 @@ describe('ExecutionUtils tests', () => {
           ]),
           enableForCI: true,
           enableForCD: true,
+          isEULAccepted: true,
           pipelineExecutionDetail: {}
         })
       ).toBe(true)
@@ -476,6 +480,7 @@ describe('ExecutionUtils tests', () => {
           pipelineStagesMap: new Map<string, GraphLayoutNode>([['CI_Stage_2', nodeLayoutForCIStage]]),
           enableForCI: true,
           enableForCD: true,
+          isEULAccepted: true,
           pipelineExecutionDetail: pipelineExecutionDetailMock
         })
       ).toBe(true)
@@ -486,6 +491,7 @@ describe('ExecutionUtils tests', () => {
           pipelineStagesMap: new Map<string, GraphLayoutNode>([['CI_Stage_2', nodeLayoutForCIStage]]),
           enableForCI: true,
           enableForCD: true,
+          isEULAccepted: true,
           pipelineExecutionDetail: {}
         })
       ).toBe(false)
