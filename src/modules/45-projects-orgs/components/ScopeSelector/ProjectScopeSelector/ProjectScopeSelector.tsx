@@ -29,7 +29,6 @@ import {
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { CellProps, Column, Renderer } from 'react-table'
-import { noop } from 'lodash-es'
 import {
   RenderColumnProject,
   RenderColumnOrganization
@@ -178,7 +177,7 @@ export const ProjectScopeSelector: React.FC<ProjectScopeSelectorProps> = ({ onCl
                       projectAggregate.projectResponse.project.orgIdentifier === selectedProject?.orgIdentifier
                     }
                     className={cx(css.projectCard, Classes.POPOVER_DISMISS)}
-                    onClick={() => onClick?.(projectAggregate)} //integrate click after left-nav framework is done
+                    onClick={() => onClick?.(projectAggregate)}
                     hideAddOption={true}
                   />
                 ))}
@@ -201,7 +200,7 @@ export const ProjectScopeSelector: React.FC<ProjectScopeSelectorProps> = ({ onCl
                 name="ProjectListView"
                 getRowClassName={_row => cx(Classes.POPOVER_DISMISS, css.row)}
                 data={data?.data?.content || []}
-                onRowClick={noop}
+                onRowClick={projectData => onClick?.(projectData)}
                 pagination={{
                   itemCount: data?.data?.totalItems || 0,
                   pageSize: data?.data?.pageSize || 10,

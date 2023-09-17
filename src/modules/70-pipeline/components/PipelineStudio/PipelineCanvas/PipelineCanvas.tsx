@@ -175,7 +175,7 @@ export function PipelineCanvas({
   } = state
 
   const { getString } = useStrings()
-  const { CDS_PIPELINE_STUDIO_UPGRADES } = useFeatureFlags()
+  const { CDS_PIPELINE_STUDIO_UPGRADES, CDS_NAV_2_0 } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier, module } = useParams<
     PipelineType<PipelinePathProps> & GitQueryParams
   >()
@@ -782,7 +782,10 @@ export function PipelineCanvas({
             shouldBlockNavigation={nextLocation => {
               let localUpdated = isUpdated
               const matchDefault = matchPath(nextLocation.pathname, {
-                path: toPipelineStudio({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams }),
+                path: [
+                  ...(CDS_NAV_2_0 ? [toPipelineStudio({ ...accountPathProps, ...pipelinePathProps })] : []),
+                  toPipelineStudio({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })
+                ],
                 exact: true
               })
 

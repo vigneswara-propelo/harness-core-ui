@@ -349,6 +349,7 @@ purpose:
     title: Error Tracking
   code:
     name: Code
+    title: Soucre Code Management
   chaos:
     continuous: Chaos Engineering
     chaos: Chaos
@@ -1476,6 +1477,7 @@ Stepper:
 # SSCA module
 ssca: Supply Chain Assurance
 sscaText: Software Supply Chain Assurance
+sscaShortLabel: Supply Chain
 tickets:
   selectConnector: 'Select Ticket Provider Connector'
   selectProjectName: 'Select Project Name'
@@ -1687,3 +1689,7 @@ dataUnavailableInScope: '{{pageName}} data is not available in {{scope}} scope.'
 doInstead: What would you like to do instead?
 viewSettings: 'View {{scope}} Settings'
 viewAndManageSettings: 'View and manage different settings of your {{scope}}.'
+allMode:
+  welcome:
+    title: Work more productively
+    subtitle: Have all modules you work in one view

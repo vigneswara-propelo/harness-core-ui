@@ -35,16 +35,20 @@ const SSCARedirect: React.FC = () => {
     return <Redirect to={routes.toSettings({ orgIdentifier: params?.orgIdentifier, module })} />
   }
 
-  return (
-    <Redirect
-      to={routes.toOverview({
-        projectIdentifier: params?.projectIdentifier,
-        orgIdentifier: params?.orgIdentifier,
-        accountId,
-        module
-      })}
-    />
-  )
+  if (scope === Scope.PROJECT) {
+    return (
+      <Redirect
+        to={routes.toOverview({
+          projectIdentifier: params?.projectIdentifier,
+          orgIdentifier: params?.orgIdentifier,
+          accountId,
+          module
+        })}
+      />
+    )
+  }
+
+  return <Redirect to={routes.toSettings({ module })} />
 }
 
 // eslint-disable-next-line import/no-unresolved

@@ -86,14 +86,14 @@ const CISideNavLinks = (mode: NAV_MODE): React.ReactElement => {
             icon="nav-pipeline"
             label={getString('pipelines')}
             to={routes.toPipelines({ accountId, projectIdentifier: identifier, orgIdentifier, module })}
-            visible={mode !== NAV_MODE.ALL}
+            hidden={mode === NAV_MODE.ALL}
           />
 
           <SideNav.Link
             icon="nav-builds"
             label={getString('buildsText')}
             to={routes.toDeployments({ accountId, projectIdentifier: identifier, orgIdentifier, module })}
-            visible={mode !== NAV_MODE.ALL}
+            hidden={mode === NAV_MODE.ALL}
           />
         </SideNav.Scope>
       </>

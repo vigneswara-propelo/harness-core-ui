@@ -108,6 +108,8 @@ export function ModeCard(props: ModeCardProps): JSX.Element {
   } = props
   const { getString } = useStrings()
 
+  const newTabProps = shouldOpenInNewTab ? { target: '_blank', rel: 'noreferrer' } : {}
+
   return (
     <Popover
       position={Position.RIGHT}
@@ -125,12 +127,18 @@ export function ModeCard(props: ModeCardProps): JSX.Element {
         />
       }
     >
-      <NavLink className={cx(css.modeCard, modeBorderCss)} activeClassName={css.active} onClick={onClick} {...rest}>
+      <NavLink
+        className={cx(css.modeCard, modeBorderCss)}
+        activeClassName={css.active}
+        onClick={onClick}
+        {...newTabProps}
+        {...rest}
+      >
         {leftIcon ? (
           <Icon name={icon} {...iconprops} className={cx(css.marginRight12, { [css.active]: isSelected })} />
         ) : null}
         <Text font={{ variation: FontVariation.SMALL_SEMI }} lineClamp={2} style={{ wordBreak: 'break-word' }}>
-          {getString(shortLabel)}
+          {getString(popoverProps.modeLabel)}
         </Text>
         {leftIcon ? null : (
           <Icon name={icon} size={32} {...iconprops} className={cx(css.modeIcon, { [css.active]: isSelected })} />

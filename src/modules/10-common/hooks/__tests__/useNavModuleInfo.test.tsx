@@ -67,7 +67,7 @@ describe('useModuleInfo tests', () => {
     })
 
     expect(result.current.icon).toBe('sto-color-filled')
-    expect(result.current.label).toBe('common.purpose.sto.continuous')
+    expect(result.current.label).toBe('common.stoText')
     expect(result.current.shouldVisible).toBe(true)
   })
 
@@ -87,7 +87,7 @@ describe('useModuleInfo tests', () => {
     })
 
     expect(result.current.icon).toBe('code')
-    expect(result.current.label).toBe('common.purpose.code.name')
+    expect(result.current.label).toBe('common.purpose.code.title')
     expect(result.current.shouldVisible).toBe(true)
   })
 
@@ -107,7 +107,7 @@ describe('useModuleInfo tests', () => {
     })
 
     expect(result.current['CODE'].icon).toBe('code')
-    expect(result.current['CODE'].label).toBe('common.purpose.code.name')
+    expect(result.current['CODE'].label).toBe('common.purpose.code.title')
     expect(result.current['CODE'].shouldVisible).toBe(true)
     expect(result.current['CODE'].hasLicense).toBe(true)
   })

@@ -13,4 +13,9 @@
   .link {
     text-decoration: none;
   }
+
+  .label {
+    line-height: var(--spacing-5) !important;
+    font-weight: 600 !important;
+  }
 }

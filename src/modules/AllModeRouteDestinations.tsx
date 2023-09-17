@@ -6,12 +6,11 @@
  */
 
 import React from 'react'
-import { Redirect, Route, Switch } from 'react-router-dom'
+import { Redirect, Route, Switch, useHistory } from 'react-router-dom'
 import routes from '@common/RouteDefinitionsV2'
 import { accountPathProps, modePathProps, orgPathProps, projectPathProps, NAV_MODE } from '@common/utils/routeUtils'
 import { Scope } from 'framework/types/types'
 import ProjectDetails from '@projects-orgs/pages/projects/views/ProjectDetails/ProjectDetails'
-import LandingDashboardWelcomeView from '@projects-orgs/pages/LandingDashboardPage/LandingDashboardWelcomeView'
 import PipelineRouteDestinations from '@pipeline/PipelineRouteDestinations'
 import CommonRouteDestinations from '@user-profile/CommonRouteDestinations'
 import NotFoundPage from '@common/pages/404/NotFoundPage'
@@ -20,12 +19,17 @@ import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
 import TriggersRouteDestinations from '@triggers/TriggersRouteDestinations'
 import LandingDashboardPage from '@projects-orgs/pages/LandingDashboardPage/LandingDashboardPage'
+import { HomePageTemplate } from '@projects-orgs/pages/HomePageTemplate/HomePageTemplate'
+import welcomeVideo from '@projects-orgs/pages/LandingDashboardPage/images/hero-animation.mp4'
+import { useStrings } from 'framework/strings'
 
 // eslint-disable-next-line
 import { ModulesRouteDestinations } from './ModuleRouteConfig'
 
 const RedirectAllMode: React.FC = () => {
   const { scope, params } = useGetSelectedScope()
+  const history = useHistory()
+  const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier } = params || {}
 
   if (scope === Scope.PROJECT) {
@@ -41,12 +45,15 @@ const RedirectAllMode: React.FC = () => {
     return <Redirect to={routes.toOverview()} />
   }
 
-  // Create a different common component instead of this welcome component
   return (
-    <LandingDashboardWelcomeView
-      setView={() => {
-        // empty
+    <HomePageTemplate
+      title={getString('common.allMode.welcome.title')}
+      subTitle={getString('common.allMode.welcome.subtitle')}
+      bgImageUrl={welcomeVideo}
+      projectCreateSuccessHandler={data => {
+        history.push(routes.toOverview({ orgIdentifier: data?.orgIdentifier, projectIdentifier: data?.identifier }))
       }}
+      documentText=""
     />
   )
 }

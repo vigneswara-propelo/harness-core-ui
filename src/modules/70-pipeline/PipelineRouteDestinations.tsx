@@ -11,6 +11,7 @@ import routes from '@common/RouteDefinitionsV2'
 import { RouteWithContext } from '@common/router/RouteWithContext/RouteWithContext'
 import {
   NAV_MODE,
+  accountPathProps,
   executionPathProps,
   inputSetFormPathProps,
   modulePathProps,
@@ -40,6 +41,8 @@ import BuildTestsApp from './pages/execution/ExecutionTestView/BuildTestsApp'
 import { BuildCommits } from './pages/execution/ExecutionLandingPage/Commits/BuildCommits'
 import ResilienceView from './pages/execution/ResilienceView/ResilienceView'
 import { PipelineDeploymentList } from './pages/pipeline-deployment-list/PipelineDeploymentList'
+import ExecutionIACMResourcesView from './pages/execution/ExecutionIACMResourcesView/ExecutionIACMResourcesView'
+import ExecutionIACMCostsEstimationView from './pages/execution/ExecutionIACMCostsEstimationView'
 
 interface PipleineRouteDestinationProps {
   mode: NAV_MODE
@@ -347,6 +350,35 @@ function PipelineRouteDestinations({
         ]}
       >
         <RedirectToPipelineDetailHome />
+      </RouteWithContext>
+
+      <RouteWithContext
+        exact
+        licenseRedirectData={licenseRedirectData}
+        path={routes.toIACMPipelineResources({
+          ...accountPathProps,
+          ...executionPathProps,
+          ...modulePathProps
+        })}
+        pageName={PAGE_NAME.ExecutionIACMPipelineResources}
+      >
+        <ExecutionLandingPage>
+          <ExecutionIACMResourcesView />
+        </ExecutionLandingPage>
+      </RouteWithContext>
+      <RouteWithContext
+        exact
+        licenseRedirectData={licenseRedirectData}
+        path={routes.toIACMPipelineCostEstimation({
+          ...accountPathProps,
+          ...executionPathProps,
+          ...modulePathProps
+        })}
+        pageName={PAGE_NAME.IACMCostEstimation}
+      >
+        <ExecutionLandingPage>
+          <ExecutionIACMCostsEstimationView />
+        </ExecutionLandingPage>
       </RouteWithContext>
     </Switch>
   )

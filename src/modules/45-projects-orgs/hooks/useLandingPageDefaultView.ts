@@ -17,6 +17,7 @@ export enum View {
 const useLandingPageDefaultView = (): View => {
   const { CD_LICENSE_STATE } = useLicenseStore()
   const isCommunity = useGetCommunity()
+
   if (CD_LICENSE_STATE !== LICENSE_STATE_VALUES.ACTIVE || isCommunity || isOnPrem()) {
     return View.Welcome
   }

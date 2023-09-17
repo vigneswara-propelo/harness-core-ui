@@ -16,6 +16,7 @@ import { RouteWithContext } from '@common/router/RouteWithContext/RouteWithConte
 import { Scope } from 'framework/types/types'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
+import TriggersRouteDestinations from '@triggers/TriggersRouteDestinations'
 import type { ResourceDTO } from 'services/audit'
 import { IACMApp } from './components/IACMApp'
 
@@ -35,16 +36,20 @@ const IACMRedirect: React.FC = () => {
     return <Redirect to={routes.toSettings({ orgIdentifier: params?.orgIdentifier, module })} />
   }
 
-  return (
-    <Redirect
-      to={routes.toIACMWorkspaces({
-        projectIdentifier: params?.projectIdentifier || '',
-        orgIdentifier: params?.orgIdentifier || '',
-        accountId,
-        module
-      })}
-    />
-  )
+  if (scope === Scope.PROJECT) {
+    return (
+      <Redirect
+        to={routes.toIACMWorkspaces({
+          projectIdentifier: params?.projectIdentifier || '',
+          orgIdentifier: params?.orgIdentifier || '',
+          accountId,
+          module
+        })}
+      />
+    )
+  }
+
+  return <Redirect to={routes.toOverview({ module })} />
 }
 
 const IACMV2Routes = (mode = NAV_MODE.MODULE): JSX.Element => {
@@ -62,6 +67,7 @@ const IACMV2Routes = (mode = NAV_MODE.MODULE): JSX.Element => {
       </RouteWithContext>
 
       {PipelineRouteDestinations({ mode }).props.children}
+      {TriggersRouteDestinations({ mode }).props.children}
       <RouteWithContext>
         <IACMApp />
       </RouteWithContext>

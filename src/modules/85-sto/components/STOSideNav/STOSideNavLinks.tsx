@@ -32,7 +32,7 @@ const STOSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
             icon="main-issue"
             label={getString('sto.issues')}
             to={routes.toSTOIssues({ accountId, projectIdentifier: identifier, orgIdentifier, module })}
-            visible={STO_ALL_ISSUES_PAGE}
+            hidden={!STO_ALL_ISSUES_PAGE}
           />
 
           <SideNav.Link

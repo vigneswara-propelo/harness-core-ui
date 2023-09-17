@@ -129,7 +129,7 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   },
   [ModuleName.STO]: {
     icon: 'sto-color-filled',
-    label: 'common.purpose.sto.continuous',
+    label: 'common.stoText',
     getHomePageUrl: (accountId: string) => routes.toSTO({ accountId }),
     color: '--sto-border',
     backgroundColor: '--sto-background',
@@ -144,12 +144,12 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     color: '--chaos-border',
     backgroundColor: '--chaos-background',
     backgroundColorLight: '--chaos-background-light',
-    shortLabel: 'common.purpose.chaos.chaos',
+    shortLabel: 'common.purpose.chaos.continuous',
     moduleIntro: 'common.moduleIntro.chaosEngineering'
   },
   [ModuleName.CODE]: {
     icon: 'code',
-    label: 'common.purpose.code.name',
+    label: 'common.purpose.code.title',
     getHomePageUrl: (accountId: string) => routes.toCODE({ accountId }),
     featureFlagName: FeatureFlag.CODE_ENABLED,
     color: '--default-module-border',
@@ -169,7 +169,7 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     getHomePageUrl: (accountId: string) => routes.toSSCA({ accountId }),
     featureFlagName: FeatureFlag.SSCA_ENABLED,
     color: '--default-module-border',
-    shortLabel: 'common.ssca',
+    shortLabel: 'common.sscaShortLabel',
     moduleIntro: 'common.moduleIntro.softwareSupplyChainAssurance'
   },
   [ModuleName.IDP]: {

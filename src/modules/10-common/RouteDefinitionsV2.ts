@@ -958,24 +958,18 @@ const routes = {
   toCFConfigurePath: withModeModuleAndScopePrefix<ProjectPathProps>(() => '/configurePath'),
 
   // iacm routes
-  toIACM: withModeModuleAndScopePrefix<ProjectPathProps>(() => '/iacm'),
-  toIACMOverview: withModeModuleAndScopePrefix<ProjectPathProps>(() => '/iacm/overview'),
-  toIACMMicroFrontend: withModeModuleAndScopePrefix<ProjectPathProps>(
-    params => `/iacm/orgs/${params?.orgIdentifier}/projects/${params?.projectIdentifier}/`
-  ),
+  toIACMOverview: withModeModuleAndScopePrefix<ProjectPathProps>(() => '/overview'),
   toIACMWorkspaces: withModeModuleAndScopePrefix<ProjectPathProps>(() => `/workspaces`),
   toIACMWorkspace: withModeModuleAndScopePrefix<ProjectPathProps & IACMPathProps>(
     params => `/workspaces/${params?.workspaceIdentifier}/resources`
   ),
-  toIACMSetup: withModeModuleAndScopePrefix<ProjectPathProps>(
-    params => `/iacm/orgs/${params?.orgIdentifier}/projects/${params?.projectIdentifier}/setup/`
-  ),
-  toIACMPipelines: withModeModuleAndScopePrefix<ProjectPathProps>(
-    params => `/iacm/orgs/${params?.orgIdentifier}/projects/${params?.projectIdentifier}/pipelines`
-  ),
+  toIACMSetup: withModeModuleAndScopePrefix<ProjectPathProps>(() => `/setup/`),
+  toIACMPipelines: withModeModuleAndScopePrefix<ProjectPathProps>(() => `/pipelines`),
   toIACMPipelineResources: withModeModuleAndScopePrefix<ProjectPathProps & ExecutionPathProps>(
-    params =>
-      `/iacm/orgs/${params?.orgIdentifier}/projects/${params?.projectIdentifier}/pipelines/${params?.pipelineIdentifier}/${params?.source}/${params?.executionIdentifier}/resources`
+    params => `/pipelines/${params?.pipelineIdentifier}/${params?.source}/${params?.executionIdentifier}/resources`
+  ),
+  toIACMPipelineCostEstimation: withModeModuleAndScopePrefix<ProjectPathProps & ExecutionPathProps>(
+    params => `/pipelines/${params?.pipelineIdentifier}/${params?.source}/${params?.executionIdentifier}/costs`
   )
 }
 

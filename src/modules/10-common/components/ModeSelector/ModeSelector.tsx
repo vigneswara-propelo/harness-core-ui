@@ -91,7 +91,7 @@ export const ModeSelector: React.FC = () => {
             className={css.clickable}
           />
         </Container>
-        <Container width={420} padding="xlarge" className={css.modeSelectorPanel}>
+        <Container width={460} padding="xlarge" className={css.modeSelectorPanel}>
           <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
             <ModeCard
               shortLabel="common.nav.allModules"

@@ -25,13 +25,13 @@ export interface SideNavLinkProps extends NavLinkProps {
   iconProps?: Partial<IconProps>
   label: string
   scope?: Scope | Scope[]
-  visible?: boolean
+  hidden?: boolean
   __TYPE?: string
   className?: string
 }
 
 export const SideNavLink: React.FC<SideNavLinkProps> = props => {
-  const { icon, iconProps, label, scope, className, visible = true, to, ...rest } = props
+  const { icon, iconProps, label, scope, className, hidden, to, ...rest } = props
   const { path, module, projectIdentifier, orgIdentifier } = getRouteParams<
     { path: string } & ModulePathParams & ProjectPathProps
   >(true, to as string)
@@ -55,7 +55,7 @@ export const SideNavLink: React.FC<SideNavLinkProps> = props => {
     }
   }
 
-  if (!visible) {
+  if (hidden) {
     return null
   }
 

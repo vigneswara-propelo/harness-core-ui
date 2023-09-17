@@ -5,11 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import { useHistory, useParams, matchPath, useLocation } from 'react-router-dom'
-import { useToaster } from '@harness/uicore'
-
-import { SettingType } from '@common/constants/Utils'
 import { SideNav } from '@common/navigation/SideNavV2/SideNavV2'
 import { Scope } from 'framework/types/types'
 import routes from '@common/RouteDefinitionsV2'
@@ -19,24 +16,18 @@ import { NAV_MODE } from '@common/utils/routeUtils'
 import { useGetCommunity } from '@common/utils/utils'
 import { useGetPipelines } from '@pipeline/hooks/useGetPipelines'
 import { PagePMSPipelineSummaryResponse } from 'services/pipeline-ng'
-import { useGetSettingValue } from 'services/cd-ng'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
 
 const module: Module = 'cd'
 const CDSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
   const history = useHistory()
-  const { showError } = useToaster()
-  const { getRBACErrorMessage } = useRBACError()
   const { params } = useGetSelectedScope()
   const { projectIdentifier = '', orgIdentifier = '' } = params || {}
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
   const isCommunity = useGetCommunity()
   const { CDS_SERVICE_OVERRIDES_2_0, SRM_COMMON_MONITORED_SERVICE } = useFeatureFlags()
-
-  const [isCDGetStartedVisible, setIsCDGetStartedVisible] = useState<boolean>()
 
   const { pathname } = useLocation()
 
@@ -71,7 +62,6 @@ const CDSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
       const { data, status } = fetchPipelinesData
       const isGettingStartedEnabled =
         status === 'SUCCESS' && (data as PagePMSPipelineSummaryResponse)?.totalElements === 0
-      setIsCDGetStartedVisible(isGettingStartedEnabled)
       if (isGettingStartedEnabled) {
         isOverviewPage &&
           history.replace(routes.toGetStartedWithCD({ accountId, projectIdentifier, orgIdentifier, module }))
@@ -82,23 +72,7 @@ const CDSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
     }
   }, [fetchPipelinesData, fetchingPipelines, history, accountId, orgIdentifier, projectIdentifier])
 
-  const { data: enableServiceOverrideSettings, error: enableServiceOverrideSettingsError } = useGetSettingValue({
-    identifier: SettingType.ENABLE_SERVICE_OVERRIDE_V2,
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier
-    },
-    lazy: false
-  })
-
-  React.useEffect(() => {
-    if (enableServiceOverrideSettingsError) {
-      showError(getRBACErrorMessage(enableServiceOverrideSettingsError))
-    }
-  }, [enableServiceOverrideSettingsError])
-
-  const isServiceOverridesEnabled = CDS_SERVICE_OVERRIDES_2_0 && enableServiceOverrideSettings?.data?.value === 'true'
+  const isServiceOverridesEnabled = CDS_SERVICE_OVERRIDES_2_0
 
   return (
     <SideNav.Main>
@@ -108,25 +82,24 @@ const CDSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
             icon="nav-home"
             label={getString('overview')}
             to={routes.toOverview({ accountId, projectIdentifier, orgIdentifier, module })}
-            visible={!isCommunity && !isCDGetStartedVisible}
+            hidden={isCommunity}
           />
           <SideNav.Link
             icon="get-started"
             label={getString('getStarted')}
             to={routes.toGetStartedWithCD({ accountId, projectIdentifier, orgIdentifier, module })}
-            visible={isCDGetStartedVisible}
           />
           <SideNav.Link
             icon="execution"
             label={getString('executionsText')}
             to={routes.toDeployments({ accountId, projectIdentifier, orgIdentifier, module })}
-            visible={mode !== NAV_MODE.ALL}
+            hidden={mode === NAV_MODE.ALL}
           />
           <SideNav.Link
             icon="nav-pipeline"
             label={getString('pipelines')}
             to={routes.toPipelines({ accountId, projectIdentifier, orgIdentifier, module })}
-            visible={mode !== NAV_MODE.ALL}
+            hidden={mode === NAV_MODE.ALL}
           />
           <SideNav.Link
             icon="services"
@@ -142,19 +115,19 @@ const CDSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
             icon="monitored-service"
             label={getString('common.monitoredServices')}
             to={routes.toMonitoredServices({ accountId, projectIdentifier, orgIdentifier, module })}
-            visible={SRM_COMMON_MONITORED_SERVICE}
+            hidden={!SRM_COMMON_MONITORED_SERVICE}
           />
           <SideNav.Link
             label={getString('common.overrides')}
             to={routes.toServiceOverrides({ accountId, projectIdentifier, orgIdentifier, module })}
-            visible={isServiceOverridesEnabled}
+            hidden={!isServiceOverridesEnabled}
             icon="layers-outline"
           />
           <SideNav.Link
             icon="gitops"
             label={getString('cd.gitOps')}
             to={routes.toGitOps({ ...params, module })}
-            visible={!isCommunity}
+            hidden={isCommunity}
           />
         </SideNav.Scope>
       </SideNav.Section>

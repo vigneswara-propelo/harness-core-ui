@@ -29,13 +29,14 @@ const SideNavHeader: React.FC = () => {
   const moduleFromParam = match?.params.module as Module
   const module = moduleFromParam ? moduleToModuleNameMapping[moduleFromParam] : undefined
   const {
-    shortLabel = undefined,
     icon = undefined,
-    color = undefined
+    color = undefined,
+    label = undefined
   } = module && match?.params.mode === NAV_MODE.MODULE && moduleMap[module as NavModuleName]
     ? moduleMap[module as NavModuleName]
     : {}
   const { getString } = useStrings()
+  const moduleProps = match?.params.mode === NAV_MODE.MODULE ? { module: moduleFromParam } : {}
 
   return (
     <Layout.Horizontal
@@ -43,12 +44,15 @@ const SideNavHeader: React.FC = () => {
       className={css.container}
       style={{ borderColor: color ? `var(${color})` : 'var(--primary-6' }}
     >
-      <Link className={css.link} to={routes.toMode({ mode: match?.params.mode || NAV_MODE.ADMIN, accountId })}>
+      <Link
+        className={css.link}
+        to={routes.toMode({ mode: match?.params.mode || NAV_MODE.ADMIN, accountId, ...moduleProps })}
+      >
         <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-          <Icon name={icon || 'harness-logo-black'} size={icon ? 24 : 100} margin={{ right: 'small' }} />
-          {shortLabel && (
-            <Text color={Color.GREY_800} font={{ variation: FontVariation.H6 }}>
-              {getString(shortLabel)}
+          <Icon name={icon || 'harness-logo-black'} size={icon ? 32 : 100} margin={{ right: 'small' }} />
+          {label && (
+            <Text color={Color.GREY_800} font={{ variation: FontVariation.BODY2 }} className={css.label}>
+              {getString(label)}
             </Text>
           )}
         </Layout.Horizontal>

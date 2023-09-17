@@ -36,7 +36,7 @@ export default function IACMSideNav(mode: NAV_MODE): React.ReactElement {
             label={getString('pipelines')}
             icon="nav-pipeline"
             to={routes.toPipelines({ accountId, projectIdentifier, orgIdentifier, module })}
-            visible={mode !== NAV_MODE.ALL}
+            hidden={mode === NAV_MODE.ALL}
           />
         </SideNav.Scope>
       </SideNav.Section>

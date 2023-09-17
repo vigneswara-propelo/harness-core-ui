@@ -21,35 +21,6 @@ export interface ScopeSwitchDialogProps {
   hideScopeIcon?: boolean
 }
 
-// interface ScopeSwitchDialoActions {
-//   clickOnSelectScope: () => void
-//   onClose: () => void
-//   closeScopeSelector: () => void
-// }
-// interface ScopeSwitchCardProps {
-//   icon: IconName
-//   onClick: () => void
-//   title: string
-//   subtitle?: string
-// }
-
-// const ScopeSwitchCard: React.FC<ScopeSwitchCardProps> = props => {
-//   const { icon, onClick, title, subtitle } = props
-//   return (
-//     <Card className={css.card} onClick={onClick}>
-//       <Icon name={icon} size={32} color={Color.PRIMARY_5} />
-//       <Layout.Vertical className={css.flex1} margin={{ left: 'medium' }}>
-//         <Text color={Color.GREY_700} font={{ variation: FontVariation.H6 }} margin={{ bottom: 'xsmall' }}>
-//           {title}
-//         </Text>
-//         <Text color={Color.GREY_800} font={{ variation: FontVariation.TINY_SEMI }} lineClamp={2}>
-//           {subtitle}
-//         </Text>
-//       </Layout.Vertical>
-//     </Card>
-//   )
-// }
-
 const scopeIconMap: Record<Scope, IconName> = {
   [Scope.PROJECT]: 'nav-project',
   [Scope.ORGANIZATION]: 'nav-organization',

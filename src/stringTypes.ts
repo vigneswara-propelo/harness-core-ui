@@ -60,6 +60,8 @@ export interface StringsMap {
   'common.allClusters': string
   'common.allEnvironments': string
   'common.allErrors': string
+  'common.allMode.welcome.subtitle': string
+  'common.allMode.welcome.title': string
   'common.allServices': string
   'common.allowFirstGenAccess': string
   'common.analyzing': string
@@ -940,6 +942,7 @@ export interface StringsMap {
   'common.purpose.ci.integration': string
   'common.purpose.ci.subtitle': string
   'common.purpose.code.name': string
+  'common.purpose.code.title': string
   'common.purpose.compare': string
   'common.purpose.continuous': string
   'common.purpose.cv.continuous': string
@@ -1235,6 +1238,7 @@ export interface StringsMap {
   'common.specified': string
   'common.specify': string
   'common.ssca': string
+  'common.sscaShortLabel': string
   'common.sscaText': string
   'common.stable': string
   'common.stage': string

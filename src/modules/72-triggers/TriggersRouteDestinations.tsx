@@ -16,6 +16,7 @@ import TriggersPage from './pages/triggers/TriggersPage'
 import TriggerActivityHistoryPage from './pages/triggers/TriggerLandingPage/TriggerActivityHistoryPage/TriggerActivityHistoryPage'
 import TriggersWizardPage from './pages/triggers/TriggersWizardPage'
 import TriggerDetailPage from './pages/triggers/TriggerLandingPage/TriggerDetailPage/TriggerDetailPage'
+import TriggerLandingPage from './pages/triggers/TriggerLandingPage/TriggerLandingPage'
 
 interface TriggersRouteDestinationProps {
   mode: NAV_MODE
@@ -50,9 +51,9 @@ function TriggersRouteDestinations({
         licenseRedirectData={licenseRedirectData}
         pageName={PAGE_NAME.TriggersPage}
       >
-        <PipelineDetails>
+        <TriggerLandingPage>
           <TriggerDetailPage />
-        </PipelineDetails>
+        </TriggerLandingPage>
       </RouteWithContext>
       <RouteWithContext
         exact
@@ -63,9 +64,9 @@ function TriggersRouteDestinations({
         licenseRedirectData={licenseRedirectData}
         pageName={PAGE_NAME.TriggersPage}
       >
-        <PipelineDetails>
+        <TriggerLandingPage>
           <TriggerActivityHistoryPage />
-        </PipelineDetails>
+        </TriggerLandingPage>
       </RouteWithContext>
       <RouteWithContext
         exact
@@ -76,9 +77,7 @@ function TriggersRouteDestinations({
         licenseRedirectData={licenseRedirectData}
         pageName={PAGE_NAME.TriggersPage}
       >
-        <PipelineDetails>
-          <TriggersWizardPage />
-        </PipelineDetails>
+        <TriggersWizardPage />
       </RouteWithContext>
     </>
   )

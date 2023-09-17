@@ -168,7 +168,7 @@ const RoutesV2 = (): React.ReactElement => {
       </Route>
 
       <Route exact path={['/account/:accountId/main-dashboard']}>
-        <RedirectToMode mode={NAV_MODE.ADMIN} />
+        <Redirect to={routes.toMode({ mode: NAV_MODE.ALL, noscope: true })} />
       </Route>
 
       {/* home path redirects */}

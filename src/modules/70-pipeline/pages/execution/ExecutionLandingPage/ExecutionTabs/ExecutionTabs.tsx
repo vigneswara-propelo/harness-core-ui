@@ -10,7 +10,8 @@ import { HarnessDocTooltip, Icon, Tabs } from '@harness/uicore'
 import { Switch } from '@blueprintjs/core'
 import { NavLink, useParams, useLocation, matchPath } from 'react-router-dom'
 
-import routes from '@common/RouteDefinitions'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { accountPathProps, executionPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
 import { useAnyEnterpriseLicense } from '@common/hooks/useModuleLicenses'
@@ -19,7 +20,7 @@ import type { CIWebhookInfoDTO } from 'services/ci'
 import type { ExecutionQueryParams } from '@pipeline/utils/executionUtils'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useIsPrivateAccess } from 'framework/hooks/usePublicAccess'
@@ -61,7 +62,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
   const { children, savedExecutionView, setSavedExecutionView } = props
   const { getString } = useStrings()
   const { pipelineExecutionDetail, isPipelineInvalid } = useExecutionContext()
-  const CI_YAML_VERSIONING = useFeatureFlag(FeatureFlag.CI_YAML_VERSIONING)
+  const { CI_YAML_VERSIONING, CDS_NAV_2_0 } = useFeatureFlags()
   const initialSelectedView = isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
     ? SavedExecutionViewTypes.LOG
     : savedExecutionView || SavedExecutionViewTypes.GRAPH
@@ -78,6 +79,8 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
   const isCetCdIntegrationEnabled = useFeatureFlag(FeatureFlag.CET_CD_INTEGRATION)
   const canUsePolicyEngine = useAnyEnterpriseLicense()
   const isPrivateAccess = useIsPrivateAccess()
+
+  const routes = CDS_NAV_2_0 ? routesV2 : routesV1
 
   const routeParams = { ...accountPathProps, ...executionPathProps, ...pipelineModuleParams }
   const isLogView =

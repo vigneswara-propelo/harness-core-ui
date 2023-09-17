@@ -60,11 +60,11 @@ const ModuleRouteConfig: Record<NavModuleName, IModuleRouteConfig> = {
     routes: ChaosRouteDestinations
   },
   [ModuleName.CODE]: {
-    sideNavLinks: CDSideNavLinks,
+    sideNavLinks: () => <></>,
     routes: () => <></>
   },
   [ModuleName.CET]: {
-    sideNavLinks: CDSideNavLinks,
+    sideNavLinks: () => <></>,
     routes: () => <></>
   },
   [ModuleName.CE]: {
@@ -80,7 +80,7 @@ const ModuleRouteConfig: Record<NavModuleName, IModuleRouteConfig> = {
     routes: IACMRouteDestinations
   },
   [ModuleName.IDP]: {
-    sideNavLinks: CDSideNavLinks,
+    sideNavLinks: () => <></>,
     routes: () => <></>
   },
   [ModuleName.SSCA]: {
@@ -88,7 +88,7 @@ const ModuleRouteConfig: Record<NavModuleName, IModuleRouteConfig> = {
     routes: SSCARouteDestinations
   },
   [ModuleName.SEI]: {
-    sideNavLinks: CDSideNavLinks,
+    sideNavLinks: () => <></>,
     routes: () => <></>
   }
 }

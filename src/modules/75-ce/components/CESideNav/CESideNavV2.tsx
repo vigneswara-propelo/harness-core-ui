@@ -81,7 +81,7 @@ const CCMSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
             }}
           />
           <SideNav.Link
-            visible={CCM_MSP}
+            hidden={!CCM_MSP}
             label={getString('ce.msp.sideNavText')}
             icon="ccm-policy-details"
             to={routes.toCEManagedServiceProvider({ accountId, module })}
@@ -116,7 +116,7 @@ const CCMSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
             }}
           />
           <SideNav.Link
-            visible={showCO}
+            hidden={!showCO}
             label={getString('ce.commitmentOrchestration.sideNavLabel')}
             icon="ccm-nav-commitments"
             to={routes.toCommitmentOrchestration({ accountId, module })}
@@ -127,7 +127,7 @@ const CCMSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
             }}
           />
           <SideNav.Link
-            visible={CCM_CLUSTER_ORCH}
+            hidden={!CCM_CLUSTER_ORCH}
             label={getString('ce.co.clusterOrchestratorLabel')}
             icon="ccm-nav-cluster-orchestration"
             to={routes.toClusterOrchestrator({ accountId, module })}
@@ -141,7 +141,7 @@ const CCMSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
         <SideNav.Title label="ce.sideNav.sectionTitles.costGovernance" />
         <SideNav.Scope scope={Scope.ACCOUNT}>
           <SideNav.Link
-            visible={CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI}
+            hidden={!CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI}
             label={getString('ce.governance.sideNavText')}
             icon="ccm-nav-asset-governance"
             to={routes.toCEGovernance({ accountId, module })}

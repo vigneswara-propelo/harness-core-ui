@@ -23,6 +23,7 @@ import css from './LandingDashboardPage.module.scss'
 
 interface WelcomeViewProps {
   setView: (val: View) => void
+  hideBackButton?: boolean
 }
 
 const LandingDashboardWelcomeView: React.FC<WelcomeViewProps> = props => {

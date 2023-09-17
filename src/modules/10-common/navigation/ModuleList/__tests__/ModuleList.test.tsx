@@ -60,7 +60,7 @@ describe('ModuleList', () => {
     expect(queryByText('common.purpose.cf.continuous')).toBeDefined()
     expect(queryByText('common.purpose.cv.serviceReliability')).toBeDefined()
     expect(queryByText('common.purpose.ce.cloudCost')).toBeNull()
-    expect(queryByText('common.purpose.sto.continuous')).not.toBeNull()
+    expect(queryByText('common.stoText')).not.toBeNull()
     expect(queryByText('common.purpose.chaos.chaos')).toBeNull()
   })
 

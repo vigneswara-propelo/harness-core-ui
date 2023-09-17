@@ -52,14 +52,14 @@ const ChaosSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
             icon="chaos-nav-resilience-probes"
             label={getString('chaos.navLabels.probes')}
             to={routes.toChaosProbes(routeParams)}
-            visible={CHAOS_PROBE_ENABLED}
+            hidden={!CHAOS_PROBE_ENABLED}
           />
 
           <SideNav.Link
             icon="default-dashboard"
             label={getString('chaos.navLabels.dashboards')}
             to={routes.toChaosDashboards(routeParams)}
-            visible={CHAOS_DASHBOARD_ENABLED}
+            hidden={!CHAOS_DASHBOARD_ENABLED}
           />
 
           <SideNav.Link
@@ -72,14 +72,14 @@ const ChaosSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
             icon="chaos-nav-chaosguard"
             label={getString('chaos.navLabels.chaosGuard')}
             to={routes.toChaosSecurityGovernance(routeParams)}
-            visible={CHAOS_SECURITY_GOVERNANCE}
+            hidden={!CHAOS_SECURITY_GOVERNANCE}
           />
 
           <SideNav.Link
             icon="configure"
             label={getString('chaos.navLabels.imageRegistry')}
             to={routes.toChaosImageRegistry(routeParams)}
-            visible={CHAOS_IMAGE_REGISTRY_DEV}
+            hidden={!CHAOS_IMAGE_REGISTRY_DEV}
           />
         </SideNav.Scope>
       </SideNav.Section>

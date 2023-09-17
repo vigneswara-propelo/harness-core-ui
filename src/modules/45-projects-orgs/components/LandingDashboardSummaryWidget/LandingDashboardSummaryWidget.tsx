@@ -38,6 +38,8 @@ import DashboardAPIErrorWidget, {
 } from '@projects-orgs/components/DashboardAPIErrorWidget/DashboardAPIErrorWidget'
 
 import OverviewGlanceCards from '@projects-orgs/components/OverviewGlanceCards/OverviewGlanceCards'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import routesV2 from '@common/RouteDefinitionsV2'
 import css from './LandingDashboardSummaryWidget.module.scss'
 
 const getModuleSummaryHeader = (iconName: IconName, title: string): JSX.Element | string => {
@@ -117,7 +119,8 @@ const renderModuleSummary = (
   accountId: string,
   strings: Record<string, string>,
   iconName: IconName,
-  refetch: DashboardAPIErrorWidgetProps['callback']
+  refetch: DashboardAPIErrorWidgetProps['callback'],
+  isNewLeftNav?: boolean
 ): JSX.Element => {
   return dataKey && responseData?.[dataKey]?.executionStatus === 'SUCCESS' ? (
     responseData?.[dataKey]?.response?.length ? (
@@ -139,7 +142,15 @@ const renderModuleSummary = (
           </Text>
         }
         iconProps={{ size: 100 }}
-        getStartedLink={routes.toCDHome({ accountId })}
+        getStartedLink={
+          isNewLeftNav
+            ? routesV2.toMode({
+                accountId,
+                module: 'cd',
+                mode: 'module'
+              })
+            : routes.toCDHome({ accountId })
+        }
       ></DashboardNoDataWidget>
     )
   ) : (
@@ -195,6 +206,7 @@ const LandingDashboardSummaryWidget: React.FC<LandingDashboardSummaryWidgetProps
   const { accountId } = useParams<ProjectPathProps>()
   const [range] = useState([Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000, Date.now()])
   const { getString } = useStrings()
+  const { CDS_NAV_2_0: newLeftNav } = useFeatureFlags()
 
   const {
     data: response,
@@ -247,7 +259,8 @@ const LandingDashboardSummaryWidget: React.FC<LandingDashboardSummaryWidgetProps
                     noDeployments: getString('common.noDeployments')
                   },
                   iconName,
-                  refetch
+                  refetch,
+                  newLeftNav
                 )}
               </Layout.Horizontal>
             ) : (

@@ -22,7 +22,7 @@
   height: 100vh;
 
   .nonModuleSections {
-    gap: var(--spacing-7);
+    gap: var(--spacing-8);
   }
 
   span[data-icon='customize'] {
@@ -65,8 +65,8 @@
 }
 
 .modeCard {
-  min-width: 172px;
-  height: 60px;
+  width: 186px;
+  height: 56px;
   padding-left: var(--spacing-4) !important;
   overflow: hidden;
   padding-right: 30px !important;
@@ -79,6 +79,10 @@
   text-decoration: none;
   border-radius: 4px;
   box-shadow: 0px 2px 4px 0px rgba(96, 97, 112, 0.16), 0px 0px 1px 0px rgba(40, 41, 61, 0.04);
+
+  > p {
+    line-height: var(--spacing-5);
+  }
 
   &:hover,
   &.active {

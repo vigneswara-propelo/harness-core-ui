@@ -40,7 +40,7 @@ const CFSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
             icon="nav-pipeline"
             label={getString('pipelines')}
             to={routes.toPipelines({ accountId, projectIdentifier, orgIdentifier, module })}
-            visible={mode !== NAV_MODE.ALL}
+            hidden={mode === NAV_MODE.ALL}
           />
           <SideNav.Link
             icon="target-management"
