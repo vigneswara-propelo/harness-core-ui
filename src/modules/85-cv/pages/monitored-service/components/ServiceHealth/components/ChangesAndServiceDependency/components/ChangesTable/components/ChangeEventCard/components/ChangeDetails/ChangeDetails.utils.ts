@@ -9,7 +9,12 @@ import { Color } from '@harness/design-system'
 import { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import type { ChangeEventDTO } from 'services/cv'
 import type { UseStringsReturn } from 'framework/strings'
-import { EXECUTION_STATUS_HARNESS_CD_NEXTGEN, EXECUTION_STATUS_HARNESS_CD } from './ChangeDetails.constant'
+import {
+  EXECUTION_STATUS_HARNESS_CD_NEXTGEN,
+  EXECUTION_STATUS_HARNESS_CD,
+  EXTERNAL_LINK_TO_ENTITY,
+  CHANGE_EVENT_DETAILS_LINK
+} from './ChangeDetails.constant'
 
 export const createDetailsTitle = (type?: string, category?: string) => {
   switch (category) {
@@ -28,6 +33,8 @@ export const getOnClickOptions = (detailsItem: { name: string | ChangeEventDTO['
   }
   return {}
 }
+
+export const isUrl = (key: string): boolean => key === EXTERNAL_LINK_TO_ENTITY || key === CHANGE_EVENT_DETAILS_LINK
 
 const statusToColorMappingHarnessCDNextGen = (status: keyof typeof EXECUTION_STATUS_HARNESS_CD_NEXTGEN) => {
   switch (status) {

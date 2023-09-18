@@ -15,12 +15,11 @@ import {
   ChangeSourceTypes,
   CustomChangeSourceList
 } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
-import { EXECUTED_BY, UPDATED_BY } from '@cv/constants'
 import { getDetailsLabel } from '@cv/utils/CommonUtils'
-import { getOnClickOptions, getSourceLabel, statusToColorMapping } from './ChangeDetails.utils'
+import { getOnClickOptions, getSourceLabel, isUrl, statusToColorMapping } from './ChangeDetails.utils'
 import type { ChangeDetailsDataInterface } from '../../ChangeEventCard.types'
 import StatusChip from './components/StatusChip/StatusChip'
-import { ExternalLinkToEntity } from './ChangeDetails.constant'
+import { EXECUTED_BY, UPDATED_BY } from './ChangeDetails.constant'
 import css from './ChangeDetails.module.scss'
 
 export default function ChangeDetails({
@@ -92,12 +91,12 @@ export const getChanges = (details: ChangeDetailsDataInterface['details']) => {
       value = typeof item[1] === 'string' ? item[1] : item[1]?.name
     }
 
-    const isURL = item[0] === ExternalLinkToEntity
+    const isURL = isUrl(item[0])
 
     if (isURL) {
       return (
         <>
-          <Text className={css.gridItem} font={{ size: 'small' }}>
+          <Text className={css.gridItem} font={{ size: 'small', weight: 'semi-bold' }}>
             {shouldVisible ? getDetailsLabel(item[0], getString) : ''}
           </Text>
           <Text

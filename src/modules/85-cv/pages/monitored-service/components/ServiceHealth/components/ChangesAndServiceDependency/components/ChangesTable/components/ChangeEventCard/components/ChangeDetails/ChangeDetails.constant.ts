@@ -52,4 +52,7 @@ export enum EXECUTION_STATUS_HARNESS_CD {
   PREPARING = 'PREPARING'
 }
 
-export const ExternalLinkToEntity = 'externalLinkToEntity'
+export const EXTERNAL_LINK_TO_ENTITY = 'externalLinkToEntity'
+export const CHANGE_EVENT_DETAILS_LINK = 'changeEventDetailsLink'
+export const EXECUTED_BY = 'executedBy'
+export const UPDATED_BY = 'updatedBy'

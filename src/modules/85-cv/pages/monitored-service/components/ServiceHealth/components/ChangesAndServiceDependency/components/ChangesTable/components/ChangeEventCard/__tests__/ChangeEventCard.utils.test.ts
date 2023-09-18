@@ -18,9 +18,13 @@ import {
 } from '../ChangeEventCard.utils'
 import {
   EXECUTION_STATUS_HARNESS_CD_NEXTGEN,
-  EXECUTION_STATUS_HARNESS_CD
+  EXECUTION_STATUS_HARNESS_CD,
+  CHANGE_EVENT_DETAILS_LINK,
+  EXTERNAL_LINK_TO_ENTITY,
+  EXECUTED_BY,
+  UPDATED_BY
 } from '../components/ChangeDetails/ChangeDetails.constant'
-import { statusToColorMapping } from '../components/ChangeDetails/ChangeDetails.utils'
+import { isUrl, statusToColorMapping } from '../components/ChangeDetails/ChangeDetails.utils'
 import { payload } from './ChangeEventCard.mock'
 
 describe('Validate Utils', () => {
@@ -70,6 +74,14 @@ describe('Validate Utils', () => {
       envIdentifier: 'prod',
       status: 'triggered'
     })
+  })
+
+  test('is the value URL', () => {
+    expect(isUrl(CHANGE_EVENT_DETAILS_LINK)).toEqual(true)
+    expect(isUrl(EXTERNAL_LINK_TO_ENTITY)).toEqual(true)
+    expect(isUrl(EXECUTED_BY)).toEqual(false)
+    expect(isUrl(UPDATED_BY)).toEqual(false)
+    expect(isUrl('description')).toEqual(false)
   })
 
   test('should verificationResultToColor', () => {

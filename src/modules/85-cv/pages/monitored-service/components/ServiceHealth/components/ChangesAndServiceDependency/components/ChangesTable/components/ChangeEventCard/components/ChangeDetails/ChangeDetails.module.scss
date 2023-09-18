@@ -10,8 +10,9 @@
   width: fit-content;
   grid-gap: var(--padding-button) !important;
   margin: var(--spacing-large) 0 !important;
-  grid-template-columns: 10% 90%;
+  grid-template-columns: 12% 88%;
 }
+
 .gridItem {
   text-transform: capitalize;
 }

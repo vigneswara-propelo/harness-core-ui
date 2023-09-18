@@ -353,6 +353,8 @@ export const getDetailsLabel = (key: string, getString: UseStringsReturn['getStr
       return getString('common.updatedBy')
     case 'externalLinkToEntity':
       return getString('cv.changesPage.externalLink')
+    case 'changeEventDetailsLink':
+      return getString('details')
     default:
       return key
   }
