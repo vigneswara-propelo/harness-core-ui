@@ -23,17 +23,16 @@ export interface NewWebhookModalProps {
   entityScope?: Scope
   closeModal: () => void
 }
+export function processFolderPaths(folderPaths: string[]): { id: string; value: string }[] {
+  return folderPaths.map(path => ({ id: uuid('', nameSpace()), value: path }))
+}
 
 export const initialWebhookModalData = {
   name: '',
   identifier: '',
   connectorRef: '',
   repo: '',
-  folderPaths: []
-}
-
-export function processFolderPaths(folderPaths: string[]): { id: string; value: string }[] {
-  return [...folderPaths].map(path => ({ id: uuid('', nameSpace()), value: path }))
+  folderPaths: processFolderPaths([''])
 }
 
 export enum STATUS {

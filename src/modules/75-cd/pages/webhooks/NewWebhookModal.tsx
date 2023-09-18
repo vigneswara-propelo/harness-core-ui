@@ -9,6 +9,7 @@ import React from 'react'
 import { Button, ButtonVariation, FormInput, Formik, Layout, Text, Icon } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { FieldArray, Form, FormikProps } from 'formik'
+import * as Yup from 'yup'
 import cx from 'classnames'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { useParams } from 'react-router-dom'
@@ -23,6 +24,7 @@ import { useStrings } from 'framework/strings'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getConnectorIdentifierWithScope } from '@platform/connectors/utils/utils'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
+import { NameIdentifierSchema } from '@common/utils/Validation'
 import { AddWebhookModalData, NewWebhookModalProps } from './utils'
 import css from './Webhooks.module.scss'
 
@@ -85,7 +87,38 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
   }
 
   return (
-    <Formik<AddWebhookModalData> initialValues={initialData} formName="addWebhookModalData" onSubmit={handleSubmit}>
+    <Formik<AddWebhookModalData>
+      initialValues={initialData}
+      formName="addWebhookModalData"
+      onSubmit={handleSubmit}
+      validationSchema={NameIdentifierSchema(getString, {
+        nameRequiredErrorMsg: getString('common.validation.fieldIsRequired', {
+          name: getString('name')
+        })
+      }).shape({
+        connectorRef: Yup.string().required(
+          getString('common.validation.fieldIsRequired', {
+            name: getString('platform.connectors.title.gitConnector')
+          })
+        ),
+        repo: Yup.string().required(
+          getString('common.validation.fieldIsRequired', {
+            name: getString('repository')
+          })
+        ),
+        folderPaths: Yup.array()
+          .min(1)
+          .of(
+            Yup.object({
+              value: Yup.string().required(
+                getString('common.validation.fieldIsRequired', {
+                  name: getString('common.git.folderPath')
+                })
+              )
+            })
+          )
+      })}
+    >
       {formik => {
         formikRef.current = formik
         return (
@@ -126,7 +159,7 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
               <FieldArray
                 name="folderPaths"
                 render={({ push, remove }) => {
-                  const getDefaultResetValue = () => {
+                  const getDefaultResetValue = (): [{ id: string; value: string }] => {
                     return [{ id: uuid('', nameSpace()), value: '' }]
                   }
                   const value = get(formik.values, 'folderPaths', getDefaultResetValue())
@@ -136,16 +169,18 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
                         value.map(({ id }, index: number) => (
                           <div className={css.group} key={id}>
                             <Layout.Horizontal className={cx(css.width, css.folderPath)}>
-                              <div className={css.paddingRight}>{index + 1}.</div>
+                              <div className={css.folderPathIndex}>{index + 1}.</div>
                               <FormInput.Text name={`folderPaths[${index}].value`} label="" style={{ flexGrow: 1 }} />
                             </Layout.Horizontal>
-                            <Button
-                              icon="main-trash"
-                              iconProps={{ size: 20 }}
-                              minimal
-                              onClick={() => remove(index)}
-                              data-testid={`remove-folderPaths-[${index}]`}
-                            />
+                            {index !== 0 && (
+                              <Button
+                                icon="main-trash"
+                                iconProps={{ size: 20 }}
+                                minimal
+                                onClick={() => remove(index)}
+                                data-testid={`remove-folderPaths-[${index}]`}
+                              />
+                            )}
                           </div>
                         ))}
                       <Button

@@ -41,7 +41,6 @@
 .group {
   display: flex;
   padding: var(--spacing-small) 0px var(--spacing-small) 0px;
-  align-items: center;
 
   &:not(:first-child) {
     margin-top: var(--spacing-medium);
@@ -57,14 +56,14 @@
 }
 
 .folderPath {
-  align-items: center;
   > * {
     margin-bottom: 0;
   }
 }
 
-.padding-right {
+.folderPathIndex {
   padding-right: var(--spacing-small);
+  margin-top: var(--spacing-xsmall);
 }
 
 .add-btn {
