@@ -154,6 +154,7 @@ function ServiceConfiguration({
   const handleModeSwitch = useCallback(
     (view: SelectedView): void => {
       if (view === SelectedView.VISUAL) {
+        setHasYamlValidationErrors(false)
         const newServiceData = getUpdatedPipelineYaml()
         newServiceData && updatePipeline(newServiceData, view)
       }
