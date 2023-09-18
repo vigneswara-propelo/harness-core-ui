@@ -13,10 +13,13 @@ import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { Feature, useGetAllFeatures } from 'services/cf'
 import { GetEnvironmentListQueryParams, useGetEnvironmentList } from 'services/cd-ng'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getErrorMessage } from '@cf/utils/CFUtils'
 import type { FlagConfigurationStepData } from './types'
 import FlagChanges from './FlagChanges/FlagChanges'
+import FlagChangesRuntime from './FlagChangesV2/FlagChangesRuntime'
 
 export interface FlagConfigurationInputSetStepProps {
   existingValues?: FlagConfigurationStepData
@@ -28,6 +31,8 @@ export interface FlagConfigurationInputSetStepProps {
 
 const FlagConfigurationInputSetStep = connect<FlagConfigurationInputSetStepProps, FlagConfigurationStepData>(
   ({ existingValues, template, pathPrefix, readonly, formik }) => {
+    const expressionSupportEnabled = useFeatureFlag(FeatureFlag.FFM_8261_EXPRESSIONS_IN_PIPELINE_STEP)
+
     const prefix = useCallback<(fieldName: string) => string>(
       fieldName => (pathPrefix ? `${pathPrefix}.${fieldName}` : fieldName),
       [pathPrefix]
@@ -47,7 +52,10 @@ const FlagConfigurationInputSetStep = connect<FlagConfigurationInputSetStepProps
       data: featuresData,
       error: errorFeatures,
       refetch: refetchFeatures
-    } = useGetAllFeatures({ queryParams: { ...queryParams, sortByField: 'name' }, debounce: 250 })
+    } = useGetAllFeatures({
+      queryParams: { ...queryParams, sortByField: 'name' },
+      debounce: 250
+    })
 
     const featureItems = useMemo<SelectOption[]>(
       () => featuresData?.features?.map(({ identifier: value, name: label }) => ({ value, label })) || [],
@@ -96,6 +104,18 @@ const FlagConfigurationInputSetStep = connect<FlagConfigurationInputSetStepProps
       [featuresData?.features, selectedFeatureId]
     )
 
+    const flattenedInstructions = JSON.stringify(template?.spec.instructions)
+    const hasFlagChangesRuntimeInputs = useMemo<boolean>(() => {
+      if (!Array.isArray(template?.spec?.instructions)) {
+        return false
+      }
+
+      return !!template?.spec.instructions.some(instruction => {
+        return instruction.spec?.state === RUNTIME_INPUT_VALUE // set flag state
+      })
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [flattenedInstructions])
+
     if (errorFeatures || errorEnvironments) {
       return (
         <Container padding={{ top: 'huge' }}>
@@ -141,6 +161,15 @@ const FlagConfigurationInputSetStep = connect<FlagConfigurationInputSetStepProps
             clearField={fieldName => formik?.setFieldValue(prefix(fieldName), undefined)}
             setField={(fieldName, value) => formik?.setFieldValue(prefix(fieldName), value)}
             fieldValues={formik.values}
+            pathPrefix={pathPrefix}
+          />
+        )}
+
+        {expressionSupportEnabled && hasFlagChangesRuntimeInputs && (
+          <FlagChangesRuntime
+            selectedFeature={selectedFeature}
+            selectedEnvironmentId={selectedEnvironmentId}
+            initialInstructions={existingValues?.spec?.instructions}
             pathPrefix={pathPrefix}
           />
         )}

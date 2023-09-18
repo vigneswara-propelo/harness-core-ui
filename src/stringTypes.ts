@@ -8801,6 +8801,7 @@ export interface StringsMap {
   'cf.pipeline.advanced.title': string
   'cf.pipeline.flagConfiguration.addEditVariationToSpecificTargets': string
   'cf.pipeline.flagConfiguration.addEditVariationToTargetGroups': string
+  'cf.pipeline.flagConfiguration.addFlagChange': string
   'cf.pipeline.flagConfiguration.configureMore': string
   'cf.pipeline.flagConfiguration.enterTarget': string
   'cf.pipeline.flagConfiguration.enterTargetGroup': string
@@ -8813,7 +8814,9 @@ export interface StringsMap {
   'cf.pipeline.flagConfiguration.flagChangesRuntimeSetDefaultRules': string
   'cf.pipeline.flagConfiguration.flagChangesRuntimeSetFlagSwitch': string
   'cf.pipeline.flagConfiguration.flagRequired': string
+  'cf.pipeline.flagConfiguration.noFlagChanges': string
   'cf.pipeline.flagConfiguration.pleaseSelectAFeatureFlag': string
+  'cf.pipeline.flagConfiguration.removeFlagChange': string
   'cf.pipeline.flagConfiguration.selectEnvironment': string
   'cf.pipeline.flagConfiguration.selectFlag': string
   'cf.pipeline.flagConfiguration.selectOnOrOff': string

@@ -507,6 +507,9 @@ pipeline:
     toTargetGroup: to target group
     toTargetGroups: to target groups
     pleaseSelectAFeatureFlag: Please select an environment and feature flag.
+    noFlagChanges: Please add a flag change.
+    removeFlagChange: Remove flag change
+    addFlagChange: Add Flag Change
 segmentDetail:
   directlyAdded: Directly Added
   autoAdded: Automatically Added Through Conditions

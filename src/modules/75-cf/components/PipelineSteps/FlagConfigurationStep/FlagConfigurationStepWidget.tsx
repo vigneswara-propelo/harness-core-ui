@@ -11,6 +11,7 @@ import {
   Container,
   Formik,
   FormInput,
+  getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
   PageError,
@@ -26,8 +27,11 @@ import { GetEnvironmentListQueryParams, useGetEnvironmentList } from 'services/c
 import { GetAllFeaturesQueryParams, GetFeatureFlagQueryParams, useGetAllFeatures, useGetFeatureFlag } from 'services/cf'
 import { useStrings } from 'framework/strings'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import type { FlagConfigurationStepData } from './types'
 import FlagChanges from './FlagChanges/FlagChanges'
+import FlagChangesV2 from './FlagChangesV2/FlagChanges'
 import preProcessFormValues from './preProcessFormValues'
 import flagChangesValidationSchema from './FlagChanges/flagChangesValidationSchema'
 
@@ -46,6 +50,8 @@ const FlagConfigurationStepWidget = forwardRef(
     { initialValues, onUpdate, isNewStep, readonly, stepViewType, allowableTypes }: FlagConfigurationStepWidgetProps,
     formikRef: StepFormikFowardRef<FlagConfigurationStepData>
   ) => {
+    const expressionSupportEnabled = useFeatureFlag(FeatureFlag.FFM_8261_EXPRESSIONS_IN_PIPELINE_STEP)
+
     const [isInitialRender, setIsInitialRender] = useState<boolean>(true)
     const formValuesRef = useRef<FlagConfigurationStepData>({} as FlagConfigurationStepData)
     const { getString } = useStrings()
@@ -94,14 +100,21 @@ const FlagConfigurationStepWidget = forwardRef(
       [initialValues, featuresData, projectIdentifier, orgIdentifier]
     )
 
-    const allowedTypes =
+    let allowedTypes =
       !orgIdentifier || !projectIdentifier ? ([MultiTypeInputType.RUNTIME] as AllowedTypes) : allowableTypes
 
+    if (expressionSupportEnabled) {
+      allowedTypes =
+        !orgIdentifier || !projectIdentifier
+          ? ([MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION] as AllowedTypes)
+          : ([...allowableTypes, MultiTypeInputType.EXPRESSION] as AllowedTypes)
+    }
+
     useEffect(() => {
-      if (initialValues.spec.feature !== RUNTIME_INPUT_VALUE) {
+      if (getMultiTypeFromValue(initialValues.spec.feature) === MultiTypeInputType.FIXED) {
         refetchFeatures()
       }
-      if (initialValues.spec.environment !== RUNTIME_INPUT_VALUE) {
+      if (getMultiTypeFromValue(initialValues.spec.environment) === MultiTypeInputType.FIXED) {
         refetchEnvironments()
       }
     }, [initialValues.spec.environment, initialValues.spec.feature, refetchEnvironments, refetchFeatures])
@@ -290,7 +303,7 @@ const FlagConfigurationStepWidget = forwardRef(
               />
               <FormInput.MultiTypeInput
                 name="spec.feature"
-                useValue={true}
+                useValue
                 selectItems={featureItems}
                 label={getString('cf.pipeline.flagConfiguration.selectFlag')}
                 disabled={readonly}
@@ -308,19 +321,23 @@ const FlagConfigurationStepWidget = forwardRef(
                 }}
               />
 
-              <FlagChanges
-                selectedFeature={
-                  formValues.spec.feature === RUNTIME_INPUT_VALUE ? formValues.spec.feature : currentFeature
-                }
-                selectedEnvironmentId={currentEnvironment?.identifier}
-                initialInstructions={initialValues.spec.instructions}
-                clearField={(fieldName: string) => setFieldValue(fieldName, undefined)}
-                setField={(fieldName: string, value: unknown) => setFieldValue(fieldName, value)}
-                fieldValues={formValues}
-                envType={envType}
-                flagType={flagType}
-                showRuntimeFixedSelector
-              />
+              {expressionSupportEnabled ? (
+                <FlagChangesV2 selectedFeature={currentFeature} initialInstructions={initialValues.spec.instructions} />
+              ) : (
+                <FlagChanges
+                  selectedFeature={
+                    formValues.spec.feature === RUNTIME_INPUT_VALUE ? formValues.spec.feature : currentFeature
+                  }
+                  selectedEnvironmentId={currentEnvironment?.identifier}
+                  initialInstructions={initialValues.spec.instructions}
+                  clearField={(fieldName: string) => setFieldValue(fieldName, undefined)}
+                  setField={(fieldName: string, value: unknown) => setFieldValue(fieldName, value)}
+                  fieldValues={formValues}
+                  envType={envType}
+                  flagType={flagType}
+                  showRuntimeFixedSelector
+                />
+              )}
             </Layout.Vertical>
           )
         }}
