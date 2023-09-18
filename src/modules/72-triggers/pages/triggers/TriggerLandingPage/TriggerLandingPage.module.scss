@@ -26,6 +26,11 @@
         max-width: 680px;
         overflow-x: scroll;
       }
+
+      .stages-to-execute {
+        padding-left: var(--spacing-4);
+        margin-top: var(--spacing-small);
+      }
     }
   }
 }

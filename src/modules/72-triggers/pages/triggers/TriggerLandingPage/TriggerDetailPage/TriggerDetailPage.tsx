@@ -127,6 +127,24 @@ const getOverviewContent = ({
   }
 ]
 
+const renderStagesToExecute = ({
+  stagesToExecute,
+  getString
+}: {
+  stagesToExecute?: string[]
+  getString: UseStringsReturn['getString']
+}): JSX.Element => {
+  return (
+    <ul className={css.stagesToExecute}>
+      {stagesToExecute?.length ? (
+        stagesToExecute.map(stageToExecute => <li key={stageToExecute}>{stageToExecute}</li>)
+      ) : (
+        <li>{getString('pipeline.allStages')}</li>
+      )}
+    </ul>
+  )
+}
+
 const getDetailsContent = ({
   getString,
   conditionsExist,
@@ -158,7 +176,8 @@ const getDetailsContent = ({
     },
     {
       label: getString('triggers.selectPipelineStages'),
-      value: stagesToExecute?.length ? <p>{stagesToExecute}</p> : <p>{getString('pipeline.allStages')}</p>
+      value: renderStagesToExecute({ stagesToExecute, getString }),
+      type: ContentType.CUSTOM
     }
   ]
 

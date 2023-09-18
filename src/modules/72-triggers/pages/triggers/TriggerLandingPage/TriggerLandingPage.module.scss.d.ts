@@ -12,5 +12,6 @@ declare const styles: {
   readonly inputSet: string
   readonly main: string
   readonly panel: string
+  readonly stagesToExecute: string
 }
 export default styles

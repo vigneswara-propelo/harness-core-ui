@@ -461,24 +461,19 @@ exports[`Test Trigger Detail Page Test should test snapshot view 1`] = `
               <div
                 class="StyledProps--font StyledProps--main detailsSectionRowWrapper"
               >
-                <div
-                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+                <p
+                  class="StyledProps--font StyledProps--main"
+                  style="font-size: 12px;"
                 >
-                  <p
-                    class="StyledProps--font StyledProps--main"
-                    style="font-size: 12px;"
-                  >
-                    triggers.selectPipelineStages
-                  </p>
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
-                    style="--text-line-clamp: 1; width: 424px;"
-                  >
-                    <p>
-                      pipeline.allStages
-                    </p>
-                  </p>
-                </div>
+                  triggers.selectPipelineStages
+                </p>
+                <ul
+                  class="stagesToExecute"
+                >
+                  <li>
+                    pipeline.allStages
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
