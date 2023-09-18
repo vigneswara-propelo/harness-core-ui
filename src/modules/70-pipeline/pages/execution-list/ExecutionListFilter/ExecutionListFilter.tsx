@@ -368,6 +368,10 @@ export function ExecutionListFilter(): React.ReactElement {
           tag: Yup.string().when('buildType', {
             is: BUILD_TYPE.TAG,
             then: Yup.string()
+          }),
+          services: Yup.string().when('artifacts', {
+            is: val => !isEmpty(val),
+            then: Yup.string().required(getString('pipeline.validation.serviceProvideArtifacts'))
           })
         })}
       />

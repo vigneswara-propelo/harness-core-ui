@@ -29,7 +29,8 @@ export const usePipelineListFilterFieldToLabelMapping = () => {
       ['deploymentTypes', getString('deploymentTypeText')],
       ['infrastructureTypes', getString('infrastructureTypeText')],
       ['serviceNames', getString('services')],
-      ['environmentNames', getString('environments')]
+      ['environmentNames', getString('environments')],
+      ['artifactDisplayNames', getString('artifacts')]
     ])
   }, [])
 }
@@ -107,4 +108,11 @@ export const prepareFiltersPayload = (filters: PipelineFilterProperties) => {
   }
 
   return omitBy(filters, isEmpty)
+}
+
+export const artifactFilter = (artifacts?: string) => {
+  return artifacts
+    ?.split(',')
+    ?.map((artifact: string) => artifact.trim())
+    ?.filter((artifact: string) => artifact)
 }

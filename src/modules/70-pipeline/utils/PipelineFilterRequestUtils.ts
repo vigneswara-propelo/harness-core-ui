@@ -11,6 +11,7 @@ import type { PipelineFilterProperties, FilterDTO, NGTag, FilterProperties } fro
 
 import type { FilterDataInterface, FilterInterface } from '@common/components/Filter/Constants'
 import { StringUtils } from '@common/exports'
+import { artifactFilter } from '@pipeline/pages/utils/Filters/filters'
 import { BUILD_TYPE, getCIModuleProperties } from './PipelineExecutionFilterRequestUtils'
 import type { DeploymentTypeContext, BuildTypeContext } from './PipelineExecutionFilterRequestUtils'
 
@@ -67,7 +68,7 @@ export const getValidFilterArguments = (
         infrastructureTypes: infrastructureType ? [infrastructureType] : undefined,
         serviceNames: services?.map((service: MultiSelectOption) => service?.value),
         environmentNames: environments?.map((env: MultiSelectOption) => env?.value),
-        artifacts
+        artifactDisplayNames: artifactFilter(artifacts)
       }
     }
   })

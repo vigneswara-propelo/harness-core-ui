@@ -14,6 +14,7 @@ import type { FilterDataInterface, FilterInterface } from '@common/components/Fi
 import { StringUtils } from '@common/exports'
 import type { CIWebhookInfoDTO } from 'services/ci'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
+import { artifactFilter } from '@pipeline/pages/utils/Filters/filters'
 
 export interface DeploymentTypeContext {
   deploymentType?: MultiSelectOption[]
@@ -89,10 +90,7 @@ export const getValidFilterArguments = (
         infrastructureType: infrastructureType,
         serviceIdentifiers: services?.map((service: MultiSelectOption) => service?.value),
         envIdentifiers: environments?.map((env: MultiSelectOption) => env?.value),
-        artifactDisplayNames: artifacts
-          ?.split(',')
-          ?.map((artifact: string) => artifact.trim())
-          ?.filter((artifact: string) => artifact),
+        artifactDisplayNames: artifactFilter(artifacts),
         gitOpsAppIdentifiers: gitOpsAppIdentifiers?.map((app: MultiSelectOption) => app?.value)
       }
     }

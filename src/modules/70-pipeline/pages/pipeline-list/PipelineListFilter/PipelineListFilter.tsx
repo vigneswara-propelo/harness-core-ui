@@ -161,7 +161,7 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
   } = (filterProperties as PipelineFilterProperties) || {}
   const { ci, cd } = moduleProperties || {}
   const { branch, tag, ciExecutionInfoDTO, repoNames: repositoryName } = ci || {}
-  const { deploymentTypes, environmentNames, infrastructureTypes, serviceNames } = cd || {}
+  const { deploymentTypes, environmentNames, infrastructureTypes, serviceNames, artifactDisplayNames } = cd || {}
   const { sourceBranch, targetBranch } = ciExecutionInfoDTO?.pullRequest || {}
   const buildType = getBuildType(moduleProperties || {})
   const fieldToLabelMapping = usePipelineListFilterFieldToLabelMapping()
@@ -280,7 +280,8 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
       deploymentType: deploymentTypes,
       infrastructureType: infrastructureTypes ? infrastructureTypes[0] : undefined,
       services: getMultiSelectFormOptions(serviceNames, 'service'),
-      environments: getMultiSelectFormOptions(environmentNames, 'environment')
+      environments: getMultiSelectFormOptions(environmentNames, 'environment'),
+      artifacts: artifactDisplayNames?.join(', ')
     }
     const stringKeys: (keyof typeof formValues)[] = [
       'name',
@@ -300,7 +301,7 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
 
     return formValues
   }, [
-    _pipelineTags,
+    artifactDisplayNames,
     branch,
     buildType,
     deploymentTypes,
