@@ -109,3 +109,15 @@
   border: 1px solid var(--primary-5) !important;
   margin-right: var(--margin-form-field) !important;
 }
+
+.errorHandler {
+  margin-bottom: var(--spacing-large) !important;
+}
+
+.modalHeader {
+  margin-bottom: (var(--spacing-large)) !important;
+  top: 0;
+  position: sticky;
+  background-color: var(--white) !important;
+  z-index: 1;
+}

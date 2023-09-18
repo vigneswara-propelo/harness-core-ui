@@ -7218,9 +7218,11 @@ export interface StringsMap {
   'cd.valuesYamlValidation': string
   'cd.varFile': string
   'cd.varFileDetails': string
+  'cd.webhookEvents.backToEdit': string
   'cd.webhookEvents.dateTime': string
   'cd.webhookEvents.eventId': string
   'cd.webhookEvents.events': string
+  'cd.webhookEvents.failedCreateWebhook': string
   'cd.webhookEvents.lastEventDetails': string
   'cd.webhookEvents.payloadDetails': string
   'cd.webhookEvents.pusher': string

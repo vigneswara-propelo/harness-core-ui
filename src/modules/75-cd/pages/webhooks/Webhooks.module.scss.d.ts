@@ -12,6 +12,7 @@ declare const styles: {
   readonly content: string
   readonly dateRange: string
   readonly dialogStylesWebhook: string
+  readonly errorHandler: string
   readonly folderPath: string
   readonly folderPathIndex: string
   readonly footer: string
@@ -19,6 +20,7 @@ declare const styles: {
   readonly header: string
   readonly layout: string
   readonly loading: string
+  readonly modalHeader: string
   readonly noWebhookHeading: string
   readonly noWebhookText: string
   readonly toolbar: string

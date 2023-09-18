@@ -127,16 +127,6 @@ export function Webhooks(): JSX.Element {
           canEscapeKeyClose
           canOutsideClickClose
           onClose={onClosehandler}
-          title={
-            <>
-              <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'small' }}>
-                {getString('cd.webhooks.newWebhook')}
-              </Text>
-              <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_500}>
-                {getString('cd.webhooks.createSubtitle')}
-              </Text>{' '}
-            </>
-          }
           isCloseButtonShown
           className={cx('padded-dialog', css.dialogStylesWebhook)}
         >

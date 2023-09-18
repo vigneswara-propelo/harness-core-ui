@@ -1320,3 +1320,5 @@ webhookEvents:
   timestamp: Timestamp
   viewAll: View All Events
   lastEventDetails: Last Event Details
+  failedCreateWebhook: Failed to set up Web Hook
+  backToEdit: Back to Edit

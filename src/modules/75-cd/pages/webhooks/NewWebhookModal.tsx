@@ -6,8 +6,8 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, FormInput, Formik, Layout, Text, Icon } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Button, ButtonVariation, FormInput, Formik, Layout, Text, Icon, Container } from '@harness/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import { FieldArray, Form, FormikProps } from 'formik'
 import * as Yup from 'yup'
 import cx from 'classnames'
@@ -25,6 +25,7 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import { getConnectorIdentifierWithScope } from '@platform/connectors/utils/utils'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { NameIdentifierSchema } from '@common/utils/Validation'
+import { ErrorHandler, ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
 import { AddWebhookModalData, NewWebhookModalProps } from './utils'
 import css from './Webhooks.module.scss'
 
@@ -33,13 +34,20 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const formikRef = React.useRef<FormikProps<AddWebhookModalData>>()
+  const [errorMessages, setErrorMessages] = React.useState<ResponseMessage[]>([])
 
-  const { data, isLoading: loading, mutate: createWebhook } = useCreateGitxWebhookMutation({})
+  const {
+    data,
+    isLoading: loading,
+    mutate: createWebhook,
+    error: webhookCreateError
+  } = useCreateGitxWebhookMutation({})
 
   const {
     data: webhookUpdateData,
     isLoading: loadingUpdateWebhook,
-    mutate: updateWebhook
+    mutate: updateWebhook,
+    error: webhookUpdateError
   } = useUpdateGitxWebhookMutation({})
 
   function handleSubmit(values: AddWebhookModalData): void {
@@ -66,13 +74,21 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
         })
   }
 
-  if (loading || loadingUpdateWebhook) {
-    return <ContainerSpinner message={getString('cd.webhooks.settingUpWebhook')} />
-  }
+  React.useEffect(() => {
+    const errorMessage = [...errorMessages]
+    if (webhookCreateError) {
+      errorMessage.push({ message: (webhookCreateError as Error).message, level: 'ERROR' })
+    }
+    if (webhookUpdateError) {
+      errorMessage.push({ message: (webhookUpdateError as Error).message, level: 'ERROR' })
+    }
+    setErrorMessages(errorMessage)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [webhookCreateError, webhookUpdateError])
 
   if (data || webhookUpdateData) {
     return (
-      <Layout.Vertical flex={{ alignItems: 'center' }}>
+      <Layout.Vertical flex={{ alignItems: 'center' }} padding={'large'}>
         <Icon name="success-tick" size={34} padding={'small'} />
         <Text font={{ variation: FontVariation.H3 }} padding={'medium'}>
           {getString(isEdit ? 'cd.webhooks.successUpdateMessage' : 'cd.webhooks.successMessage', {
@@ -123,93 +139,124 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
         formikRef.current = formik
         return (
           <Form>
-            <Layout.Vertical className={css.addWebhookModalForm}>
-              <NameId
-                identifierProps={{
-                  inputName: 'name',
-                  isIdentifierEditable: !isEdit
-                }}
-              />
-              <ConnectorReferenceField
-                name="connectorRef"
-                width={353}
-                type={getSupportedProviders()}
-                selected={get(formik.values, 'connectorRef')}
-                error={formik.submitCount > 0 ? (formik.errors?.connectorRef as string) : undefined}
-                label={getString('platform.connectors.title.gitConnector')}
-                placeholder={`- ${getString('select')} -`}
-                accountIdentifier={accountId}
-                {...(entityScope === Scope.ACCOUNT ? {} : { orgIdentifier })}
-                {...(entityScope === Scope.PROJECT ? { projectIdentifier } : {})}
-                onChange={(value, scope) => {
-                  const connectorRefWithScope = getConnectorIdentifierWithScope(scope, value?.identifier)
-
-                  formik.setFieldValue('connectorRef', connectorRefWithScope)
-                  formik.setFieldValue?.('repo', '')
-                }}
-              />
-
-              <RepositorySelect
-                formikProps={formik}
-                selectedValue={get(formik.values, 'repo')}
-                connectorRef={get(formik.values, 'connectorRef')}
-                customClassName={css.width}
-              />
-              <Text>{getString('common.git.folderPath')}</Text>
-              <FieldArray
-                name="folderPaths"
-                render={({ push, remove }) => {
-                  const getDefaultResetValue = (): [{ id: string; value: string }] => {
-                    return [{ id: uuid('', nameSpace()), value: '' }]
-                  }
-                  const value = get(formik.values, 'folderPaths', getDefaultResetValue())
-                  return (
-                    <>
-                      {Array.isArray(value) &&
-                        value.map(({ id }, index: number) => (
-                          <div className={css.group} key={id}>
-                            <Layout.Horizontal className={cx(css.width, css.folderPath)}>
-                              <div className={css.folderPathIndex}>{index + 1}.</div>
-                              <FormInput.Text name={`folderPaths[${index}].value`} label="" style={{ flexGrow: 1 }} />
-                            </Layout.Horizontal>
-                            {index !== 0 && (
-                              <Button
-                                icon="main-trash"
-                                iconProps={{ size: 20 }}
-                                minimal
-                                onClick={() => remove(index)}
-                                data-testid={`remove-folderPaths-[${index}]`}
-                              />
-                            )}
-                          </div>
-                        ))}
-                      <Button
-                        intent="primary"
-                        minimal
-                        text={getString('plusAdd')}
-                        data-testid={`add-folderPaths`}
-                        onClick={() => push({ id: uuid('', nameSpace()), value: '' })}
-                        className={css.addBtn}
-                      />
-                    </>
-                  )
-                }}
-              />
-              <Layout.Horizontal spacing="small" padding={{ top: 'large' }}>
+            {loading || loadingUpdateWebhook ? (
+              <ContainerSpinner message={getString('cd.webhooks.settingUpWebhook')} padding={'large'} />
+            ) : errorMessages.length > 0 ? (
+              <Layout.Vertical flex={{ alignItems: 'center' }}>
+                <Icon name="warning-sign" size={34} padding={'small'} color={Color.RED_500} />
+                <Text font={{ variation: FontVariation.H3 }} padding={'medium'}>
+                  {getString('cd.webhookEvents.failedCreateWebhook')}
+                </Text>
+                <ErrorHandler responseMessages={errorMessages} className={css.errorHandler} />
                 <Button
+                  text={getString('cd.webhookEvents.backToEdit')}
+                  onClick={() => setErrorMessages([])}
                   variation={ButtonVariation.PRIMARY}
-                  type="submit"
-                  text={isEdit ? getString('save') : getString('add')}
                 />
-                <Button
-                  variation={ButtonVariation.TERTIARY}
-                  onClick={() => {
-                    closeModal?.()
-                  }}
-                  text={getString('cancel')}
-                />
-              </Layout.Horizontal>
-            </Layout.Vertical>
+              </Layout.Vertical>
+            ) : (
+              <Layout.Vertical>
+                <Container className={css.modalHeader}>
+                  <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'small' }}>
+                    {getString('cd.webhooks.newWebhook')}
+                  </Text>
+                  <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_500}>
+                    {getString('cd.webhooks.createSubtitle')}
+                  </Text>
+                </Container>
+                <Layout.Vertical className={css.addWebhookModalForm}>
+                  <NameId
+                    identifierProps={{
+                      inputName: 'name',
+                      isIdentifierEditable: !isEdit
+                    }}
+                  />
+                  <ConnectorReferenceField
+                    name="connectorRef"
+                    width={353}
+                    type={getSupportedProviders()}
+                    selected={get(formik.values, 'connectorRef')}
+                    error={formik.submitCount > 0 ? (formik.errors?.connectorRef as string) : undefined}
+                    label={getString('platform.connectors.title.gitConnector')}
+                    placeholder={`- ${getString('select')} -`}
+                    accountIdentifier={accountId}
+                    {...(entityScope === Scope.ACCOUNT ? {} : { orgIdentifier })}
+                    {...(entityScope === Scope.PROJECT ? { projectIdentifier } : {})}
+                    onChange={(value, scope) => {
+                      const connectorRefWithScope = getConnectorIdentifierWithScope(scope, value?.identifier)
+
+                      formik.setFieldValue('connectorRef', connectorRefWithScope)
+                      formik.setFieldValue?.('repo', '')
+                    }}
+                  />
+
+                  <RepositorySelect
+                    formikProps={formik}
+                    selectedValue={get(formik.values, 'repo')}
+                    connectorRef={get(formik.values, 'connectorRef')}
+                    customClassName={css.width}
+                  />
+                  <Text>{getString('common.git.folderPath')}</Text>
+                  <FieldArray
+                    name="folderPaths"
+                    render={({ push, remove }) => {
+                      const getDefaultResetValue = (): [{ id: string; value: string }] => {
+                        return [{ id: uuid('', nameSpace()), value: '' }]
+                      }
+                      const value = get(formik.values, 'folderPaths', getDefaultResetValue())
+                      return (
+                        <>
+                          {Array.isArray(value) &&
+                            value.map(({ id }, index: number) => (
+                              <div className={css.group} key={id}>
+                                <Layout.Horizontal className={cx(css.width, css.folderPath)}>
+                                  <div className={css.folderPathIndex}>{index + 1}.</div>
+                                  <FormInput.Text
+                                    name={`folderPaths[${index}].value`}
+                                    label=""
+                                    style={{ flexGrow: 1 }}
+                                  />
+                                </Layout.Horizontal>
+                                {index !== 0 && (
+                                  <Button
+                                    icon="main-trash"
+                                    iconProps={{ size: 20 }}
+                                    minimal
+                                    onClick={() => remove(index)}
+                                    data-testid={`remove-folderPaths-[${index}]`}
+                                  />
+                                )}
+                              </div>
+                            ))}
+                          <Button
+                            intent="primary"
+                            minimal
+                            text={getString('plusAdd')}
+                            data-testid={`add-folderPaths`}
+                            onClick={() => push({ id: uuid('', nameSpace()), value: '' })}
+                            className={css.addBtn}
+                          />
+                        </>
+                      )
+                    }}
+                  />
+                  <Layout.Horizontal spacing="small" padding={{ top: 'large' }}>
+                    <Button
+                      variation={ButtonVariation.PRIMARY}
+                      type="submit"
+                      text={isEdit ? getString('save') : getString('add')}
+                    />
+                    <Button
+                      variation={ButtonVariation.TERTIARY}
+                      onClick={() => {
+                        closeModal?.()
+                      }}
+                      text={getString('cancel')}
+                    />
+                  </Layout.Horizontal>
+                </Layout.Vertical>
+              </Layout.Vertical>
+            )}
           </Form>
         )
       }}

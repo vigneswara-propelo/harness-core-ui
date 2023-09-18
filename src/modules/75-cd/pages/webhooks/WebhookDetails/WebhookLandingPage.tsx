@@ -103,7 +103,8 @@ export default function WebhookLandingPage(): JSX.Element {
     data: webhookResponse,
     isInitialLoading: loadingWebhook,
     isFetching,
-    refetch
+    refetch,
+    error: webhooksDetailsError
   } = useGetGitxWebhookQuery({
     'gitx-webhook': webhookIdentifier
   })
@@ -126,6 +127,14 @@ export default function WebhookLandingPage(): JSX.Element {
       webhook_identifier: webhookIdentifier
     }
   })
+
+  React.useEffect(() => {
+    if (webhooksDetailsError) {
+      showError(getRBACErrorMessage((webhooksDetailsError as Error).message))
+      history.replace(routes.toWebhooks({ accountId }))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [webhooksDetailsError])
   const [showCreateModal, hideCreateModal] = useModalHook(
     /* istanbul ignore next */ () => {
       const onCloseHandler = (): void => {
