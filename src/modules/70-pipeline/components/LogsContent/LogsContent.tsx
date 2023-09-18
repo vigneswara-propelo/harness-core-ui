@@ -34,6 +34,7 @@ import type {
   LogsContentProps,
   RenderLogsInterface
 } from '@pipeline/factories/ExecutionFactory/types'
+import { ExecutionNode, PipelineExecutionDetail } from 'services/pipeline-ng'
 import { showHarnessCoPilot, resolveCurrentStep } from '@pipeline/utils/executionUtils'
 import type { ModulePathParams, ExecutionPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { addHotJarSuppressionAttribute } from '@common/utils/utils'
@@ -141,6 +142,15 @@ export const logsRenderer = ({ hasLogs, isSingleSectionLogs, virtuosoRef, state,
       <StrTemplate tagName="div" className={css.noLogs} stringID="common.logs.noLogsText" />
     </pre>
   )
+}
+
+export const shouldRenderAIDAForStageLevelErrors = (
+  selectedStageId: string,
+  allNodeMap: { [key: string]: ExecutionNode },
+  pipelineExecutionDetail: PipelineExecutionDetail | null
+): boolean => {
+  const nodeId = Object.entries(allNodeMap).find(([, value]) => value.setupId === selectedStageId)?.[0] || ''
+  return pipelineExecutionDetail?.executionGraph?.nodeAdjacencyListMap?.[nodeId]?.children?.length === 0
 }
 
 export function LogsContent(props: LogsContentProps): React.ReactElement {
@@ -447,7 +457,7 @@ export function DefaultConsoleViewStepDetails(props: ConsoleViewStepDetailProps)
   const isWaitingOnExecInputs = isExecutionWaitingForInput(status)
   const shouldShowInputOutput = ((stepType ?? '') as string) !== 'liteEngineTask' && !isStageExecutionInputConfigured
   const { CI_AI_ENHANCED_REMEDIATIONS, CD_AI_ENHANCED_REMEDIATIONS } = useFeatureFlags()
-  const { pipelineStagesMap, selectedStageId, pipelineExecutionDetail } = useExecutionContext()
+  const { pipelineStagesMap, selectedStageId, pipelineExecutionDetail, allNodeMap } = useExecutionContext()
 
   React.useEffect(() => {
     if (!shouldShowInputOutput && activeTab !== ConsoleDetailTab.CONSOLE_LOGS) {
@@ -466,8 +476,6 @@ export function DefaultConsoleViewStepDetails(props: ConsoleViewStepDetailProps)
       </>
     )
   }, [stageErrorMessage])
-
-  const hideAIDAButtonForStageLevelErrors = true
 
   const { data: aidaSettingResponse } = useGetSettingValue({
     identifier: SettingType.AIDA,
@@ -523,7 +531,7 @@ export function DefaultConsoleViewStepDetails(props: ConsoleViewStepDetailProps)
         )}
         {stageErrorMessage && (
           <div className={css.errorMsgWrapper}>
-            {!hideAIDAButtonForStageLevelErrors &&
+            {shouldRenderAIDAForStageLevelErrors(selectedStageId, allNodeMap, pipelineExecutionDetail) &&
             showHarnessCoPilot({
               pipelineStagesMap,
               selectedStageId,

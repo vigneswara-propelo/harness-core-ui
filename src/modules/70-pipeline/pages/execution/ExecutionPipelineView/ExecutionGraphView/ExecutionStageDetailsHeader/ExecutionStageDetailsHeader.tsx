@@ -39,6 +39,7 @@ import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRu
 import { extractInfo } from '@common/components/ErrorHandler/ErrorHandler'
 import type { StoreType } from '@common/constants/GitSyncTypes'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { shouldRenderAIDAForStageLevelErrors } from '@pipeline/components/LogsContent/LogsContent'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import { SettingType } from '@common/constants/Utils'
 import IACMWorkspaceHeader from './IACMWorkspaceHeader'
@@ -58,7 +59,6 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
   } = useExecutionContext()
   const { orgIdentifier, projectIdentifier, executionIdentifier, accountId, pipelineIdentifier, module, source } =
     useParams<PipelineType<ExecutionPathProps>>()
-
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const getNodeId =
@@ -187,8 +187,6 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
     ])
     return !isEmpty(parentRollbackStageId) && parentRollbackStageId === selectedStageId
   }, [pipelineExecutionDetail?.rollbackGraph?.pipelineExecutionSummary, selectedStageId])
-
-  const hideAIDAButtonForStageLevelErrors = true
 
   const renderErrorMssgWrapper = useCallback(
     (renderWithAIDA?: boolean): React.ReactElement => {
@@ -339,7 +337,7 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
 
       {shouldShowError ? (
         <div className={css.errorMsgWrapper}>
-          {!hideAIDAButtonForStageLevelErrors &&
+          {shouldRenderAIDAForStageLevelErrors(selectedStageId, allNodeMap, pipelineExecutionDetail) &&
           showHarnessCoPilot({
             pipelineStagesMap,
             selectedStageId,

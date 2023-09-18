@@ -15,11 +15,19 @@ import * as logsService from 'services/logs'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ExecutionContext, ExecutionContextParams } from '@pipeline/context/ExecutionContext'
 import { nodeLayoutForCIStage } from '@pipeline/utils/__tests__/mockJson/mockExecutionContext'
-import { LogsContent, DefaultConsoleViewStepDetails } from '../LogsContent'
+import { LogsContent, DefaultConsoleViewStepDetails, shouldRenderAIDAForStageLevelErrors } from '../LogsContent'
 import { useLogsContent } from '../useLogsContent'
 import { getDefaultReducerState } from '../LogsState/utils'
 import type { UseActionCreatorReturn } from '../LogsState/actions'
-import { testReducerState } from './mocks'
+import {
+  testReducerState,
+  nodeIdHideAIDA,
+  nodeIdShowAIDA,
+  allNodeMapHideAIDA,
+  allNodeMapShowAIDA,
+  pipelineExecDetailHideAIDA,
+  pipelineExecDetailShowAIDA
+} from './mocks'
 import responseMessages from './reponseMessages.json'
 
 jest.mock('../components/GroupedLogs', () => ({
@@ -480,6 +488,21 @@ describe('<LogsContent /> tests', () => {
       await waitFor(() => {
         expect(getByText('retry')).toBeInTheDocument()
       })
+    })
+
+    test('test shouldRenderAIDAForStageLevelErrors', () => {
+      const shouldNotRenderAIDA = shouldRenderAIDAForStageLevelErrors(
+        nodeIdHideAIDA,
+        allNodeMapHideAIDA as any,
+        pipelineExecDetailHideAIDA as any
+      )
+      expect(shouldNotRenderAIDA).toBe(false)
+      const shouldRenderAIDA = shouldRenderAIDAForStageLevelErrors(
+        nodeIdShowAIDA,
+        allNodeMapShowAIDA as any,
+        pipelineExecDetailShowAIDA as any
+      )
+      expect(shouldRenderAIDA).toBe(true)
     })
   })
 })
