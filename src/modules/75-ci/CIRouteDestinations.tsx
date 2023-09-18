@@ -19,6 +19,7 @@ import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.util
 import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import PipelineRouteDestinations from '@pipeline/PipelineRouteDestinations'
+import TriggersRouteDestinations from '@triggers/TriggersRouteDestinations'
 import CIHomePage from './pages/home/CIHomePage'
 import CIDashboardPage from './pages/dashboard/CIDashboardPage'
 import CITrialHomePage from './pages/home/CITrialHomePage'
@@ -97,6 +98,7 @@ const CIRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
         <GetStartedWithCI />
       </RouteWithLayout>
       {PipelineRouteDestinations({ mode, pipelineStudioPageName: PAGE_NAME.CIPipelineStudio }).props.children}
+      {TriggersRouteDestinations({ mode }).props.children}
     </Switch>
   )
 }

@@ -45,6 +45,7 @@ import PipelineRouteDestinations from '@pipeline/PipelineRouteDestinations'
 import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
+import TriggersRouteDestinations from '@triggers/TriggersRouteDestinations'
 import { registerFeatureFlagPipelineStage } from './pages/pipeline-studio/views/FeatureFlagStage'
 import { registerFlagConfigurationPipelineStep } from './components/PipelineSteps'
 import { TargetsPage } from './pages/target-management/targets/TargetsPage'
@@ -403,7 +404,8 @@ const CFRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
       >
         <CFWorkflowsPage />
       </RouteWithContext>
-      <PipelineRouteDestinations mode={mode} />
+      {PipelineRouteDestinations({ mode }).props.children}
+      {TriggersRouteDestinations({ mode }).props.children}
     </Switch>
   )
 }

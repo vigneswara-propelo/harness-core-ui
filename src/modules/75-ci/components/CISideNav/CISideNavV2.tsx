@@ -11,26 +11,30 @@ import { SideNav } from '@common/navigation/SideNavV2/SideNavV2'
 import routes from '@common/RouteDefinitionsV2'
 import { Scope } from 'framework/types/types'
 import { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import { NAV_MODE } from '@common/utils/routeUtils'
 import { useGetPipelines } from '@pipeline/hooks/useGetPipelines'
 import { PagePMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { useHostedBuilds } from '@common/hooks/useHostedBuild'
+import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
 
 const module: Module = 'ci'
 const CISideNavLinks = (mode: NAV_MODE): React.ReactElement => {
   const { getString } = useStrings()
+  const { params } = useGetSelectedScope()
+  const { projectIdentifier = '', orgIdentifier = '' } = params || {}
   const { accountId } = useParams<AccountPathProps>()
-  const { selectedProject } = useAppStore()
-  const { identifier = '', orgIdentifier = '' } = selectedProject || {}
   const history = useHistory()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
   const [getStartedWithCIFirst, setGetStartedWithCIFirst] = useState(false)
   const { pathname } = useLocation()
 
   const isOverviewPage = !!matchPath(pathname, {
-    path: routes.toOverview({ accountId, projectIdentifier: identifier, orgIdentifier, module })
+    path: routes.toOverview({ accountId, projectIdentifier, orgIdentifier, module })
+  })
+
+  const isGetStartedPage = !!matchPath(pathname, {
+    path: routes.toGetStartedWithCI({ accountId, projectIdentifier, orgIdentifier, module })
   })
 
   const {
@@ -39,17 +43,17 @@ const CISideNavLinks = (mode: NAV_MODE): React.ReactElement => {
     refetch: fetchPipelines
   } = useGetPipelines({
     accountIdentifier: accountId,
-    projectIdentifier: identifier,
+    projectIdentifier,
     orgIdentifier,
     lazy: true,
     size: 1
   })
 
   useEffect(() => {
-    if (enabledHostedBuildsForFreeUsers && selectedProject?.identifier) {
+    if (enabledHostedBuildsForFreeUsers && projectIdentifier) {
       fetchPipelines()
     }
-  }, [selectedProject?.identifier, getStartedWithCIFirst, enabledHostedBuildsForFreeUsers])
+  }, [projectIdentifier, getStartedWithCIFirst, enabledHostedBuildsForFreeUsers])
 
   useEffect(() => {
     if (!fetchingPipelines && fetchPipelinesData) {
@@ -63,69 +67,47 @@ const CISideNavLinks = (mode: NAV_MODE): React.ReactElement => {
       isOverviewPage &&
         history.replace(
           routes.toGetStartedWithCI({
-            projectIdentifier: identifier,
+            projectIdentifier,
             orgIdentifier,
             accountId,
             module
           })
         )
+    } else {
+      isGetStartedPage && history.replace(routes.toDeployments({ accountId, projectIdentifier, orgIdentifier, module }))
     }
-  }, [getStartedWithCIFirst, history, accountId, orgIdentifier, identifier])
+  }, [getStartedWithCIFirst, history, accountId, orgIdentifier, projectIdentifier])
 
-  const renderCommonNavLinks = (): JSX.Element => {
-    return (
-      <>
+  return (
+    <SideNav.Main>
+      <SideNav.Section>
         <SideNav.Scope scope={Scope.PROJECT}>
           <SideNav.Link
             icon="nav-home"
             label={getString('overview')}
-            to={routes.toOverview({ accountId, projectIdentifier: identifier, orgIdentifier, module })}
+            to={routes.toOverview({ accountId, projectIdentifier, orgIdentifier, module })}
           />
 
           <SideNav.Link
             icon="nav-pipeline"
             label={getString('pipelines')}
-            to={routes.toPipelines({ accountId, projectIdentifier: identifier, orgIdentifier, module })}
+            to={routes.toPipelines({ accountId, projectIdentifier, orgIdentifier, module })}
             hidden={mode === NAV_MODE.ALL}
           />
 
           <SideNav.Link
             icon="nav-builds"
             label={getString('buildsText')}
-            to={routes.toDeployments({ accountId, projectIdentifier: identifier, orgIdentifier, module })}
+            to={routes.toDeployments({ accountId, projectIdentifier, orgIdentifier, module })}
             hidden={mode === NAV_MODE.ALL}
           />
+
+          <SideNav.Link
+            icon="get-started"
+            label={getString('getStarted')}
+            to={routes.toGetStartedWithCI({ accountId, projectIdentifier, orgIdentifier, module })}
+          />
         </SideNav.Scope>
-      </>
-    )
-  }
-
-  const renderGetStartedWithCI = (): JSX.Element => {
-    return (
-      <SideNav.Scope scope={Scope.PROJECT}>
-        <SideNav.Link
-          icon="get-started"
-          label={getString('getStarted')}
-          to={routes.toGetStartedWithCI({ accountId, projectIdentifier: identifier, orgIdentifier, module })}
-        />
-      </SideNav.Scope>
-    )
-  }
-
-  return (
-    <SideNav.Main>
-      <SideNav.Section>
-        {getStartedWithCIFirst ? (
-          <>
-            {renderGetStartedWithCI()}
-            {renderCommonNavLinks()}
-          </>
-        ) : (
-          <>
-            {renderCommonNavLinks()}
-            {renderGetStartedWithCI()}
-          </>
-        )}
       </SideNav.Section>
       <SideNav.SettingsLink mode={mode} module={module} />
     </SideNav.Main>
