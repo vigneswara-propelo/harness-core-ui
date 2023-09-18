@@ -730,15 +730,24 @@ export const getPropagatingStagesFromStage = (
   stageId: string,
   pipeline: PipelineInfoConfig
 ): StageElementWrapperConfig[] => {
-  return getFlattenedStages(pipeline).stages?.filter(
-    currentStage =>
-      (currentStage.stage?.spec as DeploymentStageConfig)?.serviceConfig?.useFromStage?.stage === stageId ||
+  return getFlattenedStages(pipeline).stages?.filter(currentStage => {
+    const stageSpec = currentStage.stage?.spec as DeploymentStageConfig
+    const templateStageSpec = currentStage.stage?.template?.templateInputs?.spec as DeploymentStageConfig
+    return (
+      stageSpec?.serviceConfig?.useFromStage?.stage === stageId ||
       // The below conditions are for NG_SVC_ENV_REDESIGN. A specific FF check
       // IS NOT required as the useFromStage combinations are exclusive
-      (currentStage.stage?.spec as DeploymentStageConfig)?.service?.useFromStage?.stage === stageId ||
-      (currentStage.stage?.template?.templateInputs?.spec as DeploymentStageConfig)?.service?.useFromStage?.stage ===
-        stageId
-  )
+      // Single Service Propagation
+      stageSpec?.service?.useFromStage?.stage === stageId ||
+      templateStageSpec?.service?.useFromStage?.stage === stageId ||
+      // Multi Service Propagation
+      stageSpec?.services?.useFromStage?.stage === stageId ||
+      templateStageSpec?.services?.useFromStage?.stage === stageId ||
+      // Environment Propagation
+      stageSpec?.environment?.useFromStage?.stage === stageId ||
+      templateStageSpec?.environment?.useFromStage?.stage === stageId
+    )
+  })
 }
 
 export const getStagesAfterNodeRemoval = (
@@ -761,21 +770,44 @@ export const getStagesAfterNodeRemoval = (
         if (get(draft, 'stage.template.templateInputs.spec.service.useFromStage.stage') === nodeIdentifier) {
           set(draft, 'stage.template.templateInputs.spec.service', { serviceRef: '' })
         }
+
+        if (get(draft, 'stage.spec.services.useFromStage.stage')) {
+          unset(draft, 'stage.spec.services')
+          set(draft, 'stage.spec.service', { serviceRef: '' })
+        }
+
+        if (get(draft, 'stage.template.templateInputs.spec.services.useFromStage.stage')) {
+          unset(draft, 'stage.template.templateInputs.spec.services')
+          set(draft, 'stage.template.templateInputs.spec.service', { serviceRef: '' })
+        }
+
+        if (get(draft, 'stage.spec.environment.useFromStage.stage') === nodeIdentifier) {
+          set(draft, 'stage.spec.environment', { environmentRef: '' })
+        }
+
+        if (get(draft, 'stage.template.templateInputs.spec.environment.useFromStage.stage') === nodeIdentifier) {
+          set(draft, 'stage.template.templateInputs.spec.environment', { environmentRef: '' })
+        }
       }
     })
   )
 }
 
 export const getParentPropagatedStage = (stage?: StageElementConfig): string | undefined => {
+  const stageSpec = stage?.spec as DeploymentStageConfig
+  const stageTemplateSpec = stage?.template?.templateInputs?.spec as DeploymentStageConfig
   return (
-    (stage?.spec as DeploymentStageConfig)?.serviceConfig?.useFromStage?.stage ||
+    stageSpec?.serviceConfig?.useFromStage?.stage ||
     // The below conditions are for NG_SVC_ENV_REDESIGN. A specific FF check
     // IS NOT required as the useFromStage combinations are exclusive
-    (stage?.spec as DeploymentStageConfig)?.service?.useFromStage?.stage ||
-    (stage?.template?.templateInputs?.spec as DeploymentStageConfig)?.service?.useFromStage?.stage ||
+    stageSpec?.service?.useFromStage?.stage ||
+    stageTemplateSpec?.service?.useFromStage?.stage ||
     // The below mentioned conditions are for handling multi service propagation - Template/Non template Scenarios
-    (stage?.spec as DeploymentStageConfig)?.services?.useFromStage?.stage ||
-    (stage?.template?.templateInputs?.spec as DeploymentStageConfig)?.services?.useFromStage?.stage
+    stageSpec?.services?.useFromStage?.stage ||
+    stageTemplateSpec?.services?.useFromStage?.stage ||
+    // The below mentioned conditions are for handling Environment propagation
+    stageSpec?.environment?.useFromStage?.stage ||
+    stageTemplateSpec?.environment?.useFromStage?.stage
   )
 }
 
@@ -983,6 +1015,14 @@ export const resetStageServiceSpec = (stage: StageElementWrapperConfig): StageEl
     if (get(draft, 'stage.template.templateInputs.spec.services.useFromStage.stage')) {
       unset(draft, 'stage.template.templateInputs.spec.services')
       set(draft, 'stage.template.templateInputs.spec.service', { serviceRef: '' })
+    }
+
+    if (get(draft, 'stage.spec.environment.useFromStage.stage')) {
+      set(draft, 'stage.spec.environment', { environmentRef: '' })
+    }
+
+    if (get(draft, 'stage.template.templateInputs.spec.environment.useFromStage.stage')) {
+      set(draft, 'stage.template.templateInputs.spec.environment', { environmentRef: '' })
     }
   })
 

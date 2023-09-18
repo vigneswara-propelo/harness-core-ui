@@ -17,6 +17,7 @@ import type {
   ServiceDefinition,
   TemplateLinkConfig
 } from 'services/cd-ng'
+import { StageElementWrapperConfig } from 'services/pipeline-ng'
 
 export interface DeployEnvironmentEntityConfig extends Omit<DeploymentStageConfig, 'execution'> {
   environment?: DeploymentStageConfig['environment']
@@ -54,6 +55,10 @@ export interface DeployEnvironmentEntityCustomStepProps {
   deploymentType?: ServiceDefinition['type']
   gitOpsEnabled?: boolean
   customDeploymentRef?: TemplateLinkConfig
+}
+
+export interface DeployEnvironmentEntityCustomStepPropsWithStages extends DeployEnvironmentEntityCustomStepProps {
+  stages?: StageElementWrapperConfig[] | undefined
 }
 
 export interface DeployEnvironmentEntityCustomInputStepProps extends DeployEnvironmentEntityCustomStepProps {

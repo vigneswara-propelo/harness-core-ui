@@ -6,20 +6,21 @@
  */
 
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
-import { defaultTo, isEmpty, isNil, set } from 'lodash-es'
+import { defaultTo, isEmpty, isNil, set, get } from 'lodash-es'
 import { isValueExpression } from '@common/utils/utils'
+import { StageElementWrapperConfig } from 'services/pipeline-ng'
 import type {
   DeployEnvironmentEntityConfig,
-  DeployEnvironmentEntityCustomStepProps,
+  DeployEnvironmentEntityCustomStepPropsWithStages,
   DeployEnvironmentEntityFormState
 } from '../../types'
 
 export function processSingleEnvironmentInitialValues(
   environment: DeployEnvironmentEntityConfig['environment'],
-  customStepProps: DeployEnvironmentEntityCustomStepProps
+  customStepProps: DeployEnvironmentEntityCustomStepPropsWithStages
 ): DeployEnvironmentEntityFormState {
   const formState: DeployEnvironmentEntityFormState = {}
-  const { gitOpsEnabled, serviceIdentifiers } = customStepProps
+  const { gitOpsEnabled, serviceIdentifiers, stages = [] as StageElementWrapperConfig[] } = customStepProps
   const isOverridesEnabled = (customStepProps as any).isOverridesEnabled
 
   if (environment) {
@@ -27,14 +28,51 @@ export function processSingleEnvironmentInitialValues(
       set(formState, 'environment', RUNTIME_INPUT_VALUE)
       set(formState, 'provisioner', environment.provisioner)
     } else {
-      if (environment.useFromStage) {
+      const useFromStageValue = environment?.useFromStage?.stage
+      if (useFromStageValue) {
         set(
           formState,
           'propagateFrom',
-          environment.useFromStage.stage
-            ? { label: environment.useFromStage.stage, value: environment.useFromStage.stage }
-            : { label: '', value: '' }
+          useFromStageValue ? { label: useFromStageValue, value: useFromStageValue } : { label: '', value: '' }
         )
+        // In order to show environment and override inputs properly in a readonly manner, resolved values are required in formik
+        // for stage which propagates env data from a previous stage
+        const propagatedFromStage = (stages as StageElementWrapperConfig[])?.find(
+          stage => stage?.stage?.identifier === useFromStageValue
+        )
+        const environmentDetails = get(propagatedFromStage, 'stage.spec.environment')
+        if (!isEmpty(environmentDetails)) {
+          set(formState, 'environment', environmentDetails.environmentRef)
+
+          if (getMultiTypeFromValue(environmentDetails.environmentRef) === MultiTypeInputType.FIXED) {
+            set(formState, 'environmentInputs', {
+              [environmentDetails.environmentRef as string]: environmentDetails?.environmentInputs
+            })
+          } else if (isValueExpression(environmentDetails.environmentRef)) {
+            set(formState, 'environmentInputs', { environment: { expression: environmentDetails.environmentInputs } })
+          } else {
+            set(formState, 'environmentInputs', {})
+          }
+
+          if (!isNil(environmentDetails.serviceOverrideInputs) && !isEmpty(environmentDetails.serviceOverrideInputs)) {
+            if (
+              getMultiTypeFromValue(environmentDetails.environmentRef) === MultiTypeInputType.FIXED &&
+              serviceIdentifiers?.length
+            ) {
+              set(formState, 'serviceOverrideInputs', {
+                [environmentDetails.environmentRef as string]: {
+                  [serviceIdentifiers?.[0] as string]: environmentDetails?.serviceOverrideInputs
+                }
+              })
+            } else if (isValueExpression(environmentDetails.environmentRef)) {
+              set(formState, 'serviceOverrideInputs', {
+                environment: { expression: environmentDetails.serviceOverrideInputs }
+              })
+            } else {
+              set(formState, 'serviceOverrideInputs', {})
+            }
+          }
+        }
       } else {
         set(formState, 'environment', environment.environmentRef)
         set(formState, 'provisioner', environment.provisioner)

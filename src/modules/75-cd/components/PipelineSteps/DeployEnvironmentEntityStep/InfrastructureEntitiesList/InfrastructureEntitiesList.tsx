@@ -172,6 +172,7 @@ export default function InfrastructureEntitiesList({
                       environmentIdentifier={environmentIdentifier}
                       environmentPermission={environmentPermission}
                       infrastructureIndex={index}
+                      totalLength={infrastructuresData?.length}
                     />
                   )
                 })}

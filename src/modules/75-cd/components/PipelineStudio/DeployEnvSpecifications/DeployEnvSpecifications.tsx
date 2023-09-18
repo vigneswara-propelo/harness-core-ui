@@ -36,6 +36,7 @@ import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { getAllowableTypesWithoutFixedValue } from '@pipeline/utils/runPipelineUtils'
+import { getFlattenedStages } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 
 import ErrorsStripBinded from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
 import {
@@ -70,6 +71,7 @@ export default function DeployEnvSpecifications(
 
   const {
     state: {
+      pipeline,
       selectionState: { selectedStageId }
     },
     scope,
@@ -81,6 +83,7 @@ export default function DeployEnvSpecifications(
   } = usePipelineContext()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
+  const { stages } = getFlattenedStages(pipeline)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceUpdateStage = useCallback(
@@ -192,7 +195,8 @@ export default function DeployEnvSpecifications(
             deploymentType: stage?.stage?.spec?.deploymentType,
             gitOpsEnabled: defaultTo(stage?.stage?.spec?.gitOpsEnabled, false),
             customDeploymentRef: stage?.stage?.spec?.customDeploymentRef,
-            isOverridesEnabled
+            isOverridesEnabled,
+            stages
           }}
         />
         <Container margin={{ top: 'xxlarge' }}>{props.children}</Container>

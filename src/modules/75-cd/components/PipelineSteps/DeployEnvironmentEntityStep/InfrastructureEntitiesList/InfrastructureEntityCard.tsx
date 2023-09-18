@@ -47,6 +47,7 @@ export interface InfrastructureEntityCardProps extends InfrastructureData {
   environmentIdentifier: string
   environmentPermission?: ButtonProps['permission']
   infrastructureIndex: number
+  totalLength?: number
 }
 
 export function InfrastructureEntityCard({
@@ -58,7 +59,8 @@ export function InfrastructureEntityCard({
   onDeleteClick,
   environmentIdentifier,
   environmentPermission,
-  infrastructureIndex
+  infrastructureIndex,
+  totalLength
 }: InfrastructureEntityCardProps): React.ReactElement {
   const { getString } = useStrings()
   const { values } = useFormikContext<DeployEnvironmentEntityFormState>()
@@ -85,7 +87,7 @@ export function InfrastructureEntityCard({
         return (
           <div {...provided.draggableProps} ref={provided.innerRef} style={{ ...provided.draggableProps.style }}>
             <Card className={css.card}>
-              {!readonly && (
+              {!readonly && totalLength && totalLength > 1 && (
                 <Layout.Horizontal className={css.dragHandle} flex={{ justifyContent: 'center' }}>
                   <Icon name="drag-handle-horizontal" {...provided.dragHandleProps} />
                 </Layout.Horizontal>

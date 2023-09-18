@@ -135,6 +135,10 @@ export default function BaseDeployEnvironmentEntityStep({
 
   const onPropogatedStageSelect = useCallback(
     (value: SelectOption): void => {
+      // Clears all environment details in formik to ensure fresh values are received
+      setFieldValue('environment', undefined)
+      setFieldValue('environmentInputs', undefined)
+      setFieldValue('serviceOverrideInputs', undefined)
       setFieldValue('propagateFrom', value)
       setSelectedPropagatedState(value)
     },
@@ -147,6 +151,10 @@ export default function BaseDeployEnvironmentEntityStep({
       if (!readonly) {
         setSetupMode(mode)
         setSelectedPropagatedState('')
+        // Clears all environment details in formik to ensure fresh values are received
+        setFieldValue('environment', undefined)
+        setFieldValue('environmentInputs', undefined)
+        setFieldValue('serviceOverrideInputs', undefined)
         if (mode === setupMode.DIFFERENT) {
           setFieldValue('propagateFrom', undefined)
         } else {
