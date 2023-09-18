@@ -27,8 +27,6 @@ import cx from 'classnames'
 import type { ConnectorRequestBody, ConnectorInfoDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
 import { setupServiceNowFormData, useGetHelpPanel } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import { Connectors } from '@platform/connectors/constants'
@@ -98,13 +96,11 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
   const [isRefreshTokenScopeDisabled, setIsRefreshTokenScopeDisabled] = React.useState(false)
   const [tokenUrl, setTokenUrl] = React.useState('')
 
-  const isServiceNowRefreshTokenAuthEnabled = useFeatureFlag(FeatureFlag.CDS_SERVICENOW_REFRESH_TOKEN_AUTH)
-
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = React.useState(true && props.isEditMode)
   const { getString } = useStrings()
 
-  const authOptions: SelectOption[] = React.useMemo(() => {
-    const baseAuthOptions = [
+  const authOptions: SelectOption[] = React.useMemo(
+    () => [
       {
         label: getString('platform.connectors.serviceNow.usernamePasswordAPIKey'),
         value: AuthTypes.USER_PASSWORD
@@ -112,18 +108,11 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
       {
         label: getString('platform.connectors.serviceNow.adfs'),
         value: AuthTypes.ADFS
-      }
-    ]
-
-    if (isServiceNowRefreshTokenAuthEnabled) {
-      return [
-        ...baseAuthOptions,
-        { label: getString('platform.connectors.serviceNow.oidcRefreshToken'), value: AuthTypes.REFRESH_TOKEN }
-      ]
-    }
-
-    return baseAuthOptions
-  }, [isServiceNowRefreshTokenAuthEnabled])
+      },
+      { label: getString('platform.connectors.serviceNow.oidcRefreshToken'), value: AuthTypes.REFRESH_TOKEN }
+    ],
+    []
+  )
 
   const savedTokenUrl = (prevStepData as unknown as ServiceNowFormData)?.tokenUrl || initialValues?.tokenUrl
 
