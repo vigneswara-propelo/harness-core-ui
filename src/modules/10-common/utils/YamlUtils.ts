@@ -79,21 +79,23 @@ async function validateJSONWithSchema(
   }
 }
 
-const getDiagnosticsOptions = (schema: Record<string, any>): DiagnosticsOptions => {
+const getDiagnosticsOptions = (schema?: Record<string, any>): DiagnosticsOptions => {
   return {
     validate: true,
     enableSchemaRequest: false,
     hover: true,
     completion: true,
-    schemas: [
-      {
-        fileMatch: ['*'],
-        schema,
-        // uri should ideally be the source of the schema, but most of the consumers of YamlBuilder don't have URIs for their schemas.
-        // Hence a generic URI is used for now.
-        uri: 'https://github.com/harness/harness-schema'
-      }
-    ]
+    ...(schema && {
+      schemas: [
+        {
+          fileMatch: ['*'],
+          schema,
+          // uri should ideally be the source of the schema, but most of the consumers of YamlBuilder don't have URIs for their schemas.
+          // Hence a generic URI is used for now.
+          uri: 'https://github.com/harness/harness-schema'
+        }
+      ]
+    })
   }
 }
 

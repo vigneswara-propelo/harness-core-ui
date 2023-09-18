@@ -270,9 +270,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   }, [existingYaml])
 
   useEffect(() => {
-    if (schema) {
-      setDiagnosticsOptions(getDiagnosticsOptions(schema))
-    }
+    setDiagnosticsOptions(getDiagnosticsOptions(schema))
   }, [schema])
 
   /* #endregion */
