@@ -27,6 +27,7 @@ import {
   Utils,
   useToaster
 } from '@harness/uicore'
+import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { PageSpinner } from '@common/components'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -201,9 +202,20 @@ export const DelegateListing: React.FC = () => {
                 openMoreTokenInfoModal(row.original.name || '')
               }}
             />
-            <MenuItem
+            <RbacMenuItem
               icon="clipboard"
               text={getString('platform.delegates.tokens.copytoken')}
+              permission={{
+                resourceScope: {
+                  accountIdentifier: accountId,
+                  orgIdentifier,
+                  projectIdentifier
+                },
+                permission: PermissionIdentifier.UPDATE_DELEGATE,
+                resource: {
+                  resourceType: ResourceType.DELEGATE
+                }
+              }}
               onClick={(event: React.MouseEvent<HTMLElement>) => {
                 event.stopPropagation()
                 getTokenForCopy({
