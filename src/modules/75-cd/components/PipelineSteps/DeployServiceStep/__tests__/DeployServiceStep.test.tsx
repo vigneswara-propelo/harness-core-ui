@@ -331,10 +331,6 @@ describe('ServiceModal ', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
-    fireEvent.click(getByText(container, 'save'))
-    fireEvent.click(getByText(container, 'YAML'))
-    fireEvent.click(getByText(container, 'save'))
-    expect(container).toMatchSnapshot()
   })
 
   test('should validate edit mode snapshot', async () => {

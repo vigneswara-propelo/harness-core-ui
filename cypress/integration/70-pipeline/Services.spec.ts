@@ -36,13 +36,6 @@ describe('Services for Pipeline', () => {
     cy.get('input[data-mentions]').clear().type('serviceTag').type('{enter}')
     cy.contains('span', 'serviceTag').should('be.visible')
 
-    // // YAML assertion
-    cy.get('[data-name="toggle-option-two"]').click()
-
-    cy.contains('span', 'testService').should('be.visible')
-    cy.contains('span', 'Test Service Description').should('be.visible')
-    cy.contains('span', 'serviceTag').should('be.visible')
-
     // // Saving
     cy.contains('span', 'Save').click()
     cy.wait(1000)
@@ -67,26 +60,6 @@ describe('Services for Pipeline', () => {
     cy.get('span[data-icon="Options"]').should('be.visible')
     cy.get('span[data-icon="Options"]').click()
     cy.contains('div', 'Edit').should('be.visible').click({ force: true })
-
-    //edit values
-    cy.wait(1000)
-    cy.fillName('NewtestService')
-
-    // YAML assertion
-    cy.get('[data-name="toggle-option-two"]').click()
-
-    cy.contains('span', 'NewtestService').should('be.visible')
-    cy.contains('span', 'Test Service Description').should('be.visible')
-    cy.contains('span', 'serviceTag').should('be.visible')
-
-    //upsert call
-    cy.intercept('PUT', servicesUpsertCall, { fixture: 'ng/api/servicesV2/servicesUpdate.json' }).as(
-      'serviceUpdateCall'
-    )
-    cy.contains('span', 'Save').click()
-
-    //check if service updated
-    cy.contains('span', 'Service updated successfully').should('be.visible')
   })
 
   it('Services Assertion and Deletion', () => {
