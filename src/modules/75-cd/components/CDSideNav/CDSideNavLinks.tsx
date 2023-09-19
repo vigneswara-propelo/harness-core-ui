@@ -27,7 +27,7 @@ const CDSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
   const isCommunity = useGetCommunity()
-  const { CDS_SERVICE_OVERRIDES_2_0, SRM_COMMON_MONITORED_SERVICE } = useFeatureFlags()
+  const { CDS_SERVICE_OVERRIDES_2_0 } = useFeatureFlags()
 
   const { pathname } = useLocation()
 
@@ -115,7 +115,6 @@ const CDSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
             icon="monitored-service"
             label={getString('common.monitoredServices')}
             to={routes.toMonitoredServices({ accountId, projectIdentifier, orgIdentifier, module })}
-            hidden={!SRM_COMMON_MONITORED_SERVICE}
           />
           <SideNav.Link
             label={getString('common.overrides')}

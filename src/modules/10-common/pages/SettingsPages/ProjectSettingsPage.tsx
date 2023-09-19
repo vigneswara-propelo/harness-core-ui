@@ -42,8 +42,7 @@ export const ProjectSettingsPage: React.FC = () => {
     USE_OLD_GIT_SYNC,
     SRM_ET_EXPERIMENTAL,
     SRM_DOWNTIME,
-    CVNG_TEMPLATE_MONITORED_SERVICE,
-    SRM_COMMON_MONITORED_SERVICE
+    CVNG_TEMPLATE_MONITORED_SERVICE
   } = useFeatureFlags()
   const { currentModule, isGitSimplificationEnabled, isGitSyncEnabled, gitSyncEnabledOnlyForFF } = useAppStore()
   const module = moduleFromProps || currentModule
@@ -170,12 +169,13 @@ export const ProjectSettingsPage: React.FC = () => {
               icon={'variables-blue'}
               route={routesV2.toVariablesSettings({ accountId, orgIdentifier, projectIdentifier, module })}
             />
+            {/* SLO downtime should be visible when the feature flag is enabled */}
             <SettingsResourceCard
               label={<String stringID="common.sloDowntimeLabel" />}
               id={SettingsResources.SLODowntime}
               icon={'connectors-blue'}
               route={routesV2.toCVSLODowntime({ accountId, orgIdentifier, projectIdentifier, module })}
-              hidden={!(SRM_DOWNTIME && haveCV)}
+              hidden={!SRM_DOWNTIME}
             />
             <SettingsResourceCard //todo-test
               label={<String stringID="gitManagement" />}
@@ -203,7 +203,6 @@ export const ProjectSettingsPage: React.FC = () => {
               id={SettingsResources.MonitoredServices}
               icon={'monitored-service'}
               route={routesV2.toMonitoredServicesSettings({ accountId, orgIdentifier, projectIdentifier, module })}
-              hidden={!SRM_COMMON_MONITORED_SERVICE}
             />
             <SettingsResourceCard
               label={<String stringID="common.overrides" />}
