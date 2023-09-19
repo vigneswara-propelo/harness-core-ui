@@ -97,6 +97,14 @@ const CIRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
       >
         <GetStartedWithCI />
       </RouteWithLayout>
+      <RouteWithContext
+        licenseRedirectData={licenseRedirectData}
+        path={[routes.toCIHome({ ...accountPathProps, mode, module: 'ci' })]}
+        pageName={PAGE_NAME.CIHomePage}
+        exact
+      >
+        <CIHomePage />
+      </RouteWithContext>
       {PipelineRouteDestinations({ mode, pipelineStudioPageName: PAGE_NAME.CIPipelineStudio }).props.children}
       {TriggersRouteDestinations({ mode }).props.children}
     </Switch>

@@ -68,7 +68,8 @@ import {
 export type PathProps = Partial<AccountPathProps> &
   Partial<ProjectPathProps> &
   Partial<ModePathProps> &
-  Partial<ModulePathParams>
+  Partial<ModulePathParams> &
+  Partial<EnvironmentPathProps>
 
 const CV_HOME = `/cv/home`
 
@@ -152,6 +153,7 @@ const routes = {
     return withAccountId(() => `/${NAV_MODE.ADMIN}/settings`)({ accountId })
   },
   toSettings: withModeModuleAndScopePrefix(() => '/settings'),
+  toCIHome: withModeModuleAndScopePrefix<ModuleHomeParams>(() => `/home`),
 
   // to route to module trial pages
   toModuleTrial: withModeModuleAndScopePrefix<ModuleHomeParams>(params => {
@@ -670,9 +672,15 @@ const routes = {
   ),
 
   toSettingsEnvironments: withModeModuleAndScopePrefix(() => 'settings/environments'),
-  toSettingsEnvironmentDetails: withModeModuleAndScopePrefix<EnvironmentPathProps & EnvironmentQueryParams>(
-    params => `settings/environments/${params?.environmentIdentifier}/details`
-  ),
+  toSettingsEnvironmentDetails: withModeModuleAndScopePrefix<EnvironmentPathProps & EnvironmentQueryParams>(p => {
+    const params = removeDefaultPathProps<EnvironmentPathProps & EnvironmentQueryParams>(p)
+    const { environmentIdentifier, ...rest } = params
+    const queryString = qs.stringify(rest, { skipNulls: true })
+    if (queryString.length > 0) {
+      return `settings/environments/${params?.environmentIdentifier}/details?${queryString}`
+    }
+    return `settings/environments/${params?.environmentIdentifier}/details`
+  }),
   toSettingsEnvironmentGroups: withModeModuleAndScopePrefix(() => 'settings/environments/groups'),
   toSettingsEnvironmentGroupDetails: withModeModuleAndScopePrefix<
     EnvironmentGroupQueryParams & EnvironmentGroupPathProps

@@ -16,11 +16,13 @@ import { Color } from '@harness/design-system'
 import { String as StrTemplate } from 'framework/strings'
 import type { Application, GitOpsExecutionSummary } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { getIdentifierFromScopedRef } from '@common/utils/utils'
 
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { ProjectPathProps, ModulePathParams, Module } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { StageDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import { ServicePopoverCard } from '@cd/components/ServicePopoverCard/ServicePopoverCard'
 import { EnvironmentDetailsTab } from '../EnvironmentsV2/utils'
@@ -106,6 +108,7 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
   const { stage } = props
   const gitOpsApps = get(stage, 'moduleInfo.cd.gitOpsAppSummary.applications') || []
   const { orgIdentifier, projectIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
+  const { CDS_NAV_2_0 } = useFeatureFlags()
 
   const gitOpsEnvironments = Array.isArray(get(stage, 'moduleInfo.cd.gitopsExecutionSummary.environments'))
     ? (get(stage, 'moduleInfo.cd.gitopsExecutionSummary') as Required<GitOpsExecutionSummary>).environments.map(
@@ -126,6 +129,68 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
       : []
   }
 
+  const toServiceStudio =
+    CDS_NAV_2_0 && !module
+      ? `${routesV2.toSettingsServiceDetails({
+          accountId,
+          ...(serviceScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+          ...(serviceScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
+          serviceId: getIdentifierFromScopedRef(get(stage, 'moduleInfo.cd.serviceInfo.identifier', ''))
+        })}`
+      : `${routes.toServiceStudio({
+          accountId,
+          ...(serviceScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+          ...(serviceScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
+          serviceId: getIdentifierFromScopedRef(get(stage, 'moduleInfo.cd.serviceInfo.identifier', '')),
+          module,
+          accountRoutePlacement: 'settings'
+        })}`
+
+  const toEnvironmentDetails =
+    CDS_NAV_2_0 && !module
+      ? routesV2.toSettingsEnvironmentDetails({
+          accountId,
+          ...(infrastructureScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+          ...(infrastructureScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
+          environmentIdentifier: getIdentifierFromScopedRef(
+            get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', '')
+          ),
+          sectionId: 'INFRASTRUCTURE'
+        })
+      : routes.toEnvironmentDetails({
+          accountId,
+          ...(infrastructureScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+          ...(infrastructureScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
+          environmentIdentifier: getIdentifierFromScopedRef(
+            get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', '')
+          ),
+          module,
+          sectionId: 'INFRASTRUCTURE',
+          accountRoutePlacement: 'settings'
+        })
+
+  const toEnvironmentInfrastructureDefinitionDetails =
+    CDS_NAV_2_0 && !module
+      ? routesV2.toSettingsEnvironmentDetails({
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          environmentIdentifier: get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', ''),
+          sectionId: EnvironmentDetailsTab.INFRASTRUCTURE,
+          infraDetailsTab: InfraDefinitionTabs.CONFIGURATION,
+          infrastructureId: get(stage, 'moduleInfo.cd.infraExecutionSummary.infrastructureIdentifier', '')
+        })
+      : routes.toEnvironmentDetails({
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          environmentIdentifier: get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', ''),
+          sectionId: EnvironmentDetailsTab.INFRASTRUCTURE,
+          infraDetailsTab: InfraDefinitionTabs.CONFIGURATION,
+          infrastructureId: get(stage, 'moduleInfo.cd.infraExecutionSummary.infrastructureIdentifier', ''),
+          module
+        })
+
   return (
     <div className={css.container}>
       <div className={cx(css.main, { [css.threeSections]: !!gitOpsApps.length })}>
@@ -141,16 +206,7 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
                 className={css.serviceWrapper}
               >
                 <div className={css.serviceName} data-testid={'serviceLink'}>
-                  <Link
-                    to={`${routes.toServiceStudio({
-                      accountId,
-                      ...(serviceScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
-                      ...(serviceScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
-                      serviceId: getIdentifierFromScopedRef(get(stage, 'moduleInfo.cd.serviceInfo.identifier', '')),
-                      module,
-                      accountRoutePlacement: 'settings'
-                    })}`}
-                  >
+                  <Link to={toServiceStudio}>
                     <Text className={css.stageItemDetails} lineClamp={1} color={Color.PRIMARY_6}>
                       {get(stage, 'moduleInfo.cd.serviceInfo.displayName', null)}
                     </Text>
@@ -170,19 +226,26 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
                   const gitOpsEnvironmentScope = getScopeFromValue(defaultTo(env.identifier, ''))
                   const gitClusters = getGitopsClusters(env?.name as string)
 
-                  return (
-                    <Layout.Horizontal key={env.identifier}>
-                      <Link
-                        key={env.identifier}
-                        to={`${routes.toEnvironmentDetails({
+                  const toGitOpsEnvironmentDetails =
+                    CDS_NAV_2_0 && !module
+                      ? `${routesV2.toSettingsEnvironmentDetails({
+                          accountId,
+                          ...(gitOpsEnvironmentScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+                          ...(gitOpsEnvironmentScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
+                          environmentIdentifier: getIdentifierFromScopedRef(defaultTo(env.identifier, ''))
+                        })}`
+                      : `${routes.toEnvironmentDetails({
                           accountId,
                           ...(gitOpsEnvironmentScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
                           ...(gitOpsEnvironmentScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
                           environmentIdentifier: getIdentifierFromScopedRef(defaultTo(env.identifier, '')),
                           module,
                           accountRoutePlacement: 'settings'
-                        })}`}
-                      >
+                        })}`
+
+                  return (
+                    <Layout.Horizontal key={env.identifier}>
+                      <Link key={env.identifier} to={toGitOpsEnvironmentDetails}>
                         <Text className={css.stageItemDetails} margin={{ right: 'xsmall' }} color={Color.PRIMARY_6}>
                           {env.name}
                         </Text>
@@ -221,19 +284,7 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
               </>
             ) : (
               <Layout.Horizontal>
-                <Link
-                  to={routes.toEnvironmentDetails({
-                    accountId,
-                    ...(infrastructureScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
-                    ...(infrastructureScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
-                    environmentIdentifier: getIdentifierFromScopedRef(
-                      get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', '')
-                    ),
-                    module,
-                    sectionId: 'INFRASTRUCTURE',
-                    accountRoutePlacement: 'settings'
-                  })}
-                >
+                <Link to={toEnvironmentDetails}>
                   <li>
                     <Text lineClamp={1} className={css.stageItemDetails} color={Color.PRIMARY_6}>
                       {get(stage, 'moduleInfo.cd.infraExecutionSummary.name', null)}
@@ -243,18 +294,7 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
                 (
                 <>
                   <StrTemplate stringID="infrastructureText" />:
-                  <Link
-                    to={routes.toEnvironmentDetails({
-                      accountId,
-                      orgIdentifier,
-                      projectIdentifier,
-                      environmentIdentifier: get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', ''),
-                      sectionId: EnvironmentDetailsTab.INFRASTRUCTURE,
-                      infraDetailsTab: InfraDefinitionTabs.CONFIGURATION,
-                      infrastructureId: get(stage, 'moduleInfo.cd.infraExecutionSummary.infrastructureIdentifier', ''),
-                      module
-                    })}
-                  >
+                  <Link to={toEnvironmentInfrastructureDefinitionDetails}>
                     <Text lineClamp={1} className={css.stageItemDetails} color={Color.PRIMARY_6}>
                       {get(stage, 'moduleInfo.cd.infraExecutionSummary.infrastructureIdentifier', null)}
                     </Text>
