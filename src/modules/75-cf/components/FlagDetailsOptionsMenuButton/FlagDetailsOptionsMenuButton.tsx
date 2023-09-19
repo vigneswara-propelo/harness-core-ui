@@ -12,7 +12,6 @@ import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type {
   DeleteFeatureFlagQueryParams,
   Feature,
@@ -63,7 +62,6 @@ const FlagDetailsOptionsMenuButton: FC<FlagDetailsOptionsMenuButtonProps> = ({
   const history = useHistory()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
   const { withActiveEnvironment, activeEnvironment } = useActiveEnvironment()
-  const { FFM_7921_ARCHIVING_FEATURE_FLAGS } = useFeatureFlags()
   const [showArchiveDialog, setShowArchiveDialog] = useState<boolean>()
 
   const featureFlagListURL = withActiveEnvironment(
@@ -154,20 +152,8 @@ const FlagDetailsOptionsMenuButton: FC<FlagDetailsOptionsMenuButtonProps> = ({
     }
   }
 
-  const getMenuItems = (
-    archivingFlags: boolean,
-    flag: Feature,
-    menuOptions: Record<string, RbacMenuItemProps>
-  ): RbacMenuItemProps[] => {
-    if (archivingFlags) {
-      if (flag.archived) {
-        return [menuOptions.restore, menuOptions.delete]
-      } else {
-        return [menuOptions.edit, menuOptions.archive]
-      }
-    } else {
-      return [menuOptions.edit, menuOptions.delete]
-    }
+  const getMenuItems = (flag: Feature, menuOptions: Record<string, RbacMenuItemProps>): RbacMenuItemProps[] => {
+    return flag.archived ? [menuOptions.restore, menuOptions.delete] : [menuOptions.edit, menuOptions.archive]
   }
 
   return (
@@ -184,7 +170,7 @@ const FlagDetailsOptionsMenuButton: FC<FlagDetailsOptionsMenuButtonProps> = ({
         />
       )}
 
-      <RbacOptionsMenuButton items={getMenuItems(!!FFM_7921_ARCHIVING_FEATURE_FLAGS, featureFlag, options)} />
+      <RbacOptionsMenuButton items={getMenuItems(featureFlag, options)} />
     </>
   )
 }

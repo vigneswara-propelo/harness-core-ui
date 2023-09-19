@@ -79,20 +79,12 @@ export const featureFlagFilters = (features: Features | null): Array<FilterProps
 ]
 
 export const FlagTableFilters: FC<FlagTableFiltersProps> = ({ features, currentFilter, updateTableFilter }) => {
-  const {
-    FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW: DISPLAY_ACTIVE_FILTER,
-    FFM_7921_ARCHIVING_FEATURE_FLAGS: ARCHIVING_FEATURE_FLAGS
-  } = useFeatureFlags()
+  const { FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW: DISPLAY_ACTIVE_FILTER } = useFeatureFlags()
   let filters = featureFlagFilters(features)
 
   // remove 'Active Flags' filter card if feature flag FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW is not enabled
   if (!DISPLAY_ACTIVE_FILTER) {
     filters = filters.filter(filter => filter.label !== 'cf.flagFilters.active')
-  }
-
-  // remove 'Archived Flags' filter card if Archiving FF is toggled OFF
-  if (!ARCHIVING_FEATURE_FLAGS) {
-    filters = filters.filter(filter => filter.label !== 'cf.flagFilters.archivedFlags')
   }
 
   return <TableFilters filters={filters} currentFilter={currentFilter} updateTableFilter={updateTableFilter} />

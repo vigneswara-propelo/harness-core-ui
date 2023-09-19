@@ -27,7 +27,7 @@ import FeatureFlagsPage from '../FeatureFlagsPage'
 import mockFeatureFlags from './mockFeatureFlags'
 import mockGetAllEnvironmentsFlags from './mockGetAllEnvironmentsFlags'
 
-const renderComponent = (isArchivingFFOn = false): RenderResult =>
+const renderComponent = (): RenderResult =>
   render(
     <TestWrapper
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
@@ -40,7 +40,6 @@ const renderComponent = (isArchivingFFOn = false): RenderResult =>
         STALE_FLAGS_FFM_1510: true,
         FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW: true,
         FFM_6683_ALL_ENVIRONMENTS_FLAGS: true,
-        FFM_7921_ARCHIVING_FEATURE_FLAGS: isArchivingFFOn,
         FFM_7258_INTERCOM_VIDEO_LINKS: true,
         FFM_8344_FLAG_CLEANUP: true
       }}
@@ -205,25 +204,6 @@ describe('FeatureFlagsPage', () => {
     expect(screen.getByTestId('location')).toHaveTextContent('feature-flags/hello_world')
   })
 
-  test('It should allow deleting', async () => {
-    const mutate = jest.fn(() => {
-      return Promise.resolve({ data: {} })
-    })
-
-    mockImport('services/cf', {
-      useDeleteFeatureFlag: () => ({ mutate })
-    })
-
-    renderComponent()
-
-    await act(async () => {
-      await fireEvent.click(document.querySelector('[role="row"] [data-icon="Options"]') as HTMLElement)
-      await fireEvent.click(document.querySelector('[icon="trash"]') as HTMLElement)
-      await fireEvent.click(document.querySelector('button[class*=intent-danger]') as HTMLButtonElement)
-    })
-    expect(mutate).toBeCalledTimes(1)
-  })
-
   test('It should render error correctly', async () => {
     const message = 'ERROR OCCURS'
 
@@ -302,7 +282,7 @@ describe('FeatureFlagsPage', () => {
       mockEnvs()
       renderComponent()
 
-      expect(screen.queryAllByTestId('filter-card')).toHaveLength(6)
+      expect(screen.queryAllByTestId('filter-card')).toHaveLength(7)
     })
 
     test('It should not render if there is an active Environment but no flags', async () => {
@@ -316,10 +296,9 @@ describe('FeatureFlagsPage', () => {
     })
 
     test('It should render if there are only archived flags', async () => {
-      const isArchivingFFOn = true
       mockEnvs()
 
-      renderComponent(isArchivingFFOn)
+      renderComponent()
       expect(screen.getAllByTestId('filter-card')).toHaveLength(7)
     })
   })

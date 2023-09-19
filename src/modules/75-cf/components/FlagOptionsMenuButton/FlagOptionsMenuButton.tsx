@@ -65,7 +65,7 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
   const { withActiveEnvironment } = useActiveEnvironment()
   const { getString } = useStrings()
   const { isPlanEnforcementEnabled } = usePlanEnforcement()
-  const { FFM_7921_ARCHIVING_FEATURE_FLAGS, FFM_8344_FLAG_CLEANUP } = useFeatureFlags()
+  const { FFM_8344_FLAG_CLEANUP } = useFeatureFlags()
   const [showArchiveDialog, setShowArchiveDialog] = useState<boolean>()
   const [showNotStaleDialog, setShowNotStaleDialog] = useState<boolean>(false)
   const [showCleanupDialog, setShowCleanupDialog] = useState<boolean>(false)
@@ -174,7 +174,6 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
   }
 
   const getMenuItems = (
-    archivingFlags: boolean,
     flag: Feature,
     menuOptions: Record<string, RbacMenuItemProps>
   ): RbacOptionsMenuButtonProps['items'] => {
@@ -184,16 +183,12 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
       } else {
         return [menuOptions.edit, menuOptions.archive, '-', menuOptions.notStale]
       }
-    } else if (archivingFlags) {
-      if (flag.archived) {
-        return [menuOptions.restore, menuOptions.delete]
-      } else {
-        return [menuOptions.edit, menuOptions.archive]
-      }
+    } else if (flag.archived) {
+      return [menuOptions.restore, menuOptions.delete]
     } else if (noEdit) {
       return [menuOptions.delete]
     } else {
-      return [menuOptions.edit, menuOptions.delete]
+      return [menuOptions.edit, menuOptions.archive]
     }
   }
 
@@ -228,7 +223,7 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
         />
       )}
 
-      <RbacOptionsMenuButton items={getMenuItems(!!FFM_7921_ARCHIVING_FEATURE_FLAGS, flagData, options)} />
+      <RbacOptionsMenuButton items={getMenuItems(flagData, options)} />
     </>
   )
 }
