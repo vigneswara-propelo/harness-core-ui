@@ -591,15 +591,23 @@ export function TestsExecution({
               </Text>
               <Container height={CALL_GRAPH_HEIGHT}>
                 {(callGraphLoading || callGraphError) && (
-                  <Container className={css.callgraphLoadingStatus}>
+                  <Container className={css.callgraphLoadingStatus} height="100%" margin="medium">
                     {callGraphLoading && <Icon name="spinner" />}
                     {callGraphError && (
-                      <>
-                        <img src={testsCallgraphErrorIllustration} alt="" />
-                        <Text color="black" margin={{ top: 'xlarge' }}>
-                          {get(callGraphError, 'data.error_msg', error?.message)}
-                        </Text>
-                      </>
+                      <Layout.Vertical
+                        spacing="large"
+                        flex={{ alignItems: 'center', justifyContent: 'center' }}
+                        height="100%"
+                      >
+                        <Container>
+                          <img src={testsCallgraphErrorIllustration} alt="" />
+                        </Container>
+                        <Container flex padding="small">
+                          <Text color="black" lineClamp={1}>
+                            {get(callGraphError, 'data.error_msg', error?.message)}
+                          </Text>
+                        </Container>
+                      </Layout.Vertical>
                     )}
                   </Container>
                 )}
