@@ -967,6 +967,7 @@ const routes = {
   toCFConfigurePath: withModeModuleAndScopePrefix<ProjectPathProps>(() => '/configurePath'),
 
   // iacm routes
+  toIACM: withModeModuleAndScopePrefix<ProjectPathProps>(() => '/'),
   toIACMOverview: withModeModuleAndScopePrefix<ProjectPathProps>(() => '/overview'),
   toIACMWorkspaces: withModeModuleAndScopePrefix<ProjectPathProps>(() => `/workspaces`),
   toIACMWorkspace: withModeModuleAndScopePrefix<ProjectPathProps & IACMPathProps>(

@@ -8,7 +8,7 @@
 import React from 'react'
 import { Redirect, Switch, useParams } from 'react-router-dom'
 import routes from '@common/RouteDefinitionsV2'
-import { accountPathProps, NAV_MODE, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
+import { accountPathProps, modulePathProps, NAV_MODE, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import PipelineRouteDestinations from '@pipeline/PipelineRouteDestinations'
 import '@iacm/components/IACMStage'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
@@ -68,7 +68,7 @@ const IACMV2Routes = (mode = NAV_MODE.MODULE): JSX.Element => {
 
       {PipelineRouteDestinations({ mode }).props.children}
       {TriggersRouteDestinations({ mode }).props.children}
-      <RouteWithContext>
+      <RouteWithContext path={routes.toIACM({ ...modulePathProps, ...projectPathProps, mode })}>
         <IACMApp />
       </RouteWithContext>
     </Switch>
