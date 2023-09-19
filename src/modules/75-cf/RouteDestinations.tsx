@@ -197,8 +197,8 @@ const CFRoutes: FC = () => {
     FFM_5256_FF_MFE_Environment_Listing,
     FFM_5951_FF_MFE_Targets_Listing,
     FFM_6665_FF_MFE_Target_Detail,
-    FFM_6800_FF_MFE_Onboarding,
-    FFM_7127_FF_MFE_Onboarding_Detail
+    FFM_6800_FF_MFE_ONBOARDING,
+    FFM_7127_FF_MFE_ONBOARDING_DETAIL
   } = useFeatureFlags()
 
   return (
@@ -354,7 +354,7 @@ const CFRoutes: FC = () => {
         exact
         pageName={PAGE_NAME.OnboardingPage}
       >
-        {FFM_6800_FF_MFE_Onboarding ? <FFUIApp /> : <OnboardingPage />}
+        {FFM_6800_FF_MFE_ONBOARDING ? <FFUIApp /> : <OnboardingPage />}
       </RouteWithLayout>
 
       <RouteWithLayout
@@ -365,7 +365,7 @@ const CFRoutes: FC = () => {
         exact
         pageName={PAGE_NAME.OnboardingDetailPage}
       >
-        {FFM_7127_FF_MFE_Onboarding_Detail ? <FFUIApp /> : <OnboardingDetailPage />}
+        {FFM_7127_FF_MFE_ONBOARDING_DETAIL ? <FFUIApp /> : <OnboardingDetailPage />}
       </RouteWithLayout>
 
       <RouteWithLayout
@@ -375,7 +375,7 @@ const CFRoutes: FC = () => {
         exact
         pageName={PAGE_NAME.CFConfigurePath}
       >
-        {FFM_6800_FF_MFE_Onboarding ? <FFUIApp /> : <ConfigurePath />}
+        {FFM_6800_FF_MFE_ONBOARDING ? <FFUIApp /> : <ConfigurePath />}
       </RouteWithLayout>
 
       <RouteWithLayout

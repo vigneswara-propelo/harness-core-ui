@@ -23,8 +23,8 @@ describe('RouteDestinations', () => {
     FFM_5256_FF_MFE_Environment_Listing: false,
     FFM_6665_FF_MFE_Target_Detail: false,
     FFM_6666_FF_MFE_Target_Group_Detail: false,
-    FFM_6800_FF_MFE_Onboarding: false,
-    FFM_7127_FF_MFE_Onboarding_Detail: false
+    FFM_6800_FF_MFE_ONBOARDING: false,
+    FFM_7127_FF_MFE_ONBOARDING_DETAIL: false
   }
 
   const renderRoutes = (flagOverrides: Partial<Record<FeatureFlag, boolean>> = {}): ReactElement[] => {
@@ -117,38 +117,38 @@ describe('RouteDestinations', () => {
     expect(routesHavePageName(routes, 'TargetDetailPage')).toBeFalsy()
   })
 
-  test('it should render the NGUI version of the Onboarding page when FFM_6800_FF_MFE_Onboarding is false', async () => {
-    const routes = renderRoutes({ FFM_6800_FF_MFE_Onboarding: false })
+  test('it should render the NGUI version of the Onboarding page when FFM_6800_FF_MFE_ONBOARDING is false', async () => {
+    const routes = renderRoutes({ FFM_6800_FF_MFE_ONBOARDING: false })
 
     expect(routesHavePageName(routes, 'OnboardingPage')).toBeTruthy()
   })
 
-  test('it should not render the NGUI version of the Onboarding listing page when FFM_6800_FF_MFE_Onboarding is true', async () => {
-    const routes = renderRoutes({ FFM_6800_FF_MFE_Onboarding: true })
+  test('it should not render the NGUI version of the Onboarding listing page when FFM_6800_FF_MFE_ONBOARDING is true', async () => {
+    const routes = renderRoutes({ FFM_6800_FF_MFE_ONBOARDING: true })
 
     expect(routesHavePageName(routes, 'OnboardingPage')).toBeFalsy()
   })
 
-  test('it should render the NGUI version of the ConfigurePath routing page when FFM_6800_FF_MFE_Onboarding is false', async () => {
-    const routes = renderRoutes({ FFM_6800_FF_MFE_Onboarding: false })
+  test('it should render the NGUI version of the ConfigurePath routing page when FFM_6800_FF_MFE_ONBOARDING is false', async () => {
+    const routes = renderRoutes({ FFM_6800_FF_MFE_ONBOARDING: false })
 
     expect(routesHavePageName(routes, 'ConfigurePath')).toBeTruthy()
   })
 
-  test('it should not render the NGUI version of the ConfigurePath routing page when FFM_6800_FF_MFE_Onboarding is true', async () => {
-    const routes = renderRoutes({ FFM_6800_FF_MFE_Onboarding: true })
+  test('it should not render the NGUI version of the ConfigurePath routing page when FFM_6800_FF_MFE_ONBOARDING is true', async () => {
+    const routes = renderRoutes({ FFM_6800_FF_MFE_ONBOARDING: true })
 
     expect(routesHavePageName(routes, 'ConfigurePath')).toBeFalsy()
   })
 
-  test('it should render the NGUI version of Onboarding Detail page when FFM_7127_FF_MFE_Onboarding_Detail is false', async () => {
-    const routes = renderRoutes({ FFM_7127_FF_MFE_Onboarding_Detail: false })
+  test('it should render the NGUI version of Onboarding Detail page when FFM_7127_FF_MFE_ONBOARDING_DETAIL is false', async () => {
+    const routes = renderRoutes({ FFM_7127_FF_MFE_ONBOARDING_DETAIL: false })
 
     expect(routesHavePageName(routes, 'OnboardingDetailPage')).toBeTruthy()
   })
 
-  test('it should not render the NGUI version of the Onboarding Detail page when FFM_7127_FF_MFE_Onboarding_Detail is true', async () => {
-    const routes = renderRoutes({ FFM_7127_FF_MFE_Onboarding_Detail: true })
+  test('it should not render the NGUI version of the Onboarding Detail page when FFM_7127_FF_MFE_ONBOARDING_DETAIL is true', async () => {
+    const routes = renderRoutes({ FFM_7127_FF_MFE_ONBOARDING_DETAIL: true })
 
     expect(routesHavePageName(routes, 'OnboardingDetailPage')).toBeFalsy()
   })
