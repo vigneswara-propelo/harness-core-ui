@@ -57,7 +57,7 @@ const MonitoredService = (props: MonitoredServiceProps) => {
   const { config } = props
   const { getString } = useStrings()
 
-  useDocumentTitle([getString('cv.srmTitle'), getString('cv.monitoredServices.title')])
+  useDocumentTitle([getString('common.module.srm'), getString('cv.monitoredServices.title')])
 
   const history = useHistory()
   const { view } = useQueryParams<{ view?: Views.GRID }>()

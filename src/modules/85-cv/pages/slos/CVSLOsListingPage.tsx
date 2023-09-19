@@ -87,7 +87,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
   const { getString } = useStrings()
   const SRM_ENABLE_REQUEST_SLO = useFeatureFlag(FeatureFlag.SRM_ENABLE_REQUEST_SLO)
   const monitoredServiceIdentifier = useMemo(() => monitoredService?.identifier, [monitoredService?.identifier])
-  useDocumentTitle([getString('cv.srmTitle'), getServiceTitle(getString, monitoredServiceIdentifier)])
+  useDocumentTitle([getString('common.module.srm'), getServiceTitle(getString, monitoredServiceIdentifier)])
 
   const { showError, showSuccess } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()

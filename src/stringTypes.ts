@@ -667,6 +667,7 @@ export interface StringsMap {
   'common.module.governance': string
   'common.module.pms': string
   'common.module.sei': string
+  'common.module.srm': string
   'common.module.sto': string
   'common.module.templateService': string
   'common.moduleConfig.autoSaved': string
@@ -10386,7 +10387,6 @@ export interface StringsMap {
   'cv.slos.validations.specialCharacters': string
   'cv.slos.validations.userJourneyRequired': string
   'cv.somethingWentWrongWhileParsingTheData': string
-  'cv.srmTitle': string
   'cv.statusCode': string
   'cv.sunday': string
   'cv.templates.healthSourceDetails': string

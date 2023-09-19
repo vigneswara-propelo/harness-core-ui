@@ -166,7 +166,7 @@ describe('Unit tests for createting monitored source', () => {
 
     expect(getByText('cv.monitoredServices.monitoredServiceName')).toBeDefined()
 
-    expect(document.title).toBe('cv.srmTitle | cv.monitoredServices.title | 1234_project | harness')
+    expect(document.title).toBe('common.module.srm | cv.monitoredServices.title | 1234_project | harness')
   })
 
   test('should render loading state', () => {

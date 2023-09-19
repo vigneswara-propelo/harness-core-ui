@@ -56,7 +56,7 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
   const history = useHistory()
   const { getString } = useStrings()
   const { SRM_ENABLE_REQUEST_SLO: enableRequestSLO } = useFeatureFlags()
-  useDocumentTitle([getString('cv.srmTitle'), getString('cv.slos.title')])
+  useDocumentTitle([getString('common.module.srm'), getString('cv.slos.title')])
 
   const { showSuccess, showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier, identifier } = useParams<

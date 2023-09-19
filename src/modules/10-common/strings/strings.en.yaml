@@ -874,6 +874,7 @@ module:
   code: CODE
   cet: CET
   sei: SEI
+  srm: SRM
 templateServiceLabel: Template Service
 customPricing: for Custom Pricing
 specified: Specified

@@ -29,7 +29,7 @@ const CVSLODetailsPage: React.FC = () => {
   const history = useHistory()
   const { getString } = useStrings()
 
-  useDocumentTitle([getString('cv.srmTitle'), getString('cv.slos.title')])
+  useDocumentTitle([getString('common.module.srm'), getString('cv.slos.title')])
 
   const { accountId, orgIdentifier, projectIdentifier, identifier } = useParams<
     ProjectPathProps & { identifier: string }

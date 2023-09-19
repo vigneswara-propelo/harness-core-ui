@@ -70,7 +70,7 @@ export default function ServiceHealth({
   const { showError } = useToaster()
   const { getString } = useStrings()
 
-  useDocumentTitle([getString('cv.srmTitle'), getString('cv.monitoredServices.title')])
+  useDocumentTitle([getString('common.module.srm'), getString('cv.monitoredServices.title')])
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { notificationTime } = useQueryParams<{ notificationTime?: number }>()

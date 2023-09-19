@@ -28,7 +28,7 @@ import { CreateDowntimeForm } from './components/CreateDowntimeForm/CreateDownti
 const CVCreateDowntime = (): JSX.Element => {
   const { getString } = useStrings()
   const history = useHistory()
-  useDocumentTitle([getString('cv.srmTitle'), getString('cv.sloDowntime.label')])
+  useDocumentTitle([getString('common.module.srm'), getString('cv.sloDowntime.label')])
   const { showSuccess, showError } = useToaster()
 
   const { accountId, orgIdentifier, projectIdentifier, identifier } = useParams<

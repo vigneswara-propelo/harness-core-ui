@@ -1,5 +1,4 @@
 continuous: '{{$.common.purpose.cv.serviceReliability}}'
-srmTitle: SRM
 methodLabel: Method Label
 count: count
 request: '{{ $.common.request }}'

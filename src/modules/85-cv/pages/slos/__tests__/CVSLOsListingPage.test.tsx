@@ -149,7 +149,7 @@ describe('CVSLOsListingPage', () => {
 
     expect(screen.queryByText('cv.slos.completeTitle')).toBeInTheDocument()
     expect(screen.getByText('cv.slos.createSLO')).toBeInTheDocument()
-    expect(document.title).toBe('cv.srmTitle | cv.slos.title | project_identifier | harness')
+    expect(document.title).toBe('common.module.srm | cv.slos.title | project_identifier | harness')
   })
 
   test('With monitoredServiceIdentifier it should not render with the page headers', () => {

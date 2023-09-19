@@ -34,7 +34,7 @@ const DowntimeTabsTitle = ({ title }: { title: string }): JSX.Element => (
 export const SLODowntimePage = (): JSX.Element => {
   const { getString } = useStrings()
   const history = useHistory()
-  useDocumentTitle([getString('cv.srmTitle'), getString('cv.sloDowntime.label')])
+  useDocumentTitle([getString('common.module.srm'), getString('cv.sloDowntime.label')])
   const { tab = SLODowntimeTabs.DOWNTIME } = useQueryParams<{ tab?: SLODowntimeTabs }>()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const pathParams = useMemo(

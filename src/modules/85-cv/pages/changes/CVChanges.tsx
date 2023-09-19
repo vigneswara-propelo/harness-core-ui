@@ -60,7 +60,7 @@ export const CVChanges = ({ updateTime }: { updateTime?: Date }): JSX.Element =>
   const { getString } = useStrings()
   const isChaosExperimentCSEnabled = useFeatureFlag(FeatureFlag.SRM_INTERNAL_CHANGE_SOURCE_CE)
 
-  useDocumentTitle([getString('cv.srmTitle'), getString('changes')])
+  useDocumentTitle([getString('common.module.srm'), getString('changes')])
 
   const sourceTypes = useMemo(() => {
     return getChangeSourceOptions({ getString, isChaosExperimentCSEnabled }).map((changeSourceOption: SelectOption) => {

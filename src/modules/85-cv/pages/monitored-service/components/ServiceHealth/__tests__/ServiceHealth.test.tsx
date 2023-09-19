@@ -174,7 +174,7 @@ describe('Unit tests for ServiceHealth', () => {
   }
   test('Verify if all the fields are rendered correctly inside ServiceHealth and with correct document title', async () => {
     render(<WrapperComponent {...props} />)
-    expect(document.title).toBe('cv.srmTitle | cv.monitoredServices.title | harness')
+    expect(document.title).toBe('common.module.srm | cv.monitoredServices.title | harness')
   })
 
   test('Verify if reset functionality works correctly', async () => {

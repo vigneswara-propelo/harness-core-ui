@@ -82,7 +82,7 @@ describe('Test cases for CVSLODetailsPage', () => {
 
     expect(container).toMatchSnapshot()
 
-    expect(document.title).toBe('cv.srmTitle | cv.slos.title | PROJECT_IDENTIFIER | harness')
+    expect(document.title).toBe('common.module.srm | cv.slos.title | PROJECT_IDENTIFIER | harness')
   })
 
   test('it should handle the loading state', () => {

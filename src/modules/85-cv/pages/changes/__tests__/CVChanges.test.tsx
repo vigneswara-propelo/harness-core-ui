@@ -206,7 +206,7 @@ describe('Unit tests for CVChanges', () => {
     expect(getByText('cv.cvChanges.sourceFilterDefault: all')).toBeDefined()
     expect(getByText('cv.cvChanges.changeTypeFilterDefault: all')).toBeDefined()
     expect(mockFetch).toHaveBeenCalledTimes(2)
-    expect(document.title).toBe('cv.srmTitle | changes | harness')
+    expect(document.title).toBe('common.module.srm | changes | harness')
   })
 
   test('change a time period', async () => {

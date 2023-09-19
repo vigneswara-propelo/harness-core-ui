@@ -65,7 +65,7 @@ export default function Configurations(
 ): JSX.Element {
   const { getString } = useStrings()
 
-  useDocumentTitle([getString('cv.srmTitle'), getString('cv.monitoredServices.title')])
+  useDocumentTitle([getString('common.module.srm'), getString('cv.monitoredServices.title')])
 
   const {
     state: { storeMetadata }

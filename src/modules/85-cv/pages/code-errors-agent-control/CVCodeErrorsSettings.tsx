@@ -47,7 +47,7 @@ const CVCodeErrorsSettings: React.FC = ({ children }) => {
     })
   }
 
-  useDocumentTitle([getString('cv.srmTitle'), getString('common.codeErrorsSettings')])
+  useDocumentTitle([getString('common.module.srm'), getString('common.codeErrorsSettings')])
 
   if (SRM_ET_EXPERIMENTAL) {
     return (

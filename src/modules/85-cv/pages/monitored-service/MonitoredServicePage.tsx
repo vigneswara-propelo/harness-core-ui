@@ -201,7 +201,7 @@ const ServiceHealthAndConfiguration: React.FC = () => {
 const CVMonitoredServiceDetails: React.FC = () => {
   const { getString } = useStrings()
 
-  useDocumentTitle([getString('cv.srmTitle'), getString('cv.monitoredServices.title')])
+  useDocumentTitle([getString('common.module.srm'), getString('cv.monitoredServices.title')])
 
   const { identifier, serviceIdentifier, environmentIdentifier } =
     useParams<{ identifier?: string; serviceIdentifier?: string; environmentIdentifier?: string }>()
