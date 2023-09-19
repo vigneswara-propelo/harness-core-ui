@@ -56,7 +56,7 @@ interface TrialInformation {
 
 interface SubscriptionTabProps {
   trialInfo: TrialInformation
-  hasLicense?: boolean
+  hasLicense?: boolean | ModuleLicenseDTO
   selectedModule: ModuleName
   licenseData?: ModuleLicenseDTO
   refetchGetLicense: () => void

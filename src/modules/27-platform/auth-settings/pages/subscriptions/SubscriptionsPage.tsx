@@ -147,10 +147,14 @@ const SubscriptionsPage: React.FC = () => {
     queryParams: getModuleLicenseQueryParams,
     accountIdentifier: accountId
   })
+  const hasLicense =
+    selectedModuleCard?.module === 'SRM'
+      ? (licenseData?.data && licenseData.data.length > 0) || licenseInformation['CV']
+      : licenseData?.data && licenseData.data.length > 0
 
-  const hasLicense = licenseData?.data && licenseData.data.length > 0
-
-  const latestModuleLicense = hasLicense ? licenseData?.data?.[licenseData.data.length - 1] : undefined
+  const latestModuleLicense = hasLicense
+    ? licenseData?.data?.[licenseData.data.length - 1] || licenseInformation['CV']
+    : undefined
 
   useEffect(() => {
     handleUpdateLicenseStore(

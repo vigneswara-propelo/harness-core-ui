@@ -166,7 +166,9 @@ const SubscribedModules: React.FC = () => {
   } = accountLicenses?.data?.allModuleLicenses || {}
 
   const clonedModules = clone(modules)
-  delete clonedModules.CV
+  if (clonedModules.SRM?.length !== 0) {
+    delete clonedModules.CV
+  }
   const subscribedModules =
     Object.values(clonedModules).length > 0 ? (
       Object.values(clonedModules).map(moduleLicenses => {
