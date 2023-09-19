@@ -7,7 +7,7 @@
 
 import React, { useEffect } from 'react'
 import cx from 'classnames'
-import { Layout, Text } from '@harness/uicore'
+import { Layout, Text, useToggleOpen } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { ModalProvider } from '@harness/use-modal'
 import { useStrings } from 'framework/strings'
@@ -24,6 +24,7 @@ import { SideNavContextProvider } from './SideNavV2Context'
 import SideNavSectionComponent, { SideNavSectionComponentProps } from './SideNavSection/SideNavSection'
 import { SideNavLink as SideNavLinkComponent, SideNavLinkProps } from './SideNavLink/SideNavLink'
 import { useGetSelectedScope } from './SideNavV2.utils'
+import ModulesConfigurationScreen from '../ModuleConfigurationScreen/ModuleConfigurationScreen'
 import css from './SideNavV2.module.scss'
 
 // scope selector should be moved to common component
@@ -187,6 +188,7 @@ export const SideNav: SideNavComponent<React.PropsWithChildren<unknown>> = (prop
 interface SettingsLinkProps {
   module?: Module
   mode: NAV_MODE
+  showConfigurationLink?: boolean
 }
 
 const SettingsTitle = (props: { label: keyof StringsMap }): JSX.Element => {
@@ -210,9 +212,10 @@ SettingsTitle.defaultProps = {
 }
 
 const SettingsLink: React.FC<SettingsLinkProps> = props => {
-  const { module, mode } = props
+  const { module, mode, showConfigurationLink = false } = props
   const { params } = useGetSelectedScope()
   const { getString } = useStrings()
+  const { isOpen: isModuleConfigOpen, toggle: toggleModuleConfig, close: closeModuleConfig } = useToggleOpen(false)
 
   if (mode === NAV_MODE.ALL && module) {
     return null
@@ -246,6 +249,27 @@ const SettingsLink: React.FC<SettingsLinkProps> = props => {
           icon={'setting'}
         />
       </SideNav.Scope>
+      {showConfigurationLink && (
+        <Text
+          icon="list-view"
+          iconProps={{ size: 20, margin: { right: 'xsmall' } }}
+          font={{ variation: FontVariation.BODY }}
+          color={Color.GREY_800}
+          className={css.configureNavigation}
+          onClick={() => {
+            toggleModuleConfig()
+          }}
+        >
+          {getString('common.configureNavigation')}
+        </Text>
+      )}
+      {isModuleConfigOpen ? (
+        <ModulesConfigurationScreen
+          onClose={() => {
+            closeModuleConfig()
+          }}
+        />
+      ) : null}
     </SideNavSectionComponent>
   )
 }

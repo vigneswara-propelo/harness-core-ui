@@ -8,14 +8,18 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Layout, Heading, Text, Container } from '@harness/uicore'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import routes from '@common/RouteDefinitionsV2'
 
 export default function NotFoundPage(): JSX.Element {
+  const { CDS_NAV_2_0 } = useFeatureFlags()
+
   return (
     <Container height="100%" flex={{ align: 'center-center' }}>
       <Layout.Vertical spacing="large" flex={{ align: 'center-center' }}>
         <Heading>404</Heading>
         <Text>Oops, we could not find this page.</Text>
-        <Link to="/">Go to Home</Link>
+        <Link to={CDS_NAV_2_0 ? routes.toMode() : '/'}>Go to Home</Link>
         <Icon name="harness-logo-black" size={200} />
       </Layout.Vertical>
     </Container>

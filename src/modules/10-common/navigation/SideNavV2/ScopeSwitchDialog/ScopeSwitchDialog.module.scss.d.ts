@@ -7,9 +7,11 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly body: string
   readonly card: string
   readonly dialog: string
   readonly flex1: string
+  readonly icon: string
   readonly scopeIconContainer: string
 }
 export default styles

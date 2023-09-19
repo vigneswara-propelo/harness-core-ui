@@ -10,8 +10,9 @@ import { useHistory, useParams } from 'react-router-dom'
 import { ButtonVariation } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
-import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { ModePathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import { useGetPipelines } from '@pipeline/hooks/useGetPipelines'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -19,12 +20,14 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
 import GetStartedWithCDButton from '@pipeline/components/GetStartedWithCDButton/GetStartedWithCDButton'
 import { useGetFreeOrCommunityCD } from '@common/utils/utils'
+import { NAV_MODE, getRouteParams } from '@common/utils/routeUtils'
 import { useExecutionListQueryParams } from '../utils/executionListUtil'
 import css from './ExecutionListEmpty.module.scss'
 
 export function useExecutionListEmptyAction(isPipelineInvalid: boolean, onRunPipeline: () => void) {
   const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier } =
     useParams<PipelineType<PipelinePathProps>>()
+  const { mode } = getRouteParams<ModePathProps>()
   const { module } = useModuleInfo()
   const { getString } = useStrings()
   const history = useHistory()
@@ -41,15 +44,27 @@ export function useExecutionListEmptyAction(isPipelineInvalid: boolean, onRunPip
   const hasNoPipelines = data?.data?.totalElements === 0
 
   const onCreatePipeline = useCallback(() => {
-    history.push(
-      routes.toPipelineStudio({
-        projectIdentifier,
-        orgIdentifier,
-        pipelineIdentifier: '-1',
-        accountId,
-        module
-      })
-    )
+    if (mode === NAV_MODE.ALL) {
+      history.push(
+        routesV2.toPipelineStudio({
+          projectIdentifier,
+          orgIdentifier,
+          pipelineIdentifier: '-1',
+          accountId,
+          mode: NAV_MODE.ALL
+        })
+      )
+    } else {
+      history.push(
+        routes.toPipelineStudio({
+          projectIdentifier,
+          orgIdentifier,
+          pipelineIdentifier: '-1',
+          accountId,
+          module
+        })
+      )
+    }
   }, [accountId, history, module, orgIdentifier, projectIdentifier])
 
   // eslint-disable-next-line react/function-component-definition

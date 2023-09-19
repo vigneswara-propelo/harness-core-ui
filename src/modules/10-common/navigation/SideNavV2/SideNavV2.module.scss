@@ -49,3 +49,20 @@
     display: none; /* Safari and Chrome */
   }
 }
+
+.configureNavigation {
+  display: flex;
+  padding: var(--spacing-small) var(--spacing-medium) !important;
+  margin-bottom: var(--spacing-tiny) !important;
+  background-color: transparent;
+  border-radius: 4px;
+  text-decoration: none;
+  cursor: pointer;
+  margin-bottom: var(--spacing-xsmall);
+
+  &:hover {
+    text-decoration: none;
+    color: var(--primary-8);
+    background-color: rgba(#0278d5, 0.25);
+  }
+}

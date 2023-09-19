@@ -57,11 +57,20 @@ const UserProfilePopoverContent: React.FC = () => {
     <Container className={css.userProfileContent}>
       <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} padding={'xlarge'}>
         <Avatar name={user.name || user.email} email={user.email} size="medium" hoverCard={false} />
-        <Layout.Vertical flex={{ justifyContent: 'flex-start', alignItems: 'flex-start' }} padding={{ left: 'medium' }}>
-          <Text color={Color.GREY_800} font={{ variation: FontVariation.H5 }}>
+        <Layout.Vertical
+          flex={{ justifyContent: 'flex-start', alignItems: 'flex-start' }}
+          padding={{ left: 'medium' }}
+          width={195}
+        >
+          <Text
+            color={Color.GREY_800}
+            font={{ variation: FontVariation.H5 }}
+            lineClamp={1}
+            style={{ overflow: 'none' }}
+          >
             {user.name}
           </Text>
-          <Text color={Color.GREY_800} font={{ variation: FontVariation.SMALL }}>
+          <Text color={Color.GREY_800} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
             {user.email}
           </Text>
         </Layout.Vertical>
@@ -137,7 +146,7 @@ const SideNavFooter: React.FC = () => {
           padding={{ top: 'small', bottom: 'small', left: 'small', right: 'small' }}
         >
           <Avatar name={user.name || user.email} email={user.email} size="small" hoverCard={false} />
-          <Text font={{ variation: FontVariation.BODY2 }} color={Color.BLACK}>
+          <Text font={{ variation: FontVariation.BODY2 }} color={Color.BLACK} lineClamp={1}>
             {user.name || user.email}
           </Text>
         </Layout.Horizontal>

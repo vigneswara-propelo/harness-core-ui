@@ -45,8 +45,11 @@ import { EnvironmentsPage } from './RouteDestinations'
 import EnvironmentGroupDetails from './components/EnvironmentGroups/EnvironmentGroupDetails/EnvironmentGroupDetails'
 import GetStartedWithCDV2 from './pages/get-started-with-cd/GetStartedWithCDv2'
 import ServiceOverrides from './components/ServiceOverrides/ServiceOverrides'
-import CDOnboardingWizardWithCLI from './pages/get-started-with-cd/CDOnboardingWizardWithCLI/CDOnboardingWizardWithCLI'
 import CDOnboardingWizard from './pages/get-started-with-cd/CDOnboardingWizardWithCLI/CDOnboardingWizard'
+
+const CDOnboardingWizardWithCLI = React.lazy(
+  () => import('./pages/get-started-with-cd/CDOnboardingWizardWithCLI/CDOnboardingWizard')
+)
 
 RbacFactory.registerResourceCategory(ResourceCategory.GITOPS, {
   icon: 'gitops-blue-circle',

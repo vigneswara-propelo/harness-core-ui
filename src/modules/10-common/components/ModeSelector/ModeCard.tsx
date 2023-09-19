@@ -116,7 +116,7 @@ export function ModeCard(props: ModeCardProps): JSX.Element {
       popoverClassName={css.tooltipPopoverStyle}
       interactionKind="hover"
       hoverOpenDelay={1500}
-      hoverCloseDelay={0}
+      hoverCloseDelay={100}
       content={
         <ModeInfoPopover
           icon={popoverProps.icon || icon}

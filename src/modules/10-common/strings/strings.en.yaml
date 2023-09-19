@@ -1669,6 +1669,7 @@ moduleIntro:
 modeIntro:
   accountAdministration: Focus on managing general resources in your account, organizations, and projects
 serviceAccounts: Service Accounts
+configureNavigation: Configure Navigation
 settingsPage:
   title:
     accountLevelResources: 'Account-level resources'
@@ -1694,3 +1695,7 @@ allMode:
   welcome:
     title: Work more productively
     subtitle: Have all modules you work in one view
+scopeSwitchDialog:
+  secondary:
+    title: 'We are switching you to the {{targetScope}} scope'
+    subtitle: 'You have selected to view {{pageName}} so we will switch your scope to the {{targetScope}} level to view more details.'

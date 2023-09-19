@@ -10,8 +10,9 @@ import { useParams, matchPath, useLocation, useHistory } from 'react-router-dom'
 import { Breadcrumbs as UiCoreBreadcrumbs, Breadcrumb } from '@harness/uicore'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
+import { NAV_MODE } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitionsV2'
-import { ModePathProps, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import useSecondaryScopeSwitchDialog from '@common/navigation/SideNavV2/ScopeSwitchDialog/useSecondaryScopeSwiitchDialog'
 import { Scope } from 'framework/types/types'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
@@ -27,8 +28,8 @@ const renderLabelAndName = (label: string, name?: string): string => {
 
 const NGBreadcrumbsV2: React.FC<Partial<NGBreadcrumbsProps>> = props => {
   const { getString } = useStrings()
-  const { module, orgIdentifier, projectIdentifier } = useParams<ModulePathParams & ProjectPathProps & ModePathProps>()
-  const { selectedProject, selectedOrg, accountInfo } = useAppStore()
+  const { module, orgIdentifier, projectIdentifier } = useParams<ModulePathParams & ProjectPathProps>()
+  const { selectedProject, selectedOrg, accountInfo, currentMode: mode } = useAppStore()
   const { scope } = useGetSelectedScope()
   const { pathname } = useLocation()
   const history = useHistory()
@@ -42,7 +43,7 @@ const NGBreadcrumbsV2: React.FC<Partial<NGBreadcrumbsProps>> = props => {
       label: renderLabelAndName(getString('account'), accountInfo?.name),
       url: '',
       onClick: () => {
-        if (scope !== Scope.ACCOUNT) {
+        if (scope !== Scope.ACCOUNT && mode !== NAV_MODE.ADMIN) {
           showSecondaryScopeSwitchDialog({
             targetScope: Scope.ACCOUNT,
             onContinue: () => {
@@ -51,6 +52,8 @@ const NGBreadcrumbsV2: React.FC<Partial<NGBreadcrumbsProps>> = props => {
             },
             pageName: `[${renderLabelAndName(getString('account'), accountInfo?.name)}]`
           })
+        } else {
+          history.push(routes.toMode({ module }))
         }
       }
     }
@@ -62,7 +65,7 @@ const NGBreadcrumbsV2: React.FC<Partial<NGBreadcrumbsProps>> = props => {
       // url: routes.toMode({ module, orgIdentifier })
       url: '',
       onClick: () => {
-        if (scope !== Scope.ORGANIZATION) {
+        if (scope !== Scope.ORGANIZATION && mode !== NAV_MODE.ADMIN) {
           showSecondaryScopeSwitchDialog({
             targetScope: Scope.ORGANIZATION,
             onContinue: () => {
@@ -71,6 +74,8 @@ const NGBreadcrumbsV2: React.FC<Partial<NGBreadcrumbsProps>> = props => {
             },
             pageName: `[${renderLabelAndName(getString('orgsText'), selectedOrg?.name)}]`
           })
+        } else {
+          history.push(routes.toMode({ orgIdentifier, module }))
         }
       }
     })
@@ -81,7 +86,7 @@ const NGBreadcrumbsV2: React.FC<Partial<NGBreadcrumbsProps>> = props => {
       label: renderLabelAndName(getString('projectLabel'), selectedProject?.name),
       url: '',
       onClick: () => {
-        if (scope !== Scope.PROJECT) {
+        if (scope !== Scope.PROJECT && mode !== NAV_MODE.ADMIN) {
           showSecondaryScopeSwitchDialog({
             targetScope: Scope.PROJECT,
             onContinue: () => {
@@ -90,6 +95,8 @@ const NGBreadcrumbsV2: React.FC<Partial<NGBreadcrumbsProps>> = props => {
             },
             pageName: `[${renderLabelAndName(getString('projectLabel'), selectedProject?.name)}]`
           })
+        } else {
+          history.push(routes.toMode({ projectIdentifier, orgIdentifier, module }))
         }
       }
     })

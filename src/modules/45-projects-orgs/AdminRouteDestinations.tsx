@@ -8,7 +8,7 @@
 import React from 'react'
 import { Redirect, Switch, Route } from 'react-router-dom'
 import routes from '@common/RouteDefinitionsV2'
-import { NAV_MODE, accountPathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
+import { NAV_MODE, accountPathProps, modePathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import LandingDashboardPage from '@projects-orgs/pages/LandingDashboardPage/LandingDashboardPage'
 import CommonRouteDestinations from '@user-profile/CommonRouteDestinations'
 import NotFoundPage from '@common/pages/404/NotFoundPage'
@@ -56,16 +56,16 @@ const AdminRouteDestinations = (): React.ReactElement => {
       >
         <AdminRedirect />
       </RouteWithContext>
-      <RouteWithContext path={routes.toOverview({ ...accountPathProps })}>
+      <RouteWithContext path={routes.toOverview({ ...accountPathProps, ...modePathProps })}>
         <LandingDashboardPage />
       </RouteWithContext>
-      <RouteWithContext path={routes.toOrgs({ ...accountPathProps })}>
+      <RouteWithContext path={routes.toOrgs({ ...accountPathProps, ...modePathProps })}>
         <OrganizationsPage />
       </RouteWithContext>
-      <RouteWithContext path={routes.toProjects({ ...accountPathProps })}>
+      <RouteWithContext path={routes.toProjects({ ...accountPathProps, ...modePathProps })}>
         <ProjectsListPage />
       </RouteWithContext>
-      <RouteWithContext path={routes.toProjectDetails({ ...projectPathProps })}>
+      <RouteWithContext path={routes.toProjectDetails({ ...projectPathProps, ...modePathProps })}>
         <ProjectDetails />
       </RouteWithContext>
       {CommonRouteDestinations({ mode: NAV_MODE.ADMIN }).props.children}

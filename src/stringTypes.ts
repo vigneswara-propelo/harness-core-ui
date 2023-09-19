@@ -208,6 +208,7 @@ export interface StringsMap {
   'common.configureJfrog': string
   'common.configureModuleList': string
   'common.configureNav': string
+  'common.configureNavigation': string
   'common.configureOptions.advancedHelp': string
   'common.configureOptions.askDuringExecution': string
   'common.configureOptions.configureOptions': string
@@ -1100,6 +1101,8 @@ export interface StringsMap {
   'common.schedulePanel.yearlyTabTitle': string
   'common.scope': string
   'common.scopeLabel': string
+  'common.scopeSwitchDialog.secondary.subtitle': string
+  'common.scopeSwitchDialog.secondary.title': string
   'common.script': string
   'common.scriptRequired': string
   'common.scriptType': string

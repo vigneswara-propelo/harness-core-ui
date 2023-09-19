@@ -1,6 +1,5 @@
 import React from 'react'
-import { Dialog, IconName, Layout, Text, Container } from '@harness/uicore'
-import { Icon } from '@harness/icons'
+import { Dialog, IconName, Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { OrgPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from 'framework/types/types'
@@ -19,20 +18,15 @@ export interface ScopeSwitchDialogProps {
   content: React.ReactNode
   onClose?: () => void
   hideScopeIcon?: boolean
-}
-
-const scopeIconMap: Record<Scope, IconName> = {
-  [Scope.PROJECT]: 'nav-project',
-  [Scope.ORGANIZATION]: 'nav-organization',
-  [Scope.ACCOUNT]: 'Account'
+  rightContent?: React.ReactNode
 }
 
 const ScopeSwitchDialog: React.FC<ScopeSwitchDialogProps> = props => {
-  const { title, subtitle, content, targetScope, onClose, hideScopeIcon } = props
+  const { title, subtitle, content, onClose, rightContent } = props
 
   return (
     <Dialog isOpen enforceFocus={false} className={css.dialog} onClose={onClose}>
-      <Layout.Horizontal>
+      <Layout.Horizontal className={css.body}>
         <Layout.Vertical className={css.flex1}>
           <Text font={{ variation: FontVariation.H4 }} margin={{ bottom: 'small' }}>
             {title}
@@ -40,11 +34,7 @@ const ScopeSwitchDialog: React.FC<ScopeSwitchDialogProps> = props => {
           {subtitle ? <Text font={{ variation: FontVariation.BODY }}>{subtitle}</Text> : undefined}
           <Layout.Horizontal padding={{ top: 'xxlarge' }}>{content}</Layout.Horizontal>
         </Layout.Vertical>
-        {!hideScopeIcon && (
-          <Container className={css.scopeIconContainer}>
-            <Icon name={scopeIconMap[targetScope]} size={180} />
-          </Container>
-        )}
+        {rightContent}
       </Layout.Horizontal>
     </Dialog>
   )

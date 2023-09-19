@@ -3,6 +3,10 @@
   position: relative;
   width: 660px;
   padding-bottom: var(--spacing-xxlarge);
+
+  .body {
+    overflow: hidden;
+  }
   .card {
     display: flex !important;
     width: 270px;
@@ -34,7 +38,9 @@
   }
 
   .scopeIconContainer {
-    opacity: 0.1;
     width: 30%;
+    .icon {
+      opacity: 0.1;
+    }
   }
 }

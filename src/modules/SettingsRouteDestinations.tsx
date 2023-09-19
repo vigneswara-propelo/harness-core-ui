@@ -373,6 +373,7 @@ function SettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactEle
             policySetIdentifier: ':policySetIdentifier'
           }),
           ...pathArrayForAllScopes(routes.toGovernanceEvaluationsListing, mode),
+          ...pathArrayForAllScopes(routes.toGovernanceOnboarding, mode),
           ...pathArrayForAllScopes(routes.toGovernanceEvaluationDetail, mode, {
             evaluationId: ':evaluationId'
           })

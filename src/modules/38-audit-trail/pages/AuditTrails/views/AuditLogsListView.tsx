@@ -87,6 +87,7 @@ const AuditLogsListView: React.FC<AuditLogsListViewProps> = ({ data }) => {
   const [showEventSummary, setShowEventSummary] = useState<boolean>(true)
   const [selectedAuditEvent, setSelectedAuditEvent] = useState<AuditEventDTO | undefined>()
   const { getString } = useStrings()
+  const { CDS_NAV_2_0 } = useFeatureFlags()
 
   const renderColumnResource: Renderer<CellProps<AuditEventDTO>> = ({ row }) => {
     const { resourceScope, resource, module } = row.original
@@ -107,7 +108,7 @@ const AuditLogsListView: React.FC<AuditLogsListViewProps> = ({ data }) => {
 
     return (
       <Layout.Vertical padding={{ right: 'xlarge' }}>
-        {url ? (
+        {url && !CDS_NAV_2_0 ? (
           <Link className={css.resourceLink} to={url}>
             <Text lineClamp={1}>{defaultTo(resource.labels?.resourceName, resource.identifier)}</Text>
           </Link>

@@ -785,6 +785,7 @@ const routes = {
     params => `/settings/governance/policy-sets/${params?.policySetIdentifier}`
   ),
   toGovernanceEvaluationsListing: withModeModuleAndScopePrefix(() => `/settings/governance/policy-evaluations`),
+  toGovernanceOnboarding: withModeModuleAndScopePrefix(() => `/settings/governance/onboarding`),
   toGovernanceEvaluationDetail: withModeModuleAndScopePrefix<GovernancePathProps>(
     params => `/settings/governance/policy-evaluations/${params?.evaluationId}`
   ),

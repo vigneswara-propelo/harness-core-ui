@@ -49,7 +49,7 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
   const { accountId } = useParams<ProjectPathProps>()
   const { scope: selectedScope, params } = useGetSelectedScope()
   const [selectedTabId, setSelectedTabId] = React.useState<Scope | undefined>(selectedScope)
-  const { path } = getRouteParams<ProjectPathProps & { path: string }>(true)
+  const { path } = getRouteParams<ProjectPathProps & { path: string }>(true, activeLink?.url)
   const history = useHistory()
   const { showDialog: showPrimaryScopeSwitchDialog } = usePrimaryScopeSwitchDialog({ closeScopeSelector: onClose })
 
@@ -126,7 +126,7 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
       return
     }
 
-    const isScopeSwitchPossible = possibleScopeSwitchLinksMap?.[targetScope]?.find(availableLink => {
+    const scopeSwtichData = possibleScopeSwitchLinksMap?.[targetScope]?.find(availableLink => {
       return Boolean(
         matchPath(targetUrl, {
           path: availableLink.url
@@ -134,7 +134,7 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
       )
     })
 
-    if (isScopeSwitchPossible) {
+    if (scopeSwtichData) {
       onClose()
       history.push(targetUrl)
       return
