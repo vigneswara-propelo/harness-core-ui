@@ -52,6 +52,14 @@ jest.mock('@cv/hooks/useLogContentHook/views/SLOLogContent', () => ({
 jest.mock('highcharts-react-official', () => () => <></>)
 
 describe('Unit tests for ExecutionVerificationView unit tests', () => {
+  beforeEach(() => {
+    jest.resetAllMocks()
+
+    jest.spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId').mockReturnValue({
+      data: HealthSourcesResponse,
+      refetch: jest.fn() as unknown
+    } as any)
+  })
   test('Ensure tabs are rendered', async () => {
     const { container, getByText } = render(
       <TestWrapper>
@@ -115,6 +123,13 @@ describe('Unit tests for ExecutionVerificationView unit tests', () => {
   })
 
   test('Ensure correct tabs are rendered via queryParams', async () => {
+    const useGetHealthSourcesForVerifyStepExecutionIdSpy = jest
+      .spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId')
+      .mockReturnValue({
+        data: HealthSourcesResponse,
+        refetch: jest.fn() as unknown
+      } as any)
+
     const LogsContainer = render(
       <TestWrapper queryParams={{ type: 'pipeline.verification.analysisTab.logs' }}>
         <ExecutionVerificationView step={{ progressData: { activityId: '1234_activityId' as any } }} />
@@ -133,6 +148,8 @@ describe('Unit tests for ExecutionVerificationView unit tests', () => {
     expect(MetricsContainer.container.querySelector('.LogAnalysisContainer')).not.toBeInTheDocument()
     expect(MetricsContainer.container.querySelector('.deploymentMetrics')).toBeInTheDocument()
     expect(MetricsContainer.container).toMatchSnapshot()
+
+    await waitFor(() => expect(useGetHealthSourcesForVerifyStepExecutionIdSpy).toHaveBeenCalled())
   })
 
   test('should open the LogContent modal and render VerifyStepLog with type ExecutionLog by clicking the Execution Logs button', async () => {

@@ -38,7 +38,7 @@ interface SummaryTextProps {
 function SummaryText(props: SummaryTextProps): JSX.Element {
   const { numerator, denominator, titleText, tabId } = props
   const { getString } = useStrings()
-  const { updateQueryParams } = useUpdateQueryParams<ExecutionQueryParams & { type: string }>()
+  const { updateQueryParams } = useUpdateQueryParams<ExecutionQueryParams>()
   return (
     <Container className={css.summaryContent}>
       <Container className={css.violations}>

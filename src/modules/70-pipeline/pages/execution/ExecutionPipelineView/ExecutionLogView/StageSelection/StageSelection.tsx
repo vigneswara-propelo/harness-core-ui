@@ -132,6 +132,14 @@ export function StageSelection(props: StageSelectionProps): React.ReactElement {
       stage: selectedStageId,
       childStage: selectedChildStageId,
       stageExecId: selectedStageExecutionId,
+      /**
+       * "type" query param is being used by verify step to switch tabs,
+       * when user switches beteween steps, it needs to be reset to
+       * avoid persistence of previous selected tab.
+       * https://harness.atlassian.net/browse/OIP-916
+       *
+       */
+      type: undefined,
       retryStep
     })
   }

@@ -30,6 +30,7 @@ export interface ExecutionPageQueryParams {
   stageExecId?: string // strategy nodes require stageExecId + stageID
   childStage?: string
   collapsedNode?: string
+  type?: string
 }
 
 export interface ExpressionBlock {

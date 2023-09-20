@@ -68,6 +68,13 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
   const canEnableMetricsTab = getCanEnableTabByType(healthSourcesData, MetricsProviderType)
   const canEnableLogsTab = getCanEnableTabByType(healthSourcesData, LogsProviderType)
 
+  useEffect(() => {
+    fetchHealthSources()
+    const newTabId = getDefaultTabId({ getString, tabName: type, canEnableMetricsTab, canEnableLogsTab })
+
+    setSelectedTab(newTabId)
+  }, [step])
+
   const [selectedTab, setSelectedTab] = useState(() =>
     getDefaultTabId({ getString, tabName: type, canEnableMetricsTab, canEnableLogsTab })
   )
