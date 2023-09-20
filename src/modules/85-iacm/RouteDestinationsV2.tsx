@@ -49,7 +49,7 @@ const IACMRedirect: React.FC = () => {
     )
   }
 
-  return <Redirect to={routes.toOverview({ module })} />
+  return <Redirect to={routes.toSettings({ module })} />
 }
 
 const IACMV2Routes = (mode = NAV_MODE.MODULE): JSX.Element => {

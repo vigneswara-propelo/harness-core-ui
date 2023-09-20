@@ -355,11 +355,17 @@ function PipelineRouteDestinations({
       <RouteWithContext
         exact
         licenseRedirectData={licenseRedirectData}
-        path={routes.toIACMPipelineResources({
-          ...accountPathProps,
-          ...executionPathProps,
-          ...modulePathProps
-        })}
+        path={[
+          routes.toIACMPipelineResources({
+            ...accountPathProps,
+            ...executionPathProps,
+            ...modulePathProps
+          }),
+          routes.toIACMPipelineResources({
+            ...accountPathProps,
+            ...executionPathProps
+          })
+        ]}
         pageName={PAGE_NAME.ExecutionIACMPipelineResources}
       >
         <ExecutionLandingPage>
@@ -369,11 +375,17 @@ function PipelineRouteDestinations({
       <RouteWithContext
         exact
         licenseRedirectData={licenseRedirectData}
-        path={routes.toIACMPipelineCostEstimation({
-          ...accountPathProps,
-          ...executionPathProps,
-          ...modulePathProps
-        })}
+        path={[
+          routes.toIACMPipelineCostEstimation({
+            ...accountPathProps,
+            ...executionPathProps,
+            ...modulePathProps
+          }),
+          routes.toIACMPipelineCostEstimation({
+            ...accountPathProps,
+            ...executionPathProps
+          })
+        ]}
         pageName={PAGE_NAME.IACMCostEstimation}
       >
         <ExecutionLandingPage>
