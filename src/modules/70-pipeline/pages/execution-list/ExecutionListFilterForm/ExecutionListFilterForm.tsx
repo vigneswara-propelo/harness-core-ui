@@ -88,7 +88,7 @@ export function ExecutionListFilterForm<
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelineType<PipelinePathProps>>()
   const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   const { type, formikProps, isCDEnabled, isCIEnabled, initialValues } = props
-  const [searchTerm, setSearchTerm] = useState<string>('')
+  const [searchTerm, setSearchTerm] = useState<string | undefined>()
   const loadMoreRef = useRef(null)
   const formikFromContext = useFormikContext<T>()
   const pageSize = useRef(20)

@@ -6,6 +6,7 @@
  */
 
 import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react'
+import { isUndefined } from 'lodash-es'
 
 const DEFAULT_PAGE_SIZE = 10
 
@@ -165,7 +166,7 @@ export const useInfiniteScroll = (props: InfiniteScrollProps): InfiniteScrollRet
   }, [])
 
   useEffect(() => {
-    if (initialPageLoaded.current) {
+    if (initialPageLoaded.current && !isUndefined(searchTerm)) {
       offsetToFetch.current = 0
       loadItems()
     }

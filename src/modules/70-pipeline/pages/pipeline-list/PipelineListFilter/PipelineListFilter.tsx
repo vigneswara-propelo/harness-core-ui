@@ -20,16 +20,19 @@ import { isObjectEmpty, UNSAVED_FILTER } from '@common/components/Filter/utils/F
 import { StringUtils, useToaster } from '@common/exports'
 import { useBooleanStatus, useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { deploymentTypeLabel } from '@pipeline/utils/DeploymentTypeUtils'
-import { getBuildType, getFilterByIdentifier } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
+import {
+  getBuildType,
+  getFilterByIdentifier,
+  getMultiSelectFormOptions
+} from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 import {
   createRequestBodyPayload,
-  getMultiSelectFormOptions,
   getValidFilterArguments,
   PipelineFormType
 } from '@pipeline/utils/PipelineFilterRequestUtils'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
-import { useGetEnvironmentListV2, useGetServiceDefinitionTypes, useGetServiceList } from 'services/cd-ng'
+import { useGetEnvironmentListV2, useGetServiceDefinitionTypes } from 'services/cd-ng'
 import type { FilterDTO, PipelineFilterProperties } from 'services/pipeline-ng'
 import { useDeleteFilter, useGetFilterList, usePostFilter, useUpdateFilter } from 'services/pipeline-ng'
 import { killEvent } from '@common/utils/eventUtils'
@@ -75,16 +78,6 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
 
   const { data: deploymentTypeResponse, loading: isDeploymentTypesLoading } = useGetServiceDefinitionTypes({
     queryParams: { accountId },
-    lazy: !filterDrawerOpenedRef.current
-  })
-
-  const { data: servicesResponse, loading: isServicesLoading } = useGetServiceList({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      includeAllServicesAccessibleAtScope: CDS_OrgAccountLevelServiceEnvEnvGroup
-    },
     lazy: !filterDrawerOpenedRef.current
   })
 
@@ -138,7 +131,7 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
     onFilterListUpdate(filterList)
   }, [filterList, onFilterListUpdate])
 
-  const isMetaDataLoading = isDeploymentTypesLoading || isEnvironmentsLoading || isServicesLoading
+  const isMetaDataLoading = isDeploymentTypesLoading || isEnvironmentsLoading
   const isFilterCrudLoading =
     isCreateFilterLoading || isUpdateFilterLoading || isDeleteFilterLoading || isFilterListLoading
   const appliedFilter =
@@ -338,7 +331,6 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
             isCIEnabled={isCIEnabled}
             initialValues={{
               environments: getMultiSelectFormOptions(environmentsResponse?.data?.content, 'environment'),
-              services: getMultiSelectFormOptions(servicesResponse?.data?.content, 'service'),
               deploymentType: deploymentTypeSelectOptions
             }}
             type="PipelineSetup"
