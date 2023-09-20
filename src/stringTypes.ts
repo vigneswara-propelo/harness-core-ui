@@ -5207,6 +5207,9 @@ export interface StringsMap {
   'pipeline.serviceHooks.title': string
   'pipeline.serviceLabel': string
   'pipeline.serviceNowApprovalStep.approvalChangeWindow': string
+  'pipeline.serviceNowApprovalStep.changeRequestNumber': string
+  'pipeline.serviceNowApprovalStep.changeRequestPlaceholder': string
+  'pipeline.serviceNowApprovalStep.changeTaskType': string
   'pipeline.serviceNowApprovalStep.connectToServiceNow': string
   'pipeline.serviceNowApprovalStep.connectorRef': string
   'pipeline.serviceNowApprovalStep.execution.conditions.equals': string
@@ -5229,6 +5232,7 @@ export interface StringsMap {
   'pipeline.serviceNowApprovalStep.serviceNowConnectorPlaceholder': string
   'pipeline.serviceNowApprovalStep.serviceNowField': string
   'pipeline.serviceNowApprovalStep.ticketType': string
+  'pipeline.serviceNowApprovalStep.updateMultiple': string
   'pipeline.serviceNowApprovalStep.validations.connectorRef': string
   'pipeline.serviceNowApprovalStep.validations.issueNumber': string
   'pipeline.serviceNowApprovalStep.validations.ticketType': string
@@ -5248,6 +5252,7 @@ export interface StringsMap {
   'pipeline.serviceNowCreateStep.shortDescriptionPlaceholder': string
   'pipeline.serviceNowCreateStep.templateName': string
   'pipeline.serviceNowCreateStep.templateNamePlaceholder': string
+  'pipeline.serviceNowCreateStep.validations.changeRequestNumber': string
   'pipeline.serviceNowCreateStep.validations.description': string
   'pipeline.serviceNowCreateStep.validations.shortDescription': string
   'pipeline.serviceNowCreateStep.validations.templateName': string
@@ -5454,6 +5459,9 @@ export interface StringsMap {
   'pipeline.syncStep.validation.skipSchemaValidation': string
   'pipeline.tagDependencyRequired': string
   'pipeline.targets.title': string
+  'pipeline.taskOptions.implementation': string
+  'pipeline.taskOptions.planning': string
+  'pipeline.taskOptions.testing': string
   'pipeline.templateAlreadyExists.confirmation': string
   'pipeline.templateAlreadyExists.content': string
   'pipeline.templateAlreadyExists.title': string

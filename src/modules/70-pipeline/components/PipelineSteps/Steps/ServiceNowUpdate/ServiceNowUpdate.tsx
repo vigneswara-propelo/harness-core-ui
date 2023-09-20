@@ -180,7 +180,11 @@ export class ServiceNowUpdate extends PipelineStep<ServiceNowUpdateData> {
         allowableTypes={allowableTypes}
         onChange={(values: ServiceNowUpdateData) => onChange?.(values)}
         initialValues={processInitialValues(initialValues)}
-        onUpdate={(values: ServiceNowUpdateData) => onUpdate?.(values)}
+        onUpdate={(values: ServiceNowUpdateData) => {
+          delete values?.spec?.updateMultipleFlag
+          const payload = processFormData(values, true)
+          onUpdate?.(payload)
+        }}
         isNewStep={isNewStep}
         readonly={readonly}
       />

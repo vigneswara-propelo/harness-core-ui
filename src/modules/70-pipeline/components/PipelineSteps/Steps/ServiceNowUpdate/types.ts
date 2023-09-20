@@ -38,6 +38,14 @@ export interface ServiceNowUpdateData extends StepElementConfig {
     delegateSelectors?: string[]
     fieldType?: FieldType
     ticketNumber: string
+    updateMultipleFlag?: boolean
+    updateMultiple?: {
+      type?: string
+      spec: {
+        changeRequestNumber?: string
+        changeRequestType?: string
+      }
+    }
     description?: string
     shortDescription?: string
     templateFields?: ServiceNowFieldValueNG[]
@@ -45,6 +53,10 @@ export interface ServiceNowUpdateData extends StepElementConfig {
     useServiceNowTemplate: boolean
     isTemplateSectionAvailable?: boolean
   }
+}
+
+export enum TaskTypes {
+  'CHANGE_TASK' = 'CHANGE_TASK'
 }
 
 export interface ServiceNowUpdateVariableListModeProps {

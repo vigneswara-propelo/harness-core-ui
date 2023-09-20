@@ -23,7 +23,8 @@ import {
   Text,
   PageSpinner,
   AllowedTypes,
-  FormError
+  FormError,
+  SelectOption
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -71,8 +72,15 @@ import { ServiceNowTemplateFieldsRenderer } from '@pipeline/components/PipelineS
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { Connectors } from '@platform/connectors/constants'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
-import type { ServiceNowUpdateStepModeProps, ServiceNowUpdateData, ServiceNowUpdateFormContentInterface } from './types'
+import {
+  ServiceNowUpdateStepModeProps,
+  ServiceNowUpdateData,
+  ServiceNowUpdateFormContentInterface,
+  TaskTypes
+} from './types'
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
 import { getGenuineValue } from '../ServiceNowApproval/helper'
 import type { ServiceNowTicketTypeSelectOption } from '../ServiceNowApproval/types'
@@ -95,6 +103,7 @@ function FormContent({
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { CDS_NG_UPDATE_MULTIPLE_SNOW_CHANGE_REQUEST } = useFeatureFlags()
 
   const [ticketFieldList, setTicketFieldList] = useState<ServiceNowFieldNG[]>([])
   const [count, setCount] = React.useState(0)
@@ -103,6 +112,25 @@ function FormContent({
   )
   const [connectorValueType, setConnectorValueType] = useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
   const [ticketValueType, setTicketValueType] = useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
+
+  const taskTypeOptions: SelectOption[] = [
+    {
+      label: getString('pipeline.taskOptions.planning'),
+      value: 'Planning'
+    },
+    {
+      label: getString('pipeline.taskOptions.implementation'),
+      value: 'Implementation'
+    },
+    {
+      label: getString('pipeline.taskOptions.testing'),
+      value: 'Testing'
+    },
+    {
+      label: getString('review'),
+      value: 'Review'
+    }
+  ]
 
   const commonParams = {
     accountIdentifier: accountId,
@@ -120,6 +148,7 @@ function FormContent({
   const serviceNowType = 'updateMode'
   const [isTemplateSectionAvailable, setIsTemplateSectionAvailable] = useState<boolean>(false)
   const [templateName, setTemplateName] = useState<string>(formik.values.spec.templateName || '')
+  const ticketTypeVal = (formik.values?.spec?.ticketType as string)?.toLocaleUpperCase()
 
   useEffect(() => {
     if (connectorRefFixedValue && connectorValueType === MultiTypeInputType.FIXED) {
@@ -250,7 +279,6 @@ function FormContent({
     serviceNowTemplateMetaDataQuery?.error?.message
   )
   const istemplateErrorString = !serviceNowTemplateMetaDataQuery.loading && !isEmpty(templateErrorString)
-
   const [showDynamicFieldsModal, hideDynamicFieldsModal] = useModalHook(() => {
     return (
       <Dialog
@@ -444,32 +472,94 @@ function FormContent({
           />
         </div>
 
-        <div className={cx(stepCss.formGroup, stepCss.lg)}>
-          <FormInput.MultiTextInput
-            tooltipProps={{
-              dataTooltipId: 'serviceNowApprovalTicketNumber'
-            }}
-            label={getString('pipeline.serviceNowApprovalStep.issueNumber')}
-            name="spec.ticketNumber"
-            placeholder={getString('pipeline.serviceNowApprovalStep.issueNumberPlaceholder')}
-            disabled={isApprovalStepFieldDisabled(readonly)}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-          />
-          {getMultiTypeFromValue(formik.values.spec.ticketNumber) === MultiTypeInputType.RUNTIME && (
-            <ConfigureOptions
-              value={formik.values.spec.ticketNumber}
-              type="String"
-              variableName="spec.ticketNumber"
-              showRequiredField={false}
-              showDefaultField={false}
-              onChange={value => formik.setFieldValue('spec.ticketNumber', value)}
-              isReadonly={readonly}
+        {(ticketTypeVal === TaskTypes.CHANGE_TASK && !formik.values?.spec?.updateMultipleFlag) ||
+        ticketTypeVal !== TaskTypes.CHANGE_TASK ? (
+          <div className={cx(stepCss.formGroup, stepCss.lg)}>
+            <FormInput.MultiTextInput
+              tooltipProps={{
+                dataTooltipId: 'serviceNowApprovalTicketNumber'
+              }}
+              label={getString('pipeline.serviceNowApprovalStep.issueNumber')}
+              name="spec.ticketNumber"
+              placeholder={getString('pipeline.serviceNowApprovalStep.issueNumberPlaceholder')}
+              disabled={isApprovalStepFieldDisabled(readonly)}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
             />
-          )}
-        </div>
+            {getMultiTypeFromValue(formik.values.spec.ticketNumber) === MultiTypeInputType.RUNTIME && (
+              <ConfigureOptions
+                value={formik.values.spec.ticketNumber}
+                type="String"
+                variableName="spec.ticketNumber"
+                showRequiredField={false}
+                showDefaultField={false}
+                onChange={value => formik.setFieldValue('spec.ticketNumber', value)}
+                isReadonly={readonly}
+              />
+            )}
+          </div>
+        ) : null}
+        {ticketTypeVal === TaskTypes.CHANGE_TASK && CDS_NG_UPDATE_MULTIPLE_SNOW_CHANGE_REQUEST ? (
+          <>
+            <div className={cx(stepCss.formGroup, stepCss.sm)}>
+              <FormInput.CheckBox
+                name="spec.updateMultipleFlag"
+                label={getString('pipeline.serviceNowApprovalStep.updateMultiple')}
+              />
+            </div>
+            <div className={cx(stepCss.formGroup, stepCss.lg)}>
+              {formik.values?.spec?.updateMultipleFlag ? (
+                <>
+                  <FormInput.MultiTextInput
+                    tooltipProps={{
+                      dataTooltipId: 'serviceNowApprovalChangeRequestNumber'
+                    }}
+                    label={getString('pipeline.serviceNowApprovalStep.changeRequestNumber')}
+                    name={`spec.updateMultiple.spec.changeRequestNumber`}
+                    placeholder={getString('pipeline.serviceNowApprovalStep.changeRequestPlaceholder')}
+                    disabled={isApprovalStepFieldDisabled(readonly)}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes
+                    }}
+                  />
+
+                  {getMultiTypeFromValue(formik.values.spec?.updateMultiple?.spec?.changeRequestNumber) ===
+                    MultiTypeInputType.RUNTIME && (
+                    <ConfigureOptions
+                      value={formik.values.spec?.updateMultiple?.spec?.changeRequestNumber as any}
+                      type="String"
+                      variableName="spec.updateMultiple.spec.changeRequestNumber"
+                      showRequiredField={false}
+                      showDefaultField={false}
+                      onChange={value => formik.setFieldValue('spec.updateMultiple.spec.changeRequestNumber', value)}
+                      isReadonly={readonly}
+                    />
+                  )}
+                </>
+              ) : null}
+            </div>
+
+            <div className={cx(stepCss.formGroup, stepCss.lg)}>
+              {formik.values?.spec?.updateMultipleFlag ? (
+                <>
+                  <FormInput.Select
+                    tooltipProps={{
+                      dataTooltipId: 'serviceNowApprovalChangeTaskType'
+                    }}
+                    label={getString('pipeline.serviceNowApprovalStep.changeTaskType')}
+                    name={`spec.updateMultiple.spec.changeTaskType`}
+                    disabled={isApprovalStepFieldDisabled(readonly)}
+                    items={taskTypeOptions}
+                  />
+                </>
+              ) : null}
+            </div>
+          </>
+        ) : null}
+
         <div className={stepCss.noLookDivider} />
       </React.Fragment>
       <div className={stepCss.divider} />
@@ -708,8 +798,19 @@ function ServiceNowUpdateStepMode(
 
   return (
     <Formik<ServiceNowUpdateData>
-      onSubmit={values => {
-        onUpdate?.(processFormData(values))
+      onSubmit={(values, { setFieldError }) => {
+        if (
+          (values.spec?.ticketType as string).toLocaleUpperCase() === TaskTypes.CHANGE_TASK &&
+          (values.spec as any)?.updateMultipleFlag &&
+          !values.spec?.updateMultiple?.spec?.changeRequestNumber
+        ) {
+          setFieldError(
+            'spec.updateMultiple.spec.changeRequestNumber',
+            getString('pipeline.serviceNowCreateStep.validations.changeRequestNumber')
+          )
+        } else {
+          onUpdate?.(processFormData(values, true))
+        }
       }}
       formName="serviceNowCreate"
       initialValues={props.initialValues}
@@ -723,8 +824,15 @@ function ServiceNowUpdateStepMode(
           connectorRef: ConnectorRefSchema(getString, {
             requiredErrorMsg: getString('pipeline.serviceNowApprovalStep.validations.connectorRef')
           }),
+
           ticketType: Yup.string().required(getString('pipeline.serviceNowApprovalStep.validations.ticketType')),
-          ticketNumber: Yup.string().required(getString('pipeline.serviceNowApprovalStep.validations.issueNumber')),
+          ticketNumber: Yup.string().when(['ticketType', 'updateMultipleFlag'], {
+            is: (ticketType, updateMultiple) =>
+              (ticketType?.toLocaleLowerCase() === 'change_task' && !updateMultiple) ||
+              ticketType?.toLocaleLowerCase() !== 'change_task',
+            then: Yup.string().required(getString('pipeline.serviceNowApprovalStep.validations.issueNumber')),
+            otherwise: Yup.string()
+          }),
           templateName: Yup.string().when('useServiceNowTemplate', {
             is: true,
             then: Yup.string()

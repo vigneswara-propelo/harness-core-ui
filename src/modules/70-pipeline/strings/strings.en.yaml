@@ -307,7 +307,11 @@ serviceNowApprovalStep:
   ticketType: Ticket Type
   issueTypePlaceholder: Select Ticket Type
   issueNumber: Ticket Number
+  changeRequestNumber: Change Request Number
+  updateMultiple: Update Multiple
+  changeTaskType: Change Task Type
   issueNumberPlaceholder: Enter Ticket Number
+  changeRequestPlaceholder: Enter Change Request Number
   fetchingTicketTypesPlaceholder: Fetching Ticket Types...
   fetchTicketTypesError: Failed to fetch ticket types
   fetching: Fetching...
@@ -356,6 +360,7 @@ serviceNowCreateStep:
     shortDescription: Short Description is required
     validTemplateName: Valid Template Name is required
     templateName: Template Name is required
+    changeRequestNumber: Change Request Number is required
 serviceNowUpdateStep:
   fieldType:
     applyFromTemplate: Apply from template
@@ -1993,3 +1998,7 @@ executionFailed: Execution failed
 cacheIntelligence:
   label: Cache Intelligence
 costChange: Cost Change Estimation
+taskOptions:
+  implementation: 'Implementation'
+  planning: 'Planning'
+  testing: 'Testing'

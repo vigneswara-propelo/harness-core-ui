@@ -330,6 +330,26 @@ function FormContent(formContentProps: ServiceNowUpdateDeploymentModeFormContent
           template={template}
         />
       )}
+
+      {getMultiTypeFromValue(template?.spec?.updateMultiple?.spec?.changeRequestNumber) ===
+        MultiTypeInputType.RUNTIME && (
+        <TextFieldInputSetView
+          label={getString('pipeline.serviceNowApprovalStep.changeRequestNumber')}
+          name={`${prefix}spec.updateMultiple.spec.changeRequestNumber`}
+          disabled={isApprovalStepFieldDisabled(readonly)}
+          multiTextInputProps={{
+            placeholder: getString('pipeline.serviceNowApprovalStep.changeRequestPlaceholder'),
+            allowableTypes: allowableTypes,
+            disabled: isApprovalStepFieldDisabled(readonly)
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          template={template}
+          fieldPath="spec.updateMultiple.spec.changeRequestNumber"
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
+      )}
       {serviceNowIssueCreateMetadataQuery.loading ? (
         <PageSpinner message={getString('pipeline.serviceNowCreateStep.fetchingFields')} className={css.fetching} />
       ) : fetchMetadataRequired && customFields?.length === 0 ? (

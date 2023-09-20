@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import type { ServiceNowUpdateData } from '@pipeline/components/PipelineSteps/Steps/ServiceNowUpdate/types'
+import { ServiceNowUpdateData, TaskTypes } from '@pipeline/components/PipelineSteps/Steps/ServiceNowUpdate/types'
 import type { ServiceNowCreateFieldType } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types'
 import { FieldType, ServiceNowStaticFields } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types'
 import {
@@ -13,8 +13,16 @@ import {
   processFieldsForSubmit
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/helper'
 
-export const processFormData = (values: ServiceNowUpdateData): ServiceNowUpdateData => {
+export const processFormData = (values: any, isFormSubmit = false): ServiceNowUpdateData => {
   let serviceNowSpec
+  const updateMultipleObj = values.spec?.updateMultipleFlag
+    ? {
+        updateMultiple: {
+          type: TaskTypes.CHANGE_TASK,
+          ...values.spec.updateMultiple
+        }
+      }
+    : {}
   if (!values.spec.useServiceNowTemplate) {
     serviceNowSpec = {
       spec: {
@@ -23,7 +31,8 @@ export const processFormData = (values: ServiceNowUpdateData): ServiceNowUpdateD
         connectorRef: values.spec.connectorRef,
         ticketType: values.spec.ticketType,
         ticketNumber: values.spec.ticketNumber,
-        fields: processFieldsForSubmit(values)
+        fields: processFieldsForSubmit(values),
+        ...updateMultipleObj
       }
     }
   } else {
@@ -35,9 +44,13 @@ export const processFormData = (values: ServiceNowUpdateData): ServiceNowUpdateD
         ticketType: values.spec.ticketType,
         ticketNumber: values.spec.ticketNumber,
         fields: [],
-        templateName: values.spec.templateName
+        templateName: values.spec.templateName,
+        ...updateMultipleObj
       }
     }
+  }
+  if (isFormSubmit) {
+    values.spec?.updateMultipleFlag ? delete values.spec.ticketNumber : delete values.spec.updateMultiple
   }
   return {
     ...values,
@@ -50,12 +63,13 @@ export const getKVFields = (values: ServiceNowUpdateData): ServiceNowCreateField
 }
 
 export const processInitialValues = (values: ServiceNowUpdateData): ServiceNowUpdateData => {
-  return {
+  const initValues = {
     ...values,
     spec: {
       delegateSelectors: values.spec.delegateSelectors,
       connectorRef: values.spec.connectorRef,
       useServiceNowTemplate: values.spec.useServiceNowTemplate,
+
       fieldType: values.spec.useServiceNowTemplate ? FieldType.CreateFromTemplate : FieldType.ConfigureFields,
       ticketType: values.spec.ticketType,
       description: values.spec.fields
@@ -71,4 +85,17 @@ export const processInitialValues = (values: ServiceNowUpdateData): ServiceNowUp
       templateFields: []
     }
   }
+  if (values.spec?.updateMultiple) {
+    return {
+      ...initValues,
+      spec: {
+        ...initValues.spec,
+        updateMultipleFlag: true,
+        updateMultiple: {
+          ...values.spec?.updateMultiple
+        }
+      }
+    }
+  }
+  return initValues
 }
