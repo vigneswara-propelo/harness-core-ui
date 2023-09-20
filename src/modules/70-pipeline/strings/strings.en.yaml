@@ -403,6 +403,7 @@ manifestType:
   manifestIdentifierRegexErrorMsg: '{{$.pipeline.manifestType.manifestIdentifier}} must start with a letter or _ and can then be followed by alphanumerics or _'
   manifestPlaceholder: Enter Manifest Name
   ociHelmConnectorLabel: OCI Helm
+  ociSelectConnector: Select Connection Type
   basePathPlaceholder: Enter Base Path
   basePath: Base Path
   manifestSource: Manifest Source

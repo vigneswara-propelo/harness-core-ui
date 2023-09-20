@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import {
   Accordion,
   Layout,
@@ -35,6 +36,9 @@ import { resetFieldValue } from '@pipeline/components/ArtifactsSelection/Artifac
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+import { useListAwsRegions } from 'services/portal'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+
 import type { HelmWithOCIDataType, HelmWithOCIManifestLastStepPrevStepData } from '../../ManifestInterface'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
 
@@ -43,7 +47,12 @@ import {
   ManifestDataType,
   ManifestIdentifierValidation
 } from '../../Manifesthelper'
-import { filePathWidth, handleCommandFlagsSubmitData, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
+import {
+  filePathWidth,
+  handleCommandFlagsSubmitData,
+  OciHelmTypes,
+  removeEmptyFieldsFromStringArray
+} from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
 import { useGetHelmChartVersionData } from '../CommonManifestDetails/useGetHelmChartVersionData'
 import css from '../ManifestWizardSteps.module.scss'
@@ -77,8 +86,11 @@ function HelmWithOCI({
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
+  const [regions, setRegions] = React.useState<SelectOption[]>([])
 
   const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
+  const { accountId } = useParams<ProjectPathProps>()
+
   const { chartVersions, loadingChartVersions, chartVersionsError, fetchChartVersions, setLastQueryData } =
     useGetHelmChartVersionData({ modifiedPrevStepData, fields: ['chartName'] })
   React.useEffect(() => {
@@ -89,9 +101,31 @@ function HelmWithOCI({
     }
   }, [initialValues])
 
+  const {
+    data: regionData,
+    loading: loadingRegions,
+    error: errorRegions
+  } = useListAwsRegions({
+    queryParams: {
+      accountId
+    }
+  })
+
+  React.useEffect(() => {
+    const regionValues = (regionData?.resource || []).map(region => ({
+      value: region.value,
+      label: region.name
+    }))
+
+    setRegions(regionValues as SelectOption[])
+  }, [regionData?.resource])
+
+  const isEcrType = React.useMemo(() => {
+    return modifiedPrevStepData?.config?.type === OciHelmTypes.Ecr
+  }, [modifiedPrevStepData])
+
   const getInitialValues = (): HelmWithOCIDataType => {
     const specValues = get(initialValues, 'spec.store.spec.config.spec', null)
-
     if (specValues) {
       return {
         ...specValues,
@@ -104,6 +138,7 @@ function HelmWithOCI({
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
         enableDeclarativeRollback: initialValues?.spec?.enableDeclarativeRollback,
         fetchHelmChartMetadata: initialValues?.spec?.fetchHelmChartMetadata,
+        region: isEcrType ? initialValues.spec?.store?.spec?.config?.spec?.region : undefined,
         valuesPaths:
           /* istanbul ignore next */
           typeof initialValues?.spec?.valuesPaths === 'string'
@@ -128,7 +163,8 @@ function HelmWithOCI({
       skipResourceVersioning: false,
       enableDeclarativeRollback: false,
       fetchHelmChartMetadata: false,
-      commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }]
+      commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }],
+      region: isEcrType ? '' : undefined
     }
   }
 
@@ -142,9 +178,11 @@ function HelmWithOCI({
             type: formData?.store,
             spec: {
               config: {
-                type: 'Generic',
+                type: defaultTo(modifiedPrevStepData?.config.type, 'Generic'),
                 spec: {
-                  connectorRef: formData?.connectorRef
+                  connectorRef: formData?.connectorRef,
+                  region: isEcrType ? formData?.region : undefined,
+                  registryId: isEcrType ? formData?.registryId : undefined
                 }
               },
               basePath: formData?.basePath
@@ -201,6 +239,13 @@ function HelmWithOCI({
             .notOneOf(['latest'], getString('pipeline.manifestType.oci.chartVersionValidation')),
           chartName: Yup.string().trim().required(getString('pipeline.manifestType.http.chartNameRequired')),
           helmVersion: Yup.string().trim().required(getString('pipeline.manifestType.helmVersionRequired')),
+          region: Yup.string().when('validation', {
+            is: () => {
+              return isEcrType
+            },
+            then: Yup.string().trim().required(getString('validation.regionRequired'))
+          }),
+
           commandFlags: Yup.array().of(
             Yup.object().shape({
               flag: Yup.string().when('commandType', {
@@ -341,7 +386,10 @@ function HelmWithOCI({
                           fetchChartVersions({
                             chartName: formik.values?.chartName,
                             helmVersion: formik.values?.helmVersion,
-                            folderPath: formik.values?.basePath
+                            folderPath: formik.values?.basePath,
+                            ociHelmChartStoreConfigType: isEcrType ? OciHelmTypes.Ecr : OciHelmTypes.Generic,
+                            region: formik.values?.region,
+                            registryId: formik.values?.registryId
                           })
                       }
                     }}
@@ -361,6 +409,7 @@ function HelmWithOCI({
                   )}
                 </div>
               </Layout.Horizontal>
+
               <Layout.Horizontal flex spacing="huge" margin={{ bottom: 'small' }}>
                 <div
                   className={cx(helmcss.halfWidth, {
@@ -389,6 +438,72 @@ function HelmWithOCI({
                     />
                   )}
                 </div>
+                {isEcrType ? (
+                  <div className={cx(helmcss.halfWidth)}>
+                    <FormInput.MultiTypeInput
+                      name="region"
+                      selectItems={regions}
+                      useValue
+                      multiTypeInputProps={{
+                        selectProps: {
+                          items: regions,
+                          noResults: (
+                            <Text lineClamp={1} width={384} margin="small">
+                              {getRBACErrorMessage(errorRegions as RBACError) || getString('pipeline.noRegions')}
+                            </Text>
+                          )
+                        }
+                      }}
+                      label={getString('regionLabel')}
+                      placeholder={loadingRegions ? getString('loading') : getString('select')}
+                    />
+
+                    {getMultiTypeFromValue(formik.values.region) === MultiTypeInputType.RUNTIME && (
+                      <div className={css.configureOptions}>
+                        <SelectConfigureOptions
+                          options={regions}
+                          loading={loadingRegions}
+                          style={{ alignSelf: 'center' }}
+                          value={formik.values?.region as string}
+                          type="String"
+                          variableName="region"
+                          showRequiredField={false}
+                          showDefaultField={false}
+                          onChange={value => {
+                            formik.setFieldValue('region', value)
+                          }}
+                          isReadonly={isReadonly}
+                        />
+                      </div>
+                    )}
+
+                    <div>
+                      <FormInput.MultiTextInput
+                        label={getString('pipeline.artifactsSelection.registryId')}
+                        name="registryId"
+                        placeholder={getString('pipeline.artifactsSelection.registryIdPlaceholder')}
+                        disabled={isReadonly}
+                        isOptional={true}
+                        multiTextInputProps={{ expressions, allowableTypes }}
+                      />
+                      {getMultiTypeFromValue(formik.values?.registryId) === MultiTypeInputType.RUNTIME && (
+                        <div className={css.configureOptions}>
+                          <ConfigureOptions
+                            value={formik.values?.registryId || ''}
+                            type="String"
+                            variableName="registryId"
+                            showRequiredField={false}
+                            showDefaultField={false}
+                            onChange={value => {
+                              formik.setFieldValue('registryId', value)
+                            }}
+                            isReadonly={isReadonly}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : null}
               </Layout.Horizontal>
               <div
                 className={cx({
@@ -448,7 +563,9 @@ function HelmWithOCI({
                 text={getString('back')}
                 icon="chevron-left"
                 variation={ButtonVariation.SECONDARY}
-                onClick={() => previousStep?.(modifiedPrevStepData)}
+                onClick={() => {
+                  previousStep?.(modifiedPrevStepData)
+                }}
               />
               <Button
                 variation={ButtonVariation.PRIMARY}

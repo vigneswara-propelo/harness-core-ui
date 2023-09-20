@@ -18,6 +18,7 @@ import {
 import { useStrings } from 'framework/strings'
 import { ConnectorConfigDTO, Failure, useGetHelmChartVersionDetailsV1 } from 'services/cd-ng'
 import { getConnectorRefOrConnectorId } from '../../Manifesthelper'
+import { OciHelmTypes } from '../ManifestUtils'
 
 interface DependentFields {
   chartName: string
@@ -25,6 +26,8 @@ interface DependentFields {
   bucketName?: string
   folderPath?: string
   helmVersion?: string
+  ociHelmChartStoreConfigType?: string | OciHelmTypes
+  registryId?: string
 }
 
 const DEFAULT_HELM_VERSION = 'V3'
@@ -50,7 +53,8 @@ export function useGetHelmChartVersionData(props: HelmChartVersionDataProps): He
     bucketName: '',
     folderPath: '',
     region: '',
-    helmVersion: DEFAULT_HELM_VERSION
+    helmVersion: DEFAULT_HELM_VERSION,
+    ociHelmChartStoreConfigType: ''
   })
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()
 
@@ -66,11 +70,12 @@ export function useGetHelmChartVersionData(props: HelmChartVersionDataProps): He
       projectIdentifier,
       connectorRef: getConnectorRefOrConnectorId(modifiedPrevStepData),
       chartName: lastQueryData?.chartName,
-      region: lastQueryData?.region,
+      region: lastQueryData?.region || 'us-east-1',
       bucketName: lastQueryData?.bucketName,
       folderPath: lastQueryData.folderPath,
       storeType: modifiedPrevStepData?.store,
       helmVersion: DEFAULT_HELM_VERSION
+      // ociHelmChartStoreConfigType: lastQueryData?.ociHelmChartStoreConfigType
     },
     lazy: true,
     debounce: 300

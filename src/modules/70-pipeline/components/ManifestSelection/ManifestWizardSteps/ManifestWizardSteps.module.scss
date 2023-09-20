@@ -213,3 +213,26 @@
     }
   }
 }
+
+.sectionCard {
+  width: 600px;
+  margin-top: var(--spacing-3);
+  display: block;
+  padding: var(--spacing-7);
+  .info {
+    font-size: 13px;
+  }
+  .thumbnailSelect {
+    &:global(.bp3-form-group) {
+      margin-bottom: 0px;
+    }
+  }
+  .cardListContainer {
+    display: flex;
+    gap: var(--spacing-small);
+    flex-wrap: wrap;
+    label {
+      margin-left: 0px !important;
+    }
+  }
+}

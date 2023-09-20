@@ -10,10 +10,12 @@ import cx from 'classnames'
 import { FormError, FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { defaultTo, get } from 'lodash-es'
+// import { OciHelmTypes } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/ManifestUtils'
 import {
   ManifestDataType,
   ManifestStoreMap,
-  ManifestToConnectorMap
+  ManifestToConnectorMap,
+  getOciHelmConnectorMap
 } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import { useStrings } from 'framework/strings'
@@ -31,6 +33,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { FileUsage } from '@filestore/interfaces/FileStore'
+
 import {
   getDefaultQueryParam,
   getFinalQueryParamData,
@@ -83,7 +86,10 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
     manifest?.spec?.store?.type === 'OciHelmChart'
       ? `${manifestPath}.spec.store.spec.config.spec.connectorRef`
       : `${manifestPath}.spec.store.spec.connectorRef`
-
+  const regionPath =
+    manifest?.spec?.store?.type === 'OciHelmChart'
+      ? `${manifestPath}.spec.store.spec.config.spec.region`
+      : `${manifestPath}.spec.store.spec.region`
   const folderPath =
     manifest?.spec?.store?.type === 'OciHelmChart'
       ? `${manifestPath}.spec.store.spec.basePath`
@@ -94,6 +100,9 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       accountId
     }
   })
+  const isOciHelmChart = React.useMemo(() => {
+    return manifest?.spec?.store?.type === 'OciHelmChart'
+  }, [manifest])
 
   const {
     data: chartVersionData,
@@ -360,7 +369,11 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             accountIdentifier={accountId}
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
-            type={ManifestToConnectorMap[defaultTo(manifest?.spec?.store?.type, '')]}
+            type={
+              isOciHelmChart
+                ? getOciHelmConnectorMap(defaultTo(manifest?.spec?.store?.spec?.config?.type, ''))
+                : ManifestToConnectorMap[defaultTo(manifest?.spec?.store?.type, '')]
+            }
             gitScope={{
               repo: defaultTo(repoIdentifier, ''),
               branch: defaultTo(branch, ''),
@@ -390,7 +403,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
           </div>
         )}
       </div>
-
       {isFieldRuntime(`${manifestPath}.spec.store.spec.branch`, template) && (
         <TextFieldInputSetView
           disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.branch`)}
@@ -405,7 +417,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
           className={cx(css.fieldAndOptionsWidth, css.verticalSpacingInput)}
         />
       )}
-
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.store.spec.commitId`, template) && (
           <div className={css.verticalSpacingInput}>
@@ -424,12 +435,12 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
         )}
       </div>
       <div className={css.inputFieldLayout}>
-        {isFieldRuntime(`${manifestPath}.spec.store.spec.region`, template) && (
+        {isFieldRuntime(regionPath, template) && (
           <div className={css.verticalSpacingInput}>
             <ExperimentalInput
               formik={formik}
-              name={`${path}.${manifestPath}.spec.store.spec.region`}
-              disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.region`)}
+              name={`${path}.${regionPath}`}
+              disabled={isFieldDisabled(`${regionPath}`)}
               multiTypeInputProps={{
                 selectProps: {
                   usePortal: true,
@@ -445,21 +456,20 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             />
           </div>
         )}
-        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.store.spec.region`)) ===
-          MultiTypeInputType.RUNTIME && (
+        {getMultiTypeFromValue(get(formik?.values, `${path}.${regionPath}`)) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions
             className={css.configureOptions}
             style={{ alignSelf: 'center' }}
-            value={get(formik?.values, `${path}.${manifestPath}.spec.store.spec.region`)}
+            value={get(formik?.values, `${path}.${regionPath}`)}
             type="String"
             variableName="region"
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
             onChange={value => {
-              formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.region`, value)
+              formik.setFieldValue(`${path}.${regionPath}`, value)
             }}
-            isReadonly={isFieldDisabled(`${manifestPath}.spec.store.spec.region`)}
+            isReadonly={isFieldDisabled(`${regionPath}`)}
           />
         )}
       </div>
@@ -654,7 +664,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
           />
         )}
       </div>
-
       {isFieldRuntime(`${manifestPath}.spec.subChartPath`, template) && (
         <TextFieldInputSetView
           template={template}
@@ -670,7 +679,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
           placeholder={getString('pipeline.manifestType.subChartPlaceholder')}
         />
       )}
-
       {isFieldRuntime(`${manifestPath}.spec.valuesPaths`, template) && (
         <div className={css.verticalSpacingInput}>
           <MultiTypeListOrFileSelectList
@@ -691,7 +699,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       )}
       <CustomRemoteManifestRuntimeFields {...props} />
       <ManifestCommonRuntimeFields {...props} fileUsage={fileUsage} />
-
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.enableDeclarativeRollback`, template) && (
           <div className={css.verticalSpacingInput}>
@@ -725,7 +732,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
           />
         )}
       </div>
-
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.skipResourceVersioning`, template) && (
           <div className={css.verticalSpacingInput}>
@@ -759,7 +765,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
           />
         )}
       </div>
-
       {CDS_HELM_FETCH_CHART_METADATA_NG ? (
         <div className={css.inputFieldLayout}>
           {isFieldRuntime(`${manifestPath}.spec.fetchHelmChartMetadata`, template) && (
@@ -795,7 +800,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
           )}
         </div>
       ) : null}
-
       {renderCommandFlags(`${manifestPath}.spec.commandFlags`)}
     </Layout.Vertical>
   )

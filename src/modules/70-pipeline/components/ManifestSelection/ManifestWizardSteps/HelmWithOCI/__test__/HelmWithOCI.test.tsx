@@ -48,6 +48,10 @@ const initValue = {
   }
 }
 
+const mockRegions = {
+  resource: [{ name: 'region1', value: 'region1' }]
+}
+
 const prevStepData = {
   config: {
     type: 'Generic',
@@ -91,6 +95,12 @@ const findConfigurOptionsPopover = (): HTMLElement | null => document.querySelec
 
 jest.mock('services/cd-ng', () => ({
   useHelmCmdFlags: jest.fn().mockImplementation(() => ({ data: { data: ['Template', 'Pull'] }, refetch: jest.fn() }))
+}))
+
+jest.mock('services/portal', () => ({
+  useListAwsRegions: jest.fn().mockImplementation(() => {
+    return { data: mockRegions, refetch: jest.fn(), error: null, loading: false }
+  })
 }))
 
 const useGetHelmChartVersionDataMock = {
@@ -200,7 +210,9 @@ describe('helm with OCI tests', () => {
                 config: {
                   type: 'Generic',
                   spec: {
-                    connectorRef: 'erverv'
+                    connectorRef: 'erverv',
+                    region: undefined,
+                    registryId: undefined
                   }
                 },
                 basePath: 'helm/chart'
@@ -256,7 +268,8 @@ describe('helm with OCI tests', () => {
         helmVersion: 'V380',
         skipResourceVersioning: false,
         valuesPaths: '<+input>',
-        commandFlags: [{ commandType: 'Template', flag: 'flag' }]
+        enableDeclarativeRollback: false,
+        fetchHelmChartMetadata: false
       }
     }
     const { container, getByText } = render(
@@ -280,7 +293,7 @@ describe('helm with OCI tests', () => {
     await waitFor(() => {
       expect(props.handleSubmit).toHaveBeenCalledWith({
         manifest: {
-          identifier: 'name',
+          identifier: 'testidentifier',
           type: ManifestDataType.HelmChart,
           spec: {
             store: {
@@ -289,18 +302,20 @@ describe('helm with OCI tests', () => {
                 config: {
                   type: 'Generic',
                   spec: {
-                    connectorRef: ''
+                    connectorRef: 'erverv'
                   }
                 },
-                basePath: '<+input>'
+                basePath: 'helm/chart'
               }
             },
-            chartName: '<+input>',
+            chartName: 'testchart',
             chartVersion: '<+input>',
             helmVersion: 'V380',
             skipResourceVersioning: false,
-            valuesPaths: '<+input>',
-            commandFlags: [{ commandType: 'Template', flag: 'flag' }]
+            valuesPaths: undefined,
+            subChartPath: undefined,
+            enableDeclarativeRollback: undefined,
+            fetchHelmChartMetadata: undefined
           }
         }
       })

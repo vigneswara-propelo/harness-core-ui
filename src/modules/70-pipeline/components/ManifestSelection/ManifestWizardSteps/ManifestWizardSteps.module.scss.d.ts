@@ -14,6 +14,7 @@ declare const styles: {
   readonly advancedStepOpen: string
   readonly advancesSteps: string
   readonly alignSelf: string
+  readonly cardListContainer: string
   readonly checkbox: string
   readonly commandFlagType: string
   readonly commandFlags: string
@@ -32,6 +33,7 @@ declare const styles: {
   readonly headerContainer: string
   readonly helmCommandFlags: string
   readonly helmToolTip: string
+  readonly info: string
   readonly kustomizeYamlFolderPath: string
   readonly manifestForm: string
   readonly manifestIcon: string
@@ -43,6 +45,7 @@ declare const styles: {
   readonly runtimeInput: string
   readonly runtimeInput: string
   readonly saveBtn: string
+  readonly sectionCard: string
   readonly sqaureCardTitle: string
   readonly squareCard: string
   readonly squareCardContainer: string

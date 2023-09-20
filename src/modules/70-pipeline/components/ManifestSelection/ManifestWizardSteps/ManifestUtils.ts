@@ -135,3 +135,9 @@ export const getListOfDisabledManifestTypes = (listOfManifests: ManifestConfigWr
   )
   return intersection(selectedManifestTypes, allowedManifestForSingleAddition)
 }
+
+export enum OciHelmTypes {
+  Generic = 'Generic',
+  Ecr = 'ECR',
+  Chart = 'OciHelmChart'
+}

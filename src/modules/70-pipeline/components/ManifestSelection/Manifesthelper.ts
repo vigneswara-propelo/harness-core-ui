@@ -362,6 +362,28 @@ export const ManifestToConnectorLabelMap: Record<ManifestStoreWithoutConnector, 
   AzureRepo: 'pipeline.manifestType.azureRepoConnectorLabel'
 }
 
+export const getOciHelmConnectorLabel = (type: string): StringKeys => {
+  switch (type) {
+    case 'Generic':
+      return 'platform.connectors.title.ociHelmConnector'
+    case 'ECR':
+      return 'pipeline.manifestToConnectorLabelMap.AWSLabel'
+    default:
+      return 'platform.connectors.title.ociHelmConnector'
+  }
+}
+
+export const getOciHelmConnectorMap = (type: string): ConnectorInfoDTO['type'] => {
+  switch (type) {
+    case 'Generic':
+      return Connectors.OciHelmRepo
+    case 'ECR':
+      return Connectors.AWS
+    default:
+      return Connectors.OciHelmRepo
+  }
+}
+
 export enum GitRepoName {
   Account = 'Account',
   Repo = 'Repo'

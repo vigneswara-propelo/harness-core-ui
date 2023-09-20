@@ -20,15 +20,16 @@ import {
   ButtonVariation,
   FormikForm,
   ButtonSize,
-  AllowedTypes
+  AllowedTypes,
+  Card
 } from '@harness/uicore'
 import * as Yup from 'yup'
-import { FontVariation } from '@harness/design-system'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { FontVariation, Color } from '@harness/design-system'
+import { defaultTo, isEmpty, get } from 'lodash-es'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
-
+import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
@@ -36,6 +37,7 @@ import type { ConnectorSelectedValue } from '@platform/connectors/components/Con
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { SelectOciHelmConnector } from './HelmWithOCI/HelmWithOCIEcr'
 import type { ManifestStepInitData, ManifestStores, ManifestStoreWithoutConnector } from '../ManifestInterface'
 import {
   isConnectorStoreType,
@@ -43,8 +45,11 @@ import {
   ManifestIconByType,
   ManifestStoreTitle,
   ManifestToConnectorLabelMap,
-  ManifestToConnectorMap
+  ManifestToConnectorMap,
+  getOciHelmConnectorLabel,
+  getOciHelmConnectorMap
 } from '../Manifesthelper'
+import { OciHelmTypes } from './ManifestUtils'
 import css from './ManifestWizardSteps.module.scss'
 import style from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactConnector.module.scss'
 
@@ -133,6 +138,9 @@ function ManifestStore({
         initValues.connectorRef = prevStepData?.connectorRef
       }
       handleStoreChange(selectedStore)
+      if (prevStepData?.config) {
+        initValues.config = prevStepData.config
+      }
     }
     if (selectedStore !== initValues.store) {
       initValues.connectorRef = ''
@@ -150,12 +158,15 @@ function ManifestStore({
     [manifestStoreTypes, getString]
   )
 
+  const isOciHelmChart = React.useMemo(() => {
+    return selectedStore === OciHelmTypes.Chart
+  }, [selectedStore])
+
   return (
     <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
       <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
         {stepName}
       </Text>
-
       <Formik
         initialValues={getInitialValues()}
         formName="manifestStore"
@@ -174,123 +185,158 @@ function ManifestStore({
         }}
         enableReinitialize={true}
       >
-        {formik => (
-          <FormikForm>
-            <Layout.Vertical
-              flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
-              className={css.manifestForm}
-            >
-              <Layout.Vertical>
-                <Layout.Horizontal spacing="large">
-                  <ThumbnailSelect
-                    className={style.thumbnailSelect}
-                    name={'store'}
-                    items={supportedManifestStores}
-                    isReadonly={isReadonly}
-                    onChange={storeSelected => {
-                      handleOptionSelection(formik?.values, storeSelected as ManifestStoreWithoutConnector)
-                    }}
-                    layoutProps={{ className: style.wrapping }}
+        {formik => {
+          const newOciConnectorLabel = `${getString('newLabel')} ${
+            isValidConnectorStore() && getString(getOciHelmConnectorLabel(defaultTo(formik.values?.config?.type, '')))
+          } ${getString('connector')}`
+          return (
+            <FormikForm>
+              <Layout.Vertical
+                flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
+                className={css.manifestForm}
+              >
+                <Layout.Vertical>
+                  <Layout.Horizontal spacing="large">
+                    <ThumbnailSelect
+                      className={style.thumbnailSelect}
+                      name={'store'}
+                      items={supportedManifestStores}
+                      isReadonly={isReadonly}
+                      onChange={storeSelected => {
+                        handleOptionSelection(formik?.values, storeSelected as ManifestStoreWithoutConnector)
+                      }}
+                      layoutProps={{ className: style.wrapping }}
+                    />
+                  </Layout.Horizontal>
+                  {isOciHelmChart ? (
+                    <Layout.Horizontal
+                      spacing={'medium'}
+                      flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
+                    >
+                      <Card className={css.sectionCard}>
+                        <Text margin={{ bottom: 'medium', color: Color.BLACK_100 }}>
+                          <StringWithTooltip
+                            tooltipId={'ociHelmConnector'}
+                            stringId="pipeline.manifestType.ociSelectConnector"
+                          />
+                        </Text>
+                        <SelectOciHelmConnector
+                          isReadonly={isReadonly}
+                          selectedConnectorType={get(formik.values, 'config.type')}
+                          onChange={configType => {
+                            formik.setFieldValue('config.type', configType)
+                            formik.setFieldValue('connectorRef', '')
+                          }}
+                        />
+                      </Card>
+                    </Layout.Horizontal>
+                  ) : null}
+                  {!isEmpty(formik.values.store) && !doesStorehasConnector(selectedStore) ? (
+                    <Layout.Horizontal
+                      spacing={'medium'}
+                      flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
+                      className={css.connectorContainer}
+                    >
+                      <FormMultiTypeConnectorField
+                        key={formik.values.store}
+                        onLoadingFinish={() => {
+                          setIsLoadingConnectors(false)
+                        }}
+                        name="connectorRef"
+                        label={`${getString(
+                          isOciHelmChart
+                            ? getOciHelmConnectorLabel(defaultTo(formik.values?.config?.type, ''))
+                            : ManifestToConnectorLabelMap[formik.values.store as ManifestStoreWithoutConnector]
+                        )} ${getString('connector')}`}
+                        placeholder={`${getString('select')} ${getString(
+                          isOciHelmChart
+                            ? getOciHelmConnectorLabel(defaultTo(formik.values?.config?.type, ''))
+                            : ManifestToConnectorLabelMap[formik.values.store as ManifestStoreWithoutConnector]
+                        )} ${getString('connector')}`}
+                        accountIdentifier={accountId}
+                        projectIdentifier={projectIdentifier}
+                        orgIdentifier={orgIdentifier}
+                        width={400}
+                        multiTypeProps={{ expressions, allowableTypes }}
+                        isNewConnectorLabelVisible={
+                          !(
+                            getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME &&
+                            (isReadonly || !canCreate)
+                          )
+                        }
+                        createNewLabel={isOciHelmChart ? newOciConnectorLabel : newConnectorLabel}
+                        type={
+                          isOciHelmChart
+                            ? getOciHelmConnectorMap(defaultTo(formik.values?.config?.type, ''))
+                            : ManifestToConnectorMap[formik.values.store]
+                        }
+                        enableConfigureOptions={false}
+                        multitypeInputValue={multitypeInputValue}
+                        gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+                      />
+                      {getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME ? (
+                        <ConnectorConfigureOptions
+                          className={css.configureOptions}
+                          value={formik.values.connectorRef as unknown as string}
+                          type={ManifestToConnectorMap[formik.values.store]}
+                          variableName="connectorRef"
+                          showRequiredField={false}
+                          showDefaultField={false}
+                          onChange={value => {
+                            formik.setFieldValue('connectorRef', value)
+                          }}
+                          isReadonly={isReadonly}
+                          connectorReferenceFieldProps={{
+                            accountIdentifier: accountId,
+                            projectIdentifier,
+                            orgIdentifier,
+                            type: ManifestToConnectorMap[formik.values.store],
+                            label: `${getString(
+                              ManifestToConnectorLabelMap[formik.values.store as ManifestStoreWithoutConnector]
+                            )} ${getString('connector')}`,
+                            disabled: isReadonly,
+                            gitScope: { repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }
+                          }}
+                        />
+                      ) : (
+                        <Button
+                          variation={ButtonVariation.LINK}
+                          size={ButtonSize.SMALL}
+                          disabled={isReadonly || !canCreate}
+                          id="new-manifest-connector"
+                          text={isOciHelmChart ? newOciConnectorLabel : newConnectorLabel}
+                          className={css.addNewManifest}
+                          icon="plus"
+                          iconProps={{ size: 12 }}
+                          onClick={() => {
+                            handleConnectorViewChange()
+                            nextStep?.({ ...prevStepData, store: selectedStore })
+                          }}
+                        />
+                      )}
+                    </Layout.Horizontal>
+                  ) : null}
+                </Layout.Vertical>
+
+                <Layout.Horizontal spacing="medium" className={css.saveBtn}>
+                  <Button
+                    text={getString('back')}
+                    icon="chevron-left"
+                    variation={ButtonVariation.SECONDARY}
+                    onClick={() => previousStep?.(prevStepData)}
+                  />
+                  <Button
+                    variation={ButtonVariation.PRIMARY}
+                    type="submit"
+                    text={getString('continue')}
+                    rightIcon="chevron-right"
+                    disabled={!shouldGotoNextStep(formik.values.connectorRef as ConnectorSelectedValue | string)}
                   />
                 </Layout.Horizontal>
-
-                {!isEmpty(formik.values.store) && !doesStorehasConnector(selectedStore) ? (
-                  <Layout.Horizontal
-                    spacing={'medium'}
-                    flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
-                    className={css.connectorContainer}
-                  >
-                    <FormMultiTypeConnectorField
-                      key={formik.values.store}
-                      onLoadingFinish={() => {
-                        setIsLoadingConnectors(false)
-                      }}
-                      name="connectorRef"
-                      label={`${getString(
-                        ManifestToConnectorLabelMap[formik.values.store as ManifestStoreWithoutConnector]
-                      )} ${getString('connector')}`}
-                      placeholder={`${getString('select')} ${getString(
-                        ManifestToConnectorLabelMap[formik.values.store as ManifestStoreWithoutConnector]
-                      )} ${getString('connector')}`}
-                      accountIdentifier={accountId}
-                      projectIdentifier={projectIdentifier}
-                      orgIdentifier={orgIdentifier}
-                      width={400}
-                      multiTypeProps={{ expressions, allowableTypes }}
-                      isNewConnectorLabelVisible={
-                        !(
-                          getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME &&
-                          (isReadonly || !canCreate)
-                        )
-                      }
-                      createNewLabel={newConnectorLabel}
-                      type={ManifestToConnectorMap[formik.values.store]}
-                      enableConfigureOptions={false}
-                      multitypeInputValue={multitypeInputValue}
-                      gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-                    />
-                    {getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME ? (
-                      <ConnectorConfigureOptions
-                        className={css.configureOptions}
-                        value={formik.values.connectorRef as unknown as string}
-                        type={ManifestToConnectorMap[formik.values.store]}
-                        variableName="connectorRef"
-                        showRequiredField={false}
-                        showDefaultField={false}
-                        onChange={value => {
-                          formik.setFieldValue('connectorRef', value)
-                        }}
-                        isReadonly={isReadonly}
-                        connectorReferenceFieldProps={{
-                          accountIdentifier: accountId,
-                          projectIdentifier,
-                          orgIdentifier,
-                          type: ManifestToConnectorMap[formik.values.store],
-                          label: `${getString(
-                            ManifestToConnectorLabelMap[formik.values.store as ManifestStoreWithoutConnector]
-                          )} ${getString('connector')}`,
-                          disabled: isReadonly,
-                          gitScope: { repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }
-                        }}
-                      />
-                    ) : (
-                      <Button
-                        variation={ButtonVariation.LINK}
-                        size={ButtonSize.SMALL}
-                        disabled={isReadonly || !canCreate}
-                        id="new-manifest-connector"
-                        text={newConnectorLabel}
-                        className={css.addNewManifest}
-                        icon="plus"
-                        iconProps={{ size: 12 }}
-                        onClick={() => {
-                          handleConnectorViewChange()
-                          nextStep?.({ ...prevStepData, store: selectedStore })
-                        }}
-                      />
-                    )}
-                  </Layout.Horizontal>
-                ) : null}
               </Layout.Vertical>
-
-              <Layout.Horizontal spacing="medium" className={css.saveBtn}>
-                <Button
-                  text={getString('back')}
-                  icon="chevron-left"
-                  variation={ButtonVariation.SECONDARY}
-                  onClick={() => previousStep?.(prevStepData)}
-                />
-                <Button
-                  variation={ButtonVariation.PRIMARY}
-                  type="submit"
-                  text={getString('continue')}
-                  rightIcon="chevron-right"
-                  disabled={!shouldGotoNextStep(formik.values.connectorRef as ConnectorSelectedValue | string)}
-                />
-              </Layout.Horizontal>
-            </Layout.Vertical>
-          </FormikForm>
-        )}
+            </FormikForm>
+          )
+        }}
       </Formik>
     </Layout.Vertical>
   )

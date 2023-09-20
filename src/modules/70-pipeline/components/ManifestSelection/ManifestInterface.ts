@@ -110,6 +110,11 @@ export interface ManifestStepInitData {
   connectorRef: string | undefined | ConnectorSelectedValue
   store: ManifestStores | string
   selectedManifest: ManifestTypes | null
+  config?: OciHelmConfigData
+}
+
+export interface OciHelmConfigData {
+  type: 'ECR' | 'Generic'
 }
 export interface CommonManifestDataType {
   identifier: string
@@ -185,6 +190,8 @@ export interface HelmWithOCIDataType {
   valuesPaths?: any
   commandFlags: Array<CommandFlags>
   fetchHelmChartMetadata?: boolean
+  region?: string
+  registryId?: string
 }
 export interface TASManifestDataType {
   identifier: string

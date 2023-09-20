@@ -4881,6 +4881,7 @@ export interface StringsMap {
   'pipeline.manifestType.oci.basePathRequired': string
   'pipeline.manifestType.oci.chartVersionValidation': string
   'pipeline.manifestType.ociHelmConnectorLabel': string
+  'pipeline.manifestType.ociSelectConnector': string
   'pipeline.manifestType.optimizedKustomizeManifestCollection': string
   'pipeline.manifestType.osTemplatePath': string
   'pipeline.manifestType.osTemplatePathPlaceHolder': string
