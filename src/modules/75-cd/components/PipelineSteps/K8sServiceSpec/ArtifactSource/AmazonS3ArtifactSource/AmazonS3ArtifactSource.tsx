@@ -265,7 +265,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
     accountIdentifier: accountId,
     orgIdentifier,
     projectIdentifier,
-    connectorRef: fixedConnectorValue,
+    connectorRef: getFinalQueryParamValue(fixedConnectorValue),
     region: getFinalQueryParamValue(fixedRegionValue),
     bucketName: fixedBucketValue,
     filePathRegex: '*',
