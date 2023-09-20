@@ -81,7 +81,7 @@ describe('SliderBar', () => {
       </TestWrapper>
     )
 
-    expect(getByTestId('slider-input')).toHaveValue('')
+    expect(getByTestId('slider-input')).toHaveValue('5')
 
     await userEvent.clear(getByTestId('slider-input'))
 

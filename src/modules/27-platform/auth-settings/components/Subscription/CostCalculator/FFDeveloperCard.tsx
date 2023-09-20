@@ -16,9 +16,11 @@ import css from './CostCalculator.module.scss'
 
 export const generateRangeArray = (min: number, max: number, stepSize: number): number[] => {
   const rangeArray = []
+
   for (let i = min; i <= max; i += stepSize) {
     rangeArray.push(i)
   }
+
   return rangeArray
 }
 
@@ -149,8 +151,8 @@ const FFDeveloperCard: React.FC<FFDeveloperCardProps> = ({
       setValue(0)
     } else {
       setLicensesRange({
-        min: 25,
-        max: 50,
+        min: 0,
+        max: 25,
         stepSize: 1,
         labelStepSize: 25
       })
@@ -162,18 +164,12 @@ const FFDeveloperCard: React.FC<FFDeveloperCardProps> = ({
     if (newPlan === Editions.TEAM) {
       return generateRangeArray(0, 50, 1)
     } else {
-      return generateRangeArray(0, 50, 1)
+      return generateRangeArray(25, 50, 1)
     }
   }, [newPlan])
   const selectedNumberOfDevelopers = rangeArray.findIndex((num: number) => num === numberOfDevelopers)
   const setValue = (newValue: number): void => {
-    if (newValue > 50) {
-      newValue = 50
-    }
-    let valueFromRange = rangeArray[newValue]
-    if (valueFromRange < 25) {
-      valueFromRange = 25
-    }
+    const valueFromRange = rangeArray[newValue]
     setNumberOfDevelopers(valueFromRange)
   }
   return (
@@ -199,6 +195,7 @@ const FFDeveloperCard: React.FC<FFDeveloperCardProps> = ({
           labelRenderer={(value: number) => {
             return `${rangeArray[value]}`
           }}
+          newPlan={newPlan}
         />
       </Layout.Vertical>
     </Card>

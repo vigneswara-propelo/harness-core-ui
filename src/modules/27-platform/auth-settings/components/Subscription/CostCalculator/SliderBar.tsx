@@ -9,6 +9,7 @@ import React, { useState } from 'react'
 import { defaultTo } from 'lodash-es'
 import { Slider } from '@blueprintjs/core'
 import { DropDown, Layout, TextInput, SelectOption } from '@harness/uicore'
+import { Editions } from '@common/constants/SubscriptionTypes'
 import css from './CostCalculator.module.scss'
 
 interface SliderWrapperProps {
@@ -54,6 +55,7 @@ interface SliderBarProps {
   unit?: string
   labelRenderer?: (value: number) => string | JSX.Element
   inputValue?: number
+  newPlan?: Editions
 }
 
 const SliderBar: React.FC<SliderBarProps> = ({
@@ -66,11 +68,13 @@ const SliderBar: React.FC<SliderBarProps> = ({
   inputValue,
   setValue,
   unit,
-  labelRenderer
+  labelRenderer,
+  newPlan
 }) => {
-  const [passedNumberValue, setPassedValue] = useState<string>('')
-  const passedValue = (val: number) => {
-    setPassedValue(val.toString())
+  const [localValue, setLocalValue] = useState<boolean>(false)
+  let passedValue = ''
+  if (!localValue) {
+    passedValue = defaultTo(inputValue, value).toString()
   }
 
   const dropdownList = React.useMemo(() => {
@@ -117,14 +121,20 @@ const SliderBar: React.FC<SliderBarProps> = ({
         />
       ) : (
         <TextInput
+          disabled={newPlan === Editions.ENTERPRISE}
           data-testid="slider-input"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             const val = Math.abs(Number(e.target.value))
             const maxValue = Math.abs(Number(max))
-            passedValue(val)
+            if (val === 0) {
+              setLocalValue(true)
+            } else {
+              setLocalValue(false)
+            }
+
             return setValue(val > maxValue ? maxValue : val)
           }}
-          value={passedNumberValue || inputValue?.toString()}
+          value={passedValue}
           className={css.textInput}
         />
       )}

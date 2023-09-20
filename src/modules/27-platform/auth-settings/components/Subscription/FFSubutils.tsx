@@ -60,7 +60,7 @@ const FFSubutils: React.FC<FFSubutilsProps> = ({
         usage={usageAndLimitInfo.usageData.usage?.ff?.activeFeatureFlagUsers?.count || 0}
         toggledNumberOfDevelopers={subscriptionDetails.quantities?.featureFlag?.numberOfDevelopers}
         setNumberOfDevelopers={(value: number) => {
-          if (subscriptionDetails.edition === 'ENTERPRISE' && value < 25) {
+          if (subscriptionDetails.edition === 'ENTERPRISE' && value <= 25) {
             value = 25
           }
 
