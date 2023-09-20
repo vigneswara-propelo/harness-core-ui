@@ -50,28 +50,6 @@ const DashboardsHeader: React.FC = () => {
     updateTitle(titleArray)
   }, [breadcrumbs, getString, updateTitle])
 
-  const dashboard_navigation: React.ReactNode = React.useMemo(() => {
-    if (!CDS_NAV_2_0) {
-      return (
-        <Layout.Horizontal spacing="medium">
-          <NavLink
-            className={css.tags}
-            activeClassName={css.activeTag}
-            to={routes.toCustomDashboardHome({ accountId, folderId })}
-          >
-            {getString('common.dashboards')}
-          </NavLink>
-          <NavLink className={css.tags} activeClassName={css.activeTag} to={routes.toCustomFolderHome({ accountId })}>
-            {getString('common.folders')}
-          </NavLink>
-          <AidaDrawer isOpen={isAidaDrawerOpen} setIsOpen={setAidaDrawerOpen}>
-            <AidaDashboardContent />
-          </AidaDrawer>
-        </Layout.Horizontal>
-      )
-    }
-  }, [accountId, folderId, CDS_NAV_2_0, getString])
-
   React.useEffect(() => {
     setAidaDrawerOpen(false)
   }, [aiTileDetails])
@@ -124,7 +102,31 @@ const DashboardsHeader: React.FC = () => {
     <Page.Header
       title={title}
       breadcrumbs={<NGBreadcrumbs links={breadcrumbs} />}
-      content={dashboard_navigation}
+      content={
+        <Layout.Horizontal spacing="medium">
+          {!CDS_NAV_2_0 && (
+            <>
+              <NavLink
+                className={css.tags}
+                activeClassName={css.activeTag}
+                to={routes.toCustomDashboardHome({ accountId, folderId })}
+              >
+                {getString('common.dashboards')}
+              </NavLink>
+              <NavLink
+                className={css.tags}
+                activeClassName={css.activeTag}
+                to={routes.toCustomFolderHome({ accountId })}
+              >
+                {getString('common.folders')}
+              </NavLink>
+            </>
+          )}
+          <AidaDrawer isOpen={isAidaDrawerOpen} setIsOpen={setAidaDrawerOpen}>
+            <AidaDashboardContent />
+          </AidaDrawer>
+        </Layout.Horizontal>
+      }
       toolbar={showAidaButton ? aidaButton : getStarted}
     />
   )

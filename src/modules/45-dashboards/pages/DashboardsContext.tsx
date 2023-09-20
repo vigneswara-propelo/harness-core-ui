@@ -32,17 +32,17 @@ export function DashboardsContextProvider(props: React.PropsWithChildren<unknown
   const [aiTileDetails, setAiTileDetails] = useState<AiAddTileRequestBody>()
   const [mode, setMode] = useState<DashboardMode>(DashboardMode.VIEW)
 
-  const includeBreadcrumbs = (breadcrumbsToAdd: Breadcrumb[]): void => {
+  const includeBreadcrumbs = React.useCallback((breadcrumbsToAdd: Breadcrumb[]): void => {
     setBreadcrumbs(breadcrumbsToAdd)
-  }
+  }, [])
 
-  const updateDashboardMode = (newMode: DashboardMode): void => {
+  const updateDashboardMode = React.useCallback((newMode: DashboardMode): void => {
     setMode(newMode)
-  }
+  }, [])
 
-  const updateAiTileDetails = (updatedDetails: AiAddTileRequestBody): void => {
+  const updateAiTileDetails = React.useCallback((updatedDetails: AiAddTileRequestBody): void => {
     setAiTileDetails(updatedDetails)
-  }
+  }, [])
 
   const { data: folderResponse } = useSearchFolders({
     queryParams: { accountId, page: 1, pageSize: 100, permission: PermissionIdentifier.EDIT_DASHBOARD }

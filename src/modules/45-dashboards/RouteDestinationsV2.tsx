@@ -57,9 +57,7 @@ const RouteDestinations = (): React.ReactElement => {
         </DashboardsPage>
       </RouteWithContext>
       <RouteWithContext exact path={routes.toDashboardsEmbedPage({ ...dashboardEmbedPathProps })}>
-        <DashboardsPage>
-          <DashboardViewPage />
-        </DashboardsPage>
+        <DashboardViewPage />
       </RouteWithContext>
     </Switch>
   )
