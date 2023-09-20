@@ -10,6 +10,7 @@ import { defaultTo, isEmpty } from 'lodash-es'
 import { Heading, Layout, TabNavigation, useToaster } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { matchPath, useLocation, useParams, useRouteMatch } from 'react-router-dom'
+import { GetDataError } from 'restful-react'
 import { Page } from '@common/exports'
 import routesv1 from '@common/RouteDefinitions'
 import routesv2 from '@common/RouteDefinitionsV2'
@@ -143,7 +144,8 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
   }
 
   React.useEffect(() => {
-    if (CDS_V1_EOL_BANNER) {
+    //Check if Pipeline is Using V1 Stage only for the Edit flow.
+    if (CDS_V1_EOL_BANNER && pipelineIdentifier !== DefaultNewPipelineId) {
       mutate({
         orgIdentifier,
         projectIdentifier,
@@ -154,11 +156,10 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
             setShowBanner(true)
           }
         })
-        .catch((err: Error) => {
-          showError(err.message || getString('somethingWentWrong'))
+        .catch((err: GetDataError<Error>) => {
+          showError(defaultTo(defaultTo((err.data as Error)?.message, err.message), getString('somethingWentWrong')))
         })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orgIdentifier, projectIdentifier, pipelineIdentifier, CDS_V1_EOL_BANNER])
 
   React.useEffect(() => {

@@ -20,6 +20,7 @@ import {
 } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import classNames from 'classnames'
+import { GetDataError } from 'restful-react'
 import { useStrings } from 'framework/strings'
 import { NavigationCheck, Page } from '@common/exports'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -128,7 +129,11 @@ export function TemplateStudioInternal(): React.ReactElement {
   })
 
   React.useEffect(() => {
-    if (CDS_V1_EOL_BANNER && isPipelineOrStageType(templateType as TemplateType)) {
+    if (
+      CDS_V1_EOL_BANNER &&
+      isPipelineOrStageType(templateType as TemplateType) &&
+      !isNewTemplate(templateIdentifier) // Check if Template Using V1 Stage only for edit flow
+    ) {
       mutate({
         templateIdentifier,
         orgIdentifier,
@@ -139,8 +144,8 @@ export function TemplateStudioInternal(): React.ReactElement {
             setShowBanner(true)
           }
         })
-        .catch((err: Error) => {
-          showError(err.message || getString('somethingWentWrong'))
+        .catch((err: GetDataError<Error>) => {
+          showError(defaultTo(defaultTo((err.data as Error)?.message, err.message), getString('somethingWentWrong')))
         })
     }
   }, [templateType, templateIdentifier])
