@@ -97,7 +97,7 @@ export const ModulesRouteDestinations: React.FC<{ mode?: NAV_MODE }> = ({ mode =
   const modules = Object.keys(ModuleRouteConfig)
 
   return (
-    <Switch>
+    <>
       {modules.map(module => (
         <Route
           key={module}
@@ -107,12 +107,14 @@ export const ModulesRouteDestinations: React.FC<{ mode?: NAV_MODE }> = ({ mode =
             ...accountPathProps
           })}
         >
-          {CommonRouteDestinations({ mode }).props.children}
-          {ModuleRouteConfig[module as NavModuleName].routes(mode)}
-          {GitOpsRouteDestinations({ mode }).props.children}
+          <Switch>
+            {CommonRouteDestinations({ mode }).props.children}
+            {ModuleRouteConfig[module as NavModuleName].routes(mode)}
+            {GitOpsRouteDestinations({ mode }).props.children}
+          </Switch>
         </Route>
       ))}
-    </Switch>
+    </>
   )
 }
 

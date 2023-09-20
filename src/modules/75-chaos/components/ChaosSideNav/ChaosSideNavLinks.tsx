@@ -15,6 +15,7 @@ import { SideNav } from '@common/navigation/SideNavV2/SideNavV2'
 import { Scope } from 'framework/types/types'
 import { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 
 const module: Module = 'chaos'
 
@@ -31,9 +32,10 @@ const ChaosSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
   }
   const { CHAOS_PROBE_ENABLED, CHAOS_DASHBOARD_ENABLED, CHAOS_SECURITY_GOVERNANCE, CHAOS_IMAGE_REGISTRY_DEV } =
     useFeatureFlags()
-
+  const { CHAOS_LICENSE_STATE } = useLicenseStore()
+  const isChaosLicenseStateNotStarted = CHAOS_LICENSE_STATE === 'NOT_STARTED'
   return (
-    <SideNav.Main>
+    <SideNav.Main disableScopeSelector={isChaosLicenseStateNotStarted}>
       <SideNav.Section>
         <SideNav.Scope scope={Scope.PROJECT}>
           <SideNav.Link icon="nav-home" label={getString('overview')} to={routes.toChaosOverview(routeParams)} />

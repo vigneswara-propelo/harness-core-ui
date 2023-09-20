@@ -112,11 +112,7 @@ const ChaosRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
       >
         <ChaosRedirect />
       </RouteWithContext>
-      <RouteWithContext
-        path={routes.toModuleTrialHome({ ...accountPathProps, module, mode })}
-        licenseRedirectData={licenseRedirectData}
-        exact
-      >
+      <RouteWithContext path={routes.toModuleTrialHome({ ...accountPathProps, module, mode })} exact>
         <ChaosTrialHomePage />
       </RouteWithContext>
       <RouteWithContext
