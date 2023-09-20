@@ -13,6 +13,7 @@ import { NGManagerServiceAPIClient } from '@harnessio/react-ng-manager-client'
 import { SSCAServiceAPIClient } from '@harnessio/react-ssca-service-client'
 import { SSCAManagerAPIClient } from '@harnessio/react-ssca-manager-client'
 import { SRMServiceAPIClient } from '@harnessio/react-srm-service-client'
+import { TemplateServiceAPIClient } from '@harnessio/react-template-service-client'
 
 import SessionToken from 'framework/utils/SessionToken'
 
@@ -24,6 +25,7 @@ type UseOpenApiClientsReturn = {
   sscaServiceClientRef: React.MutableRefObject<SSCAServiceAPIClient>
   sscaManagerClientRef: React.MutableRefObject<SSCAManagerAPIClient>
   srmManagerClientRef: React.MutableRefObject<SRMServiceAPIClient>
+  templateServiceClientRef: React.MutableRefObject<TemplateServiceAPIClient>
 }
 
 export const getOpenAPIClientInitiator = (
@@ -69,6 +71,7 @@ const useOpenApiClients = (
   const sscaManagerClientRef = useRef(new SSCAManagerAPIClient(openAPIClientInitiator))
   const srmManagerClientRef = useRef(new SRMServiceAPIClient(openAPIClientInitiator))
   const ngManagerServiceClientRef = useRef(new NGManagerServiceAPIClient(openAPIClientInitiator))
+  const templateServiceClientRef = useRef(new TemplateServiceAPIClient(openAPIClientInitiator))
 
   return {
     auditServiceClientRef,
@@ -77,7 +80,8 @@ const useOpenApiClients = (
     ngManagerServiceClientRef,
     sscaServiceClientRef,
     sscaManagerClientRef,
-    srmManagerClientRef
+    srmManagerClientRef,
+    templateServiceClientRef
   }
 }
 

@@ -10,6 +10,7 @@ import { defaultTo, isEmpty, isEqual } from 'lodash-es'
 import { parse } from 'yaml'
 import { ButtonVariation, Checkbox, Container, Tag } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
+import { useGetTemplateSchemaQuery } from '@harnessio/react-template-service-client'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { useStrings } from 'framework/strings'
 import RbacButton from '@rbac/components/Button/Button'
@@ -20,11 +21,12 @@ import { TemplateContext } from '@templates-library/components/TemplateStudio/Te
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { useGetStaticSchemaYaml, useGetTemplateSchema } from 'services/template-ng'
+import { useGetTemplateSchema } from 'services/template-ng'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { useEnableEditModes } from '@pipeline/components/PipelineStudio/hooks/useEnableEditModes'
+import { TemplateTypes } from '../TemplateStudioUtils'
 import css from './TemplateYamlView.module.scss'
 
 export const POLL_INTERVAL = 1 /* sec */ * 1000 /* ms */
@@ -121,14 +123,19 @@ const TemplateYamlView: React.FC = () => {
     lazy: isTemplateSchemaValidationDisabled || PIE_STATIC_YAML_SCHEMA
   })
 
-  const { data: templateStaticSchema } = useGetStaticSchemaYaml({
-    queryParams: {
-      ...commonQueryParams
+  const { data: templateStaticSchema } = useGetTemplateSchemaQuery(
+    {
+      queryParams: {
+        node_group: TemplateTypes[commonQueryParams.templateEntityType],
+        node_type: commonQueryParams.entityType
+      }
     },
-    lazy: isTemplateSchemaValidationDisabled || !PIE_STATIC_YAML_SCHEMA
-  })
+    {
+      enabled: PIE_STATIC_YAML_SCHEMA
+    }
+  )
 
-  const templateSchema = defaultTo(templateSchemaV1, templateStaticSchema)
+  const templateSchema = defaultTo(templateSchemaV1, templateStaticSchema?.content)
 
   const onEditButtonClick = async () => {
     try {

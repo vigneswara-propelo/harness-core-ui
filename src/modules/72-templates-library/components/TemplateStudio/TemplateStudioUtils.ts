@@ -55,3 +55,14 @@ export const isPipelineOrStageType = (type: TemplateType) => {
 export const isNewTemplate = (templateIdentifier: string | undefined): boolean | undefined => {
   return templateIdentifier === DefaultNewTemplateId
 }
+
+export enum TemplateTypes {
+  Step = 'step',
+  Stage = 'stage',
+  Pipeline = 'pipeline',
+  CustomDeployment = 'customdeployment',
+  MonitoredService = 'monitoredservice',
+  SecretManager = 'secretmanager',
+  ArtifactSource = 'artifactsourcetemplate',
+  StepGroup = 'stepgroup'
+}

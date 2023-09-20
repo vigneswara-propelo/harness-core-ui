@@ -43,6 +43,10 @@ jest.mock('services/template-ng', () => ({
   })
 }))
 
+jest.mock('@harnessio/react-template-service-client', () => ({
+  useGetTemplateSchemaQuery: jest.fn(() => ({}))
+}))
+
 jest.mock('services/cd-ng', () => ({
   useListGitSync: jest.fn().mockImplementation(() => {
     return { data: gitConfigs, refetch: jest.fn() }
