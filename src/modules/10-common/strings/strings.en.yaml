@@ -349,7 +349,7 @@ purpose:
     title: Error Tracking
   code:
     name: Code
-    title: Soucre Code Management
+    title: Source Code Management
   chaos:
     continuous: Chaos Engineering
     chaos: Chaos
