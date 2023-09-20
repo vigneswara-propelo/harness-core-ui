@@ -25,7 +25,6 @@ function processQueryParams(data: any): ApplicationFilters {
 export function useApplicationsFilter(): [ApplicationFilters, ApplicationFilterActions] {
   const filters = useQueryParams<ApplicationFilters>({ processQueryParams })
   const { updateQueryParams } = useUpdateQueryParams<Partial<ApplicationFilters>>()
-
   return [
     filters,
     {

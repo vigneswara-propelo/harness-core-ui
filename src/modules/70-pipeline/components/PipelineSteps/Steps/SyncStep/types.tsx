@@ -125,6 +125,7 @@ export interface ApplicationFilters {
 export interface ApplicationFilterActions {
   search(term: string): void
 }
+
 export interface SyncStepDeploymentModeProps {
   stepViewType: StepViewType
   initialValues: SyncStepData

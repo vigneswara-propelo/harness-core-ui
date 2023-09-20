@@ -117,6 +117,7 @@ export enum StepType {
   SshServiceSpec = 'SshServiceSpec',
   WinRmServiceSpec = 'WinRmServiceSpec',
   MergePR = 'MergePR',
+  UpdateGitOpsApp = 'UpdateGitOpsApp',
   AzureWebAppsRollback = 'AzureWebAppRollback',
   AzureSlotDeployment = 'AzureSlotDeployment',
   JenkinsBuild = 'JenkinsBuild',

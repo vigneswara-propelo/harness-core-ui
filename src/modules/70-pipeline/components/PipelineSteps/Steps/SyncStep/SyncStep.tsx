@@ -222,7 +222,6 @@ export class SyncStep extends PipelineStep<SyncStepData> {
         />
       )
     }
-
     return (
       <SyncStepBaseWithRef
         initialValues={this.getInitialValues(initialValues)}

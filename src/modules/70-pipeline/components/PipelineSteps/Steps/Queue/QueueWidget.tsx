@@ -60,7 +60,6 @@ function QueueWidget(props: QueueProps, formikRef: StepFormikFowardRef<QueueData
                   <FormInput.InputWithIdentifier inputLabel={getString('name')} isIdentifierEditable={isNewStep} />
                 </div>
               )}
-
               <div className={cx(stepCss.formGroup, stepCss.sm)}>
                 <FormMultiTypeDurationField
                   name="timeout"

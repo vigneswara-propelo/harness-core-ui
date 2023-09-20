@@ -7,18 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly addButton: string
-  readonly environmentVarHeader: string
-  readonly equalSizeVariableRow: string
-  readonly label: string
-  readonly minConfigBtn: string
-  readonly outputVarHeader: string
-  readonly panel: string
-  readonly radioGroup: string
-  readonly separator: string
-  readonly stepDesc: string
-  readonly stepType: string
-  readonly stepValue: string
-  readonly variablesList: string
+  readonly header: string
 }
 export default styles

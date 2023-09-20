@@ -1334,6 +1334,7 @@ stepDescription:
   DeployCloudFunctionTrafficShift: Shift traffic between the existing revision and the new revision of a Google function.
   createPR: Create PR
   mergePR: Merge the PR created by the GitOps Update Release Repo step
+  updateGitOpsApp: Update an existing, synced GitOps application
   updateReleaseRepo: Create the PR with your updated JSON files
   fetchLinkedApps: Fetch Linked Apps
   fetchInstanceScript: Fetch Instances

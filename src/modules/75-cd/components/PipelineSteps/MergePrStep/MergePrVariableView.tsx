@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { get, pick } from 'lodash-es'
-
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import type { VariableResponseMapValue } from 'services/pipeline-ng'
 import type { StepElementConfig } from 'services/cd-ng'

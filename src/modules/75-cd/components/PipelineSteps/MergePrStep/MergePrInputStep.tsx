@@ -10,7 +10,6 @@ import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypes, FormInput, Sel
 import { get, defaultTo, isArray } from 'lodash-es'
 import cx from 'classnames'
 import { FieldArray } from 'formik'
-
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 

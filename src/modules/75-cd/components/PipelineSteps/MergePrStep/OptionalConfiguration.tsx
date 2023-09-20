@@ -9,7 +9,6 @@ import React from 'react'
 import { FormikProps, FieldArray } from 'formik'
 import { AllowedTypes, Button, ButtonVariation, FormikForm, FormInput, SelectOption } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
-
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'

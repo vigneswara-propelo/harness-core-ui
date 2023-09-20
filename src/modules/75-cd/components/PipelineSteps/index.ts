@@ -55,6 +55,7 @@ import { CFCreateStack } from './CloudFormation/CreateStack/CreateStack'
 import { SshServiceSpec } from './SshServiceSpec/SshServiceSpec'
 import { WinRmServiceSpec } from './WinRmServiceSpec/WinRmServiceSpec'
 import { MergePR } from './MergePrStep/MergePrStep'
+import { UpdateGitOpsApp } from './UpdateGitOpsAppStep/UpdateGitOpsAppStep'
 import { FetchInstanceScript } from './FetchInstanceScriptStep/FetchInstanceScriptStep'
 import { AzureWebAppRollback } from './AzureWebAppRollback/AzureWebAppRollback'
 import { CommandScriptsStep } from './CommandScripts/CommandScriptsStep'
@@ -206,6 +207,7 @@ factory.registerStep(new UpdateReleaseRepo())
 factory.registerStep(new GitOpsFetchLinkedApps())
 factory.registerStep(new GitOpsRevertPR())
 factory.registerStep(new MergePR())
+factory.registerStep(new UpdateGitOpsApp())
 factory.registerStep(new FetchInstanceScript())
 factory.registerStep(new AzureWebAppRollback())
 factory.registerStep(new AzureSlotDeployment())

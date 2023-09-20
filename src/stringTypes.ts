@@ -5426,6 +5426,7 @@ export interface StringsMap {
   'pipeline.stepDescription.fetchLinkedApps': string
   'pipeline.stepDescription.mergePR': string
   'pipeline.stepDescription.revertPR': string
+  'pipeline.stepDescription.updateGitOpsApp': string
   'pipeline.stepDescription.updateReleaseRepo': string
   'pipeline.stepDetails': string
   'pipeline.stepGroupVariables': string
@@ -6297,6 +6298,7 @@ export interface StringsMap {
   'cd.fetchingAgent': string
   'cd.fetchingDelegate': string
   'cd.fetchingRepository': string
+  'cd.fileParameters': string
   'cd.filePathPlaceholder': string
   'cd.filePathRequired': string
   'cd.gCloud': string
@@ -6810,6 +6812,7 @@ export interface StringsMap {
   'cd.overrideValue': string
   'cd.overrideYaml': string
   'cd.pathCannotBeEmpty': string
+  'cd.pathValue': string
   'cd.pipelineCreation': string
   'cd.pipelineId': string
   'cd.pipelineSteps.environmentTab.allClustersSelected': string
@@ -7232,6 +7235,7 @@ export interface StringsMap {
   'cd.validation.clusterType': string
   'cd.validation.keyData': string
   'cd.validation.specifyFilter': string
+  'cd.valueFiles': string
   'cd.valuesYamlValidation': string
   'cd.varFile': string
   'cd.varFileDetails': string

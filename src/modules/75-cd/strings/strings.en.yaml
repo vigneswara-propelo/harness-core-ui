@@ -1189,6 +1189,9 @@ removeStepTemplate: Remove Step Template
 duplicateStep: Step with same name already exists
 removeStepTemplateConfirmationLabel: 'Are you sure you want to remove linked step template ?'
 apiParameters: API Parameters
+fileParameters: File Parameters
+valueFiles: Value Files
+pathValue: Value Path
 artifactSource:
   artifactRepositoryTypeIsRequired: Artifact Repository Type is required
 azureArm:

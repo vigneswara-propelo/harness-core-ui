@@ -79,5 +79,4 @@ function QueueInputStep({ inputSetData, readonly, allowableTypes, stepViewType }
     </>
   )
 }
-
 export default QueueInputStep

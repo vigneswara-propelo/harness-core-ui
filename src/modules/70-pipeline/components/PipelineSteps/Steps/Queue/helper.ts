@@ -36,7 +36,6 @@ export interface QueueProps {
   onChange?: (data: QueueData) => void
   readonly?: boolean
 }
-
 export const getScopeOptions = (
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
 ) => [
