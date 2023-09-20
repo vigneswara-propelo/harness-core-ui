@@ -12,7 +12,6 @@ import { requestPolicyExchange } from '@urql/exchange-request-policy'
 import { get } from 'lodash-es'
 import routes from '@common/RouteDefinitionsV2'
 import { accountPathProps, NAV_MODE } from '@common/utils/routeUtils'
-import { RouteWithLayout } from '@common/router'
 import type { AccountPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import NotFoundPage from '@common/pages/404/NotFoundPage'
 import SessionToken from 'framework/utils/SessionToken'
@@ -367,25 +366,9 @@ const RedirectToModuleTrialHome = (): React.ReactElement => {
 
   return (
     <Redirect
-      to={routes.toModule({
+      to={routes.toModuleTrialHome({
         accountId,
         module
-      })}
-    />
-  )
-}
-
-const RedirectToOverviewPage = (): React.ReactElement => {
-  const { accountId } = useParams<{
-    accountId: string
-  }>()
-
-  return (
-    <Redirect
-      to={routes.toCEOverview({
-        accountId,
-        module,
-        mode: NAV_MODE.MODULE
       })}
     />
   )
@@ -683,37 +666,32 @@ const CERouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
   return (
     <Provider value={urqlClient}>
       <Switch>
-        <RouteWithLayout
-          // layout={MinimalLayout}
-          path={routes.toModuleTrial({ ...accountPathProps, module })}
+        <RouteWithContext
+          path={routes.toModuleTrialHome({ ...accountPathProps, module })}
           exact
           pageName={PAGE_NAME.CETrialHomePage}
         >
           <CETrialHomePage />
-        </RouteWithLayout>
-        <RouteWithLayout
+        </RouteWithContext>
+
+        <RouteWithContext
           licenseRedirectData={licenseRedirectData}
-          path={routes.toCEHome({ ...accountPathProps, module, mode })}
+          path={[
+            routes.toCE({ ...accountPathProps, module, mode }),
+            routes.toCEHome({ ...accountPathProps, module, mode })
+          ]}
           exact
-          pageName={PAGE_NAME.CEHomePage}
         >
           <CEHomePage />
-        </RouteWithLayout>
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          path={routes.toCE({ ...accountPathProps, module, mode })}
-          exact
-        >
-          <RedirectToOverviewPage />
-        </RouteWithLayout>
-        <RouteWithLayout
+        </RouteWithContext>
+        <RouteWithContext
           licenseRedirectData={licenseRedirectData}
           path={routes.toOldCECOAccessPoints({ ...accountPathProps, module, mode })}
           exact
         >
           <RedirectToNewAccessPointsPage />
-        </RouteWithLayout>
-        <RouteWithLayout
+        </RouteWithContext>
+        <RouteWithContext
           licenseRedirectData={licenseRedirectData}
           path={routes.toOldCECloudIntegration({ ...accountPathProps, module, mode })}
           exact
@@ -725,8 +703,8 @@ const CERouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
               mode: NAV_MODE.MODULE
             })}
           />
-        </RouteWithLayout>
-        <RouteWithLayout
+        </RouteWithContext>
+        <RouteWithContext
           licenseRedirectData={licenseRedirectData}
           path={routes.toOldCECurrencyPreferences({ ...accountPathProps, module, mode })}
           exact
@@ -738,7 +716,7 @@ const CERouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
               mode: NAV_MODE.MODULE
             })}
           />
-        </RouteWithLayout>
+        </RouteWithContext>
         {/* {!enableMicroFrontend && CENonMFERoutes.props.children} */}
 
         {/* <RouteWithLayout
@@ -770,7 +748,7 @@ const CERouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
         >
           <RedirectToNewNodeRecommendationDetailsRoute />
         </RouteWithLayout> */}
-        <RouteWithLayout path={[...mfePaths, routes.toCCMMFE({ ...accountPathProps, module, mode })]}>
+        <RouteWithContext path={[...mfePaths, routes.toCCMMFE({ ...accountPathProps, module, mode })]}>
           <ChildAppMounter<CCMUIAppCustomProps>
             customComponents={{
               OverviewAddCluster,
@@ -785,7 +763,7 @@ const CERouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
             }}
             ChildApp={CcmMicroFrontendPath}
           />
-        </RouteWithLayout>
+        </RouteWithContext>
         {/* {enableMicroFrontend ? (
         ) : null} */}
 

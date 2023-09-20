@@ -9,7 +9,7 @@ import React, { useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { pick } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import routes from '@common/RouteDefinitions'
+import routes from '@common/RouteDefinitionsV2'
 import { StartTrialTemplate } from '@rbac/components/TrialHomePageTemplate/StartTrialTemplate'
 import { useStartFreeLicense, ResponseModuleLicenseDTO } from 'services/cd-ng'
 import useCreateConnector from '@ce/components/CreateConnector/CreateConnector'
@@ -39,10 +39,10 @@ const CETrialHomePage: React.FC = () => {
   const isDefaultProjectCreated = useFeatureFlag(FeatureFlag.CREATE_DEFAULT_PROJECT)
   const { openModal } = useCreateConnector({
     onSuccess: () => {
-      history.push(routes.toCEOverview({ accountId }))
+      history.push(routes.toCEOverview({ accountId, module }))
     },
     onClose: () => {
-      history.push(routes.toCEOverview({ accountId }))
+      history.push(routes.toCEOverview({ accountId, module }))
     }
   })
 
@@ -87,9 +87,11 @@ const CETrialHomePage: React.FC = () => {
     const data = await startFreePlan()
     if (isDefaultProjectCreated) {
       const moduleUrlWithDefaultProject = getModuleToDefaultURLMap(accountId, module as Module)[module]
-      history.push(moduleUrlWithDefaultProject ? (moduleUrlWithDefaultProject as string) : routes.toHome({ accountId }))
+      history.push(
+        moduleUrlWithDefaultProject ? (moduleUrlWithDefaultProject as string) : routes.toCEHome({ accountId, module })
+      )
     } else {
-      microfrontendEnabled ? history.push(routes.toCEOverview({ accountId })) : showModal()
+      microfrontendEnabled ? history.push(routes.toCEOverview({ accountId, module })) : showModal()
     }
     return data
   }
@@ -107,7 +109,7 @@ const CETrialHomePage: React.FC = () => {
       }
 
       handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module as Module, updatedLicenseInfo)
-      microfrontendEnabled ? history.push(routes.toCEOverview({ accountId })) : showModal()
+      microfrontendEnabled ? history.push(routes.toCEOverview({ accountId, module })) : showModal()
     } catch (error) {
       showError(error.data?.message)
     }
@@ -131,7 +133,7 @@ const CETrialHomePage: React.FC = () => {
 
   useEffect(() => {
     if (experience) {
-      microfrontendEnabled ? history.push(routes.toCEOverview({ accountId })) : showModal()
+      microfrontendEnabled ? history.push(routes.toCEOverview({ accountId, module })) : showModal()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [experience])

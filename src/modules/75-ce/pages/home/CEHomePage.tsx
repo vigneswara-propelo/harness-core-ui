@@ -14,7 +14,7 @@ import { ModuleName } from 'framework/types/ModuleName'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import { useGetLicensesAndSummary } from 'services/cd-ng'
 import { useQueryParams } from '@common/hooks'
-import routes from '@common/RouteDefinitions'
+import routes from '@common/RouteDefinitionsV2'
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
@@ -77,7 +77,7 @@ const CEHomePage: React.FC = () => {
       })
     )
   } else {
-    history.push(routes.toCEOverview({ accountId }))
+    history.push(routes.toCEOverview({ accountId, module }))
   }
 
   return <></>
