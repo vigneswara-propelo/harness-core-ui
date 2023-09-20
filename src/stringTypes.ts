@@ -9237,7 +9237,9 @@ export interface StringsMap {
   'sei.accountSettings.seiSettings.apiKeys': string
   'sei.accountSettings.seiSettings.customize': string
   'sei.accountSettings.seiSettings.label': string
+  'sei.collection': string
   'sei.configurationSettings': string
+  'sei.insight': string
   'sei.insights': string
   'sei.learnMore': string
   'sei.sei': string

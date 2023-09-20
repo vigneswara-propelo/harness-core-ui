@@ -1,7 +1,9 @@
 sei: '{{ $$.common.module.sei }}'
+collection: Collection
 softwareEngineering: Software Engineering
 configurationSettings: Configuration Settings
 insights: '{{ $.common.purpose.sei.continuous}}'
+insight: 'Insight'
 trellisScore: Trellis Score
 learnMore: Learn more about Software Engineering Insights
 accountSettings:

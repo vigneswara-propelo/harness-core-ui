@@ -25,10 +25,19 @@ import { useGetLicensesAndSummary } from 'services/cd-ng'
 import { NameSchema } from '@common/utils/Validation'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
+import ChildComponentMounter from 'microfrontends/ChildComponentMounter'
 import { SEICustomMicroFrontendProps } from './SEICustomMicroFrontendProps.types'
 
 // eslint-disable-next-line import/no-unresolved
 const SEIMicroFrontend = React.lazy(() => import('sei/MicroFrontendApp'))
+// eslint-disable-next-line import/no-unresolved
+const CollectionResourceModalBody = React.lazy(() => import('sei/CollectionResourceModalBody'))
+// eslint-disable-next-line import/no-unresolved
+const CollectionResourcesRenderer = React.lazy(() => import('sei/CollectionResourcesRenderer'))
+// eslint-disable-next-line import/no-unresolved
+const InsightsResourceModalBody = React.lazy(() => import('sei/InsightsResourceModalBody'))
+// eslint-disable-next-line import/no-unresolved
+const InsightsResourceRenderer = React.lazy(() => import('sei/InsightsResourceRenderer'))
 
 export default function SEIRoutes(): React.ReactElement {
   const isSEIEnabled = useFeatureFlag(FeatureFlag.SEI_ENABLED)
@@ -53,25 +62,31 @@ export default function SEIRoutes(): React.ReactElement {
     RbacFactory.registerResourceTypeHandler(ResourceType.SEI_COLLECTIONS, {
       icon: 'res-users',
       label: 'common.purpose.sei.collections',
+      labelSingular: 'sei.collection',
       category: ResourceCategory.SEI,
       permissionLabels: {
         [PermissionIdentifier.VIEW_SEI_COLLECTIONS]: <LocaleString stringID="rbac.permissionLabels.view" />,
         [PermissionIdentifier.EDIT_SEI_COLLECTIONS]: <LocaleString stringID="rbac.permissionLabels.edit" />,
         [PermissionIdentifier.CREATE_SEI_COLLECTIONS]: <LocaleString stringID="rbac.permissionLabels.create" />,
         [PermissionIdentifier.DELETE_SEI_COLLECTIONS]: <LocaleString stringID="rbac.permissionLabels.delete" />
-      }
+      },
+      addResourceModalBody: props => <ChildComponentMounter ChildComponent={CollectionResourceModalBody} {...props} />,
+      staticResourceRenderer: props => <ChildComponentMounter ChildComponent={CollectionResourcesRenderer} {...props} />
     })
 
     RbacFactory.registerResourceTypeHandler(ResourceType.SEI_INSIGHTS, {
       icon: 'res-users',
       label: 'sei.insights',
+      labelSingular: 'sei.insight',
       category: ResourceCategory.SEI,
       permissionLabels: {
         [PermissionIdentifier.VIEW_SEI_INSIGHTS]: <LocaleString stringID="rbac.permissionLabels.view" />,
         [PermissionIdentifier.EDIT_SEI_INSIGHTS]: <LocaleString stringID="rbac.permissionLabels.edit" />,
         [PermissionIdentifier.CREATE_SEI_INSIGHTS]: <LocaleString stringID="rbac.permissionLabels.create" />,
         [PermissionIdentifier.DELETE_SEI_INSIGHTS]: <LocaleString stringID="rbac.permissionLabels.delete" />
-      }
+      },
+      addResourceModalBody: props => <ChildComponentMounter ChildComponent={InsightsResourceModalBody} {...props} />,
+      staticResourceRenderer: props => <ChildComponentMounter ChildComponent={InsightsResourceRenderer} {...props} />
     })
 
     RbacFactory.registerResourceTypeHandler(ResourceType.SEI_TRELLIS_SCORE, {

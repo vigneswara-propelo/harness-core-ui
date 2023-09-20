@@ -172,6 +172,26 @@ declare module 'sei/MicroFrontendApp' {
   export default ChildApp
 }
 
+declare module 'sei/CollectionResourceModalBody' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'sei/CollectionResourcesRenderer' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'sei/InsightsResourceModalBody' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'sei/InsightsResourceRenderer' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare module 'errortracking/App' {
   const ChildApp: ChildAppComponent
   export default ChildApp

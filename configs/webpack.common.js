@@ -330,6 +330,10 @@ if (!enableIDP) {
 
 if (!enableSEI) {
   config.resolve.alias['sei/MicroFrontendApp'] = ChildAppError
+  config.resolve.alias['sei/CollectionResourceModalBody'] = ChildAppError
+  config.resolve.alias['sei/CollectionResourcesRenderer'] = ChildAppError
+  config.resolve.alias['sei/InsightsResourceModalBody'] = ChildAppError
+  config.resolve.alias['sei/InsightsResourceRenderer'] = ChildAppError
 }
 
 module.exports = config
