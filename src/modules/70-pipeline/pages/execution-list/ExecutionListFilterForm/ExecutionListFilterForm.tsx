@@ -19,7 +19,9 @@ import {
   BUILD_TYPE,
   DeploymentTypeContext,
   BuildTypeContext,
-  getMultiSelectFormOptions
+  getMultiSelectFormOptions,
+  ExecutorTriggerType,
+  getExecutorTriggerTypeOption
 } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 
 import type { ModulePathParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -30,6 +32,15 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './ExecutionListFilterForm.module.scss'
 
 export type FormView = 'PIPELINE-META'
+
+const executorTriggerTypes: ExecutorTriggerType[] = [
+  'MANUAL',
+  'WEBHOOK',
+  'WEBHOOK_CUSTOM',
+  'SCHEDULER_CRON',
+  'ARTIFACT',
+  'MANIFEST'
+]
 interface ExecutionListFilterFormProps<T> {
   formikProps?: FormikProps<T>
   type: FilterProperties['filterType']
@@ -39,14 +50,6 @@ interface ExecutionListFilterFormProps<T> {
 }
 
 const NO_SELECTION = { label: '', value: '' }
-
-/*
-Examples - 
-  :v  ->  key: "", value: "v"
-  v:  ->  key: "v", value: ""
-  a:b ->  key: "a", value: "b"
-  a   ->  key: "a", value: null
-*/
 
 type KVAccumulator = { [key: string]: string | undefined | null }
 
@@ -349,6 +352,8 @@ export function ExecutionListFilterForm<
   const getPipelineFormCommonFields = (): React.ReactElement => {
     const isPipeSetupType = type === 'PipelineSetup'
 
+    const { triggers = [] } = initialValues as DeploymentTypeContext
+
     return (
       <>
         <FormInput.Text
@@ -379,19 +384,41 @@ export function ExecutionListFilterForm<
           }}
         />
 
-        {type === 'PipelineExecution' ? (
-          <FormInput.MultiSelect
-            items={getExecutionStatusOptions()}
-            name="status"
-            label={getString('status')}
-            placeholder={getString('pipeline.jiraUpdateStep.selectStatus')}
-            key="status"
-            multiSelectProps={{
-              allowCreatingNewItems: false
-            }}
-          />
-        ) : null}
-        {type === 'PipelineExecution' ? <InputDatePicker formikProps={formikProps} /> : null}
+        {type === 'PipelineExecution' && (
+          <>
+            <FormInput.MultiSelect
+              items={getExecutionStatusOptions()}
+              name="status"
+              label={getString('status')}
+              placeholder={getString('pipeline.jiraUpdateStep.selectStatus')}
+              key="status"
+              multiSelectProps={{
+                allowCreatingNewItems: false
+              }}
+            />
+            <FormInput.MultiSelect
+              key="triggerTypes"
+              name="triggerTypes"
+              label={getString('pipeline.filters.triggerType')}
+              placeholder={getString('common.selectName', { name: getString('pipeline.filters.triggerType') })}
+              items={executorTriggerTypes.map(triggerType => getExecutorTriggerTypeOption(triggerType))}
+              multiSelectProps={{
+                allowCreatingNewItems: false
+              }}
+            />
+            <FormInput.MultiSelect
+              key="triggerIdentifiers"
+              name="triggerIdentifiers"
+              label={getString('pipeline.filters.triggerIdentifier')}
+              placeholder={getString('common.selectName', { name: getString('pipeline.filters.triggerIdentifier') })}
+              items={triggers}
+              multiSelectProps={{
+                allowCreatingNewItems: false
+              }}
+            />
+            <InputDatePicker formikProps={formikProps} />
+          </>
+        )}
       </>
     )
   }

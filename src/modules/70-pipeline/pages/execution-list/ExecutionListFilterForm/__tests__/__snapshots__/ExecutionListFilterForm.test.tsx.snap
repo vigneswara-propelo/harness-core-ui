@@ -136,12 +136,114 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
           </div>
         </div>
         <div
+          class="bp3-form-group"
+          data-id="triggerTypes-3"
+        >
+          <label
+            class="bp3-label"
+            for="triggerTypes"
+          >
+            <span
+              class="Tooltip--acenter"
+              data-tooltip-id="pipelineFilterFormTest_triggerTypes"
+            >
+              pipeline.filters.triggerType
+            </span>
+             
+            <span
+              class="bp3-text-muted"
+            />
+          </label>
+          <div
+            class="bp3-form-content"
+          >
+            <div
+              class="bp3-popover-wrapper MultiSelect--main bp3-fill"
+            >
+              <div
+                class="bp3-popover-target"
+              >
+                <div
+                  class=""
+                >
+                  <div
+                    class="bp3-input bp3-tag-input bp3-multi-select"
+                  >
+                    <div
+                      class="bp3-tag-input-values"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input-ghost bp3-multi-select-tag-input-input"
+                        name="triggerTypes"
+                        placeholder="- common.selectName -"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bp3-form-group"
+          data-id="triggerIdentifiers-4"
+        >
+          <label
+            class="bp3-label"
+            for="triggerIdentifiers"
+          >
+            <span
+              class="Tooltip--acenter"
+              data-tooltip-id="pipelineFilterFormTest_triggerIdentifiers"
+            >
+              pipeline.filters.triggerIdentifier
+            </span>
+             
+            <span
+              class="bp3-text-muted"
+            />
+          </label>
+          <div
+            class="bp3-form-content"
+          >
+            <div
+              class="bp3-popover-wrapper MultiSelect--main bp3-fill"
+            >
+              <div
+                class="bp3-popover-target"
+              >
+                <div
+                  class=""
+                >
+                  <div
+                    class="bp3-input bp3-tag-input bp3-multi-select"
+                  >
+                    <div
+                      class="bp3-tag-input-values"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input-ghost bp3-multi-select-tag-input-input"
+                        name="triggerIdentifiers"
+                        placeholder="- common.selectName -"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
           data-nodeid="inputDatePicker"
           data-testid="inputDatePicker"
         >
           <div
             class="bp3-form-group"
-            data-id="null-3"
+            data-id="null-5"
           >
             <label
               class="bp3-label"
@@ -208,7 +310,7 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
         </span>
         <div
           class="bp3-form-group"
-          data-id="deploymentType-4"
+          data-id="deploymentType-6"
         >
           <label
             class="bp3-label"
@@ -276,7 +378,7 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
         </div>
         <div
           class="bp3-form-group"
-          data-id="services-5"
+          data-id="services-7"
         >
           <label
             class="bp3-label"
@@ -327,7 +429,7 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
         </div>
         <div
           class="bp3-form-group"
-          data-id="environments-6"
+          data-id="environments-8"
         >
           <label
             class="bp3-label"
@@ -378,7 +480,7 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
         </div>
         <div
           class="bp3-form-group artifactFilterTextArea"
-          data-id="artifacts-7"
+          data-id="artifacts-9"
         >
           <label
             class="bp3-label"
@@ -410,7 +512,7 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
         </div>
         <div
           class="bp3-form-group"
-          data-id="gitOpsAppIdentifiers-8"
+          data-id="gitOpsAppIdentifiers-10"
         >
           <label
             class="bp3-label"
@@ -470,7 +572,7 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
         </span>
         <div
           class="bp3-form-group"
-          data-id="buildType-9"
+          data-id="buildType-11"
         >
           <label
             class="bp3-label"

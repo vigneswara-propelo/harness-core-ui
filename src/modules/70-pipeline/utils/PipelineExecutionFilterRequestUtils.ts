@@ -8,7 +8,6 @@
 import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 import { get, isArray, omit, startCase } from 'lodash-es'
 import type { PipelineExecutionFilterProperties, FilterDTO, NGTag, FilterProperties } from 'services/pipeline-ng'
-
 import { EXECUTION_STATUS } from '@pipeline/utils/statusHelpers'
 import type { FilterDataInterface, FilterInterface } from '@common/components/Filter/Constants'
 import { StringUtils } from '@common/exports'
@@ -20,6 +19,7 @@ export interface DeploymentTypeContext {
   deploymentType?: MultiSelectOption[]
   infrastructureType?: string
   services?: MultiSelectOption[]
+  triggers?: MultiSelectOption[]
   environments?: MultiSelectOption[]
   artifacts?: string
   gitOpsAppIdentifiers?: MultiSelectOption[]
@@ -34,6 +34,11 @@ export interface BuildTypeContext {
   tag?: string
 }
 
+export type ExecutorTriggerType = Exclude<
+  Required<PipelineExecutionFilterProperties>['triggerTypes'][number],
+  'NOOP' | 'UNRECOGNIZED'
+>
+
 const exclusionList = [
   'buildType',
   'repositoryName',
@@ -45,7 +50,9 @@ const exclusionList = [
   'environments',
   'artifacts',
   'deploymentType',
-  'gitOpsAppIdentifiers'
+  'gitOpsAppIdentifiers',
+  'triggerTypes',
+  'triggerIdentifiers'
 ]
 
 export const getValidFilterArguments = (
@@ -66,13 +73,17 @@ export const getValidFilterArguments = (
     gitOpsAppIdentifiers,
     deploymentType,
     infrastructureType,
-    pipelineTags
+    pipelineTags,
+    triggerTypes,
+    triggerIdentifiers
   } = formData
   return Object.assign(omit(formData, ...exclusionList), {
     pipelineTags: Object.keys(pipelineTags || {})?.map((key: string) => {
       return { key, value: pipelineTags[key] } as NGTag
     }),
     status: status?.map((statusOption: MultiSelectOption) => statusOption?.value),
+    triggerTypes: triggerTypes?.map((triggerType: MultiSelectOption) => triggerType?.value),
+    triggerIdentifiers: triggerIdentifiers?.map((triggerName: MultiSelectOption) => triggerName?.value),
     moduleProperties: {
       ci: getCIModuleProperties(
         buildType as BUILD_TYPE,
@@ -97,8 +108,13 @@ export const getValidFilterArguments = (
   })
 }
 
-export type PipelineExecutionFormType = Omit<PipelineExecutionFilterProperties, 'status' | 'pipelineTags'> & {
+export type PipelineExecutionFormType = Omit<
+  PipelineExecutionFilterProperties,
+  'status' | 'pipelineTags' | 'triggerTypes' | 'triggerIdentifiers'
+> & {
   status?: MultiSelectOption[]
+  triggerTypes?: MultiSelectOption[]
+  triggerIdentifiers?: MultiSelectOption[]
   pipelineTags?: Record<string, any>
 } & BuildTypeContext &
   DeploymentTypeContext
@@ -141,12 +157,15 @@ export const createRequestBodyPayload = ({
     formValues
   } = data
   const filterType: FilterProperties['filterType'] = 'PipelineExecution'
+
   const {
     pipelineName,
     pipelineTags: _pipelineTags,
     status: _statuses,
     timeRange,
-    moduleProperties: _moduleProperties
+    moduleProperties: _moduleProperties,
+    triggerTypes,
+    triggerIdentifiers
   } = getValidFilterArguments(formValues, filterType)
   return {
     name: _name,
@@ -159,6 +178,8 @@ export const createRequestBodyPayload = ({
       pipelineTags: _pipelineTags || [],
       pipelineName: pipelineName || '',
       status: _statuses,
+      triggerTypes,
+      triggerIdentifiers,
       timeRange: timeRange,
       moduleProperties: _moduleProperties as PipelineExecutionFilterProperties['moduleProperties']
     } as PipelineExecutionFilterProperties
@@ -240,3 +261,6 @@ export const getMultiSelectFormOptions = (values?: any[], entityName?: string): 
 
 export const getFilterByIdentifier = (identifier: string, filters?: FilterDTO[]): FilterDTO | undefined =>
   filters?.find((filter: FilterDTO) => filter.identifier?.toLowerCase() === identifier.toLowerCase())
+
+export const getExecutorTriggerTypeOption = (triggerType: ExecutorTriggerType): MultiSelectOption =>
+  ({ label: triggerType, value: triggerType } as MultiSelectOption)

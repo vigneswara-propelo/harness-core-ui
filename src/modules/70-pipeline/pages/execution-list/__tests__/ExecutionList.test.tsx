@@ -54,6 +54,35 @@ const mockBranches = {
   metaData: null,
   correlationId: 'a48d56f0-2d6f-4b4b-8b13-d8eba153005f'
 }
+
+const mockTriggers = {
+  status: 'SUCCESS',
+  data: {
+    content: [
+      {
+        name: 'Test 1',
+        identifier: 'Test_1',
+        type: 'Manifest'
+      },
+      {
+        name: 'Test 2',
+        identifier: 'Test_2',
+        type: 'Webhook'
+      },
+      {
+        name: 'Test 3',
+        identifier: 'Test_3',
+        type: 'Scheduled'
+      },
+      {
+        name: 'Test_4',
+        identifier: 'Test_4',
+        type: 'Artifact'
+      }
+    ]
+  }
+}
+
 const fetchBranches = jest.fn(() => {
   return Object.create(mockBranches)
 })
@@ -114,7 +143,8 @@ jest.mock('services/pipeline-ng', () => ({
   useGetNotesForExecution: jest.fn().mockReturnValue({}),
   useUpdateNotesForExecution: jest.fn(() => ({
     mutate: jest.fn()
-  }))
+  })),
+  useGetTriggerListForTarget: jest.fn().mockImplementation(() => ({ data: mockTriggers }))
 }))
 
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))

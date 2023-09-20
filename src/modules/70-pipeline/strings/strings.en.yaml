@@ -91,6 +91,8 @@ filters:
   environmentPlaceholder: Search/Select Environment
   artifactPlaceholder: Enter comma separated artifact names
   builtTypePlaceholder: Select Build Type
+  triggerType: Trigger Type
+  triggerIdentifier: Trigger Identifier
 selectStagePlaceholder: Search/Select Stage
 selectStage: Select Stage
 stepNamePlaceholder: 'Enter Step Name'

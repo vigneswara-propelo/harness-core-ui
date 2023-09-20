@@ -112,7 +112,8 @@ jest.mock('services/pipeline-ng', () => ({
   useGetNotesForExecution: jest.fn().mockReturnValue({}),
   useUpdateNotesForExecution: jest.fn(() => ({
     mutate: jest.fn()
-  }))
+  })),
+  useGetTriggerListForTarget: jest.fn().mockImplementation(() => ({ data: {} }))
 }))
 
 jest.mock('services/pipeline-rq', () => ({

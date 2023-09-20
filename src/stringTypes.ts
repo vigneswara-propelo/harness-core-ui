@@ -4631,6 +4631,8 @@ export interface StringsMap {
   'pipeline.filters.environmentPlaceholder': string
   'pipeline.filters.pipelineNamePlaceholder': string
   'pipeline.filters.servicePlaceholder': string
+  'pipeline.filters.triggerIdentifier': string
+  'pipeline.filters.triggerType': string
   'pipeline.frozenExecList.emptyStateMsg': string
   'pipeline.frozenExecList.freezeConfig': string
   'pipeline.frozenExecList.freezeTime': string

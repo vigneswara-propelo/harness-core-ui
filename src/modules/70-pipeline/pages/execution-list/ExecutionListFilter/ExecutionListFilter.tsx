@@ -8,14 +8,21 @@
 
 import React, { useMemo, useRef } from 'react'
 import { useParams } from 'react-router-dom'
-import { Layout, SelectOption, useToaster } from '@harness/uicore'
+import { Layout, MultiSelectOption, SelectOption, useToaster } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
-import { isEmpty, isUndefined, toLower } from 'lodash-es'
+import { defaultTo, isEmpty, isUndefined, toLower } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import type { FilterDTO, PipelineExecutionFilterProperties } from 'services/pipeline-ng'
-import { usePostFilter, useUpdateFilter, useDeleteFilter, useGetFilterList } from 'services/pipeline-ng'
+import {
+  usePostFilter,
+  useUpdateFilter,
+  useDeleteFilter,
+  useGetFilterList,
+  FilterDTO,
+  PipelineExecutionFilterProperties,
+  useGetTriggerListForTarget
+} from 'services/pipeline-ng'
 import { useGetEnvironmentListV2, useGetServiceDefinitionTypes } from 'services/cd-ng'
 import { Servicev1Application, useApplicationServiceListApps } from 'services/gitops'
 import { Filter, FilterRef } from '@common/components/Filter/Filter'
@@ -30,7 +37,9 @@ import {
   getFilterByIdentifier,
   getBuildType,
   getValidFilterArguments,
-  createRequestBodyPayload
+  createRequestBodyPayload,
+  getExecutorTriggerTypeOption,
+  ExecutorTriggerType
 } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterCRUD'
 import { isObjectEmpty, UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
@@ -54,7 +63,8 @@ export interface ExecutionFilterQueryParams {
 const UNSAVED_FILTER_IDENTIFIER = StringUtils.getIdentifierFromName(UNSAVED_FILTER)
 
 export function ExecutionListFilter(): React.ReactElement {
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelineType<PipelinePathProps>>()
+  const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier } =
+    useParams<PipelineType<PipelinePathProps>>()
   const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<ExecutionListPageQueryParams>>()
   const [gitOpsAppNameOptions, setGitOpsAppNameOptions] = React.useState<SelectOption[] | undefined>([])
   const queryParams = useExecutionListQueryParams()
@@ -91,6 +101,16 @@ export function ExecutionListFilter(): React.ReactElement {
   })
 
   const { mutate: getApplications } = useApplicationServiceListApps({})
+
+  const { data: triggerListResponse } = useGetTriggerListForTarget({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      targetIdentifier: defaultTo(pipelineIdentifier, '')
+    },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' }
+  })
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -179,6 +199,8 @@ export function ExecutionListFilter(): React.ReactElement {
   const {
     pipelineName,
     status,
+    triggerTypes,
+    triggerIdentifiers,
     moduleProperties,
     timeRange,
     pipelineTags: _pipelineTags
@@ -292,6 +314,21 @@ export function ExecutionListFilter(): React.ReactElement {
   )
   const reset = () => replaceQueryParams({})
 
+  const triggerOptions: MultiSelectOption[] = defaultTo(
+    triggerListResponse?.data?.content?.map(item => ({
+      label: item.name || '',
+      value: item.identifier || ''
+    })),
+    []
+  )
+
+  const triggerIdentifiersOptions = triggerIdentifiers?.map((triggerIdentifier: string) =>
+    defaultTo(
+      triggerOptions.find(triggerOption => triggerOption.value === triggerIdentifier),
+      { label: triggerIdentifier, value: triggerIdentifier } as MultiSelectOption
+    )
+  )
+
   /**End Handlers */
 
   return (
@@ -316,6 +353,7 @@ export function ExecutionListFilter(): React.ReactElement {
             isCIEnabled={isCIEnabled}
             initialValues={{
               environments: getMultiSelectFormOptions(environmentsResponse?.data?.content, 'environment'),
+              triggers: triggerOptions,
               deploymentType: deploymentTypeSelectOptions,
               gitOpsAppIdentifiers: gitOpsAppNameOptions
             }}
@@ -328,6 +366,10 @@ export function ExecutionListFilter(): React.ReactElement {
             pipelineTags,
             repositoryName,
             status: getMultiSelectFormOptions(status),
+            triggerTypes: triggerTypes?.map(triggerType =>
+              getExecutorTriggerTypeOption(triggerType as ExecutorTriggerType)
+            ),
+            triggerIdentifiers: triggerIdentifiersOptions,
             branch,
             tag,
             timeRange,
