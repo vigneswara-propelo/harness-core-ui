@@ -67,7 +67,7 @@ const TrialRedirect: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
   return (
     <Redirect
-      to={routes.toModuleTrial({
+      to={routes.toModuleTrialHome({
         accountId,
         module
       })}
@@ -113,7 +113,7 @@ const ChaosRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
         <ChaosRedirect />
       </RouteWithContext>
       <RouteWithContext
-        path={routes.toModuleTrial({ ...accountPathProps, module, mode })}
+        path={routes.toModuleTrialHome({ ...accountPathProps, module, mode })}
         licenseRedirectData={licenseRedirectData}
         exact
       >
