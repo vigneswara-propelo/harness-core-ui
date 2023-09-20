@@ -338,7 +338,12 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     return (
       <>
         <Link to={`${path}${queryParams}`}>
-          <Text color={Color.PRIMARY_7} title={name} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
+          <Text
+            color={Color.PRIMARY_7}
+            data-testid="SLOName"
+            title={name}
+            font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
+          >
             {name} {sloType === SLOType.COMPOSITE && <Tag intent={Intent.PRIMARY}>{sloType}</Tag>}
           </Text>
           <Text
@@ -374,6 +379,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
             color={Color.PRIMARY_7}
             lineClamp={1}
             title={serviceName}
+            data-testid="MonitoredService"
             font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
           >
             {serviceName}
@@ -410,6 +416,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
       <Text
         lineClamp={1}
         title={`${noOfActiveAlerts}`}
+        data-testid="alerts"
         font={{ align: 'left', size: 'normal', weight: 'light' }}
         color={Color.GREY_900}
       >
@@ -427,6 +434,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
         title={`${defaultTo(Number(burnRate), 0).toFixed(2)}%`}
         font={{ align: 'left', size: 'normal', weight: 'light' }}
         color={Color.GREY_900}
+        data-testid="BurnRate"
       >
         {defaultTo(Number(burnRate), 0).toFixed(2)}%
       </Text>
@@ -442,6 +450,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
         title={userJourneyName}
         font={{ align: 'left', size: 'normal', weight: 'light' }}
         color={Color.GREY_900}
+        data-testid="UserJourney"
       >
         {userJourneyName}
       </Text>
@@ -469,6 +478,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
         title={evaluationType}
         font={{ align: 'left', size: 'normal', weight: 'light' }}
         color={Color.GREY_900}
+        data-testid="EvaluationType"
       >
         {evaluationLabel}
       </Text>
@@ -483,6 +493,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
         title={` ${Number((Number(slo?.sloTargetPercentage) || 0).toFixed(2))}%`}
         font={{ align: 'left', size: 'normal', weight: 'light' }}
         color={Color.GREY_900}
+        data-testid="Target"
       >
         {` ${Number((Number(slo?.sloTargetPercentage) || 0).toFixed(2))}%`}
       </Text>
@@ -502,6 +513,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
         font={{ align: 'left' }}
         iconProps={{ color: getRiskColorValue(errorBudgetRisk, false), margin: { right: 'xxsmall' }, size: 14 }}
         icon={riskCategory}
+        data-testid="SLOStatus"
       >
         {errorBudgetRisk}
       </Text>
@@ -520,6 +532,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
           font={{ align: 'left', size: 'normal', weight: 'light' }}
           padding={{ right: 'small' }}
           color={Color.GREY_900}
+          data-testid="ErrorBudgetRemainingPercentage"
         >
           {isRequest ? getString('na') : ` ${Number(errorBudgetRemainingPercentage || 0).toFixed(2)}%`}
         </Text>
@@ -531,6 +544,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
               title={`${errorBudgetRemaining} m`}
               color={Color.GREY_700}
               className={css.errorBudgetRemaining}
+              data-testid="ErrorBudgetRemainingMins"
             >
               {`${errorBudgetRemaining} m`}
             </Text>
