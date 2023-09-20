@@ -3122,7 +3122,6 @@ export interface StringsMap {
   'platform.defaultSettings.enableMsteams': string
   'platform.defaultSettings.enablePagerduty': string
   'platform.defaultSettings.enablePipelineExecutionAuditEvents': string
-  'platform.defaultSettings.enableServiceOverrideV2': string
   'platform.defaultSettings.enableSlack': string
   'platform.defaultSettings.enableWebhook': string
   'platform.defaultSettings.enforceGitExperience': string

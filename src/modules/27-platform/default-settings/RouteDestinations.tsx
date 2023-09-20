@@ -59,7 +59,6 @@ DefaultSettingsFactory.registerCategory('CD', {
   modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto', 'ssca'],
   settingsAndGroupDisplayOrder: [
     SettingType.EMAIL_TO_NON_HARNESS_USERS,
-    SettingType.ENABLE_SERVICE_OVERRIDE_V2,
     SettingType.PROJECT_SCOPED_RESOURCE_CONSTRAINT_QUEUE
   ]
 })
@@ -229,12 +228,6 @@ DefaultSettingsFactory.registerGroupHandler(SettingGroups.PERSPECTIVES_PREFERENC
 
 DefaultSettingsFactory.registerSettingHandler(SettingType.EMAIL_TO_NON_HARNESS_USERS, {
   label: 'platform.defaultSettings.emailToNonHarnessUsers',
-  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
-  settingCategory: 'CD'
-})
-
-DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_SERVICE_OVERRIDE_V2, {
-  label: 'platform.defaultSettings.enableServiceOverrideV2',
   settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
   settingCategory: 'CD'
 })
