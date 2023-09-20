@@ -18,9 +18,9 @@ import routes from '@common/RouteDefinitions'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { SettingType } from '@common/constants/Utils'
-import AidaDashboardContent from '@dashboards/components/AidaDashboardContent'
-import AidaDrawer from '@dashboards/components/AidaDrawer'
-import AidaToolTip from '@dashboards/components/AidaToolTip'
+import AidaDashboardContent from '@dashboards/components/AidaDashboardContent/AidaDashboardContent'
+import AidaDrawer from '@dashboards/components/AidaDrawer/AidaDrawer'
+import AidaToolTip from '@dashboards/components/AidaToolTip/AidaToolTip'
 import { DashboardMode } from '@dashboards/types/DashboardTypes.types'
 import { useStrings } from 'framework/strings'
 import { GetStarted } from './home/GetStarted'
@@ -77,7 +77,7 @@ const DashboardsHeader: React.FC = () => {
       icon="harness-copilot"
       onClick={() => setAidaDrawerOpen(true)}
       variation={ButtonVariation.AI}
-      text="Create a widget using AIDA"
+      text={getString('dashboards.aida.createWidget')}
       tooltip={<AidaToolTip hideToolTip={() => setAidaToolTipOpen(false)} />}
       tooltipProps={{
         isOpen: isAidaToolTipOpen,
@@ -122,7 +122,7 @@ const DashboardsHeader: React.FC = () => {
               </NavLink>
             </>
           )}
-          <AidaDrawer isOpen={isAidaDrawerOpen} setIsOpen={setAidaDrawerOpen}>
+          <AidaDrawer isOpen={isAidaDrawerOpen} onClose={() => setAidaDrawerOpen(false)}>
             <AidaDashboardContent />
           </AidaDrawer>
         </Layout.Horizontal>

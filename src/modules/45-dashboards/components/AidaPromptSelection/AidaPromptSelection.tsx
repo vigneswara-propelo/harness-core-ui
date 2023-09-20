@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Text } from '@harness/uicore'
+import { Container, Tag, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { PromptOption, Prompt } from '@dashboards/types/AidaTypes.types'
 import css from './AidaPromptSelection.module.scss'
@@ -37,15 +37,14 @@ const AidaPromptSelection: React.FC<AidaPromptSelectionProps> = ({ onPromptSelec
           )}
           <Container key={`prompt-options-${i}`} className={css.promptOptionsContainer}>
             {prompt.options.map((promptOption, j) => (
-              <Container
-                data-testid={`prompt-option-${i}-${j}`}
-                key={`prompt-option-${i}-${j}`}
-                className={css.promptOption}
-                onClick={() => onPromptSelected(promptOption)}
-              >
-                <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_400} lineClamp={1}>
-                  {promptOption.content}
-                </Text>
+              <Container key={`prompt-option-${i}-${j}`}>
+                <Tag
+                  className={css.promptOption}
+                  data-testid={`prompt-option-${i}-${j}`}
+                  onClick={() => onPromptSelected(promptOption)}
+                >
+                  <div className={css.promptContent}>{promptOption.content}</div>
+                </Tag>
               </Container>
             ))}
           </Container>

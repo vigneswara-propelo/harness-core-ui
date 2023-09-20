@@ -42,6 +42,7 @@ export function DashboardsContextProvider(props: React.PropsWithChildren<unknown
 
   const updateAiTileDetails = React.useCallback((updatedDetails: AiAddTileRequestBody): void => {
     setAiTileDetails(updatedDetails)
+    setMode(DashboardMode.VIEW)
   }, [])
 
   const { data: folderResponse } = useSearchFolders({

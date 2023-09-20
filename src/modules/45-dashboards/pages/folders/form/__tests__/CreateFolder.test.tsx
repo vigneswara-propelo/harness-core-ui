@@ -36,16 +36,12 @@ const createFolderResponse: customDashboardServices.CreateFolderResponse = {
 }
 
 const createUser = function (): Promise<customDashboardServices.CreateFolderResponse> {
-  return new Promise(resolve => {
-    resolve(createFolderResponse)
-  })
+  return Promise.resolve(createFolderResponse)
 }
 
 describe('CreateFolder', () => {
   beforeEach(() => {
-    jest
-      .spyOn(customDashboardServices, 'useDeprecatedCreateFolder')
-      .mockImplementation(() => ({ mutate: createUser } as any))
+    jest.spyOn(customDashboardServices, 'useDeprecatedCreateFolder').mockReturnValue({ mutate: createUser } as any)
   })
   afterEach(() => {
     jest.spyOn(customDashboardServices, 'useDeprecatedCreateFolder').mockReset()
@@ -72,13 +68,9 @@ describe('CreateFolder', () => {
 
   test('it should display error message in form if request fails', async () => {
     const createUserFail = function (): Promise<customDashboardServices.CreateFolderResponse> {
-      return new Promise((_resolve, reject) => {
-        reject()
-      })
+      return Promise.reject()
     }
-    jest
-      .spyOn(customDashboardServices, 'useDeprecatedCreateFolder')
-      .mockImplementation(() => ({ mutate: createUserFail } as any))
+    jest.spyOn(customDashboardServices, 'useDeprecatedCreateFolder').mockReturnValue({ mutate: createUserFail } as any)
 
     const onFormCompletedMock = jest.fn()
     const { container } = renderComponent({ onFormCompleted: onFormCompletedMock })
@@ -98,6 +90,6 @@ describe('CreateFolder', () => {
     await waitFor(() =>
       expect(screen.getByText(result.current.getString('dashboards.createFolder.folderSubmitFail'))).toBeInTheDocument()
     )
-    expect(onFormCompletedMock).toHaveBeenCalledTimes(0)
+    expect(onFormCompletedMock).not.toHaveBeenCalled()
   })
 })

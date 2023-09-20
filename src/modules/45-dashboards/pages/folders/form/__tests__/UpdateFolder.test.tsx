@@ -51,14 +51,12 @@ const updateFolderResponse: customDashboardServices.PatchFolderResponse = {
 }
 
 const updateUser = function (): Promise<customDashboardServices.PatchFolderResponse> {
-  return new Promise(resolve => {
-    resolve(updateFolderResponse)
-  })
+  return Promise.resolve(updateFolderResponse)
 }
 
 describe('UpdateFolder', () => {
   beforeEach(() => {
-    jest.spyOn(customDashboardServices, 'usePatchFolder').mockImplementation(() => ({ mutate: updateUser } as any))
+    jest.spyOn(customDashboardServices, 'usePatchFolder').mockReturnValue({ mutate: updateUser } as any)
   })
   afterEach(() => {
     jest.spyOn(customDashboardServices, 'usePatchFolder').mockReset()
@@ -85,11 +83,9 @@ describe('UpdateFolder', () => {
 
   test('it should display error message in form if request fails', async () => {
     const updateUserFail = function (): Promise<customDashboardServices.PatchFolderResponse> {
-      return new Promise((_resolve, reject) => {
-        reject()
-      })
+      return Promise.reject()
     }
-    jest.spyOn(customDashboardServices, 'usePatchFolder').mockImplementation(() => ({ mutate: updateUserFail } as any))
+    jest.spyOn(customDashboardServices, 'usePatchFolder').mockReturnValue({ mutate: updateUserFail } as any)
 
     const onFormCompletedMock = jest.fn()
     const { container } = renderComponent({ ...defaultProps, onFormCompleted: onFormCompletedMock })
@@ -109,6 +105,6 @@ describe('UpdateFolder', () => {
     await waitFor(() =>
       expect(screen.getByText(result.current.getString('dashboards.updateFolder.folderUpdateFail'))).toBeInTheDocument()
     )
-    expect(onFormCompletedMock).toHaveBeenCalledTimes(0)
+    expect(onFormCompletedMock).not.toHaveBeenCalled()
   })
 })

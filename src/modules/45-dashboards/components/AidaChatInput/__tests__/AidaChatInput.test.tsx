@@ -1,7 +1,8 @@
 import React from 'react'
 import { act, fireEvent, render, RenderResult, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import AidaChatInput from '..'
+import AidaChatInput from '../AidaChatInput'
 
 const renderComponent = (onEnter: (value: string) => void = jest.fn()): RenderResult =>
   render(
@@ -14,7 +15,7 @@ describe('AidaChatInput', () => {
   test('it should display placeholder text in input', async () => {
     const { container } = renderComponent()
     expect(screen.getByPlaceholderText('common.csBot.askAIDA')).toBeInTheDocument()
-    expect(container.querySelector('svg')?.getAttribute('data-icon')).toEqual('arrow-right')
+    expect(container.querySelector('svg')).toHaveAttribute('data-icon', 'arrow-right')
   })
 
   test('it should allow text entry within input', async () => {
@@ -29,7 +30,7 @@ describe('AidaChatInput', () => {
       })
     })
 
-    expect(input.value).toBe(mockText)
+    expect(input).toHaveValue(mockText)
   })
 
   test('it should trigger onEnter callback when enter pressed with text in input', async () => {
@@ -40,15 +41,15 @@ describe('AidaChatInput', () => {
     const input = screen.getByPlaceholderText('common.csBot.askAIDA') as HTMLInputElement
     const mockText = 'dummy text'
 
-    fireEvent.keyPress(input, { key: 'Enter', charCode: 13 })
-    expect(onEnterMock).toHaveBeenCalledTimes(0)
+    await userEvent.click(input)
+    await userEvent.keyboard('{Enter}')
 
-    await act(async () => {
-      fireEvent.change(input, {
-        target: { value: mockText }
-      })
-    })
-    fireEvent.keyPress(input, { key: 'Enter', charCode: 13 })
+    expect(onEnterMock).not.toHaveBeenCalled()
+
+    await userEvent.type(input, mockText)
+    expect(input).toHaveValue(mockText)
+
+    await userEvent.keyboard('{Enter}')
     expect(onEnterMock).toHaveBeenCalledTimes(1)
   })
 })

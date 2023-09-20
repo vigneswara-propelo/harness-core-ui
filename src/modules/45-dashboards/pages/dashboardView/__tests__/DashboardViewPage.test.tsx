@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { waitFor, render, RenderResult, screen } from '@testing-library/react'
+import { render, RenderResult, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as customDashboardServices from 'services/custom-dashboards'
 import * as useLicenseStore from 'framework/LicenseStore/LicenseStoreContext'
@@ -37,9 +37,7 @@ const renderComponent = ({ children }: React.PropsWithChildren<unknown> = {}): R
   )
 
 const generateMockSignedUrl = (mockUrl = ''): Promise<customDashboardServices.SignedUrlResponse> => {
-  return new Promise(resolve => {
-    resolve({ resource: mockUrl })
-  })
+  return Promise.resolve({ resource: mockUrl })
 }
 
 const aidaMock = {
@@ -66,8 +64,8 @@ describe('DashboardsPage', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    jest.spyOn(customDashboardServices, 'useSearchFolders').mockImplementation(() => ({ data: {} } as any))
-    jest.spyOn(customDashboardServices, 'useGetModelTags').mockImplementation(() => ({ data: { resource: [] } } as any))
+    jest.spyOn(customDashboardServices, 'useSearchFolders').mockReturnValue({ data: {} } as any)
+    jest.spyOn(customDashboardServices, 'useGetModelTags').mockReturnValue({ data: { resource: [] } } as any)
     useGetFolderDetailMock.mockReturnValue({ data: { resource: 'folder name' }, refetch: fetchFolderDetailMock } as any)
     useGetDashboardDetailMock.mockReturnValue({ resource: true, title: 'dashboard name' } as any)
     useCreateSignedUrlMock.mockReturnValue({
@@ -101,6 +99,6 @@ describe('DashboardsPage', () => {
 
     expect(screen.queryByText('dashboards.upgrade')).not.toBeInTheDocument()
 
-    await waitFor(() => expect(screen.getByText('common.loading')).toBeInTheDocument())
+    expect(await screen.findByText('common.loading')).toBeInTheDocument()
   })
 })

@@ -127,8 +127,8 @@ describe('DashboardList', () => {
     await openContextMenu()
 
     expect(screen.getByText(cloneText)).toBeInTheDocument()
-    expect(screen.queryByText(editText)).toBeNull()
-    expect(screen.queryByText(deleteText)).toBeNull()
+    expect(screen.queryByText(editText)).not.toBeInTheDocument()
+    expect(screen.queryByText(deleteText)).not.toBeInTheDocument()
   })
 
   test('it should allow for opening of editable context menu on account dashboard data', async () => {

@@ -90,8 +90,8 @@ describe('Dashboards', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    jest.spyOn(customDashboardServices, 'useSearchFolders').mockImplementation(() => ({ data: {} } as any))
-    jest.spyOn(customDashboardServices, 'useGetModelTags').mockImplementation(() => ({ data: { resource: [] } } as any))
+    jest.spyOn(customDashboardServices, 'useSearchFolders').mockReturnValue({ data: {} } as any)
+    jest.spyOn(customDashboardServices, 'useGetModelTags').mockReturnValue({ data: { resource: [] } } as any)
     useSearchFoldersMock.mockReturnValue({ data: mockEmptyGetFolderResponse, error: null, loading: false } as any)
   })
 
@@ -110,7 +110,7 @@ describe('Dashboards', () => {
     const { container } = renderComponent(testProps)
 
     const noDashboardsText: StringKeys = 'dashboards.homePage.noDashboardsAvailable'
-    expect(screen.queryByText(noDashboardsText)).toBeNull()
+    expect(screen.queryByText(noDashboardsText)).not.toBeInTheDocument()
     expect(container.querySelector('.masonry')).toBeInTheDocument()
   })
 
@@ -126,14 +126,12 @@ describe('Dashboards', () => {
 
     const headerViewCount: StringKeys = 'dashboards.dashboardList.headerViewCount'
 
-    expect(screen.queryByText(noDashboardsText)).toBeNull()
+    expect(screen.queryByText(noDashboardsText)).not.toBeInTheDocument()
     expect(screen.getByText(headerViewCount)).toBeInTheDocument()
   })
 
   test('it should show edit dashboard form when editDashboard callback triggered', async () => {
-    jest
-      .spyOn(customDashboardServices, 'useSearchFolders')
-      .mockImplementation(() => ({ data: mockGetFolderResponse } as any))
+    jest.spyOn(customDashboardServices, 'useSearchFolders').mockReturnValue({ data: mockGetFolderResponse } as any)
 
     const testDashboard: DashboardModel = {
       ...defaultTestDashboard,
@@ -160,9 +158,7 @@ describe('Dashboards', () => {
   })
 
   test('it should trigger delete callback when deleteDashboard triggered', () => {
-    jest
-      .spyOn(customDashboardServices, 'useSearchFolders')
-      .mockImplementation(() => ({ data: mockGetFolderResponse } as any))
+    jest.spyOn(customDashboardServices, 'useSearchFolders').mockReturnValue({ data: mockGetFolderResponse } as any)
 
     const mockCallback = jest.fn()
     const testDashboard: DashboardModel = {
@@ -190,9 +186,7 @@ describe('Dashboards', () => {
   })
 
   test('it should trigger clone callback when cloneDashboard triggered', async () => {
-    jest
-      .spyOn(customDashboardServices, 'useSearchFolders')
-      .mockImplementation(() => ({ data: mockGetFolderResponse } as any))
+    jest.spyOn(customDashboardServices, 'useSearchFolders').mockReturnValue({ data: mockGetFolderResponse } as any)
     const testDashboard: DashboardModel = {
       ...defaultTestDashboard,
       type: DashboardType.ACCOUNT

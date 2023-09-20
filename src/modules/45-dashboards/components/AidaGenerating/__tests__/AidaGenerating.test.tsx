@@ -5,7 +5,7 @@ import { useDashboardsContext } from '@dashboards/pages/DashboardsContext'
 import { Message, MessageType, VisualizationType } from '@dashboards/types/AidaTypes.types'
 import * as sharedService from 'services/custom-dashboards'
 
-import AidaGenerating from '..'
+import AidaGenerating from '../AidaGenerating'
 
 const renderComponent = (messages: Message[]): RenderResult =>
   render(
@@ -17,9 +17,7 @@ const renderComponent = (messages: Message[]): RenderResult =>
 const generateMockAiTile = (
   mockDashboard: sharedService.DashboardModel
 ): Promise<sharedService.GetDashboardResponse> => {
-  return new Promise(resolve => {
-    resolve({ resource: mockDashboard })
-  })
+  return Promise.resolve({ resource: mockDashboard })
 }
 
 jest.mock('@dashboards/pages/DashboardsContext', () => ({
@@ -78,6 +76,6 @@ describe('AidaGenerating', () => {
       visualization_type,
       query
     }
-    expect(updateAiTileDetailsMock.mock.calls[0][0]).toStrictEqual(expectedBody)
+    expect(updateAiTileDetailsMock).toHaveBeenCalledWith(expectedBody)
   })
 })

@@ -39,9 +39,7 @@ jest.mock('@dashboards/pages/DashboardsContext', () => ({
 const useDashboardsContextMock = useDashboardsContext as jest.Mock
 
 const generateMockSignedUrl = (mockUrl = ''): Promise<sharedService.SignedUrlResponse> => {
-  return new Promise(resolve => {
-    resolve({ resource: mockUrl })
-  })
+  return Promise.resolve({ resource: mockUrl })
 }
 
 describe('DashboardView', () => {

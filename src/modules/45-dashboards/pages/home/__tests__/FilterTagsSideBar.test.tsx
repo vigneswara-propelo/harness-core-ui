@@ -80,8 +80,7 @@ describe('FilterTagsSideBar', () => {
     await userEvent.click(tagButton)
 
     await waitFor(() => expect(setFilteredTagsMock).toHaveBeenCalled())
-    const clickedTag = setFilteredTagsMock.mock.calls[0][0]
-    expect(clickedTag).toEqual('one')
+    expect(setFilteredTagsMock).toHaveBeenCalledWith('one')
   })
 
   test('it should not add duplicate tags when clicked', async () => {
@@ -95,7 +94,6 @@ describe('FilterTagsSideBar', () => {
     await userEvent.click(tagButton)
 
     await waitFor(() => expect(setFilteredTagsMock).toHaveBeenCalled())
-    const clickedTag = setFilteredTagsMock.mock.calls[0][0]
-    expect(clickedTag).toEqual('two')
+    expect(setFilteredTagsMock).toHaveBeenCalledWith('two')
   })
 })

@@ -28,8 +28,8 @@ const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactEle
 describe('DashboardsContext', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    jest.spyOn(customDashboardServices, 'useSearchFolders').mockImplementation(() => ({ data: null } as any))
-    jest.spyOn(customDashboardServices, 'useGetModelTags').mockImplementation(() => ({ data: null } as any))
+    jest.spyOn(customDashboardServices, 'useSearchFolders').mockReturnValue({ data: null } as any)
+    jest.spyOn(customDashboardServices, 'useGetModelTags').mockReturnValue({ data: null } as any)
   })
   test('it should provide no default breadcrumbs', async () => {
     const { result } = renderHook(() => useDashboardsContext(), { wrapper })
@@ -64,9 +64,7 @@ describe('DashboardsContext', () => {
       pages: 1
     }
 
-    jest
-      .spyOn(customDashboardServices, 'useSearchFolders')
-      .mockImplementation(() => ({ data: mockGetFolderResponse } as any))
+    jest.spyOn(customDashboardServices, 'useSearchFolders').mockReturnValue({ data: mockGetFolderResponse } as any)
 
     const { result } = renderHook(() => useDashboardsContext(), { wrapper })
     expect(result.current.editableFolders).toEqual([mockFolderOne])

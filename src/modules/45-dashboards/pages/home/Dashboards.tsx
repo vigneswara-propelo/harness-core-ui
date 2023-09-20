@@ -41,7 +41,7 @@ const Dashboards: React.FC<DashboardsProps> = ({
 
   const [showCloneModal, hideCloneModal] = useModalHook(
     () => (
-      <Dialog isOpen={true} enforceFocus={false} onClose={hideCloneModal} className={cx(css.dashboardDialog)}>
+      <Dialog isOpen enforceFocus={false} onClose={hideCloneModal} className={cx(css.dashboardDialog)}>
         <CloneDashboardForm
           editableFolders={editableFolders}
           formData={selectedDashboard}
@@ -55,7 +55,7 @@ const Dashboards: React.FC<DashboardsProps> = ({
 
   const [showEditModal, hideEditModal] = useModalHook(
     () => (
-      <Dialog isOpen={true} enforceFocus={false} onClose={hideEditModal} className={cx(css.dashboardDialog)}>
+      <Dialog isOpen enforceFocus={false} onClose={hideEditModal} className={cx(css.dashboardDialog)}>
         <UpdateDashboardForm
           editableFolders={editableFolders}
           formData={selectedDashboard}

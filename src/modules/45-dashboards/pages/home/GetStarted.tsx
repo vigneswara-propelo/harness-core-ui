@@ -26,12 +26,12 @@ export const GetStarted: React.FC<DrawerProps> = props => {
 
   return (
     <Drawer
-      autoFocus={true}
-      enforceFocus={true}
-      hasBackdrop={true}
-      usePortal={true}
-      canOutsideClickClose={true}
-      canEscapeKeyClose={true}
+      autoFocus
+      enforceFocus
+      hasBackdrop
+      usePortal
+      canOutsideClickClose
+      canEscapeKeyClose
       isOpen={props.isOpen}
       onClose={() => {
         props.setDrawerOpen(false)

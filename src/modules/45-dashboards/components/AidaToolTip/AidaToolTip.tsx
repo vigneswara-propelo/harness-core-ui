@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Icon, Layout, Text } from '@harness/uicore'
+import { Button, ButtonSize, ButtonVariation, Container, Icon, Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import css from './AidaToolTip.module.scss'
@@ -21,12 +21,14 @@ const AidaToolTip: React.FC<AidaToolTipProps> = ({ hideToolTip }) => {
   return (
     <Container className={css.tooltipPadding}>
       <Container flex={{ justifyContent: 'flex-end' }}>
-        <Icon
-          name="cross"
-          size={20}
-          onClick={hideToolTip}
-          data-testid="dismiss-tooltip-button"
+        <Button
+          minimal
           className={css.closeBtn}
+          variation={ButtonVariation.ICON}
+          icon="cross"
+          data-testid="dismiss-tooltip-button"
+          size={ButtonSize.SMALL}
+          onClick={hideToolTip}
         />
       </Container>
       <Layout.Vertical spacing="small" className={css.tooltipContent}>

@@ -56,8 +56,8 @@ describe('DashboardsPage', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    jest.spyOn(customDashboardServices, 'useSearchFolders').mockImplementation(() => ({ data: {} } as any))
-    jest.spyOn(customDashboardServices, 'useGetModelTags').mockImplementation(() => ({ data: { resource: [] } } as any))
+    jest.spyOn(customDashboardServices, 'useSearchFolders').mockReturnValue({ data: {} } as any)
+    jest.spyOn(customDashboardServices, 'useGetModelTags').mockReturnValue({ data: { resource: [] } } as any)
   })
 
   test('it should display the banner when license edition is not enterprise', async () => {

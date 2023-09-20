@@ -182,7 +182,7 @@ const FoldersPage: React.FC = () => {
 
   const [showModal, hideModal] = useModalHook(
     () => (
-      <Dialog isOpen={true} enforceFocus={false} onClose={hideModal} className={cx(css.dashboardDialog, css.create)}>
+      <Dialog isOpen enforceFocus={false} onClose={hideModal} className={cx(css.dashboardDialog, css.create)}>
         <CreateFolder onFormCompleted={hideModal} />
       </Dialog>
     ),

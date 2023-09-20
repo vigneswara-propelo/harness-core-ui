@@ -1,9 +1,10 @@
 import React from 'react'
-import { act, fireEvent, render, RenderResult, screen } from '@testing-library/react'
+import { render, RenderResult, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useDashboardsContext } from '@dashboards/pages/DashboardsContext'
 import * as sharedService from 'services/custom-dashboards'
-import AidaDashboardContent from '..'
+import AidaDashboardContent from '../AidaDashboardContent'
 
 const renderComponent = (): RenderResult =>
   render(
@@ -19,9 +20,7 @@ jest.mock('@dashboards/pages/DashboardsContext', () => ({
 const generateMockAiTile = (
   mockDashboard: sharedService.DashboardModel
 ): Promise<sharedService.GetDashboardResponse> => {
-  return new Promise(resolve => {
-    resolve({ resource: mockDashboard })
-  })
+  return Promise.resolve({ resource: mockDashboard })
 }
 
 describe('AidaDashboardContent', () => {
@@ -51,30 +50,24 @@ describe('AidaDashboardContent', () => {
     // Explore stage
     const explorePromptButton = screen.getByTestId('prompt-option-0-0')
 
-    act(() => {
-      fireEvent.click(explorePromptButton)
-    })
+    await userEvent.click(explorePromptButton)
 
     // Visualizaton stage
     expect(screen.getByText('dashboards.aida.selectVisualisation')).toBeInTheDocument()
 
     const visPromptButton = screen.getByTestId('prompt-option-0-0')
 
-    act(() => {
-      fireEvent.click(visPromptButton)
-    })
+    await userEvent.click(visPromptButton)
 
     // Chat box stage
     const input = screen.getByPlaceholderText('common.csBot.askAIDA') as HTMLInputElement
     expect(input).toBeInTheDocument()
 
     const mockText = 'dummy text'
-    await act(async () => {
-      fireEvent.change(input, {
-        target: { value: mockText }
-      })
-    })
-    fireEvent.keyPress(input, { key: 'Enter', charCode: 13 })
+
+    await userEvent.type(input, mockText)
+    expect(input).toHaveValue(mockText)
+    await userEvent.keyboard('{Enter}')
 
     expect(screen.getByText('dashboards.aida.generating')).toBeInTheDocument()
   })

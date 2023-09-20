@@ -19,8 +19,8 @@ const AidaChatInput: React.FC<AidaChatInputProps> = ({ onEnter }) => {
   const [value, setValue] = useState('')
 
   const onHandleEnter = (newValue: string): void => {
-    if (newValue && newValue.length) {
-      onEnter(newValue)
+    if (newValue.trim().length) {
+      onEnter(newValue.trim())
       setValue('')
     }
   }
@@ -40,7 +40,7 @@ const AidaChatInput: React.FC<AidaChatInputProps> = ({ onEnter }) => {
       value={value}
       placeholder={getString('common.csBot.askAIDA')}
       wrapperClassName={css.inputContainer}
-      rightElement={'arrow-right'}
+      rightElement="arrow-right"
       rightElementProps={{ onClick: () => onHandleEnter(value), size: 24, style: { cursor: 'pointer' } }}
       onChange={onChange}
       onKeyPress={onKeyPress}

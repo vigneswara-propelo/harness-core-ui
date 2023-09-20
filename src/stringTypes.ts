@@ -3694,13 +3694,14 @@ export interface StringsMap {
   'gitsync.syncFailed': string
   'gitsync.syncStatus': string
   'gitsync.syncSucessToaster': string
+  'dashboards.aida.asA': string
   'dashboards.aida.assist': string
+  'dashboards.aida.createCustomWidgetFor': string
   'dashboards.aida.createWidget': string
   'dashboards.aida.generating': string
   'dashboards.aida.helpText': string
   'dashboards.aida.selectExplore': string
   'dashboards.aida.selectVisualisation': string
-  'dashboards.aida.specify': string
   'dashboards.aida.visualisationArenaChart': string
   'dashboards.aida.visualisationBarChart': string
   'dashboards.aida.visualisationLineChart': string

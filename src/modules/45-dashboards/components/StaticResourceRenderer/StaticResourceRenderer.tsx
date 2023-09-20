@@ -52,7 +52,7 @@ const StaticResourceRenderer = <T extends ResourceHandlerTableData>({
     [onResourceSelectionChange, columns, resourceType]
   )
 
-  return <Table<T> columns={staticResourceColumns} data={data} bpTableProps={{ bordered: false }} hideHeaders={true} />
+  return <Table<T> columns={staticResourceColumns} data={data} bpTableProps={{ bordered: false }} hideHeaders />
 }
 
 export default StaticResourceRenderer

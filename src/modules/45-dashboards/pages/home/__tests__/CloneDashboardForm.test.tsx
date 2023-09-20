@@ -37,7 +37,7 @@ describe('CloneDashboardForm', () => {
   beforeEach(() => {
     jest
       .spyOn(customDashboardServices, 'useSearchFolders')
-      .mockImplementation(() => ({ data: mockEmptyGetFolderResponse, loading: false } as any))
+      .mockReturnValue({ data: mockEmptyGetFolderResponse, loading: false } as any)
   })
   afterEach(() => {
     jest.spyOn(customDashboardServices, 'useCloneDashboard').mockReset()
@@ -62,7 +62,7 @@ describe('CloneDashboardForm', () => {
     const mockCallbackClone = jest.fn(() => Promise.resolve({ resource: { resourceIdentifier } }))
     jest
       .spyOn(customDashboardServices, 'useCloneDashboard')
-      .mockImplementation(() => ({ mutate: mockCallbackClone, loading: false } as any))
+      .mockReturnValue({ mutate: mockCallbackClone, loading: false } as any)
     const mockCallbackHide = jest.fn()
     const mockCallbackReload = jest.fn()
 
@@ -102,7 +102,7 @@ describe('CloneDashboardForm', () => {
     const mockCallbackClone = jest.fn(() => Promise.reject())
     jest
       .spyOn(customDashboardServices, 'useCloneDashboard')
-      .mockImplementation(() => ({ mutate: mockCallbackClone, loading: false } as any))
+      .mockReturnValue({ mutate: mockCallbackClone, loading: false } as any)
     const mockCallbackHide = jest.fn()
     const mockCallbackReload = jest.fn()
 
@@ -127,7 +127,7 @@ describe('CloneDashboardForm', () => {
     await waitFor(() => expect(screen.getByText(failToastText)).toBeInTheDocument())
 
     expect(mockCallbackClone).toHaveBeenCalledTimes(1)
-    expect(mockCallbackHide).toHaveBeenCalledTimes(0)
-    expect(mockCallbackReload).toHaveBeenCalledTimes(0)
+    expect(mockCallbackHide).not.toHaveBeenCalled()
+    expect(mockCallbackReload).not.toHaveBeenCalled()
   })
 })

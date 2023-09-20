@@ -1,7 +1,8 @@
 import React from 'react'
-import { act, fireEvent, render, RenderResult, screen } from '@testing-library/react'
+import { render, RenderResult, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import AidaToolTip from '..'
+import AidaToolTip from '../AidaToolTip'
 
 const renderComponent = (hideToolTip: () => void = jest.fn()): RenderResult =>
   render(
@@ -17,13 +18,12 @@ describe('AidaToolTip', () => {
     expect(screen.getByText('dashboards.aida.helpText')).toBeInTheDocument()
   })
 
-  test('it can trigger hideToolTip callback when close button clicked', () => {
+  test('it can trigger hideToolTip callback when close button clicked', async () => {
     const onHideMock = jest.fn()
     renderComponent(onHideMock)
     const closeButton = screen.getByTestId('dismiss-tooltip-button')
-    act(() => {
-      fireEvent.click(closeButton)
-    })
+
+    await userEvent.click(closeButton)
     expect(onHideMock).toHaveBeenCalled()
   })
 })

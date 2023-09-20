@@ -57,7 +57,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ accountId, folder, onTriggerFol
 
   const [showModal, hideModal] = useModalHook(
     () => (
-      <Dialog isOpen={true} enforceFocus={false} onClose={hideModal} className={cx(css.dashboardDialog, css.create)}>
+      <Dialog isOpen enforceFocus={false} onClose={hideModal} className={cx(css.dashboardDialog, css.create)}>
         <UpdateFolder onFormCompleted={onFormCompleted} folderData={folder} />
       </Dialog>
     ),

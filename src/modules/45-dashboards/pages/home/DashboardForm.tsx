@@ -111,7 +111,7 @@ const DashboardForm: React.FC<DashboardFormProps> = ({
               label={getString('name')}
               placeholder={getString('dashboards.createModal.namePlaceholder')}
             />
-            <FormInput.KVTagInput name="description" label={getString('tagsLabel')} isArray={true} />
+            <FormInput.KVTagInput name="description" label={getString('tagsLabel')} isArray />
             <Button
               className={css.button}
               disabled={loading}

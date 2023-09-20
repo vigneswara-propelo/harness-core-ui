@@ -102,8 +102,8 @@ describe('DashboardCard', () => {
     await openContextMenu(container)
 
     expect(screen.getByText(cloneText)).toBeInTheDocument()
-    expect(screen.queryByText(editText)).toBeNull()
-    expect(screen.queryByText(deleteText)).toBeNull()
+    expect(screen.queryByText(editText)).not.toBeInTheDocument()
+    expect(screen.queryByText(deleteText)).not.toBeInTheDocument()
   })
 
   test('it should show editable dashboard card for an account dashboard', async () => {

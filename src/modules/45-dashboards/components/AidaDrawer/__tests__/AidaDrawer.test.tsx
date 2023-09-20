@@ -1,36 +1,40 @@
 import React from 'react'
-import { act, fireEvent, render, RenderResult, screen } from '@testing-library/react'
+import { render, RenderResult, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import AidaDrawer, { AidaDrawerProps } from '..'
+import AidaDrawer, { AidaDrawerProps } from '../AidaDrawer'
 
-const renderComponent = (props: AidaDrawerProps): RenderResult =>
+const testContentText = 'Test Content'
+const testComponent = <div>{testContentText}</div>
+
+const renderComponent = (props: Partial<AidaDrawerProps> = {}): RenderResult =>
   render(
     <TestWrapper>
-      <AidaDrawer {...props} />
+      <AidaDrawer isOpen onClose={jest.fn()} {...props}>
+        {testComponent}
+      </AidaDrawer>
     </TestWrapper>
   )
 
 describe('AidaDrawer', () => {
-  const testContentText = 'Test Content'
-  const testComponent = <div>{testContentText}</div>
-
   test('it should not display content within drawer when closed', async () => {
-    renderComponent({ children: testComponent, isOpen: false, setIsOpen: jest.fn() })
+    renderComponent({ isOpen: false })
 
-    expect(screen.queryByText('dashboards.aida.assist')).toBeNull()
-    expect(screen.queryByText(testContentText)).toBeNull()
+    expect(screen.queryByText('dashboards.aida.assist')).not.toBeInTheDocument()
+    expect(screen.queryByText(testContentText)).not.toBeInTheDocument()
   })
 
   test('it should display content within drawer when opened', async () => {
-    const props: AidaDrawerProps = { children: testComponent, isOpen: false, setIsOpen: jest.fn() }
-    const { rerender } = renderComponent(props)
+    const { rerender } = renderComponent({ isOpen: false })
 
-    expect(screen.queryByText('dashboards.aida.assist')).toBeNull()
-    expect(screen.queryByText(testContentText)).toBeNull()
+    expect(screen.queryByText('dashboards.aida.assist')).not.toBeInTheDocument()
+    expect(screen.queryByText(testContentText)).not.toBeInTheDocument()
 
     rerender(
       <TestWrapper>
-        <AidaDrawer {...props} isOpen />
+        <AidaDrawer isOpen onClose={jest.fn()}>
+          {testComponent}
+        </AidaDrawer>
       </TestWrapper>
     )
 
@@ -40,15 +44,13 @@ describe('AidaDrawer', () => {
 
   test('it triggers the drawerOpen callback when close is clicked', async () => {
     const mockDrawerToggle = jest.fn()
-    const props: AidaDrawerProps = { children: testComponent, isOpen: true, setIsOpen: mockDrawerToggle }
+    const props: AidaDrawerProps = { children: testComponent, isOpen: true, onClose: mockDrawerToggle }
     renderComponent(props)
 
     const closeButton = screen.getByTestId('close-drawer-button')
     expect(closeButton).toBeInTheDocument()
 
-    act(() => {
-      fireEvent.click(closeButton)
-    })
+    await userEvent.click(closeButton)
     expect(mockDrawerToggle).toHaveBeenCalled()
   })
 })

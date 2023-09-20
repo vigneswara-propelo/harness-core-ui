@@ -1,8 +1,9 @@
 import React from 'react'
-import { act, fireEvent, render, RenderResult, screen } from '@testing-library/react'
+import { render, RenderResult, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { Prompt } from '@dashboards/types/AidaTypes.types'
-import AidaPromptSelection, { AidaPromptSelectionProps } from '..'
+import AidaPromptSelection, { AidaPromptSelectionProps } from '../AidaPromptSelection'
 
 const renderComponent = (props: AidaPromptSelectionProps): RenderResult =>
   render(
@@ -35,7 +36,7 @@ describe('AidaPromptSelection', () => {
     renderComponent({ prompts: [prompt], onPromptSelected: jest.fn(), title })
 
     expect(screen.getByText(promptContent1)).toBeInTheDocument()
-    expect(screen.queryByTestId('prompt-title-0')).toBeNull()
+    expect(screen.queryByTestId('prompt-title-0')).not.toBeInTheDocument()
   })
 
   test('it should display prompt with sub-title', async () => {
@@ -61,9 +62,7 @@ describe('AidaPromptSelection', () => {
     expect(screen.getByText(promptContent1)).toBeInTheDocument()
     const promptButton = screen.getByTestId('prompt-option-0-0')
 
-    act(() => {
-      fireEvent.click(promptButton)
-    })
+    await userEvent.click(promptButton)
     expect(mockPromptSelect).toHaveBeenCalled()
   })
 
@@ -92,9 +91,8 @@ describe('AidaPromptSelection', () => {
 
     const promptButton = screen.getByTestId('prompt-option-2-0')
     expect(promptButton).toBeInTheDocument()
-    act(() => {
-      fireEvent.click(promptButton)
-    })
-    expect(mockPromptSelect.mock.calls[0][0]).toBe(prompt3.options[0])
+
+    await userEvent.click(promptButton)
+    expect(mockPromptSelect).toHaveBeenCalledWith(prompt3.options[0])
   })
 })

@@ -16,10 +16,10 @@ import {
   MessageType,
   PromptOption
 } from '@dashboards/types/AidaTypes.types'
-import AidaChatInput from '../AidaChatInput'
-import AidaChatRenderer from '../AidaChatRenderer'
-import AidaGenerating from '../AidaGenerating'
-import AidaPromptSelection from '../AidaPromptSelection'
+import AidaChatInput from '../AidaChatInput/AidaChatInput'
+import AidaChatRenderer from '../AidaChatRenderer/AidaChatRenderer'
+import AidaGenerating from '../AidaGenerating/AidaGenerating'
+import AidaPromptSelection from '../AidaPromptSelection/AidaPromptSelection'
 import css from './AidaDashboardContent.module.scss'
 
 const AidaDashboardContent: React.FC = () => {
@@ -30,7 +30,10 @@ const AidaDashboardContent: React.FC = () => {
 
   const onPromptSelected = React.useCallback(
     (promptOption: PromptOption): void => {
-      const baseContent = stage === DashboardPromptStage.Explore ? 'Create a custom widget for' : 'As a'
+      const baseContent =
+        stage === DashboardPromptStage.Explore
+          ? getString('dashboards.aida.createCustomWidgetFor')
+          : getString('dashboards.aida.asA')
       const newMessages: Message[] = [
         ...messages,
         {
@@ -43,7 +46,7 @@ const AidaDashboardContent: React.FC = () => {
       setMessages(newMessages)
       setStage(stage + 1)
     },
-    [messages, stage]
+    [getString, messages, stage]
   )
 
   const onUserInputEntered = React.useCallback(

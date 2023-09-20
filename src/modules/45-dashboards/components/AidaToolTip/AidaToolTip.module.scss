@@ -1,9 +1,5 @@
 .closeBtn {
-  color: var(--grey-700) !important;
-  &:hover {
-    cursor: pointer;
-    color: var(--grey-700) !important;
-  }
+  --text-color: var(--ai-purple-600) !important;
 }
 
 .label {

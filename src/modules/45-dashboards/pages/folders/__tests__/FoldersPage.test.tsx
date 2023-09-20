@@ -50,11 +50,9 @@ describe('FoldersPage', () => {
   beforeEach(() => {
     jest
       .spyOn(customDashboardServices, 'useSearchFolders')
-      .mockImplementation(() => ({ data: mockEmptyGetFolderResponse, loading: false } as any))
-    jest
-      .spyOn(customDashboardServices, 'useDeprecatedCreateFolder')
-      .mockImplementation(() => ({ mutate: jest.fn() } as any))
-    jest.spyOn(customDashboardServices, 'useGetModelTags').mockImplementation(() => ({ data: { resource: [] } } as any))
+      .mockReturnValue({ data: mockEmptyGetFolderResponse, loading: false } as any)
+    jest.spyOn(customDashboardServices, 'useDeprecatedCreateFolder').mockReturnValue({ mutate: jest.fn() } as any)
+    jest.spyOn(customDashboardServices, 'useGetModelTags').mockReturnValue({ data: { resource: [] } } as any)
   })
   afterEach(() => {
     jest.spyOn(customDashboardServices, 'useSearchFolders').mockReset()
@@ -76,7 +74,7 @@ describe('FoldersPage', () => {
     }
     jest
       .spyOn(customDashboardServices, 'useSearchFolders')
-      .mockImplementation(() => ({ data: mockGetFolderResponse, loading: false } as any))
+      .mockReturnValue({ data: mockGetFolderResponse, loading: false } as any)
     const { container } = renderComponent()
 
     await waitFor(() => expect(container.querySelector('.folderMasonry')).toBeInTheDocument())
@@ -107,7 +105,7 @@ describe('FoldersPage', () => {
     }
     jest
       .spyOn(customDashboardServices, 'useSearchFolders')
-      .mockImplementation(() => ({ data: mockGetFolderResponse, loading: false } as any))
+      .mockReturnValue({ data: mockGetFolderResponse, loading: false } as any)
     renderComponent()
 
     const button = screen.getByLabelText('dashboards.switchToListView')
@@ -126,7 +124,7 @@ describe('FoldersPage', () => {
     }
     jest
       .spyOn(customDashboardServices, 'useSearchFolders')
-      .mockImplementation(() => ({ data: mockGetFolderResponse, loading: false } as any))
+      .mockReturnValue({ data: mockGetFolderResponse, loading: false } as any)
     const { container } = renderComponent()
 
     const button = screen.getByLabelText('dashboards.switchToGridView')
@@ -145,7 +143,7 @@ describe('FoldersPage', () => {
     }
     jest
       .spyOn(customDashboardServices, 'useSearchFolders')
-      .mockImplementation(() => ({ data: mockGetFolderResponse, loading: false } as any))
+      .mockReturnValue({ data: mockGetFolderResponse, loading: false } as any)
     renderComponent()
     const createButton = screen.getByLabelText('dashboards.switchToListView')
     act(() => {

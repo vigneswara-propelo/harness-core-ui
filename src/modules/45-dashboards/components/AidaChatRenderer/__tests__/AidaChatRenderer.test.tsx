@@ -2,7 +2,7 @@ import React from 'react'
 import { render, RenderResult, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { Message } from '@dashboards/types/AidaTypes.types'
-import AidaChatRenderer from '..'
+import AidaChatRenderer from '../AidaChatRenderer'
 
 const renderComponent = (messages: Message[]): RenderResult =>
   render(
@@ -15,7 +15,7 @@ describe('AidaChatRenderer', () => {
   test('it should display blank screen with no messages', async () => {
     renderComponent([])
 
-    expect(screen.queryByTestId('aida-message-0')).toBeNull()
+    expect(screen.queryByTestId('aida-message-0')).not.toBeInTheDocument()
   })
 
   test('it should display message on screen', async () => {
@@ -42,25 +42,7 @@ describe('AidaChatRenderer', () => {
     expect(screen.getByText(testText2)).toBeInTheDocument()
 
     const mockMessage3: Message = { content: testText3 }
-    const mockMessage4: Message = { content: 'testing' }
-    const mockMessage5: Message = { content: 'testing' }
-    const mockMessage6: Message = { content: 'testing' }
-    const mockMessage7: Message = { content: 'testing' }
-    const mockMessage8: Message = { content: 'testing' }
-    const mockMessage9: Message = { content: 'testing' }
-    const mockMessage10: Message = { content: 'testing' }
-    const mockMessage11: Message = { content: 'testing' }
-    messages.push(
-      mockMessage3,
-      mockMessage4,
-      mockMessage5,
-      mockMessage6,
-      mockMessage7,
-      mockMessage8,
-      mockMessage9,
-      mockMessage10,
-      mockMessage11
-    )
+    messages.push(mockMessage3)
     rerender(
       <TestWrapper>
         <AidaChatRenderer messages={messages} />

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Icon, Text } from '@harness/uicore'
+import { Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useDashboardsContext } from '@dashboards/pages/DashboardsContext'
 import { Message, MessageType, VisualizationType } from '@dashboards/types/AidaTypes.types'
@@ -20,28 +20,23 @@ interface AidaGeneratingProps {
 }
 
 const getValueFromMessage = (messages: Message[], messageType: MessageType, key?: string): string => {
-  let matchingValue = ''
-
-  messages.find(message => {
+  for (const message of messages) {
     if (messageType === MessageType.Prompt && message.promptMapping) {
       const matchingMapping = message.promptMapping.find(mapping => mapping.key === key)
       if (matchingMapping) {
-        matchingValue = matchingMapping.value
-        return true
+        return matchingMapping.value
       }
     }
     if (messageType === MessageType.Text && message.type === MessageType.Text) {
-      matchingValue = message.content
-      return true
+      return message.content
     }
-  })
-
-  return matchingValue
+  }
+  return ''
 }
 
 const AidaGenerating: React.FC<AidaGeneratingProps> = ({ messages }) => {
   const { updateAiTileDetails } = useDashboardsContext()
-  const { accountId, viewId } = useParams<{ accountId: string; folderId: string; viewId: string }>()
+  const { accountId, viewId } = useParams<Record<string, string>>()
   const { getString } = useStrings()
 
   const { mutate: generateAiTile } = useAiGenerateTile({
@@ -50,18 +45,15 @@ const AidaGenerating: React.FC<AidaGeneratingProps> = ({ messages }) => {
     pathParams: { dashboard_id: viewId }
   })
 
-  const performAiTileGeneration = React.useCallback(
-    async (requestBody: AiAddTileRequestBody): Promise<void> => {
+  React.useEffect(() => {
+    const performAiTileGeneration = async (requestBody: AiAddTileRequestBody): Promise<void> => {
       const { resource } = await generateAiTile(requestBody)
       if (resource) {
         updateAiTileDetails(requestBody)
       }
-    },
-    [generateAiTile, updateAiTileDetails]
-  )
+    }
 
-  React.useEffect(() => {
-    if (messages) {
+    if (messages.length) {
       const model = getValueFromMessage(messages, MessageType.Prompt, 'model')
       const explore = getValueFromMessage(messages, MessageType.Prompt, 'explore')
       const visualization_type = getValueFromMessage(messages, MessageType.Prompt, 'visualization') as VisualizationType
@@ -71,11 +63,17 @@ const AidaGenerating: React.FC<AidaGeneratingProps> = ({ messages }) => {
 
       performAiTileGeneration(aiAddTileRequestBody)
     }
-  }, [messages, performAiTileGeneration])
+  }, [messages, generateAiTile, updateAiTileDetails])
 
   return (
-    <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.PURPLE_500} className={css.assistantMsg}>
-      {getString('dashboards.aida.generating')} <Icon name="loading" style={{ verticalAlign: 'middle' }} />
+    <Text
+      font={{ variation: FontVariation.SMALL_SEMI }}
+      color={Color.PURPLE_500}
+      className={css.assistantMsg}
+      rightIcon="loading"
+      rightIconProps={{ style: { verticalAlign: 'middle' } }}
+    >
+      {getString('dashboards.aida.generating')}
     </Text>
   )
 }
