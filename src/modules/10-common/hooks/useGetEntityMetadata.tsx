@@ -16,6 +16,7 @@ import { getPipelineSummaryPromise, ResponsePMSPipelineSummaryResponse } from 's
 import { getTemplateMetadataListPromise, TemplateMetadataSummaryResponse } from 'services/template-ng'
 import { getScopeBasedProjectPathParams } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { NAV_MODE } from '@common/utils/routeUtils'
 
 export interface EntityScope {
   accountIdentifier?: string
@@ -24,6 +25,7 @@ export interface EntityScope {
   branch?: string
   versionLabel?: string
   entityScope?: NGTemplateReference['scope']
+  module?: Module
 }
 
 export interface UseGetEntityUrlProp {
@@ -96,7 +98,7 @@ export const getTemplateMetadataByIdentifier = (
 }
 
 export const getPipelineUrl = async (scope: EntityScope, identifier: string, isNewNav: boolean): Promise<string> => {
-  const { accountIdentifier = '', orgIdentifier = '', projectIdentifier = '', branch = '' } = scope
+  const { accountIdentifier = '', orgIdentifier = '', projectIdentifier = '', branch = '', module } = scope
   const pipelineMetadataResponse = await getPipelineMetadataByIdentifier(scope, identifier)
   const pipelineMetadata = pipelineMetadataResponse?.data
   const inlinePipelineUrl = isNewNav
@@ -106,14 +108,16 @@ export const getPipelineUrl = async (scope: EntityScope, identifier: string, isN
         projectIdentifier,
         pipelineIdentifier: identifier,
         storeType: StoreType.INLINE,
-        mode: 'all'
+        mode: module ? undefined : NAV_MODE.ALL,
+        module
       })}`
     : `${routes.toPipelineStudio({
         accountId: accountIdentifier,
         orgIdentifier,
         projectIdentifier,
         pipelineIdentifier: identifier,
-        storeType: StoreType.INLINE
+        storeType: StoreType.INLINE,
+        module
       })}`
 
   const pipelineListUrl = isNewNav
@@ -134,7 +138,8 @@ export const getPipelineUrl = async (scope: EntityScope, identifier: string, isN
             storeType: pipelineMetadata?.storeType,
             connectorRef: pipelineMetadata?.connectorRef,
             repoName: pipelineMetadata?.gitDetails?.repoName,
-            mode: 'all',
+            mode: module ? undefined : NAV_MODE.ALL,
+            module,
             ...(branch ? { branch } : {})
           })
         : routes.toPipelineStudio({
@@ -145,6 +150,7 @@ export const getPipelineUrl = async (scope: EntityScope, identifier: string, isN
             storeType: pipelineMetadata?.storeType,
             connectorRef: pipelineMetadata?.connectorRef,
             repoName: pipelineMetadata?.gitDetails?.repoName,
+            module,
             ...(branch ? { branch } : {})
           })
     )
@@ -369,7 +375,8 @@ export const useGetEntityMetadata = (
               accountIdentifier,
               orgIdentifier,
               projectIdentifier,
-              branch
+              branch,
+              module
             },
             identifier,
             isNewNav

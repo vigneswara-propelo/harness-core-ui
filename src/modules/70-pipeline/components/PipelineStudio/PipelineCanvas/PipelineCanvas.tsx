@@ -211,7 +211,8 @@ export function PipelineCanvas({
           accountIdentifier: accountId,
           orgIdentifier,
           projectIdentifier,
-          branch: gitDetails?.branch
+          branch: gitDetails?.branch,
+          module
         },
         defaultTo(pipeline?.identifier, pipelineIdentifier),
         !!CDS_NAV_2_0
