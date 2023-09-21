@@ -86,3 +86,49 @@ export const buildUpdateIPAllowlistPayload = (
     }
   }
 }
+
+/**
+ * Converts minutes to higher dimensions of time such as months, days and hours
+ *
+ * Examples:
+ * formatMinutesToHigherDimensions(150);    // Output: "2 hours 30 minutes"
+ * formatMinutesToHigherDimensions(4320);   // Output: "3 days"
+ * formatMinutesToHigherDimensions(45000);  // Output: "1 month 1 day 6 hours"
+ * @param minutes
+ * @returns a string in higher dimensions
+ */
+export const formatMinutesToHigherDimensions = (minutes: number | undefined): string => {
+  if (minutes === undefined || minutes < 0) {
+    return 'Invalid input'
+  }
+
+  const MINUTES_IN_AN_HOUR = 60
+  const HOURS_IN_A_DAY = 24
+  const DAYS_IN_A_MONTH = 30
+
+  const result = []
+
+  if (minutes >= MINUTES_IN_AN_HOUR * HOURS_IN_A_DAY * DAYS_IN_A_MONTH) {
+    const months = Math.floor(minutes / (MINUTES_IN_AN_HOUR * HOURS_IN_A_DAY * DAYS_IN_A_MONTH))
+    result.push(`${months} month${months > 1 ? 's' : ''}`)
+    minutes %= MINUTES_IN_AN_HOUR * HOURS_IN_A_DAY * DAYS_IN_A_MONTH
+  }
+
+  if (minutes >= MINUTES_IN_AN_HOUR * HOURS_IN_A_DAY) {
+    const days = Math.floor(minutes / (MINUTES_IN_AN_HOUR * HOURS_IN_A_DAY))
+    result.push(`${days} day${days > 1 ? 's' : ''}`)
+    minutes %= MINUTES_IN_AN_HOUR * HOURS_IN_A_DAY
+  }
+
+  if (minutes >= MINUTES_IN_AN_HOUR) {
+    const hours = Math.floor(minutes / MINUTES_IN_AN_HOUR)
+    result.push(`${hours} hour${hours > 1 ? 's' : ''}`)
+    minutes %= MINUTES_IN_AN_HOUR
+  }
+
+  if (minutes > 0) {
+    result.push(`${minutes} minute${minutes > 1 ? 's' : ''}`)
+  }
+
+  return result.join(' ')
+}

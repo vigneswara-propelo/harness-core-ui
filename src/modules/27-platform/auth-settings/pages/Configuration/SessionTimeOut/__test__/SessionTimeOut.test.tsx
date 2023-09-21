@@ -1,10 +1,13 @@
 import React from 'react'
 import { render, act, fireEvent, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import { formatMinutesToHigherDimensions } from '@auth-settings/utils'
 import { useSetSessionTimeoutAtAccountLevel } from 'services/cd-ng'
 import SessionTimeOut from '../SessionTimeOut'
+
 let showSuccessCalled = false
 let showErrorCalled = false
+
 jest.mock('@harness/uicore', () => ({
   ...jest.requireActual('@harness/uicore'),
 
@@ -24,6 +27,14 @@ jest.mock('services/cd-ng', () => ({
 }))
 
 describe('Session time out settings', () => {
+  test('formatMinutesToHigherDimensions', () => {
+    expect(formatMinutesToHigherDimensions(undefined)).toBe('Invalid input')
+    expect(formatMinutesToHigherDimensions(-5)).toBe('Invalid input')
+    expect(formatMinutesToHigherDimensions(150)).toBe('2 hours 30 minutes')
+    expect(formatMinutesToHigherDimensions(4320)).toBe('3 days')
+    expect(formatMinutesToHigherDimensions(45000)).toBe('1 month 1 day 6 hours')
+  })
+
   test('set session timeout', async () => {
     const { container } = render(
       <TestWrapper pathParams={{ accountId: 'testAcc' }}>
@@ -37,6 +48,7 @@ describe('Session time out settings', () => {
     })
     expect(inputBox.getAttribute('value')).toBe('30')
   })
+
   test('save timeout', async () => {
     let updateSessionTimeout = false
     ;(useSetSessionTimeoutAtAccountLevel as jest.Mock).mockImplementation().mockReturnValue({
@@ -70,6 +82,7 @@ describe('Session time out settings', () => {
     })
     expect(showSuccessCalled).toBeTruthy()
   })
+
   test('error on save timeout', async () => {
     ;(useSetSessionTimeoutAtAccountLevel as jest.Mock).mockImplementation().mockReturnValue({
       error: true,

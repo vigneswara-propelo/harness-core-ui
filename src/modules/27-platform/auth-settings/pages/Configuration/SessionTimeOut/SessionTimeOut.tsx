@@ -27,15 +27,19 @@ import * as Yup from 'yup'
 import { useSetSessionTimeoutAtAccountLevel } from 'services/cd-ng'
 
 import { useStrings } from 'framework/strings'
+import { formatMinutesToHigherDimensions } from '@auth-settings/utils'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './SessionTimeOut.module.scss'
 
 interface SessionTimeOutProps {
   timeout: number | undefined
 }
+
 type FromikSessionTimeOut = Omit<SessionTimeOutProps, 'onSaveStart' | 'onSaveComplete'>
+
 export const MINIMUM_SESSION_TIME_OUT_IN_MINUTES = 30 // 30 minutes
 export const MAXIMUM_SESSION_TIME_OUT_IN_MINUTES = 4320 // 72 hours
+
 const SessionTimeOut: React.FC<SessionTimeOutProps> = ({ timeout }) => {
   const params = useParams<AccountPathProps>()
   const { accountId } = params
@@ -99,35 +103,41 @@ const SessionTimeOut: React.FC<SessionTimeOutProps> = ({ timeout }) => {
                 <Card className={css.card}>
                   <Layout.Horizontal
                     className={css.sessionTimeoutLayout}
-                    spacing={'medium'}
-                    flex={{ justifyContent: 'flex-start' }}
+                    spacing="large"
+                    flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}
                   >
-                    <Text color={Color.BLACK} font={{ variation: FontVariation.LEAD }}>
-                      {getString('platform.authSettings.sessionTimeOut')}
-                    </Text>
-                    <TextInput
-                      type="number"
-                      value={formik.values.timeout as any}
-                      min={MINIMUM_SESSION_TIME_OUT_IN_MINUTES}
-                      max={MAXIMUM_SESSION_TIME_OUT_IN_MINUTES}
-                      wrapperClassName={css.textInpt}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        formik.setFieldValue('timeout', e.target.value)
-                      }
-                      name="timeout"
-                    ></TextInput>
-                    <Button
-                      type="submit"
-                      text={getString('save')}
-                      variation={ButtonVariation.SECONDARY}
-                      disabled={loading || !!formik.errors.timeout}
-                    />
+                    <Layout.Vertical>
+                      <Text color={Color.BLACK} font={{ variation: FontVariation.LEAD }}>
+                        {getString('platform.authSettings.sessionTimeOut')}
+                      </Text>
+                    </Layout.Vertical>
+                    <Layout.Vertical spacing="small">
+                      <Layout.Horizontal spacing="large">
+                        <TextInput
+                          type="number"
+                          value={formik.values.timeout as any}
+                          min={MINIMUM_SESSION_TIME_OUT_IN_MINUTES}
+                          max={MAXIMUM_SESSION_TIME_OUT_IN_MINUTES}
+                          wrapperClassName={css.textInpt}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            formik.setFieldValue('timeout', e.target.value)
+                          }
+                          name="timeout"
+                        ></TextInput>
+                        <Button
+                          type="submit"
+                          text={getString('save')}
+                          variation={ButtonVariation.SECONDARY}
+                          disabled={loading || !!formik.errors.timeout}
+                        />
+                      </Layout.Horizontal>
+                      {formik.errors.timeout ? (
+                        <FormError name="timeoutErrorMsg" errorMessage={formik.errors.timeout} />
+                      ) : (
+                        <Text>{formatMinutesToHigherDimensions(formik.values.timeout)}</Text>
+                      )}
+                    </Layout.Vertical>
                   </Layout.Horizontal>
-                  <FormError
-                    className={css.sessionTimeoutError}
-                    name="timeoutErrorMsg"
-                    errorMessage={formik.errors.timeout}
-                  />
                 </Card>
               </Container>
             </FormikForm>

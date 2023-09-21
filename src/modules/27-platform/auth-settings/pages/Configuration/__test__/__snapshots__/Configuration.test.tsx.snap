@@ -1065,40 +1065,57 @@ exports[`Configuration Configuration page 1`] = `
                       class="bp3-card bp3-elevation-0 Card--card card"
                     >
                       <div
-                        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main sessionTimeoutLayout StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                        class="Layout--horizontal Layout--layout-spacing-large StyledProps--main sessionTimeoutLayout StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-baseline"
                       >
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-lead"
-                        >
-                          platform.authSettings.sessionTimeOut
-                        </p>
                         <div
-                          class="TextInput--main textInpt"
+                          class="Layout--vertical StyledProps--main"
+                        >
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-lead"
+                          >
+                            platform.authSettings.sessionTimeOut
+                          </p>
+                        </div>
+                        <div
+                          class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
                         >
                           <div
-                            class="bp3-input-group"
+                            class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
                           >
-                            <input
-                              class="bp3-input"
-                              max="4320"
-                              min="30"
-                              name="timeout"
-                              type="number"
-                              value="530"
-                            />
+                            <div
+                              class="TextInput--main textInpt"
+                            >
+                              <div
+                                class="bp3-input-group"
+                              >
+                                <input
+                                  class="bp3-input"
+                                  max="4320"
+                                  min="30"
+                                  name="timeout"
+                                  type="number"
+                                  value="530"
+                                />
+                              </div>
+                            </div>
+                            <button
+                              aria-label="save"
+                              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+                              type="submit"
+                            >
+                              <span
+                                class="bp3-button-text"
+                              >
+                                save
+                              </span>
+                            </button>
                           </div>
-                        </div>
-                        <button
-                          aria-label="save"
-                          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
-                          type="submit"
-                        >
-                          <span
-                            class="bp3-button-text"
+                          <p
+                            class="StyledProps--font StyledProps--main"
                           >
-                            save
-                          </span>
-                        </button>
+                            8 hours 50 minutes
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
