@@ -37,17 +37,13 @@ import {
   useCreateOverlayInputSetForPipeline,
   useUpdateOverlayInputSetForPipeline,
   ResponseOverlayInputSetResponse,
-  useGetSchemaYaml,
   EntityGitDetails,
   UpdateOverlayInputSetForPipelineQueryParams,
   UpdateOverlayInputSetForPipelinePathParams,
   CreateOverlayInputSetForPipelineQueryParams,
   useGetMergeInputSetFromPipelineTemplateWithListInput,
   ResponseMergeInputSetResponse,
-  GitErrorMetadataDTO,
-  useGetStaticSchemaYaml,
-  GetSchemaYamlQueryParams,
-  GetStaticSchemaYamlQueryParams
+  GitErrorMetadataDTO
 } from 'services/pipeline-ng'
 import { useGetSettingValue } from 'services/cd-ng'
 import { SettingType } from '@common/constants/Utils'
@@ -60,7 +56,6 @@ import type {
   CompletionItemInterface
 } from '@common/interfaces/YAMLBuilderProps'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
-import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'
 import type { InputSetGitQueryParams } from '@common/interfaces/RouteInterfaces'
@@ -84,7 +79,6 @@ import type { ConnectorSelectedValue } from '@platform/connectors/components/Con
 import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { isValueExpression } from '@common/utils/utils'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import { InputSetSelector, InputSetSelectorProps } from '../InputSetSelector/InputSetSelector'
 import {
@@ -221,8 +215,6 @@ export function OverlayInputSetForm({
       repoIdentifier
     }
   }, [accountId, orgIdentifier, pipelineIdentifier, projectIdentifier, repoIdentifier])
-
-  const { PIE_STATIC_YAML_SCHEMA } = useFeatureFlags()
 
   const {
     data: overlayInputSetResponse,
@@ -664,31 +656,6 @@ export function OverlayInputSetForm({
     }
   )
 
-  const commonQueryParamsForSchema = {
-    entityType: 'Pipelines',
-    projectIdentifier: projectIdentifier,
-    orgIdentifier: orgIdentifier,
-    accountIdentifier: accountId,
-    scope: getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
-  }
-
-  const { loading: loadingSchemaV1, data: pipelineSchemaV1 } = useGetSchemaYaml({
-    queryParams: {
-      ...commonQueryParamsForSchema
-    } as GetSchemaYamlQueryParams,
-    lazy: PIE_STATIC_YAML_SCHEMA
-  })
-
-  const { loading: loadingStaticSchema, data: pipelineStaticSchema } = useGetStaticSchemaYaml({
-    queryParams: {
-      ...commonQueryParamsForSchema
-    } as GetStaticSchemaYamlQueryParams,
-    lazy: !PIE_STATIC_YAML_SCHEMA
-  })
-
-  const loading = defaultTo(loadingSchemaV1, loadingStaticSchema)
-  const pipelineSchema = defaultTo(pipelineSchemaV1, pipelineStaticSchema)
-
   const selectedInputSetReferences: string[] | undefined = React.useMemo(() => {
     return selectedInputSets?.map(getInputSetReference)
   }, [selectedInputSets])
@@ -962,46 +929,43 @@ export function OverlayInputSetForm({
                     ) : (
                       <div className={css.editor}>
                         <ErrorsStrip formErrors={formErrors} />
-                        {loading ? (
-                          <PageSpinner />
-                        ) : (
-                          <>
-                            {hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit) ? (
-                              <Callout intent="danger">{getString('pipeline.inputSetInvalidStoreTypeCallout')}</Callout>
-                            ) : null}
-                            <YAMLBuilder
-                              {...yamlBuilderReadOnlyModeProps}
-                              existingJSON={{
-                                overlayInputSet: {
-                                  ...omit(
-                                    formikProps?.values,
-                                    'pipeline',
-                                    'repo',
-                                    'branch',
-                                    'connectorRef',
-                                    'repoName',
-                                    'filePath',
-                                    'storeType'
-                                  ),
-                                  inputSetReferences: selectedInputSetReferences
-                                }
-                              }}
-                              invocationMap={invocationMap}
-                              bind={setYamlHandler}
-                              schema={pipelineSchema?.data}
-                              isReadOnlyMode={isReadOnly || hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)}
-                              isEditModeSupported={
-                                !isReadOnly && !hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)
+
+                        <>
+                          {hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit) ? (
+                            <Callout intent="danger">{getString('pipeline.inputSetInvalidStoreTypeCallout')}</Callout>
+                          ) : null}
+                          <YAMLBuilder
+                            {...yamlBuilderReadOnlyModeProps}
+                            existingJSON={{
+                              overlayInputSet: {
+                                ...omit(
+                                  formikProps?.values,
+                                  'pipeline',
+                                  'repo',
+                                  'branch',
+                                  'connectorRef',
+                                  'repoName',
+                                  'filePath',
+                                  'storeType'
+                                ),
+                                inputSetReferences: selectedInputSetReferences
                               }
-                              hideErrorMesageOnReadOnlyMode={hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)}
-                              fileName={getYamlFileName({
-                                isPipelineRemote,
-                                filePath: inputSet?.gitDetails?.filePath,
-                                defaultName: yamlBuilderReadOnlyModeProps.fileName
-                              })}
-                            />
-                          </>
-                        )}
+                            }}
+                            invocationMap={invocationMap}
+                            bind={setYamlHandler}
+                            isReadOnlyMode={isReadOnly || hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)}
+                            isEditModeSupported={
+                              !isReadOnly && !hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)
+                            }
+                            hideErrorMesageOnReadOnlyMode={hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)}
+                            fileName={getYamlFileName({
+                              isPipelineRemote,
+                              filePath: inputSet?.gitDetails?.filePath,
+                              defaultName: yamlBuilderReadOnlyModeProps.fileName
+                            })}
+                          />
+                        </>
+
                         <Layout.Horizontal padding={{ top: 'medium' }}>
                           <Button
                             variation={ButtonVariation.PRIMARY}
