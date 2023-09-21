@@ -61,10 +61,14 @@ export default function ConditionalExecutionTooltip(props: ConditionalExecutionT
           style={{ lineHeight: '16px' }}
           color={Color.GREY_900}
         >
-          {getString(statusMapping[status], {
-            entity: ModeEntityNameMap[mode],
-            parentEntity: ParentModeEntityNameMap[mode]
-          })}
+          {status === PipelineOrStageStatus.FAILURE && mode !== Modes.STAGE
+            ? getString('pipeline.conditionalExecution.statusOption.entityFailure', {
+                entity: ModeEntityNameMap[mode]
+              })
+            : getString(statusMapping[status], {
+                entity: ModeEntityNameMap[mode],
+                parentEntity: ParentModeEntityNameMap[mode]
+              })}
         </Text>
         {!!condition && (
           <Text

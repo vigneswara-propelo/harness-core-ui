@@ -4238,6 +4238,7 @@ export interface StringsMap {
   'pipeline.conditionalExecution.condition': string
   'pipeline.conditionalExecution.conditionLabel': string
   'pipeline.conditionalExecution.statusOption.all': string
+  'pipeline.conditionalExecution.statusOption.entityFailure': string
   'pipeline.conditionalExecution.statusOption.failure': string
   'pipeline.conditionalExecution.statusOption.success': string
   'pipeline.conditionalExecution.subTitle': string

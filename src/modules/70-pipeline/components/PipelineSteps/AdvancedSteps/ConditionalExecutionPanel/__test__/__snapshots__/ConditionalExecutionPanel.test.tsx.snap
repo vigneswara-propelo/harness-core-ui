@@ -69,7 +69,7 @@ exports[`ConditionalExecutionPanel matches snapshot 1`] = `
             <span
               class="bp3-control-indicator"
             />
-            pipeline.conditionalExecution.statusOption.failure
+            pipeline.conditionalExecution.statusOption.entityFailure
           </label>
         </div>
         <div

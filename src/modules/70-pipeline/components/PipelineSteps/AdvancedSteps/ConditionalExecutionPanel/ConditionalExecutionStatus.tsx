@@ -54,7 +54,13 @@ export default function ConditionalExecutionStatus(props: ConditionalExecutionSt
       {mode === Modes.STAGE && <br />}
       <Radio
         value={PipelineOrStageStatus.FAILURE}
-        label={getString('pipeline.conditionalExecution.statusOption.failure', strVariables)}
+        label={
+          mode === Modes.STAGE
+            ? getString('pipeline.conditionalExecution.statusOption.failure', strVariables)
+            : getString('pipeline.conditionalExecution.statusOption.entityFailure', {
+                entity: ModeEntityNameMap[mode]
+              })
+        }
         className={cx(css.blackText, { [css.active]: statusValue === PipelineOrStageStatus.FAILURE })}
       />
     </RadioGroup>
