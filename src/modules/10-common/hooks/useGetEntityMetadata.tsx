@@ -10,6 +10,7 @@ import { defaultTo } from 'lodash-es'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import type { Module, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import type { EntityDetail, NGTemplateReference } from 'services/cd-ng'
 import { getPipelineSummaryPromise, ResponsePMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { getTemplateMetadataListPromise, TemplateMetadataSummaryResponse } from 'services/template-ng'
@@ -29,6 +30,7 @@ export interface UseGetEntityUrlProp {
   entityInfo?: EntityDetail & {
     entityRef?: NGTemplateReference & { envIdentifier?: string; pipelineIdentifier?: string }
   }
+  isNewNav: boolean
 }
 
 export const getPipelineMetadataByIdentifier = (
@@ -93,35 +95,58 @@ export const getTemplateMetadataByIdentifier = (
     })
 }
 
-export const getPipelineUrl = async (scope: EntityScope, identifier: string): Promise<string> => {
+export const getPipelineUrl = async (scope: EntityScope, identifier: string, isNewNav: boolean): Promise<string> => {
   const { accountIdentifier = '', orgIdentifier = '', projectIdentifier = '', branch = '' } = scope
   const pipelineMetadataResponse = await getPipelineMetadataByIdentifier(scope, identifier)
   const pipelineMetadata = pipelineMetadataResponse?.data
-  const inlinePipelineUrl = `${routes.toPipelineStudio({
-    accountId: accountIdentifier,
-    orgIdentifier,
-    projectIdentifier,
-    pipelineIdentifier: identifier,
-    storeType: StoreType.INLINE
-  })}`
+  const inlinePipelineUrl = isNewNav
+    ? `${routesV2.toPipelineStudio({
+        accountId: accountIdentifier,
+        orgIdentifier,
+        projectIdentifier,
+        pipelineIdentifier: identifier,
+        storeType: StoreType.INLINE,
+        mode: 'all'
+      })}`
+    : `${routes.toPipelineStudio({
+        accountId: accountIdentifier,
+        orgIdentifier,
+        projectIdentifier,
+        pipelineIdentifier: identifier,
+        storeType: StoreType.INLINE
+      })}`
 
-  const pipelineListUrl = routes.toPipelines({ orgIdentifier, projectIdentifier, accountId: accountIdentifier })
+  const pipelineListUrl = isNewNav
+    ? routesV2.toPipelines({ orgIdentifier, projectIdentifier, accountId: accountIdentifier, mode: 'all' })
+    : routes.toPipelines({ orgIdentifier, projectIdentifier, accountId: accountIdentifier })
 
   if (pipelineMetadataResponse?.status !== 'SUCCESS') {
     // Without metadata can not open pipelineStudio so redirecting to list
     return Promise.resolve(pipelineListUrl)
   } else if (pipelineMetadata?.storeType === StoreType.REMOTE) {
     return Promise.resolve(
-      routes.toPipelineStudio({
-        accountId: accountIdentifier,
-        orgIdentifier,
-        projectIdentifier,
-        pipelineIdentifier: identifier,
-        storeType: pipelineMetadata?.storeType,
-        connectorRef: pipelineMetadata?.connectorRef,
-        repoName: pipelineMetadata?.gitDetails?.repoName,
-        ...(branch ? { branch } : {})
-      })
+      isNewNav
+        ? routesV2.toPipelineStudio({
+            accountId: accountIdentifier,
+            orgIdentifier,
+            projectIdentifier,
+            pipelineIdentifier: identifier,
+            storeType: pipelineMetadata?.storeType,
+            connectorRef: pipelineMetadata?.connectorRef,
+            repoName: pipelineMetadata?.gitDetails?.repoName,
+            mode: 'all',
+            ...(branch ? { branch } : {})
+          })
+        : routes.toPipelineStudio({
+            accountId: accountIdentifier,
+            orgIdentifier,
+            projectIdentifier,
+            pipelineIdentifier: identifier,
+            storeType: pipelineMetadata?.storeType,
+            connectorRef: pipelineMetadata?.connectorRef,
+            repoName: pipelineMetadata?.gitDetails?.repoName,
+            ...(branch ? { branch } : {})
+          })
     )
   } else if (pipelineMetadata?.storeType === StoreType.INLINE) {
     return Promise.resolve(inlinePipelineUrl)
@@ -133,7 +158,8 @@ export const getPipelineUrl = async (scope: EntityScope, identifier: string): Pr
 
 const getTriggerUrl = async (
   scope: EntityScope & { pipelineIdentifier?: string; module?: Module },
-  triggerIdentifier: string
+  triggerIdentifier: string,
+  isNewNav: boolean
 ): Promise<string> => {
   const {
     accountIdentifier = '',
@@ -145,41 +171,72 @@ const getTriggerUrl = async (
   } = scope
   const pipelineMetadataResponse = await getPipelineMetadataByIdentifier(scope, pipelineIdentifier)
   const pipelineMetadata = pipelineMetadataResponse?.data
-  const inlineTriggerUrl = `${routes.toTriggersDetailPage({
-    orgIdentifier,
-    projectIdentifier,
-    pipelineIdentifier,
-    triggerIdentifier,
-    accountId: accountIdentifier,
-    module,
-    storeType: StoreType.INLINE
-  })}`
+  const inlineTriggerUrl = isNewNav
+    ? `${routesV2.toTriggersDetailPage({
+        orgIdentifier,
+        projectIdentifier,
+        pipelineIdentifier,
+        triggerIdentifier,
+        accountId: accountIdentifier,
+        module,
+        storeType: StoreType.INLINE
+      })}`
+    : `${routes.toTriggersDetailPage({
+        orgIdentifier,
+        projectIdentifier,
+        pipelineIdentifier,
+        triggerIdentifier,
+        accountId: accountIdentifier,
+        module,
+        storeType: StoreType.INLINE
+      })}`
 
-  const triggerListUrl = routes.toTriggersPage({
-    orgIdentifier,
-    projectIdentifier,
-    pipelineIdentifier,
-    accountId: accountIdentifier,
-    module
-  })
+  const triggerListUrl = isNewNav
+    ? routesV2.toTriggersPage({
+        orgIdentifier,
+        projectIdentifier,
+        pipelineIdentifier,
+        accountId: accountIdentifier,
+        module
+      })
+    : routes.toTriggersPage({
+        orgIdentifier,
+        projectIdentifier,
+        pipelineIdentifier,
+        accountId: accountIdentifier,
+        module
+      })
 
   if (pipelineMetadataResponse?.status !== 'SUCCESS') {
     // Without metadata can not open triggers page so redirecting to triggers list
     return Promise.resolve(triggerListUrl)
   } else if (pipelineMetadata?.storeType === StoreType.REMOTE) {
     return Promise.resolve(
-      routes.toTriggersDetailPage({
-        orgIdentifier,
-        projectIdentifier,
-        pipelineIdentifier,
-        triggerIdentifier: triggerIdentifier,
-        accountId: accountIdentifier,
-        module,
-        storeType: pipelineMetadata?.storeType,
-        connectorRef: pipelineMetadata?.connectorRef,
-        repoName: pipelineMetadata?.gitDetails?.repoName,
-        ...(branch ? { branch } : {})
-      })
+      isNewNav
+        ? routesV2.toTriggersDetailPage({
+            orgIdentifier,
+            projectIdentifier,
+            pipelineIdentifier,
+            triggerIdentifier: triggerIdentifier,
+            accountId: accountIdentifier,
+            module,
+            storeType: pipelineMetadata?.storeType,
+            connectorRef: pipelineMetadata?.connectorRef,
+            repoName: pipelineMetadata?.gitDetails?.repoName,
+            ...(branch ? { branch } : {})
+          })
+        : routes.toTriggersDetailPage({
+            orgIdentifier,
+            projectIdentifier,
+            pipelineIdentifier,
+            triggerIdentifier: triggerIdentifier,
+            accountId: accountIdentifier,
+            module,
+            storeType: pipelineMetadata?.storeType,
+            connectorRef: pipelineMetadata?.connectorRef,
+            repoName: pipelineMetadata?.gitDetails?.repoName,
+            ...(branch ? { branch } : {})
+          })
     )
   } else if (pipelineMetadata?.storeType === StoreType.INLINE) {
     return Promise.resolve(inlineTriggerUrl)
@@ -189,7 +246,7 @@ const getTriggerUrl = async (
   }
 }
 
-const getTemplateUrl = async (scope: EntityScope, identifier: string): Promise<string> => {
+const getTemplateUrl = async (scope: EntityScope, identifier: string, isNewNav: boolean): Promise<string> => {
   const { accountIdentifier = '', orgIdentifier = '', projectIdentifier = '', versionLabel = '', branch = '' } = scope
 
   const templateListUrl = `${routes.toTemplates({
@@ -202,15 +259,26 @@ const getTemplateUrl = async (scope: EntityScope, identifier: string): Promise<s
     .then(templateMetadata => {
       if (templateMetadata?.storeType) {
         return Promise.resolve(
-          `${routes.toTemplateStudioNew({
-            accountId: accountIdentifier,
-            orgIdentifier,
-            projectIdentifier,
-            templateIdentifier: identifier,
-            templateType: templateMetadata?.templateEntityType,
-            versionLabel: versionLabel,
-            branch: branch
-          })}`
+          isNewNav
+            ? `${routesV2.toSettingsTemplateStudioNew({
+                accountId: accountIdentifier,
+                orgIdentifier,
+                projectIdentifier,
+                templateIdentifier: identifier,
+                templateType: templateMetadata?.templateEntityType,
+                versionLabel: versionLabel,
+                branch: branch,
+                mode: 'all'
+              })}`
+            : `${routes.toTemplateStudioNew({
+                accountId: accountIdentifier,
+                orgIdentifier,
+                projectIdentifier,
+                templateIdentifier: identifier,
+                templateType: templateMetadata?.templateEntityType,
+                versionLabel: versionLabel,
+                branch: branch
+              })}`
         )
       } else {
         return Promise.resolve(templateListUrl)
@@ -227,7 +295,7 @@ export const useGetEntityMetadata = (
   getEntityURL: () => Promise<string>
   overrideEntityInfo: (overrideEntityProp: UseGetEntityUrlProp) => Promise<string>
 } => {
-  const entityInfo = prop.entityInfo
+  const { entityInfo, isNewNav } = prop
   const { module } = useParams<ModulePathParams>()
 
   const getEntityURL = async (overrideEntityProp?: UseGetEntityUrlProp): Promise<string> => {
@@ -245,21 +313,37 @@ export const useGetEntityMetadata = (
 
     switch (entityType) {
       case 'Connectors':
-        entityUrl = routes.toConnectorDetails({
-          accountId: accountIdentifier,
-          connectorId: identifier,
-          orgIdentifier,
-          projectIdentifier
-        })
+        entityUrl = isNewNav
+          ? routesV2.toConnectorDetails({
+              accountId: accountIdentifier,
+              connectorId: identifier,
+              orgIdentifier,
+              projectIdentifier,
+              mode: 'all'
+            })
+          : routes.toConnectorDetails({
+              accountId: accountIdentifier,
+              connectorId: identifier,
+              orgIdentifier,
+              projectIdentifier
+            })
         break
       case 'Service':
-        entityUrl = `${routes.toServiceStudio({
-          accountId: accountIdentifier,
-          serviceId: identifier,
-          orgIdentifier,
-          projectIdentifier,
-          module
-        })}?tab=configuration`
+        entityUrl = isNewNav
+          ? `${routesV2.toServiceStudio({
+              accountId: accountIdentifier,
+              serviceId: identifier,
+              orgIdentifier,
+              projectIdentifier,
+              module
+            })}?tab=configuration`
+          : `${routes.toServiceStudio({
+              accountId: accountIdentifier,
+              serviceId: identifier,
+              orgIdentifier,
+              projectIdentifier,
+              module
+            })}?tab=configuration`
         break
       case 'Template':
         {
@@ -272,7 +356,8 @@ export const useGetEntityMetadata = (
               versionLabel: entityInfo?.entityRef?.versionLabel,
               entityScope: entityInfo?.entityRef?.scope
             },
-            identifier
+            identifier,
+            isNewNav
           )
         }
 
@@ -286,53 +371,94 @@ export const useGetEntityMetadata = (
               projectIdentifier,
               branch
             },
-            identifier
+            identifier,
+            isNewNav
           )
         }
         break
       case 'Secrets':
-        entityUrl = `${routes.toSecretDetailsOverview({
-          accountId: accountIdentifier,
-          orgIdentifier,
-          projectIdentifier,
-          secretId: identifier
-        })}`
+        entityUrl = isNewNav
+          ? `${routesV2.toSecretDetailsOverview({
+              accountId: accountIdentifier,
+              orgIdentifier,
+              projectIdentifier,
+              secretId: identifier,
+              mode: 'all'
+            })}`
+          : `${routes.toSecretDetailsOverview({
+              accountId: accountIdentifier,
+              orgIdentifier,
+              projectIdentifier,
+              secretId: identifier
+            })}`
         break
       case 'Environment':
-        entityUrl = `${routes.toEnvironmentDetails({
-          accountId: accountIdentifier,
-          orgIdentifier,
-          projectIdentifier,
-          environmentIdentifier: identifier,
-          module
-        })}`
+        entityUrl = isNewNav
+          ? `${routesV2.toEnvironmentDetails({
+              accountId: accountIdentifier,
+              orgIdentifier,
+              projectIdentifier,
+              environmentIdentifier: identifier,
+              module
+            })}`
+          : `${routes.toEnvironmentDetails({
+              accountId: accountIdentifier,
+              orgIdentifier,
+              projectIdentifier,
+              environmentIdentifier: identifier,
+              module
+            })}`
         break
       case 'EnvironmentGroup':
-        entityUrl = `${routes.toEnvironmentGroupDetails({
-          accountId: accountIdentifier,
-          orgIdentifier,
-          projectIdentifier,
-          environmentGroupIdentifier: identifier,
-          module
-        })}`
+        entityUrl = isNewNav
+          ? `${routesV2.toEnvironmentGroupDetails({
+              accountId: accountIdentifier,
+              orgIdentifier,
+              projectIdentifier,
+              environmentGroupIdentifier: identifier,
+              module
+            })}`
+          : `${routes.toEnvironmentGroupDetails({
+              accountId: accountIdentifier,
+              orgIdentifier,
+              projectIdentifier,
+              environmentGroupIdentifier: identifier,
+              module
+            })}`
         break
       case 'Infrastructure':
-        entityUrl = `${routes.toEnvironmentDetails({
-          accountId: accountIdentifier,
-          orgIdentifier,
-          projectIdentifier,
-          environmentIdentifier: defaultTo(entityInfo?.entityRef?.envIdentifier, ''),
-          module
-        })}?sectionId=INFRASTRUCTURE&infrastructureId=${identifier}`
+        entityUrl = isNewNav
+          ? `${routesV2.toEnvironmentDetails({
+              accountId: accountIdentifier,
+              orgIdentifier,
+              projectIdentifier,
+              environmentIdentifier: defaultTo(entityInfo?.entityRef?.envIdentifier, ''),
+              module
+            })}?sectionId=INFRASTRUCTURE&infrastructureId=${identifier}`
+          : `${routes.toEnvironmentDetails({
+              accountId: accountIdentifier,
+              orgIdentifier,
+              projectIdentifier,
+              environmentIdentifier: defaultTo(entityInfo?.entityRef?.envIdentifier, ''),
+              module
+            })}?sectionId=INFRASTRUCTURE&infrastructureId=${identifier}`
         break
       case 'MonitoredService':
-        entityUrl = routes.toCVAddMonitoringServicesEdit({
-          accountId: accountIdentifier,
-          orgIdentifier,
-          projectIdentifier,
-          identifier,
-          module: 'cv'
-        })
+        entityUrl = isNewNav
+          ? routesV2.toCVAddMonitoringServicesEdit({
+              accountId: accountIdentifier,
+              orgIdentifier,
+              projectIdentifier,
+              identifier,
+              module: 'cv'
+            })
+          : routes.toCVAddMonitoringServicesEdit({
+              accountId: accountIdentifier,
+              orgIdentifier,
+              projectIdentifier,
+              identifier,
+              module: 'cv'
+            })
         break
       case 'Triggers':
         entityUrl = await getTriggerUrl(
@@ -344,11 +470,14 @@ export const useGetEntityMetadata = (
             module,
             branch
           },
-          identifier
+          identifier,
+          isNewNav
         )
         break
       default:
-        entityUrl = routes.toLandingDashboard({ accountId: accountIdentifier })
+        entityUrl = isNewNav
+          ? routesV2.toLandingDashboard({ accountId: accountIdentifier })
+          : routes.toLandingDashboard({ accountId: accountIdentifier })
     }
 
     return Promise.resolve(entityUrl)

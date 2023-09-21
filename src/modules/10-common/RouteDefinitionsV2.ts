@@ -69,7 +69,8 @@ export type PathProps = Partial<AccountPathProps> &
   Partial<ProjectPathProps> &
   Partial<ModePathProps> &
   Partial<ModulePathParams> &
-  Partial<EnvironmentPathProps>
+  Partial<EnvironmentPathProps> &
+  Partial<ServicePathProps>
 
 const CV_HOME = `/cv/home`
 
@@ -369,7 +370,15 @@ const routes = {
     params => `/environments/groups/${params?.environmentGroupIdentifier}/details`
   ),
   toServices: withModeModuleAndScopePrefix<ModulePathParams>(() => '/services'),
-  toServiceStudio: withModeModuleAndScopePrefix<ServicePathProps>(params => `/services/${params?.serviceId}`),
+  toServiceStudio: withModeModuleAndScopePrefix<ServicePathProps>(p => {
+    const params = removeDefaultPathProps<ServicePathProps>(p)
+    const { serviceId, ...rest } = params
+    const queryString = qs.stringify(rest, { skipNulls: true })
+    if (queryString.length > 0) {
+      return `/services/${params?.serviceId}?${queryString}`
+    }
+    return `/services/${params?.serviceId}`
+  }),
 
   // ci routes
   toCI: ({
@@ -382,6 +391,7 @@ const routes = {
     })
   },
   toGetStartedWithCI: withModeModuleAndScopePrefix<ModulePathParams>(() => '/get-started'),
+  toLandingDashboard: withAccountId(() => '/all/get-started'),
 
   // ce routes
   toCE: withModeModuleAndScopePrefix<ModulePathParams>(() => `/`),
@@ -850,7 +860,9 @@ const routes = {
   toSecretDetailsReferencesSettings: withModeModuleAndScopePrefix<SecretsPathProps>(
     params => `/settings/secrets/${params?.secretId}/references`
   ),
-
+  toSecretDetailsOverview: withModeModuleAndScopePrefix<SecretsPathProps>(
+    params => `/resources/secrets/${params?.secretId}/overview`
+  ),
   toFileStoreSettings: withModeModuleAndScopePrefix(() => `/settings/file-store`),
   toVariablesSettings: withModeModuleAndScopePrefix(() => `/settings/variables`),
 

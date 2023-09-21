@@ -71,6 +71,7 @@ import { QueueStepView } from '@pipeline/components/execution/StepDetails/views/
 import type { AuditEventData, ResourceDTO } from 'services/audit'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import routes from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import { ServiceNowCreateUpdateView } from '@pipeline/components/execution/StepDetails/views/ServiceNowCreateUpdateView/ServiceNowCreateUpdateView'
 import { ModuleName } from 'framework/types/ModuleName'
 import { ServiceNowImportSetView } from '@pipeline/components/execution/StepDetails/views/ServiceNowImportSetView/ServiceNowImportSetView'
@@ -237,7 +238,8 @@ AuditTrailFactory.registerResourceHandler('PIPELINE', {
     pipeline: ResourceDTO,
     resourceScope: ResourceScope,
     module?: Module,
-    auditEventData?: AuditEventData
+    auditEventData?: AuditEventData,
+    isNewNav?: boolean
   ) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
     const pipelineIdentifier = pipeline.identifier
@@ -245,22 +247,42 @@ AuditTrailFactory.registerResourceHandler('PIPELINE', {
 
     if (pipelineIdentifier && orgIdentifier && projectIdentifier) {
       if (planExecutionId)
-        return routes.toExecutionPipelineView({
-          module,
-          orgIdentifier,
-          projectIdentifier,
-          accountId: accountIdentifier,
-          pipelineIdentifier: pipelineIdentifier,
-          source: 'executions',
-          executionIdentifier: planExecutionId
-        })
-      return routes.toPipelineStudio({
-        module,
-        orgIdentifier,
-        projectIdentifier,
-        accountId: accountIdentifier,
-        pipelineIdentifier: pipelineIdentifier
-      })
+        return isNewNav
+          ? routesV2.toExecutionPipelineView({
+              module,
+              orgIdentifier,
+              projectIdentifier,
+              accountId: accountIdentifier,
+              pipelineIdentifier: pipelineIdentifier,
+              source: 'executions',
+              executionIdentifier: planExecutionId,
+              mode: 'all'
+            })
+          : routes.toExecutionPipelineView({
+              module,
+              orgIdentifier,
+              projectIdentifier,
+              accountId: accountIdentifier,
+              pipelineIdentifier: pipelineIdentifier,
+              source: 'executions',
+              executionIdentifier: planExecutionId
+            })
+      return isNewNav
+        ? routesV2.toPipelineStudio({
+            module,
+            orgIdentifier,
+            projectIdentifier,
+            accountId: accountIdentifier,
+            pipelineIdentifier: pipelineIdentifier,
+            mode: 'all'
+          })
+        : routes.toPipelineStudio({
+            module,
+            orgIdentifier,
+            projectIdentifier,
+            accountId: accountIdentifier,
+            pipelineIdentifier: pipelineIdentifier
+          })
     }
     return undefined
   },
@@ -273,17 +295,32 @@ AuditTrailFactory.registerResourceHandler('INPUT_SET', {
   },
   moduleLabel: cdLabel,
   resourceLabel: 'inputSetsText',
-  resourceUrl: (inputSet: ResourceDTO, resourceScope: ResourceScope, module?: Module) => {
+  resourceUrl: (
+    inputSet: ResourceDTO,
+    resourceScope: ResourceScope,
+    module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
     if (inputSet.identifier && inputSet.labels?.pipelineIdentifier && orgIdentifier && projectIdentifier) {
-      return routes.toInputSetForm({
-        module,
-        orgIdentifier,
-        projectIdentifier,
-        accountId: accountIdentifier,
-        inputSetIdentifier: inputSet.identifier,
-        pipelineIdentifier: inputSet.labels.pipelineIdentifier
-      })
+      return isNewNav
+        ? routesV2.toInputSetForm({
+            module,
+            orgIdentifier,
+            projectIdentifier,
+            accountId: accountIdentifier,
+            inputSetIdentifier: inputSet.identifier,
+            pipelineIdentifier: inputSet.labels.pipelineIdentifier
+          })
+        : routes.toInputSetForm({
+            module,
+            orgIdentifier,
+            projectIdentifier,
+            accountId: accountIdentifier,
+            inputSetIdentifier: inputSet.identifier,
+            pipelineIdentifier: inputSet.labels.pipelineIdentifier
+          })
     }
     return undefined
   }
@@ -295,22 +332,40 @@ AuditTrailFactory.registerResourceHandler('SERVICE', {
   },
   moduleLabel: cdLabel,
   resourceLabel: 'service',
-  resourceUrl: (service: ResourceDTO, resourceScope: ResourceScope, module?: Module) => {
+  resourceUrl: (
+    service: ResourceDTO,
+    resourceScope: ResourceScope,
+    module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
     if (service.identifier && orgIdentifier && projectIdentifier) {
-      return routes.toServiceStudio({
-        module,
-        orgIdentifier,
-        projectIdentifier,
-        accountId: accountIdentifier,
-        serviceId: service.identifier
-      })
+      return isNewNav
+        ? routesV2.toSettingsServiceDetails({
+            orgIdentifier,
+            projectIdentifier,
+            accountId: accountIdentifier,
+            serviceId: service.identifier
+          })
+        : routes.toServiceStudio({
+            module,
+            orgIdentifier,
+            projectIdentifier,
+            accountId: accountIdentifier,
+            serviceId: service.identifier
+          })
     } else if (service.identifier) {
-      return routes.toServiceStudio({
-        module,
-        accountId: accountIdentifier,
-        serviceId: service.identifier
-      })
+      return isNewNav
+        ? routesV2.toSettingsServiceDetails({
+            accountId: accountIdentifier,
+            serviceId: service.identifier
+          })
+        : routes.toServiceStudio({
+            module,
+            accountId: accountIdentifier,
+            serviceId: service.identifier
+          })
     }
     return undefined
   }
@@ -322,16 +377,29 @@ AuditTrailFactory.registerResourceHandler('ENVIRONMENT_GROUP', {
   },
   moduleLabel: cdLabel,
   resourceLabel: 'common.environmentGroup.label',
-  resourceUrl: (environmentGroup: ResourceDTO, resourceScope: ResourceScope, module?: Module) => {
+  resourceUrl: (
+    environmentGroup: ResourceDTO,
+    resourceScope: ResourceScope,
+    module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
     if (environmentGroup.identifier && orgIdentifier && projectIdentifier) {
-      return routes.toEnvironmentGroupDetails({
-        module,
-        orgIdentifier,
-        projectIdentifier,
-        accountId: accountIdentifier,
-        environmentGroupIdentifier: environmentGroup.identifier
-      })
+      return isNewNav
+        ? routesV2.toSettingsEnvironmentGroupDetails({
+            orgIdentifier,
+            projectIdentifier,
+            accountId: accountIdentifier,
+            environmentGroupIdentifier: environmentGroup.identifier
+          })
+        : routes.toEnvironmentGroupDetails({
+            module,
+            orgIdentifier,
+            projectIdentifier,
+            accountId: accountIdentifier,
+            environmentGroupIdentifier: environmentGroup.identifier
+          })
     }
     return undefined
   }
@@ -343,22 +411,40 @@ AuditTrailFactory.registerResourceHandler('ENVIRONMENT', {
   },
   moduleLabel: cdLabel,
   resourceLabel: 'environment',
-  resourceUrl: (environment: ResourceDTO, resourceScope: ResourceScope, module?: Module) => {
+  resourceUrl: (
+    environment: ResourceDTO,
+    resourceScope: ResourceScope,
+    module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
     if (environment.identifier && orgIdentifier && projectIdentifier) {
-      return routes.toEnvironmentDetails({
-        module,
-        orgIdentifier,
-        projectIdentifier,
-        accountId: accountIdentifier,
-        environmentIdentifier: environment.identifier
-      })
+      return isNewNav
+        ? routesV2.toSettingsEnvironmentDetails({
+            orgIdentifier,
+            projectIdentifier,
+            accountId: accountIdentifier,
+            environmentIdentifier: environment.identifier
+          })
+        : routes.toEnvironmentDetails({
+            module,
+            orgIdentifier,
+            projectIdentifier,
+            accountId: accountIdentifier,
+            environmentIdentifier: environment.identifier
+          })
     } else if (environment.identifier) {
-      return routes.toEnvironmentDetails({
-        module,
-        accountId: accountIdentifier,
-        environmentIdentifier: environment.identifier
-      })
+      return isNewNav
+        ? routesV2.toSettingsEnvironmentDetails({
+            accountId: accountIdentifier,
+            environmentIdentifier: environment.identifier
+          })
+        : routes.toEnvironmentDetails({
+            module,
+            accountId: accountIdentifier,
+            environmentIdentifier: environment.identifier
+          })
     }
     return undefined
   }
@@ -370,7 +456,13 @@ AuditTrailFactory.registerResourceHandler('TRIGGER', {
   },
   moduleLabel: 'common.pipeline',
   resourceLabel: 'common.triggerLabel',
-  resourceUrl: (trigger: ResourceDTO, resourceScope: ResourceScope, module?: Module) => {
+  resourceUrl: (
+    trigger: ResourceDTO,
+    resourceScope: ResourceScope,
+    module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
     if (
       trigger.identifier &&
@@ -379,15 +471,25 @@ AuditTrailFactory.registerResourceHandler('TRIGGER', {
       orgIdentifier &&
       projectIdentifier
     ) {
-      return routes.toTriggersDetailPage({
-        module,
-        orgIdentifier,
-        projectIdentifier,
-        accountId: accountIdentifier,
-        triggerIdentifier: trigger.identifier,
-        triggerType: trigger.labels.triggerType as TriggerQueryParams['triggerType'],
-        pipelineIdentifier: trigger.labels.pipelineIdentifier
-      })
+      return isNewNav
+        ? routesV2.toTriggersDetailPage({
+            module,
+            orgIdentifier,
+            projectIdentifier,
+            accountId: accountIdentifier,
+            triggerIdentifier: trigger.identifier,
+            triggerType: trigger.labels.triggerType as TriggerQueryParams['triggerType'],
+            pipelineIdentifier: trigger.labels.pipelineIdentifier
+          })
+        : routes.toTriggersDetailPage({
+            module,
+            orgIdentifier,
+            projectIdentifier,
+            accountId: accountIdentifier,
+            triggerIdentifier: trigger.identifier,
+            triggerType: trigger.labels.triggerType as TriggerQueryParams['triggerType'],
+            pipelineIdentifier: trigger.labels.pipelineIdentifier
+          })
     }
     return undefined
   }

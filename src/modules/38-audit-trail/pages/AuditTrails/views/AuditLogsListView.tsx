@@ -102,7 +102,8 @@ const AuditLogsListView: React.FC<AuditLogsListViewProps> = ({ data }) => {
             accountIdentifier: accountIdentifier
           },
           getModuleNameFromAuditModule(module),
-          row.original.auditEventData
+          row.original.auditEventData,
+          CDS_NAV_2_0
         )
       : undefined
 

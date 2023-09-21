@@ -213,7 +213,8 @@ export function PipelineCanvas({
           projectIdentifier,
           branch: gitDetails?.branch
         },
-        defaultTo(pipeline?.identifier, pipelineIdentifier)
+        defaultTo(pipeline?.identifier, pipelineIdentifier),
+        !!CDS_NAV_2_0
       ).then((remotePiplineRoute: string) => {
         history.push(remotePiplineRoute)
       })

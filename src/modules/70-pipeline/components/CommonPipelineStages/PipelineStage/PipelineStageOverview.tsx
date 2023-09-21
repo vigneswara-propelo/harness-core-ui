@@ -15,6 +15,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import produce from 'immer'
 import { NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
@@ -57,6 +58,7 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
   } = usePipelineContext()
   const { accountId } = useParams<AccountPathProps & ModulePathParams>()
   const { variablesPipeline, metadataMap } = usePipelineVariables()
+  const { CDS_NAV_2_0 } = useFeatureFlags()
   const { stage } = getStageFromPipeline<PipelineStageElementConfig>(defaultTo(selectedStageId, ''))
   const { stage: stageFromVariablesPipeline } = getStageFromPipeline(
     get(stage, 'stage.identifier', ''),
@@ -81,7 +83,8 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
         identifier: pipelineIdentifier
       },
       type: EntityType.Pipelines
-    }
+    },
+    isNewNav: !!CDS_NAV_2_0
   })
 
   const updateStageDebounced = useMemo(() => debounce(updateStage, 300), [updateStage])

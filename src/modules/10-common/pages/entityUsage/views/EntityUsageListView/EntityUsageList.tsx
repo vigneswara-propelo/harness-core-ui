@@ -22,6 +22,7 @@ import { useStrings } from 'framework/strings'
 import ResourceDetailFactory from '@common/factories/ResourceDetailFactory'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getScopeLabelfromScope } from '@common/components/EntityReference/EntityReference'
 import type { StringKeys } from 'framework/strings'
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
@@ -66,13 +67,15 @@ const getReferredByEntityScopeId = (scope: Scope, referredByEntity?: ReferredByE
   }
 }
 const RenderColumnEntity: Renderer<CellProps<EntitySetupUsageDTOColumnData>> = ({ row, column }) => {
+  const { CDS_NAV_2_0 } = useFeatureFlags()
   const data = row.original
   const checkReferredByEntityTypeHandler = ResourceDetailFactory.getReferredByEntityTypeHandler(
     data.referredByEntity.type
   )
 
   const entityData = useGetEntityMetadata({
-    entityInfo: data.referredByEntity
+    entityInfo: data.referredByEntity,
+    isNewNav: !!CDS_NAV_2_0
   })
 
   if (checkReferredByEntityTypeHandler)
@@ -134,6 +137,7 @@ const RenderColumnActivity: Renderer<CellProps<EntitySetupUsageDTO>> = ({ row })
 }
 
 export const RenderScope: Renderer<CellProps<EntitySetupUsageDTOColumnData>> = ({ row, column }) => {
+  const { CDS_NAV_2_0 } = useFeatureFlags()
   const data = row.original
   const { accountIdentifier, orgIdentifier, projectIdentifier } = data.referredByEntity?.entityRef || {
     accountIdentifier: '',
@@ -142,7 +146,8 @@ export const RenderScope: Renderer<CellProps<EntitySetupUsageDTOColumnData>> = (
   }
 
   const entityData = useGetEntityMetadata({
-    entityInfo: data.referredByEntity
+    entityInfo: data.referredByEntity,
+    isNewNav: !!CDS_NAV_2_0
   })
 
   const scope = getScopeFromDTO({ accountIdentifier, orgIdentifier, projectIdentifier, identifier: '' })

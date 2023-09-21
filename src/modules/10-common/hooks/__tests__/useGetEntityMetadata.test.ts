@@ -31,7 +31,7 @@ jest.mock('services/template-ng', () => ({
 const renderUseGetEntityMetadataHook = (
   entityInfo?: UseGetEntityUrlProp['entityInfo']
 ): RenderHookResult<undefined, { getEntityURL: () => Promise<string> }> =>
-  renderHook(() => useGetEntityMetadata({ entityInfo }), {
+  renderHook(() => useGetEntityMetadata({ entityInfo, isNewNav: false }), {
     wrapper: TestWrapper
   })
 

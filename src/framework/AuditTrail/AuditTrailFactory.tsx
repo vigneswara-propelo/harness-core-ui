@@ -24,7 +24,8 @@ interface ResourceHandler {
     resource: ResourceDTO,
     resourceScope: ResourceScope,
     module?: Module,
-    auditEventData?: AuditEventData
+    auditEventData?: AuditEventData,
+    isNewNav?: boolean
   ) => string | undefined
   additionalDetails?: (auditEventData?: AuditEventData) => Record<StringKeys, string | undefined>
 }
