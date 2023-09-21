@@ -47,7 +47,9 @@ const DashboardViewContent: React.FC = () => {
     mutate: createSignedUrl,
     loading,
     error
-  } = useCreateSignedUrl({ queryParams: { accountId, dashboardId: viewId, src: signedQueryUrl, timezone } })
+  } = useCreateSignedUrl({
+    queryParams: { accountId, dashboardId: viewId, src: signedQueryUrl, timezone }
+  })
 
   const responseMessages = useMemo(() => (error?.data as ErrorResponse)?.responseMessages, [error])
 
@@ -103,22 +105,19 @@ const DashboardViewContent: React.FC = () => {
     },
     [lookerDashboardFilterChangedEvent, lookerHandleEditToggle, lookerPageChangedEvent]
   )
-  const generateSignedUrl = React.useCallback(async (): Promise<void> => {
-    const { resource } = (await createSignedUrl()) || {}
-    if (resource) {
-      setDashboardLoading(true)
-      setEmbedUrl(resource)
+
+  React.useEffect(() => {
+    const generateSignedUrl = async (): Promise<void> => {
+      const { resource } = (await createSignedUrl()) || {}
+      if (resource) {
+        setDashboardLoading(true)
+        setEmbedUrl(resource)
+      }
     }
-  }, [createSignedUrl])
-
-  React.useEffect(() => {
-    generateSignedUrl()
-  }, [generateSignedUrl, viewId])
-
-  React.useEffect(() => {
     setEmbedUrl(null)
     generateSignedUrl()
-  }, [aiTileDetails, generateSignedUrl])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewId, aiTileDetails])
 
   const { data: folderDetail, refetch: fetchFolderDetail } = useDeprecatedGetFolder({
     lazy: true,
