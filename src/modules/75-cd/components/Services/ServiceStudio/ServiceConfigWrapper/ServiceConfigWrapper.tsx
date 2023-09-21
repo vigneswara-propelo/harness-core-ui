@@ -105,15 +105,15 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
   }, [])
 
   const [currentService, setCurrentService] = React.useState(getServiceData())
-  const currentPipeline = React.useMemo(() => {
-    const defaultPipeline = {
+  const service = React.useMemo(() => {
+    const defaultService = {
       name: serviceYaml?.service?.name,
       identifier: defaultTo(serviceYaml?.service?.identifier, DefaultNewPipelineId),
       description: serviceYaml?.service?.description,
       tags: serviceYaml?.service?.tags,
       gitOpsEnabled: serviceYaml?.service?.gitOpsEnabled
     }
-    return produce({ ...defaultPipeline }, draft => {
+    return produce({ ...defaultService }, draft => {
       if (!isEmpty(serviceYaml?.service?.serviceDefinition)) {
         set(draft, 'stages[0].stage.name', DefaultNewStageName)
         set(draft, 'stages[0].stage.identifier', DefaultNewStageId)
@@ -127,7 +127,7 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
     })
   }, [serviceYaml])
 
-  const createPipeline = React.useMemo(() => {
+  const createService = React.useMemo(() => {
     const defaultPipeline = {
       name: '',
       identifier: ''
@@ -161,14 +161,20 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
   return (
     <ServicePipelineProvider
       queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier, repoIdentifier, branch }}
-      initialValue={isServiceCreateModalView ? createPipeline : (currentPipeline as PipelineInfoConfig)}
+      initialValue={isServiceCreateModalView ? createService : (service as PipelineInfoConfig)}
+      storeMetadata={{
+        storeType: serviceResponse?.storeType,
+        connectorRef: serviceResponse?.connectorRef,
+        fallbackBranch: serviceResponse?.fallbackBranch
+      }}
+      gitDetails={serviceResponse?.entityGitDetails}
       onUpdatePipeline={onUpdatePipeline}
       serviceIdentifier={serviceId}
       contextType={PipelineContextType.Pipeline}
       isReadOnly={!isEdit}
     >
       <PipelineVariablesContextProvider
-        pipeline={isServiceCreateModalView ? createPipeline : (currentPipeline as PipelineInfoConfig)}
+        pipeline={isServiceCreateModalView ? createService : (service as PipelineInfoConfig)}
       >
         <ServiceStudioDetails serviceData={currentService} {...props} />
       </PipelineVariablesContextProvider>

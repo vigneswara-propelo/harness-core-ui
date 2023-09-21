@@ -61,8 +61,8 @@ import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import { RateTrend, TrendPopover } from '@cd/pages/dashboard/dashboardUtils'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import type { Sort, SortFields } from '@common/utils/listUtils'
-import { ServiceTabs } from '../utils/ServiceUtils'
-//import { ServiceCodeSourceCell } from '../ServicesListColumns/ServicesListColumns'
+import { ServiceTabs, getRemoteServiceQueryParams } from '../utils/ServiceUtils'
+import { ServiceCodeSourceCell } from '../ServicesListColumns/ServicesListColumns'
 import css from '@cd/components/Services/ServicesList/ServiceList.module.scss'
 
 export enum DeploymentStatus {
@@ -76,9 +76,9 @@ export interface ServiceListItem {
   tags?: {
     [key: string]: string
   }
-  // storeType: ServiceDetailsDTOV2['storeType']
-  // connectorRef: ServiceDetailsDTOV2['connectorRef']
-  // entityGitDetails: ServiceDetailsDTOV2['entityGitDetails']
+  storeType: ServiceDetailsDTOV2['storeType']
+  connectorRef: ServiceDetailsDTOV2['connectorRef']
+  entityGitDetails: ServiceDetailsDTOV2['entityGitDetails']
   deploymentTypeList: string[]
   deploymentIconList: IconDTO[]
   serviceInstances: {
@@ -116,9 +116,9 @@ const transformServiceDetailsData = (data: ServiceDetailsDTOV2[]): ServiceListIt
     identifier: defaultTo(item.serviceIdentifier, ''),
     description: defaultTo(item.description, ''),
     tags: defaultTo(item.tags, {}),
-    // storeType: item.storeType,
-    // connectorRef: item.connectorRef,
-    // entityGitDetails: item.entityGitDetails,
+    storeType: item.storeType,
+    connectorRef: item.connectorRef,
+    entityGitDetails: item.entityGitDetails,
     deploymentTypeList: defaultTo(item.deploymentTypeList, []),
     deploymentIconList: defaultTo(item.deploymentIconList, []),
     serviceInstances: {
@@ -166,13 +166,13 @@ const RenderServiceName: Renderer<CellProps<ServiceListItem>> = ({ row }) => {
           <Link
             className={css.renderServiceName}
             target="_blank"
-            to={routes.toServiceStudio({
+            to={`${routes.toServiceStudio({
               accountId,
               orgIdentifier,
               projectIdentifier,
               serviceId: row.original.identifier,
               module
-            })}
+            })}?${getRemoteServiceQueryParams(row.original)}`}
             onClick={e => e.stopPropagation()}
           >
             <Text
@@ -472,7 +472,7 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
         serviceId: data.identifier,
         module
       }),
-      search: `tab=${ServiceTabs.REFERENCED_BY}`
+      search: `tab=${ServiceTabs.REFERENCED_BY}${getRemoteServiceQueryParams(data)}`
     })
   }
 
@@ -499,7 +499,7 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
           serviceId: data.identifier,
           module
         }),
-        search: `tab=${ServiceTabs.Configuration}`
+        search: `tab=${ServiceTabs.Configuration}${getRemoteServiceQueryParams(data)}`
       })
     } else {
       showModal()
@@ -512,13 +512,13 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
     openDialog()
   }
 
-  const openInNewTab = routes.toServiceStudio({
+  const openInNewTab = `${routes.toServiceStudio({
     accountId,
     orgIdentifier,
     projectIdentifier,
     serviceId: data.identifier,
     module
-  })
+  })}?${getRemoteServiceQueryParams(data)}`
 
   return (
     <Layout.Horizontal>
@@ -626,12 +626,16 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
           width: isGitXEnabledForServices ? '15%' : '20%',
           Cell: RenderServiceName
         },
-        // {
-        //   Header: getString('pipeline.codeSource'),
-        //   accessor: 'storeType',
-        //   width: '10%',
-        //   Cell: ServiceCodeSourceCell
-        // },
+        ...(isGitXEnabledForServices
+          ? [
+              {
+                Header: getString('pipeline.codeSource'),
+                id: 'storeType',
+                width: '10%',
+                Cell: ServiceCodeSourceCell
+              }
+            ]
+          : []),
         {
           Header: getString('typeLabel').toLocaleUpperCase(),
           id: 'type',
@@ -684,8 +688,17 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
   )
 
   const goToServiceDetails = useCallback(
-    ({ identifier: serviceId }: ServiceListItem): void => {
-      history.push(routes.toServiceStudio({ accountId, orgIdentifier, projectIdentifier, serviceId, module }))
+    (selectedService: ServiceListItem): void => {
+      history.push({
+        pathname: routes.toServiceStudio({
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          serviceId: selectedService?.identifier,
+          module
+        }),
+        search: `${getRemoteServiceQueryParams(selectedService)}`
+      })
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [accountId, orgIdentifier, projectIdentifier, module]

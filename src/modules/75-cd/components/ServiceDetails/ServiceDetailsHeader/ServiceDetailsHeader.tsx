@@ -88,14 +88,14 @@ export const ServiceDetailsHeader = (
   useDocumentTitle([data?.data?.name || getString('services')])
 
   const serviceCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
-  const isServiceRemote = CDS_SERVICE_GITX && storeType === 'REMOTE'
+  const isServiceRemote = storeType === StoreType.REMOTE
 
   const onGitBranchChange = (selectedFilter: { branch: string }): void => {
     updateQueryParams({ branch: selectedFilter.branch })
   }
 
   const renderRemoteDetails = (): JSX.Element | null => {
-    return CDS_SERVICE_GITX && storeType === 'REMOTE' ? (
+    return CDS_SERVICE_GITX && storeType === StoreType.REMOTE ? (
       <div className={css.gitRemoteDetailsWrapper}>
         <GitRemoteDetails
           connectorRef={connectorRef}

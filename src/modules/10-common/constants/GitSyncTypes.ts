@@ -16,6 +16,7 @@ export interface StoreMetadata {
   repoName?: string
   branch?: string
   filePath?: string
+  fallbackBranch?: string
 }
 
 export enum SaveTemplateAsType {

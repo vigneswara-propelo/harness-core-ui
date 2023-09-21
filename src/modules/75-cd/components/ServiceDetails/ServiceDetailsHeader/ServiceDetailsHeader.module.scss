@@ -12,18 +12,21 @@
   .serviceDetails {
     flex-grow: 1;
     max-width: 100%;
-    .detailsSection {
-      max-width: 500px;
-    }
-    .detailsSectionForRemote {
-      width: 250px;
-    }
     .textOverflow {
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap !important;
     }
   }
+
+  .detailsSection {
+    max-width: 500px;
+  }
+
+  .detailsSectionForRemote {
+    width: 250px;
+  }
+
   .cursor {
     cursor: pointer;
   }

@@ -13,21 +13,27 @@ import { NameIdDescriptionTags } from '@common/components'
 import { NameSchema } from '@common/utils/Validation'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { NGServiceV2InfoConfig } from 'services/cd-ng'
+import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import { useServiceContext } from '@cd/context/ServiceContext'
 import { useStrings } from 'framework/strings'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import css from './ServiceConfiguration.module.scss'
 
 function ServiceStepBasicInfo(): React.ReactElement {
   const { getString } = useStrings()
 
   const {
-    state: { pipeline },
+    state: { pipeline, storeMetadata, gitDetails },
     isReadonly,
     updatePipeline
   } = usePipelineContext()
 
   const { isServiceCreateModalView } = useServiceContext()
-
+  const initialGitFormValue = {
+    connectorRef: storeMetadata?.connectorRef,
+    repoName: gitDetails?.repoName,
+    filePath: gitDetails?.filePath
+  }
   const onUpdate = useCallback(
     (value: NGServiceV2InfoConfig): void => {
       updatePipeline({ ...value })
@@ -40,7 +46,7 @@ function ServiceStepBasicInfo(): React.ReactElement {
     <div className={css.serviceStepBasicInfo}>
       <Formik
         enableReinitialize
-        initialValues={pipeline}
+        initialValues={{ ...pipeline, ...initialGitFormValue }}
         validate={values => {
           if (isEmpty(values.name)) {
             return
@@ -71,6 +77,19 @@ function ServiceStepBasicInfo(): React.ReactElement {
                 descriptionProps={{ disabled: isReadonly }}
                 tagsProps={{ disabled: isReadonly }}
               />
+              {storeMetadata?.storeType === StoreType.REMOTE ? (
+                <GitSyncForm
+                  formikProps={formikProps}
+                  isEdit={true}
+                  skipBranch
+                  disableFields={{
+                    connectorRef: true,
+                    repoName: true,
+                    filePath: false
+                  }}
+                  initialValues={initialGitFormValue}
+                />
+              ) : null}
             </Card>
           </FormikForm>
         )}

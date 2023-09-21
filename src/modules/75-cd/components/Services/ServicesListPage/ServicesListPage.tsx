@@ -6,7 +6,6 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import qs from 'qs'
 import cx from 'classnames'
 import {
   Dialog,
@@ -46,7 +45,6 @@ import GetStartedWithCDButton from '@pipeline/components/GetStartedWithCDButton/
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { Sort, SortFields } from '@common/utils/listUtils'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { StoreType } from '@common/constants/GitSyncTypes'
 import routesV2 from '@common/RouteDefinitionsV2'
 import ServicesGridView from '../ServicesGridView/ServicesGridView'
 import ServicesListView from '../ServicesListView/ServicesListView'
@@ -54,7 +52,8 @@ import {
   ServicesQueryParams,
   SERVICES_DEFAULT_PAGE_INDEX,
   ServiceTabs,
-  useServicesQueryParamOptions
+  useServicesQueryParamOptions,
+  getRemoteServiceQueryParams
 } from '../utils/ServiceUtils'
 import css from './ServicesListPage.module.scss'
 
@@ -154,18 +153,7 @@ export const ServicesListPage = ({
         return
       }
       if (selectedService?.identifier) {
-        let remoteQueryParams = ''
-
-        if (selectedService?.storeType === StoreType.REMOTE) {
-          remoteQueryParams = `&${qs.stringify(
-            {
-              storeType: selectedService?.storeType,
-              connectorRef: selectedService?.connectorRef,
-              repoName: selectedService.entityGitDetails?.repoName
-            },
-            { skipNulls: true }
-          )}`
-        }
+        const remoteQueryParams = getRemoteServiceQueryParams(selectedService)
         const serviceDetailRoute =
           newLeftNav && calledFromSettingsPage
             ? routesV2.toSettingsServiceDetails({

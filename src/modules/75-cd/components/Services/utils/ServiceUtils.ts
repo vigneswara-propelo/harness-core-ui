@@ -6,13 +6,15 @@
  */
 
 import { set } from 'lodash-es'
+import qs from 'qs'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useQueryParamsOptions, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
 import { Sort, SortFields } from '@common/utils/listUtils'
-import type { ServiceDefinition } from 'services/cd-ng'
+import type { ServiceDefinition, ServiceResponseDTO } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
+import { StoreType } from '@common/constants/GitSyncTypes'
 
 export type ServicePipelineConfig = PipelineInfoConfig & { gitOpsEnabled?: boolean }
 
@@ -72,4 +74,20 @@ export const useServicesQueryParamOptions = (): UseQueryParamsOptions<ServicesQu
     searchTerm: '',
     sort: [SortFields.LastModifiedAt, Sort.DESC]
   })
+}
+
+export const getRemoteServiceQueryParams = (service: ServiceResponseDTO): string => {
+  let remoteQueryParams = ''
+
+  if (service?.storeType === StoreType.REMOTE) {
+    remoteQueryParams = `&${qs.stringify(
+      {
+        storeType: service?.storeType,
+        connectorRef: service?.connectorRef,
+        repoName: service.entityGitDetails?.repoName
+      },
+      { skipNulls: true }
+    )}`
+  }
+  return remoteQueryParams
 }

@@ -31,7 +31,13 @@ import {
   getStageFromPipeline as _getStageFromPipeline,
   getStagePathFromPipeline as _getStagePathFromPipeline
 } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
-import { getServiceV2Promise, GetServiceV2QueryParams, NGServiceConfig, ServiceResponseDTO } from 'services/cd-ng'
+import {
+  EntityGitDetails,
+  getServiceV2Promise,
+  GetServiceV2QueryParams,
+  NGServiceConfig,
+  ServiceResponseDTO
+} from 'services/cd-ng'
 import type { PipelineSelectionState } from '@pipeline/components/PipelineStudio/PipelineQueryParamState/usePipelineQueryParam'
 import type {
   GetPipelineQueryParams,
@@ -42,6 +48,7 @@ import type {
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { RefetchReturnType } from '@pipeline/hooks/useReconcile'
+import { StoreMetadata } from '@common/constants/GitSyncTypes'
 import {
   initialServiceState,
   DefaultNewStageName,
@@ -64,6 +71,8 @@ interface FetchServiceUnboundProps {
 export interface ServicePipelineProviderProps {
   queryParams: GetPipelineQueryParams
   initialValue: PipelineInfoConfig
+  storeMetadata?: StoreMetadata
+  gitDetails?: EntityGitDetails
   onUpdatePipeline: (pipeline: ServicePipelineConfig) => void
   contextType: PipelineContextType
   isReadOnly: boolean
@@ -95,6 +104,8 @@ const getServiceByIdentifier = (
 export function ServicePipelineProvider({
   queryParams,
   initialValue,
+  storeMetadata = {},
+  gitDetails = {},
   serviceIdentifier,
   onUpdatePipeline,
   isReadOnly,
@@ -110,7 +121,7 @@ export function ServicePipelineProvider({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const scope = getScopeFromDTO(queryParams)
-  const [state, dispatch] = React.useReducer(PipelineReducer, initialState)
+  const [state, dispatch] = React.useReducer(PipelineReducer, { ...initialState, storeMetadata, gitDetails })
   const [view, setView] = useLocalStorage<SelectedView>('pipeline_studio_view', SelectedView.VISUAL)
   const setSchemaErrorView = React.useCallback(flag => {
     dispatch(PipelineContextActions.updateSchemaErrorsFlag({ schemaErrors: flag }))
@@ -186,14 +197,14 @@ export function ServicePipelineProvider({
       const serviceYaml = yamlParse<NGServiceConfig>(defaultTo(serviceDetails.yaml, ''))
       const serviceData = merge(serviceYaml, initialServiceState)
 
-      const defaultPipeline = {
+      const defaultService = {
         identifier: defaultTo(serviceDetails.identifier, DefaultNewPipelineId),
         name: serviceDetails.name as string,
         description: serviceData.service.description,
         tags: serviceData.service.tags,
         gitOpsEnabled: serviceData.service.gitOpsEnabled
       }
-      const refetchedPipeline = produce({ ...defaultPipeline }, draft => {
+      const refetchedService = produce({ ...defaultService }, draft => {
         if (!isEmpty(serviceData.service.serviceDefinition)) {
           set(draft, 'stages[0].stage.name', DefaultNewStageName)
           set(draft, 'stages[0].stage.identifier', DefaultNewStageId)
@@ -209,14 +220,14 @@ export function ServicePipelineProvider({
       dispatch(
         PipelineContextActions.success({
           error: '',
-          pipeline: refetchedPipeline,
-          originalPipeline: cloneDeep(refetchedPipeline),
+          pipeline: refetchedService,
+          originalPipeline: cloneDeep(refetchedService),
           isBEPipelineUpdated: false,
           isUpdated: false
         })
       )
       dispatch(PipelineContextActions.initialized())
-      onUpdatePipeline?.(refetchedPipeline as ServicePipelineConfig)
+      onUpdatePipeline?.(refetchedService as ServicePipelineConfig)
     }
   }
 
@@ -230,7 +241,7 @@ export function ServicePipelineProvider({
     dispatch(PipelineContextActions.updatePipelineView({ pipelineView: data }))
   }, [])
 
-  const fetchCurrentPipeline = async (): Promise<void> => {
+  const fetchCurrentService = async (): Promise<void> => {
     dispatch(
       PipelineContextActions.success({
         error: '',
@@ -264,7 +275,7 @@ export function ServicePipelineProvider({
   )
 
   React.useEffect(() => {
-    fetchCurrentPipeline()
+    fetchCurrentService()
     setSelection({ stageId: initialValue.stages?.[0]?.stage?.identifier })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialValue])
