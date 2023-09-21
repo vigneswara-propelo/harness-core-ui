@@ -16,6 +16,7 @@ import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { isOnPrem } from '@common/utils/utils'
 
 import { StringsMap } from 'stringTypes'
 import type { CEAwsConnectorDTO } from './OverviewStep'
@@ -79,77 +80,82 @@ const useSelectedCards = (featuresEnabled: Features[]) => {
           </>
         ),
         footerNote: ''
-      },
-      {
-        icon: 'ce-visibility-plus',
-        text: getString('platform.connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
-        value: Features.VISIBILITY,
-        desc: (
-          <>
-            {getString('common.resourceLabel')}{' '}
-            <Text inline font={{ variation: FontVariation.SMALL_BOLD }}>
-              {getString('platform.connectors.ceAzure.chooseRequirements.visibility.heading')}
-            </Text>
-          </>
-        ),
-        heading: getString('platform.connectors.ceAws.crossAccountRoleStep1.visible.heading'),
-        prefix: getString('common.aws'),
-        features: [
-          getString('platform.connectors.ceAws.crossAccountRoleStep1.visible.feat1'),
-          getString('platform.connectors.ceAws.crossAccountRoleStep1.visible.feat2')
-        ],
-        footer: (
-          <>
-            {getString('platform.connectors.ceAws.crossAccountRoleStep1.adding')}{' '}
-            <a
-              href="https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#aws_ecs_and_resource_inventory_management"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {getString('platform.connectors.ceAws.crossAccountRoleStep1.thesePermissions')}
-            </a>{' '}
-            {getString('platform.connectors.ceAws.crossAccountRoleStep1.iamRole')}
-          </>
-        ),
-        footerNote: ''
-      },
-      {
-        icon: 'nav-settings',
-        text: getString('platform.connectors.ceAzure.chooseRequirements.optimizationCardDesc'),
-        value: Features.OPTIMIZATION,
-        desc: (
-          <>
-            {getString('platform.connectors.ceAws.crossAccountRoleStep1.cards.autoStopping.prefix')}{' '}
-            <Text inline font={{ variation: FontVariation.SMALL_BOLD }}>
-              {getString('common.ce.autostopping')}
-            </Text>
-          </>
-        ),
-        heading: getString('common.ce.autostopping'),
-        prefix: getString('platform.connectors.ceAws.crossAccountRoleStep1.optimize.prefix'),
-        features: [
-          getString('platform.connectors.ceAws.crossAccountRoleStep1.optimize.feat1'),
-          getString('platform.connectors.ceAws.crossAccountRoleStep1.optimize.feat2'),
-          getString('platform.connectors.ceAzure.chooseRequirements.optimization.feat2'),
-          getString('platform.connectors.ceAzure.chooseRequirements.optimization.feat3'),
-          getString('platform.connectors.ceAzure.chooseRequirements.optimization.feat4')
-        ],
-        footer: (
-          <>
-            {getString('platform.connectors.ceAws.crossAccountRoleStep1.adding')}{' '}
-            <a
-              href="https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#aws_resource_optimization_using_auto_stopping_rules"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {getString('platform.connectors.ceAws.crossAccountRoleStep1.thesePermissions')}
-            </a>{' '}
-            {getString('platform.connectors.ceAws.crossAccountRoleStep1.iamRole')}
-          </>
-        ),
-        footerNote: ''
       }
     ]
+
+    if (!isOnPrem()) {
+      cards.push(
+        {
+          icon: 'ce-visibility-plus',
+          text: getString('platform.connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
+          value: Features.VISIBILITY,
+          desc: (
+            <>
+              {getString('common.resourceLabel')}{' '}
+              <Text inline font={{ variation: FontVariation.SMALL_BOLD }}>
+                {getString('platform.connectors.ceAzure.chooseRequirements.visibility.heading')}
+              </Text>
+            </>
+          ),
+          heading: getString('platform.connectors.ceAws.crossAccountRoleStep1.visible.heading'),
+          prefix: getString('common.aws'),
+          features: [
+            getString('platform.connectors.ceAws.crossAccountRoleStep1.visible.feat1'),
+            getString('platform.connectors.ceAws.crossAccountRoleStep1.visible.feat2')
+          ],
+          footer: (
+            <>
+              {getString('platform.connectors.ceAws.crossAccountRoleStep1.adding')}{' '}
+              <a
+                href="https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#aws_ecs_and_resource_inventory_management"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {getString('platform.connectors.ceAws.crossAccountRoleStep1.thesePermissions')}
+              </a>{' '}
+              {getString('platform.connectors.ceAws.crossAccountRoleStep1.iamRole')}
+            </>
+          ),
+          footerNote: ''
+        },
+        {
+          icon: 'nav-settings',
+          text: getString('platform.connectors.ceAzure.chooseRequirements.optimizationCardDesc'),
+          value: Features.OPTIMIZATION,
+          desc: (
+            <>
+              {getString('platform.connectors.ceAws.crossAccountRoleStep1.cards.autoStopping.prefix')}{' '}
+              <Text inline font={{ variation: FontVariation.SMALL_BOLD }}>
+                {getString('common.ce.autostopping')}
+              </Text>
+            </>
+          ),
+          heading: getString('common.ce.autostopping'),
+          prefix: getString('platform.connectors.ceAws.crossAccountRoleStep1.optimize.prefix'),
+          features: [
+            getString('platform.connectors.ceAws.crossAccountRoleStep1.optimize.feat1'),
+            getString('platform.connectors.ceAws.crossAccountRoleStep1.optimize.feat2'),
+            getString('platform.connectors.ceAzure.chooseRequirements.optimization.feat2'),
+            getString('platform.connectors.ceAzure.chooseRequirements.optimization.feat3'),
+            getString('platform.connectors.ceAzure.chooseRequirements.optimization.feat4')
+          ],
+          footer: (
+            <>
+              {getString('platform.connectors.ceAws.crossAccountRoleStep1.adding')}{' '}
+              <a
+                href="https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#aws_resource_optimization_using_auto_stopping_rules"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {getString('platform.connectors.ceAws.crossAccountRoleStep1.thesePermissions')}
+              </a>{' '}
+              {getString('platform.connectors.ceAws.crossAccountRoleStep1.iamRole')}
+            </>
+          ),
+          footerNote: ''
+        }
+      )
+    }
 
     if (isGovernanceEnabled) {
       cards.push({
