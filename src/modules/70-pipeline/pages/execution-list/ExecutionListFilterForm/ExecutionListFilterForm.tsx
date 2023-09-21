@@ -28,7 +28,6 @@ import type { ModulePathParams, PipelinePathProps, PipelineType } from '@common/
 import InputDatePicker from '@common/components/InputDatePicker/InputDatePicker'
 import { getServiceListPromise } from 'services/cd-ng'
 import { useInfiniteScroll } from '@common/hooks/useInfiniteScroll'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './ExecutionListFilterForm.module.scss'
 
 export type FormView = 'PIPELINE-META'
@@ -89,7 +88,6 @@ export function ExecutionListFilterForm<
   const { getString } = useStrings()
   const { module } = useParams<ModulePathParams>()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelineType<PipelinePathProps>>()
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   const { type, formikProps, isCDEnabled, isCIEnabled, initialValues } = props
   const [searchTerm, setSearchTerm] = useState<string | undefined>()
   const loadMoreRef = useRef(null)
@@ -101,10 +99,9 @@ export function ExecutionListFilterForm<
       orgIdentifier,
       projectIdentifier,
       size: pageSize.current,
-      searchTerm,
-      includeAllServicesAccessibleAtScope: CDS_OrgAccountLevelServiceEnvEnvGroup
+      searchTerm
     }),
-    [accountId, orgIdentifier, projectIdentifier, searchTerm, CDS_OrgAccountLevelServiceEnvEnvGroup]
+    [accountId, orgIdentifier, projectIdentifier, searchTerm]
   )
 
   const [isFetchingServiceNextTime, setIsFetchingServiceNextTime] = useState(true)
