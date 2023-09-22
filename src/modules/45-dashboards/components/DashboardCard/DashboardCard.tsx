@@ -115,7 +115,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
           <Layout.Vertical spacing="large">
             <Text font={{ variation: FontVariation.CARD_TITLE }}>{dashboard?.title}</Text>
             <DashboardTags dashboard={dashboard} />
-            {dashboard?.type !== DashboardType.SHARED && (
+            {dashboard?.type === DashboardType.ACCOUNT && (
               <Layout.Horizontal spacing="small">
                 <Text
                   icon="eye-open"

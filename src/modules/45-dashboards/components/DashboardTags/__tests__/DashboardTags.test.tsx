@@ -15,7 +15,7 @@ import DashboardTags, { DashboardTagProps } from '../DashboardTags'
 
 const defaultTestDashboard: DashboardModel = {
   id: '1',
-  type: DashboardType.SHARED,
+  type: DashboardType.ACCOUNT,
   description: 'testTag',
   title: 'test title',
   view_count: 0,
@@ -47,7 +47,11 @@ describe('DashboardTags', () => {
   })
 
   test('it should display a Harness tag when shared Dashboard displayed', async () => {
-    renderComponent({ dashboard: defaultTestDashboard })
+    const mockDashboard: DashboardModel = {
+      ...defaultTestDashboard,
+      data_source: ['HARNESS']
+    }
+    renderComponent({ dashboard: mockDashboard })
 
     const expectedText: StringKeys = 'dashboards.modules.harness'
     expect(screen.getByText(expectedText)).toBeInTheDocument()

@@ -47,7 +47,7 @@ const mockFolderTwo: customDashboardServices.DashboardFolderModel = {
 
 const defaultTestDashboard: DashboardModel = {
   id: '1',
-  type: DashboardType.SHARED,
+  type: DashboardType.ACCOUNT,
   description: 'testTag',
   title: 'testTitle',
   view_count: 0,

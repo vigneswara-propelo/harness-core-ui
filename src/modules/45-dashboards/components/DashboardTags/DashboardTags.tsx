@@ -20,7 +20,7 @@ const DashboardTags: React.FC<DashboardTagProps> = ({ dashboard }) => {
   const { getString } = useStrings()
   return (
     <Container className={moduleTagCss.predefinedTags}>
-      {dashboard?.type === DashboardType.SHARED && (
+      {dashboard?.data_source.includes(ModuleTags.HARNESS) && (
         <section key={`harness-tag-${dashboard.id}`} className={moduleTagCss.harnessTag}>
           {getString('dashboards.modules.harness')}
         </section>
