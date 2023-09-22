@@ -18,6 +18,7 @@ import {
   FormikForm,
   FormInput,
   getMultiTypeFromValue,
+  Layout,
   MultiTypeInputType,
   SelectOption
 } from '@harness/uicore'
@@ -27,9 +28,11 @@ import { useStrings } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { FormMultiTypeCheckboxField } from '@common/components'
 import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
 import type {
   ECSBlueGreenCreateServiceStepInitialValues,
@@ -68,6 +71,8 @@ const ECSBlueGreenCreateServiceStepEdit = (
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
+  const { expressions } = useVariablesExpression()
+
   const [listenerList, setListenerList] = useState<SelectOption[]>([])
   const [prodListenerRules, setProdListenerRules] = useState<SelectOption[]>([])
   const [prodListenerRulesLoading, setProdListenerRulesLoading] = useState<boolean>(false)
@@ -324,6 +329,18 @@ const ECSBlueGreenCreateServiceStepEdit = (
     <>
       <Formik<ECSBlueGreenCreateServiceStepInitialValues>
         onSubmit={(values: ECSBlueGreenCreateServiceStepInitialValues) => {
+          if (
+            initialValues.spec.sameAsAlreadyRunningInstances === undefined &&
+            values.spec.sameAsAlreadyRunningInstances === false
+          ) {
+            delete values.spec.sameAsAlreadyRunningInstances
+          }
+          if (
+            initialValues.spec.enableAutoScalingInSwapStep === undefined &&
+            values.spec.enableAutoScalingInSwapStep === false
+          ) {
+            delete values.spec.enableAutoScalingInSwapStep
+          }
           onUpdate?.(values)
         }}
         formName="ecsBlueGreenCreateServiceStepEdit"
@@ -601,6 +618,42 @@ const ECSBlueGreenCreateServiceStepEdit = (
                   />
                 )}
               </div>
+
+              <Layout.Horizontal
+                flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
+                className={cx(stepCss.formGroup, stepCss.lg)}
+                margin={{ top: 'medium' }}
+              >
+                <FormMultiTypeCheckboxField
+                  className={css.checkbox}
+                  name="spec.sameAsAlreadyRunningInstances"
+                  label={getString('cd.ecsRollingDeployStep.sameAsAlreadyRunningInstances')}
+                  disabled={readonly}
+                  multiTypeTextbox={{
+                    expressions,
+                    allowableTypes,
+                    defaultValueToReset: false
+                  }}
+                />
+              </Layout.Horizontal>
+
+              <Layout.Horizontal
+                flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
+                className={cx(stepCss.formGroup, stepCss.lg)}
+                margin={{ top: 'medium' }}
+              >
+                <FormMultiTypeCheckboxField
+                  className={css.checkbox}
+                  name="spec.enableAutoScalingInSwapStep"
+                  label={getString('cd.steps.ecsBGCreateServiceStep.labels.enableAutoScalingInSwapStep')}
+                  disabled={readonly}
+                  multiTypeTextbox={{
+                    expressions,
+                    allowableTypes,
+                    defaultValueToReset: false
+                  }}
+                />
+              </Layout.Horizontal>
             </FormikForm>
           )
         }}

@@ -80,7 +80,9 @@ const emptyInitialValuesRuntime: ECSBlueGreenCreateServiceStepInitialValues = {
     prodListener: RUNTIME_INPUT_VALUE,
     prodListenerRuleArn: RUNTIME_INPUT_VALUE,
     stageListener: RUNTIME_INPUT_VALUE,
-    stageListenerRuleArn: RUNTIME_INPUT_VALUE
+    stageListenerRuleArn: RUNTIME_INPUT_VALUE,
+    sameAsAlreadyRunningInstances: RUNTIME_INPUT_VALUE,
+    enableAutoScalingInSwapStep: RUNTIME_INPUT_VALUE
   }
 }
 const existingInitialValues: ECSBlueGreenCreateServiceStepInitialValues = {
@@ -93,7 +95,9 @@ const existingInitialValues: ECSBlueGreenCreateServiceStepInitialValues = {
     prodListener: 'abc-ghi-def',
     prodListenerRuleArn: 'Listener_Rule_2',
     stageListener: 'abc-def-ghi',
-    stageListenerRuleArn: 'Listener_Rule_3'
+    stageListenerRuleArn: 'Listener_Rule_3',
+    sameAsAlreadyRunningInstances: false,
+    enableAutoScalingInSwapStep: false
   }
 }
 const customStepProps: ECSBlueGreenCreateServiceCustomStepProps = {
@@ -246,6 +250,16 @@ describe('GenericExecutionStepEdit tests', () => {
     await userEvent.click(listenerRuleOption2)
     await waitFor(() => expect(stageListenerRuleSelect.value).toBe('Listener_Rule_2'))
 
+    const sameAsAlreadyRunningInstancesCheckbox = queryByNameAttribute(
+      'spec.sameAsAlreadyRunningInstances'
+    ) as HTMLInputElement
+    await userEvent.click(sameAsAlreadyRunningInstancesCheckbox)
+
+    const enableAutoScalingInSwapStepCheckbox = queryByNameAttribute(
+      'spec.enableAutoScalingInSwapStep'
+    ) as HTMLInputElement
+    await userEvent.click(enableAutoScalingInSwapStepCheckbox)
+
     act(() => {
       formikRef.current?.submitForm()
     })
@@ -259,7 +273,9 @@ describe('GenericExecutionStepEdit tests', () => {
           prodListener: 'abc-def-ghi',
           prodListenerRuleArn: 'Listener_Rule_1',
           stageListener: 'abc-ghi-def',
-          stageListenerRuleArn: 'Listener_Rule_2'
+          stageListenerRuleArn: 'Listener_Rule_2',
+          sameAsAlreadyRunningInstances: true,
+          enableAutoScalingInSwapStep: true
         },
         type: StepType.EcsBlueGreenCreateService
       })
@@ -306,7 +322,7 @@ describe('GenericExecutionStepEdit tests', () => {
     const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
     expect(dropdownIcons.length).toBe(5)
     const fixedInputIcons = container.querySelectorAll('span[data-icon="fixed-input"]')
-    expect(fixedInputIcons.length).toBe(6)
+    expect(fixedInputIcons.length).toBe(8)
     let runtimeInputIcons = container.querySelectorAll('span[data-icon="runtime-input"]')
     expect(runtimeInputIcons.length).toBe(0)
     const portalDivs = document.getElementsByClassName('bp3-portal')
@@ -386,7 +402,9 @@ describe('GenericExecutionStepEdit tests', () => {
           prodListener: RUNTIME_INPUT_VALUE,
           prodListenerRuleArn: RUNTIME_INPUT_VALUE,
           stageListener: RUNTIME_INPUT_VALUE,
-          stageListenerRuleArn: RUNTIME_INPUT_VALUE
+          stageListenerRuleArn: RUNTIME_INPUT_VALUE,
+          sameAsAlreadyRunningInstances: RUNTIME_INPUT_VALUE,
+          enableAutoScalingInSwapStep: RUNTIME_INPUT_VALUE
         }
       })
     )
@@ -455,7 +473,9 @@ describe('GenericExecutionStepEdit tests', () => {
           prodListener: '<+input>.regex(<+input>.includes(/test/))',
           prodListenerRuleArn: '<+input>.regex(<+input>.includes(/test/))',
           stageListener: '<+input>.regex(<+input>.includes(/test/))',
-          stageListenerRuleArn: '<+input>.regex(<+input>.includes(/test/))'
+          stageListenerRuleArn: '<+input>.regex(<+input>.includes(/test/))',
+          sameAsAlreadyRunningInstances: RUNTIME_INPUT_VALUE,
+          enableAutoScalingInSwapStep: RUNTIME_INPUT_VALUE
         },
         type: StepType.EcsBlueGreenCreateService
       })

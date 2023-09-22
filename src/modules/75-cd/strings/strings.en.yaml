@@ -128,6 +128,7 @@ steps:
       prodListenerRuleARN: Prod Listener Rule ARN
       stageListener: Stage Listener
       stageListenerRuleARN: Stage Listener Rule ARN
+      enableAutoScalingInSwapStep: Enable Auto Scaling In Swap Step
   elastigroup:
     infraDetailHeader: Elastigroup Infrastructure Details
     connectorSpot: Spot Connector

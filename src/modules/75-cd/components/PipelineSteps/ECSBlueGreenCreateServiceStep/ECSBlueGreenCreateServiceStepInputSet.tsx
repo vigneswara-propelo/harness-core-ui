@@ -11,7 +11,7 @@ import produce from 'immer'
 import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import { connect, FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
-import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypes, SelectOption } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypes, SelectOption, Layout } from '@harness/uicore'
 
 import {
   DeploymentStageConfig,
@@ -24,6 +24,8 @@ import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/pip
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { isValueRuntimeInput } from '@common/utils/utils'
+import { FormMultiTypeCheckboxField } from '@common/components'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
@@ -503,6 +505,50 @@ const ECSBlueGreenCreateServiceStepInputSet = (
           fieldPath={`spec.stageListenerRuleArn`}
           template={template}
         />
+      )}
+
+      {isValueRuntimeInput(template?.spec?.sameAsAlreadyRunningInstances) && (
+        <Layout.Horizontal
+          flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
+          className={cx(stepCss.formGroup, stepCss.md)}
+          margin={{ top: 'medium' }}
+        >
+          <FormMultiTypeCheckboxField
+            className={css.checkbox}
+            name={`${prefix}spec.sameAsAlreadyRunningInstances`}
+            label={getString('cd.ecsRollingDeployStep.sameAsAlreadyRunningInstances')}
+            disabled={readonly}
+            multiTypeTextbox={{
+              expressions,
+              allowableTypes,
+              disabled: readonly,
+              defaultValueToReset: false
+            }}
+            setToFalseWhenEmpty={true}
+          />
+        </Layout.Horizontal>
+      )}
+
+      {isValueRuntimeInput(template?.spec?.enableAutoScalingInSwapStep) && (
+        <Layout.Horizontal
+          flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
+          className={cx(stepCss.formGroup, stepCss.md)}
+          margin={{ top: 'medium' }}
+        >
+          <FormMultiTypeCheckboxField
+            className={css.checkbox}
+            name={`${prefix}spec.enableAutoScalingInSwapStep`}
+            label={getString('cd.steps.ecsBGCreateServiceStep.labels.enableAutoScalingInSwapStep')}
+            disabled={readonly}
+            multiTypeTextbox={{
+              expressions,
+              allowableTypes,
+              disabled: readonly,
+              defaultValueToReset: false
+            }}
+            setToFalseWhenEmpty={true}
+          />
+        </Layout.Horizontal>
       )}
     </>
   )

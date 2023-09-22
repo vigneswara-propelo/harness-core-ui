@@ -30,6 +30,8 @@ export interface ECSBlueGreenCreateServiceStepInitialValues extends StepElementC
     prodListenerRuleArn: string
     stageListener: string
     stageListenerRuleArn: string
+    sameAsAlreadyRunningInstances?: boolean | string
+    enableAutoScalingInSwapStep?: boolean | string
   }
 }
 export interface ECSBlueGreenCreateServiceCustomStepProps {

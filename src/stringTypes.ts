@@ -7118,6 +7118,7 @@ export interface StringsMap {
   'cd.steps.common.undefinedType': string
   'cd.steps.containerStepsCommon.containerConfigurationText': string
   'cd.steps.ecsBGCreateServiceStep.labels.elasticLoadBalancer': string
+  'cd.steps.ecsBGCreateServiceStep.labels.enableAutoScalingInSwapStep': string
   'cd.steps.ecsBGCreateServiceStep.labels.prodListener': string
   'cd.steps.ecsBGCreateServiceStep.labels.prodListenerRuleARN': string
   'cd.steps.ecsBGCreateServiceStep.labels.stageListener': string
