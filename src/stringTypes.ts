@@ -7247,8 +7247,10 @@ export interface StringsMap {
   'cd.webhookEvents.events': string
   'cd.webhookEvents.failedCreateWebhook': string
   'cd.webhookEvents.lastEventDetails': string
+  'cd.webhookEvents.noEvents': string
   'cd.webhookEvents.payloadDetails': string
   'cd.webhookEvents.pusher': string
+  'cd.webhookEvents.selectEventPayload': string
   'cd.webhookEvents.timestamp': string
   'cd.webhookEvents.viewAll': string
   'cd.webhooks.createSubtitle': string

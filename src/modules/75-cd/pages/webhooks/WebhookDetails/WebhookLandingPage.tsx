@@ -30,7 +30,7 @@ import {
   useUpdateGitxWebhookMutation
 } from '@harnessio/react-ng-manager-client'
 import cx from 'classnames'
-import { defaultTo, get } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
 import EmptyContentImg from '@common/images/EmptySearchResults.svg'
 import { ModulePathParams, ProjectPathProps, WebhooksPathProps } from '@common/interfaces/RouteInterfaces'
@@ -182,7 +182,8 @@ export default function WebhookLandingPage(): JSX.Element {
   const time = getReadableDateTime(webhookEvent?.content[0]?.event_trigger_time, 'hh:mm a')
   const date = getReadableDateTime(webhookEvent?.content[0]?.event_trigger_time, 'MMM DD, YYYY')
 
-  const hasEvents = webhookEvent?.content.length
+  const hasData = Boolean(!loadingWebhookEvent && webhookEvent && !isEmpty(webhookEvent.content))
+  const noData = Boolean(!loadingWebhookEvent && webhookEvent && isEmpty(webhookEvent.content))
 
   const handleViewAllEventsClick = (): void => {
     history.replace(
@@ -225,7 +226,7 @@ export default function WebhookLandingPage(): JSX.Element {
         <Layout.Vertical spacing="medium">
           <NGBreadcrumbs customPathParams={{ module }} />
           {(loadingWebhook || loadingUpdateWebhook || isFetching) && <Container height={loadingHeaderHeight} />}
-          {webhookResponse && !loadingWebhook && !isFetching && (
+          {webhookResponse && !loadingWebhook && !isFetching && !loadingUpdateWebhook && (
             <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
               <Layout.Horizontal spacing="small" data-testid={webhookResponse.content.webhook_identifier} width={'78%'}>
                 <Layout.Vertical padding={{ left: 'small' }}>
@@ -305,7 +306,7 @@ export default function WebhookLandingPage(): JSX.Element {
                 <HarnessDocTooltip tooltipId="lastEventDetails" useStandAlone={true} />
               </Text>
             </Layout.Horizontal>
-            {!hasEvents ? (
+            {hasData && (
               <Layout.Vertical padding={{ left: 'large', right: 'large' }}>
                 <Text padding={{ bottom: 'small' }}>{getString('cd.webhookEvents.dateTime')}</Text>
                 <Layout.Horizontal padding={{ bottom: 'large' }}>
@@ -326,12 +327,13 @@ export default function WebhookLandingPage(): JSX.Element {
                   {getString('cd.webhookEvents.viewAll')}
                 </Button>
               </Layout.Vertical>
-            ) : (
+            )}
+            {noData && (
               <Container flex={{ align: 'center-center' }} height="40vh">
                 <Layout.Vertical flex={{ alignItems: 'center' }}>
                   <img src={EmptyContentImg} width={300} height={150} />
                   <Heading level={2} padding={{ top: 'xxlarge' }} margin={{ bottom: 'large' }}>
-                    {getString('auditTrail.emptyStateMessage')}
+                    {getString('cd.webhookEvents.noEvents')}
                   </Heading>
                 </Layout.Vertical>
               </Container>

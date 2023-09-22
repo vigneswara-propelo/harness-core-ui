@@ -28,6 +28,8 @@ export interface PayloadDetails {
   eventId: string
 }
 
+export type CustomColumn<T extends Record<string, any>> = Column<T>
+
 export default function WebhooksEventsList({
   response
 }: {
@@ -37,8 +39,6 @@ export default function WebhooksEventsList({
   const [payloadDetails, setPayloadDetails] = React.useState<PayloadDetails>()
 
   const { getString } = useStrings()
-
-  type CustomColumn<T extends Record<string, any>> = Column<T>
 
   function handlePayloadDetailsClick({ payloadJSON, timestamp, eventId }: PayloadDetails): void {
     setShowPayloadDetails(true)

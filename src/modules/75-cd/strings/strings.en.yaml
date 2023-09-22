@@ -1326,3 +1326,5 @@ webhookEvents:
   lastEventDetails: Last Event Details
   failedCreateWebhook: Failed to set up Web Hook
   backToEdit: Back to Edit
+  selectEventPayload: Select an event to view payload details
+  noEvents: No events found
