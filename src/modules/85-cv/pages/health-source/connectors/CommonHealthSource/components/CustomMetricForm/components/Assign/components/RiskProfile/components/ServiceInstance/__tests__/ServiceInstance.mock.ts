@@ -1,5 +1,6 @@
 import type { RecordProps } from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonCustomMetricFormContainer/CommonCustomMetricFormContainerLayout/CommonCustomMetricFormContainer.types'
 import type { FIELD_ENUM } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
+import { HealthSourceConfig } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import type { ServiceInstanceProps } from '../ServiceInstance'
 
 export const serviceInstancePropsMock: ServiceInstanceProps = {
@@ -17,7 +18,8 @@ export const serviceInstancePropsMock: ServiceInstanceProps = {
     isRecordsLoading: false,
     isQueryRecordsAvailable: false,
     sampleRecords: []
-  }
+  },
+  healthSourceConfig: {} as HealthSourceConfig
 }
 
 export const serviceInstancePropsMockWithDefaultValue: ServiceInstanceProps = {

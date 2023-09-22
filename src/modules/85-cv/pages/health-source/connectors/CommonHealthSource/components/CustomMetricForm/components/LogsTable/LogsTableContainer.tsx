@@ -1,12 +1,18 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
 import { Button, ButtonVariation, Container, Layout, Text } from '@harness/uicore'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { HealthSourceParamValuesRequest, LogRecord, QueryRecordsRequest, useGetSampleLogData } from 'services/cv'
+import {
+  HealthSourceParamValuesRequest,
+  LogRecordsResponse,
+  QueryRecordsRequest,
+  useGetSampleLogData
+} from 'services/cv'
 import { useStrings } from 'framework/strings'
 import {
+  getCanShowServiceInstanceNames,
   getFieldsDefaultValuesFromConfig,
   getIsConnectorRuntimeOrExpression,
   getRequestBodyForSampleLogs
@@ -17,6 +23,7 @@ import type {
   FieldMapping
 } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import { FIELD_ENUM } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
+import ServiceInstanceListDisplay from '@cv/pages/health-source/common/ServiceInstanceListDisplay/ServiceInstanceListDisplay'
 import JsonSelectorWithDrawer from './components/JsonSelectorWithDrawer'
 import LogsTableComponent from './components/LogsTableComponent/LogsTableComponent'
 import CustomMetricsSectionHeader from '../CustomMetricsSectionHeader'
@@ -53,8 +60,8 @@ export default function LogsTableContainer(props: CommonHealthSourceLogsTable): 
     selectOnlyValue
   } = props
   const { values, setValues } = useFormikContext<CommonCustomMetricFormikInterface>()
-  const { query } = values
-  const [logsSampleData, setLogsSampleData] = useState<LogRecord[] | null>(null)
+  const { query, serviceInstanceField } = values
+  const [logsSampleData, setLogsSampleData] = useState<LogRecordsResponse | null>(null)
   const { isTemplate } = useContext(SetupSourceTabsContext)
   const { isQueryRuntimeOrExpression } = useCommonHealthSource()
   const isConnectorRuntimeOrExpression = getIsConnectorRuntimeOrExpression(connectorIdentifier)
@@ -113,10 +120,21 @@ export default function LogsTableContainer(props: CommonHealthSourceLogsTable): 
 
     fetchSampleLogs(fetchSampleLogsPayload as QueryRecordsRequest).then(sampleData => {
       if (sampleData?.resource?.logRecords) {
-        setLogsSampleData(sampleData.resource.logRecords)
+        setLogsSampleData(sampleData.resource)
       }
     })
   }
+
+  const canShowServiceInstanceName = useMemo(
+    () =>
+      getCanShowServiceInstanceNames({
+        isConnectorRuntimeOrExpression,
+        isQueryRuntimeOrExpression,
+        query,
+        serviceInstanceField
+      }),
+    [isConnectorRuntimeOrExpression, isQueryRuntimeOrExpression, query, serviceInstanceField]
+  )
 
   return (
     <Container margin={{ top: 'medium' }}>
@@ -152,6 +170,13 @@ export default function LogsTableContainer(props: CommonHealthSourceLogsTable): 
             })
           : null}
       </Container>
+
+      {canShowServiceInstanceName ? (
+        <Container margin={{ bottom: 'large' }}>
+          <ServiceInstanceListDisplay serviceInstanceList={logsSampleData?.serviceInstances} />
+        </Container>
+      ) : null}
+
       {getCanShowSampleLogButton({
         isQueryRuntimeOrExpression,
         isConnectorRuntimeOrExpression,
@@ -180,7 +205,7 @@ export default function LogsTableContainer(props: CommonHealthSourceLogsTable): 
         loading={logsLoading}
         error={logsError}
         fetchSampleRecords={handleFetchSampleLogs}
-        sampleData={logsSampleData}
+        sampleData={logsSampleData?.logRecords}
       />
     </Container>
   )

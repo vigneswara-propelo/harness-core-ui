@@ -36,7 +36,8 @@ export default function SelectHealthSourceServices({
   customServiceInstanceName,
   fieldNames = {},
   riskProfileResponse,
-  hideServiceInstanceMetricPathTemplate
+  hideServiceInstanceMetricPathTemplate,
+  showServiceInstanceNames
 }: SelectHealthSourceServicesProps): JSX.Element {
   const { getString } = useStrings()
 
@@ -114,6 +115,7 @@ export default function SelectHealthSourceServices({
           fieldNames={fieldNames}
           isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
           riskProfileResponse={riskProfileResponse}
+          showServiceInstanceNames={showServiceInstanceNames}
         />
       )}
     </Container>

@@ -1,0 +1,11 @@
+.serviceInstanceName {
+  background: var(--grey-100) !important;
+  padding: var(--spacing-small) !important;
+  border-radius: 4px;
+}
+
+.serviceInstanceNameHolder {
+  flex-wrap: wrap !important;
+  word-break: break-all;
+  gap: var(--spacing-small);
+}

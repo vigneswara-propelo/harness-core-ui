@@ -182,6 +182,7 @@ export function getRequestBodyForSampleLogs(
 ): QueryRecordsRequest | null {
   const { connectorIdentifier, query, fieldMappings, queryField, formValues } = otherValues
   const currentTime = new Date()
+
   const startTime = currentTime.setHours(currentTime.getHours() - 2)
   const healthSourceQueryParams: { [x: string]: string } = {}
 
@@ -692,4 +693,25 @@ export function getFieldName(
 
 export const getSelectedProductInfo = (selectedProduct: string): string => {
   return PRODUCT_MAP[selectedProduct] || selectedProduct
+}
+
+export const getCanShowServiceInstanceNames = ({
+  isQueryRuntimeOrExpression,
+  isConnectorRuntimeOrExpression,
+  query,
+  serviceInstanceField
+}: {
+  isQueryRuntimeOrExpression?: boolean
+  isConnectorRuntimeOrExpression?: boolean
+  query?: string
+  serviceInstanceField?: string | SelectOption
+}): boolean => {
+  const isServiceInstanceRuntimeOrExpression = getMultiTypeFromValue(serviceInstanceField) !== MultiTypeInputType.FIXED
+  return Boolean(
+    query &&
+      serviceInstanceField &&
+      !isQueryRuntimeOrExpression &&
+      !isConnectorRuntimeOrExpression &&
+      !isServiceInstanceRuntimeOrExpression
+  )
 }

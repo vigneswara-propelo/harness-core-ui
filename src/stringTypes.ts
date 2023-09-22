@@ -10075,7 +10075,9 @@ export interface StringsMap {
   'cv.monitoringSources.riskCategoryLabel': string
   'cv.monitoringSources.riskCategoryTemplateNote': string
   'cv.monitoringSources.riskProfile': string
+  'cv.monitoringSources.serviceInstanceHostNamesTitle': string
   'cv.monitoringSources.serviceInstanceIdentifier': string
+  'cv.monitoringSources.serviceInstanceNameFetchButtonTitle': string
   'cv.monitoringSources.serviceValidation': string
   'cv.monitoringSources.splunk.addSplunkGroupName': string
   'cv.monitoringSources.splunk.defaultSplunkMetricName': string

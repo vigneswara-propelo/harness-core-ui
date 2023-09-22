@@ -117,7 +117,8 @@ describe('Unit tests for CloudMetricsHealthSource', () => {
         serviceInstance: mockCloudMetricHealthSourcePropsValue.formikProps.values.serviceInstance
       },
       riskProfileResponse: riskCategoryMock,
-      labelNamesResponse: { data: { data: ['cluster-name'] } }
+      labelNamesResponse: { data: { data: ['cluster-name'] } },
+      showServiceInstanceNames: true
     })
     expect(mockMonacoEditor).toHaveBeenCalledTimes(0)
   })

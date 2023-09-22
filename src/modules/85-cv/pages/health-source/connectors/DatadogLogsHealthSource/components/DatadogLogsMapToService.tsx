@@ -25,6 +25,9 @@ import { useGetDatadogLogIndexes, useGetDatadogLogSampleData } from 'services/cv
 
 import { MapDatadogLogsFieldNames } from '@cv/pages/health-source/connectors/DatadogLogsHealthSource/components/DatadogLogsMapToService.constants'
 import type { DatadogLogsMapToServiceProps } from '@cv/pages/health-source/connectors/DatadogLogsHealthSource/components/DatadogLogsMapToService.type'
+import ServiceInstanceListDisplayWithFetch from '@cv/pages/health-source/common/ServiceInstanceListDisplay/ServiceInstanceListDisplayWithFetch'
+import { HealthSourceTypes } from '@cv/pages/health-source/types'
+import { getCanShowServiceInstanceNames } from './DatadogLogsMapToService.utils'
 import css from '@cv/pages/health-source/connectors/DatadogLogsHealthSource/components/DatadogLogsMapToService.module.scss'
 
 export default function DatadogLogsMapToService(props: DatadogLogsMapToServiceProps): JSX.Element {
@@ -39,6 +42,9 @@ export default function DatadogLogsMapToService(props: DatadogLogsMapToServicePr
 
   const connectorIdentifier = sourceData?.connectorRef?.value || (sourceData.connectorRef as string)
   const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
+  const isQueryRuntimeOrExpression = getMultiTypeFromValue(query) !== MultiTypeInputType.FIXED
+  const isServiceInstanceRuntimeOrExpression =
+    getMultiTypeFromValue(values?.serviceInstanceIdentifierTag) !== MultiTypeInputType.FIXED
 
   const { data: indexes } = useGetDatadogLogIndexes({
     queryParams: {
@@ -104,6 +110,24 @@ export default function DatadogLogsMapToService(props: DatadogLogsMapToServicePr
     })
   }, [indexes?.data])
 
+  const canShowServiceInstanceNames = useMemo(
+    () =>
+      getCanShowServiceInstanceNames({
+        isConnectorRuntimeOrExpression,
+        isQueryRuntimeOrExpression,
+        isServiceInstanceRuntimeOrExpression,
+        query,
+        serviceInstanceIdentifierTag: values?.serviceInstanceIdentifierTag
+      }),
+    [
+      isConnectorRuntimeOrExpression,
+      isQueryRuntimeOrExpression,
+      isServiceInstanceRuntimeOrExpression,
+      query,
+      values?.serviceInstanceIdentifierTag
+    ]
+  )
+
   return (
     <Container className={css.main}>
       <SetupSourceCardHeader
@@ -166,6 +190,13 @@ export default function DatadogLogsMapToService(props: DatadogLogsMapToServicePr
                       }}
                     />
                   )}
+                  {canShowServiceInstanceNames ? (
+                    <ServiceInstanceListDisplayWithFetch
+                      connectorIdentifier={connectorIdentifier}
+                      healthSourceType={HealthSourceTypes.DatadogLog}
+                      isLogHealthSource
+                    />
+                  ) : null}
                 </Container>
               }
             />

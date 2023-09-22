@@ -138,4 +138,124 @@ describe('Common health source ServiceInstance', () => {
       expect(serviceInput).toHaveValue('test service input')
     })
   })
+
+  test('should show service instance names, when all conditions satisfies', () => {
+    const WrapperComponentWithServiceContext = (props: Partial<TestServiceInstancePropsType>): JSX.Element => {
+      const serviceInstanceComponentProps = {
+        ...serviceInstancePropsMockWithDefaultValue,
+        ...props
+      }
+      return (
+        <TestWrapper defaultFeatureFlagValues={{ SRM_CV_UI_HEALTHSOURCE_SERVICE_INSTANCE_PREVIEW: true }}>
+          <SetupSourceTabsProvider
+            isTemplate
+            sourceData={{ connectorRef: 'connectorRefTest' }}
+            onNext={Promise.resolve}
+            onPrevious={Promise.resolve}
+          >
+            <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
+              <Formik initialValues={{ query: '*' }} onSubmit={Promise.resolve}>
+                <ServiceInstance {...serviceInstanceComponentProps} />
+              </Formik>
+            </CommonHealthSourceProvider>
+          </SetupSourceTabsProvider>
+        </TestWrapper>
+      )
+    }
+
+    render(<WrapperComponentWithServiceContext recordProps={serviceInstancePropsMockWithRecords} query="<+input>" />)
+
+    const fetchButton = screen.getByTestId(/serviceInstanceFetchButton/)
+    expect(fetchButton).toBeInTheDocument()
+  })
+
+  test('should not show service instance names, when query is runtime value', () => {
+    const WrapperComponentWithServiceContext = (props: Partial<TestServiceInstancePropsType>): JSX.Element => {
+      const serviceInstanceComponentProps = {
+        ...serviceInstancePropsMockWithDefaultValue,
+        ...props
+      }
+      return (
+        <TestWrapper defaultFeatureFlagValues={{ SRM_CV_UI_HEALTHSOURCE_SERVICE_INSTANCE_PREVIEW: true }}>
+          <SetupSourceTabsProvider
+            isTemplate
+            sourceData={{ connectorRef: 'connectorRefTest' }}
+            onNext={Promise.resolve}
+            onPrevious={Promise.resolve}
+          >
+            <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
+              <Formik initialValues={{ query: '<+input>' }} onSubmit={Promise.resolve}>
+                <ServiceInstance {...serviceInstanceComponentProps} />
+              </Formik>
+            </CommonHealthSourceProvider>
+          </SetupSourceTabsProvider>
+        </TestWrapper>
+      )
+    }
+
+    render(<WrapperComponentWithServiceContext recordProps={serviceInstancePropsMockWithRecords} query="<+input>" />)
+
+    const fetchButton = screen.queryByTestId(/serviceInstanceFetchButton/)
+    expect(fetchButton).not.toBeInTheDocument()
+  })
+
+  test('should not show service instance names, when connectorRef is runtime value', () => {
+    const WrapperComponentWithServiceContext = (props: Partial<TestServiceInstancePropsType>): JSX.Element => {
+      const serviceInstanceComponentProps = {
+        ...serviceInstancePropsMockWithDefaultValue,
+        ...props
+      }
+      return (
+        <TestWrapper defaultFeatureFlagValues={{ SRM_CV_UI_HEALTHSOURCE_SERVICE_INSTANCE_PREVIEW: true }}>
+          <SetupSourceTabsProvider
+            isTemplate
+            sourceData={{ connectorRef: '<+input>' }}
+            onNext={Promise.resolve}
+            onPrevious={Promise.resolve}
+          >
+            <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
+              <Formik initialValues={{ query: '*' }} onSubmit={Promise.resolve}>
+                <ServiceInstance {...serviceInstanceComponentProps} />
+              </Formik>
+            </CommonHealthSourceProvider>
+          </SetupSourceTabsProvider>
+        </TestWrapper>
+      )
+    }
+
+    render(<WrapperComponentWithServiceContext recordProps={serviceInstancePropsMockWithRecords} query="<+input>" />)
+
+    const fetchButton = screen.queryByTestId(/serviceInstanceFetchButton/)
+    expect(fetchButton).not.toBeInTheDocument()
+  })
+
+  test('should not show service instance names, when service instance is runtime value', () => {
+    const WrapperComponentWithServiceContext = (props: Partial<TestServiceInstancePropsType>): JSX.Element => {
+      const serviceInstanceComponentProps = {
+        ...serviceInstancePropsMockWithDefaultValue,
+        ...props
+      }
+      return (
+        <TestWrapper defaultFeatureFlagValues={{ SRM_CV_UI_HEALTHSOURCE_SERVICE_INSTANCE_PREVIEW: true }}>
+          <SetupSourceTabsProvider
+            isTemplate
+            sourceData={{ connectorRef: 'test' }}
+            onNext={Promise.resolve}
+            onPrevious={Promise.resolve}
+          >
+            <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
+              <Formik initialValues={{ query: '*' }} onSubmit={Promise.resolve}>
+                <ServiceInstance {...serviceInstanceComponentProps} serviceInstanceField="<+input>" />
+              </Formik>
+            </CommonHealthSourceProvider>
+          </SetupSourceTabsProvider>
+        </TestWrapper>
+      )
+    }
+
+    render(<WrapperComponentWithServiceContext recordProps={serviceInstancePropsMockWithRecords} query="<+input>" />)
+
+    const fetchButton = screen.queryByTestId(/serviceInstanceFetchButton/)
+    expect(fetchButton).not.toBeInTheDocument()
+  })
 })

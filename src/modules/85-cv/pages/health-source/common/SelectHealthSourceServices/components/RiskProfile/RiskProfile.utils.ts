@@ -6,8 +6,11 @@
  */
 
 import type { IOptionProps } from '@blueprintjs/core'
+import { MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
 import { RadioGroupProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
-import type { MetricPackDTO, RiskCategoryDTO } from 'services/cv'
+import { HealthSourceTypes } from '@cv/pages/health-source/types'
+import type { MetricPackDTO, QueryRecordsRequest, RiskCategoryDTO } from 'services/cv'
+import { DatadogProduct } from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/DatadogMetricsHealthSource.utils'
 
 export function getRiskCategoryOptions(metricPacks?: MetricPackDTO[]): IOptionProps[] {
   if (!metricPacks?.length) {
@@ -51,4 +54,50 @@ export function getRiskCategoryOptionsV2(riskCategories?: RiskCategoryDTO[]): Ra
   }
 
   return riskCategoryOptions
+}
+
+export const getCanShowServiceInstanceNames = ({
+  showServiceInstanceNames,
+  serviceInstance,
+  isConnectorRuntimeOrExpression,
+  sourceType,
+  dataSourceType,
+  metricType,
+  query
+}: {
+  showServiceInstanceNames?: boolean
+  serviceInstance?: string
+  isConnectorRuntimeOrExpression?: boolean
+  sourceType: HealthSourceTypes
+  dataSourceType?: string
+  metricType?: string
+  query?: string
+}): boolean => {
+  const isQueryRuntimeOrExpression = getMultiTypeFromValue(query) !== MultiTypeInputType.FIXED
+  const isServiceInstanceRuntimeOrExpression = getMultiTypeFromValue(serviceInstance) !== MultiTypeInputType.FIXED
+
+  /**
+   * 💡 Service instance names section is enabled only for Prometheus and Datadog in metrics
+   */
+  return Boolean(
+    showServiceInstanceNames &&
+      query &&
+      serviceInstance &&
+      !isConnectorRuntimeOrExpression &&
+      !isServiceInstanceRuntimeOrExpression &&
+      !isQueryRuntimeOrExpression &&
+      ((sourceType === HealthSourceTypes.Prometheus && dataSourceType === HealthSourceTypes.Prometheus) ||
+        sourceType === HealthSourceTypes.DatadogMetrics ||
+        metricType === DatadogProduct.CLOUD_METRICS)
+  )
+}
+
+export const getHealthSourceTypeForServiceInstanceNames = (
+  healthSourceType: QueryRecordsRequest['healthSourceType']
+): QueryRecordsRequest['healthSourceType'] => {
+  if (healthSourceType === HealthSourceTypes.Prometheus || healthSourceType === HealthSourceTypes.DatadogMetrics) {
+    return healthSourceType
+  } else if (healthSourceType === (HealthSourceTypes.Datadog as QueryRecordsRequest['healthSourceType'])) {
+    return HealthSourceTypes.DatadogMetrics
+  }
 }

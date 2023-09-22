@@ -6,10 +6,13 @@
  */
 
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { Classes } from '@blueprintjs/core'
+import { Formik } from 'formik'
 import type { useGetMetricPacks, useGetLabelNames } from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
+import { HealthSourceTypes } from '@cv/pages/health-source/types'
+import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { RiskProfile } from '../RiskProfile'
 
 const showErrorMock = jest.fn()
@@ -128,10 +131,12 @@ describe('Unit tests for RiskProfile', () => {
   test('Ensure that api result is rendered correctly', async () => {
     const { getByText } = render(
       <TestWrapper>
-        <RiskProfile
-          metricPackResponse={MockResponse}
-          labelNamesResponse={{ data: MockLabels } as unknown as ReturnType<typeof useGetLabelNames>}
-        />
+        <Formik initialValues={{ query: '*', serviceInstance: 'hostName' }} onSubmit={Promise.resolve}>
+          <RiskProfile
+            metricPackResponse={MockResponse}
+            labelNamesResponse={{ data: MockLabels } as unknown as ReturnType<typeof useGetLabelNames>}
+          />
+        </Formik>
       </TestWrapper>
     )
 
@@ -145,10 +150,12 @@ describe('Unit tests for RiskProfile', () => {
   test('Ensure that loading state is rendered correctly', async () => {
     const { container } = render(
       <TestWrapper>
-        <RiskProfile
-          metricPackResponse={{ loading: true } as unknown as ReturnType<typeof useGetMetricPacks>}
-          labelNamesResponse={{ data: MockLabels } as unknown as ReturnType<typeof useGetLabelNames>}
-        />
+        <Formik initialValues={{ query: '*', serviceInstance: 'hostName' }} onSubmit={Promise.resolve}>
+          <RiskProfile
+            metricPackResponse={{ loading: true } as unknown as ReturnType<typeof useGetMetricPacks>}
+            labelNamesResponse={{ data: MockLabels } as unknown as ReturnType<typeof useGetLabelNames>}
+          />
+        </Formik>
       </TestWrapper>
     )
 
@@ -158,15 +165,74 @@ describe('Unit tests for RiskProfile', () => {
   test('Ensure that when an error occurs, the error is displayed', async () => {
     render(
       <TestWrapper>
-        <RiskProfile
-          metricPackResponse={
-            { error: { data: { detailedMessage: 'someError' } } } as unknown as ReturnType<typeof useGetMetricPacks>
-          }
-          labelNamesResponse={{ data: MockLabels } as unknown as ReturnType<typeof useGetLabelNames>}
-        />
+        <Formik initialValues={{ query: '*', serviceInstance: 'hostName' }} onSubmit={Promise.resolve}>
+          <RiskProfile
+            metricPackResponse={
+              { error: { data: { detailedMessage: 'someError' } } } as unknown as ReturnType<typeof useGetMetricPacks>
+            }
+            labelNamesResponse={{ data: MockLabels } as unknown as ReturnType<typeof useGetLabelNames>}
+          />
+        </Formik>
       </TestWrapper>
     )
 
     await waitFor(() => expect(showErrorMock).toBeCalledWith('someError', 7000))
+  })
+
+  test('should test service instance names section should render when showServiceInstanceNames prop is passed', async () => {
+    render(
+      <TestWrapper defaultFeatureFlagValues={{ SRM_CV_UI_HEALTHSOURCE_SERVICE_INSTANCE_PREVIEW: true }}>
+        <SetupSourceTabsContext.Provider
+          value={{
+            sourceData: { connectorRef: 'connectorRefValue', sourceType: HealthSourceTypes.DatadogMetrics },
+            onNext: Promise.resolve,
+            onPrevious: Promise.resolve
+          }}
+        >
+          <Formik initialValues={{ query: '*', serviceInstance: 'hostName' }} onSubmit={Promise.resolve}>
+            <RiskProfile
+              metricPackResponse={
+                { error: { data: { detailedMessage: 'someError' } } } as unknown as ReturnType<typeof useGetMetricPacks>
+              }
+              labelNamesResponse={{ data: MockLabels } as unknown as ReturnType<typeof useGetLabelNames>}
+              showServiceInstanceNames
+              continuousVerificationEnabled
+            />
+          </Formik>
+        </SetupSourceTabsContext.Provider>
+      </TestWrapper>
+    )
+
+    const fetchServiceInstancesButton = screen.getByTestId(/serviceInstanceFetchButton/)
+
+    await waitFor(() => expect(fetchServiceInstancesButton).toBeInTheDocument())
+  })
+
+  test('should test service instance names section should not render when showServiceInstanceNames prop is not passed', async () => {
+    render(
+      <TestWrapper defaultFeatureFlagValues={{ SRM_CV_UI_HEALTHSOURCE_SERVICE_INSTANCE_PREVIEW: true }}>
+        <SetupSourceTabsContext.Provider
+          value={{
+            sourceData: { connectorRef: 'connectorRefValue', sourceType: HealthSourceTypes.DatadogMetrics },
+            onNext: Promise.resolve,
+            onPrevious: Promise.resolve
+          }}
+        >
+          <Formik initialValues={{ query: '*', serviceInstance: 'hostName' }} onSubmit={Promise.resolve}>
+            <RiskProfile
+              metricPackResponse={
+                { error: { data: { detailedMessage: 'someError' } } } as unknown as ReturnType<typeof useGetMetricPacks>
+              }
+              labelNamesResponse={{ data: MockLabels } as unknown as ReturnType<typeof useGetLabelNames>}
+              continuousVerificationEnabled
+            />
+          </Formik>
+        </SetupSourceTabsContext.Provider>
+      </TestWrapper>
+    )
+
+    const fetchServiceInstancesButton = screen.queryByTestId(/serviceInstanceFetchButton/)
+
+    await waitFor(() => expect(fetchServiceInstancesButton).not.toBeInTheDocument())
   })
 })

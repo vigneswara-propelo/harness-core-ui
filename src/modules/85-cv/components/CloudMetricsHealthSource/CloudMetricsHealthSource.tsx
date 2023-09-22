@@ -162,6 +162,7 @@ export default function CloudMetricsHealthSource<T>(props: CloudMetricsHealthSou
                           }
                           isTemplate={isTemplate}
                           expressions={expressions}
+                          showServiceInstanceNames
                         />
                       </Container>
                     </Container>

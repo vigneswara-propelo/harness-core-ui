@@ -67,6 +67,7 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
           continuousVerificationEnabled={continuousVerificationEnabled}
           recordProps={recordProps}
           fieldsToFetchRecords={fieldsToFetchRecords}
+          healthSourceConfig={healthSourceConfig}
         />
       </Layout.Vertical>
     </>

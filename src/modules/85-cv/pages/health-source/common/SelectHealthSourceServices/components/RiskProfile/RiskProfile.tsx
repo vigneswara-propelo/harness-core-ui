@@ -5,17 +5,25 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useContext, useEffect, useMemo } from 'react'
 import { Classes } from '@blueprintjs/core'
 import { Container, FormInput, Label, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
+import { useFormikContext } from 'formik'
 import { useToaster } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import type { useGetMetricPacks, useGetLabelNames, useGetRiskCategoryForCustomHealthMetric } from 'services/cv'
 import { ServiceInstanceLabel } from '@cv/pages/health-source/common/ServiceInstanceLabel/ServiceInstanceLabel'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
-import { getRiskCategoryOptions, getRiskCategoryOptionsV2 } from './RiskProfile.utils'
+import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
+import {
+  getCanShowServiceInstanceNames,
+  getHealthSourceTypeForServiceInstanceNames,
+  getRiskCategoryOptions,
+  getRiskCategoryOptionsV2
+} from './RiskProfile.utils'
 import { FieldNames } from './RiskProfile.constant'
 import type { SelectHealthSourceServicesProps } from '../../SelectHealthSourceServices.types'
+import ServiceInstanceListDisplayWithFetch from '../../../ServiceInstanceListDisplay/ServiceInstanceListDisplayWithFetch'
 import css from './RiskProfile.module.scss'
 
 interface RiskProfileProps {
@@ -29,6 +37,7 @@ interface RiskProfileProps {
   expressions?: string[]
   isConnectorRuntimeOrExpression?: boolean
   fieldNames?: SelectHealthSourceServicesProps['fieldNames']
+  showServiceInstanceNames?: boolean
 }
 
 export function RiskProfile(props: RiskProfileProps): JSX.Element {
@@ -42,13 +51,20 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
     expressions,
     isConnectorRuntimeOrExpression,
     fieldNames = {},
-    riskProfileResponse
+    riskProfileResponse,
+    showServiceInstanceNames
   } = props
   const { error, loading, data } = metricPackResponse || {}
   const { error: riskProfileError, loading: riskProfileLoading, data: riskProfileData } = riskProfileResponse || {}
 
   const { getString } = useStrings()
   const { showError, clear } = useToaster()
+
+  const { sourceData } = useContext(SetupSourceTabsContext)
+
+  const { values } = useFormikContext<{ serviceInstance?: string; query?: string }>()
+
+  const connectorIdentifier = (sourceData?.connectorRef?.value || sourceData?.connectorRef) as string
 
   const riskCategoryItems = useMemo(() => {
     if (data) {
@@ -59,6 +75,28 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
 
     return []
   }, [data, riskProfileData])
+
+  const canShowServiceInstanceNames = useMemo(
+    () =>
+      getCanShowServiceInstanceNames({
+        sourceType: sourceData?.sourceType,
+        dataSourceType: sourceData?.dataSourceType,
+        isConnectorRuntimeOrExpression,
+        serviceInstance: values?.serviceInstance,
+        metricType: sourceData?.product?.value,
+        showServiceInstanceNames,
+        query: values?.query
+      }),
+    [
+      sourceData?.sourceType,
+      sourceData?.dataSourceType,
+      sourceData?.product?.value,
+      isConnectorRuntimeOrExpression,
+      values?.serviceInstance,
+      values?.query,
+      showServiceInstanceNames
+    ]
+  )
 
   const { riskProfileCategory, higherBaselineDeviation, lowerBaselineDeviation } = fieldNames
 
@@ -118,32 +156,41 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
       </Container>
 
       {continuousVerificationEnabled ? (
-        isTemplate ? (
-          <>
-            <Label>
-              <ServiceInstanceLabel />
-            </Label>
-            <FormInput.MultiTypeInput
-              label=""
+        <>
+          {isTemplate ? (
+            <>
+              <Label>
+                <ServiceInstanceLabel />
+              </Label>
+              <FormInput.MultiTypeInput
+                label=""
+                name={FieldNames.SERVICE_INSTANCE}
+                selectItems={transformedLabelNames}
+                multiTypeInputProps={{
+                  expressions,
+                  allowableTypes: isConnectorRuntimeOrExpression
+                    ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+                    : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+                  value: serviceInstance ? { label: serviceInstance, value: serviceInstance } : undefined
+                }}
+              />
+            </>
+          ) : (
+            <FormInput.Select
               name={FieldNames.SERVICE_INSTANCE}
-              selectItems={transformedLabelNames}
-              multiTypeInputProps={{
-                expressions,
-                allowableTypes: isConnectorRuntimeOrExpression
-                  ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
-                  : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
-                value: serviceInstance ? { label: serviceInstance, value: serviceInstance } : undefined
-              }}
+              label={<ServiceInstanceLabel />}
+              items={transformedLabelNames}
+              value={serviceInstance ? { label: serviceInstance, value: serviceInstance } : undefined}
             />
-          </>
-        ) : (
-          <FormInput.Select
-            name={FieldNames.SERVICE_INSTANCE}
-            label={<ServiceInstanceLabel />}
-            items={transformedLabelNames}
-            value={serviceInstance ? { label: serviceInstance, value: serviceInstance } : undefined}
-          />
-        )
+          )}
+
+          {canShowServiceInstanceNames ? (
+            <ServiceInstanceListDisplayWithFetch
+              connectorIdentifier={connectorIdentifier}
+              healthSourceType={getHealthSourceTypeForServiceInstanceNames(sourceData.sourceType)}
+            />
+          ) : null}
+        </>
       ) : null}
     </Container>
   )

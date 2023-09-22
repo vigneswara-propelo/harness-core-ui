@@ -235,6 +235,8 @@ monitoringSources:
   addMetric: Add Metric
   addQuery: Add Query
   totalMappedQueries: '{{total}} {{query}} mapped'
+  serviceInstanceHostNamesTitle: Service instance host names
+  serviceInstanceNameFetchButtonTitle: Get all Service instance names
   commonHealthSource:
     metric: HealthSource Metric
     chart: Chart
