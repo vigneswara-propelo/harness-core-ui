@@ -37,6 +37,7 @@ export interface FlatInitialValuesInterface {
   pipelineBranchName?: string
   inputSetRefs?: string[]
   cronFormat?: CronFormat
+  stagesToExecute?: string[]
 }
 
 export interface FlatOnEditValuesInterface {
@@ -67,6 +68,7 @@ export interface FlatOnEditValuesInterface {
   pipelineBranchName?: string
   inputSetRefs?: string[]
   cronFormat?: CronFormat
+  stagesToExecute?: string[]
 }
 
 export interface FlatValidScheduleFormikValuesInterface {

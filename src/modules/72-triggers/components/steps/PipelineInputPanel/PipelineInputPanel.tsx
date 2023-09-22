@@ -126,7 +126,7 @@ function PipelineInputPanelForm({ formikProps, isEdit }: PipelineInputPanelProps
   const { data: template, loading } = useMutateAsGet(useGetTemplateFromPipeline, {
     queryParams: commonQueryParams,
     body: {
-      stageIdentifiers: []
+      stageIdentifiers: formikProps?.values?.stagesToExecute ?? []
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     ...(isNewGitSyncRemotePipeline && { debounce: 300 })

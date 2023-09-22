@@ -353,6 +353,7 @@ export default function ScheduledTriggerWizard(
       triggerType: baseType,
       identifier: '',
       tags: {},
+      stagesToExecute: triggerData?.stagesToExecute,
       selectedScheduleTab: scheduleTabsId.MINUTES,
       pipeline: newPipeline,
       originalPipeline,
@@ -514,7 +515,8 @@ export default function ScheduledTriggerWizard(
             spec: {
               spec: { expression, type }
             }
-          }
+          },
+          stagesToExecute
         }
       } = triggerResponseJson
 
@@ -546,6 +548,7 @@ export default function ScheduledTriggerWizard(
         name,
         identifier,
         description,
+        stagesToExecute,
         tags,
         pipeline: pipelineJson,
         triggerType: 'Scheduled',
@@ -759,12 +762,14 @@ export default function ScheduledTriggerWizard(
     latestPipeline,
     latestYamlTemplate,
     orgPipeline,
-    setSubmitting
+    setSubmitting,
+    stagesToExecute
   }: {
     latestPipeline: { pipeline: PipelineInfoConfig }
     latestYamlTemplate: PipelineInfoConfig
     orgPipeline: PipelineInfoConfig | undefined
     setSubmitting: (bool: boolean) => void
+    stagesToExecute?: string[]
   }): Promise<any> => {
     let errors = formErrors
     function validateErrors(): Promise<FormikErrors<FlatValidScheduleFormikValuesInterface>> {
@@ -778,7 +783,8 @@ export default function ScheduledTriggerWizard(
               resolvedPipeline: resolvedMergedPipeline,
               getString,
               viewType: StepViewType.TriggerForm,
-              viewTypeMetadata: { isTrigger: true }
+              viewTypeMetadata: { isTrigger: true },
+              stagesToExecute
             }) as any) || formErrors
           resolve(validatedErrors)
         } catch (e) {
@@ -851,7 +857,8 @@ export default function ScheduledTriggerWizard(
             latestPipeline: latestPipelineFromYamlView || latestPipeline,
             latestYamlTemplate: yamlTemplate,
             orgPipeline: values.pipeline,
-            setSubmitting
+            setSubmitting,
+            stagesToExecute: formikProps.values?.stagesToExecute
           })
     const gitXErrors = isNewGitSyncRemotePipeline
       ? omitBy({ pipelineBranchName: _pipelineBranchNameError, inputSetRefs: _inputSetRefsError }, value => !value)
