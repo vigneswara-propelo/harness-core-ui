@@ -1,0 +1,9 @@
+.disabled:global(.monaco-editor) {
+  --disabled-bg: var(--grey-100);
+
+  --vscode-editor-background: var(--disabled-bg);
+  --vscode-editorStickyScroll-background: var(--disabled-bg);
+  --vscode-breadcrumb-background: var(--disabled-bg);
+  --vscode-editorGutter-background: var(--disabled-bg);
+  --vscode-editorMarkerNavigation-background: var(--disabled-bg);
+}

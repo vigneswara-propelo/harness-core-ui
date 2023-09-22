@@ -6,10 +6,13 @@
  */
 
 import React, { useRef, forwardRef } from 'react'
+import cx from 'classnames'
 import ReactMonacoEditor from 'react-monaco-editor'
 import type { editor } from 'monaco-editor'
 import type { MonacoEditorProps, EditorWillMount, EditorDidMount, ChangeHandler } from 'react-monaco-editor'
 import { setForwardedRef, suppressHotJarRecording } from '@common/utils/utils'
+
+import styles from './MonacoEditor.module.scss'
 
 export type MonacoCodeEditorRef = editor.IStandaloneCodeEditor
 
@@ -24,15 +27,6 @@ const MonacoEditor = forwardRef<MonacoCodeEditorRef, ExtendedMonacoEditorProps>(
   const _ref = useRef<MonacoCodeEditorRef | null>(null)
 
   const editorWillMount: EditorWillMount = monaco => {
-    monaco?.editor?.defineTheme('disable-theme', {
-      base: 'vs',
-      inherit: true,
-      rules: [{ background: 'f3f3fa', token: '' }],
-      colors: {
-        'editor.background': '#f3f3fa'
-      }
-    })
-
     // Don't allow HotJar to record content in Yaml/Code editor(s)
     suppressHotJarRecording([...document.querySelectorAll('.react-monaco-editor-container')])
 
@@ -70,11 +64,16 @@ const MonacoEditor = forwardRef<MonacoCodeEditorRef, ExtendedMonacoEditorProps>(
     props.onChange?.(value, event)
   }
 
-  const theme = props.alwaysShowDarkTheme ? 'vs-dark' : props.options?.readOnly ? 'disable-theme' : 'vs'
+  const theme = props.alwaysShowDarkTheme ? 'vs-dark' : 'vs'
+  const options: MonacoEditorProps['options'] = {
+    ...props.options,
+    extraEditorClassName: cx(props.className, !props.alwaysShowDarkTheme && props.options?.readOnly && styles.disabled)
+  }
 
   return (
     <ReactMonacoEditor
       {...props}
+      options={options}
       theme={theme}
       editorWillMount={editorWillMount}
       editorDidMount={editorDidMount}

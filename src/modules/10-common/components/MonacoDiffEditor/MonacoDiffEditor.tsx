@@ -21,20 +21,6 @@ export interface ExtendedMonacoDiffEditorProps extends MonacoDiffEditorProps {
 const MonacoDiffEditor = forwardRef<MonacoDiffEditorRef, ExtendedMonacoDiffEditorProps>(
   (props: ExtendedMonacoDiffEditorProps, ref): React.ReactElement => {
     const editorWillMount: DiffEditorWillMount = monaco => {
-      monaco?.editor?.defineTheme('disable-theme', {
-        base: 'vs',
-        inherit: true,
-        rules: [
-          {
-            token: '',
-            background: 'f3f3fa'
-          }
-        ],
-        colors: {
-          'editor.background': '#f3f3fa'
-        }
-      })
-
       // Don't allow HotJar to record content in Yaml/Code editor(s)
       suppressHotJarRecording([...document.querySelectorAll('.react-monaco-editor-container')])
 
@@ -56,7 +42,7 @@ const MonacoDiffEditor = forwardRef<MonacoDiffEditorRef, ExtendedMonacoDiffEdito
       props.editorDidMount?.(editor, monaco)
     }
 
-    const theme = props.options?.readOnly ? 'disable-theme' : 'vs'
+    const theme = 'vs'
 
     return (
       <ReactMonacoDiffEditor
