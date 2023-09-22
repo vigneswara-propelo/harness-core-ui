@@ -228,7 +228,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
     ENABLED_ARTIFACT_TYPES.Ecr,
     ENABLED_ARTIFACT_TYPES.GithubPackageRegistry,
-    ENABLED_ARTIFACT_TYPES.Bamboo
+    ENABLED_ARTIFACT_TYPES.Bamboo,
+    ENABLED_ARTIFACT_TYPES.GoogleCloudStorage
   ],
   WinRm: [
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
@@ -243,7 +244,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
     ENABLED_ARTIFACT_TYPES.Ecr,
     ENABLED_ARTIFACT_TYPES.GithubPackageRegistry,
-    ENABLED_ARTIFACT_TYPES.Bamboo
+    ENABLED_ARTIFACT_TYPES.Bamboo,
+    ENABLED_ARTIFACT_TYPES.GoogleCloudStorage
   ],
   AzureWebApp: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,

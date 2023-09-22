@@ -41,6 +41,7 @@ import {
   ArtifactConnectorStepDataToLastStep,
   useArtifactSelectionLastSteps
 } from '@pipeline/components/ArtifactsSelection/hooks/useArtifactSelectionLastSteps'
+import { isSshOrWinrmDeploymentType } from '@pipeline/utils/stageHelpers'
 import { useGetLastStepConnectorValue } from '@pipeline/hooks/useGetLastStepConnectorValue'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import ArtifactListView from './ArtifactListView/ArtifactListView'
@@ -98,15 +99,23 @@ export default function ArtifactsSelection({
   const [context, setModalContext] = useState(ModalViewFor.PRIMARY)
   const [sidecarIndex, setEditIndex] = useState(0)
   const [fetchedConnectorResponse, setFetchedConnectorResponse] = useState<PageConnectorResponse | undefined>()
-  const artifactTypes = allowedArtifactTypes[deploymentType]
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const { CDS_SERVERLESS_V2 } = useFeatureFlags()
+  const { CDS_SERVERLESS_V2, CDS_ENABLE_GCS_ARTIFACT_TYPE } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
+
+  const artifactTypes = React.useMemo(() => {
+    if (!CDS_ENABLE_GCS_ARTIFACT_TYPE && isSshOrWinrmDeploymentType(deploymentType)) {
+      return allowedArtifactTypes[deploymentType].filter(
+        (artifact: string) => artifact !== ENABLED_ARTIFACT_TYPES.GoogleCloudStorage
+      )
+    }
+    return allowedArtifactTypes[deploymentType]
+  }, [deploymentType, CDS_ENABLE_GCS_ARTIFACT_TYPE])
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<
     PipelineType<{
