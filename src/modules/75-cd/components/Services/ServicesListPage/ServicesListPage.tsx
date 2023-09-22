@@ -22,15 +22,21 @@ import {
 } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { useModalHook } from '@harness/use-modal'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { useServiceStore } from '@cd/components/Services/common'
 import { useStrings } from 'framework/strings'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-
+import RepoFilter from '@common/components/RepoFilter/RepoFilter'
 import { Page } from '@common/exports'
 import RbacButton from '@rbac/components/Button/Button'
-import { ServiceResponseDTO, useGetServiceList, ServiceResponse, useGetSettingValue } from 'services/cd-ng'
+import {
+  ServiceResponseDTO,
+  useGetServiceList,
+  ServiceResponse,
+  useGetSettingValue,
+  useGetRepositoryList
+} from 'services/cd-ng'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { useGetCommunity, useGetFreeOrCommunityCD } from '@common/utils/utils'
@@ -73,7 +79,8 @@ export const ServicesListPage = ({
   const {
     NG_SVC_ENV_REDESIGN: isSvcEnvEntityEnabled,
     CDS_V1_EOL_BANNER: isCdsV1EOLEnabled,
-    CDS_NAV_2_0: newLeftNav
+    CDS_NAV_2_0: newLeftNav,
+    CDS_SERVICE_GITX: isGitXEnabled
   } = useFeatureFlags()
 
   const { getString } = useStrings()
@@ -90,7 +97,7 @@ export const ServicesListPage = ({
   const queryParamOptions = useServicesQueryParamOptions()
   const queryParams = useQueryParams(queryParamOptions)
   const { updateQueryParams } = useUpdateQueryParams<ServicesQueryParams>()
-  const { page, size, searchTerm } = queryParams
+  const { page, size, searchTerm, repoName } = queryParams
 
   const [sort, setSort] = useState<[SortFields, Sort]>(savedSortOption ?? queryParams.sort)
   const [view, setView] = useState(Views.LIST)
@@ -122,6 +129,15 @@ export const ServicesListPage = ({
     lazy: false
   })
 
+  const repoListQuery = useGetRepositoryList({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    lazy: !isGitXEnabled
+  })
+
   useEffect(() => {
     if (forceDeleteSettingsError) {
       showError(getRBACErrorMessage(forceDeleteSettingsError))
@@ -135,6 +151,10 @@ export const ServicesListPage = ({
     } else {
       updateQueryParams({ searchTerm: undefined })
     }
+  }
+
+  const onChangeRepo = (selectedRepoFilter: string): void => {
+    updateQueryParams({ repoName: (selectedRepoFilter || []) as string, page: SERVICES_DEFAULT_PAGE_INDEX })
   }
 
   const goToServiceDetails = useCallback(
@@ -247,7 +267,7 @@ export const ServicesListPage = ({
       page,
       sort,
       searchTerm,
-
+      repoName,
       includeVersionInfo: isCdsV1EOLEnabled
     },
     queryParamStringifyOptions: { arrayFormat: 'comma' }
@@ -278,23 +298,36 @@ export const ServicesListPage = ({
           padding={{ left: 'xlarge', right: 'xlarge', top: 'medium' }}
           flex={{ distribution: 'space-between' }}
         >
-          <RbacButton
-            intent="primary"
-            data-testid="add-service"
-            icon="plus"
-            iconProps={{ size: 10 }}
-            text={getString('newService')}
-            permission={{
-              permission: PermissionIdentifier.EDIT_SERVICE,
-              resource: {
-                resourceType: ResourceType.SERVICE
-              }
-            }}
-            onClick={() => {
-              showModal()
-              setMode(SelectedView.VISUAL)
-            }}
-          />
+          <Layout.Horizontal spacing={'medium'}>
+            <RbacButton
+              intent="primary"
+              data-testid="add-service"
+              icon="plus"
+              iconProps={{ size: 10 }}
+              text={getString('newService')}
+              permission={{
+                permission: PermissionIdentifier.EDIT_SERVICE,
+                resource: {
+                  resourceType: ResourceType.SERVICE
+                }
+              }}
+              onClick={() => {
+                showModal()
+                setMode(SelectedView.VISUAL)
+              }}
+            />
+            {isGitXEnabled && (
+              <RepoFilter
+                onChange={onChangeRepo}
+                value={repoName}
+                repositories={repoListQuery.data?.data?.repositories}
+                isError={!isEmpty(repoListQuery.error)}
+                isLoadingRepos={repoListQuery.loading}
+                onRefetch={repoListQuery.refetch}
+              />
+            )}
+          </Layout.Horizontal>
+
           <Layout.Horizontal className={css.sortClass}>
             <ExpandingSearchInput
               placeholder={getString('search')}

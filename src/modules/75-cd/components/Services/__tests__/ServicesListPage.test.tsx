@@ -6,12 +6,16 @@
  */
 
 import React from 'react'
-import { render, fireEvent, waitFor } from '@testing-library/react'
+import { render, fireEvent, waitFor, queryByAttribute } from '@testing-library/react'
 import mockImport from 'framework/utils/mockImport'
 
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import { serviceListResponse, serviceListResponseWithoutIdentifier } from '@cd/mock'
+import routes from '@common/RouteDefinitions'
+import { accountPathProps } from '@common/utils/routeUtils'
 import { ServicesListPage } from '../ServicesListPage/ServicesListPage'
+
+const mockRepositories = ['test-repo', 'gitX-repo']
 
 jest.mock('services/cd-ng', () => {
   return {
@@ -25,6 +29,9 @@ jest.mock('services/cd-ng', () => {
     useUpsertServiceV2: jest.fn(() => ({ mutate: jest.fn() })),
     useDeleteServiceV2: jest.fn(() => ({ mutate: jest.fn() })),
     useGetSettingValue: jest.fn().mockResolvedValue({}),
+    useGetRepositoryList: jest.fn().mockImplementation(() => {
+      return { data: { data: { repositories: mockRepositories } }, loading: false }
+    }),
     useCreatePR: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
     useCreatePRV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
     useGetFileContent: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
@@ -127,5 +134,31 @@ describe('ServicesListPage', () => {
       </TestWrapper>
     )
     expect(getByText('Loading, please wait...')).toBeInTheDocument()
+  })
+
+  test('Repo Filter for remote service', async () => {
+    mockImport('services/cd-ng', {
+      useGetServiceList: () => ({
+        data: serviceListResponse,
+        loading: false,
+        refetch: jest.fn()
+      })
+    })
+    const { getByText } = render(
+      <TestWrapper
+        path={routes.toServices({ ...accountPathProps, accountRoutePlacement: 'settings' })}
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+        defaultFeatureFlagValues={{ CDS_SERVICE_GITX: true }}
+      >
+        <ServicesListPage />
+      </TestWrapper>
+    )
+
+    expect(getByText('common.selectRepository')).toBeInTheDocument()
+    fireEvent.click(getByText('common.selectRepository'))
+    expect(getByText(mockRepositories[0])).toBeInTheDocument()
+    expect(getByText(mockRepositories[1])).toBeInTheDocument()
+    fireEvent.click(getByText(mockRepositories[0]))
+    expect(queryByAttribute('data-testid', document.body, 'repo-filter')).toHaveTextContent(mockRepositories[0])
   })
 })
