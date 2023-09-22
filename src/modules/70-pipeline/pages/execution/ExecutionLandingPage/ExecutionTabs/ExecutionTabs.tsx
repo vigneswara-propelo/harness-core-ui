@@ -110,67 +110,97 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
 
   React.useEffect(() => {
     const isPipeLineView = !!matchPath(location.pathname, {
-      path: routes.toExecutionPipelineView(routeParams)
+      path: [
+        routes.toExecutionPipelineView(routeParams),
+        routes.toExecutionPipelineView({ ...routeParams, module: undefined }) // in all modules mode - module will be undefined
+      ]
     })
     if (isPipeLineView) {
       return setSelectedTabId(TAB_ID_MAP.PIPELINE)
     }
     const isInputsView = !!matchPath(location.pathname, {
-      path: routes.toExecutionInputsView(routeParams)
+      path: [
+        routes.toExecutionInputsView(routeParams),
+        routes.toExecutionInputsView({ ...routeParams, module: undefined })
+      ]
     })
     if (isInputsView) {
       return setSelectedTabId(TAB_ID_MAP.INPUTS)
     }
     const isArtifactsView = !!matchPath(location.pathname, {
-      path: routes.toExecutionArtifactsView(routeParams)
+      path: [
+        routes.toExecutionArtifactsView(routeParams),
+        routes.toExecutionArtifactsView({ ...routeParams, module: undefined })
+      ]
     })
     if (isArtifactsView) {
       return setSelectedTabId(TAB_ID_MAP.ARTIFACTS)
     }
     const isCommitsView = !!matchPath(location.pathname, {
-      path: routes.toExecutionCommitsView(routeParams)
+      path: [
+        routes.toExecutionCommitsView(routeParams),
+        routes.toExecutionCommitsView({ ...routeParams, module: undefined })
+      ]
     })
     if (isCommitsView) {
       return setSelectedTabId(TAB_ID_MAP.COMMITS)
     }
     const isTestsView = !!matchPath(location.pathname, {
-      path: routes.toExecutionTestsView(routeParams)
+      path: [
+        routes.toExecutionTestsView(routeParams),
+        routes.toExecutionTestsView({ ...routeParams, module: undefined })
+      ]
     })
     if (isTestsView) {
       return setSelectedTabId(TAB_ID_MAP.TESTS)
     }
     const isPolicyEvaluationsView = !!matchPath(location.pathname, {
-      path: routes.toExecutionPolicyEvaluationsView(routeParams)
+      path: [
+        routes.toExecutionPolicyEvaluationsView(routeParams),
+        routes.toExecutionPolicyEvaluationsView({ ...routeParams, module: undefined })
+      ]
     })
     if (isPolicyEvaluationsView) {
       return setSelectedTabId(TAB_ID_MAP.POLICY_EVALUATIONS)
     }
     const isSecurityView = !!matchPath(location.pathname, {
-      path: routes.toExecutionSecurityView(routeParams)
+      path: [
+        routes.toExecutionSecurityView(routeParams),
+        routes.toExecutionSecurityView({ ...routeParams, module: undefined })
+      ]
     })
     if (isSecurityView) {
       return setSelectedTabId(TAB_ID_MAP.STO_SECURITY)
     }
     const isErrorTrackingView = !!matchPath(location.pathname, {
-      path: routes.toExecutionErrorTrackingView(routeParams)
+      path: [
+        routes.toExecutionErrorTrackingView(routeParams),
+        routes.toExecutionErrorTrackingView({ ...routeParams, module: undefined })
+      ]
     })
     if (isErrorTrackingView) {
       return setSelectedTabId(TAB_ID_MAP.ERROR_TRACKING)
     }
     const isResilienceView = !!matchPath(location.pathname, {
-      path: routes.toResilienceView(routeParams)
+      path: [routes.toResilienceView(routeParams), routes.toResilienceView({ ...routeParams, module: undefined })]
     })
     if (isResilienceView) {
       return setSelectedTabId(TAB_ID_MAP.RESILIENCE)
     }
     const isIACMView = !!matchPath(location.pathname, {
-      path: routes.toIACMPipelineResources(routeParams)
+      path: [
+        routes.toIACMPipelineResources(routeParams),
+        routes.toIACMPipelineResources({ ...routeParams, module: undefined })
+      ]
     })
     if (isIACMView) {
       return setSelectedTabId(TAB_ID_MAP.IACM)
     }
     const isIACMCostsView = !!matchPath(location.pathname, {
-      path: routes.toIACMPipelineCostEstimation(routeParams)
+      path: [
+        routes.toIACMPipelineCostEstimation(routeParams),
+        routes.toIACMPipelineCostEstimation({ ...routeParams, module: undefined })
+      ]
     })
     if (isIACMCostsView) {
       return setSelectedTabId(TAB_ID_MAP.IACM_COST_ESTIMATION)

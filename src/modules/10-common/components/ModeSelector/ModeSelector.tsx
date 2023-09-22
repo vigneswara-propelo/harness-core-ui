@@ -78,6 +78,9 @@ export const ModeSelector: React.FC = () => {
         onClose={closeModeSelector}
         hasBackdrop={true}
         usePortal={true}
+        onOpening={() => {
+          window.scrollTo({ top: 0 })
+        }}
       >
         <Container
           className={cx(css.gridIconContent, { [css.active]: isModeSelectorOpen })}

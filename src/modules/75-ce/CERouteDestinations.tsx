@@ -6,14 +6,13 @@
  */
 
 import React from 'react'
-import { Route, useParams, Redirect, Switch } from 'react-router-dom'
+import { useParams, Redirect, Switch, Route } from 'react-router-dom'
 import { createClient, Provider, dedupExchange, cacheExchange, fetchExchange } from 'urql'
 import { requestPolicyExchange } from '@urql/exchange-request-policy'
 import { get } from 'lodash-es'
 import routes from '@common/RouteDefinitionsV2'
 import { accountPathProps, NAV_MODE } from '@common/utils/routeUtils'
 import type { AccountPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
-import NotFoundPage from '@common/pages/404/NotFoundPage'
 import SessionToken from 'framework/utils/SessionToken'
 // eslint-disable-next-line no-restricted-imports
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
@@ -46,6 +45,7 @@ import { SettingGroups } from '@default-settings/interfaces/SettingType.types'
 import { SettingType } from '@common/constants/Utils'
 import { RouteWithContext } from '@common/router/RouteWithContext/RouteWithContext'
 import { Connectors } from '@connectors/constants'
+import NotFoundPage from '@common/pages/404/NotFoundPage'
 import CEHomePage from './pages/home/CEHomePage'
 import CETrialHomePage from './pages/home/CETrialHomePage'
 
