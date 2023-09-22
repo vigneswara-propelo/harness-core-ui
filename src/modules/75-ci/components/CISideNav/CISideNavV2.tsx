@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { matchPath, useHistory, useLocation, useParams } from 'react-router-dom'
 import { SideNav } from '@common/navigation/SideNavV2/SideNavV2'
 import routes from '@common/RouteDefinitionsV2'
@@ -26,7 +26,6 @@ const CISideNavLinks = (mode: NAV_MODE): React.ReactElement => {
   const { accountId } = useParams<AccountPathProps>()
   const history = useHistory()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
-  const [getStartedWithCIFirst, setGetStartedWithCIFirst] = useState(false)
   const { pathname } = useLocation()
 
   const isOverviewPage = !!matchPath(pathname, {
@@ -53,30 +52,20 @@ const CISideNavLinks = (mode: NAV_MODE): React.ReactElement => {
     if (enabledHostedBuildsForFreeUsers && projectIdentifier) {
       fetchPipelines()
     }
-  }, [projectIdentifier, getStartedWithCIFirst, enabledHostedBuildsForFreeUsers])
+  }, [projectIdentifier, enabledHostedBuildsForFreeUsers])
 
   useEffect(() => {
     if (!fetchingPipelines && fetchPipelinesData) {
       const { data, status } = fetchPipelinesData
-      setGetStartedWithCIFirst(status === 'SUCCESS' && (data as PagePMSPipelineSummaryResponse)?.totalElements === 0)
+      const isGettingStartedEnabled =
+        status === 'SUCCESS' && (data as PagePMSPipelineSummaryResponse)?.totalElements === 0
+      if (isGettingStartedEnabled && isOverviewPage) {
+        history.replace(routes.toGetStartedWithCI({ accountId, projectIdentifier, orgIdentifier, module }))
+      } else if (!isGettingStartedEnabled && isGetStartedPage) {
+        history.replace(routes.toDeployments({ accountId, projectIdentifier, orgIdentifier, module }))
+      }
     }
-  }, [fetchPipelinesData, fetchingPipelines])
-
-  useEffect(() => {
-    if (getStartedWithCIFirst) {
-      isOverviewPage &&
-        history.replace(
-          routes.toGetStartedWithCI({
-            projectIdentifier,
-            orgIdentifier,
-            accountId,
-            module
-          })
-        )
-    } else {
-      isGetStartedPage && history.replace(routes.toDeployments({ accountId, projectIdentifier, orgIdentifier, module }))
-    }
-  }, [getStartedWithCIFirst, history, accountId, orgIdentifier, projectIdentifier])
+  }, [fetchPipelinesData, fetchingPipelines, history, accountId, orgIdentifier, projectIdentifier])
 
   return (
     <SideNav.Main>
