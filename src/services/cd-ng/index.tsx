@@ -426,6 +426,7 @@ export interface AccessControlCheckError {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
+    | 'MISSING_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
@@ -1201,11 +1202,13 @@ export interface ArtifactsSummary {
 
 export type AsgBlueGreenDeployStepInfo = StepSpecType & {
   delegateSelectors?: string[]
-  loadBalancer: string
-  prodListener: string
-  prodListenerRuleArn: string
-  stageListener: string
-  stageListenerRuleArn: string
+  instances?: AsgInstances
+  loadBalancer?: string
+  loadBalancers?: AwsAsgLoadBalancerConfigYaml[]
+  prodListener?: string
+  prodListenerRuleArn?: string
+  stageListener?: string
+  stageListenerRuleArn?: string
   useAlreadyRunningInstances?: boolean
 }
 
@@ -1232,9 +1235,19 @@ export type AsgConfigurationManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
+export type AsgCurrentRunningInstances = AsgInstancesSpec & { [key: string]: any }
+
 export type AsgDeploymentMetaData = DeploymentMetaData & { [key: string]: any }
 
+export type AsgFixedInstances = AsgInstancesSpec & {
+  desired: number
+  max: number
+  min: number
+}
+
 export type AsgInfrastructure = Infrastructure & {
+  asgName?: string
+  baseAsgName?: string
   connectorRef: string
   metadata?: string
   provisioner?: string
@@ -1256,6 +1269,15 @@ export type AsgInstanceInfoDTO = InstanceInfoDTO & {
   region: string
 }
 
+export interface AsgInstances {
+  spec?: AsgInstancesSpec
+  type: 'Fixed' | 'CurrentRunning'
+}
+
+export interface AsgInstancesSpec {
+  type?: 'Fixed' | 'CurrentRunning'
+}
+
 export type AsgLaunchTemplateManifest = ManifestAttributes & {
   metadata?: string
   store?: StoreConfigWrapper
@@ -1264,9 +1286,10 @@ export type AsgLaunchTemplateManifest = ManifestAttributes & {
 export type AsgRollingDeployStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   instanceWarmup?: number
+  instances?: AsgInstances
   minimumHealthyPercentage?: number
   skipMatching?: boolean
-  useAlreadyRunningInstances: boolean
+  useAlreadyRunningInstances?: boolean
 }
 
 export type AsgRollingRollbackStepInfo = StepSpecType & {
@@ -1283,7 +1306,9 @@ export type AsgScheduledUpdateGroupActionManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export type AsgServiceSpec = ServiceSpec & {}
+export type AsgServiceSpec = ServiceSpec & {
+  userData?: UserDataConfiguration
+}
 
 export type AuditFilterProperties = FilterProperties & {
   actions?: (
@@ -1338,6 +1363,7 @@ export type AuditFilterProperties = FilterProperties & {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   )[]
   principals?: Principal[]
   resources?: ResourceDTO[]
@@ -1374,6 +1400,14 @@ export type AvailabilityRestrictionMetadataDTO = RestrictionMetadataDTO & {
   enabled?: boolean
 }
 
+export interface AwsAsgLoadBalancerConfigYaml {
+  loadBalancer: string
+  prodListener: string
+  prodListenerRuleArn: string
+  stageListener: string
+  stageListenerRuleArn: string
+}
+
 export interface AwsCFTemplateParamsData {
   defaultValue?: string
   paramKey?: string
@@ -1385,6 +1419,9 @@ export type AwsCdkBootstrapStepInfo = StepSpecType & {
   commandOptions?: string[]
   connectorRef: string
   delegateSelectors?: string[]
+  envVariables?: {
+    [key: string]: string
+  }
   image: string
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
   privileged?: boolean
@@ -1397,6 +1434,9 @@ export type AwsCdkDeployStepInfo = StepSpecType & {
   commandOptions?: string[]
   connectorRef: string
   delegateSelectors?: string[]
+  envVariables?: {
+    [key: string]: string
+  }
   image: string
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
   parameters?: {
@@ -1414,6 +1454,9 @@ export type AwsCdkDestroyStepInfo = StepSpecType & {
   commandOptions?: string[]
   connectorRef: string
   delegateSelectors?: string[]
+  envVariables?: {
+    [key: string]: string
+  }
   image: string
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
   privileged?: boolean
@@ -1427,6 +1470,9 @@ export type AwsCdkDiffStepInfo = StepSpecType & {
   commandOptions?: string[]
   connectorRef: string
   delegateSelectors?: string[]
+  envVariables?: {
+    [key: string]: string
+  }
   image: string
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
   privileged?: boolean
@@ -1437,6 +1483,9 @@ export type AwsCdkDiffStepInfo = StepSpecType & {
 
 export type AwsCdkRollbackStepInfo = StepSpecType & {
   delegateSelectors?: string[]
+  envVariables?: {
+    [key: string]: string
+  }
   provisionerIdentifier: string
 }
 
@@ -1445,6 +1494,9 @@ export type AwsCdkSynthStepInfo = StepSpecType & {
   commandOptions?: string[]
   connectorRef: string
   delegateSelectors?: string[]
+  envVariables?: {
+    [key: string]: string
+  }
   exportTemplate?: boolean
   image: string
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
@@ -3255,6 +3307,7 @@ export interface ContainerInfraYamlSpec {
   containerSecurityContext?: SecurityContext
   harnessImageConnectorRef?: string
   hostNames?: string[]
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
   initTimeout?: string
   labels?: {
     [key: string]: string
@@ -3409,6 +3462,7 @@ export interface CreditDTO {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   purchaseTime?: number
   quantity?: number
 }
@@ -3588,6 +3642,11 @@ export type CustomSecretManager = ConnectorConfigDTO & {
 
 export interface CustomSequenceDTO {
   envAndEnvGroupCardList?: EnvAndEnvGroupCard[]
+}
+
+export type CustomStageConfig = StageInfoConfig & {
+  environment?: EnvironmentYamlV2
+  execution: ExecutionElementConfig
 }
 
 export interface CustomerDTO {
@@ -4766,8 +4825,8 @@ export interface EntityDetail {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
 }
 
 export interface EntityDetailProtoDTO {
@@ -5446,6 +5505,7 @@ export interface Error {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
+    | 'MISSING_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
@@ -5834,6 +5894,7 @@ export interface ErrorMetadata {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
+    | 'MISSING_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
@@ -6273,6 +6334,7 @@ export interface Failure {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
+    | 'MISSING_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
@@ -6417,7 +6479,7 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'TERRAGRUNT_APPLY'
     | 'TERRAGRUNT_DESTROY'
     | 'TERRAGRUNT_ROLLBACK'
-    | 'BAMBOO_BUILD'
+    | 'SEI_MAX_NUMBER_OF_CONTRIBUTORS'
   )[]
 }
 
@@ -6514,7 +6576,7 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'TERRAGRUNT_APPLY'
     | 'TERRAGRUNT_DESTROY'
     | 'TERRAGRUNT_ROLLBACK'
-    | 'BAMBOO_BUILD'
+    | 'SEI_MAX_NUMBER_OF_CONTRIBUTORS'
 }
 
 export interface FeatureRestrictionDetailsDTO {
@@ -6537,6 +6599,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   name?:
     | 'TEST1'
     | 'TEST2'
@@ -6629,7 +6692,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'TERRAGRUNT_APPLY'
     | 'TERRAGRUNT_DESTROY'
     | 'TERRAGRUNT_ROLLBACK'
-    | 'BAMBOO_BUILD'
+    | 'SEI_MAX_NUMBER_OF_CONTRIBUTORS'
   restriction?: RestrictionDTO
   restrictionType?:
     | 'AVAILABILITY'
@@ -6660,6 +6723,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   name?:
     | 'TEST1'
     | 'TEST2'
@@ -6752,7 +6816,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'TERRAGRUNT_APPLY'
     | 'TERRAGRUNT_DESTROY'
     | 'TERRAGRUNT_ROLLBACK'
-    | 'BAMBOO_BUILD'
+    | 'SEI_MAX_NUMBER_OF_CONTRIBUTORS'
   restrictionMetadata?: {
     [key: string]: RestrictionMetadataDTO
   }
@@ -6778,6 +6842,7 @@ export interface FeedbackFormDTO {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   score?: number
   suggestion?: string
 }
@@ -7564,8 +7629,8 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
   )[]
   moduleType?:
     | 'CD'
@@ -7584,6 +7649,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   searchTerm?: string
 }
 
@@ -7820,8 +7886,8 @@ export interface GitEntityFilterProperties {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -7841,6 +7907,7 @@ export interface GitEntityFilterProperties {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   searchTerm?: string
 }
 
@@ -8155,8 +8222,8 @@ export interface GitFullSyncEntityInfoDTO {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -8403,8 +8470,8 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -8782,8 +8849,8 @@ export interface GitSyncEntityDTO {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -9024,8 +9091,8 @@ export interface GitSyncEntityListDTO {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -9283,8 +9350,8 @@ export interface GitSyncErrorDTO {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -9326,6 +9393,7 @@ export interface GitSyncRepoFilesList {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
 }
 
 export interface GitSyncSettingsDTO {
@@ -9804,6 +9872,11 @@ export type HelmDeployStepInfo = StepSpecType & {
   skipSteadyStateCheck?: ParameterFieldBoolean
 }
 
+export interface HelmFileParameters {
+  name: string
+  path: string
+}
+
 export interface HelmManifestCommandFlag {
   commandType:
     | 'Fetch'
@@ -9822,6 +9895,11 @@ export interface HelmManifestCommandFlag {
   flag?: string
 }
 
+export interface HelmParameters {
+  name: string
+  value: string
+}
+
 export type HelmRepoOverrideManifest = ManifestAttributes & {
   connectorRef: string
   metadata?: string
@@ -9831,6 +9909,12 @@ export type HelmRepoOverrideManifest = ManifestAttributes & {
 export type HelmRollbackStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   skipSteadyStateCheck?: ParameterFieldBoolean
+}
+
+export interface HelmValues {
+  fileParameters?: HelmFileParameters[]
+  parameters?: HelmParameters[]
+  valueFiles?: string[]
 }
 
 export type HostAttributesFilter = HostFilterSpec & {
@@ -10979,6 +11063,7 @@ export type KubernetesClientKeyCertDTO = KubernetesAuthCredentialDTO & {
 }
 
 export interface KubernetesCloudClusterConfig {
+  addRegionalParam?: boolean
   clusterName?: string
   resourceGroup?: string
   subscriptionId?: string
@@ -11053,7 +11138,18 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export interface LDAPSettings {
+export interface KustomizeReplicas {
+  count: string
+  name: string
+}
+
+export interface KustomizeValues {
+  images?: string[]
+  namespace?: string
+  replicas?: KustomizeReplicas[]
+}
+
+export type LDAPSettings = NGAuthSettings & {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -11061,7 +11157,6 @@ export interface LDAPSettings {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
-  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -11306,6 +11401,7 @@ export interface LicensesWithSummaryDTO {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
 }
 
 export interface Limits {
@@ -11490,6 +11586,7 @@ export interface ModuleLicenseDTO {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   premiumSupport?: boolean
   selfService?: boolean
   startTime?: number
@@ -11738,8 +11835,8 @@ export interface NGEntityList {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
   )[]
 }
 
@@ -12104,6 +12201,7 @@ export interface OAuthSignupDTO {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   name?: string
   referer?: string
   signupAction?: 'REGULAR' | 'TRIAL' | 'SUBSCRIBE'
@@ -12972,6 +13070,7 @@ export interface PartialSchemaDTO {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   namespace?: string
   nodeName?: string
   nodeType?: string
@@ -13253,6 +13352,7 @@ export interface Project {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   )[]
   name: string
   orgIdentifier?: string
@@ -13389,6 +13489,7 @@ export interface RecommendationRequest {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   usageMap?: {
     [key: string]: number
   }
@@ -13652,8 +13753,8 @@ export interface ReferencedByDTO {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
 }
 
 export interface RefreshResponse {
@@ -13775,6 +13876,10 @@ export interface ResourceDTO {
     | 'CHAOS_SECURITY_GOVERNANCE'
     | 'END_USER_LICENSE_AGREEMENT'
     | 'WORKSPACE'
+    | 'SEI_CONFIGURATION_SETTINGS'
+    | 'SEI_COLLECTIONS'
+    | 'SEI_INSIGHTS'
+    | 'CET_SAVED_FILTER'
 }
 
 export interface ResourceGroup {
@@ -15158,8 +15263,8 @@ export interface ResponseListEntityType {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -15857,6 +15962,7 @@ export interface ResponseMessage {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
+    | 'MISSING_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
@@ -17287,7 +17393,7 @@ export type RunStepInfo = StepSpecType & {
 }
 
 export type RunTestsStepInfo = StepSpecType & {
-  args: string
+  args?: string
   buildEnvironment?: 'Core' | 'Framework'
   buildTool: 'Maven' | 'Bazel' | 'Gradle' | 'Dotnet' | 'Nunitconsole' | 'SBT' | 'Pytest' | 'Unittest' | 'Rspec'
   connectorRef?: string
@@ -17364,6 +17470,10 @@ export type SAMLSettings = NGAuthSettings & {
   logoutUrl?: string
   origin: string
   samlProviderType?: string
+}
+
+export type SEIModuleLicenseDTO = ModuleLicenseDTO & {
+  numberOfContributors?: number
 }
 
 export type SRMModuleLicenseDTO = ModuleLicenseDTO & {
@@ -18948,6 +19058,7 @@ export interface StartTrialDTO {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
 }
 
 export interface StartupCommandConfiguration {
@@ -18982,6 +19093,7 @@ export interface StepData {
     | 'MergePR'
     | 'RevertPR'
     | 'GitOpsSync'
+    | 'UpdateGitOpsApp'
     | 'APPLY'
     | 'SCALE'
     | 'STAGE_DEPLOYMENT'
@@ -19246,6 +19358,7 @@ export interface SubscriptionDTO {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   paymentFrequency?: 'MONTHLY' | 'YEARLY'
   paymentMethodId?: string
 }
@@ -19292,6 +19405,7 @@ export interface SubscriptionRequest {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   paymentFrequency?: string
   premiumSupport?: boolean
 }
@@ -20179,6 +20293,14 @@ export interface UnitTestReportSpec {
   [key: string]: any
 }
 
+export type UpdateGitOpsAppStepInfo = StepSpecType & {
+  agentId: string
+  applicationName: string
+  helm?: HelmValues
+  kustomize?: KustomizeValues
+  targetRevision?: string
+}
+
 export type UpdateReleaseRepoStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   prTitle?: string
@@ -20279,6 +20401,11 @@ export interface UserAccountLevelData {
 export interface UserAggregate {
   roleAssignmentMetadata: RoleAssignmentMetadataDTO[]
   user: UserMetadataDTO
+}
+
+export interface UserDataConfiguration {
+  metadata?: string
+  store: StoreConfigWrapper
 }
 
 export interface UserDetailsDTO {
@@ -20791,6 +20918,7 @@ export interface YamlSchemaMetadata {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   )[]
   namespace?: string
   yamlGroup: YamlGroup
@@ -20817,6 +20945,7 @@ export interface YamlSchemaWithDetails {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   schema?: JsonNode
   schemaClassName?: string
   yamlSchemaMetadata?: YamlSchemaMetadata
@@ -21820,8 +21949,8 @@ export interface ListActivitiesQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -22054,9 +22183,10 @@ export interface ListActivitiesQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
   activityTypes?: ('CONNECTIVITY_CHECK' | 'ENTITY_USAGE' | 'ENTITY_CREATION' | 'ENTITY_UPDATE')[]
+  searchTerm?: string
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -22387,8 +22517,8 @@ export interface GetUniqueReferredByEntitiesQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
   activityTypes?: ('CONNECTIVITY_CHECK' | 'ENTITY_USAGE' | 'ENTITY_CREATION' | 'ENTITY_UPDATE')[]
 }
 
@@ -22676,8 +22806,8 @@ export interface GetActivitiesSummaryQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -22910,8 +23040,8 @@ export interface GetActivitiesSummaryQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -23936,6 +24066,7 @@ export interface GetProjectAggregateDTOListQueryParams {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   searchTerm?: string
   onlyFavorites?: boolean
   pageIndex?: number
@@ -41447,7 +41578,7 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'TERRAGRUNT_APPLY'
     | 'TERRAGRUNT_DESTROY'
     | 'TERRAGRUNT_ROLLBACK'
-    | 'BAMBOO_BUILD'
+    | 'SEI_MAX_NUMBER_OF_CONTRIBUTORS'
 }
 
 export type FetchFeatureRestrictionMetadataProps = Omit<
@@ -41614,7 +41745,7 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'TERRAGRUNT_APPLY'
       | 'TERRAGRUNT_DESTROY'
       | 'TERRAGRUNT_ROLLBACK'
-      | 'BAMBOO_BUILD'
+      | 'SEI_MAX_NUMBER_OF_CONTRIBUTORS'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -41864,8 +41995,8 @@ export interface ListReferredByEntitiesQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -42159,8 +42290,8 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
   searchTerm?: string
 }
 
@@ -45757,8 +45888,8 @@ export interface GetReferencedByQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
   searchTerm?: string
 }
 
@@ -48712,8 +48843,8 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -49014,8 +49145,8 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'IdpScorecard'
       | 'IdpCheck'
       | 'AwsCdkRollback'
-      | 'IACM'
       | 'SlsaVerification'
+      | 'UpdateGitOpsApp'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -54214,6 +54345,7 @@ export interface GetEditionActionsQueryParams {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
 }
 
 export type GetEditionActionsProps = Omit<
@@ -54279,6 +54411,7 @@ export interface StartCommunityLicenseQueryParams {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
 }
 
 export type StartCommunityLicenseProps = Omit<
@@ -54410,6 +54543,7 @@ export interface StartFreeLicenseQueryParams {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   referer?: string
   gaClientId?: string
 }
@@ -54479,6 +54613,7 @@ export interface GetModuleLicensesByAccountAndModuleTypeQueryParams {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
 }
 
 export interface GetModuleLicensesByAccountAndModuleTypePathParams {
@@ -54711,6 +54846,7 @@ export interface GetLicensesAndSummaryQueryParams {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
 }
 
 export interface GetLicensesAndSummaryPathParams {
@@ -54871,6 +55007,7 @@ export interface GetHelmChartVersionDetailsQueryParams {
   bucketName?: string
   folderPath?: string
   lastTag?: string
+  registryId?: string
 }
 
 export type GetHelmChartVersionDetailsProps = Omit<
@@ -54928,7 +55065,9 @@ export interface GetHelmChartVersionDetailsV1QueryParams {
   folderPath?: string
   lastTag?: string
   storeType: string
+  ociHelmChartStoreConfigType?: string
   helmVersion?: string
+  registryId?: string
 }
 
 export type GetHelmChartVersionDetailsV1Props = Omit<
@@ -54993,6 +55132,7 @@ export interface GetHelmChartVersionDetailsWithYamlQueryParams {
   bucketName?: string
   folderPath?: string
   lastTag?: string
+  registryId?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -55780,8 +55920,8 @@ export interface GetStepYamlSchemaQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
   yamlGroup?: string
 }
 
@@ -56142,8 +56282,8 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -56502,6 +56642,7 @@ export interface GetProvisionerExecutionStrategyYamlQueryParams {
     | 'SHELL_SCRIPT_PROVISIONER'
     | 'TERRAGRUNT'
     | 'TERRAFORM_CLOUD'
+    | 'AWS_CDK'
 }
 
 export type GetProvisionerExecutionStrategyYamlProps = Omit<
@@ -56710,6 +56851,7 @@ export interface GetProjectListQueryParams {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   searchTerm?: string
   onlyFavorites?: boolean
   pageIndex?: number
@@ -56842,6 +56984,7 @@ export interface GetProjectListWithMultiOrgFilterQueryParams {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   searchTerm?: string
   onlyFavorites?: boolean
   pageIndex?: number
@@ -61505,6 +61648,66 @@ export const getServiceNowIssueCreateMetadataPromise = (
     signal
   )
 
+export interface GetStandardTemplateReadOnlyFieldsQueryParams {
+  connectorRef: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+}
+
+export type GetStandardTemplateReadOnlyFieldsProps = Omit<
+  GetProps<ResponseListString, Failure | Error, GetStandardTemplateReadOnlyFieldsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get read-only fields for standard change templates
+ */
+export const GetStandardTemplateReadOnlyFields = (props: GetStandardTemplateReadOnlyFieldsProps) => (
+  <Get<ResponseListString, Failure | Error, GetStandardTemplateReadOnlyFieldsQueryParams, void>
+    path={`/servicenow/getStandardTemplateReadOnlyFields`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetStandardTemplateReadOnlyFieldsProps = Omit<
+  UseGetProps<ResponseListString, Failure | Error, GetStandardTemplateReadOnlyFieldsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get read-only fields for standard change templates
+ */
+export const useGetStandardTemplateReadOnlyFields = (props: UseGetStandardTemplateReadOnlyFieldsProps) =>
+  useGet<ResponseListString, Failure | Error, GetStandardTemplateReadOnlyFieldsQueryParams, void>(
+    `/servicenow/getStandardTemplateReadOnlyFields`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get read-only fields for standard change templates
+ */
+export const getStandardTemplateReadOnlyFieldsPromise = (
+  props: GetUsingFetchProps<ResponseListString, Failure | Error, GetStandardTemplateReadOnlyFieldsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListString, Failure | Error, GetStandardTemplateReadOnlyFieldsQueryParams, void>(
+    getConfig('ng/api'),
+    `/servicenow/getStandardTemplateReadOnlyFields`,
+    props,
+    signal
+  )
+
 export interface GetServiceNowTemplateMetadataQueryParams {
   connectorRef: string
   accountIdentifier: string
@@ -65616,6 +65819,7 @@ export interface RetrieveProductPricesQueryParams {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
 }
 
 export type RetrieveProductPricesProps = Omit<
@@ -65844,6 +66048,7 @@ export interface CancelSubscriptionQueryParams {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
 }
 
 export type CancelSubscriptionProps = Omit<
@@ -72676,8 +72881,8 @@ export interface GetYamlSchemaQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
   subtype?:
     | 'K8sCluster'
     | 'Git'
