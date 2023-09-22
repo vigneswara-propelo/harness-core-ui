@@ -336,7 +336,7 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
                   <DelegateTaskLogsButton
                     startTime={startTime}
                     endTime={endTime}
-                    taskIds={taskIds || []}
+                    taskIds={taskIds?.length ? taskIds : [step.stepDetails?.initStepV2DelegateTaskInfo?.taskID] || []}
                     telemetry={{
                       taskContext: TaskContext.PipelineStep,
                       hasError: isExecutionCompletedWithBadState(step.status)
