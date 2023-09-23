@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { MutateMethod } from 'restful-react'
-import { defaultTo, isEmpty, noop, omit } from 'lodash-es'
+import { defaultTo, isEmpty, omit } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
 
 import { useToaster } from '@harness/uicore'
@@ -83,18 +83,12 @@ interface InputSetInfo {
   inputSetResponse: ResponseInputSetResponse | null
   isEdit: boolean
   setFormErrors: React.Dispatch<React.SetStateAction<Record<string, unknown>>>
-  onCreateSuccess?: (response: ResponseInputSetResponse) => void
+  onCreateUpdateSuccess: (response?: ResponseInputSetResponse) => void
 }
 
 export function useSaveInputSetV1(inputSetInfo: InputSetInfo): UseSaveInputSetReturnType {
-  const {
-    createInputSet,
-    updateInputSet,
-    inputSetResponse,
-    isEdit,
-    setFormErrors,
-    onCreateSuccess = noop
-  } = inputSetInfo
+  const { createInputSet, updateInputSet, inputSetResponse, isEdit, setFormErrors, onCreateUpdateSuccess } =
+    inputSetInfo
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
@@ -118,14 +112,20 @@ export function useSaveInputSetV1(inputSetInfo: InputSetInfo): UseSaveInputSetRe
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
 
   const createUpdateInputSet = React.useCallback(
-    async (
+    async ({
       inputSetObj,
-      gitDetails?: SaveToGitFormInterface,
+      gitDetails,
       objectId = '',
-      onCreateInputSetSuccess: (response: ResponseInputSetResponse) => void = noop,
+      onCreateUpdateInputSetSuccess,
+      conflictCommitId
+    }: {
+      inputSetObj: InputSetDTO
+      onCreateUpdateInputSetSuccess: (response?: ResponseInputSetResponse) => void
+      gitDetails?: SaveToGitFormInterface
+      objectId?: string
       conflictCommitId?: string
-    ): CreateUpdateInputSetsReturnType => {
-      let response: ResponseInputSetResponse | null = null
+    }): CreateUpdateInputSetsReturnType => {
+      let response: ResponseInputSetResponse | undefined = undefined
       try {
         const updatedGitDetails = getUpdatedGitDetails(
           isEdit,
@@ -175,11 +175,10 @@ export function useSaveInputSetV1(inputSetInfo: InputSetInfo): UseSaveInputSetRe
               ...updatedGitDetails
             }
           })
-          onCreateInputSetSuccess(response)
         }
         if (!isGitSyncEnabled && initialStoreMetadata.storeType !== StoreType.REMOTE) {
           showSuccess(getString('inputSets.inputSetSaved'))
-          onCreateSuccess !== noop ? onCreateSuccess(response) : history.goBack()
+          onCreateUpdateInputSetSuccess(response)
         }
       } catch (e) {
         const errors = getFormattedErrors(e?.data?.metadata?.uuidToErrorResponseMap)
@@ -195,7 +194,7 @@ export function useSaveInputSetV1(inputSetInfo: InputSetInfo): UseSaveInputSetRe
       }
       return {
         status: response?.status, // nextCallback can be added if required,        response,
-        nextCallback: () => history.goBack()
+        nextCallback: () => onCreateUpdateInputSetSuccess(response)
       }
     },
     [
@@ -221,13 +220,13 @@ export function useSaveInputSetV1(inputSetInfo: InputSetInfo): UseSaveInputSetRe
 
   const { openSaveToGitDialog } = useSaveToGitDialog<SaveInputSetDTO>({
     onSuccess: (gitData: GitData, payload?: SaveInputSetDTO, objectId?: string): Promise<UseSaveSuccessResponse> =>
-      createUpdateInputSet(
-        payload?.inputSet || savedInputSetObj,
-        gitData,
+      createUpdateInputSet({
+        inputSetObj: payload?.inputSet || savedInputSetObj,
+        gitDetails: gitData,
         objectId,
-        onCreateSuccess,
-        gitData?.resolvedConflictCommitId
-      )
+        onCreateUpdateInputSetSuccess: onCreateUpdateSuccess,
+        conflictCommitId: gitData?.resolvedConflictCommitId
+      })
   })
 
   const handleSubmit = React.useCallback(
@@ -260,7 +259,10 @@ export function useSaveInputSetV1(inputSetInfo: InputSetInfo): UseSaveInputSetRe
             payload: { inputSet: inputSetObj }
           })
         } else {
-          createUpdateInputSet(inputSetObj)
+          createUpdateInputSet({
+            inputSetObj,
+            onCreateUpdateInputSetSuccess: onCreateUpdateSuccess
+          })
         }
       }
     },

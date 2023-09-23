@@ -493,6 +493,10 @@ function WebhookPipelineInputPanelForm({
     [formikProps, selectedInputSets]
   )
 
+  const closeModal = useCallback(() => {
+    setShowNewInputSetModal(false)
+  }, [])
+
   useEffect(() => {
     setInputSetError(formikProps?.errors?.inputSetRefs)
   }, [setInputSetError, formikProps?.errors?.inputSetRefs])
@@ -554,7 +558,7 @@ function WebhookPipelineInputPanelForm({
                     selectedValueClass={css.inputSetSelectedValue}
                     selectedRepo={gitAwareForTriggerEnabled ? repoName : repoIdentifier}
                     selectedBranch={inputSetSelectedBranch}
-                    showNewInputSet={gitAwareForTriggerEnabled}
+                    showNewInputSet={true}
                     onNewInputSetClick={() => setShowNewInputSetModal(true)}
                     invalidInputSetReferences={invalidInputSetIds}
                     loadingMergeInputSets={mergingInputSets}
@@ -568,8 +572,8 @@ function WebhookPipelineInputPanelForm({
                   <NewInputSetModal
                     inputSetInitialValue={inputSetInitialValue}
                     isModalOpen={showNewInputSetModal}
-                    closeModal={() => setShowNewInputSetModal(false)}
-                    onCreateSuccess={onNewInputSetSuccess}
+                    closeModal={closeModal}
+                    onCreateUpdateSuccess={onNewInputSetSuccess}
                   />
                 )}
               </div>

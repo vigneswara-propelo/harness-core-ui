@@ -8,7 +8,7 @@
 import { cloneDeep, isNull, isUndefined, omitBy, merge } from 'lodash-es'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { InputSetGitQueryParams } from '@common/interfaces/RouteInterfaces'
-import type { InputSetSummaryResponse } from 'services/pipeline-ng'
+import type { InputSetSummaryResponse, ResponseInputSetResponse } from 'services/pipeline-ng'
 import { changeEmptyValuesToRunTimeInput } from './stageHelpers'
 import type { InputSetDTO } from './types'
 
@@ -18,6 +18,13 @@ export interface InputSetSummaryResponseExtended extends InputSetSummaryResponse
   lastUpdatedBy?: string
   createdBy?: string
   inputFieldSummary?: string
+}
+
+export interface InputSetOnCreateUpdate {
+  isNewInModal?: boolean
+  className?: string
+  onCancel?: () => void
+  onCreateUpdateSuccess: (response?: ResponseInputSetResponse) => void
 }
 
 export const isInputSetInvalid = (data: InputSetSummaryResponseExtended): boolean => {

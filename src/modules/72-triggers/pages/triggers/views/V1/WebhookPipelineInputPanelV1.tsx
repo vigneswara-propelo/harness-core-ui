@@ -210,6 +210,10 @@ function WebhookPipelineInputPanelFormV1({
     [formikProps, selectedInputSets]
   )
 
+  const closeModal = useCallback(() => {
+    setShowNewInputSetModal(false)
+  }, [])
+
   useEffect(() => {
     setInputSetError(formikProps?.errors?.inputSetRefs)
   }, [setInputSetError, formikProps?.errors?.inputSetRefs])
@@ -265,8 +269,8 @@ function WebhookPipelineInputPanelFormV1({
                 {showNewInputSetModal && (
                   <NewInputSetModal
                     isModalOpen={showNewInputSetModal}
-                    closeModal={() => setShowNewInputSetModal(false)}
-                    onCreateSuccess={onNewInputSetSuccess}
+                    closeModal={closeModal}
+                    onCreateUpdateSuccess={onNewInputSetSuccess}
                     isSimplifiedYAML
                   />
                 )}

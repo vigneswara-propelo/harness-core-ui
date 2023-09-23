@@ -106,7 +106,7 @@ const TEST_INPUT_SET_FORM_PATH = routes.toInputSetFormV1({
   ...pipelineModuleParams
 })
 
-const renderSetup = (form = <InputSetFormV1 />) =>
+const renderSetup = (form = <InputSetFormV1 onCreateUpdateSuccess={noop} />) =>
   render(
     <TestWrapper
       path={TEST_INPUT_SET_FORM_PATH}
@@ -136,7 +136,7 @@ const renderSetup = (form = <InputSetFormV1 />) =>
     </TestWrapper>
   )
 
-const renderRemoteSetup = (form = <InputSetFormV1 />) =>
+const renderRemoteSetup = (form = <InputSetFormV1 onCreateUpdateSuccess={noop} />) =>
   render(
     <TestWrapper
       path={TEST_INPUT_SET_FORM_PATH}
@@ -205,7 +205,7 @@ describe('Input Sets V1', () => {
             } as any
           }
         >
-          <InputSetFormV1 isExecutionView={true} />
+          <InputSetFormV1 isExecutionView={true} onCreateUpdateSuccess={noop} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -246,7 +246,7 @@ describe('Input Sets V1', () => {
             } as any
           }
         >
-          <InputSetFormV1 />
+          <InputSetFormV1 onCreateUpdateSuccess={noop} />
         </PipelineContext.Provider>
       </TestWrapper>
     )

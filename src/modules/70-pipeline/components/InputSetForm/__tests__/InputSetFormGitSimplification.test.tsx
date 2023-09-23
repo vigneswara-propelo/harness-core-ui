@@ -154,7 +154,7 @@ const renderExistingInputSet = () => {
         supportingGitSimplification: true
       }}
     >
-      <EnhancedInputSetForm />
+      <EnhancedInputSetForm onCreateUpdateSuccess={noop} />
     </TestWrapper>
   )
 }
@@ -273,7 +273,7 @@ describe('InputSetFrom testing - When Git Simplification is enabled', () => {
             supportingGitSimplification: true
           }}
         >
-          <EnhancedInputSetForm />
+          <EnhancedInputSetForm onCreateUpdateSuccess={noop} />
         </TestWrapper>
       )
       const nameInpt = queryByNameAttribute('name', container)

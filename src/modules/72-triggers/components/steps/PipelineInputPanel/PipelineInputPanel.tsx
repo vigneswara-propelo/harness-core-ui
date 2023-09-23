@@ -385,6 +385,10 @@ function PipelineInputPanelForm({ formikProps, isEdit }: PipelineInputPanelProps
     [formikProps, selectedInputSets]
   )
 
+  const closeModal = useCallback(() => {
+    setShowNewInputSetModal(false)
+  }, [])
+
   useEffect(() => {
     setInputSetError(formikProps?.errors?.inputSetRefs as string)
   }, [formikProps?.errors?.inputSetRefs])
@@ -445,7 +449,7 @@ function PipelineInputPanelForm({ formikProps, isEdit }: PipelineInputPanelProps
                     selectedValueClass={css.inputSetSelectedValue}
                     selectedRepo={isNewGitSyncRemotePipeline ? repoName : repoIdentifier}
                     selectedBranch={inputSetSelectedBranch}
-                    showNewInputSet={isNewGitSyncRemotePipeline}
+                    showNewInputSet={true}
                     onNewInputSetClick={() => setShowNewInputSetModal(true)}
                     invalidInputSetReferences={invalidInputSetIds}
                     loadingMergeInputSets={mergingInputSets}
@@ -459,8 +463,8 @@ function PipelineInputPanelForm({ formikProps, isEdit }: PipelineInputPanelProps
                   <NewInputSetModal
                     inputSetInitialValue={inputSetInitialValue}
                     isModalOpen={showNewInputSetModal}
-                    closeModal={() => setShowNewInputSetModal(false)}
-                    onCreateSuccess={onNewInputSetSuccess}
+                    closeModal={closeModal}
+                    onCreateUpdateSuccess={onNewInputSetSuccess}
                   />
                 )}
               </div>

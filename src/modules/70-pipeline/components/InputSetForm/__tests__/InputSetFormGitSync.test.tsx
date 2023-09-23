@@ -120,7 +120,7 @@ describe('InputSetFrom testing - When GitSync is enabled', () => {
           }}
           defaultAppStoreValues={{ ...defaultAppStoreValues, isGitSyncEnabled: true }}
         >
-          <EnhancedInputSetForm />
+          <EnhancedInputSetForm onCreateUpdateSuccess={noop} />
         </GitSyncTestWrapper>
       )
       const nameInpt = queryByNameAttribute('name', container)
@@ -165,7 +165,7 @@ describe('InputSetFrom testing - When GitSync is enabled', () => {
           }}
           defaultAppStoreValues={{ ...defaultAppStoreValues, isGitSyncEnabled: true }}
         >
-          <EnhancedInputSetForm />
+          <EnhancedInputSetForm onCreateUpdateSuccess={noop} />
         </GitSyncTestWrapper>
       )
       const nameInpt = queryByNameAttribute('name', container)
@@ -228,7 +228,7 @@ describe('InputSetFrom testing - When GitSync is enabled', () => {
           }}
           defaultAppStoreValues={{ ...defaultAppStoreValues, isGitSyncEnabled: true }}
         >
-          <EnhancedInputSetForm />
+          <EnhancedInputSetForm onCreateUpdateSuccess={noop} />
         </GitSyncTestWrapper>
       )
       const nameInpt = queryByNameAttribute('name', container)

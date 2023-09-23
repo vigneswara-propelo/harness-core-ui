@@ -63,6 +63,8 @@ import type { GitContextProps } from '@common/components/GitContextForm/GitConte
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { withInputSetsOnCreateUpdateSuccess } from '@pipeline/utils/withInputSetsOnCreateUpdateSuccess'
+import { InputSetOnCreateUpdate } from '@pipeline/utils/inputSetUtils'
 import { useSaveInputSetV1 } from './useSaveInputSetV1'
 import { InputsYaml, useInputSetsV1 } from '../RunPipelineModalV1/useInputSetsV1'
 import FormikInputSetFormV1 from './FormikInputSetFormV1'
@@ -83,16 +85,12 @@ const getDefaultInputSet = (orgIdentifier: string, projectIdentifier: string) =>
   branch: ''
 })
 
-interface InputSetV1FormProps {
+interface InputSetV1FormProps extends InputSetOnCreateUpdate {
   isExecutionView?: boolean
 
   // Props to support embedding InputSetForm (create new) in a modal
   // @see src/modules/70-pipeline/components/InputSetForm/NewInputSetModal.tsx
   inputSetInitialValue?: InputsResponseBody
-  isNewInModal?: boolean
-  className?: string
-  onCancel?: () => void
-  onCreateSuccess?: (response: ResponseInputSetResponse) => void
 }
 
 export interface InputSetV1DTO extends InputSetDTO {
@@ -148,7 +146,7 @@ const getInputSet = (
 }
 
 function InputSetV1FormInternal(props: InputSetV1FormProps): React.ReactElement {
-  const { isExecutionView, inputSetInitialValue, isNewInModal, className, onCancel, onCreateSuccess = noop } = props
+  const { isExecutionView, inputSetInitialValue, isNewInModal, className, onCancel, onCreateUpdateSuccess } = props
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, inputSetIdentifier } = useParams<
     PipelineType<InputSetPathProps> & AccountPathProps
   >()
@@ -247,7 +245,7 @@ function InputSetV1FormInternal(props: InputSetV1FormProps): React.ReactElement 
     inputSetResponse,
     isEdit,
     setFormErrors,
-    onCreateSuccess
+    onCreateUpdateSuccess
   })
 
   const handleMenu = (state: boolean): void => {
@@ -615,3 +613,5 @@ export default function InputSetFormV1(props: InputSetV1FormProps): React.ReactE
     </NestedAccordionProvider>
   )
 }
+
+export const InputSetFormV1ForRoute = withInputSetsOnCreateUpdateSuccess<InputSetV1FormProps>(InputSetFormV1)

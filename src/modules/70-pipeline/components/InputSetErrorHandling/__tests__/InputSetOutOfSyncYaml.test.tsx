@@ -211,7 +211,7 @@ const renderComponent = (): RenderResult => {
           } as any
         }
       >
-        <EnhancedInputSetForm />
+        <EnhancedInputSetForm onCreateUpdateSuccess={noop} />
       </PipelineContext.Provider>
     </TestWrapper>
   )
@@ -235,7 +235,7 @@ const renderGitSyncComponent = (): RenderResult => {
       }}
       defaultAppStoreValues={{ ...defaultAppStoreValues, isGitSyncEnabled: true }}
     >
-      <EnhancedInputSetForm />
+      <EnhancedInputSetForm onCreateUpdateSuccess={noop} />
     </GitSyncTestWrapper>
   )
 }
@@ -263,7 +263,7 @@ const renderGitSimpComponent = (): RenderResult => {
         supportingGitSimplification: true
       }}
     >
-      <EnhancedInputSetForm />
+      <EnhancedInputSetForm onCreateUpdateSuccess={noop} />
     </TestWrapper>
   )
 }

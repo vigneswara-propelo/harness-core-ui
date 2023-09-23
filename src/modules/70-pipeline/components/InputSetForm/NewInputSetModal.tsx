@@ -18,7 +18,7 @@ export interface NewInputSetModalProps {
   inputSetInitialValue?: InputSetDTO
   isModalOpen: boolean
   closeModal: () => void
-  onCreateSuccess: (response: ResponseInputSetResponse) => void
+  onCreateUpdateSuccess: (response: ResponseInputSetResponse) => void
   isSimplifiedYAML?: boolean
 }
 
@@ -26,7 +26,7 @@ export default React.memo(function NewInputSetModal({
   inputSetInitialValue,
   isModalOpen,
   closeModal,
-  onCreateSuccess,
+  onCreateUpdateSuccess,
   isSimplifiedYAML
 }: NewInputSetModalProps): React.ReactElement {
   return (
@@ -36,18 +36,18 @@ export default React.memo(function NewInputSetModal({
       className={cx(css.inModal, 'padded-dialog')}
       isOpen={isModalOpen}
       enforceFocus={false}
-      onClose={() => {
-        closeModal()
-      }}
+      onClose={closeModal}
     >
       {isSimplifiedYAML ? (
         <InputSetFormV1
           isNewInModal
           className={css.formInModal}
           onCancel={closeModal}
-          onCreateSuccess={response => {
+          onCreateUpdateSuccess={response => {
+            if (response) {
+              onCreateUpdateSuccess(response)
+            }
             closeModal()
-            onCreateSuccess(response)
           }}
         />
       ) : (
@@ -56,9 +56,11 @@ export default React.memo(function NewInputSetModal({
           isNewInModal
           className={css.formInModal}
           onCancel={closeModal}
-          onCreateSuccess={response => {
+          onCreateUpdateSuccess={response => {
+            if (response) {
+              onCreateUpdateSuccess(response)
+            }
             closeModal()
-            onCreateSuccess(response)
           }}
         />
       )}

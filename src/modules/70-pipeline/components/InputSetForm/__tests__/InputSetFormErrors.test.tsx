@@ -9,6 +9,7 @@ import React from 'react'
 import { queryByAttribute, screen } from '@testing-library/dom'
 
 import { render, waitFor, fireEvent, act } from '@testing-library/react'
+import { noop } from 'lodash-es'
 import { TestWrapper, queryByNameAttribute } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import routes from '@common/RouteDefinitions'
@@ -170,7 +171,7 @@ describe('Input Set - error scenarios', () => {
             } as any
           }
         >
-          <EnhancedInputSetForm />
+          <EnhancedInputSetForm onCreateUpdateSuccess={noop} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -207,7 +208,7 @@ describe('Input Set - error scenarios', () => {
             } as any
           }
         >
-          <EnhancedInputSetForm />
+          <EnhancedInputSetForm onCreateUpdateSuccess={noop} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -263,7 +264,7 @@ describe('Input Set - error scenarios', () => {
             } as any
           }
         >
-          <EnhancedInputSetForm />
+          <EnhancedInputSetForm onCreateUpdateSuccess={noop} />
         </PipelineContext.Provider>
       </TestWrapper>
     )

@@ -160,7 +160,7 @@ const TEST_INPUT_SET_FORM_PATH = routes.toInputSetForm({
   ...pipelineModuleParams
 })
 
-const renderSetup = (form = <EnhancedInputSetForm />) =>
+const renderSetup = (form = <EnhancedInputSetForm onCreateUpdateSuccess={noop} />) =>
   render(
     <TestWrapper
       path={TEST_INPUT_SET_FORM_PATH}
@@ -190,7 +190,7 @@ const renderSetup = (form = <EnhancedInputSetForm />) =>
     </TestWrapper>
   )
 
-const renderRemoteSetup = (form = <EnhancedInputSetForm />) =>
+const renderRemoteSetup = (form = <EnhancedInputSetForm onCreateUpdateSuccess={noop} />) =>
   render(
     <TestWrapper
       path={TEST_INPUT_SET_FORM_PATH}
@@ -268,7 +268,7 @@ describe.skip('Render Forms - Snapshot Testing', () => {
             } as any
           }
         >
-          <EnhancedInputSetForm executionView={true} />
+          <EnhancedInputSetForm executionView={true} onCreateUpdateSuccess={noop} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -325,7 +325,7 @@ describe.skip('Render Forms - Snapshot Testing', () => {
             } as any
           }
         >
-          <EnhancedInputSetForm />
+          <EnhancedInputSetForm onCreateUpdateSuccess={noop} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -589,7 +589,7 @@ describe.skip('Render Forms - Snapshot Testing', () => {
         }
         isModalOpen={true}
         closeModal={jest.fn()}
-        onCreateSuccess={jest.fn()}
+        onCreateUpdateSuccess={jest.fn()}
       />
     )
 

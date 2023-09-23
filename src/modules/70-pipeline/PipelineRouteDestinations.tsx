@@ -27,8 +27,8 @@ import PipelineStudio from './components/PipelineStudio/PipelineStudio'
 import InputSetList from './pages/inputSet-list/InputSetList'
 import PipelineStudioV1 from './v1/components/PipelineStudioV1/PipelineStudioV1'
 import FullPageLogView from './pages/full-page-log-view/FullPageLogView'
-import { EnhancedInputSetForm } from './components/InputSetForm/InputSetForm'
-import InputSetFormV1 from './v1/components/InputSetFormV1/InputSetFormV1'
+import { EnhancedInputSetFormForRoute } from './components/InputSetForm/InputSetForm'
+import { InputSetFormV1ForRoute } from './v1/components/InputSetFormV1/InputSetFormV1'
 import { RedirectToExecutionPipeline, RedirectToPipelineDetailHome } from './RouteDestinations'
 import ExecutionLandingPage from './pages/execution/ExecutionLandingPage/ExecutionLandingPage'
 import ExecutionPipelineView from './pages/execution/ExecutionPipelineView/ExecutionPipelineView'
@@ -141,7 +141,7 @@ function PipelineRouteDestinations({
         ]}
         pageName={PAGE_NAME.EnhancedInputSetForm}
       >
-        <EnhancedInputSetForm />
+        <EnhancedInputSetFormForRoute />
       </RouteWithContext>
       <RouteWithContext
         exact
@@ -152,7 +152,7 @@ function PipelineRouteDestinations({
         ]}
         pageName={PAGE_NAME.InputSetFormV1}
       >
-        <InputSetFormV1 />
+        <InputSetFormV1ForRoute />
       </RouteWithContext>
       <RouteWithContext
         exact

@@ -27,8 +27,8 @@ import {
   pipelinePathProps,
   projectPathProps
 } from '@common/utils/routeUtils'
-import { EnhancedInputSetForm } from '@pipeline/components/InputSetForm/InputSetForm'
-import InputSetFormV1 from '@pipeline/v1/components/InputSetFormV1/InputSetFormV1'
+import { EnhancedInputSetFormForRoute } from '@pipeline/components/InputSetForm/InputSetForm'
+import { InputSetFormV1ForRoute } from '@pipeline/v1/components/InputSetFormV1/InputSetFormV1'
 import ExecutionArtifactsView from '@pipeline/pages/execution/ExecutionArtifactsView/ExecutionArtifactsView'
 import ExecutionInputsView from '@pipeline/pages/execution/ExecutionInputsView/ExecutionInputsView'
 import ExecutionLandingPage from '@pipeline/pages/execution/ExecutionLandingPage/ExecutionLandingPage'
@@ -652,7 +652,7 @@ export function PipelineRouteDestinations({
         path={routes.toInputSetForm({ ...accountPathProps, ...inputSetFormPathProps, ...moduleParams })}
         pageName={PAGE_NAME.EnhancedInputSetForm}
       >
-        <EnhancedInputSetForm />
+        <EnhancedInputSetFormForRoute />
       </RouteWithLayout>
       <RouteWithLayout
         exact
@@ -660,7 +660,7 @@ export function PipelineRouteDestinations({
         path={routes.toInputSetForm({ ...accountPathProps, ...inputSetFormPathProps })}
         pageName={PAGE_NAME.EnhancedInputSetForm}
       >
-        <EnhancedInputSetForm />
+        <EnhancedInputSetFormForRoute />
       </RouteWithLayout>
       <RouteWithLayout
         exact
@@ -669,7 +669,7 @@ export function PipelineRouteDestinations({
         path={routes.toInputSetFormV1({ ...accountPathProps, ...inputSetFormPathProps, ...moduleParams })}
         pageName={PAGE_NAME.InputSetFormV1}
       >
-        <InputSetFormV1 />
+        <InputSetFormV1ForRoute />
       </RouteWithLayout>
       <RouteWithLayout
         exact
@@ -677,7 +677,7 @@ export function PipelineRouteDestinations({
         path={routes.toInputSetFormV1({ ...accountPathProps, ...inputSetFormPathProps })}
         pageName={PAGE_NAME.InputSetFormV1}
       >
-        <InputSetFormV1 />
+        <InputSetFormV1ForRoute />
       </RouteWithLayout>
       <Route
         exact

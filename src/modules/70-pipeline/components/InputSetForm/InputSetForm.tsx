@@ -60,7 +60,7 @@ import { parse, stringify, yamlParse } from '@common/utils/YamlHelperMethods'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { InputSetDTO, InputSetType, Pipeline, InputSet } from '@pipeline/utils/types'
-import { hasStoreTypeMismatch, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
+import { InputSetOnCreateUpdate, hasStoreTypeMismatch, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
@@ -73,6 +73,7 @@ import { usePermission } from '@rbac/hooks/usePermission'
 
 import { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { GitProviderOptions } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeGitProviderAndConnector'
+import { withInputSetsOnCreateUpdateSuccess } from '@pipeline/utils/withInputSetsOnCreateUpdateSuccess'
 import GitPopover from '../GitPopover/GitPopover'
 import { FormikInputSetForm } from './FormikInputSetForm'
 import { useSaveInputSet } from './useSaveInputSet'
@@ -99,16 +100,12 @@ const getDefaultInputSet = (
   branch: ''
 })
 
-export interface InputSetFormProps {
+export interface InputSetFormProps extends InputSetOnCreateUpdate {
   executionView?: boolean
 
   // Props to support embedding InputSetForm (create new) in a modal
   // @see src/modules/70-pipeline/components/InputSetForm/NewInputSetModal.tsx
   inputSetInitialValue?: InputSetDTO
-  isNewInModal?: boolean
-  className?: string
-  onCancel?: () => void
-  onCreateSuccess?: (response: ResponseInputSetResponse) => void
 }
 
 const getInputSet = (
@@ -174,7 +171,7 @@ const getInputSet = (
 }
 
 function InputSetForm(props: InputSetFormProps): React.ReactElement {
-  const { executionView, inputSetInitialValue, isNewInModal, className, onCancel, onCreateSuccess = noop } = props
+  const { executionView, inputSetInitialValue, isNewInModal, className, onCancel, onCreateUpdateSuccess } = props
   const { getString } = useStrings()
   const [isEdit, setIsEdit] = React.useState(false)
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, inputSetIdentifier } = useParams<
@@ -337,7 +334,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
     inputSetResponse,
     isEdit,
     setFormErrors,
-    onCreateSuccess
+    onCreateUpdateSuccess
   })
 
   const handleMenu = (state: boolean): void => {
@@ -962,3 +959,5 @@ export function EnhancedInputSetForm(props: InputSetFormProps): React.ReactEleme
     </NestedAccordionProvider>
   )
 }
+
+export const EnhancedInputSetFormForRoute = withInputSetsOnCreateUpdateSuccess<InputSetFormProps>(EnhancedInputSetForm)
