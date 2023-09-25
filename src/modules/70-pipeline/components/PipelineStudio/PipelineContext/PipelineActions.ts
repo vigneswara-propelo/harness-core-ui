@@ -18,7 +18,8 @@ import type {
   Failure,
   YamlSchemaErrorWrapperDTO,
   PipelineInfoConfig,
-  CacheResponseMetadata
+  CacheResponseMetadata,
+  PublicAccessResponse
 } from 'services/pipeline-ng'
 import type { DependencyElement } from 'services/ci'
 import type { TemplateServiceDataType } from '@pipeline/utils/templateUtils'
@@ -47,7 +48,8 @@ export enum PipelineActions {
   UpdateSchemaErrorsFlag = 'UpdateSchemaErrorsFlag',
   Success = 'Success',
   Error = 'Error',
-  SetValidationUuid = 'SetValidationUuid'
+  SetValidationUuid = 'SetValidationUuid',
+  SetPublicAccessResponse = 'SetPublicAccessResponse'
 }
 export const DefaultNewPipelineId = '-1'
 
@@ -137,8 +139,17 @@ export interface SelectionState {
   selectedSectionId?: string
 }
 
+export interface PipelineMetaData {
+  publicAccessResponse?: PublicAccessResponse
+}
+export interface PipelineMetaDataConfig {
+  originalMetadata?: PipelineMetaData
+  modifiedMetadata?: PipelineMetaData
+}
+
 export interface PipelineReducerState {
   pipeline: PipelineInfoConfig
+  pipelineMetadataConfig: PipelineMetaDataConfig
   yamlHandler?: YamlBuilderHandlerBinding
   originalPipeline: PipelineInfoConfig
   pipelineView: PipelineViewData
@@ -159,6 +170,7 @@ export interface PipelineReducerState {
   isInitialized: boolean
   isBEPipelineUpdated: boolean
   isUpdated: boolean
+  isMetadataUpdated: boolean
   modules: string[]
   snippets?: YamlSnippetMetaData[]
   selectionState: SelectionState
@@ -176,8 +188,11 @@ export const DefaultPipeline: PipelineInfoConfig = {
 
 export interface ActionResponse {
   error?: string
+  publicAccessResponse?: PublicAccessResponse
+  pipelineMetadataConfig?: PipelineMetaDataConfig
   schemaErrors?: boolean
   isUpdated?: boolean
+  isMetadataUpdated?: boolean
   isLoading?: boolean
   isDBInitializationFailed?: boolean
   modules?: string[]
@@ -273,6 +288,11 @@ const updateSelectionState = (response: ActionResponse): ActionReturnType => ({
   response
 })
 
+const setPublicAccessResponse = (response: ActionResponse): ActionReturnType => ({
+  type: PipelineActions.SetPublicAccessResponse,
+  response
+})
+
 export const PipelineContextActions = {
   dbInitialized,
   setDBInitializationFailed,
@@ -292,7 +312,8 @@ export const PipelineContextActions = {
   updateSchemaErrorsFlag,
   updateSelectionState,
   setIntermittentLoading,
-  setValidationUuid
+  setValidationUuid,
+  setPublicAccessResponse
 }
 
 export const initialState: PipelineReducerState = {
@@ -307,6 +328,10 @@ export const initialState: PipelineReducerState = {
     drawerData: {
       type: DrawerTypes.AddStep
     }
+  },
+  pipelineMetadataConfig: {
+    modifiedMetadata: { publicAccessResponse: { public: false } },
+    originalMetadata: { publicAccessResponse: { public: false } }
   },
   schemaErrors: false,
   storeMetadata: {},
@@ -323,6 +348,7 @@ export const initialState: PipelineReducerState = {
   isDBInitialized: false,
   isDBInitializationFailed: false,
   isUpdated: false,
+  isMetadataUpdated: false,
   modules: [],
   isInitialized: false,
   selectionState: {
@@ -398,14 +424,16 @@ export const PipelineReducer = (state = initialState, data: ActionReturnType): P
         ...state,
         ...response,
         isLoading: false,
-        isUpdated: false
+        isUpdated: false,
+        isMetadataUpdated: false
       }
     case PipelineActions.Fetching:
       return {
         ...state,
         isLoading: true,
         isBEPipelineUpdated: false,
-        isUpdated: false
+        isUpdated: false,
+        isMetadataUpdated: false
       }
     case PipelineActions.Loading:
       return {
@@ -429,6 +457,18 @@ export const PipelineReducer = (state = initialState, data: ActionReturnType): P
       return {
         ...state,
         validationUuid: response?.validationUuid
+      }
+    case PipelineActions.SetPublicAccessResponse:
+      return {
+        ...state,
+        isMetadataUpdated: response?.isMetadataUpdated ?? false,
+        pipelineMetadataConfig: {
+          ...state?.pipelineMetadataConfig,
+          modifiedMetadata: {
+            ...state?.pipelineMetadataConfig?.modifiedMetadata,
+            publicAccessResponse: response?.publicAccessResponse
+          }
+        }
       }
     default:
       return state

@@ -79,12 +79,13 @@ exports[`<AdvancedOptions/> tests should match snapshot 1`] = `
       <div
         class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--margin-bottom-large"
       >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+        <h5
+          class="StyledProps--font StyledProps--font-h5 StyledProps--main StyledProps--color StyledProps--color-grey900"
           data-tooltip-id="pipelineCreate_timeout"
+          level="5"
         >
           pipeline.pipelineTimeoutSettings
-        </p>
+        </h5>
         <div
           class="bp3-card bp3-elevation-0 Card--card"
         >
@@ -145,14 +146,15 @@ exports[`<AdvancedOptions/> tests should match snapshot 1`] = `
         </div>
       </div>
       <div
-        class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+        class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--margin-bottom-large"
       >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+        <h5
+          class="StyledProps--font StyledProps--font-h5 StyledProps--main StyledProps--color StyledProps--color-grey900"
           data-tooltip-id="stageExecution_settings"
+          level="5"
         >
           pipeline.stageExecutionSettings
-        </p>
+        </h5>
         <div
           class="bp3-card bp3-elevation-0 Card--card"
         >
@@ -214,16 +216,16 @@ exports[`<AdvancedOptions/> tests should match snapshot 1`] = `
           </div>
         </div>
       </div>
-      <br />
       <div
-        class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+        class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--margin-bottom-large"
       >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+        <h5
+          class="StyledProps--font StyledProps--font-h5 StyledProps--main StyledProps--color StyledProps--color-grey900"
           data-tooltip-id="delegateSelector"
+          level="5"
         >
           pipeline.delegate.DelegateSelectorOptional
-        </p>
+        </h5>
         <div
           class="bp3-card bp3-elevation-0 Card--card"
         >
@@ -332,6 +334,49 @@ exports[`<AdvancedOptions/> tests should match snapshot 1`] = `
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--margin-bottom-large"
+      >
+        <h5
+          class="StyledProps--font StyledProps--font-h5 StyledProps--main StyledProps--color StyledProps--color-grey900"
+          data-tooltip-id="pipeline-public-access"
+          level="5"
+        >
+          platform.authSettings.publicAccess.publicAccess common.optionalLabel
+        </h5>
+        <div
+          class="bp3-card bp3-elevation-0 Card--card"
+        >
+          <div
+            class="bp3-form-group"
+          >
+            <div
+              class="bp3-form-content"
+            >
+              <label
+                class="Toggle--toggle StyledProps--main"
+                data-testid="toggle-mark-pipeline-public"
+                name="publicAccessResponse.public"
+              >
+                <input
+                  class="Toggle--input"
+                  type="checkbox"
+                  value=""
+                />
+                <span
+                  class="Toggle--toggleIcon"
+                />
+                <span
+                  class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                  data-tooltip-id="pipelineAdvancedOptions_publicAccessResponse.public"
+                >
+                  pipeline.markPipelinePublic
+                </span>
+              </label>
             </div>
           </div>
         </div>

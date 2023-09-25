@@ -1999,6 +1999,7 @@ policyNotConfigured: Policy not configured
 executionFailed: Execution failed
 cacheIntelligence:
   label: Cache Intelligence
+markPipelinePublic: Mark this pipeline for public view
 costChange: Cost Change Estimation
 taskOptions:
   implementation: 'Implementation'

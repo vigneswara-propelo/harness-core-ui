@@ -116,6 +116,7 @@ const stateMock = {
   isBEPipelineUpdated: false,
   isDBInitialized: true,
   isUpdated: true,
+  isMetadataUpdated: false,
   isInitialized: true,
   selectionState: {
     selectedStageId: 'S1'
@@ -161,6 +162,7 @@ export const pipelineContext: PipelineContextInterface = {
   setTemplateServiceData: jest.fn(),
   setIntermittentLoading: jest.fn(),
   setValidationUuid: jest.fn(),
+  setPublicAccessResponse: jest.fn(),
   reconcile: {} as UseReconcileReturnType
 }
 

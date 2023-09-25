@@ -257,6 +257,7 @@ export const getPipelineContextMock = (): PipelineContextInterface => ({
   setTemplateServiceData: jest.fn(),
   setIntermittentLoading: jest.fn(),
   setValidationUuid: jest.fn(),
+  setPublicAccessResponse: jest.fn(),
   reconcile: {
     reconcilePipeline: jest.fn(),
     outOfSync: false,

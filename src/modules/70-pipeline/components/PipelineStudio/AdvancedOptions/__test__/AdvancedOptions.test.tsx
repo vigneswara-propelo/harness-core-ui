@@ -64,13 +64,16 @@ describe('<AdvancedOptions/> tests', () => {
     await act(async () => {
       fireEvent.click(getByText('applyChanges'))
     })
-    expect(baseProps.onApplyChanges).toBeCalledWith({
-      allowStageExecutions: true,
-      identifier: 'Some_Pipeline',
-      name: 'Some Pipeline',
-      timeout: '30m',
-      stages: []
-    })
+    expect(baseProps.onApplyChanges).toBeCalledWith(
+      {
+        allowStageExecutions: true,
+        identifier: 'Some_Pipeline',
+        name: 'Some Pipeline',
+        timeout: '30m',
+        stages: []
+      },
+      { publicAccess: { public: false } }
+    )
   })
 
   test('should not set timeout when field is cleared', async () => {
@@ -85,11 +88,14 @@ describe('<AdvancedOptions/> tests', () => {
     await act(async () => {
       fireEvent.click(getByText('applyChanges'))
     })
-    expect(baseProps.onApplyChanges).toBeCalledWith({
-      allowStageExecutions: false,
-      identifier: 'Some_Pipeline',
-      name: 'Some Pipeline',
-      stages: []
-    })
+    expect(baseProps.onApplyChanges).toBeCalledWith(
+      {
+        allowStageExecutions: false,
+        identifier: 'Some_Pipeline',
+        name: 'Some Pipeline',
+        stages: []
+      },
+      { publicAccess: { public: false } }
+    )
   })
 })

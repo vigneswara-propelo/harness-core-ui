@@ -113,6 +113,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     yamlHandler,
     remoteFetchError,
     isUpdated,
+    isMetadataUpdated,
     entityValidityDetails,
     modules
   } = state
@@ -402,7 +403,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                   variation={ButtonVariation.PRIMARY}
                   icon="run-pipeline"
                   intent="success"
-                  disabled={isUpdated || entityValidityDetails?.valid === false}
+                  disabled={isUpdated || entityValidityDetails?.valid === false || isMetadataUpdated}
                   className={css.runPipelineBtn}
                   text={getString('runPipelineText')}
                   tooltip={runTooltip}

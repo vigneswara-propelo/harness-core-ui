@@ -884,8 +884,14 @@ authSettings:
   setAsDefaultCard: Set as Default Card
   updateCard: Update Card
   addCard: Add Card
-  publicAccessEnabled: Public Access enabled on account
-  updatedPublicAccess: Updated Public Access
+  publicAccess:
+    publicAccess: Public Access
+    allowPublicResources: Allow public resources
+    updatedPublicAccess: Updated Public Access
+    resourcesNoLongerAccessible: Resources marked "public" will no longer be accessible without logging-in.
+    resourcesWillBeAccessible: Resources marked "public" will be accessible without logging-in. Public resources refer to the resources which can be accessed by anyone who uses Harness.
+    modalTitleDisable: Disable public access of resources
+    modalTitleEnable: Enable public access of resources
 connectors:
   createNewConnector: Create New Connector
   confirmDeleteTitle: Delete Connector

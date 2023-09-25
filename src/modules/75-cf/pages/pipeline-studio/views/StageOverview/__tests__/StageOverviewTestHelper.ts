@@ -29,6 +29,7 @@ export const getPipelineContext = (): PipelineContextInterface => ({
       drawerData: { type: DrawerTypes.AddStep },
       splitViewData: {}
     },
+    pipelineMetadataConfig: {},
     schemaErrors: false,
     gitDetails: {},
     entityValidityDetails: {},
@@ -41,6 +42,7 @@ export const getPipelineContext = (): PipelineContextInterface => ({
     isLoading: false,
     isIntermittentLoading: false,
     isUpdated: false,
+    isMetadataUpdated: false,
     modules: [],
     templateTypes: {},
     templateServiceData: {},
@@ -82,6 +84,7 @@ export const getPipelineContext = (): PipelineContextInterface => ({
   setTemplateServiceData: jest.fn(),
   setIntermittentLoading: jest.fn(),
   setValidationUuid: jest.fn(),
+  setPublicAccessResponse: jest.fn(),
   reconcile: {} as UseReconcileReturnType
 })
 
@@ -96,6 +99,7 @@ export const getEditPipelineContext = (): PipelineContextInterface => ({
       drawerData: { type: DrawerTypes.AddStep },
       splitViewData: {}
     },
+    pipelineMetadataConfig: {},
     schemaErrors: false,
     gitDetails: {},
     entityValidityDetails: {},
@@ -108,6 +112,7 @@ export const getEditPipelineContext = (): PipelineContextInterface => ({
     isLoading: false,
     isIntermittentLoading: false,
     isUpdated: true,
+    isMetadataUpdated: false,
     modules: [],
     templateTypes: {},
     templateServiceData: {},
@@ -149,6 +154,7 @@ export const getEditPipelineContext = (): PipelineContextInterface => ({
   setTemplateServiceData: jest.fn(),
   setIntermittentLoading: jest.fn(),
   setValidationUuid: jest.fn(),
+  setPublicAccessResponse: jest.fn(),
   reconcile: {} as UseReconcileReturnType
 })
 

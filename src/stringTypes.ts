@@ -2138,7 +2138,13 @@ export interface StringsMap {
   'platform.authSettings.pricePreview.discount': string
   'platform.authSettings.pricePreview.title': string
   'platform.authSettings.proRata': string
-  'platform.authSettings.publicAccessEnabled': string
+  'platform.authSettings.publicAccess.allowPublicResources': string
+  'platform.authSettings.publicAccess.modalTitleDisable': string
+  'platform.authSettings.publicAccess.modalTitleEnable': string
+  'platform.authSettings.publicAccess.publicAccess': string
+  'platform.authSettings.publicAccess.resourcesNoLongerAccessible': string
+  'platform.authSettings.publicAccess.resourcesWillBeAccessible': string
+  'platform.authSettings.publicAccess.updatedPublicAccess': string
   'platform.authSettings.publicOAuthLoginDisabled': string
   'platform.authSettings.publicOAuthLoginEnabled': string
   'platform.authSettings.recommendation': string
@@ -2174,7 +2180,6 @@ export interface StringsMap {
   'platform.authSettings.typeAndPressEnterToAddADomain': string
   'platform.authSettings.unitPrice': string
   'platform.authSettings.updateCard': string
-  'platform.authSettings.updatedPublicAccess': string
   'platform.authSettings.updating': string
   'platform.authSettings.uploadIdentityProvider': string
   'platform.authSettings.urlIdentityProvider': string
@@ -4940,6 +4945,7 @@ export interface StringsMap {
   'pipeline.manifestTypeLabels.ValuesYaml': string
   'pipeline.manifestTypeLabels.VarsYAML': string
   'pipeline.manuallyTriggered': string
+  'pipeline.markPipelinePublic': string
   'pipeline.moreCommitsLabel': string
   'pipeline.mostRecentDirection': string
   'pipeline.moveInlieToRemote': string

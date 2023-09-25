@@ -91,7 +91,16 @@ function SavePipelinePopover(
   } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const {
-    state: { pipeline, yamlHandler, storeMetadata, gitDetails, isUpdated, isIntermittentLoading },
+    state: {
+      pipeline,
+      yamlHandler,
+      storeMetadata,
+      gitDetails,
+      isUpdated,
+      isMetadataUpdated,
+      isIntermittentLoading,
+      pipelineMetadataConfig
+    },
     deletePipelineCache,
     fetchPipeline,
     view,
@@ -160,8 +169,8 @@ function SavePipelinePopover(
   })
 
   const isTemplatesEnabled = templatesFeatureEnabled && canEdit && !pipeline?.template
-
-  const isSaveDisabled = isReadonly || !isUpdated || isIntermittentLoading
+  // Enable save even if isUpdated is false as metadata has changed
+  const isSaveDisabled = isReadonly || isIntermittentLoading || (!isUpdated && !isMetadataUpdated)
 
   const _hasChainedPipelineStage = React.useMemo(() => hasChainedPipelineStage(pipeline?.stages), [pipeline?.stages])
 
@@ -252,7 +261,8 @@ function SavePipelinePopover(
         ...(lastObject ?? {}),
         ...(updatedGitDetails && currStoreMetadata?.storeType !== StoreType.REMOTE && updatedGitDetails?.isNewBranch
           ? { baseBranch: branch }
-          : {})
+          : {}),
+        public: !!pipelineMetadataConfig?.modifiedMetadata?.publicAccessResponse?.public
       },
       omit(latestPipeline, 'repo', 'branch'),
       isEdit

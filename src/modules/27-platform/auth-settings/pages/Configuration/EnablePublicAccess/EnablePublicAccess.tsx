@@ -8,7 +8,9 @@
 import React, { useState } from 'react'
 import { defaultTo, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { Container, Card, Switch, Text } from '@harness/uicore'
+import { Intent } from '@blueprintjs/core'
+
+import { Container, Card, Switch, Text, HarnessDocTooltip, useConfirmationDialog } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -28,29 +30,47 @@ const EnablePublicAccess: React.FC<EnablePublicAccessProps> = ({ enabled, refetc
   const [loading, setLoading] = useState(false)
   const { accountId } = useParams<AccountPathProps>()
 
-  const onChange = async (e: React.FormEvent<HTMLInputElement>): Promise<void> => {
-    const enable = e.currentTarget.checked
+  const { openDialog: openEnablePublicAccessDialog } = useConfirmationDialog({
+    contentText: enabled
+      ? getString('platform.authSettings.publicAccess.resourcesNoLongerAccessible')
+      : getString('platform.authSettings.publicAccess.resourcesWillBeAccessible'),
+    titleText: enabled
+      ? getString('platform.authSettings.publicAccess.modalTitleDisable')
+      : getString('platform.authSettings.publicAccess.modalTitleEnable'),
+    confirmButtonText: enabled ? getString('common.disable') : getString('enable'),
+    cancelButtonText: getString('cancel'),
+    intent: Intent.DANGER,
+    buttonIntent: Intent.DANGER,
+    onCloseDialog: async didConfirm => {
+      if (didConfirm) {
+        const newEnableValue = !enabled
 
-    try {
-      setLoading(true)
-      const res = await setPublicAccessPromise({
-        queryParams: {
-          accountIdentifier: accountId
-        },
-        body: enable
-      })
-      if (res.resource) {
-        // res.resource is expected as "true" if operation is successful—in both "enable" or "disable" cases
-        showSuccess(getString('platform.authSettings.updatedPublicAccess'))
-        refetchAuthSettings()
-      } else {
-        showError(defaultTo(res.responseMessages?.[0]?.message, getString('somethingWentWrong')))
+        try {
+          setLoading(true)
+          const res = await setPublicAccessPromise({
+            queryParams: {
+              accountIdentifier: accountId
+            },
+            body: newEnableValue
+          })
+          if (res.resource) {
+            // res.resource is expected as "true" if operation is successful—in both "enable" or "disable" cases
+            showSuccess(getString('platform.authSettings.publicAccess.updatedPublicAccess'))
+            refetchAuthSettings()
+          } else {
+            showError(defaultTo(res.responseMessages?.[0]?.message, getString('somethingWentWrong')))
+          }
+        } catch (error) {
+          showError(defaultTo(get(error, 'data.message'), get(error, 'message')))
+        } finally {
+          setLoading(false)
+        }
       }
-    } catch (error) {
-      showError(defaultTo(get(error, 'data.messsage'), get(error, 'message')))
-    } finally {
-      setLoading(false)
     }
+  })
+
+  const onChange = (): void => {
+    openEnablePublicAccessDialog()
   }
 
   return (
@@ -59,7 +79,8 @@ const EnablePublicAccess: React.FC<EnablePublicAccessProps> = ({ enabled, refetc
         <Switch
           labelElement={
             <Text inline color={Color.BLACK} font={{ weight: 'bold', size: 'normal' }}>
-              {getString('platform.authSettings.publicAccessEnabled')}
+              {getString('platform.authSettings.publicAccess.allowPublicResources')}
+              <HarnessDocTooltip useStandAlone tooltipId="allowPublicResources" />
             </Text>
           }
           checked={enabled}

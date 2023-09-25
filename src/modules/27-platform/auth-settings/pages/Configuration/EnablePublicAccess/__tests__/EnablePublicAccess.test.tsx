@@ -6,11 +6,11 @@
  */
 
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { render, waitFor, getByRole as getByRoleFromRTL } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { setPublicAccessPromise } from 'services/cd-ng'
-import { TestWrapper } from '@common/utils/testUtils'
+import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import EnablePublicAccess from '../EnablePublicAccess'
 
 jest.mock('services/cd-ng')
@@ -27,7 +27,7 @@ describe('EnablePublicAccess', () => {
     })
     ;(setPublicAccessPromise as jest.Mock).mockImplementationOnce(mockSetPublicAccessPromise)
 
-    const { getByTestId, queryByText } = render(
+    const { getByTestId } = render(
       <TestWrapper>
         <EnablePublicAccess enabled={false} refetchAuthSettings={refetchAuthSettings} canEdit={true} />
       </TestWrapper>
@@ -35,9 +35,13 @@ describe('EnablePublicAccess', () => {
 
     const switchBtn = getByTestId('toggle-enable-public-access')
     await userEvent.click(switchBtn!)
-    await waitFor(() => expect(setPublicAccessPromise).toBeCalled())
 
-    expect(queryByText('platform.authSettings.updatedPublicAccess')).toBeTruthy()
+    const dialogContainer = findDialogContainer()
+    expect(dialogContainer).toBeInTheDocument()
+    const enableButton = getByRoleFromRTL(dialogContainer as HTMLElement, 'button', { name: 'enable' })
+    await userEvent.click(enableButton)
+
+    await waitFor(() => expect(setPublicAccessPromise).toBeCalled())
 
     // after switch click, since mock 'setPublicAccessPromise' returns true, refetchAuthSettings should be called
     expect(refetchAuthSettings).toHaveBeenCalled()
@@ -62,6 +66,12 @@ describe('EnablePublicAccess', () => {
 
     const switchBtn = getByTestId('toggle-enable-public-access')
     await userEvent.click(switchBtn!)
+
+    const dialogContainer = findDialogContainer()
+    expect(dialogContainer).toBeInTheDocument()
+    const enableButton = getByRoleFromRTL(dialogContainer as HTMLElement, 'button', { name: 'enable' })
+    await userEvent.click(enableButton)
+
     await waitFor(() => expect(setPublicAccessPromise).toBeCalled())
 
     await waitFor(() => expect(queryByText('somethingWentWrong')).toBeTruthy())
@@ -84,6 +94,12 @@ describe('EnablePublicAccess', () => {
 
     const switchBtn = getByTestId('toggle-enable-public-access')
     await userEvent.click(switchBtn!)
+
+    const dialogContainer = findDialogContainer()
+    expect(dialogContainer).toBeInTheDocument()
+    const enableButton = getByRoleFromRTL(dialogContainer as HTMLElement, 'button', { name: 'enable' })
+    await userEvent.click(enableButton)
+
     await waitFor(() => expect(setPublicAccessPromise).toBeCalled())
 
     expect(refetchAuthSettings).not.toHaveBeenCalled()

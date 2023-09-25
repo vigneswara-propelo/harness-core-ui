@@ -244,6 +244,7 @@ const pipelineContextMock: PipelineContextInterface = {
   setTemplateServiceData: () => undefined,
   setIntermittentLoading: () => undefined,
   setValidationUuid: jest.fn(),
+  setPublicAccessResponse: jest.fn(),
   reconcile: {} as UseReconcileReturnType
 }
 
@@ -408,7 +409,8 @@ export const putPipelinePromiseArg = {
     projectIdentifier: 'testProject',
     repoIdentifier: 'gitSyncRepo',
     rootFolder: '/rootFolderTest/.harness/',
-    targetBranch: ''
+    targetBranch: '',
+    public: false
   },
   requestOptions: {
     headers: {
@@ -474,7 +476,8 @@ export const createPipelinePromiseArg = {
     projectIdentifier: 'testProject',
     repoIdentifier: 'gitSyncRepo',
     rootFolder: '/rootFolderTest/.harness/',
-    targetBranch: ''
+    targetBranch: '',
+    public: false
   },
   requestOptions: {
     headers: {

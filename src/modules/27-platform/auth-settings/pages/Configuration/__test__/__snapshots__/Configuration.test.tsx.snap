@@ -1045,7 +1045,7 @@ exports[`Configuration Configuration page 1`] = `
                   <span
                     class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-normal"
                   >
-                    platform.authSettings.publicAccessEnabled
+                    platform.authSettings.publicAccess.allowPublicResources
                   </span>
                 </label>
               </div>

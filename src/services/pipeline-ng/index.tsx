@@ -995,6 +995,11 @@ export type CdSscaOrchestrationStepInfo = StepSpecType & {
   tool: SbomOrchestrationTool
 }
 
+export type ChangeTaskUpdateMultipleSpec = UpdateMultipleSpec & {
+  changeRequestNumber: string
+  changeTaskType?: string
+}
+
 export interface ChildExecutionDetailDTO {
   executionGraph?: ExecutionGraph
   pipelineExecutionSummary?: PipelineExecutionSummary
@@ -1213,6 +1218,7 @@ export interface ContainerInfraYamlSpec {
   containerSecurityContext?: SecurityContext
   harnessImageConnectorRef?: string
   hostNames?: string[]
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
   initTimeout?: string
   labels?: {
     [key: string]: string
@@ -4059,6 +4065,7 @@ export interface PMSPipelineResponseDTO {
   gitDetails?: EntityGitDetails
   governanceMetadata?: GovernanceMetadata
   modules?: string[]
+  publicAccessResponse?: PublicAccessResponse
   resolvedTemplatesPipelineYaml?: string
   storeType?: 'INLINE' | 'REMOTE'
   validateTemplateInputsResponse?: ValidateTemplateInputsResponseDTO
@@ -4630,6 +4637,7 @@ export type PipelineRollbackStageConfig = StageInfoConfig & {}
 export interface PipelineSaveResponse {
   governanceMetadata?: GovernanceMetadata
   identifier?: string
+  publicAccessResponse?: PublicAccessResponse
 }
 
 export type PipelineStageConfig = StageInfoConfig & {
@@ -4873,6 +4881,11 @@ export type ProceedWithDefaultValuesFailureActionConfig = FailureStrategyActionC
   type: 'ProceedWithDefaultValues'
 }
 
+export interface PublicAccessResponse {
+  errorMessage?: string
+  public?: boolean
+}
+
 export type QueueStepInfo = StepSpecType & {
   key: string
   scope: 'Pipeline' | 'Stage'
@@ -5031,6 +5044,10 @@ export interface ResourceDTO {
     | 'CHAOS_SECURITY_GOVERNANCE'
     | 'END_USER_LICENSE_AGREEMENT'
     | 'WORKSPACE'
+    | 'SEI_CONFIGURATION_SETTINGS'
+    | 'SEI_COLLECTIONS'
+    | 'SEI_INSIGHTS'
+    | 'CET_SAVED_FILTER'
 }
 
 export interface ResourceScope {
@@ -6311,7 +6328,7 @@ export type RunStepInfo = StepSpecType & {
 }
 
 export type RunTestsStepInfo = StepSpecType & {
-  args: string
+  args?: string
   buildEnvironment?: 'Core' | 'Framework'
   buildTool: 'Maven' | 'Bazel' | 'Gradle' | 'Dotnet' | 'Nunitconsole' | 'SBT' | 'Pytest' | 'Unittest' | 'Rspec'
   connectorRef?: string
@@ -6534,8 +6551,9 @@ export type ServiceNowUpdateStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   fields?: ServiceNowField[]
   templateName?: string
-  ticketNumber: string
+  ticketNumber?: string
   ticketType: string
+  updateMultiple?: UpdateMultipleTaskNode
   useServiceNowTemplate: boolean
 }
 
@@ -6786,7 +6804,6 @@ export interface StepData {
     | 'TERRAGRUNT_APPLY'
     | 'TERRAGRUNT_DESTROY'
     | 'TERRAGRUNT_ROLLBACK'
-    | 'BAMBOO_BUILD'
     | 'SEI_MAX_NUMBER_OF_CONTRIBUTORS'
   name?: string
   type?: string
@@ -7158,6 +7175,15 @@ export interface UnitTestReport {
 
 export interface UnitTestReportSpec {
   [key: string]: any
+}
+
+export interface UpdateMultipleSpec {
+  [key: string]: any
+}
+
+export interface UpdateMultipleTaskNode {
+  spec: UpdateMultipleSpec
+  type: 'CHANGE_TASK'
 }
 
 export type UpdateRuleYaml = PatchInstruction & {
@@ -8378,30 +8404,38 @@ export const getFilterPromise = (
     signal
   )
 
-export type GetPMSHealthStatusProps = Omit<GetProps<RestResponseString, unknown, void, void>, 'path'>
+export type Get1Props = Omit<GetProps<RestResponseString, unknown, void, void>, 'path'>
 
-/**
- * get health for PMS service
- */
-export const GetPMSHealthStatus = (props: GetPMSHealthStatusProps) => (
+export const Get1 = (props: Get1Props) => (
   <Get<RestResponseString, unknown, void, void> path={`/health`} base={getConfig('pipeline/api')} {...props} />
 )
 
-export type UseGetPMSHealthStatusProps = Omit<UseGetProps<RestResponseString, unknown, void, void>, 'path'>
+export type UseGet1Props = Omit<UseGetProps<RestResponseString, unknown, void, void>, 'path'>
 
-/**
- * get health for PMS service
- */
-export const useGetPMSHealthStatus = (props: UseGetPMSHealthStatusProps) =>
+export const useGet1 = (props: UseGet1Props) =>
   useGet<RestResponseString, unknown, void, void>(`/health`, { base: getConfig('pipeline/api'), ...props })
 
-/**
- * get health for PMS service
- */
-export const getPMSHealthStatusPromise = (
+export const get1Promise = (
   props: GetUsingFetchProps<RestResponseString, unknown, void, void>,
   signal?: RequestInit['signal']
 ) => getUsingFetch<RestResponseString, unknown, void, void>(getConfig('pipeline/api'), `/health`, props, signal)
+
+export type DoLivenessCheck1Props = Omit<GetProps<RestResponseString, unknown, void, void>, 'path'>
+
+export const DoLivenessCheck1 = (props: DoLivenessCheck1Props) => (
+  <Get<RestResponseString, unknown, void, void> path={`/health/liveness`} base={getConfig('pipeline/api')} {...props} />
+)
+
+export type UseDoLivenessCheck1Props = Omit<UseGetProps<RestResponseString, unknown, void, void>, 'path'>
+
+export const useDoLivenessCheck1 = (props: UseDoLivenessCheck1Props) =>
+  useGet<RestResponseString, unknown, void, void>(`/health/liveness`, { base: getConfig('pipeline/api'), ...props })
+
+export const doLivenessCheck1Promise = (
+  props: GetUsingFetchProps<RestResponseString, unknown, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseString, unknown, void, void>(getConfig('pipeline/api'), `/health/liveness`, props, signal)
 
 export interface GetInputSetsListForPipelineQueryParams {
   pageIndex?: number
@@ -15231,6 +15265,7 @@ export interface CreatePipelineV2QueryParams {
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
   repoName?: string
+  public?: boolean
 }
 
 export type CreatePipelineV2Props = Omit<
@@ -15449,6 +15484,7 @@ export interface PutPipelineV2QueryParams {
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
   lastCommitId?: string
+  public?: boolean
 }
 
 export interface PutPipelineV2PathParams {
@@ -19132,8 +19168,8 @@ export interface GetSchemaYamlQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -19466,8 +19502,8 @@ export interface GetStepYamlSchemaQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
@@ -19798,8 +19834,8 @@ export interface GetStaticSchemaYamlQueryParams {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
     | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
   scope?: 'account' | 'org' | 'project' | 'unknown'
   version?: string
 }

@@ -39,7 +39,8 @@ import {
   ResponsePMSPipelineResponseDTO,
   YamlSchemaErrorWrapperDTO,
   ResponsePMSPipelineSummaryResponse,
-  CacheResponseMetadata
+  CacheResponseMetadata,
+  PublicAccessResponse
 } from 'services/pipeline-ng'
 import { useReconcile, UseReconcileReturnType } from '@pipeline/hooks/useReconcile'
 import { useGlobalEventListener, useLocalStorage, useQueryParams } from '@common/hooks'
@@ -68,6 +69,7 @@ import {
   DrawerTypes,
   initialState,
   PipelineContextActions,
+  PipelineMetaDataConfig,
   PipelineReducer,
   PipelineReducerState,
   PipelineViewData,
@@ -155,7 +157,8 @@ export const getPipelineByIdentifier = (
         yamlSchemaErrorWrapper: obj.data.yamlSchemaErrorWrapper ?? {},
         modules: response.data?.modules,
         cacheResponse: obj.data?.cacheResponse,
-        validationUuid: obj.data?.validationUuid
+        validationUuid: obj.data?.validationUuid,
+        publicAccessResponse: obj.data?.publicAccessResponse
       }
     } else if (response?.status === 'ERROR' && params?.storeType === StoreType.REMOTE) {
       return { remoteFetchError: response } as FetchError // handling remote pipeline not found
@@ -205,7 +208,7 @@ export const getPipelineMetadataByIdentifier = (
 }
 
 export const savePipeline = (
-  params: CreatePipelineQueryParams & PutPipelineQueryParams,
+  params: CreatePipelineQueryParams & PutPipelineQueryParams & { public: boolean },
   pipeline: PipelineInfoConfig,
   isEdit = false
 ): Promise<Failure | undefined> => {
@@ -270,6 +273,10 @@ export interface StagesMap {
   [key: string]: StageAttributes
 }
 
+export interface UpdatePipelineMetaData {
+  viewType?: SelectedView
+  publicAccess?: PublicAccessResponse
+}
 export interface PipelineContextInterface {
   state: PipelineReducerState
   stagesMap: StagesMap
@@ -287,7 +294,7 @@ export interface PipelineContextInterface {
   setTemplateTypes: (data: { [key: string]: string }) => void
   setTemplateIcons: (data: TemplateIcons) => void
   setTemplateServiceData: (data: TemplateServiceDataType) => void
-  updatePipeline: (pipeline: PipelineInfoConfig, viewType?: SelectedView) => Promise<void>
+  updatePipeline: (pipeline: PipelineInfoConfig, metadata?: UpdatePipelineMetaData) => Promise<void>
   updatePipelineStoreMetadata: (storeMetadata: StoreMetadata, gitDetails: EntityGitDetails) => Promise<void>
   updateGitDetails: (gitDetails: EntityGitDetails) => Promise<void>
   updateEntityValidityDetails: (entityValidityDetails: EntityValidityDetails) => Promise<void>
@@ -311,6 +318,7 @@ export interface PipelineContextInterface {
   /** Useful for setting any intermittent loading state. Eg. any API call loading, any custom loading, etc */
   setIntermittentLoading: (isIntermittentLoading: boolean) => void
   setValidationUuid: (uuid: string) => void
+  setPublicAccessResponse: (publicAccessResponse: PublicAccessResponse) => void
   deleteStage?: useDeleteStageReturnType['deleteStage']
   reconcile: UseReconcileReturnType
 }
@@ -320,6 +328,7 @@ interface PipelinePayload {
   pipeline: PipelineInfoConfig | undefined
   originalPipeline?: PipelineInfoConfig
   isUpdated: boolean
+  isMetadataUpdated?: boolean
   modules?: string[]
   storeMetadata?: StoreMetadata
   gitDetails: EntityGitDetails
@@ -328,6 +337,7 @@ interface PipelinePayload {
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
   cacheResponse?: CacheResponseMetadata
   validationUuid?: string
+  pipelineMetadataConfig?: PipelineMetaDataConfig
 }
 
 const getId = (
@@ -520,7 +530,10 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       return
     }
 
-    const pipelineWithGitDetails = pipelineById as PipelineInfoConfigWithGitDetails & { modules?: string[] }
+    const pipelineWithGitDetails = pipelineById as PipelineInfoConfigWithGitDetails & {
+      modules?: string[]
+      publicAccessResponse: PublicAccessResponse
+    }
 
     id = getId(
       queryParams.accountIdentifier,
@@ -547,13 +560,15 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       'yamlSchemaErrorWrapper',
       'modules',
       'cacheResponse',
-      'validationUuid'
+      'validationUuid',
+      'publicAccessResponse'
     ) as PipelineInfoConfig
     const payload: PipelinePayload = {
       [KeyPath]: id,
       pipeline,
       originalPipeline: cloneDeep(pipeline),
       isUpdated: false,
+      isMetadataUpdated: false,
       modules: pipelineWithGitDetails?.modules,
       gitDetails:
         pipelineWithGitDetails?.gitDetails?.objectId || pipelineWithGitDetails?.gitDetails?.commitId
@@ -567,6 +582,14 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
         pipelineWithGitDetails?.yamlSchemaErrorWrapper,
         defaultTo(data?.yamlSchemaErrorWrapper, {})
       ),
+      pipelineMetadataConfig: {
+        originalMetadata: {
+          publicAccessResponse: pipelineWithGitDetails?.publicAccessResponse
+        },
+        modifiedMetadata: {
+          publicAccessResponse: pipelineWithGitDetails?.publicAccessResponse
+        }
+      },
       cacheResponse: defaultTo(pipelineWithGitDetails?.cacheResponse, data?.cacheResponse),
       validationUuid: defaultTo(pipelineWithGitDetails?.validationUuid, data?.validationUuid)
     }
@@ -577,6 +600,17 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
         defaultTo(pipelineWithGitDetails?.gitDetails?.repoIdentifier, '')
       ),
       branch: defaultTo(gitDetails.branch, defaultTo(pipelineWithGitDetails?.gitDetails?.branch, ''))
+    }
+
+    const pipelineMetadataConfig: PipelineMetaDataConfig = {
+      originalMetadata: {
+        publicAccessResponse: pipelineWithGitDetails.publicAccessResponse
+      },
+      modifiedMetadata: {
+        publicAccessResponse:
+          data?.pipelineMetadataConfig?.modifiedMetadata?.publicAccessResponse ||
+          pipelineWithGitDetails.publicAccessResponse
+      }
     }
     if (data && !forceUpdate) {
       const { templateTypes, templateServiceData, templateIcons } = data.pipeline
@@ -600,6 +634,8 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
           originalPipeline: cloneDeep(pipeline),
           isBEPipelineUpdated: comparePipelines(pipeline, data.originalPipeline),
           isUpdated: comparePipelines(pipeline, data.pipeline),
+          isMetadataUpdated: !isEqual(pipelineMetadataConfig.originalMetadata, pipelineMetadataConfig.modifiedMetadata),
+          pipelineMetadataConfig,
           modules: defaultTo(pipelineWithGitDetails?.modules, data.modules),
           gitDetails:
             pipelineWithGitDetails?.gitDetails?.objectId || pipelineWithGitDetails?.gitDetails?.commitId
@@ -649,9 +685,11 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
           error: '',
           remoteFetchError: undefined,
           pipeline,
+          pipelineMetadataConfig,
           originalPipeline: cloneDeep(pipeline),
           isBEPipelineUpdated: false,
           isUpdated: false,
+          isMetadataUpdated: false,
           modules: payload.modules,
           gitDetails: payload.gitDetails,
           entityValidityDetails: payload.entityValidityDetails,
@@ -684,7 +722,20 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
             orgIdentifier: queryParams.orgIdentifier
           })
         ),
+        pipelineMetadataConfig: {
+          modifiedMetadata: {
+            publicAccessResponse: data?.pipelineMetadataConfig?.modifiedMetadata?.publicAccessResponse || {
+              public: false
+            }
+          },
+          originalMetadata: {
+            publicAccessResponse: data?.pipelineMetadataConfig?.originalMetadata?.publicAccessResponse || {
+              public: false
+            }
+          }
+        },
         isUpdated: true,
+        isMetadataUpdated: true,
         modules: data?.modules,
         isBEPipelineUpdated: false,
         gitDetails: defaultTo(data?.gitDetails, {}),
@@ -729,6 +780,8 @@ const _softFetchPipeline = async (
                 error: '',
                 pipeline: data.pipeline,
                 isUpdated,
+                pipelineMetadataConfig: data.pipelineMetadataConfig,
+                isMetadataUpdated: !!data.isMetadataUpdated,
                 pipelineView: {
                   ...pipelineView,
                   isSplitViewOpen: false,
@@ -739,10 +792,26 @@ const _softFetchPipeline = async (
               })
             )
           } else {
-            dispatch(PipelineContextActions.success({ error: '', pipeline: data.pipeline, isUpdated }))
+            dispatch(
+              PipelineContextActions.success({
+                error: '',
+                pipeline: data.pipeline,
+                isUpdated,
+                pipelineMetadataConfig: data.pipelineMetadataConfig,
+                isMetadataUpdated: !!data.isMetadataUpdated
+              })
+            )
           }
         } else {
-          dispatch(PipelineContextActions.success({ error: '', pipeline: data.pipeline, isUpdated }))
+          dispatch(
+            PipelineContextActions.success({
+              error: '',
+              pipeline: data.pipeline,
+              isUpdated,
+              pipelineMetadataConfig: data.pipelineMetadataConfig,
+              isMetadataUpdated: !!data.isMetadataUpdated
+            })
+          )
         }
       }
     } catch (err) {
@@ -847,13 +916,24 @@ interface UpdateEntityValidityDetailsArgs {
   originalPipeline: PipelineInfoConfig
   pipeline: PipelineInfoConfig
   gitDetails: EntityGitDetails
+  isMetadataUpdated: boolean
+  pipelineMetadataConfig: PipelineMetaDataConfig
 }
 
 const _updateEntityValidityDetails = async (
   args: UpdateEntityValidityDetailsArgs,
   entityValidityDetails: EntityValidityDetails
 ): Promise<void> => {
-  const { dispatch, queryParams, identifier, originalPipeline, pipeline, gitDetails } = args
+  const {
+    dispatch,
+    queryParams,
+    identifier,
+    originalPipeline,
+    pipeline,
+    gitDetails,
+    isMetadataUpdated,
+    pipelineMetadataConfig
+  } = args
   await _deletePipelineCache(queryParams, identifier, {})
   const id = getId(
     queryParams.accountIdentifier,
@@ -869,8 +949,10 @@ const _updateEntityValidityDetails = async (
       pipeline,
       originalPipeline,
       isUpdated: false,
+      isMetadataUpdated,
       gitDetails,
-      entityValidityDetails
+      entityValidityDetails,
+      pipelineMetadataConfig
     }
     await IdbPipeline.put(IdbPipelineStoreName, payload)
   }
@@ -884,13 +966,24 @@ interface UpdatePipelineArgs {
   originalPipeline: PipelineInfoConfig
   pipeline: PipelineInfoConfig
   gitDetails: EntityGitDetails
+  pipelineMetadataConfig: PipelineMetaDataConfig
+  isMetadataUpdated: boolean
 }
 
 const _updatePipeline = async (
   args: UpdatePipelineArgs,
-  pipelineArg: PipelineInfoConfig | ((p: PipelineInfoConfig) => PipelineInfoConfig)
+  pipelineArg: PipelineInfoConfig | ((p: PipelineInfoConfig) => PipelineInfoConfig),
+  pipelineMetadata?: UpdatePipelineMetaData
 ): Promise<void> => {
-  const { dispatch, queryParams, identifier, originalPipeline, pipeline: latestPipeline, gitDetails } = args
+  const {
+    dispatch,
+    queryParams,
+    identifier,
+    originalPipeline,
+    pipeline: latestPipeline,
+    gitDetails,
+    pipelineMetadataConfig
+  } = args
   const id = getId(
     queryParams.accountIdentifier,
     queryParams.orgIdentifier || '',
@@ -914,21 +1007,41 @@ const _updatePipeline = async (
       logger.info(DBNotFoundErrorMessage)
     }
   }
+
+  const modifiedMetadata = {
+    ...pipelineMetadataConfig?.modifiedMetadata,
+    ...(pipelineMetadata && { publicAccessResponse: pipelineMetadata?.publicAccess })
+  }
   // lodash.isEqual() gives wrong output some times, hence using fast-json-stable-stringify
   const isUpdated = comparePipelines(omit(originalPipeline, 'repo', 'branch'), pipeline as PipelineInfoConfig)
+  const isMetadataUpdated = !isEqual(pipelineMetadataConfig.originalMetadata, modifiedMetadata)
+  const pipelineMetadataConfigUpdated = {
+    ...pipelineMetadataConfig,
+    modifiedMetadata: modifiedMetadata
+  }
   const payload: PipelinePayload = {
     [KeyPath]: id,
     pipeline: pipeline as PipelineInfoConfig,
     originalPipeline,
+    isMetadataUpdated,
     isUpdated,
-    gitDetails
+    gitDetails,
+    pipelineMetadataConfig: pipelineMetadataConfigUpdated
   }
   try {
     await IdbPipeline?.put(IdbPipelineStoreName, payload)
   } catch (_) {
     logger.info(DBNotFoundErrorMessage)
   }
-  dispatch(PipelineContextActions.success({ error: '', pipeline: pipeline as PipelineInfoConfig, isUpdated }))
+  dispatch(
+    PipelineContextActions.success({
+      error: '',
+      pipeline: pipeline as PipelineInfoConfig,
+      isUpdated,
+      pipelineMetadataConfig: pipelineMetadataConfigUpdated,
+      isMetadataUpdated
+    })
+  )
 }
 
 const cleanUpDBRefs = (): void => {
@@ -1070,6 +1183,7 @@ export const PipelineContext = React.createContext<PipelineContextInterface>({
   getStagePathFromPipeline: () => '',
   setIntermittentLoading: () => undefined,
   setValidationUuid: () => undefined,
+  setPublicAccessResponse: () => undefined,
   deleteStage: (_stageId: string) => undefined,
   reconcile: {} as UseReconcileReturnType
 })
@@ -1102,6 +1216,7 @@ export function PipelineProvider({
   const abortControllerRef = React.useRef<AbortController | null>(null)
   const { supportingTemplatesGitx } = useAppStore()
   const isMounted = React.useRef(false)
+
   const [state, dispatch] = React.useReducer(
     PipelineReducer,
     merge(
@@ -1158,7 +1273,9 @@ export function PipelineProvider({
     identifier: pipelineIdentifier,
     originalPipeline: state.originalPipeline,
     pipeline: state.pipeline,
-    gitDetails: state.gitDetails
+    gitDetails: state.gitDetails,
+    pipelineMetadataConfig: state.pipelineMetadataConfig,
+    isMetadataUpdated: state.isMetadataUpdated
   })
   const updatePipeline = _updatePipeline.bind(null, {
     dispatch,
@@ -1166,7 +1283,9 @@ export function PipelineProvider({
     identifier: pipelineIdentifier,
     originalPipeline: state.originalPipeline,
     pipeline: state.pipeline,
-    gitDetails: state.gitDetails
+    gitDetails: state.gitDetails,
+    pipelineMetadataConfig: state.pipelineMetadataConfig,
+    isMetadataUpdated: state.isMetadataUpdated
   })
 
   const [isEdit] = usePermission(
@@ -1343,6 +1462,22 @@ export function PipelineProvider({
     dispatch(PipelineContextActions.setValidationUuid({ validationUuid: uuid }))
   }, [])
 
+  const setPublicAccessResponse = React.useCallback(
+    (publicAccessResponse: PublicAccessResponse) => {
+      const isMetadataUpdated = !isEqual(
+        state.pipelineMetadataConfig?.originalMetadata?.publicAccessResponse,
+        publicAccessResponse
+      )
+      dispatch(
+        PipelineContextActions.setPublicAccessResponse({
+          publicAccessResponse,
+          isMetadataUpdated
+        })
+      )
+    },
+    [state.pipelineMetadataConfig?.originalMetadata?.publicAccessResponse]
+  )
+
   const updateStage = React.useCallback(
     async (newStage: StageElementConfig) => {
       function _updateStages(stages: StageElementWrapperConfig[]): StageElementWrapperConfig[] {
@@ -1445,6 +1580,7 @@ export function PipelineProvider({
         setTemplateServiceData,
         setIntermittentLoading,
         setValidationUuid,
+        setPublicAccessResponse,
         deleteStage,
         reconcile: useReconcile({ storeMetadata: state.storeMetadata })
       }}

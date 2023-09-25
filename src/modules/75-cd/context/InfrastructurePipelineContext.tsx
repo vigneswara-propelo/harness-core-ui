@@ -204,6 +204,7 @@ export function InfrastructurePipelineProvider({
         setTemplateServiceData: noop,
         setIntermittentLoading: noop,
         setValidationUuid: noop,
+        setPublicAccessResponse: noop,
         reconcile: {
           isFetchingReconcileData: false,
           outOfSync: false,

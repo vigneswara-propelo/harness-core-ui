@@ -156,7 +156,7 @@ function ServiceConfiguration({
       if (view === SelectedView.VISUAL) {
         setHasYamlValidationErrors(false)
         const newServiceData = getUpdatedPipelineYaml()
-        newServiceData && updatePipeline(newServiceData, view)
+        newServiceData && updatePipeline(newServiceData, { viewType: view })
       }
       setView(view)
       setSelectedView(view)

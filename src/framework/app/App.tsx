@@ -191,6 +191,18 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   }, [accountId])
 
   useEffect(() => {
+    if (window.publicAccessOnAccount) {
+      // Disable token check based logout when public access is enabled
+      return
+    }
+
+    const token = SessionToken.getToken()
+    if (!token) {
+      forceLogout()
+    }
+  }, [forceLogout])
+
+  useEffect(() => {
     if (refreshTokenResponse?.resource) {
       // Token will be auto-set in cookie via the header "set-cookie"
       // [TEMPORARY]: Saving the new token in storage. Can remove this next line after complete migration to cookie

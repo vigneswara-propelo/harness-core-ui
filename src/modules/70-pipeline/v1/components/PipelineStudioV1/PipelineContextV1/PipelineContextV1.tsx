@@ -40,7 +40,8 @@ import {
   ResponsePMSPipelineResponseDTO,
   YamlSchemaErrorWrapperDTO,
   ResponsePMSPipelineSummaryResponse,
-  CacheResponseMetadata
+  CacheResponseMetadata,
+  PublicAccessResponse
 } from 'services/pipeline-ng'
 import { useGlobalEventListener, useLocalStorage, useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
@@ -261,6 +262,11 @@ export interface StagesMap {
   [key: string]: StageAttributes
 }
 
+export interface UpdatePipelineMetaData {
+  viewType?: SelectedView
+  publicAccess?: PublicAccessResponse
+}
+
 export interface PipelineContextInterface {
   state: PipelineReducerState
   stagesMap: StagesMap
@@ -278,7 +284,7 @@ export interface PipelineContextInterface {
   setTemplateTypes: (data: { [key: string]: string }) => void
   setTemplateIcons: (data: TemplateIcons) => void
   setTemplateServiceData: (data: TemplateServiceDataType) => void
-  updatePipeline: (pipeline: PipelineInfoConfig, viewType?: SelectedView) => Promise<void>
+  updatePipeline: (pipeline: PipelineInfoConfig, pipelineMetadata?: UpdatePipelineMetaData) => Promise<void>
   updatePipelineStoreMetadata: (storeMetadata: StoreMetadata, gitDetails: EntityGitDetails) => Promise<void>
   updateGitDetails: (gitDetails: EntityGitDetails) => Promise<void>
   updateEntityValidityDetails: (entityValidityDetails: EntityValidityDetails) => Promise<void>

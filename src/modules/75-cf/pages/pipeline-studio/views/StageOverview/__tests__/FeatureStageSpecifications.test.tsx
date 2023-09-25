@@ -37,6 +37,7 @@ const getPipelineContext = (): PipelineContextInterface => ({
       drawerData: { type: DrawerTypes.AddStep },
       splitViewData: {}
     },
+    pipelineMetadataConfig: {},
     schemaErrors: false,
     gitDetails: {},
     entityValidityDetails: {},
@@ -49,6 +50,7 @@ const getPipelineContext = (): PipelineContextInterface => ({
     isLoading: false,
     isIntermittentLoading: false,
     isUpdated: true,
+    isMetadataUpdated: false,
     modules: [],
     templateTypes: {},
     templateServiceData: {},
@@ -90,6 +92,7 @@ const getPipelineContext = (): PipelineContextInterface => ({
   setTemplateServiceData: jest.fn(),
   setIntermittentLoading: jest.fn(),
   setValidationUuid: jest.fn(),
+  setPublicAccessResponse: jest.fn(),
   reconcile: {} as UseReconcileReturnType
 })
 

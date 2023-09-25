@@ -14,17 +14,21 @@ import {
   Formik,
   FormInput,
   HarnessDocTooltip,
+  Heading,
   Icon,
   Layout,
   Text
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import * as Yup from 'yup'
-import { isEmpty, unset } from 'lodash-es'
+import { isEmpty, omit, unset } from 'lodash-es'
 import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
-import type { PipelineInfoConfig } from 'services/pipeline-ng'
-import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import type { PipelineInfoConfig, PublicAccessResponse } from 'services/pipeline-ng'
+import {
+  UpdatePipelineMetaData,
+  usePipelineContext
+} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
@@ -34,7 +38,7 @@ import DelegateSelectorPanel from '../../PipelineSteps/AdvancedSteps/DelegateSel
 import css from './AdvancedOptions.module.scss'
 
 interface AdvancedOptionsProps {
-  onApplyChanges: (data: PipelineInfoConfig) => void
+  onApplyChanges: (data: PipelineInfoConfig, metadata?: UpdatePipelineMetaData) => void
   onDiscard: () => void
   pipeline: PipelineInfoConfig
 }
@@ -50,30 +54,42 @@ const stageExecutionOptions = [
   }
 ]
 
+interface AdvancedOptionFormProps extends PipelineInfoConfig {
+  publicAccessResponse?: PublicAccessResponse
+}
+
 export function AdvancedOptions({ onApplyChanges, onDiscard, pipeline }: AdvancedOptionsProps): React.ReactElement {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const {
+    state: { pipelineMetadataConfig },
+    setPublicAccessResponse
+  } = usePipelineContext()
 
   const onSubmit = React.useCallback(
-    (data: PipelineInfoConfig) => {
+    async (data: AdvancedOptionFormProps) => {
       if (isEmpty(data.timeout)) {
         unset(data, 'timeout')
       }
       if (isEmpty(data.delegateSelectors) || data.delegateSelectors?.[0] === '') {
         unset(data, 'delegateSelectors')
       }
-      onApplyChanges(data)
+      setPublicAccessResponse(data?.publicAccessResponse as PublicAccessResponse)
+      onApplyChanges(omit(data, 'publicAccessResponse'), { publicAccess: data?.publicAccessResponse })
     },
-    [onApplyChanges]
+    [onApplyChanges, setPublicAccessResponse]
   )
   const { isReadonly } = usePipelineContext()
   return (
-    <Formik<PipelineInfoConfig>
+    <Formik<AdvancedOptionFormProps>
       formName="pipelineAdvancedOptions"
       validationSchema={Yup.object().shape({
         timeout: getDurationValidationSchema({ minimum: '10s' })
       })}
-      initialValues={pipeline}
+      initialValues={{
+        ...pipeline,
+        publicAccessResponse: pipelineMetadataConfig?.modifiedMetadata?.publicAccessResponse
+      }}
       onSubmit={onSubmit}
     >
       {formikProps => (
@@ -98,10 +114,11 @@ export function AdvancedOptions({ onApplyChanges, onDiscard, pipeline }: Advance
           />
           <Page.Body className={css.body}>
             <Layout.Vertical spacing="small" margin={{ bottom: 'large' }}>
-              <Text font={{ variation: FontVariation.H5 }} data-tooltip-id="pipelineCreate_timeout">
+              <Heading level={5} color={Color.GREY_900} data-tooltip-id="pipelineCreate_timeout">
                 {getString('pipeline.pipelineTimeoutSettings')}
                 <HarnessDocTooltip useStandAlone={true} tooltipId="pipelineCreate_timeout" />
-              </Text>
+              </Heading>
+
               <Card>
                 <Layout.Vertical spacing="small">
                   <Text
@@ -122,11 +139,12 @@ export function AdvancedOptions({ onApplyChanges, onDiscard, pipeline }: Advance
               </Card>
             </Layout.Vertical>
 
-            <Layout.Vertical spacing="small">
-              <Text font={{ variation: FontVariation.H5 }} data-tooltip-id="stageExecution_settings">
+            <Layout.Vertical spacing="small" margin={{ bottom: 'large' }}>
+              <Heading level={5} color={Color.GREY_900} data-tooltip-id="stageExecution_settings">
                 {getString('pipeline.stageExecutionSettings')}
                 <HarnessDocTooltip useStandAlone={true} tooltipId="stageExecution_settings" />
-              </Text>
+              </Heading>
+
               <Card>
                 <Layout.Vertical spacing="small">
                   <Text
@@ -149,15 +167,29 @@ export function AdvancedOptions({ onApplyChanges, onDiscard, pipeline }: Advance
               </Card>
             </Layout.Vertical>
 
-            <br></br>
-            <Layout.Vertical spacing="small">
-              <Text font={{ variation: FontVariation.H5 }} data-tooltip-id="delegateSelector">
+            <Layout.Vertical spacing="small" margin={{ bottom: 'large' }}>
+              <Heading level={5} color={Color.GREY_900} data-tooltip-id="delegateSelector">
                 {getString('pipeline.delegate.DelegateSelectorOptional')}
-              </Text>
+              </Heading>
               <Card>
                 <Layout.Vertical spacing="small">
                   <DelegateSelectorPanel isReadonly={isReadonly} />
                 </Layout.Vertical>
+              </Card>
+            </Layout.Vertical>
+
+            <Layout.Vertical spacing="small" margin={{ bottom: 'large' }}>
+              <Heading level={5} color={Color.GREY_900} data-tooltip-id="pipeline-public-access">
+                {`${getString('platform.authSettings.publicAccess.publicAccess')} ${getString('common.optionalLabel')}`}
+                <HarnessDocTooltip useStandAlone={true} tooltipId="pipeline-public-access" />
+              </Heading>
+              <Card>
+                <FormInput.Toggle
+                  name="publicAccessResponse.public"
+                  label={getString('pipeline.markPipelinePublic')}
+                  disabled={isReadonly}
+                  data-testid="toggle-mark-pipeline-public"
+                />
               </Card>
             </Layout.Vertical>
           </Page.Body>

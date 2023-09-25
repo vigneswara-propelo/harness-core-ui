@@ -262,6 +262,7 @@ export function TemplatePipelineProvider({
         setTemplateServiceData: noop,
         setIntermittentLoading,
         setValidationUuid: noop,
+        setPublicAccessResponse: noop,
         reconcile: {
           isFetchingReconcileData: false,
           outOfSync: false,

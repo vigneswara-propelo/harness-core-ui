@@ -11,7 +11,8 @@ import { AllowedTypesWithRunTime, MultiTypeInputType, VisualYamlSelectedView as 
 import produce from 'immer'
 import {
   PipelineContext,
-  PipelineContextType
+  PipelineContextType,
+  UpdatePipelineMetaData
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
 import {
@@ -139,7 +140,7 @@ export function ServicePipelineProvider({
   const updatePipeline = React.useCallback(
     async (
       pipelineArg: PipelineInfoConfig | ((p: PipelineInfoConfig) => PipelineInfoConfig),
-      viewType?: SelectedView
+      pipelineMetadata?: UpdatePipelineMetaData
     ): Promise<void> => {
       let pipeline = pipelineArg
       if (typeof pipelineArg === 'function') {
@@ -152,7 +153,7 @@ export function ServicePipelineProvider({
       const isUpdated = !isEqual(state.originalPipeline, pipeline)
       await dispatch(PipelineContextActions.success({ error: '', pipeline: pipeline as PipelineInfoConfig, isUpdated }))
 
-      if (view === SelectedView.VISUAL || viewType === SelectedView.VISUAL) {
+      if (view === SelectedView.VISUAL || pipelineMetadata?.viewType === SelectedView.VISUAL) {
         onUpdatePipeline?.(pipeline as ServicePipelineConfig)
       }
     },
@@ -317,6 +318,7 @@ export function ServicePipelineProvider({
         setTemplateServiceData: noop,
         setIntermittentLoading: noop,
         setValidationUuid: noop,
+        setPublicAccessResponse: noop,
         reconcile: {
           isFetchingReconcileData: false,
           outOfSync: false,
