@@ -39,7 +39,7 @@ export function useReconcile({ storeMetadata }: UseReconcileProps): UseReconcile
   const { getRBACErrorMessage } = useRBACError()
   const [outOfSync, setOutOfSync] = React.useState(false)
 
-  const showToastRef = React.useRef(true)
+  const showToastRef = React.useRef(false)
 
   const {
     data: reconcileData,
@@ -72,6 +72,9 @@ export function useReconcile({ storeMetadata }: UseReconcileProps): UseReconcile
         }
         setOutOfSync(false)
       }
+      // this prevents toast to appear when we are using useValidateTemplateInputsQuery in PipelineOutOfSync
+      // toast will appear when we call explicitly reconcilePipeline
+      showToastRef.current = false
     }
   }, [reconcileData?.data, isFetchingReconcileData])
 

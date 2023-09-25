@@ -58,7 +58,7 @@ export default function PipelineOutOfSync({
     reconcilePipeline()
   }, [])
 
-  if (!outOfSync) return null
+  if (isFetchingReconcileData || !outOfSync) return null
 
   return (
     <Container className={css.outOfSyncContainer}>
