@@ -28,7 +28,7 @@ export function traverseStageObject(
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
 ): string[] {
   const keys: string[] = []
-  if (jsonObj !== null && typeof jsonObj == 'object') {
+  if (jsonObj !== null && typeof jsonObj === 'object') {
     Object.entries(jsonObj).forEach(([_key, value]) => {
       keys.push(...traverseStageObject(value, metadataMap))
     })

@@ -82,7 +82,7 @@ export default function NotificationsContainer(props: NotificationsContainerProp
   return (
     <CardWithOuterTitle className={css.notificationsContainer}>
       <Text tooltipProps={{ dataTooltipId: 'healthSourcesLabel' }} className={css.tableTitle}>
-        {type == SRMNotificationType.SERVICE_LEVEL_OBJECTIVE
+        {type === SRMNotificationType.SERVICE_LEVEL_OBJECTIVE
           ? getString('cv.notifications.errorBudgetPolicies')
           : getString('rbac.notifications.name')}
       </Text>

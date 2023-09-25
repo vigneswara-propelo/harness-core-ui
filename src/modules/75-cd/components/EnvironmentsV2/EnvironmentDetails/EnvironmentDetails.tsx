@@ -193,7 +193,7 @@ export default function EnvironmentDetails(): React.ReactElement {
     } = values
 
     if (
-      name == newName &&
+      name === newName &&
       description === newDescription &&
       isEqual(tags, newTags) &&
       type === newType &&

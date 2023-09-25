@@ -48,7 +48,7 @@ const ActivityStack: React.FC<ActivityStackProps> = ({ items, tooltip }) => {
               {tooltip(value)}
             </Popover>
           </div>
-          {index != items.length - 1 ? <div className={css.connector} /> : null}
+          {index !== items.length - 1 ? <div className={css.connector} /> : null}
         </>
       ))}
     </>

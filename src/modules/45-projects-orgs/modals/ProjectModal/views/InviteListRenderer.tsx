@@ -74,7 +74,7 @@ const InviteListRenderer: React.FC<InviteListProps> = props => {
   }
   return (
     <Container className={css.invites} padding={{ left: 'xsmall', top: 'medium', bottom: 'medium' }}>
-      {user?.inviteType == InviteType.ADMIN_INITIATED ? (
+      {user?.inviteType === InviteType.ADMIN_INITIATED ? (
         <Layout.Horizontal>
           <Layout.Horizontal spacing="medium" className={cx(css.align, css.pendingUser)} width="60%">
             <Avatar name={user.name || user.email} email={user.email} size="normal" />

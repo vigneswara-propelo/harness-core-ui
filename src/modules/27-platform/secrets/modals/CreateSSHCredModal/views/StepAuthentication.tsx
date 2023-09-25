@@ -126,12 +126,12 @@ const StepAuthentication: React.FC<StepProps<SSHCredSharedObj> & StepAuthenticat
     }),
     keyPath: Yup.string().when(['authScheme', 'credentialType', 'tgtGenerationMethod'], {
       is: (authScheme, credentialType, tgtGenerationMethod) =>
-        (authScheme === 'SSH' && credentialType == 'KeyPath') ||
-        (authScheme === 'Kerberos' && tgtGenerationMethod == 'KeyTabFilePath'),
+        (authScheme === 'SSH' && credentialType === 'KeyPath') ||
+        (authScheme === 'Kerberos' && tgtGenerationMethod === 'KeyTabFilePath'),
       then: Yup.string().trim().required(getString('platform.secrets.createSSHCredWizard.validateKeypath'))
     }),
     key: Yup.object().when(['authScheme', 'credentialType'], {
-      is: (authScheme, credentialType) => authScheme === 'SSH' && credentialType == 'KeyReference',
+      is: (authScheme, credentialType) => authScheme === 'SSH' && credentialType === 'KeyReference',
       then: Yup.object().required(getString('platform.secrets.createSSHCredWizard.validateSshKey'))
     }),
     principal: Yup.string().when('authScheme', {

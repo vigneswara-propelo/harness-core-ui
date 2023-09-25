@@ -46,7 +46,7 @@ export function EnvironmentsList({ environments, limit = 2, className }: Environ
                     <Link
                       to={`${routes.toEnvironmentDetails({
                         accountId,
-                        ...(envScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+                        ...(envScope !== Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
                         ...(envScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
                         environmentIdentifier: defaultTo(getIdentifierFromScopedRef(defaultTo(env.identifier, '')), ''),
                         module,

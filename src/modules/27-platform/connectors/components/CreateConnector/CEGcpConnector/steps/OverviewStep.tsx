@@ -141,11 +141,11 @@ const OverviewStep: React.FC<OverviewProps> = props => {
 
     try {
       const response = await fetchConnectors(filterParams)
-      if (response.status == 'SUCCESS') {
-        if (response?.data?.pageItemCount == 0 || isEditMode) {
+      if (response.status === 'SUCCESS') {
+        if (response?.data?.pageItemCount === 0 || isEditMode) {
           const curResponse = await fetchConnectors(curReportExistFilterParams)
-          if (curResponse.status == 'SUCCESS') {
-            if (curResponse?.data?.pageItemCount == 0 || includesBilling) {
+          if (curResponse.status === 'SUCCESS') {
+            if (curResponse?.data?.pageItemCount === 0 || includesBilling) {
               nextStep?.(payload)
             } else {
               const existingCurReports: ExistingCURDetails[] =

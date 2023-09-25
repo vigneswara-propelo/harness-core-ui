@@ -20,11 +20,11 @@ export const oneThirtyOneOptions = zeroThirtyOneOptions.slice(1)
 export const oneFiftyNineDDOptions = zeroFiftyNineDDOptions.slice(1)
 export const oneTwelveOptions = Array.from({ length: 12 }, (_, i) => ({ label: `${i + 1}`, value: `${i + 1}` }))
 const getPostPosition = (i: number): string => {
-  if (i == 1 || i == 21 || i == 31) {
+  if (i === 1 || i === 21 || i === 31) {
     return 'st'
-  } else if (i == 2 || i == 22) {
+  } else if (i === 2 || i === 22) {
     return 'nd'
-  } else if (i == 3 || i == 23) {
+  } else if (i === 3 || i === 23) {
     return 'rd'
   } else {
     return 'th'

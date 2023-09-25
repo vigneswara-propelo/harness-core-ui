@@ -186,38 +186,38 @@ const GitDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDetailsS
       case Connectors.GIT:
       case Connectors.GITHUB:
         if (connectionType === GitConnectionType.HTTP) {
-          return urlType == GitUrlType.REPO
+          return urlType === GitUrlType.REPO
             ? getString('common.git.gitHubRepoUrlPlaceholder')
             : getString('common.git.gitHubUrlPlaceholder')
         }
-        return urlType == GitUrlType.REPO
+        return urlType === GitUrlType.REPO
           ? getString('common.git.gitHubRepoUrlPlaceholderSSH')
           : getString('common.git.gitHubUrlPlaceholderSSH')
       case Connectors.GITLAB:
         if (connectionType === GitConnectionType.HTTP) {
-          return urlType == GitUrlType.REPO
+          return urlType === GitUrlType.REPO
             ? getString('common.git.gitLabRepoUrlPlaceholder')
             : getString('common.git.gitLabUrlPlaceholder')
         }
-        return urlType == GitUrlType.REPO
+        return urlType === GitUrlType.REPO
           ? getString('common.git.gitLabRepoUrlPlaceholderSSH')
           : getString('common.git.gitLabUrlPlaceholderSSH')
       case Connectors.BITBUCKET:
         if (connectionType === GitConnectionType.HTTP) {
-          return urlType == GitUrlType.REPO
+          return urlType === GitUrlType.REPO
             ? getString('common.git.bitbucketRepoUrlPlaceholder')
             : getString('common.git.bitbucketUrlPlaceholder')
         }
-        return urlType == GitUrlType.REPO
+        return urlType === GitUrlType.REPO
           ? getString('common.git.bitbucketRepoPlaceholderSSH')
           : getString('common.git.bitbucketPlaceholderSSH')
       case Connectors.AZURE_REPO:
         if (connectionType === GitConnectionType.HTTP) {
-          return urlType == GitUrlType.PROJECT
+          return urlType === GitUrlType.PROJECT
             ? getString('common.git.azureReposUrlPlaceholder')
             : getString('common.git.azureReposUrlPlaceholderRepoHttp')
         }
-        return urlType == GitUrlType.PROJECT
+        return urlType === GitUrlType.PROJECT
           ? getString('common.git.azureReposPlaceholderSSH')
           : getString('common.git.azureReposPlaceholderRepoSSH')
       default:

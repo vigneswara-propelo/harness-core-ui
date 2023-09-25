@@ -2309,7 +2309,7 @@ export const getArtifactManifestTriggerYaml = ({
     )
   )
 
-  const storeManifest = filteredManifestforStore?.find((mani: undefined) => mani != undefined)
+  const storeManifest = filteredManifestforStore?.find((mani: undefined) => mani !== undefined)
   let storeVal = storeManifest?.manifest?.spec?.store
 
   //if manifest chosen is of parallel stage then to show store value in trigger yaml
@@ -2328,7 +2328,7 @@ export const getArtifactManifestTriggerYaml = ({
   for (let i = 0; i < filteredParallelManifestforStore.length; i++) {
     if (filteredParallelManifestforStore[i] !== undefined) {
       for (let j = 0; j < filteredParallelManifestforStore[i].length; j++) {
-        if (filteredParallelManifestforStore[i][j] != undefined) {
+        if (filteredParallelManifestforStore[i][j] !== undefined) {
           storeVal = filteredParallelManifestforStore[i][j]
         }
       }
@@ -2352,7 +2352,7 @@ export const getArtifactManifestTriggerYaml = ({
       (mani: { manifest: { identifier: any } }) => mani?.manifest?.identifier === selectedArtifact?.identifier
     )
   )
-  const runtimeStoreManifest = filteredStageforRuntimeStore?.find((mani: undefined) => mani != undefined)
+  const runtimeStoreManifest = filteredStageforRuntimeStore?.find((mani: undefined) => mani !== undefined)
   const newStoreVal = runtimeStoreManifest?.manifest?.spec?.store
   if (storeVal?.spec?.connectorRef === RUNTIME_INPUT_VALUE) {
     artifactSourceSpec = cloneDeep(

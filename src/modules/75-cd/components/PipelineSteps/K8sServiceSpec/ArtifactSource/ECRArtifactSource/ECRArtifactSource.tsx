@@ -221,7 +221,7 @@ const Content = (props: ECRRenderContent): JSX.Element => {
       return shouldFetchImages || isNil(imagesListData?.data)
     } else {
       return !!(
-        (imagesListLastQueryData.connectorRef != connectorRefValue ||
+        (imagesListLastQueryData.connectorRef !== connectorRefValue ||
           imagesListLastQueryData.region !== regionValue ||
           imagesListLastQueryData.registryId !== registryIdValue) &&
         checkIfQueryParamsisNotEmpty([connectorRefValue, regionValue])
@@ -347,7 +347,7 @@ const Content = (props: ECRRenderContent): JSX.Element => {
   const canFetchTags = (): boolean => {
     return (
       (!ecrTagsData?.data && !fetchTagsError) ||
-      ((lastQueryData.connectorRef != connectorRefValue ||
+      ((lastQueryData.connectorRef !== connectorRefValue ||
         lastQueryData.imagePath !== imagePathValue ||
         getMultiTypeFromValue(artifact?.spec?.imagePath) === MultiTypeInputType.EXPRESSION ||
         lastQueryData.region !== regionValue ||

@@ -410,7 +410,7 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
                     : getString('platform.connectors.testConnectionStep.viewPermissions')}
                 </Text>
               )}
-              {connectorInfo && connectorInfo?.spec?.executeOnDelegate != false ? (
+              {connectorInfo && connectorInfo?.spec?.executeOnDelegate !== false ? (
                 <DelegateTaskLogsButton
                   taskIds={[metadata?.taskId || '']}
                   areLogsAvailable={!!metadata?.taskId}

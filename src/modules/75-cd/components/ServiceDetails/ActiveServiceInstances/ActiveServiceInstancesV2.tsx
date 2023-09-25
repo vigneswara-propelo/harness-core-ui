@@ -109,7 +109,7 @@ export const ActiveServiceInstancesV2: React.FC = () => {
       activeInstanceError ||
       deploymentLoading ||
       deploymentError ||
-      (dailogData || []).length == 0
+      (dailogData || []).length === 0
     ) {
       return
     }

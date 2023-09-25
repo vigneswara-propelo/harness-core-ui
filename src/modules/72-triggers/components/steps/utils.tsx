@@ -193,9 +193,9 @@ export const getEventLabelMap = (event: string): string => {
     return 'Merge Request'
   } else if (event === eventTypes.ISSUE_COMMENT) {
     return 'Issue Comment'
-  } else if (event == eventTypes.PR_COMMENT) {
+  } else if (event === eventTypes.PR_COMMENT) {
     return 'Pull Request Comment'
-  } else if (event == eventTypes.MR_COMMENT) {
+  } else if (event === eventTypes.MR_COMMENT) {
     return 'Merge Request Comment'
   }
   return event

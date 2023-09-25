@@ -126,7 +126,7 @@ export const createTooltipLabel = (
       }`
     case ChangeSourceTypes.ChaosExperiment:
       return `${count} ${
-        count == 1
+        count === 1
           ? getString('cv.changeSource.chaosExperiment.event')
           : getString('cv.changeSource.chaosExperiment.events')
       }`

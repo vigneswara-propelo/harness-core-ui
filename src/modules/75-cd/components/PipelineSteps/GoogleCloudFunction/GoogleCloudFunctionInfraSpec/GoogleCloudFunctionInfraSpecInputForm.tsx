@@ -120,7 +120,7 @@ const GoogleCloudFunctionInfraSpecInputForm = ({
         }
         return shouldFetchProjects || isNil(projectsData?.data)
       } else {
-        return !!(lastQueryData.connectorRef != connectorRef && isFixedNonEmptyValue(defaultTo(connectorRef, '')))
+        return !!(lastQueryData.connectorRef !== connectorRef && isFixedNonEmptyValue(defaultTo(connectorRef, '')))
       }
     },
     [NG_SVC_ENV_REDESIGN, template, lastQueryData, projectsData?.data]

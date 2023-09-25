@@ -191,7 +191,7 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
         />
       )}
 
-      {store?.type == 'S3' && (
+      {store?.type === 'S3' && (
         <AmazonS3RuntimeView
           initialValues={initialValues}
           template={inputSetData?.template}

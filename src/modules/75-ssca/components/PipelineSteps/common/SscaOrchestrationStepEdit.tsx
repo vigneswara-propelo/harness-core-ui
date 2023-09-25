@@ -174,7 +174,7 @@ const SscaOrchestrationStepEdit = <T,>(
                 </>
               )}
 
-              {get(formik.values, 'spec.mode') == 'ingestion' && (
+              {get(formik.values, 'spec.mode') === 'ingestion' && (
                 <>
                   <Text font={{ variation: FontVariation.FORM_SUB_SECTION }} color={Color.GREY_900}>
                     {getString('ssca.orchestrationStep.sbomIngestion')}

@@ -216,13 +216,13 @@ const ViewSecretDetails: React.FC<ViewSecretDetailsProps> = props => {
 
     if (secret.type === 'SecretText') {
       const secretTextSpec = secret.spec as SecretTextSpecDTO
-      if (secretTextSpec.valueType == 'Inline')
+      if (secretTextSpec.valueType === 'Inline')
         items.push({
           label: getString('platform.secrets.labelValue'),
           value: getString('encrypted').toLowerCase(),
           valueColor: Color.GREY_350
         })
-      if (secretTextSpec.valueType == 'Reference') {
+      if (secretTextSpec.valueType === 'Reference') {
         items.push({ label: getString('platform.secrets.labelPath'), value: secretTextSpec.value })
       }
       if (get(secretTextSpec, 'additionalMetadata.values.regions'))

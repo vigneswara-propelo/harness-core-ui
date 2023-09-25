@@ -31,7 +31,7 @@ export const getFilteredOptions = (
   featureFlag: boolean,
   options: SelectOption[],
   optionToFilterOut: string
-): SelectOption[] => (featureFlag ? options : options.filter(el => el.value != optionToFilterOut))
+): SelectOption[] => (featureFlag ? options : options.filter(el => el.value !== optionToFilterOut))
 
 export const onConditionChange = (
   selectedOption: SelectOption,

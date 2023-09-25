@@ -187,7 +187,7 @@ const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
           </Layout.Horizontal>
         </Container>
         <Container flex={{ alignItems: 'center' }} className={css.settingOverride}>
-          {getLowestAvailableScope(settingValue?.allowedScopes) ==
+          {getLowestAvailableScope(settingValue?.allowedScopes) ===
             getCurrentScope({ projectIdentifier, orgIdentifier, accountId }) || !settingValue?.isSettingEditable ? (
             <span className={css.emptyCheckBoxSpace} />
           ) : (

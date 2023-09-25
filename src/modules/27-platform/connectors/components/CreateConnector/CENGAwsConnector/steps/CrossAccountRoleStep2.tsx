@@ -75,7 +75,7 @@ const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO> & CrossAccoun
   }
 
   useEffect(() => {
-    if (awsUrlTemplateData?.status == 'SUCCESS' && !prevStepData?.isEditMode)
+    if (awsUrlTemplateData?.status === 'SUCCESS' && !prevStepData?.isEditMode)
       setExternalId(awsUrlTemplateData?.data?.externalId || '')
   }, [awsUrlTemplateLoading])
 
@@ -86,7 +86,7 @@ const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO> & CrossAccoun
   const governanceStatus = featuresEnabled.includes(Features.GOVERNANCE)
 
   const getRoleName = (roleArn: string) => {
-    if (roleArn == undefined) return
+    if (roleArn === undefined) return
     return roleArn.split('/')[1]
   }
 
@@ -117,7 +117,7 @@ const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO> & CrossAccoun
         const response = props.isEditMode
           ? await updateConnector({ connector: connectorInfo })
           : await createConnector({ connector: connectorInfo })
-        if (response.status != 'SUCCESS') {
+        if (response.status !== 'SUCCESS') {
           throw response as Failure
         }
         if (response.data?.governanceMetadata) {

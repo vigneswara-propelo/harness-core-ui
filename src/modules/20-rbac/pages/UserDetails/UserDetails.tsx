@@ -105,7 +105,7 @@ const UserDetails: React.FC = () => {
         <Button
           text={getString('rbac.userDetails.groupMemberships')}
           minimal
-          className={cx(css.tabButton, { [css.selectedTabs]: view == UserDetailsViews.MEMBERSHIPS })}
+          className={cx(css.tabButton, { [css.selectedTabs]: view === UserDetailsViews.MEMBERSHIPS })}
           onClick={() => setView(UserDetailsViews.MEMBERSHIPS)}
         />
         <Button

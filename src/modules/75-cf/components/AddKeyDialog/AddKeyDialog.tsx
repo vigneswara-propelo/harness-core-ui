@@ -131,7 +131,7 @@ const AddKeyDialog: React.FC<AddKeyDialogProps> = ({
         <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }} flex={{ justifyContent: 'flex-end' }}>
           {getString('cf.environments.apiKeys.applicableLanguages')}
         </Text>
-        {value == 'server' ? (
+        {value === 'server' ? (
           <Layout.Horizontal spacing="small">
             <img className={css.languageIcon} src={nodejs} alt="NodeJS" />
             <img className={css.languageIcon} src={java} alt="Java" />
@@ -227,7 +227,7 @@ const AddKeyDialog: React.FC<AddKeyDialogProps> = ({
 
                 <Layout.Vertical spacing="medium" padding={{ bottom: 'medium', top: 'medium' }}>
                   <Text>
-                    {formikProps.values.type == 'server'
+                    {formikProps.values.type === 'server'
                       ? getString('cf.environments.apiKeys.serverDescription')
                       : getString('cf.environments.apiKeys.clientDescription')}
                   </Text>

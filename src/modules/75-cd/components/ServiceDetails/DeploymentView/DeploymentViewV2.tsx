@@ -102,11 +102,11 @@ export const DeploymentsV2 = (
         Header: isCluster ? getString('common.cluster') : getString('cd.serviceDashboard.headers.infrastructures'),
         id: 'infra',
         width: columnsProp.infras.width[tableType],
-        Cell: tableType == TableType.PREVIEW ? RenderInfraCount : RenderInfra
+        Cell: tableType === TableType.PREVIEW ? RenderInfraCount : RenderInfra
       }
     ]
 
-    if (tableType != TableType.PREVIEW) {
+    if (tableType !== TableType.PREVIEW) {
       columnsView.push({
         Header: getString('auditTrail.resourceLabel.pipelineExecution'),
         id: 'pipeline',
@@ -158,7 +158,7 @@ export const DeploymentsV2 = (
         columns={columns}
         data={tableDataOption}
         className={css.instanceTable}
-        hideHeaders={tableType != TableType.PREVIEW}
+        hideHeaders={tableType !== TableType.PREVIEW}
       />
     </Layout.Horizontal>
   )

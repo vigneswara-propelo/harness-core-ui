@@ -140,7 +140,7 @@ export const editViewValidateFieldsConfig = (data: SonarqubeStepData) => {
       name: 'spec.tool.project_key',
       type: ValidationFieldTypes.Text,
       label: 'sto.stepField.tool.projectKey',
-      isRequired: data.spec.mode == 'extraction'
+      isRequired: data.spec.mode === 'extraction'
     } as InputSetViewValidateFieldsConfig)
   }
 

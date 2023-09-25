@@ -334,7 +334,7 @@ export const EnvironmentDetailTable = (
   const [selectedRow, setSelectedRow] = React.useState<string>()
   const [order, setOrder] = React.useState('default')
   const inverseSorted = [...(data || [])]
-  if (order == 'desc') {
+  if (order === 'desc') {
     inverseSorted?.sort((a: InstanceGroupedByService, b: InstanceGroupedByService) => {
       const firstServiceName = defaultTo(a.serviceName, '')
       const secondServiceName = defaultTo(b.serviceName, '')

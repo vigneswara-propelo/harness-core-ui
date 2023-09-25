@@ -205,7 +205,7 @@ export const getGaClientID = (): string => {
   }
 }
 
-export const isWindowsOS = (): boolean => navigator?.appVersion?.indexOf('Win') != -1
+export const isWindowsOS = (): boolean => navigator?.appVersion?.indexOf('Win') !== -1
 
 export const toBase64 = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {

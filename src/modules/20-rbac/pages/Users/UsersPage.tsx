@@ -75,7 +75,7 @@ const UsersPage: React.FC = () => {
             <Button
               text={getString('rbac.activeUsers')}
               minimal
-              className={cx({ [css.selectedTabs]: view != Views.PENDING })}
+              className={cx({ [css.selectedTabs]: view !== Views.PENDING })}
               intent={view === Views.PENDING ? 'none' : 'primary'}
               onClick={() => {
                 history.push({
@@ -113,7 +113,7 @@ const UsersPage: React.FC = () => {
         }
       />
       <>
-        {view == Views.PENDING ? (
+        {view === Views.PENDING ? (
           <PendingUserListView shouldReload={reload} searchTerm={searchParam} />
         ) : (
           <>

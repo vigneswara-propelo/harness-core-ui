@@ -178,7 +178,7 @@ function DocsChat(): JSX.Element {
         <String stringID="common.csBot.subtitle" />
       </Layout.Vertical>
 
-      {aidaSettingResponse?.data?.value != 'true' ? (
+      {aidaSettingResponse?.data?.value !== 'true' ? (
         <Container background={Color.PRIMARY_1} padding="medium" margin="medium">
           <Text font={{ variation: FontVariation.BODY2 }} margin={{ bottom: 'medium' }} icon="info-messaging">
             <String stringID="common.csBot.turnOn" />

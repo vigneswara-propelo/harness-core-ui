@@ -289,7 +289,7 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
   }, [artifactPathError])
 
   useEffect(() => {
-    if (planKeyVal != '') {
+    if (planKeyVal !== '') {
       refetchArtifactPaths()
     }
   }, [planKeyVal])

@@ -243,7 +243,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
       return shouldFetchBuckets || isNil(bucketData?.data)
     } else {
       return !!(
-        (lastQueryData.connectorRef != fixedConnectorValue || lastQueryData.region !== fixedRegionValue) &&
+        (lastQueryData.connectorRef !== fixedConnectorValue || lastQueryData.region !== fixedRegionValue) &&
         shouldFetchTagsSource([fixedConnectorValue])
       )
     }
@@ -384,7 +384,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
       return shouldFetchFilePaths || isNil(filePathData?.data)
     } else {
       return !!(
-        (lastQueryData.connectorRef != fixedConnectorValue ||
+        (lastQueryData.connectorRef !== fixedConnectorValue ||
           lastQueryData.region !== fixedRegionValue ||
           lastQueryData.bucketName !== fixedBucketValue) &&
         shouldFetchTagsSource([fixedConnectorValue, fixedBucketValue])

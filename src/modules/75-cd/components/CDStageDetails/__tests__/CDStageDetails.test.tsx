@@ -25,7 +25,7 @@ import { CDStageDetails } from '../CDStageDetails'
 
 const getModuleParams = (scope: Scope, module = 'cd') => ({
   accountId: 'accountId',
-  ...(scope != Scope.ACCOUNT && { orgIdentifier: 'orgIdentifier' }),
+  ...(scope !== Scope.ACCOUNT && { orgIdentifier: 'orgIdentifier' }),
   ...(scope === Scope.PROJECT && { projectIdentifier: 'projectIdentifier' }),
   module
 })

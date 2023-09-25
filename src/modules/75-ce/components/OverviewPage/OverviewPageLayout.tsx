@@ -102,7 +102,7 @@ interface ChartTypeProps {
 }
 
 const getNumberOfDigits = (num = 0) => {
-  if (num % 1 != 0) {
+  if (num % 1 !== 0) {
     const parts = num.toString().split('.')
     return parts[0].length + parts[1].length
   }

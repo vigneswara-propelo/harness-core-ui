@@ -6,7 +6,7 @@
  */
 
 export function encode(arg: unknown): string | undefined {
-  if (typeof arg != 'undefined') return btoa(encodeURIComponent(JSON.stringify(arg)))
+  if (typeof arg !== 'undefined') return btoa(encodeURIComponent(JSON.stringify(arg)))
 }
 
 export function decode<T = unknown>(arg: string): T {

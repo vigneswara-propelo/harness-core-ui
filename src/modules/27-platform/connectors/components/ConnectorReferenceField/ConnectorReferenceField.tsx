@@ -769,7 +769,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     if (isMultiSelect) return
 
     if (
-      typeof selected == 'string' &&
+      typeof selected === 'string' &&
       getMultiTypeFromValue(selected) === MultiTypeInputType.FIXED &&
       selected.length > 0
     ) {

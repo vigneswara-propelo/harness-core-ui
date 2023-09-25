@@ -624,7 +624,7 @@ export const SbomFields = (props: SbomFieldsProps) => {
   if (formik.values.spec.mode === 'ingestion') return null
   if (!SSCA_ENABLED) return null
 
-  if (formik.initialValues.spec.sbom && formik.initialValues.spec.sbom?.format == undefined) {
+  if (formik.initialValues.spec.sbom && formik.initialValues.spec.sbom?.format === undefined) {
     formik.initialValues.spec.sbom.format = 'spdx-json'
     formik.setFieldValue('spec.sbom.format', SBOM_SPDX.value)
   }

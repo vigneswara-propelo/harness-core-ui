@@ -177,7 +177,7 @@ function PipelineGraph({
   }
 
   const onStop = /* istanbul ignore next */ (_e: DraggableEvent, dragData: DraggableData): void => {
-    if (position.x === dragData.x && position.y == dragData.y) {
+    if (position.x === dragData.x && position.y === dragData.y) {
       return
     }
     setPosition({ x: dragData.x, y: dragData.y })

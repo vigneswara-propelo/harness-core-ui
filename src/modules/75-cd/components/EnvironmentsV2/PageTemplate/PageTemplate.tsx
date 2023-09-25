@@ -151,7 +151,7 @@ export default function PageTemplate({
   }, [forceDeleteSettingsError])
 
   const isForceDeleteEnabled = useMemo(
-    () => forceDeleteSettings?.data?.value == 'true',
+    () => forceDeleteSettings?.data?.value === 'true',
     [forceDeleteSettings?.data?.value]
   )
 

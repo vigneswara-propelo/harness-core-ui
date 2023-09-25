@@ -93,7 +93,7 @@ const DashboardsHeader: React.FC = () => {
 
   const showAidaButton =
     aidaSettingResponse?.data?.value === 'true' &&
-    mode == DashboardMode.EDIT &&
+    mode === DashboardMode.EDIT &&
     viewId &&
     CDB_AIDA_WIDGET &&
     !isAidaDrawerOpen

@@ -255,7 +255,7 @@ const UserRoleAssignment: React.FC<UserRoleAssignmentData> = props => {
               tagInputProps={{
                 values: users,
                 placeholder:
-                  scope == Scope.ACCOUNT
+                  scope === Scope.ACCOUNT
                     ? getString('rbac.roleAssignment.addUsersPlaceHolder')
                     : getString('rbac.roleAssignment.searchOrAddUsersPlaceHolder')
               }}

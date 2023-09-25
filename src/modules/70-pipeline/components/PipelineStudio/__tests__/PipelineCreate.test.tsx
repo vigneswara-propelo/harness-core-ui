@@ -167,7 +167,7 @@ describe('PipelineCreate test', () => {
       fireEvent.change(nameInput as Element, 'Sample Pipeline')
       fireEvent.click(submit)
     })
-    await waitFor(() => nameInput?.getAttribute('value') == 'Sample Pipeline')
+    await waitFor(() => nameInput?.getAttribute('value') === 'Sample Pipeline')
     if (collpase) {
       await act(async () => {
         fireEvent.click(collpase)
@@ -198,7 +198,7 @@ describe('PipelineCreate test', () => {
       fireEvent.change(nameInput as Element, 'Sample Pipeline')
       fireEvent.click(submit)
     })
-    await waitFor(() => nameInput?.getAttribute('value') == 'Sample Pipeline')
+    await waitFor(() => nameInput?.getAttribute('value') === 'Sample Pipeline')
     if (collpase) {
       await act(async () => {
         fireEvent.click(collpase)

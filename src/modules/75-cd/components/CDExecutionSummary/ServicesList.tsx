@@ -57,7 +57,7 @@ export function ServicesList({ services, limit = 2, className }: ServicesListPro
                 <Link
                   to={`${routes.toServiceStudio({
                     accountId,
-                    ...(serviceScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+                    ...(serviceScope !== Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
                     ...(serviceScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
                     serviceId: getIdentifierFromScopedRef(defaultTo(identifier, '')),
                     module,

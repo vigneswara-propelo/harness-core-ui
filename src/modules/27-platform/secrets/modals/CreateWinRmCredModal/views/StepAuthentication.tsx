@@ -127,7 +127,7 @@ const StepAuthentication: React.FC<StepProps<WinRmCredSharedObj> & StepAuthentic
     }),
     password: Yup.string().when(['authScheme', 'tgtGenerationMethod'], {
       is: (authScheme, tgtGenerationMethod) =>
-        authScheme === 'NTLM' || (authScheme === 'Kerberos' && tgtGenerationMethod == 'Password'),
+        authScheme === 'NTLM' || (authScheme === 'Kerberos' && tgtGenerationMethod === 'Password'),
       then: Yup.string().required(getString('platform.secrets.createWinRmCredWizard.validatePassword'))
     }),
     principal: Yup.string().when('authScheme', {
@@ -139,7 +139,7 @@ const StepAuthentication: React.FC<StepProps<WinRmCredSharedObj> & StepAuthentic
       then: Yup.string().trim().required(getString('platform.secrets.createSSHCredWizard.validateRealm'))
     }),
     keyPath: Yup.string().when(['authScheme', 'tgtGenerationMethod'], {
-      is: (authScheme, tgtGenerationMethod) => authScheme === 'Kerberos' && tgtGenerationMethod == 'KeyTabFilePath',
+      is: (authScheme, tgtGenerationMethod) => authScheme === 'Kerberos' && tgtGenerationMethod === 'KeyTabFilePath',
       then: Yup.string().trim().required(getString('platform.secrets.createSSHCredWizard.validateKeypath'))
     }),
     tgtGenerationMethod: Yup.string().when('authScheme', {

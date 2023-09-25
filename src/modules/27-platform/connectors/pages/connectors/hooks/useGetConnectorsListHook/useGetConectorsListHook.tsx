@@ -88,13 +88,13 @@ export const useGetConnectorsListHook = (
       connectorCatalogueOrder.forEach(catalogueItem => {
         const catalogueEntry = originalData.find(item => item['category'] === catalogueItem)
         // deprecate aws code commit and hide harness code repo
-        if (catalogueEntry?.category == codeRepoCatalogue) {
+        if (catalogueEntry?.category === codeRepoCatalogue) {
           catalogueEntry.connectors = catalogueEntry?.connectors?.filter(
             connector => connector !== Connectors.AWS_CODECOMMIT && connector !== Connectors.Harness
           )
         }
-        const isProjectOrOrg = projectIdentifier != undefined || orgIdentifier != undefined
-        if (catalogueEntry && !(catalogueEntry.category == 'CLOUD_COST' && isProjectOrOrg)) {
+        const isProjectOrOrg = projectIdentifier !== undefined || orgIdentifier !== undefined
+        if (catalogueEntry && !(catalogueEntry.category === 'CLOUD_COST' && isProjectOrOrg)) {
           // CLOUD_COST should not be displayed at project or org level drawer
           orderedCatalogue.push(catalogueEntry)
         }

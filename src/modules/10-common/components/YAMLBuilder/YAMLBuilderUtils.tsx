@@ -162,7 +162,7 @@ const getValidStepPositions = (editor: editor.IStandaloneCodeEditor): Position[]
       }
       if (stepMatchesToRemove.length) {
         return allStepMatches.filter(function (_val, index) {
-          return stepMatchesToRemove.indexOf(index) == -1
+          return stepMatchesToRemove.indexOf(index) === -1
         })
       }
     }

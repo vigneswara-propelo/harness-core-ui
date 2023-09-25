@@ -319,7 +319,7 @@ export const FormatRemoteTagsData = (initialValues: any, prevStepData: any) => {
         type: prevStepData?.selectedConnector,
         spec: {
           connectorRef,
-          ...(prevStepData?.selectedConnector == 'S3' && region && { region })
+          ...(prevStepData?.selectedConnector === 'S3' && region && { region })
         }
       }
     }

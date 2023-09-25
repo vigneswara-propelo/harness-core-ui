@@ -384,8 +384,8 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
             rightIcon="chevron-right"
             onClick={handleSubmit}
             disabled={
-              (!prevStepData?.includeBilling && selectedCards.length == 0) ||
-              (showExistingCurWarning && selectedCards.length == 1)
+              (!prevStepData?.includeBilling && selectedCards.length === 0) ||
+              (showExistingCurWarning && selectedCards.length === 1)
             }
           />
         </Layout.Horizontal>

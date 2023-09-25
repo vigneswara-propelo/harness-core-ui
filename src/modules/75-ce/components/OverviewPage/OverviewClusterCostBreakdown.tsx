@@ -36,7 +36,7 @@ interface ClusterCostBreakdownProps {
 
 const transformClusterCost = (data: Maybe<StatsInfo>[] = []): Stats[] => {
   return data
-    .filter(d => d != null)
+    .filter(d => d !== null)
     .map((d, idx) => {
       return {
         label: d?.statsLabel as string,

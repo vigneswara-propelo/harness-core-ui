@@ -159,7 +159,7 @@ export const S3ManifestStoreRuntimeView = (props: S3ManifestStoreRuntimeViewProp
   const canFetchBuckets = React.useCallback((): boolean => {
     return (
       !!(
-        (lastQueryData.connectorRef != fixedConnectorValue || lastQueryData.region !== fixedRegionValue) &&
+        (lastQueryData.connectorRef !== fixedConnectorValue || lastQueryData.region !== fixedRegionValue) &&
         (isNewServiceEnvEntity(path as string)
           ? shouldFetchTagsSource([serviceIdentifier])
           : shouldFetchTagsSource([fixedConnectorValue, fixedRegionValue]))

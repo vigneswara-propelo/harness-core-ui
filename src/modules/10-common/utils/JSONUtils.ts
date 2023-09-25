@@ -38,7 +38,7 @@ const sanitize = (obj: Record<string, any>, sanityConfig?: YamlSanityConfig): Re
         sanitize(obj[key], sanityConfig)
       }
     } else if (Array.isArray(obj[key])) {
-      if (removeEmptyArray && obj[key].length == 0) {
+      if (removeEmptyArray && obj[key].length === 0) {
         delete obj[key]
       } else {
         sanitize(obj[key], sanityConfig)

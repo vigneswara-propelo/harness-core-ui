@@ -161,7 +161,7 @@ export default function useCVTabsHook<T>(props?: UseCVTabsHookProps): CVTabsHook
           })
         }
       } else {
-        if (currentTab == maxEnabledTab) {
+        if (currentTab === maxEnabledTab) {
           await setDBData(data, currentTab + 1, maxEnabledTab + 1)
           setCurrentTab(currentTab + 1)
           setMaxEnabledTab(maxEnabledTab + 1)

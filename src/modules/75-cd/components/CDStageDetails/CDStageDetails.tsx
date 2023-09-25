@@ -133,13 +133,13 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
     CDS_NAV_2_0 && !module
       ? `${routesV2.toSettingsServiceDetails({
           accountId,
-          ...(serviceScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+          ...(serviceScope !== Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
           ...(serviceScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
           serviceId: getIdentifierFromScopedRef(get(stage, 'moduleInfo.cd.serviceInfo.identifier', ''))
         })}`
       : `${routes.toServiceStudio({
           accountId,
-          ...(serviceScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+          ...(serviceScope !== Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
           ...(serviceScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
           serviceId: getIdentifierFromScopedRef(get(stage, 'moduleInfo.cd.serviceInfo.identifier', '')),
           module,
@@ -150,7 +150,7 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
     CDS_NAV_2_0 && !module
       ? routesV2.toSettingsEnvironmentDetails({
           accountId,
-          ...(infrastructureScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+          ...(infrastructureScope !== Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
           ...(infrastructureScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
           environmentIdentifier: getIdentifierFromScopedRef(
             get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', '')
@@ -159,7 +159,7 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
         })
       : routes.toEnvironmentDetails({
           accountId,
-          ...(infrastructureScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+          ...(infrastructureScope !== Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
           ...(infrastructureScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
           environmentIdentifier: getIdentifierFromScopedRef(
             get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', '')
@@ -230,13 +230,13 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
                     CDS_NAV_2_0 && !module
                       ? `${routesV2.toSettingsEnvironmentDetails({
                           accountId,
-                          ...(gitOpsEnvironmentScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+                          ...(gitOpsEnvironmentScope !== Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
                           ...(gitOpsEnvironmentScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
                           environmentIdentifier: getIdentifierFromScopedRef(defaultTo(env.identifier, ''))
                         })}`
                       : `${routes.toEnvironmentDetails({
                           accountId,
-                          ...(gitOpsEnvironmentScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+                          ...(gitOpsEnvironmentScope !== Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
                           ...(gitOpsEnvironmentScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
                           environmentIdentifier: getIdentifierFromScopedRef(defaultTo(env.identifier, '')),
                           module,

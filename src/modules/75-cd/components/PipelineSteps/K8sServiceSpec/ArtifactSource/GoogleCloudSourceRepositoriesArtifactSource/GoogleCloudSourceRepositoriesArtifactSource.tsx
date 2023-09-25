@@ -139,7 +139,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
       return shouldFetchProjects || isNil(projectsData?.data)
     } else {
       return !!(
-        lastQueryData.connectorRef != fixedConnectorValue && isFixedNonEmptyValue(defaultTo(fixedConnectorValue, ''))
+        lastQueryData.connectorRef !== fixedConnectorValue && isFixedNonEmptyValue(defaultTo(fixedConnectorValue, ''))
       )
     }
   }, [NG_SVC_ENV_REDESIGN, template, lastQueryData, fixedConnectorValue, projectsData?.data, artifactPath])

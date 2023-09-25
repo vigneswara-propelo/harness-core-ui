@@ -48,7 +48,7 @@ export function CDExecutionSummary(props: CDExecutionSummaryProps): React.ReactE
             to={routes.toServiceStudio({
               module: 'cd',
               accountId,
-              ...(serviceScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+              ...(serviceScope !== Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
               ...(serviceScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
               serviceId: getIdentifierFromScopedRef(stageInfo.serviceInfo?.identifier || ''),
               accountRoutePlacement: 'settings'
@@ -73,7 +73,7 @@ export function CDExecutionSummary(props: CDExecutionSummaryProps): React.ReactE
             to={routes.toEnvironmentDetails({
               module: 'cd',
               accountId,
-              ...(infrastructureScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+              ...(infrastructureScope !== Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
               ...(infrastructureScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
               environmentIdentifier: getIdentifierFromScopedRef(stageInfo.infraExecutionSummary?.identifier || ''),
               sectionId: 'INFRASTRUCTURE',

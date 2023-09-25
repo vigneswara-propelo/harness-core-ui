@@ -146,7 +146,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
       return shouldFetchProjects || isNil(projectsData?.data)
     } else {
       return !!(
-        lastProjectsQueryData.connectorRef != fixedConnectorValue &&
+        lastProjectsQueryData.connectorRef !== fixedConnectorValue &&
         isFixedNonEmptyValue(defaultTo(fixedConnectorValue, ''))
       )
     }
@@ -229,7 +229,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
       return shouldFetchBuckets || isNil(bucketsData?.data)
     } else {
       return !!(
-        lastBucketsQueryData.connectorRef != fixedConnectorValue && shouldFetchTagsSource([fixedConnectorValue])
+        lastBucketsQueryData.connectorRef !== fixedConnectorValue && shouldFetchTagsSource([fixedConnectorValue])
       )
     }
   }, [NG_SVC_ENV_REDESIGN, template, lastBucketsQueryData, fixedConnectorValue, bucketsData?.data, artifactPath])

@@ -1008,7 +1008,7 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                                 <Select
                                                   className={css.revisionTypeNewApp}
                                                   name="revisionType"
-                                                  value={revisionTypeArray.find(item => item.value == revisionType)}
+                                                  value={revisionTypeArray.find(item => item.value === revisionType)}
                                                   items={revisionTypeArray}
                                                   onChange={item => {
                                                     formikProps.setFieldValue('targetRevision', '')

@@ -125,13 +125,13 @@ export const MendStepBase = (
         setFormikRef?.(formikRef, formik)
 
         const show_product_token_field =
-          formik.values.spec.mode != 'ingestion' &&
+          formik.values.spec.mode !== 'ingestion' &&
           (formik.values.spec.tool?.product_lookup_type === 'byTokens' ||
             formik.values.spec.tool?.product_lookup_type === 'appendToProductByToken')
         const show_project_token_field =
           formik.values.spec.mode === 'extraction' && formik.values.spec.tool?.product_lookup_type === 'byTokens'
         const show_product_name_field =
-          formik.values.spec.mode != 'ingestion' &&
+          formik.values.spec.mode !== 'ingestion' &&
           (formik.values.spec.tool?.product_lookup_type === 'byNames' ||
             formik.values.spec.tool?.product_lookup_type === 'appendToProductByName')
         const show_project_name_field =

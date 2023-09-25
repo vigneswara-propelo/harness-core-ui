@@ -140,14 +140,14 @@ const OverviewStep: React.FC<OverviewProps> = props => {
 
       const response = await fetchConnectors(uniqueConnectorFilterParams)
 
-      if (response.status == 'SUCCESS') {
+      if (response.status === 'SUCCESS') {
         /* istanbul ignore else */
-        if (get(response, 'data.pageItemCount') == 0 || isEditMode) {
+        if (get(response, 'data.pageItemCount') === 0 || isEditMode) {
           //No Connectors on AwsAccountId
 
           const curResponse = await fetchConnectors(curReportExistFilterParams)
-          if (curResponse.status == 'SUCCESS') {
-            if (get(curResponse, 'data.pageItemCount') == 0 || includesBilling) {
+          if (curResponse.status === 'SUCCESS') {
+            if (get(curResponse, 'data.pageItemCount') === 0 || includesBilling) {
               nextStep?.(payload)
             } else {
               const existingCurReports: ExistingCURDetails[] =

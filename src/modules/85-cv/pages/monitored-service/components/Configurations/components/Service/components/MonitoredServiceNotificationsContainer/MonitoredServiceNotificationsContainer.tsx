@@ -67,7 +67,7 @@ export default function MonitoredServiceNotificationsContainer(props: MonitoredS
       notificationRuleResponse.notificationRule.conditions.forEach((condition: NotificationRuleCondition) => {
         if (condition.type === Condition.CODE_ERRORS) {
           const timeoutErrorsIndex = condition.spec.errorTrackingEventTypes.indexOf(EventType.TIMEOUT_ERRORS)
-          if (timeoutErrorsIndex != -1) {
+          if (timeoutErrorsIndex !== -1) {
             condition.spec.errorTrackingEventTypes.splice(timeoutErrorsIndex, 1)
           }
         }

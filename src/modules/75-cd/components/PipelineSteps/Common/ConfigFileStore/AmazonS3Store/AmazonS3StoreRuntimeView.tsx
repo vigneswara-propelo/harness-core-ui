@@ -120,7 +120,7 @@ export const AmazonS3RuntimeView = (props: AmazonS3RuntimeViewProps): React.Reac
 
   const canFetchBuckets = React.useCallback((): boolean => {
     return !!(
-      (lastQueryData.connectorRef != fixedConnectorValue || lastQueryData.region !== fixedRegionValue) &&
+      (lastQueryData.connectorRef !== fixedConnectorValue || lastQueryData.region !== fixedRegionValue) &&
       shouldFetchTagsSource([fixedConnectorValue, fixedRegionValue])
     )
   }, [lastQueryData, fixedConnectorValue, fixedRegionValue])

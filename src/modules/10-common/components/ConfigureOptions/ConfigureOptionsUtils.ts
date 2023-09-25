@@ -163,21 +163,21 @@ export function parseInputStringWithCommas(input: string): string[] {
     // Checking if the current position has substring \'
     if (
       currentPosition + 1 < input.length &&
-      input.charAt(currentPosition) == '\\' &&
-      input.charAt(currentPosition + 1) == "'"
+      input.charAt(currentPosition) === '\\' &&
+      input.charAt(currentPosition + 1) === "'"
     ) {
       isInSingleQuotes = !isInSingleQuotes
     }
     // Checking if the current position has substring \"
     else if (
       currentPosition + 1 < input.length &&
-      input.charAt(currentPosition) == '\\' &&
-      input.charAt(currentPosition + 1) == '"'
+      input.charAt(currentPosition) === '\\' &&
+      input.charAt(currentPosition + 1) === '"'
     ) {
       isInDoubleQuotes = !isInDoubleQuotes
     }
     // If current char is , and it's not within single or double quotes, then add the substring to the list
-    else if (input.charAt(currentPosition) == ',' && !isInSingleQuotes && !isInDoubleQuotes) {
+    else if (input.charAt(currentPosition) === ',' && !isInSingleQuotes && !isInDoubleQuotes) {
       values.push(input.substring(startPosition, currentPosition).trim())
       startPosition = currentPosition + 1
     }

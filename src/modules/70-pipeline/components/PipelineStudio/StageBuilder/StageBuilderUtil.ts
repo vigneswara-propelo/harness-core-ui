@@ -936,7 +936,7 @@ export const interceptDropNodeEvent = (
 
     const { stageIndex: propagatingParentIndex } = getStageIndexByIdentifier(pipeline, parentStageId)
     // if dropping last serial node to Add Stage icon , do nothing
-    if (indexToDropAt == -1 && !isDropNodeParallel) {
+    if (indexToDropAt === -1 && !isDropNodeParallel) {
       return true
     }
     // if dropping parallel node  ahead of its index and is not  a  terminal  index(first and last) node

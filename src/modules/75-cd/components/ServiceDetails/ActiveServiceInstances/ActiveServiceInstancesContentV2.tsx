@@ -696,7 +696,7 @@ export const ActiveServiceInstancesContentV2 = (
         ),
         id: 'infra',
         width: columnsProperties.infras.width[tableType],
-        Cell: tableType == TableType.PREVIEW ? RenderInfraCount : RenderInfra
+        Cell: tableType === TableType.PREVIEW ? RenderInfraCount : RenderInfra
       },
       {
         Header: getString('cd.serviceDashboard.headers.instances'),
@@ -712,7 +712,7 @@ export const ActiveServiceInstancesContentV2 = (
       }
     ]
 
-    if (tableType != TableType.PREVIEW) {
+    if (tableType !== TableType.PREVIEW) {
       columnsArray.push({
         Header: getString('auditTrail.resourceLabel.pipelineExecution'),
         id: 'pipeline',
@@ -768,7 +768,7 @@ export const ActiveServiceInstancesContentV2 = (
         columns={columns}
         data={tableData}
         className={css.instanceTable}
-        hideHeaders={tableType != TableType.PREVIEW}
+        hideHeaders={tableType !== TableType.PREVIEW}
         onRowClick={
           tableType === TableType.FULL && allowPostProdRollback
             ? async row => {

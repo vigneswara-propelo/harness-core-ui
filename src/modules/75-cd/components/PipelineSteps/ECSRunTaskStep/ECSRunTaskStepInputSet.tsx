@@ -123,7 +123,7 @@ const TaskDefinitionFields = (props: TaskDefinitionFieldsProps) => {
   const canFetchBuckets = React.useCallback((): boolean => {
     return (
       !!(
-        (lastQueryData.connectorRef != fixedConnectorValue || lastQueryData.region !== fixedRegionValue) &&
+        (lastQueryData.connectorRef !== fixedConnectorValue || lastQueryData.region !== fixedRegionValue) &&
         shouldFetchTagsSource([fixedConnectorValue, fixedRegionValue])
       ) || isNil(s3BucketList?.data)
     )

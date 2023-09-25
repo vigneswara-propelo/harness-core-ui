@@ -55,6 +55,7 @@ rules:
   semi: 0
   no-await-in-loop: 2
   no-shadow: 0
+  eqeqeq: [2, 'always']
 
   # react hooks
   react-hooks/rules-of-hooks: 2

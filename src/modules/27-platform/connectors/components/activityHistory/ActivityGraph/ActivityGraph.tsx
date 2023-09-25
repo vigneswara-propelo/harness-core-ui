@@ -127,7 +127,7 @@ const ActivityGraph: React.FC<ActivityGraphProps> = props => {
 
                 if (
                   activityName === getString('activityHistory.successfulActivity') ||
-                  activityName == getString('activityHistory.failedActivity')
+                  activityName === getString('activityHistory.failedActivity')
                 ) {
                   props.setShowConnectivityChecks(false)
                   props.setShowOtherActivity(true)

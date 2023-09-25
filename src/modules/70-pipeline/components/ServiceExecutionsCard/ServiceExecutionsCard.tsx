@@ -231,7 +231,7 @@ function InfraList({ listName, limit = 2, className, caller }: ListProps): React
       {listName.length > 0 ? (
         <>
           <div className={className}>
-            {caller == DashboardSelected.OVERVIEW && <Icon name={'environments'} className={css.icon} size={14} />}
+            {caller === DashboardSelected.OVERVIEW && <Icon name={'environments'} className={css.icon} size={14} />}
             {visibleList.map((cur, idx) => (
               <Layout.Horizontal key={cur} className={css.serviceArtifact}>
                 <Text lineClamp={1} style={{ maxWidth: caller !== ServiceArtifacts.SERVICEARTIFACT ? 90 : '' }}>

@@ -176,7 +176,7 @@ const ChannelRow: React.FC<ChannelRow> = ({
   }
 
   const handleDelete = async (values: RowData): Promise<void> => {
-    userGroup.notificationConfigs = userGroup.notificationConfigs?.filter(val => val.type != values.type)
+    userGroup.notificationConfigs = userGroup.notificationConfigs?.filter(val => val.type !== values.type)
     try {
       const deleted = await updateNotifications(userGroup)
       /* istanbul ignore else */ if (deleted) {
@@ -320,7 +320,7 @@ const ChannelRow: React.FC<ChannelRow> = ({
                 )}
                 <Container width="25%">
                   <Layout.Horizontal flex={{ justifyContent: 'flex-end' }} spacing="xsmall">
-                    {formikProps.values.type == 'EMAIL' ? (
+                    {formikProps.values.type === 'EMAIL' ? (
                       <TestEmailNotifications
                         onClick={() => handleTest(formikProps)}
                         buttonProps={{
@@ -328,7 +328,7 @@ const ChannelRow: React.FC<ChannelRow> = ({
                         }}
                       />
                     ) : null}
-                    {formikProps.values.type == 'SLACK' ? (
+                    {formikProps.values.type === 'SLACK' ? (
                       <TestSlackNotifications
                         data={formikProps.values as any}
                         onClick={() => handleTest(formikProps)}
@@ -338,7 +338,7 @@ const ChannelRow: React.FC<ChannelRow> = ({
                         }}
                       />
                     ) : null}
-                    {formikProps.values.type == 'PAGERDUTY' ? (
+                    {formikProps.values.type === 'PAGERDUTY' ? (
                       <TestPagerDutyNotifications
                         data={formikProps.values as any}
                         onClick={() => handleTest(formikProps)}
@@ -348,7 +348,7 @@ const ChannelRow: React.FC<ChannelRow> = ({
                         }}
                       />
                     ) : null}
-                    {formikProps.values.type == 'MSTEAMS' ? (
+                    {formikProps.values.type === 'MSTEAMS' ? (
                       <TestMSTeamsNotifications
                         data={{
                           userGroups: [],
