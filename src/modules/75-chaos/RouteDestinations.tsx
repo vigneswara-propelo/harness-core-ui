@@ -28,7 +28,6 @@ import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrai
 import type { ResourceDTO } from 'services/audit'
 import ExecFactory from '@pipeline/factories/ExecutionFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import ChaosEnvironments from '@chaos/pages/environments/EnvironmentsPage'
 import { MinimalLayout } from '@common/layouts'
 import { LicenseRedirectProps, LICENSE_STATE_NAMES } from 'framework/LicenseStore/LicenseStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -206,7 +205,7 @@ const licenseRedirectData: LicenseRedirectProps = {
 
 export default function ChaosRoutes(): React.ReactElement {
   // feature flags to control RBAC registrations
-  const { CHAOS_SECURITY_GOVERNANCE, PL_DISCOVERY_ENABLE, CHAOS_NEW_ENVIRONMENTS_PAGE } = useFeatureFlags()
+  const { CHAOS_SECURITY_GOVERNANCE, PL_DISCOVERY_ENABLE } = useFeatureFlags()
 
   // Pipeline registrations
   PipelineStudioFactory.registerStep(new ChaosExperimentStep())
@@ -308,19 +307,6 @@ export default function ChaosRoutes(): React.ReactElement {
       >
         <ChaosTrialHomePage />
       </RouteWithLayout>
-
-      {/* new environment page now resides in mfe so this route would no longer be required and removed later */}
-      {!CHAOS_NEW_ENVIRONMENTS_PAGE && (
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          exact
-          sidebarProps={ChaosSideNavProps}
-          path={routes.toChaosEnvironments({ ...projectPathProps, ...chaosModuleParams })}
-          pageName={PAGE_NAME.Environments}
-        >
-          <ChaosEnvironments />
-        </RouteWithLayout>
-      )}
 
       {/* Common platform routes */}
       {PL_DISCOVERY_ENABLE &&

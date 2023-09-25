@@ -39,11 +39,19 @@ const ChaosSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
       <SideNav.Section>
         <SideNav.Scope scope={Scope.PROJECT}>
           <SideNav.Link icon="nav-home" label={getString('overview')} to={routes.toChaosOverview(routeParams)} />
+
           <SideNav.Link
             icon="chaos-nav-experiments"
             label={getString('chaos.navLabels.chaosExperiments')}
             to={routes.toChaosExperiments(routeParams)}
           />
+
+          <SideNav.Link
+            icon="chaos-nav-chaoshub"
+            label={getString('chaos.navLabels.chaosHubs')}
+            to={routes.toChaosHubs(routeParams)}
+          />
+
           <SideNav.Link
             icon="chaos-nav-gamedays"
             label={getString('chaos.navLabels.gamedays')}
