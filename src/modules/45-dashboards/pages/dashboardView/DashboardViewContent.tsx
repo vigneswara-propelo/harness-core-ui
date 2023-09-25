@@ -117,7 +117,7 @@ const DashboardViewContent: React.FC = () => {
     setEmbedUrl(null)
     generateSignedUrl()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [viewId, aiTileDetails])
+  }, [aiTileDetails])
 
   const { data: folderDetail, refetch: fetchFolderDetail } = useDeprecatedGetFolder({
     lazy: true,
