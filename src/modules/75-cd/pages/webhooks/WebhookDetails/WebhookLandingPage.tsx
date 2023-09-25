@@ -23,7 +23,7 @@ import {
   Heading,
   Dialog
 } from '@harness/uicore'
-import { Color, FontVariation } from '@harness/design-system'
+import { Color } from '@harness/design-system'
 import {
   useGetGitxWebhookQuery,
   useListGitxWebhookEventsQuery,
@@ -148,16 +148,6 @@ export default function WebhookLandingPage(): JSX.Element {
           canEscapeKeyClose
           canOutsideClickClose
           onClose={onCloseHandler}
-          title={
-            <>
-              <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'small' }}>
-                {getString('cd.webhooks.editWebhook')}
-              </Text>
-              <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_500}>
-                {getString('cd.webhooks.createSubtitle')}
-              </Text>{' '}
-            </>
-          }
           isCloseButtonShown
           className={cx('padded-dialog', css.dialogStylesWebhook)}
         >

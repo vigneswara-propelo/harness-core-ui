@@ -827,6 +827,8 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
                       reloadContent={getString('inputSets.inputSetLabel')}
                       cacheResponse={inputSet?.cacheResponse}
                       reloadFromCache={handleReloadFromCache}
+                      repo={inputSet?.gitDetails?.repoName}
+                      filePath={inputSet?.gitDetails?.filePath}
                     />
                   )}
                 </Container>

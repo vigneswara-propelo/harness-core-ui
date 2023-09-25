@@ -114,6 +114,8 @@ export const ServiceDetailsHeader = (
             reloadContent={getString('common.pipeline')}
             cacheResponse={serviceResponse?.cacheResponseMetadataDTO}
             reloadFromCache={noop}
+            repo={defaultTo(gitDetails?.repoName, repoName)}
+            filePath={defaultTo(gitDetails?.filePath, '')}
           />
         )}
       </div>

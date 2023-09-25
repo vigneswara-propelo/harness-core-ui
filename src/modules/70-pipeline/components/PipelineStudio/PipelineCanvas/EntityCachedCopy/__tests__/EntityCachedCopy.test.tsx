@@ -31,7 +31,8 @@ const cacheResponseContextValue: PipelineContextInterface = {
     cacheResponse: {
       cacheState: 'VALID_CACHE',
       lastUpdatedAt: 1660213211337,
-      ttlLeft: 5000
+      ttlLeft: 5000,
+      isSyncEnabled: false
     }
   }
 }

@@ -4647,6 +4647,7 @@ export interface StringsMap {
   'pipeline.frozenExecList.freezeTime': string
   'pipeline.frozenExecPopover.abortedMsg': string
   'pipeline.frozenExecPopover.viewFreezeWindows': string
+  'pipeline.gitCacheUpToDate': string
   'pipeline.gitCloneStep.cloneDirectory': string
   'pipeline.gitCloneStep.validation.associatedBuildInput': string
   'pipeline.gitDetails': string
@@ -5691,6 +5692,7 @@ export interface StringsMap {
   'pipeline.viewInCompiledMode': string
   'pipeline.viewLatestExecution': string
   'pipeline.viewPipeline': string
+  'pipeline.viewSyncActivities': string
   'pipeline.violationDetails': string
   'pipeline.vmLabel': string
   'pipeline.waitStep.validation.duration10SecMinimum': string

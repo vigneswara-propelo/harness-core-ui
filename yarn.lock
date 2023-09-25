@@ -3009,10 +3009,10 @@
     "@types/qs" "^6.9.7"
     qs "^6.9.4"
 
-"@harnessio/react-ng-manager-client@^1.11.0":
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/@harnessio/react-ng-manager-client/-/react-ng-manager-client-1.11.0.tgz#b27cc182a1f9e3204c8d1e4e1468e008a6d7cb07"
-  integrity sha512-yLy80WSMrEBXmX+S9Zs18cFgFzOysF8U956RLIcS1pOswpyAYC4hkmdVbRD1FUNIo7UCSxEXDCxbOwjdWDD8uw==
+"@harnessio/react-ng-manager-client@^1.12.0":
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/@harnessio/react-ng-manager-client/-/react-ng-manager-client-1.12.0.tgz#59c5e1e113bb72d7a03fbdcda187d351cd607920"
+  integrity sha512-qbqhvpIaRdoS+Ft7N4ftSc7iL6ZC9WTXDiX/nn1Jb/1MtIx5ULhkPrwYHekMHLsylVeH+gSyEO6Ktcejg2aVIw==
 
 "@harnessio/react-pipeline-service-client@1.7.0":
   version "1.7.0"

@@ -391,6 +391,8 @@ export function TemplateStudioSubHeaderLeftView(
                       reloadFromCache={reloadFromCache}
                       fetchError={templateYamlError as any}
                       className={css.cacheIcon}
+                      filePath={gitDetails.filePath}
+                      repo={gitDetails.repoName}
                     />
                   ) : undefined
                 }

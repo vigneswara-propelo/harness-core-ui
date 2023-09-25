@@ -5,25 +5,41 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import type { GetDataError } from 'restful-react'
 import cx from 'classnames'
-import { Icon, IconName, Layout, useToggleOpen, ConfirmationDialog, Button, ButtonVariation } from '@harness/uicore'
+import {
+  Icon,
+  IconName,
+  Layout,
+  useToggleOpen,
+  ConfirmationDialog,
+  Button,
+  ButtonVariation,
+  Text
+} from '@harness/uicore'
 import { Intent, Color } from '@harness/design-system'
-import { isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { formatDatetoLocale } from '@common/utils/dateUtils'
 import type { CacheResponseMetadata, Failure } from 'services/pipeline-ng'
+import type { CacheResponseMetadata as CacheResponseMetadataTemplate } from 'services/template-ng'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import type { StringsMap } from 'stringTypes'
+// eslint-disable-next-line no-restricted-imports
+import WebhookSyncDrawer from '@cd/pages/webhooks/WebhookSyncDrawer/WebhookSyncDrawer'
 import css from './EntityCachedCopy.module.scss'
 
 export interface EntityCachedCopyProps {
   reloadContent: string
-  cacheResponse?: CacheResponseMetadata
+  cacheResponse?: CacheResponseMetadata | CacheResponseMetadataTemplate
   reloadFromCache: (loadFromCache?: boolean) => void
   fetchError?: GetDataError<Failure | Error> | null
   readonly?: boolean
   className?: string
   inlineReload?: boolean
+  repo?: string
+  filePath?: string
 }
 
 export interface EntityCachedCopyHandle {
@@ -35,15 +51,32 @@ const cacheStateToIconMap: Record<CacheResponseMetadata['cacheState'], IconName>
   STALE_CACHE: 'stale-cache',
   UNKNOWN: 'danger-icon'
 }
+const cacheStateToStringMap: Record<CacheResponseMetadata['cacheState'], keyof StringsMap> = {
+  VALID_CACHE: 'pipeline.gitCacheUpToDate',
+  STALE_CACHE: 'pipeline.gitCacheUpToDate',
+  UNKNOWN: 'pipeline.gitCacheUpToDate'
+}
 
 function EntityCachedCopyInner(
   props: EntityCachedCopyProps,
   ref?: React.ForwardedRef<EntityCachedCopyHandle>
 ): React.ReactElement {
-  const { reloadContent, cacheResponse, fetchError, reloadFromCache, readonly, className, inlineReload = true } = props
+  const {
+    reloadContent,
+    cacheResponse,
+    fetchError,
+    reloadFromCache,
+    readonly,
+    className,
+    inlineReload = true,
+    repo,
+    filePath
+  } = props
   const { getString } = useStrings()
   const { isOpen: isModalOpen, close: hideModal, open: showConfirmationModal } = useToggleOpen(false)
   const { isOpen: isErrorModalOpen, close: hideErrorModal, open: showErrorModal } = useToggleOpen(false)
+  const { PIE_GIT_BI_DIRECTIONAL_SYNC } = useFeatureFlags()
+  const [showSyncDrawer, setShowSyncDrawer] = useState<boolean>(false)
 
   useEffect(() => {
     if (!isEmpty(fetchError) && !readonly) {
@@ -70,6 +103,51 @@ function EntityCachedCopyInner(
         />
       )}
     </div>
+  )
+
+  const biDirectionalTooltipContent = (
+    <Layout.Vertical className={css.popover} padding={'medium'}>
+      {cacheResponse?.cacheState && (
+        <Text
+          icon={cacheStateToIconMap[cacheResponse.cacheState]}
+          color={Color.WHITE}
+          padding={{ bottom: 'small' }}
+          font={{ weight: 'semi-bold' }}
+        >
+          {getString(cacheStateToStringMap[cacheResponse.cacheState]).toUpperCase()}
+        </Text>
+      )}
+      {cacheResponse?.lastUpdatedAt && (
+        <Text
+          padding={{ bottom: 'medium' }}
+          color={Color.WHITE}
+          border={{ bottom: true, width: 1, color: Color.GREY_200 }}
+        >{`${getString('pipeline.pipelineCachedCopy.cachedCopyText')} : ${formatDatetoLocale(
+          cacheResponse.lastUpdatedAt
+        )}`}</Text>
+      )}
+      <Layout.Horizontal padding={{ top: 'medium' }}>
+        {inlineReload && (
+          <Button
+            variation={ButtonVariation.PRIMARY}
+            text={getString('common.reload')}
+            onClick={showConfirmationModal}
+            minimal
+            className={css.reload}
+          />
+        )}
+        {get(cacheResponse, 'isSyncEnabled', false) && (
+          <Text
+            onClick={() => setShowSyncDrawer(true)}
+            className={css.hoverUnderline}
+            color={Color.PRIMARY_7}
+            padding={{ left: 'small' }}
+          >
+            {getString('pipeline.viewSyncActivities')}
+          </Text>
+        )}
+      </Layout.Horizontal>
+    </Layout.Vertical>
   )
 
   React.useImperativeHandle(ref, () => ({
@@ -103,7 +181,7 @@ function EntityCachedCopyInner(
               icon={cacheStateToIconMap[cacheResponse.cacheState]}
               withoutCurrentColor
               tooltipProps={{ isDark: true, interactionKind: 'hover', position: 'bottom' }}
-              tooltip={tooltipContent}
+              tooltip={PIE_GIT_BI_DIRECTIONAL_SYNC ? biDirectionalTooltipContent : tooltipContent}
             />
           </Layout.Horizontal>
         </div>
@@ -126,6 +204,13 @@ function EntityCachedCopyInner(
         confirmButtonText={getString('common.tryAgain')}
         cancelButtonText={getString('cancel')}
       />
+      {showSyncDrawer && (
+        <WebhookSyncDrawer
+          onClose={() => setShowSyncDrawer(false)}
+          repoName={defaultTo(repo, '')}
+          filePath={defaultTo(filePath, '')}
+        />
+      )}
     </>
   )
 }

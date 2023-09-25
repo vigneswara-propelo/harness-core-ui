@@ -176,7 +176,8 @@ export const GetInputSetEdit: UseGetReturnData<ResponseInputSetResponse> = {
       cacheResponse: {
         cacheState: 'STALE_CACHE',
         lastUpdatedAt: 1680782813372,
-        ttlLeft: 257890851
+        ttlLeft: 257890851,
+        isSyncEnabled: false
       }
     },
     correlationId: 'fdb1358f-c3b8-459b-aa89-4e570b7ac6d0'
@@ -265,7 +266,8 @@ export const GetInputSetEditGitSimplification: UseGetReturnData<ResponseInputSet
       cacheResponse: {
         cacheState: 'STALE_CACHE',
         ttlLeft: 245049436,
-        lastUpdatedAt: 1692630119301
+        lastUpdatedAt: 1692630119301,
+        isSyncEnabled: false
       }
     },
     correlationId: 'fdb1358f-c3b8-459b-aa89-4e570b7ac6d0'

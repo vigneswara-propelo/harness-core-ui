@@ -31,7 +31,7 @@
   margin: 0;
   padding: var(--spacing-5);
   height: 100%;
-  color: white;
+  color: var(--white);
   max-width: 400px;
   border-radius: var(--spacing-3);
   font-size: var(--font-size-small);
@@ -42,4 +42,13 @@
 
 .reload {
   cursor: pointer;
+}
+
+.hoverUnderline {
+  align-self: center;
+  cursor: pointer;
+  &:hover {
+    color: var(--white) !important;
+    text-decoration: underline !important;
+  }
 }

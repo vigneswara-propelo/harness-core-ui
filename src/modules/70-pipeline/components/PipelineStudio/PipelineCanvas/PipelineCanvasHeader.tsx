@@ -368,6 +368,8 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                     reloadContent={getString('common.pipeline')}
                     cacheResponse={pipelineCacheResponse}
                     reloadFromCache={handleReloadFromCache}
+                    repo={defaultTo(defaultTo(defaultTo(repoName, gitDetails.repoName), gitDetails.repoIdentifier), '')}
+                    filePath={defaultTo(gitDetails.filePath, '')}
                   />
                 )}
               </div>

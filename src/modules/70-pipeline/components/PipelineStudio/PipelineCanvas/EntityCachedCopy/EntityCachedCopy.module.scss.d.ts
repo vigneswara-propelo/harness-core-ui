@@ -9,6 +9,7 @@
 declare const styles: {
   readonly cachedcopy: string
   readonly dialogStyles: string
+  readonly hoverUnderline: string
   readonly popover: string
   readonly reload: string
 }

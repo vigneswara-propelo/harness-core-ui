@@ -7,10 +7,9 @@
 
 import React, { useMemo } from 'react'
 import type { Column } from 'react-table'
-import { Dialog, TableV2, useToaster, Text, Container } from '@harness/uicore'
+import { Dialog, TableV2, useToaster, Container } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import cx from 'classnames'
-import { FontVariation, Color } from '@harness/design-system'
 import {
   GitXWebhookResponse,
   ListGitxWebhooksOkResponse,
@@ -68,16 +67,6 @@ export default function WebhooksList({
           canEscapeKeyClose
           canOutsideClickClose
           onClose={onClosehandler}
-          title={
-            <>
-              <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'small' }}>
-                {editable ? getString('cd.webhooks.editWebhook') : getString('cd.webhooks.newWebhook')}
-              </Text>
-              <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_500}>
-                {getString('cd.webhooks.createSubtitle')}
-              </Text>{' '}
-            </>
-          }
           isCloseButtonShown
           className={cx('padded-dialog', css.dialogStylesWebhook)}
         >

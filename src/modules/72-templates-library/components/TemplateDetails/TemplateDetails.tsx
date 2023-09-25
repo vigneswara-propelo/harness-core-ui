@@ -540,6 +540,8 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                               fetchError={templateYamlError as any}
                               readonly={true}
                               className={css.cacheIcon}
+                              repo={templateData?.data?.content?.[0]?.gitDetails?.repoName}
+                              filePath={templateData?.data?.content?.[0]?.gitDetails?.filePath}
                             />
                           ) : undefined
                         }

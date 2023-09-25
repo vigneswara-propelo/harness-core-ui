@@ -273,6 +273,8 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
               reloadContent={getString('common.pipeline')}
               cacheResponse={pipelineResponse?.data?.cacheResponse as CacheResponseMetadata}
               reloadFromCache={handleReloadFromCache}
+              repo={pipelineResponse?.data?.gitDetails?.repoName}
+              filePath={pipelineResponse?.data?.gitDetails?.filePath}
             />
           )}
         </div>

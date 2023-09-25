@@ -525,6 +525,8 @@ function InputSetV1FormWrapper(props: InputSetV1FormWrapperProps): React.ReactEl
                       reloadContent={getString('inputSets.inputSetLabel')}
                       cacheResponse={inputSet?.cacheResponse}
                       reloadFromCache={handleReloadFromCache}
+                      repo={inputSet?.gitDetails?.repoName}
+                      filePath={inputSet?.gitDetails?.filePath}
                     />
                   )}
                 </Container>

@@ -782,6 +782,8 @@ gitDetails: git details
 editGitDetails: Edit Git Details
 editGitDetailsTitle: Edit Git Details for the {{entity}}
 editingGitDetails: Editing Git Details
+gitCacheUpToDate: Up To Date
+viewSyncActivities: View Webhook Events
 editGitDetailsSuccess: Git Details is updated successfully.
 runtimeInputs: Runtime Inputs
 approveOrReject: Approve or Reject

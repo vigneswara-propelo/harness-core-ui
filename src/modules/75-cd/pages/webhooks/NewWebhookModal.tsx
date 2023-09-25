@@ -158,7 +158,7 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
               <Layout.Vertical>
                 <Container className={css.modalHeader}>
                   <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'small' }}>
-                    {getString('cd.webhooks.newWebhook')}
+                    {isEdit ? getString('cd.webhooks.editWebhook') : getString('cd.webhooks.newWebhook')}
                   </Text>
                   <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_500}>
                     {getString('cd.webhooks.createSubtitle')}

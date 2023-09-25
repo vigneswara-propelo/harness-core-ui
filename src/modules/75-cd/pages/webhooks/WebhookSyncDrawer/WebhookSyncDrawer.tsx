@@ -38,7 +38,8 @@ import css from './WebhookSyncDrawer.module.scss'
 
 interface WebhookSyncDrawerInterface {
   onClose: () => void
-  webhookIdentifier: string
+  repoName: string
+  filePath: string
 }
 
 function WebhooksPayloadDetails({
@@ -76,7 +77,7 @@ interface PaginationStateInterface {
 }
 
 export default function WebhookSyncDrawer(props: WebhookSyncDrawerInterface): JSX.Element {
-  const { onClose, webhookIdentifier } = props
+  const { onClose, repoName, filePath } = props
   const [payload, setPayload] = React.useState<string>('')
   const [dateFilter, setDateFilter] = React.useState<EventsDateFilter>(() => getDefaultDateState())
   const [paginationState, setPaginationState] = React.useState<PaginationStateInterface>({
@@ -94,7 +95,8 @@ export default function WebhookSyncDrawer(props: WebhookSyncDrawerInterface): JS
     queryParams: {
       limit: paginationState.size,
       page: paginationState.index,
-      webhook_identifier: webhookIdentifier,
+      repo_name: repoName,
+      file_path: filePath,
       event_start_time: dateFilter.startTime,
       event_end_time: dateFilter.endTime
     }
