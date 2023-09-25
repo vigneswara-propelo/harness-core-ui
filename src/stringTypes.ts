@@ -56,6 +56,13 @@ export interface StringsMap {
   'common.advancedSettings': string
   'common.agent': string
   'common.agents': string
+  'common.aidaFeedback.maxLengthError': string
+  'common.aidaFeedback.notCorrect': string
+  'common.aidaFeedback.notRelevant': string
+  'common.aidaFeedback.placeholder': string
+  'common.aidaFeedback.required': string
+  'common.aidaFeedback.thanks': string
+  'common.aidaFeedback.title': string
   'common.all': string
   'common.allClusters': string
   'common.allEnvironments': string

@@ -37,11 +37,13 @@
         z-index: 2;
       }
 
+      .messageWrapper {
+        width: 80%;
+      }
+
       .message {
         padding: var(--spacing-small) var(--spacing-large);
-        margin: 0 var(--spacing-small);
         display: inline-block;
-        max-width: 75%;
         word-wrap: break-word;
         line-height: 20px;
         overflow-x: auto;
@@ -67,6 +69,11 @@
 
       &.user {
         justify-content: right;
+
+        .messageWrapper {
+          display: flex;
+          justify-content: right;
+        }
 
         .message {
           border-radius: 24px 0px 24px 24px;

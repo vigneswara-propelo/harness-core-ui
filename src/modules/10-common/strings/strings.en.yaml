@@ -1628,6 +1628,14 @@ csBot:
   sampleQuestion2: How does K8s rollback work in Harness? Explain in detail.
   sampleQuestion3: What permissions are required to allow a user to execute a pipeline in UI?
   sampleQuestion4: How to share variables across different stages in CI pipeline?
+aidaFeedback:
+  title: Provide Additional Feedback (Optional)
+  notCorrect: Response was not correct
+  notRelevant: Response was not relevant
+  placeholder: What is the issue with this response? How could it be improved?
+  maxLengthError: Feedback must be less than {{ maxLength }} characters
+  required: Please provide some feedback
+  thanks: Thanks for the feedback!
 addNewCreditCard: Add a new card
 analyzing: analyzing
 expressionDefaultError: Expression not found in selected execution

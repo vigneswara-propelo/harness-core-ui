@@ -19,6 +19,7 @@ declare const styles: {
   readonly loader: string
   readonly message: string
   readonly messageContainer: string
+  readonly messageWrapper: string
   readonly messagesContainer: string
   readonly submitButton: string
   readonly user: string

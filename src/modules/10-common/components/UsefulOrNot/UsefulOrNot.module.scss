@@ -1,8 +1,9 @@
 .usefulOrNot {
+  --typography-size: 12px;
+
   .voteButton {
     border: none;
     background-color: transparent;
-    padding: var(--spacing-small);
     cursor: pointer;
 
     &:hover:enabled {
@@ -11,10 +12,10 @@
   }
 
   .votedUp {
-    color: var(--green-800);
+    font-weight: bold;
   }
 
   .votedDown {
-    color: var(--red-800);
+    font-weight: bold;
   }
 }

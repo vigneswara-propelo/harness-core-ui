@@ -154,7 +154,7 @@ function DocsChat(): JSX.Element {
 
   const loadingMessage = (
     <div className={cx(css.messageContainer, css.harness)}>
-      <Icon name="harness-copilot" size={30} className={css.aidaIcon} />
+      <Icon name="harness-copilot" size={30} className={css.aidaIcon} margin={{ right: 'small' }} />
       <div className={cx(css.message, css.loader)}>
         <div className={css.dotflashing}></div>
       </div>
@@ -203,17 +203,39 @@ function DocsChat(): JSX.Element {
                     })}
                   >
                     {message.author === 'harness' ? (
-                      <Icon name="harness-copilot" size={30} className={css.aidaIcon} />
+                      <Icon name="harness-copilot" size={30} className={css.aidaIcon} margin={{ right: 'small' }} />
                     ) : null}
-                    <div className={css.message}>
-                      {message.text === 'error' ? (
-                        <a href="javascript:;" onClick={openSubmitTicketModal} className={css.errorLink}>
-                          {getString('common.csBot.errorMessage')}
-                        </a>
-                      ) : (
-                        <div dangerouslySetInnerHTML={{ __html: getHTMLFromMarkdown(message.text) }} />
-                      )}
+
+                    <div className={css.messageWrapper}>
+                      <div className={css.message}>
+                        {message.text === 'error' ? (
+                          <a href="javascript:;" onClick={openSubmitTicketModal} className={css.errorLink}>
+                            {getString('common.csBot.errorMessage')}
+                          </a>
+                        ) : (
+                          <div dangerouslySetInnerHTML={{ __html: getHTMLFromMarkdown(message.text) }} />
+                        )}
+                      </div>
+                      {message.author === 'harness' && index > 1 ? (
+                        <UsefulOrNot
+                          allowCreateTicket={true}
+                          allowFeedback={true}
+                          telemetry={{
+                            aidaClient: AidaClient.CS_BOT,
+                            metadata: {
+                              answer: message.text,
+                              query: messages[index - 1].text
+                            }
+                          }}
+                          onVote={() => {
+                            if (messageList.current) {
+                              messageList.current.scrollTop = messageList.current.scrollHeight
+                            }
+                          }}
+                        />
+                      ) : null}
                     </div>
+
                     {message.author === 'user' ? (
                       <Avatar
                         size={'small'}
@@ -223,18 +245,6 @@ function DocsChat(): JSX.Element {
                       />
                     ) : null}
                   </div>
-                  {message.author === 'harness' && index > 1 ? (
-                    <UsefulOrNot
-                      allowCreateTicket={true}
-                      telemetry={{
-                        aidaClient: AidaClient.CS_BOT,
-                        metadata: {
-                          answer: message.text,
-                          query: messages[index - 1].text
-                        }
-                      }}
-                    />
-                  ) : null}
                 </div>
               )
             })}
