@@ -684,7 +684,7 @@ export function DefaultTriggerInfoCell(props: UseTableCellProps<PipelineExecutio
         )}
       </Layout.Vertical>
     )
-  } else if (data?.executionTriggerInfo?.triggerType === 'WEBHOOK_CUSTOM') {
+  } else if (data?.executionTriggerInfo?.triggeredBy?.triggerIdentifier) {
     return (
       <Layout.Horizontal>
         <Icon name={iconName as IconName} size={12} className={css.triggerIcon} />
