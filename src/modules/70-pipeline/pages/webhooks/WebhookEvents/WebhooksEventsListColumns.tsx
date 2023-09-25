@@ -91,7 +91,7 @@ export function WebhooksPayloadDetails({
         onClick({ payloadJSON: payload, timestamp: event_trigger_time, eventId: event_identifier })
       }}
     >
-      {getString('cd.webhookEvents.payloadDetails')}
+      {getString('pipeline.webhookEvents.payloadDetails')}
     </Button>
   )
 }

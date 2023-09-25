@@ -38,23 +38,23 @@ export default function PayloadDetails(props: PayloadDetailsInterface): JSX.Elem
       _parsedPaylod = {}
     }
     return _parsedPaylod
-  }, [payloadDetails.payloadJSON])
+  }, [payloadDetails.payloadJSON, showError])
 
   return (
     <Drawer className={css.drawer} {...drawerStates} onClose={onClose} isCloseButtonShown>
       <Container height="100%" background={Color.GREY_100} padding="xlarge">
         <Layout.Vertical>
-          <Text font={{ variation: FontVariation.H4 }}>{getString('cd.webhookEvents.payloadDetails')}</Text>
+          <Text font={{ variation: FontVariation.H4 }}>{getString('pipeline.webhookEvents.payloadDetails')}</Text>
           <Layout.Horizontal flex padding="large">
             <Layout.Vertical>
               <Text className={css.marginBottom} color={Color.BLACK}>
-                {getString('cd.webhookEvents.timestamp')}
+                {getString('pipeline.webhookEvents.timestamp')}
               </Text>
               <Text>{`${time} ${date}`}</Text>
             </Layout.Vertical>
             <Layout.Vertical>
               <Text className={css.marginBottom} color={Color.BLACK}>
-                {getString('cd.webhookEvents.eventId')}
+                {getString('pipeline.webhookEvents.eventId')}
               </Text>
               <Text>{payloadDetails.eventId}</Text>
             </Layout.Vertical>

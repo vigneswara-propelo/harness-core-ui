@@ -29,9 +29,9 @@ import { drawerStates } from '@audit-trail/components/EventSummary/EventSummary'
 import { useStrings } from 'framework/strings'
 import YamlBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
-import { EventsDateFilter } from '@cd/utils/requestUtils'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { PAGE_TEMPLATE_DEFAULT_PAGE_INDEX } from '@common/constants/Pagination'
+import { EventsDateFilter } from '@pipeline/pages/utils/requestUtils'
 import { ColumnTimeStamp, ColumnUser, EventId, withWebhookEvents } from '../WebhookEvents/WebhooksEventsListColumns'
 import { CustomColumn } from '../WebhookEvents/WebhooksEventsList'
 import css from './WebhookSyncDrawer.module.scss'
@@ -114,19 +114,19 @@ export default function WebhookSyncDrawer(props: WebhookSyncDrawerInterface): JS
   const syncDrawerColumns: CustomColumn<GitXWebhookEventResponse>[] = useMemo(
     () => [
       {
-        Header: getString('cd.webhookEvents.dateTime').toUpperCase(),
+        Header: getString('pipeline.webhookEvents.dateTime').toUpperCase(),
         id: 'dateTime',
         width: '15%',
         Cell: withWebhookEvents(ColumnTimeStamp)
       },
       {
-        Header: getString('cd.webhookEvents.pusher').toUpperCase(),
+        Header: getString('pipeline.webhookEvents.pusher').toUpperCase(),
         id: 'pusher',
         width: '35%',
         Cell: withWebhookEvents(ColumnUser)
       },
       {
-        Header: getString('cd.webhookEvents.eventId').toUpperCase(),
+        Header: getString('pipeline.webhookEvents.eventId').toUpperCase(),
         id: 'eventId',
         width: '40%',
         Cell: withWebhookEvents(EventId)
@@ -184,7 +184,7 @@ export default function WebhookSyncDrawer(props: WebhookSyncDrawerInterface): JS
       <Layout.Horizontal height="100%">
         <Layout.Vertical width={700} padding="xlarge">
           <Text font={{ variation: FontVariation.H4 }} margin={{ bottom: 'medium' }}>
-            {getString('cd.webhookEvents.events')}
+            {getString('pipeline.webhookEvents.events')}
           </Text>
           {loading ? (
             <ContainerSpinner flex={{ align: 'center-center' }} />
@@ -201,7 +201,7 @@ export default function WebhookSyncDrawer(props: WebhookSyncDrawerInterface): JS
                   <Layout.Vertical flex={{ alignItems: 'center' }}>
                     <img src={EmptyContentImg} width={300} height={150} />
                     <Heading level={2} padding={{ top: 'xxlarge' }} margin={{ bottom: 'large' }}>
-                      {getString('cd.webhookEvents.noEvents')}
+                      {getString('pipeline.webhookEvents.noEvents')}
                     </Heading>
                   </Layout.Vertical>
                 </Container>
@@ -238,11 +238,11 @@ export default function WebhookSyncDrawer(props: WebhookSyncDrawerInterface): JS
         </Layout.Vertical>
         <Layout.Vertical padding={'xxlarge'} background={Color.GREY_100} width={613}>
           <Text font={{ variation: FontVariation.H5 }} padding={{ bottom: 'large' }}>
-            {getString('cd.webhookEvents.payloadDetails')}
+            {getString('pipeline.webhookEvents.payloadDetails')}
           </Text>
           {!isEmpty(payload) ? (
             <YamlBuilder
-              fileName={getString('cd.webhookEvents.payloadDetails')}
+              fileName={getString('pipeline.webhookEvents.payloadDetails')}
               isReadOnlyMode={true}
               isEditModeSupported={false}
               hideErrorMesageOnReadOnlyMode={true}
@@ -256,7 +256,7 @@ export default function WebhookSyncDrawer(props: WebhookSyncDrawerInterface): JS
               <Layout.Vertical flex={{ alignItems: 'center' }}>
                 <img src={EmptyContentImg} width={300} height={150} />
                 <Heading level={2} padding={{ top: 'xxlarge' }} margin={{ bottom: 'large' }}>
-                  {getString('cd.webhookEvents.selectEventPayload')}
+                  {getString('pipeline.webhookEvents.selectEventPayload')}
                 </Heading>
               </Layout.Vertical>
             </Container>

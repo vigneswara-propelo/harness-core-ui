@@ -26,8 +26,7 @@ import type { CacheResponseMetadata, Failure } from 'services/pipeline-ng'
 import type { CacheResponseMetadata as CacheResponseMetadataTemplate } from 'services/template-ng'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { StringsMap } from 'stringTypes'
-// eslint-disable-next-line no-restricted-imports
-import WebhookSyncDrawer from '@cd/pages/webhooks/WebhookSyncDrawer/WebhookSyncDrawer'
+import WebhookSyncDrawer from '@pipeline/pages/webhooks/WebhookSyncDrawer/WebhookSyncDrawer'
 import css from './EntityCachedCopy.module.scss'
 
 export interface EntityCachedCopyProps {

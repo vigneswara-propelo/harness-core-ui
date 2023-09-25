@@ -99,7 +99,7 @@ export default function LogsTableComponent(props: LogsTableComponentProps): JSX.
 
   const tableColumns: Array<Column<LogRecord>> = [
     {
-      Header: getString('cd.webhookEvents.timestamp'),
+      Header: getString('pipeline.webhookEvents.timestamp'),
       id: 'timestamp',
       accessor: row => {
         {

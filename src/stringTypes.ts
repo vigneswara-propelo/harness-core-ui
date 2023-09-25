@@ -5704,6 +5704,29 @@ export interface StringsMap {
   'pipeline.vmLabel': string
   'pipeline.waitStep.validation.duration10SecMinimum': string
   'pipeline.warningForInvalidYAMLDiscard': string
+  'pipeline.webhookEvents.backToEdit': string
+  'pipeline.webhookEvents.dateTime': string
+  'pipeline.webhookEvents.eventId': string
+  'pipeline.webhookEvents.events': string
+  'pipeline.webhookEvents.failedCreateWebhook': string
+  'pipeline.webhookEvents.lastEventDetails': string
+  'pipeline.webhookEvents.noEvents': string
+  'pipeline.webhookEvents.payloadDetails': string
+  'pipeline.webhookEvents.pusher': string
+  'pipeline.webhookEvents.selectEventPayload': string
+  'pipeline.webhookEvents.timestamp': string
+  'pipeline.webhookEvents.viewAll': string
+  'pipeline.webhooks.createSubtitle': string
+  'pipeline.webhooks.delete': string
+  'pipeline.webhooks.deleteConfirmation': string
+  'pipeline.webhooks.deleted': string
+  'pipeline.webhooks.editWebhook': string
+  'pipeline.webhooks.newWebhook': string
+  'pipeline.webhooks.noWebhook': string
+  'pipeline.webhooks.settingUpWebhook': string
+  'pipeline.webhooks.successMessage': string
+  'pipeline.webhooks.successSubtitle': string
+  'pipeline.webhooks.successUpdateMessage': string
   'freezeWindows.deploymentFreeze': string
   'freezeWindows.freezeNotifications.customMessageTitle': string
   'freezeWindows.freezeNotifications.customizedMessagePlaceholder': string
@@ -7256,29 +7279,6 @@ export interface StringsMap {
   'cd.valuesYamlValidation': string
   'cd.varFile': string
   'cd.varFileDetails': string
-  'cd.webhookEvents.backToEdit': string
-  'cd.webhookEvents.dateTime': string
-  'cd.webhookEvents.eventId': string
-  'cd.webhookEvents.events': string
-  'cd.webhookEvents.failedCreateWebhook': string
-  'cd.webhookEvents.lastEventDetails': string
-  'cd.webhookEvents.noEvents': string
-  'cd.webhookEvents.payloadDetails': string
-  'cd.webhookEvents.pusher': string
-  'cd.webhookEvents.selectEventPayload': string
-  'cd.webhookEvents.timestamp': string
-  'cd.webhookEvents.viewAll': string
-  'cd.webhooks.createSubtitle': string
-  'cd.webhooks.delete': string
-  'cd.webhooks.deleteConfirmation': string
-  'cd.webhooks.deleted': string
-  'cd.webhooks.editWebhook': string
-  'cd.webhooks.newWebhook': string
-  'cd.webhooks.noWebhook': string
-  'cd.webhooks.settingUpWebhook': string
-  'cd.webhooks.successMessage': string
-  'cd.webhooks.successSubtitle': string
-  'cd.webhooks.successUpdateMessage': string
   'cd.welcomeMessage': string
   'cd.welcomeToHarnessCD': string
   'cd.whatIsHarnessAdapter': string

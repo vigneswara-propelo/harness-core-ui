@@ -157,8 +157,8 @@ export function WebhookMenu({
   const { getString } = useStrings()
 
   const { openDialog } = useConfirmationDialog({
-    titleText: getString('cd.webhooks.delete'),
-    contentText: getString('cd.webhooks.deleteConfirmation'),
+    titleText: getString('pipeline.webhooks.delete'),
+    contentText: getString('pipeline.webhooks.deleteConfirmation'),
     confirmButtonText: getString('delete'),
     cancelButtonText: getString('cancel'),
     intent: Intent.DANGER,

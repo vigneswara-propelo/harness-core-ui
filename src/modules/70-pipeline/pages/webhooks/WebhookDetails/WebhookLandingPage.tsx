@@ -194,7 +194,7 @@ export default function WebhookLandingPage(): JSX.Element {
   React.useEffect(() => {
     if (webhookUpdateData) {
       showSuccess(
-        getString('cd.webhooks.successUpdateMessage', {
+        getString('pipeline.webhooks.successUpdateMessage', {
           name: webhookUpdateData.content.webhook_identifier
         })
       )
@@ -292,19 +292,19 @@ export default function WebhookLandingPage(): JSX.Element {
                 color={Color.GREY_800}
                 padding={{ left: 'large', bottom: 'large' }}
               >
-                {getString('cd.webhookEvents.lastEventDetails')}
+                {getString('pipeline.webhookEvents.lastEventDetails')}
                 <HarnessDocTooltip tooltipId="lastEventDetails" useStandAlone={true} />
               </Text>
             </Layout.Horizontal>
             {hasData && (
               <Layout.Vertical padding={{ left: 'large', right: 'large' }}>
-                <Text padding={{ bottom: 'small' }}>{getString('cd.webhookEvents.dateTime')}</Text>
+                <Text padding={{ bottom: 'small' }}>{getString('pipeline.webhookEvents.dateTime')}</Text>
                 <Layout.Horizontal padding={{ bottom: 'large' }}>
                   <Text color={Color.BLACK}>{time}</Text>
                   <Text color={Color.BLACK}>{date}</Text>
                 </Layout.Horizontal>
                 <Text padding={{ bottom: 'small' }} color={Color.BLACK}>
-                  {getString('cd.webhookEvents.eventId')}
+                  {getString('pipeline.webhookEvents.eventId')}
                 </Text>
                 <Text
                   padding={{ bottom: 'xxlarge' }}
@@ -314,7 +314,7 @@ export default function WebhookLandingPage(): JSX.Element {
                   {webhookEvent?.content[0]?.event_identifier}
                 </Text>
                 <Button minimal onClick={handleViewAllEventsClick} className={css.viewAllBtn}>
-                  {getString('cd.webhookEvents.viewAll')}
+                  {getString('pipeline.webhookEvents.viewAll')}
                 </Button>
               </Layout.Vertical>
             )}
@@ -323,7 +323,7 @@ export default function WebhookLandingPage(): JSX.Element {
                 <Layout.Vertical flex={{ alignItems: 'center' }}>
                   <img src={EmptyContentImg} width={300} height={150} />
                   <Heading level={2} padding={{ top: 'xxlarge' }} margin={{ bottom: 'large' }}>
-                    {getString('cd.webhookEvents.noEvents')}
+                    {getString('pipeline.webhookEvents.noEvents')}
                   </Heading>
                 </Layout.Vertical>
               </Container>

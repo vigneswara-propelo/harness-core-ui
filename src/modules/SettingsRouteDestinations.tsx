@@ -90,11 +90,9 @@ import RoleDetails from '@rbac/pages/RoleDetails/RoleDetails'
 import ResourceGroupDetails from '@rbac/pages/ResourceGroupDetails/ResourceGroupDetails'
 import VariablesPage from '@platform/variables/pages/variables/VariablesPage'
 import { GitOpsPage } from '@gitops/RouteDestinations'
-import { Webhooks } from '@cd/pages/webhooks/Webhooks'
 import EnvironmentGroupsPage from '@cd/components/EnvironmentGroups/EnvironmentGroups'
 import EnvironmentGroupDetails from '@cd/components/EnvironmentGroups/EnvironmentGroupDetails/EnvironmentGroupDetails'
 import CreateSecretFromYamlPage from '@platform/secrets/pages/createSecretFromYaml/CreateSecretFromYamlPage'
-import WebhookEvents from '@cd/pages/webhooks/WebhookEvents/WebhookEvents'
 import CreateConnectorFromYamlPage from '@platform/connectors/pages/createConnectorFromYaml/CreateConnectorFromYamlPage'
 import SLODowntimePage from '@cv/pages/slos/SLODowntimePage/SLODowntimePage'
 import CVCreateDowntime from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime'
@@ -115,6 +113,8 @@ import {
 } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.constants'
 import { MonitoredServiceProvider } from '@cv/pages/monitored-service/MonitoredServiceContext'
 import CommonMonitoredServiceDetails from '@cv/components/MonitoredServiceListWidget/components/CommonMonitoredServiceDetails/CommonMonitoredServiceDetails'
+import { Webhooks } from '@pipeline/pages/webhooks/Webhooks'
+import WebhookEvents from '@pipeline/pages/webhooks/WebhookEvents/WebhookEvents'
 
 const licenseRedirectDataCD: LicenseRedirectProps = {
   licenseStateName: LICENSE_STATE_NAMES.CD_LICENSE_STATE,

@@ -91,12 +91,12 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
       <Layout.Vertical flex={{ alignItems: 'center' }} padding={'large'}>
         <Icon name="success-tick" size={34} padding={'small'} />
         <Text font={{ variation: FontVariation.H3 }} padding={'medium'}>
-          {getString(isEdit ? 'cd.webhooks.successUpdateMessage' : 'cd.webhooks.successMessage', {
+          {getString(isEdit ? 'pipeline.webhooks.successUpdateMessage' : 'pipeline.webhooks.successMessage', {
             name: get(formikRef.current?.values, 'name', '')
           })}
         </Text>
         <Text font={{ variation: FontVariation.BODY }} padding={'small'}>
-          {getString('cd.webhooks.successSubtitle')}
+          {getString('pipeline.webhooks.successSubtitle')}
         </Text>
       </Layout.Vertical>
     )
@@ -140,16 +140,16 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
         return (
           <Form>
             {loading || loadingUpdateWebhook ? (
-              <ContainerSpinner message={getString('cd.webhooks.settingUpWebhook')} padding={'large'} />
+              <ContainerSpinner message={getString('pipeline.webhooks.settingUpWebhook')} padding={'large'} />
             ) : errorMessages.length > 0 ? (
               <Layout.Vertical flex={{ alignItems: 'center' }}>
                 <Icon name="warning-sign" size={34} padding={'small'} color={Color.RED_500} />
                 <Text font={{ variation: FontVariation.H3 }} padding={'medium'}>
-                  {getString('cd.webhookEvents.failedCreateWebhook')}
+                  {getString('pipeline.webhookEvents.failedCreateWebhook')}
                 </Text>
                 <ErrorHandler responseMessages={errorMessages} className={css.errorHandler} />
                 <Button
-                  text={getString('cd.webhookEvents.backToEdit')}
+                  text={getString('pipeline.webhookEvents.backToEdit')}
                   onClick={() => setErrorMessages([])}
                   variation={ButtonVariation.PRIMARY}
                 />
@@ -158,10 +158,10 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
               <Layout.Vertical>
                 <Container className={css.modalHeader}>
                   <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'small' }}>
-                    {isEdit ? getString('cd.webhooks.editWebhook') : getString('cd.webhooks.newWebhook')}
+                    {isEdit ? getString('pipeline.webhooks.editWebhook') : getString('pipeline.webhooks.newWebhook')}
                   </Text>
                   <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_500}>
-                    {getString('cd.webhooks.createSubtitle')}
+                    {getString('pipeline.webhooks.createSubtitle')}
                   </Text>
                 </Container>
                 <Layout.Vertical className={css.addWebhookModalForm}>

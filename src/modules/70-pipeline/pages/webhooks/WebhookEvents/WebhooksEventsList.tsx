@@ -48,19 +48,19 @@ export default function WebhooksEventsList({
   const envColumns: CustomColumn<GitXWebhookEventResponse>[] = useMemo(
     () => [
       {
-        Header: getString('cd.webhookEvents.dateTime').toUpperCase(),
+        Header: getString('pipeline.webhookEvents.dateTime').toUpperCase(),
         id: 'datetime',
         width: '20%',
         Cell: withWebhookEvents(ColumnTimeStamp)
       },
       {
-        Header: getString('cd.webhookEvents.pusher').toUpperCase(),
+        Header: getString('pipeline.webhookEvents.pusher').toUpperCase(),
         id: 'pusher',
         width: '20%',
         Cell: withWebhookEvents(ColumnUser)
       },
       {
-        Header: getString('cd.webhookEvents.eventId').toUpperCase(),
+        Header: getString('pipeline.webhookEvents.eventId').toUpperCase(),
         id: 'eventId',
         width: '20%',
         Cell: withWebhookEvents(EventId)

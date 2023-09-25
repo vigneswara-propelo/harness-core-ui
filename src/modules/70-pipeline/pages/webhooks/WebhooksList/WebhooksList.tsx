@@ -102,7 +102,7 @@ export default function WebhooksList({
       await deleteGitxWebhook({
         'gitx-webhook': identifier
       })
-      showSuccess(getString('cd.webhooks.deleted', { name: name }))
+      showSuccess(getString('pipeline.webhooks.deleted', { name: name }))
       refetch()
     } catch (e: any) {
       showError(getRBACErrorMessage(e))

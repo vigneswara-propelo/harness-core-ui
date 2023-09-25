@@ -70,6 +70,9 @@ import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestina
 import { AccountSideNavProps, MainDashboardSideNavProps } from '@common/RouteDestinations'
 import { ProjectDetailsSideNavProps } from '@projects-orgs/RouteDestinations'
 import { PipelineDeploymentList } from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
+import { Webhooks } from '@pipeline/pages/webhooks/Webhooks'
+import WebhookEvents from '@pipeline/pages/webhooks/WebhookEvents/WebhookEvents'
+import WebhookLandingPage from '@pipeline/pages/webhooks/WebhookDetails/WebhookLandingPage'
 import { Environments } from './components/Environments/Environments'
 import { Environments as EnvironmentsV2 } from './components/EnvironmentsV2/Environments'
 import EnvironmentDetails from './components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetails'
@@ -91,9 +94,6 @@ import { getBannerText } from './utils/renderMessageUtils'
 import ServiceStudio from './components/Services/ServiceStudio/ServiceStudio'
 import CDOnboardingWizard from './pages/get-started-with-cd/CDOnboardingWizard'
 import GetStartedWithCDV2 from './pages/get-started-with-cd/GetStartedWithCDv2'
-import WebhookEvents from './pages/webhooks/WebhookEvents/WebhookEvents'
-import { Webhooks } from './pages/webhooks/Webhooks'
-import WebhookLandingPage from './pages/webhooks/WebhookDetails/WebhookLandingPage'
 
 const CDOnboardingWizardWithCLI = React.lazy(
   () => import('./pages/get-started-with-cd/CDOnboardingWizardWithCLI/CDOnboardingWizard')
