@@ -82,6 +82,9 @@ module.exports = {
     target: targetLocalHost ? 'http://localhost:9090' : `${baseUrl}/lw/co/api`,
     pathRewrite: { '^/lw/co/api': '' }
   },
+  '/cdc': {
+    target: targetLocalHost ? 'https://localhost:8190' : baseUrl
+  },
   '/dashboard': {
     target: process.env.CUSTOM_DASHBOARDS_API_URL || baseUrl
   },

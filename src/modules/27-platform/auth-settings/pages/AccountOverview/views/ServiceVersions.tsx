@@ -65,6 +65,11 @@ const versionAPIs = [
     id: 'cv'
   },
   {
+    label: 'Change Data Capture',
+    url: 'cdc/version',
+    id: 'change_data_capture'
+  },
+  {
     label: 'Custom Dashboards',
     url: 'dashboard/version',
     id: 'ng_custom_dashboards'
