@@ -552,13 +552,8 @@ describe('Create SLO', () => {
     cy.wait('@updatedListSLOsCallResponse')
     cy.wait('@sloRiskCountCall')
 
-    cy.get('[value="Period Type: All"]').click()
-
-    cy.findByText(/Rolling/i)
-      .scrollIntoView()
-      .click({ force: true })
-
-    cy.get('[value="Period Type: Rolling"]').should('exist')
+    cy.findByTestId('sloTargetAndBudget-filter').click()
+    cy.contains('p', 'Rolling').click({ force: true })
 
     cy.wait('@listSLOsCallWithRolling')
 
@@ -567,8 +562,5 @@ describe('Create SLO', () => {
     // Makes correct API call
     cy.wait('@accountsTabSloCall')
     cy.wait('@accountsRiskCall')
-
-    // Resets the filter
-    cy.get('[value="Period Type: All"]').should('exist')
   })
 })

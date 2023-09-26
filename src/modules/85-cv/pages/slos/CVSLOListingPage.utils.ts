@@ -269,20 +269,6 @@ export const getMonitoredServicesOptionsForFilter = (
   return [getAllOption(getString), ...getMonitoredServicesOptions(monitoredServiceData)]
 }
 
-export const getSliTypeOptionsForFilter = (getString: UseStringsReturn['getString']): SelectOption[] => {
-  return [
-    getAllOption(getString),
-    {
-      label: 'Availability',
-      value: 'Availability'
-    },
-    {
-      label: 'Latency',
-      value: 'Latency'
-    }
-  ]
-}
-
 export const getEvaluationTypeOptionsForFilter = (getString: UseStringsReturn['getString']): SelectOption[] => {
   return [
     getAllOption(getString),

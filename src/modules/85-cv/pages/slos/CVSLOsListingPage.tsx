@@ -18,8 +18,7 @@ import {
   TableV2,
   Text,
   IconName,
-  Tag,
-  ExpandingSearchInput
+  Tag
 } from '@harness/uicore'
 import { Intent, Color, FontVariation } from '@harness/design-system'
 import { defaultTo, isEqual } from 'lodash-es'
@@ -697,7 +696,6 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
             {monitoredServiceIdentifier && getAddSLOButton()}
             {hasSloFilterApplied && (
               <Container
-                flex
                 className={getClassNameForMonitoredServicePage(css.sloDropdownFilters, monitoredServiceIdentifier)}
               >
                 <SLODashbordFilters
@@ -706,17 +704,6 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
                   filterItemsData={filterItemsData}
                   hideMonitoresServicesFilter={Boolean(monitoredService)}
                   isAccountLevel={isAccountLevel}
-                />
-                <ExpandingSearchInput
-                  width={250}
-                  throttle={500}
-                  defaultValue={filterState.search}
-                  key={filterState.search}
-                  onChange={updatedText =>
-                    dispatch(SLODashboardFilterActions.updatedSearchAction({ search: updatedText }))
-                  }
-                  autoFocus={false}
-                  placeholder={getString('cv.slos.searchSLO')}
                 />
               </Container>
             )}

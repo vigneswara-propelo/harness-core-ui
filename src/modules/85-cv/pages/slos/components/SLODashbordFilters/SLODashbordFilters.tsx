@@ -6,8 +6,7 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { Button, ButtonVariation, Layout, Select } from '@harness/uicore'
-import { defaultTo } from 'lodash-es'
+import { Button, ButtonVariation, Container, ExpandingSearchInput, Label, Layout, Select } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
@@ -49,74 +48,54 @@ const SLODashbordFilters: React.FC<SLODashbordFiltersProps> = ({
     [filterState]
   )
 
-  const { updateUserJourney, updateMonitoredServices, updateTargetType, updateEvaluationType } =
+  const { updateUserJourney, updateMonitoredServices, updateTargetType, updateEvaluationType, updatedSearchAction } =
     SLODashboardFilterActions
 
   return (
-    <Layout.Horizontal className={css.sloFilters}>
-      <Layout.Vertical width="240px" margin={{ right: 'small' }} data-testid="userJourney-filter">
+    <Layout.Horizontal className={css.sloFilters} spacing={'medium'} flex={{ alignItems: 'flex-end' }}>
+      <Container width={160} data-testid="userJourney-filter">
+        <Label>{getString('cv.slos.userJourney')}</Label>
         <Select
-          value={{
-            label: `${getString('cv.slos.userJourney')}: ${defaultTo(
-              filterState?.userJourney?.label,
-              getString('all')
-            )}`,
-            value: defaultTo(filterState?.userJourney?.value, getString('all'))
-          }}
+          value={filterState?.userJourney}
           items={getUserJourneyOptionsForFilter(filterItemsData?.userJourney?.data?.content, getString)}
           onChange={item => {
             dispatch(updateUserJourney({ userJourney: item }))
           }}
         />
-      </Layout.Vertical>
+      </Container>
       {!hideMonitoresServicesFilter && !isAccountLevel && (
-        <Layout.Vertical width="240px" margin={{ right: 'small' }} data-testid="monitoredServices-filter">
+        <Container width={160} data-testid="monitoredServices-filter">
+          <Label>{getString('cv.monitoredServices.title')}</Label>
           <Select
-            value={{
-              label: `${getString('cv.monitoredServices.title')}: ${defaultTo(
-                filterState?.monitoredService?.label,
-                getString('all')
-              )}`,
-              value: defaultTo(filterState?.monitoredService?.value, getString('all'))
-            }}
+            value={filterState?.monitoredService}
             items={getMonitoredServicesOptionsForFilter(filterItemsData?.monitoredServices, getString)}
             onChange={item => {
               dispatch(updateMonitoredServices({ monitoredService: item }))
             }}
           />
-        </Layout.Vertical>
+        </Container>
       )}
-      <Layout.Vertical width="240px" margin={{ right: 'small' }} data-testid="sloTargetAndBudget-filter">
+      <Container width={160} data-testid="sloTargetAndBudget-filter">
+        <Label>{getString('cv.slos.sloTargetAndBudget.periodType')}</Label>
         <Select
-          value={{
-            label: `${getString('cv.slos.sloTargetAndBudget.periodType')}: ${defaultTo(
-              filterState?.targetTypes?.label,
-              getString('all')
-            )}`,
-            value: defaultTo(filterState?.targetTypes?.value, getString('all'))
-          }}
+          value={filterState?.targetTypes}
           items={getPeriodTypeOptionsForFilter(getString)}
           onChange={item => {
             dispatch(updateTargetType({ targetTypes: item }))
           }}
         />
-      </Layout.Vertical>
+      </Container>
       {!isAccountLevel && enableRequestSLO && (
-        <Layout.Vertical width="240px" margin={{ right: 'small' }} data-testid="evaluationType-filter">
+        <Container width={160} data-testid="evaluationType-filter">
+          <Label>{getString('common.policy.evaluations')}</Label>
           <Select
-            value={{
-              label: `${getString('common.policy.evaluations')}: ${defaultTo(
-                filterState?.evaluationType?.label,
-                getString('all')
-              )}`,
-              value: defaultTo(filterState?.evaluationType?.value, getString('all'))
-            }}
+            value={filterState?.evaluationType}
             items={getEvaluationTypeOptionsForFilter(getString)}
             onChange={item => {
               dispatch(updateEvaluationType({ evaluationType: item }))
             }}
           />
-        </Layout.Vertical>
+        </Container>
       )}
       {!hideMonitoresServicesFilter && !hideResetFilterButton && (
         <Button
@@ -128,6 +107,16 @@ const SLODashbordFilters: React.FC<SLODashbordFiltersProps> = ({
           {getString('common.filters.clearFilters')}
         </Button>
       )}
+      <ExpandingSearchInput
+        data-testid="expandingSearch-filter"
+        width={200}
+        throttle={500}
+        defaultValue={filterState.search}
+        key={filterState.search}
+        onChange={updatedText => dispatch(updatedSearchAction({ search: updatedText }))}
+        autoFocus={false}
+        placeholder={getString('cv.slos.searchSLO')}
+      />
       {hideMonitoresServicesFilter && !hideMonitoredServiceResetButton && (
         <Button
           className={css.clearButton}

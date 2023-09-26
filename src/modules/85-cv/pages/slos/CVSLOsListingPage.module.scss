@@ -41,6 +41,7 @@ $headerHeight: 146px;
 
   .sloFiltersRow1 {
     margin-bottom: var(--spacing-medium) !important;
+    align-items: flex-end;
     .createSLOInMonitoredService {
       margin-right: var(--spacing-medium) !important;
     }
