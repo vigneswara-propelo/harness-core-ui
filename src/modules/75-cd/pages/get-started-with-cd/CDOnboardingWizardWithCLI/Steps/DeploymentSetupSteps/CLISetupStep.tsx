@@ -19,15 +19,20 @@ import css from '../../CDOnboardingWizardWithCLI.module.scss'
 
 export default function CLISetupStep({
   onKeyGenerate,
-  state
-}: ApiKeySetupProps & { state: PipelineSetupState }): JSX.Element {
+  state,
+  isGitopsFlow
+}: ApiKeySetupProps & { state: PipelineSetupState; isGitopsFlow?: boolean }): JSX.Element {
   return (
     <Layout.Vertical className={css.deploymentSteps}>
       <Layout.Vertical margin={{ bottom: 'xlarge' }}>
         <Text className={css.bold} color={Color.BLACK} padding={{ top: 'large' }}>
           <String
             className={css.marginBottomLarge}
-            stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.stepsTitle"
+            stringID={
+              isGitopsFlow
+                ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.stepsTitleGitops'
+                : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.stepsTitle'
+            }
           />
         </Text>
         <Text color={Color.BLACK} padding={{ top: 'large', bottom: 'large' }}>

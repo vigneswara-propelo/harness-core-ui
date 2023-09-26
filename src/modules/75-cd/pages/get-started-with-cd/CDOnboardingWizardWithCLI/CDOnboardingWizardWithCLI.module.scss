@@ -139,3 +139,13 @@
     }
   }
 }
+
+.verificationItem {
+  margin-top: var(--spacing-small) !important;
+}
+
+.dropdownBG {
+  :global(.DropDown--dropdownButton) {
+    background-color: var(--white) !important;
+  }
+}

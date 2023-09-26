@@ -1,6 +1,7 @@
 import type { IconName } from '@harness/icons'
 import type { DelegateCommonProblemTypes } from '@delegates/constants'
 import type { StringsMap } from 'stringTypes'
+import { Servicev1HealthStatus, V1Agent } from 'services/gitops'
 export interface EntityType {
   id: string
   label: string
@@ -40,6 +41,9 @@ export interface WhereAndHowToDeployType {
   isDelegateVerified?: boolean
   installDelegateTried?: boolean
   delegateStatus: DelegateStatus
+  agentInfo?: V1Agent
+  installAgentTried?: boolean
+  agentStatus?: Servicev1HealthStatus
 }
 
 export interface PipelineSetupState {
@@ -48,6 +52,7 @@ export interface PipelineSetupState {
   githubPat?: string
   strategyId?: string
   pipelineVerified?: boolean
+  gitopsEntitiesVerified?: boolean
   infraInfo?: {
     svcKeyOrSecretKey?: string
     region?: string

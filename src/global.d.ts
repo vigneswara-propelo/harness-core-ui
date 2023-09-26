@@ -115,7 +115,16 @@ declare module 'gitopsui/MicroFrontendApp' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
-
+declare module 'gitopsui/CreateGitOpsAgent' {
+  import type { ChildAppComponent } from './microfrontends'
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+declare module 'gitopsui/VerifyGitopsAgent' {
+  import type { ChildAppComponent } from './microfrontends'
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
 declare module 'chaos/MicroFrontendApp' {
   import type { ChildAppComponent } from './microfrontends'
   const ChildApp: ChildAppComponent

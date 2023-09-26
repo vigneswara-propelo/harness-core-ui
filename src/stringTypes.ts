@@ -6398,6 +6398,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.connectTo': string
   'cd.getStartedWithCD.connectionStatus': string
   'cd.getStartedWithCD.createCluster': string
+  'cd.getStartedWithCD.createGitopsAgent': string
   'cd.getStartedWithCD.createHostedCluster': string
   'cd.getStartedWithCD.createdSuccessfully': string
   'cd.getStartedWithCD.creatingApp': string
@@ -6460,11 +6461,25 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.inputGCPInfo': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.placholders.accessKeyPlaceholderAws': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.placholders.bucketName': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.placholders.hostipplaceholder': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.placholders.linkPlaceholderAws': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.placholders.pathPlaceholdergcp': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.placholders.projectName': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.placholders.sshPortPlaceholder': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.placholders.svckeyPlaceholderAws': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.uploadSVCKey': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.appFailed': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.appLoading': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.appSuccess': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.clusterFailed': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.clusterLoading': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.clusterSuccess': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.initAgentSuccess': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.repoFailed': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.repoLoading': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.repoSuccess': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.verifyEntities': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.viewGitopsApp': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureTraditionalStep.sshPrivateKey': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureTraditionalStep.sshPrivateKeyFile': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureTraditionalStep.sshPrivateKeyFilePlaceholder': string
@@ -6496,6 +6511,9 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGCPSecret': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGCPcon': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGitIcon': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGitopsApp': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGitopsCluster': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGitopsRepo': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createInfra': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createK8scon': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createPDCCon': string
@@ -6512,6 +6530,9 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.deploymentStrategies.blueGreen.subtitle': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.deploymentStrategies.canary.subtitle': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.deploymentStrategies.rolling.subtitle': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitops.createApplication': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitops.createCluster': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitops.createRepo': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitpatPlaceholder': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitusernamePlaceholder': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.k8s.createGithubcon': string
@@ -6577,11 +6598,14 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.stepsIntro': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.stepsIntro2': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.stepsTitle': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.stepsTitleGitops': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.title': string
+  'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.agentInfo': string
   'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.description': string
   'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.heading': string
   'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.subtitle': string
   'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.title': string
+  'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.verificationSuccess': string
   'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.delegateDescription': string
   'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.delegateDescription2': string
   'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.delegateFailed': string
@@ -6743,6 +6767,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.traditionalApp': string
   'cd.getStartedWithCD.tryAnotherCreds': string
   'cd.getStartedWithCD.tryCICTA': string
+  'cd.getStartedWithCD.updateGitopsAgent': string
   'cd.getStartedWithCD.useOwnManifest': string
   'cd.getStartedWithCD.useSample': string
   'cd.getStartedWithCD.usernameAndPassword': string

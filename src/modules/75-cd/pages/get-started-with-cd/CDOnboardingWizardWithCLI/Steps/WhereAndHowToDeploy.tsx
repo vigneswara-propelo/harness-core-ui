@@ -12,6 +12,7 @@ import { Layout, Text, CardSelect, Icon, IconName } from '@harness/uicore'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { StringsMap } from 'stringTypes'
 import { useStrings } from 'framework/strings'
+import { Servicev1HealthStatus, V1Agent } from 'services/gitops'
 import {
   CDOnboardingSteps,
   DelegateStatus,
@@ -58,7 +59,7 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
   const { getString } = useStrings()
 
   React.useEffect(() => {
-    trackEvent(WIZARD_STEP_OPEN.HOW_N_WHERE_STEP_OPENED, getBranchingProps(stepsProgress))
+    trackEvent(WIZARD_STEP_OPEN.HOW_N_WHERE_STEP_OPENED, getBranchingProps(stepsProgress, getString))
   }, [])
 
   React.useEffect(() => {
@@ -67,7 +68,7 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
 
   const openDelagateDialog = (): void => {
     !state.installDelegateTried && setState(prevState => ({ ...prevState, installDelegateTried: true }))
-    trackEvent(WIZARD_STEP_OPEN.CREATE_DELEGATE_FLYOUT_OPENED, getBranchingProps(stepsProgress))
+    trackEvent(WIZARD_STEP_OPEN.CREATE_DELEGATE_FLYOUT_OPENED, getBranchingProps(stepsProgress, getString))
     setDrawerOpen(true)
   }
   const closeDelegateDialog = (data: DelgateDetails): void => {
@@ -90,7 +91,7 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
   const onDelegateFail = (): void => {
     onChangeHandler('FAILED')
     trackEvent(ONBOARDING_INTERACTIONS.DELEGATE_VERIFICATION_FAIL, {
-      ...getBranchingProps(stepsProgress),
+      ...getBranchingProps(stepsProgress, getString),
       delegateName: state?.delegateName,
       delegateType: state?.delegateType
     })
@@ -99,33 +100,57 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
   const onDelegateSuccess = (): void => {
     onChangeHandler('SUCCESS')
     trackEvent(ONBOARDING_INTERACTIONS.DELEGATE_VERIFICATION_SUCCESS, {
-      ...getBranchingProps(stepsProgress),
+      ...getBranchingProps(stepsProgress, getString),
       delegateName: state?.delegateName,
       delegateType: state?.delegateType
     })
   }
 
   const onVerificationStart = (): void => {
+    onChangeHandler('TRYING')
     trackEvent(ONBOARDING_INTERACTIONS.DELEGATE_VERIFICATION_START, {
-      ...getBranchingProps(stepsProgress),
+      ...getBranchingProps(stepsProgress, getString),
       delegateName: state?.delegateName,
       delegateType: state?.delegateType
     })
   }
   const setType = (selectedType: DeploymentFlowType): void => {
-    setState(prevState => ({ ...prevState, type: selectedType }))
+    const clearGitops =
+      selectedType?.id === DEPLOYMENT_FLOW_ENUMS.CDPipeline && state.type?.id !== DEPLOYMENT_FLOW_ENUMS.CDPipeline
+    if (clearGitops) {
+      setState(prevState => ({ ...prevState, type: selectedType, agentInfo: undefined }))
+    } else {
+      setState(prevState => ({ ...prevState, type: selectedType }))
+    }
+  }
+  const onAgentVerificationSuccess = (status?: Servicev1HealthStatus): void => {
+    setState((prevState: WhereAndHowToDeployType) => ({ ...prevState, agentStatus: status }))
+  }
+  const updateAgentInfo = (agentDetails: V1Agent): void => {
+    setState((prevState: WhereAndHowToDeployType) => ({
+      ...prevState,
+      agentInfo: agentDetails,
+      installAgentTried: agentDetails ? true : false
+    }))
   }
   const deploymentTypes = React.useMemo((): DeploymentFlowType[] => {
-    return Object.values(DEPLOYMENT_FLOW_TYPES).filter((deploymentType: DeploymentFlowType) => {
+    const deploymentTypeMap = new Map<DEPLOYMENT_FLOW_ENUMS, DeploymentFlowType>([
+      [DEPLOYMENT_FLOW_ENUMS.Gitops, DEPLOYMENT_FLOW_TYPES[DEPLOYMENT_FLOW_ENUMS.Gitops]],
+      [DEPLOYMENT_FLOW_ENUMS.CDPipeline, DEPLOYMENT_FLOW_TYPES[DEPLOYMENT_FLOW_ENUMS.CDPipeline]]
+    ])
+    const finalDeploymentTypes: DeploymentFlowType[] = []
+    Array.from(deploymentTypeMap.entries()).forEach(([_key, deploymentType]) => {
       if (
         deploymentType.id === DEPLOYMENT_FLOW_ENUMS.Gitops &&
         deploymentTypeDetails.svcType?.id !== SERVICE_TYPES.KubernetesService?.id
       ) {
         return false
       }
-      return deploymentType
+      finalDeploymentTypes.push(deploymentType)
     })
+    return finalDeploymentTypes
   }, [])
+
   return (
     <Layout.Vertical>
       <Layout.Vertical>
@@ -187,6 +212,9 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
         )}
         {state.type?.id === DEPLOYMENT_FLOW_ENUMS.Gitops && (
           <GitopsFlow
+            updateAgentInfo={updateAgentInfo}
+            agentInfo={state.agentInfo}
+            onAgentVerificationSuccess={onAgentVerificationSuccess}
             artifactType={
               deploymentTypeDetails.artifactSubType
                 ? deploymentTypeDetails.artifactSubType?.id

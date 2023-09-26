@@ -1,5 +1,13 @@
 import { StringKeys, UseStringsReturn } from 'framework/strings'
-import { DEPLOYMENT_TYPE_TO_DIR_MAP, DEPLOYMENT_TYPE_TO_FILE_MAPS, INFRA_TYPES, SERVICE_TYPES } from './Constants'
+import { StringsMap } from 'stringTypes'
+import {
+  DEPLOYMENT_FLOW_ENUMS,
+  DEPLOYMENT_TYPE_TO_DIR_MAP,
+  DEPLOYMENT_TYPE_TO_FILE_MAPS,
+  GITOPS_DIRECTORY_PATH,
+  INFRA_TYPES,
+  SERVICE_TYPES
+} from './Constants'
 import { StepsProgress } from './Store/OnboardingStore'
 import { BRANCH_LEVEL } from './TrackingConstants'
 import {
@@ -8,7 +16,8 @@ import {
   DeploymentStrategyTypes,
   PipelineSetupState,
   SERVERLESS_FUNCTIONS,
-  WhatToDeployType
+  WhatToDeployType,
+  WhereAndHowToDeployType
 } from './types'
 interface GetCommandsParam {
   getString: UseStringsReturn['getString']
@@ -19,19 +28,22 @@ interface GetCommandsParam {
   delegateName?: string
   artifactSubtype?: string
   artifactType?: string
+  isGitops?: boolean
+  agentId?: string
 }
 export const getCommandStrWithNewline = (cmd: string[]): string => cmd.join(' \n')
 
 export const getCommandsByDeploymentType = ({
   getString,
   dirPath,
-
   accountId,
   state,
   delegateName,
   artifactSubtype,
   serviceType,
-  artifactType
+  artifactType,
+  isGitops,
+  agentId
 }: GetCommandsParam): string => {
   switch (serviceType) {
     case SERVICE_TYPES?.KubernetesService?.id:
@@ -42,7 +54,10 @@ export const getCommandsByDeploymentType = ({
         accountId,
         delegateName,
         artifactSubtype,
-        serviceType
+        artifactType,
+        serviceType,
+        isGitops,
+        agentId
       })
     case SERVICE_TYPES.ServerlessFunction.id:
       return getServerLessCommands({
@@ -77,10 +92,12 @@ const getK8sCommands = ({
   accountId,
   state,
   delegateName,
-  artifactSubtype
+  artifactSubtype,
+  artifactType,
+  isGitops,
+  agentId
 }: GetCommandsParam): string => {
-  const { service, infrastructure, env } = DEPLOYMENT_TYPE_TO_FILE_MAPS[artifactSubtype as string] || {}
-  return getCommandStrWithNewline([
+  const loginCommands = [
     getString(
       'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.cloneRepo'
     ),
@@ -97,7 +114,39 @@ const getK8sCommands = ({
     getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.logincmd', {
       accId: accountId,
       apiKey: state?.apiKey
-    }),
+    })
+  ]
+  if (isGitops) {
+    const folderPath = GITOPS_DIRECTORY_PATH[artifactSubtype ? artifactSubtype : (artifactType as string)]
+
+    return getCommandStrWithNewline([
+      ...loginCommands,
+      getString(
+        'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGitopsRepo'
+      ),
+      getString(
+        'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitops.createRepo',
+        { agentId, dirPath: folderPath }
+      ),
+      getString(
+        'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGitopsCluster'
+      ),
+      getString(
+        'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitops.createCluster',
+        { agentId, dirPath: folderPath }
+      ),
+      getString(
+        'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGitopsApp'
+      ),
+      getString(
+        'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitops.createApplication',
+        { agentId, dirPath: folderPath }
+      )
+    ])
+  }
+  const { service, infrastructure, env } = DEPLOYMENT_TYPE_TO_FILE_MAPS[artifactSubtype as string] || {}
+  return getCommandStrWithNewline([
+    ...loginCommands,
     getString(
       'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createSecret'
     ),
@@ -544,17 +593,23 @@ export const getTraditionalAppsPipelineCommands = ({
     pipeline: pipelineFileName || strategy?.pipelineName
   })
 }
-export const getBranchingProps = (state: StepsProgress): { [key: string]: string | undefined } => {
+export const getBranchingProps = (
+  state: StepsProgress,
+  getString: UseStringsReturn['getString']
+): { [key: string]: string | undefined } => {
   const branchDetails: { [key: string]: string | undefined } = {
-    [BRANCH_LEVEL.BRANCH_LEVEL_1]: (state?.[CDOnboardingSteps.WHAT_TO_DEPLOY]?.stepData as WhatToDeployType)?.svcType
-      ?.label,
-    [BRANCH_LEVEL.BRANCH_LEVEL_2]: (state?.[CDOnboardingSteps.WHAT_TO_DEPLOY]?.stepData as WhatToDeployType)
-      ?.artifactType?.label
+    [BRANCH_LEVEL.BRANCH_LEVEL_1]: getString(
+      (state?.[CDOnboardingSteps.WHAT_TO_DEPLOY]?.stepData as WhatToDeployType)?.svcType?.label as keyof StringsMap
+    ),
+    [BRANCH_LEVEL.BRANCH_LEVEL_2]: getString(
+      (state?.[CDOnboardingSteps.WHAT_TO_DEPLOY]?.stepData as WhatToDeployType)?.artifactType?.label as keyof StringsMap
+    )
   }
   if ((state?.[CDOnboardingSteps.WHAT_TO_DEPLOY]?.stepData as WhatToDeployType)?.artifactSubType?.label) {
-    branchDetails[BRANCH_LEVEL.BRANCH_LEVEL_3] = (
-      state?.[CDOnboardingSteps.WHAT_TO_DEPLOY]?.stepData as WhatToDeployType
-    )?.artifactSubType?.label
+    branchDetails[BRANCH_LEVEL.BRANCH_LEVEL_3] = getString(
+      (state?.[CDOnboardingSteps.WHAT_TO_DEPLOY]?.stepData as WhatToDeployType)?.artifactSubType
+        ?.label as keyof StringsMap
+    )
   }
 
   return branchDetails
@@ -565,3 +620,7 @@ export const getDelegateTypeString = (data: WhatToDeployType, getString: UseStri
     ? getString('kubernetesText')
     : getString('delegate.cardData.docker.name')
 }
+
+export const isGitopsFlow = (stepsProgress: StepsProgress): boolean =>
+  (stepsProgress?.[CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY]?.stepData as WhereAndHowToDeployType)?.type?.id ===
+  DEPLOYMENT_FLOW_ENUMS.Gitops

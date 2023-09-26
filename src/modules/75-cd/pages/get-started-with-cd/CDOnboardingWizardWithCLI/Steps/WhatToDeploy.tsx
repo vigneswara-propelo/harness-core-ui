@@ -18,7 +18,9 @@ import {
   INFRA_TYPES,
   INFRA_SUB_TYPES,
   ARTIFACT_STRINGS_MAP_BY_TYPE,
-  SWIMLANE_DOCS_LINK
+  SWIMLANE_DOCS_LINK,
+  DEPLOYMENT_FLOW_ENUMS,
+  DEPLOYMENT_FLOW_TYPES
 } from '../Constants'
 import { useOnboardingStore } from '../Store/OnboardingStore'
 import { CDOnboardingSteps, EntityType, WhatToDeployType } from '../types'
@@ -52,6 +54,7 @@ function WhatToDeploy({ saveProgress }: WhatToDeployProps): JSX.Element {
       question: getString(ARTIFACT_STRINGS_MAP_BY_TYPE[state?.svcType?.id as string]?.svcrep),
       answer: selected.label
     })
+    resetDeploymentFlowType()
   }
 
   const setInfraSubType = (selected: EntityType): void => {
@@ -60,6 +63,12 @@ function WhatToDeploy({ saveProgress }: WhatToDeployProps): JSX.Element {
     trackEvent(ONBOARDING_INTERACTIONS.CD_ONBOARDING_BRANCH_SELECTED, {
       question: getString(ARTIFACT_STRINGS_MAP_BY_TYPE[state?.artifactType?.id as string]?.artifact),
       answer: selected.label
+    })
+    resetDeploymentFlowType()
+  }
+  const resetDeploymentFlowType = (): void => {
+    saveProgress(CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY, {
+      type: DEPLOYMENT_FLOW_TYPES[DEPLOYMENT_FLOW_ENUMS.CDPipeline]
     })
   }
   const svcTypes = React.useMemo((): EntityType[] => {

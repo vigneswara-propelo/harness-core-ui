@@ -99,7 +99,7 @@ export default function GetStartedWithCDV2(): React.ReactElement {
                       <iframe
                         width="200"
                         height="130"
-                        src="https://www.youtube.com/embed/vybcppS6MCw"
+                        src="https://www.youtube.com/embed/k-f1nbgGkww?si=3SYP0nx4B1IWPATp"
                         title="YouTube video player"
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

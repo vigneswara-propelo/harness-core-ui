@@ -10,10 +10,11 @@ import { Layout, Text } from '@harness/uicore'
 import { capitalize } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import { StringsMap } from 'stringTypes'
-import { useStrings } from 'framework/strings'
+import { UseStringsReturn, useStrings } from 'framework/strings'
 import { useOnboardingStore } from '../Store/OnboardingStore'
 import { CDOnboardingSteps, WhereAndHowToDeployType } from '../types'
 import { useDelegateHeartBeat } from '../Steps/useDelegateHeartbeat'
+import { isGitopsFlow } from '../utils'
 
 export default function WhereAndHowToDeployPreview({
   saveProgress
@@ -21,6 +22,7 @@ export default function WhereAndHowToDeployPreview({
   saveProgress: (stepId: string, data: any) => void
 }): JSX.Element {
   const { stepsProgress } = useOnboardingStore()
+  const { getString } = useStrings()
   const getStepData = (): WhereAndHowToDeployType => {
     return stepsProgress[CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY].stepData
   }
@@ -29,43 +31,66 @@ export default function WhereAndHowToDeployPreview({
     checkheartBeat: ['PENDING', 'TRYING'].includes(getStepData().delegateStatus),
     delegateName: getStepData().delegateName
   })
-
   return (
     <Layout.Vertical>
-      <DelegateStatusLabel data={getStepData()} saveProgress={saveProgress} delegateStatusData={delegateStatusData} />
+      {isGitopsFlow(stepsProgress) ? (
+        <GitopsSuccessLabel data={getStepData()} getString={getString} />
+      ) : (
+        <DelegateStatusLabel
+          getString={getString}
+          data={getStepData()}
+          saveProgress={saveProgress}
+          delegateStatusData={delegateStatusData}
+        />
+      )}
     </Layout.Vertical>
   )
 }
 
 const DelegateStatusLabel = ({
   data,
-  saveProgress
+  saveProgress,
+  getString
 }: {
   data: WhereAndHowToDeployType
   delegateStatusData: { error: boolean; loading: boolean; success: boolean }
   saveProgress: (stepId: string, data: any) => void
+  getString: UseStringsReturn['getString']
 }): JSX.Element => {
   return ['PENDING', 'TRYING'].includes(data?.delegateStatus) ? (
-    <DelegateLoadingLabel data={data} />
+    <DelegateLoadingLabel data={data} getString={getString} />
   ) : data.delegateStatus === 'SUCCESS' ? (
     <DelegateSuccessLabel data={data} saveProgress={saveProgress} />
   ) : (
     <DelegateFailedLabel data={data} saveProgress={saveProgress} />
   )
 }
-
-const DelegateLoadingLabel = ({ data }: { data: WhereAndHowToDeployType }): JSX.Element => {
-  const { getString } = useStrings()
+const DeploymentTypeLabel = ({
+  data,
+  getString
+}: {
+  data: WhereAndHowToDeployType
+  getString: UseStringsReturn['getString']
+}): JSX.Element => (
+  <Layout.Horizontal margin={{ bottom: 'small' }}>
+    <Text icon="main-tick" iconProps={{ color: Color.SUCCESS }} color={Color.BLACK}>
+      {getString('deploymentTypeText')}:
+    </Text>
+    <Text padding={{ left: 'small' }} color={Color.BLACK}>
+      {getString(data.type?.label as keyof StringsMap)}
+    </Text>
+  </Layout.Horizontal>
+)
+const DelegateLoadingLabel = ({
+  data,
+  getString
+}: {
+  data: WhereAndHowToDeployType
+  getString: UseStringsReturn['getString']
+}): JSX.Element => {
   return (
     <Layout.Vertical spacing="small">
-      <Layout.Horizontal margin={{ bottom: 'small' }}>
-        <Text icon="main-tick" iconProps={{ color: Color.SUCCESS }} color={Color.BLACK}>
-          {getString('deploymentTypeText')}:
-        </Text>
-        <Text padding={{ left: 'small' }} color={Color.BLACK}>
-          {getString(data.type?.label as keyof StringsMap)}
-        </Text>
-      </Layout.Horizontal>
+      <DeploymentTypeLabel data={data} getString={getString} />
       <Layout.Horizontal margin={{ bottom: 'small' }}>
         <Text icon="loading" iconProps={{ color: Color.SUCCESS }} color={Color.BLACK}>
           {getString('cd.getStartedWithCD.flowByQuestions.reviewAndRunStep.delegateLoading')}
@@ -75,6 +100,24 @@ const DelegateLoadingLabel = ({ data }: { data: WhereAndHowToDeployType }): JSX.
   )
 }
 
+const GitopsSuccessLabel = ({
+  getString,
+  data
+}: {
+  data: WhereAndHowToDeployType
+  getString: UseStringsReturn['getString']
+}): JSX.Element => {
+  return (
+    <Layout.Vertical spacing="small">
+      <DeploymentTypeLabel data={data} getString={getString} />
+      <Layout.Horizontal>
+        <Text icon="main-tick" iconProps={{ color: Color.SUCCESS }} color={Color.BLACK}>
+          {getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.initAgentSuccess')}
+        </Text>
+      </Layout.Horizontal>
+    </Layout.Vertical>
+  )
+}
 const DelegateSuccessLabel = ({
   data,
   saveProgress

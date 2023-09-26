@@ -255,6 +255,8 @@ const config = {
 if (!enableGitOpsUI) {
   // render a mock app when Gitops MF is disabled
   config.resolve.alias['gitopsui/MicroFrontendApp'] = ChildAppError
+  config.resolve.alias['gitopsui/VerifyGitopsAgent'] = ChildAppError
+  config.resolve.alias['gitopsui/CreateGitOpsAgent'] = ChildAppError
 }
 
 if (!enableCCMUI) {

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Label, Layout, Text, TextInput } from '@harness/uicore'
+import { Button, ButtonSize, ButtonVariation, Label, Layout, Text, TextInput } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import { useOnboardingStore } from '../../../Store/OnboardingStore'
 import { PipelineSetupState, CDOnboardingSteps, WhatToDeployType } from '../../../types'
 import AWSInputs from './AWSInputs'
+import css from '../../../CDOnboardingWizardWithCLI.module.scss'
 
 export default function ConfigureSSH({ onUpdate }: { onUpdate: (data: PipelineSetupState) => void }): JSX.Element {
   const { stepsProgress } = useOnboardingStore()
@@ -38,9 +39,23 @@ export default function ConfigureSSH({ onUpdate }: { onUpdate: (data: PipelineSe
         />
       </Text>
       <Layout.Vertical width={400} margin={{ left: 'xlarge' }}>
-        <Label>
-          {getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureTraditionalStep.sshUsername')}
-        </Label>
+        <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
+          <Label>
+            {getString(
+              'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureTraditionalStep.sshUsername'
+            )}
+          </Label>
+          <Button
+            target="_blank"
+            className={css.alignTitle}
+            variation={ButtonVariation.LINK}
+            size={ButtonSize.SMALL}
+            href="https://developer.harness.io/docs/platform/secrets/add-use-ssh-secrets/#add_ssh_credential"
+          >
+            {getString('common.learnMore')}
+          </Button>
+        </Layout.Horizontal>
+
         <TextInput
           id="sshUsername"
           name="sshUsername"
@@ -79,7 +94,9 @@ export default function ConfigureSSH({ onUpdate }: { onUpdate: (data: PipelineSe
           id="port"
           name="port"
           defaultValue={state?.port || ''}
-          placeholder={getString('common.smtp.port')}
+          placeholder={getString(
+            'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.placholders.sshPortPlaceholder'
+          )}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             const value = e.target.value
             updateState('port', value)
@@ -92,7 +109,9 @@ export default function ConfigureSSH({ onUpdate }: { onUpdate: (data: PipelineSe
           id="hostipfqdn"
           name="hostipfqdn"
           defaultValue={state?.hostIP || ''}
-          placeholder={getString('common.smtp.hostipfqdn')}
+          placeholder={getString(
+            'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.placholders.hostipplaceholder'
+          )}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             const value = e.target.value
             updateState('hostIP', value)

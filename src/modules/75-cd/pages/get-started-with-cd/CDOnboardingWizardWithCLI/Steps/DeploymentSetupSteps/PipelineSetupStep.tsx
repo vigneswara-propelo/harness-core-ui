@@ -7,13 +7,15 @@
 
 import React, { FunctionComponent } from 'react'
 import { useParams } from 'react-router-dom'
+import { isEmpty } from 'lodash-es'
 import { Layout, Text, TextInput, Label, Button, ButtonVariation, ButtonSize } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
 import { String, useStrings } from 'framework/strings'
+import { V1Agent } from 'services/gitops'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import CommandBlock from '@common/CommandBlock/CommandBlock'
-import { getCommandsByDeploymentType } from '../../utils'
+import { getCommandsByDeploymentType, isGitopsFlow } from '../../utils'
 import {
   CDOnboardingSteps,
   CLOUD_FUNCTION_TYPES,
@@ -55,6 +57,10 @@ export default function PipelineSetupStep({
   const deploymentData = React.useMemo((): WhatToDeployType => {
     return stepsProgress?.[CDOnboardingSteps.WHAT_TO_DEPLOY]?.stepData
   }, [stepsProgress])
+
+  const showGitPatInput =
+    !isGitopsFlow(stepsProgress) && deploymentData?.svcType?.id !== SERVICE_TYPES?.TraditionalApp?.id
+
   return (
     <Layout.Vertical className={css.deploymentSteps}>
       <Layout.Vertical margin={{ top: 'xxlarge', bottom: 'xlarge' }}>
@@ -93,7 +99,7 @@ export default function PipelineSetupStep({
               }}
             />
           </Layout.Vertical>
-          {deploymentData?.svcType?.id !== SERVICE_TYPES?.TraditionalApp?.id && (
+          {showGitPatInput && (
             <Layout.Vertical width={400}>
               <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
                 <Label>
@@ -154,6 +160,9 @@ export default function PipelineSetupStep({
         delegateName={
           (stepsProgress[CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY].stepData as WhereAndHowToDeployType)?.delegateName
         }
+        agentInfo={
+          (stepsProgress[CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY].stepData as WhereAndHowToDeployType)?.agentInfo
+        }
       />
     </Layout.Vertical>
   )
@@ -165,7 +174,8 @@ function CLISteps({
   delegateName,
   artifactType,
   artifactSubtype,
-  serviceType
+  serviceType,
+  agentInfo
 }: {
   getString: UseStringsReturn['getString']
   state: PipelineSetupState
@@ -173,6 +183,7 @@ function CLISteps({
   artifactSubtype?: string
   delegateName?: string
   serviceType: string
+  agentInfo?: V1Agent
 }): JSX.Element {
   const { accountId } = useParams<AccountPathProps>()
   const commandSnippet = React.useMemo((): string => {
@@ -188,7 +199,9 @@ function CLISteps({
       accountId,
       artifactSubtype,
       artifactType,
-      serviceType
+      serviceType,
+      isGitops: !isEmpty(agentInfo?.identifier),
+      agentId: agentInfo?.identifier
     })
   }, [state])
 

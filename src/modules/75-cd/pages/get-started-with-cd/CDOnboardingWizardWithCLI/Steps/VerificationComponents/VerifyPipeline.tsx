@@ -54,18 +54,26 @@ export default function VerifyPipeline({ saveProgress }: VerifyPipelineProps): J
   useEffect(() => {
     const pipelineName = PIPELINE_TO_STRATEGY_MAP[pipelineStepsdata?.strategyId as string] || ''
     if (data?.data && !pipelineStepsdata?.pipelineVerified) {
-      saveProgress(CDOnboardingSteps.DEPLOYMENT_STEPS, { ...pipelineStepsdata, pipelineVerified: true })
+      saveProgress(CDOnboardingSteps.DEPLOYMENT_STEPS, {
+        ...pipelineStepsdata,
+        pipelineVerified: true,
+        gitopsEntitiesVerified: false
+      } as PipelineSetupState)
       trackEvent(ONBOARDING_INTERACTIONS.CONFIG_VERIFICATION_SUCCESS, {
-        ...getBranchingProps(stepsProgress),
+        ...getBranchingProps(stepsProgress, getString),
         pipelineName
       })
     }
 
     if (error) {
       if (pipelineStepsdata?.pipelineVerified !== false) {
-        saveProgress(CDOnboardingSteps.DEPLOYMENT_STEPS, { ...pipelineStepsdata, pipelineVerified: false })
+        saveProgress(CDOnboardingSteps.DEPLOYMENT_STEPS, {
+          ...pipelineStepsdata,
+          pipelineVerified: false,
+          gitopsEntitiesVerified: false
+        })
         trackEvent(ONBOARDING_INTERACTIONS.CONFIG_VERIFICATION_FAIL, {
-          ...getBranchingProps(stepsProgress),
+          ...getBranchingProps(stepsProgress, getString),
           pipelineName
         })
       }
@@ -75,7 +83,7 @@ export default function VerifyPipeline({ saveProgress }: VerifyPipelineProps): J
   const refetchPipeline = async (): Promise<void> => {
     await refetch()
     trackEvent(ONBOARDING_INTERACTIONS.CONFIG_VERIFICATION_START, {
-      ...getBranchingProps(stepsProgress),
+      ...getBranchingProps(stepsProgress, getString),
       pipelineName: pipelineIdentifier
     })
   }

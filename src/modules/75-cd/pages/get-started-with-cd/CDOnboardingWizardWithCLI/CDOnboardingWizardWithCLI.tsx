@@ -22,6 +22,8 @@ import { CDOnboardingSteps } from './types'
 import PipelineSetupPreview from './Previews/PipelineSetupPreview'
 import { STEP_VALIDATION_MAP } from './StepValidations'
 import ReviewAndRunPipeline from './Steps/ReviewAndRunPipeline'
+import ViewGitopsApp from './Steps/ViewGitopsApp'
+import { isGitopsFlow } from './utils'
 import css from '../GetStartedWithCD.module.scss'
 
 export default function CDOnboardingWizardWithCLI(): JSX.Element {
@@ -93,7 +95,11 @@ export default function CDOnboardingWizardWithCLI(): JSX.Element {
             {
               id: CDOnboardingSteps.REVIEW_AND_RUN_PIPELINE,
               title: getString('cd.getStartedWithCD.flowByQuestions.reviewAndRunStep.title'),
-              panel: <ReviewAndRunPipeline saveProgress={saveProgress} />
+              panel: isGitopsFlow(state.stepsProgress) ? (
+                <ViewGitopsApp />
+              ) : (
+                <ReviewAndRunPipeline saveProgress={saveProgress} />
+              )
             }
           ]}
         ></Stepper>

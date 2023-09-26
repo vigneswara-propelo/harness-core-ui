@@ -1902,3 +1902,81 @@ export const useApplicationServiceListApps = (props: UseApplicationServiceListAp
     `/api/v1/applications`,
     { base: window.getApiBaseUrl('gitops'), ...props }
   )
+
+export interface AgentApplicationServiceGetPathParams {
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier: string
+  /**
+   * the application's name
+   */
+  queryName: string
+}
+
+export interface AgentApplicationServiceGetQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  /**
+   * forces application reconciliation if set to true.
+   */
+  'query.refresh'?: string
+  /**
+   * the project names to restrict returned list applications.
+   */
+  'query.project'?: string[]
+  /**
+   * when specified with a watch call, shows changes that occur after that particular version of a resource.
+   */
+  'query.resourceVersion'?: string
+  /**
+   * the selector to to restrict returned list to applications only with matched labels.
+   */
+  'query.selector'?: string
+  /**
+   * the repoURL to restrict returned list applications.
+   */
+  'query.repo'?: string
+}
+
+export type UseAgentApplicationServiceGetProps = Omit<
+  UseGetProps<
+    Servicev1Application,
+    GatewayruntimeError,
+    AgentApplicationServiceGetQueryParams,
+    AgentApplicationServiceGetPathParams
+  >,
+  'path'
+> &
+  AgentApplicationServiceGetPathParams
+
+/**
+ * Get returns an application by name
+ *
+ *  Get returns an application by name
+ */
+export const useAgentApplicationServiceGet = ({
+  agentIdentifier,
+  queryName,
+  ...props
+}: UseAgentApplicationServiceGetProps) =>
+  useGet<
+    Servicev1Application,
+    GatewayruntimeError,
+    AgentApplicationServiceGetQueryParams,
+    AgentApplicationServiceGetPathParams
+  >(
+    (paramsInPath: AgentApplicationServiceGetPathParams) =>
+      `/api/v1/agents/${paramsInPath.agentIdentifier}/applications/${paramsInPath.queryName}`,
+    { base: window.getApiBaseUrl('gitops'), pathParams: { agentIdentifier, queryName }, ...props }
+  )

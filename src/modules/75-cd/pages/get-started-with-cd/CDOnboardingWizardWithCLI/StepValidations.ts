@@ -20,11 +20,14 @@ function validateWhatToDeployStep(data: WhatToDeployType): boolean {
 }
 
 function validateWhereAndHowToDeployStep(data: WhereAndHowToDeployType): boolean {
-  return Boolean(data?.installDelegateTried) && data.type?.id === DEPLOYMENT_FLOW_ENUMS.CDPipeline
+  return (
+    (Boolean(data?.agentStatus === 'HEALTHY') && data.type?.id === DEPLOYMENT_FLOW_ENUMS.Gitops) ||
+    (Boolean(data?.installDelegateTried) && data.type?.id === DEPLOYMENT_FLOW_ENUMS.CDPipeline)
+  )
 }
 
 function validatePipelineSetupStep(data: PipelineSetupState): boolean {
-  return Boolean(data?.pipelineVerified)
+  return Boolean(data?.pipelineVerified) || Boolean(data?.gitopsEntitiesVerified)
 }
 
 export const STEP_VALIDATION_MAP: { [key: string]: (data: any) => boolean } = {

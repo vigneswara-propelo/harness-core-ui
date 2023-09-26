@@ -18,6 +18,7 @@ declare const styles: {
   readonly deploymentStrategyCards: string
   readonly deploymentStrategyStep: string
   readonly deploymentStrategySteps: string
+  readonly dropdownBg: string
   readonly flowcards: string
   readonly infraCards: string
   readonly marginBottomLarge: string
@@ -32,6 +33,7 @@ declare const styles: {
   readonly serviceTypeCards: string
   readonly tabsLine: string
   readonly textbox: string
+  readonly verificationItem: string
   readonly verifyPipeline: string
   readonly verifyPipelineText: string
   readonly videoPlayer: string

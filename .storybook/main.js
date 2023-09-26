@@ -49,6 +49,8 @@ module.exports = {
         alias: {
           ...webpackConfig.resolve.alias,
           'gitopsui/MicroFrontendApp': false,
+          'gitopsui/CreateGitOpsAgent': false,
+          'gitopsui/VerifyGitopsAgent': false,
           'chaos/MicroFrontendApp': false,
           'sto/App': false,
           'ssca/MicroFrontendApp': false,

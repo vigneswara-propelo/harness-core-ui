@@ -481,13 +481,6 @@ export const PIPELINE_IDS_BY_ARTIFACT_STRATEGY_MAP: Record<string, Record<string
   }
 }
 
-export const GITOPS_DOCS_LINKS: Record<string, string> = {
-  [KubernetesType.KUBERNETES_MANIFEST]: 'https://developer.harness.io/tutorials/cd-pipelines/kubernetes/manifest',
-  K8sHelm: 'https://developer.harness.io/tutorials/cd-pipelines/kubernetes/helm-chart',
-  NativeHelm: 'https://developer.harness.io/tutorials/cd-pipelines/kubernetes/helm-chart',
-  Kustomize: 'https://developer.harness.io/tutorials/cd-pipelines/kubernetes/kustomize'
-}
-
 export const ARTIFACT_BY_APP_LABEL_MAP: Record<string, keyof StringsMap> = {
   [SERVERLESS_FUNCTIONS.AWS_LAMBDA_FUNCTION]: 'cd.getStartedWithCD.awsLambda',
   [SERVERLESS_FUNCTIONS.GOOGLE_CLOUD_FUNCTION]: 'cd.getStartedWithCD.googleFunction',
@@ -496,4 +489,37 @@ export const ARTIFACT_BY_APP_LABEL_MAP: Record<string, keyof StringsMap> = {
   [KubernetesType.KUBERNETES_MANIFEST]: 'common.microservice',
   TraditionalAWS: 'common.application',
   TraditionalPhysical: 'common.application'
+}
+
+export const GITOPS_DIRECTORY_PATH: Record<string, string> = {
+  K8sHelm: 'helm-guestbook',
+  NativeHelm: 'helm-guestbook',
+  Kustomize: 'kustomize-guestbook',
+  [KubernetesType.KUBERNETES_MANIFEST]: 'guestbook'
+}
+
+export const GITOPS_ENTITY_IDS_BY_DEPLOYMENT_TYPE: Record<
+  string,
+  { application: string; cluster: string; repo: string }
+> = {
+  K8sHelm: {
+    application: 'gitops-helm-application',
+    cluster: 'gitopscluster',
+    repo: 'gitopsrepo'
+  },
+  NativeHelm: {
+    application: 'gitops-helm-application',
+    cluster: 'gitopscluster',
+    repo: 'gitopsrepo'
+  },
+  Kustomize: {
+    application: 'gitops-kustomize-application',
+    cluster: 'gitopscluster',
+    repo: 'gitopsrepo'
+  },
+  [KubernetesType.KUBERNETES_MANIFEST]: {
+    application: 'gitops-application',
+    cluster: 'gitopscluster',
+    repo: 'gitopsrepo'
+  }
 }

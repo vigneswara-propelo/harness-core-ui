@@ -11,10 +11,12 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import CLISetupStep from './CLISetupStep'
 import PipelineSetupStep from './PipelineSetupStep'
 import DeploymentStrategySelection from './DeploymentStrategyStep'
-import { CDOnboardingSteps, DeploymentStrategyTypes, PipelineSetupState } from '../../types'
+import { CDOnboardingSteps, DeploymentStrategyTypes, PipelineSetupState, WhereAndHowToDeployType } from '../../types'
 import { useOnboardingStore } from '../../Store/OnboardingStore'
 import { WIZARD_STEP_OPEN } from '../../TrackingConstants'
-import { getBranchingProps } from '../../utils'
+import { getBranchingProps, isGitopsFlow } from '../../utils'
+import { DEPLOYMENT_FLOW_ENUMS } from '../../Constants'
+import VerifyGitopsEntities from '../VerificationComponents/VerifyGitopsEntities'
 interface DeploymentSetupStepsProps {
   saveProgress: (stepId: string, data: any) => void
 }
@@ -37,20 +39,29 @@ export default function DeploymentSetupSteps({ saveProgress }: DeploymentSetupSt
     })
   }, [state])
 
+  const selectedDeploymentFlow = (
+    stepsProgress?.[CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY]?.stepData as WhereAndHowToDeployType
+  )?.type?.id
+
   const onUpdate = (data: PipelineSetupState): void => {
     setState({ ...state, ...data })
   }
   React.useEffect(() => {
-    trackEvent(WIZARD_STEP_OPEN.Configuration_STEP_OPENED, getBranchingProps(stepsProgress))
+    trackEvent(WIZARD_STEP_OPEN.Configuration_STEP_OPENED, getBranchingProps(stepsProgress, getString))
   }, [])
   const setDeploymentStrategy = (strategy?: DeploymentStrategyTypes): void => {
     setState({ ...state, strategyId: strategy?.id })
   }
   return (
     <>
-      <CLISetupStep state={state} onKeyGenerate={onUpdate} />
+      <CLISetupStep state={state} onKeyGenerate={onUpdate} isGitopsFlow={isGitopsFlow(stepsProgress)} />
       <PipelineSetupStep state={state} onUpdate={onUpdate} />
-      <DeploymentStrategySelection updateState={setDeploymentStrategy} saveProgress={saveProgress} />
+
+      {selectedDeploymentFlow === DEPLOYMENT_FLOW_ENUMS.Gitops ? (
+        <VerifyGitopsEntities saveProgress={saveProgress} />
+      ) : (
+        <DeploymentStrategySelection updateState={setDeploymentStrategy} saveProgress={saveProgress} />
+      )}
     </>
   )
 }

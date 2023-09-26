@@ -665,6 +665,8 @@ getStartedWithCD:
   nopath: This path will soon be updated in the UI for a seamless experience
   checkdocs: In the meantime, don't worry! You can still set up your deployment by following our comprehensive documentation. Simply refer to step-by-step guide.
   docLink: View documentation
+  createGitopsAgent: Install GitOps Agent
+  updateGitopsAgent: Update GitOps Agent
   downloadZipFile: Download zip file
   flowByQuestions:
     what:
@@ -708,6 +710,8 @@ getStartedWithCD:
           heading: CD GitOps
           subtitle: Connect with a GitOps agent
           description: In the GitOps Workflow approach, Harness GitOps will watch the state of your application as defined in a git repo and will then pull any changes into the Kubernetes cluster.
+          agentInfo: A Harness GitOps Agent is a worker process that runs in your environment, makes secure, outbound connections to Harness, and performs all the GitOps tasks you request in Harness
+          verificationSuccess: Harness GitOps agent was successfully installed.
     deploymentSteps:
       headsteps:
         preparation: '1. Download CLI and set up GitHub access'
@@ -717,9 +721,10 @@ getStartedWithCD:
         configureAws: '2. Configure AWS'
         configureSsh: '2. Configure SSH'
         configureWinRM: '2. Configure WinRM'
-      createEntitytitle: 'Run these commands to create the Harness entities necessary to deploy your pipeline. <a rel="noreferrer nofollow" href="https://github.com/harness/harness-cli" target="_blank">Learn more </a>'
+      createEntitytitle: 'Run these commands to create the Harness entities necessary to deploy your pipeline. <a rel="noreferrer nofollow" href="https://developer.harness.io/docs/category/cli" target="_blank">Learn more </a>'
       title: Set up your deployment
       stepsTitle: Here are the steps you can run to start deploying with Harness CD in a pipeline
+      stepsTitleGitops: Here are the steps you can run to start deploying with Harness GitOps
       stepsIntro: 'To set up the deployment, follow the steps below using the sample application located at  <a target="_blank" rel="noreferrer nofollow" href="{{sampleAppURL}}">{{sampleAppURL}} </a>. If you prefer to deploy your own application, make sure to edit the sample YAMLs provided to point to your application manifests and artifacts'
       stepsIntro2: If you want to deploy your own application, all you have to do is edit the sample application YAMLs provided to point to your application manifests and artifact.
       steps:
@@ -769,6 +774,8 @@ getStartedWithCD:
             accessKeyPlaceholderAws: Your AWS Access Key
             svckeyPlaceholderAws: Your AWS Secret Key
             linkPlaceholderAws: 'https://my-bucket.s3.region.amazonaws.com/function.json'
+            hostipplaceholder: example.abc.com
+            sshPortPlaceholder: '22 by default'
         configureAWSStep:
           getPermissions: '2.1 Get AWS function storage permissions. <a rel="noreferrer nofollow" href="https://developer.harness.io/tutorials/cd-pipelines/serverless/aws-lambda/#before-you-begin" target="_blank">Where do I locate this?</a>'
           createBucket: '2.2 Create S3 bucket. <a rel="noreferrer nofollow" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-bucket.html" target="_blank">How do I make this?</a>'
@@ -787,11 +794,24 @@ getStartedWithCD:
         configureTraditionalStep:
           sshUsername: SSH Username
           sshPrivateKey: SSH Private Key File
-          sshPrivateKeyFile: Path to SSH Private Key File
+          sshPrivateKeyFile: Path to SSH Private Key File Path
           sshPrivateKeyFilePlaceholder: '/path/to/your/file'
           winrmDomain: WinRM Domain
           winrmUsername: WinRM Username
           winrmPassword: WinRM Password
+        configureGitopsStep:
+          verifyEntities: 4. Verify that all of the required entities have been created
+          clusterFailed: 'The cluster hasn’t been created'
+          repoFailed: 'The repository hasn’t been created'
+          appFailed: 'The application hasn’t been created'
+          clusterLoading: 'Checking the cluster'
+          repoLoading: 'Checking the repository'
+          appLoading: 'Checking the application'
+          repoSuccess: The repository has been created
+          appSuccess: The application has been created
+          clusterSuccess: The cluster has been created
+          viewGitopsApp: View your GitOps Application
+          initAgentSuccess: Initialized GitOps Agent
         forkStep:
           title: '1.3. Fork <a target="_blank" rel="noreferrer nofollow" href="https://github.com/harness-community/harnesscd-example-apps/fork">harnesscd-example-apps</a> respository through the Github web interface. This enables personal experimentation and modifications without impacting the original codebase.'
         gitStep:
@@ -848,12 +868,20 @@ getStartedWithCD:
                 createSSHAwsSecret: 'harness secret --token {{{secret}}} apply --secret-type SSHKey  --username {{username}} --port {{port}}'
                 createWINRMAwsSecret: 'harness secret --password "{{{secret}}}" apply --secret-type WinRmCredentials --username {{username}} --port {{port}} --domain {{{domain}}}'
                 createinfracmdaws: 'harness infrastructure  --file {{{type}}}/infrastructure-definition.yml apply --cloud-region {{{region}}} --instance-name {{instanceName}}'
+            gitops:
+              createRepo: harness gitops-repository --file {{{dirPath}}}/harness-gitops/repository.yml apply --agent-identifier {{agentId}}
+              createCluster: harness gitops-cluster --file {{{dirPath}}}/harness-gitops/cluster.yml apply --agent-identifier {{agentId}}
+              createApplication: harness gitops-application --file {{{dirPath}}}/harness-gitops/application.yml apply --agent-identifier {{agentId}}
+
             comments:
               cloneRepo: '# Clone the repository'
               cdDir: '# Change the directory'
               login: '# Login to harness cli'
               createSecret: '# Create a Secret for GitHub PAT: This securely stores the token.'
               createGitIcon: '# Create a GiHub Connector: Access to YAMLs.'
+              createGitopsRepo: '# Create a GitOps Repository'
+              createGitopsCluster: '# Create a GitOps Cluster'
+              createGitopsApp: '# Create a GitOps Application'
               createK8scon: '# Create a Kubernetes Cluster Connector: Access to the deployment target.'
               createArtifactorycon: '# Create a Artifactory Connector: Access to the deployment target.'
               createGCPcon: '# Create a GCP Connector: Access to the deployment target.'
