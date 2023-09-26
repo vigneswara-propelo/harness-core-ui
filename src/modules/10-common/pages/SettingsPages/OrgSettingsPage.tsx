@@ -29,7 +29,7 @@ import {
 export const OrgSettingsPage: React.FC = () => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { getString } = useStrings()
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup, CDS_SERVICE_OVERRIDES_2_0, STO_JIRA_INTEGRATION } = useFeatureFlags()
+  const { CDS_SERVICE_OVERRIDES_2_0, STO_JIRA_INTEGRATION } = useFeatureFlags()
   const showGovCard = useAnyEnterpriseLicense()
   const { licenseInformation, CD_LICENSE_STATE, CI_LICENSE_STATE, STO_LICENSE_STATE } = useLicenseStore()
   const isEnterpriseEdition = isEnterprisePlan(licenseInformation, ModuleName.CD)
@@ -51,10 +51,7 @@ export const OrgSettingsPage: React.FC = () => {
     },
     lazy: false
   })
-  const isServiceOverridesEnabled =
-    CDS_OrgAccountLevelServiceEnvEnvGroup &&
-    CDS_SERVICE_OVERRIDES_2_0 &&
-    enableServiceOverrideSettings?.data?.value === 'true'
+  const isServiceOverridesEnabled = CDS_SERVICE_OVERRIDES_2_0 && enableServiceOverrideSettings?.data?.value === 'true'
 
   //Gitops
   const showGitOpsCard = (accountId || orgIdentifier) && !projectIdentifier
@@ -86,14 +83,14 @@ export const OrgSettingsPage: React.FC = () => {
               id={SettingsResources.Services}
               icon={'services'}
               route={routesV2.toSettingsServices({ accountId, orgIdentifier, module })}
-              hidden={!(CDS_OrgAccountLevelServiceEnvEnvGroup && haveCD)}
+              hidden={!haveCD}
             />
             <SettingsResourceCard
               label={<String stringID="environments" />}
               id={SettingsResources.Environments}
               icon={'infrastructure'}
               route={routesV2.toSettingsEnvironments({ accountId, orgIdentifier, module })}
-              hidden={!(CDS_OrgAccountLevelServiceEnvEnvGroup && haveCD)}
+              hidden={!haveCD}
             />
             <SettingsResourceCard
               label={<String stringID="connectorsLabel" />}

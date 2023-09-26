@@ -6,14 +6,14 @@
  */
 
 import React from 'react'
-import { render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as cdNgServices from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import { environmentPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { TestWrapper } from '@common/utils/testUtils'
 import AddEditServiceOverride from '../AddEditServiceOverride'
-import mockServicesListForOverride from './__mocks__/mockServicesListForOverrides.json'
+import mockServiceList from './__mocks__/mockServicesListForOverrides.json'
 
 jest.mock('services/cd-ng', () => ({
   ...jest.requireActual('services/cd-ng'),
@@ -25,14 +25,15 @@ jest.mock('services/cd-ng', () => ({
       error: null
     }
   }),
-  useGetService: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() }))
+  useGetService: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() })),
+  getServiceAccessListPromise: jest.fn().mockImplementation(() => Promise.resolve(mockServiceList))
 }))
 
 describe('Add Edit Service Override Test', () => {
   test('add new service override', async () => {
     jest.spyOn(cdNgServices, 'useUpsertServiceOverride')
 
-    const { container } = render(
+    const { container, getByTestId } = render(
       <TestWrapper
         path={routes.toEnvironmentDetails({
           accountId: 'dummy',
@@ -49,25 +50,18 @@ describe('Add Edit Service Override Test', () => {
           expressions={['']}
           selectedService={null}
           isReadonly={false}
-          services={mockServicesListForOverride.data.content}
+          services={[]}
         />
       </TestWrapper>
     )
 
-    const textboxes = screen.getAllByRole('textbox')
+    await userEvent.click(getByTestId('cr-field-serviceRef') as HTMLElement)
 
-    // select service
-    await userEvent.click(textboxes[0])
-    await waitFor(() => {
-      expect(screen.getByText('svc_1')).toBeInTheDocument()
-    })
+    const serviceText = screen.getByText('custom test')
+    expect(serviceText).toBeInTheDocument()
 
-    await userEvent.click(screen.getAllByRole('listitem')[0])
-    await waitFor(() => {
-      expect(textboxes[0]).toHaveValue('svc_1')
-      expect(screen.queryAllByRole('listitem').length).toBe(0)
-      expect(screen.getByText('variableLabel')).toBeInTheDocument()
-    })
+    await userEvent.click(serviceText)
+    await userEvent.click(screen.getByText('entityReference.apply')!)
     await userEvent.click(screen.getByText('variableLabel'))
 
     const newOverrideText = screen.getByText('common.newName common.override')
@@ -75,32 +69,27 @@ describe('Add Edit Service Override Test', () => {
     await userEvent.click(newOverrideText)
 
     // select variable
-    const variableTextBox = screen.getAllByRole('textbox')
-    await userEvent.click(variableTextBox[1])
+    const selectBoxes = screen.getAllByPlaceholderText('- common.selectName -')
+    const variableTextBox = selectBoxes[0]
+    await userEvent.type(variableTextBox, 'var2')
+    await userEvent.click(container.querySelector('[data-icon="plus"]') as HTMLElement)
     await waitFor(() => {
-      expect(screen.getByText('var2')).toBeInTheDocument()
+      expect(screen.queryByText('var2')).toBeInTheDocument()
     })
 
-    await userEvent.click(screen.getAllByRole('listitem')[1])
-    await waitFor(() => {
-      expect(variableTextBox[1]).toHaveValue('var2')
-      expect(screen.queryAllByRole('listitem').length).toBe(0)
+    await waitFor(async () => {
+      const inputs = (await screen.queryAllByRole('textbox')) as HTMLElement[]
+      const overrideValueInput = inputs[inputs.length - 1]
+
+      expect(overrideValueInput).toBeDefined()
+      await fireEvent.change(overrideValueInput, {
+        target: { value: 'testStr' }
+      })
     })
 
-    // change type to number
-    await userEvent.click(variableTextBox[2])
-    await waitFor(() => {
-      expect(screen.getByText('number')).toBeInTheDocument()
+    await act(async () => {
+      userEvent.click(screen.getByText('submit'))
     })
-
-    await userEvent.click(screen.getAllByRole('listitem')[2])
-    await waitFor(() => {
-      expect(screen.queryAllByRole('listitem').length).toBe(0)
-      expect(variableTextBox[2]).toHaveValue('number')
-    })
-
-    // override with number
-    await userEvent.type(screen.getByRole('spinbutton'), '123')
 
     await userEvent.click(screen.getAllByRole('button')[1])
     await waitFor(() => {

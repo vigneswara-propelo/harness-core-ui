@@ -5,14 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { environmentsCall, servicesCall, templatesListCall } from '../../../support/70-pipeline/constants'
+import { templatesListCall } from '../../../support/70-pipeline/constants'
 import { featureFlagsCall } from '../../../support/85-cv/common'
 import {
   countOfServiceAPI,
-  environmentResponse,
   monitoredServiceListCall,
   monitoredServiceListResponse,
-  servicesResponse
+  multiscopeServiceCall,
+  servicesV2Response,
+  multiScopeEnvCall,
+  environmentV2Response
 } from '../../../support/85-cv/monitoredService/constants'
 
 describe('Create empty monitored service', () => {
@@ -52,10 +54,8 @@ describe('Create empty monitored service', () => {
     cy.contains('span', 'Service is required').should('be.visible')
     cy.contains('span', 'Environment is required').should('be.visible')
 
-    cy.get('[data-testid="service"] input').click()
-    cy.contains('p', '+ Add New').should('be.visible')
-    cy.get('[data-testid="environment"] input').click()
-    cy.contains('p', '+ Add New').should('be.visible')
+    cy.findByTestId('cr-field-serviceRef').should('be.visible')
+    cy.findByTestId('cr-field-environmentRef').should('be.visible')
     cy.setServiceEnvRuntime()
 
     cy.get('#bp3-tab-title_monitoredServiceConfigurations_healthSource').click()
@@ -73,8 +73,8 @@ describe('Create empty monitored service', () => {
   })
 
   it('Add new empty monitored environment and serviceas fixed value', () => {
-    cy.intercept('GET', servicesCall, servicesResponse).as('ServiceCall')
-    cy.intercept('GET', environmentsCall, environmentResponse).as('EnvCall')
+    cy.intercept('GET', multiscopeServiceCall, servicesV2Response).as('ServiceV2Call')
+    cy.intercept('GET', multiScopeEnvCall, environmentV2Response).as('EnvV2Call')
     const applyTemplateCall =
       '/template/api/templates/applyTemplates?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&getDefaultFromOtherRepo=true'
     cy.intercept('POST', applyTemplateCall, {
@@ -87,15 +87,18 @@ describe('Create empty monitored service', () => {
     cy.get('button').contains('span', 'Save').click()
     cy.contains('span', 'Service is required').should('be.visible')
     cy.contains('span', 'Environment is required').should('be.visible')
-    cy.get('[data-testid="service"] input').click()
-    cy.contains('p', 'Service 101').click({ force: true })
-    cy.get('[data-testid="environment"] input').click()
-    cy.contains('p', '+ Add New').click({ force: true })
-    cy.contains('h4', 'New Environment').should('be.visible')
-    cy.contains('span', 'Cancel').click({ force: true })
-    cy.contains('h4', 'New Environment').should('not.exist')
-    cy.get('[data-testid="environment"] input').click()
-    cy.contains('p', 'Dev').click({ force: true })
+    // Select Service
+    cy.findByTestId('cr-field-serviceRef').click()
+    cy.wait('@ServiceV2Call')
+    cy.contains('p', 'DockerServicetest').click({ force: true })
+    cy.contains('span', 'Apply Selected').click({ force: true })
+
+    // Select Environment
+    cy.findByTestId('cr-field-environmentRef').click()
+    cy.wait('@EnvV2Call')
+    cy.contains('p', 'EnvironmentTest').click({ force: true })
+    cy.contains('span', 'Apply Selected').click({ force: true })
+
     cy.get('button').contains('span', 'Save').click()
     cy.get('[class*=bp3-dialog]').within(() => {
       cy.contains('p', 'Save Empty Monitored Service Template (1)').should('be.visible')
@@ -105,8 +108,8 @@ describe('Create empty monitored service', () => {
   })
 
   it('Add new empty monitored environment as fixed and service as runtime', () => {
-    cy.intercept('GET', servicesCall, servicesResponse).as('ServiceCall')
-    cy.intercept('GET', environmentsCall, environmentResponse).as('EnvCall')
+    cy.intercept('GET', multiscopeServiceCall, servicesV2Response).as('ServiceV2Call')
+    cy.intercept('GET', multiScopeEnvCall, environmentV2Response).as('EnvV2Call')
     const applyTemplateCall =
       '/template/api/templates/applyTemplates?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&getDefaultFromOtherRepo=true'
     cy.intercept('POST', applyTemplateCall, {
@@ -120,8 +123,13 @@ describe('Create empty monitored service', () => {
     cy.contains('span', 'Service is required').should('be.visible')
     cy.contains('span', 'Environment is required').should('be.visible')
     cy.setMultiTypeService()
-    cy.get('[data-testid="environment"] input').click()
-    cy.contains('p', 'Dev').click({ force: true })
+
+    // Select Environment
+    cy.findByTestId('cr-field-environmentRef').click()
+    cy.wait('@EnvV2Call')
+    cy.contains('p', 'EnvironmentTest').click({ force: true })
+    cy.contains('span', 'Apply Selected').click({ force: true })
+
     cy.get('button').contains('span', 'Save').click()
     cy.get('[class*=bp3-dialog]').within(() => {
       cy.contains('p', 'Save Empty Monitored Service Template (1)').should('be.visible')
@@ -131,8 +139,8 @@ describe('Create empty monitored service', () => {
   })
 
   it('Add new empty monitored service as fixed and environment as runtime', () => {
-    cy.intercept('GET', servicesCall, servicesResponse).as('ServiceCall')
-    cy.intercept('GET', environmentsCall, environmentResponse).as('EnvCall')
+    cy.intercept('GET', multiscopeServiceCall, servicesV2Response).as('ServiceV2Call')
+    cy.intercept('GET', multiScopeEnvCall, environmentV2Response).as('EnvV2Call')
     const applyTemplateCall =
       '/template/api/templates/applyTemplates?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&getDefaultFromOtherRepo=true'
     cy.intercept('POST', applyTemplateCall, {
@@ -145,8 +153,11 @@ describe('Create empty monitored service', () => {
     cy.get('button').contains('span', 'Save').click()
     cy.contains('span', 'Service is required').should('be.visible')
     cy.contains('span', 'Environment is required').should('be.visible')
-    cy.get('[data-testid="service"] input').click()
-    cy.contains('p', 'Service 101').click({ force: true })
+    // Select Service
+    cy.findByTestId('cr-field-serviceRef').click()
+    cy.wait('@ServiceV2Call')
+    cy.contains('p', 'DockerServicetest').click({ force: true })
+    cy.contains('span', 'Apply Selected').click({ force: true })
     cy.setMultiTypeEnvironment()
     cy.get('button').contains('span', 'Save').click()
     cy.get('[class*=bp3-dialog]').within(() => {

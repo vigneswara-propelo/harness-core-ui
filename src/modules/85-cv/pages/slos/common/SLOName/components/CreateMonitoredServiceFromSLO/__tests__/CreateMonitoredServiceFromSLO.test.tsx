@@ -11,7 +11,6 @@ import { Form, Formik } from 'formik'
 import type { UseGetReturn } from 'restful-react'
 import userEvent from '@testing-library/user-event'
 import { Button, Container } from '@harness/uicore'
-import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import * as cdService from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import CreateMonitoredServiceFromSLO from '../CreateMonitoredServiceFromSLO'
@@ -51,10 +50,12 @@ jest.mock(
         <Button
           onClick={() => props?.serviceOnSelect({ label: 'newService', value: 'newService' })}
           title="On Service Select"
+          className="newService"
         />
         <Button
           onClick={() => props?.environmentOnSelect({ label: 'newEnv', value: 'newEnv' })}
           title="On Environment Select"
+          className="newEnv"
         />
       </Container>
     )
@@ -154,7 +155,7 @@ describe('Test CreateMonitoredServiceFromSLO component', () => {
   })
 
   test('should add and change service and environment', async () => {
-    const { container } = render(<WrapperComponent initialValues={initialFormData} />)
+    const { container, getByTestId } = render(<WrapperComponent initialValues={initialFormData} />)
     await act(async () => {
       await userEvent.click(container.querySelector('[class="newService"]')!)
     })
@@ -162,23 +163,17 @@ describe('Test CreateMonitoredServiceFromSLO component', () => {
       await userEvent.click(container.querySelector('[class="changeService"]')!)
     })
 
-    expect(container.querySelector('[class="newService"]')).toBeInTheDocument()
-    expect(container.querySelector('[class="changeService"]')).toBeInTheDocument()
-
     await act(async () => {
       await userEvent.click(container.querySelector('[class="newEnv"]')!)
     })
     await act(async () => {
       await userEvent.click(container.querySelector('[class="changeEnv"]')!)
     })
-    expect(container.querySelector('[class="newEnv"]')).toBeInTheDocument()
-    expect(container.querySelector('[class="changeEnv"]')).toBeInTheDocument()
+
+    expect(getByTestId('OrgAccountLevelServiceEnvField')).toBeInTheDocument()
   })
 
-  test('should render when ff CDS_OrgAccountLevelServiceEnvEnvGroup is true', async () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      CDS_OrgAccountLevelServiceEnvEnvGroup: true
-    })
+  test('should render correctly when in case of org and acc level service and env', async () => {
     const { container, getByTestId, rerender } = render(<WrapperComponent initialValues={initialFormData} />)
 
     rerender(

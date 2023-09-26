@@ -9,16 +9,7 @@ import React from 'react'
 import { isUndefined } from 'lodash-es'
 import { Card, SelectOption, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
-import {
-  useGetHarnessServices,
-  useGetHarnessEnvironments,
-  HarnessServiceAsFormField,
-  HarnessEnvironmentAsFormField
-} from '@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironment'
-import type { EnvironmentMultiSelectOrCreateProps } from '@cv/components/HarnessServiceAndEnvironment/components/EnvironmentMultiSelectAndEnv/EnvironmentMultiSelectAndEnv'
-import type { EnvironmentSelectOrCreateProps } from '@cv/components/HarnessServiceAndEnvironment/components/EnvironmentSelectOrCreate/EnvironmentSelectOrCreate'
 import OrgAccountLevelServiceEnvField from '@cv/pages/monitored-service/components/Configurations/components/Service/components/MonitoredServiceOverview/component/OrgAccountLevelServiceEnvField/OrgAccountLevelServiceEnvField'
 import { spacingMedium } from '../../MonitoredServiceInputSetsTemplate.constants'
 import css from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.module.scss'
@@ -39,78 +30,10 @@ export default function ServiceEnvironmentInputSet({
   serviceKey = 'serviceRef',
   environmentKey = 'environmentRef'
 }: ServiceEnvironmentInputSetInterface): JSX.Element {
-  let content = null
   const { getString } = useStrings()
-  const { serviceOptions, setServiceOptions } = useGetHarnessServices()
-  const { environmentOptions, setEnvironmentOptions } = useGetHarnessEnvironments()
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup: orgAccountLevelServiceEnvironment } = useFeatureFlags()
-  const environmentRefValue = environmentOptions?.find(item => item?.value === environmentValue)
 
   if (isUndefined(serviceValue) && isUndefined(environmentValue)) {
     return <></>
-  }
-
-  if (orgAccountLevelServiceEnvironment) {
-    content = (
-      <OrgAccountLevelServiceEnvField
-        isInputSet
-        isTemplate={isReadOnlyInputSet}
-        serviceOnSelect={(selectedService: SelectOption) => onChange(serviceKey, selectedService.value)}
-        environmentOnSelect={(selectedEnv: SelectOption) => onChange(environmentKey, selectedEnv.value)}
-      />
-    )
-  } else {
-    content = (
-      <>
-        {!isUndefined(serviceValue) && (
-          <HarnessServiceAsFormField
-            customRenderProps={{
-              name: serviceKey,
-              label: getString('cv.healthSource.serviceLabel')
-            }}
-            serviceProps={{
-              disabled: isReadOnlyInputSet,
-              isMultiType: isReadOnlyInputSet,
-              item: serviceOptions?.find(item => item?.value === serviceValue) || serviceValue,
-              options: serviceOptions,
-              onSelect: (selectedService: SelectOption) => onChange(serviceKey, selectedService.value),
-              onNewCreated: newOption => {
-                if (newOption?.identifier && newOption.name) {
-                  const newServiceOption = { label: newOption.name, value: newOption.identifier }
-                  setServiceOptions([newServiceOption, ...serviceOptions])
-                  onChange(serviceKey, newServiceOption.value)
-                }
-              }
-            }}
-          />
-        )}
-        {!isUndefined(environmentValue) && (
-          <HarnessEnvironmentAsFormField
-            customRenderProps={{
-              name: environmentKey,
-              label: getString('cv.healthSource.environmentLabel')
-            }}
-            isMultiSelectField={false}
-            environmentProps={
-              {
-                disabled: isReadOnlyInputSet,
-                isMultiType: isReadOnlyInputSet,
-                item: environmentRefValue || (environmentValue as SelectOption),
-                onSelect: (selectedEnv: SelectOption) => onChange(environmentKey, selectedEnv.value),
-                options: environmentOptions,
-                onNewCreated: newOption => {
-                  if (newOption?.identifier && newOption.name) {
-                    const newEnvOption = { label: newOption.name, value: newOption.identifier }
-                    setEnvironmentOptions([newEnvOption, ...environmentOptions])
-                    onChange(environmentKey, newEnvOption.value)
-                  }
-                }
-              } as EnvironmentMultiSelectOrCreateProps | EnvironmentSelectOrCreateProps
-            }
-          />
-        )}
-      </>
-    )
   }
 
   return (
@@ -118,7 +41,12 @@ export default function ServiceEnvironmentInputSet({
       <Text font={{ variation: FontVariation.CARD_TITLE }} color={Color.BLACK} style={{ paddingBottom: spacingMedium }}>
         {getString('cv.monitoredServices.serviceAndEnvironment')}
       </Text>
-      {content}
+      <OrgAccountLevelServiceEnvField
+        isInputSet
+        isTemplate={isReadOnlyInputSet}
+        serviceOnSelect={(selectedService: SelectOption) => onChange(serviceKey, selectedService.value)}
+        environmentOnSelect={(selectedEnv: SelectOption) => onChange(environmentKey, selectedEnv.value)}
+      />
     </Card>
   )
 }

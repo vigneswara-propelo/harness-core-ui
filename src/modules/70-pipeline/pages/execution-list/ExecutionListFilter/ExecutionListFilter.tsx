@@ -50,7 +50,6 @@ import {
   useFilterWithValidFieldsWithMetaInfo
 } from '@pipeline/pages/utils/Filters/filters'
 import { StringUtils } from '@common/exports'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDActions, Category } from '@common/constants/TrackingConstants'
 import type { ExecutionListPageQueryParams } from '../types'
@@ -78,8 +77,6 @@ export function ExecutionListFilter(): React.ReactElement {
   const isCDEnabled = (selectedProject?.modules && selectedProject.modules?.indexOf('CD') > -1) || false
   const isCIEnabled = (selectedProject?.modules && selectedProject.modules?.indexOf('CI') > -1) || false
 
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
-
   /**Start Data hooks */
 
   const { data: deploymentTypeResponse, loading: isDeploymentTypesLoading } = useGetServiceDefinitionTypes({
@@ -92,7 +89,7 @@ export function ExecutionListFilter(): React.ReactElement {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      includeAllAccessibleAtScope: CDS_OrgAccountLevelServiceEnvEnvGroup
+      includeAllAccessibleAtScope: true
     },
     body: {
       filterType: 'Environment'

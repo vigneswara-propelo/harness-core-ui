@@ -40,7 +40,6 @@ import {
   useFilterWithValidFieldsWithMetaInfo,
   usePipelineListFilterFieldToLabelMapping
 } from '@pipeline/pages/utils/Filters/filters'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDActions, Category } from '@common/constants/TrackingConstants'
@@ -67,7 +66,6 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
   const { projectIdentifier, orgIdentifier, accountId } = useParams<PipelineListPagePathParams>()
   const { state: isFiltersDrawerOpen, open: openFilterDrawer, close: hideFilterDrawer } = useBooleanStatus()
   const filterDrawerOpenedRef = useRef(false)
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   const queryParamOptions = usePipelinesQueryParamOptions()
   const queryParams = useQueryParams<ProcessedPipelineListPageQueryParams>(queryParamOptions)
   const { selectedProject } = useAppStore()
@@ -86,7 +84,7 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      includeAllAccessibleAtScope: CDS_OrgAccountLevelServiceEnvEnvGroup
+      includeAllAccessibleAtScope: true
     },
     body: {
       filterType: 'Environment'

@@ -6,10 +6,17 @@
  */
 
 import React from 'react'
-import { render, waitFor, findByText as findByTextGlobal, queryByAttribute, getByText } from '@testing-library/react'
+import {
+  render,
+  waitFor,
+  findByText as findByTextGlobal,
+  queryByAttribute,
+  getByText,
+  screen
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { act } from 'react-dom/test-utils'
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import mockServiceList from '@cd/components/EnvironmentsV2/EnvironmentDetails/ServiceOverrides/__test__/__mocks__/mockServicesListForOverrides.json'
 
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import DeployServiceEntityWidget from '../DeployServiceEntityWidget'
@@ -31,7 +38,8 @@ jest.mock('services/cd-ng', () => ({
   }),
   mergeServiceInputsPromise: jest.fn().mockImplementation(() => Promise.resolve({ status: 'SUCCESS' })),
   useUpdateServiceV2: jest.fn().mockReturnValue({ mutate: jest.fn().mockResolvedValue({ status: 'SUCCESS' }) }),
-  useGetEntityYamlSchema: jest.fn().mockReturnValue({ data: { data: {} } })
+  useGetEntityYamlSchema: jest.fn().mockReturnValue({ data: { data: {} } }),
+  getServiceAccessListPromise: jest.fn().mockImplementation(() => Promise.resolve(mockServiceList))
 }))
 
 jest.mock('services/cd-ng-rq', () => ({
@@ -64,32 +72,17 @@ describe('DeployServiceEntityWidget - single service tests', () => {
 
     await userEvent.click(container.querySelector('[data-icon="chevron-down"]')!)
 
-    await waitFor(() => expect(document.body.querySelector('.bp3-menu')).toBeInTheDocument())
+    const serviceText = screen.getByText('custom test')
+    expect(serviceText).toBeInTheDocument()
 
-    const menu = document.body.querySelector<HTMLDivElement>('.bp3-menu')!
-
-    await act(async () => {
-      const svc1 = await findByTextGlobal(menu, 'Service 1')
-      await userEvent.click(svc1)
-    })
+    await userEvent.click(serviceText)
+    await userEvent.click(screen.getByText('entityReference.apply')!)
 
     await waitFor(() => {
       expect(onUpdate).toHaveBeenLastCalledWith({
         service: {
-          serviceInputs: {
-            serviceDefinition: {
-              spec: {
-                artifacts: {
-                  primary: {
-                    spec: { connectorRef: '<+input>', imagePath: '<+input>', tag: '<+input>' },
-                    type: 'DockerRegistry'
-                  }
-                }
-              },
-              type: 'Kubernetes'
-            }
-          },
-          serviceRef: 'svc_1'
+          serviceInputs: undefined,
+          serviceRef: 'account.custom_test'
         }
       })
     })

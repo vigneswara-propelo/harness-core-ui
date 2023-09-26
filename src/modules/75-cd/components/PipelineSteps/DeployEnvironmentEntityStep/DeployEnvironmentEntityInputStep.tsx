@@ -14,7 +14,6 @@ import { v4 as uuid } from 'uuid'
 import {
   AllowedTypes,
   ExpressionAndRuntimeTypeProps,
-  FormInput,
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
@@ -28,7 +27,6 @@ import { useStrings } from 'framework/strings'
 import type { EnvironmentYamlV2 } from 'services/cd-ng'
 
 import { useDeepCompareEffect } from '@common/hooks'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { isMultiTypeExpression, isValueExpression, isValueFixed, isValueRuntimeInput } from '@common/utils/utils'
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
@@ -99,7 +97,6 @@ export default function DeployEnvironmentEntityInputStep({
       ? 'expression'
       : undefined
   )
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
   const getEnvironmentIdentifiers = useCallback(() => {
     if (environmentValue && isValueFixed(environmentValue)) {
@@ -369,53 +366,30 @@ export default function DeployEnvironmentEntityInputStep({
     <>
       <Layout.Horizontal spacing="medium" style={{ alignItems: 'flex-end' }}>
         {!isMultiEnvironment ? (
-          CDS_OrgAccountLevelServiceEnvEnvGroup ? (
-            <MultiTypeEnvironmentField
-              {...commonProps}
-              onChange={handleSingleEnvironmentChange}
-              placeholder={placeHolderForEnvironment}
-              setRefValue={true}
-              isNewConnectorLabelVisible={false}
-              width={300}
-              multiTypeProps={{
-                expressions,
-                allowableTypes: (allowableTypes as MultiTypeInputType[])?.filter(
-                  item =>
-                    item !== MultiTypeInputType.EXECUTION_TIME &&
-                    (gitOpsEnabled ? item !== MultiTypeInputType.EXPRESSION : true)
-                ) as AllowedTypes,
-                defaultValueToReset: ''
-              }}
-            />
-          ) : (
-            <FormInput.MultiTypeInput
-              {...commonProps}
-              placeholder={placeHolderForEnvironment}
-              selectItems={selectOptions}
-              useValue
-              multiTypeInputProps={{
-                expressions,
-                allowableTypes: (allowableTypes as MultiTypeInputType[])?.filter(
-                  item =>
-                    item !== MultiTypeInputType.EXECUTION_TIME &&
-                    (gitOpsEnabled ? item !== MultiTypeInputType.EXPRESSION : true)
-                ) as AllowedTypes,
-                selectProps: {
-                  addClearBtn: !disabled,
-                  items: selectOptions
-                },
-                onChange: handleSingleEnvironmentChange
-              }}
-              className={css.inputWidth}
-            />
-          )
+          <MultiTypeEnvironmentField
+            {...commonProps}
+            onChange={handleSingleEnvironmentChange}
+            placeholder={placeHolderForEnvironment}
+            setRefValue={true}
+            isNewConnectorLabelVisible={false}
+            width={300}
+            multiTypeProps={{
+              expressions,
+              allowableTypes: (allowableTypes as MultiTypeInputType[])?.filter(
+                item =>
+                  item !== MultiTypeInputType.EXECUTION_TIME &&
+                  (gitOpsEnabled ? item !== MultiTypeInputType.EXPRESSION : true)
+              ) as AllowedTypes,
+              defaultValueToReset: ''
+            }}
+          />
         ) : null}
 
         {/* If we have multiple environments to select individually or under env group, 
           and we are deploying to all environments from pipeline studio.
           Then we should hide this field and just update the formik values */}
         {isMultiEnvironment && deployToAllEnvironments !== true ? (
-          CDS_OrgAccountLevelServiceEnvEnvGroup && !envGroupIdentifier ? (
+          !envGroupIdentifier ? (
             <MultiTypeEnvironmentField
               {...commonProps}
               placeholder={placeHolderForEnvironments}

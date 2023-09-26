@@ -5,33 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import {
-  Layout,
-  FormInput,
-  Utils,
-  useConfirmationDialog,
-  MultiTypeInputType,
-  AllowedTypes,
-  SelectOption,
-  Text,
-  Container
-} from '@harness/uicore'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Layout, FormInput, useConfirmationDialog, Text, Container } from '@harness/uicore'
 import { Color, Intent } from '@harness/design-system'
 import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'
 import type { MonitoredServiceDTO } from 'services/cv'
-import { Scope } from '@common/interfaces/SecretsInterface'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import {
-  useGetHarnessServices,
-  useGetHarnessEnvironments,
-  HarnessServiceAsFormField,
-  HarnessEnvironmentAsFormField
-} from '@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironment'
 import { ChangeSourceCategoryName } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
-import type { EnvironmentSelectOrCreateProps } from '@cv/components/HarnessServiceAndEnvironment/components/EnvironmentSelectOrCreate/EnvironmentSelectOrCreate'
-import type { EnvironmentMultiSelectOrCreateProps } from '@cv/components/HarnessServiceAndEnvironment/components/EnvironmentMultiSelectAndEnv/EnvironmentMultiSelectAndEnv'
 import { useMonitoredServiceContext } from '@cv/pages/monitored-service/MonitoredServiceContext'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import { getIfModuleIsCD } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.utils'
@@ -39,25 +19,16 @@ import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { MonitoredServiceTypeOptions } from './MonitoredServiceOverview.constants'
-import {
-  updateMonitoredServiceNameForService,
-  updatedMonitoredServiceNameForEnv,
-  serviceOnSelect
-} from './MonitoredServiceOverview.utils'
+import { updatedMonitoredServiceNameForEnv, serviceOnSelect } from './MonitoredServiceOverview.utils'
 import type { MonitoredServiceOverviewProps } from './MonitoredSourceOverview.types'
 import OrgAccountLevelServiceEnvField from './component/OrgAccountLevelServiceEnvField/OrgAccountLevelServiceEnvField'
 import css from './MonitoredServiceOverview.module.scss'
 
 export default function MonitoredServiceOverview(props: MonitoredServiceOverviewProps): JSX.Element {
   const { formikProps, isEdit, onChangeMonitoredServiceType, config, serviceIdentifier, environmentIdentifier } = props
-  const { isTemplate, templateScope } = useMonitoredServiceContext()
+  const { isTemplate } = useMonitoredServiceContext()
   const { getString } = useStrings()
   const [tempServiceType, setTempServiceType] = useState<MonitoredServiceDTO['type']>()
-  const { serviceOptions, setServiceOptions } = useGetHarnessServices()
-  const { environmentOptions, setEnvironmentOptions } = useGetHarnessEnvironments()
-  const values = formikProps.values || {}
-  const keys = useMemo(() => [Utils.randomId(), Utils.randomId()], [values.serviceRef, values.environmentRef])
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   const isCDModule = getIfModuleIsCD(config)
   const { licenseInformation } = useLicenseStore()
   const isSRMLicensePresentAndActive = licenseInformation[ModuleName.CV]?.status === LICENSE_STATE_VALUES.ACTIVE
@@ -90,14 +61,6 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
     service => serviceOnSelect(isTemplate, service, formikProps),
     [formikProps.values]
   )
-
-  const multiTypeByScope = useMemo(
-    () =>
-      templateScope !== Scope.PROJECT
-        ? [MultiTypeInputType.RUNTIME]
-        : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
-    [templateScope]
-  ) as AllowedTypes
 
   useEffect(() => {
     if (serviceIdentifier && environmentIdentifier) {
@@ -144,83 +107,11 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
             />
           )}
 
-          {CDS_OrgAccountLevelServiceEnvEnvGroup ? (
-            <OrgAccountLevelServiceEnvField
-              isTemplate={isTemplate}
-              environmentOnSelect={onEnvSelect}
-              serviceOnSelect={onServiceSelect}
-            />
-          ) : (
-            <>
-              <Layout.Vertical padding={{ top: 'large' }}>
-                <Text font={{ weight: 'semi-bold', size: 'medium' }} color={Color.BLACK} padding={{ bottom: 'small' }}>
-                  {getString('service')}
-                </Text>
-                <Text>{getString('cv.monitoredServices.serviceDescription')}</Text>
-              </Layout.Vertical>
-              <HarnessServiceAsFormField
-                key={keys[0]}
-                customRenderProps={{
-                  name: 'serviceRef',
-                  label: 'Service'
-                }}
-                serviceProps={{
-                  className: css.dropdown,
-                  disabled: isEdit,
-                  isMultiType: isTemplate,
-                  allowableTypes: multiTypeByScope,
-                  item: serviceOptions.find(item => item?.value === values.serviceRef) || values.serviceRef,
-                  options: serviceOptions,
-                  onSelect: (selectedService: SelectOption) =>
-                    serviceOnSelect(isTemplate, selectedService, formikProps),
-                  onNewCreated: newOption => {
-                    if (newOption?.identifier && newOption.name) {
-                      const newServiceOption = { label: newOption.name, value: newOption.identifier }
-                      setServiceOptions([newServiceOption, ...serviceOptions])
-                      updateMonitoredServiceNameForService(formikProps, newServiceOption)
-                    }
-                  }
-                }}
-              />
-              <Layout.Vertical padding={{ top: 'large' }}>
-                <Text font={{ weight: 'semi-bold', size: 'medium' }} color={Color.BLACK} padding={{ bottom: 'small' }}>
-                  {getString('environment')}
-                </Text>
-                <Text>{getString('cv.monitoredServices.environmentDescription')}</Text>
-              </Layout.Vertical>
-              <HarnessEnvironmentAsFormField
-                key={keys[1]}
-                customRenderProps={{
-                  name: 'environmentRef',
-                  label: 'Environment'
-                }}
-                isMultiSelectField={formikProps.values?.type === ChangeSourceCategoryName.INFRASTRUCTURE}
-                environmentProps={
-                  {
-                    className: css.dropdown,
-                    disabled: isEdit,
-                    isMultiType: isTemplate,
-                    allowableTypes: multiTypeByScope,
-                    popOverClassName: css.popOverClassName,
-                    item:
-                      formikProps.values?.type === ChangeSourceCategoryName.INFRASTRUCTURE
-                        ? environmentOptions.filter(it => values.environmentRef?.includes(it.value as string))
-                        : environmentOptions.find(item => item?.value === values.environmentRef) ||
-                          values.environmentRef,
-                    onSelect: onEnvSelect,
-                    options: environmentOptions,
-                    onNewCreated: newOption => {
-                      if (newOption?.identifier && newOption.name) {
-                        const newEnvOption = { label: newOption.name, value: newOption.identifier }
-                        setEnvironmentOptions([newEnvOption, ...environmentOptions])
-                        updatedMonitoredServiceNameForEnv(formikProps, newEnvOption, formikProps.values?.type)
-                      }
-                    }
-                  } as EnvironmentMultiSelectOrCreateProps | EnvironmentSelectOrCreateProps
-                }
-              />
-            </>
-          )}
+          <OrgAccountLevelServiceEnvField
+            isTemplate={isTemplate}
+            environmentOnSelect={onEnvSelect}
+            serviceOnSelect={onServiceSelect}
+          />
           {!isTemplate && <hr className={css.divider} />}
         </Layout.Vertical>
       ) : null}

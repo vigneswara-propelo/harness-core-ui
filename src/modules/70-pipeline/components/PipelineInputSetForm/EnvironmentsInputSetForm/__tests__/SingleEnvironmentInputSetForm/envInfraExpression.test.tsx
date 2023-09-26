@@ -47,9 +47,6 @@ describe('Single Environment Input Set Form - Env and Infra Expression', () => {
 
     render(
       <TestWrapper
-        defaultFeatureFlagValues={{
-          CDS_OrgAccountLevelServiceEnvEnvGroup: true
-        }}
         path={routes.toPipelineStudio({
           accountId: ':accountId',
           orgIdentifier: ':orgIdentifier',

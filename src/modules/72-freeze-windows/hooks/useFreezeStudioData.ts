@@ -27,14 +27,12 @@ import {
   allServicesObj
 } from '@freeze-windows/utils/FreezeWindowStudioUtil'
 import { useMutateAsGet } from '@common/hooks'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetPipelineList } from 'services/pipeline-ng'
 
 export const useFreezeStudioData = (): ResourcesInterface => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { freezeWindowLevel } = React.useContext(FreezeWindowContext)
   const { getString } = useStrings()
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
   const {
     loading: loadingOrgs,
@@ -51,7 +49,7 @@ export const useFreezeStudioData = (): ResourcesInterface => {
       orgIdentifier,
       projectIdentifier,
       size: 200,
-      includeAllServicesAccessibleAtScope: CDS_OrgAccountLevelServiceEnvEnvGroup
+      includeAllServicesAccessibleAtScope: true
     }
   })
 
@@ -60,7 +58,7 @@ export const useFreezeStudioData = (): ResourcesInterface => {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      includeAllAccessibleAtScope: CDS_OrgAccountLevelServiceEnvEnvGroup
+      includeAllAccessibleAtScope: true
     },
     body: {
       filterType: 'Environment'

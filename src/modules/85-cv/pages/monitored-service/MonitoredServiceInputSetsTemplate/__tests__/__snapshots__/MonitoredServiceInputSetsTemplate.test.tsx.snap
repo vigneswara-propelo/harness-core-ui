@@ -85,20 +85,178 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
             cv.monitoredServices.serviceAndEnvironment
           </p>
           <div
-            class="StyledProps--font StyledProps--main"
+            class="Layout--vertical StyledProps--main StyledProps--padding-top-large"
           >
-            <button
-              class="bp3-button Button--button StyledProps--font StyledProps--main addService Button--with-current-color Button--iconOnly"
-              type="button"
-            />
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-black StyledProps--padding-bottom-small"
+            >
+              service
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              cv.monitoredServices.serviceDescription
+            </p>
           </div>
           <div
-            class="StyledProps--font StyledProps--main"
+            class="serviceLabel"
           >
-            <button
-              class="bp3-button Button--button StyledProps--font StyledProps--main addEnv Button--with-current-color Button--iconOnly"
-              type="button"
-            />
+            <div
+              class="StyledProps--font StyledProps--main"
+              data-testid="serviceTooltip"
+            >
+              <span
+                class="Tooltip--acenter bp3-label"
+                data-tooltip-id="MonitoredServiceForm_serviceRef"
+              >
+                Service
+              </span>
+            </div>
+            <div
+              class="bp3-form-group"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+                  style="width: 400px;"
+                >
+                  <div
+                    class="TextInput--main MultiTypeInput--input"
+                  >
+                    <div
+                      class="bp3-input-group bp3-disabled"
+                    >
+                      <input
+                        class="bp3-input"
+                        disabled=""
+                        name="serviceRef"
+                        placeholder="<+input>"
+                        type="text"
+                        value="<+input>"
+                      />
+                    </div>
+                  </div>
+                  <span
+                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <button
+                        class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                        data-testid="multi-type-button"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="runtime-input"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 10 7.97"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M8.14 4L8 3.72a2.53 2.53 0 01-.12-.3l-.16-.35c-.11-.25-.22-.38-.32-.38s-.28.15-.37.44C7 3.1 7 3.07 7 3a.73.73 0 01.24-.46.66.66 0 01.42-.26c.25 0 .5.35.76 1.05l.07.17.07-.12c.47-.73.86-1.1 1.18-1.1a.71.71 0 01.29.07l-.4.42h-.11c-.24 0-.52.28-.86.83l-.09.16.07.2c.29.79.53 1.18.71 1.18s.31-.12.4-.36q.09.06.09.12t-.27.39a.74.74 0 01-.45.23c-.25 0-.51-.36-.77-1.07l-.12-.25-.1.17c-.44.76-.87 1.14-1.28 1.14a.65.65 0 01-.39-.12L6.84 5a.32.32 0 00.23.1c.25 0 .53-.25.83-.74l.17-.28zm-4-.32L1.7.59h2.47S5 .52 5.35 1a3.28 3.28 0 01.42 1.14h.31L5.94 0H0v.31l3.06 3.74L0 7.62V8h6.08l.38-2.36-.31-.07a2.43 2.43 0 01-.52 1c-.42.48-2 .41-2 .41H1.39z"
+                              fill="current-color"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="Layout--vertical StyledProps--main StyledProps--padding-top-large"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-black StyledProps--padding-bottom-small"
+            >
+              environment
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              cv.monitoredServices.environmentDescription
+            </p>
+          </div>
+          <div
+            class="environmentLabel"
+          >
+            <div
+              class="StyledProps--font StyledProps--main"
+              data-testid="environmentTooltip"
+            >
+              <span
+                class="Tooltip--acenter bp3-label"
+                data-tooltip-id="MonitoredServiceForm_environmentRef"
+              >
+                Environment
+              </span>
+            </div>
+            <div
+              class="bp3-form-group"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+                  style="width: 400px;"
+                >
+                  <div
+                    class="TextInput--main MultiTypeInput--input"
+                  >
+                    <div
+                      class="bp3-input-group bp3-disabled"
+                    >
+                      <input
+                        class="bp3-input"
+                        disabled=""
+                        name="environmentRef"
+                        placeholder="<+input>"
+                        type="text"
+                        value="<+input>"
+                      />
+                    </div>
+                  </div>
+                  <span
+                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <button
+                        class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                        data-testid="multi-type-button"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="runtime-input"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 10 7.97"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M8.14 4L8 3.72a2.53 2.53 0 01-.12-.3l-.16-.35c-.11-.25-.22-.38-.32-.38s-.28.15-.37.44C7 3.1 7 3.07 7 3a.73.73 0 01.24-.46.66.66 0 01.42-.26c.25 0 .5.35.76 1.05l.07.17.07-.12c.47-.73.86-1.1 1.18-1.1a.71.71 0 01.29.07l-.4.42h-.11c-.24 0-.52.28-.86.83l-.09.16.07.2c.29.79.53 1.18.71 1.18s.31-.12.4-.36q.09.06.09.12t-.27.39a.74.74 0 01-.45.23c-.25 0-.51-.36-.77-1.07l-.12-.25-.1.17c-.44.76-.87 1.14-1.28 1.14a.65.65 0 01-.39-.12L6.84 5a.32.32 0 00.23.1c.25 0 .53-.25.83-.74l.17-.28zm-4-.32L1.7.59h2.47S5 .52 5.35 1a3.28 3.28 0 01.42 1.14h.31L5.94 0H0v.31l3.06 3.74L0 7.62V8h6.08l.38-2.36-.31-.07a2.43 2.43 0 01-.52 1c-.42.48-2 .41-2 .41H1.39z"
+                              fill="current-color"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div
@@ -1600,20 +1758,148 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
             cv.monitoredServices.serviceAndEnvironment
           </p>
           <div
-            class="StyledProps--font StyledProps--main"
+            class="Layout--vertical StyledProps--main StyledProps--padding-top-large"
           >
-            <button
-              class="bp3-button Button--button StyledProps--font StyledProps--main addService Button--with-current-color Button--iconOnly"
-              type="button"
-            />
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-black StyledProps--padding-bottom-small"
+            >
+              service
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              cv.monitoredServices.serviceDescription
+            </p>
           </div>
           <div
-            class="StyledProps--font StyledProps--main"
+            class="serviceLabel"
           >
-            <button
-              class="bp3-button Button--button StyledProps--font StyledProps--main addEnv Button--with-current-color Button--iconOnly"
-              type="button"
-            />
+            <div
+              class="StyledProps--font StyledProps--main"
+              data-testid="serviceTooltip"
+            >
+              <span
+                class="Tooltip--acenter bp3-label"
+                data-tooltip-id="MonitoredServiceForm_serviceRef"
+              >
+                Service
+              </span>
+            </div>
+            <div
+              class="bp3-form-group"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <button
+                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
+                  data-testid="cr-field-serviceRef"
+                  style="width: 400px;"
+                  type="button"
+                >
+                  <span
+                    class="bp3-button-text"
+                  >
+                    <span
+                      class="placeholder"
+                    >
+                      cv.selectCreateService
+                    </span>
+                  </span>
+                  <span
+                    class="bp3-icon bp3-icon-chevron-down StyledProps--main"
+                    icon="chevron-down"
+                  >
+                    <svg
+                      data-icon="chevron-down"
+                      height="14"
+                      viewBox="0 0 16 16"
+                      width="14"
+                    >
+                      <desc>
+                        chevron-down
+                      </desc>
+                      <path
+                        d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="Layout--vertical StyledProps--main StyledProps--padding-top-large"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-black StyledProps--padding-bottom-small"
+            >
+              environment
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              cv.monitoredServices.environmentDescription
+            </p>
+          </div>
+          <div
+            class="environmentLabel"
+          >
+            <div
+              class="StyledProps--font StyledProps--main"
+              data-testid="environmentTooltip"
+            >
+              <span
+                class="Tooltip--acenter bp3-label"
+                data-tooltip-id="MonitoredServiceForm_environmentRef"
+              >
+                Environment
+              </span>
+            </div>
+            <div
+              class="bp3-form-group"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <button
+                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
+                  data-testid="cr-field-environmentRef"
+                  style="width: 400px;"
+                  type="button"
+                >
+                  <span
+                    class="bp3-button-text"
+                  >
+                    <span
+                      class="placeholder"
+                    >
+                      cv.selectOrCreateEnv
+                    </span>
+                  </span>
+                  <span
+                    class="bp3-icon bp3-icon-chevron-down StyledProps--main"
+                    icon="chevron-down"
+                  >
+                    <svg
+                      data-icon="chevron-down"
+                      height="14"
+                      viewBox="0 0 16 16"
+                      width="14"
+                    >
+                      <desc>
+                        chevron-down
+                      </desc>
+                      <path
+                        d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
         <div
@@ -2581,12 +2867,76 @@ exports[`Test MonitoredServiceInputSetsTemplate with GCO should render with ms i
             cv.monitoredServices.serviceAndEnvironment
           </p>
           <div
-            class="StyledProps--font StyledProps--main"
+            class="Layout--vertical StyledProps--main StyledProps--padding-top-large"
           >
-            <button
-              class="bp3-button Button--button StyledProps--font StyledProps--main addService Button--with-current-color Button--iconOnly"
-              type="button"
-            />
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-black StyledProps--padding-bottom-small"
+            >
+              service
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              cv.monitoredServices.serviceDescription
+            </p>
+          </div>
+          <div
+            class="serviceLabel"
+          >
+            <div
+              class="StyledProps--font StyledProps--main"
+              data-testid="serviceTooltip"
+            >
+              <span
+                class="Tooltip--acenter bp3-label"
+                data-tooltip-id="MonitoredServiceForm_serviceRef"
+              >
+                Service
+              </span>
+            </div>
+            <div
+              class="bp3-form-group"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <button
+                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
+                  data-testid="cr-field-serviceRef"
+                  style="width: 400px;"
+                  type="button"
+                >
+                  <span
+                    class="bp3-button-text"
+                  >
+                    <span
+                      class="placeholder"
+                    >
+                      cv.selectCreateService
+                    </span>
+                  </span>
+                  <span
+                    class="bp3-icon bp3-icon-chevron-down StyledProps--main"
+                    icon="chevron-down"
+                  >
+                    <svg
+                      data-icon="chevron-down"
+                      height="14"
+                      viewBox="0 0 16 16"
+                      width="14"
+                    >
+                      <desc>
+                        chevron-down
+                      </desc>
+                      <path
+                        d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
         <div

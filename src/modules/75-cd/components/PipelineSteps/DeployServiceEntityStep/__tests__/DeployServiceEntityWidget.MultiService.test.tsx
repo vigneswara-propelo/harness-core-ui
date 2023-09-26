@@ -6,9 +6,17 @@
  */
 
 import React from 'react'
-import { render, waitFor, findByText as findByTextGlobal, queryByAttribute, getByText } from '@testing-library/react'
+import {
+  render,
+  waitFor,
+  findByText as findByTextGlobal,
+  queryByAttribute,
+  getByText,
+  screen
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import mockServiceList from '@cd/components/EnvironmentsV2/EnvironmentDetails/ServiceOverrides/__test__/__mocks__/mockServicesListForOverrides.json'
 
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import DeployServiceEntityWidget from '../DeployServiceEntityWidget'
@@ -32,7 +40,8 @@ jest.mock('services/cd-ng', () => ({
       .mockResolvedValue({ status: 'SUCCESS', data: { service: { identifier: 'svc_4', name: 'Service 4' } } })
   }),
   useUpdateServiceV2: jest.fn().mockReturnValue({ mutate: jest.fn().mockResolvedValue({ status: 'SUCCESS' }) }),
-  useGetEntityYamlSchema: jest.fn().mockReturnValue({ data: { data: {} } })
+  useGetEntityYamlSchema: jest.fn().mockReturnValue({ data: { data: {} } }),
+  getServiceAccessListPromise: jest.fn().mockImplementation(() => Promise.resolve(mockServiceList))
 }))
 
 jest.mock('services/cd-ng-rq', () => ({
@@ -45,7 +54,7 @@ jest.mock('services/cd-ng-rq', () => ({
 describe('DeployServiceEntityWidget - multi services tests', () => {
   test('user can select multiple services', async () => {
     const onUpdate = jest.fn()
-    const { container, findByTestId } = render(
+    const { container } = render(
       <TestWrapper defaultFeatureFlagValues={defaultFeatureFlagValues}>
         <DeployServiceEntityWidget
           initialValues={{}}
@@ -66,17 +75,17 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
 
     await userEvent.click(toggle)
 
-    const multi = await findByTestId('multi-select-dropdown-button')
+    await userEvent.click(container.querySelector('[class="StyledProps--font StyledProps--main pointer"]')!)
 
-    await userEvent.click(multi)
+    const serviceText1 = screen.getByText('custom test')
+    const serviceText2 = screen.getByText('dwdasd')
 
-    await waitFor(() => expect(document.body.querySelector('.bp3-menu')).toBeInTheDocument())
+    expect(serviceText1).toBeInTheDocument()
+    expect(serviceText2).toBeInTheDocument()
 
-    const menu = document.body.querySelector<HTMLDivElement>('.bp3-menu')!
-    const svc1 = await findByTextGlobal(menu, 'Service 1')
-    await userEvent.click(svc1)
-
-    await userEvent.click(multi)
+    await userEvent.click(serviceText1)
+    await userEvent.click(serviceText2)
+    await userEvent.click(screen.getByText('entityReference.apply')!)
 
     await waitFor(() => {
       expect(onUpdate).toHaveBeenLastCalledWith({
@@ -86,20 +95,12 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
           },
           values: [
             {
-              serviceInputs: {
-                serviceDefinition: {
-                  spec: {
-                    artifacts: {
-                      primary: {
-                        spec: { connectorRef: '<+input>', imagePath: '<+input>', tag: '<+input>' },
-                        type: 'DockerRegistry'
-                      }
-                    }
-                  },
-                  type: 'Kubernetes'
-                }
-              },
-              serviceRef: 'svc_1'
+              serviceInputs: undefined,
+              serviceRef: 'account.custom_test'
+            },
+            {
+              serviceInputs: undefined,
+              serviceRef: 'account.dwdasd'
             }
           ]
         }

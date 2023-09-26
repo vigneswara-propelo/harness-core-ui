@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { unstable_batchedUpdates } from 'react-dom'
-import { defaultTo, isEmpty, isNil } from 'lodash-es'
+import { isEmpty } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import produce from 'immer'
 
@@ -21,7 +21,6 @@ import {
   ModalDialog,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
-  SelectOption,
   useToaster,
   useToggleOpen
 } from '@harness/uicore'
@@ -46,7 +45,6 @@ import CreateEnvironmentGroupModal from '@cd/components/EnvironmentGroups/Create
 
 import { MultiTypeEnvironmentGroupField } from '@pipeline/components/FormMultiTypeEnvironmentGroupField/FormMultiTypeEnvironmentGroupField'
 import { useDeepCompareEffect } from '@common/hooks'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import type {
   DeployEnvironmentEntityCustomStepProps,
@@ -81,14 +79,6 @@ export function getAllFixedEnvironmentGroups(data: DeployEnvironmentEntityFormSt
   return []
 }
 
-export function getSelectedEnvironmentGroupsFromOptions(items: SelectOption[]): string[] {
-  if (Array.isArray(items)) {
-    return items.map(item => item.value as string)
-  }
-
-  return []
-}
-
 export default function DeployEnvironmentGroup({
   initialValues,
   readonly,
@@ -115,8 +105,6 @@ export default function DeployEnvironmentGroup({
   const isRuntime = getMultiTypeFromValue(values.environmentGroup) === MultiTypeInputType.RUNTIME
   const filterPrefix = 'environmentGroupFilters'
 
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
-
   // API
   const {
     environmentGroupsList,
@@ -138,18 +126,6 @@ export default function DeployEnvironmentGroup({
       )
     }
   }, [nonExistingEnvironmentGroupIdentifiers])
-
-  const selectOptions = useMemo(() => {
-    /* istanbul ignore else */
-    if (!isNil(environmentGroupsList)) {
-      return environmentGroupsList.map(environmentGroup => ({
-        label: defaultTo(environmentGroup.envGroup?.name, ''),
-        value: defaultTo(environmentGroup.envGroup?.identifier, '')
-      }))
-    }
-
-    return []
-  }, [environmentGroupsList])
 
   const disabled = readonly || (isFixed && loadingEnvironmentGroupsList)
 
@@ -223,45 +199,24 @@ export default function DeployEnvironmentGroup({
         flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
         className={css.inputField}
       >
-        {CDS_OrgAccountLevelServiceEnvEnvGroup ? (
-          <MultiTypeEnvironmentGroupField
-            tooltipProps={{ dataTooltipId: 'specifyYourEnvironmentGroup' }}
-            label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup')}
-            name="environmentGroup"
-            setRefValue
-            disabled={disabled}
-            placeholder={placeHolderForEnvironmentGroup}
-            openAddNewModal={openAddNewModal}
-            isNewConnectorLabelVisible
-            onChange={item => {
-              setSelectedEnvironmentGroups([item])
-            }}
-            multiTypeProps={{
-              width: 300,
-              allowableTypes: getAllowableTypesWithoutExpression(allowableTypes),
-              defaultValueToReset: ''
-            }}
-          />
-        ) : (
-          <FormInput.MultiTypeInput
-            tooltipProps={{ dataTooltipId: 'specifyYourEnvironmentGroup' }}
-            label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup')}
-            name="environmentGroup"
-            useValue
-            disabled={disabled}
-            placeholder={placeHolderForEnvironmentGroup}
-            multiTypeInputProps={{
-              width: 300,
-              selectProps: { items: selectOptions },
-              allowableTypes: getAllowableTypesWithoutExpression(allowableTypes),
-              defaultValueToReset: '',
-              onChange: item => {
-                setSelectedEnvironmentGroups(getSelectedEnvironmentGroupsFromOptions([item as SelectOption]))
-              }
-            }}
-            selectItems={selectOptions}
-          />
-        )}
+        <MultiTypeEnvironmentGroupField
+          tooltipProps={{ dataTooltipId: 'specifyYourEnvironmentGroup' }}
+          label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup')}
+          name="environmentGroup"
+          setRefValue
+          disabled={disabled}
+          placeholder={placeHolderForEnvironmentGroup}
+          openAddNewModal={openAddNewModal}
+          isNewConnectorLabelVisible
+          onChange={item => {
+            setSelectedEnvironmentGroups([item])
+          }}
+          multiTypeProps={{
+            width: 300,
+            allowableTypes: getAllowableTypesWithoutExpression(allowableTypes),
+            defaultValueToReset: ''
+          }}
+        />
         {isFixed && (
           <RbacButton
             margin={{ top: 'xlarge' }}

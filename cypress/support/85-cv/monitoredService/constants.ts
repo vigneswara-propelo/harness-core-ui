@@ -11,6 +11,11 @@ export const servicesCall =
 export const environmentsCall =
   '/ng/api/environments?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1'
 
+export const multiscopeServiceCall = `ng/api/servicesV2/list/access?page=0&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&searchTerm=&deploymentTemplateIdentifier=`
+
+export const multiScopeEnvCall =
+  '/ng/api/environmentsV2/list/access?page=0&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&searchTerm='
+
 export const gitSyncEnabledCall = '/ng/api/git-sync/git-sync-enabled?*'
 
 export const servicesResponse = {
@@ -40,6 +45,56 @@ export const servicesResponse = {
   correlationId: '8fc77312-0015-4665-be3d-f66527ae209f'
 }
 
+export const servicesV2Response = {
+  status: 'SUCCESS',
+  data: [
+    {
+      service: {
+        accountId: 'px7xd_BFRCi-pfWPYXVjvw',
+        identifier: 'DockerServicetest',
+        orgIdentifier: 'default',
+        projectIdentifier: 'KanikaTest',
+        name: 'DockerServicetest',
+        deleted: false,
+        tags: {},
+        v2Service: false
+      },
+      createdAt: 1658998955970,
+      lastModifiedAt: 1685363737824
+    },
+    {
+      service: {
+        accountId: 'px7xd_BFRCi-pfWPYXVjvw',
+        identifier: 'manifest_svc',
+        orgIdentifier: 'default',
+        projectIdentifier: 'KanikaTest',
+        name: 'manifest_svc',
+        deleted: false,
+        tags: {},
+        v2Service: false
+      },
+      createdAt: 1679051784178,
+      lastModifiedAt: 1679051829973
+    },
+    {
+      service: {
+        accountId: 'px7xd_BFRCi-pfWPYXVjvw',
+        identifier: 'check_service',
+        orgIdentifier: 'default',
+        projectIdentifier: 'KanikaTest',
+        name: 'check service',
+        deleted: false,
+        tags: {},
+        v2Service: false
+      },
+      createdAt: 1695059042108,
+      lastModifiedAt: 1695059042108
+    }
+  ],
+  metaData: null,
+  correlationId: '60596984-4550-4a28-ab45-32ce5d65052a'
+}
+
 export const environmentResponse = {
   status: 'SUCCESS',
   data: {
@@ -67,6 +122,63 @@ export const environmentResponse = {
   },
   metaData: null,
   correlationId: '76f1288e-9bd0-47c0-82d9-6a3df8084603'
+}
+
+export const environmentV2Response = {
+  status: 'SUCCESS',
+  data: [
+    {
+      environment: {
+        accountId: 'px7xd_BFRCi-pfWPYXVjvw',
+        orgIdentifier: 'default',
+        projectIdentifier: 'KanikaTest',
+        identifier: 'EnvironmentTest',
+        name: 'EnvironmentTest',
+        color: '#0063F7',
+        type: 'Production',
+        deleted: false,
+        tags: {},
+        yaml: 'environment:\n  orgIdentifier: "default"\n  projectIdentifier: "KanikaTest"\n  identifier: "EnvironmentTest"\n  tags: {}\n  name: "EnvironmentTest"\n  type: "Production"\n'
+      },
+      createdAt: 1658999432548,
+      lastModifiedAt: 1658999432548
+    },
+    {
+      environment: {
+        accountId: 'px7xd_BFRCi-pfWPYXVjvw',
+        orgIdentifier: 'default',
+        projectIdentifier: 'KanikaTest',
+        identifier: 'envrecon',
+        name: 'env-recon',
+        color: '#0063F7',
+        type: 'Production',
+        deleted: false,
+        tags: {},
+        yaml: 'environment:\n  name: env-recon\n  identifier: envrecon\n  description: null\n  tags: {}\n  type: Production\n  orgIdentifier: default\n  projectIdentifier: KanikaTest\n  variables:\n    - name: dffdfd\n      type: String\n      value: <+input>\n      description: ""\n'
+      },
+      createdAt: 1665469583018,
+      lastModifiedAt: 1665469772829
+    },
+    {
+      environment: {
+        accountId: 'px7xd_BFRCi-pfWPYXVjvw',
+        orgIdentifier: 'default',
+        projectIdentifier: 'KanikaTest',
+        identifier: 'vbcbvx',
+        name: 'vbcbvx',
+        description: '',
+        color: '#0063F7',
+        type: 'Production',
+        deleted: false,
+        tags: {},
+        yaml: 'environment:\n  name: vbcbvx\n  identifier: vbcbvx\n  description: ""\n  tags: {}\n  type: Production\n  orgIdentifier: default\n  projectIdentifier: KanikaTest\n'
+      },
+      createdAt: 1662962692798,
+      lastModifiedAt: 1663662336526
+    }
+  ],
+  metaData: null,
+  correlationId: '020cfb58-7e19-42bb-bd2f-e764300e55d9'
 }
 
 export const environmentistCall =

@@ -10,7 +10,6 @@ import { act, render } from '@testing-library/react'
 import { Button, Container } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import ServiceEnvironmentInputSet from '../ServiceEnvironmentInputSet'
 
 jest.mock(
@@ -97,8 +96,8 @@ describe('ServiceEnvironmentInputSet', () => {
       </TestWrapper>
     )
     expect(getByText('cv.monitoredServices.serviceAndEnvironment')).toBeInTheDocument()
-    expect(container.querySelector('[title="addService"]')).toBeInTheDocument()
-    expect(container.querySelector('[title="addEnv"]')).toBeInTheDocument()
+    expect(container.querySelector('[title="On Service Select"]')).toBeInTheDocument()
+    expect(container.querySelector('[title="On Environment Select"]')).toBeInTheDocument()
     await act(async () => {
       await userEvent.click(container.querySelector('[title="addEnv"]')!)
     })
@@ -119,7 +118,7 @@ describe('ServiceEnvironmentInputSet', () => {
       </TestWrapper>
     )
     expect(getByText('cv.monitoredServices.serviceAndEnvironment')).toBeInTheDocument()
-    expect(container.querySelector('[title="addEnv"]')).toBeInTheDocument()
+    expect(container.querySelector('[title="On Environment Select"]')).toBeInTheDocument()
 
     rerender(
       <TestWrapper>
@@ -140,7 +139,7 @@ describe('ServiceEnvironmentInputSet', () => {
       </TestWrapper>
     )
     expect(getByText('cv.monitoredServices.serviceAndEnvironment')).toBeInTheDocument()
-    expect(container.querySelector('[title="addService"]')).toBeInTheDocument()
+    expect(container.querySelector('[title="On Service Select"]')).toBeInTheDocument()
     await act(async () => {
       await userEvent.click(container.querySelector('[title="addService"]')!)
     })
@@ -161,13 +160,10 @@ describe('ServiceEnvironmentInputSet', () => {
       </TestWrapper>
     )
     expect(getByText('cv.monitoredServices.serviceAndEnvironment')).toBeInTheDocument()
-    expect(container.querySelector('[title="addEnv"]')).toBeInTheDocument()
+    expect(container.querySelector('[title="On Environment Select"]')).toBeInTheDocument()
   })
 
-  test('should render correctly with an environment value provided when ff is enabled', () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      CDS_OrgAccountLevelServiceEnvEnvGroup: true
-    })
+  test('should render correctly with an environment value provided when org/acc level service env is enabled', () => {
     const { getByText, rerender } = render(
       <TestWrapper>
         <ServiceEnvironmentInputSet
@@ -192,11 +188,8 @@ describe('ServiceEnvironmentInputSet', () => {
     )
   })
 
-  test('should render when ff CDS_OrgAccountLevelServiceEnvEnvGroup is true', async () => {
+  test('should render correctly when org/acc level service env is enabled', async () => {
     const onInputSetChangeMock = jest.fn()
-    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      CDS_OrgAccountLevelServiceEnvEnvGroup: true
-    })
     const { container, getByTestId } = render(
       <TestWrapper>
         <ServiceEnvironmentInputSet

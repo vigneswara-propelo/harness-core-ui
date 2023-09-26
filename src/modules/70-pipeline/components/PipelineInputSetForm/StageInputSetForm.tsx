@@ -166,7 +166,7 @@ export function StageInputSetFormInternal({
     deploymentStageTemplateInfraKeys.includes(field)
   )
   const namePath = isEmpty(path) ? '' : `${path}.`
-  const { CIE_HOSTED_VMS_WINDOWS, CDS_OrgAccountLevelServiceEnvEnvGroup, IACM_ENABLED } = useFeatureFlags()
+  const { CIE_HOSTED_VMS_WINDOWS, IACM_ENABLED } = useFeatureFlags()
   const iacmRequired = stageType === StageType.IACM
 
   const renderMultiTypeInputWithAllowedValues = React.useCallback(
@@ -572,13 +572,7 @@ export function StageInputSetFormInternal({
       <ServicesInputSetForm
         deploymentStage={deploymentStage}
         deploymentStageTemplate={deploymentStageTemplate}
-        allowableTypes={
-          scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup
-            ? allowableTypes
-            : ((allowableTypes as MultiTypeInputType[])?.filter(
-                item => item !== MultiTypeInputType.FIXED
-              ) as AllowedTypes)
-        }
+        allowableTypes={allowableTypes}
         path={path}
         viewType={viewType}
         readonly={readonly}
@@ -589,13 +583,7 @@ export function StageInputSetFormInternal({
       <EnvironmentsInputSetForm
         deploymentStage={deploymentStage}
         deploymentStageTemplate={deploymentStageTemplate}
-        allowableTypes={
-          scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup
-            ? allowableTypes
-            : ((allowableTypes as MultiTypeInputType[])?.filter(
-                item => item !== MultiTypeInputType.FIXED
-              ) as AllowedTypes)
-        }
+        allowableTypes={allowableTypes}
         path={path}
         viewType={viewType}
         readonly={readonly}

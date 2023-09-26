@@ -7,16 +7,23 @@ import {
   servicesCallRunPipeline,
   servicesYaml,
   environmentsCallRunPipeline,
-  connectorsCall
+  connectorsCall,
+  servicesV2CallWithPageAndTemplateFilter,
+  servicesV2Response,
+  environmentV2CallWithPage,
+  environmentV2Response,
+  serviceV2YamlInput
 } from '../../support/70-pipeline/constants'
 
 describe('Checks visual to YAML and visual to variable view parity', () => {
   beforeEach(() => {
     cy.intercept('GET', servicesCallRunPipeline, { fixture: 'ng/api/servicesV2/serviceYamlVariable' })
+    cy.intercept('GET', servicesV2CallWithPageAndTemplateFilter, servicesV2Response).as('serviceV2ListCall')
+    cy.intercept('GET', environmentV2CallWithPage, environmentV2Response).as('environmentV2ListCall')
     cy.intercept('GET', environmentsCallRunPipeline, { fixture: 'ng/api/environmentsV2Access' }).as('environmentCall')
     cy.intercept('GET', connectorsCall, { fixture: 'ng/api/connectors' })
     cy.intercept('POST', pipelineVariablesCall, { fixture: 'pipeline/api/runpipeline/pipelines.variables' })
-    cy.intercept('POST', servicesYaml, { fixture: 'ng/api/servicesV2/serviceYamlInput' }).as('serviceYaml')
+    cy.intercept('POST', servicesYaml, serviceV2YamlInput).as('serviceYaml')
     cy.intercept('GET', cdFailureStrategiesYaml, { fixture: 'pipeline/api/pipelines/failureStrategiesYaml' }).as(
       'cdFailureStrategiesYaml'
     )
@@ -60,16 +67,19 @@ describe('Checks visual to YAML and visual to variable view parity', () => {
     cy.wait(1000)
     cy.visitPageAssertion('[id*="SERVICE"]')
     // Service tab config
-    cy.get('input[name="service"]').click({ force: true })
-    cy.contains('p', 'testService').click({ force: true })
+    cy.findByTestId('cr-field-service').click({ force: true })
+    cy.wait('@serviceV2ListCall')
+    cy.contains('p', 'DockerServicetest').click({ force: true })
+    cy.contains('span', 'Apply Selected').click({ force: true })
     cy.wait(1000)
 
     // Infrastructure tab config
     cy.contains('span', 'Environment').click({ force: true })
     cy.wait(1000)
-    cy.get('input[name="environment"]').click({ force: true })
-    cy.wait('@environmentCall')
-    cy.contains('p', 'testEnv').click({ force: true })
+    cy.findByTestId('cr-field-environment').click({ force: true })
+    cy.wait('@environmentV2ListCall')
+    cy.contains('p', 'EnvironmentTest').click({ force: true })
+    cy.contains('span', 'Apply Selected').click({ force: true })
     cy.wait(1000)
     cy.selectRuntimeInputForInfrastructure()
   })
@@ -89,10 +99,10 @@ describe('Checks visual to YAML and visual to variable view parity', () => {
     cy.contains('span', 'Deployment').should('be.visible')
 
     cy.contains('span', 'serviceRef').should('be.visible')
-    cy.contains('span', 'testService').should('be.visible')
+    cy.contains('span', 'DockerServicetest').should('be.visible')
 
     cy.contains('span', 'environmentRef').should('be.visible')
-    cy.contains('span', 'testEnv').should('be.visible')
+    cy.contains('span', 'EnvironmentTest').should('be.visible')
 
     cy.contains('span', 'K8sManifest').should('be.visible')
     cy.contains('span', 'DockerRegistry').should('be.visible')

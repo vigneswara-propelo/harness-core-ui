@@ -5,11 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect } from 'react'
 import {
   ButtonSize,
   ButtonVariation,
-  FormInput,
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
@@ -37,8 +36,6 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 import ServiceEntityEditModal from '@cd/components/Services/ServiceEntityEditModal/ServiceEntityEditModal'
 import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { isValueExpression, isValueRuntimeInput } from '@common/utils/utils'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'
@@ -131,7 +128,6 @@ export default function BaseDeployServiceEntity({
     open: openSwitchToSingleSvcDialog,
     close: closeSwitchToSingleSvcDialog
   } = useToggleOpen()
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
 
   useDeepCompareEffect(() => {
@@ -140,15 +136,6 @@ export default function BaseDeployServiceEntity({
       setAllServices(getAllFixedServices(initialValues))
     }
   }, [initialValues, setupModeType])
-
-  const selectOptions = useMemo(() => {
-    /* istanbul ignore else */
-    if (!isNil(servicesList)) {
-      return servicesList.map(service => ({ label: service.name, value: service.identifier }))
-    }
-
-    return []
-  }, [servicesList])
 
   const updateServiceInputsForServices = React.useCallback(
     (serviceOrServices: Pick<FormState, 'service' | 'services'>): void => {
@@ -410,88 +397,48 @@ export default function BaseDeployServiceEntity({
               <Layout.Horizontal spacing="medium" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
                 {isMultiSvc ? (
                   <>
-                    {!CDS_OrgAccountLevelServiceEnvEnvGroup ? (
-                      <FormMultiTypeMultiSelectDropDown
-                        tooltipProps={{ dataTooltipId: 'specifyYourService' }}
-                        label={defaultTo(serviceLabel, getString('cd.pipelineSteps.serviceTab.specifyYourServices'))}
-                        name="services"
-                        disabled={readonly || (isFixed && loading)}
-                        onChange={handleMultiSelectChange}
-                        dropdownProps={{
-                          items: selectOptions,
-                          placeholder: placeHolderForServices,
-                          disabled: loading || readonly
-                        }}
-                        multiTypeProps={{
-                          width: 300,
-                          allowableTypes: getAllowableTypesWithoutExpression(allowableTypes)
-                        }}
-                      />
-                    ) : (
-                      /** istanbul ignore next */ <MultiTypeServiceField
-                        name="services"
-                        label={defaultTo(serviceLabel, getString('cd.pipelineSteps.serviceTab.specifyYourServices'))}
-                        deploymentType={deploymentType as ServiceDeploymentType}
-                        gitOpsEnabled={gitOpsEnabled}
-                        deploymentMetadata={deploymentMetadata}
-                        disabled={readonly || (isFixed && loading)}
-                        placeholder={placeHolderForServices}
-                        openAddNewModal={openAddNewModal}
-                        isMultiSelect={true}
-                        isNewConnectorLabelVisible
-                        onMultiSelectChange={handleMultiSelectChange}
-                        width={300}
-                        multiTypeProps={{
-                          expressions,
-                          allowableTypes: getAllowableTypesWithoutExpression(allowableTypes),
-                          onTypeChange: setServiceInputType
-                        }}
-                      />
-                    )}
+                    <MultiTypeServiceField
+                      name="services"
+                      label={defaultTo(serviceLabel, getString('cd.pipelineSteps.serviceTab.specifyYourServices'))}
+                      deploymentType={deploymentType as ServiceDeploymentType}
+                      gitOpsEnabled={gitOpsEnabled}
+                      deploymentMetadata={deploymentMetadata}
+                      disabled={readonly || (isFixed && loading)}
+                      placeholder={placeHolderForServices}
+                      openAddNewModal={openAddNewModal}
+                      isMultiSelect={true}
+                      isNewConnectorLabelVisible
+                      onMultiSelectChange={handleMultiSelectChange}
+                      width={300}
+                      multiTypeProps={{
+                        expressions,
+                        allowableTypes: getAllowableTypesWithoutExpression(allowableTypes),
+                        onTypeChange: setServiceInputType
+                      }}
+                    />
                   </>
                 ) : (
                   <div className={css.inputFieldLayout}>
-                    {CDS_OrgAccountLevelServiceEnvEnvGroup ? (
-                      /** istanbul ignore next */ <MultiTypeServiceField
-                        name="service"
-                        label={defaultTo(serviceLabel, getString('cd.pipelineSteps.serviceTab.specifyYourService'))}
-                        deploymentType={deploymentType as ServiceDeploymentType}
-                        gitOpsEnabled={gitOpsEnabled}
-                        deploymentMetadata={deploymentMetadata}
-                        placeholder={placeHolderForService}
-                        setRefValue={true}
-                        disabled={readonly || (isFixed && loading)}
-                        openAddNewModal={openAddNewModal}
-                        isNewConnectorLabelVisible
-                        onChange={handleSingleSelectChange}
-                        width={300}
-                        multiTypeProps={{
-                          expressions,
-                          allowableTypes,
-                          defaultValueToReset: '',
-                          onTypeChange: setServiceInputType
-                        }}
-                      />
-                    ) : (
-                      <FormInput.MultiTypeInput
-                        tooltipProps={{ dataTooltipId: 'specifyYourService' }}
-                        label={defaultTo(serviceLabel, getString('cd.pipelineSteps.serviceTab.specifyYourService'))}
-                        name="service"
-                        useValue
-                        disabled={readonly || (isFixed && loading)}
-                        placeholder={placeHolderForService}
-                        multiTypeInputProps={{
-                          width: 300,
-                          expressions,
-                          selectProps: { items: selectOptions },
-                          allowableTypes,
-                          defaultValueToReset: '',
-                          onTypeChange: setServiceInputType,
-                          onChange: handleSingleSelectChange
-                        }}
-                        selectItems={selectOptions}
-                      />
-                    )}
+                    <MultiTypeServiceField
+                      name="service"
+                      label={defaultTo(serviceLabel, getString('cd.pipelineSteps.serviceTab.specifyYourService'))}
+                      deploymentType={deploymentType as ServiceDeploymentType}
+                      gitOpsEnabled={gitOpsEnabled}
+                      deploymentMetadata={deploymentMetadata}
+                      placeholder={placeHolderForService}
+                      setRefValue={true}
+                      disabled={readonly || (isFixed && loading)}
+                      openAddNewModal={openAddNewModal}
+                      isNewConnectorLabelVisible
+                      onChange={handleSingleSelectChange}
+                      width={300}
+                      multiTypeProps={{
+                        expressions,
+                        allowableTypes,
+                        defaultValueToReset: '',
+                        onTypeChange: setServiceInputType
+                      }}
+                    />
                   </div>
                 )}
                 {isFixed ? (

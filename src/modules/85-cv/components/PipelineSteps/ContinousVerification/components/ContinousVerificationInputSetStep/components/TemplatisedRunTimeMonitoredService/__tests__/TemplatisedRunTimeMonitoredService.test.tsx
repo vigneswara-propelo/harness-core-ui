@@ -9,7 +9,6 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { AllowedTypesWithRunTime, Button, Container } from '@harness/uicore'
 import * as formik from 'formik'
-import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { TestWrapper } from '@common/utils/testUtils'
 
 import type {
@@ -110,12 +109,9 @@ describe('Unit tests for TemplatisedRunTimeMonitoredService', () => {
       expressions: ['org.identifier', 'org.name'],
       allowableTypes: ['FIXED', 'RUNTIME', 'EXPRESSION'] as AllowedTypesWithRunTime[]
     }
-    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      CDS_OrgAccountLevelServiceEnvEnvGroup: false
-    })
-    const { getByText } = render(<WrapperComponent {...props} />)
-    expect(getByText('cv.healthSource.serviceLabel')).toBeInTheDocument()
-    expect(getByText('cv.healthSource.environmentLabel')).toBeInTheDocument()
+    const { container, getByText } = render(<WrapperComponent {...props} />)
+    expect(container.querySelector('[title="On Service Select"]')).toBeInTheDocument()
+    expect(container.querySelector('[title="On Environment Select"]')).toBeInTheDocument()
     expect(getByText('pipeline.applicationName')).toBeInTheDocument()
     expect(getByText('cv.monitoringSources.appD.tierName')).toBeInTheDocument()
   })
@@ -166,12 +162,9 @@ describe('Unit tests for TemplatisedRunTimeMonitoredService', () => {
         }
       }
     }
-    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      CDS_OrgAccountLevelServiceEnvEnvGroup: false
-    })
-    const { getByText } = render(<WrapperComponent {...props} />)
-    expect(getByText('cv.healthSource.serviceLabel')).toBeInTheDocument()
-    expect(getByText('cv.healthSource.environmentLabel')).toBeInTheDocument()
+    const { container, getByText } = render(<WrapperComponent {...props} />)
+    expect(container.querySelector('[title="On Service Select"]')).toBeInTheDocument()
+    expect(container.querySelector('[title="On Environment Select"]')).toBeInTheDocument()
     expect(getByText('pipeline.applicationName')).toBeInTheDocument()
     expect(getByText('cv.monitoringSources.appD.tierName')).toBeInTheDocument()
     expect(getByText('cv.monitoringSources.appD.completeMetricPath')).toBeInTheDocument()
@@ -182,10 +175,7 @@ describe('Unit tests for TemplatisedRunTimeMonitoredService', () => {
     }
   })
 
-  test('Verify if correct runtime fields are rendered in runtime screen of templatised monitored service when CDS_OrgAccountLevelServiceEnvEnvGroup is true', async () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      CDS_OrgAccountLevelServiceEnvEnvGroup: true
-    })
+  test('Verify if correct runtime fields are rendered in runtime screen of templatised monitored service when org/acc level service env is enabled', async () => {
     const { container, getByText } = render(<WrapperComponent {...TemplatisedRunTimeMonitoredServiceMockProps} />)
     expect(getByText('cv.monitoredServices.serviceAndEnvironment')).toBeInTheDocument()
     expect(container.querySelector('[title="On Service Select"]')).toBeInTheDocument()
@@ -200,10 +190,7 @@ describe('Unit tests for TemplatisedRunTimeMonitoredService', () => {
     }
   })
 
-  test('Verify if correct runtime fields are rendered in runtime screen of templatised monitored service when CDS_OrgAccountLevelServiceEnvEnvGroup is true and Service/Env are not runtime', async () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      CDS_OrgAccountLevelServiceEnvEnvGroup: true
-    })
+  test('Verify if correct runtime fields are rendered in runtime screen of templatised monitored service when org/acc level service env is enabled and Service/Env are not runtime', async () => {
     const { container, getByTestId } = render(
       <TestWrapper>
         <ServiceEnvironmentInputSetWrapper

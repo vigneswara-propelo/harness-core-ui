@@ -43,7 +43,6 @@ export const AccountSettingsPage: React.FC = () => {
   const { getString } = useStrings()
   const history = useHistory()
   const {
-    CDS_OrgAccountLevelServiceEnvEnvGroup,
     CDS_SERVICE_OVERRIDES_2_0,
     STO_JIRA_INTEGRATION,
     PIE_GIT_BI_DIRECTIONAL_SYNC,
@@ -77,10 +76,7 @@ export const AccountSettingsPage: React.FC = () => {
     lazy: false
   })
 
-  const isServiceOverridesEnabled =
-    CDS_OrgAccountLevelServiceEnvEnvGroup &&
-    CDS_SERVICE_OVERRIDES_2_0 &&
-    enableServiceOverrideSettings?.data?.value === 'true'
+  const isServiceOverridesEnabled = CDS_SERVICE_OVERRIDES_2_0 && enableServiceOverrideSettings?.data?.value === 'true'
 
   const { data: enableBidirectionalSyncSettings, error: enableBidirectionalSyncSettingsError } = useGetSettingValue({
     identifier: SettingType.ENABLE_BI_DIRECTIONAL_SYNC,
@@ -242,14 +238,14 @@ export const AccountSettingsPage: React.FC = () => {
               id={SettingsResources.Services}
               icon={'services'}
               route={routesV2.toSettingsServices({ accountId, module })}
-              hidden={!(CDS_OrgAccountLevelServiceEnvEnvGroup && haveCD)}
+              hidden={!haveCD}
             />
             <SettingsResourceCard
               label={<String stringID="environments" />}
               id={SettingsResources.Environments}
               icon={'infrastructure'}
               route={routesV2.toSettingsEnvironments({ accountId, module })}
-              hidden={!(CDS_OrgAccountLevelServiceEnvEnvGroup && haveCD)}
+              hidden={!haveCD}
             />
             <SettingsResourceCard
               label={<String stringID="connectorsLabel" />}

@@ -14,7 +14,6 @@ import {
   AllowedTypes,
   ButtonSize,
   ButtonVariation,
-  FormInput,
   getMultiTypeFromValue,
   Layout,
   ModalDialog,
@@ -28,7 +27,6 @@ import { useStrings } from 'framework/strings'
 
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { isMultiTypeExpression, isMultiTypeFixed } from '@common/utils/utils'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 
 import RbacButton from '@rbac/components/Button/Button'
@@ -94,7 +92,6 @@ export default function EnvironmentSelection({
   isServiceOverridesEnabled
 }: EnvironmentSelectionProps): React.ReactElement {
   const { getString } = useStrings()
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
   const { expressions } = useVariablesExpression()
   const { values, setFieldValue, setFieldTouched } = useFormikContext<DeployEnvironmentEntityFormState>()
@@ -193,7 +190,7 @@ export default function EnvironmentSelection({
       margin={{ bottom: isMultiEnvironment ? 'medium' : 'none' }}
     >
       {isMultiEnvironment ? (
-        CDS_OrgAccountLevelServiceEnvEnvGroup && !isUnderEnvGroup ? (
+        !isUnderEnvGroup ? (
           /*** This condition is added as entities one step down the entity tree
                 will be following the parent scope so no need of the new component here ***/
           <MultiTypeEnvironmentField
@@ -232,7 +229,7 @@ export default function EnvironmentSelection({
             }}
           />
         )
-      ) : CDS_OrgAccountLevelServiceEnvEnvGroup ? (
+      ) : (
         <MultiTypeEnvironmentField
           {...commonProps}
           placeholder={placeHolderForEnvironment}
@@ -253,24 +250,6 @@ export default function EnvironmentSelection({
             allowableTypes: gitOpsEnabled ? getAllowableTypesWithoutExpression(allowableTypes) : allowableTypes,
             defaultValueToReset: ''
           }}
-        />
-      ) : (
-        <FormInput.MultiTypeInput
-          {...commonProps}
-          useValue
-          placeholder={placeHolderForEnvironment}
-          multiTypeInputProps={{
-            onTypeChange: setEnvironmentsType,
-            width: 300,
-            selectProps: { items: selectOptions },
-            allowableTypes: gitOpsEnabled ? getAllowableTypesWithoutExpression(allowableTypes) : allowableTypes,
-            defaultValueToReset: '',
-            onChange: item => {
-              setSelectedEnvironments(getSelectedEnvironmentsFromOptions(item as SelectOption))
-            },
-            expressions
-          }}
-          selectItems={selectOptions}
         />
       )}
       {isFixed && !isUnderEnvGroup && (

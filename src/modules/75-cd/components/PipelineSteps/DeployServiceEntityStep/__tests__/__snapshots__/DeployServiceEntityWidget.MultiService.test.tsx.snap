@@ -17,114 +17,109 @@ exports[`DeployServiceEntityWidget - multi services tests user can delete select
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
           >
             <div
-              class="bp3-form-group main"
-              data-id="services-0"
+              class="serviceLabel"
             >
-              <label
-                class="bp3-label"
-                for="services"
+              <div
+                class="StyledProps--font StyledProps--main"
+                data-testid="serviceTooltip"
               >
                 <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="specifyYourService"
+                  class="Tooltip--acenter bp3-label"
+                  data-tooltip-id="deployServiceStepForm_services"
                 >
                   cd.pipelineSteps.serviceTab.specifyYourServices
                 </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
+              </div>
               <div
-                class="bp3-form-content"
+                class="bp3-form-group"
+                data-id="undefined-0"
               >
                 <div
-                  class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
+                  class="bp3-form-content"
                 >
                   <div
-                    class="StyledProps--font StyledProps--main"
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    style="width: 300px;"
                   >
                     <div
-                      class="Layout--horizontal StyledProps--main multitype"
-                      style="width: 300px;"
+                      class="StyledProps--font StyledProps--main bp3-input placeholderContainer placeholderClass StyledProps--border StyledProps--padding-xsmall"
                     >
                       <div
-                        class="bp3-popover-wrapper MultiSelectDropDown--main dropdown"
+                        class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main layoutHeight pointer StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
                       >
                         <div
-                          class="bp3-popover-target"
+                          class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main groupedReferences StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
                         >
                           <div
-                            class="Layout--horizontal StyledProps--main MultiSelectDropDown--dropdownButton MultiSelectDropDown--withBorder MultiSelectDropDown--selected MultiSelectDropDown--minWidth StyledProps--flex"
-                            data-testid="multi-select-dropdown-button"
-                            style="min-width: 130px;"
+                            class="StyledProps--font StyledProps--main StyledProps--padding-top-xsmall StyledProps--padding-right-small StyledProps--padding-bottom-xsmall StyledProps--padding-left-small StyledProps--background-primary2 StyledProps--border"
                           >
                             <div
-                              class="Layout--horizontal StyledProps--main MultiSelectDropDown--labelWrapper StyledProps--flex"
+                              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-center"
                             >
                               <p
-                                class="StyledProps--font Text--lineclamp StyledProps--main MultiSelectDropDown--label"
-                                data-testid="dropdown-value"
+                                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-black"
                                 style="--text-line-clamp: 1;"
                               >
-                                services
+                                PROJECT
                               </p>
                               <p
-                                class="StyledProps--font StyledProps--main MultiSelectDropDown--counter"
+                                class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall StyledProps--flex StyledProps--flex-align-center-center StyledProps--background-primary7 StyledProps--color StyledProps--color-white StyledProps--border"
                               >
-                                0
                                 2
                               </p>
                             </div>
-                            <span
-                              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
-                              data-icon="main-chevron-down"
-                            >
-                              <svg
-                                height="8"
-                                viewBox="0 0 14 8"
-                                width="8"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
-                                  fill="#4d5969"
-                                />
-                              </svg>
-                            </span>
                           </div>
                         </div>
-                      </div>
-                      <span
-                        class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                      >
                         <span
-                          class="bp3-popover-target"
+                          class="bp3-icon bp3-icon-cross StyledProps--main StyledProps--margin-left-medium StyledProps--color StyledProps--color-grey500"
+                          icon="cross"
                         >
-                          <button
-                            class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                            data-testid="multi-type-button"
+                          <svg
+                            data-icon="cross"
+                            height="14"
+                            viewBox="0 0 16 16"
+                            width="14"
                           >
-                            <span
-                              class="bp3-icon StyledProps--main"
-                              data-icon="fixed-input"
-                            >
-                              <svg
-                                height="12"
-                                viewBox="0 0 9 9"
-                                width="12"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                  fill="currentColor"
-                                />
-                              </svg>
-                            </span>
-                          </button>
+                            <desc>
+                              cross
+                            </desc>
+                            <path
+                              d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
                         </span>
-                      </span>
+                      </div>
                     </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -696,104 +691,95 @@ exports[`DeployServiceEntityWidget - multi services tests user can select multip
               class="inputFieldLayout"
             >
               <div
-                class="bp3-form-group"
-                data-id="service-0"
+                class="serviceLabel"
               >
-                <label
-                  class="bp3-label"
-                  for="service"
+                <div
+                  class="StyledProps--font StyledProps--main"
+                  data-testid="serviceTooltip"
                 >
                   <span
-                    class="Tooltip--acenter"
-                    data-tooltip-id="specifyYourService"
+                    class="Tooltip--acenter bp3-label"
+                    data-tooltip-id="deployServiceStepForm_service"
                   >
                     cd.pipelineSteps.serviceTab.specifyYourService
                   </span>
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
+                </div>
                 <div
-                  class="bp3-form-content"
+                  class="bp3-form-group"
+                  data-id="undefined-0"
                 >
                   <div
-                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 300px;"
+                    class="bp3-form-content"
                   >
                     <div
-                      class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
+                      class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                      style="width: 300px;"
                     >
-                      <div
-                        class="bp3-popover-target"
+                      <button
+                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
+                        data-testid="cr-field-service"
+                        style="width: 300px;"
+                        type="button"
                       >
-                        <div
-                          class="bp3-input-group"
+                        <span
+                          class="bp3-button-text"
                         >
-                          <input
-                            autocomplete="off"
-                            class="bp3-input"
-                            name="service"
-                            placeholder="cd.pipelineSteps.serviceTab.selectService"
-                            style="padding-right: 0px;"
-                            type="text"
-                            value=""
-                          />
                           <span
-                            class="bp3-input-action"
+                            class="placeholder"
+                          >
+                            cd.pipelineSteps.serviceTab.selectService
+                          </span>
+                        </span>
+                        <span
+                          class="bp3-icon bp3-icon-chevron-down StyledProps--main"
+                          icon="chevron-down"
+                        >
+                          <svg
+                            data-icon="chevron-down"
+                            height="14"
+                            viewBox="0 0 16 16"
+                            width="14"
+                          >
+                            <desc>
+                              chevron-down
+                            </desc>
+                            <path
+                              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                      <span
+                        class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                      >
+                        <span
+                          class="bp3-popover-target"
+                        >
+                          <button
+                            class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            data-testid="multi-type-button"
                           >
                             <span
-                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                              icon="chevron-down"
+                              class="bp3-icon StyledProps--main"
+                              data-icon="fixed-input"
                             >
                               <svg
-                                data-icon="chevron-down"
-                                height="14"
-                                viewBox="0 0 16 16"
-                                width="14"
+                                height="12"
+                                viewBox="0 0 9 9"
+                                width="12"
+                                xmlns="http://www.w3.org/2000/svg"
                               >
-                                <desc>
-                                  chevron-down
-                                </desc>
                                 <path
-                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                  fill-rule="evenodd"
+                                  d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                  fill="currentColor"
                                 />
                               </svg>
                             </span>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <span
-                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                    >
-                      <span
-                        class="bp3-popover-target"
-                      >
-                        <button
-                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                          data-testid="multi-type-button"
-                        >
-                          <span
-                            class="bp3-icon StyledProps--main"
-                            data-icon="fixed-input"
-                          >
-                            <svg
-                              height="12"
-                              viewBox="0 0 9 9"
-                              width="12"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                fill="currentColor"
-                              />
-                            </svg>
-                          </span>
-                        </button>
+                          </button>
+                        </span>
                       </span>
-                    </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -847,7 +833,7 @@ exports[`DeployServiceEntityWidget - multi services tests user can select multip
         </div>
         <div
           class="cardsContainer"
-          data-rbd-droppable-context-id="0"
+          data-rbd-droppable-context-id="7"
           data-rbd-droppable-id="serviceDropper"
         />
       </div>

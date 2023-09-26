@@ -36,11 +36,11 @@ import { Connectors, getConnectorIconByType } from '../utils/connctors-utils'
 import { addHashInCypressURLBasedOnBrowserRouter } from '../utils/windowLocation'
 import { activeTabClassName } from './70-pipeline/constants'
 import {
-  servicesCall,
-  servicesResponse,
-  environmentsCall,
+  multiscopeServiceCall,
+  servicesV2Response,
+  multiScopeEnvCall,
   gitSyncEnabledCall,
-  environmentResponse
+  environmentV2Response
 } from './85-cv/monitoredService/constants'
 import {
   listMonitoredServices,
@@ -288,10 +288,6 @@ Cypress.Commands.add('addNewSRMTemplate', () => {
   cy.contains('li', 'Monitored Service').should('be.visible')
   cy.contains('li', 'Monitored Service').should('not.be.disabled')
   cy.contains('li', 'Monitored Service').click()
-  cy.intercept('GET', servicesCall, servicesResponse).as('ServiceCall')
-  cy.intercept('GET', environmentsCall, environmentResponse).as('EnvCall')
-  cy.wait('@ServiceCall')
-  cy.wait('@EnvCall')
 })
 
 Cypress.Commands.add('populateTemplateDetails', (name, version) => {
@@ -306,12 +302,10 @@ Cypress.Commands.add('visitSRMMonitoredServicePage', () => {
 })
 
 Cypress.Commands.add('addNewMonitoredServiceWithServiceAndEnv', () => {
-  cy.intercept('GET', servicesCall, servicesResponse).as('ServiceCall')
-  cy.intercept('GET', environmentsCall, environmentResponse).as('EnvCall')
+  cy.intercept('GET', multiscopeServiceCall, servicesV2Response).as('ServiceV2Call')
+  cy.intercept('GET', multiScopeEnvCall, environmentV2Response).as('EnvV2Call')
   cy.wait(1000)
   cy.contains('span', 'New Monitored Service').click()
-  cy.wait('@ServiceCall')
-  cy.wait('@EnvCall')
   cy.wait(1000)
 
   // clear any cached values
@@ -331,13 +325,18 @@ Cypress.Commands.add('addNewMonitoredServiceWithServiceAndEnv', () => {
   cy.contains('span', 'Environment is required').should('be.visible')
   cy.contains('span', 'Monitored Service Name is required').should('be.visible')
 
-  cy.get('input[name="service"]').click()
-  cy.contains('p', 'Service 101').click({ force: true })
+  // Select Service
+  cy.findByTestId('cr-field-serviceRef').click()
+  cy.contains('p', 'DockerServicetest').click({ force: true })
+  cy.contains('span', 'Apply Selected').click({ force: true })
 
   cy.contains('span', 'Service is required').should('not.exist')
 
-  cy.get('input[name="environment"]').click()
-  cy.contains('p', 'Dev').click({ force: true })
+  // Select Env
+  cy.findByTestId('cr-field-environmentRef').click()
+
+  cy.contains('p', 'EnvironmentTest').click({ force: true })
+  cy.contains('span', 'Apply Selected').click({ force: true })
 
   cy.contains('span', 'Environment is required').should('not.exist')
   cy.contains('span', 'Monitored Service Name is required').should('not.exist')
@@ -569,12 +568,12 @@ Cypress.Commands.add('verifyStepSelectStrategyAndVerifyStep', () => {
 })
 
 Cypress.Commands.add('setServiceEnvRuntime', () => {
-  cy.get('div[data-testid="service"] span[data-icon="fixed-input"]').should('be.visible').click()
+  cy.get('div[class*="FormMultiTypeServiceField"] span[data-icon="fixed-input"]').should('be.visible').click()
   cy.get('a.bp3-menu-item').should('have.length', 2).as('valueList')
   cy.get('@valueList').eq(0).should('contain.text', 'Fixed value').as('fixedValue')
   cy.get('@valueList').eq(1).should('contain.text', 'Runtime input').as('runtimeValue')
   cy.get('@runtimeValue').click()
-  cy.get('div[data-testid="environment"] span[data-icon="fixed-input"]').should('be.visible').click()
+  cy.get('div[class*="FormMultiTypeEnvironmentField"] span[data-icon="fixed-input"]').should('be.visible').click()
   cy.get('a.bp3-menu-item').should('have.length', 2).as('valueList')
   cy.get('@valueList').eq(0).should('contain.text', 'Fixed value').as('fixedValue')
   cy.get('@valueList').eq(1).should('contain.text', 'Runtime input').as('runtimeValue')
@@ -582,7 +581,7 @@ Cypress.Commands.add('setServiceEnvRuntime', () => {
 })
 
 Cypress.Commands.add('setMultiTypeService', (expression: string) => {
-  cy.get('div[data-testid="service"] span[data-icon="fixed-input"]').should('be.visible').click()
+  cy.get('div[class*="FormMultiTypeServiceField"] span[data-icon="fixed-input"]').should('be.visible').click()
   cy.get('a.bp3-menu-item').should('have.length', 2).as('valueList')
   cy.get('@valueList').eq(0).should('contain.text', 'Fixed value').as('fixedValue')
   cy.get('@valueList').eq(1).should('contain.text', 'Runtime input').as('runtimeValue')
@@ -594,7 +593,7 @@ Cypress.Commands.add('setMultiTypeService', (expression: string) => {
 })
 
 Cypress.Commands.add('setMultiTypeEnvironment', (expression: string) => {
-  cy.get('div[data-testid="environment"] span[data-icon="fixed-input"]').should('be.visible').click()
+  cy.get('div[class*="FormMultiTypeEnvironmentField"] span[data-icon="fixed-input"]').should('be.visible').click()
   cy.get('a.bp3-menu-item').should('have.length', 2).as('valueList')
   cy.get('@valueList').eq(0).should('contain.text', 'Fixed value').as('fixedValue')
   cy.get('@valueList').eq(1).should('contain.text', 'Runtime input').as('runtimeValue')

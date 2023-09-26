@@ -35,7 +35,6 @@ import { useValidationErrors } from '@pipeline/components/PipelineStudio/Pipline
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import { getAllowableTypesWithoutFixedValue } from '@pipeline/utils/runPipelineUtils'
 import { getFlattenedStages } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 
 import ErrorsStripBinded from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
@@ -56,11 +55,7 @@ export default function DeployEnvSpecifications(
   const { submitFormsForTab } = useContext(StageErrorContext)
   const { errorMap } = useValidationErrors()
 
-  const {
-    CDS_OrgAccountLevelServiceEnvEnvGroup,
-    CDS_PIPELINE_STUDIO_UPGRADES,
-    CDS_SERVICE_OVERRIDES_2_0: isOverridesEnabled
-  } = useFeatureFlags()
+  const { CDS_PIPELINE_STUDIO_UPGRADES, CDS_SERVICE_OVERRIDES_2_0: isOverridesEnabled } = useFeatureFlags()
 
   useEffect(() => {
     if (errorMap.size > 0) {
@@ -153,14 +148,6 @@ export default function DeployEnvSpecifications(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stage?.stage?.spec])
 
-  const filteredAllowableTypes = useMemo(
-    () =>
-      scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup
-        ? allowableTypes
-        : getAllowableTypesWithoutFixedValue(allowableTypes),
-    [scope, CDS_OrgAccountLevelServiceEnvEnvGroup, allowableTypes]
-  )
-
   const getStageSpec = (): DeployServiceEntityData => {
     const propagatedStageId = stage?.stage?.spec?.service?.useFromStage?.stage
     if (propagatedStageId) {
@@ -185,7 +172,7 @@ export default function DeployEnvSpecifications(
           type={StepType.DeployEnvironmentEntity}
           readonly={isReadonly}
           initialValues={initialValues}
-          allowableTypes={filteredAllowableTypes}
+          allowableTypes={allowableTypes}
           onUpdate={updateEnvStep}
           factory={factory}
           stepViewType={StepViewType.Edit}

@@ -141,6 +141,13 @@ export const resolvedPipelineDetailsCall =
   '/template/api/templates/applyTemplates?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&pipelineIdentifier=testPipeline_Cypress&projectIdentifier=project1&getDefaultFromOtherRepo=true'
 export const servicesCallRunPipeline =
   '/ng/api/servicesV2/list/access?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&type=Kubernetes&gitOpsEnabled=false'
+
+export const servicesV2CallWithPageAndTemplateFilter =
+  '/ng/api/servicesV2/list/access?page=0&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&searchTerm=&type=Kubernetes&gitOpsEnabled=false&deploymentTemplateIdentifier='
+
+export const environmentV2CallWithPage =
+  '/ng/api/environmentsV2/list/access?page=0&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&searchTerm='
+
 export const servicesYaml =
   '/ng/api/servicesV2/servicesYamlMetadata?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
 export const environmentsCallRunPipeline =
@@ -577,6 +584,71 @@ export const finalSaveServiceNameResponse = {
   },
   metaData: null,
   correlationId: 'c2d087e6-f449-417d-9ca3-fb2d13daab46'
+}
+
+export const servicesV2Response = {
+  status: 'SUCCESS',
+  data: [
+    {
+      service: {
+        accountId: 'px7xd_BFRCi-pfWPYXVjvw',
+        identifier: 'DockerServicetest',
+        orgIdentifier: 'default',
+        projectIdentifier: 'KanikaTest',
+        name: 'DockerServicetest',
+        deleted: false,
+        tags: {},
+        v2Service: false
+      },
+      createdAt: 1658998955970,
+      lastModifiedAt: 1685363737824
+    }
+  ],
+  metaData: null,
+  correlationId: '60596984-4550-4a28-ab45-32ce5d65052a'
+}
+
+export const environmentV2Response = {
+  status: 'SUCCESS',
+  data: [
+    {
+      environment: {
+        accountId: 'px7xd_BFRCi-pfWPYXVjvw',
+        orgIdentifier: 'default',
+        projectIdentifier: 'KanikaTest',
+        identifier: 'EnvironmentTest',
+        name: 'EnvironmentTest',
+        color: '#0063F7',
+        type: 'Production',
+        deleted: false,
+        tags: {},
+        yaml: 'environment:\n  orgIdentifier: "default"\n  projectIdentifier: "KanikaTest"\n  identifier: "EnvironmentTest"\n  tags: {}\n  name: "EnvironmentTest"\n  type: "Production"\n'
+      },
+      createdAt: 1658999432548,
+      lastModifiedAt: 1658999432548
+    }
+  ],
+  metaData: null,
+  correlationId: '020cfb58-7e19-42bb-bd2f-e764300e55d9'
+}
+
+export const serviceV2YamlInput = {
+  status: 'SUCCESS',
+  data: {
+    serviceV2YamlMetadataList: [
+      {
+        serviceIdentifier: 'DockerServicetest',
+        serviceYaml:
+          'service:\n  name: DockerServicetest\n  identifier: DockerServicetest\n  tags: {}\n  serviceDefinition:\n    spec:\n      manifests:\n        - manifest:\n            identifier: testManifestName\n            type: K8sManifest\n            spec:\n              store:\n                type: Github\n                spec:\n                  connectorRef: <+input>\n                  gitFetchType: Branch\n                  paths:\n                    - root/bin/\n                  repoName: <+input>\n                  branch: master\n              skipResourceVersioning: false\n      artifacts:\n        primary:\n          spec:\n            connectorRef: <+input>\n            imagePath: <+input>\n            tag: <+input>\n          type: DockerRegistry\n    type: Kubernetes\n  gitOpsEnabled: false\n',
+        inputSetTemplateYaml:
+          'serviceInputs:\n  serviceDefinition:\n    type: "Kubernetes"\n    spec:\n      manifests:\n      - manifest:\n          identifier: "testManifestName"\n          type: "K8sManifest"\n          spec:\n            store:\n              type: "Github"\n              spec:\n                connectorRef: "<+input>"\n                repoName: "<+input>"\n      artifacts:\n        primary:\n          type: "DockerRegistry"\n          spec:\n            connectorRef: "<+input>"\n            imagePath: "<+input>"\n            tag: "<+input>"\n',
+        orgIdentifier: 'default',
+        projectIdentifier: 'default'
+      }
+    ]
+  },
+  metaData: null,
+  correlationId: '49aeb88d-c4fe-40d1-81d0-c3179e09dfd8'
 }
 
 export const afterFinalSaveConnectorsListResponse = {

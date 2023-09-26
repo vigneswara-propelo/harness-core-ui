@@ -11,9 +11,11 @@ import {
   countOfServiceAPI,
   monitoredServiceListCall,
   monitoredServiceListResponse,
-  environmentResponse,
-  servicesResponse,
-  riskCategoryMock
+  riskCategoryMock,
+  multiScopeEnvCall,
+  multiscopeServiceCall,
+  servicesV2Response,
+  environmentV2Response
 } from '../../../support/85-cv/monitoredService/constants'
 import {
   metricPackCall,
@@ -30,9 +32,7 @@ import {
   saveTemplateCall,
   templateListCall,
   templateDataCall,
-  templateInputSetCall,
-  servicesCallV1,
-  environmentsV1
+  templateInputSetCall
 } from '../../../support/85-cv/Templates/constants'
 
 describe('Create empty monitored service', () => {
@@ -148,9 +148,9 @@ describe('Create empty monitored service', () => {
     cy.intercept('GET', templateDataCall, { fixture: 'cv/templates/templateData' }).as('templateData')
     cy.intercept('GET', templateInputSetCall, { fixture: 'cv/templates/templateInputs' }).as('templateInputs')
     cy.contains('[data-testid="AppD_Template"]', 'AppD Template').click()
-    cy.get('[data-tooltip-id="serviceSelectOrCreate"]').should('be.visible')
-    cy.get('[data-tooltip-id="environmentSelectOrCreate"]').should('be.visible')
-    cy.get('[name="service"]').should('have.value', RuntimeValue)
+    cy.get('div[class*="FormMultiTypeServiceField"]').should('be.visible')
+    cy.get('div[class*="FormMultiTypeEnvironmentField"]').should('be.visible')
+    cy.get('[name="serviceRef"]').should('have.value', RuntimeValue)
     cy.get('[name="environmentRef"]').should('have.value', RuntimeValue)
     cy.findAllByRole('row').should('have.length', 2)
     cy.get('[name="sources.healthSources.0.spec.connectorRef"]').should('have.value', RuntimeValue)
@@ -163,13 +163,20 @@ describe('Create empty monitored service', () => {
     cy.get(
       '[name="sources.healthSources.0.spec.metricDefinitions.0.analysis.deploymentVerification.serviceInstanceMetricPath"]'
     ).should('have.value', RuntimeValue)
-    cy.intercept('GET', servicesCallV1, servicesResponse).as('ServiceCall')
-    cy.intercept('GET', environmentsV1, environmentResponse).as('EnvCall')
+    cy.intercept('GET', multiscopeServiceCall, servicesV2Response).as('ServiceV2Call')
+    cy.intercept('GET', multiScopeEnvCall, environmentV2Response).as('EnvV2Call')
     cy.contains('span', 'Use Template').click()
-    cy.get('input[name="service"]').click()
-    cy.contains('p', 'Service 101').click({ force: true })
-    cy.get('input[name="environment"]').click()
-    cy.contains('p', 'Dev').click({ force: true })
+    // Select Service
+    cy.findByTestId('cr-field-serviceRef').click()
+    cy.wait('@ServiceV2Call')
+    cy.contains('p', 'DockerServicetest').click({ force: true })
+    cy.contains('span', 'Apply Selected').click({ force: true })
+
+    // Select Env
+    cy.findByTestId('cr-field-environmentRef').click()
+    cy.wait('@EnvV2Call')
+    cy.contains('p', 'EnvironmentTest').click({ force: true })
+    cy.contains('span', 'Apply Selected').click({ force: true })
 
     cy.get('button[data-testid="cr-field-sources.healthSources.0.spec.connectorRef"]').click()
     cy.contains('p', 'appdtest').click()

@@ -8,13 +8,33 @@
 import React from 'react'
 import type { UseGetReturn } from 'restful-react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
-import { Formik, FormikForm } from '@harness/uicore'
+import { Button, Container, Formik, FormikForm } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
-import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import * as cdService from 'services/cd-ng'
 import mockImport from 'framework/utils/mockImport'
 import MonitoredServiceOverview from '../MonitoredServiceOverview'
 import { MonitoredServiceType } from '../MonitoredServiceOverview.constants'
+
+jest.mock(
+  '@cv/pages/monitored-service/components/Configurations/components/Service/components/MonitoredServiceOverview/component/OrgAccountLevelServiceEnvField/OrgAccountLevelServiceEnvField',
+  () => ({
+    __esModule: true,
+    default: (props: any) => (
+      <Container data-testid="OrgAccountLevelServiceEnvField">
+        <Button
+          onClick={() => props?.serviceOnSelect({ label: 'service2', value: 'service2' })}
+          title="On Service Select"
+          className="changeService"
+        />
+        <Button
+          onClick={() => props?.environmentOnSelect({ label: 'env2', value: 'env2' })}
+          title="On Environment Select"
+          className="changeEnv"
+        />
+      </Container>
+    )
+  })
+)
 
 jest.mock('@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironment', () => ({
   ...jest.requireActual('@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironment'),
@@ -65,7 +85,12 @@ const onChangeMonitoredServiceType = jest.fn()
 function WrapperComponent(props: any) {
   return (
     <TestWrapper>
-      <Formik onSubmit={values => props.onSubmit(values)} initialValues={props.initialValues} formName="mockForm">
+      <Formik
+        onSubmit={values => props.onSubmit(values)}
+        initialValues={props.initialValues}
+        validate={values => props.setFormikValues?.(values)}
+        formName="mockForm"
+      >
         {formikProps => (
           <FormikForm>
             <MonitoredServiceOverview
@@ -103,16 +128,22 @@ describe('Unit tests for MonitoredServiceOverview', () => {
 
   test('Ensure that providing the service and env generates correct name value', async () => {
     const onSubmitMock = jest.fn()
-    const { container } = render(<WrapperComponent onSubmit={onSubmitMock} initialValues={{}} />)
+    let formikValues: { serviceRef?: string; environmentRef?: string } = {}
+    const setFormikValues = (values: any) => {
+      formikValues = values
+    }
+    const { container } = render(
+      <WrapperComponent onSubmit={onSubmitMock} initialValues={{}} setFormikValues={setFormikValues} />
+    )
 
     await waitFor(() => expect(container.querySelector('[class*="monitoredService"]')).not.toBeNull())
-    expect(container.querySelectorAll('[class*="dropdown"]').length).toBe(3)
+    expect(container.querySelectorAll('[class*="dropdown"]').length).toBe(1)
 
     fireEvent.click(container.querySelector('.changeService')!)
-    await waitFor(() => expect(container.querySelector('input[value="service2"]')).not.toBeNull())
+    await waitFor(() => expect(formikValues.serviceRef).toBe('service2'))
 
     fireEvent.click(container.querySelector('.changeEnv')!)
-    await waitFor(() => expect(container.querySelector('input[value="service2_env2"]')).not.toBeNull())
+    await waitFor(() => expect(formikValues.environmentRef).toBe('env2'))
   })
 
   test('Ensure that edit flow only shows name field', async () => {
@@ -147,26 +178,6 @@ describe('Unit tests for MonitoredServiceOverview', () => {
     )
   })
 
-  test('Ensure that clicking on new env/service createes new entity', async () => {
-    const onSubmitMock = jest.fn()
-    const { container, getByText, getAllByText } = render(
-      <WrapperComponent
-        onSubmit={onSubmitMock}
-        initialValues={{ type: MonitoredServiceType.APPLICATION, serviceRef: 'service1' }}
-      />
-    )
-
-    await waitFor(() => expect(container.querySelector('[class*="monitoredService"]')).not.toBeNull())
-
-    // create new environment
-    fireEvent.click(container.querySelector('.newEnv')!)
-    await waitFor(() => getByText('newEnv'))
-
-    // create new service
-    fireEvent.click(container.querySelector('.newService')!)
-    await waitFor(() => getAllByText('newService'))
-  })
-
   test('Ensure that switching monitored service type works', async () => {
     const onSubmitMock = jest.fn()
     const { container, getByText } = render(
@@ -188,18 +199,15 @@ describe('Unit tests for MonitoredServiceOverview', () => {
     expect(onChangeMonitoredServiceType).toHaveBeenCalledWith('Infrastructure')
   })
 
-  test('should load when ff CDS_OrgAccountLevelServiceEnvEnvGroup is enabled', () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      CDS_OrgAccountLevelServiceEnvEnvGroup: true
-    })
+  test('should render correctly when in case of org/acc level service and environment', () => {
     const onSubmitMock = jest.fn()
-    const { getByText } = render(
+    const { container } = render(
       <WrapperComponent
         onSubmit={onSubmitMock}
         initialValues={{ type: MonitoredServiceType.APPLICATION, serviceRef: 'service1', environmentRef: 'env1' }}
       />
     )
-    expect(getByText('env1')).toBeInTheDocument()
-    expect(getByText('service1')).toBeInTheDocument()
+    expect(container.querySelector('[title="On Service Select"]')).toBeInTheDocument()
+    expect(container.querySelector('[title="On Environment Select"]')).toBeInTheDocument()
   })
 })

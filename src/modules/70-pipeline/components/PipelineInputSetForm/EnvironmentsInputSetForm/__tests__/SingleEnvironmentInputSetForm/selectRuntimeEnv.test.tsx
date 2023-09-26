@@ -80,9 +80,6 @@ describe('Single Environment Input Set Form - Runtime Env in pipeline studio', (
 
     render(
       <TestWrapper
-        defaultFeatureFlagValues={{
-          CDS_OrgAccountLevelServiceEnvEnvGroup: true
-        }}
         path={routes.toPipelineStudio({
           accountId: ':accountId',
           orgIdentifier: ':orgIdentifier',

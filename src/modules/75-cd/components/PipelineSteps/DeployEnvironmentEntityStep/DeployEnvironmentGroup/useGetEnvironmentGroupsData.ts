@@ -18,7 +18,6 @@ import { getScopedValueFromDTO } from '@common/components/EntityReference/Entity
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useGetEnvironmentGroupList } from 'services/cd-ng'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { EnvironmentGroupData } from '../types'
 
 export interface UseGetEnvironmentGroupsDataProps {
@@ -43,7 +42,6 @@ export function useGetEnvironmentGroupsData({
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
 
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   // State
   const [environmentGroupsList, setEnvironmentGroupsList] = useState<EnvironmentGroupData[]>([])
   const [nonExistingEnvironmentGroupIdentifiers, setNonExistingEnvironmentGroupIdentifiers] = useState<string[]>([])
@@ -59,7 +57,7 @@ export function useGetEnvironmentGroupsData({
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      includeAllEnvGroupsAccessibleAtScope: CDS_OrgAccountLevelServiceEnvEnvGroup
+      includeAllEnvGroupsAccessibleAtScope: true
     },
     body: { filterType: 'EnvironmentGroup' },
     lazy: !isNil(scope) && scope !== Scope.PROJECT

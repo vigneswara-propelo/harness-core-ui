@@ -49,12 +49,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const history = useHistory()
   const { getString } = useStrings()
-  const {
-    CDS_OrgAccountLevelServiceEnvEnvGroup,
-    CDS_SERVICE_OVERRIDES_2_0,
-    PL_DISCOVERY_ENABLE,
-    PIE_GIT_BI_DIRECTIONAL_SYNC
-  } = useFeatureFlags()
+  const { CDS_SERVICE_OVERRIDES_2_0, PL_DISCOVERY_ENABLE, PIE_GIT_BI_DIRECTIONAL_SYNC } = useFeatureFlags()
 
   const { showError } = useToaster()
   const { data: enableServiceOverrideSettings, error: enableServiceOverrideSettingsError } = useGetSettingValue({
@@ -89,10 +84,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enableBidirectionalSyncSettingsError])
 
-  const isServiceOverridesEnabled =
-    CDS_OrgAccountLevelServiceEnvEnvGroup &&
-    CDS_SERVICE_OVERRIDES_2_0 &&
-    enableServiceOverrideSettings?.data?.value === 'true'
+  const isServiceOverridesEnabled = CDS_SERVICE_OVERRIDES_2_0 && enableServiceOverrideSettings?.data?.value === 'true'
 
   const isBidirectionalSyncEnabled = enableBidirectionalSyncSettings?.data?.value === 'true'
 
@@ -154,7 +146,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       icon: 'services',
       route: routes.toServices({ accountId, orgIdentifier }),
       colorClass: css.connectors,
-      hidden: !CDS_OrgAccountLevelServiceEnvEnvGroup,
+      hidden: false,
       fillColor: Color.PRIMARY_7
     },
     {
@@ -162,7 +154,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       icon: 'infrastructure',
       route: routes.toEnvironment({ accountId, orgIdentifier }),
       colorClass: css.connectors,
-      hidden: !CDS_OrgAccountLevelServiceEnvEnvGroup,
+      hidden: false,
       fillColor: Color.PRIMARY_7
     },
     {

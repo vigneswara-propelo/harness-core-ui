@@ -8,7 +8,7 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { AllowedTypes, Container, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
+import { Container, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import produce from 'immer'
 import { defaultTo, get, isEmpty, isEqual, isNil, pick, set, unset } from 'lodash-es'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -248,7 +248,7 @@ export default function DeployServiceEntitySpecifications({
     }
   }, [stageIndex])
 
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup, CDS_PIPELINE_STUDIO_UPGRADES } = useFeatureFlags()
+  const { CDS_PIPELINE_STUDIO_UPGRADES } = useFeatureFlags()
 
   const getInitValuesFromServiceConfiguration = (singleOrMultiServiceConfiguration: DeployServiceWidgetInitValues) => {
     const updatedSingleOrMultiServiceConfiguration = produce(singleOrMultiServiceConfiguration, draft => {
@@ -484,13 +484,7 @@ export default function DeployServiceEntitySpecifications({
           type={StepType.DeployServiceEntity}
           readonly={isReadonly || setupModeType === setupMode.PROPAGATE}
           initialValues={deployServiceWidgetInitValues}
-          allowableTypes={
-            scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup
-              ? allowableTypes
-              : ((allowableTypes as MultiTypeInputType[]).filter(
-                  item => item !== MultiTypeInputType.FIXED
-                ) as AllowedTypes)
-          }
+          allowableTypes={allowableTypes}
           onUpdate={updateService}
           factory={factory}
           stepViewType={StepViewType.Edit}

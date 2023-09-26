@@ -88,6 +88,26 @@ jest.mock('services/cv', () => ({
     .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() }))
 }))
 
+jest.mock(
+  '@cv/pages/monitored-service/components/Configurations/components/Service/components/MonitoredServiceOverview/component/OrgAccountLevelServiceEnvField/OrgAccountLevelServiceEnvField',
+  () => ({
+    __esModule: true,
+    default: (props: any) => (
+      <Container data-testid="OrgAccountLevelServiceEnvField">
+        <FormInput.Text name="serviceRef" />
+        <Button
+          onClick={() => props?.serviceOnSelect({ label: 'newService', value: 'newService' })}
+          title="On Service Select"
+        />
+        <Button
+          onClick={() => props?.environmentOnSelect({ label: 'newEnv', value: 'newEnv' })}
+          title="On Environment Select"
+        />
+      </Container>
+    )
+  })
+)
+
 describe('Unit tests for createting monitored source', () => {
   test('Health source table and environment services component renders', async () => {
     jest.spyOn(dbHook, 'useIndexedDBHook').mockReturnValue({
