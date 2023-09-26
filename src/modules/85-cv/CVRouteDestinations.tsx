@@ -156,13 +156,6 @@ const CVRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
       >
         <CVRedirect />
       </RouteWithContext>
-      {/* Todo- check whether its required or not */}
-      {/* <RouteWithContext
-        exact
-        path={routes.toCVHome({ ...accountPathProps, ...cvModuleParams, ...projectPathProps, mode })}
-      >
-        <CVHomePage />
-      </RouteWithContext> */}
       <RouteWithContext
         path={routes.toMonitoredServices({ ...accountPathProps, ...orgPathProps, ...projectPathProps, mode })}
         exact
@@ -228,14 +221,7 @@ const CVRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
       >
         <CommonMonitoredServiceDetails config={CD_MONITORED_SERVICE_CONFIG} />
       </RouteWithContext>
-      <RouteWithContext
-        path={[
-          /* Todo- check if its needed */
-          // routes.toCV({ ...accountPathProps }),
-          routes.toCVProject({ ...accountPathProps, ...projectPathProps, mode })
-        ]}
-        exact
-      >
+      <RouteWithContext path={[routes.toCVProject({ ...accountPathProps, ...projectPathProps, mode })]} exact>
         <RedirectToCVProject />
       </RouteWithContext>
       <RouteWithContext exact path={routes.toCVHome({ ...accountPathProps, mode })}>
@@ -272,18 +258,6 @@ const CVRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
       >
         <CVCreateSLOV2 isComposite />
       </RouteWithContext>
-
-      {/* //Todo- look into this */}
-      {/* <RouteWithContext path={routes.toErrorTracking({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}>
-        <ChildAppMounter<ETCustomMicroFrontendProps>
-          ChildApp={ErrorTracking}
-          customComponents={{
-            NotificationWizardOverviewStep: Overview,
-            NotificationWizardMethodStep: NotificationMethods,
-            MultiTypeConnectorField: MultiTypeConnectorField
-          }}
-        />
-      </RouteWithContext> */}
       <RouteWithContext
         exact
         path={routes.toAccountCVSLODetailsPage({
@@ -298,7 +272,7 @@ const CVRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
       <RouteWithContext
         exact
         path={[
-          routes.toCVAddMonitoringServicesSetup({ ...accountPathProps, ...projectPathProps }),
+          routes.toCVAddMonitoringServicesSetup({ ...accountPathProps, ...projectPathProps, mode, ...cvModuleParams }),
           routes.toCVAddMonitoringServicesEdit({
             ...accountPathProps,
             ...projectPathProps,
