@@ -84,5 +84,12 @@
         box-shadow: var(--white) 0px 0px 0px 2px, var(--orange-200) 0px 0px 0px 4px;
       }
     }
+
+    &[data-state='ignoreFailed'] {
+      &:hover,
+      &:focus {
+        box-shadow: var(--white) 0px 0px 0px 2px, var(--green-500) 0px 0px 0px 4px;
+      }
+    }
   }
 }

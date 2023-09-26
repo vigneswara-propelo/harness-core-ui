@@ -16,6 +16,7 @@ import {
   isExecutionApprovalRejected,
   isExecutionExpired,
   isExecutionFailed,
+  isExecutionIgnoreFailed,
   isExecutionPaused,
   isExecutionPausing,
   isExecutionRunning,
@@ -28,7 +29,7 @@ import { StageType } from '@pipeline/utils/stageHelpers'
 import css from './StatusHeatMap.module.scss'
 
 // Visually, all of the statuses are limited to these variants - https://www.figma.com/file/4HavSweFhZeVsJoaWwSrj8/Pipelines?node-id=3499%3A285830
-type CombinedStatus = 'default' | 'success' | 'aborted' | 'failed' | 'paused' | 'running' | 'rollback'
+type CombinedStatus = 'default' | 'success' | 'aborted' | 'failed' | 'paused' | 'running' | 'rollback' | 'ignoreFailed'
 
 const statusIconMap: Partial<Record<CombinedStatus, { name: IconName; color?: string; size: number }>> = {
   aborted: {
@@ -54,13 +55,19 @@ const statusIconMap: Partial<Record<CombinedStatus, { name: IconName; color?: st
   rollback: {
     name: 'circle-pipeline-rollback',
     size: 16
+  },
+  ignoreFailed: {
+    name: 'ignore-failed-square',
+    size: 24
   }
 }
 
 export const getCombinedStatus = (status: ExecutionStatus): CombinedStatus => {
   let state: CombinedStatus = 'default'
 
-  if (isExecutionSuccess(status)) {
+  if (isExecutionIgnoreFailed(status)) {
+    state = 'ignoreFailed'
+  } else if (isExecutionSuccess(status)) {
     state = 'success'
   } else if (isExecutionAborted(status) || isExecutionExpired(status)) {
     state = 'aborted'
