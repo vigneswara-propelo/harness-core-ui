@@ -25,7 +25,7 @@ import {
   isGoogleCloudFuctionsDeploymentType
 } from '@pipeline/utils/stageHelpers'
 
-const DEFAULT_RELEASE_NAME = 'release-<+INFRA_KEY>'
+const DEFAULT_RELEASE_NAME = 'release-<+INFRA_KEY_SHORT_ID>'
 
 export const cleanUpEmptyProvisioner = (
   stageData: StageElementWrapper<DeploymentStageElementConfig> | undefined
