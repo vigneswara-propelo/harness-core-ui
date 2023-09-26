@@ -155,6 +155,13 @@ const routes = {
   },
   toSettings: withModeModuleAndScopePrefix(() => '/settings'),
   toCIHome: withModeModuleAndScopePrefix<ModuleHomeParams>(() => `/home`),
+  toPurpose: withAccountId(() => '/purpose'),
+  toModuleHome: withModeModuleAndScopePrefix<ModuleHomeParams>(params => {
+    if (params?.source) {
+      return `/home?source=${params?.source}`
+    }
+    return `/home`
+  }),
 
   // to route to module trial pages
   toModuleTrial: withModeModuleAndScopePrefix<ModuleHomeParams>(params => {

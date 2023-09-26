@@ -26,6 +26,8 @@ import { ModulesRouteDestinations } from 'modules/ModuleRouteConfig' // eslint-d
 import AllModeRouteDestinations from 'modules/AllModeRouteDestinations' // eslint-disable-line
 import NotFoundPage from '@common/pages/404/NotFoundPage'
 import { Module } from 'framework/types/ModuleName'
+import WelcomePage from '@common/pages/welcome/WelcomePage'
+import { RouteWithContext } from '@common/router/RouteWithContext/RouteWithContext'
 
 const RedirectToMode = ({ mode }: { mode?: NAV_MODE }): React.ReactElement => {
   const { module, accountId, path, projectIdentifier, orgIdentifier } = useParams<
@@ -166,6 +168,10 @@ const RoutesV2 = (): React.ReactElement => {
           </Container>
         </Layout.Horizontal>
       </Route>
+
+      <RouteWithContext path={routes.toPurpose({ ...accountPathProps })} exact>
+        <WelcomePage />
+      </RouteWithContext>
 
       <Route exact path={['/account/:accountId/main-dashboard']}>
         <Redirect to={routes.toMode({ mode: NAV_MODE.ALL, noscope: true })} />

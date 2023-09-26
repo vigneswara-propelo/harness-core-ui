@@ -11,6 +11,7 @@ import type { IconName } from '@harness/uicore'
 import { upperCase, throttle } from 'lodash-es'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import routes from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import {
   ModuleLicenseDTO,
   ResponseModuleLicenseDTO,
@@ -52,7 +53,7 @@ interface SelectModuleListProps {
 
 const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, moduleList, getStartedVariant }) => {
   const [selected, setSelected] = useState<Module>('ci')
-  const { CREATE_DEFAULT_PROJECT, AUTO_FREE_MODULE_LICENSE } = useFeatureFlags()
+  const { CREATE_DEFAULT_PROJECT, AUTO_FREE_MODULE_LICENSE, CDS_NAV_2_0 } = useFeatureFlags()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const { getString } = useStrings()
   const { accountId } = useParams<ProjectPathProps>()
@@ -124,14 +125,22 @@ const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, modu
                   selected as Module,
                   getStartedVariant as PLG_CD_GET_STARTED_VARIANTS
                 )[selected as Module]
-                CREATE_DEFAULT_PROJECT
-                  ? history.push(defaultURL)
-                  : history.push(routes.toModuleHome({ accountId, module: buttonType, source: 'purpose' }))
+                if (CREATE_DEFAULT_PROJECT) {
+                  history.push(defaultURL)
+                } else if (CDS_NAV_2_0) {
+                  history.push(routesV2.toModuleHome({ accountId, module: buttonType, source: 'purpose' }))
+                } else {
+                  history.push(routes.toModuleHome({ accountId, module: buttonType, source: 'purpose' }))
+                }
               } else {
                 updateDefaultExperience({
                   defaultExperience: Experiences.NG
                 }).then(() => {
-                  history.push(routes.toModuleHome({ accountId, module: buttonType, source: 'purpose' }))
+                  if (CDS_NAV_2_0) {
+                    history.push(routesV2.toModuleHome({ accountId, module: buttonType, source: 'purpose' }))
+                  } else {
+                    history.push(routes.toModuleHome({ accountId, module: buttonType, source: 'purpose' }))
+                  }
                 })
               }
             } catch (error) {
