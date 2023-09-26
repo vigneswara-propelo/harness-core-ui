@@ -39,6 +39,10 @@ jest.mock('services/cd-ng', () => ({
   mergeServiceInputsPromise: jest.fn().mockImplementation(() => Promise.resolve({ status: 'SUCCESS' })),
   useUpdateServiceV2: jest.fn().mockReturnValue({ mutate: jest.fn().mockResolvedValue({ status: 'SUCCESS' }) }),
   useGetEntityYamlSchema: jest.fn().mockReturnValue({ data: { data: {} } }),
+  useGetFileContent: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
+  useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
+  useCreatePR: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useCreatePRV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   getServiceAccessListPromise: jest.fn().mockImplementation(() => Promise.resolve(mockServiceList))
 }))
 

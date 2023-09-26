@@ -110,7 +110,10 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
         showSuccess(getString('cd.serviceCreated'))
         // We invalidate the service list call on creating a new service
         queryClient.invalidateQueries(['getServiceAccessList'])
-        payload && onCreateOrUpdate(response?.data?.service)
+        // onCreateOrUpdate will redirect to details page and hide modals showing status
+        setTimeout(() => {
+          response?.data?.service && onCreateOrUpdate(response?.data?.service)
+        }, 1000)
       }
       return Promise.resolve(response)
     }

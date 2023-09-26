@@ -36,7 +36,10 @@ import { useStrings } from 'framework/strings'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import {
   NGServiceConfig,
+  ResponseServiceResponse,
   ResponseValidateTemplateInputsResponseDTO,
+  ServiceRequestDTO,
+  UpdateServiceV2QueryParams,
   useCreateServiceV2,
   useUpdateServiceV2,
   validateTemplateInputsPromise
@@ -50,6 +53,9 @@ import { sanitize } from '@common/utils/JSONUtils'
 import { queryClient } from 'services/queryClient'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDActions, Category } from '@common/constants/TrackingConstants'
+import { StoreType } from '@common/constants/GitSyncTypes'
+import { useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
+import { GitData } from '@common/modals/GitDiffEditor/useGitDiffEditorDialog'
 import ServiceConfiguration from './ServiceConfiguration/ServiceConfiguration'
 import { ServiceTabs, setNameIDDescription, ServicePipelineConfig } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServiceStudio/ServiceStudio.module.scss'
@@ -92,6 +98,91 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
   const [shouldShowOutOfSyncError, setShouldShowOutOfSyncError] = React.useState(false)
   const [validateTemplateInputsResponse, setValidateTemplateInputsResponse] =
     React.useState<ResponseValidateTemplateInputsResponseDTO>()
+
+  const getFinalServiceData = useCallback(() => {
+    let updatedService
+    const isVisualView = view === SelectedView.VISUAL
+    const newServiceDefinition = get(pipeline, 'stages[0].stage.spec.serviceConfig.serviceDefinition')
+    if (!isVisualView) {
+      updatedService = produce(props.serviceData, draft => {
+        if (draft) {
+          setNameIDDescription(draft.service as PipelineInfoConfig, pipeline as ServicePipelineConfig)
+          set(draft, 'service.serviceDefinition', newServiceDefinition)
+        }
+      })
+    }
+    const finalServiceData = isVisualView ? props.serviceData : updatedService
+
+    if (!get(finalServiceData, 'service.serviceDefinition.type')) {
+      unset(finalServiceData?.service, 'serviceDefinition')
+    }
+
+    return finalServiceData
+  }, [pipeline, props.serviceData, view])
+
+  const afterUpdateHandler = (response: ResponseServiceResponse, finalServiceData?: NGServiceConfig): void => {
+    if (response.status === 'SUCCESS') {
+      const isManifestPresent = !isEmpty(finalServiceData?.service?.serviceDefinition?.spec?.manifests)
+      isManifestPresent &&
+        trackEvent(CDActions.CreateUpdateManifest, {
+          category: Category.SERVICE
+        })
+      if (isServiceCreateModalView) {
+        // We invalidate the service list call on creating a new service
+        queryClient.invalidateQueries(['getServiceAccessList'])
+      } else {
+        // We invalidate the service inputs call on updating an existing service
+        queryClient.invalidateQueries(['getServicesYamlAndRuntimeInputs'])
+      }
+
+      if (isServiceEntityModalView) {
+        const serviceResponse = response.data?.service
+        onServiceCreate?.({
+          identifier: serviceResponse?.identifier as string,
+          name: serviceResponse?.name as string
+        })
+      } else {
+        showSuccess(
+          isServiceEntityModalView && isServiceCreateModalView
+            ? getString('common.serviceCreated')
+            : getString('common.serviceUpdated')
+        )
+        fetchPipeline({ forceFetch: true, forceUpdate: true })
+        const newServiceDefinition = get(pipeline, 'stages[0].stage.spec.serviceConfig.serviceDefinition')
+        setIsDeploymentTypeDisabled?.(!!newServiceDefinition.type)
+      }
+    } else {
+      throw response
+    }
+  }
+
+  const { openSaveToGitDialog } = useSaveToGitDialog({
+    onSuccess: (gitData: GitData, servicePayload?: ServiceRequestDTO): Promise<ResponseServiceResponse> =>
+      Promise.resolve(
+        updateService(
+          { ...servicePayload, orgIdentifier, projectIdentifier },
+          {
+            queryParams: {
+              accountIdentifier: accountId,
+              storeType: StoreType.REMOTE,
+              connectorRef: serviceData?.connectorRef,
+              isNewBranch: gitData?.isNewBranch, //Need BE API support for this param, Todo: remove typeCast
+              filePath: serviceData?.entityGitDetails?.filePath,
+              ...(gitData?.isNewBranch
+                ? { baseBranch: serviceData?.entityGitDetails?.branch, branch: gitData?.branch }
+                : { branch: serviceData?.entityGitDetails?.branch }),
+              commitMsg: gitData?.commitMsg,
+              lastObjectId: serviceData?.entityGitDetails?.objectId,
+              lastCommitId: serviceData?.entityGitDetails?.commitId,
+              resolvedConflictCommitId: gitData?.resolvedConflictCommitId
+            } as unknown as UpdateServiceV2QueryParams
+          }
+        ).then(response => {
+          afterUpdateHandler(response, getFinalServiceData())
+          return response
+        })
+      )
+  })
 
   const handleTabChange = useCallback(
     (nextTab: ServiceTabs): void => {
@@ -186,25 +277,9 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
 
   const saveAndPublishService = async (): Promise<void> => {
     clear()
-
-    let updatedService
-    const isVisualView = view === SelectedView.VISUAL
-    const newServiceDefinition = get(pipeline, 'stages[0].stage.spec.serviceConfig.serviceDefinition')
-    if (!isVisualView) {
-      updatedService = produce(props.serviceData, draft => {
-        if (draft) {
-          setNameIDDescription(draft.service as PipelineInfoConfig, pipeline as ServicePipelineConfig)
-          set(draft, 'service.serviceDefinition', newServiceDefinition)
-        }
-      })
-    }
-    const finalServiceData = isVisualView ? props.serviceData : updatedService
+    const finalServiceData = getFinalServiceData()
     if (!finalServiceData?.service?.name) {
       return
-    }
-
-    if (!get(finalServiceData, 'service.serviceDefinition.type')) {
-      unset(finalServiceData?.service, 'serviceDefinition')
     }
 
     const body = {
@@ -217,38 +292,21 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     }
 
     try {
-      const response = isServiceCreateModalView ? await createService(body) : await updateService(body)
-      if (response.status === 'SUCCESS') {
-        const isManifestPresent = !isEmpty(finalServiceData?.service?.serviceDefinition?.spec?.manifests)
-        isManifestPresent &&
-          trackEvent(CDActions.CreateUpdateManifest, {
-            category: Category.SERVICE
-          })
-        if (isServiceCreateModalView) {
-          // We invalidate the service list call on creating a new service
-          queryClient.invalidateQueries(['getServiceAccessList'])
-        } else {
-          // We invalidate the service inputs call on updating an existing service
-          queryClient.invalidateQueries(['getServicesYamlAndRuntimeInputs'])
-        }
-
-        if (isServiceEntityModalView) {
-          const serviceResponse = response.data?.service
-          onServiceCreate?.({
-            identifier: serviceResponse?.identifier as string,
-            name: serviceResponse?.name as string
-          })
-        } else {
-          showSuccess(
-            isServiceEntityModalView && isServiceCreateModalView
-              ? getString('common.serviceCreated')
-              : getString('common.serviceUpdated')
-          )
-          fetchPipeline({ forceFetch: true, forceUpdate: true })
-          setIsDeploymentTypeDisabled?.(!!newServiceDefinition.type)
-        }
+      if (serviceData?.storeType === StoreType.REMOTE) {
+        openSaveToGitDialog({
+          isEditing: false,
+          resource: {
+            type: 'Service',
+            name: serviceData.name as string,
+            identifier: serviceData.identifier as string,
+            gitDetails: serviceData.entityGitDetails,
+            storeMetadata: { storeType: serviceData?.storeType, connectorRef: serviceData?.connectorRef }
+          },
+          payload: body
+        })
       } else {
-        throw response
+        const response = isServiceCreateModalView ? await createService(body) : await updateService(body)
+        afterUpdateHandler(response, finalServiceData)
       }
     } catch (e: any) {
       showError(e?.data?.message || e?.message || getString('commonError'))

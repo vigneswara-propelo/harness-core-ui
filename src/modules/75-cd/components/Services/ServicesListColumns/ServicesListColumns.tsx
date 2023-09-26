@@ -40,7 +40,7 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 import { CodeSourceWrapper } from '@pipeline/components/CommonPipelineStages/PipelineStage/utils'
-import { ServiceTabs } from '../utils/ServiceUtils'
+import { ServiceTabs, getRemoteServiceQueryParams } from '../utils/ServiceUtils'
 import css from './ServicesListColumns.module.scss'
 
 interface ServiceRow {
@@ -70,7 +70,7 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
   const newLeftNav = useFeatureFlag(FeatureFlag.CDS_NAV_2_0)
   const [hideReferencedByButton, setHideReferencedByButton] = useState(false)
   const [customErrorMessage, setCustomErrorMessage] = useState<string | undefined>()
-
+  const remoteQueryParams = getRemoteServiceQueryParams(service)
   const serviceDetailRoute =
     newLeftNav && calledFromSettingsPage
       ? routesV2.toSettingsServiceDetails({
@@ -157,7 +157,7 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
   const redirectToReferencedBy = (): void => {
     history.push({
       pathname: serviceDetailRoute,
-      search: `tab=${ServiceTabs.REFERENCED_BY}`
+      search: `tab=${ServiceTabs.REFERENCED_BY}${remoteQueryParams}`
     })
   }
 
@@ -191,7 +191,7 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
     if (isSvcEnvEntityEnabled) {
       history.push({
         pathname: serviceDetailRoute,
-        search: `tab=${ServiceTabs.Configuration}`
+        search: `tab=${ServiceTabs.Configuration}${remoteQueryParams}`
       })
     } else {
       showModal()
