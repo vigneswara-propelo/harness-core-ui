@@ -669,7 +669,7 @@ export function DefaultTriggerInfoCell(props: UseTableCellProps<PipelineExecutio
         )}
       </Layout.Horizontal>
     )
-  }, [pipelineIdentifier])
+  }, [data])
 
   if (showCITriggerInfo) {
     return (
