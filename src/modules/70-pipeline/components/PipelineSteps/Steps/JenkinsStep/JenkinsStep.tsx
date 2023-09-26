@@ -128,7 +128,7 @@ export class JenkinsStep extends PipelineStep<JenkinsStepData> {
     getString,
     viewType
   }: ValidateInputSetProps<JenkinsStepData>): FormikErrors<JenkinsStepData> {
-    const errors = { spec: {} } as any
+    const errors = {} as any
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
       const timeout = Yup.object().shape({
@@ -158,15 +158,17 @@ export class JenkinsStep extends PipelineStep<JenkinsStepData> {
         /* istanbul ignore else */
         if (e instanceof Yup.ValidationError) {
           const err = yupToFormErrors(e)
-          Object.assign(errors.spec, err)
+          Object.assign(errors, { spec: err })
         }
       }
     }
 
     if (!isEmpty(data?.spec?.consoleLogPollFrequency) && !isEmpty(data?.timeout)) {
       if (isPollingIntervalGreaterThanTimeout(data)) {
-        Object.assign(errors.spec, {
-          consoleLogPollFrequency: getString?.('pipeline.jiraApprovalStep.validations.retryIntervalExceedingTimeout')
+        Object.assign(errors, {
+          spec: {
+            consoleLogPollFrequency: getString?.('pipeline.jiraApprovalStep.validations.retryIntervalExceedingTimeout')
+          }
         })
       }
     }
@@ -176,9 +178,11 @@ export class JenkinsStep extends PipelineStep<JenkinsStepData> {
       isRequired &&
       isEmpty(data?.spec?.connectorRef)
     ) {
-      errors.spec = {
-        connectorRef: getString?.('common.validation.connectorRef')
-      }
+      Object.assign(errors, {
+        spec: {
+          connectorRef: getString?.('common.validation.connectorRef')
+        }
+      })
     }
 
     if (
@@ -187,9 +191,11 @@ export class JenkinsStep extends PipelineStep<JenkinsStepData> {
       isRequired &&
       isEmpty(data?.spec?.jobName)
     ) {
-      errors.spec = {
-        jobName: getString?.('pipeline.jenkinsStep.validations.jobName')
-      }
+      Object.assign(errors, {
+        spec: {
+          jobName: getString?.('pipeline.jenkinsStep.validations.jobName')
+        }
+      })
     }
     return errors
   }
