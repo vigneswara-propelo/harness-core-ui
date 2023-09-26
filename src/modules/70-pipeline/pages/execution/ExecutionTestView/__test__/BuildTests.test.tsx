@@ -7,8 +7,9 @@
 
 import React from 'react'
 import * as Highcharts from 'highcharts'
-import { render, waitFor, queryByText, screen } from '@testing-library/react'
+import { render, waitFor, queryByText, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { act } from 'react-dom/test-utils'
 import type { TestReportSummary } from 'services/ti-service'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -504,5 +505,44 @@ describe('BuildTests snapshot test', () => {
       />
     )
     expect(container).toMatchSnapshot()
+  })
+
+  test('Validate api calls on click of a test class row', async () => {
+    const vgSearchMock = jest.fn().mockImplementation(() => CallGraphMock)
+    jest.spyOn(tiService, 'useReportsInfo').mockReturnValue({ data: InfoMock, refetch: jest.fn() } as any)
+    jest.spyOn(tiService, 'useTestInfo').mockReturnValue({ data: [], refetch: jest.fn() } as any) // no ti response
+    jest.spyOn(tiService, 'useReportSummary').mockReturnValue({ data: ReportsSummaryMock, refetch: jest.fn() } as any)
+    jest.spyOn(tiService, 'useTestOverview').mockReturnValue({ data: TotalTestsZeroMock, refetch: jest.fn() } as any)
+    jest.spyOn(tiService, 'useTestSuiteSummary').mockReturnValue({ data: TestSuiteMock, refetch: jest.fn() } as any)
+    jest.spyOn(tiService, 'useTestCaseSummary').mockReturnValue({ data: TestCaseMock, refetch: jest.fn() } as any)
+    jest.spyOn(tiService, 'useVgSearch').mockReturnValue({ data: vgSearchMock, refetch: jest.fn() } as any)
+    jest.spyOn(tiService, 'useGetToken').mockReturnValue({ data: 'some-token', refetch: jest.fn() } as any)
+    jest.spyOn(ExecutionContext, 'useExecutionContext').mockReturnValue({
+      pipelineExecutionDetail: {
+        pipelineExecutionSummary: BuildsMock
+      }
+    } as any)
+    const { container } = render(
+      <TestWrapper
+        path="/account/zEaak-FLS425IEO7OLzMUg/ci/orgs/default/projects/TestCiProject1/pipelines/harshtriggerpipeline/executions/2NHi3lznTkegKnerhPf5og/tests"
+        pathParams={{
+          accountId: 'zEaak-FLS425IEO7OLzMUg',
+          orgIdentifier: 'default',
+          projectIdentifier: 'citestproject',
+          buildIdentifier: 2445
+        }}
+        defaultAppStoreValues={defaultAppStoreValues}
+      >
+        <BuildTests />
+      </TestWrapper>
+    )
+    await act(async () => {
+      fireEvent.click(container.querySelector('[data-test-id=show-all-tests]')!)
+    })
+    await act(async () => {
+      fireEvent.click(container.querySelectorAll('span[class="testSuiteName"]')[0]!)
+    })
+    /* vis graph api should not be called if not specified in Test executions summary */
+    expect(vgSearchMock).not.toBeCalled()
   })
 })

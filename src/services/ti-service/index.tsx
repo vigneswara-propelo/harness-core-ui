@@ -597,6 +597,10 @@ export interface VgSearchQueryParams {
    * Fully qualified class name to search for
    */
   class?: string
+  /**
+   * Language used in TI step
+   */
+  language?: string
 }
 
 export type VgSearchProps = Omit<GetProps<VisGraph, Error, VgSearchQueryParams, void>, 'path'>

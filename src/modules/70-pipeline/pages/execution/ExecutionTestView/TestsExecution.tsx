@@ -31,6 +31,8 @@ import { get, noop, omit, debounce } from 'lodash-es'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
+import { Language } from '@pipeline/utils/constants'
+import { CIPipelineModuleInfo } from 'services/ci'
 import {
   TestSuiteSummaryQueryParams,
   useTestSuiteSummary,
@@ -230,6 +232,14 @@ export function TestsExecution({
       }
     )
   }, [callGraphData])
+
+  const tiLanguage: Language = useMemo(
+    () =>
+      (context?.pipelineExecutionDetail?.pipelineExecutionSummary?.moduleInfo?.ci as CIPipelineModuleInfo)
+        ?.tiBuildDetailsList?.[0]?.language as Language,
+    [context]
+  )
+
   const onClassSelected = useCallback(
     (selectedClassName: string) => {
       if (selectedClassName !== selectedCallGraphClass && !isAggregatedReports) {
@@ -237,12 +247,13 @@ export function TestsExecution({
         fetchCallGraph({
           queryParams: Object.assign({}, omit(queryParams, ['report', 'pageIndex', 'sort', 'pageSize', 'order']), {
             limit: CALL_GRAPH_API_LIMIT,
-            class: selectedClassName
+            class: selectedClassName,
+            language: tiLanguage
           })
         })
       }
     },
-    [selectedCallGraphClass, queryParams, fetchCallGraph]
+    [selectedCallGraphClass, queryParams, fetchCallGraph, tiLanguage]
   )
   const [callgraphSearchTerm, setCallgraphSearchTerm] = useState('')
   const onCallgraphModalSearch = (event: React.FormEvent<HTMLInputElement>): void => {
@@ -397,6 +408,7 @@ export function TestsExecution({
                   status: e.currentTarget.checked ? undefined : 'failed'
                 })
               }}
+              data-test-id="show-all-tests"
             />
             <Layout.Horizontal>
               <Container ref={searchRef} flex className={css.expandSearchContainer}>

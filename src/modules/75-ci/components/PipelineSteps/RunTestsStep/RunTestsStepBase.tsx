@@ -46,7 +46,7 @@ import {
   getInitialValuesInCorrectFormat,
   getFormValuesInCorrectFormat
 } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
-import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
+import { CIBuildInfrastructureType, Language } from '@pipeline/utils/constants'
 import type { RunTestsStepProps, RunTestsStepData, RunTestsStepDataUI } from './RunTestsStep'
 import { transformValuesFieldsConfig, getEditViewValidateFieldsConfig } from './RunTestsStepFunctionConfigs'
 import { CIStepOptionalConfig, getOptionalSubLabel } from '../CIStep/CIStepOptionalConfig'
@@ -168,15 +168,6 @@ export const getErrorTrackingOptions = (getString: UseStringsReturn['getString']
   { label: getString('yes'), value: ErrorTrackingStatus.ON },
   { label: getString('no'), value: ErrorTrackingStatus.OFF }
 ]
-
-const enum Language {
-  Java = 'Java',
-  Csharp = 'Csharp',
-  Kotlin = 'Kotlin',
-  Scala = 'Scala',
-  Python = 'Python',
-  Ruby = 'Ruby'
-}
 
 const getLanguageOptionsPython = (getString: UseStringsReturn['getString']): SelectOption => {
   return { label: getString('common.python'), value: Language.Python }

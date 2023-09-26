@@ -104,3 +104,12 @@ export const AUTO_TRIGGERS: ExecutorInfoDTO['triggerType'][] = ['WEBHOOK_CUSTOM'
 export const stepNameRegex = /^[a-zA-Z_][-0-9a-zA-Z_\s]{0,63}$/
 
 export const stepIdentifierRegex = /^[a-zA-Z_][-0-9a-zA-Z_]{0,63}$/
+
+export const enum Language {
+  Java = 'Java',
+  Csharp = 'Csharp',
+  Kotlin = 'Kotlin',
+  Scala = 'Scala',
+  Python = 'Python',
+  Ruby = 'Ruby'
+}

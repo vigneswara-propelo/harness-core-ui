@@ -6953,6 +6953,7 @@ exports[`BuildTests snapshot test should render Reports UI 1`] = `
                 style="align-self: center;"
               >
                 <input
+                  data-test-id="show-all-tests"
                   type="checkbox"
                 />
                 <span
@@ -19034,6 +19035,7 @@ exports[`BuildTests snapshot test should render TI+Reports UI 1`] = `
                 style="align-self: center;"
               >
                 <input
+                  data-test-id="show-all-tests"
                   type="checkbox"
                 />
                 <span

@@ -569,6 +569,13 @@
             "description": "Fully qualified class name to search for",
             "required": false,
             "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "language",
+            "description": "Language used in TI step",
+            "required": false,
+            "type": "string"
           }
         ],
         "responses": {
