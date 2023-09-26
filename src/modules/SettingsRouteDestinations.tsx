@@ -387,7 +387,7 @@ function SettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactEle
         exact
         path={[
           ...pathArrayForAllScopes(routes.toDelegatesSettings, mode),
-          ...pathArrayForAllScopes(routes.toDelegateListSettings, mode)
+          ...pathArrayForAllScopes(routes.toDelegateList, mode)
         ]}
         pageName={PAGE_NAME.DelegateListing}
       >
@@ -397,7 +397,7 @@ function SettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactEle
       </RouteWithContext>
       <RouteWithContext
         exact
-        path={pathArrayForAllScopes(routes.toDelegateConfigsSettings, mode)}
+        path={pathArrayForAllScopes(routes.toDelegateConfigs, mode)}
         pageName={PAGE_NAME.DelegateConfigurations}
       >
         <DelegatesPage>
@@ -406,21 +406,21 @@ function SettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactEle
       </RouteWithContext>
       <RouteWithContext
         exact
-        path={pathArrayForAllScopes(routes.toDelegatesDetailsSettings, mode, { ...delegatePathProps })}
+        path={pathArrayForAllScopes(routes.toDelegatesDetails, mode, { ...delegatePathProps })}
         pageName={PAGE_NAME.DelegateDetails}
       >
         <DelegateDetails />
       </RouteWithContext>
       <RouteWithContext
         exact
-        path={pathArrayForAllScopes(routes.toDelegateConfigsDetailsSettings, mode, { ...delegateConfigProps })}
+        path={pathArrayForAllScopes(routes.toDelegateConfigsDetails, mode, { ...delegateConfigProps })}
         pageName={PAGE_NAME.DelegateProfileDetails}
       >
         <DelegateProfileDetails />
       </RouteWithContext>
       <RouteWithContext
         exact
-        path={pathArrayForAllScopes(routes.toDelegateTokensSettings, mode)}
+        path={pathArrayForAllScopes(routes.toDelegateTokens, mode)}
         pageName={PAGE_NAME.DelegateTokens}
       >
         <DelegatesPage>
@@ -466,67 +466,55 @@ function SettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactEle
       </RouteWithContext>
       <RouteWithContext
         exact
-        path={[
-          ...pathArrayForAllScopes(routes.toAccessControlUsersSettings, mode),
-          ...pathArrayForAllScopes(routes.toAccessControlSettings, mode)
-        ]}
+        path={[...pathArrayForAllScopes(routes.toUsers, mode), ...pathArrayForAllScopes(routes.toAccessControl, mode)]}
       >
         <AccessControlPage>
           <UsersPage />
         </AccessControlPage>
       </RouteWithContext>
-      <RouteWithContext
-        exact
-        path={pathArrayForAllScopes(routes.toAccessControlUsersDetailsSettings, mode, { ...userPathProps })}
-      >
+      <RouteWithContext exact path={pathArrayForAllScopes(routes.toUserDetails, mode, { ...userPathProps })}>
         <UserDetails />
       </RouteWithContext>
-      <RouteWithContext exact path={pathArrayForAllScopes(routes.toAccessControlUserGroupsSettings, mode)}>
+      <RouteWithContext exact path={pathArrayForAllScopes(routes.toUserGroups, mode)}>
         <AccessControlPage>
           <UserGroups />
         </AccessControlPage>
       </RouteWithContext>
-      <RouteWithContext
-        exact
-        path={pathArrayForAllScopes(routes.toAccessControlUserGroupsDetailsSettings, mode, { ...userGroupPathProps })}
-      >
+      <RouteWithContext exact path={pathArrayForAllScopes(routes.toUserGroupDetails, mode, { ...userGroupPathProps })}>
         <UserGroupDetails />
       </RouteWithContext>
-      <RouteWithContext exact path={pathArrayForAllScopes(routes.toAccessControlServiceAccountsSettings, mode)}>
+      <RouteWithContext exact path={pathArrayForAllScopes(routes.toServiceAccounts, mode)}>
         <AccessControlPage>
           <ServiceAccountsPage />
         </AccessControlPage>
       </RouteWithContext>
       <RouteWithContext
         exact
-        path={pathArrayForAllScopes(routes.toAccessControlServiceAccountsDetailsSettings, mode, {
+        path={pathArrayForAllScopes(routes.toServiceAccountDetails, mode, {
           ...serviceAccountProps
         })}
       >
         <ServiceAccountDetails />
       </RouteWithContext>
-      <RouteWithContext exact path={pathArrayForAllScopes(routes.toAccessControlResourceGroupsSettings, mode)}>
+      <RouteWithContext exact path={pathArrayForAllScopes(routes.toResourceGroups, mode)}>
         <AccessControlPage>
           <ResourceGroups />
         </AccessControlPage>
       </RouteWithContext>
       <RouteWithContext
         exact
-        path={pathArrayForAllScopes(routes.toAccessControlResourceGroupDetailsSettings, mode, {
+        path={pathArrayForAllScopes(routes.toResourceGroupDetails, mode, {
           ...resourceGroupPathProps
         })}
       >
         <ResourceGroupDetails />
       </RouteWithContext>
-      <RouteWithContext exact path={pathArrayForAllScopes(routes.toAccessControlRoleSettings, mode)}>
+      <RouteWithContext exact path={pathArrayForAllScopes(routes.toRoles, mode)}>
         <AccessControlPage>
           <Roles />
         </AccessControlPage>
       </RouteWithContext>
-      <RouteWithContext
-        exact
-        path={pathArrayForAllScopes(routes.toAccessControlRoleDetailsSettings, mode, { ...rolePathProps })}
-      >
+      <RouteWithContext exact path={pathArrayForAllScopes(routes.toRoleDetails, mode, { ...rolePathProps })}>
         <RoleDetails />
       </RouteWithContext>
       <RouteWithContext exact path={pathArrayForAllScopes(routes.toVariablesSettings, mode)}>
@@ -572,8 +560,8 @@ function SettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactEle
       <RouteWithContext
         exact
         path={[
-          ...pathArrayForAllScopes(routes.toGitSyncAdminSettings, mode),
-          ...pathArrayForAllScopes(routes.toGitSyncReposAdminSettings, mode)
+          ...pathArrayForAllScopes(routes.toGitSyncAdmin, mode),
+          ...pathArrayForAllScopes(routes.toGitSyncReposAdmin, mode)
         ]}
         pageName={PAGE_NAME.GitSyncRepoTab}
       >
@@ -583,7 +571,7 @@ function SettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactEle
       </RouteWithContext>
       <RouteWithContext
         exact
-        path={pathArrayForAllScopes(routes.toGitSyncEntitiesAdminSettings, mode)}
+        path={pathArrayForAllScopes(routes.toGitSyncEntitiesAdmin, mode)}
         pageName={PAGE_NAME.GitSyncEntityTab}
       >
         <GitSyncPage>
@@ -592,7 +580,7 @@ function SettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactEle
       </RouteWithContext>
       <RouteWithContext
         exact
-        path={pathArrayForAllScopes(routes.toGitSyncErrorsAdminSettings, mode)}
+        path={pathArrayForAllScopes(routes.toGitSyncErrors, mode)}
         pageName={PAGE_NAME.GitSyncErrors}
       >
         <GitSyncPage>
@@ -601,7 +589,7 @@ function SettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactEle
       </RouteWithContext>
       <RouteWithContext
         exact
-        path={pathArrayForAllScopes(routes.toGitSyncConfigAdminSettings, mode)}
+        path={pathArrayForAllScopes(routes.toGitSyncConfig, mode)}
         pageName={PAGE_NAME.GitSyncConfigTab}
       >
         <GitSyncPage>

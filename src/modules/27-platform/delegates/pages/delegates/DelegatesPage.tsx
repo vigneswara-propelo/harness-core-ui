@@ -14,7 +14,8 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { Page } from '@common/exports'
 import ScopedTitle from '@common/components/Title/ScopedTitle'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import routes from '@common/RouteDefinitions'
+import routesv1 from '@common/RouteDefinitions'
+import routesv2 from '@common/RouteDefinitionsV2'
 import type { ProjectPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 import type { GetDelegateGroupsNGV2WithFilterQueryParams } from 'services/portal'
@@ -31,7 +32,8 @@ const DelegatesPage: React.FC = ({ children }) => {
   const { getString } = useStrings()
   const { pathname } = useLocation()
   const [profiles, setProfiles] = useState<DelegateProfileDetailsNg[]>([])
-  const { PL_HELM2_DELEGATE_BANNER } = useFeatureFlags()
+  const { PL_HELM2_DELEGATE_BANNER, CDS_NAV_2_0 } = useFeatureFlags()
+  const routes = CDS_NAV_2_0 ? routesv2 : routesv1
   const [isBannerDismissed, setIsBannerDismissed] = useLocalStorage<boolean | undefined>(
     'helmv2_deprecation_banner_dismissed',
     !PL_HELM2_DELEGATE_BANNER,

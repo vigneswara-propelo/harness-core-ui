@@ -11,12 +11,14 @@ import { useParams } from 'react-router-dom'
 import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import routes from '@common/RouteDefinitions'
+import routesv1 from '@common/RouteDefinitions'
+import routesv2 from '@common/RouteDefinitionsV2'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import type { ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import DeprecatedCallout from '@gitsync/components/DeprecatedCallout/DeprecatedCallout'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import NewUserView from './newUser/NewUserView'
 
 interface GitSyncPageProps {
@@ -29,6 +31,8 @@ export const GitSyncLandingView: React.FC<GitSyncPageProps> = ({ children }) => 
   const showDeprecatedCallout = isGitSyncEnabled && !gitSyncEnabledOnlyForFF
   const { getString } = useStrings()
   useDocumentTitle(getString('gitManagement'))
+  const { CDS_NAV_2_0 } = useFeatureFlags()
+  const routes = CDS_NAV_2_0 ? routesv2 : routesv1
 
   return (
     <>

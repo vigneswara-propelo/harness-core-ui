@@ -134,7 +134,7 @@ export const ProjectSettingsPage: React.FC = () => {
               label={<String stringID="delegate.delegates" />}
               id={SettingsResources.Delegates}
               icon={'delegates-blue'}
-              route={routesV2.toDelegatesSettings({ accountId, orgIdentifier, projectIdentifier, module })}
+              route={routesV2.toDelegateList({ accountId, orgIdentifier, projectIdentifier, module })}
             />
             <SettingsResourceCard
               label={<String stringID="common.secrets" />}
@@ -180,7 +180,7 @@ export const ProjectSettingsPage: React.FC = () => {
               label={<String stringID="gitManagement" />}
               id={SettingsResources.GitManagement}
               icon={'setting'}
-              route={routesV2.toGitSyncAdminSettings({ accountId, orgIdentifier, projectIdentifier, module })}
+              route={routesV2.toGitSyncAdmin({ accountId, orgIdentifier, projectIdentifier, module })}
               hidden={!isGitSyncSupported}
             />
             <SettingsResourceCard //todo-test
@@ -231,13 +231,13 @@ export const ProjectSettingsPage: React.FC = () => {
               label={<String stringID="users" />}
               id={SettingsResources.AccessControlUsers}
               icon={'user'}
-              route={routesV2.toAccessControlUsersSettings({ accountId, orgIdentifier, projectIdentifier, module })}
+              route={routesV2.toUsers({ accountId, orgIdentifier, projectIdentifier, module })}
             />
             <SettingsResourceCard
               label={<String stringID="common.userGroups" />}
               id={SettingsResources.AccessControlUserGroups}
               icon={'user-groups'}
-              route={routesV2.toAccessControlUserGroupsSettings({
+              route={routesV2.toUserGroups({
                 accountId,
                 orgIdentifier,
                 projectIdentifier,
@@ -248,7 +248,7 @@ export const ProjectSettingsPage: React.FC = () => {
               label={<String stringID="common.serviceAccounts" />}
               id={SettingsResources.AccessControlServiceAccounts}
               icon={'setting'}
-              route={routesV2.toAccessControlServiceAccountsSettings({
+              route={routesV2.toServiceAccounts({
                 accountId,
                 orgIdentifier,
                 projectIdentifier,
@@ -259,7 +259,7 @@ export const ProjectSettingsPage: React.FC = () => {
               label={<String stringID="resourceGroups" />}
               id={SettingsResources.AccessControlResourceGroups}
               icon={'resources'}
-              route={routesV2.toAccessControlResourceGroupsSettings({
+              route={routesV2.toResourceGroups({
                 accountId,
                 orgIdentifier,
                 projectIdentifier,
@@ -270,7 +270,7 @@ export const ProjectSettingsPage: React.FC = () => {
               label={<String stringID="roles" />}
               id={SettingsResources.AccessControlRoles}
               icon={'roles'}
-              route={routesV2.toAccessControlRoleSettings({ accountId, orgIdentifier, projectIdentifier, module })}
+              route={routesV2.toRoles({ accountId, orgIdentifier, projectIdentifier, module })}
             />
           </SettingsPage.group>
           <SettingsPage.group

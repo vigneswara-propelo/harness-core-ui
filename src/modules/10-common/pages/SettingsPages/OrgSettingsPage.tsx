@@ -102,7 +102,7 @@ export const OrgSettingsPage: React.FC = () => {
               label={<String stringID="delegate.delegates" />}
               id={SettingsResources.Delegates}
               icon={'delegates-blue'}
-              route={routesV2.toDelegatesSettings({ accountId, orgIdentifier, module })}
+              route={routesV2.toDelegateList({ accountId, orgIdentifier, module })}
             />
             <SettingsResourceCard
               label={<String stringID="common.secrets" />}
@@ -183,31 +183,31 @@ export const OrgSettingsPage: React.FC = () => {
               label={<String stringID="users" />}
               id={SettingsResources.AccessControlUsers}
               icon={'user'}
-              route={routesV2.toAccessControlUsersSettings({ accountId, orgIdentifier, module })}
+              route={routesV2.toUsers({ accountId, orgIdentifier, module })}
             />
             <SettingsResourceCard
               label={<String stringID="common.userGroups" />}
               id={SettingsResources.AccessControlUserGroups}
               icon={'user-groups'}
-              route={routesV2.toAccessControlUserGroupsSettings({ accountId, orgIdentifier, module })}
+              route={routesV2.toUserGroups({ accountId, orgIdentifier, module })}
             />
             <SettingsResourceCard
               label={<String stringID="common.serviceAccounts" />}
               id={SettingsResources.AccessControlServiceAccounts}
               icon={'setting'}
-              route={routesV2.toAccessControlServiceAccountsSettings({ accountId, orgIdentifier, module })}
+              route={routesV2.toServiceAccounts({ accountId, orgIdentifier, module })}
             />
             <SettingsResourceCard
               label={<String stringID="resourceGroups" />}
               id={SettingsResources.AccessControlResourceGroups}
               icon={'resources'}
-              route={routesV2.toAccessControlResourceGroupsSettings({ accountId, orgIdentifier, module })}
+              route={routesV2.toResourceGroups({ accountId, orgIdentifier, module })}
             />
             <SettingsResourceCard
               label={<String stringID="roles" />}
               id={SettingsResources.AccessControlRoles}
               icon={'roles'}
-              route={routesV2.toAccessControlRoleSettings({ accountId, orgIdentifier, module })}
+              route={routesV2.toRoles({ accountId, orgIdentifier, module })}
             />
           </SettingsPage.group>
           <SettingsPage.group

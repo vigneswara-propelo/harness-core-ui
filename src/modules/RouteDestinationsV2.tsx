@@ -34,21 +34,24 @@ const RedirectToMode = ({ mode }: { mode?: NAV_MODE }): React.ReactElement => {
     ModulePathParams & ProjectPathProps & { path: string }
   >()
 
-  const { search } = useLocation()
+  const locationParams = useLocation()
   const { currentMode } = useAppStore()
   const finalMode =
     mode || (currentMode && isNavMode(currentMode) ? currentMode : module ? NAV_MODE.MODULE : NAV_MODE.ADMIN)
 
   return (
     <Redirect
-      to={`${routes.replace({
-        accountId,
-        mode: finalMode || (module ? NAV_MODE.MODULE : NAV_MODE.ADMIN),
-        orgIdentifier,
-        projectIdentifier,
-        module,
-        path
-      })}${search || ''}`}
+      to={{
+        ...locationParams,
+        pathname: `${routes.replace({
+          accountId,
+          mode: finalMode || (module ? NAV_MODE.MODULE : NAV_MODE.ADMIN),
+          orgIdentifier,
+          projectIdentifier,
+          module,
+          path
+        })}`
+      }}
     />
   )
 }
@@ -58,7 +61,7 @@ const RedirectHomeRoutes = (): React.ReactElement => {
     ModulePathParams & ProjectPathProps & { path: string; isSetup: string }
   >()
 
-  const { search } = useLocation()
+  const locationParams = useLocation()
   const { currentMode, currentModule: moduleFromAppStore } = useAppStore()
   const finalModule = module || (moduleFromAppStore as Module)
   let finalMode = currentMode && isNavMode(currentMode) ? currentMode : finalModule ? NAV_MODE.MODULE : NAV_MODE.ADMIN
@@ -69,27 +72,33 @@ const RedirectHomeRoutes = (): React.ReactElement => {
   if (isSetup) {
     return (
       <Redirect
-        to={`${routes.toSettings({
-          mode: finalMode,
-          accountId,
-          orgIdentifier,
-          projectIdentifier,
-          module: finalModule
-        })}/${path || ''}${search || ''}`}
+        to={{
+          ...locationParams,
+          pathname: `${routes.toSettings({
+            mode: finalMode,
+            accountId,
+            orgIdentifier,
+            projectIdentifier,
+            module: finalModule
+          })}/${path || ''}`
+        }}
       />
     )
   }
 
   return (
     <Redirect
-      to={`${routes.replace({
-        accountId,
-        mode: finalMode,
-        orgIdentifier,
-        projectIdentifier,
-        module: finalModule,
-        path
-      })}${search || ''}`}
+      to={{
+        ...locationParams,
+        pathname: `${routes.replace({
+          accountId,
+          mode: finalMode,
+          orgIdentifier,
+          projectIdentifier,
+          module: finalModule,
+          path
+        })}`
+      }}
     />
   )
 }
@@ -98,29 +107,35 @@ const RedirectResourcesToSettings = (): React.ReactElement => {
   const { path, accountId, module, orgIdentifier, projectIdentifier } = useParams<
     ProjectPathProps & { path: string } & ModulePathParams
   >()
-  const { search } = useLocation()
+  const locationParams = useLocation()
   const { currentMode, currentModule: moduleFromAppStore } = useAppStore()
   const finalMode = currentMode && isNavMode(currentMode) ? currentMode : module ? NAV_MODE.MODULE : NAV_MODE.ADMIN
 
   if (finalMode === NAV_MODE.MODULE && moduleFromAppStore) {
     return (
       <Redirect
-        to={`${routes.toSettings({
-          mode: finalMode,
-          accountId,
-          orgIdentifier,
-          projectIdentifier,
-          module: module || (moduleFromAppStore as Module)
-        })}/${path || ''}${search || ''}`}
+        to={{
+          ...locationParams,
+          pathname: `${routes.toSettings({
+            mode: finalMode,
+            accountId,
+            orgIdentifier,
+            projectIdentifier,
+            module: module || (moduleFromAppStore as Module)
+          })}/${path || ''}`
+        }}
       />
     )
   }
 
   return (
     <Redirect
-      to={`${routes.toSettings({ mode: finalMode, accountId, orgIdentifier, projectIdentifier, module })}/${
-        path || ''
-      }${search || ''}`}
+      to={{
+        ...locationParams,
+        pathname: `${routes.toSettings({ mode: finalMode, accountId, orgIdentifier, projectIdentifier, module })}/${
+          path || ''
+        }`
+      }}
     />
   )
 }

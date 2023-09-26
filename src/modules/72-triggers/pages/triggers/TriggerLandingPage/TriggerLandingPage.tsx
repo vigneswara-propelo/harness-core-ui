@@ -15,7 +15,8 @@ import { useGetTriggerDetails, useUpdateTrigger, useGetPipelineSummary } from 's
 import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
-import routes from '@common/RouteDefinitions'
+import routesv1 from '@common/RouteDefinitions'
+import routesv2 from '@common/RouteDefinitionsV2'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useQueryParams } from '@common/hooks'
@@ -45,7 +46,8 @@ const TriggerLandingPage: React.FC = ({ children }) => {
     >
   >()
   const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
-  const { CDS_TRIGGER_ACTIVITY_PAGE } = useFeatureFlags()
+  const { CDS_TRIGGER_ACTIVITY_PAGE, CDS_NAV_2_0 } = useFeatureFlags()
+  const routes = CDS_NAV_2_0 ? routesv2 : routesv1
 
   const {
     data: triggerResponse,

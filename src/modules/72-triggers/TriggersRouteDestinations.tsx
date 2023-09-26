@@ -14,9 +14,9 @@ import { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext
 import PipelineDetails from '@pipeline/pages/pipeline-details/PipelineDetails'
 import TriggersPage from './pages/triggers/TriggersPage'
 import TriggerActivityHistoryPage from './pages/triggers/TriggerLandingPage/TriggerActivityHistoryPage/TriggerActivityHistoryPage'
-import TriggersWizardPage from './pages/triggers/TriggersWizardPage'
 import TriggerDetailPage from './pages/triggers/TriggerLandingPage/TriggerDetailPage/TriggerDetailPage'
 import TriggerLandingPage from './pages/triggers/TriggerLandingPage/TriggerLandingPage'
+import TriggersWizardPage from './components/pages/TriggersWizardPage/TriggersWizardPage'
 
 interface TriggersRouteDestinationProps {
   mode: NAV_MODE

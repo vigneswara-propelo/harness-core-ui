@@ -818,40 +818,38 @@ const routes = {
   toAuditTrailSettings: withModeModuleAndScopePrefix(() => `/settings/audit-trail`),
 
   toDelegatesSettings: withModeModuleAndScopePrefix(() => `/settings/delegates`),
-  toDelegateListSettings: withModeModuleAndScopePrefix(() => `/settings/delegates/list`),
-  toDelegatesDetailsSettings: withModeModuleAndScopePrefix<DelegatePathProps>(
+  toDelegateList: withModeModuleAndScopePrefix(() => `/settings/delegates/list`),
+  toDelegatesDetails: withModeModuleAndScopePrefix<DelegatePathProps>(
     params => `/settings/delegate/${params?.delegateIdentifier}`
   ),
-  toDelegateConfigsSettings: withModeModuleAndScopePrefix(() => `/settings/delegates/configs`),
-  toDelegateConfigsDetailsSettings: withModeModuleAndScopePrefix<DelegateConfigProps>(
+  toDelegateConfigs: withModeModuleAndScopePrefix(() => `/settings/delegates/configs`),
+  toDelegateConfigsDetails: withModeModuleAndScopePrefix<DelegateConfigProps>(
     params => `/settings/delegates/configs/${params?.delegateConfigIdentifier}`
   ),
-  toDelegateTokensSettings: withModeModuleAndScopePrefix(() => `/settings/delegates/tokens`),
-  toEditDelegateConfigsDetailsSettings: withModeModuleAndScopePrefix<DelegateConfigProps>(
+  toDelegateTokens: withModeModuleAndScopePrefix(() => `/settings/delegates/tokens`),
+  toEditDelegateConfigsDetails: withModeModuleAndScopePrefix<DelegateConfigProps>(
     params => `/settings/delegates/configs/${params?.delegateConfigIdentifier}/edit`
   ),
 
-  toAccessControlSettings: withModeModuleAndScopePrefix(() => `/settings/access-control`),
-  toAccessControlServiceAccountsSettings: withModeModuleAndScopePrefix(
-    () => `/settings/access-control/service-accounts`
-  ),
-  toAccessControlServiceAccountsDetailsSettings: withModeModuleAndScopePrefix<ServiceAccountPathProps>(
+  toAccessControl: withModeModuleAndScopePrefix(() => `/settings/access-control`),
+  toServiceAccounts: withModeModuleAndScopePrefix(() => `/settings/access-control/service-accounts`),
+  toServiceAccountDetails: withModeModuleAndScopePrefix<ServiceAccountPathProps>(
     params => `/settings/access-control/service-accounts/${params?.serviceAccountIdentifier}`
   ),
-  toAccessControlUsersSettings: withModeModuleAndScopePrefix(() => `/settings/access-control/users`),
-  toAccessControlUsersDetailsSettings: withModeModuleAndScopePrefix<UserPathProps>(
+  toUsers: withModeModuleAndScopePrefix(() => `/settings/access-control/users`),
+  toUserDetails: withModeModuleAndScopePrefix<UserPathProps>(
     params => `/settings/access-control/users/${params?.userIdentifier}`
   ),
-  toAccessControlUserGroupsSettings: withModeModuleAndScopePrefix(() => `/settings/access-control/user-groups`),
-  toAccessControlUserGroupsDetailsSettings: withModeModuleAndScopePrefix<UserGroupPathProps>(
+  toUserGroups: withModeModuleAndScopePrefix(() => `/settings/access-control/user-groups`),
+  toUserGroupDetails: withModeModuleAndScopePrefix<UserGroupPathProps>(
     params => `/settings/access-control/user-groups/${params?.userGroupIdentifier}`
   ),
-  toAccessControlResourceGroupsSettings: withModeModuleAndScopePrefix(() => `/settings/access-control/resource-groups`),
-  toAccessControlResourceGroupDetailsSettings: withModeModuleAndScopePrefix<ResourceGroupPathProps>(
+  toResourceGroups: withModeModuleAndScopePrefix(() => `/settings/access-control/resource-groups`),
+  toResourceGroupDetails: withModeModuleAndScopePrefix<ResourceGroupPathProps>(
     params => `/settings/access-control/resource-groups/${params?.resourceGroupIdentifier}`
   ),
-  toAccessControlRoleSettings: withModeModuleAndScopePrefix(() => `/settings/access-control/roles`),
-  toAccessControlRoleDetailsSettings: withModeModuleAndScopePrefix<RolePathProps>(
+  toRoles: withModeModuleAndScopePrefix(() => `/settings/access-control/roles`),
+  toRoleDetails: withModeModuleAndScopePrefix<RolePathProps>(
     params => `/settings/access-control/roles/${params?.roleIdentifier}`
   ),
 
@@ -923,11 +921,11 @@ const routes = {
   toCDOnboardingWizard: withModeModuleAndScopePrefix<ModulePathParams>(() => '/cd-onboarding'),
   toCDOnboardingWizardWithCLI: withModeModuleAndScopePrefix<ModulePathParams>(() => '/cd-onboarding-wizard'),
 
-  toGitSyncAdminSettings: withModeModuleAndScopePrefix(() => `/settings/git-sync`),
-  toGitSyncReposAdminSettings: withModeModuleAndScopePrefix(() => `/settings/git-sync/repos`),
-  toGitSyncEntitiesAdminSettings: withModeModuleAndScopePrefix(() => `/settings/git-sync/entities`),
-  toGitSyncErrorsAdminSettings: withModeModuleAndScopePrefix(() => `/settings/git-sync/errors`),
-  toGitSyncConfigAdminSettings: withModeModuleAndScopePrefix(() => `/settings/git-sync/config`),
+  toGitSyncAdmin: withModeModuleAndScopePrefix(() => `/settings/git-sync`),
+  toGitSyncReposAdmin: withModeModuleAndScopePrefix(() => `/settings/git-sync/repos`),
+  toGitSyncEntitiesAdmin: withModeModuleAndScopePrefix(() => `/settings/git-sync/entities`),
+  toGitSyncErrors: withModeModuleAndScopePrefix(() => `/settings/git-sync/errors`),
+  toGitSyncConfig: withModeModuleAndScopePrefix(() => `/settings/git-sync/config`),
 
   toDiscoverySettings: withModeModuleAndScopePrefix(() => `/settings/discovery`),
   toDiscoveryDetailsSettings: withModeModuleAndScopePrefix<DiscoveryPathProps>(
