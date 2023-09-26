@@ -11,7 +11,6 @@ import { FontVariation } from '@harness/design-system'
 import { get } from 'lodash-es'
 import { CellProps, Renderer } from 'react-table'
 import { Drawer } from '@blueprintjs/core'
-import { MonacoEditorProps } from 'react-monaco-editor'
 import { NGTriggerEventHistoryResponse, NGTriggerSourceV2 } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
@@ -92,19 +91,17 @@ export const PayloadDrawer = ({
             : payloadValue()
         }
         data-testid="monaco-editor"
-        alwaysShowDarkTheme={true}
-        options={
-          {
-            readOnly: true,
-            wordBasedSuggestions: false,
-            minimap: {
-              enabled: false
-            },
-            fontFamily: "'Roboto Mono', monospace",
-            fontSize: 13,
-            scrollBeyondLastLine: false
-          } as MonacoEditorProps['options']
-        }
+        options={{
+          readOnly: true,
+          wordBasedSuggestions: false,
+          minimap: {
+            enabled: false
+          },
+          fontFamily: "'Roboto Mono', monospace",
+          fontSize: 13,
+          scrollBeyondLastLine: false,
+          theme: 'vs-dark'
+        }}
       />
     </Drawer>
   )

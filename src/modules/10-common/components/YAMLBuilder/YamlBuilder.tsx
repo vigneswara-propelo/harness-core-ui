@@ -6,7 +6,6 @@
  */
 
 import React, { useEffect, useState, useRef, useCallback, useMemo, memo } from 'react'
-import type { MonacoEditorProps } from 'react-monaco-editor'
 import * as monaco from 'monaco-editor'
 import { IKeyboardEvent, IDisposable, Position } from 'monaco-editor/esm/vs/editor/editor.api'
 import { CompletionItemKind } from 'vscode-languageserver-types'
@@ -114,14 +113,12 @@ const setUpEditor = (theme: Theme): void => {
             'editor.background': `#${EDITOR_DARK_BG}`,
             'editor.foreground': `#${EDITOR_DARK_FG}`,
             'editor.selectionBackground': `#${EDITOR_DARK_SELECTION}`,
-
             'editor.lineHighlightBackground': `#${EDITOR_DARK_SELECTION}`,
             'editorCursor.foreground': `#${EDITOR_DARK_FG}`,
             'editorWhitespace.foreground': `#${EDITOR_WHITESPACE}`
           }
         : { 'editor.background': `#${EDITOR_LIGHT_BG}` }
   })
-  monaco.editor.setTheme(getTheme(theme))
 }
 
 const ErrorSummary = memo(({ errorMap }: { errorMap?: Map<number, string> }): JSX.Element => {
@@ -746,20 +743,19 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       value={currentYaml}
       onChange={onYamlChange}
       editorDidMount={editorDidMount}
-      options={
-        {
-          readOnly: defaultTo(isReadOnlyMode, !isEditModeSupported),
-          wordBasedSuggestions: false,
-          scrollBeyondLastLine: false,
-          fontFamily: "'Roboto Mono', monospace",
-          fontSize: 13,
-          minimap: {
-            enabled: false
-          },
-          codeLens: codeLensRegistrations.current.size > 0,
-          tabSize: 2
-        } as MonacoEditorProps['options']
-      }
+      options={{
+        readOnly: defaultTo(isReadOnlyMode, !isEditModeSupported),
+        wordBasedSuggestions: false,
+        scrollBeyondLastLine: false,
+        fontFamily: "'Roboto Mono', monospace",
+        fontSize: 13,
+        minimap: {
+          enabled: false
+        },
+        codeLens: codeLensRegistrations.current.size > 0,
+        tabSize: 2,
+        theme: getTheme(theme)
+      }}
       ref={editorRef}
     />
   )

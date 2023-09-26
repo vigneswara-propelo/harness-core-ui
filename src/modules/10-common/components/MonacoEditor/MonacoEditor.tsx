@@ -20,7 +20,6 @@ export interface ExtendedMonacoEditorProps extends MonacoEditorProps {
   name?: string
   setLineCount?: (line: number) => void
   'data-testid'?: string
-  alwaysShowDarkTheme?: boolean
 }
 
 const MonacoEditor = forwardRef<MonacoCodeEditorRef, ExtendedMonacoEditorProps>((props, ref) => {
@@ -64,17 +63,20 @@ const MonacoEditor = forwardRef<MonacoCodeEditorRef, ExtendedMonacoEditorProps>(
     props.onChange?.(value, event)
   }
 
-  const theme = props.alwaysShowDarkTheme ? 'vs-dark' : 'vs'
+  const theme = props.theme || props.options?.theme || 'vs'
+
   const options: MonacoEditorProps['options'] = {
     ...props.options,
-    extraEditorClassName: cx(props.className, !props.alwaysShowDarkTheme && props.options?.readOnly && styles.disabled)
+    theme,
+    extraEditorClassName: cx(props.className, {
+      [styles.disabled]: props.options?.readOnly && theme !== 'vs-dark'
+    })
   }
 
   return (
     <ReactMonacoEditor
       {...props}
       options={options}
-      theme={theme}
       editorWillMount={editorWillMount}
       editorDidMount={editorDidMount}
       onChange={onChange}
