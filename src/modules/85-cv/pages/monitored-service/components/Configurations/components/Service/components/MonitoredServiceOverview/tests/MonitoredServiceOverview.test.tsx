@@ -12,8 +12,10 @@ import { Button, Container, Formik, FormikForm } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cdService from 'services/cd-ng'
 import mockImport from 'framework/utils/mockImport'
+import { MonitoredServiceProvider } from '@cv/pages/monitored-service/MonitoredServiceContext'
 import MonitoredServiceOverview from '../MonitoredServiceOverview'
 import { MonitoredServiceType } from '../MonitoredServiceOverview.constants'
+import { MonitoredServiceForm } from '../../../Service.types'
 
 jest.mock(
   '@cv/pages/monitored-service/components/Configurations/components/Service/components/MonitoredServiceOverview/component/OrgAccountLevelServiceEnvField/OrgAccountLevelServiceEnvField',
@@ -209,5 +211,58 @@ describe('Unit tests for MonitoredServiceOverview', () => {
     )
     expect(container.querySelector('[title="On Service Select"]')).toBeInTheDocument()
     expect(container.querySelector('[title="On Environment Select"]')).toBeInTheDocument()
+  })
+
+  test('should disable monitored service type dropdown if it is templates and edit scenario', async () => {
+    const { container } = render(
+      <TestWrapper path="/:templateIdentifier" pathParams={{ templateIdentifier: 'testTemplateId' }}>
+        <MonitoredServiceProvider isTemplate>
+          <Formik<MonitoredServiceForm>
+            onSubmit={Promise.resolve}
+            initialValues={{} as MonitoredServiceForm}
+            formName="mockForm"
+          >
+            {formikProps => (
+              <FormikForm>
+                <MonitoredServiceOverview
+                  onChangeMonitoredServiceType={onChangeMonitoredServiceType}
+                  formikProps={formikProps}
+                  isEdit={false}
+                />
+                <button type="submit" />
+              </FormikForm>
+            )}
+          </Formik>
+        </MonitoredServiceProvider>
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(container.querySelector('input[name="type"]')).toBeDisabled())
+  })
+  test('should enable monitored service type dropdown if it is templates and create scenario', async () => {
+    const { container } = render(
+      <TestWrapper path="/:templateIdentifier" pathParams={{ templateIdentifier: '-1' }}>
+        <MonitoredServiceProvider isTemplate>
+          <Formik<MonitoredServiceForm>
+            onSubmit={Promise.resolve}
+            initialValues={{} as MonitoredServiceForm}
+            formName="mockForm"
+          >
+            {formikProps => (
+              <FormikForm>
+                <MonitoredServiceOverview
+                  onChangeMonitoredServiceType={onChangeMonitoredServiceType}
+                  formikProps={formikProps}
+                  isEdit={false}
+                />
+                <button type="submit" />
+              </FormikForm>
+            )}
+          </Formik>
+        </MonitoredServiceProvider>
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(container.querySelector('input[name="type"]')).not.toBeDisabled())
   })
 })

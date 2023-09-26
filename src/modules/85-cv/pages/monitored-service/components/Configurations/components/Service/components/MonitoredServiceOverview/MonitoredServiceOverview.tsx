@@ -8,6 +8,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Layout, FormInput, useConfirmationDialog, Text, Container } from '@harness/uicore'
 import { Color, Intent } from '@harness/design-system'
+import { useParams } from 'react-router-dom'
 import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'
 import type { MonitoredServiceDTO } from 'services/cv'
@@ -32,6 +33,10 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
   const isCDModule = getIfModuleIsCD(config)
   const { licenseInformation } = useLicenseStore()
   const isSRMLicensePresentAndActive = licenseInformation[ModuleName.CV]?.status === LICENSE_STATE_VALUES.ACTIVE
+
+  const { templateIdentifier } = useParams<{ templateIdentifier: string }>()
+
+  const isTemplateAndEdit = isTemplate && Boolean(templateIdentifier) && templateIdentifier !== '-1'
 
   const { openDialog } = useConfirmationDialog({
     contentText: getString('cv.monitoredServices.changeMonitoredServiceTypeMessage'),
@@ -88,6 +93,7 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
           {isCDModule || !isSRMLicensePresentAndActive ? null : (
             <FormInput.Select
               name="type"
+              disabled={isTemplateAndEdit}
               tooltipProps={{ dataTooltipId: 'monitoredServiceType' }}
               items={MonitoredServiceTypeOptions}
               label={getString('common.serviceType')}
