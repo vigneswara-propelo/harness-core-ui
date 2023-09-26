@@ -22,6 +22,7 @@ import ChaosUsageInfo from './ChaosUsageInfo'
 import css from '../SubscriptionsPage.module.scss'
 
 interface SubscriptionUsageProps {
+  loadingCredits: boolean
   module: ModuleName
   licenseData: ModuleLicenseDTO
   creditsData?: CreditDTO[]

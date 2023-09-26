@@ -8,13 +8,13 @@
 import React from 'react'
 import { Layout, PageError } from '@harness/uicore'
 import moment from 'moment'
-
 import { useStrings } from 'framework/strings'
 import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { ModuleLicenseDTO, CreditDTO } from 'services/cd-ng'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { PageSpinner } from '@common/components'
 import UsageInfoCard, { ErrorContainer } from './UsageInfoCard'
 
 interface ActiveDevelopersProps {
@@ -29,6 +29,7 @@ interface CreditInfoProps {
 }
 
 interface CIUsageInfoProps {
+  loadingCredits?: boolean
   module: ModuleName
   licenseData: ModuleLicenseDTO
   creditsData?: CreditDTO[]
@@ -58,6 +59,7 @@ const CreditInfo: React.FC<CreditInfoProps> = ({ totalCredits, expiryDate, credi
   const { getString } = useStrings()
   const leftHeader = getString('common.subscriptions.usage.availableCredits')
   const hasBar = true
+  const leftBottomFooter = getString('common.subscribed')
   const leftFooter = getString('common.subscriptions.usage.available')
   const tooltip = getString('common.subscriptions.usage.creditTooltip')
   const tooltipExpiry = getString('common.subscriptions.usage.creditTooltipExpiry', { date: expiryDate })
@@ -65,6 +67,7 @@ const CreditInfo: React.FC<CreditInfoProps> = ({ totalCredits, expiryDate, credi
     date: expiryDate
   })
   const props = {
+    leftBottomFooter,
     creditsUsed,
     credits: totalCredits,
     leftHeader,
@@ -90,7 +93,7 @@ export const creditSum = (creditsData: CreditDTO[]): number => {
   return totalCredits
 }
 const CIUsageInfo: React.FC<CIUsageInfoProps> = props => {
-  const { creditsData, creditsUsed } = props
+  const { creditsData, creditsUsed, loadingCredits } = props
   const { BUILD_CREDITS_VIEW } = useFeatureFlags()
   let totalCredits = 0
 
@@ -134,9 +137,11 @@ const CIUsageInfo: React.FC<CIUsageInfoProps> = props => {
         subscribedUsers={limit?.ci?.totalDevelopers || 0}
         activeUsers={usage?.ci?.activeCommitters?.count || 0}
       />
-      {BUILD_CREDITS_VIEW === true ? (
+      {BUILD_CREDITS_VIEW === true && !loadingCredits ? (
         <CreditInfo creditsUsed={creditsUsed || 0} totalCredits={totalCredits} expiryDate={expiryDate} />
-      ) : null}
+      ) : (
+        <PageSpinner />
+      )}
     </Layout.Horizontal>
   )
 }

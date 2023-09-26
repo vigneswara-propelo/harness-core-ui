@@ -255,6 +255,7 @@ export interface StringsMap {
   'common.createFlag': string
   'common.createPipeline': string
   'common.creating': string
+  'common.creditsExpiresToolltip': string
   'common.csBot.aida': string
   'common.csBot.aidaFullText': string
   'common.csBot.askAIDA': string

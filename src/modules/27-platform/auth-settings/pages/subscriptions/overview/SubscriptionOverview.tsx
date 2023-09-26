@@ -40,7 +40,11 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
     accountIdentifier: accountId
   })
 
-  const { data: creditsUsed, refetch: refetchCreditsUsed } = useGetCredits({
+  const {
+    data: creditsUsed,
+    refetch: refetchCreditsUsed,
+    loading
+  } = useGetCredits({
     queryParams: {
       accountIdentifier: accountId,
       startTime: filteredSmallestTime,
@@ -73,6 +77,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
       />
       {enabled && licenseData && (
         <SubscriptionUsageCard
+          loadingCredits={loading}
           module={module}
           licenseData={licenseData}
           creditsData={creditsData?.data}

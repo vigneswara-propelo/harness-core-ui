@@ -81,6 +81,7 @@ const PercentageSubscribedLabel: React.FC<{
 }
 
 interface UsageInfoCardProps {
+  leftBottomFooter?: string
   creditsUsed?: number
   subscribed?: number
   usage?: number
@@ -100,6 +101,7 @@ export const ErrorContainer = ({ children }: { children: React.ReactElement }): 
 }
 
 const UsageInfoCard: React.FC<UsageInfoCardProps> = ({
+  leftBottomFooter,
   creditsUsed,
   subscribed,
   usage,
@@ -150,16 +152,28 @@ const UsageInfoCard: React.FC<UsageInfoCardProps> = ({
             </Text>
             {getInfoIcon(tooltip)}
           </Layout.Horizontal>
-          {credits ? null : (
+          {credits ? (
+            rightFooter && (
+              <Text tooltip={<Text padding={'small'}>{getString('common.creditsExpiresToolltip')}</Text>}>
+                <PercentageSubscribedLabel
+                  creditsAvailable={creditsAvailable}
+                  overPercentage={overPercentage}
+                  percentage={percentage}
+                  color={color}
+                  label={rightFooter}
+                />
+              </Text>
+            )
+          ) : (
             <Text font={{ size: 'small' }} color={Color.GREY_500}>
               {rightHeader}
             </Text>
           )}
         </Layout.Horizontal>
         {credits ? (
-          <div className={css.creditTotal}>
-            <Text font={{ size: 'large', weight: 'bold' }} color={Color.BLACK} className={css.creditTotal}>
-              {`${creditsAvailable}/${credits}`}
+          <div>
+            <Text font={{ size: 'large', weight: 'bold' }} color={Color.BLACK}>
+              {`${getLabel(creditsAvailable)} `}
             </Text>
           </div>
         ) : (
@@ -172,21 +186,28 @@ const UsageInfoCard: React.FC<UsageInfoCardProps> = ({
         <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
           {credits ? (
             <Text font={{ size: 'xsmall' }}>
-              {`${width}%`} {leftFooter}
+              {`${getLabel(credits)} `}
+              {leftBottomFooter}
             </Text>
           ) : (
             <Text font={{ size: 'xsmall' }}>
               {getLabel(subscribed)} {leftFooter}
             </Text>
           )}
-          {rightFooter && (
-            <PercentageSubscribedLabel
-              creditsAvailable={creditsAvailable}
-              overPercentage={overPercentage}
-              percentage={percentage}
-              color={color}
-              label={rightFooter}
-            />
+          {credits ? (
+            <Text font={{ size: 'xsmall' }}>
+              {`${Math.round(width * 100) / 100}%`} {leftFooter}
+            </Text>
+          ) : (
+            rightFooter && (
+              <PercentageSubscribedLabel
+                creditsAvailable={creditsAvailable}
+                overPercentage={overPercentage}
+                percentage={percentage}
+                color={color}
+                label={rightFooter}
+              />
+            )
           )}
         </Layout.Horizontal>
       </Layout.Vertical>
