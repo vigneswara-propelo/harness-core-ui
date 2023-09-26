@@ -206,6 +206,7 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
   }
 
   const notesModal = useNotesModal({ planExecutionId: executionIdentifier, pipelineExecutionSummary })
+  const isNotesPresent = pipelineExecutionSummary?.notesExistForPlanExecutionId || !isEmpty(notesModal.notes)
   const retryPipeline = (fromLastFailedStage?: boolean): void => {
     trackEvent(PipelineExecutionActions.RetryPipeline, {
       triggered_from: 'button',
@@ -401,24 +402,23 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
           stringID={module === 'cd' ? 'execution.pipelineIdentifierTextCD' : 'execution.pipelineIdentifierTextCI'}
           vars={pipelineExecutionSummary}
         />
-        {pipelineExecutionSummary?.notesExistForPlanExecutionId && (
-          <Button
-            minimal
-            small
-            icon={pipelineExecutionSummary?.notesExistForPlanExecutionId ? 'code-chat' : 'Edit'}
-            iconProps={{ size: 14, className: css.chatButton }}
-            withoutCurrentColor
-            intent="primary"
-            onClick={() => notesModal.onClick(true)}
-            text={
-              pipelineExecutionSummary?.notesExistForPlanExecutionId
-                ? getString('pipeline.executionNotes.viewNote')
-                : getString('pipeline.executionNotes.addNote')
-            }
-            data-testid="addViewNotes"
-            className={css.notesButton}
-          />
-        )}
+        <Button
+          minimal
+          small
+          icon={isNotesPresent ? 'code-chat' : 'Edit'}
+          iconProps={{ size: isNotesPresent ? 14 : 12, className: css.chatButton }}
+          withoutCurrentColor
+          intent="primary"
+          onClick={() => notesModal.onClick(true)}
+          text={
+            isNotesPresent
+              ? getString('pipeline.executionNotes.viewNote')
+              : getString('pipeline.executionNotes.addNote')
+          }
+          data-testid="addViewNotes"
+          className={css.notesButton}
+        />
+
         {!isEmpty(pipelineExecutionSummary?.tags) ? (
           <TagsPopover
             iconProps={{ size: 14 }}
