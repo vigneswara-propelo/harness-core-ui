@@ -100,6 +100,8 @@ function PrimaryArtifactView({
     [artifact?.connectorRef, primaryConnectorName]
   )
 
+  const artifactLocation = getArtifactLocation(artifact, artifactType)
+
   return (
     <section className={cx(css.artifactList, css.rowItem)}>
       <div>{getString(ArtifactTitleIdByType[artifactType])}</div>
@@ -124,8 +126,18 @@ function PrimaryArtifactView({
         <Icon name="full-circle" size={8} color={primaryConnectorColor} />
       </div>
       <div>
-        <Text width={200} lineClamp={1} color={Color.GREY_500}>
-          <span className={css.noWrap}>{getArtifactLocation(artifact, artifactType)}</span>
+        <Text
+          width={200}
+          lineClamp={1}
+          color={Color.GREY_500}
+          tooltip={
+            <Text font="small" color={Color.GREY_100} padding="medium">
+              {artifactLocation}
+            </Text>
+          }
+          tooltipProps={{ isDark: true }}
+        >
+          {artifactLocation}
         </Text>
       </div>
 
