@@ -154,8 +154,8 @@ describe('Unit tests for K8sNamespaceAndWorkload', () => {
           connectorIdentifier="1234_connectorIdentifier"
           dependencyMetaData={{
             monitoredServiceIdentifier: '1235_sourceIdentifier',
+            type: 'KUBERNETES',
             dependencyMetadata: {
-              type: 'KUBERNETES',
               namespace: 'namespace2',
               workload: 'workload2'
             }

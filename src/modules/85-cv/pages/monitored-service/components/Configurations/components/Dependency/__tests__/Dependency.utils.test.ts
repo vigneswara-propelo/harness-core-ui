@@ -7,6 +7,8 @@
 
 import type { ServiceDependencyDTO } from 'services/cv'
 import type { MonitoredServiceForm } from '../../Service/Service.types'
+import { KUBERNETES_TYPE } from '../component/SelectServiceCard.constants'
+import { DependencyMetaData } from '../component/SelectServiceCard.types'
 import {
   updateMonitoredServiceWithDependencies,
   filterCurrentMonitoredServiceFromList,
@@ -18,12 +20,12 @@ const dependencies = [
   { monitoredServiceIdentifier: '1234_iden' },
   {
     monitoredServiceIdentifier: '4345_iden',
+    type: KUBERNETES_TYPE,
     dependencyMetadata: {
-      type: 'KUBERNETES',
       namespace: 'namspace1',
       workload: 'workload1'
     }
-  }
+  } as DependencyMetaData
 ]
 
 const form: MonitoredServiceForm = {
@@ -47,9 +49,9 @@ describe('Validate utils', () => {
         {
           dependencyMetadata: {
             namespace: 'namspace1',
-            type: 'KUBERNETES',
             workload: 'workload1'
           },
+          type: KUBERNETES_TYPE,
           monitoredServiceIdentifier: '4345_iden'
         }
       ],
@@ -77,10 +79,10 @@ describe('Validate utils', () => {
           'delegate_production',
           {
             monitoredServiceIdentifier: 'delegate_production',
+            type: KUBERNETES_TYPE,
             dependencyMetadata: {
               namespace: 'le-ng-harness',
               supportedChangeSourceTypes: ['K8sCluster'],
-              type: 'KUBERNETES',
               workload: 'sampleledelegate-kmpysm'
             }
           }

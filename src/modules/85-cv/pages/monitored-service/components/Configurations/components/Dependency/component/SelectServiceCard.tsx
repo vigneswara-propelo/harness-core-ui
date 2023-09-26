@@ -20,6 +20,7 @@ import type { ServiceCardInterfaceProps, InfrastructureDependencyMetaData } from
 import MonitoredServiceCategory from './components/MonitoredServiceCategory/MonitoredServiceCategory'
 import K8sNamespaceAndWorkload from './components/K8sNamespaceAndWorkload/K8sNamespaceAndWorkload'
 import { getConnectorRefFromChangeSourceService } from './components/SelectServiceCard.utils'
+import { KUBERNETES_TYPE } from './SelectServiceCard.constants'
 import css from './SelectServiceCard.module.scss'
 
 export default function SelectServiceCard(props: ServiceCardInterfaceProps): JSX.Element | null {
@@ -84,9 +85,9 @@ export function KubernetesServiceCard(props: ServiceCardInterfaceProps): JSX.Ele
         dependencyMetaData={dependencyMetaData as InfrastructureDependencyMetaData}
         onChange={(namespace, workload) =>
           onChange(true, {
+            type: KUBERNETES_TYPE,
             monitoredServiceIdentifier: monitoredService?.identifier,
             dependencyMetadata: {
-              type: 'KUBERNETES',
               namespace,
               workload
             }

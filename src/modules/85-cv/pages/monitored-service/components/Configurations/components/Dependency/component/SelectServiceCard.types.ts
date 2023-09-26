@@ -22,11 +22,11 @@ export interface ServiceCardWithAccordianInterfaceProps {
 export interface DependencyMetaData {
   monitoredServiceIdentifier: string
   dependencyMetadata?: Record<string, unknown>
+  type?: 'KUBERNETES'
 }
 
 export interface InfrastructureDependencyMetaData extends DependencyMetaData {
   dependencyMetadata: {
-    type: 'KUBERNETES'
     namespace?: string
     workload?: string
   }

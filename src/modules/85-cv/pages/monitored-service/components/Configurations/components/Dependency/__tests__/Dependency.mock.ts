@@ -9,6 +9,7 @@ import routes from '@common/RouteDefinitions'
 import { projectPathProps } from '@common/utils/routeUtils'
 import type { TestWrapperProps } from '@common/utils/testUtils'
 import type { MonitoredServiceForm } from '../../Service/Service.types'
+import { KUBERNETES_TYPE } from '../component/SelectServiceCard.constants'
 
 export const pathParams = {
   accountId: 'account_id',
@@ -124,10 +125,10 @@ export const monitoredServiceList = {
           dependencies: [
             {
               monitoredServiceIdentifier: 'delegate_production',
+              type: KUBERNETES_TYPE,
               dependencyMetadata: {
                 namespace: 'le-ng-harness',
                 workload: 'sampleledelegate-kmpysm',
-                type: 'KUBERNETES',
                 supportedChangeSourceTypes: ['K8sCluster']
               }
             },
@@ -216,9 +217,10 @@ export const filteredMonitoredList = {
               dependencyMetadata: {
                 namespace: 'le-ng-harness',
                 supportedChangeSourceTypes: ['K8sCluster'],
-                type: 'KUBERNETES',
+
                 workload: 'sampleledelegate-kmpysm'
               },
+              type: KUBERNETES_TYPE,
               monitoredServiceIdentifier: 'delegate_production'
             },
             {

@@ -99,8 +99,9 @@ describe('SelectServiceCard', () => {
     fireEvent.click(getByText('workload1'))
     await waitFor(() =>
       expect(onChange).toHaveBeenLastCalledWith(true, {
-        dependencyMetadata: { namespace: 'namespace1', type: 'KUBERNETES', workload: 'workload1' },
-        monitoredServiceIdentifier: '1234_identifier'
+        dependencyMetadata: { namespace: 'namespace1', workload: 'workload1' },
+        monitoredServiceIdentifier: '1234_identifier',
+        type: 'KUBERNETES'
       })
     )
   })

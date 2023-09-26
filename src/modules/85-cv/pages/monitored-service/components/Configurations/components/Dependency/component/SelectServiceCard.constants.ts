@@ -1,0 +1,1 @@
+export const KUBERNETES_TYPE = 'KUBERNETES'

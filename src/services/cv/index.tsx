@@ -775,6 +775,12 @@ export type CVNGSlackChannelSpec = CVNGNotificationChannelSpec & {
   webhookUrl?: string
 }
 
+export interface CacheResponseMetadata {
+  cacheState: 'VALID_CACHE' | 'STALE_CACHE' | 'UNKNOWN'
+  lastUpdatedAt: number
+  ttlLeft: number
+}
+
 export type CalenderSLOTargetSpec = SLOTargetSpec & {
   spec: CalenderSpec
   type?: 'Weekly' | 'Monthly' | 'Quarterly'
@@ -1630,8 +1636,27 @@ export interface EntityDetails {
   entityRef: string
 }
 
+export interface EntityGitDetails {
+  branch?: string
+  commitId?: string
+  filePath?: string
+  fileUrl?: string
+  objectId?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  repoIdentifier?: string
+  repoName?: string
+  repoUrl?: string
+  rootFolder?: string
+}
+
 export type EntityIdentifiersRule = EntitiesRule & {
   entityIdentifiers: EntityDetails[]
+}
+
+export interface EnvironmentIdentifierResponse {
+  identifier: string
+  name?: string
 }
 
 export interface EnvironmentResponse {
@@ -1642,13 +1667,18 @@ export interface EnvironmentResponse {
 
 export interface EnvironmentResponseDTO {
   accountId?: string
+  cacheResponseMetadataDTO?: CacheResponseMetadata
   color?: string
+  connectorRef?: string
   deleted?: boolean
   description?: string
+  entityGitDetails?: EntityGitDetails
+  fallbackBranch?: string
   identifier?: string
   name?: string
   orgIdentifier?: string
   projectIdentifier?: string
+  storeType?: 'INLINE' | 'REMOTE'
   tags?: {
     [key: string]: string
   }
@@ -2004,6 +2034,7 @@ export interface Error {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
+    | 'MISSING_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
@@ -2452,6 +2483,7 @@ export interface Failure {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
+    | 'MISSING_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
@@ -3193,6 +3225,10 @@ export type InternalChangeEventMetaData = ChangeEventMetadata & {
   eventEndTime?: number
   eventStartTime?: number
   internalChangeEvent?: InternalChangeEvent
+  pipelineId?: string
+  planExecutionId?: string
+  stageId?: string
+  stageStepId?: string
   updatedBy?: string
 }
 
@@ -3306,6 +3342,11 @@ export interface KubernetesCredentialDTO {
 
 export interface KubernetesCredentialSpecDTO {
   [key: string]: any
+}
+
+export type KubernetesDependencyMetadata = ServiceDependencyMetadata & {
+  namespace?: string
+  workload?: string
 }
 
 export type KubernetesOpenIdConnectDTO = KubernetesAuthCredentialDTO & {
@@ -4338,6 +4379,17 @@ export interface PageDowntimeListView {
   totalPages?: number
 }
 
+export interface PageEnvironmentIdentifierResponse {
+  content?: EnvironmentIdentifierResponse[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  pageToken?: string
+  totalItems?: number
+  totalPages?: number
+}
+
 export interface PageLogAnalysisClusterDTO {
   content?: LogAnalysisClusterDTO[]
   empty?: boolean
@@ -4610,6 +4662,7 @@ export interface PartialSchemaDTO {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   namespace?: string
   nodeName?: string
   nodeType?: string
@@ -4708,6 +4761,7 @@ export interface QueryParamsDTO {
   healthSourceMetricName?: string
   healthSourceMetricNamespace?: string
   index?: string
+  indexes?: string[]
   messageIdentifier?: string
   serviceInstanceField?: string
   timeStampFormat?: string
@@ -5391,6 +5445,7 @@ export interface ResponseMessage {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
+    | 'MISSING_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
@@ -5517,6 +5572,13 @@ export interface ResponsePageDowntimeHistoryView {
 export interface ResponsePageDowntimeListView {
   correlationId?: string
   data?: PageDowntimeListView
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageEnvironmentIdentifierResponse {
+  correlationId?: string
+  data?: PageEnvironmentIdentifierResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -6403,6 +6465,7 @@ export interface SLOConsumptionBreakdown {
 export interface SLODashboardApiFilter {
   childResource?: boolean
   compositeSLOIdentifier?: string
+  envIdentifiers?: string[]
   errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
   evaluationType?: 'Window' | 'Request'
   monitoredServiceIdentifier?: string
@@ -6607,6 +6670,7 @@ export interface SecondaryEventsResponse {
 export interface ServiceDependencyDTO {
   dependencyMetadata?: ServiceDependencyMetadata
   monitoredServiceIdentifier?: string
+  type?: 'KUBERNETES'
 }
 
 export interface ServiceDependencyGraphDTO {
@@ -7591,6 +7655,7 @@ export interface YamlSchemaMetadata {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   )[]
   namespace?: string
   yamlGroup: YamlGroup
@@ -7617,6 +7682,7 @@ export interface YamlSchemaWithDetails {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   schema?: JsonNode
   schemaClassName?: string
   yamlSchemaMetadata?: YamlSchemaMetadata
@@ -16062,6 +16128,80 @@ export const deleteNotificationRuleDataPromise = (
     signal
   )
 
+export interface GetNotificationRuleQueryParams {
+  accountId: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface GetNotificationRulePathParams {
+  identifier: string
+}
+
+export type GetNotificationRuleProps = Omit<
+  GetProps<
+    RestResponseNotificationRuleResponse,
+    unknown,
+    GetNotificationRuleQueryParams,
+    GetNotificationRulePathParams
+  >,
+  'path'
+> &
+  GetNotificationRulePathParams
+
+/**
+ * get notificationRule data
+ */
+export const GetNotificationRule = ({ identifier, ...props }: GetNotificationRuleProps) => (
+  <Get<RestResponseNotificationRuleResponse, unknown, GetNotificationRuleQueryParams, GetNotificationRulePathParams>
+    path={`/notification-rule/${identifier}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetNotificationRuleProps = Omit<
+  UseGetProps<
+    RestResponseNotificationRuleResponse,
+    unknown,
+    GetNotificationRuleQueryParams,
+    GetNotificationRulePathParams
+  >,
+  'path'
+> &
+  GetNotificationRulePathParams
+
+/**
+ * get notificationRule data
+ */
+export const useGetNotificationRule = ({ identifier, ...props }: UseGetNotificationRuleProps) =>
+  useGet<RestResponseNotificationRuleResponse, unknown, GetNotificationRuleQueryParams, GetNotificationRulePathParams>(
+    (paramsInPath: GetNotificationRulePathParams) => `/notification-rule/${paramsInPath.identifier}`,
+    { base: getConfig('cv/api'), pathParams: { identifier }, ...props }
+  )
+
+/**
+ * get notificationRule data
+ */
+export const getNotificationRulePromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    RestResponseNotificationRuleResponse,
+    unknown,
+    GetNotificationRuleQueryParams,
+    GetNotificationRulePathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    RestResponseNotificationRuleResponse,
+    unknown,
+    GetNotificationRuleQueryParams,
+    GetNotificationRulePathParams
+  >(getConfig('cv/api'), `/notification-rule/${identifier}`, props, signal)
+
 export interface UpdateNotificationRuleDataQueryParams {
   accountId: string
   orgIdentifier?: string
@@ -16758,7 +16898,9 @@ export interface GetServiceLevelObjectivesRiskCountQueryParams {
   targetTypes?: ('Rolling' | 'Calender')[]
   errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
   filter?: string
+  sloType?: 'Simple' | 'Composite'
   evaluationType?: 'Window' | 'Request'
+  envIdentifiers?: string[]
 }
 
 export type GetServiceLevelObjectivesRiskCountProps = Omit<
@@ -17086,7 +17228,9 @@ export interface GetSLOHealthListViewQueryParams {
   targetTypes?: ('Rolling' | 'Calender')[]
   errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
   filter?: string
+  sloType?: 'Simple' | 'Composite'
   evaluationType?: 'Window' | 'Request'
+  envIdentifiers?: string[]
   pageNumber?: number
   pageSize?: number
 }
