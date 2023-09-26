@@ -67,6 +67,7 @@ export default function PayloadDetails(props: PayloadDetailsInterface): JSX.Elem
             hideErrorMesageOnReadOnlyMode={true}
             existingJSON={parsedPayload}
             theme="DARK"
+            height={'calc(100vh - 210px'}
           />
         </Layout.Vertical>
       </Container>

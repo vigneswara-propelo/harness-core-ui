@@ -112,7 +112,7 @@ export function FolderPath({ folder_paths: folderPath }: { folder_paths: string[
   )
 }
 
-export function LastActivity({ lastUpdatedAt }: { lastUpdatedAt: number }): JSX.Element {
+export function LastActivity({ event_trigger_time: lastUpdatedAt }: { event_trigger_time: number }): JSX.Element {
   return (
     <Layout.Vertical spacing={'small'}>
       <ReactTimeago date={lastUpdatedAt} />

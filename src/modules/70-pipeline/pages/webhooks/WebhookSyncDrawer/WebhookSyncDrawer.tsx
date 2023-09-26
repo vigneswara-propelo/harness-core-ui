@@ -208,6 +208,20 @@ export default function WebhookSyncDrawer(props: WebhookSyncDrawerInterface): JS
               )}
               {hasData && (
                 <>
+                  <Layout.Horizontal>
+                    <Text
+                      icon="repository"
+                      iconProps={{ size: 14, padding: { right: 'small' } }}
+                      margin={{ right: 'medium' }}
+                      padding={{ right: 'medium' }}
+                      border={{ right: true, width: 1, color: Color.GREY_200 }}
+                    >
+                      {repoName}
+                    </Text>
+                    <Text icon="code-webhook" iconProps={{ size: 16, padding: { right: 'small' } }}>
+                      {data?.content[0].webhook_identifier}
+                    </Text>
+                  </Layout.Horizontal>
                   <DateRangePickerButton
                     className={css.dateRange}
                     initialButtonText={
