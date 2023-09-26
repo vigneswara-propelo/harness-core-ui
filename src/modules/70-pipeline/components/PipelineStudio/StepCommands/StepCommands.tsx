@@ -135,11 +135,19 @@ export function StepCommands(
         : (stepsFactory.getStep((step as StepElementConfig).type) as PipelineStep<any>)
 
     const { stepValues, advancedValues } = latestValues
-    const values = {
-      ...(stepRef.current
-        ? defaultTo(stepValues, stepObj?.processFormData(stepRef.current.values) ?? stepRef.current.values)
-        : {}),
-      ...(!isTemplateStep ? defaultTo(advancedValues, advancedConfRef.current?.values as Partial<Values>) : {})
+
+    const finalStepValues = stepValues ?? stepObj?.processFormData(stepRef?.current?.values) ?? stepRef?.current?.values
+    const finalAdvancedValues = advancedValues ?? advancedConfRef?.current?.values ?? {}
+    let values = {}
+    if (!isTemplateStep) {
+      values = {
+        ...finalStepValues,
+        ...finalAdvancedValues
+      }
+    } else {
+      values = {
+        ...finalStepValues
+      }
     }
 
     return values

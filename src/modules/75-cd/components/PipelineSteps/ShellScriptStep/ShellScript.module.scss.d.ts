@@ -9,6 +9,8 @@
 declare const styles: {
   readonly addButton: string
   readonly environmentVarHeader: string
+  readonly execTargetGroup: string
+  readonly execTargetLabel: string
   readonly label: string
   readonly minConfigBtn: string
   readonly outputVarHeader: string

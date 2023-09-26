@@ -133,6 +133,7 @@ export default function ScriptTemplateForm(
               allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
               initialValues={{ onDelegate: true, ...template } as any}
               onChange={onChange}
+              fromScriptTemplate={true}
             />
           }
         />

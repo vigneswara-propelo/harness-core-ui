@@ -27,6 +27,7 @@ stepGroupVariables: StepGroup Variables
 scriptInputVariables: Script Input Variables
 scriptOutputVariables: Script Output Variables
 executionTarget: Execution Target
+execTargetLabel: Where would you like to execute the script?
 delegateLabel: On Delegate
 removeTemplate: '<b>{{name}}</b> will be removed from this {{entity}}.'
 cloneSuccess: 'Pipeline {{name}} has been cloned successfully as {{cloneName}}'
@@ -2032,3 +2033,5 @@ webhookEvents:
   backToEdit: Back to Edit
   selectEventPayload: Select an event to view payload details
   noEvents: No events found
+specifyTargetHostLabel: On Specific Target Host.
+onDelegateLabel: On Delegate.

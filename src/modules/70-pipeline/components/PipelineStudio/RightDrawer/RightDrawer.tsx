@@ -217,8 +217,15 @@ const processNodeImpl = (
         delete node.failureStrategies
       }
 
-      if (!data.stepConfig?.isStepGroup && item.delegateSelectors) {
-        set(node, 'spec.delegateSelectors', item.delegateSelectors)
+      if (
+        !data.stepConfig?.isStepGroup &&
+        ((item as StepElementConfig)?.spec?.delegateSelectors || item.delegateSelectors)
+      ) {
+        set(
+          node,
+          'spec.delegateSelectors',
+          (item as StepElementConfig)?.spec?.delegateSelectors || item.delegateSelectors
+        )
       } else if (data.stepConfig?.isStepGroup && item.delegateSelectors) {
         set(node, 'delegateSelectors', item.delegateSelectors)
       }
@@ -262,7 +269,9 @@ const processNodeImpl = (
       if (
         !data.stepConfig?.isStepGroup &&
         node.spec?.delegateSelectors &&
-        (!item.delegateSelectors || item.delegateSelectors?.length === 0)
+        (!item.delegateSelectors || item.delegateSelectors?.length === 0) &&
+        (!(item as StepElementConfig)?.spec?.delegateSelectors ||
+          (item as StepElementConfig)?.spec?.delegateSelectors?.length === 0)
       ) {
         delete node.spec.delegateSelectors
       }
@@ -277,7 +286,9 @@ const processNodeImpl = (
       if (
         data.stepConfig?.isStepGroup &&
         node.delegateSelectors &&
-        (!item.delegateSelectors || item.delegateSelectors?.length === 0)
+        (!item.delegateSelectors || item.delegateSelectors?.length === 0) &&
+        (!(item as StepElementConfig)?.spec?.delegateSelectors ||
+          (item as StepElementConfig)?.spec?.delegateSelectors?.length === 0)
       ) {
         delete node.delegateSelectors
       }

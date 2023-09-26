@@ -40,6 +40,7 @@ export interface MultiTypeDelegateSelectorProps extends IFormGroupProps {
   tooltipProps?: DataTooltipInterface
   inputProps: Omit<DelegateSelectorsV2ContainerProps, 'onChange'>
   disableTypeSelection?: boolean
+  enableConfigureOptions?: boolean
 }
 
 export interface ConnectedMultiTypeDelegateSelectorProps extends MultiTypeDelegateSelectorProps {
@@ -127,6 +128,7 @@ export function MultiTypeDelegateSelector(props: ConnectedMultiTypeDelegateSelec
     expressions = [],
     inputProps,
     disableTypeSelection = false,
+    enableConfigureOptions = false,
     ...restProps
   } = props
   const { showLabelText = true } = inputProps
@@ -166,6 +168,7 @@ export function MultiTypeDelegateSelector(props: ConnectedMultiTypeDelegateSelec
           expressionRender={() => (
             <ExpressionField name={name} value={value} disabled={disabled} formik={formik} expressions={expressions} />
           )}
+          enableConfigureOptions={enableConfigureOptions}
           style={{ flexGrow: 1, marginBottom: 0 }}
         >
           <DelegateSelectorsV2Container

@@ -15,7 +15,9 @@ import {
   MultiSelectOption,
   SelectOption,
   ExpressionInput,
-  EXPRESSION_INPUT_PLACEHOLDER
+  EXPRESSION_INPUT_PLACEHOLDER,
+  HarnessDocTooltip,
+  Label
 } from '@harness/uicore'
 import { isEmpty, get, isArray, defaultTo } from 'lodash-es'
 import cx from 'classnames'
@@ -50,6 +52,9 @@ import {
   ShellScriptFormData,
   ShellScriptStepVariable
 } from './shellScriptTypes'
+import { MultiTypeExecutionTargetGroup } from './ExecutionTargetGroup'
+import { FixedExecTargetGroup } from './OptionalConfiguration'
+
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ShellScript.module.scss'
 
@@ -474,6 +479,23 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
           template={template}
           className={cx(stepCss.formGroup, stepCss.md)}
         />
+      )}
+
+      {getMultiTypeFromValue(template?.spec?.onDelegate) === MultiTypeInputType.RUNTIME && (
+        <>
+          <Label>
+            <HarnessDocTooltip tooltipId={'exec-target'} labelText={'Execution Target'} />
+          </Label>
+
+          <MultiTypeExecutionTargetGroup
+            name={`${prefix}spec.onDelegate`}
+            formik={formik}
+            readonly={readonly}
+            initialValues={initialValues}
+          />
+
+          <FixedExecTargetGroup allowableTypes={allowableTypes} formik={formik as any} prefix={prefix} />
+        </>
       )}
     </FormikForm>
   )

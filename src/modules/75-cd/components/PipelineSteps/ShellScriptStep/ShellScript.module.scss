@@ -45,6 +45,15 @@
   }
 }
 
+.execTargetLabel {
+  font-size: var(--form-input-font-size);
+  font-weight: 500;
+}
+
+.execTargetGroup {
+  display: flex;
+}
+
 .environmentVarHeader {
   display: grid;
   grid-template-columns: 1.5fr 1fr 2fr 30px;
@@ -101,6 +110,10 @@
   padding: 0 !important;
   height: 28px !important;
   min-height: auto;
+
+  [icon='cog'] {
+    display: none;
+  }
 }
 
 .addButton {

@@ -15,6 +15,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import BaseScript from '@cd/components/BaseScript/BaseScript'
 import { FormMultiTypeCheckboxField } from '@common/components'
+
 import type { ShellScriptFormData } from './shellScriptTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 

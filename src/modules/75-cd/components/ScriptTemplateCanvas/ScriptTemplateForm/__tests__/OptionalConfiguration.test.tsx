@@ -13,6 +13,8 @@ import { Form } from 'formik'
 import { Formik } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { ShellScriptFormData } from '@cd/components/PipelineSteps/ShellScriptStep/shellScriptTypes'
+import { mockDelegateSelectorsResponse } from '@common/components/DelegateSelectors/__tests__/DelegateSelectorsMockData'
+
 import { OptionalConfigurationWithRef } from '../OptionalConfigurations'
 
 const initialValues = {
@@ -45,6 +47,13 @@ const initialValuesWithData = {
     }
   }
 }
+
+// const mockGetCallFunction = jest.fn()
+jest.mock('services/portal', () => ({
+  useGetDelegateSelectorsUpTheHierarchyV2: jest.fn().mockImplementation(() => {
+    return mockDelegateSelectorsResponse
+  })
+}))
 
 describe('Test OptionalConfigurations', () => {
   test('should match snapshot for OptionalConfigurations without initial values ', async () => {

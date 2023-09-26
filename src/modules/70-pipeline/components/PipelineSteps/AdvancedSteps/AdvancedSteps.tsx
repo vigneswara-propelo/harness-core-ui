@@ -65,7 +65,7 @@ export interface AdvancedStepsProps extends Omit<StepCommandsProps, 'onUseTempla
 type Step = StepElementConfig | StepGroupElementConfig
 
 export default function AdvancedSteps(props: AdvancedStepsProps, formikRef: StepFormikFowardRef): React.ReactElement {
-  const { step, onChange, stepsFactory, stepType, stepViewType } = props
+  const { step, onChange, stepsFactory, stepType, stepViewType, hiddenPanels } = props
   const { getString } = useStrings()
 
   const onChangeRef = useRef(onChange)
@@ -109,11 +109,15 @@ export default function AdvancedSteps(props: AdvancedStepsProps, formikRef: Step
 
   const commandFlags = defaultTo((step as StepElementConfig)?.spec?.commandFlags, defaultValues?.spec?.commandFlags)
 
+  const includeDelegateSelectors =
+    !hiddenPanels?.includes(AdvancedPanels.DelegateSelectors) &&
+    stepsFactory.getStep(stepType)?.hasDelegateSelectionVisible
+
   return (
     <Formik<FormValues>
       initialValues={{
         failureStrategies: defaultTo(failureStrategies, []) as AllFailureStrategyConfig[],
-        delegateSelectors: defaultTo(delegateSelectors, []),
+        ...(includeDelegateSelectors && { delegateSelectors: defaultTo(delegateSelectors, []) }),
         commandFlags: defaultTo(commandFlags, []),
         policySets: defaultTo(policySets, []),
         when,

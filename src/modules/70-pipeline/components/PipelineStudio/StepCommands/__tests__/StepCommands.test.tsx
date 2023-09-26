@@ -229,7 +229,7 @@ describe('<StepCommands /> tests', () => {
     expect(ref.current?.getErrors()).toEqual({})
     expect(ref.current?.getValues()).toEqual({
       commandFlags: [],
-      delegateSelectors: [],
+      strategy: undefined,
       failureStrategies: [],
       identifier: 'Wait_1',
       name: 'Wait_1',

@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { FormikProps, FieldArray, useFormikContext } from 'formik'
-import { Color, FontVariation } from '@harness/design-system'
 import {
   AllowedTypes,
   Button,
@@ -16,21 +15,27 @@ import {
   FormInput,
   getMultiTypeFromValue,
   Layout,
+  Text,
   MultiTypeInputType,
-  Text
+  HarnessDocTooltip,
+  Label
 } from '@harness/uicore'
+import { useParams } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
 import { get } from 'lodash-es'
+
 import cx from 'classnames'
-import { Radio, RadioGroup } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import MultiTypeSecretInput from '@platform/secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
 import {
   scriptInputType,
@@ -39,21 +44,128 @@ import {
   ShellScriptOutputStepVariable,
   ShellScriptStepVariable
 } from './shellScriptTypes'
+import { MultiTypeExecutionTargetGroup } from './ExecutionTargetGroup'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ShellScript.module.scss'
+
+interface FixedExecTargetGroupProps {
+  readonly?: boolean
+  expressions?: string[]
+  allowableTypes: AllowedTypes
+  formik: FormikProps<ShellScriptFormData>
+  prefix?: string
+}
+
+export const FixedExecTargetGroup = ({
+  expressions,
+  readonly,
+  allowableTypes,
+  formik,
+  prefix
+}: FixedExecTargetGroupProps): React.ReactElement => {
+  const { getString } = useStrings()
+  const formValues = formik.values
+  const { setFieldValue } = formik
+
+  if (formValues.spec?.onDelegate === 'targethost') {
+    return (
+      <div>
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormInput.MultiTextInput
+            name={prefix ? `${prefix}spec.executionTarget.host` : 'spec.executionTarget.host'}
+            placeholder={getString('cd.specifyTargetHost')}
+            label={getString('targetHost')}
+            style={{ marginTop: 'var(--spacing-small)' }}
+            multiTextInputProps={{ expressions, disabled: readonly, allowableTypes }}
+            disabled={readonly}
+          />
+          {getMultiTypeFromValue(formValues.spec?.executionTarget?.host) === MultiTypeInputType.RUNTIME && (
+            <ConfigureOptions
+              value={formValues.spec?.executionTarget?.host}
+              type="String"
+              variableName="spec.executionTarget.host"
+              showRequiredField={false}
+              showDefaultField={false}
+              onChange={value => setFieldValue('spec.executionTarget.host', value)}
+              style={{ marginTop: 12 }}
+              isReadonly={readonly}
+            />
+          )}
+        </div>
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <MultiTypeSecretInput
+            type={formValues.spec.shell === 'PowerShell' ? 'WinRmCredentials' : 'SSHKey'}
+            name={prefix ? `${prefix}spec.executionTarget.connectorRef` : 'spec.executionTarget.connectorRef'}
+            label={
+              formValues.spec.shell === 'PowerShell'
+                ? getString('platform.secrets.typeWinRM')
+                : getString('sshConnector')
+            }
+            expressions={expressions}
+            allowableTypes={allowableTypes}
+            disabled={readonly}
+          />
+          {getMultiTypeFromValue(formValues?.spec?.executionTarget?.connectorRef) === MultiTypeInputType.RUNTIME && (
+            <ConfigureOptions
+              value={formValues?.spec?.executionTarget?.connectorRef as string}
+              type={
+                <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
+                  <Text>{getString('pipelineSteps.connectorLabel')}</Text>
+                </Layout.Horizontal>
+              }
+              variableName="spec.executionTarget.connectorRef"
+              showRequiredField={false}
+              showDefaultField={false}
+              onChange={value => {
+                setFieldValue('spec.executionTarget.connectorRef', value)
+              }}
+              style={{ marginTop: 4 }}
+              isReadonly={readonly}
+            />
+          )}
+        </div>
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormInput.MultiTextInput
+            name={prefix ? `${prefix}spec.executionTarget.workingDirectory` : 'spec.executionTarget.workingDirectory'}
+            placeholder={getString('cd.enterWorkDirectory')}
+            label={getString('workingDirectory')}
+            style={{ marginTop: 'var(--spacing-medium)' }}
+            disabled={readonly}
+            multiTextInputProps={{ expressions, disabled: readonly, allowableTypes }}
+          />
+          {getMultiTypeFromValue(formValues.spec?.executionTarget?.workingDirectory) === MultiTypeInputType.RUNTIME && (
+            <ConfigureOptions
+              value={formValues.spec?.executionTarget?.workingDirectory}
+              type="String"
+              variableName="spec.executionTarget.workingDirectory"
+              showRequiredField={false}
+              showDefaultField={false}
+              onChange={value => setFieldValue('spec.executionTarget.workingDirectory', value)}
+              style={{ marginTop: 12 }}
+              isReadonly={readonly}
+            />
+          )}
+        </div>
+      </div>
+    )
+  }
+  return <div />
+}
 
 export default function OptionalConfiguration(props: {
   formik: FormikProps<ShellScriptFormData>
   readonly?: boolean
   allowableTypes: AllowedTypes
   enableOutputVar?: boolean
+  stepName?: string
 }): React.ReactElement {
-  const { formik, readonly, allowableTypes, enableOutputVar = true } = props
+  const { formik, readonly, allowableTypes, enableOutputVar = true, stepName } = props
+  const { projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+
   const { values: formValues, setFieldValue } = formik
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-
   return (
     <FormikForm>
       <div className={stepCss.stepPanel}>
@@ -192,111 +304,41 @@ export default function OptionalConfiguration(props: {
             </MultiTypeFieldSelector>
           </div>
         ) : null}
-        <div className={stepCss.formGroup}>
-          <Layout.Vertical>
-            <Layout.Horizontal margin={{ bottom: 'medium' }}>
-              <Text
-                font={{ variation: FontVariation.FORM_INPUT_TEXT, weight: 'semi-bold' }}
-                color={Color.GREY_600}
-                tooltipProps={{ dataTooltipId: 'executionTargetTooltip' }}
-              >
-                {`${getString('pipeline.executionTarget')} ${getString('common.optionalLabel')}`}
-              </Text>
-            </Layout.Horizontal>
-            <RadioGroup
-              data-tooltip-id="executionTargetTooltip"
-              selectedValue={formValues.spec.onDelegate}
+        {stepName === StepType.SHELLSCRIPT ? (
+          <>
+            <Label className={css.execTargetLabel}>
+              <HarnessDocTooltip tooltipId={'exec-target'} labelText={'Execution Target'} />
+            </Label>
+            <MultiTypeExecutionTargetGroup name="spec.onDelegate" formik={formik} readonly={readonly} />
+            <MultiTypeDelegateSelector
+              name={'spec.delegateSelectors'}
               disabled={readonly}
-              inline={true}
-              onChange={e => {
-                formik.setFieldValue('spec.onDelegate', e.currentTarget.value)
-              }}
-            >
-              <Radio value={'targethost'} label={getString('cd.specifyTargetHost')} />
-              <Radio value={'delegate'} label={getString('pipeline.delegateLabel')} />
-            </RadioGroup>
-          </Layout.Vertical>
-        </div>
-        {formValues.spec.onDelegate === 'targethost' ? (
-          <div>
-            <div className={cx(stepCss.formGroup, stepCss.md)}>
-              <FormInput.MultiTextInput
-                name="spec.executionTarget.host"
-                placeholder={getString('cd.specifyTargetHost')}
-                label={getString('targetHost')}
-                style={{ marginTop: 'var(--spacing-small)' }}
-                multiTextInputProps={{ expressions, disabled: readonly, allowableTypes }}
-                disabled={readonly}
-              />
-              {getMultiTypeFromValue(formValues.spec.executionTarget.host) === MultiTypeInputType.RUNTIME && (
-                <ConfigureOptions
-                  value={formValues.spec.executionTarget.host}
-                  type="String"
-                  variableName="spec.executionTarget.host"
-                  showRequiredField={false}
-                  showDefaultField={false}
-                  onChange={value => setFieldValue('spec.executionTarget.host', value)}
-                  style={{ marginTop: 12 }}
-                  isReadonly={readonly}
-                />
-              )}
-            </div>
-            <div className={cx(stepCss.formGroup, stepCss.md)}>
-              <MultiTypeSecretInput
-                type={formValues.spec.shell === 'PowerShell' ? 'WinRmCredentials' : 'SSHKey'}
-                name="spec.executionTarget.connectorRef"
-                label={
-                  formValues.spec.shell === 'PowerShell'
-                    ? getString('platform.secrets.typeWinRM')
-                    : getString('sshConnector')
-                }
+              inputProps={{ projectIdentifier, orgIdentifier }}
+              expressions={expressions}
+              allowableTypes={allowableTypes}
+              enableConfigureOptions={true}
+            />
+            {getMultiTypeFromValue(formValues.spec?.onDelegate) === MultiTypeInputType.FIXED ? (
+              <FixedExecTargetGroup
                 expressions={expressions}
+                readonly={readonly}
                 allowableTypes={allowableTypes}
-                disabled={readonly}
+                formik={formik}
               />
-              {getMultiTypeFromValue(formValues?.spec.executionTarget.connectorRef) === MultiTypeInputType.RUNTIME && (
-                <ConfigureOptions
-                  value={formValues?.spec.executionTarget.connectorRef as string}
-                  type={
-                    <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
-                      <Text>{getString('pipelineSteps.connectorLabel')}</Text>
-                    </Layout.Horizontal>
-                  }
-                  variableName="spec.executionTarget.connectorRef"
-                  showRequiredField={false}
-                  showDefaultField={false}
-                  onChange={value => {
-                    setFieldValue('spec.executionTarget.connectorRef', value)
-                  }}
-                  style={{ marginTop: 4 }}
-                  isReadonly={readonly}
-                />
-              )}
-            </div>
-            <div className={cx(stepCss.formGroup, stepCss.md)}>
-              <FormInput.MultiTextInput
-                name="spec.executionTarget.workingDirectory"
-                placeholder={getString('cd.enterWorkDirectory')}
-                label={getString('workingDirectory')}
-                style={{ marginTop: 'var(--spacing-medium)' }}
-                disabled={readonly}
-                multiTextInputProps={{ expressions, disabled: readonly, allowableTypes }}
+            ) : null}
+            {getMultiTypeFromValue(formValues.spec.onDelegate) === MultiTypeInputType.RUNTIME && (
+              <ConfigureOptions
+                value={formValues.spec.onDelegate as string}
+                type="String"
+                variableName="spec.onDelegate"
+                className={css.minConfigBtn}
+                showRequiredField={false}
+                showDefaultField={false}
+                onChange={value => setFieldValue('spec.onDelegate', value)}
+                isReadonly={readonly}
               />
-              {getMultiTypeFromValue(formValues.spec.executionTarget.workingDirectory) ===
-                MultiTypeInputType.RUNTIME && (
-                <ConfigureOptions
-                  value={formValues.spec.executionTarget.workingDirectory}
-                  type="String"
-                  variableName="spec.executionTarget.workingDirectory"
-                  showRequiredField={false}
-                  showDefaultField={false}
-                  onChange={value => setFieldValue('spec.executionTarget.workingDirectory', value)}
-                  style={{ marginTop: 12 }}
-                  isReadonly={readonly}
-                />
-              )}
-            </div>
-          </div>
+            )}
+          </>
         ) : null}
       </div>
     </FormikForm>

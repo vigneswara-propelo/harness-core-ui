@@ -4422,6 +4422,7 @@ export interface StringsMap {
   'pipeline.errorFramework.pipelineErrorsTitle': string
   'pipeline.errorFramework.templateErrorsTitle': string
   'pipeline.estimatedTimeRemaining': string
+  'pipeline.execTargetLabel': string
   'pipeline.execution.actions.abortPipeline': string
   'pipeline.execution.actions.abortStage': string
   'pipeline.execution.actions.addExecutionNotes': string
@@ -5003,6 +5004,7 @@ export interface StringsMap {
   'pipeline.numOfServicesAndEnv': string
   'pipeline.numOfStage': string
   'pipeline.numOfStages': string
+  'pipeline.onDelegateLabel': string
   'pipeline.onlyPositiveInteger': string
   'pipeline.openInPipelineStudio': string
   'pipeline.openPipelineInNewTab': string
@@ -5289,6 +5291,7 @@ export interface StringsMap {
   'pipeline.skipInstances.title': string
   'pipeline.slsaProvenance': string
   'pipeline.slsaVerification': string
+  'pipeline.specifyTargetHostLabel': string
   'pipeline.sslVerify': string
   'pipeline.stageDataDeleteWarningText': string
   'pipeline.stageDataDeleteWarningTitle': string

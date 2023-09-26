@@ -14,6 +14,7 @@ import { useStrings } from 'framework/strings'
 
 import { ShellScriptFormData, variableSchema } from '@cd/components/PipelineSteps/ShellScriptStep/shellScriptTypes'
 import OptionalConfiguration from '@cd/components/PipelineSteps/ShellScriptStep/OptionalConfiguration'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
 interface ShellScriptWidgetProps {
   initialValues: ShellScriptFormData
@@ -21,10 +22,11 @@ interface ShellScriptWidgetProps {
   onChange?: (data: ShellScriptFormData) => void
   allowableTypes: AllowedTypes
   readonly?: boolean
+  fromScriptTemplate?: boolean
 }
 
 export function OptionalConfigurations(
-  { initialValues, updateTemplate, onChange, allowableTypes, readonly }: ShellScriptWidgetProps,
+  { initialValues, updateTemplate, onChange, allowableTypes, readonly, fromScriptTemplate }: ShellScriptWidgetProps,
   formikRef: StepFormikFowardRef
 ): JSX.Element {
   const { getString } = useStrings()
@@ -71,6 +73,7 @@ export function OptionalConfigurations(
               readonly={readonly}
               allowableTypes={allowableTypes}
               enableOutputVar={false}
+              stepName={fromScriptTemplate ? '' : StepType.SHELLSCRIPT}
             />
           </React.Fragment>
         )

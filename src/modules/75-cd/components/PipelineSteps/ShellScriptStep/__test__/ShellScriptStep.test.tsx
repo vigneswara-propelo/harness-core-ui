@@ -18,6 +18,8 @@ import {
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import pipelineContextMock from '@pipeline/components/PipelineStudio/PipelineCanvas/__tests__/PipelineCanvasGitSyncTestHelper'
 import { StageElementWrapperConfig } from 'services/pipeline-ng'
+import { mockDelegateSelectorsResponse } from '@common/components/DelegateSelectors/__tests__/DelegateSelectorsMockData'
+
 import { ShellScriptStep } from '../ShellScriptStep'
 
 jest.mock('@common/components/MonacoEditor/MonacoEditor')
@@ -35,6 +37,12 @@ const getContextValue = (): PipelineContextInterface => {
     })
   } as unknown as PipelineContextInterface
 }
+
+jest.mock('services/portal', () => ({
+  useGetDelegateSelectorsUpTheHierarchyV2: jest.fn().mockImplementation(() => {
+    return mockDelegateSelectorsResponse
+  })
+}))
 
 describe('Test Shell Script Step', () => {
   beforeEach(() => {
@@ -266,6 +274,7 @@ describe('Test Shell Script Step', () => {
       spec: {
         shell: 'Bash',
         onDelegate: true,
+        delegateSelectors: [],
         source: {
           type: 'Inline',
           spec: {
@@ -384,6 +393,7 @@ describe('Test Shell Script Step', () => {
       type: 'ShellScript',
       spec: {
         shell: 'Bash',
+        delegateSelectors: [],
         onDelegate: false,
         source: {
           type: 'Inline',

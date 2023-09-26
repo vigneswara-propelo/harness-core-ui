@@ -11,7 +11,6 @@ import { Color } from '@harness/design-system'
 import { isEmpty, set, get, isArray, defaultTo } from 'lodash-es'
 import * as Yup from 'yup'
 import { FormikErrors, yupToFormErrors } from 'formik'
-import { v4 as uuid } from 'uuid'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { parse } from 'yaml'
 import { loggerFor } from 'framework/logging/logging'
@@ -32,6 +31,7 @@ import { ShellScriptData, ShellScriptFormData, variableSchema } from './shellScr
 import ShellScriptInputSetStep from './ShellScriptInputSetStep'
 import { ShellScriptWidgetWithRef } from './ShellScriptWidget'
 import { ShellScriptVariablesView, ShellScriptVariablesViewProps } from './ShellScriptVariablesView'
+import { getInitialValues } from './helper'
 
 const logger = loggerFor(ModuleName.CD)
 const ConnectorRefRegex = /^.+step\.spec\.executionTarget\.connectorRef$/
@@ -59,7 +59,7 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
     super()
     this.invocationMap.set(ConnectorRefRegex, this.getSecretsListForYaml.bind(this))
     this._hasStepVariables = true
-    this._hasDelegateSelectionVisible = true
+    this._hasDelegateSelectionVisible = false
   }
 
   renderStep(props: StepProps<ShellScriptData>): JSX.Element {
@@ -79,7 +79,7 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
     if (this.isTemplatizedView(stepViewType)) {
       return (
         <ShellScriptInputSetStep
-          initialValues={this.getInitialValues(initialValues)}
+          initialValues={getInitialValues(initialValues)}
           onUpdate={data => {
             onUpdate?.(this.processFormData(data))
           }}
@@ -109,8 +109,11 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
 
     return (
       <ShellScriptWidgetWithRef
-        initialValues={this.getInitialValues(initialValues)}
-        onUpdate={data => onUpdate?.(this.processFormData(data))}
+        initialValues={getInitialValues(initialValues)}
+        onUpdate={data => {
+          const payload = this.processFormData(data)
+          onUpdate?.(payload)
+        }}
         onChange={data => onChange?.(this.processFormData(data))}
         allowableTypes={allowableTypes}
         stepViewType={stepViewType}
@@ -237,7 +240,8 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
     type: StepType.SHELLSCRIPT,
     spec: {
       shell: shellScriptType[0].value,
-      onDelegate: 'targethost',
+      onDelegate: 'delegate',
+      delegateSelectors: [],
       source: {
         type: 'Inline',
         spec: {
@@ -293,45 +297,22 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
     })
   }
 
-  private getInitialValues(initialValues: ShellScriptData): ShellScriptFormData {
-    const initSpec = initialValues?.spec
-    return {
-      ...initialValues,
-      spec: {
-        ...initSpec,
-        shell: initialValues.spec?.shell || 'Bash',
-        onDelegate: initialValues.spec?.onDelegate ? 'delegate' : 'targethost',
-        source: {
-          ...(initSpec?.source || {})
-        },
-        environmentVariables: Array.isArray(initialValues.spec?.environmentVariables)
-          ? initialValues.spec?.environmentVariables.map(variable => ({
-              ...variable,
-              id: uuid()
-            }))
-          : [],
-
-        outputVariables: Array.isArray(initialValues.spec?.outputVariables)
-          ? initialValues.spec?.outputVariables.map(variable => ({
-              ...variable,
-              id: uuid()
-            }))
-          : []
-      }
-    }
-  }
   processFormData(data: ShellScriptFormData): ShellScriptData {
     const dataSpec = data?.spec
     const specSource = dataSpec?.source
     const sourceSpec = specSource?.spec
     const specExecutionTarget = dataSpec?.executionTarget
     const connectorRef = specExecutionTarget?.connectorRef
+
     const modifiedData = {
       ...data,
       spec: {
         ...data.spec,
-        onDelegate: data.spec?.onDelegate !== 'targethost',
-
+        onDelegate:
+          getMultiTypeFromValue(data.spec.onDelegate) === MultiTypeInputType.FIXED
+            ? data.spec?.onDelegate !== 'targethost'
+            : data.spec?.onDelegate,
+        delegateSelectors: data?.spec?.delegateSelectors,
         source: {
           ...specSource,
           spec: {
@@ -340,10 +321,13 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
           }
         },
 
-        executionTarget: {
-          ...specExecutionTarget,
-          connectorRef: (connectorRef?.value as string) || connectorRef?.toString()
-        },
+        executionTarget:
+          getMultiTypeFromValue(dataSpec?.onDelegate) === MultiTypeInputType.FIXED
+            ? {
+                ...specExecutionTarget,
+                connectorRef: (connectorRef?.value as string) || connectorRef?.toString()
+              }
+            : null,
 
         environmentVariables: Array.isArray(data.spec?.environmentVariables)
           ? data.spec?.environmentVariables.map(({ id, ...variable }) => ({
@@ -361,14 +345,9 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
       }
     }
 
-    if (!modifiedData.spec.executionTarget.connectorRef) {
-      delete modifiedData.spec.executionTarget.connectorRef
-    }
-
-    if (modifiedData.spec.onDelegate) {
+    if (modifiedData?.spec?.onDelegate) {
       delete modifiedData.spec.executionTarget
     }
-
     return modifiedData
   }
 }

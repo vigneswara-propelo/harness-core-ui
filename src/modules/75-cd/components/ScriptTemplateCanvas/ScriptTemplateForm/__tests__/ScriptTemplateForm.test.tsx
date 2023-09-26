@@ -10,6 +10,7 @@ import React from 'react'
 import { render, act, fireEvent, waitFor } from '@testing-library/react'
 
 import { TestWrapper } from '@common/utils/testUtils'
+import { mockDelegateSelectorsResponse } from '@common/components/DelegateSelectors/__tests__/DelegateSelectorsMockData'
 
 import { ScriptTemplateFormWithRef } from '../ScriptTemplateForm'
 
@@ -31,6 +32,11 @@ const template = {
   }
 }
 
+jest.mock('services/portal', () => ({
+  useGetDelegateSelectorsUpTheHierarchyV2: jest.fn().mockImplementation(() => {
+    return mockDelegateSelectorsResponse
+  })
+}))
 describe('Test OptionalConfigurations', () => {
   test('initial render', async () => {
     const { container, getAllByText } = render(

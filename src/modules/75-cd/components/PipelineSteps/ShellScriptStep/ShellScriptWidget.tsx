@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Accordion, AllowedTypes, Formik } from '@harness/uicore'
+import { Accordion, AllowedTypes, Formik, FormikForm, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 
@@ -23,6 +23,8 @@ import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/Commo
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { getServiceDefinitionType, ServiceDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+
 import OptionalConfiguration from './OptionalConfiguration'
 import BaseShellScript from './BaseShellScript'
 import { ShellScriptFormData, variableSchema } from './shellScriptTypes'
@@ -53,7 +55,7 @@ export function ShellScriptWidget(
     readonly,
     stepViewType
   }: ShellScriptWidgetProps,
-  formikRef: StepFormikFowardRef
+  formikRef: StepFormikFowardRef<ShellScriptFormData>
 ): JSX.Element {
   const { getString } = useStrings()
 
@@ -123,12 +125,16 @@ export function ShellScriptWidget(
     ...initialValues,
     spec: {
       ...initialValues.spec,
-      executionTarget: {
-        ...initialValues.spec.executionTarget,
-        connectorRef:
-          (initialValues.spec.executionTarget?.connectorRef?.value as string) ||
-          initialValues.spec.executionTarget?.connectorRef?.toString()
-      }
+      delegateSelectors: initialValues.spec.delegateSelectors,
+      executionTarget:
+        getMultiTypeFromValue(initialValues.spec.executionTarget) === MultiTypeInputType.FIXED
+          ? {
+              ...initialValues.spec.executionTarget,
+              connectorRef:
+                (initialValues.spec.executionTarget?.connectorRef?.value as string) ||
+                initialValues.spec.executionTarget?.connectorRef?.toString()
+            }
+          : initialValues.spec.executionTarget
     }
   }
 
@@ -149,9 +155,8 @@ export function ShellScriptWidget(
       {(formik: FormikProps<ShellScriptFormData>) => {
         // this is required
         setFormikRef(formikRef, formik)
-
         return (
-          <React.Fragment>
+          <FormikForm>
             <BaseShellScript
               isNewStep={isNewStep}
               stepViewType={stepViewType}
@@ -160,14 +165,22 @@ export function ShellScriptWidget(
               allowableTypes={allowableTypes}
               isInfraSelectorAllowed={isInfraSelectorAllowed()}
             />
+
             <Accordion className={stepCss.accordion}>
               <Accordion.Panel
                 id="optional-config"
                 summary={getString('common.optionalConfig')}
-                details={<OptionalConfiguration formik={formik} readonly={readonly} allowableTypes={allowableTypes} />}
+                details={
+                  <OptionalConfiguration
+                    formik={formik}
+                    readonly={readonly}
+                    allowableTypes={allowableTypes}
+                    stepName={StepType.SHELLSCRIPT}
+                  />
+                }
               />
             </Accordion>
-          </React.Fragment>
+          </FormikForm>
         )
       }}
     </Formik>
