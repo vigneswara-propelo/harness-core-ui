@@ -102,6 +102,17 @@ import {
 } from '../../../utils/HostedBuildsUtils'
 import css from './InfraProvisioningWizard.module.scss'
 
+export const checkRepoNameInConnectorSpec = (connector: ConnectorInfoDTO, repoName: string): string => {
+  const connectorUrl = connector.spec.url
+  const repoNameSplitBySlash = repoName.split('/')
+
+  const filteredRepoName = repoNameSplitBySlash.filter((component: string) => {
+    return !connectorUrl.includes(component)
+  })
+
+  return filteredRepoName.join('/')
+}
+
 export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = props => {
   const {
     lastConfiguredWizardStepId = InfraProvisiongWizardStepId.SelectGitProvider,
@@ -488,7 +499,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         } else if (CODE_ENABLED) {
           fullRepoName = selectRepositoryRef.current?.gitnessRepository?.uid || ''
         }
-
+        fullRepoName = checkRepoNameInConnectorSpec(configuredGitConnector, fullRepoName)
         const commonGitParams: GitQueryParams = {
           storeType: StoreType.REMOTE,
           connectorRef,
@@ -925,7 +936,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           ) {
             const saveRemotePipelineFormValues = (values as SavePipelineToRemoteInterface) || {}
             if (
-              !saveRemotePipelineFormValues.branch ||
+              (saveRemotePipelineFormValues.storeInGit && !saveRemotePipelineFormValues.branch) ||
               !saveRemotePipelineFormValues.yamlPath ||
               !saveRemotePipelineFormValues.pipelineName
             ) {

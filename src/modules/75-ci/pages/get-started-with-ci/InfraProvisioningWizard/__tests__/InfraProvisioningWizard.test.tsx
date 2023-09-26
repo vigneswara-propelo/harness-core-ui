@@ -12,9 +12,9 @@ import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { mockBranches } from '@gitsync/components/GitSyncForm/__tests__/mockdata'
-import { InfraProvisioningWizard } from '../InfraProvisioningWizard'
+import { InfraProvisioningWizard, checkRepoNameInConnectorSpec } from '../InfraProvisioningWizard'
 import { InfraProvisiongWizardStepId } from '../Constants'
-import { repos, gitnessRepos } from '../mocks/repositories'
+import { repos, gitnessRepos, connectorRepoCombos } from '../mocks/repositories'
 
 const createInputSetForPipelinePromiseMock = jest.fn(() =>
   Promise.resolve({
@@ -383,5 +383,12 @@ describe('Render and test InfraProvisioningWizard', () => {
     expect(getByText('ci.getStartedWithCI.generatePipelineConfig')).toBeDefined()
 
     await waitFor(() => expect(generatedYAMLResponseMock).toBeCalled())
+  })
+
+  test('Test utitl: checkRepoNameInConnectorSpec', () => {
+    connectorRepoCombos.forEach((connectorRepo: any) => {
+      const repoName = checkRepoNameInConnectorSpec(connectorRepo.connector, connectorRepo.repo)
+      expect(repoName).toEqual(connectorRepo.expectedResult)
+    })
   })
 })

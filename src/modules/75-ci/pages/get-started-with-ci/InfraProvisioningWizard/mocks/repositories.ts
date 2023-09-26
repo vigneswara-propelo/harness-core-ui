@@ -39,3 +39,33 @@ export const gitnessRepos = [
     uid: 'learning'
   }
 ]
+
+export const connectorRepoCombos = [
+  {
+    connector: {
+      spec: {
+        url: 'https://www.github.com/shaurya-harness'
+      }
+    },
+    repo: 'shaurya-harness/goHelloWorldServer',
+    expectedResult: 'goHelloWorldServer'
+  },
+  {
+    connector: {
+      spec: {
+        url: 'https://www.github.com/harness'
+      }
+    },
+    repo: 'harness/harness-core-ui',
+    expectedResult: 'harness-core-ui'
+  },
+  {
+    connector: {
+      spec: {
+        url: 'https://www.github.com'
+      }
+    },
+    repo: 'harness/harness-core-ui',
+    expectedResult: 'harness/harness-core-ui'
+  }
+]
