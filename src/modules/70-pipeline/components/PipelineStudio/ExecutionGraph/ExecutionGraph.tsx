@@ -697,7 +697,8 @@ function ExecutionGraphRef<T extends StageElementConfig>(
         'dotNotationPath',
         'relativeBasePath',
         'nodeStateMetadata',
-        'isContainerStepGroup'
+        'isContainerStepGroup',
+        'isAnyParentContainerStepGroup'
       ])
       const isRemove = removeStepOrGroupViaPath({
         state,
