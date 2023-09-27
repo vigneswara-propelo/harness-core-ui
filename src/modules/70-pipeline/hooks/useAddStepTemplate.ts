@@ -18,9 +18,9 @@ import { ResponseStepCategory, StepCategory, getStepsV2Promise, useGetStepsV2 } 
 import { createStepNodeFromTemplate } from '@pipeline/utils/templateUtils'
 import { AdvancedPanels } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { useMutateAsGet } from '@common/hooks'
+import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { StepType as PipelineStepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
@@ -69,6 +69,10 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
     updatePipelineView
   } = pipelineContext
 
+  const { branch, repoName } = useQueryParams<GitQueryParams>()
+  const parentTemplateBranch = defaultTo(gitDetails?.branch, branch)
+  //repoName is for pipelines and repoIdentifier for templates
+  const parentTemplateRepo = defaultTo(defaultTo(gitDetails?.repoName, gitDetails?.repoIdentifier), repoName)
   const { getTemplate } = useTemplateSelector()
   const { stage: selectedStage } = getStageFromPipeline(selectedStageId)
   const customDeploymentTemplateRef = defaultTo(
@@ -126,7 +130,7 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
           ? NodeWrapperEntity.stepGroup
           : NodeWrapperEntity.step
       const newStepData = {
-        [stepType]: createStepNodeFromTemplate(template, isCopied, gitDetails?.branch, gitDetails?.repoName)
+        [stepType]: createStepNodeFromTemplate(template, isCopied, parentTemplateBranch, parentTemplateRepo)
       }
 
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId))
