@@ -5712,6 +5712,7 @@ export interface StringsMap {
   'pipeline.vmLabel': string
   'pipeline.waitStep.validation.duration10SecMinimum': string
   'pipeline.warningForInvalidYAMLDiscard': string
+  'pipeline.webhookEvents.author': string
   'pipeline.webhookEvents.backToEdit': string
   'pipeline.webhookEvents.dateTime': string
   'pipeline.webhookEvents.eventId': string
@@ -5720,7 +5721,6 @@ export interface StringsMap {
   'pipeline.webhookEvents.lastEventDetails': string
   'pipeline.webhookEvents.noEvents': string
   'pipeline.webhookEvents.payloadDetails': string
-  'pipeline.webhookEvents.pusher': string
   'pipeline.webhookEvents.selectEventPayload': string
   'pipeline.webhookEvents.timestamp': string
   'pipeline.webhookEvents.viewAll': string

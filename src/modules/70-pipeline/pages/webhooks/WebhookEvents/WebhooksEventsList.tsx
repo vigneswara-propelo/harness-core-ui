@@ -54,7 +54,7 @@ export default function WebhooksEventsList({
         Cell: withWebhookEvents(ColumnTimeStamp)
       },
       {
-        Header: getString('pipeline.webhookEvents.pusher').toUpperCase(),
+        Header: getString('pipeline.webhookEvents.author').toUpperCase(),
         id: 'pusher',
         width: '20%',
         Cell: withWebhookEvents(ColumnUser)

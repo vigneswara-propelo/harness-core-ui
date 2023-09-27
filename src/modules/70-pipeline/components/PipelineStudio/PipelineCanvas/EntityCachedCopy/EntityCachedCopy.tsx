@@ -105,7 +105,7 @@ function EntityCachedCopyInner(
 
   const biDirectionalTooltipContent = (
     <Layout.Vertical className={css.popover} padding={'medium'}>
-      {cacheResponse?.cacheState && (
+      {cacheResponse?.cacheState && !get(cacheResponse, 'isSyncEnabled', false) && (
         <Text
           icon={cacheStateToIconMap[cacheResponse.cacheState]}
           color={Color.WHITE}

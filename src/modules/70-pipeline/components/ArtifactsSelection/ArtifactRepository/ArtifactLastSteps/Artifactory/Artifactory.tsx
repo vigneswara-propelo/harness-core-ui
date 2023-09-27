@@ -360,7 +360,7 @@ function Artifactory({
       return !!(
         (lastQueryData.artifactPath !== artifactPath ||
           lastQueryData.repository !== repository ||
-          lastQueryData.artifactFilter != artifactFilter) &&
+          lastQueryData.artifactFilter !== artifactFilter) &&
         shouldFetchFieldOptions(modifiedPrevStepData, [
           filterType === ARTIFACT_FILTER_TYPES.FILTER ? artifactFilter : artifactPath,
           repository

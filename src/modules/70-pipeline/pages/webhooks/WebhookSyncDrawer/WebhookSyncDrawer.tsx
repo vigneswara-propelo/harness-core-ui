@@ -120,7 +120,7 @@ export default function WebhookSyncDrawer(props: WebhookSyncDrawerInterface): JS
         Cell: withWebhookEvents(ColumnTimeStamp)
       },
       {
-        Header: getString('pipeline.webhookEvents.pusher').toUpperCase(),
+        Header: getString('pipeline.webhookEvents.author').toUpperCase(),
         id: 'pusher',
         width: '35%',
         Cell: withWebhookEvents(ColumnUser)
