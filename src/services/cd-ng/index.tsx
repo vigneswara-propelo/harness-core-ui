@@ -1201,6 +1201,7 @@ export interface ArtifactsSummary {
 }
 
 export type AsgBlueGreenDeployStepInfo = StepSpecType & {
+  asgName?: string
   delegateSelectors?: string[]
   instances?: AsgInstances
   loadBalancer?: string
@@ -1226,6 +1227,7 @@ export type AsgCanaryDeleteStepInfo = StepSpecType & {
 }
 
 export type AsgCanaryDeployStepInfo = StepSpecType & {
+  asgName?: string
   delegateSelectors?: string[]
   instanceSelection: Capacity
 }
@@ -1246,7 +1248,6 @@ export type AsgFixedInstances = AsgInstancesSpec & {
 }
 
 export type AsgInfrastructure = Infrastructure & {
-  asgName?: string
   baseAsgName?: string
   connectorRef: string
   metadata?: string
@@ -1284,6 +1285,7 @@ export type AsgLaunchTemplateManifest = ManifestAttributes & {
 }
 
 export type AsgRollingDeployStepInfo = StepSpecType & {
+  asgName?: string
   delegateSelectors?: string[]
   instanceWarmup?: number
   instances?: AsgInstances
@@ -2204,6 +2206,7 @@ export type AzureWebAppServiceSpec = ServiceSpec & {
 }
 
 export type AzureWebAppSlotDeploymentStepInfo = StepSpecType & {
+  clean?: boolean
   delegateSelectors?: string[]
   deploymentSlot: string
   webApp: string
@@ -2424,6 +2427,11 @@ export type BitriseStepInfoV1 = StepSpecType & {
   with?: ParameterFieldMapStringString
 }
 
+export interface Board {
+  id?: string
+  name?: string
+}
+
 export type BranchBuildSpec = BuildSpec & {
   branch: string
 }
@@ -2602,8 +2610,14 @@ export type CVModuleLicenseDTO = ModuleLicenseDTO & {
 
 export interface CacheResponseMetadata {
   cacheState: 'VALID_CACHE' | 'STALE_CACHE' | 'UNKNOWN'
+  isSyncEnabled: boolean
   lastUpdatedAt: number
   ttlLeft: number
+}
+
+export interface CannyBoardsResponseDTO {
+  boards?: Board[]
+  message?: string
 }
 
 export interface Capabilities {
@@ -4341,9 +4355,11 @@ export interface EcrResponseDTO {
 
 export type EcsBlueGreenCreateServiceStepInfo = StepSpecType & {
   delegateSelectors?: string[]
+  enableAutoScalingInSwapStep?: boolean
   loadBalancer: string
   prodListener: string
   prodListenerRuleArn: string
+  sameAsAlreadyRunningInstances?: boolean
   stageListener: string
   stageListenerRuleArn: string
 }
@@ -4863,6 +4879,7 @@ export interface EntityReference {
   orgIdentifier?: string
   projectIdentifier?: string
   repoIdentifier?: string
+  scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
 export type EntityReferredByInfraSetupUsageDetail = SetupUsageDetail & {
@@ -5105,13 +5122,18 @@ export interface EnvironmentResponse {
 
 export interface EnvironmentResponseDTO {
   accountId?: string
+  cacheResponseMetadataDTO?: CacheResponseMetadata
   color?: string
+  connectorRef?: string
   deleted?: boolean
   description?: string
+  entityGitDetails?: EntityGitDetails
+  fallbackBranch?: string
   identifier?: string
   name?: string
   orgIdentifier?: string
   projectIdentifier?: string
+  storeType?: 'INLINE' | 'REMOTE'
   tags?: {
     [key: string]: string
   }
@@ -5138,6 +5160,7 @@ export interface EnvironmentYamlV2 {
   environmentInputs?: JsonNode
   environmentRef?: string
   filters?: FilterYaml[]
+  gitBranch?: string
   gitOpsClusters?: ClusterYaml[]
   infrastructureDefinition?: InfraStructureDefinitionYaml
   infrastructureDefinitions?: InfraStructureDefinitionYaml[]
@@ -9796,6 +9819,10 @@ export type HarnessJWTTokenSpec = HarnessApiAccessSpecDTO & {
   tokenRef: string
 }
 
+export interface HarnessRelease {
+  name: string
+}
+
 export interface HarnessServiceInfoNG {
   envId?: string
   infraMappingId?: string
@@ -10066,7 +10093,6 @@ export interface IconDTO {
 export type IdentifierRef = EntityReference & {
   fullyQualifiedScopeIdentifier?: string
   isDefault?: boolean
-  scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
 export type IgnoreFailureActionConfig = FailureStrategyActionConfig & {
@@ -11109,6 +11135,7 @@ export type KubernetesServiceAccountDTO = KubernetesAuthCredentialDTO & {
 export type KubernetesServiceSpec = ServiceSpec & {
   hooks?: ServiceHookWrapper[]
   manifestConfigurations?: ManifestConfigurations
+  release?: HarnessRelease
 }
 
 export type KubernetesUserNamePasswordDTO = KubernetesAuthCredentialDTO & {
@@ -11149,7 +11176,7 @@ export interface KustomizeValues {
   replicas?: KustomizeReplicas[]
 }
 
-export type LDAPSettings = NGAuthSettings & {
+export interface LDAPSettings {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -11157,6 +11184,7 @@ export type LDAPSettings = NGAuthSettings & {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -11910,7 +11938,6 @@ export interface NGTag {
 
 export type NGTemplateReference = EntityReference & {
   isDefault?: boolean
-  scope?: 'account' | 'org' | 'project' | 'unknown'
   versionLabel?: string
 }
 
@@ -11959,6 +11986,9 @@ export type NativeHelmDeploymentReleaseDetails = DeploymentDetails & {
   k8sCloudClusterConfig?: KubernetesCloudClusterConfig
   namespaces?: string[]
   releaseName?: string
+  workloadLabelSelectors?: {
+    [key: string]: string[]
+  }
 }
 
 export type NativeHelmInstanceInfoDTO = InstanceInfoDTO & {
@@ -11973,6 +12003,7 @@ export type NativeHelmInstanceInfoDTO = InstanceInfoDTO & {
 export type NativeHelmServiceSpec = ServiceSpec & {
   hooks?: ServiceHookWrapper[]
   manifestConfigurations?: ManifestConfigurations
+  release?: HarnessRelease
 }
 
 export type NewRelicConnectorDTO = ConnectorConfigDTO & {
@@ -13262,6 +13293,7 @@ export interface PolicyConfig {
 export interface PostProdRollbackCheckDTO {
   message?: string
   rollbackAllowed?: boolean
+  swimLaneInfo?: PostProdRollbackSwimLaneInfo
 }
 
 export interface PostProdRollbackRequestDTO {
@@ -13275,6 +13307,10 @@ export interface PostProdRollbackResponseDTO {
   message?: string
   planExecutionId?: string
   rollbackTriggered?: boolean
+}
+
+export interface PostProdRollbackSwimLaneInfo {
+  [key: string]: any
 }
 
 export interface PriceCollectionDTO {
@@ -14176,6 +14212,13 @@ export interface ResponseCDStageMetaDataDTO {
 export interface ResponseCDStageModuleInfo {
   correlationId?: string
   data?: CDStageModuleInfo
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseCannyBoardsResponseDTO {
+  correlationId?: string
+  data?: CannyBoardsResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -17740,6 +17783,7 @@ export interface ScmCacheDetails {
   cacheExpiryTTL?: number
   lastUpdatedAt?: number
   scmCacheState?: 'VALID_CACHE' | 'STALE_CACHE'
+  syncEnabled?: boolean
   validUntilTTL?: number
 }
 
@@ -18674,6 +18718,7 @@ export interface ServiceYaml {
 }
 
 export interface ServiceYamlV2 {
+  gitBranch?: string
   serviceInputs?: JsonNode
   serviceRef?: string
   useFromStage?: ServiceUseFromStageV2
@@ -19783,6 +19828,7 @@ export interface TemplateResponse {
   version?: number
   versionLabel?: string
   yaml?: string
+  yamlVersion?: string
 }
 
 export interface TemplateScope {
@@ -21951,7 +21997,7 @@ export interface ListActivitiesQueryParams {
     | 'AwsCdkRollback'
     | 'SlsaVerification'
     | 'UpdateGitOpsApp'
-  referredByEntityType?:
+  referredByEntityType?: (
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
     | 'Projects'
@@ -22185,8 +22231,10 @@ export interface ListActivitiesQueryParams {
     | 'AwsCdkRollback'
     | 'SlsaVerification'
     | 'UpdateGitOpsApp'
+  )[]
   activityTypes?: ('CONNECTIVITY_CHECK' | 'ENTITY_USAGE' | 'ENTITY_CREATION' | 'ENTITY_UPDATE')[]
   searchTerm?: string
+  scopeFilter?: ('account' | 'org' | 'project' | 'unknown')[]
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -33026,11 +33074,13 @@ export const updateWhitelistedDomainsPromise = (
   >('PUT', getConfig('ng/api'), `/authentication-settings/whitelisted-domains`, props, signal)
 
 export interface AutoScalingGroupsQueryParams {
-  awsConnectorRef: string
+  awsConnectorRef?: string
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
-  region: string
+  region?: string
+  envId?: string
+  infraDefinitionId?: string
 }
 
 export type AutoScalingGroupsProps = Omit<
@@ -35297,6 +35347,50 @@ export const getFilePathsV2ForS3Promise = (
     void
   >('POST', getConfig('ng/api'), `/buckets/s3/v2/getFilePaths`, props, signal)
 
+export type GetCannyBoardsProps = Omit<
+  GetProps<ResponseCannyBoardsResponseDTO, Failure | AccessControlCheckError | Error, void, void>,
+  'path'
+>
+
+/**
+ * Get a list of boards available on Canny
+ */
+export const GetCannyBoards = (props: GetCannyBoardsProps) => (
+  <Get<ResponseCannyBoardsResponseDTO, Failure | AccessControlCheckError | Error, void, void>
+    path={`/canny/boards`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetCannyBoardsProps = Omit<
+  UseGetProps<ResponseCannyBoardsResponseDTO, Failure | AccessControlCheckError | Error, void, void>,
+  'path'
+>
+
+/**
+ * Get a list of boards available on Canny
+ */
+export const useGetCannyBoards = (props: UseGetCannyBoardsProps) =>
+  useGet<ResponseCannyBoardsResponseDTO, Failure | AccessControlCheckError | Error, void, void>(`/canny/boards`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get a list of boards available on Canny
+ */
+export const getCannyBoardsPromise = (
+  props: GetUsingFetchProps<ResponseCannyBoardsResponseDTO, Failure | AccessControlCheckError | Error, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseCannyBoardsResponseDTO, Failure | AccessControlCheckError | Error, void, void>(
+    getConfig('ng/api'),
+    `/canny/boards`,
+    props,
+    signal
+  )
+
 export type GetCdDeployStageMetadataProps = Omit<
   MutateProps<ResponseCDStageMetaDataDTO, unknown, void, CdDeployStageMetadataRequestDTO, void>,
   'path' | 'verb'
@@ -35554,6 +35648,7 @@ export interface UpdateConnectorQueryParams {
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
   lastCommitId?: string
+  isNewBranch?: boolean
 }
 
 export type UpdateConnectorProps = Omit<
@@ -42695,6 +42790,7 @@ export interface UpdateEnvironmentGroupQueryParams {
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
   lastCommitId?: string
+  isNewBranch?: boolean
 }
 
 export interface UpdateEnvironmentGroupPathParams {
@@ -44465,6 +44561,16 @@ export interface GetEnvironmentV2QueryParams {
   orgIdentifier?: string
   projectIdentifier?: string
   deleted?: boolean
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+  loadFromFallbackBranch?: boolean
 }
 
 export interface GetEnvironmentV2PathParams {
@@ -51056,6 +51162,7 @@ export interface GetInfrastructureListQueryParams {
   deploymentTemplateIdentifier?: string
   versionLabel?: string
   sort?: string[]
+  serviceRefs?: string[]
 }
 
 export type GetInfrastructureListProps = Omit<
@@ -61717,6 +61824,7 @@ export interface GetServiceNowTemplateMetadataQueryParams {
   templateName?: string
   limit?: number
   offset?: number
+  templateType?: 'Form' | 'Standard'
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -62794,6 +62902,7 @@ export interface UpdateServiceV2QueryParams {
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
   lastCommitId?: string
+  isNewBranch?: boolean
 }
 
 export type UpdateServiceV2Props = Omit<

@@ -38,7 +38,8 @@ export const stageTemplate: ResponseTemplateResponse = {
     cacheResponseMetadata: {
       cacheState: 'VALID_CACHE',
       ttlLeft: 259165572,
-      lastUpdatedAt: 1685953457963
+      lastUpdatedAt: 1685953457963,
+      isSyncEnabled: false
     },
     stableTemplate: true
   }

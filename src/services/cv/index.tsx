@@ -777,6 +777,7 @@ export type CVNGSlackChannelSpec = CVNGNotificationChannelSpec & {
 
 export interface CacheResponseMetadata {
   cacheState: 'VALID_CACHE' | 'STALE_CACHE' | 'UNKNOWN'
+  isSyncEnabled: boolean
   lastUpdatedAt: number
   ttlLeft: number
 }

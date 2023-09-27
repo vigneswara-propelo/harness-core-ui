@@ -23,7 +23,6 @@ import { defaultTo, get, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { formatDatetoLocale } from '@common/utils/dateUtils'
 import type { CacheResponseMetadata, Failure } from 'services/pipeline-ng'
-import type { CacheResponseMetadata as CacheResponseMetadataTemplate } from 'services/template-ng'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { StringsMap } from 'stringTypes'
 import WebhookSyncDrawer from '@pipeline/pages/webhooks/WebhookSyncDrawer/WebhookSyncDrawer'
@@ -31,7 +30,7 @@ import css from './EntityCachedCopy.module.scss'
 
 export interface EntityCachedCopyProps {
   reloadContent: string
-  cacheResponse?: CacheResponseMetadata | CacheResponseMetadataTemplate
+  cacheResponse?: CacheResponseMetadata
   reloadFromCache: (loadFromCache?: boolean) => void
   fetchError?: GetDataError<Failure | Error> | null
   readonly?: boolean

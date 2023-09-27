@@ -65,6 +65,7 @@ export type AuditFilterProperties = FilterProperties & {
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
     | 'IDP'
+    | 'SEI'
   )[]
   principals?: Principal[]
   resources?: ResourceDTO[]
@@ -75,6 +76,7 @@ export type AuditFilterProperties = FilterProperties & {
 
 export interface CacheResponseMetadata {
   cacheState: 'VALID_CACHE' | 'STALE_CACHE' | 'UNKNOWN'
+  isSyncEnabled: boolean
   lastUpdatedAt: number
   ttlLeft: number
 }
@@ -474,7 +476,8 @@ export interface EntityDetail {
     | 'IdpScorecard'
     | 'IdpCheck'
     | 'AwsCdkRollback'
-    | 'IACM'
+    | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
 }
 
 export interface EntityDetailProtoDTO {
@@ -511,6 +514,7 @@ export interface EntityReference {
   orgIdentifier?: string
   projectIdentifier?: string
   repoIdentifier?: string
+  scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
 export type EntityReferredByInfraSetupUsageDetail = SetupUsageDetail & {
@@ -889,6 +893,7 @@ export interface Error {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
+    | 'MISSING_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
@@ -1271,6 +1276,7 @@ export interface ErrorMetadata {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
+    | 'MISSING_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
@@ -1659,6 +1665,7 @@ export interface Failure {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
+    | 'MISSING_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
@@ -1741,7 +1748,6 @@ export interface GovernanceMetadata {
 export type IdentifierRef = EntityReference & {
   fullyQualifiedScopeIdentifier?: string
   isDefault?: boolean
-  scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
 export interface InputSetError {
@@ -1808,7 +1814,6 @@ export interface NGTemplateInfoConfig {
 
 export type NGTemplateReference = EntityReference & {
   isDefault?: boolean
-  scope?: 'account' | 'org' | 'project' | 'unknown'
   versionLabel?: string
 }
 
@@ -1849,14 +1854,11 @@ export type OverlayInputSetErrorWrapper = ErrorMetadataDTO & {
 export interface Page {
   content?: { [key: string]: any }[]
   empty?: boolean
-  first?: boolean
-  last?: boolean
-  number?: number
-  numberOfElements?: number
-  pageable?: Pageable
-  size?: number
-  sort?: Sort
-  totalElements?: number
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  pageToken?: string
+  totalItems?: number
   totalPages?: number
 }
 
@@ -2008,6 +2010,10 @@ export interface ResourceDTO {
     | 'CHAOS_SECURITY_GOVERNANCE'
     | 'END_USER_LICENSE_AGREEMENT'
     | 'WORKSPACE'
+    | 'SEI_CONFIGURATION_SETTINGS'
+    | 'SEI_COLLECTIONS'
+    | 'SEI_INSIGHTS'
+    | 'CET_SAVED_FILTER'
 }
 
 export interface ResourceScopeDTO {
@@ -2050,6 +2056,13 @@ export interface ResponseJsonNode {
 export interface ResponseListEntityDetailProtoDTO {
   correlationId?: string
   data?: EntityDetailProtoDTO[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseListTemplateWrapperResponse {
+  correlationId?: string
+  data?: TemplateWrapperResponse[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -2402,6 +2415,7 @@ export interface ResponseMessage {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
+    | 'MISSING_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
     | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
@@ -2766,6 +2780,7 @@ export interface TemplateMetadataSummaryResponse {
   templateScope?: 'account' | 'org' | 'project' | 'unknown'
   version?: number
   versionLabel?: string
+  yamlVersion?: string
 }
 
 export interface TemplateMoveConfigResponse {
@@ -2818,6 +2833,7 @@ export interface TemplateResponse {
   version?: number
   versionLabel?: string
   yaml?: string
+  yamlVersion?: string
 }
 
 export interface TemplateRetainVariablesRequestDTO {
@@ -2865,6 +2881,7 @@ export interface TemplateSummaryResponse {
   version?: number
   versionLabel?: string
   yaml?: string
+  yamlVersion?: string
 }
 
 export interface TemplateUpdateGitDetailsRequest {
@@ -3278,6 +3295,91 @@ export const getFilterPromise = (
     signal
   )
 
+export interface CreateGlobalTemplateQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  connectorIdentifier?: string
+  comments?: string
+}
+
+export interface CreateGlobalTemplateRequestBody {
+  [key: string]: { [key: string]: any }
+}
+
+export type CreateGlobalTemplateProps = Omit<
+  MutateProps<
+    ResponseListTemplateWrapperResponse,
+    Failure | Error,
+    CreateGlobalTemplateQueryParams,
+    CreateGlobalTemplateRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Creates a Global Template
+ */
+export const CreateGlobalTemplate = (props: CreateGlobalTemplateProps) => (
+  <Mutate<
+    ResponseListTemplateWrapperResponse,
+    Failure | Error,
+    CreateGlobalTemplateQueryParams,
+    CreateGlobalTemplateRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/globalTemplates`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseCreateGlobalTemplateProps = Omit<
+  UseMutateProps<
+    ResponseListTemplateWrapperResponse,
+    Failure | Error,
+    CreateGlobalTemplateQueryParams,
+    CreateGlobalTemplateRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Creates a Global Template
+ */
+export const useCreateGlobalTemplate = (props: UseCreateGlobalTemplateProps) =>
+  useMutate<
+    ResponseListTemplateWrapperResponse,
+    Failure | Error,
+    CreateGlobalTemplateQueryParams,
+    CreateGlobalTemplateRequestBody,
+    void
+  >('POST', `/globalTemplates`, { base: getConfig('template/api'), ...props })
+
+/**
+ * Creates a Global Template
+ */
+export const createGlobalTemplatePromise = (
+  props: MutateUsingFetchProps<
+    ResponseListTemplateWrapperResponse,
+    Failure | Error,
+    CreateGlobalTemplateQueryParams,
+    CreateGlobalTemplateRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseListTemplateWrapperResponse,
+    Failure | Error,
+    CreateGlobalTemplateQueryParams,
+    CreateGlobalTemplateRequestBody,
+    void
+  >('POST', getConfig('template/api'), `/globalTemplates`, props, signal)
+
 export type GetTemplateHealthStatusProps = Omit<GetProps<ResponseString, unknown, void, void>, 'path'>
 
 /**
@@ -3320,6 +3422,7 @@ export interface RefreshAndUpdateTemplateInputsQueryParams {
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
   lastCommitId?: string
+  isNewBranch?: boolean
 }
 
 export type RefreshAndUpdateTemplateInputsProps = Omit<
@@ -3412,6 +3515,7 @@ export interface RefreshAllQueryParams {
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
   lastCommitId?: string
+  isNewBranch?: boolean
 }
 
 export type RefreshAllProps = Omit<
@@ -4965,6 +5069,7 @@ export interface UpdateExistingTemplateVersionQueryParams {
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
   lastCommitId?: string
+  isNewBranch?: boolean
   setDefaultTemplate?: boolean
   comments?: string
 }
