@@ -558,7 +558,8 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
                       Connectors.AWS_SECRET_MANAGER,
                       Connectors.CUSTOM_SECRET_MANAGER,
                       Connectors.AZURE_KEY_VAULT,
-                      Connectors.GcpSecretManager
+                      Connectors.GcpSecretManager,
+                      Connectors.AWS_KMS
                     ]}
                     selected={formikProps.values['secretManagerIdentifier']}
                     placeholder={`- ${getString('select')} -`}
