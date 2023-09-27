@@ -288,7 +288,7 @@ function _PipelineListPage(): React.ReactElement {
       <Page.Body
         className={css.pageBody}
         loading={pipelinesQuery.loading || isDeletingPipeline}
-        error={pipelinesQuery.error?.message}
+        error={(pipelinesQuery.error?.data as Error)?.message || pipelinesQuery.error?.message}
         retryOnError={pipelinesQuery.refetch}
         noData={{
           when: () => !pipelinesQuery.data?.data?.content?.length,
