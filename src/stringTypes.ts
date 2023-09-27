@@ -6421,6 +6421,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.deploymentType': string
   'cd.getStartedWithCD.description': string
   'cd.getStartedWithCD.destinationDetails': string
+  'cd.getStartedWithCD.developerQuestion': string
   'cd.getStartedWithCD.directK8s': string
   'cd.getStartedWithCD.disconnected': string
   'cd.getStartedWithCD.docLink': string

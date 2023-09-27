@@ -278,6 +278,15 @@ Object {
                           class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-align-left"
                         >
                           <span>
+                            cd.getStartedWithCD.developerQuestion
+                          </span>
+                          <a
+                            href="/account/test_account_id/ci/home"
+                            target="_blank"
+                          >
+                            common.purpose.ci.continuous
+                          </a>
+                          <span>
                             cd.getStartedWithCD.tryCICTA
                           </span>
                         </p>
@@ -678,6 +687,15 @@ Object {
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-align-left"
                       >
+                        <span>
+                          cd.getStartedWithCD.developerQuestion
+                        </span>
+                        <a
+                          href="/account/test_account_id/ci/home"
+                          target="_blank"
+                        >
+                          common.purpose.ci.continuous
+                        </a>
                         <span>
                           cd.getStartedWithCD.tryCICTA
                         </span>

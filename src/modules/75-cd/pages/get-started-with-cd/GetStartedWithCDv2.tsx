@@ -9,7 +9,7 @@ import React from 'react'
 import cx from 'classnames'
 import { Text, Icon, Layout, ButtonVariation, Container, ButtonSize, Card, Heading } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { useHistory, useParams } from 'react-router-dom'
+import { Link, useHistory, useParams } from 'react-router-dom'
 import { String, useStrings } from 'framework/strings'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
@@ -78,6 +78,10 @@ export default function GetStartedWithCDV2(): React.ReactElement {
                   <Layout.Vertical>
                     <Layout.Horizontal>
                       <Text color={Color.BLACK} font={{ align: 'left' }}>
+                        <String stringID="cd.getStartedWithCD.developerQuestion" useRichText />
+                        <Link to={routes.toCIHome({ accountId })} target="_blank">
+                          {getString('common.purpose.ci.continuous')}
+                        </Link>
                         <String
                           stringID="cd.getStartedWithCD.tryCICTA"
                           vars={{
