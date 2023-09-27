@@ -84,7 +84,6 @@ describe('Account Overview Page', () => {
   describe('Rendering', () => {
     test('should render properly', () => {
       jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-        DISABLE_HARNESS_SM: true,
         PLG_ENABLE_CROSS_GENERATION_ACCESS: true
       })
       const { container } = render(

@@ -14,14 +14,13 @@ import AccountDetails from '@auth-settings/pages/AccountOverview/views/AccountDe
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import SubscribedModules from '@auth-settings/pages/AccountOverview/views/SubscribedModules'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import AccountSettings from './views/Settings/AccountSettings'
 import ServiceVersions from './views/ServiceVersions'
 
 const AccountOverview: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const { currentUserInfo } = useAppStore()
-  const { NG_LICENSES_ENABLED, DISABLE_HARNESS_SM } = useFeatureFlags()
+  const { NG_LICENSES_ENABLED } = useFeatureFlags()
 
   const { accounts } = currentUserInfo
   const createdFromNG = accounts?.find(account => account.uuid === accountId)?.createdFromNG
@@ -31,7 +30,6 @@ const AccountOverview: React.FC = () => {
       <Page.Body>
         <AccountDetails />
         {(createdFromNG || NG_LICENSES_ENABLED) && <SubscribedModules />}
-        {DISABLE_HARNESS_SM ? <AccountSettings /> : null}
         {<ServiceVersions />}
       </Page.Body>
     </>
