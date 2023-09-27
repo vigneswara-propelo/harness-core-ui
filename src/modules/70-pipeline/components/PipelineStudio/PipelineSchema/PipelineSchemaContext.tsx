@@ -8,14 +8,11 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
-import { useGetIndividualStaticSchemaQuery } from '@harnessio/react-pipeline-service-client'
 import {
-  GetSchemaYamlQueryParams,
-  ResponseJsonNode,
-  ResponseYamlSchemaResponse,
-  useGetSchemaYaml,
-  useGetStepYamlSchema
-} from 'services/pipeline-ng'
+  IndividualSchemaResponseBody,
+  useGetIndividualStaticSchemaQuery
+} from '@harnessio/react-pipeline-service-client'
+import { GetSchemaYamlQueryParams, ResponseJsonNode, useGetSchemaYaml } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
@@ -24,7 +21,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 export interface PipelineSchemaData {
   pipelineSchema: ResponseJsonNode | null
-  loopingStrategySchema: ResponseYamlSchemaResponse | null
+  loopingStrategySchema: IndividualSchemaResponseBody | null
 }
 
 const PipelineSchemaContext = React.createContext<PipelineSchemaData>({
@@ -71,33 +68,16 @@ export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unk
 
   const error = defaultTo(schemaError, staticSchemaError)
 
-  const { data: loopingStrategyDynamicSchema } = useGetStepYamlSchema({
+  const { data: loopingStrategyStaticSchema } = useGetIndividualStaticSchemaQuery({
     queryParams: {
-      entityType: 'StrategyNode',
-      projectIdentifier: projectIdentifier,
-      orgIdentifier: orgIdentifier,
-      accountIdentifier: accountId,
-      scope: getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier }),
-      yamlGroup: 'STEP'
-    },
-    lazy: PIE_STATIC_YAML_SCHEMA
-  })
-
-  const { data: loopingStrategyStaticSchema } = useGetIndividualStaticSchemaQuery(
-    {
-      queryParams: {
-        node_group: 'strategy',
-        node_type: 'strategy'
-      }
-    },
-    {
-      enabled: PIE_STATIC_YAML_SCHEMA
+      node_group: 'strategy',
+      node_type: 'strategy'
     }
-  )
-
-  const loopingStrategySchema = defaultTo(loopingStrategyDynamicSchema, {
-    data: { schema: loopingStrategyStaticSchema?.content.data }
   })
+
+  const loopingStrategySchema = {
+    data: { schema: loopingStrategyStaticSchema?.content.data }
+  }
 
   const pipelineSchema = defaultTo(pipelineSchemaV1, pipelineStaticSchema?.content as ResponseJsonNode)
 
@@ -108,7 +88,7 @@ export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unk
     <PipelineSchemaContext.Provider
       value={{
         pipelineSchema: pipelineSchema,
-        loopingStrategySchema: loopingStrategySchema as ResponseYamlSchemaResponse
+        loopingStrategySchema: loopingStrategySchema as IndividualSchemaResponseBody
       }}
     >
       {props.children}
