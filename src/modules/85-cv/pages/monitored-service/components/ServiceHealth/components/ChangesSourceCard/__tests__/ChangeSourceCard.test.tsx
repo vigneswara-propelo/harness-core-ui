@@ -26,7 +26,7 @@ import { calculateChangePercentage } from '../ChangesSourceCard.utils'
 const monitoredServiceIdentifier = 'monitored_service_identifier'
 
 const WrapperComponent = (): JSX.Element => (
-  <TestWrapper defaultFeatureFlagValues={{ SRM_INTERNAL_CHANGE_SOURCE_CE: true }}>
+  <TestWrapper>
     <ChangesSourceCard monitoredServiceIdentifier={monitoredServiceIdentifier} startTime={0} endTime={0} />
   </TestWrapper>
 )
@@ -99,25 +99,6 @@ describe('Test ChangeSourceCard', () => {
     const { container, getAllByTestId } = render(<WrapperComponent />)
     expect(getAllByTestId('loading-block')).toHaveLength(6)
     expect(container).toMatchSnapshot()
-  })
-
-  test('validate loading with CE feature flag off', async () => {
-    jest.spyOn(cvService, 'useGetMonitoredServiceChangeEventSummary').mockImplementation(
-      () =>
-        ({
-          data: null,
-          refetch: jest.fn(),
-          error: null,
-          loading: true
-        } as any)
-    )
-
-    const { getAllByTestId } = render(
-      <TestWrapper defaultFeatureFlagValues={{ SRM_INTERNAL_CHANGE_SOURCE_CE: false }}>
-        <ChangesSourceCard monitoredServiceIdentifier={monitoredServiceIdentifier} startTime={0} endTime={0} />
-      </TestWrapper>
-    )
-    expect(getAllByTestId('loading-block')).toHaveLength(5)
   })
 
   test('validate error state', async () => {

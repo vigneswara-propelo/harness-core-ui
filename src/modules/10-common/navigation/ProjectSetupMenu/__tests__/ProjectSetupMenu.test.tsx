@@ -157,13 +157,9 @@ describe('Project Setup Menu', () => {
     expect(queryByText('resourcePage.fileStore')).toBeInTheDocument()
   })
 
-  test('Show STO Downtime Link if SRM_DOWNTIME is true and module is CV', async () => {
+  test('Show STO Downtime Link if module is CV', async () => {
     const { queryByText } = render(
-      <TestWrapper
-        defaultFeatureFlagValues={{
-          SRM_DOWNTIME: true
-        }}
-      >
+      <TestWrapper>
         <ProjectSetupMenu module="cv" defaultExpanded />
       </TestWrapper>
     )

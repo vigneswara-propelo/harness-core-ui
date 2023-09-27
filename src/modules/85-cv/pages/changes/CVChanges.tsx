@@ -32,8 +32,6 @@ import { TimeLine } from '@cv/components/Timeline/TimeLine'
 import type { StringsMap } from 'stringTypes'
 import { prepareFilterInfo } from '@cv/utils/CommonUtils'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import {
   ChangeSourceCategoryName,
   ChangeSourceTypes
@@ -58,12 +56,11 @@ export const CVChanges = ({ updateTime }: { updateTime?: Date }): JSX.Element =>
   const { serviceOptions } = useGetHarnessServices(true)
   const { environmentOptions } = useGetHarnessEnvironments(true)
   const { getString } = useStrings()
-  const isChaosExperimentCSEnabled = useFeatureFlag(FeatureFlag.SRM_INTERNAL_CHANGE_SOURCE_CE)
 
   useDocumentTitle([getString('common.module.srm'), getString('changes')])
 
   const sourceTypes = useMemo(() => {
-    return getChangeSourceOptions({ getString, isChaosExperimentCSEnabled }).map((changeSourceOption: SelectOption) => {
+    return getChangeSourceOptions({ getString }).map((changeSourceOption: SelectOption) => {
       if (changeSourceOption?.value === ChangeSourceCategoryName.ALERT) {
         return { label: ChangeSourceCategoryName.INCIDENTS, value: ChangeSourceCategoryName.ALERT }
       }
@@ -71,7 +68,7 @@ export const CVChanges = ({ updateTime }: { updateTime?: Date }): JSX.Element =>
     })
   }, [])
   const connectorOptions = useMemo(() => {
-    return ChangeSourceConnectorOptions(getString, isChaosExperimentCSEnabled)
+    return ChangeSourceConnectorOptions(getString)
   }, [])
   const [selectedTimePeriod, setSelectedTimePeriod] = useState<SelectOption>({
     value: TimePeriodEnum.TWENTY_FOUR_HOURS,

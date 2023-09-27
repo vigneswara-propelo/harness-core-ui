@@ -5,14 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { MultiSelectOption } from '@harness/uicore'
 import { Connectors } from '@platform/connectors/constants'
 import type { UseStringsReturn } from 'framework/strings'
 import { ChangeSourceTypes } from '../ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 
-export const ChangeSourceConnectorOptions = (
-  getString: UseStringsReturn['getString'],
-  isChaosExperimentCSEnabled?: boolean
-) => {
+export const ChangeSourceConnectorOptions = (getString: UseStringsReturn['getString']): MultiSelectOption[] => {
   const changeSourceList = [
     {
       label: getString('cv.onboarding.changeSourceTypes.HarnessCDNextGen.name'),
@@ -30,6 +28,10 @@ export const ChangeSourceConnectorOptions = (
     {
       label: getString('cv.changeSource.FeatureFlag.label'),
       value: ChangeSourceTypes.HarnessFF
+    },
+    {
+      label: getString('cv.changeSource.chaosExperiment.label'),
+      value: ChangeSourceTypes.HarnessCE
     }
   ]
 
@@ -51,13 +53,6 @@ export const ChangeSourceConnectorOptions = (
       value: ChangeSourceTypes.CustomFF
     }
   ]
-
-  if (isChaosExperimentCSEnabled) {
-    changeSourceList.push({
-      label: getString('cv.changeSource.chaosExperiment.label'),
-      value: ChangeSourceTypes.HarnessCE
-    })
-  }
 
   return [...changeSourceList, ...customChangeSourcesList]
 }

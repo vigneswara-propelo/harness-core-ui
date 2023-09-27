@@ -14,8 +14,6 @@ import cx from 'classnames'
 import { FormConnectorReferenceField } from '@platform/connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
 import type { ConnectorReferenceFieldProps } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
@@ -47,8 +45,6 @@ export function ChangeSourceDrawer({
   const { getString } = useStrings()
   const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps & { identifier: string }>()
 
-  const isCustomChangeSourceEnabled = useFeatureFlag(FeatureFlag.SRM_CUSTOM_CHANGE_SOURCE)
-
   const onSuccessWrapper = (data: UpdatedChangeSourceDTO): void => {
     const isCustom = CustomChangeSourceList.includes(data?.type as ChangeSourceTypes)
     // for PagerDuty
@@ -62,8 +58,8 @@ export function ChangeSourceDrawer({
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const categoryOptions = useMemo(
-    () => getChangeSourceOptions({ getString, type: monitoredServiceType, isCustomChangeSourceEnabled }),
-    [monitoredServiceType, isCustomChangeSourceEnabled]
+    () => getChangeSourceOptions({ getString, type: monitoredServiceType }),
+    [monitoredServiceType]
   )
 
   const renderChangeSource = useCallback(
@@ -130,7 +126,7 @@ export function ChangeSourceDrawer({
   return (
     <Formik
       formName={'changeSourceaForm'}
-      initialValues={rowdata?.category ? rowdata : buildInitialData(categoryOptions, isCustomChangeSourceEnabled)}
+      initialValues={rowdata?.category ? rowdata : buildInitialData(categoryOptions)}
       onSubmit={onSuccessWrapper}
       validate={values => validateChangeSource(values, tableData, isEdit, getString)}
       enableReinitialize
@@ -145,8 +141,7 @@ export function ChangeSourceDrawer({
               <Container
                 margin={{ bottom: 'large' }}
                 className={cx({
-                  [style.removeEditButton]:
-                    createCardOptions(formik.values?.category, getString, isCustomChangeSourceEnabled).length === 1
+                  [style.removeEditButton]: createCardOptions(formik.values?.category, getString).length === 1
                 })}
                 width="300px"
               >
@@ -167,8 +162,7 @@ export function ChangeSourceDrawer({
                       formik.setValues({
                         [ChangeSourceFieldNames.CATEGORY]: categoryName?.value || ('' as string),
                         [ChangeSourceFieldNames.TYPE]: preSelectChangeSourceConnectorOnCategoryChange(
-                          categoryName?.value as string,
-                          isCustomChangeSourceEnabled
+                          categoryName?.value as string
                         ),
                         spec: {}
                       })
@@ -179,7 +173,7 @@ export function ChangeSourceDrawer({
                   <ThumbnailSelect
                     isReadonly={isEdit}
                     name={ChangeSourceFieldNames.TYPE}
-                    items={createCardOptions(formik.values?.category, getString, isCustomChangeSourceEnabled)}
+                    items={createCardOptions(formik.values?.category, getString)}
                   />
                 )}
               </Container>

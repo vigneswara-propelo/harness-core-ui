@@ -40,7 +40,6 @@ export const ProjectSettingsPage: React.FC = () => {
     STO_JIRA_INTEGRATION,
     PL_DISCOVERY_ENABLE,
     USE_OLD_GIT_SYNC,
-    SRM_DOWNTIME,
     CVNG_TEMPLATE_MONITORED_SERVICE
   } = useFeatureFlags()
   const { currentModule, isGitSimplificationEnabled, isGitSyncEnabled, gitSyncEnabledOnlyForFF } = useAppStore()
@@ -174,7 +173,6 @@ export const ProjectSettingsPage: React.FC = () => {
               id={SettingsResources.SLODowntime}
               icon={'connectors-blue'}
               route={routesV2.toCVSLODowntime({ accountId, orgIdentifier, projectIdentifier, module })}
-              hidden={!SRM_DOWNTIME}
             />
             <SettingsResourceCard //todo-test
               label={<String stringID="gitManagement" />}

@@ -19,8 +19,7 @@ import {
   ChangeSourceCategoryOptions,
   ChangeSourceCategoryName,
   ChangeSourceTypes,
-  CustomChangeSourceList,
-  internalChangeSources
+  CustomChangeSourceList
 } from './ChangeSourceDrawer.constants'
 import type { UpdatedChangeSourceDTO } from './ChangeSourceDrawer.types'
 
@@ -49,13 +48,9 @@ export const createChangesourceList = (
 
 export const createCardOptions = (
   category: ChangeSourceDTO['category'],
-  getString: UseStringsReturn['getString'],
-  isCustomChangeSourceEnabled?: boolean
+  getString: UseStringsReturn['getString']
 ): Item[] => {
-  let clonedOptions = cloneDeep(ChangeSourceConnectorOptions)
-  if (!isCustomChangeSourceEnabled) {
-    clonedOptions = clonedOptions.filter(item => !CustomChangeSourceList.includes(item.value as ChangeSourceTypes))
-  }
+  const clonedOptions = cloneDeep(ChangeSourceConnectorOptions)
   return (
     clonedOptions
       .filter(item => item.category === category)
@@ -155,21 +150,12 @@ export const validateChangeSourceSpec = (
 interface GetChangeSourceOptionsProps {
   getString: UseStringsReturn['getString']
   type?: MonitoredServiceDTO['type']
-  isCustomChangeSourceEnabled?: boolean
-  isChaosExperimentCSEnabled?: boolean
 }
 
-export const getChangeSourceOptions = ({
-  getString,
-  type,
-  isCustomChangeSourceEnabled,
-  isChaosExperimentCSEnabled
-}: GetChangeSourceOptionsProps): SelectOption[] => {
+export const getChangeSourceOptions = ({ getString, type }: GetChangeSourceOptionsProps): SelectOption[] => {
   const options: SelectOption[] = []
   for (const category of ChangeSourceCategoryOptions) {
     if (
-      (!isChaosExperimentCSEnabled && category.value === ChangeSourceCategoryName.CHAOS_EXPERIMENT) ||
-      (!isCustomChangeSourceEnabled && type && internalChangeSources.includes(category.value)) ||
       (type === MonitoredServiceType.APPLICATION && category.value === ChangeSourceCategoryName.INFRASTRUCTURE) ||
       (type === MonitoredServiceType.INFRASTRUCTURE && category.value === ChangeSourceCategoryName.DEPLOYMENT)
     ) {
@@ -210,29 +196,16 @@ export const updateSpecByType = (data: ChangeSourceDTO): ChangeSourceDTO['spec']
   }
 }
 
-export const buildInitialData = (
-  categoryOptions: SelectOption[],
-  isCustomChangeSourceEnabled?: boolean
-): UpdatedChangeSourceDTO => {
+export const buildInitialData = (categoryOptions: SelectOption[]): UpdatedChangeSourceDTO => {
   return {
     [ChangeSourceFieldNames.CATEGORY]: categoryOptions[0].value,
-    [ChangeSourceFieldNames.TYPE]: preSelectChangeSourceConnectorOnCategoryChange(
-      categoryOptions[0].value as string,
-      isCustomChangeSourceEnabled
-    ),
+    [ChangeSourceFieldNames.TYPE]: preSelectChangeSourceConnectorOnCategoryChange(categoryOptions[0].value as string),
     spec: {},
     enabled: true
   }
 }
-export const preSelectChangeSourceConnectorOnCategoryChange = (
-  categoryName: string,
-  isCustomChangeSourceEnabled?: boolean
-): string => {
+export const preSelectChangeSourceConnectorOnCategoryChange = (categoryName: string): string => {
   switch (categoryName) {
-    case ChangeSourceCategoryName.ALERT:
-      return isCustomChangeSourceEnabled ? '' : ChangeSourceTypes.PagerDuty
-    case ChangeSourceCategoryName.INFRASTRUCTURE:
-      return isCustomChangeSourceEnabled ? '' : ChangeSourceTypes.K8sCluster
     case ChangeSourceCategoryName.FEATURE_FLAG:
       return ChangeSourceTypes.CustomFF
     default:

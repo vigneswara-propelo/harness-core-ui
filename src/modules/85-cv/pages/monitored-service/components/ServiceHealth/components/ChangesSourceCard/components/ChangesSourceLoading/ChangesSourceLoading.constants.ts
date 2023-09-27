@@ -5,5 +5,4 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-export const NUM_OF_LOADING_BLOCKS_TO_SHOW_WITH_CE = 6
-export const NUM_OF_LOADING_BLOCKS_TO_SHOW = 5
+export const NUM_OF_LOADING_BLOCKS_TO_SHOW = 6

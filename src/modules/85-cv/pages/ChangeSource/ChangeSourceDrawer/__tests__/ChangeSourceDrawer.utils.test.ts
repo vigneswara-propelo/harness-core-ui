@@ -42,9 +42,10 @@ function mockGetString(name: string): string {
       return ''
   }
 }
+
 describe('Validate ChangeSource Utils', () => {
   test('Validate CreateCardOptions', () => {
-    expect(createCardOptions('Deployment', mockGetString, true)).toEqual([
+    expect(createCardOptions('Deployment', mockGetString)).toEqual([
       {
         category: 'Deployment',
         icon: 'harness',
@@ -58,11 +59,11 @@ describe('Validate ChangeSource Utils', () => {
         value: 'CustomDeploy'
       }
     ])
-    expect(createCardOptions('Infrastructure', mockGetString, true)).toEqual([
+    expect(createCardOptions('Infrastructure', mockGetString)).toEqual([
       { category: 'Infrastructure', icon: 'app-kubernetes', label: 'Kubernetes', value: 'K8sCluster' },
       { category: 'Infrastructure', icon: 'service-custom-connector', label: '', value: 'CustomInfrastructure' }
     ])
-    expect(createCardOptions('Alert', mockGetString, true)).toEqual([
+    expect(createCardOptions('Alert', mockGetString)).toEqual([
       { category: 'Alert', icon: 'service-pagerduty', label: 'PagerDuty', value: 'PagerDuty' },
       { category: 'Alert', icon: 'service-custom-connector', label: '', value: 'CustomIncident' }
     ])
@@ -99,31 +100,22 @@ describe('Validate ChangeSource Utils', () => {
 
   test('Ensure getChangeSourceOptions works as intended', async () => {
     // no infra options should be returned for application type
-    expect(
-      getChangeSourceOptions({ getString: str => str, type: 'Application', isCustomChangeSourceEnabled: true })
-    ).toEqual([
+    expect(getChangeSourceOptions({ getString: str => str, type: 'Application' })).toEqual([
       changeSourceCategorySelectOptions.Deployment,
       changeSourceCategorySelectOptions.Alert,
-      changeSourceCategorySelectOptions.FeatureFlag
+      changeSourceCategorySelectOptions.FeatureFlag,
+      changeSourceCategorySelectOptions.ChaosExperiment
     ])
 
     // no deployment options should be return for infra type
-    expect(
-      getChangeSourceOptions({ getString: str => str, type: 'Infrastructure', isCustomChangeSourceEnabled: true })
-    ).toEqual([
+    expect(getChangeSourceOptions({ getString: str => str, type: 'Infrastructure' })).toEqual([
       changeSourceCategorySelectOptions.Infrastructure,
       changeSourceCategorySelectOptions.Alert,
-      changeSourceCategorySelectOptions.FeatureFlag
+      changeSourceCategorySelectOptions.FeatureFlag,
+      changeSourceCategorySelectOptions.ChaosExperiment
     ])
 
     expect(getChangeSourceOptions({ getString: str => str })).toEqual([
-      changeSourceCategorySelectOptions.Deployment,
-      changeSourceCategorySelectOptions.Infrastructure,
-      changeSourceCategorySelectOptions.Alert,
-      changeSourceCategorySelectOptions.FeatureFlag
-    ])
-    // should return chaos change
-    expect(getChangeSourceOptions({ getString: str => str, isChaosExperimentCSEnabled: true })).toEqual([
       changeSourceCategorySelectOptions.Deployment,
       changeSourceCategorySelectOptions.Infrastructure,
       changeSourceCategorySelectOptions.Alert,
@@ -154,7 +146,7 @@ describe('Validate ChangeSource Utils', () => {
       category: 'Infrastructure',
       enabled: true,
       spec: {},
-      type: 'K8sCluster'
+      type: ''
     })
   })
 })

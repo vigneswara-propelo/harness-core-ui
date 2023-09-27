@@ -28,9 +28,9 @@ export const getValueFromEvent = (e: React.FormEvent<HTMLElement>): string | Sel
 }
 
 export const getFilteredOptions = (
-  featureFlag: boolean,
   options: SelectOption[],
-  optionToFilterOut: string
+  optionToFilterOut: string,
+  featureFlag = true
 ): SelectOption[] => (featureFlag ? options : options.filter(el => el.value !== optionToFilterOut))
 
 export const onConditionChange = (
