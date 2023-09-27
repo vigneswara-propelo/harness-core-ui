@@ -6,13 +6,15 @@
  */
 
 import React from 'react'
+import { identity, pickBy, omit, set } from 'lodash-es'
 import type { AllowedTypes } from '@harness/uicore'
 import { Layout } from '@harness/uicore'
 import { connect } from 'formik'
-import type { DeploymentStageConfig, StepGroupElementConfig } from 'services/cd-ng'
+import type { DeploymentStageConfig, StepElementConfig, StepGroupElementConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import type { StageType } from '@pipeline/utils/stageHelpers'
+import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepMode } from '@pipeline/utils/stepUtils'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import type { StepViewType } from '../AbstractSteps/Step'
@@ -21,6 +23,8 @@ import type { StageInputSetFormProps } from './StageInputSetForm'
 import { ConditionalExecutionForm } from './StageAdvancedInputSetForm/ConditionalExecutionForm'
 import { LoopingStrategyInputSetForm } from './StageAdvancedInputSetForm/LoopingStrategyInputSetForm'
 import { FailureStrategiesInputSetForm } from './StageAdvancedInputSetForm/FailureStrategiesInputSetForm'
+import { StepWidget } from '../AbstractSteps/StepWidget'
+import { StepType } from '../PipelineSteps/PipelineStepInterface'
 
 export function StepGroupFormSetInternal(props: {
   template: StepGroupElementConfig
@@ -81,6 +85,42 @@ export function StepGroupFormSetInternal(props: {
           mode={StepMode.STEP_GROUP}
         />
       )}
+      <StepWidget<Partial<StepElementConfig>>
+        factory={factory}
+        readonly={readonly}
+        path={path}
+        allowableTypes={allowableTypes}
+        template={omit(template, 'steps') as Partial<StepElementConfig>}
+        initialValues={values || {}}
+        allValues={allValues || {}}
+        type={StepType.StepGroup}
+        onUpdate={data => {
+          if (values) {
+            const execObj = {
+              ...data
+            }
+            if (data.stepGroupInfra) {
+              execObj['stepGroupInfra'] = {
+                ...pickBy(data.stepGroupInfra, identity)
+              }
+            }
+            formik?.setValues(set(formik?.values, path, execObj))
+          }
+        }}
+        stepViewType={viewType}
+        customStepProps={
+          customStepProps
+            ? {
+                ...customStepProps,
+                selectedStage: {
+                  stage: {
+                    spec: customStepProps?.selectedStage
+                  }
+                }
+              }
+            : null
+        }
+      />
       <ExecutionWrapperInputSetForm
         stepsTemplate={template?.steps}
         formik={formik}

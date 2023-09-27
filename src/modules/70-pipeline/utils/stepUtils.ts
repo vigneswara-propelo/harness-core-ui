@@ -378,6 +378,24 @@ export function getStepDataFromValues(
       delete node.failureStrategies
     }
 
+    if (isStepGroup) {
+      if ((item as StepGroupElementConfig).sharedPaths) {
+        set(node, 'sharedPaths', (item as StepGroupElementConfig)?.sharedPaths)
+      } else {
+        delete node.sharedPaths
+      }
+      if ((item as StepGroupElementConfig).stepGroupInfra) {
+        set(node, 'stepGroupInfra', (item as StepGroupElementConfig)?.stepGroupInfra)
+      } else {
+        delete node.stepGroupInfra
+      }
+      if ((item as StepGroupElementConfig)?.variables) {
+        set(node, 'variables', (item as StepGroupElementConfig).variables)
+      } else {
+        delete node.variables
+      }
+    }
+
     if ((item as StepGroupElementConfig)?.variables) {
       set(node, 'variables', (item as StepGroupElementConfig).variables)
     } else {

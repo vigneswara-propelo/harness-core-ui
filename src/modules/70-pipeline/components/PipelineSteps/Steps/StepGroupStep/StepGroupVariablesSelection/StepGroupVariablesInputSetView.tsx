@@ -17,6 +17,7 @@ import { useStrings } from 'framework/strings'
 import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { K8sDirectInfraStepGroupElementConfig } from '../StepGroupUtil'
 import { CustomVariableInputSetExtraProps } from '../../CustomVariables/CustomVariableInputSet'
+import css from '../StepGroupStep.module.scss'
 
 export interface StepGroupVariablesInputSetViewProps {
   factory: AbstractStepFactory
@@ -39,7 +40,7 @@ export default function StepGroupVariablesInputSetView(props: StepGroupVariables
       >
         {getString('common.variables')}
       </Text>
-      <section>
+      <section className={css.stepGroupVariableInputSetView}>
         <StepWidget<CustomVariablesData, CustomVariableInputSetExtraProps>
           factory={factory as unknown as AbstractStepFactory}
           initialValues={{

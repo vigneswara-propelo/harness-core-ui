@@ -22,8 +22,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { k8sLabelRegex, k8sAnnotationRegex } from '@common/utils/StringUtils'
 import type { ListUIType } from '@pipeline/components/List/List'
 import type { MapUIType } from '@common/components/Map/Map'
-import type { StepViewType, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
-import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType, StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { VolumesTypes } from '@pipeline/components/Volumes/Volumes'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import type { MultiTypeListType, MultiTypeListUIType } from '../StepsTypes'
@@ -42,6 +41,7 @@ interface StepGroupWidgetProps {
   initialValues: K8sDirectInfraStepGroupElementConfig
   isNewStep?: boolean
   onUpdate?: (data: StepGroupFormikValues) => void
+  onChange?: (data: StepGroupFormikValues) => void
   stepViewType?: StepViewType
   readonly?: boolean
   allowableTypes?: AllowedTypes
@@ -100,7 +100,16 @@ function StepGroupStepEdit(
   props: StepGroupWidgetProps,
   formikRef: StepFormikFowardRef<StepGroupFormikValues>
 ): React.ReactElement {
-  const { initialValues, onUpdate, isNewStep = true, readonly, allowableTypes, stepViewType, customStepProps } = props
+  const {
+    initialValues,
+    onUpdate,
+    onChange,
+    isNewStep = true,
+    readonly,
+    allowableTypes,
+    stepViewType,
+    customStepProps
+  } = props
   const { selectedStage, isRollback, isProvisionerStep, isAnyParentContainerStepGroup } = customStepProps
 
   const { getString } = useStrings()
@@ -309,7 +318,7 @@ function StepGroupStepEdit(
   }
 
   const getInitialValues = (): StepGroupFormikValues => {
-    if (initialValues?.stepGroupInfra?.type && initialValues.identifier) {
+    if (initialValues?.stepGroupInfra?.type && (stepViewType === StepViewType.Template || initialValues.identifier)) {
       const sharedPaths: ListUIType | string =
         typeof initialValues.sharedPaths === 'string'
           ? initialValues.sharedPaths
@@ -336,6 +345,9 @@ function StepGroupStepEdit(
         onSubmit={values => {
           onUpdate?.(values)
         }}
+        validate={formValues => {
+          onChange?.(formValues)
+        }}
         formName="stepGroup"
         initialValues={getInitialValues()}
         validationSchema={validationSchema}
@@ -344,9 +356,11 @@ function StepGroupStepEdit(
           setFormikRef(formikRef, formik)
           return (
             <FormikForm>
-              <div className={cx(stepCss.formGroup, stepCss.md)}>
-                <FormInput.InputWithIdentifier inputLabel={getString('name')} isIdentifierEditable={isNewStep} />
-              </div>
+              {stepViewType !== StepViewType.Template && (
+                <div className={cx(stepCss.formGroup, stepCss.md)}>
+                  <FormInput.InputWithIdentifier inputLabel={getString('name')} isIdentifierEditable={isNewStep} />
+                </div>
+              )}
               <StepGroupVariables
                 allowableTypes={allowableTypes}
                 formikRef={formik}

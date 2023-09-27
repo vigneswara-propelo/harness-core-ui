@@ -15,3 +15,12 @@
 .bottomMargin7 {
   margin-bottom: var(--spacing-7) !important;
 }
+
+.stepGroupVariableInputSetView {
+  :global {
+    .customVariables {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+}

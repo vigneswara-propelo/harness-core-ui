@@ -6,23 +6,18 @@
  */
 
 import React from 'react'
-import { Formik, Tab, Tabs } from '@harness/uicore'
+import { Tab, Tabs } from '@harness/uicore'
 import { FormikProps } from 'formik'
 import { defaultTo, isEmpty } from 'lodash-es'
-import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { AdvancedStepsWithRef } from '@pipeline/components/PipelineSteps/AdvancedSteps/AdvancedSteps'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import StepGroupVariables from '@pipeline/components/PipelineSteps/Steps/StepGroupStep/StepGroupVariablesSelection/StepGroupVariables'
 import { StepCommandsProps, Values } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { useStrings } from 'framework/strings'
-import { NGVariable, StepGroupElementConfig } from 'services/cd-ng'
-import { StepGroupFormikValues } from '@pipeline/components/PipelineSteps/Steps/StepGroupStep/StepGroupUtil'
+import { StepGroupElementConfig } from 'services/cd-ng'
 import { StepCommandsRef } from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'
+import { StepWidgetWithFormikRef } from '@pipeline/components/AbstractSteps/StepWidget'
+import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import css from './StepGroupTemplateForm.module.scss'
-
-interface StepGroupTemplateConfigFormikValues {
-  variables?: NGVariable[]
-}
 
 export enum StepCommandTabs {
   StepConfiguration = 'StepConfiguration',
@@ -36,6 +31,8 @@ export function StepGroupTemplateCommands(props: StepCommandsProps, ref: StepCom
     isReadonly,
     stepsFactory,
     allowableTypes,
+    onUpdate,
+    stepViewType,
     isRollback = false,
     isProvisionerStep = false
   } = props
@@ -74,9 +71,13 @@ export function StepGroupTemplateCommands(props: StepCommandsProps, ref: StepCom
       advancedValues?: Partial<Values>
     } = {}
   ): Partial<Values> => {
+    const stepObj = stepsFactory.getStep(StepType.StepGroup) as PipelineStep<any>
+
     const { stepValues, advancedValues } = latestValues
     const values = {
-      ...(stepRef.current ? stepValues ?? (stepRef.current?.values as Partial<Values>) : {}),
+      ...(stepRef.current
+        ? defaultTo(stepValues, stepObj?.processFormData(stepRef.current.values) ?? stepRef.current.values)
+        : {}),
       ...defaultTo(advancedValues, advancedConfRef.current?.values as Partial<Values>)
     }
     return values
@@ -111,34 +112,32 @@ export function StepGroupTemplateCommands(props: StepCommandsProps, ref: StepCom
 
   const getStepWidgetWithFormikRef = (): JSX.Element => {
     return (
-      <Formik<StepGroupTemplateConfigFormikValues>
-        initialValues={{
-          variables: (step as StepGroupElementConfig)?.variables
+      <StepWidgetWithFormikRef
+        key={step.identifier}
+        factory={stepsFactory}
+        initialValues={step}
+        readonly={isReadonly}
+        isNewStep={true}
+        onChange={values => {
+          onChange?.(getValues({ stepValues: values }))
         }}
-        onSubmit={
-          /* istanbul ignore next */ (values: StepGroupTemplateConfigFormikValues) => {
-            onChange?.(getValues({ stepValues: values }))
-          }
-        }
-        validate={formValues => {
-          onChange?.(getValues({ stepValues: formValues }))
+        onUpdate={values => {
+          onUpdate?.(getValues({ stepValues: values }))
         }}
-        formName="stepGroupTemplateConfiguration"
-      >
-        {(formik: FormikProps<StepGroupTemplateConfigFormikValues>) => {
-          setFormikRef(stepRef, formik)
-
-          return (
-            <StepGroupVariables
-              allowableTypes={allowableTypes}
-              formikRef={formik as unknown as FormikProps<StepGroupFormikValues>}
-              readonly={isReadonly}
-              isRollback={isRollback}
-              isProvisionerStep={isProvisionerStep}
-            />
-          )
+        type={StepType.StepGroup}
+        stepViewType={stepViewType}
+        ref={stepRef}
+        allowableTypes={allowableTypes}
+        customStepProps={{
+          selectedStage: {
+            stage: {
+              type: (step as Values).stageType
+            }
+          },
+          isRollback,
+          isProvisionerStep
         }}
-      </Formik>
+      />
     )
   }
 

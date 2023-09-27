@@ -100,6 +100,7 @@ export class StepGroupStep extends PipelineStep<StepGroupElementConfig> {
     const {
       initialValues,
       onUpdate,
+      onChange,
       stepViewType,
       formikRef,
       isNewStep,
@@ -135,6 +136,7 @@ export class StepGroupStep extends PipelineStep<StepGroupElementConfig> {
       <StepGroupStepEditRef
         initialValues={initialValues as K8sDirectInfraStepGroupElementConfig}
         onUpdate={(formData: StepGroupFormikValues) => onUpdate?.(this.processFormData(formData))}
+        onChange={(formData: StepGroupFormikValues) => onChange?.(this.processFormData(formData))}
         isNewStep={isNewStep}
         stepViewType={stepViewType}
         ref={formikRef}

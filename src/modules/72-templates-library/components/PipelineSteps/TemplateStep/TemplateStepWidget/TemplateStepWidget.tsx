@@ -12,7 +12,7 @@ import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
-import { defaultTo, get, isEmpty, noop, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, noop, omit, set } from 'lodash-es'
 import { produce } from 'immer'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { setFormikRef, StepViewType, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
@@ -43,8 +43,11 @@ import { StepMode } from '@pipeline/utils/stepUtils'
 import { LoopingStrategyInputSetForm } from '@pipeline/components/PipelineInputSetForm/StageAdvancedInputSetForm/LoopingStrategyInputSetForm'
 import { FailureStrategiesInputSetForm } from '@pipeline/components/PipelineInputSetForm/StageAdvancedInputSetForm/FailureStrategiesInputSetForm'
 import { isValueRuntimeInput } from '@common/utils/utils'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
+import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import css from './TemplateStepWidget.module.scss'
+import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export interface TemplateStepWidgetProps {
   initialValues: TemplateStepNode
@@ -81,7 +84,7 @@ function TemplateStepWidget(
   const [loadingMergedTemplateInputs, setLoadingMergedTemplateInputs] = React.useState<boolean>(false)
   const [formValues, setFormValues] = React.useState<TemplateStepNode>(initialValues)
   const [allValues, setAllValues] = React.useState<StepElementConfig>()
-  const [templateInputs, setTemplateInputs] = React.useState<StepElementConfig>()
+  const [templateInputs, setTemplateInputs] = React.useState<StepElementConfig | StepGroupElementConfig>()
   const selectedStage = (customStepProps as any)?.selectedStage
 
   const { orgIdentifier, projectIdentifier } = queryParams
@@ -327,6 +330,18 @@ function TemplateStepWidget(
                             />
                           </div>
                         )}
+                        {/* StepGroup template inputs root entites apart from steps */}
+                        <StepWidget<Partial<StepElementConfig>>
+                          factory={factory}
+                          readonly={readonly}
+                          path={TEMPLATE_INPUT_PATH}
+                          allowableTypes={allowableTypes}
+                          template={omit(templateInputs, 'steps') as Partial<StepElementConfig>}
+                          initialValues={formik.values.template?.templateInputs || {}}
+                          allValues={allValues || {}}
+                          type={StepType.StepGroup}
+                          stepViewType={StepViewType.TemplateUsage}
+                        />
                         <ExecutionWrapperInputSetForm
                           stepsTemplate={(templateInputs as StepGroupElementConfig)?.steps as ExecutionWrapperConfig[]}
                           formik={formik}

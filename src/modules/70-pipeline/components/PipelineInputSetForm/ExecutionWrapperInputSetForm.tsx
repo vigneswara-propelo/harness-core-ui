@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { identity, pickBy, set, isEmpty, defaultTo, isUndefined } from 'lodash-es'
+import { identity, pickBy, set, isEmpty, defaultTo, isUndefined, omit } from 'lodash-es'
 import { AllowedTypes, Icon, Label, Layout, Popover, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
@@ -259,6 +259,20 @@ function StepGroupRuntimeForm(props: {
               mode={StepMode.STEP_GROUP}
             />
           </div>
+        )}
+        {/* Fot template stepGroup - render config entities apart from steps (variables/stepGroupInfra) */}
+        {isTemplateStepGroup && (
+          <StepWidget<Partial<StepElementConfig>>
+            factory={factory}
+            readonly={readonly}
+            path={`${stepGroupPath}.template.templateInputs`}
+            allowableTypes={allowableTypes}
+            template={omit(stepGroupItem?.template?.templateInputs, 'steps')}
+            initialValues={initialValues?.stepGroup?.template?.templateInputs as Partial<StepElementConfig>}
+            allValues={defaultTo(stepGroup?.stepGroup, stepGroup?.stepGroup?.template?.templateInputs)}
+            type={StepType.StepGroup}
+            stepViewType={StepViewType.TemplateUsage}
+          />
         )}
         <ExecutionWrapperInputSetForm
           executionIdentifier={executionIdentifier}
