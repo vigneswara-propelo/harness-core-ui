@@ -141,7 +141,7 @@ export const ManifestLabels: Record<OverrideManifestTypes, StringKeys> = {
   EcsTaskDefinition: 'cd.pipelineSteps.serviceTab.manifest.taskDefinition',
   EcsServiceDefinition: 'cd.pipelineSteps.serviceTab.manifest.serviceDefinition',
   EcsScalableTargetDefinition: 'cd.pipelineSteps.serviceTab.manifest.scalableTarget',
-  EcsScalingPolicyDefinition: 'pipeline.manifestTypeLabels.EcsScalableTargetDefinition'
+  EcsScalingPolicyDefinition: 'pipeline.manifestTypeLabels.EcsScalingPolicyDefinition'
 }
 export const ManifestIcons: Record<OverrideManifestTypes, IconName> = {
   Values: 'functions',
