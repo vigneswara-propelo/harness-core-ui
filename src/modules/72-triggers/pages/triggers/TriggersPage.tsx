@@ -18,6 +18,7 @@ import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { PageQueryParams } from '@common/constants/Pagination'
 import TriggersList from './views/TriggersList'
 import type { TriggerDataInterface } from './utils/TriggersListUtils'
 import TriggerExplorer from './views/TriggerExplorer'
@@ -32,7 +33,9 @@ const TriggersPage: React.FC = (): React.ReactElement => {
   const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier, module } =
     useParams<PipelineType<TriggerPathProps>>()
   const { sectionId } = useQueryParams<TriggersQueryParams>()
-  const { updateQueryParams } = useUpdateQueryParams<TriggersQueryParams>()
+  const { updateQueryParams } = useUpdateQueryParams<
+    TriggersQueryParams & Pick<PageQueryParams, 'page' | 'searchTerm'>
+  >()
   const { CDS_TRIGGER_ACTIVITY_PAGE } = useFeatureFlags()
 
   const history = useHistory()
@@ -94,7 +97,9 @@ const TriggersPage: React.FC = (): React.ReactElement => {
 
   const handleTabChange = (tabId: TriggersDetailsTab): void => {
     updateQueryParams({
-      sectionId: tabId
+      sectionId: tabId,
+      page: undefined,
+      searchTerm: undefined
     })
     setSelectedTabId(tabId)
   }
