@@ -29,7 +29,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { getStageFromPipeline as getStageByPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
 import type { CIInfraDetails, DependencyElement } from 'services/ci'
 import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
-import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import { ArtifactType, ARTIFACT_FILTER_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 
 import type { InputSetDTO } from './types'
 import type { DeploymentStageElementConfig, PipelineStageWrapper, StageElementWrapper } from './pipelineTypes'
@@ -239,6 +239,7 @@ export const getHelpeTextForTags = (
   fields: {
     imagePath?: string
     artifactPath?: string
+    artifactFilter?: string
     region?: string
     connectorRef: string
     registryHostname?: string
@@ -257,6 +258,7 @@ export const getHelpeTextForTags = (
     artifactArrayPath?: string
     versionPath?: string
     feed?: string
+    filterType?: ARTIFACT_FILTER_TYPES
   },
   getString: (key: StringKeys) => string,
   isServerlessDeploymentTypeSelected = false,
@@ -271,6 +273,7 @@ export const getHelpeTextForTags = (
     repository,
     repositoryPort,
     artifactDirectory,
+    artifactFilter,
     registry,
     subscriptionId,
     repositoryName,
@@ -282,7 +285,8 @@ export const getHelpeTextForTags = (
     packageName,
     feed,
     artifactArrayPath,
-    versionPath
+    versionPath,
+    filterType
   } = fields
   const invalidFields: string[] = []
   if (!connectorRef || getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME) {
@@ -353,9 +357,18 @@ export const getHelpeTextForTags = (
   }
   if (
     isServerlessDeploymentTypeSelected &&
+    filterType === ARTIFACT_FILTER_TYPES.DIRECTORY &&
     (!artifactDirectory || getMultiTypeFromValue(artifactDirectory) === MultiTypeInputType.RUNTIME)
   ) {
     invalidFields.push(getString('pipeline.artifactsSelection.artifactDirectory'))
+  }
+
+  if (
+    isServerlessDeploymentTypeSelected &&
+    filterType === ARTIFACT_FILTER_TYPES.FILTER &&
+    (!artifactFilter || getMultiTypeFromValue(artifactFilter) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('pipeline.artifactsSelection.artifactFilter'))
   }
 
   if (registry !== undefined && (!registry || getMultiTypeFromValue(registry) === MultiTypeInputType.RUNTIME)) {

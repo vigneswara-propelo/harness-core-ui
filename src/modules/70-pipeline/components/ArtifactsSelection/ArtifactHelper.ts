@@ -16,7 +16,7 @@ import { IdentifierSchemaWithOutName, NameSchema } from '@common/utils/Validatio
 import { FeatureFlag } from '@common/featureFlags'
 import { Connectors } from '@connectors/constants'
 import { ServiceDeploymentType, isSshOrWinrmDeploymentType } from '@pipeline/utils/stageHelpers'
-import type { ArtifactType } from './ArtifactInterface'
+import { ArtifactType, ARTIFACT_FILTER_TYPES } from './ArtifactInterface'
 
 export enum ModalViewFor {
   PRIMARY = 1,
@@ -324,6 +324,17 @@ export const tagOptions: IOptionProps[] = [
   {
     label: 'Regex',
     value: 'regex'
+  }
+]
+
+export const filterTypeOptions: IOptionProps[] = [
+  {
+    label: 'Artifact Directory',
+    value: ARTIFACT_FILTER_TYPES.DIRECTORY
+  },
+  {
+    label: 'Artifact Filter',
+    value: ARTIFACT_FILTER_TYPES.FILTER
   }
 ]
 

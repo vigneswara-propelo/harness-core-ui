@@ -1067,6 +1067,7 @@ artifactsSelection:
   repositoryPlaceholder: Enter Repository
   artifactType: Artifact Type
   artifactDetails: Artifact Details
+  artifactDirOrFilter: Artifact Directory/Filter
   orgNamePlaceholder: Enter Organization Name
   versionDetails: Version Details
   packageSource: Package Source
@@ -1080,7 +1081,9 @@ artifactsSelection:
   loadingArtifactPaths: Loading Artifact Paths...
   artifactPathPlaceholder: Enter Artifact Path
   artifactDirectory: Artifact Directory
+  artifactFilter: Artifact Filter
   artifactDirectoryPlaceholder: Enter Artifact Directory
+  artifactFilterPlaceholder: Enter Artifact Filter
   filePathRegexLabel: File Path Regex
   filePathRegexPlaceholder: Enter File Path Regex
   amazonS3Title: Amazon S3
@@ -1098,6 +1101,7 @@ artifactsSelection:
     jobConnectorRequired: Job name and connector are required to fetch
     script: Script is required
     artifactsArrayPath: Artifact array path is required
+    artifactsFilter: Artifact filter is required
     versionPath: Version path is required
     noBuild: No build found with given details
     noPackage: No package found with given details

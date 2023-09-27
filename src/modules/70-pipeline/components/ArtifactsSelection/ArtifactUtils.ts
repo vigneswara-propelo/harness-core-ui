@@ -24,6 +24,7 @@ import {
   ArtifactType,
   AzureArtifactsInitialValues,
   CustomArtifactSource,
+  ARTIFACT_FILTER_TYPES,
   GithubPackageRegistryInitialValuesType,
   GoogleArtifactRegistryInitialValuesType,
   ImagePathTypes,
@@ -90,6 +91,11 @@ export const helperTextData = (
   formik: FormikValues,
   connectorIdValue: string
 ): ArtifactTagHelperText => {
+  const artifactoryCommonFields = {
+    repository: formik.values?.repository,
+    connectorRef: connectorIdValue,
+    filterType: formik.values?.filterType
+  }
   switch (selectedArtifact) {
     case ENABLED_ARTIFACT_TYPES.AzureArtifacts:
       return {
@@ -158,12 +164,16 @@ export const helperTextData = (
             packageName: formik.values?.spec?.packageName
           }
     case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
-      return {
-        artifactPath: formik.values?.artifactPath,
-        repository: formik.values?.repository,
-        connectorRef: connectorIdValue,
-        artifactDirectory: formik.values?.artifactDirectory
-      }
+      return formik.values?.filterType === ARTIFACT_FILTER_TYPES.FILTER
+        ? {
+            artifactFilter: formik.values?.artifactFilter,
+            ...artifactoryCommonFields
+          }
+        : {
+            artifactDirectory: formik.values?.artifactDirectory,
+            artifactPath: formik.values?.artifactPath,
+            ...artifactoryCommonFields
+          }
     case ENABLED_ARTIFACT_TYPES.Acr:
       return {
         subscriptionId: formik.values?.subscriptionId,
@@ -298,11 +308,15 @@ const getServerlessArtifactFromObj = (formData: ImagePathTypes & { connectorId?:
       : {
           artifactPathFilter: defaultTo(formData.tagRegex?.value, formData.tagRegex)
         }
-
+  const artifactFilterOrDirectory: { artifactDirectory?: string; artifactFilter?: string } = {}
+  if (formData?.filterType === ARTIFACT_FILTER_TYPES.DIRECTORY)
+    artifactFilterOrDirectory.artifactDirectory = formData?.artifactDirectory
+  if (formData?.filterType === ARTIFACT_FILTER_TYPES.FILTER)
+    artifactFilterOrDirectory.artifactFilter = formData?.artifactFilter
   return {
     spec: {
       connectorRef: formData?.connectorId,
-      artifactDirectory: formData?.artifactDirectory,
+      ...artifactFilterOrDirectory,
       ...artifactPathData
     }
   }
@@ -433,6 +447,17 @@ export type artifactInitialValueTypes =
   | AmazonMachineImageInitialValuesType
   | AzureArtifactsInitialValues
 
+const getFilterType = (specValues: ImagePathTypes): ImagePathTypes => {
+  const values = produce(specValues, draft => {
+    if (specValues?.artifactFilter) {
+      draft.filterType = ARTIFACT_FILTER_TYPES.FILTER
+    } else {
+      draft.filterType = ARTIFACT_FILTER_TYPES.DIRECTORY
+    }
+  })
+  return values
+}
+
 export const getArtifactFormData = (
   initialValues: artifactInitialValueTypes,
   selectedArtifact: ArtifactType,
@@ -496,6 +521,10 @@ export const getArtifactFormData = (
     case ENABLED_ARTIFACT_TYPES.Acr:
       values = getTagValues(specValues)
       values = getGcrDigestValues(values as ImagePathTypes)
+      break
+    case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
+      values = getTagValues(specValues, isServerlessDeploymentTypeSelected)
+      values = getFilterType(values as ImagePathTypes)
       break
     default:
       values = getTagValues(specValues, isServerlessDeploymentTypeSelected)
@@ -772,6 +801,7 @@ export const defaultArtifactInitialValues = (
         identifier: '',
         tag: RUNTIME_INPUT_VALUE,
         tagType: TagTypes.Value,
+        filterType: ARTIFACT_FILTER_TYPES.DIRECTORY,
         tagRegex: RUNTIME_INPUT_VALUE
       }
 

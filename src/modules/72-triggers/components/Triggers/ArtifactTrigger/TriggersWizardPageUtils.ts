@@ -2124,6 +2124,7 @@ export const getArtifactTriggerSpecSource = (
     case 'ArtifactoryRegistry': {
       const {
         artifactDirectory = '',
+        artifactFilter = '',
         artifactPath = '',
         connectorRef = defaultConnectorRef,
         repository = '',
@@ -2137,7 +2138,8 @@ export const getArtifactTriggerSpecSource = (
           connectorRef,
           repositoryFormat,
           repository,
-          artifactDirectory
+          artifactDirectory,
+          artifactFilter
         }
       }
 

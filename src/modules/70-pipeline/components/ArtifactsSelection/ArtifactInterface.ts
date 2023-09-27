@@ -72,6 +72,11 @@ export enum PackageSourceTypes {
   User = 'user'
 }
 
+export enum ARTIFACT_FILTER_TYPES {
+  DIRECTORY = 'directory',
+  FILTER = 'filter'
+}
+
 export enum RepositoryPortOrServer {
   RepositoryPort = 'repositoryPort',
   RepositoryUrl = 'repositoryUrl'
@@ -95,6 +100,8 @@ export interface ImagePathTypes {
   repositoryUrl?: string
   repositoryPortorRepositoryURL?: string
   artifactDirectory?: string
+  artifactFilter?: string
+  filterType?: ARTIFACT_FILTER_TYPES
   repositoryFormat?: string
   registryId?: string
 }
@@ -396,6 +403,8 @@ export interface ArtifactTagHelperText {
   project?: string
   repositoryName?: string
   artifactPath?: string
+  artifactFilter?: string
+  filterType?: ARTIFACT_FILTER_TYPES
   region?: string
   connectorRef: string
   registryHostname?: string

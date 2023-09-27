@@ -427,6 +427,16 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
         get(initialValues?.artifacts, `${artifactPath}.spec.artifactDirectory`, '')
       )
     : getImagePath(artifact?.spec?.artifactPath, get(initialValues, `artifacts.${artifactPath}.spec.artifactPath`, ''))
+
+  const artifactFilterValue = isGenericArtifactory
+    ? getDefaultQueryParam(
+        getValidInitialValuePath(
+          get(artifacts, `${artifactPath}.spec.artifactFilter`, ''),
+          artifact?.spec?.artifactFilter
+        ),
+        get(initialValues?.artifacts, `${artifactPath}.spec.artifactFilter`, '')
+      )
+    : getImagePath(artifact?.spec?.artifactPath, get(initialValues, `artifacts.${artifactPath}.spec.artifactPath`, ''))
   const connectorRefValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
@@ -446,6 +456,15 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
               artifact?.spec?.artifactDirectory
             ),
             get(initialValues?.artifacts, `${artifactPath}.spec.artifactDirectory`, '')
+          )
+        ),
+        artifactFilter: getFinalQueryParamValue(
+          getDefaultQueryParam(
+            getValidInitialValuePath(
+              get(artifacts, `${artifactPath}.spec.artifactFilter`, ''),
+              artifact?.spec?.artifactFilter
+            ),
+            get(initialValues?.artifacts, `${artifactPath}.spec.artifactFilter`, '')
           )
         ),
         connectorRef: getFinalQueryParamValue(connectorRefValue),
@@ -520,7 +539,12 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
   ])
 
   const { NG_SVC_ENV_REDESIGN, CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
-  const [lastQueryData, setLastQueryData] = useState({ connectorRef: '', artifactPaths: '', repository: '' })
+  const [lastQueryData, setLastQueryData] = useState({
+    connectorRef: '',
+    artifactPaths: '',
+    repository: '',
+    artifactFilter: ''
+  })
   const pipelineRuntimeYaml = getYamlData(formik?.values, stepViewType as StepViewType, path as string)
 
   // v1 tags api is required to fetch tags for artifact source template usage while linking to service
@@ -539,6 +563,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
       branch,
       ...pick(artifactoryTagsDataCallMetadataQueryParams, [
         'artifactPath',
+        'artifactFilter',
         'repository',
         'repositoryFormat',
         'connectorRef'
@@ -620,9 +645,10 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
       (!artifactoryTagsData?.data && !fetchTagsError) ||
       ((lastQueryData.connectorRef !== connectorRefValue ||
         lastQueryData.artifactPaths !== artifactPathValue ||
+        lastQueryData.artifactFilter !== artifactFilterValue ||
         getMultiTypeFromValue(artifact?.spec?.artifactPath) === MultiTypeInputType.EXPRESSION ||
         lastQueryData.repository !== repositoryValue) &&
-        shouldFetchTagsSource([connectorRefValue, artifactPathValue, repositoryValue]))
+        shouldFetchTagsSource([connectorRefValue, artifactPathValue || artifactFilterValue, repositoryValue]))
     )
   }
 
@@ -631,7 +657,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
       setLastQueryData({
         connectorRef: connectorRefValue,
         artifactPaths: artifactPathValue,
-        repository: repositoryValue
+        repository: repositoryValue,
+        artifactFilter: artifactFilterValue
       })
       refetchTags()
     }
@@ -759,6 +786,20 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
               name={`${path}.artifacts.${artifactPath}.spec.artifactDirectory`}
               onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.artifactPath`)}
               fieldPath={`artifacts.${artifactPath}.spec.artifactDirectory`}
+              template={template}
+            />
+          )}
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.artifactFilter`, template) && isGenericArtifactory && (
+            <TextFieldInputSetView
+              label={getString('pipeline.artifactsSelection.artifactFilter')}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.artifactFilter`)}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              name={`${path}.artifacts.${artifactPath}.spec.artifactFilter`}
+              onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.artifactPath`)}
+              fieldPath={`artifacts.${artifactPath}.spec.artifactFilter`}
               template={template}
             />
           )}

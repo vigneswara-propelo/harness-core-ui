@@ -28,6 +28,8 @@ import { getConnectorIdValue, getConnectorRefQueryData } from '@pipeline/compone
 import ArtifactoryArtifactPath from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/Artifactory/ArtifactoryArtifactPath'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { ARTIFACT_FILTER_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import { filterTypeOptions } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import type { ImagePathProps } from '../../../ArtifactInterface'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -42,9 +44,20 @@ function Artifactory({
   const validationSchema = Yup.object().shape({
     repositoryFormat: Yup.string().required(getString('triggers.validation.repositoryFormat')),
     repository: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
+    filterType: Yup.string(),
     artifactDirectory: Yup.string().when('repositoryFormat', {
       is: `${RepositoryFormatTypes.Generic}`,
-      then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactDirectory'))
+      then: Yup.string().when('filterType', {
+        is: ARTIFACT_FILTER_TYPES.DIRECTORY,
+        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactDirectory'))
+      })
+    }),
+    artifactFilter: Yup.string().when('repositoryFormat', {
+      is: `${RepositoryFormatTypes.Generic}`,
+      then: Yup.string().when('filterType', {
+        is: ARTIFACT_FILTER_TYPES.FILTER,
+        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactsFilter'))
+      })
     }),
     artifactPath: Yup.string().when('repositoryFormat', {
       is: `${RepositoryFormatTypes.Docker}`,
@@ -61,6 +74,7 @@ function Artifactory({
   const getInitialValues = (repositoryFormat = ''): any => {
     const {
       artifactDirectory = '',
+      artifactFilter = '',
       repositoryUrl = '',
       artifactPath = '',
       repository = '',
@@ -75,10 +89,19 @@ function Artifactory({
         repositoryUrl
       }
     }
+    const filterTypeValue: { filterType?: ARTIFACT_FILTER_TYPES; artifactDirectory?: string; artifactFilter?: string } =
+      {}
+    if (artifactFilter) {
+      filterTypeValue.artifactFilter = artifactFilter
+      filterTypeValue.filterType = ARTIFACT_FILTER_TYPES.FILTER
+    } else {
+      filterTypeValue.artifactDirectory = artifactDirectory
+      filterTypeValue.filterType = ARTIFACT_FILTER_TYPES.DIRECTORY
+    }
 
     return {
       ...artifactCommonValue,
-      artifactDirectory
+      ...filterTypeValue
     }
   }
 
@@ -97,7 +120,9 @@ function Artifactory({
             repositoryFormat,
             repository,
             ...(repositoryFormat === RepositoryFormatTypes.Generic && {
-              artifactDirectory: formData.artifactDirectory
+              ...(formData?.filterType === ARTIFACT_FILTER_TYPES.DIRECTORY
+                ? { artifactDirectory: formData.artifactDirectory }
+                : { artifactFilter: formData.artifactFilter })
             }),
             ...(repositoryFormat === RepositoryFormatTypes.Docker && {
               artifactPath,
@@ -135,17 +160,43 @@ function Artifactory({
                   fieldName={'repository'}
                 />
                 {isGenericRepositoryFormat && (
-                  <div className={css.imagePathContainer}>
-                    <FormInput.MultiTextInput
-                      label={getString('pipeline.artifactsSelection.artifactDirectory')}
-                      name="artifactDirectory"
-                      placeholder={getString('pipeline.artifactsSelection.artifactDirectoryPlaceholder')}
-                      multiTextInputProps={{
-                        allowableTypes: [MultiTypeInputType.FIXED]
-                      }}
-                    />
-                  </div>
+                  <>
+                    <div className={css.imagePathContainer}>
+                      <FormInput.RadioGroup
+                        name="filterType"
+                        radioGroup={{ inline: true }}
+                        items={filterTypeOptions}
+                        className={css.radioGroup}
+                        onChange={() => {
+                          formik.setFieldValue('artifactFilter', '')
+                          formik.setFieldValue('artifactDirectory', '')
+                        }}
+                      />
+                    </div>
+                    <div key={values?.filterType} className={css.imagePathContainer}>
+                      {values?.filterType === ARTIFACT_FILTER_TYPES.DIRECTORY ? (
+                        <FormInput.MultiTextInput
+                          label={getString('pipeline.artifactsSelection.artifactDirectory')}
+                          name="artifactDirectory"
+                          placeholder={getString('pipeline.artifactsSelection.artifactDirectoryPlaceholder')}
+                          multiTextInputProps={{
+                            allowableTypes: [MultiTypeInputType.FIXED]
+                          }}
+                        />
+                      ) : (
+                        <FormInput.MultiTextInput
+                          label={getString('pipeline.artifactsSelection.artifactFilter')}
+                          name="artifactFilter"
+                          placeholder={getString('pipeline.artifactsSelection.artifactFilterPlaceholder')}
+                          multiTextInputProps={{
+                            allowableTypes: [MultiTypeInputType.FIXED]
+                          }}
+                        />
+                      )}
+                    </div>
+                  </>
                 )}
+
                 {isDockerRepositoryFormat && (
                   <>
                     <div className={css.imagePathContainer}>

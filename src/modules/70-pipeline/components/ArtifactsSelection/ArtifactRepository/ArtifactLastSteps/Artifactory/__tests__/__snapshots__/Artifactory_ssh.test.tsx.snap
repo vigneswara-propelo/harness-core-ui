@@ -127,11 +127,62 @@ exports[`Artifactory tests for generic repository type mock the error flow 1`] =
               </div>
             </div>
             <div
+              class="tagGroup marginBottom"
+            >
+              <div
+                class="bp3-form-group radioGroup"
+                data-id="filterType-1"
+              >
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="StyledProps--main"
+                  >
+                    
+                    <div
+                      class="RadioButtonGroup--inline"
+                    >
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          checked=""
+                          class="RadioButton--input"
+                          name="filterType"
+                          type="radio"
+                          value="directory"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Artifact Directory
+                      </label>
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          class="RadioButton--input"
+                          name="filterType"
+                          type="radio"
+                          value="filter"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Artifact Filter
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
               class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
-                data-id="artifactDirectory-1"
+                data-id="artifactDirectory-2"
               >
                 <label
                   class="bp3-label"
@@ -204,7 +255,7 @@ exports[`Artifactory tests for generic repository type mock the error flow 1`] =
             >
               <div
                 class="bp3-form-group radioGroup"
-                data-id="tagType-2"
+                data-id="tagType-3"
               >
                 <label
                   class="bp3-label"
@@ -270,7 +321,7 @@ exports[`Artifactory tests for generic repository type mock the error flow 1`] =
             >
               <div
                 class="bp3-form-group bp3-disabled tagInputButton"
-                data-id="tag-3"
+                data-id="tag-4"
               >
                 <label
                   class="bp3-label"

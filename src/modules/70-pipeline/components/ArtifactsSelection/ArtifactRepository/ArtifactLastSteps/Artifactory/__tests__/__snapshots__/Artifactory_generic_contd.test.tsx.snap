@@ -777,11 +777,62 @@ exports[`artifactory test cases render form when repoformat is generic 1`] = `
               </div>
             </div>
             <div
+              class="tagGroup marginBottom"
+            >
+              <div
+                class="bp3-form-group radioGroup"
+                data-id="filterType-2"
+              >
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="StyledProps--main"
+                  >
+                    
+                    <div
+                      class="RadioButtonGroup--inline"
+                    >
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          checked=""
+                          class="RadioButton--input"
+                          name="filterType"
+                          type="radio"
+                          value="directory"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Artifact Directory
+                      </label>
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          class="RadioButton--input"
+                          name="filterType"
+                          type="radio"
+                          value="filter"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Artifact Filter
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
               class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
-                data-id="artifactDirectory-2"
+                data-id="artifactDirectory-3"
               >
                 <label
                   class="bp3-label"
@@ -897,7 +948,7 @@ exports[`artifactory test cases render form when repoformat is generic 1`] = `
             >
               <div
                 class="bp3-form-group radioGroup"
-                data-id="tagType-3"
+                data-id="tagType-4"
               >
                 <label
                   class="bp3-label"
@@ -963,7 +1014,7 @@ exports[`artifactory test cases render form when repoformat is generic 1`] = `
             >
               <div
                 class="bp3-form-group tagInputButton"
-                data-id="tag-4"
+                data-id="tag-5"
               >
                 <label
                   class="bp3-label"
@@ -1356,11 +1407,62 @@ exports[`artifactory test cases when deployment is azurewebapp 1`] = `
               </div>
             </div>
             <div
+              class="tagGroup marginBottom"
+            >
+              <div
+                class="bp3-form-group radioGroup"
+                data-id="filterType-3"
+              >
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="StyledProps--main"
+                  >
+                    
+                    <div
+                      class="RadioButtonGroup--inline"
+                    >
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          checked=""
+                          class="RadioButton--input"
+                          name="filterType"
+                          type="radio"
+                          value="directory"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Artifact Directory
+                      </label>
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          class="RadioButton--input"
+                          name="filterType"
+                          type="radio"
+                          value="filter"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Artifact Filter
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
               class="imagePathContainer"
             >
               <div
                 class="bp3-form-group"
-                data-id="artifactDirectory-3"
+                data-id="artifactDirectory-4"
               >
                 <label
                   class="bp3-label"
@@ -1476,7 +1578,7 @@ exports[`artifactory test cases when deployment is azurewebapp 1`] = `
             >
               <div
                 class="bp3-form-group radioGroup"
-                data-id="tagType-4"
+                data-id="tagType-5"
               >
                 <label
                   class="bp3-label"
@@ -1542,7 +1644,7 @@ exports[`artifactory test cases when deployment is azurewebapp 1`] = `
             >
               <div
                 class="bp3-form-group tagInputButton"
-                data-id="tag-5"
+                data-id="tag-6"
               >
                 <label
                   class="bp3-label"

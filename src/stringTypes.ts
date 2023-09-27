@@ -4066,8 +4066,11 @@ export interface StringsMap {
   'pipeline.artifactsSelection.addSidecar': string
   'pipeline.artifactsSelection.amazonS3Title': string
   'pipeline.artifactsSelection.artifactDetails': string
+  'pipeline.artifactsSelection.artifactDirOrFilter': string
   'pipeline.artifactsSelection.artifactDirectory': string
   'pipeline.artifactsSelection.artifactDirectoryPlaceholder': string
+  'pipeline.artifactsSelection.artifactFilter': string
+  'pipeline.artifactsSelection.artifactFilterPlaceholder': string
   'pipeline.artifactsSelection.artifactId': string
   'pipeline.artifactsSelection.artifactIdPlaceholder': string
   'pipeline.artifactsSelection.artifactPathPlaceholder': string
@@ -4128,6 +4131,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.validation.artifactPath': string
   'pipeline.artifactsSelection.validation.artifactPathFilter': string
   'pipeline.artifactsSelection.validation.artifactsArrayPath': string
+  'pipeline.artifactsSelection.validation.artifactsFilter': string
   'pipeline.artifactsSelection.validation.connectorForJobname': string
   'pipeline.artifactsSelection.validation.filePathRegex': string
   'pipeline.artifactsSelection.validation.group': string

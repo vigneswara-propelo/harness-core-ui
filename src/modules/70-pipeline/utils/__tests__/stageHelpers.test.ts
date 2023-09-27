@@ -372,14 +372,6 @@ test('getHelpeTextForTags', () => {
   ).toBe('pipeline.imagePathLabel  is  pipeline.tagDependencyRequired')
 
   expect(
-    getHelpeTextForTags({ imagePath: '/image', artifactPath: '', connectorRef: 'RUNTIME' }, (str: string) => str, true)
-  ).toBe('pipeline.artifactsSelection.artifactDirectory  is  pipeline.artifactPathDependencyRequired')
-
-  expect(
-    getHelpeTextForTags({ imagePath: '/image', artifactPath: '', connectorRef: 'RUNTIME' }, (str: string) => str, true)
-  ).toBe('pipeline.artifactsSelection.artifactDirectory  is  pipeline.artifactPathDependencyRequired')
-
-  expect(
     getHelpeTextForTags(
       {
         imagePath: '/image',

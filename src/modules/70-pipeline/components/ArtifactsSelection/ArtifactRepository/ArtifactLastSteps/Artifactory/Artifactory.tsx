@@ -23,7 +23,7 @@ import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import type { FormikProps, FormikValues } from 'formik'
 import * as Yup from 'yup'
-import { defaultTo, get, isEqual, memoize, merge, filter, isUndefined } from 'lodash-es'
+import { defaultTo, get, isEqual, memoize, merge, filter, isUndefined, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
@@ -73,13 +73,14 @@ import {
   TagTypes,
   ArtifactType,
   ImagePathProps,
-  ImagePathTypes
+  ImagePathTypes,
+  ARTIFACT_FILTER_TYPES
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
+import { ArtifactIdentifierValidation, filterTypeOptions, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { NoTagResults, selectItemsMapper } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import ServerlessArtifactoryRepository from './ServerlessArtifactoryRepository'
@@ -126,7 +127,7 @@ function Artifactory({
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const isArtifactTemplate = isTemplateView(context)
-  const [lastQueryData, setLastQueryData] = useState({ artifactPath: '', repository: '' })
+  const [lastQueryData, setLastQueryData] = useState({ artifactPath: '', repository: '', artifactFilter: '' })
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
   const [error, setError] = useState<boolean>(false)
   const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType)
@@ -205,9 +206,19 @@ function Artifactory({
 
   const serverlessArtifactorySchema = {
     repository: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
-    artifactDirectory: Yup.string()
-      .trim()
-      .required(getString('pipeline.artifactsSelection.validation.artifactDirectory')),
+    filterType: Yup.string(),
+    artifactDirectory: Yup.mixed().when('filterType', {
+      is: ARTIFACT_FILTER_TYPES.DIRECTORY,
+      then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactDirectory'))
+    }),
+    artifactFilter: Yup.mixed().when('filterType', {
+      is: ARTIFACT_FILTER_TYPES.FILTER,
+      then: Yup.lazy(value =>
+        typeof value === 'object'
+          ? Yup.object().required(getString('pipeline.artifactsSelection.validation.artifactsFilter')) // typeError is necessary here, otherwise we get a bad-looking yup error
+          : Yup.string().required(getString('pipeline.artifactsSelection.validation.artifactsFilter'))
+      )
+    }),
     tagType: Yup.string().required(),
     tagRegex: Yup.string().when('tagType', {
       is: 'regex',
@@ -264,7 +275,8 @@ function Artifactory({
     error: artifactoryTagError
   } = useGetBuildDetailsForArtifactoryArtifact({
     queryParams: {
-      artifactPath: lastQueryData.artifactPath,
+      artifactPath: lastQueryData.artifactPath || undefined,
+      artifactFilter: lastQueryData.artifactFilter || undefined,
       repository: lastQueryData.repository,
       repositoryFormat,
       connectorRef: getConnectorRefQueryData(modifiedPrevStepData),
@@ -322,7 +334,15 @@ function Artifactory({
   }, [imagePathData, connectorRef])
 
   useEffect(() => {
-    if (checkIfQueryParamsisNotEmpty(Object.values(lastQueryData))) {
+    const filteredQueryData: { artifactFilter?: string; repository: string; artifactPath?: string } = {
+      ...lastQueryData
+    }
+    if (isEmpty(lastQueryData.artifactFilter) && !isEmpty(lastQueryData.artifactPath)) {
+      delete filteredQueryData.artifactFilter
+    } else if (!isEmpty(lastQueryData.artifactFilter) && isEmpty(lastQueryData.artifactPath)) {
+      delete filteredQueryData.artifactPath
+    }
+    if (checkIfQueryParamsisNotEmpty(Object.values(filteredQueryData))) {
       refetchArtifactoryTag()
     }
   }, [lastQueryData, refetchArtifactoryTag])
@@ -336,18 +356,32 @@ function Artifactory({
   }, [data?.data?.buildDetailsList, artifactoryTagError, error, tagList])
 
   const canFetchTags = useCallback(
-    (artifactPath: string, repository: string): boolean => {
+    (artifactPath: string, repository: string, artifactFilter: string, filterType: ARTIFACT_FILTER_TYPES): boolean => {
       return !!(
-        (lastQueryData.artifactPath !== artifactPath || lastQueryData.repository !== repository) &&
-        shouldFetchFieldOptions(modifiedPrevStepData, [artifactPath, repository])
+        (lastQueryData.artifactPath !== artifactPath ||
+          lastQueryData.repository !== repository ||
+          lastQueryData.artifactFilter != artifactFilter) &&
+        shouldFetchFieldOptions(modifiedPrevStepData, [
+          filterType === ARTIFACT_FILTER_TYPES.FILTER ? artifactFilter : artifactPath,
+          repository
+        ])
       )
     },
     [lastQueryData, modifiedPrevStepData]
   )
   const fetchTags = useCallback(
-    (artifactPath = /* istanbul ignore next */ '', repository = /* istanbul ignore next */ ''): void => {
-      if (canFetchTags(artifactPath, repository)) {
-        setLastQueryData({ artifactPath, repository })
+    (
+      artifactPath = /* istanbul ignore next */ '',
+      repository = /* istanbul ignore next */ '',
+      artifactFilter = '',
+      filterType = ARTIFACT_FILTER_TYPES.DIRECTORY
+    ): void => {
+      if (canFetchTags(artifactPath, repository, artifactFilter, filterType)) {
+        setLastQueryData({
+          artifactPath,
+          repository,
+          artifactFilter
+        })
       }
     },
     [canFetchTags]
@@ -358,7 +392,10 @@ function Artifactory({
   }, [])
 
   const isArtifactPathDisabled = useCallback((formikValue): boolean => {
-    return !checkIfQueryParamsisNotEmpty([formikValue.artifactDirectory, formikValue.repository])
+    return !checkIfQueryParamsisNotEmpty([
+      formikValue.artifactDirectory || formikValue.artifactFilter,
+      formikValue.repository
+    ])
   }, [])
 
   const getInitialValues = useCallback((): ImagePathTypes => {
@@ -467,7 +504,9 @@ function Artifactory({
     const artifactPathValue: SelectOption | string = getArtifactPathToFetchTags(formik, true, isGenericArtifactory)
     fetchTags(
       defaultTo((artifactPathValue as SelectOption)?.value, artifactPathValue),
-      defaultTo(formik.values?.repository?.value, formik.values?.repository)
+      defaultTo(formik.values?.repository?.value, formik.values?.repository),
+      defaultTo(formik.values?.artifactFilter?.value, formik.values?.artifactFilter),
+      formik.values?.filterType
     )
   }
 
@@ -599,37 +638,88 @@ function Artifactory({
                 />
 
                 {isGenericArtifactory && (
-                  <div className={css.imagePathContainer}>
-                    <FormInput.MultiTextInput
-                      label={getString('pipeline.artifactsSelection.artifactDirectory')}
-                      name="artifactDirectory"
-                      placeholder={getString('pipeline.artifactsSelection.artifactDirectoryPlaceholder')}
-                      multiTextInputProps={{
-                        expressions,
-                        allowableTypes
-                      }}
-                      onChange={() => {
-                        resetTag(formik)
-                      }}
-                    />
+                  <>
+                    <div className={cx(css.tagGroup, css.marginBottom)}>
+                      <FormInput.RadioGroup
+                        name="filterType"
+                        radioGroup={{ inline: true }}
+                        items={filterTypeOptions}
+                        className={css.radioGroup}
+                        onChange={() => {
+                          resetFieldValue(formik, 'tagRegex')
+                          resetFieldValue(formik, 'tag')
+                          resetFieldValue(formik, 'digest')
+                          formik.setFieldValue('tagType', 'value')
+                          formik.setFieldValue('artifactDirectory', '')
+                          formik.setFieldValue('artifactFilter', '')
+                        }}
+                      />
+                    </div>
 
-                    {getMultiTypeFromValue(formik.values.artifactDirectory) === MultiTypeInputType.RUNTIME && (
-                      <div className={css.configureOptions}>
-                        <ConfigureOptions
-                          style={{ alignSelf: 'center' }}
-                          value={formik.values?.artifactDirectory as string}
-                          type={getString('string')}
-                          variableName="artifactDirectory"
-                          showRequiredField={false}
-                          showDefaultField={false}
-                          onChange={value => {
-                            formik.setFieldValue('artifactDirectory', value)
+                    {formik.values?.filterType === ARTIFACT_FILTER_TYPES.DIRECTORY ? (
+                      <div key={formik.values?.filterType} className={css.imagePathContainer}>
+                        <FormInput.MultiTextInput
+                          label={getString('pipeline.artifactsSelection.artifactDirectory')}
+                          name="artifactDirectory"
+                          placeholder={getString('pipeline.artifactsSelection.artifactDirectoryPlaceholder')}
+                          multiTextInputProps={{
+                            expressions,
+                            allowableTypes
                           }}
-                          isReadonly={isReadonly}
+                          onChange={() => {
+                            resetTag(formik)
+                          }}
                         />
+                        {getMultiTypeFromValue(formik.values.artifactDirectory) === MultiTypeInputType.RUNTIME && (
+                          <div className={css.configureOptions}>
+                            <ConfigureOptions
+                              style={{ alignSelf: 'center' }}
+                              value={formik.values?.artifactDirectory as string}
+                              type={getString('string')}
+                              variableName="artifactDirectory"
+                              showRequiredField={false}
+                              showDefaultField={false}
+                              onChange={value => {
+                                formik.setFieldValue('artifactDirectory', value)
+                              }}
+                              isReadonly={isReadonly}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div key={formik.values?.filterType} className={css.imagePathContainer}>
+                        <FormInput.MultiTextInput
+                          label={getString('pipeline.artifactsSelection.artifactFilter')}
+                          name="artifactFilter"
+                          placeholder={getString('pipeline.artifactsSelection.artifactFilterPlaceholder')}
+                          multiTextInputProps={{
+                            expressions,
+                            allowableTypes
+                          }}
+                          onChange={() => {
+                            resetTag(formik)
+                          }}
+                        />
+                        {getMultiTypeFromValue(formik.values.artifactFilter) === MultiTypeInputType.RUNTIME && (
+                          <div className={css.configureOptions}>
+                            <ConfigureOptions
+                              style={{ alignSelf: 'center' }}
+                              value={formik.values?.artifactFilter as string}
+                              type={getString('string')}
+                              variableName="artifactFilter"
+                              showRequiredField={false}
+                              showDefaultField={false}
+                              onChange={value => {
+                                formik.setFieldValue('artifactFilter', value)
+                              }}
+                              isReadonly={isReadonly}
+                            />
+                          </div>
+                        )}
                       </div>
                     )}
-                  </div>
+                  </>
                 )}
 
                 {isGenericArtifactory ? null : (
@@ -735,18 +825,22 @@ function Artifactory({
                 )}
 
                 <div className={cx(css.tagGroup, css.marginBottom)}>
-                  <FormInput.RadioGroup
-                    label={isGenericArtifactory ? getString('pipeline.artifactsSelection.artifactDetails') : undefined}
-                    name="tagType"
-                    radioGroup={{ inline: true }}
-                    items={tagOptions}
-                    className={css.radioGroup}
-                    onChange={() => {
-                      resetFieldValue(formik, 'tagRegex')
-                      resetFieldValue(formik, 'tag')
-                      resetFieldValue(formik, 'digest')
-                    }}
-                  />
+                  {formik.values?.filterType === ARTIFACT_FILTER_TYPES.DIRECTORY && (
+                    <FormInput.RadioGroup
+                      label={
+                        isGenericArtifactory ? getString('pipeline.artifactsSelection.artifactDetails') : undefined
+                      }
+                      name="tagType"
+                      radioGroup={{ inline: true }}
+                      items={tagOptions}
+                      className={css.radioGroup}
+                      onChange={() => {
+                        resetFieldValue(formik, 'tagRegex')
+                        resetFieldValue(formik, 'tag')
+                        resetFieldValue(formik, 'digest')
+                      }}
+                    />
+                  )}
                 </div>
                 {formik.values?.tagType === 'value' ? (
                   <div className={css.imagePathContainer}>
