@@ -9,6 +9,7 @@
 declare const styles: {
   readonly groupNodeName: string
   readonly nodelistpopover: string
+  readonly removeNode: string
   readonly secondaryIcon: string
   readonly stageRow: string
 }

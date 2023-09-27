@@ -194,6 +194,24 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
               ) : null}
               {isExecutionView && <ExecutionStatusLabel status={node?.status as ExecutionStatus} />}
             </Layout.Horizontal>
+            {!isExecutionView && (
+              <Icon
+                name={'cross'}
+                className={groupnodecss.removeNode}
+                onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+                  event.stopPropagation()
+                  props?.fireEvent?.({
+                    type: Event.RemoveNode,
+                    target: event.target,
+                    data: {
+                      entityType: DiagramType.GroupNode,
+                      identifier: node?.identifier,
+                      id: node?.id
+                    }
+                  })
+                }}
+              />
+            )}
           </Layout.Horizontal>
         </Container>
       )
