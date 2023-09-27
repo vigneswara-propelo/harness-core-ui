@@ -37,6 +37,7 @@
       max-height: calc(100vh - 250px);
       background-color: var(--grey-0) !important;
     }
+    overflow-y: auto;
   }
 
   .addLink {
@@ -111,5 +112,5 @@
 
 .addbarrier {
   padding-left: 0 !important;
-  padding-top: var(--spacing-small) !important;
+  padding-top: var(--spacing-medium) !important;
 }

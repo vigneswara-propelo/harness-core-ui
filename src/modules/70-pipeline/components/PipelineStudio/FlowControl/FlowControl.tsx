@@ -19,7 +19,8 @@ import {
   Button,
   ButtonSize,
   useToggleOpen,
-  ConfirmationDialog
+  ConfirmationDialog,
+  Container
 } from '@harness/uicore'
 import { FontVariation, Intent } from '@harness/design-system'
 import { set, debounce, cloneDeep, isEqual } from 'lodash-es'
@@ -300,7 +301,7 @@ export function BarrierList({
               name="barriers"
               render={({ push, remove }) => {
                 return (
-                  <div>
+                  <Container margin={{ top: 'medium', bottom: 'medium' }}>
                     <div className={css.barrierList}>
                       {list.map((barrier: Barrier, index) =>
                         !barrier.mode ? (
@@ -423,7 +424,7 @@ export function BarrierList({
                     >
                       <String stringID="pipeline.barriers.addBarrier" />
                     </RbacButton>
-                  </div>
+                  </Container>
                 )
               }}
             />

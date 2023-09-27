@@ -94,7 +94,9 @@ exports[`FlowControl tests should call editItem when edit icon is clicked 1`] = 
           >
             pipeline.barriers.syncBarriers
           </p>
-          <div>
+          <div
+            class="StyledProps--font StyledProps--main StyledProps--margin-top-medium StyledProps--margin-bottom-medium"
+          >
             <div
               class="barrierList"
             >
@@ -437,7 +439,9 @@ exports[`FlowControl tests should render fine 1`] = `
           >
             pipeline.barriers.syncBarriers
           </p>
-          <div>
+          <div
+            class="StyledProps--font StyledProps--main StyledProps--margin-top-medium StyledProps--margin-bottom-medium"
+          >
             <div
               class="barrierList"
             />
