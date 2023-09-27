@@ -460,14 +460,6 @@ export const SRMRoutes = (
     <RouteWithLayout
       exact
       sidebarProps={CVSideNavProps}
-      path={routes.toCVChanges({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
-    >
-      <CVChanges />
-    </RouteWithLayout>
-
-    <RouteWithLayout
-      exact
-      sidebarProps={CVSideNavProps}
       path={[routes.toCVSLODowntime({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })]}
     >
       <SLODowntimePage />
@@ -485,14 +477,6 @@ export const SRMRoutes = (
     </RouteWithLayout>
 
     <RouteWithLayout
-      exact
-      sidebarProps={CVSideNavProps}
-      path={routes.toAccountCVCreateCompositeSLOs({ ...accountPathProps, ...cvModuleParams })}
-    >
-      <CVCreateSLOV2 isComposite />
-    </RouteWithLayout>
-
-    <RouteWithLayout
       sidebarProps={CVSideNavProps}
       path={routes.toErrorTracking({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
     >
@@ -504,18 +488,6 @@ export const SRMRoutes = (
           MultiTypeConnectorField: MultiTypeConnectorField
         }}
       />
-    </RouteWithLayout>
-
-    <RouteWithLayout
-      exact
-      sidebarProps={CVSideNavProps}
-      path={routes.toAccountCVSLODetailsPage({
-        ...accountPathProps,
-        ...editParams,
-        ...cvModuleParams
-      })}
-    >
-      <CVSLODetailsPage />
     </RouteWithLayout>
 
     <RouteWithLayout
@@ -654,7 +626,10 @@ export const SRMMFERoutes: React.FC = () => {
           ...projectPathProps,
           ...editParams,
           ...cvModuleParams
-        })
+        }),
+        routes.toCVChanges({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
+        routes.toAccountCVSLODetailsPage({ ...accountPathProps, ...editParams, ...cvModuleParams }),
+        routes.toAccountCVCreateCompositeSLOs({ ...accountPathProps, ...cvModuleParams })
       ]
     : []
 
@@ -738,6 +713,31 @@ export const SRMMFERoutes: React.FC = () => {
             })}
           >
             <CVSLODetailsPage />
+          </RouteWithLayout>
+          <RouteWithLayout
+            exact
+            sidebarProps={CVSideNavProps}
+            path={routes.toCVChanges({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+          >
+            <CVChanges />
+          </RouteWithLayout>
+          <RouteWithLayout
+            exact
+            sidebarProps={CVSideNavProps}
+            path={routes.toAccountCVSLODetailsPage({
+              ...accountPathProps,
+              ...editParams,
+              ...cvModuleParams
+            })}
+          >
+            <CVSLODetailsPage />
+          </RouteWithLayout>
+          <RouteWithLayout
+            exact
+            sidebarProps={CVSideNavProps}
+            path={routes.toAccountCVCreateCompositeSLOs({ ...accountPathProps, ...cvModuleParams })}
+          >
+            <CVCreateSLOV2 isComposite />
           </RouteWithLayout>
         </>
       )}
