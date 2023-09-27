@@ -398,7 +398,7 @@ const routes = {
     })
   },
   toGetStartedWithCI: withModeModuleAndScopePrefix<ModulePathParams>(() => '/get-started'),
-  toLandingDashboard: withAccountId(() => '/all/get-started'),
+  toLandingDashboard: withModeModuleAndScopePrefix(() => '/get-started'),
 
   // ce routes
   toCE: withModeModuleAndScopePrefix<ModulePathParams>(() => `/`),

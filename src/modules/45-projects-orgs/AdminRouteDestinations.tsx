@@ -56,6 +56,9 @@ const AdminRouteDestinations = (): React.ReactElement => {
       >
         <AdminRedirect />
       </RouteWithContext>
+      <RouteWithContext exact path={routes.toLandingDashboard({ ...accountPathProps })}>
+        <Redirect to={routes.toOverview()} />
+      </RouteWithContext>
       <RouteWithContext path={routes.toOverview({ ...accountPathProps, ...modePathProps })}>
         <LandingDashboardPage />
       </RouteWithContext>
