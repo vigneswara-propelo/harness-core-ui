@@ -269,6 +269,14 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
   [StageType.MATRIX]: [],
   [StageType.LOOP]: [],
   [StageType.PARALLELISM]: [],
-  [StageType.IACM]: [],
+  [StageType.IACM]: [
+    ErrorType.Timeout,
+    ErrorType.Unknown,
+    ErrorType.InputTimeoutError,
+    ErrorType.AllErrors,
+    ErrorType.ApprovalRejection,
+    ErrorType.DelegateRestart,
+    ErrorType.UserMarkedFailure
+  ],
   [StageType.PIPELINE_ROLLBACK]: []
 }
