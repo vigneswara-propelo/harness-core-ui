@@ -16,9 +16,7 @@ import routes from '@common/RouteDefinitionsV2'
 import { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { moduleNameToModuleMapping } from 'framework/types/ModuleName'
 import { NAV_MODE } from '@common/utils/routeUtils'
-
-// eslint-disable-next-line
-import ModuleRouteConfig from 'modules/ModuleRouteConfig'
+import ModuleRouteConfig from '@modules/ModuleRouteConfig'
 import css from './ModulesAccordion.module.scss'
 interface SideNavLinksProps {
   module: NavModuleName

@@ -11,8 +11,7 @@ import routes from '@common/RouteDefinitionsV2'
 import { RouteWithContext } from '@common/router/RouteWithContext/RouteWithContext'
 import { NAV_MODE, accountPathProps, modulePathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import UserProfilePage from '@user-profile/pages/UserProfile/UserProfilePage'
-// eslint-disable-next-line aliased-module-imports
-import SettingsRouteDestinations from 'modules/SettingsRouteDestinations'
+import SettingsRouteDestinations from '@modules/SettingsRouteDestinations'
 
 function CommonRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactElement {
   return (

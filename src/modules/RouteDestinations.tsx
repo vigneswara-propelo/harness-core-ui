@@ -46,9 +46,7 @@ import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import ETRoutes from '@cet/RouteDestinations'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
-
-// eslint-disable-next-line
-import RoutesV2 from 'modules/RouteDestinationsV2'
+import RoutesV2 from '@modules/RouteDestinationsV2'
 
 export const AccountSideNavProps: SidebarContext = {
   navComponent: AccountSideNav,

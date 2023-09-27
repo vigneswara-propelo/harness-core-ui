@@ -23,8 +23,7 @@ import { AppStoreProvider } from 'framework/AppStore/AppStoreContext'
 import { PreferenceStoreProvider, PREFERENCES_TOP_LEVEL_KEY } from 'framework/PreferenceStore/PreferenceStoreContext'
 
 import { LicenseStoreProvider } from 'framework/LicenseStore/LicenseStoreContext'
-// eslint-disable-next-line aliased-module-imports
-import RouteDestinationsWithoutAccountId from 'modules/RouteDestinationsWithoutAccountId'
+import RouteDestinationsWithoutAccountId from '@modules/RouteDestinationsWithoutAccountId'
 import AppErrorBoundary from 'framework/utils/AppErrorBoundary/AppErrorBoundary'
 import { StringsContextProvider } from 'framework/strings/StringsContextProvider'
 import { useLogout, ErrorCode } from 'framework/utils/SessionUtils'

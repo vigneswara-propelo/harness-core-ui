@@ -7,9 +7,7 @@
 
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
-
-// eslint-disable-next-line
-import ModuleRouteConfig from 'modules/ModuleRouteConfig'
+import ModuleRouteConfig from '@modules/ModuleRouteConfig'
 import routes from '@common/RouteDefinitionsV2'
 import { NAV_MODE, accountPathProps } from '@common/utils/routeUtils'
 import { Module } from 'framework/types/ModuleName'

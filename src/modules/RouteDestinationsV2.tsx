@@ -10,7 +10,6 @@ import { Redirect, Route, Switch, useLocation, useParams } from 'react-router-do
 import { Container, Layout } from '@harness/uicore'
 import { isUndefined } from 'lodash-es'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-
 import routes from '@common/RouteDefinitionsV2'
 import { SideNav } from '@common/navigation/SideNavV2/SideNavV2'
 import { NAV_MODE, accountPathProps, isNavMode } from '@common/utils/routeUtils'
@@ -21,9 +20,8 @@ import ModuleSideNavLinks from '@common/navigation/SideNavs/ModuleSideNav/Module
 import { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import AdminRouteDestinations from '@projects-orgs/AdminRouteDestinations'
 import DashboardRouteDestinations from '@dashboards/RouteDestinationsV2'
-
-import { ModulesRouteDestinations } from 'modules/ModuleRouteConfig' // eslint-disable-line
-import AllModeRouteDestinations from 'modules/AllModeRouteDestinations' // eslint-disable-line
+import { ModulesRouteDestinations } from '@modules/ModuleRouteConfig'
+import AllModeRouteDestinations from '@modules/AllModeRouteDestinations'
 import NotFoundPage from '@common/pages/404/NotFoundPage'
 import { Module } from 'framework/types/ModuleName'
 import WelcomePage from '@common/pages/welcome/WelcomePage'

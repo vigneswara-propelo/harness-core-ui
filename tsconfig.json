@@ -25,6 +25,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "paths": {
+      "@modules/*": ["modules/*"],
       "@common/*": ["modules/10-common/*"],
       "@rbac/*": ["modules/20-rbac/*"],
       "@platform/*": ["modules/27-platform/*"],
