@@ -137,11 +137,13 @@ const CIUsageInfo: React.FC<CIUsageInfoProps> = props => {
         subscribedUsers={limit?.ci?.totalDevelopers || 0}
         activeUsers={usage?.ci?.activeCommitters?.count || 0}
       />
-      {BUILD_CREDITS_VIEW === true && !loadingCredits ? (
-        <CreditInfo creditsUsed={creditsUsed || 0} totalCredits={totalCredits} expiryDate={expiryDate} />
-      ) : (
-        <PageSpinner />
-      )}
+      {BUILD_CREDITS_VIEW === true ? (
+        !loadingCredits ? (
+          <CreditInfo creditsUsed={creditsUsed || 0} totalCredits={totalCredits} expiryDate={expiryDate} />
+        ) : (
+          <PageSpinner />
+        )
+      ) : null}
     </Layout.Horizontal>
   )
 }
