@@ -4565,6 +4565,8 @@ export interface StringsMap {
   'pipeline.executionStrategy.useStrategy': string
   'pipeline.executionTarget': string
   'pipeline.executionTriggeredBy': string
+  'pipeline.exportVars.label': string
+  'pipeline.exportVars.publishVarLabel': string
   'pipeline.expressionRequired': string
   'pipeline.expressionsEvaluation': string
   'pipeline.expressionsReplaced': string

@@ -2040,3 +2040,6 @@ webhookEvents:
   noEvents: No events found
 specifyTargetHostLabel: On Specific Target Host.
 onDelegateLabel: On Delegate.
+exportVars:
+  label: Export Variables
+  publishVarLabel: Publish Variable Names (Alias)

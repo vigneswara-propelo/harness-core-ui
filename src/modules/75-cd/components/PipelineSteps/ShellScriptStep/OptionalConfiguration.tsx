@@ -20,6 +20,7 @@ import {
   HarnessDocTooltip,
   Label
 } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
 import { get } from 'lodash-es'
@@ -166,6 +167,23 @@ export default function OptionalConfiguration(props: {
   const { values: formValues, setFieldValue } = formik
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+
+  const shellVariablesExportFF = useFeatureFlag(FeatureFlag.CDS_SHELL_VARIABLES_EXPORT)
+  const scopeTypes = [
+    {
+      label: getString('common.pipeline'),
+      value: 'Pipeline'
+    },
+    {
+      label: getString('common.stage'),
+      value: 'Stage'
+    },
+    {
+      label: getString('stepGroup'),
+      value: 'StepGroup'
+    }
+  ]
+
   return (
     <FormikForm>
       <div className={stepCss.stepPanel}>
@@ -302,6 +320,49 @@ export default function OptionalConfiguration(props: {
                 }}
               />
             </MultiTypeFieldSelector>
+          </div>
+        ) : null}
+
+        {shellVariablesExportFF ? (
+          <div className={stepCss.formGroup}>
+            <Layout.Vertical>
+              <Layout.Horizontal margin={{ bottom: 'medium' }}>
+                <Text font={{ variation: FontVariation.FORM_INPUT_TEXT, weight: 'semi-bold' }} color={Color.GREY_600}>
+                  {getString('pipeline.exportVars.label')}
+                </Text>
+              </Layout.Horizontal>
+              <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                <FormInput.MultiTextInput
+                  name={`spec.export.alias`}
+                  label={getString('pipeline.exportVars.publishVarLabel')}
+                  tooltipProps={{ dataTooltipId: 'publishVariableName' }}
+                ></FormInput.MultiTextInput>
+
+                {getMultiTypeFromValue(formValues.spec?.export?.alias) === MultiTypeInputType.RUNTIME && (
+                  <ConfigureOptions
+                    value={formValues.spec?.export?.alias}
+                    type="String"
+                    variableName="spec.export.alias"
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    onChange={value => setFieldValue('spec.export.alias', value)}
+                    isReadonly={readonly}
+                  />
+                )}
+              </div>
+              <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                <FormInput.Select
+                  items={scopeTypes}
+                  name="spec.export.scope"
+                  disabled={readonly}
+                  label={getString('common.scopeLabel')}
+                  placeholder={getString('pipeline.queueStep.scopePlaceholder')}
+                  onChange={val => {
+                    setFieldValue('spec.export.scope', val.value)
+                  }}
+                />
+              </div>
+            </Layout.Vertical>
           </div>
         ) : null}
         {stepName === StepType.SHELLSCRIPT ? (
