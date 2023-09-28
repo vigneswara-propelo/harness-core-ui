@@ -94,6 +94,7 @@ interface UsageInfoCardProps {
   rightFooter?: string
   prefix?: string
   credits?: number
+  useCredits?: boolean
 }
 
 export const ErrorContainer = ({ children }: { children: React.ReactElement }): React.ReactElement => {
@@ -112,7 +113,8 @@ const UsageInfoCard: React.FC<UsageInfoCardProps> = ({
   leftFooter,
   rightFooter,
   prefix,
-  credits
+  credits,
+  useCredits
 }) => {
   const creditsAvailable =
     credits !== undefined && creditsUsed !== undefined && creditsUsed >= 0 ? credits - creditsUsed : 0
@@ -152,25 +154,27 @@ const UsageInfoCard: React.FC<UsageInfoCardProps> = ({
             </Text>
             {getInfoIcon(tooltip)}
           </Layout.Horizontal>
-          {credits ? (
-            rightFooter && (
-              <Text tooltip={<Text padding={'small'}>{getString('common.creditsExpiresToolltip')}</Text>}>
-                <PercentageSubscribedLabel
-                  creditsAvailable={creditsAvailable}
-                  overPercentage={overPercentage}
-                  percentage={percentage}
-                  color={color}
-                  label={rightFooter}
-                />
-              </Text>
-            )
+          {useCredits ? (
+            creditsAvailable > 0 ? (
+              rightFooter && (
+                <Text tooltip={<Text padding={'small'}>{getString('common.creditsExpiresToolltip')}</Text>}>
+                  <PercentageSubscribedLabel
+                    creditsAvailable={creditsAvailable}
+                    overPercentage={overPercentage}
+                    percentage={percentage}
+                    color={color}
+                    label={rightFooter}
+                  />
+                </Text>
+              )
+            ) : null
           ) : (
             <Text font={{ size: 'small' }} color={Color.GREY_500}>
               {rightHeader}
             </Text>
           )}
         </Layout.Horizontal>
-        {credits ? (
+        {useCredits ? (
           <div>
             <Text font={{ size: 'large', weight: 'bold' }} color={Color.BLACK}>
               {`${getLabel(creditsAvailable)} `}
@@ -184,7 +188,7 @@ const UsageInfoCard: React.FC<UsageInfoCardProps> = ({
         )}
         {hasBar && <PercentageBar width={width} />}
         <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-          {credits ? (
+          {useCredits ? (
             <Text font={{ size: 'xsmall' }}>
               {`${getLabel(credits)} `}
               {leftBottomFooter}
@@ -194,10 +198,12 @@ const UsageInfoCard: React.FC<UsageInfoCardProps> = ({
               {getLabel(subscribed)} {leftFooter}
             </Text>
           )}
-          {credits ? (
-            <Text font={{ size: 'xsmall' }}>
-              {`${Math.round(width * 100) / 100}%`} {leftFooter}
-            </Text>
+          {useCredits ? (
+            creditsAvailable > 0 ? (
+              <Text font={{ size: 'xsmall' }}>
+                {`${Math.round(width * 100) / 100}%`} {leftFooter}
+              </Text>
+            ) : null
           ) : (
             rightFooter && (
               <PercentageSubscribedLabel

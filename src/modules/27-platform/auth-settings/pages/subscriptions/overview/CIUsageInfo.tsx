@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, PageError } from '@harness/uicore'
+import { Layout, PageError, OverlaySpinner } from '@harness/uicore'
 import moment from 'moment'
 import { useStrings } from 'framework/strings'
 import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
@@ -14,10 +14,10 @@ import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerS
 import { ModuleName } from 'framework/types/ModuleName'
 import type { ModuleLicenseDTO, CreditDTO } from 'services/cd-ng'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { PageSpinner } from '@common/components'
 import UsageInfoCard, { ErrorContainer } from './UsageInfoCard'
 
 interface ActiveDevelopersProps {
+  useCredits?: boolean
   subscribedUsers: number
   activeUsers: number
   rightHeader: string
@@ -25,7 +25,8 @@ interface ActiveDevelopersProps {
 interface CreditInfoProps {
   totalCredits: number
   expiryDate: string
-  creditsUsed: number
+  creditsUsed: number | undefined
+  useCredits?: boolean
 }
 
 interface CIUsageInfoProps {
@@ -35,7 +36,12 @@ interface CIUsageInfoProps {
   creditsData?: CreditDTO[]
   creditsUsed?: number
 }
-const ActiveDevelopers: React.FC<ActiveDevelopersProps> = ({ subscribedUsers, activeUsers, rightHeader }) => {
+const ActiveDevelopers: React.FC<ActiveDevelopersProps> = ({
+  useCredits,
+  subscribedUsers,
+  activeUsers,
+  rightHeader
+}) => {
   const { getString } = useStrings()
   const leftHeader = getString('common.subscriptions.usage.activeDevelopers')
   const tooltip = getString('common.subscriptions.usage.ciTooltip')
@@ -51,11 +57,12 @@ const ActiveDevelopers: React.FC<ActiveDevelopersProps> = ({ subscribedUsers, ac
     rightHeader: defaultRightHeader,
     hasBar,
     leftFooter,
-    rightFooter
+    rightFooter,
+    useCredits
   }
   return <UsageInfoCard {...props} />
 }
-const CreditInfo: React.FC<CreditInfoProps> = ({ totalCredits, expiryDate, creditsUsed }) => {
+const CreditInfo: React.FC<CreditInfoProps> = ({ totalCredits, expiryDate, creditsUsed, useCredits }) => {
   const { getString } = useStrings()
   const leftHeader = getString('common.subscriptions.usage.availableCredits')
   const hasBar = true
@@ -68,15 +75,16 @@ const CreditInfo: React.FC<CreditInfoProps> = ({ totalCredits, expiryDate, credi
   })
   const props = {
     leftBottomFooter,
-    creditsUsed,
-    credits: totalCredits,
+    creditsUsed: creditsUsed || 0,
+    credits: totalCredits || 0,
     leftHeader,
     tooltip,
     tooltipExpiry,
     hasBar,
     leftFooter,
     rightHeader: '',
-    rightFooter: defaultRightHeader || ''
+    rightFooter: defaultRightHeader || '',
+    useCredits
   }
   return <UsageInfoCard {...props} />
 }
@@ -136,13 +144,12 @@ const CIUsageInfo: React.FC<CIUsageInfoProps> = props => {
         rightHeader={usage?.ci?.activeCommitters?.displayName || ''}
         subscribedUsers={limit?.ci?.totalDevelopers || 0}
         activeUsers={usage?.ci?.activeCommitters?.count || 0}
+        useCredits={false}
       />
       {BUILD_CREDITS_VIEW === true ? (
-        !loadingCredits ? (
-          <CreditInfo creditsUsed={creditsUsed || 0} totalCredits={totalCredits} expiryDate={expiryDate} />
-        ) : (
-          <PageSpinner />
-        )
+        <OverlaySpinner show={loadingCredits || false}>
+          <CreditInfo creditsUsed={creditsUsed} totalCredits={totalCredits} expiryDate={expiryDate} useCredits={true} />
+        </OverlaySpinner>
       ) : null}
     </Layout.Horizontal>
   )
