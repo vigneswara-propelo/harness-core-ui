@@ -139,8 +139,9 @@ export interface SelectionState {
   selectedSectionId?: string
 }
 
+export type PublicAccessResponseType = Pick<PublicAccessResponse, 'public'>
 export interface PipelineMetaData {
-  publicAccessResponse?: PublicAccessResponse
+  publicAccessResponse?: PublicAccessResponseType
 }
 export interface PipelineMetaDataConfig {
   originalMetadata?: PipelineMetaData
@@ -188,7 +189,7 @@ export const DefaultPipeline: PipelineInfoConfig = {
 
 export interface ActionResponse {
   error?: string
-  publicAccessResponse?: PublicAccessResponse
+  publicAccessResponse?: PublicAccessResponseType
   pipelineMetadataConfig?: PipelineMetaDataConfig
   schemaErrors?: boolean
   isUpdated?: boolean

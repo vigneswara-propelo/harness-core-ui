@@ -58,7 +58,7 @@ export interface AppStoreContextProps {
   readonly connectivityMode?: GitEnabledDTO['connectivityMode'] //'MANAGER' | 'DELEGATE'
   readonly currentUserInfo: UserInfo
   readonly accountInfo?: AccountDTO
-  readonly publicAccessEnabled?: boolean
+  readonly isCurrentSessionPublic?: boolean
   /** feature flags */
   readonly featureFlags: FeatureFlagMap
   readonly currentMode?: NAV_MODE
@@ -89,7 +89,7 @@ export const AppStoreContext = React.createContext<AppStoreContextProps>({
   connectivityMode: undefined,
   accountInfo: undefined,
   updateAppStore: () => void 0,
-  publicAccessEnabled: false,
+  isCurrentSessionPublic: false,
   setCurrentMode: () => void 0
 })
 
@@ -148,7 +148,7 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
     supportingTemplatesGitx: false,
     connectivityMode: undefined,
     accountInfo: undefined,
-    publicAccessEnabled: window.publicAccessOnAccount
+    isCurrentSessionPublic: window.publicAccessOnAccount
   })
 
   const { CDS_NAV_2_0 } = state.featureFlags
@@ -193,7 +193,7 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
 
   const { data: userInfo, loading: userInfoLoading } = useGetCurrentUserInfo({
     queryParams: { accountIdentifier: accountId },
-    lazy: state.publicAccessEnabled
+    lazy: state.isCurrentSessionPublic
   })
 
   const { source, module } = useQueryParams<{ source?: string; module?: Module }>()
@@ -204,7 +204,7 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
     })
   )
 
-  const { data: accountData } = useGetAccountNG({ accountIdentifier: accountId, lazy: state.publicAccessEnabled })
+  const { data: accountData } = useGetAccountNG({ accountIdentifier: accountId, lazy: state.isCurrentSessionPublic })
 
   useEffect(() => {
     if (accountData?.data) {
@@ -293,7 +293,7 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
   }, [legacyFeatureFlags])
 
   useEffect(() => {
-    if (state.publicAccessEnabled) {
+    if (state.isCurrentSessionPublic) {
       // Prevent FetchFeatureFlags (legacy) when public access is enabled
       return
     }
@@ -391,7 +391,7 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
 
   // When projectIdentifier in URL changes, fetch projectDetails, and update selectedProject & savedProject-preference
   useEffect(() => {
-    if (state.publicAccessEnabled) {
+    if (state.isCurrentSessionPublic) {
       return
     }
     if (projectIdentifier && orgIdentifier) {
@@ -442,7 +442,7 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
 
   // update selectedOrg when orgidentifier in url changes
   useEffect(() => {
-    if (state.publicAccessEnabled) {
+    if (state.isCurrentSessionPublic) {
       // Prevent RefetchOrgs when public access is enabled
       return
     }

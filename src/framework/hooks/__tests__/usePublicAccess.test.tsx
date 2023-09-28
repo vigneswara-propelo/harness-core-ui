@@ -12,11 +12,11 @@ import { TestWrapper } from '@common/utils/testUtils'
 
 describe('usePublicAccess hooks Tests', () => {
   const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
-    <TestWrapper defaultAppStoreValues={{ publicAccessEnabled: true }}>{children}</TestWrapper>
+    <TestWrapper defaultAppStoreValues={{ isCurrentSessionPublic: true }}>{children}</TestWrapper>
   )
 
   const wrapperPrivateAccess = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
-    <TestWrapper defaultAppStoreValues={{ publicAccessEnabled: false }}>{children}</TestWrapper>
+    <TestWrapper defaultAppStoreValues={{ isCurrentSessionPublic: false }}>{children}</TestWrapper>
   )
 
   test('useIsPublicAccess should return true in public access mode', () => {

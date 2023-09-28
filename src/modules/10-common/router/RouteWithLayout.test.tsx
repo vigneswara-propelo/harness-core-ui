@@ -284,12 +284,12 @@ describe('RouteWithLayout', () => {
     expect(getByText('SUBTITLE')).toBeTruthy()
   })
 
-  test('that PageNotPublic component renders when publicAccessEnabled but route is not public', async () => {
+  test('that PageNotPublic component renders when isCurrentSessionPublic but route is not public', async () => {
     const { queryByText, getByRole } = render(
       <TestWrapper
         path="/account/:accountId/projects"
         pathParams={{ accountId: 'dummy' }}
-        defaultAppStoreValues={{ ...defaultAppStoreValues, publicAccessEnabled: true }}
+        defaultAppStoreValues={{ ...defaultAppStoreValues, isCurrentSessionPublic: true }}
       >
         <RouteWithLayout public={false} layout={EmptyLayout} path="/account/:accountId/projects">
           <div>matched-route</div>

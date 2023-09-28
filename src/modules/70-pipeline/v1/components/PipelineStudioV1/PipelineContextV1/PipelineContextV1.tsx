@@ -40,8 +40,7 @@ import {
   ResponsePMSPipelineResponseDTO,
   YamlSchemaErrorWrapperDTO,
   ResponsePMSPipelineSummaryResponse,
-  CacheResponseMetadata,
-  PublicAccessResponse
+  CacheResponseMetadata
 } from 'services/pipeline-ng'
 import { useGlobalEventListener, useLocalStorage, useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
@@ -66,6 +65,7 @@ import {
   PipelineReducer,
   PipelineReducerState,
   PipelineViewData,
+  PublicAccessResponseType,
   SelectionState
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
@@ -264,7 +264,7 @@ export interface StagesMap {
 
 export interface UpdatePipelineMetaData {
   viewType?: SelectedView
-  publicAccess?: PublicAccessResponse
+  publicAccess?: PublicAccessResponseType
 }
 
 export interface PipelineContextInterface {

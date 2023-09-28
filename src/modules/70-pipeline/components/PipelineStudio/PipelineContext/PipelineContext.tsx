@@ -39,8 +39,7 @@ import {
   ResponsePMSPipelineResponseDTO,
   YamlSchemaErrorWrapperDTO,
   ResponsePMSPipelineSummaryResponse,
-  CacheResponseMetadata,
-  PublicAccessResponse
+  CacheResponseMetadata
 } from 'services/pipeline-ng'
 import { useReconcile, UseReconcileReturnType } from '@pipeline/hooks/useReconcile'
 import { useGlobalEventListener, useLocalStorage, useQueryParams } from '@common/hooks'
@@ -73,6 +72,7 @@ import {
   PipelineReducer,
   PipelineReducerState,
   PipelineViewData,
+  PublicAccessResponseType,
   SelectionState
 } from './PipelineActions'
 import type { AbstractStepFactory } from '../../AbstractSteps/AbstractStepFactory'
@@ -158,7 +158,7 @@ export const getPipelineByIdentifier = (
         modules: response.data?.modules,
         cacheResponse: obj.data?.cacheResponse,
         validationUuid: obj.data?.validationUuid,
-        publicAccessResponse: obj.data?.publicAccessResponse
+        publicAccessResponse: pick(obj.data?.publicAccessResponse, ['public'])
       }
     } else if (response?.status === 'ERROR' && params?.storeType === StoreType.REMOTE) {
       return { remoteFetchError: response } as FetchError // handling remote pipeline not found
@@ -208,7 +208,7 @@ export const getPipelineMetadataByIdentifier = (
 }
 
 export const savePipeline = (
-  params: CreatePipelineQueryParams & PutPipelineQueryParams & { public: boolean },
+  params: CreatePipelineQueryParams & PutPipelineQueryParams & { public?: boolean },
   pipeline: PipelineInfoConfig,
   isEdit = false
 ): Promise<Failure | undefined> => {
@@ -275,7 +275,7 @@ export interface StagesMap {
 
 export interface UpdatePipelineMetaData {
   viewType?: SelectedView
-  publicAccess?: PublicAccessResponse
+  publicAccess?: PublicAccessResponseType
 }
 export interface PipelineContextInterface {
   state: PipelineReducerState
@@ -318,7 +318,7 @@ export interface PipelineContextInterface {
   /** Useful for setting any intermittent loading state. Eg. any API call loading, any custom loading, etc */
   setIntermittentLoading: (isIntermittentLoading: boolean) => void
   setValidationUuid: (uuid: string) => void
-  setPublicAccessResponse: (publicAccessResponse: PublicAccessResponse) => void
+  setPublicAccessResponse: (publicAccessResponse: PublicAccessResponseType) => void
   deleteStage?: useDeleteStageReturnType['deleteStage']
   reconcile: UseReconcileReturnType
 }
@@ -532,7 +532,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
 
     const pipelineWithGitDetails = pipelineById as PipelineInfoConfigWithGitDetails & {
       modules?: string[]
-      publicAccessResponse: PublicAccessResponse
+      publicAccessResponse: PublicAccessResponseType
     }
 
     id = getId(
@@ -608,8 +608,8 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       },
       modifiedMetadata: {
         publicAccessResponse:
-          data?.pipelineMetadataConfig?.modifiedMetadata?.publicAccessResponse ||
-          pipelineWithGitDetails.publicAccessResponse
+          pipelineWithGitDetails.publicAccessResponse ||
+          data?.pipelineMetadataConfig?.modifiedMetadata?.publicAccessResponse
       }
     }
     if (data && !forceUpdate) {
@@ -1463,7 +1463,7 @@ export function PipelineProvider({
   }, [])
 
   const setPublicAccessResponse = React.useCallback(
-    (publicAccessResponse: PublicAccessResponse) => {
+    (publicAccessResponse: PublicAccessResponseType) => {
       const isMetadataUpdated = !isEqual(
         state.pipelineMetadataConfig?.originalMetadata?.publicAccessResponse,
         publicAccessResponse

@@ -21,7 +21,7 @@ describe('Public Access Tests', () => {
   const privateContent = 'Private Access Content'
 
   const WrapperWithPublicAccessEnabled = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
-    <TestWrapper defaultAppStoreValues={{ publicAccessEnabled: true }}>{children}</TestWrapper>
+    <TestWrapper defaultAppStoreValues={{ isCurrentSessionPublic: true }}>{children}</TestWrapper>
   )
 
   test('IfPublicAccess should render its children in public access mode', () => {

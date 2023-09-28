@@ -13,8 +13,8 @@ export enum AccessType {
 }
 
 export const useIsPublicAccess = (): boolean | undefined => {
-  const { publicAccessEnabled } = useAppStore()
-  return publicAccessEnabled
+  const { isCurrentSessionPublic } = useAppStore()
+  return isCurrentSessionPublic
 }
 
 export const useIsPrivateAccess = (): boolean => {

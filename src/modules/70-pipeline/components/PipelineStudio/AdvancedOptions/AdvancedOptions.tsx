@@ -24,7 +24,7 @@ import * as Yup from 'yup'
 import { isEmpty, omit, unset } from 'lodash-es'
 import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
-import type { PipelineInfoConfig, PublicAccessResponse } from 'services/pipeline-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import {
   UpdatePipelineMetaData,
   usePipelineContext
@@ -35,6 +35,7 @@ import {
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '../PiplineHooks/useVariablesExpression'
 import DelegateSelectorPanel from '../../PipelineSteps/AdvancedSteps/DelegateSelectorPanel/DelegateSelectorPanel'
+import { PublicAccessResponseType } from '../PipelineContext/PipelineActions'
 import css from './AdvancedOptions.module.scss'
 
 interface AdvancedOptionsProps {
@@ -55,7 +56,7 @@ const stageExecutionOptions = [
 ]
 
 interface AdvancedOptionFormProps extends PipelineInfoConfig {
-  publicAccessResponse?: PublicAccessResponse
+  publicAccessResponse?: PublicAccessResponseType
 }
 
 export function AdvancedOptions({ onApplyChanges, onDiscard, pipeline }: AdvancedOptionsProps): React.ReactElement {
@@ -74,7 +75,7 @@ export function AdvancedOptions({ onApplyChanges, onDiscard, pipeline }: Advance
       if (isEmpty(data.delegateSelectors) || data.delegateSelectors?.[0] === '') {
         unset(data, 'delegateSelectors')
       }
-      setPublicAccessResponse(data?.publicAccessResponse as PublicAccessResponse)
+      setPublicAccessResponse(data?.publicAccessResponse as PublicAccessResponseType)
       onApplyChanges(omit(data, 'publicAccessResponse'), { publicAccess: data?.publicAccessResponse })
     },
     [onApplyChanges, setPublicAccessResponse]
