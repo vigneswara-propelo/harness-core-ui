@@ -19,7 +19,13 @@ import * as cvService from 'services/cv'
 import type { GroupNameProps } from '@cv/components/GroupName/GroupName.types'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
-import { mockDatadogData, MockSampleData, mockWidgetSelectedData, SourceTabsData } from './mock'
+import {
+  DataWithManualInputQueryMock,
+  mockDatadogData,
+  MockSampleData,
+  mockWidgetSelectedData,
+  SourceTabsData
+} from './mock'
 
 jest.mock('@cv/hooks/IndexedDBHook/IndexedDBHook', () => ({
   useIndexedDBHook: jest.fn().mockReturnValue({ isInitializingDB: false, dbInstance: { get: jest.fn() } }),
@@ -64,6 +70,7 @@ jest.mock(
         />
         <Container>{props.selectedMetricInfo?.query}</Container>
         <Container>{props.timeseriesDataError}</Container>
+        <Container data-testid="cloudMetricsHealthSourceNav">{props.manualQueries?.join(',')}</Container>
       </>
     )
   }
@@ -164,6 +171,17 @@ describe('DatadogMetricsHealthSource unit tests', () => {
     const { getByText } = render(<WrapperComponent data={SourceTabsData} onSubmit={jest.fn()} />)
 
     await waitFor(() => expect(getByText('Mock error message')).not.toBeNull())
+  })
+
+  test('should verify all the manual input queries are included in the dashboard', async () => {
+    jest.spyOn(cvService, 'useGetDatadogSampleData').mockReturnValue({
+      data: [],
+      refetch: jest.fn(),
+      error: null
+    } as any)
+    render(<WrapperComponent data={DataWithManualInputQueryMock} onSubmit={jest.fn()} />)
+
+    await waitFor(() => expect(screen.getByTestId('cloudMetricsHealthSourceNav')).toHaveTextContent('m3,m1,m2'))
   })
 
   describe('Metric thresholds', () => {

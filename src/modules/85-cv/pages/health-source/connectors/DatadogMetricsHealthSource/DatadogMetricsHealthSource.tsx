@@ -79,7 +79,8 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
   const [selectedMetricId, setSelectedMetricId] = useState<string>()
   const selectedMetricData = metricHealthDetailsData.get(selectedMetricId || '')
   const initialCustomCreatedMetrics = useMemo(() => {
-    return getCustomCreatedMetrics(data?.selectedMetrics || transformedData.metricDefinition)
+    const combinedMetrics = new Map([...(data?.selectedMetrics || new Map()), ...transformedData.metricDefinition])
+    return getCustomCreatedMetrics(combinedMetrics as Map<string, DatadogMetricInfo>)
   }, [data?.selectedMetrics, transformedData.metricDefinition])
 
   const [metricThresholds, setMetricThresholds] = useState<MetricThresholdsState>({

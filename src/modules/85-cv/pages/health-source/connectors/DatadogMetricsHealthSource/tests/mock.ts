@@ -661,3 +661,257 @@ export const expectedResultFromSetupSourceMapping = {
   product: { label: 'Datadog Cloud Logs', value: 'Datadog Cloud Logs' },
   selectedDashboards: [{ id: 'mock_dashboard_id', name: 'mock_dashboard_name' }]
 }
+
+const manualInputSetMap = new Map()
+
+manualInputSetMap.set('m3', {
+  isManualQuery: true,
+  isCustomCreatedMetric: true,
+  metricName: 'm3'
+})
+
+export const DataWithManualInputQueryMock = {
+  connectorRef: 'test',
+  isEdit: true,
+  healthSourceList: [
+    {
+      name: 'tee',
+      identifier: 'tee',
+      type: 'DatadogMetrics',
+      spec: {
+        connectorRef: 'test',
+        metricPacks: [],
+        feature: 'Datadog Cloud Metrics',
+        metricDefinitions: [
+          {
+            identifier: 'avg:system.cpu.user{*}__gas-53u-ruk',
+            metricName: 'avg:system.cpu.user{*}__gas-53u-ruk',
+            riskProfile: {
+              category: 'Errors',
+              thresholdTypes: []
+            },
+            analysis: {
+              liveMonitoring: {
+                enabled: false
+              },
+              deploymentVerification: {
+                enabled: false,
+                serviceInstanceFieldName: ''
+              },
+              riskProfile: {
+                category: 'Errors',
+                thresholdTypes: []
+              }
+            },
+            sli: {
+              enabled: true
+            },
+            dashboardId: 'gas-53u-ruk',
+            dashboardName: "praveen's Timeboard 5 Apr 2019 18:16",
+            metricPath: 'gas-53u-ruk__query1',
+            query: 'avg:system.cpu.user{*}.rollup(avg, 60)',
+            metric: 'system.cpu.user',
+            aggregation: 'avg',
+            serviceInstanceIdentifierTag: '',
+            isManualQuery: false,
+            isCustomCreatedMetric: false
+          },
+          {
+            identifier: 'm1',
+            metricName: 'm1',
+            riskProfile: {
+              category: 'Errors',
+              thresholdTypes: []
+            },
+            analysis: {
+              liveMonitoring: {
+                enabled: false
+              },
+              deploymentVerification: {
+                enabled: false,
+                serviceInstanceFieldName: ''
+              },
+              riskProfile: {
+                category: 'Errors',
+                thresholdTypes: []
+              }
+            },
+            sli: {
+              enabled: true
+            },
+            dashboardName: 'g1',
+            metricPath: 'm1',
+            query: 'avg:system.cpu.user{*}.rollup(avg, 60)',
+            metric: 'system.cpu.user',
+            aggregation: 'avg',
+            serviceInstanceIdentifierTag: '',
+            isManualQuery: true,
+            isCustomCreatedMetric: true
+          },
+          {
+            identifier: 'm2',
+            metricName: 'm2',
+            riskProfile: {
+              category: 'Errors',
+              thresholdTypes: []
+            },
+            analysis: {
+              liveMonitoring: {
+                enabled: false
+              },
+              deploymentVerification: {
+                enabled: false,
+                serviceInstanceFieldName: ''
+              },
+              riskProfile: {
+                category: 'Errors',
+                thresholdTypes: []
+              }
+            },
+            sli: {
+              enabled: true
+            },
+            dashboardName: 'g2',
+            metricPath: 'm2',
+            query: 'avg:system.cpu.user{*}.rollup(avg, 60)',
+            metric: 'system.cpu.user',
+            aggregation: 'avg',
+            serviceInstanceIdentifierTag: '',
+            isManualQuery: true,
+            isCustomCreatedMetric: true
+          }
+        ]
+      }
+    }
+  ],
+  serviceRef: 'svcdatadoglog',
+  environmentRef: 'envdatadoglog',
+  monitoredServiceRef: {
+    name: 'svcdatadoglog_envdatadoglog',
+    identifier: 'svcdatadoglog_envdatadoglog'
+  },
+  existingMetricDetails: {
+    name: 'tee',
+    identifier: 'tee',
+    type: 'DatadogMetrics',
+    spec: {
+      connectorRef: 'test',
+      metricPacks: [],
+      feature: 'Datadog Cloud Metrics',
+      metricDefinitions: [
+        {
+          identifier: 'avg:system.cpu.user{*}__gas-53u-ruk',
+          metricName: 'avg:system.cpu.user{*}__gas-53u-ruk',
+          riskProfile: {
+            category: 'Errors',
+            thresholdTypes: []
+          },
+          analysis: {
+            liveMonitoring: {
+              enabled: false
+            },
+            deploymentVerification: {
+              enabled: false,
+              serviceInstanceFieldName: ''
+            },
+            riskProfile: {
+              category: 'Errors',
+              thresholdTypes: []
+            }
+          },
+          sli: {
+            enabled: true
+          },
+          dashboardId: 'gas-53u-ruk',
+          dashboardName: "praveen's Timeboard 5 Apr 2019 18:16",
+          metricPath: 'gas-53u-ruk__query1',
+          query: 'avg:system.cpu.user{*}.rollup(avg, 60)',
+          metric: 'system.cpu.user',
+          aggregation: 'avg',
+          serviceInstanceIdentifierTag: '',
+          isManualQuery: false,
+          isCustomCreatedMetric: false
+        },
+        {
+          identifier: 'm1',
+          metricName: 'm1',
+          riskProfile: {
+            category: 'Errors',
+            thresholdTypes: []
+          },
+          analysis: {
+            liveMonitoring: {
+              enabled: false
+            },
+            deploymentVerification: {
+              enabled: false,
+              serviceInstanceFieldName: ''
+            },
+            riskProfile: {
+              category: 'Errors',
+              thresholdTypes: []
+            }
+          },
+          sli: {
+            enabled: true
+          },
+          dashboardName: 'g1',
+          metricPath: 'm1',
+          query: 'avg:system.cpu.user{*}.rollup(avg, 60)',
+          metric: 'system.cpu.user',
+          aggregation: 'avg',
+          serviceInstanceIdentifierTag: '',
+          isManualQuery: true,
+          isCustomCreatedMetric: true
+        },
+        {
+          identifier: 'm2',
+          metricName: 'm2',
+          riskProfile: {
+            category: 'Errors',
+            thresholdTypes: []
+          },
+          analysis: {
+            liveMonitoring: {
+              enabled: false
+            },
+            deploymentVerification: {
+              enabled: false,
+              serviceInstanceFieldName: ''
+            },
+            riskProfile: {
+              category: 'Errors',
+              thresholdTypes: []
+            }
+          },
+          sli: {
+            enabled: true
+          },
+          dashboardName: 'g2',
+          metricPath: 'm2',
+          query: 'avg:system.cpu.user{*}.rollup(avg, 60)',
+          metric: 'system.cpu.user',
+          aggregation: 'avg',
+          serviceInstanceIdentifierTag: '',
+          isManualQuery: true,
+          isCustomCreatedMetric: true
+        }
+      ]
+    }
+  },
+  healthSourceName: 'tee',
+  healthSourceIdentifier: 'tee',
+  sourceType: 'DatadogMetrics',
+  dataSourceType: null,
+  product: {
+    label: 'Datadog Cloud Metrics',
+    value: 'Datadog Cloud Metrics'
+  },
+  selectedMetrics: manualInputSetMap,
+  selectedDashboards: [
+    {
+      name: "praveen's Timeboard 5 Apr 2019 18:16",
+      id: 'gas-53u-ruk'
+    }
+  ]
+}
