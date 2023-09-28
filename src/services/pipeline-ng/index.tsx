@@ -19170,6 +19170,9 @@ export interface GetSchemaYamlQueryParams {
     | 'AwsCdkRollback'
     | 'SlsaVerification'
     | 'UpdateGitOpsApp'
+    | 'EcsServiceSetup'
+    | 'EcsUpgradeContainer'
+    | 'EcsBasicRollback'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'

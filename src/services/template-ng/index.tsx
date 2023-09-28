@@ -478,6 +478,9 @@ export interface EntityDetail {
     | 'AwsCdkRollback'
     | 'SlsaVerification'
     | 'UpdateGitOpsApp'
+    | 'EcsServiceSetup'
+    | 'EcsUpgradeContainer'
+    | 'EcsBasicRollback'
 }
 
 export interface EntityDetailProtoDTO {
@@ -1854,11 +1857,14 @@ export type OverlayInputSetErrorWrapper = ErrorMetadataDTO & {
 export interface Page {
   content?: { [key: string]: any }[]
   empty?: boolean
-  pageIndex?: number
-  pageItemCount?: number
-  pageSize?: number
-  pageToken?: string
-  totalItems?: number
+  first?: boolean
+  last?: boolean
+  number?: number
+  numberOfElements?: number
+  pageable?: Pageable
+  size?: number
+  sort?: Sort
+  totalElements?: number
   totalPages?: number
 }
 
