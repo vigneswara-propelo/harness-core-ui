@@ -390,25 +390,25 @@ const RedirectToNewAccessPointsPage = (): React.ReactElement => {
   )
 }
 
-// const RedirectToBudgetDetails = (): React.ReactElement => {
-//   const { accountId, budgetId, budgetName } = useParams<{
-//     accountId: string
-//     budgetId: string
-//     budgetName: string
-//   }>()
+const RedirectToBudgetDetails = (): React.ReactElement => {
+  const { accountId, budgetId, budgetName } = useParams<{
+    accountId: string
+    budgetId: string
+    budgetName: string
+  }>()
 
-//   return (
-//     <Redirect
-//       to={routes.toCEBudgetDetails({
-//         accountId,
-//         module,
-//         mode: NAV_MODE.MODULE,
-//         budgetName,
-//         budgetId
-//       })}
-//     />
-//   )
-// }
+  return (
+    <Redirect
+      to={routes.toCEBudgetDetails({
+        accountId,
+        module,
+        mode: NAV_MODE.MODULE,
+        budgetName,
+        budgetId
+      })}
+    />
+  )
+}
 
 const RedirectToSubscriptions = (): React.ReactElement => {
   const { accountId } = useParams<{
@@ -425,24 +425,24 @@ const RedirectToSubscriptions = (): React.ReactElement => {
   )
 }
 
-// const RedirectToNewNodeRecommendationDetailsRoute = (): React.ReactElement => {
-//   const { recommendation, recommendationName, accountId } = useParams<{
-//     recommendationName: string
-//     recommendation: string
-//     accountId: string
-//   }>()
-//   return (
-//     <Redirect
-//       to={routes.toCENodeRecommendationDetails({
-//         accountId,
-//         module,
-//         mode: NAV_MODE.MODULE,
-//         recommendationName,
-//         recommendation
-//       })}
-//     />
-//   )
-// }
+const RedirectToNewNodeRecommendationDetailsRoute = (): React.ReactElement => {
+  const { recommendation, recommendationName, accountId } = useParams<{
+    recommendationName: string
+    recommendation: string
+    accountId: string
+  }>()
+  return (
+    <Redirect
+      to={routes.toCENodeRecommendationDetails({
+        accountId,
+        module,
+        mode: NAV_MODE.MODULE,
+        recommendationName,
+        recommendation
+      })}
+    />
+  )
+}
 
 const licenseRedirectData: LicenseRedirectProps = {
   licenseStateName: LICENSE_STATE_NAMES.CCM_LICENSE_STATE,
@@ -719,9 +719,8 @@ const CERouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
         </RouteWithContext>
         {/* {!enableMicroFrontend && CENonMFERoutes.props.children} */}
 
-        {/* <RouteWithLayout
+        <RouteWithContext
           licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
           path={routes.toCEBudgetDetailsOld({
             ...accountPathProps,
             module,
@@ -732,11 +731,10 @@ const CERouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
           pageName={PAGE_NAME.CEBudgetDetails}
         >
           <RedirectToBudgetDetails />
-        </RouteWithLayout>
+        </RouteWithContext>
 
-        <RouteWithLayout
+        <RouteWithContext
           licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
           path={routes.toOldCENodeRecommendationDetails({
             ...accountPathProps,
             module,
@@ -747,7 +745,7 @@ const CERouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
           exact
         >
           <RedirectToNewNodeRecommendationDetailsRoute />
-        </RouteWithLayout> */}
+        </RouteWithContext>
         <RouteWithContext path={[...mfePaths, routes.toCCMMFE({ ...accountPathProps, module, mode })]}>
           <ChildAppMounter<CCMUIAppCustomProps>
             customComponents={{
