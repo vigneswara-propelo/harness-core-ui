@@ -105,7 +105,7 @@ import GitSyncConfigTab from '@gitsync/pages/config/GitSyncConfigTab'
 import DiscoveryPage from '@discovery/pages/home/DiscoveryPage'
 import DiscoveryDetails from '@discovery/pages/discovery-details/DiscoveryDetails'
 import NetworkMapStudio from '@discovery/pages/network-map-studio/NetworkMapStudio'
-import { CESettingsRouteDestination } from '@ce/CERouteDestinations'
+import { CESettingsRouteDestination } from '@ce/RouteDestinationsV2'
 import MonitoredServiceListWidget from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget'
 import {
   CD_MONITORED_SERVICE_CONFIG,
