@@ -804,7 +804,7 @@ gradle.projectsEvaluated {
                         )}
                       </div>
                     </Container>
-                    {selectedLanguageValue === Language.Java && (
+                    {[Language.Java, Language.Scala, Language.Kotlin].includes(selectedLanguageValue) && (
                       <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
                         {renderMultiTypeTextField({
                           name: 'spec.packages',
@@ -861,7 +861,7 @@ gradle.projectsEvaluated {
                         })}
                       </Container>
                     )}
-                    {selectedLanguageValue === Language.Java && (
+                    {[Language.Java, Language.Scala, Language.Kotlin].includes(selectedLanguageValue) && (
                       <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
                         {renderMultiTypeTextField({
                           name: 'spec.testAnnotations',
