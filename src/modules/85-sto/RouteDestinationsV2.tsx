@@ -6,7 +6,7 @@
  */
 
 import React, { lazy } from 'react'
-import { Redirect, Switch, useParams } from 'react-router-dom'
+import { Redirect, Route, Switch, useParams } from 'react-router-dom'
 import { UserLabel } from '@common/components'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import CardRailView from '@pipeline/components/Dashboards/CardRailView/CardRailView'
@@ -14,6 +14,7 @@ import ExecutionCard from '@pipeline/components/ExecutionCard/ExecutionCard'
 import ExternalTicketSettings from '@sto/components/ExternalTickets/Settings/ExternalTicketSettings'
 import STOTrialHomePage from '@sto/pages/home/trialPage/STOTrialHomePage'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
+import NotFoundPage from '@common/pages/404/NotFoundPage'
 import routes from '@common/RouteDefinitionsV2'
 import { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import { RouteWithContext } from '@common/router/RouteWithContext/RouteWithContext'
@@ -147,6 +148,11 @@ const STORouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
       )}
 
       {PipelineRouteDestinations({ mode }).props.children}
+
+      {/* Fall back to showing the 404 page. This MUST be the last route in this <Switch> */}
+      <Route>
+        <NotFoundPage />
+      </Route>
     </Switch>
   )
 }
