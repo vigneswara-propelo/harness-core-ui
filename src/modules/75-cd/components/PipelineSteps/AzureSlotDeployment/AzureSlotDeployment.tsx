@@ -46,7 +46,8 @@ export class AzureSlotDeployment extends PipelineStep<AzureSlotDeploymentStepInf
     timeout: '20m',
     spec: {
       webApp: '',
-      deploymentSlot: ''
+      deploymentSlot: '',
+      clean: false
     }
   }
 

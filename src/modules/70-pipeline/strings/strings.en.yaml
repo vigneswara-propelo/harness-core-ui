@@ -1556,6 +1556,7 @@ buildInfra:
   runAsNonRoot: Run as Non Root
   readOnlyRootFilesystem: Read-only Root Filesystem
   privileged: Privileged
+  clean: Clean
   stackNames: Stack Names
   exportTemplate: Export Template
   effect: Effect

@@ -4195,6 +4195,7 @@ export interface StringsMap {
   'pipeline.buildInfra.allowPrivilegeEscalation': string
   'pipeline.buildInfra.automountServiceAccountToken': string
   'pipeline.buildInfra.claimName': string
+  'pipeline.buildInfra.clean': string
   'pipeline.buildInfra.containerSecurityContext': string
   'pipeline.buildInfra.dropCapabilities': string
   'pipeline.buildInfra.effect': string

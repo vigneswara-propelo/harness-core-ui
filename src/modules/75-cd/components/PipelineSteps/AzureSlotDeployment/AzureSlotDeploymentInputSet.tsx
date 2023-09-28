@@ -14,6 +14,7 @@ import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
 
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { FormMultiTypeCheckboxField } from '@common/components'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
@@ -105,6 +106,22 @@ export function AzureSlotDeploymentInputSetRef<T extends AzureSlotDeploymentData
           />
         )
       }
+      {isRuntime(inputSetData?.template?.spec?.clean as string) && (
+        <div className={cx(stepCss.formGroup, stepCss.sm)}>
+          <FormMultiTypeCheckboxField
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.clean`}
+            label={getString('optionalField', { name: getString('pipeline.buildInfra.clean') })}
+            multiTypeTextbox={{
+              expressions,
+              allowableTypes,
+              disabled: readonly,
+              width: 416.5
+            }}
+            tooltipProps={{ dataTooltipId: 'cleanAzureSlotDeployment' }}
+            disabled={readonly}
+          />
+        </div>
+      )}
     </FormikForm>
   )
 }

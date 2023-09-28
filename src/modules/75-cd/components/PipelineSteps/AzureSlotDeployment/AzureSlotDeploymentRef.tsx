@@ -13,6 +13,7 @@ import { Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType, SelectOpt
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { FormMultiTypeCheckboxField } from '@common/components'
 
 import {
   FormMultiTypeDurationField,
@@ -105,6 +106,19 @@ export const AzureSlotDeploymentRef = (
                 label={getString('pipelineSteps.timeoutLabel')}
                 multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
                 disabled={readonly}
+              />
+            </div>
+            <div className={cx(stepCss.formGroup, stepCss.lg)}>
+              <FormMultiTypeCheckboxField
+                name={'spec.clean'}
+                label={getString('pipeline.buildInfra.clean')}
+                multiTypeTextbox={{
+                  expressions,
+                  allowableTypes,
+                  disabled: readonly
+                }}
+                disabled={readonly}
+                configureOptionsProps={{ hideExecutionTimeField: true }}
               />
             </div>
             <div className={stepCss.divider} />

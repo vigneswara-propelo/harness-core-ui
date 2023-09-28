@@ -25,6 +25,7 @@ export interface AzureSlotDeploymentData {
   spec: {
     webApp: string
     deploymentSlot: string
+    clean?: boolean | string
   }
 }
 
