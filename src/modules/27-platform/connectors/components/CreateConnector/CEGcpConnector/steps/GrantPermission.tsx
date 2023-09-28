@@ -32,7 +32,12 @@ import { Connectors } from '@platform/connectors/constants'
 import type { CEGcpConnectorDTO } from './OverviewStep'
 import css from '../CreateCeGcpConnector.module.scss'
 
-const GrantPermission: React.FC<StepProps<CEGcpConnectorDTO>> = props => {
+interface GrantPermissionProps {
+  isEditMode?: boolean
+  setIsEditMode?: (val: boolean) => void
+}
+
+const GrantPermission: React.FC<StepProps<CEGcpConnectorDTO> & GrantPermissionProps> = props => {
   const { getString } = useStrings()
 
   useStepLoadTelemetry(CE_GCP_CONNECTOR_CREATION_EVENTS.LOAD_GRANT_PERMISSIONS)
@@ -85,7 +90,7 @@ const GrantPermission: React.FC<StepProps<CEGcpConnectorDTO>> = props => {
           }
         }
 
-        const response = await (prevStepData.isEditMode
+        const response = await (props.isEditMode
           ? updateConnector({ connector: connectorInfo })
           : createConnector({ connector: connectorInfo }))
         if (response.status !== 'SUCCESS') {
@@ -94,9 +99,11 @@ const GrantPermission: React.FC<StepProps<CEGcpConnectorDTO>> = props => {
         if (response.data?.governanceMetadata) {
           conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, () => {
             nextStep?.({ ...prevStepData, serviceAccount })
+            props.setIsEditMode?.(true)
           })
         } else {
           nextStep?.({ ...prevStepData, serviceAccount })
+          props.setIsEditMode?.(true)
         }
       }
     } catch (e) {

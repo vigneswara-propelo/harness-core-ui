@@ -38,7 +38,11 @@ const CreateCeGcpConnector: React.FC<CreateConnectorModalProps> = props => {
         />
         <BillingExport name={getString('platform.connectors.ceGcp.billingExport.heading')} />
         <ChooseRequirements name={getString('platform.connectors.ceGcp.chooseRequirements.name')} />
-        <GrantPermission name={getString('platform.connectors.ceGcp.grantPermission.heading')}></GrantPermission>
+        <GrantPermission
+          name={getString('platform.connectors.ceGcp.grantPermission.heading')}
+          isEditMode={props.isEditMode}
+          setIsEditMode={props.setIsEditMode}
+        ></GrantPermission>
         <ConnectorTestConnection
           name={getString('platform.connectors.ceGcp.testConnection.heading')}
           connectorInfo={props.connectorInfo}

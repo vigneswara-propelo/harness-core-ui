@@ -123,6 +123,7 @@ const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO> & CrossAccoun
         if (response.data?.governanceMetadata) {
           conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, () => {
             nextStep?.(prevStepData)
+            props.setIsEditMode?.(true)
           })
         } else {
           nextStep?.(prevStepData)

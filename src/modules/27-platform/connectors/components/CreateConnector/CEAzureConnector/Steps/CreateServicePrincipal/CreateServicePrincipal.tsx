@@ -38,7 +38,12 @@ interface CommandsProps {
   comment: string
 }
 
-const CreateServicePrincipal: React.FC<StepProps<CEAzureDTO>> = (props): JSX.Element => {
+interface CreateServicePrincipalProps {
+  isEditMode?: boolean
+  setIsEditMode?: (val: boolean) => void
+}
+
+const CreateServicePrincipal: React.FC<StepProps<CEAzureDTO> & CreateServicePrincipalProps> = (props): JSX.Element => {
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const [appId, setAppId] = useState('')
@@ -73,7 +78,7 @@ const CreateServicePrincipal: React.FC<StepProps<CEAzureDTO>> = (props): JSX.Ele
           ])
         }
 
-        const response = await (prevStepData.isEditMode
+        const response = await (props.isEditMode
           ? updateConnector({ connector: payload })
           : createConnector({ connector: payload }))
         if ('SUCCESS' !== response.status) {
@@ -82,9 +87,11 @@ const CreateServicePrincipal: React.FC<StepProps<CEAzureDTO>> = (props): JSX.Ele
         if (response.data?.governanceMetadata) {
           conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, () => {
             nextStep?.(prevStepData)
+            props.setIsEditMode?.(true)
           })
         } else {
           nextStep?.(prevStepData)
+          props.setIsEditMode?.(true)
         }
       }
     } catch (e) {

@@ -45,7 +45,11 @@ const CreateCeAzureConnector: React.FC<CreateConnectorModalProps> = props => {
         />
         <Billing name={getString('platform.connectors.ceAzure.steps.billingExports')} />
         <ChooseRequirements name={getString('platform.connectors.ceAzure.steps.requirements')} />
-        <CreateServicePrincipal name={getString('platform.connectors.ceAzure.steps.servicePrincipal')} />
+        <CreateServicePrincipal
+          name={getString('platform.connectors.ceAzure.steps.servicePrincipal')}
+          isEditMode={props.isEditMode}
+          setIsEditMode={props.setIsEditMode}
+        />
         <ConnectorTestConnection
           name={getString('platform.connectors.ceAzure.testConnection.heading')}
           connectorInfo={props.connectorInfo}
