@@ -6,8 +6,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
-
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import NotFoundPage from './NotFoundPage'
 
@@ -19,5 +18,15 @@ describe('NotFoundPage', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+  })
+  test('should redirect to overview page', async () => {
+    const { getByTestId, getByText } = render(
+      <TestWrapper path="/abc" defaultFeatureFlagValues={{ CDS_NAV_2_0: true }}>
+        <NotFoundPage redirectTo="/overview" />
+      </TestWrapper>
+    )
+    fireEvent.click(getByText('Go to Home'))
+    await waitFor(() => getByTestId('location'))
+    expect(getByTestId('location')).toHaveTextContent('/overview')
   })
 })

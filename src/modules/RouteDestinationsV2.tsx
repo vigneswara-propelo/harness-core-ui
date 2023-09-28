@@ -230,7 +230,7 @@ const RoutesV2 = (): React.ReactElement => {
         <RedirectToMode />
       </Route>
 
-      <Route component={NotFoundPage} />
+      <Route component={() => <NotFoundPage redirectTo="/" />} />
     </Switch>
   )
 }
