@@ -129,7 +129,6 @@ export const NGBreadcrumbs: React.FC<Partial<NGBreadcrumbsProps>> = ({
         label = getString('common.sscaText')
         break
       case ModuleName.IDP:
-      case ModuleName.IDPAdmin:
         url = paths.toIDP(params)
         label = getString('common.purpose.idp.name')
         break

@@ -12,7 +12,6 @@ import { Container, Icon, Layout, Text, useToggleOpen } from '@harness/uicore'
 import { Position, PopoverInteractionKind, Divider, Popover } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import routes from '@common/RouteDefinitionsV2'
-import { moduleNameToModuleMapping } from 'framework/types/ModuleName'
 import { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { NavModuleName, useNavModuleInfoMap, useNavModuleInfoReturnType } from '@common/hooks/useNavModuleInfo'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
@@ -138,12 +137,7 @@ export const ModeSelector: React.FC = () => {
                         setCurrentMode?.(NAV_MODE.MODULE)
                         closeModeSelector()
                       }}
-                      to={routes.toMode({
-                        accountId,
-                        mode: NAV_MODE.MODULE,
-                        module: moduleNameToModuleMapping[moduleName],
-                        noscope: true
-                      })}
+                      to={moduleMap[moduleName].homePageUrl}
                       learnMoreOnClick={() => {
                         setSelectedModule(moduleName)
                         toggleModuleConfig()

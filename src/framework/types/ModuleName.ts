@@ -45,7 +45,7 @@ export const moduleToModuleNameMapping: Record<Module, ModuleName> = {
   cet: ModuleName.CET,
   sei: ModuleName.SEI,
   dashboards: ModuleName.DASHBOARDS,
-  'idp-admin': ModuleName.IDPAdmin
+  'idp-admin': ModuleName.IDP
 }
 
 export const moduleNameToModuleMapping: Record<

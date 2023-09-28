@@ -53,6 +53,7 @@ import type { GovernanceCustomMicroFrontendProps } from '@governance/GovernanceC
 import type { ETCustomMicroFrontendProps } from '@cet/ErrorTracking.types'
 import type { SRMCustomMicroFrontendProps } from '@cv/interface/SRMCustomMicroFrontendProps.types'
 import type { SEICustomMicroFrontendProps } from '@sei/SEICustomMicroFrontendProps.types'
+import { SideNav } from '@common/navigation/SideNavV2/SideNavV2'
 
 export interface Scope {
   accountId?: string
@@ -70,6 +71,7 @@ export interface CommonComponents {
   RBACTooltip?: typeof RBACTooltip
   LevelUpBanner?: typeof LevelUpBanner
   ParentLink?: typeof ParentLink
+  SideNav?: typeof SideNav
 }
 
 export interface Hooks {

@@ -8,13 +8,15 @@
 import { useParams } from 'react-router-dom'
 import type { IconName } from '@harness/icons'
 import type { StringKeys } from 'framework/strings'
-import { ModuleName } from 'framework/types/ModuleName'
+import { ModuleName, moduleNameToModuleMapping } from 'framework/types/ModuleName'
 import routes from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetCommunity } from '@common/utils/utils'
 import { FeatureFlag } from '@common/featureFlags'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { NAV_MODE } from '@common/utils/routeUtils'
 import type { ModuleLicenseDTO } from '../../../services/cd-ng'
 
 export type NavModuleName =
@@ -66,7 +68,7 @@ export interface useNavModuleInfoReturnType {
 export interface ModuleInfo {
   icon: IconName
   label: StringKeys
-  getHomePageUrl: (accountId: string) => string
+  getHomePageUrl: (accountId: string, isNewnavEnabled: boolean) => string
   featureFlagName?: FeatureFlag
   color: string
   backgroundColor?: string
@@ -79,7 +81,15 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.CD]: {
     icon: 'cd-main',
     label: 'common.cdAndGitops',
-    getHomePageUrl: (accountId: string) => routes.toCD({ accountId }),
+    getHomePageUrl: (accountId: string, isNewnavEnabled: boolean) =>
+      isNewnavEnabled
+        ? routesV2.toMode({
+            accountId,
+            mode: NAV_MODE.MODULE,
+            module: moduleNameToModuleMapping[ModuleName.CD],
+            noscope: true
+          })
+        : routes.toCD({ accountId }),
     color: '--cd-border',
     backgroundColor: '--cd-background',
     backgroundColorLight: '--cd-background-light',
@@ -89,7 +99,15 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.CI]: {
     icon: 'ci-main',
     label: 'common.purpose.ci.continuous',
-    getHomePageUrl: (accountId: string) => routes.toCI({ accountId }),
+    getHomePageUrl: (accountId: string, isNewnavEnabled: boolean) =>
+      isNewnavEnabled
+        ? routesV2.toMode({
+            accountId,
+            mode: NAV_MODE.MODULE,
+            module: moduleNameToModuleMapping[ModuleName.CI],
+            noscope: true
+          })
+        : routes.toCI({ accountId }),
     color: '--ci-border',
     backgroundColor: '--ci-background',
     backgroundColorLight: '--ci-background-light',
@@ -99,7 +117,15 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.CV]: {
     icon: 'cv-main',
     label: 'common.serviceReliabilityManagement',
-    getHomePageUrl: (accountId: string) => routes.toCV({ accountId }),
+    getHomePageUrl: (accountId: string, isNewnavEnabled: boolean) =>
+      isNewnavEnabled
+        ? routesV2.toMode({
+            accountId,
+            mode: NAV_MODE.MODULE,
+            module: moduleNameToModuleMapping[ModuleName.CV],
+            noscope: true
+          })
+        : routes.toCV({ accountId }),
     featureFlagName: FeatureFlag.CVNG_ENABLED,
     color: '--srm-border',
     backgroundColor: '--srm-background',
@@ -110,7 +136,15 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.CF]: {
     icon: 'ff-solid',
     label: 'common.purpose.cf.continuous',
-    getHomePageUrl: (accountId: string) => routes.toCF({ accountId }),
+    getHomePageUrl: (accountId: string, isNewnavEnabled: boolean) =>
+      isNewnavEnabled
+        ? routesV2.toMode({
+            accountId,
+            mode: NAV_MODE.MODULE,
+            module: moduleNameToModuleMapping[ModuleName.CF],
+            noscope: true
+          })
+        : routes.toCF({ accountId }),
     color: '--ff-border',
     backgroundColor: '--ff-background',
     backgroundColorLight: '--ff-background-light',
@@ -120,7 +154,15 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.CE]: {
     icon: 'ce-main',
     label: 'common.purpose.ce.continuous',
-    getHomePageUrl: (accountId: string) => routes.toCE({ accountId }),
+    getHomePageUrl: (accountId: string, isNewnavEnabled: boolean) =>
+      isNewnavEnabled
+        ? routesV2.toMode({
+            accountId,
+            mode: NAV_MODE.MODULE,
+            module: moduleNameToModuleMapping[ModuleName.CE],
+            noscope: true
+          })
+        : routes.toCE({ accountId }),
     color: '--ccm-border',
     backgroundColor: '--ccm-background',
     backgroundColorLight: '--ccm-background-light',
@@ -130,7 +172,15 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.STO]: {
     icon: 'sto-color-filled',
     label: 'common.stoText',
-    getHomePageUrl: (accountId: string) => routes.toSTO({ accountId }),
+    getHomePageUrl: (accountId: string, isNewnavEnabled: boolean) =>
+      isNewnavEnabled
+        ? routesV2.toMode({
+            accountId,
+            mode: NAV_MODE.MODULE,
+            module: moduleNameToModuleMapping[ModuleName.STO],
+            noscope: true
+          })
+        : routes.toSTO({ accountId }),
     color: '--sto-border',
     backgroundColor: '--sto-background',
     backgroundColorLight: '--sto-background-light',
@@ -140,7 +190,15 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.CHAOS]: {
     icon: 'chaos-main',
     label: 'common.purpose.chaos.continuous',
-    getHomePageUrl: (accountId: string) => routes.toChaos({ accountId }),
+    getHomePageUrl: (accountId: string, isNewnavEnabled: boolean) =>
+      isNewnavEnabled
+        ? routesV2.toMode({
+            accountId,
+            mode: NAV_MODE.MODULE,
+            module: moduleNameToModuleMapping[ModuleName.CHAOS],
+            noscope: true
+          })
+        : routes.toChaos({ accountId }),
     color: '--chaos-border',
     backgroundColor: '--chaos-background',
     backgroundColorLight: '--chaos-background-light',
@@ -150,7 +208,15 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.CODE]: {
     icon: 'code',
     label: 'common.purpose.code.title',
-    getHomePageUrl: (accountId: string) => routes.toCODE({ accountId }),
+    getHomePageUrl: (accountId: string, isNewnavEnabled: boolean) =>
+      isNewnavEnabled
+        ? routesV2.toMode({
+            accountId,
+            mode: NAV_MODE.MODULE,
+            module: moduleNameToModuleMapping[ModuleName.CODE],
+            noscope: true
+          })
+        : routes.toCODE({ accountId }),
     featureFlagName: FeatureFlag.CODE_ENABLED,
     color: '--default-module-border',
     shortLabel: 'common.purpose.code.name'
@@ -158,7 +224,15 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.IACM]: {
     icon: 'iacm',
     label: 'common.iacmText',
-    getHomePageUrl: (accountId: string) => routes.toIACM({ accountId }),
+    getHomePageUrl: (accountId: string, isNewnavEnabled: boolean) =>
+      isNewnavEnabled
+        ? routesV2.toMode({
+            accountId,
+            mode: NAV_MODE.MODULE,
+            module: moduleNameToModuleMapping[ModuleName.IACM],
+            noscope: true
+          })
+        : routes.toIACM({ accountId }),
     featureFlagName: FeatureFlag.IACM_ENABLED,
     color: '--iacm-border',
     shortLabel: 'common.infrastructures'
@@ -166,7 +240,15 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.SSCA]: {
     icon: 'ssca-main',
     label: 'common.sscaText',
-    getHomePageUrl: (accountId: string) => routes.toSSCA({ accountId }),
+    getHomePageUrl: (accountId: string, isNewnavEnabled: boolean) =>
+      isNewnavEnabled
+        ? routesV2.toMode({
+            accountId,
+            mode: NAV_MODE.MODULE,
+            module: moduleNameToModuleMapping[ModuleName.SSCA],
+            noscope: true
+          })
+        : routes.toSSCA({ accountId }),
     featureFlagName: FeatureFlag.SSCA_ENABLED,
     color: '--default-module-border',
     shortLabel: 'common.sscaShortLabel',
@@ -175,15 +257,33 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.IDP]: {
     icon: 'idp',
     label: 'common.purpose.idp.fullName',
-    getHomePageUrl: (accountId: string) => routes.toIDPDefaultPath({ accountId }),
+    getHomePageUrl: (accountId: string, isNewnavEnabled: boolean) =>
+      isNewnavEnabled
+        ? routesV2.toIDPDefaultPath({
+            accountId,
+            mode: NAV_MODE.MODULE,
+            module: moduleNameToModuleMapping[ModuleName.IDP]
+          })
+        : routes.toIDPDefaultPath({ accountId }),
     featureFlagName: FeatureFlag.IDP_ENABLED,
-    color: '--default-module-border',
-    shortLabel: 'common.purpose.idp.name'
+    color: '--idp-border',
+    shortLabel: 'common.purpose.idp.name',
+    moduleIntro: 'common.moduleIntro.idp',
+    backgroundColor: '--idp-background',
+    backgroundColorLight: '--idp-background-light'
   },
   [ModuleName.CET]: {
     icon: 'cet',
     label: 'common.purpose.cet.continuous',
-    getHomePageUrl: (accountId: string) => routes.toCET({ accountId }),
+    getHomePageUrl: (accountId: string, isNewnavEnabled: boolean) =>
+      isNewnavEnabled
+        ? routesV2.toMode({
+            accountId,
+            mode: NAV_MODE.MODULE,
+            module: moduleNameToModuleMapping[ModuleName.CET],
+            noscope: true
+          })
+        : routes.toCET({ accountId }),
     featureFlagName: FeatureFlag.CET_ENABLED,
     color: '--cet-border',
     shortLabel: 'common.purpose.errorTracking.title',
@@ -192,7 +292,15 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.SEI]: {
     icon: 'sei-main',
     label: 'common.purpose.sei.fullName',
-    getHomePageUrl: (accountId: string) => routes.toSEI({ accountId }),
+    getHomePageUrl: (accountId: string, isNewnavEnabled: boolean) =>
+      isNewnavEnabled
+        ? routesV2.toMode({
+            accountId,
+            mode: NAV_MODE.MODULE,
+            module: moduleNameToModuleMapping[ModuleName.SEI],
+            noscope: true
+          })
+        : routes.toSEI({ accountId }),
     featureFlagName: FeatureFlag.SEI_ENABLED,
     color: '--default-module-border',
     shortLabel: 'common.purpose.sei.continuous',
@@ -231,14 +339,15 @@ const getModuleInfo = (
   hasLicense: boolean,
   shouldVisible: boolean,
   color: string,
-  backgroundColor?: string
+  backgroundColor?: string,
+  isNewSidenavEnabled?: boolean
 ): useNavModuleInfoReturnType => {
   const { icon: moduleIcon, label, getHomePageUrl, shortLabel, moduleIntro } = moduleInfo
 
   return {
     icon: moduleIcon,
     label,
-    homePageUrl: getHomePageUrl(accountId),
+    homePageUrl: getHomePageUrl(accountId, isNewSidenavEnabled as boolean),
     shouldVisible: shouldVisible,
     hasLicense,
     color,
@@ -294,6 +403,7 @@ export const useNavModuleInfoMap = (): Record<NavModuleName, useNavModuleInfoRet
   const { accountId } = useParams<AccountPathProps>()
   const featureFlags = useFeatureFlags()
   const isCommunity = useGetCommunity()
+  const isNewSidenavEnabled = featureFlags.CDS_NAV_2_0
 
   const { licenseInformation } = useLicenseStore()
 
@@ -307,7 +417,9 @@ export const useNavModuleInfoMap = (): Record<NavModuleName, useNavModuleInfoRet
         accountId,
         !!licenseInformation[module]?.id,
         shouldBeVisible(module, featureFlags, licenseInformation, isCommunity),
-        moduleInfoMap[module].color
+        moduleInfoMap[module].color,
+        '',
+        isNewSidenavEnabled
       )
     }
   }, {})

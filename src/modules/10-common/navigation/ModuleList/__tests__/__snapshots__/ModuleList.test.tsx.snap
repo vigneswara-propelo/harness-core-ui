@@ -1048,7 +1048,7 @@ exports[`ModuleList should render correctly without modules 1`] = `
                   class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start"
                 >
                   <div
-                    class="StyledProps--font StyledProps--main container default StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--background-primary9"
+                    class="StyledProps--font StyledProps--main container idp StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--background-primary9"
                     style="width: 310px;"
                   >
                     <div

@@ -10,6 +10,7 @@ import { useLogout } from 'framework/utils/SessionUtils'
 import RbacButton from '@rbac/components/Button/Button'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import { SideNav } from '@common/navigation/SideNavV2/SideNavV2'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useFeature } from '@common/hooks/useFeatures'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -47,7 +48,8 @@ function ChildAppMounter<T>({ ChildApp, children, ...rest }: T & ChildAppMounter
         YAMLBuilder,
         MonacoDiffEditor,
         LevelUpBanner,
-        ParentLink
+        ParentLink,
+        SideNav
       }}
       hooks={{
         useDocumentTitle,

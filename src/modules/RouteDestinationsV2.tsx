@@ -26,6 +26,9 @@ import NotFoundPage from '@common/pages/404/NotFoundPage'
 import { Module } from 'framework/types/ModuleName'
 import WelcomePage from '@common/pages/welcome/WelcomePage'
 import { RouteWithContext } from '@common/router/RouteWithContext/RouteWithContext'
+import IDPRouteDestinations from '@idp/IDPRouteDestination'
+import IDPAdminRouteDestinations from '@idp/IDPAdminRouteDestination'
+import IDPAdminSideNavLinks from '@idp/components/IDPSideNav/IDPAdminSideNavLinks'
 
 const RedirectToMode = ({ mode }: { mode?: NAV_MODE }): React.ReactElement => {
   const { module, accountId, path, projectIdentifier, orgIdentifier } = useParams<
@@ -168,6 +171,23 @@ const RoutesV2 = (): React.ReactElement => {
           </SideNav>
           <Container style={{ flex: 1 }}>
             <DashboardRouteDestinations />
+          </Container>
+        </Layout.Horizontal>
+      </Route>
+      <Route path={routes.toMode({ ...accountPathProps, mode: NAV_MODE.MODULE, module: ':module(idp)' })}>
+        <Layout.Horizontal>
+          <Container style={{ flex: 1 }}>
+            <IDPRouteDestinations />
+          </Container>
+        </Layout.Horizontal>
+      </Route>
+      <Route path={routes.toMode({ ...accountPathProps, mode: NAV_MODE.MODULE, module: ':module(idp-admin)' })}>
+        <Layout.Horizontal>
+          <SideNav>
+            <IDPAdminSideNavLinks />
+          </SideNav>
+          <Container style={{ flex: 1 }}>
+            <IDPAdminRouteDestinations />
           </Container>
         </Layout.Horizontal>
       </Route>

@@ -1004,7 +1004,22 @@ const routes = {
   ),
   toIACMPipelineCostEstimation: withModeModuleAndScopePrefix<ProjectPathProps & ExecutionPathProps>(
     params => `/pipelines/${params?.pipelineIdentifier}/${params?.source}/${params?.executionIdentifier}/costs`
-  )
+  ),
+
+  // idp routes
+  toIDPDefaultPath: withModeModuleAndScopePrefix<ModulePathParams>(() => '/default'),
+  toIDP: withModeModuleAndScopePrefix<ModulePathParams>(() => '/'),
+  toIDPAdmin: withModeModuleAndScopePrefix<ModulePathParams>(() => '/'),
+  toGetStartedWithIDP: withModeModuleAndScopePrefix<ModulePathParams>(() => '/get-started'),
+  toAdminHome: withModeModuleAndScopePrefix<ModulePathParams>(() => '/home'),
+  toPluginsPage: withModeModuleAndScopePrefix<ModulePathParams>(() => '/plugins'),
+  toConfigurations: withModeModuleAndScopePrefix<ModulePathParams>(() => '/configurations'),
+  toLayoutConfig: withModeModuleAndScopePrefix<ModulePathParams>(() => '/layout'),
+  toIDPAccessControl: withModeModuleAndScopePrefix<ModulePathParams>(() => '/access-control'),
+  toConnectorsPage: withModeModuleAndScopePrefix<ModulePathParams>(() => '/connectors'),
+  toIDPOAuthConfig: withModeModuleAndScopePrefix<ModulePathParams>(() => '/oauth'),
+  toIDPAllowListURL: withModeModuleAndScopePrefix<ModulePathParams>(() => '/allowlist-url'),
+  toScorecards: withModeModuleAndScopePrefix<ModulePathParams>(() => '/scorecards')
 }
 
 export default routes

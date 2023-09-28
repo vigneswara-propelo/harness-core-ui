@@ -728,6 +728,7 @@ export interface StringsMap {
   'common.moduleIntro.continuousErrorTracking': string
   'common.moduleIntro.deployments': string
   'common.moduleIntro.featureFlag': string
+  'common.moduleIntro.idp': string
   'common.moduleIntro.insights': string
   'common.moduleIntro.reliabilityManagement': string
   'common.moduleIntro.securityTest': string
