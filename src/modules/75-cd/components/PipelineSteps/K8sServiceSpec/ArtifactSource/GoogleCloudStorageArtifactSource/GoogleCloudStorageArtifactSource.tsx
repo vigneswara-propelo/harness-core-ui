@@ -341,7 +341,11 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               placeholder={getString('common.selectProject')}
               selectItems={projectOptions}
               useValue
-              disabled={!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.project`)}
+              disabled={
+                (!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.project`)) ||
+                (isValueRuntimeInput(get(template, `artifacts.${artifactPath}.spec.connectorRef`)) &&
+                  !get(formik?.values, `${path}.artifacts.${artifactPath}.spec.connectorRef`))
+              }
               helperText={getProjectHelperText()}
               multiTypeInputProps={{
                 allowableTypes,
@@ -378,7 +382,11 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               label={getString('pipelineSteps.bucketLabel')}
               placeholder={getString('pipeline.artifacts.googleCloudStorage.bucketPlaceholder')}
               selectItems={bucketOptions}
-              disabled={!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.bucket`)}
+              disabled={
+                (!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.bucket`)) ||
+                (isValueRuntimeInput(get(template, `artifacts.${artifactPath}.spec.project`)) &&
+                  !get(formik?.values, `${path}.artifacts.${artifactPath}.spec.project`))
+              }
               helperText={getBucketHelperText()}
               useValue
               multiTypeInputProps={{
