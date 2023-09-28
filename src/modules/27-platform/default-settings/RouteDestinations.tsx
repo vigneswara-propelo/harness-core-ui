@@ -361,6 +361,11 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_NODE_EXECUTION_
   yupValidation: Yup.boolean(),
   settingCategory: 'PMS'
 })
+DefaultSettingsFactory.registerSettingHandler(SettingType.DO_NOT_DELETE_PIPELINE_EXECUTION_DETAILS, {
+  label: 'platform.defaultSettings.doNotDeletePipelineExecutionDetails',
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
+  settingCategory: 'PMS'
+})
 
 DefaultSettingsFactory.registerSettingHandler(SettingType.ALLOW_USER_TO_MARK_STEP_AS_FAILED_EXPLICITLY, {
   label: 'platform.defaultSettings.allowUserToMarkStepAsFailedExplicitly',

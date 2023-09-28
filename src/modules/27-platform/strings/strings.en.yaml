@@ -6,6 +6,7 @@ defaultSettings:
   inheritedFrom: Inherited from {{source}}
   mandateWebhookSecretsGithubTriggers: Mandate Webhook Secrets for Github Triggers
   mandateAuthorizationForCustomWebhookTriggers: Mandate Authorization for Custom Webhook Triggers
+  doNotDeletePipelineExecutionDetails: Do Not Delete Pipeline Execution Details
   executeTriggersWithAllCollectedArtifactsOrManifests: Execute Triggers With All Collected Artifacts or Manifests
   enableForceDelete: Enable Force Delete of Harness Resources
   enableGitCommands: Use Git client for commits

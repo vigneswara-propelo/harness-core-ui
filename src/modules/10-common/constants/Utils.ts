@@ -121,7 +121,8 @@ export enum SettingType {
   ENABLE_MSTEAMS_NOTIFICATION = 'enable_msTeams_notification',
   MSTEAMS_NOTIFICATION_ENDPOINTS_ALLOWLIST = 'msTeam_notification_endpoints_allowlist',
   ENABLE_SLACK_NOTIFICATION = 'enable_slack_notification',
-  SLACK_NOTIFICATION_ENDPOINTS_ALLOWLIST = 'slack_notification_endpoints_allowlist'
+  SLACK_NOTIFICATION_ENDPOINTS_ALLOWLIST = 'slack_notification_endpoints_allowlist',
+  DO_NOT_DELETE_PIPELINE_EXECUTION_DETAILS = 'do_not_delete_pipeline_execution_details'
 }
 
 export const isValidYAMLFilePath = (filePath: string): boolean => {

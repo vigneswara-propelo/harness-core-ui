@@ -3127,6 +3127,7 @@ export interface StringsMap {
   'platform.defaultSettings.defaultGitExperienceRepoPlaceholder': string
   'platform.defaultSettings.defaultImagePullPolicyForAddOnContainer': string
   'platform.defaultSettings.defaultStoreType': string
+  'platform.defaultSettings.doNotDeletePipelineExecutionDetails': string
   'platform.defaultSettings.emailPlaceholder': string
   'platform.defaultSettings.emailToNonHarnessUsers': string
   'platform.defaultSettings.enableBiDirectionalSync': string
