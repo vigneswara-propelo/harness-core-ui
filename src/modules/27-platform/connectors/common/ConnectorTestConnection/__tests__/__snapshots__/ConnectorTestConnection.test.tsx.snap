@@ -318,6 +318,9 @@ exports[`Verification step for out of cluster delegate render ConnectorTestConne
             </div>
           </div>
         </div>
+        <div
+          class="StyledProps--font StyledProps--main delegateTaskLogsButton"
+        />
       </div>
     </div>
     <div
@@ -588,6 +591,9 @@ exports[`Verification step for out of cluster delegate render ConnectorTestConne
             </div>
           </div>
         </div>
+        <div
+          class="StyledProps--font StyledProps--main delegateTaskLogsButton"
+        />
       </div>
     </div>
     <div
@@ -758,6 +764,9 @@ exports[`Verification step for out of cluster delegate render ConnectorTestConne
             </div>
           </div>
         </div>
+        <div
+          class="StyledProps--font StyledProps--main delegateTaskLogsButton"
+        />
       </div>
     </div>
     <div
@@ -891,6 +900,9 @@ exports[`Verification step for out of cluster delegate render ConnectorTestConne
             </div>
           </div>
         </div>
+        <div
+          class="StyledProps--font StyledProps--main delegateTaskLogsButton"
+        />
       </div>
     </div>
   </div>
@@ -1015,6 +1027,9 @@ exports[`Verification step for out of cluster delegate render ConnectorTestConne
             </div>
           </div>
         </div>
+        <div
+          class="StyledProps--font StyledProps--main delegateTaskLogsButton"
+        />
       </div>
     </div>
     <div

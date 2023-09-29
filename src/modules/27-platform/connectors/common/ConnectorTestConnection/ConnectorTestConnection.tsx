@@ -16,7 +16,8 @@ import {
   StepProps,
   ButtonVariation,
   ButtonSize,
-  HarnessDocTooltip
+  HarnessDocTooltip,
+  Container
 } from '@harness/uicore'
 import { Color, FontVariation, Intent } from '@harness/design-system'
 import { useGetDelegateFromId } from 'services/portal'
@@ -318,10 +319,10 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
     const timePadding = 60 * 5 // 5 minutes
     const testStartTimeForApi = Math.floor((testStartTime || 0) / 1000) - timePadding
     const testEndTimeForApi = Math.floor((testEndTime || 0) / 1000) + timePadding * 2
+    const metadata = (testConnectionResponse?.data as Error)?.metadata as ConnectorValidationErrorMetadataDTO
 
     const renderError = () => {
       const { responseMessages = null } = testConnectionResponse?.data as Error
-      const metadata = (testConnectionResponse?.data as Error).metadata as ConnectorValidationErrorMetadataDTO
       const genericHandler = (
         <Layout.Vertical>
           <Layout.Horizontal className={css.errorResult}>
@@ -410,20 +411,8 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
                     : getString('platform.connectors.testConnectionStep.viewPermissions')}
                 </Text>
               )}
-              {connectorInfo && connectorInfo?.spec?.executeOnDelegate !== false ? (
-                <DelegateTaskLogsButton
-                  taskIds={[metadata?.taskId || '']}
-                  areLogsAvailable={!!metadata?.taskId}
-                  startTime={testStartTimeForApi}
-                  endTime={testEndTimeForApi}
-                  telemetry={{ hasError: true, taskContext: TaskContext.ConnectorValidation }}
-                />
-              ) : null}
             </Layout.Horizontal>
           ) : null}
-          {/* ) : (
-          <Button text={getString('platform.connectors.testConnectionStep.installNewDelegate')} disabled width="160px" />
-        )} */}
         </Layout.Vertical>
       )
     }
@@ -537,17 +526,22 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
               current={stepDetails.step}
               currentStatus={stepDetails.status}
             />
-            {connectorInfo && connectorInfo?.spec?.executeOnDelegate ? (
-              <DelegateTaskLogsButton
-                startTime={testStartTimeForApi}
-                endTime={testEndTimeForApi}
-                taskIds={[testConnectionResponse?.data?.taskId || '']}
-                telemetry={{
-                  taskContext: TaskContext.ConnectorValidation,
-                  hasError: testConnectionResponse?.data?.status !== 'SUCCESS'
-                }}
-                areLogsAvailable={!!(testConnectionResponse?.data?.delegateId && testConnectionResponse?.data?.taskId)}
-              />
+            {!loading && connectorInfo && connectorInfo?.spec?.executeOnDelegate !== false ? (
+              <Container className={css.delegateTaskLogsButton}>
+                <DelegateTaskLogsButton
+                  startTime={testStartTimeForApi}
+                  endTime={testEndTimeForApi}
+                  taskIds={[metadata?.taskId || testConnectionResponse?.data?.taskId || '']}
+                  telemetry={{
+                    taskContext: TaskContext.ConnectorValidation,
+                    hasError: testConnectionResponse?.data?.status !== 'SUCCESS'
+                  }}
+                  areLogsAvailable={
+                    !!metadata?.taskId ||
+                    !!(testConnectionResponse?.data?.delegateId && testConnectionResponse?.data?.taskId)
+                  }
+                />
+              </Container>
             ) : null}
             {stepDetails.status === 'DONE' ? (
               <Text color={Color.GREEN_600} font={{ weight: 'bold' }}>

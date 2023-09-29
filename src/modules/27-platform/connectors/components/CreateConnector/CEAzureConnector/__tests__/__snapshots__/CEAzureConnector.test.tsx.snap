@@ -2461,6 +2461,9 @@ exports[`Create Azure connector Wizard should render feature cards, render servi
                     </div>
                   </div>
                 </div>
+                <div
+                  class="StyledProps--font StyledProps--main delegateTaskLogsButton"
+                />
               </div>
             </div>
             <div

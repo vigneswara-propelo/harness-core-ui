@@ -10,6 +10,7 @@ declare const styles: {
   readonly btnWrapper: string
   readonly content: string
   readonly contentMinHeight: string
+  readonly delegateTaskLogsButton: string
   readonly editCreds: string
   readonly errorHandler: string
   readonly errorMsg: string
