@@ -23,6 +23,7 @@ export function ServicePopoverCard(props: ServicePopoveCardProps): React.ReactEl
   const manifestChartName = manifestInfo?.chartName
   const manifestChartVersion = manifestInfo?.chartVersion
   const manifestRepoName = manifestInfo?.repoName
+
   return (
     <div className={css.main}>
       <String tagName="div" className={css.title} stringID="primaryArtifactText" />
@@ -88,7 +89,7 @@ export function ServicePopoverCard(props: ServicePopoveCardProps): React.ReactEl
           ))}
         </>
       ) : null}
-      {manifestInfo ? (
+      {manifestChartName || manifestChartVersion ? (
         <>
           <String tagName="div" className={css.title} stringID="pipeline.manifestType.manifestDetails" />
           {manifestChartName && (
