@@ -179,6 +179,7 @@ featureFlags:
       Please ensure all references to this flag are removed prior to archiving. <br/><br/>'
   tagging:
     emptyState: No tags assigned
+    maxTagsError: Exceeded max number of tags allowed per flag (10)
   rules:
     whenFlagEnabled: When the Flag is Enabled
     whenFlagDisabled: When the Flag is Disabled

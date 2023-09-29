@@ -30,6 +30,8 @@ const renderComponent = (props: Partial<NoFeatureFlagsProps>): RenderResult =>
         environmentIdentifier="dummy"
         clearFilter={onClearFilter}
         clearSearch={onClearSearch}
+        tags={[]}
+        tagsError={null}
         {...props}
       />
     </TestWrapper>

@@ -5,20 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.about-flag-container {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-
-  :global(.bp3-control-indicator) {
-    margin-left: 0 !important;
-  }
-  .checkbox-icon {
-    position: absolute;
-  }
-}
-
-.tooltip-about-flag {
+.aboutFlagTooltip {
   & > div {
     p {
       padding: var(--spacing-large) !important;
@@ -26,4 +13,9 @@
       font-size: var(--font-size-small) !important;
     }
   }
+}
+
+.footerBtns {
+  position: absolute;
+  bottom: 0;
 }

@@ -5,11 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useMemo } from 'react'
 import {
   Formik,
   FormikForm as Form,
   FormInput,
+  Heading,
   Layout,
   Container,
   StepProps,
@@ -24,61 +25,84 @@ import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
 import { illegalIdentifiers } from '@common/utils/StringUtils'
 import { useTelemetry } from '@common/hooks/useTelemetry'
+import type { Tag } from 'services/cf'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import type { FlagWizardFormValues } from './FlagWizard'
 import css from './FlagElemAbout.module.scss'
 
-interface FlagElemAboutProps {
+export interface FlagElemAboutProps {
   goBackToTypeSelections: () => void
+  tags?: Tag[]
+  tagsError?: unknown
 }
 
-type AboutFormProps = FormikProps<any> & FlagElemAboutProps & { isEdit: boolean }
+type AboutFormProps = FormikProps<any> & FlagElemAboutProps & { isEdit: boolean; disabled: boolean }
 
 const AboutForm: FC<AboutFormProps> = props => {
   const { getString } = useStrings()
+  const { FFM_8184_FEATURE_FLAG_TAGGING } = useFeatureFlags()
+
+  const { tags = [], disabled, handleSubmit, goBackToTypeSelections } = props
+
+  const tagItems = useMemo(
+    () =>
+      tags?.map(t => ({
+        label: t.name,
+        value: t.identifier
+      })),
+    [tags]
+  )
 
   return (
     <Form>
-      <Container height="100%" className={css.aboutFlagContainer}>
-        <Container style={{ flexGrow: 1, overflow: 'auto' }}>
-          <Text style={{ fontSize: '18px', color: Color.GREY_700 }} margin={{ bottom: 'xlarge' }}>
-            {getString('cf.creationModal.aboutFlag.aboutFlagHeading')}
-          </Text>
-          <Container margin={{ bottom: 'large' }} width="60%">
-            <FormInput.InputWithIdentifier
-              inputName="name"
-              idName="identifier"
-              isIdentifierEditable={true}
-              inputGroupProps={{
-                placeholder: getString('cf.creationModal.aboutFlag.ffNamePlaceholder'),
-                inputGroup: { autoFocus: true }
+      <Layout.Vertical spacing="medium" height="100%">
+        <Heading color={Color.GREY_700} level={2}>
+          {getString('cf.creationModal.aboutFlag.aboutFlagHeading')}
+        </Heading>
+        <Container width="60%">
+          <FormInput.InputWithIdentifier
+            inputName="name"
+            idName="identifier"
+            isIdentifierEditable
+            inputGroupProps={{
+              placeholder: getString('cf.creationModal.aboutFlag.ffNamePlaceholder'),
+              inputGroup: { autoFocus: true }
+            }}
+          />
+          <FormInput.TextArea label={getString('description')} name="description" />
+          {FFM_8184_FEATURE_FLAG_TAGGING && (
+            <FormInput.MultiSelect
+              label={getString('tagsLabel')}
+              disabled={disabled}
+              name="tags"
+              multiSelectProps={{
+                allowCreatingNewItems: true,
+                placeholder: getString('tagsLabel')
               }}
+              items={tagItems}
             />
-            <FormInput.TextArea label={getString('description')} name="description" />
-          </Container>
-          <Container margin={{ top: 'xlarge' }}>
-            <Layout.Horizontal>
-              <FormInput.CheckBox name="permanent" label={getString('cf.creationModal.aboutFlag.permaFlag')} />
-              <Text
-                margin={{ left: 'xsmall' }}
-                tooltip={getString('cf.creationModal.aboutFlag.permaFlagTooltip')}
-                tooltipProps={{
-                  isDark: true,
-                  portalClassName: css.tooltipAboutFlag
-                }}
-                inline
-              />
-            </Layout.Horizontal>
-          </Container>
+          )}
         </Container>
-        <Layout.Horizontal spacing="small" margin={{ top: 'large' }}>
+        <Layout.Horizontal padding={{ top: 'medium' }} spacing="xsmall">
+          <FormInput.CheckBox name="permanent" label={getString('cf.creationModal.aboutFlag.permaFlag')} />
+          <Text
+            tooltip={getString('cf.creationModal.aboutFlag.permaFlagTooltip')}
+            tooltipProps={{
+              isDark: true,
+              portalClassName: css.aboutFlagTooltip
+            }}
+            inline
+          />
+        </Layout.Horizontal>
+        <Layout.Horizontal flex spacing="small" className={css.footerBtns}>
           <Button
             type="button"
             text={getString('back')}
             variation={ButtonVariation.SECONDARY}
             onMouseDown={e => {
               Utils.stopEvent(e)
-              props.goBackToTypeSelections()
+              goBackToTypeSelections()
             }}
           />
           <Button
@@ -87,17 +111,22 @@ const AboutForm: FC<AboutFormProps> = props => {
             rightIcon="chevron-right"
             text={getString('next')}
             variation={ButtonVariation.PRIMARY}
-            onClick={() => props.handleSubmit()}
+            onClick={() => handleSubmit()}
           />
         </Layout.Horizontal>
-      </Container>
+      </Layout.Vertical>
     </Form>
   )
 }
 
-const FlagElemAbout: FC<StepProps<Partial<FlagWizardFormValues>> & FlagElemAboutProps> = props => {
+const FlagElemAbout: FC<StepProps<Partial<FlagWizardFormValues>> & FlagElemAboutProps> = ({
+  nextStep,
+  prevStepData,
+  goBackToTypeSelections,
+  tags,
+  tagsError
+}) => {
   const { getString } = useStrings()
-  const { nextStep, prevStepData, goBackToTypeSelections } = props
   const isEdit = Boolean(prevStepData)
 
   const { trackEvent } = useTelemetry()
@@ -112,35 +141,43 @@ const FlagElemAbout: FC<StepProps<Partial<FlagWizardFormValues>> & FlagElemAbout
   }, [isEdit])
 
   return (
-    <>
-      <Formik
-        initialValues={{
-          name: prevStepData?.name || '',
-          identifier: prevStepData?.identifier || '',
-          description: prevStepData?.description || '',
-          tags: prevStepData?.tags || [],
-          permanent: prevStepData?.permanent || false
-        }}
-        formName="cfFlagElem"
-        validationSchema={Yup.object().shape({
-          name: Yup.string().trim().required(getString('cf.creationModal.aboutFlag.nameRequired')),
-          identifier: Yup.string()
-            .trim()
-            .required(getString('cf.creationModal.aboutFlag.idRequired'))
-            .matches(/^(?![0-9])[0-9a-zA-Z_$]*$/, getString('cf.creationModal.aboutFlag.ffRegex'))
-            .notOneOf(illegalIdentifiers)
-        })}
-        onSubmit={vals => {
-          trackEvent(FeatureActions.AboutTheFlagNext, {
-            category: Category.FEATUREFLAG,
-            data: vals
-          })
-          nextStep?.({ ...prevStepData, ...vals })
-        }}
-      >
-        {formikProps => <AboutForm {...formikProps} isEdit={isEdit} goBackToTypeSelections={goBackToTypeSelections} />}
-      </Formik>
-    </>
+    <Formik
+      initialValues={{
+        name: prevStepData?.name || '',
+        identifier: prevStepData?.identifier || '',
+        description: prevStepData?.description || '',
+        tags: prevStepData?.tags || [],
+        permanent: prevStepData?.permanent || false
+      }}
+      formName="cfFlagElem"
+      validationSchema={Yup.object().shape({
+        name: Yup.string().trim().required(getString('cf.creationModal.aboutFlag.nameRequired')),
+        identifier: Yup.string()
+          .trim()
+          .required(getString('cf.creationModal.aboutFlag.idRequired'))
+          .matches(/^(?![0-9])[0-9a-zA-Z_$]*$/, getString('cf.creationModal.aboutFlag.ffRegex'))
+          .notOneOf(illegalIdentifiers),
+        tags: Yup.array().max(10, getString('cf.featureFlags.tagging.maxTagsError'))
+      })}
+      onSubmit={vals => {
+        trackEvent(FeatureActions.AboutTheFlagNext, {
+          category: Category.FEATUREFLAG,
+          data: vals
+        })
+
+        nextStep?.({ ...prevStepData, ...vals })
+      }}
+    >
+      {formikProps => (
+        <AboutForm
+          disabled={!!tagsError}
+          isEdit={isEdit}
+          goBackToTypeSelections={goBackToTypeSelections}
+          tags={tags}
+          {...formikProps}
+        />
+      )}
+    </Formik>
   )
 }
 

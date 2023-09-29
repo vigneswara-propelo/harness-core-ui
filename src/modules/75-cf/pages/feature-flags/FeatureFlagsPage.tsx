@@ -15,7 +15,8 @@ import {
   GetFeatureMetricsQueryParams,
   useDeleteFeatureFlag,
   useGetAllFeatures,
-  useGetFeatureMetrics
+  useGetFeatureMetrics,
+  useGetAllTags
 } from 'services/cf'
 import { useStrings } from 'framework/strings'
 import { useToggleFeatureFlag } from '@cf/hooks/useToggleFeatureFlag'
@@ -108,6 +109,15 @@ const FeatureFlagsPage: FC = () => {
     searchTerm
   })
 
+  const { data: tagsData, error: tagsError } = useGetAllTags({
+    queryParams: {
+      projectIdentifier,
+      environmentIdentifier,
+      accountIdentifier,
+      orgIdentifier
+    }
+  })
+
   const toggleFeatureFlag = useToggleFeatureFlag({
     accountIdentifier,
     orgIdentifier,
@@ -187,7 +197,7 @@ const FeatureFlagsPage: FC = () => {
           hasFeatureFlags && (
             <>
               <div className={css.leftToolbar}>
-                <FlagDialog environment={environmentIdentifier} />
+                <FlagDialog environment={environmentIdentifier} tags={tagsData?.tags || []} tagsError={tagsError} />
                 <GitSyncActions isLoading={gitSync.isGitSyncActionsEnabled && (gitSync.gitSyncLoading || gitSyncing)} />
               </div>
               <ExpandingSearchInput
@@ -274,6 +284,8 @@ const FeatureFlagsPage: FC = () => {
             environmentIdentifier={environmentIdentifier}
             clearFilter={onClearFilter}
             clearSearch={onClearSearch}
+            tags={tagsData?.tags || []}
+            tagsError={tagsError}
           />
         )}
       </ListingPageTemplate>

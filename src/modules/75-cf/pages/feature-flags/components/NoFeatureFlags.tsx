@@ -5,11 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactNode } from 'react'
+import React, { FC, ReactNode } from 'react'
 import { ButtonProps, Container, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import FlagDialog from '@cf/components/CreateFlagDialog/FlagDialog'
 import { NoData } from '@cf/components/NoData/NoData'
+import type { Tag } from 'services/cf'
 import { useStrings, String } from 'framework/strings'
 import noFlagsImg from '@cf/images/Feature_Flags_Teepee.svg'
 import noResultsImg from '@cf/images/EmptySearchResults.svg'
@@ -24,15 +25,19 @@ export interface NoFeatureFlagsProps {
   environmentIdentifier: string
   clearFilter: () => void
   clearSearch: () => void
+  tags?: Tag[]
+  tagsError?: unknown
 }
 
-export const NoFeatureFlags: React.FC<NoFeatureFlagsProps> = ({
+export const NoFeatureFlags: FC<NoFeatureFlagsProps> = ({
   hasFeatureFlags,
   hasSearchTerm,
   hasFlagFilter,
   environmentIdentifier,
   clearFilter,
-  clearSearch
+  clearSearch,
+  tags = [],
+  tagsError = null
 }) => {
   const { getString } = useStrings()
 
@@ -84,7 +89,7 @@ export const NoFeatureFlags: React.FC<NoFeatureFlagsProps> = ({
             <String useRichText stringID="cf.featureFlags.noFlagsToGetStarted" />
           </div>
           <GetStartedWithFF />
-          <FlagDialog environment={environmentIdentifier} isLinkVariation />
+          <FlagDialog environment={environmentIdentifier} isLinkVariation tags={tags} tagsError={tagsError} />
         </>
       )
     }
@@ -108,7 +113,7 @@ export const NoFeatureFlags: React.FC<NoFeatureFlagsProps> = ({
   return (
     <Container width="100%" height="100%" flex={{ align: 'center-center' }}>
       <FlagsSectionNoData>
-        <FlagDialog environment={environmentIdentifier} isLinkVariation />
+        <FlagDialog environment={environmentIdentifier} isLinkVariation tags={tags} tagsError={tagsError} />
       </FlagsSectionNoData>
     </Container>
   )

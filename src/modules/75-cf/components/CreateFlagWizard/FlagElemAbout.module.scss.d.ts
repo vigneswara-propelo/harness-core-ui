@@ -7,8 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly aboutFlagContainer: string
-  readonly checkboxIcon: string
-  readonly tooltipAboutFlag: string
+  readonly aboutFlagTooltip: string
+  readonly footerBtns: string
 }
 export default styles

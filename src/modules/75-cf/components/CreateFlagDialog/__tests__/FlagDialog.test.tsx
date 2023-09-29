@@ -6,36 +6,35 @@
  */
 
 import React from 'react'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { render, screen, RenderResult } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import FlagDialog from '../FlagDialog'
-
-jest.mock('@common/hooks', () => ({
-  useQueryParams: () => jest.fn(),
-  useDeepCompareEffect: () => jest.fn(),
-  useLocalStorage: jest.fn().mockImplementation(() => [5, jest.fn()])
-}))
+import FlagDialog, { FlagDialogProps } from '../FlagDialog'
 
 const trackEventMock = jest.fn()
 jest.mock('@common/hooks/useTelemetry', () => ({
   useTelemetry: () => ({ identifyUser: jest.fn(), trackEvent: trackEventMock })
 }))
 
-describe('FlagDialog', () => {
-  test('it should fire telemetary event when Create Flag Dialog opened', () => {
-    render(
-      <TestWrapper
-        path="/account/:accountId/cf/dashboard/orgs/:orgIdentifier/projects/:projectIdentifier"
-        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
-      >
-        <FlagDialog disabled={false} environment="nonProduction" />
-      </TestWrapper>
-    )
+const renderComponent = (props: Partial<FlagDialogProps> = {}): RenderResult => {
+  return render(
+    <TestWrapper
+      path="/account/:accountId/cf/dashboard/orgs/:orgIdentifier/projects/:projectIdentifier"
+      pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+    >
+      <FlagDialog environment="nonProduction" {...props} />
+    </TestWrapper>
+  )
+}
 
-    const createFlagButton = screen.getByText('cf.featureFlags.newFlag')
+describe('FlagDialog', () => {
+  test('it should fire telemetary event when Create Flag Dialog opened', async () => {
+    renderComponent()
+
+    const createFlagButton = screen.getByRole('button', { name: 'cf.featureFlags.newFlag' })
     expect(createFlagButton).toBeInTheDocument()
 
-    fireEvent.click(createFlagButton)
+    await userEvent.click(createFlagButton)
 
     expect(trackEventMock).toHaveBeenCalled()
   })

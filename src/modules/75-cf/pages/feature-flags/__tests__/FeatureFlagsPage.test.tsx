@@ -41,7 +41,8 @@ const renderComponent = (): RenderResult =>
         FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW: true,
         FFM_6683_ALL_ENVIRONMENTS_FLAGS: true,
         FFM_7258_INTERCOM_VIDEO_LINKS: true,
-        FFM_8344_FLAG_CLEANUP: true
+        FFM_8344_FLAG_CLEANUP: true,
+        FFM_8184_FEATURE_FLAG_TAGGING: true
       }}
     >
       <FeatureFlagsPage />
@@ -78,6 +79,9 @@ describe('FeatureFlagsPage', () => {
     })
     mockImport('services/cf', {
       useGetFeatureMetrics: () => ({ data: [], refetch: jest.fn() })
+    })
+    mockImport('services/cf', {
+      useGetAllTags: () => ({ data: [], refetch: jest.fn() })
     })
 
     mockEnvs()

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { FC, ReactElement, useEffect, useState } from 'react'
 import { Dialog } from '@blueprintjs/core'
 import { Button, ButtonVariation, Container, Icon, Text } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
@@ -16,19 +16,22 @@ import { ExitModalActions, Category, FeatureActions } from '@common/constants/Tr
 import useJira from '@cf/hooks/useJira'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { Tag } from 'services/cf'
 import { FlagTypeVariations } from './FlagDialogUtils'
 import FlagWizard from '../CreateFlagWizard/FlagWizard'
 import FlagTypeElement from '../CreateFlagType/FlagTypeElement'
 import CreateFlagButton from '../CreateFlagButton/CreateFlagButton'
 import css from './FlagDialog.module.scss'
 
-export interface FlagModalProps {
+export interface FlagDialogProps {
   disabled?: boolean
   environment: string
   isLinkVariation?: boolean
+  tags?: Tag[]
+  tagsError?: unknown
 }
 
-const FlagModal: React.FC<FlagModalProps> = ({ disabled, environment, isLinkVariation }) => {
+const FlagDialog: FC<FlagDialogProps> = ({ disabled, environment, isLinkVariation, tags = [], tagsError = null }) => {
   const { getString } = useStrings()
   const [flagTypeClicked, setFlagTypeClicked] = useState(false)
   const [flagTypeView, setFlagTypeView] = useState('')
@@ -51,7 +54,7 @@ const FlagModal: React.FC<FlagModalProps> = ({ disabled, environment, isLinkVari
 
   const { trackEvent } = useTelemetry()
 
-  const FeatureSelect = (): React.ReactElement => {
+  const FeatureSelect = (): ReactElement => {
     useEffect(() => {
       trackEvent(FeatureActions.SelectFeatureFlagType, {
         category: Category.FEATUREFLAG
@@ -96,7 +99,7 @@ const FlagModal: React.FC<FlagModalProps> = ({ disabled, environment, isLinkVari
   const [showModal, hideModal] = useModalHook(() => {
     return (
       <Dialog
-        isOpen={true}
+        isOpen
         enforceFocus={false}
         onClose={() => {
           setFlagTypeClicked(false)
@@ -108,6 +111,8 @@ const FlagModal: React.FC<FlagModalProps> = ({ disabled, environment, isLinkVari
         {flagTypeClicked ? (
           <FlagWizard
             flagTypeView={flagTypeView}
+            tags={tags}
+            tagsError={tagsError}
             environmentIdentifier={environment}
             toggleFlagType={toggleFlagType}
             hideModal={hideModal}
@@ -150,4 +155,4 @@ const FlagModal: React.FC<FlagModalProps> = ({ disabled, environment, isLinkVari
   return <CreateFlagButton disabled={disabled} showModal={showModal} isLinkVariation={isLinkVariation} />
 }
 
-export default FlagModal
+export default FlagDialog

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { FC, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { StepWizard, SelectOption, ModalErrorHandlerBinding } from '@harness/uicore'
 import {
@@ -13,12 +13,14 @@ import {
   FeatureFlagRequestRequestBody,
   CreateFeatureFlagQueryParams,
   GitSyncErrorResponse,
-  usePatchFeature
+  usePatchFeature,
+  Tag
 } from 'services/cf'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import routes from '@common/RouteDefinitions'
 import { useToaster } from '@common/exports'
 import { useStrings } from 'framework/strings'
+import { getIdentifierFromName } from '@common/utils/StringUtils'
 import { getErrorMessage, showToaster, FeatureFlagMutivariateKind } from '@cf/utils/CFUtils'
 import { PageSpinner } from '@common/components'
 import { GIT_SYNC_ERROR_CODE, useGitSync } from '@cf/hooks/useGitSync'
@@ -32,8 +34,10 @@ import SaveFlagRepoStep from './SaveFlagRepoStep'
 import patch from '../../utils/instructions'
 import css from './FlagWizard.module.scss'
 
-interface FlagWizardProps {
+export interface FlagWizardProps {
   flagTypeView: string
+  tags?: Tag[]
+  tagsError?: unknown
   environmentIdentifier: string
   jiraIssueKey?: string
   toggleFlagType: (newFlag: string) => void
@@ -45,17 +49,34 @@ export interface FlagWizardFormValues extends FeatureFlagRequestRequestBody {
   autoCommit: boolean
 }
 
-const FlagWizard: React.FC<FlagWizardProps> = props => {
+interface TagDropdownFormValues {
+  label: string
+  value: string
+}
+
+const FlagWizard: FC<FlagWizardProps> = props => {
   const { getString } = useStrings()
+  const { showError } = useToaster()
   const { currentUserInfo } = useAppStore()
+
   const flagTypeOptions: SelectOption[] = [
     { label: getString('cf.boolean'), value: FlagTypeVariations.booleanFlag },
     { label: getString('cf.multivariate'), value: FeatureFlagMutivariateKind.string }
   ]
-  const { flagTypeView, environmentIdentifier, toggleFlagType, hideModal, goBackToTypeSelections } = props
+
+  const {
+    flagTypeView,
+    environmentIdentifier,
+    tags = [],
+    tagsError = null,
+    toggleFlagType,
+    hideModal,
+    goBackToTypeSelections
+  } = props
+
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding | undefined>()
-  const { showError } = useToaster()
   const { projectIdentifier, orgIdentifier, accountId: accountIdentifier } = useParams<Record<string, string>>()
+
   const history = useHistory()
   const { handleError: handleGovernanceError, isGovernanceError } = useGovernance()
 
@@ -81,14 +102,21 @@ const FlagWizard: React.FC<FlagWizardProps> = props => {
     }
   })
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function sanitizeTagArray(tagVals: any): Tag[] {
+    // if object has label and value, rename to name and identifier
+    return tagVals.map((tag: TagDropdownFormValues) => ({
+      name: tag.label,
+      identifier: getIdentifierFromName(tag.value)
+    }))
+  }
+
   const onWizardSubmit = async (formData: FlagWizardFormValues | undefined): Promise<void> => {
     modalErrorHandler?.hide()
-
     if (formData) {
-      const valTags: any = formData?.tags?.map(elem => {
-        return { name: elem, value: elem }
-      })
+      const valTags = sanitizeTagArray(formData.tags)
       formData.tags = valTags
+
       // Note: Currently there's no official way to get current user. Rely on old token from
       // current gen login
       formData.owner = currentUserInfo.email || 'unknown'
@@ -180,6 +208,8 @@ const FlagWizard: React.FC<FlagWizardProps> = props => {
       <FlagElemAbout
         name={getString('cf.creationModal.aboutFlag.aboutFlagHeading')}
         goBackToTypeSelections={goBackToTypeSelections}
+        tags={tags}
+        tagsError={tagsError}
       />
       {flagTypeView === FlagTypeVariations.booleanFlag ? (
         <FlagElemBoolean
