@@ -49,7 +49,7 @@ export const moduleToModuleNameMapping: Record<Module, ModuleName> = {
 }
 
 export const moduleNameToModuleMapping: Record<
-  Exclude<ModuleName, 'COMMON' | 'TEMPLATES' | 'FRAMEWORK' | 'SRM' | 'DX' | 'ET'>,
+  Exclude<ModuleName, 'COMMON' | 'TEMPLATES' | 'FRAMEWORK' | 'SRM' | 'DX' | 'ET' | 'IDPAdmin'>,
   Module
 > = {
   [ModuleName.CI]: 'ci',
@@ -63,7 +63,6 @@ export const moduleNameToModuleMapping: Record<
   [ModuleName.IACM]: 'iacm',
   [ModuleName.SSCA]: 'ssca',
   [ModuleName.IDP]: 'idp',
-  [ModuleName.IDPAdmin]: 'idp-admin',
   [ModuleName.CET]: 'cet',
   [ModuleName.SEI]: 'sei',
   [ModuleName.DASHBOARDS]: 'dashboards'

@@ -320,7 +320,7 @@ export const NEW_ROUTE_PATHS = [
   '/account/:accountId/:mode/:module/orgs/:orgIdentifier',
   '/account/:accountId/:mode/orgs/:orgIdentifier/projects/:projectIdentifier',
   '/account/:accountId/:mode/orgs/:orgIdentifier',
-  '/account/:accountId/:mode/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|cet|sei)',
+  '/account/:accountId/:mode/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|cet|sei|idp-admin)',
   '/account/:accountId/:mode'
 ]
 
@@ -336,7 +336,7 @@ export const getRouteParams = <T>(includePath?: boolean, url?: string): T => {
 export const MODE_PATH = [
   `${
     window.harnessNameSpace || ''
-  }/ng/account/:accountId/:mode/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|cet|sei)`,
+  }/ng/account/:accountId/:mode/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp||idp-admin|cet|sei)`,
   `${window.harnessNameSpace || ''}/ng/account/:accountId/:mode`
 ]
 
