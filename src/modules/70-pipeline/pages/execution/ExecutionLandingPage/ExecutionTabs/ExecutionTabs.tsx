@@ -91,6 +91,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
   const isCIInPipeline = pipelineExecutionDetail?.pipelineExecutionSummary?.moduleInfo?.ci
   const isSTOInPipeline = pipelineExecutionDetail?.pipelineExecutionSummary?.moduleInfo?.sto
   const isCDInPipeline = pipelineExecutionDetail?.pipelineExecutionSummary?.moduleInfo?.cd
+  const isIACMInPipeline = pipelineExecutionDetail?.pipelineExecutionSummary?.moduleInfo?.iacm
 
   const ciData = pipelineExecutionDetail?.pipelineExecutionSummary?.moduleInfo?.ci
     ?.ciExecutionInfoDTO as CIWebhookInfoDTO
@@ -356,7 +357,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
   }
 
-  if (isPrivateAccess && isIACMEnabled) {
+  if (isPrivateAccess && isIACMEnabled && isIACMInPipeline) {
     tabList.push({
       id: TAB_ID_MAP.IACM,
       title: (
