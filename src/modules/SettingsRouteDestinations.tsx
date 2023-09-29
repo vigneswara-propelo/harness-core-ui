@@ -115,6 +115,7 @@ import { MonitoredServiceProvider } from '@cv/pages/monitored-service/MonitoredS
 import CommonMonitoredServiceDetails from '@cv/components/MonitoredServiceListWidget/components/CommonMonitoredServiceDetails/CommonMonitoredServiceDetails'
 import { Webhooks } from '@pipeline/pages/webhooks/Webhooks'
 import WebhookEvents from '@pipeline/pages/webhooks/WebhookEvents/WebhookEvents'
+import CVMonitoredService from '@cv/pages/monitored-service/CVMonitoredService/CVMonitoredService'
 
 const licenseRedirectDataCD: LicenseRedirectProps = {
   licenseStateName: LICENSE_STATE_NAMES.CD_LICENSE_STATE,
@@ -213,7 +214,6 @@ function SettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactEle
       >
         <ProjectSettingsPage />
       </RouteWithContext>
-
       {/* Settings Resources */}
       <RouteWithContext exact path={pathArrayForAllScopes(routes.toSettingsServices, mode)}>
         <Services calledFromSettingsPage={true} />
@@ -330,7 +330,6 @@ function SettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactEle
       >
         <SubscriptionsPage />
       </RouteWithContext>
-
       <RouteWithContext exact path={pathArrayForAllScopes(routes.toTicketSettings, mode)}>
         <ExternalTicketSettings />
       </RouteWithContext>
@@ -521,6 +520,9 @@ function SettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactEle
         <VariablesPage />
       </RouteWithContext>
 
+      {/* SRM settings page */}
+
+      {/* SLO Downtime */}
       <RouteWithContext exact path={pathArrayForAllScopes(routes.toCVSLODowntime, mode)}>
         <SLODowntimePage />
       </RouteWithContext>
@@ -529,6 +531,27 @@ function SettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactEle
       </RouteWithContext>
       <RouteWithContext exact path={pathArrayForAllScopes(routes.toCVEditSLODowntime, mode, { ...editParams })}>
         <CVCreateDowntime />
+      </RouteWithContext>
+
+      {/* Monitored Service */}
+      <RouteWithContext path={pathArrayForAllScopes(routes.toMonitoredServicesSettings, mode)} exact>
+        <MonitoredServiceListWidget config={monitoredServiceConfig} calledFromSettings={true} />
+      </RouteWithContext>
+      <RouteWithContext exact path={pathArrayForAllScopes(routes.toCVMonitoringServicesSettings, mode)}>
+        <MonitoredServiceProvider isTemplate={false}>
+          <CVMonitoredService calledFromSettings={true} />
+        </MonitoredServiceProvider>
+      </RouteWithContext>
+      <RouteWithContext exact path={pathArrayForAllScopes(routes.toAddMonitoredServicesSettings, mode)}>
+        <MonitoredServiceProvider isTemplate={false}>
+          <CommonMonitoredServiceDetails config={monitoredServiceConfig} calledFromSettings={true} />
+        </MonitoredServiceProvider>
+      </RouteWithContext>
+      <RouteWithContext
+        path={pathArrayForAllScopes(routes.toMonitoredServicesConfigurations, mode, { ...editParams })}
+        exact
+      >
+        <CommonMonitoredServiceDetails config={monitoredServiceConfig} calledFromSettings={true} />
       </RouteWithContext>
 
       <RouteWithContext
@@ -623,30 +646,6 @@ function SettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactEle
           <NetworkMapStudio />
         </React.Suspense>
       </RouteWithContext>
-
-      <RouteWithContext
-        path={[
-          ...pathArrayForAllScopes(routes.toMonitoredServicesSettings, mode),
-          ...pathArrayForAllScopes(routes.toMonitoredServices, mode)
-        ]}
-        exact
-      >
-        <MonitoredServiceListWidget config={monitoredServiceConfig} />
-      </RouteWithContext>
-
-      <RouteWithContext exact path={pathArrayForAllScopes(routes.toAddMonitoredServices, mode)}>
-        <MonitoredServiceProvider isTemplate={false}>
-          <CommonMonitoredServiceDetails config={monitoredServiceConfig} />
-        </MonitoredServiceProvider>
-      </RouteWithContext>
-
-      <RouteWithContext
-        path={pathArrayForAllScopes(routes.toMonitoredServicesConfigurations, mode, { ...editParams })}
-        exact
-      >
-        <CommonMonitoredServiceDetails config={monitoredServiceConfig} />
-      </RouteWithContext>
-
       {/* CCM Setting pages */}
       {
         CESettingsRouteDestination({

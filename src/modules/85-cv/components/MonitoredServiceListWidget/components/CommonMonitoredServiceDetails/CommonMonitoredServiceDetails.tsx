@@ -16,10 +16,11 @@ import css from './CommonMonitoredServiceDetails.module.scss'
 
 interface CommonMonitoredServiceDetailsProps {
   config: MonitoredServiceConfig
+  calledFromSettings?: boolean
 }
 
 export default function CommonMonitoredServiceDetails(props: CommonMonitoredServiceDetailsProps): JSX.Element {
-  const { config } = props
+  const { config, calledFromSettings } = props
   const { module } = config
   const { getString } = useStrings()
   const history = useHistory()
@@ -85,7 +86,7 @@ export default function CommonMonitoredServiceDetails(props: CommonMonitoredServ
         />
       )}
 
-      <Configurations config={config} />
+      <Configurations config={config} calledFromSettings={calledFromSettings} />
     </>
   )
 }

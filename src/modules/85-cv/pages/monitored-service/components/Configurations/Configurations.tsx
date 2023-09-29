@@ -13,8 +13,9 @@ import { parse } from 'yaml'
 import type { FormikProps } from 'formik'
 import { useQueryParams } from '@common/hooks'
 import { getCVMonitoringServicesSearchParam, getErrorMessage, getSearchString } from '@cv/utils/CommonUtils'
-import { accountPathProps, projectPathProps, modulePathProps } from '@common/utils/routeUtils'
+import { accountPathProps, projectPathProps, modulePathProps, getRouteParams } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import { editParams } from '@cv/utils/routeUtils'
 import type { Module, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useIndexedDBHook, CVObjectStoreNames } from '@cv/hooks/IndexedDBHook/IndexedDBHook'
@@ -38,6 +39,7 @@ import { TemplateContext } from '@templates-library/components/TemplateStudio/Te
 import { SLODetailsPageTabIds } from '@cv/pages/slos/CVSLODetailsPage/CVSLODetailsPage.types'
 import { isNewTemplate } from '@templates-library/components/TemplateStudio/TemplateStudioUtils'
 import type { MonitoredServiceConfig } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.types'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import Service, { ServiceWithRef } from './components/Service/Service'
 import { getInitFormData } from './components/Service/Service.utils'
 import type { MonitoredServiceForm } from './components/Service/Service.types'
@@ -51,6 +53,7 @@ interface ConfigurationsInterface {
   config?: MonitoredServiceConfig
   serviceIdentifier?: string
   environmentIdentifier?: string
+  calledFromSettings?: boolean
 }
 
 export default function Configurations(
@@ -59,7 +62,8 @@ export default function Configurations(
     templateValue,
     config,
     serviceIdentifier = '',
-    environmentIdentifier = ''
+    environmentIdentifier = '',
+    calledFromSettings
   }: ConfigurationsInterface,
   formikRef: TemplateFormRef
 ): JSX.Element {
@@ -91,7 +95,9 @@ export default function Configurations(
   const [overrideBlockNavigation, setOverrideBlockNavigation] = useState<boolean>(false)
   const [defaultMonitoredService, setDefaultMonitoredService] = useState<MonitoredServiceDTO>()
   const projectRef = useRef(projectIdentifier)
-  const { module } = config || {}
+  // const { module } = config || {}
+  const { CDS_NAV_2_0: newLeftNav } = useFeatureFlags()
+  const isSettingsRoute = newLeftNav && calledFromSettings
 
   const {
     data: dataMonitoredServiceById,
@@ -164,27 +170,30 @@ export default function Configurations(
 
   useEffect(() => {
     if (overrideBlockNavigation && !redirectToSLO) {
+      const pathParams = { projectIdentifier, orgIdentifier, accountId }
+      const { module } = getRouteParams<{ module: Module }>()
+      const params = {
+        ...pathParams,
+        ...(module ? { module: module as Module } : {})
+      }
       if (config) {
-        history.push(
-          routes.toMonitoredServices({
-            projectIdentifier,
-            orgIdentifier,
-            accountId,
-            ...(module ? { module: module as Module } : {})
-          })
-        )
+        isSettingsRoute
+          ? history.push(routesV2.toMonitoredServicesSettings(params))
+          : history.push(routes.toMonitoredServices(params))
       } else {
-        history.push({
-          pathname: routes.toCVMonitoringServices({
-            orgIdentifier,
-            projectIdentifier,
-            accountId
-          }),
-          search: getCVMonitoringServicesSearchParam({ view })
-        })
+        isSettingsRoute
+          ? history.push({
+              pathname: routesV2.toCVMonitoringServicesSettings(params),
+              search: getCVMonitoringServicesSearchParam({ view })
+            })
+          : history.push({
+              pathname: routes.toCVMonitoringServices(pathParams),
+              search: getCVMonitoringServicesSearchParam({ view })
+            })
       }
     }
-  }, [overrideBlockNavigation, redirectToSLO, module, config])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [overrideBlockNavigation, redirectToSLO, module, config, isSettingsRoute])
 
   const [hasTemplateChangeSourceSet, sethasTemplateChangeSourceSet] = useState(false)
   useEffect(() => {

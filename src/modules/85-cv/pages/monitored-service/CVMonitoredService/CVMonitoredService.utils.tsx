@@ -18,7 +18,10 @@ import { getRiskColorValue, getRiskLabelStringId } from '@cv/utils/CommonUtils'
 import ImageDeleteService from '@cv/assets/delete-service.svg'
 import type { FilterCardItem } from '@cv/components/FilterCard/FilterCard.types'
 import routes from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import type { MonitoredServiceConfig } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.types'
+import { Module } from 'framework/types/ModuleName'
+import { getRouteParams } from '@common/utils/routeUtils'
 import { RiskTagWithLabelProps, FilterTypes } from './CVMonitoredService.types'
 import { HistoricalTrendChartOption, DefaultChangePercentage } from './CVMonitoredService.constants'
 import css from './CVMonitoredService.module.scss'
@@ -185,14 +188,24 @@ export const getMonitoredServiceFilterOptions = (
 
 export const getPathNameOnCreateMonitoredService = (
   pathParams: { accountId: string; orgIdentifier: string; projectIdentifier: string },
-  configData?: MonitoredServiceConfig
+  configData?: MonitoredServiceConfig,
+  isSettingsRoute?: boolean
 ): string => {
-  let pathName = routes.toCVAddMonitoringServicesSetup(pathParams)
+  const { module } = getRouteParams<{ module: Module }>()
+  let pathName = isSettingsRoute
+    ? routesV2.toAddMonitoredServicesSettings({ ...pathParams, module })
+    : routes.toCVAddMonitoringServicesSetup(pathParams)
   if (configData) {
-    pathName = routes.toAddMonitoredServices({
-      ...pathParams,
-      ...(configData?.module && { module: configData?.module })
-    })
+    pathName = isSettingsRoute
+      ? routesV2.toAddMonitoredServicesSettings({
+          ...pathParams,
+          module,
+          ...(configData?.module && { module: configData?.module as Module })
+        })
+      : routes.toAddMonitoredServices({
+          ...pathParams,
+          ...(configData?.module && { module: configData?.module })
+        })
   }
   return pathName
 }

@@ -936,7 +936,8 @@ const routes = {
   ),
 
   toMonitoredServicesSettings: withModeModuleAndScopePrefix(() => '/settings/monitoredservices'),
-  toMonitoredServicesSetupSettings: withModeModuleAndScopePrefix(() => `/settings/monitoringservices/setup`),
+  toCVMonitoringServicesSettings: withModeModuleAndScopePrefix(() => '/settings/monitoringservices'),
+  toAddMonitoredServicesSettings: withModeModuleAndScopePrefix(() => '/settings/monitoringservices/setup'),
 
   // ssca module routes
   toSSCAArtifacts: withModeModuleAndScopePrefix(() => '/artifacts'),

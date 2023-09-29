@@ -35,6 +35,7 @@ import LandingDashboardPage from '@projects-orgs/pages/LandingDashboardPage/Land
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import TriggersRouteDestinations from '@triggers/TriggersRouteDestinations'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
+import SRMRouteDestinations from '@modules/85-cv/SRMRouteDestinations'
 import CDDashboardPage from './pages/dashboard/CDDashboardPage'
 import CDHomePage from './pages/home/CDHomePage'
 import ServiceStudio from './components/Services/ServiceStudio/ServiceStudio'
@@ -308,6 +309,7 @@ const CDRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
           .props.children
       }
       {TriggersRouteDestinations({ mode }).props.children}
+      {SRMRouteDestinations({ mode }).props.children}
     </Switch>
   )
 }

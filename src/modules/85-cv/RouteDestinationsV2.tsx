@@ -131,7 +131,7 @@ const CVRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
   const mfePaths = enableMicroFrontend
     ? [
         routes.toCVSLOs({ ...accountPathProps, mode, ...projectPathProps, ...cvModuleParams }),
-        routes.toAccountCVSLOs({ ...accountPathProps, mode }),
+        routes.toAccountCVSLOs({ ...accountPathProps, mode, ...cvModuleParams }),
         routes.toCVCreateSLOs({ ...accountPathProps, mode, ...projectPathProps, ...cvModuleParams }),
         routes.toCVCreateCompositeSLOs({ ...accountPathProps, mode, ...projectPathProps, ...cvModuleParams }),
         routes.toCVSLODetailsPage({
@@ -351,7 +351,7 @@ const CVRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
           >
             <CVSLOsListingPage />
           </RouteWithContext>
-          <RouteWithContext exact path={routes.toAccountCVSLOs({ ...accountPathProps, mode })}>
+          <RouteWithContext exact path={routes.toAccountCVSLOs({ ...accountPathProps, mode, ...cvModuleParams })}>
             <CVSLOsListingPage />
           </RouteWithContext>
           <RouteWithContext

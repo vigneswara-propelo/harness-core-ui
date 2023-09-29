@@ -30,6 +30,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { MonitoredServiceActiveAgentsDTO } from 'services/cet/cetSchemas'
 import { useGetMonitoredServicesLiveProcessCount } from 'services/cet/cetComponents'
 import { MonitoredServiceActiveAgentsDTOArray } from '@cet/ErrorTracking.types'
+import { getRouteParams } from '@common/utils/routeUtils'
 import MonitoredServiceListView from './MonitoredServiceListView'
 import { FilterTypes, MonitoredServiceListProps } from '../../CVMonitoredService.types'
 import css from '../../CVMonitoredService.module.scss'
@@ -240,7 +241,7 @@ const MonitoredServiceList: React.FC<MonitoredServiceListProps> = ({
 
   const onEditService = (identifier: string): void => {
     if (config) {
-      const { module } = config
+      const { module } = getRouteParams<{ module: Module }>()
       history.push({
         pathname: routes.toMonitoredServicesConfigurations({
           ...pathParams,

@@ -64,6 +64,7 @@ export interface MonitoredServiceListProps {
   search?: string
   appliedSearchAndFilter: boolean
   config?: MonitoredServiceConfig
+  isSettingsRoute?: boolean
 }
 
 export interface MonitoredServiceListViewProps {

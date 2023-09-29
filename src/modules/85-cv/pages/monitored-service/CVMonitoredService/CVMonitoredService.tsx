@@ -51,10 +51,11 @@ import css from './CVMonitoredService.module.scss'
 
 interface MonitoredServiceProps {
   config?: MonitoredServiceConfig
+  calledFromSettings?: boolean
 }
 
 const MonitoredService = (props: MonitoredServiceProps) => {
-  const { config } = props
+  const { config, calledFromSettings } = props
   const { getString } = useStrings()
 
   useDocumentTitle([getString('common.module.srm'), getString('cv.monitoredServices.title')])
@@ -67,7 +68,8 @@ const MonitoredService = (props: MonitoredServiceProps) => {
     orgIdentifier,
     projectIdentifier
   }
-  const { CVNG_TEMPLATE_MONITORED_SERVICE } = useFeatureFlags()
+  const { CVNG_TEMPLATE_MONITORED_SERVICE, CDS_NAV_2_0: newLeftNav } = useFeatureFlags()
+  const isSettingsRoute = newLeftNav && calledFromSettings
 
   const [page, setPage] = useState(0)
   const [selectedView, setSelectedView] = useState<Views>(view === Views.GRID ? Views.GRID : Views.LIST)
@@ -148,7 +150,7 @@ const MonitoredService = (props: MonitoredServiceProps) => {
   }
 
   const createButton = (hasMonitoredServices: boolean, configData?: MonitoredServiceConfig): JSX.Element => {
-    const pathname = getPathNameOnCreateMonitoredService(pathParams, configData)
+    const pathname = getPathNameOnCreateMonitoredService(pathParams, configData, isSettingsRoute)
     {
       const LayoutOrientation = hasMonitoredServices ? Layout.Horizontal : Layout.Vertical
       return (
@@ -261,6 +263,7 @@ const MonitoredService = (props: MonitoredServiceProps) => {
           serviceCountErrorMessage={getErrorMessage(serviceCountError)}
           refetchServiceCountData={refetchServiceCountData}
           config={config}
+          isSettingsRoute={isSettingsRoute}
         />
       ) : (
         <ServiceDependencyGraph
