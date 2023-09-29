@@ -249,7 +249,7 @@ exports[`ServiceExecutionsCard  initial render 1`] = `
           >
             <p
               class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--margin-left-xsmall"
-              style="max-width: var(--spacing-13); --text-line-clamp: 1;"
+              style="max-width: var(--spacing-12); --text-line-clamp: 1;"
             >
               testEnvInfra
             </p>
@@ -293,7 +293,7 @@ exports[`ServiceExecutionsCard  initial render 1`] = `
           >
             <p
               class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--margin-left-xsmall"
-              style="max-width: var(--spacing-13); --text-line-clamp: 1;"
+              style="max-width: var(--spacing-12); --text-line-clamp: 1;"
             >
               env09
             </p>

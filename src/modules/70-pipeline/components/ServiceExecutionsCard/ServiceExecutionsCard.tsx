@@ -330,7 +330,7 @@ function EnvList({ envIdentifiers, limit = 2 }: EnvListProp): React.ReactElement
               color={Color.PRIMARY_7}
               font={{ size: 'small', weight: 'semi-bold' }}
               margin={{ left: 'xsmall' }}
-              style={{ maxWidth: 'var(--spacing-13)' }}
+              style={{ maxWidth: 'var(--spacing-12)' }}
               key={item.envId}
               lineClamp={1}
             >
