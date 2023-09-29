@@ -51,8 +51,8 @@ const cacheStateToIconMap: Record<CacheResponseMetadata['cacheState'], IconName>
 }
 const cacheStateToStringMap: Record<CacheResponseMetadata['cacheState'], keyof StringsMap> = {
   VALID_CACHE: 'pipeline.gitCacheUpToDate',
-  STALE_CACHE: 'pipeline.gitCacheUpToDate',
-  UNKNOWN: 'pipeline.gitCacheUpToDate'
+  STALE_CACHE: 'pipeline.gitCacheStaleCache',
+  UNKNOWN: 'pipeline.gitCacheUnknown'
 }
 
 function EntityCachedCopyInner(

@@ -4665,6 +4665,8 @@ export interface StringsMap {
   'pipeline.frozenExecList.freezeTime': string
   'pipeline.frozenExecPopover.abortedMsg': string
   'pipeline.frozenExecPopover.viewFreezeWindows': string
+  'pipeline.gitCacheStaleCache': string
+  'pipeline.gitCacheUnknown': string
   'pipeline.gitCacheUpToDate': string
   'pipeline.gitCloneStep.cloneDirectory': string
   'pipeline.gitCloneStep.validation.associatedBuildInput': string
