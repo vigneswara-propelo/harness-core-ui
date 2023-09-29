@@ -95,7 +95,6 @@ export default function Configurations(
   const [overrideBlockNavigation, setOverrideBlockNavigation] = useState<boolean>(false)
   const [defaultMonitoredService, setDefaultMonitoredService] = useState<MonitoredServiceDTO>()
   const projectRef = useRef(projectIdentifier)
-  // const { module } = config || {}
   const { CDS_NAV_2_0: newLeftNav } = useFeatureFlags()
   const isSettingsRoute = newLeftNav && calledFromSettings
 
@@ -171,7 +170,8 @@ export default function Configurations(
   useEffect(() => {
     if (overrideBlockNavigation && !redirectToSLO) {
       const pathParams = { projectIdentifier, orgIdentifier, accountId }
-      const { module } = getRouteParams<{ module: Module }>()
+      const { module: moduleInfo } = getRouteParams<{ module: Module }>()
+      const module = moduleInfo || config?.module
       const params = {
         ...pathParams,
         ...(module ? { module: module as Module } : {})
