@@ -6,11 +6,11 @@
  */
 
 import React from 'react'
-import { useParams, matchPath, useLocation, useHistory } from 'react-router-dom'
+import { matchPath, useLocation, useHistory } from 'react-router-dom'
 import { Breadcrumbs as UiCoreBreadcrumbs, Breadcrumb } from '@harness/uicore'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
-import { NAV_MODE } from '@common/utils/routeUtils'
+import { NAV_MODE, getRouteParams } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitionsV2'
 import { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import useSecondaryScopeSwitchDialog from '@common/navigation/SideNavV2/ScopeSwitchDialog/useSecondaryScopeSwiitchDialog'
@@ -28,7 +28,7 @@ const renderLabelAndName = (label: string, name?: string): string => {
 
 const NGBreadcrumbsV2: React.FC<Partial<NGBreadcrumbsProps>> = props => {
   const { getString } = useStrings()
-  const { module, orgIdentifier, projectIdentifier } = useParams<ModulePathParams & ProjectPathProps>()
+  const { module, orgIdentifier, projectIdentifier } = getRouteParams<ModulePathParams & ProjectPathProps>()
   const { selectedProject, selectedOrg, accountInfo, currentMode: mode } = useAppStore()
   const { scope } = useGetSelectedScope()
   const { pathname } = useLocation()

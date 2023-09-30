@@ -1,8 +1,15 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { Accordion, Container, Icon, Layout, Popover, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import React from 'react'
 import cx from 'classnames'
-import { matchPath, useLocation, useParams } from 'react-router-dom'
+import { NavLink, matchPath, useLocation, useParams } from 'react-router-dom'
 import { PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { useStrings } from 'framework/strings'
@@ -14,7 +21,7 @@ import { getFilteredModules } from '@common/components/ModeSelector/ModeSelector
 import useNavModuleInfo, { NavModuleName, useNavModuleInfoMap } from '@common/hooks/useNavModuleInfo'
 import routes from '@common/RouteDefinitionsV2'
 import { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { moduleNameToModuleMapping } from 'framework/types/ModuleName'
+import { ModuleName, moduleNameToModuleMapping } from 'framework/types/ModuleName'
 import { NAV_MODE } from '@common/utils/routeUtils'
 import ModuleRouteConfig from '@modules/ModuleRouteConfig'
 import css from './ModulesAccordion.module.scss'
@@ -44,6 +51,30 @@ const filterSideNavScope = (
   return components
 }
 
+function DirectAccessModules({ module }: { module: ModuleName }): React.ReactElement {
+  const { getString } = useStrings()
+  const moduleMap = useNavModuleInfoMap()
+
+  const { icon, shortLabel, color, homePageUrl } = moduleMap[module as NavModuleName]
+
+  return (
+    <NavLink to={homePageUrl}>
+      <Layout.Horizontal className={css.container} flex={{ justifyContent: 'flex-start' }}>
+        <Icon
+          className={css.moduleIcon}
+          name={icon}
+          size={20}
+          margin={{ right: 'small' }}
+          style={{ fill: `var(${color})` }}
+        />
+        <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
+          {getString(shortLabel)}
+        </Text>
+      </Layout.Horizontal>
+    </NavLink>
+  )
+}
+
 export const SideNavLinksComponent: React.FC<SideNavLinksProps> = props => {
   const Component: JSX.Element = ModuleRouteConfig[props.module].sideNavLinks(props.mode)
 
@@ -52,10 +83,19 @@ export const SideNavLinksComponent: React.FC<SideNavLinksProps> = props => {
   return <>{components}</>
 }
 
-const ModuleSummary: React.FC<{ module: NavModuleName; selectedModule?: string }> = ({ module, selectedModule }) => {
+const ModuleSummary: React.FC<{ module: NavModuleName; isLinkModule: boolean; selectedModule?: string }> = ({
+  module,
+  selectedModule,
+  isLinkModule
+}) => {
   const { getString } = useStrings()
   const { icon, shortLabel, color } = useNavModuleInfo(module)
   const isActive = selectedModule?.toLowerCase() === module.toLowerCase()
+
+  if (isLinkModule) {
+    return <DirectAccessModules module={module} />
+  }
+
   return (
     <Popover
       interactionKind={PopoverInteractionKind.HOVER}
@@ -101,9 +141,11 @@ const ModulesAccordion: React.FC<ModulesAccordionProps> = ({ mode = NAV_MODE.ALL
   )
   const { pathname } = useLocation()
   const { selectedModules = [], orderedModules = [] } = modulesPreferenceData || {}
+  const directAccessModules = [ModuleName.IDP]
 
   const visibleModules = React.useMemo(
     () => getFilteredModules(orderedModules, selectedModules, moduleMap),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [moduleMap, orderedModules, selectedModules]
   )
 
@@ -124,11 +166,19 @@ const ModulesAccordion: React.FC<ModulesAccordionProps> = ({ mode = NAV_MODE.ALL
         <Accordion.Panel
           key={module}
           id={module}
-          summary={<ModuleSummary module={module} selectedModule={selectedModule} />}
+          summary={
+            <ModuleSummary
+              module={module}
+              selectedModule={selectedModule}
+              isLinkModule={directAccessModules.includes(module)}
+            />
+          }
           details={
-            <Container className={css.module} padding={{ left: 'small' }}>
-              <SideNavLinksComponent module={module} mode={NAV_MODE.ALL} />
-            </Container>
+            !directAccessModules.includes(module) && (
+              <Container className={css.module} padding={{ left: 'small' }}>
+                <SideNavLinksComponent module={module} mode={NAV_MODE.ALL} />
+              </Container>
+            )
           }
         />
       ))}
