@@ -32,6 +32,8 @@ import routes from '@common/RouteDefinitions'
 
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import { replaceEmptyStringsWithRuntimeInput } from '@pipeline/utils/runPipelineUtils'
+import { InputSetValue } from '../InputSetSelector/utils'
 import css from './PreFlightCheckModal.module.scss'
 
 enum Section {
@@ -499,6 +501,7 @@ export interface PreFlightCheckModalProps {
   orgIdentifier: string
   projectIdentifier: string
   pipelineIdentifier: string
+  selectedInputSets?: InputSetValue[]
   onCloseButtonClick: () => void
   onContinuePipelineClick: () => void
 }
@@ -513,7 +516,8 @@ export function PreFlightCheckModal({
   branch,
   repoIdentifier,
   onCloseButtonClick,
-  onContinuePipelineClick
+  onContinuePipelineClick,
+  selectedInputSets
 }: PreFlightCheckModalProps & GitQueryParams): React.ReactElement {
   const [preFlightCheckId, setPreFlightCheckId] = useState<string | undefined>()
   const [preFlightCheckData, setPreFlightCheckData] = useState<ResponsePreFlightDTO | null>()
@@ -535,6 +539,7 @@ export function PreFlightCheckModal({
   // start preflight check
   useEffect(() => {
     if (!preFlightCheckId) {
+      const sanitizedYAML = omitBy(pipeline, (_value, key) => key.startsWith('_'))
       startPreflightCheckPromise({
         queryParams: {
           accountIdentifier: accountId,
@@ -544,7 +549,12 @@ export function PreFlightCheckModal({
           ...(isGitSyncEnabled ? { repoIdentifier, branch, getDefaultFromOtherRepo: true } : {})
         },
         body: !isEmpty(pipeline)
-          ? (yamlStringify({ pipeline: omitBy(pipeline, (_value, key) => key.startsWith('_')) }) as any)
+          ? selectedInputSets && selectedInputSets?.length > 0
+            ? // RPF with IP selected - '' converted to <+input> in the payload
+              (yamlStringify({
+                pipeline: replaceEmptyStringsWithRuntimeInput(sanitizedYAML)
+              }) as any)
+            : (yamlStringify({ pipeline: sanitizedYAML }) as any)
           : ''
       })
         .then(response => {

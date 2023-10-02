@@ -94,6 +94,20 @@ export function clearRuntimeInput<T = PipelineInfoConfig>(template: T, shouldAls
   })
 }
 
+/**
+ * Loops over the pipeline and updates all default "" with the runtime input value(<+input>)
+ * Valid empty values has to be escaped or manually provided "/"/""
+ */
+export function replaceEmptyStringsWithRuntimeInput<T = PipelineInfoConfig>(template: T): T {
+  return produce(template, draft => {
+    walkObjectRecursively(draft, (_key: string, value: unknown, path: string[]) => {
+      if (typeof value === 'string' && value === '') {
+        set(draft as any, path, RUNTIME_INPUT_VALUE)
+      }
+    })
+  })
+}
+
 function mergeStage(props: MergeStageProps): StageElementWrapperConfig {
   const { stage, inputSetPortion, allValues, shouldUseDefaultValues } = props
   const stageIdToBeMatched = defaultTo(stage.stage?.identifier, '')

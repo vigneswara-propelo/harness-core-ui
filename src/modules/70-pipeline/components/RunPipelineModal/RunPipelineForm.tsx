@@ -68,6 +68,7 @@ import {
   getAllStageData,
   getAllStageItem,
   getFeaturePropsForRunPipelineButton,
+  replaceEmptyStringsWithRuntimeInput,
   SelectedStageData,
   StageSelectionData
 } from '@pipeline/utils/runPipelineUtils'
@@ -616,6 +617,7 @@ function RunPipelineFormBasic({
             hidePreflightCheckModal()
             handleRunPipeline(valuesPipelineRef.current, true)
           }}
+          selectedInputSets={selectedInputSets}
         />
       </Dialog>
     )
@@ -650,9 +652,15 @@ function RunPipelineFormBasic({
 
       try {
         let response
+        const sanitizedYAML = omitBy(valuesPipelineRef.current, (_val, key) => key.startsWith('_'))
         const finalYaml = isEmpty(valuesPipelineRef.current)
           ? ''
-          : yamlStringify({ pipeline: omitBy(valuesPipelineRef.current, (_val, key) => key.startsWith('_')) })
+          : selectedInputSets && selectedInputSets?.length > 0
+          ? // RPF with IP selected - '' converted to <+input> in the payload
+            yamlStringify({
+              pipeline: replaceEmptyStringsWithRuntimeInput(sanitizedYAML)
+            })
+          : yamlStringify({ pipeline: sanitizedYAML })
 
         if (isDebugMode) {
           response = await runPipelineInDebugMode(finalYaml as any)

@@ -6,41 +6,64 @@
  */
 
 import React from 'react'
-import { fireEvent, render, act, waitFor } from '@testing-library/react'
+import { fireEvent, render, act, waitFor, RenderResult } from '@testing-library/react'
 import * as pipelineService from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
+import { JsonNode } from 'services/cd-ng'
+import type { Module } from '@common/interfaces/RouteInterfaces'
 import preflightSuccessMock from './mock/preflightSuccessMock.json'
 import preflightFailureMock from './mock/preflightFailureMock.json'
 import preflightProgressMock from './mock/preflightProgressMock.json'
 import { PreFlightCheckModal } from '../PreFlightCheckModal'
+import { getPipelinePayload, pipeline, pipelinePayloadWithInputSetSelected } from './mock/helper'
+import { InputSetValue } from '../../InputSetSelector/utils'
 
 const timeoutSpy = jest.spyOn(window, 'setTimeout')
 const startPreflightCheckPromiseSpy = jest.spyOn(pipelineService, 'startPreflightCheckPromise')
 startPreflightCheckPromiseSpy.mockReturnValue(Promise.resolve({}))
 
+const setupPreFlightCheckModal = (
+  preflightDataMock: JsonNode,
+  onCloseButtonClickMock: () => void,
+  onContinueButtonClickMock: () => void,
+  selectedInputSets?: InputSetValue[],
+  pipelineData?: pipelineService.PipelineInfoConfig,
+  module = 'ci'
+): RenderResult => {
+  const mockRefetch = jest.fn()
+  const useGetPreflightCheckResponseSpy = jest.spyOn(pipelineService, 'useGetPreflightCheckResponse')
+  useGetPreflightCheckResponseSpy.mockReturnValue({
+    data: preflightDataMock,
+    refetch: mockRefetch as any
+  } as any)
+
+  const renderObj = render(
+    <TestWrapper>
+      <PreFlightCheckModal
+        {...(pipelineData ? { pipeline: pipelineData } : {})}
+        accountId="accId"
+        module={module as unknown as Module}
+        projectIdentifier="projId"
+        orgIdentifier="orgId"
+        pipelineIdentifier="pipId"
+        onCloseButtonClick={onCloseButtonClickMock}
+        onContinuePipelineClick={onContinueButtonClickMock}
+        selectedInputSets={selectedInputSets}
+      />
+    </TestWrapper>
+  )
+
+  return renderObj
+}
+
 describe('PreflightCheck', () => {
   test('renders property when return all success checks', async () => {
-    const mockRefetch = jest.fn()
-    const useGetPreflightCheckResponseSpy = jest.spyOn(pipelineService, 'useGetPreflightCheckResponse')
-    useGetPreflightCheckResponseSpy.mockReturnValue({
-      data: preflightSuccessMock,
-      refetch: mockRefetch as any
-    } as any)
-
     const closeButtonClickMock = jest.fn()
     const continueButtonClickMock = jest.fn()
-    const { container, getByText } = render(
-      <TestWrapper>
-        <PreFlightCheckModal
-          accountId="accId"
-          module="ci"
-          projectIdentifier="projId"
-          orgIdentifier="orgId"
-          pipelineIdentifier="pipId"
-          onCloseButtonClick={closeButtonClickMock}
-          onContinuePipelineClick={continueButtonClickMock}
-        />
-      </TestWrapper>
+    const { container, getByText } = setupPreFlightCheckModal(
+      preflightSuccessMock,
+      closeButtonClickMock,
+      continueButtonClickMock
     )
 
     act(() => {
@@ -57,14 +80,6 @@ describe('PreflightCheck', () => {
   })
 
   test('see if RETRY works', () => {
-    const mockRefetch = jest.fn()
-    const useGetPreflightCheckResponseSpy = jest.spyOn(pipelineService, 'useGetPreflightCheckResponse')
-    const mockedSpyResponse = {
-      data: preflightSuccessMock,
-      refetch: mockRefetch as any
-    } as any
-    useGetPreflightCheckResponseSpy.mockReturnValue(mockedSpyResponse)
-
     startPreflightCheckPromiseSpy.mockResolvedValue({
       status: 'SUCCESS',
       data: 'idafterretry'
@@ -72,18 +87,10 @@ describe('PreflightCheck', () => {
 
     const closeButtonClickMock = jest.fn()
     const continueButtonClickMock = jest.fn()
-    const { container, getByText } = render(
-      <TestWrapper>
-        <PreFlightCheckModal
-          accountId="accId"
-          module="ci"
-          projectIdentifier="projId"
-          orgIdentifier="orgId"
-          pipelineIdentifier="pipId"
-          onCloseButtonClick={closeButtonClickMock}
-          onContinuePipelineClick={continueButtonClickMock}
-        />
-      </TestWrapper>
+    const { container, getByText } = setupPreFlightCheckModal(
+      preflightSuccessMock,
+      closeButtonClickMock,
+      continueButtonClickMock
     )
 
     act(() => {
@@ -95,25 +102,12 @@ describe('PreflightCheck', () => {
   })
 
   test('renders property when has failed checks', async () => {
-    const mockRefetch = jest.fn()
-    const useGetPreflightCheckResponseSpy = jest.spyOn(pipelineService, 'useGetPreflightCheckResponse')
-    useGetPreflightCheckResponseSpy.mockReturnValue({
-      data: preflightFailureMock,
-      refetch: mockRefetch as any
-    } as any)
-
-    const { container, getAllByText } = render(
-      <TestWrapper>
-        <PreFlightCheckModal
-          accountId="accId"
-          module="ci"
-          projectIdentifier="projId"
-          orgIdentifier="orgId"
-          pipelineIdentifier="pipId"
-          onCloseButtonClick={jest.fn()}
-          onContinuePipelineClick={jest.fn()}
-        />
-      </TestWrapper>
+    const closeButtonClickMock = jest.fn()
+    const continueButtonClickMock = jest.fn()
+    const { container, getAllByText } = setupPreFlightCheckModal(
+      preflightFailureMock,
+      closeButtonClickMock,
+      continueButtonClickMock
     )
 
     expect(container).toMatchSnapshot('before opening the error description panel')
@@ -127,50 +121,20 @@ describe('PreflightCheck', () => {
   })
 
   test('renders property when has in progress checks', async () => {
-    const mockRefetch = jest.fn()
-    const useGetPreflightCheckResponseSpy = jest.spyOn(pipelineService, 'useGetPreflightCheckResponse')
-    useGetPreflightCheckResponseSpy.mockReturnValue({
-      data: preflightProgressMock,
-      refetch: mockRefetch as any
-    } as any)
-
-    const { container } = render(
-      <TestWrapper>
-        <PreFlightCheckModal
-          accountId="accId"
-          module="ci"
-          projectIdentifier="projId"
-          orgIdentifier="orgId"
-          pipelineIdentifier="pipId"
-          onCloseButtonClick={jest.fn()}
-          onContinuePipelineClick={jest.fn()}
-        />
-      </TestWrapper>
-    )
+    const closeButtonClickMock = jest.fn()
+    const continueButtonClickMock = jest.fn()
+    const { container } = setupPreFlightCheckModal(preflightProgressMock, closeButtonClickMock, continueButtonClickMock)
 
     expect(container).toMatchSnapshot()
   })
 
   test('click on section title open correct section', async () => {
-    const mockRefetch = jest.fn()
-    const useGetPreflightCheckResponseSpy = jest.spyOn(pipelineService, 'useGetPreflightCheckResponse')
-    useGetPreflightCheckResponseSpy.mockReturnValue({
-      data: preflightProgressMock,
-      refetch: mockRefetch as any
-    } as any)
-
-    const { container, getByText } = render(
-      <TestWrapper>
-        <PreFlightCheckModal
-          accountId="accId"
-          module="ci"
-          projectIdentifier="projId"
-          orgIdentifier="orgId"
-          pipelineIdentifier="pipId"
-          onCloseButtonClick={jest.fn()}
-          onContinuePipelineClick={jest.fn()}
-        />
-      </TestWrapper>
+    const closeButtonClickMock = jest.fn()
+    const continueButtonClickMock = jest.fn()
+    const { container, getByText } = setupPreFlightCheckModal(
+      preflightProgressMock,
+      closeButtonClickMock,
+      continueButtonClickMock
     )
 
     const connectorsSectionTitle = getByText('pre-flight-check.verifyingPipelineInputs')
@@ -184,5 +148,46 @@ describe('PreflightCheck', () => {
       fireEvent.click(inputsSectionTitle)
     })
     expect(container).toMatchSnapshot('opened connectors section')
+  })
+
+  test('run pipeline form with no input set should - pipeline payload "" should not be transformed to <+input>', () => {
+    const closeButtonClickMock = jest.fn()
+    const continueButtonClickMock = jest.fn()
+    const { getByText } = setupPreFlightCheckModal(
+      preflightSuccessMock,
+      closeButtonClickMock,
+      continueButtonClickMock,
+      [],
+      pipeline,
+      'cd'
+    )
+
+    fireEvent.click(getByText('retry'))
+    expect(pipelineService.startPreflightCheckPromise).toHaveBeenCalledWith(getPipelinePayload(pipeline))
+  })
+
+  test('run pipeline form with input set should - pipeline payload "" should be transformed to <+input>', () => {
+    const closeButtonClickMock = jest.fn()
+    const continueButtonClickMock = jest.fn()
+    const { getByText } = setupPreFlightCheckModal(
+      preflightSuccessMock,
+      closeButtonClickMock,
+      continueButtonClickMock,
+      [
+        {
+          label: 'IP1',
+          value: 'IP1',
+          type: 'INPUT_SET',
+          gitDetails: {}
+        }
+      ],
+      pipeline,
+      'cd'
+    )
+
+    fireEvent.click(getByText('retry'))
+    expect(pipelineService.startPreflightCheckPromise).toHaveBeenCalledWith(
+      getPipelinePayload(pipelinePayloadWithInputSetSelected)
+    )
   })
 })
