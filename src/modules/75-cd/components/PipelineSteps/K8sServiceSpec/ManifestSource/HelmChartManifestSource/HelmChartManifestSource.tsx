@@ -7,10 +7,17 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { FormError, FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
+import {
+  FormError,
+  FormInput,
+  getMultiTypeFromValue,
+  Layout,
+  MultiTypeInputType,
+  SelectOption,
+  Text
+} from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { defaultTo, get } from 'lodash-es'
-// import { OciHelmTypes } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/ManifestUtils'
 import {
   ManifestDataType,
   ManifestStoreMap,
@@ -81,7 +88,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
   const { getRBACErrorMessage } = useRBACError()
   const { CDS_HELM_FETCH_CHART_METADATA_NG } = useFeatureFlags()
   const manifestStoreType = get(template, `${manifestPath}.spec.store.type`, null)
-
+  const [chartVersions, setChartVersions] = React.useState<SelectOption[]>([])
   const connectorRefPath =
     manifest?.spec?.store?.type === 'OciHelmChart'
       ? `${manifestPath}.spec.store.spec.config.spec.connectorRef`
@@ -180,10 +187,16 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
     label: region.name
   }))
 
-  const chartVersions = (chartVersionData?.data?.helmChartVersions || []).map((chartVersion: string) => ({
-    value: chartVersion,
-    label: chartVersion
-  }))
+  React.useEffect(() => {
+    if (chartVersionData?.data?.helmChartVersions) {
+      setChartVersions(
+        defaultTo(chartVersionData?.data?.helmChartVersions, []).map(chartVersion => ({
+          value: chartVersion,
+          label: chartVersion
+        }))
+      )
+    }
+  }, [chartVersionData])
 
   const s3BucketOptions = React.useMemo(() => {
     return Object.keys(s3BucketList?.data || {}).map(item => ({
@@ -364,6 +377,10 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             multiTypeProps={{
               allowableTypes,
               expressions
+            }}
+            onChange={() => {
+              setChartVersions([])
+              formik.setFieldValue(`${path}.${manifestPath}.spec.chartVersion`, '')
             }}
             width={400}
             accountIdentifier={accountId}
