@@ -589,7 +589,7 @@ subscriptions:
     cdServiceTooltip: A Service is an independent unit of software you deploy through Harness CD pipelines. An Active Service is a service deployed in the last 30 days.
     ciUsers: Active CI Developers
     ciTooltip: A Developer is an active code committer observed in the builds managed by Harness CI over last 30 days.
-    creditTooltip: Free or Paid  Build credits that haven't expired.
+    creditTooltip: Available paid build credits that haven't expired yet.
     creditTooltipExpiry: The earliest expiry date on a credit is on {{date}}.
     ffActiveUserTootip: Monthly Active Users (MAUs) are only applicable to client-side applications and are defined as unique end users evaluating flags from client-side SDKs (JavaScript, iOS, Android, C/C++, React, etc) over a 30-day period.
     ffDeveloperTooltip: Developers are Harness Feature Flag users actually engaged with the product to create/edit/delete Feature Flags and/or Targets/Segments.

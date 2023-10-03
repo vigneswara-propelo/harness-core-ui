@@ -19,6 +19,7 @@ import CDUsageInfo from './CDUsageInfo'
 import STOUsageInfo from './STOUsageInfo'
 import CETUsageInfo from './CETUsageInfo'
 import ChaosUsageInfo from './ChaosUsageInfo'
+import SRMUsageInfo from './SRMUsageInfo'
 import css from '../SubscriptionsPage.module.scss'
 
 interface SubscriptionUsageProps {
@@ -45,6 +46,8 @@ const getModuleUsages = (props: SubscriptionUsageProps): React.ReactElement | un
       return <CETUsageInfo {...props} />
     case ModuleName.CHAOS:
       return <ChaosUsageInfo />
+    case ModuleName.SRM:
+      return <SRMUsageInfo {...props} />
     default:
       return undefined
   }
