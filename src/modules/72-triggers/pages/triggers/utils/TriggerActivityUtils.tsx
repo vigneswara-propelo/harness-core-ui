@@ -14,7 +14,7 @@ import { Drawer } from '@blueprintjs/core'
 import { NGTriggerEventHistoryResponse, NGTriggerSourceV2 } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
-import { TriggerArtifactType } from '@triggers/components/Triggers/TriggerInterface'
+import { ManifestType, TriggerArtifactType } from '@triggers/components/Triggers/TriggerInterface'
 import css from '../TriggerLandingPage/TriggerActivityHistoryPage/TriggerActivityHistoryPage.module.scss'
 
 interface PayloadDrawerInterface {
@@ -111,12 +111,11 @@ export const isWebhookTrigger = (triggerType: NGTriggerSourceV2['type']): boolea
   return triggerType === 'Webhook'
 }
 
-export const artifactTriggerTypes: Array<TriggerArtifactType> = [
+export const artifactTriggerTypes: Array<TriggerArtifactType | ManifestType> = [
   'Gcr',
   'Ecr',
   'DockerRegistry',
   'Nexus3Registry',
-  'Nexus2Registry',
   'ArtifactoryRegistry',
   'Acr',
   'AmazonS3',
@@ -127,5 +126,6 @@ export const artifactTriggerTypes: Array<TriggerArtifactType> = [
   'AzureArtifacts',
   'AmazonMachineImage',
   'GoogleCloudStorage',
-  'Bamboo'
+  'Bamboo',
+  'HelmChart'
 ]

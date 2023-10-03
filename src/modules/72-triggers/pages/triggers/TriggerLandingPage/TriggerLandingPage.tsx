@@ -127,7 +127,8 @@ const TriggerLandingPage: React.FC = ({ children }) => {
     },
     {
       label: getString('activityHistoryLabel'),
-      to: routes.toTriggersActivityHistoryPage(routeParams)
+      to: routes.toTriggersActivityHistoryPage(routeParams),
+      disabled: triggerResponse?.data?.type === 'Scheduled'
     }
   ]
 

@@ -191,7 +191,7 @@ const RenderColumnMenu: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
             data-testid={`${data.identifier}-edit-button`}
           />
           <Menu.Divider />
-          {CDS_TRIGGER_ACTIVITY_PAGE && (
+          {CDS_TRIGGER_ACTIVITY_PAGE && data.type !== 'Scheduled' && (
             <>
               <Menu.Item
                 icon="history"

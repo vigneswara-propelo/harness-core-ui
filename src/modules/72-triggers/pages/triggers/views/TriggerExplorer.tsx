@@ -25,6 +25,7 @@ import { Link, useParams } from 'react-router-dom'
 import { capitalize, defaultTo, get, isEmpty, map } from 'lodash-es'
 import { Column } from 'react-table'
 import { Radio, RadioGroup } from '@blueprintjs/core'
+import ReactTimeago from 'react-timeago'
 import { useStrings } from 'framework/strings'
 import {
   NGTriggerEventHistoryResponse,
@@ -83,7 +84,7 @@ const RenderColumnStatus: CellType = ({ row }) => {
   )
 }
 
-const RenderTriggerName: CellType = ({ row }) => {
+const RenderTrigger: CellType = ({ row }) => {
   const { accountId } = useParams<AccountPathProps>()
   const { orgIdentifier = '', projectIdentifier = '', targetIdentifier = '', triggerIdentifier = '' } = row.original
   return (
@@ -217,10 +218,10 @@ const TriggerExplorer: React.FC = (): React.ReactElement => {
         Cell: RenderColumnEventId
       },
       {
-        Header: getString('common.triggerName'),
+        Header: getString('common.triggerLabel'),
         id: 'name',
         width: '20%',
-        Cell: RenderTriggerName
+        Cell: RenderTrigger
       },
       {
         Header: getString('triggers.activityHistory.triggerStatus'),
@@ -245,16 +246,32 @@ const TriggerExplorer: React.FC = (): React.ReactElement => {
     ] as unknown as Column<NGTriggerEventHistoryResponse>[]
 
     if (!isWebhookTrigger(triggerType)) {
-      cols.splice(0, 1, {
-        Header: getString('pipeline.artifactsSelection.artifactType'),
-        id: 'artifactType',
-        width: '25%',
-        Cell: (
-          <Text color={Color.BLACK} lineClamp={1} width="90%">
-            {selectedArtifactTriggerTypeOption?.label}
-          </Text>
-        )
-      })
+      cols.splice(
+        0,
+        1,
+        {
+          Header: getString('pipeline.artifactsSelection.artifactType'),
+          id: 'artifactType',
+          width: '14%',
+          Cell: (
+            <Text color={Color.BLACK} lineClamp={1} width="90%">
+              {selectedArtifactTriggerTypeOption?.label}
+            </Text>
+          )
+        },
+        {
+          Header: getString('timeLabel'),
+          id: 'time',
+          width: '11%',
+          Cell: ({ row }: { row: { original: NGTriggerEventHistoryResponse } }) => {
+            return (
+              <Text color={Color.BLACK} lineClamp={1} width="90%">
+                <ReactTimeago date={get(row.original, 'eventCreatedAt') as number} />
+              </Text>
+            )
+          }
+        }
+      )
     }
     return cols
   }, [getString, triggerType, selectedArtifactTriggerTypeOption?.label])
@@ -286,9 +303,7 @@ const TriggerExplorer: React.FC = (): React.ReactElement => {
       </Container>
       <Layout.Vertical border={{ radius: 8, color: Color.GREY_100 }} background={Color.WHITE} padding={'large'}>
         <Text font={{ weight: 'semi-bold', variation: FontVariation.H5 }} padding={{ bottom: 'medium' }}>
-          {isWebhookTrigger(triggerType)
-            ? getString('triggers.triggerExplorer.searchWebhookTriggers')
-            : getString('triggers.triggerExplorer.searchArtifactTriggers')}
+          {isWebhookTrigger(triggerType) && getString('triggers.triggerExplorer.searchWebhookTriggers')}
         </Text>
         <RadioGroup
           inline
@@ -331,24 +346,32 @@ const TriggerExplorer: React.FC = (): React.ReactElement => {
               />
             </>
           ) : (
-            <>
-              <Text font={{ weight: 'semi-bold', variation: FontVariation.H6 }} width={150}>
-                {getString('triggers.triggerExplorer.selectArtifactType')}
+            <Layout.Vertical>
+              <Text padding={{ bottom: 'xlarge' }} font={{ weight: 'semi-bold', variation: FontVariation.H6 }}>
+                {getString('triggers.triggerExplorer.searchArtifactTriggers')}
               </Text>
-              <Select
-                name="artifactTriggerType"
-                items={map(artifactTriggerTypes, artifact => ({
-                  label: getString(ArtifactTitleIdByType[artifact as ArtifactType]),
-                  value: artifact as string
-                }))}
-                onChange={item => {
-                  setSelectedArtifactTriggerTypeOption(item)
-                  updateQueryParams({ page: PAGE_TEMPLATE_DEFAULT_PAGE_INDEX, size: artifactTriggerSize })
-                }}
-                value={selectedArtifactTriggerTypeOption}
-                className={css.selectArtifact}
-              />
-            </>
+              <Layout.Horizontal>
+                <Text font={{ weight: 'semi-bold', variation: FontVariation.H6 }} width={150}>
+                  {getString('triggers.triggerExplorer.selectArtifactType')}
+                </Text>
+                <Select
+                  name="artifactTriggerType"
+                  items={map(artifactTriggerTypes, artifact => ({
+                    label:
+                      artifact === 'HelmChart'
+                        ? getString('common.HelmChartLabel')
+                        : getString(ArtifactTitleIdByType[artifact as ArtifactType]),
+                    value: artifact as string
+                  }))}
+                  onChange={item => {
+                    setSelectedArtifactTriggerTypeOption(item)
+                    updateQueryParams({ page: PAGE_TEMPLATE_DEFAULT_PAGE_INDEX, size: artifactTriggerSize })
+                  }}
+                  value={selectedArtifactTriggerTypeOption}
+                  className={css.selectArtifact}
+                />
+              </Layout.Horizontal>
+            </Layout.Vertical>
           )}
         </Layout.Horizontal>
       </Layout.Vertical>

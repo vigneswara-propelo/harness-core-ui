@@ -33,3 +33,5 @@ export type TriggerArtifactType = Required<ArtifactTriggerConfig>['type']
 export type ManifestType = Required<ManifestTriggerConfig>['type']
 
 export type TriggerSubType = SourceRepo | ScheduleType | TriggerArtifactType | ManifestType
+
+export type ArtifactManifestTriggerType = TriggerArtifactType | ManifestType
