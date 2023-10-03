@@ -9,6 +9,8 @@ import React, { useRef, useState, useLayoutEffect, ForwardedRef } from 'react'
 import { defaultTo, get, throttle } from 'lodash-es'
 import classNames from 'classnames'
 import { isNodeTypeMatrixOrFor } from '@pipeline/utils/executionUtils'
+import { loggerFor } from 'framework/logging/logging'
+import { ModuleName } from 'framework/types/ModuleName'
 import GroupNode from '../Nodes/GroupNode/GroupNode'
 import type {
   NodeCollapsibleProps,
@@ -366,6 +368,7 @@ const PipelineGraphNode = React.memo(PipelineGraphNodeBasic)
 function PipelineGraphNodeObserved(
   props: PipelineGraphNodeBasicProps & { index: number; isDragging?: boolean }
 ): React.ReactElement {
+  const logger = loggerFor(ModuleName.CD)
   const { graphScale } = React.useContext(GraphConfigStore)
   const [ref, setRef] = useState<HTMLDivElement | null>(null)
   const [visible, setVisible] = useState(true)
@@ -381,7 +384,10 @@ function PipelineGraphNodeObserved(
       let observer: IntersectionObserver
       if (ref && props?.parentSelector && IS_RENDER_OPTIMIZATION_ENABLED) {
         const rootElement = document.querySelector(props?.parentSelector as string)
-
+        if (!rootElement) {
+          logger.info('Root element not found')
+          return
+        }
         observer = new IntersectionObserver(
           (entries, _observer) => {
             entries.forEach((entry: IntersectionObserverEntry) => {
