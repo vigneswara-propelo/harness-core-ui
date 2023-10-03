@@ -4,7 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react'
 import cx from 'classnames'
 import { Button, ButtonVariation, Container } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
@@ -125,6 +125,15 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
     sloWidgetsData
   })
 
+  const SLOTargetChartRef = useRef<HTMLDivElement>(null)
+  const [chartWidth, setChartWidth] = useState(0)
+
+  useEffect(() => {
+    if (SLOTargetChartRef.current?.getBoundingClientRect().width && !chartWidth) {
+      setChartWidth(SLOTargetChartRef.current?.getBoundingClientRect().width)
+    }
+  }, [])
+
   return (
     <>
       {isAnnotationsEnabled ? (
@@ -149,6 +158,7 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
         data-testid="timeline-slider-container"
       >
         <Container
+          ref={SLOTargetChartRef}
           className={cx({
             [css.burndownWrapper]: isCardView && !isSLOView,
             [css.sloWrapper]: isCardView && isSLOView
@@ -193,23 +203,25 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
             defaultOffSetPercentage={defaultOffSetPercentage}
           />
         )}
-        <ChangeTimeline
-          sloWidgetsData={sloWidgetsDataWithUpdatedFailure}
-          sloWidgetsDataLoading={sloWidgetsDataLoading}
-          fetchSecondaryEvents={fetchSecondaryEvents}
-          selectedTimeRange={{ startTime, endTime }}
-          startTime={sliderTimeRange?.startTime}
-          endTime={sliderTimeRange?.endTime}
-          hideTimeline={!isCardView}
-          monitoredServiceIdentifier={monitoredServiceIdentifier}
-          onSliderMoved={setChangeTimelineSummary}
-          monitoredServiceIdentifiers={monitoredServiceIdentifiers}
-          addAnnotation={(annotationMessage?: AnnotationMessage) => {
-            showDrawer({ annotationMessage })
-          }}
-          isSLOChartTimeline
-          isCompositeSLO={isCompositeSLO}
-        />
+        <Container width={chartWidth}>
+          <ChangeTimeline
+            sloWidgetsData={sloWidgetsDataWithUpdatedFailure}
+            sloWidgetsDataLoading={sloWidgetsDataLoading}
+            fetchSecondaryEvents={fetchSecondaryEvents}
+            selectedTimeRange={{ startTime, endTime }}
+            startTime={sliderTimeRange?.startTime}
+            endTime={sliderTimeRange?.endTime}
+            hideTimeline={!isCardView}
+            monitoredServiceIdentifier={monitoredServiceIdentifier}
+            onSliderMoved={setChangeTimelineSummary}
+            monitoredServiceIdentifiers={monitoredServiceIdentifiers}
+            addAnnotation={(annotationMessage?: AnnotationMessage) => {
+              showDrawer({ annotationMessage })
+            }}
+            isSLOChartTimeline
+            isCompositeSLO={isCompositeSLO}
+          />
+        </Container>
       </Container>
     </>
   )

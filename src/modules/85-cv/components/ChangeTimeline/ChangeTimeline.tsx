@@ -214,7 +214,7 @@ export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element 
   return (
     <Timeline
       isLoading={loading}
-      rowOffset={90}
+      rowOffset={115}
       timelineRows={Object.entries(categoryTimeline || skeletonLoadingCategory).map(timeline => ({
         labelName: labelByCategory(timeline[0] as ChangeSourceDTO['category'], getString),
         data: createTimelineSeriesData(timeline[0] as ChangeSourceTypes, getString, timeline[1])

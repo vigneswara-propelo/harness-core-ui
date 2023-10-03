@@ -293,7 +293,7 @@ export default function ServiceHealth({
               <TimelineSlider
                 resetFocus={resetSlider}
                 initialSliderWidth={sliderDimensions.minWidth}
-                leftContainerOffset={90}
+                leftContainerOffset={115}
                 hideSlider={!showTimelineSlider}
                 className={css.slider}
                 minSliderWidth={sliderDimensions.minWidth}
