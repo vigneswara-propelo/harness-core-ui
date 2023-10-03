@@ -61,7 +61,6 @@ import StepArtifactoryAuthentication from '@platform/connectors/components/Creat
 import DelegateSelectorStep from '@platform/connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/connectors/constants'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import StepAWSAuthentication from '@platform/connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
@@ -112,7 +111,6 @@ export default function TerraformEditView(
   const { stepType, isNewStep = true } = props
   const { initialValues, onUpdate, onChange, allowableTypes, stepViewType, readonly = false } = props
   const { getString } = useStrings()
-  const { CDS_ENCRYPT_TERRAFORM_APPLY_JSON_OUTPUT } = useFeatureFlags()
 
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -858,7 +856,7 @@ export default function TerraformEditView(
                               disabled={readonly}
                             />
                           </div>
-                          {CDS_ENCRYPT_TERRAFORM_APPLY_JSON_OUTPUT && stepType === StepType.TerraformApply && (
+                          {stepType === StepType.TerraformApply && (
                             <div className={cx(stepCss.formGroup, stepCss.md)}>
                               {secretManagerComponent(fieldNameValue, () => {
                                 formik.setFieldValue(fieldNameValue, undefined)
@@ -892,7 +890,7 @@ export default function TerraformEditView(
 
               {formik.values?.spec?.configuration?.type === ConfigurationTypes.InheritFromPlan && (
                 <Accordion className={stepCss.accordion}>
-                  {CDS_ENCRYPT_TERRAFORM_APPLY_JSON_OUTPUT && stepType === StepType.TerraformApply && (
+                  {stepType === StepType.TerraformApply && (
                     <Accordion.Panel
                       id="step-1"
                       summary={getString('common.optionalConfig')}

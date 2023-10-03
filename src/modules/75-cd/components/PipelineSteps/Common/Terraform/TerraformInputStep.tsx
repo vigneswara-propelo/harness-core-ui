@@ -37,7 +37,6 @@ import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { FormMultiTypeCheckboxField } from '@common/components'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useQueryParams } from '@common/hooks'
 import { GitQueryParams } from '@common/interfaces/RouteInterfaces'
@@ -66,7 +65,6 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
   const formik = useFormikContext()
   const fieldPath = inputSetData?.template?.spec?.configuration ? 'configuration' : 'cloudCliConfiguration'
   const inputSetDataSpec = get(inputSetData?.template?.spec, `${fieldPath}`)
-  const { CDS_ENCRYPT_TERRAFORM_APPLY_JSON_OUTPUT } = useFeatureFlags()
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -246,41 +244,40 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
         }
       })}
 
-      {CDS_ENCRYPT_TERRAFORM_APPLY_JSON_OUTPUT &&
-        isValueRuntimeInput((inputSetDataSpec as any)?.encryptOutput?.outputSecretManagerRef) && (
-          <Container flex>
-            <FormMultiTypeConnectorField
-              accountIdentifier={accountId}
-              projectIdentifier={projectIdentifier}
-              category={'SECRET_MANAGER'}
-              setRefValue
-              orgIdentifier={orgIdentifier}
-              name={`${
-                isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
-              }spec.${fieldPath}.encryptOutput.outputSecretManagerRef`}
-              tooltipProps={{
-                dataTooltipId: 'outputSecretManagerRef'
-              }}
-              label={getString('optionalField', { name: getString('cd.encryptJsonOutput') })}
-              enableConfigureOptions={false}
-              placeholder={getString('select')}
-              disabled={readonly}
-              multiTypeProps={{ allowableTypes, expressions }}
-              gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-            />
-            <Icon
-              name="remove"
-              onClick={() => {
-                formik?.setFieldValue(
-                  `${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.${fieldPath}.encryptOutput`,
-                  undefined
-                )
-              }}
-              margin={{ left: 'medium', top: 'medium' }}
-              size={24}
-            />
-          </Container>
-        )}
+      {isValueRuntimeInput((inputSetDataSpec as any)?.encryptOutput?.outputSecretManagerRef) && (
+        <Container flex>
+          <FormMultiTypeConnectorField
+            accountIdentifier={accountId}
+            projectIdentifier={projectIdentifier}
+            category={'SECRET_MANAGER'}
+            setRefValue
+            orgIdentifier={orgIdentifier}
+            name={`${
+              isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+            }spec.${fieldPath}.encryptOutput.outputSecretManagerRef`}
+            tooltipProps={{
+              dataTooltipId: 'outputSecretManagerRef'
+            }}
+            label={getString('optionalField', { name: getString('cd.encryptJsonOutput') })}
+            enableConfigureOptions={false}
+            placeholder={getString('select')}
+            disabled={readonly}
+            multiTypeProps={{ allowableTypes, expressions }}
+            gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+          />
+          <Icon
+            name="remove"
+            onClick={() => {
+              formik?.setFieldValue(
+                `${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.${fieldPath}.encryptOutput`,
+                undefined
+              )
+            }}
+            margin={{ left: 'medium', top: 'medium' }}
+            size={24}
+          />
+        </Container>
+      )}
     </FormikForm>
   )
 }
