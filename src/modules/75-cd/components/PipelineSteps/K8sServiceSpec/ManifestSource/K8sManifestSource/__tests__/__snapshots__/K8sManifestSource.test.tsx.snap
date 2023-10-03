@@ -36,7 +36,7 @@ exports[`K8sManifestSource tests Should match snapshot 1`] = `
               connector
             </div>
             <div
-              style="display: flex; align-items: center;"
+              class="withConfigureOptions"
             >
               <div
                 class="bp3-form-group"
@@ -391,7 +391,7 @@ exports[`K8sManifestSource tests Should match snapshot with fromTrigger 1`] = `
               connector
             </div>
             <div
-              style="display: flex; align-items: center;"
+              class="withConfigureOptions"
             >
               <div
                 class="bp3-form-group"

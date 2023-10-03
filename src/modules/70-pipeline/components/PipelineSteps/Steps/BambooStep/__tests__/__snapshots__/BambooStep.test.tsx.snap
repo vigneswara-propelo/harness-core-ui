@@ -675,7 +675,7 @@ exports[`Bamboo step tests Basic snapshot - deploymentform mode 1`] = `
             </span>
           </div>
           <div
-            style="display: flex; align-items: center;"
+            class="withConfigureOptions"
           >
             <div
               class="bp3-form-group"
@@ -1115,7 +1115,7 @@ exports[`Bamboo step tests Basic snapshot - inputset mode 1`] = `
             </span>
           </div>
           <div
-            style="display: flex; align-items: center;"
+            class="withConfigureOptions"
           >
             <div
               class="bp3-form-group"
@@ -1552,7 +1552,7 @@ exports[`Bamboo step tests Basic snapshot - inputset mode but no runtime values 
             </span>
           </div>
           <div
-            style="display: flex; align-items: center;"
+            class="withConfigureOptions"
           >
             <div
               class="bp3-form-group"
@@ -2523,7 +2523,7 @@ exports[`Bamboo step tests deploymentform mode - readonly 1`] = `
             </span>
           </div>
           <div
-            style="display: flex; align-items: center;"
+            class="withConfigureOptions"
           >
             <div
               class="bp3-form-group"

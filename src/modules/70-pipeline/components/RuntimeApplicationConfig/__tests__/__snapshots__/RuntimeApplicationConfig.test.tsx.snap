@@ -31,7 +31,7 @@ exports[`Azure Web App config tests Should match snapshot for application settin
               connector
             </div>
             <div
-              style="display: flex; align-items: center;"
+              class="withConfigureOptions"
             >
               <div
                 class="bp3-form-group"
@@ -324,7 +324,7 @@ exports[`Azure Web App config tests Should match snapshot for connection strings
               connector
             </div>
             <div
-              style="display: flex; align-items: center;"
+              class="withConfigureOptions"
             >
               <div
                 class="bp3-form-group"
@@ -617,7 +617,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
               connector
             </div>
             <div
-              style="display: flex; align-items: center;"
+              class="withConfigureOptions"
             >
               <div
                 class="bp3-form-group"

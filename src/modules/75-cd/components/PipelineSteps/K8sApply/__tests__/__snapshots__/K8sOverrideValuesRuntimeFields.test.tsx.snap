@@ -125,7 +125,7 @@ exports[`OverrideYamlValues runtimefields tests Render runtime fields in run pip
       connector
     </div>
     <div
-      style="display: flex; align-items: center;"
+      class="withConfigureOptions"
     >
       <div
         class="bp3-form-group"

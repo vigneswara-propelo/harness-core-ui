@@ -21,7 +21,7 @@ exports[`ServiceNow Update tests Basic snapshot - deploymentform mode: serviceNo
         </span>
       </div>
       <div
-        style="display: flex; align-items: center;"
+        class="withConfigureOptions"
       >
         <div
           class="bp3-form-group"
@@ -479,7 +479,7 @@ exports[`ServiceNow Update tests Basic snapshot - inputset mode: input set with 
         </span>
       </div>
       <div
-        style="display: flex; align-items: center;"
+        class="withConfigureOptions"
       >
         <div
           class="bp3-form-group bp3-intent-danger"
@@ -2574,7 +2574,7 @@ exports[`ServiceNow Update tests deploymentform readonly mode: serviceNow-update
         </span>
       </div>
       <div
-        style="display: flex; align-items: center;"
+        class="withConfigureOptions"
       >
         <div
           class="bp3-form-group"

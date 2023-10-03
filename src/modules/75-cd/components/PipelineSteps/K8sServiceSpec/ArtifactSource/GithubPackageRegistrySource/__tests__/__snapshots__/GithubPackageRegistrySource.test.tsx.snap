@@ -29,7 +29,7 @@ exports[`GithubPackageRegistrySource tests renders fine for all Runtime values w
               </span>
             </div>
             <div
-              style="display: flex; align-items: center;"
+              class="withConfigureOptions"
             >
               <div
                 class="bp3-form-group"
@@ -429,7 +429,7 @@ exports[`GithubPackageRegistrySource tests renders fine for all Runtime values w
               </span>
             </div>
             <div
-              style="display: flex; align-items: center;"
+              class="withConfigureOptions"
             >
               <div
                 class="bp3-form-group"

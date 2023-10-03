@@ -216,7 +216,7 @@ exports[`Test Azure Blueprint step should render azure blueprint view as new ste
           </span>
         </div>
         <div
-          style="display: flex; align-items: center;"
+          class="withConfigureOptions"
         >
           <div
             class="bp3-form-group"

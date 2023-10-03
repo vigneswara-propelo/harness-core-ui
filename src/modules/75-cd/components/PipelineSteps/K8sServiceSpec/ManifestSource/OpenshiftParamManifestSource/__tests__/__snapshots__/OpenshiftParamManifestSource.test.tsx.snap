@@ -36,7 +36,7 @@ exports[`OpenshiftParamManifestSource tests Should match snapshot 1`] = `
               connector
             </div>
             <div
-              style="display: flex; align-items: center;"
+              class="withConfigureOptions"
             >
               <div
                 class="bp3-form-group"
@@ -468,7 +468,7 @@ exports[`OpenshiftParamManifestSource tests Should match snapshot with fromTrigg
               connector
             </div>
             <div
-              style="display: flex; align-items: center;"
+              class="withConfigureOptions"
             >
               <div
                 class="bp3-form-group"

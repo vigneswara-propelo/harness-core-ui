@@ -97,7 +97,7 @@ exports[`ServiceNowImportSet Step Test Basic Snapshot -> Deploymentform Mode: se
         </span>
       </div>
       <div
-        style="display: flex; align-items: center;"
+        class="withConfigureOptions"
       >
         <div
           class="bp3-form-group"
@@ -502,7 +502,7 @@ exports[`ServiceNowImportSet Step Test Basic Snapshot -> Inputset Mode: input se
         </span>
       </div>
       <div
-        style="display: flex; align-items: center;"
+        class="withConfigureOptions"
       >
         <div
           class="bp3-form-group"
@@ -938,7 +938,7 @@ exports[`ServiceNowImportSet Step Test DeploymentForm -> StagingTable Loading Tr
         </span>
       </div>
       <div
-        style="display: flex; align-items: center;"
+        class="withConfigureOptions"
       >
         <div
           class="bp3-form-group"
@@ -1329,7 +1329,7 @@ exports[`ServiceNowImportSet Step Test DeploymentForm Readonly Mode: serviceNow-
         </span>
       </div>
       <div
-        style="display: flex; align-items: center;"
+        class="withConfigureOptions"
       >
         <div
           class="bp3-form-group"

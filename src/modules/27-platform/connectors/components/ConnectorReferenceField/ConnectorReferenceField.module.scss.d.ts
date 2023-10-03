@@ -41,5 +41,6 @@ declare const styles: {
   readonly selectedPopover: string
   readonly status: string
   readonly tag: string
+  readonly withConfigureOptions: string
 }
 export default styles

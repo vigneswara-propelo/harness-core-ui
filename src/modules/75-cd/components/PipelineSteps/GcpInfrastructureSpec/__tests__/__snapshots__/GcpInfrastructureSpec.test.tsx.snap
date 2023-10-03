@@ -27,7 +27,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view for inputse
             </span>
           </div>
           <div
-            style="display: flex; align-items: center;"
+            class="withConfigureOptions"
           >
             <div
               class="bp3-form-group"

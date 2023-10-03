@@ -44,7 +44,7 @@ exports[`Test cloudformation create stack parameters input set should render rem
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -868,7 +868,7 @@ exports[`Test cloudformation create stack parameters input set should render rem
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -1278,7 +1278,7 @@ exports[`Test cloudformation create stack parameters input set should render rem
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"

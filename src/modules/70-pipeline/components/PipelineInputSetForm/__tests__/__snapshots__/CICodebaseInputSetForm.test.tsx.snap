@@ -59,7 +59,7 @@ exports[`CICodebaseInputSetForm tests Run Pipeline Form  Initial Render 1`] = `
                     </span>
                   </div>
                   <div
-                    style="display: flex; align-items: center;"
+                    class="withConfigureOptions"
                   >
                     <div
                       class="bp3-form-group"
@@ -865,7 +865,7 @@ exports[`CICodebaseInputSetForm tests Run Pipeline Form  Re-Run Pipeline Render 
                     </span>
                   </div>
                   <div
-                    style="display: flex; align-items: center;"
+                    class="withConfigureOptions"
                   >
                     <div
                       class="bp3-form-group"
@@ -1756,7 +1756,7 @@ exports[`CICodebaseInputSetForm tests Run Pipeline from Template Form Initial Re
                     </span>
                   </div>
                   <div
-                    style="display: flex; align-items: center;"
+                    class="withConfigureOptions"
                   >
                     <div
                       class="bp3-form-group"
@@ -2572,7 +2572,7 @@ exports[`CICodebaseInputSetForm tests Run Pipeline from Template Form Initial Re
                     </span>
                   </div>
                   <div
-                    style="display: flex; align-items: center;"
+                    class="withConfigureOptions"
                   >
                     <div
                       class="bp3-form-group"
@@ -3510,7 +3510,7 @@ exports[`CICodebaseInputSetForm tests Run Pipeline from Template Form Re-Run Pip
                     </span>
                   </div>
                   <div
-                    style="display: flex; align-items: center;"
+                    class="withConfigureOptions"
                   >
                     <div
                       class="bp3-form-group"

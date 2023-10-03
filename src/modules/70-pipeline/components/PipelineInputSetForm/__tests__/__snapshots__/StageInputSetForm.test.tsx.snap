@@ -65,7 +65,7 @@ exports[`stageinputset tests viewType DeploymentForm initial render 1`] = `
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -705,7 +705,7 @@ exports[`stageinputset tests viewType DeploymentForm initial render2 1`] = `
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -1345,7 +1345,7 @@ exports[`stageinputset tests viewType InputSet initial render 1`] = `
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -1985,7 +1985,7 @@ exports[`stageinputset tests viewType InputSet initial render2 1`] = `
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"

@@ -227,7 +227,7 @@ exports[`Dependency Edit view edit mode fails when cpu present but memory is not
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -704,7 +704,7 @@ exports[`Dependency Edit view edit mode works 1`] = `
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -1181,7 +1181,7 @@ exports[`Dependency Edit view edit mode works when memory present but cpu is not
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -1703,7 +1703,7 @@ exports[`Dependency Edit view renders runtime inputs 1`] = `
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -2179,7 +2179,7 @@ exports[`Dependency Edit view should render properly 1`] = `
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -2533,7 +2533,7 @@ exports[`Dependency InputSet View should render all fields 1`] = `
               </span>
             </div>
             <div
-              style="display: flex; align-items: center;"
+              class="withConfigureOptions"
             >
               <div
                 class="bp3-form-group"

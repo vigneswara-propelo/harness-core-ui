@@ -366,7 +366,7 @@ Object {
               </span>
             </div>
             <div
-              style="display: flex; align-items: center;"
+              class="withConfigureOptions"
             >
               <div
                 class="bp3-form-group"
@@ -898,7 +898,7 @@ Object {
             </span>
           </div>
           <div
-            style="display: flex; align-items: center;"
+            class="withConfigureOptions"
           >
             <div
               class="bp3-form-group"
@@ -1484,7 +1484,7 @@ exports[`Test TerraformPlan renders more than one var file 1`] = `
           </span>
         </div>
         <div
-          style="display: flex; align-items: center;"
+          class="withConfigureOptions"
         >
           <div
             class="bp3-form-group"
@@ -3249,7 +3249,7 @@ exports[`Test TerraformPlan should render edit view as edit step 1`] = `
           </span>
         </div>
         <div
-          style="display: flex; align-items: center;"
+          class="withConfigureOptions"
         >
           <div
             class="bp3-form-group"
@@ -3780,7 +3780,7 @@ exports[`Test TerraformPlan should render edit view as new step 1`] = `
           </span>
         </div>
         <div
-          style="display: flex; align-items: center;"
+          class="withConfigureOptions"
         >
           <div
             class="bp3-form-group"
@@ -4311,7 +4311,7 @@ exports[`Test TerraformPlan should render edit view as new step 2`] = `
           </span>
         </div>
         <div
-          style="display: flex; align-items: center;"
+          class="withConfigureOptions"
         >
           <div
             class="bp3-form-group"
@@ -5068,7 +5068,7 @@ exports[`Test TerraformPlan should render edit view with command Destroy 1`] = `
           </span>
         </div>
         <div
-          style="display: flex; align-items: center;"
+          class="withConfigureOptions"
         >
           <div
             class="bp3-form-group"
@@ -5344,7 +5344,7 @@ exports[`Test TerraformPlan should render input set view 1`] = `
             </span>
           </div>
           <div
-            style="display: flex; align-items: center;"
+            class="withConfigureOptions"
           >
             <div
               class="bp3-form-group"
@@ -6171,7 +6171,7 @@ exports[`Test TerraformPlan should submit form for terraform plan 1`] = `
           </span>
         </div>
         <div
-          style="display: flex; align-items: center;"
+          class="withConfigureOptions"
         >
           <div
             class="bp3-form-group"

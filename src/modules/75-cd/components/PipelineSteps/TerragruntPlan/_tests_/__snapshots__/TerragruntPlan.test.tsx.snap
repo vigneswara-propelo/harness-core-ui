@@ -345,7 +345,7 @@ exports[`Test TerragruntPlan Terragrunt edit view test should render edit view a
           </span>
         </div>
         <div
-          style="display: flex; align-items: center;"
+          class="withConfigureOptions"
         >
           <div
             class="bp3-form-group"
@@ -802,7 +802,7 @@ exports[`Test TerragruntPlan Terragrunt inputset/deployment view test Basic snap
             </span>
           </div>
           <div
-            style="display: flex; align-items: center;"
+            class="withConfigureOptions"
           >
             <div
               class="bp3-form-group"
@@ -1477,7 +1477,7 @@ exports[`Test TerragruntPlan Terragrunt inputset/deployment view test Deployment
             </span>
           </div>
           <div
-            style="display: flex; align-items: center;"
+            class="withConfigureOptions"
           >
             <div
               class="bp3-form-group"

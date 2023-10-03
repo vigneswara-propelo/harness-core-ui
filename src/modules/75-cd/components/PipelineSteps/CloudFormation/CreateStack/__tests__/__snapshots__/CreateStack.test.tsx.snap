@@ -284,7 +284,7 @@ exports[`Test Cloudformation create stack should be able to open and close inlin
           </span>
         </div>
         <div
-          style="display: flex; align-items: center;"
+          class="withConfigureOptions"
         >
           <div
             class="bp3-form-group"
@@ -3158,7 +3158,7 @@ exports[`Test Cloudformation create stack should be able to submit 1`] = `
           </span>
         </div>
         <div
-          style="display: flex; align-items: center;"
+          class="withConfigureOptions"
         >
           <div
             class="bp3-form-group"
@@ -3839,7 +3839,7 @@ exports[`Test Cloudformation create stack should open and close remote template 
           </span>
         </div>
         <div
-          style="display: flex; align-items: center;"
+          class="withConfigureOptions"
         >
           <div
             class="bp3-form-group"
@@ -4503,7 +4503,7 @@ exports[`Test Cloudformation create stack should render edit view as new step 1`
           </span>
         </div>
         <div
-          style="display: flex; align-items: center;"
+          class="withConfigureOptions"
         >
           <div
             class="bp3-form-group"
@@ -5169,7 +5169,7 @@ exports[`Test Cloudformation create stack should render edit view as new step wi
           </span>
         </div>
         <div
-          style="display: flex; align-items: center;"
+          class="withConfigureOptions"
         >
           <div
             class="bp3-form-group"
@@ -5982,7 +5982,7 @@ exports[`Test Cloudformation create stack should render runtime components 1`] =
           </span>
         </div>
         <div
-          style="display: flex; align-items: center;"
+          class="withConfigureOptions"
         >
           <div
             class="bp3-form-group"
@@ -6740,7 +6740,7 @@ exports[`Test Cloudformation create stack should show api aws statues loading st
           </span>
         </div>
         <div
-          style="display: flex; align-items: center;"
+          class="withConfigureOptions"
         >
           <div
             class="bp3-form-group"
@@ -7454,7 +7454,7 @@ exports[`Test Cloudformation create stack should show api capabilities loading s
           </span>
         </div>
         <div
-          style="display: flex; align-items: center;"
+          class="withConfigureOptions"
         >
           <div
             class="bp3-form-group"
@@ -8168,7 +8168,7 @@ exports[`Test Cloudformation create stack should show api regions loading state 
           </span>
         </div>
         <div
-          style="display: flex; align-items: center;"
+          class="withConfigureOptions"
         >
           <div
             class="bp3-form-group"

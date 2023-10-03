@@ -256,7 +256,7 @@ exports[`Test cloudformation remote wizard step one should click each repo optio
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -670,7 +670,7 @@ exports[`Test cloudformation remote wizard step one should click each repo optio
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -1084,7 +1084,7 @@ exports[`Test cloudformation remote wizard step one should click each repo optio
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -1498,7 +1498,7 @@ exports[`Test cloudformation remote wizard step one should click each repo optio
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -1982,7 +1982,7 @@ exports[`Test cloudformation remote wizard step one should render error when sub
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -2437,7 +2437,7 @@ exports[`Test cloudformation remote wizard step one should render parameter deta
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -2962,7 +2962,7 @@ exports[`Test cloudformation remote wizard step one should render parameter deta
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -3572,7 +3572,7 @@ exports[`Test cloudformation remote wizard step one should render parameter deta
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -4128,7 +4128,7 @@ exports[`Test cloudformation remote wizard step one should render submit step on
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -4582,7 +4582,7 @@ exports[`Test cloudformation remote wizard step one should render with initial d
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -5035,7 +5035,7 @@ exports[`Test cloudformation remote wizard step one should render with no initia
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -5418,7 +5418,7 @@ exports[`Test cloudformation remote wizard step one should render with runtime d
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"

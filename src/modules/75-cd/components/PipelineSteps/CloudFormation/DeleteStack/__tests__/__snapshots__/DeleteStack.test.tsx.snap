@@ -284,7 +284,7 @@ exports[`Test Cloudformation delete stack should be able to edit inline config 1
           </span>
         </div>
         <div
-          style="display: flex; align-items: center;"
+          class="withConfigureOptions"
         >
           <div
             class="bp3-form-group"
@@ -1011,7 +1011,7 @@ exports[`Test Cloudformation delete stack should error form for inline config 1`
           </span>
         </div>
         <div
-          style="display: flex; align-items: center;"
+          class="withConfigureOptions"
         >
           <div
             class="bp3-form-group bp3-intent-danger"
@@ -2527,7 +2527,7 @@ exports[`Test Cloudformation delete stack should render delete stack view - inli
           </span>
         </div>
         <div
-          style="display: flex; align-items: center;"
+          class="withConfigureOptions"
         >
           <div
             class="bp3-form-group"
@@ -4603,7 +4603,7 @@ exports[`Test Cloudformation delete stack should submit form for inline config 1
           </span>
         </div>
         <div
-          style="display: flex; align-items: center;"
+          class="withConfigureOptions"
         >
           <div
             class="bp3-form-group"

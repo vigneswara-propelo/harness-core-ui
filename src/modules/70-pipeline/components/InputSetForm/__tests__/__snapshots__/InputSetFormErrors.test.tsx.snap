@@ -514,7 +514,7 @@ exports[`Input Set - error scenarios By default save button should be disabled 1
                                         </span>
                                       </div>
                                       <div
-                                        style="display: flex; align-items: center;"
+                                        class="withConfigureOptions"
                                       >
                                         <div
                                           class="bp3-form-group connectorMargin"

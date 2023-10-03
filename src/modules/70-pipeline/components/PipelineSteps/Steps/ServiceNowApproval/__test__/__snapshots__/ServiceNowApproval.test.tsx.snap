@@ -21,7 +21,7 @@ exports[`ServiceNow Approval tests Basic snapshot - deploymentform mode: service
         </span>
       </div>
       <div
-        style="display: flex; align-items: center;"
+        class="withConfigureOptions"
       >
         <div
           class="bp3-form-group"
@@ -703,7 +703,7 @@ exports[`ServiceNow Approval tests Basic snapshot - inputset mode: input set wit
         </span>
       </div>
       <div
-        style="display: flex; align-items: center;"
+        class="withConfigureOptions"
       >
         <div
           class="bp3-form-group bp3-intent-danger"
@@ -3218,7 +3218,7 @@ exports[`ServiceNow Approval tests deploymentform mode - readonly: serviceNow-ap
         </span>
       </div>
       <div
-        style="display: flex; align-items: center;"
+        class="withConfigureOptions"
       >
         <div
           class="bp3-form-group"

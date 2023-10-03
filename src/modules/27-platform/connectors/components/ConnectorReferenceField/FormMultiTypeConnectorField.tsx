@@ -537,7 +537,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
         <HarnessDocTooltip tooltipId={dataTooltipId} labelText={label} className={Classes.LABEL} />
       </Container>
       {enableConfigureOptions ? (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div className={css.withConfigureOptions}>
           {component}
           {getMultiTypeFromValue(selected) === MultiTypeInputType.RUNTIME && (
             <ConnectorConfigureOptions

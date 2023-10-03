@@ -37,7 +37,7 @@ exports[`K8sServiceSpec tests inputSetMode 1`] = `
               pipelineSteps.deploy.inputSet.artifactServer
             </div>
             <div
-              style="display: flex; align-items: center;"
+              class="withConfigureOptions"
             >
               <div
                 class="bp3-form-group connectorMargin"
@@ -720,7 +720,7 @@ exports[`K8sServiceSpec tests inputSetMode 1`] = `
               pipelineSteps.deploy.inputSet.artifactServer
             </div>
             <div
-              style="display: flex; align-items: center;"
+              class="withConfigureOptions"
             >
               <div
                 class="bp3-form-group connectorMargin"
@@ -996,7 +996,7 @@ exports[`K8sServiceSpec tests inputSetMode 1`] = `
                 connector
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -1116,7 +1116,7 @@ exports[`K8sServiceSpec tests inputSetMode 1`] = `
                 connector
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"

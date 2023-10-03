@@ -171,7 +171,7 @@ exports[`Test cloudformation create stack input set should render remote templat
               </span>
             </div>
             <div
-              style="display: flex; align-items: center;"
+              class="withConfigureOptions"
             >
               <div
                 class="bp3-form-group"

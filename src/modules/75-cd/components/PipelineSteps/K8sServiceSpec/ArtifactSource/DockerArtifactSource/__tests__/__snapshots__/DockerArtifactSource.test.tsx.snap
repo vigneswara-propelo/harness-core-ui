@@ -143,7 +143,7 @@ exports[`Docker Artifact Source tests snapshot test for Sidecar Docker artifact 
             pipelineSteps.deploy.inputSet.artifactServer
           </div>
           <div
-            style="display: flex; align-items: center;"
+            class="withConfigureOptions"
           >
             <div
               class="bp3-form-group connectorMargin"
@@ -535,7 +535,7 @@ exports[`Docker Artifact Source tests when featureflag is enabled - shows digest
             pipelineSteps.deploy.inputSet.artifactServer
           </div>
           <div
-            style="display: flex; align-items: center;"
+            class="withConfigureOptions"
           >
             <div
               class="bp3-form-group connectorMargin"

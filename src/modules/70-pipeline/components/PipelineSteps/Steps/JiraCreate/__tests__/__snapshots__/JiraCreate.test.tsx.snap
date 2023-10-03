@@ -651,7 +651,7 @@ exports[`Jira Create tests Basic snapshot - deploymentform mode: jira-create-dep
         </span>
       </div>
       <div
-        style="display: flex; align-items: center;"
+        class="withConfigureOptions"
       >
         <div
           class="bp3-form-group"
@@ -1094,7 +1094,7 @@ exports[`Jira Create tests Basic snapshot - inputset mode: input set with errors
         </span>
       </div>
       <div
-        style="display: flex; align-items: center;"
+        class="withConfigureOptions"
       >
         <div
           class="bp3-form-group bp3-intent-danger"
@@ -1535,7 +1535,7 @@ exports[`Jira Create tests Deploymentform readonly mode: jira-create-deploymentf
         </span>
       </div>
       <div
-        style="display: flex; align-items: center;"
+        class="withConfigureOptions"
       >
         <div
           class="bp3-form-group"

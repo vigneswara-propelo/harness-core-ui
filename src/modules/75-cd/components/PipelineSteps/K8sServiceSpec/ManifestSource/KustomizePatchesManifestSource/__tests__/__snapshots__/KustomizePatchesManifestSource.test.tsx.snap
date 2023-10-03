@@ -36,7 +36,7 @@ exports[`KustomizePatchesManifestSource tests Should match snapshot 1`] = `
               connector
             </div>
             <div
-              style="display: flex; align-items: center;"
+              class="withConfigureOptions"
             >
               <div
                 class="bp3-form-group"
@@ -473,7 +473,7 @@ exports[`KustomizePatchesManifestSource tests Should match snapshot with fromTri
               connector
             </div>
             <div
-              style="display: flex; align-items: center;"
+              class="withConfigureOptions"
             >
               <div
                 class="bp3-form-group"

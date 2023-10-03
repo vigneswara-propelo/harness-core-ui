@@ -187,7 +187,7 @@ exports[`Test cloudformation delete stack input set should render all input vari
                   </span>
                 </div>
                 <div
-                  style="display: flex; align-items: center;"
+                  class="withConfigureOptions"
                 >
                   <div
                     class="bp3-form-group"

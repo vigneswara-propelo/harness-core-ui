@@ -411,7 +411,7 @@ exports[`BuildInfraSpecifications snapshot tests for AWS Build Infra Render AWS 
                         </span>
                       </div>
                       <div
-                        style="display: flex; align-items: center;"
+                        class="withConfigureOptions"
                       >
                         <div
                           class="bp3-form-group"
@@ -1229,7 +1229,7 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                         </span>
                       </div>
                       <div
-                        style="display: flex; align-items: center;"
+                        class="withConfigureOptions"
                       >
                         <div
                           class="bp3-form-group"
@@ -4592,7 +4592,7 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                                   </span>
                                 </div>
                                 <div
-                                  style="display: flex; align-items: center;"
+                                  class="withConfigureOptions"
                                 >
                                   <div
                                     class="bp3-form-group"
@@ -5142,7 +5142,7 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra Renders wit
                     </span>
                   </div>
                   <div
-                    style="display: flex; align-items: center;"
+                    class="withConfigureOptions"
                   >
                     <div
                       class="bp3-form-group"
@@ -5765,7 +5765,7 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra able to sel
                         </span>
                       </div>
                       <div
-                        style="display: flex; align-items: center;"
+                        class="withConfigureOptions"
                       >
                         <div
                           class="bp3-form-group"

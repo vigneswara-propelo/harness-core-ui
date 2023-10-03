@@ -3031,7 +3031,7 @@ exports[`Manifest Trigger Tests on click of edit - submits thru the right payloa
                     </span>
                   </div>
                   <div
-                    style="display: flex; align-items: center;"
+                    class="withConfigureOptions"
                   >
                     <div
                       class="bp3-form-group"

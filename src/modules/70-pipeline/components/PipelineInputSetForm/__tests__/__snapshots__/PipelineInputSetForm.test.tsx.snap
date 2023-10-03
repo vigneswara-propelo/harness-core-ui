@@ -759,7 +759,7 @@ exports[`CI enabled CI with ConnectorRef as runtime input: CI stage expects Conn
                     </span>
                   </div>
                   <div
-                    style="display: flex; align-items: center;"
+                    class="withConfigureOptions"
                   >
                     <div
                       class="bp3-form-group"
@@ -1050,7 +1050,7 @@ exports[`CI enabled Render CI Codebase all runtime inputs: all inputs as runtime
                     </span>
                   </div>
                   <div
-                    style="display: flex; align-items: center;"
+                    class="withConfigureOptions"
                   >
                     <div
                       class="bp3-form-group"

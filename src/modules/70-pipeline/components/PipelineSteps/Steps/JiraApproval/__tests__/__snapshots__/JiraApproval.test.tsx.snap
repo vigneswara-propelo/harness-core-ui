@@ -926,7 +926,7 @@ exports[`Jira Approval tests Basic snapshot - deploymentform mode: jira-approval
         </span>
       </div>
       <div
-        style="display: flex; align-items: center;"
+        class="withConfigureOptions"
       >
         <div
           class="bp3-form-group"
@@ -1326,7 +1326,7 @@ exports[`Jira Approval tests Basic snapshot - inputset mode: input set with erro
         </span>
       </div>
       <div
-        style="display: flex; align-items: center;"
+        class="withConfigureOptions"
       >
         <div
           class="bp3-form-group bp3-intent-danger"
@@ -2466,7 +2466,7 @@ exports[`Jira Approval tests deploymentform mode - readonly: jira-approval-deplo
         </span>
       </div>
       <div
-        style="display: flex; align-items: center;"
+        class="withConfigureOptions"
       >
         <div
           class="bp3-form-group"

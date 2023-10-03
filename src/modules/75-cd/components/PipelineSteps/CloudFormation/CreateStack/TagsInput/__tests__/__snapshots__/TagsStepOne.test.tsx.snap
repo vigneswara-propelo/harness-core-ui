@@ -327,7 +327,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -813,7 +813,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -1299,7 +1299,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -1785,7 +1785,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -2270,7 +2270,7 @@ exports[`Test cloudformation remote tags step one should error when submitting 1
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -2725,7 +2725,7 @@ exports[`Test cloudformation remote tags step one should open new connector moda
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -3211,7 +3211,7 @@ exports[`Test cloudformation remote tags step one should open new connector moda
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -3697,7 +3697,7 @@ exports[`Test cloudformation remote tags step one should render tags details inc
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -4308,7 +4308,7 @@ exports[`Test cloudformation remote tags step one should render with initial dat
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -4833,7 +4833,7 @@ exports[`Test cloudformation remote tags step one should render with no initial 
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -5287,7 +5287,7 @@ exports[`Test cloudformation remote tags step one should render with runtime dat
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -5757,7 +5757,7 @@ exports[`Test cloudformation remote tags step one should submit step one 1`] = `
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"

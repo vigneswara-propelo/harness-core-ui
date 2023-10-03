@@ -13,7 +13,7 @@ exports[`FormMultiTypeConnectorField tests renders drawer mode for addition of c
       connector
     </div>
     <div
-      style="display: flex; align-items: center;"
+      class="withConfigureOptions"
     >
       <div
         class="bp3-form-group"
@@ -279,7 +279,7 @@ exports[`FormMultiTypeConnectorField tests renders without crashing 1`] = `
       connector
     </div>
     <div
-      style="display: flex; align-items: center;"
+      class="withConfigureOptions"
     >
       <div
         class="bp3-form-group"

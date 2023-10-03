@@ -142,7 +142,7 @@ exports[`ECR Step Edit View should render properly for AWS VMs build infra 1`] =
               </span>
             </div>
             <div
-              style="display: flex; align-items: center;"
+              class="withConfigureOptions"
             >
               <div
                 class="bp3-form-group"

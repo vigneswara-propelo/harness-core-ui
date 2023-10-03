@@ -148,7 +148,7 @@ exports[`Git Clone Step InputSet View Render should render all fields with valid
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -1531,7 +1531,7 @@ exports[`Git Clone Step Step Render initial render 1`] = `
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -2148,7 +2148,7 @@ exports[`Git Clone Step Step Render should render onEdit fixed values properly 1
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"
@@ -2944,7 +2944,7 @@ exports[`Git Clone Step Step Render should render onEdit runtime input values pr
                 </span>
               </div>
               <div
-                style="display: flex; align-items: center;"
+                class="withConfigureOptions"
               >
                 <div
                   class="bp3-form-group"

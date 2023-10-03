@@ -226,7 +226,7 @@ exports[`Background Step Edit View edit mode works 1`] = `
               </span>
             </div>
             <div
-              style="display: flex; align-items: center;"
+              class="withConfigureOptions"
             >
               <div
                 class="bp3-form-group"
@@ -1353,7 +1353,7 @@ exports[`Background Step Edit View renders runtime inputs 1`] = `
               </span>
             </div>
             <div
-              style="display: flex; align-items: center;"
+              class="withConfigureOptions"
             >
               <div
                 class="bp3-form-group"
@@ -2228,7 +2228,7 @@ exports[`Background Step Edit View should render properly 1`] = `
               </span>
             </div>
             <div
-              style="display: flex; align-items: center;"
+              class="withConfigureOptions"
             >
               <div
                 class="bp3-form-group"
@@ -2916,7 +2916,7 @@ exports[`Background Step InputSet View should render all fields 1`] = `
               </span>
             </div>
             <div
-              style="display: flex; align-items: center;"
+              class="withConfigureOptions"
             >
               <div
                 class="bp3-form-group"

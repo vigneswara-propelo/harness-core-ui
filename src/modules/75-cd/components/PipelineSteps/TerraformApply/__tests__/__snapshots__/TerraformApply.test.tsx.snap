@@ -1041,7 +1041,7 @@ exports[`Test TerraformApply expand backend Spec config 1`] = `
                         </span>
                       </div>
                       <div
-                        style="display: flex; align-items: center;"
+                        class="withConfigureOptions"
                       >
                         <div
                           class="bp3-form-group"
