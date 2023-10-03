@@ -267,7 +267,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
     projectIdentifier,
     connectorRef: getFinalQueryParamValue(fixedConnectorValue),
     region: getFinalQueryParamValue(fixedRegionValue),
-    bucketName: fixedBucketValue,
+    bucketName: getFinalQueryParamValue(fixedBucketValue),
     filePathRegex: '*',
     pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
     serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
