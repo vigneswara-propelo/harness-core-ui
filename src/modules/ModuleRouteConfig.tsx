@@ -19,6 +19,8 @@ import CISideNavLinks from '@ci/components/CISideNav/CISideNavV2'
 import CVRouteDestinations from '@modules/85-cv/RouteDestinationsV2'
 import CIRouteDestinations from '@modules/75-ci/RouteDestinationsV2'
 import CFSideNav from '@cf/components/SideNav/CFSideNav'
+import CODESideNavLinks from '@modules/60-code/components/SideNav/CODESideNavLinks'
+import CODERouteDestinations from '@code/CODERouteDestinations'
 import CFRouteDestinations from '@modules/75-cf/RouteDestinationsV2'
 import CVSideNavLinks from '@cv/components/SideNav/CVSideNavLinks'
 import CCMSideNavLinks from '@ce/components/CESideNav/CESideNavV2'
@@ -62,8 +64,8 @@ const ModuleRouteConfig: Record<NavModuleName, IModuleRouteConfig> = {
     routes: ChaosRouteDestinations
   },
   [ModuleName.CODE]: {
-    sideNavLinks: () => <></>,
-    routes: () => <></>
+    sideNavLinks: CODESideNavLinks,
+    routes: CODERouteDestinations
   },
   [ModuleName.CET]: {
     sideNavLinks: CETSideNavLinks,

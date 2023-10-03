@@ -58,6 +58,7 @@ const HARNESS_FF_SDK_EVENT_URL = process.env.HARNESS_FF_SDK_EVENT_URL
 const HARNESS_FF_SDK_ENABLE_STREAM = process.env.HARNESS_FF_SDK_ENABLE_STREAM
 const HARNESS_FF_SDK_KEY = process.env.HARNESS_FF_SDK_KEY
 const HARNESS_FF_SDK_ASYNC = process.env.HARNESS_FF_SDK_ASYNC
+const DISABLE_DEV_SERVER_CLIENT_OVERLAY = process.env.DISABLE_DEV_SERVER_CLIENT_OVERLAY === 'true'
 
 console.log('\nFeature flags SDK env vars')
 console.table({
@@ -93,7 +94,7 @@ const config = {
         },
         port: 8181,
         client: {
-          overlay: !(isCypress || isCypressCoverage)
+          overlay: !(DISABLE_DEV_SERVER_CLIENT_OVERLAY || isCypress || isCypressCoverage)
         },
         server: {
           type: 'https',

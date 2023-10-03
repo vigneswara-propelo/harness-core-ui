@@ -218,7 +218,9 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
           })
         : routes.toCODE({ accountId }),
     featureFlagName: FeatureFlag.CODE_ENABLED,
-    color: '--default-module-border',
+    color: '--code-border',
+    backgroundColor: '--code-background',
+    backgroundColorLight: '--code-background-light',
     shortLabel: 'common.purpose.code.name'
   },
   [ModuleName.IACM]: {

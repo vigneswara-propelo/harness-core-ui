@@ -545,6 +545,10 @@ const routes = {
   toCEManagedServiceProvider: withModeModuleAndScopePrefix<ModulePathParams>(() => `/managed-service-provider`),
   toCCMMFE: withModeModuleAndScopePrefix<ModulePathParams>(() => `/new`),
 
+  // CODE/Gitness routes
+  toCODE: withModeModuleAndScopePrefix(() => `/`),
+  toCODEHome: withModeModuleAndScopePrefix(() => `/home`),
+
   // cf routes
   toFeatureFlags: withModeModuleAndScopePrefix<ModulePathParams>(() => '/feature-flags'),
 
