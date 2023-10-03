@@ -762,6 +762,9 @@ logs:
   retry: '{{ $.retry }}'
 conditionalExecution:
   title: Conditional Execution
+  deleteModal:
+    title: Remove conditional execution?
+    content: Are you sure you want to remove this conditional execution? All the configuration will be lost.
   subTitle: Use conditions to determine when this {{entity}} is executed.
   statusOption:
     success: Execute this {{entity}} if the {{parentEntity}} execution is successful thus far

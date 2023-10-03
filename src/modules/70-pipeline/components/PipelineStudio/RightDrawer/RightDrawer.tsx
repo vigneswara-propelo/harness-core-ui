@@ -176,7 +176,6 @@ const addReplace = (item: Partial<Values>, node: any): void => {
   if (item.name) node.name = item.name
   if (item.identifier) node.identifier = item.identifier
   if ((item as StepElementConfig).description) node.description = (item as StepElementConfig).description
-  if (item.when) node.when = item.when
   if ((item as StepElementConfig).timeout) node.timeout = (item as StepElementConfig).timeout
 }
 
@@ -240,6 +239,12 @@ const processNodeImpl = (
         delete (node as any).strategy
       } else {
         set(node, 'strategy', item.strategy)
+      }
+
+      if (item?.when) {
+        set(node, 'when', item.when)
+      } else {
+        delete (node as StepElementConfig & StepGroupElementConfig).when
       }
 
       if (item?.policySets) {

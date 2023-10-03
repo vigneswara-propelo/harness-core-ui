@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
-import { FormInput } from '@harness/uicore'
+import { Button, ButtonVariation, ConfirmationDialog, FormInput, Layout, useToggleOpen } from '@harness/uicore'
 import { useFormikContext } from 'formik'
-import { get } from 'lodash-es'
+import { get, isUndefined, set } from 'lodash-es'
+import produce from 'immer'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import { isValueRuntimeInput } from '@common/utils/utils'
+import { useStrings } from 'framework/strings'
 import ConditionalExecutionPanelHeader from './ConditionalExecutionHeader'
 import ConditionalExecutionPanelStatus from './ConditionalExecutionStatus'
 import ConditionalExecutionPanelCondition from './ConditionalExecutionCondition'
@@ -25,14 +27,40 @@ export interface ConditionalExecutionPanelProps {
 
 export default function ConditionalExecutionPanel(props: ConditionalExecutionPanelProps): React.ReactElement {
   const { mode, isReadonly, path = 'when' } = props
+  const { getString } = useStrings()
   const formik = useFormikContext()
-  const statusPath = mode === Modes.STAGE ? 'pipelineStatus' : 'stageStatus'
+  const {
+    isOpen: isDeleteConfirmationOpen,
+    open: openDeleteConfirmation,
+    close: closeDeleteConfirmation
+  } = useToggleOpen()
 
+  const statusPath = mode === Modes.STAGE ? 'pipelineStatus' : 'stageStatus'
   const value = get(formik.values, path)
+
+  const handleCloseDeleteConfirmation = (confirm: boolean): void => {
+    if (confirm) {
+      formik.setValues(
+        produce(formik.values, (draft: any) => {
+          set(draft, path, undefined)
+        })
+      )
+    }
+    closeDeleteConfirmation()
+  }
 
   return (
     <div className={css.main}>
-      <ConditionalExecutionPanelHeader mode={mode} />
+      <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
+        <ConditionalExecutionPanelHeader mode={mode} />
+        <Button
+          variation={ButtonVariation.ICON}
+          icon={'main-trash'}
+          data-testid="delete"
+          disabled={isReadonly || isUndefined(value)}
+          onClick={openDeleteConfirmation}
+        />
+      </Layout.Horizontal>
       {isValueRuntimeInput(value) ? (
         <FormInput.Text className={css.runtimeInput} name={path} disabled />
       ) : (
@@ -42,6 +70,15 @@ export default function ConditionalExecutionPanel(props: ConditionalExecutionPan
           <ConditionalExecutionPanelCondition path={path} statusPath={statusPath} isReadonly={isReadonly} mode={mode} />
         </div>
       )}
+      <ConfirmationDialog
+        intent="danger"
+        titleText={getString('pipeline.conditionalExecution.deleteModal.title')}
+        contentText={getString('pipeline.conditionalExecution.deleteModal.content')}
+        confirmButtonText={getString('common.remove')}
+        cancelButtonText={getString('cancel')}
+        isOpen={isDeleteConfirmationOpen}
+        onClose={handleCloseDeleteConfirmation}
+      />
     </div>
   )
 }

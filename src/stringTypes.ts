@@ -4257,6 +4257,8 @@ export interface StringsMap {
   'pipeline.conditionalExecution.belowExpression': string
   'pipeline.conditionalExecution.condition': string
   'pipeline.conditionalExecution.conditionLabel': string
+  'pipeline.conditionalExecution.deleteModal.content': string
+  'pipeline.conditionalExecution.deleteModal.title': string
   'pipeline.conditionalExecution.statusOption.all': string
   'pipeline.conditionalExecution.statusOption.entityFailure': string
   'pipeline.conditionalExecution.statusOption.failure': string
