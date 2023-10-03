@@ -352,7 +352,7 @@ Object {
         >
           <div
             class="connectorLabel"
-            style="margin-bottom: 10px;"
+            style="margin-bottom: 10px; width: 280px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -377,12 +377,12 @@ Object {
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 280px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-spec.configuration.secretManagerRef"
-                      style="width: 280px;"
+                      style="width: 100%;"
                       type="button"
                     >
                       <span
@@ -884,7 +884,7 @@ Object {
       >
         <div
           class="connectorLabel"
-          style="margin-bottom: 10px;"
+          style="margin-bottom: 10px; width: 280px;"
         >
           <div
             class="StyledProps--font StyledProps--main"
@@ -909,12 +909,12 @@ Object {
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 280px;"
+                  style="width: 100%;"
                 >
                   <button
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-spec.configuration.secretManagerRef"
-                    style="width: 280px;"
+                    style="width: 100%;"
                     type="button"
                   >
                     <span
@@ -1470,7 +1470,7 @@ exports[`Test TerraformPlan renders more than one var file 1`] = `
     >
       <div
         class="connectorLabel"
-        style="margin-bottom: 10px;"
+        style="margin-bottom: 10px; width: 280px;"
       >
         <div
           class="StyledProps--font StyledProps--main"
@@ -1495,12 +1495,12 @@ exports[`Test TerraformPlan renders more than one var file 1`] = `
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                style="width: 280px;"
+                style="width: 100%;"
               >
                 <button
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                   data-testid="cr-field-spec.configuration.secretManagerRef"
-                  style="width: 280px;"
+                  style="width: 100%;"
                   type="button"
                 >
                   <span
@@ -3235,7 +3235,7 @@ exports[`Test TerraformPlan should render edit view as edit step 1`] = `
     >
       <div
         class="connectorLabel"
-        style="margin-bottom: 10px;"
+        style="margin-bottom: 10px; width: 280px;"
       >
         <div
           class="StyledProps--font StyledProps--main"
@@ -3260,12 +3260,12 @@ exports[`Test TerraformPlan should render edit view as edit step 1`] = `
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                style="width: 280px;"
+                style="width: 100%;"
               >
                 <button
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                   data-testid="cr-field-spec.configuration.secretManagerRef"
-                  style="width: 280px;"
+                  style="width: 100%;"
                   type="button"
                 >
                   <span
@@ -3766,7 +3766,7 @@ exports[`Test TerraformPlan should render edit view as new step 1`] = `
     >
       <div
         class="connectorLabel"
-        style="margin-bottom: 10px;"
+        style="margin-bottom: 10px; width: 280px;"
       >
         <div
           class="StyledProps--font StyledProps--main"
@@ -3791,12 +3791,12 @@ exports[`Test TerraformPlan should render edit view as new step 1`] = `
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                style="width: 280px;"
+                style="width: 100%;"
               >
                 <button
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                   data-testid="cr-field-spec.configuration.secretManagerRef"
-                  style="width: 280px;"
+                  style="width: 100%;"
                   type="button"
                 >
                   <span
@@ -4297,7 +4297,7 @@ exports[`Test TerraformPlan should render edit view as new step 2`] = `
     >
       <div
         class="connectorLabel"
-        style="margin-bottom: 10px;"
+        style="margin-bottom: 10px; width: 280px;"
       >
         <div
           class="StyledProps--font StyledProps--main"
@@ -4322,12 +4322,12 @@ exports[`Test TerraformPlan should render edit view as new step 2`] = `
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                style="width: 280px;"
+                style="width: 100%;"
               >
                 <button
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                   data-testid="cr-field-spec.configuration.secretManagerRef"
-                  style="width: 280px;"
+                  style="width: 100%;"
                   type="button"
                 >
                   <span
@@ -5054,7 +5054,7 @@ exports[`Test TerraformPlan should render edit view with command Destroy 1`] = `
     >
       <div
         class="connectorLabel"
-        style="margin-bottom: 10px;"
+        style="margin-bottom: 10px; width: 280px;"
       >
         <div
           class="StyledProps--font StyledProps--main"
@@ -5079,12 +5079,12 @@ exports[`Test TerraformPlan should render edit view with command Destroy 1`] = `
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                style="width: 280px;"
+                style="width: 100%;"
               >
                 <button
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                   data-testid="cr-field-spec.configuration.secretManagerRef"
-                  style="width: 280px;"
+                  style="width: 100%;"
                   type="button"
                 >
                   <span
@@ -5330,6 +5330,7 @@ exports[`Test TerraformPlan should render input set view 1`] = `
         </label>
         <div
           class="connectorLabel"
+          style="width: 400px;"
         >
           <div
             class="StyledProps--font StyledProps--main"
@@ -5355,12 +5356,12 @@ exports[`Test TerraformPlan should render input set view 1`] = `
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 400px;"
+                  style="width: 100%;"
                 >
                   <button
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-test.spec.configuration.configFiles.store.spec.connectorRef"
-                    style="width: 400px;"
+                    style="width: 100%;"
                     type="button"
                   >
                     <span
@@ -6156,7 +6157,7 @@ exports[`Test TerraformPlan should submit form for terraform plan 1`] = `
     >
       <div
         class="connectorLabel"
-        style="margin-bottom: 10px;"
+        style="margin-bottom: 10px; width: 280px;"
       >
         <div
           class="StyledProps--font StyledProps--main"
@@ -6181,12 +6182,12 @@ exports[`Test TerraformPlan should submit form for terraform plan 1`] = `
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                style="width: 280px;"
+                style="width: 100%;"
               >
                 <button
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                   data-testid="cr-field-spec.configuration.secretManagerRef"
-                  style="width: 280px;"
+                  style="width: 100%;"
                   type="button"
                 >
                   <span

@@ -286,7 +286,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
           >
             <div
               class="connectorLabel"
-              style="margin-bottom: 10px;"
+              style="margin-bottom: 10px; width: 400px;"
             >
               <div
                 class="StyledProps--font StyledProps--main"
@@ -338,12 +338,12 @@ exports[`Test cloudformation remote tags step one should click each repo option 
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="width: 400px;"
+                      style="width: 100%;"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                         data-testid="cr-field-spec.store.spec.connectorRef"
-                        style="width: 400px;"
+                        style="width: 100%;"
                         type="button"
                       >
                         <span
@@ -772,7 +772,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
           >
             <div
               class="connectorLabel"
-              style="margin-bottom: 10px;"
+              style="margin-bottom: 10px; width: 400px;"
             >
               <div
                 class="StyledProps--font StyledProps--main"
@@ -824,12 +824,12 @@ exports[`Test cloudformation remote tags step one should click each repo option 
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="width: 400px;"
+                      style="width: 100%;"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                         data-testid="cr-field-spec.store.spec.connectorRef"
-                        style="width: 400px;"
+                        style="width: 100%;"
                         type="button"
                       >
                         <span
@@ -1258,7 +1258,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
           >
             <div
               class="connectorLabel"
-              style="margin-bottom: 10px;"
+              style="margin-bottom: 10px; width: 400px;"
             >
               <div
                 class="StyledProps--font StyledProps--main"
@@ -1310,12 +1310,12 @@ exports[`Test cloudformation remote tags step one should click each repo option 
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="width: 400px;"
+                      style="width: 100%;"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                         data-testid="cr-field-spec.store.spec.connectorRef"
-                        style="width: 400px;"
+                        style="width: 100%;"
                         type="button"
                       >
                         <span
@@ -1744,7 +1744,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
           >
             <div
               class="connectorLabel"
-              style="margin-bottom: 10px;"
+              style="margin-bottom: 10px; width: 400px;"
             >
               <div
                 class="StyledProps--font StyledProps--main"
@@ -1796,12 +1796,12 @@ exports[`Test cloudformation remote tags step one should click each repo option 
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="width: 400px;"
+                      style="width: 100%;"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                         data-testid="cr-field-spec.store.spec.connectorRef"
-                        style="width: 400px;"
+                        style="width: 100%;"
                         type="button"
                       >
                         <span
@@ -2230,7 +2230,7 @@ exports[`Test cloudformation remote tags step one should error when submitting 1
           >
             <div
               class="connectorLabel"
-              style="margin-bottom: 10px;"
+              style="margin-bottom: 10px; width: 400px;"
             >
               <div
                 class="StyledProps--font StyledProps--main"
@@ -2281,12 +2281,12 @@ exports[`Test cloudformation remote tags step one should error when submitting 1
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="width: 400px;"
+                      style="width: 100%;"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                         data-testid="cr-field-spec.store.spec.connectorRef"
-                        style="width: 400px;"
+                        style="width: 100%;"
                         type="button"
                       >
                         <span
@@ -2684,7 +2684,7 @@ exports[`Test cloudformation remote tags step one should open new connector moda
           >
             <div
               class="connectorLabel"
-              style="margin-bottom: 10px;"
+              style="margin-bottom: 10px; width: 400px;"
             >
               <div
                 class="StyledProps--font StyledProps--main"
@@ -2736,12 +2736,12 @@ exports[`Test cloudformation remote tags step one should open new connector moda
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="width: 400px;"
+                      style="width: 100%;"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                         data-testid="cr-field-spec.store.spec.connectorRef"
-                        style="width: 400px;"
+                        style="width: 100%;"
                         type="button"
                       >
                         <span
@@ -3170,7 +3170,7 @@ exports[`Test cloudformation remote tags step one should open new connector moda
           >
             <div
               class="connectorLabel"
-              style="margin-bottom: 10px;"
+              style="margin-bottom: 10px; width: 400px;"
             >
               <div
                 class="StyledProps--font StyledProps--main"
@@ -3222,12 +3222,12 @@ exports[`Test cloudformation remote tags step one should open new connector moda
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="width: 400px;"
+                      style="width: 100%;"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                         data-testid="cr-field-spec.store.spec.connectorRef"
-                        style="width: 400px;"
+                        style="width: 100%;"
                         type="button"
                       >
                         <span
@@ -3656,7 +3656,7 @@ exports[`Test cloudformation remote tags step one should render tags details inc
           >
             <div
               class="connectorLabel"
-              style="margin-bottom: 10px;"
+              style="margin-bottom: 10px; width: 400px;"
             >
               <div
                 class="StyledProps--font StyledProps--main"
@@ -3708,12 +3708,12 @@ exports[`Test cloudformation remote tags step one should render tags details inc
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="width: 400px;"
+                      style="width: 100%;"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                         data-testid="cr-field-spec.store.spec.connectorRef"
-                        style="width: 400px;"
+                        style="width: 100%;"
                         type="button"
                       >
                         <span
@@ -4267,7 +4267,7 @@ exports[`Test cloudformation remote tags step one should render with initial dat
           >
             <div
               class="connectorLabel"
-              style="margin-bottom: 10px;"
+              style="margin-bottom: 10px; width: 400px;"
             >
               <div
                 class="StyledProps--font StyledProps--main"
@@ -4319,12 +4319,12 @@ exports[`Test cloudformation remote tags step one should render with initial dat
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="width: 400px;"
+                      style="width: 100%;"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                         data-testid="cr-field-spec.store.spec.connectorRef"
-                        style="width: 400px;"
+                        style="width: 100%;"
                         type="button"
                       >
                         <span
@@ -4793,7 +4793,7 @@ exports[`Test cloudformation remote tags step one should render with no initial 
           >
             <div
               class="connectorLabel"
-              style="margin-bottom: 10px;"
+              style="margin-bottom: 10px; width: 400px;"
             >
               <div
                 class="StyledProps--font StyledProps--main"
@@ -4844,12 +4844,12 @@ exports[`Test cloudformation remote tags step one should render with no initial 
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="width: 400px;"
+                      style="width: 100%;"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                         data-testid="cr-field-spec.store.spec.connectorRef"
-                        style="width: 400px;"
+                        style="width: 100%;"
                         type="button"
                       >
                         <span
@@ -5247,7 +5247,7 @@ exports[`Test cloudformation remote tags step one should render with runtime dat
           >
             <div
               class="connectorLabel"
-              style="margin-bottom: 10px;"
+              style="margin-bottom: 10px; width: 400px;"
             >
               <div
                 class="StyledProps--font StyledProps--main"
@@ -5298,7 +5298,7 @@ exports[`Test cloudformation remote tags step one should render with runtime dat
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                      style="width: 400px;"
+                      style="width: 100%;"
                     >
                       <div
                         class="TextInput--main MultiTypeInput--input"
@@ -5716,7 +5716,7 @@ exports[`Test cloudformation remote tags step one should submit step one 1`] = `
           >
             <div
               class="connectorLabel"
-              style="margin-bottom: 10px;"
+              style="margin-bottom: 10px; width: 400px;"
             >
               <div
                 class="StyledProps--font StyledProps--main"
@@ -5768,7 +5768,7 @@ exports[`Test cloudformation remote tags step one should submit step one 1`] = `
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                      style="width: 400px;"
+                      style="width: 100%;"
                     >
                       <div
                         class="TextInput--main MultiTypeInput--input"

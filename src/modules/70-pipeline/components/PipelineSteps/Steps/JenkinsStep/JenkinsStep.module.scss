@@ -8,12 +8,6 @@
 .connector {
   margin-bottom: var(--spacing-medium) !important;
   margin-top: var(--spacing-xsmall) !important;
-
-  :global {
-    input[placeholder='<+input>'] {
-      width: 390px !important;
-    }
-  }
 }
 
 .jobDetails {

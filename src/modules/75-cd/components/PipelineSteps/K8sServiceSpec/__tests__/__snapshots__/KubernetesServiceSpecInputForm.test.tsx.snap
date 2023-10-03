@@ -28,6 +28,7 @@ exports[`DOCKER renders the primary artifact form if all the attributes are runt
         >
           <div
             class="connectorLabel"
+            style="width: 400px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -47,12 +48,12 @@ exports[`DOCKER renders the primary artifact form if all the attributes are runt
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 400px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-.artifacts.primary.spec.connectorRef"
-                      style="width: 400px;"
+                      style="width: 100%;"
                       type="button"
                     >
                       <span
@@ -380,6 +381,7 @@ exports[`DOCKER renders the primary artifact form in readonly mode: primary arti
         >
           <div
             class="connectorLabel"
+            style="width: 400px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -399,13 +401,13 @@ exports[`DOCKER renders the primary artifact form in readonly mode: primary arti
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                    style="width: 400px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-.artifacts.primary.spec.connectorRef"
                       disabled=""
-                      style="width: 400px;"
+                      style="width: 100%;"
                       tabindex="-1"
                       type="button"
                     >
@@ -987,6 +989,7 @@ exports[`ECR renders the primary artifact form if all the attributes are runtime
         >
           <div
             class="connectorLabel"
+            style="width: 400px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -1006,12 +1009,12 @@ exports[`ECR renders the primary artifact form if all the attributes are runtime
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 400px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-.artifacts.primary.spec.connectorRef"
-                      style="width: 400px;"
+                      style="width: 100%;"
                       type="button"
                     >
                       <span
@@ -1476,6 +1479,7 @@ exports[`ECR renders the primary artifact form in readonly mode: ecr - primary a
         >
           <div
             class="connectorLabel"
+            style="width: 400px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -1495,13 +1499,13 @@ exports[`ECR renders the primary artifact form in readonly mode: ecr - primary a
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                    style="width: 400px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-.artifacts.primary.spec.connectorRef"
                       disabled=""
-                      style="width: 400px;"
+                      style="width: 100%;"
                       tabindex="-1"
                       type="button"
                     >
@@ -2214,6 +2218,7 @@ exports[`GCR renders the primary artifact form if all the attributes are runtime
         >
           <div
             class="connectorLabel"
+            style="width: 400px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -2233,12 +2238,12 @@ exports[`GCR renders the primary artifact form if all the attributes are runtime
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 400px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-.artifacts.primary.spec.connectorRef"
-                      style="width: 400px;"
+                      style="width: 100%;"
                       type="button"
                     >
                       <span
@@ -2665,6 +2670,7 @@ exports[`GCR renders the primary artifact form in readonly mode: ecr - primary a
         >
           <div
             class="connectorLabel"
+            style="width: 400px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -2684,13 +2690,13 @@ exports[`GCR renders the primary artifact form in readonly mode: ecr - primary a
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                    style="width: 400px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-.artifacts.primary.spec.connectorRef"
                       disabled=""
-                      style="width: 400px;"
+                      style="width: 100%;"
                       tabindex="-1"
                       type="button"
                     >

@@ -1010,6 +1010,7 @@ exports[`Jenkins step tests Edit stage - readonly: edit stage view readonly 1`] 
         >
           <div
             class="connectorLabel connectorLabel"
+            style="width: 100%;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -1032,13 +1033,13 @@ exports[`Jenkins step tests Edit stage - readonly: edit stage view readonly 1`] 
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                  style="width: 390px;"
+                  style="width: 100%;"
                 >
                   <button
                     class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-spec.connectorRef"
                     disabled=""
-                    style="width: 390px;"
+                    style="width: 100%;"
                     tabindex="-1"
                     type="button"
                   >
@@ -1196,7 +1197,7 @@ exports[`Jenkins step tests Edit stage - readonly: edit stage view readonly 1`] 
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                style="width: 390px;"
+                style="width: 100%;"
               >
                 <div
                   class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
@@ -1929,6 +1930,7 @@ exports[`Jira Approval fetch projects show error if failed to fetch projects 1`]
         >
           <div
             class="connectorLabel connectorLabel"
+            style="width: 100%;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -1951,12 +1953,12 @@ exports[`Jira Approval fetch projects show error if failed to fetch projects 1`]
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 390px;"
+                  style="width: 100%;"
                 >
                   <button
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-spec.connectorRef"
-                    style="width: 390px;"
+                    style="width: 100%;"
                     type="button"
                   >
                     <span
@@ -2177,7 +2179,7 @@ exports[`Jira Approval fetch projects show error if failed to fetch projects 1`]
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                style="width: 390px;"
+                style="width: 100%;"
               >
                 <div
                   class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"

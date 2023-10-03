@@ -376,7 +376,7 @@ function FormContent({
         <FormMultiTypeConnectorField
           name="spec.connectorRef"
           label={getString('platform.connectors.jenkins.jenkinsConnectorLabel')}
-          width={390}
+          width="100%"
           className={css.connector}
           connectorLabelClass={css.connectorLabel}
           placeholder={getString('select')}
@@ -452,7 +452,7 @@ function FormContent({
           value={getJobNameValue()}
           placeholder={jobNamePlaceholder}
           multiTypeInputProps={{
-            width: 390,
+            width: '100%',
             onChange: (primaryValue: any) => {
               if (primaryValue?.hasSubmenuItems) {
                 setShowChildJobField(true)

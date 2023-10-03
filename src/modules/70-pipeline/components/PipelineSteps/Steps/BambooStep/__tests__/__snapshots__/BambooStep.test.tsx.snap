@@ -198,6 +198,7 @@ exports[`Bamboo Step renders normally 1`] = `
         >
           <div
             class="connectorLabel connectorLabel"
+            style="width: 390px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -220,12 +221,12 @@ exports[`Bamboo Step renders normally 1`] = `
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 390px;"
+                  style="width: 100%;"
                 >
                   <button
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-spec.connectorRef"
-                    style="width: 390px;"
+                    style="width: 100%;"
                     type="button"
                   >
                     <span
@@ -660,6 +661,7 @@ exports[`Bamboo step tests Basic snapshot - deploymentform mode 1`] = `
         </div>
         <div
           class="connectorLabel"
+          style="width: 385px;"
         >
           <div
             class="StyledProps--font StyledProps--main"
@@ -685,12 +687,12 @@ exports[`Bamboo step tests Basic snapshot - deploymentform mode 1`] = `
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 385px;"
+                  style="width: 100%;"
                 >
                   <button
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-spec.connectorRef"
-                    style="width: 385px;"
+                    style="width: 100%;"
                     type="button"
                   >
                     <span
@@ -1099,6 +1101,7 @@ exports[`Bamboo step tests Basic snapshot - inputset mode 1`] = `
         </div>
         <div
           class="connectorLabel"
+          style="width: 385px;"
         >
           <div
             class="StyledProps--font StyledProps--main"
@@ -1124,12 +1127,12 @@ exports[`Bamboo step tests Basic snapshot - inputset mode 1`] = `
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 385px;"
+                  style="width: 100%;"
                 >
                   <button
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-spec.connectorRef"
-                    style="width: 385px;"
+                    style="width: 100%;"
                     type="button"
                   >
                     <span
@@ -1535,6 +1538,7 @@ exports[`Bamboo step tests Basic snapshot - inputset mode but no runtime values 
         </div>
         <div
           class="connectorLabel"
+          style="width: 385px;"
         >
           <div
             class="StyledProps--font StyledProps--main"
@@ -1560,12 +1564,12 @@ exports[`Bamboo step tests Basic snapshot - inputset mode but no runtime values 
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 385px;"
+                  style="width: 100%;"
                 >
                   <button
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-spec.connectorRef"
-                    style="width: 385px;"
+                    style="width: 100%;"
                     type="button"
                   >
                     <span
@@ -2039,6 +2043,7 @@ exports[`Bamboo step tests Edit stage - readonly: edit stage view readonly 1`] =
         >
           <div
             class="connectorLabel connectorLabel"
+            style="width: 390px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -2061,13 +2066,13 @@ exports[`Bamboo step tests Edit stage - readonly: edit stage view readonly 1`] =
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                  style="width: 390px;"
+                  style="width: 100%;"
                 >
                   <button
                     class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-spec.connectorRef"
                     disabled=""
-                    style="width: 390px;"
+                    style="width: 100%;"
                     tabindex="-1"
                     type="button"
                   >
@@ -2504,6 +2509,7 @@ exports[`Bamboo step tests deploymentform mode - readonly 1`] = `
         </div>
         <div
           class="connectorLabel"
+          style="width: 385px;"
         >
           <div
             class="StyledProps--font StyledProps--main"
@@ -2529,12 +2535,12 @@ exports[`Bamboo step tests deploymentform mode - readonly 1`] = `
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 385px;"
+                  style="width: 100%;"
                 >
                   <button
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-spec.connectorRef"
-                    style="width: 385px;"
+                    style="width: 100%;"
                     type="button"
                   >
                     <span

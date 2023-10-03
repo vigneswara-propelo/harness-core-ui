@@ -83,6 +83,7 @@ exports[`ServiceNowImportSet Step Test Basic Snapshot -> Deploymentform Mode: se
     </div>
     <div
       class="connectorLabel"
+      style="width: 385px;"
     >
       <div
         class="StyledProps--font StyledProps--main"
@@ -107,12 +108,12 @@ exports[`ServiceNowImportSet Step Test Basic Snapshot -> Deploymentform Mode: se
           >
             <div
               class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              style="width: 385px;"
+              style="width: 100%;"
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                 data-testid="cr-field-spec.connectorRef"
-                style="width: 385px;"
+                style="width: 100%;"
                 type="button"
               >
                 <span
@@ -487,6 +488,7 @@ exports[`ServiceNowImportSet Step Test Basic Snapshot -> Inputset Mode: input se
     </div>
     <div
       class="connectorLabel"
+      style="width: 385px;"
     >
       <div
         class="StyledProps--font StyledProps--main"
@@ -511,12 +513,12 @@ exports[`ServiceNowImportSet Step Test Basic Snapshot -> Inputset Mode: input se
           >
             <div
               class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              style="width: 385px;"
+              style="width: 100%;"
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                 data-testid="cr-field-spec.connectorRef"
-                style="width: 385px;"
+                style="width: 100%;"
                 type="button"
               >
                 <span
@@ -922,6 +924,7 @@ exports[`ServiceNowImportSet Step Test DeploymentForm -> StagingTable Loading Tr
     </div>
     <div
       class="connectorLabel"
+      style="width: 385px;"
     >
       <div
         class="StyledProps--font StyledProps--main"
@@ -946,12 +949,12 @@ exports[`ServiceNowImportSet Step Test DeploymentForm -> StagingTable Loading Tr
           >
             <div
               class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              style="width: 385px;"
+              style="width: 100%;"
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                 data-testid="cr-field-spec.connectorRef"
-                style="width: 385px;"
+                style="width: 100%;"
                 type="button"
               >
                 <span
@@ -1312,6 +1315,7 @@ exports[`ServiceNowImportSet Step Test DeploymentForm Readonly Mode: serviceNow-
     </div>
     <div
       class="connectorLabel"
+      style="width: 385px;"
     >
       <div
         class="StyledProps--font StyledProps--main"
@@ -1336,12 +1340,12 @@ exports[`ServiceNowImportSet Step Test DeploymentForm Readonly Mode: serviceNow-
           >
             <div
               class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              style="width: 385px;"
+              style="width: 100%;"
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                 data-testid="cr-field-spec.connectorRef"
-                style="width: 385px;"
+                style="width: 100%;"
                 type="button"
               >
                 <span
@@ -1849,6 +1853,7 @@ exports[`ServiceNowImportSet Step Test Edit Stage -> Readonly view: edit-stage-r
         >
           <div
             class="connectorLabel connectorLabel"
+            style="width: 390px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -1871,13 +1876,13 @@ exports[`ServiceNowImportSet Step Test Edit Stage -> Readonly view: edit-stage-r
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                  style="width: 390px;"
+                  style="width: 100%;"
                 >
                   <button
                     class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-spec.connectorRef"
                     disabled=""
-                    style="width: 390px;"
+                    style="width: 100%;"
                     tabindex="-1"
                     type="button"
                   >
@@ -2301,6 +2306,7 @@ exports[`ServiceNowImportSet Step Test Edit Stage -> Runtime Check: edit-stage-r
         >
           <div
             class="connectorLabel connectorLabel"
+            style="width: 390px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -2323,13 +2329,13 @@ exports[`ServiceNowImportSet Step Test Edit Stage -> Runtime Check: edit-stage-r
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                  style="width: 390px;"
+                  style="width: 100%;"
                 >
                   <button
                     class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-spec.connectorRef"
                     disabled=""
-                    style="width: 390px;"
+                    style="width: 100%;"
                     tabindex="-1"
                     type="button"
                   >
@@ -2788,6 +2794,7 @@ exports[`ServiceNowImportSet Step Test Edit Stage -> StagingTable Loading True: 
         >
           <div
             class="connectorLabel connectorLabel"
+            style="width: 390px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -2810,13 +2817,13 @@ exports[`ServiceNowImportSet Step Test Edit Stage -> StagingTable Loading True: 
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                  style="width: 390px;"
+                  style="width: 100%;"
                 >
                   <button
                     class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-spec.connectorRef"
                     disabled=""
-                    style="width: 390px;"
+                    style="width: 100%;"
                     tabindex="-1"
                     type="button"
                   >

@@ -7,6 +7,7 @@ exports[`ServiceNow Approval tests Basic snapshot - deploymentform mode: service
   >
     <div
       class="connectorLabel"
+      style="width: 385px;"
     >
       <div
         class="StyledProps--font StyledProps--main"
@@ -31,12 +32,12 @@ exports[`ServiceNow Approval tests Basic snapshot - deploymentform mode: service
           >
             <div
               class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              style="width: 385px;"
+              style="width: 100%;"
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                 data-testid="cr-field-spec.connectorRef"
-                style="width: 385px;"
+                style="width: 100%;"
                 type="button"
               >
                 <span
@@ -688,6 +689,7 @@ exports[`ServiceNow Approval tests Basic snapshot - inputset mode: input set wit
   >
     <div
       class="connectorLabel"
+      style="width: 385px;"
     >
       <div
         class="StyledProps--font StyledProps--main"
@@ -712,12 +714,12 @@ exports[`ServiceNow Approval tests Basic snapshot - inputset mode: input set wit
           >
             <div
               class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              style="width: 385px;"
+              style="width: 100%;"
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                 data-testid="cr-field-spec.connectorRef"
-                style="width: 385px;"
+                style="width: 100%;"
                 type="button"
               >
                 <span
@@ -1516,6 +1518,7 @@ exports[`ServiceNow Approval tests Edit stage - readonly: edit stage view readon
         >
           <div
             class="connectorLabel connectorLabel"
+            style="width: 390px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -1538,13 +1541,13 @@ exports[`ServiceNow Approval tests Edit stage - readonly: edit stage view readon
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                  style="width: 390px;"
+                  style="width: 100%;"
                 >
                   <button
                     class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-spec.connectorRef"
                     disabled=""
-                    style="width: 390px;"
+                    style="width: 100%;"
                     tabindex="-1"
                     type="button"
                   >
@@ -2221,6 +2224,7 @@ exports[`ServiceNow Approval tests Open a saved serviceNow approval step - edit 
         >
           <div
             class="connectorLabel connectorLabel"
+            style="width: 390px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -2243,12 +2247,12 @@ exports[`ServiceNow Approval tests Open a saved serviceNow approval step - edit 
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 390px;"
+                  style="width: 100%;"
                 >
                   <button
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-spec.connectorRef"
-                    style="width: 390px;"
+                    style="width: 100%;"
                     type="button"
                   >
                     <span
@@ -3200,6 +3204,7 @@ exports[`ServiceNow Approval tests deploymentform mode - readonly: serviceNow-ap
   >
     <div
       class="connectorLabel"
+      style="width: 385px;"
     >
       <div
         class="StyledProps--font StyledProps--main"
@@ -3224,12 +3229,12 @@ exports[`ServiceNow Approval tests deploymentform mode - readonly: serviceNow-ap
           >
             <div
               class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              style="width: 385px;"
+              style="width: 100%;"
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                 data-testid="cr-field-spec.connectorRef"
-                style="width: 385px;"
+                style="width: 100%;"
                 type="button"
               >
                 <span

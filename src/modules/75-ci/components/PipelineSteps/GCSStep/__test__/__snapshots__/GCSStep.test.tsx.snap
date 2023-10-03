@@ -125,6 +125,7 @@ exports[`GCS Step Edit View edit mode works 1`] = `
         >
           <div
             class="connectorLabel"
+            style="width: 385px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -155,12 +156,12 @@ exports[`GCS Step Edit View edit mode works 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 385px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-spec.connectorRef"
-                      style="width: 385px;"
+                      style="width: 100%;"
                       type="button"
                     >
                       <span
@@ -591,6 +592,7 @@ exports[`GCS Step Edit View renders runtime inputs 1`] = `
         >
           <div
             class="connectorLabel"
+            style="width: 385px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -621,7 +623,7 @@ exports[`GCS Step Edit View renders runtime inputs 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                    style="width: 385px;"
+                    style="width: 100%;"
                   >
                     <div
                       class="TextInput--main MultiTypeInput--input"
@@ -1099,6 +1101,7 @@ exports[`GCS Step Edit View should render edit view as new step 1`] = `
         >
           <div
             class="connectorLabel"
+            style="width: 385px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -1129,12 +1132,12 @@ exports[`GCS Step Edit View should render edit view as new step 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 385px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-spec.connectorRef"
-                      style="width: 385px;"
+                      style="width: 100%;"
                       type="button"
                     >
                       <span
@@ -1445,6 +1448,7 @@ exports[`GCS Step InputSet View InputSet View should render all fields 1`] = `
         >
           <div
             class="connectorLabel"
+            style="width: 385px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -1480,12 +1484,12 @@ exports[`GCS Step InputSet View InputSet View should render all fields 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 385px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-spec.connectorRef"
-                      style="width: 385px;"
+                      style="width: 100%;"
                       type="button"
                     >
                       <span

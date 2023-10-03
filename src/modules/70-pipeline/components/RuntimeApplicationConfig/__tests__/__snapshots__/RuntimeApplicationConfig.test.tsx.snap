@@ -22,6 +22,7 @@ exports[`Azure Web App config tests Should match snapshot for application settin
         >
           <div
             class="connectorLabel"
+            style="width: 391px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -41,13 +42,13 @@ exports[`Azure Web App config tests Should match snapshot for application settin
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                    style="width: 391px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.applicationSettings.store.spec.connectorRef"
                       disabled=""
-                      style="width: 391px;"
+                      style="width: 100%;"
                       tabindex="-1"
                       type="button"
                     >
@@ -314,6 +315,7 @@ exports[`Azure Web App config tests Should match snapshot for connection strings
         >
           <div
             class="connectorLabel"
+            style="width: 391px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -333,13 +335,13 @@ exports[`Azure Web App config tests Should match snapshot for connection strings
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                    style="width: 391px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.connectionStrings.store.spec.connectorRef"
                       disabled=""
-                      style="width: 391px;"
+                      style="width: 100%;"
                       tabindex="-1"
                       type="button"
                     >
@@ -606,6 +608,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
         >
           <div
             class="connectorLabel"
+            style="width: 391px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -625,13 +628,13 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                    style="width: 391px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-stages[0].stage.spec.service.serviceInputs.serviceDefinition.spec.startupCommand.store.spec.connectorRef"
                       disabled=""
-                      style="width: 391px;"
+                      style="width: 100%;"
                       tabindex="-1"
                       type="button"
                     >

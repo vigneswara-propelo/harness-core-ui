@@ -125,6 +125,7 @@ exports[`DockerHub Step Edit View edit mode works 1`] = `
         >
           <div
             class="connectorLabel"
+            style="width: 385px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -155,12 +156,12 @@ exports[`DockerHub Step Edit View edit mode works 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 385px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-spec.connectorRef"
-                      style="width: 385px;"
+                      style="width: 100%;"
                       type="button"
                     >
                       <span
@@ -874,6 +875,7 @@ exports[`DockerHub Step Edit View renders runtime inputs 1`] = `
         >
           <div
             class="connectorLabel"
+            style="width: 385px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -904,7 +906,7 @@ exports[`DockerHub Step Edit View renders runtime inputs 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                    style="width: 385px;"
+                    style="width: 100%;"
                   >
                     <div
                       class="TextInput--main MultiTypeInput--input"
@@ -1389,6 +1391,7 @@ exports[`DockerHub Step Edit View should render properly 1`] = `
         >
           <div
             class="connectorLabel"
+            style="width: 385px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -1419,12 +1422,12 @@ exports[`DockerHub Step Edit View should render properly 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 385px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-spec.connectorRef"
-                      style="width: 385px;"
+                      style="width: 100%;"
                       type="button"
                     >
                       <span
@@ -2640,6 +2643,7 @@ exports[`DockerHub Step InputSet View should render all fields 1`] = `
         >
           <div
             class="connectorLabel"
+            style="width: 385px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -2675,12 +2679,12 @@ exports[`DockerHub Step InputSet View should render all fields 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 385px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-spec.connectorRef"
-                      style="width: 385px;"
+                      style="width: 100%;"
                       type="button"
                     >
                       <span

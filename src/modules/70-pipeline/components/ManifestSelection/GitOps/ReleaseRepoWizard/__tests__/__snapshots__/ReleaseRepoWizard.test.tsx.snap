@@ -165,6 +165,7 @@ exports[`Release Repo wizard tests initial render 1`] = `
                   >
                     <div
                       class="connectorLabel"
+                      style="width: 400px;"
                     >
                       <div
                         class="StyledProps--font StyledProps--main"
@@ -187,12 +188,12 @@ exports[`Release Repo wizard tests initial render 1`] = `
                         >
                           <div
                             class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                            style="width: 400px;"
+                            style="width: 100%;"
                           >
                             <button
                               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                               data-testid="cr-field-connectorRef"
-                              style="width: 400px;"
+                              style="width: 100%;"
                               type="button"
                             >
                               <span
@@ -518,6 +519,7 @@ exports[`Release Repo wizard tests initial render when connectorview is true 1`]
                   >
                     <div
                       class="connectorLabel"
+                      style="width: 400px;"
                     >
                       <div
                         class="StyledProps--font StyledProps--main"
@@ -540,12 +542,12 @@ exports[`Release Repo wizard tests initial render when connectorview is true 1`]
                         >
                           <div
                             class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                            style="width: 400px;"
+                            style="width: 100%;"
                           >
                             <button
                               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                               data-testid="cr-field-connectorRef"
-                              style="width: 400px;"
+                              style="width: 100%;"
                               type="button"
                             >
                               <span
@@ -871,6 +873,7 @@ exports[`Release Repo wizard tests on edit 1`] = `
                   >
                     <div
                       class="connectorLabel"
+                      style="width: 400px;"
                     >
                       <div
                         class="StyledProps--font StyledProps--main"
@@ -893,12 +896,12 @@ exports[`Release Repo wizard tests on edit 1`] = `
                         >
                           <div
                             class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                            style="width: 400px;"
+                            style="width: 100%;"
                           >
                             <button
                               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                               data-testid="cr-field-connectorRef"
-                              style="width: 400px;"
+                              style="width: 100%;"
                               type="button"
                             >
                               <span

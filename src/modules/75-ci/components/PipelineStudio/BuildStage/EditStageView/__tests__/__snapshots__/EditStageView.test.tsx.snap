@@ -564,6 +564,7 @@ exports[`EditStageView snapshot test should render properly without data 1`] = `
               >
                 <div
                   class="connectorLabel"
+                  style="width: 366px;"
                 >
                   <div
                     class="StyledProps--font StyledProps--main"
@@ -589,12 +590,12 @@ exports[`EditStageView snapshot test should render properly without data 1`] = `
                       >
                         <div
                           class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                          style="width: 366px;"
+                          style="width: 100%;"
                         >
                           <button
                             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                             data-testid="cr-field-connectorRef"
-                            style="width: 366px;"
+                            style="width: 100%;"
                             type="button"
                           >
                             <span

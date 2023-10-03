@@ -4,6 +4,7 @@ exports[`FormMultiTypeConnectorField tests renders drawer mode for addition of c
 <div>
   <div
     class="connectorLabel"
+    style="width: 400px;"
   >
     <div
       class="StyledProps--font StyledProps--main"
@@ -23,12 +24,12 @@ exports[`FormMultiTypeConnectorField tests renders drawer mode for addition of c
         >
           <div
             class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-            style="width: 400px;"
+            style="width: 100%;"
           >
             <button
               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
               data-testid="cr-field-connectorRef"
-              style="width: 400px;"
+              style="width: 100%;"
               type="button"
             >
               <span
@@ -269,6 +270,7 @@ exports[`FormMultiTypeConnectorField tests renders without crashing 1`] = `
 <div>
   <div
     class="connectorLabel"
+    style="width: 400px;"
   >
     <div
       class="StyledProps--font StyledProps--main"
@@ -288,12 +290,12 @@ exports[`FormMultiTypeConnectorField tests renders without crashing 1`] = `
         >
           <div
             class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-            style="width: 400px;"
+            style="width: 100%;"
           >
             <button
               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
               data-testid="cr-field-connectorRef"
-              style="width: 400px;"
+              style="width: 100%;"
               type="button"
             >
               <span

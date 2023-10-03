@@ -169,7 +169,7 @@ exports[`Test cloudformation delete stack input set should render all input vari
             >
               <div
                 class="connectorLabel"
-                style="margin-bottom: 10px;"
+                style="margin-bottom: 10px; width: 300px;"
               >
                 <div
                   class="StyledProps--font StyledProps--main"
@@ -199,12 +199,12 @@ exports[`Test cloudformation delete stack input set should render all input vari
                     >
                       <div
                         class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                        style="width: 300px;"
+                        style="width: 100%;"
                       >
                         <button
                           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                           data-testid="cr-field-test.spec.configuration.spec.connectorRef"
-                          style="width: 300px;"
+                          style="width: 100%;"
                           type="button"
                         >
                           <span

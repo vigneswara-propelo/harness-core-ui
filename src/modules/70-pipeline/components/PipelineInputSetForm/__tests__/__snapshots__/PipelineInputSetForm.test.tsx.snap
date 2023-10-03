@@ -741,6 +741,7 @@ exports[`CI enabled CI with ConnectorRef as runtime input: CI stage expects Conn
               >
                 <div
                   class="connectorLabel"
+                  style="width: 385px;"
                 >
                   <div
                     class="StyledProps--font StyledProps--main"
@@ -769,13 +770,13 @@ exports[`CI enabled CI with ConnectorRef as runtime input: CI stage expects Conn
                       >
                         <div
                           class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                          style="width: 385px;"
+                          style="width: 100%;"
                         >
                           <button
                             class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                             data-testid="cr-field-/dummypath.properties.ci.codebase.connectorRef"
                             disabled=""
-                            style="width: 385px;"
+                            style="width: 100%;"
                             tabindex="-1"
                             type="button"
                           >
@@ -1031,6 +1032,7 @@ exports[`CI enabled Render CI Codebase all runtime inputs: all inputs as runtime
               >
                 <div
                   class="connectorLabel"
+                  style="width: 385px;"
                 >
                   <div
                     class="StyledProps--font StyledProps--main"
@@ -1059,13 +1061,13 @@ exports[`CI enabled Render CI Codebase all runtime inputs: all inputs as runtime
                       >
                         <div
                           class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                          style="width: 385px;"
+                          style="width: 100%;"
                         >
                           <button
                             class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                             data-testid="cr-field-pipeline.properties.ci.codebase.connectorRef"
                             disabled=""
-                            style="width: 385px;"
+                            style="width: 100%;"
                             tabindex="-1"
                             type="button"
                           >

@@ -123,6 +123,7 @@ exports[`ECR Step Edit View should render properly for AWS VMs build infra 1`] =
         >
           <div
             class="connectorLabel"
+            style="width: 385px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -153,12 +154,12 @@ exports[`ECR Step Edit View should render properly for AWS VMs build infra 1`] =
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 385px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-spec.connectorRef"
-                      style="width: 385px;"
+                      style="width: 100%;"
                       type="button"
                     >
                       <span

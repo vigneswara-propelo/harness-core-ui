@@ -266,7 +266,7 @@ exports[`Test Cloudformation create stack should be able to open and close inlin
     >
       <div
         class="connectorLabel"
-        style="margin-bottom: 10px;"
+        style="margin-bottom: 10px; width: 300px;"
       >
         <div
           class="StyledProps--font StyledProps--main"
@@ -295,7 +295,7 @@ exports[`Test Cloudformation create stack should be able to open and close inlin
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                style="width: 300px;"
+                style="width: 100%;"
               >
                 <div
                   class="TextInput--main MultiTypeInput--input"
@@ -3140,7 +3140,7 @@ exports[`Test Cloudformation create stack should be able to submit 1`] = `
     >
       <div
         class="connectorLabel"
-        style="margin-bottom: 10px;"
+        style="margin-bottom: 10px; width: 300px;"
       >
         <div
           class="StyledProps--font StyledProps--main"
@@ -3169,7 +3169,7 @@ exports[`Test Cloudformation create stack should be able to submit 1`] = `
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                style="width: 300px;"
+                style="width: 100%;"
               >
                 <div
                   class="TextInput--main MultiTypeInput--input"
@@ -3821,7 +3821,7 @@ exports[`Test Cloudformation create stack should open and close remote template 
     >
       <div
         class="connectorLabel"
-        style="margin-bottom: 10px;"
+        style="margin-bottom: 10px; width: 300px;"
       >
         <div
           class="StyledProps--font StyledProps--main"
@@ -3850,12 +3850,12 @@ exports[`Test Cloudformation create stack should open and close remote template 
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                style="width: 300px;"
+                style="width: 100%;"
               >
                 <button
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                   data-testid="cr-field-spec.configuration.connectorRef"
-                  style="width: 300px;"
+                  style="width: 100%;"
                   type="button"
                 >
                   <span
@@ -4485,7 +4485,7 @@ exports[`Test Cloudformation create stack should render edit view as new step 1`
     >
       <div
         class="connectorLabel"
-        style="margin-bottom: 10px;"
+        style="margin-bottom: 10px; width: 300px;"
       >
         <div
           class="StyledProps--font StyledProps--main"
@@ -4514,12 +4514,12 @@ exports[`Test Cloudformation create stack should render edit view as new step 1`
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                style="width: 300px;"
+                style="width: 100%;"
               >
                 <button
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                   data-testid="cr-field-spec.configuration.connectorRef"
-                  style="width: 300px;"
+                  style="width: 100%;"
                   type="button"
                 >
                   <span
@@ -5151,7 +5151,7 @@ exports[`Test Cloudformation create stack should render edit view as new step wi
     >
       <div
         class="connectorLabel"
-        style="margin-bottom: 10px;"
+        style="margin-bottom: 10px; width: 300px;"
       >
         <div
           class="StyledProps--font StyledProps--main"
@@ -5180,7 +5180,7 @@ exports[`Test Cloudformation create stack should render edit view as new step wi
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                style="width: 300px;"
+                style="width: 100%;"
               >
                 <div
                   class="TextInput--main MultiTypeInput--input"
@@ -5964,7 +5964,7 @@ exports[`Test Cloudformation create stack should render runtime components 1`] =
     >
       <div
         class="connectorLabel"
-        style="margin-bottom: 10px;"
+        style="margin-bottom: 10px; width: 300px;"
       >
         <div
           class="StyledProps--font StyledProps--main"
@@ -5993,7 +5993,7 @@ exports[`Test Cloudformation create stack should render runtime components 1`] =
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                style="width: 300px;"
+                style="width: 100%;"
               >
                 <div
                   class="TextInput--main MultiTypeInput--input"
@@ -6722,7 +6722,7 @@ exports[`Test Cloudformation create stack should show api aws statues loading st
     >
       <div
         class="connectorLabel"
-        style="margin-bottom: 10px;"
+        style="margin-bottom: 10px; width: 300px;"
       >
         <div
           class="StyledProps--font StyledProps--main"
@@ -6751,12 +6751,12 @@ exports[`Test Cloudformation create stack should show api aws statues loading st
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                style="width: 300px;"
+                style="width: 100%;"
               >
                 <button
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                   data-testid="cr-field-spec.configuration.connectorRef"
-                  style="width: 300px;"
+                  style="width: 100%;"
                   type="button"
                 >
                   <span
@@ -7436,7 +7436,7 @@ exports[`Test Cloudformation create stack should show api capabilities loading s
     >
       <div
         class="connectorLabel"
-        style="margin-bottom: 10px;"
+        style="margin-bottom: 10px; width: 300px;"
       >
         <div
           class="StyledProps--font StyledProps--main"
@@ -7465,12 +7465,12 @@ exports[`Test Cloudformation create stack should show api capabilities loading s
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                style="width: 300px;"
+                style="width: 100%;"
               >
                 <button
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                   data-testid="cr-field-spec.configuration.connectorRef"
-                  style="width: 300px;"
+                  style="width: 100%;"
                   type="button"
                 >
                   <span
@@ -8150,7 +8150,7 @@ exports[`Test Cloudformation create stack should show api regions loading state 
     >
       <div
         class="connectorLabel"
-        style="margin-bottom: 10px;"
+        style="margin-bottom: 10px; width: 300px;"
       >
         <div
           class="StyledProps--font StyledProps--main"
@@ -8179,12 +8179,12 @@ exports[`Test Cloudformation create stack should show api regions loading state 
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                style="width: 300px;"
+                style="width: 100%;"
               >
                 <button
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                   data-testid="cr-field-spec.configuration.connectorRef"
-                  style="width: 300px;"
+                  style="width: 100%;"
                   type="button"
                 >
                   <span

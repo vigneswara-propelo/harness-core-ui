@@ -134,6 +134,7 @@ exports[`Git Clone Step InputSet View Render should render all fields with valid
           >
             <div
               class="connectorLabel"
+              style="width: 327px;"
             >
               <div
                 class="StyledProps--font StyledProps--main"
@@ -159,12 +160,12 @@ exports[`Git Clone Step InputSet View Render should render all fields with valid
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="width: 327px;"
+                      style="width: 100%;"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                         data-testid="cr-field-spec.connectorRef"
-                        style="width: 327px;"
+                        style="width: 100%;"
                         type="button"
                       >
                         <span
@@ -1516,6 +1517,7 @@ exports[`Git Clone Step Step Render initial render 1`] = `
           >
             <div
               class="connectorLabel"
+              style="width: 385px;"
             >
               <div
                 class="StyledProps--font StyledProps--main"
@@ -1541,12 +1543,12 @@ exports[`Git Clone Step Step Render initial render 1`] = `
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="width: 385px;"
+                      style="width: 100%;"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                         data-testid="cr-field-spec.connectorRef"
-                        style="width: 385px;"
+                        style="width: 100%;"
                         type="button"
                       >
                         <span
@@ -2132,6 +2134,7 @@ exports[`Git Clone Step Step Render should render onEdit fixed values properly 1
           >
             <div
               class="connectorLabel"
+              style="width: 385px;"
             >
               <div
                 class="StyledProps--font StyledProps--main"
@@ -2157,12 +2160,12 @@ exports[`Git Clone Step Step Render should render onEdit fixed values properly 1
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="width: 385px;"
+                      style="width: 100%;"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                         data-testid="cr-field-spec.connectorRef"
-                        style="width: 385px;"
+                        style="width: 100%;"
                         type="button"
                       >
                         <span
@@ -2927,6 +2930,7 @@ exports[`Git Clone Step Step Render should render onEdit runtime input values pr
           >
             <div
               class="connectorLabel"
+              style="width: 327px;"
             >
               <div
                 class="StyledProps--font StyledProps--main"
@@ -2952,7 +2956,7 @@ exports[`Git Clone Step Step Render should render onEdit runtime input values pr
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                      style="width: 327px;"
+                      style="width: 100%;"
                     >
                       <div
                         class="TextInput--main MultiTypeInput--input"

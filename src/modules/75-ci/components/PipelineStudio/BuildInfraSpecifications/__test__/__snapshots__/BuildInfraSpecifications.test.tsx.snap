@@ -388,6 +388,7 @@ exports[`BuildInfraSpecifications snapshot tests for AWS Build Infra Render AWS 
                   >
                     <div
                       class="connectorLabel"
+                      style="width: 300px;"
                     >
                       <div
                         class="StyledProps--font StyledProps--main"
@@ -421,12 +422,12 @@ exports[`BuildInfraSpecifications snapshot tests for AWS Build Infra Render AWS 
                           >
                             <div
                               class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                              style="width: 300px;"
+                              style="width: 100%;"
                             >
                               <button
                                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                                 data-testid="cr-field-harnessImageConnectorRef"
-                                style="width: 300px;"
+                                style="width: 100%;"
                                 type="button"
                               >
                                 <span
@@ -1210,6 +1211,7 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                   >
                     <div
                       class="connectorLabel"
+                      style="width: 300px;"
                     >
                       <div
                         class="StyledProps--font StyledProps--main"
@@ -1238,12 +1240,12 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                           >
                             <div
                               class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                              style="width: 300px;"
+                              style="width: 100%;"
                             >
                               <button
                                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                                 data-testid="cr-field-connectorRef"
-                                style="width: 300px;"
+                                style="width: 100%;"
                                 type="button"
                               >
                                 <span
@@ -4567,6 +4569,7 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                             >
                               <div
                                 class="connectorLabel"
+                                style="width: 300px;"
                               >
                                 <div
                                   class="StyledProps--font StyledProps--main"
@@ -4600,12 +4603,12 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                                     >
                                       <div
                                         class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                                        style="width: 300px;"
+                                        style="width: 100%;"
                                       >
                                         <button
                                           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                                           data-testid="cr-field-harnessImageConnectorRef"
-                                          style="width: 300px;"
+                                          style="width: 100%;"
                                           type="button"
                                         >
                                           <span
@@ -5121,6 +5124,7 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra Renders wit
               >
                 <div
                   class="connectorLabel"
+                  style="width: 300px;"
                 >
                   <div
                     class="StyledProps--font StyledProps--main"
@@ -5149,12 +5153,12 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra Renders wit
                       >
                         <div
                           class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                          style="width: 300px;"
+                          style="width: 100%;"
                         >
                           <button
                             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                             data-testid="cr-field-connectorRef"
-                            style="width: 300px;"
+                            style="width: 100%;"
                             type="button"
                           >
                             <span
@@ -5743,6 +5747,7 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra able to sel
                   >
                     <div
                       class="connectorLabel"
+                      style="width: 300px;"
                     >
                       <div
                         class="StyledProps--font StyledProps--main"
@@ -5771,12 +5776,12 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra able to sel
                           >
                             <div
                               class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                              style="width: 300px;"
+                              style="width: 100%;"
                             >
                               <button
                                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                                 data-testid="cr-field-connectorRef"
-                                style="width: 300px;"
+                                style="width: 100%;"
                                 type="button"
                               >
                                 <span

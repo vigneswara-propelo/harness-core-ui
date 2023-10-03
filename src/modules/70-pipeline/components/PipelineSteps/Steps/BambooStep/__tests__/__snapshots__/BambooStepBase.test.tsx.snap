@@ -200,6 +200,7 @@ exports[`Bamboo Step Tests should render form when fields are runtime 1`] = `
         >
           <div
             class="connectorLabel connectorLabel"
+            style="width: 390px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -222,7 +223,7 @@ exports[`Bamboo Step Tests should render form when fields are runtime 1`] = `
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                  style="width: 390px;"
+                  style="width: 100%;"
                 >
                   <div
                     class="TextInput--main MultiTypeInput--input"

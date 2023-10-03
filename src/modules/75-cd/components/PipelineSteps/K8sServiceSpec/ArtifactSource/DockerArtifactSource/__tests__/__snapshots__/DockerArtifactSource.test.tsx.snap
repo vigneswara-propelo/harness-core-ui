@@ -134,6 +134,7 @@ exports[`Docker Artifact Source tests snapshot test for Sidecar Docker artifact 
       >
         <div
           class="connectorLabel"
+          style="width: 400px;"
         >
           <div
             class="StyledProps--font StyledProps--main"
@@ -153,12 +154,12 @@ exports[`Docker Artifact Source tests snapshot test for Sidecar Docker artifact 
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 400px;"
+                  style="width: 100%;"
                 >
                   <button
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-undefined.artifacts.sidecars[1].sidecar.spec.connectorRef"
-                    style="width: 400px;"
+                    style="width: 100%;"
                     type="button"
                   >
                     <span
@@ -525,6 +526,7 @@ exports[`Docker Artifact Source tests when featureflag is enabled - shows digest
       >
         <div
           class="connectorLabel"
+          style="width: 400px;"
         >
           <div
             class="StyledProps--font StyledProps--main"
@@ -544,12 +546,12 @@ exports[`Docker Artifact Source tests when featureflag is enabled - shows digest
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 400px;"
+                  style="width: 100%;"
                 >
                   <button
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-undefined.artifacts.sidecars[1].sidecar.spec.connectorRef"
-                    style="width: 400px;"
+                    style="width: 100%;"
                     type="button"
                   >
                     <span

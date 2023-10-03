@@ -15,6 +15,7 @@ exports[`GithubPackageRegistrySource tests renders fine for all Runtime values w
         >
           <div
             class="connectorLabel"
+            style="width: 400px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -40,12 +41,12 @@ exports[`GithubPackageRegistrySource tests renders fine for all Runtime values w
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 400px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-pipeline.stages[0].stage.spec.seviceConfig.serviceDefinition.spec.artifacts.primary.spec.connectorRef"
-                      style="width: 400px;"
+                      style="width: 100%;"
                       type="button"
                     >
                       <span
@@ -414,6 +415,7 @@ exports[`GithubPackageRegistrySource tests renders fine for all Runtime values w
         >
           <div
             class="connectorLabel"
+            style="width: 400px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -439,12 +441,12 @@ exports[`GithubPackageRegistrySource tests renders fine for all Runtime values w
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 400px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-pipeline.stages[0].stage.spec.seviceConfig.serviceDefinition.spec.artifacts.primary.spec.connectorRef"
-                      style="width: 400px;"
+                      style="width: 100%;"
                       type="button"
                     >
                       <span

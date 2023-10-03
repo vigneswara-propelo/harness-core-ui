@@ -178,6 +178,7 @@ exports[`<ArtifactSourceConfigForm /> tests Should render artifact source templa
                   >
                     <div
                       class="connectorLabel"
+                      style="width: 400px;"
                     >
                       <div
                         class="StyledProps--font StyledProps--main"
@@ -200,7 +201,7 @@ exports[`<ArtifactSourceConfigForm /> tests Should render artifact source templa
                         >
                           <div
                             class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                            style="width: 400px;"
+                            style="width: 100%;"
                           >
                             <div
                               class="TextInput--main MultiTypeInput--input"

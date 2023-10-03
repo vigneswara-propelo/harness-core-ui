@@ -15,6 +15,7 @@ exports[`AmazonS3ArtifactSource tests renders fine for all Runtime values when f
         >
           <div
             class="connectorLabel"
+            style="width: 391px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -40,12 +41,12 @@ exports[`AmazonS3ArtifactSource tests renders fine for all Runtime values when f
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 391px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-pipeline.stages[0].stage.spec.seviceConfig.serviceDefinition.spec.artifacts.primary.spec.connectorRef"
-                      style="width: 391px;"
+                      style="width: 100%;"
                       type="button"
                     >
                       <span
@@ -359,6 +360,7 @@ exports[`AmazonS3ArtifactSource tests renders fine for all Runtime values when f
         >
           <div
             class="connectorLabel"
+            style="width: 391px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -384,12 +386,12 @@ exports[`AmazonS3ArtifactSource tests renders fine for all Runtime values when f
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 391px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-pipeline.stages[0].stage.spec.seviceConfig.serviceDefinition.spec.artifacts.primary.spec.connectorRef"
-                      style="width: 391px;"
+                      style="width: 100%;"
                       type="button"
                     >
                       <span

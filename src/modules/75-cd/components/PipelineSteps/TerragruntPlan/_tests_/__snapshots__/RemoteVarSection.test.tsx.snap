@@ -16,6 +16,7 @@ exports[`Config section tests initial render with basic data 1`] = `
   </div>
   <div
     class="connectorLabel"
+    style="width: 400px;"
   >
     <div
       class="StyledProps--font StyledProps--main"
@@ -35,12 +36,12 @@ exports[`Config section tests initial render with basic data 1`] = `
         >
           <div
             class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-            style="width: 400px;"
+            style="width: 100%;"
           >
             <button
               class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
               data-testid="cr-field-stages[0].stage.spec.execution.steps[0].step.spec.configuration.varFiles[0].varFile.spec.store.spec.connectorRef"
-              style="width: 400px;"
+              style="width: 100%;"
               type="button"
             >
               <span

@@ -3063,6 +3063,7 @@ exports[`Test K8sApplyStep should render edit view with path and inputSet 1`] = 
     </div>
     <div
       class="connectorLabel"
+      style="width: 400px;"
     >
       <div
         class="StyledProps--font StyledProps--main"
@@ -3087,12 +3088,12 @@ exports[`Test K8sApplyStep should render edit view with path and inputSet 1`] = 
           >
             <div
               class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              style="width: 400px;"
+              style="width: 100%;"
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                 data-testid="cr-field-/abc.spec.overrides[0].manifest.spec.store.spec.connectorRef"
-                style="width: 400px;"
+                style="width: 100%;"
                 type="button"
               >
                 <span

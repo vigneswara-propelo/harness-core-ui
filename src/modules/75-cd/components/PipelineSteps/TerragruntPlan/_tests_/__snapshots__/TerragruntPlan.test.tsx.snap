@@ -331,7 +331,7 @@ exports[`Test TerragruntPlan Terragrunt edit view test should render edit view a
     >
       <div
         class="connectorLabel"
-        style="margin-bottom: 10px;"
+        style="margin-bottom: 10px; width: 261px;"
       >
         <div
           class="StyledProps--font StyledProps--main"
@@ -356,12 +356,12 @@ exports[`Test TerragruntPlan Terragrunt edit view test should render edit view a
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                style="width: 261px;"
+                style="width: 100%;"
               >
                 <button
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                   data-testid="cr-field-spec.configuration.secretManagerRef"
-                  style="width: 261px;"
+                  style="width: 100%;"
                   type="button"
                 >
                   <span
@@ -788,6 +788,7 @@ exports[`Test TerragruntPlan Terragrunt inputset/deployment view test Basic snap
         </div>
         <div
           class="connectorLabel"
+          style="width: 400px;"
         >
           <div
             class="StyledProps--font StyledProps--main"
@@ -813,12 +814,12 @@ exports[`Test TerragruntPlan Terragrunt inputset/deployment view test Basic snap
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 400px;"
+                  style="width: 100%;"
                 >
                   <button
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-test.spec.configuration.secretManagerRef"
-                    style="width: 400px;"
+                    style="width: 100%;"
                     type="button"
                   >
                     <span
@@ -1462,6 +1463,7 @@ exports[`Test TerragruntPlan Terragrunt inputset/deployment view test Deployment
         </div>
         <div
           class="connectorLabel"
+          style="width: 400px;"
         >
           <div
             class="StyledProps--font StyledProps--main"
@@ -1487,12 +1489,12 @@ exports[`Test TerragruntPlan Terragrunt inputset/deployment view test Deployment
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 400px;"
+                  style="width: 100%;"
                 >
                   <button
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-test.spec.configuration.secretManagerRef"
-                    style="width: 400px;"
+                    style="width: 100%;"
                     type="button"
                   >
                     <span

@@ -27,6 +27,7 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot 1`] = `
         >
           <div
             class="connectorLabel"
+            style="width: 400px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -46,12 +47,12 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 400px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-stages[0].stage.spec.serviceConfig.serviceDefinition.spec.manifests[0].manifest.spec.store.spec.connectorRef"
-                      style="width: 400px;"
+                      style="width: 100%;"
                       type="button"
                     >
                       <span
@@ -281,6 +282,7 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot 1`] = `
         >
           <div
             class="connectorLabel"
+            style="width: 400px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -300,12 +302,12 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 400px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-stages[0].stage.spec.serviceConfig.serviceDefinition.spec.manifests[1].manifest.spec.store.spec.connectorRef"
-                      style="width: 400px;"
+                      style="width: 100%;"
                       type="button"
                     >
                       <span
@@ -638,6 +640,7 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot with fromTr
         >
           <div
             class="connectorLabel"
+            style="width: 400px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -657,12 +660,12 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot with fromTr
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 400px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-stages[0].stage.spec.serviceConfig.serviceDefinition.spec.manifests[0].manifest.spec.store.spec.connectorRef"
-                      style="width: 400px;"
+                      style="width: 100%;"
                       type="button"
                     >
                       <span
@@ -890,6 +893,7 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot with fromTr
         >
           <div
             class="connectorLabel"
+            style="width: 400px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -909,12 +913,12 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot with fromTr
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 400px;"
+                    style="width: 100%;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-stages[0].stage.spec.serviceConfig.serviceDefinition.spec.manifests[1].manifest.spec.store.spec.connectorRef"
-                      style="width: 400px;"
+                      style="width: 100%;"
                       type="button"
                     >
                       <span

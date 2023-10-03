@@ -266,7 +266,7 @@ exports[`Test Cloudformation delete stack should be able to edit inline config 1
     >
       <div
         class="connectorLabel"
-        style="margin-bottom: 10px;"
+        style="margin-bottom: 10px; width: 300px;"
       >
         <div
           class="StyledProps--font StyledProps--main"
@@ -295,7 +295,7 @@ exports[`Test Cloudformation delete stack should be able to edit inline config 1
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                style="width: 300px;"
+                style="width: 100%;"
               >
                 <div
                   class="TextInput--main MultiTypeInput--input"
@@ -993,7 +993,7 @@ exports[`Test Cloudformation delete stack should error form for inline config 1`
     >
       <div
         class="connectorLabel"
-        style="margin-bottom: 10px;"
+        style="margin-bottom: 10px; width: 300px;"
       >
         <div
           class="StyledProps--font StyledProps--main"
@@ -1022,12 +1022,12 @@ exports[`Test Cloudformation delete stack should error form for inline config 1`
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                style="width: 300px;"
+                style="width: 100%;"
               >
                 <button
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                   data-testid="cr-field-spec.configuration.spec.connectorRef"
-                  style="width: 300px;"
+                  style="width: 100%;"
                   type="button"
                 >
                   <span
@@ -2509,7 +2509,7 @@ exports[`Test Cloudformation delete stack should render delete stack view - inli
     >
       <div
         class="connectorLabel"
-        style="margin-bottom: 10px;"
+        style="margin-bottom: 10px; width: 300px;"
       >
         <div
           class="StyledProps--font StyledProps--main"
@@ -2538,7 +2538,7 @@ exports[`Test Cloudformation delete stack should render delete stack view - inli
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                style="width: 300px;"
+                style="width: 100%;"
               >
                 <div
                   class="TextInput--main MultiTypeInput--input"
@@ -4585,7 +4585,7 @@ exports[`Test Cloudformation delete stack should submit form for inline config 1
     >
       <div
         class="connectorLabel"
-        style="margin-bottom: 10px;"
+        style="margin-bottom: 10px; width: 300px;"
       >
         <div
           class="StyledProps--font StyledProps--main"
@@ -4614,7 +4614,7 @@ exports[`Test Cloudformation delete stack should submit form for inline config 1
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                style="width: 300px;"
+                style="width: 100%;"
               >
                 <div
                   class="TextInput--main MultiTypeInput--input"

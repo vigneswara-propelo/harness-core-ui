@@ -424,7 +424,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     category,
     name,
     selected,
-    width,
+    width: '100%',
     placeholder: placeHolderLocal,
     label,
     ...(Array.isArray(connectorIdentifiers) && {
@@ -441,6 +441,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     version,
     isFavoritesEnabled: PL_FAVORITES
   })
+
   const component = (
     <FormGroup {...rest} labelFor={name} helperText={helperText} intent={intent} style={{ marginBottom: 0 }}>
       <MultiTypeReferenceInput<ConnectorReferenceDTO>
@@ -527,7 +528,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
 
   return (
     <div
-      style={style}
+      style={{ ...style, width }}
       className={cx(css.connectorLabel, connectorLabelClassFromProps, {
         [css.mini]: mini
       })}

@@ -141,6 +141,7 @@ exports[`ManifestSelection tests click continue btn 1`] = `
               >
                 <div
                   class="connectorLabel"
+                  style="width: 400px;"
                 >
                   <div
                     class="StyledProps--font StyledProps--main"
@@ -163,12 +164,12 @@ exports[`ManifestSelection tests click continue btn 1`] = `
                     >
                       <div
                         class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                        style="width: 400px;"
+                        style="width: 100%;"
                       >
                         <button
                           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                           data-testid="cr-field-connectorRef"
-                          style="width: 400px;"
+                          style="width: 100%;"
                           type="button"
                         >
                           <span
@@ -759,6 +760,7 @@ exports[`ManifestSelection tests connector as runtime 1`] = `
               >
                 <div
                   class="connectorLabel"
+                  style="width: 400px;"
                 >
                   <div
                     class="StyledProps--font StyledProps--main"
@@ -781,7 +783,7 @@ exports[`ManifestSelection tests connector as runtime 1`] = `
                     >
                       <div
                         class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                        style="width: 400px;"
+                        style="width: 100%;"
                       >
                         <div
                           class="TextInput--main MultiTypeInput--input"
@@ -1051,6 +1053,7 @@ exports[`ManifestSelection tests renders Git Store 1`] = `
               >
                 <div
                   class="connectorLabel"
+                  style="width: 400px;"
                 >
                   <div
                     class="StyledProps--font StyledProps--main"
@@ -1073,12 +1076,12 @@ exports[`ManifestSelection tests renders Git Store 1`] = `
                     >
                       <div
                         class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                        style="width: 400px;"
+                        style="width: 100%;"
                       >
                         <button
                           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                           data-testid="cr-field-connectorRef"
-                          style="width: 400px;"
+                          style="width: 100%;"
                           type="button"
                         >
                           <span

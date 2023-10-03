@@ -201,6 +201,7 @@ exports[`Jira Create fetch projects show error if failed to fetch projects 1`] =
         >
           <div
             class="connectorLabel connectorLabel"
+            style="width: 372px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -223,12 +224,12 @@ exports[`Jira Create fetch projects show error if failed to fetch projects 1`] =
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 372px;"
+                  style="width: 100%;"
                 >
                   <button
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-spec.connectorRef"
-                    style="width: 372px;"
+                    style="width: 100%;"
                     type="button"
                   >
                     <span
@@ -636,6 +637,7 @@ exports[`Jira Create tests Basic snapshot - deploymentform mode: jira-create-dep
   >
     <div
       class="connectorLabel"
+      style="width: 400px;"
     >
       <div
         class="StyledProps--font StyledProps--main"
@@ -660,12 +662,12 @@ exports[`Jira Create tests Basic snapshot - deploymentform mode: jira-create-dep
           >
             <div
               class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              style="width: 400px;"
+              style="width: 100%;"
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                 data-testid="cr-field-spec.connectorRef"
-                style="width: 400px;"
+                style="width: 100%;"
                 type="button"
               >
                 <span
@@ -1078,6 +1080,7 @@ exports[`Jira Create tests Basic snapshot - inputset mode: input set with errors
   >
     <div
       class="connectorLabel"
+      style="width: 400px;"
     >
       <div
         class="StyledProps--font StyledProps--main"
@@ -1102,12 +1105,12 @@ exports[`Jira Create tests Basic snapshot - inputset mode: input set with errors
           >
             <div
               class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              style="width: 400px;"
+              style="width: 100%;"
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                 data-testid="cr-field-spec.connectorRef"
-                style="width: 400px;"
+                style="width: 100%;"
                 type="button"
               >
                 <span
@@ -1518,6 +1521,7 @@ exports[`Jira Create tests Deploymentform readonly mode: jira-create-deploymentf
   >
     <div
       class="connectorLabel"
+      style="width: 400px;"
     >
       <div
         class="StyledProps--font StyledProps--main"
@@ -1542,12 +1546,12 @@ exports[`Jira Create tests Deploymentform readonly mode: jira-create-deploymentf
           >
             <div
               class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              style="width: 400px;"
+              style="width: 100%;"
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                 data-testid="cr-field-spec.connectorRef"
-                style="width: 400px;"
+                style="width: 100%;"
                 type="button"
               >
                 <span
@@ -2040,6 +2044,7 @@ exports[`Jira Create tests Edit Stage - readonly view: edit-stage-readonly 1`] =
         >
           <div
             class="connectorLabel connectorLabel"
+            style="width: 372px;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -2062,13 +2067,13 @@ exports[`Jira Create tests Edit Stage - readonly view: edit-stage-readonly 1`] =
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                  style="width: 372px;"
+                  style="width: 100%;"
                 >
                   <button
                     class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-spec.connectorRef"
                     disabled=""
-                    style="width: 372px;"
+                    style="width: 100%;"
                     tabindex="-1"
                     type="button"
                   >

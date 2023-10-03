@@ -47,6 +47,7 @@ exports[`stageinputset tests viewType DeploymentForm initial render 1`] = `
           >
             <div
               class="connectorLabel"
+              style="width: 320px;"
             >
               <div
                 class="StyledProps--font StyledProps--main"
@@ -75,12 +76,12 @@ exports[`stageinputset tests viewType DeploymentForm initial render 1`] = `
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="width: 320px;"
+                      style="width: 100%;"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                         data-testid="cr-field-stages[0].stage.spec.infrastructure.spec.connectorRef"
-                        style="width: 320px;"
+                        style="width: 100%;"
                         type="button"
                       >
                         <span
@@ -686,6 +687,7 @@ exports[`stageinputset tests viewType DeploymentForm initial render2 1`] = `
           >
             <div
               class="connectorLabel"
+              style="width: 320px;"
             >
               <div
                 class="StyledProps--font StyledProps--main"
@@ -714,12 +716,12 @@ exports[`stageinputset tests viewType DeploymentForm initial render2 1`] = `
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="width: 320px;"
+                      style="width: 100%;"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                         data-testid="cr-field-stages[0].stage.spec.infrastructure.spec.connectorRef"
-                        style="width: 320px;"
+                        style="width: 100%;"
                         type="button"
                       >
                         <span
@@ -1325,6 +1327,7 @@ exports[`stageinputset tests viewType InputSet initial render 1`] = `
           >
             <div
               class="connectorLabel"
+              style="width: 385px;"
             >
               <div
                 class="StyledProps--font StyledProps--main"
@@ -1353,12 +1356,12 @@ exports[`stageinputset tests viewType InputSet initial render 1`] = `
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="width: 385px;"
+                      style="width: 100%;"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                         data-testid="cr-field-stages[0].stage.spec.infrastructure.spec.connectorRef"
-                        style="width: 385px;"
+                        style="width: 100%;"
                         type="button"
                       >
                         <span
@@ -1964,6 +1967,7 @@ exports[`stageinputset tests viewType InputSet initial render2 1`] = `
           >
             <div
               class="connectorLabel"
+              style="width: 385px;"
             >
               <div
                 class="StyledProps--font StyledProps--main"
@@ -1992,12 +1996,12 @@ exports[`stageinputset tests viewType InputSet initial render2 1`] = `
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="width: 385px;"
+                      style="width: 100%;"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                         data-testid="cr-field-stages[0].stage.spec.infrastructure.spec.connectorRef"
-                        style="width: 385px;"
+                        style="width: 100%;"
                         type="button"
                       >
                         <span

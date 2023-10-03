@@ -3017,6 +3017,7 @@ exports[`Manifest Trigger Tests on click of edit - submits thru the right payloa
               >
                 <div
                   class="connectorLabel"
+                  style="width: 400px;"
                 >
                   <div
                     class="StyledProps--font StyledProps--main"
@@ -3041,12 +3042,12 @@ exports[`Manifest Trigger Tests on click of edit - submits thru the right payloa
                       >
                         <div
                           class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                          style="width: 400px;"
+                          style="width: 100%;"
                         >
                           <button
                             class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                             data-testid="cr-field-stages[0].stage.spec.serviceConfig.serviceDefinition.spec.manifests[0].manifest.spec.store.spec.connectorRef"
-                            style="width: 400px;"
+                            style="width: 100%;"
                             type="button"
                           >
                             <span
