@@ -6218,6 +6218,7 @@ export interface StringsMap {
   'cd.changeTaskDefinitionTypeWarning': string
   'cd.changingTaskDefinitionTypeWarningTitle': string
   'cd.checkCluster': string
+  'cd.chooseEnvironmentSetupHeader': string
   'cd.chooseProvisionerText': string
   'cd.closeInfrastructureDetails': string
   'cd.closeInfrastructureDetailsContent': string

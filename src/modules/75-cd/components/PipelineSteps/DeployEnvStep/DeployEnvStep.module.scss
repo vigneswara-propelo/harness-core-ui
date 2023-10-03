@@ -46,8 +46,33 @@
     margin-top: var(--spacing-xlarge) !important;
   }
 }
+.envCardWrapper {
+  display: flex;
+  gap: 20px;
+
+  /* Inline Card is small so it need to expand to take availvle unused space */
+  & > :first-child {
+    flex: 1;
+    & > div {
+      justify-content: flex-start !important;
+    }
+  }
+}
 .yamlToggleEnv {
   padding-top: var(--spacing-4) !important;
   padding-bottom: var(--spacing-4) !important;
   width: 320px;
+}
+
+.envForm {
+  .nameIdDescriptionTags {
+    width: 350px !important;
+  }
+  :global {
+    input,
+    .bp3-input-group,
+    .bp3-menu {
+      width: 350px !important;
+    }
+  }
 }

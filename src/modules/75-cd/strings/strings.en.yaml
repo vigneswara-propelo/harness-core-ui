@@ -467,6 +467,7 @@ addEnvironment: Add Environment
 existingEnvironment: 'Existing Environment'
 editIdError: 'ID: {{id}} cannot be edited'
 typeError: 'Type should not be empty and contain either "Production" or "PreProduction"'
+chooseEnvironmentSetupHeader: How do you want to setup your environment?
 newAdapter: New Adapter
 newGitOpsServer: New GitOps Server
 adapterDetails: Adapter Details

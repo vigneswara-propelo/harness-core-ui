@@ -15,12 +15,10 @@ import {
   FormInput,
   getMultiTypeFromValue,
   IconName,
-  Label,
   Dialog,
   Layout,
   MultiTypeInputType,
   SelectOption,
-  ThumbnailSelect,
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle,
   getErrorInfoFromErrorObject,
@@ -30,13 +28,11 @@ import {
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import * as Yup from 'yup'
-import { defaultTo, get, isEmpty, isNil, noop, omit, isEqual } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, noop, omit, isEqual, pick } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { Classes } from '@blueprintjs/core'
 import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { connect, FormikErrors, FormikProps } from 'formik'
-import cx from 'classnames'
 import {
   EnvironmentRequestDTO,
   EnvironmentResponseDTO,
@@ -50,7 +46,6 @@ import {
   useGetYamlSchema
 } from 'services/cd-ng'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
-import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -79,6 +74,14 @@ import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 import { Category, EnvironmentActions, ExitModalActions } from '@common/constants/TrackingConstants'
+import { FeatureFlag } from '@modules/10-common/featureFlags'
+import { useSaveToGitDialog } from '@modules/10-common/modals/SaveToGitDialog/useSaveToGitDialog'
+import { SaveToGitFormInterface } from '@modules/10-common/components/SaveToGitForm/SaveToGitForm'
+import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
+import { ConnectorSelectedValue } from '@modules/27-platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { useFeatureFlag } from '@modules/10-common/hooks/useFeatureFlag'
+import { GitSyncFormFields, gitSyncFormSchema } from '@modules/40-gitsync/components/GitSyncForm/GitSyncForm'
+import { NewEnvironmentForm } from './NewEnvironmentForm'
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import css from './DeployEnvStep.module.scss'
 
@@ -125,7 +128,7 @@ const cleanData = (values: EnvironmentResponseDTO): EnvironmentRequestDTO => {
     type: newType as 'PreProduction' | 'Production',
     yaml: yamlStringify({
       environment: {
-        ...values
+        ...omit(values, ['storeType', 'connectorRef', 'repo', 'branch', 'filePath'])
       }
     })
   }
@@ -139,7 +142,6 @@ export const NewEditEnvironmentModal: React.FC<NewEditEnvironmentModalProps> = (
   closeModal
 }): JSX.Element => {
   const { getString } = useStrings()
-  const inputRef = React.useRef<HTMLInputElement | null>(null)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     orgIdentifier: string
     projectIdentifier: string
@@ -159,6 +161,7 @@ export const NewEditEnvironmentModal: React.FC<NewEditEnvironmentModalProps> = (
   })
   const { showSuccess, showError, clear } = useToaster()
   const { trackEvent } = useTelemetry()
+  const isGitXEnabledForEnvironments = useFeatureFlag(FeatureFlag.CDS_ENV_GITX)
 
   React.useEffect(() => {
     !isEdit &&
@@ -167,6 +170,35 @@ export const NewEditEnvironmentModal: React.FC<NewEditEnvironmentModalProps> = (
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const { openSaveToGitDialog } = useSaveToGitDialog({
+    onSuccess: async (gitData: SaveToGitFormInterface, _payload?: any): Promise<any> => {
+      const isNewBranch = gitData?.isNewBranch
+      const selectedBranch = formikRef.current?.values?.branch
+      const response = await createEnvironment(
+        { ..._payload, orgIdentifier, projectIdentifier },
+        {
+          queryParams: {
+            accountIdentifier: accountId,
+            storeType: StoreType.REMOTE,
+            connectorRef: (formikRef.current?.values?.connectorRef as unknown as ConnectorSelectedValue)?.value,
+            repoName: formikRef.current?.values?.repo,
+            isNewBranch: gitData?.isNewBranch,
+            filePath: formikRef.current?.values?.filePath,
+            ...(isNewBranch ? { baseBranch: selectedBranch, branch: gitData?.branch } : { branch: selectedBranch }),
+            commitMsg: gitData?.commitMsg
+          }
+        }
+      )
+      if (response.status === 'SUCCESS') {
+        clear()
+        showSuccess(getString('cd.environmentCreated'))
+        // We invalidate the service list call on creating a new service
+        _payload && onCreateOrUpdate(_payload)
+      }
+      return Promise.resolve(response)
+    }
+  })
 
   const onSubmit = React.useCallback(
     async (value: Required<EnvironmentRequestDTO>) => {
@@ -180,6 +212,33 @@ export const NewEditEnvironmentModal: React.FC<NewEditEnvironmentModalProps> = (
           showError(getString('cd.typeError'))
         } else if (isEdit && id !== values.identifier) {
           showError(getString('cd.editIdError', { id: id }))
+        } else if (formikRef.current?.values?.storeType === StoreType.REMOTE) {
+          openSaveToGitDialog({
+            isEditing: isEdit,
+            resource: {
+              type: 'Environment',
+              name: values.name as string,
+              identifier: values.identifier as string,
+              gitDetails: {
+                branch: formikRef.current?.values?.branch,
+                commitId: undefined,
+                filePath: formikRef.current?.values?.filePath,
+                fileUrl: undefined,
+                objectId: undefined,
+                repoName: formikRef.current?.values?.repo,
+                repoUrl: undefined
+              },
+              storeMetadata: {
+                storeType: StoreType.REMOTE,
+                connectorRef: (formikRef.current?.values?.connectorRef as unknown as ConnectorSelectedValue)?.value
+              }
+            },
+            payload: {
+              ...omit(values, ['storeType', 'connectorRef', 'repo', 'branch', 'filePath']),
+              orgIdentifier,
+              projectIdentifier
+            }
+          })
         } else if (isEdit && !isEnvironment) {
           const response = await updateEnvironment({
             ...omit(values, 'accountId', 'deleted'),
@@ -206,20 +265,8 @@ export const NewEditEnvironmentModal: React.FC<NewEditEnvironmentModalProps> = (
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [onCreateOrUpdate, orgIdentifier, projectIdentifier, isEdit, isEnvironment]
   )
-  React.useEffect(() => {
-    inputRef.current?.focus()
-  }, [])
-  const typeList: { label: string; value: string }[] = [
-    {
-      label: getString('production'),
-      value: 'Production'
-    },
-    {
-      label: getString('cd.preProduction'),
-      value: 'PreProduction'
-    }
-  ]
-  const formikRef = React.useRef<FormikProps<EnvironmentResponseDTO>>()
+
+  const formikRef = React.useRef<FormikProps<EnvironmentResponseDTO & GitSyncFormFields>>()
   const id = data.identifier
   const { data: environmentSchema } = useGetYamlSchema({
     queryParams: {
@@ -237,7 +284,8 @@ export const NewEditEnvironmentModal: React.FC<NewEditEnvironmentModalProps> = (
         const envSetYamlVisual = parse(yaml).environment as EnvironmentResponseDTO
         if (envSetYamlVisual) {
           formikRef.current?.setValues({
-            ...omit(cleanData(envSetYamlVisual) as EnvironmentResponseDTO)
+            ...omit(cleanData(envSetYamlVisual) as EnvironmentResponseDTO),
+            ...pick(formikRef.current?.values, ['storeType', 'connectorRef', 'repo', 'branch', 'filePath'])
           })
         }
       }
@@ -260,7 +308,7 @@ export const NewEditEnvironmentModal: React.FC<NewEditEnvironmentModalProps> = (
         </Layout.Horizontal>
       </Container>
       <Layout.Vertical>
-        <Formik<Required<EnvironmentResponseDTO>>
+        <Formik<Required<EnvironmentResponseDTO> & GitSyncFormFields>
           initialValues={data as Required<EnvironmentResponseDTO>}
           formName="deployEnv"
           onSubmit={values => {
@@ -273,58 +321,35 @@ export const NewEditEnvironmentModal: React.FC<NewEditEnvironmentModalProps> = (
           validationSchema={Yup.object().shape({
             name: NameSchema(getString, { requiredErrorMsg: getString?.('fieldRequired', { field: 'Environment' }) }),
             type: Yup.string().required(getString?.('fieldRequired', { field: 'Type' })),
-            identifier: IdentifierSchema(getString)
+            identifier: IdentifierSchema(getString),
+            ...(isGitXEnabledForEnvironments ? { ...gitSyncFormSchema(getString) } : {})
           })}
         >
           {formikProps => {
-            formikRef.current = formikProps as FormikProps<EnvironmentResponseDTO> | undefined
+            formikRef.current = formikProps as FormikProps<EnvironmentResponseDTO & GitSyncFormFields> | undefined
             return (
               <>
                 {selectedView === SelectedView.VISUAL ? (
-                  <FormikForm>
-                    <NameIdDescriptionTags
-                      formikProps={formikProps}
-                      identifierProps={{
-                        inputLabel: getString('name'),
-                        inputGroupProps: {
-                          inputGroup: {
-                            inputRef: ref => (inputRef.current = ref)
-                          }
-                        },
-                        isIdentifierEditable: !isEdit
-                      }}
-                    />
-                    <Layout.Vertical spacing={'small'} style={{ marginBottom: 'var(--spacing-medium)' }}>
-                      <Label className={cx(Classes.LABEL, css.label)}>{getString('envType')}</Label>
-                      <ThumbnailSelect className={css.thumbnailSelect} name={'type'} items={typeList} />
-                    </Layout.Vertical>
-                    <Layout.Horizontal spacing="small" padding={{ top: 'xlarge' }}>
-                      <Button
-                        variation={ButtonVariation.PRIMARY}
-                        type={'submit'}
-                        text={getString('save')}
-                        data-id="environment-save"
-                      />
-                      <Button
-                        variation={ButtonVariation.TERTIARY}
-                        text={getString('cancel')}
-                        onClick={() => {
-                          !isEdit &&
-                            trackEvent(ExitModalActions.ExitByCancel, {
-                              category: Category.ENVIRONMENT
-                            })
-                          closeModal?.()
-                        }}
-                      />
-                    </Layout.Horizontal>
-                  </FormikForm>
+                  <NewEnvironmentForm
+                    formikProps={formikProps as FormikProps<EnvironmentResponseDTO & GitSyncFormFields>}
+                    isEdit={isEdit}
+                    isGitXEnabledForEnvironments={isGitXEnabledForEnvironments}
+                    closeModal={closeModal}
+                  />
                 ) : (
                   <Container>
                     <YAMLBuilder
                       {...yamlBuilderReadOnlyModeProps}
                       existingJSON={{
                         environment: {
-                          ...omit(formikProps?.values),
+                          ...omit(formikProps?.values, [
+                            'storeType',
+                            'connectorRef',
+                            'repo',
+                            'branch',
+                            'filePath',
+                            'yaml'
+                          ]),
                           description: defaultTo(formikProps.values.description, ''),
                           tags: defaultTo(formikProps.values.tags, {}),
                           type: defaultTo(formikProps.values.type, '')
