@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { cloneDeep, defaultTo, isEmpty, noop } from 'lodash-es'
+import { cloneDeep, defaultTo, isEmpty, noop, omit } from 'lodash-es'
 
 import { PageSpinner, useToaster } from '@harness/uicore'
 import {
@@ -231,7 +231,7 @@ export function ServiceOverridesProvider({
     const overrideResponse = rowItemToUpdate.overrideResponse as ServiceOverridesResponseDTOV2
 
     updateServiceOverride({
-      ...overrideResponse,
+      ...omit(overrideResponse, 'yamlInternal'),
       environmentRef: values.environmentRef,
       serviceRef: defaultTo(values.serviceRef, overrideResponse.serviceRef),
       infraIdentifier: defaultTo(values.infraIdentifier, overrideResponse.infraIdentifier),
