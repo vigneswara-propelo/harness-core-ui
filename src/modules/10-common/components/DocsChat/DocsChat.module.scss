@@ -44,7 +44,7 @@
       .message {
         padding: var(--spacing-small) var(--spacing-large);
         display: inline-block;
-        word-wrap: break-word;
+        word-break: break-word;
         line-height: 20px;
         overflow-x: auto;
 
