@@ -19,7 +19,7 @@ import {
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle
 } from '@harness/uicore'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Classes, Menu, Position } from '@blueprintjs/core'
 
@@ -194,8 +194,8 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   }
 
   const { open: openDiffModal } = useDiffDialog({
-    originalYaml: stringify(originalPipeline),
-    updatedYaml: stringify(pipeline),
+    originalYaml: stringify({ pipeline: omit(originalPipeline, 'repo', 'branch') }),
+    updatedYaml: stringify({ pipeline: omit(pipeline, 'repo', 'branch') }),
     title: getString('pipeline.piplineDiffTitle')
   })
 

@@ -20,6 +20,7 @@ import {
 } from '@harness/uicore'
 import { Classes, Menu, Position } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
+import { omit } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
@@ -83,8 +84,8 @@ function TemplateStudioSubHeader(
   )
 
   const { open: openDiffModal } = useDiffDialog({
-    originalYaml: stringify(originalTemplate),
-    updatedYaml: stringify(template),
+    originalYaml: stringify({ template: omit(originalTemplate, 'repo', 'branch') }),
+    updatedYaml: stringify({ template: omit(template, 'repo', 'branch') }),
     title: getString('templatesLibrary.diffTitle')
   })
 
