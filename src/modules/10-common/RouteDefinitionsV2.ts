@@ -148,7 +148,9 @@ const routes = {
   toOrgs: withModeModuleAndScopePrefix(() => '/organizations'),
   toProjects: withModeModuleAndScopePrefix(() => '/projects'),
   toProjectDetails: withModeModuleAndScopePrefix<ProjectPathProps>(() => '/details'),
+  toUser: withModeModuleAndScopePrefix(() => '/user'),
   toUserProfile: withModeModuleAndScopePrefix(() => '/user/profile'),
+  toUserPreferences: withModeModuleAndScopePrefix(() => '/user/preferences'),
 
   toAdminSettings: ({ accountId }: AccountPathProps) => {
     return withAccountId(() => `/${NAV_MODE.ADMIN}/settings`)({ accountId })
@@ -735,30 +737,31 @@ const routes = {
     }
   ),
 
-  toSettingsTemplateStudioNew: withModeModuleAndScopePrefix<
-    Partial<TemplateStudioPathProps> & TemplateStudioQueryParams
-  >(params => {
-    const queryParams: TemplateStudioQueryParams = {
-      branch: params?.branch,
-      connectorRef: params?.connectorRef,
-      repoIdentifier: params?.repoIdentifier,
-      repoName: params?.repoName,
-      storeType: params?.storeType,
-      versionLabel: params?.versionLabel
-    }
-    const queryString = qs.stringify(omitBy(queryParams, isUndefined), { skipNulls: true })
-    const templateType = params?.templateType
-    const templateIdentifier = params?.templateIdentifier
+  toTemplateStudioNew: withModeModuleAndScopePrefix<Partial<TemplateStudioPathProps> & TemplateStudioQueryParams>(
+    params => {
+      const queryParams: TemplateStudioQueryParams = {
+        branch: params?.branch,
+        connectorRef: params?.connectorRef,
+        repoIdentifier: params?.repoIdentifier,
+        repoName: params?.repoName,
+        storeType: params?.storeType,
+        versionLabel: params?.versionLabel
+      }
+      const queryString = qs.stringify(omitBy(queryParams, isUndefined), { skipNulls: true })
+      const templateType = params?.templateType
+      const templateIdentifier = params?.templateIdentifier
 
-    let path
-    if (queryString.length > 0) {
-      path = `settings/templates/${templateIdentifier}/template-studio/${templateType}/?${queryString}`
-    } else {
-      path = `settings/templates/${templateIdentifier}/template-studio/${templateType}/`
+      let path
+      if (queryString.length > 0) {
+        path = `settings/templates/${templateIdentifier}/template-studio/${templateType}/?${queryString}`
+      } else {
+        path = `settings/templates/${templateIdentifier}/template-studio/${templateType}/`
+      }
+      return path
     }
-    return path
-  }),
+  ),
   toAuthenticationSettings: withModeModuleAndScopePrefix(() => '/settings/authentication'),
+  toAccountConfiguration: withModeModuleAndScopePrefix(() => '/settings/authentication/configuration'),
   toBillingSettings: withModeModuleAndScopePrefix(() => '/settings/billing'),
   toSubscriptions: withModeModuleAndScopePrefix<SubscriptionQueryParams>(params => {
     const url = '/settings/subscriptions'

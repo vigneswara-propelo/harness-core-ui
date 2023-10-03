@@ -8,67 +8,59 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { Menu } from '@blueprintjs/core'
-import type { Organization } from 'services/cd-ng'
+import type { Project } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-// eslint-disable-next-line no-restricted-imports
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-// eslint-disable-next-line no-restricted-imports
+import { PermissionRequest } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-// eslint-disable-next-line no-restricted-imports
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
-import { NAV_MODE } from '@common/utils/routeUtils'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { NAV_MODE } from '@common/utils/routeUtils'
 
-interface OrgPopoverMenuProps {
-  org: Organization
-  editOrg?: () => void
-  inviteCollab?: () => void
-  setMenuOpen: (value: React.SetStateAction<boolean>) => void
-  openDialog: () => void
+interface PopoverMenuProps {
+  project: Project
+  reloadProjects?: () => Promise<unknown>
+  editProject?: (project: Project) => void
+  collaborators?: () => void
+  setMenuOpen?: (value: React.SetStateAction<boolean>) => void
+  openDialog?: () => void
+  refetch: () => Promise<unknown>
 }
 
-const OrgPopoverMenu: React.FC<OrgPopoverMenuProps> = props => {
-  const { org, setMenuOpen, inviteCollab, editOrg, openDialog } = props
+const PopoverMenu: React.FC<PopoverMenuProps> = props => {
+  const { project, setMenuOpen, collaborators, editProject, openDialog } = props
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
   const { currentMode } = useAppStore()
 
-  const permissionRequest = {
+  const permissionRequest: Optional<PermissionRequest, 'permission'> = {
+    resourceScope: {
+      accountIdentifier: accountId,
+      orgIdentifier: project?.orgIdentifier
+    },
     resource: {
-      resourceType: ResourceType.ORGANIZATION,
-      resourceIdentifier: org.identifier
+      resourceType: ResourceType.PROJECT,
+      resourceIdentifier: project?.identifier
     }
   }
 
-  const invitePermission = {
-    resourceScope: {
-      accountIdentifier: accountId,
-      orgIdentifier: org.identifier
-    },
-    resource: {
-      resourceType: ResourceType.USER
-    },
-    permission: PermissionIdentifier.INVITE_USER
+  const handleDelete = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+    event.stopPropagation()
+    setMenuOpen?.(false)
+    openDialog?.()
   }
 
-  const handleEdit = (e: React.MouseEvent): void => {
-    e.stopPropagation()
-    setMenuOpen(false)
-    editOrg?.()
+  const handleEdit = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+    event.stopPropagation()
+    setMenuOpen?.(false)
+    editProject?.(project)
   }
 
-  const handleInvite = (e: React.MouseEvent): void => {
-    e.stopPropagation()
-    setMenuOpen(false)
-    inviteCollab?.()
-  }
-
-  const handleDelete = async (e: React.MouseEvent): Promise<void> => {
-    e.stopPropagation()
-    setMenuOpen(false)
-    if (!org?.identifier) return
-    openDialog()
+  const handleCollaborate = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+    event.stopPropagation()
+    setMenuOpen?.(false)
+    collaborators?.()
   }
 
   return (
@@ -80,15 +72,25 @@ const OrgPopoverMenu: React.FC<OrgPopoverMenuProps> = props => {
         data-testid={'edit-project'}
         permission={{
           ...permissionRequest,
-          permission: PermissionIdentifier.UPDATE_ORG
+          permission: PermissionIdentifier.UPDATE_PROJECT
         }}
       />
       <RbacMenuItem
         icon="new-person"
         // eslint-disable-next-line strings-restrict-modules
         text={getString('projectsOrgs.invite')}
-        onClick={handleInvite}
-        permission={invitePermission}
+        onClick={handleCollaborate}
+        permission={{
+          resourceScope: {
+            accountIdentifier: accountId,
+            orgIdentifier: project.orgIdentifier,
+            projectIdentifier: project.identifier
+          },
+          resource: {
+            resourceType: ResourceType.USER
+          },
+          permission: PermissionIdentifier.INVITE_USER
+        }}
       />
       {currentMode === NAV_MODE.ADMIN && (
         <>
@@ -99,11 +101,7 @@ const OrgPopoverMenu: React.FC<OrgPopoverMenuProps> = props => {
             onClick={handleDelete}
             permission={{
               ...permissionRequest,
-              permission: PermissionIdentifier.DELETE_ORG,
-              resourceScope: {
-                accountIdentifier: accountId,
-                orgIdentifier: org.identifier
-              }
+              permission: PermissionIdentifier.DELETE_PROJECT
             }}
           />
         </>
@@ -112,4 +110,4 @@ const OrgPopoverMenu: React.FC<OrgPopoverMenuProps> = props => {
   )
 }
 
-export default OrgPopoverMenu
+export default PopoverMenu

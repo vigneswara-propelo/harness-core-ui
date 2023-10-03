@@ -266,7 +266,7 @@ const getTemplateUrl = async (scope: EntityScope, identifier: string, isNewNav: 
       if (templateMetadata?.storeType) {
         return Promise.resolve(
           isNewNav
-            ? `${routesV2.toSettingsTemplateStudioNew({
+            ? `${routesV2.toTemplateStudioNew({
                 accountId: accountIdentifier,
                 orgIdentifier,
                 projectIdentifier,

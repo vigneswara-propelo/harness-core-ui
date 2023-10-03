@@ -13,7 +13,6 @@ import { isEmpty } from 'lodash-es'
 import ReactTimeago from 'react-timeago'
 import { useParams, useHistory } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-// eslint-disable-next-line no-restricted-imports
 import RbacAvatarGroup from '@rbac/components/RbacAvatarGroup/RbacAvatarGroup'
 import routes from '@common/RouteDefinitionsV2'
 import TagsRenderer from '@common/components/TagsRenderer/TagsRenderer'
@@ -21,19 +20,14 @@ import { Project, ResponseProjectAggregateDTO } from 'services/cd-ng'
 import { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import FavoriteStar from '@common/components/FavoriteStar/FavoriteStar'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-// eslint-disable-next-line no-restricted-imports
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-// eslint-disable-next-line no-restricted-imports
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-// eslint-disable-next-line no-restricted-imports
 import { useCollaboratorModal } from '@projects-orgs/modals/ProjectModal/useCollaboratorModal'
-// eslint-disable-next-line no-restricted-imports
 import { useProjectModal } from '@projects-orgs/modals/ProjectModal/useProjectModal'
-// eslint-disable-next-line no-restricted-imports
 import useDeleteProjectDialog from '@projects-orgs/pages/projects/DeleteProject'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import PopoverMenu from './PopoverMenu'
-import css from './SettingsPages.module.scss'
+import css from '@common/pages/SettingsPages/SettingsPages.module.scss'
 
 interface ProjectsHeaderProps {
   data: ResponseProjectAggregateDTO | null

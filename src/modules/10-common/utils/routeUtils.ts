@@ -7,6 +7,7 @@
 
 import { matchPath } from 'react-router-dom'
 
+import { defaultTo } from 'lodash-es'
 import type {
   AccountPathProps,
   OrgPathProps,
@@ -360,4 +361,23 @@ export interface ModePathProps {
 
 export function isNavMode(str: string): boolean {
   return Object.values(NAV_MODE).includes(str as NAV_MODE)
+}
+
+export function pathArrayForAllScopes(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  routeToMatch: (params?: any) => string,
+  mode: NAV_MODE,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  additionalPathProps?: any
+): string[] {
+  const additionalProps = defaultTo(additionalPathProps, {})
+  const propLists = [
+    { ...projectPathProps, ...modulePathProps, mode, ...additionalProps },
+    { ...projectPathProps, mode, ...additionalProps },
+    { ...orgPathProps, ...modulePathProps, mode, ...additionalProps },
+    { ...orgPathProps, mode, ...additionalProps },
+    { ...accountPathProps, ...modulePathProps, mode, ...additionalProps },
+    { ...accountPathProps, mode, ...additionalProps }
+  ]
+  return propLists.map(props => routeToMatch(props))
 }

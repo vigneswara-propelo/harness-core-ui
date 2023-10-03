@@ -49,7 +49,7 @@ import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import DeprecatedCallout from '@gitsync/components/DeprecatedCallout/DeprecatedCallout'
 import { isOnPrem } from '@common/utils/utils'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
-import ProjectsHeader from '@common/pages/SettingsPages/ProjectsHeader'
+import ProjectsHeader from '@projects-orgs/components/SettingsPageComponent/ProjectsHeader'
 import useDeleteProjectDialog from '../../DeleteProject'
 import css from './ProjectDetails.module.scss'
 

@@ -257,7 +257,7 @@ export const AccountSettingsPage: React.FC = () => {
               label={<String stringID="delegate.delegates" />}
               id={SettingsResources.Delegates}
               icon={'delegates-blue'}
-              route={routesV2.toDelegateList({ accountId, module })}
+              route={routesV2.toDelegatesSettings({ accountId, module })}
             />
             <SettingsResourceCard
               label={<String stringID="common.secrets" />}

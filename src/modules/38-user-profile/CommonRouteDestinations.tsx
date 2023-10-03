@@ -6,12 +6,26 @@
  */
 
 import React from 'react'
-import { Switch } from 'react-router-dom'
+import { Redirect, Switch, useParams } from 'react-router-dom'
 import routes from '@common/RouteDefinitionsV2'
 import { RouteWithContext } from '@common/router/RouteWithContext/RouteWithContext'
-import { NAV_MODE, accountPathProps, modulePathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
+import {
+  NAV_MODE,
+  accountPathProps,
+  modulePathProps,
+  orgPathProps,
+  pathArrayForAllScopes,
+  projectPathProps
+} from '@common/utils/routeUtils'
 import UserProfilePage from '@user-profile/pages/UserProfile/UserProfilePage'
 import SettingsRouteDestinations from '@modules/SettingsRouteDestinations'
+import { ModulePathParams } from '@modules/10-common/interfaces/RouteInterfaces'
+import UserPreferencesPage from './pages/UserPreferences/UserPreferences'
+
+const RedirectToUserHome = ({ mode }: { mode: NAV_MODE }): React.ReactElement => {
+  const { module, ...rest } = useParams<ModulePathParams>()
+  return <Redirect to={routes.toUserProfile({ ...rest, module, mode })} />
+}
 
 function CommonRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactElement {
   return (
@@ -27,6 +41,18 @@ function CommonRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactEleme
         ]}
       >
         <UserProfilePage />
+      </RouteWithContext>
+      <RouteWithContext
+        exact
+        path={[
+          routes.toUser({ ...accountPathProps, ...modulePathProps, mode }),
+          routes.toUser({ ...accountPathProps, mode })
+        ]}
+      >
+        <RedirectToUserHome mode={mode} />
+      </RouteWithContext>
+      <RouteWithContext exact path={pathArrayForAllScopes(routes.toUserPreferences, mode)}>
+        <UserPreferencesPage />
       </RouteWithContext>
       {SettingsRouteDestinations({ mode }).props.children}
     </Switch>

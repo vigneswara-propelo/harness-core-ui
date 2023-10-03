@@ -12,29 +12,21 @@ import { Classes, Position, Intent } from '@blueprintjs/core'
 import { useParams, useHistory } from 'react-router-dom'
 import { useToaster } from '@common/exports'
 import { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-// eslint-disable-next-line no-restricted-imports
 import { useProjectModal } from '@projects-orgs/modals/ProjectModal/useProjectModal'
 import routes from '@common/RouteDefinitionsV2'
 import { String, useStrings } from 'framework/strings'
-// eslint-disable-next-line no-restricted-imports
 import RbacAvatarGroup from '@rbac/components/RbacAvatarGroup/RbacAvatarGroup'
-// eslint-disable-next-line no-restricted-imports
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-// eslint-disable-next-line no-restricted-imports
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import TagsRenderer from '@common/components/TagsRenderer/TagsRenderer'
 import { Organization, Project, ResponseOrganizationAggregateDTO, useDeleteOrganization } from 'services/cd-ng'
-// eslint-disable-next-line no-restricted-imports
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-// eslint-disable-next-line no-restricted-imports
 import { DeleteProjectOrgButtons } from '@projects-orgs/pages/projects/DeleteProject'
-// eslint-disable-next-line no-restricted-imports
 import { useOrganizationModal } from '@projects-orgs/modals/OrganizationModal/useOrganizationModal'
-// eslint-disable-next-line no-restricted-imports
 import { useCollaboratorModal } from '@projects-orgs/modals/ProjectModal/useCollaboratorModal'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import OrgPopoverMenu from './OrgPopoverMenu'
-import css from './SettingsPages.module.scss'
+import css from '@common/pages/SettingsPages/SettingsPages.module.scss'
 
 interface OrgHeaderProps {
   data: ResponseOrganizationAggregateDTO | null
