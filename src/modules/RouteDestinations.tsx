@@ -46,7 +46,7 @@ import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import ETRoutes from '@cet/RouteDestinations'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
-import RoutesV2 from '@modules/RouteDestinationsV2'
+import RoutesV2, { OldNavRedirects } from '@modules/RouteDestinationsV2'
 
 export const AccountSideNavProps: SidebarContext = {
   navComponent: AccountSideNav,
@@ -74,12 +74,9 @@ export default function RouteDestinations(): React.ReactElement {
     licenseInformation[ModuleName.CD]?.status === LICENSE_STATE_VALUES.ACTIVE ||
     CVNG_ENABLED
 
-  if (CDS_NAV_2_0) {
-    return <RoutesV2 />
-  }
-
   return (
     <Switch>
+      {CDS_NAV_2_0 ? OldNavRedirects().props.children : undefined}
       {commonRoutes.props.children}
       {secretsRoutes.props.children}
       {variableRoutes.props.children}
@@ -120,6 +117,8 @@ export default function RouteDestinations(): React.ReactElement {
       {IACM_ENABLED ? IACMRoutes().props.children : null}
       {SSCA_ENABLED ? SSCARoutes.props.children : null}
       {CET_ENABLED ? ETRoutes({})?.props.children : null}
+
+      {CDS_NAV_2_0 ? <RoutesV2 /> : undefined}
 
       <Route path="*">
         <NotFoundPage />

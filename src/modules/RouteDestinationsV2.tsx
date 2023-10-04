@@ -141,6 +141,56 @@ const RedirectResourcesToSettings = (): React.ReactElement => {
   )
 }
 
+export const OldNavRedirects = (): JSX.Element => {
+  return (
+    <>
+      <Route exact path={['/account/:accountId/main-dashboard']}>
+        <Redirect to={routes.toMode({ mode: NAV_MODE.ALL, noscope: true })} />
+      </Route>
+
+      {/* home path redirects */}
+      <Route
+        exact
+        path={[
+          '/account/:accountId/home/orgs/:orgIdentifier/projects/:projectIdentifier/:isSetup(setup)/resources/:path*',
+          '/account/:accountId/home/orgs/:orgIdentifier/projects/:projectIdentifier/:isSetup(setup)/:path*',
+          '/account/:accountId/home/orgs/:orgIdentifier/projects/:projectIdentifier/:path*',
+          '/account/:accountId/home/:path*'
+        ]}
+      >
+        <RedirectHomeRoutes />
+      </Route>
+
+      {/* old setup & settings path redirects */}
+      <Route
+        path={[
+          '/account/:accountId/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|cet|sei)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/:path*',
+          '/account/:accountId/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|cet|sei)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/:path*',
+          '/account/:accountId/settings/organizations/:orgIdentifier/setup/resources/:path*',
+          '/account/:accountId/settings/organizations/:orgIdentifier/setup/:path*',
+          '/account/:accountId/settings/resources/:path*',
+          '/account/:accountId/settings/:path*'
+        ]}
+      >
+        <RedirectResourcesToSettings />
+      </Route>
+
+      {/* module path */}
+      <Route
+        exact
+        path={[
+          '/account/:accountId/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|cet|sei)/orgs/:orgIdentifier/projects/:projectIdentifier/:path*',
+          '/account/:accountId/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|cet|sei)/orgs/:orgIdentifier/:path*',
+          '/account/:accountId/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|cet|sei)/:path*',
+          '/account/:accountId'
+        ]}
+      >
+        <RedirectToMode />
+      </Route>
+    </>
+  )
+}
+
 const RoutesV2 = (): React.ReactElement => {
   return (
     <Switch>
@@ -205,50 +255,6 @@ const RoutesV2 = (): React.ReactElement => {
       <RouteWithContext path={routes.toPurpose({ ...accountPathProps })} exact>
         <WelcomePage />
       </RouteWithContext>
-
-      <Route exact path={['/account/:accountId/main-dashboard']}>
-        <Redirect to={routes.toMode({ mode: NAV_MODE.ALL, noscope: true })} />
-      </Route>
-
-      {/* home path redirects */}
-      <Route
-        exact
-        path={[
-          '/account/:accountId/home/orgs/:orgIdentifier/projects/:projectIdentifier/:isSetup(setup)/resources/:path*',
-          '/account/:accountId/home/orgs/:orgIdentifier/projects/:projectIdentifier/:isSetup(setup)/:path*',
-          '/account/:accountId/home/orgs/:orgIdentifier/projects/:projectIdentifier/:path*',
-          '/account/:accountId/home/:path*'
-        ]}
-      >
-        <RedirectHomeRoutes />
-      </Route>
-
-      {/* old setup & settings path redirects */}
-      <Route
-        path={[
-          '/account/:accountId/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|cet|sei)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/:path*',
-          '/account/:accountId/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|cet|sei)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/:path*',
-          '/account/:accountId/settings/organizations/:orgIdentifier/setup/resources/:path*',
-          '/account/:accountId/settings/organizations/:orgIdentifier/setup/:path*',
-          '/account/:accountId/settings/resources/:path*',
-          '/account/:accountId/settings/:path*'
-        ]}
-      >
-        <RedirectResourcesToSettings />
-      </Route>
-
-      {/* module path */}
-      <Route
-        exact
-        path={[
-          '/account/:accountId/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|cet|sei)/orgs/:orgIdentifier/projects/:projectIdentifier/:path*',
-          '/account/:accountId/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|cet|sei)/orgs/:orgIdentifier/:path*',
-          '/account/:accountId/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|cet|sei)/:path*',
-          '/account/:accountId'
-        ]}
-      >
-        <RedirectToMode />
-      </Route>
 
       <Route component={() => <NotFoundPage redirectTo="/" />} />
     </Switch>
