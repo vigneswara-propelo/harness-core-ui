@@ -218,12 +218,12 @@ const processNodeImpl = (
 
       if (
         !data.stepConfig?.isStepGroup &&
-        ((item as StepElementConfig)?.spec?.delegateSelectors || item.delegateSelectors)
+        (item.delegateSelectors || (item as StepElementConfig)?.spec?.delegateSelectors)
       ) {
         set(
           node,
           'spec.delegateSelectors',
-          (item as StepElementConfig)?.spec?.delegateSelectors || item.delegateSelectors
+          item.delegateSelectors || (item as StepElementConfig)?.spec?.delegateSelectors
         )
       } else if (data.stepConfig?.isStepGroup && item.delegateSelectors) {
         set(node, 'delegateSelectors', item.delegateSelectors)
