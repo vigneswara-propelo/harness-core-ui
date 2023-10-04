@@ -125,13 +125,13 @@ export default function WebhooksList({
       {
         Header: getString('name').toUpperCase(),
         id: 'webhook_name',
-        width: '20%',
+        width: '15%',
         Cell: withWebhook(WebhookName)
       },
       {
         Header: getString('platform.connectors.title.gitConnector').toUpperCase(),
         id: 'connector_ref',
-        width: '20%',
+        width: '25%',
         Cell: withWebhook(GitConnector)
       },
       {

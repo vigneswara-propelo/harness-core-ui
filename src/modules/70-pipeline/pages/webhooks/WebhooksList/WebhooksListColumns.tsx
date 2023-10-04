@@ -57,7 +57,7 @@ export function WebhookName({
 
 export function GitConnector({ connector_ref: gitConnector }: { connector_ref: string }): JSX.Element {
   return (
-    <Text color={Color.BLACK} lineClamp={1}>
+    <Text color={Color.BLACK} lineClamp={1} padding={{ right: 'small' }}>
       {gitConnector}
     </Text>
   )
@@ -70,12 +70,12 @@ export function FolderPath({ folder_paths: folderPath }: { folder_paths: string[
   return (
     <Layout.Vertical>
       {folderPath?.[0] && (
-        <Text color={Color.BLACK} lineClamp={1} margin={{ bottom: 'small' }}>
+        <Text color={Color.BLACK} lineClamp={1} margin={{ ...(folderPath?.[1]?.length > 0 && { bottom: 'small' }) }}>
           {folderPath[0]}
         </Text>
       )}
       {folderPath?.[1] && (
-        <Text color={Color.BLACK} lineClamp={1} margin={{ bottom: 'small' }}>
+        <Text color={Color.BLACK} lineClamp={1} margin={{ ...(popoverDisplayCount > 0 && { bottom: 'small' }) }}>
           {folderPath[1]}
         </Text>
       )}

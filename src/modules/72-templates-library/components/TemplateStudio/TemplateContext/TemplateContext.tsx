@@ -231,7 +231,9 @@ const dispatchTemplateSuccess = async (args: DispatchTemplateSuccessArgs): Promi
         error: '',
         template: data.template,
         originalTemplate: cloneDeep(template),
-        isBETemplateUpdated: compareTemplates(template, data.originalTemplate),
+        isBETemplateUpdated: data.cacheResponseMetadata?.isSyncEnabled
+          ? false
+          : compareTemplates(template, data.originalTemplate),
         isUpdated: compareTemplates(template, data.template),
         versions: versions,
         lastPublishedVersion,
@@ -404,7 +406,7 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
         dispatchTemplateSuccess({
           dispatch,
           data,
-          forceUpdate,
+          forceUpdate: forceUpdate || !!templateWithGitDetails.cacheResponseMetadata?.isSyncEnabled,
           id,
           stableVersion,
           lastPublishedVersion,

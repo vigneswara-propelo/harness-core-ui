@@ -33,7 +33,7 @@ import cx from 'classnames'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
 import EmptyContentImg from '@common/images/EmptySearchResults.svg'
-import { ModulePathParams, ProjectPathProps, WebhooksPathProps } from '@common/interfaces/RouteInterfaces'
+import { ProjectPathProps, WebhooksPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { UseStringsReturn, useStrings } from 'framework/strings'
 import { getReadableDateTime } from '@common/utils/dateUtils'
@@ -93,7 +93,7 @@ const getDetailsContent = ({ folderPaths }: { folderPaths?: string[] }): Content
   }
 ]
 export default function WebhookLandingPage(): JSX.Element {
-  const { webhookIdentifier, module, accountId } = useParams<WebhooksPathProps & ProjectPathProps & ModulePathParams>()
+  const { webhookIdentifier, accountId } = useParams<WebhooksPathProps & ProjectPathProps>()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const history = useHistory()
@@ -214,7 +214,14 @@ export default function WebhookLandingPage(): JSX.Element {
         background={Color.PRIMARY_1}
       >
         <Layout.Vertical spacing="medium">
-          <NGBreadcrumbs customPathParams={{ module }} />
+          <NGBreadcrumbs
+            links={[
+              {
+                url: routes.toWebhooks({ accountId }),
+                label: getString('common.webhooks')
+              }
+            ]}
+          />
           {(loadingWebhook || loadingUpdateWebhook || isFetching) && <Container height={loadingHeaderHeight} />}
           {webhookResponse && !loadingWebhook && !isFetching && !loadingUpdateWebhook && (
             <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
@@ -299,10 +306,7 @@ export default function WebhookLandingPage(): JSX.Element {
             {hasData && (
               <Layout.Vertical padding={{ left: 'large', right: 'large' }}>
                 <Text padding={{ bottom: 'small' }}>{getString('pipeline.webhookEvents.dateTime')}</Text>
-                <Layout.Horizontal padding={{ bottom: 'large' }}>
-                  <Text color={Color.BLACK}>{time}</Text>
-                  <Text color={Color.BLACK}>{date}</Text>
-                </Layout.Horizontal>
+                <Text color={Color.BLACK} padding={{ bottom: 'large' }}>{`${time} ${date}`}</Text>
                 <Text padding={{ bottom: 'small' }} color={Color.BLACK}>
                   {getString('pipeline.webhookEvents.eventId')}
                 </Text>

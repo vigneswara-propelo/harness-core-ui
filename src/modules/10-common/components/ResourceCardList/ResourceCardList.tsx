@@ -64,10 +64,9 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const { data: enableBidirectionalSyncSettings, error: enableBidirectionalSyncSettingsError } = useGetSettingValue({
     identifier: SettingType.ENABLE_BI_DIRECTIONAL_SYNC,
     queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier
+      accountIdentifier: accountId
     },
-    lazy: !PIE_GIT_BI_DIRECTIONAL_SYNC
+    lazy: !PIE_GIT_BI_DIRECTIONAL_SYNC || !!orgIdentifier
   })
 
   React.useEffect(() => {
