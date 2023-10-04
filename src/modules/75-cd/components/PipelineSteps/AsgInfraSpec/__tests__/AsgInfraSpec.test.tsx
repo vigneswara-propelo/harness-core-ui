@@ -20,15 +20,19 @@ import { TestStepWidget, factory } from '@pipeline/components/PipelineSteps/Step
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getYaml, invalidYaml, testConnectorRefChange } from './helper'
-import { awsRegions } from './mocks'
+import { awsRegions, autoScaling } from './mocks'
 import { AsgInfraSpec } from '../AsgInfraSpec'
 
 const fetchConnector = jest.fn().mockReturnValue({ data: awsConnectorListResponse.data?.content?.[1] })
+const fetchAutoScaling = jest.fn().mockReturnValue({ data: autoScaling })
 
 jest.mock('services/cd-ng', () => ({
   getConnectorListV2Promise: () => Promise.resolve(awsConnectorListResponse),
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: { data: awsConnectorListResponse.data?.content?.[1] }, refetch: fetchConnector, loading: false }
+  }),
+  useAutoScalingGroups: jest.fn().mockImplementation(() => {
+    return { data: autoScaling, refetch: fetchAutoScaling, loading: false }
   })
 }))
 

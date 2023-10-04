@@ -652,6 +652,7 @@ minimumHealthyPercentageMaxLimit: Minimum Healthy Percentage should be less than
 minimumHealthyPercentageMinLimit: Minimum Healthy Percentage should be positive percentage
 instanceWarmupError: Instance Warmup must be a positive number
 useAlreadyRunningInstance: Same as already running Instances
+fixedAsgInstances: Fixes Instances
 instanceRefresh: Instance Refresh Configuration
 minimumHealthyPercentageLabel: Minimum Healthy Percentage (Optional)
 minimumHealthyPercentagePlaceholder: Minimum Healthy Percentage
@@ -1333,3 +1334,7 @@ customSequence:
 samVersionLabel: SAM Version
 serverlessVersionLabel: Serverless Version
 encryptJsonOutput: Encrypt json output
+baseAsgLabel: Base Asg
+baseAsgPlaceholder: Select Base Asg
+asgPlaceholder: Enter ASG Name
+asgLoadBalancer: ASG Load Balancer

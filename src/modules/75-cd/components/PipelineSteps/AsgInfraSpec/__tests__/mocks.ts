@@ -31,3 +31,10 @@ export const awsRegions = {
 }
 
 export const awsClusters = { data: ['aws-cluster-1', 'aws-cluster-2', 'aws-cluster-3'] }
+
+export const autoScaling = {
+  status: 'SUCCESS',
+  data: ['AMI-BASE-ASG-TODOLIST', 'AMI-BASE-ASG-TODOLIST-NEW'],
+  metaData: null,
+  correlationId: 'b34272f2-36dd-463d-be96-123'
+}

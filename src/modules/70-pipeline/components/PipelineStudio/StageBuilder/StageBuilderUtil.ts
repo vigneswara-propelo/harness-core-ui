@@ -715,8 +715,10 @@ export const moveStage = ({
 
 export const getDeploymentSpecificYamlKeys = (
   deploymentType: ServiceDefinition['type']
-): 'startupCommand' | 'startupScript' => {
+): 'startupCommand' | 'startupScript' | 'userData' => {
   switch (deploymentType) {
+    case ServiceDeploymentType.Asg:
+      return 'userData'
     case ServiceDeploymentType.Elastigroup:
       return 'startupScript'
     default:

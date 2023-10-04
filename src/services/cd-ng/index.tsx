@@ -21215,6 +21215,8 @@ export type DeleteManyFreezesBodyRequestBody = string[]
 
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
+export type GetACRRegistriesForServiceWithYamlBodyRequestBody = string
+
 export type ListTagsForAMIArtifactBodyRequestBody = string
 
 export type UpdateHarnessSupportAccessNGBodyRequestBody = boolean

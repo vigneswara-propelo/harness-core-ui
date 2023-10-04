@@ -65,7 +65,8 @@ const emptyInitialValues: AsgBlueGreenDeployStepInitialValues = {
     prodListener: '',
     prodListenerRuleArn: '',
     stageListener: '',
-    stageListenerRuleArn: ''
+    stageListenerRuleArn: '',
+    loadBalancers: []
   }
 }
 const emptyInitialValuesRuntime: AsgBlueGreenDeployStepInitialValues = {
@@ -79,7 +80,8 @@ const emptyInitialValuesRuntime: AsgBlueGreenDeployStepInitialValues = {
     prodListener: RUNTIME_INPUT_VALUE,
     prodListenerRuleArn: RUNTIME_INPUT_VALUE,
     stageListener: RUNTIME_INPUT_VALUE,
-    stageListenerRuleArn: RUNTIME_INPUT_VALUE
+    stageListenerRuleArn: RUNTIME_INPUT_VALUE,
+    loadBalancers: []
   }
 }
 const existingInitialValues: AsgBlueGreenDeployStepInitialValues = {
@@ -93,7 +95,8 @@ const existingInitialValues: AsgBlueGreenDeployStepInitialValues = {
     prodListener: 'abc-ghi-def',
     prodListenerRuleArn: 'Listener_Rule_2',
     stageListener: 'abc-def-ghi',
-    stageListenerRuleArn: 'Listener_Rule_3'
+    stageListenerRuleArn: 'Listener_Rule_3',
+    loadBalancers: []
   }
 }
 const customStepProps: AsgBlueGreenDeployCustomStepProps = {
@@ -266,7 +269,8 @@ describe('GenericExecutionStepEdit tests', () => {
           prodListener: RUNTIME_INPUT_VALUE,
           prodListenerRuleArn: RUNTIME_INPUT_VALUE,
           stageListener: RUNTIME_INPUT_VALUE,
-          stageListenerRuleArn: RUNTIME_INPUT_VALUE
+          stageListenerRuleArn: RUNTIME_INPUT_VALUE,
+          loadBalancers: []
         }
       })
     )
@@ -336,7 +340,8 @@ describe('GenericExecutionStepEdit tests', () => {
           prodListener: '<+input>.regex(<+input>.includes(/test/))',
           prodListenerRuleArn: '<+input>.regex(<+input>.includes(/test/))',
           stageListener: '<+input>.regex(<+input>.includes(/test/))',
-          stageListenerRuleArn: '<+input>.regex(<+input>.includes(/test/))'
+          stageListenerRuleArn: '<+input>.regex(<+input>.includes(/test/))',
+          loadBalancers: []
         },
         type: StepType.AsgBlueGreenDeploy
       })

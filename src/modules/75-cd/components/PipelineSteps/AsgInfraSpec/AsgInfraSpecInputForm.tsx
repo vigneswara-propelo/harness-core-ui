@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import { connect, FormikProps } from 'formik'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import {
   Layout,
@@ -16,14 +16,16 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   AllowedTypes,
-  SelectOption
+  SelectOption,
+  Text
 } from '@harness/uicore'
 
-import type { AsgInfrastructure } from 'services/cd-ng'
+import { AsgInfrastructure, useAutoScalingGroups } from 'services/cd-ng'
 import { useListAwsRegions } from 'services/portal'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { connectorTypes } from '@pipeline/utils/constants'
@@ -43,17 +45,49 @@ export interface AsgInfraSpecInputFormProps {
   customStepProps: AsgInfraSpecCustomStepProps
 }
 
-const AsgInfraSpecInputForm = ({
-  template,
-  readonly = false,
-  path,
-  allowableTypes,
-  customStepProps
-}: AsgInfraSpecInputFormProps) => {
+const AsgInfraSpecInputForm = (props: AsgInfraSpecInputFormProps) => {
+  const { template, readonly = false, path, allowableTypes, customStepProps, formik, allValues } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
+  const [asgBaseNames, setAsgBaseNames] = React.useState<SelectOption[]>([])
+  const { CDS_BASIC_ASG } = useFeatureFlags()
+
+  const connectorFieldName = isEmpty(path) ? 'connectorRef' : `${path}.connectorRef`
+  const regionFieldName = isEmpty(path) ? 'region' : `${path}.region`
+  const provisionerName = isEmpty(path) ? 'provisioner' : `${path}.provisioner`
+  const baseAsgName = isEmpty(path) ? 'baseAsgName' : `${path}.baseAsgName`
+
+  const {
+    data: awsAutoScalingData,
+    refetch,
+    loading,
+    error
+  } = useAutoScalingGroups({
+    queryParams: {
+      accountIdentifier: accountId,
+      region: defaultTo(get(formik, regionFieldName), ''),
+      awsConnectorRef: defaultTo(get(formik, connectorFieldName), ''),
+      projectIdentifier,
+      orgIdentifier,
+      envId: defaultTo(allValues?.environmentRef, ''),
+      infraDefinitionId: defaultTo(allValues?.infrastructureRef, '')
+    }
+  })
+
+  React.useEffect(() => {
+    setAsgBaseNames(
+      defaultTo(awsAutoScalingData?.data, []).map((asgBaseOption: string) => ({
+        value: asgBaseOption,
+        label: asgBaseOption
+      }))
+    )
+  }, [awsAutoScalingData])
+
+  React.useEffect(() => {
+    setAsgBaseNames([])
+  }, [error])
 
   const { data: awsRegionsData } = useListAwsRegions({
     queryParams: {
@@ -67,9 +101,20 @@ const AsgInfraSpecInputForm = ({
     }))
   }, [awsRegionsData?.resource])
 
-  const connectorFieldName = isEmpty(path) ? 'connectorRef' : `${path}.connectorRef`
-  const regionFieldName = isEmpty(path) ? 'region' : `${path}.region`
-  const provisionerName = isEmpty(path) ? 'provisioner' : `${path}.provisioner`
+  const getItems = (isFetching: boolean, items: SelectOption[]): SelectOption[] => {
+    if (isFetching) {
+      const labelStr = getString('common.loadingFieldOptions', { fieldName: 'Asg Base Names' })
+      return [{ label: labelStr, value: labelStr }]
+    }
+    return defaultTo(items, [])
+  }
+
+  const handleChangeConnector = (): void => {
+    if (CDS_BASIC_ASG) {
+      formik?.setFieldValue(baseAsgName, '')
+      setAsgBaseNames([])
+    }
+  }
 
   return (
     <Layout.Vertical spacing="small">
@@ -91,6 +136,7 @@ const AsgInfraSpecInputForm = ({
             label={getString('connector')}
             enableConfigureOptions={false}
             placeholder={getString('common.entityPlaceholderText')}
+            onChange={handleChangeConnector}
             disabled={readonly}
             multiTypeProps={{ allowableTypes, expressions }}
             type={connectorTypes.Aws}
@@ -109,10 +155,56 @@ const AsgInfraSpecInputForm = ({
               selectProps: {
                 items: regions,
                 popoverClassName: cx(stepCss.formGroup, stepCss.md)
+              },
+              onChange: () => {
+                if (CDS_BASIC_ASG) {
+                  formik?.setFieldValue(baseAsgName, '')
+                  setAsgBaseNames([])
+                }
               }
             }}
             label={getString('regionLabel')}
             placeholder={getString('pipeline.regionPlaceholder')}
+            disabled={readonly}
+          />
+        </div>
+      )}
+      {getMultiTypeFromValue(template?.baseAsgName) === MultiTypeInputType.RUNTIME && CDS_BASIC_ASG && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormInput.MultiTypeInput
+            name={baseAsgName}
+            selectItems={getItems(loading, asgBaseNames)}
+            useValue
+            multiTypeInputProps={{
+              selectProps: {
+                items: asgBaseNames,
+                allowCreatingNewItems: true,
+                loadingItems: loading,
+                noResults: (
+                  <Text padding={'small'}>
+                    {loading
+                      ? getString('common.loadingFieldOptions', { fieldName: 'Base Asg Names' })
+                      : get(error, 'data.message', null) || getString('common.filters.noResultsFound')}
+                  </Text>
+                )
+              },
+
+              onClick: () => {
+                refetch({
+                  queryParams: {
+                    accountIdentifier: accountId,
+                    region: defaultTo(get(formik?.values, regionFieldName), ''),
+                    awsConnectorRef: defaultTo(get(formik?.values, connectorFieldName), ''),
+                    projectIdentifier,
+                    orgIdentifier,
+                    envId: defaultTo(allValues?.environmentRef, ''),
+                    infraDefinitionId: defaultTo(allValues?.infrastructureRef, '')
+                  }
+                })
+              }
+            }}
+            label={getString('cd.baseAsgLabel')}
+            placeholder={getString('cd.baseAsgPlaceholder')}
             disabled={readonly}
           />
         </div>

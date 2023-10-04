@@ -249,7 +249,16 @@ export const getInfrastructureDefaultValue = (
         provisioner
       }
     }
-    case InfraDeploymentType.Asg:
+    case InfraDeploymentType.Asg: {
+      const { connectorRef, region, provisioner, baseAsgName } = infrastructure?.spec || {}
+      return {
+        connectorRef,
+        region,
+        allowSimultaneousDeployments,
+        provisioner,
+        baseAsgName
+      }
+    }
     case InfraDeploymentType.AwsLambda: {
       const { connectorRef, region, provisioner } = infrastructure?.spec || {}
       return {

@@ -5330,6 +5330,10 @@ export interface StringsMap {
   'pipeline.startup.script.name': string
   'pipeline.startup.script.subtitle': string
   'pipeline.startup.scriptFilePath': string
+  'pipeline.startup.userData.fileDetails': string
+  'pipeline.startup.userData.fileSource': string
+  'pipeline.startup.userData.name': string
+  'pipeline.startup.userData.subtitle': string
   'pipeline.step.validation.namePatternIsNotValid': string
   'pipeline.stepCommonFields.appPath': string
   'pipeline.stepCommonFields.runAsUser': string
@@ -6163,6 +6167,8 @@ export interface StringsMap {
   'cd.asgBlueGreenRollbackStepDescription': string
   'cd.asgBlueGreenSwapServiceStepDescription': string
   'cd.asgCanaryDeleteStepDescription': string
+  'cd.asgLoadBalancer': string
+  'cd.asgPlaceholder': string
   'cd.asgRollingDeployStepDescription': string
   'cd.asgRollingRollbackStepDescription': string
   'cd.attributeFilters': string
@@ -6206,6 +6212,8 @@ export interface StringsMap {
   'cd.backendConfigFileStore': string
   'cd.backendConfigFileStoreTitle': string
   'cd.backendConfigurationFile': string
+  'cd.baseAsgLabel': string
+  'cd.baseAsgPlaceholder': string
   'cd.cdLaunchText': string
   'cd.cdSwitchToFirstGen.description1': string
   'cd.cdSwitchToFirstGen.description2': string
@@ -6358,6 +6366,7 @@ export interface StringsMap {
   'cd.fileParameters': string
   'cd.filePathPlaceholder': string
   'cd.filePathRequired': string
+  'cd.fixedAsgInstances': string
   'cd.gCloud': string
   'cd.gcloudClusterCmd': string
   'cd.gcloudClusterCreate': string

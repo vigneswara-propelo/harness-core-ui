@@ -8,10 +8,18 @@
 import React, { useState } from 'react'
 import cx from 'classnames'
 import produce from 'immer'
-import { defaultTo, get, isEmpty, set } from 'lodash-es'
-import { connect, FormikProps } from 'formik'
+import { defaultTo, get, isEmpty, set, isArray } from 'lodash-es'
+import { connect, FormikProps, FieldArray } from 'formik'
 import { useParams } from 'react-router-dom'
-import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypes, SelectOption } from '@harness/uicore'
+import {
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  AllowedTypes,
+  SelectOption,
+  Button,
+  Layout,
+  ButtonVariation
+} from '@harness/uicore'
 
 import {
   DeploymentStageConfig,
@@ -28,7 +36,12 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { FormMultiTypeCheckboxField } from '@common/components'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import type { AsgBlueGreenDeployStepInitialValues, AsgBlueGreenDeployCustomStepProps } from './AsgBlueGreenDeployStep'
+import AsgBGStageSetupLoadBalancer from './AsgBGLoadBalancers/AsgBlueGreenDeployLoadBalancers'
+import { AsgLoadBalancer } from './AsgBlueGreenDeployStepEdit'
+
 import { shouldFetchFieldData } from '../PipelineStepsUtil'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './AsgBlueGreenDeployStep.module.scss'
@@ -55,7 +68,7 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-
+  const { CDS_BASIC_ASG, CDS_ASG_V2 } = useFeatureFlags()
   const [prodListenerRules, setProdListenerRules] = useState<SelectOption[]>([])
   const [prodListenerRulesLoading, setProdListenerRulesLoading] = useState<boolean>(false)
   const [stageListenerRules, setStageListenerRules] = useState<SelectOption[]>([])
@@ -108,7 +121,7 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
   const initialRegion = !isEmpty(region)
     ? region
     : selectedStage?.stage?.spec?.infrastructure?.infrastructureDefinition?.spec.region
-  const initialElasticLoadBalancer = !isEmpty(initialValues.spec?.loadBalancer)
+  const initialLoadBalancer = !isEmpty(initialValues.spec?.loadBalancer)
     ? initialValues.spec?.loadBalancer
     : allValues?.spec?.loadBalancer
   const initialProdListener = !isEmpty(initialValues.spec?.prodListener)
@@ -122,11 +135,11 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
     shouldFetchFieldData([initialAwsConnectorRef, initialRegion]) ||
     shouldFetchFieldData([environmentRef, infrastructureRef])
   const shouldFetchListeners =
-    shouldFetchFieldData([initialAwsConnectorRef, initialRegion, initialElasticLoadBalancer]) ||
+    shouldFetchFieldData([initialAwsConnectorRef, initialRegion, initialLoadBalancer]) ||
     shouldFetchFieldData([
       defaultTo(environmentRef, ''),
       defaultTo(infrastructureRef, ''),
-      defaultTo(initialElasticLoadBalancer, '')
+      defaultTo(initialLoadBalancer, '')
     ])
 
   const {
@@ -153,6 +166,23 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
     }))
   }, [loadBalancers?.data])
 
+  React.useEffect(() => {
+    if (
+      CDS_ASG_V2 &&
+      getMultiTypeFromValue(inputSetData.allValues?.spec?.loadBalancers[0]?.loadBalancer) === MultiTypeInputType.RUNTIME
+    ) {
+      formik?.setFieldValue(`${prefix}spec.loadBalancers`, [
+        {
+          loadBalancer: '',
+          prodListener: '',
+          prodListenerRuleArn: '',
+          stageListener: '',
+          stageListenerRuleArn: ''
+        }
+      ])
+    }
+  }, [inputSetData?.allValues])
+
   const {
     data: listeners,
     loading: loadingListeners,
@@ -164,7 +194,7 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
       projectIdentifier,
       awsConnectorRef: initialAwsConnectorRef,
       region: initialRegion,
-      elasticLoadBalancer: defaultTo(initialElasticLoadBalancer, ''),
+      elasticLoadBalancer: defaultTo(initialLoadBalancer, ''),
       envId: environmentRef,
       infraDefinitionId: infrastructureRef
     },
@@ -181,22 +211,22 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
 
   React.useEffect(() => {
     if (
-      initialElasticLoadBalancer &&
+      initialLoadBalancer &&
       initialProdListener &&
-      shouldFetchFieldData([initialElasticLoadBalancer, initialProdListener])
+      shouldFetchFieldData([initialLoadBalancer, initialProdListener])
     ) {
-      fetchProdListenerRules(initialElasticLoadBalancer, initialProdListener)
+      fetchProdListenerRules(initialLoadBalancer, initialProdListener)
     }
-  }, [initialElasticLoadBalancer, initialProdListener])
+  }, [initialLoadBalancer, initialProdListener])
   React.useEffect(() => {
     if (
-      initialElasticLoadBalancer &&
+      initialLoadBalancer &&
       initialStageListener &&
-      shouldFetchFieldData([initialElasticLoadBalancer, initialStageListener])
+      shouldFetchFieldData([initialLoadBalancer, initialStageListener])
     ) {
-      fetchStageListenerRules(initialElasticLoadBalancer, initialStageListener)
+      fetchStageListenerRules(initialLoadBalancer, initialStageListener)
     }
-  }, [initialElasticLoadBalancer, initialStageListener])
+  }, [initialLoadBalancer, initialStageListener])
 
   const fetchLoadBalancers = (e: React.FocusEvent<HTMLInputElement>) => {
     if (e?.target?.type !== 'text' || (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)) {
@@ -336,177 +366,253 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
           />
         </div>
       )}
-      {getMultiTypeFromValue(template?.spec?.useAlreadyRunningInstances) === MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue(template?.spec?.asgName) === MultiTypeInputType.RUNTIME && !!CDS_BASIC_ASG && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormMultiTypeCheckboxField
-            multiTypeTextbox={{
+          <TextFieldInputSetView
+            name={`${prefix}spec.asgName`}
+            label={getString('cd.serviceDashboard.asgName')}
+            placeholder={getString('cd.serviceDashboard.asgName')}
+            disabled={readonly}
+            multiTextInputProps={{
               expressions,
               allowableTypes
             }}
-            name={`${prefix}spec.useAlreadyRunningInstances`}
-            label={getString('cd.useAlreadyRunningInstance')}
-            disabled={readonly}
-            setToFalseWhenEmpty={true}
+            fieldPath={`spec.asgName`}
+            template={template}
           />
         </div>
       )}
-      {getMultiTypeFromValue(inputSetData.template?.spec?.loadBalancer) === MultiTypeInputType.RUNTIME && (
-        <SelectInputSetView
-          className={cx(stepCss.formGroup, stepCss.md)}
-          name={`${prefix}spec.loadBalancer`}
-          selectItems={loadBalancerOptions}
-          useValue
-          multiTypeInputProps={{
-            selectProps: {
-              items: loadBalancerOptions,
-              popoverClassName: css.dropdownMenu,
-              loadingItems: loadingLoadBalancers
-            },
-            allowableTypes,
-            expressions,
-            onChange: selectedValue => {
-              const selectedValueString =
-                typeof selectedValue === 'string' ? selectedValue : ((selectedValue as SelectOption)?.value as string)
-              onLoadBalancerChange(selectedValueString)
-            },
-            onFocus: fetchLoadBalancers
-          }}
-          label={getString('common.loadBalancer')}
-          placeholder={loadingLoadBalancers ? getString('loading') : getString('select')}
-          disabled={defaultTo(loadingLoadBalancers, readonly)}
-          fieldPath={`spec.loadBalancer`}
-          template={template}
-        />
-      )}
-      {getMultiTypeFromValue(inputSetData.template?.spec?.prodListener) === MultiTypeInputType.RUNTIME && (
-        <SelectInputSetView
-          className={cx(stepCss.formGroup, stepCss.md)}
-          name={`${prefix}spec.prodListener`}
-          selectItems={listenerOptions}
-          useValue
-          multiTypeInputProps={{
-            selectProps: {
-              items: listenerOptions,
-              popoverClassName: css.dropdownMenu,
-              loadingItems: loadingListeners
-            },
-            allowableTypes,
-            expressions,
-            onChange: selectedValue => {
-              const selectedValueString =
-                typeof selectedValue === 'string' ? selectedValue : ((selectedValue as SelectOption)?.value as string)
-              const updatedValues = produce(formik?.values, draft => {
-                if (draft) {
-                  set(draft, `${prefix}spec.prodListener`, selectedValueString)
-                  if (
-                    getMultiTypeFromValue(get(draft, `${prefix}spec.prodListenerRuleArn}`)) === MultiTypeInputType.FIXED
-                  ) {
-                    set(draft, `${prefix}spec.prodListenerRuleArn`, '')
+      {getMultiTypeFromValue(template?.spec?.useAlreadyRunningInstances) === MultiTypeInputType.RUNTIME &&
+        !CDS_BASIC_ASG && (
+          <div className={cx(stepCss.formGroup, stepCss.md)}>
+            <FormMultiTypeCheckboxField
+              multiTypeTextbox={{
+                expressions,
+                allowableTypes
+              }}
+              name={`${prefix}spec.useAlreadyRunningInstances`}
+              label={getString('cd.useAlreadyRunningInstance')}
+              disabled={readonly}
+              setToFalseWhenEmpty={true}
+            />
+          </div>
+        )}
+      {!CDS_ASG_V2 ? (
+        <>
+          {getMultiTypeFromValue(inputSetData.template?.spec?.loadBalancer) === MultiTypeInputType.RUNTIME && (
+            <SelectInputSetView
+              className={cx(stepCss.formGroup, stepCss.md)}
+              name={`${prefix}spec.loadBalancer`}
+              selectItems={loadBalancerOptions}
+              useValue
+              multiTypeInputProps={{
+                selectProps: {
+                  items: loadBalancerOptions,
+                  popoverClassName: css.dropdownMenu,
+                  loadingItems: loadingLoadBalancers
+                },
+                allowableTypes,
+                expressions,
+                onChange: selectedValue => {
+                  const selectedValueString =
+                    typeof selectedValue === 'string'
+                      ? selectedValue
+                      : ((selectedValue as SelectOption)?.value as string)
+                  onLoadBalancerChange(selectedValueString)
+                },
+                onFocus: fetchLoadBalancers
+              }}
+              label={getString('common.loadBalancer')}
+              placeholder={loadingLoadBalancers ? getString('loading') : getString('select')}
+              disabled={defaultTo(loadingLoadBalancers, readonly)}
+              fieldPath={`spec.loadBalancer`}
+              template={template}
+            />
+          )}
+          {getMultiTypeFromValue(inputSetData.template?.spec?.prodListener) === MultiTypeInputType.RUNTIME && (
+            <SelectInputSetView
+              className={cx(stepCss.formGroup, stepCss.md)}
+              name={`${prefix}spec.prodListener`}
+              selectItems={listenerOptions}
+              useValue
+              multiTypeInputProps={{
+                selectProps: {
+                  items: listenerOptions,
+                  popoverClassName: css.dropdownMenu,
+                  loadingItems: loadingListeners
+                },
+                allowableTypes,
+                expressions,
+                onChange: selectedValue => {
+                  const selectedValueString =
+                    typeof selectedValue === 'string'
+                      ? selectedValue
+                      : ((selectedValue as SelectOption)?.value as string)
+                  const updatedValues = produce(formik?.values, draft => {
+                    if (draft) {
+                      set(draft, `${prefix}spec.prodListener`, selectedValueString)
+                      if (
+                        getMultiTypeFromValue(get(draft, `${prefix}spec.prodListenerRuleArn}`)) ===
+                        MultiTypeInputType.FIXED
+                      ) {
+                        set(draft, `${prefix}spec.prodListenerRuleArn`, '')
+                      }
+                    }
+                  })
+                  if (updatedValues) {
+                    formik?.setValues(updatedValues)
                   }
+                },
+                onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                  fetchListeners(e, get(formik?.values, `${prefix}spec.loadBalancer`))
                 }
-              })
-              if (updatedValues) {
-                formik?.setValues(updatedValues)
-              }
-            },
-            onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-              fetchListeners(e, get(formik?.values, `${prefix}spec.loadBalancer`))
-            }
-          }}
-          label={getString('cd.steps.ecsBGCreateServiceStep.labels.prodListener')}
-          placeholder={loadingListeners ? getString('loading') : getString('select')}
-          disabled={defaultTo(loadingListeners, readonly)}
-          fieldPath={`spec.prodListener`}
-          template={template}
-        />
-      )}
-      {getMultiTypeFromValue(inputSetData.template?.spec?.prodListenerRuleArn) === MultiTypeInputType.RUNTIME && (
-        <SelectInputSetView
-          className={cx(stepCss.formGroup, stepCss.md)}
-          name={`${prefix}spec.prodListenerRuleArn`}
-          selectItems={prodListenerRules}
-          useValue
-          multiTypeInputProps={{
-            selectProps: {
-              items: prodListenerRules,
-              popoverClassName: css.dropdownMenu,
-              loadingItems: prodListenerRulesLoading
-            },
-            allowableTypes,
-            expressions
-          }}
-          label={getString('cd.steps.ecsBGCreateServiceStep.labels.prodListenerRuleARN')}
-          placeholder={prodListenerRulesLoading ? getString('loading') : getString('select')}
-          disabled={defaultTo(prodListenerRulesLoading, readonly)}
-          fieldPath={`spec.prodListenerRuleArn`}
-          template={template}
-        />
-      )}
-      {getMultiTypeFromValue(inputSetData.template?.spec?.stageListener) === MultiTypeInputType.RUNTIME && (
-        <SelectInputSetView
-          className={cx(stepCss.formGroup, stepCss.md)}
-          name={`${prefix}spec.stageListener`}
-          selectItems={listenerOptions}
-          useValue
-          multiTypeInputProps={{
-            selectProps: {
-              items: listenerOptions,
-              popoverClassName: css.dropdownMenu,
-              loadingItems: loadingListeners
-            },
-            allowableTypes,
-            expressions,
-            onChange: selectedValue => {
-              const selectedValueString =
-                typeof selectedValue === 'string' ? selectedValue : ((selectedValue as SelectOption)?.value as string)
-              const updatedValues = produce(formik?.values, draft => {
-                if (draft) {
-                  set(draft, `${prefix}spec.stageListener`, selectedValueString)
-                  if (
-                    getMultiTypeFromValue(get(draft, `${prefix}spec.stageListenerRuleArn}`)) ===
-                    MultiTypeInputType.FIXED
-                  ) {
-                    set(draft, `${prefix}spec.stageListenerRuleArn`, '')
+              }}
+              label={getString('cd.steps.ecsBGCreateServiceStep.labels.prodListener')}
+              placeholder={loadingListeners ? getString('loading') : getString('select')}
+              disabled={defaultTo(loadingListeners, readonly)}
+              fieldPath={`spec.prodListener`}
+              template={template}
+            />
+          )}
+          {getMultiTypeFromValue(inputSetData.template?.spec?.prodListenerRuleArn) === MultiTypeInputType.RUNTIME && (
+            <SelectInputSetView
+              className={cx(stepCss.formGroup, stepCss.md)}
+              name={`${prefix}spec.prodListenerRuleArn`}
+              selectItems={prodListenerRules}
+              useValue
+              multiTypeInputProps={{
+                selectProps: {
+                  items: prodListenerRules,
+                  popoverClassName: css.dropdownMenu,
+                  loadingItems: prodListenerRulesLoading
+                },
+                allowableTypes,
+                expressions
+              }}
+              label={getString('cd.steps.ecsBGCreateServiceStep.labels.prodListenerRuleARN')}
+              placeholder={prodListenerRulesLoading ? getString('loading') : getString('select')}
+              disabled={defaultTo(prodListenerRulesLoading, readonly)}
+              fieldPath={`spec.prodListenerRuleArn`}
+              template={template}
+            />
+          )}
+          {getMultiTypeFromValue(inputSetData.template?.spec?.stageListener) === MultiTypeInputType.RUNTIME && (
+            <SelectInputSetView
+              className={cx(stepCss.formGroup, stepCss.md)}
+              name={`${prefix}spec.stageListener`}
+              selectItems={listenerOptions}
+              useValue
+              multiTypeInputProps={{
+                selectProps: {
+                  items: listenerOptions,
+                  popoverClassName: css.dropdownMenu,
+                  loadingItems: loadingListeners
+                },
+                allowableTypes,
+                expressions,
+                onChange: selectedValue => {
+                  const selectedValueString =
+                    typeof selectedValue === 'string'
+                      ? selectedValue
+                      : ((selectedValue as SelectOption)?.value as string)
+                  const updatedValues = produce(formik?.values, draft => {
+                    if (draft) {
+                      set(draft, `${prefix}spec.stageListener`, selectedValueString)
+                      if (
+                        getMultiTypeFromValue(get(draft, `${prefix}spec.stageListenerRuleArn}`)) ===
+                        MultiTypeInputType.FIXED
+                      ) {
+                        set(draft, `${prefix}spec.stageListenerRuleArn`, '')
+                      }
+                    }
+                  })
+                  if (updatedValues) {
+                    formik?.setValues(updatedValues)
                   }
+                },
+                onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                  fetchListeners(e, get(formik?.values, `${prefix}spec.loadBalancer`))
                 }
-              })
-              if (updatedValues) {
-                formik?.setValues(updatedValues)
-              }
-            },
-            onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-              fetchListeners(e, get(formik?.values, `${prefix}spec.loadBalancer`))
-            }
-          }}
-          label={getString('cd.steps.ecsBGCreateServiceStep.labels.stageListener')}
-          placeholder={loadingListeners ? getString('loading') : getString('select')}
-          disabled={defaultTo(loadingListeners, readonly)}
-          fieldPath={`spec.stageListener`}
-          template={template}
-        />
-      )}
-      {getMultiTypeFromValue(inputSetData.template?.spec?.stageListenerRuleArn) === MultiTypeInputType.RUNTIME && (
-        <SelectInputSetView
-          className={cx(stepCss.formGroup, stepCss.md)}
-          name={`${prefix}spec.stageListenerRuleArn`}
-          selectItems={stageListenerRules}
-          useValue
-          multiTypeInputProps={{
-            selectProps: {
-              items: stageListenerRules,
-              popoverClassName: css.dropdownMenu,
-              loadingItems: stageListenerRulesLoading
-            },
-            allowableTypes,
-            expressions
-          }}
-          label={getString('cd.steps.ecsBGCreateServiceStep.labels.stageListenerRuleARN')}
-          placeholder={stageListenerRulesLoading ? getString('loading') : getString('select')}
-          disabled={defaultTo(stageListenerRulesLoading, readonly)}
-          fieldPath={`spec.stageListenerRuleArn`}
-          template={template}
-        />
-      )}
+              }}
+              label={getString('cd.steps.ecsBGCreateServiceStep.labels.stageListener')}
+              placeholder={loadingListeners ? getString('loading') : getString('select')}
+              disabled={defaultTo(loadingListeners, readonly)}
+              fieldPath={`spec.stageListener`}
+              template={template}
+            />
+          )}
+          {getMultiTypeFromValue(inputSetData.template?.spec?.stageListenerRuleArn) === MultiTypeInputType.RUNTIME && (
+            <SelectInputSetView
+              className={cx(stepCss.formGroup, stepCss.md)}
+              name={`${prefix}spec.stageListenerRuleArn`}
+              selectItems={stageListenerRules}
+              useValue
+              multiTypeInputProps={{
+                selectProps: {
+                  items: stageListenerRules,
+                  popoverClassName: css.dropdownMenu,
+                  loadingItems: stageListenerRulesLoading
+                },
+                allowableTypes,
+                expressions
+              }}
+              label={getString('cd.steps.ecsBGCreateServiceStep.labels.stageListenerRuleARN')}
+              placeholder={stageListenerRulesLoading ? getString('loading') : getString('select')}
+              disabled={defaultTo(stageListenerRulesLoading, readonly)}
+              fieldPath={`spec.stageListenerRuleArn`}
+              template={template}
+            />
+          )}
+        </>
+      ) : null}
+      {CDS_ASG_V2 &&
+        getMultiTypeFromValue(inputSetData.allValues?.spec?.loadBalancers?.[0]?.loadBalancer) ===
+          MultiTypeInputType.RUNTIME && (
+          <FieldArray
+            name={`${prefix}spec.loadBalancers`}
+            render={({ push, remove }) => {
+              return (
+                <>
+                  <Layout.Horizontal flex={{ alignItems: 'center' }} margin={{ bottom: 'medium' }}>
+                    <div>{getString('cd.ElastigroupBGStageSetup.awsLoadBalancerConfig')}</div>
+                    <Button
+                      variation={ButtonVariation.LINK}
+                      data-testid="add-aws-loadbalance"
+                      onClick={() =>
+                        push({
+                          loadBalancer: '',
+                          prodListener: '',
+                          prodListenerRuleArn: '',
+                          stageListener: '',
+                          stageListenerRuleArn: ''
+                        })
+                      }
+                    >
+                      {getString('plusAdd')}
+                    </Button>
+                  </Layout.Horizontal>
+                  {isArray(get(formik?.values, `${prefix}spec.loadBalancers`)) &&
+                    (get(formik?.values, `${prefix}spec.loadBalancers`) || [])?.map(
+                      (_item: AsgLoadBalancer, i: number) => {
+                        return (
+                          <AsgBGStageSetupLoadBalancer
+                            key={`${_item?.loadBalancer}${i}`}
+                            formik={formik as any}
+                            readonly={readonly}
+                            remove={remove}
+                            index={i}
+                            envId={defaultTo(environmentRef, '')}
+                            infraId={defaultTo(infrastructureRef, '')}
+                            path={prefix}
+                          />
+                        )
+                      }
+                    )}
+                </>
+              )
+            }}
+          />
+        )}
     </>
   )
 }

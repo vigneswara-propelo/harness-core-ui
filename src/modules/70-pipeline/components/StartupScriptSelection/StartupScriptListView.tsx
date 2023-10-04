@@ -16,6 +16,7 @@ import { get, isEmpty, set } from 'lodash-es'
 
 import produce from 'immer'
 import { useStrings } from 'framework/strings'
+import type { StringsMap } from 'stringTypes'
 
 import ConnectorDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
 import GitDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/GitDetailsStep'
@@ -71,6 +72,8 @@ const getDeploymentSpecificConnectorTypes = (
   switch (deploymentType) {
     case ServiceDeploymentType.Elastigroup:
       return ['Harness']
+    case ServiceDeploymentType.Asg:
+      return ['Harness', 'Git', 'Bitbucket', 'Github', 'GitLab']
     default:
       return AllowedTypes
   }
@@ -114,7 +117,7 @@ function StartupScriptListView({
       const path = isPropagating
         ? 'stage.spec.serviceConfig.stageOverrides'
         : 'stage.spec.serviceConfig.serviceDefinition.spec'
-      const { startupCommand: command, startupScript, ...rest } = get(stage, path)
+      const { startupCommand: command, startupScript, userData, ...rest } = get(stage, path)
       const newStage = produce(stage, draft => {
         set(draft, path, rest)
       }).stage
@@ -156,7 +159,6 @@ function StartupScriptListView({
     const path = isPropagating
       ? `stage.spec.serviceConfig.stageOverrides.${startupKey}`
       : `stage.spec.serviceConfig.serviceDefinition.spec.${startupKey}`
-
     if (stage) {
       updateStage?.(
         produce(stage, draft => {
@@ -169,7 +171,6 @@ function StartupScriptListView({
   /* istanbul ignore next */
   const handleSubmit = (script: StartupCommandConfiguration): void => {
     updateStageData(script)
-
     const startupKey = getDeploymentSpecificYamlKeys(deploymentType)
     trackEvent(StartupScriptActions.SaveStartupScriptOnPipelinePage, { [startupKey]: startupCommand?.store?.type })
 
@@ -189,21 +190,28 @@ function StartupScriptListView({
     setConnectorType(type || '')
   }
 
+  const getFileDetails = (type: string): keyof StringsMap => {
+    switch (type) {
+      case ServiceDeploymentType.Elastigroup:
+        return 'pipeline.startup.script.fileDetails'
+      case ServiceDeploymentType.Asg:
+        return 'pipeline.startup.userData.fileDetails'
+      default:
+        return 'pipeline.startup.command.fileDetails'
+    }
+  }
   const lastStepProps = useCallback((): StartupScriptLastStepProps => {
     return {
       key: getString('pipeline.fileDetails'),
       name: getString('pipeline.fileDetails'),
       expressions,
       allowableTypes,
-      stepName:
-        deploymentType === 'Elastigroup'
-          ? getString('pipeline.startup.script.fileDetails')
-          : getString('pipeline.startup.command.fileDetails'),
+      stepName: getString(getFileDetails(deploymentType)),
       initialValues: getLastStepInitialData(),
       handleSubmit: handleSubmit,
       isReadonly: isReadonly
     }
-  }, [connectorType])
+  }, [connectorType, stage, deploymentType])
 
   /* istanbul ignore next */
   const getBuildPayload = (type: ConnectorInfoDTO['type']) => {
@@ -220,6 +228,17 @@ function StartupScriptListView({
       return buildGitlabPayload
     }
     return () => ({})
+  }
+
+  const getCommandName = (type: string): keyof StringsMap => {
+    switch (type) {
+      case ServiceDeploymentType.Elastigroup:
+        return 'pipeline.startup.script.name'
+      case ServiceDeploymentType.Asg:
+        return 'pipeline.startup.userData.name'
+      default:
+        return 'pipeline.startup.command.name'
+    }
   }
 
   const getLastStepInitialData = (): StartupCommandConfiguration => {
@@ -453,10 +472,7 @@ function StartupScriptListView({
             onClick={addStartupScript}
             icon={'plus'}
             text={getString('common.addName', {
-              name:
-                deploymentType === ServiceDeploymentType.Elastigroup
-                  ? getString('pipeline.startup.script.name')
-                  : getString('pipeline.startup.command.name')
+              name: getString(getCommandName(deploymentType))
             })}
           />
         )}

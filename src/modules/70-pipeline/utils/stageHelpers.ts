@@ -1040,5 +1040,5 @@ export enum GoogleCloudFunctionsEnvType {
 }
 
 export const isDynamicProvisioningRestricted = (type: string): boolean => {
-  return [ServiceDeploymentType.Asg, ServiceDeploymentType.Elastigroup].includes(type as ServiceDeploymentType)
+  return [ServiceDeploymentType.Elastigroup].includes(type as ServiceDeploymentType)
 }

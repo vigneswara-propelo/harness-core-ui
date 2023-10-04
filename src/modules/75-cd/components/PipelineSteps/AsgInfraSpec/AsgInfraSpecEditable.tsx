@@ -19,21 +19,23 @@ import {
   SelectOption
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { debounce, defaultTo, noop } from 'lodash-es'
+import { debounce, defaultTo, noop, get } from 'lodash-es'
 import type { FormikProps } from 'formik'
 
-import type { AsgInfrastructure } from 'services/cd-ng'
+import { useAutoScalingGroups, AsgInfrastructure } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useListAwsRegions } from 'services/portal'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getIconByType } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { connectorTypes } from '@pipeline/utils/constants'
+import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { getAsgInfraValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import css from './AsgInfraSpec.module.scss'
@@ -53,10 +55,12 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
 }): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { CDS_BASIC_ASG } = useFeatureFlags()
   const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 300)).current
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
+  const [asgBaseNames, setAsgBaseNames] = React.useState<SelectOption[]>([])
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
 
   React.useEffect(() => {
@@ -70,13 +74,49 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
     }
   })
   const regions: SelectOption[] = React.useMemo(() => {
-    return defaultTo(awsRegionsData?.resource, []).map(region => ({
-      value: region.value,
-      label: region.name as string
+    return defaultTo(awsRegionsData?.resource, []).map(regionAws => ({
+      value: regionAws.value,
+      label: regionAws.name as string
     }))
   }, [awsRegionsData?.resource])
 
-  const validationSchema = getAsgInfraValidationSchema(getString)
+  const {
+    data: awsAutoScalingData,
+    refetch,
+    loading,
+    error
+  } = useAutoScalingGroups({
+    queryParams: {
+      accountIdentifier: accountId,
+      region: initialValues?.region,
+      awsConnectorRef: initialValues?.connectorRef,
+      projectIdentifier,
+      orgIdentifier
+    }
+  })
+
+  React.useEffect(() => {
+    setAsgBaseNames(
+      defaultTo(awsAutoScalingData?.data, []).map((asgBaseOption: string) => ({
+        value: asgBaseOption,
+        label: asgBaseOption
+      }))
+    )
+  }, [awsAutoScalingData])
+
+  React.useEffect(() => {
+    setAsgBaseNames([])
+  }, [error])
+
+  const validationSchema = getAsgInfraValidationSchema(getString, !!CDS_BASIC_ASG)
+
+  const getItems = (isFetching: boolean, items: SelectOption[]): SelectOption[] => {
+    if (isFetching) {
+      const labelStr = getString('common.loadingFieldOptions', { fieldName: 'Asg Base Names' })
+      return [{ label: labelStr, value: labelStr }]
+    }
+    return defaultTo(items, [])
+  }
 
   return (
     <Layout.Vertical spacing="medium">
@@ -88,7 +128,8 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
             connectorRef: undefined,
             region: value.region === '' ? undefined : value.region,
             allowSimultaneousDeployments: value.allowSimultaneousDeployments,
-            provisioner: value?.provisioner || undefined
+            provisioner: value?.provisioner || undefined,
+            baseAsgName: value?.baseAsgName || undefined
           }
           if (value.connectorRef) {
             data.connectorRef = getConnectorRefValue(value.connectorRef as ConnectorRefFormValueType)
@@ -103,6 +144,9 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
           formikRef.current = formik as FormikProps<unknown> | null
           return (
             <FormikForm>
+              <Layout.Horizontal className={css.formRow} spacing="medium">
+                <ProvisionerField name="provisioner" isReadonly />
+              </Layout.Horizontal>
               <Layout.Horizontal className={css.formRow} spacing="medium">
                 <FormMultiTypeConnectorField
                   name="connectorRef"
@@ -122,6 +166,12 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
                   style={{ marginBottom: 'var(--spacing-large)' }}
                   type={connectorTypes.Aws}
                   gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+                  onChange={() => {
+                    if (CDS_BASIC_ASG) {
+                      formik.setFieldValue('baseAsgName', '')
+                      setAsgBaseNames([])
+                    }
+                  }}
                 />
                 {getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME && !readonly && (
                   <ConfigureOptions
@@ -137,6 +187,10 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
                     showDefaultField={false}
                     onChange={value => {
                       formik.setFieldValue('connectorRef', value)
+                      if (CDS_BASIC_ASG) {
+                        formik.setFieldValue('baseAsgName', '')
+                        setAsgBaseNames([])
+                      }
                     }}
                     isReadonly={readonly}
                     className={css.marginTop}
@@ -155,6 +209,12 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
                       items: regions,
                       popoverClassName: css.regionPopover,
                       allowCreatingNewItems: true
+                    },
+                    onChange: () => {
+                      if (CDS_BASIC_ASG) {
+                        formik.setFieldValue('baseAsgName', '')
+                        setAsgBaseNames([])
+                      }
                     }
                   }}
                   label={getString('regionLabel')}
@@ -176,6 +236,60 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
                   />
                 )}
               </Layout.Horizontal>
+              {CDS_BASIC_ASG ? (
+                <Layout.Horizontal className={css.formRow} spacing="medium">
+                  <FormInput.MultiTypeInput
+                    className={css.inputWidth}
+                    name="baseAsgName"
+                    selectItems={getItems(loading, asgBaseNames)}
+                    useValue
+                    multiTypeInputProps={{
+                      selectProps: {
+                        items: asgBaseNames,
+                        popoverClassName: css.regionPopover,
+                        allowCreatingNewItems: true,
+                        loadingItems: loading,
+                        noResults: (
+                          <Text padding={'small'}>
+                            {loading
+                              ? getString('common.loadingFieldOptions', { fieldName: 'Base Asg Names' })
+                              : get(error, 'data.message', null) || getString('common.filters.noResultsFound')}
+                          </Text>
+                        )
+                      },
+
+                      onClick: () => {
+                        refetch({
+                          queryParams: {
+                            accountIdentifier: accountId,
+                            region: formik?.values?.region,
+                            awsConnectorRef: get(formik?.values, 'connectorRef.value'),
+                            projectIdentifier,
+                            orgIdentifier
+                          }
+                        })
+                      }
+                    }}
+                    label={getString('cd.baseAsgLabel')}
+                    placeholder={getString('cd.baseAsgPlaceholder')}
+                    disabled={readonly}
+                  />
+                  {getMultiTypeFromValue(formik.values.baseAsgName) === MultiTypeInputType.RUNTIME && (
+                    <ConfigureOptions
+                      value={formik.values?.baseAsgName as string}
+                      type="String"
+                      variableName="baseAsgName"
+                      showRequiredField={false}
+                      showDefaultField={false}
+                      onChange={value => {
+                        formik.setFieldValue('baseAsgName', value)
+                      }}
+                      isReadonly={readonly}
+                      className={css.marginTop}
+                    />
+                  )}
+                </Layout.Horizontal>
+              ) : null}
               <Layout.Horizontal
                 spacing="medium"
                 style={{ alignItems: 'center' }}

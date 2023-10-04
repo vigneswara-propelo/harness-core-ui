@@ -56,7 +56,7 @@ const AwsConnectorRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinit
 export class AsgInfraSpec extends PipelineStep<AsgInfrastructureStep> {
   lastFetched: number
   protected type = StepType.AsgInfraSpec
-  protected defaultValues: AsgInfrastructure = { connectorRef: '', region: '', provisioner: '' }
+  protected defaultValues: AsgInfrastructure = { connectorRef: '', region: '', provisioner: '', baseAsgName: '' }
   protected referenceId = 'AsgInfrastructure'
   protected stepIcon: IconName = 'aws-asg'
   protected stepName = 'Specify your AWS connector'

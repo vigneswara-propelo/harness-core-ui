@@ -1756,6 +1756,11 @@ startup:
     subtitle: 'Specify {{deploymentType}} {{$.pipeline.startup.command.name}} Store Type'
     fileDetails: '{{$.pipeline.startup.command.name}} File Details'
     fileSource: '{{$.pipeline.startup.command.name}} File Source'
+  userData:
+    name: User Data
+    subtitle: 'Specify {{deploymentType}} {{$.pipeline.startup.userData.name}} Store Type'
+    fileDetails: '{{$.pipeline.startup.userData.name}} File Details'
+    fileSource: '{{$.pipeline.startup.userData.name}} File Source'
   scriptFilePath: 'Script File Path'
   fileValidation: 'file is required'
   plainText: 'Plain Text'

@@ -10,7 +10,7 @@ import type { FormikErrors } from 'formik'
 import { isEmpty, set } from 'lodash-es'
 import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 
-import type { StepElementConfig } from 'services/cd-ng'
+import type { StepElementConfig, AsgFixedInstances, AsgCurrentRunningInstances } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import { StepViewType, StepProps, ValidateInputSetProps, InputSetData } from '@pipeline/components/AbstractSteps/Step'
@@ -23,14 +23,30 @@ import { AsgBlueGreenDeployStepEditRef } from './AsgBlueGreenDeployStepEdit'
 import { AsgBlueGreenDeployStepInputSetMode } from './AsgBlueGreenDeployStepInputSet'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
+export interface Instances {
+  type: 'Fixed' | 'CurrentRunning'
+  spec: AsgFixedInstances | AsgCurrentRunningInstances
+}
+
+export interface AsgAwsLoadBalancerConfigYaml {
+  loadBalancer: string
+  prodListener: string
+  prodListenerRuleArn: string
+  stageListener: string
+  stageListenerRuleArn: string
+}
+
 export interface AsgBlueGreenDeployStepInitialValues extends StepElementConfig {
   spec: {
-    useAlreadyRunningInstances: boolean
+    useAlreadyRunningInstances?: boolean
     loadBalancer: string
     prodListener: string
     prodListenerRuleArn: string
     stageListener: string
     stageListenerRuleArn: string
+    loadBalancers: AsgAwsLoadBalancerConfigYaml[]
+    asgName?: string
+    instances?: Instances
   }
 }
 export interface AsgBlueGreenDeployCustomStepProps {
@@ -53,12 +69,13 @@ export class AsgBlueGreenDeployStep extends PipelineStep<AsgBlueGreenDeployStepI
     type: StepType.AsgBlueGreenDeploy,
     timeout: '10m',
     spec: {
-      useAlreadyRunningInstances: false,
       loadBalancer: '',
       prodListener: '',
       prodListenerRuleArn: '',
       stageListener: '',
-      stageListenerRuleArn: ''
+      stageListenerRuleArn: '',
+      asgName: '',
+      loadBalancers: []
     }
   }
 

@@ -90,7 +90,8 @@ describe('Asg Canary Delete Step tests', () => {
           useAlreadyRunningInstances: false,
           minimumHealthyPercentage: 100,
           instanceWarmup: 100,
-          skipMatching: true
+          skipMatching: true,
+          asgName: ''
         }
       })
     )

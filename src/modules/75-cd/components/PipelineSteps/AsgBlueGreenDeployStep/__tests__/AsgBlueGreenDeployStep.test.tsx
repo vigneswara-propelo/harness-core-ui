@@ -117,7 +117,8 @@ describe('AsgBlueGreenDeploy tests', () => {
             prodListener: 'abc-def-ghi',
             prodListenerRuleArn: '',
             stageListener: 'abc-ghi-def',
-            stageListenerRuleArn: ''
+            stageListenerRuleArn: '',
+            loadBalancers: []
           },
           type: StepType.AsgBlueGreenDeploy
         }}
@@ -130,7 +131,8 @@ describe('AsgBlueGreenDeploy tests', () => {
             prodListener: RUNTIME_INPUT_VALUE,
             prodListenerRuleArn: RUNTIME_INPUT_VALUE,
             stageListener: RUNTIME_INPUT_VALUE,
-            stageListenerRuleArn: RUNTIME_INPUT_VALUE
+            stageListenerRuleArn: RUNTIME_INPUT_VALUE,
+            loadBalancers: []
           },
           type: StepType.AsgBlueGreenDeploy
         }}
@@ -230,7 +232,8 @@ describe('AsgBlueGreenDeploy tests', () => {
         prodListener: 'abc-def-ghi',
         prodListenerRuleArn: 'Listener_Rule_1',
         stageListener: 'abc-ghi-def',
-        stageListenerRuleArn: 'Listener_Rule_2'
+        stageListenerRuleArn: 'Listener_Rule_2',
+        loadBalancers: []
       },
       type: StepType.AsgBlueGreenDeploy
     })
@@ -249,7 +252,8 @@ describe('AsgBlueGreenDeploy tests', () => {
             prodListener: '',
             prodListenerRuleArn: '',
             stageListener: '',
-            stageListenerRuleArn: ''
+            stageListenerRuleArn: '',
+            loadBalancers: []
           },
           type: StepType.AsgBlueGreenDeploy
         }}
@@ -262,7 +266,8 @@ describe('AsgBlueGreenDeploy tests', () => {
             prodListener: RUNTIME_INPUT_VALUE,
             prodListenerRuleArn: RUNTIME_INPUT_VALUE,
             stageListener: RUNTIME_INPUT_VALUE,
-            stageListenerRuleArn: RUNTIME_INPUT_VALUE
+            stageListenerRuleArn: RUNTIME_INPUT_VALUE,
+            loadBalancers: []
           },
           type: StepType.AsgBlueGreenDeploy
         }}
@@ -315,7 +320,8 @@ describe('AsgBlueGreenDeploy tests', () => {
             prodListener: 'abc-ghi-def',
             prodListenerRuleArn: '',
             stageListener: 'abc-def-ghi',
-            stageListenerRuleArn: ''
+            stageListenerRuleArn: '',
+            loadBalancers: []
           },
           type: StepType.AsgBlueGreenDeploy
         }}
@@ -328,7 +334,8 @@ describe('AsgBlueGreenDeploy tests', () => {
             prodListener: RUNTIME_INPUT_VALUE,
             prodListenerRuleArn: RUNTIME_INPUT_VALUE,
             stageListener: RUNTIME_INPUT_VALUE,
-            stageListenerRuleArn: RUNTIME_INPUT_VALUE
+            stageListenerRuleArn: RUNTIME_INPUT_VALUE,
+            loadBalancers: []
           },
           type: StepType.AsgBlueGreenDeploy
         }}
@@ -439,7 +446,8 @@ describe('AsgBlueGreenDeploy tests', () => {
         prodListener: 'abc-def-ghi',
         prodListenerRuleArn: 'Listener_Rule_1',
         stageListener: 'abc-ghi-def',
-        stageListenerRuleArn: 'Listener_Rule_2'
+        stageListenerRuleArn: 'Listener_Rule_2',
+        loadBalancers: []
       },
       type: StepType.AsgBlueGreenDeploy
     })
@@ -458,7 +466,8 @@ describe('AsgBlueGreenDeploy tests', () => {
             prodListener: '',
             prodListenerRuleArn: '',
             stageListener: '',
-            stageListenerRuleArn: ''
+            stageListenerRuleArn: '',
+            loadBalancers: []
           },
           type: StepType.AsgBlueGreenDeploy
         }}
@@ -471,7 +480,8 @@ describe('AsgBlueGreenDeploy tests', () => {
             prodListener: RUNTIME_INPUT_VALUE,
             prodListenerRuleArn: RUNTIME_INPUT_VALUE,
             stageListener: RUNTIME_INPUT_VALUE,
-            stageListenerRuleArn: RUNTIME_INPUT_VALUE
+            stageListenerRuleArn: RUNTIME_INPUT_VALUE,
+            loadBalancers: []
           },
           type: StepType.AsgBlueGreenDeploy
         }}
@@ -545,7 +555,8 @@ describe('AsgBlueGreenDeploy tests', () => {
                         prodListener: 'abc-ghi-def',
                         prodListenerRuleArn: '',
                         stageListener: 'abc-def-ghi',
-                        stageListenerRuleArn: ''
+                        stageListenerRuleArn: '',
+                        loadBalancers: []
                       },
                       type: StepType.AsgBlueGreenDeploy
                     }
@@ -571,7 +582,8 @@ describe('AsgBlueGreenDeploy tests', () => {
             prodListener: RUNTIME_INPUT_VALUE,
             prodListenerRuleArn: RUNTIME_INPUT_VALUE,
             stageListener: RUNTIME_INPUT_VALUE,
-            stageListenerRuleArn: RUNTIME_INPUT_VALUE
+            stageListenerRuleArn: RUNTIME_INPUT_VALUE,
+            loadBalancers: []
           },
           type: StepType.AsgBlueGreenDeploy
         }}

@@ -718,7 +718,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                   connectorRef: value.connectorRef,
                   region: value.region,
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments,
-                  provisioner: value?.provisioner
+                  provisioner: value?.provisioner,
+                  baseAsgName: value?.baseAsgName || undefined
                 },
                 InfraDeploymentType.Asg
               )

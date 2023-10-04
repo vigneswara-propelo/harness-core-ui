@@ -27,6 +27,14 @@ const getDeploymentTypeStrings = (
           deploymentType: getString('pipeline.serviceDeploymentTypes.spotElastigroup')
         })
       }
+    case ServiceDeploymentType.Asg:
+      return {
+        title: getString('pipeline.startup.userData.name'),
+        stepName: getString('pipeline.startup.userData.fileSource'),
+        stepSubtitle: getString('pipeline.startup.userData.subtitle', {
+          deploymentType: getString('pipeline.serviceDeploymentTypes.asg')
+        })
+      }
     default:
       return {
         title: getString('pipeline.startup.command.name'),

@@ -22,7 +22,7 @@ import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
 import { defaultTo, get, isEmpty, set, toString } from 'lodash-es'
 import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
-import type { AsgRollingDeployStepInfo, StepElementConfig } from 'services/cd-ng'
+import type { AsgRollingDeployStepInfo, StepElementConfig, AsgFixedInstances } from 'services/cd-ng'
 
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
@@ -41,7 +41,11 @@ import type { StringsMap } from 'stringTypes'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { instanceWarmupSchema, minimumHealthyPercentageSchema } from './utils'
+import AsgSelectInstance from '../AsgBlueGreenDeployStep/AsgSelectInstance/AsgSelectInstance'
+import { InstancesType } from '../ElastigroupSetupStep/ElastigroupSetupTypes'
+import { Instances } from '../AsgBlueGreenDeployStep/AsgBlueGreenDeployStep'
 import css from './AsgRollingDeployStep.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
@@ -77,19 +81,67 @@ function AsgRollingDeployWidget(
   const { initialValues, onUpdate, isNewStep, readonly, allowableTypes, stepViewType, onChange } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { CDS_BASIC_ASG, CDS_ASG_V2 } = useFeatureFlags()
+
+  function commonValidation(this: Yup.TestContext, value: any, valueString: string): boolean | Yup.ValidationError {
+    if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED && typeof value !== 'number') {
+      return this.createError({
+        message: getString('cd.ElastigroupStep.valueCannotBe', {
+          value: valueString
+        })
+      })
+    }
+    if (value < 0) {
+      return this.createError({
+        message: getString('cd.ElastigroupStep.valueCannotBeLessThan', {
+          value: valueString,
+          value2: 0
+        })
+      })
+    }
+    return true
+  }
+
+  const getInititalValues = React.useCallback(() => {
+    if (CDS_ASG_V2) {
+      return {
+        ...initialValues,
+        spec: {
+          ...initialValues.spec,
+          instances:
+            !initialValues.spec?.instances && !!initialValues.spec?.useAlreadyRunningInstances
+              ? { type: InstancesType.CurrentRunning, spec: {} }
+              : !initialValues.spec?.instances && initialValues.spec?.useAlreadyRunningInstances === false
+              ? {
+                  type: InstancesType.Fixed,
+                  spec: {
+                    desired: 1,
+                    max: 1,
+                    min: 1
+                  }
+                }
+              : ({ ...initialValues.spec?.instances } as Instances)
+        }
+      }
+    }
+    return initialValues
+  }, [initialValues])
+
+  const formikRefValues = (): AsgRollingDeployData =>
+    (formikRef as React.MutableRefObject<FormikProps<unknown> | null>)?.current?.values as AsgRollingDeployData
   return (
     <>
       <Formik<AsgRollingDeployData>
         onSubmit={(values: AsgRollingDeployData) => {
           /* istanbul ignore next */
-          onUpdate?.(values)
+          onUpdate?.({ ...values })
         }}
         validate={(values: AsgRollingDeployData) => {
           /* istanbul ignore next */
           onChange?.(values)
         }}
         formName="AsgRollingDeploy"
-        initialValues={initialValues}
+        initialValues={getInititalValues()}
         validationSchema={Yup.object().shape({
           ...getNameAndIdentifierSchema(getString, stepViewType),
           timeout: getDurationValidationSchema({ minimum: '10s' }).required(
@@ -97,7 +149,87 @@ function AsgRollingDeployWidget(
           ),
           spec: Yup.object().shape({
             minimumHealthyPercentage: minimumHealthyPercentageSchema(getString),
-            instanceWarmup: instanceWarmupSchema(getString)
+            instanceWarmup: instanceWarmupSchema(getString),
+            instances: Yup.object().when(' ', {
+              is: () => !!CDS_ASG_V2,
+              then: Yup.object().shape({
+                type: Yup.string().trim().required(getString('common.validation.typeIsRequired')),
+                spec: Yup.object().when('type', {
+                  is: 'Fixed',
+                  then: Yup.object().shape({
+                    desired: Yup.mixed().test({
+                      test(value): boolean | Yup.ValidationError {
+                        const otherValues = formikRefValues()?.spec?.instances?.spec as AsgFixedInstances
+                        if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED) {
+                          if (value < otherValues?.min) {
+                            return this.createError({
+                              message: getString('cd.ElastigroupStep.valueCannotBeLessThan', {
+                                value: getString('cd.ElastigroupStep.desiredInstances'),
+                                value2: getString('cd.ElastigroupStep.minInstances')
+                              })
+                            })
+                          } else if (value > otherValues?.max) {
+                            return this.createError({
+                              message: getString('cd.ElastigroupStep.valueCannotBeGreaterThan', {
+                                value: getString('cd.ElastigroupStep.desiredInstances'),
+                                value2: getString('cd.ElastigroupStep.maxInstances')
+                              })
+                            })
+                          }
+                        }
+                        return commonValidation.call(this, value, getString('cd.ElastigroupStep.desiredInstances'))
+                      }
+                    }),
+                    min: Yup.mixed().test({
+                      test(value): boolean | Yup.ValidationError {
+                        const otherValues = formikRefValues()?.spec?.instances?.spec as AsgFixedInstances
+                        if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED) {
+                          if (value > otherValues?.desired) {
+                            return this.createError({
+                              message: getString('cd.ElastigroupStep.valueCannotBeGreaterThan', {
+                                value: getString('cd.ElastigroupStep.minInstances'),
+                                value2: getString('cd.ElastigroupStep.desiredInstances')
+                              })
+                            })
+                          } else if (value > otherValues?.max) {
+                            return this.createError({
+                              message: getString('cd.ElastigroupStep.valueCannotBeGreaterThan', {
+                                value: getString('cd.ElastigroupStep.minInstances'),
+                                value2: getString('cd.ElastigroupStep.maxInstances')
+                              })
+                            })
+                          }
+                        }
+                        return commonValidation.call(this, value, getString('cd.ElastigroupStep.minInstances'))
+                      }
+                    }),
+                    max: Yup.mixed().test({
+                      test(value): boolean | Yup.ValidationError {
+                        const otherValues = formikRefValues()?.spec?.instances?.spec as AsgFixedInstances
+                        if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED) {
+                          if (value < otherValues?.min) {
+                            return this.createError({
+                              message: getString('cd.ElastigroupStep.valueCannotBeLessThan', {
+                                value: getString('cd.ElastigroupStep.maxInstances'),
+                                value2: getString('cd.ElastigroupStep.minInstances')
+                              })
+                            })
+                          } else if (value < otherValues?.desired) {
+                            return this.createError({
+                              message: getString('cd.ElastigroupStep.valueCannotBeLessThan', {
+                                value: getString('cd.ElastigroupStep.maxInstances'),
+                                value2: getString('cd.ElastigroupStep.desiredInstances')
+                              })
+                            })
+                          }
+                        }
+                        return commonValidation.call(this, value, getString('cd.ElastigroupStep.maxInstances'))
+                      }
+                    })
+                  })
+                })
+              })
+            })
           })
         })}
       >
@@ -133,15 +265,36 @@ function AsgRollingDeployWidget(
                 />
               </div>
               <div className={stepCss.divider} />
+              {CDS_BASIC_ASG ? (
+                <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                  <FormInput.MultiTextInput
+                    name="spec.asgName"
+                    disabled={readonly}
+                    tooltipProps={{
+                      dataTooltipId: 'asgName'
+                    }}
+                    label={getString('cd.serviceDashboard.asgName')}
+                    placeholder={getString('cd.asgPlaceholder')}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes
+                    }}
+                  />
+                </div>
+              ) : null}
               <Text margin={{ bottom: 'medium' }}>{getString('instanceFieldOptions.instances')}</Text>
-              <div className={cx(stepCss.formGroup, stepCss.md)}>
-                <FormMultiTypeCheckboxField
-                  name="spec.useAlreadyRunningInstances"
-                  label={getString('cd.useAlreadyRunningInstance')}
-                  disabled={readonly}
-                  multiTypeTextbox={{ expressions, allowableTypes }}
-                />
-              </div>
+              {CDS_ASG_V2 ? (
+                <AsgSelectInstance formik={formik} readonly={readonly} allowableTypes={allowableTypes} />
+              ) : (
+                <div className={cx(stepCss.formGroup, stepCss.md)}>
+                  <FormMultiTypeCheckboxField
+                    name="spec.useAlreadyRunningInstances"
+                    label={getString('cd.useAlreadyRunningInstance')}
+                    disabled={readonly}
+                    multiTypeTextbox={{ expressions, allowableTypes }}
+                  />
+                </div>
+              )}
               <Accordion className={stepCss.accordion}>
                 <Accordion.Panel
                   id="optional-config"
@@ -239,6 +392,7 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { CDS_BASIC_ASG } = useFeatureFlags()
   const prefix = isEmpty(path) ? '' : `${path}.`
   return (
     <>
@@ -256,6 +410,22 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
             label={getString('pipelineSteps.timeoutLabel')}
             name={`${prefix}timeout`}
             disabled={readonly}
+          />
+        </div>
+      )}
+      {getMultiTypeFromValue(template?.spec?.asgName) === MultiTypeInputType.RUNTIME && !!CDS_BASIC_ASG && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <TextFieldInputSetView
+            name={`${prefix}spec.asgName`}
+            label={getString('cd.serviceDashboard.asgName')}
+            placeholder={getString('cd.serviceDashboard.asgName')}
+            disabled={readonly}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            fieldPath={`spec.asgName`}
+            template={template}
           />
         </div>
       )}
@@ -357,7 +527,8 @@ export class AsgRollingDeploy extends PipelineStep<AsgRollingDeployData> {
     type: StepType.AsgRollingDeploy,
     spec: {
       useAlreadyRunningInstances: false,
-      skipMatching: true
+      skipMatching: true,
+      asgName: ''
     }
   }
 
