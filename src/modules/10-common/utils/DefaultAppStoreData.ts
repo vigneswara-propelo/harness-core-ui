@@ -47,6 +47,7 @@ export const defaultAppStoreValues: Omit<AppStoreContextProps, 'updateAppStore'>
     emailVerified: false
   },
   isCurrentSessionPublic: false,
+  isPublicAccessEnabledOnResources: false,
   accountInfo: {}
 }
 

@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { act, fireEvent, render } from '@testing-library/react'
+import * as useGetAuthSettings from 'framework/hooks/useGetAuthSettings'
 import { TestWrapper } from '@common/utils/testUtils'
 import { AdvancedOptions } from '../AdvancedOptions'
 
@@ -21,6 +22,19 @@ jest.mock('services/portal', () => ({
     return []
   })
 }))
+const useGetAuthSettingsMock = {
+  authSettings: {
+    resource: {
+      publicAccessEnabled: true
+    }
+  },
+  fetchingAuthSettings: false,
+  errorWhileFetchingAuthSettings: null,
+  fetchChartVersions: jest.fn(),
+  refetchAuthSettings: jest.fn()
+}
+jest.spyOn(useGetAuthSettings, 'useGetAuthSettings').mockReturnValue(useGetAuthSettingsMock)
+
 describe('<AdvancedOptions/> tests', () => {
   const baseProps = {
     pipeline: {

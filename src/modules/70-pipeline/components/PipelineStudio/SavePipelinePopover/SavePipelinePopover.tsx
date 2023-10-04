@@ -87,7 +87,8 @@ function SavePipelinePopover(
   const {
     isGitSyncEnabled: isGitSyncEnabledForProject,
     gitSyncEnabledOnlyForFF,
-    supportingGitSimplification
+    supportingGitSimplification,
+    isPublicAccessEnabledOnResources
   } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const {
@@ -262,7 +263,9 @@ function SavePipelinePopover(
         ...(updatedGitDetails && currStoreMetadata?.storeType !== StoreType.REMOTE && updatedGitDetails?.isNewBranch
           ? { baseBranch: branch }
           : {}),
-        public: !!pipelineMetadataConfig?.modifiedMetadata?.publicAccessResponse?.public
+        ...(isPublicAccessEnabledOnResources
+          ? { public: !!pipelineMetadataConfig?.modifiedMetadata?.publicAccessResponse?.public }
+          : {})
       },
       omit(latestPipeline, 'repo', 'branch'),
       isEdit

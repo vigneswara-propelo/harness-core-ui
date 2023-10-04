@@ -33,6 +33,8 @@ import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { useGetAuthSettings } from 'framework/hooks/useGetAuthSettings'
 import { useVariablesExpression } from '../PiplineHooks/useVariablesExpression'
 import DelegateSelectorPanel from '../../PipelineSteps/AdvancedSteps/DelegateSelectorPanel/DelegateSelectorPanel'
 import { PublicAccessResponseType } from '../PipelineContext/PipelineActions'
@@ -62,10 +64,29 @@ interface AdvancedOptionFormProps extends PipelineInfoConfig {
 export function AdvancedOptions({ onApplyChanges, onDiscard, pipeline }: AdvancedOptionsProps): React.ReactElement {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { isCurrentSessionPublic, isPublicAccessEnabledOnResources, updateAppStore } = useAppStore()
   const {
     state: { pipelineMetadataConfig },
     setPublicAccessResponse
   } = usePipelineContext()
+  const { refetchAuthSettings, authSettings } = useGetAuthSettings()
+
+  React.useEffect(() => {
+    refetchAuthSettings()
+  }, [refetchAuthSettings])
+
+  React.useEffect(() => {
+    if (
+      !isCurrentSessionPublic &&
+      authSettings?.resource &&
+      authSettings.resource.publicAccessEnabled !== isPublicAccessEnabledOnResources
+    ) {
+      updateAppStore({
+        isPublicAccessEnabledOnResources: !!authSettings.resource.publicAccessEnabled
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authSettings, isPublicAccessEnabledOnResources])
 
   const onSubmit = React.useCallback(
     async (data: AdvancedOptionFormProps) => {
@@ -179,20 +200,24 @@ export function AdvancedOptions({ onApplyChanges, onDiscard, pipeline }: Advance
               </Card>
             </Layout.Vertical>
 
-            <Layout.Vertical spacing="small" margin={{ bottom: 'large' }}>
-              <Heading level={5} color={Color.GREY_900} data-tooltip-id="pipeline-public-access">
-                {`${getString('platform.authSettings.publicAccess.publicAccess')} ${getString('common.optionalLabel')}`}
-                <HarnessDocTooltip useStandAlone={true} tooltipId="pipeline-public-access" />
-              </Heading>
-              <Card>
-                <FormInput.Toggle
-                  name="publicAccessResponse.public"
-                  label={getString('pipeline.markPipelinePublic')}
-                  disabled={isReadonly}
-                  data-testid="toggle-mark-pipeline-public"
-                />
-              </Card>
-            </Layout.Vertical>
+            {isPublicAccessEnabledOnResources && (
+              <Layout.Vertical spacing="small" margin={{ bottom: 'large' }}>
+                <Heading level={5} color={Color.GREY_900} data-tooltip-id="pipeline-public-access">
+                  {`${getString('platform.authSettings.publicAccess.publicAccess')} ${getString(
+                    'common.optionalLabel'
+                  )}`}
+                  <HarnessDocTooltip useStandAlone={true} tooltipId="pipeline-public-access" />
+                </Heading>
+                <Card>
+                  <FormInput.Toggle
+                    name="publicAccessResponse.public"
+                    label={getString('pipeline.markPipelinePublic')}
+                    disabled={isReadonly}
+                    data-testid="toggle-mark-pipeline-public"
+                  />
+                </Card>
+              </Layout.Vertical>
+            )}
           </Page.Body>
         </>
       )}

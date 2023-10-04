@@ -59,6 +59,7 @@ export interface AppStoreContextProps {
   readonly currentUserInfo: UserInfo
   readonly accountInfo?: AccountDTO
   readonly isCurrentSessionPublic?: boolean
+  readonly isPublicAccessEnabledOnResources?: boolean
   /** feature flags */
   readonly featureFlags: FeatureFlagMap
   readonly currentMode?: NAV_MODE
@@ -68,7 +69,13 @@ export interface AppStoreContextProps {
     data: Partial<
       Pick<
         AppStoreContextProps,
-        'selectedOrg' | 'selectedProject' | 'isGitSyncEnabled' | 'connectivityMode' | 'currentUserInfo' | 'accountInfo'
+        | 'selectedOrg'
+        | 'selectedProject'
+        | 'isGitSyncEnabled'
+        | 'connectivityMode'
+        | 'currentUserInfo'
+        | 'accountInfo'
+        | 'isPublicAccessEnabledOnResources'
       >
     >
   ): void
@@ -90,6 +97,7 @@ export const AppStoreContext = React.createContext<AppStoreContextProps>({
   accountInfo: undefined,
   updateAppStore: () => void 0,
   isCurrentSessionPublic: false,
+  isPublicAccessEnabledOnResources: false,
   setCurrentMode: () => void 0
 })
 
@@ -148,7 +156,8 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
     supportingTemplatesGitx: false,
     connectivityMode: undefined,
     accountInfo: undefined,
-    isCurrentSessionPublic: window.publicAccessOnAccount
+    isCurrentSessionPublic: window.publicAccessOnAccount,
+    isPublicAccessEnabledOnResources: false
   })
 
   const { CDS_NAV_2_0 } = state.featureFlags
@@ -475,7 +484,13 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
     data: Partial<
       Pick<
         AppStoreContextProps,
-        'selectedOrg' | 'selectedProject' | 'isGitSyncEnabled' | 'connectivityMode' | 'currentUserInfo' | 'accountInfo'
+        | 'selectedOrg'
+        | 'selectedProject'
+        | 'isGitSyncEnabled'
+        | 'connectivityMode'
+        | 'currentUserInfo'
+        | 'accountInfo'
+        | 'isPublicAccessEnabledOnResources'
       >
     >
   ): void {
@@ -486,7 +501,11 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
       isGitSyncEnabled: defaultTo(data.isGitSyncEnabled, prevState?.isGitSyncEnabled),
       connectivityMode: defaultTo(data.connectivityMode, prevState?.connectivityMode),
       currentUserInfo: defaultTo(data.currentUserInfo, prevState?.currentUserInfo),
-      accountInfo: defaultTo(data.accountInfo, prevState?.accountInfo)
+      accountInfo: defaultTo(data.accountInfo, prevState?.accountInfo),
+      isPublicAccessEnabledOnResources: defaultTo(
+        data.isPublicAccessEnabledOnResources,
+        prevState?.isPublicAccessEnabledOnResources
+      )
     }))
   }
 

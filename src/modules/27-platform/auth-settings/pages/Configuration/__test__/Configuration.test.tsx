@@ -8,10 +8,12 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import * as useGetAuthSettings from 'framework/hooks/useGetAuthSettings'
 import Configuration from '@auth-settings/pages/Configuration/Configuration'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
 import { mockAuthSettingsResponse, mockResponse } from '@auth-settings/pages/Configuration/__test__/mock'
+import { RestResponseAuthenticationSettingsResponse } from 'services/cd-ng'
 
 const syncLdapGroupsMock = jest.fn()
 jest.mock('services/cd-ng', () => ({
@@ -56,6 +58,14 @@ jest.mock('services/cd-ng', () => ({
   }),
   useSetSessionTimeoutAtAccountLevel: jest.fn().mockReturnValue({ mutate: jest.fn() })
 }))
+const useGetAuthSettingsMock = {
+  authSettings: mockAuthSettingsResponse as RestResponseAuthenticationSettingsResponse,
+  fetchingAuthSettings: false,
+  errorWhileFetchingAuthSettings: null,
+  fetchChartVersions: jest.fn(),
+  refetchAuthSettings: jest.fn()
+}
+jest.spyOn(useGetAuthSettings, 'useGetAuthSettings').mockReturnValue(useGetAuthSettingsMock)
 
 describe('Configuration', () => {
   test('Configuration page', () => {

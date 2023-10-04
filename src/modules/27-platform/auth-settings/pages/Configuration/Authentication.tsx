@@ -10,7 +10,6 @@ import { useParams } from 'react-router-dom'
 import { Callout } from '@blueprintjs/core'
 import { Page } from '@common/exports'
 import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
-import { useGetAuthenticationSettingsV2, useGetAuthenticationSettings } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import AccountAndOAuth from '@auth-settings/pages/Configuration/AccountAndOAuth/AccountAndOAuth'
@@ -22,6 +21,8 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import SAMLProviderV2 from '@auth-settings/pages/Configuration/SAMLProvider/SAMLProviderV2'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { useGetAuthSettings } from 'framework/hooks/useGetAuthSettings'
 import LDAPProvider from './LDAPProvider/LDAPProvider'
 import SessionTimeOut from './SessionTimeOut/SessionTimeOut'
 import css from './Configuration.module.scss'
@@ -39,6 +40,14 @@ const Authentication: React.FC = () => {
   const params = useParams<AccountPathProps>()
   const { accountId } = params
   const { getString } = useStrings()
+  const {
+    authSettings: data,
+    errorWhileFetchingAuthSettings,
+    fetchingAuthSettings,
+    refetchAuthSettings
+  } = useGetAuthSettings()
+
+  const { isCurrentSessionPublic, isPublicAccessEnabledOnResources, updateAppStore } = useAppStore()
   const { PL_ENABLE_MULTIPLE_IDP_SUPPORT, PL_ALLOW_TO_SET_PUBLIC_ACCESS } = useFeatureFlags()
   const [updating, setUpdating] = React.useState(false)
 
@@ -59,36 +68,23 @@ const Authentication: React.FC = () => {
     []
   )
 
-  const {
-    data: authSettingsV1,
-    loading: fetchingAuthSettingsV1,
-    error: errorWhileFetchingAuthSettingsV1,
-    refetch: refetchAuthSettingsV1
-  } = useGetAuthenticationSettings({
-    queryParams: {
-      accountIdentifier: accountId
-    },
-    lazy: PL_ENABLE_MULTIPLE_IDP_SUPPORT
-  })
+  React.useEffect(() => {
+    refetchAuthSettings()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  const {
-    data: authSettingsV2,
-    loading: fetchingAuthSettingsV2,
-    error: errorWhileFetchingAuthSettingsV2,
-    refetch: refetchAuthSettingsV2
-  } = useGetAuthenticationSettingsV2({
-    queryParams: {
-      accountIdentifier: accountId
-    },
-    lazy: !PL_ENABLE_MULTIPLE_IDP_SUPPORT
-  })
-
-  const data = PL_ENABLE_MULTIPLE_IDP_SUPPORT ? authSettingsV2 : authSettingsV1
-  const fetchingAuthSettings = PL_ENABLE_MULTIPLE_IDP_SUPPORT ? fetchingAuthSettingsV2 : fetchingAuthSettingsV1
-  const errorWhileFetchingAuthSettings = PL_ENABLE_MULTIPLE_IDP_SUPPORT
-    ? errorWhileFetchingAuthSettingsV2
-    : errorWhileFetchingAuthSettingsV1
-  const refetchAuthSettings = PL_ENABLE_MULTIPLE_IDP_SUPPORT ? refetchAuthSettingsV2 : refetchAuthSettingsV1
+  React.useEffect(() => {
+    if (
+      !isCurrentSessionPublic &&
+      data?.resource &&
+      data.resource.publicAccessEnabled !== isPublicAccessEnabledOnResources
+    ) {
+      updateAppStore({
+        isPublicAccessEnabledOnResources: !!data.resource.publicAccessEnabled
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, isPublicAccessEnabledOnResources])
 
   return (
     <React.Fragment>

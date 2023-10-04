@@ -409,8 +409,7 @@ export const putPipelinePromiseArg = {
     projectIdentifier: 'testProject',
     repoIdentifier: 'gitSyncRepo',
     rootFolder: '/rootFolderTest/.harness/',
-    targetBranch: '',
-    public: false
+    targetBranch: ''
   },
   requestOptions: {
     headers: {
@@ -476,8 +475,7 @@ export const createPipelinePromiseArg = {
     projectIdentifier: 'testProject',
     repoIdentifier: 'gitSyncRepo',
     rootFolder: '/rootFolderTest/.harness/',
-    targetBranch: '',
-    public: false
+    targetBranch: ''
   },
   requestOptions: {
     headers: {
