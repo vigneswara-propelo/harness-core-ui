@@ -3,6 +3,13 @@ kind: ConfigMap
 metadata:
   name: next-gen-ui
   namespace: {{ .Release.Namespace }}
+  {{- if .Values.global.commonLabels }}
+  labels:
+    {{- include "harnesscommon.tplvalues.render" ( dict "value" .Values.global.commonLabels "context" $ ) | nindent 4 }}
+  {{- end }}
+  {{- if .Values.global.commonAnnotations }}
+  annotations: {{- include "harnesscommon.tplvalues.render" ( dict "value" .Values.global.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
 data:
   API_URL: '{{ .Values.global.loadbalancerURL }}/gateway'
   DEPLOYMENT_TYPE: ON_PREM

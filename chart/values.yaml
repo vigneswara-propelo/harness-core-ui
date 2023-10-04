@@ -5,6 +5,8 @@ global:
   kubeVersion: ""
   loadbalancerURL: ""
   imagePullSecrets: []
+  commonLabels: {}
+  commonAnnotations: {}
   ingress:
     # -- create ingress objects
     enabled: false
@@ -16,7 +18,7 @@ global:
     # -- set tls for ingress objects
     tls:
       enabled: true
-      secretName: ''
+      secretName: ""
     # -- add annotations to ingress objects
     objects:
       annotations: {}
@@ -65,10 +67,12 @@ serviceAccount:
   name: "harness-default"
 
 podAnnotations: {}
+podLabels: {}
 
 imagePullSecrets: {}
 
-podSecurityContext: {}
+podSecurityContext:
+  {}
   # fsGroup: 2000
 
 securityContext:
@@ -106,7 +110,10 @@ service:
   protocol: TCP
   port: 80
   targetport: 8080
+  annotations: {}
 
+ingress:
+  annotations: {}
 
 resources:
   limits:
@@ -141,7 +148,6 @@ extraVolumes: []
 #   - name: test-volume-mount
 #     mountPath: /opt/harness/config
 extraVolumeMounts: []
-
 # lifecycleHooks:
 #   postStart:
 #     exec:
