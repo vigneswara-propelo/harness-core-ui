@@ -163,7 +163,6 @@ const ConfigsSection = (
           ;(_formikRef as React.MutableRefObject<FormikProps<{ entity?: Array<Record<string, any>> }>>).current =
             formikProps as any
           ;(formikRef.current as any).onTabChange = handleSaveEntityOnTabChange
-
           return entityConfigs.map((config: EntityConfig, index: number) => (
             <ConfigRenderer
               key={index}

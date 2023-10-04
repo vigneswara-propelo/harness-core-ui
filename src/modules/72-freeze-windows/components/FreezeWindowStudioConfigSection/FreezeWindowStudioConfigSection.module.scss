@@ -96,4 +96,15 @@
     width: 120px !important;
     margin-bottom: var(--spacing-2) !important;
   }
+  [data-id*='EnvType'] {
+    width: 356px !important;
+  }
+}
+
+.selectEnvironment {
+  margin-top: var(--spacing-3) !important;
+}
+
+.excludeServiceEnvCheckbox {
+  margin-top: calc(-1 * var(--spacing-3)) !important;
 }

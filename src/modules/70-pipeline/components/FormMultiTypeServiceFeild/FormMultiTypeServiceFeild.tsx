@@ -46,7 +46,7 @@ import css from './FormMultiTypeServiceField.module.scss'
 
 export interface ServiceReferenceFieldProps extends Omit<IFormGroupProps, 'label'> {
   name: string
-  label: string | React.ReactElement
+  label?: string | React.ReactElement
   placeholder: string
   tooltipProps?: DataTooltipInterface
   deploymentType?: ServiceDeploymentType

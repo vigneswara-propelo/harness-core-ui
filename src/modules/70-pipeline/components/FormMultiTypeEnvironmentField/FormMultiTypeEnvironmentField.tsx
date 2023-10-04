@@ -47,7 +47,7 @@ import css from './FormMultiTypeEnvironmentField.module.scss'
 
 export interface EnvironmentReferenceFieldProps extends Omit<IFormGroupProps, 'label'> {
   name: string
-  label: string | React.ReactElement
+  label?: string | React.ReactElement
   placeholder: string
   tooltipProps?: DataTooltipInterface
   style?: React.CSSProperties

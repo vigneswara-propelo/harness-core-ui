@@ -6,19 +6,14 @@
  */
 
 import React from 'react'
-import { Button, Container, FormikForm, FormInput, Layout, SelectOption, Text } from '@harness/uicore'
-import { Color, FontVariation } from '@harness/design-system'
-import { get, upperCase } from 'lodash-es'
+import { Button, Container, FormikForm, FormInput, Layout, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
+import { get } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import { FIELD_KEYS, FreezeWindowLevels, ResourcesInterface } from '@freeze-windows/types'
-import {
-  allEnvironmentsObj,
-  allServicesObj,
-  FieldVisibility,
-  isAllOptionSelected
-} from '@freeze-windows/utils/FreezeWindowStudioUtil'
-import { MultiTypeEnvironmentField } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
-import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
+import { FieldVisibility, isAllOptionSelected } from '@freeze-windows/utils/FreezeWindowStudioUtil'
+import { ServiceField } from './FreezeServiceFieldRenderer'
+import { EnvironmentField } from './FreezeEnvironmentFieldRenderer'
 import {
   EnvironmentTypeRenderer,
   Organizationfield,
@@ -74,19 +69,10 @@ export const ConfigEditModeRenderer: React.FC<ConfigEditModeRendererProps> = ({
   setVisualView,
   fieldsVisibility
 }) => {
-  const { setFieldValue } = formikProps
   const serviceEntityPath = `entity[${index}].${FIELD_KEYS.Service}`
-  const servicePath = !isAllOptionSelected(get(formikProps.values, serviceEntityPath)) ? serviceEntityPath : ''
   const envEntityPath = `entity[${index}].${FIELD_KEYS.Environment}`
-  const envPath = !isAllOptionSelected(get(formikProps.values, envEntityPath)) ? envEntityPath : ''
 
   const visibleOnlyAtProject = resources.freezeWindowLevel === FreezeWindowLevels.PROJECT
-  const onMultiSelectChangeForEnvironments = (items: SelectOption[]): void => {
-    setFieldValue(envEntityPath, items)
-  }
-  const onMultiSelectChangeForServices = (items: SelectOption[]): void => {
-    setFieldValue(serviceEntityPath, items)
-  }
 
   const [showError, setShowError] = React.useState(false)
 
@@ -135,80 +121,23 @@ export const ConfigEditModeRenderer: React.FC<ConfigEditModeRendererProps> = ({
               )}
               <hr className={css.separator} />
               <Layout.Vertical>
-                <Layout.Horizontal
-                  spacing="medium"
-                  flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-                  className={css.allScvEnvCheckbox}
-                >
-                  <MultiTypeServiceField
-                    label={getString('services')}
-                    name={servicePath}
-                    placeholder={getString('services')}
-                    isNewConnectorLabelVisible={false}
-                    isOnlyFixedType={true}
-                    isMultiSelect={true}
-                    disabled={allServiceChecked}
-                    onMultiSelectChange={onMultiSelectChangeForServices}
-                    onChange={item => {
-                      onMultiSelectChangeForServices(item as SelectOption[])
-                    }}
-                    style={{ width: 400 }}
-                  />
-                  <Text font={{ variation: FontVariation.YAML }} margin={{ rigt: 'xsmall' }} color={Color.GREY_500}>
-                    {upperCase(getString('or'))}
-                  </Text>
-                  <FormInput.CheckBox
-                    name={`${serviceEntityPath}__${index}_allServices`}
-                    label={getString('common.allServices')}
-                    defaultChecked={allServiceChecked}
-                    onClick={val => {
-                      if (val.currentTarget.checked) {
-                        setFieldValue(serviceEntityPath, [allServicesObj(getString)])
-                        setAllServicesChecked(true)
-                      } else {
-                        setFieldValue(serviceEntityPath, undefined)
-                        setAllServicesChecked(false)
-                      }
-                    }}
-                  />
-                </Layout.Horizontal>
-                <Layout.Horizontal
-                  spacing="medium"
-                  className={css.allScvEnvCheckbox}
-                  flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-                >
-                  <MultiTypeEnvironmentField
-                    label={getString('environments')}
-                    name={envPath}
-                    placeholder={getString('environments')}
-                    style={{ width: 400 }}
-                    disabled={allEnvChecked}
-                    isNewConnectorLabelVisible={false}
-                    isOnlyFixedType
-                    onMultiSelectChange={onMultiSelectChangeForEnvironments}
-                    isMultiSelect={true}
-                    onChange={item => {
-                      onMultiSelectChangeForEnvironments(item as SelectOption[])
-                    }}
-                  />
-                  <Text font={{ variation: FontVariation.YAML }} margin={{ rigt: 'xsmall' }} color={Color.GREY_500}>
-                    {upperCase(getString('or'))}
-                  </Text>
-                  <FormInput.CheckBox
-                    name={`${envEntityPath}__${index}_allEnvironments`}
-                    label={getString('common.allEnvironments')}
-                    defaultChecked={allEnvChecked}
-                    onClick={val => {
-                      if (val.currentTarget.checked) {
-                        setFieldValue(envEntityPath, [allEnvironmentsObj(getString)])
-                        setAllEnvChecked(true)
-                      } else {
-                        setFieldValue(envEntityPath, undefined)
-                        setAllEnvChecked(false)
-                      }
-                    }}
-                  />
-                </Layout.Horizontal>
+                <ServiceField
+                  index={index}
+                  getString={getString}
+                  formikProps={formikProps}
+                  allServiceChecked={allServiceChecked}
+                  setAllServicesChecked={setAllServicesChecked}
+                />
+                <EnvironmentField
+                  visibleOnlyAtProject={visibleOnlyAtProject}
+                  setEnvTypeFilter={setEnvTypeFilter}
+                  envTypeFilter={envTypeFilter}
+                  index={index}
+                  getString={getString}
+                  formikProps={formikProps}
+                  allEnvChecked={allEnvChecked}
+                  setAllEnvChecked={setAllEnvChecked}
+                />
               </Layout.Vertical>
               <hr className={css.separator} />
             </>
@@ -257,43 +186,13 @@ export const ConfigEditModeRenderer: React.FC<ConfigEditModeRendererProps> = ({
         )}
         <Layout.Vertical>
           {visibleOnlyAtProject && (
-            <Layout.Horizontal
-              flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-              className={css.allScvEnvCheckbox}
-              spacing="medium"
-            >
-              <MultiTypeServiceField
-                name={servicePath}
-                label={getString('services')}
-                disabled={allServiceChecked}
-                placeholder={getString('services')}
-                style={{ width: 400 }}
-                isNewConnectorLabelVisible={false}
-                isOnlyFixedType
-                isMultiSelect={true}
-                onMultiSelectChange={onMultiSelectChangeForServices}
-                onChange={item => {
-                  onMultiSelectChangeForServices(item as SelectOption[])
-                }}
-              />
-              <Text font={{ variation: FontVariation.YAML }} margin={{ rigt: 'xsmall' }} color={Color.GREY_500}>
-                {upperCase(getString('or'))}
-              </Text>
-              <FormInput.CheckBox
-                label={getString('common.allServices')}
-                name={`${serviceEntityPath}__${index}_allServices`}
-                defaultChecked={allServiceChecked}
-                onClick={val => {
-                  if (val.currentTarget.checked) {
-                    setAllServicesChecked(true)
-                    setFieldValue(serviceEntityPath, [allServicesObj(getString)])
-                  } else {
-                    setAllServicesChecked(false)
-                    setFieldValue(serviceEntityPath, undefined)
-                  }
-                }}
-              />
-            </Layout.Horizontal>
+            <ServiceField
+              index={index}
+              getString={getString}
+              formikProps={formikProps}
+              allServiceChecked={allServiceChecked}
+              setAllServicesChecked={setAllServicesChecked}
+            />
           )}
           <Layout.Horizontal spacing="medium">
             {!visibleOnlyAtProject && (
@@ -306,52 +205,27 @@ export const ConfigEditModeRenderer: React.FC<ConfigEditModeRendererProps> = ({
                 style={{ width: '400px' }}
               />
             )}
-            <EnvironmentTypeRenderer
-              getString={getString}
-              name={`entity[${index}].${FIELD_KEYS.EnvType}`}
-              setEnvTypeFilter={setEnvTypeFilter}
-            />
+            {!visibleOnlyAtProject && (
+              <EnvironmentTypeRenderer
+                getString={getString}
+                name={`entity[${index}].${FIELD_KEYS.EnvType}`}
+                setEnvTypeFilter={setEnvTypeFilter}
+              />
+            )}
             {visibleOnlyAtProject && (
-              <Layout.Horizontal
-                spacing="medium"
-                flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-                className={css.allScvEnvCheckbox}
-              >
-                <MultiTypeEnvironmentField
-                  name={envPath}
-                  label={getString('environments')}
-                  placeholder={getString('environments')}
-                  style={{ width: 400 }}
-                  isNewConnectorLabelVisible={false}
-                  disabled={allEnvChecked}
-                  isOnlyFixedType
-                  onMultiSelectChange={onMultiSelectChangeForEnvironments}
-                  isMultiSelect={true}
-                  onChange={item => {
-                    onMultiSelectChangeForEnvironments(item as SelectOption[])
-                  }}
-                  envTypeFilter={envTypeFilter}
-                />
-                <Text font={{ variation: FontVariation.YAML }} margin={{ rigt: 'xsmall' }} color={Color.GREY_500}>
-                  {upperCase(getString('or'))}
-                </Text>
-                <FormInput.CheckBox
-                  label={getString('common.allEnvironments')}
-                  name={`${envEntityPath}__${index}_allEnvironments`}
-                  defaultChecked={allEnvChecked}
-                  onClick={val => {
-                    if (val.currentTarget.checked) {
-                      setAllEnvChecked(true)
-                      setFieldValue(envEntityPath, [allEnvironmentsObj(getString)])
-                    } else {
-                      setAllEnvChecked(false)
-                      setFieldValue(envEntityPath, undefined)
-                    }
-                  }}
-                />
-              </Layout.Horizontal>
+              <EnvironmentField
+                visibleOnlyAtProject={visibleOnlyAtProject}
+                envTypeFilter={envTypeFilter}
+                setEnvTypeFilter={setEnvTypeFilter}
+                index={index}
+                getString={getString}
+                formikProps={formikProps}
+                allEnvChecked={allEnvChecked}
+                setAllEnvChecked={setAllEnvChecked}
+              />
             )}
           </Layout.Horizontal>
+
           <Container width={'400px'}>
             {fieldsVisibility.showPipelineField ? (
               <PipelineField

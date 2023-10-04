@@ -5756,15 +5756,19 @@ export interface StringsMap {
   'freezeWindows.freezeStudio.activeFreeze': string
   'freezeWindows.freezeStudio.allOrganizations': string
   'freezeWindows.freezeStudio.defineResources': string
+  'freezeWindows.freezeStudio.excludeEnvironments': string
+  'freezeWindows.freezeStudio.excludeFollowingEnvironments': string
   'freezeWindows.freezeStudio.excludeFollowingOrg': string
   'freezeWindows.freezeStudio.excludeFollowingOrgs': string
   'freezeWindows.freezeStudio.excludeFollowingPipeline': string
   'freezeWindows.freezeStudio.excludeFollowingPipelines': string
   'freezeWindows.freezeStudio.excludeFollowingProject': string
   'freezeWindows.freezeStudio.excludeFollowingProjects': string
+  'freezeWindows.freezeStudio.excludeFollowingServices': string
   'freezeWindows.freezeStudio.excludeOrgs': string
   'freezeWindows.freezeStudio.excludePipelines': string
   'freezeWindows.freezeStudio.excludeProjects': string
+  'freezeWindows.freezeStudio.excludeServices': string
   'freezeWindows.freezeStudio.freezeCreatedSuccessfully': string
   'freezeWindows.freezeStudio.freezeUpdatedSuccessfully': string
   'freezeWindows.freezeWindowConfig.accountLevelValidationMsg': string

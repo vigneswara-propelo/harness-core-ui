@@ -96,10 +96,8 @@ describe('Project Level Freeze', () => {
     cy.get('[data-testid="config-view-mode_0"]').should('have.length', 0)
     cy.get('[data-testid="config-edit-mode_0"]').should('have.length', 1)
 
-    //entity[0].EnvType
-
     // Change env Type in First rule
-    cy.get('input[name="entity[0].EnvType"]').should('be.visible').click()
+    cy.get('input[name="entity[0].EnvType"]').should('be.visible').click({ force: true })
     cy.get('li.Select--menuItem').should('have.length', 3).as('envTypeMenuItem')
     cy.get('@envTypeMenuItem').eq(0).should('contain.text', 'All Environments').as('typeAllEnv')
     cy.get('@envTypeMenuItem').eq(1).should('contain.text', 'Production').as('typeProd')
@@ -118,7 +116,7 @@ describe('Project Level Freeze', () => {
     cy.get('button[aria-label="Apply Selected"]').click()
 
     // Select Env
-    cy.get('[data-id="entity[0].Environment__0_allEnvironments-5"] input').should('be.checked').as('allEnvCheckbox')
+    cy.get('[name="entity[0].Environment__0_allEnvironments"]').should('be.checked').as('allEnvCheckbox')
     cy.get('@allEnvCheckbox').click({ force: true })
     cy.get('@allEnvCheckbox').should('not.be.checked')
 

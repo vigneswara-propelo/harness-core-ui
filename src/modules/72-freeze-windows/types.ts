@@ -19,7 +19,11 @@ export enum FreezeWindowLevels {
 export enum FIELD_KEYS {
   EnvType = 'EnvType',
   Environment = 'Environment',
+  ExcludeEnvironmentCheckbox = 'ExcludeEnvironmentCheckbox',
+  ExcludeEnvironment = 'ExcludeEnvironment',
   Service = 'Service',
+  ExcludeServiceCheckbox = 'ExcludeServiceCheckbox',
+  ExcludeService = 'ExcludeService',
   Org = 'Org',
   ExcludeOrgCheckbox = 'ExcludeOrgCheckbox',
   ExcludeOrg = 'ExcludeOrg',
@@ -31,9 +35,15 @@ export enum FIELD_KEYS {
   ExcludePipelineCheckbox = 'ExcludePipelineCheckbox'
 }
 
+export enum FILTER_TYPE {
+  All = 'All',
+  Equals = 'Equals',
+  NotEquals = 'NotEquals'
+}
+
 export interface EntityType {
   type: FIELD_KEYS
-  filterType: 'All' | 'Equals' | 'NotEquals'
+  filterType: FILTER_TYPE
   entityRefs?: string[]
 }
 

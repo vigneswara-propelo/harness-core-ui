@@ -12,9 +12,11 @@ declare const styles: {
   readonly badge: string
   readonly configFormContainer: string
   readonly crossButton: string
+  readonly excludeServiceEnvCheckbox: string
   readonly isEditView: string
   readonly marginSmaller: string
   readonly sectionCard: string
+  readonly selectEnvironment: string
   readonly separator: string
   readonly tagInputStyle: string
   readonly tickButton: string
