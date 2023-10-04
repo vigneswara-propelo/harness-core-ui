@@ -41,6 +41,7 @@ import {
   awsCdkStepAllowedConnectorTypes,
   AwsCDKCommonStepFormikValues
 } from '../AwsCDKCommonFields'
+import { getEnvirontmentVariableValidationSchema } from '../../Common/utils/utils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../AwsCDKStep.module.scss'
 
@@ -73,14 +74,7 @@ const AwsCDKDeployStepEdit = (
       ),
       image: Yup.string().required(getString('validation.imageRequired')),
       provisionerIdentifier: Yup.string().required(getString('common.validation.provisionerIdentifierIsRequired')),
-      envVariables: Yup.array().of(
-        Yup.object().shape({
-          key: Yup.string().required(getString('common.validation.fieldIsRequired', { name: getString('keyLabel') })),
-          value: Yup.string().required(
-            getString('common.validation.fieldIsRequired', { name: getString('valueLabel') })
-          )
-        })
-      ),
+      envVariables: getEnvirontmentVariableValidationSchema(getString),
       parameters: Yup.array().of(
         Yup.object().shape({
           key: Yup.string().required(getString('common.validation.fieldIsRequired', { name: getString('keyLabel') })),

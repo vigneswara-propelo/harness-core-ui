@@ -39,7 +39,7 @@ import type { AwsSamBuildStepInitialValues } from '@pipeline/utils/types'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { ConnectorRef } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import { NameTimeoutField } from '../../Common/GenericExecutionStep/NameTimeoutField'
-import { serverlessStepAllowedConnectorTypes } from '../../Common/utils/utils'
+import { getEnvirontmentVariableValidationSchema, serverlessStepAllowedConnectorTypes } from '../../Common/utils/utils'
 import { AwsSamServerlessStepCommonOptionalFieldsEdit } from '../../Common/AwsSamServerlessStepCommonOptionalFields/AwsSamServerlessStepCommonOptionalFieldsEdit'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../AwsSamBuildDeployStep.module.scss'
@@ -90,14 +90,7 @@ const AwsSamBuildStepEdit = (
       connectorRef: Yup.string().required(
         getString('common.validation.fieldIsRequired', { name: getString('pipelineSteps.connectorLabel') })
       ),
-      envVariables: Yup.array().of(
-        Yup.object().shape({
-          key: Yup.string().required(getString('common.validation.fieldIsRequired', { name: getString('keyLabel') })),
-          value: Yup.string().required(
-            getString('common.validation.fieldIsRequired', { name: getString('valueLabel') })
-          )
-        })
-      )
+      envVariables: getEnvirontmentVariableValidationSchema(getString)
     })
   })
 

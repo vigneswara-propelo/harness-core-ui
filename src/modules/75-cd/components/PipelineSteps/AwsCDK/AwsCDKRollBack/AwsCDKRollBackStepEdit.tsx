@@ -32,7 +32,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { NameTimeoutField } from '../../Common/GenericExecutionStep/NameTimeoutField'
-
+import { getEnvirontmentVariableValidationSchema } from '../../Common/utils/utils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export interface AwsCDKRollBackStepFormikValues extends StepElementConfig {
@@ -66,14 +66,7 @@ const AwsCDKRollBackStepEdit = (
     timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
     spec: Yup.object().shape({
       provisionerIdentifier: Yup.string().required(getString('common.validation.provisionerIdentifierIsRequired')),
-      envVariables: Yup.array().of(
-        Yup.object().shape({
-          key: Yup.string().required(getString('common.validation.fieldIsRequired', { name: getString('keyLabel') })),
-          value: Yup.string().required(
-            getString('common.validation.fieldIsRequired', { name: getString('valueLabel') })
-          )
-        })
-      )
+      envVariables: getEnvirontmentVariableValidationSchema(getString)
     })
   })
 

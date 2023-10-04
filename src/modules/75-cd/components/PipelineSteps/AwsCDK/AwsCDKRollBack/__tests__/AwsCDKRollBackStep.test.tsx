@@ -120,6 +120,17 @@ describe('AwsCdkRollBackStep tests', () => {
     expect(envVariableValueInput.value).toBe('value1')
     fireEvent.change(envVariableValueInput, { target: { value: 'valueUpdated' } })
     expect(envVariableValueInput.value).toBe('valueUpdated')
+    // Add second env variable with empty value
+    expect(addEnvVariableButton).toBeInTheDocument()
+    await userEvent.click(addEnvVariableButton)
+    const envVariableKeyInput2 = queryByNameAttribute('spec.envVariables[1].key', container) as HTMLInputElement
+    await waitFor(() => expect(envVariableKeyInput2).toBeInTheDocument())
+    expect(envVariableKeyInput2.value).toBe('')
+    fireEvent.change(envVariableKeyInput2, { target: { value: 'k2' } })
+    expect(envVariableKeyInput2.value).toBe('k2')
+    const envVariableValueInput2 = queryByNameAttribute('spec.envVariables[1].value', container) as HTMLInputElement
+    expect(envVariableValueInput2).toBeInTheDocument()
+    expect(envVariableValueInput2.value).toBe('')
 
     act(() => {
       ref.current?.submitForm()
@@ -133,7 +144,8 @@ describe('AwsCdkRollBackStep tests', () => {
         spec: {
           provisionerIdentifier: 'prov2',
           envVariables: {
-            keyUpdated: 'valueUpdated'
+            keyUpdated: 'valueUpdated',
+            k2: ''
           }
         },
         timeout: '30m'

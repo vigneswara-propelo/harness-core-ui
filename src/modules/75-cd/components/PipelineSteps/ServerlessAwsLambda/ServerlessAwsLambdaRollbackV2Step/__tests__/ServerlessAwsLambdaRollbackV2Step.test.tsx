@@ -231,6 +231,17 @@ describe('ServerlessAwsLambdaRollbackV2Step tests', () => {
     expect(envVariableValueInput.value).toBe('')
     fireEvent.change(envVariableValueInput, { target: { value: 'v1' } })
     expect(envVariableValueInput.value).toBe('v1')
+    // Add second env variable with empty value
+    expect(addEnvVariableButton).toBeInTheDocument()
+    await userEvent.click(addEnvVariableButton)
+    const envVariableKeyInput2 = queryByNameAttribute('spec.envVariables[1].key', container) as HTMLInputElement
+    await waitFor(() => expect(envVariableKeyInput2).toBeInTheDocument())
+    expect(envVariableKeyInput2.value).toBe('')
+    fireEvent.change(envVariableKeyInput2, { target: { value: 'k2' } })
+    expect(envVariableKeyInput2.value).toBe('k2')
+    const envVariableValueInput2 = queryByNameAttribute('spec.envVariables[1].value', container) as HTMLInputElement
+    expect(envVariableValueInput2).toBeInTheDocument()
+    expect(envVariableValueInput2.value).toBe('')
 
     await waitFor(() =>
       expect(onChange).toHaveBeenLastCalledWith({
@@ -252,7 +263,8 @@ describe('ServerlessAwsLambdaRollbackV2Step tests', () => {
             }
           },
           envVariables: {
-            k1: 'v1'
+            k1: 'v1',
+            k2: ''
           }
         }
       })
@@ -283,7 +295,8 @@ describe('ServerlessAwsLambdaRollbackV2Step tests', () => {
             }
           },
           envVariables: {
-            k1: 'v1'
+            k1: 'v1',
+            k2: ''
           }
         }
       })
