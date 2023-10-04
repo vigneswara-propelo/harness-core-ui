@@ -9,7 +9,8 @@ import React, { useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { pick } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import routes from '@common/RouteDefinitionsV2'
+import routesV2 from '@common/RouteDefinitionsV2'
+import routes from '@common/RouteDefinitions'
 import { StartTrialTemplate } from '@rbac/components/TrialHomePageTemplate/StartTrialTemplate'
 import { useStartFreeLicense, ResponseModuleLicenseDTO } from 'services/cd-ng'
 import useCreateConnector from '@ce/components/CreateConnector/CreateConnector'
@@ -37,12 +38,13 @@ const CETrialHomePage: React.FC = () => {
   const moduleType = 'CE'
   const microfrontendEnabled = useFeatureFlag(FeatureFlag.CCM_MICRO_FRONTEND)
   const isDefaultProjectCreated = useFeatureFlag(FeatureFlag.CREATE_DEFAULT_PROJECT)
+  const isNewNavEnabled = useFeatureFlag(FeatureFlag.CDS_NAV_2_0)
   const { openModal } = useCreateConnector({
     onSuccess: () => {
-      history.push(routes.toCEOverview({ accountId, module }))
+      history.push(isNewNavEnabled ? routesV2.toCEOverview({ accountId, module }) : routes.toCEOverview({ accountId }))
     },
     onClose: () => {
-      history.push(routes.toCEOverview({ accountId, module }))
+      history.push(isNewNavEnabled ? routesV2.toCEOverview({ accountId, module }) : routes.toCEOverview({ accountId }))
     }
   })
 
@@ -88,10 +90,18 @@ const CETrialHomePage: React.FC = () => {
     if (isDefaultProjectCreated) {
       const moduleUrlWithDefaultProject = getModuleToDefaultURLMap(accountId, module as Module)[module]
       history.push(
-        moduleUrlWithDefaultProject ? (moduleUrlWithDefaultProject as string) : routes.toCEHome({ accountId, module })
+        moduleUrlWithDefaultProject
+          ? (moduleUrlWithDefaultProject as string)
+          : isNewNavEnabled
+          ? routesV2.toCEHome({ accountId, module })
+          : routes.toCEHome({ accountId })
       )
     } else {
-      microfrontendEnabled ? history.push(routes.toCEOverview({ accountId, module })) : showModal()
+      microfrontendEnabled
+        ? history.push(
+            isNewNavEnabled ? routesV2.toCEOverview({ accountId, module }) : routes.toCEOverview({ accountId })
+          )
+        : showModal()
     }
     return data
   }
@@ -109,7 +119,11 @@ const CETrialHomePage: React.FC = () => {
       }
 
       handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module as Module, updatedLicenseInfo)
-      microfrontendEnabled ? history.push(routes.toCEOverview({ accountId, module })) : showModal()
+      microfrontendEnabled
+        ? history.push(
+            isNewNavEnabled ? routesV2.toCEOverview({ accountId, module }) : routes.toCEOverview({ accountId })
+          )
+        : showModal()
     } catch (error) {
       showError(error.data?.message)
     }
@@ -133,7 +147,11 @@ const CETrialHomePage: React.FC = () => {
 
   useEffect(() => {
     if (experience) {
-      microfrontendEnabled ? history.push(routes.toCEOverview({ accountId, module })) : showModal()
+      microfrontendEnabled
+        ? history.push(
+            isNewNavEnabled ? routesV2.toCEOverview({ accountId, module }) : routes.toCEOverview({ accountId })
+          )
+        : showModal()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [experience])

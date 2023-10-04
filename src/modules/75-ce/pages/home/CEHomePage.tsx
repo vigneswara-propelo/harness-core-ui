@@ -14,14 +14,15 @@ import { ModuleName } from 'framework/types/ModuleName'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import { useGetLicensesAndSummary } from 'services/cd-ng'
 import { useQueryParams } from '@common/hooks'
-import routes from '@common/RouteDefinitionsV2'
+import routesV2 from '@common/RouteDefinitionsV2'
+import routes from '@common/RouteDefinitions'
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 
 const CEHomePage: React.FC = () => {
   const { currentUserInfo } = useAppStore()
-  const { NG_LICENSES_ENABLED } = useFeatureFlags()
+  const { NG_LICENSES_ENABLED, CDS_NAV_2_0: isNewNavEnabled } = useFeatureFlags()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
 
   const { accountId } = useParams<AccountPathProps>()
@@ -71,13 +72,12 @@ const CEHomePage: React.FC = () => {
 
   if (showTrialPages && data?.status === 'SUCCESS' && !data.data) {
     history.push(
-      routes.toModuleTrialHome({
-        accountId,
-        module
-      })
+      isNewNavEnabled
+        ? routesV2.toModuleTrialHome({ accountId, module })
+        : routes.toModuleTrialHome({ accountId, module })
     )
   } else {
-    history.push(routes.toCEOverview({ accountId, module }))
+    history.push(isNewNavEnabled ? routesV2.toCEOverview({ accountId, module }) : routes.toCEOverview({ accountId }))
   }
 
   return <></>
