@@ -11,7 +11,7 @@ metadata:
   annotations: {{- include "harnesscommon.tplvalues.render" ( dict "value" .Values.global.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 data:
-  API_URL: '{{ .Values.global.loadbalancerURL }}/gateway'
+  API_URL: '/gateway'
   DEPLOYMENT_TYPE: ON_PREM
   HARNESS_ENABLE_NG_AUTH_UI_PLACEHOLDER: "true"
   HARNESS_BROWSER_ROUTER_ENABLED: "true"
