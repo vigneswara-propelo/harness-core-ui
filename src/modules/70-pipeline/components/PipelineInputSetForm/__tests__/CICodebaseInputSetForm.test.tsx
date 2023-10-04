@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor, queryByText } from '@testing-library/react'
+import { render, waitFor, queryByText, findByText } from '@testing-library/react'
 import { Form } from 'formik'
 import { Formik } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -23,7 +23,10 @@ import {
   getCICodebaseParallelStageInitialValues,
   getCICodebaseParallelTemplateProps,
   GetUseGetConnectorRepoUrlTypeResponse,
-  GetUseGetConnectorAcctUrlTypeResponse
+  GetUseGetConnectorAcctUrlTypeResponse,
+  getCICodebaseWithCloneCodebase,
+  getCICodebaseWithoutCloneCodebase,
+  getCICodebaseInputSetFormPropsCloneCodebase
 } from './mocks'
 
 jest.mock('@common/utils/YamlUtils', () => ({}))
@@ -226,6 +229,44 @@ describe('CICodebaseInputSetForm tests', () => {
       )
       // All fields should render <+input>
       expect(container).toMatchSnapshot()
+    })
+  })
+
+  describe('hide/show codebase sections tests', () => {
+    test('Pipeline with clone codebase true shows codebase section', async () => {
+      const { container } = render(
+        <TestWrapper>
+          <Formik formName="test-form" initialValues={getCICodebaseWithCloneCodebase()} onSubmit={jest.fn()}>
+            {formik => (
+              <Form>
+                <CICodebaseInputSetForm
+                  {...getCICodebaseInputSetFormPropsCloneCodebase({ formik, cloneCodebase: true })}
+                  viewType={StepViewType.DeploymentForm}
+                />
+              </Form>
+            )}
+          </Formik>
+        </TestWrapper>
+      )
+      expect(await findByText(container, 'codebase')).toBeInTheDocument()
+    })
+
+    test('Pipeline with clone codebase false hides codebase section', async () => {
+      const { container } = render(
+        <TestWrapper>
+          <Formik formName="test-form" initialValues={getCICodebaseWithoutCloneCodebase()} onSubmit={jest.fn()}>
+            {formik => (
+              <Form>
+                <CICodebaseInputSetForm
+                  {...getCICodebaseInputSetFormPropsCloneCodebase({ formik, cloneCodebase: false })}
+                  viewType={StepViewType.DeploymentForm}
+                />
+              </Form>
+            )}
+          </Formik>
+        </TestWrapper>
+      )
+      await waitFor(() => expect(queryByText(container, 'codebase')).toBeFalsy())
     })
   })
 })

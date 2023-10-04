@@ -690,6 +690,189 @@ export const getCICodebaseParallelTemplateProps = ({ formik }: { formik: any }):
   }
 })
 
+export const getCICodebaseWithCloneCodebase = (): object => ({
+  identifier: 'withCloneCodebase',
+  properties: {
+    ci: {
+      codebase: {
+        connectorRef: '<+input>',
+        repoName: '<+input>',
+        build: '<+input>',
+        depth: '<+input>',
+        sslVerify: '<+input>',
+        prCloneStrategy: '<+input>',
+        resources: {
+          limits: {
+            memory: '<+input>',
+            cpu: '<+input>'
+          }
+        }
+      }
+    }
+  },
+  stages: [
+    {
+      stage: {
+        identifier: 's',
+        type: 'CI',
+        spec: {
+          cloneCodebase: true,
+          infrastructure: {
+            type: 'KubernetesDirect',
+            spec: {
+              connectorRef: '',
+              namespace: ''
+            }
+          },
+          execution: {
+            steps: [
+              {
+                step: {
+                  identifier: 's',
+                  type: 'Run',
+                  spec: {
+                    connectorRef: ''
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+})
+
+export const getCICodebaseWithoutCloneCodebase = (): object => ({
+  identifier: 'withoutCloneCodebase',
+  stages: [
+    {
+      stage: {
+        identifier: 's',
+        type: 'CI',
+        spec: {
+          cloneCodebase: false,
+          infrastructure: {
+            type: 'KubernetesDirect',
+            spec: {
+              connectorRef: '',
+              namespace: ''
+            }
+          },
+          execution: {
+            steps: [
+              {
+                step: {
+                  identifier: 's',
+                  type: 'Run',
+                  spec: {
+                    connectorRef: ''
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+})
+
+export const getCICodebaseInputSetFormPropsCloneCodebase = ({
+  formik,
+  cloneCodebase = true
+}: {
+  formik: any
+  cloneCodebase: boolean
+}): any => {
+  return {
+    shouldRender: true,
+    path: '',
+    formik,
+    template: {
+      identifier: 'cicodebaseallfieldsruntime',
+      template: {
+        templateInputs: {
+          properties: {
+            ci: {
+              codebase: {
+                connectorRef: '<+input>',
+                repoName: '<+input>',
+                build: '<+input>',
+                depth: '<+input>',
+                sslVerify: '<+input>',
+                prCloneStrategy: '<+input>',
+                resources: {
+                  limits: {
+                    memory: '<+input>',
+                    cpu: '<+input>'
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    originalPipeline: {
+      properties: {
+        ci: {
+          codebase: {
+            connectorRef: '<+input>',
+            repoName: '<+input>',
+            build: '<+input>',
+            depth: '<+input>',
+            sslVerify: '<+input>',
+            prCloneStrategy: '<+input>',
+            resources: {
+              limits: {
+                memory: '<+input>',
+                cpu: '<+input>'
+              }
+            }
+          }
+        }
+      },
+      stages: [
+        {
+          stage: {
+            identifier: 's',
+            type: 'CI',
+            spec: {
+              cloneCodebase,
+              infrastructure: {
+                type: 'KubernetesDirect',
+                spec: {
+                  connectorRef: '',
+                  namespace: ''
+                }
+              },
+              execution: {
+                steps: [
+                  {
+                    step: {
+                      identifier: 's',
+                      type: 'Run',
+                      spec: {
+                        connectorRef: ''
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      name: 'cicodebase-all-fields-copy',
+      identifier: 'cicodebaseallfieldscopy',
+      tags: {},
+      projectIdentifier: 'mtran',
+      orgIdentifier: 'default'
+    }
+  }
+}
+
 export function MockedIACMMFE({ children }: PropsWithChildren<unknown>): ReactElement {
   return <div>{children}</div>
 }
