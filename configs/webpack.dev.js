@@ -36,6 +36,7 @@ const NEW_NAV_CONTENTFUL_ACCESS_TOKEN = process.env.NEW_NAV_CONTENTFUL_ACCESS_TO
 const NEW_NAV_CONTENTFUL_SPACE = process.env.NEW_NAV_CONTENTFUL_SPACE
 const NEW_NAV_CONTENTFUL_ENVIRONMENT = process.env.NEW_NAV_CONTENTFUL_ENVIRONMENT
 const HARNESS_NO_AUTH_HEADER = process.env.HARNESS_NO_AUTH_HEADER === 'true'
+const SEGMENT_TOKEN = process.env.SEGMENT_TOKEN
 const DEV_FF = Object.keys(process.env)
   .filter(f => f.startsWith('FF_'))
   .reduce((obj, key) => ({ ...obj, [key.replace(/^FF_/, '')]: process.env[key] === 'true' }), {})
@@ -49,6 +50,7 @@ console.table({
   HELP_PANEL_ENVIRONMENT,
   HARNESS_NO_AUTH_HEADER,
   PUBLIC_ACCESS_ENABLED_DEV,
+  SEGMENT_TOKEN,
   ...DEV_FF
 })
 
@@ -156,7 +158,8 @@ const config = {
         HARNESS_FF_SDK_KEY_DEV: HARNESS_FF_SDK_KEY,
         HARNESS_FF_SDK_ASYNC_DEV: HARNESS_FF_SDK_ASYNC,
         HARNESS_NO_AUTH_HEADER: HARNESS_NO_AUTH_HEADER,
-        PUBLIC_ACCESS_ENABLED_DEV: PUBLIC_ACCESS_ENABLED_DEV
+        PUBLIC_ACCESS_ENABLED_DEV: PUBLIC_ACCESS_ENABLED_DEV,
+        SEGMENT_TOKEN_DEV: SEGMENT_TOKEN
       }
     }),
     new MiniCssExtractPlugin({
