@@ -213,55 +213,31 @@ Object {
                             />
                           </svg>
                         </span>
-                        cd.getStartedWithCD.productivity
-                      </p>
-                      <p
-                        class="StyledProps--font StyledProps--main bodyText StyledProps--color StyledProps--color-black StyledProps--font-align-left"
-                        style="display: flex; align-items: center;"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-black"
-                          data-icon="flash"
-                        >
-                          <svg
-                            height="18"
-                            viewBox="0 0 33 28"
-                            width="18"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              clip-rule="evenodd"
-                              d="M3.773 17.341L20.885 1.75l-2.297 8.909h8.184L9.66 26.25l2.297-8.909z"
-                              fill="#ff5310"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                        cd.getStartedWithCD.frequency
-                      </p>
-                      <p
-                        class="StyledProps--font StyledProps--main bodyText StyledProps--color StyledProps--color-black StyledProps--font-align-left"
-                        style="display: flex; align-items: center;"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-black"
-                          data-icon="flash"
-                        >
-                          <svg
-                            height="18"
-                            viewBox="0 0 33 28"
-                            width="18"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              clip-rule="evenodd"
-                              d="M3.773 17.341L20.885 1.75l-2.297 8.909h8.184L9.66 26.25l2.297-8.909z"
-                              fill="#ff5310"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
                         cd.getStartedWithCD.velocity
+                      </p>
+                      <p
+                        class="StyledProps--font StyledProps--main bodyText StyledProps--color StyledProps--color-black StyledProps--font-align-left"
+                        style="display: flex; align-items: center;"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-black"
+                          data-icon="flash"
+                        >
+                          <svg
+                            height="18"
+                            viewBox="0 0 33 28"
+                            width="18"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clip-rule="evenodd"
+                              d="M3.773 17.341L20.885 1.75l-2.297 8.909h8.184L9.66 26.25l2.297-8.909z"
+                              fill="#ff5310"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </span>
+                        cd.getStartedWithCD.visibility
                       </p>
                     </div>
                   </div>
@@ -331,6 +307,19 @@ Object {
                         >
                           <li>
                             <a
+                              href="https://developer.harness.io/docs/continuous-delivery/get-started/key-concepts"
+                              rel="noreferrer"
+                              target="_blank"
+                            >
+                              cd.getStartedWithCD.cdresources.cdconcepts
+                            </a>
+                          </li>
+                        </p>
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--margin-bottom-large StyledProps--font-align-left"
+                        >
+                          <li>
+                            <a
                               href="https://developer.harness.io/tutorials/cd-pipelines"
                               rel="noreferrer"
                               target="_blank"
@@ -344,24 +333,11 @@ Object {
                         >
                           <li>
                             <a
-                              href="https://developer.harness.io/docs/continuous-delivery/get-started/cd-pipeline-basics"
+                              href="https://developer.harness.io/docs/continuous-delivery/gitops/get-started/harness-git-ops-basics"
                               rel="noreferrer"
                               target="_blank"
                             >
-                              cd.getStartedWithCD.cdresources.cdbasics
-                            </a>
-                          </li>
-                        </p>
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--margin-bottom-large StyledProps--font-align-left"
-                        >
-                          <li>
-                            <a
-                              href="https://developer.harness.io/docs/continuous-delivery/get-started/create-first-pipeline"
-                              rel="noreferrer"
-                              target="_blank"
-                            >
-                              cd.getStartedWithCD.cdresources.firstcdpipeline
+                              cd.getStartedWithCD.cdresources.gitopsbasics
                             </a>
                           </li>
                         </p>
@@ -383,24 +359,11 @@ Object {
                         >
                           <li>
                             <a
-                              href="https://developer.harness.io/docs/continuous-delivery/get-started/services-and-environments-overview"
+                              href="https://developer.harness.io/docs/platform/automation/cli/install"
                               rel="noreferrer"
                               target="_blank"
                             >
-                              cd.getStartedWithCD.cdresources.svcinfra
-                            </a>
-                          </li>
-                        </p>
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--margin-bottom-large StyledProps--font-align-left"
-                        >
-                          <li>
-                            <a
-                              href="https://developer.harness.io/docs/platform/resource-development/terraform/automate-harness-onboarding/?utm_source=harness-app&utm_medium=intercom&utm_campaign=cd-welcome-post"
-                              rel="noreferrer"
-                              target="_blank"
-                            >
-                              cd.getStartedWithCD.cdresources.terraformcli
+                              cd.getStartedWithCD.cdresources.getstartedcli
                             </a>
                           </li>
                         </p>
@@ -623,55 +586,31 @@ Object {
                           />
                         </svg>
                       </span>
-                      cd.getStartedWithCD.productivity
-                    </p>
-                    <p
-                      class="StyledProps--font StyledProps--main bodyText StyledProps--color StyledProps--color-black StyledProps--font-align-left"
-                      style="display: flex; align-items: center;"
-                    >
-                      <span
-                        class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-black"
-                        data-icon="flash"
-                      >
-                        <svg
-                          height="18"
-                          viewBox="0 0 33 28"
-                          width="18"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            clip-rule="evenodd"
-                            d="M3.773 17.341L20.885 1.75l-2.297 8.909h8.184L9.66 26.25l2.297-8.909z"
-                            fill="#ff5310"
-                            fill-rule="evenodd"
-                          />
-                        </svg>
-                      </span>
-                      cd.getStartedWithCD.frequency
-                    </p>
-                    <p
-                      class="StyledProps--font StyledProps--main bodyText StyledProps--color StyledProps--color-black StyledProps--font-align-left"
-                      style="display: flex; align-items: center;"
-                    >
-                      <span
-                        class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-black"
-                        data-icon="flash"
-                      >
-                        <svg
-                          height="18"
-                          viewBox="0 0 33 28"
-                          width="18"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            clip-rule="evenodd"
-                            d="M3.773 17.341L20.885 1.75l-2.297 8.909h8.184L9.66 26.25l2.297-8.909z"
-                            fill="#ff5310"
-                            fill-rule="evenodd"
-                          />
-                        </svg>
-                      </span>
                       cd.getStartedWithCD.velocity
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main bodyText StyledProps--color StyledProps--color-black StyledProps--font-align-left"
+                      style="display: flex; align-items: center;"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-black"
+                        data-icon="flash"
+                      >
+                        <svg
+                          height="18"
+                          viewBox="0 0 33 28"
+                          width="18"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            clip-rule="evenodd"
+                            d="M3.773 17.341L20.885 1.75l-2.297 8.909h8.184L9.66 26.25l2.297-8.909z"
+                            fill="#ff5310"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                      cd.getStartedWithCD.visibility
                     </p>
                   </div>
                 </div>
@@ -741,6 +680,19 @@ Object {
                       >
                         <li>
                           <a
+                            href="https://developer.harness.io/docs/continuous-delivery/get-started/key-concepts"
+                            rel="noreferrer"
+                            target="_blank"
+                          >
+                            cd.getStartedWithCD.cdresources.cdconcepts
+                          </a>
+                        </li>
+                      </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--margin-bottom-large StyledProps--font-align-left"
+                      >
+                        <li>
+                          <a
                             href="https://developer.harness.io/tutorials/cd-pipelines"
                             rel="noreferrer"
                             target="_blank"
@@ -754,24 +706,11 @@ Object {
                       >
                         <li>
                           <a
-                            href="https://developer.harness.io/docs/continuous-delivery/get-started/cd-pipeline-basics"
+                            href="https://developer.harness.io/docs/continuous-delivery/gitops/get-started/harness-git-ops-basics"
                             rel="noreferrer"
                             target="_blank"
                           >
-                            cd.getStartedWithCD.cdresources.cdbasics
-                          </a>
-                        </li>
-                      </p>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--margin-bottom-large StyledProps--font-align-left"
-                      >
-                        <li>
-                          <a
-                            href="https://developer.harness.io/docs/continuous-delivery/get-started/create-first-pipeline"
-                            rel="noreferrer"
-                            target="_blank"
-                          >
-                            cd.getStartedWithCD.cdresources.firstcdpipeline
+                            cd.getStartedWithCD.cdresources.gitopsbasics
                           </a>
                         </li>
                       </p>
@@ -793,24 +732,11 @@ Object {
                       >
                         <li>
                           <a
-                            href="https://developer.harness.io/docs/continuous-delivery/get-started/services-and-environments-overview"
+                            href="https://developer.harness.io/docs/platform/automation/cli/install"
                             rel="noreferrer"
                             target="_blank"
                           >
-                            cd.getStartedWithCD.cdresources.svcinfra
-                          </a>
-                        </li>
-                      </p>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--margin-bottom-large StyledProps--font-align-left"
-                      >
-                        <li>
-                          <a
-                            href="https://developer.harness.io/docs/platform/resource-development/terraform/automate-harness-onboarding/?utm_source=harness-app&utm_medium=intercom&utm_campaign=cd-welcome-post"
-                            rel="noreferrer"
-                            target="_blank"
-                          >
-                            cd.getStartedWithCD.cdresources.terraformcli
+                            cd.getStartedWithCD.cdresources.getstartedcli
                           </a>
                         </li>
                       </p>

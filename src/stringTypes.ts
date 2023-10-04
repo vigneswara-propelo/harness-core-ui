@@ -6399,12 +6399,11 @@ export interface StringsMap {
   'cd.getStartedWithCD.backToClusterList': string
   'cd.getStartedWithCD.backToRepoList': string
   'cd.getStartedWithCD.cdWizardEventName': string
-  'cd.getStartedWithCD.cdresources.cdbasics': string
+  'cd.getStartedWithCD.cdresources.cdconcepts': string
   'cd.getStartedWithCD.cdresources.cdtuts': string
-  'cd.getStartedWithCD.cdresources.firstcdpipeline': string
+  'cd.getStartedWithCD.cdresources.getstartedcli': string
+  'cd.getStartedWithCD.cdresources.gitopsbasics': string
   'cd.getStartedWithCD.cdresources.pipelineModeling': string
-  'cd.getStartedWithCD.cdresources.svcinfra': string
-  'cd.getStartedWithCD.cdresources.terraformcli': string
   'cd.getStartedWithCD.checkAgentStatus': string
   'cd.getStartedWithCD.checkAnnonymously': string
   'cd.getStartedWithCD.checkAuthSettings': string
@@ -6675,7 +6674,6 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.what.samplesvc': string
   'cd.getStartedWithCD.flowByQuestions.what.svcrep': string
   'cd.getStartedWithCD.flowByQuestions.what.title': string
-  'cd.getStartedWithCD.frequency': string
   'cd.getStartedWithCD.gcpGen1': string
   'cd.getStartedWithCD.gcpGen2': string
   'cd.getStartedWithCD.getStartedBtn': string
@@ -6741,7 +6739,6 @@ export interface StringsMap {
   'cd.getStartedWithCD.onBoardingSubTitle': string
   'cd.getStartedWithCD.onboardingTitle': string
   'cd.getStartedWithCD.prepareCluserInfo': string
-  'cd.getStartedWithCD.productivity': string
   'cd.getStartedWithCD.provideManifest': string
   'cd.getStartedWithCD.provideMyOwn': string
   'cd.getStartedWithCD.provisionedSuccessfully': string
@@ -6804,6 +6801,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.usernameAndPassword': string
   'cd.getStartedWithCD.velocity': string
   'cd.getStartedWithCD.viewDelegateDetails': string
+  'cd.getStartedWithCD.visibility': string
   'cd.getStartedWithCD.whatDelegateSec': string
   'cd.getStartedWithCD.whyHarnessCD': string
   'cd.getStartedWithCD.workloadDeploy': string

@@ -133,28 +133,24 @@ function LearnMoreCD(): JSX.Element {
   const { getString } = useStrings()
   const CDResources = [
     {
+      label: getString('cd.getStartedWithCD.cdresources.cdconcepts'),
+      url: 'https://developer.harness.io/docs/continuous-delivery/get-started/key-concepts'
+    },
+    {
       label: getString('cd.getStartedWithCD.cdresources.cdtuts'),
       url: 'https://developer.harness.io/tutorials/cd-pipelines'
     },
     {
-      label: getString('cd.getStartedWithCD.cdresources.cdbasics'),
-      url: 'https://developer.harness.io/docs/continuous-delivery/get-started/cd-pipeline-basics'
-    },
-    {
-      label: getString('cd.getStartedWithCD.cdresources.firstcdpipeline'),
-      url: 'https://developer.harness.io/docs/continuous-delivery/get-started/create-first-pipeline'
+      label: getString('cd.getStartedWithCD.cdresources.gitopsbasics'),
+      url: 'https://developer.harness.io/docs/continuous-delivery/gitops/get-started/harness-git-ops-basics'
     },
     {
       label: getString('cd.getStartedWithCD.cdresources.pipelineModeling'),
       url: 'https://developer.harness.io/docs/continuous-delivery/get-started/cd-pipeline-modeling-overview'
     },
     {
-      label: getString('cd.getStartedWithCD.cdresources.svcinfra'),
-      url: 'https://developer.harness.io/docs/continuous-delivery/get-started/services-and-environments-overview'
-    },
-    {
-      label: getString('cd.getStartedWithCD.cdresources.terraformcli'),
-      url: 'https://developer.harness.io/docs/platform/resource-development/terraform/automate-harness-onboarding/?utm_source=harness-app&utm_medium=intercom&utm_campaign=cd-welcome-post'
+      label: getString('cd.getStartedWithCD.cdresources.getstartedcli'),
+      url: 'https://developer.harness.io/docs/platform/automation/cli/install'
     }
   ]
   return (
@@ -177,9 +173,8 @@ function WhyUseCD(): JSX.Element {
     getString('cd.getStartedWithCD.standardization'),
     getString('cd.getStartedWithCD.quality'),
     getString('cd.getStartedWithCD.restore'),
-    getString('cd.getStartedWithCD.productivity'),
-    getString('cd.getStartedWithCD.frequency'),
-    getString('cd.getStartedWithCD.velocity')
+    getString('cd.getStartedWithCD.velocity'),
+    getString('cd.getStartedWithCD.visibility')
   ]
   return (
     <>
