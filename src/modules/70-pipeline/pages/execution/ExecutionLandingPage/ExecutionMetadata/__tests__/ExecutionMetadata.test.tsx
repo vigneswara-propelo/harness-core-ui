@@ -19,6 +19,7 @@ import branchMock from './mocks/branch.json'
 import tagMock from './mocks/tag.json'
 import pullRequestMock from './mocks/pullRequest.json'
 import parentPipelineInfoMock from './mocks/parentPipelineInfo.json'
+import artifactTriggerPipelineExecutionInfoMock from './mocks/artifactTriggerPipelineExecutionInfo.json'
 
 jest.mock('@pipeline/context/ExecutionContext', () => ({
   useExecutionContext: jest.fn()
@@ -122,6 +123,38 @@ describe('<ExecutionMetadata.test /> tests', () => {
         module: pathParams.module,
         source: pathParams.source,
         stage: stagenodeid
+      })
+    )
+  })
+
+  test('Show link to the trigger details page for executions having triggerType && triggerIdentifier info', async () => {
+    const pipelineExecutionSummary = artifactTriggerPipelineExecutionInfoMock.data.pipelineExecutionSummary
+    ;(useExecutionContext as jest.Mock).mockImplementation(() => ({
+      pipelineExecutionDetail: {
+        pipelineExecutionSummary
+      }
+    }))
+
+    const { triggerIdentifier } = pipelineExecutionSummary.executionTriggerInfo.triggeredBy
+
+    const { queryByText, container } = render(
+      <TestWrapper path={TEST_EXECUTION_PATH} pathParams={pathParams as unknown as Record<string, string>}>
+        <ExecutionMetadata />
+      </TestWrapper>
+    )
+
+    const triggerDetailsLink = await screen.findByRole('link', { name: triggerIdentifier })
+    expect(container.querySelector('[data-icon="trigger-artifact"]')).toBeInTheDocument()
+    expect(queryByText(triggerIdentifier)).toBeInTheDocument()
+    expect(triggerDetailsLink).toHaveAttribute(
+      'href',
+      routes.toTriggersDetailPage({
+        accountId: pathParams.accountId,
+        orgIdentifier: pathParams.orgIdentifier,
+        projectIdentifier: pathParams.projectIdentifier,
+        pipelineIdentifier: pathParams.pipelineIdentifier,
+        module: pathParams.module,
+        triggerIdentifier
       })
     )
   })

@@ -700,6 +700,7 @@ export function DefaultTriggerInfoCell(props: UseTableCellProps<PipelineExecutio
             triggerType
           })}
           target="_blank"
+          onClick={killEvent}
         >
           <Text
             font={{ variation: FontVariation.SMALL }}

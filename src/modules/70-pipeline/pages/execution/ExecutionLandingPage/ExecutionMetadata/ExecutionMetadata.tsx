@@ -28,6 +28,10 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { useQueryParams } from '@common/hooks'
+import {
+  mapTriggerTypeToIconAndExecutionText,
+  triggerTypesToShowTriggersDetailLink
+} from '@modules/70-pipeline/utils/triggerUtils'
 import css from './ExecutionMetadata.module.scss'
 
 // stage executed name limit, exceeding this we will show a popover
@@ -71,15 +75,12 @@ function ExecutionMetadataTrigger(): React.ReactElement {
     storeType
   })
 
-  if (
-    (triggerType === 'WEBHOOK' || triggerType === 'WEBHOOK_CUSTOM' || triggerType === 'SCHEDULER_CRON') &&
-    !hasparentpipeline
-  ) {
+  if (triggerTypesToShowTriggersDetailLink.includes(triggerType) && !hasparentpipeline) {
     return (
       <div className={css.trigger}>
         <Icon
           size={14}
-          name={triggerType === 'SCHEDULER_CRON' ? 'stopwatch' : 'trigger-execution'}
+          name={defaultTo(mapTriggerTypeToIconAndExecutionText(triggerType, getString)?.iconName, 'trigger-execution')}
           margin={{ right: 'small' }}
         />
         {triggerType && triggerIdentifier ? (

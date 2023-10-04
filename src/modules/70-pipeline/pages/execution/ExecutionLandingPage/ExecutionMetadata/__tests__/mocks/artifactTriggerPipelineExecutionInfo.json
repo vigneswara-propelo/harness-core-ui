@@ -1,0 +1,191 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "pipelineExecutionSummary": {
+      "pipelineIdentifier": "ECRPipeline",
+      "orgIdentifier": "default",
+      "projectIdentifier": "sridhartest",
+      "planExecutionId": "Y24-qC4rQ1G5PqNXsTi9gA",
+      "name": "ECR-Pipeline",
+      "yamlVersion": "0",
+      "status": "Failed",
+      "tags": [],
+      "executionTriggerInfo": {
+        "triggerType": "ARTIFACT",
+        "triggeredBy": {
+          "uuid": "systemUser",
+          "identifier": "ECR",
+          "extraInfo": {
+            "execution_trigger_tag_needed_for_abort": "rXUXvbFqRr2XwcjBu3Oq-Q:default:sridhartest:ECRPipeline",
+            "triggerRef": "rXUXvbFqRr2XwcjBu3Oq-Q/default/sridhartest/ECR"
+          },
+          "triggerIdentifier": "ECR",
+          "triggerName": "ECR"
+        },
+        "isRerun": false,
+        "buildInfo": {
+          "build": "service-csr-integration-lambda-8.13.0-20230925.185300-11.jar",
+          "imagePath": "sridhar-test"
+        }
+      },
+      "executionErrorInfo": {
+        "message": "Shell Script execution failed. Please check execution logs."
+      },
+      "governanceMetadata": {
+        "id": "",
+        "deny": false,
+        "details": [],
+        "message": "",
+        "timestamp": "0",
+        "status": "",
+        "accountId": "",
+        "orgId": "",
+        "projectId": "",
+        "entity": "",
+        "type": "",
+        "action": "",
+        "created": "0"
+      },
+      "moduleInfo": {
+        "cd": {
+          "__recast": "io.harness.cdng.pipeline.executions.beans.CDPipelineModuleInfo",
+          "artifactDisplayNames": [
+            "service-csr-integration-lambda-8.13.0-20230925.185300-11.jar",
+            "479370281431.dkr.ecr.us-east-1.amazonaws.com/sridhar-test:service-csr-integration-lambda-8.13.0-20230925.185300-11.jar",
+            "sridhar-test:service-csr-integration-lambda-8.13.0-20230925.185300-11.jar",
+            "us-east-1",
+            "primary",
+            "sridhar-test"
+          ],
+          "envGroupIdentifiers": [],
+          "envIdentifiers": ["test"],
+          "environmentTypes": ["Production"],
+          "freezeIdentifiers": [],
+          "gitOpsAppIdentifiers": [],
+          "infrastructureIdentifiers": ["test1"],
+          "infrastructureNames": ["test1"],
+          "infrastructureTypes": ["KubernetesDirect"],
+          "serviceDefinitionTypes": ["Kubernetes"],
+          "serviceIdentifiers": ["ECR"]
+        }
+      },
+      "layoutNodeMap": {
+        "bv7QDaplTA-misZnORM0Tw": {
+          "nodeType": "Deployment",
+          "nodeGroup": "STAGE",
+          "nodeIdentifier": "Srg1",
+          "name": "Srg1",
+          "nodeUuid": "bv7QDaplTA-misZnORM0Tw",
+          "status": "Failed",
+          "module": "cd",
+          "moduleInfo": {
+            "cd": {
+              "__recast": "io.harness.cdng.pipeline.executions.beans.CDStageModuleInfo",
+              "rollbackDuration": 2015,
+              "serviceInfo": {
+                "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary",
+                "identifier": "ECR",
+                "displayName": "ECR",
+                "deploymentType": "Kubernetes",
+                "gitOpsEnabled": false,
+                "artifacts": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary$ArtifactsSummary",
+                  "primary": {
+                    "__recast": "io.harness.cdng.artifact.EcrArtifactSummary",
+                    "imagePath": "sridhar-test",
+                    "tag": "service-csr-integration-lambda-8.13.0-20230925.185300-11.jar"
+                  },
+                  "artifactDisplayName": "sridhar-test:service-csr-integration-lambda-8.13.0-20230925.185300-11.jar",
+                  "sidecars": []
+                },
+                "manifestInfo": {
+                  "__recast": "io.harness.cdng.manifest.yaml.summary.ManifestStoreInfo"
+                }
+              },
+              "infraExecutionSummary": {
+                "__recast": "io.harness.cdng.pipeline.executions.beans.InfraExecutionSummary",
+                "identifier": "test",
+                "name": "test",
+                "type": "Production",
+                "infrastructureIdentifier": "test1",
+                "infrastructureName": "test1"
+              }
+            }
+          },
+          "startTs": 1695668777128,
+          "endTs": 1695668809405,
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": []
+          },
+          "nodeRunInfo": {
+            "whenCondition": "<+OnPipelineSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnPipelineSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "failureInfo": {
+            "message": "Shell Script execution failed. Please check execution logs."
+          },
+          "failureInfoDTO": {
+            "message": "Shell Script execution failed. Please check execution logs.",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "nodeExecutionId": "5Z9AfCndTriBtFZlvIiA9A",
+          "executionInputConfigured": false,
+          "isRollbackStageNode": false
+        },
+        "XVL6R2dCTlyWC7DHl8_1PQ": {
+          "nodeType": "PipelineRollback",
+          "nodeGroup": "STAGE",
+          "nodeIdentifier": "prb-QvEJsiQSStS212jstP9iUw",
+          "name": "Pipeline Rollback",
+          "nodeUuid": "XVL6R2dCTlyWC7DHl8_1PQ",
+          "status": "NotStarted",
+          "module": "pms",
+          "moduleInfo": {
+            "pms": {}
+          },
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": []
+          },
+          "isRollbackStageNode": false
+        }
+      },
+      "modules": ["cd", "pms"],
+      "startingNodeId": "bv7QDaplTA-misZnORM0Tw",
+      "startTs": 1695668775183,
+      "endTs": 1695668810574,
+      "createdAt": 1695668775554,
+      "canRetry": true,
+      "showRetryHistory": false,
+      "runSequence": 2,
+      "successfulStagesCount": 0,
+      "runningStagesCount": 0,
+      "failedStagesCount": 1,
+      "totalStagesCount": 1,
+      "storeType": "INLINE",
+      "executionInputConfigured": false,
+      "parentStageInfo": {
+        "hasparentpipeline": false,
+        "stagenodeid": "",
+        "executionid": "",
+        "identifier": "",
+        "projectid": "",
+        "orgid": "",
+        "runsequence": 0
+      },
+      "allowStageExecutions": false,
+      "executionMode": "NORMAL",
+      "notesExistForPlanExecutionId": false,
+      "stagesExecution": false
+    }
+  }
+}

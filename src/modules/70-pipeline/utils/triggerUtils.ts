@@ -71,3 +71,11 @@ export const mapTriggerTypeToIconAndExecutionText = (
     }
   }
 }
+
+export const triggerTypesToShowTriggersDetailLink: ExecutorInfoDTO['triggerType'][] = [
+  'WEBHOOK',
+  'WEBHOOK_CUSTOM',
+  'SCHEDULER_CRON',
+  'ARTIFACT',
+  'MANIFEST'
+]
