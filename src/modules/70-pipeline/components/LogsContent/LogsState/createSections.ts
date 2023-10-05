@@ -46,6 +46,7 @@ export function getTaskFromExecutableResponse(node: ExecutionNode): any {
   return (
     executableResponse.taskChain ||
     executableResponse.task ||
+    executableResponse.asyncChain ||
     executableResponse.sync ||
     executableResponse.async ||
     executableResponse.child ||
@@ -55,7 +56,6 @@ export function getTaskFromExecutableResponse(node: ExecutionNode): any {
 
 export function createSections(state: State, action: Action<ActionType.CreateSections>): State {
   const { node, selectedStep, selectedStage, getSectionName } = action.payload
-
   if (!node) {
     return getDefaultReducerState({ selectedStage, selectedStep })
   }
