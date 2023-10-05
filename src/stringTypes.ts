@@ -790,6 +790,7 @@ export interface StringsMap {
   'common.noRefData': string
   'common.noSearchResultsFound': string
   'common.noTags': string
+  'common.node': string
   'common.noexpiration': string
   'common.notEnabled': string
   'common.note': string
@@ -8373,7 +8374,6 @@ export interface StringsMap {
   'ce.perspectives.workloadDetails.fieldNames.memoryAllocatable': string
   'ce.perspectives.workloadDetails.fieldNames.memoryUnitPrice': string
   'ce.perspectives.workloadDetails.fieldNames.namespace': string
-  'ce.perspectives.workloadDetails.fieldNames.node': string
   'ce.perspectives.workloadDetails.fieldNames.nodepoolName': string
   'ce.perspectives.workloadDetails.fieldNames.podCapacity': string
   'ce.perspectives.workloadDetails.fieldNames.workload': string

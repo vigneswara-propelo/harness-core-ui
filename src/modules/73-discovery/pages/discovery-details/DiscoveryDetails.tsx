@@ -165,9 +165,13 @@ const DiscoveryDetails: React.FC = () => {
           </Layout.Horizontal>
         }
       />
-      <Page.Body className={css.container}>
-        <Layout.Horizontal className={css.tabsContainerMain} flex={{ justifyContent: 'space-between' }}>
-          <Container width={'100%'}>
+      <Page.Body className={css.pageBodyHeightOverride}>
+        <Layout.Horizontal
+          height="100%"
+          className={css.tabsContainerMain}
+          flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
+        >
+          <Container width={'100%'} height={'100%'} className={css.logsTab}>
             <Tabs
               id={'DiscoveredServiceTab'}
               defaultSelectedTabId={DiscoveryTabs.DISCOVERED_RESOURCES}

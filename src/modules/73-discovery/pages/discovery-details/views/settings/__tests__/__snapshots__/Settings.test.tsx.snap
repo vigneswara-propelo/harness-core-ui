@@ -3,9 +3,8 @@
 exports[`Overview tab tests should match snapshot 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody"
-    data-name="page-body"
-    data-testid="page-body"
+    class="StyledProps--font StyledProps--main"
+    style="width: 100%; height: 100%;"
   >
     <div
       class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"

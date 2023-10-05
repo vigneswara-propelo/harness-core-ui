@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Container, Layout, Page, PageSpinner, Text, Toggle } from '@harness/uicore'
+import { Container, Layout, PageSpinner, Text, Toggle } from '@harness/uicore'
 import { Divider } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
@@ -58,7 +58,7 @@ const Settings: React.FC = () => {
   }
 
   return (
-    <Page.Body>
+    <Container height={'100%'} width={'100%'}>
       {dAgentDataLoading ? (
         <PageSpinner />
       ) : (
@@ -187,7 +187,7 @@ const Settings: React.FC = () => {
           </Layout.Vertical>
         </Layout.Horizontal>
       )}
-    </Page.Body>
+    </Container>
   )
 }
 

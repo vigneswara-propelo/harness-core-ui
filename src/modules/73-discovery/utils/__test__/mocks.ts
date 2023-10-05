@@ -153,3 +153,74 @@ export const mockServices = {
     totalPages: 1
   }
 }
+
+export const mockLogData = `{"level":"","pos":1,"out":"{file:entry.go:41,func:github.com/wings-software/service-discovery/collector.Start,level:info,msg:go version go1.20.8,time:2023-10-04T04:30:15.872344691Z}","time":"2023-10-04T04:30:20.480817808Z","args":{"PodName":"sd-cluster-9ts9x","PodNamespace":"hce"}}
+{"level":"","pos":2,"out":"{file:entry.go:42,func:github.com/wings-software/service-discovery/collector.Start,level:info,msg:go os linux,time:2023-10-04T04:30:15.872758918Z}","time":"2023-10-04T04:30:20.843837081Z","args":{"PodName":"sd-cluster-9ts9x","PodNamespace":"hce"}}
+{"level":"","pos":2,"out":"{file:entry.go:42,func:github.com/wings-software/service-discovery/collector.Start,level:info,msg:go os linux,time:2023-10-04T04:30:15.872758918Z}","time":"2023-10-04T04:30:20.843837081Z","args":{"PodName":"sd-node-2gc9l","PodNamespace":"hce"}}`
+
+export const mockLogDataResponse = [
+  {
+    text: {
+      level: '',
+      out: '{file:entry.go:41,func:github.com/wings-software/service-discovery/collector.Start,level:info,msg:go version go1.20.8,time:2023-10-04T04:30:15.872344691Z}',
+      args: {
+        PodName: 'sd-cluster-9ts9x',
+        PodNamespace: 'hce'
+      }
+    }
+  },
+  {
+    text: {
+      level: '',
+      out: '{file:entry.go:42,func:github.com/wings-software/service-discovery/collector.Start,level:info,msg:go os linux,time:2023-10-04T04:30:15.872758918Z}',
+      args: {
+        PodName: 'sd-cluster-9ts9x',
+        PodNamespace: 'hce'
+      }
+    }
+  },
+  {
+    text: {
+      args: {
+        PodName: 'sd-node-2gc9l',
+        PodNamespace: 'hce'
+      },
+      level: '',
+      out: '{file:entry.go:42,func:github.com/wings-software/service-discovery/collector.Start,level:info,msg:go os linux,time:2023-10-04T04:30:15.872758918Z}'
+    }
+  }
+]
+
+export const installations = {
+  id: '651cea4d2dc5d1dc8a74530b',
+  agentID: '65126c42183f27a2381f9384',
+  delegateTaskID: '2c4sK0KkRsivFp6gb4kDRA-DEL',
+  delegateID: '',
+  delegateTaskStatus: 'SUCCESS',
+  agentDetails: {
+    cluster: {
+      name: 'sd-cluster-9ts9x',
+      namespace: 'hce',
+      uid: 'c63fbf54-0f32-4f3a-ad54-078cf8bddf41',
+      status: 'Succeeded'
+    },
+    node: [
+      {
+        name: 'sd-node-2gc9l',
+        namespace: 'hce',
+        uid: '234d86b8-454d-434f-87ff-5493e0f0f1ea',
+        status: 'Succeeded'
+      }
+    ],
+    status: 'SUCCESS'
+  },
+  isCronTriggered: true,
+  logStreamID: 'c70fbd79-4f7d-45e7-b65c-df4b6237336f',
+  logStreamCreatedAt: '2023-10-04T04:30:05.339Z',
+  isLogStreamOpen: false,
+  createdAt: '2023-10-04T04:30:05.339Z',
+  updatedAt: '2023-10-04T04:45:15.299Z',
+  createdBy: '',
+  updatedBy: '',
+  removed: false
+}

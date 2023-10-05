@@ -91,11 +91,7 @@ export const chartOptions = (series: Highcharts.SeriesScatterOptions[], getStrin
       formatter: function (this: any): any {
         return `
         <p><strong>${getString('message')}: </strong>${this?.point?.message}</p></br>${
-          this?.point?.hostname
-            ? `<p><strong>${getString('ce.perspectives.workloadDetails.fieldNames.node')}: </strong> ${
-                this.point.hostname
-              }</p>`
-            : ''
+          this?.point?.hostname ? `<p><strong>${getString('common.node')}: </strong> ${this.point.hostname}</p>` : ''
         }
         `
       },

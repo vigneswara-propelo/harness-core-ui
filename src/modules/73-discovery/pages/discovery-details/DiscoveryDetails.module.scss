@@ -10,6 +10,11 @@
   background-color: var(--primary-1) !important;
 }
 
+.pageBodyHeightOverride {
+  height: calc(var(--page-min-height) - 100px) !important;
+  min-height: calc(var(--page-min-height) - 100px) !important;
+}
+
 .tabsContainerMain {
   :global {
     .bp3-tabs {
@@ -27,6 +32,13 @@
   }
 }
 
-.container {
-  min-height: auto !important;
+.logsTab {
+  :global(.bp3-tabs) {
+    height: 100%;
+  }
+  :global(.bp3-tab-panel) {
+    margin-top: 0;
+    height: calc(100% - 43px);
+    overflow-y: scroll;
+  }
 }

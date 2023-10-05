@@ -5,13 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.pageBody {
-  height: 100vh !important;
-  display: flex;
-  flex-direction: row;
-}
-
 .selectableCard {
+  height: 100%;
+  overflow-y: scroll;
   :global {
     .bp3-card {
       width: 100% !important;
@@ -20,6 +16,19 @@
 }
 
 .logContainer {
-  height: 100%;
   overflow-y: scroll;
+}
+
+.pagination {
+  padding-left: var(--spacing-small) !important;
+  padding-right: var(--spacing-small) !important;
+  margin-top: auto !important;
+}
+
+.logsTab {
+  :global(.bp3-tab-panel) {
+    margin-top: 0;
+    height: calc(100% - 43px);
+    overflow-y: scroll;
+  }
 }

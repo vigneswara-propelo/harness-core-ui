@@ -7,8 +7,9 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly container: string
   readonly header: string
+  readonly logsTab: string
+  readonly pageBodyHeightOverride: string
   readonly tabsContainerMain: string
 }
 export default styles

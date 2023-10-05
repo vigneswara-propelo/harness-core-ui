@@ -23,11 +23,11 @@ const paginationProps = {
 }
 
 const mockListInstallation: servicediscovery.DatabaseInstallationCollection = {
-  agentID: '',
+  agentID: '1234',
   createdAt: '2023-06-21T13:17:41.491Z',
   createdBy: 'VgWXxi_6TdqAyplTQMg4CQ',
   updatedAt: '2023-06-21T13:17:41.491Z',
-  delegateID: '',
+  delegateID: '1234',
   updatedBy: ''
 }
 
@@ -46,12 +46,18 @@ jest.mock('services/servicediscovery', () => ({
   })
 }))
 
+jest.mock('services/logs', () => ({
+  useGetToken: jest.fn(() => ({ data: 'logs_token' })),
+  logBlobPromise: jest.fn(() => Promise.resolve({}))
+}))
+
 const PATH = routes.toDiscovery({ ...accountPathProps, ...projectPathProps, ...modulePathProps })
 const PATH_PARAMS = {
   accountId: 'accountId',
   orgIdentifier: 'default',
   projectIdentifier: 'Discovery_Test',
-  module: 'chaos'
+  module: 'chaos',
+  dAgentId: '1234'
 }
 
 describe('<DiscoveryHistory /> tests', () => {
@@ -64,7 +70,6 @@ describe('<DiscoveryHistory /> tests', () => {
       </TestWrapper>
     )
     expect(servicediscovery.useListInstallation).toBeCalled()
-
     expect(container).toMatchSnapshot()
   })
 

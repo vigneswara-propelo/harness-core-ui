@@ -206,16 +206,17 @@ exports[`<DiscoveryDetails /> tests changed discovered details tabs 1`] = `
     </div>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody container"
+    class="StyledProps--font StyledProps--main PageBody--pageBody pageBodyHeightOverride"
     data-name="page-body"
     data-testid="page-body"
   >
     <div
-      class="Layout--horizontal StyledProps--main tabsContainerMain StyledProps--flex StyledProps--flex-justifyContent-space-between"
+      class="Layout--horizontal StyledProps--main tabsContainerMain StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
+      style="height: 100%;"
     >
       <div
-        class="StyledProps--font StyledProps--main"
-        style="width: 100%;"
+        class="StyledProps--font StyledProps--main logsTab"
+        style="width: 100%; height: 100%;"
       >
         <div
           class="bp3-tabs Tabs--main Tabs--horizontal"
@@ -511,16 +512,17 @@ exports[`<DiscoveryDetails /> tests changed discovered details tabs 2`] = `
     </div>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody container"
+    class="StyledProps--font StyledProps--main PageBody--pageBody pageBodyHeightOverride"
     data-name="page-body"
     data-testid="page-body"
   >
     <div
-      class="Layout--horizontal StyledProps--main tabsContainerMain StyledProps--flex StyledProps--flex-justifyContent-space-between"
+      class="Layout--horizontal StyledProps--main tabsContainerMain StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
+      style="height: 100%;"
     >
       <div
-        class="StyledProps--font StyledProps--main"
-        style="width: 100%;"
+        class="StyledProps--font StyledProps--main logsTab"
+        style="width: 100%; height: 100%;"
       >
         <div
           class="bp3-tabs Tabs--main Tabs--horizontal"
@@ -816,16 +818,17 @@ exports[`<DiscoveryDetails /> tests changed discovered details tabs 3`] = `
     </div>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody container"
+    class="StyledProps--font StyledProps--main PageBody--pageBody pageBodyHeightOverride"
     data-name="page-body"
     data-testid="page-body"
   >
     <div
-      class="Layout--horizontal StyledProps--main tabsContainerMain StyledProps--flex StyledProps--flex-justifyContent-space-between"
+      class="Layout--horizontal StyledProps--main tabsContainerMain StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
+      style="height: 100%;"
     >
       <div
-        class="StyledProps--font StyledProps--main"
-        style="width: 100%;"
+        class="StyledProps--font StyledProps--main logsTab"
+        style="width: 100%; height: 100%;"
       >
         <div
           class="bp3-tabs Tabs--main Tabs--horizontal"
@@ -903,9 +906,8 @@ exports[`<DiscoveryDetails /> tests changed discovered details tabs 3`] = `
             role="tabpanel"
           >
             <div
-              class="StyledProps--font StyledProps--main PageBody--pageBody"
-              data-name="page-body"
-              data-testid="page-body"
+              class="StyledProps--font StyledProps--main"
+              style="width: 100%; height: 100%;"
             >
               <div
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
@@ -1357,16 +1359,17 @@ exports[`<DiscoveryDetails /> tests changed discovered details tabs 4`] = `
     </div>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody container"
+    class="StyledProps--font StyledProps--main PageBody--pageBody pageBodyHeightOverride"
     data-name="page-body"
     data-testid="page-body"
   >
     <div
-      class="Layout--horizontal StyledProps--main tabsContainerMain StyledProps--flex StyledProps--flex-justifyContent-space-between"
+      class="Layout--horizontal StyledProps--main tabsContainerMain StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
+      style="height: 100%;"
     >
       <div
-        class="StyledProps--font StyledProps--main"
-        style="width: 100%;"
+        class="StyledProps--font StyledProps--main logsTab"
+        style="width: 100%; height: 100%;"
       >
         <div
           class="bp3-tabs Tabs--main Tabs--horizontal"
@@ -1665,16 +1668,17 @@ exports[`<DiscoveryDetails /> tests should match snapshot 1`] = `
     </div>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody container"
+    class="StyledProps--font StyledProps--main PageBody--pageBody pageBodyHeightOverride"
     data-name="page-body"
     data-testid="page-body"
   >
     <div
-      class="Layout--horizontal StyledProps--main tabsContainerMain StyledProps--flex StyledProps--flex-justifyContent-space-between"
+      class="Layout--horizontal StyledProps--main tabsContainerMain StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
+      style="height: 100%;"
     >
       <div
-        class="StyledProps--font StyledProps--main"
-        style="width: 100%;"
+        class="StyledProps--font StyledProps--main logsTab"
+        style="width: 100%; height: 100%;"
       >
         <div
           class="bp3-tabs Tabs--main Tabs--horizontal"
@@ -1970,16 +1974,17 @@ exports[`<DiscoveryDetails /> tests should render error view correctly 1`] = `
     </div>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody container"
+    class="StyledProps--font StyledProps--main PageBody--pageBody pageBodyHeightOverride"
     data-name="page-body"
     data-testid="page-body"
   >
     <div
-      class="Layout--horizontal StyledProps--main tabsContainerMain StyledProps--flex StyledProps--flex-justifyContent-space-between"
+      class="Layout--horizontal StyledProps--main tabsContainerMain StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
+      style="height: 100%;"
     >
       <div
-        class="StyledProps--font StyledProps--main"
-        style="width: 100%;"
+        class="StyledProps--font StyledProps--main logsTab"
+        style="width: 100%; height: 100%;"
       >
         <div
           class="bp3-tabs Tabs--main Tabs--horizontal"
@@ -2275,16 +2280,17 @@ exports[`<DiscoveryDetails /> tests should render loading view correctly 1`] = `
     </div>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody container"
+    class="StyledProps--font StyledProps--main PageBody--pageBody pageBodyHeightOverride"
     data-name="page-body"
     data-testid="page-body"
   >
     <div
-      class="Layout--horizontal StyledProps--main tabsContainerMain StyledProps--flex StyledProps--flex-justifyContent-space-between"
+      class="Layout--horizontal StyledProps--main tabsContainerMain StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
+      style="height: 100%;"
     >
       <div
-        class="StyledProps--font StyledProps--main"
-        style="width: 100%;"
+        class="StyledProps--font StyledProps--main logsTab"
+        style="width: 100%; height: 100%;"
       >
         <div
           class="bp3-tabs Tabs--main Tabs--horizontal"

@@ -65,8 +65,7 @@ const mockDiscoveryAgent: servicediscovery.ApiGetAgentResponse = {
       serviceAccount: 'cluster-admin-1',
       imageRegistry: 'index.docker.io/shovan1995',
       imageTag: 'ci',
-      imagePullPolicy: 'Always',
-      resources: {}
+      imagePullPolicy: 'Always'
     },
     data: {
       enableNodeAgent: false,

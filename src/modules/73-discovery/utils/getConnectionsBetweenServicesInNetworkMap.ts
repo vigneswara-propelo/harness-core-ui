@@ -5,7 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { ApiListCustomServiceConnection, DatabaseConnection, DatabaseNetworkMapEntity } from 'services/servicediscovery'
+import {
+  ApiListCustomServiceConnection,
+  DatabaseConnection,
+  DatabaseConnectionType,
+  DatabaseNetworkMapEntity
+} from 'services/servicediscovery'
 
 export default function getConnectionsBetweenServicesInNetworkMap(
   services: DatabaseNetworkMapEntity[] | null | undefined,
@@ -29,7 +34,7 @@ export default function getConnectionsBetweenServicesInNetworkMap(
         name: conn.destinationName,
         namespace: conn.destinationNamespace
       },
-      type: conn.type
+      type: conn.type as DatabaseConnectionType
     }))
 
   return connectionBetweenSelectedServices

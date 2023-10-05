@@ -93,6 +93,10 @@ export interface ApiGetInstallationResponse {
   delegateTaskID?: string
   delegateTaskStatus?: DatabaseDelegateTaskStatus
   id?: string
+  isCronTriggered?: boolean
+  isLogStreamOpen?: boolean
+  logStreamCreatedAt?: string
+  logStreamID?: string
   removed?: boolean
   removedAt?: string
   updatedAt?: string
@@ -128,6 +132,7 @@ export interface ApiGetNetworkMapResponse {
   removed?: boolean
   removedAt?: string
   resources?: DatabaseNetworkMapEntity[]
+  rules?: DatabaseNetworkMapRules
   tags?: string[]
   updatedAt?: string
   updatedBy?: string
@@ -305,6 +310,7 @@ export interface ApiPagination {
 export interface ApiUpdateAgentRequest {
   data?: DatabaseDataCollectionConfiguration
   kubernetes?: DatabaseKubernetesAgentConfiguration
+  log?: DatabaseLogConfiguration
 }
 
 export interface ApiUpdateNetworkMapRequest {
@@ -315,11 +321,13 @@ export interface ApiUpdateNetworkMapRequest {
 export interface DatabaseAgentConfiguration {
   data?: DatabaseDataCollectionConfiguration
   kubernetes?: DatabaseKubernetesAgentConfiguration
+  log?: DatabaseLogConfiguration
 }
 
 export interface DatabaseAgentDetails {
   cluster?: DatabaseAgentPodInfo
   node?: DatabaseAgentPodInfo[]
+  status?: DatabaseAgentStatus
 }
 
 export interface DatabaseAgentPodInfo {
@@ -329,14 +337,17 @@ export interface DatabaseAgentPodInfo {
   uid?: string
 }
 
+export type DatabaseAgentStatus = 'FAILED' | 'PARTIALLY-FAILED' | 'SUCCESS'
+
 export interface DatabaseConnection {
   from?: DatabaseNetworkMapEntity
+  manual?: boolean
   params?: {
     [key: string]: string
   }
   port?: string
   to?: DatabaseNetworkMapEntity
-  type?: string
+  type?: DatabaseConnectionType
 }
 
 export interface DatabaseConnectionCollection {
@@ -344,6 +355,7 @@ export interface DatabaseConnectionCollection {
   createdAt?: string
   createdBy?: string
   destinationIP?: string
+  destinationPodUID?: string
   destinationPort?: string
   id?: string
   nodeName?: string
@@ -356,6 +368,8 @@ export interface DatabaseConnectionCollection {
   updatedAt?: string
   updatedBy?: string
 }
+
+export type DatabaseConnectionType = 'TCP'
 
 export interface DatabaseCronConfig {
   expression?: string
@@ -469,6 +483,10 @@ export interface DatabaseInstallationCollection {
   delegateTaskID?: string
   delegateTaskStatus?: DatabaseDelegateTaskStatus
   id?: string
+  isCronTriggered?: boolean
+  isLogStreamOpen?: boolean
+  logStreamCreatedAt?: string
+  logStreamID?: string
   removed?: boolean
   removedAt?: string
   updatedAt?: string
@@ -540,6 +558,12 @@ export interface DatabaseK8SCustomServiceV1 {
 }
 
 export interface DatabaseK8SCustomWorkloadV1 {
+  annotations?: {
+    [key: string]: string
+  }
+  labels?: {
+    [key: string]: string
+  }
   owner?: V1ObjectReference
   podAnnotations?: {
     [key: string]: string
@@ -558,17 +582,18 @@ export interface DatabaseK8sConnectorRequest {
 }
 
 export interface DatabaseKubernetesAgentConfiguration {
-  affinity?: V1Affinity
+  imagePrefix?: string
   imagePullPolicy?: V1PullPolicy
   imagePullSecrets?: V1LocalObjectReference[]
   imageRegistry?: string
   imageTag?: string
   namespace?: string
   namespaced?: boolean
-  podSecurityContext?: V1PodSecurityContext
-  resources?: V1ResourceRequirements
   serviceAccount?: string
-  toleration?: V1Toleration[]
+}
+
+export interface DatabaseLogConfiguration {
+  [key: string]: any
 }
 
 export interface DatabaseNamespaceCollection {
@@ -610,6 +635,7 @@ export interface DatabaseNetworkMapCollection {
   removed?: boolean
   removedAt?: string
   resources?: DatabaseNetworkMapEntity[]
+  rules?: DatabaseNetworkMapRules
   tags?: string[]
   updatedAt?: string
   updatedBy?: string
@@ -620,6 +646,40 @@ export interface DatabaseNetworkMapEntity {
   kind?: string
   name?: string
   namespace?: string
+}
+
+export interface DatabaseNetworkMapRuleAnnotation {
+  key?: string
+  namespace?: string
+  value?: string
+}
+
+export interface DatabaseNetworkMapRuleHelmChart {
+  namespace?: string
+  releaseName?: string
+}
+
+export interface DatabaseNetworkMapRuleLabel {
+  key?: string
+  namespace?: string
+  value?: string
+}
+
+export interface DatabaseNetworkMapRuleNamespace {
+  name?: string
+}
+
+export interface DatabaseNetworkMapRules {
+  annotation?: DatabaseNetworkMapRuleAnnotation
+  helmChart?: DatabaseNetworkMapRuleHelmChart
+  label?: DatabaseNetworkMapRuleLabel
+  namespace?: DatabaseNetworkMapRuleNamespace
+  podAnnotation?: DatabaseNetworkMapRuleAnnotation
+  podLabel?: DatabaseNetworkMapRuleLabel
+  serviceAnnotation?: DatabaseNetworkMapRuleAnnotation
+  serviceLabel?: DatabaseNetworkMapRuleLabel
+  workloadAnnotation?: DatabaseNetworkMapRuleAnnotation
+  workloadLabel?: DatabaseNetworkMapRuleLabel
 }
 
 export interface DatabaseNodeCollection {
@@ -1360,7 +1420,7 @@ export interface V1Condition {
    * The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
    * +required
    * +kubebuilder:validation:Required
-   * +kubebuilder:validation:Pattern=``
+   * +kubebuilder:validation:Pattern=`^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*
    * +kubebuilder:validation:MaxLength=316
    */
   type?: string
@@ -5566,7 +5626,7 @@ export interface V1PortStatus {
    * The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
    * +optional
    * +kubebuilder:validation:Required
-   * +kubebuilder:validation:Pattern=``
+   * +kubebuilder:validation:Pattern=`^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*
    * +kubebuilder:validation:MaxLength=316
    */
   error?: string
@@ -7823,6 +7883,11 @@ export interface V1WindowsSecurityContextOptions {
   runAsUserName?: string
 }
 
+/**
+ * Create NetworkMap
+ */
+export type ApiCreateNetworkMapRequestRequestBody = ApiCreateNetworkMapRequest
+
 export interface ListAgentQueryParams {
   /**
    * account id is the account where you want to access the resource
@@ -9322,7 +9387,7 @@ export type CreateNetworkMapProps = Omit<
     ApiGetNetworkMapResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     CreateNetworkMapQueryParams,
-    ApiCreateNetworkMapRequest,
+    ApiCreateNetworkMapRequestRequestBody,
     CreateNetworkMapPathParams
   >,
   'path' | 'verb'
@@ -9339,7 +9404,7 @@ export const CreateNetworkMap = ({ agentIdentity, ...props }: CreateNetworkMapPr
     ApiGetNetworkMapResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     CreateNetworkMapQueryParams,
-    ApiCreateNetworkMapRequest,
+    ApiCreateNetworkMapRequestRequestBody,
     CreateNetworkMapPathParams
   >
     verb="POST"
@@ -9354,7 +9419,7 @@ export type UseCreateNetworkMapProps = Omit<
     ApiGetNetworkMapResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     CreateNetworkMapQueryParams,
-    ApiCreateNetworkMapRequest,
+    ApiCreateNetworkMapRequestRequestBody,
     CreateNetworkMapPathParams
   >,
   'path' | 'verb'
@@ -9371,7 +9436,7 @@ export const useCreateNetworkMap = ({ agentIdentity, ...props }: UseCreateNetwor
     ApiGetNetworkMapResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     CreateNetworkMapQueryParams,
-    ApiCreateNetworkMapRequest,
+    ApiCreateNetworkMapRequestRequestBody,
     CreateNetworkMapPathParams
   >('POST', (paramsInPath: CreateNetworkMapPathParams) => `/api/v1/agents/${paramsInPath.agentIdentity}/networkmaps`, {
     base: getConfig('servicediscovery'),
@@ -9392,7 +9457,7 @@ export const createNetworkMapPromise = (
     ApiGetNetworkMapResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     CreateNetworkMapQueryParams,
-    ApiCreateNetworkMapRequest,
+    ApiCreateNetworkMapRequestRequestBody,
     CreateNetworkMapPathParams
   > & {
     /**
@@ -9406,7 +9471,7 @@ export const createNetworkMapPromise = (
     ApiGetNetworkMapResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     CreateNetworkMapQueryParams,
-    ApiCreateNetworkMapRequest,
+    ApiCreateNetworkMapRequestRequestBody,
     CreateNetworkMapPathParams
   >('POST', getConfig('servicediscovery'), `/api/v1/agents/${agentIdentity}/networkmaps`, props, signal)
 
