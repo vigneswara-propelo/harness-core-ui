@@ -7,7 +7,7 @@
 
 import React, { useEffect, Suspense } from 'react'
 
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import { RestfulProvider } from 'restful-react'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { FocusStyleManager } from '@blueprintjs/core'
@@ -32,6 +32,7 @@ import { SideNavProvider } from 'framework/SideNavStore/SideNavContext'
 import { useRefreshToken } from 'services/portal'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { REFERER_URL } from '@common/utils/utils'
+import routes from '@common/RouteDefinitions'
 import { PermissionsProvider } from 'framework/rbac/PermissionsContext'
 import { FeaturesProvider } from 'framework/featureStore/FeaturesContext'
 import { ThirdPartyIntegrations } from '3rd-party/ThirdPartyIntegrations'
@@ -110,6 +111,7 @@ const notifyBugsnag = (
 export function AppWithAuthentication(props: AppProps): React.ReactElement {
   const { showError } = useToaster()
   const username = SessionToken.username()
+  const history = useHistory()
   // always use accountId from URL, and not from local storage
   // if user lands on /, they'll first get redirected to a path with accountId
   const { accountId } = useParams<AccountPathProps>()
@@ -163,6 +165,20 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
             .then(res => {
               showError(res.message || TOO_MANY_REQUESTS_MESSAGE)
             })
+          break
+        }
+        case 403: {
+          // 403 use-case specific only to PUBLIC ACCESS.
+          // All other 403 use cases are handled through RBAC internal to the NG-UI app
+          response
+            .clone()
+            .json()
+            .then(res => {
+              if (window.publicAccessOnAccount && res.code === 'NG_ACCESS_DENIED') {
+                history.push(routes.toPageNotPublic({ accountId }))
+              }
+            })
+          break
         }
       }
     }
