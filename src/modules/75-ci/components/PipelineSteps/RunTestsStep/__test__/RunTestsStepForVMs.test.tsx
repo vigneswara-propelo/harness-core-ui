@@ -43,7 +43,7 @@ describe('RunTests Step', () => {
 
       const dropdownSelects = container.querySelectorAll('[icon="chevron-down"]')
       // Shell dropdown should only be visible for AWS VMs Build Infra
-      expect(dropdownSelects.length).toEqual(5)
+      expect(dropdownSelects.length).toEqual(6)
 
       await waitFor(() => {
         fireEvent.click(dropdownSelects[0])

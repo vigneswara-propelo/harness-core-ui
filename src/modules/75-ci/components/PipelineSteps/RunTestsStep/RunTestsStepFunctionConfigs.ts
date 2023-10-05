@@ -117,6 +117,14 @@ export const transformValuesFieldsConfig = [
   {
     name: 'timeout',
     type: TransformValuesTypes.Text
+  },
+  {
+    name: 'spec.enableTestSplitting',
+    type: TransformValuesTypes.Text
+  },
+  {
+    name: 'spec.testSplitStrategy',
+    type: TransformValuesTypes.TestSplittingStrategy
   }
 ]
 
@@ -242,6 +250,11 @@ export const getEditViewValidateFieldsConfig = (
   {
     name: 'timeout',
     type: ValidationFieldTypes.Timeout
+  },
+  {
+    name: 'spec.testSplitStrategy',
+    type: ValidationFieldTypes.TestSplittingStrategy,
+    label: 'ci.runTestsStep.testSplitting.strategy.label'
   }
 ]
 
@@ -334,6 +347,11 @@ export function getInputSetViewValidateFieldsConfig(
     {
       name: 'timeout',
       type: ValidationFieldTypes.Timeout
+    },
+    {
+      name: 'spec.testSplitStrategy',
+      type: ValidationFieldTypes.Text,
+      label: 'ci.runTestsStep.testSplitting.strategy.label'
     }
   ]
 }

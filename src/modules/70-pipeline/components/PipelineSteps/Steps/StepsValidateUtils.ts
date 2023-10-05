@@ -46,7 +46,8 @@ export enum Types {
   FrameworkVersion,
   BuildTool,
   NotIn,
-  Namespace
+  Namespace,
+  TestSplittingStrategy
 }
 
 interface Field {

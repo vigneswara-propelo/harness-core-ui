@@ -57,6 +57,8 @@ export interface RunTestsStepSpec {
   imagePullPolicy?: MultiTypeSelectOption
   runAsUser?: string
   resources?: Resources
+  enableTestSplitting?: boolean
+  testSplitStrategy?: MultiTypeSelectOption
 }
 
 export interface RunTestsStepData {
@@ -128,7 +130,8 @@ export class RunTestsStep extends PipelineStep<RunTestsStepData> {
       buildTool: '',
       language: '',
       packages: '',
-      runOnlySelectedTests: true
+      runOnlySelectedTests: true,
+      enableTestSplitting: false
     }
   }
 

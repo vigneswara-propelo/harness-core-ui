@@ -9295,6 +9295,10 @@ export interface StringsMap {
   'ci.runTestsStep.testGlobs': string
   'ci.runTestsStep.testReportPaths': string
   'ci.runTestsStep.testRoot': string
+  'ci.runTestsStep.testSplitting.enable': string
+  'ci.runTestsStep.testSplitting.strategy.classTiming': string
+  'ci.runTestsStep.testSplitting.strategy.label': string
+  'ci.runTestsStep.testSplitting.strategy.testCount': string
   'ci.runTestsStep.unittest': string
   'ci.runTestsStep.validation.namespacesRequiredWhenCsharp': string
   'ci.save': string

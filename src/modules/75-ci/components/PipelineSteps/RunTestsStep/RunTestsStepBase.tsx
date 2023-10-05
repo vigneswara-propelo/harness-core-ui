@@ -249,6 +249,13 @@ const getUpdatedPreCommand = (preCommand: string, isErrorTrackingOn: boolean): s
   return updatedCommand
 }
 
+export const getTestSplittingStrategyOptions = (getString: UseStringsReturn['getString']): SelectOption[] => {
+  return [
+    { label: getString('ci.runTestsStep.testSplitting.strategy.classTiming'), value: 'ClassTiming' },
+    { label: getString('ci.runTestsStep.testSplitting.strategy.testCount'), value: 'TestCount' }
+  ]
+}
+
 export const RunTestsStepBase = (
   { initialValues, onUpdate, isNewStep = true, readonly, stepViewType, onChange }: RunTestsStepProps,
   formikRef: StepFormikFowardRef<RunTestsStepData>
@@ -489,7 +496,8 @@ export const RunTestsStepBase = (
           imagePullPolicyOptions: getImagePullPolicyOptions(getString),
           shellOptions: getCIRunTestsStepShellOptions(getString),
           buildEnvironmentOptions: getBuildEnvironmentOptions(getString),
-          frameworkVersionOptions: getFrameworkVersionOptions(getString)
+          frameworkVersionOptions: getFrameworkVersionOptions(getString),
+          testSplitStrategyOptions: getTestSplittingStrategyOptions(getString)
         }
       )}
       formName="ciRunTests"
@@ -754,6 +762,28 @@ gradle.projectsEvaluated {
                 summary={getString('pipeline.additionalConfiguration')}
                 details={
                   <Container margin={{ top: 'medium' }}>
+                    <Container className={cx(css.formGroup, css.sm, css.bottomMargin5)}>
+                      <FormMultiTypeCheckboxField
+                        name="spec.enableTestSplitting"
+                        label={getString('ci.runTestsStep.testSplitting.enable')}
+                        multiTypeTextbox={{
+                          expressions,
+                          disabled: readonly,
+                          allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+                        }}
+                        tooltipProps={{ dataTooltipId: 'enableTestSplitting' }}
+                        disabled={readonly}
+                      />
+                    </Container>
+                    <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
+                      {renderMultiTypeSelectField({
+                        name: 'spec.testSplitStrategy',
+                        fieldLabelKey: 'ci.runTestsStep.testSplitting.strategy.label',
+                        tooltipId: 'testSplitStrategy',
+                        selectFieldOptions: getTestSplittingStrategyOptions(getString),
+                        allowableTypes: AllMultiTypeInputTypesForStep
+                      })}
+                    </Container>
                     <Container className={css.bottomMargin5}>
                       <div
                         className={cx(css.fieldsGroup, css.withoutSpacing)}

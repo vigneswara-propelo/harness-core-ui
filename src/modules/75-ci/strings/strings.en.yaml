@@ -64,6 +64,12 @@ runTestsStep:
   unittest: Unittest
   testRoot: Test Root
   testGlobs: Test Globs
+  testSplitting:
+    enable: Enable Test splitting
+    strategy:
+      label: Test Split Strategy
+      classTiming: Class Timing
+      testCount: Test Count
   validation:
     namespacesRequiredWhenCsharp: 'Namespaces is required in case Language is C#'
 runTestsErrorTrackingSetupText: Do you want to enable Error Tracking?

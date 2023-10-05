@@ -38,7 +38,8 @@ export enum Types {
   FrameworkVersion,
   JobParameter,
   Numeric,
-  BuildType
+  BuildType,
+  TestSplittingStrategy
 }
 
 interface Field {
@@ -79,7 +80,8 @@ export function getInitialValuesInCorrectFormat<T, U>(
     imagePullPolicyOptions,
     shellOptions,
     buildEnvironmentOptions,
-    frameworkVersionOptions
+    frameworkVersionOptions,
+    testSplitStrategyOptions
   }: Dependencies = {}
 ): U {
   const values = set(
@@ -255,6 +257,15 @@ export function getInitialValuesInCorrectFormat<T, U>(
         }
       }
     }
+
+    if (type === Types.TestSplittingStrategy) {
+      const strategy =
+        getMultiTypeFromValue(value) === MultiTypeInputType.FIXED
+          ? testSplitStrategyOptions?.find((option: SelectOption) => option.value === value)
+          : value
+
+      set(values, name, strategy)
+    }
   })
 
   return values as U
@@ -343,7 +354,8 @@ export function getFormValuesInCorrectFormat<T, U>(
         Types.ImagePullPolicy,
         Types.BuildEnvironment,
         Types.FrameworkVersion,
-        Types.BuildType
+        Types.BuildType,
+        Types.TestSplittingStrategy
       ].includes(type)
     ) {
       const value = get(formValues, name) as MultiTypeSelectOption

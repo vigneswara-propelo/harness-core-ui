@@ -33,7 +33,12 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
 import type { RunTestsStepProps } from './RunTestsStep'
-import { getBuildEnvironmentOptions, getCSharpBuildToolOptions, getFrameworkVersionOptions } from './RunTestsStepBase'
+import {
+  getBuildEnvironmentOptions,
+  getCSharpBuildToolOptions,
+  getFrameworkVersionOptions,
+  getTestSplittingStrategyOptions
+} from './RunTestsStepBase'
 import { CIStep } from '../CIStep/CIStep'
 import { ConnectorRefWithImage } from '../CIStep/ConnectorRefWithImage'
 import { getOptionalSubLabel, renderMultiTypeInputWithAllowedValues } from '../CIStep/CIStepOptionalConfig'
@@ -433,7 +438,49 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
           })}
         </Container>
       )}
-
+      {getMultiTypeFromValue(template?.spec?.enableTestSplitting) === MultiTypeInputType.RUNTIME && (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          <FormMultiTypeCheckboxField
+            name={`${prefix}spec.enableTestSplitting`}
+            label={getString('ci.runTestsStep.testSplitting.enable').concat(
+              ` (${startCase(getString('common.optionalLabel'))})`
+            )}
+            multiTypeTextbox={{
+              expressions,
+              disabled: readonly,
+              allowableTypes
+            }}
+            setToFalseWhenEmpty={true}
+          />
+        </Container>
+      )}
+      {getMultiTypeFromValue(template?.spec?.testSplitStrategy) === MultiTypeInputType.RUNTIME && (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          <MultiTypeSelectField
+            label={
+              <Text
+                className={css.inpLabel}
+                color={Color.GREY_600}
+                font={{ size: 'small', weight: 'semi-bold' }}
+                tooltipProps={{ dataTooltipId: 'testSplitStrategy' }}
+              >
+                {getString('ci.runTestsStep.testSplitting.strategy.label')}
+              </Text>
+            }
+            name={`${prefix}spec.testSplitStrategy`}
+            useValue
+            multiTypeInputProps={{
+              selectItems: getTestSplittingStrategyOptions(getString),
+              placeholder: getString('select'),
+              multiTypeInputProps: {
+                expressions,
+                allowableTypes: [MultiTypeInputType.FIXED]
+              }
+            }}
+            disabled={readonly}
+          />
+        </Container>
+      )}
       {getMultiTypeFromValue(template?.spec?.preCommand) === MultiTypeInputType.RUNTIME ? (
         shouldRenderRunTimeInputViewWithAllowedValues('spec.preCommand', template) ? (
           <Container className={cx(css.formGroup, stepCss)}>

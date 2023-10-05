@@ -83,7 +83,7 @@ describe('RunTests Step', () => {
       })
 
       const dropdownSelects = container.querySelectorAll('[icon="chevron-down"]')
-      expect(dropdownSelects.length).toEqual(5)
+      expect(dropdownSelects.length).toEqual(6)
 
       await waitFor(() => {
         fireEvent.click(dropdownSelects[1])
@@ -121,7 +121,7 @@ describe('RunTests Step', () => {
 
       fireEvent.click(getByText('pipeline.additionalConfiguration'))
       const dropdownSelects = container.querySelectorAll('[icon="chevron-down"]')
-      expect(dropdownSelects.length).toEqual(5)
+      expect(dropdownSelects.length).toEqual(6)
 
       fireEvent.click(dropdownSelects[1])
 
@@ -169,7 +169,9 @@ describe('RunTests Step', () => {
               cpu: RUNTIME_INPUT_VALUE,
               memory: RUNTIME_INPUT_VALUE
             }
-          }
+          },
+          enableTestSplitting: false,
+          testSplitStrategy: RUNTIME_INPUT_VALUE
         }
       }
 
