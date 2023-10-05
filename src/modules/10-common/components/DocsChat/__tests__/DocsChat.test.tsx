@@ -4,7 +4,6 @@ import userEvent from '@testing-library/user-event'
 import { TestWrapper, findPopoverContainer } from '@common/utils/testUtils'
 import DocsChat from '../DocsChat'
 import mockResponse from './DocsChat.mock.json'
-import aidaMock from './aidaSetting.mock.json'
 import css from '../DocsChat.module.scss'
 
 jest.mock('services/notifications', () => ({
@@ -14,12 +13,6 @@ jest.mock('services/notifications', () => ({
       data: mockResponse,
       loading: false
     }
-  })
-}))
-
-jest.mock('services/cd-ng', () => ({
-  useGetSettingValue: jest.fn().mockImplementation(() => {
-    return aidaMock
   })
 }))
 
