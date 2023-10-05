@@ -461,8 +461,9 @@ export const RecentExecutionsCell: CellType = ({ row }) => {
   const { getString } = useStrings()
   const data = row.original
   let recentExecutions = data.recentExecutionsInfo || []
-  const { projectIdentifier, orgIdentifier, accountId, module, source } =
-    useParams<PipelineType<PipelineListPagePathParams>>()
+  const pathParams = useParams<PipelineType<PipelineListPagePathParams>>()
+  const queryParams = useQueryParams<GitQueryParams>()
+  const { projectIdentifier, orgIdentifier, accountId, module, source } = pathParams
 
   // Fill the size to adopt UX that always displays 10 items
   if (recentExecutions.length < 10) {
@@ -510,7 +511,27 @@ export const RecentExecutionsCell: CellType = ({ row }) => {
                     label={getString('common.executedBy')}
                     value={
                       <Layout.Horizontal spacing="xsmall" color={Color.WHITE} font="normal">
-                        <span>{i.executorInfo?.email || i.executorInfo?.username}</span>
+                        {i.parentStageInfo?.hasparentpipeline ? (
+                          <Link
+                            to={getChildExecutionPipelineViewLink<PMSPipelineSummaryResponse>(
+                              { ...data, parentStageInfo: i.parentStageInfo } as PMSPipelineSummaryResponse,
+                              pathParams,
+                              queryParams
+                            )}
+                            onClick={killEvent}
+                          >
+                            <Text
+                              font={{ variation: FontVariation.SMALL_SEMI }}
+                              color={Color.PRIMARY_7}
+                              lineClamp={1}
+                              style={{ maxWidth: '250px' }}
+                            >
+                              {`${i.parentStageInfo?.identifier}`}
+                            </Text>
+                          </Link>
+                        ) : (
+                          <span>{i.executorInfo?.email || i.executorInfo?.username}</span>
+                        )}
                         <span>|</span>
                         <ReactTimeago date={i.startTs} />
                       </Layout.Horizontal>
