@@ -12,7 +12,8 @@ import { useQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetMonitoredService } from 'services/cv'
-import routes from '@common/RouteDefinitions'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { getErrorMessage, getSearchString } from '@cv/utils/CommonUtils'
 import DetailsBreadcrumb from '@cv/pages/monitored-service/views/DetailsBreadcrumb'
@@ -43,6 +44,7 @@ const ServiceHealthAndConfiguration: React.FC = () => {
   >()
 
   const isSRMLicenseEnabled = useFeatureFlag(FeatureFlag.CVNG_LICENSE_ENFORCEMENT)
+  const isNav2Enabled = useFeatureFlag(FeatureFlag.CDS_NAV_2_0)
 
   const {
     data: monitoredServiceData,
@@ -57,6 +59,7 @@ const ServiceHealthAndConfiguration: React.FC = () => {
       projectIdentifier
     }
   })
+  const routes = isNav2Enabled ? routesV2 : routesV1
 
   const { monitoredService, lastModifiedAt } = monitoredServiceData?.data ?? {}
 

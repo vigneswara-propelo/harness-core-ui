@@ -92,7 +92,7 @@ export default function CommonMonitoredServiceConfigurations(
   } = props
   const formik = useFormikContext<MonitoredServiceForm>()
   const { licenseInformation } = useLicenseStore()
-  const { CET_PLATFORM_MONITORED_SERVICE } = useFeatureFlags()
+  const { CET_PLATFORM_MONITORED_SERVICE, CDS_NAV_2_0 } = useFeatureFlags()
   const isCETLicensePresentAndActive = licenseInformation[ModuleName.CET]?.status === LICENSE_STATE_VALUES.ACTIVE
   const isChangeSrcSectionHidden = getIsChangeSrcSectionHidden(config, identifier)
   const isHealthSrcSectionHidden = getIsHealthSrcSectionHidden(config, identifier)
@@ -153,7 +153,8 @@ export default function CommonMonitoredServiceConfigurations(
       identifier,
       view,
       notificationTime,
-      isTemplate
+      isTemplate,
+      isNav2Enabled: CDS_NAV_2_0
     })
   }
 

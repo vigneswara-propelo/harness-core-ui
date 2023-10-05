@@ -58,7 +58,34 @@ const RedirectToMode = ({ mode }: { mode?: NAV_MODE }): React.ReactElement => {
 }
 
 const RedirectHomeRoutes = (): React.ReactElement => {
-  const { module, accountId, path, projectIdentifier, orgIdentifier, isSetup } = useParams<
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ModulePathParams & ProjectPathProps>()
+
+  return (
+    <Switch>
+      <Route path="/account/:accountId/home/orgs/:orgIdentifier/projects/:projectIdentifier/details">
+        <Redirect to={routes.toProjectDetails({ projectIdentifier, orgIdentifier, accountId, mode: NAV_MODE.ADMIN })} />
+      </Route>
+      <Route path="/account/:accountId/home/projects/all">
+        <Redirect to={routes.toProjects({ accountId, mode: NAV_MODE.ADMIN })} />
+      </Route>
+      <Route path="/account/:accountId/home/orgs/:orgIdentifier/projects/:projectIdentifier/services*">
+        <Redirect to={routes.toSettingsServices({ mode: NAV_MODE.ALL, projectIdentifier, orgIdentifier })} />
+      </Route>
+      <Route path="/account/:accountId/home/orgs/:orgIdentifier/projects/:projectIdentifier/environments*">
+        <Redirect to={routes.toSettingsEnvironments({ mode: NAV_MODE.ALL, projectIdentifier, orgIdentifier })} />
+      </Route>
+      <Route path="/account/:accountId/home/orgs/:orgIdentifier/projects/:projectIdentifier/monitoredservices*">
+        <Redirect to={routes.toMonitoredServicesSettings({ mode: NAV_MODE.ALL, projectIdentifier, orgIdentifier })} />
+      </Route>
+      <Route path="/account/:accountId/home/orgs/:orgIdentifier/projects/:projectIdentifier/:path*">
+        <RedirectToMode mode={NAV_MODE.ALL} />
+      </Route>
+    </Switch>
+  )
+}
+
+const RedirectHomeSetupRoutes = (): React.ReactElement => {
+  const { module, accountId, path, projectIdentifier, orgIdentifier } = useParams<
     ModulePathParams & ProjectPathProps & { path: string; isSetup: string }
   >()
 
@@ -70,35 +97,17 @@ const RedirectHomeRoutes = (): React.ReactElement => {
   // if mode in module and no module is present then convert to ADMIN mode
   finalMode = finalMode === NAV_MODE.MODULE && isUndefined(finalModule) ? NAV_MODE.ADMIN : finalMode
 
-  if (isSetup) {
-    return (
-      <Redirect
-        to={{
-          ...locationParams,
-          pathname: `${routes.toSettings({
-            mode: finalMode,
-            accountId,
-            orgIdentifier,
-            projectIdentifier,
-            module: finalModule
-          })}/${path || ''}`
-        }}
-      />
-    )
-  }
-
   return (
     <Redirect
       to={{
         ...locationParams,
-        pathname: `${routes.replace({
-          accountId,
+        pathname: `${routes.toSettings({
           mode: finalMode,
+          accountId,
           orgIdentifier,
           projectIdentifier,
-          module: finalModule,
-          path
-        })}`
+          module: finalModule
+        })}/${path || ''}`
       }}
     />
   )
@@ -148,14 +157,21 @@ export const OldNavRedirects = (): JSX.Element => {
         <Redirect to={routes.toMode({ mode: NAV_MODE.ALL, noscope: true })} />
       </Route>
 
-      {/* home path redirects */}
       <Route
         exact
         path={[
           '/account/:accountId/home/orgs/:orgIdentifier/projects/:projectIdentifier/:isSetup(setup)/resources/:path*',
-          '/account/:accountId/home/orgs/:orgIdentifier/projects/:projectIdentifier/:isSetup(setup)/:path*',
-          '/account/:accountId/home/orgs/:orgIdentifier/projects/:projectIdentifier/:path*',
-          '/account/:accountId/home/:path*'
+          '/account/:accountId/home/orgs/:orgIdentifier/projects/:projectIdentifier/:isSetup(setup)/:path*'
+        ]}
+      >
+        <RedirectHomeSetupRoutes />
+      </Route>
+
+      {/* home path redirects */}
+      <Route
+        path={[
+          '/account/:accountId/home/orgs/:orgIdentifier/projects/:projectIdentifier/',
+          '/account/:accountId/home/*'
         ]}
       >
         <RedirectHomeRoutes />

@@ -59,6 +59,7 @@ import DashboardNoDataWidget from '@projects-orgs/components/DashboardNoDataWidg
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 
 import { renderTooltipContent } from '@pipeline/utils/DashboardUtils'
+import { NAV_MODE } from '@modules/10-common/utils/routeUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './LandingDashboardDeploymentsWidget.module.scss'
 
@@ -472,8 +473,20 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
   const [groupByValue, setGroupByValues] = useState(TimeRangeGroupByMapping[selectedTimeRange])
   const [sortByValue, setSortByValue] = useState<GetDeploymentStatsOverviewQueryParams['sortBy']>('DEPLOYMENTS')
   const [selectedView, setSelectedView] = useState<ChartType>(ChartType.BAR)
+  const { CDS_NAV_2_0 } = useFeatureFlags()
+
   const getServiceDetailsLink = (service: ActiveServiceInfo): string => {
     const serviceId = service.serviceInfo?.serviceIdentifier || ''
+    if (CDS_NAV_2_0) {
+      return routesV2.toServiceStudio({
+        accountId,
+        orgIdentifier: service.orgInfo?.orgIdentifier || '',
+        projectIdentifier: service.projectInfo?.projectIdentifier || '',
+        serviceId,
+        module: 'cd',
+        mode: NAV_MODE.MODULE
+      })
+    }
     return routes.toServiceStudio({
       accountId,
       orgIdentifier: service.orgInfo?.orgIdentifier || '',

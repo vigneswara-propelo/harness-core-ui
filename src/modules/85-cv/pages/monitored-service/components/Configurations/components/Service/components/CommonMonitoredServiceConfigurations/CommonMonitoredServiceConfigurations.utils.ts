@@ -10,7 +10,8 @@ import type { History } from 'history'
 import type { MonitoredServiceConfig } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.types'
 import { Module } from 'framework/types/ModuleName'
 import { getSearchString } from '@cv/utils/CommonUtils'
-import routes from '@common/RouteDefinitions'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
 
 export function handleTabChange({
@@ -24,7 +25,8 @@ export function handleTabChange({
   identifier,
   view,
   notificationTime,
-  isTemplate
+  isTemplate,
+  isNav2Enabled
 }: {
   nextTab: MonitoredServiceEnum
   tab: MonitoredServiceEnum
@@ -37,7 +39,9 @@ export function handleTabChange({
   view?: Views
   notificationTime?: number
   isTemplate?: boolean
+  isNav2Enabled?: boolean
 }): void {
+  const routes = isNav2Enabled ? routesV2 : routesV1
   if (nextTab !== tab && !isTemplate && identifier) {
     if (config) {
       history.push({
