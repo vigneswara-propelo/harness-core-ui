@@ -1,0 +1,49 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.link {
+  [data-icon='code-file'] {
+    margin-right: 7px !important;
+  }
+
+  [icon='git-commit'] {
+    margin-right: 7px !important;
+  }
+
+  [icon='git-branch'] {
+    margin-right: 11px !important;
+    transform: translate(2px, 2px);
+  }
+
+  [data-icon='code-tag'] {
+    margin-right: 5px !important;
+    transform: translate(2px, 0);
+
+    svg path {
+      fill: currentColor;
+    }
+  }
+
+  [icon='git-pull'] {
+    margin-right: 12px !important;
+    transform: translate(2px, 2px);
+  }
+
+  [data-icon='code-webhook'] {
+    transform: translate(-3px, -2px);
+    margin-right: 4px !important;
+  }
+
+  [data-icon='main-search'] {
+    transform: translate(2px, 2px);
+    margin-right: 11px !important;
+  }
+
+  [data-icon='setting'] {
+    margin-right: 7px !important;
+  }
+}

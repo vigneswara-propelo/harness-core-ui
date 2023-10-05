@@ -12,14 +12,8 @@ import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import SideNav from '@code/components/SideNav/SideNav'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { projectPathProps } from '@common/utils/routeUtils'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { ModuleName } from 'framework/types/ModuleName'
-import { String as LocaleString } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
-import RbacFactory from '@rbac/factories/RbacFactory'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import {
   Repository,
   Repositories,
@@ -39,6 +33,7 @@ import {
 } from './CodeApp'
 import routes, { CODEPathProps } from './RouteDefinitions'
 import CODEHomePage from './pages/home/CODEHomePage'
+import { useRegisterResourcesForCODE } from './useRegisterResourcesForCODE'
 
 const sidebarProps: SidebarContext = {
   navComponent: SideNav,
@@ -46,7 +41,7 @@ const sidebarProps: SidebarContext = {
   icon: 'code'
 }
 
-const codePathProps: Required<CODEPathProps> = {
+export const codePathProps: Required<CODEPathProps> = {
   ...projectPathProps,
   repoName: ':repoName',
   gitRef: ':gitRef*',
@@ -61,7 +56,7 @@ const codePathProps: Required<CODEPathProps> = {
   webhookId: ':webhookId'
 }
 
-const RedirectToDefaultSCMRoute: React.FC = () => {
+const RedirectToDefaultCODERoute: React.FC = () => {
   const { accountId } = useParams<CODEPathProps>()
 
   const history = useHistory()
@@ -77,13 +72,12 @@ const RedirectToDefaultSCMRoute: React.FC = () => {
     } else {
       history.replace(routes.toCODEHome({ accountId }))
     }
-  }, [history, accountId])
+  }, [history, accountId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return null
 }
 
 export default function CODERouteDestinations(): React.ReactElement {
-  const isCODEEnabled = useFeatureFlag(FeatureFlag.CODE_ENABLED)
   const repoPath = [
     codePathProps.accountId,
     codePathProps.orgIdentifier,
@@ -91,31 +85,14 @@ export default function CODERouteDestinations(): React.ReactElement {
     codePathProps.repoName
   ].join('/')
 
-  if (isCODEEnabled) {
-    RbacFactory.registerResourceCategory(ResourceCategory.CODE, {
-      icon: 'code',
-      label: 'common.purpose.code.name'
-    })
+  useRegisterResourcesForCODE()
 
-    RbacFactory.registerResourceTypeHandler(ResourceType.CODE_REPOSITORY, {
-      icon: 'code',
-      label: 'repository',
-      labelSingular: 'repository',
-      category: ResourceCategory.CODE,
-
-      permissionLabels: {
-        [PermissionIdentifier.CODE_REPO_VIEW]: <LocaleString stringID="rbac.permissionLabels.view" />,
-        [PermissionIdentifier.CODE_REPO_EDIT]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-        [PermissionIdentifier.CODE_REPO_DELETE]: <LocaleString stringID="delete" />,
-        [PermissionIdentifier.CODE_REPO_PUSH]: <LocaleString stringID="rbac.permissionLabels.push" />
-      }
-    })
-  }
   return (
     <Route path={routes.toCODE(codePathProps)}>
       <Route path={routes.toCODE(codePathProps)} exact>
-        <RedirectToDefaultSCMRoute />
+        <RedirectToDefaultCODERoute />
       </Route>
+
       <RouteWithLayout
         path={routes.toCODEHome(codePathProps)}
         sidebarProps={sidebarProps}

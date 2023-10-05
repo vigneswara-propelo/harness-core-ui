@@ -7,6 +7,8 @@
 
 import type { ProjectPathProps, RequiredField } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
+import { withModeModuleAndScopePrefix } from '@common/RouteDefinitionsV2'
+import { NAV_MODE } from '@modules/10-common/utils/routeUtils'
 
 export interface CODEProps {
   space?: string
@@ -29,6 +31,227 @@ export type CODEPathProps = RequiredField<
   'accountId' | 'orgIdentifier' | 'projectIdentifier'
 > &
   Omit<CODEProps, 'space' | 'repoPath'>
+
+type NavMode = {
+  mode?: NAV_MODE
+}
+
+const REPOS_PREFIX = '/repos'
+const CODE = 'code'
+
+export const routesV2 = {
+  toCODERepositories: ({ space, mode }: Required<Pick<CODEProps, 'space'>> & NavMode) => {
+    const [accountId, orgIdentifier, projectIdentifier] = space.split('/')
+    return withModeModuleAndScopePrefix<ProjectPathProps>(() => REPOS_PREFIX)({
+      module: CODE,
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      ...(mode ? { mode } : undefined)
+    })
+  },
+
+  toCODERepository: ({
+    repoPath,
+    gitRef,
+    resourcePath,
+    mode
+  }: RequiredField<Pick<CODEProps, 'repoPath' | 'gitRef' | 'resourcePath'>, 'repoPath'> & NavMode) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return withModeModuleAndScopePrefix<ProjectPathProps>(
+      () => `${REPOS_PREFIX}/${repoName}${gitRef ? '/files/' + gitRef : ''}${resourcePath ? '/~/' + resourcePath : ''}`
+    )({
+      module: CODE,
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      ...(mode ? { mode } : undefined)
+    })
+  },
+
+  toCODEFileEdit: ({
+    repoPath,
+    gitRef,
+    resourcePath,
+    mode
+  }: RequiredField<Pick<CODEProps, 'repoPath' | 'gitRef' | 'resourcePath'>, 'repoPath' | 'gitRef'> & NavMode) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return withModeModuleAndScopePrefix<ProjectPathProps>(
+      () => `${REPOS_PREFIX}/${repoName}/edit/${gitRef}/~/${resourcePath || ''}`
+    )({
+      module: CODE,
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      ...(mode ? { mode } : undefined)
+    })
+  },
+
+  toCODECommits: ({
+    repoPath,
+    commitRef,
+    mode
+  }: RequiredField<Pick<CODEProps, 'repoPath' | 'commitRef'>, 'repoPath'> & NavMode) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return withModeModuleAndScopePrefix<ProjectPathProps>(
+      () => `${REPOS_PREFIX}/${repoName}/commits${commitRef ? '/' + commitRef : ''}`
+    )({
+      module: CODE,
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      ...(mode ? { mode } : undefined)
+    })
+  },
+
+  toCODECommit: ({
+    repoPath,
+    commitRef,
+    mode
+  }: RequiredField<Pick<CODEProps, 'repoPath' | 'commitRef'>, 'repoPath'> & NavMode) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return withModeModuleAndScopePrefix<ProjectPathProps>(
+      () => `${REPOS_PREFIX}/${repoName}/commit${commitRef ? '/' + commitRef : ''}`
+    )({
+      module: CODE,
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      ...(mode ? { mode } : undefined)
+    })
+  },
+
+  toCODEBranches: ({ repoPath, mode }: Required<Pick<CODEProps, 'repoPath'>> & NavMode) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return withModeModuleAndScopePrefix<ProjectPathProps>(() => `${REPOS_PREFIX}/${repoName}/branches`)({
+      module: CODE,
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      ...(mode ? { mode } : undefined)
+    })
+  },
+
+  toCODETags: ({ repoPath, mode }: Required<Pick<CODEProps, 'repoPath'>> & NavMode) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return withModeModuleAndScopePrefix<ProjectPathProps>(() => `${REPOS_PREFIX}/${repoName}/tags`)({
+      module: CODE,
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      ...(mode ? { mode } : undefined)
+    })
+  },
+
+  toCODEPullRequests: ({ repoPath, mode }: Required<Pick<CODEProps, 'repoPath'>> & NavMode) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return withModeModuleAndScopePrefix<ProjectPathProps>(() => `${REPOS_PREFIX}/${repoName}/pulls`)({
+      module: CODE,
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      ...(mode ? { mode } : undefined)
+    })
+  },
+
+  toCODEPullRequest: ({
+    repoPath,
+    pullRequestId,
+    pullRequestSection,
+    commitSHA,
+    mode
+  }: RequiredField<
+    Pick<CODEProps, 'repoPath' | 'pullRequestId' | 'pullRequestSection' | 'commitSHA'>,
+    'repoPath' | 'pullRequestId'
+  > &
+    NavMode) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return withModeModuleAndScopePrefix<ProjectPathProps>(
+      () =>
+        `${REPOS_PREFIX}/${repoName}/pulls/${pullRequestId}${pullRequestSection ? '/' + pullRequestSection : ''}${
+          commitSHA ? '/' + commitSHA : ''
+        }`
+    )({
+      module: CODE,
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      ...(mode ? { mode } : undefined)
+    })
+  },
+
+  toCODECompare: ({ repoPath, diffRefs, mode }: Required<Pick<CODEProps, 'repoPath' | 'diffRefs'>> & NavMode) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return withModeModuleAndScopePrefix<ProjectPathProps>(
+      () => `${REPOS_PREFIX}/${repoName}/pulls/compare/${diffRefs}`
+    )({
+      module: CODE,
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      ...(mode ? { mode } : undefined)
+    })
+  },
+
+  toCODESearch: ({ repoPath, mode }: Required<Pick<CODEProps, 'repoPath'>> & NavMode) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return withModeModuleAndScopePrefix<ProjectPathProps>(() => `${REPOS_PREFIX}/${repoName}/search`)({
+      module: CODE,
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      ...(mode ? { mode } : undefined)
+    })
+  },
+
+  toCODESettings: ({ repoPath, mode }: Required<Pick<CODEProps, 'repoPath'>> & NavMode) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return withModeModuleAndScopePrefix<ProjectPathProps>(() => `${REPOS_PREFIX}/${repoName}/settings`)({
+      module: CODE,
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      ...(mode ? { mode } : undefined)
+    })
+  },
+
+  toCODEWebhooks: ({ repoPath, mode }: Required<Pick<CODEProps, 'repoPath'>> & NavMode) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return withModeModuleAndScopePrefix<ProjectPathProps>(() => `${REPOS_PREFIX}/${repoName}/webhooks`)({
+      module: CODE,
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      ...(mode ? { mode } : undefined)
+    })
+  },
+
+  toCODEWebhookNew: ({ repoPath, mode }: Required<Pick<CODEProps, 'repoPath'>> & NavMode) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return withModeModuleAndScopePrefix<ProjectPathProps>(() => `${REPOS_PREFIX}/${repoName}/webhooks/new`)({
+      module: CODE,
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      ...(mode ? { mode } : undefined)
+    })
+  },
+
+  toCODEWebhookDetails: ({
+    repoPath,
+    webhookId,
+    mode
+  }: Required<Pick<CODEProps, 'repoPath' | 'webhookId'>> & NavMode) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return withModeModuleAndScopePrefix<ProjectPathProps>(() => `${REPOS_PREFIX}/${repoName}/webhooks/${webhookId}`)({
+      module: CODE,
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      ...(mode ? { mode } : undefined)
+    })
+  }
+}
 
 export default {
   toCODE: routes.toCODE,

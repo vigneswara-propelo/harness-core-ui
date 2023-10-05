@@ -19,7 +19,9 @@ import { useCreateToken } from 'services/cd-ng'
 import type { ResponseString } from 'services/cd-ng'
 import { useDeepCompareEffect } from '@common/hooks'
 import commonRoutes from '@common/RouteDefinitions'
-import routes from './RouteDefinitions'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
+import routes, { routesV2 } from './RouteDefinitions'
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type RemoteViewProps = Record<string, any>
 
@@ -77,6 +79,7 @@ const RemoteNewRepoModalButton = lazy(() => import('code/NewRepoModalButton'))
 const CODERemoteComponentMounter: React.FC<{
   component: JSX.Element
 }> = ({ component }) => {
+  const { CDS_NAV_2_0 } = useFeatureFlags()
   const { getString } = useStrings()
   const { params } = useRouteMatch<ProjectPathProps>()
   const space = useMemo(
@@ -94,7 +97,7 @@ const CODERemoteComponentMounter: React.FC<{
           on401={() => {
             global401HandlerUtils(history)
           }}
-          routes={omit(routes, ['toCODE', 'toCODEHome'])}
+          routes={omit(CDS_NAV_2_0 ? routesV2 : routes, ['toCODE', 'toCODEHome'])}
           hooks={{
             useGetToken,
             usePermissionTranslate,
