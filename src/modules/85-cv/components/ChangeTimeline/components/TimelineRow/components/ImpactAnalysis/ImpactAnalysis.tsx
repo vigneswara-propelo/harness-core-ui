@@ -8,19 +8,21 @@
 import React from 'react'
 import { Container, Icon, Layout, Page, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import moment from 'moment'
 import cx from 'classnames'
-import { Popover, PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
+import { IDrawerProps, Popover, PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
-import { isEmpty } from 'lodash-es'
+import { isEmpty, noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetMSSecondaryEventsDetails } from 'services/cv'
-import { convertToDays } from '@cv/pages/monitored-service/components/ServiceHealth/components/ReportsTable/ReportDrawer/ReportDrawer.utils'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
+import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
+import ReportDrawer from '@cv/pages/monitored-service/components/ServiceHealth/components/ReportsTable/ReportDrawer/ReportDrawer'
+import { ReportStatusCard } from '@modules/85-cv/pages/monitored-service/components/ServiceHealth/components/ReportsTable/ReportsTable.utils'
 import type { TimelineDataPoint } from '../../TimelineRow.types'
-import { DATE_FORMAT, SLO_WIDGETS } from '../../TimelineRow.constants'
+import { SLO_WIDGETS } from '../../TimelineRow.constants'
 import { getInitialPositionOfWidget } from '../../TimelineRow.utils'
+import { AnalyseStepDateTime, AnalyseStepName, AnalyseStepDetails } from './components'
 import css from '../../TimelineRow.module.scss'
 import impactCss from './ImpactAnalysis.module.scss'
 
@@ -48,8 +50,19 @@ export const ImpactAnalysis = (props: ImpactAnalysisProps): JSX.Element => {
   })
 
   const { height, width, url } = icon
-  const { analysisDuration, analysisStatus } = data?.data?.details || {}
+  const { stepName, analysisDuration, analysisStatus } = data?.data?.details || {}
   const initialPosition = getInitialPositionOfWidget(position, height, width)
+
+  const drawerOptions = {
+    size: '800px',
+    onClose: noop
+  } as IDrawerProps
+
+  const { showDrawer: showReportDrawer } = useDrawer({
+    createDrawerContent: drawerProps => <ReportDrawer {...drawerProps} />,
+    drawerOptions,
+    showConfirmationDuringClose: false
+  })
 
   let content = <></>
 
@@ -73,30 +86,27 @@ export const ImpactAnalysis = (props: ImpactAnalysisProps): JSX.Element => {
     content = (
       <Container className={cx(css.widgetContainer, { [impactCss.contentContainer]: onlyContent })}>
         <Layout.Vertical>
-          <Layout.Horizontal>
-            <Text className={css.widgetTextElements} padding={{ bottom: 'xsmall', right: 'small' }}>
-              {getString('cv.analyzeDeploymentImpact.duration')}:
-            </Text>
-            <Text className={css.widgetTextElements}>{convertToDays(getString, analysisDuration as number)}</Text>
-          </Layout.Horizontal>
-          <Layout.Horizontal>
-            <Text className={css.widgetTextElements} padding={{ bottom: 'xsmall', right: 'small' }}>
-              {getString('pipeline.startTime')}:
-            </Text>
-            <Text className={css.widgetTextElements}>{moment(new Date(startTime)).format(DATE_FORMAT)}</Text>
-          </Layout.Horizontal>
-          <Layout.Horizontal>
-            <Text className={css.widgetTextElements} padding={{ bottom: 'xsmall', right: 'small' }}>
-              {getString('common.endTime')}:
-            </Text>
-            <Text className={css.widgetTextElements}>{moment(new Date(endTime)).format(DATE_FORMAT)}</Text>
-          </Layout.Horizontal>
-          <Layout.Horizontal>
-            <Text className={css.widgetTextElements} padding={{ bottom: 'xsmall', right: 'small' }}>
-              {getString('status')}:
-            </Text>
-            <Text className={css.widgetTextElements}>{analysisStatus}</Text>
-          </Layout.Horizontal>
+          {!onlyContent && <AnalyseStepDateTime startTime={startTime} />}
+          <AnalyseStepName getString={getString} name={stepName} />
+          <Container margin="small">
+            <ReportStatusCard status={analysisStatus} />
+          </Container>
+          <AnalyseStepDetails
+            endTime={endTime}
+            getString={getString}
+            startTime={startTime}
+            analysisDuration={analysisDuration}
+          />
+          <Text
+            className={impactCss.openReportButton}
+            onClick={(e: React.MouseEvent<Element, MouseEvent>) => {
+              e.stopPropagation()
+              const identifierIndex = identifiers.length === 1 ? 0 : index
+              showReportDrawer({ executionDetailIdentifier: identifiers[identifierIndex] })
+            }}
+          >
+            {getString('cv.analyzeDeploymentImpact.openReportButton')}
+          </Text>
         </Layout.Vertical>
       </Container>
     )

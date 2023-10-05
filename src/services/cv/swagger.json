@@ -3905,7 +3905,10 @@
               "IdpCheck",
               "AwsCdkRollback",
               "SlsaVerification",
-              "UpdateGitOpsApp"
+              "UpdateGitOpsApp",
+              "EcsServiceSetup",
+              "EcsUpgradeContainer",
+              "EcsBasicRollback"
             ]
           },
           {
@@ -12435,6 +12438,52 @@
         }
       }
     },
+    "/account/{accountIdentifier}/annotation": {
+      "post": {
+        "tags": ["annotation"],
+        "summary": "saves annotation",
+        "description": "",
+        "operationId": "saveAccountLevelAnnotation",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/AnnotationDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/RestResponseAnnotationResponse"
+            }
+          }
+        }
+      }
+    },
     "/account/{accountIdentifier}/annotation/identifier/{identifier}": {
       "put": {
         "tags": ["annotation"],
@@ -12528,12 +12577,12 @@
         }
       }
     },
-    "/account/{accountIdentifier}/annotation": {
+    "/account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/annotation": {
       "post": {
         "tags": ["annotation"],
         "summary": "saves annotation",
         "description": "",
-        "operationId": "saveAccountLevelAnnotation",
+        "operationId": "saveAnnotation",
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -12662,52 +12711,6 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/RestResponseBoolean"
-            }
-          }
-        }
-      }
-    },
-    "/account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/annotation": {
-      "post": {
-        "tags": ["annotation"],
-        "summary": "saves annotation",
-        "description": "",
-        "operationId": "saveAnnotation",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "orgIdentifier",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "projectIdentifier",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/AnnotationDTO"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/RestResponseAnnotationResponse"
             }
           }
         }
@@ -14378,6 +14381,74 @@
         }
       }
     },
+    "/usage/SRM/active-monitored-services": {
+      "post": {
+        "tags": ["usage"],
+        "summary": "List Active Services in SRM Module",
+        "description": "",
+        "operationId": "listSRMActiveMonitoredServices",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int32"
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 20,
+            "maximum": 50,
+            "format": "int32"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "timestamp",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int64"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/ActiveServiceMonitoredFilterParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponsePageActiveServiceDTO"
+            }
+          }
+        }
+      }
+    },
     "/usage/SRM/active-services-monitored/csv/download": {
       "get": {
         "tags": ["usage"],
@@ -14434,6 +14505,38 @@
         "responses": {
           "default": {
             "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/usage/CV": {
+      "get": {
+        "tags": ["usage"],
+        "summary": "Gets License Usage for CV",
+        "description": "",
+        "operationId": "getLicenseUsage",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseSRMLicenseUsageDTO"
+            }
           }
         }
       }
@@ -14537,106 +14640,6 @@
           }
         },
         "deprecated": true
-      }
-    },
-    "/usage/SRM/active-monitored-services": {
-      "post": {
-        "tags": ["usage"],
-        "summary": "List Active Services in SRM Module",
-        "description": "",
-        "operationId": "listSRMActiveMonitoredServices",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "default": 0,
-            "format": "int32"
-          },
-          {
-            "name": "size",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "default": 20,
-            "maximum": 50,
-            "format": "int32"
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
-          },
-          {
-            "name": "timestamp",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "default": 0,
-            "format": "int64"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/ActiveServiceMonitoredFilterParams"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponsePageActiveServiceDTO"
-            }
-          }
-        }
-      }
-    },
-    "/usage/CV": {
-      "get": {
-        "tags": ["usage"],
-        "summary": "Gets License Usage for CV",
-        "description": "",
-        "operationId": "getLicenseUsage",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "timestamp",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseSRMLicenseUsageDTO"
-            }
-          }
-        }
       }
     },
     "/deployment-time-series-analysis/{verificationJobInstanceId}": {
@@ -24599,7 +24602,7 @@
     },
     "TemplateDTO": {
       "type": "object",
-      "required": ["templateRef", "versionLabel"],
+      "required": ["templateRef"],
       "properties": {
         "templateRef": {
           "type": "string"
@@ -25278,6 +25281,9 @@
         {
           "type": "object",
           "properties": {
+            "stepName": {
+              "type": "string"
+            },
             "analysisDuration": {
               "$ref": "#/definitions/Duration"
             },
@@ -28071,7 +28077,7 @@
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["InheritFromDelegate", "ManualConfig"]
+          "enum": ["InheritFromDelegate", "ManualConfig", "OidcAuthentication"]
         },
         "spec": {
           "$ref": "#/definitions/GcpCredentialSpec"
@@ -33692,6 +33698,162 @@
         }
       }
     },
+    "ActiveServiceDTO": {
+      "type": "object",
+      "required": ["identifier"],
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "monitoredServiceCount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "orgName": {
+          "type": "string"
+        },
+        "envNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "projectName": {
+          "type": "string"
+        },
+        "accountIdentifier": {
+          "type": "string"
+        },
+        "module": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "PageActiveServiceDTO": {
+      "type": "object",
+      "properties": {
+        "totalElements": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "totalPages": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ActiveServiceDTO"
+          }
+        },
+        "number": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "sort": {
+          "$ref": "#/definitions/Sort"
+        },
+        "numberOfElements": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "last": {
+          "type": "boolean"
+        },
+        "pageable": {
+          "$ref": "#/definitions/Pageable"
+        },
+        "first": {
+          "type": "boolean"
+        },
+        "empty": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Pageable": {
+      "type": "object",
+      "properties": {
+        "offset": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "sort": {
+          "$ref": "#/definitions/Sort"
+        },
+        "paged": {
+          "type": "boolean"
+        },
+        "unpaged": {
+          "type": "boolean"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageNumber": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "ResponsePageActiveServiceDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/PageActiveServiceDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "Sort": {
+      "type": "object",
+      "properties": {
+        "empty": {
+          "type": "boolean"
+        },
+        "unsorted": {
+          "type": "boolean"
+        },
+        "sorted": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ActiveServiceMonitoredFilterParams": {
+      "type": "object",
+      "properties": {
+        "orgIdentifier": {
+          "type": "string"
+        },
+        "projectIdentifier": {
+          "type": "string"
+        },
+        "serviceIdentifier": {
+          "type": "string"
+        }
+      }
+    },
     "ReferenceDTO": {
       "type": "object",
       "properties": {
@@ -33805,13 +33967,13 @@
     "PageActiveServiceMonitoredDTO": {
       "type": "object",
       "properties": {
-        "totalPages": {
-          "type": "integer",
-          "format": "int32"
-        },
         "totalElements": {
           "type": "integer",
           "format": "int64"
+        },
+        "totalPages": {
+          "type": "integer",
+          "format": "int32"
         },
         "size": {
           "type": "integer",
@@ -33830,9 +33992,6 @@
         "sort": {
           "$ref": "#/definitions/Sort"
         },
-        "first": {
-          "type": "boolean"
-        },
         "numberOfElements": {
           "type": "integer",
           "format": "int32"
@@ -33843,33 +34002,10 @@
         "pageable": {
           "$ref": "#/definitions/Pageable"
         },
+        "first": {
+          "type": "boolean"
+        },
         "empty": {
-          "type": "boolean"
-        }
-      }
-    },
-    "Pageable": {
-      "type": "object",
-      "properties": {
-        "offset": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "sort": {
-          "$ref": "#/definitions/Sort"
-        },
-        "pageSize": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "pageNumber": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "paged": {
-          "type": "boolean"
-        },
-        "unpaged": {
           "type": "boolean"
         }
       }
@@ -33883,136 +34019,6 @@
         },
         "data": {
           "$ref": "#/definitions/PageActiveServiceMonitoredDTO"
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
-    "Sort": {
-      "type": "object",
-      "properties": {
-        "empty": {
-          "type": "boolean"
-        },
-        "sorted": {
-          "type": "boolean"
-        },
-        "unsorted": {
-          "type": "boolean"
-        }
-      }
-    },
-    "ActiveServiceMonitoredFilterParams": {
-      "type": "object",
-      "properties": {
-        "orgIdentifier": {
-          "type": "string"
-        },
-        "projectIdentifier": {
-          "type": "string"
-        },
-        "serviceIdentifier": {
-          "type": "string"
-        }
-      }
-    },
-    "ActiveServiceDTO": {
-      "type": "object",
-      "required": ["identifier"],
-      "properties": {
-        "identifier": {
-          "type": "string"
-        },
-        "monitoredServiceCount": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "name": {
-          "type": "string"
-        },
-        "orgName": {
-          "type": "string"
-        },
-        "envNames": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "projectName": {
-          "type": "string"
-        },
-        "accountIdentifier": {
-          "type": "string"
-        },
-        "module": {
-          "type": "string"
-        },
-        "timestamp": {
-          "type": "integer",
-          "format": "int64"
-        }
-      }
-    },
-    "PageActiveServiceDTO": {
-      "type": "object",
-      "properties": {
-        "totalPages": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "totalElements": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "size": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "content": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ActiveServiceDTO"
-          }
-        },
-        "number": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "sort": {
-          "$ref": "#/definitions/Sort"
-        },
-        "first": {
-          "type": "boolean"
-        },
-        "numberOfElements": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "last": {
-          "type": "boolean"
-        },
-        "pageable": {
-          "$ref": "#/definitions/Pageable"
-        },
-        "empty": {
-          "type": "boolean"
-        }
-      }
-    },
-    "ResponsePageActiveServiceDTO": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "$ref": "#/definitions/PageActiveServiceDTO"
         },
         "metaData": {
           "type": "object"

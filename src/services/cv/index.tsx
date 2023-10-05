@@ -2555,7 +2555,7 @@ export type GcpConnector = ConnectorConfigDTO & {
 
 export interface GcpConnectorCredential {
   spec?: GcpCredentialSpec
-  type: 'InheritFromDelegate' | 'ManualConfig'
+  type: 'InheritFromDelegate' | 'ManualConfig' | 'OidcAuthentication'
 }
 
 export interface GcpCredentialSpec {
@@ -6633,6 +6633,7 @@ export interface SRMAnalysisStepDetails {
 export type SRMAnalysisStepInstanceDetails = SecondaryEventDetails & {
   analysisDuration?: Duration
   analysisStatus?: 'RUNNING' | 'COMPLETED' | 'ABORTED'
+  stepName?: string
 }
 
 export interface SRMLicenseUsageDTO {
@@ -7013,7 +7014,7 @@ export type TasManualDetails = TasCredentialSpec & {
 
 export interface TemplateDTO {
   templateRef: string
-  versionLabel: string
+  versionLabel?: string
 }
 
 export interface TemplateLinkConfigForCustomSecretManager {

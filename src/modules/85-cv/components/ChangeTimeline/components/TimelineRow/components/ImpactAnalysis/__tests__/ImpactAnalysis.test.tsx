@@ -19,7 +19,8 @@ jest.mock('services/cv', () => ({
 }))
 
 describe('ImpactAnalysis', () => {
-  test('should render ImpactAnalysis', async () => {
+  test('should render ImpactAnalysis with data', async () => {
+    jest.spyOn(cvservice, 'useGetMSSecondaryEventsDetails').mockReturnValue({ data: { ...mockAPI } } as any)
     const { getByText, getByTestId } = render(
       <TestWrapper>
         <ImpactAnalysis {...ImpactAnalysisProps} />
@@ -31,8 +32,9 @@ describe('ImpactAnalysis', () => {
     })
     expect(getByText('RUNNING')).toBeInTheDocument()
     expect(getByText('cv.oneDay')).toBeInTheDocument()
-    expect(getByText('28th Aug 06:30 AM')).toBeInTheDocument()
-    expect(getByText('29th Aug 07:16 AM')).toBeInTheDocument()
+    expect(getByTestId('endTime')).toHaveTextContent('29th Aug 07:16 AM')
+    expect(getByTestId('duration')).toHaveTextContent('cv.oneDay')
+    expect(getByTestId('startTime')).toHaveTextContent('28th Aug 06:30 AM')
   })
 
   test('should render ImpactAnalysis only content', () => {

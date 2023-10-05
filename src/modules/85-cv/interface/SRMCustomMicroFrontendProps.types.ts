@@ -71,4 +71,11 @@ export interface SRMCustomMicroFrontendProps {
   customConstants: {
     ALL_TIME_ZONES: typeof ALL_TIME_ZONES
   }
+  customProps?: {
+    reportsTable: {
+      startTime: number
+      endTime: number
+      monitoredServiceIdentifier: string
+    }
+  }
 }

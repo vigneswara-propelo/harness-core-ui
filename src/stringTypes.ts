@@ -9452,10 +9452,12 @@ export interface StringsMap {
   'cv.analyzeDeploymentImpact.duration': string
   'cv.analyzeDeploymentImpact.impactAnalysis': string
   'cv.analyzeDeploymentImpact.msDisabledWarning': string
+  'cv.analyzeDeploymentImpact.openReportButton': string
   'cv.analyzeDeploymentImpact.redirectLabel': string
   'cv.analyzeDeploymentImpact.remaining': string
   'cv.analyzeDeploymentImpact.reportDrawer.title': string
   'cv.analyzeDeploymentImpact.reports.noData': string
+  'cv.analyzeDeploymentImpact.stepName': string
   'cv.analyzeDeploymentImpact.stopAnalysis': string
   'cv.analyzeDeploymentImpact.stopAnalysisTitle': string
   'cv.analyzeDeploymentImpact.stopAnalysisWarning': string

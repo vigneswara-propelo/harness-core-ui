@@ -1345,8 +1345,10 @@ analyzeStep:
     createMonitoredService: Create Monitored Service
 analyzeDeploymentImpact:
   impactAnalysis: Impact Analysis
-  duration: Analysis duration
+  duration: Impact analysis duration
   remaining: Remaining
+  stepName: Analyze Impact Step Name
+  openReportButton: Analyze Impact Report
   reportDrawer:
     title: Impact Analysis Report
   cdCard:

@@ -7,21 +7,8 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
-import {
-  Container,
-  Layout,
-  Select,
-  SelectOption,
-  Text,
-  Icon,
-  useToaster,
-  Button,
-  ButtonVariation,
-  Dialog,
-  Heading
-} from '@harness/uicore'
+import { Container, Layout, Select, SelectOption, Text, Icon, useToaster, Heading } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import { useModalHook } from '@harness/use-modal'
 import Card from '@cv/components/Card/Card'
 import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks/useQueryParams'
@@ -32,8 +19,7 @@ import type { ChangesInfoCardData } from '@cv/components/ChangeTimeline/ChangeTi
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import ServiceDependencyGraph from '@cv/pages/monitored-service/CVMonitoredService/components/MonitoredServiceGraphView/MonitoredServiceGraphView'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useReportDrawer } from '@modules/85-cv/components/ChangeTimeline/components/TimelineRow/components/ImpactAnalysis/UseReportDrawer'
 import {
   calculateLowestHealthScoreBar,
   calculateStartAndEndTimes,
@@ -44,19 +30,13 @@ import {
   limitMaxSliderWidth,
   updateFilterByNotificationTime
 } from './ServiceHealth.utils'
-import {
-  DEFAULT_MAX_SLIDER_WIDTH,
-  DEFAULT_MIN_SLIDER_WIDTH,
-  ServiceDependencyDialogProps,
-  TimePeriodEnum
-} from './ServiceHealth.constants'
+import { DEFAULT_MAX_SLIDER_WIDTH, DEFAULT_MIN_SLIDER_WIDTH, TimePeriodEnum } from './ServiceHealth.constants'
 import type { ServiceHealthProps } from './ServiceHealth.types'
 import HealthScoreChart from './components/HealthScoreChart/HealthScoreChart'
 import MetricsAndLogs from './components/MetricsAndLogs/MetricsAndLogs'
 import AnomaliesCard from './components/AnomaliesCard/AnomaliesCard'
 import ChangesSourceCard from './components/ChangesSourceCard/ChangesSourceCard'
 import ChangesTable from './components/ChangesAndServiceDependency/components/ChangesTable/ChangesTable'
-import ReportsTableCard from './components/ReportsTable/ReportsTableCard'
 import css from './ServiceHealth.module.scss'
 
 export default function ServiceHealth({
@@ -73,7 +53,7 @@ export default function ServiceHealth({
   useDocumentTitle([getString('common.module.srm'), getString('cv.monitoredServices.title')])
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const { notificationTime } = useQueryParams<{ notificationTime?: number }>()
+  const { notificationTime, reportId } = useQueryParams<{ notificationTime?: number; reportId?: string }>()
   const [defaultOffset, setDefaultOffset] = useState(0)
 
   const [selectedTimePeriod, setSelectedTimePeriod] = useState<SelectOption>({
@@ -81,31 +61,13 @@ export default function ServiceHealth({
     label: getString('cv.monitoredServices.serviceHealth.last24Hrs')
   })
 
-  const isAnalyseDeploymentEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_ANALYZE_DEPLOYMENT_STEP)
   const [timestamps, setTimestamps] = useState<number[]>([])
   const [timeRange, setTimeRange] = useState<{ startTime: number; endTime: number }>()
   const [showTimelineSlider, setShowTimelineSlider] = useState(false)
   const [changeTimelineSummary, setChangeTimelineSummary] = useState<ChangesInfoCardData[] | null>(null)
   const [healthScoreData, setHealthScoreData] = useState<RiskData[]>()
   const containerRef = useRef<HTMLElement>(null)
-  const [openServiceDepedencyModal, hideServiceDepedencyModal] = useModalHook(() => (
-    <Dialog
-      enforceFocus={false}
-      {...ServiceDependencyDialogProps}
-      onClose={hideServiceDepedencyModal}
-      title={getString('pipeline.serviceDependenciesText')}
-    >
-      <Layout.Vertical height={458} spacing={'large'}>
-        <ServiceDependencyGraph monitoredServiceIdentifier={monitoredServiceIdentifier} />
-        <Button
-          width={68}
-          text={getString('close')}
-          variation={ButtonVariation.SECONDARY}
-          onClick={hideServiceDepedencyModal}
-        />
-      </Layout.Vertical>
-    </Dialog>
-  ))
+  const { showDrawer: showReportDrawer } = useReportDrawer()
 
   useEffect(() => {
     if (notificationTime) {
@@ -135,6 +97,12 @@ export default function ServiceHealth({
       setShowTimelineSlider(true)
     }
   }, [selectedTimePeriod.value, timestamps])
+
+  useEffect(() => {
+    if (reportId) {
+      showReportDrawer({ executionDetailIdentifier: reportId })
+    }
+  }, [reportId])
 
   // calculating the min and max width for the the timeline slider
   const sliderDimensions = useMemo(() => {
@@ -244,14 +212,6 @@ export default function ServiceHealth({
             setSelectedTimePeriod(option)
           }}
         />
-        {isAnalyseDeploymentEnabled && (
-          <Button
-            className={css.serviceDepedencyButton}
-            text={getString('pipeline.serviceDependenciesText')}
-            variation={ButtonVariation.LINK}
-            onClick={openServiceDepedencyModal}
-          />
-        )}
       </Layout.Horizontal>
       <Container className={css.serviceHealthCard}>
         <Card>
@@ -319,7 +279,7 @@ export default function ServiceHealth({
         </Card>
 
         <Layout.Horizontal spacing="medium">
-          <Container width={isAnalyseDeploymentEnabled ? '50%' : '60%'}>
+          <Container width={'60%'}>
             <ChangesTable
               startTime={changesTableAndSourceCardStartAndEndtimeWithSlider[0]}
               endTime={changesTableAndSourceCardStartAndEndtimeWithSlider[1]}
@@ -327,26 +287,16 @@ export default function ServiceHealth({
               monitoredServiceIdentifier={monitoredServiceIdentifier}
             />
           </Container>
-          {isAnalyseDeploymentEnabled ? (
-            <Container width="50%">
-              <ReportsTableCard
-                startTime={changesTableAndSourceCardStartAndEndtimeWithSlider[0]}
-                endTime={changesTableAndSourceCardStartAndEndtimeWithSlider[1]}
-                monitoredServiceIdentifier={monitoredServiceIdentifier}
-              />
-            </Container>
-          ) : (
-            <Container width="40%">
-              <Heading level={2} font={{ variation: FontVariation.H6 }} padding={{ bottom: 'medium' }}>
-                {getString('pipeline.serviceDependenciesText')}
-              </Heading>
-              <Card>
-                <Layout.Vertical height={458}>
-                  <ServiceDependencyGraph monitoredServiceIdentifier={monitoredServiceIdentifier} />
-                </Layout.Vertical>
-              </Card>
-            </Container>
-          )}
+          <Container width="40%">
+            <Heading level={2} font={{ variation: FontVariation.H6 }} padding={{ bottom: 'medium' }}>
+              {getString('pipeline.serviceDependenciesText')}
+            </Heading>
+            <Card>
+              <Layout.Vertical height={458}>
+                <ServiceDependencyGraph monitoredServiceIdentifier={monitoredServiceIdentifier} />
+              </Layout.Vertical>
+            </Card>
+          </Container>
         </Layout.Horizontal>
 
         <MetricsAndLogs

@@ -273,12 +273,9 @@ export default function WidgetsWithSameStartTime(props: WidgetsWithSameStartTime
               </Layout.Vertical>
             ) : null}
             {Array.isArray(widgetsWithImpactAnalysisType) && Boolean(widgetsWithImpactAnalysisType.length) ? (
-              <Layout.Vertical>
-                <Text className={css.downTimeTextElements} padding={{ bottom: 'small' }}>
-                  {getString('cv.analyzeDeploymentImpact.impactAnalysis')}
-                </Text>
+              <Layout.Vertical spacing="small">
                 {widgetsWithImpactAnalysisType.map((item, idx) => {
-                  return <ImpactAnalysis widget={item} index={idx} key={idx} onlyContent />
+                  return <ImpactAnalysis widget={item} key={idx} index={idx} onlyContent />
                 })}
               </Layout.Vertical>
             ) : null}

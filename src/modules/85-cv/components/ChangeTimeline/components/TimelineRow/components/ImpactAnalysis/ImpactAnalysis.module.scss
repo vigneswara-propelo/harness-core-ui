@@ -9,3 +9,20 @@
   padding: 0 !important;
   padding-top: var(--spacing-small) !important;
 }
+
+.openReportButton {
+  cursor: pointer;
+  font-size: 13px !important;
+  color: var(--primary-5) !important;
+}
+
+.dividerClass {
+  border-bottom: 1px solid var(--white);
+  margin-bottom: var(--spacing-3) !important;
+  padding-bottom: var(--spacing-3) !important;
+}
+
+.widgetTextLabels {
+  font-size: var(--font-size-xsmall) !important;
+  color: var(--white) !important;
+}
