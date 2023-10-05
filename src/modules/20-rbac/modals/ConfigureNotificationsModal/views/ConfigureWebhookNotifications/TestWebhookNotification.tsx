@@ -6,9 +6,10 @@
  */
 
 import React, { useState } from 'react'
-import { Button, Icon, ButtonProps } from '@harness/uicore'
+import { Button, Icon, ButtonProps, getErrorInfoFromErrorObject } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
+import { isEmpty } from 'lodash-es'
 import { useToaster } from '@common/exports'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
@@ -50,7 +51,8 @@ export const TestWebhookNotifications: React.FC<{
         setTestStatus(TestStatus.FAILED)
       }
     } catch (err) {
-      showError(getString('rbac.notifications.invalidWebhookURL'))
+      const errorText = getErrorInfoFromErrorObject(err)
+      showError(!isEmpty(errorText) ? errorText : getString('rbac.notifications.invalidWebhookURL'))
       setTestStatus(TestStatus.ERROR)
     }
   }

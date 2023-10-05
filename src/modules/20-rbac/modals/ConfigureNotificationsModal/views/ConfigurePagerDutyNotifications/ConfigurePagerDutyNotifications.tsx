@@ -18,7 +18,8 @@ import {
   Formik,
   ButtonProps,
   MultiTypeInputType,
-  getMultiTypeFromValue
+  getMultiTypeFromValue,
+  getErrorInfoFromErrorObject
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
@@ -81,7 +82,8 @@ export const TestPagerDutyNotifications: React.FC<{
         setTestStatus(TestStatus.FAILED)
       }
     } catch (err) {
-      showError(getString('rbac.notifications.invalidPagerDutyKey'))
+      const errorText = getErrorInfoFromErrorObject(err)
+      showError(!isEmpty(errorText) ? errorText : getString('rbac.notifications.invalidPagerDutyKey'))
       setTestStatus(TestStatus.ERROR)
     }
   }

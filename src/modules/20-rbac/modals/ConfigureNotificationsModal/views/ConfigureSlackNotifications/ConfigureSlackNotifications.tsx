@@ -18,7 +18,8 @@ import {
   Formik,
   ButtonVariation,
   MultiTypeInputType,
-  getMultiTypeFromValue
+  getMultiTypeFromValue,
+  getErrorInfoFromErrorObject
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
@@ -82,7 +83,8 @@ export const TestSlackNotifications: React.FC<{
         setTestStatus(TestStatus.FAILED)
       }
     } catch (err) {
-      showError(getString('rbac.notifications.invalidWebhookURL'))
+      const errorText = getErrorInfoFromErrorObject(err)
+      showError(!isEmpty(errorText) ? errorText : getString('rbac.notifications.invalidWebhookURL'))
       setTestStatus(TestStatus.ERROR)
     }
   }
