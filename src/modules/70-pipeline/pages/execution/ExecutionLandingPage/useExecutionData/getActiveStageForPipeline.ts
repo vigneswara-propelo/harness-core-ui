@@ -13,10 +13,24 @@ import {
   isExecutionNotStarted,
   isExecutionSuccess
 } from '@pipeline/utils/statusHelpers'
-import { NonSelectableStageNodes, StageNodeType } from '@pipeline/utils/executionUtils'
 import type { GraphLayoutNode, PipelineExecutionSummary } from 'services/pipeline-ng'
 
 import { preOrderTraversal, postOrderTraversal, isExecutionActiveOrCompletedWitBadState } from './treeSearchUtils'
+
+export enum StageNodeType {
+  Parallel = 'parallel',
+  Stage = 'stage',
+  Matrix = 'MATRIX',
+  Loop = 'LOOP',
+  Parallelism = 'PARALLELISM'
+}
+
+export const NonSelectableStageNodes = [
+  StageNodeType.Loop,
+  StageNodeType.Matrix,
+  StageNodeType.Parallel,
+  StageNodeType.Parallelism
+]
 
 function getChidrenIds(node: GraphLayoutNode, nodeAdjacencyListMap: Record<string, GraphLayoutNode>): string[] {
   return (get(node, ['edgeLayoutList', 'currentNodeChildren'], []) as string[]).filter(id =>

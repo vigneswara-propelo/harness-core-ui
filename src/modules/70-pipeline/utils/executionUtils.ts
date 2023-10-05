@@ -52,6 +52,10 @@ import type { ExecutionContextParams } from '@pipeline/context/ExecutionContext'
 import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
 import { isApprovalStep } from './stepUtils'
 import { PriorityByStageStatus, StageType } from './stageHelpers'
+import {
+  getActiveStageForPipeline,
+  StageNodeType
+} from '../pages/execution/ExecutionLandingPage/useExecutionData/getActiveStageForPipeline'
 
 export const LITE_ENGINE_TASK = 'liteEngineTask'
 export const STATIC_SERVICE_GROUP_NAME = 'static_service_group'
@@ -287,21 +291,6 @@ export function getPipelineStagesMap(
   return map
 }
 
-export enum StageNodeType {
-  Parallel = 'parallel',
-  Stage = 'stage',
-  Matrix = 'MATRIX',
-  Loop = 'LOOP',
-  Parallelism = 'PARALLELISM'
-}
-
-export const NonSelectableStageNodes = [
-  StageNodeType.Loop,
-  StageNodeType.Matrix,
-  StageNodeType.Parallel,
-  StageNodeType.Parallelism
-]
-
 export interface ProcessLayoutNodeMapResponse {
   stage?: GraphLayoutNode
   parallel?: GraphLayoutNode[]
@@ -340,84 +329,6 @@ export const processLayoutNodeMap = (executionSummary?: PipelineExecutionSummary
     }
   }
   return response
-}
-
-function parseStages(stages: ProcessLayoutNodeMapResponse[] | GraphLayoutNode[]): string {
-  const n = stages.length
-  for (let i = n - 1; i >= 0; i--) {
-    const stage = (stages[i] as ProcessLayoutNodeMapResponse)?.stage ?? (stages[i] as GraphLayoutNode)
-
-    if ((stage as ProcessLayoutNodeMapResponse).parallel) {
-      return parseStages((stage as ProcessLayoutNodeMapResponse)?.parallel as GraphLayoutNode[])
-    } else {
-      if (isExecutionSkipped(stage.status)) {
-        continue
-      } else {
-        return defaultTo(stage.nodeUuid, '')
-      }
-    }
-  }
-  return ''
-}
-
-export function getActiveStageForPipeline(
-  executionSummary?: PipelineExecutionSummary,
-  pipelineExecutionStatus?: ExecutionStatus
-): string | null {
-  if (!executionSummary) {
-    return null
-  }
-  const stages = processLayoutNodeMap(executionSummary)
-  const n = stages.length
-  // for completed pipeline, select the last completed stage
-  if (isExecutionSuccess(pipelineExecutionStatus)) {
-    return parseStages(stages)
-  }
-
-  // for errored pipeline, select the errored stage
-  // for waiting status, select the waiting state
-  if (isExecutionCompletedWithBadState(pipelineExecutionStatus) || isExecutionWaiting(pipelineExecutionStatus)) {
-    for (let i = stages.length - 1; i >= 0; i--) {
-      const stage = stages[i]
-
-      if (stage.stage) {
-        if (isExecutionCompletedWithBadState(stage.stage.status) || isExecutionWaiting(stage.stage.status)) {
-          return stage.stage.nodeUuid || ''
-        }
-      } else if (stage.parallel && Array.isArray(stage.parallel)) {
-        const erroredStage = stage.parallel.find(
-          item => isExecutionCompletedWithBadState(item.status) || isExecutionWaiting(item.status)
-        )
-
-        /* istanbul ignore else */
-        if (erroredStage) {
-          return erroredStage.nodeUuid || ''
-        }
-      }
-    }
-  }
-
-  // find the current running stage
-  for (let i = 0; i < n; i++) {
-    const stage = stages[i]
-
-    // for normal stage
-    if (stage.stage) {
-      if (isExecutionRunning(stage.stage.status)) {
-        return stage.stage.nodeUuid || ''
-      }
-      // for parallel stage
-    } else if (stage.parallel && Array.isArray(stage.parallel)) {
-      const activeStage = stage.parallel.filter(item => isExecutionRunning(item.status))[0]
-
-      /* istanbul ignore else */
-      if (activeStage) {
-        return activeStage.nodeUuid || ''
-      }
-    }
-  }
-
-  return null
 }
 
 export interface StepStatus {
@@ -1304,11 +1215,11 @@ const getGroupSeperatedRunningIdentifiers = (
 }
 
 const updateBackgroundStepNodeStatuses = ({
-  runningStageId,
+  runningStageIds,
   nodeMap,
   adjacencyMap
 }: {
-  runningStageId?: string | null
+  runningStageIds?: Array<string> | null
   nodeMap: { [key: string]: ExecutionNode }
   adjacencyMap?: { [key: string]: ExecutionNodeAdjacencyList }
 }): {
@@ -1318,7 +1229,8 @@ const updateBackgroundStepNodeStatuses = ({
   const nodeMapValues: ExecutionNode[] = Object.values(nodeMap)
   // Find stepIdentifiers in running stage
   const runningStageStepIdentifiers: string[] =
-    nodeMapValues.find(node => node.setupId === runningStageId)?.stepParameters?.specConfig?.stepIdentifiers || []
+    nodeMapValues.find(node => runningStageIds?.includes(node.setupId!))?.stepParameters?.specConfig?.stepIdentifiers ||
+    []
   // Overwrite status for stepType Background in running stage
   const runningStepIdentifiers = getGroupSeperatedRunningIdentifiers(nodeMap, runningStageStepIdentifiers)
   nodeMapValues.forEach(node => {
@@ -1412,12 +1324,9 @@ export const processForCIData = ({
     isExecutionRunning(data.data.pipelineExecutionSummary.status) &&
     !isEmpty(nodeMap)
   ) {
-    const runningStageId = getActiveStageForPipeline(
-      data.data.pipelineExecutionSummary,
-      data.data.pipelineExecutionSummary.status as ExecutionStatus
-    )
+    const runningStageIds = getActiveStageForPipeline(data.data.pipelineExecutionSummary)
 
-    newNodeMap = updateBackgroundStepNodeStatuses({ runningStageId, nodeMap, adjacencyMap })
+    newNodeMap = updateBackgroundStepNodeStatuses({ runningStageIds, nodeMap, adjacencyMap })
   }
 
   // NOTE: Remove Duration for Background stepType similar to Service Dependency
