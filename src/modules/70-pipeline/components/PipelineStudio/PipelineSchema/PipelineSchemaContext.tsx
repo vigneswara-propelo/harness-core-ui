@@ -17,7 +17,6 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useToaster } from '@common/exports'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 export interface PipelineSchemaData {
   pipelineSchema: ResponseJsonNode | null
@@ -38,7 +37,6 @@ export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unk
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { PIE_STATIC_YAML_SCHEMA } = useFeatureFlags()
 
   const commonQueryParams = {
     entityType: 'Pipelines',
@@ -52,7 +50,7 @@ export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unk
     queryParams: {
       ...commonQueryParams
     } as GetSchemaYamlQueryParams,
-    lazy: PIE_STATIC_YAML_SCHEMA
+    lazy: !__DEV__
   })
 
   const { data: pipelineStaticSchema, error: staticSchemaError } = useGetIndividualStaticSchemaQuery(
@@ -62,18 +60,24 @@ export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unk
       }
     },
     {
-      enabled: PIE_STATIC_YAML_SCHEMA
+      enabled: !__DEV__
     }
   )
 
   const error = defaultTo(schemaError, staticSchemaError)
 
-  const { data: loopingStrategyStaticSchema } = useGetIndividualStaticSchemaQuery({
-    queryParams: {
-      node_group: 'strategy',
-      node_type: 'strategy'
+  const { data: loopingStrategyStaticSchema } = useGetIndividualStaticSchemaQuery(
+    {
+      queryParams: {
+        node_group: 'strategy',
+        node_type: 'strategy'
+      }
+    },
+
+    {
+      enabled: !__DEV__
     }
-  })
+  )
 
   const loopingStrategySchema = {
     data: { schema: loopingStrategyStaticSchema?.content.data }

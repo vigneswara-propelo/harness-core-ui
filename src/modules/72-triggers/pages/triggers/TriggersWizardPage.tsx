@@ -211,8 +211,7 @@ const TriggersWizardPage = (): JSX.Element => {
   const {
     CD_GIT_WEBHOOK_POLLING: isGitWebhookPollingEnabled,
 
-    CI_YAML_VERSIONING,
-    PIE_STATIC_YAML_SCHEMA
+    CI_YAML_VERSIONING
   } = useFeatureFlags()
 
   const isSimplifiedYAML = isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
@@ -313,7 +312,7 @@ const TriggersWizardPage = (): JSX.Element => {
         projectIdentifier
       })
     },
-    lazy: PIE_STATIC_YAML_SCHEMA
+    lazy: !__DEV__
   })
   const { data: triggerStaticSchema, isLoading: loadingStaticYamlSchema } = useGetIndividualStaticSchemaQuery(
     {
@@ -322,7 +321,7 @@ const TriggersWizardPage = (): JSX.Element => {
       }
     },
     {
-      enabled: PIE_STATIC_YAML_SCHEMA
+      enabled: !__DEV__
     }
   )
 

@@ -124,7 +124,7 @@ export default function WebhookTriggerWizard(
   props: TriggerProps<any> & { children: JSX.Element[] }
 ): React.ReactElement {
   const { isNewTrigger, baseType, triggerData, type: sourceRepo } = props
-  const { CD_GIT_WEBHOOK_POLLING: isGitWebhookPollingEnabled, PIE_STATIC_YAML_SCHEMA } = useFeatureFlags()
+  const { CD_GIT_WEBHOOK_POLLING: isGitWebhookPollingEnabled } = useFeatureFlags()
 
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [selectedView, setSelectedView] = useTriggerView(isNewTrigger)
@@ -200,7 +200,7 @@ export default function WebhookTriggerWizard(
         projectIdentifier
       })
     },
-    lazy: PIE_STATIC_YAML_SCHEMA
+    lazy: !__DEV__
   })
   const { data: triggerStaticSchema, isLoading: loadingStaticYamlSchema } = useGetIndividualStaticSchemaQuery(
     {
@@ -209,7 +209,7 @@ export default function WebhookTriggerWizard(
       }
     },
     {
-      enabled: PIE_STATIC_YAML_SCHEMA
+      enabled: !__DEV__
     }
   )
 

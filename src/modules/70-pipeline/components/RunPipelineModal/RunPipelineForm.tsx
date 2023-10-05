@@ -1164,13 +1164,6 @@ function RunPipelineFormBasic({
                             modules: inputSetYamlResponse?.data?.modules,
                             getString
                           })}
-                          permission={{
-                            resource: {
-                              resourceIdentifier: pipeline?.identifier as string,
-                              resourceType: ResourceType.PIPELINE
-                            },
-                            permission: PermissionIdentifier.EXECUTE_PIPELINE
-                          }}
                           disabled={getRunPipelineFormDisabledState()}
                         />
                         <div className={css.secondaryButton}>

@@ -142,7 +142,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
   const history = useHistory()
   const { getString } = useStrings()
   const [pipelineInputs, setPipelineInputs] = useState<InputsResponseBody>({})
-  const { CI_YAML_VERSIONING, PIE_STATIC_YAML_SCHEMA } = useFeatureFlags()
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
   const { data: template, loading: fetchingTemplate } = useMutateAsGet(useGetTemplateFromPipeline, {
     queryParams: {
       accountIdentifier: accountId,
@@ -257,7 +257,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
         projectIdentifier
       })
     },
-    lazy: PIE_STATIC_YAML_SCHEMA
+    lazy: !__DEV__
   })
 
   const { data: triggerStaticSchema, isLoading: loadingStaticYamlSchema } = useGetIndividualStaticSchemaQuery(
@@ -267,7 +267,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
       }
     },
     {
-      enabled: PIE_STATIC_YAML_SCHEMA
+      enabled: !__DEV__
     }
   )
   const convertFormikValuesToYaml = (values: any): { trigger: TriggerConfigDTO } | undefined => {

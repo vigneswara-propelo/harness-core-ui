@@ -28,12 +28,17 @@ export function usePipelineSchemaV1(): PipelineSchemaData {
 }
 
 export function PipelineSchemaContextProviderV1(props: React.PropsWithChildren<unknown>): React.ReactElement {
-  const { data: loopingStrategyStaticSchema } = useGetIndividualStaticSchemaQuery({
-    queryParams: {
-      node_group: 'strategy',
-      node_type: 'strategy'
+  const { data: loopingStrategyStaticSchema } = useGetIndividualStaticSchemaQuery(
+    {
+      queryParams: {
+        node_group: 'strategy',
+        node_type: 'strategy'
+      }
+    },
+    {
+      enabled: !__DEV__
     }
-  })
+  )
 
   const loopingStrategySchema = {
     data: { schema: loopingStrategyStaticSchema?.content.data }
