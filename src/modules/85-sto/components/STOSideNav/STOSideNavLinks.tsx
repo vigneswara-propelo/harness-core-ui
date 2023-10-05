@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -15,7 +22,7 @@ const STOSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const { selectedProject } = useAppStore()
-  const { identifier = '', orgIdentifier = '' } = selectedProject || {}
+  const { identifier: projectIdentifier = '', orgIdentifier = '' } = selectedProject || {}
   const { STO_ALL_ISSUES_PAGE } = useFeatureFlags()
 
   return (
@@ -25,38 +32,46 @@ const STOSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
           <SideNav.Link
             icon="nav-home"
             label={getString('overview')}
-            to={routes.toOverview({ accountId, projectIdentifier: identifier, orgIdentifier, module })}
+            to={routes.toOverview({ accountId, projectIdentifier, orgIdentifier, module })}
           />
 
           <SideNav.Link
             icon="main-issue"
             label={getString('sto.issues')}
-            to={routes.toSTOIssues({ accountId, projectIdentifier: identifier, orgIdentifier, module })}
+            to={routes.toSTOIssues({ accountId, projectIdentifier, orgIdentifier, module })}
             hidden={!STO_ALL_ISSUES_PAGE}
           />
 
           <SideNav.Link
             icon="nav-pipeline"
-            label={getString('common.pipelineExecution')}
-            to={routes.toPipelines({ accountId, projectIdentifier: identifier, orgIdentifier, module })}
+            label={getString('pipelines')}
+            to={routes.toPipelines({ accountId, projectIdentifier, orgIdentifier, module })}
+            hidden={mode === NAV_MODE.ALL}
+          />
+
+          <SideNav.Link
+            icon="execution"
+            label={getString('executionsText')}
+            to={routes.toPipelines({ accountId, projectIdentifier, orgIdentifier, module })}
+            hidden={mode === NAV_MODE.ALL}
           />
 
           <SideNav.Link
             icon="error-tracking"
             label={getString('sto.targets.testTargets')}
-            to={routes.toSTOTargets({ accountId, projectIdentifier: identifier, orgIdentifier, module })}
+            to={routes.toSTOTargets({ accountId, projectIdentifier, orgIdentifier, module })}
           />
 
           <SideNav.Link
             icon="ban-circle"
             label={getString('sto.exemptions')}
-            to={routes.toSTOSecurityReview({ accountId, projectIdentifier: identifier, orgIdentifier, module })}
+            to={routes.toSTOSecurityReview({ accountId, projectIdentifier, orgIdentifier, module })}
           />
 
           <SideNav.Link
-            icon="sto-grey"
-            label={getString('sto.gettingStarted')}
-            to={routes.toSTOGettingStarted({ accountId, projectIdentifier: identifier, orgIdentifier, module })}
+            icon="get-started"
+            label={getString('getStarted')}
+            to={routes.toSTOGettingStarted({ accountId, projectIdentifier, orgIdentifier, module })}
           />
         </SideNav.Scope>
       </SideNav.Section>
