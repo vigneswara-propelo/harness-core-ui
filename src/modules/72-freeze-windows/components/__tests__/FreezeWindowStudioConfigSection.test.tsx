@@ -156,7 +156,7 @@ describe('Freeze Window Studio Config Section', () => {
 
     expect(await screen.findByText('Rule Number 1')).toBeInTheDocument()
 
-    expect(getByText('freezeWindows.freezeStudio.allOrganizations')).toBeDefined()
+    expect(getByText('common.allOrganizations')).toBeDefined()
     expect(getByText('rbac.scopeItems.allProjects')).toBeDefined()
     expect(getByText('common.allServices')).toBeDefined()
     expect(getByText('envType: common.allEnvironments')).toBeDefined()

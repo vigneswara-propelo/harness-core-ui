@@ -209,7 +209,7 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
                   iconProps: { name: 'nav-project' },
                   panel: (
                     <ProjectScopeSelector
-                      onClick={project => {
+                      onProjectClick={project => {
                         handleScopeChange(Scope.PROJECT, project.projectResponse.project)
                       }}
                     />

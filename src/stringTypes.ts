@@ -69,6 +69,7 @@ export interface StringsMap {
   'common.allErrors': string
   'common.allMode.welcome.subtitle': string
   'common.allMode.welcome.title': string
+  'common.allOrganizations': string
   'common.allServices': string
   'common.allowFirstGenAccess': string
   'common.analyzing': string
@@ -3861,6 +3862,7 @@ export interface StringsMap {
   'projectsOrgs.orgResources.description1': string
   'projectsOrgs.orgResources.description2': string
   'projectsOrgs.orgResources.label': string
+  'projectsOrgs.orgSearchPlaceHolder': string
   'projectsOrgs.pendingInvitation': string
   'projectsOrgs.pendingUsers': string
   'projectsOrgs.pickScope': string
@@ -5755,7 +5757,6 @@ export interface StringsMap {
   'freezeWindows.freezeNotifications.rejectedDeployments': string
   'freezeWindows.freezeNotifications.windowEnabled': string
   'freezeWindows.freezeStudio.activeFreeze': string
-  'freezeWindows.freezeStudio.allOrganizations': string
   'freezeWindows.freezeStudio.defineResources': string
   'freezeWindows.freezeStudio.excludeEnvironments': string
   'freezeWindows.freezeStudio.excludeFollowingEnvironments': string

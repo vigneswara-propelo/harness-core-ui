@@ -9,24 +9,18 @@
 declare const styles: {
   readonly active: string
   readonly activeRow: string
+  readonly allButton: string
+  readonly divider: string
   readonly favorite: string
   readonly favoriteActive: string
+  readonly flexContainer: string
   readonly link: string
   readonly listHeader: string
-  readonly orgDropdown: string
-  readonly orgwidth: string
+  readonly orgDataContainer: string
   readonly pagination: string
-  readonly pickScopeHelp: string
-  readonly popover: string
-  readonly projectCard: string
-  readonly projectContainer: string
-  readonly projectContainerWrapper: string
   readonly projectSearch: string
   readonly row: string
-  readonly scopeLabelText: string
-  readonly selectButton: string
-  readonly selectContainer: string
-  readonly selectedProject: string
-  readonly splitViewContainer: string
+  readonly sectionDivider: string
+  readonly tableContainer: string
 }
 export default styles

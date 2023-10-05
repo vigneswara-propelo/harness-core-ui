@@ -32,7 +32,7 @@ export const isAllOptionSelected = (selected?: SelectOption[]) => {
 }
 
 export const allOrgsObj = (getString: UseStringsReturn['getString']) => ({
-  label: getString('freezeWindows.freezeStudio.allOrganizations'),
+  label: getString('common.allOrganizations'),
   value: FILTER_TYPE.All
 })
 export const allProjectsObj = (getString: UseStringsReturn['getString']) => ({

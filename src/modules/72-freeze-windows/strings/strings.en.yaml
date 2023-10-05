@@ -20,7 +20,6 @@ freezeStudio:
   excludePipelines: Exclude specific Pipelines
   excludeServices: Exclude specific Services
   excludeEnvironments: Exclude specific Environments
-  allOrganizations: All Organizations
   excludeFollowingProject: Exclude the following Project
   excludeFollowingProjects: Exclude the following Projects
   excludeFollowingPipeline: Exclude the following Pipeline

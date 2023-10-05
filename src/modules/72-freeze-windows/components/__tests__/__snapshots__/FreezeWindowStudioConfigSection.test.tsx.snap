@@ -380,7 +380,7 @@ exports[`Freeze Window Studio Config Section it should render Config section in 
                             <span
                               class="bp3-text-overflow-ellipsis bp3-fill"
                             >
-                              freezeWindows.freezeStudio.allOrganizations
+                              common.allOrganizations
                             </span>
                             <button
                               class="bp3-tag-remove"

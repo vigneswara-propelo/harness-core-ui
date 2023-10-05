@@ -7,6 +7,7 @@ clear: Clear
 dashboards: Dashboards
 folders: Folders
 setup: Setup
+allOrganizations: All Organizations
 HelmChartLabel: Helm Chart
 agent: Agent
 agents: Agents

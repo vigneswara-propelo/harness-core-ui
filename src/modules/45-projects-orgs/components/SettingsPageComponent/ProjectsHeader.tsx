@@ -189,7 +189,7 @@ const ProjectsHeader = (props: ProjectsHeaderProps): React.ReactElement => {
                   </Layout.Horizontal>
                 </Layout.Vertical>
 
-                <Text font={{ variation: FontVariation.H3 }} color={Color.GREY_900}>
+                <Text font={{ variation: FontVariation.H3 }} color={Color.GREY_900} lineClamp={1}>
                   {project.name}
                 </Text>
                 {project.description && (
