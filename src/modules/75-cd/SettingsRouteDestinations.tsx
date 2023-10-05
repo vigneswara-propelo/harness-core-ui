@@ -13,12 +13,14 @@ import {
   environmentGroupPathProps,
   environmentPathProps,
   pathArrayForAllScopes,
-  servicePathProps
+  servicePathProps,
+  webhooksPathProps
 } from '@common/utils/routeUtils'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import WebhookEvents from '@modules/70-pipeline/pages/webhooks/WebhookEvents/WebhookEvents'
 import { Webhooks } from '@modules/70-pipeline/pages/webhooks/Webhooks'
+import WebhookLandingPage from '@modules/70-pipeline/pages/webhooks/WebhookDetails/WebhookLandingPage'
 import { Services } from './components/Services/Services'
 import ServiceStudio from './components/Services/ServiceStudio/ServiceStudio'
 import { EnvironmentsPage } from './RouteDestinations'
@@ -76,19 +78,24 @@ function CDSettingsRouteDestinations({
         <ServiceOverrides />
       </RouteWithContext>
 
-      <RouteWithContext
-        exact
-        path={pathArrayForAllScopes(routes.toWebhooksSettings, mode)}
-        pageName={PAGE_NAME.Webhooks}
-      >
+      <RouteWithContext exact path={pathArrayForAllScopes(routes.toWebhooks, mode)} pageName={PAGE_NAME.Webhooks}>
         <Webhooks />
       </RouteWithContext>
+
       <RouteWithContext
         exact
-        path={pathArrayForAllScopes(routes.toWebhooksEventsSettings, mode)}
+        path={pathArrayForAllScopes(routes.toWebhooksEvents, mode)}
         pageName={PAGE_NAME.WebhookEvents}
       >
         <WebhookEvents />
+      </RouteWithContext>
+
+      <RouteWithContext
+        exact
+        path={pathArrayForAllScopes(routes.toWebhooksDetails, mode, { ...webhooksPathProps })}
+        pageName={PAGE_NAME.WebhooksDetails}
+      >
+        <WebhookLandingPage />
       </RouteWithContext>
     </>
   )

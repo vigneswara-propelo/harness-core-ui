@@ -283,7 +283,7 @@ export const AccountSettingsPage: React.FC = () => {
               id={SettingsResources.Webhooks}
               icon={'code-webhook'}
               hidden={!isBidirectionalSyncEnabled}
-              route={routesV2.toWebhooksSettings({ accountId, module })}
+              route={routesV2.toWebhooks({ accountId, module })}
             />
             <SettingsResourceCard
               label={<String stringID="common.variables" />}

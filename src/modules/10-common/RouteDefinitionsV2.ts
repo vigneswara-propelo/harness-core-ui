@@ -51,7 +51,8 @@ import {
   FeatureFlagPathProps,
   SegmentPathProps,
   TargetPathProps,
-  IACMPathProps
+  IACMPathProps,
+  WebhooksPathProps
 } from './interfaces/RouteInterfaces'
 
 import {
@@ -879,8 +880,16 @@ const routes = {
   toVariablesSettings: withModeModuleAndScopePrefix(() => `/settings/variables`),
 
   toGitOpsResources: withModeModuleAndScopePrefix<GitOpsPathProps>(params => `/settings/gitops/${params?.entity}`),
-  toWebhooksSettings: withModeModuleAndScopePrefix(() => `/settings/webhooks`),
-  toWebhooksEventsSettings: withModeModuleAndScopePrefix(() => `/settings/webhooks/events`),
+  toWebhooks: withModeModuleAndScopePrefix(() => `/settings/webhooks`),
+  toWebhooksDetails: withModeModuleAndScopePrefix<WebhooksPathProps>(
+    params => `/settings/webhooks/${params?.webhookIdentifier}`
+  ),
+  toWebhooksEvents: withModeModuleAndScopePrefix<Partial<WebhooksPathProps>>(params => {
+    const path = params?.webhookIdentifier
+      ? `/settings/webhooks/events?webhookIdentifier=${params.webhookIdentifier}`
+      : `/settings/webhooks/events`
+    return path
+  }),
 
   // chaos module routes
   toChaosMicroFrontend: withModeModuleAndScopePrefix<ModulePathParams>(() => '/'),

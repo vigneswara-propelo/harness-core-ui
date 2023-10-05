@@ -11,12 +11,16 @@ import { useParams } from 'react-router-dom'
 import { TabNavigation } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
-import routes from '@common/RouteDefinitions'
+import routesv1 from '@common/RouteDefinitions'
+import routesv2 from '@common/RouteDefinitionsV2'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 
 export default function WebhooksTabs(): React.ReactElement {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
+  const { CDS_NAV_2_0: newLeftNav } = useFeatureFlags()
+  const routes = newLeftNav ? routesv2 : routesv1
 
   return (
     <TabNavigation
