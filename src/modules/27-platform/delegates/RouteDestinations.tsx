@@ -9,7 +9,8 @@ import React from 'react'
 import { Redirect, useParams } from 'react-router-dom'
 
 import { RouteWithLayout } from '@common/router'
-import routes from '@common/RouteDefinitions'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import { accountPathProps, delegateConfigProps, delegatePathProps, projectPathProps } from '@common/utils/routeUtils'
 import { AccountSideNavProps } from '@common/RouteDestinations'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
@@ -19,7 +20,7 @@ import RbacFactory from '@rbac/factories/RbacFactory'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
 
-import type { ResourceDTO } from 'services/audit'
+import type { AuditEventData, ResourceDTO } from 'services/audit'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 
 import { String } from 'framework/strings'
@@ -86,8 +87,15 @@ AuditTrailFactory.registerResourceHandler(ResourceType.DELEGATE_TOKEN, {
   },
   moduleLabel: 'common.delegateTokenLabel',
   resourceLabel: 'common.delegateTokenLabel',
-  resourceUrl: (_: ResourceDTO, resourceScope: ResourceScope, module?: Module) => {
+  resourceUrl: (
+    _: ResourceDTO,
+    resourceScope: ResourceScope,
+    module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+    const routes = isNewNav ? routesV2 : routesV1
     return routes.toDelegateTokens({
       module,
       orgIdentifier,
@@ -103,8 +111,16 @@ AuditTrailFactory.registerResourceHandler(ResourceType.DELEGATE, {
   },
   moduleLabel: 'delegate.DelegateName',
   resourceLabel: 'delegate.DelegateName',
-  resourceUrl: (_: ResourceDTO, resourceScope: ResourceScope, module?: Module) => {
+  resourceUrl: (
+    _: ResourceDTO,
+    resourceScope: ResourceScope,
+    module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+    const routes = isNewNav ? routesV2 : routesV1
+
     return routes.toDelegateList({
       module,
       orgIdentifier,
@@ -116,16 +132,16 @@ AuditTrailFactory.registerResourceHandler(ResourceType.DELEGATE, {
 
 const RedirectToDelegatesHome = (): React.ReactElement => {
   const { accountId } = useParams<AccountPathProps>()
-  return <Redirect to={routes.toDelegateList({ accountId })} />
+  return <Redirect to={routesV1.toDelegateList({ accountId })} />
 }
 
 export default (
   <>
-    <RouteWithLayout sidebarProps={AccountSideNavProps} path={[routes.toDelegates({ ...accountPathProps })]} exact>
+    <RouteWithLayout sidebarProps={AccountSideNavProps} path={[routesV1.toDelegates({ ...accountPathProps })]} exact>
       <RedirectToDelegatesHome />
     </RouteWithLayout>
 
-    <RouteWithLayout sidebarProps={AccountSideNavProps} path={[routes.toDelegateList({ ...accountPathProps })]} exact>
+    <RouteWithLayout sidebarProps={AccountSideNavProps} path={[routesV1.toDelegateList({ ...accountPathProps })]} exact>
       <DelegatesPage>
         <DelegateListing />
       </DelegatesPage>
@@ -133,7 +149,7 @@ export default (
 
     <RouteWithLayout
       sidebarProps={AccountSideNavProps}
-      path={[routes.toDelegateConfigs({ ...accountPathProps })]}
+      path={[routesV1.toDelegateConfigs({ ...accountPathProps })]}
       exact
     >
       <DelegatesPage>
@@ -143,17 +159,17 @@ export default (
 
     <RouteWithLayout
       sidebarProps={AccountSideNavProps}
-      path={[routes.toDelegatesDetails({ ...accountPathProps, ...delegatePathProps })]}
+      path={[routesV1.toDelegatesDetails({ ...accountPathProps, ...delegatePathProps })]}
     >
       <DelegateDetails />
     </RouteWithLayout>
     <RouteWithLayout
       sidebarProps={AccountSideNavProps}
-      path={[routes.toDelegateConfigsDetails({ ...accountPathProps, ...delegateConfigProps })]}
+      path={[routesV1.toDelegateConfigsDetails({ ...accountPathProps, ...delegateConfigProps })]}
     >
       <DelegateProfileDetails />
     </RouteWithLayout>
-    <RouteWithLayout sidebarProps={AccountSideNavProps} path={[routes.toDelegateTokens({ ...accountPathProps })]}>
+    <RouteWithLayout sidebarProps={AccountSideNavProps} path={[routesV1.toDelegateTokens({ ...accountPathProps })]}>
       <DelegatesPage>
         <DelegateTokens />
       </DelegatesPage>
@@ -164,7 +180,7 @@ export default (
 const RedirectToModuleDelegatesHome = (): React.ReactElement => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
 
-  return <Redirect to={routes.toDelegateList({ accountId, projectIdentifier, orgIdentifier, module })} />
+  return <Redirect to={routesV1.toDelegateList({ accountId, projectIdentifier, orgIdentifier, module })} />
 }
 export const DelegateRouteDestinations: React.FC<{
   moduleParams: ModulePathParams
@@ -176,7 +192,7 @@ export const DelegateRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={routes.toDelegates({
+      path={routesV1.toDelegates({
         ...accountPathProps,
         ...projectPathProps,
         ...moduleParams
@@ -188,7 +204,7 @@ export const DelegateRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={routes.toDelegateList({
+      path={routesV1.toDelegateList({
         ...accountPathProps,
         ...projectPathProps,
         ...moduleParams
@@ -203,7 +219,7 @@ export const DelegateRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={routes.toDelegateConfigs({
+      path={routesV1.toDelegateConfigs({
         ...accountPathProps,
         ...projectPathProps,
         ...moduleParams
@@ -218,7 +234,7 @@ export const DelegateRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={routes.toDelegatesDetails({
+      path={routesV1.toDelegatesDetails({
         ...accountPathProps,
         ...projectPathProps,
         ...delegatePathProps,
@@ -233,13 +249,13 @@ export const DelegateRouteDestinations: React.FC<{
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
       path={[
-        routes.toDelegateConfigsDetails({
+        routesV1.toDelegateConfigsDetails({
           ...accountPathProps,
           ...projectPathProps,
           ...delegateConfigProps,
           ...moduleParams
         }),
-        routes.toEditDelegateConfigsDetails({
+        routesV1.toEditDelegateConfigsDetails({
           ...accountPathProps,
           ...projectPathProps,
           ...delegateConfigProps,
@@ -255,7 +271,7 @@ export const DelegateRouteDestinations: React.FC<{
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
       path={[
-        routes.toDelegateTokens({
+        routesV1.toDelegateTokens({
           ...accountPathProps,
           ...projectPathProps,
           ...moduleParams

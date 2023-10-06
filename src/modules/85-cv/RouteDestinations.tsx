@@ -10,9 +10,11 @@ import { Route, useParams, Redirect } from 'react-router-dom'
 
 import CVHomePage from '@cv/pages/home/CVHomePage'
 import { RouteWithLayout } from '@common/router'
-import routes from '@common/RouteDefinitions'
-import { accountPathProps, orgPathProps, projectPathProps, templatePathProps } from '@common/utils/routeUtils'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
+import { NAV_MODE, accountPathProps, orgPathProps, projectPathProps, templatePathProps } from '@common/utils/routeUtils'
 import type {
+  Module,
   ModulePathParams,
   ProjectPathProps,
   TemplateStudioPathProps,
@@ -40,7 +42,7 @@ import { TemplateStudio } from '@templates-library/components/TemplateStudio/Tem
 import { CVChanges } from '@cv/pages/changes/CVChanges'
 import ConnectorsPage from '@platform/connectors/pages/connectors/ConnectorsPage'
 import { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
-import type { ResourceDTO } from 'services/audit'
+import type { AuditEventData, ResourceDTO } from 'services/audit'
 import type { ResourceScope } from 'services/cd-ng'
 import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
 import featureFactory, { RenderMessageReturn } from 'framework/featureStore/FeaturesFactory'
@@ -219,7 +221,7 @@ const RedirectToCVProject = (): React.ReactElement => {
   if (selectedProject?.modules?.includes(ModuleName.CV)) {
     return (
       <Redirect
-        to={routes.toCVSLOs({
+        to={routesV1.toCVSLOs({
           accountId: params.accountId,
           orgIdentifier: selectedProject.orgIdentifier || '',
           projectIdentifier: selectedProject.identifier
@@ -227,7 +229,7 @@ const RedirectToCVProject = (): React.ReactElement => {
       />
     )
   } else {
-    return <Redirect to={routes.toCVHome(params)} />
+    return <Redirect to={routesV1.toCVHome(params)} />
   }
 }
 
@@ -240,7 +242,7 @@ const RedirectToCVTemplateStudio = (): React.ReactElement => {
 
   return (
     <Redirect
-      to={routes.toTemplateStudioNew({
+      to={routesV1.toTemplateStudioNew({
         accountId,
         orgIdentifier,
         projectIdentifier,
@@ -260,15 +262,23 @@ AuditTrailFactory.registerResourceHandler(ResourceType.MONITORED_SERVICE, {
   },
   moduleLabel: cvLabel,
   resourceLabel: 'cv.monitoredServices.title',
-  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope, module?: any) => {
+  resourceUrl: (
+    resource: ResourceDTO,
+    resourceScope: ResourceScope,
+    module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+    const routes = isNewNav ? routesV2 : routesV1
     if (module && orgIdentifier && projectIdentifier) {
       return routes.toCVAddMonitoringServicesEdit({
         module,
         orgIdentifier,
         projectIdentifier,
         accountId: accountIdentifier!,
-        identifier: resource.identifier
+        identifier: resource.identifier,
+        mode: NAV_MODE.ALL
       })
     }
     return undefined
@@ -281,15 +291,24 @@ AuditTrailFactory.registerResourceHandler(ResourceType.SERVICE_LEVEL_OBJECTIVE, 
   },
   moduleLabel: cvLabel,
   resourceLabel: 'cv.slos.title',
-  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope, module?: any) => {
+  resourceUrl: (
+    resource: ResourceDTO,
+    resourceScope: ResourceScope,
+    module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+    const routes = isNewNav ? routesV2 : routesV1
+
     if (module && orgIdentifier && projectIdentifier) {
       return routes.toCVSLODetailsPage({
         module,
         orgIdentifier,
         projectIdentifier,
         accountId: accountIdentifier!,
-        identifier: resource.identifier
+        identifier: resource.identifier,
+        mode: NAV_MODE.ALL
       })
     }
     return undefined
@@ -350,7 +369,7 @@ export const SRMRoutes = (
   <>
     <RouteWithLayout
       sidebarProps={ProjectDetailsSideNavProps}
-      path={routes.toMonitoredServices({ ...accountPathProps, ...orgPathProps, ...projectPathProps })}
+      path={routesV1.toMonitoredServices({ ...accountPathProps, ...orgPathProps, ...projectPathProps })}
       exact
     >
       <MonitoredServiceListWidget config={PROJECT_MONITORED_SERVICE_CONFIG} />
@@ -359,7 +378,7 @@ export const SRMRoutes = (
     <RouteWithLayout
       exact
       sidebarProps={ProjectDetailsSideNavProps}
-      path={routes.toAddMonitoredServices({ ...accountPathProps, ...orgPathProps, ...projectPathProps })}
+      path={routesV1.toAddMonitoredServices({ ...accountPathProps, ...orgPathProps, ...projectPathProps })}
     >
       <MonitoredServiceProvider isTemplate={false}>
         <CommonMonitoredServiceDetails config={PROJECT_MONITORED_SERVICE_CONFIG} />
@@ -368,7 +387,7 @@ export const SRMRoutes = (
 
     <RouteWithLayout
       sidebarProps={ProjectDetailsSideNavProps}
-      path={routes.toMonitoredServicesConfigurations({
+      path={routesV1.toMonitoredServicesConfigurations({
         ...accountPathProps,
         ...orgPathProps,
         ...projectPathProps,
@@ -381,7 +400,7 @@ export const SRMRoutes = (
 
     <RouteWithLayout
       sidebarProps={CDSideNavProps}
-      path={routes.toMonitoredServices({
+      path={routesV1.toMonitoredServices({
         ...accountPathProps,
         ...orgPathProps,
         ...projectPathProps,
@@ -395,7 +414,7 @@ export const SRMRoutes = (
     <RouteWithLayout
       exact
       sidebarProps={CDSideNavProps}
-      path={routes.toAddMonitoredServices({
+      path={routesV1.toAddMonitoredServices({
         ...accountPathProps,
         ...orgPathProps,
         ...projectPathProps,
@@ -409,7 +428,7 @@ export const SRMRoutes = (
 
     <RouteWithLayout
       sidebarProps={CDSideNavProps}
-      path={routes.toMonitoredServicesConfigurations({
+      path={routesV1.toMonitoredServicesConfigurations({
         ...accountPathProps,
         ...orgPathProps,
         ...projectPathProps,
@@ -422,18 +441,21 @@ export const SRMRoutes = (
     </RouteWithLayout>
 
     <Route
-      path={[routes.toCV({ ...accountPathProps }), routes.toCVProject({ ...accountPathProps, ...projectPathProps })]}
+      path={[
+        routesV1.toCV({ ...accountPathProps }),
+        routesV1.toCVProject({ ...accountPathProps, ...projectPathProps })
+      ]}
       exact
     >
       <RedirectToCVProject />
     </Route>
-    <RouteWithLayout exact sidebarProps={CVSideNavProps} path={routes.toCVHome({ ...accountPathProps })}>
+    <RouteWithLayout exact sidebarProps={CVSideNavProps} path={routesV1.toCVHome({ ...accountPathProps })}>
       <CVHomePage />
     </RouteWithLayout>
 
     <RouteWithLayout
       layout={MinimalLayout}
-      path={routes.toModuleTrialHome({ ...accountPathProps, module: 'cv' })}
+      path={routesV1.toModuleTrialHome({ ...accountPathProps, module: 'cv' })}
       exact
     >
       <CVTrialHomePage />
@@ -442,7 +464,7 @@ export const SRMRoutes = (
     <RouteWithLayout
       exact
       sidebarProps={CVSideNavProps}
-      path={routes.toCVMonitoringServices({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+      path={routesV1.toCVMonitoringServices({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
     >
       <MonitoredServiceProvider isTemplate={false}>
         <CVMonitoredService />
@@ -452,7 +474,7 @@ export const SRMRoutes = (
     <RouteWithLayout
       exact
       sidebarProps={CVSideNavProps}
-      path={routes.toCVMonitoringServicesInputSets({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+      path={routesV1.toCVMonitoringServicesInputSets({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
     >
       <MonitoredServiceInputSetsTemplate />
     </RouteWithLayout>
@@ -460,7 +482,7 @@ export const SRMRoutes = (
     <RouteWithLayout
       exact
       sidebarProps={CVSideNavProps}
-      path={[routes.toCVSLODowntime({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })]}
+      path={[routesV1.toCVSLODowntime({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })]}
     >
       <SLODowntimePage />
     </RouteWithLayout>
@@ -469,8 +491,8 @@ export const SRMRoutes = (
       exact
       sidebarProps={CVSideNavProps}
       path={[
-        routes.toCVCreateSLODowntime({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
-        routes.toCVEditSLODowntime({ ...accountPathProps, ...projectPathProps, ...cvModuleParams, ...editParams })
+        routesV1.toCVCreateSLODowntime({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
+        routesV1.toCVEditSLODowntime({ ...accountPathProps, ...projectPathProps, ...cvModuleParams, ...editParams })
       ]}
     >
       <CVCreateDowntime />
@@ -478,7 +500,7 @@ export const SRMRoutes = (
 
     <RouteWithLayout
       sidebarProps={CVSideNavProps}
-      path={routes.toErrorTracking({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+      path={routesV1.toErrorTracking({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
     >
       <ChildAppMounter<ETCustomMicroFrontendProps>
         ChildApp={ErrorTracking}
@@ -494,8 +516,8 @@ export const SRMRoutes = (
       exact
       sidebarProps={CVSideNavProps}
       path={[
-        routes.toCVAddMonitoringServicesSetup({ ...accountPathProps, ...projectPathProps }),
-        routes.toCVAddMonitoringServicesEdit({
+        routesV1.toCVAddMonitoringServicesSetup({ ...accountPathProps, ...projectPathProps }),
+        routesV1.toCVAddMonitoringServicesEdit({
           ...accountPathProps,
           ...projectPathProps,
           ...editParams,
@@ -512,7 +534,7 @@ export const SRMRoutes = (
       exact
       sidebarProps={CVSideNavProps}
       path={[
-        routes.toCVAddMonitoredServiceForServiceAndEnv({
+        routesV1.toCVAddMonitoredServiceForServiceAndEnv({
           ...accountPathProps,
           ...projectPathProps,
           ...serviceAndEnvParams
@@ -527,7 +549,7 @@ export const SRMRoutes = (
     <RouteWithLayout
       exact
       sidebarProps={CVSideNavProps}
-      path={routes.toConnectors({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+      path={routesV1.toConnectors({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
     >
       <ConnectorsPage />
     </RouteWithLayout>
@@ -535,7 +557,7 @@ export const SRMRoutes = (
     <RouteWithLayout
       exact
       sidebarProps={CVSideNavProps}
-      path={routes.toTemplates({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+      path={routesV1.toTemplates({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
     >
       <TemplatesPage />
     </RouteWithLayout>
@@ -550,14 +572,14 @@ export const SRMRoutes = (
     <RouteWithLayout
       sidebarProps={CVSideNavProps}
       exact
-      path={routes.toTemplateStudio({ ...accountPathProps, ...templatePathProps, ...cvModuleParams })}
+      path={routesV1.toTemplateStudio({ ...accountPathProps, ...templatePathProps, ...cvModuleParams })}
     >
       <RedirectToCVTemplateStudio />
     </RouteWithLayout>
     <RouteWithLayout
       sidebarProps={CVSideNavProps}
       exact
-      path={routes.toTemplateStudioNew({ ...accountPathProps, ...templatePathProps, ...cvModuleParams })}
+      path={routesV1.toTemplateStudioNew({ ...accountPathProps, ...templatePathProps, ...cvModuleParams })}
     >
       <TemplateStudio />
     </RouteWithLayout>
@@ -617,19 +639,19 @@ export const SRMMFERoutes: React.FC = () => {
   const { SRM_MICRO_FRONTEND: enableMicroFrontend } = useFeatureFlags()
   const mfePaths = enableMicroFrontend
     ? [
-        routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
-        routes.toAccountCVSLOs({ ...accountPathProps }),
-        routes.toCVCreateSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
-        routes.toCVCreateCompositeSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
-        routes.toCVSLODetailsPage({
+        routesV1.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
+        routesV1.toAccountCVSLOs({ ...accountPathProps }),
+        routesV1.toCVCreateSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
+        routesV1.toCVCreateCompositeSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
+        routesV1.toCVSLODetailsPage({
           ...accountPathProps,
           ...projectPathProps,
           ...editParams,
           ...cvModuleParams
         }),
-        routes.toCVChanges({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
-        routes.toAccountCVSLODetailsPage({ ...accountPathProps, ...editParams, ...cvModuleParams }),
-        routes.toAccountCVCreateCompositeSLOs({ ...accountPathProps, ...cvModuleParams })
+        routesV1.toCVChanges({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
+        routesV1.toAccountCVSLODetailsPage({ ...accountPathProps, ...editParams, ...cvModuleParams }),
+        routesV1.toAccountCVCreateCompositeSLOs({ ...accountPathProps, ...cvModuleParams })
       ]
     : []
 
@@ -681,31 +703,31 @@ export const SRMMFERoutes: React.FC = () => {
           <RouteWithLayout
             exact
             sidebarProps={CVSideNavProps}
-            path={routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+            path={routesV1.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
           >
             <CVSLOsListingPage />
           </RouteWithLayout>
-          <RouteWithLayout exact sidebarProps={CVSideNavProps} path={routes.toAccountCVSLOs({ ...accountPathProps })}>
+          <RouteWithLayout exact sidebarProps={CVSideNavProps} path={routesV1.toAccountCVSLOs({ ...accountPathProps })}>
             <CVSLOsListingPage />
           </RouteWithLayout>
           <RouteWithLayout
             exact
             sidebarProps={CVSideNavProps}
-            path={routes.toCVCreateSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+            path={routesV1.toCVCreateSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
           >
             <CVCreateSLOV2 />
           </RouteWithLayout>
           <RouteWithLayout
             exact
             sidebarProps={CVSideNavProps}
-            path={routes.toCVCreateCompositeSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+            path={routesV1.toCVCreateCompositeSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
           >
             <CVCreateSLOV2 isComposite />
           </RouteWithLayout>
           <RouteWithLayout
             exact
             sidebarProps={CVSideNavProps}
-            path={routes.toCVSLODetailsPage({
+            path={routesV1.toCVSLODetailsPage({
               ...accountPathProps,
               ...projectPathProps,
               ...editParams,
@@ -717,14 +739,14 @@ export const SRMMFERoutes: React.FC = () => {
           <RouteWithLayout
             exact
             sidebarProps={CVSideNavProps}
-            path={routes.toCVChanges({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+            path={routesV1.toCVChanges({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
           >
             <CVChanges />
           </RouteWithLayout>
           <RouteWithLayout
             exact
             sidebarProps={CVSideNavProps}
-            path={routes.toAccountCVSLODetailsPage({
+            path={routesV1.toAccountCVSLODetailsPage({
               ...accountPathProps,
               ...editParams,
               ...cvModuleParams
@@ -735,7 +757,7 @@ export const SRMMFERoutes: React.FC = () => {
           <RouteWithLayout
             exact
             sidebarProps={CVSideNavProps}
-            path={routes.toAccountCVCreateCompositeSLOs({ ...accountPathProps, ...cvModuleParams })}
+            path={routesV1.toAccountCVCreateCompositeSLOs({ ...accountPathProps, ...cvModuleParams })}
           >
             <CVCreateSLOV2 isComposite />
           </RouteWithLayout>

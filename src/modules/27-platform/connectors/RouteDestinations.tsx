@@ -6,13 +6,14 @@
  */
 
 import React from 'react'
-import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import type { Module, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import { RouteWithLayout } from '@common/router'
-import routes from '@common/RouteDefinitions'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import { accountPathProps, connectorPathProps, projectPathProps } from '@common/utils/routeUtils'
 import ConnectorsPage from '@platform/connectors/pages/connectors/ConnectorsPage'
 import ConnectorDetailsPage from '@platform/connectors/pages/connectors/ConnectorDetailsPage/ConnectorDetailsPage'
@@ -22,7 +23,7 @@ import { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { String } from 'framework/strings'
 import { AccountSideNavProps } from '@common/RouteDestinations'
-import type { ResourceDTO } from 'services/audit'
+import type { AuditEventData, ResourceDTO } from 'services/audit'
 import DefaultSettingsFactory from '@default-settings/factories/DefaultSettingsFactory'
 import { SettingType } from '@common/constants/Utils'
 import { DefaultSettingConnectorField } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
@@ -57,8 +58,15 @@ AuditTrailFactory.registerResourceHandler('CONNECTOR', {
   },
   moduleLabel: platformLabel,
   resourceLabel: 'connector',
-  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+  resourceUrl: (
+    resource: ResourceDTO,
+    resourceScope: ResourceScope,
+    _module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+    const routes = isNewNav ? routesV2 : routesV1
 
     return routes.toConnectorDetails({
       orgIdentifier,
@@ -82,19 +90,19 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.DEFAULT_CONNECTOR_FOR_
 
 export default (
   <>
-    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toConnectors({ ...accountPathProps })} exact>
+    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routesV1.toConnectors({ ...accountPathProps })} exact>
       <ConnectorsPage />
     </RouteWithLayout>
     <RouteWithLayout
       sidebarProps={AccountSideNavProps}
-      path={routes.toConnectorDetails({ ...accountPathProps, ...connectorPathProps })}
+      path={routesV1.toConnectorDetails({ ...accountPathProps, ...connectorPathProps })}
       exact
     >
       <ConnectorDetailsPage />
     </RouteWithLayout>
     <RouteWithLayout
       sidebarProps={AccountSideNavProps}
-      path={routes.toCreateConnectorFromYaml({ ...accountPathProps })}
+      path={routesV1.toCreateConnectorFromYaml({ ...accountPathProps })}
       exact
     >
       <CreateConnectorFromYamlPage />
@@ -112,7 +120,7 @@ export const ConnectorRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={routes.toConnectors({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
+      path={routesV1.toConnectors({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
       pageName={PAGE_NAME.ConnectorsPage}
     >
       <ConnectorsPage />
@@ -121,7 +129,7 @@ export const ConnectorRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={routes.toCreateConnectorFromYaml({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
+      path={routesV1.toCreateConnectorFromYaml({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
       pageName={PAGE_NAME.CreateConnectorFromYamlPage}
     >
       <CreateConnectorFromYamlPage />
@@ -130,7 +138,7 @@ export const ConnectorRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={routes.toConnectorDetails({
+      path={routesV1.toConnectorDetails({
         ...accountPathProps,
         ...projectPathProps,
         ...connectorPathProps,

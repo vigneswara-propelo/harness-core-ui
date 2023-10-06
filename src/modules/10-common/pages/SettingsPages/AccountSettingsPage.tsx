@@ -270,13 +270,13 @@ export const AccountSettingsPage: React.FC = () => {
               label={<String stringID="resourcePage.fileStore" />}
               id={SettingsResources.FileStores}
               icon={'filestore'}
-              route={routesV2.toFileStoreSettings({ accountId, module })}
+              route={routesV2.toFileStore({ accountId, module })}
             />
             <SettingsResourceCard
               label={<String stringID="common.templates" />}
               id={SettingsResources.Templates}
               icon={'templates-blue'}
-              route={routesV2.toSettingsTemplates({ accountId, module })}
+              route={routesV2.toTemplates({ accountId, module })}
               hidden={!haveCIorCDorSTO}
             />
             <SettingsResourceCard
@@ -290,7 +290,7 @@ export const AccountSettingsPage: React.FC = () => {
               label={<String stringID="common.variables" />}
               id={SettingsResources.Variables}
               icon={'variables-blue'}
-              route={routesV2.toVariablesSettings({ accountId, module })}
+              route={routesV2.toVariables({ accountId, module })}
             />
             <SettingsResourceCard
               label={<String stringID="common.ffProxy" />}
@@ -402,7 +402,7 @@ export const AccountSettingsPage: React.FC = () => {
               label={<String stringID="common.freezeWindows" />}
               id={SettingsResources.FreezeWindow}
               icon={'setting'}
-              route={routesV2.toFreezeWindowsSettings({ accountId, module })}
+              route={routesV2.toFreezeWindows({ accountId, module })}
               hidden={!showDeploymentFreeze}
             />
             <SettingsResourceCard

@@ -9,8 +9,9 @@ import React from 'react'
 import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import { String } from 'framework/strings'
 import { AccountSideNavProps } from '@common/RouteDestinations'
-import routes from '@common/RouteDefinitions'
-import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
+import type { Module, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import { accountPathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
@@ -21,7 +22,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import FreezeWindowsPage from '@freeze-windows/pages/FreezeWindowsPage'
 import FreezeWindowStudioPage from '@freeze-windows/pages/FreezeWindowStudioPage'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
-import type { ResourceDTO } from 'services/audit'
+import type { AuditEventData, ResourceDTO } from 'services/audit'
 
 RbacFactory.registerResourceTypeHandler(ResourceType.DEPLOYMENTFREEZE, {
   icon: 'nav-settings',
@@ -40,8 +41,16 @@ AuditTrailFactory.registerResourceHandler('DEPLOYMENT_FREEZE', {
   },
   moduleLabel: 'common.purpose.cd.continuous',
   resourceLabel: 'freezeWindows.deploymentFreeze',
-  resourceUrl: (windowIdentifier: ResourceDTO, resourceScope: ResourceScope) => {
+  resourceUrl: (
+    windowIdentifier: ResourceDTO,
+    resourceScope: ResourceScope,
+    _module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+    const routes = isNewNav ? routesV2 : routesV1
+
     if (windowIdentifier.identifier) {
       if (windowIdentifier.identifier === '_GLOBAL_') {
         return routes.toFreezeWindows({
@@ -65,12 +74,12 @@ AuditTrailFactory.registerResourceHandler('DEPLOYMENT_FREEZE', {
 
 export default (
   <>
-    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toFreezeWindows({ ...accountPathProps })} exact>
+    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routesV1.toFreezeWindows({ ...accountPathProps })} exact>
       <FreezeWindowsPage />
     </RouteWithLayout>
     <RouteWithLayout
       sidebarProps={AccountSideNavProps}
-      path={routes.toFreezeWindowStudio({
+      path={routesV1.toFreezeWindowStudio({
         ...accountPathProps,
         ...{
           windowIdentifier: ':windowIdentifier'
@@ -80,12 +89,12 @@ export default (
     >
       <FreezeWindowStudioPage />
     </RouteWithLayout>
-    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toFreezeWindows({ ...orgPathProps })} exact>
+    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routesV1.toFreezeWindows({ ...orgPathProps })} exact>
       <FreezeWindowsPage />
     </RouteWithLayout>
     <RouteWithLayout
       sidebarProps={AccountSideNavProps}
-      path={routes.toFreezeWindowStudio({
+      path={routesV1.toFreezeWindowStudio({
         ...orgPathProps,
         ...{
           windowIdentifier: ':windowIdentifier'
@@ -109,7 +118,7 @@ export const FreezeWindowRouteDestinations: React.FC<{
         exact
         licenseRedirectData={licenseRedirectData}
         sidebarProps={sidebarProps}
-        path={routes.toFreezeWindows({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
+        path={routesV1.toFreezeWindows({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
         pageName={PAGE_NAME.FreezeWindowsPage}
       >
         <FreezeWindowsPage />
@@ -118,7 +127,7 @@ export const FreezeWindowRouteDestinations: React.FC<{
         pageName={PAGE_NAME.FreezeWindowsPage}
         licenseRedirectData={licenseRedirectData}
         sidebarProps={sidebarProps}
-        path={routes.toFreezeWindowStudio({
+        path={routesV1.toFreezeWindowStudio({
           ...projectPathProps,
           ...moduleParams,
           ...{

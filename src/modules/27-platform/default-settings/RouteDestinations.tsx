@@ -10,15 +10,16 @@ import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
 import { RouteWithLayout } from '@common/router'
 import SettingsList from '@default-settings/pages/SettingsList'
-import routes from '@common/RouteDefinitions'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { AccountSideNavProps } from '@common/RouteDestinations'
-import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import type { Module, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
-import type { ResourceDTO } from 'services/audit'
+import type { AuditEventData, ResourceDTO } from 'services/audit'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -458,8 +459,16 @@ AuditTrailFactory.registerResourceHandler('SETTING', {
   },
   moduleLabel: 'common.defaultSettings',
   resourceLabel: 'common.defaultSettings',
-  resourceUrl: (_resource_: ResourceDTO, resourceScope: ResourceScope) => {
+  resourceUrl: (
+    _resource_: ResourceDTO,
+    resourceScope: ResourceScope,
+    _module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { orgIdentifier, accountIdentifier, projectIdentifier } = resourceScope
+    const routes = isNewNav ? routesV2 : routesV1
+
     return routes.toDefaultSettings({
       orgIdentifier,
       accountId: accountIdentifier,
@@ -574,7 +583,7 @@ export default function DefaultSettingsRoutes(): React.ReactElement {
     <>
       <RouteWithLayout
         sidebarProps={AccountSideNavProps}
-        path={routes.toDefaultSettings({ ...accountPathProps })}
+        path={routesV1.toDefaultSettings({ ...accountPathProps })}
         exact
       >
         <SettingsList />
@@ -592,7 +601,7 @@ export const DefaultSettingsRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={routes.toDefaultSettings({
+      path={routesV1.toDefaultSettings({
         ...accountPathProps,
         ...projectPathProps,
         ...moduleParams

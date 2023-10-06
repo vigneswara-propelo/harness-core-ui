@@ -15,11 +15,7 @@ import FileStorePage from './pages/filestore/FileStorePage'
 function FileStoreSettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactElement {
   return (
     <>
-      <RouteWithContext
-        exact
-        path={pathArrayForAllScopes(routes.toFileStoreSettings, mode)}
-        pageName={PAGE_NAME.FileStorePage}
-      >
+      <RouteWithContext exact path={pathArrayForAllScopes(routes.toFileStore, mode)} pageName={PAGE_NAME.FileStorePage}>
         <FileStorePage />
       </RouteWithContext>
     </>

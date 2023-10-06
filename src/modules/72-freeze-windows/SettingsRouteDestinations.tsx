@@ -15,12 +15,12 @@ import FreezeWindowStudioPage from './pages/FreezeWindowStudioPage'
 function FreezeWindowSettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactElement {
   return (
     <>
-      <RouteWithContext exact path={pathArrayForAllScopes(routes.toFreezeWindowsSettings, mode)}>
+      <RouteWithContext exact path={pathArrayForAllScopes(routes.toFreezeWindows, mode)}>
         <FreezeWindowsPage />
       </RouteWithContext>
       <RouteWithContext
         exact
-        path={pathArrayForAllScopes(routes.toFreezeWindowStudioSettings, mode, {
+        path={pathArrayForAllScopes(routes.toFreezeWindowStudio, mode, {
           ...{
             windowIdentifier: ':windowIdentifier'
           }

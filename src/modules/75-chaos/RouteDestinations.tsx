@@ -9,11 +9,12 @@ import React from 'react'
 import { Redirect, useParams } from 'react-router-dom'
 import { OverviewChartsWithToggle } from '@common/components/OverviewChartsWithToggle/OverviewChartsWithToggle'
 import { NavigationCheck } from '@common/components/NavigationCheck/NavigationCheck'
-import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { Module, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
-import routes from '@common/RouteDefinitions'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import { RouteWithLayout } from '@common/router'
-import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
+import { NAV_MODE, accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { String as LocaleString } from 'framework/strings'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
@@ -25,7 +26,7 @@ import { ConnectorReferenceField } from '@platform/connectors/components/Connect
 import { SecretRouteDestinations } from '@secrets/RouteDestinations'
 import PipelineStudioFactory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
-import type { ResourceDTO } from 'services/audit'
+import type { AuditEventData, ResourceDTO } from 'services/audit'
 import ExecFactory from '@pipeline/factories/ExecutionFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { MinimalLayout } from '@common/layouts'
@@ -78,14 +79,22 @@ AuditTrailFactory.registerResourceHandler('CHAOS_HUB', {
   },
   moduleLabel: 'chaos.chaosHub',
   resourceLabel: 'chaos.chaosHub',
-  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+  resourceUrl: (
+    resource: ResourceDTO,
+    resourceScope: ResourceScope,
+    _module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
-
+    const routes = isNewNav ? routesV2 : routesV1
     return routes.toChaosHub({
       accountId: accountIdentifier,
       orgIdentifier,
       projectIdentifier,
-      identifier: resource.identifier
+      identifier: resource.identifier,
+      module,
+      mode: NAV_MODE.ALL
     })
   }
 })
@@ -96,14 +105,23 @@ AuditTrailFactory.registerResourceHandler('CHAOS_EXPERIMENT', {
   },
   moduleLabel: 'chaos.chaosExperiment',
   resourceLabel: 'chaos.chaosExperiment',
-  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+  resourceUrl: (
+    resource: ResourceDTO,
+    resourceScope: ResourceScope,
+    _module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+    const routes = isNewNav ? routesV2 : routesV1
 
     return routes.toChaosExperiment({
       accountId: accountIdentifier,
       orgIdentifier,
       projectIdentifier,
-      identifier: resource.identifier
+      identifier: resource.identifier,
+      module,
+      mode: NAV_MODE.ALL
     })
   }
 })
@@ -114,13 +132,22 @@ AuditTrailFactory.registerResourceHandler('CHAOS_INFRASTRUCTURE', {
   },
   moduleLabel: 'chaos.chaosInfrastructure',
   resourceLabel: 'chaos.chaosInfrastructure',
-  resourceUrl: (_: ResourceDTO, resourceScope: ResourceScope) => {
+  resourceUrl: (
+    _: ResourceDTO,
+    resourceScope: ResourceScope,
+    _module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+    const routes = isNewNav ? routesV2 : routesV1
 
     return routes.toChaosEnvironments({
       accountId: accountIdentifier,
       orgIdentifier,
-      projectIdentifier
+      projectIdentifier,
+      module,
+      mode: NAV_MODE.ALL
     })
   }
 })
@@ -131,14 +158,23 @@ AuditTrailFactory.registerResourceHandler('CHAOS_GAMEDAY', {
   },
   moduleLabel: 'chaos.chaosGameday',
   resourceLabel: 'chaos.chaosGameday',
-  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+  resourceUrl: (
+    resource: ResourceDTO,
+    resourceScope: ResourceScope,
+    _module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+    const routes = isNewNav ? routesV2 : routesV1
 
     return routes.toChaosGameDay({
       accountId: accountIdentifier,
       orgIdentifier,
       projectIdentifier,
-      identifier: resource.identifier
+      identifier: resource.identifier,
+      module,
+      mode: NAV_MODE.ALL
     })
   }
 })
@@ -149,14 +185,23 @@ AuditTrailFactory.registerResourceHandler('CHAOS_SECURITY_GOVERNANCE', {
   },
   moduleLabel: 'chaos.chaosGuardRule',
   resourceLabel: 'chaos.chaosGuardRule',
-  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+  resourceUrl: (
+    resource: ResourceDTO,
+    resourceScope: ResourceScope,
+    _module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+    const routes = isNewNav ? routesV2 : routesV1
 
     return routes.toChaosSecurityGovernanceRuleDetails({
       accountId: accountIdentifier,
       orgIdentifier,
       projectIdentifier,
-      identifier: resource.identifier
+      identifier: resource.identifier,
+      module,
+      mode: NAV_MODE.ALL
     })
   }
 })
@@ -168,7 +213,7 @@ const RedirectToChaosProject = (): React.ReactElement => {
   if (selectedProject) {
     return (
       <Redirect
-        to={routes.toProjectOverview({
+        to={routesV1.toProjectOverview({
           accountId,
           orgIdentifier: selectedProject.orgIdentifier || '',
           projectIdentifier: selectedProject.identifier,
@@ -177,7 +222,7 @@ const RedirectToChaosProject = (): React.ReactElement => {
       />
     )
   } else {
-    return <Redirect to={routes.toModuleHome({ accountId, module })} />
+    return <Redirect to={routesV1.toModuleHome({ accountId, module })} />
   }
 }
 
@@ -189,7 +234,7 @@ const RedirectToModuleTrialHome = (): React.ReactElement => {
 
   return (
     <Redirect
-      to={routes.toModuleTrialHome({
+      to={routesV1.toModuleTrialHome({
         accountId,
         module: 'chaos'
       })}
@@ -282,7 +327,7 @@ export default function ChaosRoutes(): React.ReactElement {
       <RouteWithLayout
         licenseRedirectData={licenseRedirectData}
         sidebarProps={ChaosSideNavProps}
-        path={routes.toChaos({ ...accountPathProps })}
+        path={routesV1.toChaos({ ...accountPathProps })}
         exact
       >
         <RedirectToChaosProject />
@@ -292,7 +337,7 @@ export default function ChaosRoutes(): React.ReactElement {
       <RouteWithLayout
         licenseRedirectData={licenseRedirectData}
         sidebarProps={ChaosSideNavProps}
-        path={routes.toModuleHome({ ...accountPathProps, ...chaosModuleParams })}
+        path={routesV1.toModuleHome({ ...accountPathProps, ...chaosModuleParams })}
         exact
         pageName={PAGE_NAME.ChaosHomePage}
       >
@@ -301,7 +346,7 @@ export default function ChaosRoutes(): React.ReactElement {
 
       <RouteWithLayout
         layout={MinimalLayout}
-        path={routes.toModuleTrialHome({ ...accountPathProps, module: 'chaos' })}
+        path={routesV1.toModuleTrialHome({ ...accountPathProps, module: 'chaos' })}
         exact
         pageName={PAGE_NAME.ChaosTrialHomePage}
       >
@@ -368,7 +413,7 @@ export default function ChaosRoutes(): React.ReactElement {
       <RouteWithLayout
         licenseRedirectData={licenseRedirectData}
         sidebarProps={ChaosSideNavProps}
-        path={routes.toChaosMicroFrontend({ ...projectPathProps })}
+        path={routesV1.toChaosMicroFrontend({ ...projectPathProps })}
       >
         <ChildAppMounter<ChaosCustomMicroFrontendProps>
           ChildApp={ChaosMicroFrontend}

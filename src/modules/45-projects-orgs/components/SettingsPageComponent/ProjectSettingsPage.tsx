@@ -145,14 +145,14 @@ export const ProjectSettingsPage: React.FC = () => {
               label={<String stringID="resourcePage.fileStore" />}
               id={SettingsResources.FileStores}
               icon={'filestore'}
-              route={routesV2.toFileStoreSettings({ accountId, orgIdentifier, projectIdentifier, module })}
+              route={routesV2.toFileStore({ accountId, orgIdentifier, projectIdentifier, module })}
             />
             <SettingsResourceCard
               label={<String stringID="common.templates" />}
               id={SettingsResources.Templates}
               icon={'templates-blue'}
               hidden={!showTemplates}
-              route={routesV2.toSettingsTemplates({
+              route={routesV2.toTemplates({
                 accountId,
                 orgIdentifier,
                 projectIdentifier,
@@ -165,7 +165,7 @@ export const ProjectSettingsPage: React.FC = () => {
               label={<String stringID="common.variables" />}
               id={SettingsResources.Variables}
               icon={'variables-blue'}
-              route={routesV2.toVariablesSettings({ accountId, orgIdentifier, projectIdentifier, module })}
+              route={routesV2.toVariables({ accountId, orgIdentifier, projectIdentifier, module })}
             />
             {/* SLO downtime should be visible when the feature flag is enabled */}
             <SettingsResourceCard
@@ -287,7 +287,7 @@ export const ProjectSettingsPage: React.FC = () => {
               label={<String stringID="common.freezeWindows" />}
               id={SettingsResources.FreezeWindow}
               icon={'setting'}
-              route={routesV2.toFreezeWindowsSettings({ accountId, orgIdentifier, projectIdentifier, module })}
+              route={routesV2.toFreezeWindows({ accountId, orgIdentifier, projectIdentifier, module })}
               hidden={!showDeploymentFreeze}
             />
             <SettingsResourceCard

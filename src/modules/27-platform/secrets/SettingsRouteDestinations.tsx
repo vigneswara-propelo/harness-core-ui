@@ -20,7 +20,7 @@ import SecretReferences from './pages/secretReferences/SecretReferences'
 
 function RedirectToSecretDetailHome({ mode }: { mode: NAV_MODE }): JSX.Element {
   const { secretId, module, ...rest } = useParams<ProjectPathProps & SecretsPathProps & ModulePathParams>()
-  return <Redirect to={routes.toSecretDetailsOverviewSettings({ ...rest, mode, secretId, module })} />
+  return <Redirect to={routes.toSecretDetailsOverview({ ...rest, mode, secretId, module })} />
 }
 
 function SecretSettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactElement {
@@ -35,14 +35,14 @@ function SecretSettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.Re
       </RouteWithContext>
       <RouteWithContext
         exact
-        path={pathArrayForAllScopes(routes.toCreateSecretFromYamlSettings, mode)}
+        path={pathArrayForAllScopes(routes.toCreateSecretFromYaml, mode)}
         pageName={PAGE_NAME.CreateSecretFromYamlPage}
       >
         <CreateSecretFromYamlPage />
       </RouteWithContext>
       <RouteWithContext
         exact
-        path={[...pathArrayForAllScopes(routes.toSecretDetailsSettings, mode, { ...secretPathProps })]}
+        path={[...pathArrayForAllScopes(routes.toSecretDetails, mode, { ...secretPathProps })]}
         pageName={PAGE_NAME.SecretDetails}
       >
         <RedirectToSecretDetailHome mode={mode} />
@@ -50,8 +50,8 @@ function SecretSettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.Re
       <RouteWithContext
         exact
         path={[
-          ...pathArrayForAllScopes(routes.toSecretDetailsSettings, mode, { ...secretPathProps }),
-          ...pathArrayForAllScopes(routes.toSecretDetailsOverviewSettings, mode, { ...secretPathProps })
+          ...pathArrayForAllScopes(routes.toSecretDetails, mode, { ...secretPathProps }),
+          ...pathArrayForAllScopes(routes.toSecretDetailsOverview, mode, { ...secretPathProps })
         ]}
         pageName={PAGE_NAME.SecretDetails}
       >

@@ -15,16 +15,17 @@ import AccountOverview from '@auth-settings/pages/AccountOverview/AccountOvervie
 import NotFoundPage from '@common/pages/404/NotFoundPage'
 import SubscriptionsPage from '@auth-settings/pages/subscriptions/SubscriptionsPage'
 import { RouteWithLayout } from '@common/router'
-import routes from '@common/RouteDefinitions'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import { accountPathProps } from '@common/utils/routeUtils'
 
-import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
-import type { ResourceDTO } from 'services/audit'
+import type { AuditEventData, ResourceDTO } from 'services/audit'
 import { String } from 'framework/strings'
 import { AccountSideNavProps } from '@common/RouteDestinations'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
@@ -36,8 +37,15 @@ AuditTrailFactory.registerResourceHandler('NG_LOGIN_SETTINGS', {
   },
   moduleLabel: 'authentication',
   resourceLabel: 'authentication',
-  resourceUrl: (_resource_: ResourceDTO, resourceScope: ResourceScope) => {
+  resourceUrl: (
+    _resource_: ResourceDTO,
+    resourceScope: ResourceScope,
+    _module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { accountIdentifier } = resourceScope
+    const routes = isNewNav ? routesV2 : routesV1
     return routes.toAuthenticationSettings({
       accountId: accountIdentifier
     })
@@ -77,12 +85,12 @@ RbacFactory.registerResourceTypeHandler(ResourceType.AUTHSETTING, {
 
 const RedirectToConfiguration = (): React.ReactElement => {
   const params = useParams<AccountPathProps>()
-  return <Redirect to={routes.toAccountConfiguration(params)} />
+  return <Redirect to={routesV1.toAccountConfiguration(params)} />
 }
 
 const RedirectToOverview = (): React.ReactElement => {
   const params = useParams<AccountPathProps>()
-  return <Redirect to={routes.toAccountSettingsOverview(params)} />
+  return <Redirect to={routesV1.toAccountSettingsOverview(params)} />
 }
 
 const AuthSettingsRoutes: React.FC = () => {
@@ -100,18 +108,22 @@ const AuthSettingsRoutes: React.FC = () => {
       <Switch>
         <RouteWithLayout
           sidebarProps={AccountSideNavProps}
-          path={routes.toAccountSettings({ ...accountPathProps })}
+          path={routesV1.toAccountSettings({ ...accountPathProps })}
           exact
           pageName={PAGE_NAME.AccountOverview}
         >
           <RedirectToOverview />
         </RouteWithLayout>
-        <Route sidebarProps={AccountSideNavProps} path={routes.toAuthenticationSettings({ ...accountPathProps })} exact>
+        <Route
+          sidebarProps={AccountSideNavProps}
+          path={routesV1.toAuthenticationSettings({ ...accountPathProps })}
+          exact
+        >
           <RedirectToConfiguration />
         </Route>
         <RouteWithLayout
           sidebarProps={AccountSideNavProps}
-          path={routes.toAccountConfiguration({ ...accountPathProps })}
+          path={routesV1.toAccountConfiguration({ ...accountPathProps })}
           exact
           pageName={PAGE_NAME.AccountConfiguration}
         >
@@ -119,7 +131,7 @@ const AuthSettingsRoutes: React.FC = () => {
         </RouteWithLayout>
         <RouteWithLayout
           sidebarProps={AccountSideNavProps}
-          path={routes.toAccountSettingsOverview({ ...accountPathProps })}
+          path={routesV1.toAccountSettingsOverview({ ...accountPathProps })}
           exact
           pageName={PAGE_NAME.AccountOverview}
         >
@@ -127,7 +139,7 @@ const AuthSettingsRoutes: React.FC = () => {
         </RouteWithLayout>
         <RouteWithLayout
           sidebarProps={AccountSideNavProps}
-          path={routes.toBilling({ ...accountPathProps })}
+          path={routesV1.toBilling({ ...accountPathProps })}
           exact
           pageName={PAGE_NAME.BillingPage}
         >
@@ -135,7 +147,7 @@ const AuthSettingsRoutes: React.FC = () => {
         </RouteWithLayout>
         <RouteWithLayout
           sidebarProps={AccountSideNavProps}
-          path={routes.toSubscriptions({ ...accountPathProps })}
+          path={routesV1.toSubscriptions({ ...accountPathProps })}
           exact
           pageName={PAGE_NAME.SubscriptionsPage}
         >

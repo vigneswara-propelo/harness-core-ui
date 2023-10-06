@@ -712,12 +712,12 @@ const routes = {
 
   toSettingsServiceOverrides: withModeModuleAndScopePrefix(() => 'settings/serviceOverrides'),
 
-  toSettingsTemplates: withModeModuleAndScopePrefix<{ templateType?: TemplateType }>(params => {
+  toTemplates: withModeModuleAndScopePrefix<{ templateType?: TemplateType }>(params => {
     const path = params?.templateType ? `settings/templates?templateType=${params?.templateType}` : 'settings/templates'
     return path
   }),
 
-  toSettingsTemplateStudio: withModeModuleAndScopePrefix<Partial<TemplateStudioPathProps> & TemplateStudioQueryParams>(
+  toTemplatestudio: withModeModuleAndScopePrefix<Partial<TemplateStudioPathProps> & TemplateStudioQueryParams>(
     params => {
       const queryParams: TemplateStudioQueryParams = {
         branch: params?.branch,
@@ -785,8 +785,8 @@ const routes = {
   }),
   toTicketSettings: withModeModuleAndScopePrefix(() => `/settings/tickets`),
 
-  toFreezeWindowsSettings: withModeModuleAndScopePrefix(() => `/settings/freeze-windows`),
-  toFreezeWindowStudioSettings: withModeModuleAndScopePrefix<
+  toFreezeWindows: withModeModuleAndScopePrefix(() => `/settings/freeze-windows`),
+  toFreezeWindowStudio: withModeModuleAndScopePrefix<
     Partial<{ windowIdentifier: string; sectionId?: string } & ProjectPathProps & ModulePathParams>
   >(params => {
     const queryParams = {
@@ -807,7 +807,7 @@ const routes = {
   toGovernancePolicyDashboardSettings: withModeModuleAndScopePrefix(() => `/settings/governance/dashboard`),
   toGovernancePolicyListingSettings: withModeModuleAndScopePrefix(() => `/settings/governance/policies`),
   toGovernanceNewPolicySettings: withModeModuleAndScopePrefix(() => `/settings/governance/policies/new`),
-  toGovernanceEditPolicySettings: withModeModuleAndScopePrefix<GovernancePathProps>(
+  toGovernanceEditPolicy: withModeModuleAndScopePrefix<GovernancePathProps>(
     params => `/settings/governance/policies/edit/${params?.policyIdentifier}`
   ),
   toGovernanceViewPolicySettings: withModeModuleAndScopePrefix<GovernancePathProps>(
@@ -862,23 +862,18 @@ const routes = {
   ),
 
   toSecretsSettings: withModeModuleAndScopePrefix(() => `/settings/secrets`),
-  toSecretDetailsSettings: withModeModuleAndScopePrefix<SecretsPathProps>(
-    params => `/settings/secrets/${params?.secretId}`
-  ),
-  toCreateSecretFromYamlSettings: withModeModuleAndScopePrefix(() => `/settings/secrets/yaml/create-secret`),
+  toSecretDetails: withModeModuleAndScopePrefix<SecretsPathProps>(params => `/settings/secrets/${params?.secretId}`),
+  toCreateSecretFromYaml: withModeModuleAndScopePrefix(() => `/settings/secrets/yaml/create-secret`),
 
-  toSecretDetailsOverviewSettings: withModeModuleAndScopePrefix<SecretsPathProps>(
+  toSecretDetailsOverview: withModeModuleAndScopePrefix<SecretsPathProps>(
     params => `/settings/secrets/${params?.secretId}/overview`
   ),
   toSecretDetailsReferencesSettings: withModeModuleAndScopePrefix<SecretsPathProps>(
     params => `/settings/secrets/${params?.secretId}/references`
   ),
-  toSecretDetailsOverview: withModeModuleAndScopePrefix<SecretsPathProps>(
-    params => `/resources/secrets/${params?.secretId}/overview`
-  ),
-  toFileStoreSettings: withModeModuleAndScopePrefix(() => `/settings/file-store`),
-  toVariablesSettings: withModeModuleAndScopePrefix(() => `/settings/variables`),
   toFFProxyKeys: withModeModuleAndScopePrefix(() => '/settings/feature-flags-proxy'),
+  toFileStore: withModeModuleAndScopePrefix(() => `/settings/file-store`),
+  toVariables: withModeModuleAndScopePrefix(() => `/settings/variables`),
 
   toGitOpsResources: withModeModuleAndScopePrefix<GitOpsPathProps>(params => `/settings/gitops/${params?.entity}`),
   toWebhooks: withModeModuleAndScopePrefix(() => `/settings/webhooks`),

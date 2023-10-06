@@ -11,7 +11,8 @@ import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import { RouteWithLayout } from '@common/router'
-import routes from '@common/RouteDefinitions'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import {
   accountPathProps,
   rolePathProps,
@@ -35,6 +36,7 @@ import ResourceGroupDetails from '@rbac/pages/ResourceGroupDetails/ResourceGroup
 import RbacFactory from '@rbac/factories/RbacFactory'
 import type {
   AccountPathProps,
+  Module,
   ModulePathParams,
   PipelineType,
   ProjectPathProps
@@ -49,7 +51,7 @@ import ResourceGroupsResourceRenderer from '@rbac/components/ResourceGroupsRende
 import UserGroupsResourceModalBody from '@rbac/components/UserGroupsRenderer/UserGroupsResourceModalBody'
 import UserGroupsResourceRenderer from '@rbac/components/UserGroupsRenderer/UserGroupsResourceRenderer'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
-import type { ResourceDTO } from 'services/audit'
+import type { AuditEventData, ResourceDTO } from 'services/audit'
 import { MinimalLayout } from '@common/layouts'
 import ServiceAccountsResourceModalBody from './components/ServiceAccountsRenderer/ServiceAccountsResourceModalBody'
 import ServiceAccountsResourceRenderer from './components/ServiceAccountsRenderer/ServiceAccountsResourceRenderer'
@@ -142,8 +144,15 @@ AuditTrailFactory.registerResourceHandler('USER_GROUP', {
   },
   moduleLabel: platformLabel,
   resourceLabel: 'common.userGroup',
-  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+  resourceUrl: (
+    resource: ResourceDTO,
+    resourceScope: ResourceScope,
+    _module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { orgIdentifier, accountIdentifier, projectIdentifier } = resourceScope
+    const routes = isNewNav ? routesV2 : routesV1
     return routes.toUserGroupDetails({
       orgIdentifier,
       accountId: accountIdentifier,
@@ -159,8 +168,15 @@ AuditTrailFactory.registerResourceHandler('USER', {
   },
   moduleLabel: platformLabel,
   resourceLabel: 'common.userLabel',
-  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+  resourceUrl: (
+    resource: ResourceDTO,
+    resourceScope: ResourceScope,
+    _module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { orgIdentifier, accountIdentifier, projectIdentifier } = resourceScope
+    const routes = isNewNav ? routesV2 : routesV1
 
     const userId = resource.labels?.userId
     if (userId) {
@@ -181,8 +197,15 @@ AuditTrailFactory.registerResourceHandler('ROLE', {
   },
   moduleLabel: platformLabel,
   resourceLabel: 'common.role',
-  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+  resourceUrl: (
+    resource: ResourceDTO,
+    resourceScope: ResourceScope,
+    _module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { orgIdentifier, accountIdentifier, projectIdentifier } = resourceScope
+    const routes = isNewNav ? routesV2 : routesV1
 
     return routes.toRoleDetails({
       orgIdentifier,
@@ -199,8 +222,15 @@ AuditTrailFactory.registerResourceHandler('SERVICE_ACCOUNT', {
   },
   moduleLabel: platformLabel,
   resourceLabel: 'serviceAccount',
-  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+  resourceUrl: (
+    resource: ResourceDTO,
+    resourceScope: ResourceScope,
+    _module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { orgIdentifier, accountIdentifier, projectIdentifier } = resourceScope
+    const routes = isNewNav ? routesV2 : routesV1
 
     return routes.toServiceAccountDetails({
       orgIdentifier,
@@ -217,8 +247,15 @@ AuditTrailFactory.registerResourceHandler('RESOURCE_GROUP', {
   },
   moduleLabel: platformLabel,
   resourceLabel: 'common.resourceGroupLabel',
-  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+  resourceUrl: (
+    resource: ResourceDTO,
+    resourceScope: ResourceScope,
+    _module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { orgIdentifier, accountIdentifier, projectIdentifier } = resourceScope
+    const routes = isNewNav ? routesV2 : routesV1
 
     return routes.toResourceGroupDetails({
       orgIdentifier,
@@ -231,7 +268,7 @@ AuditTrailFactory.registerResourceHandler('RESOURCE_GROUP', {
 
 const RedirectToAccessControlHome = (): React.ReactElement => {
   const { accountId } = useParams<AccountPathProps>()
-  return <Redirect to={routes.toUsers({ accountId })} />
+  return <Redirect to={routesV1.toUsers({ accountId })} />
 }
 
 export default function RbacRoutes(): React.ReactElement {
@@ -254,13 +291,17 @@ export default function RbacRoutes(): React.ReactElement {
   })
   return (
     <>
-      <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toAccessControl({ ...accountPathProps })} exact>
+      <RouteWithLayout
+        sidebarProps={AccountSideNavProps}
+        path={routesV1.toAccessControl({ ...accountPathProps })}
+        exact
+      >
         <RedirectToAccessControlHome />
       </RouteWithLayout>
 
       <RouteWithLayout
         sidebarProps={AccountSideNavProps}
-        path={routes.toServiceAccounts({ ...accountPathProps })}
+        path={routesV1.toServiceAccounts({ ...accountPathProps })}
         exact
       >
         <AccessControlPage>
@@ -270,13 +311,13 @@ export default function RbacRoutes(): React.ReactElement {
 
       <RouteWithLayout
         sidebarProps={AccountSideNavProps}
-        path={routes.toServiceAccountDetails({ ...accountPathProps, ...serviceAccountProps })}
+        path={routesV1.toServiceAccountDetails({ ...accountPathProps, ...serviceAccountProps })}
         exact
       >
         <ServiceAccountDetails />
       </RouteWithLayout>
 
-      <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toUsers({ ...accountPathProps })} exact>
+      <RouteWithLayout sidebarProps={AccountSideNavProps} path={routesV1.toUsers({ ...accountPathProps })} exact>
         <AccessControlPage>
           <UsersPage />
         </AccessControlPage>
@@ -284,13 +325,13 @@ export default function RbacRoutes(): React.ReactElement {
 
       <RouteWithLayout
         sidebarProps={AccountSideNavProps}
-        path={routes.toUserDetails({ ...accountPathProps, ...userPathProps })}
+        path={routesV1.toUserDetails({ ...accountPathProps, ...userPathProps })}
         exact
       >
         <UserDetails />
       </RouteWithLayout>
 
-      <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toUserGroups({ ...accountPathProps })} exact>
+      <RouteWithLayout sidebarProps={AccountSideNavProps} path={routesV1.toUserGroups({ ...accountPathProps })} exact>
         <AccessControlPage>
           <UserGroups />
         </AccessControlPage>
@@ -298,19 +339,23 @@ export default function RbacRoutes(): React.ReactElement {
 
       <RouteWithLayout
         sidebarProps={AccountSideNavProps}
-        path={routes.toUserGroupDetails({ ...accountPathProps, ...userGroupPathProps })}
+        path={routesV1.toUserGroupDetails({ ...accountPathProps, ...userGroupPathProps })}
         exact
       >
         <UserGroupDetails />
       </RouteWithLayout>
 
-      <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toResourceGroups({ ...accountPathProps })} exact>
+      <RouteWithLayout
+        sidebarProps={AccountSideNavProps}
+        path={routesV1.toResourceGroups({ ...accountPathProps })}
+        exact
+      >
         <AccessControlPage>
           <ResourceGroups />
         </AccessControlPage>
       </RouteWithLayout>
 
-      <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toRoles({ ...accountPathProps })} exact>
+      <RouteWithLayout sidebarProps={AccountSideNavProps} path={routesV1.toRoles({ ...accountPathProps })} exact>
         <AccessControlPage>
           <Roles />
         </AccessControlPage>
@@ -318,14 +363,14 @@ export default function RbacRoutes(): React.ReactElement {
 
       <RouteWithLayout
         sidebarProps={AccountSideNavProps}
-        path={routes.toRoleDetails({ ...accountPathProps, ...rolePathProps })}
+        path={routesV1.toRoleDetails({ ...accountPathProps, ...rolePathProps })}
         exact
       >
         <RoleDetails />
       </RouteWithLayout>
       <RouteWithLayout
         sidebarProps={AccountSideNavProps}
-        path={routes.toResourceGroupDetails({ ...accountPathProps, ...resourceGroupPathProps })}
+        path={routesV1.toResourceGroupDetails({ ...accountPathProps, ...resourceGroupPathProps })}
         exact
       >
         <ResourceGroupDetails />
@@ -337,7 +382,7 @@ export default function RbacRoutes(): React.ReactElement {
 const RedirectToModuleAccessControlHome = (): React.ReactElement => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
 
-  return <Redirect to={routes.toUsers({ accountId, projectIdentifier, orgIdentifier, module })} />
+  return <Redirect to={routesV1.toUsers({ accountId, projectIdentifier, orgIdentifier, module })} />
 }
 
 export const AccessControlRouteDestinations: React.FC<{
@@ -351,7 +396,7 @@ export const AccessControlRouteDestinations: React.FC<{
       layout={Layout}
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={[routes.toAccessControl({ ...projectPathProps, ...moduleParams })]}
+      path={[routesV1.toAccessControl({ ...projectPathProps, ...moduleParams })]}
       exact
     >
       <RedirectToModuleAccessControlHome />
@@ -360,7 +405,7 @@ export const AccessControlRouteDestinations: React.FC<{
       layout={Layout}
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={[routes.toUsers({ ...projectPathProps, ...moduleParams })]}
+      path={[routesV1.toUsers({ ...projectPathProps, ...moduleParams })]}
       exact
       pageName={PAGE_NAME.UsersPage}
     >
@@ -373,7 +418,7 @@ export const AccessControlRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={routes.toUserDetails({ ...projectPathProps, ...moduleParams, ...userPathProps })}
+      path={routesV1.toUserDetails({ ...projectPathProps, ...moduleParams, ...userPathProps })}
       pageName={PAGE_NAME.UserDetails}
     >
       <UserDetails />
@@ -383,7 +428,7 @@ export const AccessControlRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={[routes.toUserGroups({ ...projectPathProps, ...moduleParams })]}
+      path={[routesV1.toUserGroups({ ...projectPathProps, ...moduleParams })]}
       pageName={PAGE_NAME.UserGroups}
     >
       <AccessControlPage>
@@ -395,7 +440,7 @@ export const AccessControlRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={routes.toUserGroupDetails({ ...projectPathProps, ...moduleParams, ...userGroupPathProps })}
+      path={routesV1.toUserGroupDetails({ ...projectPathProps, ...moduleParams, ...userGroupPathProps })}
       pageName={PAGE_NAME.UserGroupDetails}
     >
       <UserGroupDetails />
@@ -405,7 +450,7 @@ export const AccessControlRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={routes.toServiceAccounts({ ...projectPathProps, ...moduleParams })}
+      path={routesV1.toServiceAccounts({ ...projectPathProps, ...moduleParams })}
       pageName={PAGE_NAME.ServiceAccountsPage}
     >
       <AccessControlPage>
@@ -417,7 +462,7 @@ export const AccessControlRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={routes.toServiceAccountDetails({ ...projectPathProps, ...moduleParams, ...serviceAccountProps })}
+      path={routesV1.toServiceAccountDetails({ ...projectPathProps, ...moduleParams, ...serviceAccountProps })}
       pageName={PAGE_NAME.ServiceAccountDetails}
     >
       <ServiceAccountDetails />
@@ -427,7 +472,7 @@ export const AccessControlRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={[routes.toResourceGroups({ ...projectPathProps, ...moduleParams })]}
+      path={[routesV1.toResourceGroups({ ...projectPathProps, ...moduleParams })]}
       pageName={PAGE_NAME.ResourceGroups}
     >
       <AccessControlPage>
@@ -439,7 +484,7 @@ export const AccessControlRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={[routes.toRoles({ ...projectPathProps, ...moduleParams })]}
+      path={[routesV1.toRoles({ ...projectPathProps, ...moduleParams })]}
       pageName={PAGE_NAME.Roles}
     >
       <AccessControlPage>
@@ -451,7 +496,7 @@ export const AccessControlRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={[routes.toRoleDetails({ ...projectPathProps, ...moduleParams, ...rolePathProps })]}
+      path={[routesV1.toRoleDetails({ ...projectPathProps, ...moduleParams, ...rolePathProps })]}
       pageName={PAGE_NAME.RoleDetails}
     >
       <RoleDetails />
@@ -461,7 +506,7 @@ export const AccessControlRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={[routes.toResourceGroupDetails({ ...projectPathProps, ...moduleParams, ...resourceGroupPathProps })]}
+      path={[routesV1.toResourceGroupDetails({ ...projectPathProps, ...moduleParams, ...resourceGroupPathProps })]}
       pageName={PAGE_NAME.ResourceGroupDetails}
     >
       <ResourceGroupDetails />

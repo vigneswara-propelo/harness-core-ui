@@ -44,7 +44,7 @@ function GovernanceSettingsRouteDestinations({ mode }: { mode: NAV_MODE }): Reac
           ...pathArrayForAllScopes(routes.toGovernancePolicyDashboardSettings, mode),
           ...pathArrayForAllScopes(routes.toGovernanceNewPolicySettings, mode),
           ...pathArrayForAllScopes(routes.toGovernancePolicyListingSettings, mode),
-          ...pathArrayForAllScopes(routes.toGovernanceEditPolicySettings, mode, {
+          ...pathArrayForAllScopes(routes.toGovernanceEditPolicy, mode, {
             policyIdentifier: ':policyIdentifier'
           }),
           ...pathArrayForAllScopes(routes.toGovernanceViewPolicySettings, mode, {

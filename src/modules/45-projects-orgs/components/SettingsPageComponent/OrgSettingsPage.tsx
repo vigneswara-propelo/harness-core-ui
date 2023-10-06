@@ -114,20 +114,20 @@ export const OrgSettingsPage: React.FC = () => {
               label={<String stringID="resourcePage.fileStore" />}
               id={SettingsResources.FileStores}
               icon={'filestore'}
-              route={routesV2.toFileStoreSettings({ accountId, orgIdentifier, module })}
+              route={routesV2.toFileStore({ accountId, orgIdentifier, module })}
             />
             <SettingsResourceCard
               label={<String stringID="common.templates" />}
               id={SettingsResources.Templates}
               icon={'templates-blue'}
-              route={routesV2.toSettingsTemplates({ accountId, orgIdentifier, module })}
+              route={routesV2.toTemplates({ accountId, orgIdentifier, module })}
               hidden={!haveCIorCDorSTO}
             />
             <SettingsResourceCard
               label={<String stringID="common.variables" />}
               id={SettingsResources.Variables}
               icon={'variables-blue'}
-              route={routesV2.toVariablesSettings({ accountId, orgIdentifier, module })}
+              route={routesV2.toVariables({ accountId, orgIdentifier, module })}
             />
             <SettingsResourceCard
               label={<String stringID="common.overrides" />}
@@ -226,7 +226,7 @@ export const OrgSettingsPage: React.FC = () => {
               label={<String stringID="common.freezeWindows" />}
               id={SettingsResources.FreezeWindow}
               icon={'setting'}
-              route={routesV2.toFreezeWindowsSettings({ accountId, orgIdentifier, module })}
+              route={routesV2.toFreezeWindows({ accountId, orgIdentifier, module })}
               hidden={!showDeploymentFreeze}
             />
             <SettingsResourceCard

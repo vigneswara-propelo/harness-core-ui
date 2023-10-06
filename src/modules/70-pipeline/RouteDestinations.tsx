@@ -21,6 +21,7 @@ import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { RouteWithLayout } from '@common/router'
 import {
+  NAV_MODE,
   accountPathProps,
   executionPathProps,
   inputSetFormPathProps,
@@ -256,7 +257,7 @@ AuditTrailFactory.registerResourceHandler('PIPELINE', {
               pipelineIdentifier: pipelineIdentifier,
               source: 'executions',
               executionIdentifier: planExecutionId,
-              mode: 'all'
+              mode: NAV_MODE.ALL
             })
           : routes.toExecutionPipelineView({
               module,
@@ -274,7 +275,7 @@ AuditTrailFactory.registerResourceHandler('PIPELINE', {
             projectIdentifier,
             accountId: accountIdentifier,
             pipelineIdentifier: pipelineIdentifier,
-            mode: 'all'
+            mode: NAV_MODE.ALL
           })
         : routes.toPipelineStudio({
             module,
@@ -311,7 +312,8 @@ AuditTrailFactory.registerResourceHandler('INPUT_SET', {
             projectIdentifier,
             accountId: accountIdentifier,
             inputSetIdentifier: inputSet.identifier,
-            pipelineIdentifier: inputSet.labels.pipelineIdentifier
+            pipelineIdentifier: inputSet.labels.pipelineIdentifier,
+            mode: NAV_MODE.ALL
           })
         : routes.toInputSetForm({
             module,
@@ -479,7 +481,8 @@ AuditTrailFactory.registerResourceHandler('TRIGGER', {
             accountId: accountIdentifier,
             triggerIdentifier: trigger.identifier,
             triggerType: trigger.labels.triggerType as TriggerQueryParams['triggerType'],
-            pipelineIdentifier: trigger.labels.pipelineIdentifier
+            pipelineIdentifier: trigger.labels.pipelineIdentifier,
+            mode: NAV_MODE.ALL
           })
         : routes.toTriggersDetailPage({
             module,

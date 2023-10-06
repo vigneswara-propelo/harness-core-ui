@@ -10,11 +10,12 @@ import { Redirect, useParams } from 'react-router-dom'
 import { RouteWithLayout } from '@common/router'
 import { MinimalLayout } from '@common/layouts'
 import routes from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import { RedirectToSubscriptionsFactory } from '@common/Redirects'
-import { accountPathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
+import { NAV_MODE, accountPathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
-import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { Module as RouteModule, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { LicenseRedirectProps, LICENSE_STATE_NAMES } from 'framework/LicenseStore/LicenseStoreContext'
 import { Module, ModuleName } from 'framework/types/ModuleName'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -26,7 +27,7 @@ import AccessControlPage from '@rbac/pages/AccessControl/AccessControlPage'
 import UsersPage from '@rbac/pages/Users/UsersPage'
 import SettingsList from '@default-settings/pages/SettingsList'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
-import type { ResourceDTO } from 'services/audit'
+import type { AuditEventData, ResourceDTO } from 'services/audit'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -46,13 +47,27 @@ AuditTrailFactory.registerResourceHandler('CET_AGENT_TOKEN', {
   },
   moduleLabel: 'common.purpose.cet.continuous',
   resourceLabel: 'common.purpose.cet.agentToken',
-  resourceUrl: (_resource_: ResourceDTO, resourceScope: ResourceScope) => {
+  resourceUrl: (
+    _resource_: ResourceDTO,
+    resourceScope: ResourceScope,
+    module?: RouteModule,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
-    const url = routes.toCETAgentsTokens({
-      orgIdentifier: orgIdentifier || '',
-      accountId: accountIdentifier,
-      projectIdentifier: projectIdentifier || ''
-    })
+    const url = isNewNav
+      ? routesV2.toCETAgentsTokens({
+          orgIdentifier: orgIdentifier || '',
+          accountId: accountIdentifier,
+          projectIdentifier: projectIdentifier || '',
+          module: module as Module,
+          mode: NAV_MODE.ALL
+        })
+      : routes.toCETAgentsTokens({
+          orgIdentifier: orgIdentifier || '',
+          accountId: accountIdentifier,
+          projectIdentifier: projectIdentifier || ''
+        })
     return url
   }
 })
@@ -63,13 +78,27 @@ AuditTrailFactory.registerResourceHandler('CET_CRITICAL_EVENT', {
   },
   moduleLabel: 'common.purpose.cet.continuous',
   resourceLabel: 'common.purpose.cet.criticalEvent',
-  resourceUrl: (_resource_: ResourceDTO, resourceScope: ResourceScope) => {
+  resourceUrl: (
+    _resource_: ResourceDTO,
+    resourceScope: ResourceScope,
+    module?: RouteModule,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
-    const url = routes.toCETCriticalEvents({
-      orgIdentifier: orgIdentifier || '',
-      accountId: accountIdentifier,
-      projectIdentifier: projectIdentifier || ''
-    })
+    const url = isNewNav
+      ? routesV2.toCETCriticalEvents({
+          orgIdentifier: orgIdentifier || '',
+          accountId: accountIdentifier,
+          projectIdentifier: projectIdentifier || '',
+          module: module as Module,
+          mode: NAV_MODE.ALL
+        })
+      : routes.toCETCriticalEvents({
+          orgIdentifier: orgIdentifier || '',
+          accountId: accountIdentifier,
+          projectIdentifier: projectIdentifier || ''
+        })
     return url
   }
 })

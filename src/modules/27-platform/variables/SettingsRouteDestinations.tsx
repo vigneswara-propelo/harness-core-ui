@@ -15,11 +15,7 @@ import VariablesPage from './pages/variables/VariablesPage'
 function VariableSettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactElement {
   return (
     <>
-      <RouteWithContext
-        exact
-        path={pathArrayForAllScopes(routes.toVariablesSettings, mode)}
-        pageName={PAGE_NAME.VariablesPage}
-      >
+      <RouteWithContext exact path={pathArrayForAllScopes(routes.toVariables, mode)} pageName={PAGE_NAME.VariablesPage}>
         <VariablesPage />
       </RouteWithContext>
     </>

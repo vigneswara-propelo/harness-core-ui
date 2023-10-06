@@ -12,7 +12,8 @@ import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import { RouteWithLayout } from '@common/router'
-import routes from '@common/RouteDefinitions'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import { accountPathProps, orgPathProps, projectPathProps, secretPathProps } from '@common/utils/routeUtils'
 
 import SecretsPage from '@secrets/pages/secrets/SecretsPage'
@@ -23,12 +24,12 @@ import CreateSecretFromYamlPage from '@secrets/pages/createSecretFromYaml/Create
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
 import SecretResourceModalBody from '@secrets/components/SecretResourceModalBody/SecretResourceModalBody'
-import type { ModulePathParams, ProjectPathProps, SecretsPathProps } from '@common/interfaces/RouteInterfaces'
+import type { Module, ModulePathParams, ProjectPathProps, SecretsPathProps } from '@common/interfaces/RouteInterfaces'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String } from 'framework/strings'
 import SecretResourceRenderer from '@secrets/components/SecretResourceRenderer/SecretResourceRenderer'
 import { AccountSideNavProps } from '@common/RouteDestinations'
-import type { ResourceDTO } from 'services/audit'
+import type { AuditEventData, ResourceDTO } from 'services/audit'
 
 RbacFactory.registerResourceTypeHandler(ResourceType.SECRET, {
   icon: 'res-secrets',
@@ -54,8 +55,15 @@ AuditTrailFactory.registerResourceHandler('SECRET', {
   },
   moduleLabel: platformLabel,
   resourceLabel: 'secretType',
-  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+  resourceUrl: (
+    resource: ResourceDTO,
+    resourceScope: ResourceScope,
+    _module?: Module,
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
+  ) => {
     const { orgIdentifier, accountIdentifier, projectIdentifier } = resourceScope
+    const routes = isNewNav ? routesV2 : routesV1
 
     return routes.toSecretDetails({
       orgIdentifier,
@@ -71,7 +79,9 @@ const RedirectToSecretDetailHome: React.FC = () => {
     ProjectPathProps & SecretsPathProps & ModulePathParams
   >()
   return (
-    <Redirect to={routes.toSecretDetailsOverview({ accountId, projectIdentifier, orgIdentifier, secretId, module })} />
+    <Redirect
+      to={routesV1.toSecretDetailsOverview({ accountId, projectIdentifier, orgIdentifier, secretId, module })}
+    />
   )
 }
 
@@ -79,7 +89,7 @@ export default (
   <>
     <RouteWithLayout
       sidebarProps={AccountSideNavProps}
-      path={routes.toSecrets({ ...accountPathProps })}
+      path={routesV1.toSecrets({ ...accountPathProps })}
       pageName={PAGE_NAME.SecretsPage}
       exact
     >
@@ -87,7 +97,7 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       sidebarProps={AccountSideNavProps}
-      path={routes.toSecretDetails({
+      path={routesV1.toSecretDetails({
         ...accountPathProps,
         ...secretPathProps
       })}
@@ -97,7 +107,7 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       sidebarProps={AccountSideNavProps}
-      path={routes.toSecretDetailsOverview({
+      path={routesV1.toSecretDetailsOverview({
         ...accountPathProps,
         ...secretPathProps
       })}
@@ -110,7 +120,7 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       sidebarProps={AccountSideNavProps}
-      path={routes.toSecretDetailsReferences({
+      path={routesV1.toSecretDetailsReferences({
         ...accountPathProps,
         ...secretPathProps
       })}
@@ -123,7 +133,7 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       sidebarProps={AccountSideNavProps}
-      path={routes.toCreateSecretFromYaml({ ...accountPathProps })}
+      path={routesV1.toCreateSecretFromYaml({ ...accountPathProps })}
       pageName={PAGE_NAME.CreateSecretFromYamlPage}
       exact
     >
@@ -143,7 +153,7 @@ export const SecretRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={routes.toSecrets({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
+      path={routesV1.toSecrets({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
       pageName={PAGE_NAME.SecretsPage}
     >
       <SecretsPage />
@@ -152,7 +162,7 @@ export const SecretRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={routes.toCreateSecretFromYaml({
+      path={routesV1.toCreateSecretFromYaml({
         ...accountPathProps,
         ...projectPathProps,
         ...orgPathProps,
@@ -166,7 +176,7 @@ export const SecretRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={routes.toSecretDetails({
+      path={routesV1.toSecretDetails({
         ...accountPathProps,
         ...projectPathProps,
         ...secretPathProps,
@@ -179,7 +189,7 @@ export const SecretRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={routes.toSecretDetailsOverview({
+      path={routesV1.toSecretDetailsOverview({
         ...accountPathProps,
         ...projectPathProps,
         ...secretPathProps,
@@ -195,7 +205,7 @@ export const SecretRouteDestinations: React.FC<{
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
-      path={routes.toSecretDetailsReferences({
+      path={routesV1.toSecretDetailsReferences({
         ...accountPathProps,
         ...projectPathProps,
         ...secretPathProps,

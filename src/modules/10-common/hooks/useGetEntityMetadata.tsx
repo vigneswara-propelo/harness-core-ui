@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import type { Module, ModulePathParams } from '@common/interfaces/RouteInterfaces'
-import routes from '@common/RouteDefinitions'
+import routesV1 from '@common/RouteDefinitions'
 import routesV2 from '@common/RouteDefinitionsV2'
 import type { EntityDetail, NGTemplateReference } from 'services/cd-ng'
 import { getPipelineSummaryPromise, ResponsePMSPipelineSummaryResponse } from 'services/pipeline-ng'
@@ -111,7 +111,7 @@ export const getPipelineUrl = async (scope: EntityScope, identifier: string, isN
         mode: module ? undefined : NAV_MODE.ALL,
         module
       })}`
-    : `${routes.toPipelineStudio({
+    : `${routesV1.toPipelineStudio({
         accountId: accountIdentifier,
         orgIdentifier,
         projectIdentifier,
@@ -121,8 +121,8 @@ export const getPipelineUrl = async (scope: EntityScope, identifier: string, isN
       })}`
 
   const pipelineListUrl = isNewNav
-    ? routesV2.toPipelines({ orgIdentifier, projectIdentifier, accountId: accountIdentifier, mode: 'all' })
-    : routes.toPipelines({ orgIdentifier, projectIdentifier, accountId: accountIdentifier })
+    ? routesV2.toPipelines({ orgIdentifier, projectIdentifier, accountId: accountIdentifier, mode: NAV_MODE.ALL })
+    : routesV1.toPipelines({ orgIdentifier, projectIdentifier, accountId: accountIdentifier })
 
   if (pipelineMetadataResponse?.status !== 'SUCCESS') {
     // Without metadata can not open pipelineStudio so redirecting to list
@@ -142,7 +142,7 @@ export const getPipelineUrl = async (scope: EntityScope, identifier: string, isN
             module,
             ...(branch ? { branch } : {})
           })
-        : routes.toPipelineStudio({
+        : routesV1.toPipelineStudio({
             accountId: accountIdentifier,
             orgIdentifier,
             projectIdentifier,
@@ -185,9 +185,10 @@ const getTriggerUrl = async (
         triggerIdentifier,
         accountId: accountIdentifier,
         module,
-        storeType: StoreType.INLINE
+        storeType: StoreType.INLINE,
+        mode: NAV_MODE.ALL
       })}`
-    : `${routes.toTriggersDetailPage({
+    : `${routesV1.toTriggersDetailPage({
         orgIdentifier,
         projectIdentifier,
         pipelineIdentifier,
@@ -203,9 +204,10 @@ const getTriggerUrl = async (
         projectIdentifier,
         pipelineIdentifier,
         accountId: accountIdentifier,
-        module
+        module,
+        mode: NAV_MODE.ALL
       })
-    : routes.toTriggersPage({
+    : routesV1.toTriggersPage({
         orgIdentifier,
         projectIdentifier,
         pipelineIdentifier,
@@ -229,9 +231,10 @@ const getTriggerUrl = async (
             storeType: pipelineMetadata?.storeType,
             connectorRef: pipelineMetadata?.connectorRef,
             repoName: pipelineMetadata?.gitDetails?.repoName,
-            ...(branch ? { branch } : {})
+            ...(branch ? { branch } : {}),
+            mode: NAV_MODE.ALL
           })
-        : routes.toTriggersDetailPage({
+        : routesV1.toTriggersDetailPage({
             orgIdentifier,
             projectIdentifier,
             pipelineIdentifier,
@@ -254,6 +257,7 @@ const getTriggerUrl = async (
 
 const getTemplateUrl = async (scope: EntityScope, identifier: string, isNewNav: boolean): Promise<string> => {
   const { accountIdentifier = '', orgIdentifier = '', projectIdentifier = '', versionLabel = '', branch = '' } = scope
+  const routes = isNewNav ? routesV2 : routesV1
 
   const templateListUrl = `${routes.toTemplates({
     accountId: accountIdentifier,
@@ -274,9 +278,9 @@ const getTemplateUrl = async (scope: EntityScope, identifier: string, isNewNav: 
                 templateType: templateMetadata?.templateEntityType,
                 versionLabel: versionLabel,
                 branch: branch,
-                mode: 'all'
+                mode: NAV_MODE.ALL
               })}`
-            : `${routes.toTemplateStudioNew({
+            : `${routesV1.toTemplateStudioNew({
                 accountId: accountIdentifier,
                 orgIdentifier,
                 projectIdentifier,
@@ -325,9 +329,9 @@ export const useGetEntityMetadata = (
               connectorId: identifier,
               orgIdentifier,
               projectIdentifier,
-              mode: 'all'
+              mode: NAV_MODE.ALL
             })
-          : routes.toConnectorDetails({
+          : routesV1.toConnectorDetails({
               accountId: accountIdentifier,
               connectorId: identifier,
               orgIdentifier,
@@ -336,14 +340,15 @@ export const useGetEntityMetadata = (
         break
       case 'Service':
         entityUrl = isNewNav
-          ? `${routesV2.toServiceStudio({
+          ? `${routesV2.toSettingsServiceDetails({
               accountId: accountIdentifier,
               serviceId: identifier,
               orgIdentifier,
               projectIdentifier,
-              module
+              module,
+              mode: NAV_MODE.ALL
             })}?tab=configuration`
-          : `${routes.toServiceStudio({
+          : `${routesV1.toServiceStudio({
               accountId: accountIdentifier,
               serviceId: identifier,
               orgIdentifier,
@@ -390,9 +395,9 @@ export const useGetEntityMetadata = (
               orgIdentifier,
               projectIdentifier,
               secretId: identifier,
-              mode: 'all'
+              mode: NAV_MODE.ALL
             })}`
-          : `${routes.toSecretDetailsOverview({
+          : `${routesV1.toSecretDetailsOverview({
               accountId: accountIdentifier,
               orgIdentifier,
               projectIdentifier,
@@ -401,14 +406,15 @@ export const useGetEntityMetadata = (
         break
       case 'Environment':
         entityUrl = isNewNav
-          ? `${routesV2.toEnvironmentDetails({
+          ? `${routesV2.toSettingsEnvironmentDetails({
               accountId: accountIdentifier,
               orgIdentifier,
               projectIdentifier,
               environmentIdentifier: identifier,
-              module
+              module,
+              mode: NAV_MODE.ALL
             })}`
-          : `${routes.toEnvironmentDetails({
+          : `${routesV1.toEnvironmentDetails({
               accountId: accountIdentifier,
               orgIdentifier,
               projectIdentifier,
@@ -418,14 +424,15 @@ export const useGetEntityMetadata = (
         break
       case 'EnvironmentGroup':
         entityUrl = isNewNav
-          ? `${routesV2.toEnvironmentGroupDetails({
+          ? `${routesV2.toSettingsEnvironmentGroupDetails({
               accountId: accountIdentifier,
               orgIdentifier,
               projectIdentifier,
               environmentGroupIdentifier: identifier,
-              module
+              module,
+              mode: NAV_MODE.ALL
             })}`
-          : `${routes.toEnvironmentGroupDetails({
+          : `${routesV1.toEnvironmentGroupDetails({
               accountId: accountIdentifier,
               orgIdentifier,
               projectIdentifier,
@@ -435,14 +442,15 @@ export const useGetEntityMetadata = (
         break
       case 'Infrastructure':
         entityUrl = isNewNav
-          ? `${routesV2.toEnvironmentDetails({
+          ? `${routesV2.toSettingsEnvironmentDetails({
               accountId: accountIdentifier,
               orgIdentifier,
               projectIdentifier,
               environmentIdentifier: defaultTo(entityInfo?.entityRef?.envIdentifier, ''),
-              module
+              module,
+              mode: NAV_MODE.ALL
             })}?sectionId=INFRASTRUCTURE&infrastructureId=${identifier}`
-          : `${routes.toEnvironmentDetails({
+          : `${routesV1.toEnvironmentDetails({
               accountId: accountIdentifier,
               orgIdentifier,
               projectIdentifier,
@@ -457,9 +465,10 @@ export const useGetEntityMetadata = (
               orgIdentifier,
               projectIdentifier,
               identifier,
-              module: 'cv'
+              module: 'cv',
+              mode: NAV_MODE.MODULE
             })
-          : routes.toCVAddMonitoringServicesEdit({
+          : routesV1.toCVAddMonitoringServicesEdit({
               accountId: accountIdentifier,
               orgIdentifier,
               projectIdentifier,
@@ -484,7 +493,7 @@ export const useGetEntityMetadata = (
       default:
         entityUrl = isNewNav
           ? routesV2.toLandingDashboard({ accountId: accountIdentifier })
-          : routes.toLandingDashboard({ accountId: accountIdentifier })
+          : routesV1.toLandingDashboard({ accountId: accountIdentifier })
     }
 
     return Promise.resolve(entityUrl)

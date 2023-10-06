@@ -7,7 +7,8 @@
 
 import React, { useEffect } from 'react'
 import { Route, useHistory, useParams } from 'react-router-dom'
-import routes from '@common/RouteDefinitions'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import { accountPathProps } from '@common/utils/routeUtils'
 import { RouteWithLayout } from '@common/router'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
@@ -63,9 +64,11 @@ AuditTrailFactory.registerResourceHandler('GOVERNANCE_POLICY', {
     resource: ResourceDTO,
     resourceScope: ResourceScope,
     _module?: Module,
-    _auditEventData?: AuditEventData
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
   ) => {
     const { orgIdentifier, accountIdentifier, projectIdentifier } = resourceScope
+    const routes = isNewNav ? routesV2 : routesV1
     return routes.toGovernanceEditPolicy({
       orgIdentifier,
       accountId: accountIdentifier,
@@ -85,9 +88,11 @@ AuditTrailFactory.registerResourceHandler('GOVERNANCE_POLICY_SET', {
     resource: ResourceDTO,
     resourceScope: ResourceScope,
     _module?: Module,
-    _auditEventData?: AuditEventData
+    _auditEventData?: AuditEventData,
+    isNewNav?: boolean
   ) => {
     const { orgIdentifier, accountIdentifier, projectIdentifier } = resourceScope
+    const routes = isNewNav ? routesV2 : routesV1
     return routes.toGovernancePolicySetDetail({
       orgIdentifier,
       accountId: accountIdentifier,
@@ -102,7 +107,7 @@ const RedirectToDefaultGovernanceRoute: React.FC = () => {
   const history = useHistory()
 
   useEffect(() => {
-    history.replace(routes.toGovernancePolicyDashboard({ accountId, orgIdentifier, projectIdentifier, module }))
+    history.replace(routesV1.toGovernancePolicyDashboard({ accountId, orgIdentifier, projectIdentifier, module }))
   }, [history, accountId, orgIdentifier, projectIdentifier, module])
 
   return null
@@ -118,12 +123,12 @@ export const GovernanceRouteDestinations: React.FC<{
   pathProps: GovernancePathProps
 }> = ({ sidebarProps, pathProps }) => {
   return (
-    <Route path={routes.toGovernance(pathProps)}>
-      <Route path={routes.toGovernance(pathProps)} exact>
+    <Route path={routesV1.toGovernance(pathProps)}>
+      <Route path={routesV1.toGovernance(pathProps)} exact>
         <RedirectToDefaultGovernanceRoute />
       </Route>
       <RouteWithLayout
-        path={routes.toGovernance(pathProps)}
+        path={routesV1.toGovernance(pathProps)}
         sidebarProps={sidebarProps}
         pageName={PAGE_NAME.OPAPolicyDashboard}
       >

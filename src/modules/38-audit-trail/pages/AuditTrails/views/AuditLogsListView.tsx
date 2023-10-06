@@ -109,7 +109,7 @@ const AuditLogsListView: React.FC<AuditLogsListViewProps> = ({ data }) => {
 
     return (
       <Layout.Vertical padding={{ right: 'xlarge' }}>
-        {url && !CDS_NAV_2_0 ? (
+        {url ? (
           <Link className={css.resourceLink} to={url}>
             <Text lineClamp={1}>{defaultTo(resource.labels?.resourceName, resource.identifier)}</Text>
           </Link>
