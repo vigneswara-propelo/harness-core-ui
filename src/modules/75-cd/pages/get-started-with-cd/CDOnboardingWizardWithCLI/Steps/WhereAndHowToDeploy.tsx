@@ -50,7 +50,7 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
         isDelegateVerified: false,
         delegateStatus: 'PENDING',
         delegateProblemType: deploymentTypeDetails.artifactType?.id,
-        type: DEPLOYMENT_FLOW_TYPES['cd-pipeline']
+        type: DEPLOYMENT_FLOW_TYPES['gitops']
       }
     )
   })

@@ -68,14 +68,14 @@ Object {
                 class="StyledProps--font StyledProps--main buttonRow"
               >
                 <button
-                  aria-label="cd.getStartedWithCD.getStartedBtn"
+                  aria-label="getStarted"
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary Button--size Button--large"
                   type="button"
                 >
                   <span
                     class="bp3-button-text"
                   >
-                    cd.getStartedWithCD.getStartedBtn
+                    getStarted
                   </span>
                   <span
                     class="bp3-icon bp3-icon-chevron-right StyledProps--main"
@@ -97,6 +97,15 @@ Object {
                     </svg>
                   </span>
                 </button>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main centerAlign StyledProps--padding-medium StyledProps--font-variation-body1"
+                >
+                  cd.getStartedWithCD.onBoardingSubTitle
+                </p>
               </div>
               <div
                 class="Layout--horizontal Layout--layout-spacing-huge StyledProps--main onboardingcards"
@@ -141,7 +150,55 @@ Object {
                             />
                           </svg>
                         </span>
+                        cd.getStartedWithCD.deployanywhere
+                      </p>
+                      <p
+                        class="StyledProps--font StyledProps--main bodyText StyledProps--color StyledProps--color-black StyledProps--font-align-left"
+                        style="display: flex; align-items: center;"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-black"
+                          data-icon="flash"
+                        >
+                          <svg
+                            height="18"
+                            viewBox="0 0 33 28"
+                            width="18"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clip-rule="evenodd"
+                              d="M3.773 17.341L20.885 1.75l-2.297 8.909h8.184L9.66 26.25l2.297-8.909z"
+                              fill="#ff5310"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </span>
                         cd.getStartedWithCD.standardization
+                      </p>
+                      <p
+                        class="StyledProps--font StyledProps--main bodyText StyledProps--color StyledProps--color-black StyledProps--font-align-left"
+                        style="display: flex; align-items: center;"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-black"
+                          data-icon="flash"
+                        >
+                          <svg
+                            height="18"
+                            viewBox="0 0 33 28"
+                            width="18"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clip-rule="evenodd"
+                              d="M3.773 17.341L20.885 1.75l-2.297 8.909h8.184L9.66 26.25l2.297-8.909z"
+                              fill="#ff5310"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </span>
+                        cd.getStartedWithCD.velocity
                       </p>
                       <p
                         class="StyledProps--font StyledProps--main bodyText StyledProps--color StyledProps--color-black StyledProps--font-align-left"
@@ -190,30 +247,6 @@ Object {
                           </svg>
                         </span>
                         cd.getStartedWithCD.restore
-                      </p>
-                      <p
-                        class="StyledProps--font StyledProps--main bodyText StyledProps--color StyledProps--color-black StyledProps--font-align-left"
-                        style="display: flex; align-items: center;"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-black"
-                          data-icon="flash"
-                        >
-                          <svg
-                            height="18"
-                            viewBox="0 0 33 28"
-                            width="18"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              clip-rule="evenodd"
-                              d="M3.773 17.341L20.885 1.75l-2.297 8.909h8.184L9.66 26.25l2.297-8.909z"
-                              fill="#ff5310"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                        cd.getStartedWithCD.velocity
                       </p>
                       <p
                         class="StyledProps--font StyledProps--main bodyText StyledProps--color StyledProps--color-black StyledProps--font-align-left"
@@ -441,14 +474,14 @@ Object {
               class="StyledProps--font StyledProps--main buttonRow"
             >
               <button
-                aria-label="cd.getStartedWithCD.getStartedBtn"
+                aria-label="getStarted"
                 class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary Button--size Button--large"
                 type="button"
               >
                 <span
                   class="bp3-button-text"
                 >
-                  cd.getStartedWithCD.getStartedBtn
+                  getStarted
                 </span>
                 <span
                   class="bp3-icon bp3-icon-chevron-right StyledProps--main"
@@ -470,6 +503,15 @@ Object {
                   </svg>
                 </span>
               </button>
+            </div>
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+            >
+              <p
+                class="StyledProps--font StyledProps--main centerAlign StyledProps--padding-medium StyledProps--font-variation-body1"
+              >
+                cd.getStartedWithCD.onBoardingSubTitle
+              </p>
             </div>
             <div
               class="Layout--horizontal Layout--layout-spacing-huge StyledProps--main onboardingcards"
@@ -514,7 +556,55 @@ Object {
                           />
                         </svg>
                       </span>
+                      cd.getStartedWithCD.deployanywhere
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main bodyText StyledProps--color StyledProps--color-black StyledProps--font-align-left"
+                      style="display: flex; align-items: center;"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-black"
+                        data-icon="flash"
+                      >
+                        <svg
+                          height="18"
+                          viewBox="0 0 33 28"
+                          width="18"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            clip-rule="evenodd"
+                            d="M3.773 17.341L20.885 1.75l-2.297 8.909h8.184L9.66 26.25l2.297-8.909z"
+                            fill="#ff5310"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
                       cd.getStartedWithCD.standardization
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main bodyText StyledProps--color StyledProps--color-black StyledProps--font-align-left"
+                      style="display: flex; align-items: center;"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-black"
+                        data-icon="flash"
+                      >
+                        <svg
+                          height="18"
+                          viewBox="0 0 33 28"
+                          width="18"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            clip-rule="evenodd"
+                            d="M3.773 17.341L20.885 1.75l-2.297 8.909h8.184L9.66 26.25l2.297-8.909z"
+                            fill="#ff5310"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                      cd.getStartedWithCD.velocity
                     </p>
                     <p
                       class="StyledProps--font StyledProps--main bodyText StyledProps--color StyledProps--color-black StyledProps--font-align-left"
@@ -563,30 +653,6 @@ Object {
                         </svg>
                       </span>
                       cd.getStartedWithCD.restore
-                    </p>
-                    <p
-                      class="StyledProps--font StyledProps--main bodyText StyledProps--color StyledProps--color-black StyledProps--font-align-left"
-                      style="display: flex; align-items: center;"
-                    >
-                      <span
-                        class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-black"
-                        data-icon="flash"
-                      >
-                        <svg
-                          height="18"
-                          viewBox="0 0 33 28"
-                          width="18"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            clip-rule="evenodd"
-                            d="M3.773 17.341L20.885 1.75l-2.297 8.909h8.184L9.66 26.25l2.297-8.909z"
-                            fill="#ff5310"
-                            fill-rule="evenodd"
-                          />
-                        </svg>
-                      </span>
-                      cd.getStartedWithCD.velocity
                     </p>
                     <p
                       class="StyledProps--font StyledProps--main bodyText StyledProps--color StyledProps--color-black StyledProps--font-align-left"

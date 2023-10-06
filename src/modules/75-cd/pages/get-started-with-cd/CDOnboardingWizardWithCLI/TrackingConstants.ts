@@ -3,7 +3,8 @@ export enum WIZARD_STEP_OPEN {
   HOW_N_WHERE_STEP_OPENED = 'CD Onboarding How And Where Step Opened',
   CREATE_DELEGATE_FLYOUT_OPENED = 'CD Onboarding Create Delegate Flyout Opened',
   Configuration_STEP_OPENED = 'CD Onboarding Configuration Step Opened',
-  CREATE_AGENT_FLYOUT_OPENED = 'CD Onboarding Create GitOps Agent Interface Opened'
+  CREATE_AGENT_FLYOUT_OPENED = 'CD Onboarding Create GitOps Agent Interface Opened',
+  PREFLIGHT_SCRIPT_COPIED = 'Preflight Script Copied'
 }
 
 export enum ONBOARDING_INTERACTIONS {

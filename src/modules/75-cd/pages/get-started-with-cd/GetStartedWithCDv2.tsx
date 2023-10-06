@@ -46,7 +46,7 @@ export default function GetStartedWithCDV2(): React.ReactElement {
               <RbacButton
                 variation={ButtonVariation.PRIMARY}
                 size={ButtonSize.LARGE}
-                text={getString('cd.getStartedWithCD.getStartedBtn')}
+                text={getString('getStarted')}
                 rightIcon="chevron-right"
                 onClick={getStartedClickHandler}
                 permission={{
@@ -57,6 +57,11 @@ export default function GetStartedWithCDV2(): React.ReactElement {
                 }}
               />
             </Container>
+            <Layout.Horizontal flex={{ alignItems: 'center' }}>
+              <Text padding="medium" font={{ variation: FontVariation.BODY1 }} className={css.centerAlign}>
+                {getString('cd.getStartedWithCD.onBoardingSubTitle')}
+              </Text>
+            </Layout.Horizontal>
             <Layout.Horizontal className={css.onboardingcards} spacing={'huge'}>
               <Layout.Vertical className={css.cardGap}>
                 <Card className={cx(css.cardWidth, css.cardShadow)}>
@@ -170,10 +175,11 @@ function LearnMoreCD(): JSX.Element {
 function WhyUseCD(): JSX.Element {
   const { getString } = useStrings()
   const whyCDPointsText = [
+    getString('cd.getStartedWithCD.deployanywhere'),
     getString('cd.getStartedWithCD.standardization'),
+    getString('cd.getStartedWithCD.velocity'),
     getString('cd.getStartedWithCD.quality'),
     getString('cd.getStartedWithCD.restore'),
-    getString('cd.getStartedWithCD.velocity'),
     getString('cd.getStartedWithCD.visibility')
   ]
   return (

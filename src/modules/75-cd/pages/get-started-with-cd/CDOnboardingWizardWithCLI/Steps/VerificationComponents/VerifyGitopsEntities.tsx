@@ -24,12 +24,13 @@ export default function VerifyGitopsEntities({
   const { trackEvent } = useTelemetry()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const configdata = stepsProgress?.[CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY]?.stepData as WhereAndHowToDeployType
+
   const entityIds = useMemo((): { application: string; cluster: string; repo: string } => {
     const data = stepsProgress?.[CDOnboardingSteps.WHAT_TO_DEPLOY]?.stepData as WhatToDeployType
     const artifactId = data.artifactSubType ? data.artifactSubType?.id : (data.artifactType?.id as string)
-
     return GITOPS_ENTITY_IDS_BY_DEPLOYMENT_TYPE[artifactId] || {}
   }, [])
+
   const {
     loading: clusterLoading,
     refetch: refetchCluster,
@@ -38,8 +39,10 @@ export default function VerifyGitopsEntities({
   } = useAgentClusterServiceGet({
     agentIdentifier: configdata?.agentInfo?.identifier as string,
     identifier: entityIds?.cluster,
-    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier },
+    lazy: true
   })
+
   const {
     loading: repoLoading,
     refetch: refetchRepo,
@@ -48,8 +51,10 @@ export default function VerifyGitopsEntities({
   } = useAgentRepositoryServiceGet({
     agentIdentifier: configdata?.agentInfo?.identifier as string,
     identifier: entityIds?.repo,
-    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier },
+    lazy: true
   })
+
   const {
     loading: applicationLoading,
     refetch: refetchApp,
@@ -58,7 +63,8 @@ export default function VerifyGitopsEntities({
   } = useAgentApplicationServiceGet({
     queryName: entityIds?.application,
     agentIdentifier: configdata?.agentInfo?.identifier as string,
-    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier },
+    lazy: true
   })
 
   const setupState = React.useMemo((): PipelineSetupState => {
@@ -110,7 +116,7 @@ export default function VerifyGitopsEntities({
   }, [])
 
   useEffect(() => {
-    const allChecksPassed = [appFailed, repoFailed, clusterFailed].every(erorr => erorr === null)
+    const allChecksPassed = [appFailed, repoFailed, clusterFailed].every(error => error === null)
     const isEntityLoading = [applicationLoading, repoLoading, clusterLoading].includes(true)
     if (allChecksPassed && !isEntityLoading && !setupState?.gitopsEntitiesVerified) {
       saveProgress(CDOnboardingSteps.DEPLOYMENT_STEPS, {
@@ -153,6 +159,20 @@ export default function VerifyGitopsEntities({
     }
   }
 
+  const isVerifiedOnce = (): boolean => {
+    const hasData = [repoData, clusterData, appData].every(data => data !== null)
+    const hasError = [appFailed, repoFailed, clusterFailed].every(error => error !== null)
+    return hasData || hasError
+  }
+
+  const verifyEntites = (): void => {
+    refetchCluster()
+    refetchApp()
+    refetchRepo()
+  }
+
+  const isLoading = applicationLoading || repoLoading || clusterLoading
+
   return (
     <Layout.Vertical spacing={'medium'}>
       <Text color={Color.BLACK} font={{ variation: FontVariation.FORM_TITLE }}>
@@ -162,50 +182,56 @@ export default function VerifyGitopsEntities({
         />
       </Text>
 
-      <SuccessBanner
-        textList={[
-          {
-            ...(repoLoading ? loadingIconProps : repoFailed ? failIconProps : successIconProps),
-            text: getString(
-              repoLoading
-                ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.repoLoading'
-                : repoFailed
-                ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.repoFailed'
-                : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.repoSuccess'
-            )
-          },
-          {
-            ...(clusterLoading ? loadingIconProps : clusterFailed ? failIconProps : successIconProps),
-            text: getString(
-              clusterLoading
-                ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.clusterLoading'
-                : clusterFailed
-                ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.clusterFailed'
-                : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.clusterSuccess'
-            )
-          },
-          {
-            ...(applicationLoading ? loadingIconProps : appFailed ? failIconProps : successIconProps),
-            text: getString(
-              applicationLoading
-                ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.appLoading'
-                : appFailed
-                ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.appFailed'
-                : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.appSuccess'
-            )
-          }
-        ]}
-      />
+      {(isVerifiedOnce() || isLoading || setupState?.gitopsEntitiesVerified) && (
+        <SuccessBanner
+          textList={[
+            {
+              ...(repoLoading ? loadingIconProps : repoFailed ? failIconProps : successIconProps),
+              text: getString(
+                repoLoading
+                  ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.repoLoading'
+                  : repoFailed
+                  ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.repoFailed'
+                  : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.repoSuccess'
+              )
+            },
+            {
+              ...(clusterLoading ? loadingIconProps : clusterFailed ? failIconProps : successIconProps),
+              text: getString(
+                clusterLoading
+                  ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.clusterLoading'
+                  : clusterFailed
+                  ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.clusterFailed'
+                  : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.clusterSuccess'
+              )
+            },
+            {
+              ...(applicationLoading ? loadingIconProps : appFailed ? failIconProps : successIconProps),
+              text: getString(
+                applicationLoading
+                  ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.appLoading'
+                  : appFailed
+                  ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.appFailed'
+                  : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.appSuccess'
+              )
+            }
+          ]}
+        />
+      )}
 
-      {(appFailed || repoFailed || clusterFailed) && (
+      {!setupState?.gitopsEntitiesVerified && (
         <Button
-          disabled={applicationLoading || repoLoading || clusterLoading}
-          onClick={retryVerification}
+          disabled={isLoading}
+          onClick={isVerifiedOnce() ? retryVerification : verifyEntites}
           variation={ButtonVariation.PRIMARY}
-          text={getString(
-            'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.deploymentStrategyStep.retryVerify'
-          )}
-          width={200}
+          text={
+            isVerifiedOnce()
+              ? getString(
+                  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.deploymentStrategyStep.retryVerify'
+                )
+              : getString('verify')
+          }
+          width={isVerifiedOnce() ? 200 : 150}
         />
       )}
     </Layout.Vertical>

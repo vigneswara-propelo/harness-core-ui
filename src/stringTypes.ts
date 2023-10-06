@@ -6447,6 +6447,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.delegateSuccess': string
   'cd.getStartedWithCD.delegateWorksInfo': string
   'cd.getStartedWithCD.deployToGitops': string
+  'cd.getStartedWithCD.deployanywhere': string
   'cd.getStartedWithCD.deploymentType': string
   'cd.getStartedWithCD.description': string
   'cd.getStartedWithCD.destinationDetails': string
@@ -6679,7 +6680,6 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.what.title': string
   'cd.getStartedWithCD.gcpGen1': string
   'cd.getStartedWithCD.gcpGen2': string
-  'cd.getStartedWithCD.getStartedBtn': string
   'cd.getStartedWithCD.gitOpsAgent': string
   'cd.getStartedWithCD.gitURL': string
   'cd.getStartedWithCD.gitopsOnboardingAgentStep': string
@@ -6741,6 +6741,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.nopath': string
   'cd.getStartedWithCD.onBoardingSubTitle': string
   'cd.getStartedWithCD.onboardingTitle': string
+  'cd.getStartedWithCD.prefilghtText': string
+  'cd.getStartedWithCD.preflightScript': string
   'cd.getStartedWithCD.prepareCluserInfo': string
   'cd.getStartedWithCD.provideManifest': string
   'cd.getStartedWithCD.provideMyOwn': string

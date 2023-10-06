@@ -40,7 +40,7 @@ describe('GetStartedWithCDV2 Component', () => {
         <GetStartedWithCDV2 />
       </TestWrapper>
     )
-    const button = getByText('cd.getStartedWithCD.getStartedBtn')
+    const button = getByText('getStarted')
     act(() => {
       fireEvent.click(button)
     })

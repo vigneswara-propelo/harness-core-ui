@@ -667,6 +667,8 @@ getStartedWithCD:
   nopath: This path will soon be updated in the UI for a seamless experience
   checkdocs: In the meantime, don't worry! You can still set up your deployment by following our comprehensive documentation. Simply refer to step-by-step guide.
   docLink: View documentation
+  prefilghtText: Kubernetes is required to complete these steps. Run the following to check your system resources and (optionally) install a local cluster.
+  preflightScript: 'bash <(curl -fsSL https://raw.githubusercontent.com/harness-community/scripts/main/delegate-preflight-checks/cluster-preflight-checks.sh)'
   createGitopsAgent: Install GitOps Agent
   updateGitopsAgent: Update GitOps Agent
   downloadZipFile: Download zip file
@@ -926,7 +928,6 @@ getStartedWithCD:
       runPipeline: View and run your pipeline
       runWithoutDelegate: View and run your pipeline without delegate
       noPipeline: 'Unfortunately, we were unable to find the pipeline with id: {{pipelineid}}. Please ensure that the pipeline exists before we can proceed to the next step.'
-  getStartedBtn: Get started with a guided deployment
   whyHarnessCD: Harness Continuous Delivery & GitOps
   cdWizardEventName: CD Wizard - {{ eventName }}
   creatingApp: Creating Application in progress
@@ -983,8 +984,8 @@ getStartedWithCD:
   awsRegionHelperText: replace REGION with your AWS region, for example us-west-1
   azureAKSHelperText: replace myResourceGroup with your AKS resource group
   googleGKEHelperText: replace ZONE with your GCP region, for example us-central1-c
-  onboardingTitle: Deploy your code in minutes
-  onBoardingSubTitle: Define and manage your deployment pipelines to deliver software faster, with visibility and control
+  onboardingTitle: Deploy with the world's most advanced CD
+  onBoardingSubTitle: All you need is a cluster, and we'll help you deploy a sample app. We'll then show you how to bring your own!
   gitopsOnboardingAgentStep: Connect to Harness by provisioning hosted Agent
   gitopsOnboardingSelectAgent: Select existing agent
   gitopsOnboardingSource: Where is your source?
@@ -1126,12 +1127,13 @@ getStartedWithCD:
   giveSample: Give me a Sample
   artifactReferencedInManifest: Fantastic! If your artifact is already referenced in your manifest you are ready to continue to the next step.
   developerQuestion: '<b>Optimizing your builds and tests</b>? Check out Harness '
-  tryCICTA: ' with hosted builds and test intelligence. Learn more about <a target="_blank" rel="noreferrer nofollow" href="{{docurl}}">CI vs CD?</a>'
-  standardization: 'Standardizes deployments across your organization'
-  quality: 'Optimizes quality checks to reduce production failures'
-  restore: 'Reduces deployment risk and allows easy rollback to implement fixes'
-  velocity: 'Increases feature velocity by releasing small changes more frequently'
-  visibility: 'Provides continuous feedback and real-time deployment analytics'
+  tryCICTA: ' with hosted builds and test intelligence. Learn more about <a target="_blank" rel="noreferrer nofollow" href="{{docurl}}">CI vs CD</a>.'
+  deployanywhere: 'Deploy to any VM, container, or serverless infrastructure'
+  standardization: 'Standardize deployment governance with policy enforcement and role-based access control'
+  velocity: 'Release faster with advanced deployment strategies and managed GitOps'
+  quality: 'Improve release quality with continuous verification and automated rollbacks'
+  restore: 'Reduce deployment risk with deployment freezes and detailed audit trails'
+  visibility: 'Continuously monitor deployment health with event-based notifications and service-level dashboards'
   cdresources:
     cdconcepts: CD key concepts
     cdtuts: CD tutorials

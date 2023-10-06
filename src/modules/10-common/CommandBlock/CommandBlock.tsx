@@ -33,6 +33,7 @@ interface CommandBlockProps {
   copyButtonText?: string
   darkmode?: boolean
   commentPrefix?: string
+  onCopy?: () => void
 }
 enum DownloadFile {
   DEFAULT_NAME = 'commandBlock',
@@ -49,7 +50,8 @@ const CommandBlock: React.FC<CommandBlockProps> = ({
   copySnippet,
   copyButtonText,
   darkmode,
-  commentPrefix
+  commentPrefix,
+  onCopy
 }) => {
   const { trackEvent } = useTelemetry()
   const downloadFileDefaultName = downloadFileProps?.downloadFileName || DownloadFile.DEFAULT_NAME
@@ -100,6 +102,7 @@ const CommandBlock: React.FC<CommandBlockProps> = ({
                   telemetryProps?.copyTelemetryProps?.properties
                 )
               }
+              onCopy?.()
             }}
             primaryBtn={darkmode}
             className={cx({ [css.copyButtonHover]: darkmode })}
