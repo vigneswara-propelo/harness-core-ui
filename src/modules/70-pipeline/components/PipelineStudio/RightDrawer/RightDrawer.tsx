@@ -251,7 +251,13 @@ const processNodeImpl = (
         set(node, 'enforce.policySets', item.policySets)
       }
 
-      if (item.commandFlags && item.commandFlags.length > 0) {
+      if (
+        item.commandFlags &&
+        item.commandFlags.length > 0 &&
+        ![StepType.TerragruntRollback, StepType.TerraformRollback].includes(
+          (item as StepElementConfig)?.type as StepType
+        )
+      ) {
         const commandFlags = item.commandFlags.map((commandFlag: CommandFlags) =>
           commandFlag.commandType && commandFlag.flag
             ? {
@@ -281,11 +287,7 @@ const processNodeImpl = (
         delete node.spec.delegateSelectors
       }
 
-      if (
-        node.spec?.commandFlags &&
-        (!item.commandFlags || item.commandFlags?.length === 0) &&
-        (!(item as any)?.spec?.commandFlags || (item as any)?.spec?.commandFlags?.length === 0)
-      ) {
+      if (node.spec?.commandFlags && (!item.commandFlags || item.commandFlags?.length === 0)) {
         delete node.spec.commandFlags
       }
       if (
