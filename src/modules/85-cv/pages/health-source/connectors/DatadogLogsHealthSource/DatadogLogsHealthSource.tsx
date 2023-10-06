@@ -7,6 +7,7 @@
 
 import React, { useContext, useMemo, useState } from 'react'
 import { Formik, FormikForm, getMultiTypeFromValue, MultiTypeInputType, useToaster, Utils } from '@harness/uicore'
+import { noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { SetupSourceLayout } from '@cv/components/CVSetupSourcesView/SetupSourceLayout/SetupSourceLayout'
@@ -64,22 +65,7 @@ export function DatadogLogsHealthSource(props: DatadogLogsHealthSourceProps): JS
       isInitialValid={(args: any) =>
         Object.keys(validateMappings(getString, createdMetrics, selectedMetricIndex, args.initialValues)).length === 0
       }
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      onSubmit={async logsInfo => {
-        if (logsInfo) {
-          mappedMetrics.set(selectedMetric, {
-            ...logsInfo
-          })
-        }
-        await props.onSubmit(
-          sourceData,
-          transformDatadogLogsSetupSourceToHealthSource({
-            ...transformedSourceData,
-            logsDefinitions: mappedMetrics
-          })
-        )
-      }}
+      onSubmit={noop}
       enableReinitialize={true}
       key={rerenderKey}
       validate={values => {
@@ -136,6 +122,7 @@ export function DatadogLogsHealthSource(props: DatadogLogsHealthSourceProps): JS
                   })
                   setRerenderKey(Utils.randomId())
                 }}
+                validateOnChange={false}
                 isValidInput={formikProps.isValid}
               />
             }
@@ -151,11 +138,24 @@ export function DatadogLogsHealthSource(props: DatadogLogsHealthSourceProps): JS
           <DrawerFooter
             isSubmit
             onPrevious={onPrevious}
-            onNext={() => {
+            onNext={async () => {
               formikProps.submitForm()
 
               if (!formikProps.isValid) {
                 showPrimary(getString('cv.monitoredServices.changeCustomMetricTooltip'))
+              } else {
+                if (formikProps.values) {
+                  mappedMetrics.set(selectedMetric, {
+                    ...formikProps.values
+                  })
+                }
+                await props.onSubmit(
+                  sourceData,
+                  transformDatadogLogsSetupSourceToHealthSource({
+                    ...transformedSourceData,
+                    logsDefinitions: mappedMetrics
+                  })
+                )
               }
             }}
           />

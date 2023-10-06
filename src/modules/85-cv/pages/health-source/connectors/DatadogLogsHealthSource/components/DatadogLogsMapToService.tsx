@@ -27,7 +27,7 @@ import { MapDatadogLogsFieldNames } from '@cv/pages/health-source/connectors/Dat
 import type { DatadogLogsMapToServiceProps } from '@cv/pages/health-source/connectors/DatadogLogsHealthSource/components/DatadogLogsMapToService.type'
 import ServiceInstanceListDisplayWithFetch from '@cv/pages/health-source/common/ServiceInstanceListDisplay/ServiceInstanceListDisplayWithFetch'
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
-import { getCanShowServiceInstanceNames } from './DatadogLogsMapToService.utils'
+import { getCanShowServiceInstanceNames, getServiceInstanceFieldValue } from './DatadogLogsMapToService.utils'
 import css from '@cv/pages/health-source/connectors/DatadogLogsHealthSource/components/DatadogLogsMapToService.module.scss'
 
 export default function DatadogLogsMapToService(props: DatadogLogsMapToServiceProps): JSX.Element {
@@ -175,6 +175,16 @@ export default function DatadogLogsMapToService(props: DatadogLogsMapToServicePr
                       selectItems={hostIdentifierKeysOptions}
                       multiTypeInputProps={{
                         expressions,
+                        /**
+                         * Ignoring TS and ESLint as selectProps in MultiTypeInput requesting
+                         * for all the select component props
+                         *
+                         * selectProps?: Omit<SelectProps, 'onChange' | 'value'>
+                         *
+                         * */
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        selectProps: { allowCreatingNewItems: true },
                         allowableTypes: isConnectorRuntimeOrExpression
                           ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
                           : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
@@ -185,9 +195,11 @@ export default function DatadogLogsMapToService(props: DatadogLogsMapToServicePr
                       label={getString('cv.monitoringSources.serviceInstanceIdentifier')}
                       name={MapDatadogLogsFieldNames.SERVICE_INSTANCE_IDENTIFIER_TAG}
                       items={hostIdentifierKeysOptions}
+                      value={getServiceInstanceFieldValue(formikProps?.values, hostIdentifierKeysOptions)}
                       onChange={event => {
                         formikProps.setFieldValue(MapDatadogLogsFieldNames.SERVICE_INSTANCE_IDENTIFIER_TAG, event.value)
                       }}
+                      selectProps={{ allowCreatingNewItems: true }}
                     />
                   )}
                   {canShowServiceInstanceNames ? (
