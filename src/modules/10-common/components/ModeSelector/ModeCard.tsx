@@ -160,7 +160,6 @@ export function ModuleCard({ moduleName, onModuleClick, ...rest }: ModuleCardPro
   const { getString } = useStrings()
   const { shortLabel, icon, label, moduleIntro } = moduleMap[moduleName]
   const modeContent = moduleIntro ? getString(moduleIntro) : ''
-  const shouldOpenInNewTab = moduleName === ModuleName.CE
 
   return (
     <ModeCard
@@ -168,7 +167,6 @@ export function ModuleCard({ moduleName, onModuleClick, ...rest }: ModuleCardPro
       shortLabel={shortLabel}
       modeBorderCss={navModeToClassMap[moduleName]}
       popoverProps={{ modeContent, modeLabel: label }}
-      shouldOpenInNewTab={shouldOpenInNewTab}
       onClick={() => {
         onModuleClick(moduleName)
       }}
