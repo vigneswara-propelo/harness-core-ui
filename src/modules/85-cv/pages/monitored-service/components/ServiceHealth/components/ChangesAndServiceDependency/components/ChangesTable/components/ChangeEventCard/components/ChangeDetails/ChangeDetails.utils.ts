@@ -15,6 +15,7 @@ import {
   EXTERNAL_LINK_TO_ENTITY,
   CHANGE_EVENT_DETAILS_LINK
 } from './ChangeDetails.constant'
+import css from './ChangeDetails.module.scss'
 
 export const createDetailsTitle = (type?: string, category?: string) => {
   switch (category) {
@@ -186,5 +187,14 @@ export const getSourceLabel = (getString: UseStringsReturn['getString'], type: C
       return type
     default:
       return ''
+  }
+}
+
+export const getDetailsContainerWidth = (type: ChangeEventDTO['type']): string => {
+  switch (type) {
+    case ChangeSourceTypes.HarnessCDNextGen:
+      return css.gridColumnsWidth
+    default:
+      return css.gridColumnsWidthCustomChangeSource
   }
 }

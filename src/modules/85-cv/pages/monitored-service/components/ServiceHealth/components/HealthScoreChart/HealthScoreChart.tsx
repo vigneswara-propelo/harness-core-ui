@@ -72,6 +72,7 @@ export default function HealthScoreChart(props: HealthScoreChartProps): JSX.Elem
   return (
     <Container
       className={cx(css.main, {
+        [css.containerWidth]: Boolean(!startTime),
         [css.extraMarginForChart]: isChangeEventView
       })}
     >

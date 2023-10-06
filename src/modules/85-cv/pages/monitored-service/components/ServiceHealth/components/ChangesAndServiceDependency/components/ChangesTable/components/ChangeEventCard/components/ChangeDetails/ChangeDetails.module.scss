@@ -10,6 +10,13 @@
   width: fit-content;
   grid-gap: var(--padding-button) !important;
   margin: var(--spacing-large) 0 !important;
+}
+
+.gridColumnsWidthCustomChangeSource {
+  grid-template-columns: 20% 88%;
+}
+
+.gridColumnsWidth {
   grid-template-columns: 12% 88%;
 }
 

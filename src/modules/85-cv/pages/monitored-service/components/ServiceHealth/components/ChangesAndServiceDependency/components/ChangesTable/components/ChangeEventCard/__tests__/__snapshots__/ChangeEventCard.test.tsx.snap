@@ -65,7 +65,7 @@ exports[`Validate ChangeCard should render Pager Duty card 1`] = `
         details
       </p>
       <div
-        class="gridContainer"
+        class="gridContainer gridColumnsWidthCustomChangeSource"
       >
         <p
           class="StyledProps--font StyledProps--main gridItem StyledProps--font-size-small StyledProps--font-weight-semi-bold"
@@ -321,7 +321,7 @@ exports[`Validate ChangeCard should render Pager Duty card 1`] = `
         </div>
       </div>
       <div
-        class="StyledProps--font StyledProps--main main extraMarginForChart"
+        class="StyledProps--font StyledProps--main main containerWidth extraMarginForChart"
       >
         <div
           class="StyledProps--font StyledProps--main timelineRow"

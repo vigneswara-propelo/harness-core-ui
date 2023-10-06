@@ -3,7 +3,7 @@
 exports[`Unit tests for HealthScoreChart Verify if all the fields are rendered correctly inside HealthScoreChart 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main main"
+    class="StyledProps--font StyledProps--main main containerWidth"
   >
     <div
       class="StyledProps--font StyledProps--main timelineRow"

@@ -7,6 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly gridColumnsWidth: string
+  readonly gridColumnsWidthCustomChangeSource: string
   readonly gridContainer: string
   readonly gridItem: string
   readonly isLink: string

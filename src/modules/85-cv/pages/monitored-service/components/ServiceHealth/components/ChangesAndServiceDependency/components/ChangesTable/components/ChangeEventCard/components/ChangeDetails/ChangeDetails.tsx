@@ -16,7 +16,13 @@ import {
   CustomChangeSourceList
 } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import { getDetailsLabel } from '@cv/utils/CommonUtils'
-import { getOnClickOptions, getSourceLabel, isUrl, statusToColorMapping } from './ChangeDetails.utils'
+import {
+  getDetailsContainerWidth,
+  getOnClickOptions,
+  getSourceLabel,
+  isUrl,
+  statusToColorMapping
+} from './ChangeDetails.utils'
 import type { ChangeDetailsDataInterface } from '../../ChangeEventCard.types'
 import StatusChip from './components/StatusChip/StatusChip'
 import { EXECUTED_BY, UPDATED_BY } from './ChangeDetails.constant'
@@ -31,6 +37,7 @@ export default function ChangeDetails({
   const { type, status, executedBy } = ChangeDetailsData
   let { details } = ChangeDetailsData
   const { color, backgroundColor } = statusToColorMapping(status, type) || {}
+  const gridColumnsClassName = getDetailsContainerWidth(type)
   const isDeploymentType = [ChangeSourceTypes.HarnessCDNextGen].includes(type as ChangeSourceTypes)
   if ([ChangeSourceTypes.HarnessCDNextGen, ChangeSourceTypes.K8sCluster].includes(type as ChangeSourceTypes)) {
     details = {
@@ -49,7 +56,7 @@ export default function ChangeDetails({
       <Text font={{ size: 'normal', weight: 'bold' }} color={Color.GREY_800}>
         {getString('details')}
       </Text>
-      <div className={css.gridContainer}>{getChanges(details)}</div>
+      <div className={cx(css.gridContainer, gridColumnsClassName)}>{getChanges(details)}</div>
       {status && !isDeploymentType ? (
         <StatusChip status={status} color={color} backgroundColor={backgroundColor} />
       ) : null}
@@ -65,7 +72,7 @@ export const getAnalysisStep = ({
   component: JSX.Element
 }): JSX.Element => {
   return (
-    <div className={css.gridContainer}>
+    <div className={cx(css.gridContainer, css.gridColumnsWidth)}>
       <Text className={css.gridItem} font={{ size: 'small', weight: 'semi-bold' }}>
         {getString('cv.analyzeDeploymentImpact.cdCard.impactAnalysisStep')}
       </Text>
@@ -126,7 +133,7 @@ export const getChanges = (details: ChangeDetailsDataInterface['details']) => {
             {value}
           </Text>
         ) : Array.isArray(item[1]) ? (
-          <Layout.Vertical width="100%">
+          <Layout.Vertical width="max-content">
             {value.map((action: string, idx: number) => (
               <Layout.Horizontal key={idx} spacing="small">
                 <Text key={idx} font={{ size: 'small' }} color={Color.BLACK_100}>
