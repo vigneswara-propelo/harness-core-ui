@@ -19,6 +19,7 @@ declare const styles: {
   readonly clickable: string
   readonly columnNames: string
   readonly commitHash: string
+  readonly copyText: string
   readonly coverage: string
   readonly coverageItem: string
   readonly diff: string

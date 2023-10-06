@@ -182,7 +182,7 @@ const getColumnText = ({
       </Layout.Vertical>
     )
     return (
-      <CopyText iconName="clipboard-alt" textToCopy={textToCopy}>
+      <CopyText iconName="clipboard-alt" textToCopy={textToCopy} className={css.copyText}>
         <span
           className={cx(failed && css.expandErrorText)}
           onClick={e => {
@@ -199,7 +199,7 @@ const getColumnText = ({
   } else if (col === TestCaseColumns.CLASS_NAME) {
     const textToCopy = (row.original[col] as string) || ''
     return (
-      <CopyText iconName="clipboard-alt" textToCopy={textToCopy}>
+      <CopyText iconName="clipboard-alt" textToCopy={textToCopy} className={css.copyText}>
         {row.original[col]}
       </CopyText>
     )
@@ -532,7 +532,12 @@ export function TestsExecutionItem({
               <Button minimal large icon={expanded ? 'chevron-down' : 'chevron-right'} />
               <Layout.Horizontal>
                 <Text width={titleWidth} style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                  <CopyText iconName="clipboard-alt" stopPropagation textToCopy={executionSummary.name || ''}>
+                  <CopyText
+                    iconName="clipboard-alt"
+                    stopPropagation
+                    textToCopy={executionSummary.name || ''}
+                    className={css.copyText}
+                  >
                     <Text tooltip={<Container padding="small">{executionSummary.name}</Container>}>
                       <span className={css.testSuiteName}>
                         {getString('pipeline.testsReports.testSuite')} {executionSummary.name}
