@@ -420,6 +420,7 @@ export interface StringsMap {
   'common.feature.upgradeRequired.title': string
   'common.featureComingSoon': string
   'common.fetchingBranches': string
+  'common.ffProxy': string
   'common.file': string
   'common.fileOrFolderPath': string
   'common.files': string

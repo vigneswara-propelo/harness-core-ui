@@ -47,7 +47,8 @@ export const AccountSettingsPage: React.FC = () => {
     STO_JIRA_INTEGRATION,
     PIE_GIT_BI_DIRECTIONAL_SYNC,
     NG_LICENSES_ENABLED,
-    CCM_CURRENCY_PREFERENCES
+    CCM_CURRENCY_PREFERENCES,
+    FFM_9497_PROXY_KEY_MANAGEMENT: proxyKeysEnabled
   } = useFeatureFlags()
   const showGovCard = useAnyEnterpriseLicense()
   const { licenseInformation, CD_LICENSE_STATE, CI_LICENSE_STATE, STO_LICENSE_STATE, CV_LICENSE_STATE } =
@@ -290,6 +291,13 @@ export const AccountSettingsPage: React.FC = () => {
               id={SettingsResources.Variables}
               icon={'variables-blue'}
               route={routesV2.toVariablesSettings({ accountId, module })}
+            />
+            <SettingsResourceCard
+              label={<String stringID="common.ffProxy" />}
+              id={SettingsResources.FFProxyKeys}
+              icon={'gitops-gnupg-key-blue'}
+              hidden={!proxyKeysEnabled}
+              route={routesV2.toFFProxyKeys({ accountId, module })}
             />
             <SettingsResourceCard
               label={<String stringID="common.overrides" />}

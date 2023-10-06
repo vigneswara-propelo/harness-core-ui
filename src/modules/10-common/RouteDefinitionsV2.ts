@@ -878,6 +878,7 @@ const routes = {
   ),
   toFileStoreSettings: withModeModuleAndScopePrefix(() => `/settings/file-store`),
   toVariablesSettings: withModeModuleAndScopePrefix(() => `/settings/variables`),
+  toFFProxyKeys: withModeModuleAndScopePrefix(() => '/settings/feature-flags-proxy'),
 
   toGitOpsResources: withModeModuleAndScopePrefix<GitOpsPathProps>(params => `/settings/gitops/${params?.entity}`),
   toWebhooks: withModeModuleAndScopePrefix(() => `/settings/webhooks`),

@@ -1117,6 +1117,7 @@ plusNewName: + New {{name}}
 newName: New {{name}}
 fetchingBranches: Fetching branches
 download: Download
+ffProxy: Feature Flags Proxy
 gitOps: GitOps
 showHarnessManagedError: Harness Managed Resource cannot be edited
 contentRequired: Content is required

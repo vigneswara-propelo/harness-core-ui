@@ -43,6 +43,7 @@ export enum SettingsResources {
   FileStores = 'FileStores',
   Templates = 'Templates',
   Variables = 'Variables',
+  FFProxyKeys = 'FF_Proxy_Keys',
   Gitops_Agents = 'Gitops_Agents',
   Gitops_Repositorys = 'Gitops_Repositorys',
   Gitops_Clusters = 'Gitops_Clusters',
