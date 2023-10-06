@@ -59,6 +59,9 @@ export enum CommandTypes {
   PLAN = 'plan',
   DESTROY = 'destroy',
   PLANDESTROY = 'plan-destroy',
+  PLANREFRESH = 'plan-refresh-only',
+  APPLYREFRESH = 'apply-refresh-only',
+  DETECTDRIFT = 'detect-drift',
   APPLY = 'apply',
   VALIDATE = 'validate'
 }
