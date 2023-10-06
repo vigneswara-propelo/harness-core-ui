@@ -27,6 +27,7 @@ export interface NotificationsContainerProps {
   error: GetDataError<unknown> | null
   page: number
   getNotifications: () => Promise<void>
+  renderWithoutCards?: boolean
 }
 
 export type ConfigureMonitoredServiceAlertConditionsProps = StepProps<SRMNotification>

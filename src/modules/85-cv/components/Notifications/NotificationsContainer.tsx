@@ -29,12 +29,13 @@ export default function NotificationsContainer(props: NotificationsContainerProp
     loading,
     error,
     page,
-    getNotifications
+    getNotifications,
+    renderWithoutCards
   } = props
 
   const { getString } = useStrings()
   const { renderInsideCompositeSLO } = useContext(CompositeSLOContext)
-  const containerBorder = renderInsideCompositeSLO ? false : { top: true, bottom: true }
+  const containerBorder = renderInsideCompositeSLO || renderWithoutCards ? false : { top: true, bottom: true }
 
   const renderContent = (): JSX.Element => {
     if (loading) {
@@ -75,7 +76,7 @@ export default function NotificationsContainer(props: NotificationsContainerProp
     )
   }
 
-  if (renderInsideCompositeSLO) {
+  if (renderInsideCompositeSLO || renderWithoutCards) {
     return renderContent()
   }
 

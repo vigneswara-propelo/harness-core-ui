@@ -102,6 +102,7 @@ export default function SLOTargetNotifications(props: SLOTargetNotificationsProp
       loading={loading}
       error={error}
       getNotifications={getNotifications}
+      renderWithoutCards
     >
       <ConfigureSLOAlertConditions
         name={getString('conditions')}
