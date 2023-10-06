@@ -34,6 +34,8 @@ import type { isOnPrem } from '@common/utils/utils'
 import type { useGetResourceGroupListV2 } from 'services/resourcegroups'
 import type { getSelectedScopeLabel, useGetResourceTypeHandler } from '@rbac/pages/ResourceGroupDetails/utils'
 import type routes from '@common/RouteDefinitions'
+import ResourceHandlerTable from '@modules/20-rbac/components/ResourceHandlerTable/ResourceHandlerTable'
+import { RbacResourceModalProps, RbacResourceRendererProps } from '@modules/20-rbac/factories/RbacFactory'
 
 const { getToken: useGetToken } = SessionToken
 
@@ -72,7 +74,10 @@ export interface GovernanceCustomMicroFrontendProps {
     InlineRemoteSelect: typeof InlineRemoteSelect
     GitRemoteDetails: typeof GitRemoteDetails
     ErrorHandler: typeof ErrorHandler
+    ResourceHandlerTable: typeof ResourceHandlerTable
   }
   customRoutes: typeof routes
   baseRoutePath: string
+  RbacResourceModalProps?: RbacResourceModalProps
+  RbacResourceRendererProps?: RbacResourceRendererProps
 }

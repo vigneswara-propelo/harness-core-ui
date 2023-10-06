@@ -33,6 +33,7 @@ import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { OverviewChartsWithToggle } from '@common/components/OverviewChartsWithToggle/OverviewChartsWithToggle'
 import { useGetResourceGroupListV2 } from 'services/resourcegroups'
 import { getSelectedScopeLabel, useGetResourceTypeHandler } from '@rbac/pages/ResourceGroupDetails/utils'
+import ResourceHandlerTable from '@modules/20-rbac/components/ResourceHandlerTable/ResourceHandlerTable'
 
 export interface RouteMatch {
   path: string
@@ -75,7 +76,8 @@ const customComponents = {
   RepoBranchSelectV2,
   InlineRemoteSelect,
   GitRemoteDetails,
-  ErrorHandler
+  ErrorHandler,
+  ResourceHandlerTable
 }
 
 export { customHooks, customComponents }
