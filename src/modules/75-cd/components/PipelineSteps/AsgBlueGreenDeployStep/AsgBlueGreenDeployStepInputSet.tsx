@@ -18,7 +18,8 @@ import {
   SelectOption,
   Button,
   Layout,
-  ButtonVariation
+  ButtonVariation,
+  FormInput
 } from '@harness/uicore'
 
 import {
@@ -41,7 +42,6 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import type { AsgBlueGreenDeployStepInitialValues, AsgBlueGreenDeployCustomStepProps } from './AsgBlueGreenDeployStep'
 import AsgBGStageSetupLoadBalancer from './AsgBGLoadBalancers/AsgBlueGreenDeployLoadBalancers'
 import { AsgLoadBalancer } from './AsgBlueGreenDeployStepEdit'
-
 import { shouldFetchFieldData } from '../PipelineStepsUtil'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './AsgBlueGreenDeployStep.module.scss'
@@ -397,6 +397,44 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
             />
           </div>
         )}
+      {CDS_ASG_V2 ? (
+        <>
+          {getMultiTypeFromValue(inputSetData.template?.spec?.instances?.spec?.min) === MultiTypeInputType.RUNTIME ? (
+            <div className={cx(stepCss.formGroup, stepCss.md)}>
+              <FormInput.MultiTextInput
+                name={`${prefix}spec.instances.spec.min`}
+                placeholder={getString('cd.ElastigroupStep.minInstances')}
+                label={getString('cd.ElastigroupStep.minInstances')}
+                disabled={readonly}
+                multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
+              />
+            </div>
+          ) : null}
+          {getMultiTypeFromValue(inputSetData.template?.spec?.instances?.spec?.max) === MultiTypeInputType.RUNTIME ? (
+            <div className={cx(stepCss.formGroup, stepCss.md)}>
+              <FormInput.MultiTextInput
+                name={`${prefix}spec.instances.spec.max`}
+                placeholder={getString('cd.ElastigroupStep.maxInstances')}
+                label={getString('cd.ElastigroupStep.maxInstances')}
+                disabled={readonly}
+                multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
+              />
+            </div>
+          ) : null}
+          {getMultiTypeFromValue(inputSetData.template?.spec?.instances?.spec?.desired) ===
+          MultiTypeInputType.RUNTIME ? (
+            <div className={cx(stepCss.formGroup, stepCss.md, stepCss.bottomMargin4)}>
+              <FormInput.MultiTextInput
+                name={`${prefix}spec.instances.spec.desired`}
+                placeholder={getString('cd.ElastigroupStep.desiredInstances')}
+                label={getString('cd.ElastigroupStep.desiredInstances')}
+                disabled={readonly}
+                multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
+              />
+            </div>
+          ) : null}
+        </>
+      ) : null}
       {!CDS_ASG_V2 ? (
         <>
           {getMultiTypeFromValue(inputSetData.template?.spec?.loadBalancer) === MultiTypeInputType.RUNTIME && (

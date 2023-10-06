@@ -392,7 +392,7 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { CDS_BASIC_ASG } = useFeatureFlags()
+  const { CDS_BASIC_ASG, CDS_ASG_V2 } = useFeatureFlags()
   const prefix = isEmpty(path) ? '' : `${path}.`
   return (
     <>
@@ -429,6 +429,44 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
           />
         </div>
       )}
+      {CDS_ASG_V2 ? (
+        <>
+          {getMultiTypeFromValue((template?.spec?.instances as Instances)?.spec?.min) === MultiTypeInputType.RUNTIME ? (
+            <div className={cx(stepCss.formGroup, stepCss.md)}>
+              <FormInput.MultiTextInput
+                name={`${prefix}spec.instances.spec.min`}
+                placeholder={getString('cd.ElastigroupStep.minInstances')}
+                label={getString('cd.ElastigroupStep.minInstances')}
+                disabled={readonly}
+                multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
+              />
+            </div>
+          ) : null}
+          {getMultiTypeFromValue((template?.spec?.instances as Instances)?.spec?.max) === MultiTypeInputType.RUNTIME ? (
+            <div className={cx(stepCss.formGroup, stepCss.md)}>
+              <FormInput.MultiTextInput
+                name={`${prefix}spec.instances.spec.max`}
+                placeholder={getString('cd.ElastigroupStep.maxInstances')}
+                label={getString('cd.ElastigroupStep.maxInstances')}
+                disabled={readonly}
+                multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
+              />
+            </div>
+          ) : null}
+          {getMultiTypeFromValue((template?.spec?.instances as Instances)?.spec?.desired) ===
+          MultiTypeInputType.RUNTIME ? (
+            <div className={cx(stepCss.formGroup, stepCss.md, stepCss.bottomMargin4)}>
+              <FormInput.MultiTextInput
+                name={`${prefix}spec.instances.spec.desired`}
+                placeholder={getString('cd.ElastigroupStep.desiredInstances')}
+                label={getString('cd.ElastigroupStep.desiredInstances')}
+                disabled={readonly}
+                multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
+              />
+            </div>
+          ) : null}
+        </>
+      ) : null}
       {getMultiTypeFromValue(get(template, 'spec.useAlreadyRunningInstances')) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeCheckboxField
