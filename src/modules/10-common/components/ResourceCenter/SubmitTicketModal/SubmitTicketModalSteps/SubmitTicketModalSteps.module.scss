@@ -47,3 +47,10 @@
   margin-bottom: 20px;
   overflow-y: auto;
 }
+
+.cannyText {
+  width: 600px !important;
+  padding: var(--spacing-medium) var(--spacing-small) !important;
+  margin-bottom: var(--spacing-large) !important;
+  background-color: var(--grey-100) !important;
+}

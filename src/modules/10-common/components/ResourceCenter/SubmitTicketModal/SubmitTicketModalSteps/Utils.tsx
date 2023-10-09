@@ -26,6 +26,7 @@ export interface SubmitTicket {
   ticketDetails: string
   module: string
   fileData: any
+  boardID: string
 }
 
 export const issueTypes = [

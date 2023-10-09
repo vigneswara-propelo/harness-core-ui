@@ -1041,6 +1041,8 @@ export interface StringsMap {
   'common.resourceCenter.productUpdates.title': string
   'common.resourceCenter.productUpdates.whatsnew': string
   'common.resourceCenter.ticketmenu.attachments': string
+  'common.resourceCenter.ticketmenu.cannyPosts': string
+  'common.resourceCenter.ticketmenu.cannyText': string
   'common.resourceCenter.ticketmenu.chooseAFile': string
   'common.resourceCenter.ticketmenu.component': string
   'common.resourceCenter.ticketmenu.issueType': string

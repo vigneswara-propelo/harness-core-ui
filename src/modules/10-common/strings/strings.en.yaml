@@ -1040,6 +1040,8 @@ resourceCenter:
     chooseAFile: Choose a File
     platform: Platform
     suggestionsPanel: Before you proceed, here are some suggestions that might help...
+    cannyText: Feature Requests are managed in <a target="_blank" href="https://ideas.harness.io/">Harness Idea Portal</a>, allowing users to see each other posts and comments.
+    cannyPosts: All Posts are viewable by Harness users
   bottomlayout:
     desc: Other useful resources
     docs: Docs

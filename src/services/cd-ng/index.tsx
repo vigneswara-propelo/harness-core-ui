@@ -414,6 +414,7 @@ export interface AccessControlCheckError {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SPOTNIST_REST_EXCEPTION'
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
@@ -1387,6 +1388,7 @@ export type AuditFilterProperties = FilterProperties & {
 export interface AuthenticationSettingsResponse {
   authenticationMechanism?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   ngAuthSettings?: NGAuthSettings[]
+  oauthEnabled?: boolean
   publicAccessEnabled?: boolean
   sessionTimeoutInMinutes?: number
   twoFactorEnabled?: boolean
@@ -1991,6 +1993,7 @@ export type AzureKeyVaultConnectorDTO = ConnectorConfigDTO & {
   clientId?: string
   default?: boolean
   delegateSelectors?: string[]
+  enablePurge?: boolean
   managedClientId?: string
   secretKey?: string
   subscription: string
@@ -2005,6 +2008,7 @@ export type AzureKeyVaultMetadataRequestSpecDTO = SecretManagerMetadataRequestSp
   azureManagedIdentityType?: 'SystemAssignedManagedIdentity' | 'UserAssignedManagedIdentity'
   clientId?: string
   delegateSelectors?: string[]
+  enablePurge?: boolean
   managedClientId?: string
   secretKey?: string
   subscription: string
@@ -2628,6 +2632,11 @@ export interface CacheResponseMetadata {
 export interface CannyBoardsResponseDTO {
   boards?: Board[]
   message?: string
+}
+
+export interface CannyPostResponseDTO {
+  message?: string
+  postURL?: string
 }
 
 export interface Capabilities {
@@ -4755,6 +4764,7 @@ export interface EntityDetail {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -4878,6 +4888,7 @@ export interface EntityDetail {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
 }
 
 export interface EntityDetailProtoDTO {
@@ -5551,6 +5562,7 @@ export interface Error {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SPOTNIST_REST_EXCEPTION'
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
@@ -5940,6 +5952,7 @@ export interface ErrorMetadata {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SPOTNIST_REST_EXCEPTION'
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
@@ -6380,6 +6393,7 @@ export interface Failure {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SPOTNIST_REST_EXCEPTION'
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
@@ -7182,6 +7196,31 @@ export interface GARResponseDTO {
   buildDetailsList?: GARBuildDetailsDTO[]
 }
 
+export type GARStepInfo = StepSpecType & {
+  baseImageConnectorRefs?: ParameterFieldListString
+  buildArgs?: {
+    [key: string]: string
+  }
+  cacheFrom?: string[]
+  cacheTo?: string
+  caching?: boolean
+  connectorRef: string
+  context?: string
+  dockerfile?: string
+  host: string
+  imageName: string
+  labels?: {
+    [key: string]: string
+  }
+  optimize?: boolean
+  projectID: string
+  remoteCacheImage?: string
+  resources?: ContainerResource
+  runAsUser?: number
+  tags: string[]
+  target?: string
+}
+
 export type GCRStepInfo = StepSpecType & {
   baseImageConnectorRefs?: ParameterFieldListString
   buildArgs?: {
@@ -7277,6 +7316,17 @@ export type GcpKmsConnectorDTO = ConnectorConfigDTO & {
 
 export type GcpManualDetails = GcpCredentialSpec & {
   secretKeyRef: string
+}
+
+export interface GcpOidcAccessTokenRequestDTO {
+  gcpOidcTokenRequestDTO: GcpOidcTokenRequestDTO
+  oidcIdToken: string
+}
+
+export interface GcpOidcTokenRequestDTO {
+  gcpProjectId: string
+  providerId: string
+  workloadPoolId: string
 }
 
 export interface GcpProjectDetails {
@@ -7569,6 +7619,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -7692,6 +7743,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
   )[]
   moduleType?:
     | 'CD'
@@ -7829,6 +7881,7 @@ export interface GitEntityFilterProperties {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -7952,6 +8005,7 @@ export interface GitEntityFilterProperties {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -8168,6 +8222,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -8291,6 +8346,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -8419,6 +8475,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -8542,6 +8599,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -8801,6 +8859,7 @@ export interface GitSyncEntityDTO {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -8924,6 +8983,7 @@ export interface GitSyncEntityDTO {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -9046,6 +9106,7 @@ export interface GitSyncEntityListDTO {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -9169,6 +9230,7 @@ export interface GitSyncEntityListDTO {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -9308,6 +9370,7 @@ export interface GitSyncErrorDTO {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -9431,6 +9494,7 @@ export interface GitSyncErrorDTO {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -11157,6 +11221,7 @@ export type KubernetesClientKeyCertDTO = KubernetesAuthCredentialDTO & {
 export interface KubernetesCloudClusterConfig {
   addRegionalParam?: boolean
   clusterName?: string
+  region?: string
   resourceGroup?: string
   subscriptionId?: string
   useClusterAdminCredentials?: boolean
@@ -11242,7 +11307,7 @@ export interface KustomizeValues {
   replicas?: KustomizeReplicas[]
 }
 
-export interface LDAPSettings {
+export type LDAPSettings = NGAuthSettings & {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -11250,12 +11315,15 @@ export interface LDAPSettings {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
-  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
 export interface LandingDashboardRequestCD {
   orgProjectIdentifiers: OrgProjectIdentifier[]
+}
+
+export interface LandingPageDeploymentCount {
+  value?: number
 }
 
 export interface LastWorkloadInfo {
@@ -11811,6 +11879,7 @@ export interface NGEntityList {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -11934,6 +12003,7 @@ export interface NGEntityList {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
   )[]
 }
 
@@ -12909,6 +12979,17 @@ export interface PageServiceAccountAggregateDTO {
   totalPages?: number
 }
 
+export interface PageServiceNowTemplate {
+  content?: ServiceNowTemplate[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  pageToken?: string
+  totalItems?: number
+  totalPages?: number
+}
+
 export interface PageServiceOverrideResponseDTO {
   content?: ServiceOverrideResponseDTO[]
   empty?: boolean
@@ -13740,6 +13821,7 @@ export interface ReferencedByDTO {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -13863,6 +13945,7 @@ export interface ReferencedByDTO {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
 }
 
 export interface RefreshResponse {
@@ -14298,6 +14381,13 @@ export interface ResponseCDStageModuleInfo {
 export interface ResponseCannyBoardsResponseDTO {
   correlationId?: string
   data?: CannyBoardsResponseDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseCannyPostResponseDTO {
+  correlationId?: string
+  data?: CannyPostResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -15039,6 +15129,13 @@ export interface ResponseJsonNode {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseLandingPageDeploymentCount {
+  correlationId?: string
+  data?: LandingPageDeploymentCount
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseLicenseDateUsageDTO {
   correlationId?: string
   data?: LicenseDateUsageDTO
@@ -15274,6 +15371,7 @@ export interface ResponseListEntityType {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -15397,6 +15495,7 @@ export interface ResponseListEntityType {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -16082,6 +16181,7 @@ export interface ResponseMessage {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SPOTNIST_REST_EXCEPTION'
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
@@ -16459,6 +16559,13 @@ export interface ResponsePageSecretResponseWrapper {
 export interface ResponsePageServiceAccountAggregateDTO {
   correlationId?: string
   data?: PageServiceAccountAggregateDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageServiceNowTemplate {
+  correlationId?: string
+  data?: PageServiceNowTemplate
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -19140,6 +19247,7 @@ export interface StageElementConfig {
     [key: string]: string
   }
   template?: TemplateLinkConfig
+  timeout?: string
   type?: string
   variables?: NGVariable[]
   when?: StageWhenCondition
@@ -22061,6 +22169,7 @@ export interface ListActivitiesQueryParams {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -22184,6 +22293,7 @@ export interface ListActivitiesQueryParams {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
   referredByEntityType?: (
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -22298,6 +22408,7 @@ export interface ListActivitiesQueryParams {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -22421,6 +22532,7 @@ export interface ListActivitiesQueryParams {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
   )[]
   activityTypes?: ('CONNECTIVITY_CHECK' | 'ENTITY_USAGE' | 'ENTITY_CREATION' | 'ENTITY_UPDATE')[]
   searchTerm?: string
@@ -22637,6 +22749,7 @@ export interface GetUniqueReferredByEntitiesQueryParams {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -22760,6 +22873,7 @@ export interface GetUniqueReferredByEntitiesQueryParams {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
   activityTypes?: ('CONNECTIVITY_CHECK' | 'ENTITY_USAGE' | 'ENTITY_CREATION' | 'ENTITY_UPDATE')[]
 }
 
@@ -22929,6 +23043,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -23052,6 +23167,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -23166,6 +23282,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -23289,6 +23406,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -35567,8 +35685,12 @@ export const getFilePathsV2ForS3Promise = (
     void
   >('POST', getConfig('ng/api'), `/buckets/s3/v2/getFilePaths`, props, signal)
 
+export interface GetCannyBoardsQueryParams {
+  accountIdentifier: string
+}
+
 export type GetCannyBoardsProps = Omit<
-  GetProps<ResponseCannyBoardsResponseDTO, Failure | AccessControlCheckError | Error, void, void>,
+  GetProps<ResponseCannyBoardsResponseDTO, Failure | AccessControlCheckError | Error, GetCannyBoardsQueryParams, void>,
   'path'
 >
 
@@ -35576,7 +35698,7 @@ export type GetCannyBoardsProps = Omit<
  * Get a list of boards available on Canny
  */
 export const GetCannyBoards = (props: GetCannyBoardsProps) => (
-  <Get<ResponseCannyBoardsResponseDTO, Failure | AccessControlCheckError | Error, void, void>
+  <Get<ResponseCannyBoardsResponseDTO, Failure | AccessControlCheckError | Error, GetCannyBoardsQueryParams, void>
     path={`/canny/boards`}
     base={getConfig('ng/api')}
     {...props}
@@ -35584,7 +35706,12 @@ export const GetCannyBoards = (props: GetCannyBoardsProps) => (
 )
 
 export type UseGetCannyBoardsProps = Omit<
-  UseGetProps<ResponseCannyBoardsResponseDTO, Failure | AccessControlCheckError | Error, void, void>,
+  UseGetProps<
+    ResponseCannyBoardsResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    GetCannyBoardsQueryParams,
+    void
+  >,
   'path'
 >
 
@@ -35592,24 +35719,106 @@ export type UseGetCannyBoardsProps = Omit<
  * Get a list of boards available on Canny
  */
 export const useGetCannyBoards = (props: UseGetCannyBoardsProps) =>
-  useGet<ResponseCannyBoardsResponseDTO, Failure | AccessControlCheckError | Error, void, void>(`/canny/boards`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
+  useGet<ResponseCannyBoardsResponseDTO, Failure | AccessControlCheckError | Error, GetCannyBoardsQueryParams, void>(
+    `/canny/boards`,
+    { base: getConfig('ng/api'), ...props }
+  )
 
 /**
  * Get a list of boards available on Canny
  */
 export const getCannyBoardsPromise = (
-  props: GetUsingFetchProps<ResponseCannyBoardsResponseDTO, Failure | AccessControlCheckError | Error, void, void>,
+  props: GetUsingFetchProps<
+    ResponseCannyBoardsResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    GetCannyBoardsQueryParams,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseCannyBoardsResponseDTO, Failure | AccessControlCheckError | Error, void, void>(
-    getConfig('ng/api'),
-    `/canny/boards`,
-    props,
-    signal
-  )
+  getUsingFetch<
+    ResponseCannyBoardsResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    GetCannyBoardsQueryParams,
+    void
+  >(getConfig('ng/api'), `/canny/boards`, props, signal)
+
+export interface CreateCannyPostQueryParams {
+  accountIdentifier?: string
+}
+
+export type CreateCannyPostProps = Omit<
+  MutateProps<
+    ResponseCannyPostResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    CreateCannyPostQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * create Canny Post for given user
+ */
+export const CreateCannyPost = (props: CreateCannyPostProps) => (
+  <Mutate<
+    ResponseCannyPostResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    CreateCannyPostQueryParams,
+    void,
+    void
+  >
+    verb="POST"
+    path={`/canny/post`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseCreateCannyPostProps = Omit<
+  UseMutateProps<
+    ResponseCannyPostResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    CreateCannyPostQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * create Canny Post for given user
+ */
+export const useCreateCannyPost = (props: UseCreateCannyPostProps) =>
+  useMutate<
+    ResponseCannyPostResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    CreateCannyPostQueryParams,
+    void,
+    void
+  >('POST', `/canny/post`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * create Canny Post for given user
+ */
+export const createCannyPostPromise = (
+  props: MutateUsingFetchProps<
+    ResponseCannyPostResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    CreateCannyPostQueryParams,
+    void,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseCannyPostResponseDTO,
+    Failure | AccessControlCheckError | Error,
+    CreateCannyPostQueryParams,
+    void,
+    void
+  >('POST', getConfig('ng/api'), `/canny/post`, props, signal)
 
 export type GetCdDeployStageMetadataProps = Omit<
   MutateProps<ResponseCDStageMetaDataDTO, unknown, void, CdDeployStageMetadataRequestDTO, void>,
@@ -42259,6 +42468,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -42382,6 +42592,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -42557,6 +42768,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -42680,6 +42892,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
   searchTerm?: string
 }
 
@@ -46179,6 +46392,7 @@ export interface GetReferencedByQueryParams {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -46302,6 +46516,7 @@ export interface GetReferencedByQueryParams {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
   searchTerm?: string
 }
 
@@ -49137,6 +49352,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -49260,6 +49476,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -49442,6 +49659,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'GCSUpload'
       | 'S3Upload'
       | 'BuildAndPushGCR'
+      | 'BuildAndPushGAR'
       | 'BuildAndPushECR'
       | 'BuildAndPushDockerRegistry'
       | 'CreateStack'
@@ -49565,6 +49783,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'EcsServiceSetup'
       | 'EcsUpgradeContainer'
       | 'EcsBasicRollback'
+      | 'ChaosInfrastructure'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -53995,6 +54214,50 @@ export const getTopProjectsPromise = (
     void
   >('POST', getConfig('ng/api'), `/landingDashboards/topProjects`, props, signal)
 
+export type GetDeploymentCountProps = Omit<
+  GetProps<ResponseLandingPageDeploymentCount, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * Get Total of Deployments
+ */
+export const GetDeploymentCount = (props: GetDeploymentCountProps) => (
+  <Get<ResponseLandingPageDeploymentCount, Failure | Error, void, void>
+    path={`/landingPage/deploymentCount`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetDeploymentCountProps = Omit<
+  UseGetProps<ResponseLandingPageDeploymentCount, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * Get Total of Deployments
+ */
+export const useGetDeploymentCount = (props: UseGetDeploymentCountProps) =>
+  useGet<ResponseLandingPageDeploymentCount, Failure | Error, void, void>(`/landingPage/deploymentCount`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get Total of Deployments
+ */
+export const getDeploymentCountPromise = (
+  props: GetUsingFetchProps<ResponseLandingPageDeploymentCount, Failure | Error, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseLandingPageDeploymentCount, Failure | Error, void, void>(
+    getConfig('ng/api'),
+    `/landingPage/deploymentCount`,
+    props,
+    signal
+  )
+
 export interface PostLdapAuthenticationTestQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -55751,6 +56014,99 @@ export const configureOauthPromise = (
     void
   >('POST', getConfig('ng/api'), `/oauth/create-access-token-secret`, props, signal)
 
+export type GenerateOidcAccessTokenForGcpProps = Omit<
+  MutateProps<ResponseString, Failure | Error, void, GcpOidcAccessTokenRequestDTO, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Generate an OIDC Access Token for GCP
+ */
+export const GenerateOidcAccessTokenForGcp = (props: GenerateOidcAccessTokenForGcpProps) => (
+  <Mutate<ResponseString, Failure | Error, void, GcpOidcAccessTokenRequestDTO, void>
+    verb="POST"
+    path={`/oidc/access-token/gcp`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGenerateOidcAccessTokenForGcpProps = Omit<
+  UseMutateProps<ResponseString, Failure | Error, void, GcpOidcAccessTokenRequestDTO, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Generate an OIDC Access Token for GCP
+ */
+export const useGenerateOidcAccessTokenForGcp = (props: UseGenerateOidcAccessTokenForGcpProps) =>
+  useMutate<ResponseString, Failure | Error, void, GcpOidcAccessTokenRequestDTO, void>(
+    'POST',
+    `/oidc/access-token/gcp`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Generate an OIDC Access Token for GCP
+ */
+export const generateOidcAccessTokenForGcpPromise = (
+  props: MutateUsingFetchProps<ResponseString, Failure | Error, void, GcpOidcAccessTokenRequestDTO, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseString, Failure | Error, void, GcpOidcAccessTokenRequestDTO, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/oidc/access-token/gcp`,
+    props,
+    signal
+  )
+
+export type GenerateOidcIdTokenForGcpProps = Omit<
+  MutateProps<ResponseString, Failure | Error, void, GcpOidcTokenRequestDTO, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Generate an OIDC ID Token for GCP
+ */
+export const GenerateOidcIdTokenForGcp = (props: GenerateOidcIdTokenForGcpProps) => (
+  <Mutate<ResponseString, Failure | Error, void, GcpOidcTokenRequestDTO, void>
+    verb="POST"
+    path={`/oidc/id-token/gcp`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGenerateOidcIdTokenForGcpProps = Omit<
+  UseMutateProps<ResponseString, Failure | Error, void, GcpOidcTokenRequestDTO, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Generate an OIDC ID Token for GCP
+ */
+export const useGenerateOidcIdTokenForGcp = (props: UseGenerateOidcIdTokenForGcpProps) =>
+  useMutate<ResponseString, Failure | Error, void, GcpOidcTokenRequestDTO, void>('POST', `/oidc/id-token/gcp`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Generate an OIDC ID Token for GCP
+ */
+export const generateOidcIdTokenForGcpPromise = (
+  props: MutateUsingFetchProps<ResponseString, Failure | Error, void, GcpOidcTokenRequestDTO, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseString, Failure | Error, void, GcpOidcTokenRequestDTO, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/oidc/id-token/gcp`,
+    props,
+    signal
+  )
+
 export interface GetOrganizationListQueryParams {
   accountIdentifier: string
   identifiers?: string[]
@@ -56254,6 +56610,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -56377,6 +56734,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
   yamlGroup?: string
 }
 
@@ -56619,6 +56977,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -56742,6 +57101,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -62233,6 +62593,77 @@ export const getServiceNowTemplateMetadataPromise = (
   getUsingFetch<ResponseListServiceNowTemplate, Failure | Error, GetServiceNowTemplateMetadataQueryParams, void>(
     getConfig('ng/api'),
     `/servicenow/getTemplate`,
+    props,
+    signal
+  )
+
+export interface GetServiceNowTemplateMetadataV2QueryParams {
+  connectorRef: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  ticketType: string
+  templateName?: string
+  size?: number
+  page?: number
+  templateType?: 'Form' | 'Standard'
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+  searchTerm?: string
+}
+
+export type GetServiceNowTemplateMetadataV2Props = Omit<
+  GetProps<ResponsePageServiceNowTemplate, Failure | Error, GetServiceNowTemplateMetadataV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * Get ServiceNow template metadata
+ */
+export const GetServiceNowTemplateMetadataV2 = (props: GetServiceNowTemplateMetadataV2Props) => (
+  <Get<ResponsePageServiceNowTemplate, Failure | Error, GetServiceNowTemplateMetadataV2QueryParams, void>
+    path={`/servicenow/getTemplateV2`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetServiceNowTemplateMetadataV2Props = Omit<
+  UseGetProps<ResponsePageServiceNowTemplate, Failure | Error, GetServiceNowTemplateMetadataV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * Get ServiceNow template metadata
+ */
+export const useGetServiceNowTemplateMetadataV2 = (props: UseGetServiceNowTemplateMetadataV2Props) =>
+  useGet<ResponsePageServiceNowTemplate, Failure | Error, GetServiceNowTemplateMetadataV2QueryParams, void>(
+    `/servicenow/getTemplateV2`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get ServiceNow template metadata
+ */
+export const getServiceNowTemplateMetadataV2Promise = (
+  props: GetUsingFetchProps<
+    ResponsePageServiceNowTemplate,
+    Failure | Error,
+    GetServiceNowTemplateMetadataV2QueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageServiceNowTemplate, Failure | Error, GetServiceNowTemplateMetadataV2QueryParams, void>(
+    getConfig('ng/api'),
+    `/servicenow/getTemplateV2`,
     props,
     signal
   )
@@ -73276,6 +73707,7 @@ export interface GetYamlSchemaQueryParams {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -73399,6 +73831,7 @@ export interface GetYamlSchemaQueryParams {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
   subtype?:
     | 'K8sCluster'
     | 'Git'
