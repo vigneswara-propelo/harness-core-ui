@@ -6,6 +6,19 @@
  */
 
 .link {
+  &[class*='module_selected'] {
+    [data-icon='code-file'] svg path:first-of-type {
+      stroke: var(--primary-8);
+    }
+
+    [data-icon='code-file'] svg path:last-of-type,
+    [data-icon='code-webhook'] svg path:first-of-type,
+    [data-icon='main-search'] svg path {
+      fill: var(--primary-8);
+      opacity: 1;
+    }
+  }
+
   [data-icon='code-file'] {
     margin-right: 7px !important;
   }
