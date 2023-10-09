@@ -37,7 +37,8 @@ function ProvisionerSelectField(props: ProvisionerSelectFieldProps): React.React
     StepType.ShellScriptProvision,
     StepType.TerragruntApply,
     StepType.CloudFormationCreateStack,
-    StepType.CreateAzureARMResource
+    StepType.CreateAzureARMResource,
+    StepType.AwsCdkDeploy
   ]
 
   const getProvisionerSteps = (arr: ExecutionWrapperConfig[]): ExecutionWrapperConfig[] => {

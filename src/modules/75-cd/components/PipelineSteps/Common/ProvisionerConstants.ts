@@ -13,7 +13,7 @@ export enum ProvisionerTypes {
   ARM = 'ARM',
   Blueprint = 'Blueprint',
   Script = 'Script',
-  AwsCdk = 'AwsCdk'
+  AwsCdk = 'AWS CDK'
 }
 
 export const payloadValueforProvisionerTypes = (provisionerTypes: ProvisionerTypes) => {

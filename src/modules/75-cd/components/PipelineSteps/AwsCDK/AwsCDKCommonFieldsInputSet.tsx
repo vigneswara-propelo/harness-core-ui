@@ -129,6 +129,11 @@ export function AwsCdkStepCommonOptionalFieldsInputSet(
           fieldName: `${prefix}spec.commandOptions`,
           fieldLabel: commandOptionsLabel
         })}
+      {isValueRuntimeInput(get(template, `spec.stackNames`)) &&
+        renderMultiTypeListInputSet({
+          fieldName: `${prefix}spec.stackNames`,
+          fieldLabel: 'pipeline.buildInfra.stackNames'
+        })}
       {isValueRuntimeInput(get(template, `spec.privileged`)) && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <FormMultiTypeCheckboxField
