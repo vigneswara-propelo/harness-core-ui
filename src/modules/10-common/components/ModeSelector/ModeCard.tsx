@@ -14,6 +14,10 @@ import { Color, FontVariation } from '@harness/design-system'
 import { StringKeys, useStrings } from 'framework/strings'
 import { NavModuleName, useNavModuleInfoMap } from '@common/hooks/useNavModuleInfo'
 import { ModuleName } from 'framework/types/ModuleName'
+import { useTelemetry } from '@modules/10-common/hooks/useTelemetry'
+import { NavActions } from '@modules/10-common/constants/TrackingConstants'
+import { getRouteParams } from '@modules/10-common/utils/routeUtils'
+import { ModePathProps } from '@modules/10-common/interfaces/RouteInterfaces'
 import css from './ModeSelector.module.scss'
 
 interface ModeInfoPopoverProps {
@@ -107,6 +111,8 @@ export function ModeCard(props: ModeCardProps): JSX.Element {
     ...rest
   } = props
   const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
+  const { mode } = getRouteParams<ModePathProps>()
 
   const newTabProps = shouldOpenInNewTab ? { target: '_blank', rel: 'noreferrer' } : {}
 
@@ -130,7 +136,10 @@ export function ModeCard(props: ModeCardProps): JSX.Element {
       <NavLink
         className={cx(css.modeCard, modeBorderCss)}
         activeClassName={css.active}
-        onClick={onClick}
+        onClick={e => {
+          onClick?.(e)
+          trackEvent(NavActions.ModeChange, { currentMode: mode, newMode: shortLabel })
+        }}
         {...newTabProps}
         {...rest}
       >

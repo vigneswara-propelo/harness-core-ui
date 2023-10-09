@@ -449,3 +449,8 @@ export enum SupportTicketActions {
   SubmitTicketModalStepTwo = 'Entered submit ticket modal step two',
   SubmitZendeskSupportTicket = 'Requested to create a support zendesk ticket'
 }
+
+export enum NavActions {
+  ModeChange = 'Nav 2.0 mode change',
+  moduleConfigChange = 'Change in Module Configuration'
+}

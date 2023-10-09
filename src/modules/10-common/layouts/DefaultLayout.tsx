@@ -22,6 +22,8 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import DocsChat from '@common/components/DocsChat/DocsChat'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { String } from 'framework/strings'
+import { ModePathProps } from '../interfaces/RouteInterfaces'
+import { getRouteParams } from '../utils/routeUtils'
 import FeatureBanner from './FeatureBanner'
 
 import css from './layouts.module.scss'
@@ -40,11 +42,16 @@ export function DefaultLayout(props: React.PropsWithChildren<DefaultLayoutProps>
   const { currentUserInfo } = useAppStore()
   const { isOpen, open, close } = useToggleOpen(false)
   const { PL_AI_SUPPORT_CHATBOT, PL_EULA_ENABLED, CDS_NAV_2_0 } = useFeatureFlags()
+  const { mode } = getRouteParams<ModePathProps>()
 
   useEffect(() => {
     if (pageName) {
       identifyUser(currentUserInfo.email)
-      trackPage(pageName, { module: module || '' })
+      trackPage(pageName, {
+        module: module || '',
+        mode,
+        navVersion: CDS_NAV_2_0 ? '2' : '1'
+      })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageName])
