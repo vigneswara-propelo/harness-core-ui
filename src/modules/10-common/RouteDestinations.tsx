@@ -16,7 +16,6 @@ import ExternalTicketSettings from '@sto/components/ExternalTickets/Settings/Ext
 
 import SessionToken from 'framework/utils/SessionToken'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import PageNotPublic from 'framework/components/PublicAccess/PageNotPublic'
 import type { SidebarContext } from './navigation/SidebarProvider'
 import type { AccountPathProps } from './interfaces/RouteInterfaces'
 import GenericErrorPage from './pages/GenericError/GenericErrorPage'
@@ -84,10 +83,6 @@ export default (
 
     <Route exact path={routes.toHome({ ...accountPathProps })}>
       <RedirectToHome />
-    </Route>
-
-    <Route exact path={routes.toPageNotPublic({ ...accountPathProps })}>
-      <PageNotPublic />
     </Route>
 
     <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toAccountResources({ ...accountPathProps })} exact>

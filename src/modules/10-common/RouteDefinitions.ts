@@ -67,7 +67,6 @@ const CV_HOME = `/cv/home`
 const routes = {
   toMainDashboard: withAccountId(() => '/main-dashboard'),
   toHome: withAccountId(() => '/home'),
-  toPageNotPublic: withAccountId(() => '/page-not-public'),
   toGenericError: withAccountId(() => '/error'),
   toSetup: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
