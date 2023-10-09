@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, fireEvent, act } from '@testing-library/react'
+import { render, fireEvent, act, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
@@ -82,5 +82,31 @@ describe('Resource card list test', () => {
     expect(getByText('common.clusters')).toBeDefined()
     expect(getByText('common.repositoryCertificates')).toBeDefined()
     expect(getByText('common.gnupgKeys')).toBeDefined()
+  })
+
+  test('it should not render the Feature Flags Proxy tile at account level when the flag is false', () => {
+    render(
+      <TestWrapper
+        path={ACCOUNT_LEVEL_GITOPS_ROUTE}
+        pathParams={ACCOUNT_PATH_PARAMS}
+        defaultFeatureFlagValues={{ FFM_9497_PROXY_KEY_MANAGEMENT: false }}
+      >
+        <ResourceCardList />
+      </TestWrapper>
+    )
+    expect(screen.queryByText('common.ffProxy')).not.toBeInTheDocument()
+  })
+
+  test('it should render the Feature Flags Proxy tile at account level when the flag is true', () => {
+    render(
+      <TestWrapper
+        path={ACCOUNT_LEVEL_GITOPS_ROUTE}
+        pathParams={ACCOUNT_PATH_PARAMS}
+        defaultFeatureFlagValues={{ FFM_9497_PROXY_KEY_MANAGEMENT: true }}
+      >
+        <ResourceCardList />
+      </TestWrapper>
+    )
+    expect(screen.getByText('common.ffProxy')).toBeInTheDocument()
   })
 })

@@ -40,6 +40,7 @@ export interface ResourceOption {
   bgColor?: string
   hidden?: boolean
   fillColor?: Color
+  showMoreOptions?: boolean
 }
 interface ResourceCardListProps {
   items?: ResourceOption[]
@@ -49,7 +50,12 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const history = useHistory()
   const { getString } = useStrings()
-  const { CDS_SERVICE_OVERRIDES_2_0, PL_DISCOVERY_ENABLE, PIE_GIT_BI_DIRECTIONAL_SYNC } = useFeatureFlags()
+  const {
+    CDS_SERVICE_OVERRIDES_2_0,
+    PL_DISCOVERY_ENABLE,
+    PIE_GIT_BI_DIRECTIONAL_SYNC,
+    FFM_9497_PROXY_KEY_MANAGEMENT: ffProxyKeyEnabled
+  } = useFeatureFlags()
 
   const { showError } = useToaster()
   const { data: enableServiceOverrideSettings, error: enableServiceOverrideSettingsError } = useGetSettingValue({
@@ -128,7 +134,8 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       label: <String stringID="common.gitOps" />,
       icon: 'gitops-blue',
       onClick: toggleShowGitOpsEntities,
-      selectable: true
+      selectable: true,
+      showMoreOptions: showGitOpsEntities
     } as ResourceOption
   ]
   const defaultSettingsCard: ResourceOption[] = [
@@ -216,6 +223,12 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       hidden: !isBidirectionalSyncEnabled,
       route: routes.toWebhooks({ accountId, orgIdentifier })
     } as ResourceOption,
+    {
+      label: <String stringID="common.ffProxy" />,
+      icon: 'gitops-gnupg-key-blue',
+      hidden: !ffProxyKeyEnabled,
+      route: routes.toFeatureFlagsProxy({ accountId, orgIdentifier })
+    } as ResourceOption,
     ...(showGitOpsCard ? gitOpsCard : []),
     ...defaultSettingsCard
   ]
@@ -278,7 +291,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
                 </Text>
                 {option.subLabel}
               </Layout.Vertical>
-              {showGitOpsEntities && option.icon.includes('gitops') && <div className={css.arrowDown} />}
+              {option.showMoreOptions && <div className={css.arrowDown} />}
             </Card>
           ))}
       </div>
