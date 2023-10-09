@@ -1208,7 +1208,6 @@ verification:
     clusterType: CLUSTER TYPE
     sampleMessage: MESSAGE
     messageFrequency: MESSAGE FREQUENCY
-    messageCount: COUNT
     actions: ACTIONS
     risk: RISK
     copyURL: Copy url
@@ -1362,6 +1361,9 @@ stepDescription:
   ECSBlueGreenSwapTargetGroups: Swap stage and prod routes for a Blue/Green deployment.
   ECSBlueGreenRollback: Roll back the new ECS service version and upscale the old version to its previous task number.
   ECSRunTask: Run one-time or periodic batch job tasks using placement constraints and strategies.
+  ECSServiceSetup: Create Service
+  ECSUpgradeContainer: Upgrade Containers to full capacity
+  ECSRollback: Roll back the ECS service version deployed using the ECS Create Service step.
   GitClone: Clone a Git repository to a directory in addition to the codebase Git clone
   Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
   ElastigroupRollback: Rollback for the Elastigroup steps

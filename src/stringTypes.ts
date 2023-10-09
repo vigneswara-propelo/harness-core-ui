@@ -5384,9 +5384,12 @@ export interface StringsMap {
   'pipeline.stepDescription.ECSBlueGreenSwapTargetGroups': string
   'pipeline.stepDescription.ECSCanaryDelete': string
   'pipeline.stepDescription.ECSCanaryDeploy': string
+  'pipeline.stepDescription.ECSRollback': string
   'pipeline.stepDescription.ECSRollingDeploy': string
   'pipeline.stepDescription.ECSRollingRollback': string
   'pipeline.stepDescription.ECSRunTask': string
+  'pipeline.stepDescription.ECSServiceSetup': string
+  'pipeline.stepDescription.ECSUpgradeContainer': string
   'pipeline.stepDescription.ElastigroupBGStageSetup': string
   'pipeline.stepDescription.ElastigroupDeploy': string
   'pipeline.stepDescription.ElastigroupRollback': string
@@ -5686,7 +5689,6 @@ export interface StringsMap {
   'pipeline.verification.logs.jiraTicketTitle': string
   'pipeline.verification.logs.lastKnownOccurrence': string
   'pipeline.verification.logs.logCluster': string
-  'pipeline.verification.logs.messageCount': string
   'pipeline.verification.logs.messageFrequency': string
   'pipeline.verification.logs.noAnalysis': string
   'pipeline.verification.logs.notARiskLabel': string
@@ -7233,6 +7235,13 @@ export interface StringsMap {
   'cd.steps.ecsRunTaskStep.runTaskDefinition': string
   'cd.steps.ecsRunTaskStep.runTaskRequestDefinition': string
   'cd.steps.ecsRunTaskStep.skipSteadyStateCheck': string
+  'cd.steps.ecsServiceSetupStep.downsizeOldFirst': string
+  'cd.steps.ecsServiceSetupStep.resizeNewFirst': string
+  'cd.steps.ecsUpgradeContainerStep.downsizeInstanceCount': string
+  'cd.steps.ecsUpgradeContainerStep.downsizeInstanceCountPlaceholder': string
+  'cd.steps.ecsUpgradeContainerStep.downsizeInstanceUnit': string
+  'cd.steps.ecsUpgradeContainerStep.downsizeInstanceUnitPlaceholder': string
+  'cd.steps.ecsUpgradeContainerStep.instanceUnit': string
   'cd.steps.eks.eks': string
   'cd.steps.elastigroup.connectorSpot': string
   'cd.steps.elastigroup.elastigroupConfig': string

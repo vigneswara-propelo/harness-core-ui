@@ -20,6 +20,7 @@ declare const styles: {
   readonly bottomPadding3: string
   readonly bottomSpacing: string
   readonly checkbox: string
+  readonly checkboxInputSetView: string
   readonly code: string
   readonly delegate: string
   readonly delegateSelector: string

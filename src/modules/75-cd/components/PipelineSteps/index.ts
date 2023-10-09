@@ -147,6 +147,9 @@ import { AwsCDKDestroyStep } from './AwsCDK/AwsCDKDestroyStep/AwsCDKDestroyStep'
 import { AwsCDKSynthStep } from './AwsCDK/AwsCDKSynthStep/AwsCDKSynthStep'
 import { AwsCDKDeployStep } from './AwsCDK/AwsCDKDeploy/AwsCDKDeployStep'
 import { AwsCDKRollBackStep } from './AwsCDK/AwsCDKRollBack/AwsCDKRollBackStep'
+import { ECSServiceSetupStep } from './AmazonECS/ECSServiceSetupStep/ECSServiceSetupStep'
+import { ECSUpgradeContainerStep } from './AmazonECS/ECSUpgradeContainerStep/ECSUpgradeContainerStep'
+import { ECSBasicRollbackStep } from './AmazonECS/ECSBasicRollbackStep/ECSBasicRollbackStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -220,6 +223,9 @@ factory.registerStep(new ECSRollingDeployStep())
 factory.registerStep(new ECSRollingRollbackStep())
 factory.registerStep(new ECSCanaryDeployStep())
 factory.registerStep(new ECSCanaryDeleteStep())
+factory.registerStep(new ECSServiceSetupStep())
+factory.registerStep(new ECSUpgradeContainerStep())
+factory.registerStep(new ECSBasicRollbackStep())
 factory.registerStep(new AzureArmRollback())
 factory.registerStep(new AzureBlueprintStep())
 factory.registerStep(new ECSRunTaskStep())

@@ -291,3 +291,24 @@ export interface ServerlessAwsLambdaRollbackV2StepInitialValues extends StepElem
     envVariables?: { [key: string]: string }
   }
 }
+
+export interface ECSServiceSetupStepElementConfig extends StepElementConfig {
+  spec: {
+    resizeStrategy?: 'RESIZE_NEW_FIRST' | 'DOWNSIZE_OLD_FIRST'
+    sameAsAlreadyRunningInstances?: boolean | string
+  }
+}
+
+export enum InstanceUnit {
+  Count = 'Count',
+  Percentage = 'Percentage'
+}
+
+export interface ECSUpgradeContainerStepElementConfig extends StepElementConfig {
+  spec: {
+    newServiceInstanceCount: number | string
+    newServiceInstanceUnit: InstanceUnit.Percentage | InstanceUnit.Count
+    downsizeOldServiceInstanceCount?: number | string
+    downsizeOldServiceInstanceUnit?: InstanceUnit.Percentage | InstanceUnit.Count
+  }
+}

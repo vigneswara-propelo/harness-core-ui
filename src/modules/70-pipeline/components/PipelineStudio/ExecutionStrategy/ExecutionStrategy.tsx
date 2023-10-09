@@ -30,7 +30,7 @@ import {
   ServiceDeploymentType,
   isSshOrWinrmDeploymentType
 } from '@pipeline/utils/stageHelpers'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { executionStrategyTypes } from '@pipeline/utils/DeploymentTypeUtils'
@@ -111,6 +111,7 @@ function ExecutionStrategyRef(
   } = usePipelineContext()
   const { getString } = useStrings()
   const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+  const { CDS_ECS_BASIC_DEPLOYMENT_STRATEGY } = useFeatureFlags()
   const { accountId } = useParams<AccountPathProps>()
   const { trackEvent } = useTelemetry()
 
@@ -199,9 +200,25 @@ function ExecutionStrategyRef(
 
   useEffect(() => {
     const _strategies = strategies?.data
-    /* istanbul ignore else */ if (_strategies) {
-      if (_strategies[serviceDefinitionType()]) {
-        setStrategies(_strategies[serviceDefinitionType()] as any)
+    if (_strategies) {
+      const selectedDeploymentType = serviceDefinitionType()
+      const executionStrategiesForDeploymentType = _strategies[selectedDeploymentType]
+      if (executionStrategiesForDeploymentType) {
+        const basicExecStrategyIndex = executionStrategiesForDeploymentType.findIndex(
+          currStrategy => currStrategy === ExecutionType.BASIC
+        )
+        // Below if condition is temporary, remove once CDS_ECS_BASIC_DEPLOYMENT_STRATEGY is GAed
+        // This is done so that we do not have to change API signature and pass accountId to know FF value for the account
+        if (
+          selectedDeploymentType === ServiceDeploymentType.ECS &&
+          basicExecStrategyIndex > -1 &&
+          !CDS_ECS_BASIC_DEPLOYMENT_STRATEGY
+        ) {
+          executionStrategiesForDeploymentType.splice(basicExecStrategyIndex, 1)
+          setStrategies(executionStrategiesForDeploymentType as any)
+        } else {
+          setStrategies(executionStrategiesForDeploymentType as any)
+        }
       } else {
         setStrategies([selectedStrategy] as any) // setting default value as strategy
         logger.error('Service Definition Type is missing', { serviceDefinitionType: serviceDefinitionType() })

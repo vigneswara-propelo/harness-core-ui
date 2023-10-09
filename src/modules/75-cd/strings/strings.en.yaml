@@ -200,6 +200,15 @@ steps:
     awsCdkBootstrapContainerRegistry: AWS CDK Bootstrap Container Registry
     awsCdkBootstrapCommandOptions: AWS CDK Bootstrap Command Options
     awsCdkDestroyCommandOptions: AWS CDK Destroy Command Options
+  ecsServiceSetupStep:
+    resizeNewFirst: Resize New First
+    downsizeOldFirst: Downsize Old First
+  ecsUpgradeContainerStep:
+    instanceUnit: Instance Unit
+    downsizeInstanceCount: Downsize Instance Count
+    downsizeInstanceCountPlaceholder: Enter Downsize Instance Count
+    downsizeInstanceUnit: Downsize Instance Unit
+    downsizeInstanceUnitPlaceholder: Enter Downsize Instance Unit
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'

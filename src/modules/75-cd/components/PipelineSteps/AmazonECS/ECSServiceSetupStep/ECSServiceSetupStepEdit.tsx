@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -9,7 +9,7 @@ import React from 'react'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
-import { AllowedTypes, Formik, FormikForm } from '@harness/uicore'
+import { AllowedTypes, FormInput, Formik, FormikForm } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -17,38 +17,55 @@ import { FormMultiTypeCheckboxField } from '@common/components'
 import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import type { ECSRollingDeployStepElementConfig } from '@pipeline/utils/types'
-import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
-import css from './ECSRollingDeployStep.module.scss'
+import type { ECSServiceSetupStepElementConfig } from '@pipeline/utils/types'
+import { NameTimeoutField } from '../../Common/GenericExecutionStep/NameTimeoutField'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-export interface ECSRollingDeployStepProps {
-  initialValues: ECSRollingDeployStepElementConfig
-  onUpdate?: (data: ECSRollingDeployStepElementConfig) => void
+enum ResizeStrategy {
+  ResizeNewFirst = 'ResizeNewFirst',
+  DownsizeOldFirst = 'DownsizeOldFirst'
+}
+
+export interface ECSServiceSetupStepProps {
+  initialValues: ECSServiceSetupStepElementConfig
+  onUpdate?: (data: ECSServiceSetupStepElementConfig) => void
   stepViewType?: StepViewType
-  onChange?: (data: ECSRollingDeployStepElementConfig) => void
+  onChange?: (data: ECSServiceSetupStepElementConfig) => void
   allowableTypes: AllowedTypes
   readonly?: boolean
   isNewStep?: boolean
 }
 
-const ECSRollingDeployStepEdit = (
-  props: ECSRollingDeployStepProps,
-  formikRef: StepFormikFowardRef<ECSRollingDeployStepElementConfig>
+const ECSServiceSetupStepEdit = (
+  props: ECSServiceSetupStepProps,
+  formikRef: StepFormikFowardRef<ECSServiceSetupStepElementConfig>
 ): React.ReactElement => {
   const { initialValues, onUpdate, isNewStep = true, readonly, onChange, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
-  const onSubmit = (values: ECSRollingDeployStepElementConfig): void => {
+  const getResizeStrategyOptions = React.useCallback(() => {
+    return [
+      {
+        value: ResizeStrategy.ResizeNewFirst,
+        label: getString('cd.steps.ecsServiceSetupStep.resizeNewFirst')
+      },
+      {
+        value: ResizeStrategy.DownsizeOldFirst,
+        label: getString('cd.steps.ecsServiceSetupStep.downsizeOldFirst')
+      }
+    ]
+  }, [getString])
+
+  const onSubmit = (values: ECSServiceSetupStepElementConfig): void => {
     onUpdate?.(values)
   }
 
   return (
     <>
-      <Formik<ECSRollingDeployStepElementConfig>
+      <Formik<ECSServiceSetupStepElementConfig>
         onSubmit={onSubmit}
-        formName="ecsRollingDeployStepEdit"
+        formName="ecsServiceSetupStepEdit"
         initialValues={initialValues}
         validate={data => {
           onChange?.(data)
@@ -58,7 +75,7 @@ const ECSRollingDeployStepEdit = (
           timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum'))
         })}
       >
-        {(formik: FormikProps<ECSRollingDeployStepElementConfig>) => {
+        {(formik: FormikProps<ECSServiceSetupStepElementConfig>) => {
           setFormikRef(formikRef, formik)
 
           return (
@@ -71,24 +88,18 @@ const ECSRollingDeployStepEdit = (
               />
 
               <div className={cx(stepCss.formGroup, stepCss.lg)}>
-                <FormMultiTypeCheckboxField
-                  className={css.checkbox}
-                  name="spec.sameAsAlreadyRunningInstances"
-                  label={getString('cd.ecsRollingDeployStep.sameAsAlreadyRunningInstances')}
+                <FormInput.Select
+                  name="spec.resizeStrategy"
+                  label={getString('cd.steps.tas.resizeStrategy')}
+                  items={getResizeStrategyOptions()}
                   disabled={readonly}
-                  multiTypeTextbox={{
-                    expressions,
-                    allowableTypes,
-                    defaultValueToReset: false
-                  }}
                 />
               </div>
 
               <div className={cx(stepCss.formGroup, stepCss.lg)}>
                 <FormMultiTypeCheckboxField
-                  className={css.checkbox}
-                  name="spec.forceNewDeployment"
-                  label={getString('cd.ecsRollingDeployStep.forceNewDeployment')}
+                  name="spec.sameAsAlreadyRunningInstances"
+                  label={getString('cd.ecsRollingDeployStep.sameAsAlreadyRunningInstances')}
                   disabled={readonly}
                   multiTypeTextbox={{
                     expressions,
@@ -105,4 +116,4 @@ const ECSRollingDeployStepEdit = (
   )
 }
 
-export const ECSRollingDeployStepEditRef = React.forwardRef(ECSRollingDeployStepEdit)
+export const ECSServiceSetupStepEditRef = React.forwardRef(ECSServiceSetupStepEdit)

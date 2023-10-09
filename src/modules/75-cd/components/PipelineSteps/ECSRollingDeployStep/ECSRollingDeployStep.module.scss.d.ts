@@ -7,7 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly addmarginTop: string
   readonly checkbox: string
 }
 export default styles
