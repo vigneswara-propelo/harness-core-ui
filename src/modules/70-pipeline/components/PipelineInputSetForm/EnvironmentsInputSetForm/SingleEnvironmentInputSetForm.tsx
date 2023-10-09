@@ -7,7 +7,7 @@
 
 import React, { useMemo, useState } from 'react'
 import { useFormikContext } from 'formik'
-import { get, isEmpty, isNil, omit, pick, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, omit, pick, set } from 'lodash-es'
 
 import { Container, getMultiTypeFromValue, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -17,7 +17,7 @@ import type { DeploymentStageConfig, EnvironmentYamlV2, Infrastructure, ServiceS
 
 import { isMultiTypeExpression, isValueExpression, isValueFixed, isValueRuntimeInput } from '@common/utils/utils'
 
-import { getStepTypeByDeploymentType, infraDefinitionTypeMapping } from '@pipeline/utils/stageHelpers'
+import { getStepTypeByDeploymentType, infraDefinitionTypeMapping, StageType } from '@pipeline/utils/stageHelpers'
 import {
   getFlattenedStages,
   getStageIndexFromPipeline
@@ -37,6 +37,11 @@ import { getPropagateStageOptions, PropagateSelectOption } from './utils'
 
 import css from '../PipelineInputSetForm.module.scss'
 
+interface SingleEnvironmentInputSetFormProps
+  extends Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier' | 'stageType'> {
+  stageType?: StageType
+}
+
 export default function SingleEnvironmentInputSetForm({
   // This is the resolved pipeline yaml
   deploymentStage,
@@ -46,18 +51,21 @@ export default function SingleEnvironmentInputSetForm({
   readonly,
   viewType,
   stageIdentifier,
-  allowableTypes
-}: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier' | 'stageType'>): React.ReactElement {
+  allowableTypes,
+  stageType
+}: SingleEnvironmentInputSetFormProps): React.ReactElement {
   const {
     state: { pipeline, templateTypes }
   } = usePipelineContext()
 
   const { index: stageIndex } = getStageIndexFromPipeline(pipeline, stageIdentifier)
 
+  const isCustomStage = stageType && stageType === StageType.CUSTOM
+
   const { getString } = useStrings()
   const formik = useFormikContext<DeploymentStageConfig>()
 
-  const deploymentType = deploymentStage?.deploymentType
+  const deploymentType = defaultTo(deploymentStage?.deploymentType, '')
   const environmentTemplate = deploymentStageTemplate?.environment
   const environmentInDeploymentStage = deploymentStage?.environment
 
@@ -237,7 +245,7 @@ export default function SingleEnvironmentInputSetForm({
         />
       )}
 
-      {deploymentType && showEnvironmentPrefix && !isEnvironmentLoading && (
+      {(deploymentType || isCustomStage) && showEnvironmentPrefix && !isEnvironmentLoading && (
         <React.Fragment key={`${path}_${environment.environmentRef}`}>
           {isValueFixed(environmentIdentifier) && (
             <Text

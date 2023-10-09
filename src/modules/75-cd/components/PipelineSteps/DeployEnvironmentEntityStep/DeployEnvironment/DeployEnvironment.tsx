@@ -81,6 +81,7 @@ interface DeployEnvironmentProps extends Required<DeployEnvironmentEntityCustomS
   canPropagateFromStage?: boolean
   previousStages?: StageElementWrapperConfig[]
   selectedPropagatedState?: SelectOption | string
+  isCustomStage?: boolean
 }
 
 export default function DeployEnvironment({
@@ -98,7 +99,8 @@ export default function DeployEnvironment({
   environmentsTypeRef,
   canPropagateFromStage,
   previousStages,
-  selectedPropagatedState
+  selectedPropagatedState,
+  isCustomStage = false
 }: DeployEnvironmentProps): JSX.Element {
   const { values, setFieldValue, setValues, errors, setFieldError, setFieldTouched } =
     useFormikContext<DeployEnvironmentEntityFormState>()
@@ -418,7 +420,8 @@ export default function DeployEnvironment({
     isNil(values.propagateFrom) &&
     !isMultiEnvironment &&
     CD_NG_DYNAMIC_PROVISIONING_ENV_V2 &&
-    !isDynamicProvisioningRestricted(deploymentType)
+    !isDynamicProvisioningRestricted(deploymentType) &&
+    !isCustomStage
 
   return (
     <>

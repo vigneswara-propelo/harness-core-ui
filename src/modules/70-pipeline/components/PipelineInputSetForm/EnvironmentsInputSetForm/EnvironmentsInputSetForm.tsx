@@ -11,6 +11,7 @@ import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { StageType } from '@pipeline/utils/stageHelpers'
 
 import { MultiEnvironmentsInputSetForm } from './MultiEnvironmentsInputSetForm'
 import { EnvironmentGroupInputSetForm } from './EnvironmentGroupInputSetForm'
@@ -18,6 +19,11 @@ import SingleEnvironmentInputSetForm from './SingleEnvironmentInputSetForm'
 import type { StageInputSetFormProps } from '../StageInputSetForm'
 
 import css from '../PipelineInputSetForm.module.scss'
+
+interface EnvironmentsInputSetFormProps
+  extends Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier' | 'stageType'> {
+  stageType?: StageType
+}
 
 export default function EnvironmentsInputSetForm({
   // This is the resolved pipeline yaml
@@ -28,8 +34,9 @@ export default function EnvironmentsInputSetForm({
   readonly,
   viewType,
   stageIdentifier,
-  allowableTypes
-}: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier' | 'stageType'>): React.ReactElement {
+  allowableTypes,
+  stageType
+}: EnvironmentsInputSetFormProps): React.ReactElement {
   const { getString } = useStrings()
   const { NG_SVC_ENV_REDESIGN: isSvcEnvEntityEnabled } = useFeatureFlags()
 
@@ -54,6 +61,7 @@ export default function EnvironmentsInputSetForm({
             viewType={viewType}
             readonly={readonly}
             stageIdentifier={stageIdentifier}
+            stageType={stageType as StageType}
           />
         ))}
 

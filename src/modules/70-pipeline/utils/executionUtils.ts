@@ -168,7 +168,8 @@ export const StepV2TypeIconsMap: {
   TERRAFORM_APPLY_V2: 'terraform-apply',
   JenkinsBuildV2: 'service-jenkins',
   InitContainer: 'initialize-ci-step',
-  RunContainer: 'run-ci-step'
+  RunContainer: 'run-ci-step',
+  CUSTOM_STAGE_ENVIRONMENT: 'main-environments'
 }
 
 export const ExecutionStatusIconMap: Record<ExecutionStatus, IconName> = {

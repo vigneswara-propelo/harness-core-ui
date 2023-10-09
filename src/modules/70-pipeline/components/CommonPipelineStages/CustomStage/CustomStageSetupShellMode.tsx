@@ -16,7 +16,10 @@ import type { ValidationError } from 'yup'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import type { StageElementConfig } from 'services/cd-ng'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
+// eslint-disable-next-line no-restricted-imports
+import DeployEnvSpecifications from '@cd/components/PipelineStudio/DeployEnvSpecifications/DeployEnvSpecifications'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import { useQueryParams } from '@common/hooks'
 import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
@@ -27,6 +30,7 @@ import approvalStepCss from '../ApprovalStage/ApprovalStageSetupShellMode.module
 
 enum CustomTabs {
   OVERVIEW = 'OVERVIEW',
+  ENVIRONMENT = 'ENVIRONMENT',
   EXECUTION = 'EXECUTION',
   ADVANCED = 'ADVANCED'
 }
@@ -47,9 +51,15 @@ function getCustomStageValidationSchema(
 
 export function CustomStageSetupShellMode(): React.ReactElement {
   const { getString } = useStrings()
-  const tabHeadings = [getString('overview'), getString('executionText'), getString('advancedTitle')]
+  const { CDS_CUSTOM_STAGE_WITH_ENV_INFRA: isEnvInfraEnabledForCustomStage } = useFeatureFlags()
+  const tabHeadingsMap = {
+    [CustomTabs.OVERVIEW]: getString('overview'),
+    [CustomTabs.ENVIRONMENT]: getString('environment'),
+    [CustomTabs.EXECUTION]: getString('executionText'),
+    [CustomTabs.ADVANCED]: getString('advancedTitle')
+  }
   const layoutRef = useRef<HTMLDivElement>(null)
-  const [selectedTabId, setSelectedTabId] = React.useState<string>(tabHeadings[1])
+  const [selectedTabId, setSelectedTabId] = React.useState<string>(tabHeadingsMap[CustomTabs.EXECUTION])
   const pipelineContext = usePipelineContext()
   const {
     state: {
@@ -70,16 +80,16 @@ export function CustomStageSetupShellMode(): React.ReactElement {
 
   React.useEffect(() => {
     const sectionId = (query as any).sectionId || ''
-    if (sectionId?.length && tabHeadings.includes(_capitalize(sectionId))) {
+    if (sectionId?.length && Object.values(tabHeadingsMap).includes(_capitalize(sectionId))) {
       setSelectedTabId(_capitalize(sectionId))
     } else {
-      setSelectedSectionId(toUpper(tabHeadings[1]))
+      setSelectedSectionId(toUpper(tabHeadingsMap[CustomTabs.EXECUTION]))
     }
   }, [selectedSectionId])
 
   React.useEffect(() => {
     if (selectedStepId) {
-      setSelectedTabId(tabHeadings[1])
+      setSelectedTabId(tabHeadingsMap[CustomTabs.EXECUTION])
     }
   }, [selectedStepId])
 
@@ -92,7 +102,11 @@ export function CustomStageSetupShellMode(): React.ReactElement {
           rightIcon="chevron-right"
           onClick={() => {
             updatePipeline(pipeline)
-            setSelectedTabId(tabHeadings[1])
+            setSelectedTabId(
+              isEnvInfraEnabledForCustomStage
+                ? tabHeadingsMap[CustomTabs.ENVIRONMENT]
+                : tabHeadingsMap[CustomTabs.EXECUTION]
+            )
           }}
         />
       </Layout.Horizontal>
@@ -151,7 +165,7 @@ export function CustomStageSetupShellMode(): React.ReactElement {
         data-tabId={selectedTabId}
       >
         <Tab
-          id={tabHeadings[0]}
+          id={tabHeadingsMap[CustomTabs.OVERVIEW]}
           panel={
             <ApprovalStageOverview>
               <ActionButton />
@@ -160,11 +174,35 @@ export function CustomStageSetupShellMode(): React.ReactElement {
           title={
             <span className={approvalStepCss.tab}>
               <Icon name="tick" height={20} size={20} color={Color.GREEN_800} />
-              {tabHeadings[0]}
+              {tabHeadingsMap[CustomTabs.OVERVIEW]}
             </span>
           }
-          data-testid={tabHeadings[0]}
+          data-testid={tabHeadingsMap[CustomTabs.OVERVIEW]}
         />
+        {isEnvInfraEnabledForCustomStage && (
+          <Icon
+            name="chevron-right"
+            height={20}
+            size={20}
+            margin={{ right: 'small', left: 'small' }}
+            color={'grey400'}
+            style={{ alignSelf: 'center' }}
+          />
+        )}
+        {isEnvInfraEnabledForCustomStage && (
+          <Tab
+            id={tabHeadingsMap[CustomTabs.ENVIRONMENT]}
+            title={
+              <span data-completed={!incompleteTabs[CustomTabs.ENVIRONMENT]}>
+                <Icon name={'infrastructure'} size={16} />
+                {tabHeadingsMap[CustomTabs.ENVIRONMENT]}
+              </span>
+            }
+            panel={<DeployEnvSpecifications />}
+            data-testid={tabHeadingsMap[CustomTabs.ENVIRONMENT]}
+            className={cx(approvalStepCss.fullHeight, approvalStepCss.stepGroup)}
+          />
+        )}
         <Icon
           name="chevron-right"
           height={20}
@@ -174,15 +212,15 @@ export function CustomStageSetupShellMode(): React.ReactElement {
           style={{ alignSelf: 'center' }}
         />
         <Tab
-          id={tabHeadings[1]}
+          id={tabHeadingsMap[CustomTabs.EXECUTION]}
           title={
             <span data-completed={!incompleteTabs[CustomTabs.EXECUTION]}>
               <Icon name={incompleteTabs[CustomTabs.EXECUTION] ? 'execution' : 'tick'} size={16} />
-              {tabHeadings[1]}
+              {tabHeadingsMap[CustomTabs.EXECUTION]}
             </span>
           }
           panel={<ApprovalStageExecution />}
-          data-testid={tabHeadings[1]}
+          data-testid={tabHeadingsMap[CustomTabs.EXECUTION]}
           className={cx(approvalStepCss.fullHeight, approvalStepCss.stepGroup)}
         />
         <Icon
@@ -194,11 +232,11 @@ export function CustomStageSetupShellMode(): React.ReactElement {
           style={{ alignSelf: 'center' }}
         />
         <Tab
-          id={tabHeadings[2]}
+          id={tabHeadingsMap[CustomTabs.ADVANCED]}
           title={
             <span className={approvalStepCss.tab}>
               <Icon name="advanced" height={20} size={20} />
-              {tabHeadings[2]}
+              {tabHeadingsMap[CustomTabs.ADVANCED]}
             </span>
           }
           panel={
@@ -207,7 +245,7 @@ export function CustomStageSetupShellMode(): React.ReactElement {
               failureStrategyTooltipId="failureStrategyCustomStage"
             />
           }
-          data-testid={tabHeadings[2]}
+          data-testid={tabHeadingsMap[CustomTabs.ADVANCED]}
         />
         {/* istanbul ignore next */}
         {isContextTypeNotStageTemplate(contextType) && /* istanbul ignore next */ selectedStage?.stage && (

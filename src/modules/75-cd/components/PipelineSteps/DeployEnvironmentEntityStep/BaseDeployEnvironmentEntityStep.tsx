@@ -36,6 +36,7 @@ import {
 } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { getPropagateStageOptions } from '@pipeline/components/PipelineInputSetForm/EnvironmentsInputSetForm/utils'
+import { StageType } from '@pipeline/utils/stageHelpers'
 
 import type { DeployEnvironmentEntityCustomStepProps, DeployEnvironmentEntityFormState } from './types'
 import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
@@ -92,6 +93,9 @@ export default function BaseDeployEnvironmentEntityStep({
   const { stages } = getFlattenedStages(pipeline)
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const { index: stageIndex } = getStageIndexFromPipeline(pipeline, selectedStageId || '')
+
+  // Custom Stage only supports Env and Infra Inputs
+  const isCustomStage = React.useMemo(() => stage?.stage?.type === StageType.CUSTOM, [stage])
 
   const getStagesAllowedforPropagate = useCallback(
     (stageItem): boolean => {
@@ -169,7 +173,7 @@ export default function BaseDeployEnvironmentEntityStep({
   const isSingleEnvironment = values.category === 'single'
   const isMultiEnvironment = values.category === 'multi'
   const isEnvironmentGroup = values.category === 'group'
-  const canPropagateFromStage = !!propagateStageOptions?.length && isSingleEnvironment
+  const canPropagateFromStage = !!propagateStageOptions?.length && isSingleEnvironment && !isCustomStage
 
   const toggleLabel = getString('cd.pipelineSteps.environmentTab.multiEnvToggleText', {
     name: gitOpsEnabled ? getString('common.clusters') : getString('common.infrastructures')
@@ -184,7 +188,8 @@ export default function BaseDeployEnvironmentEntityStep({
     deploymentType,
     customDeploymentRef,
     gitOpsEnabled,
-    environmentsTypeRef
+    environmentsTypeRef,
+    isCustomStage
   }
 
   return (
@@ -195,35 +200,37 @@ export default function BaseDeployEnvironmentEntityStep({
             {getString('environment')}
           </Text>
         )}
-        <Layout.Vertical className={css.toggle} flex={{ alignItems: 'flex-end', justifyContent: 'center' }}>
-          <Layout.Vertical flex={{ alignItems: 'center' }}>
-            <Toggle
-              checked={isMultiEnvironment || isEnvironmentGroup}
-              onToggle={handleMultiEnvironmentToggle}
-              label={toggleLabel}
-              tooltipId={'multiEnvInfraToggle'}
-            />
-            {(isMultiEnvironment || isEnvironmentGroup) && (
-              <RadioGroup
-                onChange={handleEnvironmentGroupToggle}
-                options={[
-                  {
-                    label: getString('environments'),
-                    value: getString('environments')
-                  },
-                  {
-                    label: getString('common.environmentGroup.label'),
-                    value: getString('common.environmentGroup.label')
-                  }
-                ]}
-                selectedValue={radioValue}
-                disabled={readonly}
-                className={css.radioGroup}
-                inline
+        {!isCustomStage && (
+          <Layout.Vertical className={css.toggle} flex={{ alignItems: 'flex-end', justifyContent: 'center' }}>
+            <Layout.Vertical flex={{ alignItems: 'center' }}>
+              <Toggle
+                checked={isMultiEnvironment || isEnvironmentGroup}
+                onToggle={handleMultiEnvironmentToggle}
+                label={toggleLabel}
+                tooltipId={'multiEnvInfraToggle'}
               />
-            )}
+              {(isMultiEnvironment || isEnvironmentGroup) && (
+                <RadioGroup
+                  onChange={handleEnvironmentGroupToggle}
+                  options={[
+                    {
+                      label: getString('environments'),
+                      value: getString('environments')
+                    },
+                    {
+                      label: getString('common.environmentGroup.label'),
+                      value: getString('common.environmentGroup.label')
+                    }
+                  ]}
+                  selectedValue={radioValue}
+                  disabled={readonly}
+                  className={css.radioGroup}
+                  inline
+                />
+              )}
+            </Layout.Vertical>
           </Layout.Vertical>
-        </Layout.Vertical>
+        )}
         {isEnvironmentGroup ? (
           <DeployEnvironmentGroup {...commonProps} scope={scope} />
         ) : isMultiEnvironment ? (
