@@ -16,7 +16,10 @@ import type { ServiceDefinition, ServiceResponseDTO } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { StoreType } from '@common/constants/GitSyncTypes'
 
-export type ServicePipelineConfig = PipelineInfoConfig & { gitOpsEnabled?: boolean }
+export type ServicePipelineConfig = PipelineInfoConfig & { gitOpsEnabled?: boolean } & Pick<
+    ServiceResponseDTO,
+    'storeType' | 'connectorRef' | 'entityGitDetails'
+  >
 
 export enum ServiceTabs {
   SUMMARY = 'summaryTab',

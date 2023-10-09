@@ -39,7 +39,7 @@ import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/Rout
 import type { ServiceResponseDTO } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import { NewEditServiceModal } from '../PipelineSteps/DeployServiceStep/NewEditServiceModal'
-import { ServiceTabs } from '../Services/utils/ServiceUtils'
+import { ServiceTabs, getRemoteServiceQueryParams } from '../Services/utils/ServiceUtils'
 import { useServiceStore } from '../Services/common'
 import css from '@cd/components/DashboardList/DashboardList.module.scss'
 
@@ -149,6 +149,7 @@ export const DashboardList = <T extends Record<string, any>>(props: DashboardLis
         return
       }
       if (selectedService?.identifier) {
+        const remoteQueryParams = getRemoteServiceQueryParams(selectedService)
         history.push({
           pathname: routes.toServiceStudio({
             accountId,
@@ -158,10 +159,10 @@ export const DashboardList = <T extends Record<string, any>>(props: DashboardLis
             module
           }),
           search: isSvcEnvEntityEnabled
-            ? `tab=${ServiceTabs.Configuration}`
+            ? `tab=${ServiceTabs.Configuration}${remoteQueryParams}`
             : projectIdentifier
-            ? `tab=${ServiceTabs.SUMMARY}`
-            : `tab=${ServiceTabs.REFERENCED_BY}`
+            ? `tab=${ServiceTabs.SUMMARY}${remoteQueryParams}`
+            : `tab=${ServiceTabs.REFERENCED_BY}${remoteQueryParams}`
         })
       } else {
         showError(getString('cd.serviceList.noIdentifier'))

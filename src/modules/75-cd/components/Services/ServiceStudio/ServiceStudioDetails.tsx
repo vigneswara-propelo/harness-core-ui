@@ -35,10 +35,12 @@ import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import {
+  CreateServiceV2QueryParams,
   NGServiceConfig,
   ResponseServiceResponse,
   ResponseValidateTemplateInputsResponseDTO,
   ServiceRequestDTO,
+  ServiceResponseDTO,
   UpdateServiceV2QueryParams,
   useCreateServiceV2,
   useUpdateServiceV2,
@@ -56,12 +58,14 @@ import { CDActions, Category } from '@common/constants/TrackingConstants'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import { GitData } from '@common/modals/GitDiffEditor/useGitDiffEditorDialog'
+import { ConnectorSelectedValue } from '@modules/27-platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { GitSyncFormFields } from '@modules/40-gitsync/components/GitSyncForm/GitSyncForm'
 import ServiceConfiguration from './ServiceConfiguration/ServiceConfiguration'
 import { ServiceTabs, setNameIDDescription, ServicePipelineConfig } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServiceStudio/ServiceStudio.module.scss'
 
 interface ServiceStudioDetailsProps {
-  serviceData: NGServiceConfig
+  serviceData: NGServiceConfig & Pick<ServiceResponseDTO, 'storeType' | 'connectorRef' | 'entityGitDetails'>
   summaryPanel?: JSX.Element
   refercedByPanel?: JSX.Element
   invokeServiceHeaderRefetch?: () => void
@@ -134,19 +138,23 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
         // We invalidate the service inputs call on updating an existing service
         queryClient.invalidateQueries(['getServicesYamlAndRuntimeInputs'])
       }
-
+      const serviceResponse = response.data?.service
       if (isServiceEntityModalView) {
-        const serviceResponse = response.data?.service
         onServiceCreate?.({
           identifier: serviceResponse?.identifier as string,
           name: serviceResponse?.name as string
         })
       } else {
-        showSuccess(
-          isServiceEntityModalView && isServiceCreateModalView
-            ? getString('common.serviceCreated')
-            : getString('common.serviceUpdated')
-        )
+        if (serviceResponse?.storeType === StoreType.REMOTE) {
+          updateQueryParams({ branch: serviceResponse?.entityGitDetails?.branch || '' })
+          // For Remote we do not need these toaster as we show status in git save modal
+        } else {
+          showSuccess(
+            isServiceEntityModalView && isServiceCreateModalView
+              ? getString('common.serviceCreated')
+              : getString('common.serviceUpdated')
+          )
+        }
         fetchPipeline({ forceFetch: true, forceUpdate: true })
         const newServiceDefinition = get(pipeline, 'stages[0].stage.spec.serviceConfig.serviceDefinition')
         setIsDeploymentTypeDisabled?.(!!newServiceDefinition.type)
@@ -157,31 +165,49 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
   }
 
   const { openSaveToGitDialog } = useSaveToGitDialog({
-    onSuccess: (gitData: GitData, servicePayload?: ServiceRequestDTO): Promise<ResponseServiceResponse> =>
-      Promise.resolve(
-        updateService(
-          { ...servicePayload, orgIdentifier, projectIdentifier },
-          {
-            queryParams: {
-              accountIdentifier: accountId,
-              storeType: StoreType.REMOTE,
-              connectorRef: serviceData?.connectorRef,
-              isNewBranch: gitData?.isNewBranch, //Need BE API support for this param, Todo: remove typeCast
-              filePath: serviceData?.entityGitDetails?.filePath,
-              ...(gitData?.isNewBranch
-                ? { baseBranch: serviceData?.entityGitDetails?.branch, branch: gitData?.branch }
-                : { branch: serviceData?.entityGitDetails?.branch }),
-              commitMsg: gitData?.commitMsg,
-              lastObjectId: serviceData?.entityGitDetails?.objectId,
-              lastCommitId: serviceData?.entityGitDetails?.commitId,
-              resolvedConflictCommitId: gitData?.resolvedConflictCommitId
-            } as unknown as UpdateServiceV2QueryParams
-          }
-        ).then(response => {
-          afterUpdateHandler(response, getFinalServiceData())
-          return response
-        })
-      )
+    onSuccess: (gitData: GitData, servicePayload?: ServiceRequestDTO): Promise<ResponseServiceResponse> => {
+      const { connectorRef, repo: repoName, branch, filePath } = pipeline as PipelineInfoConfig & GitSyncFormFields // taking from service context for creating while selecting
+      const createUpdatePromise = isServiceCreateModalView
+        ? createService(
+            { ...servicePayload, orgIdentifier, projectIdentifier },
+            {
+              queryParams: {
+                accountIdentifier: accountId,
+                storeType: StoreType.REMOTE,
+                connectorRef: (connectorRef as ConnectorSelectedValue)?.value,
+                repoName,
+                isNewBranch: gitData?.isNewBranch,
+                filePath,
+                ...(gitData?.isNewBranch ? { baseBranch: branch, branch: gitData?.branch } : { branch }),
+                commitMsg: gitData?.commitMsg
+              } as CreateServiceV2QueryParams
+            }
+          )
+        : updateService(
+            { ...servicePayload, orgIdentifier, projectIdentifier },
+            {
+              queryParams: {
+                accountIdentifier: accountId,
+                storeType: StoreType.REMOTE,
+                connectorRef: serviceData?.connectorRef,
+                isNewBranch: gitData?.isNewBranch, //Need BE API support for this param, Todo: remove typeCast
+                filePath: serviceData?.entityGitDetails?.filePath,
+                ...(gitData?.isNewBranch
+                  ? { baseBranch: serviceData?.entityGitDetails?.branch, branch: gitData?.branch }
+                  : { branch: serviceData?.entityGitDetails?.branch }),
+                commitMsg: gitData?.commitMsg,
+                lastObjectId: serviceData?.entityGitDetails?.objectId,
+                lastCommitId: serviceData?.entityGitDetails?.commitId,
+                resolvedConflictCommitId: gitData?.resolvedConflictCommitId
+              } as unknown as UpdateServiceV2QueryParams
+            }
+          )
+
+      return createUpdatePromise.then(response => {
+        afterUpdateHandler(response, getFinalServiceData())
+        return response
+      })
+    }
   })
 
   const handleTabChange = useCallback(
@@ -292,15 +318,15 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     }
 
     try {
-      if (serviceData?.storeType === StoreType.REMOTE) {
+      if (finalServiceData?.storeType === StoreType.REMOTE) {
         openSaveToGitDialog({
-          isEditing: false,
+          isEditing: !isServiceCreateModalView,
           resource: {
             type: 'Service',
-            name: serviceData.name as string,
-            identifier: serviceData.identifier as string,
-            gitDetails: serviceData.entityGitDetails,
-            storeMetadata: { storeType: serviceData?.storeType, connectorRef: serviceData?.connectorRef }
+            name: finalServiceData?.service.name,
+            identifier: body.identifier,
+            gitDetails: finalServiceData.entityGitDetails,
+            storeMetadata: { storeType: finalServiceData?.storeType, connectorRef: finalServiceData?.connectorRef }
           },
           payload: body
         })

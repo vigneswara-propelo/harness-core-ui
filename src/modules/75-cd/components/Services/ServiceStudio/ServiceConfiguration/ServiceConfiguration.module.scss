@@ -29,6 +29,18 @@
       .nameIdDescriptionTags {
         width: 324px;
       }
+
+      .serviceCardWrapper {
+        display: flex;
+        gap: 20px;
+
+        & > :first-child {
+          width: 340px;
+          & > div {
+            justify-content: flex-start !important;
+          }
+        }
+      }
     }
   }
 

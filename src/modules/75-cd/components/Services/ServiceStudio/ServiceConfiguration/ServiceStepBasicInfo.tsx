@@ -6,37 +6,56 @@
  */
 
 import React, { useCallback } from 'react'
-import { Card, Formik, FormikForm } from '@harness/uicore'
-import { debounce, isEmpty, noop } from 'lodash-es'
+import { Card, Formik, FormikForm, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
+import { Divider } from '@blueprintjs/core'
+import { debounce, defaultTo, isEmpty, noop } from 'lodash-es'
 import * as Yup from 'yup'
 import { NameIdDescriptionTags } from '@common/components'
 import { NameSchema } from '@common/utils/Validation'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { NGServiceV2InfoConfig } from 'services/cd-ng'
 import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { useServiceContext } from '@cd/context/ServiceContext'
 import { useStrings } from 'framework/strings'
-import { StoreType } from '@common/constants/GitSyncTypes'
+import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import { InlineRemoteSelect } from '@modules/10-common/components/InlineRemoteSelect/InlineRemoteSelect'
+import { ConnectorSelectedValue } from '@modules/27-platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import css from './ServiceConfiguration.module.scss'
 
 function ServiceStepBasicInfo(): React.ReactElement {
   const { getString } = useStrings()
+  const isGitXEnabledForServices = useFeatureFlag(FeatureFlag.CDS_SERVICE_GITX)
 
   const {
     state: { pipeline, storeMetadata, gitDetails },
     isReadonly,
-    updatePipeline
+    updatePipeline,
+    updatePipelineStoreMetadata
   } = usePipelineContext()
 
   const { isServiceCreateModalView } = useServiceContext()
   const initialGitFormValue = {
     connectorRef: storeMetadata?.connectorRef,
     repoName: gitDetails?.repoName,
-    filePath: gitDetails?.filePath
+    filePath: gitDetails?.filePath,
+    storeType: storeMetadata?.storeType || (isGitXEnabledForServices ? StoreType.INLINE : undefined)
   }
   const onUpdate = useCallback(
-    (value: NGServiceV2InfoConfig): void => {
+    (value: NGServiceV2InfoConfig & StoreMetadata): void => {
       updatePipeline({ ...value })
+
+      if (value.storeType) {
+        updatePipelineStoreMetadata(
+          {
+            storeType: value.storeType,
+            connectorRef: (value.connectorRef as unknown as ConnectorSelectedValue)?.value || value.connectorRef
+          },
+          { repoName: value?.repoName, branch: value?.branch, filePath: value?.filePath }
+        )
+      }
     },
     [pipeline]
   )
@@ -45,7 +64,6 @@ function ServiceStepBasicInfo(): React.ReactElement {
   return (
     <div className={css.serviceStepBasicInfo}>
       <Formik
-        enableReinitialize
         initialValues={{ ...pipeline, ...initialGitFormValue }}
         validate={values => {
           if (isEmpty(values.name)) {
@@ -77,16 +95,46 @@ function ServiceStepBasicInfo(): React.ReactElement {
                 descriptionProps={{ disabled: isReadonly }}
                 tagsProps={{ disabled: isReadonly }}
               />
-              {storeMetadata?.storeType === StoreType.REMOTE ? (
+
+              {isGitXEnabledForServices ? (
+                <>
+                  <Divider />
+                  <Text
+                    font={{ variation: FontVariation.FORM_SUB_SECTION }}
+                    margin={{ top: 'medium', bottom: 'medium' }}
+                    data-tooltip-id="service-InlineRemoteSelect-label"
+                  >
+                    {getString('cd.pipelineSteps.serviceTab.chooseServiceSetupHeader')}
+                  </Text>
+                  <InlineRemoteSelect
+                    className={css.serviceCardWrapper}
+                    entityType={'Service'}
+                    selected={defaultTo(formikProps?.values?.storeType, StoreType.INLINE)}
+                    getCardDisabledStatus={(current, selected) => {
+                      return isServiceCreateModalView ? false : current !== selected
+                    }}
+                    onChange={item => {
+                      if (isServiceCreateModalView) {
+                        formikProps?.setFieldValue('storeType', item.type)
+                      }
+                    }}
+                  />
+                </>
+              ) : null}
+              {formikProps?.values?.storeType === StoreType.REMOTE ? (
                 <GitSyncForm
                   formikProps={formikProps}
-                  isEdit={true}
-                  skipBranch
-                  disableFields={{
-                    connectorRef: true,
-                    repoName: true,
-                    filePath: false
-                  }}
+                  isEdit={!isServiceCreateModalView}
+                  skipBranch={!isServiceCreateModalView}
+                  disableFields={
+                    isServiceCreateModalView
+                      ? {}
+                      : {
+                          connectorRef: true,
+                          repoName: true,
+                          filePath: false
+                        }
+                  }
                   initialValues={initialGitFormValue}
                 />
               ) : null}

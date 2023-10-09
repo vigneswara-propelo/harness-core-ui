@@ -28,6 +28,9 @@ import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useServiceContext } from '@cd/context/ServiceContext'
 import { PipelineVariablesContextProvider } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
+import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
+import { GitSyncFormFields } from '@modules/40-gitsync/components/GitSyncForm/GitSyncForm'
+import { ConnectorSelectedValue } from '@modules/27-platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import {
   DefaultNewStageId,
   DefaultNewStageName,
@@ -128,11 +131,11 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
   }, [serviceYaml])
 
   const createService = React.useMemo(() => {
-    const defaultPipeline = {
+    const defaultService = {
       name: '',
       identifier: ''
     }
-    return produce({ ...defaultPipeline }, draft => {
+    return produce({ ...defaultService }, draft => {
       if (!isEmpty(currentService?.service?.serviceDefinition)) {
         set(draft, 'stages[0].stage.name', DefaultNewStageName)
         set(draft, 'stages[0].stage.identifier', DefaultNewStageId)
@@ -147,13 +150,24 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
     })
   }, [])
 
-  const onUpdatePipeline = async (pipelineConfig: ServicePipelineConfig): Promise<void> => {
+  const onUpdateService = async (pipelineConfig: ServicePipelineConfig & GitSyncFormFields): Promise<void> => {
     const stage = get(pipelineConfig, 'stages[0].stage.spec.serviceConfig.serviceDefinition')
     sanitize(stage, { removeEmptyArray: false, removeEmptyObject: false, removeEmptyString: false })
 
     const updatedService = produce(currentService, draft => {
       setNameIDDescription(draft.service as PipelineInfoConfig, pipelineConfig)
       set(draft, 'service.serviceDefinition', stage)
+      if (pipelineConfig.storeType) {
+        set(draft, 'storeType', pipelineConfig.storeType)
+        if (pipelineConfig.storeType === StoreType.REMOTE) {
+          set(draft, 'connectorRef', (pipelineConfig.connectorRef as ConnectorSelectedValue)?.value)
+          set(draft, 'entityGitDetails', {
+            repoName: pipelineConfig?.repo,
+            branch: pipelineConfig?.branch,
+            filePath: pipelineConfig?.filePath
+          })
+        }
+      }
     })
     setCurrentService(updatedService)
   }
@@ -168,7 +182,7 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
         fallbackBranch: serviceResponse?.fallbackBranch
       }}
       gitDetails={serviceResponse?.entityGitDetails}
-      onUpdatePipeline={onUpdatePipeline}
+      onUpdatePipeline={onUpdateService}
       serviceIdentifier={serviceId}
       contextType={PipelineContextType.Pipeline}
       isReadOnly={!isEdit}

@@ -218,6 +218,7 @@ function DeployServiceWidget({
       <Dialog
         onClose={onClose}
         title={state.isEdit ? getString('editService') : getString('newService')}
+        style={{ width: 880 }}
         {...DIALOG_PROPS}
       >
         <NewEditServiceModal

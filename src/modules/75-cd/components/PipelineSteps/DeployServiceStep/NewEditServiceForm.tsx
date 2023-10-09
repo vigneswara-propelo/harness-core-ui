@@ -73,12 +73,7 @@ const NewEditServiceForm: React.FC<NewEditServiceFormProps> = props => {
       ) : null}
 
       {formikProps?.values?.storeType === StoreType.REMOTE ? (
-        <GitSyncForm
-          formikProps={formikProps}
-          isEdit={isEdit}
-          // Remote edit support is not there to test and verify this
-          // initialValues={pick(newInitialValues, 'repo', 'branch', 'filePath', 'connectorRef')}
-        />
+        <GitSyncForm formikProps={formikProps} isEdit={isEdit} />
       ) : null}
 
       <Layout.Horizontal spacing="small" padding={{ top: 'xlarge' }}>

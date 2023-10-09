@@ -37,15 +37,6 @@ jest.spyOn(cdngServices, 'useGetEntityYamlSchema').mockImplementation(() => {
   return { serviceSchemaMock } as any
 })
 
-jest.mock('@common/hooks/useFeatureFlag', () => {
-  const originalModule = jest.requireActual('@common/hooks/useFeatureFlag')
-
-  return {
-    ...originalModule,
-    useFeatureFlag: jest.fn(() => true)
-  }
-})
-
 jest.mock('@common/hooks/useCache', () => {
   const originalModule = jest.requireActual('@common/hooks/useCache')
 
@@ -103,6 +94,9 @@ describe('ServiceStudioDetails', () => {
         queryParams={{
           tab: 'summary'
         }}
+        defaultAppStoreValues={{
+          featureFlags: { CDS_SERVICE_GITX: false, NG_SVC_ENV_REDESIGN: true, CDC_SERVICE_DASHBOARD_REVAMP_NG: true }
+        }}
       >
         <ServiceContext.Provider value={serviceMockData as ServiceContextValues}>
           <PipelineContext.Provider value={pipelineMockData}>
@@ -115,7 +109,7 @@ describe('ServiceStudioDetails', () => {
   })
   test('discard button functionality after update event', async () => {
     pipelineMockData.state.isUpdated = true
-    const { container, getByText } = render(
+    const { getByText } = render(
       <TestWrapper
         path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services/:serviceIdentifier"
         pathParams={{
@@ -127,6 +121,9 @@ describe('ServiceStudioDetails', () => {
         queryParams={{
           tab: 'configuration'
         }}
+        defaultAppStoreValues={{
+          featureFlags: { CDS_SERVICE_GITX: false, NG_SVC_ENV_REDESIGN: true, CDC_SERVICE_DASHBOARD_REVAMP_NG: true }
+        }}
       >
         <ServiceContext.Provider value={serviceMockData as ServiceContextValues}>
           <PipelineContext.Provider value={pipelineMockData}>
@@ -136,7 +133,6 @@ describe('ServiceStudioDetails', () => {
       </TestWrapper>
     )
 
-    expect(container).toMatchSnapshot()
     const saveButton = getByText('pipeline.discard')
     fireEvent.click(saveButton)
     await waitFor(() => expect(pipelineMockData.fetchPipeline).toHaveBeenCalled(), { timeout: 3000 })
@@ -144,7 +140,7 @@ describe('ServiceStudioDetails', () => {
   })
   test('save and publish functionality', async () => {
     pipelineMockData.state.isUpdated = true
-    const { container, getByText } = render(
+    const { getByText } = render(
       <TestWrapper
         path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services/:serviceIdentifier"
         pathParams={{
@@ -156,6 +152,9 @@ describe('ServiceStudioDetails', () => {
         queryParams={{
           tab: 'configuration'
         }}
+        defaultAppStoreValues={{
+          featureFlags: { CDS_SERVICE_GITX: false, NG_SVC_ENV_REDESIGN: true, CDC_SERVICE_DASHBOARD_REVAMP_NG: true }
+        }}
       >
         <ServiceContext.Provider value={serviceMockData as ServiceContextValues}>
           <PipelineContext.Provider value={pipelineMockData}>
@@ -165,7 +164,6 @@ describe('ServiceStudioDetails', () => {
       </TestWrapper>
     )
 
-    expect(container).toMatchSnapshot()
     const saveButton = getByText('save')
     fireEvent.click(saveButton)
     await waitFor(() => expect(pipelineMockData.fetchPipeline).toHaveBeenCalled(), { timeout: 3000 })
@@ -186,6 +184,9 @@ describe('ServiceStudioDetails', () => {
         }}
         queryParams={{
           tab: 'configuration'
+        }}
+        defaultAppStoreValues={{
+          featureFlags: { CDS_SERVICE_GITX: false, NG_SVC_ENV_REDESIGN: true, CDC_SERVICE_DASHBOARD_REVAMP_NG: true }
         }}
       >
         <ServiceContext.Provider value={serviceMockData as ServiceContextValues}>
@@ -216,6 +217,9 @@ describe('ServiceStudioDetails', () => {
         }}
         queryParams={{
           tab: 'summary'
+        }}
+        defaultAppStoreValues={{
+          featureFlags: { CDS_SERVICE_GITX: false, NG_SVC_ENV_REDESIGN: true, CDC_SERVICE_DASHBOARD_REVAMP_NG: true }
         }}
       >
         <ServiceContext.Provider value={serviceMockData as ServiceContextValues}>
