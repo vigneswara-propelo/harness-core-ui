@@ -342,7 +342,8 @@ export default function JiraUpdateDeploymentMode(props: JiraUpdateDeploymentMode
       ...commonParams,
       connectorRef: '',
       issueKey: ''
-    }
+    },
+    debounce: 1000
   })
 
   return (

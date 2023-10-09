@@ -748,7 +748,8 @@ function JiraUpdateStepMode(
       connectorRef: '',
       projectKey: '',
       issueType: ''
-    }
+    },
+    debounce: 1000
   })
 
   return (

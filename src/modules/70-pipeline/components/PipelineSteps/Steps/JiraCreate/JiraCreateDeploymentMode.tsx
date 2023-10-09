@@ -381,7 +381,8 @@ export default function JiraCreateDeploymentMode(props: JiraCreateDeploymentMode
       connectorRef: '',
       projectKey: '',
       issueType: ''
-    }
+    },
+    debounce: 1000
   })
 
   return (

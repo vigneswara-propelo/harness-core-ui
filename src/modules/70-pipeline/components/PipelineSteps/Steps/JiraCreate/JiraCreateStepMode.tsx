@@ -710,7 +710,8 @@ function JiraCreateStepMode(props: JiraCreateStepModeProps, formikRef: StepFormi
       connectorRef: '',
       projectKey: '',
       issueType: ''
-    }
+    },
+    debounce: 1000
   })
 
   // formik's dirty prop is computed by comparing initialValues and values,
