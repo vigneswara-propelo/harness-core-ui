@@ -232,6 +232,11 @@ export default function OptionalConfiguration(props: {
       </div>
 
       {renderMultiTypeList({
+        name: 'spec.reports',
+        stringKey: 'pipelineSteps.reportPathsLabel'
+      })}
+
+      {renderMultiTypeList({
         name: 'spec.outputVariables',
         stringKey: 'pipelineSteps.outputVariablesLabel'
       })}

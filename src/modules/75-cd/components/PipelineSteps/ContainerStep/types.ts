@@ -19,6 +19,15 @@ export interface ContainerStepData extends StepElementConfig {
   spec: Omit<ContainerStepInfo, 'outputVariables' | 'shell'> & {
     outputVariables?: MultiTypeListUIType | MultiTypeListType | Array<{ id?: string; value?: string; name?: string }>
     shell?: MultiTypeSelectOption
+    reports?:
+      | {
+          type: 'JUnit'
+          spec: {
+            paths: MultiTypeListType
+          }
+        }
+      | MultiTypeListUIType
+      | MultiTypeListType
   }
 }
 export interface ContainerStepProps {

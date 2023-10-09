@@ -159,7 +159,7 @@ function ContainerStepInputSetBasic(props: ContainerStepProps): React.ReactEleme
     }: {
       name: string
       labelKey: keyof StringsMap
-      tooltipId: string
+      tooltipId?: string
     }): React.ReactElement => (
       <div className={cx(stepCss.formGroup, stepCss.md)}>
         <MultiTypeListInputSet
@@ -336,6 +336,12 @@ function ContainerStepInputSetBasic(props: ContainerStepProps): React.ReactEleme
           name: `${prefix}spec.infrastructure.spec.resources.limits.memory`,
           labelKey: 'pipelineSteps.limitMemoryLabel',
           fieldPath: 'spec.infrastructure.spec.resources.limits.memory'
+        })}
+
+      {isValueRuntimeInput((template?.spec?.reports as any)?.spec?.paths as string) &&
+        renderMultiTypeListInputSet({
+          name: `${prefix}spec.reports.spec.paths`,
+          labelKey: 'pipelineSteps.reportPathsLabel'
         })}
 
       {isValueRuntimeInput(template?.spec?.outputVariables as string) && (

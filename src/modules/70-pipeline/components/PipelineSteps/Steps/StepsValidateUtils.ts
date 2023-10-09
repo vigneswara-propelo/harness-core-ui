@@ -14,6 +14,7 @@ import type { UseStringsReturn, StringKeys } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type { ExecutionWrapperConfig, StepElementConfig } from 'services/cd-ng'
 import {
+  cpuLimitRegex,
   illegalIdentifiers,
   keyRegexIdentifier,
   portNumberRegex,
@@ -365,10 +366,16 @@ export function generateSchemaForLimitMemory({ getString, isRequired = false }: 
       return getMultiTypeFromValue(value as string) === MultiTypeInputType.FIXED
         ? yup
             .string()
-            .required()
+            .required(
+              getString('common.validation.fieldIsRequired', { name: getString('pipelineSteps.limitMemoryLabel') })
+            )
             // ^$ in the end is to pass empty string because otherwise it will fail
             .matches(pattern, getString('pipeline.stepCommonFields.validation.invalidLimitMemory'))
-        : yup.string().required()
+        : yup
+            .string()
+            .required(
+              getString('common.validation.fieldIsRequired', { name: getString('pipelineSteps.limitMemoryLabel') })
+            )
     }
     return getMultiTypeFromValue(value as string) === MultiTypeInputType.FIXED
       ? yup
@@ -379,15 +386,27 @@ export function generateSchemaForLimitMemory({ getString, isRequired = false }: 
   })
 }
 
-export function generateSchemaForLimitCPU({ getString }: GenerateSchemaDependencies): Lazy {
-  return yup.lazy(value =>
-    getMultiTypeFromValue(value as string) === MultiTypeInputType.FIXED
-      ? // ^$ in the end is to pass empty string because otherwise it will fail
-        yup
-          .string()
-          .matches(/^\d+(\.\d+)?$|^\d+m$|^$/, getString('pipeline.stepCommonFields.validation.invalidLimitCPU'))
+export function generateSchemaForLimitCPU({ getString, isRequired = false }: GenerateSchemaDependencies): Lazy {
+  return yup.lazy(value => {
+    if (isRequired) {
+      return getMultiTypeFromValue(value as string) === MultiTypeInputType.FIXED
+        ? yup
+            .string()
+            .required(
+              getString('common.validation.fieldIsRequired', { name: getString('pipelineSteps.limitCPULabel') })
+            )
+            .matches(cpuLimitRegex, getString('pipeline.stepCommonFields.validation.invalidLimitCPU'))
+        : yup
+            .string()
+            .required(
+              getString('common.validation.fieldIsRequired', { name: getString('pipelineSteps.limitCPULabel') })
+            )
+    }
+
+    return getMultiTypeFromValue(value as string) === MultiTypeInputType.FIXED
+      ? yup.string().matches(cpuLimitRegex, getString('pipeline.stepCommonFields.validation.invalidLimitCPU'))
       : yup.string()
-  )
+  })
 }
 
 function generateSchemaForBoolean(): Lazy {

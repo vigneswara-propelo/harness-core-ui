@@ -9,7 +9,6 @@ import * as Yup from 'yup'
 import { get, once } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import type { UseStringsReturn } from 'framework/strings'
-import { cpuLimitRegex, memorLimityRegex } from '@common/utils/StringUtils'
 import type {
   MapType,
   MapUIType,
@@ -19,7 +18,11 @@ import type {
   MultiTypeMapUIType,
   SelectOption
 } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
-import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import {
+  generateSchemaForLimitCPU,
+  generateSchemaForLimitMemory,
+  getNameAndIdentifierSchema
+} from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { OsTypes } from '@pipeline/utils/constants'
@@ -54,6 +57,7 @@ export const processInitialValues = (values: ContainerStepData): ContainerStepDa
     ...values,
     spec: {
       ...values.spec,
+      reports: getInitialListValues((values.spec?.reports as any)?.spec?.paths),
       outputVariables:
         typeof values?.spec?.outputVariables === 'string'
           ? values?.spec?.outputVariables
@@ -116,11 +120,21 @@ export const processFormData = (_values: ContainerStepData): ContainerStepData =
           .map(listValue => ({
             name: listValue.value
           }))
+
+  const reportPaths = get(values, 'spec.reports') as MultiTypeListUIType
+  const reportPathsList = processListValues(reportPaths)
+
   return {
     ...values,
     spec: {
       ...values.spec,
       connectorRef: values.spec.connectorRef,
+      reports: {
+        type: 'JUnit',
+        spec: {
+          paths: reportPathsList
+        }
+      },
       outputVariables: outputVarlist,
       envVariables: processMapValues(values.spec?.envVariables),
       infrastructure: {
@@ -163,16 +177,8 @@ export const getValidationSchema = (getString: UseStringsReturn['getString'], st
           namespace: getNameSpaceSchema(getString),
           resources: Yup.object().shape({
             limits: Yup.object().shape({
-              cpu: Yup.string()
-                .required(
-                  getString('common.validation.fieldIsRequired', { name: getString('pipelineSteps.limitCPULabel') })
-                )
-                .matches(cpuLimitRegex, getString('pipeline.stepCommonFields.validation.invalidLimitCPU')),
-              memory: Yup.string()
-                .required(
-                  getString('common.validation.fieldIsRequired', { name: getString('pipelineSteps.limitMemoryLabel') })
-                )
-                .matches(memorLimityRegex, getString('pipeline.stepCommonFields.validation.invalidLimitMemory'))
+              cpu: generateSchemaForLimitCPU({ getString, isRequired: true }),
+              memory: generateSchemaForLimitMemory({ getString, isRequired: true })
             })
           })
         })
