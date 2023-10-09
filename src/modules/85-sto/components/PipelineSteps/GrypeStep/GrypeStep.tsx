@@ -44,7 +44,7 @@ export class GrypeStep extends PipelineStep<GrypeStepData> {
 
   protected type = StepType.Grype
   protected stepName = 'Configure Anchore Grype'
-  protected stepIcon: IconName = 'Anchore'
+  protected stepIcon: IconName = 'anchore-grype'
   protected stepDescription: keyof StringsMap = 'sto.stepDescription.Grype'
   protected stepPaletteVisible = false
 
