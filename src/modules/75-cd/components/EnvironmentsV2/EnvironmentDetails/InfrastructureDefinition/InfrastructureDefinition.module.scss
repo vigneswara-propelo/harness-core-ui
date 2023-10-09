@@ -40,7 +40,7 @@
 }
 
 .nameIdCard {
-  width: 40%;
+  width: 80%;
   margin-bottom: var(--spacing-large);
 }
 
@@ -138,5 +138,31 @@
   }
   :global(.bp3-button-text) {
     flex-shrink: 0 !important;
+  }
+}
+
+.infraForm {
+  .nameIdDescriptionTags {
+    width: 350px !important;
+  }
+  :global {
+    input,
+    .bp3-input-group,
+    .bp3-menu {
+      width: 350px !important;
+    }
+  }
+}
+
+.infraCardWrapper {
+  display: flex;
+  gap: 20px;
+
+  /* Inline Card is small so it need to expand to take availabel unused space */
+  & > :first-child {
+    flex: 1;
+    & > div {
+      justify-content: flex-start !important;
+    }
   }
 }

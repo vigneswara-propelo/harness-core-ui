@@ -12,11 +12,14 @@ declare const styles: {
   readonly buttonWrapper: string
   readonly closeButton: string
   readonly dialogStyles: string
+  readonly infraCardWrapper: string
   readonly infraDefinitionDetailsDrawer: string
   readonly infraDetailsConfigurationTab: string
   readonly infraDetailsReferencedByTab: string
+  readonly infraForm: string
   readonly modalFooter: string
   readonly nameIdCard: string
+  readonly nameIdDescriptionTags: string
   readonly referenceByPageBody: string
   readonly tagRender: string
   readonly tagsPopover: string

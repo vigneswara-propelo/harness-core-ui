@@ -6822,6 +6822,7 @@ export interface StringsMap {
   'cd.ignoreReleaseHistFailStatus': string
   'cd.infra': string
   'cd.infraDefinitionDiffTitle': string
+  'cd.infrastructure.chooseInfrastructureSetupHeader': string
   'cd.infrastructure.createNew': string
   'cd.infrastructure.created': string
   'cd.infrastructure.delete': string

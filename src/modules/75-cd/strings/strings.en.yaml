@@ -573,6 +573,7 @@ infrastructure:
   noInfrastructureInEnvironment: You have no infrastructures in this environment
   createNew: Create New Infrastructure
   edit: Edit Infrastructure
+  chooseInfrastructureSetupHeader: How do you want to setup your infrastructure?
   created: Successfully created Infrastructure {{ identifier }}
   updated: Successfully updated Infrastructure {{ identifier }}
   delete: Delete Infrastructure

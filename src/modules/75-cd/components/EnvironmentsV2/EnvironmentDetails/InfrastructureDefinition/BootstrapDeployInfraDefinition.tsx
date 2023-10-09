@@ -36,6 +36,7 @@ import {
   DeploymentStageConfig,
   InfrastructureConfig,
   InfrastructureDefinitionConfig,
+  InfrastructureResponseDTO,
   useCreateInfrastructure,
   useGetYamlSchema,
   useUpdateInfrastructure,
@@ -62,7 +63,6 @@ import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesU
 import ReconcileInfraDialogWrapper from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/ReconcileHandler/ReconcileInfraDialogWrapper'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
-import { NameIdDescriptionTags } from '@common/components'
 import SelectDeploymentType from '@cd/components/PipelineStudio/DeployServiceSpecifications/SelectDeploymentType/SelectDeploymentType'
 import DeployInfraDefinition from '@cd/components/PipelineStudio/DeployInfraSpecifications/DeployInfraDefinition/DeployInfraDefinition'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
@@ -74,13 +74,25 @@ import type {
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { getIdentifierFromScopedRef } from '@common/utils/utils'
+import { useFeatureFlag } from '@modules/10-common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@modules/10-common/featureFlags'
+import { GitSyncFormFields, gitSyncFormSchema } from '@modules/40-gitsync/components/GitSyncForm/GitSyncForm'
+import { useSaveToGitDialog } from '@modules/10-common/modals/SaveToGitDialog/useSaveToGitDialog'
+import { SaveToGitFormInterface } from '@modules/10-common/components/SaveToGitForm/SaveToGitForm'
+import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
+import { ConnectorSelectedValue } from '@modules/27-platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { NewInfrastructureForm } from './NewInfrastructureForm'
 import css from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfrastructureDefinition.module.scss'
+
+export interface CombinedInfrastructureDefinationResponse
+  extends InfrastructureDefinitionConfig,
+    Pick<InfrastructureResponseDTO, 'connectorRef' | 'storeType' | 'entityGitDetails'> {}
 
 interface BootstrapDeployInfraDefinitionProps {
   closeInfraDefinitionDetails: () => void
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   refetch: any
-  infrastructureDefinition?: InfrastructureDefinitionConfig
+  infrastructureDefinition?: CombinedInfrastructureDefinationResponse
   environmentIdentifier: string
   isReadOnly: boolean
   scope: Scope
@@ -193,7 +205,8 @@ function BootstrapDeployInfraDefinition(
     description,
     tags
   })
-  const formikRef = useRef<FormikProps<Partial<InfrastructureDefinitionConfig>>>()
+  const formikRef = useRef<FormikProps<Partial<CombinedInfrastructureDefinationResponse & GitSyncFormFields>>>()
+  const formikRefValues = formikRef.current?.values
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   const getDeploymentTemplateData = useCallback((): CustomDeploymentMetaData => {
@@ -376,9 +389,15 @@ function BootstrapDeployInfraDefinition(
       name: infrastructureDefinitionConfig.name,
       identifier: infrastructureDefinitionConfig.identifier,
       description: infrastructureDefinitionConfig.description,
-      tags: infrastructureDefinitionConfig.tags
+      tags: infrastructureDefinitionConfig.tags,
+      ...(formikRefValues?.storeType === 'REMOTE' && {
+        storeType: formikRefValues?.storeType,
+        connectorRef: formikRefValues?.connectorRef,
+        filePath: formikRefValues?.filePath,
+        branch: formikRefValues?.branch,
+        repo: formikRefValues?.repo
+      })
     })
-
     const stageData = produce(stage, draft => {
       const infraDefinition = get(draft, 'stage.spec.infrastructure', {})
       if (infrastructureDefinitionConfig.spec) {
@@ -444,44 +463,106 @@ function BootstrapDeployInfraDefinition(
     }
   })
 
+  const { openSaveToGitDialog } = useSaveToGitDialog({
+    onSuccess: async (gitData: SaveToGitFormInterface, _payload?: any): Promise<any> => {
+      const isNewBranch = gitData?.isNewBranch
+      const selectedBranch = formikRefValues?.branch
+      const response = await createInfrastructure(
+        { ..._payload, orgIdentifier, projectIdentifier },
+        {
+          queryParams: {
+            accountIdentifier: accountId,
+            storeType: StoreType.REMOTE,
+            connectorRef: (formikRefValues?.connectorRef as unknown as ConnectorSelectedValue)?.value,
+            repoName: formikRefValues?.repo,
+            isNewBranch: gitData?.isNewBranch,
+            filePath: formikRefValues?.filePath,
+            ...(isNewBranch ? { baseBranch: selectedBranch, branch: gitData?.branch } : { branch: selectedBranch }),
+            commitMsg: gitData?.commitMsg
+          }
+        }
+      )
+      if (response.status === 'SUCCESS') {
+        clear()
+        showSuccess(getString('cd.infrastructure.created'))
+        closeInfraDefinitionDetails()
+      }
+      return Promise.resolve(response)
+    }
+  })
+
   const mutateFn = infrastructureDefinition ? updateInfrastructure : createInfrastructure
 
-  const onSubmit = (values: InfrastructureDefinitionConfig): void => {
+  const onSubmit = (values: CombinedInfrastructureDefinationResponse): void => {
     setIsSavingInfrastructure(true)
     const body = omit(values, ['spec', 'allowSimultaneousDeployments'])
 
-    mutateFn({
-      ...body,
-      yaml: yamlStringify({
-        infrastructureDefinition: {
-          ...body,
-          spec: values.spec,
-          allowSimultaneousDeployments: values.allowSimultaneousDeployments
-        }
-      })
-    })
-      .then(response => {
-        if (response.status === 'SUCCESS') {
-          showSuccess(
-            getString(infrastructureDefinition ? 'cd.infrastructure.updated' : 'cd.infrastructure.created', {
-              identifier: response.data?.infrastructure?.identifier
-            })
-          )
-          setIsSavingInfrastructure(false)
-          if (environmentIdentifier) {
-            refetch(response.data?.infrastructure)
-          } else {
-            refetch()
+    if (formikRefValues?.storeType === 'REMOTE') {
+      openSaveToGitDialog({
+        isEditing: false,
+        resource: {
+          type: 'Infrastructure',
+          name: values.name as string,
+          identifier: values.identifier as string,
+          gitDetails: {
+            branch: formikRefValues?.branch,
+            commitId: undefined,
+            filePath: formikRefValues?.filePath,
+            fileUrl: undefined,
+            objectId: undefined,
+            repoName: formikRefValues?.repo,
+            repoUrl: undefined
+          },
+          storeMetadata: {
+            storeType: StoreType.REMOTE,
+            connectorRef: (formikRefValues?.connectorRef as unknown as ConnectorSelectedValue)?.value
           }
-          closeInfraDefinitionDetails()
-        } else {
-          throw response
+        },
+        payload: {
+          ...omit(values, ['storeType', 'connectorRef', 'repo', 'branch', 'filePath']),
+          orgIdentifier,
+          projectIdentifier,
+          yaml: yamlStringify({
+            infrastructureDefinition: {
+              ...omit(values, ['storeType', 'connectorRef', 'repo', 'branch', 'filePath'])
+            }
+          })
         }
       })
-      .catch(e => {
-        setIsSavingInfrastructure(false)
-        showError(getErrorInfoFromErrorObject(e))
+    } else {
+      mutateFn({
+        ...body,
+        yaml: yamlStringify({
+          infrastructureDefinition: {
+            ...body,
+            spec: values.spec,
+            allowSimultaneousDeployments: values.allowSimultaneousDeployments
+          }
+        })
       })
+        .then(response => {
+          if (response.status === 'SUCCESS') {
+            showSuccess(
+              getString(infrastructureDefinition ? 'cd.infrastructure.updated' : 'cd.infrastructure.created', {
+                identifier: response.data?.infrastructure?.identifier
+              })
+            )
+            setIsSavingInfrastructure(false)
+            if (environmentIdentifier) {
+              refetch(response.data?.infrastructure)
+            } else {
+              refetch()
+            }
+            closeInfraDefinitionDetails()
+          } else {
+            throw response
+          }
+        })
+        .catch(e => {
+          setIsSavingInfrastructure(false)
+          showError(getErrorInfoFromErrorObject(e))
+        })
+    }
   }
 
   const onCustomDeploymentSelection = async (): Promise<void> => {
@@ -635,7 +716,7 @@ function BootstrapDeployInfraDefinition(
         .then(() => {
           onSubmit(
             getInfraDefinitionConfig({
-              formikValues: formikRef.current?.values,
+              formikValues: formikRefValues,
               scope,
               environmentIdentifier,
               orgIdentifier,
@@ -661,7 +742,7 @@ function BootstrapDeployInfraDefinition(
   // 1. infra save is in progress
   // 2. Infrastructure has not been updated in case of edit.
   const isSaveDisabled = isSavingInfrastructure || (!!infrastructureDefinition && !isInfraUpdated)
-
+  const isGitXEnabledForInfras = useFeatureFlag(FeatureFlag.CDS_INFRA_GITX)
   return (
     <>
       <Layout.Vertical
@@ -684,38 +765,30 @@ function BootstrapDeployInfraDefinition(
           {selectedView === SelectedView.VISUAL ? (
             <>
               <Card className={css.nameIdCard}>
-                <Formik<Partial<InfrastructureDefinitionConfig>>
-                  initialValues={{
-                    name: defaultTo(formValues.name, ''),
-                    identifier: defaultTo(formValues.identifier, ''),
-                    description: defaultTo(formValues.description, ''),
-                    tags: defaultTo(formValues.tags, {})
-                  }}
+                <Formik<Partial<CombinedInfrastructureDefinationResponse> & GitSyncFormFields>
+                  initialValues={formValues}
                   formName={'infrastructure-modal'}
                   onSubmit={noop}
                   validate={values => handleFormOnChange(values)}
                   validationSchema={Yup.object().shape({
                     name: NameSchema(getString, { requiredErrorMsg: getString('fieldRequired', { field: 'Name' }) }),
-                    identifier: IdentifierSchema(getString)
+                    identifier: IdentifierSchema(getString),
+                    ...(isGitXEnabledForInfras ? { ...gitSyncFormSchema(getString) } : {})
                   })}
                 >
                   {formikProps => {
                     formikRef.current = formikProps
                     return (
-                      <NameIdDescriptionTags
-                        formikProps={formikProps}
-                        identifierProps={{
-                          isIdentifierEditable: isReadOnly ? false : !infrastructureDefinition
-                        }}
-                        descriptionProps={{
-                          disabled: isReadOnly
-                        }}
-                        inputGroupProps={{
-                          disabled: isReadOnly
-                        }}
-                        tagsProps={{
-                          disabled: isReadOnly
-                        }}
+                      <NewInfrastructureForm
+                        formikProps={
+                          formikProps as FormikProps<
+                            Partial<CombinedInfrastructureDefinationResponse> & GitSyncFormFields
+                          >
+                        }
+                        infrastructureDefinition={infrastructureDefinition}
+                        isGitXEnabledForInfras={isGitXEnabledForInfras}
+                        isEdit={!isEmpty(selectedInfrastructure)}
+                        isReadOnly={isReadOnly}
                       />
                     )
                   }}
@@ -745,7 +818,14 @@ function BootstrapDeployInfraDefinition(
                 {...yamlBuilderReadOnlyModeProps}
                 existingJSON={{
                   infrastructureDefinition: getInfraDefinitionConfig({
-                    formikValues: formikRef.current?.values,
+                    formikValues: omit(formikRefValues, [
+                      'storeType',
+                      'connectorRef',
+                      'repo',
+                      'branch',
+                      'filePath',
+                      'yaml'
+                    ]),
                     scope,
                     environmentIdentifier,
                     orgIdentifier,

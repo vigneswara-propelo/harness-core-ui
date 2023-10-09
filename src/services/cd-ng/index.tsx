@@ -1010,6 +1010,10 @@ export interface ArtifactConfig {
   [key: string]: any
 }
 
+export interface ArtifactCorrelationDetails {
+  image?: string
+}
+
 export interface ArtifactDeploymentDetail {
   artifact?: string
   chartVersion?: string
@@ -1108,6 +1112,7 @@ export interface ArtifactSourcesResponseDTO {
 }
 
 export interface ArtifactSummary {
+  artifactIdentity?: ArtifactCorrelationDetails
   displayName?: string
   type?: string
 }
@@ -10136,6 +10141,10 @@ export type IACMModuleLicenseDTO = ModuleLicenseDTO & {
   numberOfDevelopers?: number
 }
 
+export type IDPModuleLicenseDTO = ModuleLicenseDTO & {
+  numberOfDevelopers?: number
+}
+
 export interface IconDTO {
   deploymentType?: string
   icon?: string
@@ -10311,6 +10320,8 @@ export interface InfrastructureResponse {
 
 export interface InfrastructureResponseDTO {
   accountId?: string
+  cacheResponseMetadataDTO?: CacheResponseMetadata
+  connectorRef?: string
   deploymentType?:
     | 'Kubernetes'
     | 'NativeHelm'
@@ -10327,11 +10338,14 @@ export interface InfrastructureResponseDTO {
     | 'AwsLambda'
     | 'AWS_SAM'
   description?: string
+  entityGitDetails?: EntityGitDetails
   environmentRef?: string
+  fallbackBranch?: string
   identifier?: string
   name?: string
   orgIdentifier?: string
   projectIdentifier?: string
+  storeType?: 'INLINE' | 'REMOTE'
   tags?: {
     [key: string]: string
   }
@@ -12260,9 +12274,10 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export type OAuthSettings = NGAuthSettings & {
+export interface OAuthSettings {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -21211,13 +21226,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type DeleteManyFreezesBodyRequestBody = string[]
-
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
-export type GetACRRegistriesForServiceWithYamlBodyRequestBody = string
-
 export type ListTagsForAMIArtifactBodyRequestBody = string
+
+export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateHarnessSupportAccessNGBodyRequestBody = boolean
 
@@ -46748,7 +46761,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -46762,7 +46775,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -46777,7 +46790,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -46791,7 +46804,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -46803,7 +46816,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -46812,7 +46825,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -47375,7 +47388,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -47389,7 +47402,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -47404,7 +47417,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -47418,7 +47431,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -47430,7 +47443,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -47439,7 +47452,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -51462,6 +51475,7 @@ export interface GetInfrastructureListQueryParams {
   versionLabel?: string
   sort?: string[]
   serviceRefs?: string[]
+  repoName?: string
 }
 
 export type GetInfrastructureListProps = Omit<
@@ -51515,6 +51529,16 @@ export const getInfrastructureListPromise = (
 
 export interface CreateInfrastructureQueryParams {
   accountIdentifier: string
+  branch?: string
+  repoIdentifier?: string
+  rootFolder?: string
+  filePath?: string
+  commitMsg?: string
+  isNewBranch?: boolean
+  baseBranch?: string
+  connectorRef?: string
+  storeType?: 'INLINE' | 'REMOTE'
+  repoName?: string
 }
 
 export type CreateInfrastructureProps = Omit<
@@ -51592,6 +51616,18 @@ export const createInfrastructurePromise = (
 
 export interface UpdateInfrastructureQueryParams {
   accountIdentifier: string
+  branch?: string
+  repoIdentifier?: string
+  rootFolder?: string
+  filePath?: string
+  commitMsg?: string
+  lastObjectId?: string
+  resolvedConflictCommitId?: string
+  baseBranch?: string
+  connectorRef?: string
+  storeType?: 'INLINE' | 'REMOTE'
+  lastCommitId?: string
+  isNewBranch?: boolean
 }
 
 export type UpdateInfrastructureProps = Omit<
@@ -52155,6 +52191,16 @@ export interface GetInfrastructureQueryParams {
   projectIdentifier?: string
   environmentIdentifier: string
   deleted?: boolean
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+  loadFromFallbackBranch?: boolean
 }
 
 export interface GetInfrastructurePathParams {
@@ -64931,13 +64977,17 @@ export const marketplaceSignupPromise = (
     signal
   )
 
+export interface SignupOAuthQueryParams {
+  accountId?: string
+}
+
 export type SignupOAuthProps = Omit<
-  MutateProps<RestResponseUserInfo, Failure | Error, void, OAuthSignupDTO, void>,
+  MutateProps<RestResponseUserInfo, Failure | Error, SignupOAuthQueryParams, OAuthSignupDTO, void>,
   'path' | 'verb'
 >
 
 export const SignupOAuth = (props: SignupOAuthProps) => (
-  <Mutate<RestResponseUserInfo, Failure | Error, void, OAuthSignupDTO, void>
+  <Mutate<RestResponseUserInfo, Failure | Error, SignupOAuthQueryParams, OAuthSignupDTO, void>
     verb="POST"
     path={`/signup/oauth`}
     base={getConfig('ng/api')}
@@ -64946,21 +64996,22 @@ export const SignupOAuth = (props: SignupOAuthProps) => (
 )
 
 export type UseSignupOAuthProps = Omit<
-  UseMutateProps<RestResponseUserInfo, Failure | Error, void, OAuthSignupDTO, void>,
+  UseMutateProps<RestResponseUserInfo, Failure | Error, SignupOAuthQueryParams, OAuthSignupDTO, void>,
   'path' | 'verb'
 >
 
 export const useSignupOAuth = (props: UseSignupOAuthProps) =>
-  useMutate<RestResponseUserInfo, Failure | Error, void, OAuthSignupDTO, void>('POST', `/signup/oauth`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
+  useMutate<RestResponseUserInfo, Failure | Error, SignupOAuthQueryParams, OAuthSignupDTO, void>(
+    'POST',
+    `/signup/oauth`,
+    { base: getConfig('ng/api'), ...props }
+  )
 
 export const signupOAuthPromise = (
-  props: MutateUsingFetchProps<RestResponseUserInfo, Failure | Error, void, OAuthSignupDTO, void>,
+  props: MutateUsingFetchProps<RestResponseUserInfo, Failure | Error, SignupOAuthQueryParams, OAuthSignupDTO, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<RestResponseUserInfo, Failure | Error, void, OAuthSignupDTO, void>(
+  mutateUsingFetch<RestResponseUserInfo, Failure | Error, SignupOAuthQueryParams, OAuthSignupDTO, void>(
     'POST',
     getConfig('ng/api'),
     `/signup/oauth`,
@@ -70017,6 +70068,54 @@ export const enableTwoFactorAuthPromise = (
     'PUT',
     getConfig('ng/api'),
     `/user/enable-two-factor-auth`,
+    props,
+    signal
+  )
+
+export interface IsEmailRegisteredQueryParams {
+  email: string
+}
+
+export type IsEmailRegisteredProps = Omit<
+  GetProps<ResponseBoolean, Failure | Error, IsEmailRegisteredQueryParams, void>,
+  'path'
+>
+
+/**
+ * checks if email is already registered
+ */
+export const IsEmailRegistered = (props: IsEmailRegisteredProps) => (
+  <Get<ResponseBoolean, Failure | Error, IsEmailRegisteredQueryParams, void>
+    path={`/user/is-email-registered`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseIsEmailRegisteredProps = Omit<
+  UseGetProps<ResponseBoolean, Failure | Error, IsEmailRegisteredQueryParams, void>,
+  'path'
+>
+
+/**
+ * checks if email is already registered
+ */
+export const useIsEmailRegistered = (props: UseIsEmailRegisteredProps) =>
+  useGet<ResponseBoolean, Failure | Error, IsEmailRegisteredQueryParams, void>(`/user/is-email-registered`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * checks if email is already registered
+ */
+export const isEmailRegisteredPromise = (
+  props: GetUsingFetchProps<ResponseBoolean, Failure | Error, IsEmailRegisteredQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseBoolean, Failure | Error, IsEmailRegisteredQueryParams, void>(
+    getConfig('ng/api'),
+    `/user/is-email-registered`,
     props,
     signal
   )
