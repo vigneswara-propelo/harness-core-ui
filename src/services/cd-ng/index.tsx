@@ -454,6 +454,7 @@ export interface AccessControlCheckError {
     | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
+    | 'ABORT_ALL_ALREADY_NG'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -5602,6 +5603,7 @@ export interface Error {
     | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
+    | 'ABORT_ALL_ALREADY_NG'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -5992,6 +5994,7 @@ export interface ErrorMetadata {
     | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
+    | 'ABORT_ALL_ALREADY_NG'
   errorMessage?: string
 }
 
@@ -6433,6 +6436,7 @@ export interface Failure {
     | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
+    | 'ABORT_ALL_ALREADY_NG'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -11307,7 +11311,7 @@ export interface KustomizeValues {
   replicas?: KustomizeReplicas[]
 }
 
-export type LDAPSettings = NGAuthSettings & {
+export interface LDAPSettings {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -11315,6 +11319,7 @@ export type LDAPSettings = NGAuthSettings & {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -16221,6 +16226,7 @@ export interface ResponseMessage {
     | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
+    | 'ABORT_ALL_ALREADY_NG'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -18904,6 +18910,11 @@ export interface ServiceV2YamlMetadata {
   serviceYaml?: string
 }
 
+export interface ServiceWithGitInfo {
+  branch?: string
+  ref: string
+}
+
 export interface ServiceYaml {
   description?: string
   identifier: string
@@ -18945,6 +18956,10 @@ export interface ServicesYaml {
 
 export interface ServicesYamlMetadataApiInput {
   serviceIdentifiers: string[]
+}
+
+export interface ServicesYamlMetadataApiInputV2 {
+  serviceWithGitInfoList?: ServiceWithGitInfo[]
 }
 
 export interface SessionTimeoutSettings {
@@ -43936,6 +43951,18 @@ export const createEnvironmentV2Promise = (
 
 export interface UpdateEnvironmentV2QueryParams {
   accountIdentifier: string
+  branch?: string
+  repoIdentifier?: string
+  rootFolder?: string
+  filePath?: string
+  commitMsg?: string
+  lastObjectId?: string
+  resolvedConflictCommitId?: string
+  baseBranch?: string
+  connectorRef?: string
+  storeType?: 'INLINE' | 'REMOTE'
+  lastCommitId?: string
+  isNewBranch?: boolean
 }
 
 export type UpdateEnvironmentV2Props = Omit<
@@ -63831,6 +63858,15 @@ export interface GetArtifactSourceInputsQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export interface GetArtifactSourceInputsPathParams {
@@ -64809,6 +64845,94 @@ export const upsertServiceV2Promise = (
     ServiceRequestDTORequestBody,
     void
   >('PUT', getConfig('ng/api'), `/servicesV2/upsert`, props, signal)
+
+export interface GetServicesYamlAndRuntimeInputsV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+}
+
+export type GetServicesYamlAndRuntimeInputsV2Props = Omit<
+  MutateProps<
+    ResponseServicesV2YamlMetadataDTO,
+    Failure | Error,
+    GetServicesYamlAndRuntimeInputsV2QueryParams,
+    ServicesYamlMetadataApiInputV2,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This api returns service YAML and runtime input YAML
+ */
+export const GetServicesYamlAndRuntimeInputsV2 = (props: GetServicesYamlAndRuntimeInputsV2Props) => (
+  <Mutate<
+    ResponseServicesV2YamlMetadataDTO,
+    Failure | Error,
+    GetServicesYamlAndRuntimeInputsV2QueryParams,
+    ServicesYamlMetadataApiInputV2,
+    void
+  >
+    verb="POST"
+    path={`/servicesV2/v2/services-yaml-metadata`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetServicesYamlAndRuntimeInputsV2Props = Omit<
+  UseMutateProps<
+    ResponseServicesV2YamlMetadataDTO,
+    Failure | Error,
+    GetServicesYamlAndRuntimeInputsV2QueryParams,
+    ServicesYamlMetadataApiInputV2,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This api returns service YAML and runtime input YAML
+ */
+export const useGetServicesYamlAndRuntimeInputsV2 = (props: UseGetServicesYamlAndRuntimeInputsV2Props) =>
+  useMutate<
+    ResponseServicesV2YamlMetadataDTO,
+    Failure | Error,
+    GetServicesYamlAndRuntimeInputsV2QueryParams,
+    ServicesYamlMetadataApiInputV2,
+    void
+  >('POST', `/servicesV2/v2/services-yaml-metadata`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * This api returns service YAML and runtime input YAML
+ */
+export const getServicesYamlAndRuntimeInputsV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseServicesV2YamlMetadataDTO,
+    Failure | Error,
+    GetServicesYamlAndRuntimeInputsV2QueryParams,
+    ServicesYamlMetadataApiInputV2,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseServicesV2YamlMetadataDTO,
+    Failure | Error,
+    GetServicesYamlAndRuntimeInputsV2QueryParams,
+    ServicesYamlMetadataApiInputV2,
+    void
+  >('POST', getConfig('ng/api'), `/servicesV2/v2/services-yaml-metadata`, props, signal)
 
 export interface ValidateTemplateInputsQueryParams {
   accountIdentifier: string

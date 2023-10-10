@@ -31,6 +31,7 @@ export default defineConfig({
           customFetcher: 'services/fetcher',
           allowedOperationIds: [
             'getServicesYamlAndRuntimeInputs',
+            'getServicesYamlAndRuntimeInputsV2',
             'getServiceAccessList',
             'listGitSync',
             'getSourceCodeManagers',
@@ -38,6 +39,9 @@ export default defineConfig({
           ],
           overrides: {
             getServicesYamlAndRuntimeInputs: {
+              useQuery: true
+            },
+            getServicesYamlAndRuntimeInputsV2: {
               useQuery: true
             }
           }

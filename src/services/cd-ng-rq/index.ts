@@ -17,6 +17,17 @@ export {
   useGetServicesYamlAndRuntimeInputsQuery
 } from './hooks/useGetServicesYamlAndRuntimeInputsQuery'
 export type {
+  GetServicesYamlAndRuntimeInputsV2ErrorResponse,
+  GetServicesYamlAndRuntimeInputsV2OkResponse,
+  GetServicesYamlAndRuntimeInputsV2Props,
+  GetServicesYamlAndRuntimeInputsV2QueryQueryParams,
+  GetServicesYamlAndRuntimeInputsV2RequestBody
+} from './hooks/useGetServicesYamlAndRuntimeInputsV2Query'
+export {
+  getServicesYamlAndRuntimeInputsV2,
+  useGetServicesYamlAndRuntimeInputsV2Query
+} from './hooks/useGetServicesYamlAndRuntimeInputsV2Query'
+export type {
   GetSourceCodeManagersErrorResponse,
   GetSourceCodeManagersOkResponse,
   GetSourceCodeManagersProps,
@@ -40,6 +51,8 @@ export type {
 export { listTagsForAmiArtifact, useListTagsForAmiArtifactMutation } from './hooks/useListTagsForAmiArtifactMutation'
 export type { ListTagsForAmiArtifactBodyRequestBody } from './requestBodies/ListTagsForAmiArtifactBodyRequestBody'
 export type { AmiTagObject } from './schemas/AmiTagObject'
+export type { CacheResponseMetadata } from './schemas/CacheResponseMetadata'
+export type { EntityGitDetails } from './schemas/EntityGitDetails'
 export type { Error } from './schemas/Error'
 export type { ErrorMetadataDto } from './schemas/ErrorMetadataDto'
 export type { Failure } from './schemas/Failure'
@@ -53,8 +66,10 @@ export type { ResponseServicesV2YamlMetadataDto } from './schemas/ResponseServic
 export type { ServiceResponse } from './schemas/ServiceResponse'
 export type { ServiceResponseDto } from './schemas/ServiceResponseDto'
 export type { ServiceV2YamlMetadata } from './schemas/ServiceV2YamlMetadata'
+export type { ServiceWithGitInfo } from './schemas/ServiceWithGitInfo'
 export type { ServicesV2YamlMetadataDto } from './schemas/ServicesV2YamlMetadataDto'
 export type { ServicesYamlMetadataApiInput } from './schemas/ServicesYamlMetadataApiInput'
+export type { ServicesYamlMetadataApiInputV2 } from './schemas/ServicesYamlMetadataApiInputV2'
 export type { SourceCodeManagerAuthentication } from './schemas/SourceCodeManagerAuthentication'
 export type { SourceCodeManagerDto } from './schemas/SourceCodeManagerDto'
 export type { StackTraceElement } from './schemas/StackTraceElement'

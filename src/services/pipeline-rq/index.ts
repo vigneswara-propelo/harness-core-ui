@@ -1,10 +1,3 @@
-/*
- * Copyright 2022 Harness Inc. All rights reserved.
- * Use of this source code is governed by the PolyForm Shield 1.0.0 license
- * that can be found in the licenses directory at the root of this repository, also available at
- * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
- */
-
 export type {
   GetPipelineSummaryErrorResponse,
   GetPipelineSummaryOkResponse,
@@ -20,6 +13,7 @@ export type {
   ValidateTemplateInputsQueryQueryParams
 } from './hooks/useValidateTemplateInputsQuery'
 export { useValidateTemplateInputsQuery, validateTemplateInputs } from './hooks/useValidateTemplateInputsQuery'
+export type { CacheResponseMetadata } from './schemas/CacheResponseMetadata'
 export type { EntityGitDetails } from './schemas/EntityGitDetails'
 export type { EntityValidityDetails } from './schemas/EntityValidityDetails'
 export type { Error } from './schemas/Error'
@@ -29,6 +23,7 @@ export type { ExecutionSummaryInfo } from './schemas/ExecutionSummaryInfo'
 export type { ExecutorInfoDto } from './schemas/ExecutorInfoDto'
 export type { Failure } from './schemas/Failure'
 export type { NodeInfo } from './schemas/NodeInfo'
+export type { PipelineStageInfo } from './schemas/PipelineStageInfo'
 export type { PmsPipelineSummaryResponse } from './schemas/PmsPipelineSummaryResponse'
 export type { RecentExecutionInfoDto } from './schemas/RecentExecutionInfoDto'
 export type { ResponseMessage } from './schemas/ResponseMessage'

@@ -404,6 +404,7 @@ export interface AccessControlCheckError {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SPOTNIST_REST_EXCEPTION'
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
@@ -1839,6 +1840,7 @@ export interface Error {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SPOTNIST_REST_EXCEPTION'
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
@@ -2222,6 +2224,7 @@ export interface ErrorMetadata {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SPOTNIST_REST_EXCEPTION'
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
@@ -2847,6 +2850,7 @@ export interface Failure {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SPOTNIST_REST_EXCEPTION'
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
@@ -2979,6 +2983,31 @@ export type FlagConfigurationStepInfo = StepSpecType & {
 
 export interface FlowControlConfig {
   barriers?: BarrierInfoConfig[]
+}
+
+export type GARStepInfo = StepSpecType & {
+  baseImageConnectorRefs?: ParameterFieldListString
+  buildArgs?: {
+    [key: string]: string
+  }
+  cacheFrom?: string[]
+  cacheTo?: string
+  caching?: boolean
+  connectorRef: string
+  context?: string
+  dockerfile?: string
+  host: string
+  imageName: string
+  labels?: {
+    [key: string]: string
+  }
+  optimize?: boolean
+  projectID: string
+  remoteCacheImage?: string
+  resources?: ContainerResource
+  runAsUser?: number
+  tags: string[]
+  target?: string
 }
 
 export type GCRStepInfo = StepSpecType & {
@@ -5739,6 +5768,7 @@ export interface ResponseMessage {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SPOTNIST_REST_EXCEPTION'
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
@@ -6169,6 +6199,13 @@ export interface ResponseYamlDiffResponseDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseYamlSchemaResponse {
+  correlationId?: string
+  data?: YamlSchemaResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface RestResponse {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -6429,6 +6466,10 @@ export interface ScheduledTriggerSpec {
   [key: string]: any
 }
 
+export interface SchemaErrorResponse {
+  message?: string
+}
+
 export type ScmErrorMetadataDTO = ErrorMetadataDTO & {
   conflictCommitId?: string
 }
@@ -6669,6 +6710,7 @@ export interface StageElementConfig {
     [key: string]: string
   }
   template?: TemplateLinkConfig
+  timeout?: string
   type?: string
   variables?: NGVariable[]
   when?: StageWhenCondition
@@ -7127,7 +7169,7 @@ export interface TriggerEventDataCondition {
 
 export interface TriggerEventStatus {
   message?: string
-  status?: 'SUCCESS' | 'FAILED'
+  status?: 'SUCCESS' | 'FAILED' | 'SKIPPED'
 }
 
 export type TriggerFilterProperties = FilterProperties & {
@@ -7388,6 +7430,11 @@ export interface YamlSchemaErrorDTO {
 
 export type YamlSchemaErrorWrapperDTO = ErrorMetadataDTO & {
   schemaErrors?: YamlSchemaErrorDTO[]
+}
+
+export interface YamlSchemaResponse {
+  schema?: JsonNode
+  schemaErrorResponse?: SchemaErrorResponse
 }
 
 export interface ExecutionSummaryInfo {
@@ -13520,6 +13567,7 @@ export interface GetListOfExecutionsQueryParams {
   size?: number
   sort?: string[]
   filterIdentifier?: string
+  showAllExecutions?: boolean
   module?: string
   status?: (
     | 'Running'
@@ -19050,6 +19098,7 @@ export interface GetSchemaYamlQueryParams {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -19173,6 +19222,7 @@ export interface GetSchemaYamlQueryParams {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -19264,6 +19314,297 @@ export const dummyApiForSwaggerSchemaCheckPromise = (
   getUsingFetch<ResponsePipelineConfig, Failure | Error, void, void>(
     getConfig('pipeline/api'),
     `/yaml-schema/dummyApiForSwaggerSchemaCheck`,
+    props,
+    signal
+  )
+
+export interface GetStepYamlSchemaQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  yamlGroup?: string
+  entityType?:
+    | 'CreatePR'
+    | 'GITOPS_MERGE_PR'
+    | 'Projects'
+    | 'Pipelines'
+    | 'PipelineSteps'
+    | 'Http'
+    | 'Email'
+    | 'JiraCreate'
+    | 'JiraUpdate'
+    | 'JiraApproval'
+    | 'HarnessApproval'
+    | 'CustomApproval'
+    | 'Barrier'
+    | 'Queue'
+    | 'FlagConfiguration'
+    | 'ShellScript'
+    | 'K8sCanaryDeploy'
+    | 'K8sApply'
+    | 'K8sBlueGreenDeploy'
+    | 'K8sRollingDeploy'
+    | 'K8sRollingRollback'
+    | 'K8sScale'
+    | 'K8sDelete'
+    | 'K8sBGSwapServices'
+    | 'K8sCanaryDelete'
+    | 'TerraformApply'
+    | 'TerraformPlan'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
+    | 'HelmDeploy'
+    | 'HelmRollback'
+    | 'Connectors'
+    | 'Secrets'
+    | 'Files'
+    | 'Service'
+    | 'Environment'
+    | 'EnvironmentGroup'
+    | 'InputSets'
+    | 'CvConfig'
+    | 'Verify'
+    | 'Delegates'
+    | 'DelegateConfigurations'
+    | 'CvVerificationJob'
+    | 'IntegrationStage'
+    | 'IntegrationSteps'
+    | 'SecurityStage'
+    | 'SecuritySteps'
+    | 'CvKubernetesActivitySource'
+    | 'DeploymentSteps'
+    | 'DeploymentStage'
+    | 'ApprovalStage'
+    | 'PipelineStage'
+    | 'FeatureFlagStage'
+    | 'Template'
+    | 'TemplateStage'
+    | 'CustomDeployment'
+    | 'Triggers'
+    | 'MonitoredService'
+    | 'GitRepositories'
+    | 'FeatureFlags'
+    | 'ServiceNowApproval'
+    | 'ServiceNowCreate'
+    | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
+    | 'GovernancePolicies'
+    | 'POLICY_STEP'
+    | 'Run'
+    | 'RunTests'
+    | 'Plugin'
+    | 'RestoreCacheGCS'
+    | 'RestoreCacheS3'
+    | 'SaveCacheGCS'
+    | 'SaveCacheS3'
+    | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
+    | 'GitClone'
+    | 'ArtifactoryUpload'
+    | 'GCSUpload'
+    | 'S3Upload'
+    | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
+    | 'BuildAndPushECR'
+    | 'BuildAndPushDockerRegistry'
+    | 'CreateStack'
+    | 'DeleteStack'
+    | 'ServerlessAwsLambdaDeploy'
+    | 'ServerlessAwsLambdaRollback'
+    | 'CustomStage'
+    | 'RollbackStack'
+    | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'FetchInstanceScript'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
+    | 'AzureCreateARMResource'
+    | 'BuildAndPushACR'
+    | 'AzureCreateBPResource'
+    | 'AzureARMRollback'
+    | 'Background'
+    | 'Wait'
+    | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
+    | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
+    | 'EcsRunTask'
+    | 'Chaos'
+    | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
+    | 'IACM'
+    | 'IACM'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
+    | 'AsgCanaryDeploy'
+    | 'AsgCanaryDelete'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
+    | 'DeployCloudFunction'
+    | 'DeployCloudFunctionWithNoTraffic'
+    | 'CloudFunctionTrafficShift'
+    | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
+    | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'RouteMapping'
+    | 'AWSSecurityHub'
+    | 'CustomIngest'
+    | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
+    | 'DeployCloudFunctionGenOne'
+    | 'RollbackCloudFunctionGenOne'
+    | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
+    | 'Semgrep'
+    | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
+    | 'DownloadManifests'
+    | 'ServerlessAwsLambdaPrepareRollbackV2'
+    | 'ServerlessAwsLambdaRollbackV2'
+    | 'Coverity'
+    | 'ServerlessAwsLambdaDeployV2'
+    | 'AnalyzeDeploymentImpact'
+    | 'ServerlessAwsLambdaPackageV2'
+    | 'RevertPR'
+    | 'AwsCdkBootstrap'
+    | 'AwsCdkSynth'
+    | 'AwsCdkDiff'
+    | 'AwsCdkDeploy'
+    | 'AwsCdkDestroy'
+    | 'IdpScorecard'
+    | 'IdpCheck'
+    | 'AwsCdkRollback'
+    | 'SlsaVerification'
+    | 'UpdateGitOpsApp'
+    | 'EcsServiceSetup'
+    | 'EcsUpgradeContainer'
+    | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
+  scope?: 'account' | 'org' | 'project' | 'unknown'
+}
+
+export type GetStepYamlSchemaProps = Omit<
+  GetProps<ResponseYamlSchemaResponse, Failure | Error, GetStepYamlSchemaQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get step YAML schema
+ */
+export const GetStepYamlSchema = (props: GetStepYamlSchemaProps) => (
+  <Get<ResponseYamlSchemaResponse, Failure | Error, GetStepYamlSchemaQueryParams, void>
+    path={`/yaml-schema/get`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetStepYamlSchemaProps = Omit<
+  UseGetProps<ResponseYamlSchemaResponse, Failure | Error, GetStepYamlSchemaQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get step YAML schema
+ */
+export const useGetStepYamlSchema = (props: UseGetStepYamlSchemaProps) =>
+  useGet<ResponseYamlSchemaResponse, Failure | Error, GetStepYamlSchemaQueryParams, void>(`/yaml-schema/get`, {
+    base: getConfig('pipeline/api'),
+    ...props
+  })
+
+/**
+ * Get step YAML schema
+ */
+export const getStepYamlSchemaPromise = (
+  props: GetUsingFetchProps<ResponseYamlSchemaResponse, Failure | Error, GetStepYamlSchemaQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseYamlSchemaResponse, Failure | Error, GetStepYamlSchemaQueryParams, void>(
+    getConfig('pipeline/api'),
+    `/yaml-schema/get`,
     props,
     signal
   )
