@@ -26,22 +26,22 @@ import { defaultTo, isEmpty } from 'lodash-es'
 import { DateRange } from '@blueprintjs/datetime'
 import { useStrings } from 'framework/strings'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
-import { ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import { AccountPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { PAGE_TEMPLATE_DEFAULT_PAGE_INDEX } from '@common/constants/Pagination'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import EmptyContentImg from '@common/images/EmptySearchResults.svg'
 import { WebhookEventsQueryParams, useWebhookEventsQueryParamOptions } from '@pipeline/pages/utils/requestUtils'
-import WebhooksTabs from '../WebhooksTabs'
 import WebhooksEventsList from './WebhooksEventsList'
-import { STATUS } from '../utils'
+import { STATUS, WebhookTabIds } from '../utils'
 import NoData from '../NoData'
+import WebhooksTabs from '../WebhooksTabs'
 import css from '../Webhooks.module.scss'
 
 export default function WebhookEvents(): JSX.Element {
   const { getString } = useStrings()
-  const { module } = useParams<ModulePathParams>()
+  const { module } = useParams<AccountPathProps & ModulePathParams>()
   const { updateQueryParams } = useUpdateQueryParams<WebhookEventsQueryParams>()
   const queryParamOptions = useWebhookEventsQueryParamOptions()
   const { page, size, dateFilter, webhookIdentifier } = useQueryParams(queryParamOptions)
@@ -126,14 +126,16 @@ export default function WebhookEvents(): JSX.Element {
       <Page.Header
         title={
           <Heading level={3} font={{ variation: FontVariation.H4 }} data-tooltip-id={'ff_webhook_events_heading'}>
-            {getString('pipeline.webhookEvents.events')}
+            {getString('common.webhooks')}
             <HarnessDocTooltip tooltipId={'ff_webhook_events_heading'} useStandAlone />
           </Heading>
         }
         breadcrumbs={<NGBreadcrumbs customPathParams={{ module }} />}
         className={css.header}
-        content={<WebhooksTabs />}
       />
+      <Page.SubHeader className={css.subHeader}>
+        <WebhooksTabs defaultTabId={WebhookTabIds.EventsTab} />
+      </Page.SubHeader>
       <Page.SubHeader className={css.toolbar}>
         <Layout.Horizontal>
           <DateRangePickerButton

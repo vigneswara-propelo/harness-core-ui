@@ -39,11 +39,11 @@ import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationPro
 import EmptyContentImg from '@common/images/EmptySearchResults.svg'
 import RbacButton from '@rbac/components/Button/Button'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import WebhooksTabs from './WebhooksTabs'
 import WebhooksList from './WebhooksList/WebhooksList'
 import NewWebhookModal from './NewWebhookModal'
-import { STATUS, initialWebhookModalData, Error } from './utils'
+import { STATUS, initialWebhookModalData, Error, WebhookTabIds } from './utils'
 import NoData from './NoData'
+import WebhooksTabs from './WebhooksTabs'
 import css from './Webhooks.module.scss'
 
 export function Webhooks(): JSX.Element {
@@ -156,8 +156,10 @@ export function Webhooks(): JSX.Element {
         }
         breadcrumbs={<NGBreadcrumbs customPathParams={{ module }} />}
         className={css.header}
-        content={<WebhooksTabs />}
       />
+      <Page.SubHeader className={css.subHeader}>
+        <WebhooksTabs defaultTabId={WebhookTabIds.ListTab} />
+      </Page.SubHeader>
       <Page.SubHeader className={css.toolbar}>
         <RbacButton intent="primary" icon="plus" font={{ weight: 'bold' }} {...createButtonProps} />
       </Page.SubHeader>

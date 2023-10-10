@@ -5,47 +5,46 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useState } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
 
-import { TabNavigation } from '@harness/uicore'
+import { Tab, Tabs, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
 import routesv1 from '@common/RouteDefinitions'
 import routesv2 from '@common/RouteDefinitionsV2'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
+import { WebhookTabIds } from './utils'
 
-export default function WebhooksTabs(): React.ReactElement {
+interface WebhooksTabsProps {
+  defaultTabId: WebhookTabIds
+}
+
+export default function WebhooksTabs(props: WebhooksTabsProps): React.ReactElement {
+  const { defaultTabId } = props
+  const [selectedTabId, setSelectedTabId] = useState<WebhookTabIds>(defaultTabId)
   const { getString } = useStrings()
-  const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
+  const { accountId } = useParams<ProjectPathProps & ModulePathParams>()
   const { CDS_NAV_2_0: newLeftNav } = useFeatureFlags()
   const routes = newLeftNav ? routesv2 : routesv1
+  const history = useHistory()
 
   return (
-    <TabNavigation
-      size={'small'}
-      links={[
-        {
-          label: getString('common.webhooks'),
-          to: routes.toWebhooks({
-            accountId,
-            orgIdentifier,
-            projectIdentifier,
-            module
-          }),
-          exact: true
-        },
-        {
-          label: getString('events'),
-          to: routes.toWebhooksEvents({
-            accountId,
-            orgIdentifier,
-            projectIdentifier,
-            module
-          })
+    <Tabs
+      id="webhookTabs"
+      selectedTabId={selectedTabId}
+      onChange={newTabId => {
+        if (newTabId === WebhookTabIds.ListTab) {
+          history.push(routes.toWebhooks({ accountId }))
+        } else {
+          history.push(routes.toWebhooksEvents({ accountId }))
         }
-      ]}
-    />
+        setSelectedTabId(newTabId as WebhookTabIds)
+      }}
+    >
+      <Tab id={WebhookTabIds.ListTab} title={<Text>{getString('pipeline.webhooks.webhooksListing')}</Text>} />
+      <Tab id={WebhookTabIds.EventsTab} title={<Text>{getString('events')}</Text>} />
+    </Tabs>
   )
 }

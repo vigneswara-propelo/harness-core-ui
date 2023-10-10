@@ -5756,6 +5756,7 @@ export interface StringsMap {
   'pipeline.webhooks.successMessage': string
   'pipeline.webhooks.successSubtitle': string
   'pipeline.webhooks.successUpdateMessage': string
+  'pipeline.webhooks.webhooksListing': string
   'freezeWindows.deploymentFreeze': string
   'freezeWindows.freezeNotifications.customMessageTitle': string
   'freezeWindows.freezeNotifications.customizedMessagePlaceholder': string

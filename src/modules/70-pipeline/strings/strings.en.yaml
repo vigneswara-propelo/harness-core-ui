@@ -2026,7 +2026,7 @@ taskOptions:
   planning: 'Planning'
   testing: 'Testing'
 webhooks:
-  newWebhook: Add a webhook
+  newWebhook: New Webhook
   editWebhook: Edit webhook
   createSubtitle: Link to a git webhook and view bi-directional sync events via Harness Interface!
   noWebhook: There are no webhook added.
@@ -2037,6 +2037,7 @@ webhooks:
   successUpdateMessage: Successfully updated {{name}} Webhook
   successSubtitle: You may now perform push activity in Git and view the list of events in Harness
   deleted: Successfully deleted Webhook {{ name }}
+  webhooksListing: Listing
 webhookEvents:
   events: Webhook Events
   dateTime: DateTime

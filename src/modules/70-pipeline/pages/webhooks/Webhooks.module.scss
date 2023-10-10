@@ -74,9 +74,10 @@
 .layout {
   display: grid;
   height: 100vh;
-  grid-template-rows: auto auto 1fr auto;
+  grid-template-rows: auto auto auto 1fr auto;
   grid-template-areas:
     'header'
+    'subheader'
     'toolbar'
     'content'
     'footer';
@@ -84,6 +85,14 @@
 
 .header {
   grid-area: header;
+}
+
+.subHeader {
+  grid-area: subheader;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  align-items: end;
+  height: auto;
 }
 
 .toolbar {

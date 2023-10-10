@@ -44,3 +44,8 @@ export enum STATUS {
 export interface Error {
   message: RBACError
 }
+
+export enum WebhookTabIds {
+  ListTab = 'ListTab',
+  EventsTab = 'EventsTab'
+}
