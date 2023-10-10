@@ -93,7 +93,7 @@ export default function SLONotificationRuleRow({
   }
 
   const sloConditionOptions = useMemo(
-    () => getSLOConditionOptions(isCompositeRequestBasedSLO),
+    () => getSLOConditionOptions(getString, isCompositeRequestBasedSLO),
     [isCompositeRequestBasedSLO]
   )
 
@@ -117,7 +117,7 @@ export default function SLONotificationRuleRow({
         {threshold ? renderThresholdField(index) : null}
         {lookBackDuration && condition?.value === SLOCondition.ERROR_BUDGET_BURN_RATE_IS_ABOVE ? (
           <Layout.Vertical spacing="xsmall" padding={{ left: 'small' }}>
-            <Text>{'Lookback Duration (min)'}</Text>
+            <Text>{getString('cv.notifications.notificationConditions.lookBackDuration')} (min)</Text>
             <TextInput
               required
               type="number"

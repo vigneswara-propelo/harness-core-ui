@@ -160,6 +160,40 @@ describe('NotificationConditions Component', () => {
     expect(getByText('Category C')).toBeInTheDocument()
   })
 
+  test('renders ErrorBudgetBurnRate condition correctly', () => {
+    const notificationDetails = {
+      notificationRule: {
+        conditions: [
+          {
+            type: 'ErrorBudgetBurnRate',
+            spec: {
+              threshold: 30,
+              lookBackDuration: '30m'
+            }
+          }
+        ],
+        identifier: 'notification-1',
+        name: 'notification-1',
+        notificationMethod: {
+          spec: {},
+          type: 'Email'
+        },
+        type: 'ServiceLevelObjective'
+      }
+    } as NotificationRuleResponse
+
+    const { getByText } = render(
+      <TestWrapper>
+        <NotificationConditions notificationDetails={notificationDetails} />
+      </TestWrapper>
+    )
+
+    expect(getByText('conditions')).toBeInTheDocument()
+    expect(getByText('cv.notifications.notificationConditions.errorBudgetBurnRate')).toBeInTheDocument()
+    expect(getByText('cv.notifications.notificationConditions.lookBackDuration')).toBeInTheDocument()
+    expect(getByText('conditions')).toBeInTheDocument()
+  })
+
   test('renders correctly with unknown condition type', () => {
     const notificationDetails = {
       notificationRule: {

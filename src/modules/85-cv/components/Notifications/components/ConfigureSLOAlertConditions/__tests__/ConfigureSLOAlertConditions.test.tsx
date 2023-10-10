@@ -62,7 +62,7 @@ describe('Unit tests for ConfigureSLOAlertConditions ', () => {
 
   test('should be able to fill all the fields of a condition Row when condition is Error Budget remaining percentage', async () => {
     const { getByText, container } = render(<WrapperComponent {...props} />)
-    const sloConditionType = 'Error Budget remaining percentage'
+    const sloConditionType = 'cv.notifications.notificationConditions.errorBudgetRemainingPercentage'
 
     // Selecting condition 1
     const conditionDropdown = container.querySelector('input[name="conditions.0.condition"]') as any
@@ -112,7 +112,7 @@ describe('Unit tests for ConfigureSLOAlertConditions ', () => {
 
   test('should be able to preserve data when we click on back and submit button', async () => {
     const { getByText, container } = render(<WrapperComponent {...props} />)
-    const sloConditionType = 'Error Budget remaining percentage'
+    const sloConditionType = 'cv.notifications.notificationConditions.errorBudgetRemainingPercentage'
 
     // Selecting condition 1
     const conditionDropdown = container.querySelector('input[name="conditions.0.condition"]') as any

@@ -10206,7 +10206,11 @@ export interface StringsMap {
   'cv.notifications.healthScoreBelow': string
   'cv.notifications.newNotificationRule': string
   'cv.notifications.notificationConditions.changeObserved': string
+  'cv.notifications.notificationConditions.errorBudgetBurnRate': string
+  'cv.notifications.notificationConditions.errorBudgetRemainingMinutes': string
+  'cv.notifications.notificationConditions.errorBudgetRemainingPercentage': string
   'cv.notifications.notificationConditions.eventTypes': string
+  'cv.notifications.notificationConditions.lookBackDuration': string
   'cv.notifications.notificationConditions.thresholdValue': string
   'cv.notifications.notificationName': string
   'cv.notifications.serviceHealth': string

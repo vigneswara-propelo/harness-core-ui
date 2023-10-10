@@ -681,7 +681,11 @@ notifications:
   healthScoreBelow: Health score is below
   thresholdBelow: Threshold is below
   notificationConditions:
+    errorBudgetRemainingPercentage: Error Budget remaining percentage
+    errorBudgetRemainingMinutes: Error Budget remaining minutes
+    errorBudgetBurnRate: Error Budget Burn Rate is above
     thresholdValue: Threshold Value
+    lookBackDuration: Lookback Duration
     changeObserved: Change Observed
     eventTypes: Event Types
   validations:

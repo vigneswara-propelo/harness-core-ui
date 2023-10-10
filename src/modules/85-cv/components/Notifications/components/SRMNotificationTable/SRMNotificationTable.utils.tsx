@@ -10,24 +10,27 @@ import React from 'react'
 import { Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { NotificationRuleResponse } from 'services/cv'
-import { useStrings } from 'framework/strings'
+import { UseStringsReturn, useStrings } from 'framework/strings'
 import ImageDeleteService from '@cv/assets/delete-service.svg'
 import { SRMNotification, SRMNotificationType } from '../../NotificationsContainer.types'
-import { sloConditionOptions } from '../SLONotificationRuleRow/SLONotificationRuleRow.constants'
 import {
   changeTypeOptions,
   conditionOptions,
   eventStatusOptions,
   eventTypeOptions
 } from '../ConfigureMonitoredServiceAlertConditions/ConfigureMonitoredServiceAlertConditions.constants'
+import { getSLOConditionOptions } from '../SLONotificationRuleRow/SLONotificationRuleRow.utils'
 
-export function getCurrentNotification(data: NotificationRuleResponse): SRMNotification {
+export function getCurrentNotification(
+  getString: UseStringsReturn['getString'],
+  data: NotificationRuleResponse
+): SRMNotification {
   let currentConditions = []
   if (data?.notificationRule?.type === SRMNotificationType.SERVICE_LEVEL_OBJECTIVE) {
     currentConditions = data?.notificationRule?.conditions?.map(condition => {
       return {
         id: uuid(),
-        condition: sloConditionOptions.find(el => el.value === condition?.type),
+        condition: getSLOConditionOptions(getString).find(el => el.value === condition?.type),
         threshold: condition?.spec?.threshold,
         ...(condition?.spec?.lookBackDuration && {
           lookBackDuration: condition?.spec?.lookBackDuration?.replace('m', '')
