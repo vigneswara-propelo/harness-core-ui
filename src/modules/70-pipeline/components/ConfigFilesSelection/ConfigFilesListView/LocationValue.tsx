@@ -46,7 +46,12 @@ export function LocationValue(props: ILocationValueItem): React.ReactElement {
   }
 
   return isManifest ? (
-    <Container key={`${directPath}`} onClick={() => handleClick(directPath)} flex>
+    <Container
+      data-testid={`${directPath}`}
+      key={`${directPath}`}
+      onClick={() => handleClick(directPath)}
+      flex={{ justifyContent: 'flex-start' }}
+    >
       {isHarnessFileStore && <Icon name="main-view" margin={{ right: 'xsmall' }} />}
       <Text color={Color.BLACK} className={isHarnessFileStore ? css.locationLink : ''} lineClamp={1}>
         {directPath}
@@ -71,7 +76,12 @@ export function LocationValue(props: ILocationValueItem): React.ReactElement {
           )
         }
         return (
-          <Container flex key={`${locationValue}${i}`} onClick={() => handleClick(locationValue)}>
+          <Container
+            flex={{ justifyContent: 'flex-start' }}
+            key={`${locationValue}${i}`}
+            onClick={() => handleClick(locationValue)}
+            data-testid={`${locationValue}${i}`}
+          >
             {isHarnessFileStore && <Icon name="main-view" margin={{ right: 'xsmall' }} />}
             <Text color={Color.BLACK} className={isHarnessFileStore ? css.locationLink : ''} lineClamp={1}>
               {locationValue}
