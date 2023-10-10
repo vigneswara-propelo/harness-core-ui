@@ -326,8 +326,7 @@ export interface InfrastructureGroup {
 export const getInfraGroups = (
   deploymentType: ServiceDefinition['type'],
   getString: UseStringsReturn['getString'],
-  isSvcEnvEntityEnabled: boolean,
-  isRancherEnabled: boolean
+  isSvcEnvEntityEnabled: boolean
 ): InfrastructureGroup[] => {
   const serverlessInfraGroups: InfrastructureGroup[] = [
     {
@@ -457,11 +456,9 @@ export const getInfraGroups = (
   const defaultKubernetes = [
     InfraDeploymentType.KubernetesGcp,
     InfraDeploymentType.KubernetesAzure,
-    InfraDeploymentType.KubernetesAws
+    InfraDeploymentType.KubernetesAws,
+    InfraDeploymentType.KubernetesRancher
   ]
-  const kubernetesItems = isRancherEnabled
-    ? [...defaultKubernetes, InfraDeploymentType.KubernetesRancher]
-    : [...defaultKubernetes]
 
   const kuberntesInfraGroups: InfrastructureGroup[] = [
     {
@@ -470,7 +467,7 @@ export const getInfraGroups = (
     },
     {
       groupLabel: getString('pipelineSteps.deploy.infrastructure.viaCloudProvider'),
-      items: getInfraGroupItems(kubernetesItems, getString)
+      items: getInfraGroupItems(defaultKubernetes, getString)
     }
   ]
 

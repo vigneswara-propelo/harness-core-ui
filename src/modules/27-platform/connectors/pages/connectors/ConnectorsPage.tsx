@@ -104,7 +104,6 @@ import {
   ConnectorsQueryParams,
   useConnectorsQueryParamOptions
 } from './utils/ConnectorListViewUtils'
-import { filterRancherConnector } from './utils/ConnectorUtils'
 import css from './ConnectorsPage.module.scss'
 
 interface ConnectorsListProps {
@@ -138,7 +137,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
   const history = useHistory()
   useDocumentTitle(getString('connectorsLabel'))
   const { trackEvent } = useTelemetry()
-  const { CDS_RANCHER_SUPPORT_NG, PL_FAVORITES } = useFeatureFlags()
+  const { PL_FAVORITES } = useFeatureFlags()
   const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: { accountIdentifier: accountId },
@@ -293,14 +292,12 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
       openConnectorModal(false, val?.value as ConnectorInfoDTO['type'], undefined)
       hideDrawer()
     }
-    const categories = CDS_RANCHER_SUPPORT_NG
-      ? categoriesMap
-      : { ...categoriesMap, categories: filterRancherConnector(categoriesMap.categories) }
+
     return loadingCatalogue ? (
       <PageSpinner />
     ) : (
       <AddDrawer
-        addDrawerMap={categories}
+        addDrawerMap={categoriesMap}
         onSelect={onSelect}
         onClose={hideDrawer}
         drawerContext={DrawerContext.PAGE}

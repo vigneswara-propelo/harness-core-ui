@@ -173,7 +173,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
     [updateStage]
   )
 
-  const { NG_SVC_ENV_REDESIGN: isSvcEnvEnabled, CDS_RANCHER_SUPPORT_NG } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN: isSvcEnvEnabled } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   const { accountId } = useParams<{
@@ -189,7 +189,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
   )
 
   const [infraGroups, setInfraGroups] = React.useState<InfrastructureGroup[]>(
-    getInfraGroups(selectedDeploymentType, getString, !!isSvcEnvEnabled, !!CDS_RANCHER_SUPPORT_NG)
+    getInfraGroups(selectedDeploymentType, getString, !!isSvcEnvEnabled)
   )
 
   useEffect(() => {
@@ -263,7 +263,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
       infraReset = true
     }
 
-    const initialInfraGroups = getInfraGroups(newDeploymentType, getString, !!isSvcEnvEnabled, !!CDS_RANCHER_SUPPORT_NG)
+    const initialInfraGroups = getInfraGroups(newDeploymentType, getString, !!isSvcEnvEnabled)
 
     const filteredInfraGroups = initialInfraGroups.map(group => ({
       ...group,
@@ -278,7 +278,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
 
     setSelectedInfrastructureType(infrastructureType)
 
-    setInfraGroups(getInfraGroups(newDeploymentType, getString, !!isSvcEnvEnabled, !!CDS_RANCHER_SUPPORT_NG))
+    setInfraGroups(getInfraGroups(newDeploymentType, getString, !!isSvcEnvEnabled))
 
     const initialInfraDefValues = getInfrastructureDefaultValue(stage, infrastructureType)
     setInitialInfrastructureDefinitionValues(initialInfraDefValues)

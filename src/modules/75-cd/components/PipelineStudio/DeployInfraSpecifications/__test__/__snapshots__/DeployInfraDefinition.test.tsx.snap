@@ -370,6 +370,57 @@ exports[`Deploy infra specifications test Should match snapshot 1`] = `
                   value="KubernetesAws"
                 />
               </label>
+              <label
+                class="Thumbnail--squareCardContainer"
+              >
+                <div
+                  class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+                  tabindex="0"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="rancher"
+                  >
+                    <svg
+                      height="26"
+                      viewBox="0 0 32 33"
+                      width="26"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g
+                        clip-path="url(#rancher_svg__a)"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M23.75 10.706h3.322c.68 0 1.234.558 1.239 1.233v6.408c0 .68-.559 1.233-1.234 1.233h-3.323c-.68 0-1.233-.558-1.233-1.233V15.83a1.217 1.217 0 00-.496.982v2.108c0 .68.559 1.234 1.234 1.234h2.157v3.279c0 .417-.34.753-.753.753h-4.056a.75.75 0 01-.753-.753v-3.046a.75.75 0 00-.753-.753H8.973a.754.754 0 00-.753.753v3.046a.75.75 0 01-.753.753H3.41a.75.75 0 01-.752-.753v-8.764L.826 16.112a.184.184 0 01-.257-.024l-.525-.617a.19.19 0 01-.014-.224l2.69-4.095a.746.746 0 01.686-.442h14.296c.466 0 .82.418.743.875l-.291 1.744a.754.754 0 00.743.874h2.87c.37 0 .676-.262.739-.612a1.856 1.856 0 01-.583.092h-2.05c-.68 0-1.141-.544-1.03-1.214l.345-2.084c.112-.666.37-1.215.578-1.215.204 0 .374.56.374 1.234v.316a.935.935 0 01.117-.01h3.41c.03-.005.053-.005.083-.005zm7.888-.321l.345 2.084c.112.67-.35 1.214-1.025 1.22h-2.05l-.058-.003a.944.944 0 00-.058-.003v-1.496c.039-.005.078-.005.116-.005h.544c.68 0 1.234-.558 1.234-1.234v-.544c0-.68.166-1.234.374-1.234.204 0 .467.545.578 1.215z"
+                          fill="#0075a8"
+                          fill-rule="evenodd"
+                        />
+                      </g>
+                      <defs>
+                        <clippath
+                          id="rancher_svg__a"
+                        >
+                          <path
+                            d="M0 .678h32v32H0z"
+                            fill="#fff"
+                          />
+                        </clippath>
+                      </defs>
+                    </svg>
+                  </span>
+                </div>
+                <p
+                  class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
+                >
+                  platform.connectors.rancher.title
+                </p>
+                <input
+                  name="deploymentType"
+                  type="checkbox"
+                  value="KubernetesRancher"
+                />
+              </label>
             </div>
           </div>
         </div>
