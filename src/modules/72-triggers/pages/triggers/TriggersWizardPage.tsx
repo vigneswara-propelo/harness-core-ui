@@ -89,6 +89,7 @@ import {
   CronFormat
 } from '@common/components/SchedulePanel/components/utils'
 import SchedulePanel from '@common/components/SchedulePanel/SchedulePanel'
+import { negateImplication } from '@modules/10-common/utils/conditionalUtils'
 import type { AddConditionInterface } from './views/AddConditionsSection'
 import { GitSourceProviders } from './utils/TriggersListUtils'
 import {
@@ -211,7 +212,8 @@ const TriggersWizardPage = (): JSX.Element => {
   const {
     CD_GIT_WEBHOOK_POLLING: isGitWebhookPollingEnabled,
 
-    CI_YAML_VERSIONING
+    CI_YAML_VERSIONING,
+    PIE_STATIC_YAML_SCHEMA
   } = useFeatureFlags()
 
   const isSimplifiedYAML = isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
@@ -312,7 +314,7 @@ const TriggersWizardPage = (): JSX.Element => {
         projectIdentifier
       })
     },
-    lazy: !__DEV__
+    lazy: negateImplication(__DEV__, !!PIE_STATIC_YAML_SCHEMA)
   })
   const { data: triggerStaticSchema, isLoading: loadingStaticYamlSchema } = useGetIndividualStaticSchemaQuery(
     {
@@ -321,7 +323,7 @@ const TriggersWizardPage = (): JSX.Element => {
       }
     },
     {
-      enabled: !__DEV__
+      enabled: negateImplication(__DEV__, !!PIE_STATIC_YAML_SCHEMA)
     }
   )
 

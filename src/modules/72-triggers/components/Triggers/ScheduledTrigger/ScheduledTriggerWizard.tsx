@@ -75,6 +75,8 @@ import {
 import { scheduledTypes } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import useTriggerView from '@common/components/Wizard/useTriggerView'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { negateImplication } from '@modules/10-common/utils/conditionalUtils'
 import TitleWithSwitch from '../components/TitleWithSwitch/TitleWithSwitch'
 import { flattenKeys, getModifiedTemplateValues } from '../WebhookTrigger/utils'
 import type { TriggerProps } from '../Trigger'
@@ -109,6 +111,7 @@ export default function ScheduledTriggerWizard(
 
   const history = useHistory()
   const { getString } = useStrings()
+  const { PIE_STATIC_YAML_SCHEMA } = useFeatureFlags()
   const { showSuccess, showError, clear } = useToaster()
 
   const {
@@ -175,7 +178,7 @@ export default function ScheduledTriggerWizard(
         projectIdentifier
       })
     },
-    lazy: !__DEV__
+    lazy: negateImplication(__DEV__, !!PIE_STATIC_YAML_SCHEMA)
   })
   const { data: triggerStaticSchema, isLoading: loadingStaticYamlSchema } = useGetIndividualStaticSchemaQuery(
     {
@@ -184,7 +187,7 @@ export default function ScheduledTriggerWizard(
       }
     },
     {
-      enabled: !__DEV__
+      enabled: negateImplication(__DEV__, !!PIE_STATIC_YAML_SCHEMA)
     }
   )
 

@@ -84,6 +84,7 @@ import type { AddConditionInterface } from '@triggers/components/AddConditionsSe
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import useTriggerView from '@common/components/Wizard/useTriggerView'
+import { negateImplication } from '@modules/10-common/utils/conditionalUtils'
 import TitleWithSwitch from '../components/TitleWithSwitch/TitleWithSwitch'
 import {
   ConnectorRefInterface,
@@ -124,7 +125,7 @@ export default function WebhookTriggerWizard(
   props: TriggerProps<any> & { children: JSX.Element[] }
 ): React.ReactElement {
   const { isNewTrigger, baseType, triggerData, type: sourceRepo } = props
-  const { CD_GIT_WEBHOOK_POLLING: isGitWebhookPollingEnabled } = useFeatureFlags()
+  const { CD_GIT_WEBHOOK_POLLING: isGitWebhookPollingEnabled, PIE_STATIC_YAML_SCHEMA } = useFeatureFlags()
 
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [selectedView, setSelectedView] = useTriggerView(isNewTrigger)
@@ -200,7 +201,7 @@ export default function WebhookTriggerWizard(
         projectIdentifier
       })
     },
-    lazy: !__DEV__
+    lazy: negateImplication(__DEV__, !!PIE_STATIC_YAML_SCHEMA)
   })
   const { data: triggerStaticSchema, isLoading: loadingStaticYamlSchema } = useGetIndividualStaticSchemaQuery(
     {
@@ -209,7 +210,7 @@ export default function WebhookTriggerWizard(
       }
     },
     {
-      enabled: !__DEV__
+      enabled: negateImplication(__DEV__, !!PIE_STATIC_YAML_SCHEMA)
     }
   )
 
