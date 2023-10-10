@@ -1903,6 +1903,82 @@ export const useApplicationServiceListApps = (props: UseApplicationServiceListAp
     { base: window.getApiBaseUrl('gitops'), ...props }
   )
 
+export interface RepositoriesHelmChart {
+  name?: string
+  versions?: string[]
+}
+
+export interface RepositoriesHelmChartsResponse {
+  items?: RepositoriesHelmChart[]
+}
+
+export interface AgentRepositoryServiceGetHelmChartsQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  /**
+   * Repo URL for query.
+   */
+  'query.repo'?: string
+  /**
+   * Whether to force a cache refresh on repo's connection state.
+   */
+  'query.forceRefresh'?: boolean
+  /**
+   * The associated project project.
+   */
+  'query.project'?: string
+}
+
+export interface AgentRepositoryServiceGetHelmChartsPathParams {
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier: string
+  identifier: string
+}
+
+export type UseAgentRepositoryServiceGetHelmChartsProps = Omit<
+  UseGetProps<
+    RepositoriesHelmChartsResponse,
+    GatewayruntimeError,
+    AgentRepositoryServiceGetHelmChartsQueryParams,
+    AgentRepositoryServiceGetHelmChartsPathParams
+  >,
+  'path'
+> &
+  AgentRepositoryServiceGetHelmChartsPathParams
+
+/**
+ * GetHelmCharts returns list of helm charts in the specified repository
+ *
+ * GetHelmCharts returns list of helm charts in the specified repository.
+ */
+export const useAgentRepositoryServiceGetHelmCharts = ({
+  agentIdentifier,
+  identifier,
+  ...props
+}: UseAgentRepositoryServiceGetHelmChartsProps) =>
+  useGet<
+    RepositoriesHelmChartsResponse,
+    GatewayruntimeError,
+    AgentRepositoryServiceGetHelmChartsQueryParams,
+    AgentRepositoryServiceGetHelmChartsPathParams
+  >(
+    (paramsInPath: AgentRepositoryServiceGetHelmChartsPathParams) =>
+      `/api/v1/agents/${paramsInPath.agentIdentifier}/repositories/${paramsInPath.identifier}/helmcharts`,
+    { base: window.getApiBaseUrl('gitops'), pathParams: { agentIdentifier, identifier }, ...props }
+  )
+
 export interface AgentApplicationServiceGetPathParams {
   /**
    * Agent identifier for entity.

@@ -7,6 +7,9 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly branchTag: string
+  readonly flexUnset: string
   readonly header: string
+  readonly targetRevisionContainer: string
 }
 export default styles

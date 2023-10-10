@@ -11,3 +11,22 @@
   color: var(--black);
   padding: var(--spacing-4) 0;
 }
+
+.targetRevisionContainer {
+  display: flex;
+  align-items: end;
+  gap: 16px;
+  :global {
+    .TextInput--main {
+      margin-bottom: 0 !important;
+    }
+  }
+}
+
+.branchTag {
+  width: 122px;
+}
+
+.flexUnset {
+  flex: unset !important;
+}

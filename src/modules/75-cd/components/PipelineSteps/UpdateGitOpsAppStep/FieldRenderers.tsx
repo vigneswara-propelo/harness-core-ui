@@ -11,13 +11,15 @@ import { v4 as uuid } from 'uuid'
 import { FieldArray } from 'formik'
 import type { FormikValues } from 'formik'
 import cx from 'classnames'
-import { Button, ButtonVariation, FormInput } from '@harness/uicore'
+import { Button, ButtonVariation, FormInput, SelectOption } from '@harness/uicore'
 import type { AllowedTypes } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import { Variable } from './helper'
+import { FIELD_KEYS, Variable } from './helper'
 import css from '@cd/components/UpdateReleaseRepo/OptionalConfig.module.scss'
+import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import ownCSS from './UpdateGitOpsAppStep.module.scss'
 
 interface RenderFieldArrayProps {
   fieldKey: string
@@ -37,8 +39,6 @@ export const renderFieldArray = ({
   buttonLabel,
   getString,
   readonly,
-  // allowableTypes,
-  // expressions,
   formValues,
   valueLabel
 }: RenderFieldArrayProps): React.ReactElement => {
@@ -97,4 +97,70 @@ export const renderFieldArray = ({
       />
     </MultiTypeFieldSelector>
   )
+}
+
+interface RenderFormByTypeProps {
+  getString: UseStringsReturn['getString']
+  formValues: FormikValues
+  type?: string
+  readonly?: boolean
+  allowableTypes: AllowedTypes
+  expressions: string[]
+  valueFiles: SelectOption[]
+  loadingValueFileOptions?: boolean
+}
+
+export const renderFormByType = ({
+  getString,
+  formValues,
+  type,
+  readonly,
+  allowableTypes,
+  expressions,
+  valueFiles,
+  loadingValueFileOptions
+}: RenderFormByTypeProps): JSX.Element | null => {
+  if (type === 'Helm') {
+    return (
+      <div>
+        <div className={ownCSS.header}>Helm</div>
+        <div className={stepCss.formGroup}>
+          <FormInput.MultiSelect
+            name={FIELD_KEYS.valueFiles}
+            items={valueFiles || []}
+            label={getString('cd.valueFiles')}
+            disabled={readonly || loadingValueFileOptions}
+            placeholder={loadingValueFileOptions ? getString('loading') : undefined}
+          />
+        </div>
+        <div className={stepCss.formGroup}>
+          {renderFieldArray({
+            getString,
+            readonly,
+            allowableTypes,
+            expressions,
+            formValues,
+            fieldKey: FIELD_KEYS.parameters,
+            labelKey: 'platform.connectors.parameters',
+            buttonLabel: 'platform.connectors.addParameter',
+            valueLabel: 'valueLabel'
+          })}
+        </div>
+        <div className={stepCss.formGroup}>
+          {renderFieldArray({
+            getString,
+            readonly,
+            allowableTypes,
+            expressions,
+            formValues,
+            fieldKey: FIELD_KEYS.fileParameters,
+            labelKey: 'cd.fileParameters',
+            buttonLabel: 'platform.connectors.addParameter',
+            valueLabel: 'cd.pathValue'
+          })}
+        </div>
+      </div>
+    )
+  }
+  return null
 }

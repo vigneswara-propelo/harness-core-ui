@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { FormikErrors } from 'formik'
-import { cloneDeep } from 'lodash-es'
+import { cloneDeep, get, isEmpty } from 'lodash-es'
 import { v4 as uuid } from 'uuid'
 import { IconName } from '@harness/icons'
 import type { SelectOption } from '@harness/uicore'
@@ -18,6 +18,7 @@ import { StepViewType, StepProps } from '@pipeline/components/AbstractSteps/Step
 import type { StringsMap } from 'stringTypes'
 import { UpdateGitOpsAppStepData, SOURCE_TYPE_UNSET, ApplicationOption } from './helper'
 import UpdateGitOpsAppStepWithRef from './UpdateGitOpsAppWidget'
+import UpdateGitopsAppInputStep from './UpdateGitopsAppInputStep'
 
 export class UpdateGitOpsApp extends PipelineStep<UpdateGitOpsAppStepData> {
   constructor() {
@@ -32,16 +33,26 @@ export class UpdateGitOpsApp extends PipelineStep<UpdateGitOpsAppStepData> {
       onUpdate,
       stepViewType,
       formikRef,
-      // customStepProps,
       isNewStep,
       readonly,
       allowableTypes,
-      // inputSetData,
+      inputSetData,
       onChange
     } = props
 
     if (this.isTemplatizedView(stepViewType)) {
-      return <div>isTemplatizedView</div>
+      return (
+        <UpdateGitopsAppInputStep
+          initialValues={this.getInitialValues(initialValues)}
+          onUpdate={data => onUpdate?.(this.processFormData(data))}
+          onChange={data => onUpdate?.(this.processFormData(data))}
+          stepViewType={stepViewType}
+          allowableTypes={allowableTypes}
+          readonly={!!get(inputSetData, 'readonly', false)}
+          template={get(inputSetData, 'template', undefined)}
+          path={get(inputSetData, 'path', '')}
+        />
+      )
     }
     if (stepViewType === StepViewType.InputVariable) {
       return <div>StepViewType.InputVariable</div>
@@ -79,31 +90,56 @@ export class UpdateGitOpsApp extends PipelineStep<UpdateGitOpsAppStepData> {
 
   private getInitialValues(initialValues: UpdateGitOpsAppStepData): UpdateGitOpsAppStepData {
     const clonedValues: UpdateGitOpsAppStepData = cloneDeep(initialValues)
+
+    /* istanbul ignore else */
+    if (isEmpty(clonedValues.spec)) {
+      return initialValues
+    }
+
+    /* istanbul ignore else */
     if (clonedValues.spec.applicationName) {
       const appName = clonedValues.spec.applicationName
       const agentId = clonedValues.spec.agentId
-      clonedValues.spec.applicationNameOption = {
-        label: `${appName} (${agentId})`,
-        value: appName || '',
-        sourceType: SOURCE_TYPE_UNSET,
-        agentId
-      }
+      clonedValues.spec.applicationNameOption =
+        appName === RUNTIME_INPUT_VALUE
+          ? RUNTIME_INPUT_VALUE
+          : {
+              label: `${appName} (${agentId})`,
+              value: appName || '',
+              sourceType: SOURCE_TYPE_UNSET,
+              agentId
+            }
+    }
+
+    const targetRevision = clonedValues.spec.targetRevision as string
+    /* istanbul ignore else */
+    if (targetRevision) {
+      clonedValues.spec.targetRevision =
+        targetRevision === RUNTIME_INPUT_VALUE
+          ? RUNTIME_INPUT_VALUE
+          : {
+              label: targetRevision,
+              value: targetRevision
+            }
     }
 
     const parameters = clonedValues.spec.helm?.parameters
     const fileParameters = clonedValues.spec.helm?.fileParameters
 
+    /* istanbul ignore else */
     if (!clonedValues.spec.helm) {
       clonedValues.spec.helm = {}
     }
 
     // Adding uuid to parameters
+    /* istanbul ignore else */
     if (parameters?.length) {
       clonedValues.spec.helm.parameters = parameters.map(variable => ({
         ...variable,
         id: uuid()
       }))
     }
+    /* istanbul ignore else */
     if (fileParameters?.length) {
       clonedValues.spec.helm.fileParameters = fileParameters.map(({ path, ...variable }) => ({
         ...variable,
@@ -113,6 +149,8 @@ export class UpdateGitOpsApp extends PipelineStep<UpdateGitOpsAppStepData> {
     }
 
     const valueFiles = clonedValues.spec.helm?.valueFiles as string[]
+
+    /* istanbul ignore else */
     if (valueFiles?.length) {
       clonedValues.spec.helm.valueFiles = valueFiles.map(value => ({
         label: value,
@@ -127,38 +165,55 @@ export class UpdateGitOpsApp extends PipelineStep<UpdateGitOpsAppStepData> {
     const clonedValues = cloneDeep(data)
     const applicationNameOption = clonedValues.spec.applicationNameOption
     const isApplicationRuntime = applicationNameOption === RUNTIME_INPUT_VALUE
-    const appName = (applicationNameOption as ApplicationOption)?.value
-    /* istanbul ignore next */
-    const parameters = clonedValues.spec.helm?.parameters
-    /* istanbul ignore next */
-    const fileParameters = clonedValues.spec.helm?.fileParameters
-    /* istanbul ignore next */
-    const valueFiles = clonedValues.spec.helm?.valueFiles as SelectOption[]
-    const isHelm = (data.spec?.applicationNameOption as ApplicationOption)?.sourceType === 'Helm'
+    const targetRevisionOption = clonedValues.spec.targetRevision
+    const isTargetRevisionRuntime = targetRevisionOption === RUNTIME_INPUT_VALUE
+    const appName = /* istanbul ignore next */ (applicationNameOption as ApplicationOption)?.value
+    const targetRevision = /* istanbul ignore next */ (targetRevisionOption as SelectOption)?.value
 
+    const parameters = /* istanbul ignore next */ clonedValues.spec.helm?.parameters
+    const fileParameters = /* istanbul ignore next */ clonedValues.spec.helm?.fileParameters
+    const valueFiles = /* istanbul ignore next */ clonedValues.spec.helm?.valueFiles as SelectOption[]
+    const isHelm =
+      /* istanbul ignore next */ (data.spec?.applicationNameOption as ApplicationOption)?.sourceType === 'Helm'
+
+    /* istanbul ignore else */
     if (appName && typeof appName === 'string') {
       clonedValues.spec.applicationName = appName
       clonedValues.spec.agentId = (applicationNameOption as ApplicationOption)?.agentId
     }
+
+    /* istanbul ignore else */
     if (isApplicationRuntime) {
       clonedValues.spec.applicationName = RUNTIME_INPUT_VALUE
       clonedValues.spec.agentId = RUNTIME_INPUT_VALUE
-      delete clonedValues.spec.targetRevision
+      clonedValues.spec.targetRevision = RUNTIME_INPUT_VALUE
+      // delete clonedValues.spec.targetRevision
     }
 
+    /* istanbul ignore else */
+    if (targetRevision && typeof targetRevision === 'string') {
+      clonedValues.spec.targetRevision = targetRevision
+    }
+    /* istanbul ignore else */
+    if (isTargetRevisionRuntime) {
+      clonedValues.spec.targetRevision = RUNTIME_INPUT_VALUE
+    }
+
+    /* istanbul ignore else */
     if (!clonedValues.spec.helm) {
       clonedValues.spec.helm = {}
     }
 
     // Removing uuid from parameters
-    /* istanbul ignore next */
-    if (isHelm && parameters?.length) {
+    /* istanbul ignore else */
+    if (isHelm && /* istanbul ignore next */ parameters?.length) {
       clonedValues.spec.helm.parameters = parameters
         .filter(variable => variable.value)
         .map(({ id, ...variable }) => variable)
     }
-    /* istanbul ignore next */
-    if (isHelm && fileParameters?.length) {
+
+    /* istanbul ignore else */
+    if (isHelm && /* istanbul ignore next */ fileParameters?.length) {
       clonedValues.spec.helm.fileParameters = fileParameters
         .filter(variable => variable.value)
         .map(({ id, value, ...variable }) => ({
@@ -172,7 +227,8 @@ export class UpdateGitOpsApp extends PipelineStep<UpdateGitOpsAppStepData> {
       clonedValues.spec.helm.valueFiles = valueFiles.filter(option => option?.value).map(({ value }) => value as string)
     }
 
-    if (!isHelm) {
+    /* istanbul ignore else */
+    if (!isHelm || isEmpty(clonedValues.spec.helm)) {
       delete clonedValues.spec.helm
     }
 

@@ -7,15 +7,13 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { isEmpty, debounce } from 'lodash-es'
+import { isEmpty } from 'lodash-es'
 import * as Yup from 'yup'
-import type { FormikValues, FormikProps } from 'formik'
+import type { FormikProps } from 'formik'
 import cx from 'classnames'
 import { Formik, FormInput, MultiTypeInputType, SelectOption, RUNTIME_INPUT_VALUE } from '@harness/uicore'
-import type { AllowedTypes } from '@harness/uicore'
 import { useAgentRepositoryServiceGetAppDetails } from 'services/gitops'
 import { useStrings } from 'framework/strings'
-import type { UseStringsReturn } from 'framework/strings'
 import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
@@ -25,77 +23,12 @@ import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/S
 import { useApplications } from '@cd/components/PipelineSteps/UpdateGitOpsAppStep/useApplications'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import type { UpdateGitOpsAppProps, UpdateGitOpsAppStepData, ApplicationOption } from './helper'
-import { SOURCE_TYPE_UNSET, FIELD_KEYS } from './helper'
-import { renderFieldArray } from './FieldRenderers'
+import { SOURCE_TYPE_UNSET, FIELD_KEYS, gitopsAllowableTypes, isHelmApp } from './helper'
+import { renderFormByType } from './FieldRenderers'
+import { TargetRevision } from './TargetRevision'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-import ownCSS from './UpdateGitOpsAppStep.module.scss'
-
-interface RenderFormByTypeProps {
-  getString: UseStringsReturn['getString']
-  formValues: FormikValues
-  type?: string
-  readonly?: boolean
-  allowableTypes: AllowedTypes
-  expressions: string[]
-  valueFiles: SelectOption[]
-  loadingValueFileOptions?: boolean
-}
-
-const renderFormByType = ({
-  getString,
-  formValues,
-  type,
-  readonly,
-  allowableTypes,
-  expressions,
-  valueFiles,
-  loadingValueFileOptions
-}: RenderFormByTypeProps): JSX.Element | null => {
-  if (type === 'Helm') {
-    return (
-      <div>
-        <div className={ownCSS.header}>Helm</div>
-        <div className={stepCss.formGroup}>
-          <FormInput.MultiSelect
-            name={FIELD_KEYS.valueFiles}
-            items={valueFiles || []}
-            label={getString('cd.valueFiles')}
-            disabled={readonly || loadingValueFileOptions}
-            placeholder={loadingValueFileOptions ? getString('loading') : undefined}
-          />
-        </div>
-        <div className={stepCss.formGroup}>
-          {renderFieldArray({
-            getString,
-            readonly,
-            allowableTypes,
-            expressions,
-            formValues,
-            fieldKey: FIELD_KEYS.parameters,
-            labelKey: 'platform.connectors.parameters',
-            buttonLabel: 'platform.connectors.addParameter',
-            valueLabel: 'valueLabel'
-          })}
-        </div>
-        <div className={stepCss.formGroup}>
-          {renderFieldArray({
-            getString,
-            readonly,
-            allowableTypes,
-            expressions,
-            formValues,
-            fieldKey: FIELD_KEYS.fileParameters,
-            labelKey: 'cd.fileParameters',
-            buttonLabel: 'platform.connectors.addParameter',
-            valueLabel: 'cd.pathValue'
-          })}
-        </div>
-      </div>
-    )
-  }
-  return null
-}
 
 function UpdateGitOpsAppStep(
   props: UpdateGitOpsAppProps,
@@ -104,7 +37,6 @@ function UpdateGitOpsAppStep(
   const { initialValues, onUpdate, isNewStep = true, onChange, stepViewType, allowableTypes, readonly } = props
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
-  const gitopsAllowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME] as AllowedTypes
 
   const { getString } = useStrings()
   const { data } = useApplications()
@@ -114,8 +46,8 @@ function UpdateGitOpsAppStep(
   const {
     data: appDetails,
     loading: appDetailsLoading,
-    // error: appDetailsFetchError,
-    refetch: fetchAppDetails
+    refetch: fetchAppDetails,
+    cancel: cancelAppDetails
   } = useAgentRepositoryServiceGetAppDetails({
     agentIdentifier: 'dummy',
     pathParams: { agentIdentifier: 'dummy', identifier: 'dummy' },
@@ -128,12 +60,13 @@ function UpdateGitOpsAppStep(
     lazy: true
   })
 
-  const fetchappDetailsWrapper = (option?: ApplicationOption): void => {
+  const fetchappDetailsWrapper = (option?: ApplicationOption, targetRevisionValue?: string): void => {
     const agentId = option?.agentId
     const chart = option?.chart
-    const targetRevision = option?.targetRevision
+    const targetRevision = targetRevisionValue || option?.targetRevision
     const repoIdentifier = option?.repoIdentifier
-    if (!agentId || !repoIdentifier || option?.sourceType !== 'Helm') return
+    if (!agentId || !repoIdentifier || !isHelmApp(option)) return
+    cancelAppDetails()
     fetchAppDetails({
       pathParams: {
         agentIdentifier: agentId,
@@ -144,7 +77,8 @@ function UpdateGitOpsAppStep(
         projectIdentifier,
         orgIdentifier,
         'query.source.chart': chart,
-        'query.source.targetRevision': targetRevision
+        'query.source.targetRevision': targetRevision,
+        'query.source.path': option?.path
       }
     })
   }
@@ -154,22 +88,48 @@ function UpdateGitOpsAppStep(
     const formikRefCurrent = (formikRef as React.MutableRefObject<StepFormikRef<UpdateGitOpsAppStepData> | null>)
       ?.current as FormikProps<UpdateGitOpsAppStepData>
 
-    if (!formikRefCurrent || !_targetRevision) return
-    formikRefCurrent.setFieldValue(FIELD_KEYS.targetRevision, _targetRevision)
+    if (!formikRefCurrent) return
+
+    const isTargetRevisionRunTime = formikRefCurrent.values?.spec?.targetRevision
+    if (!isTargetRevisionRunTime) {
+      formikRefCurrent.setFieldValue(
+        FIELD_KEYS.targetRevision,
+        _targetRevision ? { label: _targetRevision, value: _targetRevision } : undefined
+      )
+    }
     formikRefCurrent.setFieldValue(FIELD_KEYS.valueFiles, [])
   }
 
+  // Initial - On Edit
   React.useEffect(() => {
     const isSourceTypeUnset =
       (initialValues.spec.applicationNameOption as ApplicationOption)?.sourceType === SOURCE_TYPE_UNSET
     const formikRefCurrent = (formikRef as React.MutableRefObject<StepFormikRef<UpdateGitOpsAppStepData> | null>)
       ?.current as FormikProps<UpdateGitOpsAppStepData>
+    const initialTargetValue = initialValues.spec.targetRevision
+    const initialAppValue = (initialValues.spec.applicationNameOption as ApplicationOption)?.value
+    const isAppNotRunTime = initialAppValue !== RUNTIME_INPUT_VALUE
 
     // This is for Edit Mode
     if (isSourceTypeUnset && formikRefCurrent && data.length) {
       const value = (initialValues.spec.applicationNameOption as ApplicationOption)?.value
       const option = data.find(datum => datum.value === value)
-      formikRefCurrent.setFieldValue(FIELD_KEYS.application, option)
+      const _targetRevision = option?.targetRevision
+
+      if (isAppNotRunTime) {
+        formikRefCurrent.setFieldValue(FIELD_KEYS.application, option)
+      }
+
+      if (
+        isAppNotRunTime &&
+        initialTargetValue !== RUNTIME_INPUT_VALUE &&
+        !(initialTargetValue as SelectOption)?.value
+      ) {
+        formikRefCurrent.setFieldValue(
+          FIELD_KEYS.targetRevision,
+          _targetRevision ? { label: _targetRevision, value: _targetRevision } : undefined
+        )
+      }
 
       // Fetch app details
       fetchappDetailsWrapper(option)
@@ -190,16 +150,19 @@ function UpdateGitOpsAppStep(
     }
   }, [appDetails])
 
-  const handleTargetRevisionChange = debounce(value => {
+  const handleChangeTargetRevision = (targetRevisionValue?: string) => {
     const formikRefCurrent = (formikRef as React.MutableRefObject<StepFormikRef<UpdateGitOpsAppStepData> | null>)
       ?.current as FormikProps<UpdateGitOpsAppStepData>
-
-    formikRefCurrent.setFieldValue(FIELD_KEYS.valueFiles, [])
-    fetchappDetailsWrapper({
-      ...(formikRefCurrent.values?.spec?.applicationNameOption as ApplicationOption),
-      targetRevision: value || ''
-    } as ApplicationOption)
-  }, 500)
+    const app = formikRefCurrent.values?.spec.applicationNameOption
+    if (
+      formikRefCurrent &&
+      isHelmApp(app as ApplicationOption) &&
+      targetRevisionValue &&
+      targetRevisionValue !== RUNTIME_INPUT_VALUE
+    ) {
+      fetchappDetailsWrapper(app as ApplicationOption, targetRevisionValue as string)
+    }
+  }
 
   return (
     <Formik<UpdateGitOpsAppStepData>
@@ -252,6 +215,11 @@ function UpdateGitOpsAppStep(
                       setDefaultValues(value as ApplicationOption)
                       fetchappDetailsWrapper(value as ApplicationOption)
                     }
+
+                    if (isMultiTypeRuntime(type)) {
+                      formik.setFieldValue(FIELD_KEYS.targetRevision, undefined)
+                      formik.setFieldValue(FIELD_KEYS.valueFiles, [])
+                    }
                   }
                 }}
                 placeholder={getString('selectApplication')}
@@ -261,16 +229,11 @@ function UpdateGitOpsAppStep(
             {formik.values?.spec?.applicationNameOption === RUNTIME_INPUT_VALUE ? null : (
               <>
                 <div className={cx(stepCss.formGroup, stepCss.lg)}>
-                  <FormInput.MultiTextInput
-                    name={FIELD_KEYS.targetRevision}
-                    style={{ flex: 1 }}
-                    label={getString('cd.getStartedWithCD.targetRevision')}
-                    placeholder={getString('cd.getStartedWithCD.targetRevision')}
-                    onChange={handleTargetRevisionChange}
-                    multiTextInputProps={{
-                      disabled: readonly,
-                      allowableTypes: gitopsAllowableTypes
-                    }}
+                  <TargetRevision
+                    app={formik.values.spec?.applicationNameOption as ApplicationOption}
+                    readonly={readonly}
+                    formik={formik}
+                    onChange={handleChangeTargetRevision}
                   />
                 </div>
                 {renderFormByType({
