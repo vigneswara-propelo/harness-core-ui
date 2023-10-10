@@ -190,11 +190,10 @@ export const NewEditEnvironmentModal: React.FC<NewEditEnvironmentModalProps> = (
           }
         }
       )
-      if (response.status === 'SUCCESS') {
+      if (response.status === 'SUCCESS' && response.data?.environment) {
         clear()
         showSuccess(getString('cd.environmentCreated'))
-        // We invalidate the service list call on creating a new service
-        _payload && onCreateOrUpdate(_payload)
+        _payload && onCreateOrUpdate(response.data?.environment as EnvironmentRequestDTO)
       }
       return Promise.resolve(response)
     }

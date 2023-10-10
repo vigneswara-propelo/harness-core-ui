@@ -18,8 +18,10 @@ import type { EnvironmentResponseDTO } from 'services/cd-ng'
 
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import routes from '@common/RouteDefinitions'
-import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
+import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
+import { useQueryParams } from '@modules/10-common/hooks'
 import { EnvironmentTypes } from '../EnvironmentsList/EnvironmentsListColumns'
 
 import css from './EnvironmentDetails.module.scss'
@@ -29,10 +31,18 @@ export function PageHeaderTitle({
   identifier,
   description,
   tags,
-  type
-}: Partial<EnvironmentResponseDTO>): React.ReactElement {
+  type,
+  renderRemoteDetails,
+  hasRemoteFetchFailed
+}: Partial<EnvironmentResponseDTO> & {
+  renderRemoteDetails: () => JSX.Element | null
+  hasRemoteFetchFailed: boolean
+}): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
+  const { storeType } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
+
+  const isEnvRemote = storeType === StoreType.REMOTE
 
   return (
     <Layout.Vertical spacing={'small'}>
@@ -48,7 +58,13 @@ export function PageHeaderTitle({
       </Layout.Horizontal>
       <Container>
         <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing={'small'}>
-          <Text tag="h2" tooltip={name} lineClamp={1} width={900} margin={{ bottom: 'xsmall' }}>
+          <Text
+            tag="h2"
+            tooltip={name}
+            lineClamp={1}
+            margin={{ bottom: 'xsmall' }}
+            className={isEnvRemote ? css.nameSectionWhenRemote : css.name}
+          >
             {name}
           </Text>
           {!isEmpty(tags) && (
@@ -61,7 +77,8 @@ export function PageHeaderTitle({
               }}
             />
           )}
-          <EnvironmentTypes environment={{ type }} />
+          {!hasRemoteFetchFailed && <EnvironmentTypes environment={{ type }} />}
+          {renderRemoteDetails()}
         </Layout.Horizontal>
         <Text font={{ size: 'small' }} inline>
           {getString('common.ID')}: {identifier}

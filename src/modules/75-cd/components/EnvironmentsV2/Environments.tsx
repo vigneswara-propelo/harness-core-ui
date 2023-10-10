@@ -8,7 +8,7 @@
 import React, { useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import cx from 'classnames'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 
 import { ButtonVariation, Container, Dialog, Heading, Text, Views } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
@@ -29,6 +29,7 @@ import EmptyContentImg from '@pipeline/icons/emptyServiceDetail.svg'
 import GetStartedWithCDButton from '@pipeline/components/GetStartedWithCDButton/GetStartedWithCDButton'
 import RbacButton from '@rbac/components/Button/Button'
 import { useGetFreeOrCommunityCD } from '@common/utils/utils'
+import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
 import { PageStoreContext } from './PageTemplate/PageContext'
 import PageTemplate from './PageTemplate/PageTemplate'
 import { Sort, SortFields } from './PageTemplate/utils'
@@ -81,7 +82,12 @@ export function Environments({ calledFromSettingsPage }: { calledFromSettingsPag
                   projectIdentifier,
                   module,
                   environmentIdentifier: defaultTo(values.identifier, ''),
-                  sectionId: 'CONFIGURATION'
+                  sectionId: 'CONFIGURATION',
+                  ...(get(values, 'storeType', '') === StoreType.REMOTE && {
+                    storeType: get(values, 'storeType', ''),
+                    connectorRef: get(values, 'connectorRef', ''),
+                    repoName: get(values, 'entityGitDetails.repoName', '')
+                  })
                 })
               )
             }}

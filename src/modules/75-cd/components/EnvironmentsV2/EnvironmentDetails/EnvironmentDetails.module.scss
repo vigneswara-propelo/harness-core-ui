@@ -28,6 +28,14 @@
     overflow-y: auto;
   }
 }
+.gitRemoteDetailsWrapper {
+  display: inline-flex;
+  align-items: center;
+  padding-left: 12px;
+  border: 1px solid var(--grey-200) !important;
+  border-radius: var(--spacing-2);
+  height: 32px;
+}
 
 .environmentDetailsBody {
   :global {
@@ -110,4 +118,12 @@
     column-gap: var(--spacing-large);
     align-items: center;
   }
+}
+
+.name {
+  width: 900px;
+}
+
+.nameSectionWhenRemote {
+  max-width: 650px;
 }

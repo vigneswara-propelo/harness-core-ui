@@ -26,14 +26,15 @@ import routesV2 from '@common/RouteDefinitionsV2'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
 import {
   EnvironmentMenu,
   EnvironmentName,
   EnvironmentTypes,
   withEnvironment,
-  LastUpdatedBy
+  LastUpdatedBy,
+  CodeSourceCell
 } from './EnvironmentsListColumns'
 import { EnvironmentDetailsTab } from '../utils'
 
@@ -54,7 +55,7 @@ export default function EnvironmentsList({
   const { getString } = useStrings()
   const history = useHistory()
   const [environmentToDelete, setEnvironmentToDelete] = useState<EnvironmentResponseDTO>({})
-  const newLeftNav = useFeatureFlag(FeatureFlag.CDS_NAV_2_0)
+  const { CDS_NAV_2_0: newLeftNav, CDS_ENV_GITX } = useFeatureFlags()
 
   const { mutate: deleteItem } = useDeleteEnvironmentV2({
     queryParams: {
@@ -130,9 +131,19 @@ export default function EnvironmentsList({
       {
         Header: getString('environment').toUpperCase(),
         id: 'name',
-        width: '50%',
+        width: CDS_ENV_GITX ? '30%' : '50%',
         Cell: withEnvironment(EnvironmentName)
       },
+      ...(CDS_ENV_GITX
+        ? [
+            {
+              Header: getString('pipeline.codeSource'),
+              id: 'codeSource',
+              width: '25%',
+              Cell: withEnvironment(CodeSourceCell)
+            }
+          ]
+        : []),
       {
         Header: getString('typeLabel').toUpperCase(),
         id: 'type',
@@ -142,7 +153,7 @@ export default function EnvironmentsList({
       {
         Header: getString('lastUpdated').toUpperCase(),
         id: 'lastUpdatedBy',
-        width: '25%',
+        width: CDS_ENV_GITX ? '20%' : '25%',
         Cell: withEnvironment(LastUpdatedBy)
       },
       {
@@ -169,7 +180,12 @@ export default function EnvironmentsList({
           projectIdentifier,
           module,
           environmentIdentifier: get(row, 'environment.identifier', ''),
-          sectionId: projectIdentifier ? EnvironmentDetailsTab.SUMMARY : EnvironmentDetailsTab.CONFIGURATION
+          sectionId: projectIdentifier ? EnvironmentDetailsTab.SUMMARY : EnvironmentDetailsTab.CONFIGURATION,
+          ...(get(row, 'environment.storeType', '') === StoreType.REMOTE && {
+            storeType: get(row, 'environment.storeType', ''),
+            connectorRef: get(row, 'environment.connectorRef', ''),
+            repoName: get(row, 'environment.entityGitDetails.repoName', '')
+          })
         }
         history.push(
           newLeftNav && calledFromSettingsPage

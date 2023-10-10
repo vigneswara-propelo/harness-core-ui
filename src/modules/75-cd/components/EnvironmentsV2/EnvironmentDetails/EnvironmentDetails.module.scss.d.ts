@@ -15,7 +15,10 @@ declare const styles: {
   readonly environmentDetailsBody: string
   readonly environmentDetailsHeader: string
   readonly fullWidth: string
+  readonly gitRemoteDetailsWrapper: string
   readonly label: string
+  readonly name: string
+  readonly nameSectionWhenRemote: string
   readonly sectionCard: string
   readonly tagsPopover: string
   readonly thumbnailSelect: string

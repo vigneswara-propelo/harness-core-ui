@@ -57,6 +57,8 @@ import { PermissionRequest, usePermission } from '@rbac/hooks/usePermission'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import ApplicationConfigSelection from '@pipeline/components/ApplicationConfig/ApplicationConfigSelection'
 import { ApplicationConfigSelectionTypes } from '@pipeline/components/ApplicationConfig/ApplicationConfig.types'
+import { GitSyncForm } from '@modules/40-gitsync/components/GitSyncForm/GitSyncForm'
+import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
 import ServiceManifestOverride from '../ServiceOverrides/ServiceManifestOverride/ServiceManifestOverride'
 import ServiceConfigFileOverride from '../ServiceOverrides/ServiceConfigFileOverride/ServiceConfigFileOverride'
 import css from '../EnvironmentDetails.module.scss'
@@ -358,6 +360,18 @@ export default function EnvironmentConfiguration({
               {getString('envType')}
             </Text>
             <ThumbnailSelect className={css.thumbnailSelect} name={'type'} items={typeList} isReadonly={!canEdit} />
+            {data?.data?.environment?.storeType === StoreType.REMOTE ? (
+              <GitSyncForm
+                formikProps={formikProps}
+                isEdit={true}
+                skipBranch
+                disableFields={{
+                  connectorRef: true,
+                  repoName: true,
+                  filePath: false
+                }}
+              />
+            ) : null}
           </Card>
           {!isServiceOverridesEnabled && (
             <>
@@ -379,7 +393,9 @@ export default function EnvironmentConfiguration({
                   details={
                     <Layout.Vertical spacing="medium" margin={{ bottom: 'small' }}>
                       <Card
-                        className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
+                        className={cx(css.sectionCard, {
+                          [css.fullWidth]: context !== PipelineContextType.Standalone
+                        })}
                         id="manifests"
                       >
                         <Text
@@ -404,7 +420,9 @@ export default function EnvironmentConfiguration({
                         />
                       </Card>
                       <Card
-                        className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
+                        className={cx(css.sectionCard, {
+                          [css.fullWidth]: context !== PipelineContextType.Standalone
+                        })}
                         id="configFiles"
                       >
                         <Text
@@ -429,7 +447,9 @@ export default function EnvironmentConfiguration({
                         />
                       </Card>
                       <Card
-                        className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
+                        className={cx(css.sectionCard, {
+                          [css.fullWidth]: context !== PipelineContextType.Standalone
+                        })}
                         id="applicationSettings"
                       >
                         <Text
@@ -454,7 +474,9 @@ export default function EnvironmentConfiguration({
                         />
                       </Card>
                       <Card
-                        className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
+                        className={cx(css.sectionCard, {
+                          [css.fullWidth]: context !== PipelineContextType.Standalone
+                        })}
                         id="connectionStrings"
                       >
                         <Text

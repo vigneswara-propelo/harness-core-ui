@@ -8,10 +8,10 @@
 import React from 'react'
 import cx from 'classnames'
 import ReactTimeago from 'react-timeago'
-import { defaultTo, isEmpty } from 'lodash-es'
-import { Classes, Menu, Position } from '@blueprintjs/core'
-import { Layout, TagsPopover, Text, Checkbox, useConfirmationDialog, Popover, Button } from '@harness/uicore'
-import { Intent, Color } from '@harness/design-system'
+import { defaultTo, get, isEmpty } from 'lodash-es'
+import { Classes, Menu, PopoverInteractionKind, Position } from '@blueprintjs/core'
+import { Layout, TagsPopover, Text, Checkbox, useConfirmationDialog, Popover, Button, Icon } from '@harness/uicore'
+import { Intent, Color, FontVariation } from '@harness/design-system'
 
 import type { EnvironmentResponse, EnvironmentResponseDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -23,6 +23,8 @@ import type { PermissionRequest } from '@rbac/hooks/usePermission'
 
 import { EnvironmentType } from '@common/constants/EnvironmentType'
 
+import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
+import { CodeSourceWrapper } from '@modules/70-pipeline/components/CommonPipelineStages/PipelineStage/utils'
 import css from './EnvironmentsList.module.scss'
 
 interface EnvironmentRowColumn {
@@ -36,12 +38,17 @@ interface EnvironmentRowColumn {
 }
 
 export function withEnvironment(Component: any) {
+  // eslint-disable-next-line react/display-name
   return (props: EnvironmentRowColumn) => {
     return <Component {...props.row.original} {...props.column.actions} />
   }
 }
 
-export function EnvironmentName({ environment: { name, tags, identifier } }: { environment: EnvironmentResponseDTO }) {
+export function EnvironmentName({
+  environment: { name, tags, identifier }
+}: {
+  environment: EnvironmentResponseDTO
+}): JSX.Element {
   const { getString } = useStrings()
   return (
     <Layout.Vertical>
@@ -65,7 +72,7 @@ export function EnvironmentName({ environment: { name, tags, identifier } }: { e
   )
 }
 
-export function EnvironmentTypes({ environment: { type } }: { environment: EnvironmentResponseDTO }) {
+export function EnvironmentTypes({ environment: { type } }: { environment: EnvironmentResponseDTO }): JSX.Element {
   const { getString } = useStrings()
   return (
     <Text
@@ -178,7 +185,7 @@ export function EnvironmentMenu({
   )
 }
 
-export function DeleteCheckbox({ row, column }: any) {
+export function DeleteCheckbox({ row, column }: any): JSX.Element {
   return (
     <Checkbox
       onClick={event => column.onCheckboxSelect(event, row?.original)}
@@ -187,5 +194,60 @@ export function DeleteCheckbox({ row, column }: any) {
           (selectedEnv as any).environment.identifier === row?.original?.environment.identifier
       )}
     />
+  )
+}
+export function CodeSourceCell({ environment }: { environment: EnvironmentResponseDTO }): React.ReactElement {
+  const { entityGitDetails: gitDetails, storeType } = environment
+  const { getString } = useStrings()
+  const isRemote = storeType === StoreType.REMOTE
+  const inlineWrapper: CodeSourceWrapper = {
+    textName: getString('inline'),
+    iconName: 'repository',
+    size: 10
+  }
+  const remoteWrapper: CodeSourceWrapper = {
+    textName: getString('repository'),
+    iconName: 'remote-setup',
+    size: 12
+  }
+
+  return (
+    <div className={css.codeSourceColumnContainer}>
+      <Popover
+        disabled={!isRemote}
+        position={Position.TOP}
+        interactionKind={PopoverInteractionKind.HOVER}
+        className={Classes.DARK}
+        content={
+          <Layout.Vertical spacing="small" padding="large" className={css.contentWrapper}>
+            <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'start' }}>
+              <Icon name="github" size={14} color={Color.GREY_200} />
+              <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }}>
+                {get(gitDetails, 'repoName', get(gitDetails, 'repoIdentifier'))}
+              </Text>
+            </Layout.Horizontal>
+            {gitDetails?.filePath && (
+              <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'start' }}>
+                <Icon name="remotefile" size={14} color={Color.GREY_200} />
+                <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }}>
+                  {gitDetails.filePath}
+                </Text>
+              </Layout.Horizontal>
+            )}
+          </Layout.Vertical>
+        }
+      >
+        <div className={css.codeSourceColumn}>
+          <Icon
+            name={isRemote ? remoteWrapper.iconName : inlineWrapper.iconName}
+            size={isRemote ? remoteWrapper.size : inlineWrapper.size}
+            color={Color.GREY_600}
+          />
+          <Text margin={{ left: 'xsmall' }} font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_600}>
+            {isRemote ? remoteWrapper.textName : inlineWrapper.textName}
+          </Text>
+        </div>
+      </Popover>
+    </div>
   )
 }

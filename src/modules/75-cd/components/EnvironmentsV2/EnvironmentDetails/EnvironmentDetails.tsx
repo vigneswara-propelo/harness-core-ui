@@ -11,7 +11,7 @@ import { Expander } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'
 import { parse } from 'yaml'
 import cx from 'classnames'
-import { defaultTo, isEqual } from 'lodash-es'
+import { defaultTo, isEqual, noop } from 'lodash-es'
 import * as Yup from 'yup'
 
 import {
@@ -33,6 +33,7 @@ import { useStrings } from 'framework/strings'
 import {
   EnvironmentResponse,
   EnvironmentResponseDTO,
+  GitErrorMetadataDTO,
   NGEnvironmentConfig,
   NGEnvironmentInfoConfig,
   updateEnvironmentV2Promise,
@@ -40,7 +41,12 @@ import {
   useGetSettingValue
 } from 'services/cd-ng'
 
-import type { EnvironmentPathProps, EnvironmentQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type {
+  EnvironmentPathProps,
+  EnvironmentQueryParams,
+  GitQueryParams,
+  ProjectPathProps
+} from '@common/interfaces/RouteInterfaces'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
@@ -55,6 +61,13 @@ import { EntityType } from '@common/pages/entityUsage/EntityConstants'
 import { sanitize } from '@common/utils/JSONUtils'
 import { SettingType } from '@common/constants/Utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
+import {
+  EntityCachedCopy,
+  EntityCachedCopyHandle
+} from '@modules/70-pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
+import GitRemoteDetails from '@modules/10-common/components/GitRemoteDetails/GitRemoteDetails'
+import NoEntityFound from '@modules/70-pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { PageHeaderTitle, PageHeaderToolbar } from './EnvironmentDetailsPageHeader'
 import EnvironmentConfiguration from './EnvironmentConfiguration/EnvironmentConfiguration'
 import { ServiceOverrides } from './ServiceOverrides/ServiceOverrides'
@@ -69,13 +82,19 @@ export default function EnvironmentDetails(): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier, environmentIdentifier } = useParams<
     ProjectPathProps & EnvironmentPathProps
   >()
-  const { sectionId } = useQueryParams<EnvironmentQueryParams>()
-  const { updateQueryParams } = useUpdateQueryParams<EnvironmentQueryParams>()
+  const {
+    sectionId,
+    storeType,
+    connectorRef,
+    repoName,
+    branch = ''
+  } = useQueryParams<EnvironmentQueryParams & GitQueryParams>()
+  const { updateQueryParams } = useUpdateQueryParams<EnvironmentQueryParams & GitQueryParams>()
 
   const { getString } = useStrings()
   const { showSuccess, showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { CDS_SERVICE_OVERRIDES_2_0 } = useFeatureFlags()
+  const { CDS_SERVICE_OVERRIDES_2_0, CDS_ENV_GITX } = useFeatureFlags()
   const environmentSummaryEnabled = projectIdentifier
 
   const { data: enableServiceOverrideSettings, error: enableServiceOverrideSettingsError } = useGetSettingValue({
@@ -114,10 +133,55 @@ export default function EnvironmentDetails(): React.ReactElement {
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
-      projectIdentifier
+      projectIdentifier,
+      ...(storeType === StoreType.REMOTE
+        ? {
+            connectorRef,
+            repoName,
+            ...(branch ? { branch } : { loadFromFallbackBranch: true })
+          }
+        : {})
     },
     environmentIdentifier: defaultTo(environmentIdentifier, '')
   })
+
+  const environmentCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
+  const isEnvironmentRemote = CDS_ENV_GITX && storeType === 'REMOTE'
+  const gitDetails = data?.data?.environment?.entityGitDetails
+  const hasRemoteFetchFailed = useMemo(() => {
+    const errorMetadata = (error?.data as any)?.metadata as GitErrorMetadataDTO
+    return Boolean(error?.status === 400 && errorMetadata?.branch)
+  }, [error?.data, error?.status])
+
+  const onGitBranchChange = (selectedFilter: { branch: string }): void => {
+    updateQueryParams({ branch: selectedFilter.branch })
+  }
+
+  const renderRemoteDetails = (): JSX.Element | null => {
+    return isEnvironmentRemote ? (
+      <div className={css.gitRemoteDetailsWrapper}>
+        <GitRemoteDetails
+          connectorRef={connectorRef}
+          repoName={defaultTo(gitDetails?.repoName, repoName)}
+          filePath={defaultTo(gitDetails?.filePath, '')}
+          fileUrl={defaultTo(gitDetails?.fileUrl, '')}
+          branch={defaultTo(gitDetails?.branch, branch)}
+          onBranchChange={onGitBranchChange}
+          flags={{
+            readOnly: false
+          }}
+        />
+        {hasRemoteFetchFailed && (
+          <EntityCachedCopy
+            ref={environmentCachedCopyRef}
+            reloadContent={getString('common.pipeline')}
+            cacheResponse={data?.data?.environment?.cacheResponseMetadataDTO}
+            reloadFromCache={noop}
+          />
+        )}
+      </div>
+    ) : null
+  }
 
   useEffect(() => {
     // istanbul ignore else
@@ -204,21 +268,44 @@ export default function EnvironmentDetails(): React.ReactElement {
       setIsModified(true)
     }
   }
+  const initialGitFormValue = {
+    connectorRef: data?.data?.environment?.connectorRef,
+    repoName: gitDetails?.repoName,
+    filePath: gitDetails?.filePath
+  }
 
   return (
     <>
       <HelpPanel referenceId="environmentDetails" type={HelpPanelType.FLOATING_CONTAINER} />
-      {firstLoad || error ? null : (
+      {(firstLoad || error) && !hasRemoteFetchFailed ? null : (
         <Page.Header
           className={cx({ [css.environmentDetailsHeader]: Boolean(description) })}
           size={'large'}
           title={
-            <PageHeaderTitle name={name} identifier={identifier} description={description} tags={tags} type={type} />
+            <PageHeaderTitle
+              name={name}
+              identifier={defaultTo(identifier, environmentIdentifier)}
+              description={description}
+              tags={tags}
+              type={type}
+              renderRemoteDetails={renderRemoteDetails}
+              hasRemoteFetchFailed={hasRemoteFetchFailed}
+            />
           }
-          toolbar={<PageHeaderToolbar createdAt={createdAt} lastModifiedAt={lastModifiedAt} />}
+          toolbar={!hasRemoteFetchFailed && <PageHeaderToolbar createdAt={createdAt} lastModifiedAt={lastModifiedAt} />}
         />
       )}
-      <Page.Body error={/*istanbul ignore next */ error?.message} loading={loading || updateLoading}>
+      <Page.Body
+        error={/*istanbul ignore next */ !hasRemoteFetchFailed && error?.message}
+        loading={loading || updateLoading}
+      >
+        {hasRemoteFetchFailed && (
+          <NoEntityFound
+            identifier={environmentIdentifier as string}
+            entityType={'environment'}
+            errorObj={error?.data as unknown as Error}
+          />
+        )}
         {identifier && (
           <Formik<NGEnvironmentInfoConfig>
             initialValues={
@@ -233,7 +320,8 @@ export default function EnvironmentDetails(): React.ReactElement {
                 ...(!isServiceOverridesEnabled && {
                   variables,
                   overrides
-                })
+                }),
+                ...initialGitFormValue
               } as NGEnvironmentInfoConfig
             }
             formName="editEnvironment"
