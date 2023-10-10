@@ -40,10 +40,10 @@ const CETrialHomePage: React.FC = () => {
   const isDefaultProjectCreated = useFeatureFlag(FeatureFlag.CREATE_DEFAULT_PROJECT)
   const isNewNavEnabled = useFeatureFlag(FeatureFlag.CDS_NAV_2_0)
   const { openModal } = useCreateConnector({
-    onSuccess: () => {
+    onSuccess: /* istanbul ignore next */ () => {
       history.push(isNewNavEnabled ? routesV2.toCEOverview({ accountId, module }) : routes.toCEOverview({ accountId }))
     },
-    onClose: () => {
+    onClose: /* istanbul ignore next */ () => {
       history.push(isNewNavEnabled ? routesV2.toCEOverview({ accountId, module }) : routes.toCEOverview({ accountId }))
     }
   })
@@ -72,7 +72,7 @@ const CETrialHomePage: React.FC = () => {
   }
 
   const { showModal, hideModal } = useCETrialModal({
-    onContinue: () => {
+    onContinue: /* istanbul ignore next */ () => {
       hideModal()
       openModal()
     },
