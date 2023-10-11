@@ -15,13 +15,18 @@ import {
   MultiTypeInputType,
   AllowedTypes,
   Container,
-  Label
+  Label,
+  Button,
+  ButtonVariation,
+  MultiSelectOption,
+  SelectOption,
+  Accordion
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import cx from 'classnames'
-import { FormikErrors, FormikProps, useFormikContext, yupToFormErrors } from 'formik'
-
-import { defaultTo, isEmpty, set } from 'lodash-es'
+import { FieldArray, FormikErrors, FormikProps, useFormikContext, yupToFormErrors } from 'formik'
+import { v4 as uuid } from 'uuid'
+import { defaultTo, get, isArray, isEmpty, set } from 'lodash-es'
 import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import type { StepElementConfig, StoreConfig, TasCommandStepInfo } from 'services/cd-ng'
@@ -48,10 +53,30 @@ import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScri
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { FileUsage } from '@filestore/interfaces/FileStore'
 import { ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import { useFeatureFlag } from '@modules/10-common/hooks/useFeatureFlag'
+import {
+  MultiSelectVariableAllowedValues,
+  concatValuesWithQuotes,
+  isFixedInput
+} from '@modules/70-pipeline/components/PipelineSteps/Steps/CustomVariables/MultiSelectVariableAllowedValues/MultiSelectVariableAllowedValues'
+import { TextFieldInputSetView } from '@modules/70-pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import {
+  getAllowedValuesFromTemplate,
+  shouldRenderRunTimeInputViewWithAllowedValues
+} from '@modules/70-pipeline/utils/CIUtils'
+import { FeatureFlag } from '@modules/10-common/featureFlags'
 import MultiTypeListOrFileSelectList from '../K8sServiceSpec/ManifestSource/MultiTypeListOrFileSelectList'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import {
+  ShellScriptOutputStepVariable,
+  ShellScriptStepVariable,
+  scriptInputType,
+  scriptOutputType,
+  variableSchema
+} from '../ShellScriptStep/shellScriptTypes'
+import { OptionalVariables } from '../ShellScriptStep/OptionalConfiguration'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 import css from './TanzuCommand.module.scss'
+import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface TanzuCommandData extends StepElementConfig {
   spec: TasCommandStepInfo
@@ -173,7 +198,15 @@ function TanzuCommandWidget(
                   })
                 })
             })
-          })
+          }),
+          inputVariables: variableSchema(getString),
+          outputVariables: Yup.array().of(
+            Yup.object({
+              name: Yup.string().required(getString('common.validation.nameIsRequired')),
+              value: Yup.string().required(getString('common.validation.valueIsRequired')),
+              type: Yup.string().trim().required(getString('common.validation.typeIsRequired'))
+            })
+          )
         })
       })}
     >
@@ -196,7 +229,6 @@ function TanzuCommandWidget(
                 />
               </div>
             )}
-
             <div className={cx(stepCss.formGroup, stepCss.sm)}>
               <FormMultiTypeDurationField
                 name="timeout"
@@ -232,7 +264,7 @@ function TanzuCommandWidget(
             </Layout.Horizontal>
 
             {templateFileType === InstanceScriptTypes.FileStore && (
-              <div className={cx(stepCss.formGroup, stepCss.md)}>
+              <div className={cx(stepCss.formGroup, stepCss.md, css.bottomWidth)}>
                 <MultiConfigSelectField
                   name="spec.script.store.spec.files"
                   allowableTypes={allowableTypes}
@@ -283,6 +315,154 @@ function TanzuCommandWidget(
                 </MultiTypeFieldSelector>
               </div>
             )}
+            <Accordion className={stepCss.accordion}>
+              <Accordion.Panel
+                id="optional-config"
+                summary={getString('common.optionalConfig')}
+                details={
+                  <div>
+                    <div className={stepCss.formGroup}>
+                      <MultiTypeFieldSelector
+                        name="spec.inputVariables"
+                        label={getString('pipeline.scriptInputVariables')}
+                        isOptional
+                        optionalLabel={getString('common.optionalLabel')}
+                        defaultValueToReset={[]}
+                        disableTypeSelection
+                        data-tooltip-id={`shellScriptInputVariable_${values?.spec?.shell}`}
+                        tooltipProps={{ dataTooltipId: `shellScriptInputVariable_${values?.spec?.shell}` }}
+                      >
+                        <FieldArray
+                          name="spec.inputVariables"
+                          render={({ push, remove }) => {
+                            return (
+                              <div className={css.panel}>
+                                <div className={css.environmentVarHeader}>
+                                  <span className={css.label}>{getString('name')}</span>
+                                  <span className={css.label}>{getString('typeLabel')}</span>
+                                  <span className={css.label}>{getString('valueLabel')}</span>
+                                </div>
+                                {values.spec.inputVariables?.map(({ id }: ShellScriptStepVariable, i: number) => {
+                                  return (
+                                    <div className={css.environmentVarHeader} key={id}>
+                                      <FormInput.Text
+                                        name={`spec.inputVariables[${i}].name`}
+                                        placeholder={getString('name')}
+                                        disabled={readonly}
+                                      />
+                                      <FormInput.Select
+                                        items={scriptInputType}
+                                        name={`spec.inputVariables[${i}].type`}
+                                        placeholder={getString('typeLabel')}
+                                        disabled={readonly}
+                                      />
+                                      <OptionalVariables
+                                        variablePath={`spec.inputVariables[${i}].value`}
+                                        variableTypePath={`spec.inputVariables[${i}].type`}
+                                        allowableTypes={allowableTypes}
+                                        readonly={readonly}
+                                      />
+                                      <Button
+                                        variation={ButtonVariation.ICON}
+                                        icon="main-trash"
+                                        data-testid={`remove-inputVar-${i}`}
+                                        onClick={() => remove(i)}
+                                        disabled={readonly}
+                                      />
+                                    </div>
+                                  )
+                                })}
+                                <Button
+                                  icon="plus"
+                                  variation={ButtonVariation.LINK}
+                                  data-testid="add-inputVar"
+                                  disabled={readonly}
+                                  onClick={() => push({ name: '', type: 'String', value: '', id: uuid() })}
+                                  className={css.addButton}
+                                >
+                                  {getString('addInputVar')}
+                                </Button>
+                              </div>
+                            )
+                          }}
+                        />
+                      </MultiTypeFieldSelector>
+                    </div>
+                    <div className={stepCss.formGroup}>
+                      <MultiTypeFieldSelector
+                        name="spec.outputVariables"
+                        label={getString('pipeline.scriptOutputVariables')}
+                        isOptional
+                        optionalLabel={getString('common.optionalLabel')}
+                        defaultValueToReset={[]}
+                        disableTypeSelection
+                        data-tooltip-id={`shellScriptOutputVariable_${values?.spec?.shell}`}
+                        tooltipProps={{ dataTooltipId: `shellScriptOutputVariable_${values?.spec?.shell}` }}
+                      >
+                        <FieldArray
+                          name="spec.outputVariables"
+                          render={({ push, remove }) => {
+                            return (
+                              <div className={css.panel}>
+                                <div className={css.outputVarHeader}>
+                                  <span className={css.label}>{getString('name')}</span>
+                                  <span className={css.label}>{getString('typeLabel')}</span>
+                                  <span className={css.label}>
+                                    {getString('cd.steps.shellScriptOutputVariablesLabel', { scriptType: scriptType })}
+                                  </span>
+                                </div>
+                                {values.spec.outputVariables?.map(
+                                  ({ id }: ShellScriptOutputStepVariable, i: number) => {
+                                    return (
+                                      <div className={css.outputVarHeader} key={id}>
+                                        <FormInput.Text
+                                          name={`spec.outputVariables[${i}].name`}
+                                          placeholder={getString('name')}
+                                          disabled={readonly}
+                                        />
+                                        <FormInput.Select
+                                          items={[{ label: 'String', value: 'String' }]}
+                                          name={`spec.outputVariables[${i}].type`}
+                                          placeholder={getString('typeLabel')}
+                                          disabled={readonly}
+                                        />
+
+                                        <OptionalVariables
+                                          variablePath={`spec.outputVariables[${i}].value`}
+                                          allowableTypes={allowableTypes}
+                                          readonly={readonly}
+                                          variableTypePath={`spec.outputVariables[${i}].type`}
+                                        />
+
+                                        <Button
+                                          minimal
+                                          icon="main-trash"
+                                          onClick={() => remove(i)}
+                                          disabled={readonly}
+                                        />
+                                      </div>
+                                    )
+                                  }
+                                )}
+                                <Button
+                                  icon="plus"
+                                  variation={ButtonVariation.LINK}
+                                  onClick={() => push({ name: '', type: 'String', value: '', id: uuid() })}
+                                  disabled={readonly}
+                                  className={css.addButton}
+                                >
+                                  {getString('addOutputVar')}
+                                </Button>
+                              </div>
+                            )
+                          }}
+                        />
+                      </MultiTypeFieldSelector>
+                    </div>
+                  </div>
+                }
+              />
+            </Accordion>
           </Layout.Vertical>
         )
       }}
@@ -290,8 +470,31 @@ function TanzuCommandWidget(
   )
 }
 
+type variablesInfo = {
+  selectOption: SelectOption[]
+  variableType: 'String' | 'Number' | 'Secret'
+  variableValue: string
+}
+const getMultiSelectProps = (
+  template: TanzuCommandData,
+  initialValues: TanzuCommandData | undefined,
+  path: string
+): variablesInfo => {
+  const selectOpt = defaultTo(getAllowedValuesFromTemplate(template, `${path}.value`), [])
+  const variableValue = get(initialValues, `${path}.value`, '')
+  const variableType = get(initialValues, `${path}.type`, 'String') as 'String' | 'Number' | 'Secret'
+
+  return {
+    selectOption: selectOpt,
+    variableType,
+    variableValue
+  }
+}
+
 const TanzuCommandInputStep: React.FC<TanzuCommandProps> = props => {
-  const { inputSetData, allowableTypes, stepViewType } = props
+  const { inputSetData, allowableTypes, stepViewType, readonly, initialValues } = props
+  const multiSelectSupportForAllowedValues = useFeatureFlag(FeatureFlag.PIE_MULTISELECT_AND_COMMA_IN_ALLOWED_VALUES)
+  const isExecutionTimeFieldDisabledForStep = isExecutionTimeFieldDisabled(stepViewType)
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   /* istanbul ignore next */
@@ -299,6 +502,7 @@ const TanzuCommandInputStep: React.FC<TanzuCommandProps> = props => {
     `${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}${fieldName}`
   const prefix = isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
   const formik = useFormikContext()
+
   return (
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
@@ -369,6 +573,206 @@ const TanzuCommandInputStep: React.FC<TanzuCommandProps> = props => {
               scriptType={scriptType}
               disabled={inputSetData?.readonly}
               expressions={expressions}
+            />
+          </MultiTypeFieldSelector>
+        </div>
+      ) : null}
+      {isArray(inputSetData?.template?.spec?.inputVariables) && inputSetData?.template?.spec?.inputVariables ? (
+        <div className={stepCss.formGroup}>
+          <MultiTypeFieldSelector
+            name="spec.inputVariables"
+            label={getString('pipeline.scriptInputVariables')}
+            defaultValueToReset={[]}
+            disableTypeSelection
+          >
+            <FieldArray
+              name="spec.inputVariables"
+              render={() => {
+                const formikInputVariablesPath = `${prefix}spec.inputVariables`
+                const formikInputVariables = defaultTo(get(formik?.values, formikInputVariablesPath), [])
+                return (
+                  <div className={css.panel}>
+                    <div className={css.outputVarHeader}>
+                      <span className={css.label}>{getString('name')}</span>
+                      <span className={css.label}>{getString('typeLabel')}</span>
+                      <span className={css.label}>{getString('common.inputVariables')}</span>
+                    </div>
+                    {inputSetData?.template?.spec.inputVariables?.map((inputVariable: any, i: number) => {
+                      // find Index from values, not from template variables
+                      // because the order of the variables might not be the same
+                      const formikInputVariableIndex = formikInputVariables.findIndex(
+                        (formikInputVariable: ShellScriptStepVariable) =>
+                          inputVariable.name === formikInputVariable.name
+                      )
+                      const formikInputVariablePath = `${formikInputVariablesPath}[${formikInputVariableIndex}]`
+                      const variableInfo = getMultiSelectProps(
+                        inputSetData.template!,
+                        initialValues,
+                        `spec.inputVariables[${i}]`
+                      )
+                      const allowMultiSelectAllowedValues =
+                        multiSelectSupportForAllowedValues &&
+                        variableInfo.variableType === 'String' &&
+                        shouldRenderRunTimeInputViewWithAllowedValues(
+                          `spec.inputVariables[${i}].value`,
+                          inputSetData.template
+                        ) &&
+                        isFixedInput(formik, `${formikInputVariablePath}.value`)
+
+                      return (
+                        <div className={css.runtimeVarHeader} key={inputVariable.value}>
+                          <FormInput.Text
+                            name={`${formikInputVariablePath}.name`}
+                            placeholder={getString('name')}
+                            disabled={true}
+                          />
+
+                          <FormInput.Select
+                            items={scriptInputType}
+                            name={`${formikInputVariablePath}.type`}
+                            placeholder={getString('typeLabel')}
+                            disabled={true}
+                          />
+                          {allowMultiSelectAllowedValues ? (
+                            <MultiSelectVariableAllowedValues
+                              name={`${formikInputVariablePath}.value`}
+                              allowableTypes={allowableTypes}
+                              disabled={readonly}
+                              selectOption={variableInfo.selectOption}
+                              onChange={val => {
+                                const finalValue =
+                                  getMultiTypeFromValue(val) === MultiTypeInputType.FIXED
+                                    ? concatValuesWithQuotes(val as MultiSelectOption[])
+                                    : val
+                                formik.setFieldValue(`${formikInputVariablePath}.value`, finalValue)
+                              }}
+                              label=""
+                            />
+                          ) : (
+                            <TextFieldInputSetView
+                              name={`${formikInputVariablePath}.value`}
+                              multiTextInputProps={{
+                                allowableTypes,
+                                expressions,
+                                disabled: readonly,
+                                defaultValueToReset: ''
+                              }}
+                              label=""
+                              placeholder={getString('valueLabel')}
+                              fieldPath={`spec.inputVariables[${i}].value`}
+                              template={inputSetData.template}
+                              enableConfigureOptions
+                              configureOptionsProps={{
+                                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
+                              }}
+                            />
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+                )
+              }}
+            />
+          </MultiTypeFieldSelector>
+        </div>
+      ) : null}
+      {isArray(inputSetData?.template?.spec?.outputVariables) && inputSetData?.template?.spec?.outputVariables ? (
+        <div className={stepCss.formGroup}>
+          <MultiTypeFieldSelector
+            name="spec.outputVariables"
+            label={getString('pipeline.scriptOutputVariables')}
+            defaultValueToReset={[]}
+            disableTypeSelection
+          >
+            <FieldArray
+              name="spec.outputVariables"
+              render={() => {
+                const formikOutputVariablesPath = `${prefix}spec.outputVariables`
+                const formikOutputVariables = defaultTo(get(formik?.values, formikOutputVariablesPath), [])
+                return (
+                  <div className={css.panel}>
+                    <div className={css.outputVarHeader}>
+                      <span className={css.label}>{getString('name')}</span>
+                      <span className={css.label}>{getString('typeLabel')}</span>
+                      <span className={css.label}>{getString('pipelineSteps.outputVariablesLabel')}</span>
+                    </div>
+                    {inputSetData?.template?.spec.outputVariables?.map((outputVariable: any, i: number) => {
+                      // find Index from values, not from template variables
+                      // because the order of the variables might not be the same
+                      const formikOutputVariableIndex = formikOutputVariables.findIndex(
+                        (formikOutputVariable: ShellScriptStepVariable) =>
+                          outputVariable.name === formikOutputVariable.name
+                      )
+                      const formikOutputVariablePath = `${formikOutputVariablesPath}[${formikOutputVariableIndex}]`
+                      const variableInfo = getMultiSelectProps(
+                        inputSetData?.template as any,
+                        initialValues,
+                        `spec.outputVariables[${i}]`
+                      )
+                      const allowMultiSelectAllowedValues =
+                        multiSelectSupportForAllowedValues &&
+                        variableInfo.variableType === 'String' &&
+                        shouldRenderRunTimeInputViewWithAllowedValues(
+                          `spec.outputVariables[${i}].value`,
+                          inputSetData?.template
+                        ) &&
+                        isFixedInput(formik, `${formikOutputVariablePath}.value`)
+                      return (
+                        <div className={css.outputVarHeader} key={outputVariable.name}>
+                          <FormInput.Text
+                            name={`${formikOutputVariablePath}.name`}
+                            placeholder={getString('name')}
+                            disabled={true}
+                          />
+
+                          <FormInput.Select
+                            items={scriptOutputType}
+                            name={`${formikOutputVariablePath}.type`}
+                            placeholder={getString('typeLabel')}
+                            disabled={true}
+                          />
+
+                          {allowMultiSelectAllowedValues ? (
+                            <MultiSelectVariableAllowedValues
+                              name={`${formikOutputVariablePath}.value`}
+                              allowableTypes={allowableTypes}
+                              disabled={readonly}
+                              selectOption={variableInfo.selectOption}
+                              onChange={val => {
+                                const finalValue =
+                                  getMultiTypeFromValue(val) === MultiTypeInputType.FIXED
+                                    ? concatValuesWithQuotes(val as MultiSelectOption[])
+                                    : val
+                                formik.setFieldValue(`${formikOutputVariablePath}.value`, finalValue)
+                              }}
+                              label=""
+                            />
+                          ) : (
+                            <TextFieldInputSetView
+                              name={`${formikOutputVariablePath}.value`}
+                              multiTextInputProps={{
+                                allowableTypes,
+                                expressions,
+                                disabled: readonly,
+                                defaultValueToReset: ''
+                              }}
+                              label=""
+                              placeholder={getString('valueLabel')}
+                              fieldPath={`spec.outputVariables[${i}].value`}
+                              template={inputSetData?.template}
+                              enableConfigureOptions
+                              configureOptionsProps={{
+                                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
+                              }}
+                            />
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+                )
+              }}
             />
           </MultiTypeFieldSelector>
         </div>
@@ -492,6 +896,35 @@ export class TanzuCommandStep extends PipelineStep<TanzuCommandData> {
     ) {
       set(errors, 'spec.script.store.spec.content', getString?.('fieldRequired', { field: 'Script' }))
     }
+    /* istanbul ignore else */
+    if (
+      (isArray(template?.spec?.inputVariables) || isArray(template?.spec?.outputVariables)) &&
+      isRequired &&
+      getString
+    ) {
+      try {
+        const schema = Yup.object().shape({
+          spec: Yup.object().shape({
+            inputVariables: variableSchema(getString),
+            outputVariables: Yup.array().of(
+              Yup.object({
+                name: Yup.string().required(getString('common.validation.nameIsRequired')),
+                value: Yup.string().required(getString('common.validation.valueIsRequired')),
+                type: Yup.string().trim().required(getString('common.validation.typeIsRequired'))
+              })
+            )
+          })
+        })
+        schema.validateSync(data)
+      } catch (e) {
+        /* istanbul ignore else */
+        if (e instanceof Yup.ValidationError) {
+          const err = yupToFormErrors(e)
+
+          Object.assign(errors, err)
+        }
+      }
+    }
 
     /* istanbul ignore else */
     if (isEmpty(errors.spec)) {
@@ -527,7 +960,19 @@ export class TanzuCommandStep extends PipelineStep<TanzuCommandData> {
                     files: fileFormData
                   }
           }
-        }
+        },
+        inputVariables: Array.isArray(values.spec?.inputVariables)
+          ? values.spec?.inputVariables.map(({ id, ...variable }) => ({
+              ...variable,
+              value: defaultTo(variable.value, '')
+            }))
+          : undefined,
+        outputVariables: Array.isArray(values.spec?.outputVariables)
+          ? values.spec?.outputVariables.map(({ id, ...variable }) => ({
+              ...variable,
+              value: defaultTo(variable.value, '')
+            }))
+          : undefined
       }
     }
   }

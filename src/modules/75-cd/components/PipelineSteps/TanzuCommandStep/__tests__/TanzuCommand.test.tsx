@@ -32,7 +32,9 @@ const existingInitialValues = {
           files: ['filePath']
         }
       }
-    }
+    },
+    inputVariables: [{ name: 'var1', type: 'String', value: 'val1' }],
+    outputVariables: [{ name: 'var2', type: 'String', value: 'val2' }]
   }
 }
 
@@ -86,7 +88,9 @@ describe('TanzuCommandStep tests', () => {
               },
               type: InstanceScriptTypes.FileStore
             }
-          }
+          },
+          inputVariables: [{ name: 'var1', type: 'String', value: 'val1' }],
+          outputVariables: [{ name: 'var2', type: 'String', value: 'val2' }]
         }
       })
     )
@@ -196,7 +200,9 @@ describe('TanzuCommandStep tests', () => {
                   files: RUNTIME_INPUT_VALUE
                 }
               }
-            }
+            },
+            inputVariables: [{ name: 'var1', type: 'String', value: '<+input>' }],
+            outputVariables: [{ name: 'var2', type: 'String', value: '<+input>' }]
           }
         }}
         type={StepType.TanzuCommand}
@@ -221,7 +227,9 @@ describe('TanzuCommandStep tests', () => {
                   content: RUNTIME_INPUT_VALUE
                 }
               }
-            }
+            },
+            inputVariables: [{ name: 'var1', type: 'String', value: '<+input>' }],
+            outputVariables: [{ name: 'var2', type: 'String', value: '<+input>' }]
           }
         }}
         type={StepType.TanzuCommand}

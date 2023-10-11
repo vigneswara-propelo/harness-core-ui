@@ -7,6 +7,15 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly addButton: string
+  readonly bottomWidth: string
+  readonly environmentVarHeader: string
+  readonly execTargetGroup: string
+  readonly execTargetLabel: string
+  readonly label: string
+  readonly outputVarHeader: string
+  readonly panel: string
+  readonly runtimeVarHeader: string
   readonly selectDropdown: string
   readonly typeSelect: string
 }

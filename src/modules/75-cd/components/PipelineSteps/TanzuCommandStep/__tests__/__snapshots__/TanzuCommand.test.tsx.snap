@@ -637,7 +637,7 @@ exports[`TanzuCommandStep tests should render edit view as edit step with all ru
         </div>
       </div>
       <div
-        class="formGroup md"
+        class="formGroup md bottomWidth"
       >
         <div
           class="group"
@@ -769,6 +769,38 @@ exports[`TanzuCommandStep tests should render edit view as edit step with all ru
               </button>
             </span>
           </span>
+        </div>
+      </div>
+      <div
+        class="Accordion--accordion accordion"
+      >
+        <div
+          class="Accordion--panel"
+          data-open="false"
+          data-testid="optional-config-panel"
+        >
+          <div
+            class="Accordion--summary"
+            data-testid="optional-config-summary"
+          >
+            <div
+              class="Accordion--label"
+            >
+              common.optionalConfig
+            </div>
+            <div
+              class="Accordion--chevron"
+            />
+          </div>
+          <div
+            class="bp3-collapse Accordion--collapse"
+          >
+            <div
+              aria-hidden="false"
+              class="bp3-collapse-body"
+              style="transform: translateY(-undefinedpx);"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -1095,6 +1127,38 @@ exports[`TanzuCommandStep tests should render edit view as edit step with all ru
           </div>
         </div>
       </div>
+      <div
+        class="Accordion--accordion accordion"
+      >
+        <div
+          class="Accordion--panel"
+          data-open="false"
+          data-testid="optional-config-panel"
+        >
+          <div
+            class="Accordion--summary"
+            data-testid="optional-config-summary"
+          >
+            <div
+              class="Accordion--label"
+            >
+              common.optionalConfig
+            </div>
+            <div
+              class="Accordion--chevron"
+            />
+          </div>
+          <div
+            class="bp3-collapse Accordion--collapse"
+          >
+            <div
+              aria-hidden="false"
+              class="bp3-collapse-body"
+              style="transform: translateY(-undefinedpx);"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1376,7 +1440,7 @@ exports[`TanzuCommandStep tests should show error on submit with invalid data wi
         </div>
       </div>
       <div
-        class="formGroup md"
+        class="formGroup md bottomWidth"
       >
         <div
           class="group"
@@ -1632,6 +1696,38 @@ exports[`TanzuCommandStep tests should show error on submit with invalid data wi
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="Accordion--accordion accordion"
+      >
+        <div
+          class="Accordion--panel"
+          data-open="false"
+          data-testid="optional-config-panel"
+        >
+          <div
+            class="Accordion--summary"
+            data-testid="optional-config-summary"
+          >
+            <div
+              class="Accordion--label"
+            >
+              common.optionalConfig
+            </div>
+            <div
+              class="Accordion--chevron"
+            />
+          </div>
+          <div
+            class="bp3-collapse Accordion--collapse"
+          >
+            <div
+              aria-hidden="false"
+              class="bp3-collapse-body"
+              style="transform: translateY(-undefinedpx);"
+            />
           </div>
         </div>
       </div>
@@ -1916,7 +2012,7 @@ exports[`TanzuCommandStep tests should show error on submit with invalid data wi
         </div>
       </div>
       <div
-        class="formGroup md"
+        class="formGroup md bottomWidth"
       >
         <div
           class="group"
@@ -2172,6 +2268,38 @@ exports[`TanzuCommandStep tests should show error on submit with invalid data wi
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="Accordion--accordion accordion"
+      >
+        <div
+          class="Accordion--panel"
+          data-open="false"
+          data-testid="optional-config-panel"
+        >
+          <div
+            class="Accordion--summary"
+            data-testid="optional-config-summary"
+          >
+            <div
+              class="Accordion--label"
+            >
+              common.optionalConfig
+            </div>
+            <div
+              class="Accordion--chevron"
+            />
+          </div>
+          <div
+            class="bp3-collapse Accordion--collapse"
+          >
+            <div
+              aria-hidden="false"
+              class="bp3-collapse-body"
+              style="transform: translateY(-undefinedpx);"
+            />
           </div>
         </div>
       </div>
