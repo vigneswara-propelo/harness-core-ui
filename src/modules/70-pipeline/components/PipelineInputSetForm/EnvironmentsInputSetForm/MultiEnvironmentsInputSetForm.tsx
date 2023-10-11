@@ -407,19 +407,19 @@ export function MultiEnvironmentsInputSetForm({
                                         if (
                                           get(
                                             deploymentStageInputSet,
-                                            `${path}.${pathToEnvironments}[${index}].infrastructureDefinitions.[${infraIndex}].inputs.spec`
+                                            `${pathToEnvironments}[${index}].infrastructureDefinitions.[${infraIndex}].inputs.spec`
                                           )
                                         ) {
                                           set(
                                             deploymentStageInputSet,
-                                            `${path}.${pathToEnvironments}[${index}].infrastructureDefinitions.[${infraIndex}].inputs.spec`,
+                                            `${pathToEnvironments}[${index}].infrastructureDefinitions.[${infraIndex}].inputs.spec`,
                                             data
                                           )
                                           formik?.setValues(
                                             set(
                                               formik?.values,
                                               `${path}.${pathToEnvironments}[${infraIndex}]`,
-                                              deploymentStageInputSet
+                                              get(deploymentStageInputSet, `${pathToEnvironments}[${index}]`)
                                             )
                                           )
                                         }

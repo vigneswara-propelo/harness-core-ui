@@ -444,15 +444,17 @@ export default function SingleEnvironmentInputSetForm({
                             if (
                               get(
                                 deploymentStageInputSet,
-                                `${path}.environment.infrastructureDefinitions.[${infraIndex}].inputs.spec`
+                                `environment.infrastructureDefinitions.[${infraIndex}].inputs.spec`
                               )
                             ) {
                               set(
                                 deploymentStageInputSet,
-                                `${path}.environment.infrastructureDefinitions.[${infraIndex}].inputs.spec`,
+                                `environment.infrastructureDefinitions.[${infraIndex}].inputs.spec`,
                                 data
                               )
-                              formik?.setValues(set(formik?.values, `${path}.environment`, deploymentStageInputSet))
+                              formik?.setValues(
+                                set(formik?.values, `${path}.environment`, get(deploymentStageInputSet, 'environment'))
+                              )
                             }
                           }}
                         />
