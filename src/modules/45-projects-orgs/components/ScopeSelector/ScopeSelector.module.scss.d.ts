@@ -28,5 +28,6 @@ declare const styles: {
   readonly selectContainer: string
   readonly selectedProject: string
   readonly splitViewContainer: string
+  readonly viewAllProjects: string
 }
 export default styles

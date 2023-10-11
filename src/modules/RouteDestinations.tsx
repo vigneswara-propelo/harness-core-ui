@@ -112,7 +112,7 @@ export default function RouteDestinations(): React.ReactElement {
       <Route path="/account/:accountId/:module(ce)">
         <CERoutes />
       </Route>
-      {CDB_MFE_ENABLED ? CdbMfeRoutes.props.children : CdbNonMfeRoutes.props.children}
+      {!CDS_NAV_2_0 ? (CDB_MFE_ENABLED ? CdbMfeRoutes.props.children : CdbNonMfeRoutes.props.children) : null}
       {CFRoutes({})?.props.children}
       {IACM_ENABLED ? IACMRoutes().props.children : null}
       {SSCA_ENABLED ? SSCARoutes.props.children : null}

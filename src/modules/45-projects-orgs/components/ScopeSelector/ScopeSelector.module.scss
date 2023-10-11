@@ -46,10 +46,10 @@
 }
 
 .projectContainerWrapper {
-  height: calc(100vh - 130px);
+  height: calc(100vh - 210px);
   justify-content: space-between;
   margin: var(--spacing-none) var(--spacing-none) !important;
-  overflow-y: hidden;
+  overflow-y: auto;
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -69,7 +69,9 @@
 }
 
 .splitViewContainer {
+  height: calc(100vh - 130px) !important;
   display: flex;
+  overflow: hidden !important;
 }
 
 .projectCard {
@@ -172,4 +174,8 @@
   box-shadow: 0px 2px 8px -5px var(--black) !important;
   border: 1px solid var(--primary-7) !important;
   background-color: #fcfeff !important;
+}
+
+.viewAllProjects {
+  padding-right: 0 !important;
 }

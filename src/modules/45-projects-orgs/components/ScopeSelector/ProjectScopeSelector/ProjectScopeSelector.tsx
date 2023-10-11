@@ -7,7 +7,7 @@
 
 import React, { useMemo, useState } from 'react'
 import { Classes } from '@blueprintjs/core'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import cx from 'classnames'
 import {
   Layout,
@@ -25,7 +25,9 @@ import {
   Checkbox,
   CheckboxVariant,
   Icon,
-  SelectOption
+  SelectOption,
+  Button,
+  ButtonVariation
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { CellProps, Column, Renderer } from 'react-table'
@@ -45,6 +47,8 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import FavoriteStar from '@common/components/FavoriteStar/FavoriteStar'
 import { OrgProjectSplitView } from '@projects-orgs/pages/projects/views/OrgProjectSplitView/OrgProjectSplitView'
+import routes from '@modules/10-common/RouteDefinitionsV2'
+import { NAV_MODE } from '@modules/10-common/utils/routeUtils'
 import css from '../ScopeSelector.module.scss'
 
 const RenderColumnMenu: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) => {
@@ -66,11 +70,12 @@ interface ProjectScopeSelectorProps {
 
 export const ProjectScopeSelector: React.FC<ProjectScopeSelectorProps> = ({ onProjectClick }): JSX.Element => {
   const { getString } = useStrings()
+  const history = useHistory()
   const { accountId } = useParams<OrgPathProps>()
-  const { selectedProject, selectedOrg: org } = useAppStore()
+  const { selectedProject } = useAppStore()
   const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
     usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.ProjectListing}`)
-  const [selectedOrg, setSelectedOrg] = useState<string | undefined>(org?.identifier)
+  const [selectedOrg, setSelectedOrg] = useState<string | undefined>()
   const [page, setPage] = useState(0)
   const [orgPage, setOrgPage] = useState(0)
   const { PL_FAVORITES } = useFeatureFlags()
@@ -100,7 +105,7 @@ export const ProjectScopeSelector: React.FC<ProjectScopeSelectorProps> = ({ onPr
       accountIdentifier: accountId,
       searchTerm: orgSearchTerm,
       pageIndex: orgPage,
-      pageSize: 30
+      pageSize: 100
     },
     queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
@@ -176,6 +181,14 @@ export const ProjectScopeSelector: React.FC<ProjectScopeSelectorProps> = ({ onPr
           }}
           splitView={true}
         />
+        <Button
+          variation={ButtonVariation.LINK}
+          className={css.viewAllProjects}
+          text={getString('projectsOrgs.viewAllProjects')}
+          onClick={() => {
+            history.push(routes.toProjects({ accountId, mode: NAV_MODE.ADMIN }))
+          }}
+        />
       </Layout.Horizontal>
 
       {!(projectView === Views.SPLIT_VIEW) && (
@@ -189,7 +202,7 @@ export const ProjectScopeSelector: React.FC<ProjectScopeSelectorProps> = ({ onPr
           className={css.listHeader}
         />
       )}
-      {orgDataLoading && loading ? (
+      {(orgDataLoading || loading) && projectView !== Views.SPLIT_VIEW ? (
         <PageSpinner />
       ) : (
         <>

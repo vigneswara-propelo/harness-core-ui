@@ -79,7 +79,7 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
   const { showError } = useToaster()
   const history = useHistory()
   const { getString } = useStrings()
-  const { currentUserInfo, updateAppStore } = useAppStore()
+  const { currentUserInfo, updateAppStore, selectedProject } = useAppStore()
 
   const { data, loading, refetch, error } = useGetUserAccounts({
     queryParams: {
@@ -105,7 +105,8 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
   useEffect(() => {
     if (userInfo?.data?.defaultAccountId !== currentUserInfo.defaultAccountId) {
       updateAppStore({
-        currentUserInfo: userInfo?.data
+        currentUserInfo: userInfo?.data,
+        selectedProject
       })
     }
   }, [userInfo])

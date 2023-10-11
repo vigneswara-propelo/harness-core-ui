@@ -113,8 +113,8 @@ export const ModulesRouteDestinations: React.FC<{ mode?: NAV_MODE }> = ({ mode =
         >
           <Switch>
             {CommonRouteDestinations({ mode }).props.children}
-            {ModuleRouteConfig[module as NavModuleName].routes(mode).props.children}
             {GitOpsRouteDestinations({ mode }).props.children}
+            {ModuleRouteConfig[module as NavModuleName].routes(mode)}
           </Switch>
         </Route>
       ))}

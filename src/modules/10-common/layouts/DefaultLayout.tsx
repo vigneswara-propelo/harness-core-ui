@@ -49,8 +49,7 @@ export function DefaultLayout(props: React.PropsWithChildren<DefaultLayoutProps>
       identifyUser(currentUserInfo.email)
       trackPage(pageName, {
         module: module || '',
-        mode,
-        navVersion: CDS_NAV_2_0 ? '2' : '1'
+        ...(CDS_NAV_2_0 ? { mode: mode, isNav2Enabled: 'true' } : undefined)
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
