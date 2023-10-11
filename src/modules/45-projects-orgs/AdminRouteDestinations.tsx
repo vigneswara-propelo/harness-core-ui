@@ -15,8 +15,6 @@ import NotFoundPage from '@common/pages/404/NotFoundPage'
 import { RouteWithContext } from '@common/router/RouteWithContext/RouteWithContext'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
 import { Scope } from 'framework/types/types'
-
-// eslint-disable-next-line aliased-module-imports
 import OrganizationsPage from './pages/organizations/OrganizationsPage'
 import ProjectsListPage from './pages/projects/ProjectsPage'
 import ProjectDetails from './pages/projects/views/ProjectDetails/ProjectDetails'

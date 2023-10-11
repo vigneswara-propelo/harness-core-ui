@@ -15,6 +15,7 @@ import routes from '@common/RouteDefinitionsV2'
 import { NAV_MODE, accountPathProps, getRouteParams, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { Module } from 'framework/types/ModuleName'
 import { Scope } from 'framework/types/types'
+import { SIDE_NAV_STATE, useLayoutV2 } from '@modules/10-common/router/RouteWithLayoutV2'
 import { StringsMap } from 'stringTypes'
 import SideNavHeader from './SideNavHeader/SideNavHeader'
 import { useSideNavV2 } from './useSideNavV2'
@@ -52,6 +53,7 @@ export interface ScopeSwitchProps {
 interface SideNavScopeProps {
   scope: Scope | Scope[]
   children?: React.ReactElement<SideNavLinkProps> | Array<React.ReactElement<SideNavLinkProps>>
+  isRenderedInAccordion?: boolean
   showLinksIfNotPresentInScope?: boolean
   scopeSwitchProps?: Partial<Record<Scope, ScopeSwitchProps>>
   __TYPE?: string
@@ -59,7 +61,7 @@ interface SideNavScopeProps {
 
 interface SideNavMainProps {
   disableScopeSelector?: boolean
-  children: React.ReactElement | React.ReactElement[]
+  disableCollapse?: boolean
 }
 
 export interface LinkInfo {
@@ -120,7 +122,7 @@ const getSideNavLinks = (
 
 const SideNavScope: React.FC<SideNavScopeProps> = props => {
   const { scope } = useGetSelectedScope()
-  const { children, scopeSwitchProps, showLinksIfNotPresentInScope } = props
+  const { children, scopeSwitchProps, showLinksIfNotPresentInScope, isRenderedInAccordion } = props
   const { updateAvailableLinks } = useSideNavV2()
 
   useEffect(() => {
@@ -150,10 +152,16 @@ const SideNavScope: React.FC<SideNavScopeProps> = props => {
   }
 
   if (Array.isArray(children)) {
-    return <>{children.map(child => React.cloneElement(child as React.ReactElement, { scope: props.scope }))}</>
+    return (
+      <>
+        {children.map(child =>
+          React.cloneElement(child as React.ReactElement, { scope: props.scope, isRenderedInAccordion })
+        )}
+      </>
+    )
   }
 
-  return <>{React.cloneElement(props.children as React.ReactElement, { scope: props.scope })}</>
+  return <>{React.cloneElement(props.children as React.ReactElement, { scope: props.scope, isRenderedInAccordion })}</>
 }
 
 SideNavScope.defaultProps = {
@@ -162,7 +170,12 @@ SideNavScope.defaultProps = {
 
 const SideNavMainComponent: React.FC<SideNavMainProps> = props => {
   const { scope } = useGetSelectedScope()
-  const { children, disableScopeSelector } = props
+  const { setDisableSideNavCollapse } = useLayoutV2()
+  const { children, disableScopeSelector, disableCollapse } = props
+
+  useEffect(() => {
+    setDisableSideNavCollapse?.(Boolean(disableCollapse))
+  }, [disableCollapse])
 
   return (
     <SideNavContextProvider disableScopeSelector={disableScopeSelector}>
@@ -172,14 +185,31 @@ const SideNavMainComponent: React.FC<SideNavMainProps> = props => {
 }
 
 export const SideNav: SideNavComponent<React.PropsWithChildren<unknown>> = (props): JSX.Element => {
+  const { sideNavState, setSideNavState } = useLayoutV2()
   const { children } = props
 
+  if (sideNavState === SIDE_NAV_STATE.HIDDEN) {
+    return <></>
+  }
+
+  const isCollapsed = sideNavState === SIDE_NAV_STATE.COLLAPSED
   return (
     <ModalProvider>
-      <Layout.Vertical className={cx(css.container, css.expanded)} padding="medium">
+      <Layout.Vertical
+        className={cx(css.container, {
+          [css.expanded]: !isCollapsed,
+          [css.collapsed]: isCollapsed
+        })}
+        onMouseEnter={e => {
+          if (isCollapsed && e.currentTarget === e.target) {
+            setSideNavState(SIDE_NAV_STATE.EXPANDED)
+          }
+        }}
+      >
         <SideNavHeader />
         {children}
         <SideNavFooter />
+        {/* {!disableSideNavCollapse && <SideNavToggleButton />} */}
       </Layout.Vertical>
     </ModalProvider>
   )
@@ -194,7 +224,11 @@ interface SettingsLinkProps {
 const SettingsTitle = (props: { label: keyof StringsMap }): JSX.Element => {
   const { label } = props
   const { getString } = useStrings()
+  const { sideNavState } = useLayoutV2()
 
+  if (sideNavState === SIDE_NAV_STATE.COLLAPSED) {
+    return <></>
+  }
   return (
     <Text
       className={css.sectionTitle}
@@ -250,18 +284,16 @@ const SettingsLink: React.FC<SettingsLinkProps> = props => {
         />
       </SideNav.Scope>
       {showConfigurationLink && (
-        <Text
+        <SideNav.Link
           icon="list-view"
-          iconProps={{ size: 20, margin: { right: 'xsmall' } }}
-          font={{ variation: FontVariation.BODY }}
-          color={Color.GREY_800}
-          className={css.configureNavigation}
-          onClick={() => {
+          label={getString('common.configureNavigation')}
+          to=""
+          onClick={e => {
+            e.stopPropagation()
+            e.preventDefault()
             toggleModuleConfig()
           }}
-        >
-          {getString('common.configureNavigation')}
-        </Text>
+        />
       )}
       {isModuleConfigOpen ? (
         <ModulesConfigurationScreen

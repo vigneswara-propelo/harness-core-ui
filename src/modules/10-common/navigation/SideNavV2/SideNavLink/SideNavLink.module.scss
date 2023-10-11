@@ -12,6 +12,24 @@
     text-decoration: none;
     color: var(--primary-8);
     background-color: rgba(#0278d5, 0.25);
+
+    &.collapsed {
+      .dot {
+        background-color: var(--primary-8);
+      }
+    }
+  }
+
+  &.collapsed {
+    align-items: center;
+    justify-content: center;
+
+    .dot {
+      height: 4px;
+      width: 4px;
+      border-radius: 100%;
+      background-color: var(--grey-300);
+    }
   }
 
   &:last-child {

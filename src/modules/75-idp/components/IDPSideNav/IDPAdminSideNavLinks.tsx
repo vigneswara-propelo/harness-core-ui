@@ -37,7 +37,7 @@ function IDPAdminSideNavLinks(): React.ReactElement {
   }, [onboardingStatus])
 
   return (
-    <SideNav.Main disableScopeSelector>
+    <SideNav.Main disableScopeSelector disableCollapse>
       <SideNav.Section>
         {showGetStarted ? (
           <SideNav.Link

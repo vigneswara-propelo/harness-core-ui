@@ -36,9 +36,13 @@ import IACMSideNavLinks from '@iacm/components/IACMSideNav/Nav2'
 import IACMRouteDestinations from '@iacm/RouteDestinationsV2'
 import CETRouteDestinations from '@modules/75-cet/RouteDestinationsV2'
 import CETSideNavLinks from '@cet/components/SideNav/CETSideNavLinks'
+import { SIDE_NAV_STATE } from '@common/router/RouteWithLayoutV2'
 
+export interface ModuleLinksProps {
+  sideNavState: SIDE_NAV_STATE
+}
 interface IModuleRouteConfig {
-  sideNavLinks: (mode: NAV_MODE) => React.ReactElement
+  sideNavLinks: (mode: NAV_MODE, props?: ModuleLinksProps) => React.ReactElement
   routes: (mode: NAV_MODE) => React.ReactElement
 }
 

@@ -1,0 +1,52 @@
+.container {
+  width: 12px;
+  height: 56px;
+  position: absolute;
+  bottom: 46px;
+  z-index: 100;
+  border-top: 16px solid transparent;
+  border-bottom: 16px solid transparent;
+  cursor: pointer;
+  display: block !important;
+  border-bottom-left-radius: 100%;
+  border-top-left-radius: 100%;
+
+  .triangle {
+    transform: rotate(-90deg);
+    color: var(--grey-0);
+  }
+
+  &.collapse {
+    right: 0px;
+    border-right: 14px solid var(--grey-300);
+    &:hover {
+      border-right: 18px solid var(--grey-300);
+      transition: all 100ms ease-out;
+    }
+  }
+
+  &.expand {
+    transform: rotate(180deg);
+    border-right: 14px solid var(--grey-300);
+    right: -14px;
+    &:hover {
+      border-right: 18px solid var(--grey-300);
+      transition: all 100ms ease-out;
+      right: -18px;
+    }
+    .triangle {
+      color: var(--grey-0);
+    }
+  }
+}
+
+.popover {
+  :global {
+    .bp3-transition-container {
+      z-index: 100;
+    }
+    .bp3-popover {
+      z-index: 100;
+    }
+  }
+}

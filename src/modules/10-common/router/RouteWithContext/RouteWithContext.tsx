@@ -18,14 +18,17 @@ import type { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import PageProvider from '@common/pages/pageContext/PageProvider'
 import { TemplateSelectorContextProvider } from 'framework/Templates/TemplateSelectorContext/TemplateSelectorContext'
 import { TemplateSelectorDrawer } from 'framework/Templates/TemplateSelectorDrawer/TemplateSelectorDrawer'
+import { SIDE_NAV_STATE } from '../RouteWithLayoutV2'
 
 export interface RouteWithContextProps extends RouterRouteprops {
   licenseRedirectData?: LicenseRedirectProps
   pageName?: PAGE_NAME
+  sideNavState?: SIDE_NAV_STATE
+  disableAuxNav?: boolean
 }
 
 export function RouteWithContext(props: React.PropsWithChildren<RouteWithContextProps>): React.ReactElement {
-  const { children, licenseRedirectData, pageName, ...rest } = props
+  const { children, licenseRedirectData, pageName, sideNavState, disableAuxNav, ...rest } = props
   const licenseStore = useLicenseStore()
 
   const childComponent = (
@@ -33,7 +36,9 @@ export function RouteWithContext(props: React.PropsWithChildren<RouteWithContext
       <ModalProvider>
         <TemplateSelectorContextProvider>
           <PageProvider pageName={pageName}>
-            <DefaultLayout>{children}</DefaultLayout>
+            <DefaultLayout sideNavState={sideNavState} disableAuxNav={disableAuxNav}>
+              {children}
+            </DefaultLayout>
           </PageProvider>
           <TemplateSelectorDrawer />
         </TemplateSelectorContextProvider>

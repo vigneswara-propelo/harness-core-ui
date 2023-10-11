@@ -1,15 +1,10 @@
 .container {
   position: relative;
-  height: 90px;
+  height: 100px;
   bottom: 0px;
   border-top: 1px solid var(--grey-200);
   .helpLink {
-    display: flex;
-    padding: var(--spacing-small) var(--spacing-medium) !important;
-    background-color: transparent;
-    border-radius: 4px;
-    text-decoration: none;
-    cursor: pointer;
+    margin-top: var(--spacing-small);
 
     &:hover {
       text-decoration: none;

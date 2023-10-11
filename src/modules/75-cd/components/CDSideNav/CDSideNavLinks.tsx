@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { useHistory, useParams, matchPath, useLocation } from 'react-router-dom'
+import { Button, ButtonSize, ButtonVariation, Container } from '@harness/uicore'
 import { SideNav } from '@common/navigation/SideNavV2/SideNavV2'
 import { Scope } from 'framework/types/types'
 import routes from '@common/RouteDefinitionsV2'
@@ -18,9 +19,12 @@ import { useGetPipelines } from '@pipeline/hooks/useGetPipelines'
 import { PagePMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
+import { ModuleLinksProps } from '@modules/ModuleRouteConfig'
+import { SIDE_NAV_STATE } from '@modules/10-common/router/RouteWithLayoutV2'
+import css from './CDSideNav.module.scss'
 
 const module: Module = 'cd'
-const CDSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
+const CDSideNavLinks = (mode: NAV_MODE, sideNavProps?: ModuleLinksProps): React.ReactElement => {
   const history = useHistory()
   const { params } = useGetSelectedScope()
   const { projectIdentifier = '', orgIdentifier = '' } = params || {}
@@ -131,6 +135,20 @@ const CDSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
         </SideNav.Scope>
       </SideNav.Section>
       <SideNav.SettingsLink mode={mode} module={module} />
+      {sideNavProps?.sideNavState === SIDE_NAV_STATE.EXPANDED && (
+        <Container className={css.flex1}>
+          <Button
+            className={css.launchButton}
+            variation={ButtonVariation.SECONDARY}
+            size={ButtonSize.SMALL}
+            onClick={() => {
+              window.location.href = `/#/account/${accountId}/dashboard`
+            }}
+          >
+            {getString('cd.cdLaunchText')}
+          </Button>
+        </Container>
+      )}
     </SideNav.Main>
   )
 }

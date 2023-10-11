@@ -17,6 +17,7 @@ import routes from '@common/RouteDefinitionsV2'
 import { ModePathProps, NAV_MODE, accountPathProps, modePathProps, modulePathProps } from '@common/utils/routeUtils'
 import { AccountPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { Module, moduleToModuleNameMapping } from 'framework/types/ModuleName'
+import { SIDE_NAV_STATE, useLayoutV2 } from '@modules/10-common/router/RouteWithLayoutV2'
 import css from './SideNavHeader.module.scss'
 
 const SideNavHeader: React.FC = () => {
@@ -36,28 +37,35 @@ const SideNavHeader: React.FC = () => {
     ? moduleMap[module as NavModuleName]
     : {}
   const { getString } = useStrings()
+  const { sideNavState } = useLayoutV2()
   const moduleProps = match?.params.mode === NAV_MODE.MODULE ? { module: moduleFromParam } : {}
 
+  const isCollapsed = sideNavState === SIDE_NAV_STATE.COLLAPSED
   return (
     <Layout.Horizontal
-      flex={{ justifyContent: 'space-between' }}
+      flex={{ justifyContent: isCollapsed ? 'center' : 'space-between' }}
       className={css.container}
-      style={{ borderColor: color ? `var(${color})` : 'var(--primary-6' }}
+      style={{ borderColor: color ? `var(${color})` : 'var(--primary-6)' }}
     >
       <Link
         className={css.link}
         to={routes.toMode({ mode: match?.params.mode || NAV_MODE.ADMIN, accountId, ...moduleProps })}
       >
         <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-          <Icon name={icon || 'harness-logo-black'} size={icon ? 32 : 100} margin={{ right: 'small' }} />
-          {label && (
+          {isCollapsed ? (
+            <Icon name={icon || 'nav-harness'} size={32} />
+          ) : (
+            <Icon name={icon || 'harness-logo-black'} size={icon ? 32 : 100} margin={{ right: 'small' }} />
+          )}
+
+          {label && !isCollapsed && (
             <Text color={Color.GREY_800} font={{ variation: FontVariation.BODY2 }} className={css.label}>
               {getString(label)}
             </Text>
           )}
         </Layout.Horizontal>
       </Link>
-      <ModeSelector />
+      {!isCollapsed && <ModeSelector />}
     </Layout.Horizontal>
   )
 }

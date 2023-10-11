@@ -16,6 +16,7 @@ declare const styles: {
   readonly moduleIcon: string
   readonly panel: string
   readonly popover: string
+  readonly sideNavCollapsed: string
   readonly summary: string
 }
 export default styles

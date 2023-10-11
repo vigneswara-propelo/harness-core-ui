@@ -9,6 +9,7 @@
 declare const styles: {
   readonly active: string
   readonly activeRow: string
+  readonly collapsed: string
   readonly favorite: string
   readonly favoriteActive: string
   readonly link: string

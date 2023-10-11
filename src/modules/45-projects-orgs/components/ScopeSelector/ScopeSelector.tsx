@@ -10,7 +10,7 @@ import { Position, PopoverInteractionKind } from '@blueprintjs/core'
 import { matchPath, useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
-import { Text, Container, Popover, Button, Tabs, Layout } from '@harness/uicore'
+import { Text, Container, Popover, Button, Tabs, Layout, Icon } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Scope } from 'framework/types/types'
 import { Organization, Project } from 'services/cd-ng'
@@ -20,6 +20,7 @@ import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitionsV2'
 import usePrimaryScopeSwitchDialog from '@common/navigation/SideNavV2/ScopeSwitchDialog/usePrimaryScopeSwitchDialog'
 import { LinkInfo } from '@common/navigation/SideNavV2/SideNavV2'
+import { SIDE_NAV_STATE, useLayoutV2 } from '@modules/10-common/router/RouteWithLayoutV2'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
 import pointerImageDark from './pointer-dark.svg'
@@ -51,6 +52,7 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
   const [selectedTabId, setSelectedTabId] = React.useState<Scope | undefined>(selectedScope)
   const { path } = getRouteParams<ProjectPathProps & { path: string }>(true, activeLink?.url)
   const history = useHistory()
+  const { sideNavState } = useLayoutV2()
   const { showDialog: showPrimaryScopeSwitchDialog } = usePrimaryScopeSwitchDialog({ closeScopeSelector: onClose })
 
   const handleTabChange = (tabId: Scope): void => {
@@ -160,9 +162,11 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
     }
   }
 
+  const isCollapsed = sideNavState === SIDE_NAV_STATE.COLLAPSED
+
   return (
     <>
-      <Container padding={{ top: 'medium', bottom: 'small' }}>
+      <Container padding={{ top: 'medium', bottom: 'small' }} width="100%">
         <Popover
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.RIGHT}
@@ -177,9 +181,12 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
         >
           <Button
             minimal
-            rightIcon="chevron-right"
+            rightIcon={isCollapsed ? undefined : 'chevron-right'}
             iconProps={{ color: Color.GREY_400 }}
-            className={cx(css.selectButton, { [css.active]: isScopeSelectorOpen })}
+            className={cx(css.selectButton, {
+              [css.active]: isScopeSelectorOpen,
+              [css.collapsed]: isCollapsed
+            })}
             tooltipProps={{
               isDark: true,
               usePortal: true,
@@ -194,7 +201,11 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
             }
             onClick={onButtonClick}
           >
-            <Layout.Vertical spacing="xsmall">{renderSelectedScopeButtonContent()}</Layout.Vertical>
+            {isCollapsed ? (
+              <Icon name="nav-project" size={20} />
+            ) : (
+              <Layout.Vertical spacing="xsmall">{renderSelectedScopeButtonContent()}</Layout.Vertical>
+            )}
           </Button>
           <Container width={760} padding="xlarge" className={css.selectContainer}>
             <Tabs
@@ -244,7 +255,7 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
             />
           </Container>
         </Popover>
-        {!selectedScope ? (
+        {!selectedScope && sideNavState === SIDE_NAV_STATE.EXPANDED ? (
           <div style={{ backgroundImage: `url(${pointerImageDark})` }} className={css.pickScopeHelp}>
             <Text color={Color.GREY_450} font={{ variation: FontVariation.BODY }} padding="small">
               {getString('projectsOrgs.pickScope', { scope: selectedScope || Scope.PROJECT })}

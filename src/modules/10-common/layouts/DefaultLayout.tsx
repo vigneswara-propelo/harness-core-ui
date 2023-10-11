@@ -24,16 +24,18 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { String } from 'framework/strings'
 import { ModePathProps } from '../interfaces/RouteInterfaces'
 import { getRouteParams } from '../utils/routeUtils'
+import { SIDE_NAV_STATE, useLayoutV2 } from '../router/RouteWithLayoutV2'
 import FeatureBanner from './FeatureBanner'
 
 import css from './layouts.module.scss'
 
 export interface DefaultLayoutProps {
   disableAuxNav?: boolean
+  sideNavState?: SIDE_NAV_STATE
 }
 
 export function DefaultLayout(props: React.PropsWithChildren<DefaultLayoutProps>): React.ReactElement {
-  const { disableAuxNav } = props
+  const { disableAuxNav, sideNavState } = props
   const { title, subtitle, icon, navComponent: NavComponent, launchButtonText, launchButtonRedirectUrl } = useSidebar()
 
   const { pageName } = usePage()
@@ -43,6 +45,7 @@ export function DefaultLayout(props: React.PropsWithChildren<DefaultLayoutProps>
   const { isOpen, open, close } = useToggleOpen(false)
   const { PL_AI_SUPPORT_CHATBOT, PL_EULA_ENABLED, CDS_NAV_2_0 } = useFeatureFlags()
   const { mode } = getRouteParams<ModePathProps>()
+  const { setSideNavState } = useLayoutV2()
 
   useEffect(() => {
     if (pageName) {
@@ -54,6 +57,10 @@ export function DefaultLayout(props: React.PropsWithChildren<DefaultLayoutProps>
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageName])
+
+  useEffect(() => {
+    setSideNavState(sideNavState)
+  }, [sideNavState])
 
   return (
     <div className={cx(css.main, css.flex)} data-layout="default">

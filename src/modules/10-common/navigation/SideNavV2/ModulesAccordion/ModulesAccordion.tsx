@@ -24,6 +24,7 @@ import { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { ModuleName, moduleNameToModuleMapping } from 'framework/types/ModuleName'
 import { NAV_MODE } from '@common/utils/routeUtils'
 import ModuleRouteConfig from '@modules/ModuleRouteConfig'
+import { SIDE_NAV_STATE, useLayoutV2 } from '@modules/10-common/router/RouteWithLayoutV2'
 import css from './ModulesAccordion.module.scss'
 interface SideNavLinksProps {
   module: NavModuleName
@@ -40,7 +41,8 @@ const filterSideNavScope = (
         ...child,
         props: {
           ...child?.props,
-          showLinksIfNotPresentInScope: true
+          showLinksIfNotPresentInScope: true,
+          isRenderedInAccordion: true
         }
       })
     }
@@ -53,6 +55,7 @@ const filterSideNavScope = (
 
 function DirectAccessModules({ module }: { module: ModuleName }): React.ReactElement {
   const { getString } = useStrings()
+  const { sideNavState } = useLayoutV2()
   const moduleMap = useNavModuleInfoMap()
 
   const { icon, shortLabel, color, homePageUrl } = moduleMap[module as NavModuleName]
@@ -67,35 +70,40 @@ function DirectAccessModules({ module }: { module: ModuleName }): React.ReactEle
           margin={{ right: 'small' }}
           style={{ fill: `var(${color})` }}
         />
-        <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
-          {getString(shortLabel)}
-        </Text>
+        {sideNavState !== SIDE_NAV_STATE.COLLAPSED && (
+          <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
+            {getString(shortLabel)}
+          </Text>
+        )}
       </Layout.Horizontal>
     </NavLink>
   )
 }
 
 export const SideNavLinksComponent: React.FC<SideNavLinksProps> = props => {
-  const Component: JSX.Element = ModuleRouteConfig[props.module].sideNavLinks(props.mode)
+  const { sideNavState } = useLayoutV2()
+  const Component: JSX.Element = ModuleRouteConfig[props.module].sideNavLinks(props.mode, { sideNavState })
 
   const components = filterSideNavScope(Component)
 
   return <>{components}</>
 }
 
-const ModuleSummary: React.FC<{ module: NavModuleName; isLinkModule: boolean; selectedModule?: string }> = ({
+const ModuleSummary: React.FC<{ module: NavModuleName; isDirectAccessModule: boolean; selectedModule?: string }> = ({
   module,
   selectedModule,
-  isLinkModule
+  isDirectAccessModule
 }) => {
   const { getString } = useStrings()
   const { icon, shortLabel, color } = useNavModuleInfo(module)
+  const { sideNavState } = useLayoutV2()
   const isActive = selectedModule?.toLowerCase() === module.toLowerCase()
 
-  if (isLinkModule) {
+  if (isDirectAccessModule) {
     return <DirectAccessModules module={module} />
   }
 
+  const isCollapsed = sideNavState === SIDE_NAV_STATE.COLLAPSED
   return (
     <Popover
       interactionKind={PopoverInteractionKind.HOVER}
@@ -110,7 +118,7 @@ const ModuleSummary: React.FC<{ module: NavModuleName; isLinkModule: boolean; se
       }
     >
       <Layout.Horizontal
-        className={cx(css.container, { [css.active]: isActive })}
+        className={cx(css.container, { [css.active]: isActive, [css.sideNavCollapsed]: isCollapsed })}
         flex={{ justifyContent: 'flex-start' }}
       >
         <Icon
@@ -120,9 +128,11 @@ const ModuleSummary: React.FC<{ module: NavModuleName; isLinkModule: boolean; se
           margin={{ right: 'small' }}
           style={{ fill: `var(${color})` }}
         />
-        <Text color={isActive ? Color.PRIMARY_7 : Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
-          {getString(shortLabel)}
-        </Text>
+        {!isCollapsed && (
+          <Text color={isActive ? Color.PRIMARY_7 : Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
+            {getString(shortLabel)}
+          </Text>
+        )}
       </Layout.Horizontal>
     </Popover>
   )
@@ -134,6 +144,7 @@ interface ModulesAccordionProps {
 
 const ModulesAccordion: React.FC<ModulesAccordionProps> = ({ mode = NAV_MODE.ALL }) => {
   const moduleMap = useNavModuleInfoMap()
+  const { sideNavState } = useLayoutV2()
   const { accountId } = useParams<AccountPathProps>()
   const { preference: modulesPreferenceData } = usePreferenceStore<ModulesPreferenceStoreData>(
     PreferenceScope.USER,
@@ -155,7 +166,7 @@ const ModulesAccordion: React.FC<ModulesAccordionProps> = ({ mode = NAV_MODE.ALL
 
   return (
     <Accordion
-      className={css.accordion}
+      className={cx(css.accordion, { [css.sideNavCollapsed]: sideNavState === SIDE_NAV_STATE.COLLAPSED })}
       summaryClassName={css.summary}
       chevronClassName={css.chevron}
       activeId={selectedModule}
@@ -170,7 +181,7 @@ const ModulesAccordion: React.FC<ModulesAccordionProps> = ({ mode = NAV_MODE.ALL
             <ModuleSummary
               module={module}
               selectedModule={selectedModule}
-              isLinkModule={directAccessModules.includes(module)}
+              isDirectAccessModule={directAccessModules.includes(module)}
             />
           }
           details={

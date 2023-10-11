@@ -100,8 +100,15 @@
     border-left: 1px solid var(--grey-200);
   }
 
-  a[data-name='nav-link'] > span[class*='bp3-icon'] {
-    display: none;
+  &.sideNavCollapsed {
+    .chevron {
+      display: none !important;
+    }
+
+    .accordionDetails {
+      margin-left: 0px;
+      border-left: none;
+    }
   }
 }
 

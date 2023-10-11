@@ -113,6 +113,10 @@
     border: 1px solid var(--primary-6) !important;
     color: var(--primary-6) !important;
   }
+  &.collapsed {
+    padding: 0px !important;
+    justify-content: center;
+  }
 }
 
 .active {

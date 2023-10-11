@@ -29,8 +29,9 @@ import { RouteWithContext } from '@common/router/RouteWithContext/RouteWithConte
 import IDPRouteDestinations from '@idp/IDPRouteDestination'
 import IDPAdminRouteDestinations from '@idp/IDPAdminRouteDestination'
 import IDPAdminSideNavLinks from '@idp/components/IDPSideNav/IDPAdminSideNavLinks'
+import RouteWithLayoutV2 from '@common/router/RouteWithLayoutV2'
 
-const RedirectToMode = ({ mode }: { mode?: NAV_MODE }): React.ReactElement => {
+export const RedirectToMode = ({ mode }: { mode?: NAV_MODE }): React.ReactElement => {
   const { module, accountId, path, projectIdentifier, orgIdentifier } = useParams<
     ModulePathParams & ProjectPathProps & { path: string }
   >()
@@ -113,7 +114,7 @@ const RedirectHomeSetupRoutes = (): React.ReactElement => {
   )
 }
 
-const RedirectResourcesToSettings = (): React.ReactElement => {
+export const RedirectResourcesToSettings = (): React.ReactElement => {
   const { path, accountId, module, orgIdentifier, projectIdentifier } = useParams<
     ProjectPathProps & { path: string } & ModulePathParams
   >()
@@ -210,7 +211,7 @@ export const OldNavRedirects = (): JSX.Element => {
 const RoutesV2 = (): React.ReactElement => {
   return (
     <Switch>
-      <Route path={routes.toMode({ ...accountPathProps, mode: NAV_MODE.ADMIN })}>
+      <RouteWithLayoutV2 path={routes.toMode({ ...accountPathProps, mode: NAV_MODE.ADMIN })}>
         <Layout.Horizontal>
           <SideNav>
             <AdminSideNav />
@@ -219,8 +220,8 @@ const RoutesV2 = (): React.ReactElement => {
             <AdminRouteDestinations />
           </Container>
         </Layout.Horizontal>
-      </Route>
-      <Route path={routes.toMode({ ...accountPathProps, mode: NAV_MODE.ALL })}>
+      </RouteWithLayoutV2>
+      <RouteWithLayoutV2 path={routes.toMode({ ...accountPathProps, mode: NAV_MODE.ALL })}>
         <Layout.Horizontal>
           <SideNav>
             <AllModeSideNav />
@@ -229,8 +230,8 @@ const RoutesV2 = (): React.ReactElement => {
             <AllModeRouteDestinations />
           </Container>
         </Layout.Horizontal>
-      </Route>
-      <Route path={routes.toMode({ ...accountPathProps, mode: NAV_MODE.DASHBOARDS })}>
+      </RouteWithLayoutV2>
+      <RouteWithLayoutV2 path={routes.toMode({ ...accountPathProps, mode: NAV_MODE.DASHBOARDS })}>
         <Layout.Horizontal>
           <SideNav>
             <DashboardsSideNav />
@@ -239,15 +240,17 @@ const RoutesV2 = (): React.ReactElement => {
             <DashboardRouteDestinations />
           </Container>
         </Layout.Horizontal>
-      </Route>
-      <Route path={routes.toMode({ ...accountPathProps, mode: NAV_MODE.MODULE, module: ':module(idp)' })}>
+      </RouteWithLayoutV2>
+      <RouteWithLayoutV2 path={routes.toMode({ ...accountPathProps, mode: NAV_MODE.MODULE, module: ':module(idp)' })}>
         <Layout.Horizontal>
           <Container style={{ flex: 1 }}>
             <IDPRouteDestinations />
           </Container>
         </Layout.Horizontal>
-      </Route>
-      <Route path={routes.toMode({ ...accountPathProps, mode: NAV_MODE.MODULE, module: ':module(idp-admin)' })}>
+      </RouteWithLayoutV2>
+      <RouteWithLayoutV2
+        path={routes.toMode({ ...accountPathProps, mode: NAV_MODE.MODULE, module: ':module(idp-admin)' })}
+      >
         <Layout.Horizontal>
           <SideNav>
             <IDPAdminSideNavLinks />
@@ -256,8 +259,8 @@ const RoutesV2 = (): React.ReactElement => {
             <IDPAdminRouteDestinations />
           </Container>
         </Layout.Horizontal>
-      </Route>
-      <Route path={routes.toMode({ ...accountPathProps, mode: NAV_MODE.MODULE })}>
+      </RouteWithLayoutV2>
+      <RouteWithLayoutV2 path={routes.toMode({ ...accountPathProps, mode: NAV_MODE.MODULE })}>
         <Layout.Horizontal>
           <SideNav>
             <ModuleSideNavLinks />
@@ -266,7 +269,7 @@ const RoutesV2 = (): React.ReactElement => {
             <ModulesRouteDestinations />
           </Container>
         </Layout.Horizontal>
-      </Route>
+      </RouteWithLayoutV2>
 
       <RouteWithContext path={routes.toPurpose({ ...accountPathProps })} exact>
         <WelcomePage />

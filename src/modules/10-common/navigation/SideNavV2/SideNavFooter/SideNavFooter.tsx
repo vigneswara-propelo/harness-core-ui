@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { matchPath, useHistory, useLocation, useRouteMatch } from 'react-router-dom'
-import { Avatar, Container, Icon, Layout, Popover, Text, useToaster } from '@harness/uicore'
+import { Avatar, Container, Layout, Popover, Text, useToaster } from '@harness/uicore'
 import { PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { get } from 'lodash-es'
@@ -12,7 +12,8 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import { useLogout1 } from 'services/portal'
 import SecureStorage from 'framework/utils/SecureStorage'
-import { ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { SIDE_NAV_STATE, useLayoutV2 } from '@modules/10-common/router/RouteWithLayoutV2'
 import { accountPathProps, getRouteParams, modulePathProps, returnUrlParams } from '@common/utils/routeUtils'
 import { getLoginPageURL } from 'framework/utils/SessionUtils'
 import SideNavLink from '../SideNavLink/SideNavLink'
@@ -104,25 +105,25 @@ const SideNavFooter: React.FC = () => {
   const [showResourceCenter, setShowResourceCenter] = useState<boolean>(false)
   const { currentUserInfo: user } = useAppStore()
   const { getString } = useStrings()
-  const { module } = getRouteParams<ModulePathParams>()
-  const match = useRouteMatch(routes.toUserProfile({ module: module }))
+  const { module, projectIdentifier, orgIdentifier } = getRouteParams<ModulePathParams & ProjectPathProps>()
+  const match = useRouteMatch(routes.toUserProfile({ module: module, projectIdentifier, orgIdentifier }))
+  const { sideNavState } = useLayoutV2()
 
+  const isCollapsed = sideNavState === SIDE_NAV_STATE.COLLAPSED
   return (
     <Container className={css.container}>
-      <>
-        <Layout.Horizontal
-          onClick={() => {
-            setShowResourceCenter(true)
-          }}
-          className={css.helpLink}
-          margin={{ top: 'small' }}
-        >
-          <Icon margin={{ right: 'small' }} name="nav-help" size={20} />
-          <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_800}>
-            {getString('common.help')}
-          </Text>
-        </Layout.Horizontal>
-      </>
+      <SideNavLink
+        to=""
+        icon="nav-help"
+        label={getString('common.help')}
+        onClick={e => {
+          e.stopPropagation()
+          e.preventDefault()
+          setShowResourceCenter(true)
+        }}
+        className={css.helpLink}
+      />
+
       <ResourceCenter
         hideHelpBtn={true}
         isOpen={showResourceCenter}
@@ -146,9 +147,11 @@ const SideNavFooter: React.FC = () => {
           padding={{ top: 'small', bottom: 'small', left: 'small', right: 'small' }}
         >
           <Avatar name={user.name || user.email} email={user.email} size="small" hoverCard={false} />
-          <Text font={{ variation: FontVariation.BODY2 }} color={Color.BLACK} lineClamp={1}>
-            {user.name || user.email}
-          </Text>
+          {!isCollapsed && (
+            <Text font={{ variation: FontVariation.BODY2 }} color={Color.BLACK} lineClamp={1}>
+              {user.name || user.email}
+            </Text>
+          )}
         </Layout.Horizontal>
       </Popover>
     </Container>

@@ -12,9 +12,11 @@ import routes from '@common/RouteDefinitionsV2'
 import { NAV_MODE, accountPathProps } from '@common/utils/routeUtils'
 import { Module } from 'framework/types/ModuleName'
 import { NavModuleName } from '@common/hooks/useNavModuleInfo'
+import { useLayoutV2 } from '@modules/10-common/router/RouteWithLayoutV2'
 
 const SideNavLinksComponent: React.FC<{ module: NavModuleName; mode: NAV_MODE }> = props => {
-  const Component = ModuleRouteConfig[props.module].sideNavLinks(props.mode)
+  const { sideNavState } = useLayoutV2()
+  const Component = ModuleRouteConfig[props.module].sideNavLinks(props.mode, { sideNavState })
 
   return <>{Component} </>
 }

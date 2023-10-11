@@ -19,6 +19,7 @@ import {
   projectPathProps
 } from '@common/utils/routeUtils'
 import { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
+import { SIDE_NAV_STATE } from '@modules/10-common/router/RouteWithLayoutV2'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { ExecutionListPage } from './pages/execution-list-page/ExecutionListPage'
 import { PipelineListPage } from './pages/pipeline-list/PipelineListPage'
@@ -128,6 +129,8 @@ function PipelineRouteDestinations({
             stepIndentifier: ':stepIndentifier'
           })
         ]}
+        sideNavState={SIDE_NAV_STATE.HIDDEN}
+        disableAuxNav
         pageName={PAGE_NAME.FullPageLogView}
       >
         <FullPageLogView />
@@ -156,7 +159,6 @@ function PipelineRouteDestinations({
       </RouteWithContext>
       <RouteWithContext
         exact
-        // licenseStateName={licenseRedirectData?.licenseStateName}
         path={[
           routes.toExecution({ ...projectPathProps, ...executionPathProps, ...modulePathProps, mode }),
           routes.toExecution({ ...projectPathProps, ...executionPathProps, mode })
@@ -167,6 +169,7 @@ function PipelineRouteDestinations({
       <RouteWithContext
         exact
         licenseRedirectData={licenseRedirectData}
+        sideNavState={SIDE_NAV_STATE.COLLAPSED}
         path={[
           routes.toExecutionPipelineView({ ...projectPathProps, ...executionPathProps, ...modulePathProps, mode }),
           routes.toExecutionPipelineView({ ...projectPathProps, ...executionPathProps, mode })
@@ -180,6 +183,7 @@ function PipelineRouteDestinations({
       <RouteWithContext
         exact
         licenseRedirectData={licenseRedirectData}
+        sideNavState={SIDE_NAV_STATE.COLLAPSED}
         path={[
           routes.toExecutionPolicyEvaluationsView({
             ...projectPathProps,
@@ -206,6 +210,7 @@ function PipelineRouteDestinations({
           }),
           routes.toExecutionSecurityView({ ...projectPathProps, ...executionPathProps, mode })
         ]}
+        sideNavState={SIDE_NAV_STATE.COLLAPSED}
         pageName={PAGE_NAME.ExecutionSecurityView}
       >
         <ExecutionLandingPage>
@@ -214,6 +219,7 @@ function PipelineRouteDestinations({
       </RouteWithContext>
       <RouteWithContext
         licenseRedirectData={licenseRedirectData}
+        sideNavState={SIDE_NAV_STATE.COLLAPSED}
         path={[
           routes.toExecutionErrorTrackingView({
             ...projectPathProps,
@@ -241,6 +247,7 @@ function PipelineRouteDestinations({
           }),
           routes.toExecutionInputsView({ ...projectPathProps, ...executionPathProps, mode })
         ]}
+        sideNavState={SIDE_NAV_STATE.COLLAPSED}
         pageName={PAGE_NAME.ExecutionInputsView}
       >
         <ExecutionLandingPage>
@@ -258,6 +265,7 @@ function PipelineRouteDestinations({
           }),
           routes.toExecutionArtifactsView({ ...projectPathProps, ...executionPathProps, mode })
         ]}
+        sideNavState={SIDE_NAV_STATE.COLLAPSED}
         pageName={PAGE_NAME.ExecutionArtifactsView}
       >
         <ExecutionLandingPage>
@@ -276,6 +284,7 @@ function PipelineRouteDestinations({
           }),
           routes.toExecutionTestsView({ ...projectPathProps, ...executionPathProps, mode })
         ]}
+        sideNavState={SIDE_NAV_STATE.COLLAPSED}
         pageName={PAGE_NAME.BuildTests}
       >
         <ExecutionLandingPage>
@@ -293,6 +302,7 @@ function PipelineRouteDestinations({
           }),
           routes.toExecutionCommitsView({ ...projectPathProps, ...executionPathProps, mode })
         ]}
+        sideNavState={SIDE_NAV_STATE.COLLAPSED}
         pageName={PAGE_NAME.BuildCommits}
       >
         <ExecutionLandingPage>
@@ -312,6 +322,7 @@ function PipelineRouteDestinations({
           }),
           routes.toResilienceView({ ...projectPathProps, ...executionPathProps, mode })
         ]}
+        sideNavState={SIDE_NAV_STATE.COLLAPSED}
         pageName={PAGE_NAME.ExecutionResilienceView}
       >
         <ExecutionLandingPage>

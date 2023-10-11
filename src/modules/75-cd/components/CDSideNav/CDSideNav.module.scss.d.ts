@@ -7,10 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly collapsed: string
-  readonly dot: string
-  readonly link: string
-  readonly section: string
-  readonly selected: string
+  readonly flex1: string
+  readonly launchButton: string
 }
 export default styles
