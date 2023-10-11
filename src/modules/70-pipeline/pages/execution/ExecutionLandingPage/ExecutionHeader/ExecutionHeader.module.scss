@@ -111,4 +111,7 @@
       stroke: var(--primary-7) !important;
     }
   }
+  :global(.bp3-button-text) {
+    font-size: var(--font-size-small);
+  }
 }

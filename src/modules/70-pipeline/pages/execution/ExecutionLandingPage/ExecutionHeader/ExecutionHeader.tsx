@@ -402,23 +402,24 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
           stringID={module === 'cd' ? 'execution.pipelineIdentifierTextCD' : 'execution.pipelineIdentifierTextCI'}
           vars={pipelineExecutionSummary}
         />
-        <Button
-          minimal
-          small
-          icon={isNotesPresent ? 'code-chat' : 'Edit'}
-          iconProps={{ size: isNotesPresent ? 14 : 12, className: css.chatButton }}
-          withoutCurrentColor
-          intent="primary"
-          onClick={() => notesModal.onClick(true)}
-          text={
-            isNotesPresent
-              ? getString('pipeline.executionNotes.viewNote')
-              : getString('pipeline.executionNotes.addNote')
-          }
-          data-testid="addViewNotes"
-          className={css.notesButton}
-        />
-
+        <IfPrivateAccess>
+          <Button
+            minimal
+            small
+            icon={isNotesPresent ? 'code-chat' : 'Edit'}
+            iconProps={{ size: isNotesPresent ? 14 : 12, className: css.chatButton }}
+            withoutCurrentColor
+            intent="primary"
+            onClick={() => notesModal.onClick(true)}
+            text={
+              isNotesPresent
+                ? getString('pipeline.executionNotes.viewNote')
+                : getString('pipeline.executionNotes.addNote')
+            }
+            data-testid="addViewNotes"
+            className={css.notesButton}
+          />
+        </IfPrivateAccess>
         {!isEmpty(pipelineExecutionSummary?.tags) ? (
           <TagsPopover
             iconProps={{ size: 14 }}
