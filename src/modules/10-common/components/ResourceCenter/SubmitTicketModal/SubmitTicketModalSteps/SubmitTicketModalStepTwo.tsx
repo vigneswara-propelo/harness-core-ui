@@ -13,9 +13,9 @@ import {
   ButtonVariation,
   StepProps,
   FormInput,
-  PageSpinner,
   useToaster,
-  SelectOption
+  SelectOption,
+  PageSpinner
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
@@ -67,8 +67,8 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
     previousStep?.()
   }
 
-  const { mutate: createZendeskTicket, loading } = useCreateZendeskTicket({})
-  const { mutate: createCannyPost, loading: loadingCannyPost } = useCreateCannyPost({
+  const { mutate: createZendeskTicket, loading: loadingCreateZendeskTicket } = useCreateZendeskTicket({})
+  const { mutate: createCannyPost, loading: loadingCreateCannyTicket } = useCreateCannyPost({
     queryParams: { accountIdentifier: accountId }
   })
 
@@ -203,11 +203,7 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
       <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
         {stepName}
       </Text>
-      {(loading || loadingCannyPost) && (
-        <Layout.Vertical flex={{ alignItems: 'center' }} height="100%">
-          <PageSpinner />
-        </Layout.Vertical>
-      )}
+      {(loadingCreateZendeskTicket || loadingCreateCannyTicket) && <PageSpinner />}
       <Formik<SubmitTicket>
         initialValues={{
           subject: prevStepData.subject,
@@ -230,11 +226,14 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
               name: getString('common.resourceCenter.ticketmenu.priority')
             })
           ),
-          ticketDetails: Yup.string().required(
-            getString('common.validation.fieldIsRequired', {
-              name: getString('common.resourceCenter.ticketmenu.ticketDescription')
-            })
-          ),
+          ticketDetails: Yup.mixed().when('issueType', {
+            is: val => val !== IssueType.FEATURE_REQUEST,
+            then: Yup.string().required(
+              getString('common.validation.fieldIsRequired', {
+                name: getString('common.resourceCenter.ticketmenu.ticketDescription')
+              })
+            )
+          }),
           boardID: Yup.mixed().when('issueType', {
             is: IssueType.FEATURE_REQUEST,
             then: Yup.string().required(
@@ -244,7 +243,9 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
             )
           })
         })}
-        onSubmit={handleSubmit}
+        onSubmit={values => {
+          handleSubmit(values)
+        }}
       >
         {formik => {
           return (
