@@ -11,7 +11,8 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
   mockServiceNowMetadataResponse,
-  mockServiceNowTemplateResponse
+  mockServiceNowTemplateResponse,
+  mockTicketDetailsResponse
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/__tests__/ServiceNowCreateTestHelper'
 import {
   mockTicketTypesResponse,
@@ -39,7 +40,8 @@ jest.mock('services/cd-ng', () => ({
   useGetServiceNowTicketTypes: () => mockTicketTypesResponse,
   useGetServiceNowTicketTypesV2: () => mockTicketTypesResponseV2,
   useGetServiceNowIssueMetadata: () => mockServiceNowMetadataResponse,
-  useGetServiceNowTemplateMetadata: () => mockServiceNowTemplateResponse
+  useGetServiceNowTemplateMetadata: () => mockServiceNowTemplateResponse,
+  useGetTicketDetails: () => mockTicketDetailsResponse
 }))
 
 describe('ServiceNow Update tests', () => {

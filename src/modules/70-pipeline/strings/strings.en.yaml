@@ -366,6 +366,7 @@ serviceNowUpdateStep:
   fieldType:
     applyFromTemplate: Apply from template
     updateFields: Update Fields
+  refreshFieldInfo: This field has a different value in the connected ServiceNow. Click “Refresh” to update it with values from ServiceNow.
 serviceNowImportSetStep:
   stagingTable: Staging Table
   jsonBody: JSON Body

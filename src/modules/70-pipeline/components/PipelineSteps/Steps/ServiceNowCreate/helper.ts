@@ -148,7 +148,7 @@ export const processInitialValues = (values: ServiceNowCreateData): ServiceNowCr
 }
 
 export const getSelectedFieldsToBeAddedInForm = (
-  newFields: ServiceNowFieldNG[],
+  newFields: ServiceNowFieldNGWithValue[],
   existingFields: ServiceNowFieldNGWithValue[] = [],
   existingKVFields: ServiceNowCreateFieldType[]
 ): ServiceNowFieldNGWithValue[] => {
@@ -157,9 +157,29 @@ export const getSelectedFieldsToBeAddedInForm = (
     const alreadyPresent = existingFields.find(existing => existing.key === field.key)
     const alreadyPresentKVField = existingKVFields.find(kv => kv.name === field.name)
     if (!alreadyPresent && !alreadyPresentKVField) {
-      toReturn.push({ ...field, value: !isEmpty(field.allowedValues) ? [] : '' })
+      toReturn.push({
+        ...field,
+        value: !isEmpty(field.allowedValues)
+          ? field.value
+            ? {
+                label: (field.value as ServiceNowFieldValueNG).displayValue,
+                value: (field.value as ServiceNowFieldValueNG).value
+              }
+            : []
+          : field.value
+          ? (field.value as ServiceNowFieldValueNG).value
+          : ''
+      })
     } else {
-      toReturn.push({ ...field, value: alreadyPresent !== undefined ? alreadyPresent?.value : '' })
+      toReturn.push({
+        ...field,
+        value:
+          alreadyPresent !== undefined
+            ? alreadyPresent?.value
+            : field.value
+            ? (field.value as ServiceNowFieldValueNG).value
+            : ''
+      })
     }
   })
   return toReturn

@@ -5305,6 +5305,7 @@ export interface StringsMap {
   'pipeline.serviceNowImportSetStep.validations.stagingTableRequired': string
   'pipeline.serviceNowUpdateStep.fieldType.applyFromTemplate': string
   'pipeline.serviceNowUpdateStep.fieldType.updateFields': string
+  'pipeline.serviceNowUpdateStep.refreshFieldInfo': string
   'pipeline.setVariableRequiredDuringRuntime': string
   'pipeline.singleStageExecution': string
   'pipeline.skipInstances.title': string

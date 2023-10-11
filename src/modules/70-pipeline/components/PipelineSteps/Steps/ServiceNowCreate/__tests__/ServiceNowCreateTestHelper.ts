@@ -15,6 +15,7 @@ import type {
   ResponseListServiceNowTemplate,
   ResponseListServiceNowTicketTypeDTO,
   ResponsePageConnectorResponse,
+  ResponseServiceNowTicketNG,
   ServiceNowFieldSchemaNG
 } from 'services/cd-ng'
 import type { ServiceNowFieldsRendererProps } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowFieldsRenderer'
@@ -423,6 +424,7 @@ export const mockTicketTypeReponse: ResponseListServiceNowTicketTypeDTO = {
     }
   ]
 }
+
 export const mockServiceNowTemplateResponse: UseGetMockData<ResponseListServiceNowTemplate> = {
   loading: false,
   // eslint-disable-next-line
@@ -441,5 +443,24 @@ export const mockServiceNowTemplateResponse: UseGetMockData<ResponseListServiceN
         sys_id: 'field1'
       }
     ]
+  }
+}
+
+export const mockTicketDetailsResponse: UseGetMockData<ResponseServiceNowTicketNG> = {
+  loading: false,
+  // eslint-disable-next-line
+  // @ts-ignore
+  refetch: jest.fn(),
+  data: {
+    correlationId: '',
+    status: 'SUCCESS',
+    metaData: null as unknown as undefined,
+    data: {
+      fields: {
+        fieldName: { displayValue: 'value', value: 'value' }
+      },
+      number: '1',
+      url: 'sample.xyz'
+    }
   }
 }

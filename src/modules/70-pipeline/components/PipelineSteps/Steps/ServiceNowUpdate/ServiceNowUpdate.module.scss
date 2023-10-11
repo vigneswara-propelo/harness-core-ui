@@ -75,9 +75,18 @@
   }
 }
 
+.selectedFieldOverrideCss {
+  display: grid;
+  grid-template-columns: 1fr 42px 42px !important;
+}
+
+.keyValueFieldsContainer {
+  max-width: 80% !important;
+}
+
 .headerRow {
   display: grid;
-  grid-template-columns: 1fr 1.5fr 30px;
+  grid-template-columns: 1fr 1.5fr 20px 20px;
   column-gap: var(--spacing-small);
   margin-bottom: var(--spacing-small);
   align-items: center;

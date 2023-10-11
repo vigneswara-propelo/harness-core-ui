@@ -2272,7 +2272,7 @@ exports[`ServiceNow Update tests Edit stage - readony view: editstage-readonly 1
         </div>
         <div>
           <div
-            class="formGroup lg"
+            class="formGroup selectedFieldOverrideCss lg"
           >
             <div
               class="bp3-form-group bp3-disabled"
@@ -2339,7 +2339,7 @@ exports[`ServiceNow Update tests Edit stage - readony view: editstage-readonly 1
             </div>
           </div>
           <div
-            class="formGroup lg"
+            class="formGroup selectedFieldOverrideCss lg"
           >
             <div
               class="bp3-form-group bp3-disabled"
@@ -2405,7 +2405,9 @@ exports[`ServiceNow Update tests Edit stage - readony view: editstage-readonly 1
               </div>
             </div>
           </div>
-          <div>
+          <div
+            class="keyValueFieldsContainer"
+          >
             <div
               class="headerRow"
             >

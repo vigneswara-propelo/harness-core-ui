@@ -30,7 +30,7 @@ export interface ServiceNowCreateFieldType {
 }
 
 export interface ServiceNowFieldNGWithValue extends ServiceNowFieldNG {
-  value: string | number | SelectOption | MultiSelectOption[]
+  value?: string | number | SelectOption | MultiSelectOption[] | ServiceNowFieldValueNG | undefined
 }
 export enum FieldType {
   ConfigureFields = 'ConfigureFields',

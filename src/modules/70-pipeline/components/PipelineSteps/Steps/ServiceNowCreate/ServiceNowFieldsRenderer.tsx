@@ -8,20 +8,29 @@
 import React, { useCallback } from 'react'
 import cx from 'classnames'
 import { defaultTo, isEmpty, isNull, isUndefined } from 'lodash-es'
-import { Button, FormInput, Layout, AllowedTypes } from '@harness/uicore'
+import { Button, FormInput, Layout, AllowedTypes, SelectOption } from '@harness/uicore'
+import { useStrings } from 'framework/strings'
+import { ServiceNowFieldValueNG } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import type { ServiceNowFieldNG } from 'services/cd-ng'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import { setServiceNowFieldAllowedValuesOptions } from './helper'
 import type { ServiceNowFieldNGWithValue } from './types'
 import css from './ServiceNowCreate.module.scss'
 
+export type TicketFieldDetailsMap = {
+  [key: string]: ServiceNowFieldValueNG
+}
+
 export interface ServiceNowFieldsRendererProps {
   selectedFields?: ServiceNowFieldNGWithValue[]
   readonly?: boolean
   onDelete?: (index: number, selectedField: ServiceNowFieldNG) => void
+  onRefresh?: (index: number, selectedField: ServiceNowFieldNGWithValue, valueToUpdate: ServiceNowFieldValueNG) => void
   allowableTypes: AllowedTypes
+  ticketFieldDetailsMap?: TicketFieldDetailsMap
 }
 
 interface MappedComponentInterface {
@@ -34,6 +43,7 @@ interface MappedComponentInterface {
 export const TEXT_INPUT_SUPPORTED_FIELD_TYPES = new Set(['string', 'glide_date_time', 'integer', 'boolean', 'unknown'])
 
 function GetMappedFieldComponent({ selectedField, props, expressions, index }: MappedComponentInterface) {
+  const { CDS_SERVICENOW_FETCH_FIELDS } = useFeatureFlags()
   const showTextField = useCallback(() => {
     if (
       isNull(selectedField.schema) ||
@@ -61,7 +71,9 @@ function GetMappedFieldComponent({ selectedField, props, expressions, index }: M
         label={selectedField.name}
         name={`spec.selectedFields[${index}].value`}
         placeholder={selectedField.name}
-        disabled={isApprovalStepFieldDisabled(props.readonly)}
+        disabled={isApprovalStepFieldDisabled(
+          props.readonly || (CDS_SERVICENOW_FETCH_FIELDS && selectedField.readOnly)
+        )}
         className={cx(css.multiSelect, css.md)}
         multiTypeInputProps={{ allowableTypes: props.allowableTypes, expressions }}
       />
@@ -73,7 +85,9 @@ function GetMappedFieldComponent({ selectedField, props, expressions, index }: M
         name={`spec.selectedFields[${index}].value`}
         placeholder={selectedField.name}
         multiTypeTextArea={{ enableConfigureOptions: false, expressions, allowableTypes: props.allowableTypes }}
-        disabled={isApprovalStepFieldDisabled(props.readonly)}
+        disabled={isApprovalStepFieldDisabled(
+          props.readonly || (CDS_SERVICENOW_FETCH_FIELDS && selectedField.readOnly)
+        )}
         className={css.md}
       />
     )
@@ -81,7 +95,9 @@ function GetMappedFieldComponent({ selectedField, props, expressions, index }: M
     return (
       <FormInput.MultiTextInput
         label={selectedField.name}
-        disabled={isApprovalStepFieldDisabled(props.readonly)}
+        disabled={isApprovalStepFieldDisabled(
+          props.readonly || (CDS_SERVICENOW_FETCH_FIELDS && selectedField.readOnly)
+        )}
         name={`spec.selectedFields[${index}].value`}
         placeholder={selectedField.name}
         className={css.deploymentViewMedium}
@@ -97,27 +113,57 @@ function GetMappedFieldComponent({ selectedField, props, expressions, index }: M
 
 export function ServiceNowFieldsRenderer(props: ServiceNowFieldsRendererProps) {
   const { expressions } = useVariablesExpression()
-  const { readonly, selectedFields, onDelete } = props
+  const { getString } = useStrings()
+  const { readonly, selectedFields, onDelete, ticketFieldDetailsMap = {}, onRefresh } = props
   return selectedFields ? (
     <>
-      {selectedFields?.map((selectedField: ServiceNowFieldNG, index: number) => (
-        <Layout.Horizontal className={css.alignCenter} key={selectedField.name}>
-          <GetMappedFieldComponent
-            selectedField={selectedField}
-            props={props}
-            expressions={expressions}
-            index={index}
-          />
+      {selectedFields?.map((selectedField: ServiceNowFieldNGWithValue, index: number) => {
+        let isFieldUpdatedComparedToServiceNow
 
-          <Button
-            minimal
-            icon="trash"
-            disabled={isApprovalStepFieldDisabled(readonly)}
-            data-testid={`remove-selectedField-${index}`}
-            onClick={() => onDelete?.(index, selectedField)}
-          />
-        </Layout.Horizontal>
-      ))}
+        const existingValueObjFromServiceNow = selectedField?.key ? ticketFieldDetailsMap?.[selectedField.key] : {}
+        const existingValueFromServiceNow = existingValueObjFromServiceNow?.displayValue
+
+        if (!isEmpty(selectedField?.allowedValues)) {
+          // Handles refresh for dropdown fields
+          isFieldUpdatedComparedToServiceNow =
+            existingValueObjFromServiceNow &&
+            existingValueObjFromServiceNow.value &&
+            existingValueObjFromServiceNow.value !== (selectedField?.value as SelectOption)?.value
+        } else {
+          // Handles refresh for text/non dropdown fields
+          isFieldUpdatedComparedToServiceNow =
+            existingValueFromServiceNow && existingValueFromServiceNow !== selectedField?.value
+        }
+        return (
+          <Layout.Horizontal className={css.alignCenter} key={selectedField.name}>
+            <GetMappedFieldComponent
+              selectedField={selectedField}
+              props={props}
+              expressions={expressions}
+              index={index}
+            />
+            <Button
+              minimal
+              icon="trash"
+              disabled={isApprovalStepFieldDisabled(readonly)}
+              data-testid={`remove-selectedField-${index}`}
+              onClick={() => onDelete?.(index, selectedField)}
+            />
+            {isFieldUpdatedComparedToServiceNow && (
+              <Button
+                intent="primary"
+                icon="refresh"
+                onClick={() =>
+                  onRefresh?.(index, selectedField, existingValueObjFromServiceNow as ServiceNowFieldValueNG)
+                }
+                minimal
+                tooltipProps={{ isDark: true }}
+                tooltip={getString('pipeline.serviceNowUpdateStep.refreshFieldInfo')}
+              />
+            )}
+          </Layout.Horizontal>
+        )
+      })}
     </>
   ) : null
 }

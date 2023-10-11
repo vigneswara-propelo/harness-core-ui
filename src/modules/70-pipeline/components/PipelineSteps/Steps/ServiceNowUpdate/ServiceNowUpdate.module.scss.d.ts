@@ -18,10 +18,12 @@ declare const styles: {
   readonly fieldsPopoverHeading: string
   readonly headerRow: string
   readonly jiraFieldSelectorSection: string
+  readonly keyValueFieldsContainer: string
   readonly label: string
   readonly marginTop: string
   readonly md: string
   readonly multiSelect: string
+  readonly selectedFieldOverrideCss: string
   readonly tooltip: string
 }
 export default styles

@@ -6,7 +6,7 @@
  */
 
 import type { FormikProps } from 'formik'
-import type { UseGetReturn } from 'restful-react'
+import type { UseGetReturn, UseMutateReturn } from 'restful-react'
 import type { AllowedTypes, SelectOption } from '@harness/uicore'
 import type { InputSetData, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type {
@@ -18,7 +18,10 @@ import type {
   ServiceNowFieldValueNG,
   GetServiceNowTicketTypesQueryParams,
   GetServiceNowIssueCreateMetadataQueryParams,
-  GetServiceNowTemplateMetadataQueryParams
+  GetServiceNowTemplateMetadataQueryParams,
+  ResponseServiceNowTicketNG,
+  UpdateWhitelistedDomainsBodyRequestBody,
+  GetTicketDetailsQueryParams
 } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { ServiceNowTicketTypeSelectOption } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/types'
@@ -97,6 +100,13 @@ export interface ServiceNowUpdateFormContentInterface {
     Failure | Error,
     GetServiceNowIssueCreateMetadataQueryParams,
     unknown
+  >
+  serviceNowTicketDetailsQuery: UseMutateReturn<
+    ResponseServiceNowTicketNG,
+    Failure | Error,
+    UpdateWhitelistedDomainsBodyRequestBody,
+    GetTicketDetailsQueryParams,
+    void
   >
 }
 

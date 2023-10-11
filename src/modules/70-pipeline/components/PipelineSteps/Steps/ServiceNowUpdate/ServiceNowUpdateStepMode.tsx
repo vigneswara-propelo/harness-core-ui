@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { debounce, defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Dialog } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -24,7 +24,8 @@ import {
   PageSpinner,
   AllowedTypes,
   FormError,
-  SelectOption
+  SelectOption,
+  useToaster
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -35,12 +36,14 @@ import {
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import type { AcceptableValue } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import {
   ServiceNowFieldNG,
   ServiceNowTicketTypeDTO,
   useGetServiceNowIssueMetadata,
   useGetServiceNowTemplateMetadata,
-  useGetServiceNowTicketTypesV2
+  useGetServiceNowTicketTypesV2,
+  useGetTicketDetails
 } from 'services/cd-ng'
 import type {
   AccountPathProps,
@@ -52,7 +55,10 @@ import { FormMultiTypeConnectorField } from '@platform/connectors/components/Con
 import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import { ConnectorRefSchema } from '@common/utils/Validation'
 import { ServiceNowDynamicFieldsSelector } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowDynamicFieldsSelector'
-import { ServiceNowFieldsRenderer } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowFieldsRenderer'
+import {
+  ServiceNowFieldsRenderer,
+  TicketFieldDetailsMap
+} from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowFieldsRenderer'
 import {
   FieldType,
   ServiceNowCreateFieldType,
@@ -96,16 +102,20 @@ function FormContent({
   stepViewType,
   serviceNowTicketTypesQuery,
   serviceNowTemplateMetaDataQuery,
-  serviceNowIssueCreateMetadataQuery
+  serviceNowIssueCreateMetadataQuery,
+  serviceNowTicketDetailsQuery
 }: ServiceNowUpdateFormContentInterface): JSX.Element {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const { CDS_NG_UPDATE_MULTIPLE_SNOW_CHANGE_REQUEST } = useFeatureFlags()
+  const { CDS_NG_UPDATE_MULTIPLE_SNOW_CHANGE_REQUEST, CDS_SERVICENOW_FETCH_FIELDS } = useFeatureFlags()
+  const { mutate: fetchTicketDetails } = serviceNowTicketDetailsQuery
+  const { showError } = useToaster()
 
   const [ticketFieldList, setTicketFieldList] = useState<ServiceNowFieldNG[]>([])
+  const [ticketFieldDetailsMap, setTicketFieldDetailsMap] = useState<TicketFieldDetailsMap>({})
   const [count, setCount] = React.useState(0)
   const [serviceNowTicketTypesOptions, setServiceNowTicketTypesOptions] = useState<ServiceNowTicketTypeSelectOption[]>(
     []
@@ -145,6 +155,58 @@ function FormContent({
     !isEmpty(formik.values.spec.ticketType)
       ? formik.values.spec.ticketType
       : undefined
+
+  const ticketNumberFixedValue =
+    getMultiTypeFromValue(formik.values.spec.ticketNumber) === MultiTypeInputType.FIXED &&
+    !isEmpty(formik.values.spec.ticketNumber)
+      ? formik.values.spec.ticketNumber
+      : undefined
+
+  const handleFetchTicketDetails = (ticketNumberValue: string) => {
+    if (connectorRefFixedValue && ticketTypeKeyFixedValue && ticketNumberValue) {
+      fetchTicketDetails([], {
+        queryParams: {
+          ...commonParams,
+          connectorRef: connectorRefFixedValue.toString(),
+          ticketType: ticketTypeKeyFixedValue.toString(),
+          ticketNumber: ticketNumberValue.toString()
+        }
+      })
+        .then(ticketDetailsResponse => {
+          setTicketFieldDetailsMap(defaultTo(ticketDetailsResponse?.data?.fields, {}) as TicketFieldDetailsMap)
+        })
+        .catch(err => {
+          /* istanbul ignore next */
+          showError(err?.data?.message || err?.message)
+        })
+    }
+  }
+
+  const debouncedFetchTicketDetails = React.useCallback(
+    debounce((ticketNumberVal?: AcceptableValue): void => {
+      if (
+        CDS_SERVICENOW_FETCH_FIELDS &&
+        ticketNumberVal &&
+        getMultiTypeFromValue(ticketNumberVal as string) === MultiTypeInputType.FIXED
+      ) {
+        handleFetchTicketDetails(ticketNumberVal as string)
+      }
+    }, 1000),
+    [connectorRefFixedValue, ticketTypeKeyFixedValue]
+  )
+
+  useEffect(() => {
+    if (
+      connectorRefFixedValue &&
+      connectorValueType === MultiTypeInputType.FIXED &&
+      ticketTypeKeyFixedValue &&
+      ticketNumberFixedValue &&
+      CDS_SERVICENOW_FETCH_FIELDS
+    ) {
+      handleFetchTicketDetails(ticketNumberFixedValue)
+    }
+  }, [ticketTypeKeyFixedValue, connectorRefFixedValue, connectorValueType])
+
   const serviceNowType = 'updateMode'
   const [isTemplateSectionAvailable, setIsTemplateSectionAvailable] = useState<boolean>(false)
   const [templateName, setTemplateName] = useState<string>(formik.values.spec.templateName || '')
@@ -238,6 +300,7 @@ function FormContent({
         // formik.setFieldValue('spec.fields', getKVFields(formik.values))
         formik.setFieldValue('spec.selectedFields', [])
         setTicketFieldList([])
+        setTicketFieldDetailsMap({})
       }
     }
   }, [serviceNowIssueCreateMetadataQuery.data?.data])
@@ -263,6 +326,7 @@ function FormContent({
       formik.setFieldValue('spec.templateFields', [])
       formik.setFieldValue('spec.templateName', '')
       setTicketFieldList([])
+      setTicketFieldDetailsMap({})
       setTemplateName('')
     }
   }, [ticketValueType])
@@ -295,10 +359,16 @@ function FormContent({
           selectedFields={formik.values.spec.selectedFields}
           ticketTypeBasedFieldList={ticketFieldList}
           addSelectedFields={(fieldsToBeAdded: ServiceNowFieldNG[]) => {
+            const fieldsToBeAddedWithUpdatedValues: ServiceNowFieldNGWithValue[] = fieldsToBeAdded?.map(
+              (field: ServiceNowFieldNG) => {
+                return { ...field, value: ticketFieldDetailsMap?.[field.key] }
+              }
+            )
+
             formik.setFieldValue(
               'spec.selectedFields',
               getSelectedFieldsToBeAddedInForm(
-                fieldsToBeAdded,
+                fieldsToBeAddedWithUpdatedValues,
                 formik.values.spec.selectedFields,
                 formik.values.spec.fields
               )
@@ -336,6 +406,9 @@ function FormContent({
       </Text>
     )
   }
+
+  const descriptionValueFromServiceNow = ticketFieldDetailsMap['description']?.displayValue
+  const shortDescriptionValueFromServiceNow = ticketFieldDetailsMap['short_description']?.displayValue
 
   return (
     <React.Fragment>
@@ -487,6 +560,7 @@ function FormContent({
                 expressions,
                 allowableTypes
               }}
+              onChange={debouncedFetchTicketDetails}
             />
             {getMultiTypeFromValue(formik.values.spec.ticketNumber) === MultiTypeInputType.RUNTIME && (
               <ConfigureOptions
@@ -595,7 +669,7 @@ function FormContent({
               />
             ) : (
               <>
-                <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                <div className={cx(stepCss.formGroup, css.selectedFieldOverrideCss, stepCss.lg)}>
                   <FormMultiTypeTextAreaField
                     label={getString('description')}
                     name="spec.description"
@@ -603,6 +677,17 @@ function FormContent({
                     multiTypeTextArea={{ enableConfigureOptions: false, expressions, allowableTypes }}
                     disabled={isApprovalStepFieldDisabled(readonly)}
                   />
+                  {descriptionValueFromServiceNow &&
+                    descriptionValueFromServiceNow !== formik.values.spec.description && (
+                      <Button
+                        intent="primary"
+                        icon="refresh"
+                        onClick={() => formik.setFieldValue('spec.description', descriptionValueFromServiceNow)}
+                        minimal
+                        tooltipProps={{ isDark: true }}
+                        tooltip={getString('pipeline.serviceNowUpdateStep.refreshFieldInfo')}
+                      />
+                    )}
                   {getMultiTypeFromValue(formik.values.spec.description) === MultiTypeInputType.RUNTIME && (
                     <ConfigureOptions
                       value={formik.values.spec.description || ''}
@@ -615,7 +700,7 @@ function FormContent({
                     />
                   )}
                 </div>
-                <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                <div className={cx(stepCss.formGroup, css.selectedFieldOverrideCss, stepCss.lg)}>
                   <FormMultiTypeTextAreaField
                     label={getString('pipeline.serviceNowCreateStep.shortDescription')}
                     name="spec.shortDescription"
@@ -623,6 +708,19 @@ function FormContent({
                     multiTypeTextArea={{ enableConfigureOptions: false, expressions, allowableTypes }}
                     disabled={isApprovalStepFieldDisabled(readonly)}
                   />
+                  {shortDescriptionValueFromServiceNow &&
+                    shortDescriptionValueFromServiceNow !== formik.values.spec.shortDescription && (
+                      <Button
+                        intent="primary"
+                        icon="refresh"
+                        onClick={() =>
+                          formik.setFieldValue('spec.shortDescription', shortDescriptionValueFromServiceNow)
+                        }
+                        minimal
+                        tooltipProps={{ isDark: true }}
+                        tooltip={getString('pipeline.serviceNowUpdateStep.refreshFieldInfo')}
+                      />
+                    )}
                   {getMultiTypeFromValue(formik.values.spec.shortDescription) === MultiTypeInputType.RUNTIME && (
                     <ConfigureOptions
                       value={formik.values.spec.shortDescription || ''}
@@ -638,6 +736,7 @@ function FormContent({
                 <ServiceNowFieldsRenderer
                   selectedFields={formik.values.spec.selectedFields}
                   readonly={readonly}
+                  ticketFieldDetailsMap={ticketFieldDetailsMap}
                   onDelete={(index, selectedField) => {
                     const selectedFieldsAfterRemoval = formik.values.spec.selectedFields?.filter(
                       (_unused, i) => i !== index
@@ -645,6 +744,16 @@ function FormContent({
                     formik.setFieldValue('spec.selectedFields', selectedFieldsAfterRemoval)
                     const customFields = formik.values.spec.fields?.filter(field => field.name !== selectedField.name)
                     formik.setFieldValue('spec.fields', customFields)
+                  }}
+                  onRefresh={(index, selectedField, valueObjToUpdate) => {
+                    if (isEmpty(selectedField.allowedValues)) {
+                      formik.setFieldValue(`spec.selectedFields[${index}].value`, valueObjToUpdate.displayValue)
+                    } else {
+                      formik.setFieldValue(`spec.selectedFields[${index}].value`, {
+                        value: valueObjToUpdate.value,
+                        label: valueObjToUpdate.displayValue
+                      })
+                    }
                   }}
                   allowableTypes={allowableTypes}
                 />
@@ -654,39 +763,59 @@ function FormContent({
                     name="spec.fields"
                     render={({ remove }) => {
                       return (
-                        <div>
+                        <div className={css.keyValueFieldsContainer}>
                           <div className={css.headerRow}>
                             <String className={css.label} stringID="keyLabel" />
                             <String className={css.label} stringID="valueLabel" />
                           </div>
-                          {formik.values.spec.fields?.map((_unused: ServiceNowCreateFieldType, i: number) => (
-                            <div className={css.headerRow} key={i}>
-                              <FormInput.Text
-                                name={`spec.fields[${i}].name`}
-                                disabled={isApprovalStepFieldDisabled(readonly)}
-                                placeholder={getString('pipeline.keyPlaceholder')}
-                              />
-                              <FormInput.MultiTextInput
-                                name={`spec.fields[${i}].value`}
-                                label=""
-                                placeholder={getString('common.valuePlaceholder')}
-                                disabled={isApprovalStepFieldDisabled(readonly)}
-                                multiTextInputProps={{
-                                  allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                                    item => !isMultiTypeRuntime(item)
-                                  ) as AllowedTypes,
-                                  expressions
-                                }}
-                              />
-                              <Button
-                                minimal
-                                icon="main-trash"
-                                disabled={isApprovalStepFieldDisabled(readonly)}
-                                data-testid={`remove-fieldList-${i}`}
-                                onClick={() => remove(i)}
-                              />
-                            </div>
-                          ))}
+                          {formik.values.spec.fields?.map((keyValueSnowField: ServiceNowCreateFieldType, i: number) => {
+                            const existingValueFromServiceNow = keyValueSnowField?.name
+                              ? ticketFieldDetailsMap[keyValueSnowField.name]?.displayValue
+                              : undefined
+
+                            const isFieldUpdatedComparedToServiceNow =
+                              existingValueFromServiceNow && existingValueFromServiceNow !== keyValueSnowField?.value
+                            return (
+                              <div className={css.headerRow} key={i}>
+                                <FormInput.Text
+                                  name={`spec.fields[${i}].name`}
+                                  disabled={isApprovalStepFieldDisabled(readonly)}
+                                  placeholder={getString('pipeline.keyPlaceholder')}
+                                />
+                                <FormInput.MultiTextInput
+                                  name={`spec.fields[${i}].value`}
+                                  label=""
+                                  placeholder={getString('common.valuePlaceholder')}
+                                  disabled={isApprovalStepFieldDisabled(readonly)}
+                                  multiTextInputProps={{
+                                    allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                      item => !isMultiTypeRuntime(item)
+                                    ) as AllowedTypes,
+                                    expressions
+                                  }}
+                                />
+                                <Button
+                                  minimal
+                                  icon="main-trash"
+                                  disabled={isApprovalStepFieldDisabled(readonly)}
+                                  data-testid={`remove-fieldList-${i}`}
+                                  onClick={() => remove(i)}
+                                />
+                                {isFieldUpdatedComparedToServiceNow && (
+                                  <Button
+                                    intent="primary"
+                                    icon="refresh"
+                                    onClick={() =>
+                                      formik.setFieldValue(`spec.fields[${i}].value`, existingValueFromServiceNow)
+                                    }
+                                    minimal
+                                    tooltipProps={{ isDark: true }}
+                                    tooltip={getString('pipeline.serviceNowUpdateStep.refreshFieldInfo')}
+                                  />
+                                )}
+                              </div>
+                            )
+                          })}
                         </div>
                       )
                     }}
@@ -796,6 +925,15 @@ function ServiceNowUpdateStepMode(
     }
   })
 
+  const serviceNowTicketDetailsQuery = useGetTicketDetails({
+    queryParams: {
+      ...commonParams,
+      connectorRef: '',
+      ticketType: '',
+      ticketNumber: ''
+    }
+  })
+
   return (
     <Formik<ServiceNowUpdateData>
       onSubmit={(values, { setFieldError }) => {
@@ -870,6 +1008,7 @@ function ServiceNowUpdateStepMode(
               serviceNowTicketTypesQuery={serviceNowTicketTypesV2Query}
               serviceNowIssueCreateMetadataQuery={serviceNowIssueCreateMetadataQuery}
               serviceNowTemplateMetaDataQuery={serviceNowTemplateMetaDataQuery}
+              serviceNowTicketDetailsQuery={serviceNowTicketDetailsQuery}
             />
           </FormikForm>
         )

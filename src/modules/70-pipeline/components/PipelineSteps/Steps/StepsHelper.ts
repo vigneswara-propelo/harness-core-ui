@@ -7,14 +7,14 @@
 
 import { MultiSelectOption, parseStringToTime, SelectOption } from '@harness/uicore'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import type { ConnectorResponse } from 'services/cd-ng'
+import type { ConnectorResponse, ServiceNowFieldValueNG } from 'services/cd-ng'
 import { checkIfFixedAndValidString } from './JiraApproval/helper'
 import { JiraApprovalData } from './JiraApproval/types'
 import { ServiceNowApprovalData } from './ServiceNowApproval/types'
 
 export interface FieldType {
   name: string
-  value: string | number | SelectOption | MultiSelectOption[]
+  value?: string | number | SelectOption | MultiSelectOption[] | ServiceNowFieldValueNG | undefined
 }
 
 export const getConnectorValue = (connector?: ConnectorResponse): string => {
