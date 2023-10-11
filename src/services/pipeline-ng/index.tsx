@@ -444,6 +444,7 @@ export interface AccessControlCheckError {
     | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
+    | 'ABORT_ALL_ALREADY_NG'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -593,6 +594,17 @@ export interface ApproversDTO {
   disallowPipelineExecutor?: boolean
   minimumCount?: number
   userGroups?: string[]
+}
+
+export type ArrayNGVariableV1 = NGVariableV1 & {
+  __uuid?: string
+  default?: { [key: string]: any }[]
+  validator?: ArrayValidator
+  value?: ParameterFieldListObject
+}
+
+export interface ArrayValidator {
+  [key: string]: any
 }
 
 export type ArtifactTriggerConfig = NGTriggerSpecV2 & {
@@ -1880,6 +1892,7 @@ export interface Error {
     | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
+    | 'ABORT_ALL_ALREADY_NG'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2264,6 +2277,7 @@ export interface ErrorMetadata {
     | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
+    | 'ABORT_ALL_ALREADY_NG'
   errorMessage?: string
 }
 
@@ -2890,6 +2904,7 @@ export interface Failure {
     | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
+    | 'ABORT_ALL_ALREADY_NG'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -3097,7 +3112,7 @@ export type GithubIssueCommentSpec = GithubEventSpec & {
 }
 
 export type GithubPRSpec = GithubEventSpec & {
-  actions?: ('Close' | 'Edit' | 'Open' | 'Reopen' | 'Label' | 'Unlabel' | 'Synchronize')[]
+  actions?: ('Close' | 'Edit' | 'Open' | 'Reopen' | 'Label' | 'Unlabel' | 'Synchronize' | 'ReadyForReview')[]
   autoAbortPreviousExecutions?: boolean
   connectorRef?: string
   headerConditions?: TriggerEventDataCondition[]
@@ -3386,6 +3401,20 @@ export type HttpStepInfo = StepSpecType & {
   outputVariables?: NGVariable[]
   requestBody?: string
   url: string
+}
+
+export type HttpStepInfoV1 = StepSpecType & {
+  assertion?: ParameterFieldString
+  body?: ParameterFieldString
+  cert?: ParameterFieldString
+  cert_key?: ParameterFieldString
+  delegate?: ParameterFieldListTaskSelectorYaml
+  headers?: HttpHeaderConfig[]
+  input_vars?: NGVariableV1Wrapper
+  metadata?: string
+  method?: ParameterFieldString
+  output_vars?: NGVariableV1Wrapper
+  url?: ParameterFieldString
 }
 
 export type IgnoreFailureActionConfig = FailureStrategyActionConfig & {
@@ -3793,7 +3822,7 @@ export interface NGProperties {
 
 export interface NGTag {
   key: string
-  value: string
+  value?: string
 }
 
 export interface NGTriggerConfigV2 {
@@ -3931,6 +3960,20 @@ export interface NGVariable {
   type?: 'String' | 'Number' | 'Secret'
 }
 
+export interface NGVariableV1 {
+  desc?: string
+  execution_input?: boolean
+  metadata?: string
+  required?: boolean
+  type?: 'string' | 'number' | 'secret' | 'array' | 'object' | 'boolean'
+}
+
+export interface NGVariableV1Wrapper {
+  map?: {
+    [key: string]: NGVariableV1
+  }
+}
+
 export type Nexus2RegistrySpec = ArtifactTypeSpec & {
   artifactId?: string
   classifier?: string
@@ -4003,6 +4046,28 @@ export type NumberNGVariable = NGVariable & {
   name?: string
   type?: 'Number'
   value: number
+}
+
+export type NumberNGVariableV1 = NGVariableV1 & {
+  __uuid?: string
+  default?: number
+  validator?: NumberValidator
+  value?: ParameterFieldDouble
+}
+
+export interface NumberValidator {
+  [key: string]: any
+}
+
+export type ObjectNGVariableV1 = NGVariableV1 & {
+  __uuid?: string
+  default?: { [key: string]: any }
+  validator?: ObjectValidator
+  value?: ParameterFieldObject
+}
+
+export interface ObjectValidator {
+  [key: string]: any
 }
 
 export interface OnFailureConfig {
@@ -4269,6 +4334,30 @@ export interface ParameterField {
   value?: { [key: string]: any }
 }
 
+export interface ParameterFieldDouble {
+  defaultValue?: number
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: number
+}
+
+export interface ParameterFieldListObject {
+  defaultValue?: { [key: string]: any }[]
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: { [key: string]: any }[]
+}
+
 export interface ParameterFieldListString {
   defaultValue?: string[]
   executionInput?: boolean
@@ -4279,6 +4368,18 @@ export interface ParameterFieldListString {
   responseField?: string
   typeString?: boolean
   value?: string[]
+}
+
+export interface ParameterFieldListTaskSelectorYaml {
+  defaultValue?: TaskSelectorYaml[]
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: TaskSelectorYaml[]
 }
 
 export interface ParameterFieldMapStringJsonNode {
@@ -4323,6 +4424,30 @@ export interface ParameterFieldMatrixConfigInterface {
   responseField?: string
   typeString?: boolean
   value?: MatrixConfigInterface
+}
+
+export interface ParameterFieldObject {
+  defaultValue?: { [key: string]: any }
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: { [key: string]: any }
+}
+
+export interface ParameterFieldSecretRefData {
+  defaultValue?: SecretRefData
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: SecretRefData
 }
 
 export interface ParameterFieldString {
@@ -5083,6 +5208,14 @@ export interface ResourceDTO {
     | 'SEI_COLLECTIONS'
     | 'SEI_INSIGHTS'
     | 'CET_SAVED_FILTER'
+    | 'GITOPS_AGENT'
+    | 'GITOPS_REPOSITORY'
+    | 'GITOPS_CLUSTER'
+    | 'GITOPS_CREDENTIAL_TEMPLATE'
+    | 'GITOPS_REPOSITORY_CERTIFICATE'
+    | 'GITOPS_GNUPG_KEY'
+    | 'GITOPS_PROJECT_MAPPING'
+    | 'GITOPS_APPLICATION'
 }
 
 export interface ResourceScope {
@@ -5319,7 +5452,7 @@ export interface ResponseListGithubIssueCommentAction {
 
 export interface ResponseListGithubPRAction {
   correlationId?: string
-  data?: ('Close' | 'Edit' | 'Open' | 'Reopen' | 'Label' | 'Unlabel' | 'Synchronize')[]
+  data?: ('Close' | 'Edit' | 'Open' | 'Reopen' | 'Label' | 'Unlabel' | 'Synchronize' | 'ReadyForReview')[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -5808,6 +5941,7 @@ export interface ResponseMessage {
     | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
+    | 'ABORT_ALL_ALREADY_NG'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -6495,6 +6629,19 @@ export type SecretNGVariable = NGVariable & {
   value: string
 }
 
+export type SecretNGVariableV1 = NGVariableV1 & {
+  __uuid?: string
+  default?: SecretRefData
+  value?: ParameterFieldSecretRefData
+}
+
+export interface SecretRefData {
+  decryptedValue?: string[]
+  identifier?: string
+  null?: boolean
+  scope?: 'account' | 'org' | 'project' | 'unknown'
+}
+
 export interface SecurityContext {
   allowPrivilegeEscalation?: boolean
   capabilities?: Capabilities
@@ -6923,6 +7070,17 @@ export type StringNGVariable = NGVariable & {
   value: string
 }
 
+export type StringNGVariableV1 = NGVariableV1 & {
+  __uuid?: string
+  default?: string
+  validator?: StringValidator
+  value?: ParameterFieldString
+}
+
+export interface StringValidator {
+  [key: string]: any
+}
+
 export interface SuccessHealthInfo {
   percent?: number
   rate?: number
@@ -6944,6 +7102,11 @@ export interface TargetExecutionSummary {
   startTs?: number
   targetId?: string
   triggerId?: string
+}
+
+export interface TaskSelectorYaml {
+  delegateSelectors?: string
+  origin?: string
 }
 
 export type TemplateFilterProperties = FilterProperties & {

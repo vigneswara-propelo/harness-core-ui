@@ -358,6 +358,7 @@ export interface EntityDetail {
     | 'GCSUpload'
     | 'S3Upload'
     | 'BuildAndPushGCR'
+    | 'BuildAndPushGAR'
     | 'BuildAndPushECR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
@@ -481,6 +482,7 @@ export interface EntityDetail {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'ChaosInfrastructure'
 }
 
 export interface EntityDetailProtoDTO {
@@ -884,6 +886,7 @@ export interface Error {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SPOTNIST_REST_EXCEPTION'
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
@@ -923,6 +926,7 @@ export interface Error {
     | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
+    | 'ABORT_ALL_ALREADY_NG'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1267,6 +1271,7 @@ export interface ErrorMetadata {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SPOTNIST_REST_EXCEPTION'
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
@@ -1306,6 +1311,7 @@ export interface ErrorMetadata {
     | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
+    | 'ABORT_ALL_ALREADY_NG'
   errorMessage?: string
 }
 
@@ -1656,6 +1662,7 @@ export interface Failure {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SPOTNIST_REST_EXCEPTION'
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
@@ -1695,6 +1702,7 @@ export interface Failure {
     | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
+    | 'ABORT_ALL_ALREADY_NG'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1784,7 +1792,7 @@ export interface JsonNode {
 
 export interface NGTag {
   key: string
-  value: string
+  value?: string
 }
 
 export interface NGTemplateConfig {
@@ -2017,6 +2025,14 @@ export interface ResourceDTO {
     | 'SEI_COLLECTIONS'
     | 'SEI_INSIGHTS'
     | 'CET_SAVED_FILTER'
+    | 'GITOPS_AGENT'
+    | 'GITOPS_REPOSITORY'
+    | 'GITOPS_CLUSTER'
+    | 'GITOPS_CREDENTIAL_TEMPLATE'
+    | 'GITOPS_REPOSITORY_CERTIFICATE'
+    | 'GITOPS_GNUPG_KEY'
+    | 'GITOPS_PROJECT_MAPPING'
+    | 'GITOPS_APPLICATION'
 }
 
 export interface ResourceScopeDTO {
@@ -2406,6 +2422,7 @@ export interface ResponseMessage {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SPOTNIST_REST_EXCEPTION'
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
@@ -2445,6 +2462,7 @@ export interface ResponseMessage {
     | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
+    | 'ABORT_ALL_ALREADY_NG'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -2657,6 +2675,7 @@ export interface TemplateApplyRequest {
   getMergedYamlWithTemplateField?: boolean
   getOnlyFileContent?: boolean
   originalEntityYaml: string
+  yamlVersion?: string
 }
 
 export interface TemplateDeleteListRequest {
@@ -2750,6 +2769,7 @@ export interface TemplateMergeResponse {
   cacheResponseMetadata?: CacheResponseMetadata
   mergedPipelineYaml?: string
   mergedPipelineYamlWithTemplateRef?: string
+  processedYamlVersion?: string
   templateReferenceSummaries?: TemplateReferenceSummary[]
 }
 
@@ -3382,6 +3402,178 @@ export const createGlobalTemplatePromise = (
     CreateGlobalTemplateRequestBody,
     void
   >('POST', getConfig('template/api'), `/globalTemplates`, props, signal)
+
+export interface GetGlobalTemplateInputSetYamlQueryParams {
+  accountIdentifier: string
+  versionLabel: string
+}
+
+export interface GetGlobalTemplateInputSetYamlPathParams {
+  globalTemplateIdentifier: string
+}
+
+export type GetGlobalTemplateInputSetYamlProps = Omit<
+  GetProps<
+    ResponseString,
+    Failure | Error,
+    GetGlobalTemplateInputSetYamlQueryParams,
+    GetGlobalTemplateInputSetYamlPathParams
+  >,
+  'path'
+> &
+  GetGlobalTemplateInputSetYamlPathParams
+
+/**
+ * Gets global template input set yaml
+ */
+export const GetGlobalTemplateInputSetYaml = ({
+  globalTemplateIdentifier,
+  ...props
+}: GetGlobalTemplateInputSetYamlProps) => (
+  <Get<
+    ResponseString,
+    Failure | Error,
+    GetGlobalTemplateInputSetYamlQueryParams,
+    GetGlobalTemplateInputSetYamlPathParams
+  >
+    path={`/globalTemplates/inputs/${globalTemplateIdentifier}`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseGetGlobalTemplateInputSetYamlProps = Omit<
+  UseGetProps<
+    ResponseString,
+    Failure | Error,
+    GetGlobalTemplateInputSetYamlQueryParams,
+    GetGlobalTemplateInputSetYamlPathParams
+  >,
+  'path'
+> &
+  GetGlobalTemplateInputSetYamlPathParams
+
+/**
+ * Gets global template input set yaml
+ */
+export const useGetGlobalTemplateInputSetYaml = ({
+  globalTemplateIdentifier,
+  ...props
+}: UseGetGlobalTemplateInputSetYamlProps) =>
+  useGet<
+    ResponseString,
+    Failure | Error,
+    GetGlobalTemplateInputSetYamlQueryParams,
+    GetGlobalTemplateInputSetYamlPathParams
+  >(
+    (paramsInPath: GetGlobalTemplateInputSetYamlPathParams) =>
+      `/globalTemplates/inputs/${paramsInPath.globalTemplateIdentifier}`,
+    { base: getConfig('template/api'), pathParams: { globalTemplateIdentifier }, ...props }
+  )
+
+/**
+ * Gets global template input set yaml
+ */
+export const getGlobalTemplateInputSetYamlPromise = (
+  {
+    globalTemplateIdentifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseString,
+    Failure | Error,
+    GetGlobalTemplateInputSetYamlQueryParams,
+    GetGlobalTemplateInputSetYamlPathParams
+  > & { globalTemplateIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseString,
+    Failure | Error,
+    GetGlobalTemplateInputSetYamlQueryParams,
+    GetGlobalTemplateInputSetYamlPathParams
+  >(getConfig('template/api'), `/globalTemplates/inputs/${globalTemplateIdentifier}`, props, signal)
+
+export interface GetGlobalTemplateListQueryParams {
+  page?: number
+  size?: number
+  sort?: string[]
+  searchTerm?: string
+  filterIdentifier?: string
+  templateListType: 'Stable' | 'LastUpdated' | 'All'
+}
+
+export type GetGlobalTemplateListProps = Omit<
+  MutateProps<
+    ResponsePageTemplateSummaryResponse,
+    Failure | Error,
+    GetGlobalTemplateListQueryParams,
+    TemplateFilterPropertiesRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets all Global template list
+ */
+export const GetGlobalTemplateList = (props: GetGlobalTemplateListProps) => (
+  <Mutate<
+    ResponsePageTemplateSummaryResponse,
+    Failure | Error,
+    GetGlobalTemplateListQueryParams,
+    TemplateFilterPropertiesRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/globalTemplates/list`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseGetGlobalTemplateListProps = Omit<
+  UseMutateProps<
+    ResponsePageTemplateSummaryResponse,
+    Failure | Error,
+    GetGlobalTemplateListQueryParams,
+    TemplateFilterPropertiesRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets all Global template list
+ */
+export const useGetGlobalTemplateList = (props: UseGetGlobalTemplateListProps) =>
+  useMutate<
+    ResponsePageTemplateSummaryResponse,
+    Failure | Error,
+    GetGlobalTemplateListQueryParams,
+    TemplateFilterPropertiesRequestBody,
+    void
+  >('POST', `/globalTemplates/list`, { base: getConfig('template/api'), ...props })
+
+/**
+ * Gets all Global template list
+ */
+export const getGlobalTemplateListPromise = (
+  props: MutateUsingFetchProps<
+    ResponsePageTemplateSummaryResponse,
+    Failure | Error,
+    GetGlobalTemplateListQueryParams,
+    TemplateFilterPropertiesRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePageTemplateSummaryResponse,
+    Failure | Error,
+    GetGlobalTemplateListQueryParams,
+    TemplateFilterPropertiesRequestBody,
+    void
+  >('POST', getConfig('template/api'), `/globalTemplates/list`, props, signal)
 
 export type GetTemplateHealthStatusProps = Omit<GetProps<ResponseString, unknown, void, void>, 'path'>
 
@@ -4569,6 +4761,68 @@ export const moveTemplateConfigsPromise = (
     void,
     MoveTemplateConfigsPathParams
   >('POST', getConfig('template/api'), `/templates/move-config/${templateIdentifier}`, props, signal)
+
+export interface GetStaticSchemaYamlQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  entityType?: string
+  templateEntityType:
+    | 'Step'
+    | 'Stage'
+    | 'Pipeline'
+    | 'CustomDeployment'
+    | 'MonitoredService'
+    | 'SecretManager'
+    | 'ArtifactSource'
+    | 'StepGroup'
+  scope?: 'account' | 'org' | 'project' | 'unknown'
+  version?: string
+}
+
+export type GetStaticSchemaYamlProps = Omit<
+  GetProps<ResponseJsonNode, Failure | Error, GetStaticSchemaYamlQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Static Yaml Schema
+ */
+export const GetStaticSchemaYaml = (props: GetStaticSchemaYamlProps) => (
+  <Get<ResponseJsonNode, Failure | Error, GetStaticSchemaYamlQueryParams, void>
+    path={`/templates/schema/static`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseGetStaticSchemaYamlProps = Omit<
+  UseGetProps<ResponseJsonNode, Failure | Error, GetStaticSchemaYamlQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Static Yaml Schema
+ */
+export const useGetStaticSchemaYaml = (props: UseGetStaticSchemaYamlProps) =>
+  useGet<ResponseJsonNode, Failure | Error, GetStaticSchemaYamlQueryParams, void>(`/templates/schema/static`, {
+    base: getConfig('template/api'),
+    ...props
+  })
+
+/**
+ * Get Static Yaml Schema
+ */
+export const getStaticSchemaYamlPromise = (
+  props: GetUsingFetchProps<ResponseJsonNode, Failure | Error, GetStaticSchemaYamlQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseJsonNode, Failure | Error, GetStaticSchemaYamlQueryParams, void>(
+    getConfig('template/api'),
+    `/templates/schema/static`,
+    props,
+    signal
+  )
 
 export interface GetTemplateSchemaQueryParams {
   templateEntityType:

@@ -74,6 +74,12 @@ export interface AMITagObject {
   tagName?: string
 }
 
+export type AWSIAMRoleCredentialSpec = TerraformProviderCredentialSpec & {
+  connectorRef: string
+  region?: string
+  roleArn?: string
+}
+
 export type AbortFailureActionConfig = FailureStrategyActionConfig & {
   type: 'Abort'
 }
@@ -879,6 +885,7 @@ export type AllowAllFilter = FilterSpec & { [key: string]: any }
 export type AmazonS3ArtifactConfig = ArtifactConfig & {
   bucketName: string
   connectorRef: string
+  fileFilter?: string
   filePath?: string
   filePathRegex?: string
   region?: string
@@ -3685,6 +3692,7 @@ export interface CustomSequenceDTO {
 export type CustomStageConfig = StageInfoConfig & {
   environment?: EnvironmentYamlV2
   execution: ExecutionElementConfig
+  metadata?: string
 }
 
 export interface CustomerDTO {
@@ -12077,7 +12085,7 @@ export interface NGServiceV2InfoConfig {
 
 export interface NGTag {
   key: string
-  value: string
+  value?: string
 }
 
 export type NGTemplateReference = EntityReference & {
@@ -14076,6 +14084,14 @@ export interface ResourceDTO {
     | 'SEI_COLLECTIONS'
     | 'SEI_INSIGHTS'
     | 'CET_SAVED_FILTER'
+    | 'GITOPS_AGENT'
+    | 'GITOPS_REPOSITORY'
+    | 'GITOPS_CLUSTER'
+    | 'GITOPS_CREDENTIAL_TEMPLATE'
+    | 'GITOPS_REPOSITORY_CERTIFICATE'
+    | 'GITOPS_GNUPG_KEY'
+    | 'GITOPS_PROJECT_MAPPING'
+    | 'GITOPS_APPLICATION'
 }
 
 export interface ResourceGroup {
@@ -20217,6 +20233,7 @@ export interface TerraformExecutionData {
   backendConfig?: TerraformBackendConfig
   configFiles: TerraformConfigFilesWrapper
   environmentVariables?: NGVariable[]
+  providerCredential?: TerraformProviderCredential
   targets?: string[]
   varFiles?: TerraformVarFileWrapper[]
   workspace?: string
@@ -20242,6 +20259,15 @@ export type TerraformPlanStepInfo = StepSpecType & {
   configuration?: TerraformPlanExecutionData
   delegateSelectors?: string[]
   provisionerIdentifier: string
+}
+
+export interface TerraformProviderCredential {
+  spec: TerraformProviderCredentialSpec
+  type: 'Aws'
+}
+
+export interface TerraformProviderCredentialSpec {
+  [key: string]: any
 }
 
 export type TerraformRollbackStepInfo = StepSpecType & {
@@ -35379,6 +35405,7 @@ export interface GetFilePathsForS3QueryParams {
   connectorRef: string
   bucketName: string
   filePathRegex?: string
+  fileFilter?: string
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -35610,6 +35637,7 @@ export interface GetFilePathsV2ForS3QueryParams {
   connectorRef?: string
   bucketName?: string
   filePathRegex?: string
+  fileFilter?: string
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -44409,6 +44437,7 @@ export interface GetEnvironmentListV2QueryParams {
   sort?: string[]
   filterIdentifier?: string
   includeAllAccessibleAtScope?: boolean
+  repoName?: string
 }
 
 export type GetEnvironmentListV2Props = Omit<

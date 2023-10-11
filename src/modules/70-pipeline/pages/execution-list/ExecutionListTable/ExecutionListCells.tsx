@@ -246,7 +246,7 @@ export const PipelineNameCell: CellType = ({ row }) => {
             popoverProps={{ className: Classes.DARK }}
             className={css.tags}
             tags={defaultTo(data?.tags, []).reduce((_tags, tag) => {
-              _tags[tag.key] = tag.value
+              _tags[tag.key] = defaultTo(tag.value, '')
               return _tags
             }, {} as { [key: string]: string })}
           />
