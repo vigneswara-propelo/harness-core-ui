@@ -2,11 +2,13 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: var(--spacing-xxxlarge) !important;
+  padding: var(--spacing-xxxlarge) var(--spacing-small) !important;
   padding-top: var(--spacing-xlarge) !important;
 }
 
 .layout {
+  max-height: calc(100vh - 258px);
+  overflow: auto;
   height: 100%;
 }
 

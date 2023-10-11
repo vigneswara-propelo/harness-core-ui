@@ -6,7 +6,7 @@ const CloudCostPrompt: Prompt = {
     {
       content: 'AWS',
       mapping: [
-        { key: 'model', value: 'QA_CE' },
+        { key: 'model', value: 'CE' },
         { key: 'explore', value: 'aws' }
       ],
       mappedContent: 'AWS costs'
@@ -14,7 +14,7 @@ const CloudCostPrompt: Prompt = {
     {
       content: 'Azure',
       mapping: [
-        { key: 'model', value: 'QA_CE' },
+        { key: 'model', value: 'CE' },
         { key: 'explore', value: 'azure' }
       ],
       mappedContent: 'Azure costs'
@@ -22,7 +22,7 @@ const CloudCostPrompt: Prompt = {
     {
       content: 'GCP',
       mapping: [
-        { key: 'model', value: 'QA_CE' },
+        { key: 'model', value: 'CE' },
         { key: 'explore', value: 'gcp' }
       ],
       mappedContent: 'GCP costs'
@@ -30,7 +30,7 @@ const CloudCostPrompt: Prompt = {
     {
       content: 'Kubernetes Cluster',
       mapping: [
-        { key: 'model', value: 'QA_CE' },
+        { key: 'model', value: 'CE' },
         { key: 'explore', value: 'cluster' }
       ],
       mappedContent: 'Kubernetes cluster costs'
@@ -44,7 +44,7 @@ const ContinuousBuildsPrompt: Prompt = {
     {
       content: 'Builds and Repositories',
       mapping: [
-        { key: 'model', value: 'QA_CI' },
+        { key: 'model', value: 'CI' },
         { key: 'explore', value: 'pipeline_execution_summary_ci' }
       ]
     }
@@ -57,7 +57,7 @@ const ContinuousErrorTrackingPrompt: Prompt = {
     {
       content: 'Dashboard Invocation Daily Agg',
       mapping: [
-        { key: 'model', value: 'QA_CET' },
+        { key: 'model', value: 'CET' },
         { key: 'explore', value: 'dashboard_invocation_daily_agg' }
       ],
       mappedContent: 'the daily aggregate of dashboard invocations'
@@ -71,7 +71,7 @@ const ContinuousVerificationPrompt: Prompt = {
     {
       content: 'Deployment Stages',
       mapping: [
-        { key: 'model', value: 'QA_CV' },
+        { key: 'model', value: 'CV' },
         { key: 'explore', value: 'service_infra_info' }
       ],
       mappedContent: 'verification of deployment stages'
@@ -79,7 +79,7 @@ const ContinuousVerificationPrompt: Prompt = {
     {
       content: 'Verifications',
       mapping: [
-        { key: 'model', value: 'QA_CV' },
+        { key: 'model', value: 'CV' },
         { key: 'explore', value: 'verify_step_execution_cvng' }
       ],
       mappedContent: 'verifications of step executions'
@@ -93,21 +93,21 @@ const DeploymentsPrompt: Prompt = {
     {
       content: 'Deployments and Services',
       mapping: [
-        { key: 'model', value: 'QA_CD' },
+        { key: 'model', value: 'CD' },
         { key: 'explore', value: 'pipeline_execution_summary_cd' }
       ]
     },
     {
       content: 'Deployments and Services V2',
       mapping: [
-        { key: 'model', value: 'QA_CD' },
+        { key: 'model', value: 'CD' },
         { key: 'explore', value: 'stage_execution_summary' }
       ]
     },
     {
       content: 'Instances',
       mapping: [
-        { key: 'model', value: 'QA_CD' },
+        { key: 'model', value: 'CD' },
         { key: 'explore', value: 'ng_services' }
       ],
       mappedContent: 'Deployment instances'
@@ -115,7 +115,7 @@ const DeploymentsPrompt: Prompt = {
     {
       content: 'Orgs',
       mapping: [
-        { key: 'model', value: 'QA_CD' },
+        { key: 'model', value: 'CD' },
         { key: 'explore', value: 'organizations' }
       ],
       mappedContent: 'Organizations'
@@ -129,14 +129,14 @@ const FeatureFlagsPrompt: Prompt = {
     {
       content: 'Feature Flags',
       mapping: [
-        { key: 'model', value: 'QA_CF' },
+        { key: 'model', value: 'CF' },
         { key: 'explore', value: 'feature_flags' }
       ]
     },
     {
       content: 'Targets',
       mapping: [
-        { key: 'model', value: 'QA_CF' },
+        { key: 'model', value: 'CF' },
         { key: 'explore', value: 'targets' }
       ],
       mappedContent: 'Feature Flag targets'

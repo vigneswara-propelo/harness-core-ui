@@ -23,6 +23,10 @@ const generateMockAiTile = (
   return Promise.resolve({ resource: mockDashboard })
 }
 
+const generateMockAiTileFailure = (): Promise<sharedService.GetDashboardResponse> => {
+  return Promise.reject()
+}
+
 describe('AidaDashboardContent', () => {
   const useAiGenerateTileMock = jest.spyOn(sharedService, 'useAiGenerateTile')
 
@@ -70,5 +74,39 @@ describe('AidaDashboardContent', () => {
     await userEvent.keyboard('{Enter}')
 
     expect(screen.getByText('dashboards.aida.generating')).toBeInTheDocument()
+  })
+
+  test('it should display AIDA trouble message if request failure occurs', async () => {
+    useAiGenerateTileMock.mockReturnValue({
+      mutate: generateMockAiTileFailure,
+      loading: true,
+      error: null
+    } as any)
+    useDashboardsContextMock.mockReturnValue({ updateAiTileDetails: updateAiTileDetailsMock })
+    renderComponent()
+
+    // Explore stage
+    const explorePromptButton = screen.getByTestId('prompt-option-0-0')
+
+    await userEvent.click(explorePromptButton)
+
+    // Visualizaton stage
+    expect(screen.getByText('dashboards.aida.selectVisualisation')).toBeInTheDocument()
+
+    const visPromptButton = screen.getByTestId('prompt-option-0-0')
+
+    await userEvent.click(visPromptButton)
+
+    // Chat box stage
+    const input = screen.getByPlaceholderText('common.csBot.askAIDA') as HTMLInputElement
+    expect(input).toBeInTheDocument()
+
+    const mockText = 'dummy text'
+
+    await userEvent.type(input, mockText)
+    expect(input).toHaveValue(mockText)
+    await userEvent.keyboard('{Enter}')
+
+    expect(screen.getByText('dashboards.aida.trouble')).toBeInTheDocument()
   })
 })

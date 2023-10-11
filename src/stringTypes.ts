@@ -3720,10 +3720,13 @@ export interface StringsMap {
   'dashboards.aida.assist': string
   'dashboards.aida.createCustomWidgetFor': string
   'dashboards.aida.createWidget': string
+  'dashboards.aida.failureGeneratingTile': string
   'dashboards.aida.generating': string
   'dashboards.aida.helpText': string
   'dashboards.aida.selectExplore': string
   'dashboards.aida.selectVisualisation': string
+  'dashboards.aida.successGeneratingTile': string
+  'dashboards.aida.trouble': string
   'dashboards.aida.visualisationArenaChart': string
   'dashboards.aida.visualisationBarChart': string
   'dashboards.aida.visualisationLineChart': string

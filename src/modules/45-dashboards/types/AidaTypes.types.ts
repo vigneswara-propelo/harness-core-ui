@@ -41,8 +41,9 @@ export interface PromptOption {
 }
 
 export interface Message {
-  type?: MessageType
-  role?: MessageRole
+  id: string
+  type: MessageType
+  role: MessageRole
   promptMapping?: PromptMapping[]
   content: string
 }

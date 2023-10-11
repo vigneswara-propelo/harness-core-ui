@@ -1,7 +1,5 @@
 .chatRenderer {
   margin-bottom: auto !important;
-  max-height: calc(100vh - 235px);
-  overflow: auto;
 
   .message {
     padding: var(--spacing-small) var(--spacing-xlarge);
@@ -12,8 +10,16 @@
     margin-top: 0px !important;
   }
 
-  .userMsgWrapper {
+  .msgWrapper {
     margin-top: var(--spacing-xlarge) !important;
+  }
+
+  .userMsgWrapper {
+    align-self: flex-end;
+  }
+
+  .responseMsgWrapper {
+    align-self: flex-start;
   }
 
   .userMsg {
@@ -22,5 +28,13 @@
     margin-left: auto;
     box-shadow: var(--elevation-2);
     border-radius: 24px 0px 24px 24px;
+  }
+
+  .responseMsg {
+    @extend .message;
+    background-color: var(--ai-purple-100);
+    margin-right: auto;
+    box-shadow: var(--elevation-2);
+    border-radius: 24px 24px 24px 0px;
   }
 }

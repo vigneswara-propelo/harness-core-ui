@@ -9,6 +9,9 @@
 declare const styles: {
   readonly chatRenderer: string
   readonly message: string
+  readonly msgWrapper: string
+  readonly responseMsg: string
+  readonly responseMsgWrapper: string
   readonly scrollViewCtn: string
   readonly userMsg: string
   readonly userMsgWrapper: string

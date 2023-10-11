@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Text } from '@harness/uicore'
+import { useToaster, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useDashboardsContext } from '@dashboards/pages/DashboardsContext'
 import { Message, MessageType, VisualizationType } from '@dashboards/types/AidaTypes.types'
@@ -17,6 +17,7 @@ import css from './AidaGenerating.module.scss'
 
 interface AidaGeneratingProps {
   messages: Message[]
+  onError: () => void
 }
 
 const getValueFromMessage = (messages: Message[], messageType: MessageType, key?: string): string => {
@@ -34,8 +35,10 @@ const getValueFromMessage = (messages: Message[], messageType: MessageType, key?
   return ''
 }
 
-const AidaGenerating: React.FC<AidaGeneratingProps> = ({ messages }) => {
+const AidaGenerating: React.FC<AidaGeneratingProps> = ({ messages, onError }) => {
   const { updateAiTileDetails } = useDashboardsContext()
+  const { showSuccess, showError } = useToaster()
+
   const { accountId, viewId } = useParams<Record<string, string>>()
   const { getString } = useStrings()
 
@@ -47,9 +50,15 @@ const AidaGenerating: React.FC<AidaGeneratingProps> = ({ messages }) => {
 
   React.useEffect(() => {
     const performAiTileGeneration = async (requestBody: AiAddTileRequestBody): Promise<void> => {
-      const { resource } = await generateAiTile(requestBody)
-      if (resource) {
-        updateAiTileDetails(requestBody)
+      try {
+        const { resource } = await generateAiTile(requestBody)
+        if (resource) {
+          showSuccess(getString('dashboards.aida.successGeneratingTile'))
+          updateAiTileDetails(requestBody)
+        }
+      } catch (e) {
+        showError(getString('dashboards.aida.failureGeneratingTile'))
+        onError()
       }
     }
 
@@ -63,7 +72,8 @@ const AidaGenerating: React.FC<AidaGeneratingProps> = ({ messages }) => {
 
       performAiTileGeneration(aiAddTileRequestBody)
     }
-  }, [messages, generateAiTile, updateAiTileDetails])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [generateAiTile, messages, onError, updateAiTileDetails])
 
   return (
     <Text
