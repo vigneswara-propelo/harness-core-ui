@@ -21,38 +21,19 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import type { AuditEventData, ResourceDTO } from 'services/audit'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
-import PolicyManagementMFE from './GovernanceApp'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 
+import PolicyManagementMFE, {
+  PolicyManagementResourceBody,
+  PolicyResourceRenderer,
+  PolicySetResourceBody,
+  PolicySetResourceRenderer
+} from './GovernanceApp'
 export const AccountSideNavProps: SidebarContext = {
   navComponent: AccountSideNav,
   icon: 'nav-settings',
   title: 'Account Settings'
 }
-
-RbacFactory.registerResourceTypeHandler(ResourceType.GOVERNANCE_POLICY, {
-  icon: 'nav-settings',
-  label: 'governance.permissions.governancePolicies',
-  labelSingular: 'common.singularLabels.governancePolicy',
-  category: ResourceCategory.SHARED_RESOURCES,
-  permissionLabels: {
-    [PermissionIdentifier.GOV_VIEW_POLICY]: <String stringID="rbac.permissionLabels.view" />,
-    [PermissionIdentifier.GOV_EDIT_POLICY]: <String stringID="rbac.permissionLabels.createEdit" />,
-    [PermissionIdentifier.GOV_DELETE_POLICY]: <String stringID="rbac.permissionLabels.delete" />
-  }
-})
-
-RbacFactory.registerResourceTypeHandler(ResourceType.GOVERNANCE_POLICYSETS, {
-  icon: 'nav-settings',
-  label: 'governance.permissions.governancePolicySets',
-  labelSingular: 'common.singularLabels.governancePolicySet',
-  category: ResourceCategory.SHARED_RESOURCES,
-  permissionLabels: {
-    [PermissionIdentifier.GOV_VIEW_POLICYSET]: <String stringID="rbac.permissionLabels.view" />,
-    [PermissionIdentifier.GOV_EDIT_POLICYSET]: <String stringID="rbac.permissionLabels.createEdit" />,
-    [PermissionIdentifier.GOV_DELETE_POLICYSET]: <String stringID="rbac.permissionLabels.delete" />,
-    [PermissionIdentifier.GOV_EVALUATE_POLICYSET]: <String stringID="rbac.permissionLabels.evaluate" />
-  }
-})
 
 AuditTrailFactory.registerResourceHandler('GOVERNANCE_POLICY', {
   moduleIcon: {
@@ -118,6 +99,7 @@ const RedirectToDefaultGovernanceRoute: React.FC = () => {
 // places: Account Settings, Project Detail, and Org Detail. Depends on pathProps of where this module
 // is mounted, this function will generate proper Governance routes.
 //
+
 export const GovernanceRouteDestinations: React.FC<{
   sidebarProps: SidebarContext
   pathProps: GovernancePathProps
@@ -138,4 +120,43 @@ export const GovernanceRouteDestinations: React.FC<{
   )
 }
 
-export default <>{GovernanceRouteDestinations({ sidebarProps: AccountSideNavProps, pathProps: accountPathProps })}</>
+export default function GovernanceRoutes(): React.ReactElement {
+  const { OPA_RBAC_FEATURE } = useFeatureFlags()
+
+  RbacFactory.registerResourceCategory(ResourceCategory.GOVERNANCE, {
+    icon: 'governance',
+    label: 'common.governance'
+  })
+
+  if (OPA_RBAC_FEATURE) {
+    RbacFactory.registerResourceTypeHandler(ResourceType.GOVERNANCE_POLICY, {
+      icon: 'governance',
+      label: 'governance.permissions.governancePolicies',
+      labelSingular: 'common.singularLabels.governancePolicy',
+      category: ResourceCategory.GOVERNANCE,
+      addResourceModalBody: props => <PolicyManagementResourceBody {...props} />,
+      staticResourceRenderer: props => <PolicyResourceRenderer {...props} />,
+      permissionLabels: {
+        [PermissionIdentifier.GOV_VIEW_POLICY]: <String stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.GOV_EDIT_POLICY]: <String stringID="rbac.permissionLabels.createEdit" />,
+        [PermissionIdentifier.GOV_DELETE_POLICY]: <String stringID="rbac.permissionLabels.delete" />
+      }
+    })
+
+    RbacFactory.registerResourceTypeHandler(ResourceType.GOVERNANCE_POLICYSETS, {
+      icon: 'governance-policy-set',
+      label: 'governance.permissions.governancePolicySets',
+      labelSingular: 'common.singularLabels.governancePolicySet',
+      category: ResourceCategory.GOVERNANCE,
+      addResourceModalBody: props => <PolicySetResourceBody {...props} />,
+      staticResourceRenderer: props => <PolicySetResourceRenderer {...props} />,
+      permissionLabels: {
+        [PermissionIdentifier.GOV_VIEW_POLICYSET]: <String stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.GOV_EDIT_POLICYSET]: <String stringID="rbac.permissionLabels.createEdit" />,
+        [PermissionIdentifier.GOV_DELETE_POLICYSET]: <String stringID="rbac.permissionLabels.delete" />,
+        [PermissionIdentifier.GOV_EVALUATE_POLICYSET]: <String stringID="rbac.permissionLabels.evaluate" />
+      }
+    })
+  }
+  return <GovernanceRouteDestinations sidebarProps={AccountSideNavProps} pathProps={accountPathProps} />
+}

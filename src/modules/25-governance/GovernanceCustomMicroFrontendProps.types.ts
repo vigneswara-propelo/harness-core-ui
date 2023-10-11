@@ -36,6 +36,7 @@ import type { getSelectedScopeLabel, useGetResourceTypeHandler } from '@rbac/pag
 import type routes from '@common/RouteDefinitions'
 import ResourceHandlerTable from '@modules/20-rbac/components/ResourceHandlerTable/ResourceHandlerTable'
 import { RbacResourceModalProps, RbacResourceRendererProps } from '@modules/20-rbac/factories/RbacFactory'
+import StaticResourceRenderer from '@modules/20-rbac/components/StaticResourceRenderer/StaticResourceRenderer'
 
 const { getToken: useGetToken } = SessionToken
 
@@ -75,6 +76,7 @@ export interface GovernanceCustomMicroFrontendProps {
     GitRemoteDetails: typeof GitRemoteDetails
     ErrorHandler: typeof ErrorHandler
     ResourceHandlerTable: typeof ResourceHandlerTable
+    StaticResourceRenderer: typeof StaticResourceRenderer
   }
   customRoutes: typeof routes
   baseRoutePath: string

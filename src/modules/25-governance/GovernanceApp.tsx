@@ -18,7 +18,14 @@ const RemoteGovernanceApp = lazy(() => import('governance/App'))
 const RemotePipelineGovernanceView = lazy(() => import('governance/PipelineGovernanceView'))
 // eslint-disable-next-line import/no-unresolved
 const RemotePolicySetWizard = lazy(() => import('governance/PolicySetWizard'))
-
+// eslint-disable-next-line import/no-unresolved
+const RemotePolicyResourceBody = lazy(() => import('governance/PolicyResourceModalBody'))
+// eslint-disable-next-line import/no-unresolved
+const RemotePolicyResourceRenderer = lazy(() => import('governance/PolicyResourceRenderer'))
+// eslint-disable-next-line import/no-unresolved
+const RemotePolicySetResourceBody = lazy(() => import('governance/PolicySetsResourceModalBody'))
+// eslint-disable-next-line import/no-unresolved
+const RemotePolicySetResourceRenderer = lazy(() => import('governance/PolicySetResourceRenderer'))
 /*
  * Would like to change these baseRoutePath and accountId props to use the default
  * renderUrl.
@@ -63,6 +70,71 @@ export const PolicyManagementPolicySetWizard: FC<any> = (props: any) => {
       baseRoutePath={path}
     >
       <RemotePolicySetWizard {...props} />
+    </ChildAppMounter>
+  )
+}
+
+export const PolicyManagementResourceBody: FC<any> = (props: any) => {
+  const { path }: RouteMatch = useRouteMatch()
+
+  return (
+    <ChildAppMounter<GovernanceCustomMicroFrontendProps>
+      ChildApp={RemoteGovernanceApp}
+      customHooks={customHooks}
+      customComponents={customComponents}
+      customRoutes={routes}
+      baseRoutePath={path}
+      {...props}
+    >
+      <RemotePolicyResourceBody {...props} />
+    </ChildAppMounter>
+  )
+}
+
+export const PolicyResourceRenderer: FC<any> = (props: any) => {
+  const { path }: RouteMatch = useRouteMatch()
+  return (
+    <ChildAppMounter<GovernanceCustomMicroFrontendProps>
+      ChildApp={RemoteGovernanceApp}
+      customHooks={customHooks}
+      customComponents={customComponents}
+      customRoutes={routes}
+      baseRoutePath={path}
+      {...props}
+    >
+      <RemotePolicyResourceRenderer {...props} />
+    </ChildAppMounter>
+  )
+}
+
+export const PolicySetResourceBody: FC<any> = (props: any) => {
+  const { path }: RouteMatch = useRouteMatch()
+  return (
+    <ChildAppMounter<GovernanceCustomMicroFrontendProps>
+      ChildApp={RemoteGovernanceApp}
+      customHooks={customHooks}
+      customComponents={customComponents}
+      customRoutes={routes}
+      baseRoutePath={path}
+      {...props}
+    >
+      <RemotePolicySetResourceBody {...props} />
+    </ChildAppMounter>
+  )
+}
+
+export const PolicySetResourceRenderer: FC<any> = (props: any) => {
+  const { path }: RouteMatch = useRouteMatch()
+  return (
+    <ChildAppMounter<GovernanceCustomMicroFrontendProps>
+      ChildApp={RemoteGovernanceApp}
+      customHooks={customHooks}
+      customComponents={customComponents}
+      customRoutes={routes}
+      baseRoutePath={path}
+      {...props}
+    >
+      <RemotePolicySetResourceRenderer {...props} />
     </ChildAppMounter>
   )
 }

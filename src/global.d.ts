@@ -308,6 +308,26 @@ declare module 'governance/PolicySetWizard' {
   export default ChildApp
 }
 
+declare module 'governance/PolicyResourceModalBody' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'governance/PolicyResourceRenderer' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'governance/PolicySetsResourceModalBody' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'governance/PolicySetResourceRenderer' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare type Optional<T, K extends keyof T = keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
 declare type RequiredPick<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>

@@ -87,7 +87,7 @@ export default function RouteDestinations(): React.ReactElement {
       {delegatesRoutes.props.children}
       {fileStoreRoutes.props.children}
       {projectsOrgsRoutes.props.children}
-      {GovernanceRoutes.props.children}
+      {GovernanceRoutes().props.children}
       {CODE_ENABLED ? CODERouteDestinations().props.children : null}
       {connectorRoutes.props.children}
       {tempatesRoutes.props.children}

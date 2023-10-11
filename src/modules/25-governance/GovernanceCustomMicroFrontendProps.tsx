@@ -4,6 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
+import ResourceHandlerTable from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
 
 import { useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import GitFilters from '@common/components/GitFilters/GitFilters'
@@ -27,13 +28,14 @@ import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranch
 import { InlineRemoteSelect } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
+
 import SessionToken from 'framework/utils/SessionToken'
 import { useAnyEnterpriseLicense, useCurrentEnterpriseLicense } from '@common/hooks/useModuleLicenses'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { OverviewChartsWithToggle } from '@common/components/OverviewChartsWithToggle/OverviewChartsWithToggle'
 import { useGetResourceGroupListV2 } from 'services/resourcegroups'
 import { getSelectedScopeLabel, useGetResourceTypeHandler } from '@rbac/pages/ResourceGroupDetails/utils'
-import ResourceHandlerTable from '@modules/20-rbac/components/ResourceHandlerTable/ResourceHandlerTable'
+import StaticResourceRenderer from '@rbac/components/StaticResourceRenderer/StaticResourceRenderer'
 
 export interface RouteMatch {
   path: string
@@ -77,7 +79,8 @@ const customComponents = {
   InlineRemoteSelect,
   GitRemoteDetails,
   ErrorHandler,
-  ResourceHandlerTable
+  ResourceHandlerTable,
+  StaticResourceRenderer
 }
 
 export { customHooks, customComponents }
