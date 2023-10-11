@@ -5,6 +5,8 @@ global:
   kubeVersion: ""
   loadbalancerURL: ""
   imagePullSecrets: []
+  cg:
+    enabled: false
   commonLabels: {}
   commonAnnotations: {}
   ingress:
