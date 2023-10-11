@@ -13,20 +13,22 @@ import type { FormikContextType } from 'formik'
 import DelegatesGit from '@common/icons/DelegatesGit.svg'
 import PlatformGit from '@common/icons/PlatformGit.svg'
 import { useStrings } from 'framework/strings'
-import type { AwsCredential } from 'services/cd-ng'
+import type { AwsCredential, GcpConnectorCredential } from 'services/cd-ng'
 
 export enum ConnectivityModeType {
   Manager = 'Manager',
   Delegate = 'Delegate'
 }
+
 export interface CredentialType {
-  [key: string]: AwsCredential['type']
+  [key: string]: AwsCredential['type'] | GcpConnectorCredential['type']
 }
 
 export const DelegateTypes: CredentialType = {
   DELEGATE_IN_CLUSTER: 'InheritFromDelegate',
   DELEGATE_IN_CLUSTER_IRSA: 'Irsa',
-  DELEGATE_OUT_CLUSTER: 'ManualConfig'
+  DELEGATE_OUT_CLUSTER: 'ManualConfig',
+  DELEGATE_OIDC: 'OidcAuthentication'
 }
 
 export interface ConnectivityCardItem extends CollapsableSelectOptions {
@@ -47,10 +49,10 @@ interface ConnectivityModeProps {
   connectorLabel?: string
   delegateImage?: string
   platformImage?: string
-  delegateType?: AwsCredential['type']
+  delegateType?: CredentialType['key']
 }
 
-const hideConnectThroughPlatformCard = (delegateType?: AwsCredential['type']): boolean =>
+const hideConnectThroughPlatformCard = (delegateType?: CredentialType['key']): boolean =>
   !!delegateType && [DelegateTypes.DELEGATE_IN_CLUSTER, DelegateTypes.DELEGATE_IN_CLUSTER_IRSA].includes(delegateType)
 
 const ConnectivityMode: React.FC<ConnectivityModeProps> = props => {

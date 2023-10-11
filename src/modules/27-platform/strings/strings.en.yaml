@@ -1209,6 +1209,9 @@ connectors:
   GCP:
     delegateOutClusterInfo: 'Specify credentials here'
     delegateInClusterInfo: '{{ $.platform.connectors.delegateInClusterInfo }}'
+    workloadPoolId: Workload Pool ID
+    providerId: Provider ID
+    enterEntity: 'Enter {{ entity }}'
   ECR:
     name: ECR
     fullName: ECR Container Registry

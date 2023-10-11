@@ -15,7 +15,8 @@ import {
   Container,
   ButtonVariation,
   PageSpinner,
-  ThumbnailSelect
+  ThumbnailSelect,
+  FormInput
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
@@ -30,6 +31,7 @@ import { Connectors } from '@platform/connectors/constants'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import css from '../CreateGcpConnector.module.scss'
 
@@ -59,7 +61,7 @@ const GcpAuthentication: React.FC<StepProps<StepConfigureProps> & GcpAuthenticat
   const { prevStepData, nextStep } = props
   const { accountId } = props
   const { getString } = useStrings()
-
+  const { PL_GCP_OIDC_AUTHENTICATION } = useFeatureFlags()
   const defaultInitialFormData: GCPFormInterface = {
     password: undefined
   }
@@ -70,12 +72,23 @@ const GcpAuthentication: React.FC<StepProps<StepConfigureProps> & GcpAuthenticat
   const DelegateCards: DelegateCardInterface[] = [
     {
       type: DelegateTypes.DELEGATE_OUT_CLUSTER,
-      info: getString('platform.connectors.GCP.delegateOutClusterInfo')
+      info: getString('platform.connectors.GCP.delegateOutClusterInfo'),
+      icon: 'service-kubernetes'
     },
     {
       type: DelegateTypes.DELEGATE_IN_CLUSTER,
-      info: getString('platform.connectors.GCP.delegateInClusterInfo')
-    }
+      info: getString('platform.connectors.GCP.delegateInClusterInfo'),
+      icon: 'delegates-blue'
+    },
+    ...(PL_GCP_OIDC_AUTHENTICATION
+      ? [
+          {
+            type: DelegateTypes.DELEGATE_OIDC,
+            info: 'OIDC',
+            icon: 'oidc-authentication'
+          } as DelegateCardInterface
+        ]
+      : [])
   ]
 
   useEffect(() => {
@@ -118,10 +131,22 @@ const GcpAuthentication: React.FC<StepProps<StepConfigureProps> & GcpAuthenticat
       }
     : undefined
 
+  const authenticationModifiedCardItems = DelegateCards.map(card => ({
+    label: (
+      <Text
+        font={{ size: 'small', weight: 'bold' }}
+        icon={card.icon}
+        iconProps={{ size: 23, margin: { right: 'xsmall' } }}
+      >
+        {card.info}
+      </Text>
+    ),
+    value: card.type
+  }))
   return loadingConnectorSecrets ? (
     <PageSpinner />
   ) : (
-    <Layout.Vertical spacing="medium" className={css.secondStep}>
+    <Layout.Vertical className={css.secondStep}>
       <Text font={{ variation: FontVariation.H3 }} tooltipProps={{ dataTooltipId: 'gcpAuthenticationDetails' }}>
         {getString('details')}
       </Text>
@@ -138,6 +163,30 @@ const GcpAuthentication: React.FC<StepProps<StepConfigureProps> & GcpAuthenticat
           password: Yup.object().when('delegateType', {
             is: DelegateTypes.DELEGATE_OUT_CLUSTER,
             then: Yup.object().required(getString('validation.encryptedKey'))
+          }),
+          workloadPoolId: Yup.string().when('delegateType', {
+            is: DelegateTypes.DELEGATE_OIDC,
+            then: Yup.string().required(
+              getString('common.validation.fieldIsRequired', {
+                name: getString('platform.connectors.GCP.workloadPoolId')
+              })
+            )
+          }),
+          providerId: Yup.string().when('delegateType', {
+            is: DelegateTypes.DELEGATE_OIDC,
+            then: Yup.string().required(
+              getString('common.validation.fieldIsRequired', {
+                name: getString('platform.connectors.GCP.providerId')
+              })
+            )
+          }),
+          gcpProjectId: Yup.string().when('delegateType', {
+            is: DelegateTypes.DELEGATE_OIDC,
+            then: Yup.string().required(
+              getString('common.validation.fieldIsRequired', {
+                name: getString('platform.connectors.ceGcp.existingCurTable.projectId')
+              })
+            )
           })
         })}
         onSubmit={handleSubmit}
@@ -146,15 +195,17 @@ const GcpAuthentication: React.FC<StepProps<StepConfigureProps> & GcpAuthenticat
           <>
             <Container className={css.clusterWrapper}>
               <ThumbnailSelect
-                items={DelegateCards.map(card => ({ label: card.info, value: card.type }))}
+                thumbnailClassName={css.thumbnailCard}
+                items={authenticationModifiedCardItems}
                 name="delegateType"
                 size="large"
+                layoutProps={{ className: css.cardRow }}
                 onChange={type => {
                   formikProps?.setFieldValue('delegateType', type)
                 }}
               />
               <Layout.Vertical style={{ width: '54%' }}>
-                {formikProps.values.delegateType === DelegateTypes.DELEGATE_OUT_CLUSTER ? (
+                {formikProps.values.delegateType === DelegateTypes.DELEGATE_OUT_CLUSTER && (
                   <SecretInput
                     name={'password'}
                     label={getString('platform.connectors.k8.serviceAccountKey')}
@@ -162,8 +213,31 @@ const GcpAuthentication: React.FC<StepProps<StepConfigureProps> & GcpAuthenticat
                     tooltipProps={{ dataTooltipId: 'gcpConnectorSecretKeyTooltip' }}
                     scope={scope}
                   />
-                ) : (
-                  <></>
+                )}
+                {formikProps.values.delegateType === DelegateTypes.DELEGATE_OIDC && (
+                  <Layout.Vertical>
+                    <FormInput.Text
+                      name="workloadPoolId"
+                      label={getString('platform.connectors.GCP.workloadPoolId')}
+                      placeholder={getString('platform.connectors.GCP.enterEntity', {
+                        entity: getString('platform.connectors.GCP.workloadPoolId')
+                      })}
+                    />
+                    <FormInput.Text
+                      name="providerId"
+                      label={getString('platform.connectors.GCP.providerId')}
+                      placeholder={getString('platform.connectors.GCP.enterEntity', {
+                        entity: getString('platform.connectors.GCP.providerId')
+                      })}
+                    />
+                    <FormInput.Text
+                      name="gcpProjectId"
+                      label={getString('platform.connectors.ceGcp.existingCurTable.projectId')}
+                      placeholder={getString('platform.connectors.GCP.enterEntity', {
+                        entity: getString('platform.connectors.ceGcp.existingCurTable.projectId')
+                      })}
+                    />
+                  </Layout.Vertical>
                 )}
               </Layout.Vertical>
             </Container>

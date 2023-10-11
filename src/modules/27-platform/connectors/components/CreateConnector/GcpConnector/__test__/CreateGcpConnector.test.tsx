@@ -9,10 +9,10 @@ import React from 'react'
 import { noop } from 'lodash-es'
 import { render, fireEvent, queryByText } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
-import { TestWrapper } from '@common/utils/testUtils'
+import { TestWrapper, queryByNameAttribute } from '@common/utils/testUtils'
 import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import routes from '@common/RouteDefinitions'
-import { mockResponse, mockSecret, encryptedKeyMock, backButtonMock, hostedEncryptedKeyMock } from './mocks'
+import { mockResponse, mockSecret, encryptedKeyMock, backButtonMock, hostedEncryptedKeyMock, oidcMock } from './mocks'
 import CreateGcpConnector from '../CreateGcpConnector'
 import { backButtonTest } from '../../commonTest'
 
@@ -171,6 +171,75 @@ describe('Create GCP connector Wizard', () => {
       {
         connector: {
           ...hostedEncryptedKeyMock,
+          name: 'dummy name'
+        }
+      },
+      { queryParams: {} }
+    )
+  })
+
+  test('Should render form for OIDC authentication method', async () => {
+    const { container, getByText } = render(
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <CreateGcpConnector
+          {...commonProps}
+          isEditMode={true}
+          connectorInfo={oidcMock}
+          connectivityMode={ConnectivityModeType.Delegate}
+        />
+      </TestWrapper>
+    )
+    // editing connector name
+    await act(async () => {
+      fireEvent.change(container.querySelector('input[name="name"]')!, {
+        target: { value: 'dummy name' }
+      })
+    })
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+    // step 2 - GCP auth step
+    expect(queryByText(container, 'platform.connectors.GCP.delegateOutClusterInfo')).toBeTruthy()
+    expect(queryByNameAttribute('workloadPoolId', container)).toHaveAttribute('value', 'a1')
+    expect(queryByNameAttribute('providerId', container)).toHaveAttribute('value', 'a2')
+    expect(queryByNameAttribute('gcpProjectId', container)).toHaveAttribute('value', 'a3')
+
+    // adding empty field value in gcpProjectId field
+    act(() => {
+      fireEvent.change(container.querySelector('input[name="gcpProjectId"]')!, { target: { value: '' } })
+    })
+
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+    expect(container).toMatchSnapshot()
+    // Asserting error as gcpProjectId is empty
+    expect(getByText('common.validation.fieldIsRequired')).toBeInTheDocument()
+
+    // Adding Value back to gcpProjectId
+    act(() => {
+      fireEvent.change(container.querySelector('input[name="gcpProjectId"]')!, { target: { value: 'a3' } })
+    })
+
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+    //connectivity mode step
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
+    // step 3 - delegate selection step
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
+    expect(updateConnector).toBeCalledTimes(1)
+
+    expect(updateConnector).toBeCalledWith(
+      {
+        connector: {
+          ...oidcMock,
           name: 'dummy name'
         }
       },

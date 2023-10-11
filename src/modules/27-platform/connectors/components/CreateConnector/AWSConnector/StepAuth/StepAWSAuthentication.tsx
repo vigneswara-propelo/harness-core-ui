@@ -13,10 +13,10 @@ import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { setupAWSFormData } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
-import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
+import { CredentialType, DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import { PageSpinner } from '@common/components'
-import type { ConnectorConfigDTO, ConnectorInfoDTO, AwsCredential } from 'services/cd-ng'
+import type { ConnectorConfigDTO, ConnectorInfoDTO } from 'services/cd-ng'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
 import type { ConnectorDetailsProps } from '@platform/connectors/interfaces/ConnectorInterface'
@@ -33,7 +33,7 @@ interface StepAWSAuthenticationProps extends ConnectorInfoDTO {
 }
 
 export interface AWSFormInterface {
-  delegateType: AwsCredential['type']
+  delegateType: CredentialType['key']
   accessKey: TextReferenceInterface | void
   secretKeyRef: SecretReferenceInterface | void
   crossAccountAccess: boolean

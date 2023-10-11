@@ -60,6 +60,13 @@ const getGCPDisplaySummary = (connector: ConnectorInfoDTO): JSX.Element | string
   if (connector?.spec?.credential?.type === DelegateTypes.DELEGATE_IN_CLUSTER) {
     return displayDelegatesTagsSummary(connector.spec.delegateSelectors)
   }
+  if (connector?.spec?.credential?.type === DelegateTypes.DELEGATE_OIDC) {
+    return getConnectorDisplaySummaryLabel(
+      'platform.connectors.GCP.workloadPoolId',
+      textRenderer(connector?.spec?.credential?.spec?.workloadPoolId)
+    )
+  }
+
   return getConnectorDisplaySummaryLabel(
     'encryptedKeyLabel',
     textRenderer(connector?.spec?.credential?.spec?.secretKeyRef)

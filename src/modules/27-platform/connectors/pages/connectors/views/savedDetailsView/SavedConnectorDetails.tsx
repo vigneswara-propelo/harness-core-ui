@@ -772,6 +772,18 @@ const getGCPSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInte
     {
       label: 'encryptedKeyLabel',
       value: connector?.spec?.credential?.spec?.secretKeyRef
+    },
+    {
+      label: 'platform.connectors.GCP.workloadPoolId',
+      value: connector?.spec?.credential?.spec?.workloadPoolId
+    },
+    {
+      label: 'platform.connectors.GCP.providerId',
+      value: connector?.spec?.credential?.spec?.providerId
+    },
+    {
+      label: 'platform.connectors.ceGcp.existingCurTable.projectId',
+      value: connector?.spec?.credential?.spec?.gcpProjectId
     }
   ]
 }

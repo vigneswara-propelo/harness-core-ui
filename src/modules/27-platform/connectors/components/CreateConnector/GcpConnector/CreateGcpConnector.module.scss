@@ -18,6 +18,11 @@
     letter-spacing: 0;
     color: var(--grey-800);
   }
+  .thumbnailCard {
+    margin-left: 0px !important;
+    margin-right: var(--layout-spacing);
+    margin-bottom: var(--layout-spacing);
+  }
 
   .clusterWrapper {
     padding: var(--spacing-xsmall) !important;
@@ -25,7 +30,10 @@
 
     .cardRow {
       display: flex;
-      margin-bottom: var(--spacing-large);
+      flex-wrap: wrap;
+      width: 680px;
+      margin-top: 10px;
+      margin-left: 7px;
       .card {
         display: flex;
         justify-content: space-between;
@@ -44,10 +52,9 @@
 
       :global {
         .bp3-card {
-          width: 42%;
           display: flex;
+          flex-wrap: wrap;
           justify-content: space-between;
-          padding: 0;
           margin-right: 4%;
           border-radius: 8px;
           background-color: var(--white);

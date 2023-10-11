@@ -21,6 +21,20 @@ export const encryptedKeyMock: ConnectorInfoDTO = {
     executeOnDelegate: true
   }
 }
+export const oidcMock: ConnectorInfoDTO = {
+  name: 'devConnector',
+  identifier: 'devConnector',
+  description: 'devConnector description',
+  orgIdentifier: undefined,
+  projectIdentifier: undefined,
+  tags: {},
+  type: 'Gcp',
+  spec: {
+    delegateSelectors: ['dummyDelegateSelector'],
+    credential: { type: 'OidcAuthentication', spec: { gcpProjectId: 'a3', providerId: 'a2', workloadPoolId: 'a1' } },
+    executeOnDelegate: true
+  }
+}
 
 export const hostedEncryptedKeyMock: ConnectorInfoDTO = {
   name: 'devConnector',

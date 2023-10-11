@@ -14,5 +14,6 @@ declare const styles: {
   readonly secondStep: string
   readonly selectedCard: string
   readonly textInfo: string
+  readonly thumbnailCard: string
 }
 export default styles

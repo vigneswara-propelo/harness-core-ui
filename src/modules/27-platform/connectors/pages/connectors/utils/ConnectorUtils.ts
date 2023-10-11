@@ -893,7 +893,10 @@ export const setupGCPFormData = async (connectorInfo: ConnectorInfoDTO, accountI
   const formData = {
     delegateType: connectorInfo.spec.credential.type,
     password: await setSecretField(connectorInfo.spec.credential?.spec?.secretKeyRef, scopeQueryParams),
-    connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate)
+    connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate),
+    workloadPoolId: connectorInfo.spec.credential.spec.workloadPoolId,
+    providerId: connectorInfo.spec.credential.spec.providerId,
+    gcpProjectId: connectorInfo.spec.credential.spec.gcpProjectId
   }
 
   return formData
@@ -1799,6 +1802,12 @@ export const buildGcpPayload = (formData: FormData) => {
           formData?.delegateType === DelegateTypes.DELEGATE_OUT_CLUSTER
             ? {
                 secretKeyRef: formData.password.referenceString
+              }
+            : formData?.delegateType === DelegateTypes.DELEGATE_OIDC
+            ? {
+                workloadPoolId: formData.workloadPoolId,
+                providerId: formData.providerId,
+                gcpProjectId: formData.gcpProjectId
               }
             : null
       }
