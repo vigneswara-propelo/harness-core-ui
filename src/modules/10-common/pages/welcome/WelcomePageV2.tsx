@@ -25,7 +25,7 @@ import {
 import { Color } from '@harness/design-system'
 import { StringKeys, useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { PurposeActions, Category, PLG_ELEMENTS } from '@common/constants/TrackingConstants'
+import { PurposeActions, Category, PLG_ELEMENTS, PageNames } from '@common/constants/TrackingConstants'
 import { Experiences } from '@common/constants/Utils'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -50,7 +50,7 @@ export default function WelcomePageV2(props: { getStartedVariant?: string }): JS
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const { getString } = useStrings()
   const { accountId } = useParams<ProjectPathProps>()
-  const { trackEvent } = useTelemetry()
+  const { trackEvent } = useTelemetry({ pageName: PageNames.Purpose })
   const { showError } = useToaster()
   const { mutate: updateDefaultExperience, loading: updatingDefaultExperience } = useUpdateAccountDefaultExperienceNG({
     accountIdentifier: accountId

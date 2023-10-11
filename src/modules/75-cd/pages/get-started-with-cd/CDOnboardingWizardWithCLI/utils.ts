@@ -624,3 +624,7 @@ export const getDelegateTypeString = (data: WhatToDeployType, getString: UseStri
 export const isGitopsFlow = (stepsProgress: StepsProgress): boolean =>
   (stepsProgress?.[CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY]?.stepData as WhereAndHowToDeployType)?.type?.id ===
   DEPLOYMENT_FLOW_ENUMS.Gitops
+
+export const isK8sSwimlane = (stepsProgress: StepsProgress): boolean =>
+  (stepsProgress?.[CDOnboardingSteps.WHAT_TO_DEPLOY]?.stepData as WhatToDeployType)?.svcType?.id ===
+  SERVICE_TYPES.KubernetesService.id

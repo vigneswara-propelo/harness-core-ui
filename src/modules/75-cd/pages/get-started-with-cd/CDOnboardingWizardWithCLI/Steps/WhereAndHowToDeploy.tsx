@@ -59,7 +59,9 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
   const { getString } = useStrings()
 
   React.useEffect(() => {
+    const stepData = stepsProgress?.[CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY]?.stepData as WhereAndHowToDeployType
     trackEvent(WIZARD_STEP_OPEN.HOW_N_WHERE_STEP_OPENED, getBranchingProps(stepsProgress, getString))
+    triggerBranchSelectionEvent(stepData?.type?.id as string)
   }, [])
 
   React.useEffect(() => {
@@ -114,7 +116,19 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
       delegateType: state?.delegateType
     })
   }
+
+  const triggerBranchSelectionEvent = (selectedType: string): void =>
+    trackEvent(ONBOARDING_INTERACTIONS.CD_ONBOARDING_BRANCH_SELECTED, {
+      ...getBranchingProps(stepsProgress, getString),
+      question: getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.title', {
+        serviceType: getString(ARTIFACT_BY_APP_LABEL_MAP[deploymentTypeDetails.artifactType?.id as string])
+      }),
+      selection: selectedType
+    })
+
   const setType = (selectedType: DeploymentFlowType): void => {
+    triggerBranchSelectionEvent(selectedType?.id)
+
     const clearGitops =
       selectedType?.id === DEPLOYMENT_FLOW_ENUMS.CDPipeline && state.type?.id !== DEPLOYMENT_FLOW_ENUMS.CDPipeline
     if (clearGitops) {

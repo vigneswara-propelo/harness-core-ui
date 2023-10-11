@@ -25,6 +25,7 @@ import {
 import { useOnboardingStore } from '../Store/OnboardingStore'
 import { CDOnboardingSteps, EntityType, WhatToDeployType } from '../types'
 import MissingSwimlane from './MissingSwimlane'
+import { isK8sSwimlane } from '../utils'
 import { ONBOARDING_INTERACTIONS, WIZARD_STEP_OPEN } from '../TrackingConstants'
 import css from '../CDOnboardingWizardWithCLI.module.scss'
 interface WhatToDeployProps {
@@ -66,11 +67,16 @@ function WhatToDeploy({ saveProgress }: WhatToDeployProps): JSX.Element {
     })
     resetDeploymentFlowType()
   }
+
   const resetDeploymentFlowType = (): void => {
+    const setGitops = isK8sSwimlane(stepsProgress)
     saveProgress(CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY, {
-      type: DEPLOYMENT_FLOW_TYPES[DEPLOYMENT_FLOW_ENUMS.Gitops]
+      type: setGitops
+        ? DEPLOYMENT_FLOW_TYPES[DEPLOYMENT_FLOW_ENUMS.Gitops]
+        : DEPLOYMENT_FLOW_TYPES[DEPLOYMENT_FLOW_ENUMS.CDPipeline]
     })
   }
+
   const svcTypes = React.useMemo((): EntityType[] => {
     return Object.values(SERVICE_TYPES).map((data: EntityType) => {
       return data
@@ -100,12 +106,15 @@ function WhatToDeploy({ saveProgress }: WhatToDeployProps): JSX.Element {
       : infraSubTypesList
     return infraSubTypesList
   }, [state.artifactType])
+
   React.useEffect(() => {
     trackEvent(WIZARD_STEP_OPEN.WHAT_STEP_OPENED, {})
   }, [])
+
   React.useEffect(() => {
     saveProgress(CDOnboardingSteps.WHAT_TO_DEPLOY, state)
   }, [state])
+
   return (
     <Layout.Vertical>
       <Text color={Color.BLACK} margin={{ bottom: 'xlarge' }}>
