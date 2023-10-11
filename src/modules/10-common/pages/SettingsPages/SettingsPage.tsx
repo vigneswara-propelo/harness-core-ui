@@ -65,6 +65,7 @@ export enum SettingsResources {
   Authentication = 'Authentication',
   Subscription = 'Subscription',
   Billing = 'Billing',
+  Plans = 'Plans',
   GitManagement = 'GitManagement',
   Discovery = 'Discovery',
   CodeErrorsSettings = 'CodeErrorsSettings',

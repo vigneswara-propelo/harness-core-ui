@@ -9,7 +9,6 @@ import React from 'react'
 import { Route, useParams, Redirect, Switch } from 'react-router-dom'
 import { createClient, Provider, dedupExchange, cacheExchange, fetchExchange } from 'urql'
 import { requestPolicyExchange } from '@urql/exchange-request-policy'
-
 import Configuration from '@auth-settings/pages/Configuration/Configuration'
 import AccountOverview from '@auth-settings/pages/AccountOverview/AccountOverview'
 import NotFoundPage from '@common/pages/404/NotFoundPage'
@@ -144,6 +143,14 @@ const AuthSettingsRoutes: React.FC = () => {
           pageName={PAGE_NAME.BillingPage}
         >
           <Billing />
+        </RouteWithLayout>
+        <RouteWithLayout
+          sidebarProps={AccountSideNavProps}
+          path={routesV1.toPlans({ ...accountPathProps })}
+          exact
+          pageName={PAGE_NAME.PlanPage}
+        >
+          <SubscriptionsPage />
         </RouteWithLayout>
         <RouteWithLayout
           sidebarProps={AccountSideNavProps}

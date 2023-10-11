@@ -783,6 +783,21 @@ const routes = {
     }
     return url
   }),
+  toPlans: withModeModuleAndScopePrefix<SubscriptionQueryParams>(params => {
+    const url = '/settings/plans'
+    const moduleCard = params?.moduleCard
+    const tab = params?.tab
+    if (moduleCard && tab) {
+      return url.concat(`?moduleCard=${moduleCard}&&tab=${tab}`)
+    }
+    if (moduleCard) {
+      return url.concat(`?moduleCard=${moduleCard}`)
+    }
+    if (tab) {
+      return url.concat(`?tab=${tab}`)
+    }
+    return url
+  }),
   toTicketSettings: withModeModuleAndScopePrefix(() => `/settings/tickets`),
 
   toFreezeWindows: withModeModuleAndScopePrefix(() => `/settings/freeze-windows`),

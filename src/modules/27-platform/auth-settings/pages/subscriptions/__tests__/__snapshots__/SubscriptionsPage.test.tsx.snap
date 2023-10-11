@@ -464,9 +464,6 @@ exports[`Subscription Details Card should render CI details: ci module  1`] = `
       </p>
     </div>
     <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main subscriptionTabButtons"
-    />
-    <div
       class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
       style="width: 90%;"
     >
@@ -1837,9 +1834,6 @@ exports[`Subscription Details Card should render SRM details by selecting projec
         common.subscriptions.banner.trial common.subscriptions.expiryCountdown
       </p>
     </div>
-    <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main subscriptionTabButtons"
-    />
     <div
       class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
       style="width: 90%;"
@@ -4260,9 +4254,6 @@ exports[`Subscription Details Card should render SRM details: srm module  1`] = 
         common.subscriptions.banner.trial common.subscriptions.expiryCountdown
       </p>
     </div>
-    <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main subscriptionTabButtons"
-    />
     <div
       class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
       style="width: 90%;"
@@ -6735,9 +6726,6 @@ exports[`Subscriptions Page it renders an expired banner when the trial is expir
       </p>
     </div>
     <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main subscriptionTabButtons"
-    />
-    <div
       class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
       style="width: 90%;"
     >
@@ -8241,9 +8229,6 @@ exports[`Subscriptions Page it renders the correct card in the subscriptions pag
         common.subscriptions.banner.trial common.subscriptions.expiryCountdown
       </p>
     </div>
-    <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main subscriptionTabButtons"
-    />
     <div
       class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
       style="width: 90%;"
@@ -9749,9 +9734,6 @@ exports[`Subscriptions Page it renders the subscriptions page 1`] = `
       </p>
     </div>
     <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main subscriptionTabButtons"
-    />
-    <div
       class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
       style="width: 90%;"
     >
@@ -11227,9 +11209,6 @@ exports[`Subscriptions Page it renders trial not started information 1`] = `
       </div>
     </div>
     <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main subscriptionTabButtons"
-    />
-    <div
       class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
       style="width: 90%;"
     >
@@ -12604,9 +12583,6 @@ exports[`Subscriptions Page it should update the license store 1`] = `
         common.subscriptions.banner.trial common.subscriptions.expiryCountdown
       </p>
     </div>
-    <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main subscriptionTabButtons"
-    />
     <div
       class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
       style="width: 90%;"

@@ -21,7 +21,7 @@ import { FontVariation, Color } from '@harness/design-system'
 import { Page } from '@common/exports'
 import { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { String, useStrings } from 'framework/strings'
-import { useGetAccountNG, useGetSettingValue, useGetSmtpConfig } from 'services/cd-ng'
+import { useGetSettingValue, useGetSmtpConfig } from 'services/cd-ng'
 import routesV2 from '@common/RouteDefinitionsV2'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -56,9 +56,6 @@ export const AccountSettingsPage: React.FC = () => {
   const isEnterpriseEdition = isEnterprisePlan(licenseInformation, ModuleName.CD)
   const showDeploymentFreeze = isEnterpriseEdition
   const { showError } = useToaster()
-  const { data: accountData } = useGetAccountNG({
-    accountIdentifier: accountId
-  })
 
   //active licenses
   const haveCD = isActiveLicense(CD_LICENSE_STATE)
@@ -418,6 +415,13 @@ export const AccountSettingsPage: React.FC = () => {
             description={getString('common.settingsPage.description.subscription')}
           >
             <SettingsResourceCard
+              label={<String stringID="common.billing" />}
+              id={SettingsResources.Billing}
+              icon={'file'}
+              route={routesV2.toBillingSettings({ accountId, module })}
+              hidden={false}
+            />
+            <SettingsResourceCard
               label={<String stringID="common.subscriptions.title" />}
               id={SettingsResources.Subscription}
               icon={'nav-settings'}
@@ -425,11 +429,11 @@ export const AccountSettingsPage: React.FC = () => {
               hidden={!NG_LICENSES_ENABLED}
             />
             <SettingsResourceCard
-              label={<String stringID="common.billing" />}
-              id={SettingsResources.Billing}
-              icon={'nav-settings'}
-              route={routesV2.toBillingSettings({ accountId, module })}
-              hidden={!accountData?.data?.productLed}
+              label={<String stringID="common.subscriptions.tabs.plans" />}
+              id={SettingsResources.Plans}
+              icon={'filestore'}
+              route={routesV2.toPlans({ accountId, module })}
+              hidden={false}
             />
           </SettingsPage.group>
           <SettingsPage.group

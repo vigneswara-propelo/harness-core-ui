@@ -416,9 +416,6 @@ exports[`Subscriptions Page it renders the subscriptions page with no data servi
       </p>
     </div>
     <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main subscriptionTabButtons"
-    />
-    <div
       class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
       style="width: 90%;"
     >
@@ -1432,9 +1429,6 @@ exports[`Subscriptions Page should render CI details  with no data service table
         common.subscriptions.banner.trial common.subscriptions.expiryCountdown
       </p>
     </div>
-    <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main subscriptionTabButtons"
-    />
     <div
       class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
       style="width: 90%;"
@@ -2530,9 +2524,6 @@ exports[`Subscriptions Page should render SRM details  with no data service tabl
         common.subscriptions.banner.trial common.subscriptions.expiryCountdown
       </p>
     </div>
-    <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main subscriptionTabButtons"
-    />
     <div
       class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
       style="width: 90%;"

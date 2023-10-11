@@ -47,6 +47,9 @@ export default function AccountSideNav(): React.ReactElement {
       {NG_LICENSES_ENABLED && (
         <SidebarLink exact label={getString('common.subscriptions.title')} to={routes.toSubscriptions({ accountId })} />
       )}
+      {accountInfo?.productLed && (
+        <SidebarLink exact label={getString('common.subscriptions.tabs.plans')} to={routes.toPlans({ accountId })} />
+      )}
       <SidebarLink label={getString('common.auditTrail')} to={routes.toAuditTrail({ accountId })} />
       <SidebarLink label={getString('orgsText')} to={routes.toOrganizations({ accountId })} />
       {STO_JIRA_INTEGRATION && (

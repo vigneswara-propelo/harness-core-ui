@@ -74,6 +74,11 @@ function AuthSettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.Reac
           <SubscriptionsPage />
         </Provider>
       </RouteWithContext>
+      <RouteWithContext exact path={pathArrayForAllScopes(routes.toPlans, mode)} pageName={PAGE_NAME.PlanPage}>
+        <Provider value={urqlClient()}>
+          <SubscriptionsPage />
+        </Provider>
+      </RouteWithContext>
     </>
   )
 }

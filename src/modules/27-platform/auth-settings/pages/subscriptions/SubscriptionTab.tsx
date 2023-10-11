@@ -6,24 +6,15 @@
  */
 
 import React, { ReactElement, useState, useEffect } from 'react'
-import cx from 'classnames'
-
-import { useParams, useHistory } from 'react-router-dom'
-import { Button, Layout } from '@harness/uicore'
 import type { Editions } from '@common/constants/SubscriptionTypes'
 import { SubscriptionTabNames, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
-import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { AccountDTO, ModuleLicenseDTO } from 'services/cd-ng'
-import routes from '@common/RouteDefinitions'
-import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import type { StringsMap } from 'stringTypes'
-import { useGetCommunity, isOnPrem } from '@common/utils/utils'
 import SubscriptionOverview from './overview/SubscriptionOverview'
 import SubscriptionBanner from './SubscriptionBanner'
 import SubscriptionPlans from './plans/SubscriptionPlans'
-import css from './SubscriptionsPage.module.scss'
 
 export interface SubscriptionTabInfo {
   name: SubscriptionTabNames
@@ -55,6 +46,7 @@ interface TrialInformation {
 }
 
 interface SubscriptionTabProps {
+  isPlansPage: boolean
   trialInfo: TrialInformation
   hasLicense?: boolean | ModuleLicenseDTO
   selectedModule: ModuleName
@@ -64,6 +56,7 @@ interface SubscriptionTabProps {
 }
 
 const SubscriptionTab = ({
+  isPlansPage,
   accountData,
   trialInfo,
   selectedModule,
@@ -71,19 +64,20 @@ const SubscriptionTab = ({
   licenseData,
   refetchGetLicense
 }: SubscriptionTabProps): ReactElement => {
-  const isCommunity = useGetCommunity()
   const [selectedSubscriptionTab, setSelectedSubscriptionTab] = useState<SubscriptionTabInfo>(SUBSCRIPTION_TABS[0])
-  const { getString } = useStrings()
-  const { tab: queryTab } = useQueryParams<{ tab?: SubscriptionTabNames }>()
-  const { accountId } = useParams<AccountPathProps>()
-  const history = useHistory()
+  let { tab: queryTab } = useQueryParams<{ tab?: SubscriptionTabNames }>()
   const { isFreeOrCommunity, edition, isExpired, expiredDays, days } = trialInfo
 
   useEffect(() => {
+    if (isPlansPage) {
+      queryTab = SubscriptionTabNames.PLANS
+    } else {
+      queryTab = SubscriptionTabNames.OVERVIEW
+    }
     if (queryTab) {
       setSelectedSubscriptionTab(SUBSCRIPTION_TABS.find(tab => tab.name === queryTab) || SUBSCRIPTION_TABS[0])
     }
-  }, [queryTab])
+  }, [queryTab, isPlansPage])
 
   function getBanner(): React.ReactElement | null {
     if ((!isExpired && licenseData?.licenseType !== ModuleLicenseType.TRIAL && expiredDays > 14) || isFreeOrCommunity) {
@@ -99,35 +93,6 @@ const SubscriptionTab = ({
         isExpired={isExpired}
       />
     )
-  }
-
-  function getSubscriptionTabButtons(): React.ReactElement[] {
-    const tabs = SUBSCRIPTION_TABS.map(tab => {
-      function handleTabClick(): void {
-        history.push(
-          routes.toSubscriptions({ accountId, moduleCard: selectedModule.toLowerCase() as Module, tab: tab.name })
-        )
-      }
-
-      const isSelected = tab === selectedSubscriptionTab
-      const buttonClassnames = cx(css.subscriptionTabButton, isSelected && css.selected)
-      // adding this until we have plans page for srm page
-      if (selectedModule.toUpperCase() === ModuleName.CV && tab.label === SUBSCRIPTION_TABS[1].label) {
-        return <></>
-      }
-      return (
-        <Button className={buttonClassnames} key={tab.label} round onClick={handleTabClick}>
-          {getString(tab.label)}
-        </Button>
-      )
-    })
-
-    // show Plans tab only when feature flag is on, always show for community edition
-    if (!isCommunity && isOnPrem()) {
-      tabs.splice(1, 1)
-    }
-
-    return tabs
   }
 
   function getTabComponent(): React.ReactElement | null {
@@ -151,9 +116,6 @@ const SubscriptionTab = ({
   return (
     <React.Fragment>
       {hasLicense && getBanner()}
-      <Layout.Horizontal className={css.subscriptionTabButtons} spacing="medium">
-        {accountData?.productLed && getSubscriptionTabButtons()}
-      </Layout.Horizontal>
       {getTabComponent()}
     </React.Fragment>
   )

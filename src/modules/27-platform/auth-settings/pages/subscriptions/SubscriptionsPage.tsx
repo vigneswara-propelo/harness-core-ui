@@ -174,10 +174,25 @@ const SubscriptionsPage: React.FC = () => {
 
   function getModuleSelectElements(): React.ReactElement[] {
     return ACTIVE_MODULE_SELECT_CARDS.map(cardData => {
+      const currentUrl = window.location.href
+      const plansPage = currentUrl.includes('tab=PLANS') || currentUrl.includes('/plans')
       function handleCardClick(): void {
         setSelectedModuleCard(cardData)
         // reset default tab
-        history.push(routes.toSubscriptions({ accountId, moduleCard: cardData.module.toLowerCase() as Module }))
+        plansPage
+          ? history.push(
+              routes.toPlans({
+                accountId,
+                moduleCard: cardData.module.toLowerCase() as Module,
+                tab: 'PLANS'
+              })
+            )
+          : history.push(
+              routes.toSubscriptions({
+                accountId,
+                moduleCard: cardData.module.toLowerCase() as Module
+              })
+            )
       }
 
       const isSelected = cardData === selectedModuleCard
@@ -221,6 +236,7 @@ const SubscriptionsPage: React.FC = () => {
     </Container>
   ) : (
     <SubscriptionTab
+      isPlansPage={window.location.href.includes('/plans')}
       accountData={accountInfo}
       trialInfo={trialInformation}
       hasLicense={hasLicense}

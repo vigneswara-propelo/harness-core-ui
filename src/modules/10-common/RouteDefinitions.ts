@@ -216,6 +216,19 @@ const routes = {
     }
     return url
   }),
+  toPlans: withAccountId(({ moduleCard, tab }: SubscriptionQueryParams) => {
+    const url = '/settings/plans'
+    if (moduleCard && tab) {
+      return url.concat(`?moduleCard=${moduleCard}&&tab=${tab}`)
+    }
+    if (moduleCard) {
+      return url.concat(`?moduleCard=${moduleCard}`)
+    }
+    if (tab) {
+      return url.concat(`?tab=${tab}`)
+    }
+    return url
+  }),
   toAccountSettings: withAccountId(() => '/settings'),
   toAccountSettingsOverview: withAccountId(() => '/settings/overview'),
   toAuthenticationSettings: withAccountId(() => '/settings/authentication'),
