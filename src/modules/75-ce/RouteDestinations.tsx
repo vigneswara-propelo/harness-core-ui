@@ -114,6 +114,26 @@ RbacFactory.registerResourceTypeHandler(ResourceType.CCM_BUDGETS, {
   }
 })
 
+RbacFactory.registerResourceTypeHandler(ResourceType.CCM_ANOMALIES, {
+  icon: 'ccm-solid',
+  label: 'ce.anomalyDetection.sideNavText',
+  labelSingular: 'ce.anomalyDetection.labelSingular',
+  category: ResourceCategory.CLOUD_COSTS,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_CCM_ANOMALIES]: <LocaleString stringID="rbac.permissionLabels.view" />
+  }
+})
+
+RbacFactory.registerResourceTypeHandler(ResourceType.CCM_RECOMMENDATIONS, {
+  icon: 'ccm-solid',
+  label: 'ce.recommendation.sideNavText',
+  labelSingular: 'platform.authSettings.recommendation',
+  category: ResourceCategory.CLOUD_COSTS,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_CCM_RECOMMENDATIONS]: <LocaleString stringID="rbac.permissionLabels.view" />
+  }
+})
+
 RbacFactory.registerResourceTypeHandler(ResourceType.CCM_COST_CATEGORY, {
   icon: 'ccm-solid',
   label: 'ce.businessMapping.sideNavText',

@@ -1075,6 +1075,7 @@ budgets:
 anomalyDetection:
   sideNavText: Anomalies
   settingsBtn: '{{ $.settingsLabel }}'
+  labelSingular: Anomaly
   filters:
     groupByNoneLabel: 'GroupBy: None (Show all anomalies)'
     groupByNonePlaceholder: 'GroupBy: None'

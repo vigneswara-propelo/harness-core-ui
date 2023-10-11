@@ -7375,6 +7375,7 @@ export interface StringsMap {
   'ce.anomalyDetection.filters.groupByNonePlaceholder': string
   'ce.anomalyDetection.filters.groupByNoneValue': string
   'ce.anomalyDetection.filters.spendPlaceholder': string
+  'ce.anomalyDetection.labelSingular': string
   'ce.anomalyDetection.listFetchingError': string
   'ce.anomalyDetection.listFetchingErrorDesc': string
   'ce.anomalyDetection.noData': string
