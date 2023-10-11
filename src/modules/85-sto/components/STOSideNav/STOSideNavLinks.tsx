@@ -52,7 +52,7 @@ const STOSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
           <SideNav.Link
             icon="execution"
             label={getString('executionsText')}
-            to={routes.toPipelines({ accountId, projectIdentifier, orgIdentifier, module })}
+            to={routes.toDeployments({ accountId, projectIdentifier, orgIdentifier, module })}
             hidden={mode === NAV_MODE.ALL}
           />
 
