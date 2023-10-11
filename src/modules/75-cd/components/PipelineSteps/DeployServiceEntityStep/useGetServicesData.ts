@@ -12,15 +12,23 @@ import { useToaster, shouldShowError } from '@harness/uicore'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import type { DeploymentMetaData, ServiceDefinition, ServiceYaml } from 'services/cd-ng'
-import { useGetServiceAccessListQuery, useGetServicesYamlAndRuntimeInputsQuery } from 'services/cd-ng-rq'
+import {
+  useGetServiceAccessListQuery,
+  useGetServicesYamlAndRuntimeInputsQuery,
+  useGetServicesYamlAndRuntimeInputsV2Query
+} from 'services/cd-ng-rq'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { StoreMetadata } from '@common/constants/GitSyncTypes'
 import type { ServiceData } from './DeployServiceEntityUtils'
 
 export interface UseGetServicesDataProps {
   deploymentType: ServiceDefinition['type']
   gitOpsEnabled?: boolean
   deploymentMetadata?: DeploymentMetaData
+  parentStoreMetadata?: StoreMetadata
   serviceIdentifiers: string[]
   deploymentTemplateIdentifier?: string
   versionLabel?: string
@@ -49,7 +57,8 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
     deploymentTemplateIdentifier,
     versionLabel,
     lazyService,
-    deploymentMetadata
+    deploymentMetadata,
+    parentStoreMetadata
   } = props
   const [servicesList, setServicesList] = useState<ServiceYaml[]>([])
   const [servicesData, setServicesData] = useState<ServiceData[]>([])
@@ -57,6 +66,7 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
+  const isGitXEnabledForServices = useFeatureFlag(FeatureFlag.CDS_SERVICE_GITX)
 
   const {
     data: servicesListResponse,
@@ -99,7 +109,34 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
       body: { serviceIdentifiers: sortedServiceIdentifiers }
     },
     {
-      enabled: !lazyService && sortedServiceIdentifiers.length > 0,
+      enabled: !lazyService && !isGitXEnabledForServices && sortedServiceIdentifiers.length > 0,
+      staleTime: STALE_TIME
+    }
+  )
+
+  const {
+    data: servicesDataResponseV2,
+    isInitialLoading: loadingServicesDataV2,
+    isFetching: updatingDataV2,
+    refetch: refetchServicesDataV2
+  } = useGetServicesYamlAndRuntimeInputsV2Query(
+    {
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        parentEntityConnectorRef: parentStoreMetadata?.connectorRef,
+        parentEntityRepoName: parentStoreMetadata?.repoName,
+        branch: parentStoreMetadata?.branch
+      },
+      body: {
+        serviceWithGitInfoList: sortedServiceIdentifiers.map(id => {
+          return { ref: id }
+        })
+      }
+    },
+    {
+      enabled: !lazyService && isGitXEnabledForServices && sortedServiceIdentifiers.length > 0,
       staleTime: STALE_TIME
     }
   )
@@ -125,9 +162,12 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
         }))
       }
 
+      const serviceV2YamlMetadataList = isGitXEnabledForServices
+        ? servicesDataResponseV2?.data?.serviceV2YamlMetadataList
+        : servicesDataResponse?.data?.serviceV2YamlMetadataList
       /* istanbul ignore else */
-      if (servicesDataResponse?.data?.serviceV2YamlMetadataList?.length) {
-        _servicesData = servicesDataResponse.data.serviceV2YamlMetadataList.map(row => {
+      if (serviceV2YamlMetadataList?.length) {
+        _servicesData = serviceV2YamlMetadataList.map(row => {
           const serviceYaml = defaultTo(row.serviceYaml, '{}')
           const service = yamlParse<Pick<ServiceData, 'service'>>(serviceYaml).service
           service.yaml = serviceYaml
@@ -180,6 +220,7 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
     loading,
     servicesListResponse?.data,
     servicesDataResponse?.data?.serviceV2YamlMetadataList,
+    servicesDataResponseV2?.data?.serviceV2YamlMetadataList,
     sortedServiceIdentifiers
   ])
 
@@ -196,10 +237,10 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
   return {
     servicesData,
     servicesList,
-    updatingData,
-    loadingServicesData,
+    updatingData: isGitXEnabledForServices ? updatingDataV2 : updatingData,
+    loadingServicesData: isGitXEnabledForServices ? loadingServicesDataV2 : loadingServicesData,
     loadingServicesList,
-    refetchServicesData,
+    refetchServicesData: isGitXEnabledForServices ? refetchServicesDataV2 : refetchServicesData,
     refetchListData,
     prependServiceToServiceList,
     nonExistingServiceIdentifiers

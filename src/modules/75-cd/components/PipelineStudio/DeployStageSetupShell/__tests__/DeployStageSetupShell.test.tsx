@@ -110,7 +110,10 @@ jest.mock('services/cd-ng-rq', () => ({
     },
     isInitialLoading: false
   })),
-  useGetServicesYamlAndRuntimeInputsQuery: jest.fn(() => ({ data: { data: metadata } }))
+  useGetServicesYamlAndRuntimeInputsQuery: jest.fn(() => ({ data: { data: metadata } })),
+  useGetServicesYamlAndRuntimeInputsV2Query: jest.fn(() => ({
+    data: { data: metadata }
+  }))
 }))
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

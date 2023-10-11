@@ -48,6 +48,9 @@ jest.mock('services/cd-ng-rq', () => ({
   useGetServiceAccessListQuery: jest.fn(() => ({
     data: { data: services }
   })),
+  useGetServicesYamlAndRuntimeInputsV2Query: jest.fn(() => ({
+    data: { data: services }
+  })),
   useGetServicesYamlAndRuntimeInputsQuery: jest.fn(() => ({ data: { data: metadata } }))
 }))
 

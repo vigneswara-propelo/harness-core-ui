@@ -137,6 +137,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
       } else {
         // We invalidate the service inputs call on updating an existing service
         queryClient.invalidateQueries(['getServicesYamlAndRuntimeInputs'])
+        queryClient.invalidateQueries(['getServicesYamlAndRuntimeInputsV2'])
       }
       const serviceResponse = response.data?.service
       if (isServiceEntityModalView) {

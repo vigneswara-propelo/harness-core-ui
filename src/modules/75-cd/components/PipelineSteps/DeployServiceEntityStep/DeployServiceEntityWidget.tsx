@@ -116,7 +116,8 @@ export default function DeployServiceEntityWidget({
   )
   const {
     state: {
-      selectionState: { selectedStageId }
+      selectionState: { selectedStageId },
+      storeMetadata
     },
     getStageFromPipeline
   } = usePipelineContext()
@@ -132,6 +133,7 @@ export default function DeployServiceEntityWidget({
   const useGetServicesDataReturn = useGetServicesData({
     gitOpsEnabled,
     deploymentMetadata,
+    parentStoreMetadata: storeMetadata,
     serviceIdentifiers: allServices,
     deploymentType: deploymentType as ServiceDefinition['type'],
     ...(shouldAddCustomDeploymentData ? { deploymentTemplateIdentifier, versionLabel } : {}),
