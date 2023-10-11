@@ -92,6 +92,30 @@ exports[`<ServiceNowApprovalTab/> tests isWaiting test 1`] = `
                 </p>
                 )
               </div>
+              <span
+                class="bp3-popover-wrapper"
+              >
+                <span
+                  class="bp3-popover-target"
+                >
+                  <a
+                    aria-label="common.noDelegateLogs"
+                    class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--variation Button--variation-secondary Button--size Button--small"
+                    disabled=""
+                    role="button"
+                    style="width: 210px;"
+                    tabindex="-1"
+                  >
+                    <span
+                      class="bp3-button-text"
+                    >
+                      common.viewText
+                       
+                      common.logs.delegateTaskLogs
+                    </span>
+                  </a>
+                </span>
+              </span>
             </div>
           </td>
         </tr>

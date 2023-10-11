@@ -40,11 +40,7 @@ const TEST_PATH_PARAMS = {
 describe('StepDetails tests', () => {
   test('should render fine when delegateInfoList IS NOT empty inside step prop', async () => {
     render(
-      <TestWrapper
-        path={TEST_PATH}
-        pathParams={TEST_PATH_PARAMS}
-        defaultFeatureFlagValues={{ DEL_FETCH_TASK_LOG_API: true }}
-      >
+      <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS}>
         <StepDetails
           step={{ startTs: 123, endTs: 456, name: 'step name', delegateInfoList: [{ taskId: 'abc', taskName: 'ABC' }] }}
           executionMetadata={{
@@ -77,11 +73,7 @@ describe('StepDetails tests', () => {
 
   test('should render fine when delegateInfoList IS empty inside step prop and stepDetails IS NOT empty', async () => {
     render(
-      <TestWrapper
-        path={TEST_PATH}
-        pathParams={TEST_PATH_PARAMS}
-        defaultFeatureFlagValues={{ DEL_FETCH_TASK_LOG_API: true }}
-      >
+      <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS}>
         <StepDetails
           step={{
             startTs: 123,

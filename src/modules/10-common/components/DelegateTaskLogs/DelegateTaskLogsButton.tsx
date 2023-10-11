@@ -1,7 +1,6 @@
 import React from 'react'
 import { Button, ButtonSize, ButtonVariation, useToggleOpen } from '@harness/uicore'
 import { DelegateTaskLogsModal, DelegateTaskLogsProps } from '@common/components/DelegateTaskLogs/DelegateTaskLogs'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isOnPrem } from '@common/utils/utils'
 import { useStrings } from 'framework/strings'
 
@@ -18,9 +17,8 @@ export default function DelegateTaskLogsButton({
 }: DelegateTaskLogsButtonProps): JSX.Element | null {
   const { isOpen, open: openDelegateTaskLogsModal, close: closeDelegateTaskLogsModal } = useToggleOpen(false)
   const { getString } = useStrings()
-  const { DEL_FETCH_TASK_LOG_API } = useFeatureFlags()
 
-  return DEL_FETCH_TASK_LOG_API && !isOnPrem() ? (
+  return !isOnPrem() ? (
     <>
       <Button
         variation={ButtonVariation.SECONDARY}
