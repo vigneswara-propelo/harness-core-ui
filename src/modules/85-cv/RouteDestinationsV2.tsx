@@ -28,6 +28,7 @@ import { useHarnessServicetModal } from '@common/modals/HarnessServiceModal/Harn
 import { formatDatetoLocale, getReadableDateTime, ALL_TIME_ZONES } from '@common/utils/dateUtils'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
+import NotFoundPage from '@modules/10-common/pages/404/NotFoundPage'
 import MonitoredServiceListWidget from './components/MonitoredServiceListWidget/MonitoredServiceListWidget'
 import {
   CD_MONITORED_SERVICE_CONFIG,
@@ -38,13 +39,10 @@ import { editParams } from './utils/routeUtils'
 import { cdModuleParams, serviceAndEnvParams } from './RouteDestinations'
 import CVMonitoredService from './pages/monitored-service/CVMonitoredService/CVMonitoredService'
 import MonitoredServiceInputSetsTemplate from './pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate'
-import { CVChanges } from './pages/changes/CVChanges'
 import CVSLODetailsPage from './pages/slos/CVSLODetailsPage/CVSLODetailsPage'
 import MonitoredServicePage from './pages/monitored-service/MonitoredServicePage'
 import { MonitoredServiceProvider } from './pages/monitored-service/MonitoredServiceContext'
-import CVCreateSLOV2 from './pages/slos/components/CVCreateSLOV2/CVCreateSLOV2'
 import CVHomePage from './pages/home/CVHomePage'
-import CVSLOsListingPage from './pages/slos/CVSLOsListingPage'
 import { cvModuleParams } from './constants'
 import ChangeTimeline from './components/ChangeTimeline/ChangeTimeline'
 import TimelineSlider from './components/ChangeTimeline/components/TimelineSlider/TimelineSlider'
@@ -128,21 +126,23 @@ const SrmMicroFrontendPath = React.lazy(() => import('srmui/MicroFrontendApp'))
 
 const CVRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
   const { SRM_MICRO_FRONTEND: enableMicroFrontend } = useFeatureFlags()
-  const mfePaths = enableMicroFrontend
-    ? [
-        routes.toCVSLOs({ ...accountPathProps, mode, ...projectPathProps, ...cvModuleParams }),
-        routes.toAccountCVSLOs({ ...accountPathProps, mode, ...cvModuleParams }),
-        routes.toCVCreateSLOs({ ...accountPathProps, mode, ...projectPathProps, ...cvModuleParams }),
-        routes.toCVCreateCompositeSLOs({ ...accountPathProps, mode, ...projectPathProps, ...cvModuleParams }),
-        routes.toCVSLODetailsPage({
-          ...accountPathProps,
-          mode,
-          ...projectPathProps,
-          ...editParams,
-          ...cvModuleParams
-        })
-      ]
-    : []
+
+  const mfePaths = [
+    routes.toCVSLOs({ ...accountPathProps, mode, ...projectPathProps, ...cvModuleParams }),
+    routes.toAccountCVSLOs({ ...accountPathProps, mode, ...cvModuleParams }),
+    routes.toCVCreateSLOs({ ...accountPathProps, mode, ...projectPathProps, ...cvModuleParams }),
+    routes.toCVCreateCompositeSLOs({ ...accountPathProps, mode, ...projectPathProps, ...cvModuleParams }),
+    routes.toCVSLODetailsPage({
+      ...accountPathProps,
+      mode,
+      ...projectPathProps,
+      ...editParams,
+      ...cvModuleParams
+    }),
+    routes.toCVChanges({ ...accountPathProps, mode, ...projectPathProps, ...cvModuleParams }),
+    routes.toAccountCVSLODetailsPage({ ...accountPathProps, mode, ...editParams, ...cvModuleParams }),
+    routes.toAccountCVCreateCompositeSLOs({ ...accountPathProps, mode, ...cvModuleParams })
+  ]
 
   return (
     <>
@@ -248,18 +248,6 @@ const CVRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
       </RouteWithContext>
       <RouteWithContext
         exact
-        path={routes.toCVChanges({ ...accountPathProps, ...projectPathProps, ...cvModuleParams, mode })}
-      >
-        <CVChanges />
-      </RouteWithContext>
-      <RouteWithContext
-        exact
-        path={routes.toAccountCVCreateCompositeSLOs({ ...accountPathProps, ...cvModuleParams, mode })}
-      >
-        <CVCreateSLOV2 isComposite />
-      </RouteWithContext>
-      <RouteWithContext
-        exact
         path={routes.toAccountCVSLODetailsPage({
           ...accountPathProps,
           ...editParams,
@@ -344,41 +332,9 @@ const CVRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
           />
         </RouteWithContext>
       ) : (
-        <>
-          <RouteWithContext
-            exact
-            path={routes.toCVSLOs({ ...accountPathProps, mode, ...projectPathProps, ...cvModuleParams })}
-          >
-            <CVSLOsListingPage />
-          </RouteWithContext>
-          <RouteWithContext exact path={routes.toAccountCVSLOs({ ...accountPathProps, mode, ...cvModuleParams })}>
-            <CVSLOsListingPage />
-          </RouteWithContext>
-          <RouteWithContext
-            exact
-            path={routes.toCVCreateSLOs({ ...accountPathProps, mode, ...projectPathProps, ...cvModuleParams })}
-          >
-            <CVCreateSLOV2 />
-          </RouteWithContext>
-          <RouteWithContext
-            exact
-            path={routes.toCVCreateCompositeSLOs({ ...accountPathProps, mode, ...projectPathProps, ...cvModuleParams })}
-          >
-            <CVCreateSLOV2 isComposite />
-          </RouteWithContext>
-          <RouteWithContext
-            exact
-            path={routes.toCVSLODetailsPage({
-              ...accountPathProps,
-              mode,
-              ...projectPathProps,
-              ...editParams,
-              ...cvModuleParams
-            })}
-          >
-            <CVSLODetailsPage />
-          </RouteWithContext>
-        </>
+        <RouteWithContext exact path={[...mfePaths]}>
+          <NotFoundPage />
+        </RouteWithContext>
       )}
       {PipelineRouteDestinations({ mode, pipelineStudioPageName: PAGE_NAME.CDPipelineStudio }).props.children}
     </>

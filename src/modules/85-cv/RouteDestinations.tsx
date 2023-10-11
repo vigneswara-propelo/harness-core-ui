@@ -39,7 +39,6 @@ import { ModuleName } from 'framework/types/ModuleName'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import TemplatesPage from '@templates-library/pages/TemplatesPage/TemplatesPage'
 import { TemplateStudio } from '@templates-library/components/TemplateStudio/TemplateStudio'
-import { CVChanges } from '@cv/pages/changes/CVChanges'
 import ConnectorsPage from '@platform/connectors/pages/connectors/ConnectorsPage'
 import { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
 import type { AuditEventData, ResourceDTO } from 'services/audit'
@@ -68,14 +67,12 @@ import { useHarnessServicetModal } from '@common/modals/HarnessServiceModal/Harn
 import { Ticker } from '@common/components/Ticker/Ticker'
 import { DateTimePicker } from '@common/components/DateTimePicker/DateTimePicker'
 import { MultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import NotFoundPage from '@modules/10-common/pages/404/NotFoundPage'
 import ChildAppMounter from '../../microfrontends/ChildAppMounter'
 import CVTrialHomePage from './pages/home/CVTrialHomePage'
 import { editParams } from './utils/routeUtils'
-import CVSLOsListingPage from './pages/slos/CVSLOsListingPage'
-import CVSLODetailsPage from './pages/slos/CVSLODetailsPage/CVSLODetailsPage'
 import { MonitoredServiceProvider } from './pages/monitored-service/MonitoredServiceContext'
 import MonitoredServiceInputSetsTemplate from './pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate'
-import CVCreateSLOV2 from './pages/slos/components/CVCreateSLOV2/CVCreateSLOV2'
 import { getIsValuePresent } from './utils/licenseBannerUtils'
 import { ThresholdPercentageToShowBanner } from './constants'
 import SLODowntimePage from './pages/slos/SLODowntimePage/SLODowntimePage'
@@ -637,23 +634,21 @@ export const SRMRoutes = (
 
 export const SRMMFERoutes: React.FC = () => {
   const { SRM_MICRO_FRONTEND: enableMicroFrontend } = useFeatureFlags()
-  const mfePaths = enableMicroFrontend
-    ? [
-        routesV1.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
-        routesV1.toAccountCVSLOs({ ...accountPathProps }),
-        routesV1.toCVCreateSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
-        routesV1.toCVCreateCompositeSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
-        routesV1.toCVSLODetailsPage({
-          ...accountPathProps,
-          ...projectPathProps,
-          ...editParams,
-          ...cvModuleParams
-        }),
-        routesV1.toCVChanges({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
-        routesV1.toAccountCVSLODetailsPage({ ...accountPathProps, ...editParams, ...cvModuleParams }),
-        routesV1.toAccountCVCreateCompositeSLOs({ ...accountPathProps, ...cvModuleParams })
-      ]
-    : []
+  const mfePaths = [
+    routesV1.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
+    routesV1.toAccountCVSLOs({ ...accountPathProps }),
+    routesV1.toCVCreateSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
+    routesV1.toCVCreateCompositeSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
+    routesV1.toCVSLODetailsPage({
+      ...accountPathProps,
+      ...projectPathProps,
+      ...editParams,
+      ...cvModuleParams
+    }),
+    routesV1.toCVChanges({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
+    routesV1.toAccountCVSLODetailsPage({ ...accountPathProps, ...editParams, ...cvModuleParams }),
+    routesV1.toAccountCVCreateCompositeSLOs({ ...accountPathProps, ...cvModuleParams })
+  ]
 
   return (
     <>
@@ -699,69 +694,9 @@ export const SRMMFERoutes: React.FC = () => {
           />
         </RouteWithLayout>
       ) : (
-        <>
-          <RouteWithLayout
-            exact
-            sidebarProps={CVSideNavProps}
-            path={routesV1.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
-          >
-            <CVSLOsListingPage />
-          </RouteWithLayout>
-          <RouteWithLayout exact sidebarProps={CVSideNavProps} path={routesV1.toAccountCVSLOs({ ...accountPathProps })}>
-            <CVSLOsListingPage />
-          </RouteWithLayout>
-          <RouteWithLayout
-            exact
-            sidebarProps={CVSideNavProps}
-            path={routesV1.toCVCreateSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
-          >
-            <CVCreateSLOV2 />
-          </RouteWithLayout>
-          <RouteWithLayout
-            exact
-            sidebarProps={CVSideNavProps}
-            path={routesV1.toCVCreateCompositeSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
-          >
-            <CVCreateSLOV2 isComposite />
-          </RouteWithLayout>
-          <RouteWithLayout
-            exact
-            sidebarProps={CVSideNavProps}
-            path={routesV1.toCVSLODetailsPage({
-              ...accountPathProps,
-              ...projectPathProps,
-              ...editParams,
-              ...cvModuleParams
-            })}
-          >
-            <CVSLODetailsPage />
-          </RouteWithLayout>
-          <RouteWithLayout
-            exact
-            sidebarProps={CVSideNavProps}
-            path={routesV1.toCVChanges({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
-          >
-            <CVChanges />
-          </RouteWithLayout>
-          <RouteWithLayout
-            exact
-            sidebarProps={CVSideNavProps}
-            path={routesV1.toAccountCVSLODetailsPage({
-              ...accountPathProps,
-              ...editParams,
-              ...cvModuleParams
-            })}
-          >
-            <CVSLODetailsPage />
-          </RouteWithLayout>
-          <RouteWithLayout
-            exact
-            sidebarProps={CVSideNavProps}
-            path={routesV1.toAccountCVCreateCompositeSLOs({ ...accountPathProps, ...cvModuleParams })}
-          >
-            <CVCreateSLOV2 isComposite />
-          </RouteWithLayout>
-        </>
+        <RouteWithLayout exact sidebarProps={CVSideNavProps} path={[...mfePaths]}>
+          <NotFoundPage />
+        </RouteWithLayout>
       )}
     </>
   )
