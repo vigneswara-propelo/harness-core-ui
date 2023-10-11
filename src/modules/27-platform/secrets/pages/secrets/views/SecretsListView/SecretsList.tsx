@@ -74,13 +74,13 @@ const RenderColumnSecret: Renderer<CellProps<SecretResponseWrapper>> = ({ row })
         <Icon name="command-winrm" size={28} margin={{ top: 'xsmall', right: 'small' }} />
       ) : null}
       <Layout.Vertical>
-        <Layout.Horizontal spacing="small" width={230}>
+        <Layout.Horizontal spacing="small">
           <Text color={Color.BLACK} lineClamp={1} className={css.secretName} font={{ variation: FontVariation.BODY2 }}>
             {data.name}
           </Text>
           {data.tags && Object.keys(data.tags).length ? <TagsPopover tags={data.tags} /> : null}
         </Layout.Horizontal>
-        <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }} width={230} lineClamp={1}>
+        <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
           {`${getString('common.ID')}: ${data.identifier}`}
         </Text>
       </Layout.Vertical>
@@ -127,12 +127,12 @@ const RenderColumnDetails: Renderer<CellProps<SecretResponseWrapper>> = ({ row }
     <>
       {data.type === 'SecretText' || data.type === 'SecretFile' ? (
         <>
-          <Text color={Color.BLACK} lineClamp={1} width={230}>
+          <Text color={Color.BLACK} lineClamp={1}>
             {`${getString('platform.connectors.title.secretManager')}: ${
               (data.spec as SecretTextSpecDTO).secretManagerIdentifier
             }`}
           </Text>
-          <Text color={Color.GREY_600} lineClamp={1} font={{ size: 'small' }} width={230}>
+          <Text color={Color.GREY_600} lineClamp={1} font={{ size: 'small' }}>
             {getScopeName()}
           </Text>
         </>
@@ -392,28 +392,28 @@ const SecretsList: React.FC<SecretsListProps> = ({ secrets, refetch }) => {
         Header: getString('secretType'),
         accessor: row => row.secret.name,
         id: 'name',
-        width: '30%',
+        width: '40%',
         Cell: RenderColumnSecret
       },
       {
         Header: getString('details'),
         accessor: row => row.secret.description,
         id: 'details',
-        width: '25%',
+        width: '35%',
         Cell: RenderColumnDetails
       },
       {
         Header: getString('lastActivity'),
         accessor: 'updatedAt',
         id: 'activity',
-        width: '20%',
+        width: '15%',
         Cell: RenderColumnActivity
       },
       {
         Header: '',
         accessor: row => row.secret.type,
         id: 'status',
-        width: '20%',
+        width: '5%',
         Cell: RenderColumnStatus,
         refreshSecrets: refetch,
         disableSortBy: true
