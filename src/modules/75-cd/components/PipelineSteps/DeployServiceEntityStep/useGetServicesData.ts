@@ -141,7 +141,7 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
     }
   )
 
-  const loading = loadingServicesList || loadingServicesData
+  const loading = loadingServicesList || (isGitXEnabledForServices ? loadingServicesDataV2 : loadingServicesData)
 
   const prependServiceToServiceList = useCallback((newServiceInfo: ServiceYaml) => {
     setServicesList(data => [newServiceInfo, ...(data || [])])

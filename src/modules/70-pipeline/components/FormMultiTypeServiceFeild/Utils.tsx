@@ -16,6 +16,8 @@ import type { ReferenceSelectProps } from '@common/components/ReferenceSelect/Re
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import serviceEmptyStateSvg from '@pipeline/icons/emptyInstanceDetail.svg'
+import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
+import GitRemoteDetails from '@modules/10-common/components/GitRemoteDetails/GitRemoteDetails'
 import css from './FormMultiTypeServiceField.module.scss'
 
 export function getReferenceFieldProps({
@@ -74,6 +76,8 @@ export function getReferenceFieldProps({
               record: {
                 identifier: defaultTo(service.service?.identifier, ''),
                 name: defaultTo(service.service?.name, ''),
+                storeType: defaultTo(service.service?.storeType, StoreType.INLINE),
+                entityGitDetails: service.service?.entityGitDetails,
                 description: service.service?.description,
                 tags: service.service?.tags,
                 orgIdentifier: scope !== Scope.ACCOUNT ? orgIdentifier : undefined,
@@ -113,6 +117,17 @@ export function getReferenceFieldProps({
               </Text>
             </div>
           </Layout.Horizontal>
+          {item?.record?.storeType === StoreType?.REMOTE ? (
+            <GitRemoteDetails
+              repoName={item?.record?.entityGitDetails?.repoName}
+              filePath={item?.record?.entityGitDetails?.filePath}
+              fileUrl={item?.record?.entityGitDetails?.fileUrl}
+              flags={{
+                readOnly: true,
+                showBranch: false
+              }}
+            />
+          ) : null}
         </Layout.Horizontal>
       )
     }
