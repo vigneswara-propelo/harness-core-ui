@@ -55,6 +55,9 @@ interface ConnectivityModeProps {
 const hideConnectThroughPlatformCard = (delegateType?: CredentialType['key']): boolean =>
   !!delegateType && [DelegateTypes.DELEGATE_IN_CLUSTER, DelegateTypes.DELEGATE_IN_CLUSTER_IRSA].includes(delegateType)
 
+const hideConnectThroughDelegateCard = (delegateType?: CredentialType['key']): boolean =>
+  !!delegateType && [DelegateTypes.DELEGATE_OIDC].includes(delegateType)
+
 const ConnectivityMode: React.FC<ConnectivityModeProps> = props => {
   const { delegateImage = DelegatesGit, platformImage = PlatformGit, delegateType, formik } = props
   const { values, setFieldValue } = formik
@@ -71,13 +74,18 @@ const ConnectivityMode: React.FC<ConnectivityModeProps> = props => {
           }
         ]
       : []),
-    {
-      type: ConnectivityModeType.Delegate,
-      title: getString('common.connectThroughDelegate'),
-      info: getString('common.connectThroughDelegateInfo', { connectorType: props.connectorLabel }),
-      icon: <img src={delegateImage} width="100%" />,
-      value: ConnectivityModeType.Delegate
-    }
+    // Added for GCP OIDC authentication method, will be removed once BE starts supporting it
+    ...(!hideConnectThroughDelegateCard(delegateType)
+      ? [
+          {
+            type: ConnectivityModeType.Delegate,
+            title: getString('common.connectThroughDelegate'),
+            info: getString('common.connectThroughDelegateInfo', { connectorType: props.connectorLabel }),
+            icon: <img src={delegateImage} width="100%" />,
+            value: ConnectivityModeType.Delegate
+          }
+        ]
+      : [])
   ]
 
   React.useEffect(() => {
