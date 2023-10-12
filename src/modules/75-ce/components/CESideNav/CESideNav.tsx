@@ -132,7 +132,6 @@ const SideNavItems = () => {
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
   const {
-    CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI,
     CCM_COMMORCH: showCO,
     CCM_CURRENCY_PREFERENCES: currencyPreferencesEnabled,
     CCM_CLUSTER_ORCH,
@@ -204,15 +203,13 @@ const SideNavItems = () => {
             trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, { feature_name: featureNames.BI_DASHBOARD_FEATURE })
           }}
         />
-        {CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI && (
-          <SidebarLink
-            label={getString('ce.governance.sideNavText')}
-            to={routes.toCEGovernance({ accountId })}
-            onClick={() => {
-              trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, { feature_name: featureNames.GOVERNANCE })
-            }}
-          />
-        )}
+        <SidebarLink
+          label={getString('ce.governance.sideNavText')}
+          to={routes.toCEGovernance({ accountId })}
+          onClick={() => {
+            trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, { feature_name: featureNames.GOVERNANCE })
+          }}
+        />
         {CCM_CLUSTER_ORCH && (
           <SidebarLink
             label={getString('ce.co.clusterOrchestratorLabel')}

@@ -25,7 +25,7 @@ const CCMSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
-  const { CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI, CCM_COMMORCH: showCO, CCM_CLUSTER_ORCH, CCM_MSP } = useFeatureFlags()
+  const { CCM_COMMORCH: showCO, CCM_CLUSTER_ORCH, CCM_MSP } = useFeatureFlags()
 
   return (
     <SideNav.Main disableScopeSelector>
@@ -141,7 +141,6 @@ const CCMSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
         <SideNav.Title label="ce.sideNav.sectionTitles.costGovernance" />
         <SideNav.Scope scope={Scope.ACCOUNT}>
           <SideNav.Link
-            hidden={!CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI}
             label={getString('ce.governance.sideNavText')}
             icon="ccm-nav-asset-governance"
             to={routes.toCEGovernance({ accountId, module })}

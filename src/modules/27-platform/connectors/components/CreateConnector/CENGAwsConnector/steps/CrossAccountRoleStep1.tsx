@@ -47,7 +47,6 @@ interface CardData {
 const useSelectedCards = (featuresEnabled: Features[]) => {
   const { getString } = useStrings()
 
-  const isGovernanceEnabled = useFeatureFlag(FeatureFlag.CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI)
   const isCommitmentOrchEnabled = useFeatureFlag(FeatureFlag.CCM_COMM_SETUP)
 
   const FeatureCards = useMemo(() => {
@@ -153,41 +152,38 @@ const useSelectedCards = (featuresEnabled: Features[]) => {
             </>
           ),
           footerNote: ''
+        },
+        {
+          icon: 'nav-settings',
+          text: getString('platform.connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
+          value: Features.GOVERNANCE,
+          desc: (
+            <Text inline font={{ variation: FontVariation.SMALL_BOLD }}>
+              {getString('platform.connectors.ceAws.crossAccountRoleStep1.cards.governance.header')}
+            </Text>
+          ),
+          heading: getString('platform.connectors.ceAws.crossAccountRoleStep1.cards.governance.header'),
+          prefix: getString('common.aws'),
+          features: [
+            getString('platform.connectors.ceAws.crossAccountRoleStep1.cards.governance.feat1'),
+            getString('platform.connectors.ceAws.crossAccountRoleStep1.cards.governance.feat2')
+          ],
+          footer: (
+            <>
+              {getString('platform.connectors.ceAws.crossAccountRoleStep1.adding')}{' '}
+              <a
+                href="https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {getString('platform.connectors.ceAws.crossAccountRoleStep1.thesePermissions')}
+              </a>{' '}
+              {getString('platform.connectors.ceAws.crossAccountRoleStep1.iamRole')}
+            </>
+          ),
+          footerNote: ''
         }
       )
-    }
-
-    if (isGovernanceEnabled) {
-      cards.push({
-        icon: 'nav-settings',
-        text: getString('platform.connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
-        value: Features.GOVERNANCE,
-        desc: (
-          <Text inline font={{ variation: FontVariation.SMALL_BOLD }}>
-            {getString('platform.connectors.ceAws.crossAccountRoleStep1.cards.governance.header')}
-          </Text>
-        ),
-        heading: getString('platform.connectors.ceAws.crossAccountRoleStep1.cards.governance.header'),
-        prefix: getString('common.aws'),
-        features: [
-          getString('platform.connectors.ceAws.crossAccountRoleStep1.cards.governance.feat1'),
-          getString('platform.connectors.ceAws.crossAccountRoleStep1.cards.governance.feat2')
-        ],
-        footer: (
-          <>
-            {getString('platform.connectors.ceAws.crossAccountRoleStep1.adding')}{' '}
-            <a
-              href="https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {getString('platform.connectors.ceAws.crossAccountRoleStep1.thesePermissions')}
-            </a>{' '}
-            {getString('platform.connectors.ceAws.crossAccountRoleStep1.iamRole')}
-          </>
-        ),
-        footerNote: ''
-      })
     }
 
     if (isCommitmentOrchEnabled) {
@@ -235,7 +231,7 @@ const useSelectedCards = (featuresEnabled: Features[]) => {
     }
 
     return cards as CardData[]
-  }, [isGovernanceEnabled, isCommitmentOrchEnabled])
+  }, [isCommitmentOrchEnabled])
 
   const [selectedCards, setSelectedCards] = useState<CardData[]>(() => {
     const initialSelectedCards = []

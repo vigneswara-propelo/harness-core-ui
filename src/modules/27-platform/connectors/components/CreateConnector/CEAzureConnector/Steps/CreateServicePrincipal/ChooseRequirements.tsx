@@ -53,9 +53,7 @@ interface ICard {
 
 const useSelectedCards = (featuresEnabled: ICard['value'][]) => {
   const { getString } = useStrings()
-  const { CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI, CCM_ENABLE_AZURE_CLOUD_ASSET_GOVERNANCE_UI } = useFeatureFlags()
-
-  const isGovernanceEnabled = CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI && CCM_ENABLE_AZURE_CLOUD_ASSET_GOVERNANCE_UI
+  const { CCM_ENABLE_AZURE_CLOUD_ASSET_GOVERNANCE_UI: isAzureGovernanceEnabled } = useFeatureFlags()
 
   const FeatureCards = useMemo(() => {
     const cards = [
@@ -158,7 +156,7 @@ const useSelectedCards = (featuresEnabled: ICard['value'][]) => {
       }
     ]
 
-    if (isGovernanceEnabled) {
+    if (isAzureGovernanceEnabled) {
       cards.push({
         icon: 'nav-settings',
         text: getString('platform.connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
@@ -192,7 +190,7 @@ const useSelectedCards = (featuresEnabled: ICard['value'][]) => {
     }
 
     return cards as ICard[]
-  }, [isGovernanceEnabled])
+  }, [isAzureGovernanceEnabled])
 
   const [selectedCards, setSelectedCards] = useState<ICard[]>(() => {
     const initialSelectedCards = [FeatureCards[0]]
