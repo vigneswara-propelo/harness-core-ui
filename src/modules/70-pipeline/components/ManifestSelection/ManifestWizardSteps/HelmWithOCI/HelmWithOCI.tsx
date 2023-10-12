@@ -178,7 +178,7 @@ function HelmWithOCI({
             type: formData?.store,
             spec: {
               config: {
-                type: defaultTo(modifiedPrevStepData?.config.type, 'Generic'),
+                type: defaultTo(modifiedPrevStepData?.config?.type, 'Generic'),
                 spec: {
                   connectorRef: formData?.connectorRef,
                   region: isEcrType ? formData?.region : undefined,
