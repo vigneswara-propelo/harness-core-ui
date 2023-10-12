@@ -93,8 +93,6 @@ export default function WelcomePageV2(props: { getStartedVariant?: string }): JS
     },
     [CVNG_ENABLED]
   )
-  const trackLearnMore = (moduleSelected: string): void =>
-    trackEvent(PurposeActions.LearnMoreClicked, { category: Category.SIGNUP, module: moduleSelected })
 
   const getClickHandle = (
     moduleSelected: string,
@@ -157,9 +155,10 @@ export default function WelcomePageV2(props: { getStartedVariant?: string }): JS
         return {}
     }
   }
+  const cdPoints = getString(modulesInfo.cd.points as StringKeys)?.split(',')
 
   return (
-    <OverlaySpinner show={updatingDefaultExperience || loading}>
+    <OverlaySpinner show={updatingDefaultExperience || loading} className={css.primaryBg}>
       <HarnessLogo height={30} style={{ alignSelf: 'start' }} className={css.harnessLogo} />
       <Container padding={{ top: 'xxxlarge' }} flex={{ alignItems: 'start' }} className={cx(css.onboardingContainer)}>
         <Container>
@@ -174,57 +173,8 @@ export default function WelcomePageV2(props: { getStartedVariant?: string }): JS
             {getString('common.welcomePage.selectusecase')}
           </Heading>
           <Layout.Horizontal>
-            <Container className={cx(css.width80, css.moduleCards)}>
+            <Container className={cx(css.moduleCards)}>
               <Container padding={{ top: 'large' }} flex={{ alignItems: 'start' }} className={cx(css.onboardingCards)}>
-                <Card className={cx(css.width50, css.onboardingCard, css.cardShadow)}>
-                  <Layout.Vertical>
-                    <Layout.Horizontal>
-                      <Heading
-                        color={Color.BLACK}
-                        font={{ size: 'medium', weight: 'bold' }}
-                        className={css.onboardingHead}
-                      >
-                        <Icon name={modulesInfo.cd.icon} size={20} padding={{ right: 'medium' }} />
-
-                        {getString(modulesInfo.cd.title)}
-                      </Heading>
-                    </Layout.Horizontal>
-                    <Text padding={{ top: 'medium', bottom: 'large' }} className={css.bodyText} color={Color.BLACK}>
-                      {getString(modulesInfo.cd.bodyText)}
-                    </Text>
-                    {getString(modulesInfo.cd.points as StringKeys)
-                      ?.split(',')
-                      .map((point: string, idx: number) => (
-                        <Text
-                          key={idx}
-                          icon="flash"
-                          color={Color.BLACK}
-                          iconProps={{ color: Color.BLACK, size: 18 }}
-                          className={css.bodyText}
-                        >
-                          {point}
-                        </Text>
-                      ))}
-                  </Layout.Vertical>
-                  <Layout.Horizontal padding={{ top: 'xxlarge' }}>
-                    <Button
-                      variation={ButtonVariation.PRIMARY}
-                      onClick={getClickHandle(modulesInfo.cd.module, PLG_ELEMENTS.MODULE_CARD).clickHandle}
-                      disabled={getClickHandle(modulesInfo.cd.module, PLG_ELEMENTS.MODULE_CARD).disabled}
-                    >
-                      {getString('getStarted')}
-                    </Button>
-                    <Button
-                      variation={ButtonVariation.LINK}
-                      href={modulesInfo.cd.helpURL}
-                      target="_blank"
-                      withoutBoxShadow={true}
-                      onClick={() => trackLearnMore(modulesInfo.cd.module)}
-                    >
-                      {getString('learnMore')}
-                    </Button>
-                  </Layout.Horizontal>
-                </Card>
                 {getModuleStatus(modulesInfo.ci.module) && (
                   <Card className={cx(css.width50, css.onboardingCard, css.cardShadow)}>
                     <Layout.Vertical>
@@ -241,19 +191,21 @@ export default function WelcomePageV2(props: { getStartedVariant?: string }): JS
                       <Text padding={{ top: 'medium', bottom: 'large' }} className={css.bodyText} color={Color.BLACK}>
                         {getString(modulesInfo.ci.bodyText)}
                       </Text>
-                      {getString(modulesInfo.ci.points as StringKeys)
-                        ?.split(',')
-                        .map((point: string, idx: number) => (
-                          <Text
-                            key={idx}
-                            icon="flash"
-                            color={Color.BLACK}
-                            iconProps={{ color: Color.BLACK, size: 18 }}
-                            className={css.bodyText}
-                          >
-                            {point}
-                          </Text>
-                        ))}
+                      <ul className={css.bulletPadding}>
+                        {getString(modulesInfo.ci.points as StringKeys)
+                          ?.split(',')
+                          .map((point: string, idx: number) => (
+                            <li key={idx}>
+                              <Text
+                                color={Color.BLACK}
+                                iconProps={{ color: Color.BLACK, size: 18 }}
+                                className={css.bodyText}
+                              >
+                                {point}
+                              </Text>
+                            </li>
+                          ))}
+                      </ul>
                     </Layout.Vertical>
                     <Layout.Horizontal padding={{ top: 'xxlarge' }}>
                       <Button
@@ -263,18 +215,53 @@ export default function WelcomePageV2(props: { getStartedVariant?: string }): JS
                       >
                         {getString('getStarted')}
                       </Button>
-                      <Button
-                        variation={ButtonVariation.LINK}
-                        href={modulesInfo.ci.helpURL}
-                        target="_blank"
-                        withoutBoxShadow={true}
-                        onClick={() => trackLearnMore(modulesInfo.ci.module)}
-                      >
-                        {getString('learnMore')}
-                      </Button>
                     </Layout.Horizontal>
                   </Card>
                 )}
+                <Card className={cx(css.width50, css.onboardingCard, css.cardShadow)}>
+                  <Layout.Vertical>
+                    <Layout.Horizontal>
+                      <Heading
+                        color={Color.BLACK}
+                        font={{ size: 'medium', weight: 'bold' }}
+                        className={css.onboardingHead}
+                      >
+                        <Icon name={modulesInfo.cd.icon} size={20} padding={{ right: 'medium' }} />
+
+                        {getString(modulesInfo.cd.title)}
+                      </Heading>
+                    </Layout.Horizontal>
+                    <Text padding={{ top: 'medium', bottom: 'large' }} className={css.bodyText} color={Color.BLACK}>
+                      {getString(modulesInfo.cd.bodyText)}
+                    </Text>
+                    <ul className={css.bulletPadding}>
+                      {cdPoints?.map((point: string, idx: number) => {
+                        return (
+                          <li key={idx}>
+                            <Text
+                              color={Color.BLACK}
+                              iconProps={{ color: Color.BLACK, size: 18 }}
+                              className={cx(css.bodyText, {
+                                [css.alignTop]: idx === cdPoints?.length - 1
+                              })}
+                            >
+                              {point}
+                            </Text>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  </Layout.Vertical>
+                  <Layout.Horizontal padding={{ top: 'xxlarge' }}>
+                    <Button
+                      variation={ButtonVariation.PRIMARY}
+                      onClick={getClickHandle(modulesInfo.cd.module, PLG_ELEMENTS.MODULE_CARD).clickHandle}
+                      disabled={getClickHandle(modulesInfo.cd.module, PLG_ELEMENTS.MODULE_CARD).disabled}
+                    >
+                      {getString('getStarted')}
+                    </Button>
+                  </Layout.Horizontal>
+                </Card>
               </Container>
               <Container padding={{ top: 'xlarge' }} flex={{ alignItems: 'start' }} className={cx(css.onboardingCards)}>
                 {Object.values(modulesInfo)
@@ -309,70 +296,15 @@ export default function WelcomePageV2(props: { getStartedVariant?: string }): JS
                           >
                             {getString('getStarted')}
                           </Button>
-                          <Button
-                            variation={ButtonVariation.LINK}
-                            href={moduleData.helpURL}
-                            target="_blank"
-                            withoutBoxShadow={true}
-                            onClick={() => trackLearnMore(moduleData.module)}
-                          >
-                            {getString('learnMore')}
-                          </Button>
                         </Layout.Horizontal>
                       </Card>
                     ) : null
                   )}
               </Container>
             </Container>
-            <Layout.Vertical padding={{ left: 'xxxlarge' }}>
-              <Layout.Vertical padding={{ top: 'large', left: 'medium', right: 'medium', bottom: 'small' }}>
-                <Text color={Color.GREY_500} font={{ size: 'medium' }}>
-                  {getString('common.welcomePage.allusecases')}
-                </Text>
-              </Layout.Vertical>
-              {Object.values(modulesInfo).map((moduleInfo: ModuleInfoValue, idx: number) =>
-                getModuleStatus(moduleInfo.module) ? (
-                  <ModuleSidecard
-                    onclick={getClickHandle(moduleInfo.module, PLG_ELEMENTS.RIGHT_COLUMN).clickHandle}
-                    key={idx}
-                    index={idx}
-                    getString={getString}
-                    moduleInfo={moduleInfo}
-                  />
-                ) : null
-              )}
-            </Layout.Vertical>
           </Layout.Horizontal>
         </Container>
       </Container>
     </OverlaySpinner>
-  )
-}
-
-const ModuleSidecard = ({
-  index,
-  getString,
-  moduleInfo,
-  onclick
-}: {
-  index: number
-  getString(key: StringKeys, vars?: Record<string, any>): string
-  moduleInfo: ModuleInfoValue
-  onclick: (() => Promise<void>) | undefined
-}): JSX.Element => {
-  return (
-    <Layout.Horizontal padding="medium" onClick={onclick} className={cx(css.sidecard, { [css.noBorder]: index === 5 })}>
-      <Container padding={{ left: 'medium', right: 'medium' }} className={css.iconSidecard}>
-        <Icon name={moduleInfo.icon} size={18} />
-      </Container>
-      <Layout.Vertical padding="small">
-        <Text color={Color.BLACK} font={{ weight: 'bold' }}>
-          {getString(moduleInfo.title)}
-        </Text>
-        <Text font={{ size: 'small' }} padding={{ top: 'xsmall', bottom: 'xsmall' }} color={Color.GREY_800}>
-          {getString(moduleInfo.subTitle)}
-        </Text>
-      </Layout.Vertical>
-    </Layout.Horizontal>
   )
 }

@@ -9,16 +9,14 @@ import React, { useState } from 'react'
 import { Layout, Text, useToggle } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Servicev1HealthStatus, V1Agent } from 'services/gitops'
-import { useStrings } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import CommandBlock from '@common/CommandBlock/CommandBlock'
 import CreateGitopsAgentModal from './CreateAgentModal'
 import AgentVerificationStep from '../VerificationComponents/VerifyGitopsAgent'
 import SuccessBanner from '../VerificationComponents/SuccessBanner'
-import { ONBOARDING_INTERACTIONS, WIZARD_STEP_OPEN } from '../../TrackingConstants'
-import { getBranchingProps, getCommandStrWithNewline } from '../../utils'
+import { ONBOARDING_INTERACTIONS } from '../../TrackingConstants'
+import { getBranchingProps } from '../../utils'
 import { useOnboardingStore } from '../../Store/OnboardingStore'
-import css from '../../CDOnboardingWizardWithCLI.module.scss'
 
 export default function GitopsFlow({
   updateAgentInfo,
@@ -47,29 +45,10 @@ export default function GitopsFlow({
   }
   return (
     <Layout.Vertical spacing={'large'}>
-      <Text color={Color.BLACK} className={css.bold}>
-        {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.title')}
-      </Text>
       <Text color={Color.BLACK}>
-        {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.description')}
+        <String stringID="cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.description" useRichText />
       </Text>
-      <Text color={Color.BLACK}>
-        {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.agentInfo')}
-      </Text>
-      <Text color={Color.BLACK} margin={{ bottom: 'large' }}>
-        {getString('cd.getStartedWithCD.prefilghtText')}
-      </Text>
-      <CommandBlock
-        darkmode
-        allowCopy
-        ignoreWhiteSpaces={false}
-        commandSnippet={getCommandStrWithNewline([getString('cd.getStartedWithCD.preflightScript')])}
-        downloadFileProps={{ downloadFileName: 'harness-delegate-preflight', downloadFileExtension: 'xdf' }}
-        copyButtonText={getString('common.copy')}
-        onCopy={() => {
-          trackEvent(WIZARD_STEP_OPEN.PREFLIGHT_SCRIPT_COPIED, getBranchingProps(stepsProgress, getString))
-        }}
-      />
+
       <CreateGitopsAgentModal
         agentInfo={agentInfo}
         toggleVisible={toggleVisible}

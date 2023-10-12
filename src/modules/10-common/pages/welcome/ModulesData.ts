@@ -14,16 +14,6 @@ export interface ModulesInfoMap {
   [key: string]: ModuleInfoValue
 }
 const modulesInfo = {
-  cd: {
-    module: 'cd',
-    icon: 'cd-main',
-    title: 'common.cdAndGitops',
-    subTitle: 'common.welcomePage.cd.subTitle',
-    bodyText: 'common.welcomePage.cd.bodyText',
-    points: 'common.welcomePage.cd.points',
-    helpURL: 'https://developer.harness.io/tutorials/deploy-services',
-    hasPoints: true
-  },
   ci: {
     module: 'ci',
     icon: 'ci-main',
@@ -32,6 +22,16 @@ const modulesInfo = {
     bodyText: 'common.welcomePage.ci.bodyText',
     points: 'common.welcomePage.ci.points',
     helpURL: 'https://developer.harness.io/tutorials/build-code',
+    hasPoints: true
+  },
+  cd: {
+    module: 'cd',
+    icon: 'cd-main',
+    title: 'common.cdAndGitops',
+    subTitle: 'common.welcomePage.cd.subTitle',
+    bodyText: 'common.welcomePage.cd.bodyText',
+    points: 'common.welcomePage.cd.points',
+    helpURL: 'https://developer.harness.io/tutorials/deploy-services',
     hasPoints: true
   },
   ce: {

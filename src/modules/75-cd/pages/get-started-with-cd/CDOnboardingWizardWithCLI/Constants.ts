@@ -252,7 +252,7 @@ export const DEPLOYMENT_FLOW_TYPES: { [key in DEPLOYMENT_FLOW_ENUMS]: Deployment
   [DEPLOYMENT_FLOW_ENUMS.Gitops]: {
     id: DEPLOYMENT_FLOW_ENUMS.Gitops,
     label: 'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.heading',
-    icon: 'slot-deployment',
+    icon: 'gitops-blue',
     subtitle: 'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdGitops.subtitle'
   }
 }

@@ -1520,19 +1520,19 @@ pipelineStage: Pipeline Stage
 violations: Violations
 sbom: SBOM
 welcomePage:
-  allusecases: All Usecases
-  selectusecase: What use case do you want to start with?
-  improveText: Improve All Phases of Software Delivery
+  allusecases: All Use Cases
+  selectusecase: Choose your starting use case.
+  improveText: Supercharge every step of software development and delivery
   cd:
     title: '{{ $.common.cdAndGitops }}'
     subTitle: Fast & secure deployments
-    bodyText: Deliver software faster, with visibility and control. Eliminate scripting and manual deployments with declarative GitOps and powerful, easy to use pipelines.
-    points: Seamless Integration With Your DevOps Toolchain, Developer Friendly Pipeline-As-Code Experience, Visibility and Control at Every Deployment Stage
+    bodyText: Deploy software faster, with visibility and control.
+    points: Integrates with your existing delivery toolchain, Powerful declarative pipelines represented visually and as code, Granular policy enforcement and role-based access control, Visualize the entire software lifecycle with built-in DORA metrics dashboards
   ci:
     title: '{{ $.common.purpose.ci.continuous }}'
     subTitle: Intelligent build & test
-    bodyText: Optimizing performance through hosted builds, caching, and proprietary Test Intelligence™.
-    points: Up to 4X faster than Other Solutions, Fastest managed build cloud service, Reduce build cycles by up to 90% with ML
+    bodyText: Build and test with any language on any platform.
+    points: Run builds on your own infrastructure or Harness Cloud, Prioritize the tests relevant to your code changes with Test Intelligence™, Track and remediate vulnerabilities on every commit, Tap into thousands configuration templates and community integrations
   cf:
     title: '{{ $.common.purpose.cf.continuous }}'
     subTitle: Manage Features within Pipelines

@@ -6437,6 +6437,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.codeRepos': string
   'cd.getStartedWithCD.configureRepo': string
   'cd.getStartedWithCD.connectDelegateHeader': string
+  'cd.getStartedWithCD.connectHarness': string
   'cd.getStartedWithCD.connectHarnessEnv': string
   'cd.getStartedWithCD.connectOwnArtifact': string
   'cd.getStartedWithCD.connectTo': string

@@ -7,8 +7,10 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly alignTop: string
   readonly bodyIcon: string
   readonly bodyText: string
+  readonly bulletPadding: string
   readonly card: string
   readonly cardContainer: string
   readonly cardShadow: string
@@ -34,6 +36,7 @@ declare const styles: {
   readonly onboardingCards: string
   readonly onboardingContainer: string
   readonly onboardingHead: string
+  readonly primaryBg: string
   readonly selectedModuleInfoCard: string
   readonly sidecard: string
   readonly titleIcon: string

@@ -24,6 +24,7 @@ declare const styles: {
   readonly marginBottomLarge: string
   readonly marginBottomxl: string
   readonly missingSwimlanes: string
+  readonly noMarginTop: string
   readonly nodelegatebg: string
   readonly padLeft: string
   readonly redIcon: string

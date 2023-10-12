@@ -7,7 +7,6 @@
 .serviceTypeCards {
   display: flex;
   gap: var(--spacing-small);
-  margin-bottom: var(--spacing-xxlarge);
   &.infraCards {
     :global(.Card--card) {
       width: 145px;
@@ -148,4 +147,8 @@
   :global(.DropDown--dropdownButton) {
     background-color: var(--white) !important;
   }
+}
+
+.noMarginTop {
+  margin-top: 0 !important;
 }

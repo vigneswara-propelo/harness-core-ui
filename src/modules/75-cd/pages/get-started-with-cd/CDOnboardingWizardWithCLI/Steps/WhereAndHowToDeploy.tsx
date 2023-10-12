@@ -11,6 +11,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import { Layout, Text, CardSelect, Icon, IconName } from '@harness/uicore'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { StringsMap } from 'stringTypes'
+import CommandBlock from '@modules/10-common/CommandBlock/CommandBlock'
 import { useStrings } from 'framework/strings'
 import { Servicev1HealthStatus, V1Agent } from 'services/gitops'
 import {
@@ -31,7 +32,7 @@ import {
 } from '../Constants'
 import type { DelgateDetails } from '../DelegateModal'
 import CDPipeline from './DeploymentFlowTypes/CDPipeline'
-import { getBranchingProps, getDelegateTypeString } from '../utils'
+import { getBranchingProps, getCommandStrWithNewline } from '../utils'
 import { ONBOARDING_INTERACTIONS, WIZARD_STEP_OPEN } from '../TrackingConstants'
 import css from '../CDOnboardingWizardWithCLI.module.scss'
 
@@ -123,7 +124,7 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
       question: getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.title', {
         serviceType: getString(ARTIFACT_BY_APP_LABEL_MAP[deploymentTypeDetails.artifactType?.id as string])
       }),
-      selection: selectedType
+      answer: selectedType
     })
 
   const setType = (selectedType: DeploymentFlowType): void => {
@@ -169,44 +170,50 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
     <Layout.Vertical>
       <Layout.Vertical>
         <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'large' }}>
-          {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.title', {
-            serviceType: getString(ARTIFACT_BY_APP_LABEL_MAP[deploymentTypeDetails.artifactType?.id as string])
-          })}
+          {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.title')}
         </Text>
-        <Text color={Color.BLACK} margin={{ bottom: 'xlarge' }}>
-          {getString(
-            deploymentTypeDetails.svcType?.id !== SERVICE_TYPES.KubernetesService?.id
-              ? 'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.descriptionNonK8s'
-              : 'cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.description'
-          )}
-        </Text>
-        <CardSelect<DeploymentFlowType>
-          data={deploymentTypes}
-          cornerSelected
-          className={cx(css.serviceTypeCards, css.flowcards)}
-          renderItem={(item: DeploymentFlowType) => (
-            <Layout.Vertical flex spacing={'xlarge'}>
-              <Icon name={item?.icon as IconName} size={30} padding={{ bottom: 'xxlarge' }} />
-              <Layout.Vertical>
-                <Text
-                  padding={{ bottom: 'small' }}
-                  font={{ variation: FontVariation.BODY }}
-                  color={state?.type?.id === item.id ? Color.PRIMARY_7 : Color.GREY_800}
-                >
-                  {getString(item.label as keyof StringsMap)}
-                </Text>
-                <Text font={{ variation: FontVariation.BODY2_SEMI }} color={Color.GREY_500}>
-                  {getString(item.subtitle as keyof StringsMap, {
-                    delegateType: getDelegateTypeString(deploymentTypeDetails, getString)
-                  })}
-                </Text>
-              </Layout.Vertical>
-            </Layout.Vertical>
-          )}
-          selected={state.type}
-          onChange={setType}
-        />
 
+        <Layout.Vertical margin={{ bottom: 'xlarge' }}>
+          <Text color={Color.BLACK} margin={{ bottom: 'large' }}>
+            {getString('cd.getStartedWithCD.prefilghtText')}
+          </Text>
+          <CommandBlock
+            allowCopy
+            ignoreWhiteSpaces={false}
+            commandSnippet={getCommandStrWithNewline([getString('cd.getStartedWithCD.preflightScript')])}
+            downloadFileProps={{ downloadFileName: 'harness-delegate-preflight', downloadFileExtension: 'xdf' }}
+            copyButtonText={getString('common.copy')}
+            onCopy={() => {
+              trackEvent(WIZARD_STEP_OPEN.PREFLIGHT_SCRIPT_COPIED, getBranchingProps(stepsProgress, getString))
+            }}
+          />
+        </Layout.Vertical>
+        <Layout.Vertical>
+          <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'large' }}>
+            {getString('cd.getStartedWithCD.connectHarness')}
+          </Text>
+          <CardSelect<DeploymentFlowType>
+            data={deploymentTypes}
+            cornerSelected
+            className={cx(css.serviceTypeCards, css.flowcards)}
+            renderItem={(item: DeploymentFlowType) => (
+              <Layout.Vertical flex spacing={'xlarge'}>
+                <Icon name={item?.icon as IconName} size={30} />
+                <Layout.Vertical>
+                  <Text
+                    padding={{ bottom: 'small' }}
+                    font={{ variation: FontVariation.BODY }}
+                    color={state?.type?.id === item.id ? Color.PRIMARY_7 : Color.GREY_800}
+                  >
+                    {getString(item.label as keyof StringsMap)}
+                  </Text>
+                </Layout.Vertical>
+              </Layout.Vertical>
+            )}
+            selected={state.type}
+            onChange={setType}
+          />
+        </Layout.Vertical>
         {state.type?.id === DEPLOYMENT_FLOW_ENUMS.CDPipeline && (
           <CDPipeline
             state={state}

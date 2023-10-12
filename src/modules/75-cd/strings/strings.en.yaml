@@ -677,7 +677,8 @@ getStartedWithCD:
   nopath: This path will soon be updated in the UI for a seamless experience
   checkdocs: In the meantime, don't worry! You can still set up your deployment by following our comprehensive documentation. Simply refer to step-by-step guide.
   docLink: View documentation
-  prefilghtText: Kubernetes is required to complete these steps. Run the following to check your system resources and (optionally) install a local cluster.
+  connectHarness: Connect Harness to your cluster
+  prefilghtText: '[optional] Run the preflight script to check your cluster resources or set up a temporary local cluster.'
   preflightScript: 'bash <(curl -fsSL https://raw.githubusercontent.com/harness-community/scripts/main/delegate-preflight-checks/cluster-preflight-checks.sh)'
   createGitopsAgent: Install GitOps Agent
   updateGitopsAgent: Update GitOps Agent
@@ -704,7 +705,7 @@ getStartedWithCD:
       title: How and where do you want to deploy?
       subtitle: Choose how you would like to deploy.
       K8s:
-        title: Tell us how and where you want to deploy your {{serviceType}}
+        title: Prepare your Kubernetes cluster
         descriptionNonK8s: You will need access to a cluster that will be the deployment target.
         description: You will need access to a Kubernetes cluster that will be the deployment target for these manifests. You can deploy to this Kubernetes cluster either via a CD pipeline or via a GitOps workflow. Make the selection below.
         cdPipeline:
@@ -714,7 +715,7 @@ getStartedWithCD:
           delegateDescription: You will need access to a Kubernetes cluster that will be the deployment target for these manifests. You can deploy to this Kubernetes cluster via a CD pipeline.
           delegateDescription2: You need to install a Harness Delegate on your  {{clusterType}} cluster as a prerequisite for the CD Pipeline. This delegate will then receive various tasks (such as secrets decryption, connecting to private systems and more) from your CD pipeline and automatically run them on your behalf.
           howDelegateWorks: You will create a Pipeline that will automate the deployment on your behalf and push the new application version into your target {{clusterType}} cluster.
-          description1: In the CD Pipeline approach, you will create a Pipeline that will automate the deployment on your behalf and push the new application version into your target  {{clusterType}} cluster.
+          description1: Automate deployments via a <a target="_blank"  rel="noreferrer nofollow" href="https://developer.harness.io/docs/continuous-delivery/get-started/key-concepts/#pipeline">Pipeline</a> pushing new versions to your Kubernetes cluster. First, install a <a target="_blank"  rel="noreferrer nofollow" href="https://developer.harness.io/docs/continuous-delivery/get-started/key-concepts/#delegates">Harness Delegate</a> to handle tasks like secret decryption and system connections.
           installDelegate: Install the Kubernetes delegate to create a CD Pipeline for deployment
           installButton: 'Install the {{type}} delegate'
           delegateFailed: Delegate connection failed
@@ -723,7 +724,7 @@ getStartedWithCD:
           title: GitOps Workflow
           heading: CD GitOps
           subtitle: Connect with a GitOps agent
-          description: In the GitOps Workflow approach, Harness GitOps will watch the state of your application as defined in a git repo and will then pull any changes into the Kubernetes cluster.
+          description: <a target="_blank"  rel="noreferrer nofollow" href="https://developer.harness.io/docs/continuous-delivery/gitops/get-started/harness-git-ops-basics/">Harness GitOps</a>  monitors your app's state in a git repo, pulling changes into your Kubernetes cluster. The <a target="_blank" rel="noreferrer nofollow" href="https://developer.harness.io/docs/continuous-delivery/gitops/get-started/harness-git-ops-basics/#agent">GitOps Agent</a> in your environment connects securely to Harness, executing your GitOps tasks.
           agentInfo: A Harness GitOps Agent is a worker process that runs in your environment, makes secure, outbound connections to Harness, and performs all the GitOps tasks you request in Harness
           verificationSuccess: Harness GitOps agent was successfully installed.
     deploymentSteps:

@@ -8,18 +8,13 @@
 import React from 'react'
 import { Color } from '@harness/design-system'
 import { Layout, Text, Button, ButtonVariation } from '@harness/uicore'
-import { useStrings } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import VerifyDelegateConnection from '@delegates/pages/delegates/delegateCommandLineCreation/components/VerifyDelegateConnection'
 import { DelegateCommonProblemTypes } from '@delegates/constants'
-import CommandBlock from '@common/CommandBlock/CommandBlock'
-import { useTelemetry } from '@common/hooks/useTelemetry'
 import DelegateModal, { DelgateDetails } from '../../DelegateModal'
 import { CLOUD_FUNCTION_TYPES, WhatToDeployType, WhereAndHowToDeployType } from '../../types'
-import { getBranchingProps, getCommandStrWithNewline, getDelegateTypeString } from '../../utils'
-import { SERVICE_TYPES } from '../../Constants'
-import { useOnboardingStore } from '../../Store/OnboardingStore'
-import { WIZARD_STEP_OPEN } from '../../TrackingConstants'
-import css from '../../CDOnboardingWizardWithCLI.module.scss'
+import { getDelegateTypeString } from '../../utils'
+
 export interface CDPipelineProps {
   state: WhereAndHowToDeployType
   closeDelegateDialog: (data: DelgateDetails) => void
@@ -43,40 +38,13 @@ export default function CDPipeline({
   deploymentTypeDetails
 }: CDPipelineProps): JSX.Element {
   const { getString } = useStrings()
-  const { trackEvent } = useTelemetry()
-  const { stepsProgress } = useOnboardingStore()
-  const clusterType =
-    deploymentTypeDetails.svcType?.id === SERVICE_TYPES.KubernetesService.id ? getString('kubernetesText') : ''
   const showServerlessImage = deploymentTypeDetails.artifactSubType?.id === CLOUD_FUNCTION_TYPES.ServerLessLambda
   return (
     <Layout.Vertical spacing="large">
-      <Text color={Color.BLACK} className={css.bold}>
-        {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.title')}
-      </Text>
       <Text color={Color.BLACK}>
-        {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.description1', {
-          clusterType
-        })}
+        <String useRichText stringID="cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.description1" />
       </Text>
-      <Text color={Color.BLACK} margin={{ bottom: 'small' }}>
-        {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.delegateDescription2', {
-          clusterType
-        })}
-      </Text>
-      <Text color={Color.BLACK} margin={{ bottom: 'large' }}>
-        {getString('cd.getStartedWithCD.prefilghtText')}
-      </Text>
-      <CommandBlock
-        darkmode
-        allowCopy
-        ignoreWhiteSpaces={false}
-        commandSnippet={getCommandStrWithNewline([getString('cd.getStartedWithCD.preflightScript')])}
-        downloadFileProps={{ downloadFileName: 'harness-delegate-preflight', downloadFileExtension: 'xdf' }}
-        copyButtonText={getString('common.copy')}
-        onCopy={() => {
-          trackEvent(WIZARD_STEP_OPEN.PREFLIGHT_SCRIPT_COPIED, getBranchingProps(stepsProgress, getString))
-        }}
-      />
+
       {!state.isDelegateVerified && (
         <Button variation={ButtonVariation.PRIMARY} width={'fit-content'} onClick={openDelagateDialog}>
           {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.installButton', {
