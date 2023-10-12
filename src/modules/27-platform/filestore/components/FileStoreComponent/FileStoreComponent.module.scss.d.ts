@@ -11,6 +11,9 @@ declare const styles: {
   readonly crossIcon: string
   readonly dialog: string
   readonly fileStoreField: string
+  readonly fileStoreFooter: string
+  readonly fileStoreFullScreenPanel: string
+  readonly fullScreen: string
   readonly noDataCardImg: string
   readonly noDataContainer: string
   readonly search: string

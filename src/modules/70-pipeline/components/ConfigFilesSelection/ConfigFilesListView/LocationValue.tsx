@@ -6,8 +6,12 @@
  */
 
 import React from 'react'
+import { useParams, Link } from 'react-router-dom'
 import { Text, Icon, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import routes from '@common/RouteDefinitions'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { getParamsByScope } from '@filestore/utils/FileStoreUtils'
 
 import { getScope } from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
 import css from '../ConfigFilesSelection.module.scss'
@@ -32,6 +36,8 @@ export function LocationValue(props: ILocationValueItem): React.ReactElement {
     isManifest = false,
     directPath = ''
   } = props
+
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
   const isHarnessFileStore = React.useMemo(() => {
     return isHarnessStore && isFileStore
@@ -60,19 +66,34 @@ export function LocationValue(props: ILocationValueItem): React.ReactElement {
   ) : (
     <>
       {locations.map((locationValue: string, i: number) => {
+        const { scope, path } = getScope(locationValue)
+        const params = getParamsByScope(scope, { accountId, orgIdentifier, projectIdentifier })
         if (isTooltip) {
           return (
-            <Text
-              color={Color.BLACK}
-              padding="small"
-              className={isHarnessFileStore ? css.locationLink : ''}
-              key={`${locationValue}${i}`}
-              onClick={() => handleClick(locationValue)}
-              lineClamp={1}
-            >
-              {isHarnessFileStore && <Icon name="edit" margin={{ right: 'xsmall' }} />}
-              {locationValue}
-            </Text>
+            <>
+              <Text
+                color={Color.BLACK}
+                padding="small"
+                className={isHarnessFileStore ? css.locationLink : ''}
+                key={`${locationValue}${i}`}
+                onClick={() => handleClick(locationValue)}
+                lineClamp={1}
+              >
+                {isHarnessFileStore && <Icon name="edit" margin={{ right: 'xsmall' }} />}
+                {locationValue}
+              </Text>
+              {isHarnessFileStore && (
+                <Link
+                  to={`${routes.toFileStore({
+                    accountId,
+                    ...params
+                  })}?path=${path}`}
+                  target="_blank"
+                >
+                  <Icon name="launch" margin={{ right: 'xsmall' }} />
+                </Link>
+              )}
+            </>
           )
         }
         return (
@@ -87,6 +108,17 @@ export function LocationValue(props: ILocationValueItem): React.ReactElement {
               {locationValue}
               {!isTooltip && locations.length !== i + 1 ? ` ,` : null}
             </Text>
+            {isHarnessFileStore && (
+              <Link
+                to={`${routes.toFileStore({
+                  accountId,
+                  ...params
+                })}?path=${path}`}
+                target="_blank"
+              >
+                <Icon name="launch" margin={{ right: 'xsmall' }} />
+              </Link>
+            )}
           </Container>
         )
       })}

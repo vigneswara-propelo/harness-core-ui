@@ -17,7 +17,8 @@ import css from './StoreView.module.scss'
 
 export default function StoreView(): React.ReactElement {
   const { getString } = useStrings()
-  const { currentNode, loading, isModalView, activeTab, setActiveTab, isClosedNode } = useContext(FileStoreContext)
+  const { currentNode, loading, isModalView, activeTab, setActiveTab, isClosedNode, isFullScreen } =
+    useContext(FileStoreContext)
 
   React.useEffect(() => {
     if (activeTab === FILE_VIEW_TAB.DETAILS) {
@@ -43,7 +44,10 @@ export default function StoreView(): React.ReactElement {
   }
 
   return (
-    <Container className={css.storeView} height={!isModalView ? 'calc(100vh - 75px)' : 'calc(50vh - 70px)'}>
+    <Container
+      className={css.storeView}
+      height={!isModalView ? 'calc(100vh - 75px)' : isFullScreen ? '100vh' : 'calc(50vh - 70px)'}
+    >
       <CurrentPathComponent />
       {currentNode?.type === FileStoreNodeTypes.FOLDER ? <NodesList /> : <FileView />}
     </Container>

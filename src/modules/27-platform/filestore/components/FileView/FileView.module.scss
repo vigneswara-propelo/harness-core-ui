@@ -60,3 +60,23 @@
     }
   }
 }
+
+.modalDetails {
+  position: relative;
+}
+
+.modalResizeBtn {
+  position: absolute;
+  cursor: pointer;
+  right: 5px;
+  top: 100px;
+  z-index: 1;
+}
+
+.modalReduceSizeBtn {
+  position: absolute;
+  cursor: pointer;
+  right: 5px;
+  top: -42px;
+  z-index: 1;
+}

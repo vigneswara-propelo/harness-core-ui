@@ -12,5 +12,8 @@ declare const styles: {
   readonly fileInfoContainer: string
   readonly fileName: string
   readonly mainFileView: string
+  readonly modalDetails: string
+  readonly modalReduceSizeBtn: string
+  readonly modalResizeBtn: string
 }
 export default styles

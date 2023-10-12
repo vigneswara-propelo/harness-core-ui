@@ -70,6 +70,7 @@ const useFileStoreModal = ({
 
   const selectedAccount = accounts.find(account => account.uuid === accountId)
   const [selectedFile, setSelectedFile] = useState<FileStoreNodeDTOWithScope>({} as FileStoreNodeDTOWithScope)
+  const [isFullScreen, setFullScreen] = useState<boolean>(false)
 
   const handleSelectFile = (selectedNode: FileStoreNodeDTOWithScope): void => {
     setSelectedFile(selectedNode)
@@ -103,7 +104,11 @@ const useFileStoreModal = ({
     handleSetIsUnsaved: setIsUnsaved,
     pathValue,
     scopeValue,
-    isReadonly
+    isReadonly,
+    isFullScreen,
+    setFullScreen: (status: boolean): void => {
+      setFullScreen(status)
+    }
   }
 
   const renderTab = (
@@ -116,29 +121,32 @@ const useFileStoreModal = ({
   ): React.ReactElement | null => {
     return show ? (
       <Tab
-        className={css.tabClass}
+        panelClassName={cx({ [css.fileStoreFullScreenPanel]: isFullScreen })}
+        className={cx(css.tabClass, { [css.fullScreen]: isFullScreen })}
         id={id}
         title={
-          <Layout.Horizontal
-            onClick={() => handleActiveTab(id)}
-            flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-            padding={{ left: 'xsmall', right: 'xsmall' }}
-          >
-            <Icon name={icon} {...iconProps} className={css.tabIcon} />
-            <Text lineClamp={1} font={{ variation: FontVariation.H6, weight: 'light' }}>
-              {getString(title)}
-            </Text>
-            {renderTabSubHeading && tabDesc && (
-              <Text
-                lineClamp={1}
-                font={{ variation: FontVariation.FORM_LABEL, weight: 'light' }}
-                padding={{ left: 'xsmall' }}
-                className={css.tabValue}
-              >
-                {`[${tabDesc}]`}
+          !isFullScreen && (
+            <Layout.Horizontal
+              onClick={() => handleActiveTab(id)}
+              flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+              padding={{ left: 'xsmall', right: 'xsmall' }}
+            >
+              <Icon name={icon} {...iconProps} className={css.tabIcon} />
+              <Text lineClamp={1} font={{ variation: FontVariation.H6, weight: 'light' }}>
+                {getString(title)}
               </Text>
-            )}
-          </Layout.Horizontal>
+              {renderTabSubHeading && tabDesc && (
+                <Text
+                  lineClamp={1}
+                  font={{ variation: FontVariation.FORM_LABEL, weight: 'light' }}
+                  padding={{ left: 'xsmall' }}
+                  className={css.tabValue}
+                >
+                  {`[${tabDesc}]`}
+                </Text>
+              )}
+            </Layout.Horizontal>
+          )
         }
         panel={<FileStorePage scope={scope} {...commonProps} />}
       />
@@ -147,8 +155,8 @@ const useFileStoreModal = ({
 
   const TabsRender = React.useMemo(() => {
     return (
-      <Container className={cx(css.container)}>
-        <div className={css.tabsContainer}>
+      <Container className={cx(css.container, { [css.fullScreen]: isFullScreen })}>
+        <div className={cx(css.tabsContainer, { [css.fullScreen]: isFullScreen })}>
           <Tabs id="fileStoreTabs" selectedTabId={activeTab}>
             {renderTab(
               !!projectIdentifier,
@@ -162,28 +170,12 @@ const useFileStoreModal = ({
             {renderTab(true, Scope.ACCOUNT, Scope.ACCOUNT, 'layers', 'account', selectedAccount?.accountName)}
           </Tabs>
         </div>
-      </Container>
-    )
-  }, [activeTab, pathValue, scopeValue, defaultTab])
-
-  const [showModal, hideModal] = useModalHook(() => {
-    return (
-      <Dialog
-        isOpen={true}
-        enforceFocus={false}
-        onClose={() => {
-          hideModal()
-        }}
-        title={
-          <Text lineClamp={1} color={Color.GREY_700} style={{ fontSize: 24, fontWeight: 600 }}>
-            {getString('common.entityReferenceTitle', { compName: 'Config file' })}
-          </Text>
-        }
-        className={cx(css.fileStoreField, css.dialog)}
-      >
-        {TabsRender}
-        {!isReadonly && (
-          <Layout.Horizontal spacing="medium" padding={{ top: 'medium' }}>
+        {!isReadonly && !isFullScreen && (
+          <Layout.Horizontal
+            className={cx({ [css.fileStoreFooter]: isFullScreen })}
+            spacing="medium"
+            padding={{ top: 'medium' }}
+          >
             <Button
               variation={ButtonVariation.PRIMARY}
               text={getString('entityReference.apply')}
@@ -200,9 +192,32 @@ const useFileStoreModal = ({
             }
           </Layout.Horizontal>
         )}
+      </Container>
+    )
+  }, [activeTab, pathValue, scopeValue, defaultTab, isFullScreen, isReadonly, selectedFile, isUnsaved])
+
+  const [showModal, hideModal] = useModalHook(() => {
+    return (
+      <Dialog
+        isOpen={true}
+        enforceFocus={false}
+        onClose={() => {
+          hideModal()
+        }}
+        title={
+          !isFullScreen && (
+            <Text lineClamp={1} color={Color.GREY_700} style={{ fontSize: 24, fontWeight: 600 }}>
+              {getString('common.entityReferenceTitle', { compName: 'Config file' })}
+            </Text>
+          )
+        }
+        className={cx(css.fileStoreField, css.dialog, { [css.fullScreen]: isFullScreen })}
+        isCloseButtonShown={!isFullScreen}
+      >
+        {TabsRender}
       </Dialog>
     )
-  }, [activeTab, selectedFile, isUnsaved, pathValue, scopeValue, isReadonly])
+  }, [activeTab, selectedFile, isUnsaved, pathValue, scopeValue, isReadonly, isFullScreen])
 
   return {
     openFileStoreModal: (valuePath = '/', scope = Scope.ACCOUNT) => {

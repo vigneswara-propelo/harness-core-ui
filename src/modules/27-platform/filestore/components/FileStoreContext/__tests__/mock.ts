@@ -87,6 +87,7 @@ export const contextFSMock = {
   tempNodes: [],
   activeTab: 'details',
   isModalView: false,
+  isFullScreen: false,
   scope: '',
   queryParams: {
     accountIdentifier: 'acc1',
@@ -122,7 +123,8 @@ export const getDummyFileStoreContextValue = (): FileStoreContextState => {
     isClosedNode: jest.fn(),
     updateSortNode: jest.fn(),
     getSortTypeById: jest.fn(),
-    updateGlobalSort: jest.fn()
+    updateGlobalSort: jest.fn(),
+    setFullScreen: jest.fn()
   } as any
 }
 
@@ -182,7 +184,8 @@ export const getDummyFileStoreContextValueWithFolderChildren = (): FileStoreCont
     isClosedNode: jest.fn(),
     updateSortNode: jest.fn(),
     getSortTypeById: jest.fn(),
-    updateGlobalSort: jest.fn()
+    updateGlobalSort: jest.fn(),
+    setFullScreen: jest.fn()
   } as any
 }
 

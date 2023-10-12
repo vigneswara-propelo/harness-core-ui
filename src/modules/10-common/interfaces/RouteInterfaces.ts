@@ -325,3 +325,7 @@ export interface NetworkMapQueryParams extends CommonPaginationQueryParams {
 export interface DiscoveredResourceQueryParams {
   tab?: string
 }
+
+export interface FileStoreResourceQueryParams {
+  path?: string
+}

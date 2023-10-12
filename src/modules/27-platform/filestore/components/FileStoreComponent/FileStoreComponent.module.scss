@@ -9,6 +9,30 @@
   padding: var(--spacing-xlarge);
   &.dialog {
     width: auto;
+    position: relative;
+  }
+
+  &.dialog.fullScreen {
+    width: 100%;
+    height: 100vh;
+    margin-top: 0px;
+    padding: 0px;
+    :global {
+      .bp3-tab-list {
+        border-bottom: none;
+        height: 0;
+      }
+      .bp3-tab-panel {
+        height: 100vh !important;
+        overflow: hidden;
+        margin-top: 0px;
+      }
+    }
+    :global {
+      .bp3-dialog-header {
+        min-height: 0px !important;
+      }
+    }
   }
   :global {
     .bp3-dialog-header {
@@ -28,9 +52,18 @@
   width: 1352px;
   height: 'auto';
   margin-top: var(--spacing-small) !important;
+  position: relative;
+  &.fullScreen {
+    width: 100%;
+    height: 100%;
+  }
   .tabsContainer {
     padding-bottom: 12px;
     border-bottom: 1px solid var(--grey-200);
+    &.fullScreen {
+      // width: 100vw;
+      height: 100%;
+    }
     .tabClass {
       padding: unset;
     }
@@ -85,4 +118,30 @@
 }
 .noDataCardImg {
   height: 100% !important;
+}
+
+.fullScreen {
+  > div[class*='bp3-dialog-header'] {
+    width: 0 !important;
+    height: 0 !important;
+    min-height: 0 !important;
+  }
+
+  > div[class*='PageHeader--container'] {
+    padding: 0px !important;
+    height: 0px !important;
+  }
+  > div[class*='bp3-tabs'] {
+    height: 100% !important;
+  }
+}
+
+.fileStoreFooter {
+  position: absolute;
+  bottom: 0;
+}
+.fileStoreFullScreenPanel {
+  > div[class*='bp3-tab-list'] {
+    margin-top: 0px !important;
+  }
 }

@@ -71,9 +71,11 @@ export interface FileStoreContextState {
   updateGlobalSort: (sortType: SortType) => void
   pathValue: string
   scopeValue: string
-  getNodeByPath: () => void
+  getNodeByPath: (path?: string) => void
   isReadonly: boolean
   forceDeleteEnabled: boolean
+  isFullScreen: boolean
+  setFullScreen: (state: boolean) => void
 }
 
 export interface GetNodeConfig {
@@ -96,6 +98,8 @@ interface FileStoreContextProps {
   scopeValue?: string
   pathValue?: string
   isReadonly?: boolean
+  isFullScreen?: boolean
+  setFullScreen?: (status: boolean) => void
 }
 
 export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props: FileStoreContextProps) => {
@@ -106,7 +110,8 @@ export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props:
     handleSetIsUnsaved,
     scopeValue = '',
     pathValue = '',
-    isReadonly = false
+    isReadonly = false,
+    isFullScreen = false
   } = props
   const queryParams = useFileStoreScope({
     scope,
@@ -214,6 +219,10 @@ export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props:
     setCurrentNode(node)
   }
 
+  const setFullScreen = (state: boolean): void => {
+    props?.setFullScreen?.(state)
+  }
+
   const updateFileStore = useCallback(
     (store: FileStoreNodeDTO[]): void => {
       setFileStore(store)
@@ -274,12 +283,12 @@ export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props:
     }
   }
 
-  const getNodeByPath = async (): Promise<void> => {
+  const getNodeByPath = async (path?: string): Promise<void> => {
     getFileStoreNodesOnPathPromise({
       queryParams: {
         ...queryParams,
         fileUsage,
-        path: queryParams?.path as string
+        path: `${path}` || (queryParams?.path as string)
       }
     }).then(res => {
       if (res?.data?.children) {
@@ -301,7 +310,8 @@ export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props:
             parentName: FILE_STORE_ROOT
           })
         } else {
-          const paths = pathValue.split('/').slice(1)
+          const pathToParse = pathValue || path
+          const paths = pathToParse?.split('/').slice(1) || []
           setCurrentNode({
             ...res.data,
             parentName: FILE_STORE_ROOT
@@ -441,7 +451,9 @@ export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props:
         pathValue,
         getNodeByPath,
         isReadonly,
-        forceDeleteEnabled
+        forceDeleteEnabled,
+        isFullScreen,
+        setFullScreen
       }}
     >
       {props.children}

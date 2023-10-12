@@ -18,11 +18,12 @@ import {
 } from '@harness/uicore'
 import SplitPane from 'react-split-pane'
 import { useHistory } from 'react-router-dom'
-import { debounce, pick } from 'lodash-es'
+import { debounce, pick, defaultTo } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
 import type { GetDataError } from 'restful-react'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
+import type { FileStoreResourceQueryParams } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { Page, StringUtils, useToaster } from '@common/exports'
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
@@ -68,6 +69,7 @@ import { useUnsavedConfirmation } from '@filestore/common/useUnsavedConfirmation
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useTelemetry } from '@common/hooks/useTelemetry'
+import { useQueryParams } from '@common/hooks'
 import { Category, CDActions } from '@common/constants/TrackingConstants'
 import css from './FileStorePage.module.scss'
 
@@ -102,9 +104,11 @@ interface FileStoreProps {
   pathValue?: string
   scopeValue?: string
   isReadonly?: boolean
+  isFullScreen?: boolean
+  setFullScreen?: (status: boolean) => void
 }
 
-export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreProps) => {
+export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange, isFullScreen }: FileStoreProps) => {
   const [searchTerm, setSearchTerm] = useState('')
   const [filters, setFilters] = useState<FilterDTO[]>()
   const [isRefreshingFilters, setIsRefreshingFilters] = useState<boolean>(false)
@@ -115,6 +119,8 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
   const { getString } = useStrings()
   const { showError } = useToaster()
   const filterRef = React.useRef<FilterRef<FilterDTO> | null>(null)
+  const { path } = useQueryParams<FileStoreResourceQueryParams>()
+
   const {
     fileStore,
     setFileStore,
@@ -357,8 +363,8 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
   )
 
   useEffect(() => {
-    if (pathValue && scopeValue === scope && pathValue !== '/') {
-      getNodeByPath()
+    if ((pathValue && scopeValue === scope && pathValue !== '/') || path) {
+      getNodeByPath(defaultTo(path, ''))
     } else {
       getRootNodes({ identifier: FILE_STORE_ROOT, name: FILE_STORE_ROOT, type: FileStoreNodeTypes.FOLDER }).then(
         response => {
@@ -574,19 +580,21 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
             }}
             className={cx((tempNodes[0] && css.disableEvents) || (unsavedNodes[0] && css.disableEvents))}
           >
-            <Container data-name="fileStoreSearchContainer">
-              <ExpandingSearchInput
-                alwaysExpanded
-                width={isModalView ? 1300 : 200}
-                placeholder={getString('search')}
-                throttle={200}
-                onChange={(query: string) => {
-                  debouncedFilesSearch(encodeURIComponent(query))
-                  setSearchTerm(query)
-                }}
-                className={css.expandSearch}
-              />
-            </Container>
+            {!isFullScreen && (
+              <Container data-name="fileStoreSearchContainer">
+                <ExpandingSearchInput
+                  alwaysExpanded
+                  width={isModalView ? 1300 : 200}
+                  placeholder={getString('search')}
+                  throttle={200}
+                  onChange={(query: string) => {
+                    debouncedFilesSearch(encodeURIComponent(query))
+                    setSearchTerm(query)
+                  }}
+                  className={css.expandSearch}
+                />
+              </Container>
+            )}
             {!isModalView && (
               <FilterSelector<FilterDTO>
                 appliedFilter={appliedFilter}
@@ -625,14 +633,14 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
                 description={getString('platform.filestore.noFilesTitle')}
               />
             ) : (
-              <Layout.Horizontal style={{ height: isModalView ? 530 : '100%' }}>
+              <Layout.Horizontal height={isModalView ? (isFullScreen ? '100vh ' : 530) : '100%'}>
                 <SplitPane
                   size={splitPaneSize}
                   split="vertical"
                   minSize={312}
                   maxSize={600}
                   style={{ overflow: 'auto' }}
-                  pane2Style={{ overflow: 'initial', zIndex: 2 }}
+                  pane2Style={{ overflow: 'scroll', zIndex: 2 }}
                   resizerStyle={resizerStyle}
                   onChange={handleStageResize}
                 >
@@ -657,9 +665,10 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
 }
 
 export default function FileStorePage(props: FileStoreProps): React.ReactElement {
+  const { isFullScreen, setFullScreen } = props
   return (
     <FileStoreContextProvider {...props}>
-      <FileStore onNodeChange={props.onNodeChange} />
+      <FileStore isFullScreen={isFullScreen} setFullScreen={setFullScreen} onNodeChange={props.onNodeChange} />
     </FileStoreContextProvider>
   )
 }

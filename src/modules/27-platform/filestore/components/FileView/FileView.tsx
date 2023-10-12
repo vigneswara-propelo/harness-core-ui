@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React, { useContext } from 'react'
-import { Container, Tabs } from '@harness/uicore'
+import { Container, Tabs, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import FileDetails from '@filestore/components/FileView/FileDetails/FileDetails'
@@ -18,7 +18,8 @@ import css from '@filestore/components/FileView/FileView.module.scss'
 
 export default function FileView(): React.ReactElement {
   const { getString } = useStrings()
-  const { activeTab, setActiveTab, isModalView, currentNode, isCachedNode } = useContext(FileStoreContext)
+  const { activeTab, setActiveTab, isModalView, currentNode, isCachedNode, isFullScreen, setFullScreen } =
+    useContext(FileStoreContext)
   const [error, setError] = React.useState('')
 
   React.useEffect(() => {
@@ -28,10 +29,27 @@ export default function FileView(): React.ReactElement {
   return (
     <Container
       background={Color.WHITE}
-      style={{ width: '100%', height: isModalView ? 530 : 'calc(100vh - 120px)' }}
+      height={isModalView ? (isFullScreen ? '95vh' : 530) : 'calc(100vh - 120px)'}
+      width={'100%'}
       className={css.mainFileView}
     >
-      {error ? (
+      {isFullScreen ? (
+        <Container height={'95vh'} className={css.modalDetails}>
+          <FileDetails
+            handleError={(errorType: string) => {
+              setError(errorType)
+            }}
+          />
+          <Icon
+            onClick={() => {
+              setFullScreen(!isFullScreen)
+            }}
+            name={isFullScreen ? 'full-screen-exit' : 'fullscreen'}
+            className={css.modalReduceSizeBtn}
+            size={32}
+          />
+        </Container>
+      ) : error ? (
         <DeletedView error={error} />
       ) : !isModalView ? (
         <Tabs
@@ -68,11 +86,20 @@ export default function FileView(): React.ReactElement {
               id: FILE_VIEW_TAB.DETAILS,
               title: getString('details'),
               panel: (
-                <FileDetails
-                  handleError={(errorType: string) => {
-                    setError(errorType)
-                  }}
-                />
+                <Container className={css.modalDetails}>
+                  <Icon
+                    onClick={() => {
+                      setFullScreen(!isFullScreen)
+                    }}
+                    name={isFullScreen ? 'full-screen-exit' : 'fullscreen'}
+                    className={css.modalResizeBtn}
+                  />
+                  <FileDetails
+                    handleError={(errorType: string) => {
+                      setError(errorType)
+                    }}
+                  />
+                </Container>
               )
             },
             {
