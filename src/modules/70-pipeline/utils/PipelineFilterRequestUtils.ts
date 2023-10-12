@@ -7,7 +7,7 @@
 
 import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 import { get, isArray, omit } from 'lodash-es'
-import type { PipelineFilterProperties, FilterDTO, NGTag, FilterProperties } from 'services/pipeline-ng'
+import type { PipelineFilterProperties, FilterDTO, FilterProperties } from 'services/pipeline-ng'
 
 import type { FilterDataInterface, FilterInterface } from '@common/components/Filter/Constants'
 import { StringUtils } from '@common/exports'
@@ -48,9 +48,7 @@ export const getValidFilterArguments = (
     artifacts
   } = formData
   return Object.assign(omit(formData, ...exclusionList), {
-    pipelineTags: Object.keys(pipelineTags || {})?.map((key: string) => {
-      return { key, value: pipelineTags[key] } as NGTag
-    }),
+    pipelineTags,
     moduleProperties: {
       ci: getCIModuleProperties(
         buildType as BUILD_TYPE,
@@ -74,10 +72,7 @@ export const getValidFilterArguments = (
   })
 }
 
-export type PipelineFormType = Omit<PipelineFilterProperties, 'pipelineTags'> & {
-  pipelineTags?: Record<string, any>
-} & BuildTypeContext &
-  DeploymentTypeContext
+export type PipelineFormType = PipelineFilterProperties & BuildTypeContext & DeploymentTypeContext
 
 export const createRequestBodyPayload = ({
   isUpdate,

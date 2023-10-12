@@ -1368,6 +1368,7 @@ export interface StringsMap {
   'common.tabOrgs': string
   'common.tabProjects': string
   'common.tagName': string
+  'common.tagPlaceholder': string
   'common.targetBranch': string
   'common.targetBranchPlaceholder': string
   'common.template.createNewModal.versionPlaceholder': string

@@ -6,11 +6,11 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { FormikProps, useFormikContext } from 'formik'
+import { FormikProps } from 'formik'
 import { Container, FormInput, Layout, SelectOption, Text } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { IItemRendererProps, ItemListRenderer } from '@blueprintjs/select'
-import { defaultTo, get, isEmpty, isNil, isUndefined } from 'lodash-es'
+import { defaultTo, isEmpty, isNil, isUndefined } from 'lodash-es'
 import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import type { FilterProperties } from 'services/pipeline-ng'
@@ -50,32 +50,32 @@ interface ExecutionListFilterFormProps<T> {
 
 const NO_SELECTION = { label: '', value: '' }
 
-type KVAccumulator = { [key: string]: string | undefined | null }
-
-const convertToKVAccumulator = (values: string[]): KVAccumulator => {
-  const filteredValues = values.filter(val => !isNil(val))
-  const tagValues =
-    filteredValues?.reduce((acc, tag) => {
-      const parts = tag.split(':')
-      acc[parts[0]] = !isUndefined(parts[1]) ? parts[1]?.trim() || '' : null
-      return acc
-    }, {} as KVAccumulator) || {}
-  return tagValues
+type NGTagUI = {
+  key: string
+  value?: string | null | undefined
 }
 
-const convertToKeyValueString = (tagValues: KVAccumulator): string[] => {
-  return Object.keys(tagValues || {}).map(key => {
-    const value = tagValues[key]
-    if (!isNil(value)) {
-      if (isEmpty(value)) {
-        return `${key}:`
-      } else {
-        return `${key}:${value}`
-      }
-    } else {
-      return key
-    }
-  })
+const getLabelFromTag = (tag: NGTagUI): string => {
+  let { key, value } = tag
+  key = key.trim()
+  value = typeof value === 'string' ? value.trim() : value
+
+  const label = [
+    ...(!isEmpty(key) ? [key.trim()] : []),
+    ...(!isNil(value) ? [':'] : []),
+    ...(!isEmpty(value) ? [value] : [])
+  ].join('')
+
+  return label
+}
+
+const getTagFromLabel = (tagLabel: string): NGTagUI => {
+  const [key, value] = tagLabel.split(':')
+
+  return {
+    key: key.trim(),
+    value: !isUndefined(value) ? value?.trim() || '' : null
+  }
 }
 
 export function ExecutionListFilterForm<
@@ -91,7 +91,6 @@ export function ExecutionListFilterForm<
   const { type, formikProps, isCDEnabled, isCIEnabled, initialValues } = props
   const [searchTerm, setSearchTerm] = useState<string | undefined>()
   const loadMoreRef = useRef(null)
-  const formikFromContext = useFormikContext<T>()
   const pageSize = useRef(20)
   const queryParams = useMemo(
     () => ({
@@ -368,17 +367,18 @@ export function ExecutionListFilterForm<
             key={'description'}
           />
         ) : null}
-        <FormInput.KVTagInput
+        <FormInput.TagInput
           name="pipelineTags"
           label={getString('tagsLabel')}
-          key="pipelineTags"
-          onChange={changed => {
-            const values: string[] = changed as string[]
-            formikFromContext?.setFieldTouched('pipelineTags', true, false)
-            formikFromContext?.setFieldValue('pipelineTags', convertToKVAccumulator(values))
-          }}
-          tagsProps={{
-            values: convertToKeyValueString(get(formikFromContext?.values, 'pipelineTags') as KVAccumulator)
+          items={[]}
+          labelFor={item => getLabelFromTag(item as NGTagUI)}
+          itemFromNewTag={getTagFromLabel}
+          tagInputProps={{
+            allowNewTag: true,
+            showAddTagButton: false,
+            showClearAllButton: true,
+            noResults: null,
+            placeholder: getString('common.tagPlaceholder')
           }}
         />
 

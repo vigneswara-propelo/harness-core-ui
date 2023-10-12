@@ -7,7 +7,7 @@
 
 import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 import { get, isArray, omit, startCase } from 'lodash-es'
-import type { PipelineExecutionFilterProperties, FilterDTO, NGTag, FilterProperties } from 'services/pipeline-ng'
+import type { PipelineExecutionFilterProperties, FilterDTO, FilterProperties } from 'services/pipeline-ng'
 import { EXECUTION_STATUS } from '@pipeline/utils/statusHelpers'
 import type { FilterDataInterface, FilterInterface } from '@common/components/Filter/Constants'
 import { StringUtils } from '@common/exports'
@@ -78,9 +78,7 @@ export const getValidFilterArguments = (
     triggerIdentifiers
   } = formData
   return Object.assign(omit(formData, ...exclusionList), {
-    pipelineTags: Object.keys(pipelineTags || {})?.map((key: string) => {
-      return { key, value: pipelineTags[key] } as NGTag
-    }),
+    pipelineTags,
     status: status?.map((statusOption: MultiSelectOption) => statusOption?.value),
     triggerTypes: triggerTypes?.map((triggerType: MultiSelectOption) => triggerType?.value),
     triggerIdentifiers: triggerIdentifiers?.map((triggerName: MultiSelectOption) => triggerName?.value),

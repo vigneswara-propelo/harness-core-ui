@@ -9,7 +9,7 @@
 import React, { useEffect, useMemo, useRef } from 'react'
 import { Layout, SelectOption } from '@harness/uicore'
 import type { FormikProps } from 'formik'
-import { isEmpty, isUndefined } from 'lodash-es'
+import { isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import type { FilterDataInterface, FilterInterface } from '@common/components/Filter/Constants'
@@ -146,7 +146,7 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
   const { name = '', filterVisibility, identifier = '', filterProperties } = appliedFilter || {}
   const {
     name: pipelineName,
-    pipelineTags: _pipelineTags,
+    pipelineTags,
     moduleProperties,
     description
   } = (filterProperties as PipelineFilterProperties) || {}
@@ -244,15 +244,6 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
     }
   }
 
-  const pipelineTags = React.useMemo(
-    () =>
-      _pipelineTags?.reduce(
-        (obj, item) => Object.assign(obj, { [item.key]: !isUndefined(item.value) ? item.value : null }),
-        {}
-      ),
-    [_pipelineTags]
-  )
-
   const reset = () => replaceQueryParams({})
 
   /**End Handlers */
@@ -304,7 +295,8 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
     serviceNames,
     sourceBranch,
     tag,
-    targetBranch
+    targetBranch,
+    pipelineTags
   ])
 
   return (

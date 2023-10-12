@@ -11,7 +11,7 @@ import { useParams } from 'react-router-dom'
 import { Layout, MultiSelectOption, SelectOption, useToaster } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
-import { defaultTo, isEmpty, isUndefined, toLower } from 'lodash-es'
+import { defaultTo, isEmpty, toLower } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import {
@@ -193,15 +193,8 @@ export function ExecutionListFilter(): React.ReactElement {
         } as FilterDTO)
       : null
   const { name = '', filterVisibility, identifier = '', filterProperties } = appliedFilter || {}
-  const {
-    pipelineName,
-    status,
-    triggerTypes,
-    triggerIdentifiers,
-    moduleProperties,
-    timeRange,
-    pipelineTags: _pipelineTags
-  } = (filterProperties as PipelineExecutionFilterProperties) || {}
+  const { pipelineName, status, triggerTypes, triggerIdentifiers, moduleProperties, timeRange, pipelineTags } =
+    (filterProperties as PipelineExecutionFilterProperties) || {}
   const { ci, cd } = moduleProperties || {}
   const {
     serviceDefinitionTypes,
@@ -301,14 +294,6 @@ export function ExecutionListFilter(): React.ReactElement {
     }
   }
 
-  const pipelineTags = React.useMemo(
-    () =>
-      _pipelineTags?.reduce(
-        (obj, item) => Object.assign(obj, { [item.key]: !isUndefined(item.value) ? item.value : null }),
-        {}
-      ),
-    [_pipelineTags]
-  )
   const reset = () => replaceQueryParams({})
 
   const triggerOptions: MultiSelectOption[] = defaultTo(

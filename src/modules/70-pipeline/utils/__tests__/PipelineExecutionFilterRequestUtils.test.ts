@@ -84,7 +84,7 @@ describe('Test util methods', () => {
       )
     ).toEqual({
       pipelineName: 'test-pipeline',
-      pipelineTags: [],
+      pipelineTags: undefined,
       moduleProperties: {
         ci: {
           ciExecutionInfoDTO: {

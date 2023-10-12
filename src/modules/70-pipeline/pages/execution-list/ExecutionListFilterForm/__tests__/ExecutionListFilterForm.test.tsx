@@ -6,7 +6,15 @@
  */
 
 import React from 'react'
-import { fireEvent, getAllByRole, getByPlaceholderText, getByText, render, screen } from '@testing-library/react'
+import {
+  findByText,
+  fireEvent,
+  getAllByRole,
+  getByPlaceholderText,
+  getByText,
+  render,
+  screen
+} from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 
 import { Formik, FormikForm } from '@harness/uicore'
@@ -97,11 +105,11 @@ describe('<ExecutionListFilterForm /> test', () => {
 
   test('Tag value convert to expected key:value', async () => {
     const { container } = render(<WrapperComponent />)
-    const tagInputValues = screen.getByPlaceholderText(/Type and press enter to create a tag/)
+    const tagInputValues = screen.getByPlaceholderText('common.tagPlaceholder')
 
     //tag should retain true values - specifically for v: and d
     const testTagValue = ['a:b', ':v', 'v:', 'd']
     testTagValue.forEach(tagValue => enterTagValue(tagInputValues, tagValue))
-    testTagValue.forEach(tagValue => expect(getByText(container, tagValue)).toBeInTheDocument())
+    testTagValue.forEach(async tagValue => expect(await findByText(container, tagValue)).toBeInTheDocument())
   })
 })

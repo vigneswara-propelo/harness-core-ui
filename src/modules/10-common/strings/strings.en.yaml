@@ -681,6 +681,7 @@ confirmText: Are you sure?
 gotIt: Got it
 paste: Paste
 artifactTag: tag
+tagPlaceholder: Type and press enter to create a tag
 clientId: Client Id
 filter: Filter
 filters:
