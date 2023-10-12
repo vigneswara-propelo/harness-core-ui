@@ -118,7 +118,8 @@ export function TemplateVariablesContextProvider(
     requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     body: {
       originalEntityYaml: yamlStringify(originalTemplate)
-    }
+    },
+    debounce: 300
   })
 
   React.useEffect(() => {
