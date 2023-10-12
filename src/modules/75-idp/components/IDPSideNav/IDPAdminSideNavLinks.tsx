@@ -11,8 +11,10 @@ import { useGetStatusInfoByTypeQuery } from '@harnessio/react-idp-service-client
 import { isEmpty } from 'lodash-es'
 import { SideNav } from '@common/navigation/SideNavV2/SideNavV2'
 import routes from '@common/RouteDefinitionsV2'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
+import { FeatureFlag } from '@common/featureFlags'
 
 const IDPAdminModule: Module = 'idp-admin'
 const IDPModule: Module = 'idp'
@@ -20,6 +22,7 @@ const IDPModule: Module = 'idp'
 function IDPAdminSideNavLinks(): React.ReactElement {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
+  const IDPScorecardsEnabled = useFeatureFlag(FeatureFlag.IDP_ENABLE_SCORECARDS)
 
   const { data } = useGetStatusInfoByTypeQuery(
     { type: 'onboarding' },
@@ -63,10 +66,12 @@ function IDPAdminSideNavLinks(): React.ReactElement {
               label={getString('idp.oAuthConfig')}
               to={routes.toIDPOAuthConfig({ accountId, module: IDPAdminModule })}
             />
-            <SideNav.Link
-              label={getString('idp.scorecards')}
-              to={routes.toScorecards({ accountId, module: IDPAdminModule })}
-            />
+            {IDPScorecardsEnabled && (
+              <SideNav.Link
+                label={getString('idp.scorecards')}
+                to={routes.toScorecards({ accountId, module: IDPAdminModule })}
+              />
+            )}
             <SideNav.Link
               label={getString('idp.layout')}
               to={routes.toLayoutConfig({ accountId, module: IDPAdminModule })}
