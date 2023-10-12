@@ -893,6 +893,10 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
           infraObj.environment = value.environment
           delete infraObj.environmentRef
         } else {
+          // For service V1, initial pipeline object does not have `stage.spec.infrastructure` causing updateStage to not initialse this value
+          if (draft && isEmpty(infraObj)) {
+            set(draft, 'stage.spec.infrastructure.environmentRef', value.environmentRef || '')
+          }
           infraObj.environmentRef = value.environmentRef
           delete infraObj.environment
         }
