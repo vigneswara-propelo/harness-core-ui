@@ -100,10 +100,13 @@ const RedirectToDefaultGovernanceRoute: React.FC = () => {
 // is mounted, this function will generate proper Governance routes.
 //
 
-export const GovernanceRouteDestinations: React.FC<{
+export const GovernanceRouteDestinations = ({
+  sidebarProps,
+  pathProps
+}: {
   sidebarProps: SidebarContext
   pathProps: GovernancePathProps
-}> = ({ sidebarProps, pathProps }) => {
+}): React.ReactElement => {
   return (
     <Route path={routesV1.toGovernance(pathProps)}>
       <Route path={routesV1.toGovernance(pathProps)} exact>
@@ -158,5 +161,5 @@ export default function GovernanceRoutes(): React.ReactElement {
       }
     })
   }
-  return <GovernanceRouteDestinations sidebarProps={AccountSideNavProps} pathProps={accountPathProps} />
+  return GovernanceRouteDestinations({ sidebarProps: AccountSideNavProps, pathProps: accountPathProps })
 }
