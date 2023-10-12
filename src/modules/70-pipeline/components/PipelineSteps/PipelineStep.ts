@@ -14,7 +14,7 @@ export type { StepProps } from '@pipeline/components/AbstractSteps/Step'
 
 export abstract class PipelineStep<T extends { name?: string; identifier?: string }> extends Step<T> {
   getDefaultValues(initialValues: T, viewType: StepViewType): T {
-    if (initialValues.identifier && isCustomGeneratedString(initialValues.identifier)) {
+    if (initialValues?.identifier && isCustomGeneratedString(initialValues.identifier)) {
       const values = cloneDeep(initialValues)
       delete values.name
       delete values.identifier
