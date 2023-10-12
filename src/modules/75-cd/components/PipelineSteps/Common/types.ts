@@ -23,3 +23,10 @@ export interface ValidateArtifactInputSetFieldArgs extends ValidateInputSetField
   dataPathToField: string
   templatePathToField: string
 }
+
+export interface OptionalTypeVariableFormikValue {
+  value: number | string
+  id: string
+  name?: string
+  type?: 'String' | 'Number' | 'Secret'
+}

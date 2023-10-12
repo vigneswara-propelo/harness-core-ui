@@ -19853,6 +19853,8 @@ export interface TasCommandScript {
 
 export type TasCommandStepInfo = StepSpecType & {
   delegateSelectors?: string[]
+  inputVariables?: NGVariable[]
+  outputVariables?: NGVariable[]
   script: TasCommandScript
 }
 
@@ -21367,6 +21369,8 @@ export type UserFilterRequestBody = UserFilter
 
 export type UserGroupDTORequestBody = UserGroupDTO
 
+export type UserGroupFilterDTORequestBody = UserGroupFilterDTO
+
 export type UserGroupRequestV2DTORequestBody = UserGroupRequestV2DTO
 
 export type UserSourceCodeManagerRequestDTORequestBody = UserSourceCodeManagerRequestDTO
@@ -21884,7 +21888,7 @@ export interface UpdateHarnessSupportAccessNGPathParams {
 
 export type UpdateHarnessSupportAccessNGProps = Omit<
   MutateProps<
-    ResponseBoolean,
+    RestResponseBoolean,
     Failure | Error,
     void,
     UpdateHarnessSupportAccessNGBodyRequestBody,
@@ -21899,7 +21903,7 @@ export type UpdateHarnessSupportAccessNGProps = Omit<
  */
 export const UpdateHarnessSupportAccessNG = ({ accountIdentifier, ...props }: UpdateHarnessSupportAccessNGProps) => (
   <Mutate<
-    ResponseBoolean,
+    RestResponseBoolean,
     Failure | Error,
     void,
     UpdateHarnessSupportAccessNGBodyRequestBody,
@@ -21914,7 +21918,7 @@ export const UpdateHarnessSupportAccessNG = ({ accountIdentifier, ...props }: Up
 
 export type UseUpdateHarnessSupportAccessNGProps = Omit<
   UseMutateProps<
-    ResponseBoolean,
+    RestResponseBoolean,
     Failure | Error,
     void,
     UpdateHarnessSupportAccessNGBodyRequestBody,
@@ -21932,7 +21936,7 @@ export const useUpdateHarnessSupportAccessNG = ({
   ...props
 }: UseUpdateHarnessSupportAccessNGProps) =>
   useMutate<
-    ResponseBoolean,
+    RestResponseBoolean,
     Failure | Error,
     void,
     UpdateHarnessSupportAccessNGBodyRequestBody,
@@ -21952,7 +21956,7 @@ export const updateHarnessSupportAccessNGPromise = (
     accountIdentifier,
     ...props
   }: MutateUsingFetchProps<
-    ResponseBoolean,
+    RestResponseBoolean,
     Failure | Error,
     void,
     UpdateHarnessSupportAccessNGBodyRequestBody,
@@ -21961,7 +21965,7 @@ export const updateHarnessSupportAccessNGPromise = (
   signal?: RequestInit['signal']
 ) =>
   mutateUsingFetch<
-    ResponseBoolean,
+    RestResponseBoolean,
     Failure | Error,
     void,
     UpdateHarnessSupportAccessNGBodyRequestBody,
@@ -68865,7 +68869,7 @@ export type GetBatchUserGroupListProps = Omit<
     ResponseListUserGroupDTO,
     Failure | AccessControlCheckError | Error,
     GetBatchUserGroupListQueryParams,
-    UserGroupFilterDTO,
+    UserGroupFilterDTORequestBody,
     void
   >,
   'path' | 'verb'
@@ -68879,7 +68883,7 @@ export const GetBatchUserGroupList = (props: GetBatchUserGroupListProps) => (
     ResponseListUserGroupDTO,
     Failure | AccessControlCheckError | Error,
     GetBatchUserGroupListQueryParams,
-    UserGroupFilterDTO,
+    UserGroupFilterDTORequestBody,
     void
   >
     verb="POST"
@@ -68894,7 +68898,7 @@ export type UseGetBatchUserGroupListProps = Omit<
     ResponseListUserGroupDTO,
     Failure | AccessControlCheckError | Error,
     GetBatchUserGroupListQueryParams,
-    UserGroupFilterDTO,
+    UserGroupFilterDTORequestBody,
     void
   >,
   'path' | 'verb'
@@ -68908,7 +68912,7 @@ export const useGetBatchUserGroupList = (props: UseGetBatchUserGroupListProps) =
     ResponseListUserGroupDTO,
     Failure | AccessControlCheckError | Error,
     GetBatchUserGroupListQueryParams,
-    UserGroupFilterDTO,
+    UserGroupFilterDTORequestBody,
     void
   >('POST', `/user-groups/batch`, { base: getConfig('ng/api'), ...props })
 
@@ -68920,7 +68924,7 @@ export const getBatchUserGroupListPromise = (
     ResponseListUserGroupDTO,
     Failure | AccessControlCheckError | Error,
     GetBatchUserGroupListQueryParams,
-    UserGroupFilterDTO,
+    UserGroupFilterDTORequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -68929,7 +68933,7 @@ export const getBatchUserGroupListPromise = (
     ResponseListUserGroupDTO,
     Failure | AccessControlCheckError | Error,
     GetBatchUserGroupListQueryParams,
-    UserGroupFilterDTO,
+    UserGroupFilterDTORequestBody,
     void
   >('POST', getConfig('ng/api'), `/user-groups/batch`, props, signal)
 
@@ -68990,6 +68994,87 @@ export const copyUserGroupPromise = (
     props,
     signal
   )
+
+export interface GetFilteredUserGroupsListQueryParams {
+  accountIdentifier?: string
+  pageIndex?: number
+  pageSize?: number
+  sortOrders?: string[]
+  pageToken?: string
+}
+
+export type GetFilteredUserGroupsListProps = Omit<
+  MutateProps<
+    ResponsePageUserGroupDTO,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredUserGroupsListQueryParams,
+    UserGroupFilterDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get filtered User Groups
+ */
+export const GetFilteredUserGroupsList = (props: GetFilteredUserGroupsListProps) => (
+  <Mutate<
+    ResponsePageUserGroupDTO,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredUserGroupsListQueryParams,
+    UserGroupFilterDTORequestBody,
+    void
+  >
+    verb="POST"
+    path={`/user-groups/filter`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetFilteredUserGroupsListProps = Omit<
+  UseMutateProps<
+    ResponsePageUserGroupDTO,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredUserGroupsListQueryParams,
+    UserGroupFilterDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get filtered User Groups
+ */
+export const useGetFilteredUserGroupsList = (props: UseGetFilteredUserGroupsListProps) =>
+  useMutate<
+    ResponsePageUserGroupDTO,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredUserGroupsListQueryParams,
+    UserGroupFilterDTORequestBody,
+    void
+  >('POST', `/user-groups/filter`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Get filtered User Groups
+ */
+export const getFilteredUserGroupsListPromise = (
+  props: MutateUsingFetchProps<
+    ResponsePageUserGroupDTO,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredUserGroupsListQueryParams,
+    UserGroupFilterDTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePageUserGroupDTO,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredUserGroupsListQueryParams,
+    UserGroupFilterDTORequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/user-groups/filter`, props, signal)
 
 export interface GetSsoLinkedUserGroupsQueryParams {
   accountIdentifier: string

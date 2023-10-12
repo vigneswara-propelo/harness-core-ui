@@ -67,33 +67,42 @@ import {
 import { FeatureFlag } from '@modules/10-common/featureFlags'
 import MultiTypeListOrFileSelectList from '../K8sServiceSpec/ManifestSource/MultiTypeListOrFileSelectList'
 import {
-  ShellScriptOutputStepVariable,
   ShellScriptStepVariable,
   scriptInputType,
   scriptOutputType,
   variableSchema
 } from '../ShellScriptStep/shellScriptTypes'
 import { OptionalVariables } from '../ShellScriptStep/OptionalConfiguration'
+import { OptionalTypeVariableFormikValue } from '../Common/types'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 import css from './TanzuCommand.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-interface TanzuCommandData extends StepElementConfig {
-  spec: TasCommandStepInfo
+export interface TanzuCommandData extends StepElementConfig {
+  spec: Omit<TasCommandStepInfo, 'inputVariables' | 'outputVariables' | 'source'> & {
+    inputVariables?: Array<Omit<OptionalTypeVariableFormikValue, 'id'>>
+    outputVariables?: Array<Omit<OptionalTypeVariableFormikValue, 'id'>>
+  }
+}
+interface TanzuCommandFormData extends StepElementConfig {
+  spec: Omit<TasCommandStepInfo, 'inputVariables' | 'outputVariables' | 'source'> & {
+    inputVariables?: Array<OptionalTypeVariableFormikValue>
+    outputVariables?: Array<OptionalTypeVariableFormikValue>
+  }
 }
 
 export interface TanzuCommandVariableStepProps {
-  initialValues: TanzuCommandData
+  initialValues: TanzuCommandFormData
   stageIdentifier: string
-  onUpdate?(data: TanzuCommandData): void
+  onUpdate?(data: TanzuCommandFormData): void
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData: TanzuCommandData
+  variablesData: TanzuCommandFormData
 }
 
 interface TanzuCommandProps {
   initialValues: TanzuCommandData
-  onUpdate?: (data: TanzuCommandData) => void
-  onChange?: (data: TanzuCommandData) => void
+  onUpdate?: (data: TanzuCommandFormData) => void
+  onChange?: (data: TanzuCommandFormData) => void
   allowableTypes: AllowedTypes
   readonly?: boolean
   stepViewType?: StepViewType
@@ -109,7 +118,7 @@ const scriptType: ScriptType = 'Bash'
 
 function TanzuCommandWidget(
   props: TanzuCommandProps,
-  formikRef: StepFormikFowardRef<TanzuCommandData>
+  formikRef: StepFormikFowardRef<TanzuCommandFormData>
 ): React.ReactElement {
   const { initialValues, onUpdate, isNewStep, readonly, allowableTypes, onChange, stepViewType } = props
   const { getString } = useStrings()
@@ -124,10 +133,34 @@ function TanzuCommandWidget(
     [getString]
   )
 
+  const getInitialValues = (): TanzuCommandFormData => {
+    const initSpec = initialValues?.spec
+    return {
+      ...initialValues,
+      spec: {
+        ...initSpec,
+
+        inputVariables: Array.isArray(initialValues.spec?.inputVariables)
+          ? initialValues.spec?.inputVariables.map(variable => ({
+              ...variable,
+              id: uuid()
+            }))
+          : [],
+
+        outputVariables: Array.isArray(initialValues.spec?.outputVariables)
+          ? initialValues.spec?.outputVariables.map(variable => ({
+              ...variable,
+              id: uuid()
+            }))
+          : []
+      }
+    }
+  }
+
   /* istanbul ignore next */
   const onSelectChange = (
     e: React.ChangeEvent<HTMLSelectElement>,
-    values: TanzuCommandData,
+    values: TanzuCommandFormData,
     setFieldValue: (field: string, value: any) => void
   ): void => {
     const fieldName = 'spec.script.store'
@@ -149,13 +182,13 @@ function TanzuCommandWidget(
   }
 
   return (
-    <Formik<TanzuCommandData>
-      onSubmit={(values: TanzuCommandData) => {
+    <Formik<TanzuCommandFormData>
+      onSubmit={(values: TanzuCommandFormData) => {
         /* istanbul ignore next */
         onUpdate?.(values)
       }}
       formName="TanzuCommandStep"
-      initialValues={initialValues}
+      initialValues={getInitialValues()}
       validate={data => {
         /* istanbul ignore next */
         onChange?.(data)
@@ -210,7 +243,7 @@ function TanzuCommandWidget(
         })
       })}
     >
-      {(formik: FormikProps<TanzuCommandData>) => {
+      {(formik: FormikProps<TanzuCommandFormData>) => {
         const { values, setFieldValue } = formik
         const templateFileType = values?.spec?.script?.store?.type
         setFormikRef(formikRef, formik)
@@ -342,36 +375,38 @@ function TanzuCommandWidget(
                                   <span className={css.label}>{getString('typeLabel')}</span>
                                   <span className={css.label}>{getString('valueLabel')}</span>
                                 </div>
-                                {values.spec.inputVariables?.map(({ id }: ShellScriptStepVariable, i: number) => {
-                                  return (
-                                    <div className={css.environmentVarHeader} key={id}>
-                                      <FormInput.Text
-                                        name={`spec.inputVariables[${i}].name`}
-                                        placeholder={getString('name')}
-                                        disabled={readonly}
-                                      />
-                                      <FormInput.Select
-                                        items={scriptInputType}
-                                        name={`spec.inputVariables[${i}].type`}
-                                        placeholder={getString('typeLabel')}
-                                        disabled={readonly}
-                                      />
-                                      <OptionalVariables
-                                        variablePath={`spec.inputVariables[${i}].value`}
-                                        variableTypePath={`spec.inputVariables[${i}].type`}
-                                        allowableTypes={allowableTypes}
-                                        readonly={readonly}
-                                      />
-                                      <Button
-                                        variation={ButtonVariation.ICON}
-                                        icon="main-trash"
-                                        data-testid={`remove-inputVar-${i}`}
-                                        onClick={() => remove(i)}
-                                        disabled={readonly}
-                                      />
-                                    </div>
-                                  )
-                                })}
+                                {values.spec.inputVariables?.map(
+                                  ({ id }: OptionalTypeVariableFormikValue, i: number) => {
+                                    return (
+                                      <div className={css.environmentVarHeader} key={id}>
+                                        <FormInput.Text
+                                          name={`spec.inputVariables[${i}].name`}
+                                          placeholder={getString('name')}
+                                          disabled={readonly}
+                                        />
+                                        <FormInput.Select
+                                          items={scriptInputType}
+                                          name={`spec.inputVariables[${i}].type`}
+                                          placeholder={getString('typeLabel')}
+                                          disabled={readonly}
+                                        />
+                                        <OptionalVariables
+                                          variablePath={`spec.inputVariables[${i}].value`}
+                                          variableTypePath={`spec.inputVariables[${i}].type`}
+                                          allowableTypes={allowableTypes}
+                                          readonly={readonly}
+                                        />
+                                        <Button
+                                          variation={ButtonVariation.ICON}
+                                          icon="main-trash"
+                                          data-testid={`remove-inputVar-${i}`}
+                                          onClick={() => remove(i)}
+                                          disabled={readonly}
+                                        />
+                                      </div>
+                                    )
+                                  }
+                                )}
                                 <Button
                                   icon="plus"
                                   variation={ButtonVariation.LINK}
@@ -412,7 +447,7 @@ function TanzuCommandWidget(
                                   </span>
                                 </div>
                                 {values.spec.outputVariables?.map(
-                                  ({ id }: ShellScriptOutputStepVariable, i: number) => {
+                                  ({ id }: OptionalTypeVariableFormikValue, i: number) => {
                                     return (
                                       <div className={css.outputVarHeader} key={id}>
                                         <FormInput.Text
@@ -851,7 +886,7 @@ export class TanzuCommandStep extends PipelineStep<TanzuCommandData> {
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<TanzuCommandData>): FormikErrors<TanzuCommandData> {
+  }: ValidateInputSetProps<TanzuCommandFormData>): FormikErrors<TanzuCommandFormData> {
     /* istanbul ignore next */
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -939,7 +974,7 @@ export class TanzuCommandStep extends PipelineStep<TanzuCommandData> {
   protected referenceId = 'TanzuCommandStep'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.TanzuCommandScript'
 
-  processFormData(values: TanzuCommandData): TanzuCommandData {
+  processFormData(values: TanzuCommandFormData): TanzuCommandData {
     const fileFormData = values.spec.script.store.spec?.files
     const templateFile = values.spec.script.store.type
     return {
@@ -976,7 +1011,7 @@ export class TanzuCommandStep extends PipelineStep<TanzuCommandData> {
       }
     }
   }
-  protected defaultValues: TanzuCommandData = {
+  protected defaultValues: TanzuCommandFormData = {
     identifier: '',
     name: '',
     type: StepType.TanzuCommand,
