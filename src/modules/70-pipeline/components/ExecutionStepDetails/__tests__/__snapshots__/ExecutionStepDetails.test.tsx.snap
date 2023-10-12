@@ -760,6 +760,23 @@ exports[`<ExecutionStepDetails /> tests retried steps does not fetches data for 
                     </div>
                   </td>
                 </tr>
+                <tr>
+                  <th>
+                    pipeline.failureStrategies.fieldLabels.failureStrategyApplied:
+                  </th>
+                  <td>
+                    RETRY
+                  </td>
+                </tr>
+                <tr>
+                  <th>
+                    pipeline.failureStrategies.appliedBy:
+                  </th>
+                  <td>
+                    pipeline.failureStrategies.title
+                    
+                  </td>
+                </tr>
               </tbody>
             </table>
             <div
@@ -1222,6 +1239,23 @@ exports[`<ExecutionStepDetails /> tests retried steps fetches data for retry ste
                     <div>
                       MOCK DURATION
                     </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th>
+                    pipeline.failureStrategies.fieldLabels.failureStrategyApplied:
+                  </th>
+                  <td>
+                    RETRY
+                  </td>
+                </tr>
+                <tr>
+                  <th>
+                    pipeline.failureStrategies.appliedBy:
+                  </th>
+                  <td>
+                    pipeline.failureStrategies.title
+                    
                   </td>
                 </tr>
               </tbody>

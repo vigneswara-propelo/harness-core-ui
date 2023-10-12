@@ -130,4 +130,44 @@ describe('StepDetails tests', () => {
     const allRows = getAllByRole(delegateTaskLogsDialog, 'row')
     expect(allRows).toHaveLength(4)
   })
+
+  test('should render post timeout action and manual intervention information', async () => {
+    const { getByText } = render(
+      <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS}>
+        <StepDetails
+          step={{
+            startTs: 123,
+            endTs: 456,
+            name: 'step name'
+          }}
+          executionMetadata={{
+            accountId,
+            orgIdentifier,
+            projectIdentifier
+          }}
+          interruptHistoryData={{
+            interruptId: 'dGR1K0cSQpa66pIVB80tTA',
+            tookEffectAt: 1696536143668,
+            interruptType: 'IGNORE',
+            interruptConfig: {
+              issuedBy: {
+                issueTime: 1696536143000,
+                manualIssuer: {
+                  email_id: 'user@abc.com',
+                  user_id: 'User Name',
+                  type: 'USER',
+                  identifier: 'qUaLKpHcTOS3ThJVG2bwIw'
+                }
+              }
+            }
+          }}
+        />
+      </TestWrapper>
+    )
+
+    expect(getByText('pipeline.failureStrategies.fieldLabels.failureStrategyApplied:')).toBeInTheDocument()
+    expect(getByText('pipeline.failureStrategies.appliedBy:')).toBeInTheDocument()
+    expect(getByText('IGNORE')).toBeInTheDocument()
+    expect(getByText(/user@abc\.com/)).toBeInTheDocument()
+  })
 })

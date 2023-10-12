@@ -180,6 +180,7 @@ export default function ExecutionStepDetails(): React.ReactElement {
       ) : (
         <StepDetails
           key={selectedStep.uuid}
+          interruptHistoryData={originalStep?.interruptHistories?.[retryCount]}
           step={selectedStep}
           executionMetadata={defaultTo(
             pipelineExecutionDetail?.childGraph?.executionGraph?.executionMetadata ||

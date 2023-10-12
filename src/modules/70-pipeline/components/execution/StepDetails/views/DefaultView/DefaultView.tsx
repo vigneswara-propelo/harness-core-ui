@@ -31,7 +31,13 @@ enum StepDetailTab {
 }
 
 export function DefaultView(props: StepDetailProps): React.ReactElement {
-  const { step, stageType = StageType.DEPLOY, isStageExecutionInputConfigured, executionMetadata } = props
+  const {
+    step,
+    stageType = StageType.DEPLOY,
+    isStageExecutionInputConfigured,
+    executionMetadata,
+    interruptHistoryData
+  } = props
   const { getString } = useStrings()
   const [activeTab, setActiveTab] = React.useState(StepDetailTab.STEP_DETAILS)
   const manuallySelected = React.useRef(false)
@@ -76,7 +82,13 @@ export function DefaultView(props: StepDetailProps): React.ReactElement {
           <Tab
             id={StepDetailTab.STEP_DETAILS}
             title={<HarnessDocTooltip tooltipId={'stepDetailsTab'} labelText={getString('details')} />}
-            panel={<StepDetailsTab step={step} executionMetadata={executionMetadata} />}
+            panel={
+              <StepDetailsTab
+                step={step}
+                executionMetadata={executionMetadata}
+                interruptHistoryData={interruptHistoryData}
+              />
+            }
           />
         )}
 

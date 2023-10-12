@@ -18,6 +18,7 @@ import {
   ExecutableResponse,
   ExecutionGraph,
   ExecutionNode,
+  InterruptEffectDTO,
   getApprovalInstancePromise
 } from 'services/pipeline-ng'
 import { String, useStrings } from 'framework/strings'
@@ -55,6 +56,7 @@ export interface StepDetailsProps {
   }
   ticketStatus?: string
   approvalInstanceMetadata?: any
+  interruptHistoryData?: InterruptEffectDTO
 }
 
 export function StepDetails(props: StepDetailsProps): React.ReactElement {
@@ -66,7 +68,8 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
     ticketStatus,
     latestDelegateTaskId,
     delegateTaskName,
-    approvalInstanceMetadata
+    approvalInstanceMetadata,
+    interruptHistoryData
   } = props
   const { getString } = useStrings()
   const [loader, setLoader] = useState<boolean>(false)
@@ -124,7 +127,7 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
   const startTime = Math.floor((step?.startTs as number) / 1000) - timePadding
   const endTime = Math.floor((step?.endTs || Date.now()) / 1000) + timePadding
 
-  const handleSelectionLogClick = () => {
+  const handleSelectionLogClick = (): void => {
     setLoader(true)
     const approvalData = {
       taskId: defaultTo(latestDelegateTaskId || progressData?.latestDelegateTaskId, ''),
@@ -147,6 +150,16 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
         openDelegateSelectionLogsModal(approvalData)
       })
   }
+
+  const getInterruptAppliedByLabel = React.useMemo(() => {
+    const issuedBy = interruptHistoryData?.interruptConfig?.issuedBy
+    return issuedBy?.manualIssuer
+      ? defaultTo(issuedBy.manualIssuer.email_id, '')
+      : issuedBy?.timeoutIssuer
+      ? getString('pipeline.failureStrategies.fieldLabels.onTimeoutLabel')
+      : getString('pipeline.failureStrategies.title')
+  }, [interruptHistoryData, getString])
+
   if (loader) {
     return (
       <Layout.Vertical height="100%" flex={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -177,6 +190,23 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
             <th>{`${getString('pipelineSteps.timeoutLabel')}:`}</th>
             <td>{timeout}</td>
           </tr>
+        )}
+        {interruptHistoryData && !isEmpty(interruptHistoryData) && (
+          <>
+            <tr>
+              <th>{`${getString('pipeline.failureStrategies.fieldLabels.failureStrategyApplied')}:`}</th>
+              <td>{interruptHistoryData?.interruptType}</td>
+            </tr>
+            <tr>
+              <th>{`${getString('pipeline.failureStrategies.appliedBy')}:`}</th>
+              <td>
+                {getInterruptAppliedByLabel}
+                {interruptHistoryData?.tookEffectAt
+                  ? ` ( ${new Date(interruptHistoryData?.tookEffectAt).toLocaleString()} ) `
+                  : ''}
+              </td>
+            </tr>
+          </>
         )}
         {ticketStatus && (
           <tr>

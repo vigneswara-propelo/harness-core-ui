@@ -541,11 +541,13 @@ failureStrategies:
   addedAllStrategies: You have added all possible failure strategies. There are no more options to add.
   tabHasErrors: The current settings have errors. Please review the error messages displayed and resolve the issues.
   onFailureOfType: On failure of type
+  appliedBy: Applied By
   fieldLabels:
     retryCountLabel: Retry count
     retryIntervalsLabel: Retry intervals
     onTimeoutLabel: Post timeout action
     onRetryFailureLabel: Post retry failure action
+    failureStrategyApplied: Failure Strategy Applied
   strategiesLabel:
     Retry: 'Retry Step'
     RetryStepGroup: 'Retry Step Group'

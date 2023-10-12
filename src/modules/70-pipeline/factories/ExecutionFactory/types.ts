@@ -9,7 +9,7 @@ import type { RefObject } from 'react'
 import type { GroupedVirtuosoHandle, VirtuosoHandle } from 'react-virtuoso'
 import type { IconName } from '@harness/uicore'
 
-import type { ExecutionGraph, ExecutionNode, GraphLayoutNode } from 'services/pipeline-ng'
+import type { ExecutionGraph, ExecutionNode, GraphLayoutNode, InterruptEffectDTO } from 'services/pipeline-ng'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import type { CardVariant } from '@pipeline/utils/constants'
 import type { State } from '@pipeline/components/LogsContent/LogsState/types'
@@ -19,6 +19,7 @@ export interface StepDetailProps {
   step: ExecutionNode
   executionMetadata: ExecutionGraph['executionMetadata']
   stageType?: StageType
+  interruptHistoryData?: InterruptEffectDTO
   isStageExecutionInputConfigured?: boolean
 }
 

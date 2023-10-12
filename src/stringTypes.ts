@@ -4585,6 +4585,7 @@ export interface StringsMap {
   'pipeline.expressionsEvaluation': string
   'pipeline.expressionsReplaced': string
   'pipeline.failureStrategies.addedAllStrategies': string
+  'pipeline.failureStrategies.appliedBy': string
   'pipeline.failureStrategies.errorTypeLabels.ApprovalRejection': string
   'pipeline.failureStrategies.errorTypeLabels.Authentication': string
   'pipeline.failureStrategies.errorTypeLabels.Authorization': string
@@ -4596,6 +4597,7 @@ export interface StringsMap {
   'pipeline.failureStrategies.errorTypeLabels.Unknown': string
   'pipeline.failureStrategies.errorTypeLabels.UserMarkedFailure': string
   'pipeline.failureStrategies.errorTypeLabels.Verification': string
+  'pipeline.failureStrategies.fieldLabels.failureStrategyApplied': string
   'pipeline.failureStrategies.fieldLabels.onRetryFailureLabel': string
   'pipeline.failureStrategies.fieldLabels.onTimeoutLabel': string
   'pipeline.failureStrategies.fieldLabels.retryCountLabel': string

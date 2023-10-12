@@ -11,7 +11,7 @@ import cx from 'classnames'
 import qs from 'qs'
 import { Container } from '@harness/uicore'
 import { ResponseMessage, useGetSettingValue } from 'services/cd-ng'
-import type { ExecutionGraph, ExecutionNode } from 'services/pipeline-ng'
+import type { ExecutionGraph, ExecutionNode, InterruptEffectDTO } from 'services/pipeline-ng'
 import { String } from 'framework/strings'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { LogsContentWithErrorBoundary as LogsContent } from '@pipeline/components/LogsContent/LogsContent'
@@ -32,10 +32,11 @@ export interface ExecutionStepDetailsTabProps {
   step: ExecutionNode
   executionMetadata: ExecutionGraph['executionMetadata']
   labels?: StepLabels[]
+  interruptHistoryData?: InterruptEffectDTO
 }
 
 export function StepDetailsTab(props: ExecutionStepDetailsTabProps): React.ReactElement {
-  const { step, executionMetadata, labels } = props
+  const { step, executionMetadata, labels, interruptHistoryData } = props
   const { pathname } = useLocation()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const queryParams = useQueryParams<ExecutionQueryParams>()
@@ -79,7 +80,12 @@ export function StepDetailsTab(props: ExecutionStepDetailsTabProps): React.React
           <HarnessCopilot mode="step-details" scope={ErrorScope.Step} />
         </Container>
       ) : null}
-      <StepDetails step={step} labels={labels} executionMetadata={executionMetadata} />
+      <StepDetails
+        step={step}
+        labels={labels}
+        executionMetadata={executionMetadata}
+        interruptHistoryData={interruptHistoryData}
+      />
       <LogsContent mode="step-details" toConsoleView={logUrl} />
     </div>
   )
