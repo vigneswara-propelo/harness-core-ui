@@ -34,6 +34,7 @@ stepDescription:
   Fossa: Use Fossa to test for vulnerabilities.
   Semgrep: Use Semgrep to test for vulnerabilities.
   Coverity: Use Coverity to test for vulnerabilities.
+  Anchore: Use Anchore Enterprise to test for vulnerabilities.
 stepField:
   mode: Scan Mode
   config: Scan Configuration
