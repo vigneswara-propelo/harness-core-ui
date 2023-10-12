@@ -9,8 +9,6 @@ import { Button, Container, FormInput, Layout, MultiSelectDropDown, Text, TextIn
 import React from 'react'
 import HorizontalLineWithText from '@cv/components/HorizontalLineWithText/HorizontalLineWithText'
 import { StringKeys, useStrings } from 'framework/strings'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import {
   eventStatusOptions,
   eventTypeOptions,
@@ -212,13 +210,6 @@ export default function NotificationRuleRow({
   index
 }: NotificationRuleRowProps): JSX.Element {
   const { getString } = useStrings()
-  const SRM_CODE_ERROR_NOTIFICATIONS = useFeatureFlag(FeatureFlag.SRM_CODE_ERROR_NOTIFICATIONS)
-
-  const actualConditionOptions = getFilteredOptions(
-    conditionOptions,
-    Condition.CODE_ERRORS,
-    SRM_CODE_ERROR_NOTIFICATIONS
-  )
 
   return (
     <>
@@ -229,7 +220,7 @@ export default function NotificationRuleRow({
             name={`conditions.${index}.condition`}
             className={css.conditionField}
             value={notificationRule.condition}
-            items={actualConditionOptions}
+            items={conditionOptions}
             onChange={option => {
               onConditionChange(option, notificationRule, handleChangeField)
             }}

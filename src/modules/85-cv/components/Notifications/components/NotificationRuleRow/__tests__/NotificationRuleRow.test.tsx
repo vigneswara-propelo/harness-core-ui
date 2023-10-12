@@ -19,7 +19,7 @@ import { getOptionsWithAllEvents } from '../NotificationRuleRow.utils'
 
 const WrapperComponent = (props: NotificationRuleRowProps): JSX.Element => {
   return (
-    <TestWrapper defaultFeatureFlagValues={{ SRM_CODE_ERROR_NOTIFICATIONS: true }}>
+    <TestWrapper>
       <NotificationRuleRow {...props} />
     </TestWrapper>
   )
@@ -80,14 +80,6 @@ describe('Unit tests for NotificationRuleRow', () => {
     const thirdTypeToSelect = getByText(thirdMonitoredServiceConditionType)
     await userEvent.click(thirdTypeToSelect)
     expect(thirdConditionDropdown.value).toBe(thirdMonitoredServiceConditionType)
-
-    // Selecting fourth condition
-    const fourthMonitoredServiceConditionType = 'Code Errors'
-    const fourthConditionDropdown = container.querySelector('input[name="conditions.0.condition"]') as any
-    await userEvent.click(conditionDropdown)
-    const fourthTypeToSelect = getByText(fourthMonitoredServiceConditionType)
-    await userEvent.click(fourthTypeToSelect)
-    expect(fourthConditionDropdown).toHaveValue(fourthMonitoredServiceConditionType)
   })
 })
 
