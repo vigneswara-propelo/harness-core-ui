@@ -7,6 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly delegateHorizontalPage: string
+  readonly delegateReloadButton: string
   readonly delegateTaskLogsModal: string
   readonly jsonContainer: string
   readonly table: string

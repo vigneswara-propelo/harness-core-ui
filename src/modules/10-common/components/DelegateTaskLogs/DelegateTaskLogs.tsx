@@ -7,7 +7,6 @@
 
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-
 import {
   Button,
   ButtonVariation,
@@ -48,18 +47,23 @@ export interface DelegateTaskLogsProps {
   telemetry: DelegateTaskLogsTelemetry
 }
 
-export default function DelegateTaskLogs({
-  telemetry,
+interface DelegateTaskLogsModalProps extends DelegateTaskLogsProps {
+  isOpen: boolean
+  close(): void
+}
+
+export const DelegateTaskLogsModal: React.FC<DelegateTaskLogsModalProps> = ({
+  isOpen,
+  close,
   taskIds,
   startTime,
-  endTime
-}: DelegateTaskLogsProps): JSX.Element {
+  endTime,
+  telemetry
+}) => {
+  const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [currentPageToken, setCurrentPageToken] = useState<string | undefined>('')
-  const { getString } = useStrings()
   const [previousPageStack, setPreviousPageStack] = useState<Array<string>>([])
-  const pageSize = 100
-
   useTrackEvent(DelegateActions.DelegateTaskLogsViewed, {
     task_context: telemetry.taskContext,
     has_error: telemetry.hasError
@@ -67,20 +71,23 @@ export default function DelegateTaskLogs({
 
   const queryParams: GetTasksLogQueryParams = {
     accountId,
-    taskIds,
     orgId: orgIdentifier,
     projectId: projectIdentifier,
+    taskIds,
     startTime,
     endTime,
-    pageSize
+    pageSize: 100
   }
 
   const { data, loading, refetch, error } = useGetTasksLog({
     queryParams,
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'
-    }
+    },
+    lazy: !isOpen
   })
+
+  const previousPageToken = previousPageStack.length > 0 ? previousPageStack[previousPageStack.length - 1] : null
 
   const RenderExpandColumn: Renderer<{
     row: UseExpandedRowProps<DelegateStackDriverLog> & Row<DelegateStackDriverLog>
@@ -150,88 +157,110 @@ export default function DelegateTaskLogs({
     return cols
   }, [taskIds])
 
-  /* istanbul ignore next */
-  if (loading) return <PageSpinner />
-
-  /* istanbul ignore next */
-  if (error) return <PageError message={error.message} />
-
-  if (data?.resource?.content && data.resource.content.length > 0) {
-    const previousPageToken = previousPageStack.length > 0 ? previousPageStack[previousPageStack.length - 1] : null
-    return (
-      <>
-        <TableV2<DelegateStackDriverLog>
-          data={data.resource.content}
-          columns={columns}
-          minimal
-          renderRowSubComponent={renderRowSubComponent}
-          onRowClick={noop}
-          className={css.table}
-        />
-        <Layout.Horizontal spacing={'medium'}>
-          <Button
-            variation={ButtonVariation.SECONDARY}
-            icon={'chevron-left'}
-            disabled={previousPageToken === null}
-            onClick={() => {
-              if (previousPageStack.length > 0 && previousPageToken !== null) {
-                setPreviousPageStack(previousPageStack.slice(0, previousPageStack.length - 1))
-                return refetch({ queryParams: { ...queryParams, pageToken: previousPageToken } })
-              }
-            }}
-            data-testid="button-previous"
-          >
-            {getString('previous')}
-          </Button>
-          <Button
-            variation={ButtonVariation.SECONDARY}
-            rightIcon={'chevron-right'}
-            disabled={data?.resource?.pageToken === undefined || data?.resource?.pageToken === null}
-            onClick={() => {
-              if (currentPageToken !== null && currentPageToken !== undefined) {
-                setPreviousPageStack([...previousPageStack, currentPageToken])
-              }
-              /* istanbul ignore next */
-              const nextPageToken = data?.resource?.pageToken
-              setCurrentPageToken(nextPageToken)
-              return refetch({ queryParams: { ...queryParams, pageToken: nextPageToken } })
-            }}
-            data-testid="button-next"
-          >
-            {getString('next')}
-          </Button>
-        </Layout.Horizontal>
-      </>
-    )
-  } else {
-    return (
-      <Layout.Vertical flex={{ align: 'center-center' }} spacing="medium" margin="xlarge">
-        <Icon name="delegates-icon" size={48} />
-        <Text font={{ size: 'medium' }}>{getString('common.logs.noLogsText')}</Text>
-        <Button variation={ButtonVariation.SECONDARY} icon={'main-refresh'} onClick={() => refetch({ queryParams })}>
-          {getString('common.reload')}
-        </Button>
-      </Layout.Vertical>
-    )
-  }
-}
-
-interface DelegateTaskLogsModalProps extends DelegateTaskLogsProps {
-  isOpen: boolean
-  close(): void
-}
-
-export function DelegateTaskLogsModal({ isOpen, close, ...rest }: DelegateTaskLogsModalProps): JSX.Element {
-  const { getString } = useStrings()
   return (
     <ModalDialog
       isOpen={isOpen}
       onClose={close}
       enforceFocus={false}
-      title={getString('common.logs.delegateTaskLogs')}
+      title={
+        <Layout.Horizontal className={css.delegateHorizontalPage}>
+          <Text color="black">{getString('common.logs.delegateTaskLogs')} </Text>
+          {
+            <Button
+              disabled={loading}
+              intent="primary"
+              minimal
+              iconProps={{
+                className: css.delegateReloadButton
+              }}
+              tooltip={getString('common.refresh')}
+              tooltipProps={{ isDark: true }}
+              icon={'refresh'}
+              onClick={() => {
+                refetch({ queryParams })
+              }}
+            />
+          }
+        </Layout.Horizontal>
+      }
       className={css.delegateTaskLogsModal}
     >
-      <DelegateTaskLogs {...rest} />
+      {loading && <PageSpinner />}
+      {error && !loading && <PageError message={error.message} />}
+      {data?.resource?.content && data.resource.content.length > 0 && !loading ? (
+        <>
+          <TableV2<DelegateStackDriverLog>
+            data={data.resource.content}
+            columns={columns}
+            minimal
+            renderRowSubComponent={renderRowSubComponent}
+            onRowClick={noop}
+            className={css.table}
+          />
+          <Layout.Horizontal spacing={'medium'}>
+            <Button
+              variation={ButtonVariation.SECONDARY}
+              icon={'chevron-left'}
+              disabled={previousPageToken === null}
+              onClick={() => {
+                if (previousPageStack.length > 0 && previousPageToken !== null) {
+                  setPreviousPageStack(previousPageStack.slice(0, previousPageStack.length - 1))
+                  return refetch({
+                    queryParams: {
+                      ...queryParams,
+                      pageToken: previousPageToken
+                    }
+                  })
+                }
+              }}
+              data-testid="button-previous"
+            >
+              {getString('previous')}
+            </Button>
+            <Button
+              variation={ButtonVariation.SECONDARY}
+              rightIcon={'chevron-right'}
+              disabled={data?.resource?.pageToken === undefined || data?.resource?.pageToken === null}
+              onClick={() => {
+                if (currentPageToken !== null && currentPageToken !== undefined) {
+                  setPreviousPageStack([...previousPageStack, currentPageToken])
+                }
+                /* istanbul ignore next */
+                const nextPageToken = data?.resource?.pageToken
+                setCurrentPageToken(nextPageToken)
+                return refetch({
+                  queryParams: {
+                    ...queryParams,
+
+                    pageToken: nextPageToken
+                  }
+                })
+              }}
+              data-testid="button-next"
+            >
+              {getString('next')}
+            </Button>
+          </Layout.Horizontal>
+        </>
+      ) : (
+        <Layout.Vertical flex={{ align: 'center-center' }} spacing="medium" margin="xlarge">
+          <Icon name="delegates-icon" size={48} />
+          <Text font={{ size: 'medium' }}>{getString('common.logs.noLogsText')}</Text>
+          <Button
+            variation={ButtonVariation.SECONDARY}
+            icon={'main-refresh'}
+            onClick={() => {
+              refetch({
+                queryParams: {
+                  ...queryParams
+                }
+              })
+            }}
+          >
+            {getString('common.reload')}
+          </Button>
+        </Layout.Vertical>
+      )}
     </ModalDialog>
   )
 }

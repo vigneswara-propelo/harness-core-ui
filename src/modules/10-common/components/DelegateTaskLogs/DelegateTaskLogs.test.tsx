@@ -9,7 +9,7 @@ import React from 'react'
 import { render, act, fireEvent, within } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
-import DelegateTaskLogs, { TaskContext } from './DelegateTaskLogs'
+import { DelegateTaskLogsModal, TaskContext } from './DelegateTaskLogs'
 import mockData from './jsonpayload.json'
 
 const refetchLogs = jest.fn()
@@ -37,7 +37,9 @@ describe('Delegate Task Logs Modal', () => {
           executionIdentifier: 'executionIdentifier'
         }}
       >
-        <DelegateTaskLogs
+        <DelegateTaskLogsModal
+          isOpen={true}
+          close={jest.fn()}
           telemetry={{
             taskContext: TaskContext.PipelineStep,
             hasError: false
@@ -120,7 +122,9 @@ describe('Delegate Task Logs Modal', () => {
           executionIdentifier: 'executionIdentifier'
         }}
       >
-        <DelegateTaskLogs
+        <DelegateTaskLogsModal
+          isOpen={true}
+          close={jest.fn()}
           taskIds={['abc', 'qwe']}
           startTime={123}
           endTime={456}
