@@ -56,6 +56,7 @@ import css from './ProjectSelector.module.scss'
 export interface ProjectSelectorProps {
   onSelect: (project: Project) => void
   moduleFilter?: Required<Project>['modules'][0]
+  fallbackAccountId?: string
 }
 
 const RenderColumnMenu: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) => {
@@ -71,8 +72,9 @@ const RenderColumnMenu: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) => 
   )
 }
 
-const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
-  const { accountId } = useParams<AccountPathProps>()
+const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect, fallbackAccountId = '' }) => {
+  const accountProps = useParams<AccountPathProps>()
+  const accountId = accountProps.accountId || fallbackAccountId
   const [selectedOrg, setSelectedOrg] = useState<SelectOption | undefined>()
   const history = useHistory()
   const { selectedProject } = useAppStore()
@@ -293,7 +295,7 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
     </Popover>
   )
 }
-export const ProjectSelector: React.FC<ProjectSelectorProps> = ({ onSelect, moduleFilter }) => {
+export const ProjectSelector: React.FC<ProjectSelectorProps> = ({ onSelect, moduleFilter, fallbackAccountId }) => {
   const { selectedProject, updateAppStore } = useAppStore()
   const { getString } = useStrings()
 
@@ -311,7 +313,7 @@ export const ProjectSelector: React.FC<ProjectSelectorProps> = ({ onSelect, modu
         <Text margin={{ bottom: 'xsmall' }} font={{ size: 'small' }} color={Color.GREY_500}>
           {getString('projectLabel')}
         </Text>
-        <ProjectSelect onSelect={onSelect} />
+        <ProjectSelect onSelect={onSelect} fallbackAccountId={fallbackAccountId} />
       </Layout.Vertical>
 
       {selectedProject ? null : (
