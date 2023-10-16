@@ -280,6 +280,7 @@ jiraUpdateStep:
   transitionLabel: Transition Name
   transitionPlaceholder: Enter Transition Name
   fetchingStatus: Fetching Status List...
+  fetchingTransitions: Fetching Transitions...
   selectStatus: Select Status
   projectIssueKeyDisclaimer: Only permitted fields are being displayed. Please check if there are sufficient permissions in Jira to perform this action.
   statusDisclaimer: Only permitted statuses are being displayed. Please check if there are sufficient permissions in Jira to perform this action.

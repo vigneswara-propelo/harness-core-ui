@@ -9,7 +9,8 @@ import React from 'react'
 import { render, act, fireEvent, queryByAttribute, waitFor } from '@testing-library/react'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { useGetJiraStatuses } from 'services/cd-ng'
+import * as ngServices from 'services/cd-ng'
+import * as hooks from '@common/hooks/useFeatureFlag'
 import { TestStepWidget, factory } from '../../__tests__/StepTestUtil'
 import { JiraUpdate } from '../JiraUpdate'
 import {
@@ -21,7 +22,10 @@ import {
   mockConnectorResponse,
   mockStatusResponse,
   mockStatusErrorResponse,
-  mockFieldsMetadataResponse
+  mockFieldsMetadataResponse,
+  mockStatus,
+  mockTransitionResponse,
+  mockTransition
 } from './JiraUpdateTestHelper'
 import type { JiraUpdateData } from '../types'
 import { processFormData } from '../helper'
@@ -34,6 +38,7 @@ jest.mock('services/cd-ng', () => ({
   useGetJiraIssueUpdateMetadata: () => mockFieldsMetadataResponse,
   useGetJiraIssueCreateMetadata: () => mockProjectMetadataResponse,
   useGetJiraProjects: () => mockProjectsResponse,
+  useGetIssueTransitions: jest.fn(),
   useGetJiraStatuses: jest.fn()
 }))
 
@@ -41,7 +46,8 @@ describe('Jira Update fetch status', () => {
   beforeAll(() => {
     // eslint-disable-next-line
     // @ts-ignore
-    useGetJiraStatuses.mockImplementation(() => mockStatusErrorResponse)
+    jest.spyOn(ngServices, 'useGetJiraStatuses').mockReturnValue(mockStatusErrorResponse),
+      jest.spyOn(ngServices, 'useGetIssueTransitions').mockReturnValue(mockTransitionResponse as any)
   })
   beforeEach(() => {
     factory.registerStep(new JiraUpdate())
@@ -67,7 +73,8 @@ describe('Jira Update tests', () => {
   beforeAll(() => {
     // eslint-disable-next-line
     // @ts-ignore
-    useGetJiraStatuses.mockImplementation(() => mockStatusResponse)
+    jest.spyOn(ngServices, 'useGetJiraStatuses').mockReturnValue(mockStatusResponse)
+    jest.spyOn(ngServices, 'useGetIssueTransitions').mockReturnValue(mockTransitionResponse as any)
   })
   beforeEach(() => {
     factory.registerStep(new JiraUpdate())
@@ -117,6 +124,92 @@ describe('Jira Update tests', () => {
     )
 
     expect(container).toMatchSnapshot('jira-update-deploymentform-readonly')
+  })
+
+  test('edit stage form with transition API FF on - Status API call onFocus only', async () => {
+    const refetchStatus = jest.fn()
+    const refetchTransition = jest.fn()
+    const useFeatureFlags = jest.spyOn(hooks, 'useFeatureFlags')
+    useFeatureFlags.mockReturnValue({ CDS_JIRA_TRANSITION_LIST: true })
+    jest
+      .spyOn(ngServices, 'useGetJiraStatuses')
+      .mockReturnValue({ data: mockStatus, refetch: refetchStatus, cancel: jest.fn() } as any)
+    jest
+      .spyOn(ngServices, 'useGetIssueTransitions')
+      .mockReturnValue({ data: mockTransition, refetch: refetchTransition, cancel: jest.fn() } as any)
+    const props = getJiraUpdateEditModePropsWithValues()
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    const { container, getByText } = render(
+      <TestStepWidget
+        initialValues={props.initialValues}
+        type={StepType.JiraUpdate}
+        stepViewType={StepViewType.Edit}
+        ref={ref}
+        testWrapperProps={{
+          pathParams: {
+            accountId: 'accountId',
+            orgIdentifier: 'orgIdentifier',
+            projectIdentifier: 'projectIdentifier',
+            pipelineIdentifier: 'pipelineIdentifier',
+            executionIdentifier: 'executionIdentifier'
+          }
+        }}
+      />
+    )
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+    fireEvent.click(getByText('common.optionalConfig'))
+    expect(queryByNameAttribute('spec.transitionTo.status')).toBeTruthy()
+    queryByNameAttribute('spec.transitionTo.status')?.focus()
+    expect(container).toMatchSnapshot()
+    expect(refetchStatus).toHaveBeenCalledWith({
+      queryParams: {
+        connectorRef: 'c1d1',
+        issueKey: 'tji-8097'
+      }
+    })
+
+    queryByNameAttribute('spec.transitionTo.transitionName')?.focus()
+    expect(refetchTransition).toHaveBeenCalledWith({
+      queryParams: {
+        connectorRef: 'c1d1',
+        issueKey: 'tji-8097'
+      }
+    })
+  })
+
+  test('edit stage form with transition API FF off - Status API called without issueKey', async () => {
+    const refetch = jest.fn()
+    const useFeatureFlags = jest.spyOn(hooks, 'useFeatureFlags')
+    useFeatureFlags.mockReturnValue({ CDS_JIRA_TRANSITION_LIST: false })
+    jest
+      .spyOn(ngServices, 'useGetJiraStatuses')
+      .mockReturnValue({ data: mockStatus, refetch, cancel: jest.fn() } as any)
+    const props = getJiraUpdateEditModePropsWithValues()
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    const { container, getByText } = render(
+      <TestStepWidget
+        initialValues={props.initialValues}
+        type={StepType.JiraUpdate}
+        stepViewType={StepViewType.Edit}
+        ref={ref}
+      />
+    )
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+    fireEvent.click(getByText('common.optionalConfig'))
+    expect(queryByNameAttribute('spec.transitionTo.status')).toBeTruthy()
+    queryByNameAttribute('spec.transitionTo.status')?.focus()
+    expect(container).toMatchSnapshot()
+    expect(refetch).not.toHaveBeenCalledWith({
+      queryParams: {
+        connectorRef: 'c1d1',
+        issueKey: 'tji-8097'
+      }
+    })
+    expect(refetch).toHaveBeenCalledWith({
+      queryParams: {
+        connectorRef: 'c1d1'
+      }
+    })
   })
 
   test('Basic snapshot - inputset mode but no runtime values', async () => {

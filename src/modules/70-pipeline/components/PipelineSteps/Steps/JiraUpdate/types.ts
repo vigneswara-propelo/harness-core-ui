@@ -13,9 +13,11 @@ import type {
   Failure,
   ResponseJiraIssueCreateMetadataNG,
   ResponseJiraIssueUpdateMetadataNG,
+  ResponseListJiraIssueTransitionNG,
   ResponseListJiraStatusNG,
   StepElementConfig,
   UseGetJiraIssueCreateMetadataProps,
+  UseGetIssueTransitionsProps,
   UseGetJiraIssueUpdateMetadataProps,
   UseGetJiraStatusesProps
 } from 'services/cd-ng'
@@ -71,6 +73,8 @@ export interface JiraUpdateFormContentInterface {
   readonly?: boolean
   issueUpdateMetadataResponse?: ResponseJiraIssueUpdateMetadataNG | null
   refetchIssueUpdateMetadata: (props: UseGetJiraIssueUpdateMetadataProps) => Promise<void>
+  refetchIssueTransitions: (props: UseGetIssueTransitionsProps) => Promise<void>
+  issueTransitionsResponse: ResponseListJiraIssueTransitionNG | null
   refetchProjectMetadata: (props: UseGetJiraIssueCreateMetadataProps) => Promise<void>
   refetchIssueMetadata: (props: UseGetJiraIssueCreateMetadataProps) => Promise<void>
   projectMetaResponse: ResponseJiraIssueCreateMetadataNG | null
@@ -79,8 +83,10 @@ export interface JiraUpdateFormContentInterface {
   issueMetaResponse: ResponseJiraIssueCreateMetadataNG | null
   fetchingProjectMetadata: boolean
   issueUpdateMetadataFetchError?: GetDataError<Failure | Error> | null
+  issueTransitionsFetchError?: GetDataError<Failure | Error> | null
   issueUpdateMetadataLoading?: boolean
   issueMetadataLoading?: boolean
+  issueTransitionsLoading?: boolean
 }
 
 export interface JiraUpdateDeploymentModeProps {
@@ -102,4 +108,8 @@ export interface JiraUpdateDeploymentModeFormContentInterface extends JiraUpdate
   issueUpdateMetadataLoading: boolean
   issueUpdateMetadataFetchError?: GetDataError<Failure | Error> | null
   issueUpdateMetadataResponse: ResponseJiraIssueUpdateMetadataNG | null
+  refetchIssueTransitions: (props: UseGetIssueTransitionsProps) => Promise<void>
+  issueTransitionsResponse: ResponseListJiraIssueTransitionNG | null
+  issueTransitionsLoading?: boolean
+  issueTransitionsFetchError?: GetDataError<Failure | Error> | null
 }

@@ -13,6 +13,7 @@ import type {
   JiraFieldSchemaNG,
   ResponseConnectorResponse,
   ResponseJiraIssueCreateMetadataNG,
+  ResponseListJiraIssueTransitionNG,
   ResponseListJiraProjectBasicNG,
   ResponseListJiraUserData,
   ResponsePageConnectorResponse
@@ -318,6 +319,36 @@ export const mockProjectsResponse: UseGetMockData<ResponseListJiraProjectBasicNG
         id: 'pid3',
         key: 'pid3',
         name: 'p3'
+      }
+    ]
+  }
+}
+
+export const mockTransitionResponse: UseGetMockData<ResponseListJiraIssueTransitionNG> = {
+  loading: false,
+  // eslint-disable-next-line
+  // @ts-ignore
+  refetch: jest.fn(),
+  data: {
+    correlationId: '',
+    status: 'SUCCESS',
+    metaData: null as unknown as undefined,
+    data: [
+      {
+        id: 'pid1',
+        to: {
+          id: 'pid2',
+          name: 'p2'
+        },
+        name: 'p1'
+      },
+      {
+        id: 'pid2',
+        to: {
+          id: 'pid1',
+          name: 'p1'
+        },
+        name: 'p2'
       }
     ]
   }

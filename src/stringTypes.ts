@@ -4822,6 +4822,7 @@ export interface StringsMap {
   'pipeline.jiraCreateStep.unsupportedRequiredFieldsError': string
   'pipeline.jiraCreateStep.validations.summary': string
   'pipeline.jiraUpdateStep.fetchingStatus': string
+  'pipeline.jiraUpdateStep.fetchingTransitions': string
   'pipeline.jiraUpdateStep.projectIssueKeyDisclaimer': string
   'pipeline.jiraUpdateStep.selectStatus': string
   'pipeline.jiraUpdateStep.statusDisclaimer': string

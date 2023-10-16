@@ -13,6 +13,7 @@ import type {
   JiraFieldSchemaNG,
   ResponseConnectorResponse,
   ResponseJiraIssueUpdateMetadataNG,
+  ResponseListJiraIssueTransitionNG,
   ResponseListJiraProjectBasicNG,
   ResponseListJiraStatusNG,
   ResponsePageConnectorResponse
@@ -239,6 +240,16 @@ export const mockConnectorsResponse: ResponsePageConnectorResponse = {
   }
 }
 
+export const mockStatus = [
+  { name: 'Done', id: 'Done' },
+  { name: 'ToDo', id: 'ToDo' }
+]
+
+export const mockTransition = [
+  { name: 'Done', id: 'Done', to: { name: 'ToDo', id: 'ToDo' } },
+  { name: 'ToDo', id: 'ToDo', to: { name: 'Done', id: 'Done' } }
+]
+
 export const mockStatusResponse: ResponseListJiraStatusNG = {
   correlationId: 'someid',
   status: 'SUCCESS',
@@ -246,10 +257,17 @@ export const mockStatusResponse: ResponseListJiraStatusNG = {
   // @ts-ignore
   refetch: jest.fn(),
   metaData: null as unknown as undefined,
-  data: [
-    { name: 'Done', id: 'Done' },
-    { name: 'ToDo', id: 'ToDo' }
-  ]
+  data: mockStatus
+}
+
+export const mockTransitionResponse: ResponseListJiraIssueTransitionNG = {
+  correlationId: 'someid',
+  status: 'SUCCESS',
+  // eslint-disable-next-line
+  // @ts-ignore
+  refetch: jest.fn(),
+  metaData: null as unknown as undefined,
+  data: mockTransition
 }
 
 export const mockStatusErrorResponse: ResponseListJiraStatusNG = {

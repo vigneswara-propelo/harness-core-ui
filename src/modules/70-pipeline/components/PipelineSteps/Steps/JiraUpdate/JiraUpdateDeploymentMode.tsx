@@ -7,17 +7,19 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { isEmpty, pickBy, set } from 'lodash-es'
+import { isEmpty, memoize, pickBy, set } from 'lodash-es'
 import { Intent } from '@blueprintjs/core'
 import {
   EXECUTION_TIME_INPUT_VALUE,
   FormError,
+  FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
   PageSpinner,
   SelectOption,
   Text
 } from '@harness/uicore'
+import { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
 import type {
   AccountPathProps,
@@ -33,15 +35,23 @@ import { JiraFieldsRenderer } from '@pipeline/components/PipelineSteps/Steps/Jir
 import type { JiraFieldNGWithValue } from '@pipeline/components/PipelineSteps/Steps/JiraCreate/types'
 import { getInitialValueForSelectedField } from '@pipeline/components/PipelineSteps/Steps/JiraCreate/helper'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { JiraFieldNG, JiraStatusNG, useGetJiraIssueUpdateMetadata, useGetJiraStatuses } from 'services/cd-ng'
+import {
+  JiraFieldNG,
+  JiraIssueTransitionNG,
+  JiraStatusNG,
+  useGetIssueTransitions,
+  useGetJiraIssueUpdateMetadata,
+  useGetJiraStatuses
+} from 'services/cd-ng'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
-import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import { getGenuineValue } from '../JiraApproval/helper'
 import type { JiraUpdateDeploymentModeFormContentInterface, JiraUpdateDeploymentModeProps } from './types'
 import css from '../JiraCreate/JiraCreate.module.scss'
-
 function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterface): React.ReactElement {
   const {
     inputSetData,
@@ -49,13 +59,15 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
     statusResponse,
     fetchingStatuses,
     refetchStatuses,
-    statusFetchError,
     allowableTypes,
     stepViewType,
     refetchIssueUpdateMetadata,
     issueUpdateMetadataResponse,
     issueUpdateMetadataLoading,
-    issueUpdateMetadataFetchError
+    issueUpdateMetadataFetchError,
+    refetchIssueTransitions,
+    issueTransitionsResponse,
+    issueTransitionsLoading
   } = formContentProps
   const template = inputSetData?.template
   const path = inputSetData?.path
@@ -64,6 +76,7 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps & GitQueryParams>>()
+  const { CDS_JIRA_TRANSITION_LIST } = useFeatureFlags()
 
   const { getRBACErrorMessage } = useRBACError()
   const { expressions } = useVariablesExpression()
@@ -86,21 +99,19 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
       ? formContentProps?.formik?.values?.spec?.issueKey
       : initialValues.spec?.issueKey || inputSetData?.allValues?.spec?.issueKey
 
-  const [statusValue, setStatusValue] = useState<SelectOption>()
-  const [additionalFields, setAdditionalFields] = React.useState<JiraFieldNGWithValue[]>([])
+  const issueTypeFixedValue =
+    template?.spec?.issueType === EXECUTION_TIME_INPUT_VALUE
+      ? formContentProps?.formik?.values?.spec?.issueType
+      : initialValues.spec?.issueType || inputSetData?.allValues?.spec?.issueType
 
-  useEffect(() => {
-    // If connector value changes in form, fetch projects
-    if (connectorRefFixedValue) {
-      refetchStatuses({
-        queryParams: {
-          ...commonParams,
-          connectorRef: connectorRefFixedValue.toString()
-        }
-      })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [connectorRefFixedValue])
+  const projectKeyFixedValue =
+    template?.spec?.projectKey === EXECUTION_TIME_INPUT_VALUE
+      ? formContentProps?.formik?.values?.spec?.projectKey
+      : initialValues.spec?.projectKey || inputSetData?.allValues?.spec?.projectKey
+
+  const [transitions, setTransitions] = useState<SelectOption[]>([])
+
+  const [additionalFields, setAdditionalFields] = React.useState<JiraFieldNGWithValue[]>([])
 
   useEffect(() => {
     if (connectorRefFixedValue && issueKeyFixedValue) {
@@ -115,6 +126,19 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
   }, [connectorRefFixedValue, issueKeyFixedValue])
 
   useEffect(() => {
+    // If connector value changes in form, fetch projects
+    if (connectorRefFixedValue && !CDS_JIRA_TRANSITION_LIST) {
+      refetchStatuses({
+        queryParams: {
+          ...commonParams,
+          connectorRef: connectorRefFixedValue.toString()
+        }
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connectorRefFixedValue])
+
+  useEffect(() => {
     // get status by connector ref response
     let options: SelectOption[] = []
     const statusResponseList: JiraStatusNG[] = statusResponse?.data || []
@@ -125,12 +149,21 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
       })) || []
 
     setStatusOptions(options)
-    const matched = options?.find(opt => opt.value === initialValues.spec?.transitionTo?.status)
-    if (matched) {
-      setStatusValue(matched)
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusResponse?.data])
+
+  useEffect(() => {
+    // get status by connector ref response
+    let transitionsData: SelectOption[] = []
+    const issueTransitionsResponseList: JiraIssueTransitionNG[] = issueTransitionsResponse?.data || []
+    transitionsData =
+      issueTransitionsResponseList.map((transition: JiraIssueTransitionNG) => ({
+        label: transition.name || '',
+        value: transition.name || ''
+      })) || []
+
+    setTransitions(transitionsData)
+  }, [issueTransitionsResponse?.data])
 
   useEffect(() => {
     if (issueKeyFixedValue && issueUpdateMetadataResponse?.data?.fields) {
@@ -159,6 +192,14 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
       setAdditionalFields(additionallyConfiguredJiraFields as JiraFieldNGWithValue[])
     }
   }, [issueKeyFixedValue, issueUpdateMetadataResponse])
+
+  const statusItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingStatuses} />
+  ))
+
+  const transitionItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={issueTransitionsLoading} />
+  ))
 
   return (
     <React.Fragment>
@@ -226,49 +267,100 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
       ) : null}
 
       {getMultiTypeFromValue(template?.spec?.transitionTo?.status) === MultiTypeInputType.RUNTIME ? (
-        <SelectInputSetView
-          selectItems={statusOptions}
-          className={css.deploymentViewFieldWidth}
+        <FormInput.MultiTypeInput
+          selectItems={
+            fetchingStatuses
+              ? [{ label: getString('pipeline.jiraUpdateStep.fetchingStatus'), value: '' }]
+              : statusOptions
+          }
           label={getString('status')}
           name={`${prefix}spec.transitionTo.status`}
-          disabled={isApprovalStepFieldDisabled(readonly)}
+          placeholder={
+            fetchingStatuses
+              ? getString('pipeline.jiraUpdateStep.fetchingStatus')
+              : getString('pipeline.jiraUpdateStep.selectStatus')
+          }
           useValue
-          template={template}
-          fieldPath="spec.transitionTo.status"
           multiTypeInputProps={{
+            width: 400,
+
             expressions,
             allowableTypes,
             selectProps: {
-              defaultSelectedItem: statusValue,
-              items: statusOptions,
-              inputProps: {
-                placeholder: fetchingStatuses
-                  ? getString('pipeline.jiraUpdateStep.fetchingStatus')
-                  : statusFetchError?.message
-                  ? statusFetchError.message
-                  : getString('pipeline.jiraUpdateStep.selectStatus')
+              addClearBtn: !readonly,
+              itemRenderer: statusItemRenderer,
+              allowCreatingNewItems: true,
+              items: fetchingStatuses
+                ? [{ label: getString('pipeline.jiraUpdateStep.fetchingStatus'), value: '' }]
+                : statusOptions
+            },
+            onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+              if (
+                e?.target?.type !== 'text' ||
+                (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                !connectorRefFixedValue ||
+                !CDS_JIRA_TRANSITION_LIST
+              ) {
+                return
               }
+              refetchStatuses({
+                queryParams: {
+                  ...commonParams,
+                  connectorRef: connectorRefFixedValue.toString(),
+                  issueKey: issueKeyFixedValue,
+                  issueType: issueTypeFixedValue as string,
+                  projectKey: projectKeyFixedValue as string
+                }
+              })
             }
           }}
-          configureOptionsProps={{
-            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-          }}
+          disabled={isApprovalStepFieldDisabled(readonly)}
         />
       ) : null}
 
       {getMultiTypeFromValue(template?.spec?.transitionTo?.transitionName) === MultiTypeInputType.RUNTIME ? (
-        <TextFieldInputSetView
-          placeholder={getString('pipeline.jiraUpdateStep.transitionPlaceholder')}
+        <FormInput.MultiTypeInput
+          selectItems={
+            issueTransitionsLoading
+              ? [{ label: getString('pipeline.jiraUpdateStep.fetchingTransitions'), value: '' }]
+              : transitions
+          }
           label={getString('pipeline.jiraUpdateStep.transitionLabel')}
-          className={css.deploymentViewFieldWidth}
           name={`${prefix}spec.transitionTo.transitionName`}
+          placeholder={getString('pipeline.jiraUpdateStep.transitionPlaceholder')}
           disabled={isApprovalStepFieldDisabled(readonly)}
-          multiTextInputProps={{ expressions, allowableTypes }}
-          configureOptionsProps={{
-            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          useValue
+          multiTypeInputProps={{
+            width: 400,
+            expressions,
+            allowableTypes,
+            selectProps: {
+              addClearBtn: !readonly,
+              itemRenderer: transitionItemRenderer,
+              allowCreatingNewItems: true,
+              items: issueTransitionsLoading
+                ? [{ label: getString('pipeline.jiraUpdateStep.fetchingTransitions'), value: '' }]
+                : transitions
+            },
+            onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+              if (
+                e?.target?.type !== 'text' ||
+                (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                !connectorRefFixedValue ||
+                getMultiTypeFromValue(issueKeyFixedValue) !== MultiTypeInputType.FIXED ||
+                !CDS_JIRA_TRANSITION_LIST
+              ) {
+                return
+              }
+              refetchIssueTransitions({
+                queryParams: {
+                  ...commonParams,
+                  connectorRef: connectorRefFixedValue.toString(),
+                  issueKey: issueKeyFixedValue
+                }
+              })
+            }
           }}
-          template={template}
-          fieldPath="spec.transitionTo.transitionName"
         />
       ) : null}
 
@@ -346,6 +438,21 @@ export default function JiraUpdateDeploymentMode(props: JiraUpdateDeploymentMode
     debounce: 1000
   })
 
+  const {
+    refetch: refetchIssueTransitions,
+    data: issueTransitionsResponse,
+    error: issueTransitionsFetchError,
+    loading: issueTransitionsLoading
+  } = useGetIssueTransitions({
+    lazy: true,
+    debounce: 300,
+    queryParams: {
+      ...commonParams,
+      connectorRef: '',
+      issueKey: ''
+    }
+  })
+
   return (
     <FormContent
       {...props}
@@ -357,6 +464,10 @@ export default function JiraUpdateDeploymentMode(props: JiraUpdateDeploymentMode
       issueUpdateMetadataResponse={issueUpdateMetadataResponse}
       issueUpdateMetadataFetchError={issueUpdateMetadataFetchError}
       issueUpdateMetadataLoading={issueUpdateMetadataLoading}
+      refetchIssueTransitions={refetchIssueTransitions}
+      issueTransitionsResponse={issueTransitionsResponse}
+      issueTransitionsFetchError={issueTransitionsFetchError}
+      issueTransitionsLoading={issueTransitionsLoading}
     />
   )
 }
