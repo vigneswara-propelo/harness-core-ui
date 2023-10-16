@@ -11,7 +11,7 @@ import { Expander } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'
 import { parse } from 'yaml'
 import cx from 'classnames'
-import { defaultTo, isEqual, noop } from 'lodash-es'
+import { defaultTo, isEqual, noop, omit } from 'lodash-es'
 import * as Yup from 'yup'
 
 import {
@@ -31,11 +31,14 @@ import { Color } from '@harness/design-system'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
 import {
+  EnvironmentRequestDTO,
   EnvironmentResponse,
   EnvironmentResponseDTO,
   GitErrorMetadataDTO,
   NGEnvironmentConfig,
   NGEnvironmentInfoConfig,
+  ResponseEnvironmentResponse,
+  UpdateEnvironmentV2QueryParams,
   updateEnvironmentV2Promise,
   useGetEnvironmentV2,
   useGetSettingValue
@@ -68,6 +71,8 @@ import {
 } from '@modules/70-pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
 import GitRemoteDetails from '@modules/10-common/components/GitRemoteDetails/GitRemoteDetails'
 import NoEntityFound from '@modules/70-pipeline/pages/utils/NoEntityFound/NoEntityFound'
+import { useSaveToGitDialog } from '@modules/10-common/modals/SaveToGitDialog/useSaveToGitDialog'
+import { GitData } from '@modules/10-common/modals/GitDiffEditor/useGitDiffEditorDialog'
 import { PageHeaderTitle, PageHeaderToolbar } from './EnvironmentDetailsPageHeader'
 import EnvironmentConfiguration from './EnvironmentConfiguration/EnvironmentConfiguration'
 import { ServiceOverrides } from './ServiceOverrides/ServiceOverrides'
@@ -191,6 +196,43 @@ export default function EnvironmentDetails(): React.ReactElement {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading])
 
+  const afterUpdateHandler = (response: ResponseEnvironmentResponse): void => {
+    if (response.status === 'SUCCESS') {
+      showSuccess(getString('common.environmentUpdated'))
+      setIsModified(false)
+      refetch()
+    } else {
+      throw response
+    }
+  }
+
+  const { openSaveToGitDialog } = useSaveToGitDialog({
+    onSuccess: (gitData: GitData, environmentPayload?: EnvironmentRequestDTO): Promise<ResponseEnvironmentResponse> => {
+      return updateEnvironmentV2Promise({
+        body: { ...environmentPayload } as EnvironmentRequestDTO,
+
+        queryParams: {
+          accountIdentifier: accountId,
+          storeType: StoreType.REMOTE,
+          connectorRef: data?.data?.environment?.connectorRef,
+          isNewBranch: gitData?.isNewBranch, //Need BE API support for this param, Todo: remove typeCast
+          repoIdentifier: repoName,
+          filePath: gitDetails?.filePath,
+          ...(gitData?.isNewBranch
+            ? { baseBranch: gitDetails?.branch, branch: gitData?.branch }
+            : { branch: gitDetails?.branch }),
+          commitMsg: gitData?.commitMsg,
+          lastObjectId: gitDetails?.objectId,
+          lastCommitId: gitDetails?.commitId,
+          resolvedConflictCommitId: gitData?.resolvedConflictCommitId
+        } as unknown as UpdateEnvironmentV2QueryParams
+      }).then(response => {
+        afterUpdateHandler(response)
+        return response
+      })
+    }
+  })
+
   const onUpdate = async (values: EnvironmentResponseDTO): Promise<void> => {
     setUpdateLoading(true)
     clear()
@@ -204,26 +246,43 @@ export default function EnvironmentDetails(): React.ReactElement {
         tags: values.tags,
         type: defaultTo(values.type, 'Production')
       }
-      const response = await updateEnvironmentV2Promise({
-        body: {
-          ...bodyWithoutYaml,
-          yaml: yamlStringify({
-            environment: sanitize({ ...values }, { removeEmptyObject: false, removeEmptyString: false })
-          })
-        },
-        queryParams: {
-          accountIdentifier: accountId
-        },
-        requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
-      })
 
-      // istanbul ignore else
-      if (response.status === 'SUCCESS') {
-        showSuccess(getString('common.environmentUpdated'))
-        setIsModified(false)
-        refetch()
+      const body = {
+        ...bodyWithoutYaml,
+        yaml: yamlStringify({
+          environment: sanitize(
+            { ...omit(values, 'repoName', 'connectorRef', 'filePath') },
+            { removeEmptyObject: false, removeEmptyString: false }
+          )
+        })
+      }
+
+      if (storeType === 'REMOTE') {
+        openSaveToGitDialog({
+          isEditing: true,
+          resource: {
+            type: 'Environment',
+            name: defaultTo(values.name, ''),
+            identifier: defaultTo(values.identifier, ''),
+            gitDetails: gitDetails,
+            storeMetadata: {
+              storeType: data?.data?.environment?.storeType,
+              connectorRef: data?.data?.environment?.connectorRef
+            }
+          },
+          payload: body
+        })
       } else {
-        throw response
+        const response = await updateEnvironmentV2Promise({
+          body,
+          queryParams: {
+            accountIdentifier: accountId
+          },
+          requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
+        })
+
+        // istanbul ignore else
+        afterUpdateHandler(response)
       }
     } catch (e) {
       showError(getErrorInfoFromErrorObject(e, true))
