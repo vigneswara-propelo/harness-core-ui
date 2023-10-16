@@ -460,7 +460,7 @@ function BuildTests({ reportSummaryMock, testOverviewMock }: BuildTestsProps): R
         setHasTIStep(true)
       }
     }
-  }, [reportInfoData, testInfoData])
+  }, [reportInfoData, testInfoData, context])
 
   const queryParams = useMemo(() => {
     const optionalKeys = getOptionalQueryParamKeys({ stageId, stepId })
