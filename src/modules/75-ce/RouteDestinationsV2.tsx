@@ -51,8 +51,6 @@ import CETrialHomePage from './pages/home/CETrialHomePage'
 // import OverviewPage from './pages/overview/OverviewPage'
 import formatCost from './utils/formatCost'
 import OverviewAddCluster from './components/OverviewPage/OverviewAddCluster'
-// import CloudIntegrationPage from './pages/cloud-integration/CloudIntegrationPage'
-import AnomaliesFilter from './components/AnomaliesFilter/AnomaliesFilter'
 import GatewayListFilters from './components/COGatewayList/GatewayListFilters'
 import PerspectiveResourceModalBody from './components/ResourceGroupModals/Perspective/PerspectiveResourceModalBody'
 import PerspectiveResourceRenderer from './components/ResourceGroupModals/Perspective/PerspectiveResourceRenderer'
@@ -519,15 +517,6 @@ const getRequestOptions = (): Partial<RequestInit> => {
 //     >
 //       <OverviewPage />
 //     </RouteWithLayout>
-//     <RouteWithLayout
-//       licenseRedirectData={licenseRedirectData}
-//       sidebarProps={CESideNavProps}
-//       path={routes.toCECloudIntegration({ ...accountPathProps })}
-//       pageName={PAGE_NAME.CECloudIntegration}
-//       exact
-//     >
-//       <CloudIntegrationPage />
-//     </RouteWithLayout>
 //   </>
 // )
 
@@ -744,7 +733,6 @@ const CERouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
           <ChildAppMounter<CCMUIAppCustomProps>
             customComponents={{
               OverviewAddCluster,
-              AnomaliesFilter,
               ConnectorReferenceField,
               GatewayListFilters,
               FeatureWarningBanner,
@@ -787,7 +775,6 @@ export const CESettingsRouteDestination = ({ path }: { path?: string | string[] 
         <ChildAppMounter<CCMUIAppCustomProps>
           customComponents={{
             OverviewAddCluster,
-            AnomaliesFilter,
             ConnectorReferenceField,
             GatewayListFilters,
             FeatureWarningBanner,

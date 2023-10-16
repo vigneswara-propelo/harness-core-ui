@@ -7,7 +7,6 @@
 
 import type React from 'react'
 import type { OverviewAddClusterProps } from '@ce/components/OverviewPage/OverviewAddCluster'
-import type { AnomalyFiltersProps } from '@ce/components/AnomaliesFilter/AnomaliesFilter'
 import type { ConnectorReferenceFieldProps } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { GatewayListFiltersProps } from '@ce/components/COGatewayList/GatewayListFilters'
 import type FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
@@ -16,7 +15,6 @@ import type useTestConnectionModal from '@platform/connectors/common/useTestConn
 export interface CCMUIAppCustomProps {
   customComponents: {
     OverviewAddCluster: React.ComponentType<OverviewAddClusterProps>
-    AnomaliesFilter: React.ComponentType<AnomalyFiltersProps>
     ConnectorReferenceField: React.ComponentType<ConnectorReferenceFieldProps>
     GatewayListFilters: React.ComponentType<GatewayListFiltersProps>
     FeatureWarningBanner: typeof FeatureWarningBanner
