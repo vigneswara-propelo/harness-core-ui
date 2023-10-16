@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, Suspense } from 'react'
+import React, { useEffect, Suspense, ReactNode } from 'react'
 
 import { useParams } from 'react-router-dom'
 import { RestfulProvider } from 'restful-react'
@@ -26,7 +26,7 @@ import { LicenseStoreProvider } from 'framework/LicenseStore/LicenseStoreContext
 import RouteDestinationsWithoutAccountId from '@modules/RouteDestinationsWithoutAccountId'
 import AppErrorBoundary from 'framework/utils/AppErrorBoundary/AppErrorBoundary'
 import { StringsContextProvider } from 'framework/strings/StringsContextProvider'
-import { useLogout, ErrorCode } from 'framework/utils/SessionUtils'
+import { useLogout, ErrorCode, UseLogoutReturn } from 'framework/utils/SessionUtils'
 import SecureStorage from 'framework/utils/SecureStorage'
 import { isJsonResponse } from 'framework/utils/APIUtils'
 import { SideNavProvider } from 'framework/SideNavStore/SideNavContext'
@@ -43,8 +43,6 @@ import { FeatureFlagsProvider } from 'framework/FeatureFlags/FeatureFlagsProvide
 import './App.scss'
 
 const RouteDestinations = React.lazy(() => import('modules/RouteDestinations'))
-
-const TOO_MANY_REQUESTS_MESSAGE = 'Too many requests received, please try again later'
 
 const NOT_WHITELISTED_IP_MESSAGE = 'NOT_WHITELISTED_IP_MESSAGE'
 
@@ -108,6 +106,61 @@ const notifyBugsnag = (
   )
 }
 
+export const globalResponseHandler = async (
+  username: string,
+  accountId: string,
+  showError: (message: string | ReactNode, timeout?: number, key?: string) => void,
+  forceLogout: UseLogoutReturn['forceLogout'],
+  sessionStorage: Storage,
+  response: Response
+): Promise<void> => {
+  const TOO_MANY_REQUESTS_MESSAGE = 'Too many requests received, please try again later'
+
+  if (!response.ok) {
+    const clonedResponse = response.clone()
+    try {
+      if (isJsonResponse(clonedResponse)) {
+        const res = await clonedResponse.json()
+        switch (clonedResponse.status) {
+          case 401:
+          case 400: {
+            const notWhitelistedMessage = getNotWhitelistedMessage(res)
+            if (notWhitelistedMessage) {
+              const msg = notWhitelistedMessage.message
+              showError(msg)
+              // NG-Auth-UI expects to read "NOT_WHITELISTED_IP_MESSAGE" from session
+              sessionStorage.setItem('NOT_WHITELISTED_IP_MESSAGE', msg)
+              forceLogout(clonedResponse.status === 401 ? ErrorCode.unauth : undefined)
+            }
+
+            // if 401 occurred due to a reason other than whitelist, logout nevertheless
+            if (clonedResponse.status === 401) {
+              forceLogout()
+            }
+            break
+          }
+          case 429:
+            showError(res.message || TOO_MANY_REQUESTS_MESSAGE)
+            break
+        }
+      } else {
+        // when non-json response is returned with 401 status, logout nevertheless
+        if (clonedResponse.status === 401) {
+          forceLogout()
+        }
+      }
+    } catch (e) {
+      notifyBugsnag(
+        `Error handling ${clonedResponse.status} status code`,
+        `${clonedResponse.status} Details`,
+        response,
+        username,
+        accountId
+      )
+    }
+  }
+}
+
 export function AppWithAuthentication(props: AppProps): React.ReactElement {
   const { showError } = useToaster()
   const username = SessionToken.username()
@@ -115,66 +168,20 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   // if user lands on /, they'll first get redirected to a path with accountId
   const { accountId } = useParams<AccountPathProps>()
   const { forceLogout } = useLogout()
-  const globalResponseHandler = (response: Response): void => {
-    if (!response.ok) {
-      switch (response.status) {
-        case 401: {
-          const clonedResponse = response.clone()
-          if (isJsonResponse(clonedResponse)) {
-            clonedResponse
-              .json()
-              .then(res => {
-                const notWhiteListedMessage = getNotWhitelistedMessage(res)
-                if (notWhiteListedMessage) {
-                  const msg = notWhiteListedMessage.message
-                  showError(msg)
-                  // NG-Auth-UI expects to read "NOT_WHITELISTED_IP_MESSAGE" from session
-                  sessionStorage.setItem(NOT_WHITELISTED_IP_MESSAGE, msg)
-                  forceLogout(ErrorCode.unauth)
-                }
-              })
-              .catch(() => {
-                notifyBugsnag('Error handling 401 status code', '401 Details', response, username, accountId)
-              })
-              .finally(() => {
-                forceLogout()
-                return
-              })
-          }
-          break
-        }
-        case 400: {
-          const clonedResponse = response.clone()
-          if (isJsonResponse(clonedResponse)) {
-            clonedResponse
-              .json()
-              .then(res => {
-                const notWhiteListedMessage = getNotWhitelistedMessage(res)
-                if (notWhiteListedMessage) {
-                  showError(notWhiteListedMessage.message)
-                  forceLogout()
-                }
-              })
-              .catch(() => {
-                notifyBugsnag('Error handling 400 status code', '400 Details', response, username, accountId)
-              })
-          }
-          return
-        }
-        case 429: {
-          const clonedResponse = response.clone()
-          if (isJsonResponse(clonedResponse)) {
-            clonedResponse.json().then(res => {
-              showError(res.message || TOO_MANY_REQUESTS_MESSAGE)
-            })
-          }
-          break
-        }
-      }
-    }
-  }
 
-  useOpenApiClients(globalResponseHandler, accountId)
+  // last parameter i.e. "response" is not bound. It will be passed by the caller.
+  // eslint-disable-next-line
+  // @ts-ignore // needed because of typescript error TS2684 related to binding with null
+  const boundGlobalResponseHandler = globalResponseHandler.bind(
+    null,
+    username,
+    accountId,
+    showError,
+    forceLogout,
+    sessionStorage
+  )
+
+  useOpenApiClients(boundGlobalResponseHandler, accountId)
 
   const getQueryParams = React.useCallback(() => {
     return {
@@ -258,7 +265,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
 
   useGlobalEventListener('PROMISE_API_RESPONSE', ({ detail }) => {
     if (detail && detail.response) {
-      globalResponseHandler(detail.response)
+      boundGlobalResponseHandler(detail.response)
     }
   })
 
@@ -268,7 +275,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
       requestOptions={getRequestOptions}
       queryParams={getQueryParams()}
       queryParamStringifyOptions={{ skipNulls: true }}
-      onResponse={globalResponseHandler}
+      onResponse={boundGlobalResponseHandler}
     >
       <QueryClientProvider client={queryClient}>
         <StringsContextProvider initialStrings={props.strings}>
