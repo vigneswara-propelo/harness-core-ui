@@ -2058,5 +2058,7 @@ webhookEvents:
 specifyTargetHostLabel: On Specific Target Host.
 onDelegateLabel: On Delegate.
 exportVars:
-  label: Export Variables
+  label: Output alias
   publishVarLabel: Publish Variable Names (Alias)
+  keyValidation: Key is a required field
+  scopeValidation: Scope is a required field

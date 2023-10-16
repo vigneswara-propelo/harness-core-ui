@@ -142,7 +142,21 @@ export function ShellScriptWidget(
 
   return (
     <Formik<ShellScriptFormData>
-      onSubmit={submit => {
+      onSubmit={(submit, formikActions) => {
+        if (submit.spec?.outputAlias) {
+          if (submit.spec?.outputAlias.key === '' && !submit.spec?.outputAlias.scope) {
+            delete submit.spec?.outputAlias
+          } else {
+            if (!submit.spec?.outputAlias.key) {
+              formikActions.setFieldError('spec.outputAlias.key', getString('pipeline.exportVars.keyValidation'))
+              return
+            }
+            if (!submit.spec?.outputAlias.scope) {
+              formikActions.setFieldError('spec.outputAlias.scope', getString('pipeline.exportVars.scopeValidation'))
+              return
+            }
+          }
+        }
         onUpdate?.(submit)
       }}
       validate={formValues => {
