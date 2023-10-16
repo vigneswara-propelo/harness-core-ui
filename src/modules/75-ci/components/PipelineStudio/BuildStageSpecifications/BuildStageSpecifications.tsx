@@ -209,12 +209,7 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
 
         stageData.identifier = values.identifier
         stageData.name = values.name
-
-        if (values.description) {
-          stageData.description = values.description
-        } else {
-          delete stageData.description
-        }
+        stageData.description = values.description
 
         if (values.tags) {
           stageData.tags = values.tags
