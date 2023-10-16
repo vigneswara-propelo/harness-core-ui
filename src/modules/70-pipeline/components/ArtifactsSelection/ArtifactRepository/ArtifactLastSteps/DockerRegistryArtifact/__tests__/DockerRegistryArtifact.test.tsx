@@ -11,7 +11,6 @@ import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ArtifactType, TagTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
-import * as hooks from '@common/hooks/useFeatureFlag'
 
 import { DockerRegistryArtifact } from '../DockerRegistryArtifact'
 
@@ -114,8 +113,6 @@ describe('DockerRegistry Image Path Artifact tests', () => {
   })
 
   test('submits with the right payload ', async () => {
-    const useFeatureFlags = jest.spyOn(hooks, 'useFeatureFlags')
-    useFeatureFlags.mockReturnValue({ CD_NG_DOCKER_ARTIFACT_DIGEST: true })
     const initialValues = {
       identifier: '',
       spec: {
@@ -194,9 +191,6 @@ describe('DockerRegistry Image Path Artifact tests', () => {
   })
 
   test('mocking feature flag for digest', () => {
-    const useFeatureFlags = jest.spyOn(hooks, 'useFeatureFlags')
-    useFeatureFlags.mockReturnValue({ CD_NG_DOCKER_ARTIFACT_DIGEST: true })
-
     const initialValues = {
       identifier: 'id',
       imagePath: 'library/nginx',

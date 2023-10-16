@@ -57,7 +57,6 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isSshOrWinrmDeploymentType, getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
 import {
   ArtifactIdentifierValidation,
@@ -159,8 +158,6 @@ function FormComponent({
       org: orgValue
     }
   })
-
-  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
 
   const selectPackageItems = useMemo(() => {
     return packageDetails?.data?.githubPackageResponse?.map((packageInfo: GithubPackageDTO) => ({
@@ -622,16 +619,14 @@ function FormComponent({
             )}
           </div>
         )}
-        {CD_NG_DOCKER_ARTIFACT_DIGEST && (
-          <GithubPackageRegistryArtifactDigestField
-            formik={formik}
-            expressions={expressions}
-            allowableTypes={allowableTypes}
-            isReadonly={isReadonly}
-            connectorRefValue={connectorRefValue as string}
-            isVersionDetailsLoading={fetchingVersion}
-          />
-        )}
+        <GithubPackageRegistryArtifactDigestField
+          formik={formik}
+          expressions={expressions}
+          allowableTypes={allowableTypes}
+          isReadonly={isReadonly}
+          connectorRefValue={connectorRefValue as string}
+          isVersionDetailsLoading={fetchingVersion}
+        />
       </div>
       {!hideHeaderAndNavBtns && (
         <Layout.Horizontal spacing="medium">
@@ -692,7 +687,6 @@ export function GithubPackageRegistry(
   } = props
 
   const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
-  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const getInitialValues = (): GithubPackageRegistryInitialValuesType => {
@@ -719,9 +713,6 @@ export function GithubPackageRegistry(
           identifier: formData.identifier
         }
       : {}
-    if (!CD_NG_DOCKER_ARTIFACT_DIGEST) {
-      delete versionData.digest
-    }
     handleSubmit({
       ...identifierData,
       spec: {

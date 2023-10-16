@@ -33,7 +33,6 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useIsTagRegex } from '@pipeline/hooks/useIsTagRegex'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
@@ -89,7 +88,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     branch
   }
 
-  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
   const serviceId = isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined
 
   const connectorRefValue = getDefaultQueryParam(
@@ -576,43 +574,37 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               }}
             />
           )}
-          {!fromTrigger &&
-            CD_NG_DOCKER_ARTIFACT_DIGEST &&
-            !isVersionRegex &&
-            isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
-              <div className={css.inputFieldLayout}>
-                <DigestField
-                  {...props}
-                  fetchingDigest={fetchingDigest}
-                  fetchDigestError={digestError}
-                  fetchDigest={fetchDigest}
-                  expressions={expressions}
-                  stageIdentifier={stageIdentifier}
-                  digestData={digestData}
-                  disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
-                />
-              </div>
-            )}
-          {!fromTrigger &&
-            CD_NG_DOCKER_ARTIFACT_DIGEST &&
-            isVersionRegex &&
-            isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
-              <TextFieldInputSetView
-                tooltipProps={{
-                  dataTooltipId: 'artifactDigestTooltip'
-                }}
+          {!fromTrigger && !isVersionRegex && isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
+            <div className={css.inputFieldLayout}>
+              <DigestField
+                {...props}
+                fetchingDigest={fetchingDigest}
+                fetchDigestError={digestError}
+                fetchDigest={fetchDigest}
+                expressions={expressions}
+                stageIdentifier={stageIdentifier}
+                digestData={digestData}
                 disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
-                placeholder={getString('pipeline.artifactsSelection.digestPlaceholder')}
-                multiTextInputProps={{
-                  expressions,
-                  allowableTypes
-                }}
-                label={getString('pipeline.digest')}
-                name={`${path}.artifacts.${artifactPath}.spec.digest`}
-                fieldPath={`artifacts.${artifactPath}.spec.digest`}
-                template={template}
               />
-            )}
+            </div>
+          )}
+          {!fromTrigger && isVersionRegex && isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
+            <TextFieldInputSetView
+              tooltipProps={{
+                dataTooltipId: 'artifactDigestTooltip'
+              }}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
+              placeholder={getString('pipeline.artifactsSelection.digestPlaceholder')}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              label={getString('pipeline.digest')}
+              name={`${path}.artifacts.${artifactPath}.spec.digest`}
+              fieldPath={`artifacts.${artifactPath}.spec.digest`}
+              template={template}
+            />
+          )}
         </Layout.Vertical>
       )}
     </>

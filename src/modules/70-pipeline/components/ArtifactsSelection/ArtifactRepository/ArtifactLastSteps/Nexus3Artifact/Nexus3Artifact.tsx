@@ -54,7 +54,6 @@ import {
   RepositoryPortOrServer
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { RepositoryFormatTypes, getAllowedRepoOptions } from '@pipeline/utils/stageHelpers'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { isValueFixed } from '@common/utils/utils'
@@ -106,7 +105,6 @@ export function Nexus3Artifact({
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<Nexus2InitialValuesType>): React.ReactElement {
   const { getString } = useStrings()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
-  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
 
   const [lastQueryData, setLastQueryData] = useState<queryInterface>({ repositoryFormat: '', repository: '' })
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
@@ -550,9 +548,6 @@ export function Nexus3Artifact({
 
     if (isIdentifierAllowed) {
       merge(formatedFormData, { identifier: formData?.identifier })
-    }
-    if (!CD_NG_DOCKER_ARTIFACT_DIGEST) {
-      delete formatedFormData.spec.digest
     }
     handleSubmit(formatedFormData)
   }
@@ -1093,7 +1088,7 @@ export function Nexus3Artifact({
                     : undefined
                 }
               />
-              {CD_NG_DOCKER_ARTIFACT_DIGEST && formik.values?.repositoryFormat === RepositoryFormatTypes.Docker && (
+              {formik.values?.repositoryFormat === RepositoryFormatTypes.Docker && (
                 <Nexus3ArtifactDigestField
                   formik={formik}
                   expressions={expressions}

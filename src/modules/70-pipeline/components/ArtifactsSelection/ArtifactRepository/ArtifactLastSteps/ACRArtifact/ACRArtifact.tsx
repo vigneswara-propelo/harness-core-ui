@@ -61,7 +61,6 @@ import type {
   ACRArtifactProps
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { AcrArtifactDigestField } from './AcrDigestField'
@@ -85,7 +84,6 @@ export function ACRArtifact({
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
 
   const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
 
@@ -454,9 +452,6 @@ export function ACRArtifact({
       repository: formData?.repository,
       digest: formData?.digest
     })
-    if (!CD_NG_DOCKER_ARTIFACT_DIGEST) {
-      delete artifactObj?.spec?.digest
-    }
     handleSubmit(artifactObj)
   }
 
@@ -905,16 +900,14 @@ export function ACRArtifact({
                     )}
                   </div>
                 ) : null}
-                {CD_NG_DOCKER_ARTIFACT_DIGEST && (
-                  <AcrArtifactDigestField
-                    formik={formik}
-                    expressions={expressions}
-                    allowableTypes={allowableTypes}
-                    isReadonly={isReadonly}
-                    connectorRefValue={connectorRef}
-                    isVersionDetailsLoading={acrBuildDetailsLoading}
-                  />
-                )}
+                <AcrArtifactDigestField
+                  formik={formik}
+                  expressions={expressions}
+                  allowableTypes={allowableTypes}
+                  isReadonly={isReadonly}
+                  connectorRefValue={connectorRef}
+                  isVersionDetailsLoading={acrBuildDetailsLoading}
+                />
               </div>
 
               {!hideHeaderAndNavBtns && (

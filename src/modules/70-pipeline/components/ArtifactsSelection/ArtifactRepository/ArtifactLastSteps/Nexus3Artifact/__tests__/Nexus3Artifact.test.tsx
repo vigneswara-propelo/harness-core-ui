@@ -207,6 +207,7 @@ describe('Nexus Artifact tests', () => {
           repository: 'cdp-test-group2',
           tag: '<+input>',
           repositoryFormat: 'docker',
+          digest: '',
           spec: {
             artifactPath: 'artifact-path',
             repositoryUrl: 'repositoryUrl'
@@ -306,6 +307,7 @@ describe('Nexus Artifact tests', () => {
           repository: 'cdp-test-group2',
           tag: '<+input>',
           repositoryFormat: 'docker',
+          digest: '',
           spec: {
             artifactPath: 'artifact-path',
             repositoryPort: 'repositoryPort'
@@ -380,6 +382,7 @@ describe('Nexus Artifact tests', () => {
           repository: 'cdp-test-group2',
           tagRegex: '<+input>',
           repositoryFormat: 'docker',
+          digest: '',
           spec: {
             artifactPath: 'artifact-path',
             repositoryUrl: 'repositoryUrl'

@@ -140,12 +140,12 @@ describe('Service V2', () => {
     cy.contains('p', 'Docker Registry').click()
     cy.clickSubmit()
 
-    cy.get('span[data-icon="fixed-input"]').click()
+    cy.get('span[data-icon="fixed-input"]').eq(0).click()
     cy.contains('span', 'Runtime input').click()
     cy.get('input[value="<+input>"]').should('be.visible')
     cy.clickSubmit()
 
-    cy.get('span[data-icon="fixed-input"]').click()
+    cy.get('span[data-icon="fixed-input"]').eq(0).click()
     cy.contains('span', 'Runtime input').click()
     cy.get('input[value="<+input>"]').should('be.visible')
     cy.get('input[name="identifier"]').type('test_artifact_source_name')

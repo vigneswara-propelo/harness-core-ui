@@ -11,7 +11,6 @@ import { render, waitFor } from '@testing-library/react'
 import { MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import * as hooks from '@common/hooks/useFeatureFlag'
 
 import { ArtifactSourceBaseFactory } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import type { ArtifactListConfig, ServiceSpec } from 'services/cd-ng'
@@ -71,9 +70,6 @@ describe('Docker Artifact Source tests', () => {
   })
 
   test('when featureflag is enabled - shows digest field', () => {
-    const useFeatureFlags = jest.spyOn(hooks, 'useFeatureFlags')
-    useFeatureFlags.mockReturnValue({ CD_NG_DOCKER_ARTIFACT_DIGEST: true })
-
     const { container } = render(
       <TestWrapper>
         <KubernetesSidecarArtifacts

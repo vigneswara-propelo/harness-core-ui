@@ -24,7 +24,6 @@ import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/Triggers
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { useIsTagRegex } from '@pipeline/hooks/useIsTagRegex'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
@@ -81,7 +80,6 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const [lastQueryData, setLastQueryData] = useState({ connectorRef: '', imagePath: '' })
-  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
 
   const { isTagRegex, isServiceLoading } = useIsTagRegex({
     serviceIdentifier: serviceIdentifier!,
@@ -350,42 +348,36 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
               template={template}
             />
           )}
-          {!fromTrigger &&
-            CD_NG_DOCKER_ARTIFACT_DIGEST &&
-            !isTagRegex &&
-            isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
-              <DigestField
-                {...props}
-                fetchingDigest={fetchingDigest}
-                // buildDetailsList={dockerdata?.data?.buildDetailsList}
-                fetchDigestError={digestError}
-                fetchDigest={fetchDigest}
-                expressions={expressions}
-                stageIdentifier={stageIdentifier}
-                digestData={digestData}
-                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
-              />
-            )}
+          {!fromTrigger && !isTagRegex && isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
+            <DigestField
+              {...props}
+              fetchingDigest={fetchingDigest}
+              // buildDetailsList={dockerdata?.data?.buildDetailsList}
+              fetchDigestError={digestError}
+              fetchDigest={fetchDigest}
+              expressions={expressions}
+              stageIdentifier={stageIdentifier}
+              digestData={digestData}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
+            />
+          )}
 
-          {!fromTrigger &&
-            CD_NG_DOCKER_ARTIFACT_DIGEST &&
-            isTagRegex &&
-            isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
-              <TextFieldInputSetView
-                tooltipProps={{
-                  dataTooltipId: 'artifactDigestTooltip'
-                }}
-                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
-                multiTextInputProps={{
-                  expressions,
-                  allowableTypes
-                }}
-                label={getString('pipeline.digest')}
-                name={`${path}.artifacts.${artifactPath}.spec.digest`}
-                fieldPath={`artifacts.${artifactPath}.spec.digest`}
-                template={template}
-              />
-            )}
+          {!fromTrigger && isTagRegex && isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
+            <TextFieldInputSetView
+              tooltipProps={{
+                dataTooltipId: 'artifactDigestTooltip'
+              }}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              label={getString('pipeline.digest')}
+              name={`${path}.artifacts.${artifactPath}.spec.digest`}
+              fieldPath={`artifacts.${artifactPath}.spec.digest`}
+              template={template}
+            />
+          )}
         </Layout.Vertical>
       )}
     </>

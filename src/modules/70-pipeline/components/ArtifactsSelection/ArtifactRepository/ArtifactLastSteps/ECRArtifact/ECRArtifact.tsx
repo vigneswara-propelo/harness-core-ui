@@ -57,7 +57,6 @@ import type {
   ImagePathTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import ArtifactImagePathTagView from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
@@ -83,7 +82,6 @@ export function ECRArtifact({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getRBACErrorMessage } = useRBACError()
-  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
 
   const [tagList, setTagList] = React.useState([])
   const [lastQueryData, setLastQueryData] = React.useState<{ imagePath: string; region: any; registryId: string }>({
@@ -291,9 +289,6 @@ export function ECRArtifact({
       ...(formData?.registryId ? { registryId: formData?.registryId } : {})
     })
     handleSubmit(artifactObj)
-    if (!CD_NG_DOCKER_ARTIFACT_DIGEST) {
-      delete artifactObj?.spec?.digest
-    }
   }
 
   const handleValidate = (formData: ImagePathTypes & { connectorId?: string }) => {
@@ -501,16 +496,14 @@ export function ECRArtifact({
                 isImagePath={false}
                 isArtifactPath={false}
               />
-              {CD_NG_DOCKER_ARTIFACT_DIGEST && (
-                <EcrArtifactDigestField
-                  formik={formik}
-                  expressions={expressions}
-                  allowableTypes={allowableTypes}
-                  isReadonly={isReadonly}
-                  connectorRefValue={getConnectorRefQueryData()}
-                  isVersionDetailsLoading={ecrBuildDetailsLoading}
-                />
-              )}
+              <EcrArtifactDigestField
+                formik={formik}
+                expressions={expressions}
+                allowableTypes={allowableTypes}
+                isReadonly={isReadonly}
+                connectorRefValue={getConnectorRefQueryData()}
+                isVersionDetailsLoading={ecrBuildDetailsLoading}
+              />
             </div>
 
             {!hideHeaderAndNavBtns && (

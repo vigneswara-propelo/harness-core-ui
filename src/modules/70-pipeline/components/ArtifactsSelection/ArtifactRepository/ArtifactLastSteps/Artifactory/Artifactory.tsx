@@ -136,7 +136,7 @@ function Artifactory({
   const isCustomDeploymentTypeSelected = isCustomDeploymentType(selectedDeploymentType)
   const isTasDeploymentTypeSelected = isTASDeploymentType(selectedDeploymentType)
   const isAWSLambdaDeploymentTypeSelected = isAWSLambdaDeploymentType(selectedDeploymentType)
-  const { CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY, CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
+  const { CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY } = useFeatureFlags()
 
   const showRepositoryFormatForAllowedTypes =
     isSSHWinRmDeploymentType ||
@@ -433,7 +433,7 @@ function Artifactory({
     if (isAzureWebAppGeneric) {
       delete artifactObj?.spec?.repositoryUrl
     }
-    if (isGenericArtifactory || !CD_NG_DOCKER_ARTIFACT_DIGEST) {
+    if (isGenericArtifactory) {
       delete artifactObj?.spec?.digest
     }
     handleSubmit(artifactObj)
@@ -919,7 +919,7 @@ function Artifactory({
                     )}
                   </div>
                 ) : null}
-                {CD_NG_DOCKER_ARTIFACT_DIGEST && !isGenericArtifactory && (
+                {!isGenericArtifactory && (
                   <ArtifactoryArtifactDigestField
                     repositoryFormat={repositoryFormat as string}
                     formik={formik}

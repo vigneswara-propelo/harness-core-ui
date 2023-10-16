@@ -54,7 +54,6 @@ import { useQueryParams } from '@common/hooks'
 import { getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -110,7 +109,6 @@ function FormComponent(
   const repositoryNameValue = defaultTo(formik.values?.spec.repositoryName, initialValues?.spec?.repositoryName)
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const isTemplateContext = context === ModalViewFor.Template
-  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
 
   const {
     data: buildDetails,
@@ -431,16 +429,14 @@ function FormComponent(
           </div>
         )}
 
-        {CD_NG_DOCKER_ARTIFACT_DIGEST && (
-          <GarArtifactDigestField
-            formik={formik}
-            expressions={expressions}
-            allowableTypes={allowableTypes}
-            isReadonly={isReadonly}
-            connectorRefValue={getConnectorRefQueryData()}
-            isVersionDetailsLoading={fetchingBuilds}
-          />
-        )}
+        <GarArtifactDigestField
+          formik={formik}
+          expressions={expressions}
+          allowableTypes={allowableTypes}
+          isReadonly={isReadonly}
+          connectorRefValue={getConnectorRefQueryData()}
+          isVersionDetailsLoading={fetchingBuilds}
+        />
       </div>
       {!hideHeaderAndNavBtns && (
         <Layout.Horizontal spacing="medium">
@@ -477,7 +473,6 @@ export function GoogleArtifactRegistry(
   } = props
 
   const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
-  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
@@ -505,9 +500,6 @@ export function GoogleArtifactRegistry(
           identifier: formData.identifier
         }
       : {}
-    if (!CD_NG_DOCKER_ARTIFACT_DIGEST) {
-      delete versionData.digest
-    }
     handleSubmit({
       ...identifierData,
       spec: {

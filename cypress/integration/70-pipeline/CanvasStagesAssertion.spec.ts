@@ -56,9 +56,9 @@ describe('Canvas Stages Assertion', () => {
     //dragging up the node 15
     cy.get('div[id="ref_test15"]').then(el => dragElementVerticallyBy(el, -320))
     cy.contains('p', '5 more stages').should('be.visible')
-    cy.contains('p', 'test13').should('be.visible')
-    cy.contains('p', 'test14').should('be.visible')
-    cy.contains('p', 'test15').should('be.visible')
+    cy.contains('p', 'test13').scrollIntoView().should('be.visible')
+    cy.contains('p', 'test14').scrollIntoView().should('be.visible')
+    cy.contains('p', 'test15').scrollIntoView().should('be.visible')
 
     //testing zoom out
     cy.get('span[data-icon="zoom-out"]').eq(0).should('be.visible').click().click().click()

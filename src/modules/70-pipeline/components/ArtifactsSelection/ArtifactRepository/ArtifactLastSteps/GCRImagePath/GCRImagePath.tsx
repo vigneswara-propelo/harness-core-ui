@@ -45,7 +45,6 @@ import type {
   ImagePathTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import ArtifactImagePathTagView from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
@@ -102,7 +101,6 @@ export function GCRImagePath({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
-  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
 
   const getConnectorRefQueryData = (): string => {
     return defaultTo(modifiedPrevStepData?.connectorId?.value, modifiedPrevStepData?.connectorId)
@@ -168,9 +166,6 @@ export function GCRImagePath({
     const artifactObj = getFinalArtifactObj(formData, isIdentifierAllowed)
 
     merge(artifactObj.spec, { registryHostname: formData?.registryHostname, digest: formData?.digest })
-    if (!CD_NG_DOCKER_ARTIFACT_DIGEST) {
-      delete artifactObj?.spec?.digest
-    }
     handleSubmit(artifactObj)
   }
 
@@ -282,16 +277,14 @@ export function GCRImagePath({
                 setTagList={setTagList}
                 tagDisabled={isTagDisabled(formik?.values)}
               />
-              {CD_NG_DOCKER_ARTIFACT_DIGEST && (
-                <GcrArtifactDigestField
-                  formik={formik}
-                  expressions={expressions}
-                  allowableTypes={allowableTypes}
-                  isReadonly={isReadonly}
-                  connectorRefValue={getConnectorRefQueryData()}
-                  isVersionDetailsLoading={false}
-                />
-              )}
+              <GcrArtifactDigestField
+                formik={formik}
+                expressions={expressions}
+                allowableTypes={allowableTypes}
+                isReadonly={isReadonly}
+                connectorRefValue={getConnectorRefQueryData()}
+                isVersionDetailsLoading={false}
+              />
             </div>
             {!hideHeaderAndNavBtns && (
               <Layout.Horizontal spacing="medium">

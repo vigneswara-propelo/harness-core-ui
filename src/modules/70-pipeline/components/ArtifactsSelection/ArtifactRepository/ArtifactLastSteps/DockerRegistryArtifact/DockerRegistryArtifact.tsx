@@ -14,7 +14,6 @@ import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import { useQueryParams } from '@common/hooks'
 
@@ -61,7 +60,6 @@ export function DockerRegistryArtifact({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
-  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
 
   const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
 
@@ -153,9 +151,6 @@ export function DockerRegistryArtifact({
   }
   const submitFormData = (formData: ImagePathTypes & { connectorId?: string }): void => {
     const artifactObj = getFinalArtifactObj(formData, isIdentifierAllowed)
-    if (!CD_NG_DOCKER_ARTIFACT_DIGEST) {
-      delete artifactObj?.spec?.digest
-    }
     handleSubmit(artifactObj)
   }
 
@@ -190,9 +185,7 @@ export function DockerRegistryArtifact({
             connectorId: getConnectorIdValue(modifiedPrevStepData)
           }
 
-          if (CD_NG_DOCKER_ARTIFACT_DIGEST) {
-            formObject['digest'] = defaultTo(formData?.digest?.value, formData?.digest)
-          }
+          formObject['digest'] = defaultTo(formData?.digest?.value, formData?.digest)
           submitFormData(formObject)
         }}
       >
@@ -217,18 +210,16 @@ export function DockerRegistryArtifact({
                 tagDisabled={isTagDisabled(formik?.values)}
               />
 
-              {CD_NG_DOCKER_ARTIFACT_DIGEST ? (
-                <div className={css.imagePathContainer}>
-                  <DockerArtifactDigestField
-                    formik={formik}
-                    expressions={expressions}
-                    allowableTypes={allowableTypes}
-                    isReadonly={isReadonly}
-                    connectorRefValue={getConnectorRefQueryData()}
-                    isBuildDetailsLoading={dockerBuildDetailsLoading}
-                  />
-                </div>
-              ) : null}
+              <div className={css.imagePathContainer}>
+                <DockerArtifactDigestField
+                  formik={formik}
+                  expressions={expressions}
+                  allowableTypes={allowableTypes}
+                  isReadonly={isReadonly}
+                  connectorRefValue={getConnectorRefQueryData()}
+                  isBuildDetailsLoading={dockerBuildDetailsLoading}
+                />
+              </div>
             </div>
             {!hideHeaderAndNavBtns && (
               <Layout.Horizontal spacing="medium">
