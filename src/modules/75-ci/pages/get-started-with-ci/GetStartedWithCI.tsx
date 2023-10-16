@@ -68,7 +68,8 @@ export default function GetStartedWithCI(): React.ReactElement {
       pageSize: 100,
       projectIdentifier,
       orgIdentifier,
-      includeAllConnectorsAvailableAtScope: true
+      includeAllConnectorsAvailableAtScope: true,
+      searchTerm: 'Account'
     }
   })
   const [isFetchingSecret, setIsFetchingSecret] = useState<boolean>()
