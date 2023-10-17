@@ -1349,3 +1349,4 @@ baseAsgLabel: Base Asg
 baseAsgPlaceholder: Select Base Asg
 asgPlaceholder: Enter ASG Name
 asgLoadBalancer: ASG Load Balancer
+scopeToSpecificServices: Scope to Specific Services

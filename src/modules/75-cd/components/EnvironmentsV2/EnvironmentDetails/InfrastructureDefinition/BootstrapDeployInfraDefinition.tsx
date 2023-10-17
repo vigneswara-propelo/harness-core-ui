@@ -18,7 +18,9 @@ import {
   Tag,
   useToaster,
   VisualYamlToggle,
-  VisualYamlSelectedView as SelectedView
+  VisualYamlSelectedView as SelectedView,
+  SelectOption,
+  FormInput
 } from '@harness/uicore'
 import { defaultTo, get, isBoolean, isEmpty, isEqual, noop, omit, set } from 'lodash-es'
 import type { FormikProps } from 'formik'
@@ -74,19 +76,26 @@ import type {
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { getIdentifierFromScopedRef } from '@common/utils/utils'
-import { useFeatureFlag } from '@modules/10-common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@modules/10-common/featureFlags'
 import { GitSyncFormFields, gitSyncFormSchema } from '@modules/40-gitsync/components/GitSyncForm/GitSyncForm'
 import { useSaveToGitDialog } from '@modules/10-common/modals/SaveToGitDialog/useSaveToGitDialog'
 import { SaveToGitFormInterface } from '@modules/10-common/components/SaveToGitForm/SaveToGitForm'
 import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
 import { ConnectorSelectedValue } from '@modules/27-platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { MultiTypeServiceField } from '@modules/70-pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
 import { NewInfrastructureForm } from './NewInfrastructureForm'
+import stageCss from '@cd/components/PipelineStudio/DeployStageSetupShell/DeployStage.module.scss'
 import css from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfrastructureDefinition.module.scss'
 
 export interface CombinedInfrastructureDefinationResponse
   extends InfrastructureDefinitionConfig,
     Pick<InfrastructureResponseDTO, 'connectorRef' | 'storeType' | 'entityGitDetails'> {}
+
+interface ScopedServiceFormikValues {
+  scopedServices: SelectOption[]
+  scopeToSpecificServices: boolean
+}
 
 interface BootstrapDeployInfraDefinitionProps {
   closeInfraDefinitionDetails: () => void
@@ -132,10 +141,19 @@ export interface GetInfraDefinitionConfigParams {
   pipeline: PipelineInfoConfig
   orgIdentifier: string
   projectIdentifier: string
+  scopedServices?: string[]
 }
 
 export const getInfraDefinitionConfig = (params: GetInfraDefinitionConfigParams) => {
-  const { formikValues = {}, scope, environmentIdentifier, pipeline, orgIdentifier, projectIdentifier } = params
+  const {
+    formikValues = {},
+    scope,
+    environmentIdentifier,
+    pipeline,
+    orgIdentifier,
+    projectIdentifier,
+    scopedServices
+  } = params
   return {
     ...formikValues,
     orgIdentifier: scope !== Scope.ACCOUNT ? orgIdentifier : undefined,
@@ -145,7 +163,8 @@ export const getInfraDefinitionConfig = (params: GetInfraDefinitionConfigParams)
     type: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure?.infrastructureDefinition?.type,
     spec: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure?.infrastructureDefinition?.spec,
     allowSimultaneousDeployments: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure
-      ?.allowSimultaneousDeployments
+      ?.allowSimultaneousDeployments,
+    scopedServices
   } as InfrastructureDefinitionConfig
 }
 
@@ -188,10 +207,10 @@ function BootstrapDeployInfraDefinition(
   } = usePipelineContext()
   const { checkErrorsForTab } = useContext(StageErrorContext)
 
-  const { name, identifier, description, tags } = defaultTo(
+  const { name, identifier, description, tags, scopedServices } = defaultTo(
     infrastructureDefinition,
     {}
-  ) as InfrastructureDefinitionConfig
+  ) as InfrastructureDefinitionConfig & { scopedServices?: string[] }
 
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
@@ -205,6 +224,9 @@ function BootstrapDeployInfraDefinition(
     description,
     tags
   })
+  const [selectedScopedServices, setSelectedScopedServices] = useState<string[] | undefined>(scopedServices)
+
+  const { CDS_SCOPE_INFRA_TO_SERVICES } = useFeatureFlags()
   const formikRef = useRef<FormikProps<Partial<CombinedInfrastructureDefinationResponse & GitSyncFormFields>>>()
   const formikRefValues = formikRef.current?.values
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
@@ -384,7 +406,9 @@ function BootstrapDeployInfraDefinition(
     }
   }
 
-  const updateFormValues = (infrastructureDefinitionConfig: InfrastructureDefinitionConfig): void => {
+  const updateFormValues = (
+    infrastructureDefinitionConfig: InfrastructureDefinitionConfig & { scopedServices?: string[] }
+  ): void => {
     setFormValues({
       name: infrastructureDefinitionConfig.name,
       identifier: infrastructureDefinitionConfig.identifier,
@@ -411,6 +435,8 @@ function BootstrapDeployInfraDefinition(
       if (isBoolean(infrastructureDefinitionConfig.allowSimultaneousDeployments)) {
         infraDefinition.allowSimultaneousDeployments = infrastructureDefinitionConfig.allowSimultaneousDeployments
       }
+
+      infraDefinition.scopedServices = infrastructureDefinitionConfig.scopedServices
 
       const serviceDefinition = get(draft, 'stage.spec.serviceConfig.serviceDefinition', {})
 
@@ -721,7 +747,8 @@ function BootstrapDeployInfraDefinition(
               environmentIdentifier,
               orgIdentifier,
               projectIdentifier,
-              pipeline
+              pipeline,
+              scopedServices: selectedScopedServices
             }) as InfrastructureDefinitionConfig
           )
         })
@@ -737,6 +764,30 @@ function BootstrapDeployInfraDefinition(
       handleSaveInfrastructure()
     }
   }))
+
+  const initialScopedServices =
+    scopedServices?.map(scopedService => ({ label: scopedService, value: scopedService })) || []
+  const scopedServicesInitialValues: ScopedServiceFormikValues = {
+    scopedServices: initialScopedServices,
+    scopeToSpecificServices: !!initialScopedServices.length
+  }
+
+  const handleSelectedScopedServiceChange = (latestScopedServicesFormikValues: ScopedServiceFormikValues): void => {
+    const latestScopedServicesValues = latestScopedServicesFormikValues.scopedServices.map(
+      scopedService => scopedService.value as string
+    )
+    const updatedInfradefinitionConfig = getInfraDefinitionConfig({
+      formikValues: {},
+      scope,
+      environmentIdentifier,
+      orgIdentifier,
+      projectIdentifier,
+      pipeline,
+      scopedServices: latestScopedServicesValues
+    })
+    handleInfrastructureUpdate?.({ infrastructureDefinition: updatedInfradefinitionConfig })
+    setSelectedScopedServices(latestScopedServicesValues)
+  }
 
   // Save button is to be disabled when -
   // 1. infra save is in progress
@@ -764,7 +815,7 @@ function BootstrapDeployInfraDefinition(
         <Container>
           {selectedView === SelectedView.VISUAL ? (
             <>
-              <Card className={css.nameIdCard}>
+              <Card className={css.infraCardSection}>
                 <Formik<Partial<CombinedInfrastructureDefinationResponse> & GitSyncFormFields>
                   initialValues={formValues}
                   formName={'infrastructure-modal'}
@@ -811,6 +862,47 @@ function BootstrapDeployInfraDefinition(
                   isSingleEnv={isSingleEnv}
                 />
               )}
+              {!!CDS_SCOPE_INFRA_TO_SERVICES && (infrastructureDefinition?.deploymentType || selectedDeploymentType) && (
+                <Card className={stageCss.sectionCard}>
+                  <Formik<ScopedServiceFormikValues>
+                    initialValues={scopedServicesInitialValues}
+                    formName={'scopedServicesForm'}
+                    onSubmit={noop}
+                    validate={values => handleSelectedScopedServiceChange(values)}
+                  >
+                    {scopedServiceFormikProps => {
+                      return (
+                        <>
+                          <FormInput.CheckBox
+                            name="scopeToSpecificServices"
+                            label={getString('cd.scopeToSpecificServices')}
+                          />
+                          {scopedServiceFormikProps.values.scopeToSpecificServices && (
+                            <Container className={css.inputWidth}>
+                              <MultiTypeServiceField
+                                name={'scopedServices'}
+                                label={getString('cd.pipelineSteps.serviceTab.specifyYourServices')}
+                                deploymentType={
+                                  defaultTo(
+                                    infrastructureDefinition?.deploymentType,
+                                    selectedDeploymentType
+                                  ) as ServiceDeploymentType
+                                }
+                                disabled={isReadOnly}
+                                placeholder={getString('cd.pipelineSteps.serviceTab.selectServices')}
+                                isNewConnectorLabelVisible={false}
+                                isOnlyFixedType
+                                isMultiSelect={true}
+                                onMultiSelectChange={noop}
+                              />
+                            </Container>
+                          )}
+                        </>
+                      )
+                    }}
+                  </Formik>
+                </Card>
+              )}
             </>
           ) : (
             <div className={css.yamlBuilder}>
@@ -830,7 +922,8 @@ function BootstrapDeployInfraDefinition(
                     environmentIdentifier,
                     orgIdentifier,
                     projectIdentifier,
-                    pipeline
+                    pipeline,
+                    scopedServices: selectedScopedServices
                   }) as InfrastructureDefinitionConfig
                 }}
                 key={refreshYAMLBuilder}

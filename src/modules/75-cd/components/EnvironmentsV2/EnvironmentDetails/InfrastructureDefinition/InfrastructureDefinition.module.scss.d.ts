@@ -13,13 +13,14 @@ declare const styles: {
   readonly closeButton: string
   readonly contentWrapper: string
   readonly dialogStyles: string
+  readonly infraCardSection: string
   readonly infraCardWrapper: string
   readonly infraDefinitionDetailsDrawer: string
   readonly infraDetailsConfigurationTab: string
   readonly infraDetailsReferencedByTab: string
   readonly infraForm: string
+  readonly inputWidth: string
   readonly modalFooter: string
-  readonly nameIdCard: string
   readonly nameIdDescriptionTags: string
   readonly referenceByPageBody: string
   readonly tagRender: string

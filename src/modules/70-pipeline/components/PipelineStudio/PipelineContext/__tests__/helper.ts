@@ -640,7 +640,8 @@ const stateWithAwsSamDeploymentType = {
         }
       ]
     },
-    selectionState: { selectedStageId: 'Stage_1' }
+    selectionState: { selectedStageId: 'Stage_1' },
+    gitDetails: {}
   }
 }
 
@@ -650,7 +651,8 @@ export const pipelineContextAwsSam = {
     return { stage: stateWithAwsSamDeploymentType.state.pipeline.stages[0], parent: undefined }
   }),
   allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
-  updateStage: jest.fn()
+  updateStage: jest.fn(),
+  setSelection: jest.fn()
 } as any
 
 const stateWithAwsSamManifests = {

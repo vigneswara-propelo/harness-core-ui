@@ -8,7 +8,7 @@
 import React from 'react'
 import * as Yup from 'yup'
 import cx from 'classnames'
-import type { FormikProps } from 'formik'
+import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
 import { AllowedTypes, FormInput, Formik, FormikForm, Layout } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
@@ -51,6 +51,51 @@ const ECSUpgradeContainerStepEdit = (
     onUpdate?.(values)
   }
 
+  const upgradeContainerStepValidationSchema = Yup.object().shape({
+    ...getNameAndIdentifierSchema(getString, stepViewType),
+    timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
+    spec: Yup.object().shape({
+      newServiceInstanceCount: Yup.lazy(value =>
+        typeof value === 'number'
+          ? Yup.number()
+              .min(0)
+              .max(100)
+              .required(
+                getString('common.validation.fieldIsRequired', {
+                  name: getString('instanceFieldOptions.instanceText')
+                })
+              )
+          : Yup.string().required(
+              getString('common.validation.fieldIsRequired', {
+                name: getString('instanceFieldOptions.instanceText')
+              })
+            )
+      ),
+      newServiceInstanceUnit: Yup.string().required(
+        getString('common.validation.fieldIsRequired', {
+          name: getString('cd.steps.ecsUpgradeContainerStep.instanceUnit')
+        })
+      ),
+      downsizeOldServiceInstanceCount: Yup.lazy(value =>
+        typeof value === 'number' ? Yup.number().min(0).max(100).notRequired() : Yup.string().notRequired()
+      )
+    })
+  })
+
+  const checkForErrors = (
+    formValues: ECSUpgradeContainerStepElementConfig
+  ): FormikErrors<ECSUpgradeContainerStepElementConfig> => {
+    try {
+      upgradeContainerStepValidationSchema.validateSync(formValues)
+    } catch (e) {
+      if (e instanceof Yup.ValidationError) {
+        const err = yupToFormErrors(e)
+        return err
+      }
+    }
+    return {}
+  }
+
   return (
     <>
       <Formik<ECSUpgradeContainerStepElementConfig>
@@ -59,28 +104,9 @@ const ECSUpgradeContainerStepEdit = (
         initialValues={initialValues}
         validate={data => {
           onChange?.(data)
+          return checkForErrors(data)
         }}
-        validationSchema={Yup.object().shape({
-          ...getNameAndIdentifierSchema(getString, stepViewType),
-          timeout: getDurationValidationSchema({ minimum: '10s' }).required(
-            getString('validation.timeout10SecMinimum')
-          ),
-          spec: Yup.object().shape({
-            newServiceInstanceCount: Yup.string()
-              .min(0)
-              .max(100)
-              .required(
-                getString('common.validation.fieldIsRequired', {
-                  name: getString('instanceFieldOptions.instanceText')
-                })
-              ),
-            newServiceInstanceUnit: Yup.string().required(
-              getString('common.validation.fieldIsRequired', {
-                name: getString('cd.steps.ecsUpgradeContainerStep.instanceUnit')
-              })
-            )
-          })
-        })}
+        validationSchema={upgradeContainerStepValidationSchema}
       >
         {(formik: FormikProps<ECSUpgradeContainerStepElementConfig>) => {
           setFormikRef(formikRef, formik)
@@ -129,6 +155,7 @@ const ECSUpgradeContainerStepEdit = (
                       label={getString('cd.steps.ecsUpgradeContainerStep.instanceUnit')}
                       items={getInstanceUnitList()}
                       disabled={readonly}
+                      usePortal={true}
                     />
                   </div>
                 </Layout.Horizontal>
@@ -169,6 +196,7 @@ const ECSUpgradeContainerStepEdit = (
                       label={getString('cd.steps.ecsUpgradeContainerStep.downsizeInstanceUnit')}
                       items={getInstanceUnitList()}
                       disabled={readonly}
+                      usePortal={true}
                     />
                   </div>
                 </Layout.Horizontal>

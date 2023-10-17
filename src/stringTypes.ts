@@ -7044,6 +7044,7 @@ export interface StringsMap {
   'cd.resourceCannotBeEmpty': string
   'cd.runDelegate': string
   'cd.samVersionLabel': string
+  'cd.scopeToSpecificServices': string
   'cd.searchPlaceholder': string
   'cd.secretManagerRequired': string
   'cd.selectArtifact': string

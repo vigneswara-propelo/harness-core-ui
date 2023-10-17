@@ -1,0 +1,35 @@
+{
+  "status": "SUCCESS",
+  "data": [
+    {
+      "service": {
+        "accountId": "zEaak-FLS425IEO7OLzMUg",
+        "identifier": "Service_1",
+        "orgIdentifier": "default",
+        "projectIdentifier": "kanikaTest",
+        "name": "Service 1",
+        "deleted": false,
+        "tags": {},
+        "v2Service": false
+      },
+      "createdAt": 1664450857367,
+      "lastModifiedAt": 1664450857367
+    },
+    {
+      "service": {
+        "accountId": "zEaak-FLS425IEO7OLzMUg",
+        "identifier": "Service_2",
+        "orgIdentifier": "default",
+        "projectIdentifier": "kanikaTest",
+        "name": "Service 2",
+        "deleted": false,
+        "tags": {},
+        "v2Service": false
+      },
+      "createdAt": 1695327467628,
+      "lastModifiedAt": 1695327467628
+    }
+  ],
+  "metaData": null,
+  "correlationId": "1c85d409-1c13-4339-8a7e-57c8426e14fe"
+}
