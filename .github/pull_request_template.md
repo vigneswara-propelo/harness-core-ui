@@ -36,6 +36,9 @@ NA
 - Cypress Pipeline: `retrigger cypress-pipeline`
 - Cypress CV: `retrigger cypress-cv`
 - Fix Prettier: `fix prettier`
+- messagecheck: `trigger messagecheck`
+- gitLeaks: `trigger gitLeaks`
+
 </details>
 
 #### [Contributor license agreement](https://github.com/harness/harness-core-ui/blob/develop/CONTRIBUTOR_LICENSE_AGREEMENT.md)

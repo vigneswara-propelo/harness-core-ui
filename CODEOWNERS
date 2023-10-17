@@ -1,4 +1,4 @@
-.github/ @harness/ui-council
+.github/ @harness/ui-council @harness/build-engineering
 .eslintrc.yml @harness/ui-council
 .prettierignore @harness/ui-council
 .prettierrc.yml @harness/ui-council
