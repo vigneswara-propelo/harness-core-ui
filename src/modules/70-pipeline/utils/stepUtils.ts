@@ -352,7 +352,7 @@ export function getStepDataFromValues(
     // for step groups it is stored at the path 'delegateSelectors'
     if (!isEmpty(item.delegateSelectors)) {
       set(node, isStepGroup ? 'delegateSelectors' : 'spec.delegateSelectors', item.delegateSelectors)
-    } else {
+    } else if (![StepType.SHELLSCRIPT].includes((item as StepElementConfig)?.type as StepType)) {
       delete node?.spec?.delegateSelectors
       delete (node as StepGroupElementConfig)?.delegateSelectors
     }
