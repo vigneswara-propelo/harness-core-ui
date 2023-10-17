@@ -30,7 +30,7 @@ import {
 import { getInterruptHistoriesFromType, getStepsTreeStatus, Interrupt } from '@pipeline/utils/executionUtils'
 import { useGetRetryStepGroupData } from '@pipeline/components/PipelineDiagram/Nodes/StepGroupNode/useGetRetryStepGroupData'
 import { StatusIcon } from './StatusIcon'
-import { getRetryInterrupts, getStepDisplayName } from './utils'
+import { NodeDisplayName, getRetryInterrupts, getStepDisplayName } from './utils'
 import css from './StepsTree.module.scss'
 import stageCss from '../StageSelection/StageSelection.module.scss'
 
@@ -198,14 +198,12 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
               }
             })
             const name = getStepDisplayName(step.item)
-
+            const matrixNodeName = step.item?.data?.strategyMetadata?.matrixmetadata?.matrixvalues
             return (
               <li key={step.item.identifier} className={css.item} data-type="retry-item">
                 <div className={css.step} data-status={statusLower}>
                   <StatusIcon className={css.icon} status={status as ExecutionStatus} />
-                  <Text lineClamp={1} className={css.name}>
-                    {name}
-                  </Text>
+                  <NodeDisplayName name={name} matrixNodeName={matrixNodeName} />
                 </div>
                 <StepsTree nodes={retryNodes} {...commonProps} />
               </li>
@@ -216,6 +214,7 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
             !!step.item.data?.executionInputConfigured && isExecutionWaitingForInput(step.item.status)
           const key = defaultTo(step.item.retryId, step.item.identifier)
           const name = getStepDisplayName(step.item)
+          const matrixNodeName = step.item?.data?.strategyMetadata?.matrixmetadata?.matrixvalues
           return (
             <li
               className={cx(css.item, {
@@ -230,9 +229,7 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
                 onClick={() => handleStepSelect(step.item?.identifier as string, step.item?.status, step.item?.retryId)}
               >
                 <StatusIcon className={css.icon} status={status as ExecutionStatus} />
-                <Text lineClamp={1} className={css.name}>
-                  {name}
-                </Text>
+                <NodeDisplayName name={name} matrixNodeName={matrixNodeName} />
                 {shouldShowExecutionInputs ? (
                   <button
                     className={stageCss.inputWaiting}
@@ -258,6 +255,7 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
           const status = getStepsTreeStatus({ step, allNodeMap }) || step.group.status
           const statusLower = status.toLowerCase()
           const name = getStepDisplayName(step.group)
+          const matrixNodeName = step.group?.data?.strategyMetadata?.matrixmetadata?.matrixvalues
           return (
             <li className={css.item} key={step.group.identifier} data-type="group">
               <div className={css.step} data-status={statusLower}>
@@ -265,11 +263,9 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
                 <div className={css.nameWrapper}>
                   {isRoot ? null : <div className={css.groupIcon} />}
                   {name ? (
-                    <Text lineClamp={1} className={css.name}>
-                      {name}
-                    </Text>
+                    <NodeDisplayName name={name} matrixNodeName={matrixNodeName} />
                   ) : (
-                    <Template className={css.name} stringID="stepGroup" />
+                    <Template className={stageCss.name} stringID="stepGroup" />
                   )}
                 </div>
 
@@ -327,7 +323,7 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
                 <StatusIcon className={css.icon} status={status as ExecutionStatus} />
                 <div className={css.nameWrapper}>
                   {isRoot ? null : <div className={css.parallelIcon} />}
-                  <Template className={css.name} stringID="parallelSteps" />
+                  <Template className={stageCss.name} stringID="parallelSteps" />
                 </div>
               </div>
               <StepsTree nodes={step.parallel} {...commonProps} />

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Accordion, AccordionHandle, Icon, Text } from '@harness/uicore'
+import { Accordion, AccordionHandle, Icon } from '@harness/uicore'
 import { Divider, Spinner } from '@blueprintjs/core'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 
@@ -23,6 +23,7 @@ import type { ExecutionNode, GraphLayoutNode } from 'services/pipeline-ng'
 import { stageGroupTypes, StageType } from '@pipeline/utils/stageHelpers'
 import { StepsTree } from '../StepsTree/StepsTree'
 import { StatusIcon } from '../StepsTree/StatusIcon'
+import { NodeDisplayName } from '../StepsTree/utils'
 import statusIconCss from '../StepsTree/StatusIcon.module.scss'
 import css from './StageSelection.module.scss'
 
@@ -263,9 +264,11 @@ export function StageSelection(props: StageSelectionProps): React.ReactElement {
                         size={23}
                       />
                     )}
-                    <Text lineClamp={1} font={{ weight: 'semi-bold' }}>
-                      {stage.name}
-                    </Text>
+                    <NodeDisplayName
+                      name={stage.name as string}
+                      matrixNodeName={stage.strategyMetadata?.matrixmetadata?.matrixvalues}
+                      isStageNode
+                    />
                   </div>
                   {shouldShowExecutionInputs ? (
                     <button
@@ -307,11 +310,13 @@ export function StageSelection(props: StageSelectionProps): React.ReactElement {
                             disabled={isExecutionSkipped(childStage.status) || isExecutionNotStarted(childStage.status)}
                             summary={
                               <div className={css.stageName}>
-                                <div>
+                                <div className={css.stageUtil}>
                                   <StatusIcon className={css.icon} status={childStage.status as ExecutionStatus} />
-                                  <Text lineClamp={1} font={{ weight: 'semi-bold' }}>
-                                    {childStage.name}
-                                  </Text>
+                                  <NodeDisplayName
+                                    name={childStage.name as string}
+                                    matrixNodeName={childStage.strategyMetadata?.matrixmetadata?.matrixvalues}
+                                    isStageNode
+                                  />
                                 </div>
                               </div>
                             }
