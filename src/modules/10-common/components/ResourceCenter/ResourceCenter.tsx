@@ -9,7 +9,6 @@ import React, { useState, useEffect } from 'react'
 import { noop } from 'lodash-es'
 import { Button, ButtonVariation, Icon, Layout, Text, IconName, useToggleOpen } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-
 import _refiner from 'refiner-js'
 import { Drawer, Position } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -52,7 +51,7 @@ interface ResourceCenterProps {
 
 export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link, isOpen: display, onClose, hideHelpBtn }) => {
   const { getString } = useStrings()
-  const { currentUserInfo } = useAppStore()
+  const { currentUserInfo, accountInfo } = useAppStore()
   const [buttonDisabled, setButtonDisabled] = useState(false)
   const [show, setShow] = useState<boolean>(Boolean(display))
   const { showModal } = useReleaseNotesModal()
@@ -127,7 +126,8 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link, isOpen: di
     finalTiles.push({
       title: getString('common.resourceCenter.ticketmenu.shareYourIdeas'),
       icon: 'chat',
-      onClick: (e: React.MouseEvent<Element, MouseEvent>) => cannySupportShareYourIdeas(e),
+      onClick: (e: React.MouseEvent<Element, MouseEvent>) =>
+        cannySupportShareYourIdeas(e, currentUserInfo, accountInfo),
       disabled: buttonDisabled,
       iconSize: 20,
       testId: 'shareIdeas'

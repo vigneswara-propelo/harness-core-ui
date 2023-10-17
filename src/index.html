@@ -48,6 +48,7 @@
     <!-- IDPUrl -->
     <!-- segmentToken -->
     <!-- bugsnagToken -->
+    <!-- cannyAppId -->
     <!-- appDyEUMToken -->
     <!-- deploymentType -->
     <!-- refinerProjectToken -->
@@ -176,6 +177,7 @@
       window.HARNESS_ENABLE_APPDY_EUM = 'HARNESS_ENABLE_APPDY_EUM_PLACEHOLDER' === 'true'
       window.HARNESS_ENABLE_CDN = 'HARNESS_ENABLE_CDN_PLACEHOLDER' === 'true'
       window.HARNESS_ENABLE_SABER = 'HARNESS_ENABLE_SABER_PLACEHOLDER' === 'true'
+      window.HARNESS_ENABLE_CANNY = 'HARNESS_ENABLE_CANNY_PLACEHOLDER' === 'true'
       window.HARNESS_PLG_FF_SDK_KEY = 'HARNESS_PLG_FF_SDK_KEY_PLACEHOLDER'
     </script>
 
@@ -248,6 +250,37 @@
       }
     </script>
     <!-- End of Saber Feedback button -->
+
+    <!-- Download Canny SDK -->
+    <script>
+      if (window.HARNESS_ENABLE_CANNY) {
+        !(function (w, d, i, s) {
+          function l() {
+            if (!d.getElementById(i)) {
+              var f = d.getElementsByTagName(s)[0],
+                e = d.createElement(s)
+              ;(e.type = 'text/javascript'),
+                (e.async = !0),
+                (e.src = 'https://canny.io/sdk.js'),
+                f.parentNode.insertBefore(e, f)
+            }
+          }
+          if ('function' != typeof w.Canny) {
+            var c = function () {
+              c.q.push(arguments)
+            }
+            ;(c.q = []),
+              (w.Canny = c),
+              'complete' === d.readyState
+                ? l()
+                : w.attachEvent
+                ? w.attachEvent('onload', l)
+                : w.addEventListener('load', l, !1)
+          }
+        })(window, document, 'canny-jssdk', 'script')
+      }
+    </script>
+    <!-- End of Download Canny SDK -->
 
     <!-- Harness Feature Flags -->
     <% if (__DEV__) { %>

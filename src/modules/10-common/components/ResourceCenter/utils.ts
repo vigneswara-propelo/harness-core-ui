@@ -6,7 +6,7 @@
  */
 
 import moment from 'moment'
-import type { UserInfo } from 'services/cd-ng'
+import type { AccountDTO, UserInfo } from 'services/cd-ng'
 
 export const ON_PREM_RELEASE_NODE_LINK = 'https://ngdocs.harness.io/article/556wy85kbo-harness-on-prem-release-notes'
 export const SAAS_RELEASE_NODE_LINK = 'https://ngdocs.harness.io/article/7zkchy5lhj-harness-saa-s-release-notes-2022'
@@ -28,9 +28,7 @@ export const timestamp = moment.now()
 export const HARNESS_SUPPORT_LINK =
   '/sso.html?action=login&brand_id=114095000394&locale_id=1&return_to=https%3A%2F%2Fsupport.harness.io%2Fhc%2Fen-us%2Frequests&src=zendesk&timestamp=' +
   timestamp
-export const CANNY_SUPPORT_LINK =
-  '/gateway/sso.html?src=canny&action=login&companyID=6450229969594e0bc28b76ef&redirect=https%3A%2F%2Fharness-io.canny.io%2F'
-
+export const CANNY_SUPPORT_LINK = 'https://ideas.harness.io/'
 export const WHATS_NEW_LINK = `https://docs.harness.io/article/ueeiji09do-what-s-new`
 export const EARLY_ACCESS_LINK = `https://docs.harness.io/article/w4krvu96i3-early-access`
 
@@ -40,9 +38,31 @@ export const openZendeskSupport = (e: React.MouseEvent<Element, MouseEvent>): vo
   window.open(HARNESS_SUPPORT_LINK)
 }
 
-export const cannySupportShareYourIdeas = (e: React.MouseEvent<Element, MouseEvent>): void => {
+const initCanny = (currentUserInfo: UserInfo, account?: AccountDTO) => {
+  Canny('identify', {
+    appID: window.cannyAppId,
+    user: {
+      companies: [
+        {
+          id: account?.identifier,
+          name: account?.companyName
+        }
+      ],
+      email: currentUserInfo.email,
+      id: currentUserInfo.uuid,
+      name: currentUserInfo.name
+    }
+  })
+}
+
+export const cannySupportShareYourIdeas = (
+  e: React.MouseEvent<Element, MouseEvent>,
+  currentUserInfo: UserInfo,
+  account?: AccountDTO
+): void => {
   e.stopPropagation()
   e.preventDefault()
+  initCanny(currentUserInfo, account)
   window.open(CANNY_SUPPORT_LINK)
 }
 

@@ -21,6 +21,7 @@ sed -i "s|HARNESS_ENABLE_APPDY_EUM_PLACEHOLDER|$HARNESS_ENABLE_APPDY_EUM_PLACEHO
 sed -i "s|HARNESS_ENABLE_CDN_PLACEHOLDER|$HARNESS_ENABLE_CDN_PLACEHOLDER|" index.html
 sed -i "s|BROWSER_ROUTER_ENABLED_PLACEHOLDER|$BROWSER_ROUTER_ENABLED_PLACEHOLDER|" index.html
 sed -i "s|HARNESS_ENABLE_SABER_PLACEHOLDER|$HARNESS_ENABLE_SABER_PLACEHOLDER|" index.html
+sed -i "s|HARNESS_ENABLE_CANNY_PLACEHOLDER|$CANNY_ENABLE|" index.html
 sed -i "s|<\!-- segmentToken -->|<script>window.segmentToken = '$SEGMENT_TOKEN'</script>|" index.html
 sed -i "s|<\!-- bugsnagToken -->|<script>window.bugsnagToken = '$BUGSNAG_TOKEN'</script>|" index.html
 sed -i "s|<\!-- appDyEUMToken -->|<script>window.appDyEUMToken = '$APPDY_EUM_TOKEN'</script>|" index.html
@@ -37,6 +38,8 @@ sed -i "s|<\!-- newNavContentfulEnvironment -->|<script>window.newNavContentfulE
 sed -i "s|<\!-- harnessNameSpacePlaceHolder -->|<script>window.harnessNameSpace = '$HARNESS_NAME_SPACE'</script>|" index.html
 sed -i "s|<\!-- harnessClusterURLPlaceHolder -->|<script>window.harnessClusterURL = '$HARNESS_CLUSTER_URL'</script>|" index.html
 sed -i "s|<\!-- stripeApiKey -->|<script>window.stripeApiKey = '$STRIPE_API_KEY'</script>|" index.html
+sed -i "s|<\!-- cannyAppId -->|<script>window.cannyAppId = '$CANNY_APP_ID'</script>|" index.html
+
 
 sed -i "s|USE_LEGACY_FEATURE_FLAGS_PLACEHOLDER|$USE_LEGACY_FEATURE_FLAGS|" index.html
 sed -i "s|HARNESS_FF_SDK_BASE_URL_PLACEHOLDER|$HARNESS_FF_SDK_BASE_URL|" index.html
@@ -54,7 +57,7 @@ fi
 
 if [ "$HARNESS_ENABLE_CSP_HEADERS" = "true" ]
 then
-  sed -i "s|#cspHeadersPlaceholder|add_header Content-Security-Policy-Report-Only \"script-src 'self' 'unsafe-inline' https://*.harness.io https://widget.saberfeedback.com https://cdn.segment.com https://js.refiner.io https://widget.intercom.io https://js.intercomcdn.com https://d2wy8f7a9ursnm.cloudfront.net https://cdn.appdynamics.com; style-src 'self' 'unsafe-inline' https://*.harness.io https://fonts.googleapis.com https://widget.saberfeedback.com https://js.refiner.io; img-src 'self' data: blob: https://*.harness.io https://widget.saberfeedback.com; font-src 'self' https://fonts.gstatic.com;\";|" $NGINX_CONFIG_FILE
+  sed -i "s|#cspHeadersPlaceholder|add_header Content-Security-Policy-Report-Only \"script-src 'self' 'unsafe-inline' https://canny.io https://*.harness.io https://widget.saberfeedback.com https://cdn.segment.com https://js.refiner.io https://widget.intercom.io https://js.intercomcdn.com https://d2wy8f7a9ursnm.cloudfront.net https://cdn.appdynamics.com; style-src 'self' 'unsafe-inline' https://*.harness.io https://fonts.googleapis.com https://widget.saberfeedback.com https://js.refiner.io; img-src 'self' data: blob: https://*.harness.io https://widget.saberfeedback.com; font-src 'self' https://fonts.gstatic.com;\";|" $NGINX_CONFIG_FILE
 fi
 
 

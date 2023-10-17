@@ -11,6 +11,7 @@ declare const __DEV__: boolean
 declare const Bugsnag: any
 declare const __BUGSNAG_RELEASE_VERSION__: string
 declare const DEV_FF: Record<string, boolean>
+declare const Canny: any
 declare module '*.png' {
   const value: string
   export default value
@@ -56,6 +57,7 @@ declare interface Window {
   HARNESS_PLG_FF_SDK_KEY: string
   bugsnagClient: any
   bugsnagToken: string
+  cannyAppId: string
   Harness: {
     openNgTooltipEditor: () => void
     openTooltipEditor: () => void
