@@ -8,10 +8,10 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
-import { defaultTo, isEmpty, pick } from 'lodash-es'
-import { Classes, Menu, Position } from '@blueprintjs/core'
-import { Layout, TagsPopover, Text, useConfirmationDialog, Popover, Button } from '@harness/uicore'
-import { Intent, Color } from '@harness/design-system'
+import { defaultTo, get, isEmpty, pick } from 'lodash-es'
+import { Classes, Menu, PopoverInteractionKind, Position } from '@blueprintjs/core'
+import { Layout, TagsPopover, Text, useConfirmationDialog, Popover, Button, Icon } from '@harness/uicore'
+import { Intent, Color, FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 import type { InfrastructureResponse, InfrastructureResponseDTO } from 'services/cd-ng'
@@ -23,6 +23,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { PermissionRequest } from '@rbac/hooks/usePermission'
 
+import { CodeSourceWrapper } from '@modules/70-pipeline/components/CommonPipelineStages/PipelineStage/utils'
 import css from '../InfrastructureDefinition.module.scss'
 
 interface InfrastructureRowColumn {
@@ -171,6 +172,68 @@ export function InfrastructureMenu({
             }}
           />
         </Menu>
+      </Popover>
+    </Layout.Horizontal>
+  )
+}
+
+export function CodeSourceCell({ infrastructure }: { infrastructure: InfrastructureResponseDTO }): React.ReactElement {
+  const { entityGitDetails: gitDetails, storeType } = infrastructure
+  const { getString } = useStrings()
+  const isRemote = storeType === 'REMOTE'
+  const inlineWrapper: CodeSourceWrapper = {
+    textName: getString('inline'),
+    iconName: 'repository',
+    size: 10
+  }
+  const remoteWrapper: CodeSourceWrapper = {
+    textName: getString('repository'),
+    iconName: 'remote-setup',
+    size: 12
+  }
+
+  return (
+    <Layout.Horizontal flex>
+      <Popover
+        disabled={!isRemote}
+        position={Position.TOP}
+        interactionKind={PopoverInteractionKind.HOVER}
+        className={Classes.DARK}
+        content={
+          <Layout.Vertical spacing="small" padding="large" className={css.contentWrapper}>
+            <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'start' }}>
+              <Icon name="github" size={14} color={Color.GREY_200} />
+              <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }}>
+                {get(gitDetails, 'repoName', get(gitDetails, 'repoIdentifier'))}
+              </Text>
+            </Layout.Horizontal>
+            {gitDetails?.filePath && (
+              <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'start' }}>
+                <Icon name="remotefile" size={14} color={Color.GREY_200} />
+                <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }}>
+                  {gitDetails.filePath}
+                </Text>
+              </Layout.Horizontal>
+            )}
+          </Layout.Vertical>
+        }
+      >
+        <Layout.Horizontal
+          flex={{ justifyContent: 'center' }}
+          spacing="small"
+          padding="small"
+          border={{ radius: 3 }}
+          background={Color.GREY_100}
+        >
+          <Icon
+            name={isRemote ? remoteWrapper.iconName : inlineWrapper.iconName}
+            size={isRemote ? remoteWrapper.size : inlineWrapper.size}
+            color={Color.GREY_600}
+          />
+          <Text margin={{ left: 'xsmall' }} font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_600}>
+            {isRemote ? remoteWrapper.textName : inlineWrapper.textName}
+          </Text>
+        </Layout.Horizontal>
       </Popover>
     </Layout.Horizontal>
   )

@@ -11,6 +11,7 @@ declare const styles: {
   readonly body: string
   readonly buttonWrapper: string
   readonly closeButton: string
+  readonly contentWrapper: string
   readonly dialogStyles: string
   readonly infraCardWrapper: string
   readonly infraDefinitionDetailsDrawer: string

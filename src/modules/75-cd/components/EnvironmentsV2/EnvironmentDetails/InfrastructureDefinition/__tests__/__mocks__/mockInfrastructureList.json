@@ -18,6 +18,7 @@
           "tags": { "tag 1": "" },
           "deploymentType": "Kubernetes",
           "type": "KubernetesDirect",
+          "storeType": "INLINE",
           "yaml": "infrastructureDefinition:\n  name: \"Infra 5\"\n  identifier: \"Infra_5\"\n  orgIdentifier: \"dummy\"\n  projectIdentifier: \"dummy\"\n  environmentRef: \"Env_1\"\n  description: \"Some desc\"\n  tags:\n    tag 1: \"\"\n  allowSimultaneousDeployments: true\n  deploymentType: \"Kubernetes\"\n  type: \"KubernetesDirect\"\n  spec:\n    connectorRef: \"Test\"\n    namespace: \"testasdsaa\"\n    releaseName: \"release-<+INFRA_KEY>\"\n"
         },
         "createdAt": 1655450453892,
@@ -86,6 +87,11 @@
           "tags": {},
           "deploymentType": "Kubernetes",
           "type": "KubernetesDirect",
+          "storeType": "REMOTE",
+          "entityGitDetails": {
+            "repoName": "testRepo",
+            "filePath": ".harness/infra6.yaml"
+          },
           "yaml": "infrastructureDefinition:\n  name: \"Infra 1\"\n  identifier: \"Infra_1\"\n  orgIdentifier: \"dummy\"\n  projectIdentifier: \"dummy\"\n  environmentRef: \"Env_1\"\n  description: \"\"\n  tags: {}\n  allowSimultaneousDeployments: true\n  deploymentType: \"Kubernetes\"\n  type: \"KubernetesDirect\"\n  spec:\n    connectorRef: \"Test\"\n    namespace: \"test\"\n    releaseName: \"release-<+INFRA_KEY>\"\n"
         },
         "createdAt": 1655281836514,

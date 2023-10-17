@@ -8,6 +8,7 @@
 import React from 'react'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 
+import userEvent from '@testing-library/user-event'
 import * as cdNgServices from 'services/cd-ng'
 
 import routes from '@common/RouteDefinitions'
@@ -325,5 +326,44 @@ describe('Infrastructure Definition tests', () => {
     fireEvent.click(confirmButton!)
 
     await waitFor(() => expect(showErrorMock).toHaveBeenCalled())
+  })
+
+  test('test code source details present in listing page if CDS_INFRA_GITX flag is on', async () => {
+    jest.spyOn(cdNgServices, 'useGetInfrastructureList').mockImplementation(() => {
+      return {
+        loading: false,
+        error: undefined,
+        data: mockInfrastructureList,
+        refetch: jest.fn()
+      } as any
+    })
+
+    const { container, getByText } = render(
+      <TestWrapper
+        path={routes.toEnvironmentDetails({
+          ...projectPathProps,
+          ...modulePathProps,
+          ...environmentPathProps
+        })}
+        pathParams={{
+          accountId: 'dummy',
+          orgIdentifier: 'dummy',
+          projectIdentifier: 'dummy',
+          module: 'cd',
+          environmentIdentifier: 'Env_1'
+        }}
+        queryParams={{ sectionId: 'INFRASTRUCTURE' }}
+        defaultFeatureFlagValues={{ CDS_INFRA_GITX: true }}
+      >
+        <InfrastructureDefinition isEnvPage />
+      </TestWrapper>
+    )
+
+    expect(container.querySelector('[data-icon="repository"]') as HTMLButtonElement).toBeInTheDocument() //Inline
+
+    userEvent.hover(container.querySelector('[data-icon="remote-setup"]') as HTMLButtonElement) //Remote
+    await waitFor(() => {
+      expect(getByText('testRepo')).toBeInTheDocument()
+    })
   })
 })

@@ -21,7 +21,10 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { FeatureFlag } from '@modules/10-common/featureFlags'
+import { useFeatureFlag } from '@modules/10-common/hooks/useFeatureFlag'
 import {
+  CodeSourceCell,
   InfraDetails,
   InfrastructureMenu,
   InfrastructureName,
@@ -44,6 +47,7 @@ export default function InfrastructureList({
   const { accountId, orgIdentifier, projectIdentifier, environmentIdentifier } = useParams<
     ProjectPathProps & EnvironmentPathProps
   >()
+  const isGitXEnabledForInfras = useFeatureFlag(FeatureFlag.CDS_INFRA_GITX)
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
@@ -124,18 +128,28 @@ export default function InfrastructureList({
       {
         Header: getString('infrastructureText').toUpperCase(),
         id: 'name',
-        width: '50%',
+        width: isGitXEnabledForInfras ? '40%' : '50%',
         Cell: withInfrastructure(InfrastructureName)
       },
+      ...(isGitXEnabledForInfras
+        ? [
+            {
+              Header: getString('pipeline.codeSource'),
+              id: 'storeType',
+              width: '25%',
+              Cell: withInfrastructure(CodeSourceCell)
+            }
+          ]
+        : []),
       {
         Header: getString('lastUpdated').toUpperCase(),
         id: 'lastUpdatedBy',
-        width: '30%',
+        width: isGitXEnabledForInfras ? '25%' : '40%',
         Cell: withInfrastructure(LastUpdatedBy)
       },
       {
         id: 'editOrDelete',
-        width: '20%',
+        width: '10%',
         Cell: withInfrastructure(InfrastructureMenu),
         actions: {
           onEdit,
