@@ -13,7 +13,6 @@ import {
   ButtonVariation,
   Layout,
   Select,
-  GridListToggle,
   Views,
   SelectOption,
   Heading,
@@ -47,6 +46,7 @@ import {
 } from './CVMonitoredService.utils'
 import { FilterTypes } from './CVMonitoredService.types'
 import MonitoredServiceList from './components/MonitoredServiceListView/MonitoredServiceList'
+import GraphListToggle from './components/GraphListToggle/GraphListToggle'
 import css from './CVMonitoredService.module.scss'
 
 interface MonitoredServiceProps {
@@ -186,6 +186,14 @@ const MonitoredService = (props: MonitoredServiceProps) => {
               }}
             />
           )}
+          {!config && (
+            <GraphListToggle
+              initialView={view}
+              selectedView={selectedView}
+              onSwitch={setSelectedView}
+              loading={serviceCountLoading}
+            />
+          )}
         </LayoutOrientation>
       )
     }
@@ -236,13 +244,6 @@ const MonitoredService = (props: MonitoredServiceProps) => {
                 }}
                 className={css.filterSelect}
               />
-              {!config && (
-                <GridListToggle
-                  initialSelectedView={selectedView}
-                  onViewToggle={setSelectedView}
-                  icons={{ left: 'graph' }}
-                />
-              )}
             </Layout.Horizontal>
           }
         />

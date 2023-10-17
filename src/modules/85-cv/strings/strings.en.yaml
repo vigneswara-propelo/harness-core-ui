@@ -615,6 +615,8 @@ monitoredServices:
   changeMonitoredServiceType: Change Monitored Service Type
   changeMonitoredServiceTypeMessage: Changing monitored service type will reset change sources
   searchMonitoredServices: Search Monitored Services
+  listAndGridViewLabel:
+    gridView: Switch to map view
   sloErrorBudget: SLO / Error Budget
   searchMonitoresService: 'Search monitored services'
   serviceHealth:

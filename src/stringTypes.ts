@@ -9851,6 +9851,7 @@ export interface StringsMap {
   'cv.monitoredServices.filterlabel': string
   'cv.monitoredServices.heading': string
   'cv.monitoredServices.healthScoreDataNotAvailable': string
+  'cv.monitoredServices.listAndGridViewLabel.gridView': string
   'cv.monitoredServices.listToggleSwitchDisableMessage': string
   'cv.monitoredServices.monitoredServiceCreated': string
   'cv.monitoredServices.monitoredServiceDeleted': string
