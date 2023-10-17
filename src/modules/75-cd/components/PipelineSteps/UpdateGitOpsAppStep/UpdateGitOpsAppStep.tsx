@@ -16,7 +16,7 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepViewType, StepProps } from '@pipeline/components/AbstractSteps/Step'
 import type { StringsMap } from 'stringTypes'
-import { UpdateGitOpsAppStepData, SOURCE_TYPE_UNSET, ApplicationOption } from './helper'
+import { UpdateGitOpsAppStepData, SOURCE_TYPE_UNSET, ApplicationOption, HelmValues } from './helper'
 import UpdateGitOpsAppStepWithRef from './UpdateGitOpsAppWidget'
 import UpdateGitopsAppInputStep from './UpdateGitopsAppInputStep'
 
@@ -123,8 +123,8 @@ export class UpdateGitOpsApp extends PipelineStep<UpdateGitOpsAppStepData> {
             }
     }
 
-    const parameters = clonedValues.spec.helm?.parameters
-    const fileParameters = clonedValues.spec.helm?.fileParameters
+    const parameters = (clonedValues.spec.helm as HelmValues)?.parameters
+    const fileParameters = (clonedValues.spec.helm as HelmValues)?.fileParameters
 
     /* istanbul ignore else */
     if (!clonedValues.spec.helm) {
@@ -134,25 +134,25 @@ export class UpdateGitOpsApp extends PipelineStep<UpdateGitOpsAppStepData> {
     // Adding uuid to parameters
     /* istanbul ignore else */
     if (parameters?.length) {
-      clonedValues.spec.helm.parameters = parameters.map(variable => ({
+      ;(clonedValues.spec.helm as HelmValues).parameters = parameters.map(variable => ({
         ...variable,
         id: uuid()
       }))
     }
     /* istanbul ignore else */
     if (fileParameters?.length) {
-      clonedValues.spec.helm.fileParameters = fileParameters.map(({ path, ...variable }) => ({
+      ;(clonedValues.spec.helm as HelmValues).fileParameters = fileParameters.map(({ path, ...variable }) => ({
         ...variable,
         value: path,
         id: uuid()
       }))
     }
 
-    const valueFiles = clonedValues.spec.helm?.valueFiles as string[]
+    const valueFiles = (clonedValues.spec.helm as HelmValues)?.valueFiles as string[]
 
     /* istanbul ignore else */
     if (valueFiles?.length) {
-      clonedValues.spec.helm.valueFiles = valueFiles.map(value => ({
+      ;(clonedValues.spec.helm as HelmValues).valueFiles = valueFiles.map(value => ({
         label: value,
         value
       }))
@@ -170,11 +170,11 @@ export class UpdateGitOpsApp extends PipelineStep<UpdateGitOpsAppStepData> {
     const appName = /* istanbul ignore next */ (applicationNameOption as ApplicationOption)?.value
     const targetRevision = /* istanbul ignore next */ (targetRevisionOption as SelectOption)?.value
 
-    const parameters = /* istanbul ignore next */ clonedValues.spec.helm?.parameters
-    const fileParameters = /* istanbul ignore next */ clonedValues.spec.helm?.fileParameters
-    const valueFiles = /* istanbul ignore next */ clonedValues.spec.helm?.valueFiles as SelectOption[]
+    const parameters = /* istanbul ignore next */ (clonedValues.spec.helm as HelmValues)?.parameters
+    const fileParameters = /* istanbul ignore next */ (clonedValues.spec.helm as HelmValues)?.fileParameters
+    const valueFiles = /* istanbul ignore next */ (clonedValues.spec.helm as HelmValues)?.valueFiles as SelectOption[]
     const isHelm =
-      /* istanbul ignore next */ (data.spec?.applicationNameOption as ApplicationOption)?.sourceType === 'Helm'
+      /* istanbul ignore next */ (data.spec?.applicationNameOption as ApplicationOption)?.appType === 'Helm'
 
     /* istanbul ignore else */
     if (appName && typeof appName === 'string') {
@@ -207,14 +207,14 @@ export class UpdateGitOpsApp extends PipelineStep<UpdateGitOpsAppStepData> {
     // Removing uuid from parameters
     /* istanbul ignore else */
     if (isHelm && /* istanbul ignore next */ parameters?.length) {
-      clonedValues.spec.helm.parameters = parameters
+      ;(clonedValues.spec.helm as HelmValues).parameters = parameters
         .filter(variable => variable.value)
         .map(({ id, ...variable }) => variable)
     }
 
     /* istanbul ignore else */
     if (isHelm && /* istanbul ignore next */ fileParameters?.length) {
-      clonedValues.spec.helm.fileParameters = fileParameters
+      ;(clonedValues.spec.helm as HelmValues).fileParameters = fileParameters
         .filter(variable => variable.value)
         .map(({ id, value, ...variable }) => ({
           ...variable,
@@ -224,12 +224,18 @@ export class UpdateGitOpsApp extends PipelineStep<UpdateGitOpsAppStepData> {
 
     /* istanbul ignore next */
     if (isHelm && valueFiles?.length) {
-      clonedValues.spec.helm.valueFiles = valueFiles.filter(option => option?.value).map(({ value }) => value as string)
+      ;(clonedValues.spec.helm as HelmValues).valueFiles = valueFiles
+        .filter(option => option?.value)
+        .map(({ value }) => value as string)
     }
 
     /* istanbul ignore else */
-    if (!isHelm || isEmpty(clonedValues.spec.helm)) {
+    if (!isHelm || isEmpty(clonedValues.spec.helm) || (clonedValues.spec.helm as string) === RUNTIME_INPUT_VALUE) {
       delete clonedValues.spec.helm
+    }
+
+    if (isApplicationRuntime || (isHelm && isTargetRevisionRuntime)) {
+      clonedValues.spec.helm = RUNTIME_INPUT_VALUE
     }
 
     delete clonedValues.spec.applicationNameOption

@@ -48,16 +48,13 @@ export const useApplications = (): {
       /* istanbul ignore next */
       response.content?.map(app => {
         const chart = app.app?.spec?.source?.chart
-        let _sourceType = app.app?.status?.sourceType
-        if (!_sourceType) {
-          _sourceType = chart ? 'Helm' : 'Git'
-        }
         return {
           label: `${app.name} (${app.agentIdentifier})`,
           value: app.name || '',
           repoIdentifier: app.repoIdentifier || '',
           agentId: app.agentIdentifier,
-          sourceType: _sourceType,
+          sourceType: chart ? 'Helm' : 'Git',
+          appType: app.app?.spec?.source?.helm ? 'Helm' : 'Git',
           chart: chart,
           targetRevision: app.app?.spec?.source?.targetRevision,
           path: app.app?.spec?.source?.path

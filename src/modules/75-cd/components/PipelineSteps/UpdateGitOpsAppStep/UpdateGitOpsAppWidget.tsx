@@ -239,7 +239,7 @@ function UpdateGitOpsAppStep(
                 {renderFormByType({
                   getString,
                   formValues: formik.values,
-                  type: (formik.values.spec?.applicationNameOption as ApplicationOption)?.sourceType,
+                  type: (formik.values.spec?.applicationNameOption as ApplicationOption)?.appType,
                   readonly,
                   allowableTypes: gitopsAllowableTypes,
                   expressions,

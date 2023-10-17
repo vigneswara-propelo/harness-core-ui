@@ -8,16 +8,17 @@
 import React from 'react'
 import cx from 'classnames'
 import { get } from 'lodash-es'
+import { FormikProps } from 'formik'
 import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType, Formik } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { setFormikRef, StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { TargetRevision } from './TargetRevision'
 import { useApplications } from './useApplications'
-import { ApplicationOption, UpdateGitOpsAppStepData } from './helper'
+import { ApplicationOption, FIELD_KEYS, SOURCE_TYPE_UNSET, UpdateGitOpsAppStepData } from './helper'
 import { renderFormByType } from './FieldRenderers'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -33,6 +34,7 @@ export interface UpdateGitopsAppInputStepProps {
 }
 
 const UpdateGitopsAppInputStep = (props: UpdateGitopsAppInputStepProps): React.ReactElement => {
+  const formikRef = React.createRef<StepFormikRef<unknown>>()
   const { template, readonly, allowableTypes, stepViewType, onChange, onUpdate, initialValues } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -44,6 +46,19 @@ const UpdateGitopsAppInputStep = (props: UpdateGitopsAppInputStepProps): React.R
   const isTargetRevisionField =
     getMultiTypeFromValue(get(template, 'spec.targetRevision')) === MultiTypeInputType.RUNTIME
 
+  React.useEffect(() => {
+    const isSourceTypeUnset =
+      (initialValues.spec?.applicationNameOption as ApplicationOption)?.sourceType === SOURCE_TYPE_UNSET
+    const formikRefCurrent = (formikRef as React.MutableRefObject<StepFormikRef<UpdateGitOpsAppStepData>>)
+      ?.current as FormikProps<UpdateGitOpsAppStepData>
+
+    if (isSourceTypeUnset && formikRefCurrent && appsData.length) {
+      const value = (initialValues.spec.applicationNameOption as ApplicationOption)?.value
+      const option = appsData.find(datum => datum.value === value)
+      formikRefCurrent.setFieldValue(FIELD_KEYS.application, option)
+    }
+  }, [appsData])
+
   return (
     <Formik
       onSubmit={values => /* istanbul ignore next */ onUpdate?.(values)}
@@ -54,8 +69,16 @@ const UpdateGitopsAppInputStep = (props: UpdateGitopsAppInputStepProps): React.R
       }}
     >
       {formik => {
+        setFormikRef(formikRef, formik)
         return (
-          <>
+          <div
+            onKeyDown={e => {
+              if (e.keyCode === 13) {
+                e.stopPropagation()
+                e.preventDefault()
+              }
+            }}
+          >
             {getMultiTypeFromValue(get(template, 'timeout', '')) === MultiTypeInputType.RUNTIME && (
               <TimeoutFieldInputSetView
                 multiTypeDurationProps={{
@@ -114,7 +137,7 @@ const UpdateGitopsAppInputStep = (props: UpdateGitopsAppInputStepProps): React.R
                 ? renderFormByType({
                     getString,
                     formValues: formik.values,
-                    type: 'Helm',
+                    type: (formik.values?.spec?.applicationNameOption as ApplicationOption)?.appType,
                     readonly,
                     allowableTypes,
                     expressions,
@@ -123,7 +146,7 @@ const UpdateGitopsAppInputStep = (props: UpdateGitopsAppInputStepProps): React.R
                   })
                 : null
             }
-          </>
+          </div>
         )
       }}
     </Formik>

@@ -33,9 +33,16 @@ export interface ApplicationOption extends SelectOption {
   repoIdentifier?: string
   agentId?: string
   sourceType?: string
+  appType?: string
   chart?: string
   targetRevision?: string
   path?: string
+}
+
+export interface HelmValues {
+  fileParameters?: Variable[]
+  parameters?: Variable[]
+  valueFiles?: SelectOption[] | string[]
 }
 
 export interface UpdateGitOpsAppStepData extends StepElementConfig {
@@ -44,11 +51,7 @@ export interface UpdateGitOpsAppStepData extends StepElementConfig {
     applicationName?: string
     agentId?: string
     targetRevision?: SelectOption | string
-    helm?: {
-      fileParameters?: Variable[]
-      parameters?: Variable[]
-      valueFiles?: SelectOption[] | string[]
-    }
+    helm?: HelmValues | string
   }
 }
 
@@ -72,7 +75,8 @@ export const SOURCE_TYPES = {
   Git: 'Git'
 }
 
-export const isHelmApp = (app?: ApplicationOption) => app?.sourceType === SOURCE_TYPES.Helm
+export const isHelmSourceRepo = (app?: ApplicationOption) => app?.sourceType === SOURCE_TYPES.Helm
+export const isHelmApp = (app?: ApplicationOption) => app?.appType === SOURCE_TYPES.Helm
 
 export const gitopsAllowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME] as AllowedTypes
 

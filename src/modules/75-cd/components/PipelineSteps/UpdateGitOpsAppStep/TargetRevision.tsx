@@ -19,7 +19,7 @@ import {
   gitopsAllowableTypes,
   getRevisionsTransformedArr,
   RevisionType,
-  isHelmApp,
+  isHelmSourceRepo,
   SOURCE_TYPE_UNSET,
   UpdateGitOpsAppStepData
 } from './helper'
@@ -96,7 +96,7 @@ export const TargetRevision = ({
   })
 
   const { revisionsBranchesArr, revisionsTagsArr } = getRevisionsTransformedArr(revisions)
-  const isHelm = isHelmApp(app)
+  const isHelm = isHelmSourceRepo(app)
 
   React.useEffect(() => {
     if (isSourceTypeUnset) return
