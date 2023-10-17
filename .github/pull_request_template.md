@@ -36,9 +36,11 @@ NA
 - Cypress Pipeline: `retrigger cypress-pipeline`
 - Cypress CV: `retrigger cypress-cv`
 - Fix Prettier: `fix prettier`
-- messagecheck: `trigger messagecheck`
-- gitLeaks: `trigger gitLeaks`
-
+- MessageMetadata: `trigger messagecheck`
+- GitLeaks: `trigger gitLeaks`
 </details>
+
+## PR check failures and solutions
+https://harness.atlassian.net/wiki/spaces/BT/pages/21106884744/PR+Checks+-+Failures+and+Solutions
 
 #### [Contributor license agreement](https://github.com/harness/harness-core-ui/blob/develop/CONTRIBUTOR_LICENSE_AGREEMENT.md)
