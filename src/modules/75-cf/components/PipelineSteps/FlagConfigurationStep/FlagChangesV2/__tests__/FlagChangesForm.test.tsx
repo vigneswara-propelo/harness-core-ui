@@ -11,18 +11,11 @@ import { render, RenderResult, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
-import * as ffServices from 'services/cf'
 import type { FlagConfigurationStepFormDataValues } from '../../types'
 import { FeatureFlagConfigurationInstruction } from '../../types'
-import { mockSetFlagSwitchFieldValues, mockVariations } from '../subSections/__tests__/utils.mocks'
+import { mockSetFlagSwitchFieldValues } from '../subSections/__tests__/utils.mocks'
 import FlagChangesForm, { allSubSections, FlagChangesFormProps } from '../FlagChangesForm'
 import SubSection, { SubSectionProps } from '../SubSection'
-
-const mockFeature = {
-  name: 'f1',
-  identifier: 'f1',
-  variations: mockVariations
-} as ffServices.Feature
 
 const mockInitialValues = {
   identifier: 'step',
@@ -42,18 +35,13 @@ const renderComponent = (
   render(
     <TestWrapper>
       <Formik onSubmit={jest.fn()} initialValues={initialValues}>
-        <FlagChangesForm
-          prefix={fieldName => fieldName}
-          initialInstructions={get(initialValues, 'spec.instructions')}
-          selectedFeature={mockFeature}
-          {...props}
-        />
+        <FlagChangesForm prefixPath="prefix" initialInstructions={get(initialValues, 'spec.instructions')} {...props} />
       </Formik>
     </TestWrapper>
   )
 
 const totalSubSections = allSubSections.length
-jest.mock('../subSections/SetFlagSwitch', () => ({
+jest.mock('../subSections/SetFlagSwitch/SetFlagSwitch', () => ({
   default: ({ onRemove }: SubSectionProps) => (
     <SubSection title="Sub Section" onRemove={onRemove}>
       Sub section

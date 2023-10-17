@@ -10,10 +10,11 @@ import type { StringKeys } from 'framework/strings'
 import type { SubSectionProps } from './SubSection'
 
 export interface SubSectionComponentProps extends Omit<SubSectionProps, 'children'> {
-  prefix: (path: string) => string
+  prefixPath: string
 }
 export type SubSectionComponent = FC<SubSectionComponentProps>
 
 export const subSectionNames: Record<string, StringKeys> = {
-  SetFlagSwitch: 'cf.pipeline.flagConfiguration.setFlagSwitch'
+  SetFlagSwitch: 'cf.pipeline.flagConfiguration.setFlagSwitch',
+  DefaultOnRule: 'cf.pipeline.flagConfiguration.setDefaultOnRule'
 }

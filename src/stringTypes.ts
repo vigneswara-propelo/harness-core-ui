@@ -8731,6 +8731,7 @@ export interface StringsMap {
   'cf.featureFlags.flagPipeline.title': string
   'cf.featureFlags.flagPipeline.to': string
   'cf.featureFlags.flagPipeline.triggerDetails': string
+  'cf.featureFlags.flagPipeline.validation.defaultOnRule.onVariation': string
   'cf.featureFlags.flagPipeline.validation.defaultRules.onOrOffVariation': string
   'cf.featureFlags.flagPipeline.validation.servePercentageRollout.targetGroup': string
   'cf.featureFlags.flagPipeline.validation.serveVariationToIndividualTarget.variationTargets': string
@@ -8943,10 +8944,11 @@ export interface StringsMap {
   'cf.pipeline.flagConfiguration.flagChangesRuntimeServeVariationToTargetGroups': string
   'cf.pipeline.flagConfiguration.flagChangesRuntimeServeVariationToTargets': string
   'cf.pipeline.flagConfiguration.flagChangesRuntimeSetDefaultRules': string
-  'cf.pipeline.flagConfiguration.flagChangesRuntimeSetFlagSwitch': string
   'cf.pipeline.flagConfiguration.flagRequired': string
   'cf.pipeline.flagConfiguration.noFlagChanges': string
   'cf.pipeline.flagConfiguration.pleaseSelectAFeatureFlag': string
+  'cf.pipeline.flagConfiguration.pleaseSelectEnvironment': string
+  'cf.pipeline.flagConfiguration.pleaseSelectFlag': string
   'cf.pipeline.flagConfiguration.removeFlagChange': string
   'cf.pipeline.flagConfiguration.selectEnvironment': string
   'cf.pipeline.flagConfiguration.selectFlag': string
@@ -8956,6 +8958,7 @@ export interface StringsMap {
   'cf.pipeline.flagConfiguration.servePercentageRollout': string
   'cf.pipeline.flagConfiguration.serveVariationToIndividualTarget': string
   'cf.pipeline.flagConfiguration.serveVariationToTargetGroup': string
+  'cf.pipeline.flagConfiguration.setDefaultOnRule': string
   'cf.pipeline.flagConfiguration.setFlagSwitch': string
   'cf.pipeline.flagConfiguration.stepName': string
   'cf.pipeline.flagConfiguration.switchTo': string

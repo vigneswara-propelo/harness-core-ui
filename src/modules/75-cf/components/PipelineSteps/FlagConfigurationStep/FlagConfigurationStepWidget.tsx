@@ -34,6 +34,8 @@ import FlagChanges from './FlagChanges/FlagChanges'
 import FlagChangesV2 from './FlagChangesV2/FlagChanges'
 import preProcessFormValues from './preProcessFormValues'
 import flagChangesValidationSchema from './FlagChanges/flagChangesValidationSchema'
+import flagChangesValidationSchemaV2 from './FlagChangesV2/flagChangesValidationSchema'
+import FlagChangesContextProvider from './FlagChangesContextProvider'
 
 export interface FlagConfigurationStepWidgetProps {
   initialValues: FlagConfigurationStepData
@@ -242,6 +244,8 @@ const FlagConfigurationStepWidget = forwardRef(
       )
     }
 
+    const validationSchema = expressionSupportEnabled ? flagChangesValidationSchemaV2 : flagChangesValidationSchema
+
     return (
       <Formik<FlagConfigurationStepData>
         formName="FeatureFlagConfigurationForm"
@@ -252,9 +256,7 @@ const FlagConfigurationStepWidget = forwardRef(
           spec: Yup.object().shape({
             environment: Yup.string().required(getString('cf.pipeline.flagConfiguration.environmentRequired')),
             feature: Yup.mixed().required(getString('cf.pipeline.flagConfiguration.flagRequired')),
-            instructions: Yup.lazy(val =>
-              val === RUNTIME_INPUT_VALUE ? Yup.string() : flagChangesValidationSchema(getString)
-            )
+            instructions: Yup.lazy(val => (val === RUNTIME_INPUT_VALUE ? Yup.string() : validationSchema(getString)))
           })
         })}
       >
@@ -275,7 +277,6 @@ const FlagConfigurationStepWidget = forwardRef(
           )?.environment
 
           return (
-            //environment dropdown
             <Layout.Vertical padding={{ right: 'xlarge' }}>
               <FormInput.InputWithIdentifier
                 isIdentifierEditable={isNewStep && !readonly}
@@ -322,7 +323,13 @@ const FlagConfigurationStepWidget = forwardRef(
               />
 
               {expressionSupportEnabled ? (
-                <FlagChangesV2 selectedFeature={currentFeature} initialInstructions={initialValues.spec.instructions} />
+                <FlagChangesContextProvider
+                  flag={currentFeature || formValues?.spec.feature}
+                  environmentIdentifier={formValues?.spec.environment}
+                  mode={StepViewType.Edit}
+                >
+                  <FlagChangesV2 initialInstructions={initialValues.spec.instructions} />
+                </FlagChangesContextProvider>
               ) : (
                 <FlagChanges
                   selectedFeature={

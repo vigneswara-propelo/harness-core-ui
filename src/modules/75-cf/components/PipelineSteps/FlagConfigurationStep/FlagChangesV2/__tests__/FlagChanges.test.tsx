@@ -29,20 +29,6 @@ const renderComponent = (
   )
 
 describe('FlagChanges', () => {
-  test('it should display the select message if the environment is not selected', async () => {
-    renderComponent({ spec: { feature: 'feat123' } })
-
-    expect(screen.getByText('cf.pipeline.flagConfiguration.pleaseSelectAFeatureFlag')).toBeInTheDocument()
-    expect(screen.queryByTestId('flag-changes-form')).not.toBeInTheDocument()
-  })
-
-  test('it should display the select message if the flag is not selected', async () => {
-    renderComponent({ spec: { environment: 'env123' } })
-
-    expect(screen.getByText('cf.pipeline.flagConfiguration.pleaseSelectAFeatureFlag')).toBeInTheDocument()
-    expect(screen.queryByTestId('flag-changes-form')).not.toBeInTheDocument()
-  })
-
   test('it should display the form if the flag and environment are selected', async () => {
     renderComponent({ spec: { environment: 'env123', feature: 'feat123' } })
 

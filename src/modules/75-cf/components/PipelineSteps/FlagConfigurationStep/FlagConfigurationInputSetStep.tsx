@@ -15,11 +15,12 @@ import { Feature, useGetAllFeatures } from 'services/cf'
 import { GetEnvironmentListQueryParams, useGetEnvironmentList } from 'services/cd-ng'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getErrorMessage } from '@cf/utils/CFUtils'
 import type { FlagConfigurationStepData } from './types'
 import FlagChanges from './FlagChanges/FlagChanges'
 import FlagChangesRuntime from './FlagChangesV2/FlagChangesRuntime'
+import FlagChangesContextProvider from './FlagChangesContextProvider'
 
 export interface FlagConfigurationInputSetStepProps {
   existingValues?: FlagConfigurationStepData
@@ -30,7 +31,7 @@ export interface FlagConfigurationInputSetStepProps {
 }
 
 const FlagConfigurationInputSetStep = connect<FlagConfigurationInputSetStepProps, FlagConfigurationStepData>(
-  ({ existingValues, template, pathPrefix, readonly, formik }) => {
+  ({ existingValues, template, pathPrefix, readonly, formik, stepViewType = StepViewType.InputSet }) => {
     const expressionSupportEnabled = useFeatureFlag(FeatureFlag.FFM_8261_EXPRESSIONS_IN_PIPELINE_STEP)
 
     const prefix = useCallback<(fieldName: string) => string>(
@@ -110,9 +111,11 @@ const FlagConfigurationInputSetStep = connect<FlagConfigurationInputSetStepProps
         return false
       }
 
-      return !!template?.spec.instructions.some(instruction => {
-        return instruction.spec?.state === RUNTIME_INPUT_VALUE // set flag state
-      })
+      return !!template?.spec.instructions.some(
+        instruction =>
+          instruction.spec?.state === RUNTIME_INPUT_VALUE || // set flag state
+          instruction.spec?.variation === RUNTIME_INPUT_VALUE // set default on/off variation
+      )
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [flattenedInstructions])
 
@@ -166,12 +169,19 @@ const FlagConfigurationInputSetStep = connect<FlagConfigurationInputSetStepProps
         )}
 
         {expressionSupportEnabled && hasFlagChangesRuntimeInputs && (
-          <FlagChangesRuntime
-            selectedFeature={selectedFeature}
-            selectedEnvironmentId={selectedEnvironmentId}
-            initialInstructions={existingValues?.spec?.instructions}
-            pathPrefix={pathPrefix}
-          />
+          <FlagChangesContextProvider
+            flag={selectedFeature || selectedFeatureId}
+            environmentIdentifier={selectedEnvironmentId}
+            mode={stepViewType}
+            readonly={readonly}
+          >
+            <FlagChangesRuntime
+              selectedFeature={selectedFeature}
+              selectedEnvironmentId={selectedEnvironmentId}
+              initialInstructions={existingValues?.spec?.instructions}
+              pathPrefix={pathPrefix}
+            />
+          </FlagChangesContextProvider>
         )}
       </>
     )

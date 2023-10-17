@@ -10,15 +10,16 @@ import { Container } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { SubSectionComponent } from './subSection.types'
 import { subSectionNames } from './subSection.types'
+import { withPrefix } from './subSections/withPrefix'
 import subSectionCSS from './SubSection.module.scss'
 
 export interface SubSectionsProps {
-  prefix: (fieldName: string) => string
+  prefixPath: string
   subSections: SubSectionComponent[]
-  onRemove: (subSection: SubSectionComponent) => void
+  onRemove?: (subSection: SubSectionComponent) => void
 }
 
-const SubSections: FC<SubSectionsProps> = ({ prefix, subSections, onRemove }) => {
+const SubSections: FC<SubSectionsProps> = ({ prefixPath, subSections, onRemove }) => {
   const { getString } = useStrings()
 
   return (
@@ -33,8 +34,8 @@ const SubSections: FC<SubSectionsProps> = ({ prefix, subSections, onRemove }) =>
         <SubSection
           key={SubSection.name}
           title={getString(subSectionNames[SubSection.name])}
-          prefix={fieldName => prefix(`spec.instructions[${index}].${fieldName}`)}
-          onRemove={() => onRemove(SubSection)}
+          prefixPath={withPrefix(prefixPath, `spec.instructions[${index}]`)}
+          onRemove={onRemove ? () => onRemove(SubSection) : undefined}
         />
       ))}
     </>

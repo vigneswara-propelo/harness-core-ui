@@ -114,7 +114,7 @@ const FlagChanges: FC<FlagChangesProps> = ({
         <Container className={subSectionCSS.subSection} padding="large" data-testid="flag-changes-runtime">
           <Text>{getString('cf.pipeline.flagConfiguration.flagChangesRuntime')}</Text>
           <ul className={css.runtimeList}>
-            <li>{getString('cf.pipeline.flagConfiguration.flagChangesRuntimeSetFlagSwitch')}</li>
+            <li>{getString('cf.pipeline.flagConfiguration.setFlagSwitch')}</li>
             <li>{getString('cf.pipeline.flagConfiguration.flagChangesRuntimeSetDefaultRules')}</li>
             <li>{getString('cf.pipeline.flagConfiguration.flagChangesRuntimeServeVariationToTargets')}</li>
             <li>{getString('cf.pipeline.flagConfiguration.flagChangesRuntimeServeVariationToTargetGroups')}</li>

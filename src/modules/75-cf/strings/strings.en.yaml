@@ -259,6 +259,8 @@ featureFlags:
         state: Flag state is required
       defaultRules:
         onOrOffVariation: An ON or OFF variation is required
+      defaultOnRule:
+        onVariation: ON variation is required
       serveVariationToIndividualTarget:
         variationTargets: Targets/variation is required
       serveVariationToTargetGroup:
@@ -486,12 +488,12 @@ pipeline:
     serve: Serve
     flagChanges: Flag Changes
     flagChangesRuntime: 'At runtime, you may choose the following flag configuration changes:'
-    flagChangesRuntimeSetFlagSwitch: Set flag switch
     flagChangesRuntimeSetDefaultRules: Set default rules
     flagChangesRuntimeServeVariationToTargets: Serve variation to targets
     flagChangesRuntimeServeVariationToTargetGroups: Serve variation to target groups
     flagChangesRuntimeServePercentageRollout: Serve a percentage rollout
-    setFlagSwitch: Set Flag Switch
+    setFlagSwitch: Set flag switch
+    setDefaultOnRule: Set default ON rule
     serveVariationToIndividualTarget: Serve Variation to Individual Target
     serveVariationToTargetGroup: Serve Variation to Target Group
     servePercentageRollout: Serve Percentage Rollout
@@ -508,6 +510,8 @@ pipeline:
     toTargetGroup: to target group
     toTargetGroups: to target groups
     pleaseSelectAFeatureFlag: Please select an environment and feature flag.
+    pleaseSelectFlag: Please select a feature flag.
+    pleaseSelectEnvironment: Please select an environment.
     noFlagChanges: Please add a flag change.
     removeFlagChange: Remove flag change
     addFlagChange: Add Flag Change

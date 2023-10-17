@@ -9,12 +9,15 @@
 import * as Yup from 'yup'
 import { CFPipelineInstructionType } from '@cf/components/PipelineSteps/FlagConfigurationStep/types'
 import type { UseStringsReturn } from 'framework/strings'
-import { setFlagSwitchSchema } from './subSections/SetFlagSwitch'
+import { setFlagSwitchSchema } from './subSections/SetFlagSwitch/SetFlagSwitch'
+import { defaultOnRuleSchema } from './subSections/DefaultOnRule/DefaultOnRule'
 
 const flagChangesValidationSchema = (getString: UseStringsReturn['getString']): Yup.Schema<unknown> =>
   Yup.array().of(
     Yup.lazy<any>(instruction => {
       switch (instruction.type) {
+        case CFPipelineInstructionType.SET_DEFAULT_ON_VARIATION:
+          return defaultOnRuleSchema(getString)
         // case CFPipelineInstructionType.ADD_RULE:
         //   return servePercentageRolloutSchema(getString)
         // case CFPipelineInstructionType.ADD_SEGMENT_TO_VARIATION_TARGET_MAP:

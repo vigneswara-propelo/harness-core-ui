@@ -13,11 +13,12 @@ import { TestWrapper } from '@common/utils/testUtils'
 import SubSections, { SubSectionsProps } from '../SubSections'
 import SubSection from '../SubSection'
 import { SubSectionComponent } from '../subSection.types'
+import { withPrefix } from '../subSections/withPrefix'
 
-const FakeSubSection: SubSectionComponent = ({ title, onRemove, prefix }) => {
+const FakeSubSection: SubSectionComponent = ({ title, onRemove, prefixPath }) => {
   return (
     <SubSection title={title} onRemove={onRemove}>
-      {prefix('TEST')}
+      {withPrefix(prefixPath, 'TEST')}
     </SubSection>
   )
 }
@@ -32,7 +33,7 @@ const renderComponent = (props: Partial<SubSectionsProps> = {}): RenderResult =>
   render(
     <TestWrapper>
       <Formik onSubmit={jest.fn()} initialValues={{}}>
-        <SubSections prefix={jest.fn()} subSections={[FakeSubSection]} onRemove={jest.fn()} {...props} />
+        <SubSections prefixPath="" subSections={[FakeSubSection]} onRemove={jest.fn()} {...props} />
       </Formik>
     </TestWrapper>
   )
@@ -51,9 +52,9 @@ describe('SubSections', () => {
   })
 
   test('it should prefix with the appropriate spec path', async () => {
-    renderComponent({ prefix: fieldName => fieldName })
+    renderComponent({ prefixPath: 'testing' })
 
-    expect(screen.getByText('spec.instructions[0].TEST')).toBeInTheDocument()
+    expect(screen.getByText('testing.spec.instructions[0].TEST')).toBeInTheDocument()
   })
 
   test('it should call the onRemove callback when the remove button is clicked', async () => {

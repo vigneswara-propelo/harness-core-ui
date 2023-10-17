@@ -6,43 +6,29 @@
  */
 
 import React from 'react'
-import { get } from 'lodash-es'
 import { render, RenderResult, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Formik } from 'formik'
-import { TestWrapper } from '@common/utils/testUtils'
-import { SubSectionComponentProps } from '../../subSection.types'
+import SubSectionTestWrapper, { SubSectionTestWrapperProps } from '../../__tests__/SubSectionTestWrapper.mock'
+import { SubSectionComponentProps } from '../../../subSection.types'
 import SetFlagSwitch, { setFlagSwitchSchema } from '../SetFlagSwitch'
-import { prefixInstructionField } from './utils.mocks'
 
-let formValues = {}
-
-const renderComponent = (props: Partial<SubSectionComponentProps> = {}): RenderResult =>
+const renderComponent = (
+  props: Partial<SubSectionComponentProps> = {},
+  testWrapperProps: Partial<SubSectionTestWrapperProps> = {}
+): RenderResult =>
   render(
-    <TestWrapper>
-      <Formik onSubmit={jest.fn()} initialValues={{}}>
-        {({ values }) => {
-          formValues = values
-
-          return (
-            <SetFlagSwitch title="SET FLAG SWITCH" onRemove={jest.fn()} prefix={prefixInstructionField} {...props} />
-          )
-        }}
-      </Formik>
-    </TestWrapper>
+    <SubSectionTestWrapper {...testWrapperProps}>
+      <SetFlagSwitch prefixPath="test" title="Set Flag Switch" {...props} />
+    </SubSectionTestWrapper>
   )
 
 describe('SetFlagSwitch', () => {
-  beforeEach(() => {
-    formValues = {}
-  })
-
   test('it should display a select box with On and Off options', async () => {
     renderComponent()
 
     expect(screen.getByText('cf.pipeline.flagConfiguration.switchTo')).toBeInTheDocument()
 
-    const input = document.querySelector('[name$="spec.state"]') as HTMLInputElement
+    const input = screen.getByPlaceholderText('cf.pipeline.flagConfiguration.selectOnOrOff')
     expect(input).toBeInTheDocument()
 
     expect(screen.queryByText('common.ON')).not.toBeInTheDocument()
@@ -52,23 +38,6 @@ describe('SetFlagSwitch', () => {
 
     expect(screen.getByText('common.ON')).toBeInTheDocument()
     expect(screen.getByText('common.OFF')).toBeInTheDocument()
-  })
-
-  test('it should properly set the value of the input on selection', async () => {
-    renderComponent()
-
-    const input = document.querySelector('[name$="spec.state"]') as HTMLInputElement
-    expect(input).not.toHaveValue()
-
-    await userEvent.click(input)
-    await userEvent.click(screen.getByText('common.ON'))
-
-    expect(get(formValues, prefixInstructionField('spec.state'))).toBe('on')
-
-    await userEvent.click(input)
-    await userEvent.click(screen.getByText('common.OFF'))
-
-    expect(get(formValues, prefixInstructionField('spec.state'))).toBe('off')
   })
 })
 

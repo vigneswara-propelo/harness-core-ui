@@ -319,7 +319,7 @@ exports[`FlagConfigurationStep StepViewType.Edit it should render disabled in ed
             class="runtimeList"
           >
             <li>
-              cf.pipeline.flagConfiguration.flagChangesRuntimeSetFlagSwitch
+              cf.pipeline.flagConfiguration.setFlagSwitch
             </li>
             <li>
               cf.pipeline.flagConfiguration.flagChangesRuntimeSetDefaultRules
@@ -657,7 +657,7 @@ exports[`FlagConfigurationStep StepViewType.Edit it should render in edit mode 1
             class="runtimeList"
           >
             <li>
-              cf.pipeline.flagConfiguration.flagChangesRuntimeSetFlagSwitch
+              cf.pipeline.flagConfiguration.setFlagSwitch
             </li>
             <li>
               cf.pipeline.flagConfiguration.flagChangesRuntimeSetDefaultRules

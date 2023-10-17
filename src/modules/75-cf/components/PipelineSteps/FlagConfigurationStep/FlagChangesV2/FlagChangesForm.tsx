@@ -11,16 +11,24 @@ import { useFormikContext } from 'formik'
 import { Button, ButtonVariation } from '@harness/uicore'
 import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
-import { Feature } from 'services/cf'
-import { FeatureFlagConfigurationInstruction, FlagConfigurationStepFormDataValues } from '../types'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import {
+  CFPipelineInstructionType,
+  FeatureFlagConfigurationInstruction,
+  FlagConfigurationStepFormDataValues
+} from '../types'
 import { SubSectionComponent, subSectionNames } from './subSection.types'
 import SubSections from './SubSections'
+import { useFlagChanges } from '../FlagChangesContextProvider'
+import { withPrefix } from './subSections/withPrefix'
 
 // sub-sections
-import SetFlagSwitch from './subSections/SetFlagSwitch'
+import SetFlagSwitch from './subSections/SetFlagSwitch/SetFlagSwitch'
+import DefaultOnRule from './subSections/DefaultOnRule/DefaultOnRule'
 
 export const allSubSections: SubSectionComponent[] = [
-  SetFlagSwitch
+  SetFlagSwitch,
+  DefaultOnRule
   // DefaultRules,
   // ServeVariationToIndividualTarget,
   // ServeVariationToTargetGroup,
@@ -28,14 +36,14 @@ export const allSubSections: SubSectionComponent[] = [
 ]
 
 export interface FlagChangesFormProps {
-  prefix: (fieldName: string) => string
+  prefixPath: string
   initialInstructions?: FeatureFlagConfigurationInstruction[]
-  selectedFeature?: Feature
 }
 
-const FlagChangesForm: FC<FlagChangesFormProps> = ({ prefix, initialInstructions }) => {
+const FlagChangesForm: FC<FlagChangesFormProps> = ({ prefixPath, initialInstructions }) => {
   const { getString } = useStrings()
   const { setFieldValue, values } = useFormikContext<FlagConfigurationStepFormDataValues>()
+  const { mode } = useFlagChanges()
 
   const [subSections, setSubSections] = useState<SubSectionComponent[]>(() => {
     if (!Array.isArray(initialInstructions) || initialInstructions.length === 0) {
@@ -46,7 +54,8 @@ const FlagChangesForm: FC<FlagChangesFormProps> = ({ prefix, initialInstructions
       ...new Set(
         initialInstructions.map(instruction => {
           switch (instruction.type) {
-            // case CFPipelineInstructionType.SET_DEFAULT_ON_VARIATION:
+            case CFPipelineInstructionType.SET_DEFAULT_ON_VARIATION:
+              return DefaultOnRule
             // case CFPipelineInstructionType.SET_DEFAULT_OFF_VARIATION:
             // case CFPipelineInstructionType.SET_DEFAULT_VARIATIONS:
             //   return DefaultRules
@@ -66,8 +75,9 @@ const FlagChangesForm: FC<FlagChangesFormProps> = ({ prefix, initialInstructions
   })
 
   const availableSubSections = useMemo<SubSectionComponent[]>(
-    () => allSubSections.filter(section => !subSections.includes(section)),
-    [subSections]
+    () =>
+      mode === StepViewType.DeploymentForm ? [] : allSubSections.filter(section => !subSections.includes(section)),
+    [mode, subSections]
   )
 
   const onAddSubSection = useCallback((subSection: SubSectionComponent): void => {
@@ -78,8 +88,8 @@ const FlagChangesForm: FC<FlagChangesFormProps> = ({ prefix, initialInstructions
     setSubSections(currentSubSections => {
       const subSectionIndex = currentSubSections.indexOf(subSection)
 
-      const path = prefix('spec.instructions')
-      const instructions = get(values, path)
+      const path = withPrefix(prefixPath, 'spec.instructions')
+      const instructions = get(values, path, [])
       instructions.splice(subSectionIndex, 1)
       setFieldValue(path, instructions)
 
@@ -89,7 +99,11 @@ const FlagChangesForm: FC<FlagChangesFormProps> = ({ prefix, initialInstructions
 
   return (
     <>
-      <SubSections prefix={prefix} subSections={subSections} onRemove={removeSubSection} />
+      <SubSections
+        prefixPath={prefixPath}
+        subSections={subSections}
+        onRemove={mode === StepViewType.Edit ? removeSubSection : undefined}
+      />
 
       {!!availableSubSections.length && (
         <Button
