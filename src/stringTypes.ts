@@ -10588,6 +10588,7 @@ export interface StringsMap {
   'cv.yourExistingErrorBudgetIs': string
   'cv.zoom': string
   'iacm.ansible': string
+  'iacm.autoApproveStep': string
   'iacm.betaMaxTimeoutMessage': string
   'iacm.cdk': string
   'iacm.cloudformation': string

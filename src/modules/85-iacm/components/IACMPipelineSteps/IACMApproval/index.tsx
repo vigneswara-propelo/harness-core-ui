@@ -19,6 +19,9 @@ export class IACMApprovalStep extends PipelineStep<IACMApprovalData> {
     type: StepType.IACMApproval,
     identifier: '',
     name: '',
+    spec: {
+      autoApprove: false
+    },
     timeout: '1h'
   }
 

@@ -13,3 +13,4 @@ pipelineSteps:
   description: Run terraform commands against your workspace
   approvalDescription: Approve IACM operations
 betaMaxTimeoutMessage: During IACM Beta, timeout value must be less than or equal to 1h
+autoApproveStep: Auto approve when the plan does not change

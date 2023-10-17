@@ -14,6 +14,8 @@ import { useStrings } from 'framework/strings'
 
 import type { IACMApprovalData, IACMApprovalStepProps } from './types'
 
+import styles from './styles.module.scss'
+
 const IACMApprovalStepMode = (
   props: IACMApprovalStepProps,
   ref: StepFormikFowardRef<IACMApprovalData>
@@ -74,6 +76,12 @@ const IACMApprovalStepMode = (
                 allowableTypes,
                 disabled: readonly
               }}
+            />
+            <FormInput.CheckBox
+              className={styles.checkBox}
+              label={getString('iacm.autoApproveStep')}
+              name="spec.autoApprove"
+              disabled={readonly}
             />
           </FormikForm>
         )
