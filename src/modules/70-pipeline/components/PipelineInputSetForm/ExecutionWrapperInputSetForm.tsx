@@ -260,7 +260,7 @@ function StepGroupRuntimeForm(props: {
             />
           </div>
         )}
-        {/* Fot template stepGroup - render config entities apart from steps (variables/stepGroupInfra) */}
+        {/* For template stepGroup - render config entities apart from steps (variables/stepGroupInfra) */}
         {isTemplateStepGroup && (
           <StepWidget<Partial<StepElementConfig>>
             factory={factory}
@@ -268,8 +268,8 @@ function StepGroupRuntimeForm(props: {
             path={`${stepGroupPath}.template.templateInputs`}
             allowableTypes={allowableTypes}
             template={omit(stepGroupItem?.template?.templateInputs, 'steps')}
-            initialValues={initialValues?.stepGroup?.template?.templateInputs as Partial<StepElementConfig>}
-            allValues={defaultTo(stepGroup?.stepGroup, stepGroup?.stepGroup?.template?.templateInputs)}
+            initialValues={(initialValues?.stepGroup?.template?.templateInputs as Partial<StepElementConfig>) || {}}
+            allValues={defaultTo(stepGroup?.stepGroup, stepGroup?.stepGroup?.template?.templateInputs) || {}}
             type={StepType.StepGroup}
             stepViewType={StepViewType.TemplateUsage}
           />
