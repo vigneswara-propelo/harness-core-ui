@@ -113,7 +113,10 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
       } as GetDelegateGroupsNGV2WithFilterQueryParams),
     [accountId, module, orgIdentifier, projectIdentifier, page, sortPreference]
   )
-  const { mutate: fetchDelegates, loading: isFetchingDelegates } = useGetDelegateGroupsNGV2WithFilter({ queryParams })
+  const { mutate: fetchDelegates, loading: isFetchingDelegates } = useGetDelegateGroupsNGV2WithFilter({
+    queryParams,
+    queryParamStringifyOptions: { arrayFormat: 'repeat' }
+  })
   const { openDelegateModal } = useCreateDelegateModal()
   const { openDelegateModalWithCommands } = useCreateDelegateViaCommandsModal({
     oldDelegateCreation: openDelegateModal
