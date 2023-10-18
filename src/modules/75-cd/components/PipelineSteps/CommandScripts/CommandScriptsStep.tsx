@@ -8,7 +8,7 @@
 import React from 'react'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { isArray } from 'lodash-es'
+import { isArray, merge } from 'lodash-es'
 import * as Yup from 'yup'
 import { FormikErrors, yupToFormErrors } from 'formik'
 import { v4 as uuid } from 'uuid'
@@ -133,8 +133,7 @@ export class CommandScriptsStep extends PipelineStep<CommandScriptsData> {
         /* istanbul ignore else */
         if (e instanceof Yup.ValidationError) {
           const err = yupToFormErrors(e)
-
-          Object.assign(errors, err)
+          merge(errors, err)
         }
       }
     }
@@ -158,7 +157,7 @@ export class CommandScriptsStep extends PipelineStep<CommandScriptsData> {
         if (e instanceof Yup.ValidationError) {
           const err = yupToFormErrors(e)
 
-          Object.assign(errors, err)
+          merge(errors, err)
         }
       }
     }

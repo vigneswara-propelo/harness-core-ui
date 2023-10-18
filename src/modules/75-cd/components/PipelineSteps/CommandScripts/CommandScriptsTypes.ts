@@ -8,6 +8,7 @@
 import * as Yup from 'yup'
 import type { SelectOption } from '@harness/uicore'
 import type { RadioButtonProps } from '@harness/uicore/dist/components/RadioButton/RadioButton'
+import { isEmpty, isUndefined } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import type {
   CopyCommandUnitSpec,
@@ -20,6 +21,7 @@ import type {
   HarnessFileStoreSource,
   DownloadArtifactCommandUnitSpec
 } from 'services/cd-ng'
+import { isValueRuntimeInput } from '@modules/10-common/utils/utils'
 
 // Copy Command Unit type
 export interface CopyCommandUnit extends CommandUnitWrapper {
@@ -144,9 +146,17 @@ export const commandUnitSchema = (
         then: Yup.object({
           source: Yup.object({
             spec: Yup.object({
-              script: Yup.string().required(
-                getString?.('common.validation.fieldIsRequired', { name: getString('common.script') })
-              )
+              script: Yup.string().test({
+                test(value: string | undefined): boolean | Yup.ValidationError {
+                  if (isUndefined(value) || isValueRuntimeInput(value)) return true
+                  if (isEmpty(value)) {
+                    return this.createError({
+                      message: getString('common.validation.fieldIsRequired', { name: getString('common.script') })
+                    })
+                  }
+                  return true
+                }
+              })
             })
           })
         }),
