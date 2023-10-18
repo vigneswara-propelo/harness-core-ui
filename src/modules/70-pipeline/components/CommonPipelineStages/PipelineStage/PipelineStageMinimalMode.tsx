@@ -163,9 +163,13 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
         )
         if (status === 'SUCCESS') {
           if (data?.content)
-            // Parent pipeline should not be displayed in the child pipeline selection list.
+            // Parent pipeline within same org & project should not be displayed in the child pipeline selection list.
             remove(data.content, (pipelineObj: PMSPipelineSummaryResponse) => {
-              return pipelineObj?.identifier === pipelineIdentifier
+              return (
+                pipelineObj?.identifier === pipelineIdentifier &&
+                projectId === projectIdentifier &&
+                orgId === orgIdentifier
+              )
             })
           setPipelineListData(data)
         }
