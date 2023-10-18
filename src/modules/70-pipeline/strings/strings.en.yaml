@@ -770,11 +770,11 @@ conditionalExecution:
     title: Remove conditional execution?
     content: Are you sure you want to remove this conditional execution? All the configuration will be lost.
   subTitle: Use conditions to determine when this {{entity}} is executed.
+  executeEntity: 'Execute this {{entity}}:'
   statusOption:
-    success: Execute this {{entity}} if the {{parentEntity}} execution is successful thus far
-    all: Always execute this {{entity}}
-    failure: Execute this {{entity}} only if prior {{parentEntity}} or {{entity}} failed
-    entityFailure: Execute this {{entity}} only if prior {{entity}} failed
+    success: If the {{parentEntity}} executes successfully up to this point (default)
+    failure: If the previous {{parentEntity}} or {{entity}} fails
+    entityFailure: If the previous {{entity}} fails
   condition: And execute this {{entity}} only if the following JEXL Condition evaluates to true
   conditionLabel: Execute only if the following JEXL Condition evaluates to true
   toolTip:

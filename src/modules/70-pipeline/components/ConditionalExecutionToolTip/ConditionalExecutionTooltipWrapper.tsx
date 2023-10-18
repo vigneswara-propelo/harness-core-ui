@@ -21,7 +21,7 @@ const statusToStringIdMapping: any = {
   OnStageSuccess: 'pipeline.conditionalExecution.statusOption.success',
   OnPipelineFailure: 'pipeline.conditionalExecution.statusOption.failure',
   OnStageFailure: 'pipeline.conditionalExecution.statusOption.failure',
-  Always: 'pipeline.conditionalExecution.statusOption.all'
+  Always: 'pipelineSteps.pullAlwaysLabel'
 }
 
 export interface ConditionalExecutionToolTipWrapperProps {

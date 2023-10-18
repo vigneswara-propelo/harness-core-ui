@@ -16,6 +16,12 @@
     padding-top: var(--spacing-xxlarge);
   }
 
+  .executionStatusLabel {
+    label {
+      margin-bottom: var(--spacing-medium);
+    }
+  }
+
   .divider {
     width: 1px solid;
     background: var(--grey-200);

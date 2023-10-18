@@ -28,7 +28,7 @@ export interface ConditionalExecutionTooltipProps {
 const statusMapping: Record<PipelineOrStageStatus, StringKeys> = {
   Success: 'pipeline.conditionalExecution.statusOption.success',
   Failure: 'pipeline.conditionalExecution.statusOption.failure',
-  All: 'pipeline.conditionalExecution.statusOption.all'
+  All: 'pipelineSteps.pullAlwaysLabel'
 }
 
 export default function ConditionalExecutionTooltip(props: ConditionalExecutionTooltipProps): React.ReactElement {
@@ -61,14 +61,18 @@ export default function ConditionalExecutionTooltip(props: ConditionalExecutionT
           style={{ lineHeight: '16px' }}
           color={Color.GREY_900}
         >
-          {status === PipelineOrStageStatus.FAILURE && mode !== Modes.STAGE
-            ? getString('pipeline.conditionalExecution.statusOption.entityFailure', {
-                entity: ModeEntityNameMap[mode]
-              })
-            : getString(statusMapping[status], {
-                entity: ModeEntityNameMap[mode],
-                parentEntity: ParentModeEntityNameMap[mode]
-              })}
+          {`${getString('pipeline.conditionalExecution.executeEntity', {
+            entity: ModeEntityNameMap[mode]
+          })} ${
+            status === PipelineOrStageStatus.FAILURE && mode !== Modes.STAGE
+              ? getString('pipeline.conditionalExecution.statusOption.entityFailure', {
+                  entity: ModeEntityNameMap[mode]
+                })
+              : getString(statusMapping[status], {
+                  entity: ModeEntityNameMap[mode],
+                  parentEntity: ParentModeEntityNameMap[mode]
+                })
+          }`}
         </Text>
         {!!condition && (
           <Text

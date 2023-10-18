@@ -10,6 +10,7 @@ declare const styles: {
   readonly active: string
   readonly blackText: string
   readonly divider: string
+  readonly executionStatusLabel: string
   readonly expressionInput: string
   readonly main: string
   readonly panel: string
