@@ -33,12 +33,12 @@ export const AccountScopeSelector: React.FC<AccountScopeSelectorProps> = (props)
     debounce: 500
   })
 
-  const isOnlyOneAccount = data?.resource?.content?.length === 1 ?? false
+  const isOnlyOneAccount = data?.resource?.content?.length === 1 && searchTerm === undefined
 
   return (
     <Container>
       <Layout.Horizontal flex={{ alignItems: 'center' }}>
-        {!isOnlyOneAccount && !loading && (
+        {!isOnlyOneAccount && (
           <ExpandingSearchInput
             defaultValue={searchTerm}
             placeholder={getString('common.switchAccountSearch')}
