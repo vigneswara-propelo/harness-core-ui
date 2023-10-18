@@ -162,5 +162,6 @@ export enum PAGE_NAME {
   SEIHomePage = 'SEIHomePage',
   IACMCostEstimation = 'IACMCostEstimation',
   AllModePipelineStudio = 'AllModePipelineStudio',
-  CCMSettingsPage = 'CCMSettingsPage'
+  CCMSettingsPage = 'CCMSettingsPage',
+  FeatureFlagsProxy = 'FeatureFlagsProxy'
 }

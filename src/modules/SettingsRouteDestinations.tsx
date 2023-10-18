@@ -43,6 +43,7 @@ import GitOpsSettingsRouteDestinations from '@gitops/SettingsRouteDestinations'
 import FileStoreSettingsRouteDestinations from '@platform/filestore/SettingsRouteDestinations'
 import VariableSettingsRouteDestinations from '@platform/variables/SettingsRouteDestinations'
 import { CESettingsRouteDestination } from '@ce/RouteDestinationsV2'
+import CFSettingsRouteDestinations from '@modules/75-cf/SettingsRouteDestinations'
 
 const licenseRedirectDataCD: LicenseRedirectProps = {
   licenseStateName: LICENSE_STATE_NAMES.CD_LICENSE_STATE,
@@ -118,6 +119,8 @@ function SettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactEle
       {DiscoverySettingsRouteDestinations({ mode }).props.children}
 
       {CVSettingsRouteDestinations({ mode }).props.children}
+
+      {CFSettingsRouteDestinations({ mode }).props.children}
 
       {/* CCM Setting pages */}
       {

@@ -44,7 +44,7 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { getBannerText } from '@cf/utils/UsageLimitUtils'
 import { String } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
+import { AccountSideNavProps, GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { RedirectToModuleTrialHomeFactory, RedirectToSubscriptionsFactory } from '@common/Redirects'
 import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
@@ -67,6 +67,7 @@ import FeatureFlagsLandingPage from './pages/feature-flags/FeatureFlagsLandingPa
 import { FFGitSyncProvider } from './contexts/ff-git-sync-context/FFGitSyncContext'
 import ConfigurePath from './pages/onboarding/ConfigurePath'
 import FFUIApp from './pages/FFUIApp/FFUIApp'
+import ProxyKeyPage from './pages/proxy-key-management/ProxyKeyPage'
 
 featureFactory.registerFeaturesByModule('cf', {
   features: [FeatureIdentifier.MAUS],
@@ -237,6 +238,15 @@ const CFRoutes: FC = () => {
         pageName={PAGE_NAME.CFHomePage}
       >
         <CFHomePage />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        sidebarProps={AccountSideNavProps}
+        path={routes.toFeatureFlagsProxy({ ...accountPathProps })}
+        exact
+        pageName={PAGE_NAME.FeatureFlagsProxy}
+      >
+        <ProxyKeyPage />
       </RouteWithLayout>
 
       <RouteWithLayout

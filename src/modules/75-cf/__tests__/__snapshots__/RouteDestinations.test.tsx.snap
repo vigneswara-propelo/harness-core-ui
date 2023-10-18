@@ -64,6 +64,21 @@ Array [
   <RouteWithLayout
     exact={true}
     layout={[Function]}
+    pageName="FeatureFlagsProxy"
+    path="/account/:accountId/settings/resources/feature-flags-proxy"
+    sidebarProps={
+      Object {
+        "icon": "nav-settings",
+        "navComponent": [Function],
+        "title": "Account Settings",
+      }
+    }
+  >
+    <ProxyKeyPage />
+  </RouteWithLayout>,
+  <RouteWithLayout
+    exact={true}
+    layout={[Function]}
     licenseRedirectData={
       Object {
         "expiredTrialRedirect": [Function],

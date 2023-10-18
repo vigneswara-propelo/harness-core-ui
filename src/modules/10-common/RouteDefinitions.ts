@@ -93,19 +93,8 @@ const routes = {
       })
     }
   ),
-  toFeatureFlagsProxy: withAccountId(
-    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
-      const path = `resources/feature-flags-proxy`
-      return getScopeBasedRoute({
-        scope: {
-          orgIdentifier,
-          projectIdentifier,
-          module
-        },
-        path
-      })
-    }
-  ),
+
+  toFeatureFlagsProxy: withAccountId(() => `/settings/resources/feature-flags-proxy`),
 
   toWebhooks: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {

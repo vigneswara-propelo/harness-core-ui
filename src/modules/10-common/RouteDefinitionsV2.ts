@@ -902,6 +902,8 @@ const routes = {
     return path
   }),
 
+  toFeatureFlagsProxySettings: withModeModuleAndScopePrefix(() => `/settings/feature-flags-proxy`),
+
   // chaos module routes
   toChaosMicroFrontend: withModeModuleAndScopePrefix<ModulePathParams>(() => '/'),
   toChaosOverview: withModeModuleAndScopePrefix<ModulePathParams>(() => `/dashboard`),

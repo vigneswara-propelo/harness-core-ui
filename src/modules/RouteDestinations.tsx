@@ -106,6 +106,7 @@ export default function RouteDestinations(): React.ReactElement {
       {GitOpsRoutes.props.children}
       {IDP_ENABLED ? IDPRoutes().props.children : null}
       {STORoutes({})?.props.children}
+      {CFRoutes({})?.props.children}
       <Route path="/account/:accountId/settings">
         <AuthSettingsRoutes />
       </Route>
@@ -113,7 +114,6 @@ export default function RouteDestinations(): React.ReactElement {
         <CERoutes />
       </Route>
       {!CDS_NAV_2_0 ? (CDB_MFE_ENABLED ? CdbMfeRoutes.props.children : CdbNonMfeRoutes.props.children) : null}
-      {CFRoutes({})?.props.children}
       {IACM_ENABLED ? IACMRoutes().props.children : null}
       {SSCA_ENABLED ? SSCARoutes.props.children : null}
       {CET_ENABLED ? ETRoutes({})?.props.children : null}

@@ -59,6 +59,7 @@ import ConfigurePath from './pages/onboarding/ConfigurePath'
 import FFUIApp from './pages/FFUIApp/FFUIApp'
 import { FFGitSyncProvider } from './contexts/ff-git-sync-context/FFGitSyncContext'
 import FeatureFlagsLandingPage from './pages/feature-flags/FeatureFlagsLandingPage'
+import ProxyKeyPage from './pages/proxy-key-management/ProxyKeyPage'
 
 featureFactory.registerFeaturesByModule('cf', {
   features: [FeatureIdentifier.MAUS],
@@ -238,6 +239,14 @@ const CFRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
         pageName={PAGE_NAME.CFTrialHomePage}
       >
         <CFTrialHomePage />
+      </RouteWithContext>
+
+      <RouteWithContext
+        path={routes.toFeatureFlagsProxySettings({ ...accountPathProps })}
+        exact
+        pageName={PAGE_NAME.FeatureFlagsProxy}
+      >
+        <ProxyKeyPage />
       </RouteWithContext>
 
       <RouteWithContext

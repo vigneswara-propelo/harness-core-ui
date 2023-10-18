@@ -227,7 +227,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       label: <String stringID="common.ffProxy" />,
       icon: 'gitops-gnupg-key-blue',
       hidden: !ffProxyKeyEnabled,
-      route: routes.toFeatureFlagsProxy({ accountId, orgIdentifier })
+      route: routes.toFeatureFlagsProxy({ accountId })
     } as ResourceOption,
     ...(showGitOpsCard ? gitOpsCard : []),
     ...defaultSettingsCard
