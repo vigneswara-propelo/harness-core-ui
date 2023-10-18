@@ -3727,6 +3727,7 @@ export interface StringsMap {
   'dashboards.aida.failureGeneratingTile': string
   'dashboards.aida.generating': string
   'dashboards.aida.helpText': string
+  'dashboards.aida.initializing': string
   'dashboards.aida.selectExplore': string
   'dashboards.aida.selectVisualisation': string
   'dashboards.aida.successGeneratingTile': string

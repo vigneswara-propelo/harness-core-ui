@@ -1,4 +1,5 @@
-import { Prompt, VisualizationType } from '@dashboards/types/AidaTypes.types'
+import { Prompt } from 'services/custom-dashboards'
+import { VisualizationType } from '../types/AidaTypes.types'
 
 const CloudCostPrompt: Prompt = {
   title: 'Cloud Cost Management',
@@ -9,7 +10,7 @@ const CloudCostPrompt: Prompt = {
         { key: 'model', value: 'CE' },
         { key: 'explore', value: 'aws' }
       ],
-      mappedContent: 'AWS costs'
+      mapped_content: 'AWS costs'
     },
     {
       content: 'Azure',
@@ -17,7 +18,7 @@ const CloudCostPrompt: Prompt = {
         { key: 'model', value: 'CE' },
         { key: 'explore', value: 'azure' }
       ],
-      mappedContent: 'Azure costs'
+      mapped_content: 'Azure costs'
     },
     {
       content: 'GCP',
@@ -25,7 +26,7 @@ const CloudCostPrompt: Prompt = {
         { key: 'model', value: 'CE' },
         { key: 'explore', value: 'gcp' }
       ],
-      mappedContent: 'GCP costs'
+      mapped_content: 'GCP costs'
     },
     {
       content: 'Kubernetes Cluster',
@@ -33,7 +34,7 @@ const CloudCostPrompt: Prompt = {
         { key: 'model', value: 'CE' },
         { key: 'explore', value: 'cluster' }
       ],
-      mappedContent: 'Kubernetes cluster costs'
+      mapped_content: 'Kubernetes cluster costs'
     }
   ]
 }
@@ -60,7 +61,7 @@ const ContinuousErrorTrackingPrompt: Prompt = {
         { key: 'model', value: 'CET' },
         { key: 'explore', value: 'dashboard_invocation_daily_agg' }
       ],
-      mappedContent: 'the daily aggregate of dashboard invocations'
+      mapped_content: 'the daily aggregate of dashboard invocations'
     }
   ]
 }
@@ -74,7 +75,7 @@ const ContinuousVerificationPrompt: Prompt = {
         { key: 'model', value: 'CV' },
         { key: 'explore', value: 'service_infra_info' }
       ],
-      mappedContent: 'verification of deployment stages'
+      mapped_content: 'verification of deployment stages'
     },
     {
       content: 'Verifications',
@@ -82,7 +83,7 @@ const ContinuousVerificationPrompt: Prompt = {
         { key: 'model', value: 'CV' },
         { key: 'explore', value: 'verify_step_execution_cvng' }
       ],
-      mappedContent: 'verifications of step executions'
+      mapped_content: 'verifications of step executions'
     }
   ]
 }
@@ -110,7 +111,7 @@ const DeploymentsPrompt: Prompt = {
         { key: 'model', value: 'CD' },
         { key: 'explore', value: 'ng_services' }
       ],
-      mappedContent: 'Deployment instances'
+      mapped_content: 'Deployment instances'
     },
     {
       content: 'Orgs',
@@ -118,7 +119,7 @@ const DeploymentsPrompt: Prompt = {
         { key: 'model', value: 'CD' },
         { key: 'explore', value: 'organizations' }
       ],
-      mappedContent: 'Organizations'
+      mapped_content: 'Organizations'
     }
   ]
 }
@@ -139,7 +140,7 @@ const FeatureFlagsPrompt: Prompt = {
         { key: 'model', value: 'CF' },
         { key: 'explore', value: 'targets' }
       ],
-      mappedContent: 'Feature Flag targets'
+      mapped_content: 'Feature Flag targets'
     }
   ]
 }

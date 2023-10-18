@@ -3,6 +3,7 @@ import { render, RenderResult, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useDashboardsContext } from '@dashboards/pages/DashboardsContext'
+import { ExplorePrompts, VisualizationPrompts } from '@dashboards/constants/AidaDashboardPrompts'
 import * as sharedService from 'services/custom-dashboards'
 import AidaDashboardContent from '../AidaDashboardContent'
 
@@ -28,6 +29,7 @@ const generateMockAiTileFailure = (): Promise<sharedService.GetDashboardResponse
 }
 
 describe('AidaDashboardContent', () => {
+  const useGetAiGenerateTilePromptsMock = jest.spyOn(sharedService, 'useGetAiGenerateTilePrompts')
   const useAiGenerateTileMock = jest.spyOn(sharedService, 'useAiGenerateTile')
 
   const useDashboardsContextMock = useDashboardsContext as jest.Mock
@@ -35,6 +37,19 @@ describe('AidaDashboardContent', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+
+    useGetAiGenerateTilePromptsMock.mockReturnValue({
+      data: {},
+      loading: false,
+      error: {
+        data: {
+          code: 500,
+          responseMessages: '',
+          error: ''
+        }
+      }
+    } as any)
+
     useAiGenerateTileMock.mockReturnValue({
       mutate: generateMockAiTile,
       loading: true,
@@ -43,12 +58,27 @@ describe('AidaDashboardContent', () => {
     useDashboardsContextMock.mockReturnValue({ updateAiTileDetails: updateAiTileDetailsMock })
   })
 
-  test('it should display Explore stage as default', () => {
+  test('it should display Initializing stage as default while prompts load', () => {
+    useGetAiGenerateTilePromptsMock.mockReturnValue({
+      data: null,
+      loading: true,
+      error: null
+    } as any)
     renderComponent()
-    expect(screen.getByText('dashboards.aida.selectExplore')).toBeInTheDocument()
+    expect(screen.getByText('dashboards.aida.initializing')).toBeInTheDocument()
   })
 
   test('it should move through all of the stages to generation stage', async () => {
+    const mockPrompts: sharedService.GenerateTilePrompt = {
+      explore_prompts: ExplorePrompts,
+      visualization_prompts: VisualizationPrompts
+    }
+    useGetAiGenerateTilePromptsMock.mockReturnValue({
+      data: { resource: mockPrompts },
+      loading: false,
+      error: null
+    } as any)
+
     renderComponent()
 
     // Explore stage

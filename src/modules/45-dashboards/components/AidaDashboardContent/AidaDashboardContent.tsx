@@ -10,38 +10,43 @@ import { v4 as uuid } from 'uuid'
 import { Container, Layout } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { ExplorePrompts, VisualizationPrompts } from '@dashboards/constants/AidaDashboardPrompts'
-import {
-  DashboardPromptStage,
-  Message,
-  MessageRole,
-  MessageType,
-  PromptOption
-} from '@dashboards/types/AidaTypes.types'
+import { DashboardPromptStage, Message, MessageRole, MessageType } from '@dashboards/types/AidaTypes.types'
+import { GenerateTilePrompt, PromptOption } from 'services/custom-dashboards'
 import AidaChatInput from '../AidaChatInput/AidaChatInput'
 import AidaChatRenderer from '../AidaChatRenderer/AidaChatRenderer'
 import AidaGenerating from '../AidaGenerating/AidaGenerating'
 import AidaPromptSelection from '../AidaPromptSelection/AidaPromptSelection'
+import AidaInitializing from '../AidaInitializing/AidaInitializing'
 import css from './AidaDashboardContent.module.scss'
 
-type Action = { type: 'submit'; newMessage: Message } | { type: 'response'; aidaResponse: Message } | { type: 'reset' }
+type Action =
+  | { type: 'submit'; newMessage: Message }
+  | { type: 'response'; aidaResponse: Message }
+  | { type: 'reset' }
+  | { type: 'updatePrompts'; prompts: GenerateTilePrompt }
 type State = {
   historicMessages: Message[]
   messages: Message[]
   stage: DashboardPromptStage
+  prompts: GenerateTilePrompt
 }
 
 const initialState: State = {
   historicMessages: [],
   messages: [],
-  stage: DashboardPromptStage.Explore
+  stage: DashboardPromptStage.Initializing,
+  prompts: { explore_prompts: [], visualization_prompts: [] }
 }
 
 const messageReducer = (state: State, action: Action): State => {
   switch (action.type) {
+    case 'updatePrompts':
+      return { ...state, prompts: action.prompts, stage: DashboardPromptStage.Explore }
     case 'submit':
       return { ...state, messages: [...state.messages, action.newMessage], stage: state.stage + 1 }
     case 'response':
       return {
+        ...state,
         historicMessages: [...state.historicMessages, ...state.messages, action.aidaResponse],
         messages: [],
         stage: DashboardPromptStage.Explore
@@ -53,6 +58,7 @@ const messageReducer = (state: State, action: Action): State => {
     }
   }
 }
+
 const AidaDashboardContent: React.FC = () => {
   const { getString } = useStrings()
 
@@ -66,7 +72,7 @@ const AidaDashboardContent: React.FC = () => {
           : getString('dashboards.aida.asA')
       const newMessage: Message = {
         id: uuid() as string,
-        content: `${baseContent} ${promptOption.mappedContent ? promptOption.mappedContent : promptOption.content}`,
+        content: `${baseContent} ${promptOption.mapped_content ? promptOption.mapped_content : promptOption.content}`,
         promptMapping: promptOption.mapping,
         type: MessageType.Prompt,
         role: MessageRole.User
@@ -84,6 +90,18 @@ const AidaDashboardContent: React.FC = () => {
       role: MessageRole.User
     }
     dispatch({ type: 'submit', newMessage })
+  }, [])
+
+  const handleAidaPromptInitialize = React.useCallback((prompts: GenerateTilePrompt): void => {
+    dispatch({ type: 'updatePrompts', prompts })
+  }, [])
+
+  const handleAidaPromptError = React.useCallback((): void => {
+    // Fallback to pre-defined prompts in-case of error
+    dispatch({
+      type: 'updatePrompts',
+      prompts: { explore_prompts: ExplorePrompts, visualization_prompts: VisualizationPrompts }
+    })
   }, [])
 
   const handleAidaError = React.useCallback((): void => {
@@ -106,6 +124,9 @@ const AidaDashboardContent: React.FC = () => {
     <Container className={css.contentContainer}>
       <Layout.Vertical spacing="large" className={css.layout}>
         <AidaChatRenderer messages={[...state.historicMessages, ...state.messages]} />
+        {state.stage === DashboardPromptStage.Initializing && (
+          <AidaInitializing onInitialized={handleAidaPromptInitialize} onError={handleAidaPromptError} />
+        )}
         {state.stage === DashboardPromptStage.Explore && (
           <AidaPromptSelection
             onPromptSelected={onPromptSelected}

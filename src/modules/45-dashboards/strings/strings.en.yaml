@@ -81,14 +81,15 @@ dashboardSortingOptions:
   mostLiked: 'Most Liked'
 aida:
   assist: I can generate new Custom Dashboard widgets quickly and effectively.
-  generating: AIDA is Generating
+  initializing: AIDA is initializing
+  generating: AIDA is generating
   createWidget: Create a widget using AIDA
   createCustomWidgetFor: Create a custom widget for
   asA: As a
   helpText: Harness AI Development Assistant (AIDA) can help build Custom Dashboard widgets quickly and effectively.
   selectExplore: Select an explore for the widget
   selectVisualisation: Select a visualization for the widget
-  successGeneratingTile: AIDA successfully generated a Dashboard tile
+  successGeneratingTile: AIDA successfully generated a dashboard tile
   failureGeneratingTile: AIDA dashboard tile generation failed
   trouble: Sorry I had some trouble with that request, please try again.
   visualisationArenaChart: Arena Chart

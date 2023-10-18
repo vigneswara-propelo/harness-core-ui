@@ -2,7 +2,7 @@ import React from 'react'
 import { render, RenderResult, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import { Prompt } from '@dashboards/types/AidaTypes.types'
+import { Prompt } from 'services/custom-dashboards'
 import AidaPromptSelection, { AidaPromptSelectionProps } from '../AidaPromptSelection'
 
 const renderComponent = (props: AidaPromptSelectionProps): RenderResult =>

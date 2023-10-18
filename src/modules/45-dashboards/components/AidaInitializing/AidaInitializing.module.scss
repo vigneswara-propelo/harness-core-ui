@@ -1,0 +1,11 @@
+.message {
+  padding: var(--spacing-small) var(--spacing-xlarge) !important;
+  max-width: 550px;
+}
+
+.assistantMsg {
+  @extend .message;
+  background-color: var(--ai-purple-100) !important;
+  margin-right: auto !important;
+  border-radius: 24px 24px 24px 0px;
+}

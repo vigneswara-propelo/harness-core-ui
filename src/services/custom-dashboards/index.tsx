@@ -17,13 +17,13 @@ export interface AiAddTileRequestBody {
   model: string
   query: string
   visualization_type:
-    | 'pie_chart'
-    | 'table'
+    | 'bar_chart'
     | 'column_chart'
     | 'line_chart'
-    | 'single_value'
-    | 'bar_chart'
+    | 'pie_chart'
     | 'scatterplot'
+    | 'single_value'
+    | 'table'
 }
 
 export interface CloneDashboardRequestBody {
@@ -135,6 +135,11 @@ export interface FolderModel {
   type: 'ACCOUNT' | 'SHARED' | 'OOTB'
 }
 
+export interface GenerateTilePrompt {
+  explore_prompts: Prompt[]
+  visualization_prompts: Prompt[]
+}
+
 export interface GetAllTagsResponse {
   resource: GetAllTagsResponseResource
 }
@@ -156,6 +161,10 @@ export interface GetFolderResponse {
   resource: FolderModel
 }
 
+export interface GetGenerateTilePromptsResponse {
+  resource: GenerateTilePrompt
+}
+
 export interface GetModelTagsResponse {
   resource: string[]
 }
@@ -175,6 +184,11 @@ export interface ListFoldersResponse {
   resource?: FolderModel[]
 }
 
+export interface PatchFolderRequestBody {
+  folderId: string
+  name: string
+}
+
 export interface PatchFolderResponse {
   resource: PatchFolderResponseResource
 }
@@ -183,6 +197,22 @@ export interface PatchFolderResponseResource {
   accountId: string
   folderId: string
   name: string
+}
+
+export interface Prompt {
+  options: PromptOption[]
+  title?: string
+}
+
+export interface PromptMapping {
+  key: string
+  value: string
+}
+
+export interface PromptOption {
+  content: string
+  mapped_content?: string
+  mapping?: PromptMapping[]
 }
 
 export interface SearchFoldersResponse {
@@ -322,6 +352,54 @@ export const cloneDashboardPromise = (
     'POST',
     getConfig('dashboard/'),
     `/clone`,
+    props,
+    signal
+  )
+
+export interface GetAiGenerateTilePromptsQueryParams {
+  accountId: string
+}
+
+export type GetAiGenerateTilePromptsProps = Omit<
+  GetProps<GetGenerateTilePromptsResponse, ErrorResponse, GetAiGenerateTilePromptsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get all available prompts for generating a dashboard tile.
+ */
+export const GetAiGenerateTilePrompts = (props: GetAiGenerateTilePromptsProps) => (
+  <Get<GetGenerateTilePromptsResponse, ErrorResponse, GetAiGenerateTilePromptsQueryParams, void>
+    path={`/dashboards/ai/tile/prompts`}
+    base={getConfig('dashboard/')}
+    {...props}
+  />
+)
+
+export type UseGetAiGenerateTilePromptsProps = Omit<
+  UseGetProps<GetGenerateTilePromptsResponse, ErrorResponse, GetAiGenerateTilePromptsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get all available prompts for generating a dashboard tile.
+ */
+export const useGetAiGenerateTilePrompts = (props: UseGetAiGenerateTilePromptsProps) =>
+  useGet<GetGenerateTilePromptsResponse, ErrorResponse, GetAiGenerateTilePromptsQueryParams, void>(
+    `/dashboards/ai/tile/prompts`,
+    { base: getConfig('dashboard/'), ...props }
+  )
+
+/**
+ * Get all available prompts for generating a dashboard tile.
+ */
+export const getAiGenerateTilePromptsPromise = (
+  props: GetUsingFetchProps<GetGenerateTilePromptsResponse, ErrorResponse, GetAiGenerateTilePromptsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<GetGenerateTilePromptsResponse, ErrorResponse, GetAiGenerateTilePromptsQueryParams, void>(
+    getConfig('dashboard/'),
+    `/dashboards/ai/tile/prompts`,
     props,
     signal
   )
@@ -577,7 +655,7 @@ export interface PatchFolderQueryParams {
 }
 
 export type PatchFolderProps = Omit<
-  MutateProps<PatchFolderResponse, FolderErrorResponse, PatchFolderQueryParams, CreateDashboardRequest, void>,
+  MutateProps<PatchFolderResponse, FolderErrorResponse, PatchFolderQueryParams, PatchFolderRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -585,7 +663,7 @@ export type PatchFolderProps = Omit<
  * Update a folder's name.
  */
 export const PatchFolder = (props: PatchFolderProps) => (
-  <Mutate<PatchFolderResponse, FolderErrorResponse, PatchFolderQueryParams, CreateDashboardRequest, void>
+  <Mutate<PatchFolderResponse, FolderErrorResponse, PatchFolderQueryParams, PatchFolderRequestBody, void>
     verb="PATCH"
     path={`/folder`}
     base={getConfig('dashboard/')}
@@ -594,7 +672,7 @@ export const PatchFolder = (props: PatchFolderProps) => (
 )
 
 export type UsePatchFolderProps = Omit<
-  UseMutateProps<PatchFolderResponse, FolderErrorResponse, PatchFolderQueryParams, CreateDashboardRequest, void>,
+  UseMutateProps<PatchFolderResponse, FolderErrorResponse, PatchFolderQueryParams, PatchFolderRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -602,7 +680,7 @@ export type UsePatchFolderProps = Omit<
  * Update a folder's name.
  */
 export const usePatchFolder = (props: UsePatchFolderProps) =>
-  useMutate<PatchFolderResponse, FolderErrorResponse, PatchFolderQueryParams, CreateDashboardRequest, void>(
+  useMutate<PatchFolderResponse, FolderErrorResponse, PatchFolderQueryParams, PatchFolderRequestBody, void>(
     'PATCH',
     `/folder`,
     { base: getConfig('dashboard/'), ...props }
@@ -616,12 +694,12 @@ export const patchFolderPromise = (
     PatchFolderResponse,
     FolderErrorResponse,
     PatchFolderQueryParams,
-    CreateDashboardRequest,
+    PatchFolderRequestBody,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<PatchFolderResponse, FolderErrorResponse, PatchFolderQueryParams, CreateDashboardRequest, void>(
+  mutateUsingFetch<PatchFolderResponse, FolderErrorResponse, PatchFolderQueryParams, PatchFolderRequestBody, void>(
     'PATCH',
     getConfig('dashboard/'),
     `/folder`,

@@ -8,7 +8,7 @@
 import React from 'react'
 import { Container, Tag, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { PromptOption, Prompt } from '@dashboards/types/AidaTypes.types'
+import { Prompt, PromptOption } from 'services/custom-dashboards'
 import css from './AidaPromptSelection.module.scss'
 
 export interface AidaPromptSelectionProps {
