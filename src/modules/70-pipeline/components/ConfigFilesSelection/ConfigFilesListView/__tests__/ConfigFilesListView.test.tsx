@@ -11,7 +11,6 @@ import type { AllowedTypesWithRunTime } from '@harness/uicore'
 
 import type { ServiceDefinition, StoreConfigWrapper } from 'services/cd-ng'
 import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
-import type { FeatureFlag } from '@common/featureFlags'
 import { connectorsData } from '@platform/connectors/pages/connectors/__tests__/mockData'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { ConfigFilesListViewProps, ConfigFileType } from '../../ConfigFilesInterface'
@@ -70,16 +69,13 @@ const defaultProps = {
   updateStage: jest.fn()
 }
 
-const renderComponent = (
-  featureFlags?: Partial<Record<FeatureFlag, boolean>> | undefined,
-  props?: ConfigFilesListViewProps
-): RenderResult => {
+const renderComponent = (props?: ConfigFilesListViewProps): RenderResult => {
   const commonProps = {
     ...defaultProps,
     ...props
   }
   return render(
-    <TestWrapper defaultFeatureFlagValues={featureFlags}>
+    <TestWrapper>
       <ConfigFilesListView {...(commonProps as ConfigFilesListViewProps)} />
     </TestWrapper>
   )
@@ -125,7 +121,7 @@ describe('Define Config Files list view', () => {
   })
 
   test('should show last step directly while editing', async () => {
-    const { container } = renderComponent({})
+    const { container } = renderComponent()
 
     // Click on edit button
     const editBtn = container.querySelector('.bp3-button') as HTMLElement
@@ -189,7 +185,7 @@ describe('Define Config Files list view', () => {
     }
     defaultProps.stage = gitConfigFileStage as any
 
-    const { container } = renderComponent({ CDS_GIT_CONFIG_FILES: true }, defaultProps as any)
+    const { container } = renderComponent(defaultProps as any)
 
     // Click on edit button
     const editBtn = container.querySelector('.bp3-button') as HTMLElement

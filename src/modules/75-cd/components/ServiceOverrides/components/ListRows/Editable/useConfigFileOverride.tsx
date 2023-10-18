@@ -45,7 +45,6 @@ import StepBitbucketAuthentication from '@platform/connectors/components/CreateC
 import StepGitlabAuthentication from '@platform/connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
 import DelegateSelectorStep from '@platform/connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useQueryParams } from '@common/hooks'
 import { HarnessConfigStep } from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/HarnessConfigStep'
 import type {
@@ -118,8 +117,6 @@ export default function useConfigFileOverride(props: ServiceConfigFileOverridePr
   const { accountId, orgIdentifier, projectIdentifier } = useParams<PipelinePathProps & EnvironmentPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
-  const { CDS_GIT_CONFIG_FILES } = useFeatureFlags()
-
   const allowedOverrideStoreTypes = React.useMemo((): ConfigFileType[] => {
     if (serviceType) {
       return shouldShowGitConfigStores(serviceType as ServiceDefinition['type'])
@@ -127,9 +124,9 @@ export default function useConfigFileOverride(props: ServiceConfigFileOverridePr
         : AllowedConfigStoresTypes
     } else {
       // Environment Configurations
-      return getAllowedConfigStores({ CDS_GIT_CONFIG_FILES })
+      return getAllowedConfigStores()
     }
-  }, [CDS_GIT_CONFIG_FILES, serviceType])
+  }, [serviceType])
 
   const getServiceYaml = useCallback((): NGServiceV2InfoConfig => {
     const serviceSelected = serviceList?.find(serviceObj => serviceObj.service?.identifier === selectedService)

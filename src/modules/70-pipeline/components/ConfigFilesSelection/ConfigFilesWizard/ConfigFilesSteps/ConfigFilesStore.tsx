@@ -29,7 +29,6 @@ import { isEmpty } from 'lodash-es'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
@@ -43,8 +42,7 @@ import {
   ConfigFileTypeTitle,
   ConfigFileIconByType,
   ConfigFilesToConnectorMap,
-  ConfigFilesMap,
-  ConfigStoresBehindFeatureFlag
+  ConfigFilesMap
 } from '../../ConfigFilesHelper'
 import css from './ConfigFilesType.module.scss'
 
@@ -75,8 +73,6 @@ function ConfigFileStore({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
-
-  const { CDS_GIT_CONFIG_FILES } = useFeatureFlags()
 
   const [isLoadingConnectors, setIsLoadingConnectors] = useState<boolean>(true)
   const [selectedStore, setSelectedStore] = useState(prevStepData?.store ?? initialValues.store)
@@ -144,16 +140,11 @@ function ConfigFileStore({
     (): Item[] =>
       configFilesStoreTypes
         .map((store: ConfigFileType) => {
-          if (
-            (ConfigStoresBehindFeatureFlag.includes(store) && CDS_GIT_CONFIG_FILES) ||
-            store === ConfigFilesMap.Harness
-          ) {
-            return {
-              label: getString(ConfigFileTypeTitle[store]),
-              icon: ConfigFileIconByType[store] as IconName,
-              value: store
-            } as Item
-          }
+          return {
+            label: getString(ConfigFileTypeTitle[store]),
+            icon: ConfigFileIconByType[store] as IconName,
+            value: store
+          } as Item
         })
         ?.filter(store => !!store) as Item[],
     [configFilesStoreTypes, getString]

@@ -18,12 +18,8 @@ export const OverrideGitStores = [
   ConfigFilesMap.GitLab
 ]
 
-export function getAllowedConfigStores({ CDS_GIT_CONFIG_FILES = false }): ConfigFileType[] {
-  let overrideConfigStores = [...AllowedConfigStoresTypes]
-  if (CDS_GIT_CONFIG_FILES) {
-    overrideConfigStores = overrideConfigStores.concat(OverrideGitStores)
-  }
-  return overrideConfigStores
+export function getAllowedConfigStores(): ConfigFileType[] {
+  return [...AllowedConfigStoresTypes, ...OverrideGitStores]
 }
 
 export const shouldShowGitConfigStores = (deploymentType: ServiceDefinition['type']): boolean => {
