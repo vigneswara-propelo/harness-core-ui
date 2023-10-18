@@ -15,7 +15,7 @@ import MockFeature from '@cf/utils/testData/data/mockFeature'
 import { CFPipelineInstructionType } from '@cf/components/PipelineSteps/FlagConfigurationStep/types'
 import { SubSectionComponentProps } from '../../../subSection.types'
 import SubSectionTestWrapper, { SubSectionTestWrapperProps } from '../../__tests__/SubSectionTestWrapper.mock'
-import DefaultOnRule, { defaultOnRuleSchema, hasDefaultOnRuleRuntime } from '../DefaultOnRule'
+import DefaultOffRule, { defaultOffRuleSchema, hasDefaultOffRuleRuntime } from '../DefaultOffRule'
 
 const renderComponent = (
   props: Partial<SubSectionComponentProps> = {},
@@ -23,11 +23,11 @@ const renderComponent = (
 ): RenderResult =>
   render(
     <SubSectionTestWrapper {...testWrapperProps}>
-      <DefaultOnRule prefixPath="test" title="Default ON rule" {...props} />
+      <DefaultOffRule prefixPath="test" title="Default OFF rule" {...props} />
     </SubSectionTestWrapper>
   )
 
-describe('DefaultOnRule', () => {
+describe('DefaultOffRule', () => {
   test('it should display the title', async () => {
     const title = 'TEST TITLE'
     renderComponent({ title })
@@ -100,54 +100,54 @@ describe('DefaultOnRule', () => {
   })
 })
 
-describe('defaultOnRuleSchema', () => {
+describe('defaultOffRuleSchema', () => {
   test('it should throw when variation is not set', async () => {
-    const schema = defaultOnRuleSchema(str => str)
+    const schema = defaultOffRuleSchema(str => str)
 
     expect(() => schema.validateSync({ spec: {} })).toThrow(
-      'cf.featureFlags.flagPipeline.validation.defaultOnRule.onVariation'
+      'cf.featureFlags.flagPipeline.validation.defaultOffRule.offVariation'
     )
   })
 
   test('it should throw when variation is empty', async () => {
-    const schema = defaultOnRuleSchema(str => str)
+    const schema = defaultOffRuleSchema(str => str)
 
     expect(() => schema.validateSync({ spec: { variation: '' } })).toThrow(
-      'cf.featureFlags.flagPipeline.validation.defaultOnRule.onVariation'
+      'cf.featureFlags.flagPipeline.validation.defaultOffRule.offVariation'
     )
   })
 
   test('it should not throw when variation is set', async () => {
-    const schema = defaultOnRuleSchema(str => str)
+    const schema = defaultOffRuleSchema(str => str)
 
     expect(() => schema.validateSync({ spec: { variation: 'test' } })).not.toThrow()
   })
 })
 
-describe('hasDefaultOnRuleRuntime', () => {
-  test('it should return true when the instruction is a default on rule and the variation is set as runtime', async () => {
+describe('hasDefaultOffRuleRuntime', () => {
+  test('it should return true when the instruction is a default off rule and the variation is set as runtime', async () => {
     expect(
-      hasDefaultOnRuleRuntime({
+      hasDefaultOffRuleRuntime({
         identifier: 'test',
-        type: CFPipelineInstructionType.SET_DEFAULT_ON_VARIATION,
+        type: CFPipelineInstructionType.SET_DEFAULT_OFF_VARIATION,
         spec: { variation: RUNTIME_INPUT_VALUE }
       })
     ).toBeTruthy()
   })
 
-  test('it should return false when the instruction is a default on rule and the variation is not set as runtime', async () => {
+  test('it should return false when the instruction is a default off rule and the variation is not set as runtime', async () => {
     expect(
-      hasDefaultOnRuleRuntime({
+      hasDefaultOffRuleRuntime({
         identifier: 'test',
-        type: CFPipelineInstructionType.SET_DEFAULT_ON_VARIATION,
+        type: CFPipelineInstructionType.SET_DEFAULT_OFF_VARIATION,
         spec: { variation: 'test' }
       })
     ).toBeFalsy()
   })
 
-  test('it should return false when the instruction is not a default on rule and the variation is set as runtime', async () => {
+  test('it should return false when the instruction is not a default off rule and the variation is set as runtime', async () => {
     expect(
-      hasDefaultOnRuleRuntime({
+      hasDefaultOffRuleRuntime({
         identifier: 'test',
         type: CFPipelineInstructionType.SET_FEATURE_FLAG_STATE,
         spec: { variation: RUNTIME_INPUT_VALUE }

@@ -7,12 +7,12 @@
 
 import React, { useEffect, useMemo } from 'react'
 import * as Yup from 'yup'
-import { FormInput } from '@harness/uicore'
+import { FormInput, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { useFormikContext } from 'formik'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { FeatureFlagActivationStatus } from '@cf/utils/CFUtils'
-import { CFPipelineInstructionType } from '../../../types'
+import { CFPipelineInstructionType, FeatureFlagConfigurationInstruction } from '../../../types'
 import SubSection from '../../SubSection'
 import type { SubSectionComponent } from '../../subSection.types'
 import { useFlagChanges } from '../../../FlagChangesContextProvider'
@@ -27,6 +27,10 @@ export const setFlagSwitchSchema = (getString: UseStringsReturn['getString']): Y
       state: Yup.string().required(getString('cf.featureFlags.flagPipeline.validation.setFlagSwitch.state'))
     })
   })
+
+export const hasSetFlagSwitchRuntime = (instruction: FeatureFlagConfigurationInstruction): boolean =>
+  instruction.type === CFPipelineInstructionType.SET_FEATURE_FLAG_STATE &&
+  instruction.spec.state === RUNTIME_INPUT_VALUE
 
 const SetFlagSwitch: SubSectionComponent = ({ prefixPath, ...props }) => {
   const { getString } = useStrings()
@@ -44,7 +48,7 @@ const SetFlagSwitch: SubSectionComponent = ({ prefixPath, ...props }) => {
     <SubSection data-testid="flagChanges-setFlagSwitch" {...props}>
       {mode === StepViewType.DeploymentForm && (
         <FormInput.Select
-          name={withPrefix(prefixPath, '.spec.state')}
+          name={withPrefix(prefixPath, 'spec.state')}
           className={css.hideLabelText}
           items={[
             { label: getString('common.ON'), value: FeatureFlagActivationStatus.ON },
@@ -59,7 +63,7 @@ const SetFlagSwitch: SubSectionComponent = ({ prefixPath, ...props }) => {
 
       {mode !== StepViewType.DeploymentForm && (
         <FormInput.MultiTypeInput
-          name={withPrefix(prefixPath, '.spec.state')}
+          name={withPrefix(prefixPath, 'spec.state')}
           useValue
           className={css.hideLabelText}
           selectItems={[

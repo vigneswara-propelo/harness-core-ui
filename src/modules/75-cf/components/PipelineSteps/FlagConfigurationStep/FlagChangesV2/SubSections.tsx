@@ -15,7 +15,7 @@ import subSectionCSS from './SubSection.module.scss'
 
 export interface SubSectionsProps {
   prefixPath: string
-  subSections: SubSectionComponent[]
+  subSections: Array<SubSectionComponent | null>
   onRemove?: (subSection: SubSectionComponent) => void
 }
 
@@ -31,12 +31,16 @@ const SubSections: FC<SubSectionsProps> = ({ prefixPath, subSections, onRemove }
       )}
 
       {subSections.map((SubSection, index) => (
-        <SubSection
-          key={SubSection.name}
-          title={getString(subSectionNames[SubSection.name])}
-          prefixPath={withPrefix(prefixPath, `spec.instructions[${index}]`)}
-          onRemove={onRemove ? () => onRemove(SubSection) : undefined}
-        />
+        <>
+          {SubSection && (
+            <SubSection
+              key={SubSection.name}
+              title={getString(subSectionNames[SubSection.name])}
+              prefixPath={withPrefix(prefixPath, `spec.instructions[${index}]`)}
+              onRemove={onRemove ? () => onRemove(SubSection) : undefined}
+            />
+          )}
+        </>
       ))}
     </>
   )

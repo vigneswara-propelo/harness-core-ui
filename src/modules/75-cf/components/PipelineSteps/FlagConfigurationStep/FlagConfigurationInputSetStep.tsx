@@ -21,6 +21,9 @@ import type { FlagConfigurationStepData } from './types'
 import FlagChanges from './FlagChanges/FlagChanges'
 import FlagChangesRuntime from './FlagChangesV2/FlagChangesRuntime'
 import FlagChangesContextProvider from './FlagChangesContextProvider'
+import { hasSetFlagSwitchRuntime } from './FlagChangesV2/subSections/SetFlagSwitch/SetFlagSwitch'
+import { hasDefaultOnRuleRuntime } from './FlagChangesV2/subSections/DefaultOnRule/DefaultOnRule'
+import { hasDefaultOffRuleRuntime } from './FlagChangesV2/subSections/DefaultOffRule/DefaultOffRule'
 
 export interface FlagConfigurationInputSetStepProps {
   existingValues?: FlagConfigurationStepData
@@ -113,8 +116,9 @@ const FlagConfigurationInputSetStep = connect<FlagConfigurationInputSetStepProps
 
       return !!template?.spec.instructions.some(
         instruction =>
-          instruction.spec?.state === RUNTIME_INPUT_VALUE || // set flag state
-          instruction.spec?.variation === RUNTIME_INPUT_VALUE // set default on/off variation
+          hasSetFlagSwitchRuntime(instruction) ||
+          hasDefaultOnRuleRuntime(instruction) ||
+          hasDefaultOffRuleRuntime(instruction)
       )
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [flattenedInstructions])

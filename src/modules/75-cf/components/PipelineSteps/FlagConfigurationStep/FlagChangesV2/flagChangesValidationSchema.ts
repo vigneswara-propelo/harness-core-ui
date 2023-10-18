@@ -11,6 +11,7 @@ import { CFPipelineInstructionType } from '@cf/components/PipelineSteps/FlagConf
 import type { UseStringsReturn } from 'framework/strings'
 import { setFlagSwitchSchema } from './subSections/SetFlagSwitch/SetFlagSwitch'
 import { defaultOnRuleSchema } from './subSections/DefaultOnRule/DefaultOnRule'
+import { defaultOffRuleSchema } from './subSections/DefaultOffRule/DefaultOffRule'
 
 const flagChangesValidationSchema = (getString: UseStringsReturn['getString']): Yup.Schema<unknown> =>
   Yup.array().of(
@@ -18,6 +19,8 @@ const flagChangesValidationSchema = (getString: UseStringsReturn['getString']): 
       switch (instruction.type) {
         case CFPipelineInstructionType.SET_DEFAULT_ON_VARIATION:
           return defaultOnRuleSchema(getString)
+        case CFPipelineInstructionType.SET_DEFAULT_OFF_VARIATION:
+          return defaultOffRuleSchema(getString)
         // case CFPipelineInstructionType.ADD_RULE:
         //   return servePercentageRolloutSchema(getString)
         // case CFPipelineInstructionType.ADD_SEGMENT_TO_VARIATION_TARGET_MAP:

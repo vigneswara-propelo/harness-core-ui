@@ -23,13 +23,14 @@ import { useFlagChanges } from '../FlagChangesContextProvider'
 import { withPrefix } from './subSections/withPrefix'
 
 // sub-sections
-import SetFlagSwitch from './subSections/SetFlagSwitch/SetFlagSwitch'
-import DefaultOnRule from './subSections/DefaultOnRule/DefaultOnRule'
+import SetFlagSwitch, { hasSetFlagSwitchRuntime } from './subSections/SetFlagSwitch/SetFlagSwitch'
+import DefaultOnRule, { hasDefaultOnRuleRuntime } from './subSections/DefaultOnRule/DefaultOnRule'
+import DefaultOffRule, { hasDefaultOffRuleRuntime } from './subSections/DefaultOffRule/DefaultOffRule'
 
 export const allSubSections: SubSectionComponent[] = [
   SetFlagSwitch,
-  DefaultOnRule
-  // DefaultRules,
+  DefaultOnRule,
+  DefaultOffRule
   // ServeVariationToIndividualTarget,
   // ServeVariationToTargetGroup,
   // ServePercentageRollout
@@ -45,9 +46,27 @@ const FlagChangesForm: FC<FlagChangesFormProps> = ({ prefixPath, initialInstruct
   const { setFieldValue, values } = useFormikContext<FlagConfigurationStepFormDataValues>()
   const { mode } = useFlagChanges()
 
-  const [subSections, setSubSections] = useState<SubSectionComponent[]>(() => {
+  const [subSections, setSubSections] = useState<Array<SubSectionComponent | null>>(() => {
     if (!Array.isArray(initialInstructions) || initialInstructions.length === 0) {
       return []
+    }
+
+    if (mode === StepViewType.DeploymentForm) {
+      return initialInstructions.map(instruction => {
+        if (hasSetFlagSwitchRuntime(instruction)) {
+          return SetFlagSwitch
+        }
+
+        if (hasDefaultOnRuleRuntime(instruction)) {
+          return DefaultOnRule
+        }
+
+        if (hasDefaultOffRuleRuntime(instruction)) {
+          return DefaultOffRule
+        }
+
+        return null
+      })
     }
 
     return [
@@ -56,6 +75,8 @@ const FlagChangesForm: FC<FlagChangesFormProps> = ({ prefixPath, initialInstruct
           switch (instruction.type) {
             case CFPipelineInstructionType.SET_DEFAULT_ON_VARIATION:
               return DefaultOnRule
+            case CFPipelineInstructionType.SET_DEFAULT_OFF_VARIATION:
+              return DefaultOffRule
             // case CFPipelineInstructionType.SET_DEFAULT_OFF_VARIATION:
             // case CFPipelineInstructionType.SET_DEFAULT_VARIATIONS:
             //   return DefaultRules

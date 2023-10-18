@@ -31,18 +31,18 @@ import { useFlagChanges } from '../../../FlagChangesContextProvider'
 import { getAllowableTypes } from '../getAllowableTypes'
 import { withPrefix } from '../withPrefix'
 
-export const defaultOnRuleSchema = (getString: UseStringsReturn['getString']): Yup.Schema<unknown> =>
+export const defaultOffRuleSchema = (getString: UseStringsReturn['getString']): Yup.Schema<unknown> =>
   Yup.object({
     spec: Yup.object({
-      variation: Yup.string().required(getString('cf.featureFlags.flagPipeline.validation.defaultOnRule.onVariation'))
+      variation: Yup.string().required(getString('cf.featureFlags.flagPipeline.validation.defaultOffRule.offVariation'))
     })
   })
 
-export const hasDefaultOnRuleRuntime = (instruction: FeatureFlagConfigurationInstruction): boolean =>
-  instruction.type === CFPipelineInstructionType.SET_DEFAULT_ON_VARIATION &&
+export const hasDefaultOffRuleRuntime = (instruction: FeatureFlagConfigurationInstruction): boolean =>
+  instruction.type === CFPipelineInstructionType.SET_DEFAULT_OFF_VARIATION &&
   instruction.spec.variation === RUNTIME_INPUT_VALUE
 
-const DefaultOnRule: SubSectionComponent = ({ prefixPath, ...props }) => {
+const DefaultOffRule: SubSectionComponent = ({ prefixPath, ...props }) => {
   const { setFieldValue, values } = useFormikContext()
   const [inputType, setInputType] = useState<MultiTypeInputType>(() =>
     getMultiTypeFromValue(get(values, withPrefix(prefixPath, 'spec.variation')))
@@ -73,9 +73,9 @@ const DefaultOnRule: SubSectionComponent = ({ prefixPath, ...props }) => {
   useEffect(() => {
     setFieldValue(
       withPrefix(prefixPath, 'identifier'),
-      `${CFPipelineInstructionType.SET_DEFAULT_ON_VARIATION}Identifier`
+      `${CFPipelineInstructionType.SET_DEFAULT_OFF_VARIATION}Identifier`
     )
-    setFieldValue(withPrefix(prefixPath, 'type'), CFPipelineInstructionType.SET_DEFAULT_ON_VARIATION)
+    setFieldValue(withPrefix(prefixPath, 'type'), CFPipelineInstructionType.SET_DEFAULT_OFF_VARIATION)
   }, [prefixPath, setFieldValue])
 
   const onTypeChange = useCallback(
@@ -87,14 +87,14 @@ const DefaultOnRule: SubSectionComponent = ({ prefixPath, ...props }) => {
   )
 
   return (
-    <SubSection data-testid="flagChanges-defaultOnRule" {...props}>
+    <SubSection data-testid="flagChanges-defaultOffRule" {...props}>
       {mode === StepViewType.DeploymentForm &&
         (items.length ? (
           <FormInput.Select
             name={withPrefix(prefixPath, 'spec.variation')}
             placeholder={getString('cf.pipeline.flagConfiguration.selectVariation')}
             items={items}
-            label={getString('cf.pipeline.flagConfiguration.whenTheFlagIsOnServe')}
+            label={getString('cf.pipeline.flagConfiguration.whenTheFlagIsOffServe')}
             disabled={readonly}
             usePortal
           />
@@ -108,7 +108,7 @@ const DefaultOnRule: SubSectionComponent = ({ prefixPath, ...props }) => {
           placeholder={getString('cf.pipeline.flagConfiguration.selectVariation')}
           useValue
           selectItems={items}
-          label={getString('cf.pipeline.flagConfiguration.whenTheFlagIsOnServe')}
+          label={getString('cf.pipeline.flagConfiguration.whenTheFlagIsOffServe')}
           multiTypeInputProps={{
             allowableTypes: allowableTypes as AllowedTypes,
             multitypeInputValue: inputType,
@@ -121,4 +121,4 @@ const DefaultOnRule: SubSectionComponent = ({ prefixPath, ...props }) => {
   )
 }
 
-export default DefaultOnRule
+export default DefaultOffRule

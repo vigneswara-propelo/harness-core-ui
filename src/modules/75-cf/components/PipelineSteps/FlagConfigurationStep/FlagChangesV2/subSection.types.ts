@@ -16,5 +16,6 @@ export type SubSectionComponent = FC<SubSectionComponentProps>
 
 export const subSectionNames: Record<string, StringKeys> = {
   SetFlagSwitch: 'cf.pipeline.flagConfiguration.setFlagSwitch',
-  DefaultOnRule: 'cf.pipeline.flagConfiguration.setDefaultOnRule'
+  DefaultOnRule: 'cf.pipeline.flagConfiguration.setDefaultOnRule',
+  DefaultOffRule: 'cf.pipeline.flagConfiguration.setDefaultOffRule'
 }

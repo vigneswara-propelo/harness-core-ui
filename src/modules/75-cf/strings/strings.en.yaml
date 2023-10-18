@@ -261,6 +261,8 @@ featureFlags:
         onOrOffVariation: An ON or OFF variation is required
       defaultOnRule:
         onVariation: ON variation is required
+      defaultOffRule:
+        offVariation: OFF variation is required
       serveVariationToIndividualTarget:
         variationTargets: Targets/variation is required
       serveVariationToTargetGroup:
@@ -494,6 +496,7 @@ pipeline:
     flagChangesRuntimeServePercentageRollout: Serve a percentage rollout
     setFlagSwitch: Set flag switch
     setDefaultOnRule: Set default ON rule
+    setDefaultOffRule: Set default OFF rule
     serveVariationToIndividualTarget: Serve Variation to Individual Target
     serveVariationToTargetGroup: Serve Variation to Target Group
     servePercentageRollout: Serve Percentage Rollout

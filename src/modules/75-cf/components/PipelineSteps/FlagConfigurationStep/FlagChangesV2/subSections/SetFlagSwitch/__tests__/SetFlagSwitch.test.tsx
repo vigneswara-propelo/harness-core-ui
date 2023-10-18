@@ -8,9 +8,11 @@
 import React from 'react'
 import { render, RenderResult, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { CFPipelineInstructionType } from '@cf/components/PipelineSteps/FlagConfigurationStep/types'
 import SubSectionTestWrapper, { SubSectionTestWrapperProps } from '../../__tests__/SubSectionTestWrapper.mock'
 import { SubSectionComponentProps } from '../../../subSection.types'
-import SetFlagSwitch, { setFlagSwitchSchema } from '../SetFlagSwitch'
+import SetFlagSwitch, { hasSetFlagSwitchRuntime, setFlagSwitchSchema } from '../SetFlagSwitch'
 
 const renderComponent = (
   props: Partial<SubSectionComponentProps> = {},
@@ -42,15 +44,57 @@ describe('SetFlagSwitch', () => {
 })
 
 describe('setFlagSwitchSchema', () => {
-  const getStringMock = jest.fn().mockImplementation(str => str)
+  test('it should throw when state is not set', async () => {
+    const schema = setFlagSwitchSchema(str => str)
 
-  test('it should throw when state is not specified', async () => {
-    expect(() => setFlagSwitchSchema(getStringMock).validateSync({ spec: {} })).toThrow(
+    expect(() => schema.validateSync({ spec: {} })).toThrow(
       'cf.featureFlags.flagPipeline.validation.setFlagSwitch.state'
     )
   })
 
-  test('it should not throw when state is specified', async () => {
-    expect(() => setFlagSwitchSchema(getStringMock).validateSync({ spec: { state: 'ON' } })).not.toThrow()
+  test('it should throw when state is empty', async () => {
+    const schema = setFlagSwitchSchema(str => str)
+
+    expect(() => schema.validateSync({ spec: { state: '' } })).toThrow(
+      'cf.featureFlags.flagPipeline.validation.setFlagSwitch.state'
+    )
+  })
+
+  test('it should not throw when state is set', async () => {
+    const schema = setFlagSwitchSchema(str => str)
+
+    expect(() => schema.validateSync({ spec: { state: 'test' } })).not.toThrow()
+  })
+})
+
+describe('hasSetFlagSwitchRuntime', () => {
+  test('it should return true when the instruction is set flag switch and the state is set as runtime', async () => {
+    expect(
+      hasSetFlagSwitchRuntime({
+        identifier: 'test',
+        type: CFPipelineInstructionType.SET_FEATURE_FLAG_STATE,
+        spec: { state: RUNTIME_INPUT_VALUE }
+      })
+    ).toBeTruthy()
+  })
+
+  test('it should return false when the instruction is set flag switch and the state is not set as runtime', async () => {
+    expect(
+      hasSetFlagSwitchRuntime({
+        identifier: 'test',
+        type: CFPipelineInstructionType.SET_FEATURE_FLAG_STATE,
+        spec: { state: 'test' }
+      })
+    ).toBeFalsy()
+  })
+
+  test('it should return false when the instruction is not set flag state and the state is set as runtime', async () => {
+    expect(
+      hasSetFlagSwitchRuntime({
+        identifier: 'test',
+        type: CFPipelineInstructionType.SET_DEFAULT_OFF_VARIATION,
+        spec: { variation: RUNTIME_INPUT_VALUE }
+      })
+    ).toBeFalsy()
   })
 })
