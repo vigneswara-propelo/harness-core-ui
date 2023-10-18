@@ -29,7 +29,8 @@ import {
   AllowedTypesWithRunTime
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import routes from '@common/RouteDefinitions'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import { projectPathProps, modulePathProps, environmentPathProps } from '@common/utils/routeUtils'
 import { NavigationCheck } from '@common/exports'
 import { useStrings } from 'framework/strings'
@@ -51,6 +52,7 @@ import { CustomVariablesEditableStage } from '@pipeline/components/PipelineSteps
 import type { AllNGVariables } from '@pipeline/utils/types'
 import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import RbacButton from '@rbac/components/Button/Button'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { PermissionRequest, usePermission } from '@rbac/hooks/usePermission'
@@ -127,7 +129,9 @@ export default function EnvironmentConfiguration({
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & EnvironmentPathProps>()
   const history = useHistory()
   const { expressions } = useVariablesExpression()
+  const { CDS_NAV_2_0 } = useFeatureFlags()
   const environmentIdentifier = data?.data?.environment?.identifier
+  const routes = CDS_NAV_2_0 ? routesV2 : routesV1
 
   const resourceAndScope: Pick<PermissionRequest, 'resource' | 'resourceScope'> = {
     resource: {

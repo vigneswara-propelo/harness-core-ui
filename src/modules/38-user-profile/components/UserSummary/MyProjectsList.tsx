@@ -14,7 +14,7 @@ import { useStrings } from 'framework/strings'
 import { useGetUserProjectInfo } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import routesV2 from '@common/RouteDefinitionsV2'
-import { getRouteParams } from '@common/utils/routeUtils'
+import { NAV_MODE, getRouteParams } from '@common/utils/routeUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './UserSummary.module.scss'
 
@@ -57,10 +57,12 @@ const MyProjectsList: React.FC = () => {
                 onClick={() => {
                   if (CDS_NAV_2_0) {
                     history.push(
-                      routesV2.toMode({
+                      routesV2.toProjectDetails({
+                        accountId,
                         orgIdentifier: project.orgIdentifier || 'default',
                         projectIdentifier: project.identifier,
-                        module
+                        module,
+                        mode: NAV_MODE.ADMIN
                       })
                     )
                   } else {

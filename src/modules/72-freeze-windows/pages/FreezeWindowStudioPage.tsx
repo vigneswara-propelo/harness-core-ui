@@ -9,7 +9,8 @@ import React, { ReactElement } from 'react'
 import { matchPath, useHistory } from 'react-router-dom'
 import { Page, useToaster, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import { NavigationCheck } from '@common/components'
-import routes from '@common/RouteDefinitions'
+import routesv1 from '@common/RouteDefinitions'
+import routesv2 from '@common/RouteDefinitionsV2'
 import { useStrings, StringKeys } from 'framework/strings'
 import type { Error } from 'services/cd-ng'
 import { FreezeWindowContext, FreezeWindowProvider } from '@freeze-windows/context/FreezeWindowContext'
@@ -20,6 +21,7 @@ import { FreezeWindowStudioHeader } from '@freeze-windows/components/FreezeWindo
 import { FreezeWindowStudioSubHeader } from '@freeze-windows/components/FreezeWindowStudioSubHeader/FreezeWindowStudioSubHeader'
 import { FreezeWindowStudioBody } from '@freeze-windows/components/FreezeWindowStudioBody/FreezeWindowStudioBody'
 import { DefaultFreezeId } from '@freeze-windows/context/FreezeWindowReducer'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 
 const _FreezeWindowStudioPage = (): React.ReactElement => {
   const {
@@ -35,6 +37,7 @@ const _FreezeWindowStudioPage = (): React.ReactElement => {
     state: { isYamlEditable, yamlHandler, freezeObj, isUpdated }
   } = React.useContext(FreezeWindowContext)
   const history = useHistory()
+  const { CDS_NAV_2_0 } = useFeatureFlags()
 
   const resources = useFreezeStudioData()
 
@@ -68,6 +71,8 @@ const _FreezeWindowStudioPage = (): React.ReactElement => {
     updateYamlView(false)
     return true
   }
+
+  const routes = CDS_NAV_2_0 ? routesv2 : routesv1
 
   return (
     <>

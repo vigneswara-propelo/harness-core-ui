@@ -13,6 +13,7 @@ import { DashboardEmbedPathProps } from '@common/interfaces/RouteInterfaces'
 import DashboardResourceModalBody from '@dashboards/components/DashboardResourceModalBody/DashboardResourceModalBody'
 import DashboardResourceRenderer from '@dashboards/components/DashboardResourceRenderer/DashboardResourceRenderer'
 import RbacFactory from '@rbac/factories/RbacFactory'
+import CommonRouteDestinations from '@user-profile/CommonRouteDestinations'
 import { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
 import { RouteWithContext } from '@common/router/RouteWithContext/RouteWithContext'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -59,6 +60,7 @@ const RouteDestinations = (): React.ReactElement => {
       <RouteWithContext exact path={routes.toDashboardsEmbedPage({ ...dashboardEmbedPathProps })}>
         <DashboardViewPage />
       </RouteWithContext>
+      {CommonRouteDestinations({ mode: NAV_MODE.DASHBOARDS }).props.children}
     </Switch>
   )
 }
