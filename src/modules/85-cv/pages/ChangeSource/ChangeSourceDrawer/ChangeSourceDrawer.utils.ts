@@ -23,7 +23,7 @@ import {
 } from './ChangeSourceDrawer.constants'
 import type { UpdatedChangeSourceDTO } from './ChangeSourceDrawer.types'
 
-export const createChangesourceList = (
+export const createChangeSourceList = (
   changeSource: ChangeSourceDTO[],
   healthSourcesPayload: ChangeSourceDTO
 ): ChangeSourceDTO[] => {
@@ -189,7 +189,8 @@ export const updateSpecByType = (data: ChangeSourceDTO): ChangeSourceDTO['spec']
     case ChangeSourceTypes.CustomIncident:
     case ChangeSourceTypes.CustomInfrastructure:
       return {
-        type: data?.category
+        type: data?.category,
+        authorizationToken: data?.spec?.authorizationToken
       }
     default:
       return {}

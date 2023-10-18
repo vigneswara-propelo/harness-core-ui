@@ -9,7 +9,7 @@
 declare const styles: {
   readonly alignHorizontal: string
   readonly divider: string
-  readonly formFullheight: string
+  readonly formFullHeight: string
   readonly outerCard: string
   readonly removeEditButton: string
   readonly selectChangeSource: string

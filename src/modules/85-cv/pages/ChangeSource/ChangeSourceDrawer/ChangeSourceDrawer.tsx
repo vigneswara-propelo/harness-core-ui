@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { Text, Formik, FormInput, Container, ThumbnailSelect, FormikForm } from '@harness/uicore'
+import { Text, Formik, FormInput, Container, ThumbnailSelect, FormikForm, Layout } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
@@ -19,7 +19,7 @@ import type { ConnectorReferenceFieldProps } from '@platform/connectors/componen
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import {
   createCardOptions,
-  createChangesourceList,
+  createChangeSourceList,
   validateChangeSource,
   getChangeSourceOptions,
   updateSpecByType,
@@ -52,7 +52,7 @@ export function ChangeSourceDrawer({
       data.enabled = true
     }
     data['spec'] = updateSpecByType(data)
-    const updatedChangeSources = createChangesourceList(tableData, data)
+    const updatedChangeSources = createChangeSourceList(tableData, data)
     onSuccess(updatedChangeSources)
   }
 
@@ -134,8 +134,9 @@ export function ChangeSourceDrawer({
       {formik => {
         const changeSourceType = formik.values?.type as string
         const isCustomChangeSource = CustomChangeSourceList.includes(changeSourceType as ChangeSourceTypes)
+        const isCustomIncident = changeSourceType === ChangeSourceTypes.CustomIncident
         return (
-          <FormikForm className={style.formFullheight}>
+          <FormikForm className={style.formFullHeight}>
             <CardWithOuterTitle title={getString('cv.changeSource.defineChangeSource')} className={style.outerCard}>
               <Text className={style.selectChangeSource}>{getString('cv.changeSource.selectChangeSource')}</Text>
               <Container
@@ -178,12 +179,22 @@ export function ChangeSourceDrawer({
                 )}
               </Container>
               <hr className={style.divider} />
-              <Container margin={{ bottom: 'large', top: 'large' }} color={Color.BLACK} width="400px">
-                <FormInput.InputWithIdentifier
-                  inputLabel={getString('cv.changeSource.sourceName')}
-                  isIdentifierEditable={!isEdit}
-                />
-              </Container>
+              <Layout.Horizontal margin={{ top: 'large' }} spacing={'large'} color={Color.BLACK}>
+                <Container width="400px">
+                  <FormInput.InputWithIdentifier
+                    inputLabel={getString('cv.changeSource.sourceName')}
+                    isIdentifierEditable={!isEdit}
+                  />
+                </Container>
+                {isCustomIncident && (
+                  <Container width="400px">
+                    <FormInput.Text
+                      name={ChangeSourceFieldNames.AUTHORIZATION_TOKEN}
+                      label={getString('cv.onboarding.changeSourceTypes.Custom.authorizationToken')}
+                    />
+                  </Container>
+                )}
+              </Layout.Horizontal>
               {isCustomChangeSource && !isEdit && (
                 <Text font={{ variation: FontVariation.SMALL }} icon="info" iconProps={{ color: Color.BLUE_400 }}>
                   {getString('cv.onboarding.changeSourceTypes.Custom.note')}

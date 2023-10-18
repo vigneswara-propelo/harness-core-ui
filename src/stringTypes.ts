@@ -10250,6 +10250,7 @@ export interface StringsMap {
   'cv.onboarding.activitySources.changeSourceInfo': string
   'cv.onboarding.activitySources.dontHaveChangeSource': string
   'cv.onboarding.activitySources.infrastructureProvider': string
+  'cv.onboarding.changeSourceTypes.Custom.authorizationToken': string
   'cv.onboarding.changeSourceTypes.Custom.copyCURL': string
   'cv.onboarding.changeSourceTypes.Custom.curl': string
   'cv.onboarding.changeSourceTypes.Custom.note': string

@@ -84,5 +84,6 @@ export const ChangeSourceConnectorOptions: CardSelectOption[] = [
 
 export const ChangeSourceFieldNames = {
   CATEGORY: 'category',
-  TYPE: 'type'
+  TYPE: 'type',
+  AUTHORIZATION_TOKEN: 'spec.authorizationToken'
 }

@@ -508,6 +508,7 @@ export type AzureKeyVaultConnectorDTO = ConnectorConfigDTO & {
   clientId?: string
   default?: boolean
   delegateSelectors?: string[]
+  enablePurge?: boolean
   managedClientId?: string
   secretKey?: string
   subscription: string
@@ -758,7 +759,7 @@ export type CVNGMSTeamsChannelSpec = CVNGNotificationChannelSpec & {
 
 export interface CVNGNotificationChannel {
   spec: CVNGNotificationChannelSpec
-  type?: 'Email' | 'Slack' | 'PagerDuty' | 'MsTeams'
+  type?: 'Email' | 'Slack' | 'PagerDuty' | 'MsTeams' | 'Webhook'
 }
 
 export interface CVNGNotificationChannelSpec {
@@ -1058,6 +1059,7 @@ export interface CrossAccountAccess {
 
 export interface CustomChangeEvent {
   changeEventDetailsLink?: string
+  channelId?: string
   channelUrl?: string
   description?: string
   externalLinkToEntity?: string
@@ -1083,6 +1085,7 @@ export type CustomChangeEventMetadata = ChangeEventMetadata & {
 }
 
 export type CustomChangeSourceSpec = ChangeSourceSpec & {
+  authorizationToken?: string
   name?: string
   type?: 'Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag' | 'ChaosExperiment'
   webhookCurlCommand?: string
@@ -1091,6 +1094,7 @@ export type CustomChangeSourceSpec = ChangeSourceSpec & {
 
 export interface CustomChangeWebhookEventDetail {
   changeEventDetailsLink?: string
+  channelId?: string
   channelUrl?: string
   description: string
   externalLinkToEntity?: string
@@ -1431,6 +1435,8 @@ export interface DeploymentVerificationJobInstanceSummary {
     | 'NOT_STARTED'
     | 'VERIFICATION_PASSED'
     | 'VERIFICATION_FAILED'
+    | 'ABORTED_AS_SUCCESS'
+    | 'ABORTED_AS_FAILURE'
     | 'ERROR'
     | 'ABORTED'
     | 'IN_PROGRESS'
@@ -2023,6 +2029,7 @@ export interface Error {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SPOTNIST_REST_EXCEPTION'
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
@@ -2062,6 +2069,7 @@ export interface Error {
     | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
+    | 'ABORT_ALL_ALREADY_NG'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2472,6 +2480,7 @@ export interface Failure {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SPOTNIST_REST_EXCEPTION'
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
@@ -2511,6 +2520,7 @@ export interface Failure {
     | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
+    | 'ABORT_ALL_ALREADY_NG'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -4742,7 +4752,9 @@ export interface PrometheusSampleData {
   }
 }
 
-export type QuarterlyCalenderSpec = CalenderSpec & { [key: string]: any }
+export type QuarterlyCalenderSpec = CalenderSpec & {
+  quarterStart?: 'Jan-Apr-Jul-Oct' | 'Feb-May-Aug-Nov' | 'Mar-Jun-Sep-Dec'
+}
 
 export interface QueryDefinition {
   continuousVerificationEnabled?: boolean
@@ -5434,6 +5446,7 @@ export interface ResponseMessage {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SPOTNIST_REST_EXCEPTION'
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
@@ -5473,6 +5486,7 @@ export interface ResponseMessage {
     | 'PIPELINE_UPDATE_EXCEPTION'
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
+    | 'ABORT_ALL_ALREADY_NG'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -7565,6 +7579,10 @@ export type VaultConnectorDTO = ConnectorConfigDTO & {
   xvaultAwsIamServerId?: string
 }
 
+export interface VerificationAbortDTO {
+  verificationStatus: 'SUCCESS' | 'FAILURE'
+}
+
 export interface VerificationOverview {
   appliedDeploymentAnalysisType?: 'CANARY' | 'NO_ANALYSIS' | 'ROLLING' | 'TEST' | 'SIMPLE'
   baselineOverview?: BaselineOverview
@@ -7584,6 +7602,8 @@ export interface VerificationOverview {
     | 'NOT_STARTED'
     | 'VERIFICATION_PASSED'
     | 'VERIFICATION_FAILED'
+    | 'ABORTED_AS_SUCCESS'
+    | 'ABORTED_AS_FAILURE'
     | 'ERROR'
     | 'ABORTED'
     | 'IN_PROGRESS'
@@ -7610,6 +7630,8 @@ export interface VerifyStepSummary {
     | 'NOT_STARTED'
     | 'VERIFICATION_PASSED'
     | 'VERIFICATION_FAILED'
+    | 'ABORTED_AS_SUCCESS'
+    | 'ABORTED_AS_FAILURE'
     | 'ERROR'
     | 'ABORTED'
     | 'IN_PROGRESS'

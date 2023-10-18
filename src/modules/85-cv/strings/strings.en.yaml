@@ -152,6 +152,7 @@ onboarding:
       curl: cURL
       note: Upon saving, a webhook URL and cURL command will be generated, which can be obtained from the change source listing
       copyCURL: Copy as cURL command
+      authorizationToken: Authorization Token
   monitoringSources:
     addMoreSources: Add more Monitoring Sources
     select: Select your Monitoring Source
