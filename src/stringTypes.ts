@@ -9348,6 +9348,7 @@ export interface StringsMap {
   'ci.usesLabel': string
   'ci.welcome': string
   'idp.adminHome': string
+  'idp.backtoIDP': string
   'idp.chooseProject': string
   'idp.createChooseProject': string
   'idp.createProject': string

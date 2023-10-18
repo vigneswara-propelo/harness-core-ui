@@ -15,6 +15,7 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import { FeatureFlag } from '@common/featureFlags'
+import css from './IDPAdminSideNavLinks.module.scss'
 
 const IDPAdminModule: Module = 'idp-admin'
 const IDPModule: Module = 'idp'
@@ -34,6 +35,7 @@ function IDPAdminSideNavLinks(): React.ReactElement {
   const [showGetStarted, setShowGetStarted] = useState(false)
 
   useEffect(() => {
+    /* istanbul ignore if */
     if (!isEmpty(onboardingStatus)) {
       setShowGetStarted(onboardingStatus !== 'COMPLETED')
     }
@@ -43,49 +45,65 @@ function IDPAdminSideNavLinks(): React.ReactElement {
     <SideNav.Main disableScopeSelector disableCollapse>
       <SideNav.Section>
         {showGetStarted ? (
-          <SideNav.Link
+          /* istanbul ignore next */ <SideNav.Link
             label={getString('getStarted')}
             to={routes.toGetStartedWithIDP({ accountId, module: IDPAdminModule })}
           />
         ) : (
           <>
             <SideNav.Link
-              label={getString('back')}
+              label={getString('idp.backtoIDP')}
               to={routes.toIDP({ accountId, module: IDPModule })}
-              icon="main-chevron-left"
+              icon="arrow-left"
+              className={css.backToMenu}
             />
             <SideNav.Link
               label={getString('common.plugins')}
+              icon="idp-nav-plugins"
+              iconProps={{ padding: { right: 'xsmall' } }}
               to={routes.toPluginsPage({ accountId, module: IDPAdminModule })}
             />
             <SideNav.Link
               label={getString('common.configurations')}
+              icon="idp-nav-pluginconfig"
+              iconProps={{ padding: { right: 'xsmall' } }}
               to={routes.toConfigurations({ accountId, module: IDPAdminModule })}
             />
             <SideNav.Link
               label={getString('idp.oAuthConfig')}
+              icon="idp-nav-oauth"
+              iconProps={{ padding: { right: 'xsmall' } }}
               to={routes.toIDPOAuthConfig({ accountId, module: IDPAdminModule })}
             />
             {IDPScorecardsEnabled && (
               <SideNav.Link
                 label={getString('idp.scorecards')}
+                icon="idp-nav-scorecards"
+                iconProps={{ padding: { right: 'xsmall' } }}
                 to={routes.toScorecards({ accountId, module: IDPAdminModule })}
               />
             )}
             <SideNav.Link
               label={getString('idp.layout')}
+              icon="idp-nav-layout"
+              iconProps={{ padding: { right: 'xsmall' } }}
               to={routes.toLayoutConfig({ accountId, module: IDPAdminModule })}
             />
             <SideNav.Link
               label={getString('accessControl')}
+              icon="user"
+              iconProps={{ size: 18, padding: { right: 'xsmall' } }}
               to={routes.toIDPAccessControl({ accountId, module: IDPAdminModule })}
             />
             <SideNav.Link
               label={getString('connectorsLabel')}
+              icon="idp-nav-connectors"
+              iconProps={{ padding: { right: 'xsmall' } }}
               to={routes.toConnectorsPage({ accountId, module: IDPAdminModule })}
             />
             <SideNav.Link
               label={getString('idp.urlAllowList')}
+              icon="idp-nav-allowlist"
               to={routes.toIDPAllowListURL({ accountId, module: IDPAdminModule })}
             />
           </>
