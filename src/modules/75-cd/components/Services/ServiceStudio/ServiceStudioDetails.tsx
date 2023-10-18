@@ -309,13 +309,17 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
       return
     }
 
+    const finalServiceDataForYAML = omit(finalServiceData, ['storeType', 'connectorRef', 'entityGitDetails'])
+
     const body = {
       ...omit(cloneDeep(finalServiceData?.service), 'serviceDefinition', 'gitOpsEnabled'),
       projectIdentifier: isServiceCreateModalView ? projectIdentifier : serviceData?.projectIdentifier,
       orgIdentifier: isServiceCreateModalView ? orgIdentifier : serviceData?.orgIdentifier,
       //serviceId is not present in queryParam when service is created in pipeline studio.
       identifier: defaultTo(serviceId, finalServiceData?.service?.identifier),
-      yaml: yamlStringify(sanitize({ ...finalServiceData }, { removeEmptyObject: false, removeEmptyString: false }))
+      yaml: yamlStringify(
+        sanitize({ ...finalServiceDataForYAML }, { removeEmptyObject: false, removeEmptyString: false })
+      )
     }
 
     try {

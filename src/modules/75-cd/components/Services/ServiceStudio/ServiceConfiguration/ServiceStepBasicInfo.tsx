@@ -64,6 +64,7 @@ function ServiceStepBasicInfo(): React.ReactElement {
   return (
     <div className={css.serviceStepBasicInfo}>
       <Formik
+        enableReinitialize
         initialValues={{ ...pipeline, ...initialGitFormValue }}
         validate={values => {
           if (isEmpty(values.name)) {
