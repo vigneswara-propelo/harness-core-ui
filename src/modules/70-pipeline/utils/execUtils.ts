@@ -984,8 +984,9 @@ export const getExecutionNodeName = (node?: ExecutionNode): string => {
   }
 
   const hostName = node.strategyMetadata?.formetadata?.value
+  const isCommandStepType = node.stepType === StepType.Command
 
-  if (hostName) {
+  if (isCommandStepType && hostName) {
     return hostName
   }
 
