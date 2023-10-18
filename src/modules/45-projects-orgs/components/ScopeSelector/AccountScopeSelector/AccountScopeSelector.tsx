@@ -71,7 +71,7 @@ export const AccountScopeSelector: React.FC<AccountScopeSelectorProps> = (props)
           />
         </Layout.Vertical>
       ) : !loading ? (
-        <NoDataCard icon="Account" message={getString('projectsOrgs.noOrganizations')} />
+        <NoDataCard icon="Account" message={getString('projectsOrgs.noAccounts')} />
       ) : null}
     </Container>
   )
