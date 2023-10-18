@@ -30,7 +30,7 @@ export const AccountScopeSelector: React.FC<AccountScopeSelectorProps> = (props)
       searchTerm
     },
     queryParamStringifyOptions: { arrayFormat: 'repeat' },
-    debounce: 300
+    debounce: 500
   })
 
   const isOnlyOneAccount = data?.resource?.content?.length === 1 ?? false
