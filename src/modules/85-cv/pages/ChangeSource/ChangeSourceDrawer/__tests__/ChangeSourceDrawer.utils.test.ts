@@ -103,24 +103,21 @@ describe('Validate ChangeSource Utils', () => {
     expect(getChangeSourceOptions({ getString: str => str, type: 'Application' })).toEqual([
       changeSourceCategorySelectOptions.Deployment,
       changeSourceCategorySelectOptions.Alert,
-      changeSourceCategorySelectOptions.FeatureFlag,
-      changeSourceCategorySelectOptions.ChaosExperiment
+      changeSourceCategorySelectOptions.FeatureFlag
     ])
 
     // no deployment options should be return for infra type
     expect(getChangeSourceOptions({ getString: str => str, type: 'Infrastructure' })).toEqual([
       changeSourceCategorySelectOptions.Infrastructure,
       changeSourceCategorySelectOptions.Alert,
-      changeSourceCategorySelectOptions.FeatureFlag,
-      changeSourceCategorySelectOptions.ChaosExperiment
+      changeSourceCategorySelectOptions.FeatureFlag
     ])
 
     expect(getChangeSourceOptions({ getString: str => str })).toEqual([
       changeSourceCategorySelectOptions.Deployment,
       changeSourceCategorySelectOptions.Infrastructure,
       changeSourceCategorySelectOptions.Alert,
-      changeSourceCategorySelectOptions.FeatureFlag,
-      changeSourceCategorySelectOptions.ChaosExperiment
+      changeSourceCategorySelectOptions.FeatureFlag
     ])
   })
 

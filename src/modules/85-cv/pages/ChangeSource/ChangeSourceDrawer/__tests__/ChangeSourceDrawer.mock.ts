@@ -138,6 +138,5 @@ export const changeSourceCategorySelectOptions = {
   Deployment: { label: 'deploymentsText', value: ChangeSourceCategoryName.DEPLOYMENT },
   Alert: { label: 'cv.changeSource.incident', value: ChangeSourceCategoryName.ALERT },
   FeatureFlag: { label: 'common.purpose.cf.continuous', value: ChangeSourceCategoryName.FEATURE_FLAG },
-  ChaosExperiment: { label: 'chaos.chaosExperiment', value: ChangeSourceCategoryName.CHAOS_EXPERIMENT },
   Infrastructure: { label: 'infrastructureText', value: ChangeSourceCategoryName.INFRASTRUCTURE }
 }

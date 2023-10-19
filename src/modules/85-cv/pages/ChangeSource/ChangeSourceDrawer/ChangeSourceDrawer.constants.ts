@@ -41,8 +41,7 @@ export const ChangeSourceCategoryOptions = [
   { label: 'deploymentsText', value: ChangeSourceCategoryName.DEPLOYMENT },
   { label: 'infrastructureText', value: ChangeSourceCategoryName.INFRASTRUCTURE },
   { label: 'cv.changeSource.incident', value: ChangeSourceCategoryName.ALERT },
-  { label: 'common.purpose.cf.continuous', value: ChangeSourceCategoryName.FEATURE_FLAG },
-  { label: 'chaos.chaosExperiment', value: ChangeSourceCategoryName.CHAOS_EXPERIMENT }
+  { label: 'common.purpose.cf.continuous', value: ChangeSourceCategoryName.FEATURE_FLAG }
 ]
 
 export const ChangeSourceConnectorOptions: CardSelectOption[] = [
