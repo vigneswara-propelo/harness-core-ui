@@ -20,7 +20,6 @@ export enum MessageRole {
 export enum DashboardPromptStage {
   Initializing,
   Explore,
-  Visualization,
   UserInput,
   Generating
 }
@@ -31,19 +30,4 @@ export interface Message {
   role: MessageRole
   promptMapping?: PromptMapping[]
   content: string
-}
-
-export interface Visualization {
-  name: string
-  type: VisualizationType
-}
-
-export enum VisualizationType {
-  BarChart = 'bar_chart',
-  ColumnChart = 'column_chart',
-  LineChart = 'line_chart',
-  PieChart = 'pie_chart',
-  Table = 'table',
-  ScatterPlot = 'scatterplot',
-  SingleValue = 'single_value'
 }

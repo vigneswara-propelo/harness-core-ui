@@ -2,7 +2,7 @@ import React from 'react'
 import { waitFor, render, RenderResult, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useDashboardsContext } from '@dashboards/pages/DashboardsContext'
-import { Message, MessageRole, MessageType, VisualizationType } from '@dashboards/types/AidaTypes.types'
+import { Message, MessageRole, MessageType } from '@dashboards/types/AidaTypes.types'
 import * as sharedService from 'services/custom-dashboards'
 
 import AidaGenerating from '../AidaGenerating'
@@ -47,7 +47,6 @@ describe('AidaGenerating', () => {
   test('it should attempt to perform generation from messages', async () => {
     const model = 'mockModel'
     const explore = 'mockExplore'
-    const visualization_type = VisualizationType.BarChart
     const query = 'query message'
 
     const mockMessage1: Message = {
@@ -60,16 +59,9 @@ describe('AidaGenerating', () => {
         { key: 'explore', value: explore }
       ]
     }
-    const mockMessage2: Message = {
-      id: '2',
-      content: 'message3',
-      type: MessageType.Prompt,
-      role: MessageRole.Assistant,
-      promptMapping: [{ key: 'visualization', value: visualization_type }]
-    }
-    const mockMessage3: Message = { id: '3', content: query, type: MessageType.Text, role: MessageRole.User }
+    const mockMessage2: Message = { id: '2', content: query, type: MessageType.Text, role: MessageRole.User }
 
-    const mockMessages: Message[] = [mockMessage1, mockMessage2, mockMessage3]
+    const mockMessages: Message[] = [mockMessage1, mockMessage2]
     renderComponent(mockMessages)
 
     await waitFor(() => expect(updateAiTileDetailsMock).toHaveBeenCalled())
@@ -77,7 +69,6 @@ describe('AidaGenerating', () => {
     const expectedBody: sharedService.AiAddTileRequestBody = {
       model,
       explore,
-      visualization_type,
       query
     }
     expect(updateAiTileDetailsMock).toHaveBeenCalledWith(expectedBody)
@@ -97,7 +88,6 @@ describe('AidaGenerating', () => {
 
     const model = 'mockModel'
     const explore = 'mockExplore'
-    const visualization_type = VisualizationType.BarChart
     const query = 'query message'
 
     const mockMessage1: Message = {
@@ -110,16 +100,9 @@ describe('AidaGenerating', () => {
         { key: 'explore', value: explore }
       ]
     }
-    const mockMessage2: Message = {
-      id: '2',
-      content: 'message3',
-      type: MessageType.Prompt,
-      role: MessageRole.Assistant,
-      promptMapping: [{ key: 'visualization', value: visualization_type }]
-    }
-    const mockMessage3: Message = { id: '3', content: query, type: MessageType.Text, role: MessageRole.User }
+    const mockMessage2: Message = { id: '2', content: query, type: MessageType.Text, role: MessageRole.User }
 
-    const mockMessages: Message[] = [mockMessage1, mockMessage2, mockMessage3]
+    const mockMessages: Message[] = [mockMessage1, mockMessage2]
 
     const onMockError = jest.fn()
     renderComponent(mockMessages, onMockError)

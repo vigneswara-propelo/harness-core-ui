@@ -3,7 +3,7 @@ import { render, RenderResult, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useDashboardsContext } from '@dashboards/pages/DashboardsContext'
-import { ExplorePrompts, VisualizationPrompts } from '@dashboards/constants/AidaDashboardPrompts'
+import { ExplorePrompts } from '@dashboards/constants/AidaDashboardPrompts'
 import * as sharedService from 'services/custom-dashboards'
 import AidaDashboardContent from '../AidaDashboardContent'
 
@@ -70,8 +70,7 @@ describe('AidaDashboardContent', () => {
 
   test('it should move through all of the stages to generation stage', async () => {
     const mockPrompts: sharedService.GenerateTilePrompt = {
-      explore_prompts: ExplorePrompts,
-      visualization_prompts: VisualizationPrompts
+      explore_prompts: ExplorePrompts
     }
     useGetAiGenerateTilePromptsMock.mockReturnValue({
       data: { resource: mockPrompts },
@@ -85,13 +84,6 @@ describe('AidaDashboardContent', () => {
     const explorePromptButton = screen.getByTestId('prompt-option-0-0')
 
     await userEvent.click(explorePromptButton)
-
-    // Visualizaton stage
-    expect(screen.getByText('dashboards.aida.selectVisualisation')).toBeInTheDocument()
-
-    const visPromptButton = screen.getByTestId('prompt-option-0-0')
-
-    await userEvent.click(visPromptButton)
 
     // Chat box stage
     const input = screen.getByPlaceholderText('common.csBot.askAIDA') as HTMLInputElement
@@ -119,13 +111,6 @@ describe('AidaDashboardContent', () => {
     const explorePromptButton = screen.getByTestId('prompt-option-0-0')
 
     await userEvent.click(explorePromptButton)
-
-    // Visualizaton stage
-    expect(screen.getByText('dashboards.aida.selectVisualisation')).toBeInTheDocument()
-
-    const visPromptButton = screen.getByTestId('prompt-option-0-0')
-
-    await userEvent.click(visPromptButton)
 
     // Chat box stage
     const input = screen.getByPlaceholderText('common.csBot.askAIDA') as HTMLInputElement

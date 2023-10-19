@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom'
 import { useToaster, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useDashboardsContext } from '@dashboards/pages/DashboardsContext'
-import { Message, MessageType, VisualizationType } from '@dashboards/types/AidaTypes.types'
+import { Message, MessageType } from '@dashboards/types/AidaTypes.types'
 import { useStrings } from 'framework/strings'
 import { AiAddTileRequestBody, useAiGenerateTile } from 'services/custom-dashboards'
 import css from './AidaGenerating.module.scss'
@@ -65,10 +65,9 @@ const AidaGenerating: React.FC<AidaGeneratingProps> = ({ messages, onError }) =>
     if (messages.length) {
       const model = getValueFromMessage(messages, MessageType.Prompt, 'model')
       const explore = getValueFromMessage(messages, MessageType.Prompt, 'explore')
-      const visualization_type = getValueFromMessage(messages, MessageType.Prompt, 'visualization') as VisualizationType
       const query = getValueFromMessage(messages, MessageType.Text)
 
-      const aiAddTileRequestBody: AiAddTileRequestBody = { model, explore, visualization_type, query }
+      const aiAddTileRequestBody: AiAddTileRequestBody = { model, explore, query }
 
       performAiTileGeneration(aiAddTileRequestBody)
     }

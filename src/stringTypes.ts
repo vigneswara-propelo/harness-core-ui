@@ -3730,15 +3730,8 @@ export interface StringsMap {
   'dashboards.aida.helpText': string
   'dashboards.aida.initializing': string
   'dashboards.aida.selectExplore': string
-  'dashboards.aida.selectVisualisation': string
   'dashboards.aida.successGeneratingTile': string
   'dashboards.aida.trouble': string
-  'dashboards.aida.visualisationArenaChart': string
-  'dashboards.aida.visualisationBarChart': string
-  'dashboards.aida.visualisationLineChart': string
-  'dashboards.aida.visualisationPieChart': string
-  'dashboards.aida.visualisationSingleValue': string
-  'dashboards.aida.visualisationTable': string
   'dashboards.cloneDashboardModal.submitFail': string
   'dashboards.cloneDashboardModal.success': string
   'dashboards.cloneDashboardModal.title': string

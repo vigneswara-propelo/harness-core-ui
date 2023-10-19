@@ -9,7 +9,7 @@ import React from 'react'
 import { v4 as uuid } from 'uuid'
 import { Container, Layout } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { ExplorePrompts, VisualizationPrompts } from '@dashboards/constants/AidaDashboardPrompts'
+import { ExplorePrompts } from '@dashboards/constants/AidaDashboardPrompts'
 import { DashboardPromptStage, Message, MessageRole, MessageType } from '@dashboards/types/AidaTypes.types'
 import { GenerateTilePrompt, PromptOption } from 'services/custom-dashboards'
 import AidaChatInput from '../AidaChatInput/AidaChatInput'
@@ -35,7 +35,7 @@ const initialState: State = {
   historicMessages: [],
   messages: [],
   stage: DashboardPromptStage.Initializing,
-  prompts: { explore_prompts: [], visualization_prompts: [] }
+  prompts: { explore_prompts: [] }
 }
 
 const messageReducer = (state: State, action: Action): State => {
@@ -100,7 +100,7 @@ const AidaDashboardContent: React.FC = () => {
     // Fallback to pre-defined prompts in-case of error
     dispatch({
       type: 'updatePrompts',
-      prompts: { explore_prompts: ExplorePrompts, visualization_prompts: VisualizationPrompts }
+      prompts: { explore_prompts: ExplorePrompts }
     })
   }, [])
 
@@ -132,13 +132,6 @@ const AidaDashboardContent: React.FC = () => {
             onPromptSelected={onPromptSelected}
             prompts={ExplorePrompts}
             title={getString('dashboards.aida.selectExplore')}
-          />
-        )}
-        {state.stage === DashboardPromptStage.Visualization && (
-          <AidaPromptSelection
-            onPromptSelected={onPromptSelected}
-            prompts={VisualizationPrompts}
-            title={getString('dashboards.aida.selectVisualisation')}
           />
         )}
         {state.stage === DashboardPromptStage.Generating && (

@@ -35,8 +35,7 @@ describe('AidaGenerating', () => {
 
   test('it should trigger initialization callback upon request success', () => {
     const mockPrompts: sharedService.GenerateTilePrompt = {
-      explore_prompts: [],
-      visualization_prompts: []
+      explore_prompts: []
     }
     useGetAiGenerateTilePromptsMock.mockReturnValue({
       data: { resource: mockPrompts },

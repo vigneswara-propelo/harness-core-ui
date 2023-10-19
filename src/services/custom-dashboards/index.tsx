@@ -16,14 +16,7 @@ export interface AiAddTileRequestBody {
   explore: string
   model: string
   query: string
-  visualization_type:
-    | 'bar_chart'
-    | 'column_chart'
-    | 'line_chart'
-    | 'pie_chart'
-    | 'scatterplot'
-    | 'single_value'
-    | 'table'
+  visualization_type?: string
 }
 
 export interface CloneDashboardRequestBody {
@@ -137,7 +130,7 @@ export interface FolderModel {
 
 export interface GenerateTilePrompt {
   explore_prompts: Prompt[]
-  visualization_prompts: Prompt[]
+  visualization_prompts?: Prompt[]
 }
 
 export interface GetAllTagsResponse {

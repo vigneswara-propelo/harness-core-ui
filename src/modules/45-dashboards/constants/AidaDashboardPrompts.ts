@@ -1,5 +1,4 @@
 import { Prompt } from 'services/custom-dashboards'
-import { VisualizationType } from '../types/AidaTypes.types'
 
 const CloudCostPrompt: Prompt = {
   title: 'Cloud Cost Management',
@@ -153,38 +152,3 @@ export const ExplorePrompts: Prompt[] = [
   DeploymentsPrompt,
   FeatureFlagsPrompt
 ]
-
-const VisualizationPrompt: Prompt = {
-  options: [
-    {
-      content: 'Table',
-      mapping: [{ key: 'visualization', value: VisualizationType.Table }]
-    },
-    {
-      content: 'Bar Chart',
-      mapping: [{ key: 'visualization', value: VisualizationType.BarChart }]
-    },
-    {
-      content: 'Line Chart',
-      mapping: [{ key: 'visualization', value: VisualizationType.LineChart }]
-    },
-    {
-      content: 'Column Chart',
-      mapping: [{ key: 'visualization', value: VisualizationType.ColumnChart }]
-    },
-    {
-      content: 'Pie Chart',
-      mapping: [{ key: 'visualization', value: VisualizationType.PieChart }]
-    },
-    {
-      content: 'Scatter Plot',
-      mapping: [{ key: 'visualization', value: VisualizationType.ScatterPlot }]
-    },
-    {
-      content: 'Single Value',
-      mapping: [{ key: 'visualization', value: VisualizationType.SingleValue }]
-    }
-  ]
-}
-
-export const VisualizationPrompts: Prompt[] = [VisualizationPrompt]
