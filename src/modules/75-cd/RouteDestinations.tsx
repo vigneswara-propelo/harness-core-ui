@@ -93,7 +93,7 @@ import manifestSourceBaseFactory from './factory/ManifestSourceFactory/ManifestS
 import { getBannerText } from './utils/renderMessageUtils'
 import ServiceStudio from './components/Services/ServiceStudio/ServiceStudio'
 import CDOnboardingWizard from './pages/get-started-with-cd/CDOnboardingWizard'
-import GetStartedWithCDV2 from './pages/get-started-with-cd/GetStartedWithCDv2'
+import GetStartedWithCD from './pages/get-started-with-cd/GetStartedWithCD'
 
 const CDOnboardingWizardWithCLI = React.lazy(
   () => import('./pages/get-started-with-cd/CDOnboardingWizardWithCLI/CDOnboardingWizard')
@@ -304,7 +304,7 @@ export default (
       pageName={PAGE_NAME.GetStartedWithCD}
       path={routes.toGetStartedWithCD({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
     >
-      <GetStartedWithCDV2 />
+      <GetStartedWithCD />
     </RouteWithLayout>
 
     <RouteWithLayout

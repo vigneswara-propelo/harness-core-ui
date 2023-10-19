@@ -116,100 +116,103 @@ function WhatToDeploy({ saveProgress }: WhatToDeployProps): JSX.Element {
   }, [state])
 
   return (
-    <Layout.Vertical>
-      <Text color={Color.BLACK} margin={{ bottom: 'xlarge' }}>
-        {getString('cd.getStartedWithCD.flowByQuestions.what.samplesvc')}
-      </Text>
-      <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'xxlarge' }}>
-        {getString('cd.getStartedWithCD.flowByQuestions.what.aboutSvc')}
-      </Text>
+    <Layout.Vertical spacing="xxlarge">
+      <Text color={Color.BLACK}>{getString('cd.getStartedWithCD.flowByQuestions.what.samplesvc')}</Text>
+      <Layout.Vertical spacing={'large'}>
+        <Text color={Color.BLACK} className={css.bold}>
+          {getString('cd.getStartedWithCD.flowByQuestions.what.aboutSvc')}
+        </Text>
 
-      <CardSelect<EntityType>
-        data={svcTypes}
-        cornerSelected
-        className={cx(css.serviceTypeCards, css.infraCards)}
-        renderItem={(item: EntityType) => (
-          <Layout.Vertical flex spacing={'xlarge'}>
-            <Icon name={item?.icon as IconName} className={item.className} size={30} />
-            <Text
-              font={{
-                variation: FontVariation.BODY
-              }}
-              color={state.artifactType?.id === item.id ? Color.PRIMARY_7 : Color.GREY_800}
-            >
-              {getString(item.label as keyof StringsMap)}
-            </Text>
-          </Layout.Vertical>
-        )}
-        selected={state.svcType}
-        onChange={setSvc}
-      />
-      {state.svcType && !isEmpty(infraTypes) && (
-        <>
-          {ARTIFACT_STRINGS_MAP_BY_TYPE?.[state.svcType?.id]?.svcrep && (
-            <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'large' }}>
-              {getString(ARTIFACT_STRINGS_MAP_BY_TYPE[state.svcType?.id]?.svcrep)}
-            </Text>
+        <CardSelect<EntityType>
+          data={svcTypes}
+          cornerSelected
+          className={cx(css.serviceTypeCards, css.infraCards)}
+          renderItem={(item: EntityType) => (
+            <Layout.Vertical flex>
+              <Icon name={item?.icon as IconName} className={item.className} size={30} />
+              <Text
+                font={{
+                  variation: FontVariation.BODY
+                }}
+                color={state.artifactType?.id === item.id ? Color.PRIMARY_7 : Color.GREY_800}
+              >
+                {getString(item.label as keyof StringsMap)}
+              </Text>
+            </Layout.Vertical>
           )}
-          {ARTIFACT_STRINGS_MAP_BY_TYPE?.[state.svcType?.id]?.svcsubtext && (
-            <Text color={Color.BLACK} margin={{ bottom: 'xxlarge' }}>
-              {getString(ARTIFACT_STRINGS_MAP_BY_TYPE[state.svcType?.id]?.svcsubtext)}
-            </Text>
-          )}
-          <CardSelect<EntityType>
-            data={infraTypes}
-            cornerSelected
-            className={cx(css.serviceTypeCards, css.infraCards)}
-            renderItem={(item: EntityType) => (
-              <Layout.Vertical flex spacing={'xlarge'}>
-                <Icon name={item?.icon as IconName} size={30} />
-                <Text
-                  font={{
-                    variation: FontVariation.BODY
-                  }}
-                  color={state.artifactType?.id === item.id ? Color.PRIMARY_7 : Color.GREY_800}
-                >
-                  {getString(item.label as keyof StringsMap)}
-                </Text>
-              </Layout.Vertical>
+          selected={state.svcType}
+          onChange={setSvc}
+        />
+      </Layout.Vertical>
+      <Layout.Vertical spacing="large">
+        {state.svcType && !isEmpty(infraTypes) && (
+          <>
+            {ARTIFACT_STRINGS_MAP_BY_TYPE?.[state.svcType?.id]?.svcrep && (
+              <Text color={Color.BLACK} className={css.bold}>
+                {getString(ARTIFACT_STRINGS_MAP_BY_TYPE[state.svcType?.id]?.svcrep)}
+              </Text>
             )}
-            selected={state.artifactType}
-            onChange={setInfra}
-          />
-        </>
-      )}
+            {ARTIFACT_STRINGS_MAP_BY_TYPE?.[state.svcType?.id]?.svcsubtext && (
+              <Text color={Color.BLACK}>{getString(ARTIFACT_STRINGS_MAP_BY_TYPE[state.svcType?.id]?.svcsubtext)}</Text>
+            )}
+            <CardSelect<EntityType>
+              data={infraTypes}
+              cornerSelected
+              className={cx(css.serviceTypeCards, css.infraCards)}
+              renderItem={(item: EntityType) => (
+                <Layout.Vertical flex spacing={'xlarge'}>
+                  <Icon name={item?.icon as IconName} size={30} />
+                  <Text
+                    font={{
+                      variation: FontVariation.BODY
+                    }}
+                    color={state.artifactType?.id === item.id ? Color.PRIMARY_7 : Color.GREY_800}
+                  >
+                    {getString(item.label as keyof StringsMap)}
+                  </Text>
+                </Layout.Vertical>
+              )}
+              selected={state.artifactType}
+              onChange={setInfra}
+            />
+          </>
+        )}
+      </Layout.Vertical>
+
       {state.artifactType && SWIMLANE_DOCS_LINK[state.artifactType.id]?.isInComplete && (
         <MissingSwimlane url={SWIMLANE_DOCS_LINK[state.artifactType.id]?.link} />
       )}
-      {state.artifactType && !isEmpty(infraSubTypes) && (
-        <>
-          {ARTIFACT_STRINGS_MAP_BY_TYPE?.[state.artifactType?.id]?.artifact && (
-            <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'large' }}>
-              {getString(ARTIFACT_STRINGS_MAP_BY_TYPE?.[state.artifactType?.id]?.artifact)}
-            </Text>
-          )}
-          <CardSelect<EntityType>
-            data={infraSubTypes}
-            cornerSelected
-            className={cx(css.serviceTypeCards, css.infraCards)}
-            renderItem={(item: EntityType) => (
-              <Layout.Vertical flex spacing={'xlarge'}>
-                <Icon name={item?.icon as IconName} size={30} />
-                <Text
-                  font={{
-                    variation: FontVariation.BODY
-                  }}
-                  color={state.artifactSubType?.id === item.id ? Color.PRIMARY_7 : Color.GREY_800}
-                >
-                  {getString(item.label as keyof StringsMap)}
-                </Text>
-              </Layout.Vertical>
+      <Layout.Vertical spacing="large">
+        {state.artifactType && !isEmpty(infraSubTypes) && (
+          <>
+            {ARTIFACT_STRINGS_MAP_BY_TYPE?.[state.artifactType?.id]?.artifact && (
+              <Text color={Color.BLACK} className={css.bold}>
+                {getString(ARTIFACT_STRINGS_MAP_BY_TYPE?.[state.artifactType?.id]?.artifact)}
+              </Text>
             )}
-            selected={state.artifactSubType}
-            onChange={setInfraSubType}
-          />
-        </>
-      )}
+            <CardSelect<EntityType>
+              data={infraSubTypes}
+              cornerSelected
+              className={cx(css.serviceTypeCards, css.infraCards)}
+              renderItem={(item: EntityType) => (
+                <Layout.Vertical flex spacing={'xlarge'}>
+                  <Icon name={item?.icon as IconName} size={30} />
+                  <Text
+                    font={{
+                      variation: FontVariation.BODY
+                    }}
+                    color={state.artifactSubType?.id === item.id ? Color.PRIMARY_7 : Color.GREY_800}
+                  >
+                    {getString(item.label as keyof StringsMap)}
+                  </Text>
+                </Layout.Vertical>
+              )}
+              selected={state.artifactSubType}
+              onChange={setInfraSubType}
+            />
+          </>
+        )}
+      </Layout.Vertical>
       {state.artifactSubType && SWIMLANE_DOCS_LINK[state.artifactSubType.id]?.isInComplete && (
         <MissingSwimlane url={SWIMLANE_DOCS_LINK[state.artifactSubType.id]?.link} />
       )}

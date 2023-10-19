@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { Button, ButtonVariation, IconName, IconProps, Layout, Text } from '@harness/uicore'
-import { Color, FontVariation } from '@harness/design-system'
+import { Color } from '@harness/design-system'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { String, useStrings } from 'framework/strings'
@@ -175,65 +175,78 @@ export default function VerifyGitopsEntities({
 
   return (
     <Layout.Vertical spacing={'medium'}>
-      <Text color={Color.BLACK} font={{ variation: FontVariation.FORM_TITLE }}>
+      <Text color={Color.BLACK} className={css.bold}>
         <String
           color={Color.BLACK}
           stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.verifyEntities"
         />
       </Text>
-
-      {(isVerifiedOnce() || isLoading || setupState?.gitopsEntitiesVerified) && (
-        <SuccessBanner
-          textList={[
-            {
-              ...(repoLoading ? loadingIconProps : repoFailed ? failIconProps : successIconProps),
-              text: getString(
-                repoLoading
-                  ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.repoLoading'
-                  : repoFailed
-                  ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.repoFailed'
-                  : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.repoSuccess'
-              )
-            },
-            {
-              ...(clusterLoading ? loadingIconProps : clusterFailed ? failIconProps : successIconProps),
-              text: getString(
-                clusterLoading
-                  ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.clusterLoading'
-                  : clusterFailed
-                  ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.clusterFailed'
-                  : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.clusterSuccess'
-              )
-            },
-            {
-              ...(applicationLoading ? loadingIconProps : appFailed ? failIconProps : successIconProps),
-              text: getString(
-                applicationLoading
-                  ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.appLoading'
-                  : appFailed
-                  ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.appFailed'
-                  : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.appSuccess'
-              )
-            }
-          ]}
-        />
-      )}
-
-      {!setupState?.gitopsEntitiesVerified && (
-        <Button
-          disabled={isLoading}
-          onClick={isVerifiedOnce() ? retryVerification : verifyEntites}
-          variation={ButtonVariation.PRIMARY}
-          text={
-            isVerifiedOnce()
-              ? getString(
-                  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.deploymentStrategyStep.retryVerify'
+      <div>
+        {(isVerifiedOnce() || isLoading || setupState?.gitopsEntitiesVerified) && (
+          <SuccessBanner
+            textList={[
+              {
+                ...(repoLoading ? loadingIconProps : repoFailed ? failIconProps : successIconProps),
+                text: getString(
+                  repoLoading
+                    ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.repoLoading'
+                    : repoFailed
+                    ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.repoFailed'
+                    : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.repoSuccess'
                 )
-              : getString('verify')
-          }
-          width={isVerifiedOnce() ? 200 : 150}
-        />
-      )}
+              },
+              {
+                ...(clusterLoading ? loadingIconProps : clusterFailed ? failIconProps : successIconProps),
+                text: getString(
+                  clusterLoading
+                    ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.clusterLoading'
+                    : clusterFailed
+                    ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.clusterFailed'
+                    : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.clusterSuccess'
+                )
+              },
+              {
+                ...(applicationLoading ? loadingIconProps : appFailed ? failIconProps : successIconProps),
+                text: getString(
+                  applicationLoading
+                    ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.appLoading'
+                    : appFailed
+                    ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.appFailed'
+                    : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGitopsStep.appSuccess'
+                )
+              }
+            ]}
+          />
+        )}
+
+        {!setupState?.gitopsEntitiesVerified && (
+          <Layout.Horizontal
+            spacing="large"
+            flex={{ alignItems: 'center', justifyContent: 'start' }}
+            margin={{ left: 'large' }}
+          >
+            <Button
+              disabled={isLoading}
+              onClick={isVerifiedOnce() ? retryVerification : verifyEntites}
+              variation={ButtonVariation.PRIMARY}
+              text={
+                isVerifiedOnce()
+                  ? getString(
+                      'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.deploymentStrategyStep.retryVerify'
+                    )
+                  : getString('verify')
+              }
+              width={isVerifiedOnce() ? 200 : 120}
+            />
+            <Text color={Color.BLACK}>
+              <String
+                color={Color.BLACK}
+                stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.deploymentStrategyStep.verifyPipeline"
+              />
+            </Text>
+          </Layout.Horizontal>
+        )}
+      </div>
     </Layout.Vertical>
   )
 }

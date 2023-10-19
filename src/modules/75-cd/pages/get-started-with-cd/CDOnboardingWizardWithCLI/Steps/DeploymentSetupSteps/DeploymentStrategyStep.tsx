@@ -166,7 +166,6 @@ function PipelineCommandStep({ strategy }: { strategy: DeploymentStrategyTypes }
   return (
     <Layout.Vertical margin={{ bottom: 'xlarge', top: 'large' }}>
       <CommandBlock
-        darkmode
         allowCopy={true}
         commandSnippet={getPipelineCommands({ getString, strategy, deploymentData })}
         ignoreWhiteSpaces={false}

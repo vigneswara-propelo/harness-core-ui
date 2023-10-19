@@ -70,7 +70,7 @@ const CommandBlock: React.FC<CommandBlockProps> = ({
   }
   return commentPrefix ? (
     <CommandBlockWithComments
-      darkmode
+      darkmode={darkmode}
       allowCopy
       ignoreWhiteSpaces={false}
       commandSnippet={commandSnippet}
@@ -174,7 +174,7 @@ const CommandBlockWithComments: React.FC<CommandBlockProps> = ({
           return (
             <Text
               key={str}
-              color={isComment ? Color.YELLOW_300 : darkmode ? Color.WHITE : undefined}
+              color={isComment ? Color.RED_300 : darkmode ? Color.WHITE : undefined}
               className={cx(!ignoreWhiteSpaces && css.ignoreWhiteSpaces)}
               font={{ variation: FontVariation.YAML }}
             >

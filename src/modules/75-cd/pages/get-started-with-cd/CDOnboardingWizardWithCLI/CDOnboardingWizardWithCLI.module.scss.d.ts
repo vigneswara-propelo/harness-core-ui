@@ -13,6 +13,7 @@ declare const styles: {
   readonly bold: string
   readonly buttons: string
   readonly copyButton: string
+  readonly createTokenBtn: string
   readonly delegateImg: string
   readonly deploymentSteps: string
   readonly deploymentStrategyCards: string

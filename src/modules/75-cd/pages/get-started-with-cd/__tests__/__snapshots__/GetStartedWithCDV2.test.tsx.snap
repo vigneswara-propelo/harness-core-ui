@@ -400,6 +400,19 @@ Object {
                             </a>
                           </li>
                         </p>
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--margin-bottom-large StyledProps--font-align-left"
+                        >
+                          <li>
+                            <a
+                              href=""
+                              rel="noreferrer"
+                              target="_blank"
+                            >
+                              cd.getStartedWithCD.cdresources.delgateOverview
+                            </a>
+                          </li>
+                        </p>
                       </ul>
                     </div>
                   </div>
@@ -803,6 +816,19 @@ Object {
                             target="_blank"
                           >
                             cd.getStartedWithCD.cdresources.getstartedcli
+                          </a>
+                        </li>
+                      </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--margin-bottom-large StyledProps--font-align-left"
+                      >
+                        <li>
+                          <a
+                            href=""
+                            rel="noreferrer"
+                            target="_blank"
+                          >
+                            cd.getStartedWithCD.cdresources.delgateOverview
                           </a>
                         </li>
                       </p>

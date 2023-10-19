@@ -216,7 +216,6 @@ function CLISteps({
         />
       </Text>
       <CommandBlock
-        darkmode
         allowCopy={true}
         commandSnippet={commandSnippet}
         ignoreWhiteSpaces={false}

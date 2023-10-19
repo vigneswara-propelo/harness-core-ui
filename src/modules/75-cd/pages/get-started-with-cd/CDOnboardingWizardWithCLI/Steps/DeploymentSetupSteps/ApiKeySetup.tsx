@@ -33,8 +33,10 @@ import css from '../../CDOnboardingWizardWithCLI.module.scss'
 
 export default function ApiKeySetup({
   onKeyGenerate,
-  state
-}: ApiKeySetupProps & { state: PipelineSetupState }): JSX.Element {
+  state,
+  title,
+  createBtnClass
+}: ApiKeySetupProps & { state: PipelineSetupState; title: string; createBtnClass?: string }): JSX.Element {
   const { currentUserInfo } = useAppStore()
   const { accountId } = useParams<ProjectPathProps>()
   const [token, setToken] = React.useState<string | undefined>()
@@ -156,10 +158,7 @@ export default function ApiKeySetup({
   return (
     <Layout.Vertical>
       <Text color={Color.BLACK} padding={{ top: 'large', bottom: 'large' }}>
-        <String
-          className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.prepareStep.title"
-        />
+        {title}
       </Text>
       {token ? (
         <TokenValueRenderer
@@ -170,7 +169,7 @@ export default function ApiKeySetup({
         />
       ) : (
         <Button
-          margin={{ left: 'xlarge' }}
+          className={createBtnClass}
           width={250}
           variation={ButtonVariation.PRIMARY}
           onClick={generateOrUpdateToken}

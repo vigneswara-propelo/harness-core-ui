@@ -22,10 +22,11 @@ export default function CLISetupStep({
   state,
   isGitopsFlow
 }: ApiKeySetupProps & { state: PipelineSetupState; isGitopsFlow?: boolean }): JSX.Element {
+  const { getString } = useStrings()
   return (
     <Layout.Vertical className={css.deploymentSteps}>
-      <Layout.Vertical margin={{ bottom: 'xlarge' }}>
-        <Text className={css.bold} color={Color.BLACK} padding={{ top: 'large' }}>
+      <Layout.Vertical spacing="large">
+        <Text className={css.bold} color={Color.BLACK}>
           <String
             className={css.marginBottomLarge}
             stringID={
@@ -35,10 +36,9 @@ export default function CLISetupStep({
             }
           />
         </Text>
-        <Text color={Color.BLACK} padding={{ top: 'large', bottom: 'large' }}>
+        <Text color={Color.BLACK}>
           <String
             color={Color.BLACK}
-            className={css.marginBottomLarge}
             stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.stepsIntro"
             useRichText
             vars={{ sampleAppURL: 'https://github.com/harness-community/harnesscd-example-apps/' }}
@@ -52,8 +52,18 @@ export default function CLISetupStep({
           />
         </Text>
       </Layout.Vertical>
-      <InstallCLIInfo />
-      <ApiKeySetup state={state} onKeyGenerate={onKeyGenerate} />
+      <Layout.Vertical spacing={'large'}>
+        <Text color={Color.BLACK}>
+          <String stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.title" />
+        </Text>
+        <InstallCLIInfo />
+      </Layout.Vertical>
+      <ApiKeySetup
+        state={state}
+        onKeyGenerate={onKeyGenerate}
+        title={getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.prepareStep.title')}
+        createBtnClass={css.createTokenBtn}
+      />
       <Layout.Vertical>
         <Text className={css.bold} color={Color.BLACK} padding={{ top: 'large' }}>
           <Text color={Color.BLACK} padding={{ top: 'xlarge' }}>
@@ -69,7 +79,7 @@ export default function CLISetupStep({
   )
 }
 
-function InstallCLIInfo(): JSX.Element {
+export function InstallCLIInfo(): JSX.Element {
   const [version, setLatestVersion] = useState('')
   const getLatestVersion = async (): Promise<string> => {
     const { tag_name }: { tag_name: string } = await fetch(
@@ -85,12 +95,6 @@ function InstallCLIInfo(): JSX.Element {
   return (
     <OverlaySpinner show={isEmpty(version)}>
       <Layout.Vertical className={css.tabsLine}>
-        <Text color={Color.BLACK}>
-          <String
-            className={css.marginBottomLarge}
-            stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.title"
-          />
-        </Text>
         <Layout.Vertical padding={{ left: 'medium' }}>
           <Tabs id="selectedOS">
             <Tab
@@ -133,7 +137,6 @@ const CLIDownloadMac = ({ version }: { version: string }): JSX.Element => {
   return (
     <Layout.Vertical>
       <CommandBlock
-        darkmode
         allowCopy
         ignoreWhiteSpaces={false}
         commandSnippet={getCommands()}
@@ -193,7 +196,6 @@ const CLIDownloadLinux = ({ version }: { version: string }): JSX.Element => {
       </Layout.Horizontal>
 
       <CommandBlock
-        darkmode
         allowCopy
         ignoreWhiteSpaces={false}
         commandSnippet={getCommands()}
@@ -216,7 +218,6 @@ const CLIDownloadWin = ({ version }: { version: string }): JSX.Element => {
         />
       </Text>
       <CommandBlock
-        darkmode
         allowCopy
         ignoreWhiteSpaces={false}
         commandSnippet={getCommandStrWithNewline([
@@ -232,7 +233,6 @@ const CLIDownloadWin = ({ version }: { version: string }): JSX.Element => {
         <String stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.move" />
       </Text>
       <CommandBlock
-        darkmode
         allowCopy
         ignoreWhiteSpaces={false}
         commandSnippet={getCommandStrWithNewline([

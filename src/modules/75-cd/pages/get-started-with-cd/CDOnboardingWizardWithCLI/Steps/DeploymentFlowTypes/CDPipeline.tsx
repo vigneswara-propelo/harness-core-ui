@@ -39,42 +39,45 @@ export default function CDPipeline({
 }: CDPipelineProps): JSX.Element {
   const { getString } = useStrings()
   const showServerlessImage = deploymentTypeDetails.artifactSubType?.id === CLOUD_FUNCTION_TYPES.ServerLessLambda
+
   return (
     <Layout.Vertical spacing="large">
       <Text color={Color.BLACK}>
-        <String useRichText stringID="cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.description1" />
+        <String stringID="cd.getStartedWithCD.flowByQuestions.what.nonK8sStep" useRichText />
       </Text>
 
-      {!state.isDelegateVerified && (
-        <Button variation={ButtonVariation.PRIMARY} width={'fit-content'} onClick={openDelagateDialog}>
-          {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.installButton', {
-            type: getDelegateTypeString(deploymentTypeDetails, getString)
-          })}
-        </Button>
-      )}
+      <Layout.Vertical spacing="large">
+        {!state.isDelegateVerified && (
+          <Button variation={ButtonVariation.PRIMARY} width={'fit-content'} onClick={openDelagateDialog}>
+            {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.installButton', {
+              type: getDelegateTypeString(deploymentTypeDetails, getString)
+            })}
+          </Button>
+        )}
 
-      <DelegateModal
-        delegateName={state.delegateName}
-        onClose={closeDelegateDialog}
-        enabledDelegateTypes={delegateTypes}
-        isOpen={isDrawerOpen}
-        checkAndSuggestDelegateName
-        customImageName={showServerlessImage ? 'harnesscommunity/serverless-delegate:latest' : undefined}
-      />
-
-      {state?.delegateName && state?.delegateType && !isDrawerOpen && (
-        <VerifyDelegateConnection
-          delegateType={state?.delegateProblemType as DelegateCommonProblemTypes}
-          name={state.delegateName as string}
-          onSuccessHandler={onDelegateSuccess}
-          showDoneButton={false}
-          onDone={() => {
-            //
-          }}
-          onErrorHandler={onDelegateFail}
-          onVerificationStart={onVerificationStart}
+        <DelegateModal
+          delegateName={state.delegateName}
+          onClose={closeDelegateDialog}
+          enabledDelegateTypes={delegateTypes}
+          isOpen={isDrawerOpen}
+          checkAndSuggestDelegateName
+          customImageName={showServerlessImage ? 'harnesscommunity/serverless-delegate:latest' : undefined}
         />
-      )}
+
+        {state?.delegateName && state?.delegateType && !isDrawerOpen && (
+          <VerifyDelegateConnection
+            delegateType={state?.delegateProblemType as DelegateCommonProblemTypes}
+            name={state.delegateName as string}
+            onSuccessHandler={onDelegateSuccess}
+            showDoneButton={false}
+            onDone={() => {
+              //
+            }}
+            onErrorHandler={onDelegateFail}
+            onVerificationStart={onVerificationStart}
+          />
+        )}
+      </Layout.Vertical>
     </Layout.Vertical>
   )
 }

@@ -508,7 +508,7 @@ confirmGitOpsServerDeleteTitle: Delete Server
 confirmGitOpsServerDelete: Are you sure you want to delete the GitOps Server
 duplicateIdError: 'Failed to create Adapter: {{ providerName }}. There is already an Adapter with identifier {{ providerIdentifier }} present. Please provide a new unique identifier and save again.'
 duplicateGitOpsServerIdError: 'Failed to create GitOps Server: {{ providerName }}. There is already a server with identifier {{ providerIdentifier }} present. Please provide a new unique identifier and save again.'
-connectionIssueSuggestion: 'Try these suggestions <ul> <li> Install the Adapter. Follow the <a target="_blank" rel="noreferrer nofollow" href="https://docs.harness.io/article/bymoar4glr-argo#step_2_install_and_launch_the_ecs_delegate"> steps </a>  </li> <li> Make sure the Adapter URL is reachable from your network </li> </ul>'
+connectionIssueSuggestion: 'Try these suggestions <ul> <li> Install the Adapter. Follow the <a target="_blank" rel="noreferrer noopener nofollow" href="https://docs.harness.io/article/bymoar4glr-argo#step_2_install_and_launch_the_ecs_delegate"> steps </a>  </li> <li> Make sure the Adapter URL is reachable from your network </li> </ul>'
 connectionIssueInfo: 'Issue could be <ul> <li> Adapter is not installed or not running </li> </ul>'
 searchPlaceholder: 'Search by name, description or tag'
 gitOpsWizardTitle: 'Adapter'
@@ -682,6 +682,23 @@ getStartedWithCD:
   preflightScript: 'bash <(curl -fsSL https://raw.githubusercontent.com/harness-community/scripts/main/delegate-preflight-checks/cluster-preflight-checks.sh)'
   createGitopsAgent: Install GitOps Agent
   updateGitopsAgent: Update GitOps Agent
+  getStartedPage:
+    sampleDeployment: Get started with a sample deployment
+    prereq: You'll need&colon; A Kubernetes cluster (local is ok), or other <a target="_blank" rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/continuous-delivery/cd-integrations/">supported environment.</a><br> We'll help you deploy a sample app and show how to bring your own!
+    moreAboutCD: Learn more about Harness CD
+    optimizeBuilds: Optimizing your builds and tests? Try Harness CI
+    ciVsCd: Check out Harness Continuous Integration with hosted builds and test intelligence.<br> Learn more about <a target="_blank" rel="noreferrer noopener nofollow" href="https://developer.harness.io/tutorials/cd-pipelines/unified-cicd/#continuous-integration">CI vs CD.</a>
+    videoOverview: Watch video overview
+    deployAnywhere: Deploy anywhere
+    deployAnywhereInfo: to any VM, container, or serverless infrastructure
+    stdDeployment: Standardize deployment governance
+    stdDeploymentInfo: with policy enforcement and RBAC
+    fastRelease: Release faster
+    fastReleaseInfo: with advanced deployment strategies and managed GitOps
+    improveRelease: Improve release quality
+    improveReleaseInfo: with continuous verification and automated rollbacks
+    reduceDeployment: Reduce deployment risk
+    reduceDeploymentInfo: with deployment freezes and detailed audit trails
   downloadZipFile: Download zip file
   flowByQuestions:
     what:
@@ -689,6 +706,7 @@ getStartedWithCD:
       samplesvc: We will start you with a sample service. You can add your own by editing the yaml later.
       aboutSvc: Tell us about your service
       svcrep: Service representation
+      nonK8sStep: A <a target="_blank" rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/continuous-delivery/get-started/key-concepts/#pipeline">CD Pipeline</a> automates your deployments and pushes new versions to a target environment. You will first install a <a target="_blank" rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/continuous-delivery/get-started/key-concepts/#delegates">Harness Delegate</a> so that your deployment infrastructure and any third-party resources can connect to Harness
       K8sSteps:
         k8sSvcRep: How is your Kubernetes Service represented?
         artifact: Your artifact is usually specified in the image tag(s) of these manifests.
@@ -702,10 +720,10 @@ getStartedWithCD:
         artifact: Select deployment type for Physical Data Center
         artifactaws: Select deployment type for AWS Instances
     howNwhere:
-      title: How and where do you want to deploy?
+      title: How do you want to deploy?
       subtitle: Choose how you would like to deploy.
       K8s:
-        title: Prepare your Kubernetes cluster
+        title: Access to a Kubernetes cluster is required.
         descriptionNonK8s: You will need access to a cluster that will be the deployment target.
         description: You will need access to a Kubernetes cluster that will be the deployment target for these manifests. You can deploy to this Kubernetes cluster either via a CD pipeline or via a GitOps workflow. Make the selection below.
         cdPipeline:
@@ -715,7 +733,7 @@ getStartedWithCD:
           delegateDescription: You will need access to a Kubernetes cluster that will be the deployment target for these manifests. You can deploy to this Kubernetes cluster via a CD pipeline.
           delegateDescription2: You need to install a Harness Delegate on your  {{clusterType}} cluster as a prerequisite for the CD Pipeline. This delegate will then receive various tasks (such as secrets decryption, connecting to private systems and more) from your CD pipeline and automatically run them on your behalf.
           howDelegateWorks: You will create a Pipeline that will automate the deployment on your behalf and push the new application version into your target {{clusterType}} cluster.
-          description1: Automate deployments via a <a target="_blank"  rel="noreferrer nofollow" href="https://developer.harness.io/docs/continuous-delivery/get-started/key-concepts/#pipeline">Pipeline</a> pushing new versions to your Kubernetes cluster. First, install a <a target="_blank"  rel="noreferrer nofollow" href="https://developer.harness.io/docs/continuous-delivery/get-started/key-concepts/#delegates">Harness Delegate</a> to handle tasks like secret decryption and system connections.
+          description1: Automate deployments via a <a target="_blank"  rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/continuous-delivery/get-started/key-concepts/#pipeline">Pipeline</a> pushing new versions to your Kubernetes cluster. First, install a <a target="_blank"  rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/continuous-delivery/get-started/key-concepts/#delegates">Harness Delegate</a> to handle tasks like secret decryption and system connections.
           installDelegate: Install the Kubernetes delegate to create a CD Pipeline for deployment
           installButton: 'Install the {{type}} delegate'
           delegateFailed: Delegate connection failed
@@ -724,7 +742,7 @@ getStartedWithCD:
           title: GitOps Workflow
           heading: CD GitOps
           subtitle: Connect with a GitOps agent
-          description: <a target="_blank"  rel="noreferrer nofollow" href="https://developer.harness.io/docs/continuous-delivery/gitops/get-started/harness-git-ops-basics/">Harness GitOps</a>  monitors your app's state in a git repo, pulling changes into your Kubernetes cluster. The <a target="_blank" rel="noreferrer nofollow" href="https://developer.harness.io/docs/continuous-delivery/gitops/get-started/harness-git-ops-basics/#agent">GitOps Agent</a> in your environment connects securely to Harness, executing your GitOps tasks.
+          description: <a target="_blank"  rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/continuous-delivery/gitops/get-started/harness-git-ops-basics/">Harness GitOps</a>  monitors your app's state in a git repo, pulling changes into your Kubernetes cluster. The <a target="_blank" rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/continuous-delivery/gitops/get-started/harness-git-ops-basics/#agent">GitOps Agent</a> in your environment connects securely to Harness, executing your GitOps tasks.
           agentInfo: A Harness GitOps Agent is a worker process that runs in your environment, makes secure, outbound connections to Harness, and performs all the GitOps tasks you request in Harness
           verificationSuccess: Harness GitOps agent was successfully installed.
     deploymentSteps:
@@ -736,21 +754,26 @@ getStartedWithCD:
         configureAws: '2. Configure AWS'
         configureSsh: '2. Configure SSH'
         configureWinRM: '2. Configure WinRM'
-      createEntitytitle: 'Run these commands to create the Harness entities necessary to deploy your pipeline. <a rel="noreferrer nofollow" href="https://developer.harness.io/docs/category/cli" target="_blank">Learn more </a>'
+      createEntitytitle: 'Run these commands to create the Harness entities necessary to deploy your pipeline. <a rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/category/cli" target="_blank">Learn more </a>'
       title: Set up your deployment
       stepsTitle: Here are the steps you can run to start deploying with Harness CD in a pipeline
       stepsTitleGitops: Here are the steps you can run to start deploying with Harness GitOps
-      stepsIntro: 'To set up the deployment, follow the steps below using the sample application located at  <a target="_blank" rel="noreferrer nofollow" href="{{sampleAppURL}}">{{sampleAppURL}} </a>. If you prefer to deploy your own application, make sure to edit the sample YAMLs provided to point to your application manifests and artifacts'
+      stepsIntro: 'To set up the deployment, follow the steps below using the sample application located at  <a target="_blank" rel="noreferrer noopener nofollow" href="{{sampleAppURL}}">{{sampleAppURL}} </a>. If you prefer to deploy your own application, make sure to edit the sample YAMLs provided to point to your application manifests and artifacts'
       stepsIntro2: If you want to deploy your own application, all you have to do is edit the sample application YAMLs provided to point to your application manifests and artifact.
       steps:
         prepareStep:
           title: '1.2 Create an API key for CLI authentication.'
+          gitopsTitle: '{{titleIndex}} Create an API key to use with your commands.'
+          gitopsLogin: Login to Harness from CLI
+          gitopsClone: Clone <a rel="noreferrer noopener nofollow" target="_blank" href="https://github.com/harness-community/harnesscd-example-apps">harnessed-example-apps</a> repo and change directory.
           generateButton: Generate API key
           regenerateButton: Re-Generate API key
           apiKeyPlacholder: HARNESS-API-KEY
           fetchingApiKeys: Fetching Api Keys
         setupStep:
-          title: 1.1 Download the Harness CLI.
+          title: '{{titleIndex}}{{^titleIndex}}1.1 {{/titleIndex}}Download the Harness CLI.'
+          setupEntites: '{{titleIndex}}Run these commands to create the Harness entities necessary to deploy your application.'
+          gitopsTitle: These steps will use the Harness CLI to deploy a sample "Guestbook" application located at <a target="_blank"  rel="noreferrer noopener nofollow" href="https://github.com/harness-commuity/harnesscd-example-apps/" >https://github.com/harness-commuity/harnesscd-example-apps/</a>
           arm: 'curl -LO https://github.com/harness/harness-cli/releases/download/{{version}}/harness-{{version}}-linux-arm64.tar.gz'
           amd: 'curl -LO https://github.com/harness/harness-cli/releases/download/{{version}}/harness-{{version}}-linux-amd64.tar.gz'
           mac: 'curl -LO https://github.com/harness/harness-cli/releases/download/{{version}}/harness-{{version}}-darwin-amd64.tar.gz'
@@ -774,10 +797,10 @@ getStartedWithCD:
             winpathsetup1: '$currentPath = Get-Location'
             winpathsetup2: '[Environment]::SetEnvironmentVariable("PATH", "$env:PATH;$currentPath", [EnvironmentVariableTarget]::Machine)'
         configureGCPStep:
-          getPermissions: '2.1 Get GCP function storage permissions. <a rel="noreferrer nofollow" href="https://developer.harness.io/tutorials/cd-pipelines/serverless/gcp-cloud-func" target="_blank">Where do I locate this?</a>'
-          createBucket: '2.2 Create GCP bucket. <a rel="noreferrer nofollow" href="https://cloud.google.com/storage/docs/creating-buckets" target="_blank">How do I make this?</a>'
-          downloadArtifact: '2.3 Download zip file and add to GCP.  <a rel="noreferrer nofollow" href="https://cloud.google.com/storage/docs/uploading-objects" target="_blank">Where do I put this?</a>'
-          inputGCPInfo: '2.4 Input GCP information. <a rel="noreferrer nofollow" href="https://cloud.google.com/iam/docs/keys-create-delete" target="_blank">Where do I find this?</a>'
+          getPermissions: '2.1 Get GCP function storage permissions. <a rel="noreferrer noopener nofollow" href="https://developer.harness.io/tutorials/cd-pipelines/serverless/gcp-cloud-func" target="_blank">Where do I locate this?</a>'
+          createBucket: '2.2 Create GCP bucket. <a rel="noreferrer noopener nofollow" href="https://cloud.google.com/storage/docs/creating-buckets" target="_blank">How do I make this?</a>'
+          downloadArtifact: '2.3 Download zip file and add to GCP.  <a rel="noreferrer noopener nofollow" href="https://cloud.google.com/storage/docs/uploading-objects" target="_blank">Where do I put this?</a>'
+          inputGCPInfo: '2.4 Input GCP information. <a rel="noreferrer noopener nofollow" href="https://cloud.google.com/iam/docs/keys-create-delete" target="_blank">Where do I find this?</a>'
           uploadSVCKey: Local path to GCP Service Key
           gcpProjectName: GCP project name
           gcpRegion: GCP region
@@ -792,10 +815,10 @@ getStartedWithCD:
             hostipplaceholder: example.abc.com
             sshPortPlaceholder: '22 by default'
         configureAWSStep:
-          getPermissions: '2.1 Get AWS function storage permissions. <a rel="noreferrer nofollow" href="https://developer.harness.io/tutorials/cd-pipelines/serverless/aws-lambda/#before-you-begin" target="_blank">Where do I locate this?</a>'
-          createBucket: '2.2 Create S3 bucket. <a rel="noreferrer nofollow" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-bucket.html" target="_blank">How do I make this?</a>'
-          downloadArtifact: '2.3 Download zip file and add to AWS S3 bucket.  <a rel="noreferrer nofollow" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/uploading-an-object-bucket.html" target="_blank">Where do I put this?</a>'
-          inputAWSInfo: '2.4 Input AWS information. <a rel="noreferrer nofollow" href="https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html" target="_blank">Where do I find this?</a>'
+          getPermissions: '2.1 Get AWS function storage permissions. <a rel="noreferrer noopener nofollow" href="https://developer.harness.io/tutorials/cd-pipelines/serverless/aws-lambda/#before-you-begin" target="_blank">Where do I locate this?</a>'
+          createBucket: '2.2 Create S3 bucket. <a rel="noreferrer noopener nofollow" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-bucket.html" target="_blank">How do I make this?</a>'
+          downloadArtifact: '2.3 Download zip file and add to AWS S3 bucket.  <a rel="noreferrer noopener nofollow" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/uploading-an-object-bucket.html" target="_blank">Where do I put this?</a>'
+          inputAWSInfo: '2.4 Input AWS information. <a rel="noreferrer noopener nofollow" href="https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html" target="_blank">Where do I find this?</a>'
           inputSSHInfo: '2. Input SSH configuration information'
           inputWINRMInfo: '2. Input WinRM configuration information'
           awsSVCKey: AWS Secret Key
@@ -815,7 +838,7 @@ getStartedWithCD:
           winrmUsername: WinRM Username
           winrmPassword: WinRM Password
         configureGitopsStep:
-          verifyEntities: 4. Verify that all of the required entities have been created
+          verifyEntities: 3. Verify that all of the required entities have been created
           clusterFailed: 'The cluster hasn’t been created'
           repoFailed: 'The repository hasn’t been created'
           appFailed: 'The application hasn’t been created'
@@ -828,7 +851,7 @@ getStartedWithCD:
           viewGitopsApp: View your GitOps Application
           initAgentSuccess: Initialized GitOps Agent
         forkStep:
-          title: '1.3. Fork <a target="_blank" rel="noreferrer nofollow" href="https://github.com/harness-community/harnesscd-example-apps/fork">harnesscd-example-apps</a> respository through the Github web interface. This enables personal experimentation and modifications without impacting the original codebase.'
+          title: '1.3. Fork <a target="_blank" rel="noreferrer noopener nofollow" href="https://github.com/harness-community/harnesscd-example-apps/fork">harnesscd-example-apps</a> respository through the Github web interface. This enables personal experimentation and modifications without impacting the original codebase.'
         gitStep:
           title: '1.4. Provide GitHub access details.'
           githubusername: 'GitHub username'
@@ -837,12 +860,13 @@ getStartedWithCD:
           whyGitDetails: As you’ll eventually control deployment configuration by editing YAML definitions, Harness CD needs to read from your repository.
         pipelineSetupStep:
           title: '5. Pipeline Setup'
-          description1: 'Run the steps to deploy the sample guestbook application located at <a target="_blank" rel="noreferrer nofollow" href="{{guestBookURL}}">{{guestBookURL}}</a>.'
+          description1: 'Run the steps to deploy the sample guestbook application located at <a target="_blank" rel="noreferrer noopener nofollow" href="{{guestBookURL}}">{{guestBookURL}}</a>.'
           description2: You will first create a Harness Service representing this application and a Harness Environment representing the infrastructure where you are deploying (and already identified by the Delegate installed in the previous step).
           commands:
             gitpatPlaceholder: GITHUB-PAT
             gitusernamePlaceholder: GITHUB-USERNAME
             clonecmd: 'git clone https://github.com/{{gitUser}}/harnesscd-example-apps.git'
+            cloneDefaultCmd: 'git clone https://github.com/harnesscd-example-apps.git'
             cddir: cd harnesscd-example-apps
             logincmd: 'harness login --api-key {{apiKey}} --account-id {{accId}}'
             createsecret: 'harness secret  --token {{gitPat}} apply'
@@ -894,9 +918,9 @@ getStartedWithCD:
               login: '# Login to harness cli'
               createSecret: '# Create a Secret for GitHub PAT: This securely stores the token.'
               createGitIcon: '# Create a GiHub Connector: Access to YAMLs.'
-              createGitopsRepo: '# Create a GitOps Repository'
-              createGitopsCluster: '# Create a GitOps Cluster'
-              createGitopsApp: '# Create a GitOps Application'
+              createGitopsRepo: 'Create a GitOps Repository.<a target="_blank" rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/continuous-delivery/gitops/get-started/harness-git-ops-basics/#repository"> Learn More'
+              createGitopsCluster: 'Create a GitOps Cluster.<a target="_blank" rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/continuous-delivery/gitops/get-started/harness-git-ops-basics/#cluster"> Learn More'
+              createGitopsApp: 'Create a GitOps Application.<a target="_blank" rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/continuous-delivery/gitops/get-started/harness-git-ops-basics/#application"> Learn More'
               createK8scon: '# Create a Kubernetes Cluster Connector: Access to the deployment target.'
               createArtifactorycon: '# Create a Artifactory Connector: Access to the deployment target.'
               createGCPcon: '# Create a GCP Connector: Access to the deployment target.'
@@ -1089,7 +1113,7 @@ getStartedWithCD:
   delegateWorksInfo: The Delegate is similar to a traditional DevOps agent. The Delegate only initiates outbound, secure connections when you need it to perform deployment tasks. When you trigger a deployment, the Delegate fetches your manifest and artifacts and deploys your app to your target environment.
   whatDelegateSec: What about security?
   delegateSecInfo: The Delegate connects to Harness Manager (via SaaS) over a Secure WebSockets channel (WebSockets over TLS). The channel is used to send notifications of Delegate task events and to exchange connection heartbeats. The channel is not used to send task data itself.
-  delegateSecInfoMore: "For any security concerns please review the open <a target='_blank' rel='noreferrer nofollow' href='{{sourceCode}}'>source code</a>. Inspect the <a target='_blank' rel='noreferrer nofollow' href='{{delegateImage}}'>Delegate image</a>.\nLearn more  <a target='_blank' rel='noreferrer nofollow' href='{{faq}}'>FAQ</a>."
+  delegateSecInfoMore: "For any security concerns please review the open <a target='_blank' rel='noreferrer noopener nofollow' href='{{sourceCode}}'>source code</a>. Inspect the <a target='_blank' rel='noreferrer noopener nofollow' href='{{delegateImage}}'>Delegate image</a>.\nLearn more  <a target='_blank' rel='noreferrer noopener nofollow' href='{{faq}}'>FAQ</a>."
   howToPrepareCluster: How to prepare a Kubernetes cluster?
   prepareCluserInfo: If you don't have a cluster already it can be provisioned locally or in the cloud.
   howtoProvisionK8sCluster: How to provision a Kubernetes cluster
@@ -1138,7 +1162,7 @@ getStartedWithCD:
   giveSample: Give me a Sample
   artifactReferencedInManifest: Fantastic! If your artifact is already referenced in your manifest you are ready to continue to the next step.
   developerQuestion: '<b>Optimizing your builds and tests</b>? Check out Harness '
-  tryCICTA: ' with hosted builds and test intelligence. Learn more about <a target="_blank" rel="noreferrer nofollow" href="{{docurl}}">CI vs CD</a>.'
+  tryCICTA: ' with hosted builds and test intelligence. Learn more about <a target="_blank" rel="noreferrer noopener nofollow" href="{{docurl}}">CI vs CD</a>.'
   deployanywhere: 'Deploy to any VM, container, or serverless infrastructure'
   standardization: 'Standardize deployment governance with policy enforcement and role-based access control'
   velocity: 'Release faster with advanced deployment strategies and managed GitOps'
@@ -1150,7 +1174,8 @@ getStartedWithCD:
     cdtuts: CD tutorials
     gitopsbasics: GitOps basics
     pipelineModeling: CD pipeline modeling
-    getstartedcli: Get started with the Harness CLI
+    getstartedcli: Harness CLI
+    delgateOverview: Delegate overview
 ecsRollingDeployStep:
   sameAsAlreadyRunningInstances: Same as already running instances
   forceNewDeployment: Force new deployment

@@ -32,7 +32,7 @@ import {
 } from '../Constants'
 import type { DelgateDetails } from '../DelegateModal'
 import CDPipeline from './DeploymentFlowTypes/CDPipeline'
-import { getBranchingProps, getCommandStrWithNewline } from '../utils'
+import { getBranchingProps, getCommandStrWithNewline, isK8sSwimlane } from '../utils'
 import { ONBOARDING_INTERACTIONS, WIZARD_STEP_OPEN } from '../TrackingConstants'
 import css from '../CDOnboardingWizardWithCLI.module.scss'
 
@@ -86,7 +86,8 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
   }
   const onChangeHandler = React.useCallback(
     (delegateStatus: DelegateStatus): void => {
-      setState(prevState => ({ ...prevState, isDelegateVerified: state.isDelegateVerified, delegateStatus }))
+      const isDelegateVerified = delegateStatus === 'SUCCESS' ? true : false
+      setState(prevState => ({ ...prevState, isDelegateVerified: isDelegateVerified, delegateStatus }))
     },
     [state.isDelegateVerified]
   )
@@ -168,53 +169,12 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
 
   return (
     <Layout.Vertical>
-      <Layout.Vertical>
-        <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'large' }}>
-          {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.title')}
-        </Text>
-
-        <Layout.Vertical margin={{ bottom: 'xlarge' }}>
-          <Text color={Color.BLACK} margin={{ bottom: 'large' }}>
-            {getString('cd.getStartedWithCD.prefilghtText')}
-          </Text>
-          <CommandBlock
-            allowCopy
-            ignoreWhiteSpaces={false}
-            commandSnippet={getCommandStrWithNewline([getString('cd.getStartedWithCD.preflightScript')])}
-            downloadFileProps={{ downloadFileName: 'harness-delegate-preflight', downloadFileExtension: 'xdf' }}
-            copyButtonText={getString('common.copy')}
-            onCopy={() => {
-              trackEvent(WIZARD_STEP_OPEN.PREFLIGHT_SCRIPT_COPIED, getBranchingProps(stepsProgress, getString))
-            }}
-          />
-        </Layout.Vertical>
+      {!isK8sSwimlane(stepsProgress) ? (
         <Layout.Vertical>
           <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'large' }}>
-            {getString('cd.getStartedWithCD.connectHarness')}
+            {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.title')}
           </Text>
-          <CardSelect<DeploymentFlowType>
-            data={deploymentTypes}
-            cornerSelected
-            className={cx(css.serviceTypeCards, css.flowcards)}
-            renderItem={(item: DeploymentFlowType) => (
-              <Layout.Vertical flex spacing={'xlarge'}>
-                <Icon name={item?.icon as IconName} size={30} />
-                <Layout.Vertical>
-                  <Text
-                    padding={{ bottom: 'small' }}
-                    font={{ variation: FontVariation.BODY }}
-                    color={state?.type?.id === item.id ? Color.PRIMARY_7 : Color.GREY_800}
-                  >
-                    {getString(item.label as keyof StringsMap)}
-                  </Text>
-                </Layout.Vertical>
-              </Layout.Vertical>
-            )}
-            selected={state.type}
-            onChange={setType}
-          />
-        </Layout.Vertical>
-        {state.type?.id === DEPLOYMENT_FLOW_ENUMS.CDPipeline && (
+
           <CDPipeline
             state={state}
             onDelegateSuccess={onDelegateSuccess}
@@ -230,22 +190,86 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
                 : DELEGATE_TYPE_BY_ARTIFACT_MAP[deploymentTypeDetails?.artifactType?.id as string]
             }
           />
-        )}
-        {state.type?.id === DEPLOYMENT_FLOW_ENUMS.Gitops && (
-          <GitopsFlow
-            updateAgentInfo={updateAgentInfo}
-            agentInfo={state.agentInfo}
-            onAgentVerificationSuccess={onAgentVerificationSuccess}
-            artifactType={
-              deploymentTypeDetails.artifactSubType
-                ? deploymentTypeDetails.artifactSubType?.id
-                : (deploymentTypeDetails?.artifactType?.id as string)
-            }
-          />
-        )}
-      </Layout.Vertical>
+        </Layout.Vertical>
+      ) : (
+        <Layout.Vertical>
+          <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'large' }}>
+            {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.title')}
+          </Text>
+
+          <Layout.Vertical margin={{ bottom: 'xlarge' }}>
+            <Text color={Color.BLACK} margin={{ bottom: 'large' }}>
+              {getString('cd.getStartedWithCD.prefilghtText')}
+            </Text>
+            <CommandBlock
+              allowCopy
+              ignoreWhiteSpaces={false}
+              commandSnippet={getCommandStrWithNewline([getString('cd.getStartedWithCD.preflightScript')])}
+              downloadFileProps={{ downloadFileName: 'harness-delegate-preflight', downloadFileExtension: 'xdf' }}
+              copyButtonText={getString('common.copy')}
+              onCopy={() => {
+                trackEvent(WIZARD_STEP_OPEN.PREFLIGHT_SCRIPT_COPIED, getBranchingProps(stepsProgress, getString))
+              }}
+            />
+          </Layout.Vertical>
+          <Layout.Vertical>
+            <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'large' }}>
+              {getString('cd.getStartedWithCD.connectHarness')}
+            </Text>
+            <CardSelect<DeploymentFlowType>
+              data={deploymentTypes}
+              cornerSelected
+              className={cx(css.serviceTypeCards, css.flowcards)}
+              renderItem={(item: DeploymentFlowType) => (
+                <Layout.Vertical flex spacing={'xlarge'}>
+                  <Icon name={item?.icon as IconName} size={30} />
+                  <Layout.Vertical>
+                    <Text
+                      padding={{ bottom: 'small' }}
+                      font={{ variation: FontVariation.BODY }}
+                      color={state?.type?.id === item.id ? Color.PRIMARY_7 : Color.GREY_800}
+                    >
+                      {getString(item.label as keyof StringsMap)}
+                    </Text>
+                  </Layout.Vertical>
+                </Layout.Vertical>
+              )}
+              selected={state.type}
+              onChange={setType}
+            />
+          </Layout.Vertical>
+          {state.type?.id === DEPLOYMENT_FLOW_ENUMS.CDPipeline && (
+            <CDPipeline
+              state={state}
+              onDelegateSuccess={onDelegateSuccess}
+              openDelagateDialog={openDelagateDialog}
+              isDrawerOpen={isDrawerOpen}
+              closeDelegateDialog={closeDelegateDialog}
+              onDelegateFail={onDelegateFail}
+              onVerificationStart={onVerificationStart}
+              deploymentTypeDetails={deploymentTypeDetails}
+              delegateTypes={
+                deploymentTypeDetails.artifactSubType
+                  ? DELEGATE_TYPE_BY_ARTIFACT_MAP[deploymentTypeDetails.artifactSubType?.id]
+                  : DELEGATE_TYPE_BY_ARTIFACT_MAP[deploymentTypeDetails?.artifactType?.id as string]
+              }
+            />
+          )}
+          {state.type?.id === DEPLOYMENT_FLOW_ENUMS.Gitops && (
+            <GitopsFlow
+              updateAgentInfo={updateAgentInfo}
+              agentInfo={state.agentInfo}
+              onAgentVerificationSuccess={onAgentVerificationSuccess}
+              artifactType={
+                deploymentTypeDetails.artifactSubType
+                  ? deploymentTypeDetails.artifactSubType?.id
+                  : (deploymentTypeDetails?.artifactType?.id as string)
+              }
+            />
+          )}
+        </Layout.Vertical>
+      )}
     </Layout.Vertical>
   )
 }
-
 export default WhereAndHowToDeploy

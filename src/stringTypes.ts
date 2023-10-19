@@ -6423,6 +6423,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.cdWizardEventName': string
   'cd.getStartedWithCD.cdresources.cdconcepts': string
   'cd.getStartedWithCD.cdresources.cdtuts': string
+  'cd.getStartedWithCD.cdresources.delgateOverview': string
   'cd.getStartedWithCD.cdresources.getstartedcli': string
   'cd.getStartedWithCD.cdresources.gitopsbasics': string
   'cd.getStartedWithCD.cdresources.pipelineModeling': string
@@ -6555,6 +6556,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.whereToFindGitPat': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.whyGitDetails': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.cddir': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.cloneDefaultCmd': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.clonecmd': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.cdDir': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.cloneRepo': string
@@ -6626,6 +6628,9 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.prepareStep.apiKeyPlacholder': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.prepareStep.fetchingApiKeys': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.prepareStep.generateButton': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.prepareStep.gitopsClone': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.prepareStep.gitopsLogin': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.prepareStep.gitopsTitle': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.prepareStep.regenerateButton': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.prepareStep.title': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.amd': string
@@ -6639,9 +6644,11 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.extractamd': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.extractarm': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.extractmac': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.gitopsTitle': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.mac': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.mvharness': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.setPath': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.setupEntites': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.title': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.win': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.wininstall.description1': string
@@ -6695,11 +6702,28 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.what.TraditionalApp.artifactaws': string
   'cd.getStartedWithCD.flowByQuestions.what.TraditionalApp.svcrep': string
   'cd.getStartedWithCD.flowByQuestions.what.aboutSvc': string
+  'cd.getStartedWithCD.flowByQuestions.what.nonK8sStep': string
   'cd.getStartedWithCD.flowByQuestions.what.samplesvc': string
   'cd.getStartedWithCD.flowByQuestions.what.svcrep': string
   'cd.getStartedWithCD.flowByQuestions.what.title': string
   'cd.getStartedWithCD.gcpGen1': string
   'cd.getStartedWithCD.gcpGen2': string
+  'cd.getStartedWithCD.getStartedPage.ciVsCd': string
+  'cd.getStartedWithCD.getStartedPage.deployAnywhere': string
+  'cd.getStartedWithCD.getStartedPage.deployAnywhereInfo': string
+  'cd.getStartedWithCD.getStartedPage.fastRelease': string
+  'cd.getStartedWithCD.getStartedPage.fastReleaseInfo': string
+  'cd.getStartedWithCD.getStartedPage.improveRelease': string
+  'cd.getStartedWithCD.getStartedPage.improveReleaseInfo': string
+  'cd.getStartedWithCD.getStartedPage.moreAboutCD': string
+  'cd.getStartedWithCD.getStartedPage.optimizeBuilds': string
+  'cd.getStartedWithCD.getStartedPage.prereq': string
+  'cd.getStartedWithCD.getStartedPage.reduceDeployment': string
+  'cd.getStartedWithCD.getStartedPage.reduceDeploymentInfo': string
+  'cd.getStartedWithCD.getStartedPage.sampleDeployment': string
+  'cd.getStartedWithCD.getStartedPage.stdDeployment': string
+  'cd.getStartedWithCD.getStartedPage.stdDeploymentInfo': string
+  'cd.getStartedWithCD.getStartedPage.videoOverview': string
   'cd.getStartedWithCD.gitOpsAgent': string
   'cd.getStartedWithCD.gitURL': string
   'cd.getStartedWithCD.gitopsOnboardingAgentStep': string

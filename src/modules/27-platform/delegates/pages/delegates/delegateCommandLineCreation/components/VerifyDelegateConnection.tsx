@@ -100,7 +100,7 @@ const VerifyDelegateConnection: FC<VerifyDelegateConnectionProps> = props => {
   const getVerifyDelegateDetails = () => {
     if (showError) {
       return (
-        <>
+        <Layout.Vertical>
           <Container className={css.delegateErrorContainer} padding="large" margin={{ bottom: 'xlarge' }}>
             <Layout.Vertical spacing="small">
               <Layout.Horizontal spacing="medium">
@@ -149,7 +149,7 @@ const VerifyDelegateConnection: FC<VerifyDelegateConnectionProps> = props => {
             </Layout.Vertical>
           </Container>
           {startTroubleShoot && delegateType && <CommonProblemsForDelegate delegateType={delegateType} />}
-        </>
+        </Layout.Vertical>
       )
     } else if (showSuccess && isHeartBeatVerified) {
       return (

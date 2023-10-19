@@ -9,9 +9,72 @@
   &.oldGetStarted {
     width: 90% !important;
     position: relative;
-    margin: 100px 0px var(--spacing-small) 0px !important;
+    margin: 80px 0px var(--spacing-small) 0px !important;
     padding: var(--spacing-xxlarge) var(--spacing-huge) var(--spacing-xxlarge) var(--spacing-11) !important;
+    line-height: 20px !important;
+    padding-left: 0 !important;
+    .getStartedTitle {
+      padding-left: var(--spacing-3);
+    }
+    .getStartedGrid {
+      display: flex;
+      flex-direction: row;
+      gap: var(--spacing-large);
+      padding-left: var(--spacing-13);
+      .cardsPadding {
+        padding: var(--spacing-xxxlarge);
+        border-radius: 8px;
+      }
+      .pointer {
+        cursor: pointer;
+      }
+
+      .harnessLinksSection {
+        width: 70%;
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-large);
+        .sampleDeploymentcard {
+          padding: var(--spacing-xxlarge);
+          border: 2px solid var(--green-200);
+          box-shadow: 0px 0px 42px 0px var(--green-200);
+        }
+        .cicard {
+          display: flex;
+          flex-direction: column;
+        }
+        .cdlinks {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: space-between;
+
+          > p {
+            width: 33%;
+            align-items: center;
+            justify-content: start;
+            display: flex;
+          }
+        }
+      }
+      .harnessInfoSection {
+        width: 30%;
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        .videoBtn {
+          border: solid 1px var(--green-600) !important;
+          color: var(--green-600) !important;
+        }
+      }
+      .aboutHarnesscard {
+        display: flex;
+        align-items: stretch;
+        flex-direction: column;
+      }
+    }
   }
+
   &.cdwizardcli {
     margin: 60px 0px var(--spacing-small) 0px !important;
     padding: var(--spacing-xxlarge) var(--spacing-huge) var(--spacing-xxlarge) var(--spacing-13) !important;

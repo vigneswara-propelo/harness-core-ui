@@ -7,74 +7,189 @@
 
 import React, { useEffect } from 'react'
 import cx from 'classnames'
-import { Text, Icon, Layout, ButtonVariation, Container, ButtonSize } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Text, Icon, Layout, Container, Card, Button, ButtonSize, ButtonVariation } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { useFeatureFlag } from '@harnessio/ff-react-client-sdk'
-import { useStrings } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import WithABFFProvider from '@common/components/WithFFProvider/WithFFProvider'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
-import RbacButton from '@rbac/components/Button/Button'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PLG_EXPERIMENTS, EXPOSURE_EVENT } from '@common/components/WithFFProvider/PLGExperiments'
 import { FeatureFlag } from '@common/featureFlags'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { PLG_CD_GET_STARTED_VARIANTS } from '@common/components/ConfigureOptions/constants'
-import cdOnboardingSteps from '../home/images/cd-onboarding-steps.svg'
 import GetStartedWithCDV2 from './GetStartedWithCDv2'
 import css from './GetStartedWithCD.module.scss'
 
 function GetStartedWithCD(): React.ReactElement {
   const { getString } = useStrings()
-  const history = useHistory()
-  const { trackEvent } = useTelemetry()
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ServicePathProps>()
 
+  return (
+    <Layout.Vertical flex>
+      <Container className={cx(css.topPage, css.oldGetStarted)}>
+        <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'start' }} className={css.getStartedTitle}>
+          <Icon name="cd-main" size={40} padding="xlarge" />
+          <Text font={{ variation: FontVariation.H1, weight: 'semi-bold' }} className={css.centerAlign}>
+            {getString('cd.getStartedWithCD.onboardingTitle')}
+          </Text>
+        </Layout.Horizontal>
+        <div className={css.getStartedGrid}>
+          <GetStartedSection />
+          <HarnessInfoSection />
+        </div>
+      </Container>
+    </Layout.Vertical>
+  )
+}
+
+function GetStartedSection(): JSX.Element {
+  const { trackEvent } = useTelemetry()
+  const history = useHistory()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ServicePathProps>()
   const getStartedClickHandler = (): void => {
     trackEvent(CDOnboardingActions.GetStartedClicked, {})
     history.push(routes.toCDOnboardingWizard({ accountId, orgIdentifier, projectIdentifier, module: 'cd' }))
   }
+  const { getString } = useStrings()
+  const CDResources = [
+    {
+      label: getString('cd.getStartedWithCD.cdresources.cdconcepts'),
+      url: 'https://developer.harness.io/docs/continuous-delivery/get-started/key-concepts'
+    },
+    {
+      label: getString('cd.getStartedWithCD.cdresources.cdtuts'),
+      url: 'https://developer.harness.io/tutorials/cd-pipelines'
+    },
+    {
+      label: getString('cd.getStartedWithCD.cdresources.gitopsbasics'),
+      url: 'https://developer.harness.io/docs/continuous-delivery/gitops/get-started/harness-git-ops-basics'
+    },
+    {
+      label: getString('cd.getStartedWithCD.cdresources.pipelineModeling'),
+      url: 'https://developer.harness.io/docs/continuous-delivery/get-started/cd-pipeline-modeling-overview'
+    },
+    {
+      label: getString('cd.getStartedWithCD.cdresources.getstartedcli'),
+      url: 'https://developer.harness.io/docs/platform/automation/cli/install'
+    },
+    {
+      label: getString('cd.getStartedWithCD.cdresources.delgateOverview'),
+      url: 'https://developer.harness.io/docs/platform/delegates/delegate-concepts/delegate-overview/'
+    }
+  ]
   return (
-    <Layout.Vertical flex>
-      <Container className={cx(css.topPage, css.oldGetStarted)}>
-        <Layout.Horizontal flex margin="auto">
-          <Layout.Vertical padding="xlarge" style={{ flex: 1, textAlign: 'center' }} className={css.centerAlign}>
-            <Icon name="cd-main" size={40} padding="xlarge" />
-            <Text font={{ variation: FontVariation.H1 }} className={css.centerAlign}>
-              {getString('cd.getStartedWithCD.onboardingTitle')}
+    <div className={css.harnessLinksSection}>
+      <Card className={cx(css.sampleDeploymentcard, css.cardsPadding)}>
+        <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} margin={{ bottom: 'small' }}>
+          {getString('cd.getStartedWithCD.getStartedPage.sampleDeployment')}
+        </Text>
+        <Text color={Color.BLACK} margin={{ bottom: 'large' }}>
+          <String stringID="cd.getStartedWithCD.getStartedPage.prereq" useRichText />
+        </Text>
+        <Button
+          variation={ButtonVariation.PRIMARY}
+          rightIcon="right-arrow"
+          size={ButtonSize.LARGE}
+          text={getString('getStarted')}
+          onClick={getStartedClickHandler}
+        />
+      </Card>
+      <Card className={cx(css.cardsPadding)}>
+        <Text
+          margin={{ bottom: 'medium' }}
+          font={{ variation: FontVariation.H5, weight: 'semi-bold' }}
+          color={Color.GREY_900}
+        >
+          <String stringID="cd.getStartedWithCD.getStartedPage.moreAboutCD" />
+        </Text>
+        <div className={css.cdlinks}>
+          {CDResources.map(data => (
+            <Text key={data.label} font={{ align: 'left' }} margin={{ bottom: 'large' }}>
+              <a target="_blank" href={data.url} rel="noreferrer noopener nofollow">
+                {data.label}
+              </a>
             </Text>
-            <Text padding="medium" font={{ variation: FontVariation.BODY1 }} className={css.centerAlign}>
-              {getString('cd.getStartedWithCD.onBoardingSubTitle')}
+          ))}
+        </div>
+      </Card>
+      <Card className={cx(css.cardsPadding, css.pointer)} onClick={() => history.push(routes.toCIHome({ accountId }))}>
+        <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
+          <div className={css.cicard}>
+            <Text
+              margin={{ bottom: 'medium' }}
+              font={{ variation: FontVariation.H5, weight: 'semi-bold' }}
+              color={Color.GREY_900}
+            >
+              <String stringID="cd.getStartedWithCD.getStartedPage.optimizeBuilds" />
             </Text>
-            <Container padding="xxlarge" style={{ flex: 1 }} className={css.centerAlign}>
-              <Container
-                style={{ background: `transparent url(${cdOnboardingSteps}) no-repeat` }}
-                className={css.samplePipeline}
-              />
-            </Container>
-            <Container className={css.buttonRow}>
-              <RbacButton
-                variation={ButtonVariation.PRIMARY}
-                size={ButtonSize.LARGE}
-                text={getString('getStarted')}
-                rightIcon="chevron-right"
-                onClick={getStartedClickHandler}
-                permission={{
-                  permission: PermissionIdentifier.EDIT_PIPELINE,
-                  resource: {
-                    resourceType: ResourceType.PIPELINE
-                  }
-                }}
-              />
-            </Container>
-          </Layout.Vertical>
+            <Text
+              color={Color.BLACK}
+              margin={{ bottom: 'large' }}
+              onClick={e => {
+                e.stopPropagation()
+              }}
+            >
+              <String stringID="cd.getStartedWithCD.getStartedPage.ciVsCd" useRichText />
+            </Text>
+          </div>
+          <Icon size={32} name="right-arrow" />
         </Layout.Horizontal>
-      </Container>
-    </Layout.Vertical>
+      </Card>
+    </div>
+  )
+}
+function HarnessInfoSection(): JSX.Element {
+  const { getString } = useStrings()
+  return (
+    <div className={css.harnessInfoSection}>
+      <Card className={cx(css.aboutHarnesscard, css.cardsPadding)}>
+        <Layout.Vertical spacing="large">
+          <Button
+            variation={ButtonVariation.LINK}
+            color={Color.GREEN_600}
+            className={css.videoBtn}
+            href="https://www.youtube.com/watch?v=k-f1nbgGkww&ab_channel=harness"
+            target="_blank"
+          >
+            <Icon name="play" />
+            <String stringID="cd.getStartedWithCD.getStartedPage.videoOverview" />
+          </Button>
+          <InfoRow
+            title={getString('cd.getStartedWithCD.getStartedPage.deployAnywhere')}
+            subtitle={getString('cd.getStartedWithCD.getStartedPage.deployAnywhereInfo')}
+          />
+          <InfoRow
+            title={getString('cd.getStartedWithCD.getStartedPage.stdDeployment')}
+            subtitle={getString('cd.getStartedWithCD.getStartedPage.stdDeploymentInfo')}
+          />
+          <InfoRow
+            title={getString('cd.getStartedWithCD.getStartedPage.fastRelease')}
+            subtitle={getString('cd.getStartedWithCD.getStartedPage.fastReleaseInfo')}
+          />
+          <InfoRow
+            title={getString('cd.getStartedWithCD.getStartedPage.improveRelease')}
+            subtitle={getString('cd.getStartedWithCD.getStartedPage.improveReleaseInfo')}
+          />
+          <InfoRow
+            title={getString('cd.getStartedWithCD.getStartedPage.reduceDeployment')}
+            subtitle={getString('cd.getStartedWithCD.getStartedPage.reduceDeploymentInfo')}
+          />
+        </Layout.Vertical>
+      </Card>
+    </div>
+  )
+}
+function InfoRow({ title, subtitle }: { title: string; subtitle: string }): JSX.Element {
+  return (
+    <div>
+      <Text font={{ weight: 'semi-bold' }} margin={{ bottom: 'xsmall' }}>
+        {title}
+      </Text>
+      <Text>{subtitle}</Text>
+    </div>
   )
 }
 
@@ -104,6 +219,6 @@ const GetStartedWithHooks: React.FC = () => {
         variant: FLOW_TYPE
       })
   }, [])
-  return FLOW_TYPE === PLG_CD_GET_STARTED_VARIANTS.INFO_HEAVY ? <GetStartedWithCDV2 /> : <GetStartedWithCD />
+  return FLOW_TYPE === PLG_CD_GET_STARTED_VARIANTS.INFO_HEAVY ? <GetStartedWithCD /> : <GetStartedWithCDV2 />
 }
 export default GetStartedWithAB

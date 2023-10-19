@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly aboutHarnessAdapterAnswer: string
+  readonly aboutHarnesscard: string
   readonly agentFirstSection: string
   readonly agentSecondSection: string
   readonly agentThirdSection: string
@@ -20,13 +21,20 @@ declare const styles: {
   readonly cardGap: string
   readonly cardShadow: string
   readonly cardWidth: string
+  readonly cardsPadding: string
+  readonly cdlinks: string
   readonly cdresourcelist: string
   readonly cdwizardcli: string
   readonly centerAlign: string
+  readonly cicard: string
   readonly closeWizard: string
   readonly containerItemCss: string
   readonly descriptionLeftpad: string
   readonly error: string
+  readonly getStartedGrid: string
+  readonly getStartedTitle: string
+  readonly harnessInfoSection: string
+  readonly harnessLinksSection: string
   readonly iconPadding: string
   readonly iconPaddingSmall: string
   readonly image: string
@@ -37,13 +45,16 @@ declare const styles: {
   readonly oldGetStarted: string
   readonly onboardingcards: string
   readonly paddingXSmall: string
+  readonly pointer: string
   readonly progressItem: string
   readonly provisioningInfo: string
   readonly provisioningSecondaryInfo: string
   readonly provisioningText: string
+  readonly sampleDeploymentcard: string
   readonly samplePipeline: string
   readonly separator: string
   readonly topPage: string
+  readonly videoBtn: string
   readonly videoCard: string
   readonly videoframe: string
 }

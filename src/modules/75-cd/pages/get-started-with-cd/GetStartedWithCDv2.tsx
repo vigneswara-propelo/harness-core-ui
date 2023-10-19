@@ -156,6 +156,10 @@ function LearnMoreCD(): JSX.Element {
     {
       label: getString('cd.getStartedWithCD.cdresources.getstartedcli'),
       url: 'https://developer.harness.io/docs/platform/automation/cli/install'
+    },
+    {
+      label: getString('cd.getStartedWithCD.cdresources.delgateOverview'),
+      url: ''
     }
   ]
   return (
