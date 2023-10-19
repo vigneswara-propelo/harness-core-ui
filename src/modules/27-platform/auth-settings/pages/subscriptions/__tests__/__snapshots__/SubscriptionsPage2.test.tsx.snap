@@ -2042,7 +2042,7 @@ exports[`Subscriptions Page should render CI details  with no data service table
                     <p
                       class="StyledProps--font StyledProps--main frequencyCount StyledProps--color StyledProps--color-black StyledProps--font-size-large StyledProps--font-weight-bold"
                     >
-                      -123
+                      0
                     </p>
                   </div>
                 </div>
@@ -2078,7 +2078,25 @@ exports[`Subscriptions Page should render CI details  with no data service table
                     <p
                       class="StyledProps--font StyledProps--main frequencyCount StyledProps--color StyledProps--color-black StyledProps--font-size-large StyledProps--font-weight-bold"
                     >
-                      
+                      NA
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="StyledProps--font StyledProps--main summaryCard"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main cardTitle StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+                  >
+                    common.OverUse
+                  </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main frequencyContainer"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main frequencyCount StyledProps--color StyledProps--color-black StyledProps--font-size-large StyledProps--font-weight-bold"
+                    >
+                      123
                     </p>
                   </div>
                 </div>

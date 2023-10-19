@@ -43,7 +43,7 @@ function getPercentageBarProps(
   credits?: number,
   subscribed?: number
 ): PercentageBarReturn {
-  const dividend = creditsAvailable ? creditsAvailable : usage
+  const dividend = credits ? creditsAvailable : usage
   let divisor = credits ? credits : subscribed
   if (divisor === 0) {
     divisor = 1
@@ -119,8 +119,11 @@ const UsageInfoCard: React.FC<UsageInfoCardProps> = ({
   credits,
   useCredits
 }) => {
-  const creditsAvailable =
+  let creditsAvailable =
     credits !== undefined && creditsUsed !== undefined && creditsUsed >= 0 ? credits - creditsUsed : 0
+  if (creditsAvailable < 0) {
+    creditsAvailable = 0
+  }
   const { overPercentage, percentage, width, color } = getPercentageBarProps(
     creditsAvailable,
     usage,
@@ -202,7 +205,7 @@ const UsageInfoCard: React.FC<UsageInfoCardProps> = ({
             </Text>
           )}
           {useCredits ? (
-            creditsAvailable > 0 ? (
+            creditsAvailable >= 0 ? (
               <Text font={{ size: 'xsmall' }}>
                 {`${Math.round(width * 100) / 100}%`} {leftFooter}
               </Text>

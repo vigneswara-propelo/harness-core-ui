@@ -141,7 +141,7 @@ export function BuildCreditInfoTable({ data, creditsUsed }: BuildCreditInfoTable
     return [
       {
         title: getString('common.subscriptions.usage.availableCredits'),
-        count: creditsAvailable || 0,
+        count: creditsAvailable > 0 ? creditsAvailable : 0 || 0,
         className: pageCss.peakClass
       },
       {
@@ -152,10 +152,18 @@ export function BuildCreditInfoTable({ data, creditsUsed }: BuildCreditInfoTable
       },
       {
         title: getString('common.nextExpiringDate'),
-        count: !isUndefined(data[0]?.expiryTime) ? moment(data[0]?.expiryTime).format('MMM DD YYYY') : '',
-
+        count: !isUndefined(data[0]?.expiryTime) ? moment(data[0]?.expiryTime).format('MMM DD YYYY') : 'NA',
         className: pageCss.overUseClass
-      }
+      },
+      ...(creditsAvailable < 0
+        ? [
+            {
+              title: getString('common.OverUse'),
+              count: Math.abs(creditsAvailable),
+              className: pageCss.overUseClass
+            }
+          ]
+        : [])
     ]
   }, [totalCredits, creditsUsed])
   return (
