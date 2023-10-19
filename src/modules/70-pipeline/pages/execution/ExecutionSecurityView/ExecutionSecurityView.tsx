@@ -11,6 +11,7 @@ import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import type { STOAppCustomProps } from '@pipeline/interfaces/STOApp'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import { UserLabel } from '@common/exports'
+import UsefulOrNot from '@common/components/UsefulOrNot/UsefulOrNot'
 
 const RemoteSTOApp = lazy(() => import(`stoV2/App`))
 const RemotePipelineSecurityView = lazy(() => import(`stoV2/PipelineSecurityView`))
@@ -25,7 +26,7 @@ export default function ExecutionSecurityView(): React.ReactElement | null {
 
   return (
     <Container width="100%" height="100%">
-      <ChildAppMounter<STOAppCustomProps> ChildApp={RemoteSTOApp} customComponents={{ UserLabel }}>
+      <ChildAppMounter<STOAppCustomProps> ChildApp={RemoteSTOApp} customComponents={{ UserLabel, UsefulOrNot }}>
         <RemotePipelineSecurityView pipelineExecutionDetail={pipelineExecutionDetail} />
       </ChildAppMounter>
     </Container>

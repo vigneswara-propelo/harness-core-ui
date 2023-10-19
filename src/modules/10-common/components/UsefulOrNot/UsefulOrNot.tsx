@@ -17,7 +17,8 @@ import css from './UsefulOrNot.module.scss'
 export enum AidaClient {
   CS_BOT = 'CS_BOT',
   CD_RCA = 'CD_RCA',
-  CI_RCA = 'CI_RCA'
+  CI_RCA = 'CI_RCA',
+  STO_REM = 'STO_REM'
 }
 
 export interface TelemeteryProps {
@@ -25,7 +26,7 @@ export interface TelemeteryProps {
   metadata?: Record<string, string | boolean | number>
 }
 
-interface UsefulOrNotProps {
+export interface UsefulOrNotProps {
   telemetry: TelemeteryProps
   allowFeedback?: boolean
   allowCreateTicket?: boolean

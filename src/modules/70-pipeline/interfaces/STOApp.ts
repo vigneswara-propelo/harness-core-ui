@@ -10,6 +10,7 @@ import type { CardRailViewProps } from '@pipeline/components/Dashboards/CardRail
 import type { ExecutionCardProps } from '@pipeline/components/ExecutionCard/ExecutionCard'
 import type { PipelineExecutionDetail } from 'services/pipeline-ng'
 import type { UserLabelProps } from '@common/exports'
+import { UsefulOrNotProps } from '@common/components/UsefulOrNot/UsefulOrNot'
 
 export interface STOAppCustomProps {
   stoApiPath?: string
@@ -18,6 +19,7 @@ export interface STOAppCustomProps {
     ExecutionCard: React.ComponentType<ExecutionCardProps>
     CardRailView: React.ComponentType<CardRailViewProps>
     UserLabel: React.ComponentType<UserLabelProps>
+    UsefulOrNot: React.ComponentType<UsefulOrNotProps>
   }>
 }
 

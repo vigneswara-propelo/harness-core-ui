@@ -11,6 +11,7 @@ import { UserLabel } from '@common/components'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import CardRailView from '@pipeline/components/Dashboards/CardRailView/CardRailView'
 import ExecutionCard from '@pipeline/components/ExecutionCard/ExecutionCard'
+import UsefulOrNot from '@common/components/UsefulOrNot/UsefulOrNot'
 import ExternalTicketSettings from '@sto/components/ExternalTickets/Settings/ExternalTicketSettings'
 import STOTrialHomePage from '@sto/pages/home/trialPage/STOTrialHomePage'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
@@ -99,7 +100,7 @@ const STORouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
           licenseRedirectData={licenseRedirectData}
           path={[routes.toSTOIssues({ ...projectPathProps, module, mode })]}
         >
-          <ChildAppMounter ChildApp={RemoteSTOApp} />
+          <ChildAppMounter ChildApp={RemoteSTOApp} customComponents={{ UsefulOrNot }} />
         </RouteWithContext>
       )}
 
@@ -116,7 +117,7 @@ const STORouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
         licenseRedirectData={licenseRedirectData}
         path={[routes.toSTOSecurityReview({ ...projectPathProps, module, mode })]}
       >
-        <ChildAppMounter ChildApp={RemoteSTOApp} customComponents={{ UserLabel }} />
+        <ChildAppMounter ChildApp={RemoteSTOApp} customComponents={{ UserLabel, UsefulOrNot }} />
       </RouteWithContext>
 
       <RouteWithContext
@@ -133,7 +134,7 @@ const STORouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
           licenseRedirectData={licenseRedirectData}
           path={[routes.toSTOTicketSummary({ ...projectPathProps, module, mode, issueId: ':issueId' })]}
         >
-          <ChildAppMounter ChildApp={RemoteSTOApp} customComponents={{ UserLabel }} />
+          <ChildAppMounter ChildApp={RemoteSTOApp} customComponents={{ UserLabel, UsefulOrNot }} />
         </RouteWithContext>
       )}
 
