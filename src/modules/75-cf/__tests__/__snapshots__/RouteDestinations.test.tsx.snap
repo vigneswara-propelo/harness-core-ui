@@ -74,7 +74,7 @@ Array [
       }
     }
   >
-    <ProxyKeyPage />
+    <FFUIApp />
   </RouteWithLayout>,
   <RouteWithLayout
     exact={true}

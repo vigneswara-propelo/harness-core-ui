@@ -67,7 +67,6 @@ import FeatureFlagsLandingPage from './pages/feature-flags/FeatureFlagsLandingPa
 import { FFGitSyncProvider } from './contexts/ff-git-sync-context/FFGitSyncContext'
 import ConfigurePath from './pages/onboarding/ConfigurePath'
 import FFUIApp from './pages/FFUIApp/FFUIApp'
-import ProxyKeyPage from './pages/proxy-key-management/ProxyKeyPage'
 
 featureFactory.registerFeaturesByModule('cf', {
   features: [FeatureIdentifier.MAUS],
@@ -246,7 +245,7 @@ const CFRoutes: FC = () => {
         exact
         pageName={PAGE_NAME.FeatureFlagsProxy}
       >
-        <ProxyKeyPage />
+        <FFUIApp />
       </RouteWithLayout>
 
       <RouteWithLayout

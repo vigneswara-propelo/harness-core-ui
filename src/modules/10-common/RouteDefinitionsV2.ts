@@ -886,7 +886,6 @@ const routes = {
   toSecretDetailsReferencesSettings: withModeModuleAndScopePrefix<SecretsPathProps>(
     params => `/settings/secrets/${params?.secretId}/references`
   ),
-  toFFProxyKeys: withModeModuleAndScopePrefix(() => '/settings/feature-flags-proxy'),
   toFileStore: withModeModuleAndScopePrefix(() => `/settings/file-store`),
   toVariables: withModeModuleAndScopePrefix(() => `/settings/variables`),
 

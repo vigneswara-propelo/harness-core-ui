@@ -294,7 +294,7 @@ export const AccountSettingsPage: React.FC = () => {
               id={SettingsResources.FFProxyKeys}
               icon={'gitops-gnupg-key-blue'}
               hidden={!proxyKeysEnabled}
-              route={routesV2.toFFProxyKeys({ accountId, module })}
+              route={routesV2.toFeatureFlagsProxySettings({ accountId })}
             />
             <SettingsResourceCard
               label={<String stringID="common.overrides" />}
