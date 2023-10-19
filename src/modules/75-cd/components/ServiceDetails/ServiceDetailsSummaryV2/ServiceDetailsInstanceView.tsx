@@ -271,6 +271,7 @@ function InstanceView(prop: InstanceViewProp): React.ReactElement {
               infraName={infraName}
               closeDailog={closeDailog}
               setRollbacking={setRollbacking}
+              serviceType={serviceType}
               {...pipelineExecKey}
             />
           ) : null}

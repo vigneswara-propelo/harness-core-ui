@@ -420,6 +420,8 @@ serviceDashboard:
     emptyStateMsg: No Infrastructures available to rollback
     rollbackTriggedSuccessfully: Rollback is triggered successfully
     instanceDataEmptyOrMismatch: Either the instance data is empty or there's a data mismatch. Please re-select the desired row and try again.
+    confirmation:
+      executionDescription: Please confirm that you want to initiate rollback for <a target='_blank' rel='noreferrer nofollow' href='{{executionUrl}}'>[{{executionName}} {{lastDeployed}}]</a> with following configuration
   pod: pod
   function: function
   deployedAt: Deployed At

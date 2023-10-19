@@ -18,6 +18,7 @@ import {
   useToaster
 } from '@harness/uicore'
 import { defaultTo, isNil } from 'lodash-es'
+
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -25,14 +26,17 @@ import { useStrings } from 'framework/strings'
 import type { ExecutionPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
-import { checkIfInstanceCanBeRolledBackPromise, triggerRollbackPromise } from 'services/cd-ng'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { checkIfInstanceCanBeRolledBackPromise, triggerRollbackPromise, PostProdRollbackCheckDTO } from 'services/cd-ng'
 import type { PipelineExecInfoProps } from '../ServiceDetailUtils'
+import { PostProdMessage } from './PostProdConfirmationMessage'
 
 export interface PostProdRollbackBtnProps extends Partial<PipelineExecInfoProps> {
   infraName: string
   artifactName: string
   closeDailog?: () => void
   setRollbacking?: React.Dispatch<React.SetStateAction<boolean>>
+  serviceType?: string
 }
 
 export default function PostProdRollbackBtn(props: PostProdRollbackBtnProps): JSX.Element {
@@ -54,8 +58,16 @@ export default function PostProdRollbackBtn(props: PostProdRollbackBtnProps): JS
     infrastructureMappingId,
     instanceKey,
     closeDailog,
-    setRollbacking
+    setRollbacking,
+    serviceType
   } = props
+
+  const [checkData, setCheckData] = React.useState<PostProdRollbackCheckDTO>({})
+
+  const checkSwimLaneInfo = React.useMemo(() => {
+    const availableCheckTypes: string[] = [ServiceDeploymentType.NativeHelm, ServiceDeploymentType.Kubernetes]
+    return availableCheckTypes.includes(defaultTo(serviceType, ''))
+  }, [serviceType])
 
   const requestParamForRollback = {
     body: {
@@ -139,7 +151,11 @@ export default function PostProdRollbackBtn(props: PostProdRollbackBtnProps): JS
   )
 
   const { openDialog: openRollbackConfirmation } = useConfirmationDialog({
-    contentText: confirmationText,
+    contentText: checkSwimLaneInfo ? (
+      <PostProdMessage checkData={checkData} pipelineId={defaultTo(pipelineId, pipId)} />
+    ) : (
+      confirmationText
+    ),
     titleText: getString('cd.serviceDashboard.postProdRollback.rollbackConfirmationTitle'),
     intent: Intent.WARNING,
     confirmButtonText: getString('confirm'),
@@ -173,7 +189,20 @@ export default function PostProdRollbackBtn(props: PostProdRollbackBtnProps): JS
         },
         permission: PermissionIdentifier.EXECUTE_PIPELINE
       }}
-      onClick={openRollbackConfirmation}
+      onClick={async () => {
+        if (checkSwimLaneInfo) {
+          try {
+            const response = await checkIfInstanceCanBeRolledBackPromise({ ...requestParamForRollback })
+            if (response?.data) {
+              setCheckData(response?.data)
+            }
+          } finally {
+            openRollbackConfirmation()
+          }
+        } else {
+          openRollbackConfirmation()
+        }
+      }}
       disabled={disableRollbackBtn}
       id="rollbackBtn"
     />

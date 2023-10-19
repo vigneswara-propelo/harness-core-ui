@@ -7140,6 +7140,7 @@ export interface StringsMap {
   'cd.serviceDashboard.noServices': string
   'cd.serviceDashboard.nonProd': string
   'cd.serviceDashboard.pod': string
+  'cd.serviceDashboard.postProdRollback.confirmation.executionDescription': string
   'cd.serviceDashboard.postProdRollback.emptyStateMsg': string
   'cd.serviceDashboard.postProdRollback.instanceDataEmptyOrMismatch': string
   'cd.serviceDashboard.postProdRollback.rollbackConfirmationText': string

@@ -206,3 +206,20 @@ export const successfullRollabackTrigger: ResponsePostProdRollbackResponseDTO = 
   metaData: undefined,
   correlationId: 'testCorrelation'
 }
+
+export const mockSwimLane = {
+  message: 'testmessage',
+  swimLaneInfo: {
+    lastPipelineExecutionName: 'executionName',
+    lastPipelineExecutionId: 'YGiC06iVQKmwBRSN0MrL9Q',
+    lastDeployedAt: 1696571162351,
+    envName: 'Env Name',
+    envIdentifier: 'envId',
+    infraName: 'Infra Name',
+    infraIdentifier: 'Infra id',
+    currentArtifactDisplatName: 'artifact dusplay name',
+    currentArtifactId: 'artifact id',
+    previousArtifactDisplayName: 'Prev artifact name',
+    previousArtifactId: 'Prev artifact Id'
+  }
+}
