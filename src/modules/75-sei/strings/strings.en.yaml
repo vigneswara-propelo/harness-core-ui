@@ -16,6 +16,7 @@ accountSettings:
     workflow: '{{ $.common.workflow}}'
     investment: Investment
     trellis: Trellis
+    trellisFactors: Trellis Factors
   advancedFeature:
     label: Advanced fetures
     tables: Tables
@@ -25,3 +26,5 @@ accountSettings:
     customize: Customize
     activityLogs: Activity Logs
     apiKeys: '{{ $.common.apiKeys }}'
+projectSettings:
+  integrationMapping: Integration Mapping

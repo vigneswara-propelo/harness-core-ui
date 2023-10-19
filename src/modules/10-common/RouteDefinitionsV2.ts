@@ -94,11 +94,6 @@ export function withModeModuleAndScopePrefix<T>(fn: (args?: T) => string, includ
     } = params || {}
 
     const defaultPathProps = { ...params }
-    // delete defaultPathProps.accountId
-    // delete defaultPathProps.projectIdentifier
-    // delete defaultPathProps.orgIdentifier
-    // delete defaultPathProps.module
-    // delete defaultPathProps.mode
     const path = fn(defaultPathProps as T)
 
     let url = ''
@@ -123,7 +118,7 @@ export function withModeModuleAndScopePrefix<T>(fn: (args?: T) => string, includ
       url = withAccountId(() => url)({ accountId })
     }
 
-    return `${url}${path.replace(/^\//, '')}`
+    return `${url.replace(/\/$/gm, '')}${path}`
   }
 }
 
@@ -565,103 +560,103 @@ const routes = {
     activityId: string
   }>(params =>
     params?.activityId
-      ? `dashboard/deployment/${params?.deploymentTag}/service/${params?.serviceIdentifier}?activityId=${params?.activityId}`
-      : `dashboard/deployment/${params?.deploymentTag}/service/${params?.serviceIdentifier}`
+      ? `/dashboard/deployment/${params?.deploymentTag}/service/${params?.serviceIdentifier}?activityId=${params?.activityId}`
+      : `/dashboard/deployment/${params?.deploymentTag}/service/${params?.serviceIdentifier}`
   ),
   toCVActivityChangesPage: withModeModuleAndScopePrefix<{ activityId: string }>(params =>
-    !params?.activityId ? CV_HOME : `dashboard/activity-changes/${params?.activityId}`
+    !params?.activityId ? CV_HOME : `/dashboard/activity-changes/${params?.activityId}`
   ),
-  toCVDataSources: withModeModuleAndScopePrefix(() => `datasources`),
-  toCVServices: withModeModuleAndScopePrefix(() => `services`),
+  toCVDataSources: withModeModuleAndScopePrefix(() => `/datasources`),
+  toCVServices: withModeModuleAndScopePrefix(() => `/services`),
 
-  toCVChanges: withModeModuleAndScopePrefix(() => `changes`),
+  toCVChanges: withModeModuleAndScopePrefix(() => `/changes`),
 
   toCVMonitoringServices: withModeModuleAndScopePrefix(() => {
-    return `monitoringservices`
+    return `/monitoringservices`
   }),
 
-  toCVCodeErrors: withModeModuleAndScopePrefix(() => `eventsummary`),
+  toCVCodeErrors: withModeModuleAndScopePrefix(() => `/eventsummary`),
 
-  toCVCodeErrorsAgents: withModeModuleAndScopePrefix(() => `setup/agents`),
+  toCVCodeErrorsAgents: withModeModuleAndScopePrefix(() => `/setup/agents`),
 
-  toCVCodeErrorsAgentsTokens: withModeModuleAndScopePrefix(() => `setup/tokens`),
+  toCVCodeErrorsAgentsTokens: withModeModuleAndScopePrefix(() => `/setup/tokens`),
 
-  toCVCodeErrorsCriticalEvents: withModeModuleAndScopePrefix(() => `setup/criticalevents`),
+  toCVCodeErrorsCriticalEvents: withModeModuleAndScopePrefix(() => `/setup/criticalevents`),
 
-  toCVCodeErrorsSettings: withModeModuleAndScopePrefix(() => `setup`),
+  toCVCodeErrorsSettings: withModeModuleAndScopePrefix(() => `/setup`),
 
   toCVMonitoringServicesInputSets: withModeModuleAndScopePrefix(() => {
-    return `monitoringservicesinputset`
+    return `/monitoringservicesinputset`
   }),
   toAccountCVSLODetailsPage: withModeModuleAndScopePrefix<{ identifier: string }>(
     params => `/slos/${params?.identifier}`
   ),
-  toCVSLOs: withModeModuleAndScopePrefix(() => `slos`),
+  toCVSLOs: withModeModuleAndScopePrefix(() => `/slos`),
   toAccountCVSLOs: withModeModuleAndScopePrefix(() => '/slos'),
-  toCVSLODetailsPage: withModeModuleAndScopePrefix<{ identifier?: string }>(params => `slos/${params?.identifier}`),
+  toCVSLODetailsPage: withModeModuleAndScopePrefix<{ identifier?: string }>(params => `/slos/${params?.identifier}`),
 
   toErrorTracking: withModeModuleAndScopePrefix(() => {
-    return `cet`
+    return `/cet`
   }),
   toCVCreateSLOs: withModeModuleAndScopePrefix(() => {
-    return `slo/create`
+    return `/slo/create`
   }),
   toCVCreateCompositeSLOs: withModeModuleAndScopePrefix(() => {
-    return `slo/create/composite`
+    return `/slo/create/composite`
   }),
   toAccountCVCreateCompositeSLOs: withModeModuleAndScopePrefix(() => {
-    return `slo/create/composite`
+    return `/slo/create/composite`
   }),
   toCVSLODowntime: withModeModuleAndScopePrefix(() => '/settings/slo-downtime'),
   toCVCreateSLODowntime: withModeModuleAndScopePrefix(() => '/settings/slo-downtime/create'),
   toCVEditSLODowntime: withModeModuleAndScopePrefix<{ identifier?: string }>(
     params => `/settings/slo-downtime/edit/${params?.identifier}`
   ),
-  toCVAddMonitoringServicesSetup: withModeModuleAndScopePrefix(() => `monitoringservices/setup`),
+  toCVAddMonitoringServicesSetup: withModeModuleAndScopePrefix(() => `/monitoringservices/setup`),
   toCVAddMonitoredServiceForServiceAndEnv: withModeModuleAndScopePrefix<{
     serviceIdentifier: string
     environmentIdentifier: string
   }>(params => {
-    return `monitoringservices/setup/serviceIdentifier/${params?.serviceIdentifier}/environmentIdentifier/${params?.environmentIdentifier}`
+    return `/monitoringservices/setup/serviceIdentifier/${params?.serviceIdentifier}/environmentIdentifier/${params?.environmentIdentifier}`
   }),
   toCVAddMonitoringServicesEdit: withModeModuleAndScopePrefix<{ identifier: string }>(
-    params => `monitoringservices/edit/${params?.identifier}`
+    params => `/monitoringservices/edit/${params?.identifier}`
   ),
   toCVOnBoardingSetup: withModeModuleAndScopePrefix<{ dataSourceType: string }>(
-    params => `onboarding/${params?.dataSourceType}/setup`
+    params => `/onboarding/${params?.dataSourceType}/setup`
   ),
   toCVActivitySourceSetup: withModeModuleAndScopePrefix<{ activitySource: string }>(
-    params => `admin/setup/activity-source-setup/${params?.activitySource}`
+    params => `/admin/setup/activity-source-setup/${params?.activitySource}`
   ),
   toCVActivitySourceEditSetup: withModeModuleAndScopePrefix<{ activitySource: string; activitySourceId: string }>(
     params =>
-      `admin/setup/activity-source-setup/${params?.activitySource}/activity-sourceId/${params?.activitySourceId}`
+      `/admin/setup/activity-source-setup/${params?.activitySource}/activity-sourceId/${params?.activitySourceId}`
   ),
-  toCVActivityDashboard: withModeModuleAndScopePrefix(() => `activities/dashboard`),
-  toCVAdminActivitySources: withModeModuleAndScopePrefix(() => `admin/activity-sources`),
-  toCVAdminMonitoringSources: withModeModuleAndScopePrefix(() => `admin/monitoring-sources`),
-  toCVAdminVerificationJobs: withModeModuleAndScopePrefix(() => `admin/verification-jobs`),
+  toCVActivityDashboard: withModeModuleAndScopePrefix(() => `/activities/dashboard`),
+  toCVAdminActivitySources: withModeModuleAndScopePrefix(() => `/admin/activity-sources`),
+  toCVAdminMonitoringSources: withModeModuleAndScopePrefix(() => `/admin/monitoring-sources`),
+  toCVAdminVerificationJobs: withModeModuleAndScopePrefix(() => `/admin/verification-jobs`),
   toCVActivityDetails: withModeModuleAndScopePrefix<{ activityType: string }>(
-    params => `activities/admin/${params?.activityType}`
+    params => `/activities/admin/${params?.activityType}`
   ),
-  toCVAdminGeneralSettings: withModeModuleAndScopePrefix(() => `admin/general-settings`),
-  toCVAdminGovernance: withModeModuleAndScopePrefix(() => `setup/governance`),
-  toCVAdminSetup: withModeModuleAndScopePrefix(() => `admin/setup`),
+  toCVAdminGeneralSettings: withModeModuleAndScopePrefix(() => `/admin/general-settings`),
+  toCVAdminGovernance: withModeModuleAndScopePrefix(() => `/setup/governance`),
+  toCVAdminSetup: withModeModuleAndScopePrefix(() => `/admin/setup`),
   toCVAdminSetupMonitoringSource: withModeModuleAndScopePrefix<{ monitoringSource: string }>(
-    params => `admin/setup/monitoring-source/${params?.monitoringSource}`
+    params => `/admin/setup/monitoring-source/${params?.monitoringSource}`
   ),
-  toCVAdmin: withModeModuleAndScopePrefix(() => `admin`),
+  toCVAdmin: withModeModuleAndScopePrefix(() => `/admin`),
   toCVAdminSetupMonitoringSourceEdit: withModeModuleAndScopePrefix<{ monitoringSource: string; identifier: string }>(
-    params => `admin/setup/monitoring-source/${params?.monitoringSource}/${params?.identifier}`
+    params => `/admin/setup/monitoring-source/${params?.monitoringSource}/${params?.identifier}`
   ),
-  toCVAdminSetupVerificationJob: withModeModuleAndScopePrefix(() => `admin/setup/verification-job`),
+  toCVAdminSetupVerificationJob: withModeModuleAndScopePrefix(() => `/admin/setup/verification-job`),
   toCVAdminSetupVerificationJobEdit: withModeModuleAndScopePrefix<{ verificationId: string }>(
-    params => `admin/setup/verification-job/verificationId/${params?.verificationId}`
+    params => `/admin/setup/verification-job/verificationId/${params?.verificationId}`
   ),
-  toCVAdminAccessControl: withModeModuleAndScopePrefix(() => `setup/access-control`),
-  toCVAdminNotifications: withModeModuleAndScopePrefix(() => `admin/notifications`),
+  toCVAdminAccessControl: withModeModuleAndScopePrefix(() => `/setup/access-control`),
+  toCVAdminNotifications: withModeModuleAndScopePrefix(() => `/admin/notifications`),
   toMonitoredServicesConfigurations: withModeModuleAndScopePrefix<{ identifier: string }>(params => {
-    return `monitoredservices/configurations/${params?.identifier}`
+    return `/monitoredservices/configurations/${params?.identifier}`
   }),
 
   // STO routes
@@ -680,19 +675,19 @@ const routes = {
     params => `/folder/${params?.folderId ?? 'shared'}/view/${params?.viewId}`
   ),
   //settings routes
-  toConnectors: withModeModuleAndScopePrefix(() => `settings/connectors`),
+  toConnectors: withModeModuleAndScopePrefix(() => `/settings/connectors`),
   toConnectorDetails: withModeModuleAndScopePrefix<ConnectorPathProps>(
-    params => `settings/connectors/${params?.connectorId}`
+    params => `/settings/connectors/${params?.connectorId}`
   ),
-  toCreateConnectorFromYamlSettings: withModeModuleAndScopePrefix(() => `settings/connectors/yaml/create-connector`),
+  toCreateConnectorFromYamlSettings: withModeModuleAndScopePrefix(() => `/settings/connectors/yaml/create-connector`),
 
   toAccountSettingsOverview: withModeModuleAndScopePrefix(() => '/settings/overview'),
-  toDefaultSettings: withModeModuleAndScopePrefix(() => `settings/default-settings`),
-  toAccountSMTP: withModeModuleAndScopePrefix(() => 'settings/smtp'),
+  toDefaultSettings: withModeModuleAndScopePrefix(() => `/settings/default-settings`),
+  toAccountSMTP: withModeModuleAndScopePrefix(() => '/settings/smtp'),
 
-  toSettingsServices: withModeModuleAndScopePrefix(() => 'settings/services'),
+  toSettingsServices: withModeModuleAndScopePrefix(() => '/settings/services'),
   toSettingsServiceDetails: withModeModuleAndScopePrefix<ServicePathProps>(
-    params => `settings/services/${params?.serviceId}`
+    params => `/settings/services/${params?.serviceId}`
   ),
 
   toSettingsEnvironments: withModeModuleAndScopePrefix(() => 'settings/environments'),
@@ -701,19 +696,21 @@ const routes = {
     const { environmentIdentifier, ...rest } = params
     const queryString = qs.stringify(rest, { skipNulls: true })
     if (queryString.length > 0) {
-      return `settings/environments/${params?.environmentIdentifier}/details?${queryString}`
+      return `/settings/environments/${params?.environmentIdentifier}/details?${queryString}`
     }
-    return `settings/environments/${params?.environmentIdentifier}/details`
+    return `/settings/environments/${params?.environmentIdentifier}/details`
   }),
-  toSettingsEnvironmentGroups: withModeModuleAndScopePrefix(() => 'settings/environments/groups'),
+  toSettingsEnvironmentGroups: withModeModuleAndScopePrefix(() => '/settings/environments/groups'),
   toSettingsEnvironmentGroupDetails: withModeModuleAndScopePrefix<
     EnvironmentGroupQueryParams & EnvironmentGroupPathProps
-  >(params => `settings/environments/groups/${params?.environmentGroupIdentifier}/details`),
+  >(params => `/settings/environments/groups/${params?.environmentGroupIdentifier}/details`),
 
-  toSettingsServiceOverrides: withModeModuleAndScopePrefix(() => 'settings/serviceOverrides'),
+  toSettingsServiceOverrides: withModeModuleAndScopePrefix(() => '/settings/serviceOverrides'),
 
   toTemplates: withModeModuleAndScopePrefix<{ templateType?: TemplateType }>(params => {
-    const path = params?.templateType ? `settings/templates?templateType=${params?.templateType}` : 'settings/templates'
+    const path = params?.templateType
+      ? `/settings/templates?templateType=${params?.templateType}`
+      : '/settings/templates'
     return path
   }),
 
@@ -734,9 +731,9 @@ const routes = {
 
       let path
       if (queryString.length > 0) {
-        path = `settings/template-studio/${templateType}/template/${templateIdentifier}/?${queryString}`
+        path = `/settings/template-studio/${templateType}/template/${templateIdentifier}/?${queryString}`
       } else {
-        path = `settings/template-studio/${templateType}/template/${templateIdentifier}/`
+        path = `/settings/template-studio/${templateType}/template/${templateIdentifier}/`
       }
       return path
     }
@@ -758,9 +755,9 @@ const routes = {
 
       let path
       if (queryString.length > 0) {
-        path = `settings/templates/${templateIdentifier}/template-studio/${templateType}/?${queryString}`
+        path = `/settings/templates/${templateIdentifier}/template-studio/${templateType}/?${queryString}`
       } else {
-        path = `settings/templates/${templateIdentifier}/template-studio/${templateType}/`
+        path = `/settings/templates/${templateIdentifier}/template-studio/${templateType}/`
       }
       return path
     }
@@ -811,9 +808,9 @@ const routes = {
     }
     const queryString = qs.stringify(queryParams, { skipNulls: true })
     if (queryString.length > 0) {
-      return `settings/freeze-windows/studio/window/${params?.windowIdentifier}/?${queryString}`
+      return `/settings/freeze-windows/studio/window/${params?.windowIdentifier}/?${queryString}`
     } else {
-      return `settings/freeze-windows/studio/window/${params?.windowIdentifier}/`
+      return `/settings/freeze-windows/studio/window/${params?.windowIdentifier}/`
     }
   }),
 
@@ -1002,10 +999,10 @@ const routes = {
   toCFTargets: withModeModuleAndScopePrefix<ProjectPathProps>(() => '/target-management/targets'),
   toCFSegmentDetailsWithEnv: withModeModuleAndScopePrefix<ProjectPathProps & EnvironmentPathProps & SegmentPathProps>(
     params =>
-      `target-management/target-groups/${params?.segmentIdentifier}?activeEnvironment=${params?.environmentIdentifier}`
+      `/target-management/target-groups/${params?.segmentIdentifier}?activeEnvironment=${params?.environmentIdentifier}`
   ),
   toCFSegmentDetails: withModeModuleAndScopePrefix<ProjectPathProps & SegmentPathProps>(params => {
-    return `target-management/target-groups/${params?.segmentIdentifier}`
+    return `/target-management/target-groups/${params?.segmentIdentifier}`
   }),
   toCFTargetDetails: withModeModuleAndScopePrefix<ProjectPathProps & TargetPathProps>(
     params => `/target-management/targets/${params?.targetIdentifier}`
@@ -1048,7 +1045,28 @@ const routes = {
   toConnectorsPage: withModeModuleAndScopePrefix<ModulePathParams>(() => '/connectors'),
   toIDPOAuthConfig: withModeModuleAndScopePrefix<ModulePathParams>(() => '/oauth'),
   toIDPAllowListURL: withModeModuleAndScopePrefix<ModulePathParams>(() => '/allowlist-url'),
-  toScorecards: withModeModuleAndScopePrefix<ModulePathParams>(() => '/scorecards')
+  toScorecards: withModeModuleAndScopePrefix<ModulePathParams>(() => '/scorecards'),
+
+  // sei routes
+  toSEI: withModeModuleAndScopePrefix<ModulePathParams>(() => `/`),
+  toSEIInsights: withModeModuleAndScopePrefix<ModulePathParams>(() => `/sei-home`),
+  toSEIGetStarted: withModeModuleAndScopePrefix<ModulePathParams>(() => `/get-started`),
+  toSEIIntegrationMapping: withModeModuleAndScopePrefix<ModulePathParams>(() => `/sei-integration-mapping`),
+  toSEICollection: withModeModuleAndScopePrefix<ModulePathParams>(() => `/configuration/organization`),
+
+  // sei account level routes
+  toSEIIntegrations: withModeModuleAndScopePrefix<ModulePathParams>(() => `/configuration/integrations`),
+  toSEIContributors: withModeModuleAndScopePrefix<ModulePathParams>(() => `/configuration/organization_users`),
+  toSEIWorklowProfilePage: withModeModuleAndScopePrefix<ModulePathParams>(() => `/configuration/lead-time-profile`),
+  toSEIEffortInvestment: withModeModuleAndScopePrefix<ModulePathParams>(() => `/configuration/effort-investment`),
+  toSEITrellisScoreProfile: withModeModuleAndScopePrefix<ModulePathParams>(
+    () => `/configuration/trellis_score_profile`
+  ),
+  toSEITables: withModeModuleAndScopePrefix<ModulePathParams>(() => `/tables`),
+  toSEIPropels: withModeModuleAndScopePrefix<ModuleHomeParams>(() => '/propels'),
+  toSEICustomise: withModeModuleAndScopePrefix<ModuleHomeParams>(() => '/configuration/global'),
+  toSEIActivityLogs: withModeModuleAndScopePrefix<ModuleHomeParams>(() => '/configuration/audit_logs'),
+  toSEIApiKeys: withModeModuleAndScopePrefix<ModuleHomeParams>(() => '/configuration/apikeys')
 }
 
 export default routes

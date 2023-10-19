@@ -13,7 +13,8 @@ import { String as LocaleString } from 'framework/strings'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
+
 import { FeatureFlag } from '@common/featureFlags'
 import { EmptyLayout, MinimalLayout } from '@common/layouts'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
@@ -118,6 +119,10 @@ export default function SEIRoutes(): React.ReactElement {
           }}
           customRoutes={routes}
           customUtils={{ NameSchema }}
+          customHooks={{
+            useFeatureFlag,
+            useFeatureFlags
+          }}
         />
       </RouteWithLayout>
     </>

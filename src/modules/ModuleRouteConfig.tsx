@@ -37,6 +37,8 @@ import IACMRouteDestinations from '@iacm/RouteDestinationsV2'
 import CETRouteDestinations from '@modules/75-cet/RouteDestinationsV2'
 import CETSideNavLinks from '@cet/components/SideNav/CETSideNavLinks'
 import { SIDE_NAV_STATE } from '@common/router/RouteWithLayoutV2'
+import SEISideNavLinks from '@modules/75-sei/SideNav/SEISideNavLinks'
+import SEIRouteDestinations from '@modules/75-sei/RouteDestinationsV2'
 
 export interface ModuleLinksProps {
   sideNavState: SIDE_NAV_STATE
@@ -96,8 +98,8 @@ const ModuleRouteConfig: Record<NavModuleName, IModuleRouteConfig> = {
     routes: SSCARouteDestinations
   },
   [ModuleName.SEI]: {
-    sideNavLinks: () => <></>,
-    routes: () => <></>
+    sideNavLinks: SEISideNavLinks,
+    routes: SEIRouteDestinations
   }
 }
 

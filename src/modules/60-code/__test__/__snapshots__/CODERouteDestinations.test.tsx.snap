@@ -2,9 +2,9 @@
 
 exports[`CODERouteDestinations Tests CODERouteDestinations should render correct routes 1`] = `
 <div>
-  /account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier/
-  /account/:accountId/module/code/orgs/:orgIdentifier/
-  /account/:accountId/module/code/
+  /account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier
+  /account/:accountId/module/code/orgs/:orgIdentifier
+  /account/:accountId/module/code
   /
   /account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/pulls/compare/:diffRefs*
   /

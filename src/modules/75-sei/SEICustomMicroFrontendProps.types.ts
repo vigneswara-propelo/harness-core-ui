@@ -6,6 +6,7 @@
  */
 
 import type routes from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import type { NameSchema } from '@common/utils/Validation'
 import { ProjectSelector } from '@projects-orgs/components/ProjectSelector/ProjectSelector'
 import NavExpandable from '@common/navigation/NavExpandable/NavExpandable'
@@ -15,6 +16,7 @@ import { useGetLicensesAndSummary } from 'services/cd-ng'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
 import { EmptyLayout } from '@common/layouts'
+import type { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 export interface SEICustomMicroFrontendProps {
   cdServices: {
@@ -29,8 +31,12 @@ export interface SEICustomMicroFrontendProps {
     AccessControlRouteDestinations: typeof AccessControlRouteDestinations
     EmptyLayout: typeof EmptyLayout
   }
-  customRoutes: typeof routes
+  customRoutes: typeof routes | typeof routesV2
   customUtils: {
     NameSchema: typeof NameSchema
+  }
+  customHooks: {
+    useFeatureFlag: typeof useFeatureFlag
+    useFeatureFlags: typeof useFeatureFlags
   }
 }
