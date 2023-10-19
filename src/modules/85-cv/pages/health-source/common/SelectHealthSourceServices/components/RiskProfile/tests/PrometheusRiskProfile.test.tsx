@@ -235,4 +235,95 @@ describe('Unit tests for RiskProfile', () => {
 
     await waitFor(() => expect(fetchServiceInstancesButton).not.toBeInTheDocument())
   })
+
+  test('should render service instance dropdown with value as placeholder if the lable names options are loading and value is present for service insntance', async () => {
+    render(
+      <TestWrapper defaultFeatureFlagValues={{ SRM_CV_UI_HEALTHSOURCE_SERVICE_INSTANCE_PREVIEW: true }}>
+        <SetupSourceTabsContext.Provider
+          value={{
+            sourceData: { connectorRef: 'connectorRefValue', sourceType: HealthSourceTypes.DatadogMetrics },
+            onNext: Promise.resolve,
+            onPrevious: Promise.resolve
+          }}
+        >
+          <Formik initialValues={{ query: '*', serviceInstance: 'hostName' }} onSubmit={Promise.resolve}>
+            <RiskProfile
+              metricPackResponse={
+                { error: { data: { detailedMessage: 'someError' } } } as unknown as ReturnType<typeof useGetMetricPacks>
+              }
+              labelNamesResponse={{ data: null, loading: true } as unknown as ReturnType<typeof useGetLabelNames>}
+              continuousVerificationEnabled
+            />
+          </Formik>
+        </SetupSourceTabsContext.Provider>
+      </TestWrapper>
+    )
+
+    const serviceInstanceInput = screen.getByPlaceholderText(/hostName/)
+
+    await waitFor(() => expect(serviceInstanceInput).toBeInTheDocument())
+  })
+
+  test('should render service instance dropdown with value as placeholder if the lable names options are loading and value is present for service insntance in templates', async () => {
+    render(
+      <TestWrapper defaultFeatureFlagValues={{ SRM_CV_UI_HEALTHSOURCE_SERVICE_INSTANCE_PREVIEW: true }}>
+        <SetupSourceTabsContext.Provider
+          value={{
+            sourceData: { connectorRef: 'connectorRefValue', sourceType: HealthSourceTypes.DatadogMetrics },
+            onNext: Promise.resolve,
+            onPrevious: Promise.resolve
+          }}
+        >
+          <Formik initialValues={{ query: '*', serviceInstance: 'hostName' }} onSubmit={Promise.resolve}>
+            <RiskProfile
+              isTemplate
+              metricPackResponse={
+                { error: { data: { detailedMessage: 'someError' } } } as unknown as ReturnType<typeof useGetMetricPacks>
+              }
+              labelNamesResponse={{ data: null, loading: true } as unknown as ReturnType<typeof useGetLabelNames>}
+              continuousVerificationEnabled
+            />
+          </Formik>
+        </SetupSourceTabsContext.Provider>
+      </TestWrapper>
+    )
+
+    const serviceInstanceInput = screen.getByPlaceholderText(/hostName/)
+
+    await waitFor(() => expect(serviceInstanceInput).toBeInTheDocument())
+  })
+
+  test('should render service instance dropdown as disabled if the lable names call fails', async () => {
+    render(
+      <TestWrapper defaultFeatureFlagValues={{ SRM_CV_UI_HEALTHSOURCE_SERVICE_INSTANCE_PREVIEW: true }}>
+        <SetupSourceTabsContext.Provider
+          value={{
+            sourceData: { connectorRef: 'connectorRefValue', sourceType: HealthSourceTypes.DatadogMetrics },
+            onNext: Promise.resolve,
+            onPrevious: Promise.resolve
+          }}
+        >
+          <Formik initialValues={{ query: '*', serviceInstance: 'hostName' }} onSubmit={Promise.resolve}>
+            <RiskProfile
+              isTemplate
+              metricPackResponse={
+                { error: { data: { detailedMessage: 'someError' } } } as unknown as ReturnType<typeof useGetMetricPacks>
+              }
+              labelNamesResponse={
+                { data: null, loading: false, error: { message: 'Failed to fetch' } } as unknown as ReturnType<
+                  typeof useGetLabelNames
+                >
+              }
+              continuousVerificationEnabled
+            />
+          </Formik>
+        </SetupSourceTabsContext.Provider>
+      </TestWrapper>
+    )
+
+    const serviceInstanceInput = screen.getByPlaceholderText(/hostName/)
+
+    await waitFor(() => expect(serviceInstanceInput).toBeInTheDocument())
+    await waitFor(() => expect(serviceInstanceInput).toBeDisabled())
+  })
 })

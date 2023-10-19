@@ -165,6 +165,8 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
               <FormInput.MultiTypeInput
                 label=""
                 name={FieldNames.SERVICE_INSTANCE}
+                disabled={labelNamesResponse?.loading || Boolean(labelNamesResponse?.error)}
+                placeholder={values.serviceInstance ?? undefined}
                 selectItems={transformedLabelNames}
                 multiTypeInputProps={{
                   expressions,
@@ -180,6 +182,8 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
               name={FieldNames.SERVICE_INSTANCE}
               label={<ServiceInstanceLabel />}
               items={transformedLabelNames}
+              disabled={labelNamesResponse?.loading || Boolean(labelNamesResponse?.error)}
+              placeholder={values.serviceInstance ?? undefined}
               value={serviceInstance ? { label: serviceInstance, value: serviceInstance } : undefined}
             />
           )}
