@@ -13,9 +13,11 @@ import ProxyKeyPage from './pages/proxy-key-management/ProxyKeyPage'
 
 function CFSettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactElement {
   return (
-    <RouteWithContext exact path={pathArrayForAllScopes(routes.toFeatureFlagsProxySettings, mode)}>
-      <ProxyKeyPage />
-    </RouteWithContext>
+    <>
+      <RouteWithContext exact path={pathArrayForAllScopes(routes.toFeatureFlagsProxySettings, mode)}>
+        <ProxyKeyPage />
+      </RouteWithContext>
+    </>
   )
 }
 
