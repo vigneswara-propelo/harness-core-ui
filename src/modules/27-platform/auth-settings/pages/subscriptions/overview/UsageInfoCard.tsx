@@ -44,7 +44,10 @@ function getPercentageBarProps(
   subscribed?: number
 ): PercentageBarReturn {
   const dividend = creditsAvailable ? creditsAvailable : usage
-  const divisor = credits ? credits : subscribed
+  let divisor = credits ? credits : subscribed
+  if (divisor === 0) {
+    divisor = 1
+  }
   let width = 0,
     color = Color.PRIMARY_6,
     percentage = 0,
