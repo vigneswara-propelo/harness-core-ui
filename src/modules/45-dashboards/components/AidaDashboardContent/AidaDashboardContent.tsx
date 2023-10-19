@@ -92,7 +92,10 @@ const AidaDashboardContent: React.FC = () => {
     dispatch({ type: 'submit', newMessage })
   }, [])
 
-  const handleAidaPromptInitialize = React.useCallback((prompts: GenerateTilePrompt): void => {
+  const handleAidaPromptInitialize = React.useCallback((receivedPrompts: GenerateTilePrompt): void => {
+    const prompts: GenerateTilePrompt = receivedPrompts.explore_prompts.length
+      ? receivedPrompts
+      : { explore_prompts: ExplorePrompts }
     dispatch({ type: 'updatePrompts', prompts })
   }, [])
 
@@ -130,7 +133,7 @@ const AidaDashboardContent: React.FC = () => {
         {state.stage === DashboardPromptStage.Explore && (
           <AidaPromptSelection
             onPromptSelected={onPromptSelected}
-            prompts={ExplorePrompts}
+            prompts={state.prompts.explore_prompts}
             title={getString('dashboards.aida.selectExplore')}
           />
         )}
