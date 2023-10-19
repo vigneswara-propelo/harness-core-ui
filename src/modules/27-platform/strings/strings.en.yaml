@@ -1211,6 +1211,7 @@ connectors:
     delegateInClusterInfo: '{{ $.platform.connectors.delegateInClusterInfo }}'
     workloadPoolId: Workload Pool ID
     providerId: Provider ID
+    serviceAccountEmail: Service Account Email
     enterEntity: 'Enter {{ entity }}'
   ECR:
     name: ECR

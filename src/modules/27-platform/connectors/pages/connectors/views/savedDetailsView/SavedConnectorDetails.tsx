@@ -784,6 +784,10 @@ const getGCPSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInte
     {
       label: 'platform.connectors.ceGcp.existingCurTable.projectId',
       value: connector?.spec?.credential?.spec?.gcpProjectId
+    },
+    {
+      label: 'platform.connectors.GCP.serviceAccountEmail',
+      value: connector?.spec?.credential?.spec?.serviceAccountEmail
     }
   ]
 }

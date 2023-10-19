@@ -896,7 +896,8 @@ export const setupGCPFormData = async (connectorInfo: ConnectorInfoDTO, accountI
     connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate),
     workloadPoolId: connectorInfo.spec.credential.spec.workloadPoolId,
     providerId: connectorInfo.spec.credential.spec.providerId,
-    gcpProjectId: connectorInfo.spec.credential.spec.gcpProjectId
+    gcpProjectId: connectorInfo.spec.credential.spec.gcpProjectId,
+    serviceAccountEmail: connectorInfo.spec.credential.spec.serviceAccountEmail
   }
 
   return formData
@@ -1807,7 +1808,8 @@ export const buildGcpPayload = (formData: FormData) => {
             ? {
                 workloadPoolId: formData.workloadPoolId,
                 providerId: formData.providerId,
-                gcpProjectId: formData.gcpProjectId
+                gcpProjectId: formData.gcpProjectId,
+                serviceAccountEmail: formData.serviceAccountEmail
               }
             : null
       }

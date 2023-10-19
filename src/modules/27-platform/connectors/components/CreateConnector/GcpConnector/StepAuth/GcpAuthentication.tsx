@@ -32,6 +32,7 @@ import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { EmailValidationSchema } from '@modules/75-cd/components/PipelineSteps/EmailStep/emailStepUtils'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import css from '../CreateGcpConnector.module.scss'
 
@@ -187,6 +188,10 @@ const GcpAuthentication: React.FC<StepProps<StepConfigureProps> & GcpAuthenticat
                 name: getString('platform.connectors.ceGcp.existingCurTable.projectId')
               })
             )
+          }),
+          serviceAccountEmail: Yup.string().when('delegateType', {
+            is: DelegateTypes.DELEGATE_OIDC,
+            then: EmailValidationSchema(getString)
           })
         })}
         onSubmit={handleSubmit}
@@ -235,6 +240,13 @@ const GcpAuthentication: React.FC<StepProps<StepConfigureProps> & GcpAuthenticat
                       label={getString('platform.connectors.ceGcp.existingCurTable.projectId')}
                       placeholder={getString('platform.connectors.GCP.enterEntity', {
                         entity: getString('platform.connectors.ceGcp.existingCurTable.projectId')
+                      })}
+                    />
+                    <FormInput.Text
+                      name="serviceAccountEmail"
+                      label={getString('platform.connectors.GCP.serviceAccountEmail')}
+                      placeholder={getString('platform.connectors.GCP.enterEntity', {
+                        entity: getString('platform.connectors.GCP.serviceAccountEmail')
                       })}
                     />
                   </Layout.Vertical>

@@ -2209,6 +2209,7 @@ export interface StringsMap {
   'platform.connectors.GCP.delegateOutClusterInfo': string
   'platform.connectors.GCP.enterEntity': string
   'platform.connectors.GCP.providerId': string
+  'platform.connectors.GCP.serviceAccountEmail': string
   'platform.connectors.GCP.workloadPoolId': string
   'platform.connectors.GCR.artifactServer': string
   'platform.connectors.GCR.fullName': string
