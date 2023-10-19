@@ -73,9 +73,9 @@ const RenderColumnSecret: Renderer<CellProps<SecretResponseWrapper>> = ({ row })
       {data.type === 'WinRmCredentials' ? (
         <Icon name="command-winrm" size={28} margin={{ top: 'xsmall', right: 'small' }} />
       ) : null}
-      <Layout.Vertical>
+      <Layout.Vertical className={css.secretFlex} margin={{ right: 'small' }}>
         <Layout.Horizontal spacing="small">
-          <Text color={Color.BLACK} lineClamp={1} className={css.secretName} font={{ variation: FontVariation.BODY2 }}>
+          <Text color={Color.BLACK} lineClamp={1} font={{ variation: FontVariation.BODY2 }}>
             {data.name}
           </Text>
           {data.tags && Object.keys(data.tags).length ? <TagsPopover tags={data.tags} /> : null}
