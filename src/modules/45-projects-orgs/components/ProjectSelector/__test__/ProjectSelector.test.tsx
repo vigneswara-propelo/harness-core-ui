@@ -8,6 +8,7 @@
 import React from 'react'
 import { render, act, fireEvent } from '@testing-library/react'
 import { TestWrapper, findPopoverContainer } from '@common/utils/testUtils'
+import { useGetProjectAggregateDTOList } from 'services/cd-ng'
 import { ProjectSelector } from '../ProjectSelector'
 
 import projects from './projects.json'
@@ -83,5 +84,31 @@ describe('ProjectSelector', () => {
     })
 
     expect(popover).toMatchSnapshot()
+  })
+
+  test('render list view using fallback account id, when account is not present in path', async () => {
+    ;(useGetProjectAggregateDTOList as jest.Mock).mockImplementation(() => {
+      return { data: projects, refetch: jest.fn(), error: null }
+    })
+    const handleSelect = jest.fn()
+    render(
+      <TestWrapper pathParams={{ accountId: '' }} projects={projects as any}>
+        <ProjectSelector onSelect={handleSelect} fallbackAccountId="fallbackAccountId" />
+      </TestWrapper>
+    )
+
+    expect(useGetProjectAggregateDTOList).toBeCalledWith({
+      debounce: 300,
+      queryParamStringifyOptions: { arrayFormat: 'repeat' },
+      queryParams: {
+        accountIdentifier: 'fallbackAccountId',
+        onlyFavorites: false,
+        orgIdentifier: undefined,
+        pageIndex: 0,
+        pageSize: 50,
+        searchTerm: undefined,
+        sortOrders: ['lastModifiedAt,DESC']
+      }
+    })
   })
 })

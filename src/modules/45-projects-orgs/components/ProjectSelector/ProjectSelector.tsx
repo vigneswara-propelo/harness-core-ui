@@ -215,6 +215,7 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect, fallbackAccou
             onChange={org => {
               setSelectedOrg(org)
             }}
+            fallbackAccountId={fallbackAccountId}
           />
           <GridListToggle
             initialSelectedView={projectView}

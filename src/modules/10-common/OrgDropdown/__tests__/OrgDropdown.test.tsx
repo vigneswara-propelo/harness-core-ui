@@ -10,6 +10,7 @@ import { render } from '@testing-library/react'
 import type { SelectOption } from '@harness/uicore'
 import { noop } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
+import { getOrganizationListPromise } from 'services/cd-ng'
 import OrgDropdown from '../OrgDropdown'
 
 jest.mock('@harness/uicore', () => {
@@ -102,5 +103,19 @@ describe('org dropdown test', () => {
       </TestWrapper>
     )
     expect(queryByText('orgDropdown')).not.toBeNull()
+  })
+
+  test('test when account id is not available in path props ', () => {
+    ;(getOrganizationListPromise as jest.Mock).mockImplementation(() => {
+      return orgListPromiseMock()
+    })
+    render(
+      <TestWrapper pathParams={{ accountId: '' }}>
+        <OrgDropdown onChange={noop} fallbackAccountId="fallbackAccountId" />
+      </TestWrapper>
+    )
+    expect(getOrganizationListPromise).toBeCalledWith({
+      queryParams: { accountIdentifier: 'fallbackAccountId', searchTerm: undefined }
+    })
   })
 })

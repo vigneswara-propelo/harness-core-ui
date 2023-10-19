@@ -16,16 +16,20 @@ interface OrgDropdownProps {
   onChange: (item: SelectOption) => void
   value?: SelectOption
   className?: string
+  fallbackAccountId?: string
 }
 
 const OrgDropdown: React.FC<OrgDropdownProps> = props => {
+  const { fallbackAccountId = '' } = props
   const { accountId } = useParams<AccountPathProps>()
   const [query, setQuery] = useState<string>()
   const { getString } = useStrings()
 
   function orgListPromise(): Promise<SelectOption[]> {
     return new Promise<SelectOption[]>(resolve => {
-      getOrganizationListPromise({ queryParams: { accountIdentifier: accountId, searchTerm: query } })
+      getOrganizationListPromise({
+        queryParams: { accountIdentifier: accountId ?? fallbackAccountId, searchTerm: query }
+      })
         .then(result => {
           let selectItems: Array<SelectOption> = []
 
