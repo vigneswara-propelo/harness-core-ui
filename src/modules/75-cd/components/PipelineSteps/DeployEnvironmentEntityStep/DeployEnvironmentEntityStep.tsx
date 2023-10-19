@@ -6,15 +6,16 @@
  */
 
 import React from 'react'
-import { Formik } from 'formik'
-import { noop } from 'lodash-es'
+import { Formik, FormikErrors } from 'formik'
+import { get, isEmpty, isNil, noop, set } from 'lodash-es'
+import { IconName, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
 
-import type { IconName } from '@harness/uicore'
-
-import { Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
+import { EnvironmentYamlV2 } from 'services/cd-ng'
+import { isValueRuntimeInput } from '@modules/10-common/utils/utils'
+import { Step, StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
-
+import { AllNGVariables } from '@modules/70-pipeline/utils/types'
 import DeployEnvironmentEntityWidget from './DeployEnvironmentEntityWidget'
 import type {
   DeployEnvironmentEntityConfig,
@@ -81,45 +82,72 @@ export class DeployEnvironmentEntityStep extends Step<DeployEnvironmentEntityCon
     )
   }
 
-  validateInputSet(): any {
-    // const errors: FormikErrors<DeployStageConfig> = {}
-    // const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
-    // data?.environment?.serviceOverrideInputs?.variables?.forEach((variable: AllNGVariables, index: number) => {
-    //   const currentVariableTemplate = get(template, `environment.serviceOverrideInputs.variables[${index}].value`, '')
-    //   if (
-    //     isRequired &&
-    //     ((isEmpty(variable.value) && variable.type !== 'Number') ||
-    //       (variable.type === 'Number' && (typeof variable.value !== 'number' || isNaN(variable.value)))) &&
-    //     getMultiTypeFromValue(currentVariableTemplate) === MultiTypeInputType.RUNTIME
-    //   ) {
-    //     set(
-    //       errors,
-    //       `serviceOverrideInputs.variables.[${index}].value`,
-    //       getString?.('fieldRequired', { field: variable.name })
-    //     )
-    //   }
-    // })
-    // if (!(errors as unknown as DeployStageConfig['environment'])?.serviceOverrideInputs?.variables?.length) {
-    //   delete (errors as unknown as DeployStageConfig['environment'])?.serviceOverrideInputs
-    // }
-    // data?.environment?.environmentInputs?.variables?.forEach((variable: AllNGVariables, index: number) => {
-    //   const currentVariableTemplate = get(template, `environment.environmentInputs.variables[${index}].value`, '')
-    //   if (
-    //     isRequired &&
-    //     ((isEmpty(variable.value) && variable.type !== 'Number') ||
-    //       (variable.type === 'Number' && (typeof variable.value !== 'number' || isNaN(variable.value)))) &&
-    //     getMultiTypeFromValue(currentVariableTemplate) === MultiTypeInputType.RUNTIME
-    //   ) {
-    //     set(
-    //       errors,
-    //       `environmentInputs.variables.[${index}].value`,
-    //       getString?.('fieldRequired', { field: variable.name })
-    //     )
-    //   }
-    // })
-    // if (!(errors as unknown as DeployStageConfig['environment'])?.environmentInputs?.variables?.length) {
-    //   delete (errors as unknown as DeployStageConfig['environment'])?.environmentInputs
-    // }
-    // return errors
+  validateInputSet({
+    data,
+    template,
+    getString,
+    viewType
+  }: ValidateInputSetProps<DeployEnvironmentEntityConfig>): FormikErrors<Required<DeployEnvironmentEntityConfig>> {
+    const errors: FormikErrors<Required<DeployEnvironmentEntityConfig>> = {}
+    const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
+    if (
+      isEmpty(data?.environment?.environmentRef) &&
+      isEmpty(data?.environment?.useFromStage) &&
+      isRequired &&
+      getMultiTypeFromValue(template?.environment?.environmentRef) === MultiTypeInputType.RUNTIME
+    ) {
+      set(errors, 'environment.environmentRef', getString?.('cd.pipelineSteps.environmentTab.environmentIsRequired'))
+    }
+
+    if (
+      isNil(data?.environment?.environmentRef) &&
+      isEmpty(data?.environment?.useFromStage?.stage) &&
+      isRequired &&
+      (isValueRuntimeInput(template?.environment?.environmentRef) ||
+        isValueRuntimeInput(template?.environment?.useFromStage as any))
+    ) {
+      set(errors, 'environment.useFromStage.stage', getString?.('cd.pipelineSteps.environmentTab.useFromStageRequired'))
+    }
+
+    data?.environment?.serviceOverrideInputs?.variables?.forEach((variable: AllNGVariables, index: number) => {
+      const currentVariableTemplate = get(template, `environment.serviceOverrideInputs.variables[${index}].value`, '')
+      if (
+        isRequired &&
+        ((isEmpty(variable.value) && variable.type !== 'Number') ||
+          (variable.type === 'Number' && (typeof variable.value !== 'number' || isNaN(variable.value)))) &&
+        getMultiTypeFromValue(currentVariableTemplate) === MultiTypeInputType.RUNTIME
+      ) {
+        set(
+          errors,
+          `serviceOverrideInputs.variables.[${index}].value`,
+          getString?.('fieldRequired', { field: variable.name })
+        )
+      }
+    })
+
+    if (!(errors as EnvironmentYamlV2)?.serviceOverrideInputs?.variables?.length) {
+      delete (errors as EnvironmentYamlV2)?.serviceOverrideInputs
+    }
+    data?.environment?.environmentInputs?.variables?.forEach((variable: AllNGVariables, index: number) => {
+      const currentVariableTemplate = get(template, `environment.environmentInputs.variables[${index}].value`, '')
+      if (
+        isRequired &&
+        ((isEmpty(variable.value) && variable.type !== 'Number') ||
+          (variable.type === 'Number' && (typeof variable.value !== 'number' || isNaN(variable.value)))) &&
+        getMultiTypeFromValue(currentVariableTemplate) === MultiTypeInputType.RUNTIME
+      ) {
+        set(
+          errors,
+          `environmentInputs.variables.[${index}].value`,
+          getString?.('fieldRequired', { field: variable.name })
+        )
+      }
+    })
+
+    if (!(errors as EnvironmentYamlV2)?.environmentInputs?.variables?.length) {
+      delete (errors as EnvironmentYamlV2)?.environmentInputs
+    }
+
+    return errors
   }
 }

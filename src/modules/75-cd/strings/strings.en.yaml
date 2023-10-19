@@ -324,6 +324,7 @@ pipelineSteps:
     deleteEnvironmentGroupFromListConfirmationText: Are you sure you want to remove Environment Group - {{name}} from the list?
     propagateEnvironmentFrom: 'Propagate Environment From:'
     deployToDifferentEnvironment: Deploy to Different Environment
+    useFromStageRequired: Environment or Propagate Environment From is required
   serviceTab:
     stageOverrides: Stage Overrides
     overrideChanges: Override artifacts, manifests, service variables for this stage

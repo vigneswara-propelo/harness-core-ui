@@ -13,7 +13,8 @@ import {
   act,
   queryByAttribute,
   findByTestId as findByTestIdGlobal,
-  screen
+  screen,
+  findByText as findElementByText
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {
@@ -36,7 +37,9 @@ import {
   getMockFor_useGetInputSetsListForPipeline,
   getMockFor_useGetMergeInputSetFromPipelineTemplateWithListInput,
   getMockFor_useGetPipeline,
+  getMockFor_useGetPipelineServiceEnv,
   getMockFor_useGetTemplateFromPipeline,
+  getMockFor_useGetTemplateFromPipeline_serviceEnvRef,
   getUseRetryPipelineRequest,
   inputSetYAML,
   mockPostRetryPipeline,
@@ -186,6 +189,8 @@ describe('STUDIO MODE', () => {
       .mockReset()
       .mockImplementation(getMockFor_useGetMergeInputSetFromPipelineTemplateWithListInput().mutate)
     mockRePostPipelineExecuteYaml.mockReset()
+    ;(useGetPipeline as jest.Mock).mockImplementation(() => getMockFor_useGetPipeline())
+    ;(useGetTemplateFromPipeline as jest.Mock).mockImplementation(() => getMockFor_useGetTemplateFromPipeline())
   })
 
   test('should toggle visual and yaml mode', async () => {
@@ -234,7 +239,7 @@ describe('STUDIO MODE', () => {
     // Navigate to 'Provide Values'
     const selectExistingOrProvide = await findByTestId('selectExistingOrProvide')
     fireEvent.click(selectExistingOrProvide)
-    await waitFor(() => expect(queryByText('customVariables.pipelineVariablesTitle')).toBeTruthy())
+    await waitFor(() => expect(queryByText('customVariables.pipelineVariablesTitle')).toBeInTheDocument())
 
     // Submit the incomplete form
     const runPipelineButton = getByRole('button', {
@@ -244,9 +249,59 @@ describe('STUDIO MODE', () => {
       fireEvent.click(runPipelineButton)
     })
     // Required variable is present so ErrorStrip is visible and submit button is disabled in RPF
-    await waitFor(() => expect(queryByText('common.errorCount')).toBeTruthy())
-    await waitFor(() => expect(queryByText('common.seeDetails')).toBeTruthy())
-    await waitFor(() => expect(queryByText('fieldRequired')).toBeTruthy())
+    await waitFor(() => expect(queryByText('common.errorCount')).toBeInTheDocument())
+    const seeDetails = queryByText('common.seeDetails')
+    await waitFor(() => expect(seeDetails).toBeInTheDocument())
+    await waitFor(() => expect(queryByText('fieldRequired')).toBeInTheDocument())
+    expect(runPipelineButton).toBeDisabled()
+  })
+
+  test('should not allow submit if form is incomplete as serviceRef, environmentRef values are required', async () => {
+    ;(useGetPipeline as jest.Mock).mockImplementation(() => getMockFor_useGetPipelineServiceEnv())
+    ;(useGetTemplateFromPipeline as jest.Mock).mockImplementation(() =>
+      getMockFor_useGetTemplateFromPipeline_serviceEnvRef()
+    )
+
+    const { findByTestId, queryByText, getByRole } = render(
+      <TestWrapper>
+        <RunPipelineForm {...commonProps} source="executions" />
+      </TestWrapper>
+    )
+
+    const portalDivs = document.getElementsByClassName('bp3-portal')
+    expect(portalDivs.length).toBe(0)
+
+    const selectExistingOrProvide = await findByTestId('selectExistingOrProvide')
+    expect(selectExistingOrProvide).toBeDisabled()
+    expect(selectExistingOrProvide).not.toBeChecked()
+
+    // Submit the incomplete form
+    const runPipelineButton = getByRole('button', {
+      name: 'runPipeline'
+    })
+    act(() => {
+      fireEvent.click(runPipelineButton)
+    })
+
+    // Required fields are empty, so ErrorStrip is visible and submit button is disabled in RPF
+    await waitFor(() => expect(queryByText('common.errorCount')).toBeInTheDocument())
+
+    const seeDetails = queryByText('common.seeDetails')
+    await waitFor(() => expect(seeDetails).toBeInTheDocument())
+    userEvent.hover(seeDetails!)
+    await waitFor(() => expect(portalDivs).toHaveLength(1))
+    const seeDetailsTooltipContainer = portalDivs[0] as HTMLElement
+    const serviceRequiredText = await findElementByText(
+      seeDetailsTooltipContainer,
+      'cd.pipelineSteps.serviceTab.serviceIsRequired (1)'
+    )
+    expect(serviceRequiredText).toBeInTheDocument()
+    const envRequiredText = await findElementByText(
+      seeDetailsTooltipContainer,
+      'cd.pipelineSteps.environmentTab.environmentIsRequired (1)'
+    )
+    expect(envRequiredText).toBeInTheDocument()
+
     expect(runPipelineButton).toBeDisabled()
   })
 

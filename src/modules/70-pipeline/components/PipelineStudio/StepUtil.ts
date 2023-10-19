@@ -30,6 +30,7 @@ import { getPrCloneStrategyOptions } from '@pipeline/utils/constants'
 import { CodebaseTypes, isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import type { AccountPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import { DeployEnvironmentEntityConfig } from '@modules/75-cd/components/PipelineSteps/DeployEnvironmentEntityStep/types'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
 // eslint-disable-next-line no-restricted-imports
@@ -565,6 +566,21 @@ export const validateStage = ({
         set(errors, 'spec.infrastructure', errorsResponse)
       }
     }
+
+    if (stage?.type === 'Deployment' && templateStageConfig?.environment) {
+      const step = factory.getStep(StepType.DeployEnvironmentEntity)
+      const errorsResponse = step?.validateInputSet({
+        data: stageConfig,
+        template: templateStageConfig,
+        getString,
+        viewType
+      }) as FormikErrors<Required<DeployEnvironmentEntityConfig>>
+
+      if (!isEmpty(errorsResponse)) {
+        set(errors, 'spec.environment.environmentRef', errorsResponse?.environment?.environmentRef)
+      }
+    }
+
     if (
       stageConfig?.infrastructure?.infrastructureDefinition?.spec &&
       originalStageConfig?.infrastructure?.infrastructureDefinition?.type

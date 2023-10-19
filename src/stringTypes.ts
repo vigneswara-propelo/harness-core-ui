@@ -7006,6 +7006,7 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.specifyYourEnvironments': string
   'cd.pipelineSteps.environmentTab.specifyYourInfrastructure': string
   'cd.pipelineSteps.environmentTab.specifyYourInfrastructures': string
+  'cd.pipelineSteps.environmentTab.useFromStageRequired': string
   'cd.pipelineSteps.environmentTab.viewEnvironmentInputs': string
   'cd.pipelineSteps.environmentTab.viewEnvironmentServiceOverrideInputs': string
   'cd.pipelineSteps.environmentTab.viewInfrastructureInputs': string

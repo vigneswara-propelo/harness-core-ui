@@ -18,27 +18,27 @@ export const getMockFor_useGetPipeline = (): any => ({
   tags: {}
   stages:
     - stage:
-      name: Stage1
-      identifier: Stage1
-      description: ""
-      type: Approval
-      spec:
-        execution:
-          steps:
-            - step:
-                name: Approval
-                identifier: approval
-                type: HarnessApproval
-                timeout: 1d
-                spec:
-                  includePipelineExecutionHistory: true
-                  approvers:
-                    disallowPipelineExecutor: false
-                    minimumCount: 2
-                    userGroups:
-                      - Chirag
-                  approverInputs: []
-                  approvalMessage: ABC
+        name: Stage1
+        identifier: Stage1
+        description: ""
+        type: Approval
+        spec:
+          execution:
+            steps:
+              - step:
+                  name: Approval
+                  identifier: approval
+                  type: HarnessApproval
+                  timeout: 1d
+                  spec:
+                    includePipelineExecutionHistory: true
+                    approvers:
+                      disallowPipelineExecutor: false
+                      minimumCount: 2
+                      userGroups:
+                        - Chirag
+                    approverInputs: []
+                    approvalMessage: ABC
       tags: {}
       variables: []
   projectIdentifier: Chirag
@@ -92,6 +92,61 @@ export const getMockFor_useGetPipeline = (): any => ({
       type: String
       value: <+input>
       required: false`
+    }
+  }
+})
+
+export const getMockFor_useGetPipelineServiceEnv = (): any => ({
+  data: {
+    data: {
+      resolvedTemplatesPipelineYaml: `pipeline:
+  name: TestPipeline
+  identifier: First
+  tags: {}
+  stages:
+    - stage:
+        name: Stage1
+        identifier: Stage1
+        description: ""
+        type: Deployment
+        spec:
+          service:
+            serviceRef: <+input>
+            serviceInputs: <+input>
+          environment:
+            environmentRef: <+input>
+            environmentInputs: <+input>
+            serviceOverrideInputs: <+input>
+            infrastructureDefinitions: <+input>
+          execution: {}
+      tags: {}
+      variables: []
+  projectIdentifier: Chirag
+  orgIdentifier: harness`,
+      yamlPipeline: `pipeline:
+  name: TestPipeline
+  identifier: First
+  tags: {}
+  stages:
+    - stage:
+        name: Stage1
+        identifier: Stage1
+        description: ""
+        type: Deployment
+        spec:
+          service:
+            serviceRef: <+input>
+            serviceInputs: <+input>
+          environment:
+            environmentRef: <+input>
+            environmentInputs: <+input>
+            serviceOverrideInputs: <+input>
+            infrastructureDefinitions: <+input>
+          execution: {}
+        tags: {}
+        variables: []
+  projectIdentifier: Chirag
+  orgIdentifier: harness`
     }
   }
 })
@@ -168,6 +223,28 @@ export const getMockFor_useGetTemplateFromPipeline = (): any => ({
     - name: "checkVariable2"
       type: "String"
       value: "<+input>"`
+    }
+  })
+})
+
+export const getMockFor_useGetTemplateFromPipeline_serviceEnvRef = (): any => ({
+  mutate: jest.fn().mockResolvedValue({
+    data: {
+      inputSetTemplateYaml: `pipeline:
+  identifier: "First"
+  stages:
+    - stage:
+        identifier: Stage1
+        type: Deployment
+        spec:
+          service:
+            serviceRef: <+input>
+            serviceInputs: <+input>
+          environment:
+            environmentRef: <+input>
+            environmentInputs: <+input>
+            serviceOverrideInputs: <+input>
+            infrastructureDefinitions: <+input>`
     }
   })
 })
