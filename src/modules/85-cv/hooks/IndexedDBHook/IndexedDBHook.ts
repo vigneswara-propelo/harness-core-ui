@@ -103,10 +103,12 @@ async function initializeCVDB(setDBInstance: (dbInstance?: IDBPDatabase) => void
       upgrade(db) {
         for (const store of OBJECT_STORES) {
           try {
-            const dbStore = db.createObjectStore(store.name, store.options)
-            if (store.index) {
-              const { indexName, property, options } = store.index
-              dbStore.createIndex(indexName, property, options)
+            if (!db.objectStoreNames.contains(store.name)) {
+              const dbStore = db.createObjectStore(store.name, store.options)
+              if (store.index) {
+                const { indexName, property, options } = store.index
+                dbStore.createIndex(indexName, property, options)
+              }
             }
           } catch (exception) {
             logger.error(`Exception thrown when attempting to create an object store: ${exception}`)
