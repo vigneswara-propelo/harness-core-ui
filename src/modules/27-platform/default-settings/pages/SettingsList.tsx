@@ -26,6 +26,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import type { SettingType } from '@common/constants/Utils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { SettingCategory, SettingYupValidation } from '../interfaces/SettingType.types'
 import SettingsCategorySection from '../components/SettingsCategorySection'
 import css from './SettingsList.module.scss'
@@ -107,7 +108,7 @@ const SettingsList = () => {
   const updateValidation = (val: SettingYupValidation) => {
     updateValidationScheme({ ...validationScheme, ...val })
   }
-
+  const { CDS_NAV_2_0 } = useFeatureFlags()
   const history = useHistory()
   return (
     <>
@@ -153,9 +154,13 @@ const SettingsList = () => {
                     />
                   }
                   breadcrumbs={
-                    <NGBreadcrumbs
-                      links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
-                    />
+                    CDS_NAV_2_0 ? (
+                      <NGBreadcrumbs />
+                    ) : (
+                      <NGBreadcrumbs
+                        links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
+                      />
+                    )
                   }
                 />
                 {savingSettingInProgress && <Page.Spinner message={getString('common.saving')}></Page.Spinner>}

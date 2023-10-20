@@ -111,9 +111,13 @@ const DelegatesPage: React.FC = ({ children }) => {
       )}
       <Page.Header
         breadcrumbs={
-          <NGBreadcrumbs
-            links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
-          />
+          CDS_NAV_2_0 ? (
+            <NGBreadcrumbs />
+          ) : (
+            <NGBreadcrumbs
+              links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
+            />
+          )
         }
         title={
           <ScopedTitle

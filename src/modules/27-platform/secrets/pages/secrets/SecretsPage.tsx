@@ -77,7 +77,7 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
   const history = useHistory()
   const { getString } = useStrings()
   const [searchTerm, setSearchTerm] = useState<string | undefined>()
-  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
+  const { PL_NEW_PAGE_SIZE, CDS_NAV_2_0 } = useFeatureFlags()
   const { page: pageIndex, size: pageSize } = useQueryParams<CommonPaginationQueryParams>()
   const { updateQueryParams } = useUpdateQueryParams<CommonPaginationQueryParams>()
   const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
@@ -184,9 +184,13 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
     <>
       <Page.Header
         breadcrumbs={
-          <NGBreadcrumbs
-            links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
-          />
+          CDS_NAV_2_0 ? (
+            <NGBreadcrumbs />
+          ) : (
+            <NGBreadcrumbs
+              links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
+            />
+          )
         }
         title={
           <ScopedTitle

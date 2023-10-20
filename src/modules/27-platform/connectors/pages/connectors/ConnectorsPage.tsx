@@ -137,7 +137,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
   const history = useHistory()
   useDocumentTitle(getString('connectorsLabel'))
   const { trackEvent } = useTelemetry()
-  const { PL_FAVORITES } = useFeatureFlags()
+  const { PL_FAVORITES, CDS_NAV_2_0 } = useFeatureFlags()
   const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: { accountIdentifier: accountId },
@@ -570,9 +570,13 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
           />
         }
         breadcrumbs={
-          <NGBreadcrumbs
-            links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
-          />
+          CDS_NAV_2_0 ? (
+            <NGBreadcrumbs />
+          ) : (
+            <NGBreadcrumbs
+              links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
+            />
+          )
         }
       />
       <Layout.Vertical className={css.listPage}>

@@ -99,7 +99,7 @@ export default function TemplatesPage(): React.ReactElement {
   } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const scope = getScopeFromDTO({ projectIdentifier, orgIdentifier, accountIdentifier: accountId })
-  const { CVNG_TEMPLATE_MONITORED_SERVICE, NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+  const { CVNG_TEMPLATE_MONITORED_SERVICE, NG_SVC_ENV_REDESIGN, CDS_NAV_2_0 } = useFeatureFlags()
   const { enabled: templateFeatureEnabled } = useFeature({
     featureRequest: {
       featureName: FeatureIdentifier.TEMPLATE_SERVICE
@@ -256,9 +256,13 @@ export default function TemplatesPage(): React.ReactElement {
           </div>
         }
         breadcrumbs={
-          <NGBreadcrumbs
-            links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
-          />
+          CDS_NAV_2_0 ? (
+            <NGBreadcrumbs />
+          ) : (
+            <NGBreadcrumbs
+              links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
+            />
+          )
         }
         className={css.templatesPageHeader}
       />

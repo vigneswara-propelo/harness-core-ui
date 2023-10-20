@@ -11,14 +11,15 @@ import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import AccountDetails from '@auth-settings/pages/AccountOverview/views/AccountDetails'
-import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import SubscribedModules from '@auth-settings/pages/AccountOverview/views/SubscribedModules'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { NGBreadcrumbs } from '@modules/10-common/components/NGBreadcrumbs/NGBreadcrumbs'
 import ServiceVersions from './views/ServiceVersions'
 
 const AccountOverview: React.FC = () => {
   const { getString } = useStrings()
-  const { accountId } = useParams<AccountPathProps>()
+  const { accountId } = useParams<AccountPathProps & ProjectPathProps>()
   const { currentUserInfo } = useAppStore()
   const { NG_LICENSES_ENABLED } = useFeatureFlags()
 
@@ -26,7 +27,7 @@ const AccountOverview: React.FC = () => {
   const createdFromNG = accounts?.find(account => account.uuid === accountId)?.createdFromNG
   return (
     <>
-      <Page.Header title={getString('common.accountOverview')} />
+      <Page.Header title={getString('common.accountOverview')} breadcrumbs={<NGBreadcrumbs />} />
       <Page.Body>
         <AccountDetails />
         {(createdFromNG || NG_LICENSES_ENABLED) && <SubscribedModules />}

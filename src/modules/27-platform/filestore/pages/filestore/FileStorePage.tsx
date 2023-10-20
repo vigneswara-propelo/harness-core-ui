@@ -27,6 +27,7 @@ import type { FileStoreResourceQueryParams } from '@common/interfaces/RouteInter
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { Page, StringUtils, useToaster } from '@common/exports'
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'
 import EmptyNodeView from '@filestore/components/EmptyNodeView/EmptyNodeView'
@@ -553,6 +554,8 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange, isFullScreen
     [refetchFileStoreList, appliedFilter?.filterProperties]
   )
 
+  const { CDS_NAV_2_0 } = useFeatureFlags()
+
   const { handleUnsavedConfirmation } = useUnsavedConfirmation({
     callback: () => null,
     isNavigationBar: false
@@ -563,11 +566,14 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange, isFullScreen
       <Page.Header
         breadcrumbs={
           <>
-            {!isModalView && (
-              <NGBreadcrumbs
-                links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
-              />
-            )}
+            {!isModalView &&
+              (CDS_NAV_2_0 ? (
+                <NGBreadcrumbs />
+              ) : (
+                <NGBreadcrumbs
+                  links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
+                />
+              ))}
           </>
         }
         title={!isModalView && getString('resourcePage.fileStore')}

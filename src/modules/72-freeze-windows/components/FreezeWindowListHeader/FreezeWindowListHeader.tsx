@@ -11,6 +11,7 @@ import { useParams } from 'react-router-dom'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import { GlobalFreezeToggle, GlobalFreezeToggleProps } from '../GlobalFreezeToggle/GlobalFreezeToggle'
 
@@ -20,6 +21,7 @@ export const FreezeWindowListHeader: FC<GlobalFreezeToggleProps> = ({
 }) => {
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
+  const { CDS_NAV_2_0 } = useFeatureFlags()
 
   return (
     <Page.Header
@@ -30,7 +32,13 @@ export const FreezeWindowListHeader: FC<GlobalFreezeToggleProps> = ({
         </div>
       }
       breadcrumbs={
-        <NGBreadcrumbs links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })} />
+        CDS_NAV_2_0 ? (
+          <NGBreadcrumbs />
+        ) : (
+          <NGBreadcrumbs
+            links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
+          />
+        )
       }
       toolbar={
         <GlobalFreezeToggle
