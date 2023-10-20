@@ -120,6 +120,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
       onSubmit={data => onUpdate?.(data)}
       validate={debouncedUpdate}
       validationSchema={enableValidation ? getValidationSchema(getString, validationSchema) : undefined}
+      enableReinitialize
     >
       {formik => {
         const { values, setFieldValue } = formik
