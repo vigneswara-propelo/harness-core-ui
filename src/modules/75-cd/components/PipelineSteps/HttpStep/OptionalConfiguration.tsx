@@ -226,7 +226,7 @@ function InputOutputVariablesFieldSelector<T extends HttpStepInputVariable | Htt
                   <OptionalVariables
                     allowableTypes={allowableTypes}
                     readonly={readonly}
-                    variablePath={`${fieldName}[${i}].value`}
+                    variableSpec={`${fieldName}[${i}]`}
                   />
                   <Button
                     variation={ButtonVariation.ICON}

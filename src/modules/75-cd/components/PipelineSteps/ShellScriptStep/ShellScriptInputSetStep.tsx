@@ -46,10 +46,10 @@ import {
 import { getAllowedValuesFromTemplate, shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import {
-  scriptInputType,
   scriptOutputType,
   ShellScriptData,
   ShellScriptFormData,
+  shellScriptInputType,
   ShellScriptStepVariable
 } from './shellScriptTypes'
 import { MultiTypeExecutionTargetGroup } from './ExecutionTargetGroup'
@@ -272,7 +272,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                         isFixedInput(formik, `${formikEnvironmentVariablePath}.value`)
 
                       return (
-                        <div className={css.runtimeVarHeader} key={environmentVariable.value}>
+                        <div className={css.environmentVarHeader} key={environmentVariable.value}>
                           <FormInput.Text
                             name={`${formikEnvironmentVariablePath}.name`}
                             placeholder={getString('name')}
@@ -280,12 +280,28 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                           />
 
                           <FormInput.Select
-                            items={scriptInputType}
+                            items={shellScriptInputType}
                             name={`${formikEnvironmentVariablePath}.type`}
                             placeholder={getString('typeLabel')}
                             disabled={true}
                           />
-                          {allowMultiSelectAllowedValues ? (
+                          {get(environmentVariable, 'type') === 'Secret' ? (
+                            <MultiTypeSecretInput
+                              expressions={expressions}
+                              allowableTypes={allowableTypes}
+                              name={`${formikEnvironmentVariablePath}.value`}
+                              disabled={readonly}
+                              label=""
+                              templateProps={{
+                                isTemplatizedView: true,
+                                templateValue: get(template, `${formikEnvironmentVariablePath}.value`)
+                              }}
+                              enableConfigureOptions
+                              configureOptionsProps={{
+                                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
+                              }}
+                            />
+                          ) : allowMultiSelectAllowedValues ? (
                             <MultiSelectVariableAllowedValues
                               name={`${formikEnvironmentVariablePath}.value`}
                               allowableTypes={allowableTypes}
@@ -317,6 +333,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                               configureOptionsProps={{
                                 isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
                               }}
+                              className={css.shellScriptVariable}
                             />
                           )}
                         </div>
@@ -382,7 +399,23 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                             disabled={true}
                           />
 
-                          {allowMultiSelectAllowedValues ? (
+                          {get(outputVariable, 'type') === 'Secret' ? (
+                            <MultiTypeSecretInput
+                              expressions={expressions}
+                              allowableTypes={allowableTypes}
+                              name={`${formikOutputVariablePath}.value`}
+                              disabled={readonly}
+                              label=""
+                              templateProps={{
+                                isTemplatizedView: true,
+                                templateValue: get(template, `${formikOutputVariablePath}.value`)
+                              }}
+                              enableConfigureOptions
+                              configureOptionsProps={{
+                                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
+                              }}
+                            />
+                          ) : allowMultiSelectAllowedValues ? (
                             <MultiSelectVariableAllowedValues
                               name={`${formikOutputVariablePath}.value`}
                               allowableTypes={allowableTypes}
@@ -414,6 +447,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                               configureOptionsProps={{
                                 isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
                               }}
+                              className={css.shellScriptVariable}
                             />
                           )}
                         </div>

@@ -22,7 +22,7 @@ import {
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
-import { get } from 'lodash-es'
+import { get, isEmpty } from 'lodash-es'
 
 import cx from 'classnames'
 
@@ -38,10 +38,12 @@ import MultiTypeSecretInput from '@platform/secrets/components/MutiTypeSecretInp
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
+import { SecretConfigureOptions } from '@modules/27-platform/secrets/components/SecretConfigureOptions/SecretConfigureOptions'
 import {
   scriptInputType,
   scriptOutputType,
   ShellScriptFormData,
+  shellScriptInputType,
   ShellScriptOutputStepVariable,
   ShellScriptStepVariable
 } from './shellScriptTypes'
@@ -217,16 +219,16 @@ export default function OptionalConfiguration(props: {
                             disabled={readonly}
                           />
                           <FormInput.Select
-                            items={scriptInputType}
+                            items={isEmpty(stepName) ? scriptInputType : shellScriptInputType}
                             name={`spec.environmentVariables[${i}].type`}
                             placeholder={getString('typeLabel')}
                             disabled={readonly}
                           />
                           <OptionalVariables
-                            variablePath={`spec.environmentVariables[${i}].value`}
-                            variableTypePath={`spec.environmentVariables[${i}].type`}
+                            variableSpec={`spec.environmentVariables[${i}]`}
                             allowableTypes={allowableTypes}
                             readonly={readonly}
+                            stepName={stepName}
                           />
                           <Button
                             variation={ButtonVariation.ICON}
@@ -296,10 +298,10 @@ export default function OptionalConfiguration(props: {
                             />
 
                             <OptionalVariables
-                              variablePath={`spec.outputVariables[${i}].value`}
+                              variableSpec={`spec.outputVariables[${i}]`}
                               allowableTypes={allowableTypes}
                               readonly={readonly}
-                              variableTypePath={`spec.outputVariables[${i}].type`}
+                              stepName={stepName}
                             />
 
                             <Button minimal icon="main-trash" onClick={() => remove(i)} disabled={readonly} />
@@ -415,48 +417,71 @@ export default function OptionalConfiguration(props: {
 }
 
 export function OptionalVariables({
-  variablePath,
+  variableSpec,
   allowableTypes,
   readonly,
-  variableTypePath
+  stepName
 }: {
-  variablePath: string
-  variableTypePath?: string
+  variableSpec: string
   allowableTypes: AllowedTypes
   readonly?: boolean
+  stepName?: string
 }): React.ReactElement {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-
   const { values: formValues, setFieldValue } = useFormikContext()
+
+  const variablePath = `${variableSpec}.value`
+  const variableTypePath = `${variableSpec}.type`
+  const variableNamePath = `${variableSpec}.name`
+
   const variableValue = get(formValues, variablePath)
+  const variableName = variableNamePath ? get(formValues, variableNamePath) : undefined
   const variableType = variableTypePath ? get(formValues, variableTypePath) : undefined
   const commasInAllowedValues = useFeatureFlag(FeatureFlag.PIE_MULTISELECT_AND_COMMA_IN_ALLOWED_VALUES)
 
   return (
     <Layout.Horizontal>
-      <FormInput.MultiTextInput
-        name={variablePath}
-        placeholder={getString('valueLabel')}
-        multiTextInputProps={{
-          allowableTypes,
-          expressions,
-          disabled: readonly
-        }}
-        label=""
-        disabled={readonly}
-      />
-
-      {isValueRuntimeInput(variableValue) && (
-        <ConfigureOptions
-          value={variableValue}
-          type="String"
-          variableName={variablePath}
-          onChange={value => setFieldValue(variablePath, value)}
-          isReadonly={readonly}
-          tagsInputSeparator={commasInAllowedValues && variableType === 'String' ? '/[\n\r]/' : undefined}
+      {variableType === 'Secret' && stepName === StepType.SHELLSCRIPT ? (
+        <MultiTypeSecretInput name={variablePath} label="" disabled={readonly} />
+      ) : (
+        <FormInput.MultiTextInput
+          name={variablePath}
+          placeholder={getString('valueLabel')}
+          multiTextInputProps={{
+            allowableTypes,
+            expressions,
+            disabled: readonly
+          }}
+          label=""
+          disabled={readonly}
         />
       )}
+
+      {isValueRuntimeInput(variableValue) &&
+        (variableType === 'Secret' ? (
+          <SecretConfigureOptions
+            value={variableValue as string}
+            type="Secret"
+            variableName={variableName}
+            onChange={value => {
+              setFieldValue(variablePath, value)
+            }}
+            isReadonly={readonly}
+            secretInputProps={{
+              disabled: readonly
+            }}
+          />
+        ) : (
+          <ConfigureOptions
+            value={variableValue}
+            type="String"
+            variableName={variableName}
+            onChange={value => setFieldValue(variablePath, value)}
+            isReadonly={readonly}
+            tagsInputSeparator={commasInAllowedValues && variableType === 'String' ? '/[\n\r]/' : undefined}
+          />
+        ))}
     </Layout.Horizontal>
   )
 }

@@ -15,6 +15,12 @@ export const scriptInputType: SelectOption[] = [
   { label: 'Number', value: 'Number' }
 ]
 
+export const shellScriptInputType: SelectOption[] = [
+  { label: 'String', value: 'String' },
+  { label: 'Number', value: 'Number' },
+  { label: 'Secret', value: 'Secret' }
+]
+
 export const variableSchema = (
   getString: UseStringsReturn['getString']
 ): Yup.NotRequiredArraySchema<
@@ -38,18 +44,19 @@ export const scriptOutputType: SelectOption[] = [
   { label: 'Secret', value: 'Secret' }
 ]
 
-export interface ShellScriptStepVariable {
+export interface ScriptStepVariable<T = 'String' | 'Number'> {
   value: number | string
   id: string
   name?: string
-  type?: 'String' | 'Number'
+  type?: T
 }
-export interface ShellScriptOutputStepVariable {
-  value: number | string
-  id: string
-  name?: string
-  type?: 'String'
-}
+
+export type ScriptOutputStepVariable = ScriptStepVariable<'String'>
+
+export type ShellScriptStepVariable = ScriptStepVariable<'String' | 'Number' | 'Secret'>
+
+export type ShellScriptOutputStepVariable = ScriptStepVariable<'String' | 'Secret'>
+
 interface ShellScriptSource {
   type?: string
   spec?: ShellScriptInline

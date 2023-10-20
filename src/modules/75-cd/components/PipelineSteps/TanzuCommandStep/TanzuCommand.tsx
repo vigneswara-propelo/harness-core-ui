@@ -67,7 +67,7 @@ import {
 import { FeatureFlag } from '@modules/10-common/featureFlags'
 import MultiTypeListOrFileSelectList from '../K8sServiceSpec/ManifestSource/MultiTypeListOrFileSelectList'
 import {
-  ShellScriptStepVariable,
+  ScriptStepVariable,
   scriptInputType,
   scriptOutputType,
   variableSchema
@@ -391,8 +391,7 @@ function TanzuCommandWidget(
                                           disabled={readonly}
                                         />
                                         <OptionalVariables
-                                          variablePath={`spec.inputVariables[${i}].value`}
-                                          variableTypePath={`spec.inputVariables[${i}].type`}
+                                          variableSpec={`spec.inputVariables[${i}]`}
                                           allowableTypes={allowableTypes}
                                           readonly={readonly}
                                         />
@@ -463,10 +462,9 @@ function TanzuCommandWidget(
                                         />
 
                                         <OptionalVariables
-                                          variablePath={`spec.outputVariables[${i}].value`}
+                                          variableSpec={`spec.outputVariables[${i}]`}
                                           allowableTypes={allowableTypes}
                                           readonly={readonly}
-                                          variableTypePath={`spec.outputVariables[${i}].type`}
                                         />
 
                                         <Button
@@ -636,8 +634,7 @@ const TanzuCommandInputStep: React.FC<TanzuCommandProps> = props => {
                       // find Index from values, not from template variables
                       // because the order of the variables might not be the same
                       const formikInputVariableIndex = formikInputVariables.findIndex(
-                        (formikInputVariable: ShellScriptStepVariable) =>
-                          inputVariable.name === formikInputVariable.name
+                        (formikInputVariable: ScriptStepVariable) => inputVariable.name === formikInputVariable.name
                       )
                       const formikInputVariablePath = `${formikInputVariablesPath}[${formikInputVariableIndex}]`
                       const variableInfo = getMultiSelectProps(
@@ -736,8 +733,7 @@ const TanzuCommandInputStep: React.FC<TanzuCommandProps> = props => {
                       // find Index from values, not from template variables
                       // because the order of the variables might not be the same
                       const formikOutputVariableIndex = formikOutputVariables.findIndex(
-                        (formikOutputVariable: ShellScriptStepVariable) =>
-                          outputVariable.name === formikOutputVariable.name
+                        (formikOutputVariable: ScriptStepVariable) => outputVariable.name === formikOutputVariable.name
                       )
                       const formikOutputVariablePath = `${formikOutputVariablesPath}[${formikOutputVariableIndex}]`
                       const variableInfo = getMultiSelectProps(

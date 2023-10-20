@@ -18,6 +18,7 @@ declare const styles: {
   readonly radioGroup: string
   readonly runtimeVarHeader: string
   readonly separator: string
+  readonly shellScriptVariable: string
   readonly stepDesc: string
   readonly stepType: string
   readonly stepValue: string

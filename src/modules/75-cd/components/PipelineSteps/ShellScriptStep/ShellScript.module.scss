@@ -54,6 +54,15 @@
   display: flex;
 }
 
+.shellScriptVariable {
+  display: flex !important;
+  :global {
+    .bp3-form-group {
+      flex-grow: 1;
+    }
+  }
+}
+
 .environmentVarHeader {
   display: grid;
   grid-template-columns: 1.5fr 1fr 2fr 30px;

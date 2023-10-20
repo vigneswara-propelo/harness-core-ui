@@ -45,12 +45,6 @@ export enum RunTypes {
   Apply = 'Apply'
 }
 
-export const variableTypes: SelectOption[] = [
-  { label: 'String', value: 'String' },
-  { label: 'Number', value: 'Number' },
-  { label: 'Secret', value: 'Secret' }
-]
-
 export const processFormData = (values: TerraformCloudRunFormData): TerraformCloudRunFormData => {
   const specValues = values.spec?.spec
   const { workspace, organization, variables, provisionerIdentifier } = defaultTo(specValues, {})
