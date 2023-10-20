@@ -1,6 +1,13 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useCallback } from 'react'
 import { useFormikContext } from 'formik'
-import { isNil } from 'lodash-es'
+import { isEmpty, isNil } from 'lodash-es'
 
 import {
   AllowedTypes,
@@ -227,6 +234,11 @@ function EditableRowInternal({
           )
         } else {
           const overrideTypeValue = values.overrideType
+          const manifestValue = (overrideDetails as ManifestOverrideDetails)?.manifestValue
+          const configFileValue = (overrideDetails as ConfigFileOverrideDetails)?.configFileValue
+          const applicationSettingsValue = (overrideDetails as ApplicationSettingsOverrideDetails)
+            ?.applicationSettingsValue
+          const connectionStringsValue = (overrideDetails as ConnectionStringsOverrideDetails)?.connectionStringsValue
 
           return (
             <Layout.Horizontal
@@ -240,21 +252,19 @@ function EditableRowInternal({
                 className={css.flexWrap}
               >
                 {overrideTypeValue === OverrideTypes.VARIABLE && <VariableOverrideEditable />}
-                {overrideTypeValue === OverrideTypes.MANIFEST && isEdit && (
-                  <ManifestOverrideInfo {...(overrideDetails as ManifestOverrideDetails).manifestValue} />
+                {overrideTypeValue === OverrideTypes.MANIFEST && isEdit && !isEmpty(manifestValue) && (
+                  <ManifestOverrideInfo {...manifestValue} />
                 )}
-                {overrideTypeValue === OverrideTypes.CONFIG && isEdit && (
-                  <ConfigFileOverrideInfo {...(overrideDetails as ConfigFileOverrideDetails).configFileValue} />
+                {overrideTypeValue === OverrideTypes.CONFIG && isEdit && !isEmpty(configFileValue) && (
+                  <ConfigFileOverrideInfo {...configFileValue} />
                 )}
-                {overrideTypeValue === OverrideTypes.APPLICATIONSETTING && isEdit && (
-                  <ApplicationSettingOverrideInfo
-                    {...(overrideDetails as ApplicationSettingsOverrideDetails).applicationSettingsValue}
-                  />
-                )}
-                {overrideTypeValue === OverrideTypes.CONNECTIONSTRING && isEdit && (
-                  <ConnectionStringOverrideInfo
-                    {...(overrideDetails as ConnectionStringsOverrideDetails).connectionStringsValue}
-                  />
+                {overrideTypeValue === OverrideTypes.APPLICATIONSETTING &&
+                  isEdit &&
+                  !isEmpty(applicationSettingsValue) && (
+                    <ApplicationSettingOverrideInfo {...applicationSettingsValue} />
+                  )}
+                {overrideTypeValue === OverrideTypes.CONNECTIONSTRING && isEdit && !isEmpty(connectionStringsValue) && (
+                  <ConnectionStringOverrideInfo {...connectionStringsValue} />
                 )}
                 {overrideDetails && overrideTypeValue && overrideTypeValue !== OverrideTypes.VARIABLE && (
                   <Button
