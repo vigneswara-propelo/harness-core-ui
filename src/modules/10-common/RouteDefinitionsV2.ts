@@ -993,7 +993,7 @@ const routes = {
   toCFProject: withModeModuleAndScopePrefix<ProjectPathProps>(() => '/'),
   toCFProjectOverview: withModeModuleAndScopePrefix<ProjectPathProps>(() => '/dashboard'),
   toCFFeatureFlagsDetail: withModeModuleAndScopePrefix<ProjectPathProps & FeatureFlagPathProps>(
-    params => `feature-flags/${params?.featureFlagIdentifier}`
+    params => `/feature-flags/${params?.featureFlagIdentifier}`
   ),
   toCFSegments: withModeModuleAndScopePrefix<ProjectPathProps>(() => '/target-management/target-groups'),
   toCFTargets: withModeModuleAndScopePrefix<ProjectPathProps>(() => '/target-management/targets'),
