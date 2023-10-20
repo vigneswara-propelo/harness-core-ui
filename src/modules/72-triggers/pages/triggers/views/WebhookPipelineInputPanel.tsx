@@ -50,6 +50,7 @@ import {
   usePipelineVariables
 } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { StageType } from '@pipeline/utils/stageHelpers'
+import { isValueFixed } from '@modules/10-common/utils/utils'
 import {
   ciCodebaseBuild,
   ciCodebaseBuildPullRequest,
@@ -285,7 +286,7 @@ function WebhookPipelineInputPanelForm({
     setInputSetError(getErrorMessage(mergeInputSetError) || '')
   }, [mergeInputSetError])
 
-  useEffect(
+  useDeepCompareEffect(
     function fetchInputSetsFromInputSetRefs() {
       async function fetchInputSets(): Promise<void> {
         setInputSetError('')
@@ -307,12 +308,17 @@ function WebhookPipelineInputPanelForm({
 
         Promise.all(
           inputSetRefs.map(async (inputSetIdentifier: string): Promise<any> => {
-            const data = await getInputSetForPipelinePromise({
-              inputSetIdentifier,
-              queryParams: commonQueryParams
-            })
+            const isFixedValue = isValueFixed(inputSetIdentifier)
+            if (isFixedValue) {
+              const data = await getInputSetForPipelinePromise({
+                inputSetIdentifier,
+                queryParams: commonQueryParams
+              })
 
-            return data
+              return data
+            } else {
+              return Promise.reject({ status: 'ERROR', message: getString('triggers.validation.fixedInputSetRefs') })
+            }
           })
         )
           .then(results => {
@@ -346,19 +352,12 @@ function WebhookPipelineInputPanelForm({
           })
       }
 
-      if (!fetchInputSetsInProgress && !inputSetSelected && formikProps?.values?.inputSetRefs?.length) {
+      if (!inputSetSelected && formikProps?.values?.inputSetRefs?.length) {
         setFetchInputSetsInProgress(true)
         fetchInputSets()
       }
     },
-    [
-      formikProps?.values?.inputSetRefs,
-      inputSetSelected,
-      commonQueryParams,
-      fetchInputSetsInProgress,
-      selectedInputSets,
-      formikProps
-    ]
+    [formikProps?.values?.inputSetRefs, inputSetSelected, commonQueryParams, selectedInputSets]
   )
 
   useDeepCompareEffect(() => {

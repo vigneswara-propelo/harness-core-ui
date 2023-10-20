@@ -61,6 +61,7 @@ import {
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { TriggerTypes } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
+import { isValueFixed } from '@modules/10-common/utils/utils'
 import css from './PipelineInputPanel.module.scss'
 
 interface PipelineInputPanelPropsInterface {
@@ -70,14 +71,14 @@ interface PipelineInputPanelPropsInterface {
 
 function PipelineInputPanelForm({ formikProps, isEdit }: PipelineInputPanelPropsInterface): React.ReactElement {
   const {
-    values: { inputSetSelected, pipeline, resolvedPipeline, triggerType },
+    values: { inputSetSelected, pipeline, resolvedPipeline, triggerType, pipelineBranchName, stagesToExecute = [] },
     values
-  } = formikProps ?? { values: {} }
+  } = defaultTo(formikProps, { values: {} })
 
   const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
 
   const { getString } = useStrings()
-  const ciCodebaseBuildValue = values?.pipeline?.properties?.ci?.codebase?.build
+  const ciCodebaseBuildValue = get(values, 'pipeline.properties.ci.codebase.build')
   const { repoIdentifier, branch, connectorRef, repoName } = useQueryParams<GitQueryParams>()
   const [selectedInputSets, setSelectedInputSets] = useState<InputSetSelectorProps['value']>(inputSetSelected)
   const [hasEverRendered, setHasEverRendered] = useState(
@@ -93,10 +94,10 @@ function PipelineInputPanelForm({ formikProps, isEdit }: PipelineInputPanelProps
   const inputSetSelectedBranch = useMemo(() => {
     return getTriggerInputSetsBranchQueryParameter({
       gitAwareForTriggerEnabled: isNewGitSyncRemotePipeline,
-      pipelineBranchName: values?.pipelineBranchName,
+      pipelineBranchName: pipelineBranchName,
       branch
     })
-  }, [isNewGitSyncRemotePipeline, branch, values?.pipelineBranchName])
+  }, [isNewGitSyncRemotePipeline, branch, pipelineBranchName])
 
   const commonQueryParams = useMemo(
     () => ({
@@ -126,7 +127,7 @@ function PipelineInputPanelForm({ formikProps, isEdit }: PipelineInputPanelProps
   const { data: template, loading } = useMutateAsGet(useGetTemplateFromPipeline, {
     queryParams: commonQueryParams,
     body: {
-      stageIdentifiers: formikProps?.values?.stagesToExecute ?? []
+      stageIdentifiers: stagesToExecute
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     ...(isNewGitSyncRemotePipeline && { debounce: 300 })
@@ -189,7 +190,7 @@ function PipelineInputPanelForm({ formikProps, isEdit }: PipelineInputPanelProps
     setInputSetError(getErrorMessage(mergeInputSetError) || '')
   }, [mergeInputSetError])
 
-  useEffect(
+  useDeepCompareEffect(
     function fetchInputSetsFromInputSetRefs() {
       async function fetchInputSets(): Promise<void> {
         setInputSetError('')
@@ -211,12 +212,17 @@ function PipelineInputPanelForm({ formikProps, isEdit }: PipelineInputPanelProps
 
         Promise.all(
           inputSetRefs.map(async (inputSetIdentifier: string): Promise<any> => {
-            const data = await getInputSetForPipelinePromise({
-              inputSetIdentifier,
-              queryParams: commonQueryParams
-            })
+            const isFixedValue = isValueFixed(inputSetIdentifier)
+            if (isFixedValue) {
+              const data = await getInputSetForPipelinePromise({
+                inputSetIdentifier,
+                queryParams: commonQueryParams
+              })
 
-            return data
+              return data
+            } else {
+              return Promise.reject({ status: 'ERROR', message: getString('triggers.validation.fixedInputSetRefs') })
+            }
           })
         )
           .then(results => {
@@ -250,19 +256,12 @@ function PipelineInputPanelForm({ formikProps, isEdit }: PipelineInputPanelProps
           })
       }
 
-      if (!fetchInputSetsInProgress && !inputSetSelected && values?.inputSetRefs?.length) {
+      if (!inputSetSelected && values?.inputSetRefs?.length) {
         setFetchInputSetsInProgress(true)
         fetchInputSets()
       }
     },
-    [
-      values?.inputSetRefs,
-      inputSetSelected,
-      commonQueryParams,
-      fetchInputSetsInProgress,
-      selectedInputSets,
-      formikProps
-    ]
+    [values?.inputSetRefs, inputSetSelected, commonQueryParams, selectedInputSets]
   )
 
   useDeepCompareEffect(() => {

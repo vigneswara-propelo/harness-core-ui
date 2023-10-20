@@ -60,6 +60,7 @@ export const findDialogContainer = (): HTMLElement | null => document.querySelec
 export const findPopoverContainer = (): HTMLElement | null => document.querySelector('.bp3-popover-content')
 export const findDrawerContainer = (): HTMLElement | null => document.querySelector('.bp3-drawer')
 export const findTransitionContainer = (): HTMLElement | null => document.querySelector('.bp3-transition-container')
+export const findPortal = (): HTMLElement | null => document.querySelector('.bp3-portal')
 
 export const cleanupBp3Overlay = (): void => {
   const els = document.documentElement.getElementsByClassName('bp3-overlay')

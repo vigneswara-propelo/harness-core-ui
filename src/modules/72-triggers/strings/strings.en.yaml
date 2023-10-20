@@ -72,6 +72,7 @@ validation:
   cronExpression: 'Valid cron expression is required.'
   repositoryFormat: 'Repository Format is required.'
   configureSecret: 'Secret is required'
+  fixedInputSetRefs: We do not support expressions for inputRefs. Please provide all inputRefs with a fixed value.
 toast:
   successfulCreate: 'Successfully created {{name}}. Trigger is {{enabled}} by default.'
   successfulUpdate: 'Successfully updated {{name}}.'

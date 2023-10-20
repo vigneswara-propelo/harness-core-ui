@@ -8,12 +8,13 @@
 import React, { ReactElement } from 'react'
 import { Form, Formik } from 'formik'
 import userEvent from '@testing-library/user-event'
-import { render, waitFor, within, fireEvent } from '@testing-library/react'
-import { TestWrapper, findPopoverContainer } from '@common/utils/testUtils'
+import { render, waitFor, within, fireEvent, getByText as getByTextBody, getByLabelText } from '@testing-library/react'
+import { TestWrapper, findDialogContainer, findPopoverContainer } from '@common/utils/testUtils'
 import * as pipelineNg from 'services/pipeline-ng'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { gitConfigs, sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import { connectorListResponse } from '@platform/connectors/components/ConnectorConfigureOptions/__tests__/mocks'
+import { GetInputSetEdit } from '@modules/70-pipeline/components/InputSetForm/__tests__/InputSetMocks'
 import PipelineInputPanel from '../PipelineInputPanel'
 
 jest.mock('services/pipeline-ng', () => ({
@@ -45,7 +46,11 @@ jest.mock('services/pipeline-ng', () => ({
         ]
       }
     }
-  }))
+  })),
+  useGetInputSetForPipeline: jest.fn(() => GetInputSetEdit),
+  useCreateInputSetForPipeline: jest.fn(() => ({ mutate: jest.fn() })),
+  useUpdateInputSetForPipeline: jest.fn(() => ({ mutate: jest.fn() })),
+  useGetPipeline: jest.fn(() => ({ refetch: jest.fn() }))
 }))
 
 jest.mock('services/cd-ng', () => ({
@@ -54,7 +59,12 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: connectorListResponse.data.content[1], refetch: jest.fn(), loading: false }
-  })
+  }),
+  useGetSettingValue: jest.fn(() => ({})),
+  useGetFileContent: jest.fn(() => ({ refetch: jest.fn() })),
+  useGetFileByBranch: jest.fn(() => ({ refetch: jest.fn() })),
+  useCreatePR: jest.fn(() => ({ mutate: jest.fn() })),
+  useCreatePRV2: jest.fn(() => ({ mutate: jest.fn() }))
 }))
 
 jest.mock('services/cd-ng-rq', () => ({
@@ -341,10 +351,10 @@ describe('PipelineInputPanel', () => {
     userEvent.click(getByText('pipeline.inputSets.selectPlaceholder'))
 
     const inputModalElem = await waitFor(() => {
-      const inputModal = findPopoverContainer()
+      const inputModal = findPopoverContainer() as HTMLElement
       expect(inputModal).toBeInTheDocument()
 
-      return inputModal!
+      return inputModal
     })
 
     expect(within(inputModalElem).getByText('pipeline.inputSets.overlayISHelperText')).toBeInTheDocument()
@@ -381,5 +391,43 @@ describe('PipelineInputPanel', () => {
         expect.objectContaining({ inputSetRefs: ['Input_Set_1'], pipelineBranchName: 'main-patch' })
       )
     })
+  })
+
+  test('Create new Input Set for remote pipeline', async () => {
+    jest.spyOn(pipelineNg, 'useGetTemplateFromPipeline').mockReturnValue(useGetTemplateFromPipelineMockData as any)
+    const { getByText, findByText, container } = render(
+      <TestComponent storeType={StoreType.REMOTE} initialValues={testInitialValue} submitForm={jest.fn()} />
+    )
+
+    await findByText('triggers.pipelineInputLabel')
+
+    expect(getByText('triggers.toast.payloadInfoBar')).toBeInTheDocument()
+
+    fireEvent.change(container.querySelector('input[name="pipelineBranchName"]')!, { target: { value: 'main-patch' } })
+
+    // Create new Input Set
+    fireEvent.click(getByText('pipeline.inputSets.createNewInputSet'))
+
+    const newInputSetDialogContainer = findDialogContainer() as HTMLElement
+
+    await waitFor(() => getByTextBody(newInputSetDialogContainer, 'inputSets.newInputSetLabel'))
+
+    fireEvent.click(getByLabelText(newInputSetDialogContainer, 'Close'))
+
+    await waitFor(() => {
+      expect(newInputSetDialogContainer).not.toBeInTheDocument()
+    })
+  })
+
+  test('Show error if any inputSetRefs is an expression', async () => {
+    jest.spyOn(pipelineNg, 'useGetTemplateFromPipeline').mockReturnValue(useGetTemplateFromPipelineMockData as any)
+    const { getByText, findByText, getByPlaceholderText } = render(
+      <TestComponent initialValues={{ ...testInitialValue, inputSetRefs: ['<+input>'] }} submitForm={jest.fn()} />
+    )
+
+    await findByText('triggers.pipelineInputLabel')
+
+    expect(getByText('triggers.validation.fixedInputSetRefs')).toBeInTheDocument()
+    expect(getByPlaceholderText('Enter w/d/h/m/s/ms')).not.toBeDisabled()
   })
 })

@@ -6039,6 +6039,7 @@ export interface StringsMap {
   'triggers.validation.cronExpression': string
   'triggers.validation.event': string
   'triggers.validation.eventConditions': string
+  'triggers.validation.fixedInputSetRefs': string
   'triggers.validation.headerConditions': string
   'triggers.validation.identifier': string
   'triggers.validation.matchesValue': string
