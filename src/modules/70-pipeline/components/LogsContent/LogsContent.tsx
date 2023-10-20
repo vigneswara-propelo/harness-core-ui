@@ -54,6 +54,7 @@ import { InputOutputTab } from '../execution/StepDetails/tabs/InputOutputTab/Inp
 import ExecutionStatusLabel from '../ExecutionStatusLabel/ExecutionStatusLabel'
 import { formatLogsForClipboard, getRawLogLines } from './logsUtils'
 import { LogsScope } from './components/DownloadLogs/DownloadLogsHelper'
+import LogsContentWrapper from './LogsState/LogsContentWrapper'
 import css from './LogsContent.module.scss'
 
 enum ConsoleDetailTab {
@@ -270,7 +271,7 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
   })
 
   return (
-    <div ref={rootRef} className={cx(css.main, { [css.hasErrorMessage]: hasError })} data-mode={mode}>
+    <div ref={rootRef} className={css.main} data-mode={mode}>
       <div className={css.header}>
         <StrTemplate
           tagName="div"
@@ -359,52 +360,57 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
           )}
         </div>
       </div>
-      {renderLogs({ hasLogs, isSingleSectionLogs, virtuosoRef, state, actions })}
-      {mode === 'console-view' && hasError ? (
-        <Layout.Horizontal>
-          <Container className={cx(css.errorMsgs, { [css.isWarning]: isWarning })} width={'100%'}>
-            {errorObjects.map((errorObject, index) => {
-              const { error = {}, explanations = [], hints = [] } = errorObject
-              return (
-                <div key={index} className={css.errorMsgContainer}>
-                  <Container margin={{ bottom: 'medium' }}>
-                    <Icon className={css.errorIcon} name={isWarning ? 'warning-sign' : 'circle-cross'} />
-                    <LinkifyText
-                      content={error.message}
-                      textProps={{ font: { weight: 'bold' }, color: Color.RED_700 }}
-                      linkStyles={css.link}
+      <LogsContentWrapper
+        mode={mode}
+        hasError={hasError}
+        splitPanel={renderLogs({ hasLogs, isSingleSectionLogs, virtuosoRef, state, actions })}
+      >
+        {mode === 'console-view' && hasError ? (
+          <Layout.Horizontal width={'100%'}>
+            <Container className={cx(css.errorMsgs, { [css.isWarning]: isWarning })} width={'100%'}>
+              {errorObjects.map((errorObject, index) => {
+                const { error = {}, explanations = [], hints = [] } = errorObject
+                return (
+                  <div key={index} className={css.errorMsgContainer}>
+                    <Container margin={{ bottom: 'medium' }}>
+                      <Icon className={css.errorIcon} name={isWarning ? 'warning-sign' : 'circle-cross'} />
+                      <LinkifyText
+                        content={error.message}
+                        textProps={{ font: { weight: 'bold' }, color: Color.RED_700 }}
+                        linkStyles={css.link}
+                      />
+                    </Container>
+                    <ErrorList
+                      items={explanations}
+                      header={getString('common.errorHandler.issueCouldBe')}
+                      icon={'info'}
+                      color={Color.WHITE}
                     />
-                  </Container>
-                  <ErrorList
-                    items={explanations}
-                    header={getString('common.errorHandler.issueCouldBe')}
-                    icon={'info'}
-                    color={Color.WHITE}
-                  />
-                  <ErrorList
-                    items={hints}
-                    header={getString('common.errorHandler.tryTheseSuggestions')}
-                    icon={'lightbulb'}
-                    color={Color.WHITE}
-                  />
-                </div>
-              )
-            })}
-          </Container>
-          {showHarnessCoPilot({
-            pipelineStagesMap,
-            selectedStageId,
-            pipelineExecutionDetail,
-            enableForCI: CI_AI_ENHANCED_REMEDIATIONS,
-            enableForCD: CD_AI_ENHANCED_REMEDIATIONS,
-            isEULAccepted: aidaSettingResponse?.data?.value === 'true'
-          }) ? (
-            <Container className={css.copilot} width="40%" flex={{ justifyContent: 'flex-end' }}>
-              <HarnessCopilot mode="console-view" scope={ErrorScope.Step} />
+                    <ErrorList
+                      items={hints}
+                      header={getString('common.errorHandler.tryTheseSuggestions')}
+                      icon={'lightbulb'}
+                      color={Color.WHITE}
+                    />
+                  </div>
+                )
+              })}
             </Container>
-          ) : null}
-        </Layout.Horizontal>
-      ) : null}
+            {showHarnessCoPilot({
+              pipelineStagesMap,
+              selectedStageId,
+              pipelineExecutionDetail,
+              enableForCI: CI_AI_ENHANCED_REMEDIATIONS,
+              enableForCD: CD_AI_ENHANCED_REMEDIATIONS,
+              isEULAccepted: aidaSettingResponse?.data?.value === 'true'
+            }) ? (
+              <Container className={css.copilot} width="40%" flex={{ justifyContent: 'flex-end' }}>
+                <HarnessCopilot mode="console-view" scope={ErrorScope.Step} />
+              </Container>
+            ) : null}
+          </Layout.Horizontal>
+        ) : null}
+      </LogsContentWrapper>
     </div>
   )
 }
