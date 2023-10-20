@@ -22,15 +22,18 @@ import { allowedStrategiesAsPerStep } from '@pipeline/components/PipelineSteps/A
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { StepMode } from '@pipeline/utils/stepUtils'
 import { useStrings } from 'framework/strings'
+import { VerificationOverview } from 'services/cv'
+import { isAbortVerification } from '../../ExecutionVerificationView.utils'
 import css from './ManualInterventionVerifyStep.module.scss'
 
 export interface ManualInterventionVerifyStepProps {
   step: ExecutionNode
   allowedStrategies?: StrategyType[]
+  verificationStatus?: VerificationOverview['verificationStatus']
 }
 
 export function ManualInterventionVerifyStep(props: ManualInterventionVerifyStepProps): React.ReactElement {
-  const { step, allowedStrategies } = props
+  const { step, allowedStrategies, verificationStatus } = props
   const { orgIdentifier, projectIdentifier, executionIdentifier, accountId } =
     useParams<PipelineType<ExecutionPathProps>>()
 
@@ -38,6 +41,7 @@ export function ManualInterventionVerifyStep(props: ManualInterventionVerifyStep
   const { showError } = useToaster()
 
   const isManualInterruption = isExecutionWaitingForIntervention(step.status)
+  const isSkippedVerification = isAbortVerification(verificationStatus)
   const failureStrategies =
     allowedStrategies ||
     allowedStrategiesAsPerStep(StageType.DEPLOY)[StepMode.STEP].filter(st => st !== Strategy.ManualIntervention)
@@ -84,6 +88,11 @@ export function ManualInterventionVerifyStep(props: ManualInterventionVerifyStep
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error])
 
+  const displayMessage =
+    isManualInterruption && isSkippedVerification
+      ? getString('cv.deploymentVerification.failedWithAbortVerification')
+      : getString('cv.deploymentVerification.failed')
+
   if (isManualInterruption) {
     return (
       <Container
@@ -95,7 +104,7 @@ export function ManualInterventionVerifyStep(props: ManualInterventionVerifyStep
         width={'100%'}
       >
         <Text font={{ weight: 'bold', size: 'small' }} color={Color.BLACK} padding={{ right: 'small' }}>
-          {getString('cv.deploymentVerification.failed')}
+          {displayMessage}
         </Text>
         <Container color={Color.BLACK} className={cx(css.manualInterventionTab, { [css.loading]: loading })}>
           <Select

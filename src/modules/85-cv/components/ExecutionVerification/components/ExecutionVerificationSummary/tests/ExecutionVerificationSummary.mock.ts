@@ -60,3 +60,18 @@ export const SampleResponse: VerificationOverview = {
     unexpectedFrequencyClustersCount: 0
   }
 }
+
+export const SampleResponseRunningPipeline: VerificationOverview = {
+  ...SampleResponse,
+  verificationStatus: 'IN_PROGRESS'
+}
+
+export const SampleResponsePassedPipeline: VerificationOverview = {
+  ...SampleResponse,
+  verificationStatus: 'VERIFICATION_PASSED'
+}
+
+export const SampleResponseAbortedSuccessPipeline: VerificationOverview = {
+  ...SampleResponse,
+  verificationStatus: 'ABORTED_AS_SUCCESS'
+}

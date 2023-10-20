@@ -8,12 +8,26 @@
 import React from 'react'
 import type { GetDataError } from 'restful-react'
 import { waitFor, fireEvent } from '@testing-library/dom'
-import { render } from '@testing-library/react'
+import { act, render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event/'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { RiskValues, getRiskColorValue } from '@cv/utils/CommonUtils'
+import * as cvService from 'services/cv'
 import { ExecutionVerificationSummary } from '../ExecutionVerificationSummary'
-import { SampleResponse } from './ExecutionVerificationSummary.mock'
+import {
+  SampleResponse,
+  SampleResponseAbortedSuccessPipeline,
+  SampleResponsePassedPipeline,
+  SampleResponseRunningPipeline
+} from './ExecutionVerificationSummary.mock'
+
+const showError = jest.fn()
+
+jest.mock('@harness/uicore', () => ({
+  ...jest.requireActual('@harness/uicore'),
+  useToaster: jest.fn(() => ({ showError }))
+}))
 
 describe('Unit tests for VerifyExection', () => {
   beforeEach(() => {
@@ -166,5 +180,257 @@ describe('Unit tests for VerifyExection', () => {
     )
 
     await waitFor(() => expect(container.querySelector('[class*="manualInterventionTab"]')).not.toBeNull())
+  })
+
+  describe('Abort verification', () => {
+    test('should show abort verification button when pipeline status is running', async () => {
+      const refetchFn = jest.fn()
+
+      render(
+        <TestWrapper>
+          <ExecutionVerificationSummary
+            step={{ status: ExecutionStatusEnum.InterventionWaiting }}
+            refetchOverview={refetchFn}
+            overviewData={SampleResponseRunningPipeline}
+            overviewError={null}
+          />
+        </TestWrapper>
+      )
+
+      await waitFor(() =>
+        expect(screen.getByRole('button', { name: 'cv.abortVerification.buttonText' })).toBeInTheDocument()
+      )
+    })
+
+    test('should not show abort verification button when pipeline status is other than', async () => {
+      const refetchFn = jest.fn()
+
+      render(
+        <TestWrapper>
+          <ExecutionVerificationSummary
+            step={{ status: ExecutionStatusEnum.InterventionWaiting }}
+            refetchOverview={refetchFn}
+            overviewData={SampleResponsePassedPipeline}
+            overviewError={null}
+          />
+        </TestWrapper>
+      )
+
+      await waitFor(() =>
+        expect(screen.queryByRole('button', { name: 'cv.abortVerification.buttonText' })).not.toBeInTheDocument()
+      )
+    })
+
+    test('should make correct API call with correct payload when mark as success is clicked', async () => {
+      const useAbortVerificationMock = jest.fn()
+
+      jest.spyOn(cvService, 'useAbortVerifyStep').mockReturnValue({
+        mutate: useAbortVerificationMock
+      } as any)
+
+      const refetchFn = jest.fn()
+
+      render(
+        <TestWrapper>
+          <ExecutionVerificationSummary
+            step={{ status: ExecutionStatusEnum.InterventionWaiting }}
+            refetchOverview={refetchFn}
+            overviewData={SampleResponseRunningPipeline}
+            overviewError={null}
+          />
+        </TestWrapper>
+      )
+
+      await waitFor(() =>
+        expect(screen.getByRole('button', { name: 'cv.abortVerification.buttonText' })).toBeInTheDocument()
+      )
+
+      const abortVerificationButton = screen.getByTestId(/abortVerificationButton/)
+
+      await waitFor(() => expect(abortVerificationButton).toBeInTheDocument())
+
+      await act(async () => {
+        await userEvent.click(abortVerificationButton)
+      })
+
+      await waitFor(() => expect(screen.getByText(/cv.abortVerification.markAsSuccess/)).toBeInTheDocument())
+
+      await act(async () => {
+        await userEvent.click(screen.getByText(/cv.abortVerification.markAsSuccess/))
+      })
+
+      const confirmButton = screen.getByTestId(/abortVerificationConfirmButton/)
+
+      await waitFor(() => expect(confirmButton).toBeInTheDocument())
+
+      await act(async () => {
+        await userEvent.click(confirmButton)
+      })
+
+      await waitFor(() => expect(useAbortVerificationMock).toHaveBeenCalledWith({ verificationStatus: 'SUCCESS' }))
+    })
+
+    test('should make correct API call with correct payload when mark as failure is clicked', async () => {
+      const useAbortVerificationMock = jest.fn()
+
+      jest.spyOn(cvService, 'useAbortVerifyStep').mockReturnValue({
+        mutate: useAbortVerificationMock
+      } as any)
+
+      const refetchFn = jest.fn()
+
+      render(
+        <TestWrapper>
+          <ExecutionVerificationSummary
+            step={{ status: ExecutionStatusEnum.InterventionWaiting }}
+            refetchOverview={refetchFn}
+            overviewData={SampleResponseRunningPipeline}
+            overviewError={null}
+          />
+        </TestWrapper>
+      )
+
+      expect(screen.queryByTestId(/abortVerificationBanner/)).not.toBeInTheDocument()
+
+      await waitFor(() =>
+        expect(screen.getByRole('button', { name: 'cv.abortVerification.buttonText' })).toBeInTheDocument()
+      )
+
+      const abortVerificationButton = screen.getByTestId(/abortVerificationButton/)
+
+      await waitFor(() => expect(abortVerificationButton).toBeInTheDocument())
+
+      await act(async () => {
+        await userEvent.click(abortVerificationButton)
+      })
+
+      await waitFor(() => expect(screen.getByText(/cv.abortVerification.markAsFailure/)).toBeInTheDocument())
+
+      await act(async () => {
+        await userEvent.click(screen.getByText(/cv.abortVerification.markAsFailure/))
+      })
+
+      const confirmButton = screen.getByTestId(/abortVerificationConfirmButton/)
+
+      await waitFor(() => expect(confirmButton).toBeInTheDocument())
+
+      await act(async () => {
+        await userEvent.click(confirmButton)
+      })
+
+      await waitFor(() => expect(useAbortVerificationMock).toHaveBeenCalledWith({ verificationStatus: 'FAILURE' }))
+    })
+
+    test('should have manual intervention banner with abort verification text when a pipeline execution was aborted as success', async () => {
+      const useAbortVerificationMock = jest.fn()
+
+      jest.spyOn(cvService, 'useAbortVerifyStep').mockReturnValue({
+        mutate: useAbortVerificationMock
+      } as any)
+
+      const refetchFn = jest.fn()
+
+      render(
+        <TestWrapper>
+          <ExecutionVerificationSummary
+            step={{ status: ExecutionStatusEnum.InterventionWaiting }}
+            refetchOverview={refetchFn}
+            overviewData={SampleResponseAbortedSuccessPipeline}
+            overviewError={null}
+          />
+        </TestWrapper>
+      )
+
+      expect(screen.queryByRole('button', { name: 'cv.abortVerification.buttonText' })).not.toBeInTheDocument()
+
+      await waitFor(() =>
+        expect(screen.getByText(/cv.deploymentVerification.failedWithAbortVerification/)).toBeInTheDocument()
+      )
+    })
+
+    test('should have abort verification banner when a pipeline execution was aborted as success', async () => {
+      const useAbortVerificationMock = jest.fn()
+
+      jest.spyOn(cvService, 'useAbortVerifyStep').mockReturnValue({
+        mutate: useAbortVerificationMock
+      } as any)
+
+      const refetchFn = jest.fn()
+
+      render(
+        <TestWrapper>
+          <ExecutionVerificationSummary
+            step={{ status: ExecutionStatusEnum.Success }}
+            refetchOverview={refetchFn}
+            overviewData={SampleResponseAbortedSuccessPipeline}
+            overviewError={null}
+          />
+        </TestWrapper>
+      )
+
+      expect(screen.queryByRole('button', { name: 'cv.abortVerification.buttonText' })).not.toBeInTheDocument()
+
+      await waitFor(() => expect(screen.getByTestId(/abortVerificationBanner/)).toBeInTheDocument())
+
+      expect(screen.getByTestId(/abortVerificationBanner/)).toHaveTextContent('cv.abortVerification.bannerMessage')
+    })
+
+    test('should show error toast message if the abort call fails', async () => {
+      const useAbortVerificationMock = jest.fn().mockImplementation(() =>
+        Promise.reject({
+          data: {
+            message: 'Some error'
+          },
+          message: 'some error'
+        })
+      )
+
+      jest.spyOn(cvService, 'useAbortVerifyStep').mockReturnValue({
+        mutate: useAbortVerificationMock
+      } as any)
+
+      const refetchFn = jest.fn()
+
+      render(
+        <TestWrapper>
+          <ExecutionVerificationSummary
+            step={{ status: ExecutionStatusEnum.InterventionWaiting }}
+            refetchOverview={refetchFn}
+            overviewData={SampleResponseRunningPipeline}
+            overviewError={null}
+          />
+        </TestWrapper>
+      )
+
+      expect(screen.queryByTestId(/abortVerificationBanner/)).not.toBeInTheDocument()
+
+      await waitFor(() =>
+        expect(screen.getByRole('button', { name: 'cv.abortVerification.buttonText' })).toBeInTheDocument()
+      )
+
+      const abortVerificationButton = screen.getByTestId(/abortVerificationButton/)
+
+      await waitFor(() => expect(abortVerificationButton).toBeInTheDocument())
+
+      await act(async () => {
+        await userEvent.click(abortVerificationButton)
+      })
+
+      await waitFor(() => expect(screen.getByText(/cv.abortVerification.markAsFailure/)).toBeInTheDocument())
+
+      await act(async () => {
+        await userEvent.click(screen.getByText(/cv.abortVerification.markAsFailure/))
+      })
+
+      const confirmButton = screen.getByTestId(/abortVerificationConfirmButton/)
+
+      await waitFor(() => expect(confirmButton).toBeInTheDocument())
+
+      await act(async () => {
+        await userEvent.click(confirmButton)
+      })
+
+      await waitFor(() => expect(showError).toHaveBeenCalledWith('Some error'))
+    })
   })
 })

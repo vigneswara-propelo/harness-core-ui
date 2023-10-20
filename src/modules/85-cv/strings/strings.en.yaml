@@ -203,6 +203,7 @@ onboarding:
 selectCreateService: Select or create a service
 deploymentVerification:
   failed: Deployment verification has failed and requires manual intervention.
+  failedWithAbortVerification: Verification has been manually aborted and marked as failed and requires manual intervention.
 monitoringSources:
   assign: Assign
   mapMetricsToServices: Map Metric(s) to Harness Services
@@ -1374,3 +1375,10 @@ analyzeDeploymentImpact:
   reports:
     noData: No Reports Found
 logsNewBaselineEventMessage: A baseline for comparing the events from the first deployments has not yet been established. Once the deployment runs again, the analysis will be shown.
+abortVerification:
+  buttonText: Abort Verification
+  markAsSuccess: Mark as Success
+  markAsFailure: Mark as Failure
+  confirmationModalText: Do you want to abort this verification and mark as {{type}}?
+  bannerMessage: Verification has been manually aborted and marked as {{type}}.
+  abortingVerificationMessage: Aborting verification

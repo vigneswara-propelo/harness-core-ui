@@ -217,6 +217,7 @@ allowpaths:
   - /monitored-service/secondary-events-details
   - /usage/SRM/active-monitored-services
   - /usage/SRM/active-services-monitored/csv/download
+  - /account/{accountIdentifier}/orgs/{orgIdentifier}/projects/{projectIdentifier}/verifications/{verifyStepExecutionId}/abort
 
 operationIdOverrides:
   /appdynamics/applications.get: getAppDynamicsApplications

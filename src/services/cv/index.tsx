@@ -1060,7 +1060,6 @@ export interface CrossAccountAccess {
 export interface CustomChangeEvent {
   changeEventDetailsLink?: string
   channelId?: string
-  channelUrl?: string
   description?: string
   externalLinkToEntity?: string
   webhookUrl?: string
@@ -1095,7 +1094,6 @@ export type CustomChangeSourceSpec = ChangeSourceSpec & {
 export interface CustomChangeWebhookEventDetail {
   changeEventDetailsLink?: string
   channelId?: string
-  channelUrl?: string
   description: string
   externalLinkToEntity?: string
   name: string
@@ -5080,6 +5078,13 @@ export interface ResponseListSecondaryEventsResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseListServiceResponse {
+  correlationId?: string
+  data?: ServiceResponse[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseListStackdriverDashboardDetail {
   correlationId?: string
   data?: StackdriverDashboardDetail[]
@@ -6827,6 +6832,32 @@ export type ServiceNowUserNamePasswordDTO = ServiceNowAuthCredentialsDTO & {
   passwordRef: string
   username?: string
   usernameRef?: string
+}
+
+export interface ServiceResponse {
+  createdAt?: number
+  lastModifiedAt?: number
+  service?: ServiceResponseDTO
+}
+
+export interface ServiceResponseDTO {
+  accountId?: string
+  cacheResponseMetadataDTO?: CacheResponseMetadata
+  connectorRef?: string
+  deleted?: boolean
+  description?: string
+  entityGitDetails?: EntityGitDetails
+  fallbackBranch?: string
+  identifier?: string
+  name?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  storeType?: 'INLINE' | 'REMOTE'
+  tags?: {
+    [key: string]: string
+  }
+  v2Service?: boolean
+  yaml?: string
 }
 
 export interface ServiceSummaryDetails {
@@ -10551,6 +10582,90 @@ export const createTicketForFeedbackPromise = (
     'POST',
     getConfig('cv/api'),
     `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/log-feedback/${logFeedbackId}/ticket`,
+    props,
+    signal
+  )
+
+export interface AbortVerifyStepPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  verifyStepExecutionId: string
+}
+
+export type AbortVerifyStepProps = Omit<
+  MutateProps<boolean, unknown, void, VerificationAbortDTO, AbortVerifyStepPathParams>,
+  'path' | 'verb'
+> &
+  AbortVerifyStepPathParams
+
+/**
+ * Abort a verify step execution, and set the verificationStatus
+ */
+export const AbortVerifyStep = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: AbortVerifyStepProps) => (
+  <Mutate<boolean, unknown, void, VerificationAbortDTO, AbortVerifyStepPathParams>
+    verb="POST"
+    path={`/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/abort`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseAbortVerifyStepProps = Omit<
+  UseMutateProps<boolean, unknown, void, VerificationAbortDTO, AbortVerifyStepPathParams>,
+  'path' | 'verb'
+> &
+  AbortVerifyStepPathParams
+
+/**
+ * Abort a verify step execution, and set the verificationStatus
+ */
+export const useAbortVerifyStep = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: UseAbortVerifyStepProps) =>
+  useMutate<boolean, unknown, void, VerificationAbortDTO, AbortVerifyStepPathParams>(
+    'POST',
+    (paramsInPath: AbortVerifyStepPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/orgs/${paramsInPath.orgIdentifier}/projects/${paramsInPath.projectIdentifier}/verifications/${paramsInPath.verifyStepExecutionId}/abort`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, verifyStepExecutionId },
+      ...props
+    }
+  )
+
+/**
+ * Abort a verify step execution, and set the verificationStatus
+ */
+export const abortVerifyStepPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    verifyStepExecutionId,
+    ...props
+  }: MutateUsingFetchProps<boolean, unknown, void, VerificationAbortDTO, AbortVerifyStepPathParams> & {
+    accountIdentifier: string
+    orgIdentifier: string
+    projectIdentifier: string
+    verifyStepExecutionId: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<boolean, unknown, void, VerificationAbortDTO, AbortVerifyStepPathParams>(
+    'POST',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/abort`,
     props,
     signal
   )

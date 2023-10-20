@@ -27,6 +27,7 @@ import { getActivityId, getCanEnableTabByType, getDefaultTabId } from './Executi
 import { ManualInterventionVerifyStep } from './components/ManualInterventionVerifyStep/ManualInterventionVerifyStep'
 import InterruptedHistory from './components/InterruptedHistory/InterruptedHistory'
 import { LogsProviderType, LogsQueryParamName, MetricsProviderType } from './ExecutionVerificationView.constants'
+import AbortVerificationBanner from './components/ExecutionVerificationSummary/components/AbortVerificationBanner/AbortVerificationBanner'
 import css from './ExecutionVerificationView.module.scss'
 
 interface ExecutionVerificationViewProps {
@@ -90,7 +91,8 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
 
   const content = activityId ? (
     <>
-      <ManualInterventionVerifyStep step={step} />
+      <AbortVerificationBanner verificationStatus={data?.verificationStatus} step={step} />
+      <ManualInterventionVerifyStep step={step} verificationStatus={data?.verificationStatus} />
       <InterruptedHistory interruptedHistories={step?.interruptHistories} />
       <Tabs id="AnalysisTypeTabs" selectedTabId={selectedTab} onChange={handleTabChange}>
         <Tab

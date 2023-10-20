@@ -36,6 +36,7 @@ export const serviceEnvironmentTest1Call = `/cv/api/monitored-service/service-en
 export const serviceEnvironmentTest2Call = `/cv/api/monitored-service/service-environment?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1&environmentIdentifier=prod&serviceIdentifier=testService2`
 export const serviceEnvironmentTest3Call = `/cv/api/monitored-service/service-environment?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${org}&projectIdentifier=${project}&environmentIdentifier=${ENV}&serviceIdentifier=testService3`
 export const overviewCall = `/cv/api/account/${accountId}/orgs/default/projects/${project}/verifications/GZNwefkdR2aBhc7owmJ1-w/overview?routingId=${accountId}`
+export const abortVerificationCall = `/cv/api/account/${accountId}/orgs/${org}/projects/${project}/verifications/GZNwefkdR2aBhc7owmJ1-w/abort?*`
 export const metricsCallSimpleVerification = `/cv/api/account/accountId/orgs/default/projects/project1/verifications/GZNwefkdR2aBhc7owmJ1-w/analysis/metrics?*`
 export const updateBaselineCall = `/cv/api/account/${accountId}/orgs/default/projects/${project}/verifications/GZNwefkdR2aBhc7owmJ1-w/baseline?routingId=${accountId}`
 
@@ -2356,6 +2357,16 @@ export const overviewCallResponse = {
   metricsAnalysis: { healthy: 0, warning: 0, unhealthy: 0, noAnalysis: 336 },
   logClusters: { knownClustersCount: 0, unknownClustersCount: 0, unexpectedFrequencyClustersCount: 0 },
   errorClusters: { knownClustersCount: 0, unknownClustersCount: 0, unexpectedFrequencyClustersCount: 0 }
+}
+
+export const overviewCallRunningPipelineResponse = {
+  ...overviewCallResponse,
+  verificationStatus: 'IN_PROGRESS'
+}
+
+export const overviewCallAbortedPipelineResponse = {
+  ...overviewCallResponse,
+  verificationStatus: 'ABORTED_AS_FAILURE'
 }
 
 export const overviewCallResponseWithBaseline = {

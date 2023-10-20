@@ -50,6 +50,7 @@ export default function VerificationStatusCard({
       break
     case 'VERIFICATION_FAILED':
     case 'Failed':
+    case 'ABORTED_AS_FAILURE':
     case 'IgnoreFailed':
       statusMessage = getString('failed')
       color = Color.RED_900
@@ -68,6 +69,7 @@ export default function VerificationStatusCard({
       iconSize = 9
       break
     case 'VERIFICATION_PASSED':
+    case 'ABORTED_AS_SUCCESS':
       statusMessage = getString('passed')
       color = Color.GREEN_800
       backgroundColor = Color.GREEN_50

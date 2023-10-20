@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Container, Text } from '@harness/uicore'
+import { Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import moment from 'moment'
 import cx from 'classnames'
@@ -15,6 +15,7 @@ import { useStrings } from 'framework/strings'
 import { VerificationJobType } from '@cv/constants'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { VerificationStatus } from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/components/ChangeEventCard/ChangeEventCard.constant'
 import CVProgressBar from './components/CVProgressBar/CVProgressBar'
 import { PrimaryAndCanaryNodes } from '../ExecutionVerificationSummary/components/PrimaryandCanaryNodes/PrimaryAndCanaryNodes'
 import VerificationStatusCard from './components/VerificationStatusCard/VerificationStatusCard'
@@ -23,6 +24,7 @@ import TestsSummaryView from './components/TestSummaryView/TestsSummaryView'
 import PinBaslineButton from './components/PinBaslineButton/PinBaslineButton'
 import { canShowBaselineElements, canShowExpiryDateDetails, getStatusMessage } from './DeploymentProgressAndNodes.utils'
 import { StatusMessageDisplay } from './components/StatusMessageDisplay/StatusMessageDisplay'
+import AbortVerification from './components/AbortVerification/AbortVerification'
 import css from './DeploymentProgressAndNodes.module.scss'
 
 export interface DeploymentProgressAndNodesProps {
@@ -45,6 +47,8 @@ export function DeploymentProgressAndNodes(props: DeploymentProgressAndNodesProp
     verificationStatus,
     baselineOverview: baselineData
   } = data || {}
+
+  const canShowAbortVerification = verificationStatus === VerificationStatus.IN_PROGRESS
 
   const { getString } = useStrings()
 
@@ -115,6 +119,11 @@ export function DeploymentProgressAndNodes(props: DeploymentProgressAndNodesProp
 
   return (
     <Container className={cx(css.main, className)}>
+      {canShowAbortVerification && (
+        <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
+          <AbortVerification activityId={activityId} />
+        </Layout.Horizontal>
+      )}
       {metricsAnalysis && (
         <Container
           className={cx(css.durationAndStatus, {

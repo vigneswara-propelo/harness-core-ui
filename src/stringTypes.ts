@@ -9476,6 +9476,12 @@ export interface StringsMap {
   'cv.abbreviatedCategories.errors': string
   'cv.abbreviatedCategories.infrastructure': string
   'cv.abbreviatedCategories.performance': string
+  'cv.abortVerification.abortingVerificationMessage': string
+  'cv.abortVerification.bannerMessage': string
+  'cv.abortVerification.buttonText': string
+  'cv.abortVerification.confirmationModalText': string
+  'cv.abortVerification.markAsFailure': string
+  'cv.abortVerification.markAsSuccess': string
   'cv.activitySources.harnessCD.application.infoText': string
   'cv.activitySources.harnessCD.application.noData': string
   'cv.activitySources.harnessCD.application.searchPlaceholder': string
@@ -9658,6 +9664,7 @@ export interface StringsMap {
   'cv.days': string
   'cv.dependenciesHealthWithCount': string
   'cv.deploymentVerification.failed': string
+  'cv.deploymentVerification.failedWithAbortVerification': string
   'cv.displayOnlyErrors': string
   'cv.download': string
   'cv.ends': string

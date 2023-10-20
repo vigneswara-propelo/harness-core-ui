@@ -5,9 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { HealthSourceV2 } from 'services/cv'
+import { HealthSourceV2, VerificationOverview } from 'services/cv'
 import { UseStringsReturn } from 'framework/strings'
 import type { ExecutionNode } from 'services/pipeline-ng'
+import { VerificationStatus } from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/components/ChangeEventCard/ChangeEventCard.constant'
 import { LogsProviderType, MetricsProviderType } from './ExecutionVerificationView.constants'
 
 export const getActivityId = (step: ExecutionNode): string => {
@@ -49,4 +50,11 @@ export const getCanEnableTabByType = (
   }
 
   return healthSources.some(healthSource => healthSource.providerType === type)
+}
+
+export function isAbortVerification(verificationStatus: VerificationOverview['verificationStatus']): boolean {
+  return (
+    verificationStatus === VerificationStatus.ABORTED_AS_FAILURE ||
+    verificationStatus === VerificationStatus.ABORTED_AS_SUCCESS
+  )
 }

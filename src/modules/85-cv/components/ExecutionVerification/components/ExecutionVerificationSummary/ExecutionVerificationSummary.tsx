@@ -22,6 +22,7 @@ import { ManualInterventionVerifyStep } from '../ManualInterventionVerifyStep/Ma
 import InterruptedHistory from '../InterruptedHistory/InterruptedHistory'
 import { SummaryOfDeployedNodes } from './components/SummaryOfDeployedNodes/SummaryOfDeployedNodes'
 import { getTotalClustersData, getTotalMetrics } from './ExecutionVerificationSummary.utils'
+import AbortVerificationBanner from './components/AbortVerificationBanner/AbortVerificationBanner'
 import css from './ExecutionVerificationSummary.module.scss'
 
 const POLLING_INTERVAL = 15000
@@ -120,7 +121,12 @@ export function ExecutionVerificationSummary(props: VerifyExecutionProps): JSX.E
       )}
       {!isConsoleView && (
         <>
-          <ManualInterventionVerifyStep step={step} allowedStrategies={failureStrategies} />
+          <AbortVerificationBanner verificationStatus={data?.verificationStatus} step={step} />
+          <ManualInterventionVerifyStep
+            verificationStatus={data?.verificationStatus}
+            step={step}
+            allowedStrategies={failureStrategies}
+          />
           <InterruptedHistory interruptedHistories={step?.interruptHistories} />
         </>
       )}
