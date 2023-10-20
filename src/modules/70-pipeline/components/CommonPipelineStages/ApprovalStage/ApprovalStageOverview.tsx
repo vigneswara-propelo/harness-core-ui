@@ -27,6 +27,7 @@ import type { AllNGVariables } from '@pipeline/utils/types'
 import type { ApprovalStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
+import { StageTimeout } from '@modules/75-cd/components/PipelineStudio/StageTimeout/StageTimeout'
 import type { ApprovalStageOverviewProps } from './types'
 import css from './ApprovalStageOverview.module.scss'
 
@@ -120,6 +121,11 @@ export function ApprovalStageOverview(props: ApprovalStageOverviewProps): React.
             addDomId={true}
             details={
               <Card className={css.sectionCard} id="variables">
+                <StageTimeout<StageElementConfig>
+                  data={stage}
+                  onChange={updateStageDebounced}
+                  isReadonly={isReadonly}
+                />
                 <div className={cx(css.tabSubHeading, 'ng-tooltip-native')} data-tooltip-id="overviewStageVariables">
                   {getString('pipeline.stageVariables')}
                   <HarnessDocTooltip tooltipId="overviewStageVariables" useStandAlone={true} />

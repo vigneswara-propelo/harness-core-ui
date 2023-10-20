@@ -36,6 +36,7 @@ import type { AccountPathProps, ModulePathParams } from '@common/interfaces/Rout
 import { useGetEntityMetadata } from '@common/hooks/useGetEntityMetadata'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { StageTimeout } from '@modules/75-cd/components/PipelineStudio/StageTimeout/StageTimeout'
 import { PipelineStageTabs } from './utils'
 import css from './PipelineStageOverview.module.scss'
 
@@ -195,6 +196,11 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
             }
             details={
               <Card className={css.variableSectionCard} id="variables">
+                <StageTimeout<PipelineStageElementConfig>
+                  data={stage}
+                  onChange={updateStageDebounced}
+                  isReadonly={isReadonly}
+                />
                 <div className={cx(css.tabSubHeading, 'ng-tooltip-native')} data-tooltip-id="overviewStageVariables">
                   {getString('pipeline.stageVariables')}
                   <HarnessDocTooltip tooltipId="overviewStageVariables" useStandAlone={true} />

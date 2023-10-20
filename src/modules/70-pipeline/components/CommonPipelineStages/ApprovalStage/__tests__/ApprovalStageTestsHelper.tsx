@@ -220,6 +220,7 @@ export const pipelineContextMock = {
             identifier: 'ApprovalStep',
             description: '',
             type: 'Approval',
+            timeout: '<+input>.default(20m).allowedValues(10m,20m,30m)',
             spec: {}
           }
         }

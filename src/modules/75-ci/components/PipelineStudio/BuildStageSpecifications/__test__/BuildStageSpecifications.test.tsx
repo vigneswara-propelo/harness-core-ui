@@ -54,6 +54,8 @@ describe('BuildStageSpecifications tests', () => {
 
     expect(getByText('pipeline.stageVariables')).toBeTruthy()
 
+    expect(getByText('pipelineSteps.timeoutLabel')).toBeInTheDocument()
+
     expect(container).toMatchSnapshot()
   })
 

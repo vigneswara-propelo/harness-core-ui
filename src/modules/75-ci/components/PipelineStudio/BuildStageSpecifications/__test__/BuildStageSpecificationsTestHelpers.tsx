@@ -50,6 +50,7 @@ export const pipelineContextMock = {
             identifier: 'BuildStage',
             description: '',
             type: 'CI',
+            timeout: '10m',
             spec: {}
           }
         }

@@ -55,6 +55,7 @@ import {
   getChildPipelineMetadata
 } from './ChainedPipelineInputSetUtils'
 import { OutputPanelInputSetView } from '../CommonPipelineStages/PipelineStage/PipelineStageOutputSection/OutputPanelInputSetView'
+import { TimeoutFieldInputSetView } from '../InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import css from './PipelineInputSetForm.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -108,6 +109,24 @@ export function StageFormInternal({
   const { getString } = useStrings()
   return (
     <div className={cx(css.topAccordion, stageClassName)}>
+      {template?.stage?.timeout && (
+        <div id={`Stage.${allValues?.stage?.identifier}.timeout`} className={cx(css.accordionSummary)}>
+          <div className={cx(stepCss.formGroup, stepCss.sm)}>
+            <TimeoutFieldInputSetView
+              name={`${path}.timeout`}
+              label={getString('pipelineSteps.timeoutLabel')}
+              multiTypeDurationProps={{
+                enableConfigureOptions: true,
+                disabled: readonly,
+                allowableTypes: getFilteredAllowableTypes(allowableTypes, viewType)
+              }}
+              disabled={readonly}
+              fieldPath="stage.timeout"
+              template={template}
+            />
+          </div>
+        </div>
+      )}
       {template?.stage?.variables && (
         <div id={`Stage.${allValues?.stage?.identifier}.Variables`} className={cx(css.accordionSummary)}>
           <Text font={{ weight: 'semi-bold' }} padding={{ top: 'medium', bottom: 'medium' }}>

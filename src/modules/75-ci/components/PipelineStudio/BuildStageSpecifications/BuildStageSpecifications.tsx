@@ -42,6 +42,7 @@ import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import MultiTypeSecretInput from '@platform/secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { StageTimeout } from '@modules/75-cd/components/PipelineStudio/StageTimeout/StageTimeout'
 import { BuildTabs } from '../CIPipelineStagesUtils'
 import { Modes } from '../BuildInfraSpecifications/BuildInfraSpecifications'
 import css from './BuildStageSpecifications.module.scss'
@@ -527,6 +528,11 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
                         id="variables"
                         style={{ width: '100%' }}
                       >
+                        <StageTimeout<StageElementConfig>
+                          data={stage}
+                          onChange={handleStepWidgetUpdate}
+                          isReadonly={isReadonly}
+                        />
                         <div className={css.tabSubHeading}>{getString('pipeline.stageVariables')}</div>
                         <Text style={{ color: 'var(--grey-500)', lineHeight: '24px' }}>
                           {getString('workflowVariableInfo')}

@@ -394,6 +394,57 @@ exports[`BuildStageSpecifications tests renders correctly 1`] = `
                     style="width: 100%;"
                   >
                     <div
+                      class="OverlaySpinner--overlaySpinner"
+                    >
+                      <div
+                        class="formGroup sm"
+                      >
+                        <div
+                          class="bp3-form-group"
+                        >
+                          <label
+                            class="bp3-label"
+                            for="timeout"
+                          >
+                            <span
+                              class="Tooltip--acenter"
+                              data-tooltip-id="stageTimeout_timeout"
+                            >
+                              pipelineSteps.timeoutLabel
+                            </span>
+                             
+                            <span
+                              class="bp3-text-muted"
+                            />
+                          </label>
+                          <div
+                            class="bp3-form-content"
+                          >
+                            <div
+                              class="container"
+                            >
+                              <div
+                                class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                                style="flex-grow: 1;"
+                              >
+                                <div
+                                  class="bp3-input-group bp3-fill"
+                                >
+                                  <input
+                                    class="bp3-input"
+                                    name="timeout"
+                                    placeholder="Enter w/d/h/m/s/ms"
+                                    type="text"
+                                    value="10m"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
                       class="tabSubHeading"
                     >
                       pipeline.stageVariables

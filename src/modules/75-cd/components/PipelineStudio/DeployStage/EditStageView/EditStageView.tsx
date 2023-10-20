@@ -77,6 +77,7 @@ import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks/useQueryParams'
 import SelectDeploymentType from '../../DeployServiceSpecifications/SelectDeploymentType/SelectDeploymentType'
 import type { EditStageFormikType, EditStageViewProps } from '../EditStageViewInterface'
+import { StageTimeout } from '../../StageTimeout/StageTimeout'
 import css from './EditStageView.module.scss'
 import stageCss from '../../DeployStageSetupShell/DeployStage.module.scss'
 
@@ -585,6 +586,13 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                 summary={<div className={stageCss.tabHeading}>{getString('common.advanced')}</div>}
                 details={
                   <Card className={stageCss.sectionCard} id="variables">
+                    <StageTimeout<DeploymentStageElementConfig>
+                      data={data}
+                      onChange={(values: DeploymentStageElementConfig) => {
+                        onChange?.(values)
+                      }}
+                      isReadonly={isReadonly}
+                    />
                     <div
                       className={cx(stageCss.tabSubHeading, 'ng-tooltip-native')}
                       data-tooltip-id="overviewStageVariables"
