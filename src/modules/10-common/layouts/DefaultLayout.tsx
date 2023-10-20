@@ -50,10 +50,18 @@ export function DefaultLayout(props: React.PropsWithChildren<DefaultLayoutProps>
   useEffect(() => {
     if (pageName) {
       identifyUser(currentUserInfo.email)
-      trackPage(pageName, {
-        module: module || '',
-        ...(CDS_NAV_2_0 ? { mode: mode, isNav2Enabled: 'true' } : undefined)
-      })
+      if (CDS_NAV_2_0) {
+        trackPage(pageName, {
+          module: module || '',
+          mode,
+          navVersion: '2'
+        })
+      } else {
+        trackPage(pageName, {
+          module: module || '',
+          navVersion: '1'
+        })
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageName])
@@ -85,7 +93,7 @@ export function DefaultLayout(props: React.PropsWithChildren<DefaultLayoutProps>
       <div className={css.rhs}>
         {module && <TrialLicenseBanner />}
         {module && <FeatureBanner />}
-        <div className={css.children}>{props.children}</div>
+        <div className={cx(css.children, { [css.breadcrumbsV2]: CDS_NAV_2_0 })}>{props.children}</div>
       </div>
 
       {PL_AI_SUPPORT_CHATBOT && PL_EULA_ENABLED && !disableAuxNav ? (

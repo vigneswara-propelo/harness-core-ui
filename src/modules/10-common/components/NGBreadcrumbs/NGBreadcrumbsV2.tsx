@@ -7,7 +7,10 @@
 
 import React from 'react'
 import { matchPath, useLocation, useHistory } from 'react-router-dom'
-import { Breadcrumbs as UiCoreBreadcrumbs, Breadcrumb } from '@harness/uicore'
+import { Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
+import { Boundary, Breadcrumbs, IBreadcrumbProps } from '@blueprintjs/core'
+import cx from 'classnames'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import { NAV_MODE, getRouteParams } from '@common/utils/routeUtils'
@@ -17,6 +20,7 @@ import useSecondaryScopeSwitchDialog from '@common/navigation/SideNavV2/ScopeSwi
 import { Scope } from 'framework/types/types'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
 import { NGBreadcrumbsProps } from './NGBreadcrumbs'
+import css from './NGBreadcrumbsV2.module.scss'
 
 const renderLabelAndName = (label: string, name?: string): string => {
   if (name) {
@@ -38,10 +42,13 @@ const NGBreadcrumbsV2: React.FC<Partial<NGBreadcrumbsProps>> = props => {
 
   const { className, links } = props
 
-  const list: Breadcrumb[] = [
+  const list: IBreadcrumbProps[] = [
     {
-      label: renderLabelAndName(getString('account'), accountInfo?.name),
-      url: '',
+      text: (
+        <Text font={{ size: 'small' }} lineClamp={1} color={Color.PRIMARY_7}>
+          {renderLabelAndName(getString('account'), accountInfo?.name)}
+        </Text>
+      ),
       onClick: () => {
         if (scope !== Scope.ACCOUNT && mode !== NAV_MODE.ADMIN) {
           showSecondaryScopeSwitchDialog({
@@ -61,9 +68,11 @@ const NGBreadcrumbsV2: React.FC<Partial<NGBreadcrumbsProps>> = props => {
 
   if (orgIdentifier) {
     list.push({
-      label: renderLabelAndName(getString('orgsText'), selectedOrg?.name),
-      // url: routes.toMode({ module, orgIdentifier })
-      url: '',
+      text: (
+        <Text font={{ size: 'small' }} lineClamp={1} color={Color.PRIMARY_7}>
+          {renderLabelAndName(getString('orgsText'), selectedOrg?.name)}
+        </Text>
+      ),
       onClick: () => {
         if (scope !== Scope.ORGANIZATION && mode !== NAV_MODE.ADMIN) {
           showSecondaryScopeSwitchDialog({
@@ -83,8 +92,11 @@ const NGBreadcrumbsV2: React.FC<Partial<NGBreadcrumbsProps>> = props => {
 
   if (projectIdentifier) {
     list.push({
-      label: renderLabelAndName(getString('projectLabel'), selectedProject?.name),
-      url: '',
+      text: (
+        <Text font={{ size: 'small' }} lineClamp={1} color={Color.PRIMARY_7}>
+          {renderLabelAndName(getString('projectLabel'), selectedProject?.name)}
+        </Text>
+      ),
       onClick: () => {
         if (scope !== Scope.PROJECT && mode !== NAV_MODE.ADMIN) {
           showSecondaryScopeSwitchDialog({
@@ -109,14 +121,37 @@ const NGBreadcrumbsV2: React.FC<Partial<NGBreadcrumbsProps>> = props => {
 
   if (isSettingsPage) {
     list.push({
-      label: getString('settingsLabel'),
-      url: routes.toSettings({ module, projectIdentifier, orgIdentifier })
+      text: (
+        <Text font={{ size: 'small' }} lineClamp={1} color={Color.PRIMARY_7}>
+          {getString('settingsLabel')}
+        </Text>
+      ),
+      href: routes.toSettings({ module, projectIdentifier, orgIdentifier })
+    })
+  }
+
+  if (links) {
+    links.forEach(link => {
+      list.push({
+        text: (
+          <Text font={{ size: 'small' }} lineClamp={1} color={Color.PRIMARY_7}>
+            {link.label}
+          </Text>
+        ),
+        href: link.url
+      })
     })
   }
 
   return (
     <>
-      <UiCoreBreadcrumbs links={[...list, ...(links as Breadcrumb[])]} className={className} />
+      <Breadcrumbs
+        items={list}
+        collapseFrom={Boundary.START}
+        minVisibleItems={0}
+        className={className}
+        popoverProps={{ popoverClassName: cx(css.breadcrumbs, className) }}
+      />
     </>
   )
 }

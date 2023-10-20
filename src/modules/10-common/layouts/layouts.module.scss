@@ -162,3 +162,11 @@
 .btn {
   margin-top: 1px !important;
 }
+
+.breadcrumbsV2 {
+  :global {
+    .PageHeader--container > div:first-child {
+      flex: 1;
+    }
+  }
+}
