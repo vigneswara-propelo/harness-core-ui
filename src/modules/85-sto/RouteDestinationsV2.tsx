@@ -26,6 +26,7 @@ import { Scope } from 'framework/types/types'
 import { ModuleName } from 'framework/types/ModuleName'
 import PipelineRouteDestinations from '@pipeline/PipelineRouteDestinations'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
+import { useGetSettingValue } from 'services/cd-ng'
 
 const module: Module = 'sto'
 
@@ -100,7 +101,11 @@ const STORouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
           licenseRedirectData={licenseRedirectData}
           path={[routes.toSTOIssues({ ...projectPathProps, module, mode })]}
         >
-          <ChildAppMounter ChildApp={RemoteSTOApp} customComponents={{ UsefulOrNot }} />
+          <ChildAppMounter
+            ChildApp={RemoteSTOApp}
+            customComponents={{ UsefulOrNot }}
+            customHooks={{ useGetSettingValue }}
+          />
         </RouteWithContext>
       )}
 
@@ -117,7 +122,11 @@ const STORouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
         licenseRedirectData={licenseRedirectData}
         path={[routes.toSTOSecurityReview({ ...projectPathProps, module, mode })]}
       >
-        <ChildAppMounter ChildApp={RemoteSTOApp} customComponents={{ UserLabel, UsefulOrNot }} />
+        <ChildAppMounter
+          ChildApp={RemoteSTOApp}
+          customComponents={{ UserLabel, UsefulOrNot }}
+          customHooks={{ useGetSettingValue }}
+        />
       </RouteWithContext>
 
       <RouteWithContext
@@ -134,7 +143,11 @@ const STORouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
           licenseRedirectData={licenseRedirectData}
           path={[routes.toSTOTicketSummary({ ...projectPathProps, module, mode, issueId: ':issueId' })]}
         >
-          <ChildAppMounter ChildApp={RemoteSTOApp} customComponents={{ UserLabel, UsefulOrNot }} />
+          <ChildAppMounter
+            ChildApp={RemoteSTOApp}
+            customComponents={{ UserLabel, UsefulOrNot }}
+            customHooks={{ useGetSettingValue }}
+          />
         </RouteWithContext>
       )}
 

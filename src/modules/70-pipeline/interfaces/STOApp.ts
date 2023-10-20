@@ -9,6 +9,7 @@ import type React from 'react'
 import type { CardRailViewProps } from '@pipeline/components/Dashboards/CardRailView/CardRailView'
 import type { ExecutionCardProps } from '@pipeline/components/ExecutionCard/ExecutionCard'
 import type { PipelineExecutionDetail } from 'services/pipeline-ng'
+import type { useGetSettingValue } from 'services/cd-ng'
 import type { UserLabelProps } from '@common/exports'
 import { UsefulOrNotProps } from '@common/components/UsefulOrNot/UsefulOrNot'
 
@@ -20,6 +21,9 @@ export interface STOAppCustomProps {
     CardRailView: React.ComponentType<CardRailViewProps>
     UserLabel: React.ComponentType<UserLabelProps>
     UsefulOrNot: React.ComponentType<UsefulOrNotProps>
+  }>
+  customHooks: Partial<{
+    useGetSettingValue: typeof useGetSettingValue
   }>
 }
 
