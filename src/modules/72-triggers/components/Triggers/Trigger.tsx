@@ -22,7 +22,7 @@ export interface TriggerProps<T> {
 export abstract class Trigger<T> {
   protected abstract baseType: TriggerBaseType
   protected abstract type: TriggerSubType
-  protected abstract triggerDescription: keyof StringsMap | undefined
+  protected abstract triggerDescription: keyof StringsMap
   protected abstract defaultValues: T
 
   getBaseType(): TriggerBaseType {
@@ -33,7 +33,7 @@ export abstract class Trigger<T> {
     return this.type
   }
 
-  getDescription(): keyof StringsMap | undefined {
+  getDescription(): keyof StringsMap {
     return this.triggerDescription
   }
 

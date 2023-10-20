@@ -776,3 +776,37 @@ export const GetDeleteTriggerResponse = {
   metaData: null,
   correlationId: '60982855-534b-4997-9bd5-a30b1f5964df'
 }
+
+export const ConnectorListV2 = {
+  status: 'SUCCESS',
+  data: {
+    content: [
+      {
+        connector: {
+          name: 'Test_GCP_Connector',
+          identifier: 'Test_GCP_Connector',
+          projectIdentifier: 'px7xd_BFRCi-pfWPYXVjvw',
+          type: 'Gcp',
+          spec: {
+            credential: {
+              type: 'OidcAuthentication',
+              spec: {
+                workloadPoolId: 'a1',
+                providerId: 'a2',
+                gcpProjectId: 'a3'
+              }
+            }
+          }
+        },
+        status: {
+          status: 'SUCCESS'
+        },
+        entityValidityDetails: {
+          valid: true,
+          invalidYaml: null
+        },
+        governanceMetadata: null
+      }
+    ]
+  }
+}

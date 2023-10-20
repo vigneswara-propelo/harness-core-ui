@@ -5,46 +5,30 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { isEmpty } from 'lodash-es'
-
 import type { StringsMap } from 'stringTypes'
-
 import type { Trigger } from '../components/Triggers/Trigger'
+import { TriggerBaseType, TriggerSubType } from '../components/Triggers/TriggerInterface'
 
 export abstract class AbstractTriggerFactory {
-  protected triggerBank: Map<string, Trigger<unknown>>
+  protected triggerBank: Map<TriggerSubType, Trigger<unknown>>
 
   constructor() {
     this.triggerBank = new Map()
   }
 
   registerTrigger<T>(trigger: Trigger<T>): void {
-    this.triggerBank.set(trigger.getType(), trigger as Trigger<unknown>)
+    this.triggerBank.set(trigger.getType(), trigger)
   }
 
-  deregisterTrigger(type: string): void {
-    const deletedTrigger = this.triggerBank.get(type)
-    if (deletedTrigger) {
-      this.triggerBank.delete(type)
-    }
+  getTrigger<T>(subType: TriggerSubType): Trigger<T> {
+    return this.triggerBank.get(subType) as Trigger<T>
   }
 
-  getTrigger<T>(sourceRepo?: string): Trigger<T> | undefined {
-    if (sourceRepo && !isEmpty(sourceRepo)) {
-      return this.triggerBank.get(sourceRepo) as Trigger<T>
-    }
-    return
+  getTriggerBaseType(subType: TriggerSubType): TriggerBaseType {
+    return this.getTrigger(subType).getBaseType()
   }
 
-  getTriggerBaseType(type: string): string | undefined {
-    return this.triggerBank.get(type)?.getBaseType()
-  }
-
-  getTriggerType(type: string): string | undefined {
-    return this.triggerBank.get(type)?.getType()
-  }
-
-  getDescription(type: string): keyof StringsMap | undefined {
-    return this.triggerBank.get(type)?.getDescription()
+  getDescription(subType: TriggerSubType): keyof StringsMap {
+    return this.getTrigger(subType).getDescription()
   }
 }

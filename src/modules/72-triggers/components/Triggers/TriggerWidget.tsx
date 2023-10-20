@@ -39,6 +39,7 @@ export function TriggerWidget<T>({
   // Show triggers V2 for NG_SVC_ENV_REDESIGN with artifact or manifest, or CD_TRIGGERS_REFACTOR
   const trigger =
     ((NG_SVC_ENV_REDESIGN && (baseType === 'Artifact' || baseType === 'Manifest')) || CD_TRIGGERS_REFACTOR) &&
+    type &&
     factory.getTrigger<T>(type)
 
   if (!trigger) {
