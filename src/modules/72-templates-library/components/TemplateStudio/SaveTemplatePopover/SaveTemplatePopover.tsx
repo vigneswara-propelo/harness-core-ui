@@ -237,12 +237,17 @@ function SaveTemplatePopover(
         await customDeleteTemplateCache(updatedGitDetails)
         navigateToLocation(latestTemplate, updatedGitDetails)
       } else {
-        // Update template in existing branch
-        if (updatedGitDetails?.isNewBranch === false) {
-          await fetchTemplate({ forceFetch: true, forceUpdate: true })
-        } else {
-          // Update template in new branch
+        if (
+          [SaveTemplateAsType.NEW_LABEL_VERSION, SaveTemplateAsType.NEW_TEMPALTE].includes(
+            saveAsType as SaveTemplateAsType
+          ) ||
+          updatedGitDetails?.isNewBranch
+        ) {
+          // Update template in new branch && navigates the user to newly created template or newly created version label of the same template
           navigateToLocation(latestTemplate, updatedGitDetails)
+        } else {
+          // Update template in existing branch
+          await fetchTemplate({ forceFetch: true, forceUpdate: true })
         }
       }
     }

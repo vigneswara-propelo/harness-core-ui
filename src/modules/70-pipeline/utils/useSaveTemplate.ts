@@ -45,6 +45,7 @@ declare global {
 
 interface SaveTemplateObj {
   template: NGTemplateInfoConfig
+  saveAsType?: SaveTemplateAsType.NEW_LABEL_VERSION | SaveTemplateAsType.NEW_TEMPALTE
 }
 
 interface LastRemoteObjectId {
@@ -230,7 +231,7 @@ export function useSaveTemplate({
       omit(updatedGitDetails, 'name', 'identifier'),
       templateIdentifier !== DefaultNewTemplateId ? { lastObjectId: objectId, lastCommitId } : {},
       storeMetadata,
-      undefined,
+      payload?.saveAsType,
       undefined,
       true
     )
@@ -298,7 +299,7 @@ export function useSaveTemplate({
           gitDetails: getUpdatedGitDetails(updatedGitDetails!, updatedTemplate, isEdit),
           storeMetadata
         },
-        payload: { template: omit(updatedTemplate, 'repo', 'branch') }
+        payload: { template: omit(updatedTemplate, 'repo', 'branch'), saveAsType }
       })
       return Promise.resolve({ status: 'SUCCESS' })
     }
