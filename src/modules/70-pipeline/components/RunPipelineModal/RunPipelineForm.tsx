@@ -670,7 +670,7 @@ function RunPipelineFormBasic({
           response = selectedStageData.allStagesSelected
             ? await reRunPipeline(finalYaml as any)
             : await reRunStages({
-                runtimeInputYaml: finalYaml as any,
+                runtimeInputYaml: hasRuntimeInputs ? finalYaml : undefined,
                 stageIdentifiers: stageIdentifiers,
                 expressionValues
               })
@@ -678,7 +678,7 @@ function RunPipelineFormBasic({
           response = selectedStageData.allStagesSelected
             ? await runPipeline(finalYaml as any)
             : await runStage({
-                runtimeInputYaml: finalYaml,
+                runtimeInputYaml: hasRuntimeInputs ? finalYaml : undefined,
                 stageIdentifiers: stageIdentifiers,
                 expressionValues
               })
@@ -741,7 +741,8 @@ function RunPipelineFormBasic({
       skipPreFlightCheck,
       formErrors,
       selectedStageData,
-      notifyOnlyMe
+      notifyOnlyMe,
+      hasRuntimeInputs
     ]
   )
 
