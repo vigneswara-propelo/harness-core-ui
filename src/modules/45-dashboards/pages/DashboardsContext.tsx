@@ -11,6 +11,8 @@ import type { Breadcrumb } from '@harness/uicore'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { DashboardMode } from '@dashboards/types/DashboardTypes.types'
+import { useTelemetry } from '@modules/10-common/hooks/useTelemetry'
+import { CDBActions, Category } from '@modules/10-common/constants/TrackingConstants'
 import { FolderModel, useSearchFolders, useGetModelTags, AiAddTileRequestBody } from 'services/custom-dashboards'
 
 export interface DashboardsContextProps {
@@ -28,6 +30,7 @@ const DashboardsContext = React.createContext<DashboardsContextProps>({} as Dash
 
 export function DashboardsContextProvider(props: React.PropsWithChildren<unknown>): React.ReactElement {
   const { accountId } = useParams<AccountPathProps>()
+  const { trackEvent } = useTelemetry()
   const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([])
   const [aiTileDetails, setAiTileDetails] = useState<AiAddTileRequestBody>()
   const [mode, setMode] = useState<DashboardMode>(DashboardMode.VIEW)
@@ -36,9 +39,15 @@ export function DashboardsContextProvider(props: React.PropsWithChildren<unknown
     setBreadcrumbs(breadcrumbsToAdd)
   }, [])
 
-  const updateDashboardMode = React.useCallback((newMode: DashboardMode): void => {
-    setMode(newMode)
-  }, [])
+  const updateDashboardMode = React.useCallback(
+    (newMode: DashboardMode): void => {
+      const telemetryAction =
+        newMode === DashboardMode.EDIT ? CDBActions.DashboardEmbedEditEnabled : CDBActions.DashboardEmbedEditDisabled
+      trackEvent(telemetryAction, { category: Category.CUSTOM_DASHBOARDS })
+      setMode(newMode)
+    },
+    [trackEvent]
+  )
 
   const updateAiTileDetails = React.useCallback((updatedDetails: AiAddTileRequestBody): void => {
     setAiTileDetails(updatedDetails)

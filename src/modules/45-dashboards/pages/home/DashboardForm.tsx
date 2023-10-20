@@ -6,6 +6,8 @@
  */
 
 import React from 'react'
+import * as Yup from 'yup'
+import { useParams } from 'react-router-dom'
 import {
   Button,
   ButtonVariation,
@@ -19,8 +21,8 @@ import {
   SelectOption
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import * as Yup from 'yup'
-import { useParams } from 'react-router-dom'
+import { CDBActions, Category } from '@modules/10-common/constants/TrackingConstants'
+import { useTelemetry } from '@modules/10-common/hooks/useTelemetry'
 import type { FolderModel } from 'services/custom-dashboards'
 import { useStrings } from 'framework/strings'
 import type { DashboardFolderPathProps } from '@common/interfaces/RouteInterfaces'
@@ -61,6 +63,7 @@ const DashboardForm: React.FC<DashboardFormProps> = ({
 }) => {
   const { getString } = useStrings()
   const { folderId } = useParams<DashboardFolderPathProps>()
+  const { trackEvent } = useTelemetry()
 
   const folderListItems = React.useMemo(() => {
     return editableFolders.map((folder: FolderModel): SelectOption => ({ value: folder?.id, label: folder?.name }))
@@ -77,6 +80,27 @@ const DashboardForm: React.FC<DashboardFormProps> = ({
     }
   }, [editableFolders, folderId, folderListItems, formData?.description, formData?.folderId, formData?.name])
 
+  const handleCompleteClicked = (completedFormData: DashboardFormikValues): void => {
+    let action = ''
+    switch (mode) {
+      case 'CREATE':
+        action = CDBActions.DashboardCreationSubmitted
+        break
+      case 'EDIT':
+        action = CDBActions.DashboardEditSubmitted
+        break
+      case 'CLONE':
+        action = CDBActions.DashboardCloneSubmitted
+        break
+    }
+
+    trackEvent(action, { category: Category.CUSTOM_DASHBOARDS })
+    onComplete({
+      ...completedFormData,
+      description: completedFormData.description?.join(TAGS_SEPARATOR) || ''
+    })
+  }
+
   return (
     <Layout.Vertical padding="xxlarge" spacing="large">
       <Heading level={3} font={{ variation: FontVariation.H3 }}>
@@ -91,12 +115,7 @@ const DashboardForm: React.FC<DashboardFormProps> = ({
           folderId: Yup.string().trim().required(getString('dashboards.folderForm.folderNameValidation')),
           name: Yup.string().trim().required(getString('dashboards.createModal.nameValidation'))
         })}
-        onSubmit={completedFormData => {
-          onComplete({
-            ...completedFormData,
-            description: completedFormData.description?.join(TAGS_SEPARATOR) || ''
-          })
-        }}
+        onSubmit={handleCompleteClicked}
       >
         <Form className={css.formContainer}>
           <Layout.Vertical spacing="large">

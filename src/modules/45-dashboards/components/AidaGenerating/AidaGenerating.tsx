@@ -11,6 +11,8 @@ import { useToaster, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useDashboardsContext } from '@dashboards/pages/DashboardsContext'
 import { Message, MessageType } from '@dashboards/types/AidaTypes.types'
+import { useTelemetry } from '@modules/10-common/hooks/useTelemetry'
+import { CDBActions, Category } from '@modules/10-common/constants/TrackingConstants'
 import { useStrings } from 'framework/strings'
 import { AiAddTileRequestBody, useAiGenerateTile } from 'services/custom-dashboards'
 import css from './AidaGenerating.module.scss'
@@ -38,6 +40,7 @@ const getValueFromMessage = (messages: Message[], messageType: MessageType, key?
 const AidaGenerating: React.FC<AidaGeneratingProps> = ({ messages, onError }) => {
   const { updateAiTileDetails } = useDashboardsContext()
   const { showSuccess, showError } = useToaster()
+  const { trackEvent } = useTelemetry()
 
   const { accountId, viewId } = useParams<Record<string, string>>()
   const { getString } = useStrings()
@@ -53,10 +56,18 @@ const AidaGenerating: React.FC<AidaGeneratingProps> = ({ messages, onError }) =>
       try {
         const { resource } = await generateAiTile(requestBody)
         if (resource) {
+          trackEvent(CDBActions.AidaGenerateDashboardTileSuccess, {
+            category: Category.CUSTOM_DASHBOARDS,
+            requestBody
+          })
           showSuccess(getString('dashboards.aida.successGeneratingTile'))
           updateAiTileDetails(requestBody)
         }
       } catch (e) {
+        trackEvent(CDBActions.AidaGenerateDashboardTileFailure, {
+          category: Category.CUSTOM_DASHBOARDS,
+          requestBody
+        })
         showError(getString('dashboards.aida.failureGeneratingTile'))
         onError()
       }

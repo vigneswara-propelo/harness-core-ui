@@ -19,6 +19,8 @@ import routes from '@common/RouteDefinitions'
 import { FolderType } from '@dashboards/constants/FolderType'
 import useDeleteFolder from '@dashboards/pages/folders/useDeleteFolder'
 import UpdateFolder from '@dashboards/pages/folders/form/UpdateFolder'
+import { CDBActions, Category } from '@modules/10-common/constants/TrackingConstants'
+import { useTelemetry } from '@modules/10-common/hooks/useTelemetry'
 import { useStrings } from 'framework/strings'
 import type { FolderModel } from 'services/custom-dashboards'
 import css from '@dashboards/pages/home/HomePage.module.scss'
@@ -34,6 +36,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ accountId, folder, onTriggerFol
   const { getString } = useStrings()
   const { openDialog: openDeleteDialog } = useDeleteFolder(folder, onTriggerFolderRefetch)
   const [menuOpen, setMenuOpen] = useState(false)
+  const { trackEvent } = useTelemetry()
 
   const folderPath = routes.toCustomDashboardHome({
     folderId: folder?.id ?? 'shared',
@@ -46,8 +49,14 @@ const FolderCard: React.FC<FolderCardProps> = ({ accountId, folder, onTriggerFol
   }
 
   const onDeleteCard = (): void => {
+    trackEvent(CDBActions.FolderDeleteClicked, { category: Category.CUSTOM_DASHBOARDS })
     setMenuOpen(false)
     openDeleteDialog()
+  }
+
+  const onEditCard = (): void => {
+    trackEvent(CDBActions.FolderEditClicked, { category: Category.CUSTOM_DASHBOARDS })
+    showModal()
   }
 
   const onFormCompleted = (): void => {
@@ -75,7 +84,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ accountId, folder, onTriggerFol
                 <Menu>
                   <RbacMenuItem
                     text={getString('edit')}
-                    onClick={showModal}
+                    onClick={onEditCard}
                     permission={{
                       permission: PermissionIdentifier.EDIT_DASHBOARD,
                       resource: {

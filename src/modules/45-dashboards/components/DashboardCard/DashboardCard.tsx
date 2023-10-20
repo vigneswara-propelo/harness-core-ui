@@ -19,6 +19,8 @@ import { DashboardType } from '@dashboards/types/DashboardTypes.types'
 import DashboardTags from '@dashboards/components/DashboardTags/DashboardTags'
 import { useDashboardsContext } from '@dashboards/pages/DashboardsContext'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import { CDBActions, Category } from '@modules/10-common/constants/TrackingConstants'
+import { useTelemetry } from '@modules/10-common/hooks/useTelemetry'
 
 import { useStrings } from 'framework/strings'
 
@@ -41,6 +43,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
   const { accountId, folderId } = useParams<{ accountId: string; folderId: string }>()
   const [menuOpen, setMenuOpen] = useState(false)
   const { editableFolders } = useDashboardsContext()
+  const { trackEvent } = useTelemetry()
 
   const isCloneable = !!editableFolders.length
 
@@ -55,18 +58,21 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
 
   const onCloneClick = (event: React.MouseEvent<HTMLElement>): void => {
     event.stopPropagation()
+    trackEvent(CDBActions.DashboardCloneClicked, { category: Category.CUSTOM_DASHBOARDS })
     setMenuOpen(false)
     cloneDashboard(dashboard)
   }
 
   const onDeleteClick = (event: React.MouseEvent<HTMLElement>): void => {
     event.stopPropagation()
+    trackEvent(CDBActions.DashboardDeleteClicked, { category: Category.CUSTOM_DASHBOARDS })
     setMenuOpen(false)
     deleteDashboard(dashboard.id)
   }
 
   const onEditClick = (event: React.MouseEvent<HTMLElement>): void => {
     event.stopPropagation()
+    trackEvent(CDBActions.DashboardEditClicked, { category: Category.CUSTOM_DASHBOARDS })
     setMenuOpen(false)
     editDashboard(dashboard)
   }

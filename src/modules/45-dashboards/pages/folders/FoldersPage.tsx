@@ -35,6 +35,8 @@ import routes from '@common/RouteDefinitions'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { PAGE_SIZE } from '@dashboards/pages/home/HomePage'
 import FolderCard from '@dashboards/components/FolderCard/FolderCard'
+import { CDBActions, Category } from '@modules/10-common/constants/TrackingConstants'
+import { useTelemetry } from '@modules/10-common/hooks/useTelemetry'
 import { useStrings } from 'framework/strings'
 import { ErrorResponse, FolderModel, useSearchFolders } from 'services/custom-dashboards'
 import CreateFolder from './form/CreateFolder'
@@ -105,6 +107,7 @@ const FoldersPage: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
   const history = useHistory()
   const { includeBreadcrumbs } = useDashboardsContext()
+  const { trackEvent } = useTelemetry()
 
   const [filteredFoldersList, setFilteredList] = React.useState<FolderModel[]>([])
 
@@ -189,6 +192,20 @@ const FoldersPage: React.FC = () => {
     []
   )
 
+  const handleCreateClick = (): void => {
+    trackEvent(CDBActions.FolderCreationClicked, { category: Category.CUSTOM_DASHBOARDS })
+    showModal()
+  }
+
+  const handleShowFoldersAsGrid = (): void => {
+    trackEvent(CDBActions.FolderLayoutGridViewClicked, { category: Category.CUSTOM_DASHBOARDS })
+    setLayoutView(LayoutViews.GRID)
+  }
+  const handleShowFoldersAsList = (): void => {
+    trackEvent(CDBActions.FolderLayoutListViewClicked, { category: Category.CUSTOM_DASHBOARDS })
+    setLayoutView(LayoutViews.LIST)
+  }
+
   return (
     <Page.Body
       loading={loading}
@@ -205,7 +222,7 @@ const FoldersPage: React.FC = () => {
         <RbacButton
           intent="primary"
           text={getString(strRefFolders)}
-          onClick={showModal}
+          onClick={handleCreateClick}
           icon="plus"
           className={css.createButton}
           permission={{
@@ -245,18 +262,14 @@ const FoldersPage: React.FC = () => {
               icon="grid-view"
               aria-label={getString('dashboards.switchToGridView')}
               intent={layoutView === LayoutViews.GRID ? 'primary' : 'none'}
-              onClick={() => {
-                setLayoutView(LayoutViews.GRID)
-              }}
+              onClick={handleShowFoldersAsGrid}
             />
             <Button
               minimal
               aria-label={getString('dashboards.switchToListView')}
               icon="list"
               intent={layoutView === LayoutViews.LIST ? 'primary' : 'none'}
-              onClick={() => {
-                setLayoutView(LayoutViews.LIST)
-              }}
+              onClick={handleShowFoldersAsList}
             />
           </Layout.Horizontal>
         </Layout.Horizontal>

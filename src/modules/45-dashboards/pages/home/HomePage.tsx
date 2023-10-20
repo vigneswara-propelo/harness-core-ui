@@ -34,6 +34,8 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { PermissionRequest } from '@rbac/hooks/usePermission'
 import ModuleTagsFilter from '@dashboards/components/ModuleTagsFilter/ModuleTagsFilter'
+import { CDBActions, Category } from '@modules/10-common/constants/TrackingConstants'
+import { useTelemetry } from '@modules/10-common/hooks/useTelemetry'
 
 import { ErrorResponse, useDeleteDashboard, useDeprecatedGetFolder, useSearch } from 'services/custom-dashboards'
 import routes from '@common/RouteDefinitions'
@@ -121,6 +123,7 @@ const HomePage: React.FC = () => {
   const [sortBy, setSortingFilter] = useQueryParamsState<SelectOption>('sortBy', defaultSortBy)
   const [selectedTags, setCheckboxFilter] = useQueryParamsState('tags', DEFAULT_FILTER)
   const [layoutView, setLayoutView] = useQueryParamsState('view', DashboardLayoutViews.GRID)
+  const { trackEvent } = useTelemetry()
 
   const { editableFolders, includeBreadcrumbs } = useDashboardsContext()
 
@@ -227,6 +230,20 @@ const HomePage: React.FC = () => {
     }
   }
 
+  const handleShowDashboardsAsGrid = (): void => {
+    trackEvent(CDBActions.DashboardLayoutGridViewClicked, { category: Category.CUSTOM_DASHBOARDS })
+    setLayoutView(DashboardLayoutViews.GRID)
+  }
+  const handleShowDashboardsAsList = (): void => {
+    trackEvent(CDBActions.DashboardLayoutListViewClicked, { category: Category.CUSTOM_DASHBOARDS })
+    setLayoutView(DashboardLayoutViews.LIST)
+  }
+
+  const handleShowCreateDashboard = (): void => {
+    trackEvent(CDBActions.DashboardCreationClicked, { category: Category.CUSTOM_DASHBOARDS })
+    showModal()
+  }
+
   return (
     <Page.Body
       loading={loading || deleting}
@@ -245,7 +262,7 @@ const HomePage: React.FC = () => {
           <RbacButton
             intent="primary"
             text={getString('dashboardLabel')}
-            onClick={showModal}
+            onClick={handleShowCreateDashboard}
             icon="plus"
             className={css.createButton}
             disabled={!hasEditableFolders}
@@ -287,18 +304,14 @@ const HomePage: React.FC = () => {
                 aria-label={getString('dashboards.switchToGridView')}
                 icon="grid-view"
                 intent={layoutView === DashboardLayoutViews.GRID ? 'primary' : 'none'}
-                onClick={() => {
-                  setLayoutView(DashboardLayoutViews.GRID)
-                }}
+                onClick={handleShowDashboardsAsGrid}
               />
               <Button
                 minimal
                 aria-label={getString('dashboards.switchToListView')}
                 icon="list"
                 intent={layoutView === DashboardLayoutViews.LIST ? 'primary' : 'none'}
-                onClick={() => {
-                  setLayoutView(DashboardLayoutViews.LIST)
-                }}
+                onClick={handleShowDashboardsAsList}
               />
             </Layout.Horizontal>
           </Layout.Horizontal>

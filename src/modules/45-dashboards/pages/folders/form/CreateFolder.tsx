@@ -10,6 +10,8 @@ import { useHistory, useParams } from 'react-router-dom'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import FolderForm, { FolderFormikValues } from '@dashboards/components/FolderForm/FolderForm'
+import { CDBActions, Category } from '@modules/10-common/constants/TrackingConstants'
+import { useTelemetry } from '@modules/10-common/hooks/useTelemetry'
 import { useStrings } from 'framework/strings'
 import { useDeprecatedCreateFolder } from 'services/custom-dashboards'
 
@@ -21,6 +23,7 @@ const CreateFolder: React.FC<CreateFolderProps> = ({ onFormCompleted }) => {
   const { getString } = useStrings()
   const history = useHistory()
   const { accountId } = useParams<AccountPathProps>()
+  const { trackEvent } = useTelemetry()
 
   const [errorMessage, setErrorMessage] = React.useState<string>()
   const { mutate: createFolder, loading } = useDeprecatedCreateFolder({
@@ -28,6 +31,7 @@ const CreateFolder: React.FC<CreateFolderProps> = ({ onFormCompleted }) => {
   })
 
   const onSubmit = (formData: FolderFormikValues): void => {
+    trackEvent(CDBActions.FolderCreationSubmitted, { category: Category.CUSTOM_DASHBOARDS })
     setErrorMessage('')
     createFolder(formData)
       .then(response => {

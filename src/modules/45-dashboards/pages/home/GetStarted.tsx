@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { Drawer } from '@blueprintjs/core'
-
 import { Layout, Button, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -17,9 +16,8 @@ interface DrawerProps {
   setDrawerOpen: (state: boolean) => void
 }
 
-export const GetStarted: React.FC<DrawerProps> = props => {
+export const GetStarted: React.FC<DrawerProps> = ({ isOpen, setDrawerOpen }) => {
   const { getString } = useStrings()
-
   const renderEmbeddedVideo = (src: string, title: string): React.ReactElement => (
     <iframe allowFullScreen frameBorder={0} height="250" src={src} scrolling="no" title={title} width="470" />
   )
@@ -32,9 +30,9 @@ export const GetStarted: React.FC<DrawerProps> = props => {
       usePortal
       canOutsideClickClose
       canEscapeKeyClose
-      isOpen={props.isOpen}
+      isOpen={isOpen}
       onClose={() => {
-        props.setDrawerOpen(false)
+        setDrawerOpen(false)
       }}
       size="500px"
       style={{
@@ -53,7 +51,7 @@ export const GetStarted: React.FC<DrawerProps> = props => {
           <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.BLACK}>
             {getString('dashboards.getStarted.title')}
           </Text>
-          <Button icon="cross" minimal onClick={_ => props.setDrawerOpen(false)} />
+          <Button icon="cross" minimal onClick={_ => setDrawerOpen(false)} />
         </Layout.Horizontal>
         <Layout.Vertical spacing="medium" padding="medium">
           <Layout.Vertical spacing="large">

@@ -9,6 +9,8 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import FolderForm, { FolderFormikValues } from '@dashboards/components/FolderForm/FolderForm'
+import { CDBActions, Category } from '@modules/10-common/constants/TrackingConstants'
+import { useTelemetry } from '@modules/10-common/hooks/useTelemetry'
 import { useStrings } from 'framework/strings'
 import { FolderModel, usePatchFolder } from 'services/custom-dashboards'
 
@@ -22,12 +24,13 @@ const UpdateFolder: React.FC<UpdateFolderProps> = ({ folderData, onFormCompleted
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const [errorMessage, setErrorMessage] = React.useState<string>()
-
+  const { trackEvent } = useTelemetry()
   const { mutate: updateFolder, loading } = usePatchFolder({
     queryParams: { accountId: accountId }
   })
 
   const onSubmit = (formData: FolderFormikValues): void => {
+    trackEvent(CDBActions.FolderEditSubmitted, { category: Category.CUSTOM_DASHBOARDS })
     setErrorMessage('')
     updateFolder({ ...formData, folderId })
       .then(() => {

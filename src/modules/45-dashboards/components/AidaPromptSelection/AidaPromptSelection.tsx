@@ -8,6 +8,8 @@
 import React from 'react'
 import { Container, Tag, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
+import { useTelemetry } from '@modules/10-common/hooks/useTelemetry'
+import { CDBActions, Category } from '@modules/10-common/constants/TrackingConstants'
 import { Prompt, PromptOption } from 'services/custom-dashboards'
 import css from './AidaPromptSelection.module.scss'
 
@@ -18,6 +20,13 @@ export interface AidaPromptSelectionProps {
 }
 
 const AidaPromptSelection: React.FC<AidaPromptSelectionProps> = ({ onPromptSelected, prompts, title }) => {
+  const { trackEvent } = useTelemetry()
+
+  const handlePromptSelection = (selection: PromptOption): void => {
+    trackEvent(CDBActions.AidaPromptClicked, { category: Category.CUSTOM_DASHBOARDS, selection })
+    onPromptSelected(selection)
+  }
+
   return (
     <Container>
       <Text color={Color.GREY_500} font={{ variation: FontVariation.BODY2 }} margin={{ bottom: 'medium' }}>
@@ -41,7 +50,7 @@ const AidaPromptSelection: React.FC<AidaPromptSelectionProps> = ({ onPromptSelec
                 <Tag
                   className={css.promptOption}
                   data-testid={`prompt-option-${i}-${j}`}
-                  onClick={() => onPromptSelected(promptOption)}
+                  onClick={() => handlePromptSelection(promptOption)}
                 >
                   <div className={css.promptContent}>{promptOption.content}</div>
                 </Tag>

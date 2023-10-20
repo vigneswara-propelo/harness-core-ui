@@ -233,7 +233,8 @@ export enum Category {
   AUDIT_TRAIL = 'AuditTrail',
   TEMPLATES = 'Templates',
   PIPELINE_EXECUTION = 'PipelineExecution',
-  SUPPORT_TICKET_DEFLECTION = 'SupportTicketDeflection'
+  SUPPORT_TICKET_DEFLECTION = 'SupportTicketDeflection',
+  CUSTOM_DASHBOARDS = 'CustomDashboards'
 }
 export enum CreditCard {
   UpgradePlan = 'Upgrade Plan',
@@ -429,6 +430,35 @@ export enum CDActions {
   CreateUpdateManifest = 'Create/Update Manifest',
   ApplyAdvancedFilter = 'Applied advanced filter'
 }
+
+export enum CDBActions {
+  DashboardGetStartedClicked = 'Dashboards Get Started clicked',
+  DashboardCloneClicked = 'Dashboard clone clicked',
+  DashboardCloneSubmitted = 'Dashboard clone submitted',
+  DashboardCreationClicked = 'Dashboard create clicked',
+  DashboardCreationSubmitted = 'Dashboard create submitted',
+  DashboardDeleteClicked = 'Dashboard delete clicked',
+  DashboardEditClicked = 'Dashboard edit clicked',
+  DashboardEditSubmitted = 'Dashboard edit submitted',
+  DashboardEmbedEditDisabled = 'Dashboard Embed Edit Mode Disabled',
+  DashboardEmbedEditEnabled = 'Dashboard Embed Edit Mode Enabled',
+  DashboardLayoutGridViewClicked = 'Dashboard Layout Grid view clicked',
+  DashboardLayoutListViewClicked = 'Dashboard Layout List view clicked',
+  FolderLayoutGridViewClicked = 'Folder Layout Grid view clicked',
+  FolderLayoutListViewClicked = 'Folder Layout List view clicked',
+  FolderCreationClicked = 'Folder creation clicked',
+  FolderCreationSubmitted = 'Folder creation submitted',
+  FolderEditClicked = 'Folder edit clicked',
+  FolderEditSubmitted = 'Folder edit submitted',
+  FolderDeleteClicked = 'Folder delete clicked',
+  AidaGenerateDashboardTileOpened = 'AIDA Generate Tile window opened',
+  AidaGenerateDashboardTileClosed = 'AIDA Generate Tile window manually closed',
+  AidaPromptClicked = 'AIDA prompt clicked',
+  AidaUserInputSubmitted = 'User input submitted to AIDA',
+  AidaGenerateDashboardTileSuccess = 'AIDA successfully generated dashboard tile',
+  AidaGenerateDashboardTileFailure = 'AIDA failed to generate dashboard tile'
+}
+
 export enum CFOverviewActions {
   OverviewStartFreePlan = 'FF Overview - Start a free plan',
   InviteCollaboratorsClick = 'Clicked Invite Collaborators'

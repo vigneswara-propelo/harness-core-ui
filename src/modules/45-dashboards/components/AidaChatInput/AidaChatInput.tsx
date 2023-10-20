@@ -7,6 +7,8 @@
 
 import React, { useState } from 'react'
 import { TextInput } from '@harness/uicore'
+import { useTelemetry } from '@modules/10-common/hooks/useTelemetry'
+import { CDBActions, Category } from '@modules/10-common/constants/TrackingConstants'
 import { useStrings } from 'framework/strings'
 import css from './AidaChatInput.module.scss'
 
@@ -17,10 +19,13 @@ interface AidaChatInputProps {
 const AidaChatInput: React.FC<AidaChatInputProps> = ({ onEnter }) => {
   const { getString } = useStrings()
   const [value, setValue] = useState('')
+  const { trackEvent } = useTelemetry()
 
   const onHandleEnter = (newValue: string): void => {
-    if (newValue.trim().length) {
-      onEnter(newValue.trim())
+    const input = newValue.trim()
+    if (input.length) {
+      trackEvent(CDBActions.AidaUserInputSubmitted, { category: Category.CUSTOM_DASHBOARDS, input })
+      onEnter(input)
       setValue('')
     }
   }

@@ -22,6 +22,8 @@ import AidaDashboardContent from '@dashboards/components/AidaDashboardContent/Ai
 import AidaDrawer from '@dashboards/components/AidaDrawer/AidaDrawer'
 import AidaToolTip from '@dashboards/components/AidaToolTip/AidaToolTip'
 import { DashboardMode } from '@dashboards/types/DashboardTypes.types'
+import { CDBActions, Category } from '@modules/10-common/constants/TrackingConstants'
+import { useTelemetry } from '@modules/10-common/hooks/useTelemetry'
 import { useStrings } from 'framework/strings'
 import { GetStarted } from './home/GetStarted'
 import { useDashboardsContext } from './DashboardsContext'
@@ -29,6 +31,7 @@ import css from './home/HomePage.module.scss'
 
 const DashboardsHeader: React.FC = () => {
   const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
   const { aiTileDetails, breadcrumbs, mode } = useDashboardsContext()
   const { CDB_AIDA_WIDGET, CDS_NAV_2_0 } = useFeatureFlags()
   const { updateTitle } = useDocumentTitle(getString('common.dashboards'))
@@ -36,6 +39,16 @@ const DashboardsHeader: React.FC = () => {
   const [isOpen, setDrawerOpen] = useState(false)
   const [isAidaDrawerOpen, setAidaDrawerOpen] = useState(false)
   const [isAidaToolTipOpen, setAidaToolTipOpen] = useState(true)
+
+  const handleAidaOpenEvent = (): void => {
+    trackEvent(CDBActions.AidaGenerateDashboardTileOpened, { category: Category.CUSTOM_DASHBOARDS })
+    setAidaDrawerOpen(true)
+  }
+
+  const handleAidaCloseEvent = (): void => {
+    trackEvent(CDBActions.AidaGenerateDashboardTileClosed, { category: Category.CUSTOM_DASHBOARDS })
+    setAidaDrawerOpen(false)
+  }
 
   const title = React.useMemo(
     () => (breadcrumbs.length ? breadcrumbs[breadcrumbs.length - 1].label : getString('common.dashboards')),
@@ -59,13 +72,18 @@ const DashboardsHeader: React.FC = () => {
     queryParams: { accountIdentifier: accountId }
   })
 
+  const handleGetStartedClicked = (): void => {
+    trackEvent(CDBActions.DashboardGetStartedClicked, { category: Category.CUSTOM_DASHBOARDS })
+    setDrawerOpen(true)
+  }
+
   const getStarted = (
     <>
       <Button
         minimal
         color={Color.PRIMARY_6}
         icon="question"
-        onClick={() => setDrawerOpen(true)}
+        onClick={handleGetStartedClicked}
         text={getString('getStarted')}
       />
       <GetStarted isOpen={isOpen} setDrawerOpen={(val: boolean) => setDrawerOpen(val)} />
@@ -75,7 +93,7 @@ const DashboardsHeader: React.FC = () => {
   const aidaButton = (
     <Button
       icon="harness-copilot"
-      onClick={() => setAidaDrawerOpen(true)}
+      onClick={handleAidaOpenEvent}
       variation={ButtonVariation.AI}
       text={getString('dashboards.aida.createWidget')}
       tooltip={<AidaToolTip hideToolTip={() => setAidaToolTipOpen(false)} />}
@@ -122,7 +140,7 @@ const DashboardsHeader: React.FC = () => {
               </NavLink>
             </>
           )}
-          <AidaDrawer isOpen={isAidaDrawerOpen} onClose={() => setAidaDrawerOpen(false)}>
+          <AidaDrawer isOpen={isAidaDrawerOpen} onClose={handleAidaCloseEvent}>
             <AidaDashboardContent />
           </AidaDrawer>
         </Layout.Horizontal>

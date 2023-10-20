@@ -11,6 +11,8 @@ import { Link, useParams } from 'react-router-dom'
 import { Classes, Menu } from '@blueprintjs/core'
 import { CardBody, Container, TableV2, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
+import { CDBActions, Category } from '@modules/10-common/constants/TrackingConstants'
+import { useTelemetry } from '@modules/10-common/hooks/useTelemetry'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import type { DashboardModel } from 'services/custom-dashboards'
@@ -36,11 +38,25 @@ const DashboardList: React.FC<DashboardListProps> = ({
   const { getString } = useStrings()
   const { accountId, folderId } = useParams<{ accountId: string; folderId: string }>()
   const { editableFolders } = useDashboardsContext()
+  const { trackEvent } = useTelemetry()
 
   const isCloneable = !!editableFolders.length
 
   const isDashboardEditable = (dashboard: DashboardModel): boolean => {
     return !!editableFolders.some(folder => folder.id === dashboard.folder.id)
+  }
+
+  const handleCloneClick = (dashboard: DashboardModel): void => {
+    trackEvent(CDBActions.DashboardCloneClicked, { category: Category.CUSTOM_DASHBOARDS })
+    cloneDashboard(dashboard)
+  }
+  const handleDeleteClick = (dashboard: DashboardModel): void => {
+    trackEvent(CDBActions.DashboardDeleteClicked, { category: Category.CUSTOM_DASHBOARDS })
+    deleteDashboard(dashboard.id)
+  }
+  const handleEditClick = (dashboard: DashboardModel): void => {
+    trackEvent(CDBActions.DashboardEditClicked, { category: Category.CUSTOM_DASHBOARDS })
+    editDashboard(dashboard)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -79,14 +95,14 @@ const DashboardList: React.FC<DashboardListProps> = ({
               <RbacMenuItem
                 icon="edit"
                 text={getString('edit')}
-                onClick={() => editDashboard(data)}
+                onClick={() => handleEditClick(data)}
                 disabled={!isDashboardEditable(data)}
               />
             )}
             <RbacMenuItem
               icon="duplicate"
               text={getString('projectCard.clone')}
-              onClick={() => cloneDashboard(data)}
+              onClick={() => handleCloneClick(data)}
               disabled={!isCloneable}
             />
             {data.type === DashboardType.ACCOUNT && (
@@ -95,7 +111,7 @@ const DashboardList: React.FC<DashboardListProps> = ({
                 <RbacMenuItem
                   icon="trash"
                   text={getString('delete')}
-                  onClick={() => deleteDashboard(data.id)}
+                  onClick={() => handleDeleteClick(data)}
                   disabled={!isDashboardEditable(data)}
                 />
               </>
