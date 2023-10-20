@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { cloneDeep, defaultTo, isEmpty, isEqual, merge, noop, set } from 'lodash-es'
+import { cloneDeep, defaultTo, isEmpty, isEqual, merge, noop, pick, set } from 'lodash-es'
 import { AllowedTypesWithRunTime, MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import produce from 'immer'
 import {
@@ -49,7 +49,7 @@ import type {
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { RefetchReturnType } from '@pipeline/hooks/useReconcile'
-import { StoreMetadata } from '@common/constants/GitSyncTypes'
+import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import {
   initialServiceState,
   DefaultNewStageName,
@@ -158,6 +158,24 @@ export function ServicePipelineProvider({
       }
     },
     [onUpdatePipeline, state.originalPipeline, state.pipeline, view]
+  )
+
+  const updatePipelineStoreMetadata = React.useCallback(
+    async (serviceStoreMetadata: StoreMetadata, serviceGitDetails: EntityGitDetails): Promise<void> => {
+      const newStoreMetadata: StoreMetadata = {
+        ...serviceStoreMetadata,
+        ...(serviceStoreMetadata.storeType === StoreType.REMOTE
+          ? pick(serviceGitDetails, 'repoName', 'branch', 'filePath')
+          : { connectorRef: undefined })
+      }
+      dispatch(
+        PipelineContextActions.success({
+          storeMetadata: newStoreMetadata,
+          gitDetails: serviceGitDetails
+        })
+      )
+    },
+    []
   )
 
   const updateStage = React.useCallback(
@@ -298,7 +316,7 @@ export function ServicePipelineProvider({
         // eslint-disable-next-line react/display-name
         renderPipelineStage: () => <div />,
         fetchPipeline,
-        updatePipelineStoreMetadata: Promise.resolve,
+        updatePipelineStoreMetadata,
         updateGitDetails: Promise.resolve,
         updateEntityValidityDetails: Promise.resolve,
         updatePipeline,

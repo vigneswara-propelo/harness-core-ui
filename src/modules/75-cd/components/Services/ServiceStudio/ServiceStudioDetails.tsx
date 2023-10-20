@@ -58,8 +58,8 @@ import { CDActions, Category } from '@common/constants/TrackingConstants'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import { GitData } from '@common/modals/GitDiffEditor/useGitDiffEditorDialog'
-import { ConnectorSelectedValue } from '@modules/27-platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
-import { GitSyncFormFields } from '@modules/40-gitsync/components/GitSyncForm/GitSyncForm'
+// import { ConnectorSelectedValue } from '@modules/27-platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+// import { GitSyncFormFields } from '@modules/40-gitsync/components/GitSyncForm/GitSyncForm'
 import ServiceConfiguration from './ServiceConfiguration/ServiceConfiguration'
 import { ServiceTabs, setNameIDDescription, ServicePipelineConfig } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServiceStudio/ServiceStudio.module.scss'
@@ -78,7 +78,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
   const { tab } = useQueryParams<{ tab: string }>()
   const { updateQueryParams } = useUpdateQueryParams()
   const {
-    state: { pipeline, isUpdated, pipelineView, isLoading },
+    state: { pipeline, isUpdated, pipelineView, isLoading, storeMetadata = {} },
     view,
     updatePipelineView,
     fetchPipeline,
@@ -167,7 +167,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
 
   const { openSaveToGitDialog } = useSaveToGitDialog({
     onSuccess: (gitData: GitData, servicePayload?: ServiceRequestDTO): Promise<ResponseServiceResponse> => {
-      const { connectorRef, repo: repoName, branch, filePath } = pipeline as PipelineInfoConfig & GitSyncFormFields // taking from service context for creating while selecting
+      const { connectorRef, repoName, branch, filePath } = storeMetadata
       const createUpdatePromise = isServiceCreateModalView
         ? createService(
             { ...servicePayload, orgIdentifier, projectIdentifier },
@@ -175,7 +175,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
               queryParams: {
                 accountIdentifier: accountId,
                 storeType: StoreType.REMOTE,
-                connectorRef: (connectorRef as ConnectorSelectedValue)?.value,
+                connectorRef,
                 repoName,
                 isNewBranch: gitData?.isNewBranch,
                 filePath,
@@ -190,9 +190,10 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
               queryParams: {
                 accountIdentifier: accountId,
                 storeType: StoreType.REMOTE,
-                connectorRef: serviceData?.connectorRef,
-                isNewBranch: gitData?.isNewBranch, //Need BE API support for this param, Todo: remove typeCast
-                filePath: serviceData?.entityGitDetails?.filePath,
+                connectorRef,
+                repoName,
+                isNewBranch: gitData?.isNewBranch,
+                filePath,
                 ...(gitData?.isNewBranch
                   ? { baseBranch: serviceData?.entityGitDetails?.branch, branch: gitData?.branch }
                   : { branch: serviceData?.entityGitDetails?.branch }),
@@ -323,15 +324,18 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     }
 
     try {
-      if (finalServiceData?.storeType === StoreType.REMOTE) {
+      if (storeMetadata?.storeType === StoreType.REMOTE) {
         openSaveToGitDialog({
           isEditing: !isServiceCreateModalView,
           resource: {
             type: 'Service',
             name: finalServiceData?.service.name,
             identifier: body.identifier,
-            gitDetails: finalServiceData.entityGitDetails,
-            storeMetadata: { storeType: finalServiceData?.storeType, connectorRef: finalServiceData?.connectorRef }
+            gitDetails: isServiceCreateModalView ? finalServiceData.entityGitDetails : serviceData.entityGitDetails,
+            storeMetadata: {
+              storeType: storeMetadata?.storeType,
+              connectorRef: storeMetadata?.connectorRef
+            }
           },
           payload: body
         })

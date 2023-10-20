@@ -15,14 +15,14 @@ import { NameIdDescriptionTags } from '@common/components'
 import { NameSchema } from '@common/utils/Validation'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { NGServiceV2InfoConfig } from 'services/cd-ng'
-import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
+import { GitSyncForm, GitSyncFormFields } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useServiceContext } from '@cd/context/ServiceContext'
 import { useStrings } from 'framework/strings'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { InlineRemoteSelect } from '@modules/10-common/components/InlineRemoteSelect/InlineRemoteSelect'
-import { ConnectorSelectedValue } from '@modules/27-platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { getConnectorValue } from '@modules/27-platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import css from './ServiceConfiguration.module.scss'
 
 function ServiceStepBasicInfo(): React.ReactElement {
@@ -37,23 +37,25 @@ function ServiceStepBasicInfo(): React.ReactElement {
   } = usePipelineContext()
 
   const { isServiceCreateModalView } = useServiceContext()
+  const [gitConnector, setGitConnector] = React.useState(storeMetadata?.connectorRef)
+
   const initialGitFormValue = {
-    connectorRef: storeMetadata?.connectorRef,
-    repoName: gitDetails?.repoName,
+    connectorRef: gitConnector || storeMetadata?.connectorRef,
+    repo: gitDetails?.repoName,
     filePath: gitDetails?.filePath,
     storeType: storeMetadata?.storeType || (isGitXEnabledForServices ? StoreType.INLINE : undefined)
   }
   const onUpdate = useCallback(
-    (value: NGServiceV2InfoConfig & StoreMetadata): void => {
+    (value: NGServiceV2InfoConfig & GitSyncFormFields & StoreMetadata): void => {
       updatePipeline({ ...value })
 
       if (value.storeType) {
         updatePipelineStoreMetadata(
           {
             storeType: value.storeType,
-            connectorRef: (value.connectorRef as unknown as ConnectorSelectedValue)?.value || value.connectorRef
+            connectorRef: value.connectorRef ? getConnectorValue(value.connectorRef) : undefined
           },
-          { repoName: value?.repoName, branch: value?.branch, filePath: value?.filePath }
+          { repoName: value?.repo, branch: value?.branch, filePath: value?.filePath }
         )
       }
     },
@@ -69,6 +71,12 @@ function ServiceStepBasicInfo(): React.ReactElement {
         validate={values => {
           if (isEmpty(values.name)) {
             return
+          }
+
+          const selectedConnector = values.connectorRef ? getConnectorValue(values.connectorRef) : undefined
+          if (values.storeType === StoreType.REMOTE && selectedConnector !== gitConnector) {
+            // enableReinitialize will reset the connector before it is saved in context
+            setGitConnector(selectedConnector)
           }
           delayedOnUpdate(values)
         }}

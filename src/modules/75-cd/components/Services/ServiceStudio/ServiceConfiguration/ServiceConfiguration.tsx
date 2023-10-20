@@ -13,7 +13,7 @@ import {
   ButtonVariation,
   Container
 } from '@harness/uicore'
-import { cloneDeep, defaultTo, get, isEmpty, isEqual, set } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isEmpty, isEqual, omit, set } from 'lodash-es'
 import { matchPath, useHistory, useParams } from 'react-router-dom'
 import { parse } from 'yaml'
 import produce from 'immer'
@@ -267,7 +267,7 @@ function ServiceConfiguration({
                 updatePipelineView({ ...pipelineView, isYamlEditable: true })
               }}
               isEditModeSupported={!isReadonly}
-              existingJSON={serviceData}
+              existingJSON={omit(serviceData, ['storeType', 'connectorRef', 'entityGitDetails'])}
               bind={setYamlHandler}
               schema={serviceSchema?.data}
               height={isServiceEntityModalView ? 540 : 700}

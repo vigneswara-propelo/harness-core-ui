@@ -70,20 +70,25 @@ export function getReferenceFieldProps({
         .then(responseData => {
           if (responseData?.data?.length) {
             setPagedServiceData(responseData)
-            const servicesList = responseData?.data?.map(service => ({
-              identifier: defaultTo(service.service?.identifier, ''),
-              name: defaultTo(service.service?.name, ''),
-              record: {
-                identifier: defaultTo(service.service?.identifier, ''),
+            const servicesList = responseData?.data?.map(service => {
+              const serviceData = service.service
+              return {
+                identifier: defaultTo(serviceData?.identifier, ''),
                 name: defaultTo(service.service?.name, ''),
-                storeType: defaultTo(service.service?.storeType, StoreType.INLINE),
-                entityGitDetails: service.service?.entityGitDetails,
-                description: service.service?.description,
-                tags: service.service?.tags,
-                orgIdentifier: scope !== Scope.ACCOUNT ? orgIdentifier : undefined,
-                projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined
+                record: {
+                  identifier: defaultTo(serviceData?.identifier, ''),
+                  name: defaultTo(serviceData?.name, ''),
+                  storeType: defaultTo(serviceData?.storeType, StoreType.INLINE),
+                  connectorRef: serviceData?.connectorRef,
+                  fallbackBranch: serviceData?.fallbackBranch,
+                  entityGitDetails: serviceData?.entityGitDetails,
+                  description: serviceData?.description,
+                  tags: serviceData?.tags,
+                  orgIdentifier: scope !== Scope.ACCOUNT ? orgIdentifier : undefined,
+                  projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined
+                }
               }
-            }))
+            })
             done(servicesList)
           } else done([])
         })
@@ -119,12 +124,14 @@ export function getReferenceFieldProps({
           </Layout.Horizontal>
           {item?.record?.storeType === StoreType?.REMOTE ? (
             <GitRemoteDetails
+              connectorRef={item?.record?.connectorRef}
               repoName={item?.record?.entityGitDetails?.repoName}
+              branch={item?.record?.fallbackBranch}
               filePath={item?.record?.entityGitDetails?.filePath}
               fileUrl={item?.record?.entityGitDetails?.fileUrl}
               flags={{
                 readOnly: true,
-                showBranch: false
+                showBranch: true
               }}
             />
           ) : null}
