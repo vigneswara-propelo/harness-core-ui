@@ -24,6 +24,9 @@ export interface CODEProps {
   pullRequestSection?: string // commits | diffs | checks ...
   webhookId?: string
   commitSHA?: string
+  settingSection?: string
+  ruleId?: string
+  settingSectionMode?: string
 }
 
 export type CODEPathProps = RequiredField<
@@ -204,9 +207,21 @@ export const routesV2 = {
     })
   },
 
-  toCODESettings: ({ repoPath, mode }: Required<Pick<CODEProps, 'repoPath'>> & NavMode) => {
+  toCODESettings: ({
+    repoPath,
+    mode,
+    settingSection,
+    settingSectionMode,
+    ruleId
+  }: RequiredField<Pick<CODEProps, 'repoPath' | 'ruleId' | 'settingSection' | 'settingSectionMode'>, 'repoPath'> &
+    NavMode) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return withModeModuleAndScopePrefix<ProjectPathProps>(() => `${REPOS_PREFIX}/${repoName}/settings`)({
+    return withModeModuleAndScopePrefix<ProjectPathProps>(
+      () =>
+        `${REPOS_PREFIX}/${repoName}/settings${settingSection ? '/' + settingSection : ''}${
+          ruleId ? '/' + ruleId : ''
+        }${settingSectionMode ? '/' + settingSectionMode : ''}`
+    )({
       module: CODE,
       accountId,
       orgIdentifier,
@@ -326,9 +341,16 @@ export default {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/search`
   },
-  toCODESettings: ({ repoPath }: Required<Pick<CODEProps, 'repoPath'>>) => {
+  toCODESettings: ({
+    repoPath,
+    settingSection,
+    settingSectionMode,
+    ruleId
+  }: RequiredField<Pick<CODEProps, 'repoPath' | 'ruleId' | 'settingSection' | 'settingSectionMode'>, 'repoPath'>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/settings`
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/settings${
+      settingSection ? '/' + settingSection : ''
+    }${ruleId ? '/' + ruleId : ''}${settingSectionMode ? '/' + settingSectionMode : ''}`
   },
   toCODEWebhooks: ({ repoPath }: Required<Pick<CODEProps, 'repoPath'>>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')

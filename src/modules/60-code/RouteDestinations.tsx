@@ -53,7 +53,10 @@ export const codePathProps: Required<CODEPathProps> = {
   pullRequestId: ':pullRequestId',
   pullRequestSection: ':pullRequestSection',
   commitSHA: ':commitSHA',
-  webhookId: ':webhookId'
+  webhookId: ':webhookId',
+  settingSection: ':settingSection',
+  ruleId: ':ruleId',
+  settingSectionMode: ':settingSectionMode'
 }
 
 const RedirectToDefaultCODERoute: React.FC = () => {
@@ -185,7 +188,22 @@ export default function CODERouteDestinations(): React.ReactElement {
       </RouteWithLayout>
 
       <RouteWithLayout
-        path={routes.toCODESettings({ repoPath })}
+        path={[
+          routes.toCODESettings({
+            repoPath,
+            settingSection: codePathProps.settingSection,
+            settingSectionMode: codePathProps.settingSectionMode,
+            ruleId: codePathProps.ruleId
+          }),
+          routes.toCODESettings({
+            repoPath,
+            settingSection: codePathProps.settingSection,
+            settingSectionMode: codePathProps.settingSectionMode
+          }),
+
+          routes.toCODESettings({ repoPath, settingSection: codePathProps.settingSection }),
+          routes.toCODESettings({ repoPath })
+        ]}
         sidebarProps={sidebarProps}
         pageName={PAGE_NAME.CODESettings}
         exact
