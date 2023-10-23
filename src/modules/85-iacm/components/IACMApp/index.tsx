@@ -59,15 +59,19 @@ RbacFactory.registerResourceCategory(ResourceCategory.IACM, {
   label: 'common.iacmText'
 })
 
-RbacFactory.registerResourceTypeHandler(ResourceType.IAC_STACK, {
+RbacFactory.registerResourceTypeHandler(ResourceType.IAC_WORKSPACE, {
   icon: 'nav-settings',
   label: 'iacm.permissions.iacmWorkspaces',
   labelSingular: 'iacm.permissions.iacmWorkspace',
   category: ResourceCategory.IACM,
   permissionLabels: {
-    [PermissionIdentifier.IAC_VIEW_STACK]: <String stringID="rbac.permissionLabels.view" />,
-    [PermissionIdentifier.IAC_EDIT_STACK]: <String stringID="rbac.permissionLabels.createEdit" />,
-    [PermissionIdentifier.IAC_DELETE_STACK]: <String stringID="rbac.permissionLabels.delete" />
+    [PermissionIdentifier.IAC_WORKSPACE_VIEW]: <String stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.IAC_WORKSPACE_EDIT]: <String stringID="rbac.permissionLabels.createEdit" />,
+    [PermissionIdentifier.IAC_WORKSPACE_DELETE]: <String stringID="rbac.permissionLabels.delete" />,
+    [PermissionIdentifier.IAC_WORKSPACE_APPROVE]: <String stringID="rbac.permissionLabels.approveReject" />,
+    [PermissionIdentifier.IAC_WORKSPACE_ACCESSSTATE]: <String stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.IAC_WORKSPACE_DELETEVARIABLE]: <String stringID="rbac.permissionLabels.delete" />,
+    [PermissionIdentifier.IAC_WORKSPACE_EDITVARIABLE]: <String stringID="rbac.permissionLabels.edit" />
   }
 })
 

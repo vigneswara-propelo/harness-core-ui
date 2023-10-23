@@ -244,9 +244,13 @@ export enum PermissionIdentifier {
   VIEW_LICENSE = 'core_license_view',
 
   // IACM Permissions
-  IAC_VIEW_STACK = 'iac_stack_view',
-  IAC_EDIT_STACK = 'iac_stack_edit',
-  IAC_DELETE_STACK = 'iac_stack_delete',
+  IAC_WORKSPACE_ACCESSSTATE = 'iac_workspace_accessstate',
+  IAC_WORKSPACE_APPROVE = 'iac_workspace_approve',
+  IAC_WORKSPACE_DELETE = 'iac_workspace_delete',
+  IAC_WORKSPACE_DELETEVARIABLE = 'iac_workspace_deletevariable',
+  IAC_WORKSPACE_EDIT = 'iac_workspace_edit',
+  IAC_WORKSPACE_EDITVARIABLE = 'iac_workspace_editvariable',
+  IAC_WORKSPACE_VIEW = 'iac_workspace_view',
 
   // Log Streaming Permissions
   VIEW_STREAMING_DESTINATION = 'core_streamingDestination_view',
