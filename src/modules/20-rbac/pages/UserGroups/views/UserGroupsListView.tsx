@@ -28,7 +28,8 @@ import {
   ResponsePageUserGroupAggregateDTO,
   UserGroupDTO,
   UserMetadataDTO,
-  RoleAssignmentMetadataDTO
+  RoleAssignmentMetadataDTO,
+  getUserGroupAggregatePromise
 } from 'services/cd-ng'
 import { getPrincipalScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useStrings, String, StringKeys } from 'framework/strings'
@@ -40,7 +41,8 @@ import {
   mapfromScopetoPrincipalScope,
   getScopeFromUserGroupDTO,
   getUserGroupMenuOptionText,
-  AuthenticationMechanisms
+  AuthenticationMechanisms,
+  getUserGroupQueryParams
 } from '@rbac/utils/utils'
 import type { PipelineType, ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
@@ -135,6 +137,9 @@ const RenderColumnMembers: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, 
     orgIdentifier: childOrgIdentifier,
     projectIdentifier: childProjectIdentifier
   } = useParams<ProjectPathProps>()
+  const { showError } = useToaster()
+  const [fetchingUserGroupAggregateData, setFetchingUserGroupAggregateData] = useState<boolean>(false)
+
   const { getString } = useStrings()
 
   const avatars =
@@ -142,9 +147,26 @@ const RenderColumnMembers: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, 
       return { email: user.email, name: getUserName(user) }
     }) || []
 
-  const handleAddMember = (e: React.MouseEvent<HTMLElement | Element, MouseEvent>): void => {
+  const handleAddMember = async (e: React.MouseEvent<HTMLElement | Element, MouseEvent>): Promise<void> => {
     e.stopPropagation()
-    ;(column as any).openUserGroupModal(data, true)
+    const parentScope = getPrincipalScopeFromDTO(data.userGroupDTO)
+    setFetchingUserGroupAggregateData(true)
+    try {
+      // Get specific UserGroup data so that all users are fetched instead of just 6
+      const userGroupAggregateResponse = await getUserGroupAggregatePromise({
+        identifier: data.userGroupDTO.identifier,
+        queryParams: {
+          ...getUserGroupQueryParams(accountIdentifier, childOrgIdentifier, childProjectIdentifier, parentScope),
+          roleAssignmentScopeOrgIdentifier: orgIdentifier,
+          roleAssignmentScopeProjectIdentifier: projectIdentifier
+        }
+      })
+      ;(column as any).openUserGroupModal(userGroupAggregateResponse.data, true)
+    } catch (err) {
+      showError(err?.message || err?.msg || getString('somethingWentWrong'))
+    } finally {
+      setFetchingUserGroupAggregateData(false)
+    }
   }
 
   const userGroupInherited = isUserGroupInherited(
@@ -169,38 +191,43 @@ const RenderColumnMembers: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, 
 
   const avatarTooltip = disableTooltipText ? <Text padding="medium">{disableTooltipText}</Text> : undefined
 
-  return avatars.length ? (
-    <RbacAvatarGroup
-      avatars={avatars}
-      restrictLengthTo={6}
-      onAdd={handleAddMember}
-      permission={{
-        resourceScope: {
-          accountIdentifier,
-          orgIdentifier,
-          projectIdentifier
-        },
-        resource: {
-          resourceType: ResourceType.USERGROUP,
-          resourceIdentifier: identifier
-        },
-        permission: PermissionIdentifier.MANAGE_USERGROUP
-      }}
-      disabled={disabled}
-      onAddTooltip={avatarTooltip}
-    />
-  ) : (
-    <Layout.Horizontal>
-      <ManagePrincipalButton
-        text={getString('plusNumber', { number: getString('members') })}
-        variation={ButtonVariation.LINK}
-        onClick={handleAddMember}
-        className={css.roleButton}
-        resourceType={ResourceType.USERGROUP}
-        resourceIdentifier={identifier}
-        disabled={disabled}
-        tooltip={avatarTooltip}
-      />
+  return (
+    <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+      {avatars.length ? (
+        <RbacAvatarGroup
+          avatars={avatars}
+          restrictLengthTo={6}
+          onAdd={handleAddMember}
+          permission={{
+            resourceScope: {
+              accountIdentifier,
+              orgIdentifier,
+              projectIdentifier
+            },
+            resource: {
+              resourceType: ResourceType.USERGROUP,
+              resourceIdentifier: identifier
+            },
+            permission: PermissionIdentifier.MANAGE_USERGROUP
+          }}
+          disabled={disabled}
+          onAddTooltip={avatarTooltip}
+        />
+      ) : (
+        <Layout.Horizontal>
+          <ManagePrincipalButton
+            text={getString('plusNumber', { number: getString('members') })}
+            variation={ButtonVariation.LINK}
+            onClick={handleAddMember}
+            className={css.roleButton}
+            resourceType={ResourceType.USERGROUP}
+            resourceIdentifier={identifier}
+            disabled={disabled}
+            tooltip={avatarTooltip}
+          />
+        </Layout.Horizontal>
+      )}
+      {fetchingUserGroupAggregateData && <Icon name="spinner" color="primary7" size={18} />}
     </Layout.Horizontal>
   )
 }
