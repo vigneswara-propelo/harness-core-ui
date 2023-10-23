@@ -19,8 +19,8 @@ import type { Error } from 'services/pipeline-ng'
 import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
 import {
   useGetListOfBranchesWithStatus,
-  useCheckIfPipelineUsingV1Stage,
-  ResponseEOLBannerResponseDTO
+  ResponseEOLBannerResponseDTO,
+  checkIfPipelineUsingV1StagePromise
 } from 'services/cd-ng'
 import { NavigatedToPage } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
@@ -85,12 +85,6 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
   ) || { isExact: false }
   const isPipelineStudioRoute = isPipelineStudioV0Route || isPipelineStudioV1Route
 
-  const { mutate } = useCheckIfPipelineUsingV1Stage({
-    queryParams: {
-      accountIdentifier: accountId
-    }
-  })
-
   const { data: pipeline, error } = useGetPipelineSummaryQuery(
     {
       pipelineIdentifier,
@@ -129,7 +123,7 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
   const { CI_YAML_VERSIONING, CDS_V1_EOL_BANNER } = useFeatureFlags()
   const auxNavEnabled = useFeatureFlag(FeatureFlag.PL_AI_SUPPORT_CHATBOT)
   const isYAMLSimplicationEnabledForCI = isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
-
+  const abortControllerRef = React.useRef<AbortController | null>(null)
   const routeParams = {
     orgIdentifier,
     projectIdentifier,
@@ -144,23 +138,37 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
   }
 
   React.useEffect(() => {
-    //Check if Pipeline is Using V1 Stage only for the Edit flow.
+    // Check if Pipeline is Using V1 Stage only for the Edit flow.
     if (CDS_V1_EOL_BANNER && pipelineIdentifier !== DefaultNewPipelineId) {
-      mutate({
-        orgIdentifier,
-        projectIdentifier,
-        pipelineIdentifier
-      })
+      abortControllerRef.current = new AbortController()
+      checkIfPipelineUsingV1StagePromise(
+        {
+          queryParams: {
+            accountIdentifier: accountId
+          },
+          body: { orgIdentifier, projectIdentifier, pipelineIdentifier }
+        },
+        abortControllerRef.current?.signal
+      )
         .then((res: ResponseEOLBannerResponseDTO) => {
           if (res?.data?.showBanner) {
             setShowBanner(true)
           }
         })
         .catch((err: GetDataError<Error>) => {
-          showError(defaultTo(defaultTo((err.data as Error)?.message, err.message), getString('somethingWentWrong')))
+          // ignore errors like user aborted API request
+          if (!abortControllerRef.current?.signal.aborted) {
+            showError(defaultTo(defaultTo((err.data as Error)?.message, err.message), getString('somethingWentWrong')))
+          }
         })
     }
-  }, [orgIdentifier, projectIdentifier, pipelineIdentifier, CDS_V1_EOL_BANNER])
+    return () => {
+      if (abortControllerRef.current) {
+        /* istanbul ignore next */
+        abortControllerRef.current.abort()
+      }
+    }
+  }, [orgIdentifier, projectIdentifier, pipelineIdentifier, CDS_V1_EOL_BANNER, accountId])
 
   React.useEffect(() => {
     if (repoIdentifier && !storeType) {

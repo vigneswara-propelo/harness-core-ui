@@ -50,9 +50,7 @@ jest.mock('services/cd-ng', () => ({
   useListGitSync: jest.fn().mockImplementation(() => {
     return { data: gitConfigs, refetch: getListGitSync }
   }),
-  useCheckIfPipelineUsingV1Stage: jest.fn().mockImplementation(() => {
-    return { mutate: jest.fn() }
-  })
+  checkIfPipelineUsingV1StagePromise: jest.fn()
 }))
 
 jest.mock('services/cd-ng-rq', () => ({
