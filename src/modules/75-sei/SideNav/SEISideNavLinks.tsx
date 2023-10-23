@@ -8,14 +8,15 @@
 import React from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { Color } from '@harness/design-system'
-import { ScopeSwitchProps, SideNav } from '@common/navigation/SideNavV2/SideNavV2'
+import { SideNav } from '@common/navigation/SideNavV2/SideNavV2'
 import { Scope } from 'framework/types/types'
-import { AccountPathProps, OrgPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitionsV2'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
 import { NAV_MODE } from '@common/utils/routeUtils'
 import { useStrings } from 'framework/strings'
 import { module } from '../constants'
+import { getAccountLevelRedirectionProps, getProjectLevelRedirectionProps } from './SEISideNavLinks.utils'
 
 const SEISideNavLinks = (mode: NAV_MODE): React.ReactElement => {
   const { getString } = useStrings()
@@ -25,48 +26,17 @@ const SEISideNavLinks = (mode: NAV_MODE): React.ReactElement => {
   const { scope: selectedScope } = useGetSelectedScope()
   const history = useHistory()
 
-  const projectLevelRedirectionProps: Partial<Record<Scope, ScopeSwitchProps>> = {
-    [Scope.ACCOUNT]: {
-      link: {
-        icon: 'ccm-cloud-integration-settings',
-        label: 'Go to Integrations',
-        info: '',
-        onClick: () => {
-          history.push(routes.toSEIIntegrations({ accountId, module }))
-        }
-      }
-    }
-  }
-
-  const accountLevelRedirectionProps: Partial<Record<Scope, ScopeSwitchProps>> = {
-    [Scope.PROJECT]: {
-      link: {
-        icon: 'graph-increase',
-        label: 'Go to Insights',
-        info: '',
-        onClick: (targetScopeParams?: ProjectPathProps | OrgPathProps) => {
-          const { projectIdentifier: targetProject, orgIdentifier: targetOrg } = targetScopeParams as ProjectPathProps
-          history.push(
-            routes.toSEIInsights({
-              accountId,
-              projectIdentifier: targetProject,
-              orgIdentifier: targetOrg,
-              module
-            })
-          )
-        }
-      }
-    }
-  }
+  const projectLevelRedirectionProps = getProjectLevelRedirectionProps(history, accountId)
+  const accountLevelRedirectionProps = getAccountLevelRedirectionProps(history, accountId)
 
   return (
     <SideNav.Main>
       <SideNav.Section>
         <SideNav.Scope scope={[Scope.PROJECT]} scopeSwitchProps={projectLevelRedirectionProps}>
           <SideNav.Link
-            label={'Get Started'}
+            label={getString('getStarted')}
             to={routes.toSEIGetStarted({ accountId, projectIdentifier, orgIdentifier, module })}
-            icon="play"
+            icon="get-started"
           />
           <SideNav.Link
             label={getString('sei.insights')}
@@ -113,7 +83,7 @@ const SEISideNavLinks = (mode: NAV_MODE): React.ReactElement => {
           <SideNav.Link
             label={getString('sei.accountSettings.profile.trellisFactors')}
             to={routes.toSEITrellisScoreProfile({ accountId, module })}
-            icon="clusterEffieiencyScore"
+            icon="resource-stack"
           />
         </SideNav.Scope>
         {selectedScope === Scope.ACCOUNT ? <SideNav.Title label="sei.accountSettings.advancedFeature.label" /> : null}

@@ -1,8 +1,11 @@
-import React from 'react'
 import { render, screen } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom' // Use MemoryRouter to simulate routing
-import { NAV_MODE } from '@modules/10-common/utils/routeUtils'
+import { MemoryRouter } from 'react-router-dom'
+import React from 'react'
+import { Scope } from 'framework/types/types'
+import { ScopeSwitchProps } from '@modules/10-common/navigation/SideNavV2/SideNavV2'
 import { TestWrapper } from '@modules/10-common/utils/testUtils'
+import { NAV_MODE } from '@modules/10-common/utils/routeUtils'
+import { getAccountLevelRedirectionProps, getProjectLevelRedirectionProps } from '../SEISideNavLinks.utils'
 import SEISideNavLinks from '../SEISideNavLinks'
 
 describe('SEISideNavLinks Component', () => {
@@ -26,5 +29,43 @@ describe('SEISideNavLinks Component', () => {
     expect(dataSettingsLabel).toBeInTheDocument()
     expect(integrationsLabel).toBeInTheDocument()
     expect(contributorsLabel).toBeInTheDocument()
+  })
+})
+describe('getProjectLevelRedirectionProps function', () => {
+  test('should return the correct object for Scope.ACCOUNT', () => {
+    const history = { push: jest.fn() } as any
+    const accountId = '123'
+
+    const result = getProjectLevelRedirectionProps(history, accountId) as Partial<Record<Scope, ScopeSwitchProps>>
+
+    expect(result?.[Scope.ACCOUNT]?.link?.icon).toBe('ccm-cloud-integration-settings')
+    expect(result?.[Scope.ACCOUNT]?.link?.label).toBe('Go to Integrations')
+    expect(result?.[Scope.ACCOUNT]?.link?.info).toBe('')
+    expect(typeof result?.[Scope.ACCOUNT]?.link?.onClick).toBe('function')
+
+    result?.[Scope.ACCOUNT]?.link?.onClick()
+    expect(history.push).toHaveBeenCalledWith('/account/123/sei/configuration/integrations')
+  })
+})
+
+describe('getAccountLevelRedirectionProps function', () => {
+  test('should return the correct object for Scope.PROJECT', () => {
+    const history = { push: jest.fn() } as any
+    const accountId = '123'
+    const targetScopeParams = {
+      projectIdentifier: 'project123',
+      orgIdentifier: 'org456',
+      accountId: 'accountId'
+    }
+
+    const result = getAccountLevelRedirectionProps(history, accountId)
+
+    expect(result?.[Scope.PROJECT]?.link?.icon).toBe('graph-increase')
+    expect(result?.[Scope.PROJECT]?.link?.label).toBe('Go to Insights')
+    expect(result?.[Scope.PROJECT]?.link?.info).toBe('')
+    expect(typeof result?.[Scope.PROJECT]?.link?.onClick).toBe('function')
+
+    result?.[Scope.PROJECT]?.link?.onClick(targetScopeParams)
+    expect(history.push).toHaveBeenCalledWith('/account/123/sei/orgs/org456/projects/project123/sei-home')
   })
 })
