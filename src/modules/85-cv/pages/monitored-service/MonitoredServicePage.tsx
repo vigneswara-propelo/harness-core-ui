@@ -21,6 +21,8 @@ import DetailsHeaderTitle from '@cv/pages/monitored-service/views/DetailsHeaderT
 import DetailsToolbar from '@cv/pages/monitored-service/views/DetailsToolbar'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import MFEWrapper from '@modules/85-cv/MFEWrapper'
+import { ChildComponentNames } from '@modules/85-cv/interface/SRMCustomMicroFrontendProps.constants'
 import Configurations from './components/Configurations/Configurations'
 import { MonitoredServiceEnum } from './MonitoredServicePage.constants'
 import ServiceHealth from './components/ServiceHealth/ServiceHealth'
@@ -45,6 +47,7 @@ const ServiceHealthAndConfiguration: React.FC = () => {
 
   const isSRMLicenseEnabled = useFeatureFlag(FeatureFlag.CVNG_LICENSE_ENFORCEMENT)
   const isNav2Enabled = useFeatureFlag(FeatureFlag.CDS_NAV_2_0)
+  const isMFEEnabled = useFeatureFlag(FeatureFlag.SRM_MICRO_FRONTEND)
 
   const {
     data: monitoredServiceData,
@@ -125,7 +128,13 @@ const ServiceHealthAndConfiguration: React.FC = () => {
         when: () => !monitoredService
       }}
     >
-      <CVSLOsListingPage monitoredService={monitoredService} />
+      {isMFEEnabled ? (
+        <MFEWrapper
+          renderComponent={{ componentName: ChildComponentNames.SLOsListingPage, componentProps: { monitoredService } }}
+        />
+      ) : (
+        <CVSLOsListingPage monitoredService={monitoredService} />
+      )}
     </Page.Body>
   )
 

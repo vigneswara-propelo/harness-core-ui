@@ -56,16 +56,10 @@ import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import NotificationMethods from '@pipeline/components/Notifications/Steps/NotificationMethods'
 import Overview from '@pipeline/components/Notifications/Steps/Overview'
 import type { ETCustomMicroFrontendProps } from '@cet/ErrorTracking.types'
-import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { useQueryParams, useDeepCompareEffect, useMutateAsGet } from '@common/hooks'
-import { formatDatetoLocale, getReadableDateTime, ALL_TIME_ZONES } from '@common/utils/dateUtils'
-import { Stepper } from '@common/components/Stepper/Stepper'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useQueryParams } from '@common/hooks'
 import { CDSideNavProps } from '@cd/RouteDestinations'
 import { ProjectDetailsSideNavProps } from '@projects-orgs/RouteDestinations'
-import { NameIdDescriptionTags, TimeSeriesAreaChart } from '@common/components'
-import { useHarnessServicetModal } from '@common/modals/HarnessServiceModal/HarnessServiceModal'
-import { Ticker } from '@common/components/Ticker/Ticker'
-import { DateTimePicker } from '@common/components/DateTimePicker/DateTimePicker'
 import { MultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import NotFoundPage from '@modules/10-common/pages/404/NotFoundPage'
 import ChildAppMounter from '../../microfrontends/ChildAppMounter'
@@ -82,27 +76,8 @@ import {
   PROJECT_MONITORED_SERVICE_CONFIG
 } from './components/MonitoredServiceListWidget/MonitoredServiceListWidget.constants'
 import CommonMonitoredServiceDetails from './components/MonitoredServiceListWidget/components/CommonMonitoredServiceDetails/CommonMonitoredServiceDetails'
-import type { SRMCustomMicroFrontendProps } from './interface/SRMCustomMicroFrontendProps.types'
 import MonitoredServiceListWidget from './components/MonitoredServiceListWidget/MonitoredServiceListWidget'
-import {
-  useGetHarnessServices,
-  useGetHarnessEnvironments,
-  HarnessServiceAsFormField,
-  HarnessEnvironmentAsFormField
-} from './components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironment'
-import {
-  updatedMonitoredServiceNameForEnv,
-  updateMonitoredServiceNameForService
-} from './pages/monitored-service/components/Configurations/components/Service/components/MonitoredServiceOverview/MonitoredServiceOverview.utils'
-import { WrapperOrgAccountLevelServiceEnvField } from './pages/monitored-service/components/Configurations/components/Service/components/MonitoredServiceOverview/component/OrgAccountLevelServiceEnvField/OrgAccountLevelServiceEnvField'
-import SLOTargetNotifications from './pages/slos/common/SLOTargetAndBudgetPolicy/components/SLOTargetNotificationsContainer/SLOTargetNotifications'
-import HealthSourceDrawerHeader from './pages/health-source/HealthSourceDrawer/component/HealthSourceDrawerHeader/HealthSourceDrawerHeader'
-import HealthSourceDrawerContent from './pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent'
-import { useLogContentHook } from './hooks/useLogContentHook/useLogContentHook'
-import ChangesTable from './pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/ChangesTable'
-import ChangeTimeline from './components/ChangeTimeline/ChangeTimeline'
-import TimelineSlider from './components/ChangeTimeline/components/TimelineSlider/TimelineSlider'
-import AnomaliesCard from './pages/monitored-service/components/ServiceHealth/components/AnomaliesCard/AnomaliesCard'
+import MFEWrapper from './MFEWrapper'
 
 // PubSubPipelineActions.subscribe(
 //   PipelineActions.RunPipeline,
@@ -351,9 +326,6 @@ RbacFactory.registerResourceTypeHandler(ResourceType.DOWNTIME, {
     [PermissionIdentifier.DELETE_DOWNTIME]: <String stringID="delete" />
   }
 })
-
-// eslint-disable-next-line import/no-unresolved
-const SrmMicroFrontendPath = React.lazy(() => import('srmui/MicroFrontendApp'))
 
 const CVSideNavProps: SidebarContext = {
   navComponent: SideNav,
@@ -654,44 +626,7 @@ export const SRMMFERoutes = (): JSX.Element => {
     <>
       {enableMicroFrontend ? (
         <RouteWithLayout exact path={[...mfePaths]} sidebarProps={CVSideNavProps}>
-          <ChildAppMounter<SRMCustomMicroFrontendProps>
-            ChildApp={SrmMicroFrontendPath}
-            customHooks={{
-              useMutateAsGet,
-              useQueryParams,
-              useFeatureFlag,
-              useFeatureFlags,
-              useLogContentHook,
-              useDeepCompareEffect,
-              useGetHarnessServices,
-              useGetHarnessEnvironments,
-              useHarnessServicetModal
-            }}
-            customFunctions={{
-              formatDatetoLocale,
-              getReadableDateTime,
-              updatedMonitoredServiceNameForEnv,
-              updateMonitoredServiceNameForService
-            }}
-            customConstants={{ ALL_TIME_ZONES }}
-            customComponents={{
-              Stepper,
-              Ticker,
-              ChangeTimeline,
-              TimelineSlider,
-              AnomaliesCard,
-              ChangesTable,
-              DateTimePicker,
-              NameIdDescriptionTags,
-              SLOTargetNotifications,
-              HarnessServiceAsFormField,
-              HarnessEnvironmentAsFormField,
-              HealthSourceDrawerHeader,
-              HealthSourceDrawerContent,
-              TimeSeriesAreaChart,
-              OrgAccountLevelServiceEnvField: WrapperOrgAccountLevelServiceEnvField
-            }}
-          />
+          <MFEWrapper />
         </RouteWithLayout>
       ) : (
         <RouteWithLayout exact sidebarProps={CVSideNavProps} path={[...mfePaths]}>

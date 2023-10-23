@@ -32,6 +32,9 @@ import ChangesTable from '@cv/pages/monitored-service/components/ServiceHealth/c
 import ChangeTimeline from '@cv/components/ChangeTimeline/ChangeTimeline'
 import TimelineSlider from '@cv/components/ChangeTimeline/components/TimelineSlider/TimelineSlider'
 import AnomaliesCard from '@cv/pages/monitored-service/components/ServiceHealth/components/AnomaliesCard/AnomaliesCard'
+import { ChangesTableInterface } from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/ChangesTable.types'
+import { ChildComponentNames } from './SRMCustomMicroFrontendProps.constants'
+import { CVSLOsListingPageProps } from '../pages/slos/CVSLOsListingPage.types'
 
 export interface SRMCustomMicroFrontendProps {
   customComponents: {
@@ -77,5 +80,9 @@ export interface SRMCustomMicroFrontendProps {
       endTime: number
       monitoredServiceIdentifier: string
     }
+  }
+  renderComponent?: {
+    componentName: ChildComponentNames
+    componentProps: ChangesTableInterface | CVSLOsListingPageProps
   }
 }
