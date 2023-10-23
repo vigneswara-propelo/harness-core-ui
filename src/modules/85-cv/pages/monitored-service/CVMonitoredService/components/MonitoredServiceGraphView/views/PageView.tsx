@@ -6,16 +6,19 @@
  */
 
 import React from 'react'
-import { Page, Layout, NoDataCard, FlexExpander } from '@harness/uicore'
+import { Page, Layout, NoDataCard, FlexExpander, Container } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import noServiceAvailableImage from '@cv/assets/noServiceAvailable.png'
 import { DependencyGraph } from '@cv/components/DependencyGraph/DependencyGraph'
 import FilterCard from '@cv/components/FilterCard/FilterCard'
 import ServiceDependenciesLegend from '@cv/components/ServiceDependenciesLegend/ServiceDependenciesLegend'
 import { getMonitoredServiceFilterOptions } from '@cv/pages/monitored-service/CVMonitoredService/CVMonitoredService.utils'
+import { useFeatureFlag } from '@modules/10-common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@modules/10-common/featureFlags'
 import SummaryCard from './SummaryCard'
 import type { PageViewProps, PageViewContentProps } from '../ServiceDependencyGraph.types'
 import { getDependencyGraphOptions } from '../MonitoredServiceGraphView.utils'
+import ServiceMapping from './ServiceMapping'
 import css from '../ServiceDependencyGraph.module.scss'
 
 const PageViewContent: React.FC<PageViewContentProps> = ({
@@ -52,7 +55,9 @@ const PageViewContent: React.FC<PageViewContentProps> = ({
 const PageView: React.FC<PageViewProps> = ({ loading, errorMessage, retryOnError, ...rest }) => {
   const { getString } = useStrings()
 
-  const { point, selectedFilter, onFilter, serviceCountData, createButton } = rest
+  const serviceMappingEnabled = useFeatureFlag(FeatureFlag.SRM_AUTO_DISCOVERY_ENABLE)
+
+  const { point, selectedFilter, onFilter, serviceCountData, createButton, onImport } = rest
 
   const filterOptions = getMonitoredServiceFilterOptions(getString, serviceCountData ?? null)
 
@@ -71,15 +76,18 @@ const PageView: React.FC<PageViewProps> = ({ loading, errorMessage, retryOnError
       className={css.pageBody}
     >
       <Layout.Vertical height="100%" padding={{ top: 'medium', left: 'xlarge', right: 'xlarge', bottom: 'xlarge' }}>
-        <FilterCard
-          data={filterOptions}
-          cardClassName={css.filterCard}
-          selected={filterOptions.find(card => card.type === selectedFilter)}
-          onChange={item => {
-            onFilter?.(item.type)
-            point?.destroySticky()
-          }}
-        />
+        <Container flex={{ justifyContent: 'space-between' }} className={css.filterSection}>
+          <FilterCard
+            data={filterOptions}
+            cardClassName={css.filterCard}
+            selected={filterOptions.find(card => card.type === selectedFilter)}
+            onChange={item => {
+              onFilter?.(item.type)
+              point?.destroySticky()
+            }}
+          />
+          {serviceMappingEnabled && <ServiceMapping onImport={onImport} />}
+        </Container>
         <PageViewContent {...rest} />
         <FlexExpander />
         <ServiceDependenciesLegend margin={{ top: 'medium' }} />

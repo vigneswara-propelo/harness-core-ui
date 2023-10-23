@@ -619,6 +619,18 @@ monitoredServices:
   searchMonitoredServices: Search Monitored Services
   listAndGridViewLabel:
     gridView: Switch to map view
+  importServiceMapping:
+    label: Import service mapping
+    tooltip: Map the Kubernetes services to Harness services to see the service dependencies.
+    form:
+      autoCreateCheckbox: Automatically create monitored services for services without a monitored service.
+    modal:
+      subtext: The discovery agent can be used to automatically map Kubernetes services to Harness services in a specific environment, for services that are deployed through Harness CD.
+    msImport: The following monitored services have been created
+    noMSImport: No new monitored services have been created
+    serviceDependenciesImported: '{{count}} service dependencies imported'
+    reImportInitiated: ReImport initiated
+    reImportSuccess: ReImport successful
   sloErrorBudget: SLO / Error Budget
   searchMonitoresService: 'Search monitored services'
   serviceHealth:

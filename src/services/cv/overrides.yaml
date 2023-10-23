@@ -218,6 +218,9 @@ allowpaths:
   - /usage/SRM/active-monitored-services
   - /usage/SRM/active-services-monitored/csv/download
   - /account/{accountIdentifier}/orgs/{orgIdentifier}/projects/{projectIdentifier}/verifications/{verifyStepExecutionId}/abort
+  - /auto-discovery/create
+  - /auto-discovery/re-import
+  - /auto-discovery/status/{correlationId}
 
 operationIdOverrides:
   /appdynamics/applications.get: getAppDynamicsApplications

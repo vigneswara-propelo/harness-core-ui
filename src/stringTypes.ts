@@ -9893,6 +9893,15 @@ export interface StringsMap {
   'cv.monitoredServices.filterlabel': string
   'cv.monitoredServices.heading': string
   'cv.monitoredServices.healthScoreDataNotAvailable': string
+  'cv.monitoredServices.importServiceMapping.form.autoCreateCheckbox': string
+  'cv.monitoredServices.importServiceMapping.label': string
+  'cv.monitoredServices.importServiceMapping.modal.subtext': string
+  'cv.monitoredServices.importServiceMapping.msImport': string
+  'cv.monitoredServices.importServiceMapping.noMSImport': string
+  'cv.monitoredServices.importServiceMapping.reImportInitiated': string
+  'cv.monitoredServices.importServiceMapping.reImportSuccess': string
+  'cv.monitoredServices.importServiceMapping.serviceDependenciesImported': string
+  'cv.monitoredServices.importServiceMapping.tooltip': string
   'cv.monitoredServices.listAndGridViewLabel.gridView': string
   'cv.monitoredServices.listToggleSwitchDisableMessage': string
   'cv.monitoredServices.monitoredServiceCreated': string

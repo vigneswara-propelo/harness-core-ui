@@ -70,6 +70,7 @@ export interface PageViewProps extends CardViewProps {
   onFilter?: (type: FilterTypes) => void
   serviceCountData?: CountServiceDTO | null
   createButton?: JSX.Element
+  onImport?: () => void
 }
 
 export type PageViewContentProps = Omit<CardViewProps, 'loading' | 'errorMessage' | 'retryOnError'>

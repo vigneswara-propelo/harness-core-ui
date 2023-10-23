@@ -7,17 +7,10 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly dependencyGraph: string
-  readonly dependencyGraphContainer: string
-  readonly filterCard: string
-  readonly filterSection: string
-  readonly graphSummaryCard: string
-  readonly loader: string
-  readonly noDataContainer: string
-  readonly noServiceAvailableImage: string
-  readonly pageBody: string
-  readonly serviceChanges: string
-  readonly serviceHealth: string
-  readonly serviceName: string
+  readonly containerPopover: string
+  readonly importButton: string
+  readonly mappingDropdown: string
+  readonly serviceMappingform: string
+  readonly widgetPopover: string
 }
 export default styles

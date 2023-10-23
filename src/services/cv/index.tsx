@@ -282,6 +282,23 @@ export type ArtifactoryUsernamePasswordAuth = ArtifactoryAuthCredentials & {
   usernameRef?: string
 }
 
+export interface AutoDiscoveryAsyncResponseDTO {
+  correlationId?: string
+  monitoredServicesCreated?: string[]
+  serviceDependenciesImported?: number
+  status?: 'CREATED' | 'RUNNING' | 'COMPLETED' | 'FAILED'
+}
+
+export interface AutoDiscoveryRequestDTO {
+  agentIdentifier: string
+  autoCreateMonitoredService?: boolean
+}
+
+export interface AutoDiscoveryResponseDTO {
+  monitoredServicesCreated?: string[]
+  serviceDependenciesImported?: number
+}
+
 export interface AwsCodeCommitAuthenticationDTO {
   spec: AwsCodeCommitCredentialsDTO
   type: 'HTTPS'
@@ -5772,6 +5789,22 @@ export interface RestResponseAnomaliesSummaryDTO {
     [key: string]: { [key: string]: any }
   }
   resource?: AnomaliesSummaryDTO
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseAutoDiscoveryAsyncResponseDTO {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: AutoDiscoveryAsyncResponseDTO
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseAutoDiscoveryResponseDTO {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: AutoDiscoveryResponseDTO
   responseMessages?: ResponseMessage[]
 }
 
@@ -11658,6 +11691,212 @@ export const getAppDynamicsTiersPromise = (
     props,
     signal
   )
+
+export interface CreateAutoDiscoveryQueryParams {
+  accountId: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type CreateAutoDiscoveryProps = Omit<
+  MutateProps<
+    RestResponseAutoDiscoveryResponseDTO,
+    unknown,
+    CreateAutoDiscoveryQueryParams,
+    AutoDiscoveryRequestDTO,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Import all service dependencies for the given agent
+ */
+export const CreateAutoDiscovery = (props: CreateAutoDiscoveryProps) => (
+  <Mutate<RestResponseAutoDiscoveryResponseDTO, unknown, CreateAutoDiscoveryQueryParams, AutoDiscoveryRequestDTO, void>
+    verb="POST"
+    path={`/auto-discovery/create`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseCreateAutoDiscoveryProps = Omit<
+  UseMutateProps<
+    RestResponseAutoDiscoveryResponseDTO,
+    unknown,
+    CreateAutoDiscoveryQueryParams,
+    AutoDiscoveryRequestDTO,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Import all service dependencies for the given agent
+ */
+export const useCreateAutoDiscovery = (props: UseCreateAutoDiscoveryProps) =>
+  useMutate<
+    RestResponseAutoDiscoveryResponseDTO,
+    unknown,
+    CreateAutoDiscoveryQueryParams,
+    AutoDiscoveryRequestDTO,
+    void
+  >('POST', `/auto-discovery/create`, { base: getConfig('cv/api'), ...props })
+
+/**
+ * Import all service dependencies for the given agent
+ */
+export const createAutoDiscoveryPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseAutoDiscoveryResponseDTO,
+    unknown,
+    CreateAutoDiscoveryQueryParams,
+    AutoDiscoveryRequestDTO,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseAutoDiscoveryResponseDTO,
+    unknown,
+    CreateAutoDiscoveryQueryParams,
+    AutoDiscoveryRequestDTO,
+    void
+  >('POST', getConfig('cv/api'), `/auto-discovery/create`, props, signal)
+
+export interface ReImportAutoDiscoveryQueryParams {
+  accountId: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type ReImportAutoDiscoveryProps = Omit<
+  MutateProps<RestResponseAutoDiscoveryAsyncResponseDTO, unknown, ReImportAutoDiscoveryQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Re-import all service dependencies for the given agent
+ */
+export const ReImportAutoDiscovery = (props: ReImportAutoDiscoveryProps) => (
+  <Mutate<RestResponseAutoDiscoveryAsyncResponseDTO, unknown, ReImportAutoDiscoveryQueryParams, void, void>
+    verb="POST"
+    path={`/auto-discovery/re-import`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseReImportAutoDiscoveryProps = Omit<
+  UseMutateProps<RestResponseAutoDiscoveryAsyncResponseDTO, unknown, ReImportAutoDiscoveryQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Re-import all service dependencies for the given agent
+ */
+export const useReImportAutoDiscovery = (props: UseReImportAutoDiscoveryProps) =>
+  useMutate<RestResponseAutoDiscoveryAsyncResponseDTO, unknown, ReImportAutoDiscoveryQueryParams, void, void>(
+    'POST',
+    `/auto-discovery/re-import`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * Re-import all service dependencies for the given agent
+ */
+export const reImportAutoDiscoveryPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseAutoDiscoveryAsyncResponseDTO,
+    unknown,
+    ReImportAutoDiscoveryQueryParams,
+    void,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseAutoDiscoveryAsyncResponseDTO, unknown, ReImportAutoDiscoveryQueryParams, void, void>(
+    'POST',
+    getConfig('cv/api'),
+    `/auto-discovery/re-import`,
+    props,
+    signal
+  )
+
+export interface GetReImportStatusQueryParams {
+  accountId: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface GetReImportStatusPathParams {
+  correlationId: string
+}
+
+export type GetReImportStatusProps = Omit<
+  GetProps<
+    RestResponseAutoDiscoveryAsyncResponseDTO,
+    unknown,
+    GetReImportStatusQueryParams,
+    GetReImportStatusPathParams
+  >,
+  'path'
+> &
+  GetReImportStatusPathParams
+
+/**
+ * Get status of the re-import api.
+ */
+export const GetReImportStatus = ({ correlationId, ...props }: GetReImportStatusProps) => (
+  <Get<RestResponseAutoDiscoveryAsyncResponseDTO, unknown, GetReImportStatusQueryParams, GetReImportStatusPathParams>
+    path={`/auto-discovery/status/${correlationId}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetReImportStatusProps = Omit<
+  UseGetProps<
+    RestResponseAutoDiscoveryAsyncResponseDTO,
+    unknown,
+    GetReImportStatusQueryParams,
+    GetReImportStatusPathParams
+  >,
+  'path'
+> &
+  GetReImportStatusPathParams
+
+/**
+ * Get status of the re-import api.
+ */
+export const useGetReImportStatus = ({ correlationId, ...props }: UseGetReImportStatusProps) =>
+  useGet<RestResponseAutoDiscoveryAsyncResponseDTO, unknown, GetReImportStatusQueryParams, GetReImportStatusPathParams>(
+    (paramsInPath: GetReImportStatusPathParams) => `/auto-discovery/status/${paramsInPath.correlationId}`,
+    { base: getConfig('cv/api'), pathParams: { correlationId }, ...props }
+  )
+
+/**
+ * Get status of the re-import api.
+ */
+export const getReImportStatusPromise = (
+  {
+    correlationId,
+    ...props
+  }: GetUsingFetchProps<
+    RestResponseAutoDiscoveryAsyncResponseDTO,
+    unknown,
+    GetReImportStatusQueryParams,
+    GetReImportStatusPathParams
+  > & { correlationId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    RestResponseAutoDiscoveryAsyncResponseDTO,
+    unknown,
+    GetReImportStatusQueryParams,
+    GetReImportStatusPathParams
+  >(getConfig('cv/api'), `/auto-discovery/status/${correlationId}`, props, signal)
 
 export interface GetPrometheusWorkspacesQueryParams {
   accountId: string

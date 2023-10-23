@@ -146,6 +146,10 @@ const ServiceDependencyGraph: React.FC<ServiceDependencyGraphProps> = ({
             refetchServiceDependencyGraphData()
           }
         }}
+        onImport={() => {
+          refetchServiceCountData?.()
+          refetchServiceDependencyGraphData()
+        }}
         monitoredServiceDependencyData={monitoredServiceDependencyData}
         onToggleService={onToggleService}
         onDeleteService={onDeleteService}

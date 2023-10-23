@@ -72,3 +72,8 @@ $headerHeight: 146px;
   height: 350px;
   margin-right: 40px;
 }
+
+.filterSection {
+  padding-bottom: var(--spacing-medium) !important;
+  border-bottom: 1px solid var(--grey-200);
+}
