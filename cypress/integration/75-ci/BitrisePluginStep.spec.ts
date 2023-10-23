@@ -1,6 +1,7 @@
 import {
   BasePipelineTypes,
   setupBasePipeline,
+  navigateToExecutionTab,
   addStepToPipeline,
   visitInputSetsPage,
   visitTriggersPage,
@@ -21,6 +22,7 @@ describe('Bitrise Plugin Step', () => {
 
   it('add Bitrise plugin step to base pipeline', () => {
     selectStage('CI_Stage1')
+    navigateToExecutionTab()
     addStepToPipeline()
     selectStepInStepLibrary('Bitrise Plugin')
     cy.get('.bp3-input-group').eq(0).type('Bitrise plugin')

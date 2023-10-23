@@ -2,6 +2,7 @@ import {
   addStepToPipeline,
   addTemplate,
   BasePipelineTypes,
+  navigateToExecutionTab,
   selectStage,
   selectStepInStepLibrary,
   setupBasePipeline,
@@ -17,6 +18,7 @@ describe('Run Tests Step', () => {
 
   it('adds run tests step with connectorRef and image to k8 pipeline', () => {
     selectStage('CI_Stage1')
+    navigateToExecutionTab()
     addStepToPipeline()
     selectStepInStepLibrary('Run Tests')
     cy.get('button[data-testid="cr-field-spec.connectorRef"]').click({ force: true })

@@ -88,6 +88,7 @@ describe('Pipeline Studio', () => {
     }).as('inputSetTemplateCall')
     cy.contains('p', 'CI_Stage1').should('be.visible')
     cy.contains('p', 'CI_Stage1').click({ force: true })
+    cy.contains('span', 'Execution').click({ force: true })
     cy.contains('p', 'Add Step').click({ force: true })
     cy.get('button[data-testid="addStepPipeline"]').click({ force: true })
     cy.get('[data-testid="step-card-Run"]').click({ force: true })

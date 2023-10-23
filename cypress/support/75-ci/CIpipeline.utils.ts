@@ -97,6 +97,10 @@ export const selectStage = (stageName: string) => {
   cy.contains('p', stageName).click({ force: true })
 }
 
+export const navigateToExecutionTab = () => {
+  cy.contains('span', 'Execution').click({ force: true })
+}
+
 export const addStepToPipeline = () => {
   cy.contains('p', 'Add Step').click({ force: true })
   cy.get('button[data-testid="addStepPipeline"]').click({ force: true })

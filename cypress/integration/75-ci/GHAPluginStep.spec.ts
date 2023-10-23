@@ -9,7 +9,8 @@ import {
   visitTemplatesPage,
   addTemplate,
   selectStepInStepLibrary,
-  selectStage
+  selectStage,
+  navigateToExecutionTab
 } from '../../support/75-ci/CIpipeline.utils'
 
 const runtimeInputParagraphLabels = ['Uses', 'Settings', 'Environment Variables']
@@ -21,6 +22,7 @@ describe('GHA Plugin Step', () => {
 
   it('add GHA plugin step to base pipeline', () => {
     selectStage('CI_Stage1')
+    navigateToExecutionTab()
     addStepToPipeline()
     selectStepInStepLibrary('Github Action Plugin')
     cy.get('.bp3-input-group').eq(0).type('GHA plugin')
