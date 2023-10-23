@@ -24,7 +24,8 @@ import {
 } from 'services/cd-ng'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import environmentEmptyStateSvg from '@pipeline/icons/emptyServiceDetail.svg'
-
+import GitRemoteDetails from '@modules/10-common/components/GitRemoteDetails/GitRemoteDetails'
+import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
 import css from './FormMultiTypeEnvironmentField.module.scss'
 
 export function getReferenceFieldProps({
@@ -99,6 +100,10 @@ export function getReferenceFieldProps({
                 description: environment.environment?.description,
                 tags: environment.environment?.tags,
                 type: environment.environment?.type,
+                storeType: defaultTo(environment.environment?.storeType, StoreType.INLINE),
+                entityGitDetails: environment.environment?.entityGitDetails,
+                connectorRef: environment.environment?.connectorRef,
+                fallbackBranch: environment.environment?.fallbackBranch,
                 orgIdentifier: scope !== Scope.ACCOUNT ? orgIdentifier : undefined,
                 projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined
               }
@@ -136,6 +141,19 @@ export function getReferenceFieldProps({
               </Text>
             </div>
           </Layout.Horizontal>
+          {item?.record?.storeType === StoreType?.REMOTE ? (
+            <GitRemoteDetails
+              connectorRef={item?.record?.connectorRef}
+              repoName={item?.record?.entityGitDetails?.repoName}
+              filePath={item?.record?.entityGitDetails?.filePath}
+              branch={item?.record?.fallbackBranch}
+              fileUrl={item?.record?.entityGitDetails?.fileUrl}
+              flags={{
+                readOnly: true,
+                showBranch: true
+              }}
+            />
+          ) : null}
         </Layout.Horizontal>
       )
     }

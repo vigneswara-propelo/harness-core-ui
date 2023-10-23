@@ -50,6 +50,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { usePipelineContext } from '@modules/70-pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import EnvironmentEntitiesList from '../EnvironmentEntitiesList/EnvironmentEntitiesList'
 import type {
   DeployEnvironmentEntityCustomStepProps,
@@ -120,6 +121,9 @@ export default function DeployEnvironment({
     },
     lazy: false
   })
+  const {
+    state: { storeMetadata }
+  } = usePipelineContext()
   const isMultiServiceConfigurationPresent = serviceIdentifiers?.length > 1
 
   const isServiceOverridesEnabled = CDS_SERVICE_OVERRIDES_2_0 && enableServiceOverrideSettings?.data?.value === 'true'
@@ -160,7 +164,8 @@ export default function DeployEnvironment({
   } = useGetEnvironmentsData({
     envIdentifiers: selectedEnvironments,
     envGroupIdentifier,
-    serviceIdentifiers
+    serviceIdentifiers,
+    parentStoreMetadata: storeMetadata
   })
 
   useEffect(() => {

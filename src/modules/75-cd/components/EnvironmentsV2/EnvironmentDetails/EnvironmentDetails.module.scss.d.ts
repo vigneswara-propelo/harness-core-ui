@@ -12,6 +12,7 @@ declare const styles: {
   readonly clusterDataTable: string
   readonly configCard: string
   readonly dialogStyles: string
+  readonly envCardWrapper: string
   readonly environmentDetailsBody: string
   readonly environmentDetailsHeader: string
   readonly fullWidth: string

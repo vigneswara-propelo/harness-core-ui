@@ -29,6 +29,7 @@ import {
   AllowedTypesWithRunTime
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
+import { Divider } from '@blueprintjs/core'
 import routesV1 from '@common/RouteDefinitions'
 import routesV2 from '@common/RouteDefinitionsV2'
 import { projectPathProps, modulePathProps, environmentPathProps } from '@common/utils/routeUtils'
@@ -59,8 +60,9 @@ import { PermissionRequest, usePermission } from '@rbac/hooks/usePermission'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import ApplicationConfigSelection from '@pipeline/components/ApplicationConfig/ApplicationConfigSelection'
 import { ApplicationConfigSelectionTypes } from '@pipeline/components/ApplicationConfig/ApplicationConfig.types'
-import { GitSyncForm } from '@modules/40-gitsync/components/GitSyncForm/GitSyncForm'
+import { GitSyncForm, GitSyncFormFields } from '@modules/40-gitsync/components/GitSyncForm/GitSyncForm'
 import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
+import { InlineRemoteSelect } from '@modules/10-common/components/InlineRemoteSelect/InlineRemoteSelect'
 import ServiceManifestOverride from '../ServiceOverrides/ServiceManifestOverride/ServiceManifestOverride'
 import ServiceConfigFileOverride from '../ServiceOverrides/ServiceConfigFileOverride/ServiceConfigFileOverride'
 import css from '../EnvironmentDetails.module.scss'
@@ -78,7 +80,7 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
 }
 
 export interface EnvironmentConfigurationProps {
-  formikProps: FormikProps<NGEnvironmentInfoConfig>
+  formikProps: FormikProps<NGEnvironmentInfoConfig & Partial<GitSyncFormFields & { storeType: StoreType }>>
   scope: Scope
   selectedView: SelectedView
   setSelectedView: (view: SelectedView) => void
@@ -129,9 +131,10 @@ export default function EnvironmentConfiguration({
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & EnvironmentPathProps>()
   const history = useHistory()
   const { expressions } = useVariablesExpression()
-  const { CDS_NAV_2_0 } = useFeatureFlags()
+  const { CDS_NAV_2_0, CDS_ENV_GITX } = useFeatureFlags()
   const environmentIdentifier = data?.data?.environment?.identifier
   const routes = CDS_NAV_2_0 ? routesV2 : routesV1
+  const isGitXEnabledForEnvironments = CDS_ENV_GITX
 
   const resourceAndScope: Pick<PermissionRequest, 'resource' | 'resourceScope'> = {
     resource: {
@@ -211,7 +214,12 @@ export default function EnvironmentConfiguration({
 
           if (yamlVisual) {
             formikProps?.setValues({
-              ...yamlVisual
+              ...yamlVisual,
+              storeType: defaultTo(formikProps.values.storeType, StoreType.INLINE),
+              connectorRef: formikProps.values.connectorRef,
+              repo: formikProps.values.repo,
+              branch: formikProps.values.branch,
+              filePath: formikProps.values.filePath
             })
           }
         } catch (e) {
@@ -364,16 +372,42 @@ export default function EnvironmentConfiguration({
               {getString('envType')}
             </Text>
             <ThumbnailSelect className={css.thumbnailSelect} name={'type'} items={typeList} isReadonly={!canEdit} />
-            {data?.data?.environment?.storeType === StoreType.REMOTE ? (
+            {isGitXEnabledForEnvironments ? (
+              <>
+                <Divider />
+                <Text font={{ variation: FontVariation.FORM_SUB_SECTION }} margin={{ top: 'medium', bottom: 'medium' }}>
+                  {getString('cd.chooseEnvironmentSetupHeader')}
+                </Text>
+                <InlineRemoteSelect
+                  className={css.envCardWrapper}
+                  entityType={'Environment'}
+                  selected={defaultTo(get(formikProps.values, 'storeType'), StoreType.INLINE)}
+                  getCardDisabledStatus={(current, selected) => {
+                    return isEdit ? current !== selected : false
+                  }}
+                  onChange={item => {
+                    if (!isEdit) {
+                      formikProps?.setFieldValue('storeType', item.type)
+                    }
+                  }}
+                />
+              </>
+            ) : null}
+            {data?.data?.environment?.storeType === StoreType.REMOTE ||
+            get(formikProps.values, 'storeType') === StoreType.REMOTE ? (
               <GitSyncForm
                 formikProps={formikProps}
-                isEdit={true}
-                skipBranch
-                disableFields={{
-                  connectorRef: true,
-                  repoName: true,
-                  filePath: false
-                }}
+                isEdit={isEdit}
+                skipBranch={isEdit}
+                disableFields={
+                  isEdit
+                    ? {
+                        connectorRef: true,
+                        repoName: true,
+                        filePath: false
+                      }
+                    : {}
+                }
               />
             ) : null}
           </Card>

@@ -35,6 +35,13 @@
   border: 1px solid var(--grey-200) !important;
   border-radius: var(--spacing-2);
   height: 32px;
+  background-color: var(--white);
+
+  :global {
+    .bp3-input {
+      cursor: pointer;
+    }
+  }
 }
 
 .environmentDetailsBody {
@@ -67,6 +74,7 @@
 }
 
 .thumbnailSelect {
+  margin-bottom: var(--spacing-large) !important;
   &:global(.bp3-form-group) {
     margin-bottom: 0px;
   }
@@ -98,6 +106,17 @@
   .thumbnailSelect {
     &:global(.bp3-form-group) {
       margin-bottom: 0px;
+    }
+  }
+  .envCardWrapper {
+    display: flex;
+    gap: 20px;
+
+    & > :first-child {
+      width: 340px;
+      & > div {
+        justify-content: flex-start !important;
+      }
     }
   }
 }

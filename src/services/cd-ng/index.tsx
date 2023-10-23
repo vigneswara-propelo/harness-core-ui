@@ -1767,6 +1767,7 @@ export type AwsSamDeploymentMetaData = DeploymentMetaData & { [key: string]: any
 
 export type AwsSamDirectoryManifest = ManifestAttributes & {
   metadata?: string
+  samTemplateFile?: string
   store?: StoreConfigWrapper
 }
 
@@ -4898,6 +4899,7 @@ export interface EntityDetail {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
 }
 
 export interface EntityDetailProtoDTO {
@@ -4960,6 +4962,11 @@ export interface EntityValidityDetails {
   valid?: boolean
 }
 
+export interface EntityWithGitInfo {
+  branch?: string
+  ref: string
+}
+
 export interface EnvAndEnvGroupCard {
   envGroup?: boolean
   environmentTypes?: ('PreProduction' | 'Production')[]
@@ -5003,6 +5010,12 @@ export interface Environment {
   identifier?: string
   name?: string
   type?: string
+}
+
+export interface EnvironmentAndServiceOverridesMetadataInput {
+  entityWithGitInfoList?: EntityWithGitInfo[]
+  envGroupIdentifier?: string
+  serviceIdentifiers: string[]
 }
 
 export interface EnvironmentDeploymentInfo {
@@ -7338,6 +7351,7 @@ export interface GcpOidcAccessTokenRequestDTO {
 export interface GcpOidcTokenRequestDTO {
   gcpProjectId: string
   providerId: string
+  serviceAccountEmail?: string
   workloadPoolId: string
 }
 
@@ -7756,6 +7770,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
   )[]
   moduleType?:
     | 'CD'
@@ -8018,6 +8033,7 @@ export interface GitEntityFilterProperties {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -8359,6 +8375,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -8612,6 +8629,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -8996,6 +9014,7 @@ export interface GitSyncEntityDTO {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -9243,6 +9262,7 @@ export interface GitSyncEntityListDTO {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -9507,6 +9527,7 @@ export interface GitSyncErrorDTO {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -11015,6 +11036,15 @@ export interface JsonNode {
   [key: string]: any
 }
 
+export interface JwksPublicKeyDTO {
+  alg?: string
+  e?: string
+  kid?: string
+  kty?: string
+  n?: string
+  use?: string
+}
+
 export type K8SDirectInfrastructure = Infrastructure & {
   connectorRef: string
   namespace: string
@@ -11026,6 +11056,7 @@ export type K8sApplyStepInfo = StepSpecType & {
   commandFlags?: K8sStepCommandFlag[]
   delegateSelectors?: string[]
   filePaths?: string[]
+  manifestSource?: ManifestSourceWrapper
   overrides?: ManifestConfigWrapper[]
   skipDryRun?: boolean
   skipRendering?: boolean
@@ -11679,6 +11710,11 @@ export interface ManifestOverrideSets {
   manifests?: ManifestConfigWrapper[]
 }
 
+export interface ManifestSourceWrapper {
+  spec: ManifestAttributes
+  type: 'K8sManifest'
+}
+
 export interface ManifestStoreInfo {
   branch?: string
   bucketName?: string
@@ -12017,6 +12053,7 @@ export interface NGEntityList {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
   )[]
 }
 
@@ -12546,6 +12583,7 @@ export interface Organization {
   tags?: {
     [key: string]: string
   }
+  uniqueId?: string
 }
 
 export interface OrganizationAggregateDTO {
@@ -13558,6 +13596,7 @@ export interface Project {
   tags?: {
     [key: string]: string
   }
+  uniqueId?: string
 }
 
 export interface ProjectAggregateDTO {
@@ -13959,6 +13998,7 @@ export interface ReferencedByDTO {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
 }
 
 export interface RefreshResponse {
@@ -15517,6 +15557,7 @@ export interface ResponseListEntityType {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -18919,16 +18960,15 @@ export interface ServiceUseFromStageV2 {
 }
 
 export interface ServiceV2YamlMetadata {
+  connectorRef?: string
+  entityGitDetails?: EntityGitDetails
+  fallbackBranch?: string
   inputSetTemplateYaml?: string
   orgIdentifier?: string
   projectIdentifier?: string
   serviceIdentifier: string
   serviceYaml?: string
-}
-
-export interface ServiceWithGitInfo {
-  branch?: string
-  ref: string
+  storeType?: 'INLINE' | 'REMOTE'
 }
 
 export interface ServiceYaml {
@@ -18975,7 +19015,7 @@ export interface ServicesYamlMetadataApiInput {
 }
 
 export interface ServicesYamlMetadataApiInputV2 {
-  serviceWithGitInfoList?: ServiceWithGitInfo[]
+  entityWithGitInfoList?: EntityWithGitInfo[]
 }
 
 export interface SessionTimeoutSettings {
@@ -20110,6 +20150,7 @@ export interface TerraformCloudCliPlanExecutionData {
   commandFlags?: TerraformCliOptionFlag[]
   configFiles: TerraformConfigFilesWrapper
   environmentVariables?: NGVariable[]
+  skipStateStorage?: boolean
   targets?: string[]
   varFiles?: TerraformVarFileWrapper[]
 }
@@ -20117,6 +20158,7 @@ export interface TerraformCloudCliPlanExecutionData {
 export interface TerraformCloudCliStepConfiguration {
   commandFlags?: TerraformCliOptionFlag[]
   encryptOutput?: TerraformEncryptOutput
+  skipStateStorage?: boolean
   spec?: TerraformCloudCliExecutionData
 }
 
@@ -20249,8 +20291,10 @@ export interface TerraformPlanExecutionData {
   environmentVariables?: NGVariable[]
   exportTerraformHumanReadablePlan?: boolean
   exportTerraformPlanJson?: boolean
+  providerCredential?: TerraformProviderCredential
   secretManagerRef: string
   skipRefreshCommand?: boolean
+  skipStateStorage?: boolean
   targets?: string[]
   varFiles?: TerraformVarFileWrapper[]
   workspace?: string
@@ -20283,6 +20327,7 @@ export interface TerraformStepConfiguration {
   commandFlags?: TerraformCliOptionFlag[]
   encryptOutput?: TerraformEncryptOutput
   skipRefreshCommand?: boolean
+  skipStateStorage?: boolean
   spec?: TerraformExecutionData
   type: 'Inline' | 'InheritFromPlan' | 'InheritFromApply'
 }
@@ -22339,6 +22384,7 @@ export interface ListActivitiesQueryParams {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
   referredByEntityType?: (
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -22578,6 +22624,7 @@ export interface ListActivitiesQueryParams {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
   )[]
   activityTypes?: ('CONNECTIVITY_CHECK' | 'ENTITY_USAGE' | 'ENTITY_CREATION' | 'ENTITY_UPDATE')[]
   searchTerm?: string
@@ -22919,6 +22966,7 @@ export interface GetUniqueReferredByEntitiesQueryParams {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
   activityTypes?: ('CONNECTIVITY_CHECK' | 'ENTITY_USAGE' | 'ENTITY_CREATION' | 'ENTITY_UPDATE')[]
 }
 
@@ -23213,6 +23261,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -23452,6 +23501,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -40070,6 +40120,7 @@ export interface GetServiceDetailsV2QueryParams {
   startTime: number
   endTime: number
   sort?: string[]
+  repoName?: string
 }
 
 export type GetServiceDetailsV2Props = Omit<
@@ -42640,6 +42691,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -42940,6 +42992,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
   searchTerm?: string
 }
 
@@ -45078,6 +45131,98 @@ export const upsertEnvironmentV2Promise = (
     void
   >('PUT', getConfig('ng/api'), `/environmentsV2/upsert`, props, signal)
 
+export interface GetEnvironmentsInputYamlAndServiceOverridesV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+}
+
+export type GetEnvironmentsInputYamlAndServiceOverridesV2Props = Omit<
+  MutateProps<
+    ResponseEnvironmentYamlMetadataDTO,
+    Failure | Error,
+    GetEnvironmentsInputYamlAndServiceOverridesV2QueryParams,
+    EnvironmentAndServiceOverridesMetadataInput,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This api returns environments runtime input YAML and serviceOverrides Yaml
+ */
+export const GetEnvironmentsInputYamlAndServiceOverridesV2 = (
+  props: GetEnvironmentsInputYamlAndServiceOverridesV2Props
+) => (
+  <Mutate<
+    ResponseEnvironmentYamlMetadataDTO,
+    Failure | Error,
+    GetEnvironmentsInputYamlAndServiceOverridesV2QueryParams,
+    EnvironmentAndServiceOverridesMetadataInput,
+    void
+  >
+    verb="POST"
+    path={`/environmentsV2/v2/env-service-override-metadata`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetEnvironmentsInputYamlAndServiceOverridesV2Props = Omit<
+  UseMutateProps<
+    ResponseEnvironmentYamlMetadataDTO,
+    Failure | Error,
+    GetEnvironmentsInputYamlAndServiceOverridesV2QueryParams,
+    EnvironmentAndServiceOverridesMetadataInput,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This api returns environments runtime input YAML and serviceOverrides Yaml
+ */
+export const useGetEnvironmentsInputYamlAndServiceOverridesV2 = (
+  props: UseGetEnvironmentsInputYamlAndServiceOverridesV2Props
+) =>
+  useMutate<
+    ResponseEnvironmentYamlMetadataDTO,
+    Failure | Error,
+    GetEnvironmentsInputYamlAndServiceOverridesV2QueryParams,
+    EnvironmentAndServiceOverridesMetadataInput,
+    void
+  >('POST', `/environmentsV2/v2/env-service-override-metadata`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * This api returns environments runtime input YAML and serviceOverrides Yaml
+ */
+export const getEnvironmentsInputYamlAndServiceOverridesV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseEnvironmentYamlMetadataDTO,
+    Failure | Error,
+    GetEnvironmentsInputYamlAndServiceOverridesV2QueryParams,
+    EnvironmentAndServiceOverridesMetadataInput,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseEnvironmentYamlMetadataDTO,
+    Failure | Error,
+    GetEnvironmentsInputYamlAndServiceOverridesV2QueryParams,
+    EnvironmentAndServiceOverridesMetadataInput,
+    void
+  >('POST', getConfig('ng/api'), `/environmentsV2/v2/env-service-override-metadata`, props, signal)
+
 export interface DeleteEnvironmentV2QueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -46577,6 +46722,7 @@ export interface GetReferencedByQueryParams {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
   searchTerm?: string
 }
 
@@ -49537,6 +49683,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -49844,6 +49991,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'EcsUpgradeContainer'
       | 'EcsBasicRollback'
       | 'ChaosInfrastructure'
+      | 'Anchore'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -56121,6 +56269,121 @@ export const generateOidcAccessTokenForGcpPromise = (
     signal
   )
 
+export interface GetHarnessOpenIdJwksPathParams {
+  accountId: string
+}
+
+export type GetHarnessOpenIdJwksProps = Omit<
+  GetProps<JwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>,
+  'path'
+> &
+  GetHarnessOpenIdJwksPathParams
+
+/**
+ * Gets the openid configuration for Harness
+ */
+export const GetHarnessOpenIdJwks = ({ accountId, ...props }: GetHarnessOpenIdJwksProps) => (
+  <Get<JwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>
+    path={`/oidc/account/${accountId}/.well-known/jwks`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetHarnessOpenIdJwksProps = Omit<
+  UseGetProps<JwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>,
+  'path'
+> &
+  GetHarnessOpenIdJwksPathParams
+
+/**
+ * Gets the openid configuration for Harness
+ */
+export const useGetHarnessOpenIdJwks = ({ accountId, ...props }: UseGetHarnessOpenIdJwksProps) =>
+  useGet<JwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>(
+    (paramsInPath: GetHarnessOpenIdJwksPathParams) => `/oidc/account/${paramsInPath.accountId}/.well-known/jwks`,
+    { base: getConfig('ng/api'), pathParams: { accountId }, ...props }
+  )
+
+/**
+ * Gets the openid configuration for Harness
+ */
+export const getHarnessOpenIdJwksPromise = (
+  {
+    accountId,
+    ...props
+  }: GetUsingFetchProps<JwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams> & {
+    accountId: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<JwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>(
+    getConfig('ng/api'),
+    `/oidc/account/${accountId}/.well-known/jwks`,
+    props,
+    signal
+  )
+
+export interface GetHarnessOpenIdConfigResponse {
+  [key: string]: { [key: string]: any }
+}
+
+export interface GetHarnessOpenIdConfigPathParams {
+  accountId: string
+}
+
+export type GetHarnessOpenIdConfigProps = Omit<
+  GetProps<GetHarnessOpenIdConfigResponse, Failure | Error, void, GetHarnessOpenIdConfigPathParams>,
+  'path'
+> &
+  GetHarnessOpenIdConfigPathParams
+
+/**
+ * Gets the openid configuration for Harness
+ */
+export const GetHarnessOpenIdConfig = ({ accountId, ...props }: GetHarnessOpenIdConfigProps) => (
+  <Get<GetHarnessOpenIdConfigResponse, Failure | Error, void, GetHarnessOpenIdConfigPathParams>
+    path={`/oidc/account/${accountId}/.wellknown/openid-configuration`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetHarnessOpenIdConfigProps = Omit<
+  UseGetProps<GetHarnessOpenIdConfigResponse, Failure | Error, void, GetHarnessOpenIdConfigPathParams>,
+  'path'
+> &
+  GetHarnessOpenIdConfigPathParams
+
+/**
+ * Gets the openid configuration for Harness
+ */
+export const useGetHarnessOpenIdConfig = ({ accountId, ...props }: UseGetHarnessOpenIdConfigProps) =>
+  useGet<GetHarnessOpenIdConfigResponse, Failure | Error, void, GetHarnessOpenIdConfigPathParams>(
+    (paramsInPath: GetHarnessOpenIdConfigPathParams) =>
+      `/oidc/account/${paramsInPath.accountId}/.wellknown/openid-configuration`,
+    { base: getConfig('ng/api'), pathParams: { accountId }, ...props }
+  )
+
+/**
+ * Gets the openid configuration for Harness
+ */
+export const getHarnessOpenIdConfigPromise = (
+  {
+    accountId,
+    ...props
+  }: GetUsingFetchProps<GetHarnessOpenIdConfigResponse, Failure | Error, void, GetHarnessOpenIdConfigPathParams> & {
+    accountId: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<GetHarnessOpenIdConfigResponse, Failure | Error, void, GetHarnessOpenIdConfigPathParams>(
+    getConfig('ng/api'),
+    `/oidc/account/${accountId}/.wellknown/openid-configuration`,
+    props,
+    signal
+  )
+
 export type GenerateOidcIdTokenForGcpProps = Omit<
   MutateProps<ResponseString, Failure | Error, void, GcpOidcTokenRequestDTO, void>,
   'path' | 'verb'
@@ -56795,6 +57058,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
   yamlGroup?: string
 }
 
@@ -57162,6 +57426,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -64972,6 +65237,15 @@ export interface ValidateTemplateInputsQueryParams {
   orgIdentifier?: string
   projectIdentifier?: string
   identifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
 }
 
 export type ValidateTemplateInputsProps = Omit<
@@ -74070,6 +74344,7 @@ export interface GetYamlSchemaQueryParams {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
   subtype?:
     | 'K8sCluster'
     | 'Git'

@@ -20,18 +20,23 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
   EnvironmentYaml,
   useGetEnvironmentAccessList,
-  useGetEnvironmentsInputYamlAndServiceOverrides
+  useGetEnvironmentsInputYamlAndServiceOverrides,
+  useGetEnvironmentsInputYamlAndServiceOverridesV2
 } from 'services/cd-ng'
 
 import { getScopedValueFromDTO, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getIdentifierFromScopedRef } from '@common/utils/utils'
+import { StoreMetadata } from '@modules/10-common/constants/GitSyncTypes'
+import { FeatureFlag } from '@modules/10-common/featureFlags'
+import { useFeatureFlag } from '@modules/10-common/hooks/useFeatureFlag'
 import type { EnvironmentData } from '../types'
 
 export interface UseGetEnvironmentsDataProps {
   envIdentifiers: string[]
   serviceIdentifiers: string[]
   envGroupIdentifier?: string
+  parentStoreMetadata?: StoreMetadata
 }
 
 export interface UseGetEnvironmentsDataReturn {
@@ -53,7 +58,8 @@ export interface UseGetEnvironmentsDataReturn {
 export function useGetEnvironmentsData({
   envIdentifiers,
   serviceIdentifiers,
-  envGroupIdentifier
+  envGroupIdentifier,
+  parentStoreMetadata
 }: UseGetEnvironmentsDataProps): UseGetEnvironmentsDataReturn {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { showError } = useToaster()
@@ -63,6 +69,7 @@ export function useGetEnvironmentsData({
   const [environmentsList, setEnvironmentsList] = useState<EnvironmentYaml[]>([])
   const [environmentsData, setEnvironmentsData] = useState<EnvironmentData[]>([])
   const [nonExistingEnvironmentIdentifiers, setNonExistingEnvironmentIdentifiers] = useState<string[]>([])
+  const isGitXEnabledForEnvironments = useFeatureFlag(FeatureFlag.CDS_ENV_GITX)
 
   const envGroupScope = getScopeFromValue(envGroupIdentifier as string)
 
@@ -104,10 +111,38 @@ export function useGetEnvironmentsData({
         : { ...(envGroupIdentifier && { envGroupIdentifier }) }),
       serviceIdentifiers
     },
-    lazy: !(envGroupIdentifier || sortedEnvIdentifiers.length)
+    lazy: !(envGroupIdentifier || sortedEnvIdentifiers.length) || isGitXEnabledForEnvironments
   })
 
-  const loading = loadingEnvironmentsList || loadingEnvironmentsData
+  const {
+    data: environmentsDataResponseV2,
+    error: environmentsDataErrorV2,
+    initLoading: loadingEnvironmentsDataV2,
+    loading: updatingEnvironmentsDataV2,
+    refetch: refetchEnvironmentsDataV2
+  } = useMutateAsGet(useGetEnvironmentsInputYamlAndServiceOverridesV2, {
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      parentEntityConnectorRef: parentStoreMetadata?.connectorRef,
+      parentEntityRepoName: parentStoreMetadata?.repoName,
+      branch: parentStoreMetadata?.branch
+    },
+    body: {
+      ...(envIdentifiers
+        ? {
+            entityWithGitInfoList: sortedEnvIdentifiers.map(id => {
+              return { ref: id }
+            })
+          }
+        : { ...(envGroupIdentifier && { envGroupIdentifier }) }),
+      serviceIdentifiers
+    },
+    lazy: !(envGroupIdentifier || sortedEnvIdentifiers.length) || !isGitXEnabledForEnvironments
+  })
+
+  const loading = loadingEnvironmentsList || loadingEnvironmentsData || loadingEnvironmentsDataV2
 
   useEffect(() => {
     if (!loading) {
@@ -129,7 +164,9 @@ export function useGetEnvironmentsData({
       }
 
       const environmentsAndServiceOverridesInResponse = defaultTo(
-        environmentsDataResponse?.data?.environmentsInputYamlAndServiceOverrides,
+        isGitXEnabledForEnvironments
+          ? environmentsDataResponseV2?.data?.environmentsInputYamlAndServiceOverrides
+          : environmentsDataResponse?.data?.environmentsInputYamlAndServiceOverrides,
         []
       )
 
@@ -207,6 +244,7 @@ export function useGetEnvironmentsData({
     loading,
     environmentsListResponse?.data,
     environmentsDataResponse?.data?.environmentsInputYamlAndServiceOverrides,
+    environmentsDataResponseV2?.data?.environmentsInputYamlAndServiceOverrides,
     sortedEnvIdentifiers
   ])
 
@@ -214,7 +252,9 @@ export function useGetEnvironmentsData({
     if (!loading) {
       let _environmentsData: EnvironmentData[] = []
       const environmentsAndServiceOverridesInResponse = defaultTo(
-        environmentsDataResponse?.data?.environmentsInputYamlAndServiceOverrides,
+        isGitXEnabledForEnvironments
+          ? environmentsDataResponseV2?.data?.environmentsInputYamlAndServiceOverrides
+          : environmentsDataResponse?.data?.environmentsInputYamlAndServiceOverrides,
         []
       )
 
@@ -275,7 +315,8 @@ export function useGetEnvironmentsData({
   }, [
     loading,
     environmentsListResponse?.data,
-    environmentsDataResponse?.data?.environmentsInputYamlAndServiceOverrides
+    environmentsDataResponse?.data?.environmentsInputYamlAndServiceOverrides,
+    environmentsDataResponseV2?.data?.environmentsInputYamlAndServiceOverrides
   ])
 
   useEffect(() => {
@@ -300,6 +341,15 @@ export function useGetEnvironmentsData({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [environmentsDataError])
 
+  useEffect(() => {
+    if (environmentsDataErrorV2?.message) {
+      if (shouldShowError(environmentsDataErrorV2)) {
+        showError(getRBACErrorMessage(environmentsDataErrorV2))
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [environmentsDataErrorV2])
+
   const prependEnvironmentToEnvironmentList = useCallback((newEnvironmentInfo: EnvironmentYaml) => {
     setEnvironmentsList(previousEnvironmentsList => [newEnvironmentInfo, ...(previousEnvironmentsList || [])])
   }, [])
@@ -308,10 +358,10 @@ export function useGetEnvironmentsData({
     environmentsList,
     environmentsData,
     loadingEnvironmentsList,
-    loadingEnvironmentsData,
-    updatingEnvironmentsData,
+    loadingEnvironmentsData: loadingEnvironmentsData || loadingEnvironmentsDataV2,
+    updatingEnvironmentsData: updatingEnvironmentsData || updatingEnvironmentsDataV2,
     refetchEnvironmentsList,
-    refetchEnvironmentsData,
+    refetchEnvironmentsData: isGitXEnabledForEnvironments ? refetchEnvironmentsDataV2 : refetchEnvironmentsData,
     prependEnvironmentToEnvironmentList,
     nonExistingEnvironmentIdentifiers
   }
