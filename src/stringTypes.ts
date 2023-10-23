@@ -9397,8 +9397,12 @@ export interface StringsMap {
   'sei.accountSettings.seiSettings.label': string
   'sei.collection': string
   'sei.configurationSettings': string
+  'sei.goToInsights': string
+  'sei.goToIntegrations': string
+  'sei.insghtsInfo': string
   'sei.insight': string
   'sei.insights': string
+  'sei.integrationsInfo': string
   'sei.learnMore': string
   'sei.projectSettings.integrationMapping': string
   'sei.sei': string

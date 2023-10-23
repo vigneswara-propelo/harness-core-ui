@@ -31,16 +31,20 @@ describe('SEISideNavLinks Component', () => {
     expect(contributorsLabel).toBeInTheDocument()
   })
 })
+
 describe('getProjectLevelRedirectionProps function', () => {
+  const getString = (key: string): string => key
   test('should return the correct object for Scope.ACCOUNT', () => {
     const history = { push: jest.fn() } as any
+
     const accountId = '123'
 
-    const result = getProjectLevelRedirectionProps(history, accountId) as Partial<Record<Scope, ScopeSwitchProps>>
+    const result = getProjectLevelRedirectionProps(history, accountId, getString) as Partial<
+      Record<Scope, ScopeSwitchProps>
+    >
 
     expect(result?.[Scope.ACCOUNT]?.link?.icon).toBe('ccm-cloud-integration-settings')
-    expect(result?.[Scope.ACCOUNT]?.link?.label).toBe('Go to Integrations')
-    expect(result?.[Scope.ACCOUNT]?.link?.info).toBe('')
+    expect(result?.[Scope.ACCOUNT]?.link?.label).toBe('sei.goToIntegrations')
     expect(typeof result?.[Scope.ACCOUNT]?.link?.onClick).toBe('function')
 
     result?.[Scope.ACCOUNT]?.link?.onClick()
@@ -49,6 +53,7 @@ describe('getProjectLevelRedirectionProps function', () => {
 })
 
 describe('getAccountLevelRedirectionProps function', () => {
+  const getString = (key: string): string => key
   test('should return the correct object for Scope.PROJECT', () => {
     const history = { push: jest.fn() } as any
     const accountId = '123'
@@ -58,11 +63,10 @@ describe('getAccountLevelRedirectionProps function', () => {
       accountId: 'accountId'
     }
 
-    const result = getAccountLevelRedirectionProps(history, accountId)
+    const result = getAccountLevelRedirectionProps(history, accountId, getString)
 
     expect(result?.[Scope.PROJECT]?.link?.icon).toBe('graph-increase')
-    expect(result?.[Scope.PROJECT]?.link?.label).toBe('Go to Insights')
-    expect(result?.[Scope.PROJECT]?.link?.info).toBe('')
+    expect(result?.[Scope.PROJECT]?.link?.label).toBe('sei.goToInsights')
     expect(typeof result?.[Scope.PROJECT]?.link?.onClick).toBe('function')
 
     result?.[Scope.PROJECT]?.link?.onClick(targetScopeParams)

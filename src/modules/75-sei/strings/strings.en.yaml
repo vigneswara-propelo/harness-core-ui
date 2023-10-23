@@ -28,3 +28,7 @@ accountSettings:
     apiKeys: '{{ $.common.apiKeys }}'
 projectSettings:
   integrationMapping: Integration Mapping
+integrationsInfo: Integrations allow to connect and modify integration for generating insights
+insghtsInfo: View valuable insights to assess team productivity and improve developer experience
+goToIntegrations: Go to Integrations
+goToInsights: Go to Insights

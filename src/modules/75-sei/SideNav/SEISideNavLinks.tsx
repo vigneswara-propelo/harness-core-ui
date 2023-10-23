@@ -26,8 +26,8 @@ const SEISideNavLinks = (mode: NAV_MODE): React.ReactElement => {
   const { scope: selectedScope } = useGetSelectedScope()
   const history = useHistory()
 
-  const projectLevelRedirectionProps = getProjectLevelRedirectionProps(history, accountId)
-  const accountLevelRedirectionProps = getAccountLevelRedirectionProps(history, accountId)
+  const projectLevelRedirectionProps = getProjectLevelRedirectionProps(history, accountId, getString)
+  const accountLevelRedirectionProps = getAccountLevelRedirectionProps(history, accountId, getString)
 
   return (
     <SideNav.Main>
