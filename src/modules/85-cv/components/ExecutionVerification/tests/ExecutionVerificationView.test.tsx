@@ -243,4 +243,14 @@ describe('Unit tests for ExecutionVerificationView unit tests', () => {
       )
     )
   })
+
+  test('Failure error message must be shown in No Analysis screen, if it is present in step details', async () => {
+    render(
+      <TestWrapper>
+        <ExecutionVerificationView step={{ failureInfo: { message: 'Test error message' } }} />
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(screen.getByText('Test error message')).toBeInTheDocument())
+  })
 })

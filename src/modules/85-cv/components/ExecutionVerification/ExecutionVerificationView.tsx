@@ -7,7 +7,7 @@
 
 import React, { useMemo, useState, useCallback, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Tabs, Tab, NoDataCard, Layout, FlexExpander, Button, ButtonVariation } from '@harness/uicore'
+import { Container, Tabs, Tab, NoDataCard, Layout, FlexExpander, Button, ButtonVariation, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'
@@ -178,6 +178,16 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
     </>
   ) : (
     <Container className={css.noAnalysis}>
+      {step.failureInfo?.message && (
+        <Text
+          font={{ size: 'small', weight: 'bold' }}
+          className={css.failureMessage}
+          lineClamp={4}
+          color={Color.RED_500}
+        >
+          {step.failureInfo.message}
+        </Text>
+      )}
       <NoDataCard message={getString('pipeline.verification.logs.noAnalysis')} icon="warning-sign" />
     </Container>
   )

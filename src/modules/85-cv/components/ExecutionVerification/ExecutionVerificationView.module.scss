@@ -39,6 +39,12 @@
   }
 }
 
+.failureMessage {
+  margin-bottom: var(--spacing-small) !important;
+  background-color: var(--red-100) !important;
+  padding: var(--spacing-small) !important;
+}
+
 .mainTabPanel {
   flex: 1;
   overflow-y: scroll;

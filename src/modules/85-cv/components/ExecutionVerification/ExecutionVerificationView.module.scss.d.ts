@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly executionSummary: string
+  readonly failureMessage: string
   readonly main: string
   readonly mainTabPanel: string
   readonly mainTabPanelLogs: string
