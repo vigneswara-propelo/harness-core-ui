@@ -98,11 +98,7 @@ export default function RouteDestinations(): React.ReactElement {
       {SEI_ENABLED ? SEIRoutes().props.children : null}
       {CDRoutes.props.children}
       {isCVModuleEnabled ? SRMRoutes.props.children : null}
-      {isCVModuleEnabled ? (
-        <Route path="/account/:accountId/:module(cv)">
-          <SRMMFERoutes />
-        </Route>
-      ) : null}
+      {isCVModuleEnabled ? SRMMFERoutes?.().props.children : null}
       {GitOpsRoutes.props.children}
       {IDP_ENABLED ? IDPRoutes().props.children : null}
       {STORoutes({})?.props.children}

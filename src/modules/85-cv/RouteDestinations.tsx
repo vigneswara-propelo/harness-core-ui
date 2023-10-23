@@ -632,7 +632,7 @@ export const SRMRoutes = (
   </>
 )
 
-export const SRMMFERoutes: React.FC = () => {
+export const SRMMFERoutes = (): JSX.Element => {
   const { SRM_MICRO_FRONTEND: enableMicroFrontend } = useFeatureFlags()
   const mfePaths = [
     routesV1.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams }),
