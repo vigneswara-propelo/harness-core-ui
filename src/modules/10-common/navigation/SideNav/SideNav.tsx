@@ -95,6 +95,10 @@ export default function SideNav(props: React.PropsWithChildren<SideNavProps>): R
     }
   }, [sideNavHovered])
 
+  useEffect(() => {
+    sendSideNavExpandedEvent(sideNavExpanded)
+  }, [sideNavExpanded])
+
   return (
     <div
       className={cx(
@@ -182,3 +186,9 @@ export const SidebarLink: React.FC<SidebarLinkProps> = ({
     </Text>
   </Link>
 )
+
+// Dispatch 'SIDE_NAV_EXPANDED_EVENT' to modules which are interested in custom
+// handling their UI when SideNav is expanded or collapsed
+const sendSideNavExpandedEvent = (state: boolean): void => {
+  window.dispatchEvent(new CustomEvent('SIDE_NAV_EXPANDED_EVENT', { detail: state }))
+}

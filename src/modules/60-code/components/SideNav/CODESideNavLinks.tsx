@@ -61,6 +61,7 @@ export default function CODESideNavLinks(mode: NAV_MODE): React.ReactElement {
         <SideNav.Scope scope={[Scope.PROJECT]}>
           <SideNav.Link
             label={getString('repositories')}
+            data-code-nav-version="2"
             to={routes.toCODERepositories({ space: [accountId, orgIdentifier, projectIdentifier].join('/') })}
             isActive={() => matchedRouteKey === 'toCODERepositories' && !location.pathname.endsWith('/settings')}
           />
