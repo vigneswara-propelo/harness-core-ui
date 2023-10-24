@@ -31,9 +31,17 @@ import {
   path
 } from '../mocks'
 
+jest.mock('@common/hooks', () => ({
+  ...(jest.requireActual('@common/hooks') as any),
+  useMutateAsGet: jest.fn().mockImplementation(fn => {
+    return fn()
+  })
+}))
+
 jest.mock('services/cd-ng', () => ({
   useGetPlansKey: jest.fn().mockImplementation(() => ({
     loading: false,
+    data: mockPlansResponse,
     mutate: jest.fn().mockImplementation(() => {
       return Promise.resolve({
         ...mockPlansResponse
@@ -44,6 +52,7 @@ jest.mock('services/cd-ng', () => ({
   })),
   useGetArtifactPathsForBamboo: jest.fn().mockImplementation(() => ({
     loading: false,
+    data: mockArtifactPathsResponse,
     mutate: jest.fn().mockImplementation(() => {
       return Promise.resolve({
         ...mockArtifactPathsResponse
@@ -55,6 +64,7 @@ jest.mock('services/cd-ng', () => ({
 
   useGetBuildsForBamboo: jest.fn().mockImplementation(() => ({
     loading: false,
+    data: mockBuildsResponse,
     mutate: jest.fn().mockImplementation(() => {
       return Promise.resolve({
         ...mockBuildsResponse

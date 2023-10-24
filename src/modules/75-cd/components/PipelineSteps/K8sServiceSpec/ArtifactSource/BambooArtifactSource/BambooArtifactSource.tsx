@@ -81,7 +81,8 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
     isSidecar,
     artifactPath,
     artifacts,
-    stepViewType
+    stepViewType,
+    useArtifactV1Data = false
   } = props
 
   const { getString } = useStrings()
@@ -121,7 +122,6 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
   const planFqnPath = getFqnPathForEntity('planKey')
   const artifactPathsFqnPath = getFqnPathForEntity('artifactPaths')
   const buildsFqnPath = getFqnPathForEntity('build')
-  const planKeyVal = get(initialValues?.artifacts, `${artifactPath}.spec.planKey`, '')
 
   const refetchingAllowedTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION] as MultiTypeInputType[]
 
@@ -134,12 +134,10 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
     )
   )
 
-  const planKey = React.useState(
-    getFinalQueryParamValue(
-      getDefaultQueryParam(
-        getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.planKey`, ''), artifact?.spec?.plankey),
-        get(initialValues?.artifacts, `${artifactPath}.spec.planKey`, '')
-      )
+  const planKeyValue = getFinalQueryParamValue(
+    getDefaultQueryParam(
+      getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.planKey`, ''), artifact?.spec?.planKey),
+      get(initialValues?.artifacts, `${artifactPath}.spec.planKey`, '')
     )
   )
 
@@ -167,7 +165,7 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
       connectorRef: connectorRefValue?.toString(),
       fqnPath: planFqnPath,
       pipelineIdentifier,
-      serviceId: serviceIdentifier
+      serviceId: useArtifactV1Data ? undefined : serviceIdentifier
     },
     lazy: true
   })
@@ -191,8 +189,8 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
       connectorRef: connectorRefValue?.toString(),
       fqnPath: artifactPathsFqnPath,
       pipelineIdentifier,
-      serviceId: serviceIdentifier,
-      planName: get(initialValues?.artifacts, `${artifactPath}.spec.planKey`, '')
+      serviceId: useArtifactV1Data ? undefined : serviceIdentifier,
+      planName: planKeyValue
     },
     lazy: true
   })
@@ -216,8 +214,8 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
       fqnPath: buildsFqnPath,
       connectorRef: connectorRefValue?.toString(),
       pipelineIdentifier,
-      serviceId: serviceIdentifier,
-      planName: get(initialValues?.artifacts, `${artifactPath}.spec.planKey`, '')
+      serviceId: useArtifactV1Data ? undefined : serviceIdentifier,
+      planName: planKeyValue
     },
     lazy: true
   })
@@ -289,10 +287,10 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
   }, [artifactPathError])
 
   useEffect(() => {
-    if (planKeyVal !== '') {
+    if (planKeyValue !== '') {
       refetchArtifactPaths()
     }
-  }, [planKeyVal])
+  }, [planKeyValue])
 
   const isFieldDisabled = (fieldName: string, isTag = false): boolean => {
     /* instanbul ignore else */
@@ -482,7 +480,7 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                 onClick: () => {
                   if (
                     refetchingAllowedTypes?.includes(getMultiTypeFromValue(connectorRefValue, allowableTypes)) &&
-                    refetchingAllowedTypes?.includes(getMultiTypeFromValue(planKey as any, allowableTypes))
+                    refetchingAllowedTypes?.includes(getMultiTypeFromValue(planKeyValue as any, allowableTypes))
                   ) {
                     refetchBambooBuild()
                   }
