@@ -39,6 +39,7 @@ export type ACRStepInfo = StepSpecType & {
   subscriptionId?: string
   tags: string[]
   target?: string
+  version?: string
 }
 
 export type AMIArtifactConfig = ArtifactConfig & {
@@ -754,6 +755,7 @@ export interface AcrResponseDTO {
 export type ActionStepInfo = StepSpecType & {
   env?: ParameterFieldMapStringString
   uses: string
+  version?: string
   with?: ParameterFieldMapStringString
 }
 
@@ -762,6 +764,7 @@ export type ActionStepInfoV1 = StepSpecType & {
   outputs?: string[]
   resources?: ContainerResource
   uses: string
+  version?: string
   with?: ParameterFieldMapStringString
 }
 
@@ -1382,6 +1385,7 @@ export type AuditFilterProperties = FilterProperties & {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -2262,6 +2266,7 @@ export type BackgroundStepInfo = StepSpecType & {
   resources?: ContainerResource
   runAsUser?: number
   shell?: 'Sh' | 'Bash' | 'Powershell' | 'Pwsh' | 'Python'
+  version?: string
 }
 
 export type BackgroundStepInfoV1 = StepSpecType & {
@@ -2280,6 +2285,7 @@ export type BackgroundStepInfoV1 = StepSpecType & {
   run: string
   shell?: 'sh' | 'bash' | 'powershell' | 'pwsh' | 'python'
   user?: number
+  version?: string
 }
 
 export type BambooArtifactConfig = ArtifactConfig & {
@@ -2439,6 +2445,7 @@ export type BitbucketUsernameTokenApiAccess = BitbucketApiAccessSpecDTO & {
 export type BitriseStepInfo = StepSpecType & {
   env?: ParameterFieldMapStringString
   uses: string
+  version?: string
   with?: ParameterFieldMapStringString
 }
 
@@ -2447,6 +2454,7 @@ export type BitriseStepInfoV1 = StepSpecType & {
   outputs?: string[]
   resources?: ContainerResource
   uses: string
+  version?: string
   with?: ParameterFieldMapStringString
 }
 
@@ -2469,6 +2477,7 @@ export interface Build {
 }
 
 export interface BuildDetails {
+  artifactDownloadMetadata?: ArtifactFileMetadata[]
   artifactFileMetadataList?: ArtifactFileMetadata[]
   artifactFileSize?: string
   artifactPath?: string
@@ -3506,6 +3515,7 @@ export interface CreditDTO {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -4208,6 +4218,7 @@ export type DockerStepInfo = StepSpecType & {
   runAsUser?: number
   tags: string[]
   target?: string
+  version?: string
 }
 
 export type DockerUserNamePasswordDTO = DockerAuthCredentialsDTO & {
@@ -4315,6 +4326,7 @@ export type ECRStepInfo = StepSpecType & {
   runAsUser?: number
   tags: string[]
   target?: string
+  version?: string
 }
 
 export type ELKConnectorDTO = ConnectorConfigDTO & {
@@ -4900,6 +4912,7 @@ export interface EntityDetail {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
 }
 
 export interface EntityDetailProtoDTO {
@@ -5156,10 +5169,16 @@ export interface EnvironmentInputsMergedResponseDto {
 }
 
 export interface EnvironmentInputsetYamlAndServiceOverridesMetadata {
+  connectorRef?: string
+  entityGitDetails?: EntityGitDetails
   envRef?: string
   envRuntimeInputYaml?: string
   envYaml?: string
+  fallbackBranch?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   servicesOverrides?: ServiceOverridesMetadata[]
+  storeType?: 'INLINE' | 'REMOTE'
 }
 
 export interface EnvironmentInputsetYamlAndServiceOverridesMetadataInput {
@@ -6694,6 +6713,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -6818,6 +6838,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -6937,6 +6958,7 @@ export interface FeedbackFormDTO {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -7244,6 +7266,7 @@ export type GARStepInfo = StepSpecType & {
   runAsUser?: number
   tags: string[]
   target?: string
+  version?: string
 }
 
 export type GCRStepInfo = StepSpecType & {
@@ -7269,6 +7292,7 @@ export type GCRStepInfo = StepSpecType & {
   runAsUser?: number
   tags: string[]
   target?: string
+  version?: string
 }
 
 export type GarArtifactSummary = ArtifactSummary & {
@@ -7465,6 +7489,7 @@ export type GitCloneStepInfo = StepSpecType & {
   resources?: ContainerResource
   runAsUser?: number
   sslVerify?: boolean
+  version?: string
 }
 
 export type GitConfigDTO = ConnectorConfigDTO & {
@@ -7771,6 +7796,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
   )[]
   moduleType?:
     | 'CD'
@@ -7787,6 +7813,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -8034,6 +8061,7 @@ export interface GitEntityFilterProperties {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -8051,6 +8079,7 @@ export interface GitEntityFilterProperties {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -8376,6 +8405,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -8630,6 +8660,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -9015,6 +9046,7 @@ export interface GitSyncEntityDTO {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -9263,6 +9295,7 @@ export interface GitSyncEntityListDTO {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -9528,6 +9561,7 @@ export interface GitSyncErrorDTO {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -9567,6 +9601,7 @@ export interface GitSyncRepoFilesList {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -11605,6 +11640,7 @@ export interface LicensesWithSummaryDTO {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -11795,6 +11831,7 @@ export interface ModuleLicenseDTO {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -12054,6 +12091,7 @@ export interface NGEntityList {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
   )[]
 }
 
@@ -12419,6 +12457,7 @@ export interface OAuthSignupDTO {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -13300,6 +13339,7 @@ export interface PartialSchemaDTO {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -13472,6 +13512,7 @@ export type PluginStepInfo = StepSpecType & {
   runAsUser?: number
   settings?: ParameterFieldMapStringJsonNode
   uses?: string
+  version?: string
 }
 
 export type PluginStepInfoV1 = StepSpecType & {
@@ -13484,6 +13525,7 @@ export type PluginStepInfoV1 = StepSpecType & {
   resources?: ContainerResource
   user?: number
   uses?: string
+  version?: string
   with?: ParameterFieldMapStringJsonNode
 }
 
@@ -13587,6 +13629,7 @@ export interface Project {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -13725,6 +13768,7 @@ export interface RecommendationRequest {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -13999,6 +14043,7 @@ export interface ReferencedByDTO {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
 }
 
 export interface RefreshResponse {
@@ -15558,6 +15603,7 @@ export interface ResponseListEntityType {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -17544,6 +17590,7 @@ export type RestoreCacheGCSStepInfo = StepSpecType & {
   key: string
   resources?: ContainerResource
   runAsUser?: number
+  version?: string
 }
 
 export type RestoreCacheS3StepInfo = StepSpecType & {
@@ -17558,6 +17605,7 @@ export type RestoreCacheS3StepInfo = StepSpecType & {
   region?: string
   resources?: ContainerResource
   runAsUser?: number
+  version?: string
 }
 
 export interface RestrictionDTO {
@@ -17692,6 +17740,7 @@ export type RunStepInfo = StepSpecType & {
   resources?: ContainerResource
   runAsUser?: number
   shell?: 'Sh' | 'Bash' | 'Powershell' | 'Pwsh' | 'Python'
+  version?: string
 }
 
 export type RunTestsStepInfo = StepSpecType & {
@@ -17723,6 +17772,7 @@ export type RunTestsStepInfo = StepSpecType & {
   testGlobs?: string
   testRoot?: string
   testSplitStrategy?: 'ClassTiming' | 'TestCount'
+  version?: string
 }
 
 export interface RuntimeEntity {
@@ -17984,6 +18034,7 @@ export type SaveCacheGCSStepInfo = StepSpecType & {
   resources?: ContainerResource
   runAsUser?: number
   sourcePaths: string[]
+  version?: string
 }
 
 export type SaveCacheS3StepInfo = StepSpecType & {
@@ -17999,6 +18050,7 @@ export type SaveCacheS3StepInfo = StepSpecType & {
   resources?: ContainerResource
   runAsUser?: number
   sourcePaths: string[]
+  version?: string
 }
 
 export interface ScimGroup {
@@ -18198,6 +18250,7 @@ export type ScriptStepInfo = StepSpecType & {
   run: string
   shell?: 'sh' | 'bash' | 'powershell' | 'pwsh' | 'python'
   user?: number
+  version?: string
 }
 
 export interface SecretDTOV2 {
@@ -18344,6 +18397,7 @@ export type SecurityStepInfo = StepSpecType & {
   resources?: ContainerResource
   runAsUser?: number
   settings?: ParameterFieldMapStringJsonNode
+  version?: string
 }
 
 export interface SequenceToggleDTO {
@@ -18852,6 +18906,7 @@ export interface ServiceOverridesSpec {
   configFiles?: ConfigFileWrapper[]
   connectionStrings?: ConnectionStringsConfiguration
   manifests?: ManifestConfigWrapper[]
+  metadata?: string
   variables?: NGVariable[]
 }
 
@@ -19015,7 +19070,7 @@ export interface ServicesYamlMetadataApiInput {
 }
 
 export interface ServicesYamlMetadataApiInputV2 {
-  entityWithGitInfoList?: EntityWithGitInfo[]
+  serviceWithGitInfoList?: EntityWithGitInfo[]
 }
 
 export interface SessionTimeoutSettings {
@@ -19369,6 +19424,7 @@ export interface StartTrialDTO {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -19672,6 +19728,7 @@ export interface SubscriptionDTO {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -19719,6 +19776,7 @@ export interface SubscriptionRequest {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -20454,6 +20512,7 @@ export type TestStepInfo = StepSpecType & {
   splitting?: Splitting
   user?: number
   uses?: 'maven' | 'bazel' | 'gradle' | 'dotnet' | 'nunit_console' | 'sbt' | 'pytest' | 'unittest' | 'rspec'
+  version?: string
   with?: {
     [key: string]: JsonNode
   }
@@ -20649,6 +20708,7 @@ export type UploadToArtifactoryStepInfo = StepSpecType & {
   runAsUser?: number
   sourcePath: string
   target: string
+  version?: string
 }
 
 export type UploadToGCSStepInfo = StepSpecType & {
@@ -20659,6 +20719,7 @@ export type UploadToGCSStepInfo = StepSpecType & {
   runAsUser?: number
   sourcePath: string
   target?: string
+  version?: string
 }
 
 export type UploadToS3StepInfo = StepSpecType & {
@@ -20672,6 +20733,7 @@ export type UploadToS3StepInfo = StepSpecType & {
   sourcePath: string
   stripPrefix?: string
   target?: string
+  version?: string
 }
 
 export interface UsageDataDTO {
@@ -21250,6 +21312,7 @@ export interface YamlSchemaMetadata {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -21277,6 +21340,7 @@ export interface YamlSchemaWithDetails {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -22385,6 +22449,7 @@ export interface ListActivitiesQueryParams {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
   referredByEntityType?: (
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -22625,6 +22690,7 @@ export interface ListActivitiesQueryParams {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
   )[]
   activityTypes?: ('CONNECTIVITY_CHECK' | 'ENTITY_USAGE' | 'ENTITY_CREATION' | 'ENTITY_UPDATE')[]
   searchTerm?: string
@@ -22967,6 +23033,7 @@ export interface GetUniqueReferredByEntitiesQueryParams {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
   activityTypes?: ('CONNECTIVITY_CHECK' | 'ENTITY_USAGE' | 'ENTITY_CREATION' | 'ENTITY_UPDATE')[]
 }
 
@@ -23262,6 +23329,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -23502,6 +23570,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -24524,6 +24593,7 @@ export interface GetProjectAggregateDTOListQueryParams {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -42692,6 +42762,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -42993,6 +43064,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
   searchTerm?: string
 }
 
@@ -46723,6 +46795,7 @@ export interface GetReferencedByQueryParams {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
   searchTerm?: string
 }
 
@@ -49684,6 +49757,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -49992,6 +50066,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'EcsBasicRollback'
       | 'ChaosInfrastructure'
       | 'Anchore'
+      | 'Overrides'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -55266,6 +55341,7 @@ export interface GetEditionActionsQueryParams {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -55332,6 +55408,7 @@ export interface StartCommunityLicenseQueryParams {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -55464,6 +55541,7 @@ export interface StartFreeLicenseQueryParams {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -55534,6 +55612,7 @@ export interface GetModuleLicensesByAccountAndModuleTypeQueryParams {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -55767,6 +55846,7 @@ export interface GetLicensesAndSummaryQueryParams {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -57059,6 +57139,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
   yamlGroup?: string
 }
 
@@ -57427,6 +57508,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -57992,6 +58074,7 @@ export interface GetProjectListQueryParams {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -58125,6 +58208,7 @@ export interface GetProjectListWithMultiOrgFilterQueryParams {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -67144,6 +67228,7 @@ export interface RetrieveProductPricesQueryParams {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -67373,6 +67458,7 @@ export interface CancelSubscriptionQueryParams {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -74345,6 +74431,7 @@ export interface GetYamlSchemaQueryParams {
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
     | 'Anchore'
+    | 'Overrides'
   subtype?:
     | 'K8sCluster'
     | 'Git'

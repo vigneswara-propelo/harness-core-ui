@@ -34,6 +34,7 @@ export type ACRStepInfo = StepSpecType & {
   subscriptionId?: string
   tags: string[]
   target?: string
+  version?: string
 }
 
 export interface AMIFilter {
@@ -468,6 +469,7 @@ export type AcrSpec = ArtifactTypeSpec & {
 export type ActionStepInfo = StepSpecType & {
   env?: ParameterFieldMapStringString
   uses: string
+  version?: string
   with?: ParameterFieldMapStringString
 }
 
@@ -476,6 +478,7 @@ export type ActionStepInfoV1 = StepSpecType & {
   outputs?: string[]
   resources?: ContainerResource
   uses: string
+  version?: string
   with?: ParameterFieldMapStringString
 }
 
@@ -711,6 +714,7 @@ export type AuditFilterProperties = FilterProperties & {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -812,6 +816,7 @@ export type BackgroundStepInfo = StepSpecType & {
   resources?: ContainerResource
   runAsUser?: number
   shell?: 'Sh' | 'Bash' | 'Powershell' | 'Pwsh' | 'Python'
+  version?: string
 }
 
 export type BackgroundStepInfoV1 = StepSpecType & {
@@ -830,6 +835,7 @@ export type BackgroundStepInfoV1 = StepSpecType & {
   run: string
   shell?: 'sh' | 'bash' | 'powershell' | 'pwsh' | 'python'
   user?: number
+  version?: string
 }
 
 export type BambooRegistrySpec = ArtifactTypeSpec & {
@@ -913,6 +919,7 @@ export type BitbucketSpec = WebhookTriggerSpecV2 & {
 export type BitriseStepInfo = StepSpecType & {
   env?: ParameterFieldMapStringString
   uses: string
+  version?: string
   with?: ParameterFieldMapStringString
 }
 
@@ -921,6 +928,7 @@ export type BitriseStepInfoV1 = StepSpecType & {
   outputs?: string[]
   resources?: ContainerResource
   uses: string
+  version?: string
   with?: ParameterFieldMapStringString
 }
 
@@ -1274,6 +1282,7 @@ export type ContainerStepInfo = StepSpecType & {
   privileged?: boolean
   settings?: ParameterFieldMapStringJsonNode
   shell?: 'Sh' | 'Bash' | 'Powershell' | 'Pwsh' | 'Python'
+  version?: string
 }
 
 export interface ContainerStepInfra {
@@ -1419,6 +1428,7 @@ export type DockerStepInfo = StepSpecType & {
   runAsUser?: number
   tags: string[]
   target?: string
+  version?: string
 }
 
 export type ECRStepInfo = StepSpecType & {
@@ -1444,6 +1454,7 @@ export type ECRStepInfo = StepSpecType & {
   runAsUser?: number
   tags: string[]
   target?: string
+  version?: string
 }
 
 export type EcrSpec = ArtifactTypeSpec & {
@@ -3023,6 +3034,7 @@ export type GARStepInfo = StepSpecType & {
   runAsUser?: number
   tags: string[]
   target?: string
+  version?: string
 }
 
 export type GCRStepInfo = StepSpecType & {
@@ -3048,6 +3060,7 @@ export type GCRStepInfo = StepSpecType & {
   runAsUser?: number
   tags: string[]
   target?: string
+  version?: string
 }
 
 export type GarSpec = ArtifactTypeSpec & {
@@ -3090,6 +3103,7 @@ export type GitCloneStepInfo = StepSpecType & {
   resources?: ContainerResource
   runAsUser?: number
   sslVerify?: boolean
+  version?: string
 }
 
 export type GitErrorMetadataDTO = ErrorMetadataDTO & {
@@ -3403,20 +3417,6 @@ export type HttpStepInfo = StepSpecType & {
   url: string
 }
 
-export type HttpStepInfoV1 = StepSpecType & {
-  assertion?: ParameterFieldString
-  body?: ParameterFieldString
-  cert?: ParameterFieldString
-  cert_key?: ParameterFieldString
-  delegate?: ParameterFieldListTaskSelectorYaml
-  headers?: HttpHeaderConfig[]
-  input_vars?: NGVariableV1Wrapper
-  metadata?: string
-  method?: ParameterFieldString
-  output_vars?: NGVariableV1Wrapper
-  url?: ParameterFieldString
-}
-
 export type IgnoreFailureActionConfig = FailureStrategyActionConfig & {
   type: 'Ignore'
 }
@@ -3464,6 +3464,15 @@ export interface InputSetImportRequestDTO {
 
 export interface InputSetImportResponseDTO {
   identifier?: string
+}
+
+export interface InputSetListResponse {
+  description?: string
+  identifier?: string
+  inputSetIdWithPipelineId?: string
+  inputSetType?: 'INPUT_SET' | 'OVERLAY_INPUT_SET'
+  name?: string
+  pipelineIdentifier?: string
 }
 
 export interface InputSetMoveConfigResponseDTO {
@@ -3621,6 +3630,7 @@ export type JiraApprovalInstanceDetails = ApprovalInstanceDetailsDTO & {
   issue: JiraIssueKeyNG
   latestDelegateTaskId?: string
   rejectionCriteria: CriteriaSpecWrapperDTO
+  retryInterval?: Timeout
 }
 
 export type JiraApprovalStepInfo = StepSpecType & {
@@ -4231,6 +4241,17 @@ export interface PageFilterDTO {
   totalPages?: number
 }
 
+export interface PageInputSetListResponse {
+  content?: InputSetListResponse[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  pageToken?: string
+  totalItems?: number
+  totalPages?: number
+}
+
 export interface PageInputSetSummaryResponse {
   content?: InputSetSummaryResponse[]
   empty?: boolean
@@ -4332,6 +4353,18 @@ export interface ParameterField {
   responseField?: string
   typeString?: boolean
   value?: { [key: string]: any }
+}
+
+export interface ParameterFieldBoolean {
+  defaultValue?: boolean
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: boolean
 }
 
 export interface ParameterFieldDouble {
@@ -4907,6 +4940,7 @@ export type PluginStepInfo = StepSpecType & {
   runAsUser?: number
   settings?: ParameterFieldMapStringJsonNode
   uses?: string
+  version?: string
 }
 
 export type PluginStepInfoV1 = StepSpecType & {
@@ -4919,6 +4953,7 @@ export type PluginStepInfoV1 = StepSpecType & {
   resources?: ContainerResource
   user?: number
   uses?: string
+  version?: string
   with?: ParameterFieldMapStringJsonNode
 }
 
@@ -4988,6 +5023,7 @@ export interface PolledResponse {
 export interface PollingInfoForTriggers {
   perpetualTaskId?: string
   polledResponse?: PolledResponse
+  pollingDocId?: string
 }
 
 export interface PollingSubscriptionStatus {
@@ -6067,6 +6103,13 @@ export interface ResponsePageFilterDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponsePageInputSetListResponse {
+  correlationId?: string
+  data?: PageInputSetListResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponsePageInputSetSummaryResponse {
   correlationId?: string
   data?: PageInputSetSummaryResponse
@@ -6365,6 +6408,7 @@ export type RestoreCacheGCSStepInfo = StepSpecType & {
   key: string
   resources?: ContainerResource
   runAsUser?: number
+  version?: string
 }
 
 export type RestoreCacheS3StepInfo = StepSpecType & {
@@ -6379,6 +6423,7 @@ export type RestoreCacheS3StepInfo = StepSpecType & {
   region?: string
   resources?: ContainerResource
   runAsUser?: number
+  version?: string
 }
 
 export type RetryFailureActionConfig = FailureStrategyActionConfig & {
@@ -6495,6 +6540,7 @@ export type RunStepInfo = StepSpecType & {
   resources?: ContainerResource
   runAsUser?: number
   shell?: 'Sh' | 'Bash' | 'Powershell' | 'Pwsh' | 'Python'
+  version?: string
 }
 
 export type RunTestsStepInfo = StepSpecType & {
@@ -6526,6 +6572,7 @@ export type RunTestsStepInfo = StepSpecType & {
   testGlobs?: string
   testRoot?: string
   testSplitStrategy?: 'ClassTiming' | 'TestCount'
+  version?: string
 }
 
 export type S3BuildStoreTypeSpec = BuildStoreTypeSpec & {
@@ -6551,6 +6598,7 @@ export type SaveCacheGCSStepInfo = StepSpecType & {
   resources?: ContainerResource
   runAsUser?: number
   sourcePaths: string[]
+  version?: string
 }
 
 export type SaveCacheS3StepInfo = StepSpecType & {
@@ -6566,6 +6614,7 @@ export type SaveCacheS3StepInfo = StepSpecType & {
   resources?: ContainerResource
   runAsUser?: number
   sourcePaths: string[]
+  version?: string
 }
 
 export interface SbomOrchestrationSpec {
@@ -6587,8 +6636,8 @@ export interface SbomSourceSpec {
 }
 
 export interface ScheduledDeadline {
-  time?: string
-  timeZone?: string
+  time: string
+  timeZone: string
 }
 
 export type ScheduledTriggerConfig = NGTriggerSpecV2 & {
@@ -6620,6 +6669,7 @@ export type ScriptStepInfo = StepSpecType & {
   run: string
   shell?: 'sh' | 'bash' | 'powershell' | 'pwsh' | 'python'
   user?: number
+  version?: string
 }
 
 export type SecretNGVariable = NGVariable & {
@@ -6661,6 +6711,7 @@ export type SecurityStepInfo = StepSpecType & {
   resources?: ContainerResource
   runAsUser?: number
   settings?: ParameterFieldMapStringJsonNode
+  version?: string
 }
 
 export interface Serve {
@@ -6680,6 +6731,7 @@ export type ServiceNowApprovalInstanceDetails = ApprovalInstanceDetailsDTO & {
   delegateTaskName?: string
   latestDelegateTaskId?: string
   rejectionCriteria?: CriteriaSpecWrapperDTO
+  retryInterval?: Timeout
   ticket: ServiceNowTicketKeyNG
 }
 
@@ -6701,11 +6753,12 @@ export interface ServiceNowChangeWindowSpec {
 
 export type ServiceNowCreateStepInfo = StepSpecType & {
   connectorRef: string
+  createType?: string
   delegateSelectors?: string[]
   fields?: ServiceNowField[]
   templateName?: string
   ticketType: string
-  useServiceNowTemplate: boolean
+  useServiceNowTemplate?: boolean
 }
 
 export interface ServiceNowField {
@@ -7242,6 +7295,7 @@ export type TestStepInfo = StepSpecType & {
   splitting?: Splitting
   user?: number
   uses?: 'maven' | 'bazel' | 'gradle' | 'dotnet' | 'nunit_console' | 'sbt' | 'pytest' | 'unittest' | 'rspec'
+  version?: string
   with?: {
     [key: string]: JsonNode
   }
@@ -7258,6 +7312,11 @@ export interface Throwable {
 export interface TimeRange {
   endTime?: number
   startTime?: number
+}
+
+export interface Timeout {
+  timeoutInMillis?: number
+  timeoutString?: string
 }
 
 export interface TimeoutIssuer {
@@ -7408,6 +7467,7 @@ export type UploadToArtifactoryStepInfo = StepSpecType & {
   runAsUser?: number
   sourcePath: string
   target: string
+  version?: string
 }
 
 export type UploadToGCSStepInfo = StepSpecType & {
@@ -7418,6 +7478,7 @@ export type UploadToGCSStepInfo = StepSpecType & {
   runAsUser?: number
   sourcePath: string
   target?: string
+  version?: string
 }
 
 export type UploadToS3StepInfo = StepSpecType & {
@@ -7431,6 +7492,7 @@ export type UploadToS3StepInfo = StepSpecType & {
   sourcePath: string
   stripPrefix?: string
   target?: string
+  version?: string
 }
 
 export interface UserOpaEvaluationContext {
@@ -8898,6 +8960,73 @@ export const importInputSetPromise = (
     InputSetImportRequestDTO,
     ImportInputSetPathParams
   >('POST', getConfig('pipeline/api'), `/inputSets/import/${inputSetIdentifier}`, props, signal)
+
+export interface GetInputSetsListForProjectQueryParams {
+  pageIndex?: number
+  pageSize?: number
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  inputSetType?: 'ALL' | 'INPUT_SET' | 'OVERLAY_INPUT_SET'
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+}
+
+export type GetInputSetsListForProjectProps = Omit<
+  GetProps<ResponsePageInputSetListResponse, Failure | Error, GetInputSetsListForProjectQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets InputSets list for a project
+ */
+export const GetInputSetsListForProject = (props: GetInputSetsListForProjectProps) => (
+  <Get<ResponsePageInputSetListResponse, Failure | Error, GetInputSetsListForProjectQueryParams, void>
+    path={`/inputSets/list`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetInputSetsListForProjectProps = Omit<
+  UseGetProps<ResponsePageInputSetListResponse, Failure | Error, GetInputSetsListForProjectQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets InputSets list for a project
+ */
+export const useGetInputSetsListForProject = (props: UseGetInputSetsListForProjectProps) =>
+  useGet<ResponsePageInputSetListResponse, Failure | Error, GetInputSetsListForProjectQueryParams, void>(
+    `/inputSets/list`,
+    { base: getConfig('pipeline/api'), ...props }
+  )
+
+/**
+ * Gets InputSets list for a project
+ */
+export const getInputSetsListForProjectPromise = (
+  props: GetUsingFetchProps<
+    ResponsePageInputSetListResponse,
+    Failure | Error,
+    GetInputSetsListForProjectQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageInputSetListResponse, Failure | Error, GetInputSetsListForProjectQueryParams, void>(
+    getConfig('pipeline/api'),
+    `/inputSets/list`,
+    props,
+    signal
+  )
 
 export interface GetInputSetRepositoryListQueryParams {
   accountIdentifier: string
@@ -19386,6 +19515,8 @@ export interface GetSchemaYamlQueryParams {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
+    | 'Overrides'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -19725,6 +19856,8 @@ export interface GetStepYamlSchemaQueryParams {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
+    | 'Overrides'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 

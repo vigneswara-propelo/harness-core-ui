@@ -63,6 +63,7 @@ export type AuditFilterProperties = FilterProperties & {
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
     | 'IDP'
     | 'SEI'
@@ -483,6 +484,8 @@ export interface EntityDetail {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'ChaosInfrastructure'
+    | 'Anchore'
+    | 'Overrides'
 }
 
 export interface EntityDetailProtoDTO {
@@ -4761,68 +4764,6 @@ export const moveTemplateConfigsPromise = (
     void,
     MoveTemplateConfigsPathParams
   >('POST', getConfig('template/api'), `/templates/move-config/${templateIdentifier}`, props, signal)
-
-export interface GetStaticSchemaYamlQueryParams {
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  entityType?: string
-  templateEntityType:
-    | 'Step'
-    | 'Stage'
-    | 'Pipeline'
-    | 'CustomDeployment'
-    | 'MonitoredService'
-    | 'SecretManager'
-    | 'ArtifactSource'
-    | 'StepGroup'
-  scope?: 'account' | 'org' | 'project' | 'unknown'
-  version?: string
-}
-
-export type GetStaticSchemaYamlProps = Omit<
-  GetProps<ResponseJsonNode, Failure | Error, GetStaticSchemaYamlQueryParams, void>,
-  'path'
->
-
-/**
- * Get Static Yaml Schema
- */
-export const GetStaticSchemaYaml = (props: GetStaticSchemaYamlProps) => (
-  <Get<ResponseJsonNode, Failure | Error, GetStaticSchemaYamlQueryParams, void>
-    path={`/templates/schema/static`}
-    base={getConfig('template/api')}
-    {...props}
-  />
-)
-
-export type UseGetStaticSchemaYamlProps = Omit<
-  UseGetProps<ResponseJsonNode, Failure | Error, GetStaticSchemaYamlQueryParams, void>,
-  'path'
->
-
-/**
- * Get Static Yaml Schema
- */
-export const useGetStaticSchemaYaml = (props: UseGetStaticSchemaYamlProps) =>
-  useGet<ResponseJsonNode, Failure | Error, GetStaticSchemaYamlQueryParams, void>(`/templates/schema/static`, {
-    base: getConfig('template/api'),
-    ...props
-  })
-
-/**
- * Get Static Yaml Schema
- */
-export const getStaticSchemaYamlPromise = (
-  props: GetUsingFetchProps<ResponseJsonNode, Failure | Error, GetStaticSchemaYamlQueryParams, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponseJsonNode, Failure | Error, GetStaticSchemaYamlQueryParams, void>(
-    getConfig('template/api'),
-    `/templates/schema/static`,
-    props,
-    signal
-  )
 
 export interface GetTemplateSchemaQueryParams {
   templateEntityType:
