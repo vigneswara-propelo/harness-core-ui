@@ -13,6 +13,7 @@ import { PluginStep } from './PluginStep/PluginStep'
 import { ACRStep } from './ACRStep/ACRStep'
 import { GitCloneStep } from './GitCloneStep/GitCloneStep'
 import { GCRStep } from './GCRStep/GCRStep'
+import { GARStep } from './GARStep/GARStep'
 import { ECRStep } from './ECRStep/ECRStep'
 import { SaveCacheGCSStep } from './SaveCacheGCSStep/SaveCacheGCSStep'
 import { RestoreCacheGCSStep } from './RestoreCacheGCSStep/RestoreCacheGCSStep'
@@ -34,6 +35,7 @@ factory.registerStep(new BackgroundStep())
 factory.registerStep(new PluginStep())
 factory.registerStep(new ACRStep())
 factory.registerStep(new GCRStep())
+factory.registerStep(new GARStep())
 factory.registerStep(new ECRStep())
 factory.registerStep(new SaveCacheGCSStep())
 factory.registerStep(new RestoreCacheGCSStep())

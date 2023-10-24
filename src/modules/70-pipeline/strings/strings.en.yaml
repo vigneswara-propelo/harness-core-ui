@@ -1305,6 +1305,7 @@ stepDescription:
   Run: Execute one or more commands on a container image in a CI stage.
   ACR: Build a Docker image and push it to Azure Container Registry (ACR).
   GCR: Build a Docker image and push it to Google Container Registry (GCR).
+  GAR: Build a Docker image and push it to Google Artifact Registry (GAR).
   ECR: Build a Docker image and push it to AWS Elastic Container Registry (ECR).
   SaveCacheGCS: Preserve files and directories between builds using Google Cloud Storage (GCS).
   RestoreCacheGCS: Restore saved files and directories between builds using Google Cloud Storage (GCS).

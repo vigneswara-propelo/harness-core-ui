@@ -5407,6 +5407,7 @@ export interface StringsMap {
   'pipeline.stepDescription.ElastigroupSwapRoute': string
   'pipeline.stepDescription.Email': string
   'pipeline.stepDescription.FlagConfiguration': string
+  'pipeline.stepDescription.GAR': string
   'pipeline.stepDescription.GCR': string
   'pipeline.stepDescription.GCS': string
   'pipeline.stepDescription.GHAPlugin': string

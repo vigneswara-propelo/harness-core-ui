@@ -57,6 +57,7 @@ export enum StepType {
   BitrisePlugin = 'Bitrise',
   GitClone = 'GitClone',
   Run = 'Run',
+  GAR = 'BuildAndPushGAR',
   GCR = 'BuildAndPushGCR',
   ACR = 'BuildAndPushACR',
   PDC = 'Pdc',
