@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React from 'react'
 import cx from 'classnames'
 import { connect, FormikContextType } from 'formik'
 import {
@@ -64,13 +64,8 @@ export function MultiTypeExecutionTargetGroup(props: ConnecteExecutionTargetGrpP
   const dataTooltipId =
     defaultTo(get(props, 'tooltipProps.dataTooltipId'), '') ||
     defaultTo(`${get(tooltipContext, 'formName')}_${name}`, '')
-  /* istanbul ignore next */
-  useEffect(() => {
-    if (initialValues && defaultTo(get(initialValues, 'spec.onDelegate'), 'targethost')) {
-      /* istanbul ignore next */
-      formik.setFieldValue('spec.onDelegate', initialValues?.spec?.onDelegate)
-    }
-  }, [initialValues?.spec?.onDelegate])
+
+  const selectedValue = get(formik.values, name) ? 'delegate' : 'targethost'
 
   return (
     <FormGroup
@@ -84,7 +79,7 @@ export function MultiTypeExecutionTargetGroup(props: ConnecteExecutionTargetGrpP
         <MultiTypeFieldSelector
           name={name}
           label={getString('pipeline.execTargetLabel')}
-          defaultValueToReset={['']}
+          defaultValueToReset={false}
           skipRenderValueInExpressionLabel
           allowedTypes={allowableTypes}
           supportListOfExpressions={true}
@@ -94,11 +89,11 @@ export function MultiTypeExecutionTargetGroup(props: ConnecteExecutionTargetGrpP
         >
           <RadioGroup
             data-tooltip-id="executionTargetTooltip"
-            selectedValue={formik.values.spec?.onDelegate}
+            selectedValue={selectedValue}
             disabled={readonly}
             inline={true}
             onChange={e => {
-              formik.setFieldValue('spec.onDelegate', e.currentTarget.value)
+              formik.setFieldValue(name, e.currentTarget.value !== 'targethost')
             }}
           >
             <Radio value={'targethost'} label={getString('cd.specifyTargetHost')} />

@@ -116,7 +116,23 @@ export function ShellScriptWidget(
           })
       }),
       environmentVariables: variableSchema(getString),
-      outputVariables: variableSchema(getString)
+      outputVariables: variableSchema(getString),
+      executionTarget: Yup.object().when(['onDelegate'], {
+        is: onDelegate => {
+          return !onDelegate
+        },
+        then: Yup.object().shape({
+          host: Yup.string()
+            .trim()
+            .required(getString('fieldRequired', { field: getString('cd.specifyTargetHost') })),
+          connectorRef: Yup.string()
+            .trim()
+            .required(getString('fieldRequired', { field: getString('sshConnector') })),
+          workingDirectory: Yup.string()
+            .trim()
+            .required(getString('fieldRequired', { field: getString('workingDirectory') }))
+        })
+      })
     }),
     ...getNameAndIdentifierSchema(getString, stepViewType)
   })
@@ -126,6 +142,7 @@ export function ShellScriptWidget(
     spec: {
       ...initialValues.spec,
       delegateSelectors: initialValues.spec.delegateSelectors,
+      onDelegate: initialValues.spec?.onDelegate ?? true,
       executionTarget:
         getMultiTypeFromValue(initialValues.spec.executionTarget) === MultiTypeInputType.FIXED
           ? {

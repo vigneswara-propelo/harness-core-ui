@@ -1,14 +1,9 @@
-import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
 
 import { ShellScriptData, ShellScriptFormData } from './shellScriptTypes'
 
-const getOnDelegateValue = (values: ShellScriptData): string => {
-  if (getMultiTypeFromValue(values?.spec?.onDelegate) === MultiTypeInputType.FIXED) {
-    return values.spec?.onDelegate ? 'delegate' : 'targethost'
-  } else {
-    return values.spec?.onDelegate
-  }
+const getOnDelegateValue = (values: ShellScriptData): string | boolean => {
+  return values.spec?.onDelegate !== '' ? values.spec?.onDelegate : true
 }
 
 export const getInitialValues = (initialValues: ShellScriptData): ShellScriptFormData => {

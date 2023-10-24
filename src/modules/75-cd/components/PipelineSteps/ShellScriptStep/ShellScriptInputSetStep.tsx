@@ -103,7 +103,6 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
   const isExecutionTimeFieldDisabledForStep = isExecutionTimeFieldDisabled(stepViewType)
   const multiSelectSupportForAllowedValues = useFeatureFlag(FeatureFlag.PIE_MULTISELECT_AND_COMMA_IN_ALLOWED_VALUES)
   const formik = useFormikContext()
-
   return (
     <FormikForm>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME && (
@@ -158,6 +157,23 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
           </MultiTypeFieldSelector>
         </div>
       ) : null}
+
+      {getMultiTypeFromValue(template?.spec?.onDelegate) === MultiTypeInputType.RUNTIME && (
+        <>
+          <Label>
+            <HarnessDocTooltip tooltipId={'exec-target'} labelText={getString('pipeline.executionTarget')} />
+          </Label>
+
+          <MultiTypeExecutionTargetGroup name={`${prefix}spec.onDelegate`} formik={formik} readonly={readonly} />
+
+          <FixedExecTargetGroup
+            allowableTypes={allowableTypes}
+            formik={formik as any}
+            prefix={prefix}
+            delegate={`${prefix}spec.onDelegate`}
+          />
+        </>
+      )}
       {getMultiTypeFromValue(template?.spec?.source?.spec?.file) === MultiTypeInputType.RUNTIME ? (
         <div className={cx(stepCss.formGroup, stepCss.alignStart, stepCss.md)}>
           <MultiTypeConfigFileSelect
@@ -513,23 +529,6 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
           template={template}
           className={cx(stepCss.formGroup, stepCss.md)}
         />
-      )}
-
-      {getMultiTypeFromValue(template?.spec?.onDelegate) === MultiTypeInputType.RUNTIME && (
-        <>
-          <Label>
-            <HarnessDocTooltip tooltipId={'exec-target'} labelText={'Execution Target'} />
-          </Label>
-
-          <MultiTypeExecutionTargetGroup
-            name={`${prefix}spec.onDelegate`}
-            formik={formik}
-            readonly={readonly}
-            initialValues={initialValues}
-          />
-
-          <FixedExecTargetGroup allowableTypes={allowableTypes} formik={formik as any} prefix={prefix} />
-        </>
       )}
     </FormikForm>
   )

@@ -58,6 +58,7 @@ interface FixedExecTargetGroupProps {
   allowableTypes: AllowedTypes
   formik: FormikProps<ShellScriptFormData>
   prefix?: string
+  delegate?: string
 }
 
 export const FixedExecTargetGroup = ({
@@ -70,8 +71,10 @@ export const FixedExecTargetGroup = ({
   const { getString } = useStrings()
   const formValues = formik.values
   const { setFieldValue } = formik
+  const fieldName = prefix ? `${prefix}spec.onDelegate` : 'spec.onDelegate'
+  const onDelegateVal = get(formValues, fieldName)
 
-  if (formValues.spec?.onDelegate === 'targethost') {
+  if (!onDelegateVal) {
     return (
       <div>
         <div className={cx(stepCss.formGroup, stepCss.md)}>
@@ -98,10 +101,10 @@ export const FixedExecTargetGroup = ({
         </div>
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <MultiTypeSecretInput
-            type={formValues.spec.shell === 'PowerShell' ? 'WinRmCredentials' : 'SSHKey'}
+            type={formValues.spec?.shell === 'PowerShell' ? 'WinRmCredentials' : 'SSHKey'}
             name={prefix ? `${prefix}spec.executionTarget.connectorRef` : 'spec.executionTarget.connectorRef'}
             label={
-              formValues.spec.shell === 'PowerShell'
+              formValues.spec?.shell === 'PowerShell'
                 ? getString('platform.secrets.typeWinRM')
                 : getString('sshConnector')
             }
@@ -378,7 +381,7 @@ export default function OptionalConfiguration(props: {
         {stepName === StepType.SHELLSCRIPT ? (
           <>
             <Label className={css.execTargetLabel}>
-              <HarnessDocTooltip tooltipId={'exec-target'} labelText={'Execution Target'} />
+              <HarnessDocTooltip tooltipId={'exec-target'} labelText={getString('pipeline.executionTarget')} />
             </Label>
             <MultiTypeExecutionTargetGroup name="spec.onDelegate" formik={formik} readonly={readonly} />
             <MultiTypeDelegateSelector

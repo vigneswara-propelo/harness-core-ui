@@ -190,18 +190,21 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
 
     /* istanbul ignore else */
     if (
-      getMultiTypeFromValue(template?.spec?.executionTarget?.host) === MultiTypeInputType.RUNTIME &&
-      isRequired &&
-      isEmpty(data?.spec?.executionTarget?.host)
+      (getMultiTypeFromValue(template?.spec?.executionTarget?.host) === MultiTypeInputType.RUNTIME && isRequired) ||
+      (isEmpty(data?.spec?.executionTarget?.host) &&
+        getMultiTypeFromValue(template?.spec?.onDelegate) === MultiTypeInputType.RUNTIME &&
+        !data?.spec?.onDelegate)
     ) {
       set(errors, 'spec.executionTarget.host', getString?.('fieldRequired', { field: 'Target Host' }))
     }
 
     /* istanbul ignore else */
     if (
-      getMultiTypeFromValue(template?.spec?.executionTarget?.connectorRef) === MultiTypeInputType.RUNTIME &&
-      isRequired &&
-      isEmpty(data?.spec?.executionTarget?.connectorRef)
+      (getMultiTypeFromValue(template?.spec?.executionTarget?.connectorRef) === MultiTypeInputType.RUNTIME &&
+        isRequired) ||
+      (isEmpty(data?.spec?.executionTarget?.connectorRef) &&
+        getMultiTypeFromValue(template?.spec?.onDelegate) === MultiTypeInputType.RUNTIME &&
+        !data?.spec?.onDelegate)
     ) {
       set(
         errors,
@@ -212,9 +215,11 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
 
     /* istanbul ignore else */
     if (
-      getMultiTypeFromValue(template?.spec?.executionTarget?.workingDirectory) === MultiTypeInputType.RUNTIME &&
-      isRequired &&
-      isEmpty(data?.spec?.executionTarget?.workingDirectory)
+      (getMultiTypeFromValue(template?.spec?.executionTarget?.workingDirectory) === MultiTypeInputType.RUNTIME &&
+        isRequired) ||
+      (isEmpty(data?.spec?.executionTarget?.workingDirectory) &&
+        getMultiTypeFromValue(template?.spec?.onDelegate) === MultiTypeInputType.RUNTIME &&
+        !data?.spec?.onDelegate)
     ) {
       set(errors, 'spec.executionTarget.workingDirectory', getString?.('fieldRequired', { field: 'Working Directory' }))
     }
@@ -240,7 +245,7 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
     type: StepType.SHELLSCRIPT,
     spec: {
       shell: shellScriptType[0].value,
-      onDelegate: 'delegate',
+      onDelegate: true,
       delegateSelectors: [],
       source: {
         type: 'Inline',
@@ -308,10 +313,7 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
       ...data,
       spec: {
         ...data.spec,
-        onDelegate:
-          getMultiTypeFromValue(data.spec.onDelegate) === MultiTypeInputType.FIXED
-            ? data.spec?.onDelegate !== 'targethost'
-            : data.spec?.onDelegate,
+        onDelegate: data.spec?.onDelegate,
         delegateSelectors: data?.spec?.delegateSelectors,
         source: {
           ...specSource,
