@@ -880,6 +880,10 @@ export interface OnboardingSDKs {
   items?: string[]
 }
 
+export interface OrganizationDictionary {
+  [key: string]: ProjectDictionary
+}
+
 export interface Pagination {
   /**
    * The total number of items
@@ -962,6 +966,10 @@ export interface Project {
   tags?: Tag[]
 }
 
+export interface ProjectDictionary {
+  [key: string]: ProxyKeyProject
+}
+
 /**
  * Returns all the flags in a project and their state in each environment
  */
@@ -999,6 +1007,14 @@ export interface Projects {
 }
 
 export interface ProxyKey {
+  /**
+   * The date the key was created at in milliseconds
+   */
+  createdAt: number
+  /**
+   * A description of the Proxy Key
+   */
+  description: string
   environments?: string[]
   /**
    * The ProxyKeys ID
@@ -1012,6 +1028,10 @@ export interface ProxyKey {
    * The ProxyKeys name
    */
   name: string
+  /**
+   * The date the key was last updated at in milliseconds
+   */
+  updatedAt: number
 }
 
 /**
@@ -1022,6 +1042,18 @@ export interface ProxyKeyInstruction {
     addEnvironments?: string[]
     removeEnvironments?: string[]
   }
+}
+
+export interface ProxyKeyProject {
+  environments?: string[]
+  scope: 'all' | 'prod' | 'non-prod' | 'selected'
+}
+
+/**
+ * A list of Proxy Keys
+ */
+export type ProxyKeys = Pagination & {
+  proxyKeys?: ProxyKey[]
 }
 
 export interface ReferenceDTO {
@@ -1533,9 +1565,10 @@ export interface ProjectRequestRequestBody {
 export type ProxyKeysPatchRequestRequestBody = ProxyKeyInstruction
 
 export interface ProxyKeysPostRequestRequestBody {
-  environments?: string[]
-  identifier?: string
-  name?: string
+  description?: string
+  identifier: string
+  name: string
+  organizations: OrganizationDictionary
 }
 
 export type SegmentPatchRequestRequestBody = GitSyncPatchOperation
@@ -1744,6 +1777,11 @@ export type ProxyKeyResponseResponse = ProxyKey
 export interface ProxyKeysCreateResponseResponse {
   key?: string
 }
+
+/**
+ * OK
+ */
+export type ProxyKeysResponseResponse = ProxyKeys
 
 /**
  * OK
@@ -3247,9 +3285,9 @@ export interface GetAllFeaturesQueryParams {
    */
   summary?: boolean
   /**
-   * Filter for flags based on their tag values
+   * Filter for flags based on their tag values supplied as comma separated list
    */
-  tags?: string[]
+  tags?: string
 }
 
 export type GetAllFeaturesProps = Omit<
@@ -3703,9 +3741,9 @@ export interface GetFeatureMetricsQueryParams {
    */
   enabled?: boolean
   /**
-   * Filter for flags based on their tag values
+   * Filter for flags based on their tag values supplied as comma separated list
    */
-  tags?: string[]
+  tags?: string
 }
 
 export type GetFeatureMetricsProps = Omit<
@@ -4508,9 +4546,9 @@ export interface GetDependentFeaturesQueryParams {
    */
   summary?: boolean
   /**
-   * Filter for flags based on their tag values
+   * Filter for flags based on their tag values supplied as comma separated list
    */
-  tags?: string[]
+  tags?: string
 }
 
 export interface GetDependentFeaturesPathParams {
@@ -6897,15 +6935,134 @@ export const createGitRepoPromise = (
     CreateGitRepoPathParams
   >('POST', getConfig('cf'), `/admin/projects/${identifier}/git_repo`, props, signal)
 
-export interface CreateProxyKeyQueryParams {
+export interface GetProxyKeysQueryParams {
   /**
    * Account Identifier
    */
   accountIdentifier: string
   /**
-   * Organization Identifier
+   * Name of the field
    */
-  orgIdentifier: string
+  name?: string
+  /**
+   * SortOrder
+   */
+  sortOrder?: 'ASCENDING' | 'DESCENDING'
+  /**
+   * SortByField
+   */
+  sortByField?: 'name' | 'createdAt' | 'updatedAt'
+  /**
+   * PageNumber
+   */
+  pageNumber?: number
+  /**
+   * PageSize
+   */
+  pageSize?: number
+}
+
+export type GetProxyKeysProps = Omit<
+  GetProps<
+    ProxyKeysResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+    GetProxyKeysQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Returns all Proxy keys in an account
+ *
+ * Returns all the Proxy keys in an account
+ */
+export const GetProxyKeys = (props: GetProxyKeysProps) => (
+  <Get<
+    ProxyKeysResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+    GetProxyKeysQueryParams,
+    void
+  >
+    path={`/admin/proxy/keys`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseGetProxyKeysProps = Omit<
+  UseGetProps<
+    ProxyKeysResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+    GetProxyKeysQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Returns all Proxy keys in an account
+ *
+ * Returns all the Proxy keys in an account
+ */
+export const useGetProxyKeys = (props: UseGetProxyKeysProps) =>
+  useGet<
+    ProxyKeysResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+    GetProxyKeysQueryParams,
+    void
+  >(`/admin/proxy/keys`, { base: getConfig('cf'), ...props })
+
+/**
+ * Returns all Proxy keys in an account
+ *
+ * Returns all the Proxy keys in an account
+ */
+export const getProxyKeysPromise = (
+  props: GetUsingFetchProps<
+    ProxyKeysResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+    GetProxyKeysQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ProxyKeysResponseResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+    GetProxyKeysQueryParams,
+    void
+  >(getConfig('cf'), `/admin/proxy/keys`, props, signal)
+
+export interface CreateProxyKeyQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
 }
 
 export type CreateProxyKeyProps = Omit<
@@ -7022,10 +7179,6 @@ export interface DeleteProxyKeyQueryParams {
    * Account Identifier
    */
   accountIdentifier: string
-  /**
-   * Organization Identifier
-   */
-  orgIdentifier: string
 }
 
 export type DeleteProxyKeyProps = Omit<
@@ -7142,10 +7295,6 @@ export interface GetProxyKeyQueryParams {
    * Account Identifier
    */
   accountIdentifier: string
-  /**
-   * Organization Identifier
-   */
-  orgIdentifier: string
 }
 
 export interface GetProxyKeyPathParams {
@@ -7158,7 +7307,11 @@ export interface GetProxyKeyPathParams {
 export type GetProxyKeyProps = Omit<
   GetProps<
     ProxyKeyResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
     GetProxyKeyQueryParams,
     GetProxyKeyPathParams
   >,
@@ -7174,7 +7327,11 @@ export type GetProxyKeyProps = Omit<
 export const GetProxyKey = ({ identifier, ...props }: GetProxyKeyProps) => (
   <Get<
     ProxyKeyResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
     GetProxyKeyQueryParams,
     GetProxyKeyPathParams
   >
@@ -7187,7 +7344,11 @@ export const GetProxyKey = ({ identifier, ...props }: GetProxyKeyProps) => (
 export type UseGetProxyKeyProps = Omit<
   UseGetProps<
     ProxyKeyResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
     GetProxyKeyQueryParams,
     GetProxyKeyPathParams
   >,
@@ -7203,7 +7364,11 @@ export type UseGetProxyKeyProps = Omit<
 export const useGetProxyKey = ({ identifier, ...props }: UseGetProxyKeyProps) =>
   useGet<
     ProxyKeyResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
     GetProxyKeyQueryParams,
     GetProxyKeyPathParams
   >((paramsInPath: GetProxyKeyPathParams) => `/admin/proxy/keys/${paramsInPath.identifier}`, {
@@ -7223,7 +7388,11 @@ export const getProxyKeyPromise = (
     ...props
   }: GetUsingFetchProps<
     ProxyKeyResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
     GetProxyKeyQueryParams,
     GetProxyKeyPathParams
   > & {
@@ -7236,7 +7405,11 @@ export const getProxyKeyPromise = (
 ) =>
   getUsingFetch<
     ProxyKeyResponseResponse,
-    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
     GetProxyKeyQueryParams,
     GetProxyKeyPathParams
   >(getConfig('cf'), `/admin/proxy/keys/${identifier}`, props, signal)
@@ -7246,10 +7419,6 @@ export interface UpdateProxyKeyQueryParams {
    * Account Identifier
    */
   accountIdentifier: string
-  /**
-   * Organization Identifier
-   */
-  orgIdentifier: string
 }
 
 export interface UpdateProxyKeyPathParams {
