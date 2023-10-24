@@ -690,7 +690,7 @@ const routes = {
     params => `/settings/services/${params?.serviceId}`
   ),
 
-  toSettingsEnvironments: withModeModuleAndScopePrefix(() => 'settings/environments'),
+  toSettingsEnvironments: withModeModuleAndScopePrefix(() => '/settings/environments'),
   toSettingsEnvironmentDetails: withModeModuleAndScopePrefix<EnvironmentPathProps & EnvironmentQueryParams>(p => {
     const params = removeDefaultPathProps<EnvironmentPathProps & EnvironmentQueryParams>(p)
     const { environmentIdentifier, ...rest } = params
