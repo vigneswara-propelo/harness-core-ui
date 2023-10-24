@@ -1,0 +1,9 @@
+.filter {
+  max-width: 200px !important;
+  margin-bottom: 0;
+  :global {
+    .bp3-input {
+      max-height: var(--spacing-xxlarge) !important;
+    }
+  }
+}

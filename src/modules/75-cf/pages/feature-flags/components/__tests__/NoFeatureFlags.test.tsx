@@ -27,9 +27,11 @@ const renderComponent = (props: Partial<NoFeatureFlagsProps>): RenderResult =>
         hasFeatureFlags={false}
         hasSearchTerm={false}
         hasFlagFilter={false}
+        hasTagFilter={false}
         environmentIdentifier="dummy"
         clearFilter={onClearFilter}
         clearSearch={onClearSearch}
+        clearTagFilter={jest.fn()}
         tags={[]}
         tagsError={null}
         {...props}
@@ -120,6 +122,33 @@ describe('NoFeatureFlags', () => {
 
     await waitFor(() => {
       expect(onClearFilter).toHaveBeenCalled()
+    })
+  })
+
+  test('It should show the empty state if there are no matching tags', async () => {
+    const clearTagFilterMock = jest.fn()
+    const clearFilterMock = jest.fn()
+
+    renderComponent({
+      hasFeatureFlags: true,
+      hasFlagFilter: false,
+      hasTagFilter: true,
+      hasSearchTerm: false,
+      clearTagFilter: clearTagFilterMock,
+      clearFilter: clearFilterMock
+    })
+
+    await waitFor(() => {
+      expect(screen.getByTestId('nodata-image')).toBeInTheDocument()
+      expect(screen.getByText('common.filters.noMatchingFilterData')).toBeInTheDocument()
+      expect(screen.getByText('cf.featureFlags.resetFilters')).toBeInTheDocument()
+    })
+
+    await userEvent.click(screen.getByText('cf.featureFlags.resetFilters'))
+
+    await waitFor(() => {
+      expect(clearTagFilterMock).toHaveBeenCalled()
+      expect(clearFilterMock).toHaveBeenCalled()
     })
   })
 })

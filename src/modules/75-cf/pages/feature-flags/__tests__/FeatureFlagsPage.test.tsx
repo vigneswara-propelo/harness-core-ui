@@ -25,6 +25,7 @@ import mockImport from 'framework/utils/mockImport'
 import mockEnvironments from '@cf/pages/environments/__tests__/mockEnvironments'
 import FeatureFlagsPage from '../FeatureFlagsPage'
 import mockFeatureFlags from './mockFeatureFlags'
+import mockTagsPayload from './data/mockTagsPayload'
 import mockGetAllEnvironmentsFlags from './mockGetAllEnvironmentsFlags'
 
 const renderComponent = (): RenderResult =>
@@ -81,7 +82,7 @@ describe('FeatureFlagsPage', () => {
       useGetFeatureMetrics: () => ({ data: [], refetch: jest.fn() })
     })
     mockImport('services/cf', {
-      useGetAllTags: () => ({ data: [], refetch: jest.fn() })
+      useGetAllTags: () => ({ data: mockTagsPayload, refetch: jest.fn() })
     })
 
     mockEnvs()
@@ -349,6 +350,62 @@ describe('FeatureFlagsPage', () => {
           expect(checkbox).not.toBeChecked()
         })
       })
+    })
+  })
+
+  describe('TagFilter', () => {
+    test('it should refetch flags on tag filter change', async () => {
+      const refetchFlags = jest.fn()
+
+      jest
+        .spyOn(cfServices, 'useGetAllFeatures')
+        .mockReturnValue({ data: mockFeatureFlags, loading: false, error: null, refetch: refetchFlags } as any)
+
+      renderComponent()
+
+      const tagsDropdown = screen.getByPlaceholderText('- tagsLabel -')
+      expect(tagsDropdown).toBeInTheDocument()
+
+      const TAG1 = 'tag1'
+
+      await userEvent.type(tagsDropdown, TAG1)
+      expect(tagsDropdown).toHaveValue(TAG1)
+
+      await userEvent.click(screen.getByText(TAG1))
+
+      expect(refetchFlags).toHaveBeenCalled()
+
+      const TAG2 = 'tag2'
+
+      await userEvent.type(tagsDropdown, TAG2)
+      await userEvent.click(screen.getByText(TAG2))
+
+      expect(refetchFlags).toHaveBeenCalled()
+    })
+
+    test('it should be disabled if tags are loading', async () => {
+      mockImport('services/cf', {
+        useGetAllTags: () => ({ data: null, refetch: jest.fn(), loading: true })
+      })
+
+      renderComponent()
+
+      expect(screen.getByPlaceholderText('- tagsLabel -')).toBeDisabled()
+    })
+
+    test('it should be disabled if it fails to fetch tags', async () => {
+      mockImport('services/cf', {
+        useGetAllTags: () => ({
+          data: null,
+          refetch: jest.fn(),
+          loading: false,
+          error: 'ERROR FETCHING TAGS'
+        })
+      })
+
+      renderComponent()
+
+      expect(screen.getByPlaceholderText('- tagsLabel -')).toBeDisabled()
     })
   })
 })

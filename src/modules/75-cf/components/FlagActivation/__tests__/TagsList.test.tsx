@@ -50,13 +50,13 @@ describe('TagsList', () => {
     expect(screen.queryByText('cf.featureFlags.tagging.emptyState')).not.toBeInTheDocument()
   })
 
-  test('it should display correct empty state', async () => {
+  test('it should display the empty state when tags is undefined', async () => {
     renderComponent({ tags: undefined })
 
     expect(screen.getByText('cf.featureFlags.tagging.emptyState')).toBeInTheDocument()
   })
 
-  test('it should display correct empty state', async () => {
+  test('it should display the empty state when tags is empty', async () => {
     renderComponent({ tags: [] })
 
     expect(screen.getByText('cf.featureFlags.tagging.emptyState')).toBeInTheDocument()

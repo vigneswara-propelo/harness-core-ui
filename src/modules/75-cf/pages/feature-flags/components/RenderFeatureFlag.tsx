@@ -6,7 +6,7 @@
  */
 
 import React, { FC, useEffect, useRef, useState, ReactElement } from 'react'
-import { Button, ButtonVariation, Container, Heading, Layout, Text, Utils, Popover } from '@harness/uicore'
+import { Button, ButtonVariation, Container, Heading, Layout, Popover, TagsPopover, Text, Utils } from '@harness/uicore'
 import { noop } from 'lodash-es'
 import { Classes, Position, Switch, PopoverInteractionKind } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
@@ -257,6 +257,14 @@ export const RenderFeatureFlag: FC<RenderFeatureFlagProps> = ({
               <Text inline color={Color.GREY_400} padding={{ left: 'xsmall' }} font={{ size: 'small' }}>
                 ({getString('cf.shared.archived')})
               </Text>
+            )}
+            {!!data?.tags?.length && (
+              <TagsPopover
+                iconProps={{ size: 12, color: Color.GREY_600 }}
+                tags={data.tags.reduce((tagsObj, currentTag) => {
+                  return Object.assign(tagsObj, { [currentTag.name]: '' })
+                }, {})}
+              />
             )}
           </Text>
           {data.identifier && (

@@ -7,12 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly generalInfo: string
-  readonly leftToolbar: string
-  readonly rightToolbar: string
-  readonly switchTooltip: string
-  readonly toggleFlagButton: string
-  readonly tooltip: string
-  readonly tooltipTable: string
+  readonly filter: string
 }
 export default styles

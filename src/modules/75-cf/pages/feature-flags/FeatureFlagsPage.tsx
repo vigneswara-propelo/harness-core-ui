@@ -9,6 +9,7 @@ import React, { FC, useMemo, useCallback, useEffect, useRef } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Container, ExpandingSearchInput, ExpandingSearchInputHandle, Pagination } from '@harness/uicore'
 import { defer } from 'lodash-es'
+import { Formik } from 'formik'
 import {
   FeatureMetric,
   GetAllFeaturesQueryParams,
@@ -41,6 +42,7 @@ import FeatureFlagsListing from './components/FeatureFlagsListing'
 import { StaleFlagActions } from './components/StaleFlagActions/StaleFlagActions'
 import { useIsStaleFlagsView } from './hooks/useIsStaleFlagsView'
 import StaleFlagsForm from './components/StaleFlagActions/StaleFlagsForm'
+import TagFilter, { tagsDropdownValue } from './components/TagFilter'
 import css from './FeatureFlagsPage.module.scss'
 
 const FeatureFlagsPage: FC = () => {
@@ -52,6 +54,8 @@ const FeatureFlagsPage: FC = () => {
   const [pageNumber, setPageNumber] = useQueryParamsState('page', 0)
   const [searchTerm, setSearchTerm] = useQueryParamsState('search', '')
   const [flagFilter, setFlagFilter] = useQueryParamsState<Optional<FilterProps>>('filter', {})
+  const [tagFilter, setTagFilter] = useQueryParamsState<tagsDropdownValue[]>('tag', [])
+  const flatTagsFilter = JSON.stringify(tagFilter)
 
   const queryParams = useMemo<GetAllFeaturesQueryParams | GetFeatureMetricsQueryParams>(() => {
     return {
@@ -65,8 +69,10 @@ const FeatureFlagsPage: FC = () => {
       flagCounts: true,
       name: searchTerm,
       summary: true,
+      tags: tagFilter.map(t => t.value).join(',') || undefined,
       [flagFilter.queryProps?.key]: flagFilter.queryProps?.value
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     projectIdentifier,
     environmentIdentifier,
@@ -75,7 +81,8 @@ const FeatureFlagsPage: FC = () => {
     pageNumber,
     searchTerm,
     flagFilter.queryProps?.key,
-    flagFilter.queryProps?.value
+    flagFilter.queryProps?.value,
+    flatTagsFilter
   ])
 
   const {
@@ -109,7 +116,11 @@ const FeatureFlagsPage: FC = () => {
     searchTerm
   })
 
-  const { data: tagsData, error: tagsError } = useGetAllTags({
+  const {
+    data: tagsData,
+    error: tagsError,
+    loading: tagsLoading
+  } = useGetAllTags({
     queryParams: {
       projectIdentifier,
       environmentIdentifier,
@@ -134,7 +145,8 @@ const FeatureFlagsPage: FC = () => {
 
   const loading = flagsLoading || envsLoading
   const gitSyncing = toggleFeatureFlag.loading || deleteFlag.loading
-  const error = flagsError || envsError || deleteFlag.error || (toggleFeatureFlag.error && !governance.governanceError)
+  const error =
+    flagsError || envsError || deleteFlag.error || (toggleFeatureFlag.error && !governance.governanceError) || tagsError
 
   const onSearchInputChanged = useCallback(
     name => {
@@ -142,6 +154,13 @@ const FeatureFlagsPage: FC = () => {
       defer(() => setPageNumber(0))
     },
     [setSearchTerm, setPageNumber]
+  )
+
+  const onTagFilterChange = useCallback(
+    tag => {
+      setTagFilter(tag)
+    },
+    [setTagFilter]
   )
 
   useEffect(() => {
@@ -159,12 +178,21 @@ const FeatureFlagsPage: FC = () => {
     !!features?.featureCounts?.totalFeatures || !emptyFeatureFlags || !!features?.featureCounts?.totalArchived
 
   const title = getString('featureFlagsText')
-  const { STALE_FLAGS_FFM_1510: FILTER_FEATURE_FLAGS, FFM_8344_FLAG_CLEANUP } = useFeatureFlags()
+  const {
+    STALE_FLAGS_FFM_1510: FILTER_FEATURE_FLAGS,
+    FFM_8344_FLAG_CLEANUP,
+    FFM_8184_FEATURE_FLAG_TAGGING
+  } = useFeatureFlags()
   const showFilterCards = FILTER_FEATURE_FLAGS && hasFeatureFlags && environmentIdentifier
 
   const onClearFilter = (): void => {
     defer(() => setFlagFilter({}))
   }
+
+  const onClearTagFilter = (): void => {
+    defer(() => setTagFilter([]))
+  }
+
   const onClearSearch = (): void => searchRef.current.clear()
 
   const onRowClick = useCallback(
@@ -200,14 +228,26 @@ const FeatureFlagsPage: FC = () => {
                 <FlagDialog environment={environmentIdentifier} tags={tagsData?.tags || []} tagsError={tagsError} />
                 <GitSyncActions isLoading={gitSync.isGitSyncActionsEnabled && (gitSync.gitSyncLoading || gitSyncing)} />
               </div>
-              <ExpandingSearchInput
-                ref={searchRef}
-                alwaysExpanded
-                name="findFlag"
-                placeholder={getString('search')}
-                onChange={onSearchInputChanged}
-                defaultValue={searchTerm}
-              />
+              <div className={css.rightToolbar}>
+                {FFM_8184_FEATURE_FLAG_TAGGING && (
+                  <Formik formName="tag-filter" initialValues={{ tags: tagFilter }} onSubmit={() => void 0}>
+                    <TagFilter
+                      tagsData={tagsData?.tags || []}
+                      onFilterChange={onTagFilterChange}
+                      tagFilter={tagFilter}
+                      disabled={!!tagsError || !!tagsLoading}
+                    />
+                  </Formik>
+                )}
+                <ExpandingSearchInput
+                  ref={searchRef}
+                  alwaysExpanded
+                  name="findFlag"
+                  placeholder={getString('search')}
+                  onChange={onSearchInputChanged}
+                  defaultValue={searchTerm}
+                />
+              </div>
             </>
           )
         }
@@ -281,8 +321,10 @@ const FeatureFlagsPage: FC = () => {
               (flagFilter.queryProps?.key?.length > 0 && flagFilter.queryProps?.value?.length > 0) ||
               !!features?.featureCounts?.totalArchived
             }
+            hasTagFilter={!!tagFilter.length}
             environmentIdentifier={environmentIdentifier}
             clearFilter={onClearFilter}
+            clearTagFilter={onClearTagFilter}
             clearSearch={onClearSearch}
             tags={tagsData?.tags || []}
             tagsError={tagsError}

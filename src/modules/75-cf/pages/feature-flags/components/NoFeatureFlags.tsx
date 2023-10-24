@@ -22,9 +22,11 @@ export interface NoFeatureFlagsProps {
   hasFeatureFlags: boolean
   hasSearchTerm: boolean
   hasFlagFilter: boolean
+  hasTagFilter: boolean
   environmentIdentifier: string
   clearFilter: () => void
   clearSearch: () => void
+  clearTagFilter: () => void
   tags?: Tag[]
   tagsError?: unknown
 }
@@ -33,8 +35,10 @@ export const NoFeatureFlags: FC<NoFeatureFlagsProps> = ({
   hasFeatureFlags,
   hasSearchTerm,
   hasFlagFilter,
+  hasTagFilter,
   environmentIdentifier,
   clearFilter,
+  clearTagFilter,
   clearSearch,
   tags = [],
   tagsError = null
@@ -42,25 +46,28 @@ export const NoFeatureFlags: FC<NoFeatureFlagsProps> = ({
   const { getString } = useStrings()
 
   const mainMessage = (): string => {
-    if (hasFlagFilter) return getString('common.filters.noMatchingFilterData')
+    if (hasFlagFilter || hasTagFilter) return getString('common.filters.noMatchingFilterData')
     if (hasSearchTerm) return getString('cf.noResultMatch')
 
     return ''
   }
 
   const buttonText = (): string => {
-    if (hasFlagFilter) return getString('cf.featureFlags.resetFilters')
+    if (hasFlagFilter || hasTagFilter) return getString('cf.featureFlags.resetFilters')
     if (hasSearchTerm) return getString('cf.featureFlags.clearSearch')
     return ''
   }
 
   const buttonProps = (): ButtonProps => {
-    if (hasFlagFilter) {
+    if (hasFlagFilter || hasTagFilter) {
       return {
         text: getString('cf.featureFlags.resetFilters'),
         icon: 'reset',
         minimal: true,
-        onClick: clearFilter
+        onClick: () => {
+          clearFilter()
+          clearTagFilter()
+        }
       }
     }
     if (hasSearchTerm) {
@@ -95,7 +102,7 @@ export const NoFeatureFlags: FC<NoFeatureFlagsProps> = ({
     }
   }
 
-  if (hasSearchTerm || hasFlagFilter) {
+  if (hasSearchTerm || hasFlagFilter || hasTagFilter) {
     return (
       <Container flex={{ justifyContent: 'center' }} padding="xxxlarge">
         <NoData

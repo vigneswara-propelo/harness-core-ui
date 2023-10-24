@@ -335,7 +335,16 @@ export default {
       project: 'tnhucf1',
       results: [],
       status: { lastAccess: -6795364578871, status: 'never-requested' },
-      tags: [],
+      tags: [
+        {
+          identifier: 'tag_1',
+          name: 'tag1'
+        },
+        {
+          identifier: 'tag_2',
+          name: 'tag2'
+        }
+      ],
       variations: [
         { identifier: 'true', name: 'True', value: 'true' },
         { identifier: 'false', name: 'False', value: 'false' }
@@ -367,7 +376,16 @@ export default {
       project: 'tnhucf1',
       results: [],
       status: { lastAccess: -6795364578871, status: 'never-requested' },
-      tags: [],
+      tags: [
+        {
+          identifier: 'tag_1',
+          name: 'tag1'
+        },
+        {
+          identifier: 'tag_2',
+          name: 'tag2'
+        }
+      ],
       variations: [
         { identifier: 'true', name: 'True', value: 'true' },
         { identifier: 'false', name: 'False', value: 'false' }

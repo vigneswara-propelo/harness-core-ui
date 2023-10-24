@@ -64,6 +64,12 @@
   align-items: center;
 }
 
+.rightToolbar {
+  display: flex;
+  gap: var(--spacing-medium);
+  align-items: center;
+}
+
 .switchTooltip {
   span {
     word-break: break-all;
