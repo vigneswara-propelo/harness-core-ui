@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`FeatureFlagsDetailPage FeatureFlagsDetailPage should render data correctly 1`] = `
+exports[`FeatureFlagsDetailPage it should render data correctly 1`] = `
 <div>
   <div
     class="pageLayout"

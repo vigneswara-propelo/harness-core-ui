@@ -5,20 +5,21 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useState } from 'react'
+import React, { FC, useMemo, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import type { MutateMethod, MutateRequestOptions } from 'restful-react/dist/Mutate'
 import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useStrings } from 'framework/strings'
-import type {
+import {
   DeleteFeatureFlagQueryParams,
   Feature,
   FeatureResponseMetadata,
   GitSyncPatchOperation,
   PatchFeaturePathParams,
-  PatchFeatureQueryParams
+  PatchFeatureQueryParams,
+  useGetAllTags
 } from 'services/cf'
 import type { UseGitSync } from '@cf/hooks/useGitSync'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
@@ -72,6 +73,19 @@ const FlagDetailsOptionsMenuButton: FC<FlagDetailsOptionsMenuButtonProps> = ({
     })
   )
 
+  const {
+    data: tagsData,
+    error: tagsError,
+    loading: tagsLoading
+  } = useGetAllTags({
+    queryParams: {
+      projectIdentifier,
+      environmentIdentifier: activeEnvironment,
+      accountIdentifier: accountId,
+      orgIdentifier
+    }
+  })
+
   const { confirmDeleteFlag } = useDeleteFlagModal({
     featureFlag,
     gitSync,
@@ -87,12 +101,19 @@ const FlagDetailsOptionsMenuButton: FC<FlagDetailsOptionsMenuButtonProps> = ({
     onRestore: () => refetchFlag()
   })
 
+  const tagsDropdownData = useMemo(
+    () => tagsData?.tags?.map(t => ({ label: t.name, value: t.identifier })),
+    [tagsData?.tags]
+  )
+
   const { openEditDetailsModal } = useEditFlagDetailsModal({
     featureFlag,
     gitSync,
     refetchFlag,
     submitPatch,
-    setGovernanceMetadata
+    setGovernanceMetadata,
+    tagsData: tagsDropdownData || [],
+    tagsDisabled: !!(tagsError || tagsLoading)
   })
 
   const { isPlanEnforcementEnabled } = usePlanEnforcement()

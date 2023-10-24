@@ -10,7 +10,7 @@ export default {
   createdAt: 1632747505707,
   defaultOffVariation: 'false',
   defaultOnVariation: 'true',
-  description: '',
+  description: 'Test Bool Flag Description',
   envProperties: {
     defaultServe: {
       variation: 'false'
@@ -38,7 +38,12 @@ export default {
     lastAccess: -6795364578871,
     status: 'never-requested'
   },
-  tags: [],
+  tags: [
+    {
+      identifier: 'tag1',
+      name: 'tag1'
+    }
+  ],
   variations: [
     {
       identifier: 'true',

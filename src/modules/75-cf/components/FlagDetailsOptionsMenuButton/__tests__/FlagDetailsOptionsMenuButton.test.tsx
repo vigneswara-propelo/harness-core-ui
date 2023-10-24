@@ -51,7 +51,11 @@ const renderComponent = (props: Partial<FlagDetailsOptionsMenuButtonProps> = {})
 }
 
 describe('FlagDetailsOptionsMenuButton', () => {
-  beforeEach(() => jest.spyOn(useFeaturesMock, 'useGetFirstDisabledFeature').mockReturnValue({ featureEnabled: true }))
+  beforeEach(() => {
+    jest.spyOn(cfServices, 'useGetAllTags').mockReturnValue({ data: [], loading: false, error: null } as any)
+
+    jest.spyOn(useFeaturesMock, 'useGetFirstDisabledFeature').mockReturnValue({ featureEnabled: true })
+  })
 
   describe('Archived Flag - Delete', () => {
     test('it should render a DELETE and RESTORE button', async () => {

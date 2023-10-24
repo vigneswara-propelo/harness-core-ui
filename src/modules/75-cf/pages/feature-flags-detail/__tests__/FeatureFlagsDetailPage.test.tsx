@@ -28,7 +28,7 @@ jest.mock('@cf/hooks/useGitSync', () => ({
 }))
 
 describe('FeatureFlagsDetailPage', () => {
-  test('FeatureFlagsDetailPage should render loading correctly', async () => {
+  test('it should render loading correctly', async () => {
     mockImport('services/cd-ng', {
       useGetEnvironmentListForProject: () => ({ loading: true, refetch: jest.fn() })
     })
@@ -54,6 +54,15 @@ describe('FeatureFlagsDetailPage', () => {
       })
     })
 
+    mockImport('services/cf', {
+      useGetAllTags: () => ({
+        data: [],
+        loading: false,
+        error: null,
+        refetch: jest.fn()
+      })
+    })
+
     const { container } = render(
       <TestWrapper
         path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/onboarding/detail"
@@ -67,7 +76,7 @@ describe('FeatureFlagsDetailPage', () => {
     expect(getAllByText(container, /Loading, please wait\.\.\./)).toBeDefined()
   })
 
-  test('FeatureFlagsDetailPage should render error correctly 1', async () => {
+  test('it should render error correctly 1', async () => {
     const error = { message: 'SOME ERROR OCCURS' }
     mockImport('services/cd-ng', {
       useGetEnvironmentListForProject: () => ({ loading: true, refetch: jest.fn() })
@@ -106,7 +115,7 @@ describe('FeatureFlagsDetailPage', () => {
     expect(getAllByText(container, error.message)).toBeDefined()
   })
 
-  test('FeatureFlagsDetailPage should render error correctly 2', async () => {
+  test('it should render error correctly 2', async () => {
     const error = { message: 'SOME ERROR OCCURS' }
     mockImport('services/cd-ng', {
       useGetEnvironmentListForProject: () => ({ loading: true, refetch: jest.fn() })
@@ -145,7 +154,7 @@ describe('FeatureFlagsDetailPage', () => {
     expect(getAllByText(container, error.message)).toBeDefined()
   })
 
-  test('FeatureFlagsDetailPage should render no environment', async () => {
+  test('it should render no environment', async () => {
     mockImport('services/cd-ng', {
       useGetEnvironmentListForProject: () => ({ loading: true, refetch: jest.fn() })
     })
@@ -185,7 +194,7 @@ describe('FeatureFlagsDetailPage', () => {
     expect(getByText(container, 'newEnvironment')).toBeDefined()
   })
 
-  test('FeatureFlagsDetailPage should render data correctly', async () => {
+  test('it should render data correctly', async () => {
     mockImport('services/cd-ng', {
       useGetEnvironmentListForProject: () => ({ loading: true, refetch: jest.fn() })
     })

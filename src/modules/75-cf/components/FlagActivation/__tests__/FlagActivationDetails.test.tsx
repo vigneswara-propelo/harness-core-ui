@@ -76,6 +76,8 @@ describe('FlagActivationDetails', () => {
       .spyOn(cfServiceMock, 'useRestoreFeatureFlag')
       .mockReturnValue({ data: [], loading: false, mutate: jest.fn() } as any)
 
+    jest.spyOn(cfServiceMock, 'useGetAllTags').mockReturnValue({ data: [], loading: false } as any)
+
     jest.spyOn(cfServiceMock, 'useGetDependentFeatures').mockReturnValue({
       refetch: jest.fn(),
       loading: false,
@@ -113,7 +115,7 @@ describe('FlagActivationDetails', () => {
     expect(screen.getByText('tagsLabel')).toBeInTheDocument()
   })
 
-  test('it should show Tags subsection if FFM_8184_FEATURE_FLAG_TAGGING is toggled OFF', async () => {
+  test('it should not show Tags subsection if FFM_8184_FEATURE_FLAG_TAGGING is toggled OFF', async () => {
     const isTaggingFFOn = false
     renderComponent(isTaggingFFOn)
 

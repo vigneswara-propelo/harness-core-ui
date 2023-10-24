@@ -250,7 +250,7 @@ const FlagActivationDetails: FC<FlagActivationDetailsProps> = props => {
           setGovernanceMetadata={setGovernanceMetadata}
         />
 
-        {FFM_8184_FEATURE_FLAG_TAGGING && <TagsList tags={featureFlag.tags} />}
+        {FFM_8184_FEATURE_FLAG_TAGGING && <TagsList tags={featureFlag.tags || []} />}
 
         {FFM_4117_INTEGRATE_SRM && <ServicesList featureFlag={featureFlag} refetchFlag={refetchFlag} />}
 

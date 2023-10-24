@@ -242,17 +242,17 @@ const setDefaultOffVariation: (identifier: string) => Instruction<VariationIdent
   'setDefaultOffVariation',
   shape<VariationIdentifier>('identifier')
 )
-const addTag: (name: string, value: any) => Instruction<TagParams> = binaryInstructionCreator(
+const addTag: (name: string, identifier: string) => Instruction<TagParams> = binaryInstructionCreator(
   'addTag',
-  shape<TagParams>('name', 'value')
+  shape<TagParams>('name', 'identifier')
 )
-const updateTag: (name: string, value: any) => Instruction<TagParams> = binaryInstructionCreator(
+const updateTag: (name: string, identifier: string) => Instruction<TagParams> = binaryInstructionCreator(
   'updateTag',
-  shape<TagParams>('name', 'value')
+  shape<TagParams>('name', 'identifier')
 )
-const removeTag: (name: string, value: any) => Instruction<TagParams> = binaryInstructionCreator(
+const removeTag: (name: string, identifier: string) => Instruction<TagParams> = binaryInstructionCreator(
   'removeTag',
-  shape<TagParams>('name', 'value')
+  shape<TagParams>('name', 'identifier')
 )
 const setFeatureFlagState: (state: 'on' | 'off') => Instruction<SetStateParams> = unaryInstructionCreator(
   'setFeatureFlagState',
