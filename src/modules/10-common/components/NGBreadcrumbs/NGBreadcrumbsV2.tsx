@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { matchPath, useLocation, useHistory } from 'react-router-dom'
+import { matchPath, useLocation, useHistory, Link } from 'react-router-dom'
 import { Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Boundary, Breadcrumbs, IBreadcrumbProps } from '@blueprintjs/core'
@@ -122,11 +122,12 @@ const NGBreadcrumbsV2: React.FC<Partial<NGBreadcrumbsProps>> = props => {
   if (isSettingsPage) {
     list.push({
       text: (
-        <Text font={{ size: 'small' }} lineClamp={1} color={Color.PRIMARY_7}>
-          {getString('settingsLabel')}
-        </Text>
-      ),
-      href: routes.toSettings({ module, projectIdentifier, orgIdentifier })
+        <Link to={routes.toSettings({ module, projectIdentifier, orgIdentifier })}>
+          <Text font={{ size: 'small' }} lineClamp={1} color={Color.PRIMARY_7}>
+            {getString('settingsLabel')}
+          </Text>
+        </Link>
+      )
     })
   }
 
@@ -134,11 +135,12 @@ const NGBreadcrumbsV2: React.FC<Partial<NGBreadcrumbsProps>> = props => {
     links.forEach(link => {
       list.push({
         text: (
-          <Text font={{ size: 'small' }} lineClamp={1} color={Color.PRIMARY_7}>
-            {link.label}
-          </Text>
-        ),
-        href: link.url
+          <Link to={link.url}>
+            <Text font={{ size: 'small' }} lineClamp={1} color={Color.PRIMARY_7}>
+              {link.label}
+            </Text>
+          </Link>
+        )
       })
     })
   }
