@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Button, Container, Icon, Layout, Popover, Text } from '@harness/uicore'
+import { Button, Container, Layout, Popover, Text } from '@harness/uicore'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import { FontVariation, Color } from '@harness/design-system'
 import { Classes, Position } from '@blueprintjs/core'
@@ -17,9 +17,7 @@ import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 import { Project, useGetProjectAggregateDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import { ModuleName } from 'framework/types/ModuleName'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import ModuleListCard from '@projects-orgs/components/ModuleListCard/ModuleListCard'
 import { useProjectModal } from '@projects-orgs/modals/ProjectModal/useProjectModal'
 import { useCollaboratorModal } from '@projects-orgs/modals/ProjectModal/useCollaboratorModal'
 import ContextMenu from '@projects-orgs/components/Menu/ContextMenu'
@@ -38,18 +36,14 @@ import { useGetCounts } from 'services/dashboard-service'
 import LandingDashboardFactory from '@common/factories/LandingDashboardFactory'
 import LandingDashboardWidgetWrapper from '@projects-orgs/components/LandingDashboardWidgetWrapper/LandingDashboardWidgetWrapper'
 import { DASHBOARD_MODULES } from '@projects-orgs/pages/LandingDashboardPage/LandingDashboardPage'
+import ProjectsHeader from '@modules/45-projects-orgs/components/SettingsPageComponent/ProjectsHeader'
 import {
   TimeRangeToDays,
   useLandingDashboardContext,
   LandingDashboardContextProvider
 } from '@common/factories/LandingDashboardContext'
 import TimeRangeSelect from '@projects-orgs/components/TimeRangeSelect/TimeRangeSelect'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import DeprecatedCallout from '@gitsync/components/DeprecatedCallout/DeprecatedCallout'
-import { isOnPrem } from '@common/utils/utils'
-import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
-import ProjectsHeader from '@projects-orgs/components/SettingsPageComponent/ProjectsHeader'
 import useDeleteProjectDialog from '../../DeleteProject'
 import css from './ProjectDetails.module.scss'
 
@@ -61,9 +55,7 @@ const ProjectDetails: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false)
   const { selectedTimeRange } = useLandingDashboardContext()
   const [range] = useState([Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000, Date.now()])
-  const { CDS_NAV_2_0, CVNG_ENABLED } = useFeatureFlags()
-  const showProjectOverview = !isOnPrem()
-  const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
+  const { CDS_NAV_2_0 } = useFeatureFlags()
   const invitePermission = {
     resourceScope: {
       accountIdentifier: accountId,
@@ -121,46 +113,6 @@ const ProjectDetails: React.FC = () => {
   }
   const { openDialog } = useDeleteProjectDialog(projectData || { identifier: '', name: '' }, onDeleted)
   useDocumentTitle(getString('projectsText'))
-  const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
-  const getModuleInfoCards = (): React.ReactElement | React.ReactElement[] => {
-    if (!projectData?.modules?.length) {
-      return (
-        <Layout.Vertical padding="huge" flex={{ align: 'center-center' }} spacing="huge">
-          <Icon name="nav-project" size={70} />
-          <Text font="medium">{getString('projectsOrgs.noModules')}</Text>
-        </Layout.Vertical>
-      )
-    }
-
-    const infoCards = []
-
-    if (shouldVisible && projectData.modules.includes(ModuleName.CD)) infoCards.push(ModuleName.CD)
-    if (projectData.modules.includes(ModuleName.CI)) infoCards.push(ModuleName.CI)
-    if (FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE && projectData.modules.includes(ModuleName.CF))
-      infoCards.push(ModuleName.CF)
-    if (
-      licenseInformation['CE']?.status === LICENSE_STATE_VALUES.ACTIVE &&
-      projectData.modules.includes(ModuleName.CE)
-    ) {
-      infoCards.push(ModuleName.CE)
-    }
-    if (CVNG_ENABLED && projectData.modules.includes(ModuleName.CV)) infoCards.push(ModuleName.CV)
-    if (
-      licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE &&
-      projectData.modules.includes(ModuleName.STO)
-    )
-      infoCards.push(ModuleName.STO)
-
-    return infoCards.map(module => (
-      <ModuleListCard
-        module={module as ModuleName}
-        key={module}
-        projectIdentifier={projectData.identifier}
-        orgIdentifier={projectData.orgIdentifier || ''}
-        accountId={accountId}
-      />
-    ))
-  }
 
   /* istanbul ignore next */ if (loading) return <Page.Spinner />
   /* istanbul ignore next */ if (error)
@@ -174,20 +126,7 @@ const ProjectDetails: React.FC = () => {
       ) : (
         <Page.Header
           size={projectData.description || !isEmpty(projectData.tags) ? 'xxlarge' : 'xlarge'}
-          breadcrumbs={
-            <NGBreadcrumbs
-              links={
-                !showProjectOverview
-                  ? [
-                      {
-                        url: routes.toProjects({ accountId }),
-                        label: getString('projectsText')
-                      }
-                    ]
-                  : []
-              }
-            />
-          }
+          breadcrumbs={<NGBreadcrumbs />}
           title={
             <Layout.Vertical spacing="small" padding={{ top: 'small' }} className={css.title}>
               <Layout.Horizontal
@@ -311,50 +250,41 @@ const ProjectDetails: React.FC = () => {
       )}
       <Page.Body>
         <Layout.Horizontal>
-          <Container padding="xxlarge" className={cx(css.enabledModules, { [css.fullWidth]: showProjectOverview })}>
+          <Container padding="xxlarge" className={cx(css.enabledModules, css.fullWidth)}>
             <Layout.Vertical padding="small" spacing="large">
-              {!showProjectOverview && (
-                <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.BLACK}>
-                  {getString('modules')}
-                </Text>
-              )}
-              {showProjectOverview ? (
-                <LandingDashboardContextProvider>
-                  <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-                    <Text font={{ size: 'medium', weight: 'bold' }} color={Color.BLACK}>
-                      {getString('projectsOrgs.landingDashboard.atAGlance')}
-                    </Text>
-                    <TimeRangeSelect className={css.timeRangeSelect} />
-                  </Layout.Horizontal>
-                  {countData && (
-                    <>
-                      <OverviewGlanceCards
-                        glanceCardData={countData}
-                        hideCards={[OverviewGalanceCard.PROJECT]}
-                        className={css.glanceCardContainer}
-                        glanceCardProps={{ className: css.glanceCard }}
-                      />
-                    </>
-                  )}
-                  <Layout.Vertical spacing="large" padding={{ top: 'huge' }}>
-                    {DASHBOARD_MODULES.map(moduleName => {
-                      const moduleHandler = LandingDashboardFactory.getModuleDashboardHandler(moduleName)
-                      return moduleHandler ? (
-                        <LandingDashboardWidgetWrapper
-                          icon={moduleHandler?.icon}
-                          title={moduleHandler?.label}
-                          iconProps={moduleHandler?.iconProps}
-                          key={moduleName}
-                        >
-                          {moduleHandler.moduleDashboardRenderer?.()}
-                        </LandingDashboardWidgetWrapper>
-                      ) : null
-                    })}
-                  </Layout.Vertical>
-                </LandingDashboardContextProvider>
-              ) : (
-                getModuleInfoCards()
-              )}
+              <LandingDashboardContextProvider>
+                <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
+                  <Text font={{ size: 'medium', weight: 'bold' }} color={Color.BLACK}>
+                    {getString('projectsOrgs.landingDashboard.atAGlance')}
+                  </Text>
+                  <TimeRangeSelect className={css.timeRangeSelect} />
+                </Layout.Horizontal>
+                {countData && (
+                  <>
+                    <OverviewGlanceCards
+                      glanceCardData={countData}
+                      hideCards={[OverviewGalanceCard.PROJECT]}
+                      className={css.glanceCardContainer}
+                      glanceCardProps={{ className: css.glanceCard }}
+                    />
+                  </>
+                )}
+                <Layout.Vertical spacing="large" padding={{ top: 'huge' }}>
+                  {DASHBOARD_MODULES.map(moduleName => {
+                    const moduleHandler = LandingDashboardFactory.getModuleDashboardHandler(moduleName)
+                    return moduleHandler ? (
+                      <LandingDashboardWidgetWrapper
+                        icon={moduleHandler?.icon}
+                        title={moduleHandler?.label}
+                        iconProps={moduleHandler?.iconProps}
+                        key={moduleName}
+                      >
+                        {moduleHandler.moduleDashboardRenderer?.()}
+                      </LandingDashboardWidgetWrapper>
+                    ) : null
+                  })}
+                </Layout.Vertical>
+              </LandingDashboardContextProvider>
             </Layout.Vertical>
           </Container>
         </Layout.Horizontal>
