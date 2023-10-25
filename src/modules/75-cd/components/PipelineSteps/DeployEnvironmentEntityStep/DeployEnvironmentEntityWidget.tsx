@@ -9,6 +9,7 @@ import React, { BaseSyntheticEvent, useEffect, useRef, useState } from 'react'
 import { isEmpty, noop, set } from 'lodash-es'
 import { FormikProps } from 'formik'
 import produce from 'immer'
+import * as Yup from 'yup'
 
 import {
   AllowedTypes,
@@ -30,6 +31,8 @@ import { useStageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
+import { StageType } from '@pipeline/utils/stageHelpers'
 
 import type { DeployEnvironmentEntityCustomStepProps, DeployEnvironmentEntityFormState } from './types'
 import { getValidationSchema } from './utils/utils'
@@ -65,11 +68,19 @@ export default function DeployEnvironmentEntityWidget({
 }: DeployEnvironmentEntityWidgetProps): JSX.Element {
   const { getString } = useStrings()
   const [radioValue, setRadioValue] = useState<string>(getString(getRadioValueFromInitialValues(initialValues)))
-  const { scope } = usePipelineContext()
+  const {
+    state: {
+      selectionState: { selectedStageId }
+    },
+    scope,
+    getStageFromPipeline
+  } = usePipelineContext()
   const { CD_NG_DYNAMIC_PROVISIONING_ENV_V2 } = useFeatureFlags()
 
   const formikRef = useRef<FormikProps<DeployEnvironmentEntityFormState> | null>(null)
   const environmentsTypeRef = useRef<MultiTypeInputType | null>(null)
+  const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
+  const isCustomStage = stage?.stage?.type === StageType.CUSTOM
 
   const {
     isOpen: isSwitchToMultiEnvironmentDialogOpen,
@@ -319,7 +330,7 @@ export default function DeployEnvironmentEntityWidget({
           onUpdate?.({ ...values })
         }}
         initialValues={initialValues}
-        validationSchema={getValidationSchema(getString, gitOpsEnabled)}
+        validationSchema={isCustomStage ? Yup.object() : getValidationSchema(getString, gitOpsEnabled)}
       >
         {formik => {
           window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.ENVIRONMENT }))

@@ -43,6 +43,7 @@ import {
   getAllFixedServices
 } from '@cd/components/PipelineSteps/DeployServiceEntityStep/DeployServiceEntityUtils'
 import type { DeployEnvironmentEntityConfig } from '@cd/components/PipelineSteps/DeployEnvironmentEntityStep/types'
+import { StageType } from '@pipeline/utils/stageHelpers'
 
 import { isContextTypeTemplateType } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
@@ -78,6 +79,7 @@ export default function DeployEnvSpecifications(
   } = usePipelineContext()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
+  const isCustomStage = React.useMemo(() => stage?.stage?.type === StageType.CUSTOM, [stage])
   const { stages } = getFlattenedStages(pipeline)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -99,7 +101,11 @@ export default function DeployEnvSpecifications(
         if (specObject) {
           // istanbul ignore else
           if (value.environment) {
-            specObject.environment = value.environment
+            if (isCustomStage && !value.environment?.environmentRef) {
+              delete specObject.environment
+            } else {
+              specObject.environment = value.environment
+            }
             delete specObject.environments
             delete specObject.environmentGroup
           } else if (value.environments) {
@@ -116,7 +122,7 @@ export default function DeployEnvSpecifications(
       debounceUpdateStage(stageData?.stage)
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [stage, debounceUpdateStage]
+    [stage, debounceUpdateStage, isCustomStage]
   )
 
   const initialValues = useMemo(() => {
@@ -139,14 +145,19 @@ export default function DeployEnvSpecifications(
         }
       }
     }
+    // Env ref should be initialised as runtime in the following scenarios -
+    // 1. When stage type is not custom - since it is optional for custom stage
+    // 2. When configuring within Pipeline/Stage template of any scope
+    const shouldEnvRefBeInitialisedAsRuntime =
+      !isCustomStage && !(scope === Scope.PROJECT && !isContextTypeTemplateType(contextType))
 
     return {
       environment: {
-        environmentRef: !(scope === Scope.PROJECT && !isContextTypeTemplateType(contextType)) ? RUNTIME_INPUT_VALUE : ''
+        environmentRef: shouldEnvRefBeInitialisedAsRuntime ? RUNTIME_INPUT_VALUE : ''
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stage?.stage?.spec])
+  }, [stage?.stage?.spec, isCustomStage])
 
   const getStageSpec = (): DeployServiceEntityData => {
     const propagatedStageId = stage?.stage?.spec?.service?.useFromStage?.stage
