@@ -47,6 +47,12 @@ const template: any = {
     provisionerIdentifier: RUNTIME_INPUT_VALUE,
     configuration: {
       type: 'Inline',
+      skipRefreshCommand: RUNTIME_INPUT_VALUE,
+      skipStateStorage: RUNTIME_INPUT_VALUE,
+      encryptOutput: {
+        outputSecretManagerRef: RUNTIME_INPUT_VALUE
+      },
+      commandFlags: [{ flag: RUNTIME_INPUT_VALUE }],
       spec: {
         workspace: RUNTIME_INPUT_VALUE,
         configFiles: {

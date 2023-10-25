@@ -223,6 +223,18 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
         />
       )}
 
+      {isValueRuntimeInput((inputSetDataSpec as TerraformStepConfiguration)?.skipStateStorage) && (
+        <FormMultiTypeCheckboxField
+          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.configuration.skipStateStorage`}
+          label={getString('cd.skipStateStorage')}
+          multiTypeTextbox={{ expressions, allowableTypes }}
+          enableConfigureOptions={true}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+        />
+      )}
+
       {inputSetDataSpec?.commandFlags?.map((terraformCommandFlag: TerraformCliOptionFlag, terraformFlagIdx: number) => {
         if (
           isValueRuntimeInput(get(inputSetData?.template, `spec.${fieldPath}.commandFlags[${terraformFlagIdx}].flag`))

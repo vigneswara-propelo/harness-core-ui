@@ -256,6 +256,7 @@ addTFVarFileLabel: 'Add File Path'
 enterWorkDirectory: Enter Working Directory
 enterTragets: Enter Targets
 exportTerraformPlanJson: Export JSON representation of Terraform Plan
+skipStateStorage: Skip state storage
 exportTerraformHumanReadablePlan: Export Human Readable representation of Terraform Plan
 exportTerragruntPlanJson: Export JSON representation of Terragrunt Plan
 commandLineOptions: Command Line Options

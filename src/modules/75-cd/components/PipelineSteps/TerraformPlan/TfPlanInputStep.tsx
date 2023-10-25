@@ -230,6 +230,18 @@ export default function TfPlanInputStep(
           }}
         />
       )}
+      {getMultiTypeFromValue(get(inputSetData?.template?.spec, `${fieldPath}.skipStateStorage`)) ===
+        MultiTypeInputType.RUNTIME && (
+        <FormMultiTypeCheckboxField
+          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.${fieldPath}.skipStateStorage`}
+          label={getString('cd.skipStateStorage')}
+          multiTypeTextbox={{ expressions, allowableTypes }}
+          enableConfigureOptions={true}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+        />
+      )}
 
       {isValueRuntimeInput(inputSetData?.template?.spec?.configuration?.skipRefreshCommand) && (
         <FormMultiTypeCheckboxField

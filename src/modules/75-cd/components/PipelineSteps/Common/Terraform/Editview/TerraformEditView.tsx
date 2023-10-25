@@ -576,7 +576,12 @@ export default function TerraformEditView(
               ? get(values.spec, `${fieldPath}.spec.backendConfig`)
               : undefined
           const backendConfigFilePath = getConfigFilePath(backendConfigFile?.spec)
-
+          const skipStateStoragePath = enableCloudCli
+            ? 'spec.cloudCliConfiguration.skipStateStorage'
+            : 'spec.configuration.skipStateStorage'
+          const skipStateStorageValue = enableCloudCli
+            ? formik.values?.spec?.cloudCliConfiguration?.skipStateStorage
+            : formik.values?.spec?.configuration?.skipStateStorage
           return (
             <>
               {stepViewType !== StepViewType.Template && (
@@ -863,6 +868,30 @@ export default function TerraformEditView(
                               })}
                             </div>
                           )}
+                          <div className={cx(stepCss.formGroup, css.addMarginTop)}>
+                            <FormMultiTypeCheckboxField
+                              formik={formik as FormikProps<unknown>}
+                              name={skipStateStoragePath}
+                              label={getString('cd.skipStateStorage')}
+                              multiTypeTextbox={{ expressions, allowableTypes }}
+                              disabled={readonly}
+                            />
+                            {getMultiTypeFromValue(skipStateStorageValue) === MultiTypeInputType.RUNTIME && (
+                              <ConfigureOptions
+                                value={(skipStateStorageValue || '') as string}
+                                type="String"
+                                variableName={skipStateStoragePath}
+                                showRequiredField={false}
+                                showDefaultField={false}
+                                onChange={
+                                  /* istanul ignore next */
+                                  value => formik.setFieldValue(skipStateStoragePath, value)
+                                }
+                                style={{ alignSelf: 'center' }}
+                                isReadonly={readonly}
+                              />
+                            )}
+                          </div>
                         </div>
                       }
                     />

@@ -7188,6 +7188,7 @@ export interface StringsMap {
   'cd.skipMatchingLabel': string
   'cd.skipRefreshCommand': string
   'cd.skipRendering': string
+  'cd.skipStateStorage': string
   'cd.specifyTargetHost': string
   'cd.specifyTfVarStore': string
   'cd.stepName': string

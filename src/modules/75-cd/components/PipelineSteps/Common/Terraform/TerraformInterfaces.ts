@@ -274,10 +274,12 @@ export interface TFPlanFormData extends StepElementConfig {
     configuration?: Omit<TerraformPlanExecutionData, 'environmentVariables' | 'targets'> & {
       targets?: Array<{ id: string; value: string }> | string[] | string
       environmentVariables?: Array<{ key: string; id: string; value: string }> | string
+      skipStateStorage?: boolean
     }
     cloudCliConfiguration?: Omit<TerraformCloudCliPlanExecutionData, 'environmentVariables' | 'targets'> & {
       targets?: Array<{ id: string; value: string }> | string[] | string
       environmentVariables?: Array<{ key: string; id: string; value: string }> | string
+      skipStateStorage?: boolean
     }
   }
 }
@@ -306,6 +308,7 @@ export const onSubmitTerraformData = (values: any): TerraformData => {
   const envVars = get(values.spec, `${fieldPath}.spec.environmentVariables`)
   const targets = get(values.spec, `${fieldPath}.spec.targets`) as MultiTypeInputType
   const cmdFlags = get(values.spec, `${fieldPath}.commandFlags`)
+  let skipStateStorage = get(values.spec, `${fieldPath}.skipStateStorage`)
 
   const secretManagerRef = values?.spec?.cloudCliConfiguration
     ? get(values.spec, `cloudCliConfiguration.encryptOutput.outputSecretManagerRef`)
@@ -414,6 +417,9 @@ export const onSubmitTerraformData = (values: any): TerraformData => {
     } else {
       unset(get(values.spec, `${fieldPath}.spec`), 'varFiles')
     }
+    if (values?.spec?.configuration?.type !== 'Inline') {
+      skipStateStorage = undefined
+    }
 
     if (connectorValue || getMultiTypeFromValue(connectorValue) === MultiTypeInputType.RUNTIME) {
       configObject['configFiles'] = {
@@ -446,6 +452,7 @@ export const onSubmitTerraformData = (values: any): TerraformData => {
             type: values?.spec?.configuration?.type,
             skipRefreshCommand: values?.spec?.configuration?.skipRefreshCommand,
             commandFlags: processCmdFlags(),
+            skipStateStorage,
             ...secretObj,
             spec: {
               ...configObject
@@ -461,6 +468,7 @@ export const onSubmitTerraformData = (values: any): TerraformData => {
           ...values.spec,
           cloudCliConfiguration: {
             commandFlags: processCmdFlags(),
+            skipStateStorage,
             ...secretObj,
             spec: {
               ...configObject
@@ -478,6 +486,7 @@ export const onSubmitTerraformData = (values: any): TerraformData => {
       configuration: {
         type: values?.spec?.configuration?.type,
         skipRefreshCommand: values?.spec?.configuration?.skipRefreshCommand,
+        skipStateStorage,
         commandFlags: processCmdFlags(),
         ...secretObj
       }
@@ -489,6 +498,7 @@ export const onSubmitTFPlanData = (values: any): TFPlanFormData => {
   const fieldPath = values.spec?.configuration ? 'configuration' : 'cloudCliConfiguration'
   const envVars = get(values.spec, `${fieldPath}.environmentVariables`)
   const envMap: StringNGVariable[] = []
+
   if (Array.isArray(envVars)) {
     envVars.forEach(mapValue => {
       if (mapValue.value) {
@@ -619,6 +629,10 @@ export const onSubmitTFPlanData = (values: any): TFPlanFormData => {
 
   if (!isUndefined(values?.spec?.configuration?.exportTerraformPlanJson)) {
     configObject['exportTerraformPlanJson'] = values?.spec?.configuration?.exportTerraformPlanJson
+  }
+
+  if (!isUndefined(get(values.spec, `${fieldPath}.skipStateStorage`))) {
+    configObject['skipStateStorage'] = get(values.spec, `${fieldPath}.skipStateStorage`)
   }
 
   if (!isUndefined(values?.spec?.configuration?.exportTerraformHumanReadablePlan)) {
@@ -759,6 +773,7 @@ export const getTerraformInitialValues = (data: any): TerraformData => {
               configuration: {
                 type: defaultTo(data.spec?.configuration?.type, ConfigurationTypes.Inline),
                 skipRefreshCommand: data.spec?.configuration?.skipRefreshCommand,
+                skipStateStorage: data.spec?.configuration?.skipStateStorage,
                 commandFlags: get(data, `${path}.commandFlags`)?.map(
                   (commandFlag: { commandType: string; flag: string }) => ({
                     commandType: commandFlag.commandType,
@@ -771,6 +786,7 @@ export const getTerraformInitialValues = (data: any): TerraformData => {
             }
           : {
               cloudCliConfiguration: {
+                skipStateStorage: data.spec?.cloudCliConfiguration?.skipStateStorage,
                 commandFlags: get(data, `${path}.commandFlags`)?.map(
                   (commandFlag: { commandType: string; flag: string }) => ({
                     commandType: commandFlag.commandType,
