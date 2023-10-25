@@ -79,8 +79,7 @@ export const getInfrastructureDefaultValue = (
         provisioner
       }
     }
-    case InfraDeploymentType.KubernetesGcp:
-    case InfraDeploymentType.KubernetesAws: {
+    case InfraDeploymentType.KubernetesGcp: {
       const connectorRef = infrastructure?.spec?.connectorRef
       const namespace = infrastructure?.spec?.namespace
       const releaseName = infrastructure?.spec?.releaseName ?? DEFAULT_RELEASE_NAME
@@ -94,6 +93,24 @@ export const getInfrastructureDefaultValue = (
         cluster,
         allowSimultaneousDeployments,
         provisioner
+      }
+    }
+    case InfraDeploymentType.KubernetesAws: {
+      const connectorRef = infrastructure?.spec?.connectorRef
+      const namespace = infrastructure?.spec?.namespace
+      const releaseName = infrastructure?.spec?.releaseName ?? DEFAULT_RELEASE_NAME
+      const cluster = infrastructure?.spec?.cluster
+      const provisioner = infrastructure?.spec?.provisioner
+      const region = infrastructure?.spec?.region
+
+      return {
+        connectorRef,
+        namespace,
+        releaseName,
+        cluster,
+        allowSimultaneousDeployments,
+        provisioner,
+        region
       }
     }
     case InfraDeploymentType.KubernetesRancher: {

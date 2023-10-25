@@ -20,7 +20,7 @@ import {
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
-import { isEmpty, memoize } from 'lodash-es'
+import { isEmpty, memoize, get } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
 import { useFormikContext } from 'formik'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -53,18 +53,25 @@ export interface K8sRancherInfrastructureUI extends Omit<K8sRancherInfrastructur
 }
 export interface K8sAwsInfrastructureUI extends Omit<K8sAwsInfrastructure, 'cluster'> {
   cluster?: { label?: string; value?: string } | string | any
+  region?: { label?: string; value?: string } | string
 }
 
 export interface CommonKuberetesInfraSpecEditableProps {
   readonly?: boolean
   allowableTypes: AllowedTypes
   connectorType: 'Aws' | 'Gcp' | 'Rancher'
-  clusterError: GetDataError<Failure | Error> | null
+  clusterError?: GetDataError<Failure | Error> | null
   clusterLoading: boolean
   clusterOptions: SelectOption[]
+  regionsOptions?: SelectOption[]
+  regionError?: GetDataError<Failure | Error> | null
+  regionLoading?: boolean
+  fetchRegions?: (connectorRef: string) => void
+  setRegionsOptions?: React.Dispatch<React.SetStateAction<SelectOption[]>>
   setClusterOptions: React.Dispatch<React.SetStateAction<SelectOption[]>>
   fetchClusters?: (connectorRef: string) => void
   isSingleEnv?: boolean
+  isEKSInfra?: boolean
 }
 
 export function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
@@ -108,7 +115,11 @@ export function CommonKuberetesInfraSpecEditable(props: CommonKuberetesInfraSpec
     clusterOptions,
     setClusterOptions,
     fetchClusters,
-    isSingleEnv
+    isSingleEnv,
+    regionsOptions = [],
+    regionLoading,
+    regionError = '',
+    isEKSInfra
   } = props
   const connectorTypeLowerCase = connectorType.toLowerCase()
   const formik = useFormikContext<K8sAwsInfrastructureUI | K8sGcpInfrastructureUI>()
@@ -199,6 +210,46 @@ export function CommonKuberetesInfraSpecEditable(props: CommonKuberetesInfraSpec
           />
         )}
       </Layout.Horizontal>
+      {isEKSInfra ? (
+        <Layout.Horizontal className={css.formRow} spacing="medium">
+          <FormInput.MultiTypeInput
+            name={`region`}
+            selectItems={regionsOptions}
+            className={css.inputWidth}
+            multiTypeInputProps={{
+              selectProps: {
+                items: regionsOptions,
+                allowCreatingNewItems: true,
+                addClearBtn: !(clusterLoading || readonly),
+                noResults: (
+                  <Text lineClamp={1} width={384} margin="small">
+                    {getRBACErrorMessage(regionError as RBACError) || getString('pipeline.noRegions')}
+                  </Text>
+                )
+              }
+            }}
+            label={getString('regionLabel')}
+            placeholder={regionLoading ? getString('loading') : getString('select')}
+          />
+
+          {getMultiTypeFromValue(get(formik.values, `region`)) === MultiTypeInputType.RUNTIME && (
+            <SelectConfigureOptions
+              options={regionsOptions}
+              loading={regionLoading}
+              style={{ alignSelf: 'center' }}
+              value={getClusterValue(formik.values.region)}
+              type="String"
+              variableName={`region`}
+              showRequiredField={false}
+              showDefaultField={false}
+              onChange={value => {
+                formik.setFieldValue(`region`, value)
+              }}
+              isReadonly={readonly}
+            />
+          )}
+        </Layout.Horizontal>
+      ) : null}
       <Layout.Horizontal className={css.formRow} spacing="medium">
         <FormInput.MultiTypeInput
           name="cluster"
@@ -259,6 +310,7 @@ export function CommonKuberetesInfraSpecEditable(props: CommonKuberetesInfraSpec
           />
         )}
       </Layout.Horizontal>
+
       <Layout.Horizontal className={css.formRow} spacing="medium">
         <FormInput.MultiTextInput
           name="namespace"

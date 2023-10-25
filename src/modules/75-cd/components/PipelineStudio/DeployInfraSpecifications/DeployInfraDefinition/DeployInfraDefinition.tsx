@@ -497,7 +497,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                   namespace: value.namespace,
                   releaseName: value.releaseName,
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments,
-                  provisioner: value?.provisioner || undefined
+                  provisioner: value?.provisioner || undefined,
+                  region: value?.region
                 },
                 InfraDeploymentType.KubernetesAws
               )

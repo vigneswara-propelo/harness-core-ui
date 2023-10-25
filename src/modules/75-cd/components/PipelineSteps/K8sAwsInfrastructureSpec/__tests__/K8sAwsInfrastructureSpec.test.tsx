@@ -30,6 +30,10 @@ const ClusterNamesResponse: UseGetReturnData<ResponseListString> = {
   }
 }
 
+const mockRegions = {
+  resource: [{ name: 'region1', value: 'region1' }]
+}
+
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn(() => ConnectorResponse),
@@ -37,6 +41,12 @@ jest.mock('services/cd-ng', () => ({
 
   getConnectorListV2Promise: jest.fn(() => Promise.resolve(ConnectorsResponse.data)),
   getEKSClusterNamesPromise: jest.fn(() => Promise.resolve(ClusterNamesResponse.data))
+}))
+
+jest.mock('services/portal', () => ({
+  useListAwsRegions: jest.fn().mockImplementation(() => {
+    return { data: mockRegions, refetch: jest.fn(), error: null, loading: false }
+  })
 }))
 
 const getRuntimeInputsValues = () => ({

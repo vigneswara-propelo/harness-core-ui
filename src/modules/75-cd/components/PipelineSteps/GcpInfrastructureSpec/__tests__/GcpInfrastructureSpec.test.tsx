@@ -17,6 +17,10 @@ import { ConnectorsResponse } from './mock/ConnectorsResponse.mock'
 import { ConnectorResponse } from './mock/ConnectorResponse.mock'
 import { ClusterNamesResponse } from './mock/ClusterNamesResponse.mock'
 
+const mockRegions = {
+  resource: [{ name: 'region1', value: 'region1' }]
+}
+
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 jest.mock('services/cd-ng', () => ({
@@ -25,6 +29,12 @@ jest.mock('services/cd-ng', () => ({
   useGetClusterNamesForGcpInfra: jest.fn(() => ClusterNamesResponse),
   getConnectorListV2Promise: jest.fn(() => Promise.resolve(ConnectorsResponse.data)),
   getClusterNamesForGcpPromise: jest.fn(() => Promise.resolve(ClusterNamesResponse.data))
+}))
+
+jest.mock('services/portal', () => ({
+  useListAwsRegions: jest.fn().mockImplementation(() => {
+    return { data: mockRegions, refetch: jest.fn(), error: null, loading: false }
+  })
 }))
 
 const getRuntimeInputsValues = () => ({

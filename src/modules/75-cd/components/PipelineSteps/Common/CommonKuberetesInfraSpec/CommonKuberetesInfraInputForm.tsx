@@ -7,11 +7,20 @@
 
 import React from 'react'
 import { Menu } from '@blueprintjs/core'
-import { Text, Layout, getMultiTypeFromValue, MultiTypeInputType, SelectOption, AllowedTypes } from '@harness/uicore'
+import {
+  Text,
+  Layout,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  SelectOption,
+  AllowedTypes,
+  FormInput
+} from '@harness/uicore'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { memoize, defaultTo, isEmpty } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
+import { useListAwsRegions } from 'services/portal'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
@@ -85,6 +94,19 @@ export function CommonKuberetesInfraInputForm({
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
+  const regionFieldName = isEmpty(path) ? 'region' : `${path}.region`
+
+  const { data: awsRegionsData } = useListAwsRegions({
+    queryParams: {
+      accountId
+    }
+  })
+  const regions: SelectOption[] = React.useMemo(() => {
+    return defaultTo(awsRegionsData?.resource, []).map(region => ({
+      value: region.value,
+      label: region.name as string
+    }))
+  }, [awsRegionsData?.resource])
 
   const connectorTypeLowerCase = connectorType.toLowerCase()
   const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
@@ -136,6 +158,24 @@ export function CommonKuberetesInfraInputForm({
               isTemplatizedView: true,
               templateValue: template?.connectorRef
             }}
+          />
+        </div>
+      )}
+      {getMultiTypeFromValue(template?.region) === MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormInput.MultiTypeInput
+            name={regionFieldName}
+            selectItems={regions}
+            useValue
+            multiTypeInputProps={{
+              selectProps: {
+                items: regions,
+                popoverClassName: cx(stepCss.formGroup, stepCss.md)
+              }
+            }}
+            label={getString('regionLabel')}
+            placeholder={getString('pipeline.regionPlaceholder')}
+            disabled={readonly}
           />
         </div>
       )}

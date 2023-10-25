@@ -8,36 +8,38 @@
 import React, { useEffect, useState } from 'react'
 import { Layout, Formik, FormikForm, getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { debounce, noop, defaultTo } from 'lodash-es'
+import { debounce, noop, defaultTo, get } from 'lodash-es'
 import type { FormikProps } from 'formik'
 
 import { useGetEKSClusterNames, K8sAwsInfrastructure } from 'services/cd-ng'
+import { useListAwsRegions } from 'services/portal'
 
 import { useStrings } from 'framework/strings'
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { Connectors } from '@platform/connectors/constants'
+
 import {
   CommonKuberetesInfraSpecEditable,
   getValidationSchema,
   K8sAwsInfrastructureUI
 } from '../Common/CommonKuberetesInfraSpec/CommonKuberetesInfraSpecEditable'
+
 import type { K8sAwsInfrastructureSpecEditableProps } from './K8sAwsInfrastructureSpec'
 
-export const K8sAwsInfrastructureSpecEditable: React.FC<K8sAwsInfrastructureSpecEditableProps> = ({
-  initialValues,
-  onUpdate,
-  readonly,
-  allowableTypes,
-  isSingleEnv
-}): JSX.Element => {
+export const K8sAwsInfrastructureSpecEditable: React.FC<K8sAwsInfrastructureSpecEditableProps> = (
+  props
+): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
     orgIdentifier: string
     accountId: string
   }>()
+  const { initialValues, onUpdate, readonly, allowableTypes, isSingleEnv } = props
   const [clusterOptions, setClusterOptions] = useState<SelectOption[]>([])
+  const [regionOptions, setRegionOptions] = useState<SelectOption[]>([])
+
   const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 300)).current
   const { getString } = useStrings()
 
@@ -67,26 +69,30 @@ export const K8sAwsInfrastructureSpecEditable: React.FC<K8sAwsInfrastructureSpec
           accountIdentifier: accountId,
           projectIdentifier,
           orgIdentifier,
-          awsConnectorRef: initialValues.connectorRef
+          awsConnectorRef: initialValues.connectorRef,
+          // region: initialValues?.region?.value || initialValues?.region || undefined
+          region: defaultTo(initialValues?.region, undefined)
         }
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const fetchClusters = (connectorRef: string): void => {
-    if (getMultiTypeFromValue(connectorRef) !== MultiTypeInputType.RUNTIME) {
-      refetchClusterNames({
-        queryParams: {
-          accountIdentifier: accountId,
-          projectIdentifier,
-          orgIdentifier,
-          awsConnectorRef: connectorRef
-        }
-      })
+  const { data: regionData, loading: loadingRegions } = useListAwsRegions({
+    queryParams: {
+      accountId
     }
-  }
-  const getInitialValues = (): K8sAwsInfrastructureUI => {
+  })
+
+  React.useEffect(() => {
+    const regionValues = (regionData?.resource || []).map(region => ({
+      value: region.value,
+      label: region.name
+    }))
+    setRegionOptions(regionValues as SelectOption[])
+  }, [regionData?.resource])
+
+  const getInitialValues = React.useCallback((): K8sAwsInfrastructureUI => {
     const values: K8sAwsInfrastructureUI = {
       ...initialValues
     }
@@ -95,8 +101,12 @@ export const K8sAwsInfrastructureSpecEditable: React.FC<K8sAwsInfrastructureSpec
       values.cluster = { label: initialValues.cluster, value: initialValues.cluster }
     }
 
+    if (getMultiTypeFromValue(initialValues.region) === MultiTypeInputType.FIXED) {
+      values.region = { label: initialValues.region, value: initialValues.region }
+    }
+
     return values
-  }
+  }, [initialValues])
 
   const getClusterValue = (cluster: { label?: string; value?: string } | string | any): string => {
     return typeof cluster === 'string' ? /* istanbul ignore next */ (cluster as string) : cluster?.value
@@ -123,7 +133,8 @@ export const K8sAwsInfrastructureSpecEditable: React.FC<K8sAwsInfrastructureSpec
             connectorRef: undefined,
             cluster: getClusterValue(value.cluster) === '' ? undefined : getClusterValue(value.cluster),
             allowSimultaneousDeployments: value.allowSimultaneousDeployments,
-            provisioner: value.provisioner || undefined
+            provisioner: value.provisioner || undefined,
+            region: getClusterValue(value.region) === '' ? undefined : getClusterValue(value.region)
           }
           /* istanbul ignore else */ if (value.connectorRef) {
             data.connectorRef = (value.connectorRef as any)?.value || /* istanbul ignore next */ value.connectorRef
@@ -146,8 +157,24 @@ export const K8sAwsInfrastructureSpecEditable: React.FC<K8sAwsInfrastructureSpec
                 clusterLoading={loadingClusterNames}
                 clusterOptions={clusterOptions}
                 setClusterOptions={setClusterOptions}
-                fetchClusters={fetchClusters}
+                fetchClusters={(connectorRef: string): void => {
+                  if (getMultiTypeFromValue(connectorRef) !== MultiTypeInputType.RUNTIME) {
+                    refetchClusterNames({
+                      queryParams: {
+                        accountIdentifier: accountId,
+                        projectIdentifier,
+                        orgIdentifier,
+                        awsConnectorRef: connectorRef,
+                        region: defaultTo(get(formik.values, 'region.value'), undefined)
+                      }
+                    })
+                  }
+                }}
                 isSingleEnv={isSingleEnv}
+                regionsOptions={regionOptions}
+                setRegionsOptions={setRegionOptions}
+                regionLoading={loadingRegions}
+                isEKSInfra
               />
             </FormikForm>
           )

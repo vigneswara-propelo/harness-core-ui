@@ -75,7 +75,13 @@ const KubernetesAwsType = 'KubernetesAws'
 export class K8sAwsInfrastructureSpec extends PipelineStep<K8sAwsInfrastructureSpecStep> {
   lastFetched: number
   protected type = StepType.KubernetesAws
-  protected defaultValues: K8sAwsInfrastructure = { cluster: '', connectorRef: '', namespace: '', releaseName: '' }
+  protected defaultValues: K8sAwsInfrastructure = {
+    cluster: '',
+    connectorRef: '',
+    namespace: '',
+    releaseName: '',
+    region: ''
+  }
 
   protected stepIcon: IconName = 'cog' //TODO:: icon name
   protected stepName = 'Specify your Aws Connector'

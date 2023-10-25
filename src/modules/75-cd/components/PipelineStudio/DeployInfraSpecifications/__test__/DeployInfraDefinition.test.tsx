@@ -36,6 +36,77 @@ const getSpec = (type: string) => {
           }
         }
       }
+    case InfraDeploymentType.KubernetesRancher:
+      return {
+        serviceConfig: {
+          serviceDefinition: {
+            type: 'Kubernetes'
+          }
+        },
+        infrastructure: {
+          infrastructureDefinition: {
+            type: 'KubernetesRancher',
+            ...provisionerInfo
+          }
+        }
+      }
+    case InfraDeploymentType.KubernetesAws:
+      return {
+        serviceConfig: {
+          serviceDefinition: {
+            type: 'Kubernetes'
+          }
+        },
+        infrastructure: {
+          infrastructureDefinition: {
+            type: 'KubernetesAws',
+            ...provisionerInfo
+          }
+        }
+      }
+    case InfraDeploymentType.KubernetesAzure:
+      return {
+        serviceConfig: {
+          serviceDefinition: {
+            type: 'Kubernetes'
+          }
+        },
+        infrastructure: {
+          infrastructureDefinition: {
+            type: 'KubernetesAzure',
+            ...provisionerInfo
+          }
+        }
+      }
+
+    case InfraDeploymentType.SshWinRmAzure:
+      return {
+        serviceConfig: {
+          serviceDefinition: {
+            type: 'Ssh'
+          }
+        },
+        infrastructure: {
+          infrastructureDefinition: {
+            type: 'SshWinRmAzure',
+            ...provisionerInfo
+          }
+        }
+      }
+    case InfraDeploymentType.SshWinRmAws:
+      return {
+        serviceConfig: {
+          serviceDefinition: {
+            type: 'WinRm'
+          }
+        },
+        infrastructure: {
+          infrastructureDefinition: {
+            type: 'SshWinRmAws',
+            ...provisionerInfo
+          }
+        }
+      }
     case InfraDeploymentType.KubernetesGcp:
       return {
         serviceConfig: {
@@ -46,6 +117,19 @@ const getSpec = (type: string) => {
         infrastructure: {
           infrastructureDefinition: {
             type: 'KubernetesGcp'
+          }
+        }
+      }
+    case InfraDeploymentType.AzureWebApp:
+      return {
+        serviceConfig: {
+          serviceDefinition: {
+            type: 'Azure'
+          }
+        },
+        infrastructure: {
+          infrastructureDefinition: {
+            type: 'AzureWebApp'
           }
         }
       }
@@ -373,7 +457,84 @@ describe('Deploy infra specifications test', () => {
     fireEvent.click(button[2])
     expect(context.updateStage).toBeCalled()
   })
-
+  test('Should call onUpdateInfrastructureDefinition upon typing something on region field for AzureWebApp', async () => {
+    const context = getOverrideContextValue(InfraDeploymentType.AzureWebApp)
+    const { findAllByText } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={context}>
+          <DeployInfraDefinition />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    const button = await waitFor(() => findAllByText('Step Widget button'))
+    fireEvent.click(button[2])
+    expect(context.updateStage).toBeCalled()
+  })
+  test('Should call onUpdateInfrastructureDefinition upon typing something on region field for SshWinRmAzure', async () => {
+    const context = getOverrideContextValue(InfraDeploymentType.SshWinRmAzure)
+    const { findAllByText } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={context}>
+          <DeployInfraDefinition />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    const button = await waitFor(() => findAllByText('Step Widget button'))
+    fireEvent.click(button[2])
+    expect(context.updateStage).toBeCalled()
+  })
+  test('Should call onUpdateInfrastructureDefinition upon typing something on region field for SshWinRmAws', async () => {
+    const context = getOverrideContextValue(InfraDeploymentType.SshWinRmAws)
+    const { findAllByText } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={context}>
+          <DeployInfraDefinition />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    const button = await waitFor(() => findAllByText('Step Widget button'))
+    fireEvent.click(button[2])
+    expect(context.updateStage).toBeCalled()
+  })
+  test('Should call onUpdateInfrastructureDefinition upon typing something on region field for KubernetesRancher', async () => {
+    const context = getOverrideContextValue(InfraDeploymentType.KubernetesRancher)
+    const { findAllByText } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={context}>
+          <DeployInfraDefinition />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    const button = await waitFor(() => findAllByText('Step Widget button'))
+    fireEvent.click(button[2])
+    expect(context.updateStage).toBeCalled()
+  })
+  test('Should call onUpdateInfrastructureDefinition upon typing something on region field for KubernetesAws', async () => {
+    const context = getOverrideContextValue(InfraDeploymentType.KubernetesAws)
+    const { findAllByText } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={context}>
+          <DeployInfraDefinition />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    const button = await waitFor(() => findAllByText('Step Widget button'))
+    fireEvent.click(button[2])
+    expect(context.updateStage).toBeCalled()
+  })
+  test('Should call onUpdateInfrastructureDefinition upon typing something on region field for KubernetesAzure', async () => {
+    const context = getOverrideContextValue(InfraDeploymentType.KubernetesAzure)
+    const { findAllByText } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={context}>
+          <DeployInfraDefinition />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    const button = await waitFor(() => findAllByText('Step Widget button'))
+    fireEvent.click(button[2])
+    expect(context.updateStage).toBeCalled()
+  })
   test('Should call onUpdateInfrastructureDefinition upon typing something on region field for ServerlessGoogleFunctions', async () => {
     const context = getOverrideContextValue(InfraDeploymentType.ServerlessGoogleFunctions)
     const { findAllByText } = render(
