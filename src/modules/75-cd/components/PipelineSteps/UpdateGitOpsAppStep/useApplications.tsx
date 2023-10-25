@@ -54,7 +54,7 @@ export const useApplications = (): {
           repoIdentifier: app.repoIdentifier || '',
           agentId: app.agentIdentifier,
           sourceType: chart ? 'Helm' : 'Git',
-          appType: app.app?.spec?.source?.helm ? 'Helm' : 'Git',
+          appType: app.app?.status?.sourceType || (app.app?.spec?.source?.helm ? 'Helm' : 'Git'),
           chart: chart,
           targetRevision: app.app?.spec?.source?.targetRevision,
           path: app.app?.spec?.source?.path
