@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { debounce, defaultTo, isEmpty } from 'lodash-es'
+import { debounce, defaultTo, get, isEmpty } from 'lodash-es'
 import { Formik, FieldArray, FormikProps } from 'formik'
 import { v4 as uuid } from 'uuid'
 import {
@@ -38,9 +38,10 @@ import type { AllNGVariables } from '@pipeline/utils/types'
 import { getVariablesValidationField } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/validation'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import { useQueryParams } from '@common/hooks'
+import { useGlobalEventListener, useQueryParams } from '@common/hooks'
 import { SecretConfigureOptions } from '@secrets/components/SecretConfigureOptions/SecretConfigureOptions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { usePipelineContext } from '@modules/70-pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { CustomVariableEditableProps, CustomVariablesData } from './CustomVariableEditable'
 import { VariableType, labelStringMap } from './CustomVariableUtils'
 import AddEditCustomVariable, { VariableState } from './AddEditCustomVariable'
@@ -85,10 +86,27 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
+  const {
+    state: {
+      selectionState: { selectedStageId = '' }
+    },
+    getStageFromPipeline
+  } = usePipelineContext()
   const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT, PIE_MULTISELECT_AND_COMMA_IN_ALLOWED_VALUES: commasInAllowedValues } =
     useFeatureFlags()
 
   const [selectedVariable, setSelectedVariable] = React.useState<VariableState | null>(null)
+
+  useGlobalEventListener('UPDATE_STAGE_VARIABLES', event => {
+    if (event.detail) {
+      const { stage: updatedStage } = getStageFromPipeline(selectedStageId, event.detail)
+      const updatedStageVariables = get(updatedStage, 'stage.variables', []) as AllNGVariables[]
+      formikRef.current?.setValues({
+        variables: updatedStageVariables,
+        canAddVariable: true
+      })
+    }
+  })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedUpdate = React.useCallback(
     debounce((data: CustomVariablesData) => onUpdate?.(data), 500),
@@ -120,7 +138,6 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
       onSubmit={data => onUpdate?.(data)}
       validate={debouncedUpdate}
       validationSchema={enableValidation ? getValidationSchema(getString, validationSchema) : undefined}
-      enableReinitialize
     >
       {formik => {
         const { values, setFieldValue } = formik

@@ -37,6 +37,11 @@ import { DrawerTypes } from '../PipelineContext/PipelineActions'
 import VariableAccordionSummary from './VariableAccordionSummary'
 import css from './PipelineVariables.module.scss'
 
+declare global {
+  interface WindowEventMap {
+    UPDATE_STAGE_VARIABLES: CustomEvent<PipelineInfoConfig>
+  }
+}
 export interface PipelineVariablesRef {
   onRequestClose(): void
 }
@@ -131,6 +136,7 @@ export function PipelineVariablesWithRef(
   }
 
   async function applyChanges(): Promise<void> {
+    window.dispatchEvent(new CustomEvent('UPDATE_STAGE_VARIABLES', { detail: pipelineAsState }))
     await updatePipelineInContext(pipelineAsState)
     closeDrawer()
   }
