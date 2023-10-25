@@ -181,7 +181,6 @@ export const ModeSelector: React.FC = () => {
               to={routes.toMode({ accountId, mode: NAV_MODE.DASHBOARDS })}
               modeBorderCss={css.default}
               leftIcon
-              shouldOpenInNewTab
               iconprops={{ color: Color.PRIMARY_7, size: 24 }}
               hideLearnMore
             />
