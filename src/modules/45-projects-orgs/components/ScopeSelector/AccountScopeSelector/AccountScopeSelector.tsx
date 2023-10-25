@@ -6,11 +6,12 @@
  */
 
 import React, { useState } from 'react'
-import { Layout, Container, Pagination, ExpandingSearchInput, NoDataCard, PageSpinner } from '@harness/uicore'
+import { Layout, Container, Pagination, ExpandingSearchInput, Page } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useGetUserAccounts } from 'services/portal'
 import { AccountListView } from './AccountListView'
+import style from '../ScopeSelector.module.scss'
 import css from './AccountScopeSelector.module.scss'
 
 interface AccountScopeSelectorProps {
@@ -52,27 +53,34 @@ export const AccountScopeSelector: React.FC<AccountScopeSelectorProps> = (props)
           />
         )}
       </Layout.Horizontal>
-      {loading && <PageSpinner />}
-      {data?.resource?.content?.length ? (
-        <Layout.Vertical className={css.accountContainerWrapper}>
-          <AccountListView
-            accounts={defaultTo(data?.resource?.content, [])}
-            clickOnLoggedInAccount={props.clickOnLoggedInAccount}
-          />
+      <Page.Body
+        loading={loading}
+        className={style.pageSpinnerStyle}
+        noData={{
+          when: () => !data?.resource?.content?.length && !loading,
+          icon: 'Account',
+          message: getString('projectsOrgs.noAccounts')
+        }}
+      >
+        {data?.resource?.content?.length ? (
+          <Layout.Vertical className={css.accountContainerWrapper}>
+            <AccountListView
+              accounts={defaultTo(data?.resource?.content, [])}
+              clickOnLoggedInAccount={props.clickOnLoggedInAccount}
+            />
 
-          <Pagination
-            className={css.pagination}
-            itemCount={data?.resource?.totalItems || 0}
-            pageSize={data?.resource?.pageSize || 10}
-            pageCount={data?.resource?.totalPages || 0}
-            pageIndex={data?.resource?.pageIndex || 0}
-            gotoPage={pageNumber => setPage(pageNumber)}
-            hidePageNumbers
-          />
-        </Layout.Vertical>
-      ) : !loading ? (
-        <NoDataCard icon="Account" message={getString('projectsOrgs.noAccounts')} />
-      ) : null}
+            <Pagination
+              className={css.pagination}
+              itemCount={data?.resource?.totalItems || 0}
+              pageSize={data?.resource?.pageSize || 10}
+              pageCount={data?.resource?.totalPages || 0}
+              pageIndex={data?.resource?.pageIndex || 0}
+              gotoPage={pageNumber => setPage(pageNumber)}
+              hidePageNumbers
+            />
+          </Layout.Vertical>
+        ) : null}
+      </Page.Body>
     </Container>
   )
 }

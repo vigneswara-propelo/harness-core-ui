@@ -19,7 +19,7 @@
   .card {
     --summary-widget-width: calc(100vw - 312px);
     display: flex !important;
-    width: var(--summary-widget-width);
+    max-width: var(--summary-widget-width);
     height: 360px;
     flex-direction: column;
     padding-bottom: var(--spacing-small) !important;

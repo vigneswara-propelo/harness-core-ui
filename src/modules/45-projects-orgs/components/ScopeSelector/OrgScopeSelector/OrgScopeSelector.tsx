@@ -12,13 +12,12 @@ import {
   Container,
   Pagination,
   ExpandingSearchInput,
-  NoDataCard,
   ListHeader,
   sortByCreated,
   sortByLastModified,
   sortByName,
   SortMethod,
-  PageSpinner
+  Page
 } from '@harness/uicore'
 
 import { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -27,6 +26,7 @@ import { Organization, useGetOrganizationAggregateDTOList } from 'services/cd-ng
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { OrganizationCard } from './OrgCard'
 
+import style from '../ScopeSelector.module.scss'
 import css from './OrgScopeSelector.module.scss'
 
 interface OrgScopeSelectorProps {
@@ -69,7 +69,6 @@ export const OrgScopeSelector = (props: OrgScopeSelectorProps): JSX.Element => {
           }}
         />
       </Layout.Horizontal>
-      {loading && <PageSpinner />}
       <ListHeader
         selectedSortMethod={sortPreference}
         sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName]}
@@ -79,34 +78,42 @@ export const OrgScopeSelector = (props: OrgScopeSelectorProps): JSX.Element => {
         totalCount={data?.data?.totalItems}
         className={css.listHeader}
       />
-      {data?.data?.content?.length ? (
-        <Layout.Vertical className={css.orgContainerWrapper}>
-          <div className={css.orgContainer}>
-            {data.data.content.map(org => (
-              <OrganizationCard
-                data={org}
-                key={`${org.organizationResponse.organization.identifier}`}
-                hideAddOption={true}
-                onClick={() => {
-                  onClick?.(org.organizationResponse.organization)
-                }}
-              />
-            ))}
-          </div>
+      <Page.Body
+        loading={loading}
+        className={style.pageSpinnerStyle}
+        noData={{
+          when: () => !data?.data?.content?.length && !loading,
+          icon: 'nav-organization',
+          message: getString('projectsOrgs.noOrganizations')
+        }}
+      >
+        {data?.data?.content?.length ? (
+          <Layout.Vertical className={css.orgContainerWrapper}>
+            <div className={css.orgContainer}>
+              {data.data.content.map(org => (
+                <OrganizationCard
+                  data={org}
+                  key={`${org.organizationResponse.organization.identifier}`}
+                  hideAddOption={true}
+                  onClick={() => {
+                    onClick?.(org.organizationResponse.organization)
+                  }}
+                />
+              ))}
+            </div>
 
-          <Pagination
-            className={css.pagination}
-            itemCount={data?.data?.totalItems || 0}
-            pageSize={data?.data?.pageSize || 10}
-            pageCount={data?.data?.totalPages || 0}
-            pageIndex={data?.data?.pageIndex || 0}
-            gotoPage={pageNumber => setPage(pageNumber)}
-            hidePageNumbers
-          />
-        </Layout.Vertical>
-      ) : !loading ? (
-        <NoDataCard icon="nav-organization" message={getString('projectsOrgs.noOrganizations')} />
-      ) : null}
+            <Pagination
+              className={css.pagination}
+              itemCount={data?.data?.totalItems || 0}
+              pageSize={data?.data?.pageSize || 10}
+              pageCount={data?.data?.totalPages || 0}
+              pageIndex={data?.data?.pageIndex || 0}
+              gotoPage={pageNumber => setPage(pageNumber)}
+              hidePageNumbers
+            />
+          </Layout.Vertical>
+        ) : null}
+      </Page.Body>
     </Container>
   )
 }

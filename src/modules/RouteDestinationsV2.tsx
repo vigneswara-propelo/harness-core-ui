@@ -81,6 +81,9 @@ const RedirectHomeRoutes = (): React.ReactElement => {
       <Route path="/account/:accountId/home/orgs/:orgIdentifier/projects/:projectIdentifier/:path*">
         <RedirectToMode mode={NAV_MODE.ALL} />
       </Route>
+      <Route path={'/account/:accountId/home/:path*'}>
+        <RedirectToMode mode={NAV_MODE.ADMIN} />
+      </Route>
     </Switch>
   )
 }

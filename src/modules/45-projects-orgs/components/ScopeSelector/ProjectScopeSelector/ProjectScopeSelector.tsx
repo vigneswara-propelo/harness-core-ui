@@ -27,7 +27,8 @@ import {
   Icon,
   SelectOption,
   Button,
-  ButtonVariation
+  ButtonVariation,
+  Page
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { CellProps, Column, Renderer } from 'react-table'
@@ -41,7 +42,6 @@ import { useStrings } from 'framework/strings'
 import type { OrgPathProps } from '@common/interfaces/RouteInterfaces'
 import ProjectCard from '@projects-orgs/components/ProjectCard/ProjectCard'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
-import { PageSpinner } from '@common/components'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
@@ -199,89 +199,87 @@ export const ProjectScopeSelector: React.FC<ProjectScopeSelectorProps> = ({ onPr
           className={css.listHeader}
         />
       )}
-      {(orgDataLoading || loading) && projectView !== Views.SPLIT_VIEW ? (
-        <PageSpinner />
-      ) : (
-        <>
-          {data?.data?.content?.length ? (
-            <>
-              {projectView === Views.GRID ? (
-                <Layout.Vertical className={css.projectContainerWrapper}>
-                  <div className={css.projectContainer}>
-                    {data.data.content.map(projectAggregate => (
-                      <ProjectCard
-                        key={`${projectAggregate.projectResponse.project.orgIdentifier}${projectAggregate.projectResponse.project.identifier}`}
-                        data={projectAggregate}
-                        minimal={true}
-                        selected={
-                          projectAggregate.projectResponse.project.identifier === selectedProject?.identifier &&
-                          projectAggregate.projectResponse.project.orgIdentifier === selectedProject?.orgIdentifier
-                        }
-                        className={cx(css.projectCard, Classes.POPOVER_DISMISS)}
-                        onClick={() => onProjectClick?.(projectAggregate)}
-                        hideAddOption={true}
-                      />
-                    ))}
-                  </div>
-                  <Pagination
-                    className={css.pagination}
-                    itemCount={data?.data?.totalItems || 0}
-                    pageSize={data?.data?.pageSize || 10}
-                    pageCount={data?.data?.totalPages || 0}
-                    pageIndex={data?.data?.pageIndex || 0}
-                    gotoPage={pageNumber => setPage(pageNumber)}
-                    hidePageNumbers
-                  />
-                </Layout.Vertical>
-              ) : null}
-              {projectView === Views.LIST ? (
-                <div className={css.projectContainerWrapper}>
-                  <TableV2<ProjectAggregateDTO>
-                    columns={columns}
-                    name="ProjectListView"
-                    getRowClassName={_row =>
-                      cx(Classes.POPOVER_DISMISS, css.row, {
-                        [css.activeRow]:
-                          selectedProject?.identifier === _row.original.projectResponse.project.identifier
-                      })
-                    }
-                    data={data?.data?.content || []}
-                    onRowClick={projectData => onProjectClick?.(projectData)}
-                    pagination={{
-                      itemCount: data?.data?.totalItems || 0,
-                      pageSize: data?.data?.pageSize || 10,
-                      pageCount: data?.data?.totalPages || 0,
-                      pageIndex: data?.data?.pageIndex || 0,
-                      gotoPage: pageNumber => setPage(pageNumber),
-                      hidePageNumbers: true
-                    }}
-                  />
+      <Page.Body
+        loading={(orgDataLoading || loading) && projectView !== Views.SPLIT_VIEW}
+        className={css.pageSpinnerStyle}
+      >
+        {data?.data?.content?.length ? (
+          <>
+            {projectView === Views.GRID ? (
+              <Layout.Vertical className={css.projectContainerWrapper}>
+                <div className={css.projectContainer}>
+                  {data.data.content.map(projectAggregate => (
+                    <ProjectCard
+                      key={`${projectAggregate.projectResponse.project.orgIdentifier}${projectAggregate.projectResponse.project.identifier}`}
+                      data={projectAggregate}
+                      minimal={true}
+                      selected={
+                        projectAggregate.projectResponse.project.identifier === selectedProject?.identifier &&
+                        projectAggregate.projectResponse.project.orgIdentifier === selectedProject?.orgIdentifier
+                      }
+                      className={cx(css.projectCard, Classes.POPOVER_DISMISS)}
+                      onClick={() => onProjectClick?.(projectAggregate)}
+                      hideAddOption={true}
+                    />
+                  ))}
                 </div>
-              ) : null}
-            </>
-          ) : null}
-          {projectView === Views.SPLIT_VIEW ? (
-            <div className={cx(css.projectContainerWrapper, css.splitViewContainer)}>
-              <OrgProjectSplitView
-                onProjectClick={onProjectClick}
-                projData={data}
-                setSelectedOrg={setSelectedOrg}
-                sortPreference={sortPreference}
-                setSortPreference={setSortPreference}
-                selectedOrg={selectedOrg}
-                setPage={setPage}
-                selectedProject={selectedProject?.identifier as string}
-                orgData={orgData}
-                setOrgPage={setOrgPage}
-                searchTerm={orgSearchTerm}
-                setSearchTerm={setOrgSearchTerm}
-                orgLoading={orgDataLoading}
-                projLoading={loading}
-              />
-            </div>
-          ) : null}
-        </>
-      )}
+                <Pagination
+                  className={css.pagination}
+                  itemCount={data?.data?.totalItems || 0}
+                  pageSize={data?.data?.pageSize || 10}
+                  pageCount={data?.data?.totalPages || 0}
+                  pageIndex={data?.data?.pageIndex || 0}
+                  gotoPage={pageNumber => setPage(pageNumber)}
+                  hidePageNumbers
+                />
+              </Layout.Vertical>
+            ) : null}
+            {projectView === Views.LIST ? (
+              <div className={css.projectContainerWrapper}>
+                <TableV2<ProjectAggregateDTO>
+                  columns={columns}
+                  name="ProjectListView"
+                  getRowClassName={_row =>
+                    cx(Classes.POPOVER_DISMISS, css.row, {
+                      [css.activeRow]: selectedProject?.identifier === _row.original.projectResponse.project.identifier
+                    })
+                  }
+                  data={data?.data?.content || []}
+                  onRowClick={projectData => onProjectClick?.(projectData)}
+                  pagination={{
+                    itemCount: data?.data?.totalItems || 0,
+                    pageSize: data?.data?.pageSize || 10,
+                    pageCount: data?.data?.totalPages || 0,
+                    pageIndex: data?.data?.pageIndex || 0,
+                    gotoPage: pageNumber => setPage(pageNumber),
+                    hidePageNumbers: true
+                  }}
+                />
+              </div>
+            ) : null}
+          </>
+        ) : null}
+        {projectView === Views.SPLIT_VIEW ? (
+          <div className={cx(css.projectContainerWrapper, css.splitViewContainer)}>
+            <OrgProjectSplitView
+              onProjectClick={onProjectClick}
+              projData={data}
+              setSelectedOrg={setSelectedOrg}
+              sortPreference={sortPreference}
+              setSortPreference={setSortPreference}
+              selectedOrg={selectedOrg}
+              setPage={setPage}
+              selectedProject={selectedProject?.identifier as string}
+              orgData={orgData}
+              setOrgPage={setOrgPage}
+              searchTerm={orgSearchTerm}
+              setSearchTerm={setOrgSearchTerm}
+              orgLoading={orgDataLoading}
+              projLoading={loading}
+            />
+          </div>
+        ) : null}
+      </Page.Body>
     </Container>
   )
 }

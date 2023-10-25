@@ -12,7 +12,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import { useLogout1 } from 'services/portal'
 import SecureStorage from 'framework/utils/SecureStorage'
-import { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { SIDE_NAV_STATE, useLayoutV2 } from '@modules/10-common/router/RouteWithLayoutV2'
 import { accountPathProps, getRouteParams, modulePathProps, returnUrlParams } from '@common/utils/routeUtils'
 import { getLoginPageURL } from 'framework/utils/SessionUtils'
@@ -105,9 +105,10 @@ const SideNavFooter: React.FC = () => {
   const [showResourceCenter, setShowResourceCenter] = useState<boolean>(false)
   const { currentUserInfo: user } = useAppStore()
   const { getString } = useStrings()
-  const { module, projectIdentifier, orgIdentifier } = getRouteParams<ModulePathParams & ProjectPathProps>()
-  const match = useRouteMatch(routes.toUserProfile({ module: module, projectIdentifier, orgIdentifier }))
+  const { module, ...params } = getRouteParams<ModulePathParams>()
   const { sideNavState } = useLayoutV2()
+  const history = useHistory()
+  const match = useRouteMatch(routes.toUserProfile({ module: module, ...params }))
 
   const isCollapsed = sideNavState === SIDE_NAV_STATE.COLLAPSED
   return (
@@ -145,6 +146,7 @@ const SideNavFooter: React.FC = () => {
           flex={{ justifyContent: 'flex-start' }}
           margin={{ top: 'medium' }}
           padding={{ top: 'small', bottom: 'small', left: 'small', right: 'small' }}
+          onClick={() => history.push(routes.toUserProfile({ module, ...params }))}
         >
           <Avatar name={user.name || user.email} email={user.email} size="small" hoverCard={false} />
           {!isCollapsed && (

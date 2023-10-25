@@ -16,6 +16,7 @@ declare const styles: {
   readonly listHeader: string
   readonly orgDropdown: string
   readonly orgwidth: string
+  readonly pageSpinnerStyle: string
   readonly pagination: string
   readonly pickScopeHelp: string
   readonly popover: string

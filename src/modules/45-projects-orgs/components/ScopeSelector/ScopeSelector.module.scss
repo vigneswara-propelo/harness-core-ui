@@ -183,3 +183,9 @@
 .viewAllProjects {
   padding-right: 0 !important;
 }
+
+.pageSpinnerStyle {
+  div[data-testid='page-spinner'] {
+    height: calc(100vh - 210px);
+  }
+}
