@@ -116,21 +116,18 @@ export const ProjectScopeSelector: React.FC<ProjectScopeSelectorProps> = ({ onPr
       {
         Header: getString('projectLabel'),
         id: 'name',
-        accessor: row => row.projectResponse.project.name,
         width: '55%',
         Cell: RenderColumnProject
       },
       {
         Header: getString('orgLabel'),
         id: 'orgName',
-        accessor: row => row.projectResponse.project.orgIdentifier,
         width: '40%',
         Cell: RenderColumnOrganization
       },
       {
         Header: '',
         id: 'menu',
-        accessor: row => row.projectResponse.project.identifier,
         width: '7%',
         Cell: RenderColumnMenu
       }
