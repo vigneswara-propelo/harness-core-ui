@@ -37,9 +37,18 @@ export interface ServiceNowCreateUpdateViewProps extends StepDetailProps {
   step: ExecutionNode
 }
 
+interface outComeType {
+  ticketNumber: string
+  ticketUrl: string
+}
+
 export function ServiceNowCreateUpdateView(props: ServiceNowCreateUpdateViewProps): React.ReactElement | null {
   const { step, stageType = StageType.DEPLOY, executionMetadata } = props
-  const ticket = get(step, 'outcomes.ticket', {}) as { ticketNumber: string; ticketUrl: string }
+  const ticket = get(step, 'outcomes.ticket', {}) as {
+    ticketNumber: string
+    ticketUrl: string
+    multipleOutcomeList: outComeType[]
+  }
   const { getString } = useStrings()
   const manuallySelected = React.useRef(false)
   const [activeTab, setActiveTab] = React.useState(ApprovalStepTab.STEP_DETAILS)
@@ -58,6 +67,21 @@ export function ServiceNowCreateUpdateView(props: ServiceNowCreateUpdateViewProp
         </a>
       )
     })
+  }
+
+  if (ticket?.multipleOutcomeList?.length) {
+    const item: any = {
+      label: getString('pipeline.serviceNowApprovalStep.issueNumber'),
+      value: []
+    }
+    for (const opt of ticket.multipleOutcomeList) {
+      item.value.push(
+        <a href={opt.ticketUrl} target="_blank" rel="noreferrer">
+          {opt.ticketNumber}
+        </a>
+      )
+    }
+    labels.push(item)
   }
 
   React.useEffect(() => {

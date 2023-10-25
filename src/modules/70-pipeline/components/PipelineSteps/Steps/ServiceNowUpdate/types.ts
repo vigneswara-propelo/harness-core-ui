@@ -47,6 +47,7 @@ export interface ServiceNowUpdateData extends StepElementConfig {
       spec: {
         changeRequestNumber?: string
         changeRequestType?: string
+        changeTaskType?: string
       }
     }
     description?: string

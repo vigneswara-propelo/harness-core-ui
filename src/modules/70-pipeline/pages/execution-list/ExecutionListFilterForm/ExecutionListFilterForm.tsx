@@ -48,7 +48,7 @@ interface ExecutionListFilterFormProps<T> {
   initialValues: FormikProps<T>['initialValues']
 }
 
-const NO_SELECTION = { label: '', value: '' }
+export const NO_SELECTION = { label: '', value: '' }
 
 type NGTagUI = {
   key: string

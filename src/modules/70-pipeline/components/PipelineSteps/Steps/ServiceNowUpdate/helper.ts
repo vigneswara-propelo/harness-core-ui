@@ -14,15 +14,17 @@ import {
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/helper'
 
 export const processFormData = (values: any, isFormSubmit = false): ServiceNowUpdateData => {
+  const ticketTypeVal = (values?.spec?.ticketType as string)?.toLocaleUpperCase()
   let serviceNowSpec
-  const updateMultipleObj = values.spec?.updateMultipleFlag
-    ? {
-        updateMultiple: {
-          type: TaskTypes.CHANGE_TASK,
-          ...values.spec.updateMultiple
+  const updateMultipleObj =
+    ticketTypeVal === TaskTypes.CHANGE_TASK && values.spec?.updateMultipleFlag
+      ? {
+          updateMultiple: {
+            type: TaskTypes.CHANGE_TASK,
+            ...values.spec.updateMultiple
+          }
         }
-      }
-    : {}
+      : {}
   if (!values.spec.useServiceNowTemplate) {
     serviceNowSpec = {
       spec: {
@@ -50,7 +52,9 @@ export const processFormData = (values: any, isFormSubmit = false): ServiceNowUp
     }
   }
   if (isFormSubmit) {
-    values.spec?.updateMultipleFlag ? delete values.spec.ticketNumber : delete values.spec.updateMultiple
+    values.spec?.updateMultipleFlag && ticketTypeVal === TaskTypes.CHANGE_TASK
+      ? delete values.spec.ticketNumber
+      : delete values.spec.updateMultiple
   }
   return {
     ...values,

@@ -221,7 +221,12 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
               {isArray(label.value)
                 ? label.value.map((outcome, idx) => {
                     if (!isNil(outcome) && !isEmpty(outcome)) {
-                      return <div key={idx}>{outcome}</div>
+                      return (
+                        <>
+                          {idx > 0 && ', '}
+                          <span key={idx}>{outcome}</span>
+                        </>
+                      )
                     }
                   })
                 : label.value}

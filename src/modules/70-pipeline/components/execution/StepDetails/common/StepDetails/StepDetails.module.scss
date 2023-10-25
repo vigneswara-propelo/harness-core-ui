@@ -52,3 +52,9 @@
   color: var(--grey-500) !important;
   font-weight: 600 !important;
 }
+
+.outComeRow {
+  display: flex;
+  width: 300px;
+  flex-wrap: wrap;
+}

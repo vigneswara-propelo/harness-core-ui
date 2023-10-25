@@ -79,6 +79,7 @@ import { isMultiTypeRuntime } from '@common/utils/utils'
 import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { Connectors } from '@platform/connectors/constants'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { NO_SELECTION } from '@modules/70-pipeline/pages/execution-list/ExecutionListFilterForm/ExecutionListFilterForm'
 
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import {
@@ -627,6 +628,12 @@ function FormContent({
                     name={`spec.updateMultiple.spec.changeTaskType`}
                     disabled={isApprovalStepFieldDisabled(readonly)}
                     items={taskTypeOptions}
+                    addClearButton
+                    value={
+                      taskTypeOptions.find(
+                        item => item.value === formik.values?.spec?.updateMultiple?.spec?.changeTaskType
+                      ) || NO_SELECTION
+                    }
                   />
                 </>
               ) : null}

@@ -139,7 +139,7 @@ exports[`ServiceNowImportSet View Test  snapshot for displaying import set detai
                 Import Set Details:
               </th>
               <td>
-                <div>
+                <span>
                   <a
                     href="targetRecordURL"
                     rel="noreferrer"
@@ -147,10 +147,11 @@ exports[`ServiceNowImportSet View Test  snapshot for displaying import set detai
                   >
                     displayValue
                   </a>
-                </div>
-                <div>
+                </span>
+                , 
+                <span>
                   errorMessage
-                </div>
+                </span>
               </td>
             </tr>
           </tbody>

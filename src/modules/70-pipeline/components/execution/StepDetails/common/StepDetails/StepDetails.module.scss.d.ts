@@ -10,6 +10,7 @@ declare const styles: {
   readonly delegateRow: string
   readonly detailsTable: string
   readonly iconLabel: string
+  readonly outComeRow: string
   readonly timer: string
 }
 export default styles
