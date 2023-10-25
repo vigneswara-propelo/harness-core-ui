@@ -52,6 +52,7 @@ export interface StringsMap {
   'common.addVariable': string
   'common.addedEntityLabel': string
   'common.additionalAttributes': string
+  'common.adminSettingsLabel': string
   'common.advanced': string
   'common.advancedSettings': string
   'common.agent': string

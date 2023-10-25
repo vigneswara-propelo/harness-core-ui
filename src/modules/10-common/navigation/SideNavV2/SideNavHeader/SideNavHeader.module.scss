@@ -11,6 +11,12 @@
   border-color: var(--primary-6);
   width: 100% !important;
 
+  .harnessLogo {
+    svg {
+      height: 32px;
+    }
+  }
+
   .link {
     text-decoration: none;
   }
@@ -18,5 +24,25 @@
   .label {
     line-height: var(--spacing-5) !important;
     font-weight: 600 !important;
+  }
+
+  .subtitle {
+    position: relative;
+    bottom: 4px;
+    left: 24px;
+  }
+
+  &.admin {
+    border-color: var(--purple-700) !important;
+    .subtitle {
+      color: var(--purple-700);
+    }
+  }
+
+  &.dashboards {
+    border-color: var(--teal-800) !important;
+    .subtitle {
+      color: var(--teal-800);
+    }
   }
 }

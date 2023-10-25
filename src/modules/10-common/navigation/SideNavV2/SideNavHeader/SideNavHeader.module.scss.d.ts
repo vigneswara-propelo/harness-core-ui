@@ -7,8 +7,12 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly admin: string
   readonly container: string
+  readonly dashboards: string
+  readonly harnessLogo: string
   readonly label: string
   readonly link: string
+  readonly subtitle: string
 }
 export default styles
