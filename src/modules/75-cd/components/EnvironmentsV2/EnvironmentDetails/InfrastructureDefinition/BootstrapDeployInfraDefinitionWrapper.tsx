@@ -11,7 +11,7 @@ import { parse } from 'yaml'
 import { defaultTo, merge, set } from 'lodash-es'
 import produce from 'immer'
 
-import type { InfrastructureConfig, InfrastructureDefinitionConfig } from 'services/cd-ng'
+import type { InfrastructureConfig, InfrastructureDefinitionConfig, InfrastructureResponseDTO } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { DefaultPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import type {
@@ -51,6 +51,7 @@ interface WrapperProps {
   updatedInfra?: InfrastructureConfig
   isInfraUpdated?: boolean
   isSingleEnv?: boolean
+  infrastructureResponse?: InfrastructureResponseDTO
 }
 
 export function BootstrapDeployInfraDefinitionWrapper(
@@ -71,7 +72,8 @@ export function BootstrapDeployInfraDefinitionWrapper(
     handleInfrastructureUpdate,
     updatedInfra,
     isInfraUpdated,
-    isSingleEnv = false
+    isSingleEnv = false,
+    infrastructureResponse
   } = props
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -160,6 +162,7 @@ export function BootstrapDeployInfraDefinitionWrapper(
             isInfraUpdated={isInfraUpdated}
             updatedInfra={updatedInfra}
             isSingleEnv={isSingleEnv}
+            infrastructureResponse={infrastructureResponse}
           />
         </DeployStageErrorProvider>
       </PipelineVariablesContextProvider>

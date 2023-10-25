@@ -7,12 +7,12 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { find, get } from 'lodash-es'
 
 import { ButtonSize, ButtonVariation, Container, ModalDialog, Page, useToggleOpen } from '@harness/uicore'
+import { find, get, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 
-import { InfrastructureResponse, useGetInfrastructureList } from 'services/cd-ng'
+import { InfrastructureResponse, useGetInfrastructure, useGetInfrastructureList } from 'services/cd-ng'
 
 import type { EnvironmentPathProps, ProjectPathProps, EnvironmentQueryParams } from '@common/interfaces/RouteInterfaces'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
@@ -48,7 +48,13 @@ export default function InfrastructureDefinition({ isEnvPage }: { isEnvPage: boo
     open: openInfraDefinitionDetails
   } = useToggleOpen(false)
 
-  const { infrastructureId } = useQueryParams<EnvironmentQueryParams>()
+  const {
+    infrastructureId,
+    infraStoreType,
+    infraConnectorRef,
+    infraRepoName,
+    infraBranch = ''
+  } = useQueryParams<EnvironmentQueryParams>()
 
   const { data, loading, error, refetch } = useGetInfrastructureList({
     queryParams: {
@@ -65,6 +71,27 @@ export default function InfrastructureDefinition({ isEnvPage }: { isEnvPage: boo
     setSelectedInfrastructure('')
     closeInfraDefinitionDetails()
   }
+
+  const gitQueryParams =
+    infraStoreType === 'REMOTE'
+      ? {
+          connectorRef: infraConnectorRef,
+          repoName: infraRepoName,
+          ...(infraBranch ? { branch: infraBranch } : { loadFromFallbackBranch: true })
+        }
+      : {}
+
+  const infrastructureFetchDetails = useGetInfrastructure({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      environmentIdentifier,
+      ...gitQueryParams
+    },
+    infraIdentifier: infrastructureId as string,
+    lazy: isEmpty(infrastructureId) || infraStoreType === 'INLINE'
+  })
 
   useEffect(() => {
     const preSelectedInfrastructureYaml = get(
@@ -138,6 +165,7 @@ export default function InfrastructureDefinition({ isEnvPage }: { isEnvPage: boo
             openUnsavedChangesDiffModal={openUnsavedChangesDiffModal}
             handleInfrastructureUpdate={handleInfrastructureUpdate}
             updatedInfra={updatedInfrastructure}
+            infrastructureFetchDetails={infrastructureFetchDetails}
             isSingleEnv
           />
         ) : (

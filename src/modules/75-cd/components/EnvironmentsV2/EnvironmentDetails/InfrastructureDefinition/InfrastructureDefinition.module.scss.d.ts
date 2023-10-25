@@ -13,6 +13,7 @@ declare const styles: {
   readonly closeButton: string
   readonly contentWrapper: string
   readonly dialogStyles: string
+  readonly gitRemoteDetailsWrapper: string
   readonly infraCardSection: string
   readonly infraCardWrapper: string
   readonly infraDefinitionDetailsDrawer: string

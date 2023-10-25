@@ -9,7 +9,17 @@ import React, { useEffect, useMemo } from 'react'
 import { Drawer, Intent, Position } from '@blueprintjs/core'
 import { parse } from 'yaml'
 import { defaultTo } from 'lodash-es'
-import { Button, ButtonSize, ButtonVariation, Container, Tab, Tabs, useConfirmationDialog } from '@harness/uicore'
+import {
+  Button,
+  ButtonSize,
+  ButtonVariation,
+  Container,
+  PageSpinner,
+  Tab,
+  Tabs,
+  useConfirmationDialog
+} from '@harness/uicore'
+import { UseGetReturn } from 'restful-react'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { useStrings } from 'framework/strings'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
@@ -22,11 +32,19 @@ import type {
 import EntitySetupUsage from '@common/pages/entityUsage/EntityUsage'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { Scope } from '@common/interfaces/SecretsInterface'
-import type { InfrastructureConfig, InfrastructureDefinitionConfig } from 'services/cd-ng'
+import type {
+  Failure,
+  GetInfrastructureQueryParams,
+  GitErrorMetadataDTO,
+  InfrastructureConfig,
+  InfrastructureDefinitionConfig,
+  ResponseInfrastructureResponse
+} from 'services/cd-ng'
 import {
   BootstrapDeployInfraDefinitionWrapperWithRef,
   InfraDefinitionWrapperRef
 } from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/BootstrapDeployInfraDefinitionWrapper'
+import NoEntityFound from '@modules/70-pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import css from '../InfrastructureDefinition.module.scss'
 
 interface Props {
@@ -45,6 +63,12 @@ interface Props {
   handleInfrastructureUpdate?: (updatedInfrastructure: InfrastructureConfig) => void
   updatedInfra?: InfrastructureConfig
   isSingleEnv?: boolean
+  infrastructureFetchDetails?: UseGetReturn<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    GetInfrastructureQueryParams,
+    unknown
+  >
 }
 
 export enum InfraDefinitionTabs {
@@ -67,8 +91,15 @@ export function InfraDefinitionDetailsDrawer(props: Props) {
     openUnsavedChangesDiffModal,
     handleInfrastructureUpdate,
     updatedInfra,
-    isSingleEnv
+    isSingleEnv,
+    infrastructureFetchDetails
   } = props
+
+  const {
+    loading: infrastructureLoading,
+    data: infrastructureResponse,
+    error: infrastructureError
+  } = infrastructureFetchDetails || {}
 
   const { infraDetailsTab } = useQueryParams<EnvironmentQueryParams>()
   const { updateQueryParams } = useUpdateQueryParams<EnvironmentQueryParams>()
@@ -90,7 +121,14 @@ export function InfraDefinitionDetailsDrawer(props: Props) {
   }
 
   const resetQueryParams = () => {
-    updateQueryParams({ infraDetailsTab: undefined, infrastructureId: undefined })
+    updateQueryParams({
+      infraDetailsTab: undefined,
+      infrastructureId: undefined,
+      infraStoreType: undefined,
+      infraConnectorRef: undefined,
+      infraRepoName: undefined,
+      infraBranch: undefined
+    })
   }
 
   const handleDrawerClose = () => {
@@ -153,6 +191,11 @@ export function InfraDefinitionDetailsDrawer(props: Props) {
     updateQueryParams({ infraDetailsTab: newTab })
   }, [])
 
+  const hasRemoteFetchFailed = useMemo(() => {
+    const errorMetadata = (infrastructureError?.data as any)?.metadata as GitErrorMetadataDTO
+    return Boolean(infrastructureError?.status === 400 && errorMetadata?.branch)
+  }, [infrastructureError?.data, infrastructureError?.status])
+
   return (
     <Drawer
       usePortal={true}
@@ -174,6 +217,8 @@ export function InfraDefinitionDetailsDrawer(props: Props) {
           shouldShowActionButtons={selectedTab === InfraDefinitionTabs.CONFIGURATION}
           isInfraUpdated={isInfraUpdated}
           openUnsavedChangesDiffModal={openUnsavedChangesDiffModal}
+          infrastructureResponse={infrastructureResponse?.data?.infrastructure}
+          hasRemoteFetchFailed={hasRemoteFetchFailed}
         />
       }
       data-type={DrawerTypes.StepConfig}
@@ -195,20 +240,31 @@ export function InfraDefinitionDetailsDrawer(props: Props) {
             title={getString('configuration')}
             className={css.infraDetailsConfigurationTab}
             panel={
-              <BootstrapDeployInfraDefinitionWrapperWithRef
-                closeInfraDefinitionDetails={handleDrawerClose}
-                refetch={refetch}
-                scope={scope}
-                environmentIdentifier={environmentIdentifier}
-                selectedInfrastructure={selectedInfrastructure}
-                getTemplate={getTemplate}
-                isDrawerView={true}
-                ref={infraDefinitionFormRef}
-                setInfraSaveInProgress={setInfraSaveInProgress}
-                handleInfrastructureUpdate={handleInfrastructureUpdate}
-                updatedInfra={updatedInfra}
-                isSingleEnv={isSingleEnv}
-              />
+              infrastructureLoading ? (
+                <PageSpinner />
+              ) : hasRemoteFetchFailed ? (
+                <NoEntityFound
+                  identifier={infrastructureResponse?.data?.infrastructure?.identifier as string}
+                  entityType={'infrastructure'}
+                  errorObj={infrastructureError?.data as unknown as Error}
+                />
+              ) : (
+                <BootstrapDeployInfraDefinitionWrapperWithRef
+                  closeInfraDefinitionDetails={handleDrawerClose}
+                  refetch={refetch}
+                  scope={scope}
+                  environmentIdentifier={environmentIdentifier}
+                  selectedInfrastructure={selectedInfrastructure}
+                  getTemplate={getTemplate}
+                  isDrawerView={true}
+                  ref={infraDefinitionFormRef}
+                  setInfraSaveInProgress={setInfraSaveInProgress}
+                  handleInfrastructureUpdate={handleInfrastructureUpdate}
+                  updatedInfra={updatedInfra}
+                  isSingleEnv={isSingleEnv}
+                  infrastructureResponse={infrastructureResponse?.data?.infrastructure}
+                />
+              )
             }
           />
           <Tab

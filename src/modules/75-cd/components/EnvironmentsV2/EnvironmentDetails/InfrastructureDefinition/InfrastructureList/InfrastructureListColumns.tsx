@@ -89,7 +89,7 @@ export function InfrastructureMenu({
   onDelete
 }: {
   infrastructure: InfrastructureResponseDTO
-  onEdit: (identifier: string) => void
+  onEdit: (identifier: string, infrastructure?: InfrastructureResponseDTO) => void
   onDelete: (infrastructureDetails: InfraDetails) => void
 }): React.ReactElement {
   const [menuOpen, setMenuOpen] = React.useState(false)
@@ -117,7 +117,7 @@ export function InfrastructureMenu({
 
   const handleEdit = (event: React.MouseEvent) => {
     event.stopPropagation()
-    onEdit(defaultTo(yaml, ''))
+    onEdit(defaultTo(yaml, ''), infrastructure)
     setMenuOpen(false)
   }
 

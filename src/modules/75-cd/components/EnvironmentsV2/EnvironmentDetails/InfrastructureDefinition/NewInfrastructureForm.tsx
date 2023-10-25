@@ -15,6 +15,7 @@ import { NameIdDescriptionTags } from '@modules/10-common/components'
 import { useStrings } from 'framework/strings'
 import { InlineRemoteSelect } from '@modules/10-common/components/InlineRemoteSelect/InlineRemoteSelect'
 import { GitSyncForm, GitSyncFormFields } from '@modules/40-gitsync/components/GitSyncForm/GitSyncForm'
+
 import { CombinedInfrastructureDefinationResponse } from './BootstrapDeployInfraDefinition'
 import css from './InfrastructureDefinition.module.scss'
 
@@ -24,13 +25,13 @@ interface NewInfrastructureFormProps {
   isEdit: boolean
   isReadOnly: boolean
   infrastructureDefinition?: CombinedInfrastructureDefinationResponse
+  initialValues?: Partial<CombinedInfrastructureDefinationResponse> & GitSyncFormFields
 }
 
 export function NewInfrastructureForm(props: NewInfrastructureFormProps): JSX.Element {
-  const { formikProps, isGitXEnabledForInfras, isEdit, isReadOnly, infrastructureDefinition } = props
+  const { formikProps, isGitXEnabledForInfras, isEdit, isReadOnly, infrastructureDefinition, initialValues } = props
   const { getString } = useStrings()
   const { values, setFieldValue } = formikProps
-
   return (
     <FormikForm className={css.infraForm}>
       <NameIdDescriptionTags
@@ -73,8 +74,13 @@ export function NewInfrastructureForm(props: NewInfrastructureFormProps): JSX.El
         <GitSyncForm
           formikProps={formikProps}
           isEdit={isEdit}
-          // Remote edit support is not there to test and verify this
-          // initialValues={pick(newInitialValues, 'repo', 'branch', 'filePath', 'connectorRef')}
+          skipBranch={isEdit}
+          disableFields={{
+            connectorRef: isEdit,
+            repoName: isEdit,
+            filePath: isEdit
+          }}
+          initialValues={initialValues}
         />
       ) : null}
     </FormikForm>

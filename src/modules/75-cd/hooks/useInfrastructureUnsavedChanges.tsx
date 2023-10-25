@@ -7,7 +7,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { parse } from 'yaml'
-import { defaultTo, isEqual } from 'lodash-es'
+import { defaultTo, isEqual, omit } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { InfrastructureConfig } from 'services/cd-ng'
 import useDiffDialog from '@common/hooks/useDiffDialog'
@@ -52,7 +52,13 @@ export function useInfrastructureUnsavedChanges(params: Params): UseInfrastructu
           ({
             infrastructureDefinition: {
               ...prevInfra?.infrastructureDefinition,
-              ...updatedInfraValues.infrastructureDefinition
+              ...omit(updatedInfraValues?.infrastructureDefinition, [
+                'storeType',
+                'connectorRef',
+                'repo',
+                'branch',
+                'filePath'
+              ])
             }
           } as InfrastructureConfig)
       )

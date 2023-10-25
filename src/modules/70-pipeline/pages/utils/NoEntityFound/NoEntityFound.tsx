@@ -37,7 +37,7 @@ export enum ErrorPlacement {
 }
 interface NoEntityFoundProps {
   identifier: string
-  entityType: 'pipeline' | 'inputSet' | 'template' | 'overlayInputSet' | 'service' | 'environment'
+  entityType: 'pipeline' | 'inputSet' | 'template' | 'overlayInputSet' | 'service' | 'environment' | 'infrastructure'
   errorObj?: Error | TemplateError
   gitDetails?: GitRemoteDetailsProps
   entityConnectorRef?: string
@@ -51,7 +51,8 @@ const entityTypeLabelMapping = {
   overlayInputSet: 'overlay input set',
   template: 'template',
   service: 'service',
-  environment: 'environment'
+  environment: 'environment',
+  infrastructure: 'infrastructure'
 }
 
 export interface IRemoteFetchError extends GetDataError<Failure | Error> {

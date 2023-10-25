@@ -41,6 +41,13 @@ export interface GitQueryParams {
   storeType?: StoreMetadata['storeType']
 }
 
+export interface InfrastructureGitQueryParams {
+  infraStoreType?: StoreMetadata['storeType']
+  infraConnectorRef?: StoreMetadata['connectorRef']
+  infraRepoName?: EntityGitDetails['repoName']
+  infraBranch?: EntityGitDetails['branch']
+}
+
 export interface InputSetGitQueryParams extends GitQueryParams {
   inputSetBranch?: EntityGitDetails['branch']
   inputSetRepoIdentifier?: EntityGitDetails['repoIdentifier']
@@ -197,7 +204,7 @@ export interface WebhooksPathProps {
   webhookIdentifier: string
 }
 
-export interface EnvironmentQueryParams {
+export interface EnvironmentQueryParams extends InfrastructureGitQueryParams {
   sectionId?: 'CONFIGURATION' | 'INFRASTRUCTURE' | 'SERVICE_OVERRIDES' | 'GITOPS' | 'SUMMARY' | 'REFERENCED_BY'
   infrastructureId?: string
   infraDetailsTab?: 'CONFIGURATION' | 'REFERENCEDBY'

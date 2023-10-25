@@ -8,12 +8,22 @@
 import React, { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import type { Column } from 'react-table'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import { ButtonVariation, Container, Heading, Layout, TableV2, useToaster } from '@harness/uicore'
-import { InfrastructureResponse, useDeleteInfrastructure, useGetSettingValue } from 'services/cd-ng'
+import {
+  InfrastructureResponse,
+  InfrastructureResponseDTO,
+  useDeleteInfrastructure,
+  useGetSettingValue
+} from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
-import type { EnvironmentPathProps, ProjectPathProps, EnvironmentQueryParams } from '@common/interfaces/RouteInterfaces'
+import type {
+  EnvironmentPathProps,
+  ProjectPathProps,
+  EnvironmentQueryParams,
+  ModulePathParams
+} from '@common/interfaces/RouteInterfaces'
 import { InfraDefinitionTabs } from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfraDefinitionDetailsDrawer/InfraDefinitionDetailsDrawer'
 import { useUpdateQueryParams } from '@common/hooks'
 import { SettingType } from '@common/constants/Utils'
@@ -21,8 +31,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { FeatureFlag } from '@modules/10-common/featureFlags'
-import { useFeatureFlag } from '@modules/10-common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   CodeSourceCell,
   InfraDetails,
@@ -45,9 +54,9 @@ export default function InfrastructureList({
   setSelectedInfrastructure: (infrastructureYaml: string) => void
 }): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier, environmentIdentifier } = useParams<
-    ProjectPathProps & EnvironmentPathProps
+    ProjectPathProps & EnvironmentPathProps & ModulePathParams
   >()
-  const isGitXEnabledForInfras = useFeatureFlag(FeatureFlag.CDS_INFRA_GITX)
+  const { CDS_INFRA_GITX: isGitXEnabledForInfras } = useFeatureFlags()
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
@@ -89,7 +98,17 @@ export default function InfrastructureList({
 
   const { mutate: deleteInfrastructure } = useDeleteInfrastructure({})
 
-  const onEdit = (yaml: string): void => {
+  const onEdit = (yaml: string, row?: InfrastructureResponseDTO): void => {
+    updateQueryParams({
+      infrastructureId: get(infraDetailsToBeDeleted, 'identifier', ''),
+      infraDetailsTab: InfraDefinitionTabs.CONFIGURATION,
+      infraStoreType: get(row, 'storeType'),
+      ...(get(row, 'storeType', '') === 'REMOTE' && {
+        infraConnectorRef: get(row, 'connectorRef'),
+        infraRepoName: get(row, 'entityGitDetails.repoName')
+      })
+    })
+
     setSelectedInfrastructure(yaml)
   }
 
@@ -172,7 +191,7 @@ export default function InfrastructureList({
             columns={infrastructureColumns}
             data={defaultTo(list, [])}
             sortable
-            onRowClick={rowItem => onEdit(defaultTo(rowItem.infrastructure?.yaml, '{}'))}
+            onRowClick={rowItem => onEdit(defaultTo(rowItem.infrastructure?.yaml, '{}'), rowItem?.infrastructure)}
           />
         </Container>
       )}

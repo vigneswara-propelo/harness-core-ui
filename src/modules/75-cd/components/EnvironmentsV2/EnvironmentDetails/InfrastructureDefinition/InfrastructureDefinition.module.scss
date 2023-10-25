@@ -171,6 +171,16 @@
   width: 450px;
 }
 
+.gitRemoteDetailsWrapper {
+  display: inline-flex;
+  align-items: center;
+  padding-left: var(--spacing-4);
+  border: 1px solid var(--grey-200) !important;
+  border-radius: var(--spacing-2);
+  height: var(--spacing-xxlarge);
+  margin-left: var(--font-size-normal);
+}
+
 .contentWrapper {
   max-width: 380px;
 }

@@ -9,12 +9,21 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import { Button, ButtonVariation, Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import { get, noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { EnvironmentQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import RbacButton, { ButtonProps } from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
+import GitRemoteDetails from '@modules/10-common/components/GitRemoteDetails/GitRemoteDetails'
+import { EntityGitDetails, InfrastructureResponseDTO } from 'services/cd-ng'
+import {
+  EntityCachedCopy,
+  EntityCachedCopyHandle
+} from '@modules/70-pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
+import { useQueryParams } from '@modules/10-common/hooks'
 import css from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfrastructureDefinition.module.scss'
 
 export function InfraDefinitionDetailsDrawerTitle(props: {
@@ -26,6 +35,8 @@ export function InfraDefinitionDetailsDrawerTitle(props: {
   isInfraUpdated?: boolean
   shouldShowActionButtons: boolean
   openUnsavedChangesDiffModal: () => void
+  infrastructureResponse?: InfrastructureResponseDTO
+  hasRemoteFetchFailed?: boolean
 }): JSX.Element {
   const {
     discardChanges,
@@ -35,9 +46,13 @@ export function InfraDefinitionDetailsDrawerTitle(props: {
     infraSaveInProgress,
     shouldShowActionButtons,
     isInfraUpdated,
-    openUnsavedChangesDiffModal
+    openUnsavedChangesDiffModal,
+    infrastructureResponse,
+    hasRemoteFetchFailed
   } = props
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const { infraStoreType } = useQueryParams<EnvironmentQueryParams>()
+  const infrastructureCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
   const environmentEditPermissions: ButtonProps['permission'] = {
     resource: {
       resourceType: ResourceType.ENVIRONMENT,
@@ -51,10 +66,46 @@ export function InfraDefinitionDetailsDrawerTitle(props: {
     permission: PermissionIdentifier.EDIT_ENVIRONMENT
   }
   const { getString } = useStrings()
+  const { CDS_INFRA_GITX } = useFeatureFlags()
+  const { repoName, filePath, fileUrl, branch } = get(
+    infrastructureResponse,
+    'entityGitDetails',
+    {}
+  ) as EntityGitDetails
+
+  const renderRemoteDetails = (): JSX.Element | null => {
+    return CDS_INFRA_GITX && infraStoreType === 'REMOTE' ? (
+      <div className={css.gitRemoteDetailsWrapper}>
+        <GitRemoteDetails
+          connectorRef={get(infrastructureResponse, 'connectorRef', '')}
+          repoName={repoName}
+          filePath={filePath}
+          fileUrl={fileUrl}
+          branch={branch}
+          // onBranchChange={onGitBranchChange} //TO DO
+          flags={{
+            readOnly: false
+          }}
+        />
+        {hasRemoteFetchFailed && (
+          <EntityCachedCopy
+            ref={infrastructureCachedCopyRef}
+            reloadContent={getString('common.pipeline')}
+            cacheResponse={get(infrastructureResponse, 'cacheResponseMetadataDTO')}
+            reloadFromCache={noop}
+            repo={repoName}
+            filePath={filePath}
+          />
+        )}
+      </div>
+    ) : null
+  }
+
   return (
     <Layout.Horizontal flex={{ distribution: 'space-between' }}>
       <Text color={Color.BLACK} font={{ size: 'medium', weight: 'bold' }}>
         {getString('cd.infrastructure.infrastructureDetails')}
+        {renderRemoteDetails()}
       </Text>
       {shouldShowActionButtons && (
         <Container>
