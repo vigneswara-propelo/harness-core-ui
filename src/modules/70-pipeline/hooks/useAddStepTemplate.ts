@@ -105,10 +105,14 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
       types.push(selectedStageType)
     }
 
-    // to list step group templates of custom stage when selected stage type is Deployment
+    // Include step group templates of Custom stages when the selected stage type is Deployment and vice-versa.
     if (selectedStageType === StageType.DEPLOY) {
       types.push(StageType.CUSTOM)
     }
+    if (selectedStageType === StageType.CUSTOM) {
+      types.push(StageType.DEPLOY)
+    }
+
     return types
   }, [selectedStage?.stage?.type, stepsData?.data?.stepCategories])
 

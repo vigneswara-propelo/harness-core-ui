@@ -83,6 +83,7 @@ readOnly: Read Only
 editYaml: Edit YAML
 provisioner: Provisioner
 templates: Templates
+xAndY: '{{x}} and {{y}}'
 refreshDelegateLogs: Refresh Delegate Logs
 noDelegateLogs: Delegate Tasks Logs are not generated for this step
 comments: Comments

@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { act, fireEvent, getByRole, getByText, render } from '@testing-library/react'
+import { act, fireEvent, getByRole, getByText, render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { waitFor } from '@testing-library/dom'
 import produce from 'immer'
 import { set } from 'lodash-es'
@@ -275,5 +276,24 @@ describe('<TemplateSelectorLeftView> tests', () => {
     )
 
     expect(container).toMatchSnapshot()
+  })
+
+  test('Should render appropriate labels for Custom and Deployment child types when template type is Step', async () => {
+    const user = userEvent.setup()
+    const templateSelectorValues = produce(templateSelectorContextMock, draft => {
+      set(draft, 'state.selectorData.templateType', 'Step')
+      set(draft, 'state.selectorData.filterProperties.childTypes', ['Custom', 'Deployment'])
+    })
+
+    render(
+      <TestWrapper path={TEST_PATH} pathParams={PATH_PARAMS} defaultTemplateSelectorValues={templateSelectorValues}>
+        <TemplateSelectorLeftView {...baseProps} />
+      </TestWrapper>
+    )
+
+    await user.click(await screen.findByText('typeLabel: all'))
+
+    expect(await screen.findByText('Step Groups (Custom)'))
+    expect(screen.getByText('Step Groups (Deployment)'))
   })
 })

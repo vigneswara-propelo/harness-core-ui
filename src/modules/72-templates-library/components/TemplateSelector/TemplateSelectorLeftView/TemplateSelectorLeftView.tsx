@@ -49,6 +49,7 @@ import templateFactory from '@templates-library/components/Templates/TemplatesFa
 import RepoFilter from '@common/components/RepoFilter/RepoFilter'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
+import { StageType } from '@modules/70-pipeline/utils/stageHelpers'
 import css from './TemplateSelectorLeftView.module.scss'
 
 export interface TemplateSelectorLeftViewProps {
@@ -188,6 +189,9 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
         case TemplateType.Stage:
           return defaultTo(stagesCollection.getStageAttributes(item, getString)?.name, item)
         case TemplateType.Step:
+          if ([StageType.CUSTOM, StageType.DEPLOY].includes(item as StageType)) {
+            return `Step Groups (${item})`
+          }
           return defaultTo(factory.getStepName(item), item)
         default:
           return item
@@ -264,7 +268,13 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
                 {
                   url: '/',
                   label: getString('templatesLibrary.templatesLabel', {
-                    entity: templateFactory.getTemplateLabel(templateType)
+                    entity:
+                      templateType === TemplateType.Step
+                        ? getString('common.xAndY', {
+                            x: templateFactory.getTemplateLabel(TemplateType.Step),
+                            y: templateFactory.getTemplateLabel(TemplateType.StepGroup)
+                          })
+                        : templateFactory.getTemplateLabel(templateType)
                   })
                 }
               ]}

@@ -1539,6 +1539,7 @@ export interface StringsMap {
   'common.with': string
   'common.without': string
   'common.workflow': string
+  'common.xAndY': string
   'common.yamlDiffView.originalYamlLabel': string
   'common.yamlDiffView.refreshedYamlLabel': string
   'common.yearly': string
