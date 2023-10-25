@@ -6,9 +6,8 @@
  */
 
 import React from 'react'
-import { Redirect, Switch, useParams } from 'react-router-dom'
+import { Redirect, Switch } from 'react-router-dom'
 import routes from '@common/RouteDefinitionsV2'
-import { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { RouteWithContext } from '@common/router/RouteWithContext/RouteWithContext'
 import { NAV_MODE, accountPathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
@@ -24,9 +23,6 @@ import { NameSchema } from '@common/utils/Validation'
 import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
-import { LicenseRedirectProps, LICENSE_STATE_NAMES } from 'framework/LicenseStore/LicenseStoreContext'
-import { RedirectToSubscriptionsFactory } from '@modules/10-common/Redirects'
-import { ModuleName } from 'framework/types/ModuleName'
 import { SEICustomMicroFrontendProps } from './SEICustomMicroFrontendProps.types'
 import SEITrialPage from './pages/SEITrialPage/SEITrialPage'
 import { module } from './constants'
@@ -44,30 +40,31 @@ const SEIRedirect: React.FC = () => {
   }
 }
 
-const TrialRedirect: React.FC = () => {
-  const { accountId } = useParams<AccountPathProps>()
-  return (
-    <Redirect
-      to={routes.toModuleTrialHome({
-        accountId,
-        module
-      })}
-    />
-  )
-}
+// Todo - License will be enabled once the backend support for license is tested and enabled.
+// const TrialRedirect: React.FC = () => {
+//   const { accountId } = useParams<AccountPathProps>()
+//   return (
+//     <Redirect
+//       to={routes.toModuleTrialHome({
+//         accountId,
+//         module
+//       })}
+//     />
+//   )
+// }
 
-const licenseRedirectData: LicenseRedirectProps = {
-  licenseStateName: LICENSE_STATE_NAMES.SEI_LICENSE_STATE,
-  startTrialRedirect: () => <TrialRedirect />,
-  expiredTrialRedirect: RedirectToSubscriptionsFactory(ModuleName.SEI)
-}
+// const licenseRedirectData: LicenseRedirectProps = {
+//   licenseStateName: LICENSE_STATE_NAMES.SEI_LICENSE_STATE,
+//   startTrialRedirect: () => <TrialRedirect />,
+//   expiredTrialRedirect: RedirectToSubscriptionsFactory(ModuleName.SEI)
+// }
 
 const SEIRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
   return (
     <Switch>
       <RouteWithContext
         path={[routes.toMode({ ...orgPathProps, module, mode })]}
-        licenseRedirectData={licenseRedirectData}
+        // licenseRedirectData={licenseRedirectData}
         exact
       >
         <SEIRedirect />
@@ -80,7 +77,7 @@ const SEIRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
           routes.toSEI({ module, ...projectPathProps, mode }),
           routes.toSEI({ module, ...accountPathProps, mode })
         ]}
-        licenseRedirectData={licenseRedirectData}
+        // licenseRedirectData={licenseRedirectData}
       >
         <ChildAppMounter<SEICustomMicroFrontendProps>
           ChildApp={SEIMicroFrontend}
