@@ -12,6 +12,7 @@ import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 
 export interface ServiceContextValues {
   serviceResponse: ServiceResponseDTO
+  setServiceResponse?: (resposne: ServiceResponseDTO) => void
   onCloseModal: () => void
   onServiceCreate: (serviceInfo: ServiceYaml) => void
   isServiceEntityModalView: boolean
@@ -32,6 +33,7 @@ export interface ServiceContextValues {
 
 export const ServiceContext = React.createContext<ServiceContextValues>({
   serviceResponse: {},
+  setServiceResponse: noop,
   onCloseModal: noop,
   onServiceCreate: noop,
   isServiceEntityModalView: false,

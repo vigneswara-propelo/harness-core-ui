@@ -91,7 +91,8 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     onServiceCreate,
     onCloseModal,
     serviceResponse: serviceData,
-    setIsDeploymentTypeDisabled
+    setIsDeploymentTypeDisabled,
+    setServiceResponse
   } = useServiceContext()
   const [selectedTabId, setSelectedTabId] = useState(
     tab === ServiceTabs.SUMMARY && projectIdentifier ? ServiceTabs.SUMMARY : tab
@@ -147,6 +148,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
         })
       } else {
         if (serviceResponse?.storeType === StoreType.REMOTE) {
+          setServiceResponse?.(serviceResponse)
           updateQueryParams({ branch: serviceResponse?.entityGitDetails?.branch || '' })
           // For Remote we do not need these toaster as we show status in git save modal
         } else {

@@ -35,6 +35,7 @@ function ServiceStudio(): React.ReactElement | null {
   const { updateQueryParams } = useUpdateQueryParams()
   const refetch = useRef<ServiceHeaderRefetchRef>(null)
   const [isDeploymentTypeDisabled, setIsDeploymentTypeDisabled] = useState(false)
+  const [updatedServiceResponse, setUpdatedServiceResponse] = useState<ServiceResponseDTO | undefined>()
   const [deploymentType, setDeploymentType] = useState<ServiceDeploymentType>('' as ServiceDeploymentType)
   const isServiceDetailSummaryV2 = useFeatureFlag(FeatureFlag.CDC_SERVICE_DASHBOARD_REVAMP_NG)
 
@@ -87,7 +88,7 @@ function ServiceStudio(): React.ReactElement | null {
   return (
     <Layout.Vertical>
       <ServiceContextProvider
-        serviceResponse={serviceResponse?.data?.service as ServiceResponseDTO}
+        serviceResponse={updatedServiceResponse || (serviceResponse?.data?.service as ServiceResponseDTO)}
         isServiceEntityModalView={false}
         onCloseModal={noop}
         onServiceCreate={noop}
@@ -98,6 +99,7 @@ function ServiceStudio(): React.ReactElement | null {
         gitOpsEnabled={false}
         isDeploymentTypeDisabled={isDeploymentTypeDisabled}
         setIsDeploymentTypeDisabled={setIsDeploymentTypeDisabled}
+        setServiceResponse={setUpdatedServiceResponse}
       >
         <ServiceDetailHeaderRef ref={refetch} />
         {hasRemoteFetchFailed ? (
