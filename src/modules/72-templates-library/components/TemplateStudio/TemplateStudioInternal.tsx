@@ -41,7 +41,8 @@ import { TemplateType } from '@templates-library/utils/templatesUtils'
 import GenericErrorHandler from '@common/pages/GenericErrorHandler/GenericErrorHandler'
 import TemplateYamlView from '@templates-library/components/TemplateStudio/TemplateYamlView/TemplateYamlView'
 import { accountPathProps, orgPathProps, pipelineModuleParams, projectPathProps } from '@common/utils/routeUtils'
-import routes from '@common/RouteDefinitions'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import type { GetErrorResponse } from '@templates-library/components/TemplateStudio/SaveTemplatePopover/SaveTemplatePopover'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { useQueryParams } from '@common/hooks'
@@ -108,7 +109,8 @@ export function TemplateStudioInternal(): React.ReactElement {
   const [shouldShowOutOfSyncError, setShouldShowOutOfSyncError] = React.useState(false)
   const [showBanner, setShowBanner] = React.useState<boolean>(false)
 
-  const { CDS_V1_EOL_BANNER, PL_AI_SUPPORT_CHATBOT: auxNavEnabled } = useFeatureFlags()
+  const { CDS_V1_EOL_BANNER, PL_AI_SUPPORT_CHATBOT: auxNavEnabled, CDS_NAV_2_0 } = useFeatureFlags()
+  const routes = CDS_NAV_2_0 ? routesV2 : routesV1
 
   useDocumentTitle([parse(defaultTo(template?.name, getString('common.templates')))])
 

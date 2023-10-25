@@ -17,7 +17,9 @@ import { String } from 'framework/strings'
 import { getFreezeRouteLink, isFreezeOnSameScope } from '@common/utils/freezeWindowUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
-import routes from '@common/RouteDefinitions'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import css from './GlobalFreezeBanner.module.scss'
 
 export const DATE_PARSE_FORMAT = 'YYYY-MM-DD hh:mm A'
@@ -34,6 +36,8 @@ export const scopeText: Record<Scope, string> = {
 export const GlobalFreezeBanner: FC<{ globalFreezes: FreezeBannerDetails[] | undefined }> = ({ globalFreezes }) => {
   const [open, setOpen] = useState(false)
   const { module } = useModuleInfo()
+  const { CDS_NAV_2_0 } = useFeatureFlags()
+  const routes = CDS_NAV_2_0 ? routesV2 : routesV1
   const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps>()
   const isFreezeWindowsPage = useRouteMatch(
     routes.toFreezeWindows({ accountId, projectIdentifier, orgIdentifier, module })

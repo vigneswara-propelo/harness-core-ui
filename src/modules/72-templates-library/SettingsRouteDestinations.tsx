@@ -52,7 +52,7 @@ function TemplateSettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.
       </RouteWithContext>
       <RouteWithContext
         exact
-        path={pathArrayForAllScopes(routes.toTemplatestudio, mode, { ...templatePathProps })}
+        path={pathArrayForAllScopes(routes.toTemplateStudio, mode, { ...templatePathProps })}
         pageName={PAGE_NAME.TemplatesPage}
       >
         <RedirectToNewTemplateStudio />

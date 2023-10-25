@@ -714,7 +714,7 @@ const routes = {
     return path
   }),
 
-  toTemplatestudio: withModeModuleAndScopePrefix<Partial<TemplateStudioPathProps> & TemplateStudioQueryParams>(
+  toTemplateStudio: withModeModuleAndScopePrefix<Partial<TemplateStudioPathProps> & TemplateStudioQueryParams>(
     params => {
       const queryParams: TemplateStudioQueryParams = {
         branch: params?.branch,

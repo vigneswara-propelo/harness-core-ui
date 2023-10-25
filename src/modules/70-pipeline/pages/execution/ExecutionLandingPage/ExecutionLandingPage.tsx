@@ -35,8 +35,9 @@ import {
   pipelineHasCIStageWithK8sInfra
 } from '@pipeline/utils/stageHelpers'
 import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import routes from '@common/RouteDefinitions'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
 import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'
 import { useDownloadLogs } from '@pipeline/components/LogsContent/components/DownloadLogs/useDownloadLogs'
@@ -94,6 +95,8 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     shouldShowGovernanceEvaluations: !!location?.state?.shouldShowGovernanceEvaluations,
     governanceMetadata: location?.state?.governanceMetadata
   })
+  const { CDS_NAV_2_0 } = useFeatureFlags()
+  const routes = CDS_NAV_2_0 ? routesV2 : routesV1
 
   const { data: retryHistoryResponse } = useRetryHistory({
     planExecutionId: executionIdentifier,
