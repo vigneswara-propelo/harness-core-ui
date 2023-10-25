@@ -225,8 +225,8 @@ export const SettingsPageContainer: React.FC<SettingsPageContainerProps> = ({ ch
               })}
           </Container>
         </Layout.Horizontal>
-        {moduleSpecificSettings}
         <Layout.Vertical flex={{ alignItems: 'flex-start' }} className={css.settingsPageContent}>
+          {selectedListView === SettingsResourcesCategory.All ? moduleSpecificSettings : null}
           {React.Children.toArray(children)
             .filter(child => !(child as React.ReactElement<ResourceGroupProps>).props.hidden)
             .filter(

@@ -144,7 +144,7 @@ export const AccountSettingsPage: React.FC = () => {
         <SettingsPage.container
           moduleSpecificSettings={
             module === 'ce' ? (
-              <Container padding={'large'} background={Color.PRIMARY_1}>
+              <Container padding={'large'} background={Color.PRIMARY_1} width={'100%'}>
                 <Text font={{ variation: FontVariation.H4 }} color={Color.BLACK} margin={{ bottom: 'medium' }}>
                   {getString('common.ccmSettings.highlightSettingsSectionTitle')}
                 </Text>
