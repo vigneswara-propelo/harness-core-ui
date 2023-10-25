@@ -37,7 +37,7 @@ export default function ChangeSourceCard(props: ChangeSourceCardInterface): JSX.
   const { data, loading, error, refetch } = useGetMonitoredServiceChangeEventSummary({ lazy: true })
 
   useEffect(() => {
-    if (monitoredServiceIdentifiers?.length || monitoredServiceIdentifier) {
+    if ((monitoredServiceIdentifiers?.length || monitoredServiceIdentifier) && startTime && endTime) {
       refetch({
         queryParams: {
           accountId,
