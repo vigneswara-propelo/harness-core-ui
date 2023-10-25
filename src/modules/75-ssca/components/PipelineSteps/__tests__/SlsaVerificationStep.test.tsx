@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 /*
  * Copyright 2021 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
@@ -8,12 +9,28 @@
 import React from 'react'
 import { render, act, screen } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import userEvent from '@testing-library/user-event'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
+import { catalogueData } from '@modules/27-platform/connectors/pages/connectors/__tests__/mockData'
+import { queryByNameAttribute } from '@modules/10-common/utils/testUtils'
 import { SlsaVerificationStep } from '../SlsaVerificationStep/SlsaVerificationStep'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
+jest.mock('services/cd-ng', () => ({
+  useGetConnector: jest.fn().mockImplementation(() => ({ data: {}, refetch: () => {} })),
+  useGetConnectorCatalogue: jest.fn().mockImplementation(() => {
+    return { data: catalogueData, loading: false, refetch: () => {} }
+  })
+}))
+jest.mock('@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook', () => ({
+  useGetConnectorsListHook: jest.fn().mockReturnValue({
+    loading: true,
+    categoriesMap: {},
+    refetch: () => {}
+  })
+}))
 
 const runtimeValues = {
   identifier: 'SlsaVerification_1',
@@ -120,5 +137,19 @@ describe('SLSA Verification Step', () => {
       />
     )
     expect(screen.queryByText('pipelineSteps.stepNameLabel')).not.toBeInTheDocument()
+  })
+
+  test('gcr connector type', async () => {
+    const { container } = render(
+      <TestStepWidget initialValues={fixedValues} type={StepType.SlsaVerification} stepViewType={StepViewType.Edit} />
+    )
+
+    expect(screen.getByText('pipelineSteps.stepNameLabel')).toBeInTheDocument()
+    const registryType = queryByNameAttribute('spec.source.type', container) as HTMLElement
+
+    userEvent.click(registryType)
+    userEvent.click(await screen.findByText('Gcr'))
+    expect(await screen.findByText('common.hostLabel')).toBeInTheDocument()
+    expect(screen.getByText('pipelineSteps.projectIDLabel')).toBeInTheDocument()
   })
 })

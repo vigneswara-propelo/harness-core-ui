@@ -67,7 +67,13 @@ export class SlsaVerificationStep extends PipelineStep<SlsaVerificationStepData>
   }: ValidateInputSetProps<SlsaVerificationStepData>): FormikErrors<SlsaVerificationStepData> {
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (getString) {
-      return validateInputSet(data, template, getInputSetViewValidateFieldsConfig(isRequired), { getString }, viewType)
+      return validateInputSet(
+        data,
+        template,
+        getInputSetViewValidateFieldsConfig(data.spec.source?.type)(isRequired),
+        { getString },
+        viewType
+      )
     }
 
     /* istanbul ignore next */

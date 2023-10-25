@@ -6,11 +6,12 @@
  */
 
 import { Color, FontVariation } from '@harness/design-system'
-import { Accordion, AllowedTypes, FormInput, Formik, FormikForm, Text } from '@harness/uicore'
+import { Accordion, AllowedTypes, FormInput, Formik, FormikForm, SelectOption, Text } from '@harness/uicore'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import React from 'react'
 import { useParams } from 'react-router-dom'
+import { get } from 'lodash-es'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { StepFormikFowardRef, StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
@@ -25,7 +26,6 @@ import { useGitScope } from '@pipeline/utils/CIUtils'
 import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { Connectors } from '@platform/connectors/constants'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { useStrings } from 'framework/strings'
 import type {
@@ -35,20 +35,43 @@ import type {
   SlsaVerifyAttestation
 } from 'services/ci'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { isValueFixed } from '@modules/10-common/utils/utils'
 import { AllMultiTypeInputTypesForStep } from '../common/utils'
-import { editViewValidateFieldsConfig, transformValuesFieldsConfig } from './SlsaVerificationStepFunctionConfigs'
+import {
+  editViewValidateFieldsConfig,
+  registryConnectedType,
+  transformValuesFieldsConfig
+} from './SlsaVerificationStepFunctionConfigs'
 import css from '../common/SscaStep.module.scss'
 
+const getTypedOptions = <T extends string>(input: T[]): SelectOption[] => {
+  return input.map(item => ({ label: item, value: item }))
+}
+
+const artifactRegistryOptions = getTypedOptions<string>(Object.keys(registryConnectedType))
+
+type Source =
+  | {
+      type: SlsaVerificationSource['type']
+      spec: SlsaDockerSourceSpec
+    }
+  | {
+      type: 'Gcr'
+      spec: {
+        connector: string
+        host: string
+        project_id: string
+        image_name: string
+        tag: string
+      }
+    }
 export interface SlsaVerificationStepData {
   name?: string
   identifier: string
   type: string
   timeout?: string
   spec: {
-    source: {
-      type: SlsaVerificationSource['type']
-      spec: SlsaDockerSourceSpec
-    }
+    source: Source
     verify_attestation: {
       type: SlsaVerifyAttestation['type']
       spec: CosignSlsaVerifyAttestation
@@ -105,7 +128,7 @@ const SlsaVerificationStepEdit = (
         onChange?.(schemaValues)
         return validate(
           valuesToValidate,
-          editViewValidateFieldsConfig,
+          editViewValidateFieldsConfig(get(schemaValues, 'spec.source.type')),
           {
             initialValues,
             steps: currentStage?.stage?.spec?.execution?.steps || {},
@@ -127,6 +150,8 @@ const SlsaVerificationStepEdit = (
         // This is required
         setFormikRef?.(formikRef, formik)
 
+        const registryType = get(formik.values, 'spec.source.type') as keyof typeof registryConnectedType
+
         return (
           <FormikForm>
             <div className={css.stepContainer}>
@@ -144,9 +169,31 @@ const SlsaVerificationStepEdit = (
                 {getString('ssca.orchestrationStep.artifactSource')}
               </Text>
 
+              <FormInput.Select
+                data-testid="registryType"
+                items={artifactRegistryOptions}
+                name="spec.source.type"
+                label={getString('ssca.registryType')}
+                placeholder={getString('select')}
+                disabled={readonly}
+                onChange={() => {
+                  if (isValueFixed(get(formik.values, 'spec.source.spec.connector'))) {
+                    formik.setFieldValue('spec.source.spec.connector', undefined)
+                  }
+
+                  if (registryType === 'Docker') {
+                    formik.setFieldValue('spec.source.spec.host', undefined)
+                    formik.setFieldValue('spec.source.spec.project_id', undefined)
+                    formik.setFieldValue('spec.source.spec.image_name', undefined)
+                  } else {
+                    formik.setFieldValue('spec.source.spec.image_path', undefined)
+                  }
+                }}
+              />
+
               <FormMultiTypeConnectorField
                 label={getString('pipelineSteps.connectorLabel')}
-                type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER, Connectors.AZURE]}
+                type={[registryConnectedType[registryType]]}
                 name="spec.source.spec.connector"
                 placeholder={getString('select')}
                 accountIdentifier={accountId}
@@ -164,24 +211,86 @@ const SlsaVerificationStepEdit = (
                 }}
               />
 
-              <MultiTypeTextField
-                name="spec.source.spec.image_path"
-                label={
-                  <Text className={css.formLabel} tooltipProps={{ dataTooltipId: 'image' }}>
-                    {getString('imageLabel')}
-                  </Text>
-                }
-                multiTextInputProps={{
-                  disabled: readonly,
-                  multiTextInputProps: {
-                    expressions,
-                    allowableTypes: AllMultiTypeInputTypesForStep
+              {registryType === 'Docker' ? (
+                <MultiTypeTextField
+                  name="spec.source.spec.image_path"
+                  label={
+                    <Text className={css.formLabel} tooltipProps={{ dataTooltipId: 'image' }}>
+                      {getString('imageLabel')}
+                    </Text>
                   }
-                }}
-                configureOptionsProps={{
-                  hideExecutionTimeField: isExecutionTimeFieldDisabledForStep
-                }}
-              />
+                  multiTextInputProps={{
+                    disabled: readonly,
+                    multiTextInputProps: {
+                      expressions,
+                      allowableTypes: AllMultiTypeInputTypesForStep
+                    }
+                  }}
+                  configureOptionsProps={{
+                    hideExecutionTimeField: isExecutionTimeFieldDisabledForStep
+                  }}
+                />
+              ) : (
+                <>
+                  <MultiTypeTextField
+                    name="spec.source.spec.host"
+                    label={
+                      <Text className={css.formLabel} tooltipProps={{ dataTooltipId: 'gcrHost' }}>
+                        {getString('common.hostLabel')}
+                      </Text>
+                    }
+                    multiTextInputProps={{
+                      placeholder: getString('pipelineSteps.hostPlaceholder'),
+                      disabled: readonly,
+                      multiTextInputProps: {
+                        expressions,
+                        allowableTypes: AllMultiTypeInputTypesForStep
+                      }
+                    }}
+                    configureOptionsProps={{
+                      hideExecutionTimeField: isExecutionTimeFieldDisabledForStep
+                    }}
+                  />
+
+                  <MultiTypeTextField
+                    name="spec.source.spec.project_id"
+                    label={
+                      <Text className={css.formLabel} tooltipProps={{ dataTooltipId: 'gcrProjectID' }}>
+                        {getString('pipelineSteps.projectIDLabel')}
+                      </Text>
+                    }
+                    multiTextInputProps={{
+                      disabled: readonly,
+                      multiTextInputProps: {
+                        expressions,
+                        allowableTypes: AllMultiTypeInputTypesForStep
+                      }
+                    }}
+                    configureOptionsProps={{
+                      hideExecutionTimeField: isExecutionTimeFieldDisabledForStep
+                    }}
+                  />
+
+                  <MultiTypeTextField
+                    name="spec.source.spec.image_name"
+                    label={
+                      <Text className={css.formLabel} tooltipProps={{ dataTooltipId: 'imageName' }}>
+                        {getString('imageNameLabel')}
+                      </Text>
+                    }
+                    multiTextInputProps={{
+                      disabled: readonly,
+                      multiTextInputProps: {
+                        expressions,
+                        allowableTypes: AllMultiTypeInputTypesForStep
+                      }
+                    }}
+                    configureOptionsProps={{
+                      hideExecutionTimeField: isExecutionTimeFieldDisabledForStep
+                    }}
+                  />
+                </>
+              )}
 
               <MultiTypeTextField
                 name="spec.source.spec.tag"

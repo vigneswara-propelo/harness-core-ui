@@ -17,3 +17,4 @@ enforcementStep:
   attestedImage: Attested Image
 publicKey: Public Key
 components: Components
+registryType: Registry Type
