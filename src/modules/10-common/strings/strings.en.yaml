@@ -1664,7 +1664,7 @@ ipAddress: IP Address
 nav:
   allModules: All modules
   allModulesInfo: Work with the modules available in your panel in one single view
-  accountAdmin: Account Administration
+  accountAdmin: Administrative Settings
   accountAdminInfo: Focus on managing general resources in your Account, Organizations, and Projects
   dashboardInfo: Get an end to end visibility of software delivery lifecycle across various Harness product modules
   configure: Configure
@@ -1684,7 +1684,7 @@ moduleIntro:
   builds: Build up to 4X faster than other solutions
   idp: Explore Software Catalog, Developer Self Service and Scorecards
 modeIntro:
-  accountAdministration: Focus on managing general resources in your account, organizations, and projects
+  accountAdministration: Focus on managing general resources and settings in your Account, Organizations, and Projects.
 serviceAccounts: Service Accounts
 configureNavigation: Configure Navigation
 settingsPage:
