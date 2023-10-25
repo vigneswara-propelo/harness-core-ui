@@ -48,7 +48,12 @@ export default function CDPipeline({
 
       <Layout.Vertical spacing="large">
         {!state.isDelegateVerified && (
-          <Button variation={ButtonVariation.PRIMARY} width={'fit-content'} onClick={openDelagateDialog}>
+          <Button
+            variation={ButtonVariation.PRIMARY}
+            width={'fit-content'}
+            onClick={openDelagateDialog}
+            margin={{ bottom: 'large' }}
+          >
             {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.installButton', {
               type: getDelegateTypeString(deploymentTypeDetails, getString)
             })}
@@ -63,7 +68,6 @@ export default function CDPipeline({
           checkAndSuggestDelegateName
           customImageName={showServerlessImage ? 'harnesscommunity/serverless-delegate:latest' : undefined}
         />
-
         {state?.delegateName && state?.delegateType && !isDrawerOpen && (
           <VerifyDelegateConnection
             delegateType={state?.delegateProblemType as DelegateCommonProblemTypes}
