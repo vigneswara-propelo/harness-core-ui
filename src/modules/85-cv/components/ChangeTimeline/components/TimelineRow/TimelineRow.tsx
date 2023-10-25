@@ -62,7 +62,7 @@ export function TimelineRow(props: TimelineRowProps): JSX.Element {
   const renderTimelineRow = useMemo(() => {
     if (isLoading) {
       return (
-        <Container className={css.main} ref={timelineRowRef}>
+        <Container className={css.main}>
           <Container key={labelName} className={css.timelineRow}>
             <TimelineRowLoading loadingBlockWidth={hideTimeline ? '20px' : '75px'} />
           </Container>
