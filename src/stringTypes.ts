@@ -10644,12 +10644,16 @@ export interface StringsMap {
   'iacm.betaMaxTimeoutMessage': string
   'iacm.cdk': string
   'iacm.cloudformation': string
+  'iacm.infraAsCode': string
   'iacm.permissions.iacmWorkspace': string
   'iacm.permissions.iacmWorkspaces': string
   'iacm.pipelineSteps.approvalDescription': string
   'iacm.pipelineSteps.description': string
   'iacm.pipelineSteps.required': string
   'iacm.pulumi': string
+  'iacm.rbac.workspaceAccessState': string
+  'iacm.rbac.workspaceDeleteVar': string
+  'iacm.rbac.workspaceEditVar': string
   'iacm.stageDescription': string
   'iacm.terragrunt': string
   'iacm.workspaces': string

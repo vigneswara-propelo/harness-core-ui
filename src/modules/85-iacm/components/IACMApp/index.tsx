@@ -6,6 +6,7 @@
  */
 
 /* eslint-disable import/no-unresolved */
+/* istanbul ignore file */
 import React, { memo, ReactElement, lazy } from 'react'
 import { customComponents, customFunctions, customHooks } from '@iacm/utils/IACMChildAppUtils'
 import type { IACMCustomMicroFrontendProps } from '@iacm/interfaces/IACMCustomMicroFrontendProps.types'
@@ -56,7 +57,7 @@ export const IACMComponentMounter = <T,>(props: {
 
 RbacFactory.registerResourceCategory(ResourceCategory.IACM, {
   icon: 'iacm',
-  label: 'common.iacmText'
+  label: 'iacm.infraAsCode'
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.IAC_WORKSPACE, {
@@ -68,10 +69,10 @@ RbacFactory.registerResourceTypeHandler(ResourceType.IAC_WORKSPACE, {
     [PermissionIdentifier.IAC_WORKSPACE_VIEW]: <String stringID="rbac.permissionLabels.view" />,
     [PermissionIdentifier.IAC_WORKSPACE_EDIT]: <String stringID="rbac.permissionLabels.createEdit" />,
     [PermissionIdentifier.IAC_WORKSPACE_DELETE]: <String stringID="rbac.permissionLabels.delete" />,
-    [PermissionIdentifier.IAC_WORKSPACE_APPROVE]: <String stringID="rbac.permissionLabels.approveReject" />,
-    [PermissionIdentifier.IAC_WORKSPACE_ACCESSSTATE]: <String stringID="rbac.permissionLabels.view" />,
-    [PermissionIdentifier.IAC_WORKSPACE_DELETEVARIABLE]: <String stringID="rbac.permissionLabels.delete" />,
-    [PermissionIdentifier.IAC_WORKSPACE_EDITVARIABLE]: <String stringID="rbac.permissionLabels.edit" />
+    [PermissionIdentifier.IAC_WORKSPACE_EDITVARIABLE]: <String stringID="iacm.rbac.workspaceEditVar" />,
+    [PermissionIdentifier.IAC_WORKSPACE_DELETEVARIABLE]: <String stringID="iacm.rbac.workspaceDeleteVar" />,
+    [PermissionIdentifier.IAC_WORKSPACE_APPROVE]: <String stringID="common.approve" />,
+    [PermissionIdentifier.IAC_WORKSPACE_ACCESSSTATE]: <String stringID="iacm.rbac.workspaceAccessState" />
   }
 })
 
