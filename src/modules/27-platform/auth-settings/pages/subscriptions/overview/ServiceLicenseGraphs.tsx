@@ -115,7 +115,7 @@ export const getYAxis = (
 ): YAxisOptions | YAxisOptions[] | undefined => {
   return {
     min: 0,
-    max: maxValue > subscriptions ? maxValue + 1 : subscriptions + 1,
+    max: maxValue + 1,
     plotLines: [
       {
         color: 'var(--red-600)',
