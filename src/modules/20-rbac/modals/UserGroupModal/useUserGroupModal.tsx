@@ -40,7 +40,7 @@ export const useUserGroupModal = ({ onSuccess }: UseUserGroupModalProps): UseUse
 
   const [showModal, hideModal] = useModalHook(
     () => (
-      <Dialog isOpen={true} enforceFocus={false} title={getTitle()} onClose={hideModal}>
+      <Dialog isOpen={true} enforceFocus={false} title={getTitle()} onClose={hideModal} canOutsideClickClose={false}>
         <UserGroupForm
           data={userGroupAggregateData}
           isEdit={!!userGroupAggregateData && !isAddMember}
