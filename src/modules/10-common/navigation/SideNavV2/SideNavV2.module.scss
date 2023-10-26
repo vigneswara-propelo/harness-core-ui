@@ -1,7 +1,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  background: #f3f6fa !important; // this color is not in design system, check with ux
+  background: #f5f8fb !important; // this color is not in design system, check with ux
   box-shadow: 0px 4px 8px 0px rgba(96, 97, 112, 0.16), 0px 0px 2px 0px rgba(40, 41, 61, 0.04);
   height: 100vh;
   position: sticky;
@@ -76,6 +76,6 @@
   &:hover {
     text-decoration: none;
     color: var(--primary-8);
-    background-color: rgba(#0278d5, 0.25);
+    background-color: rgba(210, 230, 255);
   }
 }

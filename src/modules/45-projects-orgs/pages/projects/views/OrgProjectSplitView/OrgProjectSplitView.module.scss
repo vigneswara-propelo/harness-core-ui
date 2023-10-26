@@ -42,12 +42,12 @@
   &:hover {
     text-decoration: none;
     color: var(--primary-8);
-    background-color: rgba(#0278d5, 0.25);
+    background-color: rgba(210, 230, 255);
   }
 }
 
 .active {
-  background-color: rgba(#0278d5, 0.25) !important;
+  background-color: rgba(210, 230, 255) !important;
   p {
     color: var(--grey-800) !important;
     font-weight: 500;

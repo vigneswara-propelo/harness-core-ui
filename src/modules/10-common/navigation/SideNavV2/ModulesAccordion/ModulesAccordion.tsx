@@ -129,7 +129,7 @@ const ModuleSummary: React.FC<{ module: NavModuleName; isDirectAccessModule: boo
           style={{ fill: `var(${color})` }}
         />
         {!isCollapsed && (
-          <Text color={isActive ? Color.PRIMARY_7 : Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
+          <Text color={isActive ? Color.PRIMARY_8 : Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
             {getString(shortLabel)}
           </Text>
         )}

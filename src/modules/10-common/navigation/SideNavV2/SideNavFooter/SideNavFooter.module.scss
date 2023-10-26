@@ -9,7 +9,7 @@
     &:hover {
       text-decoration: none;
       color: var(--primary-8);
-      background-color: rgba(#0278d5, 0.25);
+      background-color: rgba(210, 230, 255);
     }
   }
 
@@ -17,13 +17,13 @@
     cursor: pointer;
     &.active {
       color: var(--primary-8);
-      background-color: rgba(#0278d5, 0.25);
+      background-color: rgba(210, 230, 255);
     }
     border-radius: 4px;
     &:hover {
       text-decoration: none;
       color: var(--primary-8);
-      background-color: rgba(#0278d5, 0.25);
+      background-color: rgba(210, 230, 255);
     }
   }
 }
