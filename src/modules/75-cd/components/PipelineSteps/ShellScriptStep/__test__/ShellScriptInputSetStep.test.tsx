@@ -30,6 +30,10 @@ const allValuesCommon = {
         script: 'test script'
       }
     },
+    outputAlias: {
+      key: '<+input',
+      scope: 'Pipeline'
+    },
     executionTarget: {
       host: 'targethost',
       connectorRef: 'connectorRef',
@@ -92,6 +96,10 @@ describe('ShellScriptInputSetStep tests', () => {
             value: RUNTIME_INPUT_VALUE
           }
         ],
+        outputAlias: {
+          key: RUNTIME_INPUT_VALUE,
+          scope: 'Pipeline'
+        },
         outputVariables: [
           {
             name: 'testOutput1',
@@ -113,7 +121,7 @@ describe('ShellScriptInputSetStep tests', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test.only('renders input sets', () => {
+  test.only('renders input sets', async () => {
     const onUpdate = jest.fn()
     const initialValues = {
       identifier: 'SSH',
@@ -129,6 +137,10 @@ describe('ShellScriptInputSetStep tests', () => {
           host: RUNTIME_INPUT_VALUE,
           connectorRef: RUNTIME_INPUT_VALUE,
           workingDirectory: RUNTIME_INPUT_VALUE
+        },
+        outputAlias: {
+          key: '',
+          scope: 'Pipeline'
         },
         environmentVariables: [
           {
@@ -185,11 +197,15 @@ describe('ShellScriptInputSetStep tests', () => {
             type: 'String',
             value: RUNTIME_INPUT_VALUE
           }
-        ]
+        ],
+        outputAlias: {
+          key: RUNTIME_INPUT_VALUE,
+          scope: 'Pipeline'
+        }
       },
       timeout: RUNTIME_INPUT_VALUE
     }
-    const { container } = render(
+    const { container, getByText, getAllByText } = render(
       <TestStepWidget
         initialValues={initialValues}
         template={template}
@@ -200,6 +216,10 @@ describe('ShellScriptInputSetStep tests', () => {
     )
 
     expect(container).toMatchSnapshot()
+    await act(async () => {
+      fireEvent.click(getByText('Submit'))
+    })
+    await waitFor(() => expect(getAllByText('fieldRequired').length).toEqual(4))
   })
 
   test('renders empty input sets', () => {

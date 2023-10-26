@@ -476,6 +476,25 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
           </MultiTypeFieldSelector>
         </div>
       ) : null}
+
+      {getMultiTypeFromValue(template?.spec?.outputAlias?.key) === MultiTypeInputType.RUNTIME && (
+        <TextFieldInputSetView
+          label={getString('pipeline.exportVars.publishVarLabel')}
+          multiTextInputProps={{
+            expressions,
+            disabled: readonly,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
+          }}
+          disabled={readonly}
+          name={`${prefix}spec.outputAlias.key`}
+          fieldPath={`spec.outputAlias.key`}
+          template={template}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
+      )}
       {getMultiTypeFromValue(template?.spec?.executionTarget?.host) === MultiTypeInputType.RUNTIME && (
         <TextFieldInputSetView
           placeholder={getString('cd.specifyTargetHost')}

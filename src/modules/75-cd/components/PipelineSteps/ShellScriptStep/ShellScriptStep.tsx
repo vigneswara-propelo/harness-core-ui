@@ -188,6 +188,18 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
       set(errors, 'spec.source.spec.script', getString?.('fieldRequired', { field: 'Script' }))
     }
 
+    if (
+      getMultiTypeFromValue(template?.spec?.outputAlias?.key) === MultiTypeInputType.RUNTIME &&
+      isRequired &&
+      isEmpty(data?.spec?.outputAlias?.key)
+    ) {
+      set(
+        errors,
+        'spec.outputAlias.key',
+        getString?.('fieldRequired', { field: getString('pipeline.exportVars.publishVarLabel') })
+      )
+    }
+
     /* istanbul ignore else */
     if (
       (getMultiTypeFromValue(template?.spec?.executionTarget?.host) === MultiTypeInputType.RUNTIME && isRequired) ||
