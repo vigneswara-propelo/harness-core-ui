@@ -18,6 +18,7 @@ import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/
 import InfrastructureDefinition from '../InfrastructureDefinition'
 
 import mockInfrastructureList from './__mocks__/mockInfrastructureList.json'
+import mockRemoteInfrastructureResponse from './__mocks__/mockRemoteInfrastructureResponse.json'
 
 jest.mock('../InfrastructureModal', () => ({
   __esModule: true,
@@ -365,5 +366,62 @@ describe('Infrastructure Definition tests', () => {
     await waitFor(() => {
       expect(getByText('testRepo')).toBeInTheDocument()
     })
+  })
+
+  test('opens a modal on click of edit of remote infrastructure', async () => {
+    jest.spyOn(cdNgServices, 'useGetInfrastructureList').mockImplementation(() => {
+      return {
+        loading: false,
+        error: undefined,
+        data: mockInfrastructureList,
+        refetch: jest.fn()
+      } as any
+    })
+    jest.spyOn(cdNgServices, 'useGetInfrastructure').mockImplementation(() => {
+      return { data: mockRemoteInfrastructureResponse, error: null, loading: false } as any
+    })
+
+    const { container, getByTestId } = render(
+      <TestWrapper
+        path={routes.toEnvironmentDetails({
+          ...projectPathProps,
+          ...modulePathProps,
+          ...environmentPathProps
+        })}
+        pathParams={{
+          accountId: 'dummy',
+          orgIdentifier: 'dummy',
+          projectIdentifier: 'dummy',
+          module: 'cd',
+          environmentIdentifier: 'Env_1'
+        }}
+        defaultFeatureFlagValues={{ CDS_INFRA_GITX: true }}
+        queryParams={{
+          sectionId: 'INFRASTRUCTURE',
+          infraStoreType: 'REMOTE',
+          infraConnectorRef: 'c1',
+          infraRepoName: 'testRepo'
+        }}
+      >
+        <InfrastructureDefinition isEnvPage />
+      </TestWrapper>
+    )
+
+    const rows = container.querySelectorAll('div[role="row"]')
+    expect(rows.length).toBe(6)
+
+    const moreButton = getByTestId(`${mockRemoteInfrastructureResponse?.data?.infrastructure?.identifier}-more-button`)
+    await waitFor(() => expect(moreButton).toBeInTheDocument())
+    fireEvent.click(moreButton)
+    const moreOptionPopover = findPopoverContainer()
+    await waitFor(() => expect(moreOptionPopover).toBeInTheDocument())
+    const editButton = getByTestId(`${mockRemoteInfrastructureResponse?.data?.infrastructure?.identifier}-edit-button`)
+    fireEvent.click(editButton!)
+    await waitFor(() => {
+      expect(screen.getByTestId('mock-bootstrap-deploy-infra-definition')).toBeInTheDocument()
+    })
+
+    fireEvent.click(document.querySelector('[data-icon="cross"]') as HTMLElement)
+    expect(rows.length).toBe(6)
   })
 })

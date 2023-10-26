@@ -9,7 +9,7 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import { Button, ButtonVariation, Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { get, noop } from 'lodash-es'
+import { defaultTo, get, noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { EnvironmentQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -23,7 +23,7 @@ import {
   EntityCachedCopy,
   EntityCachedCopyHandle
 } from '@modules/70-pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
-import { useQueryParams } from '@modules/10-common/hooks'
+import { useQueryParams, useUpdateQueryParams } from '@modules/10-common/hooks'
 import css from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfrastructureDefinition.module.scss'
 
 export function InfraDefinitionDetailsDrawerTitle(props: {
@@ -51,7 +51,8 @@ export function InfraDefinitionDetailsDrawerTitle(props: {
     hasRemoteFetchFailed
   } = props
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const { infraStoreType } = useQueryParams<EnvironmentQueryParams>()
+  const { infraStoreType, infraBranch, infraRepoName, infraConnectorRef } = useQueryParams<EnvironmentQueryParams>()
+  const { updateQueryParams } = useUpdateQueryParams<EnvironmentQueryParams>()
   const infrastructureCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
   const environmentEditPermissions: ButtonProps['permission'] = {
     resource: {
@@ -73,16 +74,20 @@ export function InfraDefinitionDetailsDrawerTitle(props: {
     {}
   ) as EntityGitDetails
 
+  const onGitBranchChange = (selectedFilter: { branch: string }): void => {
+    updateQueryParams({ infraBranch: selectedFilter.branch })
+  }
+
   const renderRemoteDetails = (): JSX.Element | null => {
     return CDS_INFRA_GITX && infraStoreType === 'REMOTE' ? (
       <div className={css.gitRemoteDetailsWrapper}>
         <GitRemoteDetails
-          connectorRef={get(infrastructureResponse, 'connectorRef', '')}
-          repoName={repoName}
+          connectorRef={get(infrastructureResponse, 'connectorRef', infraConnectorRef)}
+          repoName={defaultTo(repoName, infraRepoName)}
           filePath={filePath}
           fileUrl={fileUrl}
-          branch={branch}
-          // onBranchChange={onGitBranchChange} //TO DO
+          branch={defaultTo(branch, infraBranch)}
+          onBranchChange={onGitBranchChange}
           flags={{
             readOnly: false
           }}

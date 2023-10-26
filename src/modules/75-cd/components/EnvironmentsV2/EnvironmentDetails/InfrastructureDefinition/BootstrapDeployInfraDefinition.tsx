@@ -568,6 +568,10 @@ function BootstrapDeployInfraDefinition(
         afterCreateUpdateHandler(response)
         return response
       })
+    },
+    onClose: () => {
+      setInfraSaveInProgress?.(false)
+      setIsSavingInfrastructure(false)
     }
   })
 
@@ -575,7 +579,7 @@ function BootstrapDeployInfraDefinition(
 
   const onSubmit = (values: CombinedInfrastructureDefinationResponse): void => {
     setIsSavingInfrastructure(true)
-    const body = omit(values, ['spec', 'allowSimultaneousDeployments'])
+    const body = omit(values, ['spec', 'allowSimultaneousDeployments', 'connectorRef', 'repo'])
     const finalInfrastructureData =
       isEmpty(infrastructureDefinition) || infraStoreType === 'INLINE' ? formikRefValues : infrastructureResponse
     const finalInfrastructureGitDetails = isEmpty(infrastructureDefinition)
@@ -854,7 +858,7 @@ function BootstrapDeployInfraDefinition(
     } else {
       return formValues
     }
-  }, [infraStoreType, infrastructureResponse, selectedInfrastructure, infraStoreType])
+  }, [infraStoreType, infrastructureResponse, selectedInfrastructure])
 
   return (
     <>

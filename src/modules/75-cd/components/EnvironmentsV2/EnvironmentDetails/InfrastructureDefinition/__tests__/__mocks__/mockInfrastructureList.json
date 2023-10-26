@@ -88,10 +88,12 @@
           "deploymentType": "Kubernetes",
           "type": "KubernetesDirect",
           "storeType": "REMOTE",
+
           "entityGitDetails": {
             "repoName": "testRepo",
             "filePath": ".harness/infra6.yaml"
           },
+          "connectorRef": "c1",
           "yaml": "infrastructureDefinition:\n  name: \"Infra 1\"\n  identifier: \"Infra_1\"\n  orgIdentifier: \"dummy\"\n  projectIdentifier: \"dummy\"\n  environmentRef: \"Env_1\"\n  description: \"\"\n  tags: {}\n  allowSimultaneousDeployments: true\n  deploymentType: \"Kubernetes\"\n  type: \"KubernetesDirect\"\n  spec:\n    connectorRef: \"Test\"\n    namespace: \"test\"\n    releaseName: \"release-<+INFRA_KEY>\"\n"
         },
         "createdAt": 1655281836514,

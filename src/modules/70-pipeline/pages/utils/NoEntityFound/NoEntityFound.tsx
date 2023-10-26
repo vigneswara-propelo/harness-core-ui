@@ -15,6 +15,7 @@ import routes from '@common/RouteDefinitions'
 import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type {
+  InfrastructureGitQueryParams,
   InputSetGitQueryParams,
   PipelineType,
   TemplateStudioPathProps,
@@ -74,7 +75,8 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
   const { getString } = useStrings()
   const history = useHistory()
   const { supportingGitSimplification } = useAppStore()
-  const { replaceQueryParams, updateQueryParams } = useUpdateQueryParams<Partial<InputSetGitQueryParams>>()
+  const { replaceQueryParams, updateQueryParams } =
+    useUpdateQueryParams<Partial<InputSetGitQueryParams & InfrastructureGitQueryParams>>()
   const { fetchPipeline } = usePipelineContext()
 
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
@@ -147,6 +149,8 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
             onBranchChange?.(defaultTo(selectedFilter.branch, ''))
           } else if (entityType === 'service' || entityType === 'environment') {
             updateQueryParams({ branch: selectedFilter.branch })
+          } else if (entityType === 'infrastructure') {
+            updateQueryParams({ infraBranch: selectedFilter.branch })
           } else {
             history.push(
               routes.toTemplateStudio({

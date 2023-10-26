@@ -1,0 +1,28 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "infrastructure": {
+      "accountId": "dummy",
+      "identifier": "Infra_1",
+      "orgIdentifier": "dummy",
+      "projectIdentifier": "dummy",
+      "environmentRef": "Env_1",
+      "name": "Infra 1",
+      "description": "",
+      "tags": {},
+      "deploymentType": "Kubernetes",
+      "type": "KubernetesDirect",
+      "storeType": "REMOTE",
+      "entityGitDetails": {
+        "repoName": "testRepo",
+        "filePath": ".harness/infra6.yaml"
+      },
+      "connectorRef": "c1",
+      "yaml": "infrastructureDefinition:\n  name: \"Infra 1\"\n  identifier: \"Infra_1\"\n  orgIdentifier: \"dummy\"\n  projectIdentifier: \"dummy\"\n  environmentRef: \"Env_1\"\n  description: \"\"\n  tags: {}\n  allowSimultaneousDeployments: true\n  deploymentType: \"Kubernetes\"\n  type: \"KubernetesDirect\"\n  spec:\n    connectorRef: \"Test\"\n    namespace: \"test\"\n    releaseName: \"release-<+INFRA_KEY>\"\n"
+    },
+    "createdAt": 1655281836514,
+    "lastModifiedAt": 1655295908746
+  },
+  "metaData": null,
+  "correlationId": "ecbe12c1-2990-4185-89d7-e6901389ce0e"
+}

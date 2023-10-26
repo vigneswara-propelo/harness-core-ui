@@ -24,7 +24,7 @@ import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext
 import { useStrings } from 'framework/strings'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
 import type { EnvironmentQueryParams } from '@common/interfaces/RouteInterfaces'
-import { InfraDefinitionDetailsDrawerTitle } from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfraDefinitionDetailsDrawer/InfraDefinitionDetailsDrawerTitle'
+
 import type {
   GetTemplateProps,
   GetTemplateResponse
@@ -45,6 +45,7 @@ import {
   InfraDefinitionWrapperRef
 } from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/BootstrapDeployInfraDefinitionWrapper'
 import NoEntityFound from '@modules/70-pipeline/pages/utils/NoEntityFound/NoEntityFound'
+import { InfraDefinitionDetailsDrawerTitle } from './InfraDefinitionDetailsDrawerTitle'
 import css from '../InfrastructureDefinition.module.scss'
 
 interface Props {
@@ -101,7 +102,7 @@ export function InfraDefinitionDetailsDrawer(props: Props) {
     error: infrastructureError
   } = infrastructureFetchDetails || {}
 
-  const { infraDetailsTab } = useQueryParams<EnvironmentQueryParams>()
+  const { infraDetailsTab, infraBranch, infraRepoName, infraConnectorRef } = useQueryParams<EnvironmentQueryParams>()
   const { updateQueryParams } = useUpdateQueryParams<EnvironmentQueryParams>()
   const [selectedTab, setSelectedTab] = React.useState<InfraDefinitionTabs>(
     defaultTo(infraDetailsTab, InfraDefinitionTabs.CONFIGURATION) as InfraDefinitionTabs
@@ -247,6 +248,12 @@ export function InfraDefinitionDetailsDrawer(props: Props) {
                   identifier={infrastructureResponse?.data?.infrastructure?.identifier as string}
                   entityType={'infrastructure'}
                   errorObj={infrastructureError?.data as unknown as Error}
+                  entityConnectorRef={infraConnectorRef}
+                  gitDetails={{
+                    ...infrastructureResponse?.data?.infrastructure?.entityGitDetails,
+                    repoName: infraRepoName,
+                    branch: infraBranch
+                  }}
                 />
               ) : (
                 <BootstrapDeployInfraDefinitionWrapperWithRef

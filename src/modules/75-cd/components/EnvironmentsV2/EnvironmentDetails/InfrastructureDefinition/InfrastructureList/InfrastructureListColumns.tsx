@@ -151,6 +151,7 @@ export function InfrastructureMenu({
             e.stopPropagation()
             setMenuOpen(true)
           }}
+          data-testid={`${infrastructure?.identifier}-more-button`}
         />
         <Menu style={{ minWidth: 'unset' }}>
           <RbacMenuItem
@@ -161,6 +162,7 @@ export function InfrastructureMenu({
               ...resourceAndScope,
               permission: PermissionIdentifier.EDIT_ENVIRONMENT
             }}
+            data-testid={`${infrastructure?.identifier}-edit-button`}
           />
           <RbacMenuItem
             icon="trash"
