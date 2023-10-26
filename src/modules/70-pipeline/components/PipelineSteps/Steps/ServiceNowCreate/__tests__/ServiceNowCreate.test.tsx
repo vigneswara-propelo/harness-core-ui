@@ -9,7 +9,7 @@ import React from 'react'
 import { act, findByText, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
-
+import * as hooks from '@common/hooks/useFeatureFlag'
 import { TestWrapper } from '@common/utils/testUtils'
 import { FieldType } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types'
 import {
@@ -29,7 +29,9 @@ import {
   getServiceNowFieldRendererProps,
   mockConnectorResponse,
   mockServiceNowMetadataResponse,
-  mockServiceNowTemplateResponse
+  mockServiceNowTemplateResponse,
+  mockServiceNowTemplateMetadataV2,
+  mockServiceNowReadonlyFildsResponse
 } from './ServiceNowCreateTestHelper'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
@@ -39,7 +41,9 @@ jest.mock('services/cd-ng', () => ({
   useGetServiceNowTicketTypes: () => mockTicketTypesResponse,
   useGetServiceNowTicketTypesV2: () => mockTicketTypesResponseV2,
   useGetServiceNowIssueMetadata: () => mockServiceNowMetadataResponse,
-  useGetServiceNowTemplateMetadata: () => mockServiceNowTemplateResponse
+  useGetServiceNowTemplateMetadata: () => mockServiceNowTemplateResponse,
+  useGetStandardTemplateReadOnlyFields: () => mockServiceNowReadonlyFildsResponse,
+  getServiceNowTemplateMetadataV2Promise: jest.fn(() => Promise.resolve(mockServiceNowTemplateMetadataV2))
 }))
 
 describe('ServiceNow Create tests', () => {
@@ -271,8 +275,8 @@ describe('ServiceNow Create tests', () => {
       type: 'ServiceNowCreate',
       spec: {
         connectorRef: 'cid1',
-        useServiceNowTemplate: false,
         ticketType: 'CHANGE',
+        createType: 'Normal',
         delegateSelectors: undefined,
         fields: [
           { name: 'description', value: 'descriptionval' },
@@ -331,6 +335,39 @@ describe('ServiceNow Create tests', () => {
       />
     )
     expect(container).toMatchSnapshot('edit-templatetype-stage-readonly')
+  })
+
+  test('Edit Stage - standard change template should be visible only for Change Request ticket type', async () => {
+    const useFeatureFlags = jest.spyOn(hooks, 'useFeatureFlags')
+    useFeatureFlags.mockReturnValue({ CDS_GET_SERVICENOW_STANDARD_TEMPLATE: true })
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    const props = { ...getServiceNowCreateEditModePropsWithValues() }
+    const { container, queryByText } = render(
+      <TestStepWidget
+        initialValues={props.initialValues}
+        type={StepType.ServiceNowCreate}
+        stepViewType={StepViewType.Edit}
+        ref={ref}
+        onUpdate={props.onUpdate}
+      />
+    )
+
+    expect(queryByText('pipeline.serviceNowCreateStep.fieldType.createFromStandardTemplate')).not.toBeTruthy()
+
+    // Select ticketType as Change Request
+    const ticketType = container
+      .querySelector(`input[name="spec.ticketType"] + [class*="bp3-input-action"]`)
+      ?.querySelector('[data-icon="chevron-down"]')
+    await waitFor(() => {
+      fireEvent.click(ticketType!)
+    })
+    const changeTicketType = await findByText(document.body, 'change_request')
+    await act(() => {
+      fireEvent.click(changeTicketType!)
+    })
+
+    expect(container).toMatchSnapshot()
+    expect(queryByText('pipeline.serviceNowCreateStep.fieldType.createFromStandardTemplate')).toBeTruthy()
   })
 
   test('Deploymentform with custom fields as runtime', async () => {

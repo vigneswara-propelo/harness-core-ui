@@ -22,7 +22,9 @@ clickHere: Click here
 stepDetails: Step details
 stageVariables: Stage Variables
 fetchNextServices: Fetching more services
+fetchNextTemplates: Fetching more templates
 noServiceAvailable: No service available
+noTemplateAvailable: No template available
 stepGroupVariables: StepGroup Variables
 scriptInputVariables: Script Input Variables
 scriptOutputVariables: Script Output Variables
@@ -346,7 +348,8 @@ httpStep:
 serviceNowCreateStep:
   fieldType:
     configureFields: Configure Fields
-    createFromTemplate: Create From Template
+    createFromTemplate: Create From Form Template
+    createFromStandardTemplate: Create From Standard Template
   selectFieldListHelp: Select the issue type to list available fields to choose from.
   addFields: Add ServiceNow Fields
   descriptionPlaceholder: Enter the Description

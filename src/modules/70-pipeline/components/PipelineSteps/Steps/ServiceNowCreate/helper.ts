@@ -7,11 +7,17 @@
 
 import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 import type { FormikProps } from 'formik'
-import { isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import type { ServiceNowFieldAllowedValueNG, ServiceNowFieldNG, ServiceNowFieldValueNG } from 'services/cd-ng'
-import type { ServiceNowCreateData, ServiceNowCreateFieldType, ServiceNowFieldNGWithValue } from './types'
+import {
+  FieldType,
+  ServiceNowStaticFields,
+  ServiceNowCreateData,
+  ServiceNowCreateFieldType,
+  ServiceNowFieldNGWithValue,
+  TEMPLATE_TYPE
+} from './types'
 import type { ServiceNowUpdateData } from '../ServiceNowUpdate/types'
-import { FieldType, ServiceNowStaticFields } from './types'
 import { getkvFieldValue } from '../StepsHelper'
 
 export const resetForm = (
@@ -25,6 +31,9 @@ export const resetForm = (
 
   if (parent === 'ticketType') {
     formik.setFieldValue('spec.fields', [])
+    formik.setFieldValue('spec.editableFields', [])
+    formik.setFieldValue('spec.templateFields', [])
+    formik.setFieldValue('spec.templateName', '')
   }
   if (parent === 'templateName') {
     formik.setFieldValue('spec.templateFields', [])
@@ -90,27 +99,57 @@ export const getInitialValueForSelectedField = (
   return ''
 }
 
+const processStandardTemplateFieldsForSubmit = (values: ServiceNowCreateData): ServiceNowCreateFieldType[] => {
+  const editedFields: ServiceNowFieldValueNG[] =
+    values?.spec?.editableFields?.filter(field => {
+      const templateFieldObject = values?.spec?.templateFields?.find(
+        templateField => templateField.displayValue === field.displayValue
+      )
+      if (templateFieldObject) {
+        return field.value !== templateFieldObject.value
+      }
+      return false
+    }) || []
+
+  const toReturn: ServiceNowCreateFieldType[] = []
+  editedFields?.forEach(field => {
+    if (field.displayValue && field.value) toReturn.push({ name: field.displayValue, value: field.value })
+  })
+  return toReturn
+}
+
 export const processFormData = (values: ServiceNowCreateData): ServiceNowCreateData => {
   let serviceNowSpec
-  if (!values.spec.useServiceNowTemplate) {
+  if (values.spec.fieldType === FieldType.CreateFromStandardTemplate) {
     serviceNowSpec = {
       spec: {
         delegateSelectors: values.spec.delegateSelectors,
-        useServiceNowTemplate: false,
         connectorRef: values.spec.connectorRef,
         ticketType: values.spec.ticketType,
-        fields: processFieldsForSubmit(values)
+        fields: processStandardTemplateFieldsForSubmit(values),
+        createType: TEMPLATE_TYPE.STANDARD,
+        templateName: values.spec.templateName
+      }
+    }
+  } else if (values.spec.fieldType === FieldType.CreateFromTemplate || values.spec.useServiceNowTemplate) {
+    serviceNowSpec = {
+      spec: {
+        delegateSelectors: values.spec.delegateSelectors,
+        connectorRef: values.spec.connectorRef,
+        ticketType: values.spec.ticketType,
+        fields: [],
+        createType: TEMPLATE_TYPE.FORM,
+        templateName: values.spec.templateName
       }
     }
   } else {
     serviceNowSpec = {
       spec: {
         delegateSelectors: values.spec.delegateSelectors,
-        useServiceNowTemplate: true,
         connectorRef: values.spec.connectorRef,
         ticketType: values.spec.ticketType,
-        fields: [],
-        templateName: values.spec.templateName
+        fields: processFieldsForSubmit(values),
+        createType: TEMPLATE_TYPE.NORMAL
       }
     }
   }
@@ -125,13 +164,19 @@ export const getKVFields = (values: ServiceNowCreateData): ServiceNowCreateField
 }
 
 export const processInitialValues = (values: ServiceNowCreateData): ServiceNowCreateData => {
+  const fieldType =
+    values.spec?.createType === TEMPLATE_TYPE.STANDARD
+      ? FieldType.CreateFromStandardTemplate
+      : values.spec?.createType === TEMPLATE_TYPE.FORM || values.spec.useServiceNowTemplate
+      ? FieldType.CreateFromTemplate
+      : FieldType.ConfigureFields
   return {
     ...values,
     spec: {
       delegateSelectors: values.spec.delegateSelectors,
       connectorRef: values.spec.connectorRef,
       useServiceNowTemplate: values.spec.useServiceNowTemplate,
-      fieldType: values.spec.useServiceNowTemplate ? FieldType.CreateFromTemplate : FieldType.ConfigureFields,
+      fieldType,
       ticketType: values.spec.ticketType,
       description: values.spec.fields
         ?.find(field => field.name === ServiceNowStaticFields.description)
@@ -139,7 +184,10 @@ export const processInitialValues = (values: ServiceNowCreateData): ServiceNowCr
       shortDescription: values.spec.fields
         ?.find(field => field.name === ServiceNowStaticFields.short_description)
         ?.value.toString() as string,
-      fields: omitDescNShortDesc(values.spec.fields),
+      fields:
+        fieldType === FieldType.CreateFromStandardTemplate
+          ? values.spec.fields
+          : omitDescNShortDesc(values.spec.fields),
       templateName: values.spec.templateName,
       selectedFields: [],
       templateFields: []
@@ -233,7 +281,7 @@ export const convertTemplateFieldsForDisplay = (fields: {
   for (const item of Object.entries(fields)) {
     fieldsAsServiceNowField.push({
       displayValue: item[0],
-      value: item[1].displayValue?.toString()
+      value: defaultTo(item[1].displayValue?.toString(), item[1].value?.toString())
     } as ServiceNowFieldValueNG)
   }
   return fieldsAsServiceNowField

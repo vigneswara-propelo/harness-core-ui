@@ -102,30 +102,6 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
       cy.contains('span', 'Apply Changes').click({ force: true })
     })
 
-    it('Submit form required field check - Create From Template', () => {
-      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
-      cy.intercept('GET', serviceNowTicketTypesCall, { fixture: 'ng/api/serviceNow/serviceNowTicketTypes' })
-      cy.intercept('GET', serviceNowMetadataCall, { fixture: 'ng/api/serviceNow/serviceNowMetadata' })
-      cy.intercept('GET', serviceNowTemplateCall, { fixture: 'ng/api/serviceNow/serviceNowTemplate' })
-      cy.wait(2000)
-      cy.contains('span', 'Execution').click({ force: true })
-      cy.wait(3000)
-      cy.contains('p', 'ServiceNow Create').click({ force: true })
-      cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
-      cy.get('input[placeholder="Enter Step Name"]').type('Service Now Create')
-      cy.contains('span', 'Select').click({ force: true })
-      cy.contains('p', 'service_now_connector').click({ force: true })
-      cy.contains('span', 'Apply Selected').click({ force: true })
-      cy.wait(1000)
-      cy.get('input[name="spec.ticketType"]').click({ force: true })
-      cy.contains('p', 'Incident').click({ force: true })
-      cy.wait(1000)
-      cy.get('[type="radio"]').check('CreateFromTemplate', { force: true })
-      cy.wait(1000)
-      cy.contains('span', 'Apply Changes').click({ force: true })
-      cy.contains('span', 'Template Name is required').should('be.visible').should('have.class', 'FormError--error')
-    })
-
     it('Submit form after filling fields  - Create From Template', () => {
       cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
       cy.intercept('GET', serviceNowTicketTypesCall, { fixture: 'ng/api/serviceNow/serviceNowTicketTypes' })

@@ -19,7 +19,9 @@ import type {
   ServiceNowFieldValueNG,
   GetServiceNowTicketTypesQueryParams,
   GetServiceNowIssueCreateMetadataQueryParams,
-  GetServiceNowTemplateMetadataQueryParams
+  GetServiceNowTemplateMetadataQueryParams,
+  ResponseListString,
+  GetStandardTemplateReadOnlyFieldsQueryParams
 } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { ServiceNowTicketTypeSelectOption } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/types'
@@ -34,7 +36,14 @@ export interface ServiceNowFieldNGWithValue extends ServiceNowFieldNG {
 }
 export enum FieldType {
   ConfigureFields = 'ConfigureFields',
-  CreateFromTemplate = 'CreateFromTemplate'
+  CreateFromTemplate = 'CreateFromTemplate',
+  CreateFromStandardTemplate = 'CreateFromStandardTemplate'
+}
+
+export enum TEMPLATE_TYPE {
+  STANDARD = 'Standard',
+  FORM = 'Form',
+  NORMAL = 'Normal'
 }
 export interface ServiceNowCreateData extends StepElementConfig {
   spec: {
@@ -43,12 +52,15 @@ export interface ServiceNowCreateData extends StepElementConfig {
     fields: ServiceNowCreateFieldType[]
     selectedFields?: ServiceNowFieldNGWithValue[]
     delegateSelectors?: string[]
+    editableFields?: ServiceNowFieldValueNG[]
     fieldType?: FieldType
+    templateType?: TEMPLATE_TYPE
+    createType?: TEMPLATE_TYPE
     description?: string
     shortDescription?: string
     templateFields?: ServiceNowFieldValueNG[]
     templateName?: string
-    useServiceNowTemplate: boolean
+    useServiceNowTemplate?: boolean
     isTemplateSectionAvailable?: boolean
   }
 }
@@ -90,6 +102,12 @@ export interface ServiceNowCreateFormContentInterface {
     ResponseListServiceNowTemplate,
     Failure | Error,
     GetServiceNowTemplateMetadataQueryParams,
+    unknown
+  >
+  serviceNowReadOnlyFieldsQuery?: UseGetReturn<
+    ResponseListString,
+    Failure | Error,
+    GetStandardTemplateReadOnlyFieldsQueryParams,
     unknown
   >
 }

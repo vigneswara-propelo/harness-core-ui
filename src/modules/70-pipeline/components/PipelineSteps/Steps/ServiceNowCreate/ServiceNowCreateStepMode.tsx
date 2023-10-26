@@ -5,10 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
-import { defaultTo, isEmpty } from 'lodash-es'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { debounce, defaultTo, get, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { Dialog } from '@blueprintjs/core'
+import { Dialog, Menu } from '@blueprintjs/core'
 import cx from 'classnames'
 import * as Yup from 'yup'
 import { FieldArray, FormikProps } from 'formik'
@@ -16,29 +16,38 @@ import { Intent } from '@harness/design-system'
 import {
   AllowedTypes,
   Button,
+  Container,
   FormError,
   Formik,
   FormikForm,
   FormInput,
   getMultiTypeFromValue,
+  Layout,
   MultiTypeInputType,
   PageSpinner,
+  SelectOption,
   Text
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
+import { IItemRendererProps, ItemListRenderer } from '@blueprintjs/select'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { String, StringKeys, useStrings } from 'framework/strings'
 import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import {
+  getServiceNowTemplateMetadataV2Promise,
+  useGetServiceNowTemplateMetadata,
+  ResponsePageServiceNowTemplate,
   ServiceNowFieldNG,
+  ServiceNowTemplate,
   ServiceNowTicketTypeDTO,
   useGetServiceNowIssueMetadata,
-  useGetServiceNowTemplateMetadata,
-  useGetServiceNowTicketTypesV2
+  useGetServiceNowTicketTypesV2,
+  useGetStandardTemplateReadOnlyFields
 } from 'services/cd-ng'
 import type {
   AccountPathProps,
@@ -56,18 +65,21 @@ import { ServiceNowTemplateFieldsRenderer } from '@pipeline/components/PipelineS
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { Connectors } from '@platform/connectors/constants'
+import { useInfiniteScroll } from '@common/hooks/useInfiniteScroll'
 import type { ServiceNowTicketTypeSelectOption } from '../ServiceNowApproval/types'
 import { getGenuineValue } from '../ServiceNowApproval/helper'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import { ServiceNowDynamicFieldsSelector } from './ServiceNowDynamicFieldsSelector'
-import type {
+import {
   ServiceNowCreateData,
   ServiceNowCreateFieldType,
   ServiceNowCreateFormContentInterface,
   ServiceNowCreateStepModeProps,
-  ServiceNowFieldNGWithValue
+  ServiceNowFieldNGWithValue,
+  TEMPLATE_TYPE,
+  FieldType,
+  ServiceNowStaticFields
 } from './types'
-import { FieldType, ServiceNowStaticFields } from './types'
 import {
   convertTemplateFieldsForDisplay,
   getInitialValueForSelectedField,
@@ -82,7 +94,6 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ServiceNowCreate.module.scss'
 
 const fetchingTicketTypesPlaceholder: StringKeys = 'pipeline.serviceNowApprovalStep.fetchingTicketTypesPlaceholder'
-
 function FormContent({
   formik,
   isNewStep,
@@ -91,6 +102,7 @@ function FormContent({
   stepViewType,
   serviceNowTicketTypesQuery,
   serviceNowIssueCreateMetadataQuery,
+  serviceNowReadOnlyFieldsQuery,
   serviceNowTemplateMetaDataQuery
 }: ServiceNowCreateFormContentInterface): JSX.Element {
   const { getString } = useStrings()
@@ -103,6 +115,17 @@ function FormContent({
   const [serviceNowTicketTypesOptions, setServiceNowTicketTypesOptions] = useState<ServiceNowTicketTypeSelectOption[]>(
     []
   )
+  const [isTemplateSectionAvailable, setIsTemplateSectionAvailable] = useState<boolean>(false)
+  const [templateName, setTemplateName] = useState<string>(formik.values.spec.templateName || '')
+  const { CDS_GET_SERVICENOW_STANDARD_TEMPLATE } = useFeatureFlags()
+  const [fetchingReadonlyFields, setFetchingReadonlyFields] = useState<boolean>(false)
+  const pageSize = useRef(12)
+  const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined)
+  const debouncedSetSearchTerm = debounce(val => {
+    formik.setFieldValue('spec.templateName', '')
+    setSearchTerm(val)
+  }, 1000)
+  const loadMoreRef = useRef(null)
   const [connectorValueType, setConnectorValueType] = useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
   const [ticketValueType, setTicketValueType] = useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
   const commonParams = {
@@ -112,20 +135,71 @@ function FormContent({
     repoIdentifier,
     branch
   }
+
   const connectorRefFixedValue = getGenuineValue(formik.values.spec.connectorRef)
   const ticketTypeKeyFixedValue =
     getMultiTypeFromValue(formik.values.spec.ticketType) === MultiTypeInputType.FIXED &&
     !isEmpty(formik.values.spec.ticketType)
       ? formik.values.spec.ticketType
       : undefined
-
   const serviceNowType = 'createMode'
 
-  const [isTemplateSectionAvailable, setIsTemplateSectionAvailable] = useState<boolean>(false)
-  const [templateName, setTemplateName] = useState<string>(formik.values.spec.templateName || '')
+  const [templates, setTemplates] = useState<SelectOption[]>([])
+  const [isFetchingTemplateNextTime, setIsFetchingTemplateNextTime] = useState(true)
+  const fieldType = getGenuineValue(get(formik, 'values.spec.fieldType'))
+  const {
+    items: templateResponse,
+    error: fetchTemplateError,
+    fetching: fetchingTemplate,
+    attachRefToLastElement,
+    offsetToFetch,
+    reset
+  } = useInfiniteScroll({
+    getItems: options => {
+      if (
+        connectorRefFixedValue &&
+        connectorValueType === MultiTypeInputType.FIXED &&
+        ticketTypeKeyFixedValue &&
+        ticketValueType === MultiTypeInputType.FIXED
+      ) {
+        return getServiceNowTemplateMetadataV2Promise({
+          queryParams: {
+            ...commonParams,
+            connectorRef: defaultTo(connectorRefFixedValue?.toString(), ''),
+            ticketType: ticketTypeKeyFixedValue?.toString(),
+            templateType:
+              fieldType === FieldType.CreateFromStandardTemplate ? TEMPLATE_TYPE.STANDARD : TEMPLATE_TYPE.FORM,
+            size: options.limit,
+            page: options.offset,
+            searchTerm: searchTerm
+          }
+        })
+      }
+      return Promise.resolve(null)
+    },
+    limit: pageSize.current,
+    loadMoreRef,
+    searchTerm
+  })
+
+  useEffect(() => {
+    setIsFetchingTemplateNextTime(fetchingTemplate && offsetToFetch.current > 0)
+  }, [fetchingTemplate, offsetToFetch.current])
+
+  const isEmptyContent = useMemo(() => {
+    return !fetchingTemplate && !fetchTemplateError && isEmpty(templateResponse)
+  }, [fetchingTemplate, fetchTemplateError, templateResponse])
 
   useEffect(() => {
     if (connectorRefFixedValue && connectorValueType === MultiTypeInputType.FIXED) {
+      if (CDS_GET_SERVICENOW_STANDARD_TEMPLATE) {
+        serviceNowReadOnlyFieldsQuery?.refetch({
+          queryParams: {
+            ...commonParams,
+            connectorRef: connectorRefFixedValue.toString()
+          }
+        })
+      }
       serviceNowTicketTypesQuery.refetch({
         queryParams: {
           ...commonParams,
@@ -156,20 +230,24 @@ function FormContent({
       connectorValueType === MultiTypeInputType.FIXED &&
       ticketTypeKeyFixedValue &&
       ticketValueType === MultiTypeInputType.FIXED &&
-      getMultiTypeFromValue(templateName) === MultiTypeInputType.FIXED
+      fieldType !== FieldType.ConfigureFields
     ) {
-      serviceNowTemplateMetaDataQuery.refetch({
-        queryParams: {
-          ...commonParams,
-          connectorRef: connectorRefFixedValue.toString(),
-          ticketType: ticketTypeKeyFixedValue.toString(),
-          templateName: templateName || '',
-          limit: 1,
-          offset: 0
-        }
-      })
+      if (CDS_GET_SERVICENOW_STANDARD_TEMPLATE) {
+        reset()
+      } else if (getMultiTypeFromValue(templateName) === MultiTypeInputType.FIXED) {
+        serviceNowTemplateMetaDataQuery.refetch({
+          queryParams: {
+            ...commonParams,
+            connectorRef: connectorRefFixedValue.toString(),
+            ticketType: ticketTypeKeyFixedValue.toString(),
+            templateName: templateName || '',
+            limit: 1,
+            offset: 0
+          }
+        })
+      }
     }
-  }, [connectorRefFixedValue, ticketTypeKeyFixedValue, templateName])
+  }, [connectorRefFixedValue, ticketTypeKeyFixedValue, fieldType, templateName])
 
   useDeepCompareEffect(() => {
     if (connectorRefFixedValue && ticketTypeKeyFixedValue && ticketValueType === MultiTypeInputType.FIXED) {
@@ -218,7 +296,96 @@ function FormContent({
   }, [serviceNowIssueCreateMetadataQuery.data?.data])
 
   useEffect(() => {
-    if (serviceNowTemplateMetaDataQuery.data && serviceNowTemplateMetaDataQuery.data.data) {
+    if (templateResponse && CDS_GET_SERVICENOW_STANDARD_TEMPLATE) {
+      setIsTemplateSectionAvailable(true)
+      const convertedTemplateResponse = templateResponse.map((item: ServiceNowTemplate) => {
+        return {
+          label: item.name,
+          value: item.name
+        }
+      })
+      setTemplates(convertedTemplateResponse)
+      const selectedTemplateName = get(formik, 'values.spec.templateName')
+      if (
+        fieldType === FieldType.CreateFromStandardTemplate &&
+        getMultiTypeFromValue(selectedTemplateName) === MultiTypeInputType.FIXED &&
+        selectedTemplateName.length > 0 &&
+        (serviceNowReadOnlyFieldsQuery?.data?.data || serviceNowReadOnlyFieldsQuery?.error)
+      ) {
+        setFetchingReadonlyFields(true)
+        getServiceNowTemplateMetadataV2Promise({
+          queryParams: {
+            ...commonParams,
+            connectorRef: defaultTo(connectorRefFixedValue?.toString(), ''),
+            ticketType: ticketTypeKeyFixedValue?.toString() || 'change_request',
+            templateType: TEMPLATE_TYPE.STANDARD,
+            templateName: selectedTemplateName,
+            size: 1,
+            page: 0,
+            searchTerm: searchTerm
+          }
+        })
+          .then((response: ResponsePageServiceNowTemplate) => {
+            if (response?.data?.content?.length) {
+              const convertedSelectedTemplateValue = convertTemplateFieldsForDisplay(
+                response?.data?.content?.[0]?.fields || {}
+              )
+              const editableFields = convertedSelectedTemplateValue
+                .filter(
+                  field =>
+                    field.displayValue && !serviceNowReadOnlyFieldsQuery?.data?.data?.includes(field.displayValue)
+                )
+                ?.map(field => {
+                  const editedField: ServiceNowCreateFieldType = get(formik, 'values.spec.fields')?.find(
+                    (specField: ServiceNowCreateFieldType) => specField.name === field.displayValue
+                  )
+                  return {
+                    ...field,
+                    value: defaultTo(editedField?.value, field.value)
+                  }
+                })
+              formik.setFieldValue('spec.templateFields', convertedSelectedTemplateValue)
+              formik.setFieldValue('spec.editableFields', editableFields)
+            } else {
+              formik.setFieldValue('spec.templateFields', [])
+              formik.setFieldValue('spec.editableFields', [])
+            }
+          })
+          .finally(() => {
+            setFetchingReadonlyFields(false)
+          })
+      }
+      if (templateResponse.length > 0 && selectedTemplateName) {
+        const selectedTemplateValue = templateResponse?.find(
+          (item: ServiceNowTemplate) => item.name === selectedTemplateName
+        )
+        if (selectedTemplateValue) {
+          const convertedSelectedTemplateValue = convertTemplateFieldsForDisplay(selectedTemplateValue.fields || {})
+          const editableFields = convertedSelectedTemplateValue.filter(
+            field => field.displayValue && !serviceNowReadOnlyFieldsQuery?.data?.data?.includes(field.displayValue)
+          )
+          formik.setFieldValue('spec.templateFields', convertedSelectedTemplateValue)
+          formik.setFieldValue('spec.editableFields', editableFields)
+        }
+      } else {
+        formik.setFieldValue('spec.templateFields', [])
+        formik.setFieldValue('spec.editableFields', [])
+      }
+    }
+  }, [templateResponse, serviceNowReadOnlyFieldsQuery?.data?.data])
+  // console.log('fetchingReadonlyFields', {
+  //   fetchingReadonlyFields,
+  //   fetchingTemplate,
+  //   loadingRead: serviceNowReadOnlyFieldsQuery?.loading,
+  //   searchTerm
+  // })
+
+  useEffect(() => {
+    if (
+      !CDS_GET_SERVICENOW_STANDARD_TEMPLATE &&
+      serviceNowTemplateMetaDataQuery.data &&
+      serviceNowTemplateMetaDataQuery.data.data
+    ) {
       setIsTemplateSectionAvailable(true)
       if (
         serviceNowTemplateMetaDataQuery.data &&
@@ -233,7 +400,7 @@ function FormContent({
         formik.setFieldValue('spec.templateFields', [])
       }
     }
-  }, [serviceNowTemplateMetaDataQuery.data?.data])
+  }, [serviceNowTemplateMetaDataQuery.data?.data, CDS_GET_SERVICENOW_STANDARD_TEMPLATE])
 
   useEffect(() => {
     // Clear field list to be displayed under dynamic field selector or template section, if fixed ticket type is not chosen
@@ -241,8 +408,10 @@ function FormContent({
       formik.setFieldValue('spec.selectedFields', [])
       formik.setFieldValue('spec.templateFields', [])
       formik.setFieldValue('spec.templateName', '')
+      if (CDS_GET_SERVICENOW_STANDARD_TEMPLATE) {
+        formik.setFieldValue('spec.editableFields', '')
+      }
       setTicketFieldList([])
-      setTemplateName('')
     }
   }, [ticketValueType])
 
@@ -309,6 +478,7 @@ function FormContent({
     (serviceNowTicketTypesQuery?.error?.data as Error)?.message,
     serviceNowTicketTypesQuery?.error?.message
   )
+
   const shouldShowTicketTypesError = !ticketTypesLoading && !isEmpty(ticketTypesFetchError)
 
   const templateErrorString = defaultTo(
@@ -316,7 +486,45 @@ function FormContent({
     serviceNowTemplateMetaDataQuery?.error?.message
   )
 
-  const istemplateErrorString = !serviceNowTemplateMetaDataQuery.loading && !isEmpty(templateErrorString)
+  const istemplateErrorString = CDS_GET_SERVICENOW_STANDARD_TEMPLATE
+    ? !fetchingTemplate && !isEmpty(fetchTemplateError)
+    : !serviceNowTemplateMetaDataQuery.loading && !isEmpty(templateErrorString)
+
+  const serviceItemRenderer = (item: SelectOption, itemProps: IItemRendererProps) => {
+    const { handleClick, index } = itemProps
+    return (
+      <div ref={attachRefToLastElement(defaultTo(index, 0)) ? loadMoreRef : undefined} key={item.label.toString()}>
+        <Menu.Item
+          text={
+            <Layout.Horizontal spacing="small">
+              <Text>{item.label}</Text>
+            </Layout.Horizontal>
+          }
+          onClick={handleClick}
+        />
+      </div>
+    )
+  }
+
+  const itemListRenderer: ItemListRenderer<SelectOption> = itemListProps => (
+    <Menu>
+      {isEmptyContent ? (
+        <Layout.Vertical flex={{ align: 'center-center' }} width={'100%'} height={'100%'}>
+          {getString('pipeline.noTemplateAvailable')}
+          {searchTerm && <Text icon="plus">{searchTerm}</Text>}
+        </Layout.Vertical>
+      ) : (
+        itemListProps.items.map((item, i) => itemListProps.renderItem(item, i))
+      )}
+      {isFetchingTemplateNextTime && (
+        <Container padding={'large'}>
+          <Text icon="loading" iconProps={{ size: 20 }} font={{ align: 'center' }}>
+            {getString('pipeline.fetchNextTemplates')}
+          </Text>
+        </Container>
+      )}
+    </Menu>
+  )
 
   return (
     <React.Fragment>
@@ -448,6 +656,12 @@ function FormContent({
                   resetForm(formik, 'ticketType')
                   setCount(count + 1)
                 }
+                if (
+                  formik.values.spec.fieldType === FieldType.CreateFromStandardTemplate &&
+                  value !== 'change_request'
+                ) {
+                  formik.setFieldValue('spec.fieldType', FieldType.ConfigureFields)
+                }
               }
             }}
           />
@@ -469,17 +683,36 @@ function FormContent({
               label: getString('pipeline.serviceNowCreateStep.fieldType.createFromTemplate'),
               value: FieldType.CreateFromTemplate,
               disabled: !isTemplateSectionAvailable
-            }
+            },
+
+            ...(get(formik, 'values.spec.ticketType') === 'change_request' && CDS_GET_SERVICENOW_STANDARD_TEMPLATE
+              ? [
+                  {
+                    label: getString('pipeline.serviceNowCreateStep.fieldType.createFromStandardTemplate'),
+                    value: FieldType.CreateFromStandardTemplate,
+                    disabled: !isTemplateSectionAvailable
+                  }
+                ]
+              : [])
           ]}
           onChange={event => {
-            formik.setFieldValue(
-              'spec.useServiceNowTemplate',
-              event.currentTarget.value === FieldType.CreateFromTemplate
-            )
+            if (event.currentTarget.value === FieldType.CreateFromTemplate) {
+              formik.setFieldValue('spec.createType', TEMPLATE_TYPE.FORM)
+            } else if (event.currentTarget.value === FieldType.CreateFromStandardTemplate) {
+              formik.setFieldValue('spec.createType', TEMPLATE_TYPE.STANDARD)
+            } else {
+              formik.setFieldValue('spec.useServiceNowTemplate', false)
+            }
+            formik.setFieldValue('spec.templateName', '')
+            formik.setFieldValue('spec.templateFields', [])
+            formik.setFieldValue('spec.selectedFields', [])
+            if (CDS_GET_SERVICENOW_STANDARD_TEMPLATE) {
+              formik.setFieldValue('spec.editableFields', [])
+            }
           }}
         />
         {formik.values.spec.fieldType === FieldType.ConfigureFields && (
-          <div>
+          <div key={formik.values.spec.fieldType}>
             {serviceNowIssueCreateMetadataQuery.loading ? (
               <PageSpinner
                 message={getString('pipeline.serviceNowCreateStep.fetchingFields')}
@@ -592,29 +825,46 @@ function FormContent({
         )}
         {formik.values.spec.fieldType === FieldType.CreateFromTemplate && (
           <div>
-            {serviceNowTemplateMetaDataQuery.loading ? (
-              <PageSpinner
-                message={getString('pipeline.serviceNowCreateStep.fetchingTemplateDetails')}
-                className={css.fetching}
-              />
-            ) : (
-              <>
+            {CDS_GET_SERVICENOW_STANDARD_TEMPLATE ? (
+              <div>
                 <div className={cx(stepCss.formGroup, stepCss.lg)}>
-                  <FormInput.MultiTextInput
+                  <FormInput.MultiTypeInput
+                    selectItems={templates}
                     label={getString('pipeline.serviceNowCreateStep.templateName')}
                     name={`spec.templateName`}
-                    disabled={isApprovalStepFieldDisabled(readonly)}
-                    multiTextInputProps={{
-                      placeholder: getString('pipeline.serviceNowCreateStep.templateNamePlaceholder'),
-                      textProps: {
-                        onBlurCapture: values => {
-                          setTemplateName(values.target.value)
-                          if (values.target.value !== templateName) {
-                            resetForm(formik, 'templateName')
-                          }
+                    key={FieldType.CreateFromTemplate}
+                    placeholder={getString('pipeline.filters.servicePlaceholder')}
+                    useValue
+                    multiTypeInputProps={{
+                      onChange: value => {
+                        const selectedTemplateValue = templateResponse?.find(
+                          (item: ServiceNowTemplate) => item.name === (value as SelectOption)?.value
+                        )
+                        if (selectedTemplateValue) {
+                          formik.setFieldValue(
+                            'spec.templateFields',
+                            convertTemplateFieldsForDisplay(selectedTemplateValue.fields)
+                          )
                         }
                       },
-                      allowableTypes: allowableTypes
+                      onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.build', type),
+                      expressions,
+                      selectProps: {
+                        onQueryChange: query => {
+                          if (query) debouncedSetSearchTerm?.(query)
+                        },
+                        allowCreatingNewItems: true,
+                        items: defaultTo(templates, []),
+                        loadingItems: fetchingTemplate,
+                        itemRenderer: serviceItemRenderer,
+                        itemListRenderer,
+                        noResults: (
+                          <Text lineClamp={1} width={384} margin="small">
+                            {getString('common.filters.noResultsFound')}
+                          </Text>
+                        )
+                      },
+                      allowableTypes
                     }}
                   />
                   {getMultiTypeFromValue(formik.values.spec.templateName) === MultiTypeInputType.RUNTIME && (
@@ -631,7 +881,158 @@ function FormContent({
                 </div>
                 <ServiceNowTemplateFieldsRenderer
                   isError={istemplateErrorString}
-                  errorData={templateErrorString}
+                  errorData={fetchTemplateError}
+                  templateFields={formik.values.spec.templateFields}
+                  templateName={formik.values.spec.templateName}
+                />
+              </div>
+            ) : (
+              <div>
+                {serviceNowTemplateMetaDataQuery.loading ? (
+                  <PageSpinner
+                    message={getString('pipeline.serviceNowCreateStep.fetchingTemplateDetails')}
+                    className={css.fetching}
+                  />
+                ) : (
+                  <>
+                    <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                      <FormInput.MultiTextInput
+                        label={getString('pipeline.serviceNowCreateStep.templateName')}
+                        name={`spec.templateName`}
+                        disabled={isApprovalStepFieldDisabled(readonly)}
+                        multiTextInputProps={{
+                          placeholder: getString('pipeline.serviceNowCreateStep.templateNamePlaceholder'),
+                          textProps: {
+                            onBlurCapture: values => {
+                              setTemplateName(values.target.value)
+                              if (values.target.value !== templateName) {
+                                resetForm(formik, 'templateName')
+                              }
+                            }
+                          },
+                          allowableTypes: allowableTypes
+                        }}
+                      />
+                      {getMultiTypeFromValue(formik.values.spec.templateName) === MultiTypeInputType.RUNTIME && (
+                        <ConfigureOptions
+                          value={formik.values.spec.templateName || ''}
+                          type="String"
+                          variableName="spec.templateName"
+                          showRequiredField={false}
+                          showDefaultField={false}
+                          onChange={value => formik.setFieldValue('spec.templateName', value)}
+                          isReadonly={readonly}
+                        />
+                      )}
+                    </div>
+                    <ServiceNowTemplateFieldsRenderer
+                      isError={istemplateErrorString}
+                      errorData={templateErrorString}
+                      templateFields={formik.values.spec.templateFields}
+                      templateName={formik.values.spec.templateName}
+                    />
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+        {formik.values.spec.fieldType === FieldType.CreateFromStandardTemplate && CDS_GET_SERVICENOW_STANDARD_TEMPLATE && (
+          <div>
+            {fetchingReadonlyFields || fetchingReadonlyFields ? (
+              <PageSpinner
+                message={getString('pipeline.serviceNowCreateStep.fetchingFields')}
+                className={css.fetching}
+              />
+            ) : (
+              <>
+                <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                  <FormInput.MultiTypeInput
+                    selectItems={templates}
+                    label={getString('pipeline.serviceNowCreateStep.templateName')}
+                    name={`spec.templateName`}
+                    key={FieldType.CreateFromStandardTemplate}
+                    placeholder={getString('pipeline.filters.servicePlaceholder')}
+                    useValue
+                    multiTypeInputProps={{
+                      onChange: (value, _valueType, type) => {
+                        if (type === MultiTypeInputType.FIXED) {
+                          setFetchingReadonlyFields(true)
+                          getServiceNowTemplateMetadataV2Promise({
+                            queryParams: {
+                              ...commonParams,
+                              connectorRef: defaultTo(connectorRefFixedValue?.toString(), ''),
+                              ticketType: ticketTypeKeyFixedValue?.toString() || 'change_request',
+                              templateType:
+                                fieldType === FieldType.CreateFromStandardTemplate
+                                  ? TEMPLATE_TYPE.STANDARD
+                                  : TEMPLATE_TYPE.FORM,
+                              templateName: defaultTo((value as SelectOption)?.value, value as any),
+                              size: 1,
+                              page: 0,
+                              searchTerm: searchTerm
+                            }
+                          })
+                            .then((response: ResponsePageServiceNowTemplate) => {
+                              if (response?.data?.content?.length) {
+                                const convertedSelectedTemplateValue = convertTemplateFieldsForDisplay(
+                                  response?.data?.content?.[0]?.fields || {}
+                                )
+                                const editableFields = convertedSelectedTemplateValue.filter(
+                                  field =>
+                                    field.displayValue &&
+                                    !serviceNowReadOnlyFieldsQuery?.data?.data?.includes(field.displayValue)
+                                )
+                                formik.setFieldValue('spec.templateFields', convertedSelectedTemplateValue)
+                                formik.setFieldValue('spec.editableFields', editableFields)
+                              } else {
+                                formik.setFieldValue('spec.templateFields', [])
+                                formik.setFieldValue('spec.editableFields', [])
+                              }
+                            })
+                            .finally(() => {
+                              setFetchingReadonlyFields(false)
+                            })
+                        } else {
+                          setFetchingReadonlyFields(false)
+                          formik.setFieldValue('spec.templateFields', [])
+                          formik.setFieldValue('spec.editableFields', [])
+                        }
+                      },
+                      onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.build', type),
+                      expressions,
+                      selectProps: {
+                        onQueryChange: query => debouncedSetSearchTerm?.(query),
+                        allowCreatingNewItems: true,
+                        items: defaultTo(templates, []),
+                        loadingItems: fetchingTemplate,
+                        itemRenderer: serviceItemRenderer,
+                        // itemListRenderer,
+                        noResults: (
+                          <Text lineClamp={1} width={384} margin="small">
+                            {getString('common.filters.noResultsFound')}
+                          </Text>
+                        )
+                      },
+                      allowableTypes
+                    }}
+                  />
+                  {getMultiTypeFromValue(formik.values.spec.templateName) === MultiTypeInputType.RUNTIME && (
+                    <ConfigureOptions
+                      value={formik.values.spec.templateName || ''}
+                      type="String"
+                      variableName="spec.templateName"
+                      showRequiredField={false}
+                      showDefaultField={false}
+                      onChange={value => formik.setFieldValue('spec.templateName', value)}
+                      isReadonly={readonly}
+                    />
+                  )}
+                </div>
+                <ServiceNowTemplateFieldsRenderer
+                  editableFields={get(formik, 'values.spec.editableFields')}
+                  isError={istemplateErrorString}
+                  errorData={fetchTemplateError}
                   templateFields={formik.values.spec.templateFields}
                   templateName={formik.values.spec.templateName}
                 />
@@ -688,6 +1089,14 @@ function ServiceNowCreateStepMode(
     }
   })
 
+  const serviceNowReadOnlyFieldsQuery = useGetStandardTemplateReadOnlyFields({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      connectorRef: ''
+    }
+  })
+
   return (
     <Formik<ServiceNowCreateData>
       onSubmit={values => {
@@ -705,27 +1114,8 @@ function ServiceNowCreateStepMode(
           connectorRef: ConnectorRefSchema(getString, {
             requiredErrorMsg: getString('pipeline.serviceNowApprovalStep.validations.connectorRef')
           }),
-          ticketType: Yup.string().required(getString('pipeline.serviceNowApprovalStep.validations.ticketType')),
-          templateName: Yup.string().when('useServiceNowTemplate', {
-            is: true,
-            then: Yup.string()
-              .required(getString('pipeline.serviceNowCreateStep.validations.templateName'))
-              .test(
-                'templateNameTest',
-                getString('pipeline.serviceNowCreateStep.validations.validTemplateName'),
-                function () {
-                  return (
-                    // if not fixed then allow saving or
-                    // if fixed then template name should be available from the APi call
-                    // (templateFields indicates the fields fetched
-                    getMultiTypeFromValue(this.parent.templateName) !== MultiTypeInputType.FIXED ||
-                    (this.parent.templateFields?.length > 0 &&
-                      getMultiTypeFromValue(this.parent.templateName) === MultiTypeInputType.FIXED &&
-                      !isEmpty(this.parent.templateName))
-                  )
-                }
-              )
-          })
+          createType: Yup.string(),
+          ticketType: Yup.string().required(getString('pipeline.serviceNowApprovalStep.validations.ticketType'))
         })
       })}
     >
@@ -742,6 +1132,7 @@ function ServiceNowCreateStepMode(
               serviceNowTemplateMetaDataQuery={serviceNowTemplateMetaDataQuery}
               serviceNowTicketTypesQuery={serviceNowTicketTypesV2Query}
               serviceNowIssueCreateMetadataQuery={serviceNowIssueCreateMetadataQuery}
+              serviceNowReadOnlyFieldsQuery={serviceNowReadOnlyFieldsQuery}
             />
           </FormikForm>
         )

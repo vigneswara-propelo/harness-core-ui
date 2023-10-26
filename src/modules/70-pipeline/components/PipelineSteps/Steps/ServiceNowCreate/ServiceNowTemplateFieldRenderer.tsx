@@ -10,43 +10,69 @@ import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } fr
 import { Intent } from '@harness/design-system'
 import type { ServiceNowFieldValueNG } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './ServiceNowCreate.module.scss'
 
 export interface ServiceNowTemplateFieldsRendererProps {
   templateFields?: ServiceNowFieldValueNG[]
+  editableFields?: ServiceNowFieldValueNG[]
   templateName?: string
   errorData?: string
   isError?: boolean
 }
 interface ServiceNowTemplateFieldInterface {
   templateField: ServiceNowFieldValueNG
+  editableField?: ServiceNowFieldValueNG
+  isEditableField?: boolean
   index: number
+  editableFieldIndex?: number
 }
 
-function GetServiceNowTemplateFieldComponent({ templateField, index }: ServiceNowTemplateFieldInterface) {
+function GetServiceNowTemplateFieldComponent({
+  templateField,
+  editableFieldIndex,
+  isEditableField = false
+}: ServiceNowTemplateFieldInterface) {
   return (
     <FormInput.Text
       label={templateField.displayValue}
-      name={`${templateField.displayValue}_${index}`}
+      name={`spec.editableFields[${editableFieldIndex}].value`}
       placeholder={templateField.value}
-      disabled={true}
+      disabled={!isEditableField}
       className={css.deploymentViewMedium}
     />
   )
 }
 
+const isIndexValid = (index: number | undefined): boolean => {
+  if (Number.isInteger(index) && index !== -1) {
+    return true
+  }
+  return false
+}
+
 export function ServiceNowTemplateFieldsRenderer(props: ServiceNowTemplateFieldsRendererProps) {
-  const { templateFields, templateName, errorData, isError = false } = props
+  const { templateFields, templateName, errorData, isError = false, editableFields } = props
   const { getString } = useStrings()
+  const { CDS_GET_SERVICENOW_STANDARD_TEMPLATE } = useFeatureFlags()
   return templateFields && templateFields.length > 0 ? (
     <>
-      {templateFields?.map((selectedField: ServiceNowFieldValueNG, index: number) => (
-        <Layout.Horizontal className={css.alignCenter} key={selectedField.displayValue}>
-          <GetServiceNowTemplateFieldComponent templateField={selectedField} index={index} />
-        </Layout.Horizontal>
-      ))}
+      {templateFields?.map((selectedField: ServiceNowFieldValueNG, index: number) => {
+        const editableFieldIndex = editableFields?.findIndex(field => field.displayValue === selectedField.displayValue)
+        return (
+          <Layout.Horizontal className={css.alignCenter} key={selectedField.displayValue}>
+            <GetServiceNowTemplateFieldComponent
+              templateField={selectedField}
+              index={index}
+              editableFieldIndex={editableFieldIndex}
+              isEditableField={!!selectedField?.displayValue && isIndexValid(editableFieldIndex)}
+            />
+          </Layout.Horizontal>
+        )
+      })}
     </>
-  ) : getMultiTypeFromValue(templateName) !== MultiTypeInputType.FIXED ? null : (
+  ) : getMultiTypeFromValue(templateName) !== MultiTypeInputType.FIXED ||
+    CDS_GET_SERVICENOW_STANDARD_TEMPLATE ? null : (
     <Layout.Horizontal className={css.alignCenter}>
       <Text intent={isError ? Intent.DANGER : Intent.NONE}>
         {isError ? errorData : getString('pipeline.serviceNowCreateStep.noSuchTemplateFound')}

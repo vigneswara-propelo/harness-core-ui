@@ -14,7 +14,9 @@ import type {
   ResponseListServiceNowFieldNG,
   ResponseListServiceNowTemplate,
   ResponseListServiceNowTicketTypeDTO,
+  ResponseListString,
   ResponsePageConnectorResponse,
+  ResponsePageServiceNowTemplate,
   ResponseServiceNowTicketNG,
   ServiceNowFieldSchemaNG
 } from 'services/cd-ng'
@@ -444,6 +446,31 @@ export const mockServiceNowTemplateResponse: UseGetMockData<ResponseListServiceN
       }
     ]
   }
+}
+
+export const mockServiceNowReadonlyFildsResponse: UseGetMockData<ResponseListString> = {
+  loading: false,
+  // eslint-disable-next-line
+  // @ts-ignore
+  refetch: jest.fn(),
+  data: {
+    correlationId: '',
+    status: 'SUCCESS',
+    metaData: null as unknown as undefined,
+    data: ['field1', 'field2', 'field3']
+  }
+}
+
+export const mockServiceNowTemplateMetadataV2: ResponsePageServiceNowTemplate = {
+  status: 'SUCCESS',
+  data: {
+    pageItemCount: 2,
+    pageSize: 100,
+    content: [],
+    pageIndex: 0,
+    empty: false
+  },
+  correlationId: 'b966360a-06b4-4c7a-8509-7d5d6d848548'
 }
 
 export const mockTicketDetailsResponse: UseGetMockData<ResponseServiceNowTicketNG> = {

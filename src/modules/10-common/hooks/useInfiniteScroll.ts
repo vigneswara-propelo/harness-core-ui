@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { defaultTo, isUndefined } from 'lodash-es'
 import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react'
-import { isUndefined } from 'lodash-es'
 
 const DEFAULT_PAGE_SIZE = 10
 
@@ -30,6 +30,7 @@ interface InfiniteScrollProps {
 
   // search term prop to get results with the search term as substring
   searchTerm?: string
+  lazy?: boolean
 }
 
 interface InfiniteScrollReturnProps {
@@ -57,7 +58,7 @@ loadItems
  - Function that accepts a page number/offset/searchTerm variable. It will call the underlying API function with the offset/searchTerm variable
 */
 export const useInfiniteScroll = (props: InfiniteScrollProps): InfiniteScrollReturnProps => {
-  const { getItems, limit = DEFAULT_PAGE_SIZE, searchTerm } = props
+  const { getItems, limit = DEFAULT_PAGE_SIZE, searchTerm, lazy = false } = props
   const [items, setItems] = useState<any>([])
   const [fetching, setFetching] = useState(false)
   const [error, setError] = useState('')
@@ -74,14 +75,14 @@ export const useInfiniteScroll = (props: InfiniteScrollProps): InfiniteScrollRet
       limit
     })
       .then(response => {
+        if (!response) return
         if (response.data) {
           setFetching(false)
           // If the cuurent fetch count exceeds totalItems, set hasMore as false
-          const canFetchMore =
-            response.data.totalItems > response.data.pageIndex * response.data.pageSize + response.data.pageItemCount
-          hasMore.current = canFetchMore
+          const responseContent = defaultTo(response.data.content, response.data)
 
-          const responseContent = response.data.content
+          const canFetchMore = response.data.pageItemCount === limit
+          hasMore.current = canFetchMore && responseContent.length > 0
           setItems((prevItems: any) => {
             if (offsetToFetch.current === 0) {
               return responseContent ? [...responseContent] : []
@@ -157,7 +158,7 @@ export const useInfiniteScroll = (props: InfiniteScrollProps): InfiniteScrollRet
 
   // Just to ensure we don't end up fetching multiple times in the initial load
   useEffect(() => {
-    if (initialPageLoaded.current) {
+    if (initialPageLoaded.current || lazy) {
       return
     }
 

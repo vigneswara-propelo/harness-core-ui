@@ -1725,11 +1725,11 @@ exports[`ServiceNow Update tests Edit Stage - readonly view for Template type: e
             >
               <label
                 class="bp3-label"
-                for="fieldName_0"
+                for="spec.editableFields[undefined].value"
               >
                 <span
                   class="Tooltip--acenter"
-                  data-tooltip-id="serviceNowCreate_fieldName_0"
+                  data-tooltip-id="serviceNowCreate_spec.editableFields[undefined].value"
                 >
                   fieldName
                 </span>
@@ -1748,7 +1748,7 @@ exports[`ServiceNow Update tests Edit Stage - readonly view for Template type: e
                     autocomplete="off"
                     class="bp3-input"
                     disabled=""
-                    name="fieldName_0"
+                    name="spec.editableFields[undefined].value"
                     placeholder="value"
                     type="text"
                     value=""

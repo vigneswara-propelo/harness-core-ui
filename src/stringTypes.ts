@@ -4668,6 +4668,7 @@ export interface StringsMap {
   'pipeline.featureRestriction.unlimitedBuildsRequiredPlan': string
   'pipeline.feedsText': string
   'pipeline.fetchNextServices': string
+  'pipeline.fetchNextTemplates': string
   'pipeline.fieldLabels.commandType': string
   'pipeline.fieldPlaceholders.commandType': string
   'pipeline.fileDetails': string
@@ -5027,6 +5028,7 @@ export interface StringsMap {
   'pipeline.noRuntimeServiceInputsAreRequired': string
   'pipeline.noServiceAvailable': string
   'pipeline.noServicesFound': string
+  'pipeline.noTemplateAvailable': string
   'pipeline.nodes': string
   'pipeline.nodesLabel': string
   'pipeline.notAvailable': string
@@ -5299,6 +5301,7 @@ export interface StringsMap {
   'pipeline.serviceNowCreateStep.fetchingFields': string
   'pipeline.serviceNowCreateStep.fetchingTemplateDetails': string
   'pipeline.serviceNowCreateStep.fieldType.configureFields': string
+  'pipeline.serviceNowCreateStep.fieldType.createFromStandardTemplate': string
   'pipeline.serviceNowCreateStep.fieldType.createFromTemplate': string
   'pipeline.serviceNowCreateStep.noSuchTemplateFound': string
   'pipeline.serviceNowCreateStep.selectFieldListHelp': string

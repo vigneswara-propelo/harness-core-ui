@@ -91,7 +91,7 @@ export function ExecutionListFilterForm<
   const { type, formikProps, isCDEnabled, isCIEnabled, initialValues } = props
   const [searchTerm, setSearchTerm] = useState<string | undefined>()
   const loadMoreRef = useRef(null)
-  const pageSize = useRef(20)
+  const pageSize = useRef(10)
   const queryParams = useMemo(
     () => ({
       accountIdentifier: accountId,
@@ -301,7 +301,7 @@ export function ExecutionListFilterForm<
           key="services"
           placeholder={getString('pipeline.filters.servicePlaceholder')}
           multiSelectProps={{
-            allowCreatingNewItems: false,
+            allowCreatingNewItems: true,
             itemListRenderer,
             itemRender: serviceItemRenderer,
             onQueryChange: query => setSearchTerm(query)

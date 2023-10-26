@@ -69,7 +69,7 @@ describe('ServiceNow Create process form data tests', () => {
       timeout: '10m',
       type: 'ServiceNowCreate',
       spec: {
-        useServiceNowTemplate: false,
+        createType: 'Normal',
         connectorRef: 'conn',
         delegateSelectors: undefined,
         ticketType: {
@@ -135,8 +135,8 @@ describe('ServiceNow Create process form data tests', () => {
       timeout: '10m',
       type: 'ServiceNowCreate',
       spec: {
-        useServiceNowTemplate: false,
         connectorRef: '<+input>',
+        createType: 'Normal',
         delegateSelectors: undefined,
         ticketType: '<+input>',
         fields: [
@@ -179,7 +179,7 @@ describe('ServiceNow Create process form data tests', () => {
       spec: {
         connectorRef: 'conn',
         delegateSelectors: undefined,
-        useServiceNowTemplate: true,
+        createType: 'Form',
         ticketType: { label: 'Incident', value: 'INCIDENT', key: 'INCIDENT' },
         fields: [],
         templateName: 'snowCreateTemplate'

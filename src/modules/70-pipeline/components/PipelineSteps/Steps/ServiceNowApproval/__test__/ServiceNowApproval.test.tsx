@@ -334,7 +334,7 @@ describe('Test ServiceNowApproval Fields autocomplete', () => {
     const step = new ServiceNowApproval() as any
     let list: CompletionItemInterface[]
     list = await step.getTicketTypeListForYaml(ticketTypeRefPath, getYaml(), getParams())
-    expect(list).toHaveLength(3)
+    expect(list).toHaveLength(4)
     expect(list[0].insertText).toBe('INCIDENT')
     list = await step.getTicketTypeListForYaml('invalid path', getYaml(), getParams())
     expect(list).toHaveLength(0)

@@ -235,6 +235,10 @@ export const mockTicketTypesResponse: UseGetMockData<ResponseListServiceNowTicke
       {
         key: 'CHANGE_TASK',
         name: 'CHANGE_TASK'
+      },
+      {
+        key: 'change_request',
+        name: 'change_request'
       }
     ]
   }
@@ -1541,6 +1545,10 @@ export const mockTicketTypesResponseV2: UseGetMockData<ResponseListServiceNowTic
       {
         key: 'CHANGE_TASK',
         name: 'CHANGE_TASK'
+      },
+      {
+        key: 'change_request',
+        name: 'change_request'
       }
     ]
   }
