@@ -149,7 +149,11 @@ const MonitoredService = (props: MonitoredServiceProps) => {
     })
   }
 
-  const createButton = (hasMonitoredServices: boolean, configData?: MonitoredServiceConfig): JSX.Element => {
+  const createButton = (
+    hasMonitoredServices: boolean,
+    configData?: MonitoredServiceConfig,
+    showToggle?: boolean
+  ): JSX.Element => {
     const pathname = getPathNameOnCreateMonitoredService(pathParams, configData, isSettingsRoute)
     {
       const LayoutOrientation = hasMonitoredServices ? Layout.Horizontal : Layout.Vertical
@@ -186,7 +190,7 @@ const MonitoredService = (props: MonitoredServiceProps) => {
               }}
             />
           )}
-          {!config && (
+          {showToggle && !config && (
             <GraphListToggle
               initialView={view}
               selectedView={selectedView}
@@ -212,7 +216,7 @@ const MonitoredService = (props: MonitoredServiceProps) => {
       />
       {shouldShowFiltersAndAddButton(serviceCountData, appliedSearchAndFilter) && (
         <Page.Header
-          title={createButton(Boolean(serviceCountData?.allServicesCount), config)}
+          title={createButton(Boolean(serviceCountData?.allServicesCount), config, true)}
           toolbar={
             <Layout.Horizontal spacing="medium">
               <Container data-name="monitoredServiceSeachContainer">
