@@ -1,4 +1,7 @@
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.8
+# apply latest patches
+RUN microdnf update
+# install nginx
 RUN microdnf module enable nginx:1.20
 RUN microdnf install nginx
 
