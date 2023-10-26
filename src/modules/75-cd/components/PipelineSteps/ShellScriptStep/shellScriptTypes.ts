@@ -9,6 +9,7 @@ import type { SelectOption } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { UseStringsReturn } from 'framework/strings'
 import type { ShellScriptStepInfo, StepElementConfig } from 'services/pipeline-ng'
+import { StepType } from '@modules/70-pipeline/components/PipelineSteps/PipelineStepInterface'
 
 export const scriptInputType: SelectOption[] = [
   { label: 'String', value: 'String' },
@@ -22,7 +23,8 @@ export const shellScriptInputType: SelectOption[] = [
 ]
 
 export const variableSchema = (
-  getString: UseStringsReturn['getString']
+  getString: UseStringsReturn['getString'],
+  type?: string
 ): Yup.NotRequiredArraySchema<
   | {
       name: string
@@ -34,7 +36,11 @@ export const variableSchema = (
   Yup.array().of(
     Yup.object({
       name: Yup.string().required(getString('common.validation.nameIsRequired')),
-      value: Yup.string().optional(),
+      value: Yup.string().when('type', {
+        is: val => val === 'Secret' && type === StepType.SHELLSCRIPT,
+        then: Yup.string().trim().required(getString('common.validation.valueIsRequired')),
+        otherwise: Yup.string().optional()
+      }),
       type: Yup.string().trim().required(getString('common.validation.typeIsRequired'))
     })
   )

@@ -115,8 +115,8 @@ export function ShellScriptWidget(
             })
           })
       }),
-      environmentVariables: variableSchema(getString),
-      outputVariables: variableSchema(getString),
+      environmentVariables: variableSchema(getString, StepType.SHELLSCRIPT),
+      outputVariables: variableSchema(getString, StepType.SHELLSCRIPT),
       executionTarget: Yup.object().when(['onDelegate'], {
         is: onDelegate => {
           return !onDelegate

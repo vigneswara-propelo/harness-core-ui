@@ -8,7 +8,7 @@
 import React from 'react'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { isEmpty, set, get, isArray, defaultTo } from 'lodash-es'
+import { isEmpty, set, get, isArray, defaultTo, merge } from 'lodash-es'
 import * as Yup from 'yup'
 import { FormikErrors, yupToFormErrors } from 'formik'
 import { CompletionItemKind } from 'vscode-languageserver-types'
@@ -155,16 +155,11 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
     }
 
     /* istanbul ignore else */
-    if (
-      (isArray(template?.spec?.environmentVariables) || isArray(template?.spec?.outputVariables)) &&
-      isRequired &&
-      getString
-    ) {
+    if (isArray(template?.spec?.environmentVariables) && isRequired && getString) {
       try {
         const schema = Yup.object().shape({
           spec: Yup.object().shape({
-            environmentVariables: variableSchema(getString),
-            outputVariables: variableSchema(getString)
+            environmentVariables: variableSchema(getString, StepType.SHELLSCRIPT)
           })
         })
         schema.validateSync(data)
@@ -172,8 +167,24 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
         /* istanbul ignore else */
         if (e instanceof Yup.ValidationError) {
           const err = yupToFormErrors(e)
+          merge(errors, err)
+        }
+      }
+    }
 
-          Object.assign(errors, err)
+    if (isArray(template?.spec?.outputVariables) && isRequired && getString) {
+      try {
+        const schema = Yup.object().shape({
+          spec: Yup.object().shape({
+            outputVariables: variableSchema(getString, StepType.SHELLSCRIPT)
+          })
+        })
+        schema.validateSync(data)
+      } catch (e) {
+        /* istanbul ignore else */
+        if (e instanceof Yup.ValidationError) {
+          const err = yupToFormErrors(e)
+          merge(errors, err)
         }
       }
     }
