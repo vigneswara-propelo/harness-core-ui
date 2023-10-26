@@ -6,25 +6,10 @@
  */
 
 import React from 'react'
-import { defaultTo, get, isEmpty, merge, noop, omit } from 'lodash-es'
-import {
-  Layout,
-  NestedAccordionProvider,
-  Text,
-  PageHeader,
-  PageBody,
-  VisualYamlSelectedView as SelectedView,
-  VisualYamlToggle,
-  Popover,
-  Button,
-  ButtonVariation,
-  Container
-} from '@harness/uicore'
-import { FontVariation, Color } from '@harness/design-system'
-import { useHistory, useParams } from 'react-router-dom'
+import { defaultTo, isEmpty, merge, noop, omit } from 'lodash-es'
+import { NestedAccordionProvider, PageBody, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
+import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
-import { Classes, Menu, Position } from '@blueprintjs/core'
-import cx from 'classnames'
 import { flushSync } from 'react-dom'
 import type { InputSetResponse, PipelineConfig, PipelineInfoConfig } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -49,41 +34,29 @@ import type {
   InputSetPathProps,
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
-import routes from '@common/RouteDefinitions'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'
 import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
-import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
 import { parse, stringify, yamlParse } from '@common/utils/YamlHelperMethods'
-import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { InputSetDTO, InputSetType, Pipeline, InputSet } from '@pipeline/utils/types'
 import { InputSetOnCreateUpdate, hasStoreTypeMismatch, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
-import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
-import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import useDiffDialog from '@common/hooks/useDiffDialog'
 import { usePermission } from '@rbac/hooks/usePermission'
-
 import { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { GitProviderOptions } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeGitProviderAndConnector'
 import { withInputSetsOnCreateUpdateSuccess } from '@pipeline/utils/withInputSetsOnCreateUpdateSuccess'
-import GitPopover from '../GitPopover/GitPopover'
 import { FormikInputSetForm } from './FormikInputSetForm'
 import { useSaveInputSet } from './useSaveInputSet'
 import { PipelineVariablesContextProvider } from '../PipelineVariablesContext/PipelineVariablesContext'
-import { OutOfSyncErrorStrip } from '../InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
-import {
-  EntityCachedCopy,
-  EntityCachedCopyHandle
-} from '../PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
-import css from './InputSetForm.module.scss'
+import { InputSetFormHeader } from './InputSetFormHeader'
 
 const getDefaultInputSet = (
   template: PipelineInfoConfig,
@@ -224,7 +197,6 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
   const [selectedView, setSelectedView] = React.useState<SelectedView>(SelectedView.VISUAL)
   const [yamlHandler, setYamlHandler] = React.useState<YamlBuilderHandlerBinding | undefined>()
   const [formErrors, setFormErrors] = React.useState<Record<string, any>>({})
-  const [menuOpen, setMenuOpen] = React.useState(false)
   const [resolvedPipeline, setResolvedPipeline] = React.useState<PipelineInfoConfig | undefined>()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
@@ -336,10 +308,6 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
     setFormErrors,
     onCreateUpdateSuccess
   })
-
-  const handleMenu = (state: boolean): void => {
-    setMenuOpen(state)
-  }
 
   const inputSet: InputSetDTO | InputSetType = React.useMemo(() => {
     if (inputSetUpdateResponse) {
@@ -685,8 +653,6 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
       isGitSyncEnabled={isGitSyncEnabled}
       disableVisualView={disableVisualView}
       inputSetUpdateResponseHandler={inputSetUpdateResponseHandler}
-      menuOpen={menuOpen}
-      handleMenu={handleMenu}
       onBranchChange={branchChangeHandler}
       handleReloadFromCache={handleReloadFromCache}
       openDiffModal={openDiffModal}
@@ -711,8 +677,6 @@ export interface InputSetFormWrapperProps {
   isGitSyncEnabled?: boolean
   disableVisualView: boolean
   inputSetUpdateResponseHandler?: (responseData: InputSetResponse) => void
-  menuOpen: boolean
-  handleMenu: (state: boolean) => void
   onBranchChange?: (branch?: string) => void
   handleReloadFromCache?: (loadFromCache?: boolean) => void
   openDiffModal: any
@@ -734,30 +698,17 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
     isGitSyncEnabled,
     disableVisualView,
     inputSetUpdateResponseHandler,
-    menuOpen,
-    handleMenu,
     onBranchChange,
     handleReloadFromCache = noop,
     onCancel,
-    isFormDirty = false
+    isFormDirty = false,
+    openDiffModal
   } = props
 
-  const history = useHistory()
-  const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } = useParams<
+  const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
   >()
-  const { connectorRef, repoIdentifier, repoName, branch, storeType } = useQueryParams<GitQueryParams>()
-  const { getString } = useStrings()
-  const { updateQueryParams } = useUpdateQueryParams()
-  const inputCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
-
-  function showReloadFromGitoption(): boolean {
-    return Boolean(inputSet?.storeType === StoreType.REMOTE)
-  }
-
-  function handleReloadFromGitClick(): void {
-    inputCachedCopyRef.current?.showConfirmationModal()
-  }
+  const { storeType } = useQueryParams<GitQueryParams>()
 
   const [hasEditPermission] = usePermission(
     {
@@ -785,170 +736,25 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
 
   return (
     <React.Fragment>
-      <GitSyncStoreProvider>
-        <PageHeader
-          className={css.pageHeaderStyles}
-          title={
-            <Layout.Horizontal width="42%">
-              <Text
-                lineClamp={1}
-                color={Color.GREY_800}
-                font={{ weight: 'bold', variation: FontVariation.H4 }}
-                margin={{ right: 'medium' }}
-              >
-                {isEdit
-                  ? getString('inputSets.editTitle', { name: inputSet.name })
-                  : getString('inputSets.newInputSetLabel')}
-              </Text>
-              {isGitSyncEnabled && isEdit && (
-                <GitPopover
-                  data={defaultTo(inputSet.gitDetails, {})}
-                  iconProps={{ margin: { left: 'small', top: 'xsmall' } }}
-                />
-              )}
-              {isEdit && inputSet?.storeType === StoreType.REMOTE && (
-                <Container className={cx(css.gitRemoteDetails, inputSet?.cacheResponse ? '' : css.noCacheDetails)}>
-                  <GitRemoteDetails
-                    connectorRef={inputSet?.connectorRef}
-                    repoName={inputSet?.gitDetails?.repoName}
-                    branch={inputSet?.gitDetails?.branch}
-                    flags={{ borderless: true, showRepo: false, normalInputStyle: true }}
-                    onBranchChange={item => {
-                      flushSync(() => {
-                        updateQueryParams({ inputSetBranch: item?.branch })
-                      })
-                      onBranchChange?.(item?.branch)
-                    }}
-                  />
-
-                  {!loading && (
-                    <EntityCachedCopy
-                      ref={inputCachedCopyRef}
-                      reloadContent={getString('inputSets.inputSetLabel')}
-                      cacheResponse={inputSet?.cacheResponse}
-                      reloadFromCache={handleReloadFromCache}
-                      repo={inputSet?.gitDetails?.repoName}
-                      filePath={inputSet?.gitDetails?.filePath}
-                    />
-                  )}
-                </Container>
-              )}
-              <div className={css.optionBtns}>
-                <VisualYamlToggle
-                  selectedView={selectedView}
-                  onChange={nextMode => {
-                    handleModeSwitch(nextMode)
-                  }}
-                  disableToggle={disableVisualView}
-                  disableToggleReasonIcon={'danger-icon'}
-                  showDisableToggleReason={!hasStoreTypeMismatch(storeType, inputSet?.storeType, isEdit)}
-                />
-              </div>
-
-              <div className={css.reconcileMenu}>
-                {isFormDirty ? (
-                  <>
-                    <Button
-                      variation={ButtonVariation.LINK}
-                      padding={'small'}
-                      className={css.unsavedChanges}
-                      onClick={props.openDiffModal}
-                    >
-                      {getString('unsavedChanges')}
-                    </Button>
-                  </>
-                ) : null}
-                <Button
-                  variation={ButtonVariation.PRIMARY}
-                  type="submit"
-                  disabled={!isEditable}
-                  text={getString('save')}
-                  onClick={async e => {
-                    e.preventDefault()
-                    handleSaveInputSetForm()
-                  }}
-                />
-                <Button
-                  variation={ButtonVariation.TERTIARY}
-                  onClick={onCancel || history.goBack}
-                  text={getString('cancel')}
-                  style={{ marginLeft: '10px' }}
-                />
-
-                <Popover
-                  className={cx(Classes.DARK)}
-                  position={Position.LEFT}
-                  isOpen={menuOpen}
-                  onInteraction={nextOpenState => {
-                    handleMenu(nextOpenState)
-                  }}
-                >
-                  <Button
-                    variation={ButtonVariation.ICON}
-                    icon="Options"
-                    aria-label="input set menu actions"
-                    onClick={() => handleMenu(true)}
-                  />
-                  <Menu style={{ backgroundColor: 'unset' }}>
-                    <OutOfSyncErrorStrip
-                      inputSet={inputSet}
-                      pipelineGitDetails={get(pipeline, 'data.gitDetails')}
-                      fromInputSetForm
-                      inputSetUpdateResponseHandler={inputSetUpdateResponseHandler}
-                      closeReconcileMenu={() => handleMenu(false)}
-                    />
-
-                    {showReloadFromGitoption() ? (
-                      <RbacMenuItem
-                        icon="repeat"
-                        text={getString('common.reloadFromGit')}
-                        onClick={handleReloadFromGitClick}
-                        permission={{
-                          resourceScope: {
-                            accountIdentifier: accountId,
-                            orgIdentifier,
-                            projectIdentifier
-                          },
-                          resource: {
-                            resourceType: ResourceType.PIPELINE,
-                            resourceIdentifier: inputSet?.identifier
-                          },
-                          permission: PermissionIdentifier.VIEW_PIPELINE
-                        }}
-                      />
-                    ) : null}
-                  </Menu>
-                </Popover>
-              </div>
-            </Layout.Horizontal>
-          }
-          breadcrumbs={
-            <NGBreadcrumbs
-              links={[
-                {
-                  url: routes.toPipelines({ orgIdentifier, projectIdentifier, accountId, module }),
-                  label: getString('pipelines')
-                },
-                {
-                  url: routes.toInputSetList({
-                    orgIdentifier,
-                    projectIdentifier,
-                    accountId,
-                    pipelineIdentifier,
-                    module,
-                    connectorRef,
-                    repoIdentifier: isGitSyncEnabled ? pipeline?.data?.gitDetails?.repoIdentifier : repoIdentifier,
-                    repoName,
-                    branch: isGitSyncEnabled ? pipeline?.data?.gitDetails?.branch : branch,
-                    storeType
-                  }),
-                  label: defaultTo(parse<Pipeline>(defaultTo(pipeline?.data?.yamlPipeline, ''))?.pipeline.name, '')
-                }
-              ]}
-            />
-          }
-        />
-      </GitSyncStoreProvider>
+      <InputSetFormHeader
+        isEditable={isEditable}
+        disableVisualView={disableVisualView}
+        handleModeSwitch={handleModeSwitch}
+        handleReloadFromCache={handleReloadFromCache}
+        handleSaveInputSetForm={handleSaveInputSetForm}
+        inputSet={inputSet}
+        isEdit={isEdit}
+        isFormDirty={isFormDirty}
+        isGitSyncEnabled={isGitSyncEnabled}
+        loading={loading}
+        openDiffModal={openDiffModal}
+        selectedView={selectedView}
+        inputSetUpdateResponseHandler={inputSetUpdateResponseHandler}
+        onBranchChange={onBranchChange}
+        onCancel={onCancel}
+        pipelineGitDetails={pipeline?.data?.gitDetails}
+        pipelineName={defaultTo(parse<Pipeline>(defaultTo(pipeline?.data?.yamlPipeline, ''))?.pipeline.name, '')}
+      />
       <PageBody loading={loading}>{children}</PageBody>
     </React.Fragment>
   )
