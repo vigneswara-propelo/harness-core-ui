@@ -1,2 +1,3 @@
 DOCKER_FILE_PATH: /harness/harness-core-ui/DockerfileMultistage
 HELM_CHART_SOURCE_DIRECTORY: harness-core-ui/chart
+VERSION_FILE: harness-core-ui/package.json
