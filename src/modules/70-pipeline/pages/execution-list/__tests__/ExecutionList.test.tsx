@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { render, RenderResult, screen, waitFor, within } from '@testing-library/react'
+import { getByText, render, RenderResult, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
@@ -13,6 +13,7 @@ import routes from '@common/RouteDefinitions'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
+import * as infiniteScrollHook from '@common/hooks/useInfiniteScroll'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import executionList from '@pipeline/pages/execution-list/__tests__/mocks/execution-list.json'
 import filters from '@pipeline/pages/execution-list/__tests__/mocks/filters.json'
@@ -184,6 +185,19 @@ jest.mock('services/gitops', () => ({
   }))
 }))
 
+jest.mock('@common/hooks/useInfiniteScroll', () => ({
+  useInfiniteScroll: jest.fn().mockReturnValue({
+    items: [],
+    error: 'someerror',
+    fetching: false,
+    attachRefToLastElement: jest.fn(),
+    hasMore: { current: false },
+    loadItems: jest.fn(),
+    offsetToFetch: { current: 0 },
+    reset: jest.fn()
+  })
+}))
+
 const commonRequest = (): any => ({
   body: null,
   queryParamStringifyOptions: { arrayFormat: 'repeat' },
@@ -272,6 +286,40 @@ describe('Execution List', () => {
         triggerType: 'SCHEDULER_CRON'
       } as any)
     )
+  })
+
+  test('Should not have saved filters visible in the dropdown', async () => {
+    const { findByText } = renderExecutionPage()
+
+    const savedFilterDropDown = await findByText('filters.selectFilter')
+    expect(savedFilterDropDown).toBeInTheDocument()
+
+    await userEvent.click(savedFilterDropDown)
+    const filterPopver = findPopoverContainer()
+    expect(filterPopver).toBeDefined()
+    expect(getByText(filterPopver!, 'common.noFiltersAvailable')).toBeInTheDocument()
+  })
+
+  test('Should have saved filters visible in the dropdown', async () => {
+    jest.spyOn(infiniteScrollHook, 'useInfiniteScroll').mockReturnValue({
+      items: filters.data.content,
+      error: 'someerror',
+      fetching: false,
+      attachRefToLastElement: jest.fn(),
+      hasMore: { current: false },
+      loadItems: jest.fn(),
+      offsetToFetch: { current: 0 },
+      reset: jest.fn()
+    })
+    const { findByText } = renderExecutionPage()
+
+    const savedFilterDropDown = await findByText('filters.selectFilter')
+    expect(savedFilterDropDown).toBeInTheDocument()
+
+    await userEvent.click(savedFilterDropDown)
+    const filterPopver = findPopoverContainer()
+    expect(filterPopver).toBeDefined()
+    expect(getByText(filterPopver!, filters.data.content[0].name)).toBeInTheDocument()
   })
 
   test('should be able to toggle stage view with matrix stages', async () => {

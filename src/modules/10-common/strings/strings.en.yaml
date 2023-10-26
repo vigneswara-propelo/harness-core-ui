@@ -1724,4 +1724,6 @@ scopeSwitchDialog:
     subtitle: 'You have selected to view {{pageName}} so we will switch your scope to the {{targetScope}} level to view more details.'
 creditsExpiresToolltip: This date reflects the nearest upcoming expiration for an active credit subscription.
 node: Node
+noFiltersAvailable: No filters available
+fetchNextFilters: Fetching more filters
 adminSettingsLabel: Admin Settings

@@ -6,7 +6,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Layout, SelectOption } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
@@ -15,7 +15,9 @@ import * as Yup from 'yup'
 import type { FilterDataInterface, FilterInterface } from '@common/components/Filter/Constants'
 import { Filter, FilterRef } from '@common/components/Filter/Filter'
 import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterCRUD'
-import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
+import FilterSelector, {
+  customRenderersForInfiniteScroll
+} from '@common/components/Filter/FilterSelector/FilterSelector'
 import { isObjectEmpty, UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
 import { StringUtils, useToaster } from '@common/exports'
 import { useBooleanStatus, useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
@@ -33,8 +35,15 @@ import {
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import { useGetEnvironmentListV2, useGetServiceDefinitionTypes } from 'services/cd-ng'
-import type { FilterDTO, PipelineFilterProperties } from 'services/pipeline-ng'
-import { useDeleteFilter, useGetFilterList, usePostFilter, useUpdateFilter } from 'services/pipeline-ng'
+import {
+  FilterDTO,
+  GetFilterListQueryParams,
+  PipelineFilterProperties,
+  getFilterListPromise,
+  useDeleteFilter,
+  usePostFilter,
+  useUpdateFilter
+} from 'services/pipeline-ng'
 import { killEvent } from '@common/utils/eventUtils'
 import {
   useFilterWithValidFieldsWithMetaInfo,
@@ -43,6 +52,7 @@ import {
 import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDActions, Category } from '@common/constants/TrackingConstants'
+import { useInfiniteScroll } from '@modules/10-common/hooks/useInfiniteScroll'
 import { ExecutionListFilterForm } from '../../execution-list/ExecutionListFilterForm/ExecutionListFilterForm'
 import type {
   PipelineListPagePathParams,
@@ -101,16 +111,59 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
   const { mutate: deleteFilter, loading: isDeleteFilterLoading } = useDeleteFilter({
     queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier, type: 'PipelineSetup' }
   })
+
+  const loadMoreRef = useRef(null)
+  const pageSize = useRef(100)
+  const [isFetchingFilterListNextTime, setIsFetchingFilterListNextTime] = useState(true)
+
+  const filterListQueryParams: GetFilterListQueryParams = useMemo(
+    () => ({
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      type: 'PipelineSetup'
+    }),
+    [accountId, orgIdentifier, projectIdentifier]
+  )
+
   const {
-    data: filterListData,
-    loading: isFilterListLoading,
-    refetch: refetchFilterList
-  } = useGetFilterList({
-    queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier, type: 'PipelineSetup' },
-    lazy: !filterDrawerOpenedRef.current && !queryParams.filterIdentifier
+    items: filterList,
+    fetching: isFilterListLoading,
+    error: filterListError,
+    attachRefToLastElement,
+    offsetToFetch,
+    reset: resetList
+  } = useInfiniteScroll({
+    getItems: options => {
+      return getFilterListPromise({
+        queryParams: { ...filterListQueryParams, pageSize: options.limit, pageIndex: options.offset }
+      })
+    },
+    limit: pageSize.current,
+    loadMoreRef
   })
 
   /**End Data hooks */
+
+  const refetchFilterList = async () => resetList()
+
+  useEffect(() => {
+    setIsFetchingFilterListNextTime(isFilterListLoading && offsetToFetch.current > 0)
+  }, [isFilterListLoading, offsetToFetch.current])
+
+  const isEmptyContent = useMemo(() => {
+    return !isFilterListLoading && !filterListError && isEmpty(filterList)
+  }, [isFilterListLoading, filterListError, filterList])
+
+  const { itemRenderer, itemListRenderer } = customRenderersForInfiniteScroll({
+    attachRefToLastElement,
+    isEmptyContent,
+    isFetchingFilterListNextTime,
+    isFilterListLoading,
+    loadMoreRef,
+    offsetToFetch,
+    getString
+  })
 
   const deploymentTypeSelectOptions = useMemo(() => {
     const options: SelectOption[] =
@@ -122,8 +175,6 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
         })) || ([] as SelectOption[])
     return options
   }, [deploymentTypeResponse])
-
-  const filterList = filterListData?.data?.content
 
   useEffect(() => {
     onFilterListUpdate(filterList)
@@ -312,6 +363,8 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
         onFilterSelect={handleFilterSelection}
         fieldToLabelMapping={fieldToLabelMapping}
         filterWithValidFields={filterWithValidFieldsWithMetaInfo}
+        itemListRenderer={itemListRenderer}
+        itemRenderer={itemRenderer}
       />
       <Filter<PipelineFormType, FilterDTO>
         isOpen={isFiltersDrawerOpen}

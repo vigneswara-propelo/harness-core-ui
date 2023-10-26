@@ -160,6 +160,19 @@ jest.mock('services/cd-ng-rq', () => ({
   })
 }))
 
+jest.mock('@common/hooks/useInfiniteScroll', () => ({
+  useInfiniteScroll: jest.fn().mockReturnValue({
+    items: [],
+    error: 'someerror',
+    fetching: false,
+    attachRefToLastElement: jest.fn(),
+    hasMore: { current: false },
+    loadItems: jest.fn(),
+    offsetToFetch: { current: 0 },
+    reset: jest.fn()
+  })
+}))
+
 jest.mock('services/template-ng', () => ({
   useGetYamlWithTemplateRefsResolved: jest.fn(() => ({}))
 }))

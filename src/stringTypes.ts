@@ -420,6 +420,7 @@ export interface StringsMap {
   'common.feature.upgradeRequired.requiredPlans': string
   'common.feature.upgradeRequired.title': string
   'common.featureComingSoon': string
+  'common.fetchNextFilters': string
   'common.fetchingBranches': string
   'common.ffProxy': string
   'common.file': string
@@ -786,6 +787,7 @@ export interface StringsMap {
   'common.noDelegateForTask': string
   'common.noDelegateLogs': string
   'common.noDeployments': string
+  'common.noFiltersAvailable': string
   'common.noInfo': string
   'common.noNotifications': string
   'common.noPluginInputsRequired': string

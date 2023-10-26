@@ -10,6 +10,7 @@ declare const styles: {
   readonly fieldCount: string
   readonly filterButtonContainer: string
   readonly filterSelector: string
+  readonly menuItem: string
   readonly ngFilter: string
   readonly summaryPopover: string
 }

@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { PopoverInteractionKind, Position } from '@blueprintjs/core'
-import { truncate } from 'lodash-es'
-import { SelectOption, Layout, Popover, Button, DropDown } from '@harness/uicore'
-import { useStrings } from 'framework/strings'
+import { Menu, PopoverInteractionKind, Position, Spinner } from '@blueprintjs/core'
+import { defaultTo, truncate } from 'lodash-es'
+import { SelectOption, Layout, Popover, Button, DropDown, Container, Text } from '@harness/uicore'
+import { IItemRendererProps, ItemListRenderer, ItemRenderer } from '@blueprintjs/select'
+import { Color, FontVariation } from '@harness/design-system'
+import { UseStringsReturn, useStrings } from 'framework/strings'
 import { getFilterSummary, MAX_FILTER_NAME_LENGTH, getFilterSize } from '@common/components/Filter/utils/FilterUtils'
 import type { FilterInterface } from '../Constants'
 
@@ -25,6 +27,75 @@ interface FilterSelectorProps<T> {
   filterWithValidFields: {
     [key: string]: string
   }
+  itemRenderer?: ItemRenderer<SelectOption>
+  itemListRenderer?: ItemListRenderer<SelectOption>
+}
+
+interface customRenderProps {
+  attachRefToLastElement: (index: number) => boolean
+  loadMoreRef: React.MutableRefObject<null>
+  isFilterListLoading: boolean
+  offsetToFetch: React.MutableRefObject<number>
+  isEmptyContent: boolean
+  isFetchingFilterListNextTime: boolean
+  getString: UseStringsReturn['getString']
+}
+
+export const customRenderersForInfiniteScroll = (
+  props: customRenderProps
+): {
+  itemRenderer: (item: SelectOption, itemProps: IItemRendererProps) => JSX.Element
+  itemListRenderer: ItemListRenderer<SelectOption>
+} => {
+  const {
+    attachRefToLastElement,
+    loadMoreRef,
+    isEmptyContent,
+    isFetchingFilterListNextTime,
+    isFilterListLoading,
+    offsetToFetch,
+    getString
+  } = props
+  const itemRenderer = (item: SelectOption, itemProps: IItemRendererProps): JSX.Element => {
+    const { handleClick, index, modifiers } = itemProps
+    return (
+      <div ref={attachRefToLastElement(defaultTo(index, 0)) ? loadMoreRef : undefined} key={item.label.toString()}>
+        <Menu.Item text={item.label} onClick={handleClick} className={css.menuItem} {...modifiers} />
+      </div>
+    )
+  }
+
+  const itemListRenderer: ItemListRenderer<SelectOption> = itemListProps => {
+    return (
+      <Menu>
+        {isFilterListLoading && offsetToFetch.current === 0 ? (
+          <Container padding={'small'}>
+            <Spinner size={Spinner.SIZE_SMALL} />
+          </Container>
+        ) : isEmptyContent || !itemListProps.items.length ? (
+          <Layout.Vertical
+            flex={{ align: 'center-center' }}
+            font={{ variation: FontVariation.BODY }}
+            color={Color.GREY_400}
+            padding={'xsmall'}
+          >
+            {getString('common.noFiltersAvailable')}
+          </Layout.Vertical>
+        ) : (
+          itemListProps.items.map((item, i) => itemListProps.renderItem(item, i))
+        )}
+        {isFetchingFilterListNextTime && (
+          <Container padding={'medium'}>
+            <Text icon="loading" iconProps={{ size: 20 }} font={{ align: 'center' }}>
+              {getString('common.fetchNextFilters')}
+            </Text>
+          </Container>
+        )}
+      </Menu>
+    )
+  }
+
+  return { itemRenderer, itemListRenderer }
 }
 
 export default function FilterSelector<T extends FilterInterface>(props: FilterSelectorProps<T>): React.ReactElement {
@@ -35,9 +106,12 @@ export default function FilterSelector<T extends FilterInterface>(props: FilterS
     appliedFilter,
     fieldToLabelMapping,
     filterWithValidFields,
-    refetchFilters
+    refetchFilters,
+    itemListRenderer,
+    itemRenderer
   } = props
   const { getString } = useStrings()
+  const customRenderers = !!itemListRenderer && !!itemRenderer ? { itemListRenderer, itemRenderer } : {}
 
   const renderFilterBtn = React.useCallback(
     (): JSX.Element => (
@@ -82,6 +156,7 @@ export default function FilterSelector<T extends FilterInterface>(props: FilterS
         minWidth={220}
         usePortal={true}
         addClearBtn={true}
+        {...customRenderers}
       />
       <div className={css.filterButtonContainer}>
         {fieldCountInAppliedFilter ? (

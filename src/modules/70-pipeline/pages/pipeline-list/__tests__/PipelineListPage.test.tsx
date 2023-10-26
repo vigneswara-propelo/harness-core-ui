@@ -119,6 +119,19 @@ jest.mock('@pipeline/components/RunPipelineModal/useRunPipelineModal', () => ({
   })
 }))
 
+jest.mock('@common/hooks/useInfiniteScroll', () => ({
+  useInfiniteScroll: jest.fn().mockReturnValue({
+    items: [],
+    error: 'someerror',
+    fetching: false,
+    attachRefToLastElement: jest.fn(),
+    hasMore: { current: false },
+    loadItems: jest.fn(),
+    offsetToFetch: { current: 0 },
+    reset: jest.fn()
+  })
+}))
+
 const getModuleParams = (module = 'cd') => ({
   accountId: 'accountId',
   orgIdentifier: 'orgIdentifier',

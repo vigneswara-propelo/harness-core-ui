@@ -6,7 +6,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Layout, MultiSelectOption, SelectOption, useToaster } from '@harness/uicore'
 import * as Yup from 'yup'
@@ -18,15 +18,18 @@ import {
   usePostFilter,
   useUpdateFilter,
   useDeleteFilter,
-  useGetFilterList,
   FilterDTO,
   PipelineExecutionFilterProperties,
-  useGetTriggerListForTarget
+  useGetTriggerListForTarget,
+  GetFilterListQueryParams,
+  getFilterListPromise
 } from 'services/pipeline-ng'
 import { useGetEnvironmentListV2, useGetServiceDefinitionTypes } from 'services/cd-ng'
 import { Servicev1Application, useApplicationServiceListApps } from 'services/gitops'
 import { Filter, FilterRef } from '@common/components/Filter/Filter'
-import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
+import FilterSelector, {
+  customRenderersForInfiniteScroll
+} from '@common/components/Filter/FilterSelector/FilterSelector'
 import type { FilterInterface, FilterDataInterface } from '@common/components/Filter/Constants'
 import { useBooleanStatus, useMutateAsGet, useUpdateQueryParams } from '@common/hooks'
 import type { PipelineType, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
@@ -52,6 +55,7 @@ import {
 import { StringUtils } from '@common/exports'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDActions, Category } from '@common/constants/TrackingConstants'
+import { useInfiniteScroll } from '@modules/10-common/hooks/useInfiniteScroll'
 import type { ExecutionListPageQueryParams } from '../types'
 import { ExecutionListFilterForm } from '../ExecutionListFilterForm/ExecutionListFilterForm'
 import { useExecutionListQueryParams } from '../utils/executionListUtil'
@@ -150,20 +154,58 @@ export function ExecutionListFilter(): React.ReactElement {
       type: 'PipelineExecution'
     }
   })
-  const {
-    data: filterListData,
-    loading: isFilterListLoading,
-    refetch: refetchFilterList
-  } = useGetFilterList({
-    queryParams: {
+
+  const loadMoreRef = useRef(null)
+  const pageSize = useRef(100)
+  const [isFetchingFilterListNextTime, setIsFetchingFilterListNextTime] = useState(true)
+
+  const filterListQueryParams: GetFilterListQueryParams = useMemo(
+    () => ({
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
       type: 'PipelineExecution'
+    }),
+    [accountId, orgIdentifier, projectIdentifier]
+  )
+
+  const {
+    items: filterList,
+    fetching: isFilterListLoading,
+    error: filterListError,
+    attachRefToLastElement,
+    offsetToFetch,
+    reset: resetList
+  } = useInfiniteScroll({
+    getItems: options => {
+      return getFilterListPromise({
+        queryParams: { ...filterListQueryParams, pageSize: options.limit, pageIndex: options.offset }
+      })
     },
-    lazy: !filterDrawerOpenedRef.current && !queryParams.filterIdentifier
+    limit: pageSize.current,
+    loadMoreRef
   })
   /**End Data hooks */
+
+  const refetchFilterList = async () => resetList()
+
+  useEffect(() => {
+    setIsFetchingFilterListNextTime(isFilterListLoading && offsetToFetch.current > 0)
+  }, [isFilterListLoading, offsetToFetch.current])
+
+  const isEmptyContent = useMemo(() => {
+    return !isFilterListLoading && !filterListError && isEmpty(filterList)
+  }, [isFilterListLoading, filterListError, filterList])
+
+  const { itemRenderer, itemListRenderer } = customRenderersForInfiniteScroll({
+    attachRefToLastElement,
+    isEmptyContent,
+    isFetchingFilterListNextTime,
+    isFilterListLoading,
+    loadMoreRef,
+    offsetToFetch,
+    getString
+  })
 
   const deploymentTypeSelectOptions = useMemo(() => {
     const options: SelectOption[] =
@@ -177,7 +219,6 @@ export function ExecutionListFilter(): React.ReactElement {
     return options
   }, [deploymentTypeResponse?.data])
 
-  const filterList = filterListData?.data?.content
   const isMetaDataLoading = isDeploymentTypesLoading || isEnvironmentsLoading
   const isFilterCrudLoading =
     isCreateFilterLoading || isUpdateFilterLoading || isDeleteFilterLoading || isFilterListLoading
@@ -326,6 +367,8 @@ export function ExecutionListFilter(): React.ReactElement {
         onFilterSelect={handleFilterSelection}
         fieldToLabelMapping={fieldToLabelMapping}
         filterWithValidFields={filterWithValidFieldsWithMetaInfo}
+        itemListRenderer={itemListRenderer}
+        itemRenderer={itemRenderer}
       />
       <Filter<PipelineExecutionFormType, FilterDTO>
         isOpen={isFiltersDrawerOpen}
