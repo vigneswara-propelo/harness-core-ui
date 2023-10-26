@@ -10,7 +10,9 @@ import type {
   useCreateEnvironment,
   useDeleteEnvironmentV2,
   useGetEnvironment,
-  useGetEnvironmentListForProject
+  useGetEnvironmentListForProject,
+  useGetOrganizationAggregateDTOList,
+  useGetOrganizationList
 } from 'services/cd-ng'
 import type { useConfirmAction, useLocalStorage, useQueryParams } from '@common/hooks'
 import type { useQueryParamsState } from '@common/hooks/useQueryParamsState'
@@ -39,6 +41,8 @@ export interface FFCustomMicroFrontendProps {
     useCDDeleteEnvironment: typeof useDeleteEnvironmentV2
     useCDGetEnvironment: typeof useGetEnvironment
     useCDGetEnvironmentListForProject: typeof useGetEnvironmentListForProject
+    useCDGetOrganizationAggregateDTOList: typeof useGetOrganizationAggregateDTOList
+    useCDGetOrganizationList: typeof useGetOrganizationList
   }
   customHooks: {
     useActiveEnvironment: typeof useActiveEnvironment
