@@ -25,7 +25,7 @@ jest.mock('services/cd-ng', () => ({
   })
 }))
 
-describe('Secret Details', () => {
+describe('Secret Details Home Page', () => {
   test('render for data', async () => {
     const { container } = render(
       <TestWrapper

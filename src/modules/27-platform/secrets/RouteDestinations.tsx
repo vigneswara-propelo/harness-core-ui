@@ -30,6 +30,7 @@ import { String } from 'framework/strings'
 import SecretResourceRenderer from '@secrets/components/SecretResourceRenderer/SecretResourceRenderer'
 import { AccountSideNavProps } from '@common/RouteDestinations'
 import type { AuditEventData, ResourceDTO } from 'services/audit'
+import SecretRuntimeUsage from '@common/pages/entityUsage/views/RuntimeUsageView/SecretRuntimeUsage'
 
 RbacFactory.registerResourceTypeHandler(ResourceType.SECRET, {
   icon: 'res-secrets',
@@ -118,6 +119,7 @@ export default (
         <SecretDetails />
       </SecretDetailsHomePage>
     </RouteWithLayout>
+
     <RouteWithLayout
       sidebarProps={AccountSideNavProps}
       path={routesV1.toSecretDetailsReferences({
@@ -184,6 +186,35 @@ export const SecretRouteDestinations: React.FC<{
       })}
     >
       <RedirectToSecretDetailHome />
+    </RouteWithLayout>
+    <RouteWithLayout
+      sidebarProps={AccountSideNavProps}
+      path={routesV1.toSecretDetailsRuntimeUsage({
+        ...accountPathProps,
+        ...secretPathProps
+      })}
+      pageName={PAGE_NAME.SecretRuntimeUsage}
+      exact
+    >
+      <SecretDetailsHomePage>
+        <SecretRuntimeUsage />
+      </SecretDetailsHomePage>
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={sidebarProps}
+      path={routesV1.toSecretDetailsRuntimeUsage({
+        ...accountPathProps,
+        ...projectPathProps,
+        ...secretPathProps,
+        ...moduleParams
+      })}
+      pageName={PAGE_NAME.SecretRuntimeUsage}
+    >
+      <SecretDetailsHomePage>
+        <SecretDetailsHomePage />
+      </SecretDetailsHomePage>
     </RouteWithLayout>
     <RouteWithLayout
       exact

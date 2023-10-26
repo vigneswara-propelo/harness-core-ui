@@ -87,8 +87,8 @@ triggerConfigurationPanel:
   title: 'Trigger Configuration: On New Webhook'
   listenOnNewWebhook: 'Listen on New Webhook'
   payloadType: 'Payload Type'
-  event: 'Event'
   actions: Actions
+  event: '{{ $.common.secret.event }}'
   anyActions: Any Actions
   autoAbortPush: 'If a branch is updated, Harness will automatically cancel active builds for the same branch if invoked by the same Trigger.'
   autoAbortPR: 'If a PR is updated, Harness will automatically cancel active builds for the same PR if invoked by the same Trigger.'

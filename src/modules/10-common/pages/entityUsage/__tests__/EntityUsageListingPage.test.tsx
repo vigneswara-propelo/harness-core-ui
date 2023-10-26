@@ -6,7 +6,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 
 import EntityUsageListingPage from '../EntityUsageListingPage'
 
-import referencedDataWithDetails from './entity-usage-connector-data.json'
+import referencedDataWithDetails from './mocks/entity-usage-connector-data.json'
 
 describe('Entity Usage Listing Page', () => {
   test('should show spinner when loading', () => {

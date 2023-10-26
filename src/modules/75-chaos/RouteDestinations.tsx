@@ -14,7 +14,7 @@ import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import routesV1 from '@common/RouteDefinitions'
 import routesV2 from '@common/RouteDefinitionsV2'
 import { RouteWithLayout } from '@common/router'
-import { NAV_MODE, accountPathProps, projectPathProps } from '@common/utils/routeUtils'
+import { NAV_MODE, accountPathProps, projectPathProps, secretPathProps } from '@common/utils/routeUtils'
 import { String as LocaleString } from 'framework/strings'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
@@ -24,6 +24,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { ConnectorReferenceField } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { SecretRouteDestinations } from '@secrets/RouteDestinations'
+import SecretDetailsHomePage from '@secrets/pages/secretDetailsHomePage/SecretDetailsHomePage'
 import PipelineStudioFactory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import type { AuditEventData, ResourceDTO } from 'services/audit'
@@ -45,6 +46,7 @@ import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestina
 import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import SecretRuntimeUsage from '@common/pages/entityUsage/views/RuntimeUsageView/SecretRuntimeUsage'
 import ChaosHomePage from './pages/home/ChaosHomePage'
 import type { ChaosCustomMicroFrontendProps } from './interfaces/Chaos.types'
 import ChaosSideNav from './components/ChaosSideNav/ChaosSideNav'
@@ -343,7 +345,22 @@ export default function ChaosRoutes(): React.ReactElement {
       >
         <ChaosHomePage />
       </RouteWithLayout>
-
+      <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
+        exact
+        sidebarProps={ChaosSideNavProps}
+        path={routesV1.toSecretDetailsRuntimeUsage({
+          ...accountPathProps,
+          ...projectPathProps,
+          ...secretPathProps,
+          ...chaosModuleParams
+        })}
+        pageName={PAGE_NAME.SecretRuntimeUsage}
+      >
+        <SecretDetailsHomePage>
+          <SecretRuntimeUsage />
+        </SecretDetailsHomePage>
+      </RouteWithLayout>
       <RouteWithLayout
         layout={MinimalLayout}
         path={routesV1.toModuleTrialHome({ ...accountPathProps, module: 'chaos' })}

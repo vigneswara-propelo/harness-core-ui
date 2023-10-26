@@ -1072,6 +1072,7 @@ export interface StringsMap {
   'common.role': string
   'common.roleAssignmentLabel': string
   'common.rolling': string
+  'common.runtimeusage': string
   'common.saveAndClose': string
   'common.saveAsTemplate': string
   'common.savedSuccessfully': string
@@ -1127,6 +1128,10 @@ export interface StringsMap {
   'common.searchOther': string
   'common.searchPlaceholder': string
   'common.seconds': string
+  'common.secret.event': string
+  'common.secret.noSecretRuntimeUsageData': string
+  'common.secret.noSecretRuntimeUsageOnQuery': string
+  'common.secret.timestamp': string
   'common.secretKey': string
   'common.secrets': string
   'common.seeAdvancedOptions': string

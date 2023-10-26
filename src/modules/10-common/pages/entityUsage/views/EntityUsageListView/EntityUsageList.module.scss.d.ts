@@ -7,9 +7,12 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly dataContainer: string
   readonly gitText: string
   readonly link: string
   readonly overflow: string
+  readonly scopeDropdown: string
+  readonly secretRuntimeUsageHeader: string
   readonly table: string
   readonly tableWithNoSpace: string
   readonly tableWithSpace: string

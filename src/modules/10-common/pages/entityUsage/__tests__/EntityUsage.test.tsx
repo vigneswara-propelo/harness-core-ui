@@ -11,9 +11,9 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { accountPathProps, connectorPathProps, projectPathProps, secretPathProps } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'
 import EntityUsage from '../EntityUsage'
-import referencedData from './entity-usage-data.json'
-import referencedDataWithGit from './entity-usage-data-with-git.json'
-import referencedDataWithDetails from './entity-usage-connector-data.json'
+import referencedData from './mocks/entity-usage-data.json'
+import referencedDataWithGit from './mocks/entity-usage-data-with-git.json'
+import referencedDataWithDetails from './mocks/entity-usage-connector-data.json'
 
 const getPipelineSummryMock = jest.fn(() => Promise.resolve({}))
 

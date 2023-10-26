@@ -504,6 +504,12 @@ errorHandler:
   communityForum: ' Harness Community Forum'
 noRefData: 'No references found'
 references: 'References'
+runtimeusage: 'Runtime Usage'
+secret:
+  timestamp: Timestamp
+  event: Event
+  noSecretRuntimeUsageOnQuery: No Secret Runtime Usages found with matching query
+  noSecretRuntimeUsageData: No Secret Runtime Usages found
 referenceButtonText: Go view references
 referenceTextWarning: The {{type}} [{{name}}] is being referenced in other entities. Please remove the referenced {{type}} from affected entities before deleting.
 forcedDeleteWarning: Forceful deletion might render entities referencing this {{type}} invalid and will need to be updated.

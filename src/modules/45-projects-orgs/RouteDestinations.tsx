@@ -83,6 +83,7 @@ import SettingsList from '@default-settings/pages/SettingsList'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 // eslint-disable-next-line no-restricted-imports
 import ExternalTicketSettings from '@sto/components/ExternalTickets/Settings/ExternalTicketSettings'
+import SecretRuntimeUsage from '@common/pages/entityUsage/views/RuntimeUsageView/SecretRuntimeUsage'
 import LandingDashboardPageV2 from './pages/LandingDashboardPageV2/LandingDashboardPageV2'
 import LandingDashboardPage from './pages/LandingDashboardPage/LandingDashboardPage'
 
@@ -449,6 +450,15 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       sidebarProps={ProjectDetailsSideNavProps}
+      path={routesV1.toSecretDetailsRuntimeUsage({ ...accountPathProps, ...projectPathProps, ...secretPathProps })}
+      exact
+    >
+      <SecretDetailsHomePage>
+        <SecretRuntimeUsage />
+      </SecretDetailsHomePage>
+    </RouteWithLayout>
+    <RouteWithLayout
+      sidebarProps={ProjectDetailsSideNavProps}
       path={routesV1.toSecretDetailsReferences({ ...accountPathProps, ...projectPathProps, ...secretPathProps })}
       exact
     >
@@ -570,6 +580,15 @@ export default (
     >
       <SecretDetailsHomePage>
         <SecretReferences />
+      </SecretDetailsHomePage>
+    </RouteWithLayout>
+    <RouteWithLayout
+      sidebarProps={AccountSideNavProps}
+      path={routesV1.toSecretDetailsRuntimeUsage({ ...orgPathProps, ...secretPathProps })}
+      exact
+    >
+      <SecretDetailsHomePage>
+        <SecretRuntimeUsage />
       </SecretDetailsHomePage>
     </RouteWithLayout>
 

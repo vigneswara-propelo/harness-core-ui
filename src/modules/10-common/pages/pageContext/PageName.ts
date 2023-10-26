@@ -28,6 +28,7 @@ export enum PAGE_NAME {
   SecretsPage = 'SecretsPage',
   SecretDetails = 'SecretDetails',
   SecretReferences = 'SecretReferences',
+  SecretRuntimeUsage = 'SecretRuntimeUsage',
   CreateSecretFromYamlPage = 'CreateSecretFromYamlPage',
   CITrialHomePage = 'CITrialHomePage',
   CIHomePage = 'CIHomePage',

@@ -771,6 +771,7 @@ const routes = {
       })
     }
   ),
+
   toRoles: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
       const path = `access-control/roles`
@@ -876,7 +877,24 @@ const routes = {
       })
     }
   ),
-
+  toSecretDetailsRuntimeUsage: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      secretId
+    }: Partial<ProjectPathProps & ModulePathParams & SecretsPathProps>) => {
+      const path = `resources/secrets/${secretId}/runtime-usage`
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path
+      })
+    }
+  ),
   /********************************************************************************************************************/
   toCD: withAccountId(() => `/cd`),
   toCDDashboard: withAccountId(() => `/cd`),

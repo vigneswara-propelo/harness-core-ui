@@ -27,3 +27,16 @@
 .link {
   color: var(--primary-7);
 }
+.secretRuntimeUsageHeader {
+  padding: var(--spacing-large) var(--spacing-large) 0;
+  padding-right: var(--spacing-10) !important;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.scopeDropdown {
+  padding-left: var(--spacing-5) !important;
+}
+.dataContainer {
+  padding: var(--spacing-0) var(--spacing-8) var(--spacing-0) var(--spacing-3) !important;
+}

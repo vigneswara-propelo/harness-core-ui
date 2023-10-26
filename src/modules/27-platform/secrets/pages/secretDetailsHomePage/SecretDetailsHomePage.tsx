@@ -21,6 +21,7 @@ import { getScopeFromDTO } from '@common/components/EntityReference/EntityRefere
 import { Scope } from '@common/interfaces/SecretsInterface'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { SettingType } from '@common/constants/Utils'
+import SecretRuntimeUsage from '@common/pages/entityUsage/views/RuntimeUsageView/SecretRuntimeUsage'
 import SecretDetails from '../secretDetails/SecretDetails'
 import SecretReferences from '../secretReferences/SecretReferences'
 import { SecretMenuItem } from '../secrets/views/SecretsListView/SecretsList'
@@ -38,7 +39,8 @@ interface SecretDetailsProps {
 
 export enum SecretDetailsTabs {
   OVERVIEW = 'overview',
-  REFERENCE = 'reference'
+  REFERENCE = 'reference',
+  USAGE = 'usage'
 }
 
 const getProjectUrl = ({ accountId, projectIdentifier, orgIdentifier, module }: OptionalIdentifiers): string => {
@@ -60,7 +62,12 @@ const SecretDetaislHomePage: React.FC<SecretDetailsProps> = props => {
     routes.toSecretDetailsReferences({ accountId, projectIdentifier, orgIdentifier, secretId, module })
   )?.isExact
 
-  const [isReference, setIsReference] = useState(Boolean(isReferenceTab))
+  const isRuntimeTab = useRouteMatch(
+    routes.toSecretDetailsRuntimeUsage({ accountId, projectIdentifier, orgIdentifier, secretId, module })
+  )?.isExact
+  const [tab, setTab] = useState(
+    isReferenceTab ? SecretDetailsTabs.REFERENCE : isRuntimeTab ? SecretDetailsTabs.USAGE : SecretDetailsTabs.OVERVIEW
+  )
   const { showError } = useToaster()
   const { selectedProject } = useAppStore()
   const { getRBACErrorMessage } = useRBACError()
@@ -148,7 +155,9 @@ const SecretDetaislHomePage: React.FC<SecretDetailsProps> = props => {
                 secret={data?.data?.secret || {}}
                 onSuccessfulDelete={onSuccessfulDeleteRedirect}
                 onSuccessfulEdit={refetch}
-                setIsReference={isRefereceView => setIsReference(isRefereceView)}
+                setIsReference={isReferenceView => {
+                  isReferenceView ? setTab(SecretDetailsTabs.REFERENCE) : undefined
+                }}
                 forceDeleteSupported={forceDeleteSettings?.data?.value === 'true'}
               />
             </div>
@@ -168,9 +177,9 @@ const SecretDetaislHomePage: React.FC<SecretDetailsProps> = props => {
         <div className={css.secretTabs}>
           <Tabs
             id={'horizontalTabs'}
-            selectedTabId={isReference ? SecretDetailsTabs.REFERENCE : SecretDetailsTabs.OVERVIEW}
+            selectedTabId={tab}
             onChange={newTabId => {
-              setIsReference(newTabId === SecretDetailsTabs.REFERENCE)
+              setTab(newTabId as SecretDetailsTabs)
             }}
             tabList={[
               {
@@ -182,6 +191,12 @@ const SecretDetaislHomePage: React.FC<SecretDetailsProps> = props => {
                 id: SecretDetailsTabs.REFERENCE,
                 title: getString('common.references'),
                 panel: <SecretReferences secretData={data || undefined} />
+              },
+
+              {
+                id: SecretDetailsTabs.USAGE,
+                title: getString('common.runtimeusage'),
+                panel: <SecretRuntimeUsage secretData={data || undefined} />
               }
             ]}
           ></Tabs>

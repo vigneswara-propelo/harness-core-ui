@@ -48,7 +48,7 @@ export default function PayloadDetails(props: PayloadDetailsInterface): JSX.Elem
           <Layout.Horizontal flex padding="large">
             <Layout.Vertical>
               <Text className={css.marginBottom} color={Color.BLACK}>
-                {getString('pipeline.webhookEvents.timestamp')}
+                {getString('common.secret.timestamp')}
               </Text>
               <Text>{`${time} ${date}`}</Text>
             </Layout.Vertical>

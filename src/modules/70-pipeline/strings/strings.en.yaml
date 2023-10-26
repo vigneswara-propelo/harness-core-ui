@@ -2049,7 +2049,7 @@ webhookEvents:
   author: Author
   eventId: Event Id
   payloadDetails: Payload Details
-  timestamp: Timestamp
+  timestamp: '{{ $.common.secret.timestamp }}'
   viewAll: View All Events
   lastEventDetails: Last Event Details
   failedCreateWebhook: Failed to set up Web Hook

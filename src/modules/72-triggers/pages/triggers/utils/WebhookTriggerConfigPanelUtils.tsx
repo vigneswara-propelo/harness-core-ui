@@ -68,7 +68,7 @@ export const renderNonCustomEventFields = ({
       <FormInput.Select
         className={cx(!event && css.bottomMarginZero)}
         key={event}
-        label={getString('triggers.triggerConfigurationPanel.event')}
+        label={getString('common.secret.event')}
         name="event"
         placeholder={getString('triggers.triggerConfigurationPanel.eventPlaceholder')}
         items={eventOptions}

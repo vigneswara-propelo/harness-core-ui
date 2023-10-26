@@ -585,7 +585,7 @@ exports[`TriggersWizardPage Triggers tests Initial Renders/snapshots Initial Ren
                               class="Tooltip--acenter"
                               data-tooltip-id="wizardForm_webhook_event"
                             >
-                              triggers.triggerConfigurationPanel.event
+                              common.secret.event
                             </span>
                              
                             <span
@@ -1414,7 +1414,7 @@ exports[`TriggersWizardPage Triggers tests Initial Renders/snapshots Initial Ren
                               class="Tooltip--acenter"
                               data-tooltip-id="wizardForm_webhook_event"
                             >
-                              triggers.triggerConfigurationPanel.event
+                              common.secret.event
                             </span>
                              
                             <span
@@ -4329,7 +4329,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                               class="Tooltip--acenter"
                               data-tooltip-id="wizardForm_webhook_event"
                             >
-                              triggers.triggerConfigurationPanel.event
+                              common.secret.event
                             </span>
                              
                             <span
@@ -5549,7 +5549,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                               class="Tooltip--acenter"
                               data-tooltip-id="wizardForm_webhook_event"
                             >
-                              triggers.triggerConfigurationPanel.event
+                              common.secret.event
                             </span>
                              
                             <span

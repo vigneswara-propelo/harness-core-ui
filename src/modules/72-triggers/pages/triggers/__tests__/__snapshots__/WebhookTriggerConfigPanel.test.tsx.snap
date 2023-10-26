@@ -725,7 +725,7 @@ exports[`WebhookTriggerConfigPanel Triggers tests Renders/snapshots Initial Rend
                     class="Tooltip--acenter"
                     data-tooltip-id="wrapperComponentTestForm_event"
                   >
-                    triggers.triggerConfigurationPanel.event
+                    common.secret.event
                   </span>
                    
                   <span
@@ -1285,7 +1285,7 @@ exports[`WebhookTriggerConfigPanel Triggers tests Renders/snapshots Initial Rend
                     class="Tooltip--acenter"
                     data-tooltip-id="wrapperComponentTestForm_event"
                   >
-                    triggers.triggerConfigurationPanel.event
+                    common.secret.event
                   </span>
                    
                   <span
