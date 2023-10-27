@@ -826,6 +826,31 @@ function TerraformPlanWidget(
                       </div>
                       {!enableCloudCli && (
                         <>
+                          <div className={cx(stepCss.formGroup, css.addMarginTop)}>
+                            <FormMultiTypeCheckboxField
+                              formik={formik as FormikProps<unknown>}
+                              name={'spec.configuration.exportTerraformPlanJson'}
+                              label={getString('cd.exportTerraformPlanJson')}
+                              multiTypeTextbox={{ expressions, allowableTypes }}
+                              disabled={readonly}
+                            />
+                            {getMultiTypeFromValue(formik.values?.spec?.configuration?.exportTerraformPlanJson) ===
+                              MultiTypeInputType.RUNTIME && (
+                              <ConfigureOptions
+                                value={(formik.values?.spec?.configuration?.exportTerraformPlanJson || '') as string}
+                                type="String"
+                                variableName="spec.configuration.exportTerraformPlanJson"
+                                showRequiredField={false}
+                                showDefaultField={false}
+                                onChange={
+                                  /* istanul ignore next */
+                                  value => formik.setFieldValue('spec.configuration.exportTerraformPlanJson', value)
+                                }
+                                style={{ alignSelf: 'center' }}
+                                isReadonly={readonly}
+                              />
+                            )}
+                          </div>
                           <div className={cx(stepCss.formGroup, css.addMarginTop, css.addMarginBottom)}>
                             <FormMultiTypeCheckboxField
                               formik={formik as FormikProps<unknown>}

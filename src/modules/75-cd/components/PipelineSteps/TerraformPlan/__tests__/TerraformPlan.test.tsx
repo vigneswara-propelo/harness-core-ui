@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { act, fireEvent, render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -1205,5 +1206,44 @@ describe('Test TerraformPlan', () => {
 
     expect(getByText('cd.backendConfigurationFile')!).toBeInTheDocument()
     expect(getByText('/test-path')!).toBeInTheDocument()
+  })
+  test('should render edit view as edit step cloudConfig', async () => {
+    const { getByText, container } = render(
+      <TestStepWidget
+        initialValues={{
+          type: 'TerraformPlan',
+          name: 'Test A',
+          identifier: 'Test_A',
+          timeout: '10m',
+          delegateSelectors: ['test-1', 'test-2'],
+          spec: {
+            provisionerIdentifier: 'test',
+            cloudConfiguration: {
+              command: 'Apply',
+              configFiles: {
+                store: {
+                  spec: {
+                    connectorRef: RUNTIME_INPUT_VALUE,
+                    bucketName: 'd',
+                    region: 'us-gov-west-1',
+                    folderPath: '/d'
+                  },
+                  type: 'S3'
+                }
+              }
+            }
+          }
+        }}
+        type={StepType.TerraformPlan}
+        stepViewType={StepViewType.Edit}
+      />
+    )
+    await userEvent.click(getByText('common.optionalConfig')!)
+    const skipStateStorage = container.querySelector('input[name="spec.cloudCliConfiguration.skipStateStorage"]')!
+    expect(skipStateStorage).toBeDefined()
+    await userEvent.click(getByText('pipeline.terraformStep.runOnRemote')!)
+    await userEvent.click(getByText('common.optionalConfig')!)
+
+    expect(getByText('common.optionalConfig')).toBeInTheDocument()
   })
 })
