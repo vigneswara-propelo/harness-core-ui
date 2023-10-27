@@ -12,6 +12,7 @@ import {
   PipelineContext,
   PipelineContextInterface
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { NodeMetadataProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeMetadataContext'
 import { CustomStage } from '../CustomStage'
 import { getDummyPipelineContextValue } from './CustomStageHelper'
@@ -62,13 +63,19 @@ jest.mock('resize-observer-polyfill', () => {
   return ResizeObserver
 })
 
-function WrapperComponent({ mockData }: { mockData: PipelineContextInterface }): JSX.Element {
+function WrapperComponent({
+  mockData,
+  minimal = false
+}: {
+  mockData: PipelineContextInterface
+  minimal?: boolean
+}): JSX.Element {
   return (
     <TestWrapper>
       <PipelineContext.Provider value={mockData}>
         <NodeMetadataProvider>
           <CustomStage
-            minimal={false}
+            minimal={minimal}
             stageProps={{}}
             name={''}
             type={''}
@@ -85,11 +92,13 @@ function WrapperComponent({ mockData }: { mockData: PipelineContextInterface }):
 }
 
 describe('Custom stage shell view', () => {
-  test('Setup shell view tests', async () => {
+  test('Setup shell view tests when Env Infra FF is off', async () => {
     const pipelineContextMockValue = getDummyPipelineContextValue()
-    const { container, getByDisplayValue, getByText, getAllByText } = render(
-      <WrapperComponent mockData={pipelineContextMockValue} />
+    const { container, getByDisplayValue, getByText, getAllByText, rerender } = render(
+      <WrapperComponent mockData={pipelineContextMockValue} minimal={true} />
     )
+
+    rerender(<WrapperComponent mockData={pipelineContextMockValue} minimal={false} />)
 
     act(() => {
       fireEvent.click(getByText('overview'))
@@ -144,7 +153,38 @@ describe('Custom stage shell view', () => {
     await waitFor(() => expect(pipelineContextMockValue.updateStage).toBeCalled())
   })
 
-  test('readonly view should work', () => {
+  test('Setup shell view tests when Env Infra FF is enabled', async () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CDS_CUSTOM_STAGE_WITH_ENV_INFRA: true
+    })
+
+    const pipelineContextMockValue = getDummyPipelineContextValue()
+    const { getByDisplayValue, getByText } = render(<WrapperComponent mockData={pipelineContextMockValue} />)
+
+    expect(getByText('environment')).toBeInTheDocument()
+
+    act(() => {
+      fireEvent.click(getByText('environment'))
+    })
+
+    // Since Env/Infra is optional
+    await waitFor(() => expect(pipelineContextMockValue.updateStage).not.toBeCalled())
+
+    // Move to next tab
+    act(() => {
+      fireEvent.click(getByText('overview'))
+    })
+    act(() => {
+      fireEvent.change(getByDisplayValue('CustomStep'), { target: { value: 'changedstagename' } })
+    })
+
+    await waitFor(() => expect(pipelineContextMockValue.updateStage).toBeCalled())
+  })
+
+  test('readonly view should work when FF is off', () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CDS_CUSTOM_STAGE_WITH_ENV_INFRA: false
+    })
     const pipelineContextMockValue = getDummyPipelineContextValue()
     const { container, getByText } = render(
       <WrapperComponent mockData={{ ...pipelineContextMockValue, isReadonly: true }} />

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Custom stage shell view Setup shell view tests: Overview Tab 1`] = `
+exports[`Custom stage shell view Setup shell view tests when Env Infra FF is off: Overview Tab 1`] = `
 <div>
   <section
     class="approvalStageSetupShellWrapper"
@@ -490,7 +490,7 @@ exports[`Custom stage shell view Setup shell view tests: Overview Tab 1`] = `
 </div>
 `;
 
-exports[`Custom stage shell view readonly view should work: readonly view custom step overview 1`] = `
+exports[`Custom stage shell view readonly view should work when FF is off: readonly view custom step overview 1`] = `
 <div>
   <section
     class="approvalStageSetupShellWrapper"
