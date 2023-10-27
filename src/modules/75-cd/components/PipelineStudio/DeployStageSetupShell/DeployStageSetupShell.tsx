@@ -229,12 +229,6 @@ export default function DeployStageSetupShell(): JSX.Element {
   }, [selectedSectionId])
 
   React.useEffect(() => {
-    if (selectedStepId) {
-      setSelectedTabId(DeployTabs.EXECUTION)
-    }
-  }, [selectedStepId])
-
-  React.useEffect(() => {
     /* istanbul ignore else */
     if (layoutRef.current) {
       layoutRef.current.scrollTo(0, 0)

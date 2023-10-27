@@ -10,6 +10,7 @@ import { render, getByText, getAllByText, fireEvent, act, waitFor } from '@testi
 import { TestWrapper } from '@common/utils/testUtils'
 import type { StringsMap } from 'stringTypes'
 import PipelineErrors, { getFieldsLabel } from '../PipelineErrors/PipelineErrors'
+import { DeployTabs } from '../../CommonUtils/DeployStageSetupShellUtils'
 
 const PIPELINE_ERROR_1 = {
   message: 'Pipeline Error 1',
@@ -60,6 +61,7 @@ const STEP_ERROR_1 = {
     name: 'step1Name',
     fqn: '$.pipeline.stages[0].stage.spec.execution.steps[0].step'
   },
+  messageWithFQN: '$.pipeline.stages[0].stage.spec.execution.steps[0].step.type: is required',
   fqn: '$.pipeline.stages[0].stage.spec.execution.steps[0].step.type'
 }
 
@@ -235,7 +237,8 @@ describe('PipelineErrors', () => {
     })
     expect(fn).toHaveBeenCalledWith({
       stageId: STEP_ERROR_1.stageInfo.identifier,
-      stepId: 'steps.0.step.1ss'
+      stepId: 'steps.0.step.1ss',
+      sectionId: DeployTabs.EXECUTION
     })
   })
   test('should render multiple step errors in same stage', () => {

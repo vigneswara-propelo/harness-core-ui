@@ -59,7 +59,8 @@ export const InfraProvisioningBase = (
     updateStage,
     updatePipelineView,
     isReadonly,
-    getStageFromPipeline
+    getStageFromPipeline,
+    setSelectedStepId
   } = usePipelineContext()
   const { getTemplate } = useTemplateSelector()
   const { getString } = useStrings()
@@ -305,6 +306,9 @@ export const InfraProvisioningBase = (
                               }
                             }
                           })
+                        }}
+                        onSelectStep={(stepId: string) => {
+                          setSelectedStepId(stepId)
                         }}
                       />
                     )

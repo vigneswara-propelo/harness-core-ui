@@ -48,9 +48,10 @@ const SECTION_KEY_MAP = {
   serviceConfig: DeployTabs.SERVICE,
   infrastructure: DeployTabs.INFRASTRUCTURE,
   execution: DeployTabs.EXECUTION,
-  failureStrategies: DeployTabs.ADVANCED
+  failureStrategies: DeployTabs.ADVANCED,
+  environment: DeployTabs.ENVIRONMENT
 }
-type sectionKeys = 'serviceConfig' | 'infrastructure' | 'execution' | 'failureStrategies'
+type sectionKeys = 'serviceConfig' | 'infrastructure' | 'environment' | 'execution' | 'failureStrategies'
 
 /**
  * examples
@@ -180,7 +181,8 @@ function StepErrorCard({
           const errorStepId = `${getStepsPathWithoutStagePath(convertToDotNotation(fqn))}.${identifier}`
           gotoViewWithDetails({
             stageId: stepErrors[0]?.stageInfo?.identifier || '',
-            stepId: errorStepId
+            stepId: errorStepId,
+            sectionId: getSectionId(stepErrors[0].messageWithFQN)
           })
         }}
         buttonText={getString('pipeline.errorFramework.fixStep')}

@@ -84,7 +84,7 @@ import { AdvancedOptions } from '../AdvancedOptions/AdvancedOptions'
 import { RightDrawerTitle } from './RightDrawerTitle'
 import { getFlattenedStages } from '../StageBuilder/StageBuilderUtil'
 import { getFlattenedSteps } from '../CommonUtils/CommonUtils'
-import { isNewServiceEnvEntity } from '../CommonUtils/DeployStageSetupShellUtils'
+import { DeployTabs, isNewServiceEnvEntity } from '../CommonUtils/DeployStageSetupShellUtils'
 import { SampleJSON, findDotNotationByRelativePath, generateCombinedPaths } from '../PipelineContext/helpers'
 import css from './RightDrawer.module.scss'
 
@@ -587,7 +587,7 @@ export function RightDrawer(): React.ReactElement {
       templateTypes,
       pipelineView: { drawerData, isDrawerOpened, isSplitViewOpen, isRollbackToggled },
       pipelineView,
-      selectionState: { selectedStageId, selectedStepId },
+      selectionState: { selectedStageId, selectedStepId, selectedSectionId },
       gitDetails,
       storeMetadata,
       pipeline,
@@ -688,11 +688,18 @@ export function RightDrawer(): React.ReactElement {
   React.useEffect(() => {
     if (selectedStepId && selectedStage && !pipelineView.isDrawerOpened && isSplitViewOpen) {
       let step
-      let drawerType = DrawerTypes.StepConfig
+      let drawerType =
+        selectedSectionId === DeployTabs.ENVIRONMENT || selectedSectionId === DeployTabs.INFRASTRUCTURE
+          ? DrawerTypes.ProvisionerStepConfig
+          : DrawerTypes.StepConfig
       // 1. search for step in execution
       const stepNodePath = getBaseDotNotationWithoutEntityIdentifier(getStepsPathWithoutStagePath(selectedStepId))
-      const execStep = getNodeAndParent(selectedStage?.stage?.spec?.execution, stepNodePath)
-      const dotNotationObjects = generateCombinedPaths(selectedStage?.stage?.spec?.execution as SampleJSON)
+      const provisionerOrExecution =
+        selectedSectionId === DeployTabs.ENVIRONMENT || selectedSectionId === DeployTabs.INFRASTRUCTURE
+          ? get((selectedStage?.stage as DeploymentStageElementConfig).spec, provisionerPath)
+          : selectedStage?.stage?.spec?.execution
+      const provisionerOrExecStep = getNodeAndParent(provisionerOrExecution, stepNodePath)
+      const dotNotationObjects = generateCombinedPaths(provisionerOrExecution as SampleJSON)
 
       const stepNodeStateMetadata = dotNotationObjects.find(obj => obj.dotNotation === selectedStepId)
 
@@ -700,7 +707,7 @@ export function RightDrawer(): React.ReactElement {
         // Step path not found
         return
       }
-      step = execStep.node
+      step = provisionerOrExecStep.node
       if (!step) {
         drawerType = DrawerTypes.ConfigureService
         // 2. search for step in serviceDependencies
