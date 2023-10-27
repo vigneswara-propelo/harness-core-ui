@@ -10,10 +10,12 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import * as cdNgServices from 'services/cd-ng'
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 
 import { TestWrapper } from '@common/utils/testUtils'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import routes from '@common/RouteDefinitions'
-import { environmentPathProps, modulePathProps, projectPathProps } from '@common/utils/routeUtils'
+import { environmentPathProps, modulePathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import { connectorsData } from '@platform/connectors/pages/connectors/__tests__/mockData'
 import EnvironmentDetails from '../EnvironmentDetails'
@@ -73,6 +75,9 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetSettingValue: jest.fn().mockImplementation(() => {
     return { data: { data: { value: 'false' } } }
+  }),
+  useGetListOfBranchesByRefConnectorV2: jest.fn().mockImplementation(() => {
+    return { data: [], refetch: jest.fn(), error: null, loading: false }
   })
 }))
 
@@ -108,20 +113,28 @@ describe('EnvironmentDetails tests', () => {
   })
 
   test('is gitops tab visible', async () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CDS_SERVICE_OVERRIDES_2_0: true,
+      CDS_ENV_GITX: true
+    })
+    jest.spyOn(cdNgServices, 'useGetSettingValue').mockImplementation(() => {
+      return { error: 'Some error occurred', data: undefined } as any
+    })
     render(
       <TestWrapper
         path={routes.toEnvironmentDetails({
-          ...projectPathProps,
+          ...orgPathProps,
           ...modulePathProps,
           ...environmentPathProps
         })}
+        queryParams={{
+          storeType: StoreType.REMOTE
+        }}
         pathParams={{
           accountId: 'dummy',
-          projectIdentifier: 'dummy',
           orgIdentifier: 'dummy',
           module: 'cd',
-          environmentIdentifier: 'Env_1',
-          sectionId: 'CONFIGURATION'
+          environmentIdentifier: 'Env_1'
         }}
       >
         <EnvironmentDetails />

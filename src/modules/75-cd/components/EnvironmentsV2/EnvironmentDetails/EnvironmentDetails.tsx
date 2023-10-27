@@ -11,7 +11,7 @@ import { Expander } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'
 import { parse } from 'yaml'
 import cx from 'classnames'
-import { defaultTo, isEqual, noop, omit } from 'lodash-es'
+import { defaultTo, isEqual, merge, noop, omit, set, get } from 'lodash-es'
 import * as Yup from 'yup'
 
 import {
@@ -27,6 +27,7 @@ import {
   useToaster,
   getErrorInfoFromErrorObject
 } from '@harness/uicore'
+import produce from 'immer'
 import { Color } from '@harness/design-system'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
@@ -41,7 +42,8 @@ import {
   UpdateEnvironmentV2QueryParams,
   updateEnvironmentV2Promise,
   useGetEnvironmentV2,
-  useGetSettingValue
+  useGetSettingValue,
+  EntityGitDetails
 } from 'services/cd-ng'
 
 import type {
@@ -73,6 +75,11 @@ import GitRemoteDetails from '@modules/10-common/components/GitRemoteDetails/Git
 import NoEntityFound from '@modules/70-pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { useSaveToGitDialog } from '@modules/10-common/modals/SaveToGitDialog/useSaveToGitDialog'
 import { GitData } from '@modules/10-common/modals/GitDiffEditor/useGitDiffEditorDialog'
+import { PipelineVariablesContextProvider } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
+import { DefaultPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
+import { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
+import { DefaultNewStageId, DefaultNewStageName } from '@cd/components/Services/utils/ServiceUtils'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import { PageHeaderTitle, PageHeaderToolbar } from './EnvironmentDetailsPageHeader'
 import EnvironmentConfiguration from './EnvironmentConfiguration/EnvironmentConfiguration'
 import { ServiceOverrides } from './ServiceOverrides/ServiceOverrides'
@@ -152,7 +159,10 @@ export default function EnvironmentDetails(): React.ReactElement {
 
   const environmentCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
   const isEnvironmentRemote = CDS_ENV_GITX && storeType === 'REMOTE'
-  const gitDetails = data?.data?.environment?.entityGitDetails
+
+  const environmentDetails = defaultTo(get(data, 'data.environment'), {}) as EnvironmentResponseDTO
+  const gitDetails = defaultTo(get(environmentDetails, 'entityGitDetails'), {}) as EntityGitDetails
+
   const hasRemoteFetchFailed = useMemo(() => {
     const errorMetadata = (error?.data as any)?.metadata as GitErrorMetadataDTO
     return Boolean(error?.status === 400 && errorMetadata?.branch)
@@ -167,10 +177,10 @@ export default function EnvironmentDetails(): React.ReactElement {
       <div className={css.gitRemoteDetailsWrapper}>
         <GitRemoteDetails
           connectorRef={connectorRef}
-          repoName={defaultTo(gitDetails?.repoName, repoName)}
-          filePath={defaultTo(gitDetails?.filePath, '')}
-          fileUrl={defaultTo(gitDetails?.fileUrl, '')}
-          branch={defaultTo(gitDetails?.branch, branch)}
+          repoName={defaultTo(gitDetails.repoName, repoName)}
+          filePath={defaultTo(gitDetails.filePath, '')}
+          fileUrl={defaultTo(gitDetails.fileUrl, '')}
+          branch={defaultTo(gitDetails.branch, branch)}
           onBranchChange={onGitBranchChange}
           flags={{
             readOnly: false
@@ -180,7 +190,7 @@ export default function EnvironmentDetails(): React.ReactElement {
           <EntityCachedCopy
             ref={environmentCachedCopyRef}
             reloadContent={getString('common.pipeline')}
-            cacheResponse={data?.data?.environment?.cacheResponseMetadataDTO}
+            cacheResponse={environmentDetails.cacheResponseMetadataDTO}
             reloadFromCache={noop}
           />
         )}
@@ -214,16 +224,16 @@ export default function EnvironmentDetails(): React.ReactElement {
         queryParams: {
           accountIdentifier: accountId,
           storeType: StoreType.REMOTE,
-          connectorRef: data?.data?.environment?.connectorRef,
+          connectorRef: environmentDetails.connectorRef,
           isNewBranch: gitData?.isNewBranch, //Need BE API support for this param, Todo: remove typeCast
           repoIdentifier: repoName,
-          filePath: gitDetails?.filePath,
+          filePath: gitDetails.filePath,
           ...(gitData?.isNewBranch
-            ? { baseBranch: gitDetails?.branch, branch: gitData?.branch }
-            : { branch: gitDetails?.branch }),
+            ? { baseBranch: gitDetails.branch, branch: gitData?.branch }
+            : { branch: gitDetails.branch }),
           commitMsg: gitData?.commitMsg,
-          lastObjectId: gitDetails?.objectId,
-          lastCommitId: gitDetails?.commitId,
+          lastObjectId: gitDetails.objectId,
+          lastCommitId: gitDetails.commitId,
           resolvedConflictCommitId: gitData?.resolvedConflictCommitId
         } as unknown as UpdateEnvironmentV2QueryParams
       }).then(response => {
@@ -266,8 +276,8 @@ export default function EnvironmentDetails(): React.ReactElement {
             identifier: defaultTo(values.identifier, ''),
             gitDetails: gitDetails,
             storeMetadata: {
-              storeType: data?.data?.environment?.storeType,
-              connectorRef: data?.data?.environment?.connectorRef
+              storeType: environmentDetails.storeType,
+              connectorRef: environmentDetails.connectorRef
             }
           },
           payload: body
@@ -328,10 +338,28 @@ export default function EnvironmentDetails(): React.ReactElement {
     }
   }
   const initialGitFormValue = {
-    connectorRef: data?.data?.environment?.connectorRef,
-    repoName: gitDetails?.repoName,
-    filePath: gitDetails?.filePath
+    connectorRef: environmentDetails.connectorRef,
+    repoName: gitDetails.repoName,
+    filePath: gitDetails.filePath
   }
+
+  const pipeline = React.useMemo(
+    () =>
+      produce({ ...DefaultPipeline }, draft => {
+        set(
+          draft,
+          'stages[0].stage',
+          merge({}, {} as DeploymentStageElementConfig, {
+            name: DefaultNewStageName,
+            identifier: DefaultNewStageId,
+            type: StageType.DEPLOY,
+            spec: {}
+          })
+        )
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
 
   return (
     <>
@@ -418,19 +446,25 @@ export default function EnvironmentDetails(): React.ReactElement {
                         id: EnvironmentDetailsTab.CONFIGURATION,
                         title: getString('configuration'),
                         panel: (
-                          <EnvironmentConfiguration
-                            formikProps={formikProps}
-                            selectedView={selectedView}
-                            setSelectedView={setSelectedView}
-                            yamlHandler={yamlHandler}
-                            setYamlHandler={setYamlHandler}
-                            isModified={isModified}
-                            data={data}
-                            isEdit
-                            context={PipelineContextType.Standalone}
-                            scope={getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })}
-                            isServiceOverridesEnabled={isServiceOverridesEnabled}
-                          />
+                          <PipelineVariablesContextProvider pipeline={pipeline}>
+                            <EnvironmentConfiguration
+                              formikProps={formikProps}
+                              selectedView={selectedView}
+                              setSelectedView={setSelectedView}
+                              yamlHandler={yamlHandler}
+                              setYamlHandler={setYamlHandler}
+                              isModified={isModified}
+                              data={data}
+                              isEdit
+                              context={PipelineContextType.Standalone}
+                              scope={getScopeFromDTO({
+                                accountIdentifier: accountId,
+                                orgIdentifier,
+                                projectIdentifier
+                              })}
+                              isServiceOverridesEnabled={isServiceOverridesEnabled}
+                            />
+                          </PipelineVariablesContextProvider>
                         )
                       },
                       {

@@ -756,6 +756,13 @@ export const envAPI = {
       identifier: 'Env_Test',
       name: 'Env_Test',
       description: '',
+      entityGitDetails: {
+        branch: 'test',
+        filePath: 'filePath',
+        fileUrl: 'fileUrl',
+        repoName: 'repoName',
+        repoUrl: 'repoUrl'
+      },
       color: '#0063F7',
       type: 'PreProduction',
       deleted: false,
