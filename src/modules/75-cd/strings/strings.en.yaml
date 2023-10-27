@@ -712,8 +712,8 @@ getStartedWithCD:
       svcrep: Service representation
       nonK8sStep: A <a target="_blank" rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/continuous-delivery/get-started/key-concepts/#pipeline">CD Pipeline</a> automates your deployments and pushes new versions to a target environment. You will first install a <a target="_blank" rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/continuous-delivery/get-started/key-concepts/#delegates">Harness Delegate</a> so that your deployment infrastructure and any third-party resources can connect to Harness
       K8sSteps:
-        k8sSvcRep: How is your Kubernetes Service represented?
-        artifact: Your artifact is usually specified in the image tag(s) of these manifests.
+        k8sSvcRep: Type of Kubernetes configuration
+        artifact: Your artifact is usually specified in the image tag(s) within these configurations.
         k8sHelm: Select deployment type for Helm
       ServerlessSteps:
         svcrep: How is your Serverless Function represented?
@@ -1071,10 +1071,11 @@ getStartedWithCD:
   manifestFile: Configure Infra
   serverless: Serverless Function
   k8sService: Kubernetes Service
-  traditionalApp: Traditional App
+  traditionalApp: VM or Bare Metal
   awsLambda: AWS Lambda Function
   googleFunction: Google Cloud Function
   k8sHelm: Kubernetes with Helm
+  serverlesscom: Serverless.com Function
   nativeAWSLambda: Native AWS Lambda
   gcpGen1: Google Cloud Function Gen 1
   gcpGen2: Google Cloud Function Gen 2

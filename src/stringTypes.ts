@@ -6829,6 +6829,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.selectDeploymentType': string
   'cd.getStartedWithCD.selfManaged': string
   'cd.getStartedWithCD.serverless': string
+  'cd.getStartedWithCD.serverlesscom': string
   'cd.getStartedWithCD.serviceConfiguration': string
   'cd.getStartedWithCD.serviceDeploy': string
   'cd.getStartedWithCD.serviceDescription': string

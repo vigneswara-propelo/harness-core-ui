@@ -84,7 +84,7 @@ export const INFRA_SUB_TYPES: Record<string, EntityMap> = {
   [SERVERLESS_FUNCTIONS.AWS_LAMBDA_FUNCTION]: {
     [CLOUD_FUNCTION_TYPES.ServerLessLambda]: {
       id: CLOUD_FUNCTION_TYPES.ServerLessLambda,
-      label: 'cd.getStartedWithCD.serverless',
+      label: 'cd.getStartedWithCD.serverlesscom',
       icon: 'service-serverless'
     },
     [CLOUD_FUNCTION_TYPES.NativeAWSLambda]: {
