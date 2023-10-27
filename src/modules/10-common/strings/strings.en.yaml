@@ -1535,7 +1535,7 @@ welcomePage:
     title: '{{ $.common.cdAndGitops }}'
     subTitle: Fast & secure deployments
     bodyText: Deploy software faster, with visibility and control.
-    points: Integrates with your existing delivery toolchain, Powerful declarative pipelines represented visually and as code, Granular policy enforcement and role-based access control, Visualize the entire software lifecycle with built-in DORA metrics dashboards
+    points: Integrates with your existing delivery toolchain (traditional or container or serverless), Powerful declarative pipelines represented visually and as code, Granular policy enforcement and role-based access control, Visualize the entire software lifecycle with built-in DORA metrics dashboards
   ci:
     title: '{{ $.common.purpose.ci.continuous }}'
     subTitle: Intelligent build & test
@@ -1548,15 +1548,15 @@ welcomePage:
   cv:
     title: '{{ $.common.serviceReliabilityManagement }}'
     subTitle: SLO-driven software delivery
-    bodyText: Save time, reduce effort, and save up to 70% on your cloud bill with intelligent cloud cost automation. Detect and stop cloud cost anomalies as they occur to avoid unpleasant billing surprises.
+    bodyText: Improve service reliability through real-time performance insights. Detect anomalies and automate remediation while empowering your team to quickly identify and resolve issues.
   chaos:
     title: '{{ $.common.purpose.chaos.continuous }}'
     subTitle: Build & validate resilience
     bodyText: Run real-world, controlled experiments that will reveal your systems' weaknesses to avoid disasters, improve customer experience, maintain competitive advantage, accelerate digital transformation, boost developer experience, and achieve Continuous Resilience™.
   ce:
-    title: Cloud Cost Mgmt
+    title: '{{ $.common.purpose.ce.continuous }}'
     subTitle: Manage & optimize cloud costs
-    bodyText: '{{ $.common.welcomePage.cv.bodyText }}'
+    bodyText: Save time, reduce effort, and save up to 70% on your cloud bill with intelligent cloud cost automation. Detect and stop cloud cost anomalies as they occur to avoid unpleasant billing surprises.
 successCount: 'Success {{count}}'
 failedCount: 'Failed {{count}}'
 configurations: Configurations
