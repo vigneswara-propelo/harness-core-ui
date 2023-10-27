@@ -11,8 +11,10 @@ import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import { useQueryParams } from '@common/hooks'
-import routes from '@common/RouteDefinitions'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from './ExecutionArtifactsView.module.scss'
 
 // Only CI and CD artifacts for SSCA, avoids node type like pipeline rollback, parallel
@@ -29,11 +31,13 @@ export function StageSelector(props: {
   const history = useHistory()
   const params = useParams<any>()
   const query = useQueryParams<any>()
+  const { CDS_NAV_2_0 } = useFeatureFlags()
   const options = getSscaArtifactStageSetupIds(props.layoutNodeMap).map(value => ({
     value,
     label: props.layoutNodeMap![value].name!
   }))
   const selectedOption = options.find(option => option.value === query.stage)
+  const routes = CDS_NAV_2_0 ? routesV2 : routesV1
 
   // Need to have a selected change by default when we are opening a page
   if (!selectedOption && options.length > 0) {
