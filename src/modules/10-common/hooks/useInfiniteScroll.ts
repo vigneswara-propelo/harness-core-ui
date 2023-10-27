@@ -85,7 +85,9 @@ export const useInfiniteScroll = (props: InfiniteScrollProps): InfiniteScrollRet
           hasMore.current = canFetchMore && responseContent.length > 0
           setItems((prevItems: any) => {
             if (offsetToFetch.current === 0) {
-              return responseContent ? [...responseContent] : []
+              return responseContent && typeof responseContent[Symbol.iterator] === 'function'
+                ? [...responseContent]
+                : []
             } else {
               return [...prevItems, ...responseContent]
             }
