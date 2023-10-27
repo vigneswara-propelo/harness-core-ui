@@ -42,6 +42,7 @@ function ServiceStudio(): React.ReactElement | null {
   const {
     data: serviceResponse,
     loading: serviceDataLoading,
+    refetch: refetchServiceResponse,
     error
   } = useGetServiceV2({
     serviceIdentifier: serviceId,
@@ -56,7 +57,8 @@ function ServiceStudio(): React.ReactElement | null {
             ...(branch ? { branch } : { loadFromFallbackBranch: true })
           }
         : {})
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   useEffect(() => {
@@ -84,6 +86,11 @@ function ServiceStudio(): React.ReactElement | null {
   if (serviceDataLoading) {
     return <PageSpinner />
   }
+  const handleReloadFromCache = (): void => {
+    refetchServiceResponse({
+      requestOptions: { headers: { 'Load-From-Cache': 'false' } }
+    })
+  }
 
   return (
     <Layout.Vertical>
@@ -101,7 +108,7 @@ function ServiceStudio(): React.ReactElement | null {
         setIsDeploymentTypeDisabled={setIsDeploymentTypeDisabled}
         setServiceResponse={setUpdatedServiceResponse}
       >
-        <ServiceDetailHeaderRef ref={refetch} />
+        <ServiceDetailHeaderRef ref={refetch} handleReloadFromCache={handleReloadFromCache} />
         {hasRemoteFetchFailed ? (
           <NoEntityFound identifier={serviceId} entityType={'service'} errorObj={error?.data as unknown as Error} />
         ) : (

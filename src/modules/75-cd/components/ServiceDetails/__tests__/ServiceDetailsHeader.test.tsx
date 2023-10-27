@@ -31,7 +31,7 @@ describe('ServiceDetailsHeader', () => {
     })
     const { container } = render(
       <TestWrapper>
-        <ServiceDetailHeaderRef ref={jest.fn()} />
+        <ServiceDetailHeaderRef ref={jest.fn()} handleReloadFromCache={jest.fn} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -42,7 +42,7 @@ describe('ServiceDetailsHeader', () => {
     })
     const { container } = render(
       <TestWrapper>
-        <ServiceDetailHeaderRef ref={jest.fn()} />
+        <ServiceDetailHeaderRef ref={jest.fn()} handleReloadFromCache={jest.fn} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -70,7 +70,7 @@ const renderSetup = () => {
   })
   return render(
     <TestWrapper>
-      <ServiceDetailHeaderRef ref={jest.fn()} />
+      <ServiceDetailHeaderRef ref={jest.fn()} handleReloadFromCache={jest.fn} />
     </TestWrapper>
   )
 }

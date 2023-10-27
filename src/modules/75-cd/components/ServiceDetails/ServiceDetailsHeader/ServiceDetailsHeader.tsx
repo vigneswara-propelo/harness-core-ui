@@ -12,7 +12,7 @@ import { Classes, Position } from '@blueprintjs/core'
 import { Button, ButtonSize, Icon, Layout, Popover, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 
-import { defaultTo, noop } from 'lodash-es'
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useGetServiceHeaderInfo } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
@@ -41,13 +41,18 @@ import { StoreType } from '@common/constants/GitSyncTypes'
 import notificationImg from './notificationImg.svg'
 import css from '@cd/components/ServiceDetails/ServiceDetailsHeader/ServiceDetailsHeader.module.scss'
 
+interface ServiceDetailHeaderProps {
+  handleReloadFromCache: () => void
+}
+
 export const ServiceDetailsHeader = (
-  _props: unknown,
+  props: ServiceDetailHeaderProps,
   ref: React.ForwardedRef<ServiceHeaderRefetchRef>
 ): JSX.Element => {
   const { accountId, orgIdentifier, projectIdentifier, serviceId, module } = useParams<
     ProjectPathProps & ModulePathParams & ServicePathProps
   >()
+  const { handleReloadFromCache } = props
   const { getString } = useStrings()
   const {
     serviceResponse,
@@ -108,12 +113,12 @@ export const ServiceDetailsHeader = (
             readOnly: false
           }}
         />
-        {hasRemoteFetchFailed && (
+        {!hasRemoteFetchFailed && (
           <EntityCachedCopy
             ref={serviceCachedCopyRef}
-            reloadContent={getString('common.pipeline')}
+            reloadContent={getString('service')}
             cacheResponse={serviceResponse?.cacheResponseMetadataDTO}
-            reloadFromCache={noop}
+            reloadFromCache={handleReloadFromCache}
             repo={defaultTo(gitDetails?.repoName, repoName)}
             filePath={defaultTo(gitDetails?.filePath, '')}
           />

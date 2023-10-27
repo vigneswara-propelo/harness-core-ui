@@ -11,7 +11,7 @@ import { Expander } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'
 import { parse } from 'yaml'
 import cx from 'classnames'
-import { defaultTo, isEqual, merge, noop, omit, set, get } from 'lodash-es'
+import { defaultTo, isEqual, merge, omit, set, get } from 'lodash-es'
 import * as Yup from 'yup'
 
 import {
@@ -154,8 +154,15 @@ export default function EnvironmentDetails(): React.ReactElement {
           }
         : {})
     },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     environmentIdentifier: defaultTo(environmentIdentifier, '')
   })
+
+  function handleReloadFromCache(): void {
+    refetch({
+      requestOptions: { headers: { 'Load-From-Cache': 'false' } }
+    })
+  }
 
   const environmentCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
   const isEnvironmentRemote = CDS_ENV_GITX && storeType === 'REMOTE'
@@ -186,12 +193,12 @@ export default function EnvironmentDetails(): React.ReactElement {
             readOnly: false
           }}
         />
-        {hasRemoteFetchFailed && (
+        {!hasRemoteFetchFailed && (
           <EntityCachedCopy
             ref={environmentCachedCopyRef}
-            reloadContent={getString('common.pipeline')}
             cacheResponse={environmentDetails.cacheResponseMetadataDTO}
-            reloadFromCache={noop}
+            reloadContent={getString('environment')}
+            reloadFromCache={handleReloadFromCache}
           />
         )}
       </div>
