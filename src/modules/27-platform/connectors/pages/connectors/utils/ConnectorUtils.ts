@@ -894,10 +894,10 @@ export const setupGCPFormData = async (connectorInfo: ConnectorInfoDTO, accountI
     delegateType: connectorInfo.spec.credential.type,
     password: await setSecretField(connectorInfo.spec.credential?.spec?.secretKeyRef, scopeQueryParams),
     connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate),
-    workloadPoolId: connectorInfo.spec.credential.spec.workloadPoolId,
-    providerId: connectorInfo.spec.credential.spec.providerId,
-    gcpProjectId: connectorInfo.spec.credential.spec.gcpProjectId,
-    serviceAccountEmail: connectorInfo.spec.credential.spec.serviceAccountEmail
+    workloadPoolId: connectorInfo.spec.credential?.spec?.workloadPoolId,
+    providerId: connectorInfo.spec.credential?.spec?.providerId,
+    gcpProjectId: connectorInfo.spec.credential?.spec?.gcpProjectId,
+    serviceAccountEmail: connectorInfo.spec.credential?.spec?.serviceAccountEmail
   }
 
   return formData
