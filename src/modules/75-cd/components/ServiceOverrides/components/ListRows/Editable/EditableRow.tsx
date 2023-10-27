@@ -53,7 +53,7 @@ import type {
 } from '@cd/components/EnvironmentsV2/EnvironmentDetails/ServiceOverrides/ServiceManifestOverride/ServiceManifestOverrideUtils'
 
 import RowItemFromValue from './RowItemFromValue/RowItemFromValue'
-import { VariableOverrideEditable } from './VariableOverrideEditable'
+import { VariableOverrideEditable } from './VariableOverrideEditable/VariableOverrideEditable'
 import RowActionButtons from './RowActionButtons'
 import ManifestOverrideInfo from '../ViewOnly/ManifestOverrideInfo'
 import ConfigFileOverrideInfo from '../ViewOnly/ConfigFileOverrideInfo'
