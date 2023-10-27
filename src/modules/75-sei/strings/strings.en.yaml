@@ -16,7 +16,6 @@ accountSettings:
     workflow: '{{ $.common.workflow}}'
     investment: Investment
     trellis: Trellis
-    trellisFactors: Trellis Factors
   advancedFeature:
     label: Advanced fetures
     tables: Tables

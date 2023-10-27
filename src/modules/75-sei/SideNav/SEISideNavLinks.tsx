@@ -81,7 +81,7 @@ const SEISideNavLinks = (mode: NAV_MODE): React.ReactElement => {
             icon="layers-outline"
           />
           <SideNav.Link
-            label={getString('sei.accountSettings.profile.trellisFactors')}
+            label={getString('sei.accountSettings.profile.trellis')}
             to={routes.toSEITrellisScoreProfile({ accountId, module })}
             icon="resource-stack"
           />

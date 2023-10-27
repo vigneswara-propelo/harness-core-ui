@@ -9403,7 +9403,6 @@ export interface StringsMap {
   'sei.accountSettings.profile.investment': string
   'sei.accountSettings.profile.label': string
   'sei.accountSettings.profile.trellis': string
-  'sei.accountSettings.profile.trellisFactors': string
   'sei.accountSettings.profile.workflow': string
   'sei.accountSettings.seiSettings.activityLogs': string
   'sei.accountSettings.seiSettings.apiKeys': string
