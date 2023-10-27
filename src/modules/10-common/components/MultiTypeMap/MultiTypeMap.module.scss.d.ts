@@ -7,9 +7,11 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly group: string
-  readonly minimalCard: string
-  readonly withoutAligning: string
-  readonly withoutSpacing: string
+  readonly fieldAndOptions: string
+  readonly grid: string
+  readonly marginZero: string
+  readonly multiTypeMap: string
+  readonly row: string
+  readonly rows: string
 }
 export default styles

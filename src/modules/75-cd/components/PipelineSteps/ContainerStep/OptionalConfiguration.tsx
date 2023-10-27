@@ -79,28 +79,31 @@ export default function OptionalConfiguration(props: {
     []
   )
 
-  const renderMultiTypeMap = React.useCallback(
-    ({ name, stringKey }: { name: string; stringKey: keyof StringsMap }): React.ReactElement => (
-      <div className={cx(stepCss.formGroup, stepCss.xlg, css.bottomMargin)}>
-        <MultiTypeMap
-          name={name}
-          valueMultiTextInputProps={{ expressions, allowableTypes }}
-          multiTypeFieldSelectorProps={{
-            label: (
-              <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
-                {getString(stringKey)}
-              </Text>
-            ),
-            disableTypeSelection: true
-          }}
-          configureOptionsProps={{
-            hideExecutionTimeField: true
-          }}
-          disabled={readonly}
-        />
-      </div>
-    ),
-    [expressions, getString]
+  const renderMultiTypeMap = ({
+    name,
+    stringKey
+  }: {
+    name: string
+    stringKey: keyof StringsMap
+  }): React.ReactElement => (
+    <div className={cx(stepCss.xlg, css.bottomMargin)}>
+      <MultiTypeMap
+        name={name}
+        valueMultiTextInputProps={{ expressions, allowableTypes }}
+        multiTypeFieldSelectorProps={{
+          label: (
+            <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
+              {getString(stringKey)}
+            </Text>
+          ),
+          disableTypeSelection: true
+        }}
+        configureOptionsProps={{
+          hideExecutionTimeField: true
+        }}
+        disabled={readonly}
+      />
+    </div>
   )
 
   const renderMultiTypeList = React.useCallback(

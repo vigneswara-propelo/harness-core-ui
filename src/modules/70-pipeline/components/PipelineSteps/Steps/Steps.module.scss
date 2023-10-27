@@ -71,34 +71,6 @@
     margin-bottom: 5px !important;
   }
 
-  &.sm {
-    width: 45%;
-  }
-
-  &.md {
-    width: 55%;
-  }
-
-  &.lg {
-    width: 75%;
-  }
-
-  &.xlg {
-    width: 85%;
-  }
-
-  &.xxlg {
-    width: 106%;
-  }
-
-  &.lgOverride {
-    width: 75% !important;
-  }
-
-  &.kvpairLg {
-    width: 70%;
-  }
-
   &.alignStart {
     align-items: start;
   }
@@ -122,6 +94,34 @@
       margin-bottom: var(--spacing-3);
     }
   }
+}
+
+.sm {
+  width: 45%;
+}
+
+.md {
+  width: 55%;
+}
+
+.lg {
+  width: 75%;
+}
+
+.xlg {
+  width: 85%;
+}
+
+.xxlg {
+  width: 106%;
+}
+
+.lgOverride {
+  width: 75% !important;
+}
+
+.kvpairLg {
+  width: 70%;
 }
 
 .divider {

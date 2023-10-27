@@ -27,6 +27,9 @@ import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector, {
   MultiTypeFieldSelectorProps
 } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { shouldRenderRunTimeInputViewWithAllowedValues } from '@modules/70-pipeline/utils/CIUtils'
+import { ValueInputSet } from '@pipeline/components/InputSetView/MultiTypeMapInputSet/ValueInputSet'
+
 import css from './MultiTypeMapInputSet.module.scss'
 
 export type MapType = { [key: string]: string }
@@ -40,7 +43,7 @@ interface MultiTypeMapConfigureOptionsProps
   variableName?: ConfigureOptionsProps['variableName']
 }
 
-export interface MultiTypeMapProps {
+export interface MultiTypeMapInputSetProps {
   name: string
   multiTypeFieldSelectorProps: Omit<MultiTypeFieldSelectorProps, 'name' | 'defaultValueToReset' | 'children'>
   valueMultiTextInputProps?: Omit<MultiTextInputProps, 'name'>
@@ -58,20 +61,23 @@ export interface MultiTypeMapProps {
   appliedInputSetValue?: Record<string, any>
   hasValuesAsRuntimeInput?: boolean // doesn't support additional rows when fixed key/value expects value
   keyValuePlaceholders?: Array<string>
+  template?: any
+  /** path of the field in `template` */
+  fieldPath?: string
 }
 
 function generateNewValue(): { id: string; key: string; value: string } {
   return { id: uuid('', nameSpace()), key: '', value: '' }
 }
 
-const getInitialValueInCorrectFormat = (initialValue: Record<string, any>) =>
+const getInitialValueInCorrectFormat = (initialValue: Record<string, any>): MapUIType =>
   Object.keys(initialValue || {}).map(key => ({
     id: uuid('', nameSpace()),
     key: key,
     value: initialValue[key]
   }))
 
-export const MultiTypeMapInputSet = (props: MultiTypeMapProps): React.ReactElement => {
+export function MultiTypeMapInputSet(props: MultiTypeMapInputSetProps): React.ReactElement {
   const {
     name,
     multiTypeFieldSelectorProps,
@@ -87,6 +93,8 @@ export const MultiTypeMapInputSet = (props: MultiTypeMapProps): React.ReactEleme
     appliedInputSetValue,
     hasValuesAsRuntimeInput,
     keyValuePlaceholders,
+    template,
+    fieldPath,
     ...restProps
   } = props
 
@@ -235,6 +243,46 @@ export const MultiTypeMapInputSet = (props: MultiTypeMapProps): React.ReactEleme
             {value.map(({ id, key, value: valueValue }, index: number) => {
               const keyError = get(error, `[${index}].key`)
 
+              const valueTemplatePath = `${fieldPath}[${key}]`
+              const valueHasAllowedValues = shouldRenderRunTimeInputViewWithAllowedValues(valueTemplatePath, template)
+
+              const valueField = (
+                <div className={css.valueField}>
+                  {valueHasAllowedValues ? (
+                    <ValueInputSet
+                      name={`${name}[${index}].value`}
+                      value={valueValue}
+                      defaultValueToReset=""
+                      template={template}
+                      fieldPath={valueTemplatePath}
+                      onChange={v => changeValue(index, 'value', typeof v === 'string' ? v : '')}
+                      disabled={disabled}
+                      allowableTypes={
+                        valueMultiTextInputProps.allowableTypes ?? [
+                          MultiTypeInputType.FIXED,
+                          MultiTypeInputType.EXPRESSION
+                        ]
+                      }
+                      expressions={valueMultiTextInputProps.expressions}
+                      width="100%"
+                    />
+                  ) : (
+                    <MultiTextInput
+                      name={`${name}[${index}].value`}
+                      textProps={{ name: `${name}[${index}].value` }}
+                      value={valueValue}
+                      intent={(touched || hasSubmitted) && error ? Intent.DANGER : Intent.NONE}
+                      disabled={disabled}
+                      onChange={v => changeValue(index, 'value', v as any)}
+                      data-testid={`value-${name}-[${index}]`}
+                      allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+                      {...valueMultiTextInputProps}
+                      placeholder={keyValuePlaceholders?.[1]}
+                    />
+                  )}
+                </div>
+              )
+
               return (
                 <div className={cx(css.group, css.withoutAligning)} key={id}>
                   <div>
@@ -261,19 +309,7 @@ export const MultiTypeMapInputSet = (props: MultiTypeMapProps): React.ReactEleme
                       </Text>
                     )}
                     <div className={cx(css.group, css.withoutAligning, css.withoutSpacing)}>
-                      <MultiTextInput
-                        name=""
-                        textProps={{ name: `${name}[${index}].value` }}
-                        value={valueValue}
-                        intent={(touched || hasSubmitted) && error ? Intent.DANGER : Intent.NONE}
-                        disabled={disabled}
-                        onChange={v => changeValue(index, 'value', v as any)}
-                        data-testid={`value-${name}-[${index}]`}
-                        allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
-                        {...valueMultiTextInputProps}
-                        style={{ flexShrink: 1 }}
-                        placeholder={keyValuePlaceholders?.[1]}
-                      />
+                      {valueField}
                       {!disabled && !hasValuesAsRuntimeInput && (
                         <Button
                           icon="main-trash"

@@ -951,10 +951,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
 
   const renderMultiTypeMap = React.useCallback(
     ({ fieldName, stringKey }: { fieldName: string; stringKey: keyof StringsMap }): React.ReactElement => (
-      <Container className={cx(css.bottomMargin7, css.formGroup)}>
+      <Container className={css.bottomMargin7}>
         <MultiTypeMap
-          appearance={'minimal'}
-          cardStyle={{ width: '50%' }}
           name={fieldName}
           valueMultiTextInputProps={{ expressions, allowableTypes }}
           multiTypeFieldSelectorProps={{

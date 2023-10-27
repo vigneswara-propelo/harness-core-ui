@@ -232,9 +232,8 @@ export function AwsCdkCommonOptionalFieldsEdit(props: AwsCdkStepCommonOptionalFi
         )}
       </Container>
 
-      <Container className={stepCss.formGroup}>
+      <Container className={stepCss.bottomSpacing}>
         <MultiTypeMap
-          appearance={'minimal'}
           name={'spec.envVariables'}
           valueMultiTextInputProps={{ expressions, allowableTypes }}
           multiTypeFieldSelectorProps={{
@@ -248,9 +247,8 @@ export function AwsCdkCommonOptionalFieldsEdit(props: AwsCdkStepCommonOptionalFi
         />
       </Container>
       {awsCdkCommonParametersTypes.includes(defaultTo(stepType, StepType.AwsCdkDiff)) ? (
-        <Container className={stepCss.formGroup}>
+        <Container className={stepCss.bottomSpacing}>
           <MultiTypeMap
-            appearance={'minimal'}
             name={'spec.parameters'}
             valueMultiTextInputProps={{ expressions, allowableTypes }}
             multiTypeFieldSelectorProps={{

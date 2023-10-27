@@ -23,6 +23,21 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { getAllowedValuesFromTemplate } from '@pipeline/utils/CIUtils'
 import { getStringValueWithComma } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 
+export const getEscapedSelectOptions = (data: SelectOption[]): SelectOption[] => {
+  if (!isArray(data)) {
+    return data
+  }
+  const values: SelectOption[] = data.map(item => {
+    const value = typeof item.value === 'string' ? (getStringValueWithComma(item.value) as string) : item.value
+    return {
+      label: item.label,
+      value: value ?? item.value,
+      icon: item.icon
+    }
+  })
+  return values
+}
+
 interface UseRenderMultiTypeInputWithAllowedValuesArgs {
   name: string
   tooltipProps?: DataTooltipInterface
@@ -47,23 +62,6 @@ export const useRenderMultiTypeInputWithAllowedValues = ({
   onChange
 }: UseRenderMultiTypeInputWithAllowedValuesArgs): { getMultiTypeInputWithAllowedValues: () => JSX.Element } => {
   const { expressions } = useVariablesExpression()
-
-  // In case we have strings with commas, we store them as \'a,b\' in Yaml (or other places) and send this accepted format to BE
-  // Hence we need to convert item values coming here to suitable format (only for strings with commas)
-  const getEscapedSelectOptions = (data: SelectOption[]): SelectOption[] => {
-    if (!isArray(data)) {
-      return data
-    }
-    const values: SelectOption[] = data.map(item => {
-      const value = typeof item.value === 'string' ? (getStringValueWithComma(item.value) as string) : item.value
-      return {
-        label: item.label,
-        value: value ?? item.value,
-        icon: item.icon
-      }
-    })
-    return values
-  }
 
   const getMultiTypeInputWithAllowedValues = (): JSX.Element => {
     const allowedValues = getAllowedValuesFromTemplate(template, fieldPath)

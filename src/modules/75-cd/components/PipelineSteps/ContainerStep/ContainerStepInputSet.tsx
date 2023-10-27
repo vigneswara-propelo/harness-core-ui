@@ -22,7 +22,7 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { useQueryParams } from '@common/hooks'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
-import MultiTypeMapInputSet from '@common/components/MultiTypeMapInputSet/MultiTypeMapInputSet'
+import MultiTypeMapInputSet from '@modules/70-pipeline/components/InputSetView/MultiTypeMapInputSet/MultiTypeMapInputSet'
 import { Connectors } from '@platform/connectors/constants'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
@@ -88,36 +88,37 @@ function ContainerStepInputSetBasic(props: ContainerStepProps): React.ReactEleme
     [expressions, getString]
   )
 
-  const renderMultiTypeMapInputSet = React.useCallback(
-    ({
-      fieldName,
-      stringKey,
-      hasValuesAsRuntimeInput
-    }: {
-      fieldName: string
-      stringKey: keyof StringsMap
-      hasValuesAsRuntimeInput: boolean
-    }): React.ReactElement => (
-      <MultiTypeMapInputSet
-        appearance={'minimal'}
-        cardStyle={{ width: '50%' }}
-        name={fieldName}
-        valueMultiTextInputProps={{ expressions, allowableTypes }}
-        multiTypeFieldSelectorProps={{
-          label: (
-            <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
-              {getString(stringKey)}
-            </Text>
-          ),
-          disableTypeSelection: true,
-          allowedTypes: [MultiTypeInputType.FIXED]
-        }}
-        disabled={readonly}
-        formik={formik}
-        hasValuesAsRuntimeInput={hasValuesAsRuntimeInput}
-      />
-    ),
-    [expressions, getString]
+  const renderMultiTypeMapInputSet = ({
+    name,
+    stringKey,
+    hasValuesAsRuntimeInput,
+    fieldPath
+  }: {
+    name: string
+    stringKey: keyof StringsMap
+    hasValuesAsRuntimeInput: boolean
+    fieldPath: string
+  }): React.ReactElement => (
+    <MultiTypeMapInputSet
+      appearance={'minimal'}
+      cardStyle={{ width: '50%' }}
+      name={name}
+      valueMultiTextInputProps={{ expressions, allowableTypes }}
+      multiTypeFieldSelectorProps={{
+        label: (
+          <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
+            {getString(stringKey)}
+          </Text>
+        ),
+        disableTypeSelection: true,
+        allowedTypes: [MultiTypeInputType.FIXED]
+      }}
+      disabled={readonly}
+      formik={formik}
+      hasValuesAsRuntimeInput={hasValuesAsRuntimeInput}
+      template={template}
+      fieldPath={fieldPath}
+    />
   )
 
   const renderMultiTypeCheckboxInputSet = React.useCallback(
@@ -367,12 +368,13 @@ function ContainerStepInputSetBasic(props: ContainerStepProps): React.ReactEleme
       {(isValueRuntimeInput(template?.spec?.envVariables) ||
         (template?.spec?.envVariables && Object.entries(template?.spec?.envVariables).length > 0)) &&
         renderMultiTypeMapInputSet({
-          fieldName: `${prefix}spec.envVariables`,
+          name: `${prefix}spec.envVariables`,
           stringKey: 'environmentVariables',
           hasValuesAsRuntimeInput: getHasValuesAsRuntimeInputFromTemplate({
             template,
             templateFieldName: 'spec.envVariables'
-          })
+          }),
+          fieldPath: 'spec.envVariables'
         })}
 
       {isValueRuntimeInput(infrastructureSpec?.serviceAccountName) &&
@@ -392,17 +394,19 @@ function ContainerStepInputSetBasic(props: ContainerStepProps): React.ReactEleme
       {(isValueRuntimeInput(infrastructureSpec?.labels) ||
         (infrastructureSpec?.labels && Object.entries(infrastructureSpec?.labels).length > 0)) &&
         renderMultiTypeMapInputSet({
-          fieldName: `${prefix}spec.infrastructure.spec.labels`,
+          name: `${prefix}spec.infrastructure.spec.labels`,
           stringKey: 'ci.labels',
-          hasValuesAsRuntimeInput: true
+          hasValuesAsRuntimeInput: true,
+          fieldPath: 'spec.infrastructure.spec.labels'
         })}
 
       {(isValueRuntimeInput(infrastructureSpec?.annotations) ||
         (infrastructureSpec?.annotations && Object.entries(infrastructureSpec?.annotations).length > 0)) &&
         renderMultiTypeMapInputSet({
-          fieldName: `${prefix}spec.infrastructure.spec.annotations`,
+          name: `${prefix}spec.infrastructure.spec.annotations`,
           stringKey: 'common.annotations',
-          hasValuesAsRuntimeInput: true
+          hasValuesAsRuntimeInput: true,
+          fieldPath: 'spec.infrastructure.spec.annotations'
         })}
 
       {hasContainerSecurityContextFields && (
@@ -468,9 +472,10 @@ function ContainerStepInputSetBasic(props: ContainerStepProps): React.ReactEleme
       {(isValueRuntimeInput(infrastructureSpec?.nodeSelector) ||
         (infrastructureSpec?.nodeSelector && Object.entries(infrastructureSpec?.nodeSelector).length > 0)) &&
         renderMultiTypeMapInputSet({
-          fieldName: `${prefix}spec.infrastructure.spec.nodeSelector`,
+          name: `${prefix}spec.infrastructure.spec.nodeSelector`,
           stringKey: 'pipeline.buildInfra.nodeSelector',
-          hasValuesAsRuntimeInput: true
+          hasValuesAsRuntimeInput: true,
+          fieldPath: 'spec.infrastructure.spec.nodeSelector'
         })}
 
       {isValueRuntimeInput(infrastructureSpec?.tolerations) && (

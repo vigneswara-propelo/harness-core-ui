@@ -21,6 +21,7 @@ import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { Connectors, connectorUrlType } from '@platform/connectors/constants'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { isValueRuntimeInput } from '@modules/10-common/utils/utils'
 import { ConnectorRefWidth } from './constants'
 
 // Returns first 7 letters of commit ID
@@ -100,7 +101,9 @@ export const getHasValuesAsRuntimeInputFromTemplate = ({
   if (!template || !templateFieldName) {
     return false
   }
-  return Object.values(get(template, templateFieldName, {})).includes(RUNTIME_INPUT_VALUE)
+  return Object.values(get(template, templateFieldName, {})).some(value =>
+    isValueRuntimeInput(value as string | undefined)
+  )
 }
 
 export const shouldRenderRunTimeInputView = (value: any): boolean => {

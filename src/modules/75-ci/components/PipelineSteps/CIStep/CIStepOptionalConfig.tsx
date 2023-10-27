@@ -16,7 +16,7 @@ import type { StringsMap } from 'stringTypes'
 import { FormMultiTypeCheckboxField } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
 import { MultiTypeTextField, MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText'
 import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
-import { MultiTypeMapInputSet } from '@common/components/MultiTypeMapInputSet/MultiTypeMapInputSet'
+import { MultiTypeMapInputSet } from '@modules/70-pipeline/components/InputSetView/MultiTypeMapInputSet/MultiTypeMapInputSet'
 import MultiTypeList, { ConnectorReferenceProps } from '@common/components/MultiTypeList/MultiTypeList'
 import { MultiTypeListInputSet } from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
 import {
@@ -314,7 +314,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
       keyLabel,
       valueLabel,
       restrictToSingleEntry,
-      keyValuePlaceholders
+      keyValuePlaceholders,
+      enableValueConfigureOptions = false
     }: {
       fieldName: string
       stringKey: keyof StringsMap
@@ -324,8 +325,9 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
       valueLabel?: keyof StringsMap
       restrictToSingleEntry?: boolean
       keyValuePlaceholders?: Array<string>
+      enableValueConfigureOptions?: boolean
     }): React.ReactElement => (
-      <Container className={cx(css.formGroup, css.bottomMargin5, css.lg)}>
+      <Container className={cx(css.lg, css.bottomMargin5)}>
         <MultiTypeMap
           name={fieldName}
           valueMultiTextInputProps={{ expressions, allowableTypes }}
@@ -351,6 +353,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
           restrictToSingleEntry={restrictToSingleEntry}
           keyValuePlaceholders={keyValuePlaceholders}
           configureOptionsProps={{ hideExecutionTimeField: true }}
+          enableValueConfigureOptions={enableValueConfigureOptions}
         />
       </Container>
     ),
@@ -407,6 +410,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
           hasValuesAsRuntimeInput={getHasValuesAsRuntimeInputFromTemplate({ template, templateFieldName })}
           keyValuePlaceholders={keyValuePlaceholders}
           configureOptionsProps={{ hideExecutionTimeField: true }}
+          template={template}
+          fieldPath={templateFieldName}
         />
       </Container>
     ),
@@ -728,7 +733,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
           : renderMultiTypeMap({
               fieldName: `${prefix}spec.envVariables`,
               stringKey: 'environmentVariables',
-              allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
+              allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep,
+              enableValueConfigureOptions: true
             })
         : null}
       {get(enableFields, MapComponentFieldNames.WITH)

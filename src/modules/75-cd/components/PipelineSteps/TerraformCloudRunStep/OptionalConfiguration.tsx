@@ -36,7 +36,7 @@ export default function OptionalConfiguration(props: {
   return (
     <>
       <FormikForm>
-        <div className={cx(stepCss.formGroup, stepCss.xlg)}>
+        <div className={cx(stepCss.xlg, stepCss.bottomSpacing)}>
           <MultiTypeMap
             name="spec.spec.variables"
             valueMultiTextInputProps={{

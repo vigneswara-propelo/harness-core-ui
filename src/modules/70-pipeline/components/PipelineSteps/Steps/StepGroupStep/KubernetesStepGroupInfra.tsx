@@ -67,23 +67,24 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
     stringKey: keyof StringsMap
   }): React.ReactElement => {
     return (
-      <MultiTypeMap
-        appearance={'minimal'}
-        name={fieldName}
-        valueMultiTextInputProps={{ expressions, allowableTypes }}
-        multiTypeFieldSelectorProps={{
-          label: (
-            <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
-              {getString(stringKey)}
-            </Text>
-          ),
-          disableTypeSelection: true
-        }}
-        configureOptionsProps={{
-          hideExecutionTimeField: true
-        }}
-        disabled={readonly}
-      />
+      <div className={stepCss.bottomSpacing}>
+        <MultiTypeMap
+          name={fieldName}
+          valueMultiTextInputProps={{ expressions, allowableTypes }}
+          multiTypeFieldSelectorProps={{
+            label: (
+              <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
+                {getString(stringKey)}
+              </Text>
+            ),
+            disableTypeSelection: true
+          }}
+          configureOptionsProps={{
+            hideExecutionTimeField: true
+          }}
+          disabled={readonly}
+        />
+      </div>
     )
   }
 
@@ -271,13 +272,9 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
           />
         </Container>
 
-        <Container className={stepCss.formGroup}>
-          {renderMultiTypeMap({ fieldName: 'labels', stringKey: 'pipelineSteps.labelsLabel' })}
-        </Container>
+        {renderMultiTypeMap({ fieldName: 'labels', stringKey: 'pipelineSteps.labelsLabel' })}
 
-        <Container className={stepCss.formGroup}>
-          {renderMultiTypeMap({ fieldName: 'annotations', stringKey: 'common.annotations' })}
-        </Container>
+        {renderMultiTypeMap({ fieldName: 'annotations', stringKey: 'common.annotations' })}
 
         {renderContainerSecurityContext()}
 
@@ -305,12 +302,10 @@ export function KubernetesStepGroupInfra(props: KubernetesStepGroupInfraProps): 
           )}
         </Container>
 
-        <Container className={stepCss.formGroup}>
-          {renderMultiTypeMap({
-            fieldName: 'nodeSelector',
-            stringKey: 'pipeline.buildInfra.nodeSelector'
-          })}
-        </Container>
+        {renderMultiTypeMap({
+          fieldName: 'nodeSelector',
+          stringKey: 'pipeline.buildInfra.nodeSelector'
+        })}
 
         <Container
           className={stepCss.formGroup}

@@ -851,14 +851,14 @@ exports[`ECR Step Edit View should render properly for AWS VMs build infra 1`] =
                       </div>
                     </div>
                     <div
-                      class="StyledProps--font StyledProps--main formGroup bottomMargin5 lg"
+                      class="StyledProps--font StyledProps--main lg bottomMargin5"
                     >
                       <div
-                        class="group withoutSpacing"
+                        class="multiTypeMap grid"
                       >
                         <div
                           class="bp3-form-group"
-                          style="flex-grow: 1; margin-bottom: 0px;"
+                          style="margin-bottom: 0px;"
                         >
                           <label
                             class="bp3-label"
@@ -949,14 +949,14 @@ exports[`ECR Step Edit View should render properly for AWS VMs build infra 1`] =
                       </div>
                     </div>
                     <div
-                      class="StyledProps--font StyledProps--main formGroup bottomMargin5 lg"
+                      class="StyledProps--font StyledProps--main lg bottomMargin5"
                     >
                       <div
-                        class="group withoutSpacing"
+                        class="multiTypeMap grid"
                       >
                         <div
                           class="bp3-form-group"
-                          style="flex-grow: 1; margin-bottom: 0px;"
+                          style="margin-bottom: 0px;"
                         >
                           <label
                             class="bp3-label"

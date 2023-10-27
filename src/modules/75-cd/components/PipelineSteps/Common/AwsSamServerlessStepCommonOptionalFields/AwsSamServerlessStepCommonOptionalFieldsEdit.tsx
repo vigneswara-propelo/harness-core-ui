@@ -289,21 +289,18 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
         )}
       </Container>
 
-      <Container className={stepCss.formGroup}>
-        <MultiTypeMap
-          appearance={'minimal'}
-          name={'spec.envVariables'}
-          valueMultiTextInputProps={{ expressions, allowableTypes }}
-          multiTypeFieldSelectorProps={{
-            label: getString('environmentVariables'),
-            disableTypeSelection: true
-          }}
-          configureOptionsProps={{
-            hideExecutionTimeField: true
-          }}
-          disabled={readonly}
-        />
-      </Container>
+      <MultiTypeMap
+        name={'spec.envVariables'}
+        valueMultiTextInputProps={{ expressions, allowableTypes }}
+        multiTypeFieldSelectorProps={{
+          label: getString('environmentVariables'),
+          disableTypeSelection: true
+        }}
+        configureOptionsProps={{
+          hideExecutionTimeField: true
+        }}
+        disabled={readonly}
+      />
     </>
   )
 }

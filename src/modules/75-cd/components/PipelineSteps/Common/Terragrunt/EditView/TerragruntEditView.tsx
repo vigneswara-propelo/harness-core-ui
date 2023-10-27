@@ -751,7 +751,7 @@ export default function TerragruntEditView(
                             />
                           </div>
                           <div className={css.divider} />
-                          <div className={cx(stepCss.formGroup, css.addMarginTop, css.addMarginBottom)}>
+                          <div className={cx(css.addMarginTop, css.addMarginBottom)}>
                             <MultiTypeMap
                               valueMultiTextInputProps={{
                                 expressions,
