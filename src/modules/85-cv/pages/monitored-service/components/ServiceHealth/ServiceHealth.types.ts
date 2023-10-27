@@ -16,5 +16,4 @@ export interface ServiceHealthProps {
   monitoredServiceIdentifier: string
   serviceIdentifier: string
   environmentIdentifier: string
-  hasChangeSource: boolean
 }

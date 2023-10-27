@@ -713,7 +713,6 @@ changeSource:
   incident: Incident
   noChangeSource: No Change Sources Present
   noData: No changes data available
-  configureChangeSource: Configure Change Sources
   addChangeSource: Add New Change Source
   selectChangeSource: Select Change Source
   defineChangeSource: Define Change Sources

@@ -8,7 +8,7 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react'
 import { defaultTo, noop } from 'lodash-es'
 import type { IDrawerProps } from '@blueprintjs/core'
-import { useParams, Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import type { Column } from 'react-table'
 import { Icon, Container, NoDataCard, PageError, TableV2, Pagination, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -17,13 +17,10 @@ import { useChangeEventList, useChangeEventListForAccount } from 'services/cv'
 import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
-  getCVMonitoringServicesSearchParam,
   getErrorMessage,
   getMonitoredServiceIdentifierProp,
   getMonitoredServiceIdentifiers
 } from '@cv/utils/CommonUtils'
-import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
-import routes from '@common/RouteDefinitions'
 import noDataImage from '@cv/assets/noChangesData.svg'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import type { ChangesTableContentWrapper, ChangesTableInterface } from './ChangesTable.types'
@@ -37,7 +34,6 @@ export default function ChangesTable({
   isCardView = true,
   startTime,
   endTime,
-  hasChangeSource,
   monitoredServiceIdentifier,
   serviceIdentifier,
   environmentIdentifier,
@@ -53,9 +49,7 @@ export default function ChangesTable({
 }: ChangesTableInterface): JSX.Element {
   const [page, setPage] = useState(0)
   const { getString } = useStrings()
-  const { orgIdentifier, projectIdentifier, accountId, identifier } = useParams<
-    ProjectPathProps & { identifier: string }
-  >()
+  const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps & { identifier: string }>()
   const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
 
   const projectRef = useRef(projectIdentifier)
@@ -236,28 +230,6 @@ export default function ChangesTable({
     return (
       <ChangesTableWrapper {...wrapperProps}>
         <PageError message={getErrorMessage(error)} onClick={() => refetch()} />
-      </ChangesTableWrapper>
-    )
-  }
-
-  const configurationsTabRoute =
-    routes.toCVAddMonitoringServicesEdit({
-      accountId,
-      projectIdentifier,
-      orgIdentifier,
-      identifier,
-      module: 'cv'
-    }) + getCVMonitoringServicesSearchParam({ tab: MonitoredServiceEnum.Configurations })
-
-  if (!content.length && !hasChangeSource) {
-    return (
-      <ChangesTableWrapper {...wrapperProps}>
-        <NoDataCard
-          image={noDataImage}
-          containerClassName={css.noDataContainer}
-          message={getString('cv.changeSource.noChangeSource')}
-          button={<Link to={configurationsTabRoute}>{getString('cv.changeSource.configureChangeSource')}</Link>}
-        />
       </ChangesTableWrapper>
     )
   }

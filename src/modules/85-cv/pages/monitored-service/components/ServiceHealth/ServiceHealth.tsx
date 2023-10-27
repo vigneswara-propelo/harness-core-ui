@@ -42,8 +42,7 @@ import css from './ServiceHealth.module.scss'
 export default function ServiceHealth({
   monitoredServiceIdentifier,
   serviceIdentifier,
-  environmentIdentifier,
-  hasChangeSource
+  environmentIdentifier
 }: ServiceHealthProps): JSX.Element {
   const location = useLocation()
   const history = useHistory()
@@ -283,7 +282,6 @@ export default function ServiceHealth({
             <ChangesTable
               startTime={changesTableAndSourceCardStartAndEndtimeWithSlider[0]}
               endTime={changesTableAndSourceCardStartAndEndtimeWithSlider[1]}
-              hasChangeSource={hasChangeSource}
               monitoredServiceIdentifier={monitoredServiceIdentifier}
             />
           </Container>

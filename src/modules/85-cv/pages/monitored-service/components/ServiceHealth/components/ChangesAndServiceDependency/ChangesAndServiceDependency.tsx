@@ -16,7 +16,6 @@ import css from './ChangesAndServiceDependency.module.scss'
 export default function ChangesAndServiceDependency({
   startTime,
   endTime,
-  hasChangeSource,
   serviceIdentifier,
   environmentIdentifier
 }: ChangesAndServiceDependencyInterface): JSX.Element {
@@ -28,7 +27,6 @@ export default function ChangesAndServiceDependency({
         <ChangesTable
           startTime={startTime as number}
           endTime={endTime as number}
-          hasChangeSource={hasChangeSource}
           serviceIdentifier={serviceIdentifier}
           environmentIdentifier={environmentIdentifier}
         />

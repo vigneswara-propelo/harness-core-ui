@@ -188,7 +188,6 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
               </Text>
               <ChangesTable
                 isCardView={false}
-                hasChangeSource
                 startTime={startTime}
                 endTime={endTime}
                 monitoredServiceIdentifier={sloDashboardWidget.monitoredServiceIdentifier}

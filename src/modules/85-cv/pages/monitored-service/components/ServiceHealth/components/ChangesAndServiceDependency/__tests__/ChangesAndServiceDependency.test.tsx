@@ -44,7 +44,6 @@ describe('ChangesAndServiceDependency', () => {
         <ChangesAndServiceDependency
           startTime={0}
           endTime={1}
-          hasChangeSource
           serviceIdentifier={'srv'}
           environmentIdentifier={'env'}
         />

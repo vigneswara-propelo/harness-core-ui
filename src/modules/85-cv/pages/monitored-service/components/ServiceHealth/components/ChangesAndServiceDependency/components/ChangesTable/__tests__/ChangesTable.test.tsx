@@ -38,7 +38,6 @@ describe('Change table', () => {
     const { container, getByText } = render(
       <TestWrapper>
         <ChangesTable
-          hasChangeSource
           startTime={0}
           endTime={1}
           serviceIdentifier={'srv'}
@@ -64,7 +63,6 @@ describe('Change table', () => {
     const { container } = render(
       <TestWrapper>
         <ChangesTable
-          hasChangeSource
           startTime={0}
           endTime={1}
           serviceIdentifier={'srv'}
@@ -91,7 +89,6 @@ describe('Change table', () => {
     const { container, getByText } = render(
       <TestWrapper>
         <ChangesTable
-          hasChangeSource
           startTime={0}
           endTime={1}
           serviceIdentifier={'srv'}
@@ -144,7 +141,6 @@ describe('Change table', () => {
     const { container } = render(
       <TestWrapper>
         <ChangesTable
-          hasChangeSource
           startTime={1}
           endTime={2}
           serviceIdentifier={'srv'}
@@ -196,7 +192,6 @@ describe('Change table', () => {
     const { container, getByText } = render(
       <TestWrapper>
         <ChangesTable
-          hasChangeSource
           startTime={1}
           endTime={2}
           serviceIdentifier={'srv'}
@@ -235,7 +230,6 @@ describe('Change table', () => {
       <TestWrapper>
         <ChangesTable
           isCardView={false}
-          hasChangeSource
           startTime={1}
           endTime={2}
           serviceIdentifier={'srv'}

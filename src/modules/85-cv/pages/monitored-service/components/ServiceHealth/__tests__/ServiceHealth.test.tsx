@@ -169,8 +169,7 @@ describe('Unit tests for ServiceHealth', () => {
   const props = {
     monitoredServiceIdentifier: 'monitored_service_identifier',
     serviceIdentifier: 'service-identifier',
-    environmentIdentifier: 'env-identifier',
-    hasChangeSource: true
+    environmentIdentifier: 'env-identifier'
   }
   test('Verify if all the fields are rendered correctly inside ServiceHealth and with correct document title', async () => {
     render(<WrapperComponent {...props} />)

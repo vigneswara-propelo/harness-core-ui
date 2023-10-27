@@ -9591,7 +9591,6 @@ export interface StringsMap {
   'cv.changeSource.chaosExperiment.event': string
   'cv.changeSource.chaosExperiment.events': string
   'cv.changeSource.chaosExperiment.label': string
-  'cv.changeSource.configureChangeSource': string
   'cv.changeSource.connectChangeSource': string
   'cv.changeSource.defineChangeSource': string
   'cv.changeSource.deleteChangeSourceWarning': string

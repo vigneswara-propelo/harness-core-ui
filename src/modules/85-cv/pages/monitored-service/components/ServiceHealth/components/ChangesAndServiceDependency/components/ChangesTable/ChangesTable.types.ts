@@ -13,7 +13,6 @@ export interface ChangesTableInterface {
   isCardView?: boolean
   startTime: number
   endTime: number
-  hasChangeSource: boolean
   isChangesPage?: boolean
   monitoredServiceIdentifier?: string
   serviceIdentifier?: string | string[]
