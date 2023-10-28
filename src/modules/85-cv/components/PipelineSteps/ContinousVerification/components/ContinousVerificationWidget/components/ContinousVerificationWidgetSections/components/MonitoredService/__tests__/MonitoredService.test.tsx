@@ -8,11 +8,19 @@
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import {
+  getEnvironmentIdentifier,
   getEnvironmentIdentifierFromStage,
   getServiceIdentifierFromStage,
-  getStageToDeriveServiceFrom
+  getStageToDeriveValueFrom
 } from '../MonitoredService.utils'
-import { mockedPipeline, mockedSelectedDerivedStage, mockedSelectedStageNewDesign } from './MonitoredService.mock'
+import {
+  mockedPipeline,
+  mockedSelectedDerivedStage,
+  mockedSelectedStageNewDesign,
+  pipelineInfoMock,
+  selectedStageWithReferredStageMock,
+  selectedStateWithoutReferredStageMock
+} from './MonitoredService.mock'
 
 describe('Unit tests for MonitoredService', () => {
   test('Verify if getServiceIdentifierFromStage method gives correct serviceIdentifier when service is derived from a stage', async () => {
@@ -77,7 +85,7 @@ describe('getStageToDeriveServiceFrom', () => {
     const stageIdToDeriveServiceFrom = 'stage2'
     const expectedStage = { stage: { identifier: 'stage2' } }
 
-    const result = getStageToDeriveServiceFrom(pipeline, stageIdToDeriveServiceFrom)
+    const result = getStageToDeriveValueFrom(pipeline, stageIdToDeriveServiceFrom)
 
     expect(result).toEqual(expectedStage)
   })
@@ -85,8 +93,26 @@ describe('getStageToDeriveServiceFrom', () => {
   test('should return null when stageIdToDeriveServiceFrom is not found', () => {
     const stageIdToDeriveServiceFrom = 'nonexistentStage'
 
-    const result = getStageToDeriveServiceFrom(pipeline, stageIdToDeriveServiceFrom)
+    const result = getStageToDeriveValueFrom(pipeline, stageIdToDeriveServiceFrom)
 
     expect(result).toBeNull()
+  })
+
+  test('getEnvironmentIdentifier should give correct environment from its referred stage', () => {
+    const result = getEnvironmentIdentifier(
+      selectedStageWithReferredStageMock as StageElementWrapper<DeploymentStageElementConfig>,
+      pipelineInfoMock as unknown as PipelineInfoConfig
+    )
+
+    expect(result).toBe('<+input>')
+  })
+
+  test('getEnvironmentIdentifier should give correct environment from its stage values if it is not referring from other stages', () => {
+    const result = getEnvironmentIdentifier(
+      selectedStateWithoutReferredStageMock as unknown as StageElementWrapper<DeploymentStageElementConfig>,
+      pipelineInfoMock as unknown as PipelineInfoConfig
+    )
+
+    expect(result).toBe('test')
   })
 })

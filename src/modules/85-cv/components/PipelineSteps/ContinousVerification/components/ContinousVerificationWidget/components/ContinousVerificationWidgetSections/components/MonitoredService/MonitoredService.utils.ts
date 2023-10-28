@@ -46,7 +46,7 @@ export function getServiceIdentifierFromStage(
 
   if (stageFromServiceConfig || stageFromService) {
     const stageIdToDeriveServiceFrom = stageFromServiceConfig?.stage || stageFromService?.stage
-    const stageToDeriveServiceFrom = getStageToDeriveServiceFrom(pipeline, stageIdToDeriveServiceFrom)
+    const stageToDeriveServiceFrom = getStageToDeriveValueFrom(pipeline, stageIdToDeriveServiceFrom)
     serviceId = getServiceIdFromStage(stageToDeriveServiceFrom as StageElementWrapper<DeploymentStageElementConfig>)
   } else {
     serviceId = getServiceIdFromStage(selectedStage as StageElementWrapper<DeploymentStageElementConfig>)
@@ -54,25 +54,25 @@ export function getServiceIdentifierFromStage(
   return serviceId
 }
 
-export function getStageToDeriveServiceFrom(
+export function getStageToDeriveValueFrom(
   pipeline: PipelineInfoConfig,
   stageIdToDeriveServiceFrom: string | undefined
 ): StageElementWrapperConfig | null {
-  let stageToDeriveServiceFrom = null
+  let stageToDeriveValueFrom = null
   const { stages = [] } = pipeline
   for (const stageInfo of stages) {
     const { stage, parallel } = stageInfo
     if (parallel) {
       for (const parallelStage of parallel) {
         if (parallelStage?.stage?.identifier === stageIdToDeriveServiceFrom) {
-          stageToDeriveServiceFrom = parallelStage
+          stageToDeriveValueFrom = parallelStage
         }
       }
     } else if (stage?.identifier === stageIdToDeriveServiceFrom) {
-      stageToDeriveServiceFrom = stageInfo
+      stageToDeriveValueFrom = stageInfo
     }
   }
-  return stageToDeriveServiceFrom
+  return stageToDeriveValueFrom
 }
 
 export function getEnvironmentIdentifierFromStage(
@@ -84,6 +84,23 @@ export function getEnvironmentIdentifierFromStage(
     selectedStage?.stage?.spec?.environment?.environmentRef ||
     ''
   )
+}
+
+export function getEnvironmentIdentifier(
+  selectedStage: StageElementWrapper<DeploymentStageElementConfig> | undefined,
+  pipeline: PipelineInfoConfig
+): string {
+  const stageToUseEnv = selectedStage?.stage?.spec?.environment?.useFromStage
+
+  if (stageToUseEnv) {
+    const stageIdToDeriveEnvFrom = stageToUseEnv?.stage
+    const stageToDeriveEnvFrom = getStageToDeriveValueFrom(pipeline, stageIdToDeriveEnvFrom)
+    return getEnvironmentIdentifierFromStage(
+      (stageToDeriveEnvFrom as StageElementWrapper<DeploymentStageElementConfig>) ?? ''
+    )
+  } else {
+    return getEnvironmentIdentifierFromStage(selectedStage as StageElementWrapper<DeploymentStageElementConfig>) ?? ''
+  }
 }
 
 export function isFirstTimeOpenForDefaultMonitoredSvc(

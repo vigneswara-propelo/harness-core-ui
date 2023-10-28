@@ -34,7 +34,7 @@ import {
 import type { MonitoredServiceProps } from './MonitoredService.types'
 import {
   getCanFetchMonitoredServices,
-  getEnvironmentIdentifierFromStage,
+  getEnvironmentIdentifier,
   getNewSpecs,
   getServiceIdentifierFromStage,
   isAnExpression
@@ -67,8 +67,8 @@ export default function MonitoredService({
   const isMonitoredServiceDefaultType = formValues?.spec?.monitoredService?.type === MONITORED_SERVICE_TYPE.DEFAULT
 
   const environmentIdentifier = useMemo(() => {
-    return getEnvironmentIdentifierFromStage(selectedStage)
-  }, [selectedStage])
+    return getEnvironmentIdentifier(selectedStage, pipeline)
+  }, [selectedStage, pipeline])
 
   const serviceIdentifier = useMemo(() => {
     return getServiceIdentifierFromStage(selectedStage, pipeline)

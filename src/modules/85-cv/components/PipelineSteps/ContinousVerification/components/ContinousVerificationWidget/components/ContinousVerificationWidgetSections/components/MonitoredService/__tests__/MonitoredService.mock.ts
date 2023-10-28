@@ -340,3 +340,59 @@ export const mockedPipeline = {
     }
   ]
 }
+
+export const selectedStageWithReferredStageMock = {
+  stage: {
+    name: 'testD2',
+    identifier: 'testD2',
+    description: '',
+    type: 'Deployment',
+    spec: {
+      environment: {
+        useFromStage: {
+          stage: 'testD'
+        }
+      }
+    }
+  }
+}
+
+export const selectedStateWithoutReferredStageMock = {
+  stage: {
+    name: 'testD2',
+    identifier: 'testD2',
+    description: '',
+    type: 'Deployment',
+    spec: {
+      environment: {
+        environmentRef: 'test',
+        deployToAll: false,
+        environmentInputs: 'test1',
+        serviceOverrideInputs: 'test2',
+        infrastructureDefinitions: 'test3'
+      }
+    }
+  }
+}
+
+export const pipelineInfoMock = {
+  stages: [
+    {
+      stage: {
+        name: 'testD',
+        identifier: 'testD',
+        description: '',
+        type: 'Deployment',
+        spec: {
+          environment: {
+            environmentRef: '<+input>',
+            deployToAll: false,
+            environmentInputs: '<+input>',
+            serviceOverrideInputs: '<+input>',
+            infrastructureDefinitions: '<+input>'
+          }
+        }
+      }
+    }
+  ]
+}
