@@ -7,7 +7,7 @@
 
 import { FormikErrors, yupToFormErrors } from 'formik'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-import { isEmpty, has, set, isBoolean, get, pick, defaultTo } from 'lodash-es'
+import { isEmpty, has, set, isBoolean, get, pick, defaultTo, uniqWith, isEqual } from 'lodash-es'
 import * as Yup from 'yup'
 import type { K8sDirectInfraYaml } from 'services/ci'
 import type { DeploymentStageConfig, Infrastructure, ServiceYamlV2, StepGroupElementConfig } from 'services/cd-ng'
@@ -136,7 +136,8 @@ export function getChildPipelinesMetadata(pipeline?: PipelineInfoConfig): childP
       }
     })
   }
-  return childPipelinesMetaData
+
+  return uniqWith(childPipelinesMetaData, isEqual)
 }
 
 export function getPromisesForChildPipeline(

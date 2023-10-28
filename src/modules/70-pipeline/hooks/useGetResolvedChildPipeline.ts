@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { isEmpty } from 'lodash-es'
+import { cloneDeep, isEmpty } from 'lodash-es'
 import produce from 'immer'
 import type { AccountPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type {
@@ -91,13 +91,17 @@ export function useGetResolvedChildPipeline(
             if (item.stage) {
               const childPipelineKey = getChildPipelineKey(item)
               if (item.stage.type === StageType.PIPELINE && childPipelineKey) {
-                ;(item.stage.spec as PipelineStageConfig).inputs = resolvedChildPipelineMap.get(childPipelineKey)
+                ;(item.stage.spec as PipelineStageConfig).inputs = cloneDeep(
+                  resolvedChildPipelineMap.get(childPipelineKey)
+                )
               }
             } else if (item.parallel) {
               item.parallel.forEach(node => {
                 const childPipelineKey = getChildPipelineKey(node)
                 if (node.stage?.type === StageType.PIPELINE && childPipelineKey) {
-                  ;(node.stage.spec as PipelineStageConfig).inputs = resolvedChildPipelineMap.get(childPipelineKey)
+                  ;(node.stage.spec as PipelineStageConfig).inputs = cloneDeep(
+                    resolvedChildPipelineMap.get(childPipelineKey)
+                  )
                 }
               })
             }
