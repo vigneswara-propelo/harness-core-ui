@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { cloneDeep, defaultTo, get, isEmpty, set, unset, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Dialog, Intent } from '@blueprintjs/core'
@@ -119,6 +119,9 @@ function FormContent({
   const [statusOptions, setStatusOptions] = useState<SelectOption[]>([])
   const [transitions, setTransitions] = useState<SelectOption[]>([])
   const connectorRefFixedValue = getGenuineValue(formik.values.spec.connectorRef)
+
+  const issueKeyType = useRef<MultiTypeInputType>(getMultiTypeFromValue(formik.values.spec.issueKey))
+
   const issueKeyValue = isMultiTypeFixed(getMultiTypeFromValue(formik.values.spec.issueKey))
     ? formik.values.spec.issueKey
     : ''
@@ -194,7 +197,7 @@ function FormContent({
   }, [issueTransitionsResponse?.data])
 
   useEffect(() => {
-    if (connectorRefFixedValue && issueKeyValue) {
+    if (connectorRefFixedValue && issueKeyValue && issueKeyType.current === MultiTypeInputType.FIXED) {
       refetchIssueUpdateMetadata({
         queryParams: {
           ...commonParams,
@@ -537,6 +540,7 @@ function FormContent({
           placeholder={getString('pipeline.jiraApprovalStep.issueKeyPlaceholder')}
           onChange={(value, _valueType, type) => {
             const formikValues = cloneDeep(formik.values)
+            issueKeyType.current = type
             set(formikValues, 'spec.issueKey', value)
             if (
               type === MultiTypeInputType.FIXED &&

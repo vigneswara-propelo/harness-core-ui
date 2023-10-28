@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { render, act, fireEvent, queryByAttribute, waitFor } from '@testing-library/react'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import * as ngServices from 'services/cd-ng'
@@ -25,7 +26,8 @@ import {
   mockFieldsMetadataResponse,
   mockStatus,
   mockTransitionResponse,
-  mockTransition
+  mockTransition,
+  getJiraUpdateEditModePropsWithCustomIssueKeyValue
 } from './JiraUpdateTestHelper'
 import type { JiraUpdateData } from '../types'
 import { processFormData } from '../helper'
@@ -35,7 +37,7 @@ jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 jest.mock('services/cd-ng', () => ({
   useGetConnector: () => mockConnectorResponse,
-  useGetJiraIssueUpdateMetadata: () => mockFieldsMetadataResponse,
+  useGetJiraIssueUpdateMetadata: jest.fn(),
   useGetJiraIssueCreateMetadata: () => mockProjectMetadataResponse,
   useGetJiraProjects: () => mockProjectsResponse,
   useGetIssueTransitions: jest.fn(),
@@ -46,7 +48,8 @@ describe('Jira Update fetch status', () => {
   beforeAll(() => {
     // eslint-disable-next-line
     // @ts-ignore
-    jest.spyOn(ngServices, 'useGetJiraStatuses').mockReturnValue(mockStatusErrorResponse),
+    jest.spyOn(ngServices, 'useGetJiraIssueUpdateMetadata').mockReturnValue(mockFieldsMetadataResponse),
+      jest.spyOn(ngServices, 'useGetJiraStatuses').mockReturnValue(mockStatusErrorResponse as any),
       jest.spyOn(ngServices, 'useGetIssueTransitions').mockReturnValue(mockTransitionResponse as any)
   })
   beforeEach(() => {
@@ -73,7 +76,8 @@ describe('Jira Update tests', () => {
   beforeAll(() => {
     // eslint-disable-next-line
     // @ts-ignore
-    jest.spyOn(ngServices, 'useGetJiraStatuses').mockReturnValue(mockStatusResponse)
+    jest.spyOn(ngServices, 'useGetJiraIssueUpdateMetadata').mockReturnValue(mockFieldsMetadataResponse)
+    jest.spyOn(ngServices, 'useGetJiraStatuses').mockReturnValue(mockStatusResponse as any)
     jest.spyOn(ngServices, 'useGetIssueTransitions').mockReturnValue(mockTransitionResponse as any)
   })
   beforeEach(() => {
@@ -375,6 +379,66 @@ describe('Jira Update tests', () => {
       },
       name: 'jira update step'
     })
+  })
+
+  test('Open a saved step - edit stage view and issueKey as runtime val', async () => {
+    const refetch = jest.fn()
+    jest
+      .spyOn(ngServices, 'useGetJiraIssueUpdateMetadata')
+      .mockReturnValue({ data: {}, refetch, cancel: jest.fn() } as any)
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    const props = { ...getJiraUpdateEditModePropsWithCustomIssueKeyValue(RUNTIME_INPUT_VALUE) }
+    render(
+      <TestStepWidget
+        initialValues={props.initialValues}
+        type={StepType.JiraUpdate}
+        stepViewType={StepViewType.Edit}
+        ref={ref}
+        onUpdate={props.onUpdate}
+      />
+    )
+
+    expect(refetch).not.toHaveBeenCalled()
+  })
+
+  test('Open a saved step - edit stage view and issueKey as expression val', async () => {
+    const refetch = jest.fn()
+    jest
+      .spyOn(ngServices, 'useGetJiraIssueUpdateMetadata')
+      .mockReturnValue({ data: {}, refetch, cancel: jest.fn() } as any)
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    const props = { ...getJiraUpdateEditModePropsWithCustomIssueKeyValue('<+test.expression>') }
+    render(
+      <TestStepWidget
+        initialValues={props.initialValues}
+        type={StepType.JiraUpdate}
+        stepViewType={StepViewType.Edit}
+        ref={ref}
+        onUpdate={props.onUpdate}
+      />
+    )
+
+    expect(refetch).not.toHaveBeenCalled()
+  })
+
+  test('Open a saved step - edit stage view and issueKey as fixed val', async () => {
+    const refetch = jest.fn()
+    jest
+      .spyOn(ngServices, 'useGetJiraIssueUpdateMetadata')
+      .mockReturnValue({ data: {}, refetch, cancel: jest.fn() } as any)
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    const props = { ...getJiraUpdateEditModePropsWithCustomIssueKeyValue('fixed') }
+    render(
+      <TestStepWidget
+        initialValues={props.initialValues}
+        type={StepType.JiraUpdate}
+        stepViewType={StepViewType.Edit}
+        ref={ref}
+        onUpdate={props.onUpdate}
+      />
+    )
+
+    expect(refetch).toHaveBeenCalled()
   })
 
   test('Minimum time cannot be less than 10s', () => {

@@ -99,6 +99,35 @@ export const getJiraUpdateEditModePropsWithValues = (): JiraUpdateStepModeProps 
   stepViewType: StepViewType.Edit
 })
 
+export const getJiraUpdateEditModePropsWithCustomIssueKeyValue = (issueKeyVal: string): JiraUpdateStepModeProps => ({
+  initialValues: {
+    timeout: '1d',
+    name: '',
+    type: 'JiraUpdate',
+    identifier: '',
+    spec: {
+      connectorRef: 'c1d1',
+      issueKey: issueKeyVal || 'tji-8097',
+      transitionTo: {
+        status: 'Done',
+        transitionName: ''
+      },
+      fields: [
+        { name: 'f21', value: 'value1' },
+        { name: 'f2', value: 2233 },
+        { name: 'date', value: '23-march' }
+      ]
+    }
+  },
+  onUpdate: jest.fn(),
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
+  stepViewType: StepViewType.Edit
+})
+
 export const getJiraUpdateDeploymentModeProps = (): JiraUpdateDeploymentModeProps => ({
   stepViewType: StepViewType.InputSet,
   initialValues: {
