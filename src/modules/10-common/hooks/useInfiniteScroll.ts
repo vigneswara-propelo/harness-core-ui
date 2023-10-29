@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, isUndefined } from 'lodash-es'
+import { defaultTo, isArray, isUndefined } from 'lodash-es'
 import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react'
 
 const DEFAULT_PAGE_SIZE = 10
@@ -84,12 +84,11 @@ export const useInfiniteScroll = (props: InfiniteScrollProps): InfiniteScrollRet
           const canFetchMore = response.data.pageItemCount === limit
           hasMore.current = canFetchMore && responseContent.length > 0
           setItems((prevItems: any) => {
+            const responseData = responseContent && isArray(responseContent) ? [...responseContent] : []
             if (offsetToFetch.current === 0) {
-              return responseContent && typeof responseContent[Symbol.iterator] === 'function'
-                ? [...responseContent]
-                : []
+              return responseData
             } else {
-              return [...prevItems, ...responseContent]
+              return [...prevItems, ...responseData]
             }
           })
           setError('')
