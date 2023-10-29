@@ -21,18 +21,18 @@ export const useEnforcementViolationsQueryParamOptions = () => {
   })
 }
 
-export type EnforcementViolationQueryParams = {
+export type PageOptions = {
   page: number
   size: number
   sort: string
   order: string
-  searchTerm: string
+  searchTerm: string | undefined
 }
 
 export const getQueryParamOptions = () => ({
   parseArrays: true,
   decoder: queryParamDecodeAll(),
-  processQueryParams(params: EnforcementViolationQueryParams): EnforcementViolationQueryParams {
+  processQueryParams(params: PageOptions): PageOptions {
     return {
       ...params,
       page: params.page ?? ENFORCEMENT_VIOLATIONS_PAGE_INDEX,

@@ -2393,7 +2393,6 @@ const routes = {
   toSSCA: withAccountId(() => '/ssca'),
   toSSCAOverview: withAccountId(() => '/ssca/overview'),
   toSSCAArtifacts: withProjectLevelRoute(() => '/artifacts'),
-  toSSCAComponents: withProjectLevelRoute(() => '/components'),
   // IDP
   toIDPDefaultPath: withAccountId(() => '/idp-default'),
   toIDP: withAccountId(() => '/idp'),

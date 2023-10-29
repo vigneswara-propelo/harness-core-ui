@@ -27,6 +27,7 @@ import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
 import { DelegateRouteDestinations } from '@platform/delegates/RouteDestinations'
 import { VariableRouteDestinations } from '@platform/variables/RouteDestinations'
 import { useQueryParamsOptions } from '@common/hooks/useQueryParams'
+import { PolicyViolationsDrawer } from '@modules/70-pipeline/pages/execution/ExecutionArtifactsView/PolicyViolations/PolicyViolationsDrawer'
 import { SSCACustomMicroFrontendProps } from './interfaces/SSCACustomMicroFrontendProps.types'
 import SSCASideNav from './components/SSCASideNav'
 
@@ -70,19 +71,18 @@ export default (
     </RouteWithLayout>
 
     <RouteWithLayout
-      exact
       sidebarProps={SSCASideNavProps}
       path={[
+        routes.toSSCA({ ...projectPathProps, ...moduleParams }),
         routes.toSSCAOverview({ ...projectPathProps, ...moduleParams }),
         routes.toProjectOverview({ ...projectPathProps, ...moduleParams }),
-        routes.toSSCAArtifacts({ ...projectPathProps, ...moduleParams }),
-        routes.toSSCAComponents({ ...projectPathProps, ...moduleParams })
+        routes.toSSCAArtifacts({ ...projectPathProps, ...moduleParams })
       ]}
     >
       <ChildAppMounter<SSCACustomMicroFrontendProps>
         ChildApp={RemoteSSCAApp}
         customHooks={{ useQueryParams, useUpdateQueryParams, useQueryParamsOptions }}
-        customComponents={{ Duration }}
+        customComponents={{ Duration, PolicyViolationsDrawer }}
       />
     </RouteWithLayout>
 

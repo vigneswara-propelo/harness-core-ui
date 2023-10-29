@@ -83,6 +83,7 @@ const renderArtifactsTab = (
       pathParams={getModuleParams(module)}
       defaultFeatureFlagValues={{
         SSCA_ENABLED: true,
+        SSCA_MANAGER_ENABLED: true,
         ...defaultFeatureFlagValues
       }}
     >

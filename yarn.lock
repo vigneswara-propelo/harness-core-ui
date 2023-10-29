@@ -3024,10 +3024,10 @@
   resolved "https://registry.yarnpkg.com/@harnessio/react-srm-service-client/-/react-srm-service-client-1.0.0.tgz#7b083a8e6dded6ffc549b279a034ed95faa88636"
   integrity sha512-77lYIWKP+uLkK0DMkiBxui3QQpDbuwK+hrpsgLx6nwrtkCouO9tEaNCFqKYt6Odes2aIl+4awZjqKMG5fn3H/A==
 
-"@harnessio/react-ssca-manager-client@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@harnessio/react-ssca-manager-client/-/react-ssca-manager-client-0.2.0.tgz#15b6681859a6d21255799e015eed18a2e5a0f03f"
-  integrity sha512-oLmmpYeF5qxTtSCJpwb9o0ybKXdFl30SVe07YUWCeKlY7Fj3XDcewDaW4bRIpGWTh7zfSoDD+T4eIviwuFQPfA==
+"@harnessio/react-ssca-manager-client@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@harnessio/react-ssca-manager-client/-/react-ssca-manager-client-0.4.0.tgz#47242e4c75584d81b424e48982e7e7fc09c00382"
+  integrity sha512-QlPQMyDZokIdtLr6zwElla0h6NjzSHmzqyzh3pFMgB4/2g1XZTPbxzXLf36P4r3XNkHCl1LXOx2Gzz4i8KiXlQ==
 
 "@harnessio/react-ssca-service-client@^0.2.0":
   version "0.2.0"

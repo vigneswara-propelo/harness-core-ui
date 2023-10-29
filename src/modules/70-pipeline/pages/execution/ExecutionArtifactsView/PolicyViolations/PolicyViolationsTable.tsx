@@ -11,7 +11,6 @@ import type { Column } from 'react-table'
 import { GetPolicyViolationsOkResponse, PolicyViolation } from '@harnessio/react-ssca-manager-client'
 import { useStrings } from 'framework/strings'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
-import { useUpdateQueryParams, useQueryParams } from '@common/hooks'
 import {
   PackageSupplierCell,
   PackageNameCell,
@@ -19,39 +18,40 @@ import {
   SortBy,
   LicenseCell
 } from './PolicyViolationsTableCells'
-import {
-  ENFORCEMENT_VIOLATIONS_PAGE_INDEX,
-  ENFORCEMENT_VIOLATIONS_PAGE_SIZE,
-  EnforcementViolationQueryParams,
-  getQueryParamOptions
-} from './utils'
+import { ENFORCEMENT_VIOLATIONS_PAGE_INDEX, ENFORCEMENT_VIOLATIONS_PAGE_SIZE, PageOptions } from './utils'
 import css from './PolicyViolations.module.scss'
 
 export interface PolicyViolationsTableProps {
   data: GetPolicyViolationsOkResponse
+  pageOptions: PageOptions
+  updatePageOptions: (pageOptions: Partial<PageOptions>) => void
 }
 
-export function PolicyViolationsTable({ data }: PolicyViolationsTableProps): React.ReactElement {
+export function PolicyViolationsTable({
+  data,
+  pageOptions,
+  updatePageOptions
+}: PolicyViolationsTableProps): React.ReactElement {
   const { getString } = useStrings()
-  const { updateQueryParams } = useUpdateQueryParams<Partial<EnforcementViolationQueryParams>>()
-  const { sort, order } = useQueryParams<EnforcementViolationQueryParams>(getQueryParamOptions())
 
   const { total, pageSize, pageCount, pageNumber } = data.pagination || {}
   const paginationProps = useDefaultPaginationProps({
     itemCount: total || ENFORCEMENT_VIOLATIONS_PAGE_INDEX,
     pageSize: pageSize || ENFORCEMENT_VIOLATIONS_PAGE_SIZE,
     pageCount: pageCount || 0,
-    pageIndex: pageNumber
+    pageIndex: pageNumber,
+    gotoPage: page => updatePageOptions({ page }),
+    onPageSizeChange: size => updatePageOptions({ page: 0, size })
   })
   const columns: Column<PolicyViolation>[] = React.useMemo(() => {
     // TODO: get this type exported from UICore table
     const getServerSortProps = (id: string): unknown => {
       return {
         enableServerSort: true,
-        isServerSorted: sort === id,
-        isServerSortedDesc: order === 'DESC',
+        isServerSorted: pageOptions.sort === id,
+        isServerSortedDesc: pageOptions.order === 'DESC',
         getSortedColumn: (sortBy: SortBy) => {
-          updateQueryParams({ sort: sortBy.sort, order: order === 'DESC' ? 'ASC' : 'DESC' })
+          updatePageOptions({ sort: sortBy.sort, order: pageOptions.order === 'DESC' ? 'ASC' : 'DESC' })
         }
       }
     }
@@ -83,7 +83,7 @@ export function PolicyViolationsTable({ data }: PolicyViolationsTableProps): Rea
         disableSortBy: true
       }
     ]
-  }, [getString, order, sort, updateQueryParams])
+  }, [getString, pageOptions.order, pageOptions.sort, updatePageOptions])
 
   return (
     <TableV2 className={css.table} columns={columns} data={data.content || []} sortable pagination={paginationProps} />

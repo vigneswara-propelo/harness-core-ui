@@ -18,6 +18,7 @@ import PipelineRouteDestinations from '@pipeline/PipelineRouteDestinations'
 import { Scope } from 'framework/types/types'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
+import { PolicyViolationsDrawer } from '@modules/70-pipeline/pages/execution/ExecutionArtifactsView/PolicyViolations/PolicyViolationsDrawer'
 
 const module: Module = 'ssca'
 
@@ -69,15 +70,15 @@ const SSCARouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
       </RouteWithContext>
 
       <RouteWithContext
-        exact
         path={[
+          routes.toSSCA({ ...projectPathProps, module, mode }),
           routes.toOverview({ ...projectPathProps, module, mode }),
           routes.toSSCAArtifacts({ ...projectPathProps, module, mode })
         ]}
       >
         <ChildAppMounter
           ChildApp={RemoteSSCAApp}
-          customComponents={{ Duration }}
+          customComponents={{ Duration, PolicyViolationsDrawer }}
           customHooks={{ useQueryParams, useUpdateQueryParams, useQueryParamsOptions }}
         />
       </RouteWithContext>

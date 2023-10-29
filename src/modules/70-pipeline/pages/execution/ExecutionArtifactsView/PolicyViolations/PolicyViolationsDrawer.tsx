@@ -25,18 +25,23 @@ import {
   GetPolicyViolationsQueryQueryParams,
   useGetPolicyViolationsQuery
 } from '@harnessio/react-ssca-manager-client'
-import React, { ReactElement, useRef } from 'react'
+import React, { ReactElement, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import EmptySearchResults from '@common/images/EmptySearchResults.svg'
-import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { Width } from '@common/constants/Utils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { PolicyViolationsTable } from './PolicyViolationsTable'
-import { EnforcementViolationQueryParams, getQueryParamOptions } from './utils'
+import {
+  ENFORCEMENT_VIOLATIONS_DEFAULT_SORT,
+  ENFORCEMENT_VIOLATIONS_DEFAULT_SORT_ORDER,
+  ENFORCEMENT_VIOLATIONS_PAGE_INDEX,
+  ENFORCEMENT_VIOLATIONS_PAGE_SIZE,
+  PageOptions
+} from './utils'
 import { PolicyViolationsTableOld } from './PolicyViolationsTableOld'
 import css from './PolicyViolations.module.scss'
 
@@ -51,15 +56,21 @@ export function PolicyViolationsDrawer({
 }: PolicyViolationsDrawerProps): ReactElement {
   const { getString } = useStrings()
   const searchRef = useRef({} as ExpandingSearchInputHandle)
-  const { updateQueryParams } = useUpdateQueryParams<Partial<EnforcementViolationQueryParams>>()
-  const { page, size, searchTerm, sort, order } = useQueryParams<EnforcementViolationQueryParams>(
-    getQueryParamOptions()
-  )
+  const [pageOptions, setPageOptions] = useState<PageOptions>({
+    page: ENFORCEMENT_VIOLATIONS_PAGE_INDEX,
+    size: ENFORCEMENT_VIOLATIONS_PAGE_SIZE,
+    sort: ENFORCEMENT_VIOLATIONS_DEFAULT_SORT,
+    order: ENFORCEMENT_VIOLATIONS_DEFAULT_SORT_ORDER,
+    searchTerm: undefined
+  })
+  const { page, size, searchTerm, sort, order } = pageOptions
   const { projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
+  const updatePageOptions = (data: Partial<typeof pageOptions>): void => setPageOptions(prev => ({ ...prev, ...data }))
+
   const resetFilter = (): void => {
-    updateQueryParams({ searchTerm: undefined, page: 0 })
-    searchRef.current.clear()
+    updatePageOptions({ searchTerm: '', page: 0 })
+    searchRef.current?.clear()
   }
 
   const SSCA_MANAGER_ENABLED = useFeatureFlag(FeatureFlag.SSCA_MANAGER_ENABLED)
@@ -75,7 +86,7 @@ export function PolicyViolationsDrawer({
         order
       }
     },
-    { enabled: !SSCA_MANAGER_ENABLED }
+    { enabled: SSCA_MANAGER_ENABLED }
   )
 
   const useGetPolicyViolationsQueryResult = useGetPolicyViolationsQuery(
@@ -86,12 +97,12 @@ export function PolicyViolationsDrawer({
       queryParams: {
         page,
         limit: size,
-        sort: sort as GetPolicyViolationsQueryQueryParams['sort'], // TODO: change the EnforcementViolationQueryParams client side type to this after removing FF
+        sort: sort as GetPolicyViolationsQueryQueryParams['sort'], // TODO: change the PageOptions client side type to this after removing FF
         order: order as GetPolicyViolationsQueryQueryParams['order'],
         search_text: searchTerm
       }
     },
-    { enabled: SSCA_MANAGER_ENABLED }
+    { enabled: !SSCA_MANAGER_ENABLED }
   )
 
   const { isLoading, error, refetch, data } = SSCA_MANAGER_ENABLED
@@ -153,7 +164,7 @@ export function PolicyViolationsDrawer({
           <ExpandingSearchInput
             defaultValue={searchTerm}
             alwaysExpanded
-            onChange={value => updateQueryParams({ searchTerm: value, page: 0 })}
+            onChange={value => updatePageOptions({ searchTerm: value, page: 0 })}
             width={Width.LARGE}
             autoFocus={false}
             ref={searchRef}
@@ -162,9 +173,17 @@ export function PolicyViolationsDrawer({
 
         {data &&
           (SSCA_MANAGER_ENABLED ? (
-            <PolicyViolationsTable data={data as GetPolicyViolationsOkResponse} />
+            <PolicyViolationsTable
+              data={data as GetPolicyViolationsOkResponse}
+              pageOptions={pageOptions}
+              updatePageOptions={updatePageOptions}
+            />
           ) : (
-            <PolicyViolationsTableOld data={data as EnforcementnewViolationsOkResponse} />
+            <PolicyViolationsTableOld
+              data={data as EnforcementnewViolationsOkResponse}
+              pageOptions={pageOptions}
+              updatePageOptions={updatePageOptions}
+            />
           ))}
       </Page.Body>
     </Drawer>

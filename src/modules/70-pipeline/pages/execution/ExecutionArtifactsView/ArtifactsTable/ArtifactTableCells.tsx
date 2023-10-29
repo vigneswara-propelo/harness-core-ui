@@ -123,7 +123,10 @@ export const TypeCell: CellType = ({ row }) => {
     },
     {
       onSuccess: _data =>
-        downloadBlob(defaultTo(_data.content.sbom, ''), `${artifact.sbomName}_${artifact.tag}_sbom.json`),
+        downloadBlob(
+          defaultTo(_data.content.sbom, ''),
+          `sbom_${artifact.imageName}_${artifact.tag}_${artifact.stepExecutionId}.json`
+        ),
       enabled: false,
       retry: false
     }
@@ -139,7 +142,10 @@ export const TypeCell: CellType = ({ row }) => {
       enabled: false,
       retry: false,
       onSuccess: _data =>
-        downloadBlob(defaultTo(_data.content.sbom, ''), `${artifact.sbomName}_${artifact.tag}_sbom.json`)
+        downloadBlob(
+          defaultTo(_data.content.sbom, ''),
+          `sbom_${artifact.imageName}_${artifact.tag}_${artifact.stepExecutionId}.json`
+        )
     }
   )
 
@@ -174,11 +180,7 @@ export const TypeCell: CellType = ({ row }) => {
           onClick={() =>
             downloadBlob(
               JSON.stringify(get(artifact, 'provenance', {}), null, 2),
-              `${get(
-                artifact,
-                'provenance.predicate.buildDefinition.internalParameters.pipelineExecutionId',
-                ''
-              )}_slsa_provenance.json`
+              `slsa_provenance_${get(artifact, 'stage', '')}_${get(artifact, 'node.identifier', '')}.json`
             )
           }
         >
