@@ -34,11 +34,6 @@ const SEISideNavLinks = (mode: NAV_MODE): React.ReactElement => {
       <SideNav.Section>
         <SideNav.Scope scope={[Scope.PROJECT]} scopeSwitchProps={projectLevelRedirectionProps}>
           <SideNav.Link
-            label={getString('getStarted')}
-            to={routes.toSEIGetStarted({ accountId, projectIdentifier, orgIdentifier, module })}
-            icon="get-started"
-          />
-          <SideNav.Link
             label={getString('sei.insights')}
             to={routes.toSEIInsights({ accountId, projectIdentifier, orgIdentifier, module })}
             icon="graph-increase"

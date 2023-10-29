@@ -70,6 +70,6 @@ describe('getAccountLevelRedirectionProps function', () => {
     expect(typeof result?.[Scope.PROJECT]?.link?.onClick).toBe('function')
 
     result?.[Scope.PROJECT]?.link?.onClick(targetScopeParams)
-    expect(history.push).toHaveBeenCalledWith('/account/123/sei/orgs/org456/projects/project123/sei-home')
+    expect(history.push).toHaveBeenCalledWith('/account/123/sei/orgs/org456/projects/project123/dashboards')
   })
 })

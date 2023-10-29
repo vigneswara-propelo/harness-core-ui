@@ -1049,8 +1049,7 @@ const routes = {
 
   // sei routes
   toSEI: withModeModuleAndScopePrefix<ModulePathParams>(() => `/`),
-  toSEIInsights: withModeModuleAndScopePrefix<ModulePathParams>(() => `/sei-home`),
-  toSEIGetStarted: withModeModuleAndScopePrefix<ModulePathParams>(() => `/get-started`),
+  toSEIInsights: withModeModuleAndScopePrefix<ModulePathParams>(() => `/dashboards`),
   toSEIIntegrationMapping: withModeModuleAndScopePrefix<ModulePathParams>(() => `/sei-integration-mapping`),
   toSEICollection: withModeModuleAndScopePrefix<ModulePathParams>(() => `/configuration/organization`),
 
