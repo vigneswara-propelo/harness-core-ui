@@ -5,22 +5,25 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, get } from 'lodash-es'
+import { defaultTo, get, pick } from 'lodash-es'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ArtifactListConfig, ArtifactSource, useGetServiceV2 } from 'services/cd-ng'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { parse } from '@common/utils/YamlHelperMethods'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { StoreMetadata, StoreType } from '@modules/10-common/constants/GitSyncTypes'
 
 // Effect to find TagType to evaluate kind of component to show for Digest
 export const useIsTagRegex = ({
   serviceIdentifier,
+  gitMetadata,
   artifact,
   artifactPath,
   tagOrVersionRegexKey
 }: {
   serviceIdentifier: string
+  gitMetadata?: StoreMetadata
   artifact: ArtifactSource
   artifactPath: string
   tagOrVersionRegexKey: string
@@ -28,13 +31,18 @@ export const useIsTagRegex = ({
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [isTagRegex, setIsTagRegex] = useState(false)
   const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+  const gitQueryParams =
+    gitMetadata?.storeType === StoreType.REMOTE
+      ? { ...pick(gitMetadata, ['storeType', 'connectorRef', 'branch', 'repoName']) }
+      : {}
   const { data: service, loading: isServiceLoading } = useGetServiceV2({
     serviceIdentifier: serviceIdentifier,
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      fetchResolvedYaml: true
+      fetchResolvedYaml: true,
+      ...gitQueryParams
     }
   })
 

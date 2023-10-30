@@ -22,7 +22,7 @@ import {
 import { Color } from '@harness/design-system'
 import { Collapse } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
-import { defaultTo, get, isNil, set } from 'lodash-es'
+import { defaultTo, get, isNil, pick, set } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
 
@@ -32,7 +32,7 @@ import { useStrings } from 'framework/strings'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { NGServiceV2InfoConfig, ServiceSpec } from 'services/cd-ng'
+import type { EntityGitDetails, NGServiceV2InfoConfig, ServiceSpec } from 'services/cd-ng'
 import { StageFormContextProvider } from '@pipeline/context/StageFormContext'
 
 import { useDeepCompareEffect } from '@common/hooks'
@@ -41,6 +41,8 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
+import { StoreMetadata, StoreType } from '@modules/10-common/constants/GitSyncTypes'
+import GitRemoteDetails from '@modules/10-common/components/GitRemoteDetails/GitRemoteDetails'
 import type { FormState, ServiceData } from '../DeployServiceEntityUtils'
 import css from './ServiceEntitiesList.module.scss'
 
@@ -54,6 +56,8 @@ export interface ServiceEntityCardProps extends ServiceData {
   cardClassName?: string
   isPropogateFromStage: boolean
   serviceIndex: number
+  storeMetadata?: StoreMetadata
+  entityGitDetails?: EntityGitDetails
 }
 
 const getScopedRefUsingIdentifier = (
@@ -82,7 +86,9 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
     deploymentType,
     cardClassName,
     isPropogateFromStage,
-    serviceIndex
+    serviceIndex,
+    storeMetadata = {},
+    entityGitDetails
   } = props
   const [showInputs, setShowInputs] = React.useState(false)
   const { getString } = useStrings()
@@ -90,7 +96,7 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
   const scopedServiceRef = getScopedRefUsingIdentifier(formik, service)
   const [template, setTemplate] = React.useState<any>(serviceInputs?.serviceDefinition?.spec)
   const arifactsSpecPath = `serviceInputs.['${scopedServiceRef}'].serviceDefinition.spec`
-
+  const { storeType, connectorRef } = storeMetadata
   const type = service.serviceDefinition?.type as ServiceDeploymentType
 
   const { accountId } = useParams<PipelinePathProps>()
@@ -132,26 +138,50 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
                 </Layout.Horizontal>
               )}
               <div className={css.row}>
-                <div className={css.serviceNameIconWrapper}>
-                  <span className={css.serviceIcon}>
-                    {type ? <Icon name={deploymentIconMap[type]} size={24} /> : null}
-                  </span>
-                  <span className={css.serviceNameWrapper}>
-                    <Text color={Color.PRIMARY_7} font="normal" lineClamp={1}>
-                      {service.name}
-                    </Text>
-                    <Text color={Color.GREY_500} font="small">
-                      {getString('idLabel', { id: service.identifier })}
-                    </Text>
-                  </span>
-                </div>
+                <Layout.Horizontal className={css.serviceMetadata} margin={{ right: 'xlarge' }}>
+                  <div className={css.serviceNameIconWrapper}>
+                    <span className={css.serviceIcon}>
+                      {type ? <Icon name={deploymentIconMap[type]} size={24} /> : null}
+                    </span>
+                    <span className={css.serviceNameWrapper}>
+                      <Text color={Color.PRIMARY_7} font="normal" lineClamp={1}>
+                        {service.name}
+                      </Text>
+                      <Text color={Color.GREY_500} font="small">
+                        {getString('idLabel', { id: service.identifier })}
+                      </Text>
+                    </span>
+                  </div>
+                  {storeType === StoreType.REMOTE ? (
+                    <GitRemoteDetails
+                      connectorRef={connectorRef}
+                      repoName={entityGitDetails?.repoName}
+                      branch={entityGitDetails?.branch}
+                      filePath={entityGitDetails?.filePath}
+                      fileUrl={entityGitDetails?.fileUrl}
+                      flags={{
+                        readOnly: true,
+                        showBranch: true,
+                        borderless: true
+                      }}
+                    />
+                  ) : null}
+                </Layout.Horizontal>
+
                 {!isPropogateFromStage && (
                   <Layout.Horizontal>
                     <RbacButton
                       icon="Edit"
                       data-testid={`edit-service-${service.identifier}`}
                       disabled={readonly}
-                      onClick={() => onEditClick({ service, serviceInputs })}
+                      onClick={() =>
+                        onEditClick({
+                          service,
+                          serviceInputs,
+                          ...pick(storeMetadata, ['storeType', 'connectorRef']),
+                          entityGitDetails
+                        })
+                      }
                       minimal
                       aria-label={getString('editService')}
                       permission={{
@@ -218,7 +248,12 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
                           readonly={readonly}
                           customStepProps={{
                             stageIdentifier,
-                            serviceIdentifier: scopedServiceRef
+                            serviceIdentifier: scopedServiceRef,
+                            gitMetadata: {
+                              storeType,
+                              connectorRef,
+                              ...pick(entityGitDetails, ['repoName', 'branch'])
+                            }
                           }}
                         />
                       </StageFormContextProvider>

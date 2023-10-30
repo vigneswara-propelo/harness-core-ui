@@ -29,6 +29,8 @@ import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { ChildPipelineMetadataType } from '@pipeline/components/PipelineInputSetForm/ChainedPipelineInputSetUtils'
 import { useGetChildPipelineMetadata } from '@pipeline/hooks/useGetChildPipelineMetadata'
 import { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import { usePipelineContext } from '@modules/70-pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { StoreMetadata } from '@modules/10-common/constants/GitSyncTypes'
 import ExperimentalInput from '../K8sServiceSpecForms/ExperimentalInput'
 import type { K8SDirectServiceStep } from '../K8sServiceSpecInterface'
 
@@ -38,6 +40,7 @@ interface PrimaryArtifactRefProps {
   readonly: boolean
   allowableTypes: AllowedTypes
   serviceIdentifier?: string
+  gitMetadata?: StoreMetadata
   stepViewType?: StepViewType
   primaryArtifact?: PrimaryArtifact
   formik?: FormikContextType<unknown>
@@ -53,6 +56,7 @@ function PrimaryArtifactRef({
   readonly,
   formik,
   serviceIdentifier = '',
+  gitMetadata,
   stepViewType,
   childPipelineMetadata
 }: PrimaryArtifactRefProps): React.ReactElement | null {
@@ -63,9 +67,19 @@ function PrimaryArtifactRef({
   const { getStageFormTemplate, updateStageFormTemplate } = useStageFormContext()
   const primaryRefFormikValue = get(formik?.values, `${path}.artifacts.primary.primaryArtifactRef`)
   const isExecutionView = !!executionIdentifier
+  const {
+    state: { storeMetadata, gitDetails }
+  } = usePipelineContext()
+
+  const remoteQueryParams = {
+    parentEntityConnectorRef: storeMetadata?.connectorRef,
+    parentEntityRepoName: storeMetadata?.repoName,
+    repoName: gitMetadata?.repoName,
+    branch: gitMetadata?.branch || gitDetails?.branch
+  }
 
   const { data: artifactSourceResponse, loading: loadingArtifactSourceResponse } = useGetArtifactSourceInputs({
-    queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier },
+    queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier, ...remoteQueryParams },
     serviceIdentifier
   })
 

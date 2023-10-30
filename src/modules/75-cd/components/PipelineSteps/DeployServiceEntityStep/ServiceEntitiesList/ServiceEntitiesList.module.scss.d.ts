@@ -16,6 +16,7 @@ declare const styles: {
   readonly row: string
   readonly serviceIcon: string
   readonly serviceInputs: string
+  readonly serviceMetadata: string
   readonly serviceNameIconWrapper: string
   readonly serviceNameWrapper: string
   readonly toggleWrapper: string

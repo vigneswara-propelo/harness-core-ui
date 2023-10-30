@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
 import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd'
 import cx from 'classnames'
-import { cloneDeep, defaultTo } from 'lodash-es'
+import { cloneDeep, defaultTo, pick } from 'lodash-es'
 import { useToggleOpen, ConfirmationDialog, AllowedTypes, ModalDialog, SelectOption } from '@harness/uicore'
 import type { ModalDialogProps } from '@harness/uicore/dist/components/ModalDialog/ModalDialog'
 import { Intent } from '@harness/design-system'
@@ -23,6 +23,7 @@ import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentMetaData, ServiceYaml } from 'services/cd-ng'
 
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
+import { StoreMetadata } from '@modules/10-common/constants/GitSyncTypes'
 import type { FormState, ServiceData } from '../DeployServiceEntityUtils'
 import { ServiceEntityCard } from './ServiceEntityCard'
 import css from './ServiceEntitiesList.module.scss'
@@ -133,6 +134,10 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
                 className={cx(css.cardsContainer, { [css.draggingOver]: snapshot.isDraggingOver })}
               >
                 {servicesData.map((row, index: number) => {
+                  const serviceStoreMetadata: StoreMetadata = {
+                    storeType: row?.storeType,
+                    connectorRef: row?.connectorRef
+                  }
                   return (
                     <ServiceEntityCard
                       key={row.service.identifier}
@@ -147,6 +152,8 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
                       isPropogateFromStage={isPropogateFromStage}
                       cardClassName={servicesData.length - 1 !== index ? css.marginBottom : ''}
                       serviceIndex={index}
+                      storeMetadata={serviceStoreMetadata}
+                      entityGitDetails={row?.entityGitDetails}
                     />
                   )
                 })}
@@ -166,7 +173,15 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
             serviceToEdit?.service.serviceDefinition?.type as ServiceDeploymentType,
             selectedDeploymentType
           )}
-          serviceResponse={serviceToEdit ? { ...serviceToEdit.service, accountId } : undefined}
+          serviceResponse={
+            serviceToEdit
+              ? {
+                  ...serviceToEdit.service,
+                  accountId,
+                  ...pick(serviceToEdit, ['storeType', 'connectorRef', 'entityGitDetails'])
+                }
+              : undefined
+          }
           onCloseModal={onCloseEditModal}
           onServiceCreate={handleServiceEntityUpdate}
           isServiceCreateModalView={false}

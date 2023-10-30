@@ -57,6 +57,7 @@ export function getScopeFromDTO<T extends ScopedObjectDTO>(obj: T): Scope {
 export type ScopeAndIdentifier = {
   scope: Scope
   identifier: string
+  record?: any
 }
 
 const getScopedItems = (items: ScopeAndIdentifier[] = [], scope: Scope) => {

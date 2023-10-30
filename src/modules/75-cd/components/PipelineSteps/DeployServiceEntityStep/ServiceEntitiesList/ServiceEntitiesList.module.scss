@@ -39,18 +39,22 @@
   display: grid;
   grid-template-columns: 1fr 64px;
 
-  .serviceNameIconWrapper {
-    display: flex;
-    align-items: center;
-    column-gap: var(--spacing-4);
+  .serviceMetadata {
+    justify-content: space-between;
 
-    .serviceIcon {
-      display: block;
-    }
-
-    .serviceNameWrapper {
+    .serviceNameIconWrapper {
       display: flex;
-      flex-flow: column;
+      align-items: center;
+      column-gap: var(--spacing-4);
+
+      .serviceIcon {
+        display: block;
+      }
+
+      .serviceNameWrapper {
+        display: flex;
+        flex-flow: column;
+      }
     }
   }
 }

@@ -18,6 +18,9 @@ import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import serviceEmptyStateSvg from '@pipeline/icons/emptyInstanceDetail.svg'
 import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
 import GitRemoteDetails from '@modules/10-common/components/GitRemoteDetails/GitRemoteDetails'
+import { getConnectorIdentifierWithScope } from '@modules/27-platform/connectors/utils/utils'
+import { getScopeFromDTO } from '@modules/10-common/components/EntityReference/EntityReference'
+import { defaultGitContextBranchPlaceholder } from '@modules/10-common/utils/gitSyncUtils'
 import css from './FormMultiTypeServiceField.module.scss'
 
 export function getReferenceFieldProps({
@@ -35,6 +38,8 @@ export function getReferenceFieldProps({
   deploymentMetadata,
   setPagedServiceData,
   selectedServices,
+  userSelectedBranches,
+  setUserSelectedBranches,
   getString
 }: any): Omit<
   ReferenceSelectProps<ServiceResponseDTO>,
@@ -109,6 +114,8 @@ export function getReferenceFieldProps({
     isMultiSelect,
     selectedReferences: selectedServices,
     recordRender: function recordRender({ item, selected: checked }) {
+      const serviceId = getConnectorIdentifierWithScope(getScopeFromDTO(item?.record), item?.record?.identifier || '')
+      let selectedBranch
       return (
         <Layout.Horizontal margin={{ left: 'small' }} flex={{ distribution: 'space-between' }} className={css.item}>
           <Layout.Horizontal spacing="medium" className={css.leftInfo}>
@@ -126,12 +133,19 @@ export function getReferenceFieldProps({
             <GitRemoteDetails
               connectorRef={item?.record?.connectorRef}
               repoName={item?.record?.entityGitDetails?.repoName}
-              branch={item?.record?.fallbackBranch}
+              branch={selectedBranch || userSelectedBranches[serviceId] || defaultGitContextBranchPlaceholder}
               filePath={item?.record?.entityGitDetails?.filePath}
-              fileUrl={item?.record?.entityGitDetails?.fileUrl}
               flags={{
-                readOnly: true,
+                readOnly: !checked,
                 showBranch: true
+              }}
+              onBranchChange={svc => {
+                if (item?.record?.entityGitDetails) {
+                  selectedBranch = svc?.branch
+                  if (selectedBranch !== userSelectedBranches[serviceId]) {
+                    setUserSelectedBranches({ ...userSelectedBranches, [serviceId]: selectedBranch })
+                  }
+                }
               }}
             />
           ) : null}

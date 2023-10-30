@@ -10,6 +10,7 @@ import { Icon, Text, SelectOption } from '@harness/uicore'
 import { PopoverInteractionKind, Position } from '@blueprintjs/core'
 import cx from 'classnames'
 import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranchSelectV2'
+import { defaultGitContextBranchPlaceholder } from '@modules/10-common/utils/gitSyncUtils'
 import css from './GitRemoteDetails.module.scss'
 
 export interface GitRemoteDetailsProps {
@@ -97,7 +98,13 @@ const GitRemoteDetails = ({
       )}
       {showBranch ? (
         readOnly ? (
-          <Text lineClamp={1} className={cx(css.repoDetails, branchCustomClassName)}>
+          <Text
+            lineClamp={1}
+            className={cx(css.repoDetails, branchCustomClassName)}
+            data-tooltip-id={
+              branch === defaultGitContextBranchPlaceholder ? 'defaultGitContextBranchPlaceholder' : undefined
+            }
+          >
             {branch}
           </Text>
         ) : (

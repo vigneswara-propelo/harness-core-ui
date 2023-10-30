@@ -11,7 +11,7 @@ import { useParams } from 'react-router-dom'
 import { useToaster, shouldShowError } from '@harness/uicore'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
-import type { DeploymentMetaData, ServiceDefinition, ServiceYaml } from 'services/cd-ng'
+import type { DeploymentMetaData, Failure, ServiceDefinition, ServiceYaml } from 'services/cd-ng'
 import {
   useGetServiceAccessListQuery,
   useGetServicesYamlAndRuntimeInputsQuery,
@@ -30,6 +30,7 @@ export interface UseGetServicesDataProps {
   deploymentMetadata?: DeploymentMetaData
   parentStoreMetadata?: StoreMetadata
   serviceIdentifiers: string[]
+  serviceGitBranches?: Record<string, string | undefined>
   deploymentTemplateIdentifier?: string
   versionLabel?: string
   lazyService?: boolean
@@ -38,6 +39,7 @@ export interface UseGetServicesDataProps {
 export interface UseGetServicesDataReturn {
   servicesList: ServiceYaml[]
   servicesData: ServiceData[]
+  remoteFetchError: Failure | undefined
   loadingServicesList: boolean
   updatingData: boolean
   loadingServicesData: boolean
@@ -54,14 +56,17 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
     deploymentType,
     gitOpsEnabled,
     serviceIdentifiers,
+    serviceGitBranches,
     deploymentTemplateIdentifier,
     versionLabel,
     lazyService,
     deploymentMetadata,
     parentStoreMetadata
   } = props
+
   const [servicesList, setServicesList] = useState<ServiceYaml[]>([])
   const [servicesData, setServicesData] = useState<ServiceData[]>([])
+  const [remoteFetchError, setRemoteFetchError] = useState<Failure | undefined>()
   const [nonExistingServiceIdentifiers, setNonExistingServiceIdentifiers] = useState<string[]>([])
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
@@ -116,6 +121,7 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
 
   const {
     data: servicesDataResponseV2,
+    error: serviceFetchError,
     isInitialLoading: loadingServicesDataV2,
     isFetching: updatingDataV2,
     refetch: refetchServicesDataV2
@@ -131,7 +137,7 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
       },
       body: {
         serviceWithGitInfoList: sortedServiceIdentifiers.map(id => {
-          return { ref: id }
+          return { ref: id, ...(serviceGitBranches?.[id] ? { branch: serviceGitBranches[id] } : {}) }
         })
       }
     },
@@ -162,14 +168,21 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
         }))
       }
 
+      if (serviceFetchError?.status === 'ERROR' && serviceFetchError?.code === 'HINT') {
+        setRemoteFetchError(serviceFetchError)
+      } else {
+        setRemoteFetchError(undefined)
+      }
+
       const serviceV2YamlMetadataList = isGitXEnabledForServices
         ? servicesDataResponseV2?.data?.serviceV2YamlMetadataList
         : servicesDataResponse?.data?.serviceV2YamlMetadataList
-      /* istanbul ignore else */
+
       if (serviceV2YamlMetadataList?.length) {
         _servicesData = serviceV2YamlMetadataList.map(row => {
           const serviceYaml = defaultTo(row.serviceYaml, '{}')
           const service = yamlParse<Pick<ServiceData, 'service'>>(serviceYaml).service
+          const { storeType, connectorRef, entityGitDetails = {} } = row
           service.yaml = serviceYaml
           set(service, 'orgIdentifier', row.orgIdentifier)
           set(service, 'projectIdentifier', row.projectIdentifier)
@@ -186,7 +199,7 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
             }
           }
 
-          return { service, serviceInputs }
+          return { service, serviceInputs, storeType, connectorRef, entityGitDetails }
         })
       }
 
@@ -221,7 +234,8 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
     servicesListResponse?.data,
     servicesDataResponse?.data?.serviceV2YamlMetadataList,
     servicesDataResponseV2?.data?.serviceV2YamlMetadataList,
-    sortedServiceIdentifiers
+    sortedServiceIdentifiers,
+    serviceFetchError
   ])
 
   useEffect(() => {
@@ -237,6 +251,7 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
   return {
     servicesData,
     servicesList,
+    remoteFetchError,
     updatingData: isGitXEnabledForServices ? updatingDataV2 : updatingData,
     loadingServicesData: isGitXEnabledForServices ? loadingServicesDataV2 : loadingServicesData,
     loadingServicesList,

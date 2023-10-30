@@ -7,10 +7,12 @@
 
 import { isEmpty } from 'lodash-es'
 import type { GitSyncConfig } from 'services/cd-ng'
-import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import type { EntitySelectionGitData, StoreMetadata } from '@common/constants/GitSyncTypes'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { GetTemplateQueryParams } from 'services/template-ng'
 import { folderPathName, yamlFileExtension } from './StringUtils'
+
+export const defaultGitContextBranchPlaceholder = '__DEFAULT__'
 
 export const getRepoDetailsByIndentifier = (identifier: string | undefined, repos: GitSyncConfig[]) => {
   return repos.find((repo: GitSyncConfig) => repo.identifier === identifier)
@@ -62,5 +64,41 @@ export const getGitQueryParamsWithParentScope = ({
       : {}),
     ...(!isEmpty(storeMetadata?.connectorRef) && sendParentEntityDetails ? parentEntityIds : {}),
     ...(!branchParam && loadFromFallbackBranch && { loadFromFallbackBranch })
+  }
+}
+
+export function isSameRepoSameBranch(
+  parentGitData: EntitySelectionGitData,
+  childGitData: EntitySelectionGitData
+): boolean {
+  return parentGitData?.repoName === childGitData?.repoName && parentGitData?.branch === childGitData?.branch
+}
+
+export function isOtherRepoDefaultBranch(
+  parentGitData: EntitySelectionGitData,
+  childGitData: EntitySelectionGitData
+): boolean {
+  return parentGitData?.repoName !== childGitData?.repoName && Boolean(childGitData?.isDefaultSelected)
+}
+
+/**
+ * This util can be used for dynamic/static linking of child entitty
+ * By default dynamic linkling is preperred and implemented
+ * @param parentGitData
+ * @param childGitData
+ * @returns
+ */
+export function checkAndGetGitBranchForChildEntity(
+  parentGitData: EntitySelectionGitData,
+  childGitData: EntitySelectionGitData
+): { gitBranch?: string } {
+  if (
+    childGitData?.branch &&
+    ((!isSameRepoSameBranch(parentGitData, childGitData) && !isOtherRepoDefaultBranch(parentGitData, childGitData)) ||
+      !childGitData?.repoName)
+  ) {
+    return { gitBranch: childGitData?.branch }
+  } else {
+    return {}
   }
 }

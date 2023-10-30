@@ -191,7 +191,11 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
   )
 
   return (
-    <Layout.Horizontal>
+    <Layout.Horizontal
+      onClick={event => {
+        event?.stopPropagation?.()
+      }}
+    >
       <FormInput.Select
         name={defaultTo(name, 'branch')}
         disabled={disabled || loading}

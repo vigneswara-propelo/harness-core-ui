@@ -71,6 +71,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     formik,
     fromTrigger,
     serviceIdentifier,
+    gitMetadata,
     stageIdentifier,
     pipelineIdentifier,
     stepViewType,
@@ -116,6 +117,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
 
   const { isTagRegex: isVersionRegex, isServiceLoading } = useIsTagRegex({
     serviceIdentifier: serviceIdentifier!,
+    gitMetadata,
     artifact: artifact as ArtifactSource,
     artifactPath: artifactPath!,
     tagOrVersionRegexKey: 'versionRegex'

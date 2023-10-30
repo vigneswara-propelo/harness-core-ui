@@ -24,6 +24,7 @@ import type { ArtifactSourceBaseFactory } from '@cd/factory/ArtifactSourceFactor
 import type { ManifestSourceBaseFactory } from '@cd/factory/ManifestSourceFactory/ManifestSourceBaseFactory'
 import type { ChildPipelineMetadataType } from '@pipeline/components/PipelineInputSetForm/ChainedPipelineInputSetUtils'
 import type { ServiceHookSourceBaseFactory } from '@cd/factory/ServiceHookSourceFactory/ServiceHookSourceFactory'
+import { StoreMetadata } from '@modules/10-common/constants/GitSyncTypes'
 
 type KubernetesService = ServiceSpec & KubernetesServiceSpec
 export interface K8SDirectServiceStep extends ServiceSpec, KubernetesServiceSpec {
@@ -65,6 +66,7 @@ export interface KubernetesArtifactsProps {
   artifactSourceBaseFactory: ArtifactSourceBaseFactory
   stageIdentifier: string
   serviceIdentifier?: string
+  gitMetadata?: StoreMetadata
   artifacts?: ArtifactListConfig
   formik?: any
   path?: string

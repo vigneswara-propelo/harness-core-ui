@@ -23,8 +23,9 @@ import {
   Tag,
   Text
 } from '@harness/uicore'
-import { defaultTo, get, isArray } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isArray, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import produce from 'immer'
 import type { DeploymentMetaData, ResponsePageServiceResponse, ServiceResponseDTO } from 'services/cd-ng'
 import RbacButton from '@rbac/components/Button/Button'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -41,6 +42,13 @@ import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { getIdentifierFromScopedRef } from '@common/utils/utils'
+import {
+  checkAndGetGitBranchForChildEntity,
+  defaultGitContextBranchPlaceholder
+} from '@modules/10-common/utils/gitSyncUtils'
+import { UseGetServicesDataProps } from '@modules/75-cd/components/PipelineSteps/DeployServiceEntityStep/useGetServicesData'
+import { getConnectorIdentifierWithScope } from '@modules/27-platform/connectors/utils/utils'
+import { StoreMetadata } from '@modules/10-common/constants/GitSyncTypes'
 import { getReferenceFieldProps } from './Utils'
 import css from './FormMultiTypeServiceField.module.scss'
 
@@ -60,7 +68,7 @@ export interface ServiceReferenceFieldProps extends Omit<IFormGroupProps, 'label
   multitypeInputValue?: MultiTypeInputType
   multiTypeProps?: Omit<MultiTypeReferenceInputProps<ServiceResponseDTO>, 'name' | 'referenceSelectProps'>
   setRefValue?: boolean
-  onChange?: (service: any) => void
+  onChange?: (service: any, serviceGitBranches?: any) => void
   selected?: string
   defaultScope?: Scope
   width?: number
@@ -71,6 +79,7 @@ export interface ServiceReferenceFieldProps extends Omit<IFormGroupProps, 'label
   isOnlyFixedType?: boolean
   labelClass?: string
   formikProps?: FormikProps<any>
+  parentStoreMetadata?: StoreMetadata
 }
 
 export function getSelectedRenderer(selected: any): JSX.Element {
@@ -120,16 +129,22 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
     labelClass: labelClassFromProps = '',
     width,
     formikProps,
+    parentStoreMetadata,
     ...restProps
   } = props
   const formik = useFormikContext() || formikProps
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
+  const parentGitData = { repoName: parentStoreMetadata?.repoName, branch: parentStoreMetadata?.branch }
   const [page, setPage] = useState(0)
   const [pagedServiceData, setPagedServiceData] = useState<ResponsePageServiceResponse>({})
   const [hideModal, setHideModal] = useState(false)
   const selected = generateInitialValues(get(formik?.values, name, isMultiSelect ? [] : ''))
   const [selectedValue, setSelectedValue] = React.useState<any>(selected)
+  // Used for temporary displaying branches in UI, will be applied or discarded (on closing modal)
+  const [userSelectedBranches, setUserSelectedBranches] = React.useState<Record<string, string | undefined>>(
+    cloneDeep(get(formik?.initialValues, 'serviceGitBranches', {}))
+  )
   const hasError = errorCheck(name, formik)
   const {
     intent = hasError ? Intent.DANGER : Intent.NONE,
@@ -155,15 +170,41 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
     deploymentMetadata,
     setPagedServiceData,
     selectedServices: Array.isArray(selected) ? selected : [],
+    userSelectedBranches,
+    setUserSelectedBranches,
     getString
   })
+
   const handleMultiSelectChange = (svcs: any): void => {
-    const services = svcs.map((svc: any) => ({
-      label: svc.identifier,
-      value: svc.scope !== Scope.PROJECT ? `${svc.scope}.${svc.identifier}` : svc.identifier
-    }))
-    formik.setFieldValue(name, services)
-    onMultiSelectChange(services)
+    const serviceGitBranches: UseGetServicesDataProps['serviceGitBranches'] = {}
+
+    const services = svcs.map((svc: any) => {
+      const serviceId = getConnectorIdentifierWithScope(svc.scope, svc.identifier || '')
+      const branch = userSelectedBranches[serviceId]
+      const selectedServiceBranch =
+        branch && branch !== defaultGitContextBranchPlaceholder
+          ? checkAndGetGitBranchForChildEntity(parentGitData, {
+              repoName: svc?.record?.entityGitDetails?.repoName,
+              branch
+            })?.gitBranch
+          : undefined
+
+      serviceGitBranches[serviceId] = selectedServiceBranch
+
+      return {
+        label: svc.identifier,
+        value: serviceId
+      }
+    })
+
+    formik.setValues(
+      produce(formik.values, (draft: ServiceResponseDTO) => {
+        set(draft, 'serviceGitBranches', serviceGitBranches)
+        set(draft, name, services)
+      })
+    )
+
+    onMultiSelectChange(services, serviceGitBranches)
   }
   return (
     <div style={style} className={cx(css.serviceLabel, labelClassFromProps)}>
@@ -218,17 +259,32 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
               const { record, scope } = val as unknown as { record: ServiceResponseDTO; scope: Scope }
               const value = {
                 label: record.name,
-                value:
-                  scope === Scope.ORG || scope === Scope.ACCOUNT ? `${scope}.${record.identifier}` : record.identifier,
+                value: getConnectorIdentifierWithScope(scope, record.identifier || ''),
                 scope
               }
-              if (setRefValue) {
-                formik?.setFieldValue(name, value.value)
-                onChange?.(value.value)
-              } else {
-                formik?.setFieldValue(name, value)
-                onChange?.(value)
-              }
+
+              const serviceId = value.value || ''
+              const branch = userSelectedBranches[serviceId]
+              const serviceGitBranch =
+                branch && branch !== defaultGitContextBranchPlaceholder
+                  ? checkAndGetGitBranchForChildEntity(parentGitData, {
+                      repoName: record?.entityGitDetails?.repoName,
+                      branch: userSelectedBranches[serviceId]
+                    })
+                  : undefined
+              const serviceGitBranches: UseGetServicesDataProps['serviceGitBranches'] = serviceGitBranch
+                ? {
+                    [serviceId]: serviceGitBranch?.gitBranch
+                  }
+                : undefined
+
+              formik.setValues(
+                produce(formik.values, (draft: ServiceResponseDTO) => {
+                  set(draft, 'serviceGitBranches', serviceGitBranches)
+                  set(draft, name, setRefValue ? value.value : value)
+                })
+              )
+              onChange?.(setRefValue ? value.value : value, serviceGitBranches)
               setSelectedValue(value)
             } else {
               formik?.setFieldValue(name, defaultTo(val, ''))

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import produce from 'immer'
 import {
   Formik,
@@ -28,13 +28,15 @@ import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { isMultiTypeExpression, isMultiTypeRuntime, isValueExpression, isValueRuntimeInput } from '@common/utils/utils'
 import { useDeepCompareEffect } from '@common/hooks'
+
 import {
   DeployServiceEntityData,
   DeployServiceEntityCustomProps,
   FormState,
   getValidationSchema,
   getAllFixedServices,
-  getAllFixedServicesFromValues
+  getAllFixedServicesFromValues,
+  getAllFixedServicesGitBranch
 } from './DeployServiceEntityUtils'
 import { useGetServicesData } from './useGetServicesData'
 import { setupMode } from '../PipelineStepsUtil'
@@ -54,13 +56,16 @@ function getInitialValues(data: DeployServiceEntityData): FormState {
   const parallelValueToBeUpdated =
     isValueRuntimeInput(parallelValue as string) || isBoolean(parallelValue) ? parallelValue : true
 
-  if (data.service && data.service.serviceRef) {
+  const serviceRef = data.service?.serviceRef
+  if (data.service && serviceRef) {
+    const gitBranch = data.service?.gitBranch
     return {
-      service: data.service.serviceRef,
+      service: serviceRef,
+      ...(gitBranch ? { gitBranch, serviceGitBranches: { [serviceRef]: gitBranch } } : {}),
       serviceInputs:
-        getMultiTypeFromValue(data.service.serviceRef) === MultiTypeInputType.FIXED
-          ? { [data.service.serviceRef]: data.service.serviceInputs }
-          : isValueExpression(data.service.serviceRef)
+        getMultiTypeFromValue(serviceRef) === MultiTypeInputType.FIXED
+          ? { [serviceRef]: data.service.serviceInputs }
+          : isValueExpression(serviceRef)
           ? { service: { expression: data.service.serviceInputs } }
           : {}
     }
@@ -74,6 +79,10 @@ function getInitialValues(data: DeployServiceEntityData): FormState {
         serviceInputs: data.services.values.reduce(
           (p, c) => ({ ...p, [defaultTo(c.serviceRef, '')]: c.serviceInputs }),
           {}
+        ),
+        serviceGitBranches: data.services.values.reduce(
+          (p, svc) => ({ ...p, [svc.serviceRef || '']: svc.gitBranch }),
+          {} as FormState['serviceGitBranches']
         ),
         parallel: parallelValueToBeUpdated as boolean
       }
@@ -114,6 +123,12 @@ export default function DeployServiceEntityWidget({
   const [allServices, setAllServices] = useState(
     setupModeType === setupMode.DIFFERENT ? getAllFixedServices(initialValues) : ['']
   )
+
+  // Form is losing serviceGitBranches due to enableReinitialize, so just need to store a reference (state is not required)
+  let serviceGitBranches = useMemo(() => {
+    return setupModeType === setupMode.DIFFERENT ? getAllFixedServicesGitBranch(initialValues) : undefined
+  }, [initialValues, setupModeType])
+
   const {
     state: {
       selectionState: { selectedStageId },
@@ -130,17 +145,20 @@ export default function DeployServiceEntityWidget({
   const [serviceInputType, setServiceInputType] = React.useState<MultiTypeInputType>(
     getMultiTypeFromValue(initialValues?.service?.serviceRef)
   )
+
   const useGetServicesDataReturn = useGetServicesData({
     gitOpsEnabled,
     deploymentMetadata,
     parentStoreMetadata: storeMetadata,
     serviceIdentifiers: allServices,
+    serviceGitBranches,
     deploymentType: deploymentType as ServiceDefinition['type'],
     ...(shouldAddCustomDeploymentData ? { deploymentTemplateIdentifier, versionLabel } : {}),
     lazyService: isMultiTypeExpression(serviceInputType)
   })
 
-  const { nonExistingServiceIdentifiers, loadingServicesList, loadingServicesData } = useGetServicesDataReturn
+  const { nonExistingServiceIdentifiers, loadingServicesList, loadingServicesData, remoteFetchError } =
+    useGetServicesDataReturn
 
   useEffect(() => {
     subscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
@@ -149,11 +167,14 @@ export default function DeployServiceEntityWidget({
   }, [])
 
   useDeepCompareEffect(() => {
+    serviceGitBranches = getAllFixedServicesGitBranch(initialValues)
     setAllServices(getAllFixedServices(initialValues))
   }, [initialValues])
 
   useDeepCompareEffect(() => {
-    if (nonExistingServiceIdentifiers.length) {
+    if (remoteFetchError?.message) {
+      showWarning(remoteFetchError?.message)
+    } else if (nonExistingServiceIdentifiers.length) {
       showWarning(
         getString('cd.identifiersDoNotExist', {
           entity: getString('service'),
@@ -161,7 +182,7 @@ export default function DeployServiceEntityWidget({
         })
       )
     }
-  }, [nonExistingServiceIdentifiers])
+  }, [nonExistingServiceIdentifiers, remoteFetchError])
 
   const loading = loadingServicesList || loadingServicesData || isFetchingMergeServiceInputs
 
@@ -184,12 +205,15 @@ export default function DeployServiceEntityWidget({
       onUpdate?.({
         services: {
           values: Array.isArray(values.services)
-            ? values.services.map(
-                (opt): ServiceYamlV2 => ({
-                  serviceRef: opt.value as string,
-                  serviceInputs: get(values.serviceInputs, opt.value)
-                })
-              )
+            ? values.services.map((opt): ServiceYamlV2 => {
+                const serviceRef = opt.value as string
+                const serviceGitBranch = values?.serviceGitBranches?.[serviceRef]
+                return {
+                  serviceRef,
+                  serviceInputs: get(values.serviceInputs, opt.value),
+                  ...(serviceGitBranch ? { gitBranch: serviceGitBranch } : {})
+                }
+              })
             : values.services,
           metadata: {
             parallel: isValueRuntimeInput(values.parallel) ? values.parallel : !!values.parallel
@@ -210,14 +234,18 @@ export default function DeployServiceEntityWidget({
           : get(values.serviceInputs, 'service.expression')
       }
 
+      const serviceGitBranch = values?.serviceGitBranches?.[values.service]
+
       onUpdate?.({
         service: {
           serviceRef: values.service,
-          serviceInputs
+          serviceInputs,
+          ...(serviceGitBranch ? { gitBranch: serviceGitBranch } : {})
         }
       })
     }
 
+    serviceGitBranches = values?.serviceGitBranches
     setAllServices(getAllFixedServicesFromValues(values))
   }
 
@@ -226,7 +254,12 @@ export default function DeployServiceEntityWidget({
       <Formik<FormState>
         formName="deployServiceStepForm"
         onSubmit={noop}
-        validate={handleUpdate}
+        validate={(values: FormState) => {
+          // Form is losing serviceGitBranches due to enableReinitialize
+          // Using state for serviceGitBranches will need flushSync which will introduce other sideEffects
+          serviceGitBranches = values?.serviceGitBranches || serviceGitBranches
+          handleUpdate({ ...values, serviceGitBranches })
+        }}
         initialValues={getInitialValues(initialValues)}
         validationSchema={setupModeType === setupMode.DIFFERENT && getValidationSchema(getString)}
         enableReinitialize
@@ -253,6 +286,10 @@ export default function DeployServiceEntityWidget({
               useGetServicesDataReturn={useGetServicesDataReturn}
               allServices={allServices}
               setAllServices={setAllServices}
+              allServicesGitBranches={serviceGitBranches}
+              setAllServicesGitBranches={gitBranches => {
+                serviceGitBranches = gitBranches
+              }}
             />
           )
         }}

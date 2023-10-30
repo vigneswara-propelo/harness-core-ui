@@ -48,12 +48,16 @@ import { getScopedValueFromDTO } from '@common/components/EntityReference/Entity
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { FormMultiTypeCheckboxField } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
+import type { Error } from 'services/cd-ng'
+import { ErrorHandler } from '@modules/10-common/components/ErrorHandler/ErrorHandler'
+import { usePipelineContext } from '@modules/70-pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import {
   DeployServiceEntityData,
   DeployServiceEntityCustomProps,
   FormState,
   getAllFixedServices,
-  ServicesWithInputs
+  ServicesWithInputs,
+  getAllFixedServicesGitBranch
 } from './DeployServiceEntityUtils'
 import { ServiceEntitiesList } from './ServiceEntitiesList/ServiceEntitiesList'
 import { setupMode } from '../PipelineStepsUtil'
@@ -72,6 +76,8 @@ export interface BaseDeployServiceEntityProps extends DeployServiceEntityCustomP
   useGetServicesDataReturn: UseGetServicesDataReturn
   allServices: string[]
   setAllServices: React.Dispatch<React.SetStateAction<string[]>>
+  allServicesGitBranches?: Record<string, string | undefined>
+  setAllServicesGitBranches?: (gitBranches?: Record<string, string | undefined>) => void
 }
 
 const DIALOG_PROPS: Omit<ModalDialogProps, 'isOpen'> = {
@@ -102,11 +108,16 @@ export default function BaseDeployServiceEntity({
   loading,
   useGetServicesDataReturn,
   allServices,
-  setAllServices
+  setAllServices,
+  setAllServicesGitBranches
 }: BaseDeployServiceEntityProps): React.ReactElement {
   const { values, setValues, setTouched } = useFormikContext<FormState>()
-  const { prependServiceToServiceList, updatingData, servicesList, servicesData } = useGetServicesDataReturn
-
+  const {
+    state: { storeMetadata }
+  } = usePipelineContext()
+  const { prependServiceToServiceList, updatingData, servicesList, servicesData, remoteFetchError } =
+    useGetServicesDataReturn
+  const remoteFetchErrorMessages = (remoteFetchError as Error)?.responseMessages
   const { getString } = useStrings()
 
   const { expressions } = useVariablesExpression()
@@ -134,11 +145,15 @@ export default function BaseDeployServiceEntity({
     /* istanbul ignore else */
     if (setupModeType === setupMode.PROPAGATE) {
       setAllServices(getAllFixedServices(initialValues))
+      setAllServicesGitBranches?.(getAllFixedServicesGitBranch(initialValues))
     }
   }, [initialValues, setupModeType])
 
   const updateServiceInputsForServices = React.useCallback(
-    (serviceOrServices: Pick<FormState, 'service' | 'services'>): void => {
+    (
+      serviceOrServices: Pick<FormState, 'service' | 'services'>,
+      serviceGitBranches?: FormState['serviceGitBranches']
+    ): void => {
       /* istanbul ignore else */
       if (servicesData.length > 0) {
         /* istanbul ignore else */
@@ -147,6 +162,7 @@ export default function BaseDeployServiceEntity({
           setValues({
             ...values,
             ...serviceOrServices,
+            serviceGitBranches,
             // if service input is not found, add it, else use the existing one
             serviceInputs: {
               [serviceOrServices.service]: get(
@@ -181,20 +197,20 @@ export default function BaseDeployServiceEntity({
         }
       }
     },
-    [servicesData]
+    [servicesData, values?.serviceGitBranches]
   )
 
   const handleSingleSelectChange = React.useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (service: any) => {
-      updateServiceInputsForServices({ service: service.value || service })
+    (service: any, serviceGitBranches?: FormState['serviceGitBranches']) => {
+      updateServiceInputsForServices({ service: service.value || service }, serviceGitBranches)
     },
     [updateServiceInputsForServices]
   )
 
   const handleMultiSelectChange = React.useCallback(
-    (services: SelectOption[]) => {
-      updateServiceInputsForServices({ services })
+    (services: SelectOption[], serviceGitBranches?: FormState['serviceGitBranches']) => {
+      updateServiceInputsForServices({ services }, serviceGitBranches)
     },
     [updateServiceInputsForServices]
   )
@@ -404,6 +420,7 @@ export default function BaseDeployServiceEntity({
                       gitOpsEnabled={gitOpsEnabled}
                       deploymentMetadata={deploymentMetadata}
                       disabled={readonly || (isFixed && loading)}
+                      parentStoreMetadata={storeMetadata}
                       placeholder={placeHolderForServices}
                       openAddNewModal={openAddNewModal}
                       isMultiSelect={true}
@@ -428,6 +445,7 @@ export default function BaseDeployServiceEntity({
                       placeholder={placeHolderForService}
                       setRefValue={true}
                       disabled={readonly || (isFixed && loading)}
+                      parentStoreMetadata={storeMetadata}
                       openAddNewModal={openAddNewModal}
                       isNewConnectorLabelVisible
                       onChange={handleSingleSelectChange}
@@ -524,6 +542,11 @@ export default function BaseDeployServiceEntity({
             onServiceEntityUpdate={onServiceEntityUpdate}
             isPropogateFromStage={setupModeType === setupMode.PROPAGATE}
           />
+        ) : null}
+        {remoteFetchErrorMessages?.length ? (
+          <Layout.Vertical>
+            <ErrorHandler responseMessages={remoteFetchErrorMessages} />
+          </Layout.Vertical>
         ) : null}
       </FormikForm>
 

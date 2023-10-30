@@ -36,6 +36,7 @@ import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/Artifac
 import manifestSourceBaseFactory from '@cd/factory/ManifestSourceFactory/ManifestSourceBaseFactory'
 import type { ChildPipelineMetadataType } from '@pipeline/components/PipelineInputSetForm/ChainedPipelineInputSetUtils'
 import serviceHookSourceBaseFactory from '@cd/factory/ServiceHookSourceFactory/ServiceHookSourceFactory'
+import { StoreMetadata } from '@modules/10-common/constants/GitSyncTypes'
 import type { K8SDirectServiceStep } from '../../K8sServiceSpec/K8sServiceSpecInterface'
 import { KubernetesArtifacts } from '../../K8sServiceSpec/KubernetesArtifacts/KubernetesArtifacts'
 import { KubernetesManifests } from '../../K8sServiceSpec/KubernetesManifests/KubernetesManifests'
@@ -69,6 +70,7 @@ export interface KubernetesInputSetProps {
   path?: string
   stageIdentifier: string
   serviceIdentifier?: string
+  gitMetadata?: StoreMetadata
   formik?: any
   allowableTypes: AllowedTypes
   childPipelineMetadata?: ChildPipelineMetadataType
@@ -85,6 +87,7 @@ const GenericServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps
     readonly = false,
     stageIdentifier,
     serviceIdentifier,
+    gitMetadata,
     stepViewType,
     formik,
     allowableTypes,
@@ -101,6 +104,7 @@ const GenericServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps
     readonly,
     allowableTypes,
     serviceIdentifier,
+    gitMetadata,
     childPipelineMetadata
   }
 

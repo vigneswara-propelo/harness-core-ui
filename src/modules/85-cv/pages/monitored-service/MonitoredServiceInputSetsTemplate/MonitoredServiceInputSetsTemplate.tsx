@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty, omit } from 'lodash-es'
 import { parse } from 'yaml'
 import { useHistory, useParams } from 'react-router-dom'
 import {
@@ -275,7 +275,9 @@ export default function MonitoredServiceInputSetsTemplate({
         onSubmit={(values: MonitoredServiceInputSetInterface, _fn) => onSave(values)}
         initialValues={monitoredServiceInputSet}
         enableReinitialize
-        validate={value => validateInputSet(value, getString)}
+        validate={value =>
+          validateInputSet(omit(value, ['serviceGitBranches']) as MonitoredServiceInputSetInterface, getString)
+        }
       >
         {formik => {
           return (

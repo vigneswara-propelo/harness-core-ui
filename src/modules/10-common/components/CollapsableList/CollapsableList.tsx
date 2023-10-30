@@ -77,7 +77,7 @@ export function CollapsableList<T extends ScopedObjectDTO>(props: CollapsableTab
         )
         return existingRecord
           ? prev.filter(el => el !== existingRecord)
-          : [...prev, { scope: getScopeFromDTO(item.record), identifier: item.identifier }]
+          : [...prev, { scope: getScopeFromDTO(item.record), identifier: item.identifier, record: item.record }]
       })
     } else {
       setSelectedRecord(props.selectedRecord === item.record ? undefined : item.record)

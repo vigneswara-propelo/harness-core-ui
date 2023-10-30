@@ -17,6 +17,8 @@ import type {
   DeploymentMetaData
 } from 'services/cd-ng'
 import type { UseStringsReturn } from 'framework/strings'
+import { ServiceResponseDto } from 'services/cd-ng-rq/schemas/ServiceResponseDto'
+import { UseGetServicesDataProps } from './useGetServicesData'
 
 export const ServiceRegex = /^.+stage\.spec\.service\.serviceRef$/
 export const flexStart = 'flex-start'
@@ -29,7 +31,7 @@ export interface DeployServiceEntityData {
   }
 }
 
-export interface ServiceData {
+export interface ServiceData extends Pick<ServiceResponseDto, 'storeType' | 'connectorRef' | 'entityGitDetails'> {
   service: NGServiceV2InfoConfig & { yaml: string }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   serviceInputs?: any
@@ -44,7 +46,9 @@ export interface ServicesWithInputs {
 
 export interface FormState {
   services?: SelectOption[] | string
+  serviceGitBranches?: UseGetServicesDataProps['serviceGitBranches']
   service?: string
+  gitBranch?: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   serviceInputs?: Record<string, any>
   parallel?: boolean
@@ -129,4 +133,21 @@ export function getAllFixedServicesFromValues(values: FormState): string[] {
   }
 
   return []
+}
+
+export function getAllFixedServicesGitBranch(data: DeployServiceEntityData): Record<string, string | undefined> {
+  if (data.service?.serviceRef && getMultiTypeFromValue(data.service.serviceRef) === MultiTypeInputType.FIXED) {
+    return { [data.service.serviceRef]: data.service.gitBranch }
+  } else if (data.services && Array.isArray(data.services.values)) {
+    const servicesGitBranchMap: Record<string, string | undefined> = {}
+    data.services.values.forEach(service => {
+      const id = service.serviceRef
+      if (id) {
+        servicesGitBranchMap[id] = service.gitBranch
+      }
+    })
+    return servicesGitBranchMap
+  }
+
+  return {}
 }

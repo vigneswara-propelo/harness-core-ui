@@ -58,8 +58,6 @@ import { CDActions, Category } from '@common/constants/TrackingConstants'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import { GitData } from '@common/modals/GitDiffEditor/useGitDiffEditorDialog'
-// import { ConnectorSelectedValue } from '@modules/27-platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
-// import { GitSyncFormFields } from '@modules/40-gitsync/components/GitSyncForm/GitSyncForm'
 import ServiceConfiguration from './ServiceConfiguration/ServiceConfiguration'
 import { ServiceTabs, setNameIDDescription, ServicePipelineConfig } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServiceStudio/ServiceStudio.module.scss'
@@ -251,7 +249,8 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
           accountIdentifier: accountId,
           orgIdentifier,
           projectIdentifier,
-          identifier: serviceId
+          identifier: serviceId,
+          branch: serviceData?.entityGitDetails?.branch
         }
       })
       if (response?.data?.validYaml === false && response?.data?.errorNodeSummary) {

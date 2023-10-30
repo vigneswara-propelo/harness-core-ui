@@ -19,6 +19,12 @@ export interface StoreMetadata {
   fallbackBranch?: string
 }
 
+export interface EntitySelectionGitData {
+  repoName?: string
+  branch?: string
+  isDefaultSelected?: boolean
+}
+
 export enum SaveTemplateAsType {
   NEW_LABEL_VERSION = ' NEW_LABEL_VEFSION',
   NEW_TEMPALTE = 'NEW_TEMPLATE'
