@@ -115,13 +115,11 @@ export const OrgProjectSplitView: React.FC<ProjectScopeSelectorProps> = ({
     () => [
       {
         id: 'name',
-        accessor: row => row.projectResponse.project.name,
         width: '90%',
         Cell: RenderColumnProject
       },
       {
         id: 'menu',
-        accessor: row => row.projectResponse.project.identifier,
         width: '10%',
         Cell: RenderColumnMenu
       }

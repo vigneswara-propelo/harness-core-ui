@@ -10,7 +10,7 @@ import { render, waitFor, screen, fireEvent, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cdngServices from 'services/cd-ng'
-import { useGetProjectAggregateDTOList } from 'services/cd-ng'
+import { useGetProjectAggregateDTOList, useGetOrganizationAggregateDTOList } from 'services/cd-ng'
 import { ProjectScopeSelector } from '../ProjectScopeSelector'
 import { projectMockDataWithModules, organizations } from './Mocks'
 
@@ -69,14 +69,25 @@ describe('ProjectScopeSelector', () => {
     expect(rows).toHaveLength(2)
   })
   test('render split view', async () => {
-    const { getByTestId, getAllByRole } = render(<WrapperComponent />)
+    const { getByTestId, getAllByRole, queryByText } = render(<WrapperComponent />)
+    jest
+      .spyOn(cdngServices, 'useGetOrganizationAggregateDTOList')
+      .mockImplementation(() => ({ data: organizations, refetch: jest.fn() } as any))
+    jest.clearAllMocks()
     const listViewButton = getByTestId('split-view')
     act(() => {
       fireEvent.click(listViewButton)
     })
     const rows = getAllByRole('row')
     expect(rows).toHaveLength(1)
-    expect(screen.findByText('common.allOrganizations')).toBeDefined()
+    expect(queryByText('common.allOrganizations')).toBeInTheDocument()
+    expect(queryByText('a DeepakOrg')).toBeInTheDocument()
+    expect(queryByText('gitX CDC')).toBeInTheDocument()
+    const searchInput = screen.getByPlaceholderText('projectsOrgs.orgSearchPlaceHolder') as HTMLInputElement
+    const query = 'abcd'
+    userEvent.type(searchInput, query)
+    await waitFor(() => expect(searchInput?.value).toBe(query))
+    await waitFor(() => expect(useGetOrganizationAggregateDTOList).toBeCalledTimes(3))
   })
   test('should render pagespinner if loading', () => {
     jest.spyOn(cdngServices, 'useGetProjectAggregateDTOList').mockImplementation((): any => {
@@ -92,7 +103,6 @@ describe('ProjectScopeSelector', () => {
     expect(getByTestId('location')).toHaveTextContent('/projects')
   })
   test('test search functionality', async () => {
-    jest.clearAllMocks()
     jest
       .spyOn(cdngServices, 'useGetProjectAggregateDTOList')
       .mockImplementation(() => ({ data: projectMockDataWithModules, refetch: jest.fn() } as any))
