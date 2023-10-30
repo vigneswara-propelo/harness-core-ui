@@ -26,6 +26,7 @@ import { Scope } from 'framework/types/types'
 import { ModuleName } from 'framework/types/ModuleName'
 import PipelineRouteDestinations from '@pipeline/PipelineRouteDestinations'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
+import { useGetPipelineSummary } from 'services/pipeline-ng'
 import { useGetSettingValue } from 'services/cd-ng'
 
 const module: Module = 'sto'
@@ -103,8 +104,8 @@ const STORouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
         >
           <ChildAppMounter
             ChildApp={RemoteSTOApp}
-            customComponents={{ UsefulOrNot }}
-            customHooks={{ useGetSettingValue }}
+            customComponents={{ UsefulOrNot, UserLabel }}
+            customHooks={{ useGetSettingValue, useGetPipelineSummary }}
           />
         </RouteWithContext>
       )}
@@ -125,7 +126,7 @@ const STORouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
         <ChildAppMounter
           ChildApp={RemoteSTOApp}
           customComponents={{ UserLabel, UsefulOrNot }}
-          customHooks={{ useGetSettingValue }}
+          customHooks={{ useGetSettingValue, useGetPipelineSummary }}
         />
       </RouteWithContext>
 
@@ -146,7 +147,7 @@ const STORouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
           <ChildAppMounter
             ChildApp={RemoteSTOApp}
             customComponents={{ UserLabel, UsefulOrNot }}
-            customHooks={{ useGetSettingValue }}
+            customHooks={{ useGetSettingValue, useGetPipelineSummary }}
           />
         </RouteWithContext>
       )}
