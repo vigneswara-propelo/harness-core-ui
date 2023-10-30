@@ -31,7 +31,7 @@ testConnector: DA-Test Connector
 createNewDiscoveryAgent: Create New Discovery Agent
 tabs:
   selectServices: Select services
-  configureRelations: Configure relations
+  configureRelations: Configure relations (Optional)
 selectAConnector: Select a Kubernetes Connector of your cluster to discover services
 selectAConnectorDescription: A k8s connector will help to discover the services on your clusters. For the first time discovery, it may take up to 5 minutes.
 whatIsNetworkMap: What is a network map?
@@ -105,3 +105,16 @@ noServiceSelectedDescription: Select services from the left panel and view their
 selectAll: Select All
 selectRelatedServices: Select all related service
 noRelatedServiceFound: No related service found
+addCustomizedConfigurations: Add customized configurations
+addCustomizedConfigurationsDesc: "You can add customized relations that didn't get discovered"
+externalEntity: External Entity
+newRelation: New Relation
+serviceRelationshipDetails: Service relationship details
+sourceService: Source service
+targetService: Target service
+trafficDirection: Traffic direction
+relationProperties: Relation Properties
+trafficRoute: Traffic Route
+outbound: Outbound
+inbound: Inbound
+disableDeleteConnections: Discovered connections can not be deleted

@@ -11,9 +11,9 @@ import routes from '@common/RouteDefinitions'
 import * as servicediscovery from 'services/servicediscovery'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { TestWrapper } from '@common/utils/testUtils'
-import { useGetK8SCustomService, useGetServiceFromK8SCustomService } from 'services/servicediscovery'
+import { useGetDiscoveredService, useGetServiceForDiscoveredService } from 'services/servicediscovery'
 import ServiceDetails from '../ServiceDetails'
-import { mockGetCustomService, mockServiceDetails } from './mockData'
+import { mockGetDiscoveredService, mockServiceDetails } from './mockData'
 
 const mockServiceDetailsProp = {
   serviceId: 'testServiceId',
@@ -23,14 +23,14 @@ const mockServiceDetailsProp = {
 }
 
 const fetchServiceFromK8SCustomService = jest.fn(() => Promise.resolve(mockServiceDetails))
-const fetchK8SCustomService = jest.fn(() => Promise.resolve(mockGetCustomService))
+const fetchK8SCustomService = jest.fn(() => Promise.resolve(mockGetDiscoveredService))
 
 jest.mock('services/servicediscovery', () => ({
-  useGetServiceFromK8SCustomService: jest.fn().mockImplementation(() => {
+  useGetServiceForDiscoveredService: jest.fn().mockImplementation(() => {
     return { data: mockServiceDetails, refetch: fetchServiceFromK8SCustomService, error: null, loading: false }
   }),
-  useGetK8SCustomService: jest.fn().mockImplementation(() => {
-    return { data: mockGetCustomService, refetch: fetchK8SCustomService, error: null, loading: false }
+  useGetDiscoveredService: jest.fn().mockImplementation(() => {
+    return { data: mockGetDiscoveredService, refetch: fetchK8SCustomService, error: null, loading: false }
   })
 }))
 
@@ -51,8 +51,8 @@ describe('Service Details component tests', () => {
         <ServiceDetails {...mockServiceDetailsProp} />
       </TestWrapper>
     )
-    expect(useGetServiceFromK8SCustomService).toBeCalled()
-    expect(useGetK8SCustomService).toBeCalled()
+    expect(useGetServiceForDiscoveredService).toBeCalled()
+    expect(useGetDiscoveredService).toBeCalled()
 
     expect(container).toMatchSnapshot()
 
@@ -63,7 +63,7 @@ describe('Service Details component tests', () => {
   })
 
   test('should match snapshot with empty data', async () => {
-    jest.spyOn(servicediscovery, 'useGetServiceFromK8SCustomService').mockImplementation((): any => {
+    jest.spyOn(servicediscovery, 'useGetServiceForDiscoveredService').mockImplementation((): any => {
       return {
         data: null,
         loading: false,
@@ -72,7 +72,7 @@ describe('Service Details component tests', () => {
         }
       }
     })
-    jest.spyOn(servicediscovery, 'useGetK8SCustomService').mockImplementation((): any => {
+    jest.spyOn(servicediscovery, 'useGetDiscoveredService').mockImplementation((): any => {
       return {
         data: null,
         loading: false,

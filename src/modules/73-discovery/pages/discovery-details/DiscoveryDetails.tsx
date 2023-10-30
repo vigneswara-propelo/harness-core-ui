@@ -10,6 +10,7 @@ import { Color } from '@harness/design-system'
 import { Container, Layout, Page, Tabs, Text } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import moment from 'moment'
+import qs from 'qs'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import type {
   DiscoveredResourceQueryParams,
@@ -52,52 +53,52 @@ const DiscoveryDetails: React.FC = () => {
   const handleTabChange = (tabID: DiscoveryTabs): void => {
     switch (tabID) {
       case DiscoveryTabs.DISCOVERED_RESOURCES:
-        history.push(
-          routes.toDiscoveredResource({
+        history.push({
+          pathname: routes.toDiscoveredResource({
             accountId,
             projectIdentifier,
             orgIdentifier,
             module,
-            dAgentId,
-            tab: DiscoveryTabs.DISCOVERED_RESOURCES
-          })
-        )
+            dAgentId
+          }),
+          search: qs.stringify({ tab: DiscoveryTabs.DISCOVERED_RESOURCES })
+        })
         break
       case DiscoveryTabs.NETWORK_MAP:
-        history.push(
-          routes.toDiscoveredResource({
+        history.push({
+          pathname: routes.toDiscoveredResource({
             accountId,
             projectIdentifier,
             orgIdentifier,
             module,
-            dAgentId,
-            tab: DiscoveryTabs.NETWORK_MAP
-          })
-        )
+            dAgentId
+          }),
+          search: qs.stringify({ tab: DiscoveryTabs.NETWORK_MAP })
+        })
         break
       case DiscoveryTabs.DISCOVERY_HISTORY:
-        history.push(
-          routes.toDiscoveredResource({
+        history.push({
+          pathname: routes.toDiscoveredResource({
             accountId,
             projectIdentifier,
             orgIdentifier,
             module,
-            dAgentId,
-            tab: DiscoveryTabs.DISCOVERY_HISTORY
-          })
-        )
+            dAgentId
+          }),
+          search: qs.stringify({ tab: DiscoveryTabs.DISCOVERY_HISTORY })
+        })
         break
       case DiscoveryTabs.SETTINGS:
-        history.push(
-          routes.toDiscoveredResource({
+        history.push({
+          pathname: routes.toDiscoveredResource({
             accountId,
             projectIdentifier,
             orgIdentifier,
             module,
-            dAgentId,
-            tab: DiscoveryTabs.SETTINGS
-          })
-        )
+            dAgentId
+          }),
+          search: qs.stringify({ tab: DiscoveryTabs.SETTINGS })
+        })
         break
     }
   }
@@ -151,17 +152,13 @@ const DiscoveryDetails: React.FC = () => {
           </Container>
         }
         toolbar={
-          <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
+          <Layout.Horizontal spacing="medium" flex={{ alignItems: 'center' }}>
             <Text font={{ size: 'small' }}>
               {getString('discovery.discoveryDetails.lastDiscovery')}: {date}
             </Text>
-            {/* <Button
-              margin={{ left: 'medium' }}
-              icon="edit"
-              rightIcon="chevron-down"
-              variation={ButtonVariation.SECONDARY}
-              text="Edit"
-            /> */}
+            {/* <SplitButton icon="edit" variation={ButtonVariation.SECONDARY} text={getString('edit')} onClick={() => {}}>
+              <SplitButtonOption onClick={()=> {}} text={getString('delete')} icon={'trash'} />
+            </SplitButton> */}
           </Layout.Horizontal>
         }
       />

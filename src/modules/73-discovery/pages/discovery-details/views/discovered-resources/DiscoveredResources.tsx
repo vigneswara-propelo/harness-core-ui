@@ -20,7 +20,7 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import { DiscoveryPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import { useListK8sCustomServiceConnection, useListNamespace } from 'services/servicediscovery'
+import { useListDiscoveredServiceConnection, useListNamespace } from 'services/servicediscovery'
 import DiscoveredServices from './tableView/DiscoveredServices'
 import DiscoveredResourcesGraph from './graphView/DiscoveredResourcesGraph'
 
@@ -44,7 +44,7 @@ export default function DiscoveredResources(): React.ReactElement {
     }
   })
 
-  const { data: connectionList } = useListK8sCustomServiceConnection({
+  const { data: connectionList } = useListDiscoveredServiceConnection({
     agentIdentity: dAgentId,
     queryParams: {
       accountIdentifier: accountId,

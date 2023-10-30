@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<RelationPopover /> tests with data should render component and click on submit 1`] = `
+<div>
+  <span
+    class="bp3-popover-wrapper"
+  >
+    <span
+      class="bp3-popover-target bp3-popover-open"
+    >
+      <div
+        class="button"
+      />
+    </span>
+  </span>
+</div>
+`;
+
+exports[`<RelationPopover /> tests with data should render component show error and click on cancel 1`] = `
+<div>
+  <span
+    class="bp3-popover-wrapper"
+  >
+    <span
+      class="bp3-popover-target bp3-popover-open"
+    >
+      <div
+        class="button"
+      />
+    </span>
+  </span>
+</div>
+`;

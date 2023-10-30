@@ -14,7 +14,7 @@ import DiscoveredResources from '../DiscoveredResources'
 import { mockNamespaces, mockConnections } from '../mocks'
 
 jest.mock('services/servicediscovery', () => ({
-  useListK8sCustomServiceConnection: jest.fn().mockImplementation(() => {
+  useListDiscoveredServiceConnection: jest.fn().mockImplementation(() => {
     return { data: mockConnections, refetch: jest.fn(), error: null, loading: false }
   }),
   useListNamespace: jest.fn().mockImplementation(() => {

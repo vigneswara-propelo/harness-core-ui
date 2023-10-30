@@ -41,10 +41,10 @@ jest.mock('@discovery/components/NetworkGraph/NetworkGraph', () => ({
 }))
 
 jest.mock('services/servicediscovery', () => ({
-  useListK8SCustomService: jest.fn().mockImplementation(() => {
+  useListDiscoveredService: jest.fn().mockImplementation(() => {
     return { data: mockServices, refetch: jest.fn(), error: null, loading: false }
   }),
-  useListK8sCustomServiceConnection: jest.fn().mockImplementation(() => {
+  useListDiscoveredServiceConnection: jest.fn().mockImplementation(() => {
     return { data: mockConnections, refetch: jest.fn(), error: null, loading: false }
   }),
   useListNamespace: jest.fn().mockImplementation(() => {
@@ -88,31 +88,31 @@ describe('<SelectService /> tests with data', () => {
   test('should render component and call required APIs', async () => {
     const { container, getAllByRole } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
-        <SelectService networkMap={mockNetworkMap} setNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
+        <SelectService networkMap={mockNetworkMap} updateNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
       </TestWrapper>
     )
-    expect(servicediscovery.useListK8SCustomService).toBeCalled()
-    expect(servicediscovery.useListK8sCustomServiceConnection).toBeCalled()
+    expect(servicediscovery.useListDiscoveredService).toBeCalled()
+    expect(servicediscovery.useListDiscoveredServiceConnection).toBeCalled()
     expect(servicediscovery.useListNamespace).toBeCalled()
 
     expect(container).toMatchSnapshot()
 
     const allRows = getAllByRole('row')
     const firstRow = allRows[0]
-    expect(within(firstRow).getByText('access-control')).toBeInTheDocument()
-    expect(within(firstRow).getByText('discovery.discoveryDetails.id: 64920dc166c663ba792cf3b0')).toBeInTheDocument()
+    expect(within(firstRow).getByText('adservice')).toBeInTheDocument()
+    expect(within(firstRow).getByText('discovery.discoveryDetails.id: 65130e1c457bae2f07823c07')).toBeInTheDocument()
     expect(within(firstRow).getByText('common.namespace')).toBeInTheDocument()
-    expect(within(firstRow).getByText('chaos-1000')).toBeInTheDocument()
+    expect(within(firstRow).getByText('boutique')).toBeInTheDocument()
     expect(within(firstRow).getByText('common.ipAddress')).toBeInTheDocument()
-    expect(within(firstRow).getByText('10.104.11.160')).toBeInTheDocument()
+    expect(within(firstRow).getByText('10.40.4.196')).toBeInTheDocument()
     expect(within(firstRow).getByText('common.smtp.port')).toBeInTheDocument()
-    expect(within(firstRow).getByText('9006')).toBeInTheDocument()
+    expect(within(firstRow).getByText('9555')).toBeInTheDocument()
   })
 
   test('should check service on clicking checkbox', async () => {
     const { container } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
-        <SelectService networkMap={mockNetworkMap} setNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
+        <SelectService networkMap={mockNetworkMap} updateNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
       </TestWrapper>
     )
 
@@ -133,7 +133,7 @@ describe('<SelectService /> tests with data', () => {
   test('should check related services and menu should open and close', async () => {
     const { container } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
-        <SelectService networkMap={mockNetworkMap} setNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
+        <SelectService networkMap={mockNetworkMap} updateNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
       </TestWrapper>
     )
 
@@ -175,7 +175,7 @@ describe('<SelectService /> tests with data', () => {
   test('should select all service on clicking select all', async () => {
     const { container, getByText } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
-        <SelectService networkMap={mockNetworkMap} setNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
+        <SelectService networkMap={mockNetworkMap} updateNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
       </TestWrapper>
     )
 
@@ -188,7 +188,7 @@ describe('<SelectService /> tests with data', () => {
   test('should select a namespace and search', async () => {
     const { container, getByTestId, getByPlaceholderText } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
-        <SelectService networkMap={mockNetworkMap} setNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
+        <SelectService networkMap={mockNetworkMap} updateNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
       </TestWrapper>
     )
 
@@ -217,7 +217,7 @@ describe('<SelectService /> tests with data', () => {
   test('should change tab on Next button', async () => {
     const { container, getByText } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
-        <SelectService networkMap={mockNetworkMap} setNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
+        <SelectService networkMap={mockNetworkMap} updateNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
       </TestWrapper>
     )
 
@@ -235,7 +235,7 @@ describe('<SelectService /> tests without data', () => {
   })
 
   test('should render loading view correctly', async () => {
-    jest.spyOn(servicediscovery, 'useListK8SCustomService').mockImplementation((): any => {
+    jest.spyOn(servicediscovery, 'useListDiscoveredService').mockImplementation((): any => {
       return {
         data: undefined,
         loading: true
@@ -244,27 +244,10 @@ describe('<SelectService /> tests without data', () => {
 
     const { container } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
-        <SelectService networkMap={mockNetworkMap} setNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
+        <SelectService networkMap={mockNetworkMap} updateNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
       </TestWrapper>
     )
-    expect(servicediscovery.useListK8SCustomService).toBeCalled()
-
-    expect(container).toMatchSnapshot()
-  })
-
-  test('should check for partial data (some fields undefined)', async () => {
-    jest.spyOn(servicediscovery, 'useListK8SCustomService').mockImplementation((): any => {
-      return {
-        data: { ...mockServices, items: [{ ...mockServices.items[0], spec: undefined }] },
-        loading: false
-      }
-    })
-
-    const { container } = render(
-      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
-        <SelectService networkMap={mockNetworkMap} setNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
-      </TestWrapper>
-    )
+    expect(servicediscovery.useListDiscoveredService).toBeCalled()
 
     expect(container).toMatchSnapshot()
   })
@@ -281,7 +264,7 @@ describe('<SelectService /> tests without data', () => {
     })
     const { container } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
-        <SelectService networkMap={mockNetworkMap} setNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
+        <SelectService networkMap={mockNetworkMap} updateNetworkMap={setNetworkMap} handleTabChange={handleTabChange} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

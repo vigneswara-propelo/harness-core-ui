@@ -52,7 +52,8 @@ import {
   SegmentPathProps,
   TargetPathProps,
   IACMPathProps,
-  WebhooksPathProps
+  WebhooksPathProps,
+  NetworkMapPathProps
 } from './interfaces/RouteInterfaces'
 
 import {
@@ -956,8 +957,8 @@ const routes = {
   toDiscoveryDetailsSettings: withModeModuleAndScopePrefix<DiscoveryPathProps>(
     params => `/settings/discovery/${params?.dAgentId}`
   ),
-  toCreateNetworkMapSettings: withModeModuleAndScopePrefix<DiscoveryPathProps>(
-    params => `/settings/discovery/${params?.dAgentId}/create-network-map`
+  toCreateNetworkMapSettings: withModeModuleAndScopePrefix<NetworkMapPathProps>(
+    params => `/settings/discovery/${params?.dAgentId}/network-map-studio/${params?.networkMapId ?? '-1'}`
   ),
 
   toMonitoredServicesSettings: withModeModuleAndScopePrefix(() => '/settings/monitoredservices'),

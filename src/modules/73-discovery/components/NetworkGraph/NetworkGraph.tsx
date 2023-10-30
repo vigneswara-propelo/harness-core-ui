@@ -14,7 +14,8 @@ import ReactFlow, {
   Controls,
   MiniMap,
   Background,
-  BackgroundVariant
+  BackgroundVariant,
+  Node
 } from 'reactflow'
 
 import 'reactflow/dist/style.css'
@@ -23,14 +24,18 @@ import HexagonNode from './components/nodes/HexagonNode/HexagonNode'
 import { connectionLineType, edgeOptions } from './constants'
 import type { LayoutedGraph } from './types'
 import NamespaceGroupNode from './components/nodes/NamspaceGroupNode/NamespaceGroupNode'
+import NetworkMapHexagonNode from './components/nodes/NetworkMapHexagonNode/NetworkMapHexagonNode'
 
 export type NetworkGraphProps = Omit<LayoutedGraph, 'options'> & {
   isNodeConnectable?: boolean
+  onNodeConnection?: (source: string, target: string) => void
+  onNodeClick?: (node: Node<any, string | undefined>) => void
 }
 
 const nodeTypes = {
   hexagon: HexagonNode,
-  group: NamespaceGroupNode
+  group: NamespaceGroupNode,
+  networkMapHexagon: NetworkMapHexagonNode
 }
 
 const proOptions = { hideAttribution: true }
@@ -38,7 +43,9 @@ const proOptions = { hideAttribution: true }
 export default function NetworkGraph({
   nodes: initialNodes,
   edges: initialEdges,
-  isNodeConnectable = false
+  isNodeConnectable = false,
+  onNodeConnection,
+  onNodeClick
 }: NetworkGraphProps): React.ReactElement {
   const [nodes, setNodes, onNodesChange] = useNodesState([])
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
@@ -49,9 +56,12 @@ export default function NetworkGraph({
   // Due to his the user connections with mouse events can't be tested.
   /* istanbul ignore next */
   const onConnect = React.useCallback(
-    params => setEdges(eds => addEdge({ ...params }, eds)),
+    params => {
+      onNodeConnection?.(params.source, params.target)
+      setEdges(eds => addEdge({ ...params }, eds))
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [initialNodes, initialEdges]
   )
   const onLayout = React.useCallback(
     // These lines are being ignored as reactflow doesn't actually render the nodes and edges
@@ -91,6 +101,10 @@ export default function NetworkGraph({
       connectionLineType={connectionLineType}
       defaultEdgeOptions={edgeOptions}
       proOptions={proOptions}
+      // These lines are being ignored as reactflow doesn't actually render the nodes and edges
+      // in a test environment https://github.com/wbkd/react-flow/issues/716.
+      // Because of this the nodes and edges after the initial render can't be mocked.
+      onNodeClick={/* istanbul ignore next */ (_, node) => onNodeClick?.(node)}
       fitView
     >
       <Controls showInteractive={false} />

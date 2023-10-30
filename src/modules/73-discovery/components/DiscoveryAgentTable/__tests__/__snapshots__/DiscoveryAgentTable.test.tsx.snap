@@ -151,16 +151,18 @@ exports[`Discovery Agent Status  render 1`] = `
                   class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey900"
                   style="--text-line-clamp: 1;"
                 >
-                  Jun 21, 2023 01:17 PM
+                  Jun 19, 2023 07:02 AM
                 </p>
                 <div
-                  class="StyledProps--font StyledProps--main"
+                  class="StyledProps--font StyledProps--main StyledProps--background-green50"
                   style="padding: 2px 6px; border-radius: 4px;"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey700"
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-green700"
                     style="font-weight: 600;"
-                  />
+                  >
+                    SUCCESS
+                  </p>
                 </div>
               </div>
             </div>

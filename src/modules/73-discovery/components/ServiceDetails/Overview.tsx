@@ -11,7 +11,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import React from 'react'
 import { useStrings } from 'framework/strings'
-import { useGetServiceFromK8SCustomService, useGetK8SCustomService } from 'services/servicediscovery'
+import { useGetServiceForDiscoveredService, useGetDiscoveredService } from 'services/servicediscovery'
 import { DiscoveryPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import ListItems from './ListItems'
 import css from './ServiceDetails.module.scss'
@@ -24,9 +24,9 @@ interface OverviewProps {
 export default function Overview({ infraId, serviceId }: OverviewProps): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & DiscoveryPathProps>()
   const { getString } = useStrings()
-  const { data: serviceData, loading: getServiceLoading } = useGetServiceFromK8SCustomService({
+  const { data: serviceData, loading: getServiceLoading } = useGetServiceForDiscoveredService({
     agentIdentity: infraId,
-    kcs_id: serviceId,
+    dsvc_id: serviceId,
     queryParams: {
       accountIdentifier: accountId,
       organizationIdentifier: orgIdentifier,
@@ -34,22 +34,21 @@ export default function Overview({ infraId, serviceId }: OverviewProps): React.R
     }
   })
 
-  const { data: serviceWorkloadData, loading: getServiceWorkloadLoading } = useGetK8SCustomService({
+  const { data: serviceWorkloadData, loading: getServiceWorkloadLoading } = useGetDiscoveredService({
     agentIdentity: infraId,
-    kcs_id: serviceId,
+    dsvc_id: serviceId,
     queryParams: {
       accountIdentifier: accountId,
       organizationIdentifier: orgIdentifier,
       projectIdentifier: projectIdentifier
     }
   })
+  const workloads = serviceWorkloadData?.spec.kubernetes?.workloads
 
   let totalReplicas = 0
-  if (serviceWorkloadData && serviceWorkloadData.workloads) {
-    serviceWorkloadData.workloads?.forEach(workload => {
-      totalReplicas += workload?.replicas ? workload.replicas.length : 0
-    })
-  }
+  workloads?.forEach(workload => {
+    totalReplicas += workload.replicas ? workload.replicas.length : 0
+  })
 
   return (
     <Layout.Horizontal spacing="medium" flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -158,7 +157,7 @@ export default function Overview({ infraId, serviceId }: OverviewProps): React.R
               title={getString('name')}
               content={
                 <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
-                  {serviceWorkloadData?.workloads?.[0]?.owner?.name ?? ''}
+                  {workloads?.[0]?.identity?.name ?? ''}
                 </Text>
               }
             />
@@ -166,7 +165,7 @@ export default function Overview({ infraId, serviceId }: OverviewProps): React.R
               title={getString('common.namespace')}
               content={
                 <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
-                  {serviceWorkloadData?.workloads?.[0]?.owner?.namespace ?? ''}
+                  {workloads?.[0]?.identity?.namespace ?? ''}
                 </Text>
               }
               padding={{ top: 'medium' }}
@@ -176,7 +175,7 @@ export default function Overview({ infraId, serviceId }: OverviewProps): React.R
               title={getString('kind')}
               content={
                 <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
-                  {serviceWorkloadData?.workloads?.[0]?.owner?.kind ?? ''}
+                  {workloads?.[0]?.identity?.kind ?? ''}
                 </Text>
               }
             />
@@ -190,44 +189,13 @@ export default function Overview({ infraId, serviceId }: OverviewProps): React.R
               padding={{ top: 'medium' }}
             />
             <Divider />
-            {serviceWorkloadData && serviceWorkloadData?.workloads && serviceWorkloadData?.workloads[0]?.podLabels ? (
+            {workloads?.[0]?.podLabels ? (
               <>
                 <ListItems
                   title={getString('pipelineSteps.labelsLabel')}
                   content={
                     <Layout.Vertical width={'60%'}>
-                      {Object.entries(serviceWorkloadData && serviceWorkloadData?.workloads[0]?.podLabels).map(
-                        ([key, value]) => {
-                          return (
-                            <Text
-                              color={Color.GREY_700}
-                              font={{ variation: FontVariation.BODY2 }}
-                              lineClamp={1}
-                              key={key}
-                            >
-                              {key}:{value}
-                            </Text>
-                          )
-                        }
-                      )}
-                    </Layout.Vertical>
-                  }
-                  padding={{ top: 'medium' }}
-                />
-                <Divider />
-              </>
-            ) : (
-              <></>
-            )}
-            {serviceWorkloadData &&
-            serviceWorkloadData?.workloads &&
-            serviceWorkloadData?.workloads[0]?.podAnnotations ? (
-              <ListItems
-                title={getString('common.annotations')}
-                content={
-                  <Layout.Vertical width={'60%'}>
-                    {Object.entries(serviceWorkloadData && serviceWorkloadData?.workloads[0]?.podAnnotations).map(
-                      ([key, value]) => {
+                      {Object.entries(workloads[0].podLabels).map(([key, value]) => {
                         return (
                           <Text
                             color={Color.GREY_700}
@@ -238,8 +206,28 @@ export default function Overview({ infraId, serviceId }: OverviewProps): React.R
                             {key}:{value}
                           </Text>
                         )
-                      }
-                    )}
+                      })}
+                    </Layout.Vertical>
+                  }
+                  padding={{ top: 'medium' }}
+                />
+                <Divider />
+              </>
+            ) : (
+              <></>
+            )}
+            {workloads?.[0]?.podAnnotations ? (
+              <ListItems
+                title={getString('common.annotations')}
+                content={
+                  <Layout.Vertical width={'60%'}>
+                    {Object.entries(workloads[0].podAnnotations).map(([key, value]) => {
+                      return (
+                        <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }} lineClamp={1} key={key}>
+                          {key}:{value}
+                        </Text>
+                      )
+                    })}
                   </Layout.Vertical>
                 }
                 padding={{ top: 'medium' }}

@@ -11,13 +11,18 @@ import routes from '@common/RouteDefinitions'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as servicediscovery from 'services/servicediscovery'
 import { useListNetworkMap } from 'services/servicediscovery'
-import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
+import { accountPathProps, discoveryPathProps, modulePathProps, projectPathProps } from '@common/utils/routeUtils'
 import NetworkMapTable from '../NetworkMapTable'
 
 const agentName = 'test-agent'
 const k8sConnectorID = 'k8s-connector'
 
-const PATH = routes.toDiscovery({ ...accountPathProps, ...projectPathProps })
+const PATH = routes.toDiscoveredResource({
+  ...accountPathProps,
+  ...projectPathProps,
+  ...modulePathProps,
+  ...discoveryPathProps
+})
 const PATH_PARAMS = {
   accountId: 'accountId',
   orgIdentifier: 'default',
@@ -182,7 +187,7 @@ describe('<NetworkMapTable /> tests with data', () => {
   })
 
   test('Edit and delete methods should be called with correct data', async () => {
-    const { container } = render(
+    const { container, getByTestId } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
         <NetworkMapTable agentName={agentName} connectorID={k8sConnectorID} />
       </TestWrapper>
@@ -215,8 +220,16 @@ describe('<NetworkMapTable /> tests with data', () => {
     act(() => {
       fireEvent.click(getEditButton()!)
     })
-    // change once edit support is added
-    expect(container).toMatchSnapshot()
+    expect(getByTestId('location').innerHTML).toEqual(
+      routes.toCreateNetworkMap({
+        accountId: 'accountId',
+        orgIdentifier: 'default',
+        projectIdentifier: 'Discovery_Test',
+        module: 'chaos',
+        dAgentId: 'dAgent-1',
+        networkMapId: 'testnwmap'
+      })
+    )
   })
 
   test('click on new NetworkMap button', async () => {
@@ -229,13 +242,16 @@ describe('<NetworkMapTable /> tests with data', () => {
     expect(useListNetworkMap).toBeCalled()
     fireEvent.click(getByText('discovery.newNetworkMap'))
 
-    expect(getByTestId('location')).toMatchInlineSnapshot(`
-      <div
-        data-testid="location"
-      >
-        /account/accountId/home/orgs/default/projects/Discovery_Test/setup/resources/discovery/undefined/network-map-studio/-1
-      </div>
-    `)
+    expect(getByTestId('location').innerHTML).toEqual(
+      routes.toCreateNetworkMap({
+        accountId: 'accountId',
+        orgIdentifier: 'default',
+        projectIdentifier: 'Discovery_Test',
+        module: 'chaos',
+        dAgentId: 'dAgent-1',
+        networkMapId: '-1'
+      })
+    )
   })
 
   test('test search functionality', async () => {

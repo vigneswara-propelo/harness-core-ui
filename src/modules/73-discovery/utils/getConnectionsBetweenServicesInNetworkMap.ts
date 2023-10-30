@@ -6,7 +6,7 @@
  */
 
 import {
-  ApiListCustomServiceConnection,
+  ApiListDiscoveredServiceConnection,
   DatabaseConnection,
   DatabaseConnectionType,
   DatabaseNetworkMapEntity
@@ -14,27 +14,33 @@ import {
 
 export default function getConnectionsBetweenServicesInNetworkMap(
   services: DatabaseNetworkMapEntity[] | null | undefined,
-  connectionList: ApiListCustomServiceConnection | null
+  connectionList: ApiListDiscoveredServiceConnection | null
 ): DatabaseConnection[] | undefined {
   // Checks for new connections between the selected services
-  const serviceHashMap = new Map<string, string>(services?.map((s): [string, string] => [s.id ?? '', s.id ?? '']))
+  const serviceHashMap = new Map<string, DatabaseNetworkMapEntity>(services?.map(s => [s.id ?? '', s]))
+
   const connectionBetweenSelectedServices: DatabaseConnection[] | undefined = connectionList?.items
     ?.filter(conn => serviceHashMap.has(conn.sourceID ?? '') && serviceHashMap.has(conn.destinationID ?? ''))
     .map(conn => ({
       from: {
         id: conn.sourceID,
-        kind: conn.type,
+        kind: serviceHashMap.get(conn.sourceID ?? '')?.kind ?? 'discoveredservice',
         name: conn.sourceName,
-        namespace: conn.sourceNamespace
+        kubernetes: {
+          namespace: conn.sourceNamespace
+        }
       },
       port: conn.destinationPort,
       to: {
         id: conn.destinationID,
-        kind: conn.type,
+        kind: serviceHashMap.get(conn.destinationID ?? '')?.kind ?? 'discoveredservice',
         name: conn.destinationName,
-        namespace: conn.destinationNamespace
+        kubernetes: {
+          namespace: conn.destinationNamespace
+        }
       },
-      type: conn.type as DatabaseConnectionType
+      type: conn.type as DatabaseConnectionType,
+      manual: false
     }))
 
   return connectionBetweenSelectedServices

@@ -23,6 +23,7 @@ const paginationProps = {
 }
 
 const mockListInstallation: servicediscovery.DatabaseInstallationCollection = {
+  id: '123',
   agentID: '1234',
   createdAt: '2023-06-21T13:17:41.491Z',
   createdBy: 'VgWXxi_6TdqAyplTQMg4CQ',
@@ -31,7 +32,7 @@ const mockListInstallation: servicediscovery.DatabaseInstallationCollection = {
   updatedBy: ''
 }
 
-const mockInstallationList: servicediscovery.ApiListServiceResponse = {
+const mockInstallationList: servicediscovery.ApiListInstallationResponse = {
   items: [mockListInstallation],
   page: paginationProps
 }

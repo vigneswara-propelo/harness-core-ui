@@ -21,7 +21,7 @@ jest.mock('@discovery/components/ServiceDetails/ServiceDetails', () => ({
 
 const props: NodeProps = {
   id: 'a1',
-  data: { name: 'a1' },
+  data: { id: 'a1', name: 'a1' },
   isConnectable: true,
   dragging: false,
   selected: false,
@@ -44,7 +44,7 @@ describe('HexagonNode', () => {
   })
 
   test('render component with mock data with data field missing name', async () => {
-    const newProps = { ...props, data: { id: 'a1' } }
+    const newProps = { ...props, data: { id: 'a1', name: '' } }
     const { container } = render(
       <TestWrapper>
         <ReactFlowProvider>

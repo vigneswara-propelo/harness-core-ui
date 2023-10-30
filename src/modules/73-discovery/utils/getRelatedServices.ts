@@ -6,16 +6,16 @@
  */
 
 import {
-  ApiListCustomServiceConnection,
-  ApiListK8sCustomService,
-  DatabaseK8SCustomServiceCollection
+  ApiListDiscoveredServiceConnection,
+  ApiListDiscoveredService,
+  DatabaseDiscoveredServiceCollection
 } from 'services/servicediscovery'
 
 export function getRelatedServices(
   serviceID: string,
-  serviceList: ApiListK8sCustomService | null,
-  connectionList: ApiListCustomServiceConnection | null
-): DatabaseK8SCustomServiceCollection[] | undefined {
+  serviceList: ApiListDiscoveredService | null,
+  connectionList: ApiListDiscoveredServiceConnection | null
+): DatabaseDiscoveredServiceCollection[] | undefined {
   if (!serviceList || !connectionList) return
 
   const relatedServiceIds = connectionList.items?.map(conn => {

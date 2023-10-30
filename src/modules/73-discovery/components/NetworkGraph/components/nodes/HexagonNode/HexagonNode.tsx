@@ -22,12 +22,7 @@ export default function HexagonNode(props: NodeProps<ServiceNodeData>): React.Re
   return (
     <>
       <Drawer position={DrawerPosition.RIGHT} isOpen={isOpen} isCloseButtonShown={true} size={'86%'}>
-        <ServiceDetails
-          serviceName={props.data.name ?? ''}
-          serviceId={props.id}
-          infraId={dAgentId}
-          closeModal={close}
-        />
+        <ServiceDetails serviceName={props.data.name} serviceId={props.id} infraId={dAgentId} closeModal={close} />
       </Drawer>
       <div
         className={css.nodeContainer}

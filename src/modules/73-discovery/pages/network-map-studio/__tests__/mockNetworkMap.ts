@@ -5,152 +5,191 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-export const mockNetworkMap = {
+import { ApiCreateNetworkMapRequest } from 'services/servicediscovery'
+
+export const mockNetworkMap: ApiCreateNetworkMapRequest = {
   identity: 'testnetworkmap',
   name: 'testnetworkmap',
   description: 'Network map for testing',
-  tags: {
-    test: '',
-    nwMap: ''
-  },
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
+  tags: { test: '', nwMap: '' },
   resources: [
     {
       id: '64c229096fb4bc8feefc933b',
-      kind: 'Service',
+      kind: 'discoveredservice',
       name: 'cartservice',
-      namespace: 'boutique'
+      kubernetes: {
+        namespace: 'boutique'
+      }
     },
     {
       id: '64c229096fb4bc8feefc933d',
-      kind: 'Service',
+      kind: 'discoveredservice',
       name: 'checkoutservice',
-      namespace: 'boutique'
+      kubernetes: {
+        namespace: 'boutique'
+      }
     },
     {
       id: '64c229096fb4bc8feefc933e',
-      kind: 'Service',
+      kind: 'discoveredservice',
       name: 'currencyservice',
-      namespace: 'boutique'
+      kubernetes: {
+        namespace: 'boutique'
+      }
     },
     {
       id: '64c229096fb4bc8feefc933f',
-      kind: 'Service',
+      kind: 'discoveredservice',
       name: 'emailservice',
-      namespace: 'boutique'
+      kubernetes: {
+        namespace: 'boutique'
+      }
     },
     {
       id: '64c229096fb4bc8feefc9342',
-      kind: 'Service',
+      kind: 'discoveredservice',
       name: 'paymentservice',
-      namespace: 'boutique'
+      kubernetes: {
+        namespace: 'boutique'
+      }
     },
     {
       id: '64c229096fb4bc8feefc9343',
-      kind: 'Service',
+      kind: 'discoveredservice',
       name: 'productcatalogservice',
-      namespace: 'boutique'
+      kubernetes: {
+        namespace: 'boutique'
+      }
     },
     {
       id: '64c229096fb4bc8feefc9346',
-      kind: 'Service',
+      kind: 'discoveredservice',
       name: 'shippingservice',
-      namespace: 'boutique'
+      kubernetes: {
+        namespace: 'boutique'
+      }
     }
   ],
   connections: [
     {
       from: {
         id: '64c229096fb4bc8feefc933d',
-        kind: 'TCP',
+        kind: 'discoveredservice',
         name: 'checkoutservice',
-        namespace: 'boutique'
+        kubernetes: {
+          namespace: 'boutique'
+        }
       },
       port: '7070',
       to: {
         id: '64c229096fb4bc8feefc933b',
-        kind: 'TCP',
+        kind: 'discoveredservice',
         name: 'cartservice',
-        namespace: 'boutique'
+        kubernetes: {
+          namespace: 'boutique'
+        }
       },
       type: 'TCP'
     },
     {
       from: {
         id: '64c229096fb4bc8feefc933d',
-        kind: 'TCP',
+        kind: 'discoveredservice',
         name: 'checkoutservice',
-        namespace: 'boutique'
+        kubernetes: {
+          namespace: 'boutique'
+        }
       },
       port: '50051',
       to: {
         id: '64c229096fb4bc8feefc9346',
-        kind: 'TCP',
+        kind: 'discoveredservice',
         name: 'shippingservice',
-        namespace: 'boutique'
+        kubernetes: {
+          namespace: 'boutique'
+        }
       },
       type: 'TCP'
     },
     {
       from: {
         id: '64c229096fb4bc8feefc933d',
-        kind: 'TCP',
+        kind: 'discoveredservice',
         name: 'checkoutservice',
-        namespace: 'boutique'
+        kubernetes: {
+          namespace: 'boutique'
+        }
       },
       port: '5000',
       to: {
         id: '64c229096fb4bc8feefc933f',
-        kind: 'TCP',
+        kind: 'discoveredservice',
         name: 'emailservice',
-        namespace: 'boutique'
+        kubernetes: {
+          namespace: 'boutique'
+        }
       },
       type: 'TCP'
     },
     {
       from: {
         id: '64c229096fb4bc8feefc933d',
-        kind: 'TCP',
+        kind: 'discoveredservice',
         name: 'checkoutservice',
-        namespace: 'boutique'
+        kubernetes: {
+          namespace: 'boutique'
+        }
       },
       port: '3550',
       to: {
         id: '64c229096fb4bc8feefc9343',
-        kind: 'TCP',
+        kind: 'discoveredservice',
         name: 'productcatalogservice',
-        namespace: 'boutique'
+        kubernetes: {
+          namespace: 'boutique'
+        }
       },
       type: 'TCP'
     },
     {
       from: {
         id: '64c229096fb4bc8feefc933d',
-        kind: 'TCP',
+        kind: 'discoveredservice',
         name: 'checkoutservice',
-        namespace: 'boutique'
+        kubernetes: {
+          namespace: 'boutique'
+        }
       },
       port: '7000',
       to: {
         id: '64c229096fb4bc8feefc933e',
-        kind: 'TCP',
+        kind: 'discoveredservice',
         name: 'currencyservice',
-        namespace: 'boutique'
+        kubernetes: {
+          namespace: 'boutique'
+        }
       },
       type: 'TCP'
     },
     {
       from: {
         id: '64c229096fb4bc8feefc933d',
-        kind: 'TCP',
+        kind: 'discoveredservice',
         name: 'checkoutservice',
-        namespace: 'boutique'
+        kubernetes: {
+          namespace: 'boutique'
+        }
       },
       port: '50051',
       to: {
         id: '64c229096fb4bc8feefc9342',
-        kind: 'TCP',
+        kind: 'discoveredservice',
         name: 'paymentservice',
-        namespace: 'boutique'
+        kubernetes: {
+          namespace: 'boutique'
+        }
       },
       type: 'TCP'
     }

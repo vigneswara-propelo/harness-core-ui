@@ -25,10 +25,18 @@ beforeEach(() => mockReactFlow())
 
 describe('NetworkGraph', () => {
   test('render component with mock data', async () => {
+    const mockNodeConnection = jest.fn()
+    const mockNodeClick = jest.fn()
+
     const { container } = render(
       <TestWrapper>
         <ReactFlowProvider>
-          <NetworkGraph nodes={mockNodes} edges={mockEdges} />
+          <NetworkGraph
+            nodes={mockNodes}
+            edges={mockEdges}
+            onNodeClick={mockNodeClick}
+            onNodeConnection={mockNodeConnection}
+          />
         </ReactFlowProvider>
       </TestWrapper>
     )

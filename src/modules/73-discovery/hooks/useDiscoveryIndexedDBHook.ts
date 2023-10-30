@@ -24,7 +24,7 @@ export const DiscoveryIndexedDBPrimaryKeys = {
 const logger = loggerFor(ModuleName.COMMON)
 
 interface DiscoveryObjectStore {
-  name: 'networkMap'
+  name: DiscoveryObjectStoreNames
   options?: IDBObjectStoreParameters
   index?: {
     name: string

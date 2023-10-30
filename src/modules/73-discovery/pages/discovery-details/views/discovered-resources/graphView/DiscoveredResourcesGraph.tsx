@@ -9,7 +9,7 @@ import React from 'react'
 import { ReactFlowProvider } from 'reactflow'
 import { useParams } from 'react-router-dom'
 import { Page, PageSpinner } from '@harness/uicore'
-import { ApiListCustomServiceConnection, useListK8SCustomService } from 'services/servicediscovery'
+import { ApiListDiscoveredServiceConnection, useListDiscoveredService } from 'services/servicediscovery'
 import type { DiscoveryPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   getGraphEdgesFromServiceConnections,
@@ -20,7 +20,7 @@ import { useStrings } from 'framework/strings'
 import css from './DiscoveredResourcesGraph.module.scss'
 
 interface DiscoveredResourcesGraphProps {
-  connectionList: ApiListCustomServiceConnection | null
+  connectionList: ApiListDiscoveredServiceConnection | null
   search?: string
   namespace?: string
 }
@@ -31,7 +31,7 @@ export default function DiscoveredResourcesGraph({
   const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & DiscoveryPathProps>()
   const { getString } = useStrings()
 
-  const { data: serviceList } = useListK8SCustomService({
+  const { data: serviceList } = useListDiscoveredService({
     agentIdentity: dAgentId,
     queryParams: {
       accountIdentifier: accountId,

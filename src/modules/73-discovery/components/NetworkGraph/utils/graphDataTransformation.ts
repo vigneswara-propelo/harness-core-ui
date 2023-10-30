@@ -9,8 +9,8 @@ import type { Node, Edge } from 'reactflow'
 import { NodeTypes, nodeGroupOptions, nodeOptions } from '@discovery/components/NetworkGraph/constants'
 import type {
   ApiCreateNetworkMapRequest,
-  ApiListCustomServiceConnection,
-  ApiListK8sCustomService
+  ApiListDiscoveredServiceConnection,
+  ApiListDiscoveredService
 } from 'services/servicediscovery'
 import type {
   NetworkMapEdgeData,
@@ -20,32 +20,32 @@ import type {
 } from '@discovery/components/NetworkGraph/types'
 
 export function getGraphNodesFromServiceList(
-  serviceList: ApiListK8sCustomService | null
+  serviceList: ApiListDiscoveredService | null
 ): Node<ServiceNodeData, NodeTypes>[] {
   if (!serviceList) return []
 
   const namespaces = new Set<string>()
   const graphNodes: Node<ServiceNodeData, NodeTypes>[] = []
-
   serviceList.items?.map(service => {
-    if (service.namespace && !namespaces.has(service.namespace)) {
-      namespaces.add(service.namespace)
+    const namespace = service.spec.kubernetes?.namespace
+    if (namespace && !namespaces.has(namespace)) {
+      namespaces.add(namespace)
     }
 
     if (service.id)
       graphNodes.push({
+        ...nodeOptions,
         id: service.id,
-        data: service,
-        parentNode: service.namespace,
-        ...nodeOptions
+        data: { ...service, name: service.spec.kubernetes?.name ?? 'service' },
+        parentNode: namespace
       })
   })
 
   namespaces.forEach(value => {
     graphNodes.push({
+      ...nodeGroupOptions,
       id: value,
-      data: { name: value },
-      ...nodeGroupOptions
+      data: { id: value, name: value }
     })
   })
 
@@ -53,7 +53,7 @@ export function getGraphNodesFromServiceList(
 }
 
 export function getGraphEdgesFromServiceConnections(
-  connectionList: ApiListCustomServiceConnection | null
+  connectionList: ApiListDiscoveredServiceConnection | null
 ): Edge<ServiceEdgeData>[] {
   if (!connectionList) return []
 
@@ -81,24 +81,26 @@ export function getGraphNodesFromNetworkMap(
   const graphNodes: Node<NetworkMapNodeData, NodeTypes>[] = []
 
   networkMap.resources?.map(service => {
-    if (service.namespace && !namespaces.has(service.namespace)) {
-      namespaces.add(service.namespace)
+    const namespace = service.kubernetes?.namespace
+    if (namespace && !namespaces.has(namespace)) {
+      namespaces.add(namespace)
     }
 
     if (service.id)
       graphNodes.push({
+        ...nodeOptions,
+        type: NodeTypes.NetworkMapHexagon,
         id: service.id,
         data: service,
-        parentNode: service.namespace,
-        ...nodeOptions
+        parentNode: namespace
       })
   })
 
   namespaces.forEach(value => {
     graphNodes.push({
+      ...nodeGroupOptions,
       id: value,
-      data: { name: value },
-      ...nodeGroupOptions
+      data: { id: value, name: value, kind: 'discoveredservice' }
     })
   })
 
@@ -118,7 +120,7 @@ export function getGraphEdgesFromNetworkMap(
         id: `${connection.from.id}-${connection.to.id}`,
         source: connection.from.id,
         target: connection.to.id,
-        data: { parentNode: connection.from.namespace, ...connection }
+        data: { ...connection, parentNode: connection.from.kubernetes?.namespace }
       })
   })
 

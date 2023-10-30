@@ -11,20 +11,20 @@ import React from 'react'
 import { CellProps, Renderer } from 'react-table'
 import { Classes, Menu, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
-import { ApiCreateNetworkMapRequest, DatabaseServiceCollection } from 'services/servicediscovery'
+import { ApiCreateNetworkMapRequest, DatabaseDiscoveredServiceCollection } from 'services/servicediscovery'
 import MenuItem from '@rbac/components/MenuItem/MenuItem'
 
 export const RenderSelectServiceCheckbox: React.FC<
-  CellProps<DatabaseServiceCollection> & {
-    networkMap: ApiCreateNetworkMapRequest | undefined
-    handleSelectionChange: (isSelect: boolean, service: DatabaseServiceCollection) => void
+  CellProps<DatabaseDiscoveredServiceCollection> & {
+    networkMap: ApiCreateNetworkMapRequest
+    handleSelectionChange: (isSelect: boolean, service: DatabaseDiscoveredServiceCollection) => void
   }
 > = ({ row, networkMap, handleSelectionChange }) => {
-  const isChecked = networkMap?.resources?.some(nwMap => nwMap.id === row.original.id)
+  const isChecked = networkMap.resources.some(nwMap => nwMap.id === row.original.id)
   return (
     <Checkbox
       checked={isChecked}
-      key={row.original.name}
+      key={row.original.spec.kubernetes?.name}
       margin={{ left: 'medium' }}
       onChange={(event: React.FormEvent<HTMLInputElement>) => {
         handleSelectionChange(event.currentTarget.checked, row.original)
@@ -33,13 +33,13 @@ export const RenderSelectServiceCheckbox: React.FC<
   )
 }
 
-export const RenderServiceName: Renderer<CellProps<DatabaseServiceCollection>> = ({ row }) => {
+export const RenderServiceName: Renderer<CellProps<DatabaseDiscoveredServiceCollection>> = ({ row }) => {
   const { getString } = useStrings()
 
   return (
     <Layout.Vertical spacing={'small'} margin={{ left: 'small' }}>
       <Text lineClamp={1} font={{ size: 'normal', weight: 'semi-bold' }} color={Color.PRIMARY_7}>
-        {row.original.name}
+        {row.original.spec.kubernetes?.name}
       </Text>
       <Text lineClamp={1} font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_400}>
         {getString('discovery.discoveryDetails.id')}: {row.original.id}
@@ -48,7 +48,7 @@ export const RenderServiceName: Renderer<CellProps<DatabaseServiceCollection>> =
   )
 }
 
-export const RenderServiceNamespace: Renderer<CellProps<DatabaseServiceCollection>> = ({ row }) => {
+export const RenderServiceNamespace: Renderer<CellProps<DatabaseDiscoveredServiceCollection>> = ({ row }) => {
   const { getString } = useStrings()
 
   return (
@@ -62,13 +62,13 @@ export const RenderServiceNamespace: Renderer<CellProps<DatabaseServiceCollectio
         color={Color.GREY_600}
         icon="service-deployment"
       >
-        {row.original.namespace}
+        {row.original.spec.kubernetes?.namespace}
       </Text>
     </Layout.Vertical>
   )
 }
 
-export const RenderServiceIPAddress: Renderer<CellProps<DatabaseServiceCollection>> = ({ row }) => {
+export const RenderServiceIPAddress: Renderer<CellProps<DatabaseDiscoveredServiceCollection>> = ({ row }) => {
   const { getString } = useStrings()
 
   return (
@@ -77,13 +77,13 @@ export const RenderServiceIPAddress: Renderer<CellProps<DatabaseServiceCollectio
         {getString('common.ipAddress')}
       </Text>
       <Text lineClamp={1} font={{ size: 'small', weight: 'semi-bold' }} color={Color.PRIMARY_7}>
-        {row.original.spec?.clusterIP}
+        {row.original.spec?.kubernetes?.service?.clusterIP}
       </Text>
     </Layout.Vertical>
   )
 }
 
-export const RenderServicePort: Renderer<CellProps<DatabaseServiceCollection>> = ({ row }) => {
+export const RenderServicePort: Renderer<CellProps<DatabaseDiscoveredServiceCollection>> = ({ row }) => {
   const { getString } = useStrings()
 
   return (
@@ -92,14 +92,14 @@ export const RenderServicePort: Renderer<CellProps<DatabaseServiceCollection>> =
         {getString('common.smtp.port')}
       </Text>
       <Text lineClamp={1} font={{ size: 'small', weight: 'semi-bold' }} color={Color.PRIMARY_7}>
-        {row.original.spec?.ports?.[0]?.port}
+        {row?.original?.spec?.kubernetes?.service?.ports?.map(p => p.targetPort).join(', ')}
       </Text>
     </Layout.Vertical>
   )
 }
 
 export const RenderMenuCell: React.FC<
-  CellProps<DatabaseServiceCollection> & {
+  CellProps<DatabaseDiscoveredServiceCollection> & {
     handleClick: () => void
   }
 > = ({ handleClick }) => {

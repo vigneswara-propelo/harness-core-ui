@@ -9,7 +9,8 @@ import { ConnectionLineType, Edge, Node, MarkerType } from 'reactflow'
 
 export enum NodeTypes {
   Hexagon = 'hexagon',
-  Group = 'group'
+  Group = 'group',
+  NetworkMapHexagon = 'networkMapHexagon'
 }
 
 export const connectionLineType = ConnectionLineType.Straight

@@ -13,7 +13,7 @@ import NamespaceGroupNode from '../NamespaceGroupNode'
 
 const props: NodeProps = {
   id: 'ns1',
-  data: { name: 'ns1' },
+  data: { id: 'ns1', name: 'ns1' },
   isConnectable: true,
   dragging: false,
   selected: false,

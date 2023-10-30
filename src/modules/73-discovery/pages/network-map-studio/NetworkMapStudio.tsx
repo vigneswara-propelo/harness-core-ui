@@ -26,6 +26,7 @@ import {
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { Color, Intent } from '@harness/design-system'
+import qs from 'qs'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 
 import { useStrings, String } from 'framework/strings'
@@ -45,10 +46,11 @@ import RbacButton from '@rbac/components/Button/Button'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ApiCreateNetworkMapRequest, useCreateNetworkMap } from 'services/servicediscovery'
+import { ApiCreateNetworkMapRequest, useCreateNetworkMap, useGetNetworkMap } from 'services/servicediscovery'
 import { DiscoveryObjectStoreNames, useDiscoveryIndexedDBHook } from '@discovery/hooks/useDiscoveryIndexedDBHook'
 import { DiscoveryTabs } from '@discovery/interface/discovery'
 import SelectService from './views/select-service/SelectService'
+import ConfigureNetworkMap from './views/configure/ConfigureNetworkMap'
 import css from './NetworkMapStudio.module.scss'
 
 export interface FormValues {
@@ -72,7 +74,11 @@ export default function NetworkMapStudio(): React.ReactElement {
 
   useDocumentTitle(getString('discovery.createNetworkMap'))
   const { updateQueryParams } = useUpdateQueryParams()
-  const [networkMap, setNetworkMap] = React.useState<ApiCreateNetworkMapRequest>()
+  const [networkMap, setNetworkMap] = React.useState<ApiCreateNetworkMapRequest>({
+    identity: '',
+    name: '',
+    resources: []
+  })
 
   const {
     isOpen: isChangeNameToggleOpen,
@@ -93,6 +99,17 @@ export default function NetworkMapStudio(): React.ReactElement {
       projectIdentifier: projectIdentifier
     },
     agentIdentity: dAgentId ?? ''
+  })
+
+  const { data: networkMapFromAPI, refetch: refetchNetworkMap } = useGetNetworkMap({
+    queryParams: {
+      accountIdentifier: accountId,
+      organizationIdentifier: orgIdentifier,
+      projectIdentifier: projectIdentifier
+    },
+    agentIdentity: dAgentId ?? '',
+    networkMapIdentity: networkMapId,
+    lazy: true
   })
 
   const discardDialogProps: ConfirmationDialogProps = {
@@ -120,39 +137,42 @@ export default function NetworkMapStudio(): React.ReactElement {
   const handleTabChange = (tabID: StudioTabs): void => {
     switch (tabID) {
       case StudioTabs.SELECT_SERVICES:
-        history.push(
-          routes.toCreateNetworkMap({
+        history.push({
+          pathname: routes.toCreateNetworkMap({
             accountId,
             projectIdentifier,
             orgIdentifier,
             module,
             dAgentId,
-            networkMapId,
-            unsavedChanges,
-            tab: StudioTabs.SELECT_SERVICES,
-            ...otherSearchParams
-          })
-        )
+            networkMapId
+          }),
+          search: qs.stringify(
+            { unsavedChanges, tab: StudioTabs.SELECT_SERVICES, ...otherSearchParams },
+            { skipNulls: true }
+          )
+        })
         break
       case StudioTabs.CONFIGURE_RELATIONS:
-        /* istanbul ignore next */ history.push(
-          routes.toCreateNetworkMap({
+        history.push({
+          pathname: routes.toCreateNetworkMap({
             accountId,
             projectIdentifier,
             orgIdentifier,
             module,
             dAgentId,
-            networkMapId,
-            unsavedChanges,
-            tab: StudioTabs.CONFIGURE_RELATIONS,
-            ...otherSearchParams
-          })
-        )
+            networkMapId
+          }),
+          search: qs.stringify(
+            { unsavedChanges, tab: StudioTabs.CONFIGURE_RELATIONS, ...otherSearchParams },
+            { skipNulls: true }
+          )
+        })
     }
   }
 
-  const handleCreateNetworkMap = /* istanbul ignore next */ async (): Promise<void> => {
+  const handleCreateNetworkMap = async (): Promise<void> => {
     const networkMapFromIDB = await dbInstance?.get(DiscoveryObjectStoreNames.NETWORK_MAP, networkMapId)
+    /* istanbul ignore next */
     if (
       !networkMapFromIDB ||
       !networkMapFromIDB.identity ||
@@ -179,19 +199,39 @@ export default function NetworkMapStudio(): React.ReactElement {
           })
         )
       })
-      .catch(error => showError(error.data?.description || error.data?.message))
+      .catch(/* istanbul ignore next */ error => showError(error.data?.description || error.data?.message))
   }
 
   React.useEffect(() => {
     if (networkMapId !== '-1') {
       dbInstance?.get(DiscoveryObjectStoreNames.NETWORK_MAP, networkMapId).then(nwMap => {
-        setNetworkMap(nwMap)
+        if (!nwMap) {
+          /* istanbul ignore next */
+          refetchNetworkMap().then(() => {
+            if (networkMapFromAPI) {
+              const tags: { [key: string]: string } = {}
+              networkMapFromAPI.tags?.map(tag => {
+                tags[tag] = ''
+              })
+
+              updateNetworkMap({ ...networkMapFromAPI, tags } as unknown as ApiCreateNetworkMapRequest)
+            }
+          })
+        } else {
+          setNetworkMap(nwMap)
+        }
       })
     } else {
       openChangeNameToggle()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [networkMapId, dbInstance])
+  }, [networkMapId, dbInstance, networkMapFromAPI])
+
+  /* istanbul ignore next */
+  async function updateNetworkMap(updatedNetworkMap: ApiCreateNetworkMapRequest): Promise<void> {
+    setNetworkMap(updatedNetworkMap)
+    await dbInstance?.put(DiscoveryObjectStoreNames.NETWORK_MAP, updatedNetworkMap)
+  }
 
   return (
     <>
@@ -215,15 +255,17 @@ export default function NetworkMapStudio(): React.ReactElement {
                 label: getString('common.discovery')
               },
               {
-                url: routes.toDiscoveredResource({
-                  accountId,
-                  orgIdentifier,
-                  projectIdentifier,
-                  dAgentId,
-                  module,
-                  tab: DiscoveryTabs.DISCOVERED_RESOURCES
-                }),
-                label: dAgentId ?? networkMap?.identity
+                url:
+                  routes.toDiscoveredResource({
+                    accountId,
+                    orgIdentifier,
+                    projectIdentifier,
+                    dAgentId,
+                    module
+                  }) +
+                  '?' +
+                  qs.stringify({ tab: DiscoveryTabs.DISCOVERED_RESOURCES }),
+                label: dAgentId ?? networkMap.identity
               }
             ]}
           />
@@ -237,7 +279,7 @@ export default function NetworkMapStudio(): React.ReactElement {
               onClick={() => openChangeNameToggle()}
             >
               <Text color={Color.GREY_900} font="medium">
-                {networkMap?.name}
+                {networkMap.name}
               </Text>
               <Icon data-testid="edit" name="code-edit" size={20} className={css.headerIcon} />
             </Layout.Horizontal>
@@ -251,13 +293,8 @@ export default function NetworkMapStudio(): React.ReactElement {
               isCloseButtonShown={false}
               lazy
             >
-              <Formik<Partial<ApiCreateNetworkMapRequest>>
-                initialValues={
-                  networkMap ?? {
-                    identity: '',
-                    name: ''
-                  }
-                }
+              <Formik<Pick<ApiCreateNetworkMapRequest, 'identity' | 'name' | 'description' | 'tags'>>
+                initialValues={networkMap}
                 formName="networkMapNameForm"
                 validationSchema={Yup.object().shape({
                   name: Yup.string()
@@ -277,23 +314,24 @@ export default function NetworkMapStudio(): React.ReactElement {
                     values = { ...networkMapFromIDB, ...values }
                     await store?.delete(networkMapId)
                   }
-                  await store?.put(values)
+                  await store?.put({ ...values, resources: [] })
                   await tx?.done
-                  setNetworkMap(values)
+                  setNetworkMap({ ...values, resources: [] })
 
-                  history.push(
-                    routes.toCreateNetworkMap({
+                  history.push({
+                    pathname: routes.toCreateNetworkMap({
                       accountId,
                       projectIdentifier,
                       orgIdentifier,
                       module,
                       dAgentId,
-                      networkMapId: values.identity,
-                      tab: StudioTabs.SELECT_SERVICES,
-                      unsavedChanges: 'true',
-                      ...otherSearchParams
-                    })
-                  )
+                      networkMapId: values.identity
+                    }),
+                    search: qs.stringify(
+                      { unsavedChanges: 'true', tab: StudioTabs.SELECT_SERVICES, ...otherSearchParams },
+                      { skipNulls: true }
+                    )
+                  })
                   closeChangeNameToggle()
                 }}
               >
@@ -338,12 +376,16 @@ export default function NetworkMapStudio(): React.ReactElement {
                 },
                 permission: PermissionIdentifier.CREATE_NETWORK_MAP
               }}
-              disabled={!networkMap?.resources || networkMap.resources.length === 0}
+              disabled={networkMap.resources.length === 0}
               icon="run-pipeline"
-              intent="success"
               variation={ButtonVariation.PRIMARY}
-              text={getString('create')}
-              onClick={handleCreateNetworkMap}
+              text={getString('save')}
+              onClick={e => {
+                e.preventDefault()
+                e.stopPropagation()
+
+                handleCreateNetworkMap()
+              }}
             />
           </Layout.Horizontal>
         }
@@ -361,7 +403,7 @@ export default function NetworkMapStudio(): React.ReactElement {
               panel={
                 <SelectService
                   networkMap={networkMap}
-                  setNetworkMap={setNetworkMap}
+                  updateNetworkMap={updateNetworkMap}
                   handleTabChange={handleTabChange}
                 />
               }
@@ -377,9 +419,15 @@ export default function NetworkMapStudio(): React.ReactElement {
             />
 
             <Tab
-              disabled
               id={StudioTabs.CONFIGURE_RELATIONS}
-              panel={<>Configure Relations</>}
+              disabled={!networkMap}
+              panel={
+                <ConfigureNetworkMap
+                  networkMap={networkMap}
+                  updateNetworkMap={updateNetworkMap}
+                  handleTabChange={handleTabChange}
+                />
+              }
               title={getString('discovery.tabs.configureRelations')}
             />
           </Tabs>

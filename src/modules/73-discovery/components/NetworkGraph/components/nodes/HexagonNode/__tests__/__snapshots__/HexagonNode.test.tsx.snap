@@ -49,7 +49,9 @@ exports[`HexagonNode render component with mock data with data field missing nam
         <p
           class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-xsmall"
           style="--text-line-clamp: 3;"
-        />
+        >
+          
+        </p>
       </div>
     </div>
     <div

@@ -194,7 +194,7 @@ exports[`<DiscoveryDetails /> tests changed discovered details tabs 1`] = `
       </div>
     </div>
     <div
-      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-size-small"
@@ -500,7 +500,7 @@ exports[`<DiscoveryDetails /> tests changed discovered details tabs 2`] = `
       </div>
     </div>
     <div
-      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-size-small"
@@ -806,7 +806,7 @@ exports[`<DiscoveryDetails /> tests changed discovered details tabs 3`] = `
       </div>
     </div>
     <div
-      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-size-small"
@@ -1347,7 +1347,7 @@ exports[`<DiscoveryDetails /> tests changed discovered details tabs 4`] = `
       </div>
     </div>
     <div
-      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-size-small"
@@ -1656,14 +1656,14 @@ exports[`<DiscoveryDetails /> tests should match snapshot 1`] = `
       </div>
     </div>
     <div
-      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-size-small"
       >
         discovery.discoveryDetails.lastDiscovery
         : 
-        Jun 21, 2023 01:17 PM
+        Jun 19, 2023 07:02 AM
       </p>
     </div>
   </div>
@@ -1962,7 +1962,7 @@ exports[`<DiscoveryDetails /> tests should render error view correctly 1`] = `
       </div>
     </div>
     <div
-      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-size-small"
@@ -2268,7 +2268,7 @@ exports[`<DiscoveryDetails /> tests should render loading view correctly 1`] = `
       </div>
     </div>
     <div
-      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-size-small"

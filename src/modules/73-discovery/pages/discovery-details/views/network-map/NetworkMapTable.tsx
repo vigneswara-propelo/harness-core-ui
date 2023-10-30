@@ -79,7 +79,24 @@ const NetworkMapTable: React.FC<NetworkMapTableProps> = ({ agentName, connectorI
   })
 
   const Name: Renderer<CellProps<DatabaseNetworkMapCollection>> = ({ row }) => (
-    <Text font={{ size: 'normal', weight: 'semi-bold' }} margin={{ left: 'medium' }} color={Color.PRIMARY_7}>
+    <Text
+      className={css.nameCell}
+      font={{ size: 'normal', weight: 'semi-bold' }}
+      margin={{ left: 'medium' }}
+      color={Color.PRIMARY_7}
+      onClick={() =>
+        history.push(
+          routes.toCreateNetworkMap({
+            accountId,
+            orgIdentifier,
+            projectIdentifier,
+            module,
+            dAgentId,
+            networkMapId: row.original.identity
+          })
+        )
+      }
+    >
       {row.original.name}
     </Text>
   )
@@ -164,7 +181,23 @@ const NetworkMapTable: React.FC<NetworkMapTableProps> = ({ agentName, connectorI
               icon="Options"
             />
             <Menu data-testid="options" style={{ backgroundColor: 'unset' }}>
-              <MenuItem icon="edit" text={getString('edit')} disabled onClick={() => void 0} className={css.menuItem} />
+              <MenuItem
+                icon="edit"
+                text={getString('edit')}
+                onClick={() =>
+                  history.push(
+                    routes.toCreateNetworkMap({
+                      accountId,
+                      orgIdentifier,
+                      projectIdentifier,
+                      module,
+                      dAgentId,
+                      networkMapId: row.original.identity
+                    })
+                  )
+                }
+                className={css.menuItem}
+              />
               <MenuItem icon="trash" text={getString('delete')} className={css.menuItem} onClick={handleDelete} />
             </Menu>
           </Popover>
@@ -232,6 +265,14 @@ const NetworkMapTable: React.FC<NetworkMapTableProps> = ({ agentName, connectorI
     [networkMapList, refetchListNetwork]
   )
 
+  if (networkMapListLoading) {
+    return (
+      <Page.Body>
+        <Page.Spinner />
+      </Page.Body>
+    )
+  }
+
   return (
     <Container>
       {networkMapList?.items && networkMapList.items.length !== 0 ? (
@@ -265,18 +306,14 @@ const NetworkMapTable: React.FC<NetworkMapTableProps> = ({ agentName, connectorI
             </Layout.Horizontal>
           </Page.SubHeader>
           <Page.Body>
-            {networkMapListLoading ? (
-              <Page.Spinner />
-            ) : (
-              <Container className={css.tableBody}>
-                <TableV2<DatabaseNetworkMapCollection>
-                  sortable={true}
-                  columns={columns}
-                  data={networkMapListData}
-                  pagination={paginationProps}
-                />
-              </Container>
-            )}
+            <Container className={css.tableBody}>
+              <TableV2<DatabaseNetworkMapCollection>
+                sortable={true}
+                columns={columns}
+                data={networkMapListData}
+                pagination={paginationProps}
+              />
+            </Container>
           </Page.Body>
         </>
       ) : (

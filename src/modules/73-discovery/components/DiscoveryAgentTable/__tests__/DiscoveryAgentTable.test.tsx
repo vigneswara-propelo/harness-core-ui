@@ -28,10 +28,16 @@ const mockDiscoveryAgent: ApiGetAgentResponse[] = [
     createdBy: 'VgWXxi_6TdqAyplTQMg4CQ',
     updatedBy: 'Sahil',
     installationDetails: {
-      createdAt: '2023-06-21T13:17:41.491Z',
-      updatedAt: '2023-06-21T13:17:41.491Z',
+      id: '648ffda242d20c0d04713e06',
+      agentID: '648ffda242d20c0d04713e05',
+      delegateTaskID: 'DFmiyJTUSF-reLnjH2q8lQ',
+      delegateID: '',
+      delegateTaskStatus: 'SUCCESS',
+      agentDetails: {},
+      createdAt: '2023-06-19T07:02:58.75Z',
       createdBy: 'VgWXxi_6TdqAyplTQMg4CQ',
-      updatedBy: 'Sahil'
+      updatedBy: '',
+      removed: false
     },
     config: {
       kubernetes: {
@@ -44,11 +50,7 @@ const mockDiscoveryAgent: ApiGetAgentResponse[] = [
       },
       data: {
         enableNodeAgent: false,
-        enableStorageResources: false,
         enableBatchResources: false,
-        retryInSecond: 100,
-        retryCount: 3,
-        batchSize: 100,
         collectionWindowInMin: 2
       }
     }

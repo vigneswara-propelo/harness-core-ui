@@ -43,7 +43,10 @@ function DiscoverySettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React
       </RouteWithContext>
       <RouteWithContext
         exact
-        path={pathArrayForAllScopes(routes.toCreateNetworkMapSettings, mode, { dAgentId: ':dAgentId' })}
+        path={pathArrayForAllScopes(routes.toCreateNetworkMapSettings, mode, {
+          dAgentId: ':dAgentId',
+          networkMapId: ':networkMapId'
+        })}
         pageName={PAGE_NAME.CreateNetworkMap}
       >
         <React.Suspense fallback={<PageSpinner />}>

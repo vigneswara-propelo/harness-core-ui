@@ -10,6 +10,7 @@ declare const styles: {
   readonly iconDiv: string
   readonly menuItem: string
   readonly moduleIcons: string
+  readonly nameCell: string
   readonly noNetworkMapDiv: string
   readonly serviceCountContainer: string
   readonly serviceCountText: string

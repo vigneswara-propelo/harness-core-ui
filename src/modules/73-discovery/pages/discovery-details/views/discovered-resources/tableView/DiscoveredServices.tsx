@@ -12,11 +12,12 @@ import React from 'react'
 import { Color } from '@harness/design-system'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { useHistory, useParams } from 'react-router-dom'
+import qs from 'qs'
 import {
   ApiCustomServiceConnection,
-  ApiListCustomServiceConnection,
-  DatabaseK8SCustomServiceCollection,
-  useListK8SCustomService
+  ApiListDiscoveredServiceConnection,
+  DatabaseDiscoveredServiceCollection,
+  useListDiscoveredService
 } from 'services/servicediscovery'
 import { DiscoveryPathProps, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
@@ -31,12 +32,12 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import TagCount from '@discovery/components/TagCount/TagCount'
 import css from './DiscoveryServices.module.scss'
 
-export interface K8SCustomService extends DatabaseK8SCustomServiceCollection {
+export interface K8SCustomService extends DatabaseDiscoveredServiceCollection {
   relatedServices?: ApiCustomServiceConnection[]
 }
 
 interface DiscoveredServicesProps {
-  connectionList: ApiListCustomServiceConnection | null
+  connectionList: ApiListDiscoveredServiceConnection | null
   search?: string
   namespace?: string
 }
@@ -54,7 +55,7 @@ export default function DiscoveredServices({
   // States for pagination
   const { page, size } = useQueryParams<CommonPaginationQueryParams>()
 
-  const { data: serviceList, loading: serviceListLoader } = useListK8SCustomService({
+  const { data: serviceList, loading: serviceListLoader } = useListDiscoveredService({
     agentIdentity: dAgentId,
     queryParams: {
       accountIdentifier: accountId,
@@ -101,11 +102,11 @@ export default function DiscoveredServices({
           }}
           lineClamp={1}
         >
-          {row.original.name}
+          {row.original.spec.kubernetes?.name}
         </Text>
         <Drawer position={Position.RIGHT} isOpen={isOpen} isCloseButtonShown={true} size={'86%'}>
           <ServiceDetails
-            serviceName={row.original.name ?? ''}
+            serviceName={row.original.spec.kubernetes?.name ?? ''}
             serviceId={row.original.id ?? ''}
             infraId={dAgentId ?? ''}
             closeModal={() => setDrawerOpen(false)}
@@ -118,7 +119,7 @@ export default function DiscoveredServices({
   const Namespace: Renderer<CellProps<K8SCustomService>> = ({ row }) => (
     <Layout.Horizontal spacing="small" flex={{ justifyContent: 'flex-start', alignItems: 'center' }}>
       <Icon name="app-kubernetes" size={24} margin={{ right: 'small' }} />
-      <Text>{row.original.namespace}</Text>
+      <Text>{row.original.spec.kubernetes?.namespace}</Text>
     </Layout.Horizontal>
   )
   const NetworkDetails: Renderer<CellProps<K8SCustomService>> = ({ row }) => (
@@ -128,7 +129,7 @@ export default function DiscoveredServices({
           {getString('common.ipAddress')}:
         </Text>
         <Text padding={{ left: 'small' }} font={{ size: 'small', weight: 'semi-bold' }} color={Color.PRIMARY_5}>
-          {row.original.service?.clusterIP}
+          {row.original.spec.kubernetes?.service?.clusterIP}
         </Text>
       </Layout.Horizontal>
 
@@ -137,7 +138,7 @@ export default function DiscoveredServices({
           {getString('discovery.discoveryDetails.discoveredService.portNumber')}:
         </Text>
         <Text padding={{ left: 'small' }} font={{ size: 'small', weight: 'semi-bold' }} color={Color.PRIMARY_5}>
-          {row?.original?.service?.ports?.map(value => value.port).join(', ')}
+          {row?.original?.spec?.kubernetes?.service?.ports?.map(p => p.targetPort).join(', ')}
         </Text>
       </Layout.Horizontal>
     </Layout.Vertical>
@@ -182,16 +183,16 @@ export default function DiscoveredServices({
             permission: PermissionIdentifier.CREATE_NETWORK_MAP
           }}
           onClick={() => {
-            history.push(
-              routes.toCreateNetworkMap({
+            history.push({
+              pathname: routes.toCreateNetworkMap({
                 accountId,
                 orgIdentifier,
                 projectIdentifier,
                 module,
-                dAgentId,
-                relatedServicesOf: row.original.id
-              })
-            )
+                dAgentId
+              }),
+              search: qs.stringify({ relatedServicesOf: row.original.id })
+            })
           }}
         />
       </Layout.Horizontal>

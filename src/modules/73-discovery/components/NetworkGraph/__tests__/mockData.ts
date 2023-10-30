@@ -5,7 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-/* istanbul ignore file */
 import type { Node, Edge } from 'reactflow'
 import { nodeGroupOptions, nodeOptions, NodeTypes } from '@discovery/components/NetworkGraph/constants'
 import type { EdgeData } from '@discovery/components/NetworkGraph/types'
@@ -67,13 +66,15 @@ export const mockNodes: Node<unknown, NodeTypes>[] = [
     id: '4',
     data: { label: 'node 4' },
     parentNode: 'ns2',
-    ...nodeOptions
+    ...nodeOptions,
+    type: NodeTypes.NetworkMapHexagon
   },
   {
     id: '5',
     data: { label: 'node 5' },
     parentNode: 'ns2',
-    ...nodeOptions
+    ...nodeOptions,
+    type: NodeTypes.NetworkMapHexagon
   },
   {
     id: '6',
@@ -653,7 +654,7 @@ export const mockElkGraph = {
           },
           width: 100,
           height: 100,
-          type: 'hexagon',
+          type: 'networkMapHexagon',
           expandParent: true,
           targetPosition: 'top',
           sourcePosition: 'bottom',
@@ -673,7 +674,7 @@ export const mockElkGraph = {
           },
           width: 100,
           height: 100,
-          type: 'hexagon',
+          type: 'networkMapHexagon',
           expandParent: true,
           targetPosition: 'top',
           sourcePosition: 'bottom',
@@ -981,7 +982,7 @@ export const mockElkGraph = {
       style: {},
       width: 100,
       height: 100,
-      type: 'hexagon',
+      type: 'networkMapHexagon',
       expandParent: true,
       targetPosition: 'top',
       sourcePosition: 'bottom',
@@ -1002,7 +1003,7 @@ export const mockElkGraph = {
       style: {},
       width: 100,
       height: 100,
-      type: 'hexagon',
+      type: 'networkMapHexagon',
       expandParent: true,
       targetPosition: 'top',
       sourcePosition: 'bottom',

@@ -10,7 +10,7 @@ import { act, fireEvent, render } from '@testing-library/react'
 import routes from '@common/RouteDefinitions'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as servicediscovery from 'services/servicediscovery'
-import { useListK8SCustomService } from 'services/servicediscovery'
+import { useListDiscoveredService } from 'services/servicediscovery'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import DiscoveredServices from '../DiscoveredServices'
 import { mockServices, mockConnections } from '../../mocks'
@@ -32,7 +32,7 @@ const PATH_PARAMS = {
 }
 
 jest.mock('services/servicediscovery', () => ({
-  useListK8SCustomService: jest.fn().mockImplementation(() => {
+  useListDiscoveredService: jest.fn().mockImplementation(() => {
     return { data: mockServices, refetch: jest.fn(), error: null, loading: false }
   })
 }))
@@ -44,12 +44,12 @@ describe('<DiscoveryServices /> tests', () => {
         <DiscoveredServices connectionList={mockConnections} />
       </TestWrapper>
     )
-    expect(useListK8SCustomService).toBeCalled()
+    expect(useListDiscoveredService).toBeCalled()
     expect(container).toMatchSnapshot()
   })
 
   test('should render loading view correctly', async () => {
-    jest.spyOn(servicediscovery, 'useListK8SCustomService').mockImplementation((): any => {
+    jest.spyOn(servicediscovery, 'useListDiscoveredService').mockImplementation((): any => {
       return {
         data: undefined,
         loading: true
@@ -61,13 +61,13 @@ describe('<DiscoveryServices /> tests', () => {
         <DiscoveredServices connectionList={mockConnections} />
       </TestWrapper>
     )
-    expect(useListK8SCustomService).toBeCalled()
+    expect(useListDiscoveredService).toBeCalled()
 
     expect(container).toMatchSnapshot()
   })
 
   test('should render error view correctly', async () => {
-    jest.spyOn(servicediscovery, 'useListK8SCustomService').mockImplementation((): any => {
+    jest.spyOn(servicediscovery, 'useListDiscoveredService').mockImplementation((): any => {
       return {
         data: undefined,
         loading: false,
@@ -82,13 +82,13 @@ describe('<DiscoveryServices /> tests', () => {
         <DiscoveredServices connectionList={mockConnections} />
       </TestWrapper>
     )
-    expect(useListK8SCustomService).toBeCalled()
+    expect(useListDiscoveredService).toBeCalled()
 
     expect(container).toMatchSnapshot()
   })
 
   test('should render loaded view correctly', async () => {
-    jest.spyOn(servicediscovery, 'useListK8SCustomService').mockImplementation((): any => {
+    jest.spyOn(servicediscovery, 'useListDiscoveredService').mockImplementation((): any => {
       return {
         data: mockServices,
         loading: false
@@ -100,9 +100,9 @@ describe('<DiscoveryServices /> tests', () => {
         <DiscoveredServices connectionList={mockConnections} />
       </TestWrapper>
     )
-    expect(useListK8SCustomService).toBeCalled()
+    expect(useListDiscoveredService).toBeCalled()
 
-    expect(getByText('access-control')).toBeInTheDocument()
+    expect(getByText('adservice')).toBeInTheDocument()
   })
 
   test('should navigate to create network map from three dot menu', async () => {
@@ -129,7 +129,7 @@ describe('<DiscoveryServices /> tests', () => {
       </TestWrapper>
     )
 
-    const nameBtn = getByText('access-control')
+    const nameBtn = getByText('adservice')
     expect(nameBtn).toBeDefined()
 
     await act(async () => {

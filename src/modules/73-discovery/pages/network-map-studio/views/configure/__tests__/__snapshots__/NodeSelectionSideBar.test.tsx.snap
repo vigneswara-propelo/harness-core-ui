@@ -1,0 +1,1881 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<NodeConnectionsSideBar /> tests with data should render component 1`] = `
+<div>
+  <div
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main sidebar"
+  >
+    <div
+      class="bp3-card bp3-elevation-0 Card--card headerCard"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
+        style="display: flex; align-items: center;"
+      >
+        <span
+          class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+          data-icon="chaos-service-discovery"
+        >
+          <svg
+            fill="none"
+            height="24"
+            viewBox="0 0 34 34"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="17"
+              cy="17"
+              fill="#00ADE4"
+              r="17"
+            />
+            <path
+              clip-rule="evenodd"
+              d="M17.146 14.735v-.551a.184.184 0 00-.183-.184H15.86a.184.184 0 00-.184.184v1.237a.192.192 0 01-.137.18 2.92 2.92 0 00-.497.207.192.192 0 01-.226-.031l-.484-.485-.39-.39a.184.184 0 00-.26 0l-.78.78a.184.184 0 000 .26l.39.39.485.485c.06.059.07.15.031.225a2.923 2.923 0 00-.206.497.192.192 0 01-.181.137h-1.237a.184.184 0 00-.184.184v1.103c0 .101.082.184.184.184h1.237c.083 0 .156.056.18.137.055.173.124.339.207.497a.192.192 0 01-.031.225l-.485.485-.39.39a.184.184 0 000 .26l.78.78a.184.184 0 00.26 0l.39-.39.485-.485c.059-.06.15-.07.225-.032.158.084.324.153.497.207.08.024.137.097.137.18v1.238c0 .101.082.184.184.184h1.103a.184.184 0 00.183-.184v-1.237c0-.084.057-.157.137-.181.174-.054.34-.123.498-.207a.192.192 0 01.225.032l.485.485.39.39a.184.184 0 00.26 0l.78-.78a.184.184 0 000-.26l-.39-.39-.485-.485a.192.192 0 01-.032-.225 2.92 2.92 0 00.207-.497.192.192 0 01.18-.137h1.238a.184.184 0 00.184-.184V17.86a.184.184 0 00-.184-.184h-1.237a.192.192 0 01-.181-.137 2.923 2.923 0 00-.207-.497.192.192 0 01.032-.225l.485-.485.39-.39a.184.184 0 000-.26l-.78-.78a.184.184 0 00-.26 0l-.39.39-.485.485a.192.192 0 01-.225.031 2.92 2.92 0 00-.497-.206.192.192 0 01-.137-.181v-.686zm-.735 5.147a1.47 1.47 0 100-2.941 1.47 1.47 0 000 2.94z"
+              fill="#FCFEFF"
+              fill-rule="evenodd"
+            />
+            <path
+              clip-rule="evenodd"
+              d="M27.639 16.224c.43.744.43 1.661 0 2.406l-.695-.401.695.4-4.288 7.426a2.406 2.406 0 01-2.083 1.203h-8.575c-.86 0-1.654-.458-2.084-1.203L6.322 18.63a2.406 2.406 0 010-2.406l4.287-7.426a2.406 2.406 0 012.084-1.203h5.49a.802.802 0 110 1.604h-5.49A.802.802 0 0012 9.6L7.71 17.026a.802.802 0 000 .802L12 25.253a.802.802 0 00.694.401h8.575a.802.802 0 00.694-.4l4.287-7.426a.802.802 0 000-.802l-.74-1.282a.802.802 0 111.39-.802l.74 1.282z"
+              fill="#FCFEFF"
+              fill-rule="evenodd"
+            />
+            <path
+              d="M23.563 12.625c.808 0 1.66-.348 2.187-.875l1.75 1.75-1.75-1.75c.51-.502.875-1.447.875-2.188a3.062 3.062 0 10-3.063 3.063z"
+              stroke="#FCFEFF"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.2"
+            />
+          </svg>
+        </span>
+        cartservice
+      </p>
+      <span
+        class="bp3-icon StyledProps--main closeButton"
+        data-icon="code-close"
+        data-testid="closeButton"
+      >
+        <svg
+          fill="none"
+          height="24"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M6 6l6 5.999L18 6 6 18l6-6 6 6"
+            stroke="#555770"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+    </div>
+    <div
+      class="Layout--horizontal StyledProps--main StyledProps--padding-top-large StyledProps--padding-right-large StyledProps--padding-left-large StyledProps--flex StyledProps--flex-justifyContent-space-between"
+    >
+      <span
+        class="bp3-popover-wrapper"
+      >
+        <span
+          class="bp3-popover-target bp3-popover-open"
+        >
+          <button
+            aria-label="discovery.newRelation"
+            class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
+            type="button"
+          >
+            <span
+              class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+              icon="plus"
+            >
+              <svg
+                data-icon="plus"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+              >
+                <desc>
+                  plus
+                </desc>
+                <path
+                  d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+            <span
+              class="bp3-button-text"
+            >
+              discovery.newRelation
+            </span>
+          </button>
+        </span>
+      </span>
+      <div
+        class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+        data-name=""
+        style="width: 206px; max-width: 206px;"
+      >
+        <span
+          class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+          data-icon="thinner-search"
+        >
+          <svg
+            fill="none"
+            height="14"
+            viewBox="0 0 16 16"
+            width="14"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        <input
+          class="bp3-input  ExpandingSearchInput--filter"
+          dir="auto"
+          placeholder="discovery.searchService"
+          style="padding-right: 38px;"
+          type="search"
+          value=""
+        />
+      </div>
+    </div>
+    <div
+      class="TableV2--table tableBody"
+    >
+      <div
+        class="TableV2--header"
+        role="row"
+      >
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 50%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            services
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 40%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            discovery.trafficRoute
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 10%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            
+          </p>
+        </div>
+      </div>
+      <div
+        class="TableV2--body"
+      >
+        <div
+          class="TableV2--row TableV2--card"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            >
+              <span
+                class="bp3-popover-wrapper"
+              >
+                <span
+                  class="bp3-popover-target"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main serviceName StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                    style="display: flex; align-items: center;"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+                      data-icon="service-kubernetes"
+                    >
+                      <svg
+                        height="16"
+                        viewBox="0 0 14 14"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M7 .4c-.1 0-.2 0-.3.1L2 2.7c-.2.1-.4.3-.5.6l-1.2 5c-.1.2 0 .5.1.7l.1.1 3.2 4c.2.2.4.3.7.3h5.2c.3 0 .5-.1.7-.3l3.2-4c.2-.2.2-.5.2-.7l-1.2-5c-.1-.3-.2-.5-.5-.6L7.3.6c0-.1-.2-.2-.3-.2z"
+                          fill="#326ce5"
+                        />
+                        <path
+                          d="M7 2.1c-.2 0-.3.1-.3.3v.9c0 .1-.1.1-.1.1v.1c-.2 0-.3 0-.5.1-.7.2-1.4.5-1.8 1l-.1-.1H4c-.1-.1-.2-.2-.4-.3L3.4 4h-.1c-.1 0-.1-.1-.2-.1s-.2 0-.2.1c-.1.1-.1.3.1.4h.1c.1.1.2.1.2.1.2.1.3.2.4.3 0 0 .1.1.1.2l.1.1c-.5.7-.7 1.6-.6 2.5h-.1l-.1.1c-.1 0-.3.1-.5.1h-.4c-.2 0-.3.2-.2.3 0 .1.2.2.4.2h.1c.1 0 .2-.1.3-.1.2-.1.3-.1.5-.1.1 0 .1 0 .2.1h.1c.3.9.9 1.6 1.6 2l-.1.1v.2c-.1.1-.1.3-.3.5-.1.1-.1.1-.1.2v.1c-.1.2 0 .3.1.4s.3 0 .4-.2v-.1c0-.1.1-.2.1-.3.1-.2.1-.4.2-.5 0 0 .1 0 .1-.1l.1-.1c.6.2 1.4.3 2.1.2.2 0 .3-.1.5-.1l.1.1s.1 0 .1.1c.1.1.1.3.2.5 0 .1 0 .2.1.3v.1c.1.2.2.2.4.2.1-.1.2-.2.1-.4v-.1c0-.1-.1-.1-.1-.2-.1-.2-.2-.3-.2-.4V10.4c.8-.5 1.3-1.2 1.6-2h.1s.1-.1.2-.1.3.1.5.1c.1 0 .2.1.3.1h.1c.2 0 .3-.1.4-.2 0-.1-.1-.3-.2-.3h-.4c-.2 0-.4 0-.5-.1-.1 0-.1-.1-.1-.1h-.1c.1-.4 0-.9-.1-1.3s-.3-.9-.5-1.2l.1-.1c0-.1 0-.1.1-.2s.2-.2.4-.3c.1 0 .2-.1.2-.1h.1c.1-.1.2-.3.1-.4s-.3-.1-.4 0h-.1l-.2.2c-.1.1-.3.3-.4.3H10l-.1.1c-.6-.6-1.4-1-2.3-1.1v-.1l-.1-.1V3v-.4c-.2-.3-.3-.5-.5-.5zm-.3 2.2l-.1 1.5c0 .1-.1.2-.2.2h-.1l-1.2-.9c.4-.4.8-.6 1.4-.8zm.7 0c.6.1 1.2.4 1.7.8l-1.2.8c-.1.1-.3.1-.3 0l-.1-.1zM4.6 5.7l1.1 1c.1.1.1.2 0 .3l-.1.1-1.4.4c-.1-.7 0-1.3.4-1.8zm4.9 0c.2.3.3.6.4.9s.1.6.1.9l-1.4-.4c-.1 0-.2-.2-.2-.3s0-.1.1-.1zm-2.7 1h.4l.3.3-.1.4-.4.2-.4-.2-.1-.4zm1.4 1.2c.1 0 .1 0 0 0l1.5.2c-.2.6-.6 1.1-1.2 1.5l-.6-1.4c.1-.1.1-.2.3-.3zm-2.4 0c.1 0 .2.1.2.2v.2l-.6 1.4c-.5-.3-.9-.8-1.2-1.5zm1.2.6l.2.1.7 1.3c-.1 0-.2.1-.3.1-.5.1-1.1.1-1.6-.1l.7-1.3c.2 0 .2-.1.3-.1z"
+                          fill="#fff"
+                          stroke="#fff"
+                          stroke-width="0.25"
+                        />
+                      </svg>
+                    </span>
+                    checkoutservice
+                  </p>
+                </span>
+              </span>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 40%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                discovery.inbound
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <span
+                class="bp3-popover-wrapper"
+              >
+                <span
+                  class="bp3-popover-target"
+                >
+                  <a
+                    aria-label="discovery.disableDeleteConnections"
+                    class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main deleteDisabled StyledProps--border StyledProps--border-false Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                    disabled=""
+                    role="button"
+                    tabindex="-1"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main"
+                      data-icon="code-delete"
+                    >
+                      <svg
+                        fill="none"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        width="20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g
+                          clip-rule="evenodd"
+                          fill="#383946"
+                          fill-rule="evenodd"
+                        >
+                          <path
+                            d="M4.286 7.9a1 1 0 01.99-1.134h8.875a1 1 0 01.995 1.101l-.866 8.506a1 1 0 01-.995.9H6.431a1 1 0 01-.99-.866zm9.865-.134H5.277l1.154 8.506h6.854zM8.263 2.161a.5.5 0 01.6-.376l3.52.804a.5.5 0 01.376.6L12.5 4.315l3.216.735a.5.5 0 11-.222.975L4.613 3.54a.5.5 0 11.222-.975l3.17.724zm.718 1.351l2.545.582.147-.641-2.546-.582z"
+                          />
+                          <path
+                            d="M10 9.84c.23 0 .417.187.417.417v4.167a.417.417 0 11-.834 0v-4.167c0-.23.187-.417.417-.417zM7.699 9.85c.23-.02.431.15.451.378l.363 4.151a.417.417 0 01-.83.073l-.363-4.15a.417.417 0 01.379-.452zM12.302 9.85c.229.02.399.222.379.451l-.364 4.15a.417.417 0 01-.83-.072l.363-4.15a.417.417 0 01.452-.38z"
+                            opacity="0.3"
+                          />
+                        </g>
+                      </svg>
+                    </span>
+                  </a>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="TableV2--row TableV2--card"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            >
+              <span
+                class="bp3-popover-wrapper"
+              >
+                <span
+                  class="bp3-popover-target"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main serviceName StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                    style="display: flex; align-items: center;"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+                      data-icon="service-kubernetes"
+                    >
+                      <svg
+                        height="16"
+                        viewBox="0 0 14 14"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M7 .4c-.1 0-.2 0-.3.1L2 2.7c-.2.1-.4.3-.5.6l-1.2 5c-.1.2 0 .5.1.7l.1.1 3.2 4c.2.2.4.3.7.3h5.2c.3 0 .5-.1.7-.3l3.2-4c.2-.2.2-.5.2-.7l-1.2-5c-.1-.3-.2-.5-.5-.6L7.3.6c0-.1-.2-.2-.3-.2z"
+                          fill="#326ce5"
+                        />
+                        <path
+                          d="M7 2.1c-.2 0-.3.1-.3.3v.9c0 .1-.1.1-.1.1v.1c-.2 0-.3 0-.5.1-.7.2-1.4.5-1.8 1l-.1-.1H4c-.1-.1-.2-.2-.4-.3L3.4 4h-.1c-.1 0-.1-.1-.2-.1s-.2 0-.2.1c-.1.1-.1.3.1.4h.1c.1.1.2.1.2.1.2.1.3.2.4.3 0 0 .1.1.1.2l.1.1c-.5.7-.7 1.6-.6 2.5h-.1l-.1.1c-.1 0-.3.1-.5.1h-.4c-.2 0-.3.2-.2.3 0 .1.2.2.4.2h.1c.1 0 .2-.1.3-.1.2-.1.3-.1.5-.1.1 0 .1 0 .2.1h.1c.3.9.9 1.6 1.6 2l-.1.1v.2c-.1.1-.1.3-.3.5-.1.1-.1.1-.1.2v.1c-.1.2 0 .3.1.4s.3 0 .4-.2v-.1c0-.1.1-.2.1-.3.1-.2.1-.4.2-.5 0 0 .1 0 .1-.1l.1-.1c.6.2 1.4.3 2.1.2.2 0 .3-.1.5-.1l.1.1s.1 0 .1.1c.1.1.1.3.2.5 0 .1 0 .2.1.3v.1c.1.2.2.2.4.2.1-.1.2-.2.1-.4v-.1c0-.1-.1-.1-.1-.2-.1-.2-.2-.3-.2-.4V10.4c.8-.5 1.3-1.2 1.6-2h.1s.1-.1.2-.1.3.1.5.1c.1 0 .2.1.3.1h.1c.2 0 .3-.1.4-.2 0-.1-.1-.3-.2-.3h-.4c-.2 0-.4 0-.5-.1-.1 0-.1-.1-.1-.1h-.1c.1-.4 0-.9-.1-1.3s-.3-.9-.5-1.2l.1-.1c0-.1 0-.1.1-.2s.2-.2.4-.3c.1 0 .2-.1.2-.1h.1c.1-.1.2-.3.1-.4s-.3-.1-.4 0h-.1l-.2.2c-.1.1-.3.3-.4.3H10l-.1.1c-.6-.6-1.4-1-2.3-1.1v-.1l-.1-.1V3v-.4c-.2-.3-.3-.5-.5-.5zm-.3 2.2l-.1 1.5c0 .1-.1.2-.2.2h-.1l-1.2-.9c.4-.4.8-.6 1.4-.8zm.7 0c.6.1 1.2.4 1.7.8l-1.2.8c-.1.1-.3.1-.3 0l-.1-.1zM4.6 5.7l1.1 1c.1.1.1.2 0 .3l-.1.1-1.4.4c-.1-.7 0-1.3.4-1.8zm4.9 0c.2.3.3.6.4.9s.1.6.1.9l-1.4-.4c-.1 0-.2-.2-.2-.3s0-.1.1-.1zm-2.7 1h.4l.3.3-.1.4-.4.2-.4-.2-.1-.4zm1.4 1.2c.1 0 .1 0 0 0l1.5.2c-.2.6-.6 1.1-1.2 1.5l-.6-1.4c.1-.1.1-.2.3-.3zm-2.4 0c.1 0 .2.1.2.2v.2l-.6 1.4c-.5-.3-.9-.8-1.2-1.5zm1.2.6l.2.1.7 1.3c-.1 0-.2.1-.3.1-.5.1-1.1.1-1.6-.1l.7-1.3c.2 0 .2-.1.3-.1z"
+                          fill="#fff"
+                          stroke="#fff"
+                          stroke-width="0.25"
+                        />
+                      </svg>
+                    </span>
+                    dummyService
+                  </p>
+                </span>
+              </span>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 40%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                discovery.outbound
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <span
+                class="bp3-popover-wrapper"
+              >
+                <span
+                  class="bp3-popover-target"
+                >
+                  <button
+                    aria-label="discovery.disableDeleteConnections"
+                    class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main deleteEnabled StyledProps--border StyledProps--border-false Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                    tabindex="0"
+                    type="button"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main"
+                      data-icon="code-delete"
+                    >
+                      <svg
+                        fill="none"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        width="20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g
+                          clip-rule="evenodd"
+                          fill="#383946"
+                          fill-rule="evenodd"
+                        >
+                          <path
+                            d="M4.286 7.9a1 1 0 01.99-1.134h8.875a1 1 0 01.995 1.101l-.866 8.506a1 1 0 01-.995.9H6.431a1 1 0 01-.99-.866zm9.865-.134H5.277l1.154 8.506h6.854zM8.263 2.161a.5.5 0 01.6-.376l3.52.804a.5.5 0 01.376.6L12.5 4.315l3.216.735a.5.5 0 11-.222.975L4.613 3.54a.5.5 0 11.222-.975l3.17.724zm.718 1.351l2.545.582.147-.641-2.546-.582z"
+                          />
+                          <path
+                            d="M10 9.84c.23 0 .417.187.417.417v4.167a.417.417 0 11-.834 0v-4.167c0-.23.187-.417.417-.417zM7.699 9.85c.23-.02.431.15.451.378l.363 4.151a.417.417 0 01-.83.073l-.363-4.15a.417.417 0 01.379-.452zM12.302 9.85c.229.02.399.222.379.451l-.364 4.15a.417.417 0 01-.83-.072l.363-4.15a.417.417 0 01.452-.38z"
+                            opacity="0.3"
+                          />
+                        </g>
+                      </svg>
+                    </span>
+                  </button>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<NodeConnectionsSideBar /> tests with data should render empty table without connections 1`] = `
+<div>
+  <div
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main sidebar"
+  >
+    <div
+      class="bp3-card bp3-elevation-0 Card--card headerCard"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
+        style="display: flex; align-items: center;"
+      >
+        <span
+          class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+          data-icon="chaos-service-discovery"
+        >
+          <svg
+            fill="none"
+            height="24"
+            viewBox="0 0 34 34"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="17"
+              cy="17"
+              fill="#00ADE4"
+              r="17"
+            />
+            <path
+              clip-rule="evenodd"
+              d="M17.146 14.735v-.551a.184.184 0 00-.183-.184H15.86a.184.184 0 00-.184.184v1.237a.192.192 0 01-.137.18 2.92 2.92 0 00-.497.207.192.192 0 01-.226-.031l-.484-.485-.39-.39a.184.184 0 00-.26 0l-.78.78a.184.184 0 000 .26l.39.39.485.485c.06.059.07.15.031.225a2.923 2.923 0 00-.206.497.192.192 0 01-.181.137h-1.237a.184.184 0 00-.184.184v1.103c0 .101.082.184.184.184h1.237c.083 0 .156.056.18.137.055.173.124.339.207.497a.192.192 0 01-.031.225l-.485.485-.39.39a.184.184 0 000 .26l.78.78a.184.184 0 00.26 0l.39-.39.485-.485c.059-.06.15-.07.225-.032.158.084.324.153.497.207.08.024.137.097.137.18v1.238c0 .101.082.184.184.184h1.103a.184.184 0 00.183-.184v-1.237c0-.084.057-.157.137-.181.174-.054.34-.123.498-.207a.192.192 0 01.225.032l.485.485.39.39a.184.184 0 00.26 0l.78-.78a.184.184 0 000-.26l-.39-.39-.485-.485a.192.192 0 01-.032-.225 2.92 2.92 0 00.207-.497.192.192 0 01.18-.137h1.238a.184.184 0 00.184-.184V17.86a.184.184 0 00-.184-.184h-1.237a.192.192 0 01-.181-.137 2.923 2.923 0 00-.207-.497.192.192 0 01.032-.225l.485-.485.39-.39a.184.184 0 000-.26l-.78-.78a.184.184 0 00-.26 0l-.39.39-.485.485a.192.192 0 01-.225.031 2.92 2.92 0 00-.497-.206.192.192 0 01-.137-.181v-.686zm-.735 5.147a1.47 1.47 0 100-2.941 1.47 1.47 0 000 2.94z"
+              fill="#FCFEFF"
+              fill-rule="evenodd"
+            />
+            <path
+              clip-rule="evenodd"
+              d="M27.639 16.224c.43.744.43 1.661 0 2.406l-.695-.401.695.4-4.288 7.426a2.406 2.406 0 01-2.083 1.203h-8.575c-.86 0-1.654-.458-2.084-1.203L6.322 18.63a2.406 2.406 0 010-2.406l4.287-7.426a2.406 2.406 0 012.084-1.203h5.49a.802.802 0 110 1.604h-5.49A.802.802 0 0012 9.6L7.71 17.026a.802.802 0 000 .802L12 25.253a.802.802 0 00.694.401h8.575a.802.802 0 00.694-.4l4.287-7.426a.802.802 0 000-.802l-.74-1.282a.802.802 0 111.39-.802l.74 1.282z"
+              fill="#FCFEFF"
+              fill-rule="evenodd"
+            />
+            <path
+              d="M23.563 12.625c.808 0 1.66-.348 2.187-.875l1.75 1.75-1.75-1.75c.51-.502.875-1.447.875-2.188a3.062 3.062 0 10-3.063 3.063z"
+              stroke="#FCFEFF"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.2"
+            />
+          </svg>
+        </span>
+        cartservice
+      </p>
+      <span
+        class="bp3-icon StyledProps--main closeButton"
+        data-icon="code-close"
+        data-testid="closeButton"
+      >
+        <svg
+          fill="none"
+          height="24"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M6 6l6 5.999L18 6 6 18l6-6 6 6"
+            stroke="#555770"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+    </div>
+    <div
+      class="Layout--horizontal StyledProps--main StyledProps--padding-top-large StyledProps--padding-right-large StyledProps--padding-left-large StyledProps--flex StyledProps--flex-justifyContent-space-between"
+    >
+      <span
+        class="bp3-popover-wrapper"
+      >
+        <span
+          class="bp3-popover-target"
+        >
+          <button
+            aria-label="discovery.newRelation"
+            class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
+            type="button"
+          >
+            <span
+              class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+              icon="plus"
+            >
+              <svg
+                data-icon="plus"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+              >
+                <desc>
+                  plus
+                </desc>
+                <path
+                  d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+            <span
+              class="bp3-button-text"
+            >
+              discovery.newRelation
+            </span>
+          </button>
+        </span>
+      </span>
+      <div
+        class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+        data-name=""
+        style="width: 206px; max-width: 206px;"
+      >
+        <span
+          class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+          data-icon="thinner-search"
+        >
+          <svg
+            fill="none"
+            height="14"
+            viewBox="0 0 16 16"
+            width="14"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        <input
+          class="bp3-input  ExpandingSearchInput--filter"
+          dir="auto"
+          placeholder="discovery.searchService"
+          style="padding-right: 38px;"
+          type="search"
+          value=""
+        />
+      </div>
+    </div>
+    <div
+      class="TableV2--table tableBody"
+    >
+      <div
+        class="TableV2--header"
+        role="row"
+      >
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 50%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            services
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 40%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            discovery.trafficRoute
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 10%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            
+          </p>
+        </div>
+      </div>
+      <div
+        class="TableV2--body"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<NodeConnectionsSideBar /> tests with data should test new relation and close button 1`] = `
+<div>
+  <div
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main sidebar"
+  >
+    <div
+      class="bp3-card bp3-elevation-0 Card--card headerCard"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
+        style="display: flex; align-items: center;"
+      >
+        <span
+          class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+          data-icon="chaos-service-discovery"
+        >
+          <svg
+            fill="none"
+            height="24"
+            viewBox="0 0 34 34"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="17"
+              cy="17"
+              fill="#00ADE4"
+              r="17"
+            />
+            <path
+              clip-rule="evenodd"
+              d="M17.146 14.735v-.551a.184.184 0 00-.183-.184H15.86a.184.184 0 00-.184.184v1.237a.192.192 0 01-.137.18 2.92 2.92 0 00-.497.207.192.192 0 01-.226-.031l-.484-.485-.39-.39a.184.184 0 00-.26 0l-.78.78a.184.184 0 000 .26l.39.39.485.485c.06.059.07.15.031.225a2.923 2.923 0 00-.206.497.192.192 0 01-.181.137h-1.237a.184.184 0 00-.184.184v1.103c0 .101.082.184.184.184h1.237c.083 0 .156.056.18.137.055.173.124.339.207.497a.192.192 0 01-.031.225l-.485.485-.39.39a.184.184 0 000 .26l.78.78a.184.184 0 00.26 0l.39-.39.485-.485c.059-.06.15-.07.225-.032.158.084.324.153.497.207.08.024.137.097.137.18v1.238c0 .101.082.184.184.184h1.103a.184.184 0 00.183-.184v-1.237c0-.084.057-.157.137-.181.174-.054.34-.123.498-.207a.192.192 0 01.225.032l.485.485.39.39a.184.184 0 00.26 0l.78-.78a.184.184 0 000-.26l-.39-.39-.485-.485a.192.192 0 01-.032-.225 2.92 2.92 0 00.207-.497.192.192 0 01.18-.137h1.238a.184.184 0 00.184-.184V17.86a.184.184 0 00-.184-.184h-1.237a.192.192 0 01-.181-.137 2.923 2.923 0 00-.207-.497.192.192 0 01.032-.225l.485-.485.39-.39a.184.184 0 000-.26l-.78-.78a.184.184 0 00-.26 0l-.39.39-.485.485a.192.192 0 01-.225.031 2.92 2.92 0 00-.497-.206.192.192 0 01-.137-.181v-.686zm-.735 5.147a1.47 1.47 0 100-2.941 1.47 1.47 0 000 2.94z"
+              fill="#FCFEFF"
+              fill-rule="evenodd"
+            />
+            <path
+              clip-rule="evenodd"
+              d="M27.639 16.224c.43.744.43 1.661 0 2.406l-.695-.401.695.4-4.288 7.426a2.406 2.406 0 01-2.083 1.203h-8.575c-.86 0-1.654-.458-2.084-1.203L6.322 18.63a2.406 2.406 0 010-2.406l4.287-7.426a2.406 2.406 0 012.084-1.203h5.49a.802.802 0 110 1.604h-5.49A.802.802 0 0012 9.6L7.71 17.026a.802.802 0 000 .802L12 25.253a.802.802 0 00.694.401h8.575a.802.802 0 00.694-.4l4.287-7.426a.802.802 0 000-.802l-.74-1.282a.802.802 0 111.39-.802l.74 1.282z"
+              fill="#FCFEFF"
+              fill-rule="evenodd"
+            />
+            <path
+              d="M23.563 12.625c.808 0 1.66-.348 2.187-.875l1.75 1.75-1.75-1.75c.51-.502.875-1.447.875-2.188a3.062 3.062 0 10-3.063 3.063z"
+              stroke="#FCFEFF"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.2"
+            />
+          </svg>
+        </span>
+        cartservice
+      </p>
+      <span
+        class="bp3-icon StyledProps--main closeButton"
+        data-icon="code-close"
+        data-testid="closeButton"
+      >
+        <svg
+          fill="none"
+          height="24"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M6 6l6 5.999L18 6 6 18l6-6 6 6"
+            stroke="#555770"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+    </div>
+    <div
+      class="Layout--horizontal StyledProps--main StyledProps--padding-top-large StyledProps--padding-right-large StyledProps--padding-left-large StyledProps--flex StyledProps--flex-justifyContent-space-between"
+    >
+      <span
+        class="bp3-popover-wrapper"
+      >
+        <span
+          class="bp3-popover-target bp3-popover-open"
+        >
+          <button
+            aria-label="discovery.newRelation"
+            class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
+            type="button"
+          >
+            <span
+              class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+              icon="plus"
+            >
+              <svg
+                data-icon="plus"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+              >
+                <desc>
+                  plus
+                </desc>
+                <path
+                  d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+            <span
+              class="bp3-button-text"
+            >
+              discovery.newRelation
+            </span>
+          </button>
+        </span>
+      </span>
+      <div
+        class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+        data-name=""
+        style="width: 206px; max-width: 206px;"
+      >
+        <span
+          class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+          data-icon="thinner-search"
+        >
+          <svg
+            fill="none"
+            height="14"
+            viewBox="0 0 16 16"
+            width="14"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        <input
+          class="bp3-input  ExpandingSearchInput--filter"
+          dir="auto"
+          placeholder="discovery.searchService"
+          style="padding-right: 38px;"
+          type="search"
+          value=""
+        />
+      </div>
+    </div>
+    <div
+      class="TableV2--table tableBody"
+    >
+      <div
+        class="TableV2--header"
+        role="row"
+      >
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 50%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            services
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 40%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            discovery.trafficRoute
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 10%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            
+          </p>
+        </div>
+      </div>
+      <div
+        class="TableV2--body"
+      >
+        <div
+          class="TableV2--row TableV2--card"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            >
+              <span
+                class="bp3-popover-wrapper"
+              >
+                <span
+                  class="bp3-popover-target"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main serviceName StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                    style="display: flex; align-items: center;"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+                      data-icon="service-kubernetes"
+                    >
+                      <svg
+                        height="16"
+                        viewBox="0 0 14 14"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M7 .4c-.1 0-.2 0-.3.1L2 2.7c-.2.1-.4.3-.5.6l-1.2 5c-.1.2 0 .5.1.7l.1.1 3.2 4c.2.2.4.3.7.3h5.2c.3 0 .5-.1.7-.3l3.2-4c.2-.2.2-.5.2-.7l-1.2-5c-.1-.3-.2-.5-.5-.6L7.3.6c0-.1-.2-.2-.3-.2z"
+                          fill="#326ce5"
+                        />
+                        <path
+                          d="M7 2.1c-.2 0-.3.1-.3.3v.9c0 .1-.1.1-.1.1v.1c-.2 0-.3 0-.5.1-.7.2-1.4.5-1.8 1l-.1-.1H4c-.1-.1-.2-.2-.4-.3L3.4 4h-.1c-.1 0-.1-.1-.2-.1s-.2 0-.2.1c-.1.1-.1.3.1.4h.1c.1.1.2.1.2.1.2.1.3.2.4.3 0 0 .1.1.1.2l.1.1c-.5.7-.7 1.6-.6 2.5h-.1l-.1.1c-.1 0-.3.1-.5.1h-.4c-.2 0-.3.2-.2.3 0 .1.2.2.4.2h.1c.1 0 .2-.1.3-.1.2-.1.3-.1.5-.1.1 0 .1 0 .2.1h.1c.3.9.9 1.6 1.6 2l-.1.1v.2c-.1.1-.1.3-.3.5-.1.1-.1.1-.1.2v.1c-.1.2 0 .3.1.4s.3 0 .4-.2v-.1c0-.1.1-.2.1-.3.1-.2.1-.4.2-.5 0 0 .1 0 .1-.1l.1-.1c.6.2 1.4.3 2.1.2.2 0 .3-.1.5-.1l.1.1s.1 0 .1.1c.1.1.1.3.2.5 0 .1 0 .2.1.3v.1c.1.2.2.2.4.2.1-.1.2-.2.1-.4v-.1c0-.1-.1-.1-.1-.2-.1-.2-.2-.3-.2-.4V10.4c.8-.5 1.3-1.2 1.6-2h.1s.1-.1.2-.1.3.1.5.1c.1 0 .2.1.3.1h.1c.2 0 .3-.1.4-.2 0-.1-.1-.3-.2-.3h-.4c-.2 0-.4 0-.5-.1-.1 0-.1-.1-.1-.1h-.1c.1-.4 0-.9-.1-1.3s-.3-.9-.5-1.2l.1-.1c0-.1 0-.1.1-.2s.2-.2.4-.3c.1 0 .2-.1.2-.1h.1c.1-.1.2-.3.1-.4s-.3-.1-.4 0h-.1l-.2.2c-.1.1-.3.3-.4.3H10l-.1.1c-.6-.6-1.4-1-2.3-1.1v-.1l-.1-.1V3v-.4c-.2-.3-.3-.5-.5-.5zm-.3 2.2l-.1 1.5c0 .1-.1.2-.2.2h-.1l-1.2-.9c.4-.4.8-.6 1.4-.8zm.7 0c.6.1 1.2.4 1.7.8l-1.2.8c-.1.1-.3.1-.3 0l-.1-.1zM4.6 5.7l1.1 1c.1.1.1.2 0 .3l-.1.1-1.4.4c-.1-.7 0-1.3.4-1.8zm4.9 0c.2.3.3.6.4.9s.1.6.1.9l-1.4-.4c-.1 0-.2-.2-.2-.3s0-.1.1-.1zm-2.7 1h.4l.3.3-.1.4-.4.2-.4-.2-.1-.4zm1.4 1.2c.1 0 .1 0 0 0l1.5.2c-.2.6-.6 1.1-1.2 1.5l-.6-1.4c.1-.1.1-.2.3-.3zm-2.4 0c.1 0 .2.1.2.2v.2l-.6 1.4c-.5-.3-.9-.8-1.2-1.5zm1.2.6l.2.1.7 1.3c-.1 0-.2.1-.3.1-.5.1-1.1.1-1.6-.1l.7-1.3c.2 0 .2-.1.3-.1z"
+                          fill="#fff"
+                          stroke="#fff"
+                          stroke-width="0.25"
+                        />
+                      </svg>
+                    </span>
+                    checkoutservice
+                  </p>
+                </span>
+              </span>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 40%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                discovery.inbound
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <span
+                class="bp3-popover-wrapper"
+              >
+                <span
+                  class="bp3-popover-target"
+                >
+                  <a
+                    aria-label="discovery.disableDeleteConnections"
+                    class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main deleteDisabled StyledProps--border StyledProps--border-false Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                    disabled=""
+                    role="button"
+                    tabindex="-1"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main"
+                      data-icon="code-delete"
+                    >
+                      <svg
+                        fill="none"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        width="20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g
+                          clip-rule="evenodd"
+                          fill="#383946"
+                          fill-rule="evenodd"
+                        >
+                          <path
+                            d="M4.286 7.9a1 1 0 01.99-1.134h8.875a1 1 0 01.995 1.101l-.866 8.506a1 1 0 01-.995.9H6.431a1 1 0 01-.99-.866zm9.865-.134H5.277l1.154 8.506h6.854zM8.263 2.161a.5.5 0 01.6-.376l3.52.804a.5.5 0 01.376.6L12.5 4.315l3.216.735a.5.5 0 11-.222.975L4.613 3.54a.5.5 0 11.222-.975l3.17.724zm.718 1.351l2.545.582.147-.641-2.546-.582z"
+                          />
+                          <path
+                            d="M10 9.84c.23 0 .417.187.417.417v4.167a.417.417 0 11-.834 0v-4.167c0-.23.187-.417.417-.417zM7.699 9.85c.23-.02.431.15.451.378l.363 4.151a.417.417 0 01-.83.073l-.363-4.15a.417.417 0 01.379-.452zM12.302 9.85c.229.02.399.222.379.451l-.364 4.15a.417.417 0 01-.83-.072l.363-4.15a.417.417 0 01.452-.38z"
+                            opacity="0.3"
+                          />
+                        </g>
+                      </svg>
+                    </span>
+                  </a>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="TableV2--row TableV2--card"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            >
+              <span
+                class="bp3-popover-wrapper"
+              >
+                <span
+                  class="bp3-popover-target"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main serviceName StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                    style="display: flex; align-items: center;"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+                      data-icon="service-kubernetes"
+                    >
+                      <svg
+                        height="16"
+                        viewBox="0 0 14 14"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M7 .4c-.1 0-.2 0-.3.1L2 2.7c-.2.1-.4.3-.5.6l-1.2 5c-.1.2 0 .5.1.7l.1.1 3.2 4c.2.2.4.3.7.3h5.2c.3 0 .5-.1.7-.3l3.2-4c.2-.2.2-.5.2-.7l-1.2-5c-.1-.3-.2-.5-.5-.6L7.3.6c0-.1-.2-.2-.3-.2z"
+                          fill="#326ce5"
+                        />
+                        <path
+                          d="M7 2.1c-.2 0-.3.1-.3.3v.9c0 .1-.1.1-.1.1v.1c-.2 0-.3 0-.5.1-.7.2-1.4.5-1.8 1l-.1-.1H4c-.1-.1-.2-.2-.4-.3L3.4 4h-.1c-.1 0-.1-.1-.2-.1s-.2 0-.2.1c-.1.1-.1.3.1.4h.1c.1.1.2.1.2.1.2.1.3.2.4.3 0 0 .1.1.1.2l.1.1c-.5.7-.7 1.6-.6 2.5h-.1l-.1.1c-.1 0-.3.1-.5.1h-.4c-.2 0-.3.2-.2.3 0 .1.2.2.4.2h.1c.1 0 .2-.1.3-.1.2-.1.3-.1.5-.1.1 0 .1 0 .2.1h.1c.3.9.9 1.6 1.6 2l-.1.1v.2c-.1.1-.1.3-.3.5-.1.1-.1.1-.1.2v.1c-.1.2 0 .3.1.4s.3 0 .4-.2v-.1c0-.1.1-.2.1-.3.1-.2.1-.4.2-.5 0 0 .1 0 .1-.1l.1-.1c.6.2 1.4.3 2.1.2.2 0 .3-.1.5-.1l.1.1s.1 0 .1.1c.1.1.1.3.2.5 0 .1 0 .2.1.3v.1c.1.2.2.2.4.2.1-.1.2-.2.1-.4v-.1c0-.1-.1-.1-.1-.2-.1-.2-.2-.3-.2-.4V10.4c.8-.5 1.3-1.2 1.6-2h.1s.1-.1.2-.1.3.1.5.1c.1 0 .2.1.3.1h.1c.2 0 .3-.1.4-.2 0-.1-.1-.3-.2-.3h-.4c-.2 0-.4 0-.5-.1-.1 0-.1-.1-.1-.1h-.1c.1-.4 0-.9-.1-1.3s-.3-.9-.5-1.2l.1-.1c0-.1 0-.1.1-.2s.2-.2.4-.3c.1 0 .2-.1.2-.1h.1c.1-.1.2-.3.1-.4s-.3-.1-.4 0h-.1l-.2.2c-.1.1-.3.3-.4.3H10l-.1.1c-.6-.6-1.4-1-2.3-1.1v-.1l-.1-.1V3v-.4c-.2-.3-.3-.5-.5-.5zm-.3 2.2l-.1 1.5c0 .1-.1.2-.2.2h-.1l-1.2-.9c.4-.4.8-.6 1.4-.8zm.7 0c.6.1 1.2.4 1.7.8l-1.2.8c-.1.1-.3.1-.3 0l-.1-.1zM4.6 5.7l1.1 1c.1.1.1.2 0 .3l-.1.1-1.4.4c-.1-.7 0-1.3.4-1.8zm4.9 0c.2.3.3.6.4.9s.1.6.1.9l-1.4-.4c-.1 0-.2-.2-.2-.3s0-.1.1-.1zm-2.7 1h.4l.3.3-.1.4-.4.2-.4-.2-.1-.4zm1.4 1.2c.1 0 .1 0 0 0l1.5.2c-.2.6-.6 1.1-1.2 1.5l-.6-1.4c.1-.1.1-.2.3-.3zm-2.4 0c.1 0 .2.1.2.2v.2l-.6 1.4c-.5-.3-.9-.8-1.2-1.5zm1.2.6l.2.1.7 1.3c-.1 0-.2.1-.3.1-.5.1-1.1.1-1.6-.1l.7-1.3c.2 0 .2-.1.3-.1z"
+                          fill="#fff"
+                          stroke="#fff"
+                          stroke-width="0.25"
+                        />
+                      </svg>
+                    </span>
+                    dummyService
+                  </p>
+                </span>
+              </span>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 40%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                discovery.outbound
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <span
+                class="bp3-popover-wrapper"
+              >
+                <span
+                  class="bp3-popover-target"
+                >
+                  <button
+                    aria-label="discovery.disableDeleteConnections"
+                    class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main deleteEnabled StyledProps--border StyledProps--border-false Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                    tabindex="0"
+                    type="button"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main"
+                      data-icon="code-delete"
+                    >
+                      <svg
+                        fill="none"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        width="20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g
+                          clip-rule="evenodd"
+                          fill="#383946"
+                          fill-rule="evenodd"
+                        >
+                          <path
+                            d="M4.286 7.9a1 1 0 01.99-1.134h8.875a1 1 0 01.995 1.101l-.866 8.506a1 1 0 01-.995.9H6.431a1 1 0 01-.99-.866zm9.865-.134H5.277l1.154 8.506h6.854zM8.263 2.161a.5.5 0 01.6-.376l3.52.804a.5.5 0 01.376.6L12.5 4.315l3.216.735a.5.5 0 11-.222.975L4.613 3.54a.5.5 0 11.222-.975l3.17.724zm.718 1.351l2.545.582.147-.641-2.546-.582z"
+                          />
+                          <path
+                            d="M10 9.84c.23 0 .417.187.417.417v4.167a.417.417 0 11-.834 0v-4.167c0-.23.187-.417.417-.417zM7.699 9.85c.23-.02.431.15.451.378l.363 4.151a.417.417 0 01-.83.073l-.363-4.15a.417.417 0 01.379-.452zM12.302 9.85c.229.02.399.222.379.451l-.364 4.15a.417.417 0 01-.83-.072l.363-4.15a.417.417 0 01.452-.38z"
+                            opacity="0.3"
+                          />
+                        </g>
+                      </svg>
+                    </span>
+                  </button>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<NodeConnectionsSideBar /> tests with data test row functions 1`] = `
+<div>
+  <div
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main sidebar"
+  >
+    <div
+      class="bp3-card bp3-elevation-0 Card--card headerCard"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
+        style="display: flex; align-items: center;"
+      >
+        <span
+          class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+          data-icon="chaos-service-discovery"
+        >
+          <svg
+            fill="none"
+            height="24"
+            viewBox="0 0 34 34"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="17"
+              cy="17"
+              fill="#00ADE4"
+              r="17"
+            />
+            <path
+              clip-rule="evenodd"
+              d="M17.146 14.735v-.551a.184.184 0 00-.183-.184H15.86a.184.184 0 00-.184.184v1.237a.192.192 0 01-.137.18 2.92 2.92 0 00-.497.207.192.192 0 01-.226-.031l-.484-.485-.39-.39a.184.184 0 00-.26 0l-.78.78a.184.184 0 000 .26l.39.39.485.485c.06.059.07.15.031.225a2.923 2.923 0 00-.206.497.192.192 0 01-.181.137h-1.237a.184.184 0 00-.184.184v1.103c0 .101.082.184.184.184h1.237c.083 0 .156.056.18.137.055.173.124.339.207.497a.192.192 0 01-.031.225l-.485.485-.39.39a.184.184 0 000 .26l.78.78a.184.184 0 00.26 0l.39-.39.485-.485c.059-.06.15-.07.225-.032.158.084.324.153.497.207.08.024.137.097.137.18v1.238c0 .101.082.184.184.184h1.103a.184.184 0 00.183-.184v-1.237c0-.084.057-.157.137-.181.174-.054.34-.123.498-.207a.192.192 0 01.225.032l.485.485.39.39a.184.184 0 00.26 0l.78-.78a.184.184 0 000-.26l-.39-.39-.485-.485a.192.192 0 01-.032-.225 2.92 2.92 0 00.207-.497.192.192 0 01.18-.137h1.238a.184.184 0 00.184-.184V17.86a.184.184 0 00-.184-.184h-1.237a.192.192 0 01-.181-.137 2.923 2.923 0 00-.207-.497.192.192 0 01.032-.225l.485-.485.39-.39a.184.184 0 000-.26l-.78-.78a.184.184 0 00-.26 0l-.39.39-.485.485a.192.192 0 01-.225.031 2.92 2.92 0 00-.497-.206.192.192 0 01-.137-.181v-.686zm-.735 5.147a1.47 1.47 0 100-2.941 1.47 1.47 0 000 2.94z"
+              fill="#FCFEFF"
+              fill-rule="evenodd"
+            />
+            <path
+              clip-rule="evenodd"
+              d="M27.639 16.224c.43.744.43 1.661 0 2.406l-.695-.401.695.4-4.288 7.426a2.406 2.406 0 01-2.083 1.203h-8.575c-.86 0-1.654-.458-2.084-1.203L6.322 18.63a2.406 2.406 0 010-2.406l4.287-7.426a2.406 2.406 0 012.084-1.203h5.49a.802.802 0 110 1.604h-5.49A.802.802 0 0012 9.6L7.71 17.026a.802.802 0 000 .802L12 25.253a.802.802 0 00.694.401h8.575a.802.802 0 00.694-.4l4.287-7.426a.802.802 0 000-.802l-.74-1.282a.802.802 0 111.39-.802l.74 1.282z"
+              fill="#FCFEFF"
+              fill-rule="evenodd"
+            />
+            <path
+              d="M23.563 12.625c.808 0 1.66-.348 2.187-.875l1.75 1.75-1.75-1.75c.51-.502.875-1.447.875-2.188a3.062 3.062 0 10-3.063 3.063z"
+              stroke="#FCFEFF"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.2"
+            />
+          </svg>
+        </span>
+        cartservice
+      </p>
+      <span
+        class="bp3-icon StyledProps--main closeButton"
+        data-icon="code-close"
+        data-testid="closeButton"
+      >
+        <svg
+          fill="none"
+          height="24"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M6 6l6 5.999L18 6 6 18l6-6 6 6"
+            stroke="#555770"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+    </div>
+    <div
+      class="Layout--horizontal StyledProps--main StyledProps--padding-top-large StyledProps--padding-right-large StyledProps--padding-left-large StyledProps--flex StyledProps--flex-justifyContent-space-between"
+    >
+      <span
+        class="bp3-popover-wrapper"
+      >
+        <span
+          class="bp3-popover-target"
+        >
+          <button
+            aria-label="discovery.newRelation"
+            class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
+            type="button"
+          >
+            <span
+              class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+              icon="plus"
+            >
+              <svg
+                data-icon="plus"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+              >
+                <desc>
+                  plus
+                </desc>
+                <path
+                  d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+            <span
+              class="bp3-button-text"
+            >
+              discovery.newRelation
+            </span>
+          </button>
+        </span>
+      </span>
+      <div
+        class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+        data-name=""
+        style="width: 206px; max-width: 206px;"
+      >
+        <span
+          class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+          data-icon="thinner-search"
+        >
+          <svg
+            fill="none"
+            height="14"
+            viewBox="0 0 16 16"
+            width="14"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        <input
+          class="bp3-input  ExpandingSearchInput--filter"
+          dir="auto"
+          placeholder="discovery.searchService"
+          style="padding-right: 38px;"
+          type="search"
+          value=""
+        />
+      </div>
+    </div>
+    <div
+      class="TableV2--table tableBody"
+    >
+      <div
+        class="TableV2--header"
+        role="row"
+      >
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 50%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            services
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 40%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            discovery.trafficRoute
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 10%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            
+          </p>
+        </div>
+      </div>
+      <div
+        class="TableV2--body"
+      >
+        <div
+          class="TableV2--row TableV2--card"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            >
+              <span
+                class="bp3-popover-wrapper"
+              >
+                <span
+                  class="bp3-popover-target bp3-popover-open"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main serviceName StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                    style="display: flex; align-items: center;"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+                      data-icon="service-kubernetes"
+                    >
+                      <svg
+                        height="16"
+                        viewBox="0 0 14 14"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M7 .4c-.1 0-.2 0-.3.1L2 2.7c-.2.1-.4.3-.5.6l-1.2 5c-.1.2 0 .5.1.7l.1.1 3.2 4c.2.2.4.3.7.3h5.2c.3 0 .5-.1.7-.3l3.2-4c.2-.2.2-.5.2-.7l-1.2-5c-.1-.3-.2-.5-.5-.6L7.3.6c0-.1-.2-.2-.3-.2z"
+                          fill="#326ce5"
+                        />
+                        <path
+                          d="M7 2.1c-.2 0-.3.1-.3.3v.9c0 .1-.1.1-.1.1v.1c-.2 0-.3 0-.5.1-.7.2-1.4.5-1.8 1l-.1-.1H4c-.1-.1-.2-.2-.4-.3L3.4 4h-.1c-.1 0-.1-.1-.2-.1s-.2 0-.2.1c-.1.1-.1.3.1.4h.1c.1.1.2.1.2.1.2.1.3.2.4.3 0 0 .1.1.1.2l.1.1c-.5.7-.7 1.6-.6 2.5h-.1l-.1.1c-.1 0-.3.1-.5.1h-.4c-.2 0-.3.2-.2.3 0 .1.2.2.4.2h.1c.1 0 .2-.1.3-.1.2-.1.3-.1.5-.1.1 0 .1 0 .2.1h.1c.3.9.9 1.6 1.6 2l-.1.1v.2c-.1.1-.1.3-.3.5-.1.1-.1.1-.1.2v.1c-.1.2 0 .3.1.4s.3 0 .4-.2v-.1c0-.1.1-.2.1-.3.1-.2.1-.4.2-.5 0 0 .1 0 .1-.1l.1-.1c.6.2 1.4.3 2.1.2.2 0 .3-.1.5-.1l.1.1s.1 0 .1.1c.1.1.1.3.2.5 0 .1 0 .2.1.3v.1c.1.2.2.2.4.2.1-.1.2-.2.1-.4v-.1c0-.1-.1-.1-.1-.2-.1-.2-.2-.3-.2-.4V10.4c.8-.5 1.3-1.2 1.6-2h.1s.1-.1.2-.1.3.1.5.1c.1 0 .2.1.3.1h.1c.2 0 .3-.1.4-.2 0-.1-.1-.3-.2-.3h-.4c-.2 0-.4 0-.5-.1-.1 0-.1-.1-.1-.1h-.1c.1-.4 0-.9-.1-1.3s-.3-.9-.5-1.2l.1-.1c0-.1 0-.1.1-.2s.2-.2.4-.3c.1 0 .2-.1.2-.1h.1c.1-.1.2-.3.1-.4s-.3-.1-.4 0h-.1l-.2.2c-.1.1-.3.3-.4.3H10l-.1.1c-.6-.6-1.4-1-2.3-1.1v-.1l-.1-.1V3v-.4c-.2-.3-.3-.5-.5-.5zm-.3 2.2l-.1 1.5c0 .1-.1.2-.2.2h-.1l-1.2-.9c.4-.4.8-.6 1.4-.8zm.7 0c.6.1 1.2.4 1.7.8l-1.2.8c-.1.1-.3.1-.3 0l-.1-.1zM4.6 5.7l1.1 1c.1.1.1.2 0 .3l-.1.1-1.4.4c-.1-.7 0-1.3.4-1.8zm4.9 0c.2.3.3.6.4.9s.1.6.1.9l-1.4-.4c-.1 0-.2-.2-.2-.3s0-.1.1-.1zm-2.7 1h.4l.3.3-.1.4-.4.2-.4-.2-.1-.4zm1.4 1.2c.1 0 .1 0 0 0l1.5.2c-.2.6-.6 1.1-1.2 1.5l-.6-1.4c.1-.1.1-.2.3-.3zm-2.4 0c.1 0 .2.1.2.2v.2l-.6 1.4c-.5-.3-.9-.8-1.2-1.5zm1.2.6l.2.1.7 1.3c-.1 0-.2.1-.3.1-.5.1-1.1.1-1.6-.1l.7-1.3c.2 0 .2-.1.3-.1z"
+                          fill="#fff"
+                          stroke="#fff"
+                          stroke-width="0.25"
+                        />
+                      </svg>
+                    </span>
+                    checkoutservice
+                  </p>
+                </span>
+              </span>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 40%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                discovery.inbound
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <span
+                class="bp3-popover-wrapper"
+              >
+                <span
+                  class="bp3-popover-target"
+                >
+                  <a
+                    aria-label="discovery.disableDeleteConnections"
+                    class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main deleteDisabled StyledProps--border StyledProps--border-false Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                    disabled=""
+                    role="button"
+                    tabindex="-1"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main"
+                      data-icon="code-delete"
+                    >
+                      <svg
+                        fill="none"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        width="20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g
+                          clip-rule="evenodd"
+                          fill="#383946"
+                          fill-rule="evenodd"
+                        >
+                          <path
+                            d="M4.286 7.9a1 1 0 01.99-1.134h8.875a1 1 0 01.995 1.101l-.866 8.506a1 1 0 01-.995.9H6.431a1 1 0 01-.99-.866zm9.865-.134H5.277l1.154 8.506h6.854zM8.263 2.161a.5.5 0 01.6-.376l3.52.804a.5.5 0 01.376.6L12.5 4.315l3.216.735a.5.5 0 11-.222.975L4.613 3.54a.5.5 0 11.222-.975l3.17.724zm.718 1.351l2.545.582.147-.641-2.546-.582z"
+                          />
+                          <path
+                            d="M10 9.84c.23 0 .417.187.417.417v4.167a.417.417 0 11-.834 0v-4.167c0-.23.187-.417.417-.417zM7.699 9.85c.23-.02.431.15.451.378l.363 4.151a.417.417 0 01-.83.073l-.363-4.15a.417.417 0 01.379-.452zM12.302 9.85c.229.02.399.222.379.451l-.364 4.15a.417.417 0 01-.83-.072l.363-4.15a.417.417 0 01.452-.38z"
+                            opacity="0.3"
+                          />
+                        </g>
+                      </svg>
+                    </span>
+                  </a>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="TableV2--row TableV2--card"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            >
+              <span
+                class="bp3-popover-wrapper"
+              >
+                <span
+                  class="bp3-popover-target"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main serviceName StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                    style="display: flex; align-items: center;"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+                      data-icon="service-kubernetes"
+                    >
+                      <svg
+                        height="16"
+                        viewBox="0 0 14 14"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M7 .4c-.1 0-.2 0-.3.1L2 2.7c-.2.1-.4.3-.5.6l-1.2 5c-.1.2 0 .5.1.7l.1.1 3.2 4c.2.2.4.3.7.3h5.2c.3 0 .5-.1.7-.3l3.2-4c.2-.2.2-.5.2-.7l-1.2-5c-.1-.3-.2-.5-.5-.6L7.3.6c0-.1-.2-.2-.3-.2z"
+                          fill="#326ce5"
+                        />
+                        <path
+                          d="M7 2.1c-.2 0-.3.1-.3.3v.9c0 .1-.1.1-.1.1v.1c-.2 0-.3 0-.5.1-.7.2-1.4.5-1.8 1l-.1-.1H4c-.1-.1-.2-.2-.4-.3L3.4 4h-.1c-.1 0-.1-.1-.2-.1s-.2 0-.2.1c-.1.1-.1.3.1.4h.1c.1.1.2.1.2.1.2.1.3.2.4.3 0 0 .1.1.1.2l.1.1c-.5.7-.7 1.6-.6 2.5h-.1l-.1.1c-.1 0-.3.1-.5.1h-.4c-.2 0-.3.2-.2.3 0 .1.2.2.4.2h.1c.1 0 .2-.1.3-.1.2-.1.3-.1.5-.1.1 0 .1 0 .2.1h.1c.3.9.9 1.6 1.6 2l-.1.1v.2c-.1.1-.1.3-.3.5-.1.1-.1.1-.1.2v.1c-.1.2 0 .3.1.4s.3 0 .4-.2v-.1c0-.1.1-.2.1-.3.1-.2.1-.4.2-.5 0 0 .1 0 .1-.1l.1-.1c.6.2 1.4.3 2.1.2.2 0 .3-.1.5-.1l.1.1s.1 0 .1.1c.1.1.1.3.2.5 0 .1 0 .2.1.3v.1c.1.2.2.2.4.2.1-.1.2-.2.1-.4v-.1c0-.1-.1-.1-.1-.2-.1-.2-.2-.3-.2-.4V10.4c.8-.5 1.3-1.2 1.6-2h.1s.1-.1.2-.1.3.1.5.1c.1 0 .2.1.3.1h.1c.2 0 .3-.1.4-.2 0-.1-.1-.3-.2-.3h-.4c-.2 0-.4 0-.5-.1-.1 0-.1-.1-.1-.1h-.1c.1-.4 0-.9-.1-1.3s-.3-.9-.5-1.2l.1-.1c0-.1 0-.1.1-.2s.2-.2.4-.3c.1 0 .2-.1.2-.1h.1c.1-.1.2-.3.1-.4s-.3-.1-.4 0h-.1l-.2.2c-.1.1-.3.3-.4.3H10l-.1.1c-.6-.6-1.4-1-2.3-1.1v-.1l-.1-.1V3v-.4c-.2-.3-.3-.5-.5-.5zm-.3 2.2l-.1 1.5c0 .1-.1.2-.2.2h-.1l-1.2-.9c.4-.4.8-.6 1.4-.8zm.7 0c.6.1 1.2.4 1.7.8l-1.2.8c-.1.1-.3.1-.3 0l-.1-.1zM4.6 5.7l1.1 1c.1.1.1.2 0 .3l-.1.1-1.4.4c-.1-.7 0-1.3.4-1.8zm4.9 0c.2.3.3.6.4.9s.1.6.1.9l-1.4-.4c-.1 0-.2-.2-.2-.3s0-.1.1-.1zm-2.7 1h.4l.3.3-.1.4-.4.2-.4-.2-.1-.4zm1.4 1.2c.1 0 .1 0 0 0l1.5.2c-.2.6-.6 1.1-1.2 1.5l-.6-1.4c.1-.1.1-.2.3-.3zm-2.4 0c.1 0 .2.1.2.2v.2l-.6 1.4c-.5-.3-.9-.8-1.2-1.5zm1.2.6l.2.1.7 1.3c-.1 0-.2.1-.3.1-.5.1-1.1.1-1.6-.1l.7-1.3c.2 0 .2-.1.3-.1z"
+                          fill="#fff"
+                          stroke="#fff"
+                          stroke-width="0.25"
+                        />
+                      </svg>
+                    </span>
+                    dummyService
+                  </p>
+                </span>
+              </span>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 40%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                discovery.outbound
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <span
+                class="bp3-popover-wrapper"
+              >
+                <span
+                  class="bp3-popover-target"
+                >
+                  <button
+                    aria-label="discovery.disableDeleteConnections"
+                    class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main deleteEnabled StyledProps--border StyledProps--border-false Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                    tabindex="0"
+                    type="button"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main"
+                      data-icon="code-delete"
+                    >
+                      <svg
+                        fill="none"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        width="20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g
+                          clip-rule="evenodd"
+                          fill="#383946"
+                          fill-rule="evenodd"
+                        >
+                          <path
+                            d="M4.286 7.9a1 1 0 01.99-1.134h8.875a1 1 0 01.995 1.101l-.866 8.506a1 1 0 01-.995.9H6.431a1 1 0 01-.99-.866zm9.865-.134H5.277l1.154 8.506h6.854zM8.263 2.161a.5.5 0 01.6-.376l3.52.804a.5.5 0 01.376.6L12.5 4.315l3.216.735a.5.5 0 11-.222.975L4.613 3.54a.5.5 0 11.222-.975l3.17.724zm.718 1.351l2.545.582.147-.641-2.546-.582z"
+                          />
+                          <path
+                            d="M10 9.84c.23 0 .417.187.417.417v4.167a.417.417 0 11-.834 0v-4.167c0-.23.187-.417.417-.417zM7.699 9.85c.23-.02.431.15.451.378l.363 4.151a.417.417 0 01-.83.073l-.363-4.15a.417.417 0 01.379-.452zM12.302 9.85c.229.02.399.222.379.451l-.364 4.15a.417.417 0 01-.83-.072l.363-4.15a.417.417 0 01.452-.38z"
+                            opacity="0.3"
+                          />
+                        </g>
+                      </svg>
+                    </span>
+                  </button>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<NodeConnectionsSideBar /> tests with data test row functions 2`] = `
+<div>
+  <div
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main sidebar"
+  >
+    <div
+      class="bp3-card bp3-elevation-0 Card--card headerCard"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
+        style="display: flex; align-items: center;"
+      >
+        <span
+          class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+          data-icon="chaos-service-discovery"
+        >
+          <svg
+            fill="none"
+            height="24"
+            viewBox="0 0 34 34"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="17"
+              cy="17"
+              fill="#00ADE4"
+              r="17"
+            />
+            <path
+              clip-rule="evenodd"
+              d="M17.146 14.735v-.551a.184.184 0 00-.183-.184H15.86a.184.184 0 00-.184.184v1.237a.192.192 0 01-.137.18 2.92 2.92 0 00-.497.207.192.192 0 01-.226-.031l-.484-.485-.39-.39a.184.184 0 00-.26 0l-.78.78a.184.184 0 000 .26l.39.39.485.485c.06.059.07.15.031.225a2.923 2.923 0 00-.206.497.192.192 0 01-.181.137h-1.237a.184.184 0 00-.184.184v1.103c0 .101.082.184.184.184h1.237c.083 0 .156.056.18.137.055.173.124.339.207.497a.192.192 0 01-.031.225l-.485.485-.39.39a.184.184 0 000 .26l.78.78a.184.184 0 00.26 0l.39-.39.485-.485c.059-.06.15-.07.225-.032.158.084.324.153.497.207.08.024.137.097.137.18v1.238c0 .101.082.184.184.184h1.103a.184.184 0 00.183-.184v-1.237c0-.084.057-.157.137-.181.174-.054.34-.123.498-.207a.192.192 0 01.225.032l.485.485.39.39a.184.184 0 00.26 0l.78-.78a.184.184 0 000-.26l-.39-.39-.485-.485a.192.192 0 01-.032-.225 2.92 2.92 0 00.207-.497.192.192 0 01.18-.137h1.238a.184.184 0 00.184-.184V17.86a.184.184 0 00-.184-.184h-1.237a.192.192 0 01-.181-.137 2.923 2.923 0 00-.207-.497.192.192 0 01.032-.225l.485-.485.39-.39a.184.184 0 000-.26l-.78-.78a.184.184 0 00-.26 0l-.39.39-.485.485a.192.192 0 01-.225.031 2.92 2.92 0 00-.497-.206.192.192 0 01-.137-.181v-.686zm-.735 5.147a1.47 1.47 0 100-2.941 1.47 1.47 0 000 2.94z"
+              fill="#FCFEFF"
+              fill-rule="evenodd"
+            />
+            <path
+              clip-rule="evenodd"
+              d="M27.639 16.224c.43.744.43 1.661 0 2.406l-.695-.401.695.4-4.288 7.426a2.406 2.406 0 01-2.083 1.203h-8.575c-.86 0-1.654-.458-2.084-1.203L6.322 18.63a2.406 2.406 0 010-2.406l4.287-7.426a2.406 2.406 0 012.084-1.203h5.49a.802.802 0 110 1.604h-5.49A.802.802 0 0012 9.6L7.71 17.026a.802.802 0 000 .802L12 25.253a.802.802 0 00.694.401h8.575a.802.802 0 00.694-.4l4.287-7.426a.802.802 0 000-.802l-.74-1.282a.802.802 0 111.39-.802l.74 1.282z"
+              fill="#FCFEFF"
+              fill-rule="evenodd"
+            />
+            <path
+              d="M23.563 12.625c.808 0 1.66-.348 2.187-.875l1.75 1.75-1.75-1.75c.51-.502.875-1.447.875-2.188a3.062 3.062 0 10-3.063 3.063z"
+              stroke="#FCFEFF"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.2"
+            />
+          </svg>
+        </span>
+        cartservice
+      </p>
+      <span
+        class="bp3-icon StyledProps--main closeButton"
+        data-icon="code-close"
+        data-testid="closeButton"
+      >
+        <svg
+          fill="none"
+          height="24"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M6 6l6 5.999L18 6 6 18l6-6 6 6"
+            stroke="#555770"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+    </div>
+    <div
+      class="Layout--horizontal StyledProps--main StyledProps--padding-top-large StyledProps--padding-right-large StyledProps--padding-left-large StyledProps--flex StyledProps--flex-justifyContent-space-between"
+    >
+      <span
+        class="bp3-popover-wrapper"
+      >
+        <span
+          class="bp3-popover-target"
+        >
+          <button
+            aria-label="discovery.newRelation"
+            class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
+            type="button"
+          >
+            <span
+              class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+              icon="plus"
+            >
+              <svg
+                data-icon="plus"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+              >
+                <desc>
+                  plus
+                </desc>
+                <path
+                  d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+            <span
+              class="bp3-button-text"
+            >
+              discovery.newRelation
+            </span>
+          </button>
+        </span>
+      </span>
+      <div
+        class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+        data-name=""
+        style="width: 206px; max-width: 206px;"
+      >
+        <span
+          class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+          data-icon="thinner-search"
+        >
+          <svg
+            fill="none"
+            height="14"
+            viewBox="0 0 16 16"
+            width="14"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        <input
+          class="bp3-input  ExpandingSearchInput--filter"
+          dir="auto"
+          placeholder="discovery.searchService"
+          style="padding-right: 38px;"
+          type="search"
+          value=""
+        />
+      </div>
+    </div>
+    <div
+      class="TableV2--table tableBody"
+    >
+      <div
+        class="TableV2--header"
+        role="row"
+      >
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 50%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            services
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 40%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            discovery.trafficRoute
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 10%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            
+          </p>
+        </div>
+      </div>
+      <div
+        class="TableV2--body"
+      >
+        <div
+          class="TableV2--row TableV2--card"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            >
+              <span
+                class="bp3-popover-wrapper"
+              >
+                <span
+                  class="bp3-popover-target"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main serviceName StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                    style="display: flex; align-items: center;"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+                      data-icon="service-kubernetes"
+                    >
+                      <svg
+                        height="16"
+                        viewBox="0 0 14 14"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M7 .4c-.1 0-.2 0-.3.1L2 2.7c-.2.1-.4.3-.5.6l-1.2 5c-.1.2 0 .5.1.7l.1.1 3.2 4c.2.2.4.3.7.3h5.2c.3 0 .5-.1.7-.3l3.2-4c.2-.2.2-.5.2-.7l-1.2-5c-.1-.3-.2-.5-.5-.6L7.3.6c0-.1-.2-.2-.3-.2z"
+                          fill="#326ce5"
+                        />
+                        <path
+                          d="M7 2.1c-.2 0-.3.1-.3.3v.9c0 .1-.1.1-.1.1v.1c-.2 0-.3 0-.5.1-.7.2-1.4.5-1.8 1l-.1-.1H4c-.1-.1-.2-.2-.4-.3L3.4 4h-.1c-.1 0-.1-.1-.2-.1s-.2 0-.2.1c-.1.1-.1.3.1.4h.1c.1.1.2.1.2.1.2.1.3.2.4.3 0 0 .1.1.1.2l.1.1c-.5.7-.7 1.6-.6 2.5h-.1l-.1.1c-.1 0-.3.1-.5.1h-.4c-.2 0-.3.2-.2.3 0 .1.2.2.4.2h.1c.1 0 .2-.1.3-.1.2-.1.3-.1.5-.1.1 0 .1 0 .2.1h.1c.3.9.9 1.6 1.6 2l-.1.1v.2c-.1.1-.1.3-.3.5-.1.1-.1.1-.1.2v.1c-.1.2 0 .3.1.4s.3 0 .4-.2v-.1c0-.1.1-.2.1-.3.1-.2.1-.4.2-.5 0 0 .1 0 .1-.1l.1-.1c.6.2 1.4.3 2.1.2.2 0 .3-.1.5-.1l.1.1s.1 0 .1.1c.1.1.1.3.2.5 0 .1 0 .2.1.3v.1c.1.2.2.2.4.2.1-.1.2-.2.1-.4v-.1c0-.1-.1-.1-.1-.2-.1-.2-.2-.3-.2-.4V10.4c.8-.5 1.3-1.2 1.6-2h.1s.1-.1.2-.1.3.1.5.1c.1 0 .2.1.3.1h.1c.2 0 .3-.1.4-.2 0-.1-.1-.3-.2-.3h-.4c-.2 0-.4 0-.5-.1-.1 0-.1-.1-.1-.1h-.1c.1-.4 0-.9-.1-1.3s-.3-.9-.5-1.2l.1-.1c0-.1 0-.1.1-.2s.2-.2.4-.3c.1 0 .2-.1.2-.1h.1c.1-.1.2-.3.1-.4s-.3-.1-.4 0h-.1l-.2.2c-.1.1-.3.3-.4.3H10l-.1.1c-.6-.6-1.4-1-2.3-1.1v-.1l-.1-.1V3v-.4c-.2-.3-.3-.5-.5-.5zm-.3 2.2l-.1 1.5c0 .1-.1.2-.2.2h-.1l-1.2-.9c.4-.4.8-.6 1.4-.8zm.7 0c.6.1 1.2.4 1.7.8l-1.2.8c-.1.1-.3.1-.3 0l-.1-.1zM4.6 5.7l1.1 1c.1.1.1.2 0 .3l-.1.1-1.4.4c-.1-.7 0-1.3.4-1.8zm4.9 0c.2.3.3.6.4.9s.1.6.1.9l-1.4-.4c-.1 0-.2-.2-.2-.3s0-.1.1-.1zm-2.7 1h.4l.3.3-.1.4-.4.2-.4-.2-.1-.4zm1.4 1.2c.1 0 .1 0 0 0l1.5.2c-.2.6-.6 1.1-1.2 1.5l-.6-1.4c.1-.1.1-.2.3-.3zm-2.4 0c.1 0 .2.1.2.2v.2l-.6 1.4c-.5-.3-.9-.8-1.2-1.5zm1.2.6l.2.1.7 1.3c-.1 0-.2.1-.3.1-.5.1-1.1.1-1.6-.1l.7-1.3c.2 0 .2-.1.3-.1z"
+                          fill="#fff"
+                          stroke="#fff"
+                          stroke-width="0.25"
+                        />
+                      </svg>
+                    </span>
+                    checkoutservice
+                  </p>
+                </span>
+              </span>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 40%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                discovery.inbound
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <span
+                class="bp3-popover-wrapper"
+              >
+                <span
+                  class="bp3-popover-target"
+                >
+                  <a
+                    aria-label="discovery.disableDeleteConnections"
+                    class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main deleteDisabled StyledProps--border StyledProps--border-false Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                    disabled=""
+                    role="button"
+                    tabindex="-1"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main"
+                      data-icon="code-delete"
+                    >
+                      <svg
+                        fill="none"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        width="20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g
+                          clip-rule="evenodd"
+                          fill="#383946"
+                          fill-rule="evenodd"
+                        >
+                          <path
+                            d="M4.286 7.9a1 1 0 01.99-1.134h8.875a1 1 0 01.995 1.101l-.866 8.506a1 1 0 01-.995.9H6.431a1 1 0 01-.99-.866zm9.865-.134H5.277l1.154 8.506h6.854zM8.263 2.161a.5.5 0 01.6-.376l3.52.804a.5.5 0 01.376.6L12.5 4.315l3.216.735a.5.5 0 11-.222.975L4.613 3.54a.5.5 0 11.222-.975l3.17.724zm.718 1.351l2.545.582.147-.641-2.546-.582z"
+                          />
+                          <path
+                            d="M10 9.84c.23 0 .417.187.417.417v4.167a.417.417 0 11-.834 0v-4.167c0-.23.187-.417.417-.417zM7.699 9.85c.23-.02.431.15.451.378l.363 4.151a.417.417 0 01-.83.073l-.363-4.15a.417.417 0 01.379-.452zM12.302 9.85c.229.02.399.222.379.451l-.364 4.15a.417.417 0 01-.83-.072l.363-4.15a.417.417 0 01.452-.38z"
+                            opacity="0.3"
+                          />
+                        </g>
+                      </svg>
+                    </span>
+                  </a>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="TableV2--row TableV2--card"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 50%;"
+            >
+              <span
+                class="bp3-popover-wrapper"
+              >
+                <span
+                  class="bp3-popover-target"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main serviceName StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                    style="display: flex; align-items: center;"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+                      data-icon="service-kubernetes"
+                    >
+                      <svg
+                        height="16"
+                        viewBox="0 0 14 14"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M7 .4c-.1 0-.2 0-.3.1L2 2.7c-.2.1-.4.3-.5.6l-1.2 5c-.1.2 0 .5.1.7l.1.1 3.2 4c.2.2.4.3.7.3h5.2c.3 0 .5-.1.7-.3l3.2-4c.2-.2.2-.5.2-.7l-1.2-5c-.1-.3-.2-.5-.5-.6L7.3.6c0-.1-.2-.2-.3-.2z"
+                          fill="#326ce5"
+                        />
+                        <path
+                          d="M7 2.1c-.2 0-.3.1-.3.3v.9c0 .1-.1.1-.1.1v.1c-.2 0-.3 0-.5.1-.7.2-1.4.5-1.8 1l-.1-.1H4c-.1-.1-.2-.2-.4-.3L3.4 4h-.1c-.1 0-.1-.1-.2-.1s-.2 0-.2.1c-.1.1-.1.3.1.4h.1c.1.1.2.1.2.1.2.1.3.2.4.3 0 0 .1.1.1.2l.1.1c-.5.7-.7 1.6-.6 2.5h-.1l-.1.1c-.1 0-.3.1-.5.1h-.4c-.2 0-.3.2-.2.3 0 .1.2.2.4.2h.1c.1 0 .2-.1.3-.1.2-.1.3-.1.5-.1.1 0 .1 0 .2.1h.1c.3.9.9 1.6 1.6 2l-.1.1v.2c-.1.1-.1.3-.3.5-.1.1-.1.1-.1.2v.1c-.1.2 0 .3.1.4s.3 0 .4-.2v-.1c0-.1.1-.2.1-.3.1-.2.1-.4.2-.5 0 0 .1 0 .1-.1l.1-.1c.6.2 1.4.3 2.1.2.2 0 .3-.1.5-.1l.1.1s.1 0 .1.1c.1.1.1.3.2.5 0 .1 0 .2.1.3v.1c.1.2.2.2.4.2.1-.1.2-.2.1-.4v-.1c0-.1-.1-.1-.1-.2-.1-.2-.2-.3-.2-.4V10.4c.8-.5 1.3-1.2 1.6-2h.1s.1-.1.2-.1.3.1.5.1c.1 0 .2.1.3.1h.1c.2 0 .3-.1.4-.2 0-.1-.1-.3-.2-.3h-.4c-.2 0-.4 0-.5-.1-.1 0-.1-.1-.1-.1h-.1c.1-.4 0-.9-.1-1.3s-.3-.9-.5-1.2l.1-.1c0-.1 0-.1.1-.2s.2-.2.4-.3c.1 0 .2-.1.2-.1h.1c.1-.1.2-.3.1-.4s-.3-.1-.4 0h-.1l-.2.2c-.1.1-.3.3-.4.3H10l-.1.1c-.6-.6-1.4-1-2.3-1.1v-.1l-.1-.1V3v-.4c-.2-.3-.3-.5-.5-.5zm-.3 2.2l-.1 1.5c0 .1-.1.2-.2.2h-.1l-1.2-.9c.4-.4.8-.6 1.4-.8zm.7 0c.6.1 1.2.4 1.7.8l-1.2.8c-.1.1-.3.1-.3 0l-.1-.1zM4.6 5.7l1.1 1c.1.1.1.2 0 .3l-.1.1-1.4.4c-.1-.7 0-1.3.4-1.8zm4.9 0c.2.3.3.6.4.9s.1.6.1.9l-1.4-.4c-.1 0-.2-.2-.2-.3s0-.1.1-.1zm-2.7 1h.4l.3.3-.1.4-.4.2-.4-.2-.1-.4zm1.4 1.2c.1 0 .1 0 0 0l1.5.2c-.2.6-.6 1.1-1.2 1.5l-.6-1.4c.1-.1.1-.2.3-.3zm-2.4 0c.1 0 .2.1.2.2v.2l-.6 1.4c-.5-.3-.9-.8-1.2-1.5zm1.2.6l.2.1.7 1.3c-.1 0-.2.1-.3.1-.5.1-1.1.1-1.6-.1l.7-1.3c.2 0 .2-.1.3-.1z"
+                          fill="#fff"
+                          stroke="#fff"
+                          stroke-width="0.25"
+                        />
+                      </svg>
+                    </span>
+                    dummyService
+                  </p>
+                </span>
+              </span>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 40%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                discovery.outbound
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <span
+                class="bp3-popover-wrapper"
+              >
+                <span
+                  class="bp3-popover-target"
+                >
+                  <button
+                    aria-label="discovery.disableDeleteConnections"
+                    class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main deleteEnabled StyledProps--border StyledProps--border-false Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                    tabindex="0"
+                    type="button"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main"
+                      data-icon="code-delete"
+                    >
+                      <svg
+                        fill="none"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        width="20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g
+                          clip-rule="evenodd"
+                          fill="#383946"
+                          fill-rule="evenodd"
+                        >
+                          <path
+                            d="M4.286 7.9a1 1 0 01.99-1.134h8.875a1 1 0 01.995 1.101l-.866 8.506a1 1 0 01-.995.9H6.431a1 1 0 01-.99-.866zm9.865-.134H5.277l1.154 8.506h6.854zM8.263 2.161a.5.5 0 01.6-.376l3.52.804a.5.5 0 01.376.6L12.5 4.315l3.216.735a.5.5 0 11-.222.975L4.613 3.54a.5.5 0 11.222-.975l3.17.724zm.718 1.351l2.545.582.147-.641-2.546-.582z"
+                          />
+                          <path
+                            d="M10 9.84c.23 0 .417.187.417.417v4.167a.417.417 0 11-.834 0v-4.167c0-.23.187-.417.417-.417zM7.699 9.85c.23-.02.431.15.451.378l.363 4.151a.417.417 0 01-.83.073l-.363-4.15a.417.417 0 01.379-.452zM12.302 9.85c.229.02.399.222.379.451l-.364 4.15a.417.417 0 01-.83-.072l.363-4.15a.417.417 0 01.452-.38z"
+                            opacity="0.3"
+                          />
+                        </g>
+                      </svg>
+                    </span>
+                  </button>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

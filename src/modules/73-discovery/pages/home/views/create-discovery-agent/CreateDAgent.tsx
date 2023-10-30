@@ -22,13 +22,12 @@ import { Formik, FormikProps } from 'formik'
 import * as Yup from 'yup'
 import classNames from 'classnames'
 import { useParams } from 'react-router-dom'
-import { isEmpty } from 'lodash-es'
 import NetworkMap from '@discovery/images/NetworkMap.svg'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FormConnectorReferenceField } from '@platform/connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
 import List from '@discovery/components/List/List'
-import { useCreateAgent } from 'services/servicediscovery'
+import { DatabaseK8sConnectorRequest, useCreateAgent } from 'services/servicediscovery'
 import NumberedList from '@discovery/components/NumberedList/NumberedList'
 import SchedulePanel from '@common/components/SchedulePanel/SchedulePanel'
 import RbacButton from '@rbac/components/Button/Button'
@@ -70,7 +69,7 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
 
   const initialCronExpression = '0/15 * * * *'
 
-  const inputValues: FormValues = {
+  const initialValues: FormValues = {
     discoveryAgentName: '',
     discoveryNamespace: '',
     nodeAgentSelector: '',
@@ -82,47 +81,6 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
     minutes: '15',
     blacklistedNamespaces: ['kube-node-lease', 'kube-public', 'kube-system'],
     detectNetworkTrace: isNetworkTraceDetected
-  }
-
-  const handleSubmit = async (): Promise<void> => {
-    try {
-      if (dAgentFormRef.current) {
-        const dAgentFormValdiation = await dAgentFormRef.current.validateForm()
-        if (!isEmpty(dAgentFormValdiation)) {
-          return dAgentFormRef.current.validateForm().then(errors => {
-            Object.values(errors).map(err => showError(err))
-          })
-        }
-        if (dAgentFormRef.current.values.minutes && parseInt(dAgentFormRef.current.values.minutes) < 15) {
-          showError(getString('discovery.dAgentCronError'))
-          return
-        }
-        await infraMutate({
-          k8sConnectorID: dAgentFormRef.current?.values.connectorRef,
-          name: dAgentFormRef.current?.values.discoveryAgentName,
-          identity: dAgentFormRef.current?.values.identifier,
-          config: {
-            data: {
-              blacklistedNamespaces: dAgentFormRef.current?.values.blacklistedNamespaces,
-              enableNodeAgent: isNetworkTraceDetected,
-              cron: {
-                expression: dAgentFormRef.current?.values.expression
-              },
-              collectionWindowInMin: dAgentFormRef.current?.values.duration,
-              nodeAgentSelector: dAgentFormRef.current?.values.nodeAgentSelector
-            },
-            kubernetes: {
-              namespace: dAgentFormRef.current?.values.discoveryNamespace
-            }
-          }
-        }).then(() => {
-          setDrawerOpen(false)
-          refetchDAgent?.()
-        })
-      }
-    } catch (error) {
-      showError(error.data?.description || error.data?.message)
-    }
   }
 
   return (
@@ -148,7 +106,7 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
             variation={ButtonVariation.PRIMARY}
             intent="success"
             text={getString('discovery.createDiscoveryAgent')}
-            onClick={() => handleSubmit()}
+            onClick={() => dAgentFormRef.current?.handleSubmit()}
             permission={{
               resourceScope: {
                 accountIdentifier: accountId,
@@ -168,7 +126,7 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
         <Container background={Color.PRIMARY_BG} className={css.overviewContainer} border={{ right: true }}>
           <Formik<FormValues>
             innerRef={dAgentFormRef as React.Ref<FormikProps<FormValues>>}
-            initialValues={inputValues}
+            initialValues={initialValues}
             validationSchema={Yup.object().shape({
               discoveryAgentName: Yup.string()
                 .trim()
@@ -181,9 +139,57 @@ const CreateDAgent: React.FC<DrawerProps> = /* istanbul ignore next */ ({ setDra
               duration: Yup.number()
                 .min(1, getString('discovery.dAgentValidation.durationMaxMin'))
                 .max(10, getString('discovery.dAgentValidation.durationMaxMin')),
-              nodeAgentSelector: Yup.string().trim()
+              nodeAgentSelector: Yup.string().trim(),
+              minute: Yup.number().min(15)
             })}
-            onSubmit={() => void 0}
+            onSubmit={async values => {
+              if (values.minutes && parseInt(values.minutes) < 15) {
+                showError(getString('discovery.dAgentCronError'))
+                return
+              }
+
+              const k8sConnector: DatabaseK8sConnectorRequest = {
+                accountIdentifier: accountId,
+                projectIdentifier,
+                orgIdentifier,
+                id: values.connectorRef
+              }
+              if (values.connectorRef?.startsWith('org.')) {
+                delete k8sConnector.projectIdentifier
+                k8sConnector.id = values.connectorRef.slice(4)
+              } else if (values.connectorRef?.startsWith('account.')) {
+                delete k8sConnector.orgIdentifier
+                delete k8sConnector.projectIdentifier
+                k8sConnector.id = values.connectorRef.slice(8)
+              }
+
+              try {
+                await infraMutate({
+                  k8sConnectorID: k8sConnector.id ?? '',
+                  k8sConnector: k8sConnector,
+                  name: values.discoveryAgentName,
+                  identity: values.identifier ?? '',
+                  config: {
+                    data: {
+                      blacklistedNamespaces: values.blacklistedNamespaces,
+                      enableNodeAgent: isNetworkTraceDetected,
+                      cron: {
+                        expression: values.expression
+                      },
+                      collectionWindowInMin: values.duration,
+                      nodeAgentSelector: values.nodeAgentSelector
+                    },
+                    kubernetes: {
+                      namespace: values.discoveryNamespace
+                    }
+                  }
+                })
+                setDrawerOpen(false)
+                refetchDAgent?.()
+              } catch (error) {
+                showError(error.data?.description || error.data?.message)
+              }
+            }}
           >
             {formikProps => {
               return (

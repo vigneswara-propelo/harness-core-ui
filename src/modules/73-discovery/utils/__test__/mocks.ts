@@ -5,38 +5,45 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { DatabaseNetworkMapEntity } from 'services/servicediscovery'
+
 export const connectionsBetweenServices = [
   {
     from: {
       id: '64920dc166c663ba792cf3b0',
-      kind: 'TCP',
+      kind: 'discoveredservice',
       name: 'access-control',
-      namespace: 'chaos-1000'
+      kubernetes: { namespace: 'chaos-1000' }
     },
     port: '9090',
     to: {
       id: '64920dc166c663ba792cf3bb',
-      kind: 'TCP',
+      kind: 'discoveredservice',
       name: 'harness-manager',
-      namespace: 'chaos-1000'
+
+      kubernetes: { namespace: 'chaos-1000' }
     },
-    type: 'TCP'
+    type: 'TCP',
+    manual: false
   },
   {
     from: {
       id: '64920dc166c663ba792cf3bb',
-      kind: 'TCP',
+      kind: 'discoveredservice',
       name: 'access-control',
-      namespace: 'chaos-1000'
+
+      kubernetes: { namespace: 'chaos-1000' }
     },
     port: '6379',
     to: {
       id: '64920dc166c663ba792cf3b0',
-      kind: 'TCP',
+      kind: 'discoveredservice',
       name: 'redis-sentinel-harness-announce-0',
-      namespace: 'chaos-1000'
+
+      kubernetes: { namespace: 'chaos-1000' }
     },
-    type: 'TCP'
+    type: 'TCP',
+    manual: false
   }
 ]
 
@@ -113,14 +120,14 @@ export const mockServices = {
       id: '64920dc166c663ba792cf3bb',
       agentID: '64920dbb66c663ba792cf134',
       kind: 'Service',
-      name: 'access-control',
+      name: 'chaos-exporter',
       namespace: 'chaos-1000',
       uid: '02bfaa4d-9fcd-49ed-9e1a-08a24c491c88',
       service: {
         owner: {
           kind: 'Service',
           namespace: 'chaos-1000',
-          name: 'access-control',
+          name: 'chaos-exporter',
           uid: '02bfaa4d-9fcd-49ed-9e1a-08a24c491c89',
           apiVersion: 'v1'
         },
@@ -153,6 +160,25 @@ export const mockServices = {
     totalPages: 1
   }
 }
+
+export const mockNetworkMapResources: DatabaseNetworkMapEntity[] = [
+  {
+    id: '64920dc166c663ba792cf3b0',
+    kind: 'discoveredservice',
+    name: 'access-control',
+    kubernetes: {
+      namespace: 'chaos-1000'
+    }
+  },
+  {
+    id: '64920dc166c663ba792cf3bb',
+    kind: 'discoveredservice',
+    name: 'chaos-exporter',
+    kubernetes: {
+      namespace: 'chaos-1000'
+    }
+  }
+]
 
 export const mockLogData = `{"level":"","pos":1,"out":"{file:entry.go:41,func:github.com/wings-software/service-discovery/collector.Start,level:info,msg:go version go1.20.8,time:2023-10-04T04:30:15.872344691Z}","time":"2023-10-04T04:30:20.480817808Z","args":{"PodName":"sd-cluster-9ts9x","PodNamespace":"hce"}}
 {"level":"","pos":2,"out":"{file:entry.go:42,func:github.com/wings-software/service-discovery/collector.Start,level:info,msg:go os linux,time:2023-10-04T04:30:15.872758918Z}","time":"2023-10-04T04:30:20.843837081Z","args":{"PodName":"sd-cluster-9ts9x","PodNamespace":"hce"}}

@@ -13,10 +13,10 @@ import { Get, GetProps, useGet, UseGetProps, Mutate, MutateProps, useMutate, Use
 import { getConfig, getUsingFetch, GetUsingFetchProps, mutateUsingFetch, MutateUsingFetchProps } from '../config'
 export const SPEC_VERSION = '1.0'
 export interface ApiContainer {
-  id?: string
-  image?: string
-  name?: string
-  type?: string
+  id: string
+  image: string
+  name: string
+  type: string
 }
 
 export interface ApiContainerVolume {
@@ -29,50 +29,66 @@ export interface ApiContainerVolume {
 }
 
 export interface ApiCreateAgentRequest {
-  config?: DatabaseAgentConfiguration
+  config: DatabaseAgentConfiguration
   description?: string
-  identity?: string
-  k8sConnector?: DatabaseK8sConnectorRequest
-  k8sConnectorID?: string
-  name?: string
+  identity: string
+  k8sConnector: DatabaseK8sConnectorRequest
+  k8sConnectorID: string
+  name: string
   tags?: string[]
 }
 
 export interface ApiCreateNetworkMapRequest {
   connections?: DatabaseConnection[]
   description?: string
-  identity?: string
-  name?: string
-  resources?: DatabaseNetworkMapEntity[]
+  identity: string
+  name: string
+  resources: DatabaseNetworkMapEntity[]
+  rules?: DatabaseNetworkMapRules
   tags?: string[]
 }
 
 export interface ApiCustomServiceConnection {
-  destinationID?: string
-  destinationIP?: string
-  destinationName?: string
-  destinationNamespace?: string
-  destinationPort?: string
-  id?: string
-  sourceID?: string
-  sourceIP?: string
-  sourceName?: string
-  sourceNamespace?: string
-  type?: string
+  destinationID: string
+  destinationIP: string
+  destinationName: string
+  destinationNamespace: string
+  destinationPort: string
+  id: string
+  sourceID: string
+  sourceIP: string
+  sourceName: string
+  sourceNamespace: string
+  type: string
+}
+
+export interface ApiDiscoveredServiceConnection {
+  destinationID: string
+  destinationIP: string
+  destinationName: string
+  destinationNamespace: string
+  destinationPort: string
+  id: string
+  sourceID: string
+  sourceIP: string
+  sourceName: string
+  sourceNamespace: string
+  type: string
 }
 
 export interface ApiGetAgentResponse {
-  accountIdentifier?: string
-  config?: DatabaseAgentConfiguration
+  accountIdentifier: string
+  config: DatabaseAgentConfiguration
+  corelationID?: string
   createdAt?: string
   createdBy?: string
   description?: string
-  id?: string
-  identity?: string
+  id: string
+  identity: string
   installationDetails?: DatabaseInstallationCollection
   installationType?: DatabaseInstallationType
   k8sConnector?: DatabaseK8sConnectorRequest
-  name?: string
+  name: string
   networkMapCount?: number
   organizationIdentifier?: string
   projectIdentifier?: string
@@ -84,15 +100,31 @@ export interface ApiGetAgentResponse {
   updatedBy?: string
 }
 
+export interface ApiGetDiscoveredService {
+  agentID: string
+  corelationID?: string
+  createdAt?: string
+  createdBy?: string
+  id: string
+  removed?: boolean
+  removedAt?: string
+  spec: DatabaseDiscoveredServiceSpec
+  type: string
+  updatedAt?: string
+  updatedBy?: string
+  version: string
+}
+
 export interface ApiGetInstallationResponse {
   agentDetails?: DatabaseAgentDetails
-  agentID?: string
+  agentID: string
+  corelationID?: string
   createdAt?: string
   createdBy?: string
   delegateID?: string
   delegateTaskID?: string
   delegateTaskStatus?: DatabaseDelegateTaskStatus
-  id?: string
+  id: string
   isCronTriggered?: boolean
   isLogStreamOpen?: boolean
   logStreamCreatedAt?: string
@@ -105,6 +137,7 @@ export interface ApiGetInstallationResponse {
 
 export interface ApiGetK8sCustomService {
   agentID?: string
+  corelationID?: string
   createdAt?: string
   createdBy?: string
   id?: string
@@ -121,17 +154,18 @@ export interface ApiGetK8sCustomService {
 }
 
 export interface ApiGetNetworkMapResponse {
-  agentID?: string
+  agentID: string
   connections?: DatabaseConnection[]
+  corelationID?: string
   createdAt?: string
   createdBy?: string
   description?: string
-  id?: string
-  identity?: string
-  name?: string
+  id: string
+  identity: string
+  name: string
   removed?: boolean
   removedAt?: string
-  resources?: DatabaseNetworkMapEntity[]
+  resources: DatabaseNetworkMapEntity[]
   rules?: DatabaseNetworkMapRules
   tags?: string[]
   updatedAt?: string
@@ -139,162 +173,180 @@ export interface ApiGetNetworkMapResponse {
 }
 
 export interface ApiGetPodResponse {
-  agentID?: string
+  agentID: string
   annotations?: {
     [key: string]: string
   }
-  apiVersion?: string
+  apiVersion: string
+  corelationID?: string
   createdAt?: string
   createdBy?: string
   creationTimestamp?: string
   deletionTimestamp?: string
-  id?: string
-  kind?: string
+  id: string
+  kind: string
   labels?: {
     [key: string]: string
   }
-  name?: string
-  namespace?: string
+  name: string
+  namespace: string
   ownerReference?: V1OwnerReference[]
   removed?: boolean
   removedAt?: string
-  resourceVersion?: string
-  spec?: V1PodSpec
+  resourceVersion: string
+  spec: V1PodSpec
   status?: V1PodStatus
-  uid?: string
+  uid: string
   updatedAt?: string
   updatedBy?: string
 }
 
 export interface ApiGetServiceResponse {
-  agentID?: string
+  agentID: string
   annotations?: {
     [key: string]: string
   }
-  apiVersion?: string
+  apiVersion: string
+  corelationID?: string
   createdAt?: string
   createdBy?: string
   creationTimestamp?: string
   deletionTimestamp?: string
-  id?: string
-  kind?: string
+  id: string
+  kind: string
   labels?: {
     [key: string]: string
   }
-  name?: string
-  namespace?: string
+  name: string
+  namespace: string
   ownerReference?: V1OwnerReference[]
   removed?: boolean
   removedAt?: string
-  resourceVersion?: string
-  spec?: V1ServiceSpec
+  resourceVersion: string
+  spec: V1ServiceSpec
   status?: V1ServiceStatus
-  uid?: string
+  uid: string
   updatedAt?: string
   updatedBy?: string
 }
 
 export interface ApiListAgentResponse {
+  corelationID?: string
   items?: ApiGetAgentResponse[]
   page?: ApiPagination
 }
 
 export interface ApiListConnection {
+  corelationID?: string
   items?: DatabaseConnectionCollection[]
 }
 
 export interface ApiListContainer {
+  corelationID?: string
   items?: ApiContainer[]
 }
 
 export interface ApiListContainerVolume {
+  corelationID?: string
   items?: ApiContainerVolume[]
 }
 
 export interface ApiListCronJobResponse {
+  corelationID?: string
   items?: DatabaseCronJobCollection[]
   page?: ApiPagination
 }
 
 export interface ApiListCustomServiceConnection {
+  corelationID?: string
   items?: ApiCustomServiceConnection[]
 }
 
 export interface ApiListDaemonSetResponse {
+  corelationID?: string
   items?: DatabaseDaemonSetCollection[]
   page?: ApiPagination
 }
 
 export interface ApiListDeploymentResponse {
+  corelationID?: string
   items?: DatabaseDeploymentCollection[]
   page?: ApiPagination
 }
 
+export interface ApiListDiscoveredService {
+  corelationID?: string
+  items?: DatabaseDiscoveredServiceCollection[]
+  page?: ApiPagination
+}
+
+export interface ApiListDiscoveredServiceConnection {
+  corelationID?: string
+  items?: ApiDiscoveredServiceConnection[]
+}
+
 export interface ApiListInstallationResponse {
+  corelationID?: string
   items?: DatabaseInstallationCollection[]
   page?: ApiPagination
 }
 
 export interface ApiListJobResponse {
+  corelationID?: string
   items?: DatabaseJobCollection[]
   page?: ApiPagination
 }
 
 export interface ApiListK8sCustomService {
+  corelationID?: string
   items?: DatabaseK8SCustomServiceCollection[]
   page?: ApiPagination
 }
 
 export interface ApiListNamespaceResponse {
+  corelationID?: string
   items?: DatabaseNamespaceCollection[]
   page?: ApiPagination
 }
 
 export interface ApiListNetworkMapResponse {
+  corelationID?: string
   items?: DatabaseNetworkMapCollection[]
   page?: ApiPagination
 }
 
 export interface ApiListNodeResponse {
+  corelationID?: string
   items?: DatabaseNodeCollection[]
   page?: ApiPagination
 }
 
-export interface ApiListPersistentVolumeClaimResponse {
-  items?: DatabasePersistentVolumeClaimCollection[]
-  page?: ApiPagination
-}
-
-export interface ApiListPersistentVolumeResponse {
-  items?: DatabasePersistentVolumeCollection[]
-  page?: ApiPagination
-}
-
 export interface ApiListPodResponse {
+  corelationID?: string
   items?: DatabasePodCollection[]
   page?: ApiPagination
 }
 
-export interface ApiListProcess {
-  items?: DatabaseProcessCollection[]
-}
-
 export interface ApiListReplicaSetResponse {
+  corelationID?: string
   items?: DatabaseReplicaSetCollection[]
   page?: ApiPagination
 }
 
 export interface ApiListReplicationControllerResponse {
+  corelationID?: string
   items?: DatabaseReplicationControllerCollection[]
   page?: ApiPagination
 }
 
 export interface ApiListServiceResponse {
+  corelationID?: string
   items?: DatabaseServiceCollection[]
   page?: ApiPagination
 }
 
 export interface ApiListStatefulSetResponse {
+  corelationID?: string
   items?: DatabaseStatefulSetCollection[]
   page?: ApiPagination
 }
@@ -307,25 +359,36 @@ export interface ApiPagination {
   totalPages?: number
 }
 
+export interface ApiSaveNetworkMapRequest {
+  connections?: DatabaseConnection[]
+  description?: string
+  identity: string
+  name: string
+  resources: DatabaseNetworkMapEntity[]
+  rules?: DatabaseNetworkMapRules
+  tags?: string[]
+}
+
 export interface ApiUpdateAgentRequest {
-  data?: DatabaseDataCollectionConfiguration
+  data: DatabaseDataCollectionConfiguration
   kubernetes?: DatabaseKubernetesAgentConfiguration
   log?: DatabaseLogConfiguration
 }
 
 export interface ApiUpdateNetworkMapRequest {
   connections?: DatabaseConnection[]
-  resources?: DatabaseNetworkMapEntity[]
+  resources: DatabaseNetworkMapEntity[]
 }
 
 export interface DatabaseAgentConfiguration {
-  data?: DatabaseDataCollectionConfiguration
+  data: DatabaseDataCollectionConfiguration
   kubernetes?: DatabaseKubernetesAgentConfiguration
   log?: DatabaseLogConfiguration
 }
 
 export interface DatabaseAgentDetails {
   cluster?: DatabaseAgentPodInfo
+  lifecycleManager?: DatabaseAgentPodInfo[]
   node?: DatabaseAgentPodInfo[]
   status?: DatabaseAgentStatus
 }
@@ -351,22 +414,30 @@ export interface DatabaseConnection {
 }
 
 export interface DatabaseConnectionCollection {
-  agentID?: string
+  agentID: string
   createdAt?: string
   createdBy?: string
-  destinationIP?: string
-  destinationPodUID?: string
-  destinationPort?: string
-  id?: string
-  nodeName?: string
-  podUID?: string
+  id: string
   removed?: boolean
   removedAt?: string
-  serviceUID?: string
-  sourceIP?: string
-  type?: string
+  spec: DatabaseConnectionSpec
   updatedAt?: string
   updatedBy?: string
+}
+
+export interface DatabaseConnectionKubernetesSpec {
+  destinationPod?: V1ObjectReference
+  destinationService?: V1ObjectReference
+  sourcePod?: V1ObjectReference
+}
+
+export interface DatabaseConnectionSpec {
+  destinationIP: string
+  destinationPort: string
+  kubernetes?: DatabaseConnectionKubernetesSpec
+  nodeName: string
+  sourceIP: string
+  type: string
 }
 
 export type DatabaseConnectionType = 'TCP'
@@ -376,113 +447,190 @@ export interface DatabaseCronConfig {
 }
 
 export interface DatabaseCronJobCollection {
-  agentID?: string
+  agentID: string
   annotations?: {
     [key: string]: string
   }
-  apiVersion?: string
+  apiVersion: string
   createdAt?: string
   createdBy?: string
   creationTimestamp?: string
   deletionTimestamp?: string
-  id?: string
-  kind?: string
+  id: string
+  kind: string
   labels?: {
     [key: string]: string
   }
-  name?: string
-  namespace?: string
+  name: string
+  namespace: string
   ownerReference?: V1OwnerReference[]
   removed?: boolean
   removedAt?: string
-  resourceVersion?: string
-  spec?: V1CronJobSpec
+  resourceVersion: string
+  spec: V1CronJobSpec
   status?: V1CronJobStatus
-  uid?: string
+  uid: string
   updatedAt?: string
   updatedBy?: string
 }
 
 export interface DatabaseDaemonSetCollection {
-  agentID?: string
+  agentID: string
   annotations?: {
     [key: string]: string
   }
-  apiVersion?: string
+  apiVersion: string
   createdAt?: string
   createdBy?: string
   creationTimestamp?: string
   deletionTimestamp?: string
-  id?: string
-  kind?: string
+  id: string
+  kind: string
   labels?: {
     [key: string]: string
   }
-  name?: string
-  namespace?: string
+  name: string
+  namespace: string
   ownerReference?: V1OwnerReference[]
   removed?: boolean
   removedAt?: string
-  resourceVersion?: string
-  spec?: V1DaemonSetSpec
+  resourceVersion: string
+  spec: V1DaemonSetSpec
   status?: V1DaemonSetStatus
-  uid?: string
+  uid: string
   updatedAt?: string
   updatedBy?: string
 }
 
 export interface DatabaseDataCollectionConfiguration {
-  batchSize?: number
   blacklistedNamespaces?: string[]
   collectionWindowInMin?: number
   cron?: DatabaseCronConfig
   enableBatchResources?: boolean
   enableNodeAgent?: boolean
-  enableStorageResources?: boolean
+  enableOrphanedPod?: boolean
   nodeAgentSelector?: string
-  retryCount?: number
-  retryInSecond?: number
+  observedNamespaces?: string[]
 }
 
 export type DatabaseDelegateTaskStatus = 'SUCCESS' | 'FAILED' | 'ERROR' | 'PROCESSED'
 
 export interface DatabaseDeploymentCollection {
-  agentID?: string
+  agentID: string
   annotations?: {
     [key: string]: string
   }
-  apiVersion?: string
+  apiVersion: string
   createdAt?: string
   createdBy?: string
   creationTimestamp?: string
   deletionTimestamp?: string
-  id?: string
-  kind?: string
+  id: string
+  kind: string
   labels?: {
     [key: string]: string
   }
-  name?: string
-  namespace?: string
+  name: string
+  namespace: string
   ownerReference?: V1OwnerReference[]
   removed?: boolean
   removedAt?: string
-  resourceVersion?: string
-  spec?: V1DeploymentSpec
+  resourceVersion: string
+  spec: V1DeploymentSpec
   status?: V1DeploymentStatus
-  uid?: string
+  uid: string
   updatedAt?: string
   updatedBy?: string
 }
 
+export interface DatabaseDiscoveredKubernetesService {
+  annotations?: {
+    [key: string]: string
+  }
+  clusterIP?: string
+  clusterIPs?: string[]
+  externalIPs?: string[]
+  externalName?: string
+  identity?: V1ObjectReference
+  labels?: {
+    [key: string]: string
+  }
+  loadBalancerIP?: string
+  ports?: V1ServicePort[]
+  type?: V1ServiceType
+}
+
+export interface DatabaseDiscoveredKubernetesWorkload {
+  annotations?: {
+    [key: string]: string
+  }
+  identity?: V1ObjectReference
+  labels?: {
+    [key: string]: string
+  }
+  podAnnotations?: {
+    [key: string]: string
+  }
+  podLabels?: {
+    [key: string]: string
+  }
+  replicas?: DatabaseDiscoveredPod[]
+}
+
+export interface DatabaseDiscoveredPod {
+  identity?: V1ObjectReference
+  phase?: V1PodPhase
+}
+
+export interface DatabaseDiscoveredServiceCollection {
+  agentID: string
+  createdAt?: string
+  createdBy?: string
+  id: string
+  removed?: boolean
+  removedAt?: string
+  spec: DatabaseDiscoveredServiceSpec
+  type: string
+  updatedAt?: string
+  updatedBy?: string
+  version: string
+}
+
+export interface DatabaseDiscoveredServiceKubernetesSpec {
+  kind?: string
+  name?: string
+  namespace?: string
+  service?: DatabaseDiscoveredKubernetesService
+  uid?: string
+  workloads?: DatabaseDiscoveredKubernetesWorkload[]
+}
+
+export interface DatabaseDiscoveredServiceSpec {
+  fqdn?: string[]
+  harnessEnvironmentIdentity?: DatabaseEnvironmentIdentity
+  harnessServiceIdentity?: DatabaseServiceIdentity
+  ip?: string[]
+  kubernetes?: DatabaseDiscoveredServiceKubernetesSpec
+  port?: string[]
+}
+
+export interface DatabaseEnvironmentIdentity {
+  accountIdentifier?: string
+  identifier?: string
+  infraIdentifier?: string
+  organizationIdentifier?: string
+  projectIdentifier?: string
+}
+
 export interface DatabaseInstallationCollection {
   agentDetails?: DatabaseAgentDetails
-  agentID?: string
+  agentID: string
   createdAt?: string
   createdBy?: string
   delegateID?: string
   delegateTaskID?: string
   delegateTaskStatus?: DatabaseDelegateTaskStatus
-  id?: string
+  id: string
   isCronTriggered?: boolean
   isLogStreamOpen?: boolean
   logStreamCreatedAt?: string
@@ -496,29 +644,29 @@ export interface DatabaseInstallationCollection {
 export type DatabaseInstallationType = 'CONNECTOR'
 
 export interface DatabaseJobCollection {
-  agentID?: string
+  agentID: string
   annotations?: {
     [key: string]: string
   }
-  apiVersion?: string
+  apiVersion: string
   createdAt?: string
   createdBy?: string
   creationTimestamp?: string
   deletionTimestamp?: string
-  id?: string
-  kind?: string
+  id: string
+  kind: string
   labels?: {
     [key: string]: string
   }
-  name?: string
-  namespace?: string
+  name: string
+  namespace: string
   ownerReference?: V1OwnerReference[]
   removed?: boolean
   removedAt?: string
   resourceVersion?: string
-  spec?: V1JobSpec
+  spec: V1JobSpec
   status?: V1JobStatus
-  uid?: string
+  uid: string
   updatedAt?: string
   updatedBy?: string
 }
@@ -593,48 +741,48 @@ export interface DatabaseKubernetesAgentConfiguration {
 }
 
 export interface DatabaseLogConfiguration {
-  [key: string]: any
+  updatedAt?: string
 }
 
 export interface DatabaseNamespaceCollection {
-  agentID?: string
+  agentID: string
   annotations?: {
     [key: string]: string
   }
-  apiVersion?: string
+  apiVersion: string
   createdAt?: string
   createdBy?: string
   creationTimestamp?: string
   deletionTimestamp?: string
-  id?: string
-  kind?: string
+  id: string
+  kind: string
   labels?: {
     [key: string]: string
   }
-  name?: string
+  name: string
   ownerReference?: V1OwnerReference[]
   removed?: boolean
   removedAt?: string
-  resourceVersion?: string
-  spec?: V1NamespaceSpec
+  resourceVersion: string
+  spec: V1NamespaceSpec
   status?: V1NamespaceStatus
-  uid?: string
+  uid: string
   updatedAt?: string
   updatedBy?: string
 }
 
 export interface DatabaseNetworkMapCollection {
-  agentID?: string
+  agentID: string
   connections?: DatabaseConnection[]
   createdAt?: string
   createdBy?: string
   description?: string
-  id?: string
-  identity?: string
-  name?: string
+  id: string
+  identity: string
+  name: string
   removed?: boolean
   removedAt?: string
-  resources?: DatabaseNetworkMapEntity[]
+  resources: DatabaseNetworkMapEntity[]
   rules?: DatabaseNetworkMapRules
   tags?: string[]
   updatedAt?: string
@@ -642,11 +790,17 @@ export interface DatabaseNetworkMapCollection {
 }
 
 export interface DatabaseNetworkMapEntity {
-  id?: string
-  kind?: string
-  name?: string
+  id: string
+  kind: DatabaseNetworkMapResourceKind
+  kubernetes?: DatabaseNetworkMapEntityKubernetesInfo
+  name: string
+}
+
+export interface DatabaseNetworkMapEntityKubernetesInfo {
   namespace?: string
 }
+
+export type DatabaseNetworkMapResourceKind = 'K8SCustomService' | 'discoveredservice'
 
 export interface DatabaseNetworkMapRuleAnnotation {
   key?: string
@@ -683,155 +837,84 @@ export interface DatabaseNetworkMapRules {
 }
 
 export interface DatabaseNodeCollection {
-  agentID?: string
+  agentID: string
   annotations?: {
     [key: string]: string
   }
-  apiVersion?: string
+  apiVersion: string
   createdAt?: string
   createdBy?: string
   creationTimestamp?: string
   deletionTimestamp?: string
-  id?: string
-  kind?: string
+  id: string
+  kind: string
   labels?: {
     [key: string]: string
   }
-  name?: string
+  name: string
   ownerReference?: V1OwnerReference[]
   removed?: boolean
   removedAt?: string
-  resourceVersion?: string
-  spec?: V1NodeSpec
+  resourceVersion: string
+  spec: V1NodeSpec
   status?: V1NodeStatus
-  uid?: string
-  updatedAt?: string
-  updatedBy?: string
-}
-
-export interface DatabasePersistentVolumeClaimCollection {
-  agentID?: string
-  annotations?: {
-    [key: string]: string
-  }
-  apiVersion?: string
-  createdAt?: string
-  createdBy?: string
-  creationTimestamp?: string
-  deletionTimestamp?: string
-  id?: string
-  kind?: string
-  labels?: {
-    [key: string]: string
-  }
-  name?: string
-  namespace?: string
-  ownerReference?: V1OwnerReference[]
-  removed?: boolean
-  removedAt?: string
-  resourceVersion?: string
-  spec?: V1PersistentVolumeClaimSpec
-  status?: V1PersistentVolumeClaimStatus
-  uid?: string
-  updatedAt?: string
-  updatedBy?: string
-}
-
-export interface DatabasePersistentVolumeCollection {
-  agentID?: string
-  annotations?: {
-    [key: string]: string
-  }
-  apiVersion?: string
-  createdAt?: string
-  createdBy?: string
-  creationTimestamp?: string
-  deletionTimestamp?: string
-  id?: string
-  kind?: string
-  labels?: {
-    [key: string]: string
-  }
-  name?: string
-  ownerReference?: V1OwnerReference[]
-  removed?: boolean
-  removedAt?: string
-  resourceVersion?: string
-  spec?: V1PersistentVolumeSpec
-  status?: V1PersistentVolumeStatus
-  uid?: string
+  uid: string
   updatedAt?: string
   updatedBy?: string
 }
 
 export interface DatabasePodCollection {
-  agentID?: string
+  agentID: string
   annotations?: {
     [key: string]: string
   }
-  apiVersion?: string
+  apiVersion: string
   createdAt?: string
   createdBy?: string
   creationTimestamp?: string
   deletionTimestamp?: string
-  id?: string
-  kind?: string
+  id: string
+  kind: string
   labels?: {
     [key: string]: string
   }
-  name?: string
-  namespace?: string
+  name: string
+  namespace: string
   ownerReference?: V1OwnerReference[]
   removed?: boolean
   removedAt?: string
-  resourceVersion?: string
-  spec?: V1PodSpec
+  resourceVersion: string
+  spec: V1PodSpec
   status?: V1PodStatus
-  uid?: string
-  updatedAt?: string
-  updatedBy?: string
-}
-
-export interface DatabaseProcessCollection {
-  agentID?: string
-  cmd?: string
-  containerID?: string
-  createdAt?: string
-  createdBy?: string
-  id?: string
-  nodeName?: string
-  pid?: number
-  podUID?: string
-  removed?: boolean
-  removedAt?: string
+  uid: string
   updatedAt?: string
   updatedBy?: string
 }
 
 export interface DatabaseReplicaSetCollection {
-  agentID?: string
+  agentID: string
   annotations?: {
     [key: string]: string
   }
-  apiVersion?: string
+  apiVersion: string
   createdAt?: string
   createdBy?: string
   creationTimestamp?: string
   deletionTimestamp?: string
-  id?: string
-  kind?: string
+  id: string
+  kind: string
   labels?: {
     [key: string]: string
   }
-  name?: string
-  namespace?: string
+  name: string
+  namespace: string
   ownerReference?: V1OwnerReference[]
   removed?: boolean
   removedAt?: string
-  resourceVersion?: string
-  spec?: V1ReplicaSetSpec
+  resourceVersion: string
+  spec: V1ReplicaSetSpec
   status?: V1ReplicaSetStatus
-  uid?: string
+  uid: string
   updatedAt?: string
   updatedBy?: string
 }
@@ -842,91 +925,98 @@ export interface DatabaseReplicaV1 {
 }
 
 export interface DatabaseReplicationControllerCollection {
-  agentID?: string
+  agentID: string
   annotations?: {
     [key: string]: string
   }
-  apiVersion?: string
+  apiVersion: string
   createdAt?: string
   createdBy?: string
   creationTimestamp?: string
   deletionTimestamp?: string
-  id?: string
-  kind?: string
+  id: string
+  kind: string
   labels?: {
     [key: string]: string
   }
-  name?: string
-  namespace?: string
+  name: string
+  namespace: string
   ownerReference?: V1OwnerReference[]
   removed?: boolean
   removedAt?: string
-  resourceVersion?: string
-  spec?: V1ReplicationControllerSpec
+  resourceVersion: string
+  spec: V1ReplicationControllerSpec
   status?: V1ReplicationControllerStatus
-  uid?: string
+  uid: string
   updatedAt?: string
   updatedBy?: string
 }
 
 export interface DatabaseServiceCollection {
-  agentID?: string
+  agentID: string
   annotations?: {
     [key: string]: string
   }
-  apiVersion?: string
+  apiVersion: string
   createdAt?: string
   createdBy?: string
   creationTimestamp?: string
   deletionTimestamp?: string
-  id?: string
-  kind?: string
+  id: string
+  kind: string
   labels?: {
     [key: string]: string
   }
-  name?: string
-  namespace?: string
+  name: string
+  namespace: string
   ownerReference?: V1OwnerReference[]
   removed?: boolean
   removedAt?: string
-  resourceVersion?: string
-  spec?: V1ServiceSpec
+  resourceVersion: string
+  spec: V1ServiceSpec
   status?: V1ServiceStatus
-  uid?: string
+  uid: string
   updatedAt?: string
   updatedBy?: string
 }
 
+export interface DatabaseServiceIdentity {
+  accountIdentifier?: string
+  identifier?: string
+  organizationIdentifier?: string
+  projectIdentifier?: string
+}
+
 export interface DatabaseStatefulSetCollection {
-  agentID?: string
+  agentID: string
   annotations?: {
     [key: string]: string
   }
-  apiVersion?: string
+  apiVersion: string
   createdAt?: string
   createdBy?: string
   creationTimestamp?: string
   deletionTimestamp?: string
-  id?: string
-  kind?: string
+  id: string
+  kind: string
   labels?: {
     [key: string]: string
   }
-  name?: string
-  namespace?: string
+  name: string
+  namespace: string
   ownerReference?: V1OwnerReference[]
   removed?: boolean
   removedAt?: string
-  resourceVersion?: string
-  spec?: V1StatefulSetSpec
+  resourceVersion: string
+  spec: V1StatefulSetSpec
   status?: V1StatefulSetStatus
-  uid?: string
+  uid: string
   updatedAt?: string
   updatedBy?: string
 }
 
 export interface GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiEmpty {
-  [key: string]: any
+  corelationID?: string
 }
 
 export interface GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError {
@@ -1047,29 +1137,6 @@ export interface V1AzureDiskVolumeSource {
   readOnly?: boolean
 }
 
-export interface V1AzureFilePersistentVolumeSource {
-  /**
-   * readOnly defaults to false (read/write). ReadOnly here will force
-   * the ReadOnly setting in VolumeMounts.
-   * +optional
-   */
-  readOnly?: boolean
-  /**
-   * secretName is the name of secret that contains Azure Storage Account Name and Key
-   */
-  secretName?: string
-  /**
-   * secretNamespace is the namespace of the secret that contains Azure Storage Account Name and Key
-   * default is the same as the Pod
-   * +optional
-   */
-  secretNamespace?: string
-  /**
-   * shareName is the azure Share Name
-   */
-  shareName?: string
-}
-
 export interface V1AzureFileVolumeSource {
   /**
    * readOnly defaults to false (read/write). ReadOnly here will force
@@ -1085,86 +1152,6 @@ export interface V1AzureFileVolumeSource {
    * shareName is the azure share Name
    */
   shareName?: string
-}
-
-export interface V1CSIPersistentVolumeSource {
-  /**
-   * controllerExpandSecretRef is a reference to the secret object containing
-   * sensitive information to pass to the CSI driver to complete the CSI
-   * ControllerExpandVolume call.
-   * This is an beta field and requires enabling ExpandCSIVolumes feature gate.
-   * This field is optional, and may be empty if no secret is required. If the
-   * secret object contains more than one secret, all secrets are passed.
-   * +optional
-   */
-  controllerExpandSecretRef?: V1SecretReference
-  /**
-   * controllerPublishSecretRef is a reference to the secret object containing
-   * sensitive information to pass to the CSI driver to complete the CSI
-   * ControllerPublishVolume and ControllerUnpublishVolume calls.
-   * This field is optional, and may be empty if no secret is required. If the
-   * secret object contains more than one secret, all secrets are passed.
-   * +optional
-   */
-  controllerPublishSecretRef?: V1SecretReference
-  /**
-   * driver is the name of the driver to use for this volume.
-   * Required.
-   */
-  driver?: string
-  /**
-   * fsType to mount. Must be a filesystem type supported by the host operating system.
-   * Ex. "ext4", "xfs", "ntfs".
-   * +optional
-   */
-  fsType?: string
-  /**
-   * nodeExpandSecretRef is a reference to the secret object containing
-   * sensitive information to pass to the CSI driver to complete the CSI
-   * NodeExpandVolume call.
-   * This is an alpha field and requires enabling CSINodeExpandSecret feature gate.
-   * This field is optional, may be omitted if no secret is required. If the
-   * secret object contains more than one secret, all secrets are passed.
-   * +optional
-   */
-  nodeExpandSecretRef?: V1SecretReference
-  /**
-   * nodePublishSecretRef is a reference to the secret object containing
-   * sensitive information to pass to the CSI driver to complete the CSI
-   * NodePublishVolume and NodeUnpublishVolume calls.
-   * This field is optional, and may be empty if no secret is required. If the
-   * secret object contains more than one secret, all secrets are passed.
-   * +optional
-   */
-  nodePublishSecretRef?: V1SecretReference
-  /**
-   * nodeStageSecretRef is a reference to the secret object containing sensitive
-   * information to pass to the CSI driver to complete the CSI NodeStageVolume
-   * and NodeStageVolume and NodeUnstageVolume calls.
-   * This field is optional, and may be empty if no secret is required. If the
-   * secret object contains more than one secret, all secrets are passed.
-   * +optional
-   */
-  nodeStageSecretRef?: V1SecretReference
-  /**
-   * readOnly value to pass to ControllerPublishVolumeRequest.
-   * Defaults to false (read/write).
-   * +optional
-   */
-  readOnly?: boolean
-  /**
-   * volumeAttributes of the volume to publish.
-   * +optional
-   */
-  volumeAttributes?: {
-    [key: string]: string
-  }
-  /**
-   * volumeHandle is the unique volume name returned by the CSI volume
-   * plugin’s CreateVolume to refer to the volume on all subsequent calls.
-   * Required.
-   */
-  volumeHandle?: string
 }
 
 export interface V1CSIVolumeSource {
@@ -1218,44 +1205,6 @@ export interface V1Capabilities {
   drop?: string[]
 }
 
-export interface V1CephFSPersistentVolumeSource {
-  /**
-   * monitors is Required: Monitors is a collection of Ceph monitors
-   * More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
-   */
-  monitors?: string[]
-  /**
-   * path is Optional: Used as the mounted root, rather than the full Ceph tree, default is /
-   * +optional
-   */
-  path?: string
-  /**
-   * readOnly is Optional: Defaults to false (read/write). ReadOnly here will force
-   * the ReadOnly setting in VolumeMounts.
-   * More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
-   * +optional
-   */
-  readOnly?: boolean
-  /**
-   * secretFile is Optional: SecretFile is the path to key ring for User, default is /etc/ceph/user.secret
-   * More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
-   * +optional
-   */
-  secretFile?: string
-  /**
-   * secretRef is Optional: SecretRef is reference to the authentication secret for User, default is empty.
-   * More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
-   * +optional
-   */
-  secretRef?: V1SecretReference
-  /**
-   * user is Optional: User is the rados user name, default is admin
-   * More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
-   * +optional
-   */
-  user?: string
-}
-
 export interface V1CephFSVolumeSource {
   /**
    * monitors is Required: Monitors is a collection of Ceph monitors
@@ -1292,35 +1241,6 @@ export interface V1CephFSVolumeSource {
    * +optional
    */
   user?: string
-}
-
-export interface V1CinderPersistentVolumeSource {
-  /**
-   * fsType Filesystem type to mount.
-   * Must be a filesystem type supported by the host operating system.
-   * Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
-   * More info: https://examples.k8s.io/mysql-cinder-pd/README.md
-   * +optional
-   */
-  fsType?: string
-  /**
-   * readOnly is Optional: Defaults to false (read/write). ReadOnly here will force
-   * the ReadOnly setting in VolumeMounts.
-   * More info: https://examples.k8s.io/mysql-cinder-pd/README.md
-   * +optional
-   */
-  readOnly?: boolean
-  /**
-   * secretRef is Optional: points to a secret object containing parameters used to connect
-   * to OpenStack.
-   * +optional
-   */
-  secretRef?: V1SecretReference
-  /**
-   * volumeID used to identify the volume in cinder.
-   * More info: https://examples.k8s.io/mysql-cinder-pd/README.md
-   */
-  volumeID?: string
 }
 
 export interface V1CinderVolumeSource {
@@ -1420,7 +1340,7 @@ export interface V1Condition {
    * The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
    * +required
    * +kubebuilder:validation:Required
-   * +kubebuilder:validation:Pattern=`^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*
+   * +kubebuilder:validation:Pattern=`^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$`
    * +kubebuilder:validation:MaxLength=316
    */
   type?: string
@@ -2715,42 +2635,6 @@ export interface V1FieldsV1 {
 
 export type V1FinalizerName = 'kubernetes'
 
-export interface V1FlexPersistentVolumeSource {
-  /**
-   * driver is the name of the driver to use for this volume.
-   */
-  driver?: string
-  /**
-   * fsType is the Filesystem type to mount.
-   * Must be a filesystem type supported by the host operating system.
-   * Ex. "ext4", "xfs", "ntfs". The default filesystem depends on FlexVolume script.
-   * +optional
-   */
-  fsType?: string
-  /**
-   * options is Optional: this field holds extra command options if any.
-   * +optional
-   */
-  options?: {
-    [key: string]: string
-  }
-  /**
-   * readOnly is Optional: defaults to false (read/write). ReadOnly here will force
-   * the ReadOnly setting in VolumeMounts.
-   * +optional
-   */
-  readOnly?: boolean
-  /**
-   * secretRef is Optional: SecretRef is reference to the secret object containing
-   * sensitive information to pass to the plugin scripts. This may be
-   * empty if no secret object is specified. If the secret object
-   * contains more than one secret, all secrets are passed to the plugin
-   * scripts.
-   * +optional
-   */
-  secretRef?: V1SecretReference
-}
-
 export interface V1FlexVolumeSource {
   /**
    * driver is the name of the driver to use for this volume.
@@ -2870,33 +2754,6 @@ export interface V1GitRepoVolumeSource {
   revision?: string
 }
 
-export interface V1GlusterfsPersistentVolumeSource {
-  /**
-   * endpoints is the endpoint name that details Glusterfs topology.
-   * More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
-   */
-  endpoints?: string
-  /**
-   * endpointsNamespace is the namespace that contains Glusterfs endpoint.
-   * If this field is empty, the EndpointNamespace defaults to the same namespace as the bound PVC.
-   * More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
-   * +optional
-   */
-  endpointsNamespace?: string
-  /**
-   * path is the Glusterfs volume path.
-   * More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
-   */
-  path?: string
-  /**
-   * readOnly here will force the Glusterfs volume to be mounted with read-only permissions.
-   * Defaults to false.
-   * More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
-   * +optional
-   */
-  readOnly?: boolean
-}
-
 export interface V1GlusterfsVolumeSource {
   /**
    * endpoints is the endpoint name that details Glusterfs topology.
@@ -2999,71 +2856,6 @@ export interface V1HostPathVolumeSource {
 export type V1IPFamily = 'IPv4' | 'IPv6'
 
 export type V1IPFamilyPolicy = 'SingleStack' | 'PreferDualStack' | 'RequireDualStack'
-
-export interface V1ISCSIPersistentVolumeSource {
-  /**
-   * chapAuthDiscovery defines whether support iSCSI Discovery CHAP authentication
-   * +optional
-   */
-  chapAuthDiscovery?: boolean
-  /**
-   * chapAuthSession defines whether support iSCSI Session CHAP authentication
-   * +optional
-   */
-  chapAuthSession?: boolean
-  /**
-   * fsType is the filesystem type of the volume that you want to mount.
-   * Tip: Ensure that the filesystem type is supported by the host operating system.
-   * Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
-   * More info: https://kubernetes.io/docs/concepts/storage/volumes#iscsi
-   * TODO: how do we prevent errors in the filesystem from compromising the machine
-   * +optional
-   */
-  fsType?: string
-  /**
-   * initiatorName is the custom iSCSI Initiator Name.
-   * If initiatorName is specified with iscsiInterface simultaneously, new iSCSI interface
-   * <target portal>:<volume name> will be created for the connection.
-   * +optional
-   */
-  initiatorName?: string
-  /**
-   * iqn is Target iSCSI Qualified Name.
-   */
-  iqn?: string
-  /**
-   * iscsiInterface is the interface Name that uses an iSCSI transport.
-   * Defaults to 'default' (tcp).
-   * +optional
-   */
-  iscsiInterface?: string
-  /**
-   * lun is iSCSI Target Lun number.
-   */
-  lun?: number
-  /**
-   * portals is the iSCSI Target Portal List. The Portal is either an IP or ip_addr:port if the port
-   * is other than default (typically TCP ports 860 and 3260).
-   * +optional
-   */
-  portals?: string[]
-  /**
-   * readOnly here will force the ReadOnly setting in VolumeMounts.
-   * Defaults to false.
-   * +optional
-   */
-  readOnly?: boolean
-  /**
-   * secretRef is the CHAP Secret for iSCSI target and initiator authentication
-   * +optional
-   */
-  secretRef?: V1SecretReference
-  /**
-   * targetPortal is iSCSI Target Portal. The Portal is either an IP or ip_addr:port if the port
-   * is other than default (typically TCP ports 860 and 3260).
-   */
-  targetPortal?: string
-}
 
 export interface V1ISCSIVolumeSource {
   /**
@@ -3539,22 +3331,6 @@ export interface V1LocalObjectReference {
    * +optional
    */
   name?: string
-}
-
-export interface V1LocalVolumeSource {
-  /**
-   * fsType is the filesystem type to mount.
-   * It applies only when the Path is a block device.
-   * Must be a filesystem type supported by the host operating system.
-   * Ex. "ext4", "xfs", "ntfs". The default value is to auto-select a filesystem if unspecified.
-   * +optional
-   */
-  fsType?: string
-  /**
-   * path of the full path to the volume on the node.
-   * It can be either a directory or block device (disk, partition, ...).
-   */
-  path?: string
 }
 
 export interface V1ManagedFieldsEntry {
@@ -4555,213 +4331,6 @@ export interface V1PersistentVolumeClaimVolumeSource {
 
 export type V1PersistentVolumeMode = 'Block' | 'Filesystem'
 
-export type V1PersistentVolumePhase = 'Pending' | 'Available' | 'Bound' | 'Released' | 'Failed'
-
-export type V1PersistentVolumeReclaimPolicy = 'Recycle' | 'Delete' | 'Retain'
-
-export interface V1PersistentVolumeSpec {
-  /**
-   * accessModes contains all ways the volume can be mounted.
-   * More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes
-   * +optional
-   */
-  accessModes?: V1PersistentVolumeAccessMode[]
-  /**
-   * awsElasticBlockStore represents an AWS Disk resource that is attached to a
-   * kubelet's host machine and then exposed to the pod.
-   * More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
-   * +optional
-   */
-  awsElasticBlockStore?: V1AWSElasticBlockStoreVolumeSource
-  /**
-   * azureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.
-   * +optional
-   */
-  azureDisk?: V1AzureDiskVolumeSource
-  /**
-   * azureFile represents an Azure File Service mount on the host and bind mount to the pod.
-   * +optional
-   */
-  azureFile?: V1AzureFilePersistentVolumeSource
-  /**
-   * capacity is the description of the persistent volume's resources and capacity.
-   * More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#capacity
-   * +optional
-   */
-  capacity?: V1ResourceList
-  /**
-   * cephFS represents a Ceph FS mount on the host that shares a pod's lifetime
-   * +optional
-   */
-  cephfs?: V1CephFSPersistentVolumeSource
-  /**
-   * cinder represents a cinder volume attached and mounted on kubelets host machine.
-   * More info: https://examples.k8s.io/mysql-cinder-pd/README.md
-   * +optional
-   */
-  cinder?: V1CinderPersistentVolumeSource
-  /**
-   * claimRef is part of a bi-directional binding between PersistentVolume and PersistentVolumeClaim.
-   * Expected to be non-nil when bound.
-   * claim.VolumeName is the authoritative bind between PV and PVC.
-   * More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#binding
-   * +optional
-   * +structType=granular
-   */
-  claimRef?: V1ObjectReference
-  /**
-   * csi represents storage that is handled by an external CSI driver (Beta feature).
-   * +optional
-   */
-  csi?: V1CSIPersistentVolumeSource
-  /**
-   * fc represents a Fibre Channel resource that is attached to a kubelet's host machine and then exposed to the pod.
-   * +optional
-   */
-  fc?: V1FCVolumeSource
-  /**
-   * flexVolume represents a generic volume resource that is
-   * provisioned/attached using an exec based plugin.
-   * +optional
-   */
-  flexVolume?: V1FlexPersistentVolumeSource
-  /**
-   * flocker represents a Flocker volume attached to a kubelet's host machine and exposed to the pod for its usage. This depends on the Flocker control service being running
-   * +optional
-   */
-  flocker?: V1FlockerVolumeSource
-  /**
-   * gcePersistentDisk represents a GCE Disk resource that is attached to a
-   * kubelet's host machine and then exposed to the pod. Provisioned by an admin.
-   * More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
-   * +optional
-   */
-  gcePersistentDisk?: V1GCEPersistentDiskVolumeSource
-  /**
-   * glusterfs represents a Glusterfs volume that is attached to a host and
-   * exposed to the pod. Provisioned by an admin.
-   * More info: https://examples.k8s.io/volumes/glusterfs/README.md
-   * +optional
-   */
-  glusterfs?: V1GlusterfsPersistentVolumeSource
-  /**
-   * hostPath represents a directory on the host.
-   * Provisioned by a developer or tester.
-   * This is useful for single-node development and testing only!
-   * On-host storage is not supported in any way and WILL NOT WORK in a multi-node cluster.
-   * More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath
-   * +optional
-   */
-  hostPath?: V1HostPathVolumeSource
-  /**
-   * iscsi represents an ISCSI Disk resource that is attached to a
-   * kubelet's host machine and then exposed to the pod. Provisioned by an admin.
-   * +optional
-   */
-  iscsi?: V1ISCSIPersistentVolumeSource
-  /**
-   * local represents directly-attached storage with node affinity
-   * +optional
-   */
-  local?: V1LocalVolumeSource
-  /**
-   * mountOptions is the list of mount options, e.g. ["ro", "soft"]. Not validated - mount will
-   * simply fail if one is invalid.
-   * More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#mount-options
-   * +optional
-   */
-  mountOptions?: string[]
-  /**
-   * nfs represents an NFS mount on the host. Provisioned by an admin.
-   * More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
-   * +optional
-   */
-  nfs?: V1NFSVolumeSource
-  /**
-   * nodeAffinity defines constraints that limit what nodes this volume can be accessed from.
-   * This field influences the scheduling of pods that use this volume.
-   * +optional
-   */
-  nodeAffinity?: V1VolumeNodeAffinity
-  /**
-   * persistentVolumeReclaimPolicy defines what happens to a persistent volume when released from its claim.
-   * Valid options are Retain (default for manually created PersistentVolumes), Delete (default
-   * for dynamically provisioned PersistentVolumes), and Recycle (deprecated).
-   * Recycle must be supported by the volume plugin underlying this PersistentVolume.
-   * More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#reclaiming
-   * +optional
-   */
-  persistentVolumeReclaimPolicy?: V1PersistentVolumeReclaimPolicy
-  /**
-   * photonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine
-   */
-  photonPersistentDisk?: V1PhotonPersistentDiskVolumeSource
-  /**
-   * portworxVolume represents a portworx volume attached and mounted on kubelets host machine
-   * +optional
-   */
-  portworxVolume?: V1PortworxVolumeSource
-  /**
-   * quobyte represents a Quobyte mount on the host that shares a pod's lifetime
-   * +optional
-   */
-  quobyte?: V1QuobyteVolumeSource
-  /**
-   * rbd represents a Rados Block Device mount on the host that shares a pod's lifetime.
-   * More info: https://examples.k8s.io/volumes/rbd/README.md
-   * +optional
-   */
-  rbd?: V1RBDPersistentVolumeSource
-  /**
-   * scaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.
-   * +optional
-   */
-  scaleIO?: V1ScaleIOPersistentVolumeSource
-  /**
-   * storageClassName is the name of StorageClass to which this persistent volume belongs. Empty value
-   * means that this volume does not belong to any StorageClass.
-   * +optional
-   */
-  storageClassName?: string
-  /**
-   * storageOS represents a StorageOS volume that is attached to the kubelet's host machine and mounted into the pod
-   * More info: https://examples.k8s.io/volumes/storageos/README.md
-   * +optional
-   */
-  storageos?: V1StorageOSPersistentVolumeSource
-  /**
-   * volumeMode defines if a volume is intended to be used with a formatted filesystem
-   * or to remain in raw block state. Value of Filesystem is implied when not included in spec.
-   * +optional
-   */
-  volumeMode?: V1PersistentVolumeMode
-  /**
-   * vsphereVolume represents a vSphere volume attached and mounted on kubelets host machine
-   * +optional
-   */
-  vsphereVolume?: V1VsphereVirtualDiskVolumeSource
-}
-
-export interface V1PersistentVolumeStatus {
-  /**
-   * message is a human-readable message indicating details about why the volume is in this state.
-   * +optional
-   */
-  message?: string
-  /**
-   * phase indicates if a volume is available, bound to a claim, or released by a claim.
-   * More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#phase
-   * +optional
-   */
-  phase?: V1PersistentVolumePhase
-  /**
-   * reason is a brief CamelCase string that describes any failure and is meant
-   * for machine parsing and tidy display in the CLI.
-   * +optional
-   */
-  reason?: string
-}
-
 export interface V1PhotonPersistentDiskVolumeSource {
   /**
    * fsType is the filesystem type to mount.
@@ -5626,7 +5195,7 @@ export interface V1PortStatus {
    * The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
    * +optional
    * +kubebuilder:validation:Required
-   * +kubebuilder:validation:Pattern=`^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*
+   * +kubebuilder:validation:Pattern=`^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$`
    * +kubebuilder:validation:MaxLength=316
    */
   error?: string
@@ -5802,64 +5371,6 @@ export interface V1QuobyteVolumeSource {
    * volume is a string that references an already created Quobyte volume by name.
    */
   volume?: string
-}
-
-export interface V1RBDPersistentVolumeSource {
-  /**
-   * fsType is the filesystem type of the volume that you want to mount.
-   * Tip: Ensure that the filesystem type is supported by the host operating system.
-   * Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
-   * More info: https://kubernetes.io/docs/concepts/storage/volumes#rbd
-   * TODO: how do we prevent errors in the filesystem from compromising the machine
-   * +optional
-   */
-  fsType?: string
-  /**
-   * image is the rados image name.
-   * More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
-   */
-  image?: string
-  /**
-   * keyring is the path to key ring for RBDUser.
-   * Default is /etc/ceph/keyring.
-   * More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
-   * +optional
-   */
-  keyring?: string
-  /**
-   * monitors is a collection of Ceph monitors.
-   * More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
-   */
-  monitors?: string[]
-  /**
-   * pool is the rados pool name.
-   * Default is rbd.
-   * More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
-   * +optional
-   */
-  pool?: string
-  /**
-   * readOnly here will force the ReadOnly setting in VolumeMounts.
-   * Defaults to false.
-   * More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
-   * +optional
-   */
-  readOnly?: boolean
-  /**
-   * secretRef is name of the authentication secret for RBDUser. If provided
-   * overrides keyring.
-   * Default is nil.
-   * More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
-   * +optional
-   */
-  secretRef?: V1SecretReference
-  /**
-   * user is the rados user name.
-   * Default is admin.
-   * More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
-   * +optional
-   */
-  user?: string
 }
 
 export interface V1RBDVolumeSource {
@@ -6275,62 +5786,6 @@ export interface V1SELinuxOptions {
   user?: string
 }
 
-export interface V1ScaleIOPersistentVolumeSource {
-  /**
-   * fsType is the filesystem type to mount.
-   * Must be a filesystem type supported by the host operating system.
-   * Ex. "ext4", "xfs", "ntfs".
-   * Default is "xfs"
-   * +optional
-   */
-  fsType?: string
-  /**
-   * gateway is the host address of the ScaleIO API Gateway.
-   */
-  gateway?: string
-  /**
-   * protectionDomain is the name of the ScaleIO Protection Domain for the configured storage.
-   * +optional
-   */
-  protectionDomain?: string
-  /**
-   * readOnly defaults to false (read/write). ReadOnly here will force
-   * the ReadOnly setting in VolumeMounts.
-   * +optional
-   */
-  readOnly?: boolean
-  /**
-   * secretRef references to the secret for ScaleIO user and other
-   * sensitive information. If this is not provided, Login operation will fail.
-   */
-  secretRef?: V1SecretReference
-  /**
-   * sslEnabled is the flag to enable/disable SSL communication with Gateway, default false
-   * +optional
-   */
-  sslEnabled?: boolean
-  /**
-   * storageMode indicates whether the storage for a volume should be ThickProvisioned or ThinProvisioned.
-   * Default is ThinProvisioned.
-   * +optional
-   */
-  storageMode?: string
-  /**
-   * storagePool is the ScaleIO Storage Pool associated with the protection domain.
-   * +optional
-   */
-  storagePool?: string
-  /**
-   * system is the name of the storage system as configured in ScaleIO.
-   */
-  system?: string
-  /**
-   * volumeName is the name of a volume already created in the ScaleIO system
-   * that is associated with this volume source.
-   */
-  volumeName?: string
-}
-
 export interface V1ScaleIOVolumeSource {
   /**
    * fsType is the filesystem type to mount.
@@ -6468,19 +5923,6 @@ export interface V1SecretProjection {
    * +optional
    */
   optional?: boolean
-}
-
-export interface V1SecretReference {
-  /**
-   * name is unique within a namespace to reference a secret resource.
-   * +optional
-   */
-  name?: string
-  /**
-   * namespace defines the space within which the secret name must be unique.
-   * +optional
-   */
-  namespace?: string
 }
 
 export interface V1SecretVolumeSource {
@@ -7196,43 +6638,6 @@ export type V1StatefulSetUpdateStrategyType = 'RollingUpdate' | 'OnDelete'
 
 export type V1StorageMedium = '' | 'Memory' | 'HugePages' | 'HugePages-'
 
-export interface V1StorageOSPersistentVolumeSource {
-  /**
-   * fsType is the filesystem type to mount.
-   * Must be a filesystem type supported by the host operating system.
-   * Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
-   * +optional
-   */
-  fsType?: string
-  /**
-   * readOnly defaults to false (read/write). ReadOnly here will force
-   * the ReadOnly setting in VolumeMounts.
-   * +optional
-   */
-  readOnly?: boolean
-  /**
-   * secretRef specifies the secret to use for obtaining the StorageOS API
-   * credentials.  If not specified, default values will be attempted.
-   * +optional
-   */
-  secretRef?: V1ObjectReference
-  /**
-   * volumeName is the human-readable name of the StorageOS volume.  Volume
-   * names are only unique within a namespace.
-   */
-  volumeName?: string
-  /**
-   * volumeNamespace specifies the scope of the volume within StorageOS.  If no
-   * namespace is specified then the Pod's namespace will be used.  This allows the
-   * Kubernetes name scoping to be mirrored within StorageOS for tighter integration.
-   * Set VolumeName to any name to override the default behaviour.
-   * Set to "default" if you are not using namespaces within StorageOS.
-   * Namespaces that do not pre-exist within StorageOS will be created.
-   * +optional
-   */
-  volumeNamespace?: string
-}
-
 export interface V1StorageOSVolumeSource {
   /**
    * fsType is the filesystem type to mount.
@@ -7783,13 +7188,6 @@ export interface V1VolumeMount {
   subPathExpr?: string
 }
 
-export interface V1VolumeNodeAffinity {
-  /**
-   * required specifies hard node constraints that must be met.
-   */
-  required?: V1NodeSelector
-}
-
 export interface V1VolumeProjection {
   /**
    * configMap information about the configMap data to project
@@ -7890,6 +7288,10 @@ export type ApiCreateNetworkMapRequestRequestBody = ApiCreateNetworkMapRequest
 
 export interface ListAgentQueryParams {
   /**
+   * corelation id is used to debug micro svc communication
+   */
+  corelationID?: string
+  /**
    * account id is the account where you want to access the resource
    */
   accountIdentifier?: string
@@ -7988,6 +7390,10 @@ export const listAgentPromise = (
 
 export interface CreateAgentQueryParams {
   /**
+   * corelation id is used to debug micro svc communication
+   */
+  corelationID?: string
+  /**
    * account id is the account where you want to create the resource
    */
   accountIdentifier?: string
@@ -8082,6 +7488,10 @@ export const createAgentPromise = (
 
 export interface DeleteAgentQueryParams {
   /**
+   * corelation id is used to debug micro svc communication
+   */
+  corelationID?: string
+  /**
    * account id is the account where you want to access the resource
    */
   accountIdentifier?: string
@@ -8175,6 +7585,10 @@ export const deleteAgentPromise = (
   >('DELETE', getConfig('servicediscovery'), `/api/v1/agents`, props, signal)
 
 export interface GetAgentQueryParams {
+  /**
+   * corelation id is used to debug micro svc communication
+   */
+  corelationID?: string
   /**
    * account id is the account where you want to access the resource
    */
@@ -8283,6 +7697,10 @@ export const getAgentPromise = (
   >(getConfig('servicediscovery'), `/api/v1/agents/${agentIdentity}`, props, signal)
 
 export interface UpdateAgentQueryParams {
+  /**
+   * corelation id is used to debug micro svc communication
+   */
+  corelationID?: string
   /**
    * account id that want to access the resource
    */
@@ -8397,7 +7815,513 @@ export const updateAgentPromise = (
     UpdateAgentPathParams
   >('PUT', getConfig('servicediscovery'), `/api/v1/agents/${agentIdentity}`, props, signal)
 
+export interface ListDiscoveredServiceConnectionQueryParams {
+  /**
+   * corelation id is used to debug micro svc communication
+   */
+  corelationID?: string
+  /**
+   * account id that want to access the resource
+   */
+  accountIdentifier?: string
+  /**
+   * organization id that want to access the resource
+   */
+  organizationIdentifier?: string
+  /**
+   * project id that want to access the resource
+   */
+  projectIdentifier?: string
+}
+
+export interface ListDiscoveredServiceConnectionPathParams {
+  /**
+   * agent identity
+   */
+  agentIdentity: string
+}
+
+export type ListDiscoveredServiceConnectionProps = Omit<
+  GetProps<
+    ApiListDiscoveredServiceConnection,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    ListDiscoveredServiceConnectionQueryParams,
+    ListDiscoveredServiceConnectionPathParams
+  >,
+  'path'
+> &
+  ListDiscoveredServiceConnectionPathParams
+
+/**
+ * List DiscoveredService Connection
+ *
+ * List connections in the context of DiscoveredService
+ */
+export const ListDiscoveredServiceConnection = ({ agentIdentity, ...props }: ListDiscoveredServiceConnectionProps) => (
+  <Get<
+    ApiListDiscoveredServiceConnection,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    ListDiscoveredServiceConnectionQueryParams,
+    ListDiscoveredServiceConnectionPathParams
+  >
+    path={`/api/v1/agents/${agentIdentity}/discoveredserviceconnections`}
+    base={getConfig('servicediscovery')}
+    {...props}
+  />
+)
+
+export type UseListDiscoveredServiceConnectionProps = Omit<
+  UseGetProps<
+    ApiListDiscoveredServiceConnection,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    ListDiscoveredServiceConnectionQueryParams,
+    ListDiscoveredServiceConnectionPathParams
+  >,
+  'path'
+> &
+  ListDiscoveredServiceConnectionPathParams
+
+/**
+ * List DiscoveredService Connection
+ *
+ * List connections in the context of DiscoveredService
+ */
+export const useListDiscoveredServiceConnection = ({
+  agentIdentity,
+  ...props
+}: UseListDiscoveredServiceConnectionProps) =>
+  useGet<
+    ApiListDiscoveredServiceConnection,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    ListDiscoveredServiceConnectionQueryParams,
+    ListDiscoveredServiceConnectionPathParams
+  >(
+    (paramsInPath: ListDiscoveredServiceConnectionPathParams) =>
+      `/api/v1/agents/${paramsInPath.agentIdentity}/discoveredserviceconnections`,
+    { base: getConfig('servicediscovery'), pathParams: { agentIdentity }, ...props }
+  )
+
+/**
+ * List DiscoveredService Connection
+ *
+ * List connections in the context of DiscoveredService
+ */
+export const listDiscoveredServiceConnectionPromise = (
+  {
+    agentIdentity,
+    ...props
+  }: GetUsingFetchProps<
+    ApiListDiscoveredServiceConnection,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    ListDiscoveredServiceConnectionQueryParams,
+    ListDiscoveredServiceConnectionPathParams
+  > & {
+    /**
+     * agent identity
+     */
+    agentIdentity: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ApiListDiscoveredServiceConnection,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    ListDiscoveredServiceConnectionQueryParams,
+    ListDiscoveredServiceConnectionPathParams
+  >(getConfig('servicediscovery'), `/api/v1/agents/${agentIdentity}/discoveredserviceconnections`, props, signal)
+
+export interface ListDiscoveredServiceQueryParams {
+  /**
+   * corelation id is used to debug micro svc communication
+   */
+  corelationID?: string
+  /**
+   * account id that want to access the resource
+   */
+  accountIdentifier?: string
+  /**
+   * organization id that want to access the resource
+   */
+  organizationIdentifier?: string
+  /**
+   * project id that want to access the resource
+   */
+  projectIdentifier?: string
+  /**
+   * namespace of the discovered service
+   */
+  namespace?: string
+  /**
+   * page number
+   */
+  page: number
+  /**
+   * limit per page
+   */
+  limit: number
+  /**
+   * search based on name
+   */
+  search?: string
+  /**
+   * get all
+   */
+  all: boolean
+}
+
+export interface ListDiscoveredServicePathParams {
+  /**
+   * agent identity
+   */
+  agentIdentity: string
+}
+
+export type ListDiscoveredServiceProps = Omit<
+  GetProps<
+    ApiListDiscoveredService,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    ListDiscoveredServiceQueryParams,
+    ListDiscoveredServicePathParams
+  >,
+  'path'
+> &
+  ListDiscoveredServicePathParams
+
+/**
+ * Get list of discovered services
+ *
+ * Get list of discovered services
+ */
+export const ListDiscoveredService = ({ agentIdentity, ...props }: ListDiscoveredServiceProps) => (
+  <Get<
+    ApiListDiscoveredService,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    ListDiscoveredServiceQueryParams,
+    ListDiscoveredServicePathParams
+  >
+    path={`/api/v1/agents/${agentIdentity}/discoveredservices`}
+    base={getConfig('servicediscovery')}
+    {...props}
+  />
+)
+
+export type UseListDiscoveredServiceProps = Omit<
+  UseGetProps<
+    ApiListDiscoveredService,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    ListDiscoveredServiceQueryParams,
+    ListDiscoveredServicePathParams
+  >,
+  'path'
+> &
+  ListDiscoveredServicePathParams
+
+/**
+ * Get list of discovered services
+ *
+ * Get list of discovered services
+ */
+export const useListDiscoveredService = ({ agentIdentity, ...props }: UseListDiscoveredServiceProps) =>
+  useGet<
+    ApiListDiscoveredService,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    ListDiscoveredServiceQueryParams,
+    ListDiscoveredServicePathParams
+  >(
+    (paramsInPath: ListDiscoveredServicePathParams) =>
+      `/api/v1/agents/${paramsInPath.agentIdentity}/discoveredservices`,
+    { base: getConfig('servicediscovery'), pathParams: { agentIdentity }, ...props }
+  )
+
+/**
+ * Get list of discovered services
+ *
+ * Get list of discovered services
+ */
+export const listDiscoveredServicePromise = (
+  {
+    agentIdentity,
+    ...props
+  }: GetUsingFetchProps<
+    ApiListDiscoveredService,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    ListDiscoveredServiceQueryParams,
+    ListDiscoveredServicePathParams
+  > & {
+    /**
+     * agent identity
+     */
+    agentIdentity: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ApiListDiscoveredService,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    ListDiscoveredServiceQueryParams,
+    ListDiscoveredServicePathParams
+  >(getConfig('servicediscovery'), `/api/v1/agents/${agentIdentity}/discoveredservices`, props, signal)
+
+export interface GetDiscoveredServiceQueryParams {
+  /**
+   * corelation id is used to debug micro svc communication
+   */
+  corelationID?: string
+  /**
+   * account id that want to access the resource
+   */
+  accountIdentifier?: string
+  /**
+   * organization id that want to access the resource
+   */
+  organizationIdentifier?: string
+  /**
+   * project id that want to access the resource
+   */
+  projectIdentifier?: string
+}
+
+export interface GetDiscoveredServicePathParams {
+  /**
+   * agent identity
+   */
+  agentIdentity: string
+  /**
+   * discovered service id
+   */
+  dsvc_id: string
+}
+
+export type GetDiscoveredServiceProps = Omit<
+  GetProps<
+    ApiGetDiscoveredService,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    GetDiscoveredServiceQueryParams,
+    GetDiscoveredServicePathParams
+  >,
+  'path'
+> &
+  GetDiscoveredServicePathParams
+
+/**
+ * Get discovered service by id
+ *
+ * Get discovered service by id
+ */
+export const GetDiscoveredService = ({ agentIdentity, dsvc_id, ...props }: GetDiscoveredServiceProps) => (
+  <Get<
+    ApiGetDiscoveredService,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    GetDiscoveredServiceQueryParams,
+    GetDiscoveredServicePathParams
+  >
+    path={`/api/v1/agents/${agentIdentity}/discoveredservices/${dsvc_id}`}
+    base={getConfig('servicediscovery')}
+    {...props}
+  />
+)
+
+export type UseGetDiscoveredServiceProps = Omit<
+  UseGetProps<
+    ApiGetDiscoveredService,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    GetDiscoveredServiceQueryParams,
+    GetDiscoveredServicePathParams
+  >,
+  'path'
+> &
+  GetDiscoveredServicePathParams
+
+/**
+ * Get discovered service by id
+ *
+ * Get discovered service by id
+ */
+export const useGetDiscoveredService = ({ agentIdentity, dsvc_id, ...props }: UseGetDiscoveredServiceProps) =>
+  useGet<
+    ApiGetDiscoveredService,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    GetDiscoveredServiceQueryParams,
+    GetDiscoveredServicePathParams
+  >(
+    (paramsInPath: GetDiscoveredServicePathParams) =>
+      `/api/v1/agents/${paramsInPath.agentIdentity}/discoveredservices/${paramsInPath.dsvc_id}`,
+    { base: getConfig('servicediscovery'), pathParams: { agentIdentity, dsvc_id }, ...props }
+  )
+
+/**
+ * Get discovered service by id
+ *
+ * Get discovered service by id
+ */
+export const getDiscoveredServicePromise = (
+  {
+    agentIdentity,
+    dsvc_id,
+    ...props
+  }: GetUsingFetchProps<
+    ApiGetDiscoveredService,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    GetDiscoveredServiceQueryParams,
+    GetDiscoveredServicePathParams
+  > & {
+    /**
+     * agent identity
+     */
+    agentIdentity: string
+    /**
+     * discovered service id
+     */
+    dsvc_id: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ApiGetDiscoveredService,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    GetDiscoveredServiceQueryParams,
+    GetDiscoveredServicePathParams
+  >(getConfig('servicediscovery'), `/api/v1/agents/${agentIdentity}/discoveredservices/${dsvc_id}`, props, signal)
+
+export interface GetServiceForDiscoveredServiceQueryParams {
+  /**
+   * corelation id is used to debug micro svc communication
+   */
+  corelationID?: string
+  /**
+   * account id that want to access the resource
+   */
+  accountIdentifier?: string
+  /**
+   * organization id that want to access the resource
+   */
+  organizationIdentifier?: string
+  /**
+   * project id that want to access the resource
+   */
+  projectIdentifier?: string
+}
+
+export interface GetServiceForDiscoveredServicePathParams {
+  /**
+   * agent identity
+   */
+  agentIdentity: string
+  /**
+   * discovered service id
+   */
+  dsvc_id: string
+}
+
+export type GetServiceForDiscoveredServiceProps = Omit<
+  GetProps<
+    ApiGetServiceResponse,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    GetServiceForDiscoveredServiceQueryParams,
+    GetServiceForDiscoveredServicePathParams
+  >,
+  'path'
+> &
+  GetServiceForDiscoveredServicePathParams
+
+/**
+ * Get service linked to discovered service
+ *
+ * Get service linked to discovered service
+ */
+export const GetServiceForDiscoveredService = ({
+  agentIdentity,
+  dsvc_id,
+  ...props
+}: GetServiceForDiscoveredServiceProps) => (
+  <Get<
+    ApiGetServiceResponse,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    GetServiceForDiscoveredServiceQueryParams,
+    GetServiceForDiscoveredServicePathParams
+  >
+    path={`/api/v1/agents/${agentIdentity}/discoveredservices/${dsvc_id}/service`}
+    base={getConfig('servicediscovery')}
+    {...props}
+  />
+)
+
+export type UseGetServiceForDiscoveredServiceProps = Omit<
+  UseGetProps<
+    ApiGetServiceResponse,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    GetServiceForDiscoveredServiceQueryParams,
+    GetServiceForDiscoveredServicePathParams
+  >,
+  'path'
+> &
+  GetServiceForDiscoveredServicePathParams
+
+/**
+ * Get service linked to discovered service
+ *
+ * Get service linked to discovered service
+ */
+export const useGetServiceForDiscoveredService = ({
+  agentIdentity,
+  dsvc_id,
+  ...props
+}: UseGetServiceForDiscoveredServiceProps) =>
+  useGet<
+    ApiGetServiceResponse,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    GetServiceForDiscoveredServiceQueryParams,
+    GetServiceForDiscoveredServicePathParams
+  >(
+    (paramsInPath: GetServiceForDiscoveredServicePathParams) =>
+      `/api/v1/agents/${paramsInPath.agentIdentity}/discoveredservices/${paramsInPath.dsvc_id}/service`,
+    { base: getConfig('servicediscovery'), pathParams: { agentIdentity, dsvc_id }, ...props }
+  )
+
+/**
+ * Get service linked to discovered service
+ *
+ * Get service linked to discovered service
+ */
+export const getServiceForDiscoveredServicePromise = (
+  {
+    agentIdentity,
+    dsvc_id,
+    ...props
+  }: GetUsingFetchProps<
+    ApiGetServiceResponse,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    GetServiceForDiscoveredServiceQueryParams,
+    GetServiceForDiscoveredServicePathParams
+  > & {
+    /**
+     * agent identity
+     */
+    agentIdentity: string
+    /**
+     * discovered service id
+     */
+    dsvc_id: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ApiGetServiceResponse,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    GetServiceForDiscoveredServiceQueryParams,
+    GetServiceForDiscoveredServicePathParams
+  >(
+    getConfig('servicediscovery'),
+    `/api/v1/agents/${agentIdentity}/discoveredservices/${dsvc_id}/service`,
+    props,
+    signal
+  )
+
 export interface ListInstallationQueryParams {
+  /**
+   * corelation id is used to debug micro svc communication
+   */
+  corelationID?: string
   /**
    * account id is the account where you want to access the resource
    */
@@ -8519,6 +8443,10 @@ export const listInstallationPromise = (
 
 export interface CreateInstallationQueryParams {
   /**
+   * corelation id is used to debug micro svc communication
+   */
+  corelationID?: string
+  /**
    * account id is the account where you want to access the resource
    */
   accountIdentifier?: string
@@ -8632,487 +8560,11 @@ export const createInstallationPromise = (
     CreateInstallationPathParams
   >('POST', getConfig('servicediscovery'), `/api/v1/agents/${agentIdentity}/installations`, props, signal)
 
-export interface ListK8sCustomServiceConnectionQueryParams {
-  /**
-   * account id that want to access the resource
-   */
-  accountIdentifier?: string
-  /**
-   * organization id that want to access the resource
-   */
-  organizationIdentifier?: string
-  /**
-   * project id that want to access the resource
-   */
-  projectIdentifier?: string
-}
-
-export interface ListK8sCustomServiceConnectionPathParams {
-  /**
-   * agent identity
-   */
-  agentIdentity: string
-}
-
-export type ListK8sCustomServiceConnectionProps = Omit<
-  GetProps<
-    ApiListCustomServiceConnection,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    ListK8sCustomServiceConnectionQueryParams,
-    ListK8sCustomServiceConnectionPathParams
-  >,
-  'path'
-> &
-  ListK8sCustomServiceConnectionPathParams
-
-/**
- * List k8s CustomService Connection
- *
- * List connections in the context of k8s CustomService
- */
-export const ListK8sCustomServiceConnection = ({ agentIdentity, ...props }: ListK8sCustomServiceConnectionProps) => (
-  <Get<
-    ApiListCustomServiceConnection,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    ListK8sCustomServiceConnectionQueryParams,
-    ListK8sCustomServiceConnectionPathParams
-  >
-    path={`/api/v1/agents/${agentIdentity}/k8scustomserviceconnections`}
-    base={getConfig('servicediscovery')}
-    {...props}
-  />
-)
-
-export type UseListK8sCustomServiceConnectionProps = Omit<
-  UseGetProps<
-    ApiListCustomServiceConnection,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    ListK8sCustomServiceConnectionQueryParams,
-    ListK8sCustomServiceConnectionPathParams
-  >,
-  'path'
-> &
-  ListK8sCustomServiceConnectionPathParams
-
-/**
- * List k8s CustomService Connection
- *
- * List connections in the context of k8s CustomService
- */
-export const useListK8sCustomServiceConnection = ({
-  agentIdentity,
-  ...props
-}: UseListK8sCustomServiceConnectionProps) =>
-  useGet<
-    ApiListCustomServiceConnection,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    ListK8sCustomServiceConnectionQueryParams,
-    ListK8sCustomServiceConnectionPathParams
-  >(
-    (paramsInPath: ListK8sCustomServiceConnectionPathParams) =>
-      `/api/v1/agents/${paramsInPath.agentIdentity}/k8scustomserviceconnections`,
-    { base: getConfig('servicediscovery'), pathParams: { agentIdentity }, ...props }
-  )
-
-/**
- * List k8s CustomService Connection
- *
- * List connections in the context of k8s CustomService
- */
-export const listK8sCustomServiceConnectionPromise = (
-  {
-    agentIdentity,
-    ...props
-  }: GetUsingFetchProps<
-    ApiListCustomServiceConnection,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    ListK8sCustomServiceConnectionQueryParams,
-    ListK8sCustomServiceConnectionPathParams
-  > & {
-    /**
-     * agent identity
-     */
-    agentIdentity: string
-  },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<
-    ApiListCustomServiceConnection,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    ListK8sCustomServiceConnectionQueryParams,
-    ListK8sCustomServiceConnectionPathParams
-  >(getConfig('servicediscovery'), `/api/v1/agents/${agentIdentity}/k8scustomserviceconnections`, props, signal)
-
-export interface ListK8SCustomServiceQueryParams {
-  /**
-   * account id that want to access the resource
-   */
-  accountIdentifier?: string
-  /**
-   * organization id that want to access the resource
-   */
-  organizationIdentifier?: string
-  /**
-   * project id that want to access the resource
-   */
-  projectIdentifier?: string
-  /**
-   * namespace of the custom service
-   */
-  namespace?: string
-  /**
-   * page number
-   */
-  page: number
-  /**
-   * limit per page
-   */
-  limit: number
-  /**
-   * search based on name
-   */
-  search?: string
-  /**
-   * get all
-   */
-  all: boolean
-}
-
-export interface ListK8SCustomServicePathParams {
-  /**
-   * agent identity
-   */
-  agentIdentity: string
-}
-
-export type ListK8SCustomServiceProps = Omit<
-  GetProps<
-    ApiListK8sCustomService,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    ListK8SCustomServiceQueryParams,
-    ListK8SCustomServicePathParams
-  >,
-  'path'
-> &
-  ListK8SCustomServicePathParams
-
-/**
- * Get list of custom services
- *
- * Get list of custom services
- */
-export const ListK8SCustomService = ({ agentIdentity, ...props }: ListK8SCustomServiceProps) => (
-  <Get<
-    ApiListK8sCustomService,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    ListK8SCustomServiceQueryParams,
-    ListK8SCustomServicePathParams
-  >
-    path={`/api/v1/agents/${agentIdentity}/k8scustomservices`}
-    base={getConfig('servicediscovery')}
-    {...props}
-  />
-)
-
-export type UseListK8SCustomServiceProps = Omit<
-  UseGetProps<
-    ApiListK8sCustomService,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    ListK8SCustomServiceQueryParams,
-    ListK8SCustomServicePathParams
-  >,
-  'path'
-> &
-  ListK8SCustomServicePathParams
-
-/**
- * Get list of custom services
- *
- * Get list of custom services
- */
-export const useListK8SCustomService = ({ agentIdentity, ...props }: UseListK8SCustomServiceProps) =>
-  useGet<
-    ApiListK8sCustomService,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    ListK8SCustomServiceQueryParams,
-    ListK8SCustomServicePathParams
-  >(
-    (paramsInPath: ListK8SCustomServicePathParams) => `/api/v1/agents/${paramsInPath.agentIdentity}/k8scustomservices`,
-    { base: getConfig('servicediscovery'), pathParams: { agentIdentity }, ...props }
-  )
-
-/**
- * Get list of custom services
- *
- * Get list of custom services
- */
-export const listK8SCustomServicePromise = (
-  {
-    agentIdentity,
-    ...props
-  }: GetUsingFetchProps<
-    ApiListK8sCustomService,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    ListK8SCustomServiceQueryParams,
-    ListK8SCustomServicePathParams
-  > & {
-    /**
-     * agent identity
-     */
-    agentIdentity: string
-  },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<
-    ApiListK8sCustomService,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    ListK8SCustomServiceQueryParams,
-    ListK8SCustomServicePathParams
-  >(getConfig('servicediscovery'), `/api/v1/agents/${agentIdentity}/k8scustomservices`, props, signal)
-
-export interface GetK8SCustomServiceQueryParams {
-  /**
-   * account id that want to access the resource
-   */
-  accountIdentifier?: string
-  /**
-   * organization id that want to access the resource
-   */
-  organizationIdentifier?: string
-  /**
-   * project id that want to access the resource
-   */
-  projectIdentifier?: string
-}
-
-export interface GetK8SCustomServicePathParams {
-  /**
-   * agent identity
-   */
-  agentIdentity: string
-  /**
-   * custom service id
-   */
-  kcs_id: string
-}
-
-export type GetK8SCustomServiceProps = Omit<
-  GetProps<
-    ApiGetK8sCustomService,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    GetK8SCustomServiceQueryParams,
-    GetK8SCustomServicePathParams
-  >,
-  'path'
-> &
-  GetK8SCustomServicePathParams
-
-/**
- * Get custom service by id
- *
- * Get custom service by id
- */
-export const GetK8SCustomService = ({ agentIdentity, kcs_id, ...props }: GetK8SCustomServiceProps) => (
-  <Get<
-    ApiGetK8sCustomService,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    GetK8SCustomServiceQueryParams,
-    GetK8SCustomServicePathParams
-  >
-    path={`/api/v1/agents/${agentIdentity}/k8scustomservices/${kcs_id}`}
-    base={getConfig('servicediscovery')}
-    {...props}
-  />
-)
-
-export type UseGetK8SCustomServiceProps = Omit<
-  UseGetProps<
-    ApiGetK8sCustomService,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    GetK8SCustomServiceQueryParams,
-    GetK8SCustomServicePathParams
-  >,
-  'path'
-> &
-  GetK8SCustomServicePathParams
-
-/**
- * Get custom service by id
- *
- * Get custom service by id
- */
-export const useGetK8SCustomService = ({ agentIdentity, kcs_id, ...props }: UseGetK8SCustomServiceProps) =>
-  useGet<
-    ApiGetK8sCustomService,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    GetK8SCustomServiceQueryParams,
-    GetK8SCustomServicePathParams
-  >(
-    (paramsInPath: GetK8SCustomServicePathParams) =>
-      `/api/v1/agents/${paramsInPath.agentIdentity}/k8scustomservices/${paramsInPath.kcs_id}`,
-    { base: getConfig('servicediscovery'), pathParams: { agentIdentity, kcs_id }, ...props }
-  )
-
-/**
- * Get custom service by id
- *
- * Get custom service by id
- */
-export const getK8SCustomServicePromise = (
-  {
-    agentIdentity,
-    kcs_id,
-    ...props
-  }: GetUsingFetchProps<
-    ApiGetK8sCustomService,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    GetK8SCustomServiceQueryParams,
-    GetK8SCustomServicePathParams
-  > & {
-    /**
-     * agent identity
-     */
-    agentIdentity: string
-    /**
-     * custom service id
-     */
-    kcs_id: string
-  },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<
-    ApiGetK8sCustomService,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    GetK8SCustomServiceQueryParams,
-    GetK8SCustomServicePathParams
-  >(getConfig('servicediscovery'), `/api/v1/agents/${agentIdentity}/k8scustomservices/${kcs_id}`, props, signal)
-
-export interface GetServiceFromK8SCustomServiceQueryParams {
-  /**
-   * account id that want to access the resource
-   */
-  accountIdentifier?: string
-  /**
-   * organization id that want to access the resource
-   */
-  organizationIdentifier?: string
-  /**
-   * project id that want to access the resource
-   */
-  projectIdentifier?: string
-}
-
-export interface GetServiceFromK8SCustomServicePathParams {
-  /**
-   * agent identity
-   */
-  agentIdentity: string
-  /**
-   * custom service id
-   */
-  kcs_id: string
-}
-
-export type GetServiceFromK8SCustomServiceProps = Omit<
-  GetProps<
-    ApiGetServiceResponse,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    GetServiceFromK8SCustomServiceQueryParams,
-    GetServiceFromK8SCustomServicePathParams
-  >,
-  'path'
-> &
-  GetServiceFromK8SCustomServicePathParams
-
-/**
- * Get service linked to custom service
- *
- * Get service linked to custom service
- */
-export const GetServiceFromK8SCustomService = ({
-  agentIdentity,
-  kcs_id,
-  ...props
-}: GetServiceFromK8SCustomServiceProps) => (
-  <Get<
-    ApiGetServiceResponse,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    GetServiceFromK8SCustomServiceQueryParams,
-    GetServiceFromK8SCustomServicePathParams
-  >
-    path={`/api/v1/agents/${agentIdentity}/k8scustomservices/${kcs_id}/service`}
-    base={getConfig('servicediscovery')}
-    {...props}
-  />
-)
-
-export type UseGetServiceFromK8SCustomServiceProps = Omit<
-  UseGetProps<
-    ApiGetServiceResponse,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    GetServiceFromK8SCustomServiceQueryParams,
-    GetServiceFromK8SCustomServicePathParams
-  >,
-  'path'
-> &
-  GetServiceFromK8SCustomServicePathParams
-
-/**
- * Get service linked to custom service
- *
- * Get service linked to custom service
- */
-export const useGetServiceFromK8SCustomService = ({
-  agentIdentity,
-  kcs_id,
-  ...props
-}: UseGetServiceFromK8SCustomServiceProps) =>
-  useGet<
-    ApiGetServiceResponse,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    GetServiceFromK8SCustomServiceQueryParams,
-    GetServiceFromK8SCustomServicePathParams
-  >(
-    (paramsInPath: GetServiceFromK8SCustomServicePathParams) =>
-      `/api/v1/agents/${paramsInPath.agentIdentity}/k8scustomservices/${paramsInPath.kcs_id}/service`,
-    { base: getConfig('servicediscovery'), pathParams: { agentIdentity, kcs_id }, ...props }
-  )
-
-/**
- * Get service linked to custom service
- *
- * Get service linked to custom service
- */
-export const getServiceFromK8SCustomServicePromise = (
-  {
-    agentIdentity,
-    kcs_id,
-    ...props
-  }: GetUsingFetchProps<
-    ApiGetServiceResponse,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    GetServiceFromK8SCustomServiceQueryParams,
-    GetServiceFromK8SCustomServicePathParams
-  > & {
-    /**
-     * agent identity
-     */
-    agentIdentity: string
-    /**
-     * custom service id
-     */
-    kcs_id: string
-  },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<
-    ApiGetServiceResponse,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    GetServiceFromK8SCustomServiceQueryParams,
-    GetServiceFromK8SCustomServicePathParams
-  >(getConfig('servicediscovery'), `/api/v1/agents/${agentIdentity}/k8scustomservices/${kcs_id}/service`, props, signal)
-
 export interface ListNamespaceQueryParams {
+  /**
+   * corelation id is used to debug micro svc communication
+   */
+  corelationID?: string
   /**
    * account id that want to access the resource
    */
@@ -9238,6 +8690,10 @@ export const listNamespacePromise = (
 
 export interface ListNetworkMapQueryParams {
   /**
+   * corelation id is used to debug micro svc communication
+   */
+  corelationID?: string
+  /**
    * account id that want to access the resource
    */
   accountIdentifier?: string
@@ -9362,6 +8818,10 @@ export const listNetworkMapPromise = (
 
 export interface CreateNetworkMapQueryParams {
   /**
+   * corelation id is used to debug micro svc communication
+   */
+  corelationID?: string
+  /**
    * account id that want to access the resource
    */
   accountIdentifier?: string
@@ -9477,6 +8937,10 @@ export const createNetworkMapPromise = (
 
 export interface DeleteNetworkMapQueryParams {
   /**
+   * corelation id is used to debug micro svc communication
+   */
+  corelationID?: string
+  /**
    * account id that want to access the resource
    */
   accountIdentifier?: string
@@ -9590,7 +9054,11 @@ export const deleteNetworkMapPromise = (
     DeleteNetworkMapPathParams
   >('DELETE', getConfig('servicediscovery'), `/api/v1/agents/${agentIdentity}/networkmaps`, props, signal)
 
-export interface ListServiceQueryParams {
+export interface GetNetworkMapQueryParams {
+  /**
+   * corelation id is used to debug micro svc communication
+   */
+  corelationID?: string
   /**
    * account id that want to access the resource
    */
@@ -9603,117 +9071,241 @@ export interface ListServiceQueryParams {
    * project id that want to access the resource
    */
   projectIdentifier?: string
-  /**
-   * name of the service
-   */
-  name?: string
-  /**
-   * namespace of the service
-   */
-  namespace?: string
-  /**
-   * page number
-   */
-  page: number
-  /**
-   * limit per page
-   */
-  limit: number
-  /**
-   * get all
-   */
-  all: boolean
 }
 
-export interface ListServicePathParams {
+export interface GetNetworkMapPathParams {
   /**
    * agent identity
    */
   agentIdentity: string
+  /**
+   * network map identity
+   */
+  networkMapIdentity: string
 }
 
-export type ListServiceProps = Omit<
+export type GetNetworkMapProps = Omit<
   GetProps<
-    ApiListServiceResponse,
+    ApiGetNetworkMapResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    ListServiceQueryParams,
-    ListServicePathParams
+    GetNetworkMapQueryParams,
+    GetNetworkMapPathParams
   >,
   'path'
 > &
-  ListServicePathParams
+  GetNetworkMapPathParams
 
 /**
- * Get list of servces
+ * Get a networkmap
  *
- * Get list of services present in the kubernetes agent, name and namespace can be passed as filter in query param
+ * Get a networkmap
  */
-export const ListService = ({ agentIdentity, ...props }: ListServiceProps) => (
+export const GetNetworkMap = ({ agentIdentity, networkMapIdentity, ...props }: GetNetworkMapProps) => (
   <Get<
-    ApiListServiceResponse,
+    ApiGetNetworkMapResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    ListServiceQueryParams,
-    ListServicePathParams
+    GetNetworkMapQueryParams,
+    GetNetworkMapPathParams
   >
-    path={`/api/v1/agents/${agentIdentity}/services`}
+    path={`/api/v1/agents/${agentIdentity}/networkmaps/${networkMapIdentity}`}
     base={getConfig('servicediscovery')}
     {...props}
   />
 )
 
-export type UseListServiceProps = Omit<
+export type UseGetNetworkMapProps = Omit<
   UseGetProps<
-    ApiListServiceResponse,
+    ApiGetNetworkMapResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    ListServiceQueryParams,
-    ListServicePathParams
+    GetNetworkMapQueryParams,
+    GetNetworkMapPathParams
   >,
   'path'
 > &
-  ListServicePathParams
+  GetNetworkMapPathParams
 
 /**
- * Get list of servces
+ * Get a networkmap
  *
- * Get list of services present in the kubernetes agent, name and namespace can be passed as filter in query param
+ * Get a networkmap
  */
-export const useListService = ({ agentIdentity, ...props }: UseListServiceProps) =>
+export const useGetNetworkMap = ({ agentIdentity, networkMapIdentity, ...props }: UseGetNetworkMapProps) =>
   useGet<
-    ApiListServiceResponse,
+    ApiGetNetworkMapResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    ListServiceQueryParams,
-    ListServicePathParams
-  >((paramsInPath: ListServicePathParams) => `/api/v1/agents/${paramsInPath.agentIdentity}/services`, {
-    base: getConfig('servicediscovery'),
-    pathParams: { agentIdentity },
-    ...props
-  })
+    GetNetworkMapQueryParams,
+    GetNetworkMapPathParams
+  >(
+    (paramsInPath: GetNetworkMapPathParams) =>
+      `/api/v1/agents/${paramsInPath.agentIdentity}/networkmaps/${paramsInPath.networkMapIdentity}`,
+    { base: getConfig('servicediscovery'), pathParams: { agentIdentity, networkMapIdentity }, ...props }
+  )
 
 /**
- * Get list of servces
+ * Get a networkmap
  *
- * Get list of services present in the kubernetes agent, name and namespace can be passed as filter in query param
+ * Get a networkmap
  */
-export const listServicePromise = (
+export const getNetworkMapPromise = (
   {
     agentIdentity,
+    networkMapIdentity,
     ...props
   }: GetUsingFetchProps<
-    ApiListServiceResponse,
+    ApiGetNetworkMapResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    ListServiceQueryParams,
-    ListServicePathParams
+    GetNetworkMapQueryParams,
+    GetNetworkMapPathParams
   > & {
     /**
      * agent identity
      */
     agentIdentity: string
+    /**
+     * network map identity
+     */
+    networkMapIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
   getUsingFetch<
-    ApiListServiceResponse,
+    ApiGetNetworkMapResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    ListServiceQueryParams,
-    ListServicePathParams
-  >(getConfig('servicediscovery'), `/api/v1/agents/${agentIdentity}/services`, props, signal)
+    GetNetworkMapQueryParams,
+    GetNetworkMapPathParams
+  >(getConfig('servicediscovery'), `/api/v1/agents/${agentIdentity}/networkmaps/${networkMapIdentity}`, props, signal)
+
+export interface UpdateNetworkMapQueryParams {
+  /**
+   * corelation id is used to debug micro svc communication
+   */
+  corelationID?: string
+  /**
+   * account id that want to access the resource
+   */
+  accountIdentifier?: string
+  /**
+   * organization id that want to access the resource
+   */
+  organizationIdentifier?: string
+  /**
+   * project id that want to access the resource
+   */
+  projectIdentifier?: string
+}
+
+export interface UpdateNetworkMapPathParams {
+  /**
+   * agent identity
+   */
+  agentIdentity: string
+  /**
+   * network map identity
+   */
+  networkMapIdentity: string
+}
+
+export type UpdateNetworkMapProps = Omit<
+  MutateProps<
+    ApiGetNetworkMapResponse,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    UpdateNetworkMapQueryParams,
+    ApiUpdateNetworkMapRequest,
+    UpdateNetworkMapPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateNetworkMapPathParams
+
+/**
+ * Update a networkmap
+ *
+ * Update a networkmap
+ */
+export const UpdateNetworkMap = ({ agentIdentity, networkMapIdentity, ...props }: UpdateNetworkMapProps) => (
+  <Mutate<
+    ApiGetNetworkMapResponse,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    UpdateNetworkMapQueryParams,
+    ApiUpdateNetworkMapRequest,
+    UpdateNetworkMapPathParams
+  >
+    verb="PUT"
+    path={`/api/v1/agents/${agentIdentity}/networkmaps/${networkMapIdentity}`}
+    base={getConfig('servicediscovery')}
+    {...props}
+  />
+)
+
+export type UseUpdateNetworkMapProps = Omit<
+  UseMutateProps<
+    ApiGetNetworkMapResponse,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    UpdateNetworkMapQueryParams,
+    ApiUpdateNetworkMapRequest,
+    UpdateNetworkMapPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateNetworkMapPathParams
+
+/**
+ * Update a networkmap
+ *
+ * Update a networkmap
+ */
+export const useUpdateNetworkMap = ({ agentIdentity, networkMapIdentity, ...props }: UseUpdateNetworkMapProps) =>
+  useMutate<
+    ApiGetNetworkMapResponse,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    UpdateNetworkMapQueryParams,
+    ApiUpdateNetworkMapRequest,
+    UpdateNetworkMapPathParams
+  >(
+    'PUT',
+    (paramsInPath: UpdateNetworkMapPathParams) =>
+      `/api/v1/agents/${paramsInPath.agentIdentity}/networkmaps/${paramsInPath.networkMapIdentity}`,
+    { base: getConfig('servicediscovery'), pathParams: { agentIdentity, networkMapIdentity }, ...props }
+  )
+
+/**
+ * Update a networkmap
+ *
+ * Update a networkmap
+ */
+export const updateNetworkMapPromise = (
+  {
+    agentIdentity,
+    networkMapIdentity,
+    ...props
+  }: MutateUsingFetchProps<
+    ApiGetNetworkMapResponse,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    UpdateNetworkMapQueryParams,
+    ApiUpdateNetworkMapRequest,
+    UpdateNetworkMapPathParams
+  > & {
+    /**
+     * agent identity
+     */
+    agentIdentity: string
+    /**
+     * network map identity
+     */
+    networkMapIdentity: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ApiGetNetworkMapResponse,
+    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
+    UpdateNetworkMapQueryParams,
+    ApiUpdateNetworkMapRequest,
+    UpdateNetworkMapPathParams
+  >(
+    'PUT',
+    getConfig('servicediscovery'),
+    `/api/v1/agents/${agentIdentity}/networkmaps/${networkMapIdentity}`,
+    props,
+    signal
+  )

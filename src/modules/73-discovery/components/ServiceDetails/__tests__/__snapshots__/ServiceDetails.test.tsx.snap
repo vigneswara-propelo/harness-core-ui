@@ -411,7 +411,7 @@ exports[`Service Details component tests should match snapshot with mock data 1`
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-body2"
                       >
-                        access-control
+                        adservice
                       </p>
                     </div>
                     <div
@@ -426,7 +426,7 @@ exports[`Service Details component tests should match snapshot with mock data 1`
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-body2"
                       >
-                        chaos-1000
+                        boutique
                       </p>
                     </div>
                     <div
@@ -484,60 +484,13 @@ exports[`Service Details component tests should match snapshot with mock data 1`
                         >
                           app
                           :
-                          access-control
-                        </p>
-                        <p
-                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-body2"
-                          style="--text-line-clamp: 1;"
-                        >
-                          app.kubernetes.io/instance
-                          :
-                          smp-chaos
-                        </p>
-                        <p
-                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-body2"
-                          style="--text-line-clamp: 1;"
-                        >
-                          app.kubernetes.io/name
-                          :
-                          access-control
-                        </p>
-                        <p
-                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-body2"
-                          style="--text-line-clamp: 1;"
-                        >
-                          pod-template-hash
-                          :
-                          8546c78fd7
+                          adservice
                         </p>
                       </div>
                     </div>
                     <div
                       class="bp3-divider"
                     />
-                    <div
-                      class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
-                    >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-body"
-                        style="width: 40%;"
-                      >
-                        common.annotations
-                      </p>
-                      <div
-                        class="Layout--vertical StyledProps--main"
-                        style="width: 60%;"
-                      >
-                        <p
-                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-body2"
-                          style="--text-line-clamp: 1;"
-                        >
-                          cni.projectcalico.org/podIPs
-                          :
-                          10.100.2.2/32
-                        </p>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>

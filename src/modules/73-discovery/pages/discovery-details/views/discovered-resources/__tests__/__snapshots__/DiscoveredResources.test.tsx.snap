@@ -628,7 +628,7 @@ exports[`DiscoveredResources subheader components should be present 1`] = `
                       <li
                         class="DropDown--menuItem"
                       >
-                        bt-4079
+                        boutique
                       </li>
                     </ul>
                   </div>

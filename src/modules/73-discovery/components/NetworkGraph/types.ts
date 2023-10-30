@@ -10,7 +10,7 @@ import type { Node, Edge } from 'reactflow'
 import type {
   ApiCustomServiceConnection,
   DatabaseConnection,
-  DatabaseK8SCustomServiceCollection,
+  DatabaseDiscoveredServiceCollection,
   DatabaseNetworkMapEntity
 } from 'services/servicediscovery'
 
@@ -24,7 +24,7 @@ export interface EdgeData {
   parentNode?: string
 }
 
-export type ServiceNodeData = DatabaseK8SCustomServiceCollection
+export type ServiceNodeData = Partial<DatabaseDiscoveredServiceCollection> & { id: string; name: string }
 export type ServiceEdgeData = EdgeData & ApiCustomServiceConnection
 
 export type NetworkMapNodeData = DatabaseNetworkMapEntity

@@ -52,24 +52,44 @@ const paginationProps = {
 }
 
 const mockDiscoveryAgent: ApiGetAgentResponse = {
-  accountIdentifier: '',
-  id: '',
-  identity: '',
-  k8sConnector: {
-    id: ''
-  },
-  name: '',
-  organizationIdentifier: '',
-  projectIdentifier: '',
+  id: '648ffda242d20c0d04713e05',
+  name: 'local-1',
+  identity: 'local-1',
+  description: '',
+  accountIdentifier: 'VgWXxi_6TdqAyplTQMg4CQ',
+  organizationIdentifier: 'default',
+  projectIdentifier: 'test',
   createdAt: '2023-06-21T13:17:41.491Z',
-  createdBy: 'VgWXxi_6TdqAyplTQMg4CQ',
   updatedAt: '2023-06-21T13:17:41.491Z',
+  createdBy: 'VgWXxi_6TdqAyplTQMg4CQ',
+  updatedBy: '',
   installationDetails: {
-    createdAt: '2023-06-21T13:17:41.491Z',
+    id: '648ffda242d20c0d04713e06',
+    agentID: '648ffda242d20c0d04713e05',
+    delegateTaskID: 'DFmiyJTUSF-reLnjH2q8lQ',
+    delegateID: '',
+    delegateTaskStatus: 'SUCCESS',
+    agentDetails: {},
+    createdAt: '2023-06-19T07:02:58.75Z',
     createdBy: 'VgWXxi_6TdqAyplTQMg4CQ',
-    updatedAt: '2023-06-21T13:17:41.491Z'
+    updatedBy: '',
+    removed: false
   },
-  updatedBy: ''
+  config: {
+    kubernetes: {
+      namespaced: false,
+      namespace: 'sd1',
+      serviceAccount: 'cluster-admin-1',
+      imageRegistry: 'index.docker.io/shovan1995',
+      imageTag: 'ci',
+      imagePullPolicy: 'Always'
+    },
+    data: {
+      enableNodeAgent: false,
+      enableBatchResources: false,
+      collectionWindowInMin: 2
+    }
+  }
 }
 
 const mockDiscoveryList = {

@@ -29,10 +29,12 @@ import { ReactFlowProvider } from 'reactflow'
 import { useStrings } from 'framework/strings'
 import {
   ApiCreateNetworkMapRequest,
-  DatabaseServiceCollection,
-  useListK8SCustomService,
-  useListK8sCustomServiceConnection,
-  useListNamespace
+  useListDiscoveredServiceConnection,
+  useListDiscoveredService,
+  useListNamespace,
+  DatabaseNetworkMapEntity,
+  DatabaseNetworkMapResourceKind,
+  DatabaseDiscoveredServiceCollection
 } from 'services/servicediscovery'
 import type {
   NetworkMapPathProps,
@@ -44,7 +46,7 @@ import { useQueryParams } from '@common/hooks'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@discovery/interface/filters'
 import { StudioTabs } from '@discovery/interface/networkMapStudio'
-import { DiscoveryObjectStoreNames, useDiscoveryIndexedDBHook } from '@discovery/hooks/useDiscoveryIndexedDBHook'
+import { useDiscoveryIndexedDBHook } from '@discovery/hooks/useDiscoveryIndexedDBHook'
 import {
   getGraphEdgesFromNetworkMap,
   getGraphNodesFromNetworkMap
@@ -60,16 +62,16 @@ import {
   RenderServiceNamespace,
   RenderServicePort
 } from './SelectServiceTableCells'
-import noServiceIllustration from './images/noServiceIllustration.png'
+import noServiceIllustration from '../../images/noServiceIllustration.png'
 import css from './SelectService.module.scss'
 
-export interface Props {
-  networkMap: ApiCreateNetworkMapRequest | undefined
-  setNetworkMap: React.Dispatch<React.SetStateAction<ApiCreateNetworkMapRequest | undefined>>
+export interface SelectServiceProps {
+  networkMap: ApiCreateNetworkMapRequest
+  updateNetworkMap: (networkMap: ApiCreateNetworkMapRequest) => Promise<void>
   handleTabChange: (tabID: StudioTabs) => void
 }
 
-const SelectService: React.FC<Props> = ({ networkMap, setNetworkMap, handleTabChange }) => {
+const SelectService: React.FC<SelectServiceProps> = ({ networkMap, updateNetworkMap, handleTabChange }) => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, dAgentId } = useParams<
     ProjectPathProps & ModulePathParams & NetworkMapPathProps
@@ -79,11 +81,9 @@ const SelectService: React.FC<Props> = ({ networkMap, setNetworkMap, handleTabCh
   const [search, setSearch] = React.useState<string>()
   const [namespace, selectedNamespace] = React.useState<string>()
 
-  const { dbInstance } = useDiscoveryIndexedDBHook({
-    clearStoreList: [DiscoveryObjectStoreNames.NETWORK_MAP]
-  })
+  const { dbInstance } = useDiscoveryIndexedDBHook()
 
-  const { data: discoveredServices, loading: listServiceLoading } = useListK8SCustomService({
+  const { data: discoveredServices, loading: listServiceLoading } = useListDiscoveredService({
     agentIdentity: dAgentId,
     queryParams: {
       accountIdentifier: accountId,
@@ -97,7 +97,7 @@ const SelectService: React.FC<Props> = ({ networkMap, setNetworkMap, handleTabCh
     }
   })
 
-  const { data: connectionList } = useListK8sCustomServiceConnection({
+  const { data: connectionList } = useListDiscoveredServiceConnection({
     agentIdentity: dAgentId,
     queryParams: {
       accountIdentifier: accountId,
@@ -127,22 +127,24 @@ const SelectService: React.FC<Props> = ({ networkMap, setNetworkMap, handleTabCh
   })
 
   React.useEffect(() => {
-    if (relatedServicesOf && !networkMap?.resources) handleSelectRelatedServices(relatedServicesOf)
+    if (relatedServicesOf && networkMap.resources.length === 0) handleSelectRelatedServices(relatedServicesOf)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [networkMap, dbInstance])
 
-  async function handleSelectionChange(isSelect: boolean, service: DatabaseServiceCollection): Promise<void> {
+  async function handleSelectionChange(isSelect: boolean, service: DatabaseDiscoveredServiceCollection): Promise<void> {
     // Select or deselect services
-    let selectedServices = cloneDeep(networkMap?.resources) ?? []
+    let selectedServices = cloneDeep(networkMap.resources)
     if (isSelect) {
-      selectedServices?.push({
+      selectedServices.push({
         id: service.id,
-        kind: service.kind,
-        name: service.name,
-        namespace: service.namespace
+        kind: 'discoveredservice',
+        name: service.spec.kubernetes?.name ?? '',
+        kubernetes: {
+          namespace: service.spec.kubernetes?.namespace
+        }
       })
     } else {
-      /* istanbul ignore next */ selectedServices = selectedServices?.filter(s => s.id !== service.id)
+      /* istanbul ignore next */ selectedServices = selectedServices.filter(s => s.id !== service.id)
     }
 
     const newNetworkMap: ApiCreateNetworkMapRequest = {
@@ -150,8 +152,7 @@ const SelectService: React.FC<Props> = ({ networkMap, setNetworkMap, handleTabCh
       resources: selectedServices,
       connections: getConnectionsBetweenServicesInNetworkMap(selectedServices, connectionList)
     }
-    setNetworkMap(newNetworkMap)
-    await dbInstance?.put(DiscoveryObjectStoreNames.NETWORK_MAP, newNetworkMap)
+    updateNetworkMap(newNetworkMap)
   }
 
   const dropdownNamespaceOptions: SelectOption[] = [
@@ -166,9 +167,9 @@ const SelectService: React.FC<Props> = ({ networkMap, setNetworkMap, handleTabCh
 
   const getCheckedStatus = React.useMemo(() => {
     const listOfServicesOnPage = discoveredServices?.items?.map(item => item.id)
-    const selectedServicesOnPage = networkMap?.resources?.filter(item => listOfServicesOnPage?.includes(item.id))
+    const selectedServicesOnPage = networkMap.resources.filter(item => listOfServicesOnPage?.includes(item.id))
 
-    if (!listOfServicesOnPage || !selectedServicesOnPage || networkMap?.resources?.length === 0)
+    if (!listOfServicesOnPage || !selectedServicesOnPage || networkMap.resources.length === 0)
       return { allChecked: false, intermediate: false }
 
     if (listOfServicesOnPage.length === selectedServicesOnPage.length) return { allChecked: true, intermediate: false }
@@ -177,19 +178,19 @@ const SelectService: React.FC<Props> = ({ networkMap, setNetworkMap, handleTabCh
   }, [discoveredServices, networkMap])
 
   async function handleSelectAll(checked: boolean): Promise<void> {
-    let newNetworkMap: ApiCreateNetworkMapRequest | undefined
+    let newNetworkMap: ApiCreateNetworkMapRequest
     const listOfServicesOnPage = discoveredServices?.items?.map(item => item.id)
-    const prevSelectedServicesNotOnPage = networkMap?.resources?.filter(
-      item => !listOfServicesOnPage?.includes(item.id)
-    )
+    const prevSelectedServicesNotOnPage = networkMap.resources.filter(item => !listOfServicesOnPage?.includes(item.id))
     if (checked) {
-      const selectedServices = [
+      const selectedServices: DatabaseNetworkMapEntity[] = [
         ...(prevSelectedServicesNotOnPage ?? []),
         ...(discoveredServices?.items?.map(service => ({
           id: service.id,
-          kind: service.kind,
-          name: service.name,
-          namespace: service.namespace
+          kind: 'discoveredservice' as DatabaseNetworkMapResourceKind,
+          name: service.spec.kubernetes?.name ?? '',
+          kubernetes: {
+            namespace: service.spec.kubernetes?.namespace
+          }
         })) ?? [])
       ]
 
@@ -207,48 +208,46 @@ const SelectService: React.FC<Props> = ({ networkMap, setNetworkMap, handleTabCh
       }
     }
 
-    setNetworkMap(newNetworkMap)
-    await dbInstance?.put(DiscoveryObjectStoreNames.NETWORK_MAP, newNetworkMap)
+    updateNetworkMap(newNetworkMap)
   }
 
   // Dev Node: I'm exhausted and the popover won't open in jest env. I give up on this code and life itself.
   /* istanbul ignore next */
   async function handleSelectRelatedServices(serviceID: string): Promise<void> {
-    if (!networkMap) return
-
     const relatedServices = getRelatedServices(serviceID, discoveredServices, connectionList)
-    const additionalServices = relatedServices?.filter(s => !networkMap?.resources?.some(r => r.id === s.id))
+    const additionalServices = relatedServices?.filter(s => !networkMap.resources.some(r => r.id === s.id))
     if (!additionalServices || additionalServices.length === 0) return
 
-    const selectedServices = [
-      ...(networkMap?.resources ?? []),
+    const selectedServices: DatabaseNetworkMapEntity[] = [
+      ...networkMap.resources,
       ...(additionalServices?.map(service => ({
         id: service.id,
-        kind: service.kind,
-        name: service.name,
-        namespace: service.namespace
+        kind: 'discoveredservice' as DatabaseNetworkMapResourceKind,
+        name: service.spec.kubernetes?.name ?? '',
+        kubernetes: {
+          namespace: service.spec.kubernetes?.namespace
+        }
       })) ?? [])
     ]
-    const newNetworkMap: ApiCreateNetworkMapRequest | undefined = {
+    const newNetworkMap: ApiCreateNetworkMapRequest = {
       ...networkMap,
       resources: selectedServices,
       connections: getConnectionsBetweenServicesInNetworkMap(selectedServices, connectionList)
     }
 
-    setNetworkMap(newNetworkMap)
-    await dbInstance?.put(DiscoveryObjectStoreNames.NETWORK_MAP, newNetworkMap)
+    updateNetworkMap(newNetworkMap)
   }
 
   const nodes = getGraphNodesFromNetworkMap(networkMap)
   const edges = getGraphEdgesFromNetworkMap(networkMap)
 
-  const columns: Column<DatabaseServiceCollection>[] = React.useMemo(
+  const columns: Column<DatabaseDiscoveredServiceCollection>[] = React.useMemo(
     () => [
       {
         Header: '',
         width: 'fit-content',
         id: 'action',
-        Cell: (props: CellProps<DatabaseServiceCollection>) => (
+        Cell: (props: CellProps<DatabaseDiscoveredServiceCollection>) => (
           <RenderSelectServiceCheckbox
             {...props}
             networkMap={networkMap}
@@ -260,19 +259,19 @@ const SelectService: React.FC<Props> = ({ networkMap, setNetworkMap, handleTabCh
       {
         Header: '',
         id: 'name',
-        width: '47%',
+        width: '42%',
         Cell: RenderServiceName
       },
       {
         Header: '',
         id: 'namespace',
-        width: '15%',
+        width: '18%',
         Cell: RenderServiceNamespace
       },
       {
         Header: '',
         id: 'ipAddress',
-        width: '15%',
+        width: '17%',
         Cell: RenderServiceIPAddress
       },
       {
@@ -285,7 +284,7 @@ const SelectService: React.FC<Props> = ({ networkMap, setNetworkMap, handleTabCh
         Header: '',
         id: 'menu',
         width: 'fit-content',
-        Cell: (props: CellProps<DatabaseServiceCollection>) => (
+        Cell: (props: CellProps<DatabaseDiscoveredServiceCollection>) => (
           <RenderMenuCell {...props} handleClick={() => handleSelectRelatedServices(props.row.original.id ?? '')} />
         )
       }
@@ -326,6 +325,7 @@ const SelectService: React.FC<Props> = ({ networkMap, setNetworkMap, handleTabCh
               alwaysExpanded
               width={232}
               defaultValue={search}
+              autoFocus={false}
               placeholder={getString('discovery.searchService')}
               throttle={500}
               onChange={value => setSearch(value)}
@@ -342,7 +342,7 @@ const SelectService: React.FC<Props> = ({ networkMap, setNetworkMap, handleTabCh
               handleSelectAll(event.currentTarget.checked)
             }}
           />
-          <TableV2<DatabaseServiceCollection>
+          <TableV2<DatabaseDiscoveredServiceCollection>
             className={css.tableBody}
             columns={columns}
             data={discoveredServices?.items ?? []}
@@ -353,7 +353,7 @@ const SelectService: React.FC<Props> = ({ networkMap, setNetworkMap, handleTabCh
             width={80}
             variation={ButtonVariation.PRIMARY}
             text={getString('next')}
-            disabled={!networkMap?.resources}
+            disabled={networkMap.resources.length === 0}
             onClick={() => handleTabChange(StudioTabs.CONFIGURE_RELATIONS)}
           />
         </Layout.Vertical>

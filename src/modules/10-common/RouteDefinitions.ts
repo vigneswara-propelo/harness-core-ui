@@ -56,9 +56,7 @@ import type {
   ExecutionQueryParams,
   ServiceOverridesQueryParams,
   DiscoveryPathProps,
-  NetworkMapQueryParams,
   NetworkMapPathProps,
-  DiscoveredResourceQueryParams,
   WebhooksPathProps
 } from '@common/interfaces/RouteInterfaces'
 
@@ -492,11 +490,9 @@ const routes = {
       orgIdentifier,
       projectIdentifier,
       dAgentId,
-      module,
-      ...rest
-    }: Partial<ProjectPathProps & ModulePathParams & DiscoveryPathProps & DiscoveredResourceQueryParams>) => {
-      const queryString = qs.stringify(rest, { skipNulls: true })
-      const path = `resources/discovery/${dAgentId}?${queryString}`
+      module
+    }: Partial<ProjectPathProps & ModulePathParams & DiscoveryPathProps>) => {
+      const path = `resources/discovery/${dAgentId}`
       return getScopeBasedRoute({
         scope: {
           orgIdentifier,
@@ -515,13 +511,9 @@ const routes = {
       projectIdentifier,
       module,
       dAgentId,
-      networkMapId,
-      ...rest
-    }: Partial<ProjectPathProps & ModulePathParams & NetworkMapPathProps & NetworkMapQueryParams>) => {
-      const queryString = qs.stringify(rest, { skipNulls: true })
-      const path = `resources/discovery/${dAgentId}/network-map-studio/${networkMapId ?? '-1'}${
-        queryString !== '' ? `?${queryString}` : ''
-      }`
+      networkMapId
+    }: Partial<ProjectPathProps & ModulePathParams & NetworkMapPathProps>) => {
+      const path = `resources/discovery/${dAgentId}/network-map-studio/${networkMapId ?? '-1'}`
       return getScopeBasedRoute({
         scope: {
           orgIdentifier,

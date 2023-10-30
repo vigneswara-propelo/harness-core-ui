@@ -6065,6 +6065,8 @@ export interface StringsMap {
   'triggers.versionLastCollectedAt': string
   'triggers.waitingForTag': string
   'triggers.waitingForVersion': string
+  'discovery.addCustomizedConfigurations': string
+  'discovery.addCustomizedConfigurationsDesc': string
   'discovery.agentName': string
   'discovery.allDiscoveredServices': string
   'discovery.approxTime': string
@@ -6089,6 +6091,7 @@ export interface StringsMap {
   'discovery.dataCollectionSettings': string
   'discovery.dataCollectionSettingsDesc': string
   'discovery.detectNetworkTrace': string
+  'discovery.disableDeleteConnections': string
   'discovery.discardNetworkMap': string
   'discovery.discoverServices': string
   'discovery.discoveredBy': string
@@ -6110,6 +6113,7 @@ export interface StringsMap {
   'discovery.discoveryDetails.tabTitles.networkMaps': string
   'discovery.discoveryDetails.tabTitles.resources': string
   'discovery.discoveryNamespacePlaceholder': string
+  'discovery.externalEntity': string
   'discovery.forADurationOf': string
   'discovery.homepage.discoveryAgentDesc': string
   'discovery.homepage.learnMore': string
@@ -6122,17 +6126,20 @@ export interface StringsMap {
   'discovery.homepage.slogan': string
   'discovery.howToCreateNetworkMap': string
   'discovery.howToCreateNetworkMapDesc': string
+  'discovery.inbound': string
   'discovery.networkDetails': string
   'discovery.networkMapCreated': string
   'discovery.networkMapDescription': string
   'discovery.networkMapTable.noOfService': string
   'discovery.newNetworkMap': string
+  'discovery.newRelation': string
   'discovery.noDiscoveryData': string
   'discovery.noRelatedServiceFound': string
   'discovery.noServiceSelected': string
   'discovery.noServiceSelectedDescription': string
   'discovery.nodeAgentSelector': string
   'discovery.notDetected': string
+  'discovery.outbound': string
   'discovery.permissions.confirmDeleteDAgent': string
   'discovery.permissions.confirmDeleteNetworkMap': string
   'discovery.permissions.confirmDeleteTitleDAgent': string
@@ -6140,6 +6147,7 @@ export interface StringsMap {
   'discovery.permissions.deletedMessageDAgent': string
   'discovery.permissions.deletedMessageNetworkMap': string
   'discovery.relatedService': string
+  'discovery.relationProperties': string
   'discovery.searchNetworkMap': string
   'discovery.searchService': string
   'discovery.selectAConnector': string
@@ -6149,9 +6157,14 @@ export interface StringsMap {
   'discovery.serviceDrawer.ipFamily': string
   'discovery.serviceDrawer.selector': string
   'discovery.serviceDrawer.workloads': string
+  'discovery.serviceRelationshipDetails': string
+  'discovery.sourceService': string
   'discovery.tabs.configureRelations': string
   'discovery.tabs.selectServices': string
+  'discovery.targetService': string
   'discovery.testConnector': string
+  'discovery.trafficDirection': string
+  'discovery.trafficRoute': string
   'discovery.whatIsNetworkMap': string
   'discovery.whatIsServiceDiscovery': string
   'discovery.whatIsServiceDiscoveryDesc': string

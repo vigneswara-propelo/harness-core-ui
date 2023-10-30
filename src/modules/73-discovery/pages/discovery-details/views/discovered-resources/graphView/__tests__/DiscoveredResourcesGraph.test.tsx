@@ -13,7 +13,7 @@ import DiscoveredResourcesGraph from '../DiscoveredResourcesGraph'
 import { mockConnections, mockServices } from '../../mocks'
 
 jest.mock('services/servicediscovery', () => ({
-  useListK8SCustomService: jest.fn().mockImplementation(() => {
+  useListDiscoveredService: jest.fn().mockImplementation(() => {
     return { data: mockServices, refetch: jest.fn(), error: null, loading: false }
   })
 }))
@@ -37,7 +37,7 @@ describe('DiscoveredResourcesGraph', () => {
   })
 
   test('render component with empty data', async () => {
-    jest.spyOn(servicediscovery, 'useListK8SCustomService').mockImplementation((): any => {
+    jest.spyOn(servicediscovery, 'useListDiscoveredService').mockImplementation((): any => {
       return {
         data: null,
         loading: false,

@@ -6,11 +6,11 @@
  */
 
 import getConnectionsBetweenServicesInNetworkMap from '../getConnectionsBetweenServicesInNetworkMap'
-import { connectionsBetweenServices, mockConnections, mockServices } from './mocks'
+import { connectionsBetweenServices, mockConnections, mockNetworkMapResources } from './mocks'
 
 describe('getConnectionsBetweenServicesInNetworkMap', () => {
   test('test function wih mock data', async () => {
-    const connections = getConnectionsBetweenServicesInNetworkMap(mockServices.items, mockConnections)
+    const connections = getConnectionsBetweenServicesInNetworkMap(mockNetworkMapResources, mockConnections)
     expect(connections).toStrictEqual(connectionsBetweenServices)
   })
 
