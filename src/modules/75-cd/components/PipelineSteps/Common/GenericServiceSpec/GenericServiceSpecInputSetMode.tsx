@@ -152,6 +152,22 @@ const GenericServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps
         />
       )}
 
+      {isValueRuntimeInput(get(template, `release.name`)) && (
+        <TextFieldInputSetView
+          name={`${path}.release.name`}
+          label={getString('common.releaseName')}
+          placeholder={getString('common.releaseName')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          fieldPath={`release.name`}
+          template={template}
+          className={css.inputFieldLayout}
+        />
+      )}
+
       {!!template?.manifests?.length && (
         <KubernetesManifests
           manifests={allValues?.manifests}

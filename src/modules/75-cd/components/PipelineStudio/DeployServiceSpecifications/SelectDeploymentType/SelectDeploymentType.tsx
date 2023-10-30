@@ -7,7 +7,7 @@
 
 import React, { FC, ReactNode, SyntheticEvent } from 'react'
 import { Formik, FormikProps } from 'formik'
-import { get, noop } from 'lodash-es'
+import { get, noop, defaultTo } from 'lodash-es'
 import * as Yup from 'yup'
 import {
   Button,
@@ -18,6 +18,7 @@ import {
   FormInput,
   HarnessDocTooltip,
   Layout,
+  MultiTypeInputType,
   SelectOption,
   Text,
   Thumbnail,
@@ -34,6 +35,7 @@ import { errorCheck } from '@common/utils/formikHelpers'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { GoogleCloudFunctionsEnvType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
   DeploymentTypeItem,
@@ -237,6 +239,11 @@ interface GoogleCloudFunctionsSpecificPropsType {
   handleGCFEnvTypeChange?: (selectedEnv: SelectOption, event?: SyntheticEvent<HTMLElement, Event> | undefined) => void
 }
 
+interface KubernetesReleaseNameType {
+  handleKubernetesReleaseName?: (value: string) => void
+  releaseName?: string
+}
+
 interface SelectServiceDeploymentTypeProps {
   isReadonly: boolean
   shouldShowGitops: boolean
@@ -250,6 +257,7 @@ interface SelectServiceDeploymentTypeProps {
   addOrUpdateTemplate?: () => void | Promise<void>
   templateBarOverrideClassName?: string
   googleCloudFunctionsSpecificProps?: GoogleCloudFunctionsSpecificPropsType
+  kubernetesReleaseNameProps?: KubernetesReleaseNameType
 }
 
 export default function SelectDeploymentType({
@@ -264,16 +272,16 @@ export default function SelectDeploymentType({
   onDeploymentTemplateSelect,
   addOrUpdateTemplate,
   templateBarOverrideClassName = '',
-  googleCloudFunctionsSpecificProps = {}
+  googleCloudFunctionsSpecificProps = {},
+  kubernetesReleaseNameProps
 }: SelectServiceDeploymentTypeProps): JSX.Element {
   const { shouldShowGCFEnvTypeDropdown, googleCloudFunctionEnvType, handleGCFEnvTypeChange } =
     googleCloudFunctionsSpecificProps
-
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
-  const { NG_SVC_ENV_REDESIGN, CDP_AWS_SAM } = useFeatureFlags()
-
+  const { NG_SVC_ENV_REDESIGN, CDP_AWS_SAM, CDS_NG_K8S_SERVICE_RELEASE_NAME } = useFeatureFlags()
+  const { expressions } = useVariablesExpression()
   // Supported in NG (Next Gen - The one for which you are coding right now)
   const ngSupportedDeploymentTypes = React.useMemo(() => {
     return getNgSupportedDeploymentTypes({
@@ -302,6 +310,13 @@ export default function SelectDeploymentType({
       setNgDeploymentTypes(ngSupportedDeploymentTypes)
     }
   }, [])
+
+  const isKubernetesOrNativeHelm = React.useMemo((): boolean => {
+    return (
+      selectedDeploymentType === ServiceDeploymentType.NativeHelm ||
+      selectedDeploymentType === ServiceDeploymentType.Kubernetes
+    )
+  }, [selectedDeploymentType])
 
   React.useEffect(() => {
     subscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
@@ -386,6 +401,28 @@ export default function SelectDeploymentType({
     return null
   }
 
+  const renderK8sReleaseName = (): JSX.Element | null => {
+    if (isKubernetesOrNativeHelm && CDS_NG_K8S_SERVICE_RELEASE_NAME) {
+      return (
+        <FormInput.MultiTextInput
+          name="release.name"
+          className={css.releaseName}
+          label={getString('common.releaseName')}
+          placeholder={getString('cd.steps.common.releaseNamePlaceholder')}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+            defaultValue: 'release-<+INFRA_KEY_SHORT_ID>'
+          }}
+          onChange={value => {
+            kubernetesReleaseNameProps?.handleKubernetesReleaseName?.(value as string)
+          }}
+        />
+      )
+    }
+    return null
+  }
+
   const renderRecentDeploymentTemplates = (): ReactNode => {
     if (isReadonly && selectedDeploymentType !== ServiceDeploymentType.CustomDeployment) {
       return null
@@ -420,13 +457,23 @@ export default function SelectDeploymentType({
   }
 
   return (
-    <Formik<{ deploymentType: string; gitOpsEnabled: boolean; environmentType?: GoogleCloudFunctionsEnvType }>
+    <Formik<{
+      deploymentType: string
+      gitOpsEnabled: boolean
+      environmentType?: GoogleCloudFunctionsEnvType
+      release?: { name: string }
+    }>
       onSubmit={noop}
       enableReinitialize={true}
       initialValues={{
         deploymentType: selectedDeploymentType as string,
         gitOpsEnabled: shouldShowGitops ? !!gitOpsEnabled : false,
-        environmentType: shouldShowGCFEnvTypeDropdown ? googleCloudFunctionEnvType : undefined
+        environmentType: shouldShowGCFEnvTypeDropdown ? googleCloudFunctionEnvType : undefined,
+        release: isKubernetesOrNativeHelm
+          ? {
+              name: defaultTo(kubernetesReleaseNameProps?.releaseName, 'release-<+INFRA_KEY_SHORT_ID>')
+            }
+          : undefined
       }}
       validationSchema={Yup.object().shape({
         deploymentType: getServiceDeploymentTypeSchema(getString)
@@ -442,6 +489,7 @@ export default function SelectDeploymentType({
               {renderDeploymentTypes()}
               {renderGitops()}
               {renderGCFEnvTypeDropdown()}
+              {renderK8sReleaseName()}
               {renderRecentDeploymentTemplates()}
             </Card>
           )

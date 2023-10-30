@@ -15,8 +15,10 @@ import type {
   GoogleCloudFunctionsServiceSpec,
   ServiceDefinition,
   StageElementConfig,
-  TemplateLinkConfig
+  TemplateLinkConfig,
+  KubernetesServiceSpec
 } from 'services/cd-ng'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
 import { useDeepCompareEffect } from '@common/hooks'
@@ -68,6 +70,7 @@ function DeployServiceDefinition(): React.ReactElement {
   const { index: stageIndex } = getStageIndexFromPipeline(pipeline, selectedStageId || '')
   const { getString } = useStrings()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
+  const { CDS_NG_K8S_SERVICE_RELEASE_NAME } = useFeatureFlags()
 
   const getDeploymentType = (): ServiceDeploymentType => {
     if (isServiceCreateModalView) {
@@ -205,6 +208,15 @@ function DeployServiceDefinition(): React.ReactElement {
     }
   }
 
+  const handleKubernetesReleaseName = (value: string): void => {
+    const stageData = produce(stage, draft => {
+      const serviceDefinitionSpec = get(draft, 'stage.spec.serviceConfig.serviceDefinition.spec', {})
+
+      set(serviceDefinitionSpec, 'release.name', value)
+    })
+    updateStage(stageData?.stage as StageElementConfig)
+  }
+
   const handleGCFEnvTypeChange = (selectedEnv: SelectOption): void => {
     if (
       selectedEnv.value !==
@@ -286,13 +298,21 @@ function DeployServiceDefinition(): React.ReactElement {
       const stageData = produce(stage, draft => {
         const serviceDefinition = get(draft, 'stage.spec.serviceConfig.serviceDefinition', {})
         serviceDefinition.type = deploymentType
+        const serviceDefinitionSpec = get(draft, 'stage.spec.serviceConfig.serviceDefinition.spec', {})
+
         if (deploymentType === ServiceDeploymentType.GoogleCloudFunctions) {
-          const serviceDefinitionSpec = get(draft, 'stage.spec.serviceConfig.serviceDefinition.spec', {})
           serviceDefinitionSpec.environmentType = GoogleCloudFunctionsEnvType.GenTwo
+        } else if (
+          CDS_NG_K8S_SERVICE_RELEASE_NAME &&
+          (deploymentType === ServiceDeploymentType.Kubernetes || deploymentType === ServiceDeploymentType.NativeHelm)
+        ) {
+          serviceDefinitionSpec.release = { name: 'release-<+INFRA_KEY_SHORT_ID>' }
         } else {
           unset(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.environmentType')
+          unset(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.release')
         }
       })
+
       if (doesStageContainOtherData(stageData?.stage)) {
         setCurrStageData(stageData?.stage)
         openServiceDataDeleteWarningDialog()
@@ -352,6 +372,13 @@ function DeployServiceDefinition(): React.ReactElement {
               ?.environmentType as GoogleCloudFunctionsEnvType
           ),
           handleGCFEnvTypeChange: handleGCFEnvTypeChange
+        }}
+        kubernetesReleaseNameProps={{
+          handleKubernetesReleaseName: handleKubernetesReleaseName,
+          releaseName: defaultTo(
+            (stage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec as KubernetesServiceSpec)?.release?.name,
+            deploymentMetadata?.release?.name
+          )
         }}
       />
       {!!selectedDeploymentType && (

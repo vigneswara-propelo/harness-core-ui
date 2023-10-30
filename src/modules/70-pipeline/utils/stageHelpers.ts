@@ -824,7 +824,7 @@ export const isExecutionFieldPresent = (stage: DeploymentStageElementConfig): bo
 }
 
 export const isServiceDefinitionSpecDataPresent = (stage: DeploymentStageElementConfig): boolean => {
-  return !isEmpty(omit(stage.spec?.serviceConfig?.serviceDefinition?.spec, 'variables', 'environmentType'))
+  return !isEmpty(omit(stage.spec?.serviceConfig?.serviceDefinition?.spec, 'variables', 'environmentType', 'release'))
 }
 
 export const doesStageContainOtherData = (stage?: DeploymentStageElementConfig): boolean => {
