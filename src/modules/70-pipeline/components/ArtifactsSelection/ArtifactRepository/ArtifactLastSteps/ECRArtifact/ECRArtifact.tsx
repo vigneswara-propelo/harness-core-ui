@@ -465,6 +465,7 @@ export function ECRArtifact({
                 {getMultiTypeFromValue(formik.values?.imagePath) === MultiTypeInputType.RUNTIME && (
                   <div className={css.configureOptions}>
                     <SelectConfigureOptions
+                      fetchOptions={fetchImagesList.bind(null, formik.values.region, formik.values.registryId)}
                       options={allImageOptions}
                       value={formik.values?.imagePath as string}
                       type="String"

@@ -6,7 +6,6 @@
  */
 
 import React, { useCallback, useEffect } from 'react'
-import type { FormikValues } from 'formik'
 import { Menu } from '@blueprintjs/core'
 import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
 import { isNil, get, memoize } from 'lodash-es'
@@ -47,19 +46,6 @@ export function NoTagResults({
       {get(tagError, 'data.message', null) || getErrorText()}
     </Text>
   )
-}
-
-const onTagInputFocus = (
-  e: React.FocusEvent<HTMLInputElement>,
-  formik: FormikValues,
-  fetchTags: (val: string) => void,
-  isArtifactPath = false,
-  isServerlessDeploymentTypeSelected = false
-): void => {
-  if (e?.target?.type !== 'text' || (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)) {
-    return
-  }
-  fetchTags(getArtifactPathToFetchTags(formik, isArtifactPath, isServerlessDeploymentTypeSelected))
 }
 
 export const selectItemsMapper = (
@@ -145,7 +131,7 @@ function ArtifactImagePathTagView({
     resetTag(formik)
   }
 
-  const resetDigestValue = () => {
+  const resetDigestValue = (): void => {
     if (
       selectedArtifact === ENABLED_ARTIFACT_TYPES.DockerRegistry ||
       selectedArtifact === ENABLED_ARTIFACT_TYPES.Gcr ||
@@ -155,10 +141,17 @@ function ArtifactImagePathTagView({
       resetFieldValue(formik, 'digest')
     }
   }
-  const resetTagTypeValues = () => {
+  const resetTagTypeValues = (): void => {
     resetFieldValue(formik, 'tag')
     resetFieldValue(formik, 'tagRegex')
   }
+
+  const refetchTags = (): void => {
+    if (!canFetchTags || canFetchTags()) {
+      fetchTags(getArtifactPathToFetchTags(formik, isArtifactPath, isServerlessDeploymentTypeSelected))
+    }
+  }
+
   return (
     <>
       {isServerlessDeploymentTypeSelected ? null : isArtifactPath ? (
@@ -269,9 +262,13 @@ function ArtifactImagePathTagView({
                 addTooltip: true
               },
               onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-                if (!canFetchTags || canFetchTags()) {
-                  onTagInputFocus(e, formik, fetchTags, isArtifactPath, isServerlessDeploymentTypeSelected)
+                if (
+                  e?.target?.type !== 'text' ||
+                  (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                ) {
+                  return
                 }
+                refetchTags()
               },
               onChange: () => resetDigestValue()
             }}
@@ -284,6 +281,7 @@ function ArtifactImagePathTagView({
           {getMultiTypeFromValue(formik?.values?.tag) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
               <SelectConfigureOptions
+                fetchOptions={refetchTags}
                 options={tags}
                 value={formik?.values?.tag}
                 type="String"

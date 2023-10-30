@@ -64,7 +64,7 @@ export const SelectConfigureOptions = (props: SelectConfigureOptionsProps): Reac
 
   React.useEffect(() => {
     fetchOptions?.()
-  })
+  }, [])
 
   const getAllowedValuesMultiSelectComponent = (
     allowedValuesCustomComponentProps: AllowedValuesCustomComponentProps

@@ -284,4 +284,17 @@ describe('SelectConfigureOptions tests', () => {
     expect(allowedValuesSelect).toBeInTheDocument()
     expect(getElementByText(cogModal, 'somethingWentWrong')).toBeInTheDocument()
   })
+
+  test(`it should call fetchOptions on initial render if it is passed as prop`, async () => {
+    const fetchOptions = jest.fn()
+    props.fetchOptions = fetchOptions
+
+    render(
+      <TestWrapper>
+        <SelectConfigureOptions {...props} />
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(fetchOptions).toHaveBeenCalledTimes(1))
+  })
 })

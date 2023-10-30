@@ -28,15 +28,6 @@ import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/Artif
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import css from '../../ArtifactConnector.module.scss'
 
-const onTagInputFocus = (e: React.FocusEvent<HTMLInputElement>, fetchDigest: () => void): void => {
-  /* istanbul ignore next */
-  if (e?.target?.type !== 'text' || (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)) {
-    /* istanbul ignore next */
-    return
-  }
-  fetchDigest()
-}
-
 export function NoDigestResults({
   digestError,
   noDigestText,
@@ -121,6 +112,12 @@ function BaseArtifactDigestField({
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={isBuildDetailsLoading} />
   ))
 
+  const refetchDigest = (): void => {
+    if (canFetchDigest && !isLastBuildRegexType) {
+      refetch()
+    }
+  }
+
   return (
     <>
       {isLastBuildRegexType ? (
@@ -178,11 +175,13 @@ function BaseArtifactDigestField({
                 usePortal: true
               },
               onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-                /* istanbul ignore next */
-                if (canFetchDigest && !isLastBuildRegexType) {
-                  /* istanbul ignore next */
-                  onTagInputFocus(e, refetch)
+                if (
+                  e?.target?.type !== 'text' ||
+                  (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                ) {
+                  return
                 }
+                refetchDigest()
               }
             }}
             label={getString('pipeline.digest')}
@@ -193,6 +192,7 @@ function BaseArtifactDigestField({
           {getMultiTypeFromValue(digestDetails.formikDigestValueField as string) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
               <SelectConfigureOptions
+                fetchOptions={refetchDigest}
                 value={digestDetails.formikDigestValueField as string}
                 type="String"
                 options={digestItems}
