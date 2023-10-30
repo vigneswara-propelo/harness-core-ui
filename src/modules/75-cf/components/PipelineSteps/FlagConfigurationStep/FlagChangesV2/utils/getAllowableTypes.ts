@@ -6,9 +6,9 @@
  */
 
 import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { Feature } from 'services/cf'
 import { isMultiTypeExpression, isMultiTypeRuntime } from '@common/utils/utils'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
 interface FlagAndEnvOptions {
   flag?: Feature | string

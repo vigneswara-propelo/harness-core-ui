@@ -24,6 +24,7 @@ import FlagChangesContextProvider from './FlagChangesContextProvider'
 import { hasSetFlagSwitchRuntime } from './FlagChangesV2/subSections/SetFlagSwitch/SetFlagSwitch'
 import { hasDefaultOnRuleRuntime } from './FlagChangesV2/subSections/DefaultOnRule/DefaultOnRule'
 import { hasDefaultOffRuleRuntime } from './FlagChangesV2/subSections/DefaultOffRule/DefaultOffRule'
+import { hasServeVariationToTargetsRuntime } from './FlagChangesV2/subSections/ServeVariationToTargets/ServeVariationToTargets'
 
 export interface FlagConfigurationInputSetStepProps {
   existingValues?: FlagConfigurationStepData
@@ -118,7 +119,8 @@ const FlagConfigurationInputSetStep = connect<FlagConfigurationInputSetStepProps
         instruction =>
           hasSetFlagSwitchRuntime(instruction) ||
           hasDefaultOnRuleRuntime(instruction) ||
-          hasDefaultOffRuleRuntime(instruction)
+          hasDefaultOffRuleRuntime(instruction) ||
+          hasServeVariationToTargetsRuntime(instruction)
       )
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [flattenedInstructions])
@@ -178,6 +180,9 @@ const FlagConfigurationInputSetStep = connect<FlagConfigurationInputSetStepProps
             environmentIdentifier={selectedEnvironmentId}
             mode={stepViewType}
             readonly={readonly}
+            initialInstructions={
+              Array.isArray(existingValues?.spec?.instructions) ? existingValues?.spec?.instructions : undefined
+            }
           >
             <FlagChangesRuntime
               selectedFeature={selectedFeature}

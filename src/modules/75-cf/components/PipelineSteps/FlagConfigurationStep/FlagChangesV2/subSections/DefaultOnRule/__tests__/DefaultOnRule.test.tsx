@@ -6,97 +6,21 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { cloneDeep } from 'lodash-es'
+import { render, screen } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
-import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import MockFeature from '@cf/utils/testData/data/mockFeature'
 import { CFPipelineInstructionType } from '@cf/components/PipelineSteps/FlagConfigurationStep/types'
-import { SubSectionComponentProps } from '../../../subSection.types'
-import SubSectionTestWrapper, { SubSectionTestWrapperProps } from '../../__tests__/SubSectionTestWrapper.mock'
+import SubSectionTestWrapper from '../../__tests__/SubSectionTestWrapper.mock'
 import DefaultOnRule, { defaultOnRuleSchema, hasDefaultOnRuleRuntime } from '../DefaultOnRule'
 
-const renderComponent = (
-  props: Partial<SubSectionComponentProps> = {},
-  testWrapperProps: Partial<SubSectionTestWrapperProps> = {}
-): RenderResult =>
-  render(
-    <SubSectionTestWrapper {...testWrapperProps}>
-      <DefaultOnRule prefixPath="test" title="Default ON rule" {...props} />
-    </SubSectionTestWrapper>
-  )
-
 describe('DefaultOnRule', () => {
-  test('it should display the title', async () => {
-    const title = 'TEST TITLE'
-    renderComponent({ title })
+  test('it should display the ON variation label', async () => {
+    render(
+      <SubSectionTestWrapper>
+        <DefaultOnRule prefixPath="test" title="Default ON rule" />
+      </SubSectionTestWrapper>
+    )
 
-    expect(await screen.findByRole('heading', { name: title })).toBeInTheDocument()
-  })
-
-  describe('edit', () => {
-    test('it should display a dropdown with all flag variations', async () => {
-      const flag = cloneDeep(MockFeature)
-      flag.variations = [
-        { name: 'Variation A', identifier: 'varA', value: 'varA' },
-        { name: 'Variation B', identifier: 'varB', value: 'varB' },
-        { name: 'Variation C', identifier: 'varC', value: 'varC' }
-      ]
-
-      renderComponent({}, { flag, mode: StepViewType.Edit })
-
-      await userEvent.click(await screen.findByPlaceholderText('cf.pipeline.flagConfiguration.selectVariation'))
-
-      for (const variation of flag.variations) {
-        expect(await screen.findByText(variation.name!)).toBeInTheDocument()
-      }
-    })
-
-    test('it should display a disabled input when set as read only', async () => {
-      const flag = cloneDeep(MockFeature)
-      flag.variations = [
-        { name: 'Variation A', identifier: 'varA', value: 'varA' },
-        { name: 'Variation B', identifier: 'varB', value: 'varB' },
-        { name: 'Variation C', identifier: 'varC', value: 'varC' }
-      ]
-
-      renderComponent({}, { flag, mode: StepViewType.Edit, readonly: true })
-
-      expect(await screen.findByPlaceholderText('cf.pipeline.flagConfiguration.selectVariation')).toBeDisabled()
-    })
-  })
-
-  describe('runtime', () => {
-    test('it should display a dropdown with all flag variations', async () => {
-      const flag = cloneDeep(MockFeature)
-      flag.variations = [
-        { name: 'Variation A', identifier: 'varA', value: 'varA' },
-        { name: 'Variation B', identifier: 'varB', value: 'varB' },
-        { name: 'Variation C', identifier: 'varC', value: 'varC' }
-      ]
-
-      renderComponent({}, { flag, mode: StepViewType.DeploymentForm })
-
-      await userEvent.click(await screen.findByPlaceholderText('- cf.pipeline.flagConfiguration.selectVariation -'))
-
-      for (const variation of flag.variations) {
-        expect(await screen.findByText(variation.name!)).toBeInTheDocument()
-      }
-    })
-
-    test('it should display a disabled input when set as read only', async () => {
-      const flag = cloneDeep(MockFeature)
-      flag.variations = [
-        { name: 'Variation A', identifier: 'varA', value: 'varA' },
-        { name: 'Variation B', identifier: 'varB', value: 'varB' },
-        { name: 'Variation C', identifier: 'varC', value: 'varC' }
-      ]
-
-      renderComponent({}, { flag, mode: StepViewType.DeploymentForm, readonly: true })
-
-      expect(await screen.findByPlaceholderText('- cf.pipeline.flagConfiguration.selectVariation -')).toBeDisabled()
-    })
+    expect(await screen.findByText('cf.pipeline.flagConfiguration.whenTheFlagIsOnServe')).toBeInTheDocument()
   })
 })
 

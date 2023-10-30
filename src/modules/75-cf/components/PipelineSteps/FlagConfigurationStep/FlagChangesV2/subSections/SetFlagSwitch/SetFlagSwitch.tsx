@@ -10,14 +10,13 @@ import * as Yup from 'yup'
 import { FormInput, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { useFormikContext } from 'formik'
 import { useStrings, UseStringsReturn } from 'framework/strings'
-import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { FeatureFlagActivationStatus } from '@cf/utils/CFUtils'
 import { CFPipelineInstructionType, FeatureFlagConfigurationInstruction } from '../../../types'
 import SubSection from '../../SubSection'
 import type { SubSectionComponent } from '../../subSection.types'
 import { useFlagChanges } from '../../../FlagChangesContextProvider'
-import { getAllowableTypes } from '../getAllowableTypes'
-import { withPrefix } from '../withPrefix'
+import { getAllowableTypes } from '../../utils/getAllowableTypes'
+import { withPrefix } from '../../utils/withPrefix'
 
 import css from './SetFlagSwitch.module.scss'
 
@@ -46,36 +45,19 @@ const SetFlagSwitch: SubSectionComponent = ({ prefixPath, ...props }) => {
 
   return (
     <SubSection data-testid="flagChanges-setFlagSwitch" {...props}>
-      {mode === StepViewType.DeploymentForm && (
-        <FormInput.Select
-          name={withPrefix(prefixPath, 'spec.state')}
-          className={css.hideLabelText}
-          items={[
-            { label: getString('common.ON'), value: FeatureFlagActivationStatus.ON },
-            { label: getString('common.OFF'), value: FeatureFlagActivationStatus.OFF }
-          ]}
-          label={getString('cf.pipeline.flagConfiguration.switchTo')}
-          placeholder={getString('cf.pipeline.flagConfiguration.selectOnOrOff')}
-          disabled={readonly}
-          usePortal
-        />
-      )}
-
-      {mode !== StepViewType.DeploymentForm && (
-        <FormInput.MultiTypeInput
-          name={withPrefix(prefixPath, 'spec.state')}
-          useValue
-          className={css.hideLabelText}
-          selectItems={[
-            { label: getString('common.ON'), value: FeatureFlagActivationStatus.ON },
-            { label: getString('common.OFF'), value: FeatureFlagActivationStatus.OFF }
-          ]}
-          label={getString('cf.pipeline.flagConfiguration.switchTo')}
-          placeholder={getString('cf.pipeline.flagConfiguration.selectOnOrOff')}
-          multiTypeInputProps={{ allowableTypes }}
-          disabled={readonly}
-        />
-      )}
+      <FormInput.MultiTypeInput
+        name={withPrefix(prefixPath, 'spec.state')}
+        useValue
+        className={css.hideLabelText}
+        selectItems={[
+          { label: getString('common.ON'), value: FeatureFlagActivationStatus.ON },
+          { label: getString('common.OFF'), value: FeatureFlagActivationStatus.OFF }
+        ]}
+        label={getString('cf.pipeline.flagConfiguration.switchTo')}
+        placeholder={getString('cf.pipeline.flagConfiguration.selectOnOrOff')}
+        multiTypeInputProps={{ allowableTypes, resetExpressionOnFixedTypeChange: true }}
+        disabled={readonly}
+      />
     </SubSection>
   )
 }

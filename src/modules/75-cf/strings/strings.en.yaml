@@ -19,6 +19,8 @@ shared:
   getStarted: '{{ $.getStarted }}'
   quickGuide: Quick Guide
   readDocumentation: Read the docs
+  variationRequired: Variation is required
+  serveVariationToTargets: Serve variation to targets
 messages:
   flagCreated: Flag created.
   flagUpdated: Flag updated.
@@ -263,6 +265,9 @@ featureFlags:
         onVariation: ON variation is required
       defaultOffRule:
         offVariation: OFF variation is required
+      serveVariationToTargets:
+        variation: '{{ $.cf.shared.variationRequired }}'
+        targets: Targets are required
       serveVariationToIndividualTarget:
         variationTargets: Targets/variation is required
       serveVariationToTargetGroup:
@@ -485,18 +490,21 @@ pipeline:
     stepName: 'Step Name '
     selectEnvironment: '{{ $.cf.shared.selectEnvironment }}'
     selectFlag: Select Flag
+    selectTargets: Select targets
     switchTo: Set Flag Switch To
     configureMore: + Configure More
     serve: Serve
+    serveVariation: Serve variation
     flagChanges: Flag Changes
     flagChangesRuntime: 'At runtime, you may choose the following flag configuration changes:'
     flagChangesRuntimeSetDefaultRules: Set default rules
-    flagChangesRuntimeServeVariationToTargets: Serve variation to targets
+    flagChangesRuntimeServeVariationToTargets: '{{ $.cf.shared.serveVariationToTargets }}'
     flagChangesRuntimeServeVariationToTargetGroups: Serve variation to target groups
     flagChangesRuntimeServePercentageRollout: Serve a percentage rollout
     setFlagSwitch: Set flag switch
     setDefaultOnRule: Set default ON rule
     setDefaultOffRule: Set default OFF rule
+    serveVariationToTargets: '{{ $.cf.shared.serveVariationToTargets }}'
     serveVariationToIndividualTarget: Serve Variation to Individual Target
     serveVariationToTargetGroup: Serve Variation to Target Group
     servePercentageRollout: Serve Percentage Rollout
@@ -544,7 +552,7 @@ segmentDetail:
   noFlags: There are no Flags specified for this Target Group
   headingFeatureFlag: FEATURE FLAG
   headingVariation: VARIATION
-  variationIsRequired: Variation is required
+  variationIsRequired: '{{ $.cf.shared.variationRequired }}'
   addFlagNameToTargetGroup: 'Add {{ flagName }} to Target Group'
   addFlagToTargetGroup: Add Flag to Target Group
   updateSuccessful: Update successful

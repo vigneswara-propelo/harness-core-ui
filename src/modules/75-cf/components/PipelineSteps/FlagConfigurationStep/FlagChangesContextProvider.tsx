@@ -8,18 +8,21 @@
 import React, { createContext, FC, PropsWithChildren, useContext } from 'react'
 import { Feature } from 'services/cf'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { FeatureFlagConfigurationInstruction } from '@cf/components/PipelineSteps/FlagConfigurationStep/types'
 
 export interface FlagChangesContextProviderProps {
   flag: Feature | string
   environmentIdentifier: string
   mode: StepViewType
   readonly?: boolean
+  initialInstructions?: FeatureFlagConfigurationInstruction[]
 }
 
 const FlagChangesContext = createContext<FlagChangesContextProviderProps>({
   flag: '',
   environmentIdentifier: '',
-  mode: StepViewType.Edit
+  mode: StepViewType.Edit,
+  initialInstructions: []
 })
 
 const FlagChangesContextProvider: FC<PropsWithChildren<FlagChangesContextProviderProps>> = ({
@@ -27,10 +30,11 @@ const FlagChangesContextProvider: FC<PropsWithChildren<FlagChangesContextProvide
   environmentIdentifier,
   mode,
   readonly,
+  initialInstructions = [],
   children
 }) => {
   return (
-    <FlagChangesContext.Provider value={{ flag, environmentIdentifier, mode, readonly }}>
+    <FlagChangesContext.Provider value={{ flag, environmentIdentifier, mode, readonly, initialInstructions }}>
       {children}
     </FlagChangesContext.Provider>
   )

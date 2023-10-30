@@ -20,18 +20,21 @@ import {
 import { SubSectionComponent, subSectionNames } from './subSection.types'
 import SubSections from './SubSections'
 import { useFlagChanges } from '../FlagChangesContextProvider'
-import { withPrefix } from './subSections/withPrefix'
+import { withPrefix } from './utils/withPrefix'
 
 // sub-sections
 import SetFlagSwitch, { hasSetFlagSwitchRuntime } from './subSections/SetFlagSwitch/SetFlagSwitch'
 import DefaultOnRule, { hasDefaultOnRuleRuntime } from './subSections/DefaultOnRule/DefaultOnRule'
 import DefaultOffRule, { hasDefaultOffRuleRuntime } from './subSections/DefaultOffRule/DefaultOffRule'
+import ServeVariationToTargets, {
+  hasServeVariationToTargetsRuntime
+} from './subSections/ServeVariationToTargets/ServeVariationToTargets'
 
 export const allSubSections: SubSectionComponent[] = [
   SetFlagSwitch,
   DefaultOnRule,
-  DefaultOffRule
-  // ServeVariationToIndividualTarget,
+  DefaultOffRule,
+  ServeVariationToTargets
   // ServeVariationToTargetGroup,
   // ServePercentageRollout
 ]
@@ -46,27 +49,31 @@ const FlagChangesForm: FC<FlagChangesFormProps> = ({ prefixPath, initialInstruct
   const { setFieldValue, values } = useFormikContext<FlagConfigurationStepFormDataValues>()
   const { mode } = useFlagChanges()
 
-  const [subSections, setSubSections] = useState<Array<SubSectionComponent | null>>(() => {
+  const [subSections, setSubSections] = useState<SubSectionComponent[]>(() => {
     if (!Array.isArray(initialInstructions) || initialInstructions.length === 0) {
       return []
     }
 
     if (mode === StepViewType.DeploymentForm) {
-      return initialInstructions.map(instruction => {
+      return initialInstructions.reduce<SubSectionComponent[]>((components, instruction) => {
         if (hasSetFlagSwitchRuntime(instruction)) {
-          return SetFlagSwitch
+          return [...components, SetFlagSwitch]
         }
 
         if (hasDefaultOnRuleRuntime(instruction)) {
-          return DefaultOnRule
+          return [...components, DefaultOnRule]
         }
 
         if (hasDefaultOffRuleRuntime(instruction)) {
-          return DefaultOffRule
+          return [...components, DefaultOffRule]
         }
 
-        return null
-      })
+        if (hasServeVariationToTargetsRuntime(instruction)) {
+          return [...components, ServeVariationToTargets]
+        }
+
+        return components
+      }, [])
     }
 
     return [
@@ -77,6 +84,8 @@ const FlagChangesForm: FC<FlagChangesFormProps> = ({ prefixPath, initialInstruct
               return DefaultOnRule
             case CFPipelineInstructionType.SET_DEFAULT_OFF_VARIATION:
               return DefaultOffRule
+            case CFPipelineInstructionType.ADD_TARGETS_TO_VARIATION_TARGET_MAP:
+              return ServeVariationToTargets
             // case CFPipelineInstructionType.SET_DEFAULT_OFF_VARIATION:
             // case CFPipelineInstructionType.SET_DEFAULT_VARIATIONS:
             //   return DefaultRules

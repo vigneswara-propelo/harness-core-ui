@@ -12,6 +12,7 @@ import type { UseStringsReturn } from 'framework/strings'
 import { setFlagSwitchSchema } from './subSections/SetFlagSwitch/SetFlagSwitch'
 import { defaultOnRuleSchema } from './subSections/DefaultOnRule/DefaultOnRule'
 import { defaultOffRuleSchema } from './subSections/DefaultOffRule/DefaultOffRule'
+import { serveVariationToTargetsSchema } from './subSections/ServeVariationToTargets/ServeVariationToTargets'
 
 const flagChangesValidationSchema = (getString: UseStringsReturn['getString']): Yup.Schema<unknown> =>
   Yup.array().of(
@@ -25,8 +26,8 @@ const flagChangesValidationSchema = (getString: UseStringsReturn['getString']): 
         //   return servePercentageRolloutSchema(getString)
         // case CFPipelineInstructionType.ADD_SEGMENT_TO_VARIATION_TARGET_MAP:
         //   return serveVariationToTargetGroupSchema(getString)
-        // case CFPipelineInstructionType.ADD_TARGETS_TO_VARIATION_TARGET_MAP:
-        //   return serveVariationToIndividualTargetSchema(getString)
+        case CFPipelineInstructionType.ADD_TARGETS_TO_VARIATION_TARGET_MAP:
+          return serveVariationToTargetsSchema(getString)
         // case CFPipelineInstructionType.SET_DEFAULT_VARIATIONS:
         //   return defaultRulesSchema(getString)
         case CFPipelineInstructionType.SET_FEATURE_FLAG_STATE:

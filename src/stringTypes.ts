@@ -8804,6 +8804,8 @@ export interface StringsMap {
   'cf.featureFlags.flagPipeline.validation.servePercentageRollout.targetGroup': string
   'cf.featureFlags.flagPipeline.validation.serveVariationToIndividualTarget.variationTargets': string
   'cf.featureFlags.flagPipeline.validation.serveVariationToTargetGroup.variationTargetGroups': string
+  'cf.featureFlags.flagPipeline.validation.serveVariationToTargets.targets': string
+  'cf.featureFlags.flagPipeline.validation.serveVariationToTargets.variation': string
   'cf.featureFlags.flagPipeline.validation.setFlagSwitch.state': string
   'cf.featureFlags.flagVideoLabel': string
   'cf.featureFlags.flagWillTurnOff': string
@@ -9021,11 +9023,14 @@ export interface StringsMap {
   'cf.pipeline.flagConfiguration.selectEnvironment': string
   'cf.pipeline.flagConfiguration.selectFlag': string
   'cf.pipeline.flagConfiguration.selectOnOrOff': string
+  'cf.pipeline.flagConfiguration.selectTargets': string
   'cf.pipeline.flagConfiguration.selectVariation': string
   'cf.pipeline.flagConfiguration.serve': string
   'cf.pipeline.flagConfiguration.servePercentageRollout': string
+  'cf.pipeline.flagConfiguration.serveVariation': string
   'cf.pipeline.flagConfiguration.serveVariationToIndividualTarget': string
   'cf.pipeline.flagConfiguration.serveVariationToTargetGroup': string
+  'cf.pipeline.flagConfiguration.serveVariationToTargets': string
   'cf.pipeline.flagConfiguration.setDefaultOffRule': string
   'cf.pipeline.flagConfiguration.setDefaultOnRule': string
   'cf.pipeline.flagConfiguration.setFlagSwitch': string
@@ -9114,10 +9119,12 @@ export interface StringsMap {
   'cf.shared.segments': string
   'cf.shared.selectEnvironment': string
   'cf.shared.selected': string
+  'cf.shared.serveVariationToTargets': string
   'cf.shared.target': string
   'cf.shared.targetManagement': string
   'cf.shared.targets': string
   'cf.shared.variation': string
+  'cf.shared.variationRequired': string
   'cf.shared.variations': string
   'cf.staleFlagAction.checkAllStaleFlags': string
   'cf.staleFlagAction.checkStaleFlag': string

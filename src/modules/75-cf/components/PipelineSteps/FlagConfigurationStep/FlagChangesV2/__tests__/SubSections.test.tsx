@@ -13,7 +13,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import SubSections, { SubSectionsProps } from '../SubSections'
 import SubSection from '../SubSection'
 import { SubSectionComponent } from '../subSection.types'
-import { withPrefix } from '../subSections/withPrefix'
+import { withPrefix } from '../utils/withPrefix'
 
 const FakeSubSection: SubSectionComponent = ({ title, onRemove, prefixPath }) => {
   return (
