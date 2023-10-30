@@ -355,7 +355,7 @@ export function RightBar(): JSX.Element {
           font={{ weight: 'semi-bold', size: 'xsmall' }}
           icon="template-inputs"
           withoutCurrentColor={true}
-          iconProps={{ size: 28 }}
+          iconProps={{ size: 20 }}
           text={getString('pipeline.templateInputs')}
           data-testid="template-inputs"
           disabled={isUpdated}
@@ -368,7 +368,7 @@ export function RightBar(): JSX.Element {
         font={{ weight: 'semi-bold', size: 'xsmall' }}
         icon="pipeline-variables"
         withoutCurrentColor={true}
-        iconProps={{ size: 28 }}
+        iconProps={{ size: 20 }}
         text={getString('common.variables')}
         data-testid="input-variable"
       />
@@ -391,7 +391,7 @@ export function RightBar(): JSX.Element {
           }}
           font={{ weight: 'semi-bold', size: 'xsmall' }}
           icon="pipeline-deploy"
-          iconProps={{ size: 24 }}
+          iconProps={{ size: 20 }}
           text={getString('rbac.notifications.pipelineName')}
           withoutCurrentColor={true}
         />
@@ -485,7 +485,7 @@ export function RightBar(): JSX.Element {
           font={{ weight: 'semi-bold', size: 'xsmall' }}
           icon="pipeline-advanced"
           withoutCurrentColor={true}
-          iconProps={{ size: 24 }}
+          iconProps={{ size: 20 }}
           text={getString('pipeline.advancedOptions')}
         />
       )}

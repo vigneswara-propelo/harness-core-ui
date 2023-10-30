@@ -21,11 +21,11 @@ import {
   ModalDialog
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { matchPath, useHistory, useParams } from 'react-router-dom'
-import { defaultTo, isEmpty, isEqual, merge, omit } from 'lodash-es'
+import { matchPath, useHistory, useParams, useLocation } from 'react-router-dom'
+import { cloneDeep, defaultTo, isEmpty, isEqual, merge, omit } from 'lodash-es'
 import produce from 'immer'
 import { parse } from '@common/utils/YamlHelperMethods'
-import type { Error, PipelineInfoConfig } from 'services/pipeline-ng'
+import type { Error, PipelineInfoConfig, StepElementConfig } from 'services/pipeline-ng'
 import { EntityGitDetails, InputSetSummaryResponse, useGetInputsetYaml } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -64,6 +64,7 @@ import { useGetSettingsList } from 'services/cd-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getPipelineUrl } from '@common/hooks/useGetEntityMetadata'
 import { getDefaultStoreType, getSettingValue } from '@default-settings/utils/utils'
+import { PipelineMetadataForRouter } from '@pipeline/components/CreatePipelineButton/useCreatePipelineModalY1'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import CreatePipelines from '../CreateModal/PipelineCreate'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'
@@ -180,6 +181,48 @@ export function PipelineCanvas({
     PipelineType<PipelinePathProps> & GitQueryParams
   >()
   const history = useHistory()
+  const { state: routerState } = useLocation<Optional<PipelineMetadataForRouter>>()
+
+  React.useEffect(() => {
+    const process = async (): Promise<void> => {
+      // Populating pipeline context with pipeline metadata after DB is initialised with DefaultPipeline with state property of the location object
+      if (routerState?.updatedPipeline && state.isInitialized) {
+        const { updatedPipeline, gitDetails: updatedGitDetails, storeMetadata: updatedStoreMetadata } = routerState
+
+        const latestPipeline = { ...updatedPipeline, projectIdentifier, orgIdentifier } as PipelineInfoConfig
+        await updatePipeline(latestPipeline)
+
+        if (updatedStoreMetadata?.storeType) {
+          await updatePipelineStoreMetadata(updatedStoreMetadata, updatedGitDetails as EntityGitDetails, latestPipeline)
+        }
+
+        if (updatedGitDetails) {
+          await updateGitDetails(updatedGitDetails, latestPipeline)
+          if (updatedGitDetails) {
+            if (isGitSyncEnabled) {
+              updateQueryParams(
+                { repoIdentifier: updatedGitDetails.repoIdentifier, branch: updatedGitDetails.branch },
+                { skipNulls: true }
+              )
+            } else if (supportingGitSimplification && updatedStoreMetadata?.storeType === StoreType.REMOTE) {
+              updateQueryParams(
+                {
+                  connectorRef: updatedStoreMetadata.connectorRef,
+                  repoName: updatedGitDetails?.repoName,
+                  branch: updatedGitDetails.branch,
+                  storeType: updatedStoreMetadata.storeType as StoreType
+                },
+                { skipNulls: true }
+              )
+            }
+          }
+        }
+      }
+    }
+
+    process()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isGitSyncEnabled, routerState, supportingGitSimplification, updateQueryParams, state.isInitialized])
 
   // For remote pipeline queryParam will always as branch as selected branch except coming from list view
   // While opeining studio from list view, selected branch can be any branch as in pipeline response
@@ -236,7 +279,7 @@ export function PipelineCanvas({
     intent: Intent.WARNING,
     onCloseDialog: isConfirmed => {
       if (isConfirmed) {
-        fetchPipeline({ forceFetch: true, forceUpdate: true })
+        fetchPipeline()
       } else {
         setDiscardBEUpdate(true)
       }
@@ -356,7 +399,7 @@ export function PipelineCanvas({
         >
           <CreatePipelines
             afterSave={onSubmit}
-            initialValues={merge(pipeline, {
+            initialValues={merge(cloneDeep(pipeline), {
               repo: repoName || gitDetails.repoIdentifier || '',
               branch: branch || gitDetails.branch || '',
               connectorRef: defaultTo(connectorRef, ''),
@@ -368,6 +411,7 @@ export function PipelineCanvas({
             primaryButtonText={modalMode === 'create' ? getString('start') : getString('continue')}
             isReadonly={isReadonly}
             isGitXEnforced={getSettingValue(gitXSetting, SettingType.ENFORCE_GIT_EXPERIENCE) === 'true'}
+            modalMode={modalMode}
           />
         </ModalDialog>
       )
@@ -410,7 +454,8 @@ export function PipelineCanvas({
 
   React.useEffect(() => {
     if (isInitialized) {
-      if (pipeline?.identifier === DefaultNewPipelineId) {
+      // Prevent create modal opening if location.state has pipeline data ( redirected from listing page )
+      if (pipeline?.identifier === DefaultNewPipelineId && isEmpty(routerState?.updatedPipeline)) {
         setModalMode('create')
         showModal()
       }
@@ -467,50 +512,54 @@ export function PipelineCanvas({
   ])
 
   const onSubmit = React.useCallback(
-    (
+    async (
       values: PipelineInfoConfig,
       currStoreMetadata?: StoreMetadata,
       updatedGitDetails?: EntityGitDetails,
       shouldUseTemplate = false
     ) => {
-      pipeline.name = values.name
-      pipeline.description = values.description
-      pipeline.identifier = values.identifier
-      pipeline.tags = values.tags ?? {}
-      delete (pipeline as PipelineWithGitContextFormProps).repo
-      delete (pipeline as PipelineWithGitContextFormProps).branch
-      delete (pipeline as PipelineWithGitContextFormProps).connectorRef
-      delete (pipeline as PipelineWithGitContextFormProps).filePath
-      delete (pipeline as PipelineWithGitContextFormProps).storeType
-      updatePipeline(pipeline)
+      const updatedPipeline = produce(pipeline, draft => {
+        draft.name = values.name
+        draft.description = values.description
+        draft.identifier = values.identifier
+        draft.tags = values.tags ?? {}
+        delete (draft as PipelineWithGitContextFormProps).repo
+        delete (draft as PipelineWithGitContextFormProps).branch
+        delete (draft as PipelineWithGitContextFormProps).connectorRef
+        delete (draft as PipelineWithGitContextFormProps).filePath
+        delete (draft as PipelineWithGitContextFormProps).storeType
+      })
+      await updatePipeline(updatedPipeline)
+
       if (currStoreMetadata?.storeType) {
-        updatePipelineStoreMetadata(currStoreMetadata, gitDetails)
+        await updatePipelineStoreMetadata(currStoreMetadata, gitDetails)
       }
 
       if (updatedGitDetails) {
         if (gitDetails?.objectId || gitDetails?.commitId) {
           updatedGitDetails = { ...gitDetails, ...updatedGitDetails }
         }
-        updateGitDetails(updatedGitDetails).then(() => {
-          if (updatedGitDetails) {
-            if (isGitSyncEnabled) {
-              updateQueryParams(
-                { repoIdentifier: updatedGitDetails.repoIdentifier, branch: updatedGitDetails.branch },
-                { skipNulls: true }
-              )
-            } else if (supportingGitSimplification && currStoreMetadata?.storeType === StoreType.REMOTE) {
-              updateQueryParams(
-                {
-                  connectorRef: currStoreMetadata.connectorRef,
-                  repoName: updatedGitDetails?.repoName,
-                  branch: updatedGitDetails.branch,
-                  storeType: currStoreMetadata.storeType as StoreType
-                },
-                { skipNulls: true }
-              )
-            }
+
+        await updateGitDetails(updatedGitDetails)
+
+        if (updatedGitDetails) {
+          if (isGitSyncEnabled) {
+            updateQueryParams(
+              { repoIdentifier: updatedGitDetails.repoIdentifier, branch: updatedGitDetails.branch },
+              { skipNulls: true }
+            )
+          } else if (supportingGitSimplification && currStoreMetadata?.storeType === StoreType.REMOTE) {
+            updateQueryParams(
+              {
+                connectorRef: currStoreMetadata.connectorRef,
+                repoName: updatedGitDetails?.repoName,
+                branch: updatedGitDetails.branch,
+                storeType: currStoreMetadata.storeType as StoreType
+              },
+              { skipNulls: true }
+            )
           }
-        })
+        }
       }
       setUseTemplate(shouldUseTemplate)
       hideModal()
@@ -527,7 +576,10 @@ export function PipelineCanvas({
     })
     const processNode = isCopied
       ? produce(
-          defaultTo(parse<any>(defaultTo(newTemplate?.yaml, ''))?.template.spec, {}) as PipelineInfoConfig,
+          defaultTo(
+            parse<{ template: { spec: StepElementConfig } }>(defaultTo(newTemplate?.yaml, ''))?.template.spec,
+            {}
+          ) as PipelineInfoConfig,
           draft => {
             draft.name = defaultTo(pipeline?.name, '')
             draft.identifier = defaultTo(pipeline?.identifier, '')
@@ -722,8 +774,6 @@ export function PipelineCanvas({
           )
           if (!defaultSelected) {
             fetchPipeline({
-              forceFetch: true,
-              forceUpdate: true,
               repoIdentifier: selectedFilter.repo,
               branch: selectedFilter.branch
             })

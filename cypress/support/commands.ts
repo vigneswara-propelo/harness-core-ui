@@ -231,6 +231,7 @@ Cypress.Commands.add('visitExecutionsList', () => {
 Cypress.Commands.add('visitCreatePipeline', () => {
   cy.visitPipelinesList()
   cy.contains('span', 'Create a Pipeline').click()
+  cy.wait(1000)
 })
 
 Cypress.Commands.add('fillName', (value: string) => {
@@ -245,6 +246,7 @@ Cypress.Commands.add('initializeRoute', () => {
 Cypress.Commands.add('visitVerifyStepInPipeline', () => {
   cy.visitPipelinesList()
   cy.contains('span', 'Create a Pipeline').click()
+  cy.wait(1000)
 })
 
 // Change Intelligence commands

@@ -21,6 +21,7 @@ import {
   initialState,
   PipelineContextActions,
   PipelineReducer,
+  PipelineReducerState,
   PipelineViewData
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { useLocalStorage, useQueryParams } from '@common/hooks'
@@ -64,8 +65,6 @@ interface FetchServiceBoundProps {
 }
 
 interface FetchServiceUnboundProps {
-  forceFetch?: boolean
-  forceUpdate?: boolean
   signal?: AbortSignal
 }
 
@@ -202,52 +201,52 @@ export function ServicePipelineProvider({
     [updatePipeline]
   )
 
-  const _fetchService = async (props: FetchServiceBoundProps, params: FetchServiceUnboundProps): Promise<void> => {
+  const _fetchService = async (props: FetchServiceBoundProps, params: FetchServiceUnboundProps = {}): Promise<void> => {
     const { serviceIdentifier: identifier } = props
-    const { forceFetch = false, forceUpdate = false, signal } = params
+    const { signal } = params
 
     dispatch(PipelineContextActions.fetching())
-    if (forceFetch && forceUpdate) {
-      const serviceDetails: ServiceResponseDTO = await getServiceByIdentifier(
-        { ...queryParams, ...(repoIdentifier && branch ? { repoIdentifier, branch } : {}) },
-        identifier,
-        signal
-      )
-      const serviceYaml = yamlParse<NGServiceConfig>(defaultTo(serviceDetails.yaml, ''))
-      const serviceData = merge(serviceYaml, initialServiceState)
 
-      const defaultService = {
-        identifier: defaultTo(serviceDetails.identifier, DefaultNewPipelineId),
-        name: serviceDetails.name as string,
-        description: serviceData.service.description,
-        tags: serviceData.service.tags,
-        gitOpsEnabled: serviceData.service.gitOpsEnabled
-      }
-      const refetchedService = produce({ ...defaultService }, draft => {
-        if (!isEmpty(serviceData.service.serviceDefinition)) {
-          set(draft, 'stages[0].stage.name', DefaultNewStageName)
-          set(draft, 'stages[0].stage.identifier', DefaultNewStageId)
-          set(
-            draft,
-            'stages[0].stage.spec.serviceConfig.serviceDefinition',
-            cloneDeep(serviceData.service.serviceDefinition)
-          )
-          set(draft, 'stages[0].stage.spec.serviceConfig.serviceRef', serviceDetails.identifier)
-        }
-      })
+    const serviceDetails: ServiceResponseDTO = await getServiceByIdentifier(
+      { ...queryParams, ...(repoIdentifier && branch ? { repoIdentifier, branch } : {}) },
+      identifier,
+      signal
+    )
+    const serviceYaml = yamlParse<NGServiceConfig>(defaultTo(serviceDetails.yaml, ''))
+    const serviceData = merge(serviceYaml, initialServiceState)
 
-      dispatch(
-        PipelineContextActions.success({
-          error: '',
-          pipeline: refetchedService,
-          originalPipeline: cloneDeep(refetchedService),
-          isBEPipelineUpdated: false,
-          isUpdated: false
-        })
-      )
-      dispatch(PipelineContextActions.initialized())
-      onUpdatePipeline?.(refetchedService as ServicePipelineConfig)
+    const defaultService = {
+      identifier: defaultTo(serviceDetails.identifier, DefaultNewPipelineId),
+      name: serviceDetails.name as string,
+      description: serviceData.service.description,
+      tags: serviceData.service.tags,
+      gitOpsEnabled: serviceData.service.gitOpsEnabled
     }
+    const refetchedService = produce({ ...defaultService }, draft => {
+      if (!isEmpty(serviceData.service.serviceDefinition)) {
+        set(draft, 'stages[0].stage.name', DefaultNewStageName)
+        set(draft, 'stages[0].stage.identifier', DefaultNewStageId)
+        set(
+          draft,
+          'stages[0].stage.spec.serviceConfig.serviceDefinition',
+          cloneDeep(serviceData.service.serviceDefinition)
+        )
+        set(draft, 'stages[0].stage.spec.serviceConfig.serviceRef', serviceDetails.identifier)
+      }
+    })
+
+    dispatch(
+      PipelineContextActions.success({
+        error: '',
+        pipeline: refetchedService,
+        originalPipeline: cloneDeep(refetchedService),
+        isBEPipelineUpdated: false,
+        isUpdated: false
+      })
+    )
+    dispatch(PipelineContextActions.initialized())
+
+    onUpdatePipeline?.(refetchedService as ServicePipelineConfig)
   }
 
   const fetchPipeline = _fetchService.bind(null, {
@@ -320,9 +319,9 @@ export function ServicePipelineProvider({
         updateGitDetails: Promise.resolve,
         updateEntityValidityDetails: Promise.resolve,
         updatePipeline,
+        updatePipelineMetadata: Promise.resolve,
         updateStage,
         updatePipelineView,
-        pipelineSaved: noop,
         deletePipelineCache: Promise.resolve,
         isReadonly: isReadOnly,
         setYamlHandler: noop,
@@ -344,7 +343,8 @@ export function ServicePipelineProvider({
           reconcileError: null,
           setOutOfSync: noop,
           reconcilePipeline: (_showToast?: boolean) => Promise.resolve({}) as RefetchReturnType
-        }
+        },
+        getLatestState: () => ({} as PipelineReducerState)
       }}
     >
       {children}

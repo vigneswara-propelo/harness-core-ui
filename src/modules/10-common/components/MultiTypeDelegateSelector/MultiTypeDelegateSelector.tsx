@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { connect, FormikContextType } from 'formik'
+import cx from 'classnames'
 import {
   FormikTooltipContext,
   DataTooltipInterface,
@@ -173,7 +174,7 @@ export function MultiTypeDelegateSelector(props: ConnectedMultiTypeDelegateSelec
         >
           <DelegateSelectorsV2Container
             {...inputProps}
-            wrapperClassName={css.wrapper}
+            wrapperClassName={cx(css.wrapper, inputProps.wrapperClassName)}
             selectedItems={value}
             readonly={disabled}
             onTagInputChange={handleDelegateSelectorFixedValueChange}

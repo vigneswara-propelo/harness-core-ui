@@ -1,0 +1,348 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.content {
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  --page-header-height: calc(49px + 49px); /* 2 headers */
+
+  .builderContainer {
+    height: calc(var(--page-min-height) - var(--page-header-height));
+  }
+}
+
+// TODO
+.dialog {
+  width: 910px;
+}
+
+.titleBar {
+  display: grid;
+  grid-template-columns: 1fr 126px 1fr;
+  column-gap: var(--spacing-4);
+  align-items: center;
+  border-bottom: 1px solid var(--pipeline-light-grey);
+  padding: 0 var(--spacing-medium) 0 var(--spacing-xlarge);
+  background-color: var(--white);
+  height: 49px;
+}
+
+.titleSubheader {
+  display: flex;
+
+  .breadcrumbsMenu {
+    max-width: 70%;
+
+    &.remotePipelineName {
+      max-width: 50%;
+
+      @media only screen and (min-width: 2400px) {
+        max-width: 70%;
+      }
+
+      @media only screen and (min-width: 2800px) {
+        max-width: 75%;
+      }
+
+      @media only screen and (min-width: 3200px) {
+        max-width: 80%;
+      }
+    }
+
+    @media only screen and (min-width: 1920px) {
+      max-width: 80%;
+    }
+
+    > div {
+      width: 100%;
+      overflow: hidden;
+      > div {
+        width: 100%;
+        overflow: hidden;
+      }
+    }
+  }
+
+  .gitRemoteDetailsWrapper {
+    display: inline-flex;
+    align-items: center;
+    padding-left: 12px;
+    border: 1px solid var(--grey-200);
+    border-radius: var(--spacing-2);
+  }
+}
+
+.breadcrumbsMenu {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px 0 0;
+}
+
+// TODO
+// .pipelineStudioTitleContainer {
+//   text-align: center;
+
+//   .pipelineStudioTitle {
+//     display: grid;
+//     justify-content: center;
+//     .rectangle {
+//       width: 210px;
+//       height: 30px;
+//       background: var(--blue-350);
+//       position: relative;
+//       span {
+//         line-height: 30px;
+//         text-transform: uppercase;
+//         font-weight: bold;
+//         color: var(--primary-8);
+//       }
+//     }
+//     .rectangle:after {
+//       content: '';
+//       position: absolute;
+//       bottom: 0;
+//       right: 0;
+//       width: 0;
+//       height: 0;
+//       border-style: solid;
+//       border-width: 0 0 var(--spacing-xxlarge) var(--spacing-xlarge);
+//       border-color: transparent transparent var(--grey-0) transparent;
+//     }
+
+//     .rectangle::before {
+//       content: '';
+//       position: absolute;
+//       bottom: 0;
+//       left: 0;
+//       width: 0;
+//       height: 0;
+//       border-style: solid;
+//       border-width: 0 var(--spacing-xlarge) var(--spacing-xxlarge) 0;
+//       border-color: transparent transparent var(--grey-0) transparent;
+//     }
+//   }
+// }
+
+.visualYamlToggle {
+  background-color: var(--white);
+}
+
+.savePublishContainer {
+  text-align: right;
+  padding: 8px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: max-content;
+  margin-left: var(--spacing-xlarge);
+
+  .saveButton {
+    width: 70px !important;
+    height: 24px !important;
+    border-radius: 4px;
+    font-size: 13px !important;
+  }
+
+  .validationContainer {
+    margin-right: 15px;
+  }
+
+  .unsavedChanges {
+    & > :global(.bp3-button-text) {
+      color: var(--orange-600) !important;
+      text-decoration: underline;
+      text-decoration-color: var(--orange-600);
+      font-size: var(--font-size-small) !important;
+    }
+
+    margin-right: var(--spacing-5);
+    line-height: 15px;
+
+    &::before {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 100%;
+      background: var(--orange-600);
+      display: inline-block;
+      margin: 0 4px;
+    }
+  }
+
+  .runPipelineBtn {
+    margin-left: var(--spacing-3) !important;
+  }
+  .discardBtn {
+    margin-left: var(--spacing-3) !important;
+  }
+}
+
+.pipelineMetadataContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  > div {
+    display: flex;
+    align-items: center;
+  }
+  .pipelineNameContainer {
+    .pipelineName {
+      font-size: 20px !important;
+      font-weight: 600 !important;
+      color: var(--grey-700) !important;
+      line-height: 28px !important;
+      margin-right: var(--spacing-small);
+    }
+    .tagsContainer {
+      margin-right: var(--spacing-small);
+    }
+    .pipelineIcon {
+      vertical-align: middle;
+    }
+    @media only screen and (max-width: 1500px) {
+      .pipelineIcon {
+        display: none;
+      }
+    }
+  }
+  .gitDetails {
+    display: flex;
+    font-size: var(--font-size-xsmall) !important;
+    justify-content: space-between;
+    align-items: center;
+    .repoDetails {
+      color: var(--grey-900) !important;
+      .repoName {
+        max-width: 145px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        @media only screen and (max-width: 1710px) {
+          max-width: 125px;
+        }
+        @media only screen and (max-width: 1630px) {
+          max-width: 105px;
+        }
+        @media only screen and (max-width: 1550px) {
+          max-width: 85px;
+        }
+        @media only screen and (max-width: 1440px) {
+          max-width: 70px;
+        }
+      }
+      .folderName {
+        max-width: 190px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        @media only screen and (max-width: 1720px) {
+          max-width: 170px;
+        }
+        @media only screen and (max-width: 1650px) {
+          max-width: 145px;
+        }
+        @media only screen and (max-width: 1580px) {
+          max-width: 120px;
+        }
+        @media only screen and (max-width: 1510px) {
+          max-width: 95px;
+        }
+        @media only screen and (max-width: 1440px) {
+          max-width: 70px;
+        }
+      }
+    }
+    .branchDetails {
+      > div > :global(.bp3-icon) {
+        color: var(--grey-400) !important;
+      }
+      .branchName {
+        max-width: 145px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        @media only screen and (max-width: 1710px) {
+          max-width: 125px;
+        }
+        @media only screen and (max-width: 1630px) {
+          max-width: 105px;
+        }
+        @media only screen and (max-width: 1550px) {
+          max-width: 85px;
+        }
+        @media only screen and (max-width: 1440px) {
+          max-width: 70px;
+        }
+      }
+      .branchSelector {
+        width: 125px;
+        @media only screen and (max-width: 1675px) {
+          width: 100px;
+        }
+        @media only screen and (max-width: 1558px) {
+          width: 85px;
+        }
+        @media only screen and (max-width: 1440px) {
+          width: 75px;
+        }
+        input {
+          border: none;
+          color: var(--grey-500);
+        }
+        li {
+          font-size: var(--font-size-small);
+        }
+      }
+    }
+  }
+  button {
+    display: inline-flex;
+  }
+}
+
+.runPipelineDialog {
+  position: relative;
+  padding-bottom: 0 !important;
+  background-color: var(--form-bg) !important;
+}
+
+.modal-card {
+  max-height: fit-content;
+  min-height: 150px;
+  height: calc(100% - 48px);
+
+  &.bp3-dialog-header {
+    color: var(--grey-700);
+  }
+
+  .modal-content {
+    width: 100%;
+    padding: var(--spacing-large);
+  }
+}
+
+.crossIcon {
+  position: absolute;
+  right: var(--spacing-small);
+  top: 12px;
+}
+
+.dialogStyle {
+  padding-top: var(--spacing-xxlarge) !important;
+  p {
+    word-break: normal;
+  }
+}
+
+.beErrorModal {
+  p {
+    word-break: normal;
+  }
+}

@@ -119,8 +119,6 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
               })
             )
             fetchPipeline({
-              forceFetch: true,
-              forceUpdate: true,
               repoIdentifier: selectedFilter.repo,
               branch: selectedFilter.branch
             })

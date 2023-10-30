@@ -26,6 +26,13 @@
       grid-template-columns: 1fr 8rem 0.7fr 5rem;
     }
   }
+
+  &.withVersion {
+    div[class*='TableV2--cells'],
+    div[class*='TableV2--header'] {
+      grid-template-columns: 1fr 5rem 10rem 20rem 1fr 10rem 3rem;
+    }
+  }
 }
 
 .tableRow {

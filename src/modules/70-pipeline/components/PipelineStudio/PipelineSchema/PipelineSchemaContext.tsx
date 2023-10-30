@@ -34,12 +34,19 @@ export function usePipelineSchema(): PipelineSchemaData {
   return React.useContext(PipelineSchemaContext)
 }
 
-export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unknown>): React.ReactElement {
+interface PipelineSchemaContextProps {
+  isYAMLV1?: boolean
+}
+
+export function PipelineSchemaContextProvider(
+  props: React.PropsWithChildren<PipelineSchemaContextProps>
+): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { PIE_STATIC_YAML_SCHEMA } = useFeatureFlags()
+  const { isYAMLV1 } = props
 
   const commonQueryParams = {
     entityType: 'Pipelines',
@@ -59,7 +66,8 @@ export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unk
   const { data: pipelineStaticSchema, error: staticSchemaError } = useGetIndividualStaticSchemaQuery(
     {
       queryParams: {
-        node_group: 'pipeline'
+        node_group: 'pipeline',
+        version: isYAMLV1 ? 'v1' : 'v0'
       }
     },
     {

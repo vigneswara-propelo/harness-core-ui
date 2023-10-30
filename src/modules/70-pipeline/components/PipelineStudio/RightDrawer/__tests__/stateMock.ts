@@ -8,7 +8,7 @@
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { PipelineContextInterface } from '../../PipelineContext/PipelineContext'
-import { DrawerTypes } from '../../PipelineContext/PipelineActions'
+import { DrawerTypes, PipelineReducerState } from '../../PipelineContext/PipelineActions'
 
 const stateMock = {
   pipeline: {
@@ -245,7 +245,7 @@ export const getPipelineContextMock = (): PipelineContextInterface => ({
   getStageFromPipeline: () => ({ stage: stateMock.pipeline.stages[0] as any, parent: undefined }),
   setYamlHandler: () => undefined,
   updatePipeline: jest.fn(),
-  pipelineSaved: () => undefined,
+  updatePipelineMetadata: jest.fn(),
   deletePipelineCache: () => new Promise<void>(() => undefined),
   setSelectedStageId: (_selectedStageId: string | undefined) => undefined,
   setSelectedStepId: (_selectedStepId: string | undefined) => undefined,
@@ -265,7 +265,8 @@ export const getPipelineContextMock = (): PipelineContextInterface => ({
     reconcileError: null,
     setOutOfSync: jest.fn(),
     reconcileData: undefined
-  }
+  },
+  getLatestState: () => ({} as PipelineReducerState)
 })
 
 export const updateStageFnArg1 = {

@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import { PageSpinner } from '@harness/uicore'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/StagesCollection'
 import routesv1 from '@common/RouteDefinitions'
@@ -29,20 +30,28 @@ import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { ModuleName } from 'framework/types/ModuleName'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
+import {
+  PipelineLoaderProvider,
+  usePipelineLoaderContext
+} from '@pipeline/common/components/PipelineStudio/PipelineLoaderContext/PipelineLoaderContext'
+import { IDBProvider } from '@modules/10-common/components/IDBContext/IDBContext'
+import { PipelineProviderY1 } from '@pipeline/y1/components/PipelineContext/PipelineContextY1'
+import { PipelineStudioInternalY1 } from '@pipeline/y1/components/PipelineStudioInternal/PipelineStudioInternalY1'
 import { getCDTrialDialog } from './CDTrial/useCDTrialModal'
 import { getCITrialDialog } from './CITrial/useCITrialModal'
 import { getPipelineStages } from './PipelineStagesUtils'
 import css from './PipelineStudio.module.scss'
 
-export default function PipelineStudio(): React.ReactElement {
+function PipelineStudioInner(): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier, module } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { CDS_NAV_2_0 } = useFeatureFlags()
   const routes = CDS_NAV_2_0 ? routesv2 : routesv1
 
   const { branch, repoIdentifier, repoName, connectorRef, storeType } = useQueryParams<GitQueryParams>()
-
   const history = useHistory()
+
+  const { yamlVersion } = usePipelineLoaderContext()
 
   const getTrialPipelineCreateForm = (
     onSubmit: (values: PipelineInfoConfig) => void,
@@ -90,44 +99,126 @@ export default function PipelineStudio(): React.ReactElement {
   const { getString } = useStrings()
   const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   return (
-    <PipelineProvider
-      stagesMap={stagesCollection.getAllStagesAttributes(getString)}
-      queryParams={{
-        accountIdentifier: accountId,
-        orgIdentifier,
-        projectIdentifier,
-        repoIdentifier,
-        branch,
-        repoName,
-        connectorRef,
-        storeType
-      }}
-      pipelineIdentifier={pipelineIdentifier}
-      renderPipelineStage={args =>
-        getPipelineStages({
-          args,
-          getString,
-          module,
-          isCIEnabled: licenseInformation['CI']?.status === LICENSE_STATE_VALUES.ACTIVE,
-          isCDEnabled: shouldVisible,
-          isCFEnabled: licenseInformation['CF'] && FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE,
-          isSTOEnabled: licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE,
-          isIACMEnabled: IACM_ENABLED,
-          isApprovalStageEnabled: true,
-          isPipelineChainingEnabled: true
-        })
+    <VersionedProvider
+      yamlVersion={yamlVersion}
+      loading={
+        <React.Fragment>
+          <PageSpinner />
+          <div /> {/* this empty div is required for rendering layout correctly */}
+        </React.Fragment>
       }
-      stepsFactory={factory}
-      runPipeline={handleRunPipeline}
-    >
-      <PipelineStudioInternal
-        className={css.container}
-        routePipelineStudio={routes.toPipelineStudio}
-        routePipelineProject={routes.toDeployments}
-        routePipelineDetail={routes.toPipelineDetail}
-        routePipelineList={routes.toPipelines}
-        getOtherModal={getOtherModal}
-      />
-    </PipelineProvider>
+      v0={
+        <PipelineProvider
+          stagesMap={stagesCollection.getAllStagesAttributes(getString)}
+          queryParams={{
+            accountIdentifier: accountId,
+            orgIdentifier,
+            projectIdentifier,
+            repoIdentifier,
+            branch,
+            repoName,
+            connectorRef,
+            storeType
+          }}
+          pipelineIdentifier={pipelineIdentifier}
+          renderPipelineStage={args =>
+            getPipelineStages({
+              args,
+              getString,
+              module,
+              isCIEnabled: licenseInformation['CI']?.status === LICENSE_STATE_VALUES.ACTIVE,
+              isCDEnabled: shouldVisible,
+              isCFEnabled: licenseInformation['CF'] && FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE,
+              isSTOEnabled: licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE,
+              isIACMEnabled: IACM_ENABLED,
+              isApprovalStageEnabled: true,
+              isPipelineChainingEnabled: true
+            })
+          }
+          stepsFactory={factory}
+          runPipeline={handleRunPipeline}
+        >
+          <PipelineStudioInternal
+            className={css.container}
+            routePipelineStudio={routes.toPipelineStudio}
+            routePipelineProject={routes.toDeployments}
+            routePipelineDetail={routes.toPipelineDetail}
+            routePipelineList={routes.toPipelines}
+            getOtherModal={getOtherModal}
+          />
+        </PipelineProvider>
+      }
+      v1={
+        <PipelineProviderY1
+          stagesMap={stagesCollection.getAllStagesAttributes(getString)}
+          queryParams={{
+            accountIdentifier: accountId,
+            orgIdentifier,
+            projectIdentifier,
+            repoIdentifier,
+            branch,
+            repoName,
+            connectorRef,
+            storeType
+          }}
+          pipelineIdentifier={pipelineIdentifier}
+          renderPipelineStage={args =>
+            getPipelineStages({
+              args,
+              getString,
+              module,
+              isCIEnabled: licenseInformation['CI']?.status === LICENSE_STATE_VALUES.ACTIVE,
+              isCDEnabled: shouldVisible,
+              isCFEnabled: licenseInformation['CF'] && FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE,
+              isSTOEnabled: licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE,
+              isIACMEnabled: IACM_ENABLED,
+              isApprovalStageEnabled: true,
+              isPipelineChainingEnabled: true
+            })
+          }
+          stepsFactory={factory}
+          runPipeline={handleRunPipeline}
+        >
+          <PipelineStudioInternalY1 className={css.container} />
+        </PipelineProviderY1>
+      }
+    />
   )
+}
+
+export default function PipelineStudio(): React.ReactElement {
+  const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier } =
+    useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
+  const { branch, repoIdentifier, repoName, connectorRef, storeType } = useQueryParams<GitQueryParams>()
+
+  return (
+    <IDBProvider storeName="pipeline-cache" dbName="pipeline-db">
+      <PipelineLoaderProvider
+        pipelineIdentifier={pipelineIdentifier}
+        queryParams={{
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier,
+          repoIdentifier,
+          branch,
+          repoName,
+          connectorRef,
+          storeType
+        }}
+      >
+        <PipelineStudioInner />
+      </PipelineLoaderProvider>
+    </IDBProvider>
+  )
+}
+
+interface VersionedProviderProps {
+  yamlVersion: '0' | '1' | undefined
+  loading: JSX.Element
+  v0: JSX.Element
+  v1: JSX.Element
+}
+
+function VersionedProvider({ yamlVersion, v0, v1, loading }: VersionedProviderProps): JSX.Element {
+  return yamlVersion === '0' ? v0 : yamlVersion === '1' ? v1 : loading
 }

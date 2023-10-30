@@ -7,7 +7,6 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Button, ButtonVariation, Container, Layout, Text } from '@harness/uicore'
 import type {
   PipelinePathProps,
   ProjectPathProps,
@@ -15,8 +14,7 @@ import type {
   PipelineType,
   PipelineStudioQueryParams
 } from '@common/interfaces/RouteInterfaces'
-
-import { String } from 'framework/strings'
+import { UnhandledErrorMessage } from '@pipeline/common/components/UnhandledErrorMessage/UnhandledErrorMessage'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { PipelineCanvasV1 } from '../PipelineCanvasV1/PipelineCanvasV1'
@@ -70,44 +68,14 @@ export class PipelineStudioInternalV1 extends React.Component<PipelineStudioProp
     } = this.context
     if (error) {
       return (
-        <Layout.Vertical spacing="medium" padding="large">
-          <Text>
-            <String stringID="errorTitle" />
-          </Text>
-          <Text>
-            <String stringID="errorSubtitle" />
-          </Text>
-          <Layout.Horizontal style={{ alignItems: 'baseline' }}>
-            <Text>
-              <String stringID="please" />
-            </Text>
-            <Button
-              variation={ButtonVariation.SECONDARY}
-              onClick={() => {
-                return deletePipelineCache(gitDetails).then(() => {
-                  window.location.reload()
-                })
-              }}
-              minimal
-            >
-              <String stringID="clickHere" />
-            </Button>
-            <Text>
-              <String stringID="errorHelp" />
-            </Text>
-          </Layout.Horizontal>
-          {__DEV__ && (
-            <React.Fragment>
-              <Text font="small">Error Message</Text>
-              <Container>
-                <details>
-                  <summary>Stacktrace</summary>
-                  <pre>{error.stack}</pre>
-                </details>
-              </Container>
-            </React.Fragment>
-          )}
-        </Layout.Vertical>
+        <UnhandledErrorMessage
+          error={error}
+          onClick={() => {
+            return deletePipelineCache(gitDetails).then(() => {
+              window.location.reload()
+            })
+          }}
+        />
       )
     }
     const {

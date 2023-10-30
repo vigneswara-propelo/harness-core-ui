@@ -942,7 +942,6 @@ const routes = {
     }: PipelineType<PipelinePathProps> & PipelineStudioQueryParams & RunPipelineQueryParams) => {
       const queryString = qs.stringify(rest, { skipNulls: true })
       const basePath = module || 'home'
-
       if (queryString.length > 0) {
         return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/pipeline-studio/?${queryString}`
       } else {

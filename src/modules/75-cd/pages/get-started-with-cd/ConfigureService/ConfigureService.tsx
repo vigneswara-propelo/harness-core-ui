@@ -447,7 +447,7 @@ const ConfigureServiceRef = (
           color={Color.GREY_600}
           data-tooltip-id="cdOnboardingManifestLocation"
         >
-          {getString('cd.azureArm.location')}
+          {getString('pipeline.location')}
           <HarnessDocTooltip tooltipId="cdOnboardingManifestLocation" useStandAlone={true} />
         </Text>
         <Layout.Horizontal>

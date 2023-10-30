@@ -15,6 +15,7 @@ import { isRuntimeInput } from '@pipeline/utils/CIUtils'
 import type { UseReconcileReturnType } from '@pipeline/hooks/useReconcile'
 import { RightBar } from '../RightBar'
 import { PipelineContext, PipelineContextInterface } from '../../PipelineContext/PipelineContext'
+import { PipelineReducerState } from '../../PipelineContext/PipelineActions'
 
 jest.mock('services/cd-ng', () => ({
   getConnectorPromise: () => Promise.resolve(connectorMock),
@@ -126,6 +127,7 @@ const stateMock = {
 
 export const pipelineContext: PipelineContextInterface = {
   updatePipeline: jest.fn(),
+  updatePipelineMetadata: jest.fn(),
   state: stateMock as any,
   contextType: 'Pipeline',
   allowableTypes: [
@@ -151,7 +153,6 @@ export const pipelineContext: PipelineContextInterface = {
   setYamlHandler: jest.fn(),
   runPipeline: jest.fn(),
   updateStage: jest.fn(),
-  pipelineSaved: jest.fn(),
   setSelectedStageId: jest.fn(),
   setSelectedStepId: jest.fn(),
   setSelectedSectionId: jest.fn(),
@@ -163,7 +164,8 @@ export const pipelineContext: PipelineContextInterface = {
   setIntermittentLoading: jest.fn(),
   setValidationUuid: jest.fn(),
   setPublicAccessResponse: jest.fn(),
-  reconcile: {} as UseReconcileReturnType
+  reconcile: {} as UseReconcileReturnType,
+  getLatestState: () => ({} as PipelineReducerState)
 }
 
 describe('RightBar', () => {

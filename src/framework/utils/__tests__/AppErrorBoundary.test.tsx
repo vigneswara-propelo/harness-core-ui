@@ -7,7 +7,7 @@
 
 import React from 'react'
 
-import { render } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import AppErrorBoundary from '../AppErrorBoundary/AppErrorBoundary'
 import i18n from '../AppErrorBoundary/AppErrorBoundary.i18n.json'
 
@@ -43,6 +43,23 @@ describe('AppErrorBoundary tests', () => {
       </AppErrorBoundary>
     )
     expect(notifiedCalled).toBeTruthy()
+    unmount()
+  })
+
+  test(`should call custom callback if provided`, () => {
+    const refreshHandler = jest.fn()
+    const Throws = (): JSX.Element => {
+      throw new Error('Error happened!')
+    }
+
+    const { getByText, unmount } = render(
+      <AppErrorBoundary onRefreshClick={refreshHandler}>
+        <Throws />
+      </AppErrorBoundary>
+    )
+
+    fireEvent.click(getByText('refresh'))
+    expect(refreshHandler).toBeCalled()
     unmount()
   })
 })

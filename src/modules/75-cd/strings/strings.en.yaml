@@ -1269,7 +1269,6 @@ artifactSource:
   artifactRepositoryTypeIsRequired: Artifact Repository Type is required
 azureArm:
   description: Deploy resources using Azure Resource Manager (ARM).
-  location: Location
   templateFile: ARM Template File
   templateFileSource: '{{ $.cd.azureBlueprint.templateFileSource }}'
   templateFileDetails: '{{ $.cd.azureBlueprint.templateFileDetails }}'

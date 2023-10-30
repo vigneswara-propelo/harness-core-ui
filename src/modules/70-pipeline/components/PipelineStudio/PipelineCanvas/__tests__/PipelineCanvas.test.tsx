@@ -186,8 +186,6 @@ describe('Pipeline Canvas - new pipeline', () => {
     await waitFor(() => expect(contextValue.deletePipelineCache).toBeCalled())
     expect(showSuccess).toBeCalled()
     expect(contextValue.fetchPipeline).toBeCalledWith({
-      forceFetch: true,
-      forceUpdate: true,
       newPipelineId: 'Pipeline'
     })
     expect(props.toPipelineStudio).toBeCalled()

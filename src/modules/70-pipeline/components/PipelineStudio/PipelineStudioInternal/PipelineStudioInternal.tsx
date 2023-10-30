@@ -7,7 +7,6 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Button, ButtonVariation, Container, Layout, Text } from '@harness/uicore'
 import type {
   PipelinePathProps,
   ProjectPathProps,
@@ -15,10 +14,9 @@ import type {
   PipelineType,
   PipelineStudioQueryParams
 } from '@common/interfaces/RouteInterfaces'
-
-import { String } from 'framework/strings'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
+import AppErrorBoundary from 'framework/utils/AppErrorBoundary/AppErrorBoundary'
 import { PipelineCanvas } from '../PipelineCanvas/PipelineCanvas'
 import { PipelineContext } from '../PipelineContext/PipelineContext'
 import { PipelineSchemaContextProvider } from '../PipelineSchema/PipelineSchemaContext'
@@ -39,77 +37,21 @@ export interface PipelineStudioProps {
   ) => React.ReactElement<OtherModalProps>
 }
 
-interface PipelineStudioState {
-  error?: Error
-}
-
 interface OtherModalProps {
   onSubmit?: (values: PipelineInfoConfig) => void
   initialValues?: PipelineInfoConfig
   onClose?: () => void
 }
 
-export class PipelineStudioInternal extends React.Component<PipelineStudioProps, PipelineStudioState> {
-  state: PipelineStudioState = { error: undefined }
+export class PipelineStudioInternal extends React.Component<PipelineStudioProps> {
   context!: React.ContextType<typeof PipelineContext>
   static contextType = PipelineContext
 
-  componentDidCatch(error: Error): boolean {
-    this.setState({ error })
-    if (window?.bugsnagClient?.notify) {
-      window?.bugsnagClient?.notify(error)
-    }
-    return false
-  }
-
   render(): JSX.Element {
-    const { error } = this.state
     const {
       deletePipelineCache,
       state: { gitDetails }
     } = this.context
-    if (error) {
-      return (
-        <Layout.Vertical spacing="medium" padding="large">
-          <Text>
-            <String stringID="errorTitle" />
-          </Text>
-          <Text>
-            <String stringID="errorSubtitle" />
-          </Text>
-          <Layout.Horizontal style={{ alignItems: 'baseline' }}>
-            <Text>
-              <String stringID="please" />
-            </Text>
-            <Button
-              variation={ButtonVariation.SECONDARY}
-              onClick={() => {
-                return deletePipelineCache(gitDetails).then(() => {
-                  window.location.reload()
-                })
-              }}
-              minimal
-            >
-              <String stringID="clickHere" />
-            </Button>
-            <Text>
-              <String stringID="errorHelp" />
-            </Text>
-          </Layout.Horizontal>
-          {__DEV__ && (
-            <React.Fragment>
-              <Text font="small">Error Message</Text>
-              <Container>
-                <details>
-                  <summary>Stacktrace</summary>
-                  <pre>{error.stack}</pre>
-                </details>
-              </Container>
-            </React.Fragment>
-          )}
-        </Layout.Vertical>
-      )
-    }
     const {
       className = '',
       routePipelineStudio,
@@ -119,20 +61,28 @@ export class PipelineStudioInternal extends React.Component<PipelineStudioProps,
       getOtherModal
     } = this.props
     return (
-      <PipelineSchemaContextProvider>
-        <GitSyncStoreProvider>
-          <div className={cx(css.container, className)}>
-            <PipelineCanvas
-              // diagram={diagram}
-              toPipelineStudio={routePipelineStudio}
-              toPipelineDetail={routePipelineDetail}
-              toPipelineList={routePipelineList}
-              toPipelineProject={routePipelineProject}
-              getOtherModal={getOtherModal}
-            />
-          </div>
-        </GitSyncStoreProvider>
-      </PipelineSchemaContextProvider>
+      <AppErrorBoundary
+        onRefreshClick={() => {
+          return deletePipelineCache(gitDetails).then(() => {
+            window.location.reload()
+          })
+        }}
+      >
+        <PipelineSchemaContextProvider>
+          <GitSyncStoreProvider>
+            <div className={cx(css.container, className)}>
+              <PipelineCanvas
+                // diagram={diagram}
+                toPipelineStudio={routePipelineStudio}
+                toPipelineDetail={routePipelineDetail}
+                toPipelineList={routePipelineList}
+                toPipelineProject={routePipelineProject}
+                getOtherModal={getOtherModal}
+              />
+            </div>
+          </GitSyncStoreProvider>
+        </PipelineSchemaContextProvider>
+      </AppErrorBoundary>
     )
   }
 }

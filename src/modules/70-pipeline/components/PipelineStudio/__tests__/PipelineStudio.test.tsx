@@ -8,7 +8,7 @@
 import React from 'react'
 import { noop } from 'lodash-es'
 import { render } from '@testing-library/react'
-
+import i18n from 'framework/utils/AppErrorBoundary/AppErrorBoundary.i18n.json'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import gitSyncListResponse from '@common/utils/__tests__/mocks/gitSyncRepoListMock.json'
@@ -124,13 +124,13 @@ describe('PipelineStudio tests', () => {
         pipelineIdentifier={'test_pipeline'}
       />
     )
-    const errorTitle = getElementByText('errorTitle')
+    const errorTitle = getElementByText(i18n.title)
     expect(errorTitle).toBeInTheDocument()
 
-    const errorSubtitle = getElementByText('errorSubtitle')
+    const errorSubtitle = getElementByText(i18n.subtitle)
     expect(errorSubtitle).toBeInTheDocument()
 
-    const clickHereBtn = getElementByText('clickHere')
+    const clickHereBtn = getElementByText(i18n.refresh)
     expect(clickHereBtn).toBeInTheDocument()
   })
 })

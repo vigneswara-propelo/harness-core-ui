@@ -99,7 +99,10 @@ jest.mock('services/cd-ng', () => ({
     refetch: jest.fn().mockResolvedValue(gitSyncListResponse),
     loading: false
   })),
-  useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false })
+  useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false }),
+  useGetSettingsList: jest.fn().mockImplementation(() => {
+    return { data: { data: [] } }
+  })
 }))
 
 jest.mock('services/cd-ng-rq', () => ({

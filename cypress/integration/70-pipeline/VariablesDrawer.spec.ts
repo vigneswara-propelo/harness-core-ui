@@ -34,6 +34,7 @@ describe('Pipeline Variables', () => {
     cy.visitPageAssertion(pageHeaderClassName)
 
     cy.contains('span', 'Create a Pipeline').click()
+    cy.wait(1000)
 
     cy.fillName('testPipeline_Cypress')
 

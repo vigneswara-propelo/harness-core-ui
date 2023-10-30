@@ -383,7 +383,7 @@ export const Scopes = ({ formik, readonly, expressions, allowableTypes, connecto
             subscriptions,
             loadingSubscriptions
           )}
-          {dropDown('spec.configuration.scope.spec.location', 'cd.azureArm.location', locations, locationsLoading)}
+          {dropDown('spec.configuration.scope.spec.location', 'pipeline.location', locations, locationsLoading)}
         </>
       )}
       {scopeType?.value === ScopeTypes.ManagementGroup && (
@@ -394,11 +394,11 @@ export const Scopes = ({ formik, readonly, expressions, allowableTypes, connecto
             mgmtGroups,
             loadingManagementGroups
           )}
-          {dropDown('spec.configuration.scope.spec.location', 'cd.azureArm.location', locations, locationsLoading)}
+          {dropDown('spec.configuration.scope.spec.location', 'pipeline.location', locations, locationsLoading)}
         </>
       )}
       {scopeType?.value === ScopeTypes.Tenant &&
-        dropDown('spec.configuration.scope.spec.location', 'cd.azureArm.location', locations, locationsLoading)}
+        dropDown('spec.configuration.scope.spec.location', 'pipeline.location', locations, locationsLoading)}
     </>
   )
 }

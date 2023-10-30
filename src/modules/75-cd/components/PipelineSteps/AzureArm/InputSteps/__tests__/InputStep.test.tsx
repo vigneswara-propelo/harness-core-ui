@@ -209,7 +209,7 @@ describe('Test Azure ARM template input set', () => {
       }
     }
     const { getByText } = renderComponent(data)
-    expect(getByText('cd.azureArm.location')).toBeTruthy()
+    expect(getByText('pipeline.location')).toBeTruthy()
     expect(getByText('cd.azureArm.managementGroup')).toBeTruthy()
   })
 
@@ -237,7 +237,7 @@ describe('Test Azure ARM template input set', () => {
       }
     }
     const { getByText } = renderComponent(data)
-    expect(getByText('cd.azureArm.location')).toBeTruthy()
+    expect(getByText('pipeline.location')).toBeTruthy()
     expect(getByText('common.plans.subscription')).toBeTruthy()
   })
 
@@ -263,7 +263,7 @@ describe('Test Azure ARM template input set', () => {
       }
     }
     const { getByText } = renderComponent(data)
-    expect(getByText('cd.azureArm.location')).toBeTruthy()
+    expect(getByText('pipeline.location')).toBeTruthy()
   })
 
   test('should render with scope errors', () => {

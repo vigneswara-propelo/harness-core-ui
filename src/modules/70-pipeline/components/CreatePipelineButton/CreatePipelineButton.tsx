@@ -14,7 +14,8 @@ import RbacButton from '@rbac/components/Button/Button'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import useCreatePipelineModalY1 from './useCreatePipelineModalY1'
 export interface CreatePipelineButtonProps {
   label?: string
   iconName?: IconName
@@ -32,6 +33,8 @@ export default function CreatePipelineButton({
 }: CreatePipelineButtonProps): JSX.Element {
   const { getString } = useStrings()
   const { supportingGitSimplification } = useAppStore()
+  const { CDS_YAML_SIMPLIFICATION } = useFeatureFlags()
+  const { openCreatePipelineModalY1 } = useCreatePipelineModalY1()
 
   const [canCreate] = usePermission({
     permissions: [PermissionIdentifier.EDIT_PIPELINE],
@@ -40,6 +43,10 @@ export default function CreatePipelineButton({
     }
   })
 
+  const createModalClickHandler = (e: React.MouseEvent<Element, MouseEvent>): void => {
+    CDS_YAML_SIMPLIFICATION ? openCreatePipelineModalY1() : onCreatePipelineClick(e)
+  }
+
   if (supportingGitSimplification) {
     return (
       <SplitButton
@@ -47,7 +54,7 @@ export default function CreatePipelineButton({
         data-testid="add-pipeline"
         icon={iconName ?? 'plus'}
         text={label ?? getString('common.createPipeline')}
-        onClick={onCreatePipelineClick}
+        onClick={createModalClickHandler}
         tooltipProps={{
           dataTooltipId: 'addPipeline'
         }}
@@ -65,7 +72,7 @@ export default function CreatePipelineButton({
       data-testid="add-pipeline"
       icon={iconName ?? 'plus'}
       text={label ?? getString('common.createPipeline')}
-      onClick={onCreatePipelineClick}
+      onClick={createModalClickHandler}
       tooltipProps={{
         dataTooltipId: 'addPipeline'
       }}

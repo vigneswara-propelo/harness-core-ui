@@ -158,7 +158,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
               : getString('common.serviceUpdated')
           )
         }
-        fetchPipeline({ forceFetch: true, forceUpdate: true })
+        fetchPipeline()
         const newServiceDefinition = get(pipeline, 'stages[0].stage.spec.serviceConfig.serviceDefinition')
         setIsDeploymentTypeDisabled?.(!!newServiceDefinition.type)
       }
@@ -258,7 +258,11 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
         setValidateTemplateInputsResponse(response)
         setShouldShowOutOfSyncError(true)
       } else {
-        showSuccess(getString('pipeline.outOfSyncErrorStrip.noErrorText', { entity: TemplateErrorEntity.SERVICE }))
+        showSuccess(
+          getString('pipeline.outOfSyncErrorStrip.noErrorText', {
+            entity: TemplateErrorEntity.SERVICE
+          })
+        )
         setShouldShowOutOfSyncError(false)
       }
     } catch (reconcileValidateError) {
@@ -293,7 +297,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
 
         showSuccess(getString('common.serviceUpdated'))
         setShouldShowOutOfSyncError(false)
-        fetchPipeline({ forceFetch: true, forceUpdate: true })
+        fetchPipeline()
         setIsDeploymentTypeDisabled?.(!!reconciledService.service?.serviceDefinition?.type)
       } else {
         throw response
@@ -431,7 +435,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
               disabled={!isUpdated}
               onClick={() => {
                 updatePipelineView({ ...pipelineView, isYamlEditable: false })
-                fetchPipeline({ forceFetch: true, forceUpdate: true })
+                fetchPipeline()
               }}
               className={css.discardBtn}
               variation={ButtonVariation.SECONDARY}

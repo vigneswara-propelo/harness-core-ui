@@ -27,6 +27,8 @@ export interface AllowedValuesFieldsProps {
   tagsInputSeparator?: string | RegExp | false
   variableType: string | JSX.Element
   minVal?: string
+  name?: string
+  onChange?: (values: React.ReactNode[]) => boolean | void
 }
 
 interface RenderFieldProps extends Omit<AllowedValuesFieldsProps, 'showAdvanced'> {
@@ -85,7 +87,9 @@ export const RenderField = ({
   getAllowedValuesCustomComponent,
   tagsInputSeparator,
   variableType,
-  minVal
+  minVal,
+  name,
+  onChange
 }: RenderFieldProps): React.ReactElement => {
   const [inputValue, setInputValue] = React.useState('')
 
@@ -101,7 +105,7 @@ export const RenderField = ({
     tagsProps: {}
   }
 
-  const onChange: (values: MultiSelectOption[]) => void = noop
+  const onChangeHandler: (values: MultiSelectOption[]) => void = onChange || noop
 
   switch (allowedValuesType) {
     case ALLOWED_VALUES_TYPE.TIME: {
@@ -147,12 +151,13 @@ export const RenderField = ({
   }
 
   return (
-    getAllowedValuesCustomComponent?.({ onChange }) ?? (
+    getAllowedValuesCustomComponent?.({ onChange: onChangeHandler }) ?? (
       <FormInput.KVTagInput
         label={getString('allowedValues')}
-        name="allowedValues"
+        name={name ?? 'allowedValues'}
         isArray={true}
         disabled={isReadonly}
+        onChange={onChange}
         {...tagProps}
       />
     )
@@ -168,7 +173,9 @@ export default function AllowedValuesFields(props: AllowedValuesFieldsProps): Re
     getAllowedValuesCustomComponent,
     tagsInputSeparator,
     variableType,
-    minVal
+    minVal,
+    name,
+    onChange
   } = props
   const { getString } = useStrings()
   return (
@@ -183,6 +190,8 @@ export default function AllowedValuesFields(props: AllowedValuesFieldsProps): Re
         tagsInputSeparator={tagsInputSeparator}
         variableType={variableType}
         minVal={minVal}
+        name={name}
+        onChange={onChange}
       />
     </div>
   )

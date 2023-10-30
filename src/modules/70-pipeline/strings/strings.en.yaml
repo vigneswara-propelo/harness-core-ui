@@ -2018,6 +2018,11 @@ executionNotes:
   addNote: Add a Note
   noteSaved: Note has been saved successfully
   viewExecutionNotes: View Execution Notes
+simplified: Simplified
+yamlVersion:
+  v0: v0
+  v1: v1
+chooseYamlSyntax: Choose a YAML Syntax
 includeInfrastructureSelectors: Include Infrastructure Selectors
 slsaVerification: SLSA Verification
 slsaProvenance: SLSA Provenance
@@ -2066,3 +2071,19 @@ exportVars:
   publishVarLabel: Publish Variable Names (Alias)
   keyValidation: Key is a required field
   scopeValidation: Scope is a required field
+inputs:
+  name: '{{$.name}}'
+  description: '{{ $.description }}'
+  value: '{{ $.valueLabel }}'
+  inputNamePlaceholder: Enter Runtime Input Name
+inputListInfo: List of variables that you will see in run form will be managed here.
+noRuntimeInputsCreated: There are no Runtime Inputs created.
+addRuntimeInput: Add Runtime Input
+editInput: Edit Runtime Input
+removeRuntimeInput: Remove Runtime Input
+referencedIn: Referenced In
+location: Location
+totalVariableCount: 'There are a total of {{ count }} variables referencing to this input.'
+validations:
+  setInputRequiredDuringRuntime: Set runtime input as required during runtime
+  inputAlreadyExists: Runtime Input with same name already exists

@@ -169,7 +169,7 @@ export class AzureArmStep extends PipelineStep<AzureArmStepInfo> {
       set(
         errors,
         'spec.configuration.scope.spec.location',
-        getString?.('cd.azureArm.required', { name: getString?.('cd.azureArm.location') })
+        getString?.('cd.azureArm.required', { name: getString?.('pipeline.location') })
       )
     }
 

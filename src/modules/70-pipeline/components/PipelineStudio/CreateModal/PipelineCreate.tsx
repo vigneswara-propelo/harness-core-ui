@@ -34,6 +34,8 @@ import { InlineRemoteSelect } from '@common/components/InlineRemoteSelect/Inline
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { errorCheck } from '@common/utils/formikHelpers'
+import VersionSelector from '@pipeline/components/CreatePipelineButton/VersionSelector/VersionSelector'
+import { YamlVersion, useYamlVersion } from '@pipeline/common/hooks/useYamlVersion'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'
 import css from './PipelineCreate.module.scss'
 
@@ -59,14 +61,17 @@ export interface PipelineCreateProps {
     values: PipelineInfoConfig,
     storeMetadata: StoreMetadata,
     gitDetails?: EntityGitDetails,
-    useTemplate?: boolean
+    useTemplate?: boolean,
+    version?: YamlVersion
   ) => void
   initialValues?: CreatePipelinesValue
   closeModal?: () => void
   gitDetails?: IGitContextFormProps
   primaryButtonText: string
   isReadonly: boolean
+  modalMode?: 'edit' | 'create'
   isGitXEnforced?: boolean
+  canSelectVersion?: boolean
 }
 
 export default function CreatePipelines({
@@ -86,16 +91,23 @@ export default function CreatePipelines({
   closeModal,
   gitDetails,
   primaryButtonText,
-  isReadonly
+  isReadonly,
+  modalMode,
+  canSelectVersion = false
 }: PipelineCreateProps): JSX.Element {
   const { getString } = useStrings()
+  const { yamlVersion: yamlVersionValue } = useYamlVersion()
   const { pipelineIdentifier } = useParams<{ pipelineIdentifier: string }>()
+
+  const resolvedPipelineIdentifier = canSelectVersion ? DefaultNewPipelineId : pipelineIdentifier
+
   const { storeType: storeTypeParam = isGitXEnforced ? StoreType.REMOTE : StoreType.INLINE } =
     useQueryParams<GitQueryParams>()
   const { updateQueryParams } = useUpdateQueryParams()
   const { isGitSyncEnabled, gitSyncEnabledOnlyForFF, supportingGitSimplification } = useAppStore()
   const oldGitSyncEnabled = isGitSyncEnabled && !gitSyncEnabledOnlyForFF
   const { trackEvent } = useTelemetry()
+  const [yamlVersion, setYamlVersion] = React.useState<YamlVersion>(YamlVersion[1])
 
   const newInitialValues = React.useMemo(() => {
     return produce(initialValues, draft => {
@@ -125,14 +137,15 @@ export default function CreatePipelines({
         identifier: IdentifierSchema(getString),
         ...getGitValidationSchema()
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [getString, supportingGitSimplification, oldGitSyncEnabled, storeTypeParam]
   )
 
   const isEdit = React.useMemo(() => {
     return !isReadonly || supportingGitSimplification
-      ? pipelineIdentifier !== DefaultNewPipelineId
+      ? resolvedPipelineIdentifier !== DefaultNewPipelineId
       : initialValues.identifier !== DefaultNewPipelineId
-  }, [initialValues.identifier, supportingGitSimplification, pipelineIdentifier, isReadonly])
+  }, [initialValues.identifier, supportingGitSimplification, resolvedPipelineIdentifier, isReadonly])
 
   useEffect(() => {
     if (!isEdit) {
@@ -164,7 +177,8 @@ export default function CreatePipelines({
           typeof values.connectorRef !== 'string' ? (values.connectorRef as any)?.value : values.connectorRef
       },
       formGitDetails,
-      values.useTemplate
+      values.useTemplate,
+      yamlVersion
     )
   }
 
@@ -181,7 +195,7 @@ export default function CreatePipelines({
             <NameIdDescriptionTags
               formikProps={formikProps}
               identifierProps={{
-                isIdentifierEditable: pipelineIdentifier === DefaultNewPipelineId
+                isIdentifierEditable: resolvedPipelineIdentifier === DefaultNewPipelineId
               }}
               tooltipProps={{ dataTooltipId: 'pipelineCreate' }}
               inputGroupProps={{
@@ -197,6 +211,13 @@ export default function CreatePipelines({
                 disabled: isReadonly
               }}
             />
+            {(canSelectVersion || yamlVersionValue === YamlVersion[1]) && (
+              <VersionSelector
+                selectedVersion={yamlVersion}
+                onChange={setYamlVersion}
+                disabled={modalMode === 'edit'}
+              />
+            )}
             {oldGitSyncEnabled && (
               <GitSyncStoreProvider>
                 <GitContextForm formikProps={formikProps as any} gitDetails={gitDetails} />
@@ -217,12 +238,12 @@ export default function CreatePipelines({
                   className={css.pipelineCardWrapper}
                   selected={storeTypeParam}
                   getCardDisabledStatus={(current, selected) => {
-                    return pipelineIdentifier !== DefaultNewPipelineId
+                    return resolvedPipelineIdentifier !== DefaultNewPipelineId
                       ? current !== selected
                       : Boolean(isGitXEnforced && current === StoreType.INLINE)
                   }}
                   onChange={item => {
-                    if (pipelineIdentifier === DefaultNewPipelineId) {
+                    if (resolvedPipelineIdentifier === DefaultNewPipelineId) {
                       formikProps?.setFieldValue('storeType', item.type)
                       updateQueryParams({ storeType: item.type })
                     }
@@ -242,7 +263,7 @@ export default function CreatePipelines({
               <Divider className={cx({ [css.gitSimplificationDivider]: storeTypeParam === StoreType.INLINE })} />
             ) : null}
 
-            {!isEdit && (
+            {(!isEdit || canSelectVersion) && (
               <Container padding={{ top: 'large' }}>
                 <RbacButton
                   text={getString('common.templateStartLabel')}

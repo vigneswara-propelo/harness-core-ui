@@ -20,6 +20,7 @@ import {
   initialState,
   PipelineContextActions,
   PipelineReducer,
+  PipelineReducerState,
   PipelineViewData
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { useLocalStorage } from '@common/hooks'
@@ -246,9 +247,9 @@ export function TemplatePipelineProvider({
         updatePipelineStoreMetadata: Promise.resolve,
         updateEntityValidityDetails: Promise.resolve,
         updatePipeline,
+        updatePipelineMetadata: Promise.resolve,
         updateStage,
         updatePipelineView,
-        pipelineSaved: noop,
         deletePipelineCache: Promise.resolve,
         isReadonly: isReadOnly,
         setYamlHandler: noop,
@@ -270,7 +271,8 @@ export function TemplatePipelineProvider({
           reconcileError: null,
           setOutOfSync: noop,
           reconcilePipeline: (_showToast?: boolean) => Promise.resolve({}) as RefetchReturnType
-        }
+        },
+        getLatestState: () => ({} as PipelineReducerState)
       }}
     >
       {children}

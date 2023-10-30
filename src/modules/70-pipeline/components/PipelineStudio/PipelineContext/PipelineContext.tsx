@@ -5,9 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { deleteDB, IDBPDatabase, openDB } from 'idb'
-import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, omit, pick, merge, map, uniq } from 'lodash-es'
+import React, { useCallback, useEffect } from 'react'
+import { get, isEmpty, pick, merge, map, isEqual } from 'lodash-es'
 import {
   AllowedTypes,
   AllowedTypesWithRunTime,
@@ -15,11 +14,7 @@ import {
   MultiTypeInputType,
   VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
-import type { GetDataError } from 'restful-react'
 import type { PermissionCheck } from 'services/rbac'
-import { loggerFor } from 'framework/logging/logging'
-import { ModuleName } from 'framework/types/ModuleName'
-import SessionToken from 'framework/utils/SessionToken'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import {
   PipelineInfoConfig,
@@ -28,26 +23,18 @@ import {
   CreatePipelineQueryParams,
   createPipelineV2Promise,
   EntityGitDetails,
-  ErrorNodeSummary,
   EntityValidityDetails,
   Failure,
-  getPipelineSummaryPromise,
-  getPipelinePromise,
-  GetPipelineQueryParams,
   PutPipelineQueryParams,
   putPipelineV2Promise,
-  ResponsePMSPipelineResponseDTO,
-  YamlSchemaErrorWrapperDTO,
-  ResponsePMSPipelineSummaryResponse,
-  CacheResponseMetadata
+  GetPipelineQueryParams
 } from 'services/pipeline-ng'
 import { useReconcile, UseReconcileReturnType } from '@pipeline/hooks/useReconcile'
-import { useGlobalEventListener, useLocalStorage, useQueryParams } from '@common/hooks'
-import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import { useGlobalEventListener, useLocalStorage } from '@common/hooks'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { PipelineStageWrapper } from '@pipeline/utils/pipelineTypes'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -59,16 +46,15 @@ import {
   TemplateServiceDataType
 } from '@pipeline/utils/templateUtils'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
-import type { Pipeline, TemplateIcons } from '@pipeline/utils/types'
+import type { TemplateIcons } from '@pipeline/utils/types'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import { useIDBContext } from '@modules/10-common/components/IDBContext/IDBContext'
+import { useThunkReducer } from '@modules/10-common/hooks/useThunkReducer'
+import { usePipelineLoaderContext } from '@pipeline/common/components/PipelineStudio/PipelineLoaderContext/PipelineLoaderContext'
 import {
-  ActionReturnType,
-  DefaultNewPipelineId,
-  DefaultPipeline,
-  DrawerTypes,
   initialState,
   PipelineContextActions,
-  PipelineMetaDataConfig,
   PipelineReducer,
   PipelineReducerState,
   PipelineViewData,
@@ -79,198 +65,45 @@ import type { AbstractStepFactory } from '../../AbstractSteps/AbstractStepFactor
 import type { PipelineStagesProps } from '../../PipelineStages/PipelineStages'
 import { PipelineSelectionState, usePipelineQuestParamState } from '../PipelineQueryParamState/usePipelineQueryParam'
 import {
-  comparePipelines,
   getStageFromPipeline as _getStageFromPipeline,
   getStagePathFromPipeline as _getStagePathFromPipeline
 } from './helpers'
+import {
+  deletePipelineCacheAction,
+  fetchPipelineAction,
+  FetchPipelineProps,
+  processPipelineFromAPIAction,
+  processPipelineFromCache,
+  softFetchPipelineAction,
+  updateEntityValidityDetailsAction,
+  updateGitDetailsAction,
+  updatePipelineAction,
+  updatePipelineStoreMetadataAction,
+  PipelinePayload,
+  updatePipelineMetadataAction
+} from './PipelineAsyncActions'
 
-export interface PipelineInfoConfigWithGitDetails extends Partial<PipelineInfoConfig> {
-  gitDetails?: EntityGitDetails
-  entityValidityDetails?: EntityValidityDetails
-  templateError?: GetDataError<Failure | Error> | null
-  remoteFetchError?: GetDataError<Failure | Error> | null
-  yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
-  cacheResponse?: CacheResponseMetadata
-  validationUuid?: string
+// TODO DUPLICATED
+export function findAllByKey<T>(keyToFind: string, obj?: T): string[] {
+  return obj
+    ? Object.entries(obj).reduce(
+        (acc: string[], [key, value]) =>
+          key === keyToFind
+            ? acc.concat(value as string)
+            : typeof value === 'object'
+            ? acc.concat(findAllByKey(keyToFind, value))
+            : acc,
+        []
+      )
+    : []
 }
 
-interface FetchError {
-  templateError?: GetDataError<Failure | Error>
-  remoteFetchError?: GetDataError<Failure | Error>
-}
-
-const logger = loggerFor(ModuleName.CD)
-const DBNotFoundErrorMessage = 'There was no DB found'
-
-const remoteFetchErrorGitDetails = (remoteFetchError: ResponsePMSPipelineResponseDTO): Partial<EntityGitDetails> => {
-  const branch = remoteFetchError?.metaData?.branch
-  return branch ? { branch } : {}
-}
-
-export const getPipelineByIdentifier = (
-  params: GetPipelineQueryParams & GitQueryParams,
-  identifier: string,
-  loadFromCache?: boolean,
-  signal?: AbortSignal
-): Promise<PipelineInfoConfigWithGitDetails | FetchError> => {
-  return getPipelinePromise(
-    {
-      pipelineIdentifier: identifier,
-      queryParams: {
-        accountIdentifier: params.accountIdentifier,
-        orgIdentifier: params.orgIdentifier,
-        projectIdentifier: params.projectIdentifier,
-        validateAsync: params.validateAsync,
-        ...(params.branch ? { branch: params.branch } : {}),
-        ...(params.repoIdentifier ? { repoIdentifier: params.repoIdentifier } : {}),
-        parentEntityConnectorRef: params.connectorRef,
-        parentEntityRepoName: params.repoName,
-        ...(params?.storeType === StoreType.REMOTE && !params.branch ? { loadFromFallbackBranch: true } : {})
-      },
-      requestOptions: {
-        headers: {
-          'content-type': 'application/yaml',
-          ...(loadFromCache ? { 'Load-From-Cache': 'true' } : {})
-        }
-      }
-    },
-    signal
-  ).then((response: ResponsePMSPipelineResponseDTO & { message?: string }) => {
-    let obj = {} as ResponsePMSPipelineResponseDTO
-    if ((typeof response as unknown) === 'string') {
-      obj = defaultTo(parse<any>(response as string)?.data?.yamlPipeline, {})
-    } else if (response.data?.yamlPipeline) {
-      obj = response
-    }
-    if (obj.status === 'SUCCESS' && obj.data?.yamlPipeline) {
-      let yamlPipelineDetails: Pipeline | null = null
-      try {
-        yamlPipelineDetails = parse<Pipeline>(obj.data?.yamlPipeline)
-      } catch (e) {
-        // caught YAMLSemanticError, YAMLReferenceError, YAMLSyntaxError, YAMLWarning
-      }
-
-      return {
-        ...(yamlPipelineDetails !== null && { ...yamlPipelineDetails.pipeline }),
-        gitDetails: obj.data.gitDetails ?? {},
-        entityValidityDetails: obj.data.entityValidityDetails ?? {},
-        yamlSchemaErrorWrapper: obj.data.yamlSchemaErrorWrapper ?? {},
-        modules: response.data?.modules,
-        cacheResponse: obj.data?.cacheResponse,
-        validationUuid: obj.data?.validationUuid,
-        publicAccessResponse: pick(obj.data?.publicAccessResponse, ['public'])
-      }
-    } else if (response?.status === 'ERROR' && params?.storeType === StoreType.REMOTE) {
-      return { remoteFetchError: response } as FetchError // handling remote pipeline not found
-    } else {
-      const message = defaultTo(response?.message, '')
-      return {
-        templateError: {
-          message,
-          data: {
-            message
-          },
-          status: 500
-        }
-      }
-    }
-  })
-}
-
-export const getPipelineMetadataByIdentifier = (
-  params: GetPipelineQueryParams & GitQueryParams,
-  identifier: string,
-  signal?: AbortSignal
-): Promise<ResponsePMSPipelineSummaryResponse | FetchError> => {
-  return getPipelineSummaryPromise(
-    {
-      pipelineIdentifier: identifier,
-      queryParams: {
-        accountIdentifier: params.accountIdentifier,
-        orgIdentifier: params.orgIdentifier,
-        projectIdentifier: params.projectIdentifier,
-        ...(params.branch ? { branch: params.branch } : {}),
-        ...(params.repoIdentifier ? { repoIdentifier: params.repoIdentifier } : {}),
-        parentEntityConnectorRef: params.connectorRef,
-        parentEntityRepoName: params.repoName,
-        getMetadataOnly: true
-      },
-      requestOptions: {
-        headers: {
-          'content-type': 'application/json'
-        }
-      }
-    },
-    signal
-  ).then((response: ResponsePMSPipelineSummaryResponse) => {
-    return response
-  })
-}
-
-export const savePipeline = (
-  params: CreatePipelineQueryParams & PutPipelineQueryParams & { public?: boolean },
-  pipeline: PipelineInfoConfig,
-  isEdit = false
-): Promise<Failure | undefined> => {
-  const body = yamlStringify({
-    pipeline: { ...pipeline, ...pick(params, 'projectIdentifier', 'orgIdentifier') }
-  })
-
-  return isEdit
-    ? putPipelineV2Promise({
-        pipelineIdentifier: pipeline.identifier,
-        queryParams: {
-          ...params
-        },
-        body: body as any,
-        requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
-      })
-        .then((response: unknown) => {
-          if (typeof response === 'string') {
-            return JSON.parse(response) as Failure
-          } else {
-            return response
-          }
-        })
-        .catch(err => {
-          return err
-        })
-    : createPipelineV2Promise({
-        body: body as any,
-        queryParams: {
-          ...params
-        },
-        requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
-      })
-        .then(async (response: unknown) => {
-          if (typeof response === 'string') {
-            return JSON.parse(response as unknown as string) as Failure
-          } else {
-            return response as unknown as Failure
-          }
-        })
-        .catch(err => {
-          return err
-        })
-}
-
-const DBInitializationFailed = 'DB Creation retry exceeded.'
-
-let IdbPipeline: IDBPDatabase | undefined
-const IdbPipelineStoreName = 'pipeline-cache'
-export const PipelineDBName = 'pipeline-db'
-const KeyPath = 'identifier'
-
-export interface StageAttributes {
-  name: string
-  type: string
-  icon: IconName
-  iconColor: string
-  isApproval: boolean
-  openExecutionStrategy: boolean
-}
-export interface StagesMap {
-  [key: string]: StageAttributes
+export enum PipelineContextType {
+  Pipeline = 'Pipeline',
+  StageTemplate = 'StageTemplate',
+  PipelineTemplate = 'PipelineTemplate',
+  Standalone = 'Standalone',
+  StepGroupTemplate = 'StepGroupTemplate'
 }
 
 export interface UpdatePipelineMetaData {
@@ -279,6 +112,15 @@ export interface UpdatePipelineMetaData {
 }
 export interface PipelineContextInterface {
   state: PipelineReducerState
+  /** return latest state from store. can we used after sync or async method call.
+   * This should be used only if really needed. e.g. when current state is needed right after method call.
+   *
+   * ```
+   * await updatePipeline()
+   * const { pipeline } = getLatestState() // << pipeline  latest state
+   * ```
+   */
+  getLatestState: () => PipelineReducerState
   stagesMap: StagesMap
   stepsFactory: AbstractStepFactory
   view: string
@@ -289,14 +131,19 @@ export interface PipelineContextInterface {
   setSchemaErrorView: (flag: boolean) => void
   setView: (view: SelectedView) => void
   renderPipelineStage: (args: Omit<PipelineStagesProps, 'children'>) => React.ReactElement<PipelineStagesProps>
-  fetchPipeline: (args: FetchPipelineUnboundProps) => Promise<void>
+  fetchPipeline: (args?: FetchPipelineProps) => Promise<void>
   setYamlHandler: (yamlHandler: YamlBuilderHandlerBinding) => void
   setTemplateTypes: (data: { [key: string]: string }) => void
   setTemplateIcons: (data: TemplateIcons) => void
   setTemplateServiceData: (data: TemplateServiceDataType) => void
   updatePipeline: (pipeline: PipelineInfoConfig, metadata?: UpdatePipelineMetaData) => Promise<void>
-  updatePipelineStoreMetadata: (storeMetadata: StoreMetadata, gitDetails: EntityGitDetails) => Promise<void>
-  updateGitDetails: (gitDetails: EntityGitDetails) => Promise<void>
+  updatePipelineMetadata: (metadata?: UpdatePipelineMetaData) => Promise<void>
+  updatePipelineStoreMetadata: (
+    storeMetadata: StoreMetadata,
+    gitDetails: EntityGitDetails,
+    latestPipeline?: PipelineInfoConfig
+  ) => Promise<void>
+  updateGitDetails: (gitDetails: EntityGitDetails, latestPipeline?: PipelineInfoConfig) => Promise<void>
   updateEntityValidityDetails: (entityValidityDetails: EntityValidityDetails) => Promise<void>
   updatePipelineView: (data: PipelineViewData) => void
   deletePipelineCache: (gitDetails?: EntityGitDetails) => Promise<void>
@@ -305,7 +152,6 @@ export interface PipelineContextInterface {
     pipeline?: PipelineInfoConfig | StageElementWrapperConfig
   ): PipelineStageWrapper<T>
   runPipeline: (identifier: string) => void
-  pipelineSaved: (pipeline: PipelineInfoConfig) => void
   updateStage: (stage: StageElementConfig) => Promise<void>
   /** @deprecated use `setSelection` */
   setSelectedStageId: (selectedStageId: string | undefined) => void
@@ -323,833 +169,9 @@ export interface PipelineContextInterface {
   reconcile: UseReconcileReturnType
 }
 
-interface PipelinePayload {
-  identifier: string
-  pipeline: PipelineInfoConfig | undefined
-  originalPipeline?: PipelineInfoConfig
-  isUpdated: boolean
-  isMetadataUpdated?: boolean
-  modules?: string[]
-  storeMetadata?: StoreMetadata
-  gitDetails: EntityGitDetails
-  entityValidityDetails?: EntityValidityDetails
-  templateInputsErrorNodeSummary?: ErrorNodeSummary
-  yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
-  cacheResponse?: CacheResponseMetadata
-  validationUuid?: string
-  pipelineMetadataConfig?: PipelineMetaDataConfig
-}
-
-const getId = (
-  accountIdentifier: string,
-  orgIdentifier: string,
-  projectIdentifier: string,
-  pipelineIdentifier: string,
-  repoIdentifier = '',
-  branch = ''
-): string =>
-  `${accountIdentifier}_${orgIdentifier}_${projectIdentifier}_${pipelineIdentifier}_${repoIdentifier}_${branch}`
-
-export interface FetchPipelineBoundProps {
-  dispatch: React.Dispatch<ActionReturnType>
-  queryParams: GetPipelineQueryParams
-  pipelineIdentifier: string
-  gitDetails: EntityGitDetails
-  storeMetadata?: StoreMetadata
-  supportingTemplatesGitx?: boolean
-}
-
-export interface FetchPipelineUnboundProps {
-  forceFetch?: boolean
-  forceUpdate?: boolean
-  newPipelineId?: string
-  signal?: AbortSignal
-  repoIdentifier?: string
-  branch?: string
-  loadFromCache?: boolean
-}
-
-export function findAllByKey<T>(keyToFind: string, obj?: T): string[] {
-  return obj
-    ? Object.entries(obj).reduce(
-        (acc: string[], [key, value]) =>
-          key === keyToFind
-            ? acc.concat(value as string)
-            : typeof value === 'object'
-            ? acc.concat(findAllByKey(keyToFind, value))
-            : acc,
-        []
-      )
-    : []
-}
-
-const getResolvedCustomDeploymentDetailsMap = (
-  pipeline: PipelineInfoConfig,
-  queryParams: GetPipelineQueryParams
-): ReturnType<typeof getResolvedCustomDeploymentDetailsByRef> => {
-  const templateRefs = uniq(map(findAllByKey('customDeploymentRef', pipeline), 'templateRef'))
-  return getResolvedCustomDeploymentDetailsByRef(
-    {
-      accountIdentifier: queryParams.accountIdentifier,
-      orgIdentifier: queryParams.orgIdentifier,
-      projectIdentifier: queryParams.projectIdentifier,
-      templateListType: 'Stable',
-      repoIdentifier: queryParams.repoIdentifier,
-      branch: queryParams.branch,
-      getDefaultFromOtherRepo: true
-    },
-    templateRefs
-  )
-}
-
-const getTemplateType = (
-  pipeline: PipelineInfoConfig,
-  queryParams: GetPipelineQueryParams,
-  storeMetadata?: StoreMetadata,
-  supportingTemplatesGitx?: boolean,
-  loadFromCache?: boolean
-): ReturnType<typeof getTemplateTypesByRef> => {
-  const templateRefs = uniq(findAllByKey('templateRef', pipeline))
-  const templateGitBranches = extractGitBranchUsingTemplateRef(pipeline, '')
-  return getTemplateTypesByRef(
-    {
-      accountIdentifier: queryParams.accountIdentifier,
-      orgIdentifier: queryParams.orgIdentifier,
-      projectIdentifier: queryParams.projectIdentifier,
-      templateListType: 'Stable',
-      repoIdentifier: queryParams.repoIdentifier,
-      branch: queryParams.branch,
-      getDefaultFromOtherRepo: true
-    },
-    templateRefs,
-    storeMetadata,
-    supportingTemplatesGitx,
-    loadFromCache,
-    templateGitBranches
-  )
-}
-
-const getRepoIdentifierName = (gitDetails?: EntityGitDetails): string => {
-  return gitDetails?.repoIdentifier || gitDetails?.repoName || ''
-}
-
-const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipelineUnboundProps): Promise<void> => {
-  const {
-    dispatch,
-    queryParams,
-    pipelineIdentifier: identifier,
-    gitDetails,
-    supportingTemplatesGitx,
-    storeMetadata
-  } = props
-  const {
-    forceFetch = false,
-    forceUpdate = false,
-    newPipelineId,
-    signal,
-    repoIdentifier,
-    branch,
-    loadFromCache = true
-  } = params
-  const pipelineId = defaultTo(newPipelineId, identifier)
-  let id = getId(
-    queryParams.accountIdentifier,
-    defaultTo(queryParams.orgIdentifier, ''),
-    defaultTo(queryParams.projectIdentifier, ''),
-    pipelineId,
-    getRepoIdentifierName(gitDetails),
-    defaultTo(gitDetails.branch, '')
-  )
-  dispatch(PipelineContextActions.fetching())
-
-  let data: PipelinePayload | undefined
-  try {
-    data =
-      IdbPipeline?.objectStoreNames?.contains(IdbPipelineStoreName) &&
-      (await IdbPipeline?.get(IdbPipelineStoreName, id))
-  } catch (_) {
-    logger.info(DBNotFoundErrorMessage)
-  }
-
-  if ((!data || forceFetch) && pipelineId !== DefaultNewPipelineId) {
-    const pipelineByIdPromise = getPipelineByIdentifier(
-      {
-        ...queryParams,
-        validateAsync: true,
-        ...(repoIdentifier ? { repoIdentifier } : {}),
-        ...(branch ? { branch } : {})
-      },
-      pipelineId,
-      loadFromCache,
-      signal
-    )
-
-    const pipelineMetaDataPromise = getPipelineMetadataByIdentifier(
-      { ...queryParams, ...(repoIdentifier ? { repoIdentifier } : {}), ...(branch ? { branch } : {}) },
-      pipelineId,
-      signal
-    )
-
-    const pipelineAPIResponses = await Promise.allSettled([pipelineByIdPromise, pipelineMetaDataPromise])
-
-    const [pipelineById, pipelineMetaData] = pipelineAPIResponses.map((response: PromiseSettledResult<unknown>) => {
-      if (response?.status === 'fulfilled') {
-        return response?.value
-      } else {
-        return response?.reason
-      }
-    })
-
-    // For aborted request, we have to ignore else Abort error will be set as pipeline in IDB
-    // Adding check for stack trace too to ignore other unexpected error
-    if (
-      pipelineById?.stack ||
-      pipelineById?.name === 'AbortError' ||
-      pipelineMetaData?.stack ||
-      pipelineMetaData?.name === 'AbortError'
-    ) {
-      return
-    }
-
-    if (pipelineById?.templateError) {
-      dispatch(PipelineContextActions.error({ templateError: pipelineById.templateError }))
-      return
-    }
-
-    if (pipelineById?.remoteFetchError) {
-      dispatch(
-        PipelineContextActions.error({
-          remoteFetchError: pipelineById.remoteFetchError,
-          pipeline: { ...pick(pipelineMetaData?.data, ['name', 'identifier', 'description', 'tags']) },
-          gitDetails: {
-            ...pipelineMetaData?.data?.gitDetails,
-            ...remoteFetchErrorGitDetails(pipelineById.remoteFetchError)
-          }
-        })
-      )
-      return
-    }
-
-    const pipelineWithGitDetails = pipelineById as PipelineInfoConfigWithGitDetails & {
-      modules?: string[]
-      publicAccessResponse: PublicAccessResponseType
-    }
-
-    id = getId(
-      queryParams.accountIdentifier,
-      defaultTo(queryParams.orgIdentifier, ''),
-      defaultTo(queryParams.projectIdentifier, ''),
-      pipelineId,
-      defaultTo(getRepoIdentifierName(pipelineWithGitDetails?.gitDetails), gitDetails.repoIdentifier),
-      defaultTo(pipelineWithGitDetails?.gitDetails?.branch, defaultTo(gitDetails.branch, ''))
-    )
-
-    try {
-      data = await IdbPipeline?.get(IdbPipelineStoreName, id)
-    } catch (_) {
-      logger.info(DBNotFoundErrorMessage)
-    }
-    const pipeline = omit(
-      pipelineWithGitDetails,
-      'gitDetails',
-      'entityValidityDetails',
-      'repo',
-      'branch',
-      'connectorRef',
-      'filePath',
-      'yamlSchemaErrorWrapper',
-      'modules',
-      'cacheResponse',
-      'validationUuid',
-      'publicAccessResponse'
-    ) as PipelineInfoConfig
-    const payload: PipelinePayload = {
-      [KeyPath]: id,
-      pipeline,
-      originalPipeline: cloneDeep(pipeline),
-      isUpdated: false,
-      isMetadataUpdated: false,
-      modules: pipelineWithGitDetails?.modules,
-      gitDetails:
-        pipelineWithGitDetails?.gitDetails?.objectId || pipelineWithGitDetails?.gitDetails?.commitId
-          ? pipelineWithGitDetails.gitDetails
-          : data?.gitDetails ?? {},
-      entityValidityDetails: defaultTo(
-        pipelineWithGitDetails?.entityValidityDetails,
-        defaultTo(data?.entityValidityDetails, {})
-      ),
-      yamlSchemaErrorWrapper: defaultTo(
-        pipelineWithGitDetails?.yamlSchemaErrorWrapper,
-        defaultTo(data?.yamlSchemaErrorWrapper, {})
-      ),
-      pipelineMetadataConfig: {
-        originalMetadata: {
-          publicAccessResponse: pipelineWithGitDetails?.publicAccessResponse
-        },
-        modifiedMetadata: {
-          publicAccessResponse: pipelineWithGitDetails?.publicAccessResponse
-        }
-      },
-      cacheResponse: defaultTo(pipelineWithGitDetails?.cacheResponse, data?.cacheResponse),
-      validationUuid: defaultTo(pipelineWithGitDetails?.validationUuid, data?.validationUuid)
-    }
-    const templateQueryParams = {
-      ...queryParams,
-      repoIdentifier: defaultTo(
-        gitDetails.repoIdentifier,
-        defaultTo(pipelineWithGitDetails?.gitDetails?.repoIdentifier, '')
-      ),
-      branch: defaultTo(gitDetails.branch, defaultTo(pipelineWithGitDetails?.gitDetails?.branch, ''))
-    }
-
-    const pipelineMetadataConfig: PipelineMetaDataConfig = {
-      originalMetadata: {
-        publicAccessResponse: pipelineWithGitDetails.publicAccessResponse
-      },
-      modifiedMetadata: {
-        publicAccessResponse:
-          pipelineWithGitDetails.publicAccessResponse ||
-          data?.pipelineMetadataConfig?.modifiedMetadata?.publicAccessResponse
-      }
-    }
-    if (data && !forceUpdate) {
-      const { templateTypes, templateServiceData, templateIcons } = data.pipeline
-        ? await getTemplateType(
-            data.pipeline,
-            templateQueryParams,
-            storeMetadata,
-            supportingTemplatesGitx,
-            loadFromCache
-          )
-        : { templateTypes: {}, templateServiceData: {}, templateIcons: {} }
-
-      const { resolvedCustomDeploymentDetailsByRef } = data.pipeline
-        ? await getResolvedCustomDeploymentDetailsMap(data.pipeline, templateQueryParams)
-        : { resolvedCustomDeploymentDetailsByRef: {} }
-      dispatch(
-        PipelineContextActions.success({
-          error: '',
-          remoteFetchError: undefined,
-          pipeline: data.pipeline,
-          originalPipeline: cloneDeep(pipeline),
-          isBEPipelineUpdated: comparePipelines(pipeline, data.originalPipeline),
-          isUpdated: comparePipelines(pipeline, data.pipeline),
-          isMetadataUpdated: !isEqual(pipelineMetadataConfig.originalMetadata, pipelineMetadataConfig.modifiedMetadata),
-          pipelineMetadataConfig,
-          modules: defaultTo(pipelineWithGitDetails?.modules, data.modules),
-          gitDetails:
-            pipelineWithGitDetails?.gitDetails?.objectId || pipelineWithGitDetails?.gitDetails?.commitId
-              ? pipelineWithGitDetails.gitDetails
-              : defaultTo(data?.gitDetails, {}),
-          storeMetadata: {
-            ...storeMetadata,
-            storeType: pipelineMetaData?.data?.storeType,
-            connectorRef: pipelineMetaData?.data?.connectorRef
-          },
-          templateTypes,
-          templateIcons,
-          templateServiceData,
-          resolvedCustomDeploymentDetailsByRef,
-          entityValidityDetails: defaultTo(
-            pipelineWithGitDetails?.entityValidityDetails,
-            defaultTo(data?.entityValidityDetails, {})
-          ),
-          yamlSchemaErrorWrapper: defaultTo(
-            pipelineWithGitDetails?.yamlSchemaErrorWrapper,
-            defaultTo(data?.yamlSchemaErrorWrapper, {})
-          ),
-          cacheResponse: defaultTo(pipelineWithGitDetails?.cacheResponse, data?.cacheResponse),
-          validationUuid: defaultTo(pipelineWithGitDetails?.validationUuid, data?.validationUuid)
-        })
-      )
-    } else {
-      // try_catch to update IDBPipeline only if IdbPipeline is defined
-      try {
-        await IdbPipeline?.put(IdbPipelineStoreName, payload)
-      } catch (_) {
-        logger.info(DBNotFoundErrorMessage)
-      }
-      const { templateTypes, templateServiceData, templateIcons } = await getTemplateType(
-        pipeline,
-        templateQueryParams,
-        storeMetadata,
-        supportingTemplatesGitx,
-        loadFromCache
-      )
-      const { resolvedCustomDeploymentDetailsByRef } = await getResolvedCustomDeploymentDetailsMap(
-        pipeline,
-        templateQueryParams
-      )
-      dispatch(
-        PipelineContextActions.success({
-          error: '',
-          remoteFetchError: undefined,
-          pipeline,
-          pipelineMetadataConfig,
-          originalPipeline: cloneDeep(pipeline),
-          isBEPipelineUpdated: false,
-          isUpdated: false,
-          isMetadataUpdated: false,
-          modules: payload.modules,
-          gitDetails: payload.gitDetails,
-          entityValidityDetails: payload.entityValidityDetails,
-          cacheResponse: payload.cacheResponse,
-          templateTypes,
-          templateIcons,
-          templateServiceData,
-          resolvedCustomDeploymentDetailsByRef,
-          yamlSchemaErrorWrapper: payload?.yamlSchemaErrorWrapper,
-          validationUuid: payload.validationUuid
-        })
-      )
-    }
-    dispatch(PipelineContextActions.initialized())
-  } else {
-    dispatch(
-      PipelineContextActions.success({
-        error: '',
-        remoteFetchError: undefined,
-        pipeline: defaultTo(data?.pipeline, {
-          ...DefaultPipeline,
-          projectIdentifier: queryParams.projectIdentifier,
-          orgIdentifier: queryParams.orgIdentifier
-        }),
-        originalPipeline: defaultTo(
-          cloneDeep(data?.originalPipeline),
-          cloneDeep({
-            ...DefaultPipeline,
-            projectIdentifier: queryParams.projectIdentifier,
-            orgIdentifier: queryParams.orgIdentifier
-          })
-        ),
-        pipelineMetadataConfig: {
-          modifiedMetadata: {
-            publicAccessResponse: data?.pipelineMetadataConfig?.modifiedMetadata?.publicAccessResponse || {
-              public: false
-            }
-          },
-          originalMetadata: {
-            publicAccessResponse: data?.pipelineMetadataConfig?.originalMetadata?.publicAccessResponse || {
-              public: false
-            }
-          }
-        },
-        isUpdated: true,
-        isMetadataUpdated: true,
-        modules: data?.modules,
-        isBEPipelineUpdated: false,
-        gitDetails: defaultTo(data?.gitDetails, {}),
-        entityValidityDetails: defaultTo(data?.entityValidityDetails, {}),
-        yamlSchemaErrorWrapper: defaultTo(data?.yamlSchemaErrorWrapper, {}),
-        cacheResponse: data?.cacheResponse,
-        validationUuid: data?.validationUuid
-      })
-    )
-    dispatch(PipelineContextActions.initialized())
-  }
-}
-
-const _softFetchPipeline = async (
-  dispatch: React.Dispatch<ActionReturnType>,
-  queryParams: GetPipelineQueryParams,
-  pipelineId: string,
-  originalPipeline: PipelineInfoConfig,
-  pipeline: PipelineInfoConfig,
-  pipelineView: PipelineReducerState['pipelineView'],
-  selectionState: PipelineReducerState['selectionState'],
-  gitDetails: EntityGitDetails
-): Promise<void> => {
-  const id = getId(
-    queryParams.accountIdentifier,
-    queryParams.orgIdentifier || '',
-    queryParams.projectIdentifier || '',
-    pipelineId,
-    getRepoIdentifierName(gitDetails),
-    gitDetails.branch || ''
-  )
-  if (IdbPipeline) {
-    try {
-      const data: PipelinePayload = await IdbPipeline.get(IdbPipelineStoreName, id)
-      if (data?.pipeline && !isEqual(data.pipeline, pipeline)) {
-        const isUpdated = comparePipelines(originalPipeline, data.pipeline)
-        if (!isEmpty(selectionState.selectedStageId) && selectionState.selectedStageId) {
-          const stage = _getStageFromPipeline(selectionState.selectedStageId, data.pipeline).stage
-          if (isNil(stage)) {
-            dispatch(
-              PipelineContextActions.success({
-                error: '',
-                pipeline: data.pipeline,
-                isUpdated,
-                pipelineMetadataConfig: data.pipelineMetadataConfig,
-                isMetadataUpdated: !!data.isMetadataUpdated,
-                pipelineView: {
-                  ...pipelineView,
-                  isSplitViewOpen: false,
-                  isDrawerOpened: false,
-                  drawerData: { type: DrawerTypes.StepConfig },
-                  splitViewData: {}
-                }
-              })
-            )
-          } else {
-            dispatch(
-              PipelineContextActions.success({
-                error: '',
-                pipeline: data.pipeline,
-                isUpdated,
-                pipelineMetadataConfig: data.pipelineMetadataConfig,
-                isMetadataUpdated: !!data.isMetadataUpdated
-              })
-            )
-          }
-        } else {
-          dispatch(
-            PipelineContextActions.success({
-              error: '',
-              pipeline: data.pipeline,
-              isUpdated,
-              pipelineMetadataConfig: data.pipelineMetadataConfig,
-              isMetadataUpdated: !!data.isMetadataUpdated
-            })
-          )
-        }
-      }
-    } catch (err) {
-      dispatch(PipelineContextActions.success({ error: 'DB is not initialized' }))
-    }
-  } else {
-    dispatch(PipelineContextActions.success({ error: 'DB is not initialized' }))
-  }
-}
-
-interface UpdateGitDetailsArgs {
-  dispatch: React.Dispatch<ActionReturnType>
-  queryParams: GetPipelineQueryParams
-  identifier: string
-  originalPipeline: PipelineInfoConfig
-  pipeline: PipelineInfoConfig
-}
-
-const _updateStoreMetadata = async (
-  args: UpdateGitDetailsArgs,
-  storeMetadata: StoreMetadata,
-  gitDetails: EntityGitDetails
-): Promise<void> => {
-  const { dispatch, queryParams, identifier, originalPipeline, pipeline } = args
-  await _deletePipelineCache(queryParams, identifier, {})
-  const id = getId(
-    queryParams.accountIdentifier,
-    queryParams.orgIdentifier || '',
-    queryParams.projectIdentifier || '',
-    identifier,
-    getRepoIdentifierName(gitDetails),
-    gitDetails.branch || ''
-  )
-  const isUpdated = comparePipelines(originalPipeline, pipeline)
-
-  // In pipeline studio, storeMetadata only contains 2 properties - connectorRef and storeType.
-  // We need all 5 properties in storeMetadata for use in templates, Other 3 are coming from gitDetails
-  const newStoreMetadata: StoreMetadata = {
-    ...storeMetadata,
-    ...(storeMetadata.storeType === StoreType.REMOTE
-      ? pick(gitDetails, 'repoName', 'branch', 'filePath')
-      : { connectorRef: undefined })
-  }
-
-  try {
-    if (IdbPipeline) {
-      const payload: PipelinePayload = {
-        [KeyPath]: id,
-        pipeline,
-        originalPipeline,
-        isUpdated,
-        storeMetadata,
-        gitDetails
-      }
-      await IdbPipeline.put(IdbPipelineStoreName, payload)
-    }
-    dispatch(
-      PipelineContextActions.success({ error: '', pipeline, isUpdated, storeMetadata: newStoreMetadata, gitDetails })
-    )
-  } catch (_) {
-    logger.info(DBNotFoundErrorMessage)
-    dispatch(
-      PipelineContextActions.success({ error: '', pipeline, isUpdated, storeMetadata: newStoreMetadata, gitDetails })
-    )
-  }
-}
-
-const _updateGitDetails = async (args: UpdateGitDetailsArgs, gitDetails: EntityGitDetails): Promise<void> => {
-  const { dispatch, queryParams, identifier, originalPipeline, pipeline } = args
-  await _deletePipelineCache(queryParams, identifier, {})
-  const id = getId(
-    queryParams.accountIdentifier,
-    queryParams.orgIdentifier || '',
-    queryParams.projectIdentifier || '',
-    identifier,
-    getRepoIdentifierName(gitDetails),
-    gitDetails.branch || ''
-  )
-  const isUpdated = comparePipelines(originalPipeline, pipeline)
-  try {
-    if (IdbPipeline) {
-      const payload: PipelinePayload = {
-        [KeyPath]: id,
-        pipeline,
-        originalPipeline,
-        isUpdated,
-        gitDetails
-      }
-      await IdbPipeline.put(IdbPipelineStoreName, payload)
-    }
-    dispatch(PipelineContextActions.success({ error: '', pipeline, isUpdated, gitDetails }))
-  } catch (_) {
-    logger.info(DBNotFoundErrorMessage)
-    dispatch(PipelineContextActions.success({ error: '', pipeline, isUpdated, gitDetails }))
-  }
-}
-
-interface UpdateEntityValidityDetailsArgs {
-  dispatch: React.Dispatch<ActionReturnType>
-  queryParams: GetPipelineQueryParams
-  identifier: string
-  originalPipeline: PipelineInfoConfig
-  pipeline: PipelineInfoConfig
-  gitDetails: EntityGitDetails
-  isMetadataUpdated: boolean
-  pipelineMetadataConfig: PipelineMetaDataConfig
-}
-
-const _updateEntityValidityDetails = async (
-  args: UpdateEntityValidityDetailsArgs,
-  entityValidityDetails: EntityValidityDetails
-): Promise<void> => {
-  const {
-    dispatch,
-    queryParams,
-    identifier,
-    originalPipeline,
-    pipeline,
-    gitDetails,
-    isMetadataUpdated,
-    pipelineMetadataConfig
-  } = args
-  await _deletePipelineCache(queryParams, identifier, {})
-  const id = getId(
-    queryParams.accountIdentifier,
-    queryParams.orgIdentifier || '',
-    queryParams.projectIdentifier || '',
-    identifier,
-    getRepoIdentifierName(gitDetails),
-    gitDetails.branch || ''
-  )
-  if (IdbPipeline) {
-    const payload: PipelinePayload = {
-      [KeyPath]: id,
-      pipeline,
-      originalPipeline,
-      isUpdated: false,
-      isMetadataUpdated,
-      gitDetails,
-      entityValidityDetails,
-      pipelineMetadataConfig
-    }
-    await IdbPipeline.put(IdbPipelineStoreName, payload)
-  }
-  dispatch(PipelineContextActions.success({ error: '', pipeline, entityValidityDetails }))
-}
-
-interface UpdatePipelineArgs {
-  dispatch: React.Dispatch<ActionReturnType>
-  queryParams: GetPipelineQueryParams
-  identifier: string
-  originalPipeline: PipelineInfoConfig
-  pipeline: PipelineInfoConfig
-  gitDetails: EntityGitDetails
-  pipelineMetadataConfig: PipelineMetaDataConfig
-  isMetadataUpdated: boolean
-}
-
-const _updatePipeline = async (
-  args: UpdatePipelineArgs,
-  pipelineArg: PipelineInfoConfig | ((p: PipelineInfoConfig) => PipelineInfoConfig),
-  pipelineMetadata?: UpdatePipelineMetaData
-): Promise<void> => {
-  const {
-    dispatch,
-    queryParams,
-    identifier,
-    originalPipeline,
-    pipeline: latestPipeline,
-    gitDetails,
-    pipelineMetadataConfig
-  } = args
-  const id = getId(
-    queryParams.accountIdentifier,
-    queryParams.orgIdentifier || '',
-    queryParams.projectIdentifier || '',
-    identifier,
-    getRepoIdentifierName(gitDetails),
-    gitDetails.branch || ''
-  )
-
-  let pipeline = pipelineArg
-  if (typeof pipelineArg === 'function') {
-    try {
-      const dbPipeline = await IdbPipeline?.get(IdbPipelineStoreName, id)
-      if (dbPipeline?.pipeline) {
-        pipeline = pipelineArg(dbPipeline.pipeline)
-      } else {
-        throw new Error(DBNotFoundErrorMessage) //'Pipeline does not exist in the db'
-      }
-    } catch (_) {
-      pipeline = pipelineArg(latestPipeline)
-      logger.info(DBNotFoundErrorMessage)
-    }
-  }
-
-  const modifiedMetadata = {
-    ...pipelineMetadataConfig?.modifiedMetadata,
-    ...(pipelineMetadata && { publicAccessResponse: pipelineMetadata?.publicAccess })
-  }
-  // lodash.isEqual() gives wrong output some times, hence using fast-json-stable-stringify
-  const isUpdated = comparePipelines(omit(originalPipeline, 'repo', 'branch'), pipeline as PipelineInfoConfig)
-  const isMetadataUpdated = !isEqual(pipelineMetadataConfig.originalMetadata, modifiedMetadata)
-  const pipelineMetadataConfigUpdated = {
-    ...pipelineMetadataConfig,
-    modifiedMetadata: modifiedMetadata
-  }
-  const payload: PipelinePayload = {
-    [KeyPath]: id,
-    pipeline: pipeline as PipelineInfoConfig,
-    originalPipeline,
-    isMetadataUpdated,
-    isUpdated,
-    gitDetails,
-    pipelineMetadataConfig: pipelineMetadataConfigUpdated
-  }
-  try {
-    await IdbPipeline?.put(IdbPipelineStoreName, payload)
-  } catch (_) {
-    logger.info(DBNotFoundErrorMessage)
-  }
-  dispatch(
-    PipelineContextActions.success({
-      error: '',
-      pipeline: pipeline as PipelineInfoConfig,
-      isUpdated,
-      pipelineMetadataConfig: pipelineMetadataConfigUpdated,
-      isMetadataUpdated
-    })
-  )
-}
-
-const cleanUpDBRefs = (): void => {
-  if (IdbPipeline) {
-    IdbPipeline.close()
-    IdbPipeline = undefined
-  }
-}
-
-const _initializeDb = async (dispatch: React.Dispatch<ActionReturnType>, version: number, trial = 0): Promise<void> => {
-  if (!IdbPipeline) {
-    try {
-      // show loading spinner during idb initialization to prevent rendering default/initial state on mount
-      // isLoading is set to false after fetching pipeline (_fetchPipeline)
-      dispatch(PipelineContextActions.setLoading(true))
-      IdbPipeline = await openDB(PipelineDBName, version, {
-        upgrade(db) {
-          if (db.objectStoreNames.contains(IdbPipelineStoreName)) {
-            try {
-              db.deleteObjectStore(IdbPipelineStoreName)
-            } catch (_) {
-              // logger.error(DBNotFoundErrorMessage)
-              dispatch(PipelineContextActions.error({ error: DBNotFoundErrorMessage }))
-            }
-          }
-          if (!db.objectStoreNames.contains(IdbPipelineStoreName)) {
-            const objectStore = db.createObjectStore(IdbPipelineStoreName, { keyPath: KeyPath, autoIncrement: false })
-            objectStore.createIndex(KeyPath, KeyPath, { unique: true })
-          }
-        },
-        async blocked() {
-          cleanUpDBRefs()
-        },
-        async blocking() {
-          cleanUpDBRefs()
-        }
-      })
-      dispatch(PipelineContextActions.dbInitialized())
-    } catch (e) {
-      logger.info('DB downgraded, deleting and re creating the DB')
-      try {
-        await deleteDB(PipelineDBName)
-      } catch (_) {
-        // ignore
-      }
-      IdbPipeline = undefined
-
-      ++trial
-
-      if (trial < 5) {
-        await _initializeDb(dispatch, version, trial)
-      } else {
-        logger.error(DBInitializationFailed)
-        // continue loading if initialization failed, isLoading is set to false after fetching pipeline
-        dispatch(PipelineContextActions.error({ error: DBInitializationFailed, isLoading: true }))
-        dispatch(PipelineContextActions.setDBInitializationFailed(true))
-      }
-    }
-  } else {
-    dispatch(PipelineContextActions.dbInitialized())
-  }
-}
-
-const deletePipelineCacheFromIDB = async (IdbPipelineDatabase: IDBPDatabase | undefined, id: string): Promise<void> => {
-  if (IdbPipelineDatabase) {
-    try {
-      await IdbPipelineDatabase.delete(IdbPipelineStoreName, id)
-    } catch (_) {
-      logger.info(DBNotFoundErrorMessage)
-    }
-  }
-}
-const _deletePipelineCache = async (
-  queryParams: GetPipelineQueryParams,
-  identifier: string,
-  gitDetails?: EntityGitDetails
-): Promise<void> => {
-  const id = getId(
-    queryParams.accountIdentifier,
-    queryParams.orgIdentifier || '',
-    queryParams.projectIdentifier || '',
-    identifier,
-    getRepoIdentifierName(gitDetails),
-    gitDetails?.branch || ''
-  )
-  deletePipelineCacheFromIDB(IdbPipeline, id)
-
-  const defaultId = getId(
-    queryParams.accountIdentifier,
-    queryParams.orgIdentifier || '',
-    queryParams.projectIdentifier || '',
-    DefaultNewPipelineId,
-    getRepoIdentifierName(gitDetails),
-    gitDetails?.branch || ''
-  )
-  deletePipelineCacheFromIDB(IdbPipeline, defaultId)
-}
-
-export enum PipelineContextType {
-  Pipeline = 'Pipeline',
-  StageTemplate = 'StageTemplate',
-  PipelineTemplate = 'PipelineTemplate',
-  Standalone = 'Standalone',
-  StepGroupTemplate = 'StepGroupTemplate'
-}
-
 export const PipelineContext = React.createContext<PipelineContextInterface>({
   state: initialState,
+  getLatestState: () => ({} as PipelineReducerState),
   stepsFactory: {} as AbstractStepFactory,
   stagesMap: {},
   setSchemaErrorView: () => undefined,
@@ -1165,7 +187,7 @@ export const PipelineContext = React.createContext<PipelineContextInterface>({
   runPipeline: () => undefined,
   // eslint-disable-next-line react/display-name
   renderPipelineStage: () => <div />,
-  fetchPipeline: () => new Promise<void>(() => undefined),
+  fetchPipeline: () => Promise.resolve(undefined),
   updatePipelineView: () => undefined,
   updateStage: () => new Promise<void>(() => undefined),
   getStageFromPipeline: () => ({ stage: undefined, parent: undefined }),
@@ -1174,7 +196,7 @@ export const PipelineContext = React.createContext<PipelineContextInterface>({
   setTemplateIcons: () => undefined,
   setTemplateServiceData: () => undefined,
   updatePipeline: () => new Promise<void>(() => undefined),
-  pipelineSaved: () => undefined,
+  updatePipelineMetadata: () => new Promise<void>(() => undefined),
   deletePipelineCache: () => new Promise<void>(() => undefined),
   setSelectedStageId: (_selectedStageId: string | undefined) => undefined,
   setSelectedStepId: (_selectedStepId: string | undefined) => undefined,
@@ -1206,18 +228,10 @@ export function PipelineProvider({
   stagesMap,
   runPipeline
 }: React.PropsWithChildren<PipelineProviderProps>): React.ReactElement {
-  const contextType = PipelineContextType.Pipeline
-  const allowableTypes: AllowedTypesWithRunTime[] = [
-    MultiTypeInputType.FIXED,
-    MultiTypeInputType.RUNTIME,
-    MultiTypeInputType.EXPRESSION
-  ]
-  const { repoIdentifier, repoName, branch } = useQueryParams<GitQueryParams>()
-  const abortControllerRef = React.useRef<AbortController | null>(null)
-  const { supportingTemplatesGitx } = useAppStore()
-  const isMounted = React.useRef(false)
+  const { idb } = useIDBContext<PipelinePayload>()
+  const { apiData, pipelineFromDB, fetchingPipeline } = usePipelineLoaderContext()
 
-  const [state, dispatch] = React.useReducer(
+  const [state, dispatch, getLatestState] = useThunkReducer(
     PipelineReducer,
     merge(
       {
@@ -1233,67 +247,85 @@ export function PipelineProvider({
       { ...initialState, pipeline: { ...initialState.pipeline, identifier: pipelineIdentifier } }
     )
   )
+
+  // make query params available in pipeline store
+  useEffect(() => {
+    dispatch(
+      PipelineContextActions.setRouteStateParams({
+        routeState: { ...queryParams, pipelineIdentifier },
+        pipelineIdentifier: pipelineIdentifier
+      })
+    )
+  }, [queryParams, pipelineIdentifier, dispatch])
+
+  const contextType = PipelineContextType.Pipeline
+
+  const allowableTypes: AllowedTypesWithRunTime[] = [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ]
+
+  const { supportingTemplatesGitx } = useAppStore()
+
   const [view, setView] = useLocalStorage<SelectedView>(
     'pipeline_studio_view',
     state.entityValidityDetails.valid === false ? SelectedView.YAML : SelectedView.VISUAL
   )
-  state.pipelineIdentifier = pipelineIdentifier
-  const fetchPipeline = _fetchPipeline.bind(null, {
-    dispatch,
-    queryParams,
-    pipelineIdentifier,
-    gitDetails: {
-      repoIdentifier,
-      repoName,
-      branch
+
+  const fetchPipeline = useCallback(
+    async (params: FetchPipelineProps = {}) => {
+      return dispatch(
+        fetchPipelineAction(params, {
+          supportingTemplatesGitx: supportingTemplatesGitx ?? false,
+          idb
+        })
+      )
     },
-    storeMetadata: state.storeMetadata,
-    supportingTemplatesGitx
-  })
+    [dispatch, supportingTemplatesGitx, idb]
+  )
 
-  const updatePipelineStoreMetadata = _updateStoreMetadata.bind(null, {
-    dispatch,
-    queryParams,
-    identifier: pipelineIdentifier,
-    originalPipeline: state.originalPipeline,
-    pipeline: state.pipeline
-  })
+  const updatePipelineStoreMetadata = useCallback(
+    async (storeMetadata: StoreMetadata, gitDetails: EntityGitDetails) => {
+      return dispatch(updatePipelineStoreMetadataAction({ storeMetadata, gitDetails, idb }))
+    },
+    [dispatch, idb]
+  )
 
-  const updateGitDetails = _updateGitDetails.bind(null, {
-    dispatch,
-    queryParams,
-    identifier: pipelineIdentifier,
-    originalPipeline: state.originalPipeline,
-    pipeline: state.pipeline
-  })
+  const updateGitDetails = useCallback(
+    async (gitDetails: EntityGitDetails) => {
+      return dispatch(updateGitDetailsAction({ gitDetails, idb }))
+    },
+    [dispatch, idb]
+  )
 
-  const updateEntityValidityDetails = _updateEntityValidityDetails.bind(null, {
-    dispatch,
-    queryParams,
-    identifier: pipelineIdentifier,
-    originalPipeline: state.originalPipeline,
-    pipeline: state.pipeline,
-    gitDetails: state.gitDetails,
-    pipelineMetadataConfig: state.pipelineMetadataConfig,
-    isMetadataUpdated: state.isMetadataUpdated
-  })
-  const updatePipeline = _updatePipeline.bind(null, {
-    dispatch,
-    queryParams,
-    identifier: pipelineIdentifier,
-    originalPipeline: state.originalPipeline,
-    pipeline: state.pipeline,
-    gitDetails: state.gitDetails,
-    pipelineMetadataConfig: state.pipelineMetadataConfig,
-    isMetadataUpdated: state.isMetadataUpdated
-  })
+  const updateEntityValidityDetails = useCallback(
+    async (entityValidityDetails: EntityValidityDetails) => {
+      return dispatch(updateEntityValidityDetailsAction({ entityValidityDetails, idb }))
+    },
+    [dispatch, idb]
+  )
+
+  const updatePipeline = useCallback(
+    async (pipelineArg: PipelineInfoConfig | ((p: PipelineInfoConfig) => PipelineInfoConfig)) => {
+      return dispatch(updatePipelineAction({ pipelineArg, idb }))
+    },
+    [dispatch, idb]
+  )
+
+  const updatePipelineMetadata = useCallback(
+    async (pipelineMetadata?: UpdatePipelineMetaData) => {
+      return dispatch(updatePipelineMetadataAction({ pipelineMetadata, idb }))
+    },
+    [dispatch, idb]
+  )
 
   const [isEdit] = usePermission(
     {
       resourceScope: {
-        accountIdentifier: queryParams.accountIdentifier,
-        orgIdentifier: queryParams.orgIdentifier,
-        projectIdentifier: queryParams.projectIdentifier
+        accountIdentifier: state.routeState.accountIdentifier,
+        orgIdentifier: state.routeState.orgIdentifier,
+        projectIdentifier: state.routeState.projectIdentifier
       },
       resource: {
         resourceType: ResourceType.PIPELINE,
@@ -1307,18 +339,24 @@ export function PipelineProvider({
         }
       }
     },
-    [queryParams.accountIdentifier, queryParams.orgIdentifier, queryParams.projectIdentifier, pipelineIdentifier]
+    [
+      state.routeState.accountIdentifier,
+      state.routeState.orgIdentifier,
+      state.routeState.projectIdentifier,
+      pipelineIdentifier
+    ]
   )
-  const scope = getScopeFromDTO(queryParams)
+  const scope = getScopeFromDTO(state.routeState)
+
   const isReadonly = !isEdit
-  const deletePipelineCache = _deletePipelineCache.bind(null, queryParams, pipelineIdentifier)
-  const pipelineSaved = React.useCallback(
-    async (pipeline: PipelineInfoConfig) => {
-      await deletePipelineCache(state.gitDetails)
-      dispatch(PipelineContextActions.pipelineSavedAction({ pipeline, originalPipeline: cloneDeep(pipeline) }))
+
+  const deletePipelineCache = useCallback(
+    async (gitDetails?: EntityGitDetails): Promise<void> => {
+      return dispatch(deletePipelineCacheAction({ gitDetails, idb }))
     },
-    [deletePipelineCache, state.gitDetails]
+    [dispatch, idb]
   )
+
   const setYamlHandler = React.useCallback((yamlHandler: YamlBuilderHandlerBinding) => {
     dispatch(PipelineContextActions.setYamlHandler({ yamlHandler }))
   }, [])
@@ -1375,9 +413,9 @@ export function PipelineProvider({
     const templateGitBranches = extractGitBranchUsingTemplateRef(state.pipeline, '')
     getTemplateTypesByRef(
       {
-        ...queryParams,
+        ...state.routeState,
         templateListType: 'Stable',
-        repoIdentifier: state.gitDetails.repoIdentifier,
+        repoIdentifier: state.gitDetails?.repoIdentifier,
         branch: getBranchForSelectedStage(),
         getDefaultFromOtherRepo: true
       },
@@ -1399,10 +437,10 @@ export function PipelineProvider({
 
     getResolvedCustomDeploymentDetailsByRef(
       {
-        ...queryParams,
+        ...state.routeState,
         templateListType: 'Stable',
-        repoIdentifier: state.gitDetails.repoIdentifier,
-        branch: state.gitDetails.branch,
+        repoIdentifier: state.gitDetails?.repoIdentifier,
+        branch: state.gitDetails?.branch,
         getDefaultFromOtherRepo: true
       },
       unresolvedCustomDeploymentRefs
@@ -1505,49 +543,49 @@ export function PipelineProvider({
 
   const { deleteStage } = useDeleteStage(state.pipeline, getStageFromPipeline, updatePipeline)
 
+  const softFetchPipeline = useCallback(async (): Promise<void> => {
+    return dispatch(softFetchPipelineAction({ idb }))
+  }, [dispatch, idb])
+
   useGlobalEventListener('focus', () => {
-    _softFetchPipeline(
-      dispatch,
-      queryParams,
-      pipelineIdentifier,
-      state.originalPipeline,
-      state.pipeline,
-      state.pipelineView,
-      state.selectionState,
-      state.gitDetails
-    )
+    softFetchPipeline()
   })
 
   React.useEffect(() => {
-    // fetch pipeline after trying to initialize idb
-    if (state.isDBInitialized || state.isDBInitializationFailed) {
-      abortControllerRef.current = new AbortController()
-      fetchPipeline({ forceFetch: true, signal: abortControllerRef.current?.signal })
-    }
-
-    return () => {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort()
-      }
+    if (apiData && apiData.pipeline && apiData.pipelineMetadata) {
+      dispatch(
+        processPipelineFromAPIAction(
+          apiData.pipeline,
+          apiData.pipelineMetadata,
+          {},
+          {
+            supportingTemplatesGitx: supportingTemplatesGitx ?? false,
+            idb,
+            initialLoading: true
+          }
+        )
+      )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.isDBInitialized, state.isDBInitializationFailed])
+  }, [apiData])
 
   React.useEffect(() => {
-    isMounted.current = true
-    const time = SessionToken.getLastTokenSetTime()
-    _initializeDb(dispatch, time || +new Date())
-
-    return () => {
-      isMounted.current = false
-      cleanUpDBRefs()
+    if (pipelineFromDB) {
+      dispatch(processPipelineFromCache(pipelineFromDB as PipelinePayload))
     }
-  }, [])
+  }, [pipelineFromDB, dispatch])
+
+  React.useEffect(() => {
+    if (fetchingPipeline === true) {
+      dispatch(PipelineContextActions.fetching())
+    }
+  }, [fetchingPipeline, dispatch])
 
   return (
     <PipelineContext.Provider
       value={{
         state,
+        getLatestState,
         view,
         contextType,
         allowableTypes,
@@ -1563,9 +601,9 @@ export function PipelineProvider({
         updateGitDetails,
         updateEntityValidityDetails,
         updatePipeline,
+        updatePipelineMetadata,
         updateStage,
         updatePipelineView,
-        pipelineSaved,
         deletePipelineCache,
         isReadonly,
         scope,
@@ -1594,4 +632,64 @@ export function usePipelineContext(): PipelineContextInterface {
   // disabling this because this the definition of usePipelineContext
   // eslint-disable-next-line no-restricted-syntax
   return React.useContext(PipelineContext)
+}
+
+export const savePipeline = (
+  params: CreatePipelineQueryParams & PutPipelineQueryParams & { public?: boolean },
+  pipeline: PipelineInfoConfig,
+  isEdit = false
+): Promise<Failure | undefined> => {
+  const body = yamlStringify({
+    pipeline: { ...pipeline, ...pick(params, 'projectIdentifier', 'orgIdentifier') }
+  })
+
+  return isEdit
+    ? putPipelineV2Promise({
+        pipelineIdentifier: pipeline.identifier,
+        queryParams: {
+          ...params
+        },
+        body: body as any,
+        requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
+      })
+        .then((response: unknown) => {
+          if (typeof response === 'string') {
+            return JSON.parse(response) as Failure
+          } else {
+            return response
+          }
+        })
+        .catch(err => {
+          return err
+        })
+    : createPipelineV2Promise({
+        body: body as any,
+        queryParams: {
+          ...params
+        },
+        requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
+      })
+        .then(async (response: unknown) => {
+          if (typeof response === 'string') {
+            return JSON.parse(response as unknown as string) as Failure
+          } else {
+            return response as unknown as Failure
+          }
+        })
+        .catch(err => {
+          return err
+        })
+}
+
+export interface StageAttributes {
+  name: string
+  type: string
+  icon: IconName
+  iconColor: string
+  isApproval: boolean
+  openExecutionStrategy: boolean
+}
+
+export interface StagesMap {
+  [key: string]: StageAttributes
 }

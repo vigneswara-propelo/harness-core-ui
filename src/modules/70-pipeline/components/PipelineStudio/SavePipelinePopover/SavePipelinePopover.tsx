@@ -223,18 +223,16 @@ function SavePipelinePopover(
       // if updatedGitDetails is not there or isNewBranch is false - For Inline or default branch new pipelines
       if (!updatedGitDetails?.isNewBranch) {
         navigateToLocation(newPipelineId, updatedGitDetails)
-        await fetchPipeline({ forceFetch: true, forceUpdate: true, newPipelineId })
+        fetchPipeline({ newPipelineId })
       }
     } else if (!updatedGitDetails || updatedGitDetails?.isNewBranch === false) {
-      await fetchPipeline({ forceFetch: true, forceUpdate: true })
+      fetchPipeline()
     }
 
     // Only for Git Synced pipelines when isNewBranch is true
     if (updatedGitDetails?.isNewBranch) {
       navigateToLocation(newPipelineId, updatedGitDetails)
-      await fetchPipeline({
-        forceFetch: true,
-        forceUpdate: true,
+      fetchPipeline({
         newPipelineId,
         repoIdentifier: repoId,
         branch: updatedGitDetails?.branch

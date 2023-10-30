@@ -3964,6 +3964,7 @@ export interface StringsMap {
   'pipeline.aboutYourStage.stageNamePlaceholder': string
   'pipeline.addDeploymenteRepo': string
   'pipeline.addReleaseRepo': string
+  'pipeline.addRuntimeInput': string
   'pipeline.addStage.description': string
   'pipeline.addStage.title': string
   'pipeline.additionalConfiguration': string
@@ -4242,6 +4243,7 @@ export interface StringsMap {
   'pipeline.cannotRunInvalidPipeline': string
   'pipeline.cannotRunUnsavedPipeline': string
   'pipeline.changeTemplateLabel': string
+  'pipeline.chooseYamlSyntax': string
   'pipeline.ci.validations.invalidSize': string
   'pipeline.ci.validations.keyUnique': string
   'pipeline.ci.validations.mountPathUnique': string
@@ -4420,6 +4422,7 @@ export interface StringsMap {
   'pipeline.editGitDetails': string
   'pipeline.editGitDetailsSuccess': string
   'pipeline.editGitDetailsTitle': string
+  'pipeline.editInput': string
   'pipeline.editingGitDetails': string
   'pipeline.emptyExecutionListMsg': string
   'pipeline.enableContainerBasedExecution': string
@@ -4727,6 +4730,7 @@ export interface StringsMap {
   'pipeline.infraSpecifications.serviceAccountNamePlaceholder': string
   'pipeline.infraSpecifications.validation.requiredExistingStage': string
   'pipeline.infrastructurePropagatedFrom': string
+  'pipeline.inputListInfo': string
   'pipeline.inputSetDiffTitle': string
   'pipeline.inputSetErrorStrip.errorInfo': string
   'pipeline.inputSetErrorStrip.existingYaml': string
@@ -4769,6 +4773,10 @@ export interface StringsMap {
   'pipeline.inputSets.overlayISUpdated': string
   'pipeline.inputSets.removeInvalidFields': string
   'pipeline.inputSets.selectPlaceholder': string
+  'pipeline.inputs.description': string
+  'pipeline.inputs.inputNamePlaceholder': string
+  'pipeline.inputs.name': string
+  'pipeline.inputs.value': string
   'pipeline.invalidRequest': string
   'pipeline.jenkinsBuild': string
   'pipeline.jenkinsStep.addJobParameters': string
@@ -4844,6 +4852,7 @@ export interface StringsMap {
   'pipeline.lastSevenDays': string
   'pipeline.license': string
   'pipeline.linuxOnly': string
+  'pipeline.location': string
   'pipeline.logDateTimeSettings': string
   'pipeline.logLevelSettings': string
   'pipeline.logSettingsHeader': string
@@ -5027,6 +5036,7 @@ export interface StringsMap {
   'pipeline.noRunsLabel': string
   'pipeline.noRunsSimpleText': string
   'pipeline.noRunsText': string
+  'pipeline.noRuntimeInputsCreated': string
   'pipeline.noRuntimeServiceInputsAreRequired': string
   'pipeline.noServiceAvailable': string
   'pipeline.noServicesFound': string
@@ -5167,9 +5177,11 @@ export interface StringsMap {
   'pipeline.reconcileDialog.updateAllLabel': string
   'pipeline.reconcileDialog.updateEntityLabel': string
   'pipeline.reconcileDialog.updatedTemplateInfo': string
+  'pipeline.referencedIn': string
   'pipeline.regionPlaceholder': string
   'pipeline.releaseRepo': string
   'pipeline.releaseRepoStore': string
+  'pipeline.removeRuntimeInput': string
   'pipeline.removeTemplate': string
   'pipeline.removeTemplateLabel': string
   'pipeline.replacedExpressions': string
@@ -5326,6 +5338,7 @@ export interface StringsMap {
   'pipeline.serviceNowUpdateStep.fieldType.updateFields': string
   'pipeline.serviceNowUpdateStep.refreshFieldInfo': string
   'pipeline.setVariableRequiredDuringRuntime': string
+  'pipeline.simplified': string
   'pipeline.singleStageExecution': string
   'pipeline.skipInstances.title': string
   'pipeline.slsaProvenance': string
@@ -5631,6 +5644,7 @@ export interface StringsMap {
   'pipeline.ticketStatus': string
   'pipeline.timeRemainingSuffix': string
   'pipeline.totalCount': string
+  'pipeline.totalVariableCount': string
   'pipeline.traffic': string
   'pipeline.trafficPercentage': string
   'pipeline.triggerBy': string
@@ -5669,6 +5683,8 @@ export interface StringsMap {
   'pipeline.validation.validationResultApiError': string
   'pipeline.validation.validationSuccessful': string
   'pipeline.validation.validationSuccessfulText': string
+  'pipeline.validations.inputAlreadyExists': string
+  'pipeline.validations.setInputRequiredDuringRuntime': string
   'pipeline.variable.typePlaceholder': string
   'pipeline.variable.variableNamePlaceholder': string
   'pipeline.verification.analysisTab.logs': string
@@ -5778,6 +5794,8 @@ export interface StringsMap {
   'pipeline.webhooks.successSubtitle': string
   'pipeline.webhooks.successUpdateMessage': string
   'pipeline.webhooks.webhooksListing': string
+  'pipeline.yamlVersion.v0': string
+  'pipeline.yamlVersion.v1': string
   'freezeWindows.deploymentFreeze': string
   'freezeWindows.freezeNotifications.customMessageTitle': string
   'freezeWindows.freezeNotifications.customizedMessagePlaceholder': string
@@ -6222,7 +6240,6 @@ export interface StringsMap {
   'cd.awsCli': string
   'cd.awsClusterCreate': string
   'cd.azureArm.description': string
-  'cd.azureArm.location': string
   'cd.azureArm.managementGroup': string
   'cd.azureArm.paramFile': string
   'cd.azureArm.paramFilePath': string

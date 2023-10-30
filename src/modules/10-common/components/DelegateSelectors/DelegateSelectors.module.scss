@@ -22,7 +22,7 @@
 
   :global(.bp3-input.bp3-tag-input.bp3-multi-select) {
     max-height: 116px !important;
-    overflow-y: scroll !important;
+    overflow-y: auto !important;
     overflow-x: hidden;
     min-width: 500px !important;
   }

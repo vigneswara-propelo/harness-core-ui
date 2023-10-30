@@ -24,5 +24,6 @@ declare const styles: {
   readonly tags: string
   readonly timeAgo: string
   readonly trigger: string
+  readonly withVersion: string
 }
 export default styles

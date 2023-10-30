@@ -1,12 +1,21 @@
 /*
- * Copyright 2021 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * Copyright 2021 Harness Inc. All rights reserved.
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
 import React from 'react'
-import { Button, ButtonVariation, ConfirmationDialog, FormInput, Layout, useToggleOpen } from '@harness/uicore'
+import cx from 'classnames'
+import {
+  AllowedTypes,
+  Button,
+  ButtonVariation,
+  ConfirmationDialog,
+  FormInput,
+  Layout,
+  useToggleOpen
+} from '@harness/uicore'
 import { useFormikContext } from 'formik'
 import { get, isUndefined, set } from 'lodash-es'
 import produce from 'immer'
@@ -23,10 +32,12 @@ export interface ConditionalExecutionPanelProps {
   path: string
   mode: Modes
   isReadonly: boolean
+  className?: string
+  allowableTypes?: AllowedTypes
 }
 
 export default function ConditionalExecutionPanel(props: ConditionalExecutionPanelProps): React.ReactElement {
-  const { mode, isReadonly, path = 'when' } = props
+  const { mode, isReadonly, path = 'when', className, allowableTypes } = props
   const { getString } = useStrings()
   const formik = useFormikContext()
   const {
@@ -64,10 +75,16 @@ export default function ConditionalExecutionPanel(props: ConditionalExecutionPan
       {isValueRuntimeInput(value) ? (
         <FormInput.Text className={css.runtimeInput} name={path} disabled />
       ) : (
-        <div className={css.panel}>
+        <div className={cx(css.panel, className)}>
           <ConditionalExecutionPanelStatus path={path} statusPath={statusPath} isReadonly={isReadonly} mode={mode} />
           <div className={css.divider} />
-          <ConditionalExecutionPanelCondition path={path} statusPath={statusPath} isReadonly={isReadonly} mode={mode} />
+          <ConditionalExecutionPanelCondition
+            path={path}
+            statusPath={statusPath}
+            isReadonly={isReadonly}
+            mode={mode}
+            allowableTypes={allowableTypes}
+          />
         </div>
       )}
       <ConfirmationDialog

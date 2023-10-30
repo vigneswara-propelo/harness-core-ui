@@ -3566,9 +3566,9 @@ exports[`RightBar renders correctly 1`] = `
         data-icon="pipeline-variables"
       >
         <svg
-          height="28"
+          height="20"
           viewBox="0 0 20 20"
-          width="28"
+          width="20"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
@@ -3601,9 +3601,9 @@ exports[`RightBar renders correctly 1`] = `
         data-icon="pipeline-deploy"
       >
         <svg
-          height="24"
+          height="20"
           viewBox="0 0 16 16"
-          width="24"
+          width="20"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
@@ -3703,9 +3703,9 @@ exports[`RightBar renders correctly 1`] = `
         data-icon="pipeline-advanced"
       >
         <svg
-          height="24"
+          height="20"
           viewBox="0 0 17 13"
-          width="24"
+          width="20"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path

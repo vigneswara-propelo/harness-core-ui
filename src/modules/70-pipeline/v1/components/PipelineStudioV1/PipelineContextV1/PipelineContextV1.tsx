@@ -295,7 +295,6 @@ export interface PipelineContextInterface {
     pipeline?: PipelineInfoConfig | StageElementWrapperConfig
   ): PipelineStageWrapper<T>
   runPipeline: (identifier: string) => void
-  pipelineSaved: (pipeline: PipelineInfoConfig) => void
   updateStage: (stage: StageElementConfig) => Promise<void>
   /** @deprecated use `setSelection` */
   setSelectedStageId: (selectedStageId: string | undefined) => void
@@ -943,7 +942,6 @@ export const PipelineContextV1 = React.createContext<PipelineContextInterface>({
   setTemplateIcons: () => undefined,
   setTemplateServiceData: () => undefined,
   updatePipeline: () => new Promise<void>(() => undefined),
-  pipelineSaved: () => undefined,
   deletePipelineCache: () => new Promise<void>(() => undefined),
   setSelectedStageId: (_selectedStageId: string | undefined) => undefined,
   setSelectedStepId: (_selectedStepId: string | undefined) => undefined,
@@ -1072,13 +1070,6 @@ export function PipelineProviderV1({
   const scope = getScopeFromDTO(queryParams)
   const isReadonly = !isEdit
   const deletePipelineCache = _deletePipelineCache.bind(null, queryParams, pipelineIdentifier)
-  const pipelineSaved = React.useCallback(
-    async (pipeline: PipelineInfoConfig) => {
-      await deletePipelineCache(state.gitDetails)
-      dispatch(PipelineContextActions.pipelineSavedAction({ pipeline, originalPipeline: cloneDeep(pipeline) }))
-    },
-    [deletePipelineCache, state.gitDetails]
-  )
   const setYamlHandler = React.useCallback((yamlHandler: YamlBuilderHandlerBinding) => {
     dispatch(PipelineContextActions.setYamlHandler({ yamlHandler }))
   }, [])
@@ -1243,7 +1234,6 @@ export function PipelineProviderV1({
         updatePipeline,
         updateStage,
         updatePipelineView,
-        pipelineSaved,
         deletePipelineCache,
         isReadonly,
         scope,

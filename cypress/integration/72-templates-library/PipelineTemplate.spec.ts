@@ -104,6 +104,7 @@ describe('Pipeline Template creation and assertion', () => {
 
     cy.get('div[class*="PageSubHeader--container"]').within(() => {
       cy.contains('span', 'Create a Pipeline').should('be.visible').click()
+      cy.wait(1000)
     })
     cy.contains('span', 'Start with Template').should('be.visible').click()
     cy.contains('span', 'Pipeline Name is a required field').should('be.visible')

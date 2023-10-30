@@ -9,11 +9,15 @@ import React from 'react'
 import { Text, Layout, Container } from '@harness/uicore'
 import i18n from './AppErrorBoundary.i18n.json'
 
+interface AppErrorBoundaryProps {
+  onRefreshClick?: () => void
+}
+
 interface AppErrorBoundaryState {
   error?: Error
 }
 
-class AppErrorBoundary extends React.Component<unknown, AppErrorBoundaryState> {
+class AppErrorBoundary extends React.Component<AppErrorBoundaryProps, AppErrorBoundaryState> {
   state: AppErrorBoundaryState = { error: undefined }
 
   componentDidCatch(error: Error): boolean {
@@ -37,8 +41,12 @@ class AppErrorBoundary extends React.Component<unknown, AppErrorBoundaryState> {
             <a
               href="#"
               onClick={e => {
-                e.preventDefault()
-                window.location.reload()
+                if (this.props.onRefreshClick) {
+                  this.props.onRefreshClick()
+                } else {
+                  e.preventDefault()
+                  window.location.reload()
+                }
               }}
             >
               {i18n.refresh}

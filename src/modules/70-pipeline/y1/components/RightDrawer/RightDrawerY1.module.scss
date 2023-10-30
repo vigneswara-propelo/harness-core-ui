@@ -1,0 +1,33 @@
+.portal {
+  --right-bar-width: 64px;
+
+  :global(.bp3-overlay) {
+    right: var(--right-bar-width);
+  }
+}
+
+.backdrop {
+  right: var(--right-bar-width);
+}
+
+.drawer {
+  box-shadow: none;
+
+  &:global(.bp3-position-right) {
+    right: var(--right-bar-width);
+  }
+
+  .closeBtn {
+    --size: 40px;
+    position: absolute;
+    padding: var(--spacing-small) !important;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    box-shadow: none;
+    top: 0;
+    right: 100%;
+    width: var(--size);
+    height: var(--size) !important;
+    max-height: var(--size) !important;
+  }
+}

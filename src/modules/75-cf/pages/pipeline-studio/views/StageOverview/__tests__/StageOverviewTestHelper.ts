@@ -8,7 +8,7 @@
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
+import { DrawerTypes, PipelineReducerState } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import {
   PipelineContextInterface,
   PipelineContextType
@@ -46,8 +46,10 @@ export const getPipelineContext = (): PipelineContextInterface => ({
     modules: [],
     templateTypes: {},
     templateServiceData: {},
-    resolvedCustomDeploymentDetailsByRef: {}
+    resolvedCustomDeploymentDetailsByRef: {},
+    routeState: { accountIdentifier: '', orgIdentifier: '', projectIdentifier: '' }
   },
+  getLatestState: () => ({} as PipelineReducerState),
   contextType: PipelineContextType.Pipeline,
   allowableTypes: [
     MultiTypeInputType.FIXED,
@@ -65,12 +67,12 @@ export const getPipelineContext = (): PipelineContextInterface => ({
   fetchPipeline: jest.fn(),
   setYamlHandler: jest.fn(),
   updatePipeline: jest.fn(),
+  updatePipelineMetadata: jest.fn(),
   updatePipelineView: jest.fn(),
   updateStage: jest.fn(),
   getStageFromPipeline: jest.fn(() => ({ stage: undefined, parent: undefined })),
   deletePipelineCache: jest.fn(),
   runPipeline: jest.fn(),
-  pipelineSaved: jest.fn(),
   view: 'ui',
   setView: jest.fn(),
   stepsFactory: factory,
@@ -116,8 +118,10 @@ export const getEditPipelineContext = (): PipelineContextInterface => ({
     modules: [],
     templateTypes: {},
     templateServiceData: {},
-    resolvedCustomDeploymentDetailsByRef: {}
+    resolvedCustomDeploymentDetailsByRef: {},
+    routeState: { accountIdentifier: '', orgIdentifier: '', projectIdentifier: '' }
   },
+  getLatestState: () => ({} as PipelineReducerState),
   contextType: PipelineContextType.Pipeline,
   allowableTypes: [
     MultiTypeInputType.FIXED,
@@ -135,12 +139,12 @@ export const getEditPipelineContext = (): PipelineContextInterface => ({
   fetchPipeline: jest.fn(),
   setYamlHandler: jest.fn(),
   updatePipeline: jest.fn(),
+  updatePipelineMetadata: jest.fn(),
   updatePipelineView: jest.fn(),
   updateStage: jest.fn(),
   getStageFromPipeline: jest.fn(() => ({ stage: undefined, parent: undefined })),
   deletePipelineCache: jest.fn(),
   runPipeline: jest.fn(),
-  pipelineSaved: jest.fn(),
   view: 'ui',
   setView: jest.fn(),
   stepsFactory: factory,

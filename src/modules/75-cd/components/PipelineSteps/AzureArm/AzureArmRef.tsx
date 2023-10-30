@@ -115,7 +115,7 @@ export const AzureArmRef = (
                     getString('cd.azureArm.required', { name: getString('cd.azureArm.managementGroup') })
                   ),
                   location: Yup.string().required(
-                    getString('cd.azureArm.required', { name: getString('cd.azureArm.location') })
+                    getString('cd.azureArm.required', { name: getString('pipeline.location') })
                   )
                 })
               })
@@ -123,7 +123,7 @@ export const AzureArmRef = (
                 is: val => val === ScopeTypes.Tenant,
                 then: Yup.object().shape({
                   location: Yup.string().required(
-                    getString('cd.azureArm.required', { name: getString('cd.azureArm.location') })
+                    getString('cd.azureArm.required', { name: getString('pipeline.location') })
                   )
                 })
               })
@@ -134,7 +134,7 @@ export const AzureArmRef = (
                     getString('cd.azureArm.required', { name: getString('common.plans.subscription') })
                   ),
                   location: Yup.string().required(
-                    getString('cd.azureArm.required', { name: getString('cd.azureArm.location') })
+                    getString('cd.azureArm.required', { name: getString('pipeline.location') })
                   )
                 })
               })

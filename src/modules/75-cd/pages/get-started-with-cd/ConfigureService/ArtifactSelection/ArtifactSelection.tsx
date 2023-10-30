@@ -164,7 +164,7 @@ const ArtifactSelection = ({ isStepComplete }: ArtifactSelectionProps): JSX.Elem
           {/* ARTIFACT TYPE SELECTION */}
           <Layout.Vertical padding={{ bottom: 'medium' }}>
             <Text font={{ size: 'medium', weight: 'semi-bold' }} padding={{ bottom: 'large' }} color={Color.GREY_600}>
-              {getString('cd.azureArm.location')}
+              {getString('pipeline.location')}
             </Text>
             <Layout.Horizontal>
               {values?.manifestStoreType === ManifestStoreMap.Harness && (

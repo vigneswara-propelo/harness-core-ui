@@ -89,12 +89,6 @@ describe('PipelineActions test', () => {
     expect(newState).toEqual({ ...initialState, pipeline: pipelineData, isUpdated: false })
   })
 
-  test('PipelineActions PipelineSaved', () => {
-    const resp = { pipeline: { identifier: 'abc', name: 'ABC', stages: [] } }
-    const newState = PipelineReducer(initialState, { ...PipelineContextActions.pipelineSavedAction(resp) })
-    expect(newState).toEqual({ ...initialState, ...resp, isLoading: false, isUpdated: false })
-  })
-
   test('PipelineActions Fetching', () => {
     const newState = PipelineReducer(initialState, {
       ...PipelineContextActions.fetching(),

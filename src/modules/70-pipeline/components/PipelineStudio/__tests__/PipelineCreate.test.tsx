@@ -234,7 +234,8 @@ describe('PipelineCreate test', () => {
       },
       { connectorRef: undefined, storeType: undefined },
       undefined,
-      undefined
+      undefined,
+      '1'
     )
     const closeBtn = getByText('cancel')
     fireEvent.click(closeBtn!)
@@ -276,7 +277,8 @@ describe('PipelineCreate test', () => {
       },
       { connectorRef: 'testConnector', storeType: 'REMOTE' },
       { repoName: 'sunnykesh-gitSync', branch: 'master', filePath: './test.yaml' },
-      undefined
+      undefined,
+      '1'
     )
     const closeBtn = getByText('cancel')
     fireEvent.click(closeBtn!)
@@ -356,7 +358,8 @@ describe('PipelineCreate test', () => {
         repoIdentifier: 'identifier',
         branch: 'branch'
       },
-      undefined
+      undefined,
+      '1'
     )
   })
 
@@ -448,7 +451,8 @@ describe('PipelineCreate test', () => {
         branch: 'testBranch',
         filePath: '.harness/pipeline1.yaml'
       },
-      undefined
+      undefined,
+      '1'
     )
   })
 })

@@ -7,6 +7,7 @@
 
 import React, { useState } from 'react'
 import {
+  AllowedTypes,
   Container,
   getMultiTypeFromValue,
   HarnessDocTooltip,
@@ -30,10 +31,17 @@ interface ConditionalExecutionConditionProps {
   mode: Modes
   isReadonly: boolean
   statusPath: 'pipelineStatus' | 'stageStatus'
+  allowableTypes?: AllowedTypes
 }
 
 export default function ConditionalExecutionCondition(props: ConditionalExecutionConditionProps): React.ReactElement {
-  const { mode, isReadonly, path = 'when', statusPath } = props
+  const {
+    mode,
+    isReadonly,
+    path = 'when',
+    statusPath,
+    allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+  } = props
   const { getString } = useStrings()
   const formik = useFormikContext()
   const conditionValue = get(formik.values, `${path}.condition`)
@@ -79,7 +87,7 @@ export default function ConditionalExecutionCondition(props: ConditionalExecutio
       <Container padding={{ top: 'small', left: 'large' }}>
         <MultiTypeExecutionCondition
           path={`${path}.condition`}
-          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]}
+          allowableTypes={allowableTypes}
           isInputDisabled={isInputDisabled}
           multiType={multiType}
           setMultiType={setMultiType}

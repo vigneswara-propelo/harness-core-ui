@@ -37,6 +37,7 @@ const NEW_NAV_CONTENTFUL_SPACE = process.env.NEW_NAV_CONTENTFUL_SPACE
 const NEW_NAV_CONTENTFUL_ENVIRONMENT = process.env.NEW_NAV_CONTENTFUL_ENVIRONMENT
 const HARNESS_NO_AUTH_HEADER = process.env.HARNESS_NO_AUTH_HEADER === 'true'
 const SEGMENT_TOKEN = process.env.SEGMENT_TOKEN
+
 const DEV_FF = Object.keys(process.env)
   .filter(f => f.startsWith('FF_'))
   .reduce((obj, key) => ({ ...obj, [key.replace(/^FF_/, '')]: process.env[key] === 'true' }), {})

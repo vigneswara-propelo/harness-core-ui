@@ -132,7 +132,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   }, [])
 
   const onRefreshEntity = React.useCallback(() => {
-    fetchPipeline({ forceFetch: true, forceUpdate: true })
+    fetchPipeline()
     setOutOfSync(false)
   }, [fetchPipeline])
 
@@ -208,7 +208,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
 
   function handleDiscardClick(): void {
     updatePipelineView({ ...pipelineView, isYamlEditable: false })
-    fetchPipeline({ forceFetch: true, forceUpdate: true })
+    fetchPipeline()
   }
 
   function handleRunClick(e: React.SyntheticEvent): void {
@@ -235,7 +235,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
 
   function handleReloadFromCache(): void {
     updatePipelineView({ ...pipelineView, isYamlEditable: false })
-    fetchPipeline({ forceFetch: true, forceUpdate: true, loadFromCache: false })
+    fetchPipeline({ loadFromCache: false })
   }
 
   const isNewPipeline = pipelineIdentifier === DefaultNewPipelineId

@@ -10,6 +10,7 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import type { UseReconcileReturnType } from '@pipeline/hooks/useReconcile'
 import type { PipelineContextInterface } from '../../PipelineContext/PipelineContext'
 import type { PipelineSelectionState } from '../../PipelineQueryParamState/usePipelineQueryParam'
+import { PipelineReducerState } from '../../PipelineContext/PipelineActions'
 
 const stateMock = {
   pipeline: {
@@ -232,7 +233,7 @@ const pipelineContextMock: PipelineContextInterface = {
   getStageFromPipeline: () => ({ stage: stateMock.pipeline.stages[0] as any, parent: undefined }),
   setYamlHandler: () => undefined,
   updatePipeline: () => new Promise<void>(() => undefined),
-  pipelineSaved: () => undefined,
+  updatePipelineMetadata: () => new Promise<void>(() => undefined),
   deletePipelineCache: () => new Promise<void>(() => undefined),
   setSelectedStageId: (_selectedStageId: string | undefined) => undefined,
   setSelectedStepId: (_selectedStepId: string | undefined) => undefined,
@@ -245,7 +246,8 @@ const pipelineContextMock: PipelineContextInterface = {
   setIntermittentLoading: () => undefined,
   setValidationUuid: jest.fn(),
   setPublicAccessResponse: jest.fn(),
-  reconcile: {} as UseReconcileReturnType
+  reconcile: {} as UseReconcileReturnType,
+  getLatestState: () => ({} as PipelineReducerState)
 }
 
 export const updateStageFnArg1 = {

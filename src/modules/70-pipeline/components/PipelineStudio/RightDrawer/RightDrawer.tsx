@@ -595,6 +595,7 @@ export function RightDrawer(): React.ReactElement {
     },
     allowableTypes,
     updatePipeline,
+    updatePipelineMetadata,
     isReadonly,
     updateStage,
     updatePipelineView,
@@ -1227,7 +1228,8 @@ export function RightDrawer(): React.ReactElement {
         <AdvancedOptions
           pipeline={cloneDeep(pipeline)}
           onApplyChanges={async (updatedPipeline, pipelineMetadata) => {
-            await updatePipeline(updatedPipeline, pipelineMetadata)
+            await updatePipeline(updatedPipeline)
+            await updatePipelineMetadata(pipelineMetadata)
             updatePipelineView({
               ...pipelineView,
               isDrawerOpened: false,

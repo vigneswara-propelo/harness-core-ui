@@ -44,12 +44,12 @@ export enum PipelineActions {
   SetTemplateServiceData = 'SetTemplateServiceData',
   SetTemplateIcons = 'SetTemplateIcons',
   SetResolvedCustomDeploymentDetailsByRef = 'SetResolvedCustomDeploymentDetailsByRef',
-  PipelineSaved = 'PipelineSaved',
   UpdateSchemaErrorsFlag = 'UpdateSchemaErrorsFlag',
   Success = 'Success',
   Error = 'Error',
   SetValidationUuid = 'SetValidationUuid',
-  SetPublicAccessResponse = 'SetPublicAccessResponse'
+  SetPublicAccessResponse = 'SetPublicAccessResponse',
+  RouteStateChange = 'RouteStateChange'
 }
 export const DefaultNewPipelineId = '-1'
 
@@ -148,6 +148,18 @@ export interface PipelineMetaDataConfig {
   modifiedMetadata?: PipelineMetaData
 }
 
+export interface RouteState {
+  accountIdentifier: string
+  projectIdentifier: string
+  orgIdentifier: string
+  pipelineIdentifier?: string
+  module?: string
+  branch?: string
+  repoIdentifier?: string
+  repoName?: string
+  connectorRef?: string
+  storeType?: 'INLINE' | 'REMOTE' | undefined
+}
 export interface PipelineReducerState {
   pipeline: PipelineInfoConfig
   pipelineMetadataConfig: PipelineMetaDataConfig
@@ -180,6 +192,8 @@ export interface PipelineReducerState {
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
   cacheResponse?: CacheResponseMetadata
   validationUuid?: string
+  /** contains both path-params and query-params */
+  routeState: RouteState
 }
 
 export const DefaultPipeline: PipelineInfoConfig = {
@@ -218,6 +232,7 @@ export interface ActionResponse {
   templateInputsErrorNodeSummary?: ErrorNodeSummary
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
   validationUuid?: string
+  routeState?: RouteState
 }
 
 export interface ActionReturnType {
@@ -274,10 +289,6 @@ const setValidationUuid = (response: ActionResponse): ActionReturnType => ({
   type: PipelineActions.SetValidationUuid,
   response
 })
-const pipelineSavedAction = (response: ActionResponse): ActionReturnType => ({
-  type: PipelineActions.PipelineSaved,
-  response
-})
 const success = (response: ActionResponse): ActionReturnType => ({ type: PipelineActions.Success, response })
 const error = (response: ActionResponse): ActionReturnType => ({ type: PipelineActions.Error, response })
 const updateSchemaErrorsFlag = (response: ActionResponse): ActionReturnType => ({
@@ -294,13 +305,17 @@ const setPublicAccessResponse = (response: ActionResponse): ActionReturnType => 
   response
 })
 
+const setRouteStateParams = (response: ActionResponse): ActionReturnType => ({
+  type: PipelineActions.RouteStateChange,
+  response
+})
+
 export const PipelineContextActions = {
   dbInitialized,
   setDBInitializationFailed,
   initialized,
   setLoading,
   fetching,
-  pipelineSavedAction,
   updatePipelineView,
   updateTemplateView,
   setYamlHandler,
@@ -314,7 +329,8 @@ export const PipelineContextActions = {
   updateSelectionState,
   setIntermittentLoading,
   setValidationUuid,
-  setPublicAccessResponse
+  setPublicAccessResponse,
+  setRouteStateParams
 }
 
 export const initialState: PipelineReducerState = {
@@ -356,6 +372,11 @@ export const initialState: PipelineReducerState = {
     selectedStageId: undefined,
     selectedStepId: undefined,
     selectedSectionId: undefined
+  },
+  routeState: {
+    accountIdentifier: '',
+    orgIdentifier: '',
+    projectIdentifier: ''
   }
 }
 
@@ -420,14 +441,6 @@ export const PipelineReducer = (state = initialState, data: ActionReturnType): P
         isUpdated: response?.isUpdated ?? true,
         pipeline: response?.pipeline ? clone(response?.pipeline) : state.pipeline
       }
-    case PipelineActions.PipelineSaved:
-      return {
-        ...state,
-        ...response,
-        isLoading: false,
-        isUpdated: false,
-        isMetadataUpdated: false
-      }
     case PipelineActions.Fetching:
       return {
         ...state,
@@ -470,6 +483,19 @@ export const PipelineReducer = (state = initialState, data: ActionReturnType): P
             publicAccessResponse: response?.publicAccessResponse
           }
         }
+      }
+    case PipelineActions.RouteStateChange:
+      return {
+        ...state,
+        routeState: {
+          ...response?.routeState,
+          ...{
+            accountIdentifier: response?.routeState?.accountIdentifier ?? '',
+            orgIdentifier: response?.routeState?.orgIdentifier ?? '',
+            projectIdentifier: response?.routeState?.projectIdentifier ?? ''
+          }
+        },
+        pipelineIdentifier: response?.pipelineIdentifier ?? DefaultNewPipelineId
       }
     default:
       return state

@@ -231,7 +231,7 @@ function ServiceConfiguration({
           originalYaml={yamlStringify(defaultTo(originalServiceData, {}))}
           isReadOnly={isReadonly}
           onRefreshEntity={() => {
-            fetchPipeline({ forceFetch: true, forceUpdate: true, loadFromCache: false })
+            fetchPipeline({ loadFromCache: false })
             setShouldShowOutOfSyncError?.(false)
           }}
           updateRootEntity={updateServicePostReconcile as (entityYaml: string) => Promise<void>}

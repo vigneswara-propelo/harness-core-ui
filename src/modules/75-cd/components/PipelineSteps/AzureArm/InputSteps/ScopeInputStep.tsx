@@ -253,7 +253,7 @@ export const ScopeInputStep = (
 
       {needsLocation &&
         isValueRuntimeInput(get(inputSetData?.template, 'spec.configuration.scope.spec.location') as string) &&
-        dropDown('spec.configuration.scope.spec.location', 'cd.azureArm.location', locations, locationsLoading)}
+        dropDown('spec.configuration.scope.spec.location', 'pipeline.location', locations, locationsLoading)}
 
       {needsMgmtGroupId &&
         isValueRuntimeInput(get(inputSetData?.template, 'spec.configuration.scope.spec.managementGroupId') as string) &&

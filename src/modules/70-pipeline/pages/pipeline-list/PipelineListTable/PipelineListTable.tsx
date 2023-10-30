@@ -27,7 +27,8 @@ import {
   PipelineNameCell,
   RecentExecutionsCell,
   LastModifiedCell,
-  RunPipelineCell
+  RunPipelineCell,
+  VersionCell
 } from './PipelineListCells'
 import { getRouteProps } from '../PipelineListUtils'
 import css from './PipelineListTable.module.scss'
@@ -61,7 +62,7 @@ export function PipelineListTable({
   const history = useHistory()
   const { getString } = useStrings()
   const pathParams = useParams<PipelineListPagePathParams>()
-  const { CI_YAML_VERSIONING, PL_NEW_PAGE_SIZE } = useFeatureFlags()
+  const { CI_YAML_VERSIONING, PL_NEW_PAGE_SIZE, CDS_YAML_SIMPLIFICATION } = useFeatureFlags()
   const {
     content = [],
     totalElements = 0,
@@ -88,6 +89,12 @@ export function PipelineListTable({
         accessor: 'name',
         Cell: PipelineNameCell,
         serverSortProps: getServerSortProps('name')
+      },
+      CDS_YAML_SIMPLIFICATION && {
+        Header: getString('version'),
+        accessor: 'yamlVersion',
+        Cell: VersionCell,
+        disableSortBy: true
       },
       {
         Header: getString('pipeline.codeSource'),
@@ -140,7 +147,16 @@ export function PipelineListTable({
         disableSortBy: true
       }
     ].filter(Boolean) as unknown as Column<PMSPipelineSummaryResponse>[]
-  }, [currentOrder, currentSort, minimal, getString, onClonePipeline, onDeletePipeline, refetchList])
+  }, [
+    currentOrder,
+    currentSort,
+    minimal,
+    CDS_YAML_SIMPLIFICATION,
+    getString,
+    onClonePipeline,
+    onDeletePipeline,
+    refetchList
+  ])
 
   const paginationProps = useDefaultPaginationProps({
     itemCount: totalElements,
@@ -153,7 +169,7 @@ export function PipelineListTable({
 
   return (
     <TableV2
-      className={cx(css.table, minimal && css.minimal)}
+      className={cx(css.table, minimal && css.minimal, !minimal && CDS_YAML_SIMPLIFICATION && css.withVersion)}
       columns={columns}
       data={content}
       pagination={paginationProps}

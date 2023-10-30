@@ -56,6 +56,7 @@ import { getChildExecutionPipelineViewLink } from '@pipeline/pages/execution-lis
 import { useQueryParams } from '@common/hooks/useQueryParams'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import useEditGitMetadata from '@pipeline/components/MigrateResource/useEditGitMetadata'
+import { VersionTag } from '@pipeline/common/components/VersionTag/VersionTag'
 import { getRouteProps } from '../PipelineListUtils'
 import type { PipelineListPagePathParams } from '../types'
 import type { PipelineListColumnActions } from './PipelineListTable'
@@ -143,6 +144,11 @@ export const PipelineNameCell: CellType = ({ row }) => {
       )}
     </Layout.Horizontal>
   )
+}
+
+export const VersionCell: CellType = ({ cell }) => {
+  const version = `v${cell.value}`
+  return <VersionTag version={version} />
 }
 
 export const CodeSourceCell: CellType = ({ row }) => {
