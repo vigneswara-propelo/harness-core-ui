@@ -6,13 +6,16 @@
  */
 
 import React from 'react'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as pipelineServices from 'services/pipeline-ng'
+import routes from '@modules/10-common/RouteDefinitions'
 import TriggerExplorer from '../views/TriggerExplorer'
 import { errorLoadingList } from '../TriggerLandingPage/__tests__/TriggerActivityHistoryPageMocks'
-import { webhookTriggerData } from './TriggerExplorerMocks'
+import { dockerArtifactTriggerData, webhookTriggerData } from './TriggerExplorerMocks'
+
+jest.mock('react-timeago', () => () => 'dummy date')
 
 function WrapperComponent(): JSX.Element {
   return (
@@ -51,6 +54,18 @@ const searchEventCorrelationIdTest = async (
   await waitFor(() => {
     expect(refetchList).toHaveBeenCalledTimes(1)
   })
+}
+
+const artifactTriggerListing = async (): Promise<void> => {
+  userEvent.click(screen.getByRole('radio', { name: 'pipeline.artifactTriggerConfigPanel.artifact' }))
+  await waitFor(() => {
+    expect(screen.getByRole('radio', { name: 'pipeline.artifactTriggerConfigPanel.artifact' })).toBeChecked()
+    expect(document.querySelector('input[name="artifactTriggerType"]')).toBeVisible()
+  })
+  await userEvent.click(document.querySelector('input[name="artifactTriggerType"]') as HTMLElement)
+  const dockerRegistryArtifactTrigger = document.querySelectorAll('li[class*="Select--menuItem')
+  await waitFor(() => expect(dockerRegistryArtifactTrigger).toHaveLength(16))
+  userEvent.click(dockerRegistryArtifactTrigger[2])
 }
 
 describe('Trigger Explorer page tests', () => {
@@ -140,5 +155,83 @@ describe('Trigger Explorer page tests', () => {
     await waitFor(() => {
       expect(viewPayloadyButton).toBeInTheDocument()
     })
+  })
+
+  test('Show artifact help panel when artifact triggers is chosen', async () => {
+    render(<WrapperComponent />)
+    const artifactOption = screen.getByRole('radio', { name: 'pipeline.artifactTriggerConfigPanel.artifact' })
+    expect(screen.getByRole('radio', { name: 'execution.triggerType.WEBHOOK' })).toBeChecked()
+    expect(artifactOption).toBeVisible()
+    userEvent.click(artifactOption)
+    await waitFor(() => {
+      expect(screen.queryByTestId('helpPanelCard')).toBeInTheDocument()
+      expect(document.querySelector('input[name="artifactTriggerType"]')).toBeVisible()
+    })
+  })
+
+  test('Show error message and retry button when artifact trigger listing api fails', async () => {
+    const refetchList = jest.fn()
+    jest.spyOn(pipelineServices, 'useTriggerEventHistoryBuildSourceType').mockImplementation((): any => {
+      return {
+        data: {},
+        refetch: refetchList,
+        error: errorLoadingList,
+        loading: false
+      }
+    })
+    const { getByText } = render(<WrapperComponent />)
+
+    artifactTriggerListing()
+
+    await waitFor(() => {
+      expect(refetchList).toHaveBeenCalledTimes(1)
+    })
+    expect(getByText('Failed to fetch')).toBeDefined()
+    const retryButton = getByText(/Retry/)
+    expect(retryButton).toBeDefined()
+    await userEvent.click(retryButton)
+    expect(refetchList).toHaveBeenCalledWith({
+      queryParams: { accountIdentifier: 'testAcc', artifactType: 'DockerRegistry', page: 0, size: 10 }
+    })
+  })
+
+  test('Show matching artifact triggers when artifact trigger type is chosen', async () => {
+    const refetchList = jest.fn()
+    jest.spyOn(pipelineServices, 'useTriggerEventHistoryBuildSourceType').mockImplementation((): any => {
+      return {
+        data: dockerArtifactTriggerData,
+        refetch: refetchList,
+        error: null,
+        loading: false
+      }
+    })
+
+    render(<WrapperComponent />)
+
+    artifactTriggerListing()
+
+    await waitFor(() => {
+      expect(refetchList).toHaveBeenCalledTimes(1)
+    })
+    const rows = await screen.findAllByRole('row')
+    expect(rows).toHaveLength(3)
+    const artifactTriggerRow = rows[1]
+
+    expect(within(artifactTriggerRow).getByText('dummy date')).toBeInTheDocument()
+    expect(
+      within(artifactTriggerRow).getByRole('link', {
+        name: /testDockerTrigger/i
+      })
+    ).toHaveAttribute(
+      'href',
+      routes.toTriggersActivityHistoryPage({
+        accountId: 'testAcc',
+        orgIdentifier: 'NgTriggersOrg',
+        projectIdentifier: 'projectTest',
+        pipelineIdentifier: 'ThreeStagesPipeline',
+        triggerIdentifier: 'testDockerTrigger'
+      } as any)
+    )
+    expect(within(artifactTriggerRow).getByText('pipeline.executionStatus.Success')).toBeInTheDocument()
   })
 })

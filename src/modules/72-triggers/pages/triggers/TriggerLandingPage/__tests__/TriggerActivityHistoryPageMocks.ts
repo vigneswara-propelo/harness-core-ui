@@ -1,7 +1,7 @@
 import type { GetDataError } from 'restful-react'
 import type { Error, Failure } from 'services/pipeline-ng'
 
-export const triggerActivityHistoryList = {
+export const webookTriggerActivityHistoryList = {
   status: 'SUCCESS',
   data: {
     content: [
@@ -222,6 +222,102 @@ export const triggerActivityHistoryList = {
   },
   metaData: null,
   correlationId: 'e04c3422-bbd3-4266-ad2b-1f9f5d1d8474'
+}
+
+export const artifactTriggerActivityHistoryList = {
+  status: 'SUCCESS',
+  data: {
+    content: [
+      {
+        triggerIdentifier: 'testDockerTrigger',
+        accountId: 'testAcc',
+        payload:
+          'type: ARTIFACT\nartifactData {\n  build: "test.20231024.8"\n  metadata {\n    key: "image"\n    value: "docker.dev.harness.io/v2/hello-world:test.20231024.8"\n  }\n  metadata {\n    key: "tag"\n    value: "test.20231024.8"\n  }\n  metadata {\n    key: "url"\n    value: "https://docker.dev.harness.io/v2/v2/hello-world/tags/test.20231024.8"\n  }\n}\nconnectorRef: "testNewDockerConnector"\nimagePath: "v2/hello-world"\n',
+        eventCreatedAt: 1698309786406,
+        finalStatus: 'TARGET_EXECUTION_REQUESTED',
+        message: 'Pipeline execution was requested successfully',
+        triggerEventStatus: {
+          status: 'SUCCESS',
+          message: 'Target execution requested'
+        },
+        orgIdentifier: 'testOrg',
+        projectIdentifier: 'test',
+        targetIdentifier: 'ThreeStagesPipeline',
+        targetExecutionSummary: {
+          triggerId: 'testDockerTrigger',
+          targetId: 'ThreeStagesPipeline',
+          runtimeInput:
+            'pipeline:\n  identifier: ThreeStagesPipeline\n  stages:\n    - stage:\n        identifier: stage1\n        type: Custom\n        variables:\n          - name: stage1var\n            type: String\n            value: a\n    - stage:\n        identifier: stage2\n        type: Custom\n        variables:\n          - name: stage2var\n            type: String\n            value: v\n    - stage:\n        identifier: stage3\n        type: Custom\n        variables:\n          - name: stage3var\n            type: String\n            value: d\n',
+          planExecutionId: 'gHfclx3lSSKLP3RxY5grqQ',
+          runSequence: 66,
+          executionStatus: 'RUNNING',
+          startTs: 1698309787637
+        },
+        type: 'Artifact',
+        ngTriggerEventInfo: {
+          pollingDocumentInfo: {
+            pollingDocumentId: '64655e7baf86214003f8449f'
+          },
+          build: 'test.20231024.8'
+        }
+      },
+      {
+        triggerIdentifier: 'testDockerTrigger',
+        accountId: 'testAcc',
+        finalStatus: 'INVALID_RUNTIME_INPUT_YAML',
+        message: 'Failed while requesting Pipeline Execution',
+        triggerEventStatus: {
+          status: 'FAILED',
+          message: 'Invalid runtime input yaml'
+        },
+        orgIdentifier: 'testOrg',
+        projectIdentifier: 'test',
+        targetIdentifier: 'ThreeStagesPipeline',
+        targetExecutionSummary: {
+          triggerId: 'testDockerTrigger',
+          targetId: 'ThreeStagesPipeline',
+          runtimeInput: 'pipeline:{}',
+          planExecutionId: null,
+          runSequence: null,
+          startTs: 1698145968796
+        },
+        type: 'Artifact',
+        ngTriggerEventInfo: {
+          pollingDocumentInfo: {
+            pollingDocumentId: '64655e7baf86214003f8449f'
+          },
+          build: null
+        }
+      }
+    ],
+    pageable: {
+      sort: {
+        empty: false,
+        sorted: true,
+        unsorted: false
+      },
+      offset: 0,
+      pageSize: 100,
+      pageNumber: 0,
+      paged: true,
+      unpaged: false
+    },
+    totalPages: 1,
+    totalElements: 2,
+    last: true,
+    size: 100,
+    number: 0,
+    sort: {
+      empty: false,
+      sorted: true,
+      unsorted: false
+    },
+    numberOfElements: 2,
+    first: true,
+    empty: false
+  },
+  metaData: null,
+  correlationId: 'd896faec-a49c-4fc4-9ed5-922020538664'
 }
 
 export const errorLoadingList: GetDataError<Failure | Error> = {

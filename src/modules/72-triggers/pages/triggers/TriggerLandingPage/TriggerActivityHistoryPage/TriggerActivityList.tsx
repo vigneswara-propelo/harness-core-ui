@@ -120,7 +120,7 @@ const RenderColumnArtifactVersions: CellType = ({ row }) => {
     <Layout.Vertical>
       <Layout.Horizontal spacing="small" width={230}>
         <Text color={Color.BLACK} lineClamp={1} font={{ variation: FontVariation.BODY2 }}>
-          {data.ngTriggerEventInfo?.build}
+          {get(data.ngTriggerEventInfo, 'build')}
         </Text>
       </Layout.Horizontal>
     </Layout.Vertical>
@@ -132,7 +132,7 @@ const TriggerActivityList: React.FC<TriggerActivityListProps> = ({ triggersListR
   const [showPayload, setShowPayload] = React.useState<boolean>(true)
   const [selectedPayloadRow, setSelectedPayloadRow] = React.useState<string | undefined>()
   const { content = [], totalElements, size, totalPages, pageable } = defaultTo(triggersListResponse, {})
-  const selectedTriggerType = content?.[0]?.type
+  const selectedTriggerType = get(content?.[0], 'type')
   const columns: Column<NGTriggerEventHistoryResponse>[] = React.useMemo(() => {
     const cols = [
       {
@@ -155,7 +155,7 @@ const TriggerActivityList: React.FC<TriggerActivityListProps> = ({ triggersListR
       },
       {
         Header: getString('triggers.activityHistory.executionDetails'),
-        accessor: (row: NGTriggerEventHistoryResponse) => row?.targetExecutionSummary?.planExecutionId,
+        accessor: (row: NGTriggerEventHistoryResponse) => get(row?.targetExecutionSummary, 'planExecutionId'),
         width: '30%',
         Cell: RenderColumnExecutionId
       },
@@ -178,7 +178,7 @@ const TriggerActivityList: React.FC<TriggerActivityListProps> = ({ triggersListR
           selectedTriggerType === 'Manifest'
             ? getString('triggers.conditionsPanel.manifestVersion')
             : getString('triggers.activityHistory.artifactVersion'),
-        accessor: row => row?.ngTriggerEventInfo?.build,
+        accessor: row => get(row?.ngTriggerEventInfo, 'build'),
         width: '25%',
         Cell: RenderColumnArtifactVersions
       })
