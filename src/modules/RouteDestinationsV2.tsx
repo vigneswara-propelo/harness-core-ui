@@ -9,7 +9,7 @@ import React from 'react'
 import { Redirect, Route, Switch, useLocation, useParams } from 'react-router-dom'
 import { Container, Layout } from '@harness/uicore'
 import { isUndefined } from 'lodash-es'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { SavedModeDetails, useAppStore } from 'framework/AppStore/AppStoreContext'
 import routes from '@common/RouteDefinitionsV2'
 import { SideNav } from '@common/navigation/SideNavV2/SideNavV2'
 import { NAV_MODE, accountPathProps, isNavMode } from '@common/utils/routeUtils'
@@ -30,6 +30,7 @@ import IDPRouteDestinations from '@idp/IDPRouteDestination'
 import IDPAdminRouteDestinations from '@idp/IDPAdminRouteDestination'
 import IDPAdminSideNavLinks from '@idp/components/IDPSideNav/IDPAdminSideNavLinks'
 import RouteWithLayoutV2 from '@common/router/RouteWithLayoutV2'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 
 export const RedirectToMode = ({ mode }: { mode?: NAV_MODE }): React.ReactElement => {
   const { module, accountId, path, projectIdentifier, orgIdentifier } = useParams<
@@ -155,10 +156,20 @@ export const RedirectResourcesToSettings = (): React.ReactElement => {
 }
 
 export const OldNavRedirects = (): JSX.Element => {
+  const { preference: savedModeDetails } = usePreferenceStore<SavedModeDetails>(
+    PreferenceScope.USER,
+    'savedModeDetails'
+  )
   return (
     <>
       <Route exact path={['/account/:accountId/main-dashboard']}>
-        <Redirect to={routes.toMode({ mode: NAV_MODE.ALL, noscope: true })} />
+        <Redirect
+          to={routes.toMode({
+            mode: savedModeDetails?.mode || NAV_MODE.ALL,
+            module: savedModeDetails?.module,
+            noscope: true
+          })}
+        />
       </Route>
 
       <Route

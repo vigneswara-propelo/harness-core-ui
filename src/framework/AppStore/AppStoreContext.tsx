@@ -89,6 +89,11 @@ export interface SavedProjectDetails {
   name?: string
 }
 
+export interface SavedModeDetails {
+  mode: NAV_MODE
+  module?: Module
+}
+
 export const AppStoreContext = React.createContext<AppStoreContextProps>({
   featureFlags: {},
   currentUserInfo: { uuid: '' },
@@ -141,6 +146,11 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
     setPreference: setSavedProject,
     clearPreference: clearSavedProject
   } = usePreferenceStore<SavedProjectDetails>(PreferenceScope.USER, 'savedProject')
+
+  const { setPreference: setSavedModeDetails } = usePreferenceStore<SavedModeDetails>(
+    PreferenceScope.USER,
+    'savedModeDetails'
+  )
 
   const { preference: recentProjects = [], setPreference: setRecentProjects } = usePreferenceStore<
     SavedProjectDetails[]
@@ -243,6 +253,15 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
       history.push(routes.toProjects({ accountId }))
     }
   }
+
+  useEffect(() => {
+    if (CDS_NAV_2_0 && mode) {
+      setSavedModeDetails({
+        mode: mode as NAV_MODE,
+        module: moduleNav2 as Module
+      })
+    }
+  }, [mode, moduleNav2])
 
   useEffect(() => {
     if (modeFromPath && currentMode !== modeFromPath && CDS_NAV_2_0) {
