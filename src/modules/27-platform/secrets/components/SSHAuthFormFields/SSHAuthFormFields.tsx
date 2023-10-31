@@ -12,7 +12,7 @@ import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import type { SSHConfigFormData } from '@secrets/modals/CreateSSHCredModal/views/StepAuthentication'
-import { AuthScheme, SecretType, CredentialTypes, TgtGenerationMethod } from './SSHAuthUtils'
+import { AuthScheme, CredentialTypes, TgtGenerationMethod } from './SSHAuthUtils'
 
 interface SSHAuthFormFieldsProps {
   formik: FormikProps<SSHConfigFormData>
@@ -23,12 +23,6 @@ interface SSHAuthFormFieldsProps {
 const SSHAuthFormFields: React.FC<SSHAuthFormFieldsProps> = props => {
   const { getString } = useStrings()
   const { formik } = props
-
-  const isSSHKeyReference = React.useMemo(() => {
-    return formik.values.credentialType === CredentialTypes.KEY_REFERENCE
-  }, [formik.values.credentialType])
-
-  const referenceType = isSSHKeyReference ? SecretType.SECRET_FILE : SecretType.SECRET_TEXT
 
   const credentialTypeOptions: SelectOption[] = [
     {
@@ -102,8 +96,7 @@ const SSHAuthFormFields: React.FC<SSHAuthFormFieldsProps> = props => {
               <SecretInput
                 name="key"
                 label={getString('platform.secrets.sshAuthFormFields.labelFile')}
-                isMultiTypeSelect={!isSSHKeyReference}
-                type={referenceType}
+                isMultiTypeSelect
               />
               <SecretInput
                 name={'encryptedPassphrase'}

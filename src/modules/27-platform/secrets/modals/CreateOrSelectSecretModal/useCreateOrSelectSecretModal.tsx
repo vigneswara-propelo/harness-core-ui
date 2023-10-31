@@ -28,6 +28,8 @@ import css from './useCreateOrSelectSecretModal.module.scss'
 
 export interface UseCreateOrSelectSecretModalProps extends SecretMultiSelectProps {
   type?: SecretResponseWrapper['secret']['type']
+  /**  To enable File and Text Secret Selection both */
+  isMultiTypeSelect?: boolean
   onSuccess?: (secret: SecretReference) => void
   secretsListMockData?: ResponsePageSecretResponseWrapper
   connectorTypeContext?: ConnectorInfoDTO['type']

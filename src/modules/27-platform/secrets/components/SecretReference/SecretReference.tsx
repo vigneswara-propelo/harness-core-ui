@@ -61,6 +61,8 @@ export interface SecretReferenceProps extends SceretTypeDropDownProps, SecretMul
   orgIdentifier?: string
   defaultScope?: Scope
   type?: ListSecretsV2QueryParams['type']
+  /**  To enable File and Text Secret Selection both */
+  isMultiTypeSelect?: boolean
   mock?: ResponsePageSecretResponseWrapper
   connectorTypeContext?: ConnectorInfoDTO['type']
   onCancel?: () => void
@@ -150,12 +152,12 @@ const SelectTypeDropdown: React.FC<SceretTypeDropDownProps> = props => {
   const { getString } = useStrings()
   const secretTypeOptions: SelectOption[] = [
     {
-      label: getString('platform.secrets.secret.labelText'),
-      value: 'SecretText'
-    },
-    {
       label: getString('platform.secrets.secret.labelFile'),
       value: 'SecretFile'
+    },
+    {
+      label: getString('platform.secrets.secret.labelText'),
+      value: 'SecretText'
     }
   ]
 
@@ -193,6 +195,7 @@ const SecretReference: React.FC<SecretReferenceProps> = props => {
     projectIdentifier,
     orgIdentifier,
     type,
+    isMultiTypeSelect,
     mock,
     connectorTypeContext,
     selectedSecret: selectedSecretProp,
@@ -280,7 +283,9 @@ const SecretReference: React.FC<SecretReferenceProps> = props => {
         onCancel={props.onCancel}
         noRecordsText={getString('platform.secrets.secret.noSecretsFound')}
         searchInlineComponent={
-          !type ? <SelectTypeDropdown secretType={props.secretType} setSecretType={props.setSecretType} /> : undefined
+          isMultiTypeSelect ? (
+            <SelectTypeDropdown secretType={props.secretType} setSecretType={props.setSecretType} />
+          ) : undefined
         }
         showAllTab
         input={!type ? type || (props.secretType?.value as SecretDTOV2['type']) : undefined}

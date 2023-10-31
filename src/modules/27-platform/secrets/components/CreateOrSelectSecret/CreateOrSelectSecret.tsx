@@ -34,6 +34,8 @@ export interface SecretReference {
 
 export interface CreateOrSelectSecretProps extends SecretMultiSelectProps {
   type?: SecretResponseWrapper['secret']['type']
+  /**  To enable File and Text Secret Selection both */
+  isMultiTypeSelect?: boolean
   onSuccess: (secret: SecretReference) => void
   secretsListMockData?: ResponsePageSecretResponseWrapper
   connectorTypeContext?: ConnectorInfoDTO['type']
@@ -49,6 +51,7 @@ export interface CreateOrSelectSecretProps extends SecretMultiSelectProps {
 
 const CreateOrSelectSecret: React.FC<CreateOrSelectSecretProps> = ({
   type,
+  isMultiTypeSelect,
   onSuccess,
   secretsListMockData,
   connectorTypeContext,
@@ -69,6 +72,7 @@ const CreateOrSelectSecret: React.FC<CreateOrSelectSecretProps> = ({
     <section className={css.main}>
       <SecretReference
         type={type}
+        isMultiTypeSelect={isMultiTypeSelect}
         onCancel={onCancel}
         onSelect={data => {
           onSuccess({
