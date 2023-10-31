@@ -29,6 +29,7 @@ export interface DeployServiceEntityData {
     metadata?: ServicesMetadata
     values?: ServiceYamlV2[] | string
   }
+  serviceGitBranches?: Record<string, string | undefined>
 }
 
 export interface ServiceData extends Pick<ServiceResponseDto, 'storeType' | 'connectorRef' | 'entityGitDetails'> {

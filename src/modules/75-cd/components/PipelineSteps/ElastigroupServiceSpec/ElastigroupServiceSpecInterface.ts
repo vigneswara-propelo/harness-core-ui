@@ -45,6 +45,7 @@ export interface ElastigroupInputSetFormProps {
   factory?: AbstractStepFactory
   path?: string
   stageIdentifier: string
+  serviceBranch?: string
   serviceIdentifier?: string
   formik?: any
   allowableTypes: AllowedTypes

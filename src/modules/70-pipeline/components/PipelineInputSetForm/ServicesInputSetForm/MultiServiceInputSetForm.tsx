@@ -235,6 +235,7 @@ export default function MultiServiceInputSetForm({
                       customStepProps={{
                         stageIdentifier,
                         serviceIdentifier: defaultTo(service.serviceRef, ''),
+                        serviceBranch: service.gitBranch,
                         allValues: service.serviceInputs?.serviceDefinition?.spec,
                         childPipelineMetadata
                       }}

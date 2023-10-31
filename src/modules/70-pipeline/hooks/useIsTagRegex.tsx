@@ -18,12 +18,14 @@ import { StoreMetadata, StoreType } from '@modules/10-common/constants/GitSyncTy
 export const useIsTagRegex = ({
   serviceIdentifier,
   gitMetadata,
+  serviceBranch,
   artifact,
   artifactPath,
   tagOrVersionRegexKey
 }: {
   serviceIdentifier: string
   gitMetadata?: StoreMetadata
+  serviceBranch?: string
   artifact: ArtifactSource
   artifactPath: string
   tagOrVersionRegexKey: string
@@ -35,6 +37,7 @@ export const useIsTagRegex = ({
     gitMetadata?.storeType === StoreType.REMOTE
       ? { ...pick(gitMetadata, ['storeType', 'connectorRef', 'branch', 'repoName']) }
       : {}
+  gitQueryParams.branch = gitQueryParams.branch || serviceBranch
   const { data: service, loading: isServiceLoading } = useGetServiceV2({
     serviceIdentifier: serviceIdentifier,
     queryParams: {

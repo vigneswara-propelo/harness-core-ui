@@ -69,6 +69,7 @@ const Content = (props: GCRRenderContent): JSX.Element => {
     isTagsSelectionDisabled,
     allowableTypes,
     fromTrigger,
+    serviceBranch,
     artifact,
     isSidecar,
     artifactPath,
@@ -105,6 +106,7 @@ const Content = (props: GCRRenderContent): JSX.Element => {
   const { isTagRegex, isServiceLoading } = useIsTagRegex({
     serviceIdentifier: serviceIdentifier!,
     gitMetadata,
+    serviceBranch,
     artifact: artifact as ArtifactSource,
     artifactPath: artifactPath!,
     tagOrVersionRegexKey: 'tagRegex'

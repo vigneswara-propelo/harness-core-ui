@@ -41,6 +41,7 @@ export interface SshInputSetProps {
   factory?: AbstractStepFactory
   path?: string
   stageIdentifier: string
+  serviceBranch?: string
   serviceIdentifier?: string
   formik?: any
   allowableTypes: AllowedTypes
@@ -57,6 +58,7 @@ const SshServiceSpecInputSetModeFormikForm = (props: SshInputSetProps): React.Re
     readonly = false,
     stageIdentifier,
     serviceIdentifier,
+    serviceBranch,
     stepViewType,
     formik,
     allowableTypes,
@@ -71,7 +73,8 @@ const SshServiceSpecInputSetModeFormikForm = (props: SshInputSetProps): React.Re
     readonly,
     allowableTypes,
     serviceIdentifier,
-    childPipelineMetadata
+    childPipelineMetadata,
+    serviceBranch
   }
 
   return (

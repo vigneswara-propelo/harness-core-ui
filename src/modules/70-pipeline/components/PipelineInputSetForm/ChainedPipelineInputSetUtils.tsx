@@ -20,10 +20,11 @@ import type { AccountPathProps, ModulePathParams } from '@common/interfaces/Rout
 import { useGetEntityMetadata } from '@common/hooks/useGetEntityMetadata'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { PipelineGitMetaData } from '@modules/70-pipeline/context/StageFormContext'
 import type { StepViewType } from '../AbstractSteps/Step'
 import css from './PipelineInputSetForm.module.scss'
 
-export interface ChainedPipelineInputSetFormProps {
+export interface ChainedPipelineInputSetFormProps extends Optional<PipelineGitMetaData> {
   stageObj: StageElementWrapperConfig
   inputPath: string
   outputPath: string

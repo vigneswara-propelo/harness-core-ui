@@ -7,10 +7,11 @@
 
 import React from 'react'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { get, isEmpty, isNil, noop, set } from 'lodash-es'
+import { get, isArray, isEmpty, isNil, noop, set } from 'lodash-es'
 import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 
 import { Formik, FormikErrors } from 'formik'
+import produce from 'immer'
 import { Step, StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { parse } from '@common/utils/YamlHelperMethods'
@@ -26,6 +27,43 @@ import { DeployServiceEntityInputStep } from './DeployServiceEntityInputStep'
 import DeployServiceEntityWidget from './DeployServiceEntityWidget'
 
 const logger = loggerFor(ModuleName.CD)
+
+function processFormData(values: DeployServiceEntityData): DeployServiceEntityData {
+  const finalValues = produce(values, draft => {
+    if (draft.service) {
+      const gitBranch = draft.serviceGitBranches?.[draft.service.serviceRef as string]
+      if (gitBranch) {
+        set(draft, 'service.gitBranch', gitBranch)
+      }
+    }
+    if (draft.services && isArray(draft.services.values)) {
+      draft.services.values?.forEach((svc, index) => {
+        const gitBranch = draft.serviceGitBranches?.[svc.serviceRef as string]
+        if (gitBranch) {
+          set(draft, `services.values[${index}].gitBranch`, gitBranch)
+        }
+      })
+    }
+  })
+  return finalValues
+}
+
+function processInitialValuesForRunForm(initialValues: DeployServiceEntityData): DeployServiceEntityData {
+  const finalInitialValues = produce(initialValues, draft => {
+    if (draft.service) {
+      set(draft, 'serviceGitBranches', {
+        ...draft.serviceGitBranches,
+        [draft.service.serviceRef as string]: draft.service.gitBranch
+      })
+    }
+    if (draft.services && isArray(draft.services.values)) {
+      draft.services.values.map(svc => {
+        set(draft, 'serviceGitBranches', { ...draft.serviceGitBranches, [svc.serviceRef as string]: svc.gitBranch })
+      })
+    }
+  })
+  return finalInitialValues
+}
 
 export class DeployServiceEntityStep extends Step<DeployServiceEntityData> {
   protected type = StepType.DeployServiceEntity
@@ -97,7 +135,13 @@ export class DeployServiceEntityStep extends Step<DeployServiceEntityData> {
     } = props
     if (isTemplatizedView(stepViewType)) {
       return (
-        <Formik initialValues={initialValues} validate={onUpdate} onSubmit={noop}>
+        <Formik
+          initialValues={processInitialValuesForRunForm(initialValues)}
+          validate={values => {
+            onUpdate?.(processFormData(values))
+          }}
+          onSubmit={noop}
+        >
           {/** Wrapping this component in formik to prevent the pseudo fields from corrupting the main input set formik.
            * The onUpdate call takes care of picking only the required data and naturally eliminate the pseudo fields.
            * The pseudo fields are present within the component - DeployServiceEntityInputStep */}

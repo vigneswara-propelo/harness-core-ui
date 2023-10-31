@@ -43,6 +43,7 @@ const ElastigroupServiceSpecInputSetModeFormikForm = (props: ElastigroupInputSet
     stageIdentifier,
     serviceIdentifier,
     stepViewType,
+    serviceBranch,
     formik,
     allowableTypes,
     childPipelineMetadata
@@ -56,6 +57,7 @@ const ElastigroupServiceSpecInputSetModeFormikForm = (props: ElastigroupInputSet
     readonly,
     allowableTypes,
     serviceIdentifier,
+    serviceBranch,
     childPipelineMetadata
   }
 

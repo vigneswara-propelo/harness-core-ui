@@ -43,6 +43,7 @@ const AzureWebAppServiceSpecInputSet = (props: AzureWebAppServiceSpecFormProps):
     stepViewType,
     formik,
     allowableTypes,
+    serviceBranch,
     childPipelineMetadata
   } = props
   const { getString } = useStrings()
@@ -54,6 +55,7 @@ const AzureWebAppServiceSpecInputSet = (props: AzureWebAppServiceSpecFormProps):
     readonly,
     allowableTypes,
     serviceIdentifier,
+    serviceBranch,
     childPipelineMetadata
   }
 

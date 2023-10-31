@@ -40,6 +40,7 @@ export interface CustomDeploymentInputSetProps {
   path?: string
   stageIdentifier: string
   serviceIdentifier?: string
+  serviceBranch?: string
   formik?: any
   allowableTypes: AllowedTypes
   childPipelineMetadata?: ChildPipelineMetadataType
@@ -57,6 +58,7 @@ const CustomDeploymentServiceSpecInputSetModeFormikForm = (
     readonly = false,
     stageIdentifier,
     serviceIdentifier,
+    serviceBranch,
     stepViewType,
     formik,
     allowableTypes,
@@ -71,6 +73,7 @@ const CustomDeploymentServiceSpecInputSetModeFormikForm = (
     readonly,
     allowableTypes,
     serviceIdentifier,
+    serviceBranch,
     childPipelineMetadata
   }
   return (

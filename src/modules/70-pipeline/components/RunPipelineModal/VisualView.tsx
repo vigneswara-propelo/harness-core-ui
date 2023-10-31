@@ -100,6 +100,8 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
     onReconcile,
     reRunInputSetYaml,
     selectedBranch,
+    repoIdentifier,
+    connectorRef,
     isRetryFromStage,
     preSelectLastStage,
     stageToRetryState,
@@ -237,6 +239,9 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
                 showDivider={!executionView && !reRunInputSetYaml}
                 listOfSelectedStages={isRetryFromStage ? stageToRetryState?.listOfSelectedStages : undefined}
                 isRetryFormStageSelected={isRetryFromStage ? stageToRetryState?.selectedStage !== null : undefined}
+                branch={selectedBranch}
+                repoIdentifier={repoIdentifier}
+                connectorRef={connectorRef}
               />
             ) : null}
             {showVoidPipelineInputSetForm() ? <div className={css.noPipelineInputSetForm} /> : null}
@@ -261,6 +266,9 @@ export interface PipelineInputSetFormWrapperProps {
   showDivider?: boolean
   listOfSelectedStages?: string[]
   isRetryFormStageSelected?: boolean
+  repoIdentifier?: string
+  branch?: string
+  connectorRef?: string
 }
 
 function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): React.ReactElement | null {
@@ -274,7 +282,10 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
     selectedStageData,
     showDivider,
     listOfSelectedStages,
-    isRetryFormStageSelected
+    isRetryFormStageSelected,
+    repoIdentifier,
+    branch,
+    connectorRef
   } = props
 
   if (currentPipeline?.pipeline && resolvedPipeline && (hasRuntimeInputs || executionView)) {
@@ -298,6 +309,9 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
           disableRuntimeInputConfigureOptions
           listOfSelectedStages={listOfSelectedStages}
           isRetryFormStageSelected={isRetryFormStageSelected}
+          branch={branch}
+          repoName={repoIdentifier}
+          connectorRef={connectorRef}
         />
       </>
     )

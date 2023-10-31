@@ -37,6 +37,7 @@ export interface AzureWebAppServiceSpecFormProps {
   path?: string
   stageIdentifier: string
   formik?: any
+  serviceBranch?: string
   serviceIdentifier?: string
   allowableTypes: AllowedTypes
   childPipelineMetadata?: ChildPipelineMetadataType

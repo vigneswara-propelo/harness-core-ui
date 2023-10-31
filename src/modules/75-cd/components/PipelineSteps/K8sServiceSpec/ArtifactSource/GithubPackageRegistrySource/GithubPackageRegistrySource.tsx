@@ -74,6 +74,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     gitMetadata,
     stageIdentifier,
     pipelineIdentifier,
+    serviceBranch,
     stepViewType,
     useArtifactV1Data = false,
     artifacts
@@ -118,6 +119,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   const { isTagRegex: isVersionRegex, isServiceLoading } = useIsTagRegex({
     serviceIdentifier: serviceIdentifier!,
     gitMetadata,
+    serviceBranch,
     artifact: artifact as ArtifactSource,
     artifactPath: artifactPath!,
     tagOrVersionRegexKey: 'versionRegex'

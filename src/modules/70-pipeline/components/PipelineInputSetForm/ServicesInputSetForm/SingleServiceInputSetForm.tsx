@@ -230,6 +230,7 @@ export default function SingleServiceInputSetForm({
               readonly={readonly}
               customStepProps={{
                 stageIdentifier,
+                serviceBranch: deploymentStageInputSet?.service?.gitBranch,
                 serviceIdentifier,
                 allValues: deploymentStage?.service?.serviceInputs?.serviceDefinition?.spec,
                 childPipelineMetadata

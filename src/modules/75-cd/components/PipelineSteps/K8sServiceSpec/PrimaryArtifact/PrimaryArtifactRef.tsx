@@ -40,6 +40,7 @@ interface PrimaryArtifactRefProps {
   readonly: boolean
   allowableTypes: AllowedTypes
   serviceIdentifier?: string
+  serviceBranch?: string
   gitMetadata?: StoreMetadata
   stepViewType?: StepViewType
   primaryArtifact?: PrimaryArtifact
@@ -57,6 +58,7 @@ function PrimaryArtifactRef({
   formik,
   serviceIdentifier = '',
   gitMetadata,
+  serviceBranch,
   stepViewType,
   childPipelineMetadata
 }: PrimaryArtifactRefProps): React.ReactElement | null {
@@ -64,7 +66,7 @@ function PrimaryArtifactRef({
   const { expressions } = useVariablesExpression()
   const { accountId, orgIdentifier, projectIdentifier } = useGetChildPipelineMetadata(childPipelineMetadata)
   const { executionIdentifier } = useParams<PipelineType<ExecutionPathProps>>()
-  const { getStageFormTemplate, updateStageFormTemplate } = useStageFormContext()
+  const { getStageFormTemplate, updateStageFormTemplate, pipelineGitMetaData } = useStageFormContext()
   const primaryRefFormikValue = get(formik?.values, `${path}.artifacts.primary.primaryArtifactRef`)
   const isExecutionView = !!executionIdentifier
   const {
@@ -72,10 +74,10 @@ function PrimaryArtifactRef({
   } = usePipelineContext()
 
   const remoteQueryParams = {
-    parentEntityConnectorRef: storeMetadata?.connectorRef,
-    parentEntityRepoName: storeMetadata?.repoName,
+    parentEntityConnectorRef: defaultTo(storeMetadata?.connectorRef, pipelineGitMetaData?.connectorRef),
+    parentEntityRepoName: defaultTo(storeMetadata?.repoName, pipelineGitMetaData?.repoName),
     repoName: gitMetadata?.repoName,
-    branch: gitMetadata?.branch || gitDetails?.branch
+    branch: gitMetadata?.branch || serviceBranch || gitDetails?.branch || pipelineGitMetaData?.branch
   }
 
   const { data: artifactSourceResponse, loading: loadingArtifactSourceResponse } = useGetArtifactSourceInputs({

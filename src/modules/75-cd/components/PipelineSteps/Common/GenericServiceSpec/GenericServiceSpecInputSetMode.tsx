@@ -69,6 +69,7 @@ export interface KubernetesInputSetProps {
   factory?: AbstractStepFactory
   path?: string
   stageIdentifier: string
+  serviceBranch?: string
   serviceIdentifier?: string
   gitMetadata?: StoreMetadata
   formik?: any
@@ -89,6 +90,7 @@ const GenericServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps
     serviceIdentifier,
     gitMetadata,
     stepViewType,
+    serviceBranch,
     formik,
     allowableTypes,
     childPipelineMetadata,
@@ -104,6 +106,7 @@ const GenericServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps
     readonly,
     allowableTypes,
     serviceIdentifier,
+    serviceBranch,
     gitMetadata,
     childPipelineMetadata
   }

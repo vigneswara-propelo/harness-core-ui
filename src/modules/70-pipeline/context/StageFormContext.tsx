@@ -9,9 +9,15 @@ import React from 'react'
 import { noop } from 'lodash-es'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 
+export interface PipelineGitMetaData {
+  branch: string
+  repoName: string
+  connectorRef: string
+}
 export interface StageFormContextValues {
   getStageFormTemplate<T>(path: string): T | PipelineInfoConfig
   updateStageFormTemplate<T = unknown>(data: T, path: string): void
+  pipelineGitMetaData?: PipelineGitMetaData
 }
 
 export const StageFormContext = React.createContext<StageFormContextValues>({

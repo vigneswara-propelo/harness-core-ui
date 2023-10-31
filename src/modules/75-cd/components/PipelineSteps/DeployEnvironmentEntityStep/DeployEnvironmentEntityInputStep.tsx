@@ -36,6 +36,7 @@ import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { MultiTypeEnvironmentField } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
 
+import { usePipelineContext } from '@modules/70-pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityCustomInputStepProps } from './types'
 import { useGetEnvironmentsData } from './DeployEnvironment/useGetEnvironmentsData'
 import { createEnvTemplate, createEnvValues } from './DeployEnvironmentEntityInputStepUtils'
@@ -74,6 +75,11 @@ export default function DeployEnvironmentEntityInputStep({
   const { getStageFormTemplate, updateStageFormTemplate } = useStageFormContext()
   const formik = useFormikContext<DeployEnvironmentEntityConfig>()
   const uniquePath = useRef(`_pseudo_field_${uuid()}`)
+  const {
+    state: { storeMetadata }
+  } = usePipelineContext()
+
+  const { pipelineGitMetaData } = useStageFormContext()
 
   // pathPrefix contains the outer formik path but does not include the path to environments
   const pathPrefix = isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
@@ -120,7 +126,12 @@ export default function DeployEnvironmentEntityInputStep({
     // This is required only when updating the entities list
     updatingEnvironmentsData,
     nonExistingEnvironmentIdentifiers
-  } = useGetEnvironmentsData({ envIdentifiers: environmentIdentifiers, envGroupIdentifier, serviceIdentifiers })
+  } = useGetEnvironmentsData({
+    envIdentifiers: environmentIdentifiers,
+    envGroupIdentifier,
+    serviceIdentifiers,
+    parentStoreMetadata: !isEmpty(storeMetadata) ? storeMetadata : pipelineGitMetaData
+  })
 
   const selectOptions = useMemo(() => {
     /* istanbul ignore else */

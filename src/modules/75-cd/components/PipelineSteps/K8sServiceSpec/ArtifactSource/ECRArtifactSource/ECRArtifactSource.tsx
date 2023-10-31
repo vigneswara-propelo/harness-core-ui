@@ -85,6 +85,7 @@ const Content = (props: ECRRenderContent): JSX.Element => {
     artifact,
     isSidecar,
     artifactPath,
+    serviceBranch,
     stepViewType,
     artifacts,
     useArtifactV1Data = false
@@ -110,6 +111,7 @@ const Content = (props: ECRRenderContent): JSX.Element => {
   const { isTagRegex, isServiceLoading } = useIsTagRegex({
     serviceIdentifier: serviceIdentifier!,
     gitMetadata,
+    serviceBranch,
     artifact: artifact as ArtifactSource,
     artifactPath: artifactPath!,
     tagOrVersionRegexKey: 'tagRegex'

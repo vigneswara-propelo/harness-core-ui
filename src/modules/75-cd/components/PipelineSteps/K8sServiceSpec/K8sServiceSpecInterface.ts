@@ -66,6 +66,7 @@ export interface KubernetesArtifactsProps {
   artifactSourceBaseFactory: ArtifactSourceBaseFactory
   stageIdentifier: string
   serviceIdentifier?: string
+  serviceBranch?: string
   gitMetadata?: StoreMetadata
   artifacts?: ArtifactListConfig
   formik?: any

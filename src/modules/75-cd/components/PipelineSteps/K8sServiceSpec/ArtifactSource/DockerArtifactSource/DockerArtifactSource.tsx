@@ -65,6 +65,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
     branch,
     stageIdentifier,
     serviceIdentifier,
+    serviceBranch,
     gitMetadata,
     isTagsSelectionDisabled,
     allowableTypes,
@@ -85,6 +86,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
   const { isTagRegex, isServiceLoading } = useIsTagRegex({
     serviceIdentifier: serviceIdentifier!,
     gitMetadata,
+    serviceBranch,
     artifact: artifact as ArtifactSource,
     artifactPath: artifactPath!,
     tagOrVersionRegexKey: 'tagRegex'

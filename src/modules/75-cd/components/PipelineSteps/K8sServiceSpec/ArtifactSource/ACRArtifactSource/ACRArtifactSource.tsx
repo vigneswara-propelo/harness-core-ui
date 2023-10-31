@@ -85,6 +85,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     stageIdentifier,
     serviceIdentifier,
     gitMetadata,
+    serviceBranch,
     isTagsSelectionDisabled,
     allowableTypes,
     fromTrigger,
@@ -164,6 +165,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
   const { isTagRegex, isServiceLoading } = useIsTagRegex({
     serviceIdentifier: serviceIdentifier!,
     gitMetadata,
+    serviceBranch,
     artifact: artifact as ArtifactSource,
     artifactPath: artifactPath!,
     tagOrVersionRegexKey: 'tagRegex'

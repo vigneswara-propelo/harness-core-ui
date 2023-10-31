@@ -20,19 +20,21 @@ import { cloneDeep, defaultTo, get, isEmpty, merge, set } from 'lodash-es'
 import { Spinner } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { v4 as uuid } from 'uuid'
+import produce from 'immer'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import type { ServiceDefinition, ServiceYamlV2 } from 'services/cd-ng'
+import type { ServiceDefinition, ServiceResponseDTO, ServiceYamlV2 } from 'services/cd-ng'
 import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { useDeepCompareEffect } from '@common/hooks'
-import { isMultiTypeExpression, isValueRuntimeInput } from '@common/utils/utils'
+import { isMultiTypeExpression, isValueFixed, isValueRuntimeInput } from '@common/utils/utils'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import { FormMultiTypeCheckboxField } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
+import { usePipelineContext } from '@modules/70-pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeployServiceEntityData, DeployServiceEntityCustomProps } from './DeployServiceEntityUtils'
 import { useGetServicesData } from './useGetServicesData'
 import css from './DeployServiceEntityStep.module.scss'
@@ -61,7 +63,10 @@ export function DeployServiceEntityInputStep({
   const { getString } = useStrings()
   const { showWarning } = useToaster()
   const { expressions } = useVariablesExpression()
-  const { updateStageFormTemplate } = useStageFormContext()
+  const { updateStageFormTemplate, pipelineGitMetaData } = useStageFormContext()
+  const {
+    state: { storeMetadata }
+  } = usePipelineContext()
   const isStageTemplateInputSetForm = inputSetData?.path?.startsWith('template.templateInputs')
   const formik = useFormikContext()
 
@@ -76,9 +81,26 @@ export function DeployServiceEntityInputStep({
   const deployParallelTemplate = inputSetData?.template?.services?.metadata?.parallel
   const { CDS_SUPPORT_SERVICE_INPUTS_AS_EXECUTION_INPUTS: areServiceInputsSupportedAsExecutionInputs } =
     useFeatureFlags()
-
   // This is required only for single service
+
+  const parentStoreMetadata = !isEmpty(storeMetadata) ? storeMetadata : pipelineGitMetaData
   const [serviceInputType, setServiceInputType] = useState<MultiTypeInputType>(getMultiTypeFromValue(serviceValue))
+  const selectedServicesGitDetails = useMemo(() => {
+    if (serviceValue && isValueFixed(serviceValue)) {
+      return { [serviceValue]: get(initialValues, 'service.gitBranch') }
+    }
+
+    if (Array.isArray(servicesValue)) {
+      const gitBranchMap: Record<string, string> = {}
+      servicesValue.forEach(svcValue => {
+        if (svcValue.serviceRef && svcValue.gitBranch) {
+          gitBranchMap[svcValue.serviceRef] = svcValue.gitBranch
+        }
+      })
+      return gitBranchMap
+    }
+    return {}
+  }, [serviceValue, servicesValue, initialValues])
 
   const serviceIdentifiers: string[] = useMemo(() => {
     if (serviceValue && !isValueRuntimeInput(serviceValue)) {
@@ -106,7 +128,9 @@ export function DeployServiceEntityInputStep({
     deploymentType: deploymentType as ServiceDefinition['type'],
     serviceIdentifiers,
     ...(shouldAddCustomDeploymentData ? { deploymentTemplateIdentifier, versionLabel } : {}),
-    lazyService: isMultiTypeExpression(serviceInputType)
+    serviceGitBranches: selectedServicesGitDetails,
+    lazyService: isMultiTypeExpression(serviceInputType),
+    parentStoreMetadata: parentStoreMetadata
   })
   const isMultiSvcTemplate =
     getMultiTypeFromValue(servicesTemplate as unknown as string) === MultiTypeInputType.RUNTIME ||
@@ -237,7 +261,10 @@ export function DeployServiceEntityInputStep({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [servicesData, serviceIdentifiers])
 
-  function handleServicesChange(values: string | SelectOption[]): void {
+  function handleServicesChange(
+    values: string | SelectOption[],
+    serviceGitBranches?: Record<string, string | undefined>
+  ): void {
     if (isValueRuntimeInput(values)) {
       updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${fullPathPrefix}values`)
       formik.setFieldValue(`${localPathPrefix}values`, RUNTIME_INPUT_VALUE)
@@ -257,7 +284,13 @@ export function DeployServiceEntityInputStep({
           })
         : undefined
 
-      formik.setFieldValue(`${localPathPrefix}values`, newValues)
+      formik.setValues(
+        produce(formik.values, (draft: ServiceResponseDTO) => {
+          set(draft, uniquePath.current, values)
+          set(draft, `${localPathPrefix}values`, newValues)
+          set(draft, 'serviceGitBranches', serviceGitBranches)
+        })
+      )
     }
   }
 
@@ -302,6 +335,7 @@ export function DeployServiceEntityInputStep({
               deploymentType={deploymentType as ServiceDeploymentType}
               gitOpsEnabled={gitOpsEnabled}
               deploymentMetadata={deploymentMetadata}
+              parentStoreMetadata={parentStoreMetadata}
               placeholder={getString('cd.pipelineSteps.serviceTab.selectService')}
               setRefValue={true}
               isNewConnectorLabelVisible={false}
@@ -323,6 +357,7 @@ export function DeployServiceEntityInputStep({
               gitOpsEnabled={gitOpsEnabled}
               deploymentMetadata={deploymentMetadata}
               placeholder={getString('services')}
+              parentStoreMetadata={parentStoreMetadata}
               isMultiSelect={true}
               onMultiSelectChange={handleServicesChange}
               // This is required to update values when the type has changed

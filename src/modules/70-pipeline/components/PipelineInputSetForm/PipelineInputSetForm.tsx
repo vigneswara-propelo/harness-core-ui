@@ -30,7 +30,7 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDeepCompareEffect } from '@common/hooks'
 import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { StageFormContextProvider } from '@pipeline/context/StageFormContext'
+import { PipelineGitMetaData, StageFormContextProvider } from '@pipeline/context/StageFormContext'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { ConfigureOptionsContextProvider } from '@common/components/ConfigureOptions/ConfigureOptionsContext'
 import { stageTypeToIconMap } from '@pipeline/utils/constants'
@@ -59,7 +59,7 @@ import { TimeoutFieldInputSetView } from '../InputSetView/TimeoutFieldInputSetVi
 import css from './PipelineInputSetForm.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-export interface PipelineInputSetFormProps {
+export interface PipelineInputSetFormProps extends Optional<PipelineGitMetaData> {
   originalPipeline: PipelineInfoConfig
   template: PipelineInfoConfig
   path?: string
@@ -201,7 +201,10 @@ export function StageForm({
   executionIdentifier,
   childPipelineMetadata,
   viewTypeMetadata,
-  stageTooltip
+  stageTooltip,
+  repoIdentifier,
+  branch,
+  connectorRef
 }: {
   allValues?: StageElementWrapperConfig
   template?: StageElementWrapperConfig
@@ -217,6 +220,9 @@ export function StageForm({
   stageTooltip?: {
     [key in StageType]?: string
   }
+  repoIdentifier?: string
+  branch?: string
+  connectorRef?: string
 }): JSX.Element {
   const [stageFormTemplate, setStageFormTemplate] = React.useState(template)
   const isTemplateStage = !!stageFormTemplate?.stage?.template
@@ -284,6 +290,11 @@ export function StageForm({
       <StageFormContextProvider
         getStageFormTemplate={getStageFormTemplate}
         updateStageFormTemplate={updateStageFormTemplate}
+        pipelineGitMetaData={{
+          branch: defaultTo(branch, ''),
+          repoName: defaultTo(repoIdentifier, ''),
+          connectorRef: defaultTo(connectorRef, '')
+        }}
       >
         <StageFormInternal
           template={
@@ -323,7 +334,10 @@ export function ChainedPipelineInputSetForm(props: ChainedPipelineInputSetFormPr
     executionIdentifier,
     maybeContainerClass,
     viewTypeMetadata,
-    disableRuntimeInputConfigureOptions
+    disableRuntimeInputConfigureOptions,
+    repoName,
+    branch,
+    connectorRef
   } = props
   const originalPipeline = (allValues?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
   const pipelineStageTemplate = (stageObj?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
@@ -374,6 +388,9 @@ export function ChainedPipelineInputSetForm(props: ChainedPipelineInputSetFormPr
             executionIdentifier={executionIdentifier}
             hideTitle
             viewTypeMetadata={viewTypeMetadata}
+            repoIdentifier={repoName}
+            branch={branch}
+            connectorRef={connectorRef}
           />
         )}
         <PipelineInputSetFormInternal
@@ -389,6 +406,9 @@ export function ChainedPipelineInputSetForm(props: ChainedPipelineInputSetFormPr
           disableRuntimeInputConfigureOptions={disableRuntimeInputConfigureOptions}
           childPipelineMetadata={childPipelineMetadata}
           chainedPipelineStagePath={stagePath}
+          repoName={repoName}
+          branch={branch}
+          connectorRef={connectorRef}
         />
       </div>
     </>
@@ -410,7 +430,10 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
     disableRuntimeInputConfigureOptions: disableConfigureOptions,
     childPipelineMetadata,
     chainedPipelineStagePath,
-    stageTooltip
+    stageTooltip,
+    repoName,
+    branch,
+    connectorRef
   } = props
   const { getString } = useStrings()
   const isTemplatePipeline = !!template?.template
@@ -559,6 +582,9 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                         maybeContainerClass={maybeContainerClass}
                         viewTypeMetadata={viewTypeMetadata}
                         disableRuntimeInputConfigureOptions={disableConfigureOptions}
+                        branch={branch}
+                        repoName={repoName}
+                        connectorRef={connectorRef}
                       />
                     </>
                   ) : (
@@ -574,6 +600,9 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                       viewTypeMetadata={viewTypeMetadata}
                       stageClassName={childPipelineMetadata ? css.childPipelineStageWrapper : ''}
                       stageTooltip={stageTooltip}
+                      repoIdentifier={repoName}
+                      branch={branch}
+                      connectorRef={connectorRef}
                     />
                   )}
                 </Layout.Vertical>
@@ -599,6 +628,9 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                           maybeContainerClass={maybeContainerClass}
                           viewTypeMetadata={viewTypeMetadata}
                           disableRuntimeInputConfigureOptions={disableConfigureOptions}
+                          repoName={repoName}
+                          branch={branch}
+                          connectorRef={connectorRef}
                         />
                       </>
                     ) : (
@@ -613,6 +645,9 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                         viewTypeMetadata={viewTypeMetadata}
                         stageClassName={childPipelineMetadata ? css.childPipelineStageWrapper : ''}
                         stageTooltip={stageTooltip}
+                        repoIdentifier={repoName}
+                        branch={branch}
+                        connectorRef={connectorRef}
                       />
                     )}
                   </Layout.Vertical>
