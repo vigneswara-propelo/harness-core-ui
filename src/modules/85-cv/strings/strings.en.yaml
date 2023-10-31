@@ -1329,6 +1329,7 @@ licenseBanner:
   teamPlanUsageMessage: You have used {{activeServicesCount}}/{{totalServices}} Services included in the team plan
   limitExceedMessage: You have reached your service subscription limit. Consider increasing your limits to keep using services
 verifyStep:
+  monitoredServiceMultipleServiceEnvHideMessge: Custom health sources will not be displayed for stages where multiple services or multiple environments are being deployed
   baselineInputInfo: If there's no record of the previous verification, analysis will not be carried out.
   shouldUseNodesFromCD: Should use node details from CD
   controlNodeLabel: Control Node

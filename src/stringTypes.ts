@@ -10665,6 +10665,7 @@ export interface StringsMap {
   'cv.verifyStep.baselineInputInfo': string
   'cv.verifyStep.controlNodeLabel': string
   'cv.verifyStep.controlNodePlaceholder': string
+  'cv.verifyStep.monitoredServiceMultipleServiceEnvHideMessge': string
   'cv.verifyStep.nodeFilteringDescription': string
   'cv.verifyStep.nodeFilteringTitle': string
   'cv.verifyStep.shouldUseCDNodesDescription': string

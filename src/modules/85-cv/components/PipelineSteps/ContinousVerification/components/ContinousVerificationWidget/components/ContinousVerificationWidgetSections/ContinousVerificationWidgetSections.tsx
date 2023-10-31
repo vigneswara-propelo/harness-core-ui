@@ -7,6 +7,8 @@
 
 import React from 'react'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import Card from '@cv/components/Card/Card'
+import { useStrings } from 'framework/strings'
 import BaseContinousVerification from './components/BaseContinousVerification/BaseContinousVerification'
 import type { ContinousVerificationWidgetSectionsProps } from './types'
 import SelectVerificationType from './components/SelectVerificationType/SelectVerificationType'
@@ -23,20 +25,27 @@ export function ContinousVerificationWidgetSections({
 }: ContinousVerificationWidgetSectionsProps): JSX.Element {
   const { CVNG_TEMPLATE_VERIFY_STEP } = useFeatureFlags()
 
-  const renderMonitoredService = (): JSX.Element => {
+  const { getString } = useStrings()
+
+  const renderMonitoredService = (): JSX.Element | null => {
     const { monitoredService, isMultiServicesOrEnvs = false } = formik?.values?.spec || {}
+
+    if (isMultiServicesOrEnvs) {
+      return <Card>{getString('cv.verifyStep.monitoredServiceMultipleServiceEnvHideMessge')}</Card>
+    }
 
     if (monitoredService?.type === MONITORED_SERVICE_TYPE.CONFIGURED) {
       return <ConfiguredMonitoredService allowableTypes={allowableTypes} formik={formik} />
-    } else if (
+    }
+
+    if (
       monitoredService?.type === MONITORED_SERVICE_TYPE.DEFAULT &&
       stepViewType !== 'Template' &&
       !isMultiServicesOrEnvs
     ) {
       return <MonitoredService formik={formik} />
-    } else {
-      return <></>
     }
+    return null
   }
 
   return (

@@ -16,6 +16,8 @@ import { validateMonitoredService } from '../ContinousVerificationWidget.utils'
 import {
   MockSensitivityComponent,
   expectedErrorsForEmptyTemplateInputs,
+  formikMockProps,
+  formikMockPropsForSingleService,
   formikMockValues,
   formikMockValuesWithAuto,
   formikMockValuesWithRolling,
@@ -24,6 +26,7 @@ import {
   mockedTemplateInputsToValidate
 } from './ContinousVerificationWidget.mock'
 import SelectVerificationType from '../components/ContinousVerificationWidgetSections/components/SelectVerificationType/SelectVerificationType'
+import { ContinousVerificationWidgetSections } from '../components/ContinousVerificationWidgetSections/ContinousVerificationWidgetSections'
 
 describe('Unit tests for ContinousVerificationWidget Utils', () => {
   const type = 'Default'
@@ -461,6 +464,34 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
       )
 
       expect(screen.queryByTestId(/NodeFilteringFields-panel/)).not.toBeInTheDocument()
+    })
+  })
+
+  describe('Multi service or Environment deploy', () => {
+    test('Should not render health sources if the stage is deploying multiple services or environments', () => {
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ CVNG_TEMPLATE_VERIFY_STEP: true }}>
+          <Formik initialValues={formikMockValuesWithSimpleVerification.values} onSubmit={jest.fn()}>
+            <ContinousVerificationWidgetSections allowableTypes={[]} formik={formikMockProps} isNewStep={false} />
+          </Formik>
+        </TestWrapper>
+      )
+      expect(screen.getByText(/cv.verifyStep.monitoredServiceMultipleServiceEnvHideMessge/)).toBeInTheDocument()
+    })
+
+    test('Should render health sources if the stage is deploying single service or environment', () => {
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ CVNG_TEMPLATE_VERIFY_STEP: true }}>
+          <Formik initialValues={formikMockValuesWithSimpleVerification.values} onSubmit={jest.fn()}>
+            <ContinousVerificationWidgetSections
+              allowableTypes={[]}
+              formik={formikMockPropsForSingleService}
+              isNewStep={false}
+            />
+          </Formik>
+        </TestWrapper>
+      )
+      expect(screen.queryByText(/cv.verifyStep.monitoredServiceMultipleServiceEnvHideMessge/)).not.toBeInTheDocument()
     })
   })
 })

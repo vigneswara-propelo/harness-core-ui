@@ -219,3 +219,31 @@ export function MockSensitivityComponent(): JSX.Element {
     </>
   )
 }
+
+export const formikMockProps = {
+  setFieldValue: () => void 0,
+  values: {
+    spec: {
+      isMultiServicesOrEnvs: true,
+      monitoredService: {
+        spec: {},
+        type: 'Default'
+      }
+    },
+    failureStrategies: [],
+    identifier: 'test',
+    name: 'testName',
+    type: ''
+  }
+} as unknown as FormikProps<ContinousVerificationData>
+
+export const formikMockPropsForSingleService = {
+  setFieldValue: () => void 0,
+  values: {
+    ...formikMockProps.values,
+    spec: {
+      ...formikMockProps.values.spec,
+      isMultiServicesOrEnvs: false
+    }
+  }
+} as unknown as FormikProps<ContinousVerificationData>
