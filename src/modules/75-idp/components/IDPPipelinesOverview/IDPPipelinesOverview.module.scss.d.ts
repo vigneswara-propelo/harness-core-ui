@@ -7,6 +7,9 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly idpPipelinesHeader: string
+  readonly container: string
+  readonly link: string
+  readonly linkCursor: string
+  readonly subTitle: string
 }
 export default styles

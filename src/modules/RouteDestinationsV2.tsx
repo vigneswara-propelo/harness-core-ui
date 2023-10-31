@@ -184,8 +184,8 @@ export const OldNavRedirects = (): JSX.Element => {
       {/* old setup & settings path redirects */}
       <Route
         path={[
-          '/account/:accountId/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|cet|sei)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/:path*',
-          '/account/:accountId/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|cet|sei)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/:path*',
+          '/account/:accountId/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|idp-admin|cet|sei)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/:path*',
+          '/account/:accountId/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|idp-admin|cet|sei)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/:path*',
           '/account/:accountId/settings/organizations/:orgIdentifier/setup/resources/:path*',
           '/account/:accountId/settings/organizations/:orgIdentifier/setup/:path*',
           '/account/:accountId/settings/resources/:path*',
@@ -199,9 +199,9 @@ export const OldNavRedirects = (): JSX.Element => {
       <Route
         exact
         path={[
-          '/account/:accountId/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|cet|sei)/orgs/:orgIdentifier/projects/:projectIdentifier/:path*',
-          '/account/:accountId/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|cet|sei)/orgs/:orgIdentifier/:path*',
-          '/account/:accountId/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|cet|sei)/:path*',
+          '/account/:accountId/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|idp-admin|cet|sei)/orgs/:orgIdentifier/projects/:projectIdentifier/:path*',
+          '/account/:accountId/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|idp-admin|cet|sei)/orgs/:orgIdentifier/:path*',
+          '/account/:accountId/:module(cd|ci|cv|cf|ce|code|sto|chaos|iacm|ssca|idp|idp-admin|cet|sei)/:path*',
           '/account/:accountId'
         ]}
       >

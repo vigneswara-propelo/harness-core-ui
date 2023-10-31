@@ -1047,6 +1047,7 @@ const routes = {
   toIDPOAuthConfig: withModeModuleAndScopePrefix<ModulePathParams>(() => '/oauth'),
   toIDPAllowListURL: withModeModuleAndScopePrefix<ModulePathParams>(() => '/allowlist-url'),
   toScorecards: withModeModuleAndScopePrefix<ModulePathParams>(() => '/scorecards'),
+  toIDPProjectSetup: withModeModuleAndScopePrefix(() => `/project-setup`),
 
   // sei routes
   toSEI: withModeModuleAndScopePrefix<ModulePathParams>(() => `/`),

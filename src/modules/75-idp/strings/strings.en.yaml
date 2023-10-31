@@ -2,8 +2,8 @@ adminHome: Admin Home
 layout: Layout
 oAuthConfig: OAuth Configurations
 urlAllowList: URL Allow List
-createChooseProject: Choose or Create a New Project to store all of your IDP Pipelines
-chooseProject: Choose Project
-createProject: Create New Project
 scorecards: Scorecards
 backtoIDP: Back to Main Menu
+homepage:
+  idpOverviewDescription: Eliminate cognitive overload by letting developers manage their software effortlessly and access everything at their fingertips.
+  learnMore: Learn more about Internal Developer Portal

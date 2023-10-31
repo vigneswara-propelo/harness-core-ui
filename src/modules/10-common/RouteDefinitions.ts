@@ -2398,15 +2398,6 @@ const routes = {
   toIDPOAuthConfig: withAccountId(() => '/idp-admin/oauth'),
   toIDPAllowListURL: withAccountId(() => '/idp-admin/allowlist-url'),
   toScorecards: withAccountId(() => '/idp-admin/scorecards'),
-  toIDPPipelines: withAccountId(
-    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
-      `/idp-admin/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines`
-  ),
-  toIDPDeployments: withAccountId(
-    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
-      `/idp-admin/orgs/${orgIdentifier}/projects/${projectIdentifier}/deployments`
-  ),
-  toIDPProjectSetup: withAccountId(() => `/idp-admin/project-setup`),
   // Error Tracking
   toCET: withAccountId(() => '/cet'),
   toCETHome: withAccountId(() => '/cet/home'),

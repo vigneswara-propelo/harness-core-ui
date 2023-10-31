@@ -10,7 +10,7 @@ import { Position, PopoverInteractionKind } from '@blueprintjs/core'
 import { matchPath, useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
-import { Text, Container, Popover, Button, Tabs, Layout, Icon } from '@harness/uicore'
+import { Text, Container, Popover, Button, Tabs, Layout, Icon, TabProps } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Scope } from 'framework/types/types'
 import { Organization, Project } from 'services/cd-ng'
@@ -33,8 +33,11 @@ interface ScopeSelectorProps {
   isOpen: boolean
   onButtonClick: () => void
   onClose: () => void
-  availableLinks: Record<Scope, LinkInfo[]>
+  availableLinks?: Record<Scope, LinkInfo[]>
   activeLink?: LinkInfo
+  allowedScopes?: Scope[]
+  onScopeChange?: (data?: Project) => void
+  noScopeSelected?: boolean
 }
 
 export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
@@ -43,12 +46,18 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
     onButtonClick,
     onClose,
     availableLinks: possibleScopeSwitchLinksMap,
-    activeLink
+    activeLink,
+    allowedScopes = [Scope.PROJECT, Scope.ORGANIZATION, Scope.ACCOUNT],
+    onScopeChange,
+    noScopeSelected
   } = props
   const { currentUserInfo, selectedProject, selectedOrg, accountInfo } = useAppStore()
   const { getString } = useStrings()
   const { accountId } = useParams<ProjectPathProps>()
-  const { scope: selectedScope, params } = useGetSelectedScope()
+  const { scope: scopeSelected, params } = useGetSelectedScope()
+
+  const selectedScope = allowedScopes && allowedScopes.length === 1 ? allowedScopes[0] : scopeSelected
+
   const [selectedTabId, setSelectedTabId] = React.useState<Scope | undefined>(selectedScope)
   const { path } = getRouteParams<ProjectPathProps & { path: string }>(true, activeLink?.url)
   const history = useHistory()
@@ -94,7 +103,7 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
       }
     }
 
-    if (!selectedScope) {
+    if (!selectedScope || noScopeSelected) {
       return (
         <Layout.Vertical>
           <Text className={css.scopeLabelText} color={Color.GREY_350}>
@@ -164,6 +173,52 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
 
   const isCollapsed = sideNavState === SIDE_NAV_STATE.COLLAPSED
 
+  function renderTabList(): TabProps[] {
+    const scopeTabPropsMap: Record<Scope, TabProps> = {
+      [Scope.PROJECT]: {
+        id: Scope.PROJECT,
+        title: getString('projectLabel'),
+        iconProps: { name: 'nav-project' },
+        panel: (
+          <ProjectScopeSelector
+            onProjectClick={project => {
+              onScopeChange
+                ? onScopeChange(project.projectResponse.project)
+                : handleScopeChange(Scope.PROJECT, project.projectResponse.project)
+            }}
+          />
+        )
+      },
+      [Scope.ORGANIZATION]: {
+        id: Scope.ORGANIZATION,
+        title: getString('orgLabel'),
+        iconProps: { name: 'nav-organization' },
+        panel: (
+          <OrgScopeSelector
+            onClose={() => onClose()}
+            onClick={(organization: Organization) => {
+              handleScopeChange(Scope.ORGANIZATION, organization)
+            }}
+          />
+        )
+      },
+      [Scope.ACCOUNT]: {
+        id: Scope.ACCOUNT,
+        title: getString('account'),
+        iconProps: { name: 'Account' },
+        panel: (
+          <AccountScopeSelector
+            clickOnLoggedInAccount={() => {
+              handleScopeChange(Scope.ACCOUNT)
+            }}
+          />
+        )
+      }
+    }
+
+    return allowedScopes.map(scope => scopeTabPropsMap[scope])
+  }
+
   return (
     <>
       <Container padding={{ top: 'medium', bottom: 'small' }} width="100%">
@@ -178,6 +233,7 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
           isOpen={isScopeSelectorOpen}
           onOpening={() => setSelectedTabId(defaultTo(selectedScope, Scope.PROJECT))}
           onClose={onClose}
+          boundary="viewport"
         >
           <Button
             minimal
@@ -213,45 +269,7 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
               onChange={handleTabChange}
               selectedTabId={selectedTabId}
               data-tabId={selectedTabId}
-              tabList={[
-                {
-                  id: Scope.PROJECT,
-                  title: getString('projectLabel'),
-                  iconProps: { name: 'nav-project' },
-                  panel: (
-                    <ProjectScopeSelector
-                      onProjectClick={project => {
-                        handleScopeChange(Scope.PROJECT, project.projectResponse.project)
-                      }}
-                    />
-                  )
-                },
-                {
-                  id: Scope.ORGANIZATION,
-                  title: getString('orgLabel'),
-                  iconProps: { name: 'nav-organization' },
-                  panel: (
-                    <OrgScopeSelector
-                      onClose={() => onClose()}
-                      onClick={(organization: Organization) => {
-                        handleScopeChange(Scope.ORGANIZATION, organization)
-                      }}
-                    />
-                  )
-                },
-                {
-                  id: Scope.ACCOUNT,
-                  title: getString('account'),
-                  iconProps: { name: 'Account' },
-                  panel: (
-                    <AccountScopeSelector
-                      clickOnLoggedInAccount={() => {
-                        handleScopeChange(Scope.ACCOUNT)
-                      }}
-                    />
-                  )
-                }
-              ]}
+              tabList={renderTabList()}
             />
           </Container>
         </Popover>

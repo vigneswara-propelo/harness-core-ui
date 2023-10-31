@@ -6,12 +6,12 @@
  */
 
 import React from 'react'
-import { Redirect, Route, useLocation, useParams } from 'react-router-dom'
+import { Redirect, useLocation, useParams } from 'react-router-dom'
 import { useGetStatusInfoByTypeQuery } from '@harnessio/react-idp-service-client'
 import { isEmpty } from 'lodash-es'
 import routes from '@common/RouteDefinitions'
 import { RouteWithLayout } from '@common/router'
-import { accountPathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
+import { accountPathProps } from '@common/utils/routeUtils'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import { useGetUserGroupAggregateList } from 'services/cd-ng'
@@ -25,16 +25,11 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String } from 'framework/strings'
 import RbacFactory from '@rbac/factories/RbacFactory'
-import type { AccountPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
-import { PipelineDeploymentList } from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
-import { PipelineRouteDestinations } from '@pipeline/RouteDestinations'
-import { TriggersRouteDestinations } from '@triggers/RouteDestinations'
 import IDPAdminSideNav from './components/IDPAdminSideNav/IDPAdminSideNav'
 import type { IDPCustomMicroFrontendProps } from './interfaces/IDPCustomMicroFrontendProps.types'
-import IDPProjectSetup from './components/IDPProjectSetup/IDPProjectSetup'
 import './idp.module.scss'
 
 // eslint-disable-next-line import/no-unresolved
@@ -85,9 +80,6 @@ function IDPRoutes(): React.ReactElement {
       }
     })
   }
-  const moduleParams: ModulePathParams = {
-    module: ':module(idp-admin)'
-  }
   const mfePaths = [
     routes.toIDPAdmin({ ...accountPathProps }),
     routes.toGetStartedWithIDP({ ...accountPathProps }),
@@ -110,26 +102,6 @@ function IDPRoutes(): React.ReactElement {
 
       <RouteWithLayout path={routes.toIDP({ ...accountPathProps })} layout={MinimalLayout}>
         <ChildAppMounter ChildApp={IDPMicroFrontend} />
-      </RouteWithLayout>
-
-      <Route
-        sidebarProps={IDPAdminSideNavProps}
-        path={[
-          routes.toIDPPipelines({ ...projectPathProps, ...accountPathProps, ...orgPathProps }),
-          routes.toIDPDeployments({ ...projectPathProps, ...accountPathProps, ...orgPathProps })
-        ]}
-      >
-        <PipelineRouteDestinations
-          moduleParams={moduleParams}
-          sidebarProps={IDPAdminSideNavProps}
-          pipelineStudioComponent={PipelineStudio}
-          pipelineDeploymentListComponent={PipelineDeploymentList}
-        />
-        <TriggersRouteDestinations moduleParams={moduleParams} sidebarProps={IDPAdminSideNavProps} />
-      </Route>
-
-      <RouteWithLayout path={routes.toIDPProjectSetup({ ...accountPathProps })} sidebarProps={IDPAdminSideNavProps}>
-        <IDPProjectSetup />
       </RouteWithLayout>
 
       <RouteWithLayout path={[...mfePaths]} pageName={PAGE_NAME.IDPAdminPage} sidebarProps={IDPAdminSideNavProps}>

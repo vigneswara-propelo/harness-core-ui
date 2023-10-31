@@ -64,7 +64,6 @@ import type {
 import { PipelineListFilter } from './PipelineListFilter/PipelineListFilter'
 import { getIsSavedFilterApplied } from '../execution-list/utils/executionListUtil'
 import { prepareFiltersPayload } from '../utils/Filters/filters'
-import CustomPipelineListHeader from './CustomPipelineListHeader/CustomPipelineListHeader'
 import css from './PipelineListPage.module.scss'
 
 function _PipelineListPage(): React.ReactElement {
@@ -94,7 +93,6 @@ function _PipelineListPage(): React.ReactElement {
     [queryParams.sort, sortingPreference]
   )
   const sortOptions = usePipelineListSortOptions()
-  const isIDPModule = module === 'idp-admin'
 
   useDocumentTitle([getString('pipelines')])
 
@@ -229,21 +227,17 @@ function _PipelineListPage(): React.ReactElement {
 
   const hasFilter = !!(filterIdentifier || searchTerm || filters)
 
-  function pipelineListTitle(): JSX.Element {
-    if (isIDPModule) {
-      return <CustomPipelineListHeader />
-    }
-    return (
-      <div className="ng-tooltip-native">
-        <h2 data-tooltip-id="pipelinesPageHeading">{getString('pipelines')}</h2>
-        <HarnessDocTooltip tooltipId="pipelinesPageHeading" useStandAlone={true} />
-      </div>
-    )
-  }
-
   return (
     <>
-      <Page.Header title={pipelineListTitle()} breadcrumbs={<NGBreadcrumbs links={[]} />} />
+      <Page.Header
+        title={
+          <div className="ng-tooltip-native">
+            <h2 data-tooltip-id="pipelinesPageHeading">{getString('pipelines')}</h2>
+            <HarnessDocTooltip tooltipId="pipelinesPageHeading" useStandAlone={true} />
+          </div>
+        }
+        breadcrumbs={<NGBreadcrumbs links={[]} />}
+      />
       <Page.SubHeader className={css.subHeader}>
         <div className={css.subHeaderItems}>
           <CreatePipeline onSuccess={pipelinesQuery.refetch} />

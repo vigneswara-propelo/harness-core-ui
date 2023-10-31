@@ -51,35 +51,10 @@ export default function IDPAdminSideNav(): React.ReactElement {
             className={css.backBtn}
             icon="main-chevron-left"
           />
-          {/*  TODO: Change default route to IDP Admin post beta */}
-          {/* <SidebarLink label={getString('idp.adminHome')} to={routes.toAdminHome(params)} /> */}
           <SidebarLink label={getString('common.plugins')} to={routes.toPluginsPage(params)} />
           <SidebarLink label={getString('common.configurations')} to={routes.toConfigurations(params)} />
           <SidebarLink label={getString('idp.oAuthConfig')} to={routes.toIDPOAuthConfig(params)} />
           {IDPScorecardsEnabled && <SidebarLink label={getString('idp.scorecards')} to={routes.toScorecards(params)} />}
-          {/*  TODO: Pipelines routes disabled temporarily */}
-          {/* {isProjectSelected && (
-            <SidebarLink
-              label={getString('common.pipelineExecution')}
-              to={routes.toIDPDeployments({
-                ...params,
-                projectIdentifier: selectedProject?.identifier,
-                orgIdentifier: selectedProject?.orgIdentifier
-              })}
-            />
-          )}
-          <SidebarLink
-            label={getString('pipelines')}
-            to={
-              isProjectSelected
-                ? routes.toIDPPipelines({
-                    ...params,
-                    projectIdentifier: selectedProject?.identifier,
-                    orgIdentifier: selectedProject?.orgIdentifier
-                  })
-                : routes.toIDPProjectSetup(params)
-            }
-          /> */}
           <SidebarLink label={getString('idp.layout')} to={routes.toLayoutConfig(params)} />
           <SidebarLink label={getString('accessControl')} to={routes.toIDPAccessControl(params)} />
           <SidebarLink label={getString('connectorsLabel')} to={routes.toConnectorsPage(params)} />

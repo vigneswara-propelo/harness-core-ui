@@ -9427,9 +9427,8 @@ export interface StringsMap {
   'ci.welcome': string
   'idp.adminHome': string
   'idp.backtoIDP': string
-  'idp.chooseProject': string
-  'idp.createChooseProject': string
-  'idp.createProject': string
+  'idp.homepage.idpOverviewDescription': string
+  'idp.homepage.learnMore': string
   'idp.layout': string
   'idp.oAuthConfig': string
   'idp.scorecards': string
