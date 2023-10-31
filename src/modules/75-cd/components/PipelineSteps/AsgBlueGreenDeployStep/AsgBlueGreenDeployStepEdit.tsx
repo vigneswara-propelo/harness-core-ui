@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { defaultTo, isArray, isEmpty } from 'lodash-es'
+import { defaultTo, isArray, isEmpty, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import produce from 'immer'
@@ -39,6 +39,7 @@ import { useStrings } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
 import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
@@ -105,14 +106,16 @@ const AsgBlueGreenDeployStepEdit = (
   const [stageListenerRulesLoading, setStageListenerRulesLoading] = useState<boolean>(false)
   const { expressions } = useVariablesExpression()
   const { CDS_ASG_V2, CDS_BASIC_ASG } = useFeatureFlags()
-  const environmentRef = defaultTo(
-    selectedStage?.stage?.spec?.environment?.environmentRef,
-    selectedStage?.stage?.spec?.infrastructure?.environmentRef
-  )
-  const infrastructureRef = selectedStage?.stage?.spec?.environment?.infrastructureDefinitions?.[0].identifier
+  const selectedStageSpec = selectedStage?.stage?.spec
+  const selectedStageSpecEnv = selectedStageSpec?.environment
+  const selectedStageSpecInfra = selectedStageSpec?.infrastructure
+  const selectedStageSpecInfraDefinitionSpec = selectedStageSpecInfra?.infrastructureDefinition?.spec
 
-  const awsConnectorRef = selectedStage?.stage?.spec?.infrastructure?.infrastructureDefinition?.spec.connectorRef
-  const region = selectedStage?.stage?.spec?.infrastructure?.infrastructureDefinition?.spec.region
+  const environmentRef = defaultTo(selectedStageSpecEnv?.environmentRef, selectedStageSpecInfra?.environmentRef)
+  const infrastructureRef = selectedStageSpecEnv?.infrastructureDefinitions?.[0].identifier
+
+  const awsConnectorRef = selectedStageSpecInfraDefinitionSpec?.connectorRef
+  const region = selectedStageSpecInfraDefinitionSpec?.region
 
   const shouldFetchLoadBalancers = shouldFetchFieldData([
     defaultTo(environmentRef, ''),
@@ -351,16 +354,24 @@ const AsgBlueGreenDeployStepEdit = (
     setStageListenerRules([])
   }
   const getInitialValues = React.useCallback(() => {
+    const loadBalancer = initialValues.spec?.loadBalancer
+    const prodListener = initialValues.spec?.prodListener
+    const prodListenerArn = initialValues.spec?.prodListenerRuleArn
+    const stageListener = initialValues.spec?.stageListener
+    const stageListenerRuleArn = initialValues.spec?.stageListenerRuleArn
+    const loadBalancersSpec = initialValues.spec?.loadBalancers
+
     let initialLoadBalancer = {
-      loadBalancer: defaultTo(initialValues.spec?.loadBalancer, ''),
-      prodListener: defaultTo(initialValues.spec?.prodListener, ''),
-      prodListenerRuleArn: defaultTo(initialValues.spec?.prodListenerRuleArn, ''),
-      stageListener: defaultTo(initialValues.spec?.stageListener, ''),
-      stageListenerRuleArn: defaultTo(initialValues.spec?.stageListenerRuleArn, '')
+      loadBalancer: defaultTo(loadBalancer, ''),
+      prodListener: defaultTo(prodListener, ''),
+      prodListenerRuleArn: defaultTo(prodListenerArn, ''),
+      stageListener: defaultTo(stageListener, ''),
+      stageListenerRuleArn: defaultTo(stageListenerRuleArn, '')
     }
-    let loadBalancersToUpdate: AsgAwsLoadBalancerConfigYaml[] = defaultTo(initialValues?.spec?.loadBalancers, [
+    let loadBalancersToUpdate: AsgAwsLoadBalancerConfigYaml[] | string = defaultTo(initialValues.spec?.loadBalancers, [
       initialLoadBalancer
     ])
+
     if (CDS_ASG_V2) {
       initialLoadBalancer = {
         loadBalancer: '',
@@ -369,32 +380,27 @@ const AsgBlueGreenDeployStepEdit = (
         stageListener: '',
         stageListenerRuleArn: ''
       }
-      if (!shouldFetchLoadBalancers) {
-        loadBalancersToUpdate = [
-          {
-            loadBalancer: RUNTIME_INPUT_VALUE,
-            prodListener: RUNTIME_INPUT_VALUE,
-            prodListenerRuleArn: RUNTIME_INPUT_VALUE,
-            stageListener: RUNTIME_INPUT_VALUE,
-            stageListenerRuleArn: RUNTIME_INPUT_VALUE
-          }
-        ]
+
+      if (typeof loadBalancersSpec === 'string') {
+        loadBalancersToUpdate = loadBalancersSpec
       } else if (
-        shouldFetchLoadBalancers &&
-        (isEmpty(initialValues.spec?.loadBalancers) || initialValues.spec?.loadBalancer)
+        (shouldFetchLoadBalancers && (isEmpty(loadBalancersSpec) || loadBalancer)) ||
+        getMultiTypeFromValue(loadBalancer) === MultiTypeInputType.EXPRESSION
       ) {
         loadBalancersToUpdate = [
           {
-            loadBalancer: defaultTo(initialValues.spec?.loadBalancer, ''),
-            prodListener: defaultTo(initialValues.spec?.prodListener, ''),
-            prodListenerRuleArn: initialValues.spec?.prodListenerRuleArn,
-            stageListener: initialValues.spec?.stageListener,
-            stageListenerRuleArn: initialValues.spec?.stageListenerRuleArn
+            loadBalancer: defaultTo(loadBalancer, ''),
+            prodListener: defaultTo(prodListener, ''),
+            prodListenerRuleArn: prodListenerArn,
+            stageListener: stageListener,
+            stageListenerRuleArn: stageListenerRuleArn
           }
         ]
       }
     }
 
+    // const instances = initialValues.spec?.instances
+    // const useAlreadyRunningInstances = initialValues.spec?.useAlreadyRunningInstances
     const initVals = {
       ...initialValues,
       spec: {
@@ -514,39 +520,41 @@ const AsgBlueGreenDeployStepEdit = (
               ),
               otherwise: Yup.string().nullable()
             }),
-            loadBalancers: Yup.array().when(' ', {
+            loadBalancers: Yup.mixed().when(' ', {
               is: () => {
                 return !!CDS_ASG_V2
               },
-              then: Yup.array().of(
-                Yup.object().shape({
-                  loadBalancer: Yup.string().required(
-                    getString('common.validation.fieldIsRequired', {
-                      name: getString('common.loadBalancer')
-                    })
-                  ),
-                  prodListener: Yup.string().required(
-                    getString('common.validation.fieldIsRequired', {
-                      name: getString('cd.steps.ecsBGCreateServiceStep.labels.prodListener')
-                    })
-                  ),
-                  prodListenerRuleArn: Yup.string().required(
-                    getString('common.validation.fieldIsRequired', {
-                      name: getString('cd.steps.ecsBGCreateServiceStep.labels.prodListenerRuleARN')
-                    })
-                  ),
-                  stageListener: Yup.string().required(
-                    getString('common.validation.fieldIsRequired', {
-                      name: getString('cd.steps.ecsBGCreateServiceStep.labels.stageListener')
-                    })
-                  ),
-                  stageListenerRuleArn: Yup.string().required(
-                    getString('common.validation.fieldIsRequired', {
-                      name: getString('cd.steps.ecsBGCreateServiceStep.labels.stageListenerRuleARN')
-                    })
-                  )
-                })
-              )
+              then: Yup.array()
+                .of(
+                  Yup.object().shape({
+                    loadBalancer: Yup.string().required(
+                      getString('common.validation.fieldIsRequired', {
+                        name: getString('common.loadBalancer')
+                      })
+                    ),
+                    prodListener: Yup.string().required(
+                      getString('common.validation.fieldIsRequired', {
+                        name: getString('cd.steps.ecsBGCreateServiceStep.labels.prodListener')
+                      })
+                    ),
+                    prodListenerRuleArn: Yup.string().required(
+                      getString('common.validation.fieldIsRequired', {
+                        name: getString('cd.steps.ecsBGCreateServiceStep.labels.prodListenerRuleARN')
+                      })
+                    ),
+                    stageListener: Yup.string().required(
+                      getString('common.validation.fieldIsRequired', {
+                        name: getString('cd.steps.ecsBGCreateServiceStep.labels.stageListener')
+                      })
+                    ),
+                    stageListenerRuleArn: Yup.string().required(
+                      getString('common.validation.fieldIsRequired', {
+                        name: getString('cd.steps.ecsBGCreateServiceStep.labels.stageListenerRuleARN')
+                      })
+                    )
+                  })
+                )
+                .nullable()
             }),
 
             instances: Yup.object().when(' ', {
@@ -914,48 +922,114 @@ const AsgBlueGreenDeployStepEdit = (
                 </>
               ) : null}
 
-              {CDS_ASG_V2 && isArray(formik.values.spec?.loadBalancers) ? (
-                <FieldArray
-                  name="spec.loadBalancers"
-                  render={({ push, remove }) => {
-                    return (
-                      <>
-                        <Layout.Horizontal>
+              {CDS_ASG_V2 ? (
+                <Container>
+                  {getMultiTypeFromValue(get(formik.values, 'spec.loadBalancers')) === MultiTypeInputType.FIXED &&
+                  isArray(formik.values.spec?.loadBalancers) ? (
+                    <FieldArray
+                      name="spec.loadBalancers"
+                      render={({ push, remove }) => {
+                        return (
+                          <>
+                            <Layout.Horizontal
+                              flex={{ alignItems: 'center', justifyContent: 'space-between' }}
+                              margin={{ bottom: 'small' }}
+                            >
+                              <div>{getString('cd.ElastigroupBGStageSetup.awsLoadBalancerConfig')}</div>
+                              <Layout.Horizontal>
+                                <Button
+                                  variation={ButtonVariation.LINK}
+                                  data-testid="add-aws-loadbalance"
+                                  onClick={() =>
+                                    push({
+                                      loadBalancer: '',
+                                      prodListener: '',
+                                      prodListenerRuleArn: '',
+                                      stageListener: '',
+                                      stageListenerRuleArn: ''
+                                    })
+                                  }
+                                >
+                                  {getString('plusAdd')}
+                                </Button>
+                                <MultiTypeSelectorButton
+                                  allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+                                  type={getMultiTypeFromValue(get(formik.values, 'spec.loadBalancers'))}
+                                  onChange={value => {
+                                    if (value === MultiTypeInputType.FIXED) {
+                                      formik.setFieldValue('spec.loadBalancers', [
+                                        {
+                                          loadBalancer: '',
+                                          prodListener: '',
+                                          prodListenerRuleArn: '',
+                                          stageListener: '',
+                                          stageListenerRuleArn: ''
+                                        }
+                                      ])
+                                    } else {
+                                      formik.setFieldValue('spec.loadBalancers', RUNTIME_INPUT_VALUE)
+                                    }
+                                  }}
+                                />
+                              </Layout.Horizontal>
+                            </Layout.Horizontal>
+                            {isArray(formik.values.spec?.loadBalancers) &&
+                              (formik.values.spec?.loadBalancers || [])?.map((_id, i: number) => {
+                                return (
+                                  <AsgBGStageSetupLoadBalancer
+                                    key={i}
+                                    formik={formik}
+                                    readonly={readonly}
+                                    remove={remove}
+                                    index={i}
+                                    envId={defaultTo(environmentRef, '')}
+                                    infraId={defaultTo(infrastructureRef, '')}
+                                  />
+                                )
+                              })}
+                          </>
+                        )
+                      }}
+                    />
+                  ) : (
+                    <>
+                      <Layout.Vertical>
+                        <Layout.Horizontal
+                          flex={{ alignItems: 'center', justifyContent: 'space-between' }}
+                          margin={{ bottom: 'small' }}
+                        >
                           <div>{getString('cd.ElastigroupBGStageSetup.awsLoadBalancerConfig')}</div>
-                          <Button
-                            variation={ButtonVariation.LINK}
-                            data-testid="add-aws-loadbalance"
-                            onClick={() =>
-                              push({
-                                loadBalancer: '',
-                                prodListener: '',
-                                prodListenerRuleArn: '',
-                                stageListener: '',
-                                stageListenerRuleArn: ''
-                              })
-                            }
-                          >
-                            {getString('plusAdd')}
-                          </Button>
+                          <Layout.Horizontal>
+                            <MultiTypeSelectorButton
+                              allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+                              type={getMultiTypeFromValue(get(formik.values, 'spec.loadBalancers'))}
+                              onChange={value => {
+                                if (value === MultiTypeInputType.FIXED) {
+                                  formik.setFieldValue('spec.loadBalancers', [
+                                    {
+                                      loadBalancer: '',
+                                      prodListener: '',
+                                      prodListenerRuleArn: '',
+                                      stageListener: '',
+                                      stageListenerRuleArn: ''
+                                    }
+                                  ])
+                                } else {
+                                  formik.setFieldValue('spec.loadBalancers', RUNTIME_INPUT_VALUE)
+                                }
+                              }}
+                            />
+                          </Layout.Horizontal>
                         </Layout.Horizontal>
-                        {isArray(formik.values.spec?.loadBalancers) &&
-                          (formik.values.spec?.loadBalancers || [])?.map((_id, i: number) => {
-                            return (
-                              <AsgBGStageSetupLoadBalancer
-                                key={i}
-                                formik={formik as any}
-                                readonly={readonly}
-                                remove={remove}
-                                index={i}
-                                envId={defaultTo(environmentRef, '')}
-                                infraId={defaultTo(infrastructureRef, '')}
-                              />
-                            )
-                          })}
-                      </>
-                    )
-                  }}
-                />
+                        <FormInput.Text
+                          name="spec.loadBalancers"
+                          placeholder={getString('cd.ElastigroupBGStageSetup.awsLoadBalancerConfig')}
+                          disabled
+                        />
+                      </Layout.Vertical>
+                    </>
+                  )}
+                </Container>
               ) : null}
             </FormikForm>
           )

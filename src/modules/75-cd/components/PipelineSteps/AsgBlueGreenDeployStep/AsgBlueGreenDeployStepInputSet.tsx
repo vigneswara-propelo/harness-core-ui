@@ -604,8 +604,8 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
         </>
       ) : null}
       {CDS_ASG_V2 &&
-        getMultiTypeFromValue(inputSetData.allValues?.spec?.loadBalancers?.[0]?.loadBalancer) ===
-          MultiTypeInputType.RUNTIME && (
+        typeof inputSetData.allValues?.spec?.loadBalancers === 'string' &&
+        getMultiTypeFromValue(inputSetData.allValues?.spec?.loadBalancers) === MultiTypeInputType.RUNTIME && (
           <FieldArray
             name={`${prefix}spec.loadBalancers`}
             render={({ push, remove }) => {

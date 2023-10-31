@@ -16,6 +16,7 @@ import {
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import mockImport from 'framework/utils/mockImport'
 
 import { TestWrapper } from '@common/utils/testUtils'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -369,6 +370,29 @@ describe('GenericExecutionStepEdit tests', () => {
   })
 
   test('onUpdate should not be called if it is not passed as prop', async () => {
+    render(
+      <TestWrapper>
+        <AsgBlueGreenDeployStepEditRef
+          initialValues={existingInitialValues}
+          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+          isNewStep={false}
+          readonly={false}
+          stepViewType={StepViewType.Edit}
+          onChange={onChange}
+          ref={formikRef}
+          customStepProps={customStepProps}
+        />
+      </TestWrapper>
+    )
+    act(() => {
+      formikRef.current?.submitForm()
+    })
+    await waitFor(() => expect(onUpdate).not.toHaveBeenCalled())
+  })
+  test('onUpdate should not be called if it is not passed as prop with FF', async () => {
+    mockImport('@common/hooks/useFeatureFlag', {
+      useFeatureFlags: () => ({ CDS_ASG_V2: true })
+    })
     render(
       <TestWrapper>
         <AsgBlueGreenDeployStepEditRef
