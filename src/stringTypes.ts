@@ -1315,6 +1315,8 @@ export interface StringsMap {
   'common.subscriptions.trial': string
   'common.subscriptions.usage.activeDevelopers': string
   'common.subscriptions.usage.allCredits': string
+  'common.subscriptions.usage.annualizedCloudSpend': string
+  'common.subscriptions.usage.annualizedSpendTooltip': string
   'common.subscriptions.usage.available': string
   'common.subscriptions.usage.availableCredits': string
   'common.subscriptions.usage.buildCredits': string

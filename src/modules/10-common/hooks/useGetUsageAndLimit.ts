@@ -219,9 +219,14 @@ function useGetLimit(module: ModuleName): LimitReturn {
 
 const timestamp = moment.now()
 
-function useGetCCMTimeStamp(): number {
+export function useGetCCMTimeStamp(): number {
   const { licenseInformation } = useLicenseStore()
   return licenseInformation?.CE?.startTime || 0
+}
+
+export function useGetCCMExpiryTimeStamp(): number {
+  const { licenseInformation } = useLicenseStore()
+  return licenseInformation?.CE?.expiryTime || 0
 }
 
 export function useGetUsage(module: ModuleName): UsageReturn {

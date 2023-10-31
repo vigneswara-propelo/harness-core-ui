@@ -5,22 +5,27 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useMemo } from 'react'
+import { useParams } from 'react-router-dom'
+import moment from 'moment'
 import { Layout, PageError } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
-import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
+import { useGetCCMExpiryTimeStamp, useGetCCMTimeStamp, useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
+import { AccountPathProps } from '@modules/10-common/interfaces/RouteInterfaces'
+import { useGetCCMLicenseUsage } from 'services/ce'
 import UsageInfoCard, { ErrorContainer } from './UsageInfoCard'
 
 const ActiveCloudSpend: React.FC<{
   activeCloudSpend: number
   subscribedCloudSpend: number
   displayName: string | undefined
-}> = ({ activeCloudSpend, subscribedCloudSpend, displayName }) => {
+  tooltip: string
+  heading?: string
+}> = ({ activeCloudSpend, subscribedCloudSpend, displayName, heading, tooltip }) => {
   const prefix = '$'
   const { getString } = useStrings()
-  const leftHeader = getString('common.subscriptions.usage.cloudSpend')
-  const tooltip = getString('common.subscriptions.usage.ccmTooltip')
+  const leftHeader = heading || getString('common.subscriptions.usage.cloudSpend')
   const rightHeader = displayName
   const hasBar = true
   const leftFooter = getString('common.subscribed')
@@ -40,14 +45,56 @@ const ActiveCloudSpend: React.FC<{
 }
 
 const CCMUsageInfo: React.FC = () => {
+  const { accountId } = useParams<AccountPathProps>()
+  const { getString } = useStrings()
   const { limitData, usageData } = useGetUsageAndLimit(ModuleName.CE)
   const { usageErrorMsg, refetchUsage, usage } = usageData
   const { limitErrorMsg, refetchLimit, limit } = limitData
+  const ccmStartTimestamp = useGetCCMTimeStamp()
+  const ccmExpiryTimestamp = useGetCCMExpiryTimeStamp()
 
-  if (usageErrorMsg) {
+  const [annualizedSpendTimestamp, buffer] = useMemo(() => {
+    const currentTimestamp = moment()
+    const hasStartTime = moment(ccmStartTimestamp).year() >= 2015
+    if (hasStartTime) {
+      const diffInDays = currentTimestamp.diff(moment(ccmStartTimestamp), 'days')
+      const maxAllowedDate =
+        diffInDays > 365 ? moment(ccmStartTimestamp).add(Math.floor(diffInDays / 365), 'years') : ccmStartTimestamp
+      const calculationPeriod = currentTimestamp.diff(maxAllowedDate, 'days')
+      const daysBuffer = calculationPeriod > 30 ? 30 : calculationPeriod
+      return [currentTimestamp.subtract(daysBuffer, 'days').valueOf(), daysBuffer]
+    } else {
+      const ccmCurrentYearDate = moment(ccmExpiryTimestamp).year(moment().year())
+      const diffInDays = currentTimestamp.diff(ccmCurrentYearDate, 'days')
+      const daysBuffer = diffInDays < 0 || diffInDays > 30 ? 30 : diffInDays
+      return [currentTimestamp.subtract(daysBuffer, 'days').valueOf(), daysBuffer]
+    }
+  }, [ccmStartTimestamp, ccmExpiryTimestamp])
+
+  const {
+    data: ccmUsageData,
+    error: ccmUsageError,
+    refetch: ccmUsageRefetch
+  } = useGetCCMLicenseUsage({
+    queryParams: {
+      accountIdentifier: accountId,
+      timestamp: annualizedSpendTimestamp
+    }
+  })
+
+  if (usageErrorMsg || ccmUsageError) {
     return (
       <ErrorContainer>
-        <PageError message={usageErrorMsg} onClick={() => refetchUsage?.()} />
+        <PageError
+          message={usageErrorMsg || ccmUsageError}
+          onClick={() => {
+            if (usageErrorMsg) {
+              refetchUsage?.()
+            } else if (ccmUsageError) {
+              ccmUsageRefetch()
+            }
+          }}
+        />
       </ErrorContainer>
     )
   }
@@ -66,6 +113,14 @@ const CCMUsageInfo: React.FC = () => {
         activeCloudSpend={usage?.ccm?.activeSpend?.count as number}
         subscribedCloudSpend={limit?.ccm?.totalSpendLimit || 0}
         displayName={usage?.ccm?.activeSpend?.displayName}
+        tooltip={getString('common.subscriptions.usage.ccmTooltip')}
+      />
+      <ActiveCloudSpend
+        activeCloudSpend={(((ccmUsageData?.data?.activeSpend?.count || 0) / buffer) * 365) as number}
+        subscribedCloudSpend={limit?.ccm?.totalSpendLimit || 0}
+        displayName={usage?.ccm?.activeSpend?.displayName}
+        heading={getString('common.subscriptions.usage.annualizedCloudSpend')}
+        tooltip={getString('common.subscriptions.usage.annualizedSpendTooltip')}
       />
     </Layout.Horizontal>
   )

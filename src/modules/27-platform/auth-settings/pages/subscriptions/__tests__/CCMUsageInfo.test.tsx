@@ -9,6 +9,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as useGetUsageAndLimit from '@common/hooks/useGetUsageAndLimit'
+import { useGetCCMLicenseUsage } from 'services/ce'
 import CCMUsageInfo from '../overview/CCMUsageInfo'
 
 const useGetUsageAndLimitReturnMock = {
@@ -30,6 +31,22 @@ const useGetUsageAndLimitReturnMock = {
     }
   }
 }
+
+jest.mock('services/ce')
+const useGetCCMLicenseUsageMock = useGetCCMLicenseUsage as jest.MockedFunction<any>
+useGetCCMLicenseUsageMock.mockImplementation(() => {
+  return {
+    data: {
+      data: {
+        activeSpend: {
+          count: 29,
+          displayName: 'Last 30 Days'
+        }
+      },
+      status: 'SUCCESS'
+    }
+  }
+})
 
 jest.spyOn(useGetUsageAndLimit, 'useGetUsageAndLimit').mockReturnValue(useGetUsageAndLimitReturnMock)
 
