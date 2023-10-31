@@ -126,11 +126,11 @@ const RenderColumnEntity: Renderer<CellProps<RuntimeSetupUsageDTOColumnData>> = 
 }
 
 const RenderColumnEvent: Renderer<CellProps<Activity>> = ({ row }) => {
-  const data = row.original
-  const usageType = get(data, 'detail.usageDetail.usageType', '')
+  const data = row.original.detail
+  const usageDetail = get(data, 'usageDetail', '')
   return (
-    <Text color={Color.GREY_400} lineClamp={1} className={css.overflow}>
-      {usageType}
+    <Text color={Color.GREY_400} lineClamp={1}>
+      {usageDetail.usagetype}
     </Text>
   )
 }

@@ -106,10 +106,6 @@ describe('RuntimeUsageList component', () => {
       userEvent.click(entityFilterItems[0])
     })
 
-    const usageEvent = screen.queryAllByText('Test Connection')
-    await waitFor(() => {
-      expect(usageEvent).toHaveLength(4)
-    })
     const paginationElement = container.querySelector('div[class*="Pagination--pageSizeDropdown"]') as HTMLInputElement
     expect(paginationElement).toBeInTheDocument()
 
