@@ -241,7 +241,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     const sanitizedJSONObj = jsonObj ? sanitize(jsonObj, yamlSanityConfig) : null
     if (sanitizedJSONObj && Object.keys(sanitizedJSONObj).length > 0) {
       const yamlEqOfJSON = yamlStringify(sanitizedJSONObj)
-      const sanitizedYAML = yamlEqOfJSON.replace(': null\n', ': \n')
+      const sanitizedYAML =
+        yamlSanityConfig?.removeNull ?? true ? yamlEqOfJSON.replace(': null\n', ': \n') : yamlEqOfJSON
 
       setCurrentYaml(sanitizedYAML)
       currentYamlRef.current = sanitizedYAML

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 // import { Dialog, Classes } from '@blueprintjs/core'
 import {
   Button,
@@ -26,16 +26,16 @@ import { useHistory } from 'react-router-dom'
 import { isEmpty, defaultTo, keyBy } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 // import type { GetDataError } from 'restful-react'
-import { executePipeline, useGetInputsSchemaDetailsQuery } from '@harnessio/react-pipeline-service-client'
+import { useExecutePipelineMutation, useGetInputsSchemaDetailsQuery } from '@harnessio/react-pipeline-service-client'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
   PipelineInfoConfig,
   ResponseJsonNode,
   useGetPipeline, // OK
-  usePostPipelineExecuteWithInputSetYaml, // run pipeline
-  //useRePostPipelineExecuteWithInputSetYaml,
+  // usePostPipelineExecuteWithInputSetYaml,
+  // useRePostPipelineExecuteWithInputSetYaml,
   StageExecutionResponse,
-  useRunStagesWithRuntimeInputYaml,
+  // useRunStagesWithRuntimeInputYaml,
   //useRerunStagesWithRuntimeInputYaml,
   useGetStagesExecutionList,
   //useDebugPipelineExecuteWithInputSetYaml,
@@ -158,7 +158,8 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   yamlSanityConfig: {
     removeEmptyString: false,
     removeEmptyObject: false,
-    removeEmptyArray: false
+    removeEmptyArray: false,
+    removeNull: false
   }
 }
 
@@ -356,39 +357,39 @@ function RunPipelineFormBasic({
   }, [inputSetYamlResponse?.data])
   // TODO replacement for useInputSets <<<
 
-  const { mutate: runPipeline, loading: runPipelineLoading } = usePostPipelineExecuteWithInputSetYaml({
-    queryParams: {
-      accountIdentifier: accountId,
-      projectIdentifier,
-      orgIdentifier,
-      moduleType: module || '',
-      repoIdentifier,
-      branch: getPipelineBranch(),
-      notifyOnlyUser: notifyOnlyMe,
-      parentEntityConnectorRef: connectorRef,
-      parentEntityRepoName: repoIdentifier
-    },
-    identifier: pipelineIdentifier,
-    requestOptions: {
-      headers: {
-        'content-type': 'application/yaml'
-      }
-    }
-  })
+  // const { mutate: runPipeline, loading: runPipelineLoading } = usePostPipelineExecuteWithInputSetYaml({
+  //   queryParams: {
+  //     accountIdentifier: accountId,
+  //     projectIdentifier,
+  //     orgIdentifier,
+  //     moduleType: module || '',
+  //     repoIdentifier,
+  //     branch: getPipelineBranch(),
+  //     notifyOnlyUser: notifyOnlyMe,
+  //     parentEntityConnectorRef: connectorRef,
+  //     parentEntityRepoName: repoIdentifier
+  //   },
+  //   identifier: pipelineIdentifier,
+  //   requestOptions: {
+  //     headers: {
+  //       'content-type': 'application/yaml'
+  //     }
+  //   }
+  // })
 
-  const { mutate: runStage, loading: runStagesLoading } = useRunStagesWithRuntimeInputYaml({
-    queryParams: {
-      accountIdentifier: accountId,
-      projectIdentifier,
-      orgIdentifier,
-      moduleType: module || '',
-      repoIdentifier,
-      branch,
-      parentEntityConnectorRef: connectorRef,
-      parentEntityRepoName: repoIdentifier
-    },
-    identifier: pipelineIdentifier
-  })
+  // const { mutate: runStage, loading: runStagesLoading } = useRunStagesWithRuntimeInputYaml({
+  //   queryParams: {
+  //     accountIdentifier: accountId,
+  //     projectIdentifier,
+  //     orgIdentifier,
+  //     moduleType: module || '',
+  //     repoIdentifier,
+  //     branch,
+  //     parentEntityConnectorRef: connectorRef,
+  //     parentEntityRepoName: repoIdentifier
+  //   },
+  //   identifier: pipelineIdentifier
+  // })
   const { executionId } = useQueryParams<{ executionId?: string }>()
 
   const pipelineExecutionId = executionIdentifier ?? executionId
@@ -657,146 +658,130 @@ function RunPipelineFormBasic({
   //   )
   // }, [notifyOnlyMe, selectedStageData, stageIdentifiers, formErrors])
 
-  const isExecutingPipeline =
-    runPipelineLoading ||
-    //reRunPipelineLoading ||
-    runStagesLoading // ||
-  //reRunStagesLoading ||
-  //reRunDebugModeLoading ||
-  //retryPipelineLoading
+  const { mutateAsync: executePipeline, isLoading: isExecutingPipeline } = useExecutePipelineMutation()
 
-  const handleRunPipeline = useCallback(
-    async (valuesPipeline?: InputsKVPair, forceSkipFlightCheck = false) => {
-      const errors = await validateFormRef.current?.(valuesPipeline)
-      if (errors && Object.keys(errors).length) {
-        return
-      }
+  // const isExecutingPipeline =
+  //   runPipelineLoading ||
+  //   reRunPipelineLoading ||
+  //   runStagesLoading ||
+  //   reRunStagesLoading ||
+  //   reRunDebugModeLoading ||
+  //   retryPipelineLoading
 
-      valuesPipelineRef.current = valuesPipeline
-      if (!skipPreFlightCheck && !forceSkipFlightCheck) {
-        // Not skipping pre-flight check - open the new modal
-        // TODO
-        // showPreflightCheckModal()
-        return
-      }
+  const handleRunPipeline = async (valuesPipeline: InputsKVPair, forceSkipFlightCheck = false): Promise<void> => {
+    const errors = await validateFormRef.current?.(valuesPipeline)
+    if (errors && Object.keys(errors).length) {
+      return
+    }
 
-      const expressionValues: KVPair = {}
-      Object.entries(expressionFormState).forEach(([key, value]: string[]) => {
-        expressionValues[key] = value
+    valuesPipelineRef.current = valuesPipeline
+    if (!skipPreFlightCheck && !forceSkipFlightCheck) {
+      // Not skipping pre-flight check - open the new modal
+      // TODO
+      // showPreflightCheckModal()
+      return
+    }
+
+    const expressionValues: KVPair = {}
+    Object.entries(expressionFormState).forEach(([key, value]: string[]) => {
+      expressionValues[key] = value
+    })
+
+    try {
+      //let response
+      // const finalYaml = isEmpty(valuesPipelineRef.current)
+      //   ? ''
+      //   : yamlStringify({
+      //       pipeline: omit(
+      //         omitBy(valuesPipelineRef.current, (_val, key) => key.startsWith('_')),
+      //         ...pipelineMetadataKeys
+      //       )
+      //     })
+
+      // if (isDebugMode) {
+      //   response = await runPipelineInDebugMode(finalYaml as any)
+      // } else if (isRetryFromStage) {
+      //   response = await retryPipeline(finalYaml as any)
+      // } else if (isRerunPipeline) {
+      //   response = selectedStageData.allStagesSelected
+      //     ? await reRunPipeline(finalYaml as any)
+      //     : await reRunStages({
+      //         runtimeInputYaml: finalYaml as any,
+      //         stageIdentifiers: stageIdentifiers,
+      //         expressionValues
+      //       })
+      // } else {
+
+      // NOTE: type for runPipeline is wrong
+      // TODO:: once selectedStage is supported update the new openAPI endpoint
+      // const response = selectedStageData.allStagesSelected
+      // ? await runPipeline(finalYaml as unknown as void)
+      // : await runStage({
+      //     runtimeInputYaml: finalYaml,
+      //     stageIdentifiers: stageIdentifiers,
+      //     expressionValues
+      //   })
+
+      const response = await executePipeline({
+        org: orgIdentifier,
+        pipeline: pipelineMetadata?.identifier as string,
+        project: projectIdentifier,
+        body: { yaml: yamlStringify(valuesPipeline) },
+        queryParams: {}
       })
+      const data = response?.content
+      // TODO:: governanceMetadata not yet added
+      // const governanceMetadata = data?.planExecution?.governanceMetadata
 
-      try {
-        //let response
-        // const finalYaml = isEmpty(valuesPipelineRef.current)
-        //   ? ''
-        //   : yamlStringify({
-        //       pipeline: omit(
-        //         omitBy(valuesPipelineRef.current, (_val, key) => key.startsWith('_')),
-        //         ...pipelineMetadataKeys
-        //       )
-        //     })
-
-        // if (isDebugMode) {
-        //   response = await runPipelineInDebugMode(finalYaml as any)
-        // } else if (isRetryFromStage) {
-        //   response = await retryPipeline(finalYaml as any)
-        // } else if (isRerunPipeline) {
-        //   response = selectedStageData.allStagesSelected
-        //     ? await reRunPipeline(finalYaml as any)
-        //     : await reRunStages({
-        //         runtimeInputYaml: finalYaml as any,
-        //         stageIdentifiers: stageIdentifiers,
-        //         expressionValues
-        //       })
-        // } else {
-
-        // NOTE: type for runPipeline is wrong
-        // TODO:: once selectedStage is supported update the new openAPI endpoint
-        // const response = selectedStageData.allStagesSelected
-        // ? await runPipeline(finalYaml as unknown as void)
-        // : await runStage({
-        //     runtimeInputYaml: finalYaml,
-        //     stageIdentifiers: stageIdentifiers,
-        //     expressionValues
-        //   })
-
-        const response = await executePipeline({
-          org: orgIdentifier,
-          pipeline: pipelineMetadata?.identifier as string,
-          project: projectIdentifier,
-          body: { yaml: yamlStringify(valuesPipeline) },
-          queryParams: {}
-        })
-        const data = response?.content
-        // TODO:: governanceMetadata not yet added
-        // const governanceMetadata = data?.planExecution?.governanceMetadata
-
-        if ((response as any)?.status === 'SUCCESS' || !isEmpty(data)) {
-          setRunPipelineError({})
-          onClose?.()
-          if (response?.content) {
-            showSuccess(getString('runPipelineForm.pipelineRunSuccessFully'))
-            history.push({
-              pathname: routes.toExecutionPipelineView({
-                orgIdentifier,
-                pipelineIdentifier,
-                projectIdentifier,
-                // TODO: any will not be needed with latest build of pipeline service
-                executionIdentifier: defaultTo((response?.content as any)?.execution_details?.execution_id, ''),
-                accountId,
-                module,
-                source
-              }),
-              search:
-                supportingGitSimplification && storeType === StoreType.REMOTE
-                  ? `connectorRef=${connectorRef}&repoName=${repoIdentifier}&branch=${getPipelineBranch()}&storeType=${storeType}`
-                  : undefined,
-              state: {
-                // shouldShowGovernanceEvaluations:
-                //   governanceMetadata?.status === 'error' || governanceMetadata?.status === 'warning',
-                // governanceMetadata
-              }
-            })
-            trackEvent(PipelineActions.StartedExecution, { module })
-          }
+      if ((response as any)?.status === 'SUCCESS' || !isEmpty(data)) {
+        setRunPipelineError({})
+        onClose?.()
+        if (response?.content) {
+          showSuccess(getString('runPipelineForm.pipelineRunSuccessFully'))
+          history.push({
+            pathname: routes.toExecutionPipelineView({
+              orgIdentifier,
+              pipelineIdentifier,
+              projectIdentifier,
+              // TODO: any will not be needed with latest build of pipeline service
+              executionIdentifier: defaultTo((response?.content as any)?.execution_details?.execution_id, ''),
+              accountId,
+              module,
+              source
+            }),
+            search:
+              supportingGitSimplification && storeType === StoreType.REMOTE
+                ? `connectorRef=${connectorRef}&repoName=${repoIdentifier}&branch=${getPipelineBranch()}&storeType=${storeType}`
+                : undefined,
+            state: {
+              // shouldShowGovernanceEvaluations:
+              //   governanceMetadata?.status === 'error' || governanceMetadata?.status === 'warning',
+              // governanceMetadata
+            }
+          })
+          trackEvent(PipelineActions.StartedExecution, { module })
         }
-      } catch (error) {
-        setRunPipelineError(error?.data as Error)
-        if (!isErrorEnhancementFFEnabled)
-          showWarning(defaultTo(getRBACErrorMessage(error, true), getString('runPipelineForm.runPipelineFailed')))
       }
-
-      return valuesPipeline
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [
-      runPipeline,
-      runStage,
-      //retryPipeline,
-      showWarning,
-      showSuccess,
-      pipelineIdentifier,
-      history,
-      orgIdentifier,
-      module,
-      projectIdentifier,
-      onClose,
-      accountId,
-      skipPreFlightCheck,
-      formErrors,
-      selectedStageData,
-      notifyOnlyMe
-    ]
-  )
+    } catch (error) {
+      setRunPipelineError(error?.data as Error)
+      if (!isErrorEnhancementFFEnabled)
+        showWarning(defaultTo(getRBACErrorMessage(error, true), getString('runPipelineForm.runPipelineFailed')))
+    }
+  }
 
   function formikUpdateWithLatestYaml(): void {
-    if (yamlHandler && formikRef.current) {
+    if (!yamlHandler || !formikRef.current) return
+
+    try {
       const parsedYaml = yamlParse<InputsKVPair>(defaultTo(yamlHandler.getLatestYaml(), ''))
 
-      if (parsedYaml) {
-        formikRef.current.setValues(parsedYaml)
-        formikRef.current.validateForm(parsedYaml)
-      }
+      if (!parsedYaml) return
+
+      // Previous values are used again to prevent removing the inputs if they are removed in the yaml editor
+      formikRef.current.setValues(prevValues => ({ ...prevValues, ...parsedYaml }))
+      formikRef.current.validateForm(parsedYaml)
+    } catch {
+      //
     }
   }
 
@@ -968,11 +953,16 @@ function RunPipelineFormBasic({
     data: inputsSchema,
     isLoading: inputsSchemaLoading,
     failureReason: inputsSchemaError
-  } = useGetInputsSchemaDetailsQuery({
-    org: orgIdentifier,
-    pipeline: pipelineMetadata?.identifier as string,
-    project: projectIdentifier
-  })
+  } = useGetInputsSchemaDetailsQuery(
+    {
+      org: orgIdentifier,
+      pipeline: pipelineMetadata?.identifier as string,
+      project: projectIdentifier
+    },
+    {
+      cacheTime: 0
+    }
+  )
 
   useEffect(() => {
     if (inputsSchemaError) {
@@ -986,8 +976,11 @@ function RunPipelineFormBasic({
     [inputsSchema?.content]
   )
 
-  // TODO
-  const runtimeInputsInitialValues = {}
+  const runtimeInputsInitialValues = useMemo(() => {
+    return Object.fromEntries(
+      runtimeInputs.inputs.map(runtimeInput => [runtimeInput.name, runtimeInput.default ?? null])
+    )
+  }, [runtimeInputs])
 
   if (shouldShowPageSpinner()) {
     return <PageSpinner />
@@ -1076,6 +1069,7 @@ function RunPipelineFormBasic({
       <>
         <Formik<InputsKVPair>
           initialValues={runtimeInputsInitialValues}
+          enableReinitialize
           formName="runPipeline"
           onSubmit={values => {
             // DO NOT return from here, causing the Formik form to handle loading state inconsistently
@@ -1085,7 +1079,7 @@ function RunPipelineFormBasic({
           validate={handleValidation}
         >
           {formik => {
-            const { submitForm, values, setValues, setFormikState, validateForm } = formik
+            const { submitForm, values, setFormikState, validateForm } = formik
             formikRef.current = formik
             valuesPipelineRef.current = values
             validateFormRef.current = validateForm
@@ -1183,7 +1177,6 @@ function RunPipelineFormBasic({
                           {...yamlBuilderReadOnlyModeProps}
                           existingJSON={values}
                           bind={setYamlHandler}
-                          schema={{}}
                           invocationMap={factory.getInvocationMap()}
                           height="55vh"
                           width="100%"
@@ -1221,17 +1214,7 @@ function RunPipelineFormBasic({
                             // _formSubmitCount is custom state var used to track submitCount.
                             // enableReinitialize prop resets the submitCount, so error checks fail.
                             setFormikState(prevState => ({ ...prevState, _formSubmitCount: 1 }))
-                            if (selectedView === SelectedView.YAML) {
-                              const parsedYaml = yamlParse<InputsKVPair>(defaultTo(yamlHandler?.getLatestYaml(), ''))
-                              if (parsedYaml.pipeline) {
-                                setValues(parsedYaml)
-                                setTimeout(() => {
-                                  submitForm()
-                                }, 0)
-                              }
-                            } else {
-                              submitForm()
-                            }
+                            submitForm()
                           }}
                           featuresProps={getFeaturePropsForRunPipelineButton({
                             modules: inputSetYamlResponse?.data?.modules,
@@ -1343,7 +1326,6 @@ export function RunPipelineFormY1(props: RunPipelineFormProps & InputSetGitQuery
           storeMetadata={props.storeMetadata}
           lexicalContext={LexicalContext.RunPipelineForm}
         >
-          {/* <div>RUN V1</div> */}
           <RunPipelineFormBasic {...props} />
         </PipelineVariablesContextProvider>
       )}

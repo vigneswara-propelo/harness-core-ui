@@ -18,16 +18,19 @@ empty arrays
 export const DEFAULT_SANITY_CONFIG = {
   removeEmptyString: true,
   removeEmptyArray: true,
-  removeEmptyObject: true
+  removeEmptyObject: true,
+  removeNull: true
 }
 
 const sanitize = (obj: Record<string, any>, sanityConfig?: YamlSanityConfig): Record<string, any> => {
-  const { removeEmptyString, removeEmptyArray, removeEmptyObject } = {
+  const { removeEmptyString, removeEmptyArray, removeEmptyObject, removeNull } = {
     ...DEFAULT_SANITY_CONFIG,
     ...sanityConfig
   }
   for (const key in obj) {
-    if (obj[key] === null || obj[key] === undefined) {
+    if (obj[key] === null && removeNull) {
+      delete obj[key]
+    } else if (obj[key] === undefined) {
       delete obj[key]
     } else if (removeEmptyString && obj[key] === '') {
       delete obj[key]

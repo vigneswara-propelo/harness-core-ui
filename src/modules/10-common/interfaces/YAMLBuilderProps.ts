@@ -27,6 +27,7 @@ export interface YamlSanityConfig {
   removeEmptyString?: boolean
   removeEmptyArray?: boolean
   removeEmptyObject?: boolean
+  removeNull?: boolean
 }
 export interface YamlBuilderProps {
   /* Only YAMLBuilder related props */

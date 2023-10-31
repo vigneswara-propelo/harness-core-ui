@@ -33,8 +33,6 @@ import { InputsKVPair } from './RunPipelineFormY1'
 // TODO end
 import { InputsForm } from '../InputsForm/InputsForm'
 import { UIInputs } from '../InputsForm/types'
-// import { inputsMetadataResponseTmp } from '../InputsForm/tmp/response-mock'
-// import { generateInputsFromMetadataResponse } from '../InputsForm/utils'
 import css from './RunPipelineFormY1.module.scss'
 
 export type ExistingProvide = 'existing' | 'provide'
@@ -164,12 +162,6 @@ export default function VisualViewY1(props: VisualViewY1Props): React.ReactEleme
     ]
   )
 
-  // TODO:: Replace with runtimeInputs once API available
-  // const runtimeInputsTemp: UIInputs = useMemo(
-  //   () => generateInputsFromMetadataResponse(inputsMetadataResponseTmp.data),
-  //   []
-  // )
-
   return (
     <div
       className={cx(executionView ? css.runModalFormContentExecutionView : css.runModalFormContent, {
@@ -248,14 +240,6 @@ export default function VisualViewY1(props: VisualViewY1Props): React.ReactEleme
             {showVoidPipelineInputSetForm() ? <div className={css.noPipelineInputSetForm} /> : null}
           </>
         )}
-
-        {/* TODO: will be moved inside InputsForm once harness-schema API is integrated with proper response */}
-        {/* <InputsForm
-          className={css.inputsForm}
-          initialValues={runtimeInputsInitialValues}
-          inputs={runtimeInputsTemp}
-          onChange={() => undefined}
-        /> */}
       </FormikForm>
     </div>
   )

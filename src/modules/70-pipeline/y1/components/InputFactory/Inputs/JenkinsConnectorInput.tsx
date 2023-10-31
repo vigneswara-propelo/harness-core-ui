@@ -29,6 +29,7 @@ function JenkinsConnectorInputInternal(props: InputProps<InputsFormValues>): JSX
       width="100%"
       setRefValue
       disabled={readonly}
+      enableConfigureOptions={false}
       multiTypeProps={{
         allowableTypes,
         expressions: []
