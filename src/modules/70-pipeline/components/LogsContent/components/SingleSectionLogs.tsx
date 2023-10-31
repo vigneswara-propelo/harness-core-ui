@@ -24,7 +24,13 @@ export function SingleSectionLogs(
   const { state } = props
   const unitKey = state.logKeys[0]
   const unit = state.dataMap[unitKey]
-  const length = unit.data.length
+  const renderUnitData = React.useMemo(() => {
+    if (unit.data.length) {
+      return [{ text: { level: '', out: '', time: '' } }, ...unit.data]
+    }
+    return unit.data
+  }, [unit.data])
+  const length = renderUnitData.length
   const [isAtBottom, setIsAtBottom] = React.useState(false)
 
   function handleClick(): void {
@@ -46,15 +52,20 @@ export function SingleSectionLogs(
         atBottomStateChange={setIsAtBottom}
         ref={ref}
         followOutput="auto"
-        itemContent={index => (
-          <MultiLogLine
-            {...unit.data[index]}
-            lineNumber={index}
-            limit={length}
-            searchText={state.searchData.text}
-            currentSearchIndex={state.searchData.currentIndex}
-          />
-        )}
+        itemContent={index => {
+          if (index === 0) {
+            return <div className={css.emptyLogLine} />
+          }
+          return (
+            <MultiLogLine
+              {...renderUnitData[index]}
+              lineNumber={index - 1}
+              limit={length}
+              searchText={state.searchData.text}
+              currentSearchIndex={state.searchData.currentIndex}
+            />
+          )
+        }}
       />
       <Button
         className={css.singleSectionScrollBtn}

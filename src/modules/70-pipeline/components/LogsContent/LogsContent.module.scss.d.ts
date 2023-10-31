@@ -9,6 +9,7 @@
 declare const styles: {
   readonly container: string
   readonly copilot: string
+  readonly emptyLogLine: string
   readonly errorContainer: string
   readonly errorIcon: string
   readonly errorMsg: string
