@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react'
-import { cloneDeep, defaultTo, get, isEmpty, set, unset, memoize } from 'lodash-es'
+import { cloneDeep, defaultTo, isEmpty, set, unset, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Dialog, Intent } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -498,6 +498,10 @@ function FormContent({
           className={css.connector}
           connectorLabelClass={css.connectorLabel}
           width={390}
+          onChange={() => {
+            formik.setFieldValue('spec.transitionTo.transitionName', '')
+            formik.setFieldValue('spec.transitionTo.status', '')
+          }}
           placeholder={getString('common.entityPlaceholderText')}
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
@@ -542,17 +546,13 @@ function FormContent({
             const formikValues = cloneDeep(formik.values)
             issueKeyType.current = type
             set(formikValues, 'spec.issueKey', value)
-            if (
-              type === MultiTypeInputType.FIXED &&
-              get(formikValues, 'spec.projectKey') &&
-              get(formikValues, 'spec.issueType')
-            ) {
-              unset(formikValues, 'spec.issueType')
-              unset(formikValues, 'spec.projectKey')
-              unset(formikValues, 'spec.fields')
-              unset(formikValues, 'spec.selectedRequiredFields')
-              unset(formikValues, 'spec.selectedOptionalFields')
-            }
+            unset(formikValues, 'spec.issueType')
+            unset(formikValues, 'spec.projectKey')
+            unset(formikValues, 'spec.fields')
+            unset(formikValues, 'spec.selectedRequiredFields')
+            unset(formikValues, 'spec.selectedOptionalFields')
+            unset(formikValues, 'spec.transitionTo.transitionName')
+            unset(formikValues, 'spec.transitionTo.status')
             formik.setValues(formikValues)
           }}
           disabled={isApprovalStepFieldDisabled(readonly)}
@@ -576,7 +576,7 @@ function FormContent({
           summary={getString('common.optionalConfig')}
           details={
             <div>
-              <div className={cx(stepCss.formGroup, stepCss.lg)}>
+              <div key={`spec.transitionTo.status.${statusValue}`} className={cx(stepCss.formGroup, stepCss.lg)}>
                 <FormInput.MultiTypeInput
                   selectItems={
                     fetchingStatuses
@@ -608,6 +608,7 @@ function FormContent({
                         e?.target?.type !== 'text' ||
                         (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
                         !connectorRefFixedValue ||
+                        getMultiTypeFromValue(formik.values.spec.issueKey) !== MultiTypeInputType.FIXED ||
                         !CDS_JIRA_TRANSITION_LIST
                       ) {
                         return
@@ -671,7 +672,10 @@ function FormContent({
                 ></FormError>
               ) : null}
 
-              <div className={cx(stepCss.formGroup, stepCss.lg)}>
+              <div
+                key={`spec.transitionTo.transitionName.${statusValue}`}
+                className={cx(stepCss.formGroup, stepCss.lg)}
+              >
                 <FormInput.MultiTypeInput
                   selectItems={
                     issueTransitionsLoading

@@ -45,6 +45,31 @@ export const getJiraUpdateEditModeProps = (): JiraUpdateStepModeProps => ({
   stepViewType: StepViewType.Edit
 })
 
+export const getJiraUpdateEditModeRuntimeProps = (): JiraUpdateStepModeProps => ({
+  initialValues: {
+    name: '',
+    type: 'JiraUpdate',
+    identifier: '',
+    timeout: '5s',
+    spec: {
+      connectorRef: RUNTIME_INPUT_VALUE,
+      issueKey: RUNTIME_INPUT_VALUE,
+      transitionTo: {
+        status: '',
+        transitionName: ''
+      },
+      fields: []
+    }
+  },
+  onUpdate: jest.fn(),
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
+  stepViewType: StepViewType.Edit
+})
+
 export const getJiraUpdateEditModePropsWithConnectorId = (): JiraUpdateStepModeProps => ({
   initialValues: {
     name: '',

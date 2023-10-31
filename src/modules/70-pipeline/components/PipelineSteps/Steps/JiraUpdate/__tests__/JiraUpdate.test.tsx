@@ -27,7 +27,8 @@ import {
   mockStatus,
   mockTransitionResponse,
   mockTransition,
-  getJiraUpdateEditModePropsWithCustomIssueKeyValue
+  getJiraUpdateEditModePropsWithCustomIssueKeyValue,
+  getJiraUpdateEditModeRuntimeProps
 } from './JiraUpdateTestHelper'
 import type { JiraUpdateData } from '../types'
 import { processFormData } from '../helper'
@@ -290,6 +291,39 @@ describe('Jira Update tests', () => {
     )
 
     expect(container).toMatchSnapshot('editstage-readonly')
+  })
+
+  test('Status and transition call should not happen when issueKey is runtime', async () => {
+    const refetchStatus = jest.fn()
+    const refetchTransition = jest.fn()
+    const useFeatureFlags = jest.spyOn(hooks, 'useFeatureFlags')
+    useFeatureFlags.mockReturnValue({ CDS_JIRA_TRANSITION_LIST: true })
+    jest
+      .spyOn(ngServices, 'useGetJiraStatuses')
+      .mockReturnValue({ data: mockStatus, refetch: refetchStatus, cancel: jest.fn() } as any)
+    jest
+      .spyOn(ngServices, 'useGetIssueTransitions')
+      .mockReturnValue({ data: mockTransition, refetch: refetchTransition, cancel: jest.fn() } as any)
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    const props = getJiraUpdateEditModeRuntimeProps()
+    const { container, getByText } = render(
+      <TestStepWidget
+        initialValues={props.initialValues}
+        type={StepType.JiraUpdate}
+        stepViewType={StepViewType.Edit}
+        ref={ref}
+      />
+    )
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+    fireEvent.click(getByText('common.optionalConfig'))
+    expect(queryByNameAttribute('spec.transitionTo.status')).toBeTruthy()
+    queryByNameAttribute('spec.transitionTo.status')?.focus()
+
+    expect(refetchStatus).not.toHaveBeenCalled()
+
+    expect(queryByNameAttribute('spec.transitionTo.transitionName')).toBeTruthy()
+    queryByNameAttribute('spec.transitionTo.transitionName')?.focus()
+    expect(refetchTransition).not.toHaveBeenCalled()
   })
 
   test('Open a saved step - edit stage view', async () => {

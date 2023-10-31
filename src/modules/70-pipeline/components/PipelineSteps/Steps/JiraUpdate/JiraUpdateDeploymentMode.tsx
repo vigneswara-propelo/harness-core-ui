@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { isEmpty, memoize, pickBy, set } from 'lodash-es'
+import { get, isEmpty, memoize, pickBy, set } from 'lodash-es'
 import { Intent } from '@blueprintjs/core'
 import {
   EXECUTION_TIME_INPUT_VALUE,
@@ -67,7 +67,8 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
     issueUpdateMetadataFetchError,
     refetchIssueTransitions,
     issueTransitionsResponse,
-    issueTransitionsLoading
+    issueTransitionsLoading,
+    formik
   } = formContentProps
   const template = inputSetData?.template
   const path = inputSetData?.path
@@ -341,6 +342,23 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
               items: issueTransitionsLoading
                 ? [{ label: getString('pipeline.jiraUpdateStep.fetchingTransitions'), value: '' }]
                 : transitions
+            },
+            onChange: (value, _valueType, type) => {
+              if (
+                type === MultiTypeInputType.FIXED &&
+                getMultiTypeFromValue(get(formik, `values.${prefix}spec?.transitionTo?.status`)) ===
+                  MultiTypeInputType.FIXED
+              ) {
+                const transitionObj = issueTransitionsResponse?.data?.find(
+                  obj => obj.name === ((value as SelectOption)?.value || value)
+                )
+                if (transitionObj) {
+                  const targetStatus = statusOptions.find(status => status.value === transitionObj?.to?.name)
+                  if (targetStatus) {
+                    formik.setFieldValue(`${prefix}spec.transitionTo.status`, targetStatus?.value)
+                  }
+                }
+              }
             },
             onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
               if (
