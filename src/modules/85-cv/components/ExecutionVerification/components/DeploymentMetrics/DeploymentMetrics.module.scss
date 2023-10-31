@@ -11,7 +11,10 @@
 
 @mixin AccordionLayout {
   display: grid;
-  grid-template-columns: 200px 170px 120px 120px 1fr;
+  grid-template-columns: minmax(100px, 200px) minmax(50px, 170px) minmax(50px, 120px) minmax(50px, 120px) minmax(
+      100px,
+      1fr
+    );
 }
 
 .main {
@@ -210,11 +213,12 @@
 
   .nodeCount {
     align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-small);
 
     p.nodeCountMessage {
       white-space: normal !important;
       max-width: 100% !important;
-      margin-left: var(--spacing-xsmall) !important;
     }
   }
 }
@@ -222,7 +226,10 @@
 .DeploymentMetrics {
   &Lables {
     @include AccordionLayout;
-    grid-template-columns: 210px 170px 120px 120px 1fr;
+    grid-template-columns: minmax(50px, 210px) minmax(50px, 170px) minmax(50px, 120px) minmax(50px, 120px) minmax(
+        100px,
+        1fr
+      );
     margin-left: 25px !important;
     margin-bottom: var(--spacing-medium) !important;
     align-items: center;

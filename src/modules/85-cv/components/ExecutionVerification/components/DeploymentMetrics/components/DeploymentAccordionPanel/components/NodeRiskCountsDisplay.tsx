@@ -22,7 +22,7 @@ const NodeRiskCountsDisplay: React.FC<NodeCountDisplayProps> = props => {
     css
 
   return (
-    <Layout.Horizontal style={{ flexWrap: 'wrap' }}>
+    <Layout.Horizontal style={{ gap: '4px', flexWrap: 'wrap', width: '100%' }}>
       {nodeDetails?.map((node: NodeDetail | NodeRiskCount) => {
         const { risk, count } = node
 
@@ -30,7 +30,6 @@ const NodeRiskCountsDisplay: React.FC<NodeCountDisplayProps> = props => {
           <Container
             key={risk}
             data-testid="nodecount_display"
-            margin={{ right: 'xsmall' }}
             color={Color.WHITE}
             className={cx(css.nodeCountDisplay, {
               [nodeCountDisplayHealthy]: risk === HEALTHY,

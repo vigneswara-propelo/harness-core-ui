@@ -20,7 +20,7 @@ const NodeCount: React.FC<NodeCountProps> = props => {
   return (
     <Layout.Horizontal className={DeploymentMetricsStyle.nodeCount}>
       <NodeRiskCountsDisplay nodeDetails={nodeRiskCount?.nodeRiskCounts} />
-      <Layout.Horizontal style={{ flex: '1' }}>
+      <Layout.Horizontal style={{ width: '100%' }}>
         <Text font={{ variation: FontVariation.SMALL }} className={DeploymentMetricsStyle.nodeCountMessage}>
           <strong>
             {nodeRiskCount?.anomalousNodeCount}/{nodeRiskCount?.totalNodeCount} &nbsp;
