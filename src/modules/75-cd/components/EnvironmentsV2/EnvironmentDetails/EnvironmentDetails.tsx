@@ -347,7 +347,8 @@ export default function EnvironmentDetails(): React.ReactElement {
   const initialGitFormValue = {
     connectorRef: environmentDetails.connectorRef,
     repoName: gitDetails.repoName,
-    filePath: gitDetails.filePath
+    filePath: gitDetails.filePath,
+    storeType: environmentDetails.storeType
   }
 
   const pipeline = React.useMemo(
