@@ -350,7 +350,10 @@ export const processPipelineFromAPIAction = (
           originalPipeline: cloneDeep(pipeline),
           isBEPipelineUpdated: comparePipelines(pipeline, data.originalPipeline),
           isUpdated: comparePipelines(pipeline, data.pipeline),
-          isMetadataUpdated: !isEqual(pipelineMetadataConfig.originalMetadata, pipelineMetadataConfig.modifiedMetadata),
+          isMetadataUpdated: !isEqual(
+            pipelineMetadataConfig?.originalMetadata,
+            pipelineMetadataConfig?.modifiedMetadata
+          ),
           pipelineMetadataConfig,
           modules: defaultTo(pipelineWithGitDetails?.modules, data.modules),
           gitDetails:
@@ -720,7 +723,7 @@ export const updatePipelineAction = ({
       isUpdated,
       isMetadataUpdated: state.isMetadataUpdated,
       gitDetails: { repoIdentifier: state.routeState.repoIdentifier, repoName: state.routeState.repoName },
-      pipelineMetadataConfig: state.pipelineMetadataConfig
+      pipelineMetadataConfig: state?.pipelineMetadataConfig
     }
     await idb.put(payload)
 
@@ -759,7 +762,7 @@ export const updatePipelineMetadataAction = ({
       ...(pipelineMetadata && { publicAccessResponse: pipelineMetadata?.publicAccess })
     }
 
-    const isMetadataUpdated = !isEqual(pipelineMetadataConfig.originalMetadata, modifiedMetadata)
+    const isMetadataUpdated = !isEqual(pipelineMetadataConfig?.originalMetadata, modifiedMetadata)
     const pipelineMetadataConfigUpdated = {
       ...pipelineMetadataConfig,
       modifiedMetadata: modifiedMetadata
