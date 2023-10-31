@@ -11,6 +11,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import * as cvService from 'services/cv'
 import type { StringKeys } from 'framework/strings'
 import type { RiskData } from 'services/cv'
+import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
 import { RiskValues } from '@cv/utils/CommonUtils'
 import ServiceHealth from '../ServiceHealth'
 import {
@@ -35,6 +36,7 @@ import {
   expectedTimelineForGetTimestampsForPeriod
 } from './ServiceHealth.mock'
 import { changeSummaryWithPositiveChange } from '../components/ChangesSourceCard/__tests__/ChangeSourceCard.mock'
+import { ServiceHealthMFEWrapper } from '../ServiceHealthMFEWrapper'
 
 const WrapperComponent = (props: ServiceHealthProps): JSX.Element => {
   return (
@@ -51,6 +53,11 @@ function getString(key: StringKeys): StringKeys {
 const fetchHealthScore = jest.fn()
 
 jest.mock('highcharts-react-official', () => () => <></>)
+
+jest.mock('@modules/85-cv/MFEWrapper', () => ({
+  __esModule: true,
+  default: () => <div data-testid="mfewrapper" />
+}))
 
 jest.mock('services/cv', () => ({
   useGetMonitoredServiceScoresFromServiceAndEnvironment: jest.fn().mockImplementation(() => ({
@@ -348,5 +355,34 @@ describe('Unit tests for ServiceHealth', () => {
         })
       })
     })
+  })
+
+  test('should render serviceHealth from MFE', () => {
+    jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
+
+    const { getByTestId, getByText, rerender } = render(
+      <TestWrapper>
+        <ServiceHealthMFEWrapper
+          monitoredServiceIdentifier={'ms1'}
+          serviceIdentifier={'service1'}
+          environmentIdentifier={'env1'}
+        />
+      </TestWrapper>
+    )
+    expect(getByTestId('mfewrapper')).toBeInTheDocument()
+
+    jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(false)
+
+    rerender(
+      <TestWrapper>
+        <ServiceHealthMFEWrapper
+          monitoredServiceIdentifier={'ms1'}
+          serviceIdentifier={'service1'}
+          environmentIdentifier={'env1'}
+        />
+      </TestWrapper>
+    )
+
+    expect(getByText('cv.monitoredServices.serviceHealth.overallHealthScore')).toBeInTheDocument()
   })
 })

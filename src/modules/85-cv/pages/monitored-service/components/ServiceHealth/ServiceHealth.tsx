@@ -296,7 +296,6 @@ export default function ServiceHealth({
             </Card>
           </Container>
         </Layout.Horizontal>
-
         <MetricsAndLogs
           monitoredServiceIdentifier={monitoredServiceIdentifier}
           serviceIdentifier={serviceIdentifier}

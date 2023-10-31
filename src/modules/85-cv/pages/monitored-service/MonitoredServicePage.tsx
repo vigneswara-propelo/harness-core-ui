@@ -25,11 +25,12 @@ import MFEWrapper from '@modules/85-cv/MFEWrapper'
 import { ChildComponentNames } from '@modules/85-cv/interface/SRMCustomMicroFrontendProps.constants'
 import Configurations from './components/Configurations/Configurations'
 import { MonitoredServiceEnum } from './MonitoredServicePage.constants'
-import ServiceHealth from './components/ServiceHealth/ServiceHealth'
 import HealthScoreCard from './components/ServiceHealth/components/HealthScoreCard/HealthScoreCard'
 import CVSLOsListingPage from '../slos/CVSLOsListingPage'
 import { isProjectChangedOnMonitoredService } from './MonitoredServicePage.utils'
 import MonitoredServiceTabTitle from './CVMonitoredService/components/MonitoredServiceTabTitle'
+import { ServiceHealthMFEWrapper } from './components/ServiceHealth/ServiceHealthMFEWrapper'
+import MetricsAndLogs from './components/ServiceHealth/components/MetricsAndLogs/MetricsAndLogs'
 import css from './MonitoredServicePage.module.scss'
 
 const ServiceHealthAndConfiguration: React.FC = () => {
@@ -112,10 +113,11 @@ const ServiceHealthAndConfiguration: React.FC = () => {
         when: () => !monitoredService
       }}
     >
-      <ServiceHealth
+      <ServiceHealthMFEWrapper
         monitoredServiceIdentifier={monitoredService?.identifier ?? ''}
         serviceIdentifier={monitoredService?.serviceRef as string}
         environmentIdentifier={monitoredService?.environmentRef as string}
+        MetricsAndLogs={MetricsAndLogs}
       />
     </Page.Body>
   )
