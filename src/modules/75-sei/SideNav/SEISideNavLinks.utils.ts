@@ -9,16 +9,32 @@ import { module } from '../constants'
 export const getProjectLevelRedirectionProps = (
   history: History,
   accountId: string,
-  getString: UseStringsReturn['getString']
+  getString: UseStringsReturn['getString'],
+  hasAccountAccess?: boolean
 ): Partial<Record<Scope, ScopeSwitchProps>> => {
-  return {
-    [Scope.ACCOUNT]: {
-      link: {
-        icon: 'ccm-cloud-integration-settings',
-        label: getString('sei.goToIntegrations'),
-        info: getString('sei.integrationsInfo'),
-        onClick: () => {
-          history.push(routes.toSEIIntegrations({ accountId, module }))
+  if (!hasAccountAccess) {
+    return {
+      [Scope.ACCOUNT]: {
+        link: {
+          icon: 'nav-settings',
+          label: getString('common.viewSettings', { scope: Scope.ACCOUNT }),
+          info: getString('common.viewAndManageSettings', { scope: Scope.ACCOUNT }),
+          onClick: () => {
+            history.push(routes.toSettings({ accountId, module }))
+          }
+        }
+      }
+    }
+  } else {
+    return {
+      [Scope.ACCOUNT]: {
+        link: {
+          icon: 'ccm-cloud-integration-settings',
+          label: getString('sei.goToIntegrations'),
+          info: getString('sei.integrationsInfo'),
+          onClick: () => {
+            history.push(routes.toSEIIntegrations({ accountId, module }))
+          }
         }
       }
     }
