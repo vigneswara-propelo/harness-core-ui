@@ -54,7 +54,7 @@ const fetchHealthScore = jest.fn()
 
 jest.mock('highcharts-react-official', () => () => <></>)
 
-jest.mock('@modules/85-cv/MFEWrapper', () => ({
+jest.mock('@modules/85-cv/SRMApp', () => ({
   __esModule: true,
   default: () => <div data-testid="mfewrapper" />
 }))

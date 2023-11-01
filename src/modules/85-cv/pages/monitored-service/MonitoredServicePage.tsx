@@ -21,7 +21,7 @@ import DetailsHeaderTitle from '@cv/pages/monitored-service/views/DetailsHeaderT
 import DetailsToolbar from '@cv/pages/monitored-service/views/DetailsToolbar'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import MFEWrapper from '@modules/85-cv/MFEWrapper'
+import SRMApp from '@modules/85-cv/SRMApp'
 import { ChildComponentNames } from '@modules/85-cv/interface/SRMCustomMicroFrontendProps.constants'
 import Configurations from './components/Configurations/Configurations'
 import { MonitoredServiceEnum } from './MonitoredServicePage.constants'
@@ -30,7 +30,6 @@ import CVSLOsListingPage from '../slos/CVSLOsListingPage'
 import { isProjectChangedOnMonitoredService } from './MonitoredServicePage.utils'
 import MonitoredServiceTabTitle from './CVMonitoredService/components/MonitoredServiceTabTitle'
 import { ServiceHealthMFEWrapper } from './components/ServiceHealth/ServiceHealthMFEWrapper'
-import MetricsAndLogs from './components/ServiceHealth/components/MetricsAndLogs/MetricsAndLogs'
 import css from './MonitoredServicePage.module.scss'
 
 const ServiceHealthAndConfiguration: React.FC = () => {
@@ -117,7 +116,6 @@ const ServiceHealthAndConfiguration: React.FC = () => {
         monitoredServiceIdentifier={monitoredService?.identifier ?? ''}
         serviceIdentifier={monitoredService?.serviceRef as string}
         environmentIdentifier={monitoredService?.environmentRef as string}
-        MetricsAndLogs={MetricsAndLogs}
       />
     </Page.Body>
   )
@@ -130,7 +128,7 @@ const ServiceHealthAndConfiguration: React.FC = () => {
       }}
     >
       {isMFEEnabled ? (
-        <MFEWrapper
+        <SRMApp
           renderComponent={{ componentName: ChildComponentNames.SLOsListingPage, componentProps: { monitoredService } }}
         />
       ) : (

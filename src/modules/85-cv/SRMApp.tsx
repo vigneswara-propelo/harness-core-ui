@@ -35,8 +35,9 @@ import ChangesTable from './pages/monitored-service/components/ServiceHealth/com
 import ChangeTimeline from './components/ChangeTimeline/ChangeTimeline'
 import TimelineSlider from './components/ChangeTimeline/components/TimelineSlider/TimelineSlider'
 import AnomaliesCard from './pages/monitored-service/components/ServiceHealth/components/AnomaliesCard/AnomaliesCard'
+import MetricsAndLogs from './pages/monitored-service/components/ServiceHealth/components/MetricsAndLogs/MetricsAndLogs'
 
-const MFEWrapper = (props?: SRMCustomMicroFrontendProps | Record<string, unknown>): JSX.Element => {
+const SRMApp = (props?: SRMCustomMicroFrontendProps | Record<string, unknown>): JSX.Element => {
   // eslint-disable-next-line import/no-unresolved
   const SrmMicroFrontendPath = React.lazy(() => import('srmui/MicroFrontendApp'))
 
@@ -64,6 +65,7 @@ const MFEWrapper = (props?: SRMCustomMicroFrontendProps | Record<string, unknown
       customComponents={{
         Stepper,
         Ticker,
+        MetricsAndLogs,
         ChangeTimeline,
         TimelineSlider,
         AnomaliesCard,
@@ -83,4 +85,4 @@ const MFEWrapper = (props?: SRMCustomMicroFrontendProps | Record<string, unknown
   )
 }
 
-export default MFEWrapper
+export default SRMApp

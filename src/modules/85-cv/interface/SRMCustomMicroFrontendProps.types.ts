@@ -35,11 +35,13 @@ import AnomaliesCard from '@cv/pages/monitored-service/components/ServiceHealth/
 import { ChangesTableInterface } from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/ChangesTable.types'
 import { ChildComponentNames } from './SRMCustomMicroFrontendProps.constants'
 import { CVSLOsListingPageProps } from '../pages/slos/CVSLOsListingPage.types'
+import MetricsAndLogs from '../pages/monitored-service/components/ServiceHealth/components/MetricsAndLogs/MetricsAndLogs'
 
 export interface SRMCustomMicroFrontendProps {
   customComponents: {
     Ticker: typeof Ticker
     Stepper: typeof Stepper
+    MetricsAndLogs: typeof MetricsAndLogs
     ChangeTimeline: typeof ChangeTimeline
     TimelineSlider: typeof TimelineSlider
     AnomaliesCard: typeof AnomaliesCard

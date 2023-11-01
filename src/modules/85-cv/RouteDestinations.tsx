@@ -77,7 +77,7 @@ import {
 } from './components/MonitoredServiceListWidget/MonitoredServiceListWidget.constants'
 import CommonMonitoredServiceDetails from './components/MonitoredServiceListWidget/components/CommonMonitoredServiceDetails/CommonMonitoredServiceDetails'
 import MonitoredServiceListWidget from './components/MonitoredServiceListWidget/MonitoredServiceListWidget'
-import MFEWrapper from './MFEWrapper'
+import SRMApp from './SRMApp'
 
 // PubSubPipelineActions.subscribe(
 //   PipelineActions.RunPipeline,
@@ -626,7 +626,7 @@ export const SRMMFERoutes: React.FC = () => {
     <>
       {enableMicroFrontend ? (
         <RouteWithLayout exact path={[...mfePaths]} sidebarProps={CVSideNavProps}>
-          <MFEWrapper />
+          <SRMApp />
         </RouteWithLayout>
       ) : (
         <RouteWithLayout exact sidebarProps={CVSideNavProps} path={[...mfePaths]}>

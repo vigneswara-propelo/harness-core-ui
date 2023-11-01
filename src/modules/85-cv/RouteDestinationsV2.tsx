@@ -18,15 +18,7 @@ import { ModuleName } from 'framework/types/ModuleName'
 import routes from '@common/RouteDefinitionsV2'
 import { Scope } from 'framework/types/types'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
-import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { DateTimePicker } from '@common/components/DateTimePicker/DateTimePicker'
-import { NameIdDescriptionTags, TimeSeriesAreaChart } from '@common/components'
-import { Stepper } from '@common/components/Stepper/Stepper'
-import { Ticker } from '@common/components/Ticker/Ticker'
-import { useMutateAsGet, useQueryParams, useDeepCompareEffect } from '@common/hooks'
-import { useHarnessServicetModal } from '@common/modals/HarnessServiceModal/HarnessServiceModal'
-import { formatDatetoLocale, getReadableDateTime, ALL_TIME_ZONES } from '@common/utils/dateUtils'
-import ChildAppMounter from 'microfrontends/ChildAppMounter'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
 import NotFoundPage from '@modules/10-common/pages/404/NotFoundPage'
 import MonitoredServiceListWidget from './components/MonitoredServiceListWidget/MonitoredServiceListWidget'
@@ -44,26 +36,7 @@ import MonitoredServicePage from './pages/monitored-service/MonitoredServicePage
 import { MonitoredServiceProvider } from './pages/monitored-service/MonitoredServiceContext'
 import CVHomePage from './pages/home/CVHomePage'
 import { cvModuleParams } from './constants'
-import ChangeTimeline from './components/ChangeTimeline/ChangeTimeline'
-import TimelineSlider from './components/ChangeTimeline/components/TimelineSlider/TimelineSlider'
-import {
-  useGetHarnessServices,
-  useGetHarnessEnvironments,
-  HarnessServiceAsFormField,
-  HarnessEnvironmentAsFormField
-} from './components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironment'
-import { useLogContentHook } from './hooks/useLogContentHook/useLogContentHook'
-import { SRMCustomMicroFrontendProps } from './interface/SRMCustomMicroFrontendProps.types'
-import HealthSourceDrawerHeader from './pages/health-source/HealthSourceDrawer/component/HealthSourceDrawerHeader/HealthSourceDrawerHeader'
-import HealthSourceDrawerContent from './pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent'
-import { WrapperOrgAccountLevelServiceEnvField } from './pages/monitored-service/components/Configurations/components/Service/components/MonitoredServiceOverview/component/OrgAccountLevelServiceEnvField/OrgAccountLevelServiceEnvField'
-import {
-  updatedMonitoredServiceNameForEnv,
-  updateMonitoredServiceNameForService
-} from './pages/monitored-service/components/Configurations/components/Service/components/MonitoredServiceOverview/MonitoredServiceOverview.utils'
-import AnomaliesCard from './pages/monitored-service/components/ServiceHealth/components/AnomaliesCard/AnomaliesCard'
-import ChangesTable from './pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/ChangesTable'
-import SLOTargetNotifications from './pages/slos/common/SLOTargetAndBudgetPolicy/components/SLOTargetNotificationsContainer/SLOTargetNotifications'
+import SRMApp from './SRMApp'
 
 const CVRedirect: React.FC = () => {
   const { scope, params } = useGetSelectedScope()
@@ -120,9 +93,6 @@ const RedirectToCVProject = (): React.ReactElement => {
     return <Redirect to={routes.toCVHome(params)} />
   }
 }
-
-// eslint-disable-next-line import/no-unresolved
-const SrmMicroFrontendPath = React.lazy(() => import('srmui/MicroFrontendApp'))
 
 const CVRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
   const { SRM_MICRO_FRONTEND: enableMicroFrontend } = useFeatureFlags()
@@ -292,44 +262,7 @@ const CVRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
       </RouteWithContext>
       {enableMicroFrontend ? (
         <RouteWithContext exact path={[...mfePaths]}>
-          <ChildAppMounter<SRMCustomMicroFrontendProps>
-            ChildApp={SrmMicroFrontendPath}
-            customHooks={{
-              useMutateAsGet,
-              useQueryParams,
-              useFeatureFlag,
-              useFeatureFlags,
-              useLogContentHook,
-              useDeepCompareEffect,
-              useGetHarnessServices,
-              useGetHarnessEnvironments,
-              useHarnessServicetModal
-            }}
-            customFunctions={{
-              formatDatetoLocale,
-              getReadableDateTime,
-              updatedMonitoredServiceNameForEnv,
-              updateMonitoredServiceNameForService
-            }}
-            customConstants={{ ALL_TIME_ZONES }}
-            customComponents={{
-              Stepper,
-              Ticker,
-              ChangeTimeline,
-              TimelineSlider,
-              AnomaliesCard,
-              ChangesTable,
-              DateTimePicker,
-              NameIdDescriptionTags,
-              SLOTargetNotifications,
-              HarnessServiceAsFormField,
-              HarnessEnvironmentAsFormField,
-              HealthSourceDrawerHeader,
-              HealthSourceDrawerContent,
-              TimeSeriesAreaChart,
-              OrgAccountLevelServiceEnvField: WrapperOrgAccountLevelServiceEnvField
-            }}
-          />
+          <SRMApp />
         </RouteWithContext>
       ) : (
         <RouteWithContext exact path={[...mfePaths]}>
