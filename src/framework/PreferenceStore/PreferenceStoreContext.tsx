@@ -73,7 +73,7 @@ const checkAccess = (
   accountId: string,
   entityToPersist: string
 ): void => {
-  if (!contextArr || /* istanbul ignore next */ contextArr?.some(val => val === undefined)) {
+  if (!contextArr || contextArr?.some(val => val === undefined)) {
     const error = new Error(`PreferenceStore: Access to "${scope}" scope is not available in the current context.`)
     if (__DEV__) {
       console.error(error) // eslint-disable-line no-console
