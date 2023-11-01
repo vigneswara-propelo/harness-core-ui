@@ -255,23 +255,23 @@ describe('Test HostedBuildsUtils methods', () => {
       orgIdentifier: 'orgId',
       projectIdentifier: 'projectId',
       pipelineName: 'Build Dot Net',
-      repositoryName: 'test-repo',
+      repositoryName: 'test-repo.name',
       configuredGitConnector: { identifier: 'testconnector', name: 'test connector', type: 'Github', spec: {} }
     }
     let createdPipelinePayload = getPayloadForPipelineCreation(args)
     const { name, identifier } = createdPipelinePayload?.pipeline || {}
     expect(name).toBe('Build Dot Net')
-    expect(identifier).toBe('buildText_test_repo_1585699200000')
+    expect(identifier).toBe('buildText_test_repo_name_1585699200000')
     expect(get(createdPipelinePayload, 'pipeline.stages.0.stage.spec.runtime')).not.toBeUndefined()
     expect(get(createdPipelinePayload, 'pipeline.stages.0.stage.spec.platform')).not.toBeUndefined()
 
     createdPipelinePayload = getPayloadForPipelineCreation({ ...args })
     expect(createdPipelinePayload.pipeline?.name).toBe('Build Dot Net')
-    expect(createdPipelinePayload.pipeline?.identifier).toBe('buildText_test_repo_1585699200000')
+    expect(createdPipelinePayload.pipeline?.identifier).toBe('buildText_test_repo_name_1585699200000')
 
     createdPipelinePayload = getPayloadForPipelineCreation({ ...args })
     expect(createdPipelinePayload.pipeline?.name).toBe('Build Dot Net')
-    expect(createdPipelinePayload.pipeline?.identifier).toBe('buildText_test_repo_1585699200000')
+    expect(createdPipelinePayload.pipeline?.identifier).toBe('buildText_test_repo_name_1585699200000')
 
     const k8sArgs = {
       ...args,
@@ -293,7 +293,7 @@ describe('Test HostedBuildsUtils methods', () => {
 
     createdPipelinePayload = getPayloadForPipelineCreation({ ...k8sArgs })
     expect(createdPipelinePayload.pipeline?.name).toBe('Build Dot Net')
-    expect(createdPipelinePayload.pipeline?.identifier).toBe('buildText_test_repo_1585699200000')
+    expect(createdPipelinePayload.pipeline?.identifier).toBe('buildText_test_repo_name_1585699200000')
     expect(JSON.stringify(get(createdPipelinePayload, 'pipeline.stages.0.stage.spec.infrastructure'))).toBe(
       JSON.stringify({
         type: 'KubernetesHosted',
