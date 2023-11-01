@@ -91,6 +91,8 @@ import { AmazonS3Store } from '../../ConfigFileStore/AmazonS3Store/AmazonS3Store
 import { AmazonS3StoreDataType, formatAmazonS3Data } from '../../ConfigFileStore/AmazonS3Store/AmazonS3StoreHelper'
 import { formatArtifactoryData } from '../../VarFile/helper'
 import { ArtifactoryForm } from '../../VarFile/ArtifactoryForm'
+import TerraformSelectArn from '../TerraformSelectArn/TerraformSelectArn'
+
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../TerraformStep.module.scss'
 
@@ -704,31 +706,41 @@ export default function TerraformEditView(
                       details={
                         <div className={css.optionalConfigDetails}>
                           {!enableCloudCli && values?.spec?.configuration?.type === ConfigurationTypes.Inline && (
-                            <div className={cx(stepCss.formGroup, stepCss.md)}>
-                              <FormInput.MultiTextInput
-                                name="spec.configuration.spec.workspace"
-                                placeholder={getString('pipeline.terraformStep.workspace')}
-                                label={getString('pipelineSteps.workspace')}
-                                multiTextInputProps={{ expressions, allowableTypes }}
-                                isOptional={true}
-                                disabled={readonly}
-                              />
-                              {getMultiTypeFromValue(formik.values.spec?.configuration?.spec?.workspace) ===
-                                MultiTypeInputType.RUNTIME && (
-                                <ConfigureOptions
-                                  value={formik.values?.spec?.configuration?.spec?.workspace as string}
-                                  type="String"
-                                  variableName="configuration.spec.workspace"
-                                  showRequiredField={false}
-                                  showDefaultField={false}
-                                  onChange={value => {
-                                    formik.setFieldValue('spec.configuration.spec.workspace', value)
-                                  }}
-                                  isReadonly={readonly}
-                                  allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
+                            <Layout.Vertical>
+                              <div className={cx(stepCss.formGroup, stepCss.md)}>
+                                <FormInput.MultiTextInput
+                                  name="spec.configuration.spec.workspace"
+                                  placeholder={getString('pipeline.terraformStep.workspace')}
+                                  label={getString('pipelineSteps.workspace')}
+                                  multiTextInputProps={{ expressions, allowableTypes }}
+                                  isOptional={true}
+                                  disabled={readonly}
                                 />
-                              )}
-                            </div>
+                                {getMultiTypeFromValue(formik.values.spec?.configuration?.spec?.workspace) ===
+                                  MultiTypeInputType.RUNTIME && (
+                                  <ConfigureOptions
+                                    value={formik.values?.spec?.configuration?.spec?.workspace as string}
+                                    type="String"
+                                    variableName="configuration.spec.workspace"
+                                    showRequiredField={false}
+                                    showDefaultField={false}
+                                    onChange={value => {
+                                      formik.setFieldValue('spec.configuration.spec.workspace', value)
+                                    }}
+                                    isReadonly={readonly}
+                                    allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
+                                  />
+                                )}
+                              </div>
+                              <TerraformSelectArn
+                                pathName={'spec.configuration.spec'}
+                                allowableTypes={allowableTypes}
+                                fieldPath={`spec.${fieldPath}.spec.providerCredential.spec`}
+                                renderConnector
+                                renderRegion
+                                renderRole
+                              />
+                            </Layout.Vertical>
                           )}
                           <div className={cx(css.divider, css.addMarginBottom)} />
                           <VarFileList<TerraformData, TerraformVarFileWrapper>

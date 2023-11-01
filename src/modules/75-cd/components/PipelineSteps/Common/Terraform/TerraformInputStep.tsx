@@ -40,12 +40,12 @@ import { FormMultiTypeCheckboxField } from '@common/components'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useQueryParams } from '@common/hooks'
 import { GitQueryParams } from '@common/interfaces/RouteInterfaces'
-
 import { TerraformData, TerraformProps, TerraformStoreTypes } from './TerraformInterfaces'
 import ConfigInputs from './InputSteps/ConfigSection'
 import TFRemoteSection from './InputSteps/TFRemoteSection'
 import { TFMonaco } from './Editview/TFMonacoEditor'
 import InlineVarFileInputSet from '../VarFile/InlineVarFileInputSet'
+import TerraformSelectArn from './TerraformSelectArn/TerraformSelectArn'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export default function TerraformInputStep<T extends TerraformData = TerraformData>(
@@ -72,6 +72,17 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
     accountId: string
   }>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+
+  const checkArnInput = React.useMemo((): boolean => {
+    const existRuntimeArnField = ['connectorRef', 'region', 'roleArn'].some(field => {
+      return (
+        getMultiTypeFromValue(
+          get(inputSetData?.template?.spec, `${fieldPath}.spec.providerCredential.spec.${field}`)
+        ) === MultiTypeInputType.RUNTIME
+      )
+    })
+    return existRuntimeArnField
+  }, [inputSetData, fieldPath])
 
   return (
     <FormikForm className={stepCss.inputWidth}>
@@ -111,6 +122,7 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
           className={cx(stepCss.formGroup, stepCss.sm)}
         />
       )}
+
       <ConfigInputs {...props} onUpdate={onUpdateRef} onChange={onChangeRef} isConfig />
       {inputSetDataSpec?.spec?.varFiles?.length && (
         <Label style={{ color: Color.GREY_900, paddingBottom: 'var(--spacing-medium)' }}>
@@ -158,6 +170,29 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
           }}
           template={inputSetData?.template}
           fieldPath={'spec.configuration.spec.workspace'}
+        />
+      )}
+      {checkArnInput && (
+        <TerraformSelectArn
+          pathName={`${path}.spec.${fieldPath}.spec`}
+          allowableTypes={allowableTypes}
+          allValues={props?.allValues as TerraformData}
+          fieldPath={`spec.${fieldPath}.spec.providerCredential.spec`}
+          renderConnector={
+            getMultiTypeFromValue(
+              get(inputSetData?.template?.spec, `${fieldPath}.spec.providerCredential.spec.connectorRef`)
+            ) === MultiTypeInputType.RUNTIME
+          }
+          renderRegion={
+            getMultiTypeFromValue(
+              get(inputSetData?.template?.spec, `${fieldPath}.spec.providerCredential.spec.region`)
+            ) === MultiTypeInputType.RUNTIME
+          }
+          renderRole={
+            getMultiTypeFromValue(
+              get(inputSetData?.template?.spec, `${fieldPath}.spec.providerCredential.spec.roleArn`)
+            ) === MultiTypeInputType.RUNTIME
+          }
         />
       )}
 

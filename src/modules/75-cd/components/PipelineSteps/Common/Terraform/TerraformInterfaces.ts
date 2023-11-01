@@ -33,6 +33,7 @@ import type {
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { UseStringsReturn } from 'framework/strings'
 import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
+import { Connectors } from '@modules/27-platform/connectors/constants'
 
 export const TerraformStoreTypes = {
   Inline: 'Inline',
@@ -255,6 +256,7 @@ export interface TFDataSpec {
   varFiles?: TerraformVarFileWrapper[]
   exportTerraformPlanJson?: boolean
   exportTerraformHumanReadablePlan?: boolean
+  providerCredential?: TerraformProvider
 }
 
 export interface TFFormData extends StepElementConfig {
@@ -289,6 +291,26 @@ export interface TerraformFormData extends StepElementConfig {
   spec?: TerraformPlanStepInfo
 }
 
+interface ConnectorRecord {
+  identifier: string
+}
+export interface ConnectorValue {
+  scope?: string
+  record?: ConnectorRecord
+}
+interface TerraformSelectArnSpec {
+  connectorRef?: string
+  region?: string
+  roleArn?: string
+}
+interface TerraformProvider {
+  type: string
+  spec: TerraformSelectArnSpec
+}
+export interface TerraformProviderCredential {
+  providerCredential: TerraformProvider
+}
+
 export interface TfVar {
   type?: string
   connectorRef?: {
@@ -308,6 +330,7 @@ export const onSubmitTerraformData = (values: any): TerraformData => {
   const envVars = get(values.spec, `${fieldPath}.spec.environmentVariables`)
   const targets = get(values.spec, `${fieldPath}.spec.targets`) as MultiTypeInputType
   const cmdFlags = get(values.spec, `${fieldPath}.commandFlags`)
+  const providerCredentialValue = get(values.spec, `${fieldPath}.spec.providerCredential`)
   let skipStateStorage = get(values.spec, `${fieldPath}.skipStateStorage`)
 
   const secretManagerRef = values?.spec?.cloudCliConfiguration
@@ -320,6 +343,10 @@ export const onSubmitTerraformData = (values: any): TerraformData => {
         }
       }
     : {}
+  const providerCredentialObj: TerraformProvider | undefined = {
+    type: Connectors.AWS,
+    spec: {}
+  }
   const processCmdFlags = (): TerraformCliOptionFlag[] | undefined => {
     if (cmdFlags?.length && cmdFlags[0].commandType) {
       return cmdFlags.map((commandFlag: TerraformCliOptionFlag) => ({
@@ -360,7 +387,13 @@ export const onSubmitTerraformData = (values: any): TerraformData => {
 
     const configObject: any = {
       workspace: values?.spec?.configuration?.spec?.workspace,
-      configFiles: {} as any
+      configFiles: {} as any,
+      providerCredential: providerCredentialValue ? providerCredentialObj : undefined
+    }
+    if (providerCredentialValue) {
+      providerCredentialObj.spec['connectorRef'] = providerCredentialValue.spec.connectorRef
+      providerCredentialObj.spec['region'] = providerCredentialValue.spec.region
+      providerCredentialObj.spec['roleArn'] = providerCredentialValue.spec.roleArn
     }
     if (get(values.spec, `${fieldPath}.spec.backendConfig.spec.content`)) {
       configObject['backendConfig'] = {

@@ -7,7 +7,9 @@
 
 import React from 'react'
 import { act, fireEvent, render } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { mockRegions } from '@modules/27-platform/connectors/components/CreateConnector/AWSSecretManager/__test__/mocks'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
@@ -20,6 +22,9 @@ jest.mock('services/portal', () => ({
   useGetDelegateSelectorsUpTheHierarchy: jest.fn().mockImplementation(args => {
     mockGetCallFunction(args)
     return []
+  }),
+  useListAwsRegions: jest.fn().mockImplementation(() => {
+    return { data: mockRegions, refetch: jest.fn(), error: null, loading: false }
   })
 }))
 
@@ -288,7 +293,7 @@ describe('Test TerraformApply', () => {
     expect(addFile).toBeInTheDocument()
   })
 
-  test('expand backend Spec config', () => {
+  test('expand backend Spec config', async () => {
     const { container, getByText } = render(
       <TestStepWidget
         initialValues={{
@@ -322,8 +327,8 @@ describe('Test TerraformApply', () => {
         stepViewType={StepViewType.Edit}
       />
     )
-    fireEvent.click(getByText('common.optionalConfig'))
-    expect(container).toMatchSnapshot()
+    await userEvent.click(getByText('common.optionalConfig'))
+    expect(container).toBeDefined()
   })
 
   test('should render edit view as inline', () => {

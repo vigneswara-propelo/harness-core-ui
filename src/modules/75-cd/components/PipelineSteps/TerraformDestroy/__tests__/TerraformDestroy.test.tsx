@@ -11,6 +11,7 @@ import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
+import { mockRegions } from '@modules/27-platform/connectors/components/CreateConnector/AWSSecretManager/__test__/mocks'
 import { TerraformDestroy } from '../TerraformDestroy'
 
 const mockGetCallFunction = jest.fn()
@@ -19,6 +20,9 @@ jest.mock('services/portal', () => ({
   useGetDelegateSelectorsUpTheHierarchy: jest.fn().mockImplementation(args => {
     mockGetCallFunction(args)
     return []
+  }),
+  useListAwsRegions: jest.fn().mockImplementation(() => {
+    return { data: mockRegions, refetch: jest.fn(), error: null, loading: false }
   })
 }))
 
