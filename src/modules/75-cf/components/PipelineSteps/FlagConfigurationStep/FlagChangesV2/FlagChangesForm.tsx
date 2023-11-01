@@ -29,13 +29,16 @@ import DefaultOffRule, { hasDefaultOffRuleRuntime } from './subSections/DefaultO
 import ServeVariationToTargets, {
   hasServeVariationToTargetsRuntime
 } from './subSections/ServeVariationToTargets/ServeVariationToTargets'
+import ServeVariationToTargetGroups, {
+  hasServeVariationToTargetGroupsRuntime
+} from './subSections/ServeVariationToTargetGroups/ServeVariationToTargetGroups'
 
 export const allSubSections: SubSectionComponent[] = [
   SetFlagSwitch,
   DefaultOnRule,
   DefaultOffRule,
-  ServeVariationToTargets
-  // ServeVariationToTargetGroup,
+  ServeVariationToTargets,
+  ServeVariationToTargetGroups
   // ServePercentageRollout
 ]
 
@@ -72,6 +75,10 @@ const FlagChangesForm: FC<FlagChangesFormProps> = ({ prefixPath, initialInstruct
           return [...components, ServeVariationToTargets]
         }
 
+        if (hasServeVariationToTargetGroupsRuntime(instruction)) {
+          return [...components, ServeVariationToTargetGroups]
+        }
+
         return components
       }, [])
     }
@@ -86,16 +93,10 @@ const FlagChangesForm: FC<FlagChangesFormProps> = ({ prefixPath, initialInstruct
               return DefaultOffRule
             case CFPipelineInstructionType.ADD_TARGETS_TO_VARIATION_TARGET_MAP:
               return ServeVariationToTargets
-            // case CFPipelineInstructionType.SET_DEFAULT_OFF_VARIATION:
-            // case CFPipelineInstructionType.SET_DEFAULT_VARIATIONS:
-            //   return DefaultRules
+            case CFPipelineInstructionType.ADD_SEGMENT_TO_VARIATION_TARGET_MAP:
+              return ServeVariationToTargetGroups
             // case CFPipelineInstructionType.ADD_RULE:
             //   return ServePercentageRollout
-            // case CFPipelineInstructionType.ADD_TARGETS_TO_VARIATION_TARGET_MAP:
-            //   return ServeVariationToIndividualTarget
-            // case CFPipelineInstructionType.ADD_SEGMENT_TO_VARIATION_TARGET_MAP:
-            //   return ServeVariationToTargetGroup
-            // case CFPipelineInstructionType.SET_FEATURE_FLAG_STATE:
             default:
               return SetFlagSwitch
           }

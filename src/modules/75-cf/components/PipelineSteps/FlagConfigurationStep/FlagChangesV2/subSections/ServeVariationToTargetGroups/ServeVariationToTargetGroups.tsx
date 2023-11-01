@@ -10,7 +10,7 @@ import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
-import { useGetAllTargets } from 'services/cf'
+import { useGetAllSegments } from 'services/cf'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
   CFPipelineInstructionType,
@@ -20,36 +20,36 @@ import type { SubSectionComponent } from '../../subSection.types'
 import { useFlagChanges } from '../../../FlagChangesContextProvider'
 import ServeVariationToItems from '../ServeVariationToItems/ServeVariationToItems'
 
-export const serveVariationToTargetsSchema = (getString: UseStringsReturn['getString']): Yup.Schema<unknown> =>
+export const serveVariationToTargetGroupsSchema = (getString: UseStringsReturn['getString']): Yup.Schema<unknown> =>
   Yup.object({
     spec: Yup.object({
       variation: Yup.string().required(
-        getString('cf.featureFlags.flagPipeline.validation.serveVariationToTargets.variation')
+        getString('cf.featureFlags.flagPipeline.validation.serveVariationToTargetGroups.variation')
       ),
-      targets: Yup.lazy(val =>
+      segments: Yup.lazy(val =>
         (Array.isArray(val) ? Yup.array().of(Yup.string()) : Yup.string()).required(
-          getString('cf.featureFlags.flagPipeline.validation.serveVariationToTargets.targets')
+          getString('cf.featureFlags.flagPipeline.validation.serveVariationToTargetGroups.segments')
         )
       )
     })
   })
 
 const hasVariationRuntime = (instruction: FeatureFlagConfigurationInstruction): boolean =>
-  instruction.type === CFPipelineInstructionType.ADD_TARGETS_TO_VARIATION_TARGET_MAP &&
+  instruction.type === CFPipelineInstructionType.ADD_SEGMENT_TO_VARIATION_TARGET_MAP &&
   instruction.spec.variation === RUNTIME_INPUT_VALUE
 
-const hasTargetsRuntime = (instruction: FeatureFlagConfigurationInstruction): boolean =>
-  instruction.type === CFPipelineInstructionType.ADD_TARGETS_TO_VARIATION_TARGET_MAP &&
-  instruction.spec.targets === RUNTIME_INPUT_VALUE
+const hasTargetGroupsRuntime = (instruction: FeatureFlagConfigurationInstruction): boolean =>
+  instruction.type === CFPipelineInstructionType.ADD_SEGMENT_TO_VARIATION_TARGET_MAP &&
+  instruction.spec.segments === RUNTIME_INPUT_VALUE
 
-export const hasServeVariationToTargetsRuntime = (instruction: FeatureFlagConfigurationInstruction): boolean =>
-  hasVariationRuntime(instruction) || hasTargetsRuntime(instruction)
+export const hasServeVariationToTargetGroupsRuntime = (instruction: FeatureFlagConfigurationInstruction): boolean =>
+  hasVariationRuntime(instruction) || hasTargetGroupsRuntime(instruction)
 
-const ServeVariationToTargets: SubSectionComponent = ({ prefixPath, ...props }) => {
+const ServeVariationToTargetGroups: SubSectionComponent = ({ prefixPath, ...props }) => {
   const { mode, environmentIdentifier, initialInstructions } = useFlagChanges()
   const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
 
-  const { data: targetsData, refetch: fetchTargets } = useGetAllTargets({
+  const { data: targetGroupsData, refetch: fetchTargetGroups } = useGetAllSegments({
     queryParams: { accountIdentifier, orgIdentifier, projectIdentifier, environmentIdentifier },
     lazy: true,
     debounce: 200
@@ -57,7 +57,7 @@ const ServeVariationToTargets: SubSectionComponent = ({ prefixPath, ...props }) 
 
   const fetchItems = useCallback(() => {
     if (accountIdentifier && orgIdentifier && projectIdentifier && environmentIdentifier) {
-      fetchTargets({
+      fetchTargetGroups({
         queryParams: {
           accountIdentifier,
           orgIdentifier,
@@ -66,20 +66,20 @@ const ServeVariationToTargets: SubSectionComponent = ({ prefixPath, ...props }) 
         }
       })
     }
-  }, [accountIdentifier, environmentIdentifier, fetchTargets, orgIdentifier, projectIdentifier])
+  }, [accountIdentifier, environmentIdentifier, fetchTargetGroups, orgIdentifier, projectIdentifier])
 
-  const targets = useMemo<SelectOption[]>(
-    () => (targetsData?.targets || []).map(({ name, identifier }) => ({ label: name, value: identifier })),
-    [targetsData]
+  const targetGroups = useMemo<SelectOption[]>(
+    () => (targetGroupsData?.segments || []).map(({ name, identifier }) => ({ label: name, value: identifier })),
+    [targetGroupsData]
   )
 
   const onQueryChange = useCallback(
     (query: string) => {
-      fetchTargets({
-        queryParams: { accountIdentifier, orgIdentifier, projectIdentifier, environmentIdentifier, targetName: query }
+      fetchTargetGroups({
+        queryParams: { accountIdentifier, orgIdentifier, projectIdentifier, environmentIdentifier, name: query }
       })
     },
-    [accountIdentifier, environmentIdentifier, fetchTargets, orgIdentifier, projectIdentifier]
+    [accountIdentifier, environmentIdentifier, fetchTargetGroups, orgIdentifier, projectIdentifier]
   )
 
   const displayVariationField = useMemo<boolean>(
@@ -89,25 +89,25 @@ const ServeVariationToTargets: SubSectionComponent = ({ prefixPath, ...props }) 
     [initialInstructions, mode]
   )
 
-  const displayTargetsField = useMemo<boolean>(
+  const displayTargetGroupsField = useMemo<boolean>(
     () =>
       mode !== StepViewType.DeploymentForm ||
-      !!initialInstructions?.some(instruction => hasTargetsRuntime(instruction)),
+      !!initialInstructions?.some(instruction => hasTargetGroupsRuntime(instruction)),
     [initialInstructions, mode]
   )
 
   return (
     <ServeVariationToItems
       prefixPath={prefixPath}
-      items={targets}
+      items={targetGroups}
       fetchItems={fetchItems}
-      displayItemsField={displayTargetsField}
+      displayItemsField={displayTargetGroupsField}
       displayVariationField={displayVariationField}
       onQueryChange={onQueryChange}
-      instructionType={CFPipelineInstructionType.ADD_TARGETS_TO_VARIATION_TARGET_MAP}
+      instructionType={CFPipelineInstructionType.ADD_SEGMENT_TO_VARIATION_TARGET_MAP}
       {...props}
     />
   )
 }
 
-export default ServeVariationToTargets
+export default ServeVariationToTargetGroups

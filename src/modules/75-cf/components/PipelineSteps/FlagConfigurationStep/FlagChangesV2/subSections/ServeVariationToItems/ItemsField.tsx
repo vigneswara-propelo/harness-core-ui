@@ -6,12 +6,10 @@
  */
 
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { useGetAllTargets } from 'services/cf'
 import { isMultiTypeFixed, isMultiTypeRuntime } from '@common/utils/utils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useFlagChanges } from '../../../FlagChangesContextProvider'
@@ -19,19 +17,23 @@ import { withPrefix } from '../../utils/withPrefix'
 import { getAllowableTypes } from '../../utils/getAllowableTypes'
 import ItemSelector from './ItemSelector'
 
-export interface TargetsFieldProps {
+export interface ItemsFieldProps {
   prefixPath: string
+  itemType: 'targets' | 'segments'
+  items: SelectOption[]
+  onQueryChange: (query: string) => void
+  fetchItems: () => void
 }
 
-const TargetsField: FC<TargetsFieldProps> = ({ prefixPath }) => {
+const ItemsField: FC<ItemsFieldProps> = ({ prefixPath, itemType, items, onQueryChange, fetchItems }) => {
   const { getString } = useStrings()
   const { setFieldValue, values } = useFormikContext()
-  const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const { environmentIdentifier, mode, readonly } = useFlagChanges()
 
   const [inputType, setInputType] = useState<MultiTypeInputType>(() =>
-    getMultiTypeFromValue(get(values, withPrefix(prefixPath, 'spec.targets')))
+    getMultiTypeFromValue(get(values, withPrefix(prefixPath, `spec.${itemType}`)))
   )
+
   const allowableTypes = useMemo<MultiTypeInputType[]>(
     () => getAllowableTypes(mode, { environmentIdentifier }),
     [mode, environmentIdentifier]
@@ -42,61 +44,28 @@ const TargetsField: FC<TargetsFieldProps> = ({ prefixPath }) => {
       setInputType(allowableTypes[0])
 
       setFieldValue(
-        withPrefix(prefixPath, 'spec.targets'),
+        withPrefix(prefixPath, `spec.${itemType}`),
         isMultiTypeRuntime(allowableTypes[0]) ? RUNTIME_INPUT_VALUE : ''
       )
     }
-  }, [allowableTypes, inputType, prefixPath, setFieldValue])
+  }, [allowableTypes, inputType, itemType, prefixPath, setFieldValue])
 
   const onTypeChange = useCallback(
     newType => {
       setFieldValue(
-        withPrefix(prefixPath, 'spec.targets'),
+        withPrefix(prefixPath, `spec.${itemType}`),
         isMultiTypeFixed(newType) ? [] : isMultiTypeRuntime(newType) ? RUNTIME_INPUT_VALUE : ''
       )
       setInputType(newType)
     },
-    [prefixPath, setFieldValue]
+    [itemType, prefixPath, setFieldValue]
   )
-
-  const { data: targetsData, refetch: fetchTargets } = useGetAllTargets({
-    queryParams: { accountIdentifier, orgIdentifier, projectIdentifier, environmentIdentifier },
-    lazy: true,
-    debounce: 200
-  })
 
   useEffect(() => {
-    if (
-      isMultiTypeFixed(inputType) &&
-      accountIdentifier &&
-      orgIdentifier &&
-      projectIdentifier &&
-      environmentIdentifier
-    ) {
-      fetchTargets({
-        queryParams: {
-          accountIdentifier,
-          orgIdentifier,
-          projectIdentifier,
-          environmentIdentifier
-        }
-      })
+    if (isMultiTypeFixed(inputType)) {
+      fetchItems()
     }
-  }, [accountIdentifier, environmentIdentifier, fetchTargets, inputType, orgIdentifier, projectIdentifier])
-
-  const targets = useMemo<SelectOption[]>(
-    () => (targetsData?.targets || []).map(({ name, identifier }) => ({ label: name, value: identifier })),
-    [targetsData]
-  )
-
-  const onQueryChange = useCallback(
-    (query: string) => {
-      fetchTargets({
-        queryParams: { accountIdentifier, orgIdentifier, projectIdentifier, environmentIdentifier, targetName: query }
-      })
-    },
-    [accountIdentifier, environmentIdentifier, fetchTargets, orgIdentifier, projectIdentifier]
-  )
+  }, [fetchItems, inputType])
 
   if (mode === StepViewType.DeploymentForm && !environmentIdentifier) {
     return <Text>{getString('cf.pipeline.flagConfiguration.pleaseSelectEnvironment')}</Text>
@@ -104,10 +73,18 @@ const TargetsField: FC<TargetsFieldProps> = ({ prefixPath }) => {
 
   return (
     <ItemSelector
-      name={withPrefix(prefixPath, 'spec.targets')}
-      label={getString('cf.pipeline.flagConfiguration.toTargets')}
-      placeholder={getString('cf.pipeline.flagConfiguration.selectTargets')}
-      items={targets}
+      name={withPrefix(prefixPath, `spec.${itemType}`)}
+      label={
+        itemType === 'targets'
+          ? getString('cf.pipeline.flagConfiguration.toTargets')
+          : getString('cf.pipeline.flagConfiguration.toTargetGroups')
+      }
+      placeholder={
+        itemType === 'targets'
+          ? getString('cf.pipeline.flagConfiguration.selectTargets')
+          : getString('cf.pipeline.flagConfiguration.selectTargetGroups')
+      }
+      items={items}
       disabled={readonly}
       type={inputType}
       allowableTypes={allowableTypes}
@@ -117,4 +94,4 @@ const TargetsField: FC<TargetsFieldProps> = ({ prefixPath }) => {
   )
 }
 
-export default TargetsField
+export default ItemsField

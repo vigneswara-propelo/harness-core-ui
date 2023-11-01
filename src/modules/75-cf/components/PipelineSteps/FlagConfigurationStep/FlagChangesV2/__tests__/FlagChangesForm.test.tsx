@@ -12,8 +12,7 @@ import userEvent from '@testing-library/user-event'
 import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { FlagConfigurationStepFormDataValues } from '../../types'
-import { FeatureFlagConfigurationInstruction } from '../../types'
-import { mockSetFlagSwitchFieldValues } from '../subSections/__tests__/utils.mocks'
+import { CFPipelineInstructionType } from '../../types'
 import FlagChangesForm, { allSubSections, FlagChangesFormProps } from '../FlagChangesForm'
 import SubSection, { SubSectionProps } from '../SubSection'
 
@@ -96,10 +95,22 @@ describe('FlagChangesForm', () => {
   test('it should render with subsections when initialInstructions includes instructions', async () => {
     renderComponent({
       initialInstructions: [
-        mockSetFlagSwitchFieldValues().spec?.instructions?.[0]
-      ] as FeatureFlagConfigurationInstruction[]
+        { identifier: 'test1', type: CFPipelineInstructionType.SET_FEATURE_FLAG_STATE, spec: { state: 'on' } },
+        { identifier: 'test2', type: CFPipelineInstructionType.SET_DEFAULT_ON_VARIATION, spec: { variation: 'var1' } },
+        { identifier: 'test3', type: CFPipelineInstructionType.SET_DEFAULT_OFF_VARIATION, spec: { variation: 'var2' } },
+        {
+          identifier: 'test4',
+          type: CFPipelineInstructionType.ADD_TARGETS_TO_VARIATION_TARGET_MAP,
+          spec: { variation: 'var2', targets: ['t1', 't2'] }
+        },
+        {
+          identifier: 'test4',
+          type: CFPipelineInstructionType.ADD_SEGMENT_TO_VARIATION_TARGET_MAP,
+          spec: { variation: 'var2', segments: ['tg1', 'tg2'] }
+        }
+      ]
     })
 
-    expect(screen.getAllByTestId('flag-changes-subsection')).toHaveLength(1)
+    expect(screen.getAllByTestId('flag-changes-subsection')).toHaveLength(5)
   })
 })

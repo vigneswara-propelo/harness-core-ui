@@ -21,6 +21,7 @@ shared:
   readDocumentation: Read the docs
   variationRequired: Variation is required
   serveVariationToTargets: Serve variation to targets
+  serveVariationToTargetGroups: Serve variation to target groups
 messages:
   flagCreated: Flag created.
   flagUpdated: Flag updated.
@@ -268,6 +269,9 @@ featureFlags:
       serveVariationToTargets:
         variation: '{{ $.cf.shared.variationRequired }}'
         targets: Targets are required
+      serveVariationToTargetGroups:
+        variation: '{{ $.cf.shared.variationRequired }}'
+        segments: Target groups are required
       serveVariationToIndividualTarget:
         variationTargets: Targets/variation is required
       serveVariationToTargetGroup:
@@ -491,6 +495,7 @@ pipeline:
     selectEnvironment: '{{ $.cf.shared.selectEnvironment }}'
     selectFlag: Select Flag
     selectTargets: Select targets
+    selectTargetGroups: Select target groups
     switchTo: Set Flag Switch To
     configureMore: + Configure More
     serve: Serve
@@ -499,7 +504,7 @@ pipeline:
     flagChangesRuntime: 'At runtime, you may choose the following flag configuration changes:'
     flagChangesRuntimeSetDefaultRules: Set default rules
     flagChangesRuntimeServeVariationToTargets: '{{ $.cf.shared.serveVariationToTargets }}'
-    flagChangesRuntimeServeVariationToTargetGroups: Serve variation to target groups
+    flagChangesRuntimeServeVariationToTargetGroups: '{{ $.cf.shared.serveVariationToTargetGroups }}'
     flagChangesRuntimeServePercentageRollout: Serve a percentage rollout
     setFlagSwitch: Set flag switch
     setDefaultOnRule: Set default ON rule
@@ -507,6 +512,7 @@ pipeline:
     serveVariationToTargets: '{{ $.cf.shared.serveVariationToTargets }}'
     serveVariationToIndividualTarget: Serve Variation to Individual Target
     serveVariationToTargetGroup: Serve Variation to Target Group
+    serveVariationToTargetGroups: '{{ $.cf.shared.serveVariationToTargetGroups }}'
     servePercentageRollout: Serve Percentage Rollout
     selectOnOrOff: Select ON or OFF
     whenTheFlagIsOnServe: 'When the flag is ON, serve:'

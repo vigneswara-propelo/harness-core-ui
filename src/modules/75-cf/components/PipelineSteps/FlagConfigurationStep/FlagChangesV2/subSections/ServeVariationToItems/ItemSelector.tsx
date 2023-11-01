@@ -74,7 +74,7 @@ const ItemSelector: FC<ItemSelectorProps> = ({
         disabled={disabled}
         helperText={hasError ? <FormError name={name} errorMessage={get(errors, name)} /> : null}
       >
-        <Layout.Horizontal spacing="xsmall">
+        <Layout.Horizontal spacing="xsmall" flex={{ alignItems: 'flex-start' }}>
           <MultiSelect
             name={name}
             items={items}

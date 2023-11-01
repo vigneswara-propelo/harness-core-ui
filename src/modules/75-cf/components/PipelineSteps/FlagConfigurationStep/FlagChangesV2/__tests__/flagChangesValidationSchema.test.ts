@@ -11,12 +11,10 @@ import { CFPipelineInstructionType } from '../../types'
 describe('flagChangesValidationSchema', () => {
   const getStringMock = jest.fn().mockImplementation(str => str)
 
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('it should throw with 6 errors when each type is specified but not valid', async () => {
+  test('it should throw with 5 errors when each type is specified but not valid', async () => {
     expect(() =>
       flagChangesValidationSchema(getStringMock).validateSync(
         [
-          { type: CFPipelineInstructionType.ADD_RULE },
           { type: CFPipelineInstructionType.ADD_SEGMENT_TO_VARIATION_TARGET_MAP },
           { type: CFPipelineInstructionType.ADD_TARGETS_TO_VARIATION_TARGET_MAP },
           { type: CFPipelineInstructionType.SET_DEFAULT_VARIATIONS },
@@ -24,7 +22,7 @@ describe('flagChangesValidationSchema', () => {
         ],
         { abortEarly: false }
       )
-    ).toThrow('6 errors occurred')
+    ).toThrow('5 errors occurred')
   })
 
   test('it should not throw when no instructions are specified', async () => {

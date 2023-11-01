@@ -17,13 +17,13 @@ import {
   CFPipelineInstructionType,
   FeatureFlagConfigurationInstruction
 } from '@cf/components/PipelineSteps/FlagConfigurationStep/types'
-import { mockTargets } from '../../__tests__/utils.mocks'
+import { mockTargetGroups } from '../../__tests__/utils.mocks'
 import { SubSectionComponentProps } from '../../../subSection.types'
 import SubSectionTestWrapper, { SubSectionTestWrapperProps } from '../../__tests__/SubSectionTestWrapper.mock'
-import ServeVariationToTargets, {
-  hasServeVariationToTargetsRuntime,
-  serveVariationToTargetsSchema
-} from '../ServeVariationToTargets'
+import ServeVariationToTargetGroups, {
+  hasServeVariationToTargetGroupsRuntime,
+  serveVariationToTargetGroupsSchema
+} from '../ServeVariationToTargetGroups'
 
 const renderComponent = (
   props: Partial<SubSectionComponentProps> = {},
@@ -31,22 +31,26 @@ const renderComponent = (
 ): RenderResult =>
   render(
     <SubSectionTestWrapper {...testWrapperProps}>
-      <ServeVariationToTargets prefixPath="test" title="Serve variation to targets" {...props} />
+      <ServeVariationToTargetGroups prefixPath="test" title="Serve variation to targets" {...props} />
     </SubSectionTestWrapper>
   )
 
-describe('ServeVariationToTargets', () => {
-  const useGetAllTargetsMock = jest.spyOn(cfServices, 'useGetAllTargets')
+describe('ServeVariationToTargetGroups', () => {
+  const useGetAllSegmentsMock = jest.spyOn(cfServices, 'useGetAllSegments')
 
   beforeEach(() => {
-    useGetAllTargetsMock.mockReturnValue({ data: { targets: mockTargets }, loading: false, refetch: jest.fn() } as any)
+    useGetAllSegmentsMock.mockReturnValue({
+      data: { segments: mockTargetGroups },
+      loading: false,
+      refetch: jest.fn()
+    } as any)
   })
 
   describe('runtime', () => {
     const runtimeInstruction: FeatureFlagConfigurationInstruction = {
       identifier: 'test',
-      type: CFPipelineInstructionType.ADD_TARGETS_TO_VARIATION_TARGET_MAP,
-      spec: { variation: RUNTIME_INPUT_VALUE, targets: RUNTIME_INPUT_VALUE }
+      type: CFPipelineInstructionType.ADD_SEGMENT_TO_VARIATION_TARGET_MAP,
+      spec: { variation: RUNTIME_INPUT_VALUE, segments: RUNTIME_INPUT_VALUE }
     }
 
     test('it should not display the variation when not set as runtime', async () => {
@@ -58,13 +62,13 @@ describe('ServeVariationToTargets', () => {
       expect(screen.queryByPlaceholderText('cf.pipeline.flagConfiguration.selectVariation')).not.toBeInTheDocument()
     })
 
-    test('it should not display targets when not set as runtime', async () => {
+    test('it should not display target groups when not set as runtime', async () => {
       const instruction = cloneDeep(runtimeInstruction)
-      instruction.spec.targets = ['a', 'b', 'c']
+      instruction.spec.segments = ['a', 'b', 'c']
 
       renderComponent({}, { flag: MockFeature, mode: StepViewType.DeploymentForm, initialInstructions: [instruction] })
 
-      expect(screen.queryByText('cf.pipeline.flagConfiguration.toTargets')).not.toBeInTheDocument()
+      expect(screen.queryByText('cf.pipeline.flagConfiguration.toTargetGroups')).not.toBeInTheDocument()
     })
 
     test('it should display a dropdown with all flag variations', async () => {
@@ -109,84 +113,84 @@ describe('ServeVariationToTargets', () => {
   })
 })
 
-describe('serveVariationToTargetsSchema', () => {
+describe('serveVariationToTargetGroupsSchema', () => {
   test('it should throw when variation is not set', async () => {
-    const schema = serveVariationToTargetsSchema(str => str)
+    const schema = serveVariationToTargetGroupsSchema(str => str)
 
-    expect(() => schema.validateSync({ spec: { targets: ['a', 'b', 'c'] } })).toThrow(
-      'cf.featureFlags.flagPipeline.validation.serveVariationToTargets.variation'
+    expect(() => schema.validateSync({ spec: { segments: ['a', 'b', 'c'] } })).toThrow(
+      'cf.featureFlags.flagPipeline.validation.serveVariationToTargetGroups.variation'
     )
   })
 
   test('it should throw when variation is empty', async () => {
-    const schema = serveVariationToTargetsSchema(str => str)
+    const schema = serveVariationToTargetGroupsSchema(str => str)
 
-    expect(() => schema.validateSync({ spec: { variation: '', targets: ['a', 'b', 'c'] } })).toThrow(
-      'cf.featureFlags.flagPipeline.validation.serveVariationToTargets.variation'
+    expect(() => schema.validateSync({ spec: { variation: '', segments: ['a', 'b', 'c'] } })).toThrow(
+      'cf.featureFlags.flagPipeline.validation.serveVariationToTargetGroups.variation'
     )
   })
 
-  test('it should throw when targets is not set', async () => {
-    const schema = serveVariationToTargetsSchema(str => str)
+  test('it should throw when segments is not set', async () => {
+    const schema = serveVariationToTargetGroupsSchema(str => str)
 
     expect(() => schema.validateSync({ spec: { variation: 'test' } })).toThrow(
-      'cf.featureFlags.flagPipeline.validation.serveVariationToTargets.targets'
+      'cf.featureFlags.flagPipeline.validation.serveVariationToTargetGroups.segments'
     )
   })
 
-  test('it should throw when targets is empty', async () => {
-    const schema = serveVariationToTargetsSchema(str => str)
+  test('it should throw when segments is empty', async () => {
+    const schema = serveVariationToTargetGroupsSchema(str => str)
 
-    expect(() => schema.validateSync({ spec: { variation: 'test', targets: [] } })).toThrow(
-      'cf.featureFlags.flagPipeline.validation.serveVariationToTargets.targets'
+    expect(() => schema.validateSync({ spec: { variation: 'test', segments: [] } })).toThrow(
+      'cf.featureFlags.flagPipeline.validation.serveVariationToTargetGroups.segments'
     )
 
-    expect(() => schema.validateSync({ spec: { variation: 'test', targets: '' } })).toThrow(
-      'cf.featureFlags.flagPipeline.validation.serveVariationToTargets.targets'
+    expect(() => schema.validateSync({ spec: { variation: 'test', segments: '' } })).toThrow(
+      'cf.featureFlags.flagPipeline.validation.serveVariationToTargetGroups.segments'
     )
   })
 
-  test('it should not throw when variation is set', async () => {
-    const schema = serveVariationToTargetsSchema(str => str)
+  test('it should not throw when variation and segments are set', async () => {
+    const schema = serveVariationToTargetGroupsSchema(str => str)
 
-    expect(() => schema.validateSync({ spec: { variation: 'test', targets: ['a', 'b', 'c'] } })).not.toThrow()
+    expect(() => schema.validateSync({ spec: { variation: 'test', segments: ['a', 'b', 'c'] } })).not.toThrow()
   })
 })
 
-describe('hasServeVariationToTargetsRuntime', () => {
-  test('it should return true when the instruction is a variation target map rule and the variation is set as runtime', async () => {
+describe('hasServeVariationToTargetGroupsRuntime', () => {
+  test('it should return true when the instruction is a segment variation target map rule and the variation is set as runtime', async () => {
     expect(
-      hasServeVariationToTargetsRuntime({
+      hasServeVariationToTargetGroupsRuntime({
         identifier: 'test',
-        type: CFPipelineInstructionType.ADD_TARGETS_TO_VARIATION_TARGET_MAP,
-        spec: { variation: RUNTIME_INPUT_VALUE, targets: ['a', 'b', 'c'] }
+        type: CFPipelineInstructionType.ADD_SEGMENT_TO_VARIATION_TARGET_MAP,
+        spec: { variation: RUNTIME_INPUT_VALUE, segments: ['a', 'b', 'c'] }
       })
     ).toBeTruthy()
   })
 
-  test('it should return true when the instruction is a variation target map rule and targets is set as runtime', async () => {
+  test('it should return true when the instruction is a segment variation target map rule and segments is set as runtime', async () => {
     expect(
-      hasServeVariationToTargetsRuntime({
+      hasServeVariationToTargetGroupsRuntime({
         identifier: 'test',
-        type: CFPipelineInstructionType.ADD_TARGETS_TO_VARIATION_TARGET_MAP,
-        spec: { variation: 'test', targets: RUNTIME_INPUT_VALUE }
+        type: CFPipelineInstructionType.ADD_SEGMENT_TO_VARIATION_TARGET_MAP,
+        spec: { variation: 'test', segments: RUNTIME_INPUT_VALUE }
       })
     ).toBeTruthy()
   })
 
-  test('it should return false when the instruction is a variation target map rule and neither the variation nor targets are set as runtime', async () => {
+  test('it should return false when the instruction is a segment variation target map rule and neither the variation nor segments are set as runtime', async () => {
     expect(
-      hasServeVariationToTargetsRuntime({
+      hasServeVariationToTargetGroupsRuntime({
         identifier: 'test',
-        type: CFPipelineInstructionType.ADD_TARGETS_TO_VARIATION_TARGET_MAP,
-        spec: { variation: 'test', targets: ['a', 'b', 'c'] }
+        type: CFPipelineInstructionType.ADD_SEGMENT_TO_VARIATION_TARGET_MAP,
+        spec: { variation: 'test', segments: ['a', 'b', 'c'] }
       })
     ).toBeFalsy()
   })
 
-  test('it should return false when the instruction is not a variation target map rule and the variation is set as runtime', async () => {
+  test('it should return false when the instruction is not a segment variation target map rule and the variation is set as runtime', async () => {
     expect(
-      hasServeVariationToTargetsRuntime({
+      hasServeVariationToTargetGroupsRuntime({
         identifier: 'test',
         type: CFPipelineInstructionType.SET_FEATURE_FLAG_STATE,
         spec: { variation: RUNTIME_INPUT_VALUE }
