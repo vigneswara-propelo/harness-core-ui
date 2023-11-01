@@ -16,8 +16,8 @@ import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.util
 import { NAV_MODE } from '@common/utils/routeUtils'
 import { useStrings } from 'framework/strings'
 import { usePermission } from '@modules/20-rbac/hooks/usePermission'
-import { ResourceType } from '@modules/20-rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@modules/20-rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@modules/20-rbac/interfaces/ResourceType'
 import { module } from '../constants'
 import { getAccountLevelRedirectionProps, getProjectLevelRedirectionProps } from './SEISideNavLinks.utils'
 
@@ -28,15 +28,28 @@ const SEISideNavLinks = (mode: NAV_MODE): React.ReactElement => {
   const { projectIdentifier, orgIdentifier } = params || {}
   const { scope: selectedScope } = useGetSelectedScope()
   const history = useHistory()
+  const accountIdentifier = accountId || ''
 
   const [hasAccountAccess] = usePermission({
     resourceScope: {
-      accountIdentifier: accountId || ''
+      accountIdentifier
     },
     resource: {
       resourceType: ResourceType.SEI_CONFIGURATION_SETTINGS
     },
     permissions: [PermissionIdentifier.VIEW_SEI_CONFIGURATIONSETTINGS]
+  })
+
+  const [canViewCollections] = usePermission({
+    resourceScope: {
+      accountIdentifier,
+      projectIdentifier,
+      orgIdentifier
+    },
+    resource: {
+      resourceType: ResourceType.SEI_COLLECTIONS
+    },
+    permissions: [PermissionIdentifier.VIEW_SEI_COLLECTIONS]
   })
 
   const projectLevelRedirectionProps = getProjectLevelRedirectionProps(history, accountId, getString, hasAccountAccess)
@@ -51,16 +64,24 @@ const SEISideNavLinks = (mode: NAV_MODE): React.ReactElement => {
             to={routes.toSEIInsights({ accountId, projectIdentifier, orgIdentifier, module })}
             icon="graph-increase"
           />
-          <SideNav.Link
-            label={getString('sei.projectSettings.integrationMapping')}
-            to={routes.toSEIIntegrationMapping({ accountId, projectIdentifier, orgIdentifier, module })}
-            icon="ccm-cloud-integration-settings"
-          />
-          <SideNav.Link
-            label={getString('common.purpose.sei.collections')}
-            to={routes.toSEICollection({ accountId, projectIdentifier, orgIdentifier, module })}
-            icon="cascading"
-          />
+          {hasAccountAccess ? (
+            <SideNav.Link
+              label={getString('sei.projectSettings.integrationMapping')}
+              to={routes.toSEIIntegrationMapping({ accountId, projectIdentifier, orgIdentifier, module })}
+              icon="ccm-cloud-integration-settings"
+            />
+          ) : (
+            <></>
+          )}
+          {canViewCollections ? (
+            <SideNav.Link
+              label={getString('common.purpose.sei.collections')}
+              to={routes.toSEICollection({ accountId, projectIdentifier, orgIdentifier, module })}
+              icon="cascading"
+            />
+          ) : (
+            <></>
+          )}
         </SideNav.Scope>
         {hasAccountAccess ? (
           <>
