@@ -78,6 +78,7 @@ export function processSingleEnvironmentFormValues(
       return {
         environment: {
           environmentRef: data.environment,
+          ...(data.gitMetadata?.[data.environment] ? { gitBranch: data.gitMetadata?.[data.environment] } : {}),
           ...(get(data.environmentInputs, 'environment.expression')
             ? { environmentInputs: get(data.environmentInputs, 'environment.expression') }
             : !!data.environmentInputs?.[data.environment] && {

@@ -7,9 +7,10 @@
 
 import React from 'react'
 import { Formik, FormikErrors } from 'formik'
-import { get, isEmpty, isNil, noop, set } from 'lodash-es'
+import { get, isArray, isEmpty, isNil, noop, set } from 'lodash-es'
 import { IconName, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
 
+import produce from 'immer'
 import { EnvironmentYamlV2 } from 'services/cd-ng'
 import { isValueRuntimeInput } from '@modules/10-common/utils/utils'
 import { Step, StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
@@ -25,6 +26,42 @@ import type {
 import { processInitialValues, processFormValues } from './utils/utils'
 import DeployEnvironmentEntityInputStep from './DeployEnvironmentEntityInputStep'
 
+function processFormData(values: DeployEnvironmentEntityConfig): DeployEnvironmentEntityConfig {
+  const finalValues = produce(values, draft => {
+    if (draft.environment) {
+      const gitBranch = draft.gitMetadata?.[draft.environment.environmentRef as string]
+      if (gitBranch) {
+        set(draft, 'environment.gitBranch', gitBranch)
+      }
+    }
+    if (draft.environments && isArray(draft.environments.values)) {
+      draft.environments.values?.forEach((env, index) => {
+        const gitBranch = draft.gitMetadata?.[env.environmentRef as string]
+        if (gitBranch) {
+          set(draft, `environments.values[${index}].gitBranch`, gitBranch)
+        }
+      })
+    }
+  })
+  return finalValues
+}
+
+function processInitialValuesForRunForm(initialValues: DeployEnvironmentEntityConfig): DeployEnvironmentEntityConfig {
+  const finalInitialValues = produce(initialValues, draft => {
+    if (draft.environment) {
+      set(draft, 'gitMetadata', {
+        ...draft.gitMetadata,
+        [draft.environment.environmentRef as string]: draft.environment.gitBranch
+      })
+    }
+    if (draft.environments && isArray(draft.environments.values)) {
+      draft.environments.values.map(env => {
+        set(draft, 'gitMetadata', { ...draft.gitMetadata, [env.environmentRef as string]: env.gitBranch })
+      })
+    }
+  })
+  return finalInitialValues
+}
 export class DeployEnvironmentEntityStep extends Step<DeployEnvironmentEntityConfig> {
   protected type = StepType.DeployEnvironmentEntity
   protected stepPaletteVisible = false
@@ -50,7 +87,13 @@ export class DeployEnvironmentEntityStep extends Step<DeployEnvironmentEntityCon
 
     if (isTemplatizedView(stepViewType)) {
       return (
-        <Formik initialValues={initialValues} validate={onUpdate} onSubmit={noop}>
+        <Formik
+          initialValues={processInitialValuesForRunForm(initialValues)}
+          validate={values => {
+            onUpdate?.(processFormData(values))
+          }}
+          onSubmit={noop}
+        >
           {/** Wrapping this component in formik to prevent the pseudo fields from corrupting the main input set formik.
            * The onUpdate call takes care of picking only the required data and naturally eliminate the pseudo fields.
            * The pseudo fields are present within the component - DeployEnvironmentEntityInputStep */}

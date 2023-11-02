@@ -9,7 +9,7 @@ import React, { Dispatch, SetStateAction, useEffect } from 'react'
 import { Intent, Spinner } from '@blueprintjs/core'
 import { parse } from 'yaml'
 import cx from 'classnames'
-import { clone, defaultTo, set } from 'lodash-es'
+import { clone, defaultTo, pick, set } from 'lodash-es'
 
 import { AllowedTypes, ConfirmationDialog, ModalDialog, SelectOption, useToggleOpen } from '@harness/uicore'
 
@@ -19,6 +19,7 @@ import produce from 'immer'
 import { useStrings } from 'framework/strings'
 
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
+import { StoreMetadata } from '@modules/10-common/constants/GitSyncTypes'
 import type {
   DeployEnvironmentEntityCustomStepProps,
   DeployEnvironmentEntityFormState,
@@ -133,6 +134,10 @@ export default function EnvironmentEntitiesList({
                 className={cx(css.cardsContainer, { [css.draggingOver]: snapshot.isDraggingOver })}
               >
                 {environmentsData.map((row, index: number) => {
+                  const environentsStoreMetadata: StoreMetadata = {
+                    storeType: row?.storeType,
+                    connectorRef: row?.connectorRef
+                  }
                   return (
                     <EnvironmentEntityCard
                       key={row.environment.identifier}
@@ -152,6 +157,8 @@ export default function EnvironmentEntitiesList({
                       serviceIdentifiers={serviceIdentifiers}
                       envIndex={index}
                       totalLength={environmentsData?.length}
+                      storeMetadata={environentsStoreMetadata}
+                      entityGitDetails={row?.entityGitDetails}
                     />
                   )
                 })}
@@ -176,7 +183,8 @@ export default function EnvironmentEntitiesList({
       >
         <AddEditEnvironmentModal
           data={{
-            ...parse(defaultTo(environmentToEdit?.environment?.yaml, '{}'))
+            ...parse(defaultTo(environmentToEdit?.environment?.yaml, '{}')),
+            ...pick(environmentToEdit, ['storeType', 'connectorRef', 'entityGitDetails'])
           }}
           onCreateOrUpdate={handleEnvironmentEntityUpdate}
           closeModal={closeEditModal}

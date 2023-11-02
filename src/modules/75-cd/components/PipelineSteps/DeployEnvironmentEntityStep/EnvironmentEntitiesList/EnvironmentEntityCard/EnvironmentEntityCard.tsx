@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo, useState } from 'react'
-import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, pick } from 'lodash-es'
 import { Collapse, Divider } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { Color } from '@harness/design-system'
@@ -26,7 +26,7 @@ import {
 import { useParams } from 'react-router-dom'
 import { Draggable } from 'react-beautiful-dnd'
 import { useStrings } from 'framework/strings'
-import type { NGEnvironmentInfoConfig } from 'services/cd-ng'
+import type { EntityGitDetails, NGEnvironmentInfoConfig } from 'services/cd-ng'
 
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -39,6 +39,8 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { getIdentifierFromScopedRef } from '@common/utils/utils'
+import { StoreMetadata, StoreType } from '@modules/10-common/constants/GitSyncTypes'
+import GitRemoteDetails from '@modules/10-common/components/GitRemoteDetails/GitRemoteDetails'
 import type {
   DeployEnvironmentEntityCustomStepProps,
   DeployEnvironmentEntityFormState,
@@ -63,6 +65,8 @@ export interface EnvironmentEntityCardProps extends EnvironmentData, Required<De
   onDeleteClick: (environment: EnvironmentData) => void
   initialValues: DeployEnvironmentEntityFormState
   envIndex?: number
+  storeMetadata?: StoreMetadata
+  entityGitDetails?: EntityGitDetails
   totalLength: number
 }
 
@@ -96,7 +100,9 @@ export function EnvironmentEntityCard({
   customDeploymentRef,
   gitOpsEnabled,
   envIndex,
-  totalLength
+  totalLength,
+  storeMetadata = {},
+  entityGitDetails
 }: EnvironmentEntityCardProps): React.ReactElement {
   const { getString } = useStrings()
   const { values, setFieldValue } = useFormikContext<DeployEnvironmentEntityFormState>()
@@ -104,6 +110,7 @@ export function EnvironmentEntityCard({
   const scopedEnvRef = getScopedRefUsingIdentifier(values, environment)
   const filterPrefix = useMemo(() => `environmentFilters.['${scopedEnvRef}']`, [scopedEnvRef])
   const { accountId } = useParams<PipelinePathProps>()
+  const { storeType, connectorRef } = storeMetadata
 
   const handleFilterRadio = (selectedRadioValue: InlineEntityFiltersRadioType): void => {
     if (selectedRadioValue === InlineEntityFiltersRadioType.MANUAL) {
@@ -156,7 +163,7 @@ export function EnvironmentEntityCard({
               <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
                 <Layout.Vertical width={'90%'}>
                   <Layout.Horizontal
-                    flex={{ justifyContent: 'flex-start', alignItems: 'flex-end' }}
+                    flex={{ justifyContent: 'space-between', alignItems: 'flex-end' }}
                     spacing="small"
                     margin={{ bottom: 'xsmall' }}
                   >
@@ -166,6 +173,20 @@ export function EnvironmentEntityCard({
                     {!isEmpty(tags) && (
                       <TagsPopover iconProps={{ size: 14, color: Color.GREY_600 }} tags={defaultTo(tags, {})} />
                     )}
+                    {storeType === StoreType.REMOTE ? (
+                      <GitRemoteDetails
+                        connectorRef={connectorRef}
+                        repoName={entityGitDetails?.repoName}
+                        branch={entityGitDetails?.branch}
+                        filePath={entityGitDetails?.filePath}
+                        fileUrl={entityGitDetails?.fileUrl}
+                        flags={{
+                          readOnly: true,
+                          showBranch: true,
+                          borderless: true
+                        }}
+                      />
+                    ) : null}
                   </Layout.Horizontal>
 
                   <Text color={Color.GREY_500} font={{ size: 'small' }} lineClamp={1}>
@@ -181,7 +202,14 @@ export function EnvironmentEntityCard({
                         icon="edit"
                         data-testid={`edit-environment-${identifier}`}
                         disabled={readonly}
-                        onClick={() => onEditClick({ environment, environmentInputs })}
+                        onClick={() =>
+                          onEditClick({
+                            environment,
+                            environmentInputs,
+                            ...pick(storeMetadata, ['storeType', 'connectorRef']),
+                            entityGitDetails
+                          })
+                        }
                         permission={environmentPermission}
                       />
                       <Button

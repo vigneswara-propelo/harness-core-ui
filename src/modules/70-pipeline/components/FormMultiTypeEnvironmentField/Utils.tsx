@@ -26,6 +26,9 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import environmentEmptyStateSvg from '@pipeline/icons/emptyServiceDetail.svg'
 import GitRemoteDetails from '@modules/10-common/components/GitRemoteDetails/GitRemoteDetails'
 import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
+import { getConnectorIdentifierWithScope } from '@modules/27-platform/connectors/utils/utils'
+import { getScopeFromDTO } from '@modules/10-common/components/EntityReference/EntityReference.types'
+import { defaultGitContextBranchPlaceholder } from '@modules/10-common/utils/gitSyncUtils'
 import css from './FormMultiTypeEnvironmentField.module.scss'
 
 export function getReferenceFieldProps({
@@ -41,7 +44,9 @@ export function getReferenceFieldProps({
   setPagedEnvironmentData,
   selectedEnvironments,
   getString,
-  envTypeFilter
+  envTypeFilter,
+  userSelectedBranches,
+  setUserSelectedBranches
 }: any): Omit<
   ReferenceSelectProps<EnvironmentResponseDTO>,
   'onChange' | 'onMultiSelectChange' | 'onCancel' | 'pagination'
@@ -128,6 +133,11 @@ export function getReferenceFieldProps({
     isMultiSelect,
     selectedReferences: selectedEnvironments,
     recordRender: function recordRender({ item, selected: checked }) {
+      const environmentId = getConnectorIdentifierWithScope(
+        getScopeFromDTO(item?.record),
+        item?.record?.identifier || ''
+      )
+      let selectedBranch
       return (
         <Layout.Horizontal margin={{ left: 'small' }} flex={{ distribution: 'space-between' }} className={css.item}>
           <Layout.Horizontal spacing="medium" className={css.leftInfo}>
@@ -146,11 +156,19 @@ export function getReferenceFieldProps({
               connectorRef={item?.record?.connectorRef}
               repoName={item?.record?.entityGitDetails?.repoName}
               filePath={item?.record?.entityGitDetails?.filePath}
-              branch={item?.record?.fallbackBranch}
+              branch={selectedBranch || userSelectedBranches[environmentId] || defaultGitContextBranchPlaceholder}
               fileUrl={item?.record?.entityGitDetails?.fileUrl}
               flags={{
-                readOnly: true,
+                readOnly: !checked,
                 showBranch: true
+              }}
+              onBranchChange={env => {
+                if (item?.record?.entityGitDetails) {
+                  selectedBranch = env?.branch
+                  if (selectedBranch !== userSelectedBranches[environmentId]) {
+                    setUserSelectedBranches({ ...userSelectedBranches, [environmentId]: selectedBranch })
+                  }
+                }
               }}
             />
           ) : null}

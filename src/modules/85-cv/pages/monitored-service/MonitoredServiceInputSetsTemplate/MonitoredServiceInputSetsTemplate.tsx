@@ -276,7 +276,10 @@ export default function MonitoredServiceInputSetsTemplate({
         initialValues={monitoredServiceInputSet}
         enableReinitialize
         validate={value =>
-          validateInputSet(omit(value, ['serviceGitBranches']) as MonitoredServiceInputSetInterface, getString)
+          validateInputSet(
+            omit(value, ['serviceGitBranches', 'gitMetadata']) as MonitoredServiceInputSetInterface,
+            getString
+          )
         }
       >
         {formik => {

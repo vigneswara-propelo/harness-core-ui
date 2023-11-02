@@ -9,6 +9,7 @@ import type { SelectOption } from '@harness/uicore'
 import type {
   ClusterResponse,
   DeploymentStageConfig,
+  EntityGitDetails,
   EnvironmentGroupResponseDTO,
   ExecutionElementConfig,
   FilterYaml,
@@ -23,6 +24,8 @@ export interface DeployEnvironmentEntityConfig extends Omit<DeploymentStageConfi
   environment?: DeploymentStageConfig['environment']
   environments?: DeploymentStageConfig['environments']
   environmentGroup?: DeploymentStageConfig['environmentGroup']
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  gitMetadata?: Record<string, any>
 }
 
 export interface DeployEnvironmentEntityFormState {
@@ -47,6 +50,8 @@ export interface DeployEnvironmentEntityFormState {
   infraClusterFilters?: FilterYaml[]
   provisioner?: ExecutionElementConfig
   propagateFrom?: SelectOption
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  gitMetadata?: Record<string, any>
 }
 
 export interface DeployEnvironmentEntityCustomStepProps {
@@ -77,6 +82,9 @@ export interface EnvironmentData {
   environmentInputs?: any
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   serviceOverrideInputs?: any
+  connectorRef?: string
+  entityGitDetails?: EntityGitDetails
+  storeType?: 'INLINE' | 'REMOTE'
 }
 
 export interface EnvironmentWithInputs {

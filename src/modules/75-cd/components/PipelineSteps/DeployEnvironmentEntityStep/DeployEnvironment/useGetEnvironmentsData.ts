@@ -34,6 +34,7 @@ import type { EnvironmentData } from '../types'
 
 export interface UseGetEnvironmentsDataProps {
   envIdentifiers: string[]
+  environmentGitBranches?: Record<string, string | undefined>
   serviceIdentifiers: string[]
   envGroupIdentifier?: string
   parentStoreMetadata?: StoreMetadata
@@ -58,6 +59,7 @@ export interface UseGetEnvironmentsDataReturn {
 export function useGetEnvironmentsData({
   envIdentifiers,
   serviceIdentifiers,
+  environmentGitBranches,
   envGroupIdentifier,
   parentStoreMetadata
 }: UseGetEnvironmentsDataProps): UseGetEnvironmentsDataReturn {
@@ -133,7 +135,7 @@ export function useGetEnvironmentsData({
       ...(envIdentifiers
         ? {
             entityWithGitInfoList: sortedEnvIdentifiers.map(id => {
-              return { ref: id }
+              return { ref: id, ...(environmentGitBranches?.[id] ? { branch: environmentGitBranches[id] } : {}) }
             })
           }
         : { ...(envGroupIdentifier && { envGroupIdentifier }) }),
@@ -175,7 +177,10 @@ export function useGetEnvironmentsData({
           environmentIdentifier: environmentInResponse.envRef,
           environmentYaml: environmentInResponse.envYaml,
           environmentRuntimeTemplateYaml: environmentInResponse.envRuntimeInputYaml,
-          serviceOverrideList: environmentInResponse.servicesOverrides
+          serviceOverrideList: environmentInResponse.servicesOverrides,
+          storeType: environmentInResponse.storeType,
+          connectorRef: environmentInResponse.connectorRef,
+          entityGitDetails: environmentInResponse.entityGitDetails
         }
       })
 
@@ -188,6 +193,7 @@ export function useGetEnvironmentsData({
             defaultTo(row.environmentRuntimeTemplateYaml, '{}')
           ).environmentInputs
 
+          const { storeType, connectorRef, entityGitDetails = {} } = row
           /* istanbul ignore else */
           if (environment) {
             const existsInList = _environmentsList.find(
@@ -215,6 +221,9 @@ export function useGetEnvironmentsData({
           return {
             environment,
             environmentInputs,
+            storeType,
+            connectorRef,
+            entityGitDetails,
             serviceOverrideInputs: {
               [getScopedValueFromDTO(environment)]: serviceOverrideInputs
             }
@@ -263,7 +272,10 @@ export function useGetEnvironmentsData({
           environmentIdentifier: environmentInResponse.envRef,
           environmentYaml: environmentInResponse.envYaml,
           environmentRuntimeTemplateYaml: environmentInResponse.envRuntimeInputYaml,
-          serviceOverrideList: environmentInResponse.servicesOverrides
+          serviceOverrideList: environmentInResponse.servicesOverrides,
+          storeType: environmentInResponse.storeType,
+          connectorRef: environmentInResponse.connectorRef,
+          entityGitDetails: environmentInResponse.entityGitDetails
         }
       })
 
@@ -275,7 +287,7 @@ export function useGetEnvironmentsData({
           const environmentInputs = yamlParse<Pick<EnvironmentData, 'environmentInputs'>>(
             defaultTo(row.environmentRuntimeTemplateYaml, '{}')
           ).environmentInputs
-
+          const { storeType, connectorRef, entityGitDetails = {} } = row
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const serviceOverrideInputs: Record<string, any> = {}
 
@@ -292,6 +304,9 @@ export function useGetEnvironmentsData({
           return {
             environment,
             environmentInputs,
+            storeType,
+            connectorRef,
+            entityGitDetails,
             serviceOverrideInputs: {
               [getScopedValueFromDTO(environment)]: serviceOverrideInputs
             }

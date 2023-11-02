@@ -22,7 +22,7 @@ import {
   useToggleOpen
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import type { EnvironmentYaml } from 'services/cd-ng'
+import type { EnvironmentResponseDTO, EnvironmentYaml } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
@@ -39,6 +39,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { MultiTypeEnvironmentField } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
 
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import { usePipelineContext } from '@modules/70-pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeployEnvironmentEntityFormState } from '../types'
 import AddEditEnvironmentModal from '../AddEditEnvironmentModal'
 
@@ -53,6 +54,7 @@ interface EnvironmentSelectionProps {
   environmentsType: MultiTypeInputType
   setEnvironmentsType: React.Dispatch<React.SetStateAction<MultiTypeInputType>>
   setSelectedEnvironments: React.Dispatch<React.SetStateAction<string[]>>
+  setSelectedEnvironmentsGitDetails: React.Dispatch<React.SetStateAction<Record<string, string | undefined>>>
   allowableTypes: AllowedTypes
   gitOpsEnabled: boolean
   environmentsList: EnvironmentYaml[]
@@ -83,6 +85,7 @@ export default function EnvironmentSelection({
   environmentsType,
   setEnvironmentsType,
   setSelectedEnvironments,
+  setSelectedEnvironmentsGitDetails,
   allowableTypes,
   gitOpsEnabled,
   environmentsList,
@@ -97,6 +100,10 @@ export default function EnvironmentSelection({
   const { values, setFieldValue, setFieldTouched } = useFormikContext<DeployEnvironmentEntityFormState>()
   const { projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const isFixed = isMultiTypeFixed(environmentsType)
+  const {
+    state: { storeMetadata }
+  } = usePipelineContext()
+  const parentGitData = { repoName: storeMetadata?.repoName, branch: storeMetadata?.branch }
 
   const disabled = readonly || (isFixed && loading)
 
@@ -147,6 +154,10 @@ export default function EnvironmentSelection({
 
     const newFormValues = produce(values, draft => {
       if (draft.environments && Array.isArray(draft.environments)) {
+        draft.gitMetadata = {
+          ...draft.gitMetadata,
+          [scopedEnvRef]: (newEnvironmentInfo as EnvironmentResponseDTO).entityGitDetails?.branch
+        }
         draft.environments.push({ label: newEnvironmentInfo.name, value: scopedEnvRef })
         if (gitOpsEnabled && draft.clusters) {
           if (draft.infrastructures) {
@@ -160,6 +171,10 @@ export default function EnvironmentSelection({
         set(draft, uniquePathForEnvironments.current, draft.environments)
       } else {
         draft.environment = scopedEnvRef
+        draft.gitMetadata = {
+          ...draft.gitMetadata,
+          [scopedEnvRef]: (newEnvironmentInfo as EnvironmentResponseDTO).entityGitDetails?.branch
+        }
         if (gitOpsEnabled) {
           draft.cluster = ''
         } else {
@@ -171,14 +186,25 @@ export default function EnvironmentSelection({
     updateFormikAndLocalState(newFormValues)
   }
 
-  const onMultiSelectChangeForEnvironments = (items: SelectOption[]): void => {
+  const onMultiSelectChangeForEnvironments = (
+    items: SelectOption[],
+    environmentGitMetadata?: Record<string, string | undefined>
+  ): void => {
     setFieldTouched(uniquePathForEnvironments.current, true)
     if (items?.at(0)?.value === 'All') {
       setFieldValue(`environments`, undefined)
       setSelectedEnvironments([])
+      setSelectedEnvironmentsGitDetails({})
     } else {
       setFieldValue(`environments`, items)
       setSelectedEnvironments(getSelectedEnvironmentsFromOptions(items))
+      let selectionEnvGitDetails = {}
+      items.forEach(item => {
+        const envGitBranchMap = { [item.value as string]: environmentGitMetadata?.[item.value as string] }
+
+        selectionEnvGitDetails = { ...selectionEnvGitDetails, ...envGitBranchMap }
+      })
+      setSelectedEnvironmentsGitDetails(selectionEnvGitDetails as any)
     }
   }
 
@@ -198,6 +224,7 @@ export default function EnvironmentSelection({
             placeholder={placeHolderForEnvironments}
             openAddNewModal={openAddNewModal}
             isMultiSelect
+            parentGitMetadata={parentGitData}
             onMultiSelectChange={onMultiSelectChangeForEnvironments}
             multitypeInputValue={environmentsType}
             isNewConnectorLabelVisible
@@ -236,12 +263,18 @@ export default function EnvironmentSelection({
           setRefValue={true}
           openAddNewModal={openAddNewModal}
           isNewConnectorLabelVisible
-          onChange={(item, _valueType, type) => {
+          parentGitMetadata={parentGitData}
+          onChange={(item, _valueType, type, environmentGitMetadata) => {
             if (isMultiTypeExpression(type as MultiTypeInputType)) {
               setSelectedEnvironments([])
+              setSelectedEnvironmentsGitDetails({})
             } else if (getMultiTypeFromValue(item) === MultiTypeInputType.FIXED && (item as string)?.length) {
               setSelectedEnvironments([item as string])
-            } else setSelectedEnvironments([])
+              setSelectedEnvironmentsGitDetails({ [item as string]: environmentGitMetadata?.[item as string] })
+            } else {
+              setSelectedEnvironments([])
+              setSelectedEnvironmentsGitDetails({})
+            }
           }}
           width={300}
           multiTypeProps={{

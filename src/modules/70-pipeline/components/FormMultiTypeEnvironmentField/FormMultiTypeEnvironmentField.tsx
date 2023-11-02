@@ -25,8 +25,9 @@ import {
   Tag,
   Text
 } from '@harness/uicore'
-import { defaultTo, get, isArray } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isArray, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import produce from 'immer'
 import type { EnvironmentResponseDTO, ResponsePageServiceResponse } from 'services/cd-ng'
 import RbacButton from '@rbac/components/Button/Button'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -42,6 +43,9 @@ import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { getIdentifierFromScopedRef } from '@common/utils/utils'
+import { EntitySelectionGitData } from '@modules/10-common/constants/GitSyncTypes'
+import { defaultGitContextBranchPlaceholder } from '@modules/10-common/utils/gitSyncUtils'
+import { getConnectorIdentifierWithScope } from '@modules/27-platform/connectors/utils/utils'
 import { getReferenceFieldProps } from './Utils'
 import css from './FormMultiTypeEnvironmentField.module.scss'
 
@@ -61,19 +65,24 @@ export interface EnvironmentReferenceFieldProps extends Omit<IFormGroupProps, 'l
   onChange?: (
     environment: ExpressionAndRuntimeTypeProps['value'],
     valueType?: MultiTypeInputValue,
-    type?: MultiTypeInputType
+    type?: MultiTypeInputType,
+    environmentGitMetadata?: Record<string, string | undefined>
   ) => void
   selected?: string
   defaultScope?: Scope
   width?: number
   error?: string
   isMultiSelect?: boolean
-  onMultiSelectChange?: any
+  onMultiSelectChange?: (
+    environments: SelectOption[],
+    environmentGitMetadata?: Record<string, string | undefined>
+  ) => void
   isOnlyFixedType?: boolean
   isNewConnectorLabelVisible?: boolean
   labelClass?: string
   envTypeFilter?: ('PreProduction' | 'Production')[]
   formikProps?: FormikProps<any>
+  parentGitMetadata?: EntitySelectionGitData
 }
 
 export function getSelectedRenderer(selected: any): JSX.Element {
@@ -123,6 +132,7 @@ export function MultiTypeEnvironmentField(props: EnvironmentReferenceFieldProps)
     width,
     envTypeFilter = [],
     formikProps,
+    parentGitMetadata,
     ...restProps
   } = props
   const formik = useFormikContext() || formikProps
@@ -133,6 +143,9 @@ export function MultiTypeEnvironmentField(props: EnvironmentReferenceFieldProps)
   const [hideModal, setHideModal] = useState(false)
   const selected = generateInitialValues(get(formik?.values, name, isMultiSelect ? [] : ''))
   const [selectedValue, setSelectedValue] = React.useState<any>(selected)
+  const [userSelectedBranches, setUserSelectedBranches] = React.useState<Record<string, string | undefined>>(
+    cloneDeep(get(formik?.initialValues, 'gitMetadata', {}))
+  )
   const hasError = errorCheck(name, formik)
   const {
     intent = hasError ? Intent.DANGER : Intent.NONE,
@@ -156,15 +169,29 @@ export function MultiTypeEnvironmentField(props: EnvironmentReferenceFieldProps)
     setPagedEnvironmentData,
     selectedEnvironments: Array.isArray(selected) ? selected : [],
     getString,
-    envTypeFilter
+    envTypeFilter,
+    userSelectedBranches,
+    setUserSelectedBranches
   })
   const handleMultiSelectChange = (envs: any): void => {
-    const environments = envs.map((env: any) => ({
-      label: env.identifier,
-      value: env.scope !== Scope.PROJECT ? `${env.scope}.${env.identifier}` : env.identifier
-    }))
-    formik.setFieldValue(name, environments)
-    onMultiSelectChange(environments)
+    const gitMetadata: Record<string, string | undefined> = {}
+    const environments = envs.map((env: any) => {
+      const envId = getConnectorIdentifierWithScope(env.scope, env.identifier || '')
+      const branch = userSelectedBranches[envId]
+      const selectedEnvironmentBranch = branch && branch !== defaultGitContextBranchPlaceholder ? branch : undefined
+      gitMetadata[envId] = selectedEnvironmentBranch
+      return {
+        label: env.identifier,
+        value: envId
+      }
+    })
+    formik.setValues(
+      produce(formik.values, draft => {
+        set(draft as unknown as any, 'gitMetadata', gitMetadata)
+        set(draft as unknown as any, name, environments)
+      })
+    )
+    onMultiSelectChange?.(environments, gitMetadata)
   }
   return (
     <div style={style} className={cx(css.environmentLabel, labelClassFromProps)}>
@@ -220,17 +247,24 @@ export function MultiTypeEnvironmentField(props: EnvironmentReferenceFieldProps)
               const { record, scope } = val as unknown as { record: EnvironmentResponseDTO; scope: Scope }
               const value = {
                 label: record.name,
-                value:
-                  scope === Scope.ORG || scope === Scope.ACCOUNT ? `${scope}.${record.identifier}` : record.identifier,
+                value: getConnectorIdentifierWithScope(scope, record.identifier || ''),
                 scope
               }
-              if (setRefValue) {
-                formik?.setFieldValue(name, value.value)
-                onChange?.(value.value)
-              } else {
-                formik?.setFieldValue(name, value)
-                onChange?.(value as unknown as string)
-              }
+              const environmentId = value.value || ''
+              const branch = userSelectedBranches[environmentId]
+              const environmentGitBranch = branch && branch !== defaultGitContextBranchPlaceholder ? branch : undefined
+              const gitMetadata = environmentGitBranch
+                ? {
+                    [environmentId]: environmentGitBranch
+                  }
+                : undefined
+              formik.setValues(
+                produce(formik.values, (draft: EnvironmentResponseDTO): void => {
+                  set(draft, 'gitMetadata', gitMetadata)
+                  set(draft, name, setRefValue ? value.value : value)
+                })
+              )
+              onChange?.(setRefValue ? value.value : (value as unknown as string), undefined, undefined, gitMetadata)
               setSelectedValue(value)
             } else {
               formik?.setFieldValue(name, defaultTo(val, ''))

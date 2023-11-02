@@ -25,7 +25,10 @@ export function getEnvironmentsFormValuesFromFormState(
   return Array.isArray(data.environments)
     ? data.environments?.map(environment => {
         const environmentsFormState: EnvironmentYamlV2 = {
-          environmentRef: environment.value as string
+          environmentRef: environment.value as string,
+          ...(data.gitMetadata?.[environment.value as string]
+            ? { gitBranch: data.gitMetadata?.[environment.value as string] }
+            : {})
         }
 
         if (data.environmentInputs?.[environment.value as string]) {

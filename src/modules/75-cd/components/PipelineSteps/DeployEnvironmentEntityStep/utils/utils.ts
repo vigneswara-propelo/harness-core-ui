@@ -12,6 +12,7 @@ import type { UseStringsReturn } from 'framework/strings'
 import { isValueFixed, isValueRuntimeInput } from '@common/utils/utils'
 import { StageElementWrapperConfig } from 'services/pipeline-ng'
 import { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
+
 import type {
   DeployEnvironmentEntityConfig,
   DeployEnvironmentEntityCustomStepProps,
@@ -246,4 +247,20 @@ export function getAllFixedEnvironments(
   }
 
   return []
+}
+
+export function getAllFixedEnvironmentsGitDetails(
+  data: DeployEnvironmentEntityFormState
+): Record<string, string | undefined> {
+  if (data.environment && getMultiTypeFromValue(data.environment) === MultiTypeInputType.FIXED) {
+    return { [data.environment]: data.gitMetadata?.[data.environment] }
+  } else if (data.environments && Array.isArray(data.environments)) {
+    let gitMetadata = {}
+    data.environments.forEach(environment => {
+      gitMetadata = { ...gitMetadata, [environment.value as string]: data.gitMetadata?.[environment.value as string] }
+    })
+    return gitMetadata
+  }
+
+  return {}
 }

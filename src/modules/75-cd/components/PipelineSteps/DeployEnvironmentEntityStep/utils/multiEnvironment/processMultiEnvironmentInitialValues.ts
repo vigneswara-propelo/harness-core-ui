@@ -6,7 +6,7 @@
  */
 
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-import { defaultTo, isEmpty, isNil, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, set, unset } from 'lodash-es'
 import type { EnvironmentYamlV2 } from 'services/cd-ng'
 import { getIdentifierFromScopedRef, isValueExpression, isValueRuntimeInput } from '@common/utils/utils'
 import type {
@@ -20,7 +20,9 @@ export function getEnvironmentsFormStateFromInitialValues(
   deployToAll?: boolean,
   customStepProps: DeployEnvironmentEntityCustomStepProps = {}
 ): DeployEnvironmentEntityFormState {
-  const formState = {}
+  const formState = {
+    gitMetadata: {}
+  }
   const { gitOpsEnabled, serviceIdentifiers } = customStepProps
   const isOverridesEnabled = (customStepProps as any).isOverridesEnabled
 
@@ -43,7 +45,11 @@ export function getEnvironmentsFormStateFromInitialValues(
       })
 
       set(formState, `environmentInputs.['${environment.environmentRef}']`, environment.environmentInputs)
-
+      environment.gitBranch &&
+        set(formState, 'gitMetadata', {
+          ...formState.gitMetadata,
+          [environment.environmentRef as string]: environment.gitBranch
+        })
       if (isOverridesEnabled) {
         if (!isNil(environment.servicesOverrides) && !isEmpty(environment.servicesOverrides)) {
           environment.servicesOverrides.forEach(serviceOverride => {
@@ -116,7 +122,9 @@ export function getEnvironmentsFormStateFromInitialValues(
       }
     })
   }
-
+  if (isEmpty(get(formState, 'gitMetadata', {}))) {
+    unset(formState, 'gitMetadata')
+  }
   return formState
 }
 

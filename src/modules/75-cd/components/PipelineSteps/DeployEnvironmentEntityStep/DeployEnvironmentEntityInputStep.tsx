@@ -81,6 +81,8 @@ export default function DeployEnvironmentEntityInputStep({
 
   const { pipelineGitMetaData } = useStageFormContext()
 
+  const parentGitData = !isEmpty(storeMetadata) ? storeMetadata : pipelineGitMetaData
+
   // pathPrefix contains the outer formik path but does not include the path to environments
   const pathPrefix = isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
   // fullPath contains the outer formik path and the path to environments
@@ -116,7 +118,25 @@ export default function DeployEnvironmentEntityInputStep({
     return []
   }, [environmentValue, environmentValues])
 
+  const getEnvironmentGitBranches = useCallback(() => {
+    if (environmentValue && isValueFixed(environmentValue)) {
+      return { [environmentValue]: get(initialValues, 'environment.gitBranch') }
+    }
+
+    if (Array.isArray(environmentValues)) {
+      const gitBranchMap: Record<string, string> = {}
+      environmentValues.forEach(envValue => {
+        if (envValue.environmentRef && envValue.gitBranch) {
+          gitBranchMap[envValue.environmentRef] = envValue.gitBranch
+        }
+      })
+      return gitBranchMap
+    }
+    return {}
+  }, [environmentValue, environmentValues, initialValues])
+
   const [environmentIdentifiers, setEnvironmentIdentifiers] = useState<string[]>(getEnvironmentIdentifiers())
+  const [selectedEnvironentsGitDetails, setSelectedEnvironmentsGitDetails] = useState(getEnvironmentGitBranches())
 
   const {
     environmentsList,
@@ -130,7 +150,8 @@ export default function DeployEnvironmentEntityInputStep({
     envIdentifiers: environmentIdentifiers,
     envGroupIdentifier,
     serviceIdentifiers,
-    parentStoreMetadata: !isEmpty(storeMetadata) ? storeMetadata : pipelineGitMetaData
+    environmentGitBranches: selectedEnvironentsGitDetails,
+    parentStoreMetadata: parentGitData
   })
 
   const selectOptions = useMemo(() => {
@@ -191,6 +212,7 @@ export default function DeployEnvironmentEntityInputStep({
       if (!isEqual(newIdentifiers, environmentIdentifiers)) {
         setEnvironmentsSelectedType('other')
         setEnvironmentIdentifiers(newIdentifiers)
+        setSelectedEnvironmentsGitDetails({})
       }
     }
   }, [environmentsList])
@@ -314,14 +336,17 @@ export default function DeployEnvironmentEntityInputStep({
   function handleSingleEnvironmentChange(
     item?: ExpressionAndRuntimeTypeProps['value'],
     _?: MultiTypeInputValue,
-    type?: MultiTypeInputType
+    type?: MultiTypeInputType,
+    environmentGitMetadata?: Record<string, string | undefined>
   ): void {
     if (isValueRuntimeInput(item)) {
       setEnvironmentsSelectedType('runtime')
       setEnvironmentIdentifiers([])
+      setSelectedEnvironmentsGitDetails({})
     } else if (isMultiTypeExpression(type as MultiTypeInputType)) {
       setEnvironmentsSelectedType('expression')
       setEnvironmentIdentifiers([])
+      setSelectedEnvironmentsGitDetails({})
     } else {
       setEnvironmentsSelectedType('other')
       setEnvironmentIdentifiers(
@@ -332,21 +357,43 @@ export default function DeployEnvironmentEntityInputStep({
           ? [(item as SelectOption)?.value as string]
           : []
       )
+      setSelectedEnvironmentsGitDetails(
+        item && typeof item === 'string'
+          ? { [item]: environmentGitMetadata?.[item] }
+          : (item as SelectOption)?.value
+          ? {
+              [(item as SelectOption)?.value as string]:
+                environmentGitMetadata?.[(item as SelectOption)?.value as string]
+            }
+          : {}
+      )
     }
     setEnvironmentRefType?.(type as MultiTypeInputType)
   }
 
-  function handleEnvironmentsChange(items: SelectOption[]): void {
+  function handleEnvironmentsChange(
+    items: SelectOption[],
+    environmentGitMetadata?: Record<string, string | undefined>
+  ): void {
     if (isValueRuntimeInput(items)) {
       setEnvironmentsSelectedType('runtime')
       setEnvironmentIdentifiers([])
+      setSelectedEnvironmentsGitDetails({})
     } else if (items?.at(0)?.value === 'All') {
       const newIdentifiers = environmentsList.map(environmentInList => environmentInList.identifier)
       setEnvironmentsSelectedType('all')
       setEnvironmentIdentifiers(newIdentifiers)
+      setSelectedEnvironmentsGitDetails({})
     } else if (Array.isArray(items)) {
       setEnvironmentsSelectedType('other')
       setEnvironmentIdentifiers(items.map(item => item.value as string))
+      let selectionEnvGitDetails = {}
+      items.forEach(item => {
+        const envGitBranchMap = { [item.value as string]: environmentGitMetadata?.[item.value as string] }
+
+        selectionEnvGitDetails = { ...selectionEnvGitDetails, ...envGitBranchMap }
+      })
+      setSelectedEnvironmentsGitDetails(selectionEnvGitDetails as any)
     }
   }
 
@@ -383,6 +430,7 @@ export default function DeployEnvironmentEntityInputStep({
             placeholder={placeHolderForEnvironment}
             setRefValue={true}
             isNewConnectorLabelVisible={false}
+            parentGitMetadata={parentGitData}
             width={300}
             multiTypeProps={{
               expressions,
@@ -409,6 +457,7 @@ export default function DeployEnvironmentEntityInputStep({
               // This is required to update values when the type has changed
               onChange={item => handleEnvironmentsChange(item as SelectOption[])}
               isNewConnectorLabelVisible={false}
+              parentGitMetadata={parentGitData}
               width={300}
               multiTypeProps={{
                 allowableTypes: (allowableTypes as MultiTypeInputType[])?.filter(

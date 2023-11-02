@@ -75,6 +75,10 @@ export function processSingleEnvironmentInitialValues(
         }
       } else {
         set(formState, 'environment', environment.environmentRef)
+        environment.gitBranch &&
+          set(formState, 'gitMetadata', {
+            [environment.environmentRef as string]: environment.gitBranch
+          })
         set(formState, 'provisioner', environment.provisioner)
         // if environmentRef is a FIXED value and contains selected environment
         set(
@@ -195,6 +199,7 @@ export function processSingleEnvironmentGitOpsInitialValues(
       }
     } else {
       set(formState, 'environment', environment.environmentRef)
+      set(formState, 'gitMetadata', { [environment.environmentRef as string]: environment.gitBranch })
       // if environmentRef is a FIXED value and contains selected environment
       set(
         formState,

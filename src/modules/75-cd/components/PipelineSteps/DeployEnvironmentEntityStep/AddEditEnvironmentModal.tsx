@@ -130,7 +130,7 @@ export default function AddEditEnvironmentModal({
               accountIdentifier: accountId,
               storeType: StoreType.REMOTE,
               connectorRef: (formikRef.current?.values?.connectorRef as unknown as ConnectorSelectedValue)?.value,
-              isNewBranch: gitData?.isNewBranch, //Need BE API support for this param, Todo: remove typeCast
+              isNewBranch: gitData?.isNewBranch,
               repoIdentifier: formikRef.current?.values?.repo,
               filePath: formikRef.current?.values?.filePath,
               ...(gitData?.isNewBranch
@@ -230,7 +230,11 @@ export default function AddEditEnvironmentModal({
           type: defaultTo(type, ''),
           orgIdentifier: isEdit ? envOrgIdentifier : orgIdentifier,
           projectIdentifier: isEdit ? envProjectIdentifier : projectIdentifier,
-          storeType: StoreType.INLINE,
+          storeType: defaultTo(data.storeType, StoreType.INLINE),
+          connectorRef: defaultTo(data.connectorRef, ''),
+          repo: defaultTo(data.entityGitDetails?.repoName, ''),
+          branch: defaultTo(data.entityGitDetails?.branch, ''),
+          filePath: defaultTo(data.entityGitDetails?.filePath, ''),
           variables,
           overrides
         } as NGEnvironmentInfoConfig

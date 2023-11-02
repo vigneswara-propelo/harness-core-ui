@@ -67,7 +67,11 @@ import {
 } from '../components/InlineEntityFilters/InlineEntityFiltersUtils'
 import { DeployProvisioner } from '../DeployProvisioner/DeployProvisioner'
 import EnvironmentSelection from './EnvironmentSelection'
-import { getAllFixedEnvironments, getSelectedEnvironmentsWhenPropagating } from '../utils/utils'
+import {
+  getAllFixedEnvironments,
+  getAllFixedEnvironmentsGitDetails,
+  getSelectedEnvironmentsWhenPropagating
+} from '../utils/utils'
 import css from './DeployEnvironment.module.scss'
 
 interface DeployEnvironmentProps extends Required<DeployEnvironmentEntityCustomStepProps> {
@@ -138,6 +142,11 @@ export default function DeployEnvironment({
   const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(
     getAllFixedEnvironments(initialValues, previousStages)
   )
+
+  const [selectedEnvironentsGitDetails, setSelectedEnvironmentsGitDetails] = useState(
+    getAllFixedEnvironmentsGitDetails(initialValues)
+  )
+
   const [environmentsType, setEnvironmentsType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue(initialValues.environment || initialValues.environments)
   )
@@ -163,6 +172,7 @@ export default function DeployEnvironment({
     nonExistingEnvironmentIdentifiers
   } = useGetEnvironmentsData({
     envIdentifiers: selectedEnvironments,
+    environmentGitBranches: selectedEnvironentsGitDetails,
     envGroupIdentifier,
     serviceIdentifiers,
     parentStoreMetadata: storeMetadata
@@ -228,6 +238,7 @@ export default function DeployEnvironment({
     // This condition is required to clear the list when switching from multi environment to single environment
     if (!isMultiEnvironment && !values.environment && isNil(values.propagateFrom) && selectedEnvironments.length) {
       setSelectedEnvironments([])
+      setSelectedEnvironmentsGitDetails({})
     }
 
     // This condition sets the unique path when switching from single env to multi env after the component has loaded with single env view
@@ -366,6 +377,7 @@ export default function DeployEnvironment({
     setValues(newFormValues)
     // this updates the local state
     setSelectedEnvironments(getAllFixedEnvironments(newFormValues))
+    setSelectedEnvironmentsGitDetails(getAllFixedEnvironmentsGitDetails(newFormValues))
   }
 
   const onEnvironmentEntityUpdate = (): void => {
@@ -440,6 +452,7 @@ export default function DeployEnvironment({
           environmentsType={environmentsType}
           setEnvironmentsType={setEnvironmentsType}
           setSelectedEnvironments={setSelectedEnvironments}
+          setSelectedEnvironmentsGitDetails={setSelectedEnvironmentsGitDetails}
           allowableTypes={allowableTypes}
           gitOpsEnabled={gitOpsEnabled}
           environmentsList={environmentsList}
