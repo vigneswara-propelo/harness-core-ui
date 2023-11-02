@@ -247,7 +247,8 @@ export enum StepType {
   AwsCdkRollback = 'AwsCdkRollback',
   Provenance = 'provenance',
   CUSTOM_STAGE_ENVIRONMENT = 'CUSTOM_STAGE_ENVIRONMENT',
-  Anchore = 'Anchore'
+  Anchore = 'Anchore',
+  AquaSecurity = 'AquaSecurity'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

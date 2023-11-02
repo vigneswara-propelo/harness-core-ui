@@ -10738,6 +10738,7 @@ export interface StringsMap {
   'sto.stepDescription.AWSECR': string
   'sto.stepDescription.AWSSecurityHub': string
   'sto.stepDescription.Anchore': string
+  'sto.stepDescription.AquaSecurity': string
   'sto.stepDescription.AquaTrivy': string
   'sto.stepDescription.Bandit': string
   'sto.stepDescription.Blackduck': string

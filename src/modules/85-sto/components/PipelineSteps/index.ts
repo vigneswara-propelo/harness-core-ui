@@ -34,6 +34,7 @@ import { FossaStep } from './FossaStep/FossaStep'
 import { SemgrepStep } from './SemgrepStep/SemgrepStep'
 import { CoverityStep } from './CoverityStep/CoverityStep'
 import { AnchoreStep } from './AnchoreStep/AnchoreStep'
+import { AquaSecurityStep } from './AquaSecurityStep/AquaSecurityStep'
 
 factory.registerStep(new ZeroNorthStep())
 factory.registerStep(new AquatrivyStep())
@@ -63,3 +64,4 @@ factory.registerStep(new MetasploitStep())
 factory.registerStep(new BrakemanStep())
 factory.registerStep(new CoverityStep())
 factory.registerStep(new AnchoreStep())
+factory.registerStep(new AquaSecurityStep())
