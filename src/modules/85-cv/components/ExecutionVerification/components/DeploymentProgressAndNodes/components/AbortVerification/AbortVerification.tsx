@@ -8,6 +8,12 @@ import { useStrings } from 'framework/strings'
 import { useAbortVerifyStep } from 'services/cv'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
+
+import RBACTooltip from '@modules/20-rbac/components/RBACTooltip/RBACTooltip'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { usePermission } from '@modules/20-rbac/hooks/usePermission'
+import { AbortVerificationButton } from './AbortVerificationButton'
 import {
   AbortVerificationDialogProps,
   failRequestText,
@@ -15,8 +21,6 @@ import {
   successRequestText,
   successText
 } from './AbortVerification.constants'
-
-import { AbortVerificationButton } from './AbortVerificationButton'
 
 interface AbortVerificationProps {
   activityId?: string
@@ -103,18 +107,16 @@ const AbortVerification = (props: AbortVerificationProps): JSX.Element => {
     setSkipType(markSuccess)
   }
 
-  // 🚨 Add RBAC permission details once it is ready
-  const canAbort = true
-  // const [canAbort] = usePermission(
-  //   {
-  //     resource: {
-  //       resourceType: ResourceType.MONITOREDSERVICE,
-  //       resourceIdentifier: projectIdentifier
-  //     },
-  //     permissions: [PermissionIdentifier.TOGGLE_MONITORED_SERVICE]
-  //   },
-  //   [projectIdentifier]
-  // )
+  const [canAbort] = usePermission(
+    {
+      resource: {
+        resourceType: ResourceType.PIPELINE,
+        resourceIdentifier: projectIdentifier
+      },
+      permissions: [PermissionIdentifier.EXECUTE_PIPELINE]
+    },
+    [projectIdentifier]
+  )
 
   if (isProcessing) {
     return (
@@ -138,12 +140,11 @@ const AbortVerification = (props: AbortVerificationProps): JSX.Element => {
         data-testid="abortVerificationButton"
         variation={ButtonVariation.TERTIARY}
         disabled={!canAbort}
-        // tooltip={!canAbort ? (
-        //   <RBACTooltip
-        //     permission={PermissionIdentifier.TOGGLE_MONITORED_SERVICE}
-        //     resourceType={ResourceType.MONITOREDSERVICE}
-        //   />
-        // ) : undefined}
+        tooltip={
+          !canAbort ? (
+            <RBACTooltip permission={PermissionIdentifier.EXECUTE_PIPELINE} resourceType={ResourceType.PIPELINE} />
+          ) : undefined
+        }
       >
         {getString('cv.abortVerification.buttonText')}
       </Button>

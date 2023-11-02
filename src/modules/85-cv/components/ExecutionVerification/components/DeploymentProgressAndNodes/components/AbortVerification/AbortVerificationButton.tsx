@@ -22,6 +22,7 @@ export function AbortVerificationButton(props: AbortVerificationButtonProps): JS
         disabled={disabled}
         data-testid="abortVerificationSuccessButton"
         onClick={() => handleHandleSkip(true)}
+        flex={{ justifyContent: 'left' }}
       >
         {getString('cv.abortVerification.markAsSuccess')}
       </Button>
@@ -32,6 +33,7 @@ export function AbortVerificationButton(props: AbortVerificationButtonProps): JS
         disabled={disabled}
         data-testid="abortVerificationFailureButton"
         onClick={() => handleHandleSkip(false)}
+        flex={{ justifyContent: 'left' }}
       >
         {getString('cv.abortVerification.markAsFailure')}
       </Button>

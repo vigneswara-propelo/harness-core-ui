@@ -11,7 +11,9 @@ import { waitFor, fireEvent } from '@testing-library/dom'
 import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event/'
 import { TestWrapper } from '@common/utils/testUtils'
+import * as usePermission from '@rbac/hooks/usePermission'
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { RiskValues, getRiskColorValue } from '@cv/utils/CommonUtils'
 import * as cvService from 'services/cv'
 import { ExecutionVerificationSummary } from '../ExecutionVerificationSummary'
@@ -431,6 +433,66 @@ describe('Unit tests for VerifyExection', () => {
       })
 
       await waitFor(() => expect(showError).toHaveBeenCalledWith('Some error'))
+    })
+
+    test('should disable abort verification button if Rbac pipeline expectute permission is disabled', async () => {
+      const useAbortVerificationMock = jest.fn()
+      jest.spyOn(usePermission, 'usePermission').mockReturnValue([false])
+
+      jest.spyOn(cvService, 'useAbortVerifyStep').mockReturnValue({
+        mutate: useAbortVerificationMock
+      } as any)
+
+      const refetchFn = jest.fn()
+
+      render(
+        <TestWrapper>
+          <ExecutionVerificationSummary
+            step={{ status: ExecutionStatusEnum.InterventionWaiting }}
+            refetchOverview={refetchFn}
+            overviewData={SampleResponseRunningPipeline}
+            overviewError={null}
+          />
+        </TestWrapper>
+      )
+
+      const abortVerificationButton = screen.getByTestId(/abortVerificationButton/)
+
+      await waitFor(() => expect(abortVerificationButton).toBeInTheDocument())
+
+      expect(screen.getByTestId(/abortVerificationButton/).getAttribute('disabled')).toBe('')
+    })
+
+    test('should enable abort verification button if Rbac pipeline expectute permission is enabled', async () => {
+      const useAbortVerificationMock = jest.fn()
+
+      jest.spyOn(usePermission, 'usePermission').mockReturnValue([true])
+
+      jest.spyOn(cvService, 'useAbortVerifyStep').mockReturnValue({
+        mutate: useAbortVerificationMock
+      } as any)
+
+      const refetchFn = jest.fn()
+
+      const dummyPermissionsMap = new Map()
+      dummyPermissionsMap.set(PermissionIdentifier.EXECUTE_PIPELINE, true)
+
+      render(
+        <TestWrapper>
+          <ExecutionVerificationSummary
+            step={{ status: ExecutionStatusEnum.InterventionWaiting }}
+            refetchOverview={refetchFn}
+            overviewData={SampleResponseRunningPipeline}
+            overviewError={null}
+          />
+        </TestWrapper>
+      )
+
+      const abortVerificationButton = screen.getByTestId(/abortVerificationButton/)
+
+      await waitFor(() => expect(abortVerificationButton).toBeInTheDocument())
+
+      expect(screen.getByTestId(/abortVerificationButton/).getAttribute('disabled')).toBeNull()
     })
   })
 })
