@@ -7,7 +7,6 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import { PopoverPosition } from '@blueprintjs/core'
-import cx from 'classnames'
 import {
   ExpandingSearchInput,
   Layout,
@@ -17,9 +16,9 @@ import {
   TableProps,
   Page,
   useToaster,
-  Dialog,
   Container,
-  useToggleOpen
+  useToggleOpen,
+  ModalDialog
 } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
@@ -106,6 +105,7 @@ export const DashboardList = <T extends Record<string, any>>(props: DashboardLis
   const [pageSize, setPageSize] = useState(PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : PAGE_SIZE)
   const [filteredData, setFilteredData] = useState<T[]>([])
   const [searchTerm, setSearchTerm] = useState('')
+  const [showOverlay, setShowOverlay] = useState(false)
 
   const { getString } = useStrings()
   const { isOpen, open: showModal, close: hideModal } = useToggleOpen()
@@ -182,7 +182,7 @@ export const DashboardList = <T extends Record<string, any>>(props: DashboardLis
   }
 
   const newServiceDialog = (
-    <Dialog
+    <ModalDialog
       isOpen={isOpen}
       enforceFocus={false}
       canEscapeKeyClose
@@ -193,7 +193,8 @@ export const DashboardList = <T extends Record<string, any>>(props: DashboardLis
       }}
       title={isEdit ? getString('editService') : getString('cd.addService')}
       isCloseButtonShown
-      className={cx('padded-dialog', css.dialog)}
+      width={800}
+      showOverlay={showOverlay}
     >
       <Container>
         <NewEditServiceModal
@@ -208,9 +209,10 @@ export const DashboardList = <T extends Record<string, any>>(props: DashboardLis
             hideModal()
             setIsEdit(false)
           }}
+          setShowOverlay={setShowOverlay}
         />
       </Container>
-    </Dialog>
+    </ModalDialog>
   )
 
   useEffect(() => {

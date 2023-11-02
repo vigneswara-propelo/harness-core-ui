@@ -12,12 +12,12 @@ import {
   Formik,
   FormInput,
   getMultiTypeFromValue,
-  Dialog,
   Layout,
   MultiTypeInputType,
   SelectOption,
   shouldShowError,
-  FormikForm
+  FormikForm,
+  ModalDialog
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import * as Yup from 'yup'
@@ -68,6 +68,7 @@ function DeployServiceWidget({
   const [selectOptions, setSelectOptions] = useState<SelectOption[]>()
   const [state, setState] = useState<DeployServiceState>({ isEdit: false, isService: false })
   const [type, setType] = useState<MultiTypeInputType>(getMultiTypeFromValue(serviceRef))
+  const [showOverlay, setShowOverlay] = useState(false)
 
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
@@ -215,10 +216,11 @@ function DeployServiceWidget({
   }
   const [showModal, hideModal] = useModalHook(
     () => (
-      <Dialog
+      <ModalDialog
         onClose={onClose}
         title={state.isEdit ? getString('editService') : getString('newService')}
-        style={{ width: 880 }}
+        width={800}
+        showOverlay={showOverlay}
         {...DIALOG_PROPS}
       >
         <NewEditServiceModal
@@ -236,8 +238,9 @@ function DeployServiceWidget({
             onClose.call(null)
           }}
           closeModal={onClose}
+          setShowOverlay={setShowOverlay}
         />
-      </Dialog>
+      </ModalDialog>
     ),
     [state]
   )

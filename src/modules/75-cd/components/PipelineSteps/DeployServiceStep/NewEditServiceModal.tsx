@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import { omit } from 'lodash-es'
@@ -25,7 +25,6 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { useToaster } from '@common/exports'
-import { PageSpinner } from '@common/components'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
@@ -59,7 +58,8 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
   data,
   isService,
   onCreateOrUpdate,
-  closeModal
+  closeModal,
+  setShowOverlay
 }): JSX.Element => {
   const { getString } = useStrings()
   const isGitXEnabledForServices = useFeatureFlag(FeatureFlag.CDS_SERVICE_GITX)
@@ -80,6 +80,10 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
       accountIdentifier: accountId
     }
   })
+
+  useEffect(() => {
+    setShowOverlay?.(createLoading || updateLoading)
+  }, [createLoading, updateLoading])
 
   const { showSuccess, showError, clear } = useToaster()
 
@@ -188,38 +192,32 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
   const formikRef = React.useRef<FormikProps<ServiceResponseDTO & GitSyncFormFields>>()
   const id = data.identifier
 
-  if (createLoading || updateLoading) {
-    return <PageSpinner />
-  }
-
   return (
-    <>
-      <Formik<Required<ServiceResponseDTO> & GitSyncFormFields>
-        initialValues={data as Required<ServiceResponseDTO>}
-        formName="deployService"
-        onSubmit={values => {
-          onSubmit(values)
-        }}
-        validationSchema={Yup.object().shape({
-          name: NameSchema(getString, { requiredErrorMsg: getString?.('fieldRequired', { field: 'Service' }) }),
-          identifier: IdentifierSchema(getString),
-          ...(isGitXEnabledForServices ? { ...gitSyncFormSchema(getString) } : {})
-        })}
-      >
-        {formikProps => {
-          formikRef.current = formikProps as FormikProps<ServiceResponseDTO> | undefined
-          return (
-            <>
-              <NewEditServiceForm
-                isEdit={isEdit}
-                formikProps={formikProps as FormikProps<ServiceResponseDTO & GitSyncFormFields>}
-                isGitXEnabledForServices={isGitXEnabledForServices}
-                closeModal={closeModal}
-              />
-            </>
-          )
-        }}
-      </Formik>
-    </>
+    <Formik<Required<ServiceResponseDTO> & GitSyncFormFields>
+      initialValues={data as Required<ServiceResponseDTO>}
+      formName="deployService"
+      onSubmit={values => {
+        onSubmit(values)
+      }}
+      validationSchema={Yup.object().shape({
+        name: NameSchema(getString, { requiredErrorMsg: getString?.('fieldRequired', { field: 'Service' }) }),
+        identifier: IdentifierSchema(getString),
+        ...(isGitXEnabledForServices ? { ...gitSyncFormSchema(getString) } : {})
+      })}
+    >
+      {formikProps => {
+        formikRef.current = formikProps as FormikProps<ServiceResponseDTO> | undefined
+        return (
+          <>
+            <NewEditServiceForm
+              isEdit={isEdit}
+              formikProps={formikProps as FormikProps<ServiceResponseDTO & GitSyncFormFields>}
+              isGitXEnabledForServices={isGitXEnabledForServices}
+              closeModal={closeModal}
+            />
+          </>
+        )
+      }}
+    </Formik>
   )
 }

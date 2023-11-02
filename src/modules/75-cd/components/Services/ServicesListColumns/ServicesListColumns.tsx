@@ -14,12 +14,11 @@ import {
   Text,
   useConfirmationDialog,
   useToaster,
-  Dialog,
   getErrorInfoFromErrorObject,
-  Icon
+  Icon,
+  ModalDialog
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import cx from 'classnames'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, pick } from 'lodash-es'
 import { Classes, Intent, Menu, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
@@ -61,6 +60,7 @@ export enum DeploymentStatus {
 const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
   const { data: service, onRefresh, isForceDeleteEnabled, calledFromSettingsPage } = props
   const [menuOpen, setMenuOpen] = useState(false)
+  const [showOverlay, setShowOverlay] = useState(false)
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
@@ -92,7 +92,7 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
 
   const [showModal, hideModal] = useModalHook(
     () => (
-      <Dialog
+      <ModalDialog
         isOpen={true}
         enforceFocus={false}
         canEscapeKeyClose
@@ -100,7 +100,8 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
         onClose={hideModal}
         title={getString('editService')}
         isCloseButtonShown
-        className={cx('padded-dialog', css.serviceDialogStyles)}
+        width={800}
+        showOverlay={showOverlay}
       >
         <Container>
           <NewEditServiceModal
@@ -116,9 +117,10 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
               onRefresh && onRefresh()
             }}
             closeModal={hideModal}
+            setShowOverlay={setShowOverlay}
           />
         </Container>
-      </Dialog>
+      </ModalDialog>
     ),
     [service, orgIdentifier, projectIdentifier]
   )

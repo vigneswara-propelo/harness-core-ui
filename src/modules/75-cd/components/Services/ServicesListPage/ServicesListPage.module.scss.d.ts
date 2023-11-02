@@ -9,7 +9,6 @@
 declare const styles: {
   readonly card: string
   readonly container: string
-  readonly dialogStyles: string
   readonly editServiceSaveCancel: string
   readonly editor: string
   readonly header: string

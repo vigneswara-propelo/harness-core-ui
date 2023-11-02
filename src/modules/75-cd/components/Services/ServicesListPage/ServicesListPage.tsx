@@ -6,9 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import cx from 'classnames'
 import {
-  Dialog,
   Layout,
   Views,
   VisualYamlSelectedView as SelectedView,
@@ -18,7 +16,8 @@ import {
   Heading,
   ButtonVariation,
   ExpandingSearchInput,
-  ExpandingSearchInputHandle
+  ExpandingSearchInputHandle,
+  ModalDialog
 } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { useModalHook } from '@harness/use-modal'
@@ -112,6 +111,7 @@ export const ServicesListPage = ({
     description: '',
     tags: {}
   })
+  const [showOverlay, setShowOverlay] = useState(false)
 
   useDocumentTitle(getString('services'))
 
@@ -221,7 +221,7 @@ export const ServicesListPage = ({
 
   const [showModal, hideModal] = useModalHook(
     () => (
-      <Dialog
+      <ModalDialog
         isOpen={true}
         enforceFocus={false}
         canEscapeKeyClose
@@ -232,7 +232,8 @@ export const ServicesListPage = ({
         }}
         title={isEdit ? getString('editService') : getString('cd.addService')}
         isCloseButtonShown
-        className={cx('padded-dialog', css.dialogStyles)}
+        width={800}
+        showOverlay={showOverlay}
       >
         <Container>
           <NewEditServiceModal
@@ -247,9 +248,10 @@ export const ServicesListPage = ({
               hideModal()
               setIsEdit(false)
             }}
+            setShowOverlay={setShowOverlay}
           />
         </Container>
-      </Dialog>
+      </ModalDialog>
     ),
     [fetchDeploymentList, orgIdentifier, projectIdentifier, mode, isEdit, serviceDetails]
   )

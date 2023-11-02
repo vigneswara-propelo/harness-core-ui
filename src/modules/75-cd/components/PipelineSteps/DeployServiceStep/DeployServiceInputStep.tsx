@@ -5,16 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Button,
   ButtonSize,
   ButtonVariation,
   getMultiTypeFromValue,
-  Dialog,
   Layout,
   MultiTypeInputType,
-  SelectOption
+  SelectOption,
+  ModalDialog
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { defaultTo, isEmpty } from 'lodash-es'
@@ -54,6 +54,7 @@ const DeployServiceInputStep: React.FC<DeployServiceProps & { formik?: any }> = 
   const { showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { expressions } = useVariablesExpression()
+  const [showOverlay, setShowOverlay] = useState(false)
   const {
     data: serviceResponse,
     error,
@@ -96,7 +97,7 @@ const DeployServiceInputStep: React.FC<DeployServiceProps & { formik?: any }> = 
 
   const [showModal, hideModal] = useModalHook(
     () => (
-      <Dialog
+      <ModalDialog
         isOpen={true}
         enforceFocus={false}
         canEscapeKeyClose
@@ -104,7 +105,8 @@ const DeployServiceInputStep: React.FC<DeployServiceProps & { formik?: any }> = 
         onClose={onClose}
         title={state.isEdit ? getString('editService') : getString('newService')}
         isCloseButtonShown
-        className={'padded-dialog'}
+        width={800}
+        showOverlay={showOverlay}
       >
         <NewEditServiceModal
           data={{
@@ -125,8 +127,9 @@ const DeployServiceInputStep: React.FC<DeployServiceProps & { formik?: any }> = 
             onClose.call(null)
           }}
           closeModal={onClose}
+          setShowOverlay={setShowOverlay}
         />
-      </Dialog>
+      </ModalDialog>
     ),
     [state]
   )

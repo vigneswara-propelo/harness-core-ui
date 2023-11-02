@@ -8,7 +8,6 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly container: string
-  readonly dialog: string
   readonly listHeader: string
   readonly listStateContainer: string
   readonly paddingTop: string

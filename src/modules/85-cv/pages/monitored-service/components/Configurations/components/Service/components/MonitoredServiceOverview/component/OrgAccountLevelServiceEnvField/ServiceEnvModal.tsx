@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { ModalDialog } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { EnvironmentResponseDTO, ServiceYaml } from 'services/cd-ng'
@@ -17,6 +17,7 @@ import css from './OrgAccountLevelServiceEnvField.module.scss'
 
 export const ServiceEnvModal = ({ service, environment }: ServiceEnvModalProps) => {
   const { getString } = useStrings()
+  const [showOverlay, setShowOverlay] = useState(false)
   const { isModalOpen: isAddServiceModalOpen, closeModal: closeAddServiceModal, onSelect: serviceOnSelect } = service
   const { isModalOpen: isAddEnvModalOpen, closeModal: closeAddEnvModal, onSelect: environmentOnSelect } = environment
 
@@ -42,6 +43,7 @@ export const ServiceEnvModal = ({ service, environment }: ServiceEnvModalProps) 
         isOpen={isAddServiceModalOpen}
         onClose={closeAddServiceModal}
         title={getString('newService')}
+        showOverlay={showOverlay}
         {...DIALOG_PROPS}
       >
         <NewEditServiceModal
@@ -50,6 +52,7 @@ export const ServiceEnvModal = ({ service, environment }: ServiceEnvModalProps) 
           isService={false}
           onCreateOrUpdate={onServiceCreate}
           closeModal={closeAddServiceModal}
+          setShowOverlay={setShowOverlay}
         />
       </ModalDialog>
       <ModalDialog

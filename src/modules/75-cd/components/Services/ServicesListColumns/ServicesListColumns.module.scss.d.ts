@@ -12,7 +12,6 @@ declare const styles: {
   readonly contentWrapper: string
   readonly serviceDescription: string
   readonly serviceDescriptionWrapper: string
-  readonly serviceDialogStyles: string
   readonly serviceName: string
   readonly serviceTags: string
   readonly serviceTagsPopover: string

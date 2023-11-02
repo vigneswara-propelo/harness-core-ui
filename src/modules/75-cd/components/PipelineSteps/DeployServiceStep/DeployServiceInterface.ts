@@ -53,4 +53,5 @@ export interface NewEditServiceModalProps {
   serviceIdentifier?: string
   onCreateOrUpdate(data: ServiceRequestDTO): void
   closeModal?: () => void
+  setShowOverlay?: (show: boolean) => void
 }

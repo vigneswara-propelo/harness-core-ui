@@ -18,9 +18,9 @@ import {
   Text,
   useConfirmationDialog,
   useToaster,
-  Dialog,
   Icon,
-  getErrorInfoFromErrorObject
+  getErrorInfoFromErrorObject,
+  ModalDialog
 } from '@harness/uicore'
 import { Color, FontVariation, Intent } from '@harness/design-system'
 import { Classes, Menu, Position } from '@blueprintjs/core'
@@ -389,12 +389,13 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
   const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
   const [hideReferencedByButton, setHideReferencedByButton] = useState(false)
   const [customErrorMessage, setCustomErrorMessage] = useState<string | undefined>()
+  const [showOverlay, setShowOverlay] = useState(false)
 
   const { mutate: deleteService } = useDeleteServiceV2({})
 
   const [showModal, hideModal] = useModalHook(
     () => (
-      <Dialog
+      <ModalDialog
         isOpen={true}
         enforceFocus={false}
         canEscapeKeyClose
@@ -402,7 +403,8 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
         onClose={hideModal}
         title={getString('editService')}
         isCloseButtonShown
-        className={cx('padded-dialog')}
+        width={800}
+        showOverlay={showOverlay}
       >
         <NewEditServiceModal
           data={{ ...pick(data, ['name', 'identifier', 'description', 'tags']) } || { name: '', identifier: '' }}
@@ -413,8 +415,9 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
             hideModal()
           }}
           closeModal={hideModal}
+          setShowOverlay={setShowOverlay}
         />
-      </Dialog>
+      </ModalDialog>
     ),
     [data, orgIdentifier, projectIdentifier]
   )

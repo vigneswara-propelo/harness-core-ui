@@ -47,7 +47,7 @@ describe('NewEditServiceForm test', () => {
     fetchSupportedConnectorsList.mockReset()
   })
 
-  test('Inline Remote option should not be availble while creating if gitX is not supported', async () => {
+  test('Inline Remote option should not be available while creating if gitX is not supported', async () => {
     render(
       <TestWrapper
         path={routes.toServices({ ...accountPathProps, accountRoutePlacement: 'settings' })}
