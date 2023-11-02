@@ -648,6 +648,7 @@ export interface StringsMap {
   'common.learnMoreAboutECR': string
   'common.learnMoreAboutGCR': string
   'common.learnMoreDelegate': string
+  'common.learnMoreWithURL': string
   'common.leaveThisPage': string
   'common.letsGetYouStarted': string
   'common.levelUp': string
@@ -6590,6 +6591,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.deploymentStrategyStep.title': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.deploymentStrategyStep.verifyPipeline': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.forkStep.title': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.cloneAndSetup': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.createGitPat': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.githubpat': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.githubusername': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.title': string
@@ -6606,7 +6609,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createEnv': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGCPSecret': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGCPcon': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGitIcon': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGitcon': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGitopsApp': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGitopsCluster': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGitopsRepo': string

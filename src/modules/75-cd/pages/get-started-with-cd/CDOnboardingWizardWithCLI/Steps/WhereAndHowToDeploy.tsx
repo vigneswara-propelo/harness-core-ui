@@ -171,7 +171,7 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
     <Layout.Vertical>
       {!isK8sSwimlane(stepsProgress) ? (
         <Layout.Vertical>
-          <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'large' }}>
+          <Text color={Color.BLACK} className={css.bold}>
             {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.title')}
           </Text>
 

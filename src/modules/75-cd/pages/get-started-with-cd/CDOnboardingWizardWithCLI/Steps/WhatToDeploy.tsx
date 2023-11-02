@@ -35,7 +35,13 @@ function WhatToDeploy({ saveProgress }: WhatToDeployProps): JSX.Element {
   const { stepsProgress } = useOnboardingStore()
   const { trackEvent } = useTelemetry()
   const [state, setState] = React.useState<WhatToDeployType>(() => {
-    return stepsProgress?.[CDOnboardingSteps.WHAT_TO_DEPLOY]?.stepData || {}
+    const prevStepData = stepsProgress?.[CDOnboardingSteps.WHAT_TO_DEPLOY]?.stepData
+    return !isEmpty(prevStepData)
+      ? prevStepData
+      : {
+          svcType: SERVICE_TYPES.KubernetesService,
+          artifactType: INFRA_TYPES.KubernetesService.KubernetesManifest
+        }
   })
 
   const { getString } = useStrings()
@@ -117,7 +123,6 @@ function WhatToDeploy({ saveProgress }: WhatToDeployProps): JSX.Element {
 
   return (
     <Layout.Vertical spacing="xxlarge">
-      <Text color={Color.BLACK}>{getString('cd.getStartedWithCD.flowByQuestions.what.samplesvc')}</Text>
       <Layout.Vertical spacing={'large'}>
         <Text color={Color.BLACK} className={css.bold}>
           {getString('cd.getStartedWithCD.flowByQuestions.what.aboutSvc')}

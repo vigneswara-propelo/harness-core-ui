@@ -1379,6 +1379,7 @@ notification: Notification
 noNotifications: No Notifications
 createFlag: Create a Flag
 learnMore: Learn more
+learnMoreWithURL: <a  target="_blank" rel="noreferrer noopener nofollow" href="{{{link}}}">Learn more</a>
 sloNoData: You don’t have any SLO created yet
 sloDowntimeLabel: SLO Downtime
 occurrence:

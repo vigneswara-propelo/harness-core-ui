@@ -11,7 +11,10 @@ declare const styles: {
   readonly almostFullScreenCloseBtn: string
   readonly blueIcons: string
   readonly bold: string
+  readonly bottom: string
   readonly buttons: string
+  readonly commandBlock: string
+  readonly commandGap: string
   readonly copyButton: string
   readonly createTokenBtn: string
   readonly delegateImg: string
@@ -22,6 +25,8 @@ declare const styles: {
   readonly dropdownBg: string
   readonly flowcards: string
   readonly infraCards: string
+  readonly inputLength: string
+  readonly inputMargins: string
   readonly marginBottomLarge: string
   readonly marginBottomxl: string
   readonly missingSwimlanes: string

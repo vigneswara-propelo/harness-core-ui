@@ -147,8 +147,7 @@ const DelegateSuccessLabel = ({
       <Layout.Horizontal margin={{ bottom: 'small' }}>
         <Text icon="main-tick" iconProps={{ color: Color.SUCCESS }} color={Color.BLACK}>
           {`${capitalize(data.delegateType)} ${getString('delegate.DelegateName')} :`}
-        </Text>{' '}
-        -
+        </Text>
         <Text padding={{ left: 'small' }} color={Color.BLACK}>
           {getString('cd.getStartedWithCD.flowByQuestions.howNwhere.K8s.cdPipeline.delegateInstalled')}
         </Text>

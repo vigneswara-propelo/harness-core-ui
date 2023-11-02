@@ -352,8 +352,7 @@ export const DEPLOYMENT_TYPE_TO_FILE_MAPS: Record<string, Record<string, string>
 
 export const ARTIFACT_STRINGS_MAP_BY_TYPE: Record<string, Record<string, keyof StringsMap>> = {
   KubernetesService: {
-    svcrep: 'cd.getStartedWithCD.flowByQuestions.what.K8sSteps.k8sSvcRep',
-    svcsubtext: 'cd.getStartedWithCD.flowByQuestions.what.K8sSteps.artifact'
+    svcrep: 'cd.getStartedWithCD.flowByQuestions.what.K8sSteps.k8sSvcRep'
   },
   ServerlessFunction: {
     svcrep: 'cd.getStartedWithCD.flowByQuestions.what.ServerlessSteps.svcrep'

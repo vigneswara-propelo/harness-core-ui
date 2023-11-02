@@ -14,7 +14,7 @@ import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useGetPipeline } from 'services/pipeline-ng'
 import { CDOnboardingSteps, PipelineSetupState, WhatToDeployType } from '../../types'
-import { PIPELINE_IDS_BY_ARTIFACT_STRATEGY_MAP, PIPELINE_TO_STRATEGY_MAP } from '../../Constants'
+import { PIPELINE_IDS_BY_ARTIFACT_STRATEGY_MAP, PIPELINE_TO_STRATEGY_MAP, SERVICE_TYPES } from '../../Constants'
 import { useOnboardingStore } from '../../Store/OnboardingStore'
 import { getBranchingProps } from '../../utils'
 import { ONBOARDING_INTERACTIONS } from '../../TrackingConstants'
@@ -96,9 +96,9 @@ export default function VerifyPipeline({ saveProgress }: VerifyPipelineProps): J
           vars={{
             num:
               (stepsProgress[CDOnboardingSteps.WHAT_TO_DEPLOY].stepData as WhatToDeployType)?.svcType?.id ===
-              'KubernetesService'
-                ? 4
-                : 5
+              SERVICE_TYPES.KubernetesService.id
+                ? ''
+                : '5.'
           }}
         />
       </Text>

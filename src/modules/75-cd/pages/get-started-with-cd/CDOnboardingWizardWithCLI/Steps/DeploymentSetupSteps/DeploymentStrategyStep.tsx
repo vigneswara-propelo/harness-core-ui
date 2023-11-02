@@ -12,7 +12,7 @@ import { Layout, CardSelect, Text, Icon, IconName } from '@harness/uicore'
 import { StringsMap } from 'stringTypes'
 import CommandBlock from '@common/CommandBlock/CommandBlock'
 import { String, useStrings } from 'framework/strings'
-import { DEPLOYMENT_STRATEGY_TYPES, DEPLOYMENT_TYPE_MAP, StrategyVideoByType } from '../../Constants'
+import { DEPLOYMENT_STRATEGY_TYPES, DEPLOYMENT_TYPE_MAP, SERVICE_TYPES, StrategyVideoByType } from '../../Constants'
 import { CDOnboardingSteps, DeploymentStrategyTypes, WhatToDeployType } from '../../types'
 import { getPipelineCommands } from '../../utils'
 import { useOnboardingStore } from '../../Store/OnboardingStore'
@@ -79,9 +79,9 @@ export default function DeploymentStrategySelection({
           vars={{
             num:
               (stepsProgress[CDOnboardingSteps.WHAT_TO_DEPLOY].stepData as WhatToDeployType)?.svcType?.id ===
-              'KubernetesService'
-                ? 3
-                : 4
+              SERVICE_TYPES.KubernetesService.id
+                ? ''
+                : '4.'
           }}
         />
       </Text>

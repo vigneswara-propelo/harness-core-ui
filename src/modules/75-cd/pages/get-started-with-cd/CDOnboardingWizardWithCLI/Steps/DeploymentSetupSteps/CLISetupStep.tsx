@@ -6,23 +6,27 @@
  */
 
 import React, { useEffect, useState } from 'react'
+import cx from 'classnames'
 import { Button, ButtonSize, Layout, OverlaySpinner, Tab, Tabs, Text } from '@harness/uicore'
 import { isEmpty } from 'lodash-es'
+import { useParams } from 'react-router-dom'
 import { Color, FontVariation } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
+import { AccountPathProps } from '@modules/10-common/interfaces/RouteInterfaces'
 import CommandBlock from '@common/CommandBlock/CommandBlock'
 import { getCommandStrWithNewline } from '../../utils'
 import ApiKeySetup from './ApiKeySetup'
 import { SYSTEM_ARCH_TYPES } from '../../Constants'
+import TextWithIndex from './TextWithIndex'
 import type { ApiKeySetupProps, PipelineSetupState } from '../../types'
 import css from '../../CDOnboardingWizardWithCLI.module.scss'
 
 export default function CLISetupStep({
   onKeyGenerate,
   state,
-  isGitopsFlow
-}: ApiKeySetupProps & { state: PipelineSetupState; isGitopsFlow?: boolean }): JSX.Element {
-  const { getString } = useStrings()
+  isGitopsFlow,
+  isK8sFlow
+}: ApiKeySetupProps & { state: PipelineSetupState; isGitopsFlow?: boolean; isK8sFlow?: boolean }): JSX.Element {
   return (
     <Layout.Vertical className={css.deploymentSteps}>
       <Layout.Vertical spacing="large">
@@ -54,31 +58,68 @@ export default function CLISetupStep({
       </Layout.Vertical>
       <Layout.Vertical spacing={'large'}>
         <Text color={Color.BLACK}>
-          <String stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.title" />
+          <String
+            stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.title"
+            vars={{ titleIndex: isK8sFlow ? '1.' : '1.1' }}
+          />
         </Text>
         <InstallCLIInfo />
       </Layout.Vertical>
-      <ApiKeySetup
-        state={state}
-        onKeyGenerate={onKeyGenerate}
-        title={getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.prepareStep.title')}
-        createBtnClass={css.createTokenBtn}
-      />
       <Layout.Vertical>
         <Text className={css.bold} color={Color.BLACK} padding={{ top: 'large' }}>
-          <Text color={Color.BLACK} padding={{ top: 'xlarge' }}>
-            <String
-              useRichText
-              className={css.marginBottomLarge}
-              stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.forkStep.title"
-            />
-          </Text>
+          <TextWithIndex index="2. " className={css.commandGap}>
+            <Text color={Color.BLACK}>
+              <String
+                useRichText
+                className={css.marginBottomLarge}
+                stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.forkStep.title"
+              />
+            </Text>
+          </TextWithIndex>
         </Text>
       </Layout.Vertical>
+      <CLILogin onKeyGenerate={onKeyGenerate} state={state} />
     </Layout.Vertical>
   )
 }
 
+function CLILogin({
+  onKeyGenerate,
+  state
+}: ApiKeySetupProps & {
+  state: PipelineSetupState
+  isGitopsFlow?: boolean
+}): JSX.Element {
+  const { getString } = useStrings()
+  const { accountId } = useParams<AccountPathProps>()
+  return (
+    <>
+      <ApiKeySetup
+        state={state}
+        onKeyGenerate={onKeyGenerate}
+        title={getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.prepareStep.title', {
+          titleIndex: '3. '
+        })}
+        createBtnClass={css.createTokenBtn}
+      />
+      <div className={cx(css.commandBlock, css.commandGap)}>
+        <CommandBlock
+          allowCopy
+          ignoreWhiteSpaces={false}
+          commandSnippet={getString(
+            'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.logincmd',
+            {
+              accId: accountId,
+              apiKey: state?.apiKey
+            }
+          )}
+          downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
+          copyButtonText={getString('common.copy')}
+        />
+      </div>
+    </>
+  )
+}
 export function InstallCLIInfo(): JSX.Element {
   const [version, setLatestVersion] = useState('')
   const getLatestVersion = async (): Promise<string> => {

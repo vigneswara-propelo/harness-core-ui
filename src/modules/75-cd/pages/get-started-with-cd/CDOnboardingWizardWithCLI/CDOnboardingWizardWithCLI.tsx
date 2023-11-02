@@ -57,11 +57,11 @@ export default function CDOnboardingWizardWithCLI(): JSX.Element {
           <Layout.Horizontal className={css.alignicon}>
             <Icon name="cd-main" size={30} />
             <Text padding={{ left: 'xxlarge' }} font={{ variation: FontVariation.H1 }}>
-              {getString('cd.getStartedWithCD.title')}
+              {getString('cd.getStartedWithCD.getStartedPage.sampleDeployment')}
             </Text>
           </Layout.Horizontal>
           <Text className={css.descriptionLeftpad} font={{ variation: FontVariation.BODY1 }}>
-            {getString('cd.getStartedWithCD.description')}
+            {getString('cd.getStartedWithCD.onBoardingSubTitle')}
           </Text>
         </Layout.Vertical>
         <Stepper

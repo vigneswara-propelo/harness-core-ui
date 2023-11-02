@@ -708,7 +708,7 @@ getStartedWithCD:
     what:
       title: What do you want to deploy?
       samplesvc: We will start you with a sample service. You can add your own by editing the yaml later.
-      aboutSvc: Tell us about your service
+      aboutSvc: Type of workload
       svcrep: Service representation
       nonK8sStep: A <a target="_blank" rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/continuous-delivery/get-started/key-concepts/#pipeline">CD Pipeline</a> automates your deployments and pushes new versions to a target environment. You will first install a <a target="_blank" rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/continuous-delivery/get-started/key-concepts/#delegates">Harness Delegate</a> so that your deployment infrastructure and any third-party resources can connect to Harness
       K8sSteps:
@@ -751,9 +751,9 @@ getStartedWithCD:
           verificationSuccess: Harness GitOps agent was successfully installed.
     deploymentSteps:
       headsteps:
-        preparation: '1. Download CLI and set up GitHub access'
+        preparation: 'Create required entities using Harness CLI'
         createEntities: '{{num}}. Create the required Harness entities'
-        verifyPipeline: '{{num}}. Verify that pipeline has been created'
+        verifyPipeline: '{{num}} Verify that pipeline has been created'
         configureGcp: '2. Configure GCP'
         configureAws: '2. Configure AWS'
         configureSsh: '2. Configure SSH'
@@ -766,7 +766,7 @@ getStartedWithCD:
       stepsIntro2: If you want to deploy your own application, all you have to do is edit the sample application YAMLs provided to point to your application manifests and artifact.
       steps:
         prepareStep:
-          title: '1.2 Create an API key for CLI authentication.'
+          title: '{{titleIndex}} Create API key and login to harness CLI'
           gitopsTitle: '{{titleIndex}} Create an API key to use with your commands.'
           gitopsLogin: Login to Harness from CLI
           gitopsClone: Clone <a rel="noreferrer noopener nofollow" target="_blank" href="https://github.com/harness-community/harnesscd-example-apps">harnessed-example-apps</a> repo and change directory.
@@ -775,7 +775,7 @@ getStartedWithCD:
           apiKeyPlacholder: HARNESS-API-KEY
           fetchingApiKeys: Fetching Api Keys
         setupStep:
-          title: '{{titleIndex}}{{^titleIndex}}1.1 {{/titleIndex}}Download the Harness CLI.'
+          title: '{{titleIndex}} Download the Harness CLI for your OS'
           setupEntites: '{{titleIndex}}Run these commands to create the Harness entities necessary to deploy your application.'
           gitopsTitle: These steps will use the Harness CLI to deploy a sample "Guestbook" application located at <a target="_blank"  rel="noreferrer noopener nofollow" href="https://github.com/harness-commuity/harnesscd-example-apps/" >https://github.com/harness-commuity/harnesscd-example-apps/</a>
           arm: 'curl -LO https://github.com/harness/harness-cli/releases/download/{{version}}/harness-{{version}}-linux-arm64.tar.gz'
@@ -855,13 +855,15 @@ getStartedWithCD:
           viewGitopsApp: View your GitOps Application
           initAgentSuccess: Initialized GitOps Agent
         forkStep:
-          title: '1.3. Fork <a target="_blank" rel="noreferrer noopener nofollow" href="https://github.com/harness-community/harnesscd-example-apps/fork">harnesscd-example-apps</a> respository through the Github web interface. This enables personal experimentation and modifications without impacting the original codebase.'
+          title: '{{{num}}} Fork <a target="_blank" rel="noreferrer noopener nofollow" href="https://github.com/harness-community/harnesscd-example-apps/fork">harnesscd-example-apps</a> respository through the Github web interface. This enables personal experimentation and modifications without impacting the original codebase.'
         gitStep:
           title: '1.4. Provide GitHub access details.'
           githubusername: 'GitHub username'
           githubpat: 'GitHub Personal Access Token (PAT)'
           whereToFindGitPat: How do I find this?
           whyGitDetails: As you’ll eventually control deployment configuration by editing YAML definitions, Harness CD needs to read from your repository.
+          cloneAndSetup: '{{{num}}} Clone the repository and change the directory'
+          createGitPat: '{{num}} Create a Secret for GitHub PAT: This securely stores the token.<br/> It&apos;s crucial for Harness to interact with GitHub functionalities like code cloning, branch detection, and webhook triggers.'
         pipelineSetupStep:
           title: '5. Pipeline Setup'
           description1: 'Run the steps to deploy the sample guestbook application located at <a target="_blank" rel="noreferrer noopener nofollow" href="{{guestBookURL}}">{{guestBookURL}}</a>.'
@@ -921,11 +923,11 @@ getStartedWithCD:
               cdDir: '# Change the directory'
               login: '# Login to harness cli'
               createSecret: '# Create a Secret for GitHub PAT: This securely stores the token.'
-              createGitIcon: '# Create a GiHub Connector: Access to YAMLs.'
+              createGitcon: '{{num}}{{^num}}# {{/num}} Create a GiHub Connector: Access to YAMLs.'
               createGitopsRepo: 'Create a GitOps Repository.<a target="_blank" rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/continuous-delivery/gitops/get-started/harness-git-ops-basics/#repository"> Learn More'
               createGitopsCluster: 'Create a GitOps Cluster.<a target="_blank" rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/continuous-delivery/gitops/get-started/harness-git-ops-basics/#cluster"> Learn More'
               createGitopsApp: 'Create a GitOps Application.<a target="_blank" rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/continuous-delivery/gitops/get-started/harness-git-ops-basics/#application"> Learn More'
-              createK8scon: '# Create a Kubernetes Cluster Connector: Access to the deployment target.'
+              createK8scon: '{{num}} Create a Kubernetes Cluster Connector: Access to the deployment target.'
               createArtifactorycon: '# Create a Artifactory Connector: Access to the deployment target.'
               createGCPcon: '# Create a GCP Connector: Access to the deployment target.'
               createAWScon: '# Create a AWS Connector: Access to the deployment target.'
@@ -934,9 +936,9 @@ getStartedWithCD:
               createAWSSecret: '#  Create a Secret for AWS: This securely stores the token.'
               createSSHSecret: '#  Create a Secret for SSH: This securely stores the token.'
               createWINRMSecret: '#  Create a Secret for WinRM: This securely stores the token.'
-              createSvc: '# Create a Service: Represents your application.'
-              createEnv: '# Create an Environment: Represents the production or non-production infrastructure.'
-              createInfra: '# Create an Infrastructure Definition: Specifies the target cluster for the infrastructure. '
+              createSvc: '{{num}}{{^num}}# {{/num}}  Create a Service: Represents your application.'
+              createEnv: '{{num}}{{^num}}# {{/num}}  Create an Environment: Represents the production or non-production infrastructure.'
+              createInfra: '{{num}}{{^num}}# {{/num}}  Create an Infrastructure Definition: Specifies the target cluster for the infrastructure.'
             deploymentStrategies:
               canary:
                 subtitle: 'Gradually release updates to minimize risks'
@@ -950,7 +952,7 @@ getStartedWithCD:
               createrollingcmd: harness pipeline --file {{{type}}}/{{{pipeline}}}.yml apply
               createbasiccmd: harness pipeline --file {{{type}}}/{{{pipeline}}}.yml apply
         deploymentStrategyStep:
-          title: '{{num}}. Pick deployment strategy'
+          title: '{{num}} Pick deployment strategy'
           description: Create a pipeline with your preferred deployment strategy. We recommend starting with the Canary strategy as it reduces the probability of failed changes.
           verifyPipeline: Verify once you have complete the steps above to make sure they were successfully executed.
           pipelinenotfound: Pipeline not created
@@ -1074,7 +1076,7 @@ getStartedWithCD:
   traditionalApp: VM or Bare Metal
   awsLambda: AWS Lambda Function
   googleFunction: Google Cloud Function
-  k8sHelm: Kubernetes with Helm
+  k8sHelm: K8s + Helm
   serverlesscom: Serverless.com Function
   nativeAWSLambda: Native AWS Lambda
   gcpGen1: Google Cloud Function Gen 1

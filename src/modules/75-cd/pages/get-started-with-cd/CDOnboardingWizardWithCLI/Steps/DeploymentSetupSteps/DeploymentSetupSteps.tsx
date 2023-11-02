@@ -14,9 +14,10 @@ import DeploymentStrategySelection from './DeploymentStrategyStep'
 import { CDOnboardingSteps, DeploymentStrategyTypes, PipelineSetupState } from '../../types'
 import { useOnboardingStore } from '../../Store/OnboardingStore'
 import { WIZARD_STEP_OPEN } from '../../TrackingConstants'
-import { getBranchingProps, isGitopsFlow } from '../../utils'
+import { getBranchingProps, isGitopsFlow, isK8sSwimlane } from '../../utils'
 import VerifyGitopsEntities from '../VerificationComponents/VerifyGitopsEntities'
 import GitopsDeploymentSetup from './GitopsDeploymentSetup'
+import K8sCommands from './K8sCommands'
 interface DeploymentSetupStepsProps {
   saveProgress: (stepId: string, data: any) => void
 }
@@ -51,12 +52,17 @@ export default function DeploymentSetupSteps({ saveProgress }: DeploymentSetupSt
   }
 
   const isGitopsFlowSelected = isGitopsFlow(stepsProgress)
+  const isK8sFlow = isK8sSwimlane(stepsProgress)
   return isGitopsFlowSelected ? (
     <GitopsDeploymentSetup state={state} onKeyGenerate={onUpdate} saveProgress={saveProgress} />
   ) : (
     <>
-      <CLISetupStep state={state} onKeyGenerate={onUpdate} isGitopsFlow={isGitopsFlowSelected} />
-      <PipelineSetupStep state={state} onUpdate={onUpdate} />
+      <CLISetupStep state={state} onKeyGenerate={onUpdate} isGitopsFlow={isGitopsFlowSelected} isK8sFlow={isK8sFlow} />
+      {isK8sFlow ? (
+        <K8sCommands state={state} onUpdate={onUpdate} />
+      ) : (
+        <PipelineSetupStep state={state} onUpdate={onUpdate} />
+      )}
 
       {isGitopsFlowSelected ? (
         <VerifyGitopsEntities saveProgress={saveProgress} />

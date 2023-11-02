@@ -154,4 +154,21 @@
 }
 .createTokenBtn {
   margin-left: var(--spacing-xlarge) !important;
+  .bottom {
+    margin-bottom: var(--spacing-large);
+  }
+}
+.commandBlock {
+  padding: var(--spacing-large) 0 0 var(--spacing-large);
+}
+
+.inputLength {
+  width: 400px;
+  &.inputMargins {
+    margin-left: var(--spacing-large);
+  }
+}
+
+.commandGap {
+  margin-bottom: var(--spacing-large) !important;
 }
