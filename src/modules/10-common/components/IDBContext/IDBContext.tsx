@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from 'react'
+import React, { useReducer, useRef } from 'react'
 import { deleteDB, IDBPDatabase, openDB } from 'idb'
 import SessionToken from 'framework/utils/SessionToken'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -47,18 +47,17 @@ export const IDBContext = React.createContext<IDBContextInterface>({
 
 export function IDBProvider(props: IDBProviderProps): React.ReactElement {
   const { storeName, dbName, keyPath = DefaultKeyPath, children } = props
-
   const [state, dispatch] = useReducer(idbReducer, initialState)
-  const [idbHandle, setIdbHandle] = useState<IDBPDatabase | undefined>()
+  const idbHandleRef = useRef<IDBPDatabase | undefined>()
 
   const cleanUpDBRefs = (): void => {
-    if (idbHandle) {
-      idbHandle.close()
+    if (idbHandleRef.current) {
+      idbHandleRef.current.close()
     }
   }
 
   const initializeDB = async (version: number, trial = 0): Promise<void> => {
-    if (!idbHandle) {
+    if (!idbHandleRef.current) {
       try {
         dispatch(IDBContextAction.setInitializing())
         const _idbHandle = await openDB(dbName, version, {
@@ -82,7 +81,7 @@ export function IDBProvider(props: IDBProviderProps): React.ReactElement {
             cleanUpDBRefs()
           }
         })
-        setIdbHandle(_idbHandle)
+        idbHandleRef.current = _idbHandle
         dispatch(IDBContextAction.setInitialized())
       } catch (e) {
         // DB downgraded, deleting and re creating the DB
@@ -91,7 +90,7 @@ export function IDBProvider(props: IDBProviderProps): React.ReactElement {
         } catch (_) {
           // ignore
         }
-        setIdbHandle(undefined)
+        idbHandleRef.current = undefined
 
         ++trial
 
@@ -118,8 +117,8 @@ export function IDBProvider(props: IDBProviderProps): React.ReactElement {
 
   const get = async (id: string): Promise<unknown> => {
     try {
-      if (idbHandle?.objectStoreNames?.contains(storeName)) {
-        return idbHandle?.get(storeName, id)
+      if (idbHandleRef.current?.objectStoreNames?.contains(storeName)) {
+        return idbHandleRef.current?.get(storeName, id)
       }
     } catch (_) {
       logger.info(DBNotFoundErrorMessage)
@@ -128,7 +127,7 @@ export function IDBProvider(props: IDBProviderProps): React.ReactElement {
 
   const put = async (payload: IDBPayload): Promise<unknown> => {
     try {
-      return idbHandle?.put(storeName, payload)
+      return idbHandleRef.current?.put(storeName, payload)
     } catch (_) {
       logger.info(DBNotFoundErrorMessage)
     }
@@ -136,7 +135,7 @@ export function IDBProvider(props: IDBProviderProps): React.ReactElement {
 
   const del = async (id: string): Promise<unknown> => {
     try {
-      return idbHandle?.delete(storeName, id)
+      return idbHandleRef.current?.delete(storeName, id)
     } catch (_) {
       logger.info(DBNotFoundErrorMessage)
     }
@@ -145,7 +144,7 @@ export function IDBProvider(props: IDBProviderProps): React.ReactElement {
   return (
     <IDBContext.Provider
       value={{
-        idb: { idb: idbHandle, get, put, del },
+        idb: { idb: idbHandleRef.current, get, put, del },
         ...state
       }}
     >
