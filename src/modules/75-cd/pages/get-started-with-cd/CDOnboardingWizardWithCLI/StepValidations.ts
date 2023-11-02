@@ -21,9 +21,7 @@ function validateWhatToDeployStep(data: WhatToDeployType): boolean {
 
 function validateWhereAndHowToDeployStep(data: WhereAndHowToDeployType): boolean {
   return (
-    // (Boolean(data?.agentStatus === 'HEALTHY') &&
-    data.type?.id === DEPLOYMENT_FLOW_ENUMS.Gitops ||
-    // )
+    (Boolean(data?.agentStatus === 'HEALTHY') && data.type?.id === DEPLOYMENT_FLOW_ENUMS.Gitops) ||
     (Boolean(data?.installDelegateTried) && data.type?.id === DEPLOYMENT_FLOW_ENUMS.CDPipeline)
   )
 }
