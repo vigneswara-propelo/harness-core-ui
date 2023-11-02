@@ -184,3 +184,5 @@ triggerExplorer:
   selectArtifactType: 'Select Artifact Type'
   searchArtifactTriggers: 'Provide a type of Artifact Trigger to filter the history of Artifact Trigger events received'
 triggerListing: Trigger Listing
+nameASCSort: Name (A->Z, 0->9)
+nameDESCSort: Name (Z->A, 9->0)

@@ -191,7 +191,13 @@ describe('Trigger Explorer page tests', () => {
     expect(retryButton).toBeDefined()
     await userEvent.click(retryButton)
     expect(refetchList).toHaveBeenCalledWith({
-      queryParams: { accountIdentifier: 'testAcc', artifactType: 'DockerRegistry', page: 0, size: 10 }
+      queryParams: {
+        accountIdentifier: 'testAcc',
+        artifactType: 'DockerRegistry',
+        page: 0,
+        size: 10,
+        sort: ['createdAt,DESC']
+      }
     })
   })
 

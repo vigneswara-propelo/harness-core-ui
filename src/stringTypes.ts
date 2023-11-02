@@ -5963,6 +5963,8 @@ export interface StringsMap {
   'triggers.lastActivationLabel': string
   'triggers.lastCollectedTag': string
   'triggers.lastCollectedVersion': string
+  'triggers.nameASCSort': string
+  'triggers.nameDESCSort': string
   'triggers.newArtifactLabel': string
   'triggers.newManifestLabel': string
   'triggers.newTrigger': string

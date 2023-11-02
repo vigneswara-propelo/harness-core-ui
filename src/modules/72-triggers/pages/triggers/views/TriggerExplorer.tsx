@@ -18,7 +18,10 @@ import {
   Container,
   Icon,
   Select,
-  SelectOption
+  SelectOption,
+  ListHeader,
+  sortByCreated,
+  SortMethod
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { Link, useParams } from 'react-router-dom'
@@ -49,6 +52,7 @@ import {
   usePageQueryParamOptions
 } from '@common/constants/Pagination'
 import { TriggerType } from '@triggers/components/Triggers/TriggerInterface'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import {
   CellType,
   PayloadDrawer,
@@ -123,6 +127,14 @@ const TriggerExplorer: React.FC = (): React.ReactElement => {
   const [showHelpPanel, setShowHelpPanel] = React.useState<boolean>(true)
   const [selectedArtifactTriggerTypeOption, setSelectedArtifactTriggerTypeOption] = React.useState<SelectOption>()
   const { accountId } = useParams<AccountPathProps>()
+  const { preference: sortPreference = SortMethod.Newest, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-TriggersExplorerPage`)
+
+  const sortByTriggerIdentifier: SelectOption[] = [
+    { label: getString('triggers.nameASCSort'), value: 'triggerIdentifier,ASC' },
+    { label: getString('triggers.nameDESCSort'), value: 'triggerIdentifier,DESC' }
+  ]
+
   const {
     data: webhookTriggerData,
     loading: webhookTriggerLoading,
@@ -157,6 +169,7 @@ const TriggerExplorer: React.FC = (): React.ReactElement => {
     accountIdentifier: accountId,
     size: size,
     page: page ? page - 1 : 0,
+    sort: [sortPreference],
     artifactType: selectedArtifactTriggerTypeOption?.value as string
   }
   const {
@@ -168,7 +181,8 @@ const TriggerExplorer: React.FC = (): React.ReactElement => {
     queryParams: {
       ...artifactTriggerQueryParams
     },
-    lazy: true
+    lazy: true,
+    queryParamStringifyOptions: { arrayFormat: 'repeat' }
   })
 
   const {
@@ -207,7 +221,7 @@ const TriggerExplorer: React.FC = (): React.ReactElement => {
         }
       })
     }
-  }, [selectedArtifactTriggerTypeOption, page, size])
+  }, [selectedArtifactTriggerTypeOption, page, size, sortPreference])
 
   const columns: Column<NGTriggerEventHistoryResponse>[] = useMemo(() => {
     const cols = [
@@ -350,7 +364,7 @@ const TriggerExplorer: React.FC = (): React.ReactElement => {
               <Text padding={{ bottom: 'xlarge' }} font={{ weight: 'semi-bold', variation: FontVariation.H6 }}>
                 {getString('triggers.triggerExplorer.searchArtifactTriggers')}
               </Text>
-              <Layout.Horizontal>
+              <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
                 <Text font={{ weight: 'semi-bold', variation: FontVariation.H6 }} width={150}>
                   {getString('triggers.triggerExplorer.selectArtifactType')}
                 </Text>
@@ -411,13 +425,24 @@ const TriggerExplorer: React.FC = (): React.ReactElement => {
           className={css.pageBody}
         >
           {selectedArtifactTriggerTypeOption && !isEmpty(artifactTriggerContent) && (
-            <TableV2<NGTriggerEventHistoryResponse>
-              className={css.table}
-              columns={columns}
-              data={artifactTriggerContent as NGTriggerEventHistoryResponse[]}
-              name="TriggerExplorerView"
-              pagination={paginationProps}
-            />
+            <>
+              <ListHeader
+                selectedSortMethod={sortPreference}
+                sortOptions={[...sortByCreated, ...sortByTriggerIdentifier]}
+                onSortMethodChange={option => {
+                  setSortPreference(option.value as SortMethod)
+                  updateQueryParams({ page: PAGE_TEMPLATE_DEFAULT_PAGE_INDEX })
+                }}
+                totalCount={artifactTriggerData?.data?.totalElements}
+              />
+              <TableV2<NGTriggerEventHistoryResponse>
+                className={css.table}
+                columns={columns}
+                data={artifactTriggerContent as NGTriggerEventHistoryResponse[]}
+                name="TriggerExplorerView"
+                pagination={paginationProps}
+              />
+            </>
           )}
         </Page.Body>
       )}
