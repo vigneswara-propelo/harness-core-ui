@@ -418,6 +418,7 @@ export interface ArtifactTagHelperText {
   repositoryFormat?: RepositoryFormatTypes
   artifactId?: string
   groupId?: string
+  group?: string
   artifactArrayPath?: string
   versionPath?: string
   packageName?: string

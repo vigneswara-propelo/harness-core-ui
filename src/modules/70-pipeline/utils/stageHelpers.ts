@@ -259,6 +259,7 @@ export const getHelpeTextForTags = (
     versionPath?: string
     feed?: string
     filterType?: ARTIFACT_FILTER_TYPES
+    group?: string
   },
   getString: (key: StringKeys) => string,
   isServerlessDeploymentTypeSelected = false,
@@ -286,7 +287,8 @@ export const getHelpeTextForTags = (
     feed,
     artifactArrayPath,
     versionPath,
-    filterType
+    filterType,
+    group
   } = fields
   const invalidFields: string[] = []
   if (!connectorRef || getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME) {
@@ -388,6 +390,10 @@ export const getHelpeTextForTags = (
 
   if (groupId !== undefined && (!groupId || getMultiTypeFromValue(groupId) === MultiTypeInputType.RUNTIME)) {
     invalidFields.push(getString('pipeline.artifactsSelection.groupId'))
+  }
+
+  if (group !== undefined && (!group || getMultiTypeFromValue(group) === MultiTypeInputType.RUNTIME)) {
+    invalidFields.push(getString('rbac.group'))
   }
 
   if (

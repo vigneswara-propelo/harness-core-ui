@@ -157,6 +157,13 @@ export const helperTextData = (
             repository: formik.values?.repository,
             repositoryPort: formik.values?.repositoryPort
           }
+        : formik.values?.repositoryFormat === RepositoryFormatTypes.Raw
+        ? {
+            connectorRef: connectorIdValue,
+            repository: formik.values?.repository,
+            repositoryFormat: formik.values?.repositoryFormat,
+            group: formik.values?.spec?.group
+          }
         : {
             connectorRef: connectorIdValue,
             repository: formik.values?.repository,
