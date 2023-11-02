@@ -13,6 +13,7 @@ interface PipelineOutOfSyncProps {
   projectIdentifier: string
   pipelineIdentifier: string
   storeMetadata?: StoreMetadata
+  selectedBranch?: string
 }
 
 export default function PipelineOutOfSync({
@@ -20,29 +21,25 @@ export default function PipelineOutOfSync({
   accountId,
   orgIdentifier,
   projectIdentifier,
-  pipelineIdentifier
+  pipelineIdentifier,
+  selectedBranch
 }: PipelineOutOfSyncProps): React.ReactElement | null {
   const { getString } = useStrings()
   const [outOfSync, setOutOfSync] = React.useState(false)
 
-  const {
-    data: reconcileData,
-    refetch: reconcilePipeline,
-    isFetching: isFetchingReconcileData
-  } = useValidateTemplateInputsQuery(
-    {
-      queryParams: {
-        accountIdentifier: accountId,
-        orgIdentifier,
-        projectIdentifier,
-        identifier: pipelineIdentifier,
-        ...getGitQueryParamsWithParentScope({ storeMetadata, params: { accountId, orgIdentifier, projectIdentifier } })
-      }
-    },
-    {
-      enabled: false
+  const { data: reconcileData, isFetching: isFetchingReconcileData } = useValidateTemplateInputsQuery({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      identifier: pipelineIdentifier,
+      ...getGitQueryParamsWithParentScope({
+        storeMetadata,
+        params: { accountId, orgIdentifier, projectIdentifier },
+        branch: selectedBranch
+      })
     }
-  )
+  })
 
   useEffect(() => {
     if (!isFetchingReconcileData && reconcileData?.data) {
@@ -53,10 +50,6 @@ export default function PipelineOutOfSync({
       }
     }
   }, [reconcileData?.data, isFetchingReconcileData])
-
-  useEffect(() => {
-    reconcilePipeline()
-  }, [])
 
   if (isFetchingReconcileData || !outOfSync) return null
 

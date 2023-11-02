@@ -739,7 +739,8 @@ export function PipelineCanvas({
       inputSetType,
       inputSetValue,
       inputSetLabel,
-      pipelineIdentifier
+      pipelineIdentifier,
+      storeMetadata
     ]
   )
 

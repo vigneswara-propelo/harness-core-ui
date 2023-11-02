@@ -174,7 +174,8 @@ export const useRunPipelineModal = (
       pipelineIdentifier,
       inputSetSelected,
       stagesExecuted,
-      planExecutionId
+      planExecutionId,
+      storeMetadata
     ]
   )
 

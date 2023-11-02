@@ -1053,6 +1053,7 @@ function RunPipelineFormBasic({
                     orgIdentifier={orgIdentifier}
                     projectIdentifier={projectIdentifier}
                     pipelineIdentifier={pipelineIdentifier}
+                    selectedBranch={pipelineResponse?.data?.gitDetails?.branch}
                   />
                   <RequiredStagesInfo
                     selectedStageData={selectedStageData}
