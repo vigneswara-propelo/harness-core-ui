@@ -24,7 +24,7 @@ import {
   useToaster
 } from '@harness/uicore'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import type { NGEnvironmentInfoConfig } from 'services/cd-ng'
+import type { Error, NGEnvironmentInfoConfig } from 'services/cd-ng'
 import { StageElementWrapperConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { useGetSettingValue } from 'services/cd-ng'
@@ -51,6 +51,7 @@ import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { usePipelineContext } from '@modules/70-pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { ErrorHandler } from '@modules/10-common/components/ErrorHandler/ErrorHandler'
 import EnvironmentEntitiesList from '../EnvironmentEntitiesList/EnvironmentEntitiesList'
 import type {
   DeployEnvironmentEntityCustomStepProps,
@@ -162,6 +163,7 @@ export default function DeployEnvironment({
   const {
     environmentsList,
     environmentsData,
+    remoteFetchError,
     loadingEnvironmentsList,
     loadingEnvironmentsData,
     // This is required only when updating the entities list
@@ -175,8 +177,17 @@ export default function DeployEnvironment({
     environmentGitBranches: selectedEnvironentsGitDetails,
     envGroupIdentifier,
     serviceIdentifiers,
-    parentStoreMetadata: storeMetadata
+    parentStoreMetadata: storeMetadata,
+    showRemoteFetchError: true
   })
+  const remoteFetchErrorMessages = (remoteFetchError as Error)?.responseMessages
+
+  const showRemoteFetchError =
+    remoteFetchErrorMessages &&
+    isFixed &&
+    !isEmpty(selectedEnvironments) &&
+    !loadingEnvironmentsData &&
+    !updatingEnvironmentsData
 
   useEffect(() => {
     // do this only on mount of mulit env component
@@ -492,6 +503,11 @@ export default function DeployEnvironment({
             isServiceOverridesEnabled={isServiceOverridesEnabled}
           />
         )}
+        {showRemoteFetchError ? (
+          <Layout.Vertical>
+            <ErrorHandler responseMessages={remoteFetchErrorMessages} />
+          </Layout.Vertical>
+        ) : null}
         {shouldShowDynamicProvisioning && (
           <DeployProvisioner initialValues={initialValues} allowableTypes={allowableTypes} />
         )}

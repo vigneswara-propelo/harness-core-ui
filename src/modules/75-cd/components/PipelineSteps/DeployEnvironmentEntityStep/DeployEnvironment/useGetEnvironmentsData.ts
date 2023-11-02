@@ -19,6 +19,7 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 import {
   EnvironmentYaml,
+  Failure,
   useGetEnvironmentAccessList,
   useGetEnvironmentsInputYamlAndServiceOverrides,
   useGetEnvironmentsInputYamlAndServiceOverridesV2
@@ -38,6 +39,7 @@ export interface UseGetEnvironmentsDataProps {
   serviceIdentifiers: string[]
   envGroupIdentifier?: string
   parentStoreMetadata?: StoreMetadata
+  showRemoteFetchError?: boolean
 }
 
 export interface UseGetEnvironmentsDataReturn {
@@ -45,6 +47,7 @@ export interface UseGetEnvironmentsDataReturn {
   environmentsList: EnvironmentYaml[]
   /** Contains list of environment objects with inputs */
   environmentsData: EnvironmentData[]
+  remoteFetchError: Failure | undefined
   loadingEnvironmentsList: boolean
   loadingEnvironmentsData: boolean
   /** Used only for loading state while updating data */
@@ -61,7 +64,8 @@ export function useGetEnvironmentsData({
   serviceIdentifiers,
   environmentGitBranches,
   envGroupIdentifier,
-  parentStoreMetadata
+  parentStoreMetadata,
+  showRemoteFetchError = false
 }: UseGetEnvironmentsDataProps): UseGetEnvironmentsDataReturn {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { showError } = useToaster()
@@ -70,6 +74,7 @@ export function useGetEnvironmentsData({
   // State
   const [environmentsList, setEnvironmentsList] = useState<EnvironmentYaml[]>([])
   const [environmentsData, setEnvironmentsData] = useState<EnvironmentData[]>([])
+  const [remoteFetchError, setRemoteFetchError] = useState<Failure | undefined>()
   const [nonExistingEnvironmentIdentifiers, setNonExistingEnvironmentIdentifiers] = useState<string[]>([])
   const isGitXEnabledForEnvironments = useFeatureFlag(FeatureFlag.CDS_ENV_GITX)
 
@@ -164,6 +169,15 @@ export function useGetEnvironmentsData({
           projectIdentifier: environmentResponse.environment?.projectIdentifier
         }))
       }
+      if (
+        (environmentsDataErrorV2?.data as Failure)?.status === 'ERROR' &&
+        (environmentsDataErrorV2?.data as Failure)?.code === 'HINT' &&
+        showRemoteFetchError
+      ) {
+        setRemoteFetchError(environmentsDataErrorV2?.data as Failure)
+      } else {
+        setRemoteFetchError(undefined)
+      }
 
       const environmentsAndServiceOverridesInResponse = defaultTo(
         isGitXEnabledForEnvironments
@@ -254,7 +268,8 @@ export function useGetEnvironmentsData({
     environmentsListResponse?.data,
     environmentsDataResponse?.data?.environmentsInputYamlAndServiceOverrides,
     environmentsDataResponseV2?.data?.environmentsInputYamlAndServiceOverrides,
-    sortedEnvIdentifiers
+    sortedEnvIdentifiers,
+    environmentsDataErrorV2
   ])
 
   useEffect(() => {
@@ -278,6 +293,15 @@ export function useGetEnvironmentsData({
           entityGitDetails: environmentInResponse.entityGitDetails
         }
       })
+      if (
+        (environmentsDataErrorV2?.data as Failure)?.status === 'ERROR' &&
+        (environmentsDataErrorV2?.data as Failure)?.code === 'HINT' &&
+        showRemoteFetchError
+      ) {
+        setRemoteFetchError(environmentsDataErrorV2?.data as Failure)
+      } else {
+        setRemoteFetchError(undefined)
+      }
 
       if (yamlMetadataList?.length) {
         _environmentsData = yamlMetadataList.map(row => {
@@ -331,7 +355,8 @@ export function useGetEnvironmentsData({
     loading,
     environmentsListResponse?.data,
     environmentsDataResponse?.data?.environmentsInputYamlAndServiceOverrides,
-    environmentsDataResponseV2?.data?.environmentsInputYamlAndServiceOverrides
+    environmentsDataResponseV2?.data?.environmentsInputYamlAndServiceOverrides,
+    environmentsDataErrorV2
   ])
 
   useEffect(() => {
@@ -357,7 +382,14 @@ export function useGetEnvironmentsData({
   }, [environmentsDataError])
 
   useEffect(() => {
-    if (environmentsDataErrorV2?.message) {
+    if (
+      environmentsDataErrorV2?.message &&
+      (!(
+        (environmentsDataErrorV2?.data as Failure)?.status === 'ERROR' &&
+        (environmentsDataErrorV2?.data as Failure)?.code === 'HINT'
+      ) ||
+        !showRemoteFetchError)
+    ) {
       if (shouldShowError(environmentsDataErrorV2)) {
         showError(getRBACErrorMessage(environmentsDataErrorV2))
       }
@@ -372,6 +404,7 @@ export function useGetEnvironmentsData({
   return {
     environmentsList,
     environmentsData,
+    remoteFetchError,
     loadingEnvironmentsList,
     loadingEnvironmentsData: loadingEnvironmentsData || loadingEnvironmentsDataV2,
     updatingEnvironmentsData: updatingEnvironmentsData || updatingEnvironmentsDataV2,
