@@ -86,7 +86,7 @@ export function PolicyViolationsDrawer({
         order
       }
     },
-    { enabled: SSCA_MANAGER_ENABLED }
+    { enabled: !SSCA_MANAGER_ENABLED }
   )
 
   const useGetPolicyViolationsQueryResult = useGetPolicyViolationsQuery(
@@ -102,7 +102,7 @@ export function PolicyViolationsDrawer({
         search_text: searchTerm
       }
     },
-    { enabled: !SSCA_MANAGER_ENABLED }
+    { enabled: SSCA_MANAGER_ENABLED }
   )
 
   const { isLoading, error, refetch, data } = SSCA_MANAGER_ENABLED

@@ -117,7 +117,7 @@ describe('ExecutionArtifactListView', () => {
   })
 
   test('should show violation list view for enforcement step | search | sort', async () => {
-    renderArtifactsTab()
+    renderArtifactsTab('ci', { SSCA_MANAGER_ENABLED: false })
     const rows = await screen.findAllByRole('row')
 
     await userEvent.click(
