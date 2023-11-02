@@ -26,7 +26,7 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useGetMonitoredServiceListEnvironments, useGetCountOfServices } from 'services/cv'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
 import { useQueryParams } from '@common/hooks'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -38,6 +38,8 @@ import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext
 import { getCVMonitoringServicesSearchParam, getErrorMessage, getEnvironmentOptions } from '@cv/utils/CommonUtils'
 import ServiceDependencyGraph from '@cv/pages/monitored-service/CVMonitoredService/components/MonitoredServiceGraphView/MonitoredServiceGraphView'
 import type { MonitoredServiceConfig } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.types'
+import SRMApp from '@modules/85-cv/SRMApp'
+import { FeatureFlag } from '@modules/10-common/featureFlags'
 import {
   areFiltersApplied,
   getEnvironmentIdentifier,
@@ -78,6 +80,7 @@ const MonitoredService = (props: MonitoredServiceProps) => {
   const [selectedFilter, setSelectedFilter] = useState<FilterTypes>(FilterTypes.ALL)
 
   const projectRef = useRef(projectIdentifier)
+  const isMFEEnabled = useFeatureFlag(FeatureFlag.SRM_MICRO_FRONTEND)
 
   useEffect(() => {
     setPage(0)
@@ -270,7 +273,7 @@ const MonitoredService = (props: MonitoredServiceProps) => {
           config={config}
           isSettingsRoute={isSettingsRoute}
         />
-      ) : (
+      ) : !isMFEEnabled ? (
         <ServiceDependencyGraph
           isPageView
           search={search}
@@ -282,6 +285,24 @@ const MonitoredService = (props: MonitoredServiceProps) => {
           createButton={createButton(Boolean(!serviceCountData?.allServicesCount), config)}
           environmentIdentifier={getEnvironmentIdentifier(environment)}
           serviceCountErrorMessage={getErrorMessage(serviceCountError)}
+        />
+      ) : (
+        <SRMApp
+          renderComponent={{
+            componentName: 'ServiceDependencyGraph',
+            componentProps: {
+              isPageView: true,
+              search: search,
+              serviceCountData: serviceCountData,
+              selectedFilter: selectedFilter,
+              onFilter: onFilter,
+              refetchServiceCountData: refetchServiceCountData,
+              serviceCountLoading: serviceCountLoading,
+              createButton: createButton(Boolean(!serviceCountData?.allServicesCount), config),
+              environmentIdentifier: getEnvironmentIdentifier(environment),
+              serviceCountErrorMessage: getErrorMessage(serviceCountError)
+            }
+          }}
         />
       )}
     </>
