@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Accordion, Container, Icon, Layout, Popover, Text } from '@harness/uicore'
+import { Accordion, AccordionHandle, Container, Icon, Layout, Popover, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import cx from 'classnames'
 import { NavLink, matchPath, useLocation, useParams } from 'react-router-dom'
 import { PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
@@ -97,6 +97,7 @@ const ModuleSummary: React.FC<{ module: NavModuleName; isDirectAccessModule: boo
   const { getString } = useStrings()
   const { icon, shortLabel, color } = useNavModuleInfo(module)
   const { sideNavState } = useLayoutV2()
+  const nodeRef = useRef<HTMLDivElement | null>(null)
   const isActive = selectedModule?.toLowerCase() === module.toLowerCase()
 
   if (isDirectAccessModule) {
@@ -104,28 +105,43 @@ const ModuleSummary: React.FC<{ module: NavModuleName; isDirectAccessModule: boo
   }
 
   const isCollapsed = sideNavState === SIDE_NAV_STATE.COLLAPSED
+
   return (
     <Popover
       interactionKind={PopoverInteractionKind.HOVER}
       minimal
-      position={PopoverPosition.BOTTOM_RIGHT}
+      position={PopoverPosition.RIGHT_TOP}
       popoverClassName={css.popover}
-      disabled={true}
+      disabled={!isCollapsed}
       content={
-        <Container className={css.module}>
+        <Layout.Vertical className={cx(css.module, css.linksPopover)} padding="small">
+          <Layout.Horizontal className={cx(css.popoverHeader, { [css.active]: isActive })} margin={{ bottom: 'small' }}>
+            <Icon
+              className={css.moduleIcon}
+              name={icon}
+              size={20}
+              margin={{ right: 'small' }}
+              style={{ fill: `var(${color})` }}
+            />
+            <Text color={isActive ? Color.PRIMARY_8 : Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
+              {getString(shortLabel)}
+            </Text>
+          </Layout.Horizontal>
           <SideNavLinksComponent module={module} mode={NAV_MODE.ALL} />
-        </Container>
+        </Layout.Vertical>
       }
+      boundary="viewport"
     >
       <Layout.Horizontal
         className={cx(css.container, { [css.active]: isActive, [css.sideNavCollapsed]: isCollapsed })}
         flex={{ justifyContent: 'flex-start' }}
+        ref={nodeRef}
       >
         <Icon
           className={css.moduleIcon}
           name={icon}
           size={20}
-          margin={{ right: 'small' }}
+          margin={{ right: isCollapsed ? 0 : 'small' }}
           style={{ fill: `var(${color})` }}
         />
         {!isCollapsed && (
@@ -143,6 +159,7 @@ interface ModulesAccordionProps {
 }
 
 const ModulesAccordion: React.FC<ModulesAccordionProps> = ({ mode = NAV_MODE.ALL }) => {
+  const accordionRef = React.useRef<AccordionHandle>({} as AccordionHandle)
   const moduleMap = useNavModuleInfoMap()
   const { sideNavState } = useLayoutV2()
   const { accountId } = useParams<AccountPathProps>()
@@ -151,6 +168,12 @@ const ModulesAccordion: React.FC<ModulesAccordionProps> = ({ mode = NAV_MODE.ALL
     MODULES_CONFIG_PREFERENCE_STORE_KEY
   )
   const { pathname } = useLocation()
+
+  useEffect(() => {
+    if (sideNavState === SIDE_NAV_STATE.COLLAPSED && accordionRef.current) {
+      accordionRef.current.close(selectedModule as string)
+    }
+  }, [sideNavState])
   const { selectedModules = [], orderedModules = [] } = modulesPreferenceData || {}
   const directAccessModules = [ModuleName.IDP]
 
@@ -164,6 +187,8 @@ const ModulesAccordion: React.FC<ModulesAccordionProps> = ({ mode = NAV_MODE.ALL
     matchPath(pathname, { path: routes.toModule({ mode, accountId, module: moduleNameToModuleMapping[module] }) })
   )
 
+  const isCollapsed = sideNavState === SIDE_NAV_STATE.COLLAPSED
+
   return (
     <Accordion
       className={cx(css.accordion, { [css.sideNavCollapsed]: sideNavState === SIDE_NAV_STATE.COLLAPSED })}
@@ -172,11 +197,13 @@ const ModulesAccordion: React.FC<ModulesAccordionProps> = ({ mode = NAV_MODE.ALL
       activeId={selectedModule}
       panelClassName={css.panel}
       detailsClassName={css.accordionDetails}
+      ref={accordionRef}
     >
       {visibleModules.map(module => (
         <Accordion.Panel
           key={module}
           id={module}
+          disabled={isCollapsed}
           summary={
             <ModuleSummary
               module={module}

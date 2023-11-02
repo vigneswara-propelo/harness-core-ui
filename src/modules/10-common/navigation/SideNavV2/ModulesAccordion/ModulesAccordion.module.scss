@@ -19,6 +19,7 @@
       justify-content: space-between;
       border-radius: 4px;
       position: relative;
+      cursor: pointer !important;
 
       & > div {
         width: 100%;
@@ -40,6 +41,10 @@
         width: 100%;
         padding: var(--spacing-small) var(--spacing-medium);
 
+        &.sideNavCollapsed {
+          justify-content: center;
+        }
+
         &.active {
           .moduleIcon {
             svg {
@@ -47,6 +52,10 @@
                 fill: var(--primary-7);
               }
             }
+          }
+          &.sideNavCollapsed {
+            background-color: rgba(210, 230, 255);
+            border-radius: 4px;
           }
         }
 
@@ -70,11 +79,6 @@
 
       &:hover {
         background-color: rgba(210, 230, 255);
-
-        .popover {
-          display: flex;
-          flex-direction: column;
-        }
       }
 
       .chevron {
@@ -101,6 +105,7 @@
   }
 
   &.sideNavCollapsed {
+    justify-content: center;
     .chevron {
       display: none !important;
     }
@@ -108,6 +113,32 @@
     .accordionDetails {
       margin-left: 0px;
       border-left: none;
+    }
+
+    .summary {
+      &.active {
+        background-color: rgba(210, 230, 255);
+      }
+    }
+  }
+}
+
+.linksPopover {
+  background: #f5f8fb !important;
+
+  .popoverHeader {
+    padding: var(--spacing-small) !important;
+    &.active {
+      svg {
+        path {
+          fill: var(--primary-7);
+        }
+      }
+    }
+    svg {
+      path {
+        fill: #7890b2;
+      }
     }
   }
 }
@@ -120,4 +151,9 @@
   a[data-name='nav-link'] {
     display: flex;
   }
+}
+
+.popover {
+  transform: translate3d(10px, 0px, 0px) !important;
+  box-shadow: 0px 2px 4px 0px rgba(96, 97, 112, 0.16), 0px 0px 1px 0px rgba(40, 41, 61, 0.04) !important;
 }

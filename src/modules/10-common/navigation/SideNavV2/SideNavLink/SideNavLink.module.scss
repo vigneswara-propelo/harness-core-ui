@@ -22,7 +22,10 @@
 
   &.collapsed {
     align-items: center;
-    justify-content: center;
+
+    &.center {
+      justify-content: center;
+    }
 
     .dot {
       height: 4px;
@@ -58,4 +61,10 @@
   &:last-child {
     border: none;
   }
+}
+
+.popover {
+  transform: translate3d(10px, 0px, 0px) !important;
+  max-width: 200px;
+  padding: var(--spacing-small);
 }

@@ -17,6 +17,7 @@ import { Module } from 'framework/types/ModuleName'
 import { Scope } from 'framework/types/types'
 import { SIDE_NAV_STATE, useLayoutV2 } from '@modules/10-common/router/RouteWithLayoutV2'
 import { StringsMap } from 'stringTypes'
+import SideNavToggleButton from './SideNavToggleButton/SideNavToggleButton'
 import SideNavHeader from './SideNavHeader/SideNavHeader'
 import { useSideNavV2 } from './useSideNavV2'
 import SideNavFooter from './SideNavFooter/SideNavFooter'
@@ -185,7 +186,7 @@ const SideNavMainComponent: React.FC<SideNavMainProps> = props => {
 }
 
 export const SideNav: SideNavComponent<React.PropsWithChildren<unknown>> = (props): JSX.Element => {
-  const { sideNavState, setSideNavState } = useLayoutV2()
+  const { sideNavState, disableSideNavCollapse } = useLayoutV2()
   const { children } = props
 
   if (sideNavState === SIDE_NAV_STATE.HIDDEN) {
@@ -200,16 +201,11 @@ export const SideNav: SideNavComponent<React.PropsWithChildren<unknown>> = (prop
           [css.expanded]: !isCollapsed,
           [css.collapsed]: isCollapsed
         })}
-        onMouseEnter={e => {
-          if (isCollapsed && e.currentTarget === e.target) {
-            setSideNavState(SIDE_NAV_STATE.EXPANDED)
-          }
-        }}
       >
         <SideNavHeader />
         {children}
         <SideNavFooter />
-        {/* {!disableSideNavCollapse && <SideNavToggleButton />} */}
+        {!disableSideNavCollapse && <SideNavToggleButton />}
       </Layout.Vertical>
     </ModalProvider>
   )

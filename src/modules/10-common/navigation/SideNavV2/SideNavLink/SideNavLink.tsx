@@ -7,10 +7,11 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Layout, Text, IconProps } from '@harness/uicore'
+import { Text, IconProps, Popover } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { Icon, IconName } from '@harness/icons'
 import { NavLink, NavLinkProps, useHistory } from 'react-router-dom'
+import { PopoverInteractionKind, PopoverPosition, Classes } from '@blueprintjs/core'
 import { Scope } from 'framework/types/types'
 import { NAV_MODE, getRouteParams } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitionsV2'
@@ -136,10 +137,6 @@ export const SideNavLink: React.FC<SideNavLinkProps> = props => {
 
   const renderIcon = () => {
     if (isRenderedInAccordion) {
-      if (isCollapsed) {
-        return <div className={css.dot} />
-      }
-
       return undefined
     }
 
@@ -149,7 +146,7 @@ export const SideNavLink: React.FC<SideNavLinkProps> = props => {
   }
 
   const renderText = () => {
-    if (!isCollapsed) {
+    if (!isCollapsed || isRenderedInAccordion) {
       return (
         <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_800}>
           {label}
@@ -160,32 +157,50 @@ export const SideNavLink: React.FC<SideNavLinkProps> = props => {
     return undefined
   }
 
+  const renderLink = () => {
+    return (
+      <NavLink
+        data-name="nav-link"
+        className={cx(
+          css.link,
+          { [css.collapsed]: isCollapsed, [css.center]: isCollapsed && !isRenderedInAccordion },
+          className
+        )}
+        activeClassName={cx({ [css.selected]: !!to })}
+        to={to}
+        {...rest}
+        onClick={rest.onClick || handleLinkClick}
+      >
+        {!isRenderedInAccordion && renderIcon()}
+        {renderText()}
+      </NavLink>
+    )
+  }
+
+  if (isRenderedInAccordion || !isCollapsed) {
+    return renderLink()
+  }
+
   return (
-    <NavLink
-      data-name="nav-link"
-      className={cx(css.link, { [css.collapsed]: isCollapsed }, className)}
-      activeClassName={cx({ [css.selected]: !!to })}
-      to={to}
-      {...rest}
-      onClick={rest.onClick || handleLinkClick}
+    <Popover
+      interactionKind={PopoverInteractionKind.HOVER}
+      position={PopoverPosition.RIGHT}
+      boundary="viewport"
+      popoverClassName={Classes.DARK}
+      content={
+        <Text color={Color.WHITE} padding="small">
+          {label}
+        </Text>
+      }
+      portalClassName={css.popover}
     >
-      {renderIcon()}
-      {renderText()}
-    </NavLink>
+      {renderLink()}
+    </Popover>
   )
 }
 
 SideNavLink.defaultProps = {
   __TYPE: 'SIDENAV_LINK'
-}
-
-interface SideNavSectionProps {
-  className?: string
-  children: React.ReactElement<SideNavLinkProps> | React.ReactElement<SideNavLinkProps>[]
-}
-
-export const SideNavSection: React.FC<SideNavSectionProps> = props => {
-  return <Layout.Vertical className={css.section}>{props.children}</Layout.Vertical>
 }
 
 export default SideNavLink

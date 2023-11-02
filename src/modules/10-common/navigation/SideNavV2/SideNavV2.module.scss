@@ -9,6 +9,11 @@
   padding: var(--spacing-medium);
   z-index: 12;
 
+  :global(.bp3-popover-wrapper),
+  :global(.bp3-popover-target) {
+    display: block !important;
+  }
+
   &.expanded {
     width: 232px;
     padding: var(--spacing-medium);
