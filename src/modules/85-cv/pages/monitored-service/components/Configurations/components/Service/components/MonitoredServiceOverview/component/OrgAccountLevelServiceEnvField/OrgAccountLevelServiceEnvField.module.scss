@@ -53,10 +53,9 @@
 
 .multiSelectEnvDropdown {
   :global {
-    .bp3-form-content > div {
+    .bp3-form-content > div:first-child {
       width: 400px !important;
       box-shadow: none !important;
-      border: 1px solid var(--bp3-intent-color, var(--grey-200)) !important;
       color: var(--grey-800) !important;
       height: 32px !important;
       position: relative;

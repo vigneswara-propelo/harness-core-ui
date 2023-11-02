@@ -159,7 +159,11 @@ const MonitoredService = (props: MonitoredServiceProps) => {
   ): JSX.Element => {
     const pathname = getPathNameOnCreateMonitoredService(pathParams, configData, isSettingsRoute)
     {
-      const LayoutOrientation = hasMonitoredServices ? Layout.Horizontal : Layout.Vertical
+      const LayoutOrientation = showToggle
+        ? Layout.Horizontal
+        : hasMonitoredServices
+        ? Layout.Horizontal
+        : Layout.Vertical
       return (
         <LayoutOrientation spacing="large">
           <RbacButton
