@@ -4122,6 +4122,9 @@ export interface StringsMap {
   'pipeline.artifactsSelection.extensionPlaceholder': string
   'pipeline.artifactsSelection.feed': string
   'pipeline.artifactsSelection.feedPlaceholder': string
+  'pipeline.artifactsSelection.fileFilterLabel': string
+  'pipeline.artifactsSelection.fileFilterPlaceholder': string
+  'pipeline.artifactsSelection.filePathHelperText': string
   'pipeline.artifactsSelection.filePathRegexLabel': string
   'pipeline.artifactsSelection.filePathRegexPlaceholder': string
   'pipeline.artifactsSelection.garNoDigestErrortest': string

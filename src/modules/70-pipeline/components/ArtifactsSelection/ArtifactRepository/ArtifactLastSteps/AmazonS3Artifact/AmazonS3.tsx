@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef } from 'react'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
@@ -21,6 +21,7 @@ import {
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
+  RUNTIME_INPUT_VALUE,
   SelectOption,
   StepProps,
   Text
@@ -58,6 +59,7 @@ import {
   shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { isMultiTypeRuntime } from '@modules/10-common/utils/utils'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -85,12 +87,12 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   const { getRBACErrorMessage } = useRBACError()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
-
+  const formikRef = useRef<FormikProps<AmazonS3InitialValuesType>>()
   const [regions, setRegions] = React.useState<SelectOption[]>([])
-  const [lastQueryData, setLastQueryData] = React.useState({ region: undefined, bucketName: '' })
+  const [lastQueryData, setLastQueryData] = React.useState({ region: undefined, bucketName: '', fileFilter: '' })
   const [bucketList, setBucketList] = React.useState<BucketResponse[] | undefined>([])
   const [filePathList, setFilePathList] = React.useState<FilePaths[] | undefined>([])
-
+  const fileFilterValue = get(formikRef, 'current.values.fileFilter')
   // Region related code
   const {
     data: regionData,
@@ -137,7 +139,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   })
 
   React.useEffect(() => {
-    if (checkIfQueryParamsisNotEmpty(Object.values(omit(lastQueryData, ['region', 'bucketName'])))) {
+    if (checkIfQueryParamsisNotEmpty(Object.values(omit(lastQueryData, ['region', 'bucketName', 'fileFilter'])))) {
       refetchBuckets()
     }
   }, [lastQueryData, refetchBuckets])
@@ -160,7 +162,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   const fetchBuckets = useCallback(
     (region = ''): void => {
       if (canFetchBuckets(region)) {
-        setLastQueryData({ region, bucketName: lastQueryData.bucketName })
+        setLastQueryData({ region, bucketName: lastQueryData.bucketName, fileFilter: lastQueryData.fileFilter })
       }
     },
     [canFetchBuckets, lastQueryData]
@@ -198,13 +200,13 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
       connectorRef: getConnectorRefQueryData(),
       region: lastQueryData.region,
       bucketName: lastQueryData.bucketName,
-      filePathRegex: '*'
+      fileFilter: fileFilterValue
     },
     lazy: true
   })
 
   React.useEffect(() => {
-    if (checkIfQueryParamsisNotEmpty(Object.values(omit(lastQueryData, ['region'])))) {
+    if (checkIfQueryParamsisNotEmpty(Object.values(omit(lastQueryData, ['region', 'fileFilter'])))) {
       refetchFilePaths()
     }
   }, [lastQueryData, refetchFilePaths])
@@ -218,19 +220,20 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   }, [filePathData?.data, filePathError])
 
   const canFetchFilePaths = useCallback(
-    (region: string, bucketName: string): boolean => {
+    (region: string, bucketName: string, fileFilter: string): boolean => {
       return (
         !!(lastQueryData.region !== region && shouldFetchFieldOptions(modifiedPrevStepData, [])) ||
-        !!(lastQueryData.bucketName !== bucketName && shouldFetchFieldOptions(modifiedPrevStepData, [bucketName]))
+        !!(lastQueryData.bucketName !== bucketName && shouldFetchFieldOptions(modifiedPrevStepData, [bucketName])) ||
+        !!(lastQueryData.fileFilter !== fileFilter)
       )
     },
     [lastQueryData, modifiedPrevStepData]
   )
 
   const fetchFilePaths = useCallback(
-    (region = '', bucketName = ''): void => {
-      if (canFetchFilePaths(region, bucketName)) {
-        setLastQueryData({ region, bucketName })
+    (region = '', bucketName = '', fileFilter = ''): void => {
+      if (canFetchFilePaths(region, bucketName, fileFilter)) {
+        setLastQueryData({ region, bucketName, fileFilter })
       }
     },
     [canFetchFilePaths]
@@ -322,7 +325,9 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
 
     // Merge filePath or filePathRegex field value with initial data depending upon tagType selection
     const initialFilePathData =
-      formData?.tagType === TagTypes.Value ? { filePath: formData.filePath } : { filePathRegex: formData.filePathRegex }
+      formData?.tagType === TagTypes.Value
+        ? { filePath: formData.filePath, fileFilter: formData.fileFilter }
+        : { filePathRegex: formData.filePathRegex }
 
     artifactObj = {
       spec: {
@@ -452,26 +457,164 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   }
 
   const renderS3FilePathField = (formik: FormikProps<AmazonS3InitialValuesType>): JSX.Element => {
+    const filePathValue = get(formik, 'values.filePath')
     if (
       getMultiTypeFromValue(modifiedPrevStepData?.connectorId) !== MultiTypeInputType.FIXED ||
       getMultiTypeFromValue(formik.values.region) !== MultiTypeInputType.FIXED ||
-      getMultiTypeFromValue(formik.values.bucketName) !== MultiTypeInputType.FIXED
+      getMultiTypeFromValue(formik.values.bucketName) !== MultiTypeInputType.FIXED ||
+      getMultiTypeFromValue(formik.values.fileFilter) !== MultiTypeInputType.FIXED
     ) {
       return (
+        <>
+          <div className={css.imagePathContainer}>
+            <FormInput.MultiTextInput
+              key={'fileFilter'}
+              label={getString('pipeline.artifactsSelection.fileFilterLabel')}
+              name="fileFilter"
+              placeholder={getString('pipeline.artifactsSelection.fileFilterPlaceholder')}
+              onChange={(value, _valuetype, type) => {
+                if (isMultiTypeRuntime(type) || (type === MultiTypeInputType.EXPRESSION && !value)) {
+                  formik.setFieldValue('filePath', RUNTIME_INPUT_VALUE)
+                } else if (
+                  type === MultiTypeInputType.FIXED &&
+                  getMultiTypeFromValue(filePathValue) === MultiTypeInputType.FIXED
+                ) {
+                  formik.setFieldValue('filePath', '')
+                }
+              }}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+            />
+            {getMultiTypeFromValue(formik.values.fileFilter) === MultiTypeInputType.RUNTIME && (
+              <div className={css.configureOptions}>
+                <ConfigureOptions
+                  style={{ alignSelf: 'center' }}
+                  value={formik.values?.fileFilter as string}
+                  type={getString('string')}
+                  variableName="fileFilter"
+                  showRequiredField={false}
+                  showDefaultField={false}
+                  onChange={value => {
+                    formik.setFieldValue('fileFilter', value)
+                  }}
+                  isReadonly={isReadonly}
+                />
+              </div>
+            )}
+          </div>
+          <div className={css.imagePathContainer}>
+            <FormInput.MultiTextInput
+              key={`filePath-${getMultiTypeFromValue(get(formik, 'values.filePath'))}-textField`}
+              label={getString('common.git.filePath')}
+              name="filePath"
+              placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+            />
+            {getMultiTypeFromValue(formik.values.filePath) === MultiTypeInputType.RUNTIME && (
+              <div className={css.configureOptions}>
+                <ConfigureOptions
+                  style={{ alignSelf: 'center' }}
+                  value={formik.values?.filePath as string}
+                  type={getString('string')}
+                  variableName="filePath"
+                  showRequiredField={false}
+                  showDefaultField={false}
+                  onChange={value => {
+                    formik.setFieldValue('filePath', value)
+                  }}
+                  isReadonly={isReadonly}
+                />
+              </div>
+            )}
+          </div>
+        </>
+      )
+    }
+    return (
+      <>
         <div className={css.imagePathContainer}>
           <FormInput.MultiTextInput
-            key={'filePath'}
-            label={getString('common.git.filePath')}
-            name="filePath"
-            placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+            key={'fileFilter'}
+            label={getString('pipeline.artifactsSelection.fileFilterLabel')}
+            name="fileFilter"
+            placeholder={getString('pipeline.artifactsSelection.fileFilterPlaceholder')}
+            onChange={(value, _valuetype, type) => {
+              if (isMultiTypeRuntime(type) || (type === MultiTypeInputType.EXPRESSION && !value)) {
+                formik.setFieldValue('filePath', RUNTIME_INPUT_VALUE)
+              } else if (
+                type === MultiTypeInputType.FIXED &&
+                getMultiTypeFromValue(filePathValue) === MultiTypeInputType.FIXED
+              ) {
+                formik.setFieldValue('filePath', '')
+              }
+            }}
             multiTextInputProps={{
               expressions,
               allowableTypes
             }}
           />
-          {getMultiTypeFromValue(formik.values.filePath) === MultiTypeInputType.RUNTIME && (
+          {getMultiTypeFromValue(formik.values.fileFilter) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
               <ConfigureOptions
+                style={{ alignSelf: 'center' }}
+                value={formik.values?.fileFilter as string}
+                type={getString('string')}
+                variableName="fileFilter"
+                showRequiredField={false}
+                showDefaultField={false}
+                onChange={value => {
+                  formik.setFieldValue('fileFilter', value)
+                }}
+                isReadonly={isReadonly}
+              />
+            </div>
+          )}
+        </div>
+        <div className={css.imagePathContainer}>
+          <FormInput.MultiTypeInput
+            selectItems={filePaths}
+            key={`filePath-${getMultiTypeFromValue(get(formik, 'values.filePath'))}`}
+            disabled={isFilePathDisabled()}
+            label={getString('common.git.filePath')}
+            placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+            name="filePath"
+            useValue
+            multiTypeInputProps={{
+              expressions,
+              allowableTypes,
+              selectProps: {
+                noResults: (
+                  <Text lineClamp={1} width={384} margin="small">
+                    {getRBACErrorMessage(filePathError as RBACError) || getString('pipeline.noFilePathsFound')}
+                  </Text>
+                ),
+                itemRenderer: itemRenderer,
+                items: filePaths,
+                allowCreatingNewItems: true,
+                addClearBtn: true
+              },
+              onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                if (
+                  e?.target?.type !== 'text' ||
+                  (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                ) {
+                  return
+                }
+                if (!fetchingFilePaths) {
+                  fetchFilePaths(formik.values.region, formik.values.bucketName, formik.values.fileFilter)
+                }
+              }
+            }}
+          />
+          {getMultiTypeFromValue(formik.values?.filePath) === MultiTypeInputType.RUNTIME && (
+            <div className={css.configureOptions}>
+              <SelectConfigureOptions
+                options={filePaths}
                 style={{ alignSelf: 'center' }}
                 value={formik.values?.filePath as string}
                 type={getString('string')}
@@ -486,62 +629,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
             </div>
           )}
         </div>
-      )
-    }
-    return (
-      <div className={css.imagePathContainer}>
-        <FormInput.MultiTypeInput
-          selectItems={filePaths}
-          disabled={isFilePathDisabled()}
-          label={getString('common.git.filePath')}
-          placeholder={getString('pipeline.manifestType.pathPlaceholder')}
-          name="filePath"
-          useValue
-          multiTypeInputProps={{
-            expressions,
-            allowableTypes,
-            selectProps: {
-              noResults: (
-                <Text lineClamp={1} width={384} margin="small">
-                  {getRBACErrorMessage(filePathError as RBACError) || getString('pipeline.noFilePathsFound')}
-                </Text>
-              ),
-              itemRenderer: itemRenderer,
-              items: filePaths,
-              allowCreatingNewItems: true,
-              addClearBtn: true
-            },
-            onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-              if (
-                e?.target?.type !== 'text' ||
-                (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
-              ) {
-                return
-              }
-              if (!fetchingFilePaths) {
-                fetchFilePaths(formik.values.region, formik.values.bucketName)
-              }
-            }
-          }}
-        />
-        {getMultiTypeFromValue(formik.values?.filePath) === MultiTypeInputType.RUNTIME && (
-          <div className={css.configureOptions}>
-            <SelectConfigureOptions
-              options={filePaths}
-              style={{ alignSelf: 'center' }}
-              value={formik.values?.filePath as string}
-              type={getString('string')}
-              variableName="filePath"
-              showRequiredField={false}
-              showDefaultField={false}
-              onChange={value => {
-                formik.setFieldValue('filePath', value)
-              }}
-              isReadonly={isReadonly}
-            />
-          </div>
-        )}
-      </div>
+      </>
     )
   }
 
@@ -565,136 +653,139 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
           })
         }}
       >
-        {formik => (
-          <FormikForm>
-            <div className={cx(css.artifactForm, formClassName)}>
-              {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
-              {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
-              <div className={css.imagePathContainer}>
-                <FormInput.MultiTypeInput
-                  name="region"
-                  selectItems={regions}
-                  useValue
-                  multiTypeInputProps={{
-                    onChange: selected => {
-                      if (formik.values.region !== (selected as unknown as any)?.value) {
-                        resetFieldValue(formik, 'bucketName')
-                        resetFieldValue(formik, 'filePath')
-                      }
-                    },
-                    selectProps: {
-                      items: regions,
-                      noResults: (
-                        <Text lineClamp={1} width={384} margin="small">
-                          {getRBACErrorMessage(errorRegions as RBACError) || getString('pipeline.noRegions')}
-                        </Text>
-                      )
-                    }
-                  }}
-                  label={getString('optionalField', { name: getString('regionLabel') })}
-                  placeholder={loadingRegions ? getString('loading') : getString('select')}
-                />
-
-                {getMultiTypeFromValue(formik.values.region) === MultiTypeInputType.RUNTIME && (
-                  <div className={css.configureOptions}>
-                    <SelectConfigureOptions
-                      options={regions}
-                      loading={loadingRegions}
-                      style={{ alignSelf: 'center' }}
-                      value={formik.values?.region as string}
-                      type="String"
-                      variableName="region"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      onChange={value => {
-                        formik.setFieldValue('region', value)
-                      }}
-                      isReadonly={isReadonly}
-                    />
-                  </div>
-                )}
-              </div>
-
-              {renderS3BucketField(formik)}
-
-              <div className={css.tagGroup}>
-                <FormInput.RadioGroup
-                  name="tagType"
-                  radioGroup={{ inline: true }}
-                  items={tagOptions}
-                  className={css.radioGroup}
-                  onChange={event => {
-                    if (event.currentTarget.value === TagTypes.Regex) {
-                      if (getMultiTypeFromValue(formik.values.filePath) !== MultiTypeInputType.FIXED) {
-                        formik.setFieldValue('filePathRegex', formik.values.filePath)
-                      } else {
-                        formik.setFieldValue('filePathRegex', defaultTo(formik.values.filePathRegex, ''))
-                      }
-                    } else {
-                      if (getMultiTypeFromValue(formik.values.filePathRegex) !== MultiTypeInputType.FIXED) {
-                        formik.setFieldValue('filePath', formik.values.filePathRegex)
-                      } else {
-                        formik.setFieldValue('filePath', defaultTo(formik.values.filePath, ''))
-                      }
-                      // to clearValues when tagType is changed
-                      resetFieldValue(formik, 'filePathRegex')
-                      resetFieldValue(formik, 'filePath')
-                    }
-                  }}
-                />
-              </div>
-
-              {formik.values?.tagType === TagTypes.Value ? (
-                renderS3FilePathField(formik)
-              ) : (
+        {formik => {
+          formikRef.current = formik
+          return (
+            <FormikForm>
+              <div className={cx(css.artifactForm, formClassName)}>
+                {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
+                {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
                 <div className={css.imagePathContainer}>
-                  <FormInput.MultiTextInput
-                    key={'filePathRegex'}
-                    label={getString('pipeline.artifactsSelection.filePathRegexLabel')}
-                    name="filePathRegex"
-                    placeholder={getString('pipeline.artifactsSelection.filePathRegexPlaceholder')}
-                    multiTextInputProps={{
-                      expressions,
-                      allowableTypes
+                  <FormInput.MultiTypeInput
+                    name="region"
+                    selectItems={regions}
+                    useValue
+                    multiTypeInputProps={{
+                      onChange: selected => {
+                        if (formik.values.region !== (selected as unknown as any)?.value) {
+                          resetFieldValue(formik, 'bucketName')
+                          resetFieldValue(formik, 'filePath')
+                        }
+                      },
+                      selectProps: {
+                        items: regions,
+                        noResults: (
+                          <Text lineClamp={1} width={384} margin="small">
+                            {getRBACErrorMessage(errorRegions as RBACError) || getString('pipeline.noRegions')}
+                          </Text>
+                        )
+                      }
                     }}
+                    label={getString('optionalField', { name: getString('regionLabel') })}
+                    placeholder={loadingRegions ? getString('loading') : getString('select')}
                   />
-                  {getMultiTypeFromValue(formik.values.filePathRegex) === MultiTypeInputType.RUNTIME && (
+
+                  {getMultiTypeFromValue(formik.values.region) === MultiTypeInputType.RUNTIME && (
                     <div className={css.configureOptions}>
-                      <ConfigureOptions
+                      <SelectConfigureOptions
+                        options={regions}
+                        loading={loadingRegions}
                         style={{ alignSelf: 'center' }}
-                        value={formik.values?.filePathRegex as string}
-                        type={getString('string')}
-                        variableName="filePathRegex"
+                        value={formik.values?.region as string}
+                        type="String"
+                        variableName="region"
                         showRequiredField={false}
                         showDefaultField={false}
                         onChange={value => {
-                          formik.setFieldValue('filePathRegex', value)
+                          formik.setFieldValue('region', value)
                         }}
                         isReadonly={isReadonly}
                       />
                     </div>
                   )}
                 </div>
+
+                {renderS3BucketField(formik)}
+
+                <div className={css.tagGroup}>
+                  <FormInput.RadioGroup
+                    name="tagType"
+                    radioGroup={{ inline: true }}
+                    items={tagOptions}
+                    className={css.radioGroup}
+                    onChange={event => {
+                      if (event.currentTarget.value === TagTypes.Regex) {
+                        if (getMultiTypeFromValue(formik.values.filePath) !== MultiTypeInputType.FIXED) {
+                          formik.setFieldValue('filePathRegex', formik.values.filePath)
+                        } else {
+                          formik.setFieldValue('filePathRegex', defaultTo(formik.values.filePathRegex, ''))
+                        }
+                      } else {
+                        if (getMultiTypeFromValue(formik.values.filePathRegex) !== MultiTypeInputType.FIXED) {
+                          formik.setFieldValue('filePath', formik.values.filePathRegex)
+                        } else {
+                          formik.setFieldValue('filePath', defaultTo(formik.values.filePath, ''))
+                        }
+                        // to clearValues when tagType is changed
+                        resetFieldValue(formik, 'filePathRegex')
+                        resetFieldValue(formik, 'filePath')
+                      }
+                    }}
+                  />
+                </div>
+
+                {formik.values?.tagType === TagTypes.Value ? (
+                  renderS3FilePathField(formik)
+                ) : (
+                  <div className={css.imagePathContainer}>
+                    <FormInput.MultiTextInput
+                      key={'filePathRegex'}
+                      label={getString('pipeline.artifactsSelection.filePathRegexLabel')}
+                      name="filePathRegex"
+                      placeholder={getString('pipeline.artifactsSelection.filePathRegexPlaceholder')}
+                      multiTextInputProps={{
+                        expressions,
+                        allowableTypes
+                      }}
+                    />
+                    {getMultiTypeFromValue(formik.values.filePathRegex) === MultiTypeInputType.RUNTIME && (
+                      <div className={css.configureOptions}>
+                        <ConfigureOptions
+                          style={{ alignSelf: 'center' }}
+                          value={formik.values?.filePathRegex as string}
+                          type={getString('string')}
+                          variableName="filePathRegex"
+                          showRequiredField={false}
+                          showDefaultField={false}
+                          onChange={value => {
+                            formik.setFieldValue('filePathRegex', value)
+                          }}
+                          isReadonly={isReadonly}
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+              {!hideHeaderAndNavBtns && (
+                <Layout.Horizontal spacing="medium">
+                  <Button
+                    variation={ButtonVariation.SECONDARY}
+                    text={getString('back')}
+                    icon="chevron-left"
+                    onClick={() => previousStep?.(modifiedPrevStepData)}
+                  />
+                  <Button
+                    variation={ButtonVariation.PRIMARY}
+                    type="submit"
+                    text={getString('submit')}
+                    rightIcon="chevron-right"
+                  />
+                </Layout.Horizontal>
               )}
-            </div>
-            {!hideHeaderAndNavBtns && (
-              <Layout.Horizontal spacing="medium">
-                <Button
-                  variation={ButtonVariation.SECONDARY}
-                  text={getString('back')}
-                  icon="chevron-left"
-                  onClick={() => previousStep?.(modifiedPrevStepData)}
-                />
-                <Button
-                  variation={ButtonVariation.PRIMARY}
-                  type="submit"
-                  text={getString('submit')}
-                  rightIcon="chevron-right"
-                />
-              </Layout.Horizontal>
-            )}
-          </FormikForm>
-        )}
+            </FormikForm>
+          )
+        }}
       </Formik>
     </Layout.Vertical>
   )

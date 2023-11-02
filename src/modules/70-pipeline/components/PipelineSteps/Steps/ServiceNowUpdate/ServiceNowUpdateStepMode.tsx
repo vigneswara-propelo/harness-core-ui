@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { debounce, defaultTo, isEmpty } from 'lodash-es'
+import { debounce, defaultTo, get, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Dialog } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -123,7 +123,7 @@ function FormContent({
   )
   const [connectorValueType, setConnectorValueType] = useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
   const [ticketValueType, setTicketValueType] = useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
-
+  const updateMultipleSelected = get(formik, 'values.spec.updateMultipleFlag')
   const taskTypeOptions: SelectOption[] = [
     {
       label: getString('pipeline.taskOptions.planning'),
@@ -187,13 +187,14 @@ function FormContent({
     debounce((ticketNumberVal?: AcceptableValue): void => {
       if (
         CDS_SERVICENOW_FETCH_FIELDS &&
+        !updateMultipleSelected &&
         ticketNumberVal &&
         getMultiTypeFromValue(ticketNumberVal as string) === MultiTypeInputType.FIXED
       ) {
         handleFetchTicketDetails(ticketNumberVal as string)
       }
     }, 1000),
-    [connectorRefFixedValue, ticketTypeKeyFixedValue]
+    [connectorRefFixedValue, ticketTypeKeyFixedValue, updateMultipleSelected]
   )
 
   useEffect(() => {
@@ -202,7 +203,8 @@ function FormContent({
       connectorValueType === MultiTypeInputType.FIXED &&
       ticketTypeKeyFixedValue &&
       ticketNumberFixedValue &&
-      CDS_SERVICENOW_FETCH_FIELDS
+      CDS_SERVICENOW_FETCH_FIELDS &&
+      !updateMultipleSelected
     ) {
       handleFetchTicketDetails(ticketNumberFixedValue)
     }
@@ -582,6 +584,9 @@ function FormContent({
               <FormInput.CheckBox
                 name="spec.updateMultipleFlag"
                 label={getString('pipeline.serviceNowApprovalStep.updateMultiple')}
+                onChange={() => {
+                  setTicketFieldDetailsMap({})
+                }}
               />
             </div>
             <div className={cx(stepCss.formGroup, stepCss.lg)}>

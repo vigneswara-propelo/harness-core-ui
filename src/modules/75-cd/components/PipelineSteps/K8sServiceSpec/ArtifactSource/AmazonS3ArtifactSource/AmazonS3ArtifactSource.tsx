@@ -6,10 +6,11 @@
  */
 
 import React, { useMemo } from 'react'
-import { defaultTo, get, isEmpty, isNil, memoize } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, memoize, set } from 'lodash-es'
 import { Menu } from '@blueprintjs/core'
 
 import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
+import produce from 'immer'
 import {
   BucketResponse,
   FilePaths,
@@ -36,6 +37,7 @@ import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInpu
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isArtifactInMultiService, resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
+import { isMultiTypeRuntime } from '@modules/10-common/utils/utils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -98,15 +100,22 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
     get(initialValues?.artifacts, `${artifactPath}.spec.filePathRegex`)
   )
 
+  const fixedFileFilterValue: string | undefined = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.fileFilter`, ''), artifact?.spec?.fileFilter),
+    get(initialValues?.artifacts, `${artifactPath}.spec.fileFilter`)
+  )
+
   const [regions, setRegions] = React.useState<SelectOption[]>([])
   const [lastQueryData, setLastQueryData] = React.useState<{
     connectorRef?: string
     region?: string
     bucketName?: string
+    fileFilter?: string
   }>({
     connectorRef: '',
     region: '',
-    bucketName: ''
+    bucketName: '',
+    fileFilter: ''
   })
 
   // Region related code
@@ -268,7 +277,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
     connectorRef: getFinalQueryParamValue(fixedConnectorValue),
     region: getFinalQueryParamValue(fixedRegionValue),
     bucketName: getFinalQueryParamValue(fixedBucketValue),
-    filePathRegex: '*',
+    fileFilter: getFinalQueryParamValue(fixedFileFilterValue),
     pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
     serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
     fqnPath: getFqnPath(
@@ -302,7 +311,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
       connectorRef: defaultTo(fixedConnectorValue, ''),
       region: getFinalQueryParamValue(fixedRegionValue),
       bucketName: defaultTo(fixedBucketValue, ''),
-      filePathRegex: '*'
+      fileFilter: getFinalQueryParamValue(fixedFileFilterValue)
     },
     lazy: true
   })
@@ -381,11 +390,15 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
           lastQueryData.bucketName !== fixedBucketValue && shouldFetchTagsSource([fixedBucketValue])
         )
       }
+      if (isFieldRuntime(`artifacts.${artifactPath}.spec.fileFilter`, template)) {
+        shouldFetchFilePaths = !!(lastQueryData.fileFilter !== fixedFileFilterValue)
+      }
       return shouldFetchFilePaths || isNil(filePathData?.data)
     } else {
       return !!(
         (lastQueryData.connectorRef !== fixedConnectorValue ||
           lastQueryData.region !== fixedRegionValue ||
+          lastQueryData.fileFilter !== fixedFileFilterValue ||
           lastQueryData.bucketName !== fixedBucketValue) &&
         shouldFetchTagsSource([fixedConnectorValue, fixedBucketValue])
       )
@@ -397,7 +410,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
     fixedConnectorValue,
     fixedRegionValue,
     fixedBucketValue,
-    filePathData?.data
+    filePathData?.data,
+    fixedFileFilterValue
   ])
 
   const fetchFilePaths = React.useCallback((): void => {
@@ -405,7 +419,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
       setLastQueryData({
         connectorRef: fixedConnectorValue,
         region: fixedRegionValue,
-        bucketName: fixedBucketValue
+        bucketName: fixedBucketValue,
+        fileFilter: fixedFileFilterValue
       })
       refetchFilePaths()
     }
@@ -466,6 +481,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
       return getString('pipeline.filePathHelperText')
     }
   }
+
+  const filePathType = getMultiTypeFromValue(get(formik, `values.${path}.artifacts.${artifactPath}.spec.filePath`))
 
   return (
     <>
@@ -587,9 +604,36 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
             />
           )}
 
+          {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.fileFilter`, template) && (
+            <TextFieldInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.fileFilter`}
+              template={template}
+              label={getString('pipeline.artifactsSelection.fileFilterLabel')}
+              name={`${path}.artifacts.${artifactPath}.spec.fileFilter`}
+              placeholder={getString('pipeline.artifactsSelection.fileFilterPlaceholder')}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              onChange={(value, _valueType, type) => {
+                formik.setValues(
+                  produce(formik.values, (draft: any) => {
+                    if (isMultiTypeRuntime(type)) {
+                      set(draft, `${path}.artifacts.${artifactPath}.spec.filePath`, value)
+                    } else if (type === MultiTypeInputType.FIXED && filePathType === MultiTypeInputType.FIXED) {
+                      set(draft, `${path}.artifacts.${artifactPath}.spec.filePath`, '')
+                    }
+                    set(draft, `${path}.artifacts.${artifactPath}.spec.fileFilter`, value)
+                  })
+                )
+              }}
+            />
+          )}
+
           {isFieldRuntime(`artifacts.${artifactPath}.spec.filePath`, template) && (
             <SelectInputSetView
               fieldPath={`artifacts.${artifactPath}.spec.filePath`}
+              key={`filePath-${filePathType}`}
               template={template}
               selectItems={getFilePaths()}
               label={getString('common.git.filePath')}

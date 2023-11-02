@@ -148,6 +148,7 @@ export interface AmazonS3InitialValuesType {
   tagType: TagTypes
   filePath?: string
   filePathRegex?: string
+  fileFilter?: string
 }
 
 export interface ImagePathProps<T> {

@@ -158,6 +158,107 @@ describe('AmazonS3 tests', () => {
     })
   })
 
+  test(`renders fine for the existing artifact when filePath and fileFilter is present`, async () => {
+    const initialValues = {
+      spec: {
+        identifier: '',
+        bucketName: 'cdng-terraform-state',
+        tagType: TagTypes.Value,
+        filePath: 'folderName/filePath1.yaml',
+        fileFilter: 'folderName'
+      },
+      type: 'AmazonS3'
+    }
+    const { container, getByText } = render(
+      <TestWrapper>
+        <AmazonS3 initialValues={initialValues as any} {...props} />
+      </TestWrapper>
+    )
+
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+    const filePathInput = queryByNameAttribute('filePath') as HTMLInputElement
+    const fileFilterInput = queryByNameAttribute('fileFilter') as HTMLInputElement
+
+    expect(queryByNameAttribute('bucketName')).not.toBeNull()
+    expect(filePathInput).not.toBeNull()
+    expect(fileFilterInput).not.toBeNull()
+    expect(queryByNameAttribute('filePathRegex')).toBeNull()
+
+    const submitBtn = getByText('submit')
+    fireEvent.click(submitBtn)
+    await waitFor(() => {
+      expect(props.handleSubmit).toBeCalled()
+      expect(props.handleSubmit).toHaveBeenCalledWith({
+        spec: {
+          connectorRef: 'testConnector',
+          bucketName: 'cdng-terraform-state',
+          filePath: 'folderName/filePath1.yaml',
+          fileFilter: 'folderName'
+        }
+      })
+    })
+  })
+  test(`FileFilter field operations - Making fileFilter runtime will make filePath as runtime`, async () => {
+    const initialValues = {
+      spec: {
+        identifier: 'xyz',
+        bucketName: 'cdng-terraform-state',
+        tagType: TagTypes.Value,
+        filePath: 'folderName/filePath1.yaml',
+        fileFilter: 'folderName'
+      },
+      type: 'AmazonS3'
+    }
+    const { container, getByText } = render(
+      <TestWrapper>
+        <AmazonS3 initialValues={initialValues as any} {...props} />
+      </TestWrapper>
+    )
+    const fixedInputIconForFileFilter = container.querySelectorAll('span[data-icon="fixed-input"]')[2]
+    fireEvent.click(fixedInputIconForFileFilter!)
+    act(() => {
+      fireEvent.click(getByText('Runtime input'))
+    })
+    const submitBtn = getByText('submit')
+    fireEvent.click(submitBtn)
+    await waitFor(() => {
+      expect(props.handleSubmit).toBeCalled()
+      expect(props.handleSubmit).toHaveBeenCalledWith({
+        spec: {
+          connectorRef: 'testConnector',
+          bucketName: 'cdng-terraform-state',
+          filePath: RUNTIME_INPUT_VALUE,
+          fileFilter: RUNTIME_INPUT_VALUE
+        }
+      })
+    })
+  })
+  test(`FileFilter field operations - Making changes to fixed fileFilter will reset filePath`, async () => {
+    const initialValues = {
+      spec: {
+        identifier: 'xyz',
+        bucketName: 'cdng-terraform-state',
+        tagType: TagTypes.Value,
+        filePath: 'folder/xyz',
+        fileFilter: ''
+      },
+      type: 'AmazonS3'
+    }
+    const { container } = render(
+      <TestWrapper>
+        <AmazonS3 initialValues={initialValues as any} {...props} />
+      </TestWrapper>
+    )
+
+    const filePathInput = container.querySelector('[name="filePath"]') as HTMLElement
+    const fileFilterInput = container.querySelector('[name="fileFilter"]') as HTMLElement
+    if (fileFilterInput) fireEvent.change(fileFilterInput, { target: { value: 'folderName' } })
+    expect(filePathInput).toHaveValue('')
+
+    // make filePath API call with fileFilter upon focus of filerPath field
+    filePathInput?.focus()
+    expect(fetchFilePaths).toHaveBeenCalled()
+  })
   test(`renders fine for the existing artifact when filePathRegex is present`, async () => {
     const initialValues = {
       spec: {
@@ -336,7 +437,7 @@ describe('AmazonS3 tests', () => {
     act(() => {
       fireEvent.change(filePathRegexInput, { target: { value: 'test_file_path_regex' } })
     })
-
+    expect(container).toMatchSnapshot()
     const submitBtn = getByText('submit')
     fireEvent.click(submitBtn)
     await waitFor(() => {
