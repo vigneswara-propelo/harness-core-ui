@@ -10,8 +10,10 @@ import { useParams } from 'react-router-dom'
 import { getErrorInfoFromErrorObject } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { downloadLogsPromise, getTokenPromise } from 'services/logs'
 import { UseStringsReturn, useStrings } from 'framework/strings'
+import { FeatureFlag } from '@modules/10-common/featureFlags'
 import {
   DownloadActionProps,
   DownloadLogsProps,
@@ -89,9 +91,11 @@ const checkStatusAndDownload = async (
 }
 
 export function useDownloadLogs(): DownloadLogsProps {
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const logsTokenRef = React.useRef('')
+
+  const isSimplifiedLogKey = useFeatureFlag(FeatureFlag.PIE_SIMPLIFY_LOG_BASE_KEY)
 
   React.useEffect(() => {
     return () => {
@@ -100,11 +104,19 @@ export function useDownloadLogs(): DownloadLogsProps {
   }, [])
 
   const downloadLogsAction = async (props: DownloadActionProps): Promise<void> => {
-    const { logsScope, state, runSequence, uniqueKey, logBaseKey, logsToken } = props
+    const { logsScope, state, runSequence, uniqueKey, logBaseKey, logsToken, planExecId } = props
     const logKeyFromState = getLogPrefix(state)
     const prefix =
       logsScope === LogsScope.Pipeline
-        ? makePipelinePrefix(accountId, orgIdentifier, projectIdentifier, uniqueKey, defaultTo(runSequence, 0))
+        ? makePipelinePrefix(
+            accountId,
+            uniqueKey,
+            defaultTo(runSequence, 0),
+            defaultTo(planExecId, ''),
+            orgIdentifier,
+            projectIdentifier,
+            isSimplifiedLogKey
+          )
         : logBaseKey || logKeyFromState
 
     const toasterKey = logsScope === LogsScope.Pipeline ? `${uniqueKey}_${runSequence}` : uniqueKey

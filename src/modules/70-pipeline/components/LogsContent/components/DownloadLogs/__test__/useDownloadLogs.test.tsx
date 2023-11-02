@@ -41,7 +41,8 @@ function HookTestComponent({
             ? {
                 logsScope: LogsScope.Pipeline,
                 runSequence: 1,
-                uniqueKey: 'testPipelineId'
+                uniqueKey: 'testPipelineId',
+                planExecId: 'testPlanExecId'
               }
             : {
                 logsScope: LogsScope.Step,

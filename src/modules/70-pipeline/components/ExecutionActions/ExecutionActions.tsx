@@ -507,7 +507,8 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
                     logsScope: LogsScope.Pipeline,
                     runSequence,
                     uniqueKey: pipelineIdentifier,
-                    logsToken
+                    logsToken,
+                    planExecId: executionIdentifier
                   })
                 }
                 disabled={!isExecutionComplete(executionStatus)}

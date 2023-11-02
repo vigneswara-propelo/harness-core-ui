@@ -29,6 +29,7 @@ export interface DownloadActionProps {
   logBaseKey?: string
   runSequence?: number
   state?: State
+  planExecId?: string
 }
 
 export interface DownloadLogsProps {
@@ -145,12 +146,17 @@ export const handleToasters = (
 
 export const makePipelinePrefix = (
   accountId: string,
+  uniqueKey: string,
+  runSequence: number,
+  planExecId: string,
   orgId: string,
   projectId: string,
-  uniqueKey: string,
-  runSequence: number
+  isSimplifiedLogKey: boolean
 ): string => {
-  return `accountId:${accountId}/orgId:${orgId}/projectId:${projectId}/pipelineId:${uniqueKey}/runSequence:${runSequence}/level0:pipeline`
+  // Simplified LogKey accepted format - {accountId}/pipeline/{pipelineId}/{run-sequence}/-{planExecutionId}
+  return isSimplifiedLogKey
+    ? `${accountId}/pipeline/${uniqueKey}/${runSequence}/-${planExecId}`
+    : `accountId:${accountId}/orgId:${orgId}/projectId:${projectId}/pipelineId:${uniqueKey}/runSequence:${runSequence}/level0:pipeline`
 }
 
 // this function trims out commandUnitPlaceholder from the end of the logKeys in case of multiSectionLogs --> baseLogKeys
