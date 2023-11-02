@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import React, { useRef } from 'react'
+import React from 'react'
 import {
   Formik,
   FormikForm as Form,
@@ -24,7 +24,6 @@ import {
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation, Color } from '@harness/design-system'
-import { FormikProps } from 'formik'
 import { DescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import type { Project } from 'services/cd-ng'
 import ProjectCard from '@projects-orgs/components/ProjectCard/ProjectCard'
@@ -81,16 +80,9 @@ const ProjectForm: React.FC<StepProps<Project> & ProjectModalData> = props => {
   const { getString } = useStrings()
   const { currentUserInfo: user } = useAppStore()
   const [orgValue, setOrgValue] = React.useState<string>(initialOrgIdentifier)
-  const formikRef = useRef<FormikProps<AboutPageData>>()
-
   React.useEffect(() => {
     setOrgValue(initialOrgIdentifier)
   }, [initialOrgIdentifier])
-
-  React.useEffect(() => {
-    setOrgValue(orgValue)
-    formikRef.current?.setFieldValue('orgIdentifier', orgValue)
-  }, [orgValue])
 
   return (
     <Formik
@@ -105,6 +97,7 @@ const ProjectForm: React.FC<StepProps<Project> & ProjectModalData> = props => {
         ...projectData
       }}
       formName="projectsForm"
+      enableReinitialize={true}
       validationSchema={Yup.object().shape({
         name: NameSchema(getString),
         identifier: IdentifierSchema(getString),
@@ -119,7 +112,6 @@ const ProjectForm: React.FC<StepProps<Project> & ProjectModalData> = props => {
       }}
     >
       {formikProps => {
-        formikRef.current = formikProps
         return (
           <Form>
             <Layout.Horizontal>
