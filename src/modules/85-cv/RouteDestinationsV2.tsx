@@ -31,7 +31,6 @@ import { editParams } from './utils/routeUtils'
 import { cdModuleParams, serviceAndEnvParams } from './RouteDestinations'
 import CVMonitoredService from './pages/monitored-service/CVMonitoredService/CVMonitoredService'
 import MonitoredServiceInputSetsTemplate from './pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate'
-import CVSLODetailsPage from './pages/slos/CVSLODetailsPage/CVSLODetailsPage'
 import MonitoredServicePage from './pages/monitored-service/MonitoredServicePage'
 import { MonitoredServiceProvider } from './pages/monitored-service/MonitoredServiceContext'
 import CVHomePage from './pages/home/CVHomePage'
@@ -215,17 +214,6 @@ const CVRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
         })}
       >
         <MonitoredServiceInputSetsTemplate />
-      </RouteWithContext>
-      <RouteWithContext
-        exact
-        path={routes.toAccountCVSLODetailsPage({
-          ...accountPathProps,
-          ...editParams,
-          ...cvModuleParams,
-          mode
-        })}
-      >
-        <CVSLODetailsPage />
       </RouteWithContext>
       <RouteWithContext
         exact
