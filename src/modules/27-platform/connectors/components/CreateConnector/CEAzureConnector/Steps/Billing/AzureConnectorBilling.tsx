@@ -95,7 +95,7 @@ const BillingExport: React.FC<StepProps<CEAzureDTO>> = props => {
       },
       {
         name: 'reportName',
-        label: getString('platform.connectors.ceAzure.billing.reportName')
+        label: getString('platform.connectors.ceAzure.billing.exportName')
       }
     ]
 

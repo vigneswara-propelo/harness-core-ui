@@ -2520,6 +2520,7 @@ export interface StringsMap {
   'platform.connectors.ceAws.testConnection.step3': string
   'platform.connectors.ceAzure.billing.containerName': string
   'platform.connectors.ceAzure.billing.directoryName': string
+  'platform.connectors.ceAzure.billing.exportName': string
   'platform.connectors.ceAzure.billing.extension.createBillingExportGuide': string
   'platform.connectors.ceAzure.billing.extension.createExport': string
   'platform.connectors.ceAzure.billing.extension.docs': string

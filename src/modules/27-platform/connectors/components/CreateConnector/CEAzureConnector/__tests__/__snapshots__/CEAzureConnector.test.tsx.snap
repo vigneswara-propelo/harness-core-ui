@@ -425,7 +425,7 @@ exports[`Create Azure connector Wizard should render create new billing exports 
                               class="Tooltip--acenter"
                               data-tooltip-id="reportName"
                             >
-                              platform.connectors.ceAzure.billing.reportName
+                              platform.connectors.ceAzure.billing.exportName
                             </span>
                              
                             <span

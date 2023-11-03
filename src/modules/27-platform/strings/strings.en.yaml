@@ -1745,6 +1745,7 @@ connectors:
       containerName: Storage Container
       directoryName: Storage Directory
       reportName: '{{ $.common.reportName }}'
+      exportName: Export Name
       extension:
         createBillingExportGuide: How to Create a Billing Export?
         step0: After logging into Azure billing export
