@@ -7,7 +7,7 @@
 
 import React, { useEffect, useCallback, useState } from 'react'
 import { Dialog, Intent } from '@blueprintjs/core'
-import { useParams, useLocation, useHistory } from 'react-router-dom'
+import { useParams, useLocation } from 'react-router-dom'
 import { get, pickBy, isEmpty, defaultTo } from 'lodash-es'
 import { Text, Icon, PageError, PageSpinner, Layout, Container, Heading } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
@@ -27,17 +27,7 @@ import ExecutionContext from '@pipeline/context/ExecutionContext'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { IfPrivateAccess } from 'framework/components/PublicAccess/PublicAccess'
 import { usePolling } from '@common/hooks/usePolling'
-import { useReportSummary, useGetToken } from 'services/ti-service'
-import {
-  hasCIStage,
-  hasOverviewDetail,
-  hasServiceDetail,
-  pipelineHasCIStageWithK8sInfra
-} from '@pipeline/utils/stageHelpers'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import routesV1 from '@common/RouteDefinitions'
-import routesV2 from '@common/RouteDefinitionsV2'
+import { pipelineHasCIStageWithK8sInfra } from '@pipeline/utils/stageHelpers'
 import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
 import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'
 import { useDownloadLogs } from '@pipeline/components/LogsContent/components/DownloadLogs/useDownloadLogs'
@@ -95,8 +85,6 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     shouldShowGovernanceEvaluations: !!location?.state?.shouldShowGovernanceEvaluations,
     governanceMetadata: location?.state?.governanceMetadata
   })
-  const { CDS_NAV_2_0 } = useFeatureFlags()
-  const routes = CDS_NAV_2_0 ? routesV2 : routesV1
 
   const { data: retryHistoryResponse } = useRetryHistory({
     planExecutionId: executionIdentifier,
@@ -130,34 +118,6 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
       staleTime: 5 * 60 * 1000
     }
   )
-
-  const HAS_CI = hasCIStage(data?.data?.pipelineExecutionSummary)
-  const IS_SERVICEDETAIL = hasServiceDetail(data?.data?.pipelineExecutionSummary)
-  const IS_OVERVIEWPAGE = hasOverviewDetail(data?.data?.pipelineExecutionSummary)
-  const history = useHistory()
-  const CI_TESTTAB_NAVIGATION = useFeatureFlag(FeatureFlag.CI_TESTTAB_NAVIGATION)
-  const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
-  const { data: serviceToken } = useGetToken({
-    queryParams: { accountId }
-  })
-
-  const { data: reportSummary, loading: reportSummaryLoading } = useReportSummary({
-    queryParams: {
-      accountId,
-      orgId: orgIdentifier,
-      projectId: projectIdentifier,
-      pipelineId: pipelineIdentifier,
-      buildId: data?.data?.pipelineExecutionSummary?.runSequence?.toString() || '',
-      stageId: '',
-      report: 'junit' as const
-    },
-    lazy: !HAS_CI,
-    requestOptions: {
-      headers: {
-        'X-Harness-Token': serviceToken || ''
-      }
-    }
-  })
 
   useEffect(() => {
     if (pipelineHasCIStageWithK8sInfra(data?.data?.pipelineExecutionSummary)) {
@@ -304,26 +264,6 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     }
   }, [])
 
-  useEffect(() => {
-    if (HAS_CI && CI_TESTTAB_NAVIGATION && reportSummary?.failed_tests) {
-      const route = routes.toExecutionTestsView({
-        orgIdentifier,
-        pipelineIdentifier: pipelineIdentifier,
-        executionIdentifier: executionIdentifier,
-        projectIdentifier,
-        accountId,
-        module,
-        source
-      })
-      //opening in new tab is required for cards present in dashboards
-      if (IS_SERVICEDETAIL || IS_OVERVIEWPAGE) {
-        window.open(`#${route}`)
-      } else {
-        history.push(route)
-      }
-    }
-  }, [reportSummary])
-
   return (
     <ExecutionContext.Provider
       value={{
@@ -360,7 +300,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
         projectIdentifier={projectIdentifier}
         planExecutionId={executionIdentifier}
       >
-        {(!data && loading) || reportSummaryLoading || loadingPipeline ? <PageSpinner /> : null}
+        {(!data && loading) || loadingPipeline ? <PageSpinner /> : null}
         {error ? (
           <PageError message={getRBACErrorMessage(error) as string} />
         ) : (

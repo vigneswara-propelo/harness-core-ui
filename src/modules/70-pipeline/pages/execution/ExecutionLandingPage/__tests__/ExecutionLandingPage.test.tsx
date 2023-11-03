@@ -6,14 +6,7 @@
  */
 
 import React from 'react'
-import {
-  render,
-  fireEvent,
-  act,
-  findByText as findByTextContainer,
-  queryByAttribute,
-  waitFor
-} from '@testing-library/react'
+import { render, fireEvent, act, findByText as findByTextContainer, queryByAttribute } from '@testing-library/react'
 import mockImport from 'framework/utils/mockImport'
 import { TestWrapper, CurrentLocation } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
@@ -25,7 +18,6 @@ import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteI
 import { PipelineResponse as PipelineDetailsMockResponse } from '@pipeline/pages/pipeline-details/__tests__/PipelineDetailsMocks'
 import { mockRetryHistory } from '@pipeline/components/RetryPipeline/RetryHistory/__tests__/mocks'
 import ExecutionLandingPage, { POLL_INTERVAL } from '../ExecutionLandingPage'
-import reportSummaryMock from './report-summary-mock.json'
 import {
   ciPipelineExecutionSummaryWithK8sInfra,
   cdPipelineExecutionSummary,
@@ -82,15 +74,6 @@ jest.mock('services/pipeline-ng', () => ({
   }))
 }))
 
-jest.mock('services/ti-service', () => ({
-  useReportSummary: () => ({
-    data: reportSummaryMock,
-    refetch: jest.fn()
-  }),
-  useGetToken: () => ({
-    data: 'some-token'
-  })
-}))
 jest.mock('services/cd-ng', () => ({
   useGetSettingValue: jest.fn().mockImplementation(() => {
     return { data: { data: { value: 'false' } } }
@@ -268,23 +251,6 @@ describe('<ExecutionLandingPage /> tests for CI', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
-  })
-
-  test('reroute to tests view if tests are failing', async () => {
-    ;(useGetExecutionDetailV2 as jest.Mock).mockImplementation(() => ({
-      refetch: jest.fn(),
-      loading: true,
-      data: null
-    }))
-    const routesToExecutionTestsSpy = jest.spyOn(routes, 'toExecutionTestsView')
-    render(
-      <TestWrapper path={TEST_EXECUTION_PATH} pathParams={pathParams as unknown as Record<string, string>}>
-        <ExecutionLandingPage>
-          <div data-testid="children">Execution Landing Page</div>
-        </ExecutionLandingPage>
-      </TestWrapper>
-    )
-    await waitFor(() => expect(routesToExecutionTestsSpy).toHaveBeenCalled())
   })
 
   const routeToPipelineStudioV1 = jest.spyOn(routes, 'toPipelineStudioV1')
