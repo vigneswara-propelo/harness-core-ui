@@ -47,6 +47,7 @@ const UserGroupDetails: React.FC = () => {
   const { accountId, orgIdentifier, projectIdentifier, module, userGroupIdentifier } =
     useParams<PipelineType<ProjectPathProps & { userGroupIdentifier: string }>>()
   const { parentScope } = useQueryParams<{ parentScope: PrincipalScope }>()
+
   const history = useHistory()
 
   const { data, loading, error, refetch } = useGetUserGroupAggregate({
@@ -234,6 +235,7 @@ const UserGroupDetails: React.FC = () => {
             managed={userGroup.harnessManaged}
             linkedSSOType={userGroup.linkedSsoType}
             isUserGroupManaged={userGroup.externallyManaged}
+            onMemberListRefetch={refetch}
           />
         </Container>
         <Container width="50%" className={css.detailsContainer}>

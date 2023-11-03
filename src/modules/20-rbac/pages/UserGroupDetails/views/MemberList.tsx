@@ -46,6 +46,7 @@ interface MemberListProps {
   managed?: boolean
   linkedSSOType?: string | undefined
   isUserGroupManaged?: boolean | undefined
+  onMemberListRefetch?: () => void
 }
 const RenderColumnUser: Renderer<CellProps<UserInfo>> = ({ row }) => {
   const data = row.original
@@ -197,7 +198,8 @@ const MemberList: React.FC<MemberListProps> = ({
   userGroupInherited,
   managed,
   linkedSSOType,
-  isUserGroupManaged
+  isUserGroupManaged,
+  onMemberListRefetch
 }) => {
   const { getString } = useStrings()
   const [searchTerm, setSearchTerm] = useState('')
@@ -246,7 +248,10 @@ const MemberList: React.FC<MemberListProps> = ({
         accessor: (row: UserInfo) => row.uuid,
         width: '5%',
         Cell: managed ? <></> : RenderColumnMenu,
-        refetchMembers: refetch,
+        refetchMembers: () => {
+          refetch()
+          onMemberListRefetch?.()
+        },
         userGroupIdentifier: userGroupIdentifier,
         disableSortBy: true,
         ssoLinked,
@@ -254,7 +259,7 @@ const MemberList: React.FC<MemberListProps> = ({
         isUserGroupManaged
       }
     ]
-  }, [refetch])
+  }, [refetch, data, onMemberListRefetch])
 
   return (
     <Container className={css.memberList}>
