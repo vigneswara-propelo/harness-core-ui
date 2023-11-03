@@ -375,6 +375,7 @@ export default function AddEditServiceOverride({
                   multiTypeProps={{
                     defaultValueToReset: ''
                   }}
+                  hideRemoteDetails={true}
                 />
                 {!isEmpty(formikProps.values?.serviceRef) && (
                   <>

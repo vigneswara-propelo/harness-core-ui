@@ -8,10 +8,18 @@
 import React from 'react'
 import { defaultTo } from 'lodash-es'
 import cx from 'classnames'
-import { Icon, Layout, Text } from '@harness/uicore'
+import { Container, Icon, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
-import { Failure, getServiceAccessListPromise, ServiceDefinition, ServiceResponseDTO } from 'services/cd-ng'
+import {
+  Failure,
+  getServiceAccessListPromise,
+  getServiceListPromise,
+  GetServiceListQueryParams,
+  ServiceDefinition,
+  ServiceResponse,
+  ServiceResponseDTO
+} from 'services/cd-ng'
 import type { ReferenceSelectProps } from '@common/components/ReferenceSelect/ReferenceSelect'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
@@ -21,6 +29,7 @@ import GitRemoteDetails from '@modules/10-common/components/GitRemoteDetails/Git
 import { getConnectorIdentifierWithScope } from '@modules/27-platform/connectors/utils/utils'
 import { getScopeFromDTO } from '@modules/10-common/components/EntityReference/EntityReference'
 import { defaultGitContextBranchPlaceholder } from '@modules/10-common/utils/gitSyncUtils'
+import { isEntitySame } from '@modules/10-common/components/CollapsableList/CollapsableList'
 import css from './FormMultiTypeServiceField.module.scss'
 
 export function getReferenceFieldProps({
@@ -40,6 +49,7 @@ export function getReferenceFieldProps({
   selectedServices,
   userSelectedBranches,
   setUserSelectedBranches,
+  hideRemoteDetails,
   getString
 }: any): Omit<
   ReferenceSelectProps<ServiceResponseDTO>,
@@ -113,7 +123,7 @@ export function getReferenceFieldProps({
     },
     isMultiSelect,
     selectedReferences: selectedServices,
-    recordRender: function recordRender({ item, selected: checked }) {
+    recordRender: function recordRender({ item, selected: checked, onItemClick, selectedRecord }) {
       const serviceId = getConnectorIdentifierWithScope(getScopeFromDTO(item?.record), item?.record?.identifier || '')
       let selectedBranch
       return (
@@ -129,28 +139,53 @@ export function getReferenceFieldProps({
               </Text>
             </div>
           </Layout.Horizontal>
-          {item?.record?.storeType === StoreType?.REMOTE ? (
-            <GitRemoteDetails
-              connectorRef={item?.record?.connectorRef}
-              repoName={item?.record?.entityGitDetails?.repoName}
-              branch={selectedBranch || userSelectedBranches[serviceId] || defaultGitContextBranchPlaceholder}
-              filePath={item?.record?.entityGitDetails?.filePath}
-              flags={{
-                readOnly: !checked,
-                showBranch: true
-              }}
-              onBranchChange={svc => {
-                if (item?.record?.entityGitDetails) {
-                  selectedBranch = svc?.branch
-                  if (selectedBranch !== userSelectedBranches[serviceId]) {
-                    setUserSelectedBranches({ ...userSelectedBranches, [serviceId]: selectedBranch })
+          {!hideRemoteDetails && item?.record?.storeType === StoreType?.REMOTE ? (
+            <Container width={320}>
+              <GitRemoteDetails
+                connectorRef={item?.record?.connectorRef}
+                repoName={item?.record?.entityGitDetails?.repoName}
+                branch={selectedBranch || userSelectedBranches[serviceId] || defaultGitContextBranchPlaceholder}
+                filePath={item?.record?.entityGitDetails?.filePath}
+                flags={{
+                  readOnly: !checked,
+                  showBranch: true
+                }}
+                onBranchChange={svc => {
+                  if (item?.record?.entityGitDetails) {
+                    selectedBranch = svc?.branch
+                    if (selectedBranch !== userSelectedBranches[serviceId]) {
+                      const hasToSelectService = !isEntitySame(item?.record, selectedRecord || {})
+                      if (!isMultiSelect && hasToSelectService) {
+                        onItemClick?.(item)
+                      }
+                      setUserSelectedBranches({ ...userSelectedBranches, [serviceId]: selectedBranch })
+                    }
                   }
-                }
-              }}
-            />
+                }}
+              />
+            </Container>
           ) : null}
         </Layout.Horizontal>
       )
     }
+  }
+}
+
+export async function fetchServicesMetadata(
+  queryParams: Pick<
+    GetServiceListQueryParams,
+    'accountIdentifier' | 'orgIdentifier' | 'projectIdentifier' | 'serviceIdentifiers'
+  >
+): Promise<ServiceResponse[]> {
+  try {
+    const response = await getServiceListPromise({
+      queryParams,
+      queryParamStringifyOptions: {
+        arrayFormat: 'repeat'
+      }
+    })
+    return response?.data?.content || []
+  } catch {
+    return []
   }
 }

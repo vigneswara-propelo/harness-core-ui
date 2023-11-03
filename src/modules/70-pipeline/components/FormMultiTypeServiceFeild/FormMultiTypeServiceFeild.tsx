@@ -42,10 +42,7 @@ import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { getIdentifierFromScopedRef } from '@common/utils/utils'
-import {
-  checkAndGetGitBranchForChildEntity,
-  defaultGitContextBranchPlaceholder
-} from '@modules/10-common/utils/gitSyncUtils'
+import { defaultGitContextBranchPlaceholder } from '@modules/10-common/utils/gitSyncUtils'
 import { UseGetServicesDataProps } from '@modules/75-cd/components/PipelineSteps/DeployServiceEntityStep/useGetServicesData'
 import { getConnectorIdentifierWithScope } from '@modules/27-platform/connectors/utils/utils'
 import { StoreMetadata } from '@modules/10-common/constants/GitSyncTypes'
@@ -80,6 +77,7 @@ export interface ServiceReferenceFieldProps extends Omit<IFormGroupProps, 'label
   labelClass?: string
   formikProps?: FormikProps<any>
   parentStoreMetadata?: StoreMetadata
+  hideRemoteDetails?: boolean
 }
 
 export function getSelectedRenderer(selected: any): JSX.Element {
@@ -128,14 +126,13 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
     disabled,
     labelClass: labelClassFromProps = '',
     width,
+    hideRemoteDetails,
     formikProps,
-    parentStoreMetadata,
     ...restProps
   } = props
   const formik = useFormikContext() || formikProps
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
-  const parentGitData = { repoName: parentStoreMetadata?.repoName, branch: parentStoreMetadata?.branch }
   const [page, setPage] = useState(0)
   const [pagedServiceData, setPagedServiceData] = useState<ResponsePageServiceResponse>({})
   const [hideModal, setHideModal] = useState(false)
@@ -172,6 +169,7 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
     selectedServices: Array.isArray(selected) ? selected : [],
     userSelectedBranches,
     setUserSelectedBranches,
+    hideRemoteDetails,
     getString
   })
 
@@ -181,13 +179,7 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
     const services = svcs.map((svc: any) => {
       const serviceId = getConnectorIdentifierWithScope(svc.scope, svc.identifier || '')
       const branch = userSelectedBranches[serviceId]
-      const selectedServiceBranch =
-        branch && branch !== defaultGitContextBranchPlaceholder
-          ? checkAndGetGitBranchForChildEntity(parentGitData, {
-              repoName: svc?.record?.entityGitDetails?.repoName,
-              branch
-            })?.gitBranch
-          : undefined
+      const selectedServiceBranch = branch && branch !== defaultGitContextBranchPlaceholder ? branch : undefined
 
       serviceGitBranches[serviceId] = selectedServiceBranch
 
@@ -265,16 +257,10 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
 
               const serviceId = value.value || ''
               const branch = userSelectedBranches[serviceId]
-              const serviceGitBranch =
-                branch && branch !== defaultGitContextBranchPlaceholder
-                  ? checkAndGetGitBranchForChildEntity(parentGitData, {
-                      repoName: record?.entityGitDetails?.repoName,
-                      branch: userSelectedBranches[serviceId]
-                    })
-                  : undefined
+              const serviceGitBranch = branch && branch !== defaultGitContextBranchPlaceholder ? branch : undefined
               const serviceGitBranches: UseGetServicesDataProps['serviceGitBranches'] = serviceGitBranch
                 ? {
-                    [serviceId]: serviceGitBranch?.gitBranch
+                    [serviceId]: serviceGitBranch
                   }
                 : undefined
 

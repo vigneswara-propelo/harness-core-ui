@@ -140,10 +140,13 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
       }
       const serviceResponse = response.data?.service
       if (isServiceEntityModalView) {
-        onServiceCreate?.({
-          identifier: serviceResponse?.identifier as string,
-          name: serviceResponse?.name as string
-        })
+        onServiceCreate?.(
+          {
+            identifier: serviceResponse?.identifier as string,
+            name: serviceResponse?.name as string
+          },
+          serviceResponse
+        )
       } else {
         if (serviceResponse?.storeType === StoreType.REMOTE) {
           setServiceResponse?.(serviceResponse)

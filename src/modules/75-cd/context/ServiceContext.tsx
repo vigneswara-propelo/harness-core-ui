@@ -14,7 +14,7 @@ export interface ServiceContextValues {
   serviceResponse: ServiceResponseDTO
   setServiceResponse?: (resposne: ServiceResponseDTO) => void
   onCloseModal: () => void
-  onServiceCreate: (serviceInfo: ServiceYaml) => void
+  onServiceCreate: (serviceInfo: ServiceYaml, service?: ServiceResponseDTO) => void
   isServiceEntityModalView: boolean
   isServiceEntityPage: boolean
   isServiceCreateModalView: boolean

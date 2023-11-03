@@ -9,7 +9,7 @@
 import React from 'react'
 import { defaultTo } from 'lodash-es'
 import { Color } from '@harness/design-system'
-import { Icon, Layout, Text } from '@harness/uicore'
+import { Container, Icon, Layout, Text } from '@harness/uicore'
 import cx from 'classnames'
 import type { ReferenceSelectProps } from '@common/components/ReferenceSelect/ReferenceSelect'
 import {
@@ -152,25 +152,27 @@ export function getReferenceFieldProps({
             </div>
           </Layout.Horizontal>
           {item?.record?.storeType === StoreType?.REMOTE ? (
-            <GitRemoteDetails
-              connectorRef={item?.record?.connectorRef}
-              repoName={item?.record?.entityGitDetails?.repoName}
-              filePath={item?.record?.entityGitDetails?.filePath}
-              branch={selectedBranch || userSelectedBranches[environmentId] || defaultGitContextBranchPlaceholder}
-              fileUrl={item?.record?.entityGitDetails?.fileUrl}
-              flags={{
-                readOnly: !checked,
-                showBranch: true
-              }}
-              onBranchChange={env => {
-                if (item?.record?.entityGitDetails) {
-                  selectedBranch = env?.branch
-                  if (selectedBranch !== userSelectedBranches[environmentId]) {
-                    setUserSelectedBranches({ ...userSelectedBranches, [environmentId]: selectedBranch })
+            <Container width={320}>
+              <GitRemoteDetails
+                connectorRef={item?.record?.connectorRef}
+                repoName={item?.record?.entityGitDetails?.repoName}
+                filePath={item?.record?.entityGitDetails?.filePath}
+                branch={selectedBranch || userSelectedBranches[environmentId] || defaultGitContextBranchPlaceholder}
+                fileUrl={item?.record?.entityGitDetails?.fileUrl}
+                flags={{
+                  readOnly: !checked,
+                  showBranch: true
+                }}
+                onBranchChange={env => {
+                  if (item?.record?.entityGitDetails) {
+                    selectedBranch = env?.branch
+                    if (selectedBranch !== userSelectedBranches[environmentId]) {
+                      setUserSelectedBranches({ ...userSelectedBranches, [environmentId]: selectedBranch })
+                    }
                   }
-                }
-              }}
-            />
+                }}
+              />
+            </Container>
           ) : null}
         </Layout.Horizontal>
       )

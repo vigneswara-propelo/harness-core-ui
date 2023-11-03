@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import cx from 'classnames'
 import { defaultTo, get } from 'lodash-es'
 import { Link, useParams } from 'react-router-dom'
@@ -14,7 +14,7 @@ import { Layout, Popover, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
 import { String as StrTemplate } from 'framework/strings'
-import type { Application, GitOpsExecutionSummary } from 'services/cd-ng'
+import type { Application, GitOpsExecutionSummary, ServiceResponseDTO } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import routesV2 from '@common/RouteDefinitionsV2'
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
@@ -25,9 +25,11 @@ import type { ProjectPathProps, ModulePathParams, Module } from '@common/interfa
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { StageDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import { ServicePopoverCard } from '@cd/components/ServicePopoverCard/ServicePopoverCard'
+import { fetchServicesMetadata } from '@modules/70-pipeline/components/FormMultiTypeServiceFeild/Utils'
 import { EnvironmentDetailsTab } from '../EnvironmentsV2/utils'
 import { InfraDefinitionTabs } from '../EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfraDefinitionDetailsDrawer/InfraDefinitionDetailsDrawer'
 
+import { getRemoteServiceQueryParams } from '../Services/utils/ServiceUtils'
 import serviceCardCSS from '@cd/components/ServicePopoverCard/ServicePopoverCard.module.scss'
 import css from './CDStageDetails.module.scss'
 
@@ -108,7 +110,7 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
   const { stage } = props
   const gitOpsApps = get(stage, 'moduleInfo.cd.gitOpsAppSummary.applications') || []
   const { orgIdentifier, projectIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
-  const { CDS_NAV_2_0 } = useFeatureFlags()
+  const { CDS_NAV_2_0, CDS_SERVICE_GITX } = useFeatureFlags()
 
   const gitOpsEnvironments = Array.isArray(get(stage, 'moduleInfo.cd.gitopsExecutionSummary.environments'))
     ? (get(stage, 'moduleInfo.cd.gitopsExecutionSummary') as Required<GitOpsExecutionSummary>).environments.map(
@@ -128,23 +130,41 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
         )
       : []
   }
+  const serviceId = getIdentifierFromScopedRef(get(stage, 'moduleInfo.cd.serviceInfo.identifier', ''))
+  const [serviceMetadata, setServiceMetadata] = useState<ServiceResponseDTO>({})
 
-  const toServiceStudio =
-    CDS_NAV_2_0 && !module
-      ? `${routesV2.toSettingsServiceDetails({
-          accountId,
-          ...(serviceScope !== Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
-          ...(serviceScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
-          serviceId: getIdentifierFromScopedRef(get(stage, 'moduleInfo.cd.serviceInfo.identifier', ''))
-        })}`
-      : `${routes.toServiceStudio({
-          accountId,
-          ...(serviceScope !== Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
-          ...(serviceScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
-          serviceId: getIdentifierFromScopedRef(get(stage, 'moduleInfo.cd.serviceInfo.identifier', '')),
-          module,
-          accountRoutePlacement: 'settings'
-        })}`
+  useEffect(() => {
+    if (CDS_SERVICE_GITX) {
+      fetchServicesMetadata({
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        serviceIdentifiers: [serviceId]
+      }).then(responseData => {
+        responseData?.length && responseData?.[0]?.service && setServiceMetadata(responseData?.[0]?.service)
+      })
+    }
+  }, [CDS_SERVICE_GITX, accountId, orgIdentifier, projectIdentifier, serviceId])
+
+  const toServiceStudio = useMemo(
+    () =>
+      CDS_NAV_2_0 && !module
+        ? `${routesV2.toSettingsServiceDetails({
+            accountId,
+            ...(serviceScope !== Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+            ...(serviceScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
+            serviceId
+          })}?${getRemoteServiceQueryParams(serviceMetadata)}`
+        : `${routes.toServiceStudio({
+            accountId,
+            ...(serviceScope !== Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
+            ...(serviceScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
+            serviceId,
+            module,
+            accountRoutePlacement: 'settings'
+          })}?${getRemoteServiceQueryParams(serviceMetadata)}`,
+    [CDS_NAV_2_0, accountId, module, orgIdentifier, projectIdentifier, serviceId, serviceMetadata, serviceScope]
+  )
 
   const toEnvironmentDetails =
     CDS_NAV_2_0 && !module

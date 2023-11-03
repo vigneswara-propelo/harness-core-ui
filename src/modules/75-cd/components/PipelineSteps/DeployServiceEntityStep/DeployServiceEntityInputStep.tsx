@@ -335,7 +335,6 @@ export function DeployServiceEntityInputStep({
               deploymentType={deploymentType as ServiceDeploymentType}
               gitOpsEnabled={gitOpsEnabled}
               deploymentMetadata={deploymentMetadata}
-              parentStoreMetadata={parentStoreMetadata}
               placeholder={getString('cd.pipelineSteps.serviceTab.selectService')}
               setRefValue={true}
               isNewConnectorLabelVisible={false}
@@ -357,7 +356,6 @@ export function DeployServiceEntityInputStep({
               gitOpsEnabled={gitOpsEnabled}
               deploymentMetadata={deploymentMetadata}
               placeholder={getString('services')}
-              parentStoreMetadata={parentStoreMetadata}
               isMultiSelect={true}
               onMultiSelectChange={handleServicesChange}
               // This is required to update values when the type has changed

@@ -28,6 +28,7 @@ import { useFormikContext } from 'formik'
 import { Intent } from '@blueprintjs/core'
 import produce from 'immer'
 import { useParams } from 'react-router-dom'
+import { WritableDraft } from 'immer/dist/types/types-external'
 import { JsonNode, mergeServiceInputsPromise, ServiceYaml } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -48,9 +49,9 @@ import { getScopedValueFromDTO } from '@common/components/EntityReference/Entity
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { FormMultiTypeCheckboxField } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
-import type { Error } from 'services/cd-ng'
+import type { Error, ServiceResponseDTO } from 'services/cd-ng'
 import { ErrorHandler } from '@modules/10-common/components/ErrorHandler/ErrorHandler'
-import { usePipelineContext } from '@modules/70-pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
 import {
   DeployServiceEntityData,
   DeployServiceEntityCustomProps,
@@ -112,9 +113,6 @@ export default function BaseDeployServiceEntity({
   setAllServicesGitBranches
 }: BaseDeployServiceEntityProps): React.ReactElement {
   const { values, setValues, setTouched } = useFormikContext<FormState>()
-  const {
-    state: { storeMetadata }
-  } = usePipelineContext()
   const { prependServiceToServiceList, updatingData, servicesList, servicesData, remoteFetchError } =
     useGetServicesDataReturn
   const remoteFetchErrorMessages = (remoteFetchError as Error)?.responseMessages
@@ -224,7 +222,19 @@ export default function BaseDeployServiceEntity({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, servicesList, servicesData])
 
-  function onServiceEntityCreate(newServiceInfo: ServiceYaml): void {
+  function appendServiceBranch(draft: WritableDraft<FormState>, service?: ServiceResponseDTO): void {
+    if (service?.storeType === StoreType.REMOTE) {
+      const scopedServiceRef = getScopedValueFromDTO({
+        projectIdentifier,
+        orgIdentifier,
+        identifier: service.identifier
+      })
+      draft.serviceGitBranches = draft.serviceGitBranches || {}
+      draft.serviceGitBranches[scopedServiceRef] = service?.entityGitDetails?.branch
+    }
+  }
+
+  function onServiceEntityCreate(newServiceInfo: ServiceYaml, service?: ServiceResponseDTO): void {
     closeAddNewModal()
 
     // prepend the new service in the list
@@ -245,12 +255,14 @@ export default function BaseDeployServiceEntity({
           if (Array.isArray(draft.services)) {
             draft.services.push({ label: newServiceInfo.name, value: scopedServiceRef })
           }
+          appendServiceBranch(draft, service)
         })
       )
     } else {
       setValues(
         produce(values, draft => {
           draft.service = scopedServiceRef
+          appendServiceBranch(draft, service)
         })
       )
     }
@@ -420,7 +432,6 @@ export default function BaseDeployServiceEntity({
                       gitOpsEnabled={gitOpsEnabled}
                       deploymentMetadata={deploymentMetadata}
                       disabled={readonly || (isFixed && loading)}
-                      parentStoreMetadata={storeMetadata}
                       placeholder={placeHolderForServices}
                       openAddNewModal={openAddNewModal}
                       isMultiSelect={true}
@@ -445,7 +456,6 @@ export default function BaseDeployServiceEntity({
                       placeholder={placeHolderForService}
                       setRefValue={true}
                       disabled={readonly || (isFixed && loading)}
-                      parentStoreMetadata={storeMetadata}
                       openAddNewModal={openAddNewModal}
                       isNewConnectorLabelVisible
                       onChange={handleSingleSelectChange}

@@ -29,7 +29,13 @@ export interface CollapsableTableProps<T extends ScopedObjectDTO> {
   selectedRecords: ScopeAndIdentifier[]
   setSelectedRecords: Dispatch<SetStateAction<ScopeAndIdentifier[]>>
   data: EntityReferenceResponse<T>[]
-  recordRender: (args: { item: EntityReferenceResponse<T>; selectedScope: Scope; selected?: boolean }) => JSX.Element
+  recordRender: (args: {
+    item: EntityReferenceResponse<T>
+    selectedScope: Scope
+    selected?: boolean
+    onItemClick: (item: EntityReferenceResponse<T>) => void
+    selectedRecord?: T
+  }) => JSX.Element
   collapsedRecordRender?: (args: {
     item: EntityReferenceResponse<T>
     selectedScope: Scope
@@ -40,6 +46,15 @@ export interface CollapsableTableProps<T extends ScopedObjectDTO> {
   isMultiSelect?: boolean
   selectedTab?: TAB_ID
   preSelectedRecord?: ScopeAndIdentifier | undefined
+}
+
+export function isEntitySame<T extends ScopedObjectDTO & { identifier?: string }>(item1: T, item2: T): boolean {
+  if (item1.identifier !== item2.identifier) {
+    return false
+  } else if (getScopeFromDTO(item1) === getScopeFromDTO(item2)) {
+    return true
+  }
+  return false
 }
 
 export function CollapsableList<T extends ScopedObjectDTO>(props: CollapsableTableProps<T>): JSX.Element {
@@ -66,10 +81,8 @@ export function CollapsableList<T extends ScopedObjectDTO>(props: CollapsableTab
     return selectedRecord === item.record
   }
 
-  const onItemClick: (item: EntityReferenceResponse<T>) => MouseEventHandler<HTMLDivElement> = item => e => {
-    e.preventDefault()
-    e.stopPropagation()
-
+  //For nested clicks, like branch change this can be used in recordRender
+  const onItemToggle = (item: EntityReferenceResponse<T>): void => {
     if (isMultiSelect) {
       setSelectedRecords(prev => {
         const existingRecord = prev.find(
@@ -82,6 +95,12 @@ export function CollapsableList<T extends ScopedObjectDTO>(props: CollapsableTab
     } else {
       setSelectedRecord(props.selectedRecord === item.record ? undefined : item.record)
     }
+  }
+
+  const onItemClick: (item: EntityReferenceResponse<T>) => MouseEventHandler<HTMLDivElement> = item => e => {
+    e.preventDefault()
+    e.stopPropagation()
+    onItemToggle(item)
   }
   return (
     <>
@@ -102,7 +121,9 @@ export function CollapsableList<T extends ScopedObjectDTO>(props: CollapsableTab
                 {props.recordRender({
                   item,
                   selectedScope: getScopeFromDTO(item.record),
-                  selected: isPreselected(item) || isSelected(item)
+                  selected: isPreselected(item) || isSelected(item),
+                  onItemClick: onItemToggle,
+                  selectedRecord: isMultiSelect ? undefined : selectedRecord
                 })}
               </div>
             }

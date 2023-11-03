@@ -123,7 +123,13 @@ export interface EntityReferenceProps<T extends ScopedObjectDTO> {
     sortMethod?: string,
     isFavorite?: boolean
   ) => void
-  recordRender: (args: { item: EntityReferenceResponse<T>; selectedScope: Scope; selected?: boolean }) => JSX.Element
+  recordRender: (args: {
+    item: EntityReferenceResponse<T>
+    selectedScope: Scope
+    selected?: boolean
+    onItemClick?: (item: EntityReferenceResponse<T>) => void
+    selectedRecord?: ScopedObjectDTO
+  }) => JSX.Element
   collapsedRecordRender?: (args: {
     item: EntityReferenceResponse<T>
     selectedScope: Scope
