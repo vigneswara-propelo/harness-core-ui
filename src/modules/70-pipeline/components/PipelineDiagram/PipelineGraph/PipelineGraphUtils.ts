@@ -492,10 +492,10 @@ const getPipelineGraphData = ({
 }
 
 function getIsConditionalExecutionEnabled(entity: any): boolean {
-  if (entity.when) {
+  if (entity?.when) {
     return entity.when?.pipelineStatus !== 'Success' || !!entity.when?.condition?.trim()
   }
-  if (entity.template?.templateInputs?.when) {
+  if (entity?.template?.templateInputs?.when) {
     return (
       entity.template.templateInputs.when?.pipelineStatus !== 'Success' ||
       !!entity.template.templateInputs.when?.condition?.trim()
