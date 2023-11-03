@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
+import { CIBuildInfrastructureType, Language } from '@pipeline/utils/constants'
 import { Types as TransformValuesTypes } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { Types as ValidationFieldTypes } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 
@@ -130,7 +130,7 @@ export const transformValuesFieldsConfig = [
 
 export const getEditViewValidateFieldsConfig = (
   buildInfrastructureType: CIBuildInfrastructureType,
-  isLanguageCsharp: boolean,
+  language: Language,
   isTemplateView: boolean
 ): { name: string; type: ValidationFieldTypes; label?: string; isRequired?: boolean }[] => [
   {
@@ -173,13 +173,13 @@ export const getEditViewValidateFieldsConfig = (
     name: 'spec.buildEnvironment',
     type: ValidationFieldTypes.Text,
     label: 'ci.runTestsStep.buildEnvironment',
-    isRequired: isLanguageCsharp
+    isRequired: language === Language.Csharp
   },
   {
     name: 'spec.frameworkVersion',
     type: ValidationFieldTypes.Text,
     label: 'ci.runTestsStep.frameworkVersion',
-    isRequired: isLanguageCsharp
+    isRequired: language === Language.Csharp
   },
   {
     name: 'spec.buildTool',
@@ -191,7 +191,7 @@ export const getEditViewValidateFieldsConfig = (
     name: 'spec.args',
     type: ValidationFieldTypes.Text,
     label: 'argsLabel',
-    isRequired: true
+    isRequired: ![Language.Python, Language.Ruby].includes(language)
   },
   {
     name: 'spec.packages',
@@ -212,13 +212,13 @@ export const getEditViewValidateFieldsConfig = (
     name: 'spec.namespaces',
     type: ValidationFieldTypes.Text,
     label: 'ci.runTestsStep.namespaces',
-    isRequired: isLanguageCsharp
+    isRequired: language === Language.Csharp
   },
   {
     name: 'spec.reportPaths',
     type: ValidationFieldTypes.List,
     label: 'ci.runTestsStep.testReportPaths',
-    isRequired: true
+    isRequired: ![Language.Python, Language.Ruby].includes(language)
   },
   {
     name: 'spec.reports.spec.paths',

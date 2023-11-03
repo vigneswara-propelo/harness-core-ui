@@ -525,7 +525,7 @@ export const RunTestsStepBase = (
             valuesToValidate,
             getEditViewValidateFieldsConfig(
               buildInfrastructureType,
-              (valuesToValidate?.spec?.language as any)?.value === Language.Csharp,
+              (valuesToValidate?.spec?.language as any)?.value as Language,
               stepViewType === StepViewType.Template
             ),
             {
