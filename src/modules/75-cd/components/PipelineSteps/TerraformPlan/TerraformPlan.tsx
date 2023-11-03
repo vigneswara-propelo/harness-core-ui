@@ -110,6 +110,7 @@ import { AmazonS3StoreDataType, formatAmazonS3Data } from '../Common/ConfigFileS
 
 import { ArtifactoryForm } from '../Common/VarFile/ArtifactoryForm'
 import { formatArtifactoryData } from '../Common/VarFile/helper'
+import TerraformSelectArn from '../Common/Terraform/TerraformSelectArn/TerraformSelectArn'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../Common/Terraform/TerraformStep.module.scss'
 
@@ -666,32 +667,42 @@ function TerraformPlanWidget(
                     <>
                       {!enableCloudCli && (
                         <>
-                          <div className={cx(stepCss.formGroup, stepCss.md)}>
-                            <FormInput.MultiTextInput
-                              name={`spec.${fieldPath}.workspace`}
-                              placeholder={getString('pipeline.terraformStep.workspace')}
-                              label={getString('pipelineSteps.workspace')}
-                              multiTextInputProps={{ expressions, allowableTypes }}
-                              isOptional={true}
-                              disabled={readonly}
-                            />
-                            {getMultiTypeFromValue(formik.values.spec?.configuration?.workspace) ===
-                              MultiTypeInputType.RUNTIME && (
-                              <ConfigureOptions
-                                value={formik.values?.spec?.configuration?.workspace as string}
-                                type="String"
-                                variableName={`spec.${fieldPath}.workspace`}
-                                showRequiredField={false}
-                                showDefaultField={false}
-                                allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
-                                onChange={value => {
-                                  /* istanbul ignore else */
-                                  formik.setFieldValue(`spec.${fieldPath}.workspace`, value)
-                                }}
-                                isReadonly={readonly}
+                          <Layout.Vertical>
+                            <div className={cx(stepCss.formGroup, stepCss.md)}>
+                              <FormInput.MultiTextInput
+                                name={`spec.${fieldPath}.workspace`}
+                                placeholder={getString('pipeline.terraformStep.workspace')}
+                                label={getString('pipelineSteps.workspace')}
+                                multiTextInputProps={{ expressions, allowableTypes }}
+                                isOptional={true}
+                                disabled={readonly}
                               />
-                            )}
-                          </div>
+                              {getMultiTypeFromValue(formik.values.spec?.configuration?.workspace) ===
+                                MultiTypeInputType.RUNTIME && (
+                                <ConfigureOptions
+                                  value={formik.values?.spec?.configuration?.workspace as string}
+                                  type="String"
+                                  variableName={`spec.${fieldPath}.workspace`}
+                                  showRequiredField={false}
+                                  showDefaultField={false}
+                                  allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
+                                  onChange={value => {
+                                    /* istanbul ignore else */
+                                    formik.setFieldValue(`spec.${fieldPath}.workspace`, value)
+                                  }}
+                                  isReadonly={readonly}
+                                />
+                              )}
+                            </div>
+                            <TerraformSelectArn
+                              pathName={'spec.configuration'}
+                              allowableTypes={allowableTypes}
+                              fieldPath={`spec.${fieldPath}.providerCredential.spec`}
+                              renderConnector
+                              renderRegion
+                              renderRole
+                            />
+                          </Layout.Vertical>
                           <div className={css.divider} />
                         </>
                       )}

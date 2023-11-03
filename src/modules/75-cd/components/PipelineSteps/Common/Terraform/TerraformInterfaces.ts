@@ -531,6 +531,7 @@ export const onSubmitTFPlanData = (values: any): TFPlanFormData => {
   const fieldPath = values.spec?.configuration ? 'configuration' : 'cloudCliConfiguration'
   const envVars = get(values.spec, `${fieldPath}.environmentVariables`)
   const envMap: StringNGVariable[] = []
+  const providerCredentialValue = get(values.spec, `${fieldPath}.providerCredential`)
 
   if (Array.isArray(envVars)) {
     envVars.forEach(mapValue => {
@@ -556,10 +557,20 @@ export const onSubmitTFPlanData = (values: any): TFPlanFormData => {
 
   const connectorValue = get(values.spec, `${fieldPath}.configFiles.store.spec.connectorRef`)
   const backendConfigConnectorValue = get(values.spec, `${fieldPath}.backendConfig.spec.store.spec.connectorRef`)
-
+  const providerCredentialObj: TerraformProvider | undefined = {
+    type: Connectors.AWS,
+    spec: {}
+  }
   const configObject: any = {
     command: get(values.spec, `${fieldPath}.command`),
-    configFiles: {} as TerraformConfigFilesWrapper
+    configFiles: {} as TerraformConfigFilesWrapper,
+    providerCredential: providerCredentialValue ? providerCredentialObj : undefined
+  }
+
+  if (providerCredentialValue) {
+    providerCredentialObj.spec['connectorRef'] = providerCredentialValue.spec.connectorRef
+    providerCredentialObj.spec['region'] = providerCredentialValue.spec.region
+    providerCredentialObj.spec['roleArn'] = providerCredentialValue.spec.roleArn
   }
 
   if (get(values.spec, `${fieldPath}.backendConfig.spec.content`)) {

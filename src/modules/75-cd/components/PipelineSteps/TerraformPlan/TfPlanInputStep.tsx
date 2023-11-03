@@ -28,9 +28,10 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { isValueRuntimeInput } from '@common/utils/utils'
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { TFMonaco } from '../Common/Terraform/Editview/TFMonacoEditor'
-import type { TerraformPlanProps } from '../Common/Terraform/TerraformInterfaces'
+import type { TerraformPlanProps, TerraformData } from '../Common/Terraform/TerraformInterfaces'
 import ConfigInputs from './InputSteps/TfConfigSection'
 import TfVarFiles from './InputSteps/TfPlanVarFiles'
+import TerraformSelectArn from '../Common/Terraform/TerraformSelectArn/TerraformSelectArn'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../Common/Terraform/TerraformStep.module.scss'
 
@@ -48,7 +49,15 @@ export default function TfPlanInputStep(
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const fieldPath = inputSetData?.template?.spec?.configuration ? 'configuration' : 'cloudCliConfiguration'
   const cmdFlagPath = get(inputSetData?.template?.spec, `${fieldPath}.commandFlags`)
-
+  const checkArnInput = React.useMemo((): boolean => {
+    const existRuntimeArnField = ['connectorRef', 'region', 'roleArn'].some(field => {
+      return (
+        getMultiTypeFromValue(get(inputSetData?.template?.spec?.configuration, `providerCredential.spec.${field}`)) ===
+        MultiTypeInputType.RUNTIME
+      )
+    })
+    return existRuntimeArnField
+  }, [inputSetData, fieldPath])
   return (
     <FormikForm className={stepCss.inputWidth}>
       {getMultiTypeFromValue(inputSetData?.template?.spec?.provisionerIdentifier) === MultiTypeInputType.RUNTIME && (
@@ -133,6 +142,28 @@ export default function TfPlanInputStep(
           }}
           template={inputSetData?.template}
           fieldPath={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.configuration.workspace`}
+        />
+      )}
+
+      {checkArnInput && (
+        <TerraformSelectArn
+          pathName={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.configuration`}
+          allowableTypes={allowableTypes}
+          allValues={props?.allValues as TerraformData}
+          fieldPath={`${fieldPath}.providerCredential.spec`}
+          renderConnector={
+            getMultiTypeFromValue(
+              get(inputSetData?.template?.spec, `${fieldPath}.providerCredential.spec.connectorRef`)
+            ) === MultiTypeInputType.RUNTIME
+          }
+          renderRegion={
+            getMultiTypeFromValue(get(inputSetData?.template?.spec, `${fieldPath}.providerCredential.spec.region`)) ===
+            MultiTypeInputType.RUNTIME
+          }
+          renderRole={
+            getMultiTypeFromValue(get(inputSetData?.template?.spec, `${fieldPath}.providerCredential.spec.roleArn`)) ===
+            MultiTypeInputType.RUNTIME
+          }
         />
       )}
 
