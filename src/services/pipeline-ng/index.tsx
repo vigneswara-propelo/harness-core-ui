@@ -85,6 +85,7 @@ export interface AccessControlCheckError {
     | 'ACCOUNT_DOES_NOT_EXIST'
     | 'INACTIVE_ACCOUNT'
     | 'ACCOUNT_MIGRATED'
+    | 'ACCOUNT_MIGRATED_TO_NEXT_GEN'
     | 'USER_DOMAIN_NOT_ALLOWED'
     | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
     | 'RESOURCE_NOT_FOUND'
@@ -710,13 +711,13 @@ export type AuditFilterProperties = FilterProperties & {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   )[]
   principals?: Principal[]
@@ -1543,6 +1544,7 @@ export interface Error {
     | 'ACCOUNT_DOES_NOT_EXIST'
     | 'INACTIVE_ACCOUNT'
     | 'ACCOUNT_MIGRATED'
+    | 'ACCOUNT_MIGRATED_TO_NEXT_GEN'
     | 'USER_DOMAIN_NOT_ALLOWED'
     | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
     | 'RESOURCE_NOT_FOUND'
@@ -1928,6 +1930,7 @@ export interface ErrorMetadata {
     | 'ACCOUNT_DOES_NOT_EXIST'
     | 'INACTIVE_ACCOUNT'
     | 'ACCOUNT_MIGRATED'
+    | 'ACCOUNT_MIGRATED_TO_NEXT_GEN'
     | 'USER_DOMAIN_NOT_ALLOWED'
     | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
     | 'RESOURCE_NOT_FOUND'
@@ -2484,6 +2487,12 @@ export interface ExecutionTarget {
   workingDirectory?: string
 }
 
+export interface ExecutionTargetV1 {
+  connector?: ParameterFieldString
+  dir?: ParameterFieldString
+  host?: ParameterFieldString
+}
+
 export interface ExecutionTriggerInfo {
   [key: string]: any
 }
@@ -2555,6 +2564,7 @@ export interface Failure {
     | 'ACCOUNT_DOES_NOT_EXIST'
     | 'INACTIVE_ACCOUNT'
     | 'ACCOUNT_MIGRATED'
+    | 'ACCOUNT_MIGRATED_TO_NEXT_GEN'
     | 'USER_DOMAIN_NOT_ALLOWED'
     | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
     | 'RESOURCE_NOT_FOUND'
@@ -2993,6 +3003,8 @@ export interface FilterProperties {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+    | 'Override'
+    | 'InputSet'
   labels?: {
     [key: string]: string
   }
@@ -3331,6 +3343,10 @@ export type HarnessFileStoreSource = ShellScriptBaseSource & {
   file?: string
 }
 
+export type HarnessFileStoreSourceV1 = ShellScriptBaseSourceV1 & {
+  file?: ParameterFieldString
+}
+
 export interface HarnessForConfig {
   end?: number
   items?: string[]
@@ -3417,6 +3433,20 @@ export type HttpStepInfo = StepSpecType & {
   url: string
 }
 
+export type HttpStepInfoV1 = StepSpecType & {
+  assertion?: ParameterFieldString
+  body?: ParameterFieldString
+  cert?: ParameterFieldString
+  cert_key?: ParameterFieldString
+  delegate?: ParameterFieldListTaskSelectorYaml
+  headers?: HttpHeaderConfig[]
+  input_vars?: NGVariableV1Wrapper
+  metadata?: string
+  method?: ParameterFieldString
+  output_vars?: NGVariableV1Wrapper
+  url?: ParameterFieldString
+}
+
 export type IgnoreFailureActionConfig = FailureStrategyActionConfig & {
   type: 'Ignore'
 }
@@ -3451,6 +3481,10 @@ export type InputSetErrorWrapper = ErrorMetadataDTO & {
   uuidToErrorResponseMap?: {
     [key: string]: InputSetErrorResponse
   }
+}
+
+export type InputSetFilterProperties = FilterProperties & {
+  inputSetIdsWithPipelineIds?: string[]
 }
 
 export interface InputSetGitUpdateResponse {
@@ -4117,6 +4151,11 @@ export interface OutputAlias {
   scope: 'Pipeline' | 'Stage' | 'StepGroup'
 }
 
+export interface OutputAliasV1 {
+  key?: ParameterFieldString
+  scope?: 'pipeline' | 'stage' | 'group'
+}
+
 export interface OutputNGVariable {
   description?: string
   name?: string
@@ -4577,6 +4616,7 @@ export interface PipelineExecutionDetail {
 }
 
 export type PipelineExecutionFilterProperties = FilterProperties & {
+  executionModeFilter?: 'ROLLBACK' | 'ALL' | 'DEFAULT'
   moduleProperties?: {
     [key: string]: { [key: string]: any }
   }
@@ -5252,6 +5292,7 @@ export interface ResourceDTO {
     | 'GITOPS_GNUPG_KEY'
     | 'GITOPS_PROJECT_MAPPING'
     | 'GITOPS_APPLICATION'
+  uniqueId?: string
 }
 
 export interface ResourceScope {
@@ -5617,6 +5658,7 @@ export interface ResponseMessage {
     | 'ACCOUNT_DOES_NOT_EXIST'
     | 'INACTIVE_ACCOUNT'
     | 'ACCOUNT_MIGRATED'
+    | 'ACCOUNT_MIGRATED_TO_NEXT_GEN'
     | 'USER_DOMAIN_NOT_ALLOWED'
     | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
     | 'RESOURCE_NOT_FOUND'
@@ -6838,13 +6880,26 @@ export interface ShellScriptBaseSource {
   type?: string
 }
 
+export interface ShellScriptBaseSourceV1 {
+  type?: string
+}
+
 export type ShellScriptInlineSource = ShellScriptBaseSource & {
   script?: string
+}
+
+export type ShellScriptInlineSourceV1 = ShellScriptBaseSourceV1 & {
+  script?: ParameterFieldString
 }
 
 export interface ShellScriptSourceWrapper {
   spec: ShellScriptBaseSource
   type: string
+}
+
+export interface ShellScriptSourceWrapperV1 {
+  spec?: ShellScriptBaseSourceV1
+  type?: string
 }
 
 export type ShellScriptStepInfo = StepSpecType & {
@@ -6858,6 +6913,19 @@ export type ShellScriptStepInfo = StepSpecType & {
   outputVariables?: NGVariable[]
   shell: 'Bash' | 'PowerShell'
   source: ShellScriptSourceWrapper
+}
+
+export type ShellScriptStepInfoV1 = StepSpecType & {
+  delegate?: ParameterFieldListTaskSelectorYaml
+  env_vars?: NGVariableV1Wrapper
+  execution_target?: ExecutionTargetV1
+  include_infra_selectors?: ParameterFieldBoolean
+  metadata?: string
+  on_delegate?: ParameterFieldBoolean
+  output_alias?: OutputAliasV1
+  output_vars?: NGVariableV1Wrapper
+  shell?: 'bash' | 'power-shell'
+  source?: ShellScriptSourceWrapperV1
 }
 
 export interface SkipInfo {
@@ -6995,15 +7063,6 @@ export interface StepData {
     | 'CACHE_SIZE_ALLOWANCE'
     | 'SRM_SERVICES'
     | 'ANALYZE_DEPLOYMENT_STEP'
-    | 'K8S_BG_SWAP_SERVICES'
-    | 'K8S_BLUE_GREEN_DEPLOY'
-    | 'K8S_APPLY'
-    | 'K8S_DELETE'
-    | 'K8S_CANARY_DELETE'
-    | 'K8S_ROLLING_DEPLOY'
-    | 'K8S_CANARY_DEPLOY'
-    | 'K8S_SCALE'
-    | 'K8S_ROLLING_ROLLBACK'
     | 'TERRAFORM_APPLY'
     | 'TERRAFORM_PLAN'
     | 'TERRAFORM_DESTROY'
@@ -7022,10 +7081,8 @@ export interface StepData {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
-    | 'K8S_DRY_RUN'
     | 'TERRAFORM_CLOUD_RUN'
     | 'TERRAFORM_CLOUD_ROLLBACK'
-    | 'K8S_BLUE_GREEN_STAGE_SCALE_DOWN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -8376,6 +8433,8 @@ export interface GetFilterListQueryParams {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+    | 'Override'
+    | 'InputSet'
 }
 
 export type GetFilterListProps = Omit<
@@ -8543,6 +8602,8 @@ export interface DeleteFilterQueryParams {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+    | 'Override'
+    | 'InputSet'
 }
 
 export type DeleteFilterProps = Omit<
@@ -8611,6 +8672,8 @@ export interface GetFilterQueryParams {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+    | 'Override'
+    | 'InputSet'
 }
 
 export interface GetFilterPathParams {
@@ -8968,6 +9031,8 @@ export interface GetInputSetsListForProjectQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   inputSetType?: 'ALL' | 'INPUT_SET' | 'OVERLAY_INPUT_SET'
+  searchTerm?: string
+  sortOrders?: string[]
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -8980,15 +9045,28 @@ export interface GetInputSetsListForProjectQueryParams {
 }
 
 export type GetInputSetsListForProjectProps = Omit<
-  GetProps<ResponsePageInputSetListResponse, Failure | Error, GetInputSetsListForProjectQueryParams, void>,
-  'path'
+  MutateProps<
+    ResponsePageInputSetListResponse,
+    Failure | Error,
+    GetInputSetsListForProjectQueryParams,
+    InputSetFilterProperties,
+    void
+  >,
+  'path' | 'verb'
 >
 
 /**
  * Gets InputSets list for a project
  */
 export const GetInputSetsListForProject = (props: GetInputSetsListForProjectProps) => (
-  <Get<ResponsePageInputSetListResponse, Failure | Error, GetInputSetsListForProjectQueryParams, void>
+  <Mutate<
+    ResponsePageInputSetListResponse,
+    Failure | Error,
+    GetInputSetsListForProjectQueryParams,
+    InputSetFilterProperties,
+    void
+  >
+    verb="POST"
     path={`/inputSets/list`}
     base={getConfig('pipeline/api')}
     {...props}
@@ -8996,37 +9074,48 @@ export const GetInputSetsListForProject = (props: GetInputSetsListForProjectProp
 )
 
 export type UseGetInputSetsListForProjectProps = Omit<
-  UseGetProps<ResponsePageInputSetListResponse, Failure | Error, GetInputSetsListForProjectQueryParams, void>,
-  'path'
+  UseMutateProps<
+    ResponsePageInputSetListResponse,
+    Failure | Error,
+    GetInputSetsListForProjectQueryParams,
+    InputSetFilterProperties,
+    void
+  >,
+  'path' | 'verb'
 >
 
 /**
  * Gets InputSets list for a project
  */
 export const useGetInputSetsListForProject = (props: UseGetInputSetsListForProjectProps) =>
-  useGet<ResponsePageInputSetListResponse, Failure | Error, GetInputSetsListForProjectQueryParams, void>(
-    `/inputSets/list`,
-    { base: getConfig('pipeline/api'), ...props }
-  )
+  useMutate<
+    ResponsePageInputSetListResponse,
+    Failure | Error,
+    GetInputSetsListForProjectQueryParams,
+    InputSetFilterProperties,
+    void
+  >('POST', `/inputSets/list`, { base: getConfig('pipeline/api'), ...props })
 
 /**
  * Gets InputSets list for a project
  */
 export const getInputSetsListForProjectPromise = (
-  props: GetUsingFetchProps<
+  props: MutateUsingFetchProps<
     ResponsePageInputSetListResponse,
     Failure | Error,
     GetInputSetsListForProjectQueryParams,
+    InputSetFilterProperties,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponsePageInputSetListResponse, Failure | Error, GetInputSetsListForProjectQueryParams, void>(
-    getConfig('pipeline/api'),
-    `/inputSets/list`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    ResponsePageInputSetListResponse,
+    Failure | Error,
+    GetInputSetsListForProjectQueryParams,
+    InputSetFilterProperties,
+    void
+  >('POST', getConfig('pipeline/api'), `/inputSets/list`, props, signal)
 
 export interface GetInputSetRepositoryListQueryParams {
   accountIdentifier: string

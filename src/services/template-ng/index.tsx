@@ -59,13 +59,13 @@ export type AuditFilterProperties = FilterProperties & {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   )[]
   principals?: Principal[]
@@ -569,6 +569,7 @@ export interface Error {
     | 'ACCOUNT_DOES_NOT_EXIST'
     | 'INACTIVE_ACCOUNT'
     | 'ACCOUNT_MIGRATED'
+    | 'ACCOUNT_MIGRATED_TO_NEXT_GEN'
     | 'USER_DOMAIN_NOT_ALLOWED'
     | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
     | 'RESOURCE_NOT_FOUND'
@@ -954,6 +955,7 @@ export interface ErrorMetadata {
     | 'ACCOUNT_DOES_NOT_EXIST'
     | 'INACTIVE_ACCOUNT'
     | 'ACCOUNT_MIGRATED'
+    | 'ACCOUNT_MIGRATED_TO_NEXT_GEN'
     | 'USER_DOMAIN_NOT_ALLOWED'
     | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
     | 'RESOURCE_NOT_FOUND'
@@ -1345,6 +1347,7 @@ export interface Failure {
     | 'ACCOUNT_DOES_NOT_EXIST'
     | 'INACTIVE_ACCOUNT'
     | 'ACCOUNT_MIGRATED'
+    | 'ACCOUNT_MIGRATED_TO_NEXT_GEN'
     | 'USER_DOMAIN_NOT_ALLOWED'
     | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
     | 'RESOURCE_NOT_FOUND'
@@ -1742,6 +1745,7 @@ export interface FilterProperties {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+    | 'Override'
   labels?: {
     [key: string]: string
   }
@@ -2036,6 +2040,7 @@ export interface ResourceDTO {
     | 'GITOPS_GNUPG_KEY'
     | 'GITOPS_PROJECT_MAPPING'
     | 'GITOPS_APPLICATION'
+  uniqueId?: string
 }
 
 export interface ResourceScopeDTO {
@@ -2105,6 +2110,7 @@ export interface ResponseMessage {
     | 'ACCOUNT_DOES_NOT_EXIST'
     | 'INACTIVE_ACCOUNT'
     | 'ACCOUNT_MIGRATED'
+    | 'ACCOUNT_MIGRATED_TO_NEXT_GEN'
     | 'USER_DOMAIN_NOT_ALLOWED'
     | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
     | 'RESOURCE_NOT_FOUND'
@@ -2704,6 +2710,7 @@ export interface TemplateFilterProperties {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+    | 'Override'
   labels?: {
     [key: string]: string
   }
@@ -3029,6 +3036,7 @@ export interface GetFilterListQueryParams {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+    | 'Override'
 }
 
 export type GetFilterListProps = Omit<
@@ -3196,6 +3204,7 @@ export interface DeleteFilterQueryParams {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+    | 'Override'
 }
 
 export type DeleteFilterProps = Omit<
@@ -3264,6 +3273,7 @@ export interface GetFilterQueryParams {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+    | 'Override'
 }
 
 export interface GetFilterPathParams {

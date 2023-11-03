@@ -20,14 +20,14 @@ import { StringUtils, useToaster } from '@common/exports'
 import { useBooleanStatus, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { getFilterByIdentifier } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 import { useStrings } from 'framework/strings'
-import type { FilterDTO } from 'services/pipeline-ng'
 import {
   useDeleteFilter,
   useGetFilterList,
   usePostFilter,
   useUpdateFilter,
   TemplateFilterProperties,
-  NGTag
+  NGTag,
+  FilterDTO
 } from 'services/template-ng'
 import { killEvent } from '@common/utils/eventUtils'
 import { useQueryParamsOptions } from '@common/hooks/useQueryParams'
@@ -101,7 +101,7 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
     isCreateFilterLoading || isUpdateFilterLoading || isDeleteFilterLoading || isFilterListLoading
   const appliedFilter =
     queryParams.filterIdentifier && queryParams.filterIdentifier !== UNSAVED_FILTER_IDENTIFIER
-      ? getFilterByIdentifier(queryParams.filterIdentifier, filterList)
+      ? (getFilterByIdentifier(queryParams.filterIdentifier, filterList) as FilterDTO)
       : !isEmpty(queryParams.filters)
       ? ({
           name: UNSAVED_FILTER,
