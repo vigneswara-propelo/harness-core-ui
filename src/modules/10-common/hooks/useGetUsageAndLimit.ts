@@ -422,7 +422,7 @@ export function useGetUsage(module: ModuleName): UsageReturn {
             }
           },
           loadingUsage: loadingSTOUsage,
-          usageErrorMsg: stoUsageError?.payload.message,
+          usageErrorMsg: stoUsageError?.payload?.message,
           refetchUsage: refetchSTOUsage
         })
         break
@@ -448,7 +448,7 @@ export function useGetUsage(module: ModuleName): UsageReturn {
             }
           },
           loadingUsage: loadingCETUsage,
-          usageErrorMsg: cetUsageError?.payload.message,
+          usageErrorMsg: cetUsageError?.payload?.message,
           refetchUsage: refetchCETUsage
         })
         break

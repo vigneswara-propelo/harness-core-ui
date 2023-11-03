@@ -173,7 +173,7 @@ export default function ConfigureServerless({
           className={css.dropdownBg}
           items={regions}
           disabled={loading}
-          value={pipelineState.infraInfo?.region}
+          value={pipelineState?.infraInfo?.region}
           buttonTestId="aws-regions"
           onChange={selected => updateState('region', selected.value.toString())}
           placeholder={getString('pipeline.regionPlaceholder')}
