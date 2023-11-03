@@ -13,6 +13,7 @@ import { DeployServiceStep } from '@cd/components/PipelineSteps/DeployServiceSte
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
+import * as cdNg from 'services/cd-ng'
 import { DeployService } from '../DeployServiceStep.stories'
 import serviceData, { inputSetServiceData } from './serviceMock'
 import { NewEditServiceModal } from '../NewEditServiceModal'
@@ -366,5 +367,89 @@ describe('ServiceModal ', () => {
     })
 
     expect(container).toMatchSnapshot()
+  })
+
+  test('Show PageSpinner for useCreateServiceV2 API loading when setShowOverlay is not passed', async () => {
+    jest.spyOn(cdNg, 'useCreateServiceV2').mockImplementation((): any => {
+      return { loading: true, mutate: jest.fn() }
+    })
+
+    const { container } = render(
+      <TestWrapper>
+        <NewEditServiceModal
+          {...props}
+          data={{
+            orgIdentifier: 'orgIdentifier',
+            projectIdentifier: 'projectIdentifier'
+          }}
+        />
+      </TestWrapper>
+    )
+
+    expect(getByText(container, 'Loading, please wait...')).toBeInTheDocument()
+  })
+
+  test('Show PageSpinner for useUpsertServiceV2 API loading when setShowOverlay is not passed', async () => {
+    jest.spyOn(cdNg, 'useUpsertServiceV2').mockImplementation((): any => {
+      return { loading: true, mutate: jest.fn() }
+    })
+
+    const { container } = render(
+      <TestWrapper>
+        <NewEditServiceModal
+          {...props}
+          data={{
+            orgIdentifier: 'orgIdentifier',
+            projectIdentifier: 'projectIdentifier'
+          }}
+        />
+      </TestWrapper>
+    )
+
+    expect(getByText(container, 'Loading, please wait...')).toBeInTheDocument()
+  })
+
+  test('setShowOverlay should be called for useCreateServiceV2 API loading', async () => {
+    const setShowOverlay = jest.fn()
+    jest.spyOn(cdNg, 'useCreateServiceV2').mockImplementation((): any => {
+      return { loading: true, mutate: jest.fn() }
+    })
+
+    render(
+      <TestWrapper>
+        <NewEditServiceModal
+          {...props}
+          data={{
+            orgIdentifier: 'orgIdentifier',
+            projectIdentifier: 'projectIdentifier'
+          }}
+          setShowOverlay={setShowOverlay}
+        />
+      </TestWrapper>
+    )
+
+    expect(setShowOverlay).toHaveBeenCalledWith(true)
+  })
+
+  test('setShowOverlay should be called for useUpsertServiceV2 API loading', async () => {
+    const setShowOverlay = jest.fn()
+    jest.spyOn(cdNg, 'useUpsertServiceV2').mockImplementation((): any => {
+      return { loading: true, mutate: jest.fn() }
+    })
+
+    render(
+      <TestWrapper>
+        <NewEditServiceModal
+          {...props}
+          data={{
+            orgIdentifier: 'orgIdentifier',
+            projectIdentifier: 'projectIdentifier'
+          }}
+          setShowOverlay={setShowOverlay}
+        />
+      </TestWrapper>
+    )
+
+    expect(setShowOverlay).toHaveBeenCalledWith(true)
   })
 })

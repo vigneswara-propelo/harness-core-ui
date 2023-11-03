@@ -8,9 +8,9 @@
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
-import { omit } from 'lodash-es'
+import { isUndefined, omit } from 'lodash-es'
 import type { FormikProps } from 'formik'
-import { Formik, getErrorInfoFromErrorObject } from '@harness/uicore'
+import { Formik, PageSpinner, getErrorInfoFromErrorObject } from '@harness/uicore'
 
 import {
   ServiceRequestDTO,
@@ -191,6 +191,11 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
 
   const formikRef = React.useRef<FormikProps<ServiceResponseDTO & GitSyncFormFields>>()
   const id = data.identifier
+
+  // If parent element is not handling loading and not passing setShowOverlay, show PageSpinner
+  if (isUndefined(setShowOverlay) && (createLoading || updateLoading)) {
+    return <PageSpinner />
+  }
 
   return (
     <Formik<Required<ServiceResponseDTO> & GitSyncFormFields>
