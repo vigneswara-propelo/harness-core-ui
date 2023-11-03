@@ -36,7 +36,7 @@ export const TemplateInputsWrapper: React.FC = (): JSX.Element => {
   const templateWithGitDetails: NGTemplateInfoConfigWithGitDetails = React.useMemo(
     () => ({
       ...template,
-      repo: defaultTo(gitDetails.repoIdentifier, ''),
+      repo: defaultTo(gitDetails?.repoIdentifier, ''),
       branch: defaultTo(gitDetails.branch, '')
     }),
     [template, gitDetails]
