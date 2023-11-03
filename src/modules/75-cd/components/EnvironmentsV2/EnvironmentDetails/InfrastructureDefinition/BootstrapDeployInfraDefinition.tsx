@@ -853,7 +853,11 @@ function BootstrapDeployInfraDefinition(
           filePath: infrastructureResponse?.entityGitDetails?.filePath,
           storeType: infrastructureResponse?.storeType
         }
-    if (isEmpty(selectedInfrastructure) || infraStoreType === 'REMOTE') {
+    if (
+      isEmpty(selectedInfrastructure) ||
+      infraStoreType === 'REMOTE' ||
+      infrastructureResponse?.storeType === 'REMOTE'
+    ) {
       return { ...formValues, ...initialGitFormValues }
     } else {
       return formValues

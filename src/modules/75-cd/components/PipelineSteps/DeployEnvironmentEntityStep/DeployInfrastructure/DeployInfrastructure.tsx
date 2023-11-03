@@ -61,6 +61,7 @@ interface DeployInfrastructureProps
   environmentPermission?: ButtonProps['permission']
   previousStages?: StageElementWrapperConfig[]
   selectedPropagatedState?: PropagateSelectOption | string
+  environmentBranch?: string
 }
 
 export default function DeployInfrastructure({
@@ -74,7 +75,8 @@ export default function DeployInfrastructure({
   lazyInfrastructure,
   environmentPermission,
   previousStages,
-  selectedPropagatedState
+  selectedPropagatedState,
+  environmentBranch
 }: DeployInfrastructureProps): JSX.Element {
   const { values, setFieldValue, setValues, setFieldTouched, validateForm } =
     useFormikContext<DeployEnvironmentEntityFormState>()
@@ -121,6 +123,7 @@ export default function DeployInfrastructure({
     nonExistingInfrastructureIdentifiers
   } = useGetInfrastructuresData({
     environmentIdentifier: envToFetchInfraInputs,
+    environmentBranch: environmentBranch,
     // this condition makes the yaml metadata call data
     infrastructureIdentifiers: lazyInfrastructure ? [] : selectedInfrastructures,
     deploymentType,

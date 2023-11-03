@@ -14,7 +14,7 @@ import type {
 } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import { BootstrapDeployInfraDefinitionWrapper } from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/BootstrapDeployInfraDefinitionWrapper'
-import type { InfrastructureConfig } from 'services/cd-ng'
+import type { InfrastructureConfig, InfrastructureResponseDTO } from 'services/cd-ng'
 
 export default function InfrastructureModal({
   hideModal,
@@ -28,7 +28,8 @@ export default function InfrastructureModal({
   isInfraUpdated,
   handleInfrastructureUpdate,
   updatedInfra,
-  isSingleEnv
+  isSingleEnv,
+  infrastructureResponse
 }: {
   hideModal: () => void
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -43,6 +44,7 @@ export default function InfrastructureModal({
   handleInfrastructureUpdate?: (updatedInfrastructure: InfrastructureConfig) => void
   updatedInfra?: InfrastructureConfig
   isSingleEnv?: boolean
+  infrastructureResponse?: InfrastructureResponseDTO
 }): React.ReactElement {
   return (
     <BootstrapDeployInfraDefinitionWrapper
@@ -58,6 +60,7 @@ export default function InfrastructureModal({
       updatedInfra={updatedInfra}
       isInfraUpdated={isInfraUpdated}
       isSingleEnv={isSingleEnv}
+      infrastructureResponse={infrastructureResponse}
     />
   )
 }

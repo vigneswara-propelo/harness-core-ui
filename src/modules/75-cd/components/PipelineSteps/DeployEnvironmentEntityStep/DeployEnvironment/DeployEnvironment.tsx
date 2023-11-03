@@ -528,6 +528,7 @@ export default function DeployEnvironment({
                 readonly={readonly}
                 allowableTypes={allowableTypes}
                 environmentIdentifier={selectedEnvironments[0]}
+                environmentBranch={selectedEnvironentsGitDetails?.[selectedEnvironments[0]]}
                 deploymentType={deploymentType}
                 customDeploymentRef={customDeploymentRef}
                 lazyInfrastructure={isExpression}

@@ -6,6 +6,7 @@
  */
 
 import type { SelectOption } from '@harness/uicore'
+import { StoreMetadata } from '@modules/10-common/constants/GitSyncTypes'
 import type {
   ClusterResponse,
   DeploymentStageConfig,
@@ -113,6 +114,9 @@ export interface InfrastructureData {
   infrastructureDefinition: InfrastructureYaml & { yaml: string }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   infrastructureInputs?: any
+  storeType?: StoreMetadata['storeType']
+  connectorRef?: StoreMetadata['connectorRef']
+  entityGitDetails?: EntityGitDetails
 }
 
 export interface InfrastructureWithInputs {

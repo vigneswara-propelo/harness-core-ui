@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo, useState } from 'react'
-import { defaultTo, isEmpty, isNil } from 'lodash-es'
+import { defaultTo, isEmpty, isNil, pick } from 'lodash-es'
 import { Collapse } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { Color } from '@harness/design-system'
@@ -25,7 +25,7 @@ import {
 
 import { Draggable } from 'react-beautiful-dnd'
 import { useStrings } from 'framework/strings'
-import type { Infrastructure } from 'services/cd-ng'
+import type { EntityGitDetails, Infrastructure } from 'services/cd-ng'
 
 import RbacButton, { ButtonProps } from '@rbac/components/Button/Button'
 
@@ -35,6 +35,8 @@ import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { infraDefinitionTypeMapping } from '@pipeline/utils/stageHelpers'
 
+import { StoreMetadata } from '@modules/10-common/constants/GitSyncTypes'
+import GitRemoteDetails from '@modules/10-common/components/GitRemoteDetails/GitRemoteDetails'
 import type { DeployEnvironmentEntityFormState, InfrastructureData } from '../types'
 
 import css from './InfrastructureEntitiesList.module.scss'
@@ -48,11 +50,15 @@ export interface InfrastructureEntityCardProps extends InfrastructureData {
   environmentPermission?: ButtonProps['permission']
   infrastructureIndex: number
   totalLength?: number
+  entityGitDetails?: EntityGitDetails
+  storeMetadata?: StoreMetadata
 }
 
 export function InfrastructureEntityCard({
   infrastructureDefinition,
   infrastructureInputs,
+  entityGitDetails,
+  storeMetadata = {},
   readonly,
   allowableTypes,
   onEditClick,
@@ -65,8 +71,8 @@ export function InfrastructureEntityCard({
   const { getString } = useStrings()
   const { values } = useFormikContext<DeployEnvironmentEntityFormState>()
   const { name, identifier, tags } = infrastructureDefinition
-
   const [showInputs, setShowInputs] = useState(false)
+  const { storeType, connectorRef } = storeMetadata
 
   function toggle(): void {
     setShowInputs(show => !show)
@@ -93,9 +99,9 @@ export function InfrastructureEntityCard({
                 </Layout.Horizontal>
               )}
               <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                <Layout.Vertical>
+                <Layout.Vertical width={'90%'}>
                   <Layout.Horizontal
-                    flex={{ justifyContent: 'flex-start', alignItems: 'flex-end' }}
+                    flex={{ justifyContent: 'space-between', alignItems: 'flex-end' }}
                     spacing="small"
                     margin={{ bottom: 'xsmall' }}
                   >
@@ -103,6 +109,21 @@ export function InfrastructureEntityCard({
                     {!isEmpty(tags) && (
                       <TagsPopover iconProps={{ size: 14, color: Color.GREY_600 }} tags={defaultTo(tags, {})} />
                     )}
+
+                    {storeType === 'REMOTE' ? (
+                      <GitRemoteDetails
+                        connectorRef={connectorRef}
+                        repoName={entityGitDetails?.repoName}
+                        branch={entityGitDetails?.branch}
+                        filePath={entityGitDetails?.filePath}
+                        fileUrl={entityGitDetails?.fileUrl}
+                        flags={{
+                          readOnly: true,
+                          showBranch: true,
+                          borderless: true
+                        }}
+                      />
+                    ) : null}
                   </Layout.Horizontal>
 
                   <Text color={Color.GREY_500} font={{ size: 'small' }} lineClamp={1}>
@@ -118,7 +139,14 @@ export function InfrastructureEntityCard({
                         icon="edit"
                         data-testid={`edit-infrastructure-${identifier}`}
                         disabled={readonly}
-                        onClick={() => onEditClick({ infrastructureDefinition, infrastructureInputs })}
+                        onClick={() =>
+                          onEditClick({
+                            infrastructureDefinition,
+                            infrastructureInputs,
+                            ...pick(storeMetadata, ['storeType', 'connectorRef']),
+                            entityGitDetails
+                          })
+                        }
                         permission={environmentPermission}
                       />
                       <Button
@@ -183,7 +211,12 @@ export function InfrastructureEntityCard({
                         customStepProps={{
                           // serviceRef: deploymentStage?.service?.serviceRef,
                           environmentRef: environmentIdentifier,
-                          infrastructureRef: identifier
+                          infrastructureRef: identifier,
+                          gitMetadata: {
+                            storeType,
+                            connectorRef,
+                            ...pick(entityGitDetails, ['repoName', 'branch'])
+                          }
                         }}
                       />
                     </Container>

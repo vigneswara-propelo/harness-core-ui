@@ -27,6 +27,7 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { StoreMetadata } from '@modules/10-common/constants/GitSyncTypes'
 import type {
   DeployEnvironmentEntityCustomStepProps,
   DeployEnvironmentEntityFormState,
@@ -144,6 +145,17 @@ export default function InfrastructureEntitiesList({
       )
   }
 
+  const editInfrastructureResponse = useMemo(() => {
+    if (infrastructureToEdit) {
+      return produce(infrastructureToEdit, draft => {
+        set(draft, 'infrastructureDefinition', infrastructureToEdit?.infrastructureDefinition)
+        set(draft, 'storeType', infrastructureToEdit?.storeType)
+        set(draft, 'connectorRef', infrastructureToEdit?.connectorRef)
+        set(draft, 'entityGitDetails', infrastructureToEdit?.entityGitDetails)
+      })
+    }
+  }, [infrastructureToEdit])
+
   if (loading) {
     return <Spinner />
   }
@@ -160,11 +172,17 @@ export default function InfrastructureEntitiesList({
                 className={cx(css.cardsContainer, { [css.draggingOver]: snapshot.isDraggingOver })}
               >
                 {infrastructuresData.map((row, index: number) => {
+                  const infrastructureStoreMetadata: StoreMetadata = {
+                    storeType: row?.storeType,
+                    connectorRef: row?.connectorRef
+                  }
                   return (
                     <InfrastructureEntityCard
                       key={row.infrastructureDefinition.identifier}
                       infrastructureDefinition={row.infrastructureDefinition}
                       infrastructureInputs={row.infrastructureInputs}
+                      entityGitDetails={row.entityGitDetails}
+                      storeMetadata={infrastructureStoreMetadata}
                       onDeleteClick={setInfrastructureToDelete}
                       onEditClick={setInfrastructureToEdit}
                       allowableTypes={allowableTypes}
@@ -208,6 +226,7 @@ export default function InfrastructureEntitiesList({
           handleInfrastructureUpdate={handleInfrastructureUpdate}
           updatedInfra={updatedInfrastructure}
           isSingleEnv={isSingleEnv}
+          infrastructureResponse={editInfrastructureResponse}
         />
       </ModalDialog>
 

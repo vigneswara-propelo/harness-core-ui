@@ -101,6 +101,7 @@ export interface AccessControlCheckError {
     | 'ACCOUNT_DOES_NOT_EXIST'
     | 'INACTIVE_ACCOUNT'
     | 'ACCOUNT_MIGRATED'
+    | 'ACCOUNT_MIGRATED_TO_NEXT_GEN'
     | 'USER_DOMAIN_NOT_ALLOWED'
     | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
     | 'RESOURCE_NOT_FOUND'
@@ -1381,13 +1382,13 @@ export type AuditFilterProperties = FilterProperties & {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   )[]
   principals?: Principal[]
@@ -1430,8 +1431,8 @@ export interface AwsAsgLoadBalancerConfigYaml {
   loadBalancer: string
   prodListener: string
   prodListenerRuleArn: string
-  stageListener: string
-  stageListenerRuleArn: string
+  stageListener?: string
+  stageListenerRuleArn?: string
 }
 
 export interface AwsCFTemplateParamsData {
@@ -3511,13 +3512,13 @@ export interface CreditDTO {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   purchaseTime?: number
   quantity?: number
@@ -5283,6 +5284,7 @@ export interface Error {
     | 'ACCOUNT_DOES_NOT_EXIST'
     | 'INACTIVE_ACCOUNT'
     | 'ACCOUNT_MIGRATED'
+    | 'ACCOUNT_MIGRATED_TO_NEXT_GEN'
     | 'USER_DOMAIN_NOT_ALLOWED'
     | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
     | 'RESOURCE_NOT_FOUND'
@@ -5674,6 +5676,7 @@ export interface ErrorMetadata {
     | 'ACCOUNT_DOES_NOT_EXIST'
     | 'INACTIVE_ACCOUNT'
     | 'ACCOUNT_MIGRATED'
+    | 'ACCOUNT_MIGRATED_TO_NEXT_GEN'
     | 'USER_DOMAIN_NOT_ALLOWED'
     | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
     | 'RESOURCE_NOT_FOUND'
@@ -6085,9 +6088,11 @@ export interface ExecutionStatusInfo {
   endTs?: number
   environmentInfoList?: EnvironmentDeploymentsInfo[]
   gitInfo?: GitInfo
+  orgIdentifier?: string
   pipelineIdentifier?: string
   pipelineName?: string
   planExecutionId?: string
+  projectIdentifier?: string
   serviceInfoList?: ServiceDeploymentInfo[]
   startTs?: number
   status?: string
@@ -6116,6 +6121,7 @@ export interface Failure {
     | 'ACCOUNT_DOES_NOT_EXIST'
     | 'INACTIVE_ACCOUNT'
     | 'ACCOUNT_MIGRATED'
+    | 'ACCOUNT_MIGRATED_TO_NEXT_GEN'
     | 'USER_DOMAIN_NOT_ALLOWED'
     | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
     | 'RESOURCE_NOT_FOUND'
@@ -6548,15 +6554,6 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'CACHE_SIZE_ALLOWANCE'
     | 'SRM_SERVICES'
     | 'ANALYZE_DEPLOYMENT_STEP'
-    | 'K8S_BG_SWAP_SERVICES'
-    | 'K8S_BLUE_GREEN_DEPLOY'
-    | 'K8S_APPLY'
-    | 'K8S_DELETE'
-    | 'K8S_CANARY_DELETE'
-    | 'K8S_ROLLING_DEPLOY'
-    | 'K8S_CANARY_DEPLOY'
-    | 'K8S_SCALE'
-    | 'K8S_ROLLING_ROLLBACK'
     | 'TERRAFORM_APPLY'
     | 'TERRAFORM_PLAN'
     | 'TERRAFORM_DESTROY'
@@ -6575,10 +6572,8 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
-    | 'K8S_DRY_RUN'
     | 'TERRAFORM_CLOUD_RUN'
     | 'TERRAFORM_CLOUD_ROLLBACK'
-    | 'K8S_BLUE_GREEN_STAGE_SCALE_DOWN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -6645,15 +6640,6 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'CACHE_SIZE_ALLOWANCE'
     | 'SRM_SERVICES'
     | 'ANALYZE_DEPLOYMENT_STEP'
-    | 'K8S_BG_SWAP_SERVICES'
-    | 'K8S_BLUE_GREEN_DEPLOY'
-    | 'K8S_APPLY'
-    | 'K8S_DELETE'
-    | 'K8S_CANARY_DELETE'
-    | 'K8S_ROLLING_DEPLOY'
-    | 'K8S_CANARY_DEPLOY'
-    | 'K8S_SCALE'
-    | 'K8S_ROLLING_ROLLBACK'
     | 'TERRAFORM_APPLY'
     | 'TERRAFORM_PLAN'
     | 'TERRAFORM_DESTROY'
@@ -6672,10 +6658,8 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
-    | 'K8S_DRY_RUN'
     | 'TERRAFORM_CLOUD_RUN'
     | 'TERRAFORM_CLOUD_ROLLBACK'
-    | 'K8S_BLUE_GREEN_STAGE_SCALE_DOWN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -6709,13 +6693,13 @@ export interface FeatureRestrictionDetailsDTO {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   name?:
     | 'TEST1'
@@ -6762,15 +6746,6 @@ export interface FeatureRestrictionDetailsDTO {
     | 'CACHE_SIZE_ALLOWANCE'
     | 'SRM_SERVICES'
     | 'ANALYZE_DEPLOYMENT_STEP'
-    | 'K8S_BG_SWAP_SERVICES'
-    | 'K8S_BLUE_GREEN_DEPLOY'
-    | 'K8S_APPLY'
-    | 'K8S_DELETE'
-    | 'K8S_CANARY_DELETE'
-    | 'K8S_ROLLING_DEPLOY'
-    | 'K8S_CANARY_DEPLOY'
-    | 'K8S_SCALE'
-    | 'K8S_ROLLING_ROLLBACK'
     | 'TERRAFORM_APPLY'
     | 'TERRAFORM_PLAN'
     | 'TERRAFORM_DESTROY'
@@ -6789,10 +6764,8 @@ export interface FeatureRestrictionDetailsDTO {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
-    | 'K8S_DRY_RUN'
     | 'TERRAFORM_CLOUD_RUN'
     | 'TERRAFORM_CLOUD_ROLLBACK'
-    | 'K8S_BLUE_GREEN_STAGE_SCALE_DOWN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -6834,13 +6807,13 @@ export interface FeatureRestrictionMetadataDTO {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   name?:
     | 'TEST1'
@@ -6887,15 +6860,6 @@ export interface FeatureRestrictionMetadataDTO {
     | 'CACHE_SIZE_ALLOWANCE'
     | 'SRM_SERVICES'
     | 'ANALYZE_DEPLOYMENT_STEP'
-    | 'K8S_BG_SWAP_SERVICES'
-    | 'K8S_BLUE_GREEN_DEPLOY'
-    | 'K8S_APPLY'
-    | 'K8S_DELETE'
-    | 'K8S_CANARY_DELETE'
-    | 'K8S_ROLLING_DEPLOY'
-    | 'K8S_CANARY_DEPLOY'
-    | 'K8S_SCALE'
-    | 'K8S_ROLLING_ROLLBACK'
     | 'TERRAFORM_APPLY'
     | 'TERRAFORM_PLAN'
     | 'TERRAFORM_DESTROY'
@@ -6914,10 +6878,8 @@ export interface FeatureRestrictionMetadataDTO {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
-    | 'K8S_DRY_RUN'
     | 'TERRAFORM_CLOUD_RUN'
     | 'TERRAFORM_CLOUD_ROLLBACK'
-    | 'K8S_BLUE_GREEN_STAGE_SCALE_DOWN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -6954,13 +6916,13 @@ export interface FeedbackFormDTO {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   score?: number
   suggestion?: string
@@ -7373,6 +7335,7 @@ export interface GcpOidcAccessTokenRequestDTO {
 }
 
 export interface GcpOidcTokenRequestDTO {
+  accountId: string
   gcpProjectId: string
   providerId: string
   serviceAccountEmail?: string
@@ -7809,13 +7772,13 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   searchTerm?: string
 }
@@ -8075,13 +8038,13 @@ export interface GitEntityFilterProperties {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   searchTerm?: string
 }
@@ -9597,13 +9560,13 @@ export interface GitSyncRepoFilesList {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
 }
 
@@ -10504,9 +10467,15 @@ export interface InfrastructureResponseDTO {
 }
 
 export interface InfrastructureYamlMetadata {
+  connectorRef?: string
+  entityGitDetails?: EntityGitDetails
+  fallbackBranch?: string
   infrastructureIdentifier: string
   infrastructureYaml?: string
   inputSetTemplateYaml?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  storeType?: 'INLINE' | 'REMOTE'
 }
 
 export interface InfrastructureYamlMetadataApiInput {
@@ -11385,7 +11354,7 @@ export interface KustomizeValues {
   replicas?: KustomizeReplicas[]
 }
 
-export type LDAPSettings = NGAuthSettings & {
+export interface LDAPSettings {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -11393,6 +11362,7 @@ export type LDAPSettings = NGAuthSettings & {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -11635,13 +11605,13 @@ export interface LicensesWithSummaryDTO {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
 }
 
@@ -11826,13 +11796,13 @@ export interface ModuleLicenseDTO {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   premiumSupport?: boolean
   selfService?: boolean
@@ -12452,13 +12422,13 @@ export interface OAuthSignupDTO {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   name?: string
   referer?: string
@@ -12532,6 +12502,23 @@ export type OciHelmUsernamePasswordDTO = OciHelmAuthCredentialsDTO & {
   usernameRef?: string
 }
 
+export interface OidcConfiguration {
+  claims_supported?: string[]
+  id_token_signing_alg_values_supported?: string[]
+  issuer?: string
+  jwks_uri?: string
+  response_types_supported?: string[]
+  scopes_supported?: string[]
+  subject_types_supported?: string[]
+}
+
+export interface OidcWorkloadAccessTokenResponse {
+  access_token?: string
+  expires_in?: number
+  issued_token_type?: string
+  token_type?: string
+}
+
 export type OktaAddOperation = PatchOperation & {
   value?: JsonNode
 }
@@ -12586,6 +12573,11 @@ export type OpenshiftManifest = ManifestAttributes & {
 export type OpenshiftParamManifest = ManifestAttributes & {
   metadata?: string
   store?: StoreConfigWrapper
+}
+
+export interface OrgDeployments {
+  orgIdentifier?: string
+  projectDeploymentsList?: ProjectDeployments[]
 }
 
 export interface OrgLevelOverrideMigrationResponseDTO {
@@ -13334,13 +13326,13 @@ export interface PartialSchemaDTO {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   namespace?: string
   nodeName?: string
@@ -13624,13 +13616,13 @@ export interface Project {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   )[]
   name: string
@@ -13657,6 +13649,11 @@ export interface ProjectDashBoardInfo {
   orgIdentifier?: string
   projectIdentifier?: string
   successDeploymentsCount?: number
+}
+
+export interface ProjectDeployments {
+  deployments?: ExecutionStatusInfo[]
+  projectIdentifier?: string
 }
 
 export interface ProjectLevelOverrideMigrationResponseDTO {
@@ -13763,13 +13760,13 @@ export interface RecommendationRequest {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   usageMap?: {
     [key: string]: number
@@ -14072,6 +14069,7 @@ export type RemoteTerraformBackendConfigSpec = TerraformBackendConfigSpec & {
 }
 
 export type RemoteTerraformVarFileSpec = TerraformVarFileSpec & {
+  optional?: boolean
   store: StoreConfigWrapper
 }
 
@@ -14176,6 +14174,7 @@ export interface ResourceDTO {
     | 'GITOPS_GNUPG_KEY'
     | 'GITOPS_PROJECT_MAPPING'
     | 'GITOPS_APPLICATION'
+  uniqueId?: string
 }
 
 export interface ResourceGroup {
@@ -15234,6 +15233,13 @@ export interface ResponseJsonNode {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseJwksPublicKeyDTO {
+  correlationId?: string
+  data?: JwksPublicKeyDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseLandingPageDeploymentCount {
   correlationId?: string
   data?: LandingPageDeploymentCount
@@ -15968,6 +15974,7 @@ export interface ResponseMessage {
     | 'ACCOUNT_DOES_NOT_EXIST'
     | 'INACTIVE_ACCOUNT'
     | 'ACCOUNT_MIGRATED'
+    | 'ACCOUNT_MIGRATED_TO_NEXT_GEN'
     | 'USER_DOMAIN_NOT_ALLOWED'
     | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
     | 'RESOURCE_NOT_FOUND'
@@ -16401,6 +16408,20 @@ export interface ResponseNexusResponseDTO {
 export interface ResponseNgSmtpDTO {
   correlationId?: string
   data?: NgSmtpDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseOidcConfiguration {
+  correlationId?: string
+  data?: OidcConfiguration
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseOidcWorkloadAccessTokenResponse {
+  correlationId?: string
+  data?: OidcWorkloadAccessTokenResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -16940,6 +16961,13 @@ export interface ResponseServiceDeploymentListInfo {
 export interface ResponseServiceDeploymentListInfoV2 {
   correlationId?: string
   data?: ServiceDeploymentListInfoV2
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseServiceDeployments {
+  correlationId?: string
+  data?: ServiceDeployments
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -18614,6 +18642,10 @@ export interface ServiceDeploymentV2 {
   time?: number
 }
 
+export interface ServiceDeployments {
+  orgDeploymentsList?: OrgDeployments[]
+}
+
 export interface ServiceDetailsDTO {
   deploymentTypeList?: string[]
   description?: string
@@ -19419,13 +19451,13 @@ export interface StartTrialDTO {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
 }
 
@@ -19723,13 +19755,13 @@ export interface SubscriptionDTO {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   paymentFrequency?: 'MONTHLY' | 'YEARLY'
   paymentMethodId?: string
@@ -19771,13 +19803,13 @@ export interface SubscriptionRequest {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   paymentFrequency?: string
   premiumSupport?: boolean
@@ -21307,13 +21339,13 @@ export interface YamlSchemaMetadata {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   )[]
   namespace?: string
@@ -21335,13 +21367,13 @@ export interface YamlSchemaWithDetails {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   schema?: JsonNode
   schemaClassName?: string
@@ -21378,6 +21410,8 @@ export type ClusterBatchRequestRequestBody = ClusterBatchRequest
 export type ConnectorRequestBody = Connector
 
 export type ConnectorFilterPropertiesRequestBody = ConnectorFilterProperties
+
+export type CreditDTORequestBody = CreditDTO
 
 export type CustomDeploymentYamlRequestRequestBody = CustomDeploymentYamlRequest
 
@@ -21424,6 +21458,8 @@ export type GitSyncSettingsDTORequestBody = GitSyncSettingsDTO
 export type HostValidationParamsRequestBody = HostValidationParams
 
 export type InfrastructureRequestDTORequestBody = InfrastructureRequestDTO
+
+export type InfrastructureYamlMetadataApiInputRequestBody = InfrastructureYamlMetadataApiInput
 
 export type LDAPSettingsRequestBody = LDAPSettings
 
@@ -23621,7 +23657,7 @@ export interface AdminCreateCreditQueryParams {
 }
 
 export type AdminCreateCreditProps = Omit<
-  MutateProps<ResponseCreditDTO, Failure | Error, AdminCreateCreditQueryParams, CreditDTO, void>,
+  MutateProps<ResponseCreditDTO, Failure | Error, AdminCreateCreditQueryParams, CreditDTORequestBody, void>,
   'path' | 'verb'
 >
 
@@ -23629,7 +23665,7 @@ export type AdminCreateCreditProps = Omit<
  * Admin Level purchase credit for an account
  */
 export const AdminCreateCredit = (props: AdminCreateCreditProps) => (
-  <Mutate<ResponseCreditDTO, Failure | Error, AdminCreateCreditQueryParams, CreditDTO, void>
+  <Mutate<ResponseCreditDTO, Failure | Error, AdminCreateCreditQueryParams, CreditDTORequestBody, void>
     verb="POST"
     path={`/admin/credits/create`}
     base={getConfig('ng/api')}
@@ -23638,7 +23674,7 @@ export const AdminCreateCredit = (props: AdminCreateCreditProps) => (
 )
 
 export type UseAdminCreateCreditProps = Omit<
-  UseMutateProps<ResponseCreditDTO, Failure | Error, AdminCreateCreditQueryParams, CreditDTO, void>,
+  UseMutateProps<ResponseCreditDTO, Failure | Error, AdminCreateCreditQueryParams, CreditDTORequestBody, void>,
   'path' | 'verb'
 >
 
@@ -23646,7 +23682,7 @@ export type UseAdminCreateCreditProps = Omit<
  * Admin Level purchase credit for an account
  */
 export const useAdminCreateCredit = (props: UseAdminCreateCreditProps) =>
-  useMutate<ResponseCreditDTO, Failure | Error, AdminCreateCreditQueryParams, CreditDTO, void>(
+  useMutate<ResponseCreditDTO, Failure | Error, AdminCreateCreditQueryParams, CreditDTORequestBody, void>(
     'POST',
     `/admin/credits/create`,
     { base: getConfig('ng/api'), ...props }
@@ -23656,10 +23692,16 @@ export const useAdminCreateCredit = (props: UseAdminCreateCreditProps) =>
  * Admin Level purchase credit for an account
  */
 export const adminCreateCreditPromise = (
-  props: MutateUsingFetchProps<ResponseCreditDTO, Failure | Error, AdminCreateCreditQueryParams, CreditDTO, void>,
+  props: MutateUsingFetchProps<
+    ResponseCreditDTO,
+    Failure | Error,
+    AdminCreateCreditQueryParams,
+    CreditDTORequestBody,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponseCreditDTO, Failure | Error, AdminCreateCreditQueryParams, CreditDTO, void>(
+  mutateUsingFetch<ResponseCreditDTO, Failure | Error, AdminCreateCreditQueryParams, CreditDTORequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/admin/credits/create`,
@@ -23718,6 +23760,119 @@ export const adminGetCreditsByAccountPromise = (
   getUsingFetch<ResponseListCreditDTO, Failure | Error, void, AdminGetCreditsByAccountPathParams>(
     getConfig('ng/api'),
     `/admin/credits/${accountIdentifier}`,
+    props,
+    signal
+  )
+
+export interface AdminUpdatesCustomerCreditPathParams {
+  accountIdentifier: string
+}
+
+export type AdminUpdatesCustomerCreditProps = Omit<
+  MutateProps<ResponseCreditDTO, Failure | Error, void, CreditDTORequestBody, AdminUpdatesCustomerCreditPathParams>,
+  'path' | 'verb'
+> &
+  AdminUpdatesCustomerCreditPathParams
+
+/**
+ * Enables Harness Support user to update an existing Credit for a customer account
+ */
+export const AdminUpdatesCustomerCredit = ({ accountIdentifier, ...props }: AdminUpdatesCustomerCreditProps) => (
+  <Mutate<ResponseCreditDTO, Failure | Error, void, CreditDTORequestBody, AdminUpdatesCustomerCreditPathParams>
+    verb="PUT"
+    path={`/admin/credits/${accountIdentifier}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseAdminUpdatesCustomerCreditProps = Omit<
+  UseMutateProps<ResponseCreditDTO, Failure | Error, void, CreditDTORequestBody, AdminUpdatesCustomerCreditPathParams>,
+  'path' | 'verb'
+> &
+  AdminUpdatesCustomerCreditPathParams
+
+/**
+ * Enables Harness Support user to update an existing Credit for a customer account
+ */
+export const useAdminUpdatesCustomerCredit = ({ accountIdentifier, ...props }: UseAdminUpdatesCustomerCreditProps) =>
+  useMutate<ResponseCreditDTO, Failure | Error, void, CreditDTORequestBody, AdminUpdatesCustomerCreditPathParams>(
+    'PUT',
+    (paramsInPath: AdminUpdatesCustomerCreditPathParams) => `/admin/credits/${paramsInPath.accountIdentifier}`,
+    { base: getConfig('ng/api'), pathParams: { accountIdentifier }, ...props }
+  )
+
+/**
+ * Enables Harness Support user to update an existing Credit for a customer account
+ */
+export const adminUpdatesCustomerCreditPromise = (
+  {
+    accountIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseCreditDTO,
+    Failure | Error,
+    void,
+    CreditDTORequestBody,
+    AdminUpdatesCustomerCreditPathParams
+  > & { accountIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseCreditDTO,
+    Failure | Error,
+    void,
+    CreditDTORequestBody,
+    AdminUpdatesCustomerCreditPathParams
+  >('PUT', getConfig('ng/api'), `/admin/credits/${accountIdentifier}`, props, signal)
+
+export interface AdminDeleteCustomerCreditQueryParams {
+  accountIdentifier?: string
+}
+
+export type AdminDeleteCustomerCreditProps = Omit<
+  MutateProps<ResponseVoid, Failure | Error, AdminDeleteCustomerCreditQueryParams, string, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Enables Harness Support User to delete an existing Credit for a customer account
+ */
+export const AdminDeleteCustomerCredit = (props: AdminDeleteCustomerCreditProps) => (
+  <Mutate<ResponseVoid, Failure | Error, AdminDeleteCustomerCreditQueryParams, string, void>
+    verb="DELETE"
+    path={`/admin/credits`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseAdminDeleteCustomerCreditProps = Omit<
+  UseMutateProps<ResponseVoid, Failure | Error, AdminDeleteCustomerCreditQueryParams, string, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Enables Harness Support User to delete an existing Credit for a customer account
+ */
+export const useAdminDeleteCustomerCredit = (props: UseAdminDeleteCustomerCreditProps) =>
+  useMutate<ResponseVoid, Failure | Error, AdminDeleteCustomerCreditQueryParams, string, void>(
+    'DELETE',
+    `/admin/credits`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Enables Harness Support User to delete an existing Credit for a customer account
+ */
+export const adminDeleteCustomerCreditPromise = (
+  props: MutateUsingFetchProps<ResponseVoid, Failure | Error, AdminDeleteCustomerCreditQueryParams, string, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseVoid, Failure | Error, AdminDeleteCustomerCreditQueryParams, string, void>(
+    'DELETE',
+    getConfig('ng/api'),
+    `/admin/credits`,
     props,
     signal
   )
@@ -24588,13 +24743,13 @@ export interface GetProjectAggregateDTOListQueryParams {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   searchTerm?: string
   onlyFavorites?: boolean
@@ -38886,6 +39041,59 @@ export const getActiveServiceInstancesPromise = (
     signal
   )
 
+export interface GetAllDeploymentsByServiceIdQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  serviceId: string
+  startTime: number
+  endTime: number
+}
+
+export type GetAllDeploymentsByServiceIdProps = Omit<
+  GetProps<ResponseServiceDeployments, Failure | Error, GetAllDeploymentsByServiceIdQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get all deployments by serviceId
+ */
+export const GetAllDeploymentsByServiceId = (props: GetAllDeploymentsByServiceIdProps) => (
+  <Get<ResponseServiceDeployments, Failure | Error, GetAllDeploymentsByServiceIdQueryParams, void>
+    path={`/dashboard/getAllDeploymentsByServiceId`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetAllDeploymentsByServiceIdProps = Omit<
+  UseGetProps<ResponseServiceDeployments, Failure | Error, GetAllDeploymentsByServiceIdQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get all deployments by serviceId
+ */
+export const useGetAllDeploymentsByServiceId = (props: UseGetAllDeploymentsByServiceIdProps) =>
+  useGet<ResponseServiceDeployments, Failure | Error, GetAllDeploymentsByServiceIdQueryParams, void>(
+    `/dashboard/getAllDeploymentsByServiceId`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get all deployments by serviceId
+ */
+export const getAllDeploymentsByServiceIdPromise = (
+  props: GetUsingFetchProps<ResponseServiceDeployments, Failure | Error, GetAllDeploymentsByServiceIdQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseServiceDeployments, Failure | Error, GetAllDeploymentsByServiceIdQueryParams, void>(
+    getConfig('ng/api'),
+    `/dashboard/getAllDeploymentsByServiceId`,
+    props,
+    signal
+  )
+
 export interface GetArtifactInstanceDetailsQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -42289,15 +42497,6 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'CACHE_SIZE_ALLOWANCE'
     | 'SRM_SERVICES'
     | 'ANALYZE_DEPLOYMENT_STEP'
-    | 'K8S_BG_SWAP_SERVICES'
-    | 'K8S_BLUE_GREEN_DEPLOY'
-    | 'K8S_APPLY'
-    | 'K8S_DELETE'
-    | 'K8S_CANARY_DELETE'
-    | 'K8S_ROLLING_DEPLOY'
-    | 'K8S_CANARY_DEPLOY'
-    | 'K8S_SCALE'
-    | 'K8S_ROLLING_ROLLBACK'
     | 'TERRAFORM_APPLY'
     | 'TERRAFORM_PLAN'
     | 'TERRAFORM_DESTROY'
@@ -42316,10 +42515,8 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
-    | 'K8S_DRY_RUN'
     | 'TERRAFORM_CLOUD_RUN'
     | 'TERRAFORM_CLOUD_ROLLBACK'
-    | 'K8S_BLUE_GREEN_STAGE_SCALE_DOWN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -42456,15 +42653,6 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'CACHE_SIZE_ALLOWANCE'
       | 'SRM_SERVICES'
       | 'ANALYZE_DEPLOYMENT_STEP'
-      | 'K8S_BG_SWAP_SERVICES'
-      | 'K8S_BLUE_GREEN_DEPLOY'
-      | 'K8S_APPLY'
-      | 'K8S_DELETE'
-      | 'K8S_CANARY_DELETE'
-      | 'K8S_ROLLING_DEPLOY'
-      | 'K8S_CANARY_DEPLOY'
-      | 'K8S_SCALE'
-      | 'K8S_ROLLING_ROLLBACK'
       | 'TERRAFORM_APPLY'
       | 'TERRAFORM_PLAN'
       | 'TERRAFORM_DESTROY'
@@ -42483,10 +42671,8 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'AZURE_CREATE_BP_RESOURCE'
       | 'AZURE_ROLLBACK_ARM_RESOURCE'
       | 'SHELL_SCRIPT_PROVISION'
-      | 'K8S_DRY_RUN'
       | 'TERRAFORM_CLOUD_RUN'
       | 'TERRAFORM_CLOUD_ROLLBACK'
-      | 'K8S_BLUE_GREEN_STAGE_SCALE_DOWN'
       | 'SECURITY'
       | 'DEVELOPERS'
       | 'MONTHLY_ACTIVE_USERS'
@@ -52334,7 +52520,7 @@ export type GetInfrastructureYamlAndRuntimeInputsProps = Omit<
     ResponseInfrastructureYamlMetadataDTO,
     Failure | Error,
     GetInfrastructureYamlAndRuntimeInputsQueryParams,
-    InfrastructureYamlMetadataApiInput,
+    InfrastructureYamlMetadataApiInputRequestBody,
     void
   >,
   'path' | 'verb'
@@ -52348,7 +52534,7 @@ export const GetInfrastructureYamlAndRuntimeInputs = (props: GetInfrastructureYa
     ResponseInfrastructureYamlMetadataDTO,
     Failure | Error,
     GetInfrastructureYamlAndRuntimeInputsQueryParams,
-    InfrastructureYamlMetadataApiInput,
+    InfrastructureYamlMetadataApiInputRequestBody,
     void
   >
     verb="POST"
@@ -52363,7 +52549,7 @@ export type UseGetInfrastructureYamlAndRuntimeInputsProps = Omit<
     ResponseInfrastructureYamlMetadataDTO,
     Failure | Error,
     GetInfrastructureYamlAndRuntimeInputsQueryParams,
-    InfrastructureYamlMetadataApiInput,
+    InfrastructureYamlMetadataApiInputRequestBody,
     void
   >,
   'path' | 'verb'
@@ -52377,7 +52563,7 @@ export const useGetInfrastructureYamlAndRuntimeInputs = (props: UseGetInfrastruc
     ResponseInfrastructureYamlMetadataDTO,
     Failure | Error,
     GetInfrastructureYamlAndRuntimeInputsQueryParams,
-    InfrastructureYamlMetadataApiInput,
+    InfrastructureYamlMetadataApiInputRequestBody,
     void
   >('POST', `/infrastructures/infrastructureYamlMetadata`, { base: getConfig('ng/api'), ...props })
 
@@ -52389,7 +52575,7 @@ export const getInfrastructureYamlAndRuntimeInputsPromise = (
     ResponseInfrastructureYamlMetadataDTO,
     Failure | Error,
     GetInfrastructureYamlAndRuntimeInputsQueryParams,
-    InfrastructureYamlMetadataApiInput,
+    InfrastructureYamlMetadataApiInputRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -52398,7 +52584,7 @@ export const getInfrastructureYamlAndRuntimeInputsPromise = (
     ResponseInfrastructureYamlMetadataDTO,
     Failure | Error,
     GetInfrastructureYamlAndRuntimeInputsQueryParams,
-    InfrastructureYamlMetadataApiInput,
+    InfrastructureYamlMetadataApiInputRequestBody,
     void
   >('POST', getConfig('ng/api'), `/infrastructures/infrastructureYamlMetadata`, props, signal)
 
@@ -52630,6 +52816,95 @@ export const upsertInfrastructurePromise = (
     InfrastructureRequestDTORequestBody,
     void
   >('PUT', getConfig('ng/api'), `/infrastructures/upsert`, props, signal)
+
+export interface GetInfrastructureYamlAndRuntimeInputsV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  environmentIdentifier: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+}
+
+export type GetInfrastructureYamlAndRuntimeInputsV2Props = Omit<
+  MutateProps<
+    ResponseInfrastructureYamlMetadataDTO,
+    Failure | Error,
+    GetInfrastructureYamlAndRuntimeInputsV2QueryParams,
+    InfrastructureYamlMetadataApiInputRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This api returns infrastructure YAML and runtime input YAML
+ */
+export const GetInfrastructureYamlAndRuntimeInputsV2 = (props: GetInfrastructureYamlAndRuntimeInputsV2Props) => (
+  <Mutate<
+    ResponseInfrastructureYamlMetadataDTO,
+    Failure | Error,
+    GetInfrastructureYamlAndRuntimeInputsV2QueryParams,
+    InfrastructureYamlMetadataApiInputRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/infrastructures/v2/infrastructure-yaml-metadata`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetInfrastructureYamlAndRuntimeInputsV2Props = Omit<
+  UseMutateProps<
+    ResponseInfrastructureYamlMetadataDTO,
+    Failure | Error,
+    GetInfrastructureYamlAndRuntimeInputsV2QueryParams,
+    InfrastructureYamlMetadataApiInputRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This api returns infrastructure YAML and runtime input YAML
+ */
+export const useGetInfrastructureYamlAndRuntimeInputsV2 = (props: UseGetInfrastructureYamlAndRuntimeInputsV2Props) =>
+  useMutate<
+    ResponseInfrastructureYamlMetadataDTO,
+    Failure | Error,
+    GetInfrastructureYamlAndRuntimeInputsV2QueryParams,
+    InfrastructureYamlMetadataApiInputRequestBody,
+    void
+  >('POST', `/infrastructures/v2/infrastructure-yaml-metadata`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * This api returns infrastructure YAML and runtime input YAML
+ */
+export const getInfrastructureYamlAndRuntimeInputsV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseInfrastructureYamlMetadataDTO,
+    Failure | Error,
+    GetInfrastructureYamlAndRuntimeInputsV2QueryParams,
+    InfrastructureYamlMetadataApiInputRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseInfrastructureYamlMetadataDTO,
+    Failure | Error,
+    GetInfrastructureYamlAndRuntimeInputsV2QueryParams,
+    InfrastructureYamlMetadataApiInputRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/infrastructures/v2/infrastructure-yaml-metadata`, props, signal)
 
 export interface DeleteInfrastructureQueryParams {
   accountIdentifier: string
@@ -55336,13 +55611,13 @@ export interface GetEditionActionsQueryParams {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
 }
 
@@ -55403,13 +55678,13 @@ export interface StartCommunityLicenseQueryParams {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
 }
 
@@ -55536,13 +55811,13 @@ export interface StartFreeLicenseQueryParams {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   referer?: string
   gaClientId?: string
@@ -55607,13 +55882,13 @@ export interface GetModuleLicensesByAccountAndModuleTypeQueryParams {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
 }
 
@@ -55841,13 +56116,13 @@ export interface GetLicensesAndSummaryQueryParams {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
 }
 
@@ -56302,7 +56577,7 @@ export const configureOauthPromise = (
   >('POST', getConfig('ng/api'), `/oauth/create-access-token-secret`, props, signal)
 
 export type GenerateOidcAccessTokenForGcpProps = Omit<
-  MutateProps<ResponseString, Failure | Error, void, GcpOidcAccessTokenRequestDTO, void>,
+  MutateProps<ResponseOidcWorkloadAccessTokenResponse, Failure | Error, void, GcpOidcAccessTokenRequestDTO, void>,
   'path' | 'verb'
 >
 
@@ -56310,16 +56585,16 @@ export type GenerateOidcAccessTokenForGcpProps = Omit<
  * Generate an OIDC Access Token for GCP
  */
 export const GenerateOidcAccessTokenForGcp = (props: GenerateOidcAccessTokenForGcpProps) => (
-  <Mutate<ResponseString, Failure | Error, void, GcpOidcAccessTokenRequestDTO, void>
+  <Mutate<ResponseOidcWorkloadAccessTokenResponse, Failure | Error, void, GcpOidcAccessTokenRequestDTO, void>
     verb="POST"
-    path={`/oidc/access-token/gcp`}
+    path={`/oidc/access-token/gcp/workload-access`}
     base={getConfig('ng/api')}
     {...props}
   />
 )
 
 export type UseGenerateOidcAccessTokenForGcpProps = Omit<
-  UseMutateProps<ResponseString, Failure | Error, void, GcpOidcAccessTokenRequestDTO, void>,
+  UseMutateProps<ResponseOidcWorkloadAccessTokenResponse, Failure | Error, void, GcpOidcAccessTokenRequestDTO, void>,
   'path' | 'verb'
 >
 
@@ -56327,9 +56602,9 @@ export type UseGenerateOidcAccessTokenForGcpProps = Omit<
  * Generate an OIDC Access Token for GCP
  */
 export const useGenerateOidcAccessTokenForGcp = (props: UseGenerateOidcAccessTokenForGcpProps) =>
-  useMutate<ResponseString, Failure | Error, void, GcpOidcAccessTokenRequestDTO, void>(
+  useMutate<ResponseOidcWorkloadAccessTokenResponse, Failure | Error, void, GcpOidcAccessTokenRequestDTO, void>(
     'POST',
-    `/oidc/access-token/gcp`,
+    `/oidc/access-token/gcp/workload-access`,
     { base: getConfig('ng/api'), ...props }
   )
 
@@ -56337,82 +56612,29 @@ export const useGenerateOidcAccessTokenForGcp = (props: UseGenerateOidcAccessTok
  * Generate an OIDC Access Token for GCP
  */
 export const generateOidcAccessTokenForGcpPromise = (
-  props: MutateUsingFetchProps<ResponseString, Failure | Error, void, GcpOidcAccessTokenRequestDTO, void>,
+  props: MutateUsingFetchProps<
+    ResponseOidcWorkloadAccessTokenResponse,
+    Failure | Error,
+    void,
+    GcpOidcAccessTokenRequestDTO,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponseString, Failure | Error, void, GcpOidcAccessTokenRequestDTO, void>(
+  mutateUsingFetch<ResponseOidcWorkloadAccessTokenResponse, Failure | Error, void, GcpOidcAccessTokenRequestDTO, void>(
     'POST',
     getConfig('ng/api'),
-    `/oidc/access-token/gcp`,
+    `/oidc/access-token/gcp/workload-access`,
     props,
     signal
   )
-
-export interface GetHarnessOpenIdJwksPathParams {
-  accountId: string
-}
-
-export type GetHarnessOpenIdJwksProps = Omit<
-  GetProps<JwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>,
-  'path'
-> &
-  GetHarnessOpenIdJwksPathParams
-
-/**
- * Gets the openid configuration for Harness
- */
-export const GetHarnessOpenIdJwks = ({ accountId, ...props }: GetHarnessOpenIdJwksProps) => (
-  <Get<JwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>
-    path={`/oidc/account/${accountId}/.well-known/jwks`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetHarnessOpenIdJwksProps = Omit<
-  UseGetProps<JwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>,
-  'path'
-> &
-  GetHarnessOpenIdJwksPathParams
-
-/**
- * Gets the openid configuration for Harness
- */
-export const useGetHarnessOpenIdJwks = ({ accountId, ...props }: UseGetHarnessOpenIdJwksProps) =>
-  useGet<JwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>(
-    (paramsInPath: GetHarnessOpenIdJwksPathParams) => `/oidc/account/${paramsInPath.accountId}/.well-known/jwks`,
-    { base: getConfig('ng/api'), pathParams: { accountId }, ...props }
-  )
-
-/**
- * Gets the openid configuration for Harness
- */
-export const getHarnessOpenIdJwksPromise = (
-  {
-    accountId,
-    ...props
-  }: GetUsingFetchProps<JwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams> & {
-    accountId: string
-  },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<JwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>(
-    getConfig('ng/api'),
-    `/oidc/account/${accountId}/.well-known/jwks`,
-    props,
-    signal
-  )
-
-export interface GetHarnessOpenIdConfigResponse {
-  [key: string]: { [key: string]: any }
-}
 
 export interface GetHarnessOpenIdConfigPathParams {
   accountId: string
 }
 
 export type GetHarnessOpenIdConfigProps = Omit<
-  GetProps<GetHarnessOpenIdConfigResponse, Failure | Error, void, GetHarnessOpenIdConfigPathParams>,
+  GetProps<ResponseOidcConfiguration, Failure | Error, void, GetHarnessOpenIdConfigPathParams>,
   'path'
 > &
   GetHarnessOpenIdConfigPathParams
@@ -56421,15 +56643,15 @@ export type GetHarnessOpenIdConfigProps = Omit<
  * Gets the openid configuration for Harness
  */
 export const GetHarnessOpenIdConfig = ({ accountId, ...props }: GetHarnessOpenIdConfigProps) => (
-  <Get<GetHarnessOpenIdConfigResponse, Failure | Error, void, GetHarnessOpenIdConfigPathParams>
-    path={`/oidc/account/${accountId}/.wellknown/openid-configuration`}
+  <Get<ResponseOidcConfiguration, Failure | Error, void, GetHarnessOpenIdConfigPathParams>
+    path={`/oidc/account/${accountId}/.well-known/openid-configuration`}
     base={getConfig('ng/api')}
     {...props}
   />
 )
 
 export type UseGetHarnessOpenIdConfigProps = Omit<
-  UseGetProps<GetHarnessOpenIdConfigResponse, Failure | Error, void, GetHarnessOpenIdConfigPathParams>,
+  UseGetProps<ResponseOidcConfiguration, Failure | Error, void, GetHarnessOpenIdConfigPathParams>,
   'path'
 > &
   GetHarnessOpenIdConfigPathParams
@@ -56438,9 +56660,9 @@ export type UseGetHarnessOpenIdConfigProps = Omit<
  * Gets the openid configuration for Harness
  */
 export const useGetHarnessOpenIdConfig = ({ accountId, ...props }: UseGetHarnessOpenIdConfigProps) =>
-  useGet<GetHarnessOpenIdConfigResponse, Failure | Error, void, GetHarnessOpenIdConfigPathParams>(
+  useGet<ResponseOidcConfiguration, Failure | Error, void, GetHarnessOpenIdConfigPathParams>(
     (paramsInPath: GetHarnessOpenIdConfigPathParams) =>
-      `/oidc/account/${paramsInPath.accountId}/.wellknown/openid-configuration`,
+      `/oidc/account/${paramsInPath.accountId}/.well-known/openid-configuration`,
     { base: getConfig('ng/api'), pathParams: { accountId }, ...props }
   )
 
@@ -56451,14 +56673,69 @@ export const getHarnessOpenIdConfigPromise = (
   {
     accountId,
     ...props
-  }: GetUsingFetchProps<GetHarnessOpenIdConfigResponse, Failure | Error, void, GetHarnessOpenIdConfigPathParams> & {
+  }: GetUsingFetchProps<ResponseOidcConfiguration, Failure | Error, void, GetHarnessOpenIdConfigPathParams> & {
     accountId: string
   },
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<GetHarnessOpenIdConfigResponse, Failure | Error, void, GetHarnessOpenIdConfigPathParams>(
+  getUsingFetch<ResponseOidcConfiguration, Failure | Error, void, GetHarnessOpenIdConfigPathParams>(
     getConfig('ng/api'),
-    `/oidc/account/${accountId}/.wellknown/openid-configuration`,
+    `/oidc/account/${accountId}/.well-known/openid-configuration`,
+    props,
+    signal
+  )
+
+export interface GetHarnessOpenIdJwksPathParams {
+  accountId: string
+}
+
+export type GetHarnessOpenIdJwksProps = Omit<
+  GetProps<ResponseJwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>,
+  'path'
+> &
+  GetHarnessOpenIdJwksPathParams
+
+/**
+ * Gets the openid configuration for Harness
+ */
+export const GetHarnessOpenIdJwks = ({ accountId, ...props }: GetHarnessOpenIdJwksProps) => (
+  <Get<ResponseJwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>
+    path={`/oidc/account/${accountId}/.wellknown/jwks`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetHarnessOpenIdJwksProps = Omit<
+  UseGetProps<ResponseJwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>,
+  'path'
+> &
+  GetHarnessOpenIdJwksPathParams
+
+/**
+ * Gets the openid configuration for Harness
+ */
+export const useGetHarnessOpenIdJwks = ({ accountId, ...props }: UseGetHarnessOpenIdJwksProps) =>
+  useGet<ResponseJwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>(
+    (paramsInPath: GetHarnessOpenIdJwksPathParams) => `/oidc/account/${paramsInPath.accountId}/.wellknown/jwks`,
+    { base: getConfig('ng/api'), pathParams: { accountId }, ...props }
+  )
+
+/**
+ * Gets the openid configuration for Harness
+ */
+export const getHarnessOpenIdJwksPromise = (
+  {
+    accountId,
+    ...props
+  }: GetUsingFetchProps<ResponseJwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams> & {
+    accountId: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseJwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>(
+    getConfig('ng/api'),
+    `/oidc/account/${accountId}/.wellknown/jwks`,
     props,
     signal
   )
@@ -58069,13 +58346,13 @@ export interface GetProjectListQueryParams {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   searchTerm?: string
   onlyFavorites?: boolean
@@ -58203,13 +58480,13 @@ export interface GetProjectListWithMultiOrgFilterQueryParams {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   searchTerm?: string
   onlyFavorites?: boolean
@@ -67223,13 +67500,13 @@ export interface RetrieveProductPricesQueryParams {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
 }
 
@@ -67453,13 +67730,13 @@ export interface CancelSubscriptionQueryParams {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
 }
 

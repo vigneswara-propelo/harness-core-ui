@@ -23,9 +23,11 @@ import {
   ServiceDefinition,
   TemplateLinkConfig,
   useGetInfrastructureList,
-  useGetInfrastructureYamlAndRuntimeInputs
+  useGetInfrastructureYamlAndRuntimeInputs,
+  useGetInfrastructureYamlAndRuntimeInputsV2
 } from 'services/cd-ng'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { InfrastructureData, InfrastructureYaml } from '../types'
 
 export interface UseGetInfrastructuresDataProps {
@@ -35,6 +37,7 @@ export interface UseGetInfrastructuresDataProps {
   deploymentTemplateIdentifier?: TemplateLinkConfig['templateRef']
   versionLabel?: TemplateLinkConfig['versionLabel']
   lazyInfrastructure?: boolean
+  environmentBranch?: string
 }
 
 export interface UseGetInfrastructuresDataReturn {
@@ -59,7 +62,8 @@ export function useGetInfrastructuresData({
   deploymentType,
   deploymentTemplateIdentifier,
   versionLabel,
-  lazyInfrastructure
+  lazyInfrastructure,
+  environmentBranch
 }: UseGetInfrastructuresDataProps): UseGetInfrastructuresDataReturn {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { showError } = useToaster()
@@ -94,13 +98,14 @@ export function useGetInfrastructuresData({
     () => [...infrastructureIdentifiers].sort(),
     [infrastructureIdentifiers]
   )
+  const { CDS_INFRA_GITX: isGitXEnabledForInfras } = useFeatureFlags()
 
   const {
-    data: infrastructuresDataResponse,
-    error: infrastructuresDataError,
-    initLoading: loadingInfrastructuresData,
-    loading: updatingInfrastructuresData,
-    refetch: refetchInfrastructuresData
+    data: infrastructuresResponse,
+    error: infrastructuresError,
+    initLoading: loadingInfrastructures,
+    loading: updatingInfrastructures,
+    refetch: refetchInfrastructures
   } = useMutateAsGet(useGetInfrastructureYamlAndRuntimeInputs, {
     queryParams: {
       accountIdentifier: accountId,
@@ -109,8 +114,48 @@ export function useGetInfrastructuresData({
       environmentIdentifier
     },
     body: { infrastructureIdentifiers: sortedInfrastructureIdentifiers },
-    lazy: sortedInfrastructureIdentifiers.length === 0
+    lazy: sortedInfrastructureIdentifiers.length === 0 || isGitXEnabledForInfras
   })
+
+  const {
+    data: infrastructuresResponseV2,
+    error: infrastructuresErrorV2,
+    initLoading: loadingInfrastructuresV2,
+    loading: updatingInfrastructuresV2,
+    refetch: refetchInfrastructuresV2
+  } = useMutateAsGet(useGetInfrastructureYamlAndRuntimeInputsV2, {
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      environmentIdentifier,
+      branch: environmentBranch
+    },
+    body: { infrastructureIdentifiers: sortedInfrastructureIdentifiers },
+    lazy: sortedInfrastructureIdentifiers.length === 0 || !isGitXEnabledForInfras
+  })
+
+  const {
+    infrastructuresDataResponse,
+    infrastructuresDataError,
+    loadingInfrastructuresData,
+    updatingInfrastructuresData,
+    refetchInfrastructuresData
+  } = isGitXEnabledForInfras
+    ? {
+        infrastructuresDataResponse: infrastructuresResponseV2,
+        infrastructuresDataError: infrastructuresErrorV2,
+        loadingInfrastructuresData: loadingInfrastructuresV2,
+        updatingInfrastructuresData: updatingInfrastructuresV2,
+        refetchInfrastructuresData: refetchInfrastructuresV2
+      }
+    : {
+        infrastructuresDataResponse: infrastructuresResponse,
+        infrastructuresDataError: infrastructuresError,
+        loadingInfrastructuresData: loadingInfrastructures,
+        updatingInfrastructuresData: updatingInfrastructures,
+        refetchInfrastructuresData: refetchInfrastructures
+      }
 
   const loading = loadingInfrastructuresList || loadingInfrastructuresData
 
@@ -146,6 +191,8 @@ export function useGetInfrastructuresData({
             defaultTo(row.inputSetTemplateYaml, '{}')
           ).infrastructureInputs
 
+          const { storeType, connectorRef, entityGitDetails = {} } = row
+
           /* istanbul ignore else */
           if (infrastructureDefinition) {
             const existsInList = _infrastructuresList.find(
@@ -157,7 +204,7 @@ export function useGetInfrastructuresData({
             }
           }
 
-          return { infrastructureDefinition, infrastructureInputs }
+          return { infrastructureDefinition, infrastructureInputs, storeType, connectorRef, entityGitDetails }
         })
       }
 
