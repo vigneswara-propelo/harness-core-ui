@@ -1,5 +1,6 @@
 import React from 'react'
 import cx from 'classnames'
+import { isEmpty } from 'lodash-es'
 import { Button, ButtonSize, ButtonVariation, Label, Layout, Text, TextInput } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
@@ -42,7 +43,7 @@ export default function CodeBaseSetup({ state, onUpdate }: CodeBaseSetupProps): 
           ignoreWhiteSpaces={false}
           commandSnippet={getCommandStrWithNewline([
             getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.clonecmd', {
-              gitUser: state.githubUsername
+              gitUser: isEmpty(state.githubUsername) ? 'GITHUB_USERNAME' : state.githubUsername
             }),
             getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.cddir')
           ])}

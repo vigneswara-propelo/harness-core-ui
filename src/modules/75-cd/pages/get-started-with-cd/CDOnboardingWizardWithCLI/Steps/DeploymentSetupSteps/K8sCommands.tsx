@@ -11,7 +11,7 @@ import { Layout } from '@harness/uicore'
 import { String, useStrings } from 'framework/strings'
 import { CDOnboardingSteps, PipelineSetupState, WhereAndHowToDeployType } from '../../types'
 import { useOnboardingStore } from '../../Store/OnboardingStore'
-import { DEPLOYMENT_TYPE_TO_DIR_MAP } from '../../Constants'
+import { DEPLOYMENT_TYPE_TO_DIR_MAP, DEPLOYMENT_TYPE_TO_FILE_MAPS } from '../../Constants'
 import CodeBaseSetup, { GitPatSetup } from './CodeBaseSetup'
 import CommandRow from './CommandRow'
 import css from '../../CDOnboardingWizardWithCLI.module.scss'
@@ -26,9 +26,11 @@ export default function K8sCommands({
   const { getString } = useStrings()
   const { stepsProgress } = useOnboardingStore()
   const deploymentData = stepsProgress?.[CDOnboardingSteps.WHAT_TO_DEPLOY]?.stepData
-  const dirPath = deploymentData?.artifactSubType?.id
-    ? DEPLOYMENT_TYPE_TO_DIR_MAP[deploymentData?.artifactSubType?.id]
+  const artifactSubType = deploymentData?.artifactSubType?.id
+  const dirPath = artifactSubType
+    ? DEPLOYMENT_TYPE_TO_DIR_MAP[artifactSubType]
     : DEPLOYMENT_TYPE_TO_DIR_MAP[deploymentData?.artifactType?.id as string]
+  const { service, infrastructure, env } = DEPLOYMENT_TYPE_TO_FILE_MAPS[artifactSubType as string] || {}
   return (
     <Layout.Vertical className={css.deploymentSteps}>
       <Layout.Vertical margin={{ bottom: 'xlarge' }}>
@@ -82,7 +84,7 @@ export default function K8sCommands({
                 stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createK8scon"
                 vars={{ num: '7.' }}
                 useRichText
-              />{' '}
+              />
               &nbsp;
               <String
                 stringID="common.learnMoreWithURL"
@@ -98,7 +100,8 @@ export default function K8sCommands({
         <CommandRow
           classname={css.commandGap}
           commandSnippet={getString(
-            'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.k8s.createsvccmd'
+            'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.k8s.createsvccmd',
+            { type: dirPath, service: service || 'service' }
           )}
           title={
             <>
@@ -122,7 +125,8 @@ export default function K8sCommands({
         <CommandRow
           classname={css.commandGap}
           commandSnippet={getString(
-            'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.k8s.createenvcmd'
+            'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.k8s.createenvcmd',
+            { type: dirPath, environment: env || 'environment' }
           )}
           title={
             <>
@@ -130,7 +134,7 @@ export default function K8sCommands({
                 stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createEnv"
                 vars={{ num: '9.' }}
                 useRichText
-              />{' '}
+              />
               &nbsp;
               <String
                 stringID="common.learnMoreWithURL"
@@ -146,7 +150,8 @@ export default function K8sCommands({
         <CommandRow
           classname={css.commandGap}
           commandSnippet={getString(
-            'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.k8s.createinfracmd'
+            'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.k8s.createinfracmd',
+            { type: dirPath, infrastructureDefinition: infrastructure || 'infrastructure-definition' }
           )}
           title={
             <>
@@ -154,7 +159,7 @@ export default function K8sCommands({
                 stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createInfra"
                 vars={{ num: '10.' }}
                 useRichText
-              />{' '}
+              />
               &nbsp;
               <String
                 stringID="common.learnMoreWithURL"

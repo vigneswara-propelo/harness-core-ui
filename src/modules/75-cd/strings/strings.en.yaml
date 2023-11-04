@@ -872,7 +872,7 @@ getStartedWithCD:
             gitpatPlaceholder: GITHUB-PAT
             gitusernamePlaceholder: GITHUB-USERNAME
             clonecmd: 'git clone https://github.com/{{gitUser}}/harnesscd-example-apps.git'
-            cloneDefaultCmd: 'git clone https://github.com/harnesscd-example-apps.git'
+            cloneDefaultCmd: 'git clone https://github.com/harness-community/harnesscd-example-apps.git'
             cddir: cd harnesscd-example-apps
             logincmd: 'harness login --api-key {{apiKey}} --account-id {{accId}}'
             createsecret: 'harness secret  --token {{gitPat}} apply'

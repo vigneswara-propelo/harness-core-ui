@@ -30,16 +30,18 @@ export default function CLISetupStep({
   return (
     <Layout.Vertical className={css.deploymentSteps}>
       <Layout.Vertical spacing="large">
-        <Text className={css.bold} color={Color.BLACK}>
-          <String
-            className={css.marginBottomLarge}
-            stringID={
-              isGitopsFlow
-                ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.stepsTitleGitops'
-                : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.stepsTitle'
-            }
-          />
-        </Text>
+        {!isK8sFlow && (
+          <Text className={css.bold} color={Color.BLACK}>
+            <String
+              className={css.marginBottomLarge}
+              stringID={
+                isGitopsFlow
+                  ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.stepsTitleGitops'
+                  : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.stepsTitle'
+              }
+            />
+          </Text>
+        )}
         <Text color={Color.BLACK}>
           <String
             color={Color.BLACK}
