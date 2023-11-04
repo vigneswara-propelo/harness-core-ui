@@ -7,8 +7,11 @@ import { AccountPathProps } from '@modules/10-common/interfaces/RouteInterfaces'
 import { String, useStrings } from 'framework/strings'
 import { InstallCLIInfo } from './CLISetupStep'
 import ApiKeySetup from './ApiKeySetup'
-import { PipelineSetupState } from '../../types'
+import { CDOnboardingSteps, PipelineSetupState } from '../../types'
 import VerifyGitopsEntities from '../VerificationComponents/VerifyGitopsEntities'
+import { useOnboardingStore } from '../../Store/OnboardingStore'
+import { getCommandStrWithNewline } from '../../utils'
+import { DEPLOYMENT_TYPE_TO_DIR_MAP } from '../../Constants'
 import css from '../../CDOnboardingWizardWithCLI.module.scss'
 interface GitopsDeploymentSetupProps {
   state: PipelineSetupState
@@ -22,6 +25,12 @@ export default function GitopsDeploymentSetup({
 }: GitopsDeploymentSetupProps): JSX.Element {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
+
+  const { stepsProgress } = useOnboardingStore()
+  const deploymentData = stepsProgress?.[CDOnboardingSteps.WHAT_TO_DEPLOY]?.stepData
+  const dirPath = deploymentData?.artifactSubType?.id
+    ? DEPLOYMENT_TYPE_TO_DIR_MAP[deploymentData?.artifactSubType?.id]
+    : DEPLOYMENT_TYPE_TO_DIR_MAP[deploymentData?.artifactType?.id as string]
   return (
     <Layout.Vertical spacing="xlarge">
       <Text color={Color.BLACK}>
@@ -79,9 +88,13 @@ export default function GitopsDeploymentSetup({
           <CommandBlock
             allowCopy
             ignoreWhiteSpaces={false}
-            commandSnippet={getString(
-              'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.clonecmd'
-            )}
+            commandSnippet={getCommandStrWithNewline([
+              getString(
+                'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.clonecmd',
+                { gitUser: 'harness-community' }
+              ),
+              getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.cddir')
+            ])}
             downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
             copyButtonText={getString('common.copy')}
           />
@@ -99,7 +112,8 @@ export default function GitopsDeploymentSetup({
               'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitops.createCluster',
               {
                 accId: accountId,
-                apiKey: state?.apiKey
+                apiKey: state?.apiKey,
+                dirPath
               }
             )}
             downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
@@ -119,7 +133,8 @@ export default function GitopsDeploymentSetup({
               'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitops.createRepo',
               {
                 accId: accountId,
-                apiKey: state?.apiKey
+                apiKey: state?.apiKey,
+                dirPath
               }
             )}
             downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
@@ -139,7 +154,8 @@ export default function GitopsDeploymentSetup({
               'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitops.createApplication',
               {
                 accId: accountId,
-                apiKey: state?.apiKey
+                apiKey: state?.apiKey,
+                dirPath
               }
             )}
             downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
