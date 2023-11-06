@@ -107,6 +107,15 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
       })
     }
   })
+  useGlobalEventListener('UPDATE_ENVIRONMENT_VARIABLES', event => {
+    if (event.detail) {
+      const updatedEnvironmentVariables = get(event.detail, 'variables', []) as AllNGVariables[]
+      formikRef.current?.setValues({
+        variables: updatedEnvironmentVariables,
+        canAddVariable: true
+      })
+    }
+  })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedUpdate = React.useCallback(
     debounce((data: CustomVariablesData) => onUpdate?.(data), 500),

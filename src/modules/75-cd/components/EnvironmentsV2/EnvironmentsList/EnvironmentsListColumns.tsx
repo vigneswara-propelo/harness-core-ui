@@ -100,7 +100,7 @@ export function EnvironmentMenu({
   onDelete
 }: {
   environment: EnvironmentResponseDTO
-  onEdit: (identifier: string) => void
+  onEdit: (identifier: string, environment: EnvironmentResponseDTO) => void
   onDelete: (environment: EnvironmentResponseDTO) => void
 }): React.ReactElement {
   const [menuOpen, setMenuOpen] = React.useState(false)
@@ -124,7 +124,7 @@ export function EnvironmentMenu({
 
   const handleEdit = (event: React.MouseEvent): void => {
     event.stopPropagation()
-    onEdit(defaultTo(environment?.identifier, ''))
+    onEdit(defaultTo(environment?.identifier, ''), environment)
     setMenuOpen(false)
   }
 

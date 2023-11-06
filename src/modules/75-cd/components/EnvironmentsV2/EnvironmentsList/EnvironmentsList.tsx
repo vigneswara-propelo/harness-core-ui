@@ -65,14 +65,19 @@ export default function EnvironmentsList({
     }
   })
 
-  const handleEnvEdit = (id: string): void => {
+  const handleEnvEdit = (id: string, environment: EnvironmentResponseDTO): void => {
     const envParams = {
       accountId,
       orgIdentifier,
       projectIdentifier,
       module,
       environmentIdentifier: defaultTo(id, ''),
-      sectionId: EnvironmentDetailsTab.CONFIGURATION
+      sectionId: EnvironmentDetailsTab.CONFIGURATION,
+      ...(get(environment, 'storeType', '') === StoreType.REMOTE && {
+        storeType: get(environment, 'storeType', ''),
+        connectorRef: get(environment, 'connectorRef', ''),
+        repoName: get(environment, 'entityGitDetails.repoName', '')
+      })
     }
     history.push(
       newLeftNav && calledFromSettingsPage

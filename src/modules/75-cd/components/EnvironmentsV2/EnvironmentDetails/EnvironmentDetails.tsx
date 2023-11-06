@@ -176,6 +176,7 @@ export default function EnvironmentDetails(): React.ReactElement {
   }, [error?.data, error?.status])
 
   const onGitBranchChange = (selectedFilter: { branch: string }): void => {
+    setSelectedView(SelectedView.VISUAL)
     updateQueryParams({ branch: selectedFilter.branch })
   }
 
@@ -217,7 +218,11 @@ export default function EnvironmentDetails(): React.ReactElement {
     if (response.status === 'SUCCESS') {
       showSuccess(getString('common.environmentUpdated'))
       setIsModified(false)
-      refetch()
+      if (response.data?.environment?.storeType === StoreType.REMOTE) {
+        updateQueryParams({ branch: response.data?.environment?.entityGitDetails?.branch })
+      } else {
+        refetch()
+      }
     } else {
       throw response
     }
@@ -232,7 +237,7 @@ export default function EnvironmentDetails(): React.ReactElement {
           accountIdentifier: accountId,
           storeType: StoreType.REMOTE,
           connectorRef: environmentDetails.connectorRef,
-          isNewBranch: gitData?.isNewBranch, //Need BE API support for this param, Todo: remove typeCast
+          isNewBranch: gitData?.isNewBranch,
           repoIdentifier: repoName,
           filePath: gitDetails.filePath,
           ...(gitData?.isNewBranch
@@ -369,6 +374,11 @@ export default function EnvironmentDetails(): React.ReactElement {
     []
   )
 
+  React.useEffect(() => {
+    window.dispatchEvent(new CustomEvent('UPDATE_ENVIRONMENT_VARIABLES', { detail: { variables: variables } }))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data?.data?.environment])
+
   return (
     <>
       <HelpPanel referenceId="environmentDetails" type={HelpPanelType.FLOATING_CONTAINER} />
@@ -432,6 +442,8 @@ export default function EnvironmentDetails(): React.ReactElement {
               identifier: IdentifierSchema(getString)
             })}
             validateOnChange
+            // added for git-branch change functionality , shouldn't impact any existing flows
+            enableReinitialize
             validate={validate}
           >
             {formikProps => {

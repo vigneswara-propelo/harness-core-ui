@@ -20,7 +20,12 @@ import produce from 'immer'
 
 import { PageSpinner } from '@common/components'
 import { useStrings } from 'framework/strings'
-import type { PipelineInfoConfig, StageElementWrapperConfig, StageElementConfig } from 'services/pipeline-ng'
+import type {
+  PipelineInfoConfig,
+  StageElementWrapperConfig,
+  StageElementConfig,
+  NGVariable
+} from 'services/pipeline-ng'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import {
   PipelineVariablesContextProvider,
@@ -40,6 +45,7 @@ import css from './PipelineVariables.module.scss'
 declare global {
   interface WindowEventMap {
     UPDATE_STAGE_VARIABLES: CustomEvent<PipelineInfoConfig>
+    UPDATE_ENVIRONMENT_VARIABLES: CustomEvent<{ variables: NGVariable[] }>
   }
 }
 export interface PipelineVariablesRef {

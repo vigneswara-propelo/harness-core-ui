@@ -17,6 +17,8 @@ import {
   EnvironmentResponseDTO,
   Failure,
   getEnvironmentAccessListPromise,
+  getEnvironmentListPromise,
+  GetEnvironmentListQueryParams,
   getEnvironmentListV2Promise,
   PageEnvironmentResponse,
   ResponseListEnvironmentResponse,
@@ -29,6 +31,7 @@ import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
 import { getConnectorIdentifierWithScope } from '@modules/27-platform/connectors/utils/utils'
 import { getScopeFromDTO } from '@modules/10-common/components/EntityReference/EntityReference.types'
 import { defaultGitContextBranchPlaceholder } from '@modules/10-common/utils/gitSyncUtils'
+import { isEntitySame } from '@modules/10-common/components/CollapsableList/CollapsableList'
 import css from './FormMultiTypeEnvironmentField.module.scss'
 
 export function getReferenceFieldProps({
@@ -132,7 +135,7 @@ export function getReferenceFieldProps({
     },
     isMultiSelect,
     selectedReferences: selectedEnvironments,
-    recordRender: function recordRender({ item, selected: checked }) {
+    recordRender: function recordRender({ item, selected: checked, onItemClick, selectedRecord }) {
       const environmentId = getConnectorIdentifierWithScope(
         getScopeFromDTO(item?.record),
         item?.record?.identifier || ''
@@ -167,6 +170,10 @@ export function getReferenceFieldProps({
                   if (item?.record?.entityGitDetails) {
                     selectedBranch = env?.branch
                     if (selectedBranch !== userSelectedBranches[environmentId]) {
+                      const hasToSelectEnvironment = !isEntitySame(item?.record, selectedRecord || {})
+                      if (!isMultiSelect && hasToSelectEnvironment) {
+                        onItemClick?.(item)
+                      }
                       setUserSelectedBranches({ ...userSelectedBranches, [environmentId]: selectedBranch })
                     }
                   }
@@ -177,5 +184,24 @@ export function getReferenceFieldProps({
         </Layout.Horizontal>
       )
     }
+  }
+}
+
+export async function fetchEnvironmentsMetadata(
+  queryParams: Pick<
+    GetEnvironmentListQueryParams,
+    'accountIdentifier' | 'orgIdentifier' | 'projectIdentifier' | 'envIdentifiers'
+  >
+): Promise<EnvironmentResponse[]> {
+  try {
+    const response = await getEnvironmentListPromise({
+      queryParams,
+      queryParamStringifyOptions: {
+        arrayFormat: 'repeat'
+      }
+    })
+    return response?.data?.content || []
+  } catch {
+    return []
   }
 }
