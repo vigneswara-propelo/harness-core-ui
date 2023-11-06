@@ -296,8 +296,8 @@ function FormContent({
   }, [serviceNowIssueCreateMetadataQuery.data?.data])
 
   useEffect(() => {
+    setIsTemplateSectionAvailable(true)
     if (templateResponse && CDS_GET_SERVICENOW_STANDARD_TEMPLATE) {
-      setIsTemplateSectionAvailable(true)
       const convertedTemplateResponse = templateResponse.map((item: ServiceNowTemplate) => {
         return {
           label: item.name,
@@ -373,12 +373,6 @@ function FormContent({
       }
     }
   }, [templateResponse, serviceNowReadOnlyFieldsQuery?.data?.data])
-  // console.log('fetchingReadonlyFields', {
-  //   fetchingReadonlyFields,
-  //   fetchingTemplate,
-  //   loadingRead: serviceNowReadOnlyFieldsQuery?.loading,
-  //   searchTerm
-  // })
 
   useEffect(() => {
     if (

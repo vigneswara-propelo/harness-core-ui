@@ -567,7 +567,7 @@ function FormContent({
             />
             {getMultiTypeFromValue(formik.values.spec.ticketNumber) === MultiTypeInputType.RUNTIME && (
               <ConfigureOptions
-                value={formik.values.spec.ticketNumber}
+                value={defaultTo(formik.values.spec.ticketNumber, '')}
                 type="String"
                 variableName="spec.ticketNumber"
                 showRequiredField={false}
@@ -586,6 +586,7 @@ function FormContent({
                 label={getString('pipeline.serviceNowApprovalStep.updateMultiple')}
                 onChange={() => {
                   setTicketFieldDetailsMap({})
+                  formik.setFieldValue('spec.ticketNumber', '')
                 }}
               />
             </div>

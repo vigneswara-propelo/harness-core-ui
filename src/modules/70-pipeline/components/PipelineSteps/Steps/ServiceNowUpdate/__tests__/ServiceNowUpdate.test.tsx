@@ -19,10 +19,12 @@ import {
   mockTicketTypesResponseV2
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/__test__/ServiceNowApprovalTestHelper'
 import { FieldType } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types'
+import * as hooks from '@common/hooks/useFeatureFlag'
 import {
   getServiceNowUpdateDeploymentModeProps,
   getServiceNowUpdateDeploymentModeWithCustomFieldsProps,
   getServiceNowUpdateEditModeProps,
+  getServiceNowUpdateEditModePropsWithUpdateMultipleValues,
   getServiceNowUpdateEditModePropsWithValues,
   getServiceNowUpdateInputVariableModeProps,
   getServiceNowUpdateTemplateTypeEditModeProps,
@@ -184,6 +186,28 @@ describe('ServiceNow Update tests', () => {
       />
     )
     expect(container).toMatchSnapshot('edit-templatetype-stage-readonly')
+  })
+
+  test('Open a saved step - edit stage view with updateMultiple', async () => {
+    const useFeatureFlags = jest.spyOn(hooks, 'useFeatureFlags')
+    useFeatureFlags.mockReturnValue({
+      CDS_SERVICENOW_FETCH_FIELDS: true,
+      CDS_NG_UPDATE_MULTIPLE_SNOW_CHANGE_REQUEST: true
+    })
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    const props = { ...getServiceNowUpdateEditModePropsWithUpdateMultipleValues() }
+    const { container } = render(
+      <TestStepWidget
+        initialValues={props.initialValues}
+        type={StepType.ServiceNowUpdate}
+        stepViewType={StepViewType.Edit}
+        ref={ref}
+        onUpdate={props.onUpdate}
+      />
+    )
+
+    const refreshIcon = container.querySelector('[data-icon="refresh"]')
+    expect(refreshIcon).not.toBeInTheDocument()
   })
 
   test('Open a saved step - edit stage view', async () => {

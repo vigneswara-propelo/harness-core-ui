@@ -40,7 +40,7 @@ export interface ServiceNowUpdateData extends StepElementConfig {
     selectedFields?: ServiceNowFieldNGWithValue[]
     delegateSelectors?: string[]
     fieldType?: FieldType
-    ticketNumber: string
+    ticketNumber?: string
     updateMultipleFlag?: boolean
     updateMultiple?: {
       type?: string

@@ -9,7 +9,7 @@ import React, { useCallback, useRef } from 'react'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
-import { defaultTo, get, memoize, merge, omit } from 'lodash-es'
+import { defaultTo, get, memoize, merge, omit, set } from 'lodash-es'
 import * as Yup from 'yup'
 import { Menu } from '@blueprintjs/core'
 import {
@@ -27,6 +27,7 @@ import {
   Text
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
+import produce from 'immer'
 import { useStrings } from 'framework/strings'
 import { useListAwsRegions } from 'services/portal'
 import {
@@ -472,15 +473,21 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
               label={getString('pipeline.artifactsSelection.fileFilterLabel')}
               name="fileFilter"
               placeholder={getString('pipeline.artifactsSelection.fileFilterPlaceholder')}
+              isOptional={true}
               onChange={(value, _valuetype, type) => {
-                if (isMultiTypeRuntime(type) || (type === MultiTypeInputType.EXPRESSION && !value)) {
-                  formik.setFieldValue('filePath', RUNTIME_INPUT_VALUE)
-                } else if (
-                  type === MultiTypeInputType.FIXED &&
-                  getMultiTypeFromValue(filePathValue) === MultiTypeInputType.FIXED
-                ) {
-                  formik.setFieldValue('filePath', '')
-                }
+                formik.setValues(
+                  produce(formik.values, (draft: any) => {
+                    if (isMultiTypeRuntime(type)) {
+                      set(draft, `filePath`, value)
+                    } else if (
+                      type === MultiTypeInputType.FIXED &&
+                      getMultiTypeFromValue(filePathValue) === MultiTypeInputType.FIXED
+                    ) {
+                      set(draft, `filePath`, '')
+                    }
+                    set(draft, `fileFilter`, value)
+                  })
+                )
               }}
               multiTextInputProps={{
                 expressions,

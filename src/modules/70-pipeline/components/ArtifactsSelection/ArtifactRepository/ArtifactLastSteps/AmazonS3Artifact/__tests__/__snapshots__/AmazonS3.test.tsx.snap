@@ -1278,7 +1278,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when all values a
                     class="Tooltip--acenter"
                     data-tooltip-id="artifactoryArtifact_fileFilter"
                   >
-                    pipeline.artifactsSelection.fileFilterLabel
+                    pipeline.artifactsSelection.fileFilterLabel (optional)
                   </span>
                    
                   <span

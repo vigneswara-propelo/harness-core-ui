@@ -140,6 +140,35 @@ export const getServiceNowUpdateEditModePropsWithValues = (): ServiceNowUpdateSt
   stepViewType: StepViewType.Edit
 })
 
+export const getServiceNowUpdateEditModePropsWithUpdateMultipleValues = (): ServiceNowUpdateStepModeProps => ({
+  initialValues: {
+    timeout: '1d',
+    name: '',
+    type: 'ServiceNowUpdate',
+    identifier: '',
+    spec: {
+      useServiceNowTemplate: false,
+      connectorRef: 'c1d1',
+      ticketType: 'change_task',
+      fields: [],
+      updateMultiple: {
+        type: 'CHANGE_TASK',
+        spec: {
+          changeRequestNumber: 'TJI-135040',
+          changeTaskType: 'Testing'
+        }
+      }
+    }
+  },
+  onUpdate: jest.fn(),
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
+  stepViewType: StepViewType.Edit
+})
+
 export const getServiceNowUpdateDeploymentModeProps = (): ServiceNowUpdateDeploymentModeProps => ({
   stepViewType: StepViewType.InputSet,
   initialValues: {
