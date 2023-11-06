@@ -143,7 +143,10 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
     },
     {
       enabled: !lazyService && isGitXEnabledForServices && sortedServiceIdentifiers.length > 0,
-      staleTime: STALE_TIME
+      staleTime: STALE_TIME,
+      retry(failureCount) {
+        return failureCount < 1
+      }
     }
   )
 
