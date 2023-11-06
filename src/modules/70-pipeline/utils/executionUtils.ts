@@ -169,7 +169,20 @@ export const StepV2TypeIconsMap: {
   JenkinsBuildV2: 'service-jenkins',
   InitContainer: 'initialize-ci-step',
   RunContainer: 'run-ci-step',
-  CUSTOM_STAGE_ENVIRONMENT: 'main-environments'
+  CUSTOM_STAGE_ENVIRONMENT: 'main-environments',
+  K8S_BLUE_GREEN_V2: 'bluegreen',
+  K8S_BG_SWAP_SERVICES_V2: 'command-swap',
+  K8S_CANARY_V2: 'canary',
+  K8S_CANARY_DELETE_V2: 'canary-delete',
+  K8S_ROLLING_V2: 'rolling',
+  K8S_ROLLBACK_ROLLING_V2: 'undo',
+  K8S_APPLY_V2: 'apply',
+  K8S_SCALE_V2: 'swap-vertical',
+  K8S_DELETE_V2: 'delete',
+  K8S_BLUE_GREEN_STAGE_SCALE_DOWN_V2: 'bg-scale-down-step',
+  K8S_DRY_RUN_V2: 'dry-run',
+  HELM_DEPLOY_V2: 'service-helm',
+  HELM_ROLLBACK_V2: 'helm-rollback'
 }
 
 export const ExecutionStatusIconMap: Record<ExecutionStatus, IconName> = {
