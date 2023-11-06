@@ -70,7 +70,7 @@ const NGBreadcrumbsV2: React.FC<Partial<NGBreadcrumbsProps>> = props => {
     list.push({
       text: (
         <Text font={{ size: 'small' }} lineClamp={1} color={Color.PRIMARY_7}>
-          {renderLabelAndName(getString('orgsText'), selectedOrg?.name)}
+          {renderLabelAndName(getString('orgLabel'), selectedOrg?.name)}
         </Text>
       ),
       onClick: () => {

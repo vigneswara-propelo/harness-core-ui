@@ -58,7 +58,7 @@ describe('NGBreadcrumbsV2', () => {
     fireEvent.click(container.querySelector('span[class="bp3-popover-target"]') as HTMLElement)
     await waitFor(() => {
       expect(screen.getByText('account: accountName')).toBeInTheDocument()
-      expect(screen.getByText('orgsText: selectedOrgName')).toBeInTheDocument()
+      expect(screen.getByText('orgLabel: selectedOrgName')).toBeInTheDocument()
       expect(screen.getByText('projectLabel: selectedProjectName')).toBeInTheDocument()
       expect(screen.getByText('label')).toBeInTheDocument()
     })
@@ -74,7 +74,7 @@ describe('NGBreadcrumbsV2', () => {
   test('on clicking org should call showSecondaryScopeSwitchDialog', async () => {
     const { container } = render(<WrapperComponent />)
     fireEvent.click(container.querySelector('span[class="bp3-popover-target"]') as HTMLElement)
-    fireEvent.click(screen.getByText('orgsText: selectedOrgName'))
+    fireEvent.click(screen.getByText('orgLabel: selectedOrgName'))
     await waitFor(() => {
       expect(screen.getByText('common.scopeSwitchDialog.secondary.title')).toBeInTheDocument()
     })
@@ -89,7 +89,7 @@ describe('NGBreadcrumbsV2', () => {
     fireEvent.click(container.querySelector('span[class="bp3-popover-target"]') as HTMLElement)
     await waitFor(() => {
       expect(screen.getByText('account')).toBeInTheDocument()
-      expect(screen.getByText('orgsText')).toBeInTheDocument()
+      expect(screen.getByText('orgLabel')).toBeInTheDocument()
       expect(screen.getByText('projectLabel: selectedProjectName')).toBeInTheDocument()
     })
   })
