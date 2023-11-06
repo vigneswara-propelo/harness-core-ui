@@ -1622,7 +1622,7 @@ serviceDeploymentTypes:
   spotElastigroup: Spot Elastigroup
   asg: AWS Auto Scaling Group
   googleCloudFunctions: Google Cloud Functions
-noArtifactPaths: No artifact paths found with given Artifact Directory
+noArtifactPaths: No artifact paths found with given {{filterField}}
 stageDataDeleteWarningTitle: Discard Stage Data
 serviceDataDeleteWarningTitle: Discard Service Data
 stageExpired: This stage was expired and never executed

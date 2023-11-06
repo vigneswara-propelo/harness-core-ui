@@ -92,6 +92,20 @@ describe('ArtifactImagePathTagView tests', () => {
     )
     expect(getByText('pipelineSteps.deploy.errors.notags')).toBeInTheDocument()
   })
+
+  test('check if tagError is null, default error message from props should render instead of default error defined in component', () => {
+    const props = {
+      tagError: null,
+      defaultErrorText: 'Default error text'
+    }
+    const { getByText } = render(
+      <TestWrapper>
+        <NoTagResults {...props} />
+      </TestWrapper>
+    )
+    expect(getByText(props.defaultErrorText)).toBeInTheDocument()
+  })
+
   test('check selectItemsMapper function', () => {
     const emptyTagList: DockerBuildDetailsDTO[] = []
     const mappedEmptyTagList = selectItemsMapper(emptyTagList)

@@ -36,7 +36,9 @@ export function NoTagResults({
   const getErrorText = useCallback(() => {
     if (isServerlessDeploymentTypeSelected) {
       /* istanbul ignore next */
-      return getString('pipeline.noArtifactPaths')
+      return getString('pipeline.noArtifactPaths', {
+        filterField: getString('pipeline.artifactsSelection.artifactDirectory')
+      })
     }
     return defaultErrorText || getString('pipelineSteps.deploy.errors.notags')
   }, [isServerlessDeploymentTypeSelected, getString])

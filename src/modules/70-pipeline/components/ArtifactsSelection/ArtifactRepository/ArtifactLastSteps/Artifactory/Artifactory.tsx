@@ -520,6 +520,19 @@ function Artifactory({
       )
     )
   }
+
+  const getErrorTextForArtifactPath = (formik: FormikValues) => {
+    if (!isGenericArtifactory) return undefined
+    if (formik?.values?.filterType === ARTIFACT_FILTER_TYPES.DIRECTORY) {
+      return getString('pipeline.noArtifactPaths', {
+        filterField: getString('pipeline.artifactsSelection.artifactDirectory')
+      })
+    }
+    return getString('pipeline.noArtifactPaths', {
+      filterField: getString('pipeline.artifactsSelection.artifactFilter')
+    })
+  }
+
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
       {!hideHeaderAndNavBtns && (
@@ -858,7 +871,7 @@ function Artifactory({
                           noResults: (
                             <NoTagResults
                               tagError={artifactoryTagError}
-                              isServerlessDeploymentTypeSelected={isGenericArtifactory}
+                              defaultErrorText={getErrorTextForArtifactPath(formik)}
                             />
                           ),
                           items: tags,
