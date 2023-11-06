@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useMemo, useEffect } from 'react'
-import { defaultTo, get, memoize, pick } from 'lodash-es'
+import { debounce, defaultTo, get, memoize, pick } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
 
 import { parse } from 'yaml'
@@ -546,6 +546,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     artifactFilter: ''
   })
   const pipelineRuntimeYaml = getYamlData(formik?.values, stepViewType as StepViewType, path as string)
+  const debouncedResetTags = debounce(resetTags, 300)
 
   // v1 tags api is required to fetch tags for artifact source template usage while linking to service
   // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
@@ -784,7 +785,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                 allowableTypes
               }}
               name={`${path}.artifacts.${artifactPath}.spec.artifactDirectory`}
-              onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.artifactPath`)}
+              onChange={() => debouncedResetTags(formik, `${path}.artifacts.${artifactPath}.spec.artifactPath`)} // debounced reset because changing form values multiple times on single change
               fieldPath={`artifacts.${artifactPath}.spec.artifactDirectory`}
               template={template}
             />
@@ -798,7 +799,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                 allowableTypes
               }}
               name={`${path}.artifacts.${artifactPath}.spec.artifactFilter`}
-              onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.artifactPath`)}
+              onChange={() => debouncedResetTags(formik, `${path}.artifacts.${artifactPath}.spec.artifactPath`)} // debounced reset because changing form values multiple times on single change
               fieldPath={`artifacts.${artifactPath}.spec.artifactFilter`}
               template={template}
             />
