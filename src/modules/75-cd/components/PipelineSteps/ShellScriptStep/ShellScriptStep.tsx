@@ -213,7 +213,9 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
 
     /* istanbul ignore else */
     if (
-      (getMultiTypeFromValue(template?.spec?.executionTarget?.host) === MultiTypeInputType.RUNTIME && isRequired) ||
+      (getMultiTypeFromValue(template?.spec?.executionTarget?.host) === MultiTypeInputType.RUNTIME &&
+        isRequired &&
+        isEmpty(data?.spec?.executionTarget?.host)) ||
       (isEmpty(data?.spec?.executionTarget?.host) &&
         getMultiTypeFromValue(template?.spec?.onDelegate) === MultiTypeInputType.RUNTIME &&
         !data?.spec?.onDelegate)
@@ -224,7 +226,8 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
     /* istanbul ignore else */
     if (
       (getMultiTypeFromValue(template?.spec?.executionTarget?.connectorRef) === MultiTypeInputType.RUNTIME &&
-        isRequired) ||
+        isRequired &&
+        isEmpty(data?.spec?.executionTarget?.connectorRef)) ||
       (isEmpty(data?.spec?.executionTarget?.connectorRef) &&
         getMultiTypeFromValue(template?.spec?.onDelegate) === MultiTypeInputType.RUNTIME &&
         !data?.spec?.onDelegate)
@@ -239,7 +242,8 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
     /* istanbul ignore else */
     if (
       (getMultiTypeFromValue(template?.spec?.executionTarget?.workingDirectory) === MultiTypeInputType.RUNTIME &&
-        isRequired) ||
+        isRequired &&
+        isEmpty(data?.spec?.executionTarget?.workingDirectory)) ||
       (isEmpty(data?.spec?.executionTarget?.workingDirectory) &&
         getMultiTypeFromValue(template?.spec?.onDelegate) === MultiTypeInputType.RUNTIME &&
         !data?.spec?.onDelegate)

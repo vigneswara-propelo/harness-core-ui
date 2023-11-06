@@ -219,7 +219,7 @@ describe('ShellScriptInputSetStep tests', () => {
     await act(async () => {
       fireEvent.click(getByText('Submit'))
     })
-    await waitFor(() => expect(getAllByText('fieldRequired').length).toEqual(4))
+    await waitFor(() => expect(getAllByText('fieldRequired').length).toEqual(1))
   })
 
   test('renders empty input sets', () => {
