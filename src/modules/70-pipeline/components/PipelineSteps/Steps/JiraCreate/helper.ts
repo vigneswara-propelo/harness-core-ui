@@ -94,8 +94,7 @@ export const getInitialValueForSelectedField = (
       if (field.schema.array) {
         // multiselect
         // return multiselectoption[]
-        const splitValues = (savedValue as string).split(',')
-        return splitValues.map(splitvalue => ({ label: splitvalue, value: splitvalue })) as MultiSelectOption[]
+        return savedValue
       } else {
         // singleselect
         // return selectoption
