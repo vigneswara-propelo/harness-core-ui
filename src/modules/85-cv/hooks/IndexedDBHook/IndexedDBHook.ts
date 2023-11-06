@@ -152,9 +152,11 @@ export function useIndexedDBHook(props?: CVIndexDBHookProps): CVIndexedDBHookRet
     })
   }, [])
 
-  const clearDB = async (item: string) => {
+  const clearDB = async (item: string): Promise<void> => {
     try {
-      await dbInstance?.clear(item)
+      if (dbInstance?.objectStoreNames.contains(item)) {
+        await dbInstance?.clear(item)
+      }
     } catch (e) {
       showWarning(e)
     }
