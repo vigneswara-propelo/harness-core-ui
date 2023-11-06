@@ -203,51 +203,49 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
         }
       />
 
-      {secretsResponse?.data?.content?.length || searchTerm || loading || error ? (
-        <Layout.Horizontal flex className={css.header}>
-          <Layout.Horizontal spacing="small">
-            <Popover
-              minimal
-              position={Position.BOTTOM_LEFT}
-              interactionKind={PopoverInteractionKind.CLICK}
-              disabled={!canCreateSecret}
-            >
-              <CreateSecretBtn />
-              <CreateSecretBtnMenu />
-            </Popover>
+      <Layout.Horizontal flex className={css.header}>
+        <Layout.Horizontal spacing="small">
+          <Popover
+            minimal
+            position={Position.BOTTOM_LEFT}
+            interactionKind={PopoverInteractionKind.CLICK}
+            disabled={!canCreateSecret}
+          >
+            <CreateSecretBtn />
+            <CreateSecretBtnMenu />
+          </Popover>
 
-            <RbacButton
-              text={getString('createViaYaml')}
-              minimal
-              onClick={
-                /* istanbul ignore next */ () => {
-                  history.push(routes.toCreateSecretFromYaml({ accountId, orgIdentifier, projectIdentifier, module }))
-                }
+          <RbacButton
+            text={getString('createViaYaml')}
+            minimal
+            onClick={
+              /* istanbul ignore next */ () => {
+                history.push(routes.toCreateSecretFromYaml({ accountId, orgIdentifier, projectIdentifier, module }))
               }
-              permission={{
-                permission: PermissionIdentifier.UPDATE_SECRET,
-                resource: {
-                  resourceType: ResourceType.SECRET
-                },
-                resourceScope: {
-                  accountIdentifier: accountId,
-                  orgIdentifier,
-                  projectIdentifier
-                }
-              }}
-              variation={ButtonVariation.SECONDARY}
-            />
-          </Layout.Horizontal>
-          <ExpandingSearchInput
-            alwaysExpanded
-            onChange={text => {
-              setSearchTerm(text.trim())
-              updateQueryParams({ page: 0 })
+            }
+            permission={{
+              permission: PermissionIdentifier.UPDATE_SECRET,
+              resource: {
+                resourceType: ResourceType.SECRET
+              },
+              resourceScope: {
+                accountIdentifier: accountId,
+                orgIdentifier,
+                projectIdentifier
+              }
             }}
-            width={250}
+            variation={ButtonVariation.SECONDARY}
           />
         </Layout.Horizontal>
-      ) : null}
+        <ExpandingSearchInput
+          alwaysExpanded
+          onChange={text => {
+            setSearchTerm(text.trim())
+            updateQueryParams({ page: 0 })
+          }}
+          width={250}
+        />
+      </Layout.Horizontal>
 
       <Page.Body
         className={css.body}
