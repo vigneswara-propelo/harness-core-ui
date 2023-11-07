@@ -665,18 +665,8 @@ export function Nexus3Artifact({
                     },
                     onChange: (val: any) => {
                       if (isValueFixed(val)) {
-                        formik.setValues({
-                          ...formik.values,
-                          repository:
-                            getMultiTypeFromValue(formik.values?.repository) === MultiTypeInputType.RUNTIME
-                              ? val
-                              : val.value,
-                          spec: {
-                            ...formik.values.spec,
-                            groupId: '',
-                            artifactId: ''
-                          }
-                        })
+                        resetFieldValue(formik, 'spec.groupId', '')
+                        resetFieldValue(formik, 'spec.artifactId', '')
                         setGroupIds([])
                         setArtifactIds([])
                       }
