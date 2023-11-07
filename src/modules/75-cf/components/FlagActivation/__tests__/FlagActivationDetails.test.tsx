@@ -10,6 +10,7 @@ import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfServiceMock from 'services/cf'
+import * as useGetServiceDetailsMock from 'services/cd-ng'
 import { noDependentFlagsResponse } from '@cf/components/FlagArchiving/__tests__/__data__/dependentFlagsMock'
 import mockFeature from '@cf/utils/testData/data/mockFeature'
 import mockGitSync from '@cf/utils/testData/data/mockGitSync'
@@ -77,6 +78,10 @@ describe('FlagActivationDetails', () => {
       .mockReturnValue({ data: [], loading: false, mutate: jest.fn() } as any)
 
     jest.spyOn(cfServiceMock, 'useGetAllTags').mockReturnValue({ data: [], loading: false } as any)
+
+    jest
+      .spyOn(useGetServiceDetailsMock, 'useGetServiceList')
+      .mockReturnValue({ data: [], loading: false, error: null, refetch: jest.fn() } as any)
 
     jest.spyOn(cfServiceMock, 'useGetDependentFeatures').mockReturnValue({
       refetch: jest.fn(),

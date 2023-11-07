@@ -438,6 +438,67 @@ exports[`FeatureFlagsDetailPage it should render data correctly 1`] = `
               </button>
             </div>
           </div>
+          <div
+            class="Layout--vertical StyledProps--main StyledProps--margin-bottom-xlarge"
+          >
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--margin-bottom-small"
+            >
+              <div
+                class="Layout--vertical StyledProps--main StyledProps--margin-bottom-small"
+              >
+                <h5
+                  class="StyledProps--font StyledProps--font-h5 StyledProps--main StyledProps--font-variation-h5"
+                  level="5"
+                >
+                  common.monitoredServices
+                </h5>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey500"
+                >
+                  cf.featureFlagDetail.serviceDescription
+                </p>
+              </div>
+              <span
+                style="flex-grow: 1;"
+              />
+              <button
+                aria-label="edit-services"
+                class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
+                type="button"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="Edit"
+                >
+                  <svg
+                    height="16"
+                    viewBox="0 0 16 16"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                    <path
+                      clip-rule="evenodd"
+                      d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                      opacity="0.3"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+            <div
+              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-start StyledProps--flex-justifyContent-flex-start"
+              style="flex-wrap: wrap;"
+            />
+          </div>
         </div>
       </div>
     </section>

@@ -63,6 +63,15 @@ describe('FeatureFlagsDetailPage', () => {
       })
     })
 
+    mockImport('services/cd-ng', {
+      useGetServiceList: () => ({
+        data: [],
+        loading: false,
+        error: null,
+        refetch: jest.fn()
+      })
+    })
+
     const { container } = render(
       <TestWrapper
         path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/onboarding/detail"

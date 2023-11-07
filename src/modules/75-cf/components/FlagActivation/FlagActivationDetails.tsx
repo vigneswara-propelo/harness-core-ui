@@ -135,7 +135,7 @@ const FlagActivationDetails: FC<FlagActivationDetailsProps> = props => {
   const { getString } = useStrings()
   const { orgIdentifier, accountId: accountIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const { withActiveEnvironment } = useActiveEnvironment()
-  const { FFM_4117_INTEGRATE_SRM, FFM_4737_JIRA_INTEGRATION, FFM_8184_FEATURE_FLAG_TAGGING } = useFeatureFlags()
+  const { FFM_4737_JIRA_INTEGRATION, FFM_8184_FEATURE_FLAG_TAGGING } = useFeatureFlags()
   const breadcrumbs = [
     {
       label: getString('cf.continuous'),
@@ -252,7 +252,7 @@ const FlagActivationDetails: FC<FlagActivationDetailsProps> = props => {
 
         {FFM_8184_FEATURE_FLAG_TAGGING && <TagsList tags={featureFlag.tags || []} />}
 
-        {FFM_4117_INTEGRATE_SRM && <ServicesList featureFlag={featureFlag} refetchFlag={refetchFlag} />}
+        <ServicesList featureFlag={featureFlag} refetchFlag={refetchFlag} />
 
         {FFM_4737_JIRA_INTEGRATION && featureFlag.envProperties?.jiraEnabled && (
           <JiraIssueList
