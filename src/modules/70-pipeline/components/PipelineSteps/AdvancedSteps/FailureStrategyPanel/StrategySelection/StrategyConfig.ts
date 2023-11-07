@@ -278,5 +278,14 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
     ErrorType.DelegateRestart,
     ErrorType.UserMarkedFailure
   ],
+  [StageType.IDP]: [
+    ErrorType.Timeout,
+    ErrorType.Unknown,
+    ErrorType.InputTimeoutError,
+    ErrorType.AllErrors,
+    ErrorType.ApprovalRejection,
+    ErrorType.DelegateRestart,
+    ErrorType.UserMarkedFailure
+  ],
   [StageType.PIPELINE_ROLLBACK]: []
 }

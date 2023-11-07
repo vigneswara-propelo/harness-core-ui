@@ -65,3 +65,7 @@ export interface DeploymentStageElementConfigWrapper {
   stage: DeploymentStageElementConfig
   parallel: DeploymentStageElementConfigWrapper[]
 }
+
+export interface IDPStageElementConfig extends StageElementConfig {
+  spec?: CustomStageConfig
+}

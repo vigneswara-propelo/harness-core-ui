@@ -9448,6 +9448,7 @@ export interface StringsMap {
   'idp.backtoIDP': string
   'idp.homepage.idpOverviewDescription': string
   'idp.homepage.learnMore': string
+  'idp.idpStageHoverText': string
   'idp.layout': string
   'idp.oAuthConfig': string
   'idp.scorecards': string

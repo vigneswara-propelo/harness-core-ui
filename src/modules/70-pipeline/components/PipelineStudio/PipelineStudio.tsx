@@ -95,7 +95,7 @@ function PipelineStudioInner(): React.ReactElement {
     )
   }
   const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
-  const { IACM_ENABLED } = useFeatureFlags()
+  const { IACM_ENABLED, IDP_ENABLE_STAGE } = useFeatureFlags()
   const { getString } = useStrings()
   const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   return (
@@ -131,6 +131,7 @@ function PipelineStudioInner(): React.ReactElement {
               isCFEnabled: licenseInformation['CF'] && FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE,
               isSTOEnabled: licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE,
               isIACMEnabled: IACM_ENABLED,
+              isIDPEnabled: IDP_ENABLE_STAGE,
               isApprovalStageEnabled: true,
               isPipelineChainingEnabled: true
             })
@@ -172,6 +173,7 @@ function PipelineStudioInner(): React.ReactElement {
               isCFEnabled: licenseInformation['CF'] && FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE,
               isSTOEnabled: licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE,
               isIACMEnabled: IACM_ENABLED,
+              isIDPEnabled: IDP_ENABLE_STAGE,
               isApprovalStageEnabled: true,
               isPipelineChainingEnabled: true
             })

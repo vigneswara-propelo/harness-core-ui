@@ -307,6 +307,13 @@ export function getStepPaletteModuleInfosFromStage(
         }
       ]
     }
+    case StageType.IDP:
+      return [
+        {
+          module: 'idp',
+          shouldShowCommonSteps: false
+        }
+      ]
     default:
       return [
         {

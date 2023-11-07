@@ -72,6 +72,14 @@ const stagesMap = {
     iconColor: 'var(--primary-8)',
     isApproval: false,
     openExecutionStrategy: true
+  },
+  IDP: {
+    name: 'Developer Portal',
+    type: 'IDP',
+    icon: 'idp',
+    iconColor: 'var(--pipeline-custom-stage-color)',
+    isApproval: false,
+    openExecutionStrategy: true
   }
 }
 

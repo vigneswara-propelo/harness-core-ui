@@ -1,0 +1,21 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.idpStagePopover {
+  background-color: var(--white) !important;
+  display: grid;
+  padding: var(--spacing-xxlarge) !important;
+  grid-template-columns: 1fr;
+  height: 100%;
+  min-width: 464px;
+}
+
+.addStageHeading {
+  color: var(--grey-800) !important;
+  font-weight: 600 !important;
+  line-height: 24px !important;
+}

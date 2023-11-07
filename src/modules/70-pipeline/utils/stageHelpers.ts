@@ -49,7 +49,8 @@ export enum StageType {
   LOOP = 'LOOP',
   PARALLELISM = 'PARALLELISM',
   IACM = 'IACM',
-  PIPELINE_ROLLBACK = 'PipelineRollback'
+  PIPELINE_ROLLBACK = 'PipelineRollback',
+  IDP = 'IDP'
 }
 
 export enum ServiceDeploymentType {
