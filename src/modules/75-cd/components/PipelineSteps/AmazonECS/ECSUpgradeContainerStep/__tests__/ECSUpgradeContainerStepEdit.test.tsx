@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, queryByAttribute, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
@@ -117,17 +117,22 @@ describe('ECSUpgradeContainerStepEdit tests', () => {
     await userEvent.type(newServiceInstanceCountInput!, '60')
     expect(newServiceInstanceCountInput.value).toBe('60')
 
-    const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
+    const dropdownIcons = container.querySelectorAll('[data-icon="main-chevron-down"]')
     expect(dropdownIcons.length).toBe(2)
-    const newServiceInstanceUnitSelect = queryByNameAttribute('spec.newServiceInstanceUnit') as HTMLInputElement
+    const serviceInstanceUnitSelectFields = screen.getAllByTestId('dropdown-button')
+    expect(serviceInstanceUnitSelectFields).toHaveLength(2)
+
+    const newServiceInstanceUnitSelect = serviceInstanceUnitSelectFields[0]
     expect(newServiceInstanceUnitSelect).toBeInTheDocument()
-    expect(newServiceInstanceUnitSelect.value).toBe('instanceFieldOptions.percentage')
+    expect(within(newServiceInstanceUnitSelect).getByText('instanceFieldOptions.percentage')).toBeInTheDocument()
     const newServiceInstanceUnitDropdownIcon = dropdownIcons[0].parentElement
     await userEvent.click(newServiceInstanceUnitDropdownIcon!)
     const newServiceInstanceUnitSecondOption = await findByText('instanceFieldOptions.instanceHolder')
     expect(newServiceInstanceUnitSecondOption).toBeInTheDocument()
     await userEvent.click(newServiceInstanceUnitSecondOption)
-    await waitFor(() => expect(newServiceInstanceUnitSelect.value).toBe('instanceFieldOptions.instanceHolder'))
+    await waitFor(() =>
+      expect(within(newServiceInstanceUnitSelect).getByText('instanceFieldOptions.instanceHolder')).toBeInTheDocument()
+    )
 
     const downsizeOldServiceInstanceCountInput = queryByNameAttribute(
       'spec.downsizeOldServiceInstanceCount'
@@ -138,17 +143,19 @@ describe('ECSUpgradeContainerStepEdit tests', () => {
     await userEvent.type(downsizeOldServiceInstanceCountInput!, '50')
     expect(downsizeOldServiceInstanceCountInput.value).toBe('50')
 
-    const downsizeOldServiceInstanceUnitSelect = queryByNameAttribute(
-      'spec.downsizeOldServiceInstanceUnit'
-    ) as HTMLInputElement
+    const downsizeOldServiceInstanceUnitSelect = serviceInstanceUnitSelectFields[1]
     expect(downsizeOldServiceInstanceUnitSelect).toBeInTheDocument()
-    expect(downsizeOldServiceInstanceUnitSelect.value).toBe('')
+    expect(within(downsizeOldServiceInstanceUnitSelect).getByText('common.entityPlaceholderText')).toBeInTheDocument()
     const resizeStrategyDropdownIcon = dropdownIcons[1].parentElement
     await userEvent.click(resizeStrategyDropdownIcon!)
     const downsizeOldServiceInstanceUnitFirstOption = await findByText('instanceFieldOptions.percentage')
     expect(downsizeOldServiceInstanceUnitFirstOption).toBeInTheDocument()
     await userEvent.click(downsizeOldServiceInstanceUnitFirstOption)
-    await waitFor(() => expect(downsizeOldServiceInstanceUnitSelect.value).toBe('instanceFieldOptions.percentage'))
+    await waitFor(() =>
+      expect(
+        within(downsizeOldServiceInstanceUnitSelect).getByText('instanceFieldOptions.percentage')
+      ).toBeInTheDocument()
+    )
 
     act(() => {
       formikRef.current?.submitForm()
@@ -282,5 +289,70 @@ describe('ECSUpgradeContainerStepEdit tests', () => {
       formikRef.current?.submitForm()
     })
     await waitFor(() => expect(onUpdate).not.toHaveBeenCalled())
+  })
+
+  test('it should allow user to clear optional field values', async () => {
+    const { container } = render(
+      <TestWrapper>
+        <ECSUpgradeContainerStepEditRef
+          initialValues={existingInitialValues}
+          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+          isNewStep={false}
+          readonly={false}
+          stepViewType={StepViewType.Edit}
+          onUpdate={onUpdate}
+          onChange={onChange}
+          ref={formikRef}
+        />
+      </TestWrapper>
+    )
+
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+
+    const identifierEditIcon = queryByAttribute('data-icon', container, 'Edit')
+    expect(identifierEditIcon).not.toBeInTheDocument()
+
+    const downsizeOldServiceInstanceCountInput = queryByNameAttribute(
+      'spec.downsizeOldServiceInstanceCount'
+    ) as HTMLInputElement
+    expect(downsizeOldServiceInstanceCountInput).toBeInTheDocument()
+    expect(downsizeOldServiceInstanceCountInput.value).toBe('50')
+    userEvent.clear(downsizeOldServiceInstanceCountInput)
+    expect(downsizeOldServiceInstanceCountInput.value).toBe('')
+
+    const serviceInstanceUnitSelectFields = screen.getAllByTestId('dropdown-button')
+    expect(serviceInstanceUnitSelectFields).toHaveLength(2)
+    const clearIcon = container.querySelector('[data-icon="main-delete"]') // Clear icon of downsizeOldServiceInstanceUnit
+    expect(clearIcon).toBeInTheDocument()
+
+    const downsizeOldServiceInstanceUnitSelect = serviceInstanceUnitSelectFields[1]
+    expect(downsizeOldServiceInstanceUnitSelect).toBeInTheDocument()
+    expect(
+      within(downsizeOldServiceInstanceUnitSelect).getByText('instanceFieldOptions.percentage')
+    ).toBeInTheDocument()
+    userEvent.click(clearIcon!)
+    await waitFor(() =>
+      expect(within(downsizeOldServiceInstanceUnitSelect).getByText('common.entityPlaceholderText')).toBeInTheDocument()
+    )
+
+    act(() => {
+      formikRef.current?.submitForm()
+    })
+
+    await waitFor(() => expect(onUpdate).toHaveBeenCalled())
+    await waitFor(() =>
+      expect(onUpdate).toHaveBeenCalledWith({
+        identifier: 'Existing_Name',
+        name: 'Existing Name',
+        timeout: '30m',
+        type: StepType.EcsUpgradeContainer,
+        spec: {
+          newServiceInstanceCount: 50,
+          newServiceInstanceUnit: InstanceUnit.Count,
+          downsizeOldServiceInstanceCount: '',
+          downsizeOldServiceInstanceUnit: ''
+        }
+      })
+    )
   })
 })

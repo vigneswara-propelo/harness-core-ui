@@ -149,13 +149,15 @@ const ECSUpgradeContainerStepEdit = (
                     )}
                   </div>
                   <div className={cx(stepCss.formGroup, stepCss.md)}>
-                    <FormInput.Select
-                      className={stepCss.sm}
+                    <FormInput.DropDown
                       name="spec.newServiceInstanceUnit"
                       label={getString('cd.steps.ecsUpgradeContainerStep.instanceUnit')}
                       items={getInstanceUnitList()}
                       disabled={readonly}
                       usePortal={true}
+                      dropDownProps={{
+                        filterable: false
+                      }}
                     />
                   </div>
                 </Layout.Horizontal>
@@ -191,12 +193,17 @@ const ECSUpgradeContainerStepEdit = (
                     )}
                   </div>
                   <div className={cx(stepCss.formGroup, stepCss.md)}>
-                    <FormInput.Select
+                    <FormInput.DropDown
                       name="spec.downsizeOldServiceInstanceUnit"
                       label={getString('cd.steps.ecsUpgradeContainerStep.downsizeInstanceUnit')}
+                      placeholder={getString('common.entityPlaceholderText')}
                       items={getInstanceUnitList()}
                       disabled={readonly}
                       usePortal={true}
+                      addClearBtn={true}
+                      dropDownProps={{
+                        filterable: false
+                      }}
                     />
                   </div>
                 </Layout.Horizontal>

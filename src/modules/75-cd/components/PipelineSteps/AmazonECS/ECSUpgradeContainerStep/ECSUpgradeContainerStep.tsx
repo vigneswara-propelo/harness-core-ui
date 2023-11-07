@@ -90,15 +90,25 @@ export class ECSUpgradeContainerStep extends PipelineStep<ECSUpgradeContainerSte
     return (
       <ECSUpgradeContainerStepEditRef
         initialValues={initialValues}
-        onUpdate={onUpdate}
+        onChange={values => onChange?.(this.processFormData(values))}
+        onUpdate={values => onUpdate?.(this.processFormData(values))}
         isNewStep={isNewStep}
         allowableTypes={allowableTypes}
-        onChange={onChange}
         stepViewType={stepViewType}
         ref={formikRef}
         readonly={readonly}
       />
     )
+  }
+
+  processFormData(values: ECSUpgradeContainerStepElementConfig): ECSUpgradeContainerStepElementConfig {
+    if (values.spec.downsizeOldServiceInstanceCount?.toString().length === 0) {
+      delete values.spec.downsizeOldServiceInstanceCount
+    }
+    if (values.spec.downsizeOldServiceInstanceUnit?.toString().length === 0) {
+      delete values.spec.downsizeOldServiceInstanceUnit
+    }
+    return values
   }
 
   validateInputSet({
