@@ -21,7 +21,11 @@ export default function preProcessFormValues(
       instruction => instruction.spec?.distribution?.clauses[0]?.op === 'segmentMatch'
     )
 
-    if (feature && percentageRolloutInstruction) {
+    if (
+      feature &&
+      percentageRolloutInstruction &&
+      Array.isArray(percentageRolloutInstruction.spec.distribution.variations)
+    ) {
       percentageRolloutInstruction.spec.distribution.variations = feature.variations.map(({ identifier }) => ({
         variation: identifier,
         weight:

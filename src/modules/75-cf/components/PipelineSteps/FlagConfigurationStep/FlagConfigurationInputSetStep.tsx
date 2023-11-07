@@ -26,6 +26,7 @@ import { hasDefaultOnRuleRuntime } from './FlagChangesV2/subSections/DefaultOnRu
 import { hasDefaultOffRuleRuntime } from './FlagChangesV2/subSections/DefaultOffRule/DefaultOffRule'
 import { hasServeVariationToTargetsRuntime } from './FlagChangesV2/subSections/ServeVariationToTargets/ServeVariationToTargets'
 import { hasServeVariationToTargetGroupsRuntime } from './FlagChangesV2/subSections/ServeVariationToTargetGroups/ServeVariationToTargetGroups'
+import { hasServePercentageRolloutToTargetGroupRuntime } from './FlagChangesV2/subSections/ServePercentageRolloutToTargetGroup/ServePercentageRolloutToTargetGroup'
 
 export interface FlagConfigurationInputSetStepProps {
   existingValues?: FlagConfigurationStepData
@@ -122,7 +123,8 @@ const FlagConfigurationInputSetStep = connect<FlagConfigurationInputSetStepProps
           hasDefaultOnRuleRuntime(instruction) ||
           hasDefaultOffRuleRuntime(instruction) ||
           hasServeVariationToTargetsRuntime(instruction) ||
-          hasServeVariationToTargetGroupsRuntime(instruction)
+          hasServeVariationToTargetGroupsRuntime(instruction) ||
+          hasServePercentageRolloutToTargetGroupRuntime(instruction)
       )
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [flattenedInstructions])

@@ -8814,6 +8814,7 @@ export interface StringsMap {
   'cf.featureFlags.flagPipeline.validation.defaultOnRule.onVariation': string
   'cf.featureFlags.flagPipeline.validation.defaultRules.onOrOffVariation': string
   'cf.featureFlags.flagPipeline.validation.servePercentageRollout.targetGroup': string
+  'cf.featureFlags.flagPipeline.validation.servePercentageRollout.variations': string
   'cf.featureFlags.flagPipeline.validation.serveVariationToIndividualTarget.variationTargets': string
   'cf.featureFlags.flagPipeline.validation.serveVariationToTargetGroup.variationTargetGroups': string
   'cf.featureFlags.flagPipeline.validation.serveVariationToTargetGroups.segments': string
@@ -9037,11 +9038,13 @@ export interface StringsMap {
   'cf.pipeline.flagConfiguration.selectEnvironment': string
   'cf.pipeline.flagConfiguration.selectFlag': string
   'cf.pipeline.flagConfiguration.selectOnOrOff': string
+  'cf.pipeline.flagConfiguration.selectTargetGroup': string
   'cf.pipeline.flagConfiguration.selectTargetGroups': string
   'cf.pipeline.flagConfiguration.selectTargets': string
   'cf.pipeline.flagConfiguration.selectVariation': string
   'cf.pipeline.flagConfiguration.serve': string
   'cf.pipeline.flagConfiguration.servePercentageRollout': string
+  'cf.pipeline.flagConfiguration.servePercentageRolloutToTargetGroup': string
   'cf.pipeline.flagConfiguration.serveVariation': string
   'cf.pipeline.flagConfiguration.serveVariationToIndividualTarget': string
   'cf.pipeline.flagConfiguration.serveVariationToTargetGroup': string
@@ -9135,6 +9138,7 @@ export interface StringsMap {
   'cf.shared.segments': string
   'cf.shared.selectEnvironment': string
   'cf.shared.selected': string
+  'cf.shared.servePercentageRolloutToTargetGroup': string
   'cf.shared.serveVariationToTargetGroups': string
   'cf.shared.serveVariationToTargets': string
   'cf.shared.target': string

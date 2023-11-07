@@ -22,6 +22,7 @@ shared:
   variationRequired: Variation is required
   serveVariationToTargets: Serve variation to targets
   serveVariationToTargetGroups: Serve variation to target groups
+  servePercentageRolloutToTargetGroup: Serve percentage rollout to target group
 messages:
   flagCreated: Flag created.
   flagUpdated: Flag updated.
@@ -278,6 +279,7 @@ featureFlags:
         variationTargetGroups: Target Groups/variation is required
       servePercentageRollout:
         targetGroup: Target Group is required
+        variations: Variations are required
   flagVideoLabel: 'What is a feature flag?'
 featureFlagDetail:
   variationCount: '{{ count }} variations'
@@ -496,6 +498,7 @@ pipeline:
     selectFlag: Select Flag
     selectTargets: Select targets
     selectTargetGroups: Select target groups
+    selectTargetGroup: Select target group
     switchTo: Set Flag Switch To
     configureMore: + Configure More
     serve: Serve
@@ -513,6 +516,7 @@ pipeline:
     serveVariationToIndividualTarget: Serve Variation to Individual Target
     serveVariationToTargetGroup: Serve Variation to Target Group
     serveVariationToTargetGroups: '{{ $.cf.shared.serveVariationToTargetGroups }}'
+    servePercentageRolloutToTargetGroup: '{{ $.cf.shared.servePercentageRolloutToTargetGroup }}'
     servePercentageRollout: Serve Percentage Rollout
     selectOnOrOff: Select ON or OFF
     whenTheFlagIsOnServe: 'When the flag is ON, serve:'

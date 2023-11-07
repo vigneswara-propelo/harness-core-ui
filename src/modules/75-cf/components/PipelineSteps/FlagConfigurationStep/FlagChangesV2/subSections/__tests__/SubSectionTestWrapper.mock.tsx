@@ -7,15 +7,21 @@
 
 import React, { FC, PropsWithChildren } from 'react'
 import { Form, Formik } from 'formik'
-import { TestWrapper } from '@common/utils/testUtils'
+import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import MockFeature from '@cf/utils/testData/data/mockFeature'
 import FlagChangesContextProvider, { FlagChangesContextProviderProps } from '../../../FlagChangesContextProvider'
 
-export type SubSectionTestWrapperProps = PropsWithChildren<FlagChangesContextProviderProps>
+export type SubSectionTestWrapperProps = PropsWithChildren<FlagChangesContextProviderProps> &
+  Optional<Pick<TestWrapperProps, 'path' | 'pathParams' | 'queryParams'>>
 
-const SubSectionTestWrapper: FC<Partial<SubSectionTestWrapperProps>> = props => (
-  <TestWrapper>
+const SubSectionTestWrapper: FC<Partial<SubSectionTestWrapperProps>> = ({
+  path,
+  pathParams,
+  queryParams,
+  ...props
+}) => (
+  <TestWrapper path={path} pathParams={pathParams} queryParams={queryParams}>
     <Formik initialValues={{}} onSubmit={jest.fn()}>
       <Form>
         <FlagChangesContextProvider

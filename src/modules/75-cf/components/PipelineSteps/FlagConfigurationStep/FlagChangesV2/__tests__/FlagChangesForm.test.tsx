@@ -93,24 +93,37 @@ describe('FlagChangesForm', () => {
   })
 
   test('it should render with subsections when initialInstructions includes instructions', async () => {
-    renderComponent({
-      initialInstructions: [
-        { identifier: 'test1', type: CFPipelineInstructionType.SET_FEATURE_FLAG_STATE, spec: { state: 'on' } },
-        { identifier: 'test2', type: CFPipelineInstructionType.SET_DEFAULT_ON_VARIATION, spec: { variation: 'var1' } },
-        { identifier: 'test3', type: CFPipelineInstructionType.SET_DEFAULT_OFF_VARIATION, spec: { variation: 'var2' } },
-        {
-          identifier: 'test4',
-          type: CFPipelineInstructionType.ADD_TARGETS_TO_VARIATION_TARGET_MAP,
-          spec: { variation: 'var2', targets: ['t1', 't2'] }
-        },
-        {
-          identifier: 'test4',
-          type: CFPipelineInstructionType.ADD_SEGMENT_TO_VARIATION_TARGET_MAP,
-          spec: { variation: 'var2', segments: ['tg1', 'tg2'] }
+    const initialInstructions = [
+      { identifier: 'test1', type: CFPipelineInstructionType.SET_FEATURE_FLAG_STATE, spec: { state: 'on' } },
+      { identifier: 'test2', type: CFPipelineInstructionType.SET_DEFAULT_ON_VARIATION, spec: { variation: 'var1' } },
+      { identifier: 'test3', type: CFPipelineInstructionType.SET_DEFAULT_OFF_VARIATION, spec: { variation: 'var2' } },
+      {
+        identifier: 'test4',
+        type: CFPipelineInstructionType.ADD_TARGETS_TO_VARIATION_TARGET_MAP,
+        spec: { variation: 'var2', targets: ['t1', 't2'] }
+      },
+      {
+        identifier: 'test5',
+        type: CFPipelineInstructionType.ADD_SEGMENT_TO_VARIATION_TARGET_MAP,
+        spec: { variation: 'var2', segments: ['tg1', 'tg2'] }
+      },
+      {
+        identifier: 'test6',
+        type: CFPipelineInstructionType.ADD_RULE,
+        spec: {
+          distribution: {
+            variations: [
+              { variation: 'var1', weight: 50 },
+              { variation: 'var2', weight: 50 }
+            ],
+            clauses: [{ values: ['tg1'] }]
+          }
         }
-      ]
-    })
+      }
+    ]
 
-    expect(screen.getAllByTestId('flag-changes-subsection')).toHaveLength(5)
+    renderComponent({ initialInstructions })
+
+    expect(await screen.findAllByTestId('flag-changes-subsection')).toHaveLength(initialInstructions.length)
   })
 })

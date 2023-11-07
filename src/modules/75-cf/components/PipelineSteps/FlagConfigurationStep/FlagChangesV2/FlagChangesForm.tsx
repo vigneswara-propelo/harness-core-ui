@@ -32,14 +32,17 @@ import ServeVariationToTargets, {
 import ServeVariationToTargetGroups, {
   hasServeVariationToTargetGroupsRuntime
 } from './subSections/ServeVariationToTargetGroups/ServeVariationToTargetGroups'
+import ServePercentageRolloutToTargetGroup, {
+  hasServePercentageRolloutToTargetGroupRuntime
+} from './subSections/ServePercentageRolloutToTargetGroup/ServePercentageRolloutToTargetGroup'
 
 export const allSubSections: SubSectionComponent[] = [
   SetFlagSwitch,
   DefaultOnRule,
   DefaultOffRule,
   ServeVariationToTargets,
-  ServeVariationToTargetGroups
-  // ServePercentageRollout
+  ServeVariationToTargetGroups,
+  ServePercentageRolloutToTargetGroup
 ]
 
 export interface FlagChangesFormProps {
@@ -79,6 +82,10 @@ const FlagChangesForm: FC<FlagChangesFormProps> = ({ prefixPath, initialInstruct
           return [...components, ServeVariationToTargetGroups]
         }
 
+        if (hasServePercentageRolloutToTargetGroupRuntime(instruction)) {
+          return [...components, ServePercentageRolloutToTargetGroup]
+        }
+
         return components
       }, [])
     }
@@ -95,8 +102,8 @@ const FlagChangesForm: FC<FlagChangesFormProps> = ({ prefixPath, initialInstruct
               return ServeVariationToTargets
             case CFPipelineInstructionType.ADD_SEGMENT_TO_VARIATION_TARGET_MAP:
               return ServeVariationToTargetGroups
-            // case CFPipelineInstructionType.ADD_RULE:
-            //   return ServePercentageRollout
+            case CFPipelineInstructionType.ADD_RULE:
+              return ServePercentageRolloutToTargetGroup
             default:
               return SetFlagSwitch
           }

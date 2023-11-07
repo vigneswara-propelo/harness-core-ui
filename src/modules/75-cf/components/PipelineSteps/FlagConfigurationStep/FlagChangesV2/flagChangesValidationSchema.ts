@@ -14,6 +14,7 @@ import { defaultOnRuleSchema } from './subSections/DefaultOnRule/DefaultOnRule'
 import { defaultOffRuleSchema } from './subSections/DefaultOffRule/DefaultOffRule'
 import { serveVariationToTargetsSchema } from './subSections/ServeVariationToTargets/ServeVariationToTargets'
 import { serveVariationToTargetGroupsSchema } from './subSections/ServeVariationToTargetGroups/ServeVariationToTargetGroups'
+import { servePercentageRolloutToTargetGroupSchema } from './subSections/ServePercentageRolloutToTargetGroup/ServePercentageRolloutToTargetGroup'
 
 const flagChangesValidationSchema = (getString: UseStringsReturn['getString']): Yup.Schema<unknown> =>
   Yup.array().of(
@@ -23,8 +24,8 @@ const flagChangesValidationSchema = (getString: UseStringsReturn['getString']): 
           return defaultOnRuleSchema(getString)
         case CFPipelineInstructionType.SET_DEFAULT_OFF_VARIATION:
           return defaultOffRuleSchema(getString)
-        // case CFPipelineInstructionType.ADD_RULE:
-        //   return servePercentageRolloutSchema(getString)
+        case CFPipelineInstructionType.ADD_RULE:
+          return servePercentageRolloutToTargetGroupSchema(getString)
         case CFPipelineInstructionType.ADD_TARGETS_TO_VARIATION_TARGET_MAP:
           return serveVariationToTargetsSchema(getString)
         case CFPipelineInstructionType.ADD_SEGMENT_TO_VARIATION_TARGET_MAP:

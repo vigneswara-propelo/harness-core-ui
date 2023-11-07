@@ -19,5 +19,6 @@ export const subSectionNames: Record<string, StringKeys> = {
   DefaultOnRule: 'cf.pipeline.flagConfiguration.setDefaultOnRule',
   DefaultOffRule: 'cf.pipeline.flagConfiguration.setDefaultOffRule',
   ServeVariationToTargets: 'cf.pipeline.flagConfiguration.serveVariationToTargets',
-  ServeVariationToTargetGroups: 'cf.pipeline.flagConfiguration.serveVariationToTargetGroups'
+  ServeVariationToTargetGroups: 'cf.pipeline.flagConfiguration.serveVariationToTargetGroups',
+  ServePercentageRolloutToTargetGroup: 'cf.pipeline.flagConfiguration.servePercentageRolloutToTargetGroup'
 }
