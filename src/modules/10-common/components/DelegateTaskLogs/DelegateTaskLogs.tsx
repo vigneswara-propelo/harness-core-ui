@@ -17,6 +17,7 @@ import {
   PageError,
   PageSpinner,
   TableV2,
+  Tag,
   Text
 } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
@@ -24,7 +25,7 @@ import type { CellProps, Column, Renderer, Row, UseExpandedRowProps } from 'reac
 import { noop } from 'lodash-es'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetTasksLog, GetTasksLogQueryParams, DelegateStackDriverLog } from 'services/portal'
-import { useStrings } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import { useTrackEvent } from '@common/hooks/useTelemetry'
 import { DelegateActions } from '@common/constants/TrackingConstants'
 
@@ -103,16 +104,32 @@ export const DelegateTaskLogsModal: React.FC<DelegateTaskLogsModalProps> = ({
 
   const RenderMessageColumn: Renderer<CellProps<DelegateStackDriverLog>> = ({ row }) => {
     return (
-      <Text lineClamp={1} intent={row.original.severity === 'ERROR' ? Intent.DANGER : Intent.NONE}>
-        {row.original.message}
-      </Text>
+      <Layout.Horizontal spacing={'small'}>
+        <Tag>
+          <String stringID="delegate.DelegateName" />: {row.original.delegateId}
+        </Tag>
+        <Tag>
+          <String stringID="taskId" /> {row.original.taskId}
+        </Tag>
+        <Text
+          inline
+          lineClamp={1}
+          intent={row.original.severity === 'ERROR' ? Intent.DANGER : Intent.NONE}
+          {...row.getToggleRowExpandedProps()}
+        >
+          {row.original.message}
+        </Text>
+      </Layout.Horizontal>
     )
   }
 
   function renderRowSubComponent({ row }: { row: Row<DelegateStackDriverLog> }): JSX.Element {
     return (
-      <Container padding={{ left: 'xlarge' }} data-testid={`row-content-${row.index}`} className={css.jsonContainer}>
-        <pre>{JSON.stringify(row.original, null, 4)}</pre>
+      <Container padding={{ left: 'xxlarge' }} data-testid={`row-content-${row.index}`} className={css.jsonContainer}>
+        <div>{row.original.message}</div>
+        <div>
+          {row.original.exception ? <Container padding={{ left: 'large' }}>{row.original.exception}</Container> : null}
+        </div>
       </Container>
     )
   }
@@ -126,16 +143,10 @@ export const DelegateTaskLogsModal: React.FC<DelegateTaskLogsModalProps> = ({
         Cell: RenderExpandColumn
       },
       {
-        Header: 'Severity',
-        id: 'severity',
-        accessor: row => row.severity,
-        width: '100px'
-      },
-      {
         Header: 'Time',
         id: 'time',
         accessor: row => row.isotime,
-        width: '200px'
+        width: '170px'
       },
       {
         Header: 'Message',
@@ -145,17 +156,8 @@ export const DelegateTaskLogsModal: React.FC<DelegateTaskLogsModalProps> = ({
         width: '80%'
       }
     ]
-    if (taskIds && taskIds.length > 1) {
-      cols.splice(3, 0, {
-        Header: 'Task Id',
-        id: 'taskid',
-        accessor: row => row.taskId,
-        width: '200px'
-      })
-      cols[4].width = '60%'
-    }
     return cols
-  }, [taskIds])
+  }, [])
 
   return (
     <ModalDialog

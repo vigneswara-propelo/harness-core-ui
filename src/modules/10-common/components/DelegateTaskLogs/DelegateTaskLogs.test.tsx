@@ -58,7 +58,7 @@ describe('Delegate Task Logs Modal', () => {
       fireEvent.click(firstRowExpander)
     })
 
-    expect(getAllByRole('columnheader')).toHaveLength(4)
+    expect(getAllByRole('columnheader')).toHaveLength(3)
     expect(getByTestId('row-content-0')).toBeDefined()
 
     const nextButton = getByTestId('button-next')
@@ -136,20 +136,17 @@ describe('Delegate Task Logs Modal', () => {
       </TestWrapper>
     )
 
-    expect(getAllByRole('columnheader')).toHaveLength(5)
+    expect(getAllByRole('columnheader')).toHaveLength(3)
     const allRows = getAllByRole('row')
     expect(allRows).toHaveLength(4)
 
     // Header
     const headerRow = allRows[0]
-    expect(within(headerRow).getByText('Severity')).toBeInTheDocument()
     expect(within(headerRow).getByText('Time')).toBeInTheDocument()
-    expect(within(headerRow).getByText('Task Id')).toBeInTheDocument()
     expect(within(headerRow).getByText('Message')).toBeInTheDocument()
 
     // First Row
     const firstRow = allRows[1]
-    expect(within(firstRow).getByText('INFO')).toBeInTheDocument()
     expect(within(firstRow).getByText('2023-02-07T22:09:46Z')).toBeInTheDocument()
     expect(within(firstRow).getByText('KJOruTLPQfq35VaR_j5abc')).toBeInTheDocument()
     expect(
@@ -158,14 +155,12 @@ describe('Delegate Task Logs Modal', () => {
 
     // Second Row
     const secondRow = allRows[2]
-    expect(within(secondRow).getByText('ERROR')).toBeInTheDocument()
     expect(within(secondRow).getByText('2023-02-08T22:09:46Z')).toBeInTheDocument()
     expect(within(secondRow).getByText('KJOruTLPQfq35VaR_j5def')).toBeInTheDocument()
     expect(within(secondRow).getByText('Dummy error in shell script')).toBeInTheDocument()
 
     // Third Row
     const thirdRow = allRows[3]
-    expect(within(thirdRow).getByText('INFO')).toBeInTheDocument()
     expect(within(thirdRow).getByText('2023-02-09T22:09:46Z')).toBeInTheDocument()
     expect(within(thirdRow).getByText('KJOruTLPQfq35VaR_j5ghi')).toBeInTheDocument()
     expect(

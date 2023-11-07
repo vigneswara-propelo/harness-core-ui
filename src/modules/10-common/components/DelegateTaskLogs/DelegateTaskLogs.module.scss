@@ -6,12 +6,14 @@
  */
 
 .delegateTaskLogsModal {
-  width: 1024px;
+  width: clamp(960px, 80vw, 1280px);
   max-height: 80vh;
 
   .jsonContainer {
     overflow-x: auto;
-    max-width: 890px;
+
+    --font-family: monospace;
+    line-height: 1.5;
   }
 
   .table {

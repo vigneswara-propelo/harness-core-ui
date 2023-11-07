@@ -126,7 +126,7 @@ describe('StepDetails tests', () => {
 
     expect(getAllByRole(delegateTaskLogsDialog, 'row')).toHaveLength(taskLogsResponse.resource.content.length + 1)
 
-    expect(getAllByRole(delegateTaskLogsDialog, 'columnheader')).toHaveLength(5)
+    expect(getAllByRole(delegateTaskLogsDialog, 'columnheader')).toHaveLength(3)
     const allRows = getAllByRole(delegateTaskLogsDialog, 'row')
     expect(allRows).toHaveLength(4)
   })
