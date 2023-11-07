@@ -13,6 +13,7 @@ import { setFormikRef, StepViewType, StepFormikFowardRef } from '@pipeline/compo
 import { useStrings } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { URLValidationSchema } from '@modules/10-common/utils/Validation'
 import OptionalConfiguration from './OptionalConfiguration'
 import type { HttpStepData, HttpStepFormData } from './types'
 import HttpStepBase from './HttpStepBase'
@@ -56,13 +57,7 @@ export function HttpStepWidget(
         spec: Yup.object().shape({
           url: Yup.lazy((value): Yup.Schema<unknown> => {
             if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
-              return Yup.string()
-                .matches(
-                  //https://regex101.com/r/HUNasA/2
-                  /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/g,
-                  getString('validation.urlIsNotValid')
-                )
-                .required(getString('common.validation.urlIsRequired'))
+              return URLValidationSchema(getString)
             }
             return Yup.string().required(getString('common.validation.urlIsRequired'))
           }),
