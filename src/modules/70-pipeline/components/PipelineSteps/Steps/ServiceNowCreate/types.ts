@@ -62,6 +62,7 @@ export interface ServiceNowCreateData extends StepElementConfig {
     templateName?: string
     useServiceNowTemplate?: boolean
     isTemplateSectionAvailable?: boolean
+    isStandardTemplateEnabled?: boolean
   }
 }
 

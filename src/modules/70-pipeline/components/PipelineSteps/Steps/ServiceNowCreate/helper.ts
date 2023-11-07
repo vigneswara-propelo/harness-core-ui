@@ -138,8 +138,10 @@ export const processFormData = (values: ServiceNowCreateData): ServiceNowCreateD
         connectorRef: values.spec.connectorRef,
         ticketType: values.spec.ticketType,
         fields: [],
-        createType: TEMPLATE_TYPE.FORM,
-        templateName: values.spec.templateName
+        templateName: values.spec.templateName,
+        ...(values?.spec.isStandardTemplateEnabled || values?.spec?.createType
+          ? { createType: TEMPLATE_TYPE.FORM }
+          : { useServiceNowTemplate: true })
       }
     }
   } else {
@@ -149,7 +151,9 @@ export const processFormData = (values: ServiceNowCreateData): ServiceNowCreateD
         connectorRef: values.spec.connectorRef,
         ticketType: values.spec.ticketType,
         fields: processFieldsForSubmit(values),
-        createType: TEMPLATE_TYPE.NORMAL
+        ...(values?.spec.isStandardTemplateEnabled || values?.spec?.createType
+          ? { createType: TEMPLATE_TYPE.NORMAL }
+          : { useServiceNowTemplate: false })
       }
     }
   }
@@ -178,6 +182,7 @@ export const processInitialValues = (values: ServiceNowCreateData): ServiceNowCr
       useServiceNowTemplate: values.spec.useServiceNowTemplate,
       fieldType,
       ticketType: values.spec.ticketType,
+      createType: values.spec.createType,
       description: values.spec.fields
         ?.find(field => field.name === ServiceNowStaticFields.description)
         ?.value.toString() as string,

@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { debounce, defaultTo, get, isEmpty } from 'lodash-es'
+import { debounce, defaultTo, get, isEmpty, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Dialog, Menu } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -30,6 +30,7 @@ import {
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { IItemRendererProps, ItemListRenderer } from '@blueprintjs/select'
+import produce from 'immer'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { String, StringKeys, useStrings } from 'framework/strings'
 import {
@@ -409,6 +410,11 @@ function FormContent({
     }
   }, [ticketValueType])
 
+  useEffect(() => {
+    formik.setFieldValue('spec.isStandardTemplateEnabled', CDS_GET_SERVICENOW_STANDARD_TEMPLATE)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const [showDynamicFieldsModal, hideDynamicFieldsModal] = useModalHook(() => {
     return (
       <Dialog
@@ -690,19 +696,30 @@ function FormContent({
               : [])
           ]}
           onChange={event => {
-            if (event.currentTarget.value === FieldType.CreateFromTemplate) {
-              formik.setFieldValue('spec.createType', TEMPLATE_TYPE.FORM)
-            } else if (event.currentTarget.value === FieldType.CreateFromStandardTemplate) {
-              formik.setFieldValue('spec.createType', TEMPLATE_TYPE.STANDARD)
-            } else {
-              formik.setFieldValue('spec.useServiceNowTemplate', false)
-            }
-            formik.setFieldValue('spec.templateName', '')
-            formik.setFieldValue('spec.templateFields', [])
-            formik.setFieldValue('spec.selectedFields', [])
-            if (CDS_GET_SERVICENOW_STANDARD_TEMPLATE) {
-              formik.setFieldValue('spec.editableFields', [])
-            }
+            formik.setValues(
+              produce(formik.values, draft => {
+                if (CDS_GET_SERVICENOW_STANDARD_TEMPLATE) {
+                  set(draft, 'spec.editableFields', [])
+                  if (event.currentTarget.value === FieldType.CreateFromTemplate) {
+                    set(draft, 'spec.createType', TEMPLATE_TYPE.FORM)
+                  } else if (event.currentTarget.value === FieldType.CreateFromStandardTemplate) {
+                    set(draft, 'spec.createType', TEMPLATE_TYPE.STANDARD)
+                  } else {
+                    set(draft, 'spec.createType', TEMPLATE_TYPE.NORMAL)
+                  }
+                } else {
+                  if (event.currentTarget.value === FieldType.CreateFromTemplate) {
+                    set(draft, 'spec.useServiceNowTemplate', true)
+                  } else {
+                    set(draft, 'spec.useServiceNowTemplate', false)
+                  }
+                }
+                set(draft, 'spec.templateName', '')
+                set(draft, 'spec.templateFields', [])
+                set(draft, 'spec.selectedFields', [])
+                set(draft, 'spec.fieldType', event.currentTarget.value)
+              })
+            )
           }}
         />
         {formik.values.spec.fieldType === FieldType.ConfigureFields && (
@@ -834,12 +851,18 @@ function FormContent({
                         const selectedTemplateValue = templateResponse?.find(
                           (item: ServiceNowTemplate) => item.name === (value as SelectOption)?.value
                         )
-                        if (selectedTemplateValue) {
-                          formik.setFieldValue(
-                            'spec.templateFields',
-                            convertTemplateFieldsForDisplay(selectedTemplateValue.fields)
-                          )
-                        }
+                        formik.setValues(
+                          produce(formik.values, draft => {
+                            if (selectedTemplateValue) {
+                              set(
+                                draft,
+                                `spec.templateFields`,
+                                convertTemplateFieldsForDisplay(selectedTemplateValue.fields)
+                              )
+                            }
+                            set(draft, `spec.templateName`, defaultTo((value as SelectOption)?.value, value))
+                          })
+                        )
                       },
                       onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.build', type),
                       expressions,

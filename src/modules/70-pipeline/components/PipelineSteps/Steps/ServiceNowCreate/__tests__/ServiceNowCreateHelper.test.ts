@@ -23,6 +23,7 @@ describe('ServiceNow Create process form data tests', () => {
         connectorRef: 'conn',
         fieldType: FieldType.ConfigureFields,
         useServiceNowTemplate: false,
+        isStandardTemplateEnabled: true,
         ticketType: { label: 'Incident', value: 'INCIDENT', key: 'INCIDENT' },
         fields: [
           {
@@ -106,6 +107,7 @@ describe('ServiceNow Create process form data tests', () => {
         useServiceNowTemplate: false,
         connectorRef: '<+input>',
         delegateSelectors: undefined,
+        isStandardTemplateEnabled: true,
         ticketType: '<+input>',
         fields: [
           {
@@ -153,7 +155,7 @@ describe('ServiceNow Create process form data tests', () => {
     })
   })
 
-  test('when useServiceNowTemplate is true', () => {
+  test('when useServiceNowTemplate is true and CDS_GET_SERVICENOW_STANDARD_TEMPLATE OFF', () => {
     const formValues: ServiceNowCreateData = {
       name: 'serviceNowCreate',
       identifier: 'sncr',
@@ -166,6 +168,42 @@ describe('ServiceNow Create process form data tests', () => {
         ticketType: { label: 'Incident', value: 'INCIDENT', key: 'INCIDENT' },
         fields: [],
         selectedFields: [],
+        isStandardTemplateEnabled: false,
+        templateName: 'snowCreateTemplate'
+      }
+    }
+
+    const returned = processFormData(formValues)
+    expect(returned).toStrictEqual({
+      name: 'serviceNowCreate',
+      identifier: 'sncr',
+      timeout: '10m',
+      type: 'ServiceNowCreate',
+      spec: {
+        connectorRef: 'conn',
+        delegateSelectors: undefined,
+        useServiceNowTemplate: true,
+        ticketType: { label: 'Incident', value: 'INCIDENT', key: 'INCIDENT' },
+        fields: [],
+        templateName: 'snowCreateTemplate'
+      }
+    })
+  })
+
+  test('when useServiceNowTemplate is true and CDS_GET_SERVICENOW_STANDARD_TEMPLATE ON', () => {
+    const formValues: ServiceNowCreateData = {
+      name: 'serviceNowCreate',
+      identifier: 'sncr',
+      timeout: '10m',
+      type: 'ServiceNowCreate',
+      spec: {
+        connectorRef: 'conn',
+        fieldType: FieldType.CreateFromTemplate,
+        useServiceNowTemplate: true,
+        ticketType: { label: 'Incident', value: 'INCIDENT', key: 'INCIDENT' },
+        fields: [],
+        selectedFields: [],
+        isStandardTemplateEnabled: true,
         templateName: 'snowCreateTemplate'
       }
     }
