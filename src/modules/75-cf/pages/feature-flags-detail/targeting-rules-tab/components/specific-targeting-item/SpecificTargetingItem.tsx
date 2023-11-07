@@ -46,11 +46,12 @@ const SpecificTargetingItem = (props: SpecificTargetingItemProps): ReactElement 
       <Container flex={{ justifyContent: 'space-between' }}>
         <Text
           inline
+          lineClamp={1}
           font={{ variation: FontVariation.BODY }}
           icon="full-circle"
           iconProps={{ style: { color: variationColorMap[formVariationMapItem.variationIdentifier] } }}
         >
-          {formVariationMapItem.variationName}
+          {formVariationMapItem.variationName || formVariationMapItem.variationIdentifier}
         </Text>
         <DisabledFeatureTooltip>
           <Button

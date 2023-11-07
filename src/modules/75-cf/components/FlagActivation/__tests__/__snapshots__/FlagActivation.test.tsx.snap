@@ -283,8 +283,8 @@ exports[`FlagActivation it should render correctly 1`] = `
                                   class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
                                 >
                                   <span
-                                    class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-body"
-                                    style="display: inline-flex; align-items: center;"
+                                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--font-variation-body"
+                                    style="--text-line-clamp: 1; display: inline-flex; align-items: center;"
                                   >
                                     <span
                                       class="bp3-icon bp3-icon-full-circle StyledProps--main Text--icon StyledProps--padding-right-xsmall"
