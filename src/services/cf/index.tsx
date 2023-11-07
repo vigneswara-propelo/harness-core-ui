@@ -877,7 +877,14 @@ export interface ObjectSnapshots {
  * A list of SDK/Frameworks/Versions
  */
 export interface OnboardingSDKs {
-  items?: string[]
+  frameworks?: {
+    identifier?: string
+    name?: string
+    versions?: string[]
+  }[]
+  identifier?: string
+  name?: string
+  type?: string
 }
 
 export interface OrganizationDictionary {
@@ -967,7 +974,9 @@ export interface Project {
 }
 
 export interface ProjectDictionary {
-  [key: string]: ProxyKeyProject
+  projects?: {
+    [key: string]: ProxyKeyProject
+  }
 }
 
 /**
@@ -1015,7 +1024,6 @@ export interface ProxyKey {
    * A description of the Proxy Key
    */
   description: string
-  environments?: string[]
   /**
    * The ProxyKeys ID
    */
@@ -1032,16 +1040,6 @@ export interface ProxyKey {
    * The date the key was last updated at in milliseconds
    */
   updatedAt: number
-}
-
-/**
- * A Proxy Key instruction
- */
-export interface ProxyKeyInstruction {
-  instructions?: {
-    addEnvironments?: string[]
-    removeEnvironments?: string[]
-  }
 }
 
 export interface ProxyKeyProject {
@@ -1562,13 +1560,16 @@ export interface ProjectRequestRequestBody {
   tags?: Tag[]
 }
 
-export type ProxyKeysPatchRequestRequestBody = ProxyKeyInstruction
-
 export interface ProxyKeysPostRequestRequestBody {
   description?: string
   identifier: string
   name: string
   organizations: OrganizationDictionary
+}
+
+export interface ProxyKeysPutRequestRequestBody {
+  organizations: OrganizationDictionary
+  version: number
 }
 
 export type SegmentPatchRequestRequestBody = GitSyncPatchOperation
@@ -1739,7 +1740,7 @@ export interface ObjectSnapshotResponseResponse {
 /**
  * OK
  */
-export type OnboardingSDKsResponseResponse = OnboardingSDKs
+export type OnboardingSDKsResponseResponse = OnboardingSDKs[]
 
 /**
  * OK
@@ -1769,7 +1770,37 @@ export interface ProjectsResponseResponse {
 /**
  * OK
  */
-export type ProxyKeyResponseResponse = ProxyKey
+export interface ProxyKeyResponseResponse {
+  /**
+   * The date the key was created at in milliseconds
+   */
+  createdAt: number
+  /**
+   * A description of the Proxy Key
+   */
+  description: string
+  /**
+   * The ProxyKeys ID
+   */
+  id: string
+  /**
+   * The Proxy Keys identifier
+   */
+  identifier: string
+  /**
+   * The ProxyKeys name
+   */
+  name: string
+  organizations: OrganizationDictionary
+  /**
+   * The date the key was last updated at in milliseconds
+   */
+  updatedAt: number
+  /**
+   * The ProxyKey version
+   */
+  version: number
+}
 
 /**
  * Created
@@ -5630,22 +5661,11 @@ export const getOSByIDPromise = (
     GetOSByIDPathParams
   >(getConfig('cf'), `/admin/objects/${identifiers}`, props, signal)
 
-export interface GetSDKDetailsQueryParams {
-  /**
-   * Used to return Frameworks by Language
-   */
-  sdkLanguage?: string
-  /**
-   * Used to return Versions by Frameworks
-   */
-  sdkFramework?: string
-}
-
 export type GetSDKDetailsProps = Omit<
   GetProps<
     OnboardingSDKsResponseResponse,
     UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetSDKDetailsQueryParams,
+    void,
     void
   >,
   'path'
@@ -5660,7 +5680,7 @@ export const GetSDKDetails = (props: GetSDKDetailsProps) => (
   <Get<
     OnboardingSDKsResponseResponse,
     UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetSDKDetailsQueryParams,
+    void,
     void
   >
     path={`/admin/onboarding`}
@@ -5673,7 +5693,7 @@ export type UseGetSDKDetailsProps = Omit<
   UseGetProps<
     OnboardingSDKsResponseResponse,
     UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetSDKDetailsQueryParams,
+    void,
     void
   >,
   'path'
@@ -5688,7 +5708,7 @@ export const useGetSDKDetails = (props: UseGetSDKDetailsProps) =>
   useGet<
     OnboardingSDKsResponseResponse,
     UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetSDKDetailsQueryParams,
+    void,
     void
   >(`/admin/onboarding`, { base: getConfig('cf'), ...props })
 
@@ -5701,7 +5721,7 @@ export const getSDKDetailsPromise = (
   props: GetUsingFetchProps<
     OnboardingSDKsResponseResponse,
     UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetSDKDetailsQueryParams,
+    void,
     void
   >,
   signal?: RequestInit['signal']
@@ -5709,7 +5729,7 @@ export const getSDKDetailsPromise = (
   getUsingFetch<
     OnboardingSDKsResponseResponse,
     UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
-    GetSDKDetailsQueryParams,
+    void,
     void
   >(getConfig('cf'), `/admin/onboarding`, props, signal)
 
@@ -7438,7 +7458,7 @@ export type UpdateProxyKeyProps = Omit<
     | ConflictResponse
     | InternalServerErrorResponse,
     UpdateProxyKeyQueryParams,
-    ProxyKeysPatchRequestRequestBody,
+    ProxyKeysPutRequestRequestBody,
     UpdateProxyKeyPathParams
   >,
   'path' | 'verb'
@@ -7449,17 +7469,6 @@ export type UpdateProxyKeyProps = Omit<
  * Updates a Proxy Key in the account & org
  *
  * This operation is used to modify which environments a ProxyKey has access to. The requet body can include one or more instructions that can assign or unassign environmnets to the ProxyKey
- *
- * {
- *   "kind": "addEnvironment",
- *   "parameters": {
- *     "environments": ["env1", "env2"]
- *   }
- *   "kind": "removeEnvironment",
- *   "parameters": {
- *     "environments": ["env3"]
- *   }
- * }
  *
  */
 export const UpdateProxyKey = ({ identifier, ...props }: UpdateProxyKeyProps) => (
@@ -7472,10 +7481,10 @@ export const UpdateProxyKey = ({ identifier, ...props }: UpdateProxyKeyProps) =>
     | ConflictResponse
     | InternalServerErrorResponse,
     UpdateProxyKeyQueryParams,
-    ProxyKeysPatchRequestRequestBody,
+    ProxyKeysPutRequestRequestBody,
     UpdateProxyKeyPathParams
   >
-    verb="PATCH"
+    verb="PUT"
     path={`/admin/proxy/keys/${identifier}`}
     base={getConfig('cf')}
     {...props}
@@ -7492,7 +7501,7 @@ export type UseUpdateProxyKeyProps = Omit<
     | ConflictResponse
     | InternalServerErrorResponse,
     UpdateProxyKeyQueryParams,
-    ProxyKeysPatchRequestRequestBody,
+    ProxyKeysPutRequestRequestBody,
     UpdateProxyKeyPathParams
   >,
   'path' | 'verb'
@@ -7503,17 +7512,6 @@ export type UseUpdateProxyKeyProps = Omit<
  * Updates a Proxy Key in the account & org
  *
  * This operation is used to modify which environments a ProxyKey has access to. The requet body can include one or more instructions that can assign or unassign environmnets to the ProxyKey
- *
- * {
- *   "kind": "addEnvironment",
- *   "parameters": {
- *     "environments": ["env1", "env2"]
- *   }
- *   "kind": "removeEnvironment",
- *   "parameters": {
- *     "environments": ["env3"]
- *   }
- * }
  *
  */
 export const useUpdateProxyKey = ({ identifier, ...props }: UseUpdateProxyKeyProps) =>
@@ -7526,9 +7524,9 @@ export const useUpdateProxyKey = ({ identifier, ...props }: UseUpdateProxyKeyPro
     | ConflictResponse
     | InternalServerErrorResponse,
     UpdateProxyKeyQueryParams,
-    ProxyKeysPatchRequestRequestBody,
+    ProxyKeysPutRequestRequestBody,
     UpdateProxyKeyPathParams
-  >('PATCH', (paramsInPath: UpdateProxyKeyPathParams) => `/admin/proxy/keys/${paramsInPath.identifier}`, {
+  >('PUT', (paramsInPath: UpdateProxyKeyPathParams) => `/admin/proxy/keys/${paramsInPath.identifier}`, {
     base: getConfig('cf'),
     pathParams: { identifier },
     ...props
@@ -7538,17 +7536,6 @@ export const useUpdateProxyKey = ({ identifier, ...props }: UseUpdateProxyKeyPro
  * Updates a Proxy Key in the account & org
  *
  * This operation is used to modify which environments a ProxyKey has access to. The requet body can include one or more instructions that can assign or unassign environmnets to the ProxyKey
- *
- * {
- *   "kind": "addEnvironment",
- *   "parameters": {
- *     "environments": ["env1", "env2"]
- *   }
- *   "kind": "removeEnvironment",
- *   "parameters": {
- *     "environments": ["env3"]
- *   }
- * }
  *
  */
 export const updateProxyKeyPromise = (
@@ -7564,7 +7551,7 @@ export const updateProxyKeyPromise = (
     | ConflictResponse
     | InternalServerErrorResponse,
     UpdateProxyKeyQueryParams,
-    ProxyKeysPatchRequestRequestBody,
+    ProxyKeysPutRequestRequestBody,
     UpdateProxyKeyPathParams
   > & {
     /**
@@ -7583,9 +7570,9 @@ export const updateProxyKeyPromise = (
     | ConflictResponse
     | InternalServerErrorResponse,
     UpdateProxyKeyQueryParams,
-    ProxyKeysPatchRequestRequestBody,
+    ProxyKeysPutRequestRequestBody,
     UpdateProxyKeyPathParams
-  >('PATCH', getConfig('cf'), `/admin/proxy/keys/${identifier}`, props, signal)
+  >('PUT', getConfig('cf'), `/admin/proxy/keys/${identifier}`, props, signal)
 
 export interface GetAllSegmentsQueryParams {
   /**
@@ -8453,15 +8440,7 @@ export interface GetAllTagsQueryParams {
    */
   sortByField?: 'name' | 'identifier' | 'archived' | 'kind' | 'modifiedAt'
   /**
-   * Name of the field
-   */
-  name?: string
-  /**
-   * Identifier of the field
-   */
-  identifier?: string
-  /**
-   * Identifier of the tag to filter on
+   * Partial Search of Tag Identifiers to filter on
    */
   tagIdentifierFilter?: string
 }
