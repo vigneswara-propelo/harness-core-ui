@@ -658,13 +658,17 @@ function Artifactory({
                         radioGroup={{ inline: true }}
                         items={filterTypeOptions}
                         className={css.radioGroup}
-                        onChange={() => {
+                        onChange={e => {
                           resetFieldValue(formik, 'tagRegex')
                           resetFieldValue(formik, 'tag')
                           resetFieldValue(formik, 'digest')
-                          formik.setFieldValue('tagType', 'value')
-                          formik.setFieldValue('artifactDirectory', '')
-                          formik.setFieldValue('artifactFilter', '')
+                          formik.setValues({
+                            ...formik.values,
+                            filterType: e?.currentTarget?.value as ARTIFACT_FILTER_TYPES,
+                            tagType: TagTypes.Value,
+                            artifactDirectory: '',
+                            artifactFilter: ''
+                          })
                         }}
                       />
                     </div>
