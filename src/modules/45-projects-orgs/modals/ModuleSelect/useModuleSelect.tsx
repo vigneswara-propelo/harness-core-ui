@@ -253,7 +253,7 @@ export const useModuleSelectModal = ({
   const [selectedModuleName, setSelectedModuleName] = React.useState<ModuleName>()
   const [projectData, setProjectData] = React.useState<Project>()
 
-  const { CVNG_ENABLED, CET_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED } = useFeatureFlags()
   const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
   const modalProps: IDialogProps = {
     isOpen: true,
@@ -301,7 +301,7 @@ export const useModuleSelectModal = ({
       name: ModuleName.CHAOS
     })
   }
-  if (CET_ENABLED) {
+  if (licenseInformation[ModuleName.CET]?.status === LICENSE_STATE_VALUES.ACTIVE) {
     infoCards.push({
       name: ModuleName.CET
     })

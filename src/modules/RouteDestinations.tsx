@@ -61,7 +61,6 @@ export default function RouteDestinations(): React.ReactElement {
     IACM_ENABLED,
     SSCA_ENABLED,
     IDP_ENABLED,
-    CET_ENABLED,
     CDB_MFE_ENABLED,
     PL_DISCOVERY_ENABLE,
     SEI_ENABLED,
@@ -73,6 +72,8 @@ export default function RouteDestinations(): React.ReactElement {
     licenseInformation[ModuleName.CV]?.status === LICENSE_STATE_VALUES.ACTIVE ||
     licenseInformation[ModuleName.CD]?.status === LICENSE_STATE_VALUES.ACTIVE ||
     CVNG_ENABLED
+
+  const isCETModuleEnabled = licenseInformation[ModuleName.CET]?.status === LICENSE_STATE_VALUES.ACTIVE
 
   return (
     <Switch>
@@ -116,7 +117,7 @@ export default function RouteDestinations(): React.ReactElement {
       {!CDS_NAV_2_0 ? (CDB_MFE_ENABLED ? CdbMfeRoutes.props.children : CdbNonMfeRoutes.props.children) : null}
       {IACM_ENABLED ? IACMRoutes().props.children : null}
       {SSCA_ENABLED ? SSCARoutes.props.children : null}
-      {CET_ENABLED ? ETRoutes({})?.props.children : null}
+      {isCETModuleEnabled ? ETRoutes({})?.props.children : null}
 
       {CDS_NAV_2_0 ? <RoutesV2 /> : undefined}
 

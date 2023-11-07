@@ -286,7 +286,6 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
             noscope: true
           })
         : routes.toCET({ accountId }),
-    featureFlagName: FeatureFlag.CET_ENABLED,
     color: '--cet-border',
     shortLabel: 'common.purpose.errorTracking.title',
     moduleIntro: 'common.moduleIntro.continuousErrorTracking'

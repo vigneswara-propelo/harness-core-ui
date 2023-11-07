@@ -28,7 +28,6 @@ import {
 } from 'services/cd-ng'
 
 import { useLicenseStore, handleUpdateLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetCommunity } from '@common/utils/utils'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import SubscriptionTab from './SubscriptionTab'
@@ -86,7 +85,6 @@ const SubscriptionsPage: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const { moduleCard } = useQueryParams<{ moduleCard?: ModuleName }>()
-  const { CET_ENABLED } = useFeatureFlags()
   const { FF_LICENSE_STATE, licenseInformation, updateLicenseStore } = useLicenseStore()
   const history = useHistory()
   const isCommunity = useGetCommunity()
@@ -120,7 +118,7 @@ const SubscriptionsPage: React.FC = () => {
           licenseInformation['CHAOS']?.status === LICENSE_STATE_VALUES.ACTIVE && accumulator.push(card)
           break
         case ModuleName.CET:
-          CET_ENABLED && accumulator.push(card)
+          licenseInformation[ModuleName.CET]?.status === LICENSE_STATE_VALUES.ACTIVE && accumulator.push(card)
       }
       return accumulator
     },

@@ -9,17 +9,19 @@ import React from 'react'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { ErrorTracking } from '@cet/ErrorTrackingApp'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { useStrings } from 'framework/strings'
 import type { ETCustomMicroFrontendProps } from '@cet/ErrorTracking.types'
 import NotificationMethods from '@pipeline/components/Notifications/Steps/NotificationMethods'
 import Overview from '@pipeline/components/Notifications/Steps/Overview'
 import { MultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { ModuleName } from 'framework/types/ModuleName'
+import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 
 export const CETMonitoredServices = (): JSX.Element => {
   const { getString } = useStrings()
-  const CET_ENABLED = useFeatureFlag(FeatureFlag.CET_ENABLED)
+
+  const { licenseInformation } = useLicenseStore()
 
   const componentLocation = {
     pathname: '/etmonitoredservices'
@@ -27,7 +29,7 @@ export const CETMonitoredServices = (): JSX.Element => {
 
   useDocumentTitle([getString('common.monitoredServices')])
 
-  if (CET_ENABLED) {
+  if (licenseInformation[ModuleName.CET]?.status === LICENSE_STATE_VALUES.ACTIVE) {
     return (
       <ChildAppMounter<ETCustomMicroFrontendProps>
         ChildApp={ErrorTracking}

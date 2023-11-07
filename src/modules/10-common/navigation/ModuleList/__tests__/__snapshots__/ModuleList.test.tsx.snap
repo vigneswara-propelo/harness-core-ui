@@ -440,6 +440,104 @@ exports[`ModuleList should render correctly without modules 1`] = `
                   </span>
                 </div>
               </a>
+              <a
+                class="link"
+                href="/account/accountId/cet"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                >
+                  <div
+                    class="StyledProps--font StyledProps--main container cet StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--background-primary9"
+                    style="width: 310px;"
+                  >
+                    <div
+                      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main StyledProps--margin-right-xsmall"
+                        data-icon="cet"
+                      >
+                        <svg
+                          height="24"
+                          viewBox="0 0 32 32"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <lineargradient
+                            gradientUnits="userSpaceOnUse"
+                            id="cet_svg__a"
+                            x1="9.692"
+                            x2="23.308"
+                            y1="6.145"
+                            y2="27.112"
+                          >
+                            <stop
+                              offset="0"
+                              stop-color="#fd7a64"
+                            />
+                            <stop
+                              offset="1"
+                              stop-color="#d51000"
+                            />
+                          </lineargradient>
+                          <g
+                            clip-rule="evenodd"
+                            fill-rule="evenodd"
+                          >
+                            <path
+                              d="M15.504 29.128V25.56a8.99 8.99 0 01-7.935-7.935H4v5.926a5.578 5.578 0 005.578 5.577zM4 15.632h3.569a8.99 8.99 0 017.935-7.935V4.128H9.578A5.578 5.578 0 004 9.706zm13.496 13.496h5.926A5.578 5.578 0 0029 23.551V9.706a5.578 5.578 0 00-5.578-5.578h-5.926v3.569a8.99 8.99 0 017.936 7.935h1.223a.996.996 0 010 1.992H25.43a8.99 8.99 0 01-7.935 7.936zm-1.992-5.852v.276a6.999 6.999 0 01-5.928-5.928h3.23a3.826 3.826 0 007.518-.995 3.825 3.825 0 00-7.518-.997h-3.23a6.998 6.998 0 015.928-5.927v.332a.996.996 0 101.992 0v-.332a6.998 6.998 0 015.928 5.927h-.367a.996.996 0 000 1.992h.367a6.998 6.998 0 01-5.928 5.928v-.276a.996.996 0 10-1.992 0zm.996-8.4a1.753 1.753 0 100 3.506 1.753 1.753 0 000-3.507z"
+                              fill="#fff"
+                            />
+                            <path
+                              d="M15.504 29.128V25.56a8.99 8.99 0 01-7.935-7.935H4v5.926a5.578 5.578 0 005.578 5.577zM4 15.632h3.569a8.99 8.99 0 017.935-7.935V4.128H9.578A5.578 5.578 0 004 9.706zm13.496 13.496h5.926A5.578 5.578 0 0029 23.551V9.706a5.578 5.578 0 00-5.578-5.578h-5.926v3.569a8.99 8.99 0 017.936 7.935h1.223a.996.996 0 010 1.992H25.43a8.99 8.99 0 01-7.935 7.936zm-1.992-5.852v.276a6.999 6.999 0 01-5.928-5.928h3.23a3.826 3.826 0 007.518-.995 3.825 3.825 0 00-7.518-.997h-3.23a6.998 6.998 0 015.928-5.927v.332a.996.996 0 101.992 0v-.332a6.998 6.998 0 015.928 5.927h-.367a.996.996 0 000 1.992h.367a6.998 6.998 0 01-5.928 5.928v-.276a.996.996 0 10-1.992 0zm.996-8.4a1.753 1.753 0 100 3.506 1.753 1.753 0 000-3.507z"
+                              fill="url(#cet_svg__a)"
+                            />
+                          </g>
+                        </svg>
+                      </span>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-white"
+                      >
+                        <span>
+                          common.purpose.cet.continuous
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    class="bp3-popover-wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main"
+                        tabindex="0"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main clickable tooltipIcon StyledProps--padding-small"
+                          data-icon="tooltip-icon"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 12 12"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clip-rule="evenodd"
+                              d="M6.02 11a5 5 0 100-10 5 5 0 000 10zm0 1a6 6 0 100-12 6 6 0 000 12zM6 5.5a.5.5 0 01.5.5v2.5a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm0-1.029a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </span>
+                  </span>
+                </div>
+              </a>
             </div>
           </div>
           <div

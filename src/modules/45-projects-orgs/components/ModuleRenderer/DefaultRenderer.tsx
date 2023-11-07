@@ -18,7 +18,7 @@ import css from './ModuleRenderer.module.scss'
 
 const DefaultRenderer: React.FC = () => {
   const { getString } = useStrings()
-  const { CVNG_ENABLED, CET_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED } = useFeatureFlags()
   const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
   const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
 
@@ -39,7 +39,9 @@ const DefaultRenderer: React.FC = () => {
         {licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE ? (
           <Icon name="sto-color-filled" size={20} />
         ) : null}
-        {CET_ENABLED ? <Icon name="cet" size={20} /> : null}
+        {licenseInformation[ModuleName.CET]?.status === LICENSE_STATE_VALUES.ACTIVE ? (
+          <Icon name="cet" size={20} />
+        ) : null}
       </Layout.Horizontal>
     </Layout.Vertical>
   )

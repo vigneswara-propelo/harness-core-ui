@@ -185,8 +185,7 @@ moment.now = jest.fn(() => 1482363367071)
 
 const featureFlags = {
   BUILD_CREDITS_VIEW: true,
-  CVNG_ENABLED: true,
-  CET_ENABLED: true
+  CVNG_ENABLED: true
 }
 
 const useGetUsageAndLimitReturnMock = {

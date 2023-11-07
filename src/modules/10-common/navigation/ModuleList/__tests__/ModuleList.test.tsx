@@ -26,13 +26,7 @@ jest.mock('react-router-dom', () => ({
 describe('ModuleList', () => {
   test('should render correctly without modules', () => {
     const { container, getByText, getByTestId } = render(
-      <TestWrapper
-        defaultAppStoreValues={{
-          featureFlags: {
-            CET_ENABLED: false
-          }
-        }}
-      >
+      <TestWrapper defaultAppStoreValues={{}}>
         <ModuleList isOpen={true} close={noop} usePortal={false} />
       </TestWrapper>
     )
