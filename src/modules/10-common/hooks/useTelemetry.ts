@@ -90,6 +90,7 @@ export function useTelemetry(pageParams: PageParams = {}): TelemetryReturnType {
 
     telemetry.identify({
       userId: email,
+      groupId: groupId,
       properties: {
         hotjar_link
       }
