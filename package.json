@@ -17,6 +17,7 @@
     "test": "jest src --silent",
     "test:dev": "jest",
     "test:watch": "jest --watch",
+    "prepare": "husky install",
     "lint": "eslint  --rulesdir ./scripts/eslint-rules --ext .ts --ext .tsx src",
     "lint:style": "stylelint src/**/*.scss",
     "typecheck": "tsc",
