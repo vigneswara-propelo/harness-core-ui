@@ -1385,6 +1385,7 @@ export interface StringsMap {
   'common.template.createNewModal.versionPlaceholder': string
   'common.template.deleteTemplate.errorWhileDeletingTemplate': string
   'common.template.deleteTemplate.errorWhileDeletingTemplates': string
+  'common.template.deleteTemplate.selectAllExceptStable': string
   'common.template.deleteTemplate.templateDeleted': string
   'common.template.deleteTemplate.templatesDeleted': string
   'common.template.label': string

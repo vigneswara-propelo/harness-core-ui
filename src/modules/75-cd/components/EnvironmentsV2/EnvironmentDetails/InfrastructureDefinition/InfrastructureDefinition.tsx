@@ -165,7 +165,7 @@ export default function InfrastructureDefinition({ isEnvPage }: { isEnvPage: boo
             openUnsavedChangesDiffModal={openUnsavedChangesDiffModal}
             handleInfrastructureUpdate={handleInfrastructureUpdate}
             updatedInfra={updatedInfrastructure}
-            infrastructureFetchDetails={infrastructureFetchDetails}
+            infrastructureFetchDetails={infraStoreType === 'REMOTE' ? infrastructureFetchDetails : undefined}
             isSingleEnv
           />
         ) : (

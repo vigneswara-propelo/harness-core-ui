@@ -220,6 +220,7 @@ export function InfraDefinitionDetailsDrawer(props: Props) {
           openUnsavedChangesDiffModal={openUnsavedChangesDiffModal}
           infrastructureResponse={infrastructureResponse?.data?.infrastructure}
           hasRemoteFetchFailed={hasRemoteFetchFailed}
+          infrastructureLoading={infrastructureLoading}
         />
       }
       data-type={DrawerTypes.StepConfig}

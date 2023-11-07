@@ -100,7 +100,7 @@ describe('<DeleteTemplateModal /> tests', () => {
       </TestWrapper>
     )
 
-    const selectAllCheckBox = getByRole('checkbox', { name: 'Select All' })
+    const selectAllCheckBox = getByRole('checkbox', { name: 'common.template.deleteTemplate.selectAllExceptStable' })
     act(() => {
       fireEvent.click(selectAllCheckBox)
     })
@@ -137,7 +137,7 @@ describe('<DeleteTemplateModal /> tests', () => {
       </TestWrapper>
     )
 
-    const selectAllCheckBox = getByRole('checkbox', { name: 'Select All' })
+    const selectAllCheckBox = getByRole('checkbox', { name: 'common.template.deleteTemplate.selectAllExceptStable' })
     act(() => {
       fireEvent.click(selectAllCheckBox)
     })
@@ -172,7 +172,7 @@ describe('<DeleteTemplateModal /> tests', () => {
       </TestWrapper>
     )
 
-    const selectAllCheckBox = getByRole('checkbox', { name: 'Select All' })
+    const selectAllCheckBox = getByRole('checkbox', { name: 'common.template.deleteTemplate.selectAllExceptStable' })
     act(() => {
       fireEvent.click(selectAllCheckBox)
     })

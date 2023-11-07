@@ -951,6 +951,7 @@ template:
     templateDeleted: 'Template "{{ name }}" Deleted'
     errorWhileDeletingTemplates: Error occurred deleting Templates
     errorWhileDeletingTemplate: Error occurred deleting Template
+    selectAllExceptStable: Select All (except Stable)
   createNewModal:
     versionPlaceholder: 'Ex: Version1'
   templateIcon: Template Icon

@@ -569,6 +569,10 @@ function BootstrapDeployInfraDefinition(
         return response
       })
     },
+    onProgessOverlayClose: () => {
+      setInfraSaveInProgress?.(false)
+      setIsSavingInfrastructure(false)
+    },
     onClose: () => {
       setInfraSaveInProgress?.(false)
       setIsSavingInfrastructure(false)

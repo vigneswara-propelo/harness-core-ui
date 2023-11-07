@@ -37,6 +37,7 @@ export function InfraDefinitionDetailsDrawerTitle(props: {
   openUnsavedChangesDiffModal: () => void
   infrastructureResponse?: InfrastructureResponseDTO
   hasRemoteFetchFailed?: boolean
+  infrastructureLoading?: boolean
 }): JSX.Element {
   const {
     discardChanges,
@@ -48,7 +49,8 @@ export function InfraDefinitionDetailsDrawerTitle(props: {
     isInfraUpdated,
     openUnsavedChangesDiffModal,
     infrastructureResponse,
-    hasRemoteFetchFailed
+    hasRemoteFetchFailed,
+    infrastructureLoading
   } = props
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { infraStoreType, infraBranch, infraRepoName, infraConnectorRef } = useQueryParams<EnvironmentQueryParams>()
@@ -79,7 +81,7 @@ export function InfraDefinitionDetailsDrawerTitle(props: {
   }
 
   const renderRemoteDetails = (): JSX.Element | null => {
-    return CDS_INFRA_GITX && infraStoreType === 'REMOTE' ? (
+    return CDS_INFRA_GITX && infraStoreType === 'REMOTE' && !infrastructureLoading ? (
       <div className={css.gitRemoteDetailsWrapper}>
         <GitRemoteDetails
           connectorRef={get(infrastructureResponse, 'connectorRef', infraConnectorRef)}

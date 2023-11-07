@@ -317,7 +317,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot 1`] = `
                         <span
                           class="bp3-control-indicator"
                         />
-                        Select All
+                        common.template.deleteTemplate.selectAllExceptStable
                       </label>
                     </div>
                   </div>
@@ -707,7 +707,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when error occurs i
                         <span
                           class="bp3-control-indicator"
                         />
-                        Select All
+                        common.template.deleteTemplate.selectAllExceptStable
                       </label>
                     </div>
                   </div>
@@ -1223,7 +1223,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when multiple versi
                         <span
                           class="bp3-control-indicator"
                         />
-                        Select All
+                        common.template.deleteTemplate.selectAllExceptStable
                       </label>
                     </div>
                   </div>
@@ -1613,7 +1613,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when status is fail
                         <span
                           class="bp3-control-indicator"
                         />
-                        Select All
+                        common.template.deleteTemplate.selectAllExceptStable
                       </label>
                     </div>
                   </div>
