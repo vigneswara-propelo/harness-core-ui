@@ -1,14 +1,15 @@
 /*
- * Copyright 2021 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+/* istanbul ignore file - no sidenavs are tested in Unit tests rather test in integration tests, currently other sidenav do a just snapshot which is not correct way to do*/
+
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Layout } from '@harness/uicore'
-import { useFeatureFlag } from '@harnessio/ff-react-client-sdk'
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
@@ -17,6 +18,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
 import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@modules/10-common/hooks/useFeatureFlag'
 
 const module = 'ssca'
 
@@ -55,8 +57,6 @@ export default function SSCASideNav(): React.ReactElement {
           <SidebarLink label={getString('overview')} to={routes.toProjectOverview(params)} />
           {SSCA_ARTIFACTS_ENABLED && <SidebarLink label={getString('artifacts')} to={routes.toSSCAArtifacts(params)} />}
 
-          {/* TODO: will be added later */}
-          {/* <SidebarLink label={getString('ssca.components')} to={routes.toSSCAComponents(params)} /> */}
           <ProjectSetupMenu module={module} />
         </>
       )}

@@ -70,12 +70,20 @@ const SSCARouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
       </RouteWithContext>
 
       <RouteWithContext
+        exact
         path={[
           routes.toSSCA({ ...projectPathProps, module, mode }),
-          routes.toOverview({ ...projectPathProps, module, mode }),
-          routes.toSSCAArtifacts({ ...projectPathProps, module, mode })
+          routes.toOverview({ ...projectPathProps, module, mode })
         ]}
       >
+        <ChildAppMounter
+          ChildApp={RemoteSSCAApp}
+          customComponents={{ Duration, PolicyViolationsDrawer }}
+          customHooks={{ useQueryParams, useUpdateQueryParams, useQueryParamsOptions }}
+        />
+      </RouteWithContext>
+
+      <RouteWithContext path={[routes.toSSCAArtifacts({ ...projectPathProps, module, mode })]}>
         <ChildAppMounter
           ChildApp={RemoteSSCAApp}
           customComponents={{ Duration, PolicyViolationsDrawer }}

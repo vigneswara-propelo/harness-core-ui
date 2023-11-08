@@ -69,15 +69,26 @@ export default (
     <RouteWithLayout exact path={routes.toSSCA({ ...accountPathProps })}>
       <RedirectToProjectOverviewPage />
     </RouteWithLayout>
-
     <RouteWithLayout
       sidebarProps={SSCASideNavProps}
+      exact
       path={[
-        routes.toSSCA({ ...projectPathProps, ...moduleParams }),
-        routes.toSSCAOverview({ ...projectPathProps, ...moduleParams }),
-        routes.toProjectOverview({ ...projectPathProps, ...moduleParams }),
-        routes.toSSCAArtifacts({ ...projectPathProps, ...moduleParams })
+        routes.toSSCAOverview({ ...accountPathProps }),
+        routes.toProjectOverview({ ...projectPathProps, ...moduleParams })
       ]}
+    >
+      <ChildAppMounter<SSCACustomMicroFrontendProps>
+        ChildApp={RemoteSSCAApp}
+        customHooks={{ useQueryParams, useUpdateQueryParams, useQueryParamsOptions }}
+        customComponents={{ Duration, PolicyViolationsDrawer }}
+      />
+    </RouteWithLayout>
+
+    {/* no exact, to match any sublevel of artifacts which can be defined within MFE
+    also not that wildcard pattern of /account/:accountId/:module(ssca) is matched for pipeline routes */}
+    <RouteWithLayout
+      sidebarProps={SSCASideNavProps}
+      path={[routes.toSSCAArtifacts({ ...projectPathProps, ...moduleParams })]}
     >
       <ChildAppMounter<SSCACustomMicroFrontendProps>
         ChildApp={RemoteSSCAApp}
