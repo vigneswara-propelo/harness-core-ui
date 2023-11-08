@@ -24,6 +24,8 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
     'ng/api/servicenow/getTemplate?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&connectorRef=service_now_connector&ticketType=INCIDENT&templateName=&limit=1&offset=0'
   const serviceNowTemplateCallWithName =
     'ng/api/servicenow/getTemplate?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&connectorRef=service_now_connector&ticketType=INCIDENT&templateName=Test_TemplateName&limit=1&offset=0'
+  const serviceNowTemplateV2CallWithName =
+    'ng/api/servicenow/getTemplateV2?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&connectorRef=service_now_connector&ticketType=INCIDENT&templateName=Test_TemplateName&limit=1&offset=0'
   const accountLicense = 'ng/api/licenses/account?routingId=accountId&accountIdentifier=accountId'
   beforeEach(() => {
     cy.intercept('GET', accountLicense, { fixture: 'pipeline/api/approvals/accountLicense' })
@@ -108,6 +110,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
       cy.intercept('GET', serviceNowMetadataCall, { fixture: 'ng/api/serviceNow/serviceNowMetadata' })
       cy.intercept('GET', serviceNowTemplateCall, { fixture: 'ng/api/serviceNow/serviceNowTemplate' })
       cy.intercept('GET', serviceNowTemplateCallWithName, { fixture: 'ng/api/serviceNow/serviceNowTemplate' })
+      cy.intercept('GET', serviceNowTemplateV2CallWithName, { fixture: 'ng/api/serviceNow/serviceNowTemplateV2' })
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)

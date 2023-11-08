@@ -11,8 +11,9 @@ import { useParams } from 'react-router-dom'
 import { Dialog, Menu } from '@blueprintjs/core'
 import cx from 'classnames'
 import * as Yup from 'yup'
+import { Color, Intent } from '@harness/design-system'
+
 import { FieldArray, FormikProps } from 'formik'
-import { Intent } from '@harness/design-system'
 import {
   AllowedTypes,
   Button,
@@ -93,7 +94,6 @@ import { ServiceNowFieldsRenderer } from './ServiceNowFieldsRenderer'
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ServiceNowCreate.module.scss'
-
 const fetchingTicketTypesPlaceholder: StringKeys = 'pipeline.serviceNowApprovalStep.fetchingTicketTypesPlaceholder'
 function FormContent({
   formik,
@@ -148,6 +148,7 @@ function FormContent({
   const [templates, setTemplates] = useState<SelectOption[]>([])
   const [isFetchingTemplateNextTime, setIsFetchingTemplateNextTime] = useState(true)
   const fieldType = getGenuineValue(get(formik, 'values.spec.fieldType'))
+  const selectedTemplateName = get(formik, 'values.spec.templateName')
   const {
     items: templateResponse,
     error: fetchTemplateError,
@@ -306,7 +307,7 @@ function FormContent({
         }
       })
       setTemplates(convertedTemplateResponse)
-      const selectedTemplateName = get(formik, 'values.spec.templateName')
+
       if (
         fieldType === FieldType.CreateFromStandardTemplate &&
         getMultiTypeFromValue(selectedTemplateName) === MultiTypeInputType.FIXED &&
@@ -500,6 +501,7 @@ function FormContent({
               <Text>{item.label}</Text>
             </Layout.Horizontal>
           }
+          disabled={fetchingTemplate}
           onClick={handleClick}
         />
       </div>
@@ -511,7 +513,20 @@ function FormContent({
       {isEmptyContent ? (
         <Layout.Vertical flex={{ align: 'center-center' }} width={'100%'} height={'100%'}>
           {getString('pipeline.noTemplateAvailable')}
-          {searchTerm && <Text icon="plus">{searchTerm}</Text>}
+          {searchTerm && (
+            <Text
+              padding={{ top: 'medium', bottom: 'medium' }}
+              icon="plus"
+              style={{ cursor: 'pointer' }}
+              iconProps={{ color: Color.PRIMARY_7 }}
+              color={Color.PRIMARY_7}
+              onClick={() => {
+                formik.setFieldValue('spec.templateName', searchTerm)
+              }}
+            >
+              {searchTerm}
+            </Text>
+          )}
         </Layout.Vertical>
       ) : (
         itemListProps.items.map((item, i) => itemListProps.renderItem(item, i))
@@ -525,6 +540,13 @@ function FormContent({
       )}
     </Menu>
   )
+
+  const getTemplates = () => {
+    if (fetchingTemplate && !isFetchingTemplateNextTime) {
+      return [{ label: 'Loading Templates...', value: 'Loading Templates...' }]
+    }
+    return defaultTo(templates, [])
+  }
 
   return (
     <React.Fragment>
@@ -840,25 +862,32 @@ function FormContent({
               <div>
                 <div className={cx(stepCss.formGroup, stepCss.lg)}>
                   <FormInput.MultiTypeInput
-                    selectItems={templates}
+                    selectItems={getTemplates()}
                     label={getString('pipeline.serviceNowCreateStep.templateName')}
                     name={`spec.templateName`}
                     key={FieldType.CreateFromTemplate}
-                    placeholder={getString('pipeline.filters.servicePlaceholder')}
+                    placeholder={
+                      selectedTemplateName ? selectedTemplateName : getString('pipeline.filters.servicePlaceholder')
+                    }
                     useValue
                     multiTypeInputProps={{
-                      onChange: value => {
-                        const selectedTemplateValue = templateResponse?.find(
-                          (item: ServiceNowTemplate) => item.name === (value as SelectOption)?.value
-                        )
+                      onChange: (value, _valueType, type) => {
                         formik.setValues(
                           produce(formik.values, draft => {
-                            if (selectedTemplateValue) {
-                              set(
-                                draft,
-                                `spec.templateFields`,
-                                convertTemplateFieldsForDisplay(selectedTemplateValue.fields)
+                            if (type === MultiTypeInputType.FIXED) {
+                              const selectedTemplateValue = templateResponse?.find(
+                                (item: ServiceNowTemplate) => item.name === (value as SelectOption)?.value
                               )
+                              if (selectedTemplateValue) {
+                                set(
+                                  draft,
+                                  `spec.templateFields`,
+                                  convertTemplateFieldsForDisplay(selectedTemplateValue.fields)
+                                )
+                              }
+                            } else {
+                              set(draft, `spec.templateFields`, [])
+                              set(draft, `spec.editableFields`, [])
                             }
                             set(draft, `spec.templateName`, defaultTo((value as SelectOption)?.value, value))
                           })
@@ -870,10 +899,11 @@ function FormContent({
                         onQueryChange: query => {
                           if (query) debouncedSetSearchTerm?.(query)
                         },
-                        allowCreatingNewItems: true,
-                        items: defaultTo(templates, []),
+                        allowCreatingNewItems: !fetchingTemplate && !templates.length,
+                        items: defaultTo(getTemplates(), []),
                         loadingItems: fetchingTemplate,
                         itemRenderer: serviceItemRenderer,
+
                         itemListRenderer,
                         noResults: (
                           <Text lineClamp={1} width={384} margin="small">
@@ -965,7 +995,7 @@ function FormContent({
               <>
                 <div className={cx(stepCss.formGroup, stepCss.lg)}>
                   <FormInput.MultiTypeInput
-                    selectItems={templates}
+                    selectItems={getTemplates()}
                     label={getString('pipeline.serviceNowCreateStep.templateName')}
                     name={`spec.templateName`}
                     key={FieldType.CreateFromStandardTemplate}
@@ -1019,9 +1049,11 @@ function FormContent({
                       onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.build', type),
                       expressions,
                       selectProps: {
-                        onQueryChange: query => debouncedSetSearchTerm?.(query),
+                        onQueryChange: query => {
+                          if (query) debouncedSetSearchTerm?.(query)
+                        },
                         allowCreatingNewItems: true,
-                        items: defaultTo(templates, []),
+                        items: defaultTo(getTemplates(), []),
                         loadingItems: fetchingTemplate,
                         itemRenderer: serviceItemRenderer,
                         // itemListRenderer,

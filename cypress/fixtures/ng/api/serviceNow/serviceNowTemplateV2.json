@@ -1,0 +1,137 @@
+{
+    "status": "SUCCESS",
+    "data": {
+        "totalPages": 1,
+        "totalItems": 12,
+        "pageItemCount": 12,
+        "pageSize": 12,
+        "content": [
+            {
+                "name": "Add network switch to datacenter cabinet",
+                "fields": {
+                    "Implementation plan": {
+                        "value": null,
+                        "displayValue": "-- Physically rack switch in top of cabinet\r\n-- Ensure that redundant power supply is connected to the backup power circuit in the cabinet\r\n-- Ensure that first GBIC fibre connector (Gi0/1) connects to primary distribution switch\r\n-- Ensure that second GBIC fibre connector (Gi1/1) connects to secondary distribution switch\r\n-- Connect console port to cabinet management console\r\n-- Add switch to network management console\r\n-- Add switch to network monitoring console\r\n-- Add switch to ServiceNow CMDB"
+                    },
+                    "Description": {
+                        "value": null,
+                        "displayValue": "This standard change template describes adding a new network switch to a datacenter cabinet"
+                    },
+                    "Test plan": {
+                        "value": null,
+                        "displayValue": "-- Run connectivity tests by connecting laptop to copper interface\r\n-- Ensure that switch is showing as healthy in network monitoring console"
+                    },
+                    "Backout plan": {
+                        "value": null,
+                        "displayValue": "-- Physically remove switch and all associated cabling\r\n-- Remove switch from management, monitoring and ServiceNow CMDB"
+                    },
+                    "Short description": {
+                        "value": null,
+                        "displayValue": "Add network switch to cabinet"
+                    }
+                }
+            },
+            {
+                "name": "Server Reboot",
+                "fields": {
+                    "Assignment group": {
+                        "value": null,
+                        "displayValue": "ITSM Engineering"
+                    },
+                    "Type": {
+                        "value": null,
+                        "displayValue": "Emergency"
+                    },
+                    "Category": {
+                        "value": null,
+                        "displayValue": "Server Reboot"
+                    }
+                }
+            },
+            {
+                "name": "Database Restore",
+                "fields": {
+                    "Assignment group": {
+                        "value": null,
+                        "displayValue": "Database"
+                    },
+                    "Type": {
+                        "value": null,
+                        "displayValue": "Emergency"
+                    },
+                    "Category": {
+                        "value": null,
+                        "displayValue": "Other"
+                    }
+                }
+            },
+            {
+                "name": "SAN Storage Change",
+                "fields": {
+                    "Assignment group": {
+                        "value": null,
+                        "displayValue": "ITSM Engineering"
+                    },
+                    "Type": {
+                        "value": null,
+                        "displayValue": "Routine"
+                    },
+                    "Category": {
+                        "value": null,
+                        "displayValue": "SAN Storage Change"
+                    }
+                }
+            },
+            {
+                "name": "Change_request_template_automation",
+                "fields": {
+                    "Impact": {
+                        "value": null,
+                        "displayValue": "1 - High"
+                    },
+                    "Category": {
+                        "value": null,
+                        "displayValue": "Other"
+                    },
+                    "Description": {
+                        "value": null,
+                        "displayValue": "Change_request_template_automation desc"
+                    },
+                    "On hold": {
+                        "value": null,
+                        "displayValue": "false"
+                    },
+                    "CAB required": {
+                        "value": null,
+                        "displayValue": "true"
+                    },
+                    "Priority": {
+                        "value": null,
+                        "displayValue": "1 - Critical"
+                    },
+                    "State": {
+                        "value": null,
+                        "displayValue": "New"
+                    },
+                    "Risk": {
+                        "value": null,
+                        "displayValue": "Very High"
+                    },
+                    "Requested by": {
+                        "value": null,
+                        "displayValue": "System Administrator"
+                    },
+                    "Short description": {
+                        "value": null,
+                        "displayValue": "Change_request_template_automation short desc"
+                    }
+                }
+            }
+        ],
+        "pageIndex": 0,
+        "empty": false,
+        "pageToken": null
+    },
+    "metaData": null,
+    "correlationId": "23b04ab1-796a-40c8-b58b-5ac264dd55c9"
+}
