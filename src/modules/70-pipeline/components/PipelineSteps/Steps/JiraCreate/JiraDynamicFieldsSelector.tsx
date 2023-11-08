@@ -338,9 +338,8 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
         )
       ) : getConditionForWarningInJiraUpdate() ? (
         <Text intent="warning">{getString('pipeline.jiraUpdateStep.projectIssueKeyDisclaimer')}</Text>
-      ) : jiraType === 'createMode' &&
-        ((isEmpty(projectMetaResponse?.data) && !projectMetadataFetchError) ||
-          (isEmpty(issueMetaResponse?.data) && !issueMetadataFetchError)) ? (
+      ) : (isEmpty(projectMetaResponse?.data) && !projectMetadataFetchError) ||
+        (isEmpty(issueMetaResponse?.data) && !issueMetadataFetchError) ? (
         <Text intent="warning">{getString('pipeline.jiraCreateStep.projectIssueTypeDisclaimer')}</Text>
       ) : (
         <JiraFieldSelector
