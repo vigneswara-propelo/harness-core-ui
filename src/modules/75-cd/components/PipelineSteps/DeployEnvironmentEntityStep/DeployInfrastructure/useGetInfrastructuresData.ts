@@ -237,12 +237,7 @@ export function useGetInfrastructuresData({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    loading,
-    infrastructuresListResponse?.data,
-    infrastructuresDataResponse?.data?.infrastructureYamlMetadataList,
-    infrastructureIdentifiers
-  ])
+  }, [loading, infrastructuresDataResponse?.data?.infrastructureYamlMetadataList])
 
   useEffect(() => {
     /* istanbul ignore else */
