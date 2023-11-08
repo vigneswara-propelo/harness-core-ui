@@ -105,7 +105,11 @@ function FormContent({
   refetchIssueTransitions,
   issueTransitionsResponse,
   issueTransitionsLoading,
-  issueMetadataLoading
+  fetchingIssueMetadata,
+  fetchingProjectMetadata,
+  projectMetaResponse,
+  projectMetadataFetchError,
+  issueMetadataFetchError
 }: JiraUpdateFormContentInterface): JSX.Element {
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
@@ -385,6 +389,18 @@ function FormContent({
         title={getString('pipeline.jiraCreateStep.addFields')}
       >
         <JiraDynamicFieldsSelector
+          refetchProjectMetadata={refetchProjectMetadata}
+          refetchIssueMetadata={refetchIssueMetadata}
+          fetchingIssueMetadata={fetchingIssueMetadata}
+          fetchingProjectMetadata={fetchingProjectMetadata}
+          projectMetaResponse={projectMetaResponse}
+          issueMetaResponse={issueMetaResponse}
+          issueMetadataFetchError={issueMetadataFetchError}
+          projectMetadataFetchError={projectMetadataFetchError}
+          refetchIssueUpdateMetadata={refetchIssueUpdateMetadata}
+          issueUpdateMetadataResponse={issueUpdateMetadataResponse}
+          issueUpdateMetadataFetchError={issueUpdateMetadataFetchError}
+          issueUpdateMetadataLoading={issueUpdateMetadataLoading}
           connectorRef={connectorRefFixedValue || ''}
           selectedFields={formik.values.spec.selectedOptionalFields}
           selectedProjectKey={projectKeyFixedValue || ''}
@@ -433,7 +449,11 @@ function FormContent({
     connectorRefFixedValue,
     formik.values.spec.selectedOptionalFields,
     formik.values.spec.fields,
-    formik.values.spec.issueKey
+    formik.values.spec.issueKey,
+    issueMetaResponse,
+    projectMetaResponse,
+    fetchingProjectMetadata,
+    fetchingIssueMetadata
   ])
 
   function AddFieldsButton(): React.ReactElement {
@@ -763,7 +783,7 @@ function FormContent({
                 connectorRef={defaultTo(connectorRefFixedValue, '')}
               />
 
-              {issueUpdateMetadataLoading || issueMetadataLoading ? (
+              {issueUpdateMetadataLoading || fetchingIssueMetadata ? (
                 <PageSpinner message={getString('pipeline.jiraCreateStep.fetchingFields')} className={css.fetching} />
               ) : !isEmpty(formik.values.spec.fields) ? (
                 <JiraKVFieldsRenderer
@@ -864,7 +884,7 @@ function JiraUpdateStepMode(
     refetch: refetchIssueMetadata,
     data: issueMetaResponse,
     error: issueMetadataFetchError,
-    loading: issueMetadataLoading
+    loading: fetchingIssueMetadata
   } = useGetJiraIssueCreateMetadata({
     lazy: true,
     queryParams: {
@@ -933,7 +953,7 @@ function JiraUpdateStepMode(
               refetchIssueMetadata={refetchIssueMetadata}
               fetchingProjectMetadata={fetchingProjectMetadata}
               projectMetaResponse={projectMetaResponse}
-              issueMetadataLoading={issueMetadataLoading}
+              fetchingIssueMetadata={fetchingIssueMetadata}
               issueMetaResponse={issueMetaResponse}
               issueMetadataFetchError={issueMetadataFetchError}
               projectMetadataFetchError={projectMetadataFetchError}

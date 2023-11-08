@@ -106,6 +106,8 @@ function FormContent({
   projectMetaResponse,
   fetchingProjects,
   fetchingProjectMetadata,
+  fetchingIssueMetadata,
+  issueMetadataFetchError,
   isNewStep,
   allowableTypes,
   stepViewType,
@@ -328,6 +330,14 @@ function FormContent({
         title={getString('pipeline.jiraCreateStep.addFields')}
       >
         <JiraDynamicFieldsSelector
+          refetchProjectMetadata={refetchProjectMetadata}
+          refetchIssueMetadata={refetchIssueMetadata}
+          fetchingIssueMetadata={fetchingIssueMetadata}
+          fetchingProjectMetadata={fetchingProjectMetadata}
+          projectMetaResponse={projectMetaResponse}
+          issueMetaResponse={issueMetaResponse}
+          issueMetadataFetchError={issueMetadataFetchError}
+          projectMetadataFetchError={projectMetadataFetchError}
           connectorRef={connectorRefFixedValue || ''}
           selectedProjectKey={projectKeyFixedValue || ''}
           selectedIssueTypeKey={issueTypeFixedValue || ''}
@@ -348,7 +358,16 @@ function FormContent({
         />
       </Dialog>
     )
-  }, [projectOptions, connectorRefFixedValue, formik.values.spec.selectedOptionalFields, formik.values.spec.fields])
+  }, [
+    projectOptions,
+    connectorRefFixedValue,
+    formik.values.spec.selectedOptionalFields,
+    formik.values.spec.fields,
+    projectMetaResponse,
+    issueMetaResponse,
+    fetchingProjectMetadata,
+    fetchingIssueMetadata
+  ])
 
   function AddFieldsButton(): React.ReactElement {
     return (
@@ -701,7 +720,8 @@ function JiraCreateStepMode(props: JiraCreateStepModeProps, formikRef: StepFormi
   const {
     refetch: refetchIssueMetadata,
     data: issueMetaResponse,
-    error: issueMetadataFetchError
+    error: issueMetadataFetchError,
+    loading: fetchingIssueMetadata
   } = useGetJiraIssueCreateMetadata({
     lazy: true,
     queryParams: {
@@ -764,6 +784,7 @@ function JiraCreateStepMode(props: JiraCreateStepModeProps, formikRef: StepFormi
               projectsFetchError={projectsFetchError}
               refetchProjectMetadata={refetchProjectMetadata}
               refetchIssueMetadata={refetchIssueMetadata}
+              fetchingIssueMetadata={fetchingIssueMetadata}
               fetchingProjectMetadata={fetchingProjectMetadata}
               projectMetaResponse={projectMetaResponse}
               issueMetaResponse={issueMetaResponse}

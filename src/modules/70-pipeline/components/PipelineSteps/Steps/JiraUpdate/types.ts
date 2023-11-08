@@ -85,7 +85,7 @@ export interface JiraUpdateFormContentInterface {
   issueUpdateMetadataFetchError?: GetDataError<Failure | Error> | null
   issueTransitionsFetchError?: GetDataError<Failure | Error> | null
   issueUpdateMetadataLoading?: boolean
-  issueMetadataLoading?: boolean
+  fetchingIssueMetadata: boolean
   issueTransitionsLoading?: boolean
 }
 

@@ -14,7 +14,6 @@ import { ServiceNowFieldValueNG } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import type { ServiceNowFieldNG } from 'services/cd-ng'
-import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import { setServiceNowFieldAllowedValuesOptions } from './helper'
 import type { ServiceNowFieldNGWithValue } from './types'
@@ -43,7 +42,6 @@ interface MappedComponentInterface {
 export const TEXT_INPUT_SUPPORTED_FIELD_TYPES = new Set(['string', 'glide_date_time', 'integer', 'boolean', 'unknown'])
 
 function GetMappedFieldComponent({ selectedField, props, expressions, index }: MappedComponentInterface) {
-  const { CDS_SERVICENOW_FETCH_FIELDS } = useFeatureFlags()
   const showTextField = useCallback(() => {
     if (
       isNull(selectedField.schema) ||
@@ -71,9 +69,7 @@ function GetMappedFieldComponent({ selectedField, props, expressions, index }: M
         label={selectedField.name}
         name={`spec.selectedFields[${index}].value`}
         placeholder={selectedField.name}
-        disabled={isApprovalStepFieldDisabled(
-          props.readonly || (CDS_SERVICENOW_FETCH_FIELDS && selectedField.readOnly)
-        )}
+        disabled={isApprovalStepFieldDisabled(props.readonly || selectedField.readOnly)}
         className={cx(css.multiSelect, css.md)}
         multiTypeInputProps={{ allowableTypes: props.allowableTypes, expressions }}
       />
@@ -85,9 +81,7 @@ function GetMappedFieldComponent({ selectedField, props, expressions, index }: M
         name={`spec.selectedFields[${index}].value`}
         placeholder={selectedField.name}
         multiTypeTextArea={{ enableConfigureOptions: false, expressions, allowableTypes: props.allowableTypes }}
-        disabled={isApprovalStepFieldDisabled(
-          props.readonly || (CDS_SERVICENOW_FETCH_FIELDS && selectedField.readOnly)
-        )}
+        disabled={isApprovalStepFieldDisabled(props.readonly || selectedField.readOnly)}
         className={css.md}
       />
     )
@@ -95,9 +89,7 @@ function GetMappedFieldComponent({ selectedField, props, expressions, index }: M
     return (
       <FormInput.MultiTextInput
         label={selectedField.name}
-        disabled={isApprovalStepFieldDisabled(
-          props.readonly || (CDS_SERVICENOW_FETCH_FIELDS && selectedField.readOnly)
-        )}
+        disabled={isApprovalStepFieldDisabled(props.readonly || selectedField.readOnly)}
         name={`spec.selectedFields[${index}].value`}
         placeholder={selectedField.name}
         className={css.deploymentViewMedium}
@@ -121,7 +113,7 @@ export function ServiceNowFieldsRenderer(props: ServiceNowFieldsRendererProps) {
         let isFieldUpdatedComparedToServiceNow
 
         const existingValueObjFromServiceNow = selectedField?.key ? ticketFieldDetailsMap?.[selectedField.key] : {}
-        const existingValueFromServiceNow = existingValueObjFromServiceNow?.displayValue
+        const existingValueFromServiceNow = existingValueObjFromServiceNow?.value
 
         if (!isEmpty(selectedField?.allowedValues)) {
           // Handles refresh for dropdown fields

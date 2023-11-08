@@ -54,7 +54,7 @@ export interface ServiceNowUpdateData extends StepElementConfig {
     shortDescription?: string
     templateFields?: ServiceNowFieldValueNG[]
     templateName?: string
-    useServiceNowTemplate: boolean
+    useServiceNowTemplate?: boolean
     isTemplateSectionAvailable?: boolean
   }
 }

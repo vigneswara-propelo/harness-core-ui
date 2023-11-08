@@ -68,6 +68,7 @@ export interface JiraCreateFormContentInterface {
   refetchIssueMetadata: (props: UseGetJiraIssueCreateMetadataProps) => Promise<void>
   fetchingProjects: boolean
   fetchingProjectMetadata: boolean
+  fetchingIssueMetadata: boolean
   projectsResponse: ResponseListJiraProjectBasicNG | null
   allowableTypes: AllowedTypes
   projectMetaResponse: ResponseJiraIssueCreateMetadataNG | null
@@ -92,6 +93,18 @@ export interface JiraFieldSelectorProps {
 }
 
 export interface JiraDynamicFieldsSelectorInterface {
+  projectMetaResponse: ResponseJiraIssueCreateMetadataNG | null
+  issueMetaResponse: ResponseJiraIssueCreateMetadataNG | null
+  issueMetadataFetchError?: GetDataError<Failure | Error> | null
+  projectMetadataFetchError?: GetDataError<Failure | Error> | null
+  fetchingProjectMetadata: boolean
+  fetchingIssueMetadata: boolean
+  refetchProjectMetadata: (props: UseGetJiraIssueCreateMetadataProps) => Promise<void>
+  refetchIssueMetadata: (props: UseGetJiraIssueCreateMetadataProps) => Promise<void>
+  refetchIssueUpdateMetadata?: (props: UseGetJiraIssueUpdateMetadataProps) => Promise<void>
+  issueUpdateMetadataResponse?: ResponseJiraIssueUpdateMetadataNG | null
+  issueUpdateMetadataFetchError?: GetDataError<Failure | Error> | null
+  issueUpdateMetadataLoading?: boolean
   connectorRef: string
   selectedProjectKey?: string
   selectedIssueTypeKey?: string
@@ -118,10 +131,10 @@ export interface JiraDynamicFieldsSelectorContentInterface extends JiraDynamicFi
   fetchingIssueMetadata: boolean
   issueMetadataFetchError?: GetDataError<Failure | Error> | null
   issueMetaResponse: ResponseJiraIssueCreateMetadataNG | null
-  refetchIssueUpdateMetadata: (props: UseGetJiraIssueUpdateMetadataProps) => Promise<void>
-  fetchingIssueUpdateMetadata: boolean
+  refetchIssueUpdateMetadata?: (props: UseGetJiraIssueUpdateMetadataProps) => Promise<void>
+  issueUpdateMetadataLoading?: boolean
   issueUpdateMetadataFetchError?: GetDataError<Failure | Error> | null
-  issueUpdateMetaResponse: ResponseJiraIssueUpdateMetadataNG | null
+  issueUpdateMetadataResponse?: ResponseJiraIssueUpdateMetadataNG | null
   isSelectFieldEnabled?: boolean
 }
 
