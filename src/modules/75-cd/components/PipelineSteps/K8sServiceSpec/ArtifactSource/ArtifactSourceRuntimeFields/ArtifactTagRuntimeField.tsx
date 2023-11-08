@@ -104,7 +104,11 @@ const ArtifactTagRuntimeField = (props: TagsRenderContent): JSX.Element => {
 
   return (
     <SelectInputSetView
-      fieldPath={`artifacts.${artifactPath}.spec.tag`}
+      fieldPath={
+        isServerlessDeploymentTypeSelected
+          ? `artifacts.${artifactPath}.spec.artifactPath`
+          : `artifacts.${artifactPath}.spec.tag`
+      }
       template={template}
       formik={formik}
       disabled={isFieldDisabled()}
