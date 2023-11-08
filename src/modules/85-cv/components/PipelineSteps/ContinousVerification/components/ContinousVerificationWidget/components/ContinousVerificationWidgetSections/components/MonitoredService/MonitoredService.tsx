@@ -45,7 +45,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './MonitoredService.module.scss'
 
 export default function MonitoredService({
-  formik: { values: formValues, setFieldValue },
+  formik: { values: formValues, setFieldValue, setValues },
   formik
 }: MonitoredServiceProps): JSX.Element {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()
@@ -156,7 +156,16 @@ export default function MonitoredService({
     (updatedMonitoredService: MonitoredServiceResponse) => {
       const { sources } = updatedMonitoredService?.monitoredService || { sources: { healthSources: [] } }
       const newSpecs = getNewSpecs(updatedMonitoredService?.monitoredService, formValues)
-      setFieldValue('spec', newSpecs)
+      setValues(currentValue => {
+        return {
+          ...currentValue,
+          spec: {
+            ...currentValue.spec,
+            monitoredServiceRef: newSpecs.monitoredServiceRef,
+            healthSources: newSpecs.healthSources
+          }
+        }
+      })
       setHealthSourcesList(sources?.healthSources as RowData[])
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
