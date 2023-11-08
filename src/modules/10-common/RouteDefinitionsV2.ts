@@ -668,9 +668,13 @@ const routes = {
   toSTOTicketSummary: withModeModuleAndScopePrefix<{ issueId: string }>(() => '/issues'),
 
   // dashboards routes
+  toDashboardsOverview: withModeModuleAndScopePrefix<AccountPathProps>(() => `/overview`),
   toDashboardsFoldersPage: withModeModuleAndScopePrefix<AccountPathProps>(() => `/folders`),
   toDashboardsFolder: withModeModuleAndScopePrefix<DashboardFolderPathProps>(
     params => `/folder/${params?.folderId ?? 'shared'}`
+  ),
+  toDashboardsEmbedPageNew: withModeModuleAndScopePrefix<DashboardEmbedPathProps>(
+    params => `/dashboard/${params?.viewId}`
   ),
   toDashboardsEmbedPage: withModeModuleAndScopePrefix<DashboardEmbedPathProps>(
     params => `/folder/${params?.folderId ?? 'shared'}/view/${params?.viewId}`
