@@ -18,6 +18,7 @@ export interface EventsDateFilter {
 export type WebhookEventsQueryParams = {
   dateFilter?: EventsDateFilter
   webhookIdentifier?: string
+  eventId?: string
 } & CommonPaginationQueryParams
 
 export type WebhookEventsQueryParamsWithDefaults = RequiredPick<

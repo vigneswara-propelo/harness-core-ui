@@ -16,7 +16,8 @@ import {
   Text,
   Container,
   DateRangePickerButton,
-  DropDown
+  DropDown,
+  ExpandingSearchInput
 } from '@harness/uicore'
 import type { SelectOption } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
@@ -33,6 +34,7 @@ import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerS
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import EmptyContentImg from '@common/images/EmptySearchResults.svg'
 import { WebhookEventsQueryParams, useWebhookEventsQueryParamOptions } from '@pipeline/pages/utils/requestUtils'
+import { DEFAULT_PAGE_INDEX } from '@modules/70-pipeline/utils/constants'
 import WebhooksEventsList from './WebhooksEventsList'
 import { STATUS, WebhookTabIds } from '../utils'
 import NoData from '../NoData'
@@ -44,7 +46,7 @@ export default function WebhookEvents(): JSX.Element {
   const { module } = useParams<AccountPathProps & ModulePathParams>()
   const { updateQueryParams } = useUpdateQueryParams<WebhookEventsQueryParams>()
   const queryParamOptions = useWebhookEventsQueryParamOptions()
-  const { page, size, dateFilter, webhookIdentifier } = useQueryParams(queryParamOptions)
+  const { page, size, dateFilter, webhookIdentifier, eventId } = useQueryParams(queryParamOptions)
 
   const start = new Date()
   start.setDate(start.getDate() - 7)
@@ -71,7 +73,8 @@ export default function WebhookEvents(): JSX.Element {
       page: page ? page - 1 : 0,
       webhook_identifier: webhookIdentifier,
       event_start_time: dateFilter.startTime,
-      event_end_time: dateFilter.endTime
+      event_end_time: dateFilter.endTime,
+      event_identifier: eventId
     }
   })
 
@@ -105,6 +108,12 @@ export default function WebhookEvents(): JSX.Element {
         startTime: selectedDates[0].getTime(),
         endTime: selectedDates[1].getTime()
       }
+    })
+  }
+  const onSearchChange = (eventIdentifier: string): void => {
+    updateQueryParams({
+      page: DEFAULT_PAGE_INDEX,
+      eventId: eventIdentifier
     })
   }
   const getShowWebhooksDropdownList = (): SelectOption[] => {
@@ -167,6 +176,14 @@ export default function WebhookEvents(): JSX.Element {
                 webhookIdentifier: selected.value ? (selected.value as any) : undefined
               })
             }}
+          />
+        </Layout.Horizontal>
+        <Layout.Horizontal>
+          <ExpandingSearchInput
+            throttle={300}
+            alwaysExpanded
+            onChange={onSearchChange}
+            placeholder={getString('pipeline.webhooks.searchEventId')}
           />
         </Layout.Horizontal>
       </Page.SubHeader>

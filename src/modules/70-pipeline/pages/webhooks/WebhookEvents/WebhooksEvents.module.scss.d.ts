@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly avatar: string
+  readonly builder: string
   readonly card: string
   readonly drawer: string
   readonly marginBottom: string

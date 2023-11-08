@@ -42,7 +42,7 @@ export default function PayloadDetails(props: PayloadDetailsInterface): JSX.Elem
 
   return (
     <Drawer className={css.drawer} {...drawerStates} onClose={onClose} isCloseButtonShown>
-      <Container height="100%" background={Color.GREY_100} padding="xlarge">
+      <Container height="100%" padding="xlarge">
         <Layout.Vertical>
           <Text font={{ variation: FontVariation.H4 }}>{getString('pipeline.webhookEvents.payloadDetails')}</Text>
           <Layout.Horizontal flex padding="large">
@@ -65,8 +65,9 @@ export default function PayloadDetails(props: PayloadDetailsInterface): JSX.Elem
             isReadOnlyMode={true}
             isEditModeSupported={false}
             hideErrorMesageOnReadOnlyMode={true}
+            showCopyIcon={false}
             existingJSON={parsedPayload}
-            theme="DARK"
+            customCss={css.builder}
             height={'calc(100vh - 210px'}
           />
         </Layout.Vertical>

@@ -10,6 +10,7 @@ import { Drawer } from '@blueprintjs/core'
 import {
   Container,
   DateRangePickerButton,
+  ExpandingSearchInput,
   Heading,
   Icon,
   Layout,
@@ -80,6 +81,8 @@ export default function WebhookSyncDrawer(props: WebhookSyncDrawerInterface): JS
   const { onClose, repoName, filePath } = props
   const [payload, setPayload] = React.useState<string>('')
   const [dateFilter, setDateFilter] = React.useState<EventsDateFilter>(() => getDefaultDateState())
+  const [search, setSearch] = React.useState<string>('')
+  const [selectedRow, setSelectedRow] = React.useState<GitXWebhookEventResponse>()
   const [paginationState, setPaginationState] = React.useState<PaginationStateInterface>({
     size: 20,
     index: 0
@@ -98,14 +101,15 @@ export default function WebhookSyncDrawer(props: WebhookSyncDrawerInterface): JS
       repo_name: repoName,
       file_path: filePath,
       event_start_time: dateFilter.startTime,
-      event_end_time: dateFilter.endTime
+      event_end_time: dateFilter.endTime,
+      event_identifier: search
     }
   })
   const { startTime, endTime } = getDefaultDateState()
   const dateRange: DateRange = [new Date(Number(dateFilter.startTime)), new Date(Number(dateFilter.endTime))]
   const isLast7Days = dateRange[0]?.getTime() === startTime && dateRange[1]?.getTime() === endTime
   const hasData = Boolean(!loading && data && !isEmpty(data.content))
-  const noData = Boolean(!loading && data && isEmpty(data.content))
+  const webhookIdentifier = data?.content?.[0]?.webhook_identifier
 
   function handlePayloadDetailsClick(selectedPayload: string): void {
     setPayload(selectedPayload)
@@ -116,7 +120,7 @@ export default function WebhookSyncDrawer(props: WebhookSyncDrawerInterface): JS
       {
         Header: getString('pipeline.webhookEvents.dateTime').toUpperCase(),
         id: 'dateTime',
-        width: '15%',
+        width: '20%',
         Cell: withWebhookEvents(ColumnTimeStamp)
       },
       {
@@ -128,7 +132,7 @@ export default function WebhookSyncDrawer(props: WebhookSyncDrawerInterface): JS
       {
         Header: getString('pipeline.webhookEvents.eventId').toUpperCase(),
         id: 'eventId',
-        width: '40%',
+        width: '35%',
         Cell: withWebhookEvents(EventId)
       },
       {
@@ -186,42 +190,28 @@ export default function WebhookSyncDrawer(props: WebhookSyncDrawerInterface): JS
           <Text font={{ variation: FontVariation.H4 }} margin={{ bottom: 'medium' }}>
             {getString('pipeline.webhookEvents.events')}
           </Text>
-          {loading ? (
-            <ContainerSpinner flex={{ align: 'center-center' }} />
-          ) : error ? (
+          {error ? (
             <Page.Error message={getErrorInfoFromErrorObject(defaultTo(error, {}))} onClick={() => refetch()} />
           ) : (
             <>
-              {noData && (
-                <Container
-                  flex={{ align: 'center-center' }}
-                  border={{ width: 1, color: Color.GREY_500 }}
-                  height={'100%'}
-                >
-                  <Layout.Vertical flex={{ alignItems: 'center' }}>
-                    <img src={EmptyContentImg} width={300} height={150} />
-                    <Heading level={2} padding={{ top: 'xxlarge' }} margin={{ bottom: 'large' }}>
-                      {getString('pipeline.webhookEvents.noEvents')}
-                    </Heading>
-                  </Layout.Vertical>
-                </Container>
-              )}
-              {hasData && (
-                <>
-                  <Layout.Horizontal>
-                    <Text
-                      icon="repository"
-                      iconProps={{ size: 14, padding: { right: 'small' } }}
-                      margin={{ right: 'medium' }}
-                      padding={{ right: 'medium' }}
-                      border={{ right: true, width: 1, color: Color.GREY_200 }}
-                    >
-                      {repoName}
-                    </Text>
+              <>
+                <Layout.Horizontal margin={{ bottom: 'medium' }}>
+                  <Text
+                    icon="repository"
+                    iconProps={{ size: 14, padding: { right: 'small' } }}
+                    margin={{ right: 'medium' }}
+                    padding={{ right: 'medium' }}
+                    border={{ right: true, width: 1, color: Color.GREY_200 }}
+                  >
+                    {repoName}
+                  </Text>
+                  {webhookIdentifier && (
                     <Text icon="code-webhook" iconProps={{ size: 16, padding: { right: 'small' } }}>
-                      {data?.content[0].webhook_identifier}
+                      {webhookIdentifier}
                     </Text>
-                  </Layout.Horizontal>
+                  )}
+                </Layout.Horizontal>
+                <Layout.Horizontal margin={{ bottom: 'medium' }}>
                   <DateRangePickerButton
                     className={css.dateRange}
                     initialButtonText={
@@ -237,20 +227,52 @@ export default function WebhookSyncDrawer(props: WebhookSyncDrawerInterface): JS
                       `${selectedDates[0].toLocaleDateString()} - ${selectedDates[1].toLocaleDateString()}`
                     }
                   />
-                  <TableV2<GitXWebhookEventResponse>
-                    columns={syncDrawerColumns}
-                    data={data?.content as GitXWebhookEventResponse[]}
-                    className={css.table}
+                  <ExpandingSearchInput
+                    throttle={300}
+                    alwaysExpanded
+                    onChange={setSearch}
+                    placeholder={getString('pipeline.webhooks.searchEventId')}
+                    defaultValue={search}
+                    width={300}
                   />
-                  <div className={css.footer}>
-                    <Pagination {...paginationProps} hidePageNumbers />
-                  </div>
-                </>
-              )}
+                </Layout.Horizontal>
+                {loading ? (
+                  <ContainerSpinner flex={{ align: 'center-center' }} />
+                ) : hasData ? (
+                  <>
+                    <TableV2<GitXWebhookEventResponse>
+                      columns={syncDrawerColumns}
+                      data={data?.content as GitXWebhookEventResponse[]}
+                      className={css.table}
+                      getRowClassName={row => (row.original === selectedRow ? css.rowSelected : '')}
+                      onRowClick={row => {
+                        setSelectedRow(row)
+                        handlePayloadDetailsClick(defaultTo(row.payload, ''))
+                      }}
+                    />
+                    <div className={css.footer}>
+                      <Pagination {...paginationProps} hidePageNumbers />
+                    </div>
+                  </>
+                ) : (
+                  <Container
+                    flex={{ align: 'center-center' }}
+                    border={{ width: 1, color: Color.GREY_500 }}
+                    height={'100%'}
+                  >
+                    <Layout.Vertical flex={{ alignItems: 'center' }}>
+                      <img src={EmptyContentImg} width={300} height={150} />
+                      <Heading level={2} padding={{ top: 'xxlarge' }} margin={{ bottom: 'large' }}>
+                        {getString('pipeline.webhookEvents.noEvents')}
+                      </Heading>
+                    </Layout.Vertical>
+                  </Container>
+                )}
+              </>
             </>
           )}
         </Layout.Vertical>
-        <Layout.Vertical padding={'xxlarge'} background={Color.GREY_100} width={613}>
+        <Layout.Vertical padding={'xxlarge'} width={613}>
           <Text font={{ variation: FontVariation.H5 }} padding={{ bottom: 'large' }}>
             {getString('pipeline.webhookEvents.payloadDetails')}
           </Text>
@@ -261,9 +283,10 @@ export default function WebhookSyncDrawer(props: WebhookSyncDrawerInterface): JS
               isEditModeSupported={false}
               hideErrorMesageOnReadOnlyMode={true}
               existingJSON={parsedPayload}
-              theme="DARK"
+              showCopyIcon={false}
               width={548}
               height={'calc(100vh - 158px'}
+              customCss={css.builder}
             />
           ) : (
             <Container flex={{ align: 'center-center' }} border={{ width: 1, color: Color.GREY_500 }} height={'100%'}>

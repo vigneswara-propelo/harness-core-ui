@@ -90,7 +90,7 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
     return (
       <Layout.Vertical flex={{ alignItems: 'center' }} padding={'large'}>
         <Icon name="success-tick" size={34} padding={'small'} />
-        <Text font={{ variation: FontVariation.H3 }} padding={'medium'}>
+        <Text font={{ variation: FontVariation.H3 }} padding={'medium'} className={css.textAlign}>
           {getString(isEdit ? 'pipeline.webhooks.successUpdateMessage' : 'pipeline.webhooks.successMessage', {
             name: get(formikRef.current?.values, 'name', '')
           })}
@@ -121,18 +121,7 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
           getString('common.validation.fieldIsRequired', {
             name: getString('repository')
           })
-        ),
-        folderPaths: Yup.array()
-          .min(1)
-          .of(
-            Yup.object({
-              value: Yup.string().required(
-                getString('common.validation.fieldIsRequired', {
-                  name: getString('common.git.folderPath')
-                })
-              )
-            })
-          )
+        )
       })}
     >
       {formik => {
@@ -174,6 +163,7 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
                   <ConnectorReferenceField
                     name="connectorRef"
                     width={353}
+                    tooltipProps={{ dataTooltipId: 'webhook-connectorRef' }}
                     type={getSupportedProviders()}
                     selected={get(formik.values, 'connectorRef')}
                     error={formik.submitCount > 0 ? (formik.errors?.connectorRef as string) : undefined}
@@ -196,7 +186,9 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
                     connectorRef={get(formik.values, 'connectorRef')}
                     customClassName={css.width}
                   />
-                  <Text>{getString('common.git.folderPath')}</Text>
+                  <Text tooltipProps={{ dataTooltipId: 'webhook-folder-path' }}>{`${getString(
+                    'common.git.folderPath'
+                  )} ${getString('optionalField')}`}</Text>
                   <FieldArray
                     name="folderPaths"
                     render={({ push, remove }) => {
@@ -208,25 +200,35 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
                         <>
                           {Array.isArray(value) &&
                             value.map(({ id }, index: number) => (
-                              <div className={css.group} key={id}>
-                                <Layout.Horizontal className={cx(css.width, css.folderPath)}>
-                                  <div className={css.folderPathIndex}>{index + 1}.</div>
-                                  <FormInput.Text
-                                    name={`folderPaths[${index}].value`}
-                                    label=""
-                                    style={{ flexGrow: 1 }}
-                                  />
-                                </Layout.Horizontal>
-                                {index !== 0 && (
-                                  <Button
-                                    icon="main-trash"
-                                    iconProps={{ size: 20 }}
-                                    minimal
-                                    onClick={() => remove(index)}
-                                    data-testid={`remove-folderPaths-[${index}]`}
-                                  />
+                              <Layout.Vertical key={id}>
+                                <div className={css.group} key={id}>
+                                  <Layout.Horizontal className={cx(css.width, css.folderPath)}>
+                                    <div className={css.folderPathIndex}>{index + 1}.</div>
+                                    <FormInput.Text
+                                      name={`folderPaths[${index}].value`}
+                                      label=""
+                                      style={{ flexGrow: 1 }}
+                                    />
+                                  </Layout.Horizontal>
+                                  {index !== 0 && (
+                                    <Button
+                                      icon="main-trash"
+                                      iconProps={{ size: 20 }}
+                                      minimal
+                                      onClick={() => remove(index)}
+                                      data-testid={`remove-folderPaths-[${index}]`}
+                                    />
+                                  )}
+                                </div>
+                                {index === value.length - 1 && get(formik.values, `folderPaths[${index}].value`, '') && (
+                                  <Text padding={{ left: 'medium' }}>
+                                    {getString('pipeline.webhooks.folderPathWithRepo', {
+                                      repo: formik.values.repo,
+                                      folderPath: get(formik.values, `folderPaths[${index}].value`, '')
+                                    })}
+                                  </Text>
                                 )}
-                              </div>
+                              </Layout.Vertical>
                             ))}
                           <Button
                             intent="primary"

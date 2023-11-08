@@ -24,6 +24,7 @@ declare const styles: {
   readonly noWebhookHeading: string
   readonly noWebhookText: string
   readonly subHeader: string
+  readonly textAlign: string
   readonly toolbar: string
   readonly trashBtn: string
   readonly width: string

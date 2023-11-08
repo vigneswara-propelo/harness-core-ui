@@ -10,6 +10,11 @@
   .marginBottom {
     margin-bottom: 5px;
   }
+  :global {
+    .bp3-popover-wrapper {
+      padding-right: var(--spacing-small);
+    }
+  }
 }
 .payloadBtn {
   cursor: pointer;
@@ -17,9 +22,6 @@
 
 .dateRange {
   border: 1px solid var(--primary-5) !important;
-  margin-right: var(--margin-form-field) !important;
-  margin-top: var(--spacing-large) !important;
-  margin-bottom: var(--spacing-7) !important;
 }
 .footer {
   bottom: 0;
@@ -30,4 +32,12 @@
 .table {
   overflow-y: auto;
   margin-bottom: var(--spacing-11) !important;
+}
+
+.builder {
+  background-color: var(--grey-100);
+}
+
+.rowSelected {
+  background-color: var(--primary-1) !important;
 }

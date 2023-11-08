@@ -11,7 +11,7 @@ import ReactTimeago from 'react-timeago'
 import { Color, Intent } from '@harness/design-system'
 import { GitXWebhookResponse } from '@harnessio/react-ng-manager-client'
 import { Classes, Menu, PopoverInteractionKind, Position } from '@blueprintjs/core'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import css from './WebhooksList.module.scss'
@@ -63,15 +63,21 @@ export function GitConnector({ connector_ref: gitConnector }: { connector_ref: s
   )
 }
 
-export function FolderPath({ folder_paths: folderPath }: { folder_paths: string[] }): JSX.Element {
+export function FolderPath({
+  folder_paths: folderPath,
+  repo_name: repoName
+}: {
+  folder_paths: string[]
+  repo_name: string
+}): JSX.Element {
   const popoverDisplayCount = folderPath.length - 2
   const _folderPaths = [...folderPath].slice(2)
 
   return (
     <Layout.Vertical>
-      {folderPath?.[0] && (
+      {(folderPath?.[0] || repoName) && (
         <Text color={Color.BLACK} lineClamp={1} margin={{ ...(folderPath?.[1]?.length > 0 && { bottom: 'small' }) }}>
-          {folderPath[0]}
+          {isEmpty(folderPath?.[0]) ? repoName : folderPath?.[0]}
         </Text>
       )}
       {folderPath?.[1] && (

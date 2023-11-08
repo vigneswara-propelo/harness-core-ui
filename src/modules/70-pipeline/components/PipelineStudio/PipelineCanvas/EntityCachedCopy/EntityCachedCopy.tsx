@@ -138,7 +138,7 @@ function EntityCachedCopyInner(
           <Text
             onClick={() => setShowSyncDrawer(true)}
             className={css.hoverUnderline}
-            color={Color.PRIMARY_7}
+            color={Color.PRIMARY_5}
             padding={{ left: 'small' }}
           >
             {getString('pipeline.viewSyncActivities')}

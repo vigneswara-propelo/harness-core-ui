@@ -75,16 +75,20 @@ const getOverviewContent = ({
     value: repo
   }
 ]
-const getDetailsContent = ({ folderPaths }: { folderPaths?: string[] }): Content[] => [
+const getDetailsContent = ({ folderPaths, repoName }: { folderPaths?: string[]; repoName?: string }): Content[] => [
   {
     label: '',
     type: ContentType.CUSTOM,
     value: (
       <Layout.Vertical>
         {folderPaths?.map((folderPath, index) => {
+          let folderPathContent = folderPath
+          if (index === 0 && isEmpty(folderPath)) {
+            folderPathContent = defaultTo(repoName, '')
+          }
           return (
             <Text color={Color.BLACK} lineClamp={1} margin={{ bottom: 'small' }} key={folderPath}>
-              {`${index + 1}. ${folderPath}`}
+              {`${index + 1}. ${folderPathContent}`}
             </Text>
           )
         })}
@@ -286,7 +290,8 @@ export default function WebhookLandingPage(): JSX.Element {
                 classname={css.inputSet}
                 title={getString('common.git.folderPath')}
                 content={getDetailsContent({
-                  folderPaths: webhookResponse?.content?.folder_paths
+                  folderPaths: webhookResponse?.content?.folder_paths,
+                  repoName: webhookResponse?.content.repo_name
                 })}
               />
             </Layout.Horizontal>
@@ -307,9 +312,7 @@ export default function WebhookLandingPage(): JSX.Element {
               <Layout.Vertical padding={{ left: 'large', right: 'large' }}>
                 <Text padding={{ bottom: 'small' }}>{getString('pipeline.webhookEvents.dateTime')}</Text>
                 <Text color={Color.BLACK} padding={{ bottom: 'large' }}>{`${time} ${date}`}</Text>
-                <Text padding={{ bottom: 'small' }} color={Color.BLACK}>
-                  {getString('pipeline.webhookEvents.eventId')}
-                </Text>
+                <Text padding={{ bottom: 'small' }}>{getString('pipeline.webhookEvents.eventId')}</Text>
                 <Text
                   padding={{ bottom: 'xxlarge' }}
                   color={Color.BLACK}

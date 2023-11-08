@@ -97,6 +97,7 @@
 
 .toolbar {
   grid-area: toolbar;
+  justify-content: space-between;
 }
 
 .content {
@@ -129,4 +130,8 @@
   position: sticky;
   background-color: var(--white) !important;
   z-index: 1;
+}
+
+.textAlign {
+  text-align: center;
 }

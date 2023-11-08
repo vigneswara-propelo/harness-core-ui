@@ -5795,8 +5795,10 @@ export interface StringsMap {
   'pipeline.webhooks.deleteConfirmation': string
   'pipeline.webhooks.deleted': string
   'pipeline.webhooks.editWebhook': string
+  'pipeline.webhooks.folderPathWithRepo': string
   'pipeline.webhooks.newWebhook': string
   'pipeline.webhooks.noWebhook': string
+  'pipeline.webhooks.searchEventId': string
   'pipeline.webhooks.settingUpWebhook': string
   'pipeline.webhooks.successMessage': string
   'pipeline.webhooks.successSubtitle': string

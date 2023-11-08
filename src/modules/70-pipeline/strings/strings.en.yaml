@@ -2049,16 +2049,18 @@ webhooks:
   delete: Delete Webhook
   deleteConfirmation: Are you sure you want to delete this Webhook?
   settingUpWebhook: Setting up your web hook, this may take a few seconds ...
-  successMessage: Successfully added {{name}} Webhook
-  successUpdateMessage: Successfully updated {{name}} Webhook
+  successMessage: Successfully added "{{name}}" Webhook
+  successUpdateMessage: Successfully updated "{{name}}" Webhook
   successSubtitle: You may now perform push activity in Git and view the list of events in Harness
-  deleted: Successfully deleted Webhook {{ name }}
+  deleted: Successfully deleted Webhook "{{ name }}"
   webhooksListing: Listing
+  folderPathWithRepo: https://github.com/{{repo}}/{{folderPath}}
+  searchEventId: Search by Event ID
 webhookEvents:
   events: Webhook Events
   dateTime: DateTime
   author: Author
-  eventId: Event Id
+  eventId: Event ID
   payloadDetails: Payload Details
   timestamp: '{{ $.common.secret.timestamp }}'
   viewAll: View All Events

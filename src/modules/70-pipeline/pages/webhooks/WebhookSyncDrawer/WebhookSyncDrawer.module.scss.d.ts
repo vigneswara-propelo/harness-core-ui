@@ -7,11 +7,13 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly builder: string
   readonly dateRange: string
   readonly drawer: string
   readonly footer: string
   readonly marginBottom: string
   readonly payloadBtn: string
+  readonly rowSelected: string
   readonly table: string
 }
 export default styles
