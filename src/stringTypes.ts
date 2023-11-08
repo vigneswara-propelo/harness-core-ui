@@ -8629,6 +8629,8 @@ export interface StringsMap {
   'cf.auditLogs.events.setDefaultOnVariation': string
   'cf.auditLogs.events.setFeatureFlagStateOff': string
   'cf.auditLogs.events.setFeatureFlagStateOn': string
+  'cf.auditLogs.events.tagAdded': string
+  'cf.auditLogs.events.tagRemoved': string
   'cf.auditLogs.events.tagUpdated': string
   'cf.auditLogs.events.targetAddedForVariation': string
   'cf.auditLogs.events.updateClause': string

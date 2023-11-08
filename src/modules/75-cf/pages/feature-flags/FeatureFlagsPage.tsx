@@ -53,6 +53,7 @@ const FeatureFlagsPage: FC = () => {
 
   const [pageNumber, setPageNumber] = useQueryParamsState('page', 0)
   const [searchTerm, setSearchTerm] = useQueryParamsState('search', '')
+  const [tagSearchTerm, setTagSearchTerm] = useQueryParamsState('tagIdentifierFilter', '')
   const [flagFilter, setFlagFilter] = useQueryParamsState<Optional<FilterProps>>('filter', {})
   const [tagFilter, setTagFilter] = useQueryParamsState<tagsDropdownValue[]>('tag', [])
   const flatTagsFilter = JSON.stringify(tagFilter)
@@ -125,8 +126,10 @@ const FeatureFlagsPage: FC = () => {
       projectIdentifier,
       environmentIdentifier,
       accountIdentifier,
-      orgIdentifier
-    }
+      orgIdentifier,
+      tagIdentifierFilter: tagSearchTerm
+    },
+    debounce: 250
   })
 
   const toggleFeatureFlag = useToggleFeatureFlag({
@@ -161,6 +164,13 @@ const FeatureFlagsPage: FC = () => {
       setTagFilter(tag)
     },
     [setTagFilter]
+  )
+
+  const handleTagSearch = useCallback(
+    tagSearchString => {
+      setTagSearchTerm(tagSearchString)
+    },
+    [setTagSearchTerm]
   )
 
   useEffect(() => {
@@ -236,6 +246,7 @@ const FeatureFlagsPage: FC = () => {
                       onFilterChange={onTagFilterChange}
                       tagFilter={tagFilter}
                       disabled={!!tagsError || !!tagsLoading}
+                      onTagSearch={handleTagSearch}
                     />
                   </Formik>
                 )}

@@ -23,6 +23,7 @@ const renderComponent = (props: Partial<TagFilterProps>): RenderResult =>
         <TagFilter
           disabled={false}
           tagsData={mockTagsPayload.tags}
+          onTagSearch={jest.fn()}
           onFilterChange={jest.fn()}
           tagFilter={[]}
           {...props}
@@ -78,5 +79,17 @@ describe('TagFilter', () => {
     await userEvent.click(tagsDropdown)
 
     await waitFor(() => expect(tagsDropdown).toHaveValue(''))
+  })
+
+  test('it should allow tags to be searched', async () => {
+    const onTagSearchMock = jest.fn()
+
+    renderComponent({ onTagSearch: onTagSearchMock })
+
+    await waitFor(() => expect(onTagSearchMock).not.toHaveBeenCalled())
+
+    await userEvent.type(screen.getByRole('textbox'), 'tag1')
+
+    await waitFor(() => expect(onTagSearchMock).toHaveBeenCalled())
   })
 })

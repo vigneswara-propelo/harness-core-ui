@@ -407,5 +407,23 @@ describe('FeatureFlagsPage', () => {
 
       expect(screen.getByPlaceholderText('- tagsLabel -')).toBeDisabled()
     })
+
+    test('it should call the tags endpoint when a tag is being searched', async () => {
+      const useGetAllTagsMock = jest
+        .spyOn(cfServices, 'useGetAllTags')
+        .mockReturnValue({ data: mockTagsPayload, loading: false, error: null, refetch: jest.fn() } as any)
+
+      renderComponent()
+
+      const SEARCHED_TAG = 'tag1'
+
+      await userEvent.type(await screen.findByPlaceholderText('- tagsLabel -'), SEARCHED_TAG)
+
+      await waitFor(() => {
+        expect(useGetAllTagsMock).toHaveBeenCalledWith(
+          expect.objectContaining({ queryParams: expect.objectContaining({ tagIdentifierFilter: SEARCHED_TAG }) })
+        )
+      })
+    })
   })
 })

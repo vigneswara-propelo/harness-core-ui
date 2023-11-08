@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { FC, useEffect, useMemo } from 'react'
 import { FormikForm, FormInput } from '@harness/uicore'
 import type { MultiSelectOption } from '@harness/uicore'
@@ -11,6 +18,7 @@ export interface TagFilterProps {
   onFilterChange: (tags: MultiSelectOption[]) => void
   tagFilter: tagsDropdownValue[]
   disabled: boolean
+  onTagSearch: (tagSearch: string) => void
 }
 
 export interface tagsDropdownValue {
@@ -18,7 +26,13 @@ export interface tagsDropdownValue {
   value: string
 }
 
-const TagFilter: FC<TagFilterProps> = ({ tagsData = [], onFilterChange, tagFilter = [], disabled = false }) => {
+const TagFilter: FC<TagFilterProps> = ({
+  tagsData = [],
+  onFilterChange,
+  tagFilter = [],
+  disabled = false,
+  onTagSearch
+}) => {
   const tags = useMemo(() => {
     return tagsData.map(tag => ({
       label: tag.name,
@@ -44,8 +58,13 @@ const TagFilter: FC<TagFilterProps> = ({ tagsData = [], onFilterChange, tagFilte
         disabled={disabled}
         items={tags}
         name="tags"
+        usePortal
         onChange={value => onFilterChange(value)}
-        placeholder={getString('tagsLabel')}
+        multiSelectProps={{
+          placeholder: getString('tagsLabel'),
+          allowCreatingNewItems: false,
+          onQueryChange: query => onTagSearch(query)
+        }}
       />
     </FormikForm>
   )

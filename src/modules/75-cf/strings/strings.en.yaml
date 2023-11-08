@@ -474,6 +474,8 @@ auditLogs:
     setFeatureFlagStateOn: Flag turned on
     setFeatureFlagStateOff: Flag turned off
     tagUpdated: Tags updated
+    tagRemoved: Tags removed
+    tagAdded: Tags added
     addPrerequisite: Prerequisite '{{name}}' added
     removePrerequisite: Prerequisite '{{name}}' removed
     updatePrerequisite: Prerequisite '{{name}}' updated

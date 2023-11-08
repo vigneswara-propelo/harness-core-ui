@@ -251,11 +251,15 @@ describe('AuditLogsList', () => {
           break
 
         case 'addTag':
-          expect(screen.queryAllByText('cf.auditLogs.events.tagUpdated')[0]).toBeInTheDocument()
+          expect(screen.queryByText('cf.auditLogs.events.tagAdded')).toBeInTheDocument()
           break
 
         case 'updateTag':
-          expect(screen.queryAllByText('cf.auditLogs.events.tagUpdated')[1]).toBeInTheDocument()
+          expect(screen.queryByText('cf.auditLogs.events.tagUpdated')).toBeInTheDocument()
+          break
+
+        case 'removeTag':
+          expect(screen.queryByText('cf.auditLogs.events.tagRemoved')).toBeInTheDocument()
           break
       }
     })

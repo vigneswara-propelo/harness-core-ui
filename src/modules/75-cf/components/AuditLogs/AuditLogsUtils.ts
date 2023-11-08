@@ -130,12 +130,15 @@ export function translateEvents(
             : 'cf.auditLogs.events.setFeatureFlagStateOff'
         )
         break
-
-      case 'updateTag':
       case 'addTag':
+        message = getString('cf.auditLogs.events.tagAdded')
+        break
+      case 'updateTag':
         message = getString('cf.auditLogs.events.tagUpdated')
         break
-
+      case 'removeTag':
+        message = getString('cf.auditLogs.events.tagRemoved')
+        break
       case 'addPrerequisite':
         message = getString('cf.auditLogs.events.addPrerequisite', { name: Parameters.feature })
         break

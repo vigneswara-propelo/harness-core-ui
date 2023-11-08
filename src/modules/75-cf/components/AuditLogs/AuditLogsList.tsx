@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { CSSProperties, FC, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { Button, Container, Layout, Text, PageError, TableV2 } from '@harness/uicore'
@@ -96,35 +96,6 @@ const RenderCellDetails = (onViewButtonClick: (data: AuditTrail) => void) => {
 
     return (
       <Container flex>
-        {/*<Layout.Vertical spacing="xsmall" padding={{ left: 'small', right: 'small' }}>
-         Note: These below are for future use
-         <Text font={{ weight: 'bold' }}>
-          <span
-            style={{
-              display: 'inline-block',
-              padding: '3px 5px',
-              background: 'var(--grey-250)',
-              borderRadius: '4px',
-              fontSize: 'var(--font-size-xsmall)'
-            }}
-          >
-            Published
-          </span>
-          <Text
-            padding={{ left: 'xxxlarge' }}
-            inline
-            color={Color.RED_500}
-            icon="warning-sign"
-            iconProps={{ color: Color.RED_500 }}
-          >
-            (2)
-          </Text>
-        </Text>
-        <Text icon="trigger-schedule">
-          <strong style={{ display: 'inline-block', paddingRight: 'var(--spacing-xsmall' }}>Approver:</strong>
-          Olivia Dunham
-        </Text>
-        </Layout.Vertical>*/}
         <Button
           minimal
           icon="main-notes"
@@ -141,10 +112,10 @@ export interface AuditLogsListProps extends ContainerProps {
   startDate: Date
   endDate: Date
   objectType: 'FeatureActivation' | 'Segment'
-  loadingStyle?: React.CSSProperties
+  loadingStyle?: CSSProperties
 }
 
-export const AuditLogsList: React.FC<AuditLogsListProps> = ({
+export const AuditLogsList: FC<AuditLogsListProps> = ({
   startDate,
   endDate,
   flagData,
@@ -170,12 +141,15 @@ export const AuditLogsList: React.FC<AuditLogsListProps> = ({
       endTime: endDate.getTime()
     }
   }, [projectIdentifier, environmentIdentifier, accountIdentifier, orgIdentifier, pageNumber, startDate, endDate])
+
   const { data, loading, error, refetch } = useGetAuditByParams({
     queryParams
   })
+
   const { getString } = useStrings()
   const [showEventSummary, setShowEventSummary] = useState(false)
   const [auditItemForSummary, setAuditItemForSummary] = useState<AuditTrail>()
+
   const columns: Column<AuditTrail>[] = useMemo(
     () => [
       {
