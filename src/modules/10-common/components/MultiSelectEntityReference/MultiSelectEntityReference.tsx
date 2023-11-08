@@ -221,37 +221,57 @@ export function MultiSelectEntityReference<T extends Identifier>(
       )
     }
     if (!loading && !error && data.length) {
+      const { selectedItems, nonSelectedItems } = data.reduce(
+        (
+          accumulator: { selectedItems: EntityReferenceResponse<T>[]; nonSelectedItems: EntityReferenceResponse<T>[] },
+          item: EntityReferenceResponse<T>
+        ) => {
+          const checked = !!checkedItems.find(el => {
+            return isEqual(el.identifier, item.identifier) && isEqual(el.scope, selectedScope)
+          })
+
+          if (checked) {
+            accumulator.selectedItems.push(item)
+          } else {
+            accumulator.nonSelectedItems.push(item)
+          }
+
+          return accumulator
+        },
+        { selectedItems: [], nonSelectedItems: [] }
+      )
+
+      const getElement = (item: EntityReferenceResponse<T>, checked: boolean): JSX.Element => {
+        return (
+          <Layout.Horizontal
+            key={item.identifier}
+            className={cx(css.listItem, recordClassName, {
+              [css.selectedItem]: checked
+            })}
+            flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+          >
+            <Checkbox
+              onChange={e =>
+                onCheckboxChange((e.target as any).checked, {
+                  identifier: item.record.identifier,
+                  scope: selectedScope
+                })
+              }
+              data-testid={`Checkbox-${item.identifier}`}
+              disabled={disableItems(item.record['identifier'], disablePreSelectedItems, selectedItemsUuidAndScope)}
+              className={css.checkbox}
+              checked={checked}
+              large
+              labelElement={recordRender({ item, selectedScope, selected: checked })}
+            />
+          </Layout.Horizontal>
+        )
+      }
+
       renderedListTemp = (
         <div className={cx(css.referenceList, { [css.referenceListOverflow]: data.length > 5 })}>
-          {data.map((item: EntityReferenceResponse<T>) => {
-            const checked = !!checkedItems.find(el => {
-              return isEqual(el.identifier, item.identifier) && isEqual(el.scope, selectedScope)
-            })
-            return (
-              <Layout.Horizontal
-                key={item.identifier}
-                className={cx(css.listItem, recordClassName, {
-                  [css.selectedItem]: checked
-                })}
-                flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-              >
-                <Checkbox
-                  onChange={e =>
-                    onCheckboxChange((e.target as any).checked, {
-                      identifier: item.record.identifier,
-                      scope: selectedScope
-                    })
-                  }
-                  data-testid={`Checkbox-${item.identifier}`}
-                  disabled={disableItems(item.record['identifier'], disablePreSelectedItems, selectedItemsUuidAndScope)}
-                  className={css.checkbox}
-                  checked={checked}
-                  large
-                  labelElement={recordRender({ item, selectedScope, selected: checked })}
-                />
-              </Layout.Horizontal>
-            )
-          })}
+          {selectedItems.map((item: EntityReferenceResponse<T>) => getElement(item, true))}
+          {nonSelectedItems.map((item: EntityReferenceResponse<T>) => getElement(item, false))}
         </div>
       )
     }

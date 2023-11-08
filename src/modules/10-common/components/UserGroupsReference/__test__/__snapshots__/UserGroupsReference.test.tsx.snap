@@ -878,6 +878,71 @@ exports[`Test full flow should render rows with checkbox and return selected dat
             class="referenceList referenceListOverflow"
           >
             <div
+              class="Layout--horizontal StyledProps--main listItem selectedItem StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+            >
+              <label
+                class="bp3-control bp3-checkbox bp3-large StyledProps--font Checkbox--checkbox checkbox Checkbox--checked StyledProps--main"
+              >
+                <input
+                  checked=""
+                  data-testid="Checkbox-ug1"
+                  type="checkbox"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+                <div
+                  class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+                  style="width: 100%;"
+                >
+                  <div
+                    class="Layout--vertical StyledProps--main"
+                  >
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-primary7"
+                      style="--text-line-clamp: 1; width: 160px;"
+                    >
+                      User Group 1
+                    </p>
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small"
+                      style="--text-line-clamp: 1; width: 160px;"
+                    >
+                      ug1
+                    </p>
+                  </div>
+                  <div
+                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                  >
+                    <div
+                      class="AvatarGroup--stack"
+                      style="--avatar-over-lap: -13px;"
+                    >
+                      <div
+                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
+                      >
+                        <span
+                          class="bp3-popover-wrapper Avatar--avatarPopOver"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="Avatar--AvatarInner"
+                              style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                              tabindex="0"
+                            >
+                              A
+                            </div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </label>
+            </div>
+            <div
               class="Layout--horizontal StyledProps--main listItem StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
             >
               <label
@@ -1305,70 +1370,6 @@ exports[`Test full flow should render rows with checkbox and return selected dat
                     >
                       + 8
                     </p>
-                  </div>
-                </div>
-              </label>
-            </div>
-            <div
-              class="Layout--horizontal StyledProps--main listItem selectedItem StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
-            >
-              <label
-                class="bp3-control bp3-checkbox bp3-large StyledProps--font Checkbox--checkbox checkbox Checkbox--checked StyledProps--main"
-              >
-                <input
-                  data-testid="Checkbox-ug1"
-                  type="checkbox"
-                />
-                <span
-                  class="bp3-control-indicator"
-                />
-                <div
-                  class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
-                  style="width: 100%;"
-                >
-                  <div
-                    class="Layout--vertical StyledProps--main"
-                  >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-primary7"
-                      style="--text-line-clamp: 1; width: 160px;"
-                    >
-                      User Group 1
-                    </p>
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small"
-                      style="--text-line-clamp: 1; width: 160px;"
-                    >
-                      ug1
-                    </p>
-                  </div>
-                  <div
-                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
-                  >
-                    <div
-                      class="AvatarGroup--stack"
-                      style="--avatar-over-lap: -13px;"
-                    >
-                      <div
-                        class="AvatarGroup--stackAvatar Avatar--Avatar Avatar--contentStyle"
-                      >
-                        <span
-                          class="bp3-popover-wrapper Avatar--avatarPopOver"
-                        >
-                          <span
-                            class="bp3-popover-target"
-                          >
-                            <div
-                              class="Avatar--AvatarInner"
-                              style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
-                              tabindex="0"
-                            >
-                              A
-                            </div>
-                          </span>
-                        </span>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </label>
