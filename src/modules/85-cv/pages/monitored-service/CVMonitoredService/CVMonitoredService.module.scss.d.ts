@@ -23,5 +23,6 @@ declare const styles: {
   readonly tags: string
   readonly tagsText: string
   readonly toggleFlagButton: string
+  readonly wrapperContainer: string
 }
 export default styles

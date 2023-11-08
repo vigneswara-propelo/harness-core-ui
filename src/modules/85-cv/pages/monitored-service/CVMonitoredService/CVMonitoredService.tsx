@@ -212,7 +212,7 @@ const MonitoredService = (props: MonitoredServiceProps) => {
   }
 
   return (
-    <>
+    <Container className={css.wrapperContainer}>
       <Page.Header
         breadcrumbs={<NGBreadcrumbs />}
         title={
@@ -312,7 +312,7 @@ const MonitoredService = (props: MonitoredServiceProps) => {
           }}
         />
       )}
-    </>
+    </Container>
   )
 }
 

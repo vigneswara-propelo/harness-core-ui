@@ -5,6 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+.wrapperContainer {
+  min-width: 1388px;
+}
+
 .healthScoreCardContainer {
   display: flex;
   justify-content: flex-start;
