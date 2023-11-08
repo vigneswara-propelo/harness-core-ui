@@ -23,7 +23,7 @@ import type { FormikProps } from 'formik'
 import { useLocation } from 'react-router-dom'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import { getCIShellOptions } from '@ci/utils/CIShellOptionsUtils'
-import { StepFormikFowardRef, setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
@@ -136,7 +136,7 @@ export const BackgroundStepBase = (
         onChange?.(schemaValues)
         return validate(
           valuesToValidate,
-          getEditViewValidateFieldsConfig(isBuildInfrastructureTypeVM, stepViewType === StepViewType.Template),
+          getEditViewValidateFieldsConfig(isBuildInfrastructureTypeVM, isTemplateStudio),
           {
             initialValues,
             steps: currentStage?.stage?.spec?.execution?.steps || {},
@@ -170,7 +170,7 @@ export const BackgroundStepBase = (
                 description: {}
               }}
             />
-            {!isBuildInfrastructureTypeVM && stepViewType !== StepViewType.Template ? (
+            {!isBuildInfrastructureTypeVM && !isTemplateStudio ? (
               <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
@@ -201,7 +201,7 @@ export const BackgroundStepBase = (
               />
             </Container>
 
-            {!isBuildInfrastructureTypeVM && stepViewType !== StepViewType.Template ? <EntryPointElement /> : null}
+            {!isBuildInfrastructureTypeVM && !isTemplateStudio ? <EntryPointElement /> : null}
             <div className={cx(css.fieldsGroup, css.withoutSpacing, css.topPadding3, css.bottomPadding3)}>
               <MultiTypeFieldSelector
                 name="spec.command"
@@ -264,7 +264,7 @@ export const BackgroundStepBase = (
                 summary={getString('pipeline.additionalConfiguration')}
                 details={
                   <Container margin={{ top: 'medium' }}>
-                    {isBuildInfrastructureTypeVM || stepViewType === StepViewType.Template ? (
+                    {isBuildInfrastructureTypeVM || isTemplateStudio ? (
                       <>
                         <ConnectorRefWithImage
                           showOptionalSublabel={true}

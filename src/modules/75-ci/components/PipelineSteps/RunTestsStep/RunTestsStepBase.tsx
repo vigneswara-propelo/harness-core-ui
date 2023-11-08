@@ -6,6 +6,7 @@
  */
 
 import React, { FormEvent, useCallback } from 'react'
+import { useLocation } from 'react-router-dom'
 import {
   Text,
   Formik,
@@ -24,7 +25,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import type { FormikErrors, FormikProps } from 'formik'
 import { get, merge } from 'lodash-es'
 import cx from 'classnames'
-import { StepFormikFowardRef, setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import { getCIRunTestsStepShellOptions } from '@ci/utils/CIShellOptionsUtils'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -49,7 +50,7 @@ import {
 import { CIBuildInfrastructureType, Language } from '@pipeline/utils/constants'
 import type { RunTestsStepProps, RunTestsStepData, RunTestsStepDataUI } from './RunTestsStep'
 import { transformValuesFieldsConfig, getEditViewValidateFieldsConfig } from './RunTestsStepFunctionConfigs'
-import { CIStepOptionalConfig, getOptionalSubLabel } from '../CIStep/CIStepOptionalConfig'
+import { CIStepOptionalConfig, PathnameParams, getOptionalSubLabel } from '../CIStep/CIStepOptionalConfig'
 import {
   AllMultiTypeInputTypesForStep,
   useGetPropagatedStageById,
@@ -286,6 +287,9 @@ export const RunTestsStepBase = (
   // const values = getInitialValuesInCorrectFormat<RunTestsStepData, RunTestsStepDataUI>(initialValues, transformValuesFieldsConfig, {
   //   pullOptions
   // })
+
+  const pathnameParams = useLocation()?.pathname?.split('/') || []
+  const isTemplateStudio = pathnameParams.includes(PathnameParams.TEMPLATE_STUDIO)
 
   const renderMultiTypeTextField = React.useCallback(
     ({
@@ -526,7 +530,7 @@ export const RunTestsStepBase = (
             getEditViewValidateFieldsConfig(
               buildInfrastructureType,
               (valuesToValidate?.spec?.language as any)?.value as Language,
-              stepViewType === StepViewType.Template
+              isTemplateStudio
             ),
             {
               initialValues,
@@ -574,7 +578,7 @@ export const RunTestsStepBase = (
               CIBuildInfrastructureType.VM,
               CIBuildInfrastructureType.Cloud,
               CIBuildInfrastructureType.Docker
-            ].includes(buildInfrastructureType) && stepViewType !== StepViewType.Template ? (
+            ].includes(buildInfrastructureType) && !isTemplateStudio ? (
               <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
@@ -849,7 +853,7 @@ gradle.projectsEvaluated {
                       CIBuildInfrastructureType.VM,
                       CIBuildInfrastructureType.Cloud,
                       CIBuildInfrastructureType.Docker
-                    ].includes(buildInfrastructureType) || stepViewType === StepViewType.Template ? (
+                    ].includes(buildInfrastructureType) || isTemplateStudio ? (
                       <ConnectorRefWithImage
                         showOptionalSublabel={true}
                         readonly={readonly}

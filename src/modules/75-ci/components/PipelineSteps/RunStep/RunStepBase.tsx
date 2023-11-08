@@ -6,6 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
+import { useLocation } from 'react-router-dom'
 import cx from 'classnames'
 import {
   Text,
@@ -19,7 +20,7 @@ import {
 import { Color } from '@harness/design-system'
 import type { FormikErrors, FormikProps } from 'formik'
 import { get, merge } from 'lodash-es'
-import { StepFormikFowardRef, setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
@@ -38,7 +39,7 @@ import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidate
 import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import type { RunStepProps, RunStepData, RunStepDataUI } from './RunStep'
 import { transformValuesFieldsConfig, getEditViewValidateFieldsConfig } from './RunStepFunctionConfigs'
-import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'
+import { CIStepOptionalConfig, PathnameParams } from '../CIStep/CIStepOptionalConfig'
 import {
   AllMultiTypeInputTypesForStep,
   useGetPropagatedStageById,
@@ -81,6 +82,9 @@ export const RunStepBase = (
     }
   }, [])
 
+  const pathnameParams = useLocation()?.pathname?.split('/') || []
+  const isTemplateStudio = pathnameParams.includes(PathnameParams.TEMPLATE_STUDIO)
+
   return (
     <Formik
       initialValues={getInitialValuesInCorrectFormat<RunStepData, RunStepDataUI>(
@@ -114,7 +118,7 @@ export const RunStepBase = (
           errors,
           validate(
             valuesToValidate,
-            getEditViewValidateFieldsConfig(buildInfrastructureType, stepViewType === StepViewType.Template),
+            getEditViewValidateFieldsConfig(buildInfrastructureType, isTemplateStudio),
             {
               initialValues,
               steps: currentStage?.stage?.spec?.execution?.steps || {},
@@ -155,7 +159,7 @@ export const RunStepBase = (
               CIBuildInfrastructureType.VM,
               CIBuildInfrastructureType.Cloud,
               CIBuildInfrastructureType.Docker
-            ].includes(buildInfrastructureType) && stepViewType !== StepViewType.Template ? (
+            ].includes(buildInfrastructureType) && !isTemplateStudio ? (
               <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
@@ -246,7 +250,7 @@ export const RunStepBase = (
                       CIBuildInfrastructureType.VM,
                       CIBuildInfrastructureType.Cloud,
                       CIBuildInfrastructureType.Docker
-                    ].includes(buildInfrastructureType) || stepViewType === StepViewType.Template ? (
+                    ].includes(buildInfrastructureType) || isTemplateStudio ? (
                       <ConnectorRefWithImage
                         showOptionalSublabel={true}
                         readonly={readonly}
