@@ -12,7 +12,9 @@ import {
   ServiceListMock,
   ServiceListOptionsMock,
   DynatraceUpdatedHealthSourceMock,
-  DynatraceHealthSourceSpecMock
+  DynatraceHealthSourceSpecMock,
+  customMetricError,
+  dynatraceMetricData
 } from '@cv/pages/health-source/connectors/Dynatrace/__tests__/DynatraceHealthSource.mock'
 import type { DynatraceFormDataInterface } from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.types'
 import {
@@ -22,6 +24,7 @@ import {
 import { MAPPED_METRICS_LIST_MOCK } from '@cv/pages/health-source/connectors/Dynatrace/components/DynatraceCustomMetrics/__tests__/DynatraceCustomMetrics.mock'
 import { MockDatadogMetricInfo } from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/components/DatadogMetricsDetailsContent/tests/mock'
 import type { UpdatedHealthSource } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
+import { validateMapping } from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.utils'
 
 describe('Validate DynatraceHealthSource Utils', () => {
   test('validate mapping health source data to Dynatrace mapping', () => {
@@ -154,6 +157,29 @@ describe('Validate DynatraceHealthSource Utils', () => {
     expect(
       DynatraceHealthSourceUtils.validateMapping(dataWithNoMetricPackSelected, [], 0, val => val, new Map())
     ).toEqual(expectedErrors)
+  })
+
+  test('validate service field being optional', () => {
+    expect(
+      validateMapping(dynatraceMetricData as unknown as DynatraceFormDataInterface, [], 0, val => val, new Map())
+    ).toEqual({ ...customMetricError })
+
+    dynatraceMetricData.metricData.Performance = true
+
+    expect(
+      validateMapping(dynatraceMetricData as unknown as DynatraceFormDataInterface, [], 0, val => val, new Map())
+    ).toEqual({
+      dynatraceService: 'cv.healthSource.connectors.Dynatrace.validations.selectedService',
+      ...customMetricError
+    })
+
+    dynatraceMetricData.showCustomMetric = false
+
+    expect(
+      validateMapping(dynatraceMetricData as unknown as DynatraceFormDataInterface, [], 0, val => val, new Map())
+    ).toEqual({
+      dynatraceService: 'cv.healthSource.connectors.Dynatrace.validations.selectedService'
+    })
   })
 
   test('validate onSubmitDynatraceData', async () => {

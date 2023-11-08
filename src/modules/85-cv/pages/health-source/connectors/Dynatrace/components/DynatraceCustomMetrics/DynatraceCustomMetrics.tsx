@@ -83,7 +83,7 @@ export default function DynatraceCustomMetrics(props: DynatraceCustomMetricsProp
         return
       }
       const sampleData = await querySampleData(
-        { metricSelector: metricSelector, serviceId: selectedServiceId },
+        { metricSelector: metricSelector },
         { queryParams: sampleDataQueryParams }
       )
       setTimeseriesData(transformSampleDataIntoHighchartOptions(sampleData.data))

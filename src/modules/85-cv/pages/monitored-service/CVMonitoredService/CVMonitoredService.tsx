@@ -25,7 +25,7 @@ import { useStrings } from 'framework/strings'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { useGetMonitoredServiceListEnvironments, useGetCountOfServices } from 'services/cv'
+import { useGetMonitoredServiceListEnvironments, useGetCountOfServices, AutoDiscoveryResponseDTO } from 'services/cv'
 import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
 import { useQueryParams } from '@common/hooks'
@@ -78,6 +78,7 @@ const MonitoredService = (props: MonitoredServiceProps) => {
   const [environment, setEnvironment] = useState<SelectOption>()
   const [search, setSearch] = useState<string>('')
   const [selectedFilter, setSelectedFilter] = useState<FilterTypes>(FilterTypes.ALL)
+  const [discoveryResource, setDiscoveryResource] = useState<AutoDiscoveryResponseDTO | undefined>()
 
   const projectRef = useRef(projectIdentifier)
   const isMFEEnabled = useFeatureFlag(FeatureFlag.SRM_MICRO_FRONTEND)
@@ -304,7 +305,9 @@ const MonitoredService = (props: MonitoredServiceProps) => {
               serviceCountLoading: serviceCountLoading,
               createButton: createButton(Boolean(!serviceCountData?.allServicesCount), config),
               environmentIdentifier: getEnvironmentIdentifier(environment),
-              serviceCountErrorMessage: getErrorMessage(serviceCountError)
+              serviceCountErrorMessage: getErrorMessage(serviceCountError),
+              discoveryResource,
+              setDiscoveryResource
             }
           }}
         />

@@ -207,24 +207,22 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
                 />
               </CustomMetric>
             ) : (
-              selectedServiceValue && (
-                <CardWithOuterTitle
-                  title={getString('cv.healthSource.connectors.customMetrics')}
-                  dataTooltipId={'customMetricsTitle'}
+              <CardWithOuterTitle
+                title={getString('cv.healthSource.connectors.customMetrics')}
+                dataTooltipId={'customMetricsTitle'}
+              >
+                <Button
+                  icon="plus"
+                  minimal
+                  margin={{ left: 'medium' }}
+                  intent="primary"
+                  tooltip={getString('cv.healthSource.connectors.customMetricsTooltip')}
+                  tooltipProps={{ interactionKind: PopoverInteractionKind.HOVER_TARGET_ONLY }}
+                  onClick={() => setShowCustomMetric(true)}
                 >
-                  <Button
-                    icon="plus"
-                    minimal
-                    margin={{ left: 'medium' }}
-                    intent="primary"
-                    tooltip={getString('cv.healthSource.connectors.customMetricsTooltip')}
-                    tooltipProps={{ interactionKind: PopoverInteractionKind.HOVER_TARGET_ONLY }}
-                    onClick={() => setShowCustomMetric(true)}
-                  >
-                    {getString('cv.monitoringSources.addMetric')}
-                  </Button>
-                </CardWithOuterTitle>
-              )
+                  {getString('cv.monitoringSources.addMetric')}
+                </Button>
+              </CardWithOuterTitle>
             )}
             {getIsMetricThresholdCanBeShown(formik.values.metricData, groupedCreatedMetrics) && (
               <MetricThresholdProvider

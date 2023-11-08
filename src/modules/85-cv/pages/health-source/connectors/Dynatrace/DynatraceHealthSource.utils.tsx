@@ -173,18 +173,21 @@ export const validateMapping = (
 ): ((key: string) => string) => {
   let errors = {} as any
 
-  if (!dynatraceMetricData.showCustomMetric) {
+  const { Infrastructure, Performance } = dynatraceMetricData?.metricData || {}
+
+  if (!dynatraceMetricData.showCustomMetric || Infrastructure || Performance) {
     errors = validateMetricPackData(dynatraceMetricData.metricData, getString, errors)
+    const metricDataSelectedService =
+      typeof dynatraceMetricData.selectedService !== 'string'
+        ? dynatraceMetricData?.selectedService?.value
+        : dynatraceMetricData.selectedService
+    if (!metricDataSelectedService || metricDataSelectedService === 'loading') {
+      errors[DynatraceHealthSourceFieldNames.DYNATRACE_SELECTED_SERVICE] = getString(
+        'cv.healthSource.connectors.Dynatrace.validations.selectedService'
+      )
+    }
   }
-  const metricDataSelectedService =
-    typeof dynatraceMetricData.selectedService !== 'string'
-      ? dynatraceMetricData?.selectedService?.value
-      : dynatraceMetricData.selectedService
-  if (!metricDataSelectedService || metricDataSelectedService === 'loading') {
-    errors[DynatraceHealthSourceFieldNames.DYNATRACE_SELECTED_SERVICE] = getString(
-      'cv.healthSource.connectors.Dynatrace.validations.selectedService'
-    )
-  }
+
   // if custom metrics are present then validate custom metrics form
   if (dynatraceMetricData.showCustomMetric) {
     errors = validateDynatraceCustomMetricFields(

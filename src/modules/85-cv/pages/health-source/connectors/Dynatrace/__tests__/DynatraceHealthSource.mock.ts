@@ -193,3 +193,20 @@ export const mockUseGetDynatraceServices = {
   data: { data: [] },
   refetch: jest.fn()
 }
+
+export const dynatraceMetricData = {
+  metricData: {
+    Infrastructure: false,
+    Performance: false
+  },
+  selectedService: '',
+  showCustomMetric: true,
+  metricSelector: 'metric1',
+  isManualQuery: false
+}
+export const customMetricError = {
+  groupName: 'cv.monitoringSources.prometheus.validation.groupName',
+  metricName: 'cv.monitoringSources.metricNameValidation',
+  metricSelector: 'cv.monitoringSources.datadog.validation.queryContainsbuiltin:service',
+  sli: 'cv.monitoringSources.gco.mapMetricsToServicesPage.validation.baseline'
+}
