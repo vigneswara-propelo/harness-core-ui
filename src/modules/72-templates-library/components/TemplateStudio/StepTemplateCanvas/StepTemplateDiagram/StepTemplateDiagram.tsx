@@ -41,7 +41,7 @@ export const StepTemplateDiagram = (): JSX.Element => {
   const [stepPaletteModuleInfos, setStepPaletteModuleInfos] = React.useState<StepPalleteModuleInfo[]>([])
   const { module } = useParams<ModulePathParams>()
   const [isStepSelectorOpen, setIsStepSelectorOpen] = React.useState<boolean>()
-  const { FF_LICENSE_STATE } = useLicenseStore()
+  const { CI_LICENSE_STATE, FF_LICENSE_STATE } = useLicenseStore()
   const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   const { IACM_ENABLED } = useFeatureFlags()
 
@@ -85,12 +85,20 @@ export const StepTemplateDiagram = (): JSX.Element => {
     } else if (module === 'cf') {
       stepPaletteModules = getStepPaletteModuleInfosFromStage(StageType.FEATURE)
     } else {
-      if (shouldVisible && FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
+      if (
+        shouldVisible &&
+        FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE &&
+        CI_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE
+      ) {
         stepPaletteModules = getAllStepPaletteModuleInfos()
       } else if (shouldVisible) {
         stepPaletteModules = getStepPaletteModuleInfosFromStage(StageType.DEPLOY)
       } else if (FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
         stepPaletteModules = getStepPaletteModuleInfosFromStage(StageType.FEATURE)
+      }
+
+      if (CI_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE && !stepPaletteModules.some(sPM => sPM.module === 'ci')) {
+        stepPaletteModules = [...stepPaletteModules, ...getStepPaletteModuleInfosFromStage(StageType.BUILD)]
       }
     }
     if (IACM_ENABLED) {
