@@ -1339,6 +1339,7 @@ verifyStep:
   controlNodePlaceholder: Enter .* for all or specific regex like control-1|control-2
   testNodePlaceholder: Enter .* for all or specific regex like test-1|test-2
   shouldUseCDNodesLabel: Use node details from CD
+  shouldFailWhenNoAnalysisForMetrics: Fail if any custom metrics has no analysis
   shouldUseCDNodesDescription:
     Checking this checkbox ensures that metrics and log details are collected and analyzed specifically for
     the newly deployed nodes. This helps focus the analysis on the latest changes and avoids potential

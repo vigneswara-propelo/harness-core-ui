@@ -32,7 +32,8 @@ export default function ConfigureFields(props: {
 
   const {
     CV_UI_DISPLAY_NODE_REGEX_FILTER: isRegexNodeFilterFFEnabled,
-    CV_UI_DISPLAY_SHOULD_USE_NODES_FROM_CD_CHECKBOX: isFilterFromCDEnabled
+    CV_UI_DISPLAY_SHOULD_USE_NODES_FROM_CD_CHECKBOX: isFilterFromCDEnabled,
+    CV_UI_DISPLAY_FAIL_IF_ANY_CUSTOM_METRIC_IN_NO_ANALYSIS: isFailOnNoCustomMetricsAnalysisEnabled
   } = useFeatureFlags()
 
   useEffect(() => {
@@ -167,7 +168,8 @@ export default function ConfigureFields(props: {
       {canShowNodeFilterOptions({
         analysisType: formValues?.spec?.type,
         isFilterFromCDEnabled,
-        isRegexNodeFilterFFEnabled
+        isRegexNodeFilterFFEnabled,
+        isFailOnNoCustomMetricsAnalysisEnabled
       }) && <NodeFilteringFields allowableTypes={allowableTypes} />}
     </>
   )

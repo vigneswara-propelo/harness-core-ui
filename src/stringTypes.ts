@@ -10693,6 +10693,7 @@ export interface StringsMap {
   'cv.verifyStep.monitoredServiceMultipleServiceEnvHideMessge': string
   'cv.verifyStep.nodeFilteringDescription': string
   'cv.verifyStep.nodeFilteringTitle': string
+  'cv.verifyStep.shouldFailWhenNoAnalysisForMetrics': string
   'cv.verifyStep.shouldUseCDNodesDescription': string
   'cv.verifyStep.shouldUseCDNodesLabel': string
   'cv.verifyStep.shouldUseNodesFromCD': string

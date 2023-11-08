@@ -25,13 +25,21 @@ export default function NodeFilteringFieldsDetail({ allowableTypes }: NodeFilter
 
   const {
     CV_UI_DISPLAY_NODE_REGEX_FILTER: isRegexNodeFilterFFEnabled,
-    CV_UI_DISPLAY_SHOULD_USE_NODES_FROM_CD_CHECKBOX: isFilterFromCDEnabled
+    CV_UI_DISPLAY_SHOULD_USE_NODES_FROM_CD_CHECKBOX: isFilterFromCDEnabled,
+    CV_UI_DISPLAY_FAIL_IF_ANY_CUSTOM_METRIC_IN_NO_ANALYSIS: isFailOnNoCustomMetricsAnalysisEnabled
   } = useFeatureFlags()
 
   const canShowRegexFields = isRegexNodeFilterFFEnabled && verificationType !== VerificationTypes.Auto
 
   return (
     <>
+      {isFailOnNoCustomMetricsAnalysisEnabled && (
+        <FormInput.CheckBox
+          name="spec.spec.failIfAnyCustomMetricInNoAnalysis"
+          label={getString('cv.verifyStep.shouldFailWhenNoAnalysisForMetrics')}
+        />
+      )}
+
       {isFilterFromCDEnabled && (
         <>
           <FormInput.CheckBox

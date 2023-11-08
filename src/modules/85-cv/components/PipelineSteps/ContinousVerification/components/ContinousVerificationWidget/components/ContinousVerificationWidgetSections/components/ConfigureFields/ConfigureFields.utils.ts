@@ -18,14 +18,20 @@ export function isValidNodeFilteringType(type?: string): boolean {
 export function canShowNodeFilterOptions({
   isRegexNodeFilterFFEnabled,
   isFilterFromCDEnabled,
-  analysisType
+  analysisType,
+  isFailOnNoCustomMetricsAnalysisEnabled
 }: {
   isRegexNodeFilterFFEnabled?: boolean
   isFilterFromCDEnabled?: boolean
+  isFailOnNoCustomMetricsAnalysisEnabled?: boolean
   analysisType?: string
 }): boolean {
-  if (analysisType === VerificationTypes.Auto && !isFilterFromCDEnabled) {
+  if (analysisType === VerificationTypes.Auto && !isFilterFromCDEnabled && !isFailOnNoCustomMetricsAnalysisEnabled) {
     return false
+  }
+
+  if (isFailOnNoCustomMetricsAnalysisEnabled) {
+    return true
   }
 
   return Boolean((isRegexNodeFilterFFEnabled || isFilterFromCDEnabled) && isValidNodeFilteringType(analysisType))

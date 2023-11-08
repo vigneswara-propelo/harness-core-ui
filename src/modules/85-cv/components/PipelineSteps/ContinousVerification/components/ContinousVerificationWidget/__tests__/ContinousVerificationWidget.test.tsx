@@ -467,6 +467,56 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
     })
   })
 
+  describe('Fail if any custom metrics fails', () => {
+    test('Should render optional accordion when CV_UI_DISPLAY_FAIL_IF_ANY_CUSTOM_METRIC_IN_NO_ANALYSIS feature flag is enabled', async () => {
+      render(
+        <TestWrapper
+          defaultFeatureFlagValues={{
+            CV_UI_DISPLAY_FAIL_IF_ANY_CUSTOM_METRIC_IN_NO_ANALYSIS: true
+          }}
+        >
+          <Formik initialValues={formikMockValuesWithSimpleVerification.values} onSubmit={jest.fn()}>
+            <div>
+              <SelectVerificationType
+                allowableTypes={[MultiTypeInputType.FIXED]}
+                formik={formikMockValuesWithSimpleVerification}
+              />
+            </div>
+          </Formik>
+        </TestWrapper>
+      )
+
+      await waitFor(() => expect(screen.getByTestId(/NodeFilteringFields-panel/)).toBeInTheDocument())
+
+      await userEvent.click(screen.getByText(/projectsOrgs.optional/))
+
+      await waitFor(() =>
+        expect(document.querySelector('input[name="spec.spec.failIfAnyCustomMetricInNoAnalysis"]')).toBeInTheDocument()
+      )
+    })
+
+    test('Should not render optional accordion when CV_UI_DISPLAY_FAIL_IF_ANY_CUSTOM_METRIC_IN_NO_ANALYSIS and other feature flag is disabled', () => {
+      render(
+        <TestWrapper
+          defaultFeatureFlagValues={{
+            CV_UI_DISPLAY_FAIL_IF_ANY_CUSTOM_METRIC_IN_NO_ANALYSIS: false
+          }}
+        >
+          <Formik initialValues={formikMockValuesWithSimpleVerification.values} onSubmit={jest.fn()}>
+            <div>
+              <SelectVerificationType
+                allowableTypes={[MultiTypeInputType.FIXED]}
+                formik={formikMockValuesWithSimpleVerification}
+              />
+            </div>
+          </Formik>
+        </TestWrapper>
+      )
+
+      expect(screen.queryByTestId(/NodeFilteringFields-panel/)).not.toBeInTheDocument()
+    })
+  })
+
   describe('Multi service or Environment deploy', () => {
     test('Should not render health sources if the stage is deploying multiple services or environments', () => {
       render(
