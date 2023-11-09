@@ -98,7 +98,7 @@ import {
   getGitConnectorRepoBasedOnRepoUrl,
   getCIStarterPipeline,
   getRemoteInputSetPayload,
-  getPipelinePayloadWithCodebase
+  getCloudPipelinePayloadWithCodebase
 } from '../../../utils/HostedBuildsUtils'
 import css from './InfraProvisioningWizard.module.scss'
 
@@ -254,7 +254,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             pipelineYaml: yamlStringify(
               id && StarterConfigIdToOptionMap[id] === PipelineConfigurationOption.GenerateYAML
                 ? generatedYAMLAsJSON
-                : getPipelinePayloadWithCodebase()
+                : getCloudPipelinePayloadWithCodebase()
             ),
             configuredGitConnector,
             orgIdentifier,

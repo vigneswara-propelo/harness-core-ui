@@ -312,7 +312,7 @@ describe('Test HostedBuildsUtils methods', () => {
   })
 
   test('Test getNamespaceFromGitConnectorURL method', () => {
-    const configuredGitConnector: ConnectorInfoDTO = {
+    const configuredGitConnectorGithub: ConnectorInfoDTO = {
       name: 'Github',
       identifier: 'Github',
       type: 'Github',
@@ -339,22 +339,56 @@ describe('Test HostedBuildsUtils methods', () => {
         type: 'Account'
       }
     }
-    expect(getNamespaceFromGitConnectorURL(configuredGitConnector)).toBe('')
-    expect(getNamespaceFromGitConnectorURL(set(configuredGitConnector, 'spec.url', 'https://github.com/'))).toBe('')
-    expect(
-      getNamespaceFromGitConnectorURL(set(configuredGitConnector, 'spec.url', 'https://github.com/test-namespace'))
-    ).toBe('test-namespace')
-    expect(
-      getNamespaceFromGitConnectorURL(set(configuredGitConnector, 'spec.url', 'https://github.com/test-namespace/'))
-    ).toBe('test-namespace')
+    const configuredGitConnectorBitbucket: ConnectorInfoDTO = {
+      name: 'Bitbucket',
+      identifier: 'Bitbucket',
+      type: 'Bitbucket',
+      spec: {
+        url: 'https://bitbucket.org',
+        validationRepo: 'test-repo',
+        authentication: {
+          type: 'Http',
+          spec: {
+            type: 'UsernameToken',
+            spec: {
+              username: 'test-user',
+              tokenRef: 'account.pat'
+            }
+          }
+        },
+        apiAccess: {
+          type: 'Token',
+          spec: {
+            tokenRef: 'account.pat'
+          }
+        },
+        executeOnDelegate: false,
+        type: 'Account'
+      }
+    }
+    expect(getNamespaceFromGitConnectorURL(configuredGitConnectorGithub)).toBe('')
+    expect(getNamespaceFromGitConnectorURL(configuredGitConnectorBitbucket)).toBe('')
+    expect(getNamespaceFromGitConnectorURL(set(configuredGitConnectorGithub, 'spec.url', 'https://github.com/'))).toBe(
+      ''
+    )
     expect(
       getNamespaceFromGitConnectorURL(
-        set(configuredGitConnector, 'spec.url', 'https://github.com/test-namespace/test-repo')
+        set(configuredGitConnectorGithub, 'spec.url', 'https://github.com/test-namespace')
       )
     ).toBe('test-namespace')
     expect(
       getNamespaceFromGitConnectorURL(
-        set(configuredGitConnector, 'spec.url', 'https://github.com/test-namespace/test-repo.git')
+        set(configuredGitConnectorGithub, 'spec.url', 'https://github.com/test-namespace/')
+      )
+    ).toBe('test-namespace')
+    expect(
+      getNamespaceFromGitConnectorURL(
+        set(configuredGitConnectorGithub, 'spec.url', 'https://github.com/test-namespace/test-repo')
+      )
+    ).toBe('test-namespace')
+    expect(
+      getNamespaceFromGitConnectorURL(
+        set(configuredGitConnectorGithub, 'spec.url', 'https://github.com/test-namespace/test-repo.git')
       )
     ).toBe('test-namespace')
   })

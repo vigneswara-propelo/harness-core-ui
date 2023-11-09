@@ -24,7 +24,6 @@ import {
   GitHubPRTriggerActions,
   GitlabPRTriggerActions,
   DEFAULT_STAGE_ID,
-  KUBERNETES_HOSTED_INFRA_ID,
   DOCKER_REGISTRY_CONNECTOR_REF,
   ACCOUNT_SCOPE_PREFIX,
   CodebaseProperties
@@ -274,12 +273,7 @@ export const getPipelinePayloadWithoutCodebase = (): Record<string, any> => {
             type: 'CI',
             spec: {
               cloneCodebase: false,
-              infrastructure: {
-                type: 'KubernetesHosted',
-                spec: {
-                  identifier: KUBERNETES_HOSTED_INFRA_ID
-                }
-              },
+              infrastructure: {},
               execution: {
                 steps: [
                   {
@@ -343,15 +337,6 @@ export const getCIStarterPipelineV1 = (): Record<string, any> => {
 
 export const getCIStarterPipeline = (yamlVersion: YAMLVersion): PipelineConfig => {
   return yamlVersion === YAMLVersion.V1 ? getCIStarterPipelineV1() : getCloudPipelinePayloadWithCodebase()
-}
-
-export const getPipelinePayloadWithCodebase = (): Record<string, any> => {
-  const originalPipeline = getPipelinePayloadWithoutCodebase()
-  return set(
-    set(originalPipeline, 'pipeline.properties', CodebaseProperties),
-    'pipeline.stages.0.stage.spec.cloneCodebase',
-    true
-  )
 }
 
 export const getCloudPipelinePayloadWithoutCodebase = (): PipelineConfig => {
@@ -460,5 +445,5 @@ export const getRepoNameForDefaultBranchFetch = (
 const GIT_PROVIDER_BASE_URL = new Map<ConnectorInfoDTO['type'], string>([
   [Connectors.GITHUB, 'https://github.com'],
   [Connectors.GITLAB, 'https://gitlab.com'],
-  [Connectors.BITBUCKET, 'https://bitbucket.com']
+  [Connectors.BITBUCKET, 'https://bitbucket.org']
 ])
