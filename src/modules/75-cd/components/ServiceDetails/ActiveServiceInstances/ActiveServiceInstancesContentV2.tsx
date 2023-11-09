@@ -32,7 +32,7 @@ import type {
   ProjectPathProps,
   ServicePathProps
 } from '@common/interfaces/RouteInterfaces'
-import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
 import { ActiveServiceInstancePopover } from './ActiveServiceInstancePopover'
 import { PostProdRollbackBtnProps } from '../ServiceDetailsSummaryV2/PostProdRollback/PostProdRollbackButton'
 import css from './ActiveServiceInstances.module.scss'
@@ -512,7 +512,7 @@ export const RenderPipelineExecution: Renderer<CellProps<TableRowData>> = ({
         source
       })
 
-      window.open(`${windowLocationUrlPartBeforeHash()}#${route}`)
+      window.open(`${getWindowLocationUrl()}${route}`)
     } else {
       showError(getString('cd.serviceDashboard.noLastDeployment'))
     }

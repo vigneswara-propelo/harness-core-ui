@@ -23,7 +23,7 @@ import type { InstanceGroupedByInfrastructureV2, InstanceGroupedByPipelineExecut
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import type { StoreType } from '@common/constants/GitSyncTypes'
 import { numberFormatter } from '@common/utils/utils'
-import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
 import { DialogEmptyState } from './EnvironmentDetailsUtils'
 
 import css from './EnvironmentDetailSummary.module.scss'
@@ -264,7 +264,7 @@ const RenderPipelineExecution: Renderer<CellProps<TableRowData>> = ({
         storeType: pipelineExecutionDetail?.pipelineExecutionSummary?.storeType as StoreType
       })
 
-      window.open(`${windowLocationUrlPartBeforeHash()}#${route}`)
+      window.open(`${getWindowLocationUrl()}${route}`)
     } else {
       showError(getString('cd.serviceDashboard.noLastDeployment'))
     }

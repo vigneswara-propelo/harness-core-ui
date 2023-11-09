@@ -5,7 +5,6 @@ import {
   stageMetaCall,
   stageMetaResponse
 } from '../../../support/85-cv/analyseImpactStep/constants'
-import { addHashInCypressURLBasedOnBrowserRouter } from '../../../utils/windowLocation'
 
 describe('Analyse Step', () => {
   beforeEach(() => {
@@ -36,7 +35,7 @@ describe('Analyse Step', () => {
     ).as('pipelineData')
 
     cy.visit(
-      `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/project1/pipelines/testCypressInit/pipeline-studio/?storeType=INLINE&stageId=Stage_Default&sectionId=EXECUTION`,
+      `account/accountId/cd/orgs/default/projects/project1/pipelines/testCypressInit/pipeline-studio/?storeType=INLINE&stageId=Stage_Default&sectionId=EXECUTION`,
       {
         timeout: 30000
       }

@@ -25,7 +25,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
 import type { ExecutionPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
-import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { checkIfInstanceCanBeRolledBackPromise, triggerRollbackPromise, PostProdRollbackCheckDTO } from 'services/cd-ng'
 import type { PipelineExecInfoProps } from '../ServiceDetailUtils'
@@ -94,7 +94,8 @@ export default function PostProdRollbackBtn(props: PostProdRollbackBtnProps): JS
         module,
         source
       })
-      window.open(`${windowLocationUrlPartBeforeHash()}#${route}`)
+
+      window.open(`${getWindowLocationUrl()}${route}`)
     } else {
       showError(getString('cd.serviceDashboard.noLastDeployment'))
     }

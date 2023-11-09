@@ -19,7 +19,7 @@ import RuntimeUsageList from '../views/RuntimeUsageView/RuntimeUsageList'
 import { filterData } from '../utils'
 
 const projectEntityUrl =
-  'http://localhost/account/dummy/settings/organizations/orgId/setup/resources/connectors/PreCertified_Instance'
+  'http://localhost/ng/account/dummy/settings/organizations/orgId/setup/resources/connectors/PreCertified_Instance'
 window.open = jest.fn()
 const listActivitiesPromise = jest.fn(() =>
   Promise.resolve({ data: secretRuntimeUsageData, refetch: () => Promise.resolve(secretRuntimeUsageData) })

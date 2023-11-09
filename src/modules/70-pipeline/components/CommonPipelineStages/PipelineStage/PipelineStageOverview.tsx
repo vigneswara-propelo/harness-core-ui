@@ -35,7 +35,7 @@ import type { AllNGVariables } from '@pipeline/utils/types'
 import type { AccountPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { useGetEntityMetadata } from '@common/hooks/useGetEntityMetadata'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
-import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
 import { StageTimeout } from '@modules/75-cd/components/PipelineStudio/StageTimeout/StageTimeout'
 import { PipelineStageTabs } from './utils'
 import css from './PipelineStageOverview.module.scss'
@@ -172,7 +172,7 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
               e.preventDefault()
               e.stopPropagation()
               const targetUrl = await entityData.getEntityURL()
-              window.open(`${windowLocationUrlPartBeforeHash()}#${targetUrl}`, '_blank')
+              window.open(`${getWindowLocationUrl()}${targetUrl}`, '_blank')
             }}
           >
             <Icon name="chained-pipeline" color={Color.PRIMARY_7} size={20} margin={{ right: 'xsmall' }} />

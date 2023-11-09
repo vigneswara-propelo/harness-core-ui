@@ -25,7 +25,7 @@ import { Color, FontVariation } from '@harness/design-system'
 
 import type { ServicePipelineWithRevertInfo } from 'services/cd-ng'
 import { StringKeys, useStrings } from 'framework/strings'
-import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
 import routes from '@common/RouteDefinitions'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { mapToExecutionStatus } from '@pipeline/components/Dashboards/shared'
@@ -71,7 +71,7 @@ export function OpenTaskCard(props: OpenTaskCardProps): JSX.Element {
         source: 'deployments'
       })
 
-      window.open(`${windowLocationUrlPartBeforeHash()}#${route}`)
+      window.open(`${getWindowLocationUrl()}${route}`)
     } else {
       showError(getString('cd.serviceDashboard.noLastDeployment'))
     }

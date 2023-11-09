@@ -14,7 +14,7 @@ import { Layout, Popover, Text, TagsPopover, Icon, TableV2 } from '@harness/uico
 import { Classes, Position, PopoverInteractionKind } from '@blueprintjs/core'
 import type { Column } from 'react-table'
 import { parse } from '@common/utils/YamlHelperMethods'
-import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
@@ -58,7 +58,7 @@ export function FreezeWindowCell({ row, column }: CellProps): CellType {
           lineClamp={1}
           onClick={e => {
             e.stopPropagation()
-            window.open(`${windowLocationUrlPartBeforeHash()}#${getViewFreezeRowLink()}`)
+            window.open(`${getWindowLocationUrl()}${getViewFreezeRowLink()}`)
           }}
           className={cx(css.cursor, css.hoverUnderline)}
         >

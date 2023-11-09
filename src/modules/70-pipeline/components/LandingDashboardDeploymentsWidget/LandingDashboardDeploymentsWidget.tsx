@@ -56,7 +56,7 @@ import {
 import { useErrorHandler } from '@pipeline/components/Dashboards/shared'
 import DashboardAPIErrorWidget from '@projects-orgs/components/DashboardAPIErrorWidget/DashboardAPIErrorWidget'
 import DashboardNoDataWidget from '@projects-orgs/components/DashboardNoDataWidget/DashboardNoDataWidget'
-import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
 
 import { renderTooltipContent } from '@pipeline/utils/DashboardUtils'
 import { NAV_MODE } from '@modules/10-common/utils/routeUtils'
@@ -161,8 +161,8 @@ function DeployOverviewPopover({
           }
         }
     const search = qs.stringify({ filters: { ...filterQuery } })
-    const baseUrl = windowLocationUrlPartBeforeHash()
-    window.open(`${baseUrl}#${route + '?' + search}`)
+    const baseUrl = getWindowLocationUrl()
+    window.open(`${baseUrl}${route + '?' + search}`)
   }
 
   const keyList = Array.from(projectOrgCount.keys())

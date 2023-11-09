@@ -16,8 +16,7 @@ describe('Window Location Utils', () => {
     windowSpy.mockImplementation(() => ({
       location: {
         pathname: browserRouterEnabledPathNotEnabled
-      },
-      browserRouterEnabled: true
+      }
     }))
     expect(getLocationPathName()).toBe(browserRouterEnabledPath)
   })
@@ -26,18 +25,8 @@ describe('Window Location Utils', () => {
       location: {
         pathname: browserRouterEnabledPathNotEnabled
       },
-      harnessNameSpace: 'harnessNameSpace',
-      browserRouterEnabled: true
+      harnessNameSpace: 'harnessNameSpace'
     }))
     expect(getLocationPathName()).toBe(browserRouterEnabledWithNameSpace)
-  })
-  test('window location when borwserRouter is not present', () => {
-    windowSpy.mockImplementation(() => ({
-      browserRouterEnabled: undefined,
-      location: {
-        pathname: browserRouterEnabledPathNotEnabled
-      }
-    }))
-    expect(getLocationPathName()).toBe(browserRouterEnabledPathNotEnabled)
   })
 })

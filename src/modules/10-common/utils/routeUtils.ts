@@ -292,7 +292,7 @@ export const validateReturnUrl = (url: string): boolean => {
 }
 
 export const returnLaunchUrl = (url: string): string => {
-  return `${getLocationPathName().replace(/\/ng\//, '/')}${url}`
+  return `${getLocationPathName().replace(/\/ng\/?/, '/')}${url}`
 }
 
 export const getEnvServiceRoute = ({

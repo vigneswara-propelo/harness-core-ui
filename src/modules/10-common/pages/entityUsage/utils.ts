@@ -12,7 +12,7 @@ import { ProjectPathProps, SecretsPathProps } from '@common/interfaces/RouteInte
 import { ListActivitiesQueryParams } from 'services/cd-ng'
 import { StringKeys } from 'framework/strings'
 import { COMMON_PAGE_SIZE_OPTIONS } from '@modules/10-common/constants/Pagination'
-import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
 import { EntityType } from './EntityConstants'
 
 export const pageSize = COMMON_PAGE_SIZE_OPTIONS[1]
@@ -74,7 +74,7 @@ export const getOnlyValueTypeArray = (items: MultiSelectOption[]): string[] => {
 }
 
 export const routeToEntityUrl = (targetUrl: string): void => {
-  let baseUrl = windowLocationUrlPartBeforeHash()
+  let baseUrl = getWindowLocationUrl()
   if (baseUrl.endsWith('/')) {
     baseUrl = baseUrl.substring(0, baseUrl.length - 1)
   }

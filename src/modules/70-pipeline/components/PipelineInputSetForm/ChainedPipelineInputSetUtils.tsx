@@ -19,7 +19,7 @@ import { useStrings } from 'framework/strings'
 import type { AccountPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { useGetEntityMetadata } from '@common/hooks/useGetEntityMetadata'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
-import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
 import { PipelineGitMetaData } from '@modules/70-pipeline/context/StageFormContext'
 import type { StepViewType } from '../AbstractSteps/Step'
 import css from './PipelineInputSetForm.module.scss'
@@ -101,7 +101,7 @@ export function ChainedPipelineInfoPopover(
               e.preventDefault()
               e.stopPropagation()
               const targetUrl = await entityData.getEntityURL()
-              window.open(`${windowLocationUrlPartBeforeHash()}#${targetUrl}`, '_blank')
+              window.open(`${getWindowLocationUrl()}${targetUrl}`, '_blank')
             }}
           >
             <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_5} lineClamp={1}>

@@ -57,7 +57,7 @@ import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceS
 import { isExecutionIgnoreFailed, isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { mapToExecutionStatus } from '@pipeline/components/Dashboards/shared'
-import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
 import { RateTrend, TrendPopover } from '@cd/pages/dashboard/dashboardUtils'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import type { Sort, SortFields } from '@common/utils/listUtils'
@@ -318,8 +318,8 @@ const RenderLastDeployment: Renderer<CellProps<ServiceListItem>> = ({ row }) => 
         source
       })
 
-      const baseUrl = windowLocationUrlPartBeforeHash()
-      window.open(`${baseUrl}#${route}`)
+      const baseUrl = getWindowLocationUrl()
+      window.open(`${baseUrl}${route}`)
     } else {
       showError(getString('cd.serviceDashboard.noLastDeployment'))
     }

@@ -119,7 +119,7 @@ const getIdentifiersFromSavedProj = (savedProject: SavedProjectDetails): SavedPr
   }
 }
 
-const getRedirectionUrl = (accountId: string, source: string | undefined): string => {
+const getCGRedirectionUrl = (accountId: string, source: string | undefined): string => {
   const baseUrl = getLocationPathName().replace(/\/ng\//, '/')
   const dashboardUrl = `${baseUrl}#/account/${accountId}/dashboard`
   const onboardingUrl = `${baseUrl}#/account/${accountId}/onboarding`
@@ -279,7 +279,7 @@ export function AppStoreProvider({ children }: PropsWithChildren<unknown>): Reac
     // don't redirect on local because it goes into infinite loop
     // because there may be no current gen to go to
     if (!__DEV__ && currentAccount && !currentAccount.nextGenEnabled) {
-      window.location.href = getRedirectionUrl(accountId, source)
+      window.location.href = getCGRedirectionUrl(accountId, source)
     }
     if (currentAccount) {
       localStorage.setItem('defaultExperience', currentAccount.defaultExperience || '')

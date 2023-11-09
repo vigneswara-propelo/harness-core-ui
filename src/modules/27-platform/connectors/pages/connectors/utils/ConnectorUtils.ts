@@ -32,7 +32,7 @@ import type {
   SecretManagerMetadataRequestDTO
 } from 'services/cd-ng'
 import { useStrings, UseStringsReturn } from 'framework/strings'
-import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
 import { ConnectivityModeType, DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import type { CategoryInterface, ItemInterface } from '@common/components/AddDrawer/AddDrawer'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
@@ -2370,7 +2370,7 @@ export const buildErrorTrackingPayload = (formData: FormData): Connector => {
       description,
       tags,
       spec: {
-        url: windowLocationUrlPartBeforeHash(),
+        url: getWindowLocationUrl(),
         apiKeyRef: apiReferenceKey,
         delegateSelectors: delegateSelectors || {}
       } as ErrorTrackingConnectorDTO

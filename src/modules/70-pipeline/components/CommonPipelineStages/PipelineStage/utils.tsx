@@ -19,7 +19,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
 import css from './PipelineStageMinimalMode.module.scss'
 
 export interface CodeSourceWrapper {
@@ -149,7 +149,7 @@ export const ViewPipelineButtonCell: Renderer<CellProps<PMSPipelineSummaryRespon
       branch: get(data, 'gitDetails.branch'),
       storeType: get(data, 'storeType') as StoreType
     })
-    window.open(`${windowLocationUrlPartBeforeHash()}#${pipelineStudioPath}`, '_blank')
+    window.open(`${getWindowLocationUrl()}${pipelineStudioPath}`, '_blank')
   }
 
   return (

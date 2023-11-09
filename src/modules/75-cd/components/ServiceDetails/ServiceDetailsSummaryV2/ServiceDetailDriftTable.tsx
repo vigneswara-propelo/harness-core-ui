@@ -14,7 +14,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import ReactTimeago from 'react-timeago'
 import { useStrings } from 'framework/strings'
 import type { ArtifactDeploymentDetail } from 'services/cd-ng'
-import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
 import type {
   ExecutionPathProps,
   ModulePathParams,
@@ -45,7 +45,7 @@ const RenderEnvName: Renderer<CellProps<ArtifactDeploymentDetail>> = ({ row }) =
       module
     })
 
-    window.open(`${windowLocationUrlPartBeforeHash()}#${route}`)
+    window.open(`${getWindowLocationUrl()}${route}`)
   }
   return (
     <Text
@@ -111,7 +111,7 @@ const RenderLastDeployedTime: Renderer<CellProps<ArtifactDeploymentDetail>> = ({
         source
       })
 
-      window.open(`${windowLocationUrlPartBeforeHash()}#${route}`)
+      window.open(`${getWindowLocationUrl()}${route}`)
     } else {
       showError(getString('cd.serviceDashboard.noLastDeployment'))
     }

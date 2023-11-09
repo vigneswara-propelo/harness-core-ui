@@ -5,8 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { addHashInCypressURLBasedOnBrowserRouter } from '../../utils/windowLocation'
-
 export const projectId = 'project1'
 export const accountId = 'accountId'
 export const orgIdentifier = 'default'
@@ -118,22 +116,22 @@ export const saveTemplateCall = `/template/api/templates?accountIdentifier=${acc
 // Routes
 
 export const updatedPipelineExecutionEndpoint = `/pipeline/api/pipeline/execute/${pipelineIdentifier}?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&moduleType=cd&notifyOnlyUser=false`
-export const executionListRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/deployments`
-export const executionListCIRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/ci/orgs/${orgIdentifier}/projects/${projectId}/deployments`
-export const pipelinesExecutionDelegateRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/executions/${delegateExecutionId}/pipeline`
-export const executionHistoryRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/executions`
-export const pipelineStudioRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/pipeline-studio/?stageId=j&sectionId=SERVICE`
-export const newPipelineRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/${projectId}/pipelines/-1/pipeline-studio/`
-export const inputSetsRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/input-sets`
-export const environmentRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/environments`
-export const servicesRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/services`
-export const pipelinesRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines`
-export const triggersRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/triggers`
+export const executionListRoute = `account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/deployments`
+export const executionListCIRoute = `account/${accountId}/ci/orgs/${orgIdentifier}/projects/${projectId}/deployments`
+export const pipelinesExecutionDelegateRoute = `account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/executions/${delegateExecutionId}/pipeline`
+export const executionHistoryRoute = `account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/executions`
+export const pipelineStudioRoute = `account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/pipeline-studio/?stageId=j&sectionId=SERVICE`
+export const newPipelineRoute = `account/accountId/cd/orgs/default/projects/${projectId}/pipelines/-1/pipeline-studio/`
+export const inputSetsRoute = `account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/input-sets`
+export const environmentRoute = `account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/environments`
+export const servicesRoute = `account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/services`
+export const pipelinesRoute = `account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines`
+export const triggersRoute = `account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/triggers`
 export const triggerRoute = (triggerIdentifier: string): string =>
-  `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/triggers/${triggerIdentifier}`
-export const newTriggerRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/home/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/triggers/new?storeType=INLINE&triggerType=Webhook&sourceRepo=Custom`
-export const templatesListRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/setup/resources/templates`
-export const testParallelNodesPipelineRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/project1/pipelines/sad/executions/testParallelNodesPipeline/pipeline`
+  `account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/triggers/${triggerIdentifier}`
+export const newTriggerRoute = `account/${accountId}/home/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/triggers/new?storeType=INLINE&triggerType=Webhook&sourceRepo=Custom`
+export const templatesListRoute = `account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/setup/resources/templates`
+export const testParallelNodesPipelineRoute = `account/accountId/cd/orgs/default/projects/project1/pipelines/sad/executions/testParallelNodesPipeline/pipeline`
 export const triggersMergeCall =
   '/pipeline/api/inputSets/merge?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&pipelineIdentifier=testPipeline_Cypress'
 

@@ -36,7 +36,7 @@ export const frozenExecData: ResponseFrozenExecutionDetails = {
           freezeScope: 'project',
           yaml: 'freeze:\n  name: environmentFreeze\n  identifier: environmentFreeze\n  entityConfigs:\n    - name: rule1\n      entities:\n        - type: Service\n          filterType: All\n        - type: EnvType\n          filterType: All\n  status: Enabled\n  windows:\n    - timeZone: Asia/Calcutta\n      startTime: 2023-02-23 02:14 PM\n      duration: 1h\n  orgIdentifier: default\n  projectIdentifier: projectId\n  description: ""\n'
         },
-        url: 'https://localhost:8181/ng/#/account/accountId/cd/orgs/default/projects/projectId/setup/freeze-windows/studio/window/environmentFreeze'
+        url: 'https://localhost:8181/ng/account/accountId/cd/orgs/default/projects/projectId/setup/freeze-windows/studio/window/environmentFreeze'
       },
       {
         freeze: {
@@ -52,7 +52,7 @@ export const frozenExecData: ResponseFrozenExecutionDetails = {
           freezeScope: 'account',
           yaml: 'freeze:\n  identifier: _GLOBAL_\n  name: Global Freeze\n  description: "this is a description"\n  status: Disabled\n'
         },
-        url: 'https://localhost:8181/ng/#/account/accountId/settings/freeze-windows'
+        url: 'https://localhost:8181/ng/account/accountId/settings/freeze-windows'
       },
       {
         freeze: {

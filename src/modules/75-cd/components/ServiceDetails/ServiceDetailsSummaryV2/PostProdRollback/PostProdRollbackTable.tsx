@@ -25,7 +25,7 @@ import type { Column } from 'react-table'
 import { defaultTo, isEqual } from 'lodash-es'
 import moment from 'moment'
 import { Position } from '@blueprintjs/core'
-import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
@@ -66,11 +66,12 @@ export function RenderExecution({ row }: CellProps): CellType {
         module,
         source
       })
+      const baseUrl = getWindowLocationUrl()
 
       if (stageId && stageExecutionId) {
-        window.open(`${windowLocationUrlPartBeforeHash()}#${route}?stage=${stageId}&stageExecId=${stageExecutionId}`)
+        window.open(`${baseUrl}${route}?stage=${stageId}&stageExecId=${stageExecutionId}`)
       } else {
-        window.open(`${windowLocationUrlPartBeforeHash()}#${route}`)
+        window.open(`${baseUrl}${route}`)
       }
     } else {
       showError(getString('cd.serviceDashboard.noLastDeployment'))
@@ -194,7 +195,8 @@ export function PostProdRollbackListTable({
         module,
         source
       })
-      window.open(`${windowLocationUrlPartBeforeHash()}#${route}`)
+
+      window.open(`${getWindowLocationUrl()}${route}`)
     } else {
       showError(getString('cd.serviceDashboard.noLastDeployment'))
     }

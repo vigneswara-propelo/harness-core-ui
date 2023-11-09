@@ -11,7 +11,7 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import routes from '@common/RouteDefinitions'
 import type { StringKeys, StringsMap } from 'framework/strings/StringsContext'
 import { ModuleName } from 'framework/types/ModuleName'
-import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
 import type { TimeRangeFilterType } from '@common/types'
 import { getDiffInDays } from '@common/utils/momentUtils'
 import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
@@ -125,15 +125,17 @@ export const getDefaultRole = (
 }
 
 export const getDetailsUrl = ({ accountId, orgIdentifier, projectIdentifier }: ScopedDTO): string => {
+  const baseUrl = getWindowLocationUrl()
+
   if (projectIdentifier && orgIdentifier) {
-    return `${windowLocationUrlPartBeforeHash()}#${routes.toProjectDetails({
+    return `${baseUrl}${routes.toProjectDetails({
       accountId,
       orgIdentifier,
       projectIdentifier
     })}`
   }
   if (orgIdentifier) {
-    return `${windowLocationUrlPartBeforeHash()}#${routes.toOrganizationDetails({ accountId, orgIdentifier })}`
+    return `${baseUrl}${routes.toOrganizationDetails({ accountId, orgIdentifier })}`
   }
   return ''
 }

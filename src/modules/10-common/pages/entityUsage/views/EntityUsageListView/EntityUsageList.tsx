@@ -25,7 +25,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getScopeLabelfromScope } from '@common/components/EntityReference/EntityReference'
 import type { StringKeys } from 'framework/strings'
-import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
 import { getScopeFromDTO } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import css from './EntityUsageList.module.scss'
@@ -91,7 +91,7 @@ const RenderColumnEntity: Renderer<CellProps<EntitySetupUsageDTOColumnData>> = (
               e.preventDefault()
               e.stopPropagation()
               const targetUrl = await entityData.getEntityURL()
-              window.open(`${windowLocationUrlPartBeforeHash()}#${targetUrl}`, '_blank')
+              window.open(`${getWindowLocationUrl()}${targetUrl}`, '_blank')
             }}
           >
             {getReferredByEntityName(data.referredByEntity)}
@@ -165,7 +165,7 @@ export const RenderScope: Renderer<CellProps<EntitySetupUsageDTOColumnData>> = (
               e.preventDefault()
               e.stopPropagation()
               const targetUrl = await entityData.getEntityURL()
-              window.open(`${windowLocationUrlPartBeforeHash()}#${targetUrl}`, '_blank')
+              window.open(`${getWindowLocationUrl()}${targetUrl}`, '_blank')
             }}
           >
             {scopeId || scopeName}

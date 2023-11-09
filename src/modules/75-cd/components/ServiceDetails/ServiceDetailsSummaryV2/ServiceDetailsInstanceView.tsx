@@ -45,7 +45,7 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import { DialogEmptyState } from '@cd/components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetailSummary/EnvironmentDetailsUtils'
 import routes from '@common/RouteDefinitions'
-import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
@@ -214,7 +214,7 @@ function InstanceView(prop: InstanceViewProp): React.ReactElement {
         source
       })
 
-      window.open(`${windowLocationUrlPartBeforeHash()}#${route}`)
+      window.open(`${getWindowLocationUrl()}${route}`)
     } else {
       showError(getString('cd.serviceDashboard.noLastDeployment'))
     }

@@ -6,17 +6,13 @@
  */
 
 import SessionToken from 'framework/utils/SessionToken'
-import { getLocationPathName } from 'framework/utils/WindowLocation'
 import { mapKeys } from 'lodash-es'
 import qs, { IStringifyOptions } from 'qs'
 
 export const getConfig = (str: string): string => {
-  if (window.browserRouterEnabled) {
-    return `${window.apiUrl || ''}/${str}`
-  } else {
-    return window.apiUrl ? `${window.apiUrl}/${str}` : getLocationPathName().replace('ng/', '') + str
-  }
+  return `${window.apiUrl || ''}/${str}`
 }
+
 export interface GetUsingFetchProps<
   _TData = any,
   _TError = any,

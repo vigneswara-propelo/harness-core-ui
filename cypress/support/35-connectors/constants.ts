@@ -5,8 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { addHashInCypressURLBasedOnBrowserRouter } from '../../utils/windowLocation'
-
 const projectId = 'project1'
 const accountId = 'accountId'
 const orgIdentifier = 'default'
@@ -19,8 +17,8 @@ export const connectorListScopeTab = `/ng/api/connectors/listV2?accountIdentifie
 export const accountConnectorsListAPI = `/ng/api/connectors/listV2?routingId=${accountId}&sortOrders=lastModifiedAt%2CDESC&pageIndex=0&pageSize=10&accountIdentifier=${accountId}*`
 export const connectorsCatalogueAPI = `/ng/api/connectors/catalogue?routingId=${accountId}&accountIdentifier=${accountId}`
 export const delegatesListAPI = `/api/setup/delegates/delegate-selectors-up-the-hierarchy?routingId=${accountId}&accountId=${accountId}&orgId=${orgIdentifier}&projectId=${projectId}`
-export const connectorsRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/setup/resources/connectors`
-export const accountResourceConnectors = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/settings/resources/connectors`
+export const connectorsRoute = `account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/setup/resources/connectors`
+export const accountResourceConnectors = `account/${accountId}/settings/resources/connectors`
 export const testConnection = `ng/api/connectors/testConnection/${connectorName}?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
 export const accountConnectorTestConnection = `ng/api/connectors/testConnection/${connectorName}?routingId=${accountId}&accountIdentifier=${accountId}`
 export const connectorStats = `/ng/api/connectors/stats?routingId=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&accountIdentifier=${accountId}`
@@ -37,5 +35,5 @@ export const connectorsList = `/ng/api/connectors?accountIdentifier=${accountId}
 export const ceConnectorOverviewSave = `ng/api/connectors/listV2?routingId=${accountId}&pageIndex=0&pageSize=10&accountIdentifier=${accountId}&getDistinctFromBranches=false`
 export const ceAWSConnectionData = `ccm/api/connector/awsaccountconnectiondetail?routingId=${accountId}&accountIdentifier=${accountId}&is_gov=false`
 export const getGcpPermissions = `ccm/api/connector/gcpserviceaccount?routingId=${accountId}&accountIdentifier=${accountId}`
-export const connectorsListRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/setup/resources/connectors`
-export const accountConnectorsListRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/settings/resources/connectors`
+export const connectorsListRoute = `account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/setup/resources/connectors`
+export const accountConnectorsListRoute = `account/${accountId}/settings/resources/connectors`

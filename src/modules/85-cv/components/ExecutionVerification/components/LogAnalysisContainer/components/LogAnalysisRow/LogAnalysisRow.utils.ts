@@ -12,6 +12,7 @@ import type {
   RestResponseAnalyzedRadarChartLogDataWithCountDTO,
   RestResponseLogAnalysisRadarChartListWithCountDTO
 } from 'services/cv'
+import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
 import type { LogsRowData } from './LogAnalysisRow.types'
 import { LogEvents } from '../../LogAnalysis.types'
 
@@ -67,15 +68,8 @@ export const onClickErrorTrackingRow = (
     projectIdentifier: projectIdentifier,
     accountId: accountId
   })
-  let baseUrl = ''
 
-  if (window.browserRouterEnabled) {
-    baseUrl = '/ng'
-  } else {
-    baseUrl = window.location.href.split('#')[0] + '#'
-  }
-
-  window.open(`${baseUrl}${errorTrackingBaseUrl}/arc?event=${btoa(arcJson)}`)
+  window.open(`${getWindowLocationUrl()}${errorTrackingBaseUrl}/arc?event=${btoa(arcJson)}`)
 }
 
 export const isNoLogSelected = (selectedLog?: string | null): boolean =>

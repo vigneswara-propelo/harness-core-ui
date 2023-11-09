@@ -82,7 +82,7 @@ describe('FrozenExecutionDrawer', () => {
     fireEvent.click(freezeName)
     expect(window.open).toHaveBeenCalledTimes(1)
     expect(window.open).toHaveBeenCalledWith(
-      'http://localhost/#/account/accountId/cd/orgs/default/projects/projectId/setup/freeze-windows/studio/window/testBfreeze/'
+      'http://localhost/ng/account/accountId/cd/orgs/default/projects/projectId/setup/freeze-windows/studio/window/testBfreeze/'
     )
   })
 

@@ -66,17 +66,6 @@
 
     <% if (!__DEV__) { %>
     <script type="text/javascript">
-      window.browserRouterEnabled =
-        'HARNESS_BROWSER_ROUTER_ENABLED' === 'true' ||
-        window.location.href.toString().includes('browserRouterEnabled=true')
-    </script>
-    <% } %> <% if (__DEV__) { %>
-    <script type="text/javascript">
-      window.browserRouterEnabled = true
-    </script>
-
-    <% } %> <% if (!__DEV__) { %>
-    <script type="text/javascript">
       window.noAuthHeader =
         'HARNESS_NO_AUTH_HEADER' === 'true' || window.location.href.toString().includes('noAuthHeader=true')
     </script>
@@ -135,18 +124,16 @@
       }
 
       window.getApiBaseUrl = pathSuffix => {
-        if (window.browserRouterEnabled && pathSuffix.includes('remoteEntry.js')) {
+        if (pathSuffix.includes('remoteEntry.js')) {
           return window.getClusterBasedUrl(pathSuffix)
         }
+
         let str = pathSuffix
         if (str.startsWith('/')) {
           str = str.substring(1)
         }
-        let url = window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str
+        let url = `${window.apiUrl || ''}/${str}`
 
-        if (window.browserRouterEnabled) {
-          url = `${window.apiUrl || ''}/${str}`
-        }
         return url.includes('remoteEntry.js') ? `${url}?timestamp=${Date.now()}${addRoutingIdParam()}` : url
       }
 

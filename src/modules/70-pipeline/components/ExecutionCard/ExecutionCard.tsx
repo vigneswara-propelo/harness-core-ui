@@ -36,7 +36,7 @@ import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactor
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
 import type { EnvironmentDeploymentsInfo, ServiceDeploymentInfo } from 'services/cd-ng'
 import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
 import { DashboardSelected, ServiceExecutionsCard } from '../ServiceExecutionsCard/ServiceExecutionsCard'
@@ -173,7 +173,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
 
       //opening in new tab is required for cards present in dashboards
       if (IS_SERVICEDETAIL || IS_OVERVIEWPAGE) {
-        window.open(`${windowLocationUrlPartBeforeHash()}#${route}`)
+        window.open(`${getWindowLocationUrl()}${route}`)
       } else {
         history.push(route)
       }

@@ -125,7 +125,7 @@ describe('PostProdRollbackBtn tests - ', () => {
     //once rollback is triggered it will take us to rollback execution in a new tab
     expect(window.open).toHaveBeenCalledTimes(1)
     expect(window.open).toHaveBeenCalledWith(
-      'http://localhost/#/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/pipelines/testpipelineId/deployments/k8sTestPipeline_envGroup/pipeline'
+      'http://localhost/ng/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/pipelines/testpipelineId/deployments/k8sTestPipeline_envGroup/pipeline'
     )
   })
 

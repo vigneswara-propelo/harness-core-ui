@@ -44,7 +44,7 @@ export const getForgotPasswordURL = (): string => {
   // for basepath, pick current path, but remove `/ng/` or `/ng`, to respect PR env namespaces
   return window.HARNESS_ENABLE_NG_AUTH_UI
     ? `${getLocationPathName().replace(/\/ng\/?/, '/')}auth/#/forgot-password`
-    : `${getLocationPathName().replace(/\/ng\//, '/')}#/forgot-password`
+    : `${getLocationPathName().replace(/\/ng\/?/, '/')}#/forgot-password`
 }
 
 export interface UseLogoutReturn {

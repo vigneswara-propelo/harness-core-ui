@@ -297,7 +297,8 @@ describe('getSamlEndpoint cases', () => {
   test('apiUrl as undefined', () => {
     mockWindow.mockImplementation(() => ({
       location: {
-        href: 'https://qa.harness.io/ng/#/account/123/home/setup/authentication/configuration'
+        href: 'https://qa.harness.io/ng/account/123/home/setup/authentication/configuration',
+        origin: 'https://qa.harness.io'
       }
     }))
     expect(getSamlEndpoint('123')).toEqual('https://qa.harness.io/api/users/saml-login?accountId=123')
@@ -306,7 +307,8 @@ describe('getSamlEndpoint cases', () => {
       mockWindow.mockImplementation(() => ({
         apiUrl: '/gateway',
         location: {
-          href: 'https://qa.harness.io/ng/#/account/123/home/setup/authentication/configuration'
+          href: 'https://qa.harness.io/ng/account/123/home/setup/authentication/configuration',
+          origin: 'https://qa.harness.io'
         }
       }))
       expect(getSamlEndpoint('123')).toEqual('https://qa.harness.io/gateway/api/users/saml-login?accountId=123')
@@ -315,7 +317,8 @@ describe('getSamlEndpoint cases', () => {
       mockWindow.mockImplementation(() => ({
         apiUrl: 'https://qa.harness.io/gateway',
         location: {
-          href: 'https://qa.harness.io/ng/#/account/123/home/setup/authentication/configuration'
+          href: 'https://qa.harness.io/ng/account/123/home/setup/authentication/configuration',
+          origin: 'https://qa.harness.io'
         }
       }))
       expect(getSamlEndpoint('123')).toEqual('https://qa.harness.io/gateway/api/users/saml-login?accountId=123')
@@ -324,7 +327,8 @@ describe('getSamlEndpoint cases', () => {
       mockWindow.mockImplementation(() => ({
         apiUrl: 'http://localhost:9090',
         location: {
-          href: 'https://qa.harness.io/ng/#/account/123/home/setup/authentication/configuration'
+          href: 'https://qa.harness.io/ng/account/123/home/setup/authentication/configuration',
+          origin: 'https://qa.harness.io'
         }
       }))
       expect(getSamlEndpoint('123')).toEqual('http://localhost:9090/api/users/saml-login?accountId=123')

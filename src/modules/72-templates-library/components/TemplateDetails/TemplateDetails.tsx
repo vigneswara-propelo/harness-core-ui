@@ -33,7 +33,7 @@ import {
   getTypeForTemplate,
   TemplateListType
 } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
-import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
 
 import { useDeepCompareEffect, useMutateAsGet } from '@common/hooks'
 import {
@@ -426,7 +426,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
         branch: selectedBranch || storeMetadata?.branch
       })
       if (isStandAlone) {
-        window.open(`${windowLocationUrlPartBeforeHash()}#${url}`, '_blank')
+        window.open(`${getWindowLocationUrl()}${url}`, '_blank')
       } else {
         history.push(url)
       }

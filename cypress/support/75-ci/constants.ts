@@ -1,11 +1,9 @@
-import { addHashInCypressURLBasedOnBrowserRouter } from '../../utils/windowLocation'
-
 export const accountIdentifier = 'accountId'
 export const orgIdentifier = 'default'
 export const projectIdentifier = 'project1'
 export const module1 = 'ci'
 export const pipelineIdentifier = 'testPipeline_Cypress'
-export const pipelineStudioRoute = `${addHashInCypressURLBasedOnBrowserRouter()}/account/${accountIdentifier}/ci/orgs/default/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/pipeline-studio/?stageId=j&sectionId=SERVICE`
+export const pipelineStudioRoute = `/account/${accountIdentifier}/ci/orgs/default/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/pipeline-studio/?stageId=j&sectionId=SERVICE`
 export const echoStepInputSetTemplateYaml =
   'pipeline:\n  identifier: "testPipeline_Cypress"\n  stages:\n  - stage:\n      identifier: "CI_Stage1"\n      type: "CI"\n      spec:\n        execution:\n          steps:\n          - step:\n              identifier: "echo"\n              type: "Run"\n              spec:\n                connectorRef: "<+input>"\n                image: "<+input>"\n        infrastructure:\n          type: "KubernetesDirect"\n          spec:\n            connectorRef: "<+input>"\n            namespace: "<+input>"\n            os: "<+input>"\n'
 export const echoStepPipelineYaml =

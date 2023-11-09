@@ -7,7 +7,7 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Route, Switch, BrowserRouter, HashRouter } from 'react-router-dom'
+import { Route, Switch, BrowserRouter } from 'react-router-dom'
 
 import languageLoader from 'strings/languageLoader'
 import type { LangLocale } from 'strings/languageLoader'
@@ -15,18 +15,11 @@ import type { LangLocale } from 'strings/languageLoader'
 import { AppWithAuthentication, AppWithoutAccountId } from './App'
 
 const ignoredErrorClasses = ['YAMLSemanticError', 'YAMLSyntaxError', 'AbortError']
+
 const DefaultRouter: React.FC<React.PropsWithChildren<unknown>> = props => {
-  const { browserRouterEnabled } = window
-  return (
-    <>
-      {browserRouterEnabled ? (
-        <BrowserRouter basename={`${window.harnessNameSpace}/ng`}>{props.children}</BrowserRouter>
-      ) : (
-        <HashRouter>{props.children}</HashRouter>
-      )}
-    </>
-  )
+  return <BrowserRouter basename={`${window.harnessNameSpace}/ng`}>{props.children}</BrowserRouter>
 }
+
 export default async function render(): Promise<void> {
   const lang: LangLocale = 'en'
   const strings = await languageLoader(lang)

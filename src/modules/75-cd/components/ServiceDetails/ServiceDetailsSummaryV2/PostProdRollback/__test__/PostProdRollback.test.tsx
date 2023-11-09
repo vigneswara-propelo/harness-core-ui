@@ -215,13 +215,13 @@ describe('PostProdRollback - ', () => {
     await userEvent.click(getByText(postProdRollbackDrawer!, 'k8sTestPipeline_envGroup'))
     expect(window.open).toHaveBeenCalledTimes(1)
     expect(window.open).toHaveBeenCalledWith(
-      'http://localhost/#/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/pipelines/k8sTestPipeline_envGroup/deployments/testplanexec/pipeline?stage=teststageid&stageExecId=teststagenoe'
+      'http://localhost/ng/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/pipelines/k8sTestPipeline_envGroup/deployments/testplanexec/pipeline?stage=teststageid&stageExecId=teststagenoe'
     )
 
     //pipeline execution click navigation without stageId and stageExecId present
     await userEvent.click(getByText(postProdRollbackDrawer!, 'k8sTestPipeline_Group'))
     expect(window.open).toHaveBeenCalledWith(
-      'http://localhost/#/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/pipelines/k8sTestPipeline_Group/deployments/testplan/pipeline'
+      'http://localhost/ng/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/pipelines/k8sTestPipeline_Group/deployments/testplan/pipeline'
     )
   })
 })

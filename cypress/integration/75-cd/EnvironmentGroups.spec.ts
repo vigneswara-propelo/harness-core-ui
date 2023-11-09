@@ -5,7 +5,6 @@ import {
   environmentGroupDetailsCall,
   environmentGroupYamlSchemaCall
 } from '../../support/75-cd/constants'
-import { addHashInCypressURLBasedOnBrowserRouter } from '../../utils/windowLocation'
 
 describe('Environment Groups CRUD', () => {
   beforeEach(() => {
@@ -60,7 +59,7 @@ describe('Environment Groups CRUD', () => {
 
     cy.location().should(loc => {
       expect(loc.href).contains(
-        `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/project1/environments/groups/testEnvGroup/details?sectionId=ENVIRONMENTS`
+        `account/accountId/cd/orgs/default/projects/project1/environments/groups/testEnvGroup/details?sectionId=ENVIRONMENTS`
       )
     })
   })
@@ -132,7 +131,7 @@ describe('Environment Groups CRUD', () => {
 
     cy.location().should(loc => {
       expect(loc.href).contains(
-        `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/project1/environments/groups/testEnvGroup/details?sectionId=CONFIGURATION`
+        `account/accountId/cd/orgs/default/projects/project1/environments/groups/testEnvGroup/details?sectionId=CONFIGURATION`
       )
     })
 
