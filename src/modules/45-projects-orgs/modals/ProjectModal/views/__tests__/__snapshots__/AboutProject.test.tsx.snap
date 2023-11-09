@@ -796,7 +796,7 @@ exports[`About Project test create project  2`] = `
           >
             <div
               class="bp3-card bp3-elevation-0 Card--card projectCard previewProjectCard"
-              data-testid="project-card-dummy_nameundefined"
+              data-testid="project-card-dummy_name"
             >
               <div
                 class="StyledProps--font StyledProps--main projectInfo StyledProps--padding-xlarge"

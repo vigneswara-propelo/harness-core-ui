@@ -110,7 +110,7 @@ const CreateProject: React.FC<StepProps<Project> & CreateModalData> = props => {
         disableSelect={false}
         enableEdit={true}
         disableSubmit={saving}
-        initialOrgIdentifier={defaultOrg || orgSearchTerm}
+        initialOrgIdentifier={defaultOrg}
         initialModules={modules}
         organizationItems={organizations}
         title={getString('projectsOrgs.aboutProject')}

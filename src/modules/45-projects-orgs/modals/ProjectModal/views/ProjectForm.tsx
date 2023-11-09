@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useRef } from 'react'
 import {
   Formik,
   FormikForm as Form,
@@ -24,6 +24,8 @@ import {
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation, Color } from '@harness/design-system'
+import { isEmpty, isUndefined } from 'lodash-es'
+import { FormikProps } from 'formik'
 import { DescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import type { Project } from 'services/cd-ng'
 import ProjectCard from '@projects-orgs/components/ProjectCard/ProjectCard'
@@ -80,24 +82,38 @@ const ProjectForm: React.FC<StepProps<Project> & ProjectModalData> = props => {
   const { getString } = useStrings()
   const { currentUserInfo: user } = useAppStore()
   const [orgValue, setOrgValue] = React.useState<string>(initialOrgIdentifier)
+  const formikRef = useRef<FormikProps<AboutPageData>>()
+  const defaultInitialValues = {
+    color: DEFAULT_COLOR,
+    identifier: '',
+    name: '',
+    orgIdentifier: orgValue,
+    modules: initialModules,
+    description: '',
+    tags: {},
+    ...projectData
+  }
+  const [initialValues, setInitialValues] = React.useState<AboutPageData>(defaultInitialValues)
+  // For Edit Flow
+  React.useEffect(() => {
+    if (!isUndefined(projectData) && !isEmpty(projectData)) {
+      setInitialValues({
+        ...projectData
+      })
+      formikRef.current?.setValues({ ...projectData })
+    }
+  }, [projectData])
+
+  // to initialise with `default` org if present
   React.useEffect(() => {
     setOrgValue(initialOrgIdentifier)
+    formikRef.current?.setFieldValue('orgIdentifier', initialOrgIdentifier)
   }, [initialOrgIdentifier])
 
   return (
     <Formik
-      initialValues={{
-        color: DEFAULT_COLOR,
-        identifier: '',
-        name: '',
-        orgIdentifier: orgValue,
-        modules: initialModules,
-        description: '',
-        tags: {},
-        ...projectData
-      }}
+      initialValues={{ ...initialValues }}
       formName="projectsForm"
-      enableReinitialize={true}
       validationSchema={Yup.object().shape({
         name: NameSchema(getString),
         identifier: IdentifierSchema(getString),
@@ -112,6 +128,7 @@ const ProjectForm: React.FC<StepProps<Project> & ProjectModalData> = props => {
       }}
     >
       {formikProps => {
+        formikRef.current = formikProps
         return (
           <Form>
             <Layout.Horizontal>
