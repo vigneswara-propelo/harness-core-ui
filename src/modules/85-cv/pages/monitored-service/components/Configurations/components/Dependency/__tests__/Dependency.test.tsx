@@ -21,7 +21,9 @@ import Dependency from '../Dependency'
 
 describe('Dependency component', () => {
   test('should render all cards', async () => {
-    jest.spyOn(cvService, 'useGetMonitoredServiceList').mockReturnValue({ data: monitoredServiceList } as any)
+    jest
+      .spyOn(cvService, 'useGetMonitoredServicePlatformList')
+      .mockReturnValue({ data: monitoredServiceList, refetch: jest.fn() } as any)
     const onSuccessMock = jest.fn()
 
     const { container, getByText } = render(
@@ -30,7 +32,7 @@ describe('Dependency component', () => {
       </TestWrapper>
     )
     await waitFor(() => expect(container.querySelector('[class*="leftSection"]')).not.toBeNull())
-    expect(container.querySelectorAll('[class~="serviceCard"]').length).toBe(3)
+    expect(container.querySelectorAll('[class~="serviceCard"]').length).toBe(5)
     expect(container.querySelector('[class*="monitoredServiceCategory"][class*="infrastructure"]')).not.toBeNull()
     expect(container.querySelector('[class*="monitoredServiceCategory"][class*="application"]')).not.toBeNull()
     fireEvent.click(getByText('save'))
@@ -64,7 +66,9 @@ describe('Dependency component', () => {
   })
 
   test('Pressing save button after selecting a service', async () => {
-    jest.spyOn(cvService, 'useGetMonitoredServiceList').mockReturnValue({ data: monitoredServiceList } as any)
+    jest
+      .spyOn(cvService, 'useGetMonitoredServicePlatformList')
+      .mockReturnValue({ data: monitoredServiceList, refetch: jest.fn() } as any)
     jest.spyOn(cvService, 'useGetNamespaces').mockReturnValue({ data: {}, refetch: jest.fn() } as any)
 
     const { container, getByText } = render(
@@ -82,7 +86,9 @@ describe('Dependency component', () => {
   })
 
   test('Pressing discard button after selecting a service', async () => {
-    jest.spyOn(cvService, 'useGetMonitoredServiceList').mockReturnValue({ data: monitoredServiceList } as any)
+    jest
+      .spyOn(cvService, 'useGetMonitoredServicePlatformList')
+      .mockReturnValue({ data: monitoredServiceList, refetch: jest.fn() } as any)
     jest.spyOn(cvService, 'useGetNamespaces').mockReturnValue({ data: {}, refetch: jest.fn() } as any)
 
     const { container, getByText } = render(
@@ -100,7 +106,9 @@ describe('Dependency component', () => {
   })
 
   test('Ensure loading is displayed on api loading', async () => {
-    jest.spyOn(cvService, 'useGetMonitoredServiceList').mockReturnValue({ loading: true } as any)
+    jest
+      .spyOn(cvService, 'useGetMonitoredServicePlatformList')
+      .mockReturnValue({ loading: true, refetch: jest.fn() } as any)
     const onSuccessMock = jest.fn()
 
     const { container } = render(
@@ -114,8 +122,8 @@ describe('Dependency component', () => {
 
   test('Ensure error page is displayed on getting error from MS list API', async () => {
     jest
-      .spyOn(cvService, 'useGetMonitoredServiceList')
-      .mockReturnValue({ error: { data: { message: 'Error from response' } } } as any)
+      .spyOn(cvService, 'useGetMonitoredServicePlatformList')
+      .mockReturnValue({ error: { data: { message: 'Error from response' } }, refetch: jest.fn() } as any)
     const onSuccessMock = jest.fn()
 
     const { getByText } = render(
@@ -126,16 +134,19 @@ describe('Dependency component', () => {
     await waitFor(() => expect(getByText('Retry')).toBeInTheDocument())
   })
 
-  test('Ensure API useGetMonitoredServiceList is called with environmentIdentifiers - Create - Application', () => {
-    jest.spyOn(cvService, 'useGetMonitoredServiceList').mockReturnValue({ data: monitoredServiceList } as any)
+  test('Ensure API useGetMonitoredServicePlatformList is called with environmentIdentifiers - Create - Application', () => {
+    const refetch = jest.fn()
+    jest
+      .spyOn(cvService, 'useGetMonitoredServicePlatformList')
+      .mockReturnValue({ data: monitoredServiceList, refetch } as any)
 
     render(
       <TestWrapper {...testWrapperProps}>
-        <Dependency onSuccess={jest.fn()} value={monitoredServiceForm} cachedInitialValues={monitoredServiceForm} />
+        <Dependency onSuccess={jest.fn()} value={monitoredServiceForm} />
       </TestWrapper>
     )
 
-    expect(cvService.useGetMonitoredServiceList).toHaveBeenLastCalledWith(
+    expect(refetch).toHaveBeenLastCalledWith(
       expect.objectContaining({
         queryParams: { ...pathParams, environmentIdentifiers: ['production'], offset: 0, pageSize: 10 },
         queryParamStringifyOptions: {
@@ -145,8 +156,11 @@ describe('Dependency component', () => {
     )
   })
 
-  test('Ensure API useGetMonitoredServiceList is called with environmentIdentifiers - Application', () => {
-    jest.spyOn(cvService, 'useGetMonitoredServiceList').mockReturnValue({ data: monitoredServiceList } as any)
+  test('Ensure API useGetMonitoredServicePlatformList is called with environmentIdentifiers - Application', () => {
+    const refetch = jest.fn()
+    jest
+      .spyOn(cvService, 'useGetMonitoredServicePlatformList')
+      .mockReturnValue({ data: monitoredServiceList, refetch } as any)
 
     render(
       <TestWrapper {...testWrapperEditProps}>
@@ -154,7 +168,7 @@ describe('Dependency component', () => {
       </TestWrapper>
     )
 
-    expect(cvService.useGetMonitoredServiceList).toHaveBeenLastCalledWith(
+    expect(refetch).toHaveBeenLastCalledWith(
       expect.objectContaining({
         queryParams: { ...pathParams, environmentIdentifiers: ['production'], offset: 0, pageSize: 10 },
         queryParamStringifyOptions: {
@@ -164,20 +178,19 @@ describe('Dependency component', () => {
     )
   })
 
-  test('Ensure API useGetMonitoredServiceList is called with environmentIdentifiers - Create - Infrastructure', () => {
-    jest.spyOn(cvService, 'useGetMonitoredServiceList').mockReturnValue({ data: monitoredServiceList } as any)
+  test('Ensure API useGetMonitoredServicePlatformList is called with environmentIdentifiers - Create - Infrastructure', () => {
+    const refetch = jest.fn()
+    jest
+      .spyOn(cvService, 'useGetMonitoredServicePlatformList')
+      .mockReturnValue({ data: monitoredServiceList, refetch } as any)
 
     render(
       <TestWrapper {...testWrapperEditProps}>
-        <Dependency
-          onSuccess={jest.fn()}
-          value={monitoredServiceOfTypeInfrastructure}
-          cachedInitialValues={monitoredServiceOfTypeInfrastructure}
-        />
+        <Dependency onSuccess={jest.fn()} value={monitoredServiceOfTypeInfrastructure} />
       </TestWrapper>
     )
 
-    expect(cvService.useGetMonitoredServiceList).toHaveBeenLastCalledWith(
+    expect(refetch).toHaveBeenLastCalledWith(
       expect.objectContaining({
         queryParams: {
           ...pathParams,
@@ -192,8 +205,11 @@ describe('Dependency component', () => {
     )
   })
 
-  test('Ensure API useGetMonitoredServiceList is called with environmentIdentifiers - Infrastructure', () => {
-    jest.spyOn(cvService, 'useGetMonitoredServiceList').mockReturnValue({ data: monitoredServiceList } as any)
+  test('Ensure API useGetMonitoredServicePlatformList is called with environmentIdentifiers - Infrastructure', () => {
+    const refetch = jest.fn()
+    jest
+      .spyOn(cvService, 'useGetMonitoredServicePlatformList')
+      .mockReturnValue({ data: monitoredServiceList, refetch } as any)
 
     render(
       <TestWrapper {...testWrapperEditProps}>
@@ -201,7 +217,7 @@ describe('Dependency component', () => {
       </TestWrapper>
     )
 
-    expect(cvService.useGetMonitoredServiceList).toHaveBeenLastCalledWith(
+    expect(refetch).toHaveBeenLastCalledWith(
       expect.objectContaining({
         queryParams: {
           ...pathParams,

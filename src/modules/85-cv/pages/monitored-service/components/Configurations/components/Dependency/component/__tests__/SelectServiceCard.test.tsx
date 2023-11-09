@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import type { UseGetReturn } from 'restful-react'
 import { render, waitFor, fireEvent } from '@testing-library/react'
 import * as cvService from 'services/cv'
+import * as ServiceCardUtils from '@cv/pages/monitored-service/components/Configurations/components/Dependency/component/components/SelectServiceCard.utils'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { DependencyMetaData } from '@cv/pages/monitored-service/components/Configurations/components/Dependency/component/SelectServiceCard.types'
 import SelectServiceCard from '../SelectServiceCard'
@@ -62,17 +62,17 @@ describe('SelectServiceCard', () => {
   test('should render infrastructure service card', async () => {
     const onChange = jest.fn()
     jest
-      .spyOn(cvService, 'useGetNamespaces')
-      .mockReturnValue({ data: { data: { content: ['namespace1', 'namespace2'] } } } as UseGetReturn<
-        any,
-        any,
-        any,
-        any
-      >)
+      .spyOn(cvService, 'useGetMonitoredService')
+      .mockReturnValue({ data: { data: { monitoredService: { identifier: '1234_identifier' } } } } as any)
+    jest.spyOn(ServiceCardUtils, 'getConnectorRefFromChangeSourceService').mockReturnValue('connectorIdentifier')
+    jest.spyOn(cvService, 'useGetNamespaces').mockReturnValue({
+      data: { data: { content: ['namespace1', 'namespace2'] } },
+      refetch: jest.fn()
+    } as any)
 
     jest
       .spyOn(cvService, 'useGetWorkloads')
-      .mockReturnValue({ data: { data: { content: ['workload1', 'workload2'] } } } as any)
+      .mockReturnValue({ data: { data: { content: ['workload1', 'workload2'] } }, refetch: jest.fn() } as any)
 
     const { container, getByText } = render(
       <TestWrapper>

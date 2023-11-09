@@ -12,10 +12,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
-import { Text, Container, Card, Checkbox } from '@harness/uicore'
+import React, { useMemo, useEffect } from 'react'
+import { Text, Container, Card, Checkbox, Icon, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
+import { ProjectPathProps } from '@modules/10-common/interfaces/RouteInterfaces'
+import { useGetMonitoredService } from 'services/cv'
+import { getErrorMessage } from '@modules/85-cv/utils/CommonUtils'
 import type { ServiceCardInterfaceProps, InfrastructureDependencyMetaData } from './SelectServiceCard.types'
 import MonitoredServiceCategory from './components/MonitoredServiceCategory/MonitoredServiceCategory'
 import K8sNamespaceAndWorkload from './components/K8sNamespaceAndWorkload/K8sNamespaceAndWorkload'
@@ -28,7 +32,7 @@ export default function SelectServiceCard(props: ServiceCardInterfaceProps): JSX
     case 'Application':
       return <ServiceCard {...props} />
     case 'Infrastructure':
-      return <KubernetesServiceCard {...props} />
+      return <KubernetesServiceAPIWrapper {...props} />
     default:
       return null
   }
@@ -71,6 +75,52 @@ export function ServiceCard(props: ServiceCardInterfaceProps): JSX.Element {
   )
 }
 
+export function KubernetesServiceAPIWrapper(props: ServiceCardInterfaceProps): JSX.Element {
+  const { monitoredService, dependencyMetaData } = props
+  const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps & { identifier: string }>()
+  const { data, loading, error, refetch } = useGetMonitoredService({
+    identifier: monitoredService?.identifier,
+    queryParams: {
+      accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    lazy: true
+  })
+
+  useEffect(() => {
+    if (dependencyMetaData?.monitoredServiceIdentifier && !(data || error) && !loading) {
+      refetch()
+    }
+  }, [data, loading, error, dependencyMetaData?.monitoredServiceIdentifier])
+
+  let content = <></>
+  if (loading) {
+    content = (
+      <Layout.Vertical>
+        <hr />
+        <Icon name="spinner" />
+      </Layout.Vertical>
+    )
+  } else if (error) {
+    content = (
+      <Layout.Vertical>
+        <hr />
+        <Text>{getErrorMessage(error)}</Text>
+      </Layout.Vertical>
+    )
+  } else if (data?.data?.monitoredService) {
+    content = <KubernetesServiceCard {...props} monitoredService={data?.data?.monitoredService || monitoredService} />
+  }
+
+  return (
+    <Card className={css.serviceCard}>
+      <ServiceCardContent {...props} />
+      {content}
+    </Card>
+  )
+}
+
 export function KubernetesServiceCard(props: ServiceCardInterfaceProps): JSX.Element {
   const { monitoredService, dependencyMetaData, onChange } = props
   const connectorIdentifier = useMemo(
@@ -78,22 +128,19 @@ export function KubernetesServiceCard(props: ServiceCardInterfaceProps): JSX.Ele
     [dependencyMetaData, monitoredService]
   )
   return (
-    <Card className={css.serviceCard}>
-      <ServiceCardContent {...props} />
-      <K8sNamespaceAndWorkload
-        connectorIdentifier={connectorIdentifier}
-        dependencyMetaData={dependencyMetaData as InfrastructureDependencyMetaData}
-        onChange={(namespace, workload) =>
-          onChange(true, {
-            type: KUBERNETES_TYPE,
-            monitoredServiceIdentifier: monitoredService?.identifier,
-            dependencyMetadata: {
-              namespace,
-              workload
-            }
-          })
-        }
-      />
-    </Card>
+    <K8sNamespaceAndWorkload
+      connectorIdentifier={connectorIdentifier}
+      dependencyMetaData={dependencyMetaData as InfrastructureDependencyMetaData}
+      onChange={(namespace, workload) =>
+        onChange(true, {
+          type: KUBERNETES_TYPE,
+          monitoredServiceIdentifier: monitoredService?.identifier,
+          dependencyMetadata: {
+            namespace,
+            workload
+          }
+        })
+      }
+    />
   )
 }

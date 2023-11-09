@@ -9,12 +9,8 @@ import type { ServiceDependencyDTO } from 'services/cv'
 import type { MonitoredServiceForm } from '../../Service/Service.types'
 import { KUBERNETES_TYPE } from '../component/SelectServiceCard.constants'
 import { DependencyMetaData } from '../component/SelectServiceCard.types'
-import {
-  updateMonitoredServiceWithDependencies,
-  filterCurrentMonitoredServiceFromList,
-  initializeDependencyMap
-} from '../Dependency.utils'
-import { monitoredServiceList, filteredMonitoredList } from './Dependency.mock'
+import { updateMonitoredServiceWithDependencies, initializeDependencyMap } from '../Dependency.utils'
+import { intialDependencies } from './Dependency.mock'
 
 const dependencies = [
   { monitoredServiceIdentifier: '1234_iden' },
@@ -65,29 +61,25 @@ describe('Validate utils', () => {
     })
   })
 
-  test('Ensure filterCurrentMonitoredServiceFromList works as intended', async () => {
-    expect(
-      filterCurrentMonitoredServiceFromList(monitoredServiceList as any, monitoredServiceList.data.content[1] as any)
-    ).toEqual(filteredMonitoredList)
-  })
-
   test('Ensure initializeDependencyMap works as intended', async () => {
     expect(initializeDependencyMap()).toEqual(new Map())
-    expect(initializeDependencyMap(monitoredServiceList.data.content[2].monitoredService.dependencies as any)).toEqual(
+    expect(initializeDependencyMap(intialDependencies as any)).toEqual(
       new Map([
+        ['datadoglogs_version1', { monitoredServiceIdentifier: 'datadoglogs_version1' }],
         [
-          'delegate_production',
+          'dummy',
           {
-            monitoredServiceIdentifier: 'delegate_production',
+            monitoredServiceIdentifier: 'dummy',
             type: KUBERNETES_TYPE,
             dependencyMetadata: {
-              namespace: 'le-ng-harness',
+              namespace: 'custom-metrics',
               supportedChangeSourceTypes: ['K8sCluster'],
-              workload: 'sampleledelegate-kmpysm'
+              type: 'KUBERNETES',
+              workload: 'custom-metrics-stackdriver-adapter'
             }
           }
         ],
-        ['manager_production', { dependencyMetadata: null, monitoredServiceIdentifier: 'manager_production' }]
+        ['splunk_version1', { monitoredServiceIdentifier: 'splunk_version1' }]
       ])
     )
   })

@@ -86,7 +86,6 @@ export default function CommonMonitoredServiceConfigurations(
     onChangeMonitoredServiceType,
     cachedInitialValues,
     onDiscard,
-    setDBData,
     dependencyTabformRef,
     onDependencySuccess
   } = props
@@ -309,11 +308,9 @@ export default function CommonMonitoredServiceConfigurations(
             title={getString('pipelines-studio.dependenciesGroupTitle')}
             panel={
               <Dependency
-                value={initialValues}
+                value={formik.values}
                 dependencyTabformRef={dependencyTabformRef}
                 onSuccess={onDependencySuccess}
-                cachedInitialValues={cachedInitialValues}
-                setDBData={setDBData}
                 onDiscard={onDiscard}
               />
             }

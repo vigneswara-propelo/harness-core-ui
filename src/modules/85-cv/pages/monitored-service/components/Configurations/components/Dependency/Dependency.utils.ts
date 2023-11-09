@@ -5,7 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { ResponsePageMonitoredServiceResponse } from 'services/cv'
 import type { MonitoredServiceForm } from '../Service/Service.types'
 import type { DependencyMetaData } from './component/SelectServiceCard.types'
 
@@ -19,18 +18,6 @@ export function updateMonitoredServiceWithDependencies(
   }
 
   return monitoredService
-}
-
-export function filterCurrentMonitoredServiceFromList(
-  response: ResponsePageMonitoredServiceResponse,
-  identifier: string
-): ResponsePageMonitoredServiceResponse {
-  if (response?.data?.content?.length) {
-    response.data.content = response.data.content.filter(
-      item => item?.monitoredService && item.monitoredService.identifier !== identifier
-    )
-  }
-  return response
 }
 
 export function initializeDependencyMap(

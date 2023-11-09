@@ -5,12 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Layout, Text, Container, Pagination, PageError, NoDataCard } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { isEqual } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { useGetMonitoredServiceList } from 'services/cv'
+import { MonitoredServiceDTO, useGetMonitoredServicePlatformList } from 'services/cv'
 import { PageSpinner } from '@common/components'
 import SaveAndDiscardButton from '@cv/components/SaveAndDiscardButton/SaveAndDiscardButton'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -19,27 +19,23 @@ import { getErrorMessage } from '@cv/utils/CommonUtils'
 import type { MonitoredServiceForm } from '../Service/Service.types'
 import SelectServiceCard from './component/SelectServiceCard'
 import type { DependencyMetaData } from './component/SelectServiceCard.types'
-import {
-  updateMonitoredServiceWithDependencies,
-  filterCurrentMonitoredServiceFromList,
-  initializeDependencyMap
-} from './Dependency.utils'
+import { updateMonitoredServiceWithDependencies, initializeDependencyMap } from './Dependency.utils'
+import { getEnvironmentRef } from './component/ServiceDependencyGraph/ServiceDependencyGraph.utils'
+import { ServiceDependencyGraph } from './component/ServiceDependencyGraph/ServiceDependencyGraph'
 import css from './Dependency.module.scss'
 
 export default function Dependency({
   value,
   onSuccess,
-  cachedInitialValues,
   onDiscard
 }: {
   value: MonitoredServiceForm
   onSuccess: (val: any) => Promise<void>
-  cachedInitialValues?: MonitoredServiceForm | null
-  setDBData?: (val: MonitoredServiceForm) => void
   onDiscard?: () => void
   dependencyTabformRef?: unknown
 }): JSX.Element {
   const { getString } = useStrings()
+
   const [dependencyMap, setDependencyMap] = useState<Map<string, DependencyMetaData>>(new Map())
   const [isDirty, setIsDirty] = useState(false)
   const { accountId, identifier, orgIdentifier, projectIdentifier } = useParams<
@@ -51,25 +47,39 @@ export default function Dependency({
     projectIdentifier,
     orgIdentifier,
     accountId,
-    environmentIdentifiers: identifier
-      ? value.environmentRefList
-      : value.type === 'Application'
-      ? [cachedInitialValues?.environmentRef as string]
-      : (cachedInitialValues?.environmentRef as unknown as string[]) ?? []
+    environmentIdentifiers: getEnvironmentRef(identifier, value)
   })
+
+  useEffect(() => {
+    if ((value.environmentRef, value.environmentRefList?.length)) {
+      setQueryParams(oldQueryParams => {
+        return {
+          ...oldQueryParams,
+          environmentIdentifiers: getEnvironmentRef(identifier, value)
+        }
+      })
+    }
+  }, [identifier, value.environmentRef, value.environmentRefList])
 
   const {
     data,
     loading: loadingGetMonitoredService,
     error: errorGetMonitoredService,
     refetch
-  } = useGetMonitoredServiceList({
-    queryParams,
-    queryParamStringifyOptions: {
-      arrayFormat: 'repeat'
-    },
-    resolve: response => filterCurrentMonitoredServiceFromList(response, value.identifier)
+  } = useGetMonitoredServicePlatformList({
+    lazy: true
   })
+
+  useEffect(() => {
+    if (queryParams.environmentIdentifiers?.filter(env => Boolean(env))?.length) {
+      refetch({
+        queryParams,
+        queryParamStringifyOptions: {
+          arrayFormat: 'repeat'
+        }
+      })
+    }
+  }, [queryParams, value.environmentRef, value.environmentRefList])
 
   const initialDependencies = useMemo(() => {
     const dependencies = initializeDependencyMap(value?.dependencies)
@@ -78,10 +88,6 @@ export default function Dependency({
     return dependencies
   }, [value?.dependencies])
 
-  if (errorGetMonitoredService) {
-    return <PageError message={getErrorMessage(errorGetMonitoredService)} onClick={() => refetch()} />
-  }
-
   const {
     pageIndex = -1,
     pageSize = 0,
@@ -89,6 +95,12 @@ export default function Dependency({
     totalItems = 0,
     content: monitoredServiceList = []
   } = data?.data || {}
+
+  const filteredMonitoredServiceList = monitoredServiceList.filter(item => item.identifier !== identifier)
+
+  if (errorGetMonitoredService) {
+    return <PageError message={getErrorMessage(errorGetMonitoredService)} onClick={() => refetch()} />
+  }
 
   return (
     <Container>
@@ -112,24 +124,24 @@ export default function Dependency({
               {getString('cv.Dependency.serviceList')}
             </Text>
             <Text margin={{ bottom: 'medium' }} color={Color.BLACK} font={{ size: 'small', weight: 'semi-bold' }}>
-              {getString('total')} {monitoredServiceList.length}
+              {getString('total')} {filteredMonitoredServiceList.length}
             </Text>
           </Container>
-          {!monitoredServiceList.length ? (
+          {!filteredMonitoredServiceList.length ? (
             <NoDataCard icon="join-table" message={getString('cv.monitoredServices.youHaveNoMonitoredServices')} />
           ) : (
-            monitoredServiceList.map(service => (
+            filteredMonitoredServiceList.map(service => (
               <SelectServiceCard
-                key={service.monitoredService.identifier}
-                monitoredService={service.monitoredService}
-                dependencyMetaData={dependencyMap.get(service.monitoredService.identifier)}
+                key={service.identifier}
+                monitoredService={{ ...service } as MonitoredServiceDTO}
+                dependencyMetaData={dependencyMap.get(service.identifier || '')}
                 onChange={(isChecked, dependencyMetaData) =>
                   setDependencyMap(oldMap => {
                     const newMap = new Map(oldMap)
                     if (isChecked && dependencyMetaData) {
-                      newMap.set(service.monitoredService.identifier, dependencyMetaData)
+                      newMap.set(service.identifier || '', dependencyMetaData)
                     } else {
-                      newMap.delete(service.monitoredService.identifier)
+                      newMap.delete(service.identifier || '')
                     }
                     setIsDirty(!isEqual(initialDependencies, newMap))
                     return newMap
@@ -147,7 +159,12 @@ export default function Dependency({
           />
         </Container>
         <Container className={css.rightSection}>
-          <NoDataCard message={getString('cv.Dependency.noData')} icon="warning-sign" />
+          <ServiceDependencyGraph
+            value={value}
+            identifier={identifier}
+            dependencyMap={dependencyMap}
+            monitoredServiceList={monitoredServiceList}
+          />
         </Container>
       </Layout.Horizontal>
     </Container>
