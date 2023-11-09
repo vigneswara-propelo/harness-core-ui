@@ -102,7 +102,6 @@ permissions:
 discardNetworkMap: Are you sure you want to discard the current network map?
 noServiceSelected: 'You haven’t selected any services'
 noServiceSelectedDescription: Select services from the left panel and view their dependencies and add them into this network map. You can choose services cross different namespaces.
-selectAll: Select All
 selectRelatedServices: Select all related service
 noRelatedServiceFound: No related service found
 addCustomizedConfigurations: Add customized configurations

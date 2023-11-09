@@ -332,9 +332,7 @@ const SelectService: React.FC<SelectServiceProps> = ({ networkMap, updateNetwork
             />
           </Container>
           <Checkbox
-            labelElement={
-              <Text font={{ variation: FontVariation.FORM_LABEL }}>{getString('discovery.selectAll')}</Text>
-            }
+            labelElement={<Text font={{ variation: FontVariation.FORM_LABEL }}>{getString('common.selectAll')}</Text>}
             width="fit-content"
             checked={getCheckedStatus?.allChecked}
             indeterminate={getCheckedStatus?.intermediate}

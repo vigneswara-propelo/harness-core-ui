@@ -1731,3 +1731,4 @@ node: Node
 noFiltersAvailable: No filters available
 fetchNextFilters: Fetching more filters
 adminSettingsLabel: Admin Settings
+selectAll: Select All

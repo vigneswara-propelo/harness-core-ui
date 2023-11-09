@@ -124,7 +124,7 @@ exports[`<SelectService /> tests with data should change tab on Next button 1`] 
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
           >
-            discovery.selectAll
+            common.selectAll
           </p>
         </label>
         <div
@@ -835,7 +835,7 @@ exports[`<SelectService /> tests with data should check related services and men
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
           >
-            discovery.selectAll
+            common.selectAll
           </p>
         </label>
         <div
@@ -1518,7 +1518,7 @@ exports[`<SelectService /> tests with data should check service on clicking chec
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
           >
-            discovery.selectAll
+            common.selectAll
           </p>
         </label>
         <div
@@ -2201,7 +2201,7 @@ exports[`<SelectService /> tests with data should render component and call requ
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
           >
-            discovery.selectAll
+            common.selectAll
           </p>
         </label>
         <div
@@ -2951,7 +2951,7 @@ exports[`<SelectService /> tests with data should select a namespace and search 
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
           >
-            discovery.selectAll
+            common.selectAll
           </p>
         </label>
         <div
@@ -3634,7 +3634,7 @@ exports[`<SelectService /> tests with data should select all service on clicking
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
           >
-            discovery.selectAll
+            common.selectAll
           </p>
         </label>
         <div

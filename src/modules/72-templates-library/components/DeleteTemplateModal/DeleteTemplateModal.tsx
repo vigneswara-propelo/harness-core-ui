@@ -307,7 +307,11 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
                             <FormError name="versions" errorMessage={get(errors, 'versions')} />
                             <Container>
                               <Checkbox
-                                label={getString('common.template.deleteTemplate.selectAllExceptStable')}
+                                label={
+                                  options.length > 1
+                                    ? getString('common.template.deleteTemplate.selectAllExceptStable')
+                                    : getString('common.selectAll')
+                                }
                                 disabled={!isSelectAllEnabled}
                                 checked={isSelectAllChecked()}
                                 onChange={e => {

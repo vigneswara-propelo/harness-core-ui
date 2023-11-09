@@ -180,7 +180,7 @@ describe('<SelectService /> tests with data', () => {
     )
 
     act(() => {
-      fireEvent.click(getByText('discovery.selectAll'))
+      fireEvent.click(getByText('common.selectAll'))
     })
     expect(container).toMatchSnapshot()
   })

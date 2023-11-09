@@ -1146,6 +1146,7 @@ export interface StringsMap {
   'common.selectAChannel': string
   'common.selectAVersion.description': string
   'common.selectAVersion.title': string
+  'common.selectAll': string
   'common.selectAnotherScope': string
   'common.selectBranch': string
   'common.selectDefaultExperience': string
@@ -6182,7 +6183,6 @@ export interface StringsMap {
   'discovery.searchService': string
   'discovery.selectAConnector': string
   'discovery.selectAConnectorDescription': string
-  'discovery.selectAll': string
   'discovery.selectRelatedServices': string
   'discovery.serviceDrawer.ipFamily': string
   'discovery.serviceDrawer.selector': string
