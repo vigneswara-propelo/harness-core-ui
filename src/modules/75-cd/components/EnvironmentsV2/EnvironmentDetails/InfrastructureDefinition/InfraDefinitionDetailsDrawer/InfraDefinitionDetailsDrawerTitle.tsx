@@ -9,7 +9,8 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import { Button, ButtonVariation, Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { defaultTo, get, noop } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
+import { UseGetReturn } from 'restful-react'
 import { useStrings } from 'framework/strings'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { EnvironmentQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -18,7 +19,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import GitRemoteDetails from '@modules/10-common/components/GitRemoteDetails/GitRemoteDetails'
-import { EntityGitDetails, InfrastructureResponseDTO } from 'services/cd-ng'
+import { EntityGitDetails, Failure, GetInfrastructureQueryParams, ResponseInfrastructureResponse } from 'services/cd-ng'
 import {
   EntityCachedCopy,
   EntityCachedCopyHandle
@@ -35,9 +36,13 @@ export function InfraDefinitionDetailsDrawerTitle(props: {
   isInfraUpdated?: boolean
   shouldShowActionButtons: boolean
   openUnsavedChangesDiffModal: () => void
-  infrastructureResponse?: InfrastructureResponseDTO
   hasRemoteFetchFailed?: boolean
-  infrastructureLoading?: boolean
+  infrastructureFetchDetails?: UseGetReturn<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    GetInfrastructureQueryParams,
+    unknown
+  >
 }): JSX.Element {
   const {
     discardChanges,
@@ -48,10 +53,11 @@ export function InfraDefinitionDetailsDrawerTitle(props: {
     shouldShowActionButtons,
     isInfraUpdated,
     openUnsavedChangesDiffModal,
-    infrastructureResponse,
     hasRemoteFetchFailed,
-    infrastructureLoading
+    infrastructureFetchDetails
   } = props
+  const { loading, data, refetch } = infrastructureFetchDetails || {}
+
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { infraStoreType, infraBranch, infraRepoName, infraConnectorRef } = useQueryParams<EnvironmentQueryParams>()
   const { updateQueryParams } = useUpdateQueryParams<EnvironmentQueryParams>()
@@ -70,6 +76,7 @@ export function InfraDefinitionDetailsDrawerTitle(props: {
   }
   const { getString } = useStrings()
   const { CDS_INFRA_GITX } = useFeatureFlags()
+  const infrastructureResponse = data?.data?.infrastructure
   const { repoName, filePath, fileUrl, branch } = get(
     infrastructureResponse,
     'entityGitDetails',
@@ -80,8 +87,14 @@ export function InfraDefinitionDetailsDrawerTitle(props: {
     updateQueryParams({ infraBranch: selectedFilter.branch })
   }
 
+  function handleReloadFromCache(): void {
+    refetch?.({
+      requestOptions: { headers: { 'Load-From-Cache': 'false' } }
+    })
+  }
+
   const renderRemoteDetails = (): JSX.Element | null => {
-    return CDS_INFRA_GITX && infraStoreType === 'REMOTE' && !infrastructureLoading ? (
+    return CDS_INFRA_GITX && infraStoreType === 'REMOTE' && !loading ? (
       <div className={css.gitRemoteDetailsWrapper}>
         <GitRemoteDetails
           connectorRef={get(infrastructureResponse, 'connectorRef', infraConnectorRef)}
@@ -94,14 +107,12 @@ export function InfraDefinitionDetailsDrawerTitle(props: {
             readOnly: false
           }}
         />
-        {hasRemoteFetchFailed && (
+        {!hasRemoteFetchFailed && (
           <EntityCachedCopy
             ref={infrastructureCachedCopyRef}
-            reloadContent={getString('common.pipeline')}
+            reloadContent={getString('infrastructureText')}
             cacheResponse={get(infrastructureResponse, 'cacheResponseMetadataDTO')}
-            reloadFromCache={noop}
-            repo={repoName}
-            filePath={filePath}
+            reloadFromCache={handleReloadFromCache}
           />
         )}
       </div>

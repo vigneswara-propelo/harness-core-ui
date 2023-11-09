@@ -218,9 +218,8 @@ export function InfraDefinitionDetailsDrawer(props: Props) {
           shouldShowActionButtons={selectedTab === InfraDefinitionTabs.CONFIGURATION}
           isInfraUpdated={isInfraUpdated}
           openUnsavedChangesDiffModal={openUnsavedChangesDiffModal}
-          infrastructureResponse={infrastructureResponse?.data?.infrastructure}
           hasRemoteFetchFailed={hasRemoteFetchFailed}
-          infrastructureLoading={infrastructureLoading}
+          infrastructureFetchDetails={infrastructureFetchDetails}
         />
       }
       data-type={DrawerTypes.StepConfig}

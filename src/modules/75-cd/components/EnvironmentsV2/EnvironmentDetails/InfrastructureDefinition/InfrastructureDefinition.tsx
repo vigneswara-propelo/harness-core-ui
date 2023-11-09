@@ -89,6 +89,7 @@ export default function InfrastructureDefinition({ isEnvPage }: { isEnvPage: boo
       environmentIdentifier,
       ...gitQueryParams
     },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     infraIdentifier: infrastructureId as string,
     lazy: isEmpty(infrastructureId) || infraStoreType === 'INLINE'
   })
