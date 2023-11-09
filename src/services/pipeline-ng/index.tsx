@@ -4752,6 +4752,7 @@ export interface PipelineExecutionSummary {
   projectIdentifier?: string
   runSequence?: number
   runningStagesCount?: number
+  shouldUseSimplifiedKey?: boolean
   showRetryHistory?: boolean
   stagesExecuted?: string[]
   stagesExecutedNames?: {

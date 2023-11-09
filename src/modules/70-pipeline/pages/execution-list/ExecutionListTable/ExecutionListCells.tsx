@@ -584,6 +584,7 @@ export const MenuCell: CellType = ({ row, column }) => {
         menuOnlyActions
         isExecutionListView
         showAddExecutionNotes={!data?.notesExistForPlanExecutionId}
+        shouldUseSimplifiedKey={data?.shouldUseSimplifiedKey}
       />
     </div>
   )

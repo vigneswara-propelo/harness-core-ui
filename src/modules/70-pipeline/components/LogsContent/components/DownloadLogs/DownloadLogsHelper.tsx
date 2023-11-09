@@ -30,6 +30,7 @@ export interface DownloadActionProps {
   runSequence?: number
   state?: State
   planExecId?: string
+  shouldUseSimplifiedKey?: boolean
 }
 
 export interface DownloadLogsProps {
@@ -151,10 +152,10 @@ export const makePipelinePrefix = (
   planExecId: string,
   orgId: string,
   projectId: string,
-  isSimplifiedLogKey: boolean
+  shouldUseSimplifiedKey: boolean
 ): string => {
   // Simplified LogKey accepted format - {accountId}/pipeline/{pipelineId}/{run-sequence}/-{planExecutionId}
-  return isSimplifiedLogKey
+  return shouldUseSimplifiedKey
     ? `${accountId}/pipeline/${uniqueKey}/${runSequence}/-${planExecId}`
     : `accountId:${accountId}/orgId:${orgId}/projectId:${projectId}/pipelineId:${uniqueKey}/runSequence:${runSequence}/level0:pipeline`
 }

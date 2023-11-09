@@ -280,6 +280,7 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
                   canEdit={canEdit}
                   canExecute={canExecute}
                   modules={pipelineExecutionDetail?.pipelineExecutionSummary?.modules}
+                  shouldUseSimplifiedKey={pipelineExecutionDetail?.pipelineExecutionSummary?.shouldUseSimplifiedKey}
                 />
               ))}
           </div>

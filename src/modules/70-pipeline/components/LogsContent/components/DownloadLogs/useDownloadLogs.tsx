@@ -10,10 +10,8 @@ import { useParams } from 'react-router-dom'
 import { getErrorInfoFromErrorObject } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { downloadLogsPromise, getTokenPromise } from 'services/logs'
 import { UseStringsReturn, useStrings } from 'framework/strings'
-import { FeatureFlag } from '@modules/10-common/featureFlags'
 import {
   DownloadActionProps,
   DownloadLogsProps,
@@ -95,8 +93,6 @@ export function useDownloadLogs(): DownloadLogsProps {
   const { getString } = useStrings()
   const logsTokenRef = React.useRef('')
 
-  const isSimplifiedLogKey = useFeatureFlag(FeatureFlag.PIE_SIMPLIFY_LOG_BASE_KEY)
-
   React.useEffect(() => {
     return () => {
       DownloadLogsToaster.clear()
@@ -104,7 +100,16 @@ export function useDownloadLogs(): DownloadLogsProps {
   }, [])
 
   const downloadLogsAction = async (props: DownloadActionProps): Promise<void> => {
-    const { logsScope, state, runSequence, uniqueKey, logBaseKey, logsToken, planExecId } = props
+    const {
+      logsScope,
+      state,
+      runSequence,
+      uniqueKey,
+      logBaseKey,
+      logsToken,
+      planExecId,
+      shouldUseSimplifiedKey = false
+    } = props
     const logKeyFromState = getLogPrefix(state)
     const prefix =
       logsScope === LogsScope.Pipeline
@@ -115,7 +120,7 @@ export function useDownloadLogs(): DownloadLogsProps {
             defaultTo(planExecId, ''),
             orgIdentifier,
             projectIdentifier,
-            isSimplifiedLogKey
+            shouldUseSimplifiedKey
           )
         : logBaseKey || logKeyFromState
 

@@ -99,6 +99,7 @@ export interface ExecutionActionsProps {
   isExecutionListView?: boolean
   hideRetryOption?: boolean
   showAddExecutionNotes?: boolean
+  shouldUseSimplifiedKey?: boolean
 }
 
 function MarkAsFailedConfirmationContent(): JSX.Element {
@@ -176,7 +177,8 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     menuOnlyActions,
     isExecutionListView,
     hideRetryOption = false,
-    showAddExecutionNotes = false
+    showAddExecutionNotes = false,
+    shouldUseSimplifiedKey = false
   } = props
   const {
     orgIdentifier,
@@ -508,7 +510,8 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
                     runSequence,
                     uniqueKey: pipelineIdentifier,
                     logsToken,
-                    planExecId: executionIdentifier
+                    planExecId: executionIdentifier,
+                    shouldUseSimplifiedKey
                   })
                 }
                 disabled={!isExecutionComplete(executionStatus)}

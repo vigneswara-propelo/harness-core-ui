@@ -390,6 +390,7 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
               }
               onViewCompiledYaml={/* istanbul ignore next */ () => setViewCompiledYaml(pipelineExecutionSummary)}
               hideRetryOption={true}
+              shouldUseSimplifiedKey={pipelineExecutionSummary?.shouldUseSimplifiedKey}
             />
           </IfPrivateAccess>
         </div>
