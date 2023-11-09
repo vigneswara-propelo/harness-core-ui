@@ -250,6 +250,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                                 enableConfigureOptions={false}
                                 isDrawerMode={isDrawerMode}
                                 type={[]}
+                                width="100%"
                               />
                             ) : variable.type === VariableType.Secret ? (
                               <MultiTypeSecretInput name={`variables[${index}].value`} label="" disabled={readonly} />

@@ -177,6 +177,7 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
                   enableConfigureOptions={false}
                   isDrawerMode={isDrawerMode}
                   type={[]}
+                  width="100%"
                 />
               ) : variable.type === VariableType.Secret ? (
                 <MultiTypeSecretInput
