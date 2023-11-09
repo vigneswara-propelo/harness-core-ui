@@ -341,15 +341,26 @@ export const processPipelineFromAPIAction = (
       const { resolvedCustomDeploymentDetailsByRef } = data.pipeline
         ? await getResolvedCustomDeploymentDetailsMap(data.pipeline, templateQueryParams)
         : { resolvedCustomDeploymentDetailsByRef: {} }
+
+      const isLocalChangesPresent = comparePipelines(data.originalPipeline, data.pipeline)
+
+      /**
+       * this is added for the case when other user makes the changes and the current user
+       * refreshes the tab then the new saved changes should automatically be saved without
+       * pop-up
+       */
+      if (!isLocalChangesPresent) {
+        await idb.put(payload)
+      }
       dispatch(
         PipelineContextActions.success({
           pipelineIdentifier: pipelineId,
           error: '',
           remoteFetchError: undefined,
-          pipeline: data.pipeline,
+          pipeline: isLocalChangesPresent ? data.pipeline : cloneDeep(pipeline),
           originalPipeline: cloneDeep(pipeline),
-          isBEPipelineUpdated: comparePipelines(pipeline, data.originalPipeline),
-          isUpdated: comparePipelines(pipeline, data.pipeline),
+          isBEPipelineUpdated: isLocalChangesPresent ? comparePipelines(pipeline, data.originalPipeline) : false,
+          isUpdated: isLocalChangesPresent ? comparePipelines(pipeline, data.pipeline) : false,
           isMetadataUpdated: !isEqual(
             pipelineMetadataConfig?.originalMetadata,
             pipelineMetadataConfig?.modifiedMetadata
