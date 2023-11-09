@@ -19,7 +19,7 @@
             "execution_trigger_tag_needed_for_abort": "rXUXvbFqRr2XwcjBu3Oq-Q:default:sridhartest:ECRPipeline",
             "triggerRef": "rXUXvbFqRr2XwcjBu3Oq-Q/default/sridhartest/ECR"
           },
-          "triggerIdentifier": "ECR",
+          "triggerIdentifier": "ECR_Trigger",
           "triggerName": "ECR"
         },
         "isRerun": false,

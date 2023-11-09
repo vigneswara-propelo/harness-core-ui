@@ -696,7 +696,7 @@ export function DefaultTriggerInfoCell(props: UseTableCellProps<PipelineExecutio
             accountId: pathParams.accountId,
             module: pathParams.module,
             pipelineIdentifier: data.pipelineIdentifier || '',
-            triggerIdentifier: get(data, 'executionTriggerInfo.triggeredBy.identifier') || '',
+            triggerIdentifier: data.executionTriggerInfo.triggeredBy.triggerIdentifier,
             triggerType
           })}
           target="_blank"
@@ -708,7 +708,7 @@ export function DefaultTriggerInfoCell(props: UseTableCellProps<PipelineExecutio
             lineClamp={1}
             style={{ paddingLeft: 5 }}
           >
-            {data?.executionTriggerInfo?.triggeredBy?.triggerIdentifier}
+            {data.executionTriggerInfo.triggeredBy.triggerIdentifier}
           </Text>
         </Link>
       </Layout.Horizontal>
