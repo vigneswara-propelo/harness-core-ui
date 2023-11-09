@@ -18,7 +18,7 @@ import { useStrings } from 'framework/strings'
 import { usePermission } from '@modules/20-rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@modules/20-rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@modules/20-rbac/interfaces/ResourceType'
-import { module } from '../constants'
+import { module } from '../../constants'
 import { getAccountLevelRedirectionProps, getProjectLevelRedirectionProps } from './SEISideNavLinks.utils'
 
 const SEISideNavLinks = (mode: NAV_MODE): React.ReactElement => {

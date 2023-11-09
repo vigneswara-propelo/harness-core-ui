@@ -4,7 +4,7 @@ import routes from '@common/RouteDefinitionsV2'
 import { OrgPathProps, ProjectPathProps } from '@modules/10-common/interfaces/RouteInterfaces'
 import { ScopeSwitchProps } from '@modules/10-common/navigation/SideNavV2/SideNavV2'
 import type { UseStringsReturn } from 'framework/strings'
-import { module } from '../constants'
+import { module } from '../../constants'
 
 export const getProjectLevelRedirectionProps = (
   history: History,

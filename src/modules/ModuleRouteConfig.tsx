@@ -37,7 +37,7 @@ import IACMRouteDestinations from '@iacm/RouteDestinationsV2'
 import CETRouteDestinations from '@modules/75-cet/RouteDestinationsV2'
 import CETSideNavLinks from '@cet/components/SideNav/CETSideNavLinks'
 import { SIDE_NAV_STATE } from '@common/router/RouteWithLayoutV2'
-import SEISideNavLinks from '@modules/75-sei/SideNav/SEISideNavLinks'
+import SEISideNavLinks from '@modules/75-sei/SideNav/NavV2/SEISideNavLinks'
 import SEIRouteDestinations from '@modules/75-sei/RouteDestinationsV2'
 
 export interface ModuleLinksProps {

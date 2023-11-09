@@ -2488,7 +2488,35 @@ const routes = {
   ),
 
   /****************** SEI Module ************************************************************************************/
-  toSEI: withAccountId(() => `/sei`)
+  toSEI: withAccountId(() => `/sei`),
+  toSEIMicroFrontend: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/sei/orgs/${orgIdentifier}/projects/${projectIdentifier}`
+  ),
+  toSEIInsights: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/sei/orgs/${orgIdentifier}/projects/${projectIdentifier}/dashboards`
+  ),
+  toSEIIntegrationMapping: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/sei/orgs/${orgIdentifier}/projects/${projectIdentifier}/sei-integration-mapping`
+  ),
+  toSEICollection: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/sei/orgs/${orgIdentifier}/projects/${projectIdentifier}/configuration/organization`
+  ),
+
+  // sei account level routes
+  toSEIIntegrations: withAccountId(() => `/sei/configuration/integrations`),
+  toSEIContributors: withAccountId(() => `/sei/configuration/organization_users`),
+  toSEIWorklowProfilePage: withAccountId(() => `/sei/configuration/lead-time-profile`),
+  toSEIEffortInvestment: withAccountId(() => `/sei/configuration/effort-investment`),
+  toSEITrellisScoreProfile: withAccountId(() => `/sei/configuration/trellis_score_profile`),
+  toSEITables: withAccountId(() => `/sei/tables`),
+  toSEIPropels: withAccountId(() => '/sei/propels'),
+  toSEICustomise: withAccountId(() => '/sei/configuration/global'),
+  toSEIActivityLogs: withAccountId(() => '/sei/configuration/audit_logs'),
+  toSEIApiKeys: withAccountId(() => '/sei/configuration/apikeys')
 }
 
 export default routes

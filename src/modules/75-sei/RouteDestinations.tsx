@@ -6,17 +6,18 @@
  */
 
 import React from 'react'
+import { Redirect } from 'react-router-dom'
 import routes from '@common/RouteDefinitions'
 import { RouteWithLayout } from '@common/router'
-import { accountPathProps } from '@common/utils/routeUtils'
-import { String as LocaleString } from 'framework/strings'
+import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
+import { String as LocaleString, useStrings } from 'framework/strings'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import { FeatureFlag } from '@common/featureFlags'
-import { EmptyLayout, MinimalLayout } from '@common/layouts'
+import { EmptyLayout } from '@common/layouts'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import { ProjectSelector } from '@projects-orgs/components/ProjectSelector/ProjectSelector'
 import SideNav from '@common/navigation/SideNav'
@@ -27,7 +28,12 @@ import { NameSchema } from '@common/utils/Validation'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
 import ChildComponentMounter from 'microfrontends/ChildComponentMounter'
+import { ModulePathParams } from '@modules/10-common/interfaces/RouteInterfaces'
+import { SidebarContext } from '@modules/10-common/navigation/SidebarProvider'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { PAGE_NAME } from '@modules/10-common/pages/pageContext/PageName'
 import { SEICustomMicroFrontendProps } from './SEICustomMicroFrontendProps.types'
+import SEISideNav from './SideNav/NavV1/SEISideNav'
 
 // eslint-disable-next-line import/no-unresolved
 const SEIMicroFrontend = React.lazy(() => import('sei/MicroFrontendApp'))
@@ -40,8 +46,29 @@ const InsightsResourceModalBody = React.lazy(() => import('sei/InsightsResourceM
 // eslint-disable-next-line import/no-unresolved
 const InsightsResourceRenderer = React.lazy(() => import('sei/InsightsResourceRenderer'))
 
+const RedirectToSEIModule = (): React.ReactElement => {
+  const { selectedProject, accountInfo } = useAppStore()
+  const { identifier: accountId = '' } = accountInfo || {}
+  const { identifier: projectIdentifier = '', orgIdentifier: orgIdentifier = '' } = selectedProject || {}
+
+  if (selectedProject) {
+    return (
+      <Redirect
+        to={routes.toSEIInsights({
+          accountId,
+          orgIdentifier,
+          projectIdentifier
+        })}
+      />
+    )
+  } else {
+    return <Redirect to={routes.toModuleHome({ accountId, module: 'sei' })} />
+  }
+}
+
 export default function SEIRoutes(): React.ReactElement {
   const isSEIEnabled = useFeatureFlag(FeatureFlag.SEI_ENABLED)
+  const { getString } = useStrings()
 
   if (isSEIEnabled) {
     RbacFactory.registerResourceTypeHandler(ResourceType.SEI_CONFIGURATION_SETTINGS, {
@@ -89,41 +116,66 @@ export default function SEIRoutes(): React.ReactElement {
       addResourceModalBody: props => <ChildComponentMounter ChildComponent={InsightsResourceModalBody} {...props} />,
       staticResourceRenderer: props => <ChildComponentMounter ChildComponent={InsightsResourceRenderer} {...props} />
     })
-
-    RbacFactory.registerResourceTypeHandler(ResourceType.SEI_TRELLIS_SCORE, {
-      icon: 'res-users',
-      label: 'sei.trellisScore',
-      category: ResourceCategory.SEI,
-      permissionLabels: {
-        [PermissionIdentifier.VIEW_SEI_TRELLISSCORE]: <LocaleString stringID="rbac.permissionLabels.view" />,
-        [PermissionIdentifier.EDIT_SEI_TRELLISSCORE]: <LocaleString stringID="rbac.permissionLabels.edit" />
-      }
-    })
   }
+  const moduleParams: ModulePathParams = {
+    module: 'sei'
+  }
+
+  const SEISideNavProps: SidebarContext = {
+    navComponent: SEISideNav,
+    subtitle: getString('sei.softwareEngineering'),
+    title: getString('sei.insights'),
+    icon: 'sei-main'
+  }
+
+  const SEIChildAppProps: SEICustomMicroFrontendProps = {
+    customComponents: {
+      ProjectSelector,
+      NavExpandable,
+      HarnessSideNav: SideNav,
+      HomePageTemplate,
+      SidebarLink,
+      AccessControlRouteDestinations,
+      EmptyLayout
+    },
+    cdServices: {
+      useGetLicensesAndSummary
+    },
+    customRoutes: routes,
+    customUtils: { NameSchema },
+    customHooks: {
+      useFeatureFlag,
+      useFeatureFlags
+    }
+  }
+  // const licenseRedirectData: LicenseRedirectProps = {
+  //   licenseStateName: LICENSE_STATE_NAMES.SEI_LICENSE_STATE,
+  //   startTrialRedirect: () => <TrialRedirect />,
+  //   expiredTrialRedirect: RedirectToSubscriptionsFactory(ModuleName.SEI)
+  // }
   return (
     <>
-      <RouteWithLayout layout={MinimalLayout} path={routes.toSEI({ ...accountPathProps })}>
-        <ChildAppMounter<SEICustomMicroFrontendProps>
-          ChildApp={SEIMicroFrontend}
-          customComponents={{
-            ProjectSelector,
-            NavExpandable,
-            HarnessSideNav: SideNav,
-            HomePageTemplate,
-            SidebarLink,
-            AccessControlRouteDestinations,
-            EmptyLayout
-          }}
-          cdServices={{
-            useGetLicensesAndSummary
-          }}
-          customRoutes={routes}
-          customUtils={{ NameSchema }}
-          customHooks={{
-            useFeatureFlag,
-            useFeatureFlags
-          }}
-        />
+      <RouteWithLayout
+        // licenseRedirectData={licenseRedirectData}
+        path={routes.toSEI({ ...projectPathProps })}
+        exact
+        pageName={PAGE_NAME.SEIHomePage}
+      >
+        <RedirectToSEIModule />
+      </RouteWithLayout>
+      {
+        AccessControlRouteDestinations({
+          moduleParams,
+          // licenseRedirectData,
+          sidebarProps: SEISideNavProps
+        })?.props.children
+      }
+      <RouteWithLayout
+        // licenseRedirectData={licenseRedirectData}
+        sidebarProps={SEISideNavProps}
+        path={[routes.toSEIMicroFrontend({ ...projectPathProps }), routes.toSEI({ ...accountPathProps })]}
+      >
+        <ChildAppMounter ChildApp={SEIMicroFrontend} {...SEIChildAppProps} />
       </RouteWithLayout>
     </>
   )
