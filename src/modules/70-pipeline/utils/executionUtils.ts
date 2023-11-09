@@ -104,7 +104,8 @@ export enum StepNodeType {
   SERVICE_V3 = 'SERVICE_V3',
   PIPELINE_STAGE = 'PIPELINE_STAGE',
   INTEGRATION_STAGE_STEP_PMS = 'IntegrationStageStepPMS',
-  InitializeContainer = 'InitializeContainer'
+  InitializeContainer = 'InitializeContainer',
+  FLAG_STAGE = 'FLAG_STAGE'
 }
 
 export const NonSelectableStepNodes: StepNodeType[] = [
@@ -120,7 +121,8 @@ export const NonSelectableStepNodes: StepNodeType[] = [
   StepNodeType.GROUP,
   StepNodeType.NG_SECTION_WITH_ROLLBACK_INFO,
   StepNodeType.ROLLBACK_OPTIONAL_CHILD_CHAIN,
-  StepNodeType.INTEGRATION_STAGE_STEP_PMS
+  StepNodeType.INTEGRATION_STAGE_STEP_PMS,
+  StepNodeType.FLAG_STAGE
 ]
 
 export const TopLevelStepNodes: StepNodeType[] = [
@@ -156,7 +158,8 @@ export const StepTypeIconsMap: { [key in StepNodeType]: IconName } = {
   RUNTIME_INPUT: 'runtime-input',
   PIPELINE_STAGE: 'chained-pipeline',
   IntegrationStageStepPMS: 'step-group',
-  InitializeContainer: 'initialize-ci-step'
+  InitializeContainer: 'initialize-ci-step',
+  FLAG_STAGE: 'feature-flag-stage'
 }
 
 export const StepV2TypeIconsMap: {
