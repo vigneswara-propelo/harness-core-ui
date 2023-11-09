@@ -194,7 +194,7 @@ export const OrgSettingsPage: React.FC = () => {
             <SettingsResourceCard
               label={<String stringID="common.serviceAccounts" />}
               id={SettingsResources.AccessControlServiceAccounts}
-              icon={'setting'}
+              icon={'service-accounts'}
               route={routesV2.toServiceAccounts({ accountId, orgIdentifier, module })}
             />
             <SettingsResourceCard
@@ -225,7 +225,7 @@ export const OrgSettingsPage: React.FC = () => {
             <SettingsResourceCard
               label={<String stringID="common.freezeWindows" />}
               id={SettingsResources.FreezeWindow}
-              icon={'setting'}
+              icon={'FreezeWindow'}
               route={routesV2.toFreezeWindows({ accountId, orgIdentifier, module })}
               hidden={!showDeploymentFreeze}
             />

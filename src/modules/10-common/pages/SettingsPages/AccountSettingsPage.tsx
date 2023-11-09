@@ -361,7 +361,7 @@ export const AccountSettingsPage: React.FC = () => {
             <SettingsResourceCard
               label={<String stringID="common.serviceAccounts" />}
               id={SettingsResources.AccessControlServiceAccounts}
-              icon={'setting'}
+              icon={'service-accounts'}
               route={routesV2.toServiceAccounts({ accountId, module })}
             />
             <SettingsResourceCard
@@ -398,7 +398,7 @@ export const AccountSettingsPage: React.FC = () => {
             <SettingsResourceCard
               label={<String stringID="common.freezeWindows" />}
               id={SettingsResources.FreezeWindow}
-              icon={'setting'}
+              icon={'FreezeWindow'}
               route={routesV2.toFreezeWindows({ accountId, module })}
               hidden={!showDeploymentFreeze}
             />
@@ -424,7 +424,7 @@ export const AccountSettingsPage: React.FC = () => {
             <SettingsResourceCard
               label={<String stringID="common.subscriptions.title" />}
               id={SettingsResources.Subscription}
-              icon={'nav-settings'}
+              icon={'subscriptions'}
               route={routesV2.toSubscriptions({ accountId, module })}
               hidden={!NG_LICENSES_ENABLED}
             />

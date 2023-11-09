@@ -165,7 +165,7 @@ export const SettingsPageGroup: React.FC<SettingsPageGroupProps> = ({ children, 
           >
             {title}
           </Text>
-          {description ? null : <div className={css.noDescriptionDivider} />}
+          {isChildGroup ? <div className={css.noDescriptionDivider} /> : null}
         </Layout.Horizontal>
         {description ? (
           <Text font={{ variation: FontVariation.BODY }} color={Color.BLACK}>
@@ -173,7 +173,7 @@ export const SettingsPageGroup: React.FC<SettingsPageGroupProps> = ({ children, 
           </Text>
         ) : null}
       </Layout.Vertical>
-      {description ? <Divider className={css.divider} /> : null}
+      {!isChildGroup ? <Divider className={css.divider} /> : null}
       <Container className={css.settingsTileWrapper}>
         {React.Children.toArray(children)
           .filter(cardInfo => !(cardInfo as React.ReactElement<ResourceTileProps>).props.hidden)
