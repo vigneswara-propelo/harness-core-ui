@@ -63,6 +63,8 @@ const RoleAssignmentForm: React.FC<RoleAssignmentFormProps> = ({
   const scope = getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
   const defaultResourceGroup = getScopeBasedDefaultResourceGroup(scope, getString)
   const [searchTerm, setSearchTerm] = useState<string>('')
+  const [searchTermResourceGroup, setSearchTermResourceGroup] = useState<string>('')
+
   const { data: roleList, refetch } = useGetRoleList({
     queryParams: {
       accountIdentifier: accountId,
@@ -82,8 +84,10 @@ const RoleAssignmentForm: React.FC<RoleAssignmentFormProps> = ({
       orgIdentifier,
       projectIdentifier,
       pageSize: 100,
-      sortOrders: [SortMethod.NameAsc]
+      sortOrders: [SortMethod.NameAsc],
+      searchTerm: searchTermResourceGroup
     },
+    debounce: 500,
     queryParamStringifyOptions: { arrayFormat: 'repeat' }
   })
 
@@ -211,6 +215,7 @@ const RoleAssignmentForm: React.FC<RoleAssignmentFormProps> = ({
                         'data-testid': `resourceGroup-${_index}`
                       }}
                       onChange={handleChange}
+                      onQueryChange={setSearchTermResourceGroup}
                     />
                     {errorCheck('assignments', formik) && error ? (
                       <Text intent="danger" font="xsmall">
