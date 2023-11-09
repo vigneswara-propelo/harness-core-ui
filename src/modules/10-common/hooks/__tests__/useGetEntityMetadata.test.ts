@@ -168,6 +168,19 @@ describe('useGetEntityMetadata tests', () => {
     )
   })
 
+  test('For chaos-hub it should open chaos-hub details page', async () => {
+    const { result } = renderUseGetEntityMetadataHook({
+      type: 'ChaosHub',
+      entityRef: {
+        identifier: 'mock_chaoshub',
+        ...entityMockScope
+      }
+    })
+
+    const chaosHubUrl = await result.current.getEntityURL()
+    expect(chaosHubUrl).toBe('/account/mockAccount/chaos/orgs/mockOrg/projects/mockProject/chaos-hubs/mock_chaoshub')
+  })
+
   test('For secret it should open secret details page', async () => {
     const { result } = renderUseGetEntityMetadataHook({
       type: 'Secrets',

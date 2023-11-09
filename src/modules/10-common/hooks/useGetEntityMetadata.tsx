@@ -490,6 +490,22 @@ export const useGetEntityMetadata = (
           isNewNav
         )
         break
+      case 'ChaosHub':
+        entityUrl = isNewNav
+          ? routesV2.toChaosHub({
+              accountId: accountIdentifier,
+              identifier: identifier,
+              orgIdentifier,
+              projectIdentifier,
+              module: 'chaos'
+            })
+          : routesV1.toChaosHub({
+              accountId: accountIdentifier,
+              identifier: identifier,
+              orgIdentifier,
+              projectIdentifier
+            })
+        break
       default:
         entityUrl = isNewNav
           ? routesV2.toLandingDashboard({ accountId: accountIdentifier })

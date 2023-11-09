@@ -4914,6 +4914,7 @@ export interface EntityDetail {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'ChaosHub'
 }
 
 export interface EntityDetailProtoDTO {
@@ -42948,6 +42949,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'ChaosHub'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -43250,6 +43252,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'ChaosHub'
   searchTerm?: string
 }
 
