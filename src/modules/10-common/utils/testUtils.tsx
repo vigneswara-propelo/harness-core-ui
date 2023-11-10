@@ -303,11 +303,12 @@ export const doConfigureOptionsTesting = async (
 export const testConnectorRefChange = async (
   connectorRef1: string,
   connectorRef2: string,
-  selected: string
+  selected: string,
+  alreadyOpenedDialogs = 0
 ): Promise<void> => {
   const dialogs = document.getElementsByClassName('bp3-dialog')
-  await waitFor(() => expect(dialogs).toHaveLength(1))
-  const connectorSelectorDialog = dialogs[0] as HTMLElement
+  await waitFor(() => expect(dialogs).toHaveLength(alreadyOpenedDialogs + 1))
+  const connectorSelectorDialog = dialogs[alreadyOpenedDialogs] as HTMLElement
 
   let connectorToSelect = connectorRef1
   if (selected === connectorRef1) {
@@ -329,5 +330,5 @@ export const testConnectorRefChange = async (
   userEvent.click(connectorToSelectElementItem)
   const applySelected = getByText(connectorSelectorDialog, 'entityReference.apply')
   userEvent.click(applySelected)
-  await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(0))
+  await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(alreadyOpenedDialogs))
 }

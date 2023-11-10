@@ -341,6 +341,7 @@ export default function DeployEnvironmentGroup({
                         deploymentType={deploymentType}
                         customDeploymentRef={customDeploymentRef}
                         lazyInfrastructure
+                        serviceIdentifiers={serviceIdentifiers}
                       />
                     )}
                   </>

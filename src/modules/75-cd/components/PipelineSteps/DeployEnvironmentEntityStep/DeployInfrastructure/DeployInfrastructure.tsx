@@ -61,6 +61,7 @@ interface DeployInfrastructureProps
   environmentPermission?: ButtonProps['permission']
   previousStages?: StageElementWrapperConfig[]
   selectedPropagatedState?: PropagateSelectOption | string
+  serviceIdentifiers: string[]
   environmentBranch?: string
 }
 
@@ -76,6 +77,7 @@ export default function DeployInfrastructure({
   environmentPermission,
   previousStages,
   selectedPropagatedState,
+  serviceIdentifiers,
   environmentBranch
 }: DeployInfrastructureProps): JSX.Element {
   const { values, setFieldValue, setValues, setFieldTouched, validateForm } =
@@ -127,6 +129,7 @@ export default function DeployInfrastructure({
     // this condition makes the yaml metadata call data
     infrastructureIdentifiers: lazyInfrastructure ? [] : selectedInfrastructures,
     deploymentType,
+    serviceIdentifiers,
     ...(shouldAddCustomDeploymentData && {
       deploymentTemplateIdentifier,
       versionLabel

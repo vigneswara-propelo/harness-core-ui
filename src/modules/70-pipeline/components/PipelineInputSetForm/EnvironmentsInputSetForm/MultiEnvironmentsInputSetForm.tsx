@@ -51,6 +51,17 @@ export function MultiEnvironmentsInputSetForm({
   // This is the value of AllValues
   const deploymentStageInputSet = get(formik?.values, path, {})
 
+  const originalService = deploymentStage?.service
+  const originalMultiServices = deploymentStage?.services
+  const serviceInForm = deploymentStageInputSet?.service
+  const multiServicesInForm = deploymentStageInputSet?.services
+  const singleServiceIdentifier = isValueRuntimeInput(originalService?.serviceRef)
+    ? serviceInForm?.serviceRef
+    : originalService?.serviceRef
+  const multiServiceIdentifiers = isValueRuntimeInput(originalMultiServices?.values as unknown as string)
+    ? multiServicesInForm?.values
+    : originalMultiServices?.values?.map(serviceObj => serviceObj.serviceRef)
+
   const areEnvironmentsPreSelectedInStudio = Array.isArray(get(deploymentStage, pathToEnvironments))
     ? get(deploymentStage, pathToEnvironments).some(
         (environment: EnvironmentYamlV2) => !isValueRuntimeInput(environment.environmentRef)
@@ -336,6 +347,9 @@ export function MultiEnvironmentsInputSetForm({
                           customStepProps={{
                             deploymentType,
                             environmentIdentifier: environment.environmentRef,
+                            serviceIdentifiers: isEmpty(singleServiceIdentifier)
+                              ? [singleServiceIdentifier]
+                              : multiServiceIdentifiers,
                             scopePrefix,
                             isMultipleInfrastructure: true,
                             customDeploymentRef: deploymentStage?.customDeploymentRef,

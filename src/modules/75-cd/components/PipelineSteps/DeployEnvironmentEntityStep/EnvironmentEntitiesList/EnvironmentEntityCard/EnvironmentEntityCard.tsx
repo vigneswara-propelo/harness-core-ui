@@ -294,6 +294,7 @@ export function EnvironmentEntityCard({
                               deploymentType={deploymentType}
                               customDeploymentRef={customDeploymentRef}
                               environmentPermission={environmentPermission}
+                              serviceIdentifiers={serviceIdentifiers}
                             />
                           )}
                         </>

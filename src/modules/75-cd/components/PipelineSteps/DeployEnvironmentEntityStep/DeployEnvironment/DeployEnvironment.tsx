@@ -534,6 +534,7 @@ export default function DeployEnvironment({
                 lazyInfrastructure={isExpression}
                 previousStages={previousStages}
                 selectedPropagatedState={selectedPropagatedState}
+                serviceIdentifiers={serviceIdentifiers}
               />
             )}
           </>
@@ -578,6 +579,7 @@ export default function DeployEnvironment({
                       deploymentType={deploymentType}
                       customDeploymentRef={customDeploymentRef}
                       lazyInfrastructure
+                      serviceIdentifiers={serviceIdentifiers}
                     />
                   )}
                 </>

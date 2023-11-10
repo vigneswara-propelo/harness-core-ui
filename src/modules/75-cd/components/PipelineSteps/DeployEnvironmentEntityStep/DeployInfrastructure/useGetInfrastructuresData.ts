@@ -37,6 +37,7 @@ export interface UseGetInfrastructuresDataProps {
   deploymentTemplateIdentifier?: TemplateLinkConfig['templateRef']
   versionLabel?: TemplateLinkConfig['versionLabel']
   lazyInfrastructure?: boolean
+  serviceIdentifiers: string[]
   environmentBranch?: string
 }
 
@@ -63,6 +64,7 @@ export function useGetInfrastructuresData({
   deploymentTemplateIdentifier,
   versionLabel,
   lazyInfrastructure,
+  serviceIdentifiers,
   environmentBranch
 }: UseGetInfrastructuresDataProps): UseGetInfrastructuresDataReturn {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
@@ -86,10 +88,14 @@ export function useGetInfrastructuresData({
       projectIdentifier,
       environmentIdentifier,
       deploymentType,
+      serviceRefs: serviceIdentifiers,
       ...(deploymentTemplateIdentifier && {
         deploymentTemplateIdentifier,
         versionLabel
       })
+    },
+    queryParamStringifyOptions: {
+      arrayFormat: 'repeat'
     },
     lazy: lazyInfrastructure
   })

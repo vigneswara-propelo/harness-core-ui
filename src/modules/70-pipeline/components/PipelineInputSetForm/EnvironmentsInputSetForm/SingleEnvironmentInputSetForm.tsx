@@ -69,15 +69,21 @@ export default function SingleEnvironmentInputSetForm({
   const environmentTemplate = deploymentStageTemplate?.environment
   const environmentInDeploymentStage = deploymentStage?.environment
 
-  const deploymentStageInputSet = get(formik?.values, path, {})
+  const deploymentStageInputSet: DeploymentStageConfig = get(formik?.values, path, {})
   const environment: EnvironmentYamlV2 = get(deploymentStageInputSet, `environment`, {})
 
   const originalService = deploymentStage?.service
+  const originalMultiServices = deploymentStage?.services
   const serviceInForm = deploymentStageInputSet?.service
+  const multiServicesInForm = deploymentStageInputSet?.services
 
   const singleServiceIdentifier = isValueRuntimeInput(originalService?.serviceRef)
     ? serviceInForm?.serviceRef
     : originalService?.serviceRef
+
+  const multiServiceIdentifiers = isValueRuntimeInput(originalMultiServices?.values as unknown as string)
+    ? multiServicesInForm?.values
+    : originalMultiServices?.values?.map(serviceObj => serviceObj.serviceRef)
 
   const [environmentRefType, setEnvironmentRefType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue(environment.environmentRef)
@@ -377,6 +383,9 @@ export default function SingleEnvironmentInputSetForm({
                 customStepProps={{
                   deploymentType,
                   environmentIdentifier,
+                  serviceIdentifiers: isEmpty(singleServiceIdentifier)
+                    ? [singleServiceIdentifier]
+                    : multiServiceIdentifiers,
                   isMultipleInfrastructure: false,
                   customDeploymentRef: deploymentStage?.customDeploymentRef,
                   showEnvironmentsSelectionInputField,

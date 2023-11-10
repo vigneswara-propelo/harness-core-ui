@@ -57,6 +57,7 @@ export interface DeployInfrastructureEntityInputStepProps
     readonly?: boolean
   }
   scopePrefix?: string
+  serviceIdentifiers: string[]
 }
 
 export default function DeployInfrastructureEntityInputStep({
@@ -71,7 +72,8 @@ export default function DeployInfrastructureEntityInputStep({
   stepViewType,
   areEnvironmentFiltersAdded,
   lazyInfrastructure,
-  scopePrefix
+  scopePrefix,
+  serviceIdentifiers
 }: DeployInfrastructureEntityInputStepProps): React.ReactElement {
   const { getString } = useStrings()
   const { showWarning } = useToaster()
@@ -140,6 +142,7 @@ export default function DeployInfrastructureEntityInputStep({
         : infrastructureIdentifiers,
     environmentIdentifier: defaultTo(scopePrefix, '') + environmentIdentifier,
     deploymentType,
+    serviceIdentifiers,
     ...(shouldAddCustomDeploymentData && {
       deploymentTemplateIdentifier,
       versionLabel
