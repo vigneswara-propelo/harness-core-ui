@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { ModulePathParams, ProjectPathProps } from '@modules/10-common/interfaces/RouteInterfaces'
 import {
   validateReturnUrl,
   returnLaunchUrl,
@@ -12,7 +13,13 @@ import {
   withProjectIdentifier,
   withAccountId,
   getScopeBasedRoute,
-  returnUrlParams
+  returnUrlParams,
+  NAV_MODE,
+  withMode,
+  withModule,
+  getRouteParams,
+  ModePathProps,
+  isNavMode
 } from '../routeUtils'
 
 describe('validateReturnUrl', () => {
@@ -39,6 +46,17 @@ describe('route utils', () => {
     const path = returnLaunchUrl(redirectionUrl)
     expect(path).toEqual(`${window.location.pathname}${redirectionUrl}`)
   })
+  test('getRouteParams', () => {
+    const { accountId, projectIdentifier, orgIdentifier, mode, module } = getRouteParams<
+      ProjectPathProps & ModulePathParams & ModePathProps
+    >(true, '/account/abcd/module/cd/orgs/default/projects/gef/')
+
+    expect(accountId).toEqual('abcd')
+    expect(projectIdentifier).toEqual('gef')
+    expect(orgIdentifier).toEqual('default')
+    expect(mode).toEqual('module')
+    expect(module).toEqual('cd')
+  })
   test('with account identifier', () => {
     const withAccountURL = withAccountId(() => '/dummy')
     expect(withAccountURL({ accountId: 'accountId' })).toEqual('/account/accountId/dummy')
@@ -50,6 +68,21 @@ describe('route utils', () => {
   test('with project identifier', () => {
     const withProjectURL = withProjectIdentifier(() => '/dummy')
     expect(withProjectURL({ projectIdentifier: 'projectId' })).toEqual('/projects/projectId/dummy')
+  })
+  test('with mode', () => {
+    const withModeURL = withMode(() => '/dummy')
+    expect(withModeURL({ mode: NAV_MODE.ALL })).toEqual('/all/dummy')
+  })
+  test('with module', () => {
+    const withModuleURL = withModule(() => '/dummy')
+    expect(withModuleURL({ module: 'cd' })).toEqual('/cd/dummy')
+  })
+  test('isNavMode', () => {
+    expect(isNavMode('admin')).toBeTruthy()
+    expect(isNavMode('module')).toBeTruthy()
+    expect(isNavMode('all')).toBeTruthy()
+    expect(isNavMode('dashboards')).toBeTruthy()
+    expect(isNavMode('cd')).toBeFalsy()
   })
   test('getScopeBasedRoute', () => {
     expect(getScopeBasedRoute({ scope: {}, path: 'dummy' })).toEqual('/settings/dummy')
