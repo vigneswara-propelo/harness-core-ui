@@ -54,7 +54,12 @@ export default function CLISetupStep({
         <Text color={Color.BLACK} font={{ variation: FontVariation.FORM_TITLE }}>
           <String
             color={Color.BLACK}
-            stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.headsteps.preparation"
+            stringID={
+              isK8sFlow
+                ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.headsteps.preparation'
+                : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.headsteps.createEntities'
+            }
+            vars={{ num: '1' }}
           />
         </Text>
       </Layout.Vertical>
@@ -62,7 +67,7 @@ export default function CLISetupStep({
         <Text color={Color.BLACK}>
           <String
             stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.title"
-            vars={{ titleIndex: isK8sFlow ? '1.' : '1.1' }}
+            vars={{ titleIndex: '1.' }}
           />
         </Text>
         <InstallCLIInfo />
@@ -80,17 +85,19 @@ export default function CLISetupStep({
           </TextWithIndex>
         </Text>
       </Layout.Vertical>
-      <CLILogin onKeyGenerate={onKeyGenerate} state={state} />
+      <CLILogin onKeyGenerate={onKeyGenerate} state={state} isK8sFlow={isK8sFlow} />
     </Layout.Vertical>
   )
 }
 
 function CLILogin({
   onKeyGenerate,
-  state
+  state,
+  isK8sFlow
 }: ApiKeySetupProps & {
   state: PipelineSetupState
   isGitopsFlow?: boolean
+  isK8sFlow?: boolean
 }): JSX.Element {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
@@ -104,21 +111,23 @@ function CLILogin({
         })}
         createBtnClass={css.createTokenBtn}
       />
-      <div className={cx(css.commandBlock, css.commandGap)}>
-        <CommandBlock
-          allowCopy
-          ignoreWhiteSpaces={false}
-          commandSnippet={getString(
-            'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.logincmd',
-            {
-              accId: accountId,
-              apiKey: state?.apiKey
-            }
-          )}
-          downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
-          copyButtonText={getString('common.copy')}
-        />
-      </div>
+      {isK8sFlow && (
+        <div className={cx(css.commandBlock, css.commandGap)}>
+          <CommandBlock
+            allowCopy
+            ignoreWhiteSpaces={false}
+            commandSnippet={getString(
+              'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.logincmd',
+              {
+                accId: accountId,
+                apiKey: state?.apiKey
+              }
+            )}
+            downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
+            copyButtonText={getString('common.copy')}
+          />
+        </div>
+      )}
     </>
   )
 }

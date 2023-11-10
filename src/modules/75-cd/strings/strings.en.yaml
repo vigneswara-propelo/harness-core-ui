@@ -857,7 +857,7 @@ getStartedWithCD:
         forkStep:
           title: '{{{num}}} Fork <a target="_blank" rel="noreferrer noopener nofollow" href="https://github.com/harness-community/harnesscd-example-apps/fork">harnesscd-example-apps</a> respository through the Github web interface. This enables personal experimentation and modifications without impacting the original codebase.'
         gitStep:
-          title: '1.4. Provide GitHub access details.'
+          title: '{{num}}{{^num}}1.4. {{/num}}  Provide GitHub access details.'
           githubusername: 'GitHub username'
           githubpat: 'GitHub Personal Access Token (PAT)'
           whereToFindGitPat: How do I find this?

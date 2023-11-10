@@ -25,7 +25,6 @@ import {
 import { useOnboardingStore } from '../Store/OnboardingStore'
 import { CDOnboardingSteps, EntityType, WhatToDeployType } from '../types'
 import MissingSwimlane from './MissingSwimlane'
-import { isK8sSwimlane } from '../utils'
 import { ONBOARDING_INTERACTIONS, WIZARD_STEP_OPEN } from '../TrackingConstants'
 import css from '../CDOnboardingWizardWithCLI.module.scss'
 interface WhatToDeployProps {
@@ -75,11 +74,8 @@ function WhatToDeploy({ saveProgress }: WhatToDeployProps): JSX.Element {
   }
 
   const resetDeploymentFlowType = (): void => {
-    const setGitops = isK8sSwimlane(stepsProgress)
     saveProgress(CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY, {
-      type: setGitops
-        ? DEPLOYMENT_FLOW_TYPES[DEPLOYMENT_FLOW_ENUMS.Gitops]
-        : DEPLOYMENT_FLOW_TYPES[DEPLOYMENT_FLOW_ENUMS.CDPipeline]
+      type: DEPLOYMENT_FLOW_TYPES[DEPLOYMENT_FLOW_ENUMS.CDPipeline]
     })
   }
 

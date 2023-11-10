@@ -70,7 +70,9 @@ export default function PipelineSetupStep({
             color={Color.BLACK}
             className={css.marginBottomLarge}
             stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.title"
-            vars={{ guestBookURL: 'https://github.com/harness-community/harnesscd-example-apps/tree/master/guestbook' }}
+            vars={{
+              num: '4.'
+            }}
           />
         </Text>
         <Text color={Color.BLACK} margin={{ bottom: 'large' }}>
