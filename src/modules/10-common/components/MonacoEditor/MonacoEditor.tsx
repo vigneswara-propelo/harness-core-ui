@@ -68,7 +68,7 @@ const MonacoEditor = forwardRef<MonacoCodeEditorRef, ExtendedMonacoEditorProps>(
   const options: MonacoEditorProps['options'] = {
     ...props.options,
     theme,
-    extraEditorClassName: cx(props.className, {
+    extraEditorClassName: cx(props.className, styles.isolate, {
       [styles.disabled]: props.options?.readOnly && theme !== 'vs-dark'
     })
   }
