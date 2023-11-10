@@ -80,6 +80,7 @@ import GitSyncConfigTab from '@gitsync/pages/config/GitSyncConfigTab'
 import VariablesPage from '@variables/pages/variables/VariablesPage'
 import FileStorePage from '@filestore/pages/filestore/FileStorePage'
 import SettingsList from '@default-settings/pages/SettingsList'
+import { NotificationPageList } from '@modules/27-platform/notifications/NotificationsPageList'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 // eslint-disable-next-line no-restricted-imports
 import ExternalTicketSettings from '@sto/components/ExternalTickets/Settings/ExternalTicketSettings'
@@ -708,6 +709,20 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout sidebarProps={AccountSideNavProps} path={routesV1.toDefaultSettings({ ...orgPathProps })} exact>
       <SettingsList />
+    </RouteWithLayout>
+    <RouteWithLayout
+      sidebarProps={ProjectDetailsSideNavProps}
+      path={routesV1.toNotificationsManagement({ ...accountPathProps, ...projectPathProps })}
+      exact
+    >
+      <NotificationPageList />
+    </RouteWithLayout>
+    <RouteWithLayout
+      sidebarProps={AccountSideNavProps}
+      path={routesV1.toNotificationsManagement({ ...accountPathProps, ...orgPathProps })}
+      exact
+    >
+      <NotificationPageList />
     </RouteWithLayout>
     <RouteWithLayout
       sidebarProps={AccountSideNavProps}

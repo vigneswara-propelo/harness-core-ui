@@ -902,6 +902,7 @@ const routes = {
       : `/settings/webhooks/events`
     return path
   }),
+  toNotificationsManagement: withModeModuleAndScopePrefix(() => `/settings/notifications-management`),
 
   toFeatureFlagsProxySettings: withModeModuleAndScopePrefix(() => `/settings/feature-flags-proxy`),
 

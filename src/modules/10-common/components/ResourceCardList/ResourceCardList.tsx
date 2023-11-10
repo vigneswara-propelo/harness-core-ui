@@ -54,7 +54,8 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
     CDS_SERVICE_OVERRIDES_2_0,
     PL_DISCOVERY_ENABLE,
     PIE_GIT_BI_DIRECTIONAL_SYNC,
-    FFM_9497_PROXY_KEY_MANAGEMENT: ffProxyKeyEnabled
+    FFM_9497_PROXY_KEY_MANAGEMENT: ffProxyKeyEnabled,
+    PL_CENTRAL_NOTIFICATIONS
   } = useFeatureFlags()
 
   const { showError } = useToaster()
@@ -228,6 +229,14 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       icon: 'gitops-gnupg-key-blue',
       hidden: !ffProxyKeyEnabled,
       route: routes.toFeatureFlagsProxy({ accountId })
+    } as ResourceOption,
+    {
+      label: (
+        <String stringID="common.notificationsManagement.label" className={css.notificationsManagement} useRichText />
+      ),
+      icon: 'notification',
+      hidden: !PL_CENTRAL_NOTIFICATIONS,
+      route: routes.toNotificationsManagement({ accountId, orgIdentifier })
     } as ResourceOption,
     ...(showGitOpsCard ? gitOpsCard : []),
     ...defaultSettingsCard

@@ -803,6 +803,7 @@ export interface StringsMap {
   'common.noteAccountSwitch': string
   'common.notification': string
   'common.notificationPreferences': string
+  'common.notificationsManagement.label': string
   'common.oAuth.accessRevoked': string
   'common.oAuth.accessTokenAlredyAdded': string
   'common.oAuth.accessTokenCreateSuccess': string

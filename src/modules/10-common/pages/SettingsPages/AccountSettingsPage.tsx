@@ -37,6 +37,7 @@ import {
   SettingsResourcesCategory,
   isActiveLicense
 } from './SettingsPage'
+import styles from '@modules/27-platform/notifications/Notifications.module.scss'
 
 export const AccountSettingsPage: React.FC = () => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
@@ -48,7 +49,8 @@ export const AccountSettingsPage: React.FC = () => {
     PIE_GIT_BI_DIRECTIONAL_SYNC,
     NG_LICENSES_ENABLED,
     CCM_CURRENCY_PREFERENCES,
-    FFM_9497_PROXY_KEY_MANAGEMENT: proxyKeysEnabled
+    FFM_9497_PROXY_KEY_MANAGEMENT: proxyKeysEnabled,
+    PL_CENTRAL_NOTIFICATIONS
   } = useFeatureFlags()
   const showGovCard = useAnyEnterpriseLicense()
   const { licenseInformation, CD_LICENSE_STATE, CI_LICENSE_STATE, STO_LICENSE_STATE, CV_LICENSE_STATE } =
@@ -225,6 +227,20 @@ export const AccountSettingsPage: React.FC = () => {
               hidden={!CCM_CURRENCY_PREFERENCES}
             />
             <SettingsResourceCard {...smtpResource} />
+            <SettingsResourceCard
+              id={SettingsResources.NotificationsManagement}
+              label={
+                <String
+                  className={styles.notificationsManagement}
+                  stringID="common.notificationsManagement.label"
+                  useRichText
+                />
+              }
+              icon={'ccm-currency-settings'}
+              labelAlignment={'center'}
+              route={routesV2.toNotificationsManagement({ accountId, module })}
+              hidden={!PL_CENTRAL_NOTIFICATIONS}
+            />
           </SettingsPage.group>
           <SettingsPage.group
             id={SettingsResourcesCategory.AccountResource}

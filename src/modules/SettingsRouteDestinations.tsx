@@ -34,6 +34,7 @@ import AuditTrailsSettingsRouteDestinations from '@audit-trail/SettingsRouteDest
 import DiscoverySettingsRouteDestinations from '@discovery/SettingsRouteDestinations'
 import CVSettingsRouteDestinations from '@cv/SettingsRouteDestinations'
 import DelegateSettingsRouteDestinations from '@platform/delegates/SettingsRouteDestinations'
+import NotificationsManagementSettingsRouteDestinations from '@modules/27-platform/notifications/SettingsRouteDestinations'
 import SecretSettingsRouteDestinations from '@platform/secrets/SettingsRouteDestinations'
 import RbacSettingsRouteDestinations from '@rbac/SettingsRouteDestinations'
 import GitSyncSettingsRouteDestinations from '@gitsync/SettingsRouteDestinations'
@@ -44,6 +45,7 @@ import FileStoreSettingsRouteDestinations from '@platform/filestore/SettingsRout
 import VariableSettingsRouteDestinations from '@platform/variables/SettingsRouteDestinations'
 import { CESettingsRouteDestination } from '@ce/RouteDestinationsV2'
 import CFSettingsRouteDestinations from '@modules/75-cf/SettingsRouteDestinations'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 const licenseRedirectDataCD: LicenseRedirectProps = {
   licenseStateName: LICENSE_STATE_NAMES.CD_LICENSE_STATE,
@@ -52,6 +54,7 @@ const licenseRedirectDataCD: LicenseRedirectProps = {
 }
 
 function SettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactElement {
+  const { PL_CENTRAL_NOTIFICATIONS } = useFeatureFlags()
   return (
     <>
       {/* Settings Pages */}
@@ -121,6 +124,8 @@ function SettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactEle
       {CVSettingsRouteDestinations({ mode }).props.children}
 
       {CFSettingsRouteDestinations({ mode }).props.children}
+
+      {PL_CENTRAL_NOTIFICATIONS && NotificationsManagementSettingsRouteDestinations({ mode }).props.children}
 
       {/* CCM Setting pages */}
       {

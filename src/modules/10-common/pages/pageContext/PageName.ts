@@ -164,5 +164,6 @@ export enum PAGE_NAME {
   IACMCostEstimation = 'IACMCostEstimation',
   AllModePipelineStudio = 'AllModePipelineStudio',
   CCMSettingsPage = 'CCMSettingsPage',
-  FeatureFlagsProxy = 'FeatureFlagsProxy'
+  FeatureFlagsProxy = 'FeatureFlagsProxy',
+  Notifications = 'Notifications'
 }

@@ -25,11 +25,12 @@ import {
   SettingsResourcesCategory,
   isActiveLicense
 } from '@common/pages/SettingsPages/SettingsPage'
+import styles from '@modules/27-platform/notifications/Notifications.module.scss'
 
 export const OrgSettingsPage: React.FC = () => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { getString } = useStrings()
-  const { CDS_SERVICE_OVERRIDES_2_0, STO_JIRA_INTEGRATION } = useFeatureFlags()
+  const { CDS_SERVICE_OVERRIDES_2_0, STO_JIRA_INTEGRATION, PL_CENTRAL_NOTIFICATIONS } = useFeatureFlags()
   const showGovCard = useAnyEnterpriseLicense()
   const { licenseInformation, CD_LICENSE_STATE, CI_LICENSE_STATE, STO_LICENSE_STATE } = useLicenseStore()
   const isEnterpriseEdition = isEnterprisePlan(licenseInformation, ModuleName.CD)
@@ -71,6 +72,20 @@ export const OrgSettingsPage: React.FC = () => {
               id={SettingsResources.DefaultSettings}
               icon={'nav-settings'}
               route={routesV2.toDefaultSettings({ accountId, orgIdentifier, module })}
+            />
+            <SettingsResourceCard
+              id={SettingsResources.NotificationsManagement}
+              label={
+                <String
+                  className={styles.notificationsManagement}
+                  stringID="common.notificationsManagement.label"
+                  useRichText
+                />
+              }
+              icon={'notification'}
+              labelAlignment={'center'}
+              route={routesV2.toNotificationsManagement({ accountId, orgIdentifier, module })}
+              hidden={!PL_CENTRAL_NOTIFICATIONS}
             />
           </SettingsPage.group>
           <SettingsPage.group

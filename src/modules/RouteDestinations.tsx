@@ -10,6 +10,7 @@ import { Switch, Route } from 'react-router-dom'
 import GitOpsRoutes from '@gitops/RouteDestinations'
 import auditTrailRoutes from '@audit-trail/RouteDestinations'
 import delegatesRoutes from '@delegates/RouteDestinations'
+import notificationRoutes from '@modules/27-platform/notifications/RouteDestinations'
 import commonRoutes from '@common/RouteDestinations'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import AuthSettingsRoutes from '@auth-settings/RouteDestinations'
@@ -64,7 +65,8 @@ export default function RouteDestinations(): React.ReactElement {
     CDB_MFE_ENABLED,
     PL_DISCOVERY_ENABLE,
     SEI_ENABLED,
-    CDS_NAV_2_0
+    CDS_NAV_2_0,
+    PL_CENTRAL_NOTIFICATIONS
   } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
@@ -86,6 +88,7 @@ export default function RouteDestinations(): React.ReactElement {
       {RbacRoutes().props.children}
       {DefaultSettingsRoutes().props.children}
       {delegatesRoutes.props.children}
+      {PL_CENTRAL_NOTIFICATIONS && notificationRoutes.props.children}
       {fileStoreRoutes.props.children}
       {projectsOrgsRoutes.props.children}
       {GovernanceRoutes().props.children}

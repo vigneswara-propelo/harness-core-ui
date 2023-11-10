@@ -41,6 +41,11 @@
   background-color: var(--magenta-100);
 }
 
+.notificationsManagement {
+  display: flex;
+  width: var(--panel-col);
+}
+
 .gitOpsIcon {
   svg path {
     //Todo: We have blue icons today, remove this once we add non-colored icons

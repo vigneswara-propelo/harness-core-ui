@@ -39,7 +39,8 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
     STO_JIRA_INTEGRATION,
     USE_OLD_GIT_SYNC,
     PL_DISCOVERY_ENABLE,
-    IACM_OPA_WORKSPACE_GOVERNANCE
+    IACM_OPA_WORKSPACE_GOVERNANCE,
+    PL_CENTRAL_NOTIFICATIONS
   } = useFeatureFlags()
   const { showGetStartedTabInMainMenu } = useSideNavContext()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
@@ -137,6 +138,12 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
           <SidebarLink
             label={getString('common.tickets.externalTickets')}
             to={routes.toProjectTicketSettings({ ...params, module })}
+          />
+        )}
+        {PL_CENTRAL_NOTIFICATIONS && (
+          <SidebarLink
+            label={getString('common.notificationsManagement.label')}
+            to={routes.toNotificationsManagement({ ...params })}
           />
         )}
       </Layout.Vertical>

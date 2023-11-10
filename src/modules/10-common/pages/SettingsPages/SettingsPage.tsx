@@ -72,7 +72,8 @@ export enum SettingsResources {
   SLODowntime = 'SLODowntime',
   SEICollections = 'SEICollections',
   CloudCostIntegration = 'CloudCostIntegration',
-  MonitoredServices = 'MonitoredServices'
+  MonitoredServices = 'MonitoredServices',
+  NotificationsManagement = 'NotificationsManagement'
 }
 
 export interface ResourceTileProps {
@@ -188,7 +189,6 @@ export const SettingsPageGroup: React.FC<SettingsPageGroupProps> = ({ children, 
 
 export const SettingsPageContainer: React.FC<SettingsPageContainerProps> = ({ children, moduleSpecificSettings }) => {
   const [selectedListView, setSelectedListView] = React.useState<string>(SettingsResourcesCategory.All)
-
   return (
     <Layout.Horizontal className={css.settingsPage}>
       <Layout.Vertical className={css.settingsPageContainer}>

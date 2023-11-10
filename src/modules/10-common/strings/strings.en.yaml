@@ -851,6 +851,8 @@ yearly: Yearly
 billed: Billed
 subtotal: Subtotal
 annually: annually
+notificationsManagement:
+  label: Notifications Management
 ccmSettings:
   highlightSettingsSectionTitle: Settings mainly used in Cloud Cost Management
   cloudCostIntegration: 'Integration for <br/>cloud cost'

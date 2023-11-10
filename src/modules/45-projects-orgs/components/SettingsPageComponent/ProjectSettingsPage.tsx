@@ -26,6 +26,7 @@ import {
   SettingsResourcesCategory,
   isActiveLicense
 } from '@common/pages/SettingsPages/SettingsPage'
+import styles from '@modules/27-platform/notifications/Notifications.module.scss'
 
 export const ProjectSettingsPage: React.FC = () => {
   const {
@@ -40,7 +41,8 @@ export const ProjectSettingsPage: React.FC = () => {
     STO_JIRA_INTEGRATION,
     PL_DISCOVERY_ENABLE,
     USE_OLD_GIT_SYNC,
-    CVNG_TEMPLATE_MONITORED_SERVICE
+    CVNG_TEMPLATE_MONITORED_SERVICE,
+    PL_CENTRAL_NOTIFICATIONS
   } = useFeatureFlags()
   const { currentModule, isGitSimplificationEnabled, isGitSyncEnabled, gitSyncEnabledOnlyForFF } = useAppStore()
   const module = moduleFromProps || currentModule
@@ -102,6 +104,20 @@ export const ProjectSettingsPage: React.FC = () => {
               id={SettingsResources.DefaultSettings}
               icon={'nav-settings'}
               route={routesV2.toDefaultSettings({ accountId, orgIdentifier, projectIdentifier, module })}
+            />
+            <SettingsResourceCard
+              id={SettingsResources.NotificationsManagement}
+              label={
+                <String
+                  className={styles.notificationsManagement}
+                  stringID="common.notificationsManagement.label"
+                  useRichText
+                />
+              }
+              icon={'ccm-currency-settings'}
+              labelAlignment={'center'}
+              route={routesV2.toNotificationsManagement({ accountId, orgIdentifier, projectIdentifier, module })}
+              hidden={!PL_CENTRAL_NOTIFICATIONS}
             />
           </SettingsPage.group>
           <SettingsPage.group

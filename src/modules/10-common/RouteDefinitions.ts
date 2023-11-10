@@ -94,6 +94,21 @@ const routes = {
 
   toFeatureFlagsProxy: withAccountId(() => `/settings/resources/feature-flags-proxy`),
 
+  toNotificationsManagement: withAccountId(
+    ({ accountId, orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
+      const path = `resources/notifications-management`
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          accountId,
+          module
+        },
+        path
+      })
+    }
+  ),
+
   toWebhooks: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
       const path = `resources/webhooks`

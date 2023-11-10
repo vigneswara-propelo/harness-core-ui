@@ -32,6 +32,7 @@
       "@user-profile/*": ["modules/38-user-profile/*"],
       "@projects-orgs/*": ["modules/45-projects-orgs/*"],
       "@delegates/*": ["modules/27-platform/delegates/*"],
+      "@notifications/*": ["modules/27-platform/notifications/*"],
       "@dashboards/*": ["modules/45-dashboards/*"],
       "@gitsync/*": ["modules/40-gitsync/*"],
       "@resource-center/*": ["modules/22-resource-center/*"],
