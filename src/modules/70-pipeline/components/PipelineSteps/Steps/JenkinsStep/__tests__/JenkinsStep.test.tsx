@@ -262,6 +262,176 @@ describe('Jenkins step tests', () => {
     expect(response).toMatchSnapshot('Value must be greater than or equal to "10s"')
   })
 
+  test('Minimum polling time cannot be less than 5s', () => {
+    const response = new JenkinsStep().validateInputSet({
+      data: {
+        name: 'Test A',
+        identifier: 'Test A',
+        type: StepType.JenkinsBuild,
+        spec: {
+          connectorRef: '',
+          jobName: '',
+          jobParameter: [],
+          delegateSelectors: [],
+          consoleLogPollFrequency: '1s'
+        }
+      },
+      template: {
+        name: 'Test A',
+        identifier: 'Test A',
+        type: StepType.JenkinsBuild,
+        spec: {
+          connectorRef: '',
+          jobName: '',
+          jobParameter: [],
+          delegateSelectors: [],
+          consoleLogPollFrequency: '<+input>'
+        }
+      },
+      getString: str => str,
+      viewType: StepViewType.TriggerForm
+    })
+    expect(response.spec?.consoleLogPollFrequency).toBe('Value must be greater than or equal to "5s"')
+  })
+
+  test('Runtime Polling and Fixed Timeout: polling time must be greater than timeout', () => {
+    const inputData = {
+      data: {
+        name: 'Test A',
+        identifier: 'Test A',
+        type: StepType.JenkinsBuild,
+        spec: {
+          connectorRef: '',
+          jobName: '',
+          jobParameter: [],
+          delegateSelectors: [],
+          consoleLogPollFrequency: '15s'
+        }
+      },
+      template: {
+        name: 'Test A',
+        identifier: 'Test A',
+        type: StepType.JenkinsBuild,
+        spec: {
+          connectorRef: '',
+          jobName: '',
+          jobParameter: [],
+          delegateSelectors: [],
+          consoleLogPollFrequency: '<+input>'
+        }
+      },
+      getString: (str: string) => str,
+      viewType: StepViewType.TriggerForm,
+      allValues: {
+        name: 'Test A',
+        identifier: 'Test A',
+        type: StepType.JenkinsBuild,
+        timeout: '10s',
+        spec: {
+          connectorRef: '',
+          jobName: '',
+          jobParameter: [],
+          delegateSelectors: []
+        }
+      }
+    }
+    const errorResponse = new JenkinsStep().validateInputSet(inputData)
+    expect(errorResponse.spec?.consoleLogPollFrequency).toBe(
+      'pipeline.jenkinsStep.validations.pollingFrequencyExceedingTimeout'
+    )
+    inputData.data.spec.consoleLogPollFrequency = '6s'
+    const successResponse = new JenkinsStep().validateInputSet(inputData)
+    expect(successResponse.spec?.consoleLogPollFrequency).toBeUndefined()
+  })
+
+  test('Fixed Polling and Runtime Timeout: polling time must be greater than timeout', () => {
+    const inputData = {
+      data: {
+        name: 'Test A',
+        identifier: 'Test A',
+        type: StepType.JenkinsBuild,
+        timeout: '10s',
+        spec: {
+          connectorRef: '',
+          jobName: '',
+          jobParameter: [],
+          delegateSelectors: []
+        }
+      },
+      template: {
+        name: 'Test A',
+        identifier: 'Test A',
+        type: StepType.JenkinsBuild,
+        timeout: '<+input>',
+        spec: {
+          connectorRef: '',
+          jobName: '',
+          jobParameter: [],
+          delegateSelectors: []
+        }
+      },
+      getString: (str: string) => str,
+      viewType: StepViewType.TriggerForm,
+      allValues: {
+        name: 'Test A',
+        identifier: 'Test A',
+        type: StepType.JenkinsBuild,
+        spec: {
+          connectorRef: '',
+          jobName: '',
+          jobParameter: [],
+          delegateSelectors: [],
+          consoleLogPollFrequency: '15s'
+        }
+      }
+    }
+    const errorResponse = new JenkinsStep().validateInputSet(inputData)
+    expect(errorResponse.timeout).toBe('pipeline.jenkinsStep.validations.timeoutLessThanPollingFrequency')
+    inputData.data.timeout = '20s'
+    const successResponse = new JenkinsStep().validateInputSet(inputData)
+    expect(successResponse.timeout).toBeUndefined()
+  })
+
+  test('Fixed Polling and Runtime Timeout: polling time must be greater than timeout', () => {
+    const inputData = {
+      data: {
+        name: 'Test A',
+        identifier: 'Test A',
+        type: StepType.JenkinsBuild,
+        timeout: '10s',
+        spec: {
+          connectorRef: '',
+          jobName: '',
+          jobParameter: [],
+          delegateSelectors: [],
+          consoleLogPollFrequency: '15s'
+        }
+      },
+      template: {
+        name: 'Test A',
+        identifier: 'Test A',
+        type: StepType.JenkinsBuild,
+        timeout: '<+input>',
+        spec: {
+          connectorRef: '',
+          jobName: '',
+          jobParameter: [],
+          delegateSelectors: [],
+          consoleLogPollFrequency: '<+input>'
+        }
+      },
+      getString: (str: string) => str,
+      viewType: StepViewType.TriggerForm
+    }
+    const errorResponse = new JenkinsStep().validateInputSet(inputData)
+    expect(errorResponse.spec?.consoleLogPollFrequency).toBe(
+      'pipeline.jenkinsStep.validations.pollingFrequencyExceedingTimeout'
+    )
+    inputData.data.timeout = '20s'
+    const successResponse = new JenkinsStep().validateInputSet(inputData)
+    expect(successResponse.spec?.consoleLogPollFrequency).toBeUndefined()
+  })
+
   test('it should render all fields as Runtime input in TemplateUsage view if they are marked as Runtime input in template', async () => {
     const onSubmitFnMock = jest.fn()
     const props = getJenkinsStepTemplateUsageViewProps()

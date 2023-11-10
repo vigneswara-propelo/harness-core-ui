@@ -126,10 +126,56 @@ export class JenkinsStep extends PipelineStep<JenkinsStepData> {
     data,
     template,
     getString,
-    viewType
+    viewType,
+    allValues
   }: ValidateInputSetProps<JenkinsStepData>): FormikErrors<JenkinsStepData> {
     const errors = {} as any
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
+
+    if (
+      getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME &&
+      getMultiTypeFromValue(template?.spec?.consoleLogPollFrequency) === MultiTypeInputType.FIXED &&
+      !isEmpty(allValues?.spec?.consoleLogPollFrequency)
+    ) {
+      const timeout = Yup.object().shape({
+        timeout: getDurationValidationSchema({
+          minimum: allValues?.spec?.consoleLogPollFrequency,
+          minimumErrorMessage: getString?.('pipeline.jenkinsStep.validations.timeoutLessThanPollingFrequency')
+        })
+      })
+
+      try {
+        timeout.validateSync(data)
+      } catch (e) {
+        /* istanbul ignore else */
+        if (e instanceof Yup.ValidationError) {
+          const err = yupToFormErrors(e)
+          Object.assign(errors, err)
+        }
+      }
+    }
+    if (
+      getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.FIXED &&
+      getMultiTypeFromValue(template?.spec?.consoleLogPollFrequency) === MultiTypeInputType.RUNTIME &&
+      !isEmpty(allValues?.timeout)
+    ) {
+      const consoleLogPollFrequencyValidation = Yup.object().shape({
+        consoleLogPollFrequency: getDurationValidationSchema({
+          maximum: allValues?.timeout,
+          maximumErrorMessage: getString?.('pipeline.jenkinsStep.validations.pollingFrequencyExceedingTimeout')
+        })
+      })
+
+      try {
+        consoleLogPollFrequencyValidation.validateSync(data.spec)
+      } catch (e) {
+        /* istanbul ignore else */
+        if (e instanceof Yup.ValidationError) {
+          const err = yupToFormErrors(e)
+          Object.assign(errors, { spec: err })
+        }
+      }
+    }
     if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
       const timeout = Yup.object().shape({
         timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString?.('validation.timeout10SecMinimum'))
@@ -167,7 +213,7 @@ export class JenkinsStep extends PipelineStep<JenkinsStepData> {
       if (isPollingIntervalGreaterThanTimeout(data)) {
         Object.assign(errors, {
           spec: {
-            consoleLogPollFrequency: getString?.('pipeline.jiraApprovalStep.validations.retryIntervalExceedingTimeout')
+            consoleLogPollFrequency: getString?.('pipeline.jenkinsStep.validations.pollingFrequencyExceedingTimeout')
           }
         })
       }

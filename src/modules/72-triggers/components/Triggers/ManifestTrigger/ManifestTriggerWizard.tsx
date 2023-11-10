@@ -1128,7 +1128,7 @@ export default function ManifestTriggerWizard(
         : await getFormErrors({
             latestPipeline: latestPipelineFromYamlView || latestPipeline,
             latestYamlTemplate: yamlTemplate,
-            orgPipeline: values.pipeline,
+            orgPipeline: initialValues?.originalPipeline || values?.pipeline,
             setSubmitting,
             stagesToExecute: formikProps?.values?.stagesToExecute
           })

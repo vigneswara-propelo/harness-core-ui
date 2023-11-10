@@ -4802,6 +4802,7 @@ export interface StringsMap {
   'pipeline.jenkinsStep.validations.consoleLogPollFrequency': string
   'pipeline.jenkinsStep.validations.jobName': string
   'pipeline.jenkinsStep.validations.pollingFrequencyExceedingTimeout': string
+  'pipeline.jenkinsStep.validations.timeoutLessThanPollingFrequency': string
   'pipeline.jiraApprovalStep.connectToJira': string
   'pipeline.jiraApprovalStep.connectorRef': string
   'pipeline.jiraApprovalStep.execution.conditions.equals': string

@@ -198,7 +198,8 @@ export const validateStep = ({
       data: step,
       template: template,
       getString,
-      viewType
+      viewType,
+      allValues: originalStep?.step
     }),
     {}
   )

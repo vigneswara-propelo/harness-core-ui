@@ -9,7 +9,13 @@ import { isMatch, has, get } from 'lodash-es'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { PipelineInfoConfig, StageElementConfig } from 'services/pipeline-ng'
 import type { StringKeys } from 'framework/strings'
-import { validateCICodebase, validatePipeline, validateStage } from '../StepUtil'
+import {
+  getTemplatePath,
+  validateCICodebase,
+  validateCICodebaseConfiguration,
+  validatePipeline,
+  validateStage
+} from '../StepUtil'
 import {
   pipelineTemplateWithRuntimeInput,
   pipelineWithNoBuildInfo,
@@ -26,7 +32,9 @@ import {
   resolvedPipelineWithVariables,
   stageWithVariables,
   templateStageWithVariables,
-  originalStageWithVariables
+  originalStageWithVariables,
+  pipelineWithoutCICodeBaseValidation,
+  pipelineWithParallelStages
 } from './mock'
 
 jest.mock('@common/utils/YamlUtils', () => ({
@@ -268,5 +276,38 @@ describe('Test StepUtils', () => {
         variables: [{ value: 'fieldRequired' }, { value: 'fieldRequired' }]
       })
     ).toBeTruthy()
+  })
+
+  test('Test validateStage method with required variable property support', () => {
+    const errors = validateStage({
+      stage: pipelineWithParallelStages as unknown as StageElementConfig,
+      originalStage: pipelineWithParallelStages as StageElementConfig,
+      resolvedStage: pipelineWithParallelStages as StageElementConfig,
+      viewType: StepViewType.DeploymentForm,
+      getString
+    })
+    expect(Object.keys(errors).length).toBe(0)
+  })
+
+  test('Test getTemplatePath method with required variable property support', () => {
+    const templatePath = getTemplatePath(`parentPath.childPath.subChildPath`, 'parentPath')
+    expect(templatePath).toBe('childPath.subChildPath')
+
+    const emptyTemplatePath = getTemplatePath('', 'parentPath')
+    expect(emptyTemplatePath).toBe('')
+  })
+
+  test('Test validateCICodebaseConfiguration method with required variable property support', () => {
+    const errorTemplatePath = validateCICodebaseConfiguration({
+      pipeline: pipelineWithoutCICodeBaseValidation as PipelineInfoConfig,
+      getString: (str: string) => str
+    })
+    expect(errorTemplatePath).toBe('pipeline.runPipeline.ciCodebaseConfig')
+
+    const templatePath = validateCICodebaseConfiguration({
+      pipeline: pipelineWithTagBuild as PipelineInfoConfig,
+      getString: (str: string) => str
+    })
+    expect(templatePath).toBe('')
   })
 })

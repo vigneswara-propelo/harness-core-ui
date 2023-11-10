@@ -1290,7 +1290,7 @@ export default function WebhookTriggerWizard(
         : await getFormErrors({
             latestPipeline: latestPipelineFromYamlView || latestPipeline,
             latestYamlTemplate: yamlTemplate,
-            orgPipeline: values.pipeline,
+            orgPipeline: initialValues?.originalPipeline || values?.pipeline,
             setSubmitting
           })
     const gitXErrors = isNewGitSyncRemotePipeline

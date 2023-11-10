@@ -129,6 +129,273 @@ export const pipelineWithNoBuildInfo = {
   ]
 }
 
+export const pipelineWithParallelStages = {
+  name: 'cipipeline',
+  identifier: 'cipipeline',
+  projectIdentifier: 'vbci',
+  orgIdentifier: 'default',
+  tags: {},
+  properties: {
+    ci: {
+      codebase: {
+        connectorRef: 'account.testGitConnectors',
+        build: {
+          type: 'branch',
+          spec: {}
+        }
+      }
+    }
+  },
+  stages: [
+    {
+      stage: {
+        graphType: 'STAGE_GRAPH',
+        stage: {
+          name: 'stage1',
+          identifier: 'stage1',
+          description: '',
+          type: 'Custom',
+          spec: {
+            execution: {
+              steps: [
+                {
+                  step: {
+                    type: 'Wait',
+                    name: 'Wait_1',
+                    identifier: 'Wait_1',
+                    spec: {
+                      duration: '10m'
+                    },
+                    when: {
+                      stageStatus: 'Failure'
+                    },
+                    strategy: {
+                      parallelism: 1
+                    }
+                  }
+                },
+                {
+                  parallel: [
+                    {
+                      step: {
+                        type: 'Wait',
+                        name: 'Wait_2',
+                        identifier: 'Wait_2',
+                        spec: {
+                          duration: '10m'
+                        },
+                        when: {
+                          stageStatus: 'Failure'
+                        },
+                        strategy: {
+                          parallelism: 1
+                        }
+                      }
+                    },
+                    {
+                      step: {
+                        type: 'Wait',
+                        name: 'Wait_3',
+                        identifier: 'Wait_3',
+                        spec: {
+                          duration: '10m'
+                        },
+                        when: {
+                          stageStatus: 'Failure'
+                        },
+                        strategy: {
+                          parallelism: 1
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  parallel: [
+                    {
+                      stepGroup: {
+                        name: 'sg1',
+                        identifier: 'sg1',
+                        steps: [
+                          {
+                            step: {
+                              type: 'Wait',
+                              name: 'Wait_4',
+                              identifier: 'Wait_4',
+                              spec: {
+                                duration: '10m'
+                              },
+                              when: {
+                                stageStatus: 'Failure'
+                              },
+                              strategy: {
+                                parallelism: 1
+                              }
+                            }
+                          },
+                          {
+                            parallel: [
+                              {
+                                step: {
+                                  type: 'Wait',
+                                  name: 'Wait_5',
+                                  identifier: 'Wait_5',
+                                  spec: {
+                                    duration: '10m'
+                                  },
+                                  when: {
+                                    stageStatus: 'Failure'
+                                  },
+                                  strategy: {
+                                    parallelism: 1
+                                  }
+                                }
+                              },
+                              {
+                                step: {
+                                  type: 'Wait',
+                                  name: 'Wait_6',
+                                  identifier: 'Wait_6',
+                                  spec: {
+                                    duration: '10m'
+                                  },
+                                  when: {
+                                    stageStatus: 'Failure'
+                                  },
+                                  strategy: {
+                                    parallelism: 1
+                                  }
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            stepGroup: {
+                              name: 'sg5',
+                              identifier: 'sg5',
+                              steps: [
+                                {
+                                  step: {
+                                    type: 'Wait',
+                                    name: 'Wait_7',
+                                    identifier: 'Wait_7',
+                                    spec: {
+                                      duration: '10m'
+                                    },
+                                    when: {
+                                      stageStatus: 'Failure'
+                                    },
+                                    strategy: {
+                                      parallelism: 1
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        when: {
+                          stageStatus: 'Failure'
+                        },
+                        strategy: {
+                          parallelism: 1
+                        }
+                      }
+                    },
+                    {
+                      stepGroup: {
+                        name: 'sg2',
+                        identifier: 'sg2',
+                        steps: [
+                          {
+                            step: {
+                              type: 'Wait',
+                              name: 'Wait_8',
+                              identifier: 'Wait_8',
+                              spec: {
+                                duration: '10m'
+                              },
+                              when: {
+                                stageStatus: 'Failure'
+                              },
+                              strategy: {
+                                parallelism: 1
+                              }
+                            }
+                          },
+                          {
+                            step: {
+                              name: 'ShellTemplateStep',
+                              identifier: 'ShellTemplateStep',
+                              template: {
+                                templateRef: 'shellConditional',
+                                versionLabel: '1'
+                              }
+                            }
+                          }
+                        ],
+                        when: {
+                          stageStatus: 'Failure'
+                        },
+                        strategy: {
+                          parallelism: 1
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  stepGroup: {
+                    name: 'sg3',
+                    identifier: 'sg3',
+                    steps: [
+                      {
+                        step: {
+                          type: 'Wait',
+                          name: 'Wait_9',
+                          identifier: 'Wait_9',
+                          spec: {
+                            duration: '10m'
+                          },
+                          when: {
+                            stageStatus: 'Failure'
+                          },
+                          strategy: {
+                            parallelism: 1
+                          }
+                        }
+                      }
+                    ],
+                    when: {
+                      stageStatus: 'Failure'
+                    },
+                    strategy: {
+                      parallelism: 1
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          tags: {},
+          when: {
+            pipelineStatus: 'All',
+            condition: 'true'
+          },
+          strategy: {
+            parallelism: 1
+          }
+        },
+        dotNotationPath: 'pipeline.stages.0.stage.stage1',
+        isInComplete: true,
+        loopingStrategyEnabled: true,
+        conditionalExecutionEnabled: true,
+        isTemplateNode: false
+      }
+    }
+  ]
+}
+
 export const pipelineWithBranchBuild = {
   name: 'cipipeline',
   identifier: 'cipipeline',
@@ -210,6 +477,59 @@ export const pipelineWithTagBuild = {
       }
     }
   },
+  stages: [
+    {
+      stage: {
+        name: 'S1',
+        identifier: 'S1',
+        type: 'CI',
+        spec: {
+          cloneCodebase: true,
+          infrastructure: {
+            type: 'KubernetesDirect',
+            spec: {
+              connectorRef: 'account.testGitConnectors',
+              namespace: 'harness-delegate-pmdemo'
+            }
+          },
+          execution: {
+            steps: [
+              {
+                step: {
+                  type: 'Run',
+                  name: 'print commit sha',
+                  identifier: 'print_commit_sha',
+                  spec: {
+                    connectorRef: 'account.testGitConnectors',
+                    image: '<+input>',
+                    command: 'echo <+codebase.commitSha>',
+                    privileged: false
+                  }
+                }
+              }
+            ]
+          },
+          serviceConfig: {
+            serviceRef: '',
+            serviceDefinition: {
+              type: 'Kubernetes',
+              spec: {
+                variables: []
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
+
+export const pipelineWithoutCICodeBaseValidation = {
+  name: 'cipipeline',
+  identifier: 'cipipeline',
+  projectIdentifier: 'vbci',
+  orgIdentifier: 'default',
+  tags: {},
   stages: [
     {
       stage: {

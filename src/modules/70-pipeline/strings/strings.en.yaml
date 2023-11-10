@@ -190,6 +190,7 @@ jenkinsStep:
   validations:
     consoleLogPollFrequency: Minimum Poll Frequency is 5 seconds
     pollingFrequencyExceedingTimeout: Poll Frequency should not be more than timeout
+    timeoutLessThanPollingFrequency: Timeout should be more than Poll Frequency
     jobName: Job Name is a required field
   jobNamePlaceholder: Select Job Name
   jobParameter: Job Parameters
