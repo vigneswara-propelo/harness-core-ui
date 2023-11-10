@@ -64,7 +64,8 @@ export const ValidateYourFlagView: React.FC<TestYourFlagViewProps> = ({
     queryParams: {
       ...queryParams,
       environmentIdentifier: environmentIdentifier as any
-    }
+    },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' }
   })
 
   const [toggledOn, setToggledOn] = useState(false)
