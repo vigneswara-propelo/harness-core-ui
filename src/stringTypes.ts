@@ -3162,6 +3162,7 @@ export interface StringsMap {
   'platform.defaultSettings.enableGitCommands': string
   'platform.defaultSettings.enableMatrixFieldNames': string
   'platform.defaultSettings.enableMsteams': string
+  'platform.defaultSettings.enableNativeHelmSteadyStateForJobs': string
   'platform.defaultSettings.enablePagerduty': string
   'platform.defaultSettings.enablePipelineExecutionAuditEvents': string
   'platform.defaultSettings.enableSlack': string

@@ -122,7 +122,8 @@ export enum SettingType {
   MSTEAMS_NOTIFICATION_ENDPOINTS_ALLOWLIST = 'msTeam_notification_endpoints_allowlist',
   ENABLE_SLACK_NOTIFICATION = 'enable_slack_notification',
   SLACK_NOTIFICATION_ENDPOINTS_ALLOWLIST = 'slack_notification_endpoints_allowlist',
-  DO_NOT_DELETE_PIPELINE_EXECUTION_DETAILS = 'do_not_delete_pipeline_execution_details'
+  DO_NOT_DELETE_PIPELINE_EXECUTION_DETAILS = 'do_not_delete_pipeline_execution_details',
+  NATIVE_HELM_ENABLE_STEADY_STATE_FOR_JOBS = 'native_helm_enable_steady_state_for_jobs'
 }
 
 export const isValidYAMLFilePath = (filePath: string): boolean => {

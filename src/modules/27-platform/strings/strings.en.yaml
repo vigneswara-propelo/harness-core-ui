@@ -29,6 +29,7 @@ defaultSettings:
   defaultImagePullPolicyForAddOnContainer: Default Image Pull Policy For Add On Container
   emailToNonHarnessUsers: Enable Emails to be sent to non-Harness Users
   enableMatrixFieldNames: Enable Matrix Labels By Name
+  enableNativeHelmSteadyStateForJobs: Enable Native Helm steady state for jobs
   enableExpressionsJsonSupport: Enable Json Support for expressions
   perspectivePreferences: PERSPECTIVES PREFERENCES
   ticketingPreferences: TICKETING PREFERENCES

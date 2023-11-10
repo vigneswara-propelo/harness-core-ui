@@ -60,7 +60,8 @@ DefaultSettingsFactory.registerCategory('CD', {
   modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto', 'ssca'],
   settingsAndGroupDisplayOrder: [
     SettingType.EMAIL_TO_NON_HARNESS_USERS,
-    SettingType.PROJECT_SCOPED_RESOURCE_CONSTRAINT_QUEUE
+    SettingType.PROJECT_SCOPED_RESOURCE_CONSTRAINT_QUEUE,
+    SettingType.NATIVE_HELM_ENABLE_STEADY_STATE_FOR_JOBS
   ]
 })
 
@@ -235,6 +236,12 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.EMAIL_TO_NON_HARNESS_U
 
 DefaultSettingsFactory.registerSettingHandler(SettingType.PROJECT_SCOPED_RESOURCE_CONSTRAINT_QUEUE, {
   label: 'platform.defaultSettings.projectScopedResourceConstraintQueue',
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
+  settingCategory: 'CD'
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.NATIVE_HELM_ENABLE_STEADY_STATE_FOR_JOBS, {
+  label: 'platform.defaultSettings.enableNativeHelmSteadyStateForJobs',
   settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
   settingCategory: 'CD'
 })
