@@ -37,7 +37,8 @@ function FormikTestWrapper(props: StepWidgetProps): React.ReactElement {
             data: values,
             template: props.template,
             getString,
-            viewType: StepViewType.DeploymentForm
+            viewType: StepViewType.DeploymentForm,
+            allValues: props.allValues
           }) || {}
         )
       }}
