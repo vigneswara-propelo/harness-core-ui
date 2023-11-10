@@ -134,7 +134,7 @@ describe('DeployInfrastructure tests', () => {
     factory.deregisterStep(awsSamStep.getType())
   })
 
-  test('it should pass serviceIdentifiers as a query params to infra list api', async () => {
+  test('it should pass serviceIdentifiers as a query params to infra list api when CDS_SCOPE_INFRA_TO_SERVICES is true', async () => {
     render(
       <TestWrapper
         path={PATH}
@@ -295,6 +295,46 @@ describe('DeployInfrastructure tests', () => {
     connectorRef: Aws_Connector_1
   allowSimultaneousDeployments: false
 `
+    })
+  })
+
+  test('it should NOT pass serviceIdentifiers as a query params to infra list api when CDS_SCOPE_INFRA_TO_SERVICES is false', async () => {
+    render(
+      <TestWrapper
+        path={PATH}
+        pathParams={PATH_PARAMS}
+        defaultFeatureFlagValues={{ CDS_SCOPE_INFRA_TO_SERVICES: false, NG_SVC_ENV_REDESIGN: true, CDP_AWS_SAM: true }}
+      >
+        <PipelineContext.Provider value={pipelineContextAwsSam}>
+          <Formik<DeployEnvironmentEntityFormState> initialValues={{ category: 'single' }} onSubmit={jest.fn()}>
+            {() => (
+              <DeployInfrastructure
+                deploymentType={ServiceDeploymentType.AwsSam}
+                initialValues={{ environment: 'env1', infrastructure: 'infra1' }}
+                readonly={false}
+                allowableTypes={[MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED]}
+                environmentIdentifier="env1"
+                serviceIdentifiers={['service1', 'service2']}
+                customDeploymentRef={{ templateRef: '' }}
+              />
+            )}
+          </Formik>
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(useGetInfrastructureList).toHaveBeenCalled())
+    expect(useGetInfrastructureList).toBeCalledWith({
+      queryParams: {
+        accountIdentifier: 'testAccount',
+        deploymentType: ServiceDeploymentType.AwsSam,
+        environmentIdentifier: 'env1',
+        orgIdentifier: 'testOrg',
+        projectIdentifier: 'testProject'
+      },
+      queryParamStringifyOptions: {
+        arrayFormat: 'repeat'
+      }
     })
   })
 })

@@ -76,6 +76,8 @@ export function useGetInfrastructuresData({
   const [infrastructuresData, setInfrastructuresData] = useState<InfrastructureData[]>([])
   const [nonExistingInfrastructureIdentifiers, setNonExistingInfrastructureIdentifiers] = useState<string[]>([])
 
+  const { CDS_SCOPE_INFRA_TO_SERVICES } = useFeatureFlags()
+
   const {
     data: infrastructuresListResponse,
     error: infrastructuresListError,
@@ -88,7 +90,7 @@ export function useGetInfrastructuresData({
       projectIdentifier,
       environmentIdentifier,
       deploymentType,
-      serviceRefs: serviceIdentifiers,
+      serviceRefs: CDS_SCOPE_INFRA_TO_SERVICES ? serviceIdentifiers : undefined,
       ...(deploymentTemplateIdentifier && {
         deploymentTemplateIdentifier,
         versionLabel
