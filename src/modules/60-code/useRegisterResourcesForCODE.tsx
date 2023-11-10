@@ -11,6 +11,8 @@ import { String as LocaleString } from 'framework/strings'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import RepositoryResourceModal from './components/ResourceGroupModal/Repository/RepositoryResourceModalBody'
+import RepositoryResourceRenderer from './components/ResourceGroupModal/Repository/RepositoryResourceRenderer'
 
 export function useRegisterResourcesForCODE(): void {
   const isCODEEnabled = useFeatureFlag(FeatureFlag.CODE_ENABLED)
@@ -33,7 +35,9 @@ export function useRegisterResourcesForCODE(): void {
           [PermissionIdentifier.CODE_REPO_EDIT]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
           [PermissionIdentifier.CODE_REPO_DELETE]: <LocaleString stringID="delete" />,
           [PermissionIdentifier.CODE_REPO_PUSH]: <LocaleString stringID="rbac.permissionLabels.push" />
-        }
+        },
+        addResourceModalBody: props => <RepositoryResourceModal {...props} />,
+        staticResourceRenderer: props => <RepositoryResourceRenderer {...props} />
       })
     }
   }, [isCODEEnabled])
