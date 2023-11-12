@@ -15,6 +15,7 @@ declare const styles: {
   readonly paymentMethodInfo: string
   readonly paymentgrid: string
   readonly powerByStripe: string
+  readonly retryButton: string
   readonly useExistingCard: string
   readonly warning: string
 }

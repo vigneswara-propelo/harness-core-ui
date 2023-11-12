@@ -131,7 +131,7 @@ export const BillingInfo: React.FC<BillingInfoProp> = ({
               state: defaultTo(data?.state, '')
             },
             billingEmail: subscriptionProps.billingContactInfo.email,
-            companyName: subscriptionProps.billingContactInfo.companyName
+            companyName: data?.companyName
           }
         })
       } else {
@@ -240,9 +240,19 @@ export const BillingInfo: React.FC<BillingInfoProp> = ({
       {formik => (
         <FormikForm>
           {err && !subscriptionProps.subscriptionId ? (
-            <Container width={300} margin={{ left: 'large' }}>
-              <PageError message={err} onClick={formik.submitForm} />
-            </Container>
+            <>
+              <Container width={500} margin={{ left: 'large' }}>
+                <PageError message={err} />
+                <Button
+                  variation={ButtonVariation.PRIMARY}
+                  onClick={handleBack}
+                  icon="chevron-left"
+                  className={css.retryButton}
+                >
+                  {getString('back')}
+                </Button>
+              </Container>
+            </>
           ) : (
             <Layout.Vertical className={className}>
               <Header step={1} />
