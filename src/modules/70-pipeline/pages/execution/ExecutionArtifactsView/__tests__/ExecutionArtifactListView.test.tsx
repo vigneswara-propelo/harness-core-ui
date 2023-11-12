@@ -8,14 +8,12 @@
 import { RenderResult, render, screen, within } from '@testing-library/react'
 import React from 'react'
 import userEvent from '@testing-library/user-event'
-import { useEnforcementnewViolationsQuery } from '@harnessio/react-ssca-service-client'
 import { useGetPolicyViolationsQuery } from '@harnessio/react-ssca-manager-client'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, executionPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import mockImport from 'framework/utils/mockImport'
 import executionDetails from './mocks/execution-with-artifacts.json'
-import violationListOld from './mocks/violation-list-old.json'
 import violationList from './mocks/violation-list.json'
 import executionContext from './mocks/execution-context.json'
 import ExecutionArtifactsView from '../ExecutionArtifactsView'
@@ -24,15 +22,6 @@ global.URL.createObjectURL = jest.fn()
 global.URL.revokeObjectURL = jest.fn()
 
 jest.useFakeTimers({ advanceTimers: true })
-
-jest.mock('@harnessio/react-ssca-service-client', () => ({
-  useEnforcementnewViolationsQuery: jest.fn().mockImplementation(() => {
-    return { data: { content: { results: violationListOld } } }
-  }),
-  useArtifactnewSbomQuery: jest.fn().mockImplementation(() => {
-    return { data: { content: { sbom: 'dummytext' } } }
-  })
-}))
 
 jest.mock('@harnessio/react-ssca-manager-client', () => ({
   useGetPolicyViolationsQuery: jest.fn().mockImplementation(() => {
@@ -83,7 +72,6 @@ const renderArtifactsTab = (
       pathParams={getModuleParams(module)}
       defaultFeatureFlagValues={{
         SSCA_ENABLED: true,
-        SSCA_MANAGER_ENABLED: true,
         ...defaultFeatureFlagValues
       }}
     >
@@ -117,7 +105,7 @@ describe('ExecutionArtifactListView', () => {
   })
 
   test('should show violation list view for enforcement step | search | sort', async () => {
-    renderArtifactsTab('ci', { SSCA_MANAGER_ENABLED: false })
+    renderArtifactsTab('ci')
     const rows = await screen.findAllByRole('row')
 
     await userEvent.click(
@@ -133,27 +121,27 @@ describe('ExecutionArtifactListView', () => {
 
     await userEvent.type(screen.getByRole('searchbox'), 'my search term')
     jest.runOnlyPendingTimers()
-    expect(useEnforcementnewViolationsQuery).toHaveBeenCalledWith(
+    expect(useGetPolicyViolationsQuery).toHaveBeenCalledWith(
       expect.objectContaining({
-        enforcementId: 'KaVYBdKZTFW9NM4scBh7gQ',
-        queryParams: { order: 'ASC', page: 0, pageSize: 20, searchTerm: undefined, sort: 'name' }
-      }),
-      { enabled: true }
+        'enforcement-id': 'KaVYBdKZTFW9NM4scBh7gQ',
+        org: 'orgIdentifier',
+        project: 'projectIdentifier',
+        queryParams: { limit: 20, order: 'ASC', page: 0, search_text: undefined, sort: 'name' }
+      })
     )
 
     const supplier = await screen.findByText('pipeline.supplier')
     await userEvent.click(supplier)
     jest.runOnlyPendingTimers()
-    expect(useEnforcementnewViolationsQuery).toHaveBeenCalledWith(
+    expect(useGetPolicyViolationsQuery).toHaveBeenCalledWith(
       expect.objectContaining({
         queryParams: expect.objectContaining({ order: 'DESC', sort: 'supplier' })
-      }),
-      { enabled: true }
+      })
     )
   })
 
-  test('should invoke SSCA manager API with SSCA_MANAGER_ENABLED on', async () => {
-    renderArtifactsTab('home', { SSCA_MANAGER_ENABLED: true })
+  test('should invoke SSCA manager API on mount ', async () => {
+    renderArtifactsTab('home')
     const rows = await screen.findAllByRole('row')
 
     await userEvent.click(

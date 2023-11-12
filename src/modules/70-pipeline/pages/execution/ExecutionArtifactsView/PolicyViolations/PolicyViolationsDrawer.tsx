@@ -17,10 +17,6 @@ import {
   Text
 } from '@harness/uicore'
 import {
-  EnforcementnewViolationsOkResponse,
-  useEnforcementnewViolationsQuery
-} from '@harnessio/react-ssca-service-client'
-import {
   GetPolicyViolationsOkResponse,
   GetPolicyViolationsQueryQueryParams,
   useGetPolicyViolationsQuery
@@ -31,8 +27,6 @@ import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import EmptySearchResults from '@common/images/EmptySearchResults.svg'
 import { Width } from '@common/constants/Utils'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { PolicyViolationsTable } from './PolicyViolationsTable'
 import {
@@ -42,7 +36,6 @@ import {
   ENFORCEMENT_VIOLATIONS_PAGE_SIZE,
   PageOptions
 } from './utils'
-import { PolicyViolationsTableOld } from './PolicyViolationsTableOld'
 import css from './PolicyViolations.module.scss'
 
 interface PolicyViolationsDrawerProps {
@@ -73,41 +66,18 @@ export function PolicyViolationsDrawer({
     searchRef.current?.clear()
   }
 
-  const SSCA_MANAGER_ENABLED = useFeatureFlag(FeatureFlag.SSCA_MANAGER_ENABLED)
-
-  const useEnforcementnewViolationsQueryResult = useEnforcementnewViolationsQuery(
-    {
-      enforcementId,
-      queryParams: {
-        page,
-        pageSize: size,
-        searchTerm,
-        sort,
-        order
-      }
-    },
-    { enabled: !SSCA_MANAGER_ENABLED }
-  )
-
-  const useGetPolicyViolationsQueryResult = useGetPolicyViolationsQuery(
-    {
-      org: orgIdentifier,
-      project: projectIdentifier,
-      'enforcement-id': enforcementId,
-      queryParams: {
-        page,
-        limit: size,
-        sort: sort as GetPolicyViolationsQueryQueryParams['sort'], // TODO: change the PageOptions client side type to this after removing FF
-        order: order as GetPolicyViolationsQueryQueryParams['order'],
-        search_text: searchTerm
-      }
-    },
-    { enabled: SSCA_MANAGER_ENABLED }
-  )
-
-  const { isLoading, error, refetch, data } = SSCA_MANAGER_ENABLED
-    ? useGetPolicyViolationsQueryResult
-    : useEnforcementnewViolationsQueryResult
+  const { isLoading, error, refetch, data } = useGetPolicyViolationsQuery({
+    org: orgIdentifier,
+    project: projectIdentifier,
+    'enforcement-id': enforcementId,
+    queryParams: {
+      page,
+      limit: size,
+      sort: sort as GetPolicyViolationsQueryQueryParams['sort'], // TODO: change the PageOptions client side type to this after removing FF
+      order: order as GetPolicyViolationsQueryQueryParams['order'],
+      search_text: searchTerm
+    }
+  })
 
   return (
     <Drawer
@@ -141,10 +111,7 @@ export function PolicyViolationsDrawer({
           refetch()
         }}
         noData={{
-          when: () =>
-            !error && SSCA_MANAGER_ENABLED
-              ? !(data as GetPolicyViolationsOkResponse)?.content?.length
-              : !(data as EnforcementnewViolationsOkResponse)?.content.results?.length,
+          when: () => !error && !(data as GetPolicyViolationsOkResponse)?.content?.length,
           image: EmptySearchResults,
           messageTitle: getString('common.filters.noResultsFound'),
           message: getString('common.filters.noMatchingFilterData'),
@@ -171,20 +138,13 @@ export function PolicyViolationsDrawer({
           />
         </div>
 
-        {data &&
-          (SSCA_MANAGER_ENABLED ? (
-            <PolicyViolationsTable
-              data={data as GetPolicyViolationsOkResponse}
-              pageOptions={pageOptions}
-              updatePageOptions={updatePageOptions}
-            />
-          ) : (
-            <PolicyViolationsTableOld
-              data={data as EnforcementnewViolationsOkResponse}
-              pageOptions={pageOptions}
-              updatePageOptions={updatePageOptions}
-            />
-          ))}
+        {data && (
+          <PolicyViolationsTable
+            data={data as GetPolicyViolationsOkResponse}
+            pageOptions={pageOptions}
+            updatePageOptions={updatePageOptions}
+          />
+        )}
       </Page.Body>
     </Drawer>
   )

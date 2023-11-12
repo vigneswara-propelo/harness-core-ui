@@ -11,13 +11,10 @@ import { Button, ButtonSize, ButtonVariation, Icon, Layout, Text } from '@harnes
 import React from 'react'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance, UseTableCellProps } from 'react-table'
 import { defaultTo, get } from 'lodash-es'
-import { useArtifactnewSbomQuery } from '@harnessio/react-ssca-service-client'
 import { useParams } from 'react-router-dom'
 import { useDownloadSbomQuery } from '@harnessio/react-ssca-manager-client'
 import { useStrings } from 'framework/strings'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { EvaluationStatus } from '@pipeline/components/execution/StepDetails/common/ExecutionContent/PolicyEvaluationContent/EvaluationStatusLabel/EvaluationStatusLabel'
 import type { Artifact, ArtifactsColumnActions } from './ArtifactsTable'
@@ -108,29 +105,7 @@ export const ViolationsCell: CellType = ({ row, column }) => {
 
 export const TypeCell: CellType = ({ row }) => {
   const artifact = row.original
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-  const SSCA_MANAGER_ENABLED = useFeatureFlag(FeatureFlag.SSCA_MANAGER_ENABLED)
-
-  const queryOld = useArtifactnewSbomQuery(
-    {
-      artifactId: defaultTo(artifact.id, ''),
-      stepExecutionId: defaultTo(artifact.stepExecutionId, ''),
-      queryParams: {
-        accountIdentifier: accountId,
-        orgIdentifier,
-        projectIdentifier
-      }
-    },
-    {
-      onSuccess: _data =>
-        downloadBlob(
-          defaultTo(_data.content.sbom, ''),
-          `sbom_${artifact.imageName}_${artifact.tag}_${artifact.stepExecutionId}.json`
-        ),
-      enabled: false,
-      retry: false
-    }
-  )
+  const { projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
   const query = useDownloadSbomQuery(
     {
@@ -161,8 +136,8 @@ export const TypeCell: CellType = ({ row }) => {
           className={css.action}
           variation={ButtonVariation.LINK}
           size={ButtonSize.SMALL}
-          onClick={() => (SSCA_MANAGER_ENABLED ? query.refetch() : queryOld.refetch())}
-          loading={SSCA_MANAGER_ENABLED ? query.isFetching : queryOld.isInitialLoading}
+          onClick={() => query.refetch()}
+          loading={query.isFetching}
         >
           <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'start' }}>
             <Text color={Color.PRIMARY_7} font={{ variation: FontVariation.SMALL }} lineClamp={1}>

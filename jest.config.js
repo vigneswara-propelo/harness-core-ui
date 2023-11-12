@@ -115,7 +115,6 @@ module.exports = {
       @harnessio/react-idp-service-client|
       p-debounce|
       @harnessio/react-ng-manager-client|
-      @harnessio/react-ssca-service-client|
       @harnessio/react-ssca-manager-client|
       @harnessio/react-srm-service-client|
       @harnessio/react-template-service-client|

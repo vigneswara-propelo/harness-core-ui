@@ -10,7 +10,6 @@ import { HarnessReactAPIClient as AuditServiceClient } from '@harnessio/react-au
 import { IDPServiceAPIClient } from '@harnessio/react-idp-service-client'
 import { PipelineServiceAPIClient } from '@harnessio/react-pipeline-service-client'
 import { NGManagerServiceAPIClient } from '@harnessio/react-ng-manager-client'
-import { SSCAServiceAPIClient } from '@harnessio/react-ssca-service-client'
 import { SSCAManagerAPIClient } from '@harnessio/react-ssca-manager-client'
 import { SRMServiceAPIClient } from '@harnessio/react-srm-service-client'
 import { TemplateServiceAPIClient } from '@harnessio/react-template-service-client'
@@ -22,7 +21,6 @@ type UseOpenApiClientsReturn = {
   idpServiceClientRef: React.MutableRefObject<IDPServiceAPIClient>
   pipelineServiceClientRef: React.MutableRefObject<PipelineServiceAPIClient>
   ngManagerServiceClientRef: React.MutableRefObject<NGManagerServiceAPIClient>
-  sscaServiceClientRef: React.MutableRefObject<SSCAServiceAPIClient>
   sscaManagerClientRef: React.MutableRefObject<SSCAManagerAPIClient>
   srmManagerClientRef: React.MutableRefObject<SRMServiceAPIClient>
   templateServiceClientRef: React.MutableRefObject<TemplateServiceAPIClient>
@@ -67,7 +65,6 @@ const useOpenApiClients = (
   const auditServiceClientRef = useRef(new AuditServiceClient(openAPIClientInitiator))
   const idpServiceClientRef = useRef(new IDPServiceAPIClient(openAPIClientInitiator))
   const pipelineServiceClientRef = useRef(new PipelineServiceAPIClient(openAPIClientInitiator))
-  const sscaServiceClientRef = useRef(new SSCAServiceAPIClient(openAPIClientInitiator))
   const sscaManagerClientRef = useRef(new SSCAManagerAPIClient(openAPIClientInitiator))
   const srmManagerClientRef = useRef(new SRMServiceAPIClient(openAPIClientInitiator))
   const ngManagerServiceClientRef = useRef(new NGManagerServiceAPIClient(openAPIClientInitiator))
@@ -78,7 +75,6 @@ const useOpenApiClients = (
     idpServiceClientRef,
     pipelineServiceClientRef,
     ngManagerServiceClientRef,
-    sscaServiceClientRef,
     sscaManagerClientRef,
     srmManagerClientRef,
     templateServiceClientRef
