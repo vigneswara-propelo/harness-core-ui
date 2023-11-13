@@ -10,43 +10,50 @@ import { render } from '@testing-library/react'
 import type { StringKeys } from 'framework/strings'
 import { MarkdownViewer } from '../MarkdownViewer'
 
+const markdownDoc = `
+  # Install
+
+  \`\`\`
+  go get github.com/wings-software/ff-client-sdk-go
+  \`\`\`
+
+  # Usage
+
+  First we need to import lib with harness alias \`import harness "github.com/wings-software/ff-client-sdk-go/pkg/api"\`
+
+  Next we create client instance for interaction with api \`client := harness.NewClient({{ apiKey }})\`
+
+  Target definition can be user, device, app etc.
+
+  \`\`\`
+  target := dto.NewTargetBuilder("key").
+  Firstname("John").
+  Lastname("doe").
+  Email("johndoe@acme.com").
+  Country("USA").
+  Custom("height", 160).
+  Build()
+  \`\`\`
+
+  Evaluating Feature Flag \`showFeature, err := client.BoolVariation(featureFlagKey, target, false)\`
+`
+
 jest.mock('framework/strings', () => ({
   useStrings: () => ({
-    getString: () => `
-    # Install
-
-    \`\`\`
-    go get github.com/wings-software/ff-client-sdk-go
-    \`\`\`
-
-    # Usage
-
-    First we need to import lib with harness alias \`import harness "github.com/wings-software/ff-client-sdk-go/pkg/api"\`
-
-    Next we create client instance for interaction with api \`client := harness.NewClient({{ apiKey }})\`
-
-    Target definition can be user, device, app etc.
-
-    \`\`\`
-    target := dto.NewTargetBuilder("key").
-    Firstname("John").
-    Lastname("doe").
-    Email("johndoe@acme.com").
-    Country("USA").
-    Custom("height", 160).
-    Build()
-    \`\`\`
-
-    Evaluating Feature Flag \`showFeature, err := client.BoolVariation(featureFlagKey, target, false)\`
-  `
+    getString: () => markdownDoc
   })
 }))
 
 describe('MarkdownViewer', () => {
-  test('MarkdownViewer should be rendered properly', () => {
+  test('MarkdownViewer should be rendered properly from a stringId', () => {
     const { container } = render(
       <MarkdownViewer stringId={'foobar' as StringKeys} vars={{ apiKey: '1234-1234-1234' }} />
     )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('it should render from a passed string', async () => {
+    const { container } = render(<MarkdownViewer document={markdownDoc} />)
     expect(container).toMatchSnapshot()
   })
 })

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { ComponentProps, ReactElement } from 'react'
 import { CodeBlock, Container, Text } from '@harness/uicore'
 import { StringKeys, useStrings } from 'framework/strings'
 
@@ -15,14 +15,33 @@ enum BlockType {
   CODE = 'CODE'
 }
 
-export interface MarkdownViewerProps extends React.ComponentProps<typeof Container> {
+interface MarkdownFromStringsProps extends ComponentProps<typeof Container> {
   stringId: StringKeys
-  vars?: Record<string, any> // eslint-disable-line @typescript-eslint/no-explicit-any
+  vars?: Record<string, unknown>
 }
 
-export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ stringId, vars, ...props }) => {
+interface MarkdownFromDocumentProps extends ComponentProps<typeof Container> {
+  document: string
+}
+
+export function MarkdownViewer(props: MarkdownFromDocumentProps): ReactElement
+export function MarkdownViewer(props: MarkdownFromStringsProps): ReactElement
+export function MarkdownViewer(props: MarkdownFromDocumentProps | MarkdownFromStringsProps): ReactElement {
   const { getString } = useStrings()
-  const markdown = getString(stringId, vars)
+
+  let containerProps
+  let markdown
+
+  if ('stringId' in props) {
+    const { stringId, vars, ...rest } = props
+    markdown = getString(stringId, vars)
+    containerProps = rest
+  } else {
+    const { document, ...rest } = props
+    markdown = document
+    containerProps = rest
+  }
+
   const blocks: Array<{ type: BlockType; text: string; opened?: boolean }> = []
 
   markdown.split(/\n/).reduce((_blocks, line) => {
@@ -61,7 +80,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ stringId, vars, 
   }, blocks)
 
   return (
-    <Container {...props}>
+    <Container {...containerProps}>
       {blocks
         .filter(({ text }) => text.trim().length)
         .map(({ type, text }, index) => {
