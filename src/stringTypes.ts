@@ -9157,8 +9157,6 @@ export interface StringsMap {
   'cf.shared.variations': string
   'cf.staleFlagAction.checkAllStaleFlags': string
   'cf.staleFlagAction.checkStaleFlag': string
-  'cf.staleFlagAction.flagLifecycleDesc': string
-  'cf.staleFlagAction.flagLifecycleExplained': string
   'cf.staleFlagAction.flagsSelected': string
   'cf.staleFlagAction.learnMore': string
   'cf.staleFlagAction.notStale': string

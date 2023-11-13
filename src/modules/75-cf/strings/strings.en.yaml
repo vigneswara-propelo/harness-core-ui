@@ -306,8 +306,6 @@ staleFlagAction:
   flagsSelected: '{{ count }} Flags Selected'
   checkStaleFlag: Check potentially stale flag
   checkAllStaleFlags: Check all potentially stale flags
-  flagLifecycleExplained: Flags lifecycle explained
-  flagLifecycleDesc: Flag cleanup automation allows users to run a pipeline step that will automatically cleanup unwanted flags and any associated code within their codebase. Think Github's dependabot but for removing flags instead.
   waitingForCleanup: Waiting for cleanup
   notStaleDesc: These Flags will be removed from the queue to cleanup and marked as not stale.
   readyForCleanupDesc: These Flags will be added to the queue for cleanup.

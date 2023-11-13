@@ -6,9 +6,8 @@
  */
 
 import React, { FC, useCallback, useMemo, useState } from 'react'
-import { Button, ButtonVariation, Heading, Layout, Text } from '@harness/uicore'
+import { Button, ButtonVariation, Container, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { Drawer, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { Feature } from 'services/cf'
 import { useGetSelectedStaleFlags } from '../../hooks/useGetSelectedStaleFlags'
@@ -24,7 +23,6 @@ export interface StaleFlagActionsProps {
 export const StaleFlagActions: FC<StaleFlagActionsProps> = ({ flags, onAction }) => {
   const { getString } = useStrings()
   const selectedFlags = useGetSelectedStaleFlags()
-  const [showInfo, setShowInfo] = useState<boolean>(false)
   const [showNotStaleDialog, setShowNotStaleDialog] = useState<boolean>(false)
   const [showReadyForCleanupDialog, setShowReadyForCleanupDialog] = useState<boolean>(false)
 
@@ -47,102 +45,59 @@ export const StaleFlagActions: FC<StaleFlagActionsProps> = ({ flags, onAction })
     [flags, selectedFlags]
   )
 
-  const hideShowInfo = useCallback(() => {
-    setShowInfo(false)
-  }, [])
-
   return (
     <>
       {!!selectedFlags.length && (
-        <>
-          <Layout.Horizontal padding="xlarge" border={{ top: true }} background={Color.WHITE} spacing="medium">
-            <Text font={{ variation: FontVariation.CARD_TITLE }} className={css.flagsSelected}>
-              {getString('cf.staleFlagAction.flagsSelected', { count: selectedFlags.length })}
-            </Text>
-            <Button
-              text={getString('cf.staleFlagAction.notStale')}
-              variation={ButtonVariation.SECONDARY}
-              onClick={() => {
-                setShowNotStaleDialog(true)
-              }}
+        <Layout.Horizontal padding="xlarge" border={{ top: true }} background={Color.WHITE} spacing="medium">
+          <Text font={{ variation: FontVariation.CARD_TITLE }} className={css.flagsSelected}>
+            {getString('cf.staleFlagAction.flagsSelected', { count: selectedFlags.length })}
+          </Text>
+          <Button
+            text={getString('cf.staleFlagAction.notStale')}
+            variation={ButtonVariation.SECONDARY}
+            onClick={() => {
+              setShowNotStaleDialog(true)
+            }}
+          />
+          {showNotStaleDialog && (
+            <StaleFlagActionDialog
+              markAsNotStale
+              selectedFlags={selectedFlags}
+              onAction={() => onNotStaleAction()}
+              onClose={() => setShowNotStaleDialog(false)}
             />
-            {showNotStaleDialog && (
-              <StaleFlagActionDialog
-                markAsNotStale
-                selectedFlags={selectedFlags}
-                onAction={() => onNotStaleAction()}
-                onClose={() => setShowNotStaleDialog(false)}
-              />
-            )}
-
-            {showReadyForCleanupBtn && (
-              <>
-                <Button
-                  text={getString('cf.staleFlagAction.readyForCleanup')}
-                  variation={ButtonVariation.SECONDARY}
-                  onClick={() => {
-                    setShowReadyForCleanupDialog(true)
-                  }}
-                />
-                {showReadyForCleanupDialog && (
-                  <StaleFlagActionDialog
-                    selectedFlags={selectedFlags}
-                    onAction={() => onReadyForCleanupAction()}
-                    onClose={() => setShowReadyForCleanupDialog(false)}
-                  />
-                )}
-              </>
-            )}
-            <Button
-              padding={{ left: 0 }}
-              text={getString('cf.staleFlagAction.learnMore')}
-              variation={ButtonVariation.LINK}
-              onClick={() => {
-                setShowInfo(true)
-              }}
-            />
-          </Layout.Horizontal>
-          {showInfo && (
-            <Drawer
-              onClose={hideShowInfo}
-              usePortal
-              autoFocus
-              canEscapeKeyClose
-              canOutsideClickClose
-              enforceFocus={false}
-              hasBackdrop
-              isOpen
-              position={Position.RIGHT}
-              size={Drawer.SIZE_STANDARD}
-            >
-              <Button
-                className={css.closeButton}
-                icon="main-close"
-                iconProps={{ size: 12 }}
-                onClick={hideShowInfo}
-                aria-label={getString('close')}
-              />
-              <Layout.Vertical className={css.infoDrawer} height={'100%'} padding="xxlarge">
-                <Heading level={4} className={css.infoTitle} font={{ variation: FontVariation.H4 }}>
-                  {getString('cf.staleFlagAction.flagLifecycleExplained')}
-                </Heading>
-                <Text
-                  className={css.infoText}
-                  font={{ variation: FontVariation.BODY }}
-                  color={Color.GREY_500}
-                  padding="medium"
-                >
-                  {getString('cf.staleFlagAction.flagLifecycleDesc')}
-                </Text>
-                <Layout.Horizontal padding="medium">
-                  <Button className={css.gotItButton} variation={ButtonVariation.PRIMARY} onClick={hideShowInfo}>
-                    {getString('common.gotIt')}
-                  </Button>
-                </Layout.Horizontal>
-              </Layout.Vertical>
-            </Drawer>
           )}
-        </>
+
+          {showReadyForCleanupBtn && (
+            <>
+              <Button
+                text={getString('cf.staleFlagAction.readyForCleanup')}
+                variation={ButtonVariation.SECONDARY}
+                onClick={() => {
+                  setShowReadyForCleanupDialog(true)
+                }}
+              />
+              {showReadyForCleanupDialog && (
+                <StaleFlagActionDialog
+                  selectedFlags={selectedFlags}
+                  onAction={() => onReadyForCleanupAction()}
+                  onClose={() => setShowReadyForCleanupDialog(false)}
+                />
+              )}
+            </>
+          )}
+          <Container flex={{ alignItems: 'center' }}>
+            <a
+              href="https://developer.harness.io/docs/feature-flags/ff-creating-flag/manage-stale-flags/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Text inline font={{ variation: FontVariation.BODY }} color={Color.PRIMARY_7}>
+                {getString('cf.staleFlagAction.learnMore')}
+              </Text>
+            </a>
+          </Container>
+        </Layout.Horizontal>
       )}
     </>
   )

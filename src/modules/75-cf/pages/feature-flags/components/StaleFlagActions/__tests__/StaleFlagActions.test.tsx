@@ -33,7 +33,7 @@ describe('StaleFlagActions', () => {
 
     expect(screen.getByRole('button', { name: 'cf.staleFlagAction.notStale' })).toBeVisible()
     expect(screen.getByRole('button', { name: 'cf.staleFlagAction.readyForCleanup' })).toBeVisible()
-    expect(screen.getByRole('button', { name: 'cf.staleFlagAction.learnMore' })).toBeVisible()
+    expect(screen.getByRole('link', { name: 'cf.staleFlagAction.learnMore' })).toBeVisible()
   })
 
   test('it should not render the component when there are no flags selected', async () => {
@@ -42,68 +42,33 @@ describe('StaleFlagActions', () => {
 
     expect(screen.queryByRole('button', { name: 'cf.staleFlagAction.notStale' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'cf.staleFlagAction.readyForCleanup' })).not.toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: 'cf.staleFlagAction.learnMore' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'cf.staleFlagAction.learnMore' })).not.toBeInTheDocument()
   })
 
-  test('its should not render the cleanup button if flag is already marked for cleanup', async () => {
+  test('it should not render the cleanup button if flag is already marked for cleanup', async () => {
     useGetSelectedStaleFlagsMock.mockReturnValue(['Test_CleanupFlag2'])
     renderComponent({ flags: [mockFeatureFlags.features[18] as any] })
 
     expect(screen.getByRole('button', { name: 'cf.staleFlagAction.notStale' })).toBeVisible()
     expect(screen.queryByRole('button', { name: 'cf.staleFlagAction.readyForCleanup' })).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'cf.staleFlagAction.learnMore' })).toBeVisible()
+    expect(screen.getByRole('link', { name: 'cf.staleFlagAction.learnMore' })).toBeVisible()
   })
 
-  test('its should render the cleanup button if at least one flag is not already marked for cleanup', async () => {
+  test('it should render the cleanup button if at least one flag is not already marked for cleanup', async () => {
     renderComponent({ flags: [mockFeatureFlags.features[17], mockFeatureFlags.features[18] as any] })
 
     expect(screen.getByRole('button', { name: 'cf.staleFlagAction.notStale' })).toBeVisible()
     expect(screen.getByRole('button', { name: 'cf.staleFlagAction.readyForCleanup' })).toBeVisible()
-    expect(screen.getByRole('button', { name: 'cf.staleFlagAction.learnMore' })).toBeVisible()
+    expect(screen.getByRole('link', { name: 'cf.staleFlagAction.learnMore' })).toBeVisible()
   })
 
-  test('it should render the info drawer when info button is clicked', async () => {
+  test('it should show a learn more link to the docs', async () => {
     renderComponent()
 
-    userEvent.click(screen.getByRole('button', { name: 'cf.staleFlagAction.learnMore' }))
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'close' })).toBeVisible()
-      expect(screen.getByText('cf.staleFlagAction.flagLifecycleExplained')).toBeVisible()
-      expect(screen.getByText('cf.staleFlagAction.flagLifecycleDesc')).toBeVisible()
-      expect(screen.getByRole('button', { name: 'common.gotIt' })).toBeVisible()
-    })
-  })
-
-  test('it should close the info drawer when the x button is clicked', async () => {
-    renderComponent()
-
-    userEvent.click(screen.getByRole('button', { name: 'cf.staleFlagAction.learnMore' }))
-
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'close' })).toBeVisible()
-    })
-
-    userEvent.click(screen.getByRole('button', { name: 'close' }))
-
-    await waitFor(() => {
-      expect(screen.queryByRole('button', { name: 'close' })).not.toBeInTheDocument()
-    })
-  })
-
-  test('it should close the info drawer when the got it button is clicked', async () => {
-    renderComponent()
-
-    userEvent.click(screen.getByRole('button', { name: 'cf.staleFlagAction.learnMore' }))
-
-    const gotItBtn = await screen.findByRole('button', { name: 'common.gotIt' })
-
-    expect(gotItBtn).toBeVisible()
-
-    userEvent.click(gotItBtn)
-
-    await waitFor(() => {
-      expect(screen.queryByRole('button', { name: 'common.gotIt' })).not.toBeInTheDocument()
-    })
+    expect(screen.getByRole('link', { name: 'cf.staleFlagAction.learnMore' })).toHaveAttribute(
+      'href',
+      'https://developer.harness.io/docs/feature-flags/ff-creating-flag/manage-stale-flags/'
+    )
   })
 
   test('it should show mark as not stale dialog when button is clicked', async () => {
