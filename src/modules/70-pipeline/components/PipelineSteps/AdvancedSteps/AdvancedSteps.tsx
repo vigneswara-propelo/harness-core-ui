@@ -292,7 +292,6 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
                   stageType={stageType}
                   isReadonly={isReadonly || isFailureStrategyDisabled}
                   path="failureStrategies"
-                  isStepInsideStepGroup={hasStepGroupAncestor && !isStepGroup}
                 />
               }
             />

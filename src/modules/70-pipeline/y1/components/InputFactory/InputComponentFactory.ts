@@ -19,6 +19,7 @@ import { HttpMethodInput } from './Inputs/HttpMethodInput'
 import { ObjectInput } from './Inputs/ObjectInput'
 import { DelegateSelectorInput } from './Inputs/DelegateSelectorInput'
 import { ConditionalExecutionInput } from './Inputs/ConditionalExecutionInput'
+import { FailureStrategyInput } from './Inputs/FailureStrategyInput/FailureStrategyInput'
 
 const inputComponentFactory = new InputFactory()
 
@@ -35,5 +36,6 @@ inputComponentFactory.registerComponent(new JenkinsJobNameInput())
 inputComponentFactory.registerComponent(new JenkinsConnectorInput())
 inputComponentFactory.registerComponent(new DelegateSelectorInput())
 inputComponentFactory.registerComponent(new ConditionalExecutionInput())
+inputComponentFactory.registerComponent(new FailureStrategyInput())
 
 export default inputComponentFactory

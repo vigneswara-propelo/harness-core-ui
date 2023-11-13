@@ -22,9 +22,9 @@ import type {
   PipelineRollbackFailureActionConfig,
   OnFailureConfig,
   ProceedWithDefaultValuesFailureActionConfig,
-  MarkAsFailFailureActionConfig
+  MarkAsFailFailureActionConfig,
+  RetrySGFailureActionConfig
 } from 'services/pipeline-ng'
-import { Strategy } from '@pipeline/utils/FailureStrategyUtils'
 
 export type AllActions =
   | RetryFailureActionConfig
@@ -37,6 +37,7 @@ export type AllActions =
   | PipelineRollbackFailureActionConfig
   | ProceedWithDefaultValuesFailureActionConfig
   | MarkAsFailFailureActionConfig
+  | RetrySGFailureActionConfig
 
 export interface AllFailureStrategyConfig extends FailureStrategyConfig {
   onFailure: OnFailureConfig & { action: AllActions }
@@ -86,5 +87,3 @@ export function handleChangeInStrategies({
 export function getTabIntent(i: number, selectedStrategyNum: number): Intent {
   return i === selectedStrategyNum ? Intent.PRIMARY : Intent.NONE
 }
-
-export const EXCLUDE_STEP_INSIDE_STEP_GROUP_FAILURE_STRATEGY_LIST = [Strategy.RetryStepGroup]

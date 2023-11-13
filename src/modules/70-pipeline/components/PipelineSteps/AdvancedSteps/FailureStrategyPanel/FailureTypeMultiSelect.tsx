@@ -15,9 +15,7 @@ import { errorCheck } from '@common/utils/formikHelpers'
 import { useStrings } from 'framework/strings'
 import type { StringKeys } from 'framework/strings'
 import { FailureErrorType, ErrorType } from '@pipeline/utils/FailureStrategyUtils'
-import type { StageType } from '@pipeline/utils/stageHelpers'
 
-import { errorTypesForStages } from './StrategySelection/StrategyConfig'
 import css from './FailureStrategyPanel.module.scss'
 
 interface Option {
@@ -56,12 +54,12 @@ export interface FailureTypeMultiSelectProps {
   label: string
   name: string
   filterTypes?: FailureErrorType[]
-  stageType: StageType
   disabled?: boolean
+  errorTypes: FailureErrorType[]
 }
 
 export function FailureTypeMultiSelect(props: FailureTypeMultiSelectProps): React.ReactElement {
-  const { name, label, stageType, filterTypes, disabled } = props
+  const { name, label, filterTypes, disabled, errorTypes } = props
   const { getString } = useStrings()
   const formik = useFormikContext()
 
@@ -77,7 +75,6 @@ export function FailureTypeMultiSelect(props: FailureTypeMultiSelectProps): Reac
 
   const options: Option[] = (() => {
     const filterTypesSet = new Set(filterTypes || /* istanbul ignore next */ [])
-    const errorTypes = errorTypesForStages[stageType]
 
     // remove already selected values and "AllErrors" from options
     return errorTypes

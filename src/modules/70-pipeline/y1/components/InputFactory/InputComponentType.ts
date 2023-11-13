@@ -22,7 +22,8 @@ export enum DerivedInputType {
   jenkins_connector = 'jenkins_connector',
   http_method = 'http_method',
   delegate_selector = 'delegate_selector',
-  conditional_execution = 'conditional_execution'
+  conditional_execution = 'conditional_execution',
+  failure_strategy = 'failure_strategy'
 }
 
 export type InputComponentType = PrimitiveInputType | DerivedInputType

@@ -8,27 +8,21 @@ import React from 'react'
 import { Button, FormInput, Text } from '@harness/uicore'
 import { FieldArray, FormikErrors, useFormikContext } from 'formik'
 import { v4 as uuid } from 'uuid'
-import { defaultTo, flatMap, get, isEmpty, uniq, difference } from 'lodash-es'
+import { defaultTo, flatMap, get, isEmpty, uniq } from 'lodash-es'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import type { StepMode as Modes } from '@pipeline/utils/stepUtils'
+import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import { useDeepCompareEffect } from '@common/hooks'
-import { ErrorType, Strategy } from '@pipeline/utils/FailureStrategyUtils'
+import { ErrorType, FailureErrorType, Strategy, StrategyType } from '@pipeline/utils/FailureStrategyUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isValueRuntimeInput } from '@common/utils/utils'
 
 import { FailureTypeMultiSelect } from './FailureTypeMultiSelect'
 import { allowedStrategiesAsPerStep, errorTypesForStages } from './StrategySelection/StrategyConfig'
 import StrategySelection from './StrategySelection/StrategySelection'
-import {
-  findTabWithErrors,
-  hasItems,
-  handleChangeInStrategies,
-  getTabIntent,
-  EXCLUDE_STEP_INSIDE_STEP_GROUP_FAILURE_STRATEGY_LIST
-} from './utils'
+import { findTabWithErrors, hasItems, handleChangeInStrategies, getTabIntent } from './utils'
 import type { AllFailureStrategyConfig } from './utils'
 
 import css from './FailureStrategyPanel.module.scss'
@@ -41,20 +35,24 @@ import css from './FailureStrategyPanel.module.scss'
 
 export interface FailureStrategyPanelProps {
   path?: string
-  mode: Modes
+  mode?: Modes
   isReadonly: boolean
   stageType?: StageType
-  isStepInsideStepGroup?: boolean
+  /** `stageType` and `mode` are ignored when `errorTypes` is passed */
+  errorTypes?: FailureErrorType[]
+  /** `stageType` and `mode` are ignored when `allowedStrategies` is passed */
+  allowedStrategies?: StrategyType[]
 }
 
 export function FailureStrategyPanel(props: FailureStrategyPanelProps): React.ReactElement {
   const {
-    mode,
+    mode = Modes.STEP,
     path = 'failureStrategies',
     isReadonly,
     stageType = StageType.DEPLOY,
-    isStepInsideStepGroup = false
+    errorTypes = errorTypesForStages[stageType]
   } = props
+  let { allowedStrategies = allowedStrategiesAsPerStep(stageType)[mode] } = props
   const { getString } = useStrings()
   const formik = useFormikContext()
   const strategies = get(formik.values, path, []) as AllFailureStrategyConfig[]
@@ -65,7 +63,7 @@ export function FailureStrategyPanel(props: FailureStrategyPanelProps): React.Re
   const filterTypes = uniq(flatMap(strategies, e => defaultTo(e.onFailure?.errors, [])))
   const currentTabHasErrors = !isEmpty(get(errors, selectedStrategyNum))
   const addedAllErrors = filterTypes.includes(ErrorType.AllErrors)
-  const addedAllStratgies = filterTypes.length === errorTypesForStages[stageType].length
+  const addedAllStratgies = filterTypes.length === errorTypes.length
   const isAddBtnDisabled = addedAllErrors || addedAllStratgies || isReadonly || currentTabHasErrors
   const { NG_EXECUTION_INPUT, PIE_RETRY_STEP_GROUP } = useFeatureFlags()
 
@@ -124,16 +122,9 @@ export function FailureStrategyPanel(props: FailureStrategyPanelProps): React.Re
     }
   }, [formik.isSubmitting, errors])
 
-  let allowedStrategies = allowedStrategiesAsPerStep(stageType)[mode]
-
-  if (PIE_RETRY_STEP_GROUP) {
-    if (isStepInsideStepGroup) {
-      allowedStrategies = difference(allowedStrategies, EXCLUDE_STEP_INSIDE_STEP_GROUP_FAILURE_STRATEGY_LIST)
-    }
-  } else {
+  if (!PIE_RETRY_STEP_GROUP) {
     allowedStrategies = allowedStrategies.filter(st => st !== Strategy.RetryStepGroup)
   }
-
   if (!NG_EXECUTION_INPUT) {
     allowedStrategies = allowedStrategies.filter(st => st !== Strategy.ProceedWithDefaultValues)
   }
@@ -212,7 +203,7 @@ export function FailureStrategyPanel(props: FailureStrategyPanelProps): React.Re
             name={`${path}[${selectedStrategyNum}].onFailure.errors`}
             label={getString('pipeline.failureStrategies.onFailureOfType')}
             filterTypes={filterTypes}
-            stageType={stageType}
+            errorTypes={errorTypes}
             disabled={isReadonly}
           />
           <StrategySelection
