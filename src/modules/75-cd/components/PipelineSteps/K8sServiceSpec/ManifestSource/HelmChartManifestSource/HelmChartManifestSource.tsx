@@ -34,6 +34,8 @@ import { useGetBucketsInManifests, useGetGCSBucketList, useGetHelmChartVersionDe
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { OciHelmTypes } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/ManifestUtils'
+
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useMutateAsGet } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -83,33 +85,35 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
     pipelineIdentifier,
     fileUsage = FileUsage.MANIFEST_FILE
   } = props
+
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { getRBACErrorMessage } = useRBACError()
   const { CDS_HELM_FETCH_CHART_METADATA_NG } = useFeatureFlags()
   const manifestStoreType = get(template, `${manifestPath}.spec.store.type`, null)
   const [chartVersions, setChartVersions] = React.useState<SelectOption[]>([])
-  const connectorRefPath =
-    manifest?.spec?.store?.type === 'OciHelmChart'
-      ? `${manifestPath}.spec.store.spec.config.spec.connectorRef`
-      : `${manifestPath}.spec.store.spec.connectorRef`
-  const regionPath =
-    manifest?.spec?.store?.type === 'OciHelmChart'
-      ? `${manifestPath}.spec.store.spec.config.spec.region`
-      : `${manifestPath}.spec.store.spec.region`
-  const folderPath =
-    manifest?.spec?.store?.type === 'OciHelmChart'
-      ? `${manifestPath}.spec.store.spec.basePath`
-      : `${manifestPath}.spec.store.spec.folderPath`
+
+  const isOciHelmChart = React.useMemo(() => {
+    return manifest?.spec?.store?.type === OciHelmTypes.Chart
+  }, [manifest])
+  const connectorRefPath = isOciHelmChart
+    ? `${manifestPath}.spec.store.spec.config.spec.connectorRef`
+    : `${manifestPath}.spec.store.spec.connectorRef`
+  const regionPath = isOciHelmChart
+    ? `${manifestPath}.spec.store.spec.config.spec.region`
+    : `${manifestPath}.spec.store.spec.region`
+  const folderPath = isOciHelmChart
+    ? `${manifestPath}.spec.store.spec.basePath`
+    : `${manifestPath}.spec.store.spec.folderPath`
+  const registryIdPath = isOciHelmChart
+    ? `${manifestPath}.spec.store.spec.config.spec.registryId`
+    : `${manifestPath}.spec.store.spec.registryId`
 
   const { data: regionData } = useListAwsRegions({
     queryParams: {
       accountId
     }
   })
-  const isOciHelmChart = React.useMemo(() => {
-    return manifest?.spec?.store?.type === 'OciHelmChart'
-  }, [manifest])
 
   const {
     data: chartVersionData,
@@ -132,9 +136,10 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       fqnPath: getFqnPathForChart(stageIdentifier, manifest?.identifier as string),
       connectorRef: get(initialValues, connectorRefPath),
       chartName: get(initialValues, `${manifestPath}.spec.chartName`),
-      region: get(initialValues, `${manifestPath}.spec.store.spec.region`),
+      region: get(initialValues, regionPath),
       bucketName: get(initialValues, `${manifestPath}.spec.store.spec.bucketName`),
-      folderPath: get(initialValues, folderPath)
+      folderPath: get(initialValues, folderPath),
+      registryId: get(initialValues, registryIdPath)
     },
     lazy: true
   })
@@ -338,7 +343,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
 
   const renderCommandFlags = (commandFlagPath: string): React.ReactElement => {
     const commandFlags = get(template, commandFlagPath)
-
     return commandFlags?.map((helmCommandFlag: CommandFlags, helmFlagIdx: number) => {
       if (isFieldRuntime(`${manifestPath}.spec.commandFlags[${helmFlagIdx}].flag`, template)) {
         return (
@@ -595,7 +599,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.chartVersion`, template) && (
           <div className={css.verticalSpacingInput}>
-            {isNewServiceEnvEntity(path as string) && manifest?.spec?.store?.type !== 'OciHelmChart' ? (
+            {isNewServiceEnvEntity(path as string) ? (
               <>
                 <ExperimentalInput
                   formik={formik}
@@ -694,6 +698,21 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
           className={css.inputFieldLayout}
           label={getString('pipeline.manifestType.subChart')}
           placeholder={getString('pipeline.manifestType.subChartPlaceholder')}
+        />
+      )}
+      {isFieldRuntime(`${registryIdPath}`, template) && (
+        <TextFieldInputSetView
+          template={template}
+          fieldPath={`${registryIdPath}`}
+          disabled={isFieldDisabled(`${registryIdPath}`)}
+          name={`${path}.${registryIdPath}`}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          className={css.inputFieldLayout}
+          label={getString('pipeline.artifactsSelection.registryId')}
+          placeholder={getString('pipeline.artifactsSelection.registryIdPlaceholder')}
         />
       )}
       {isFieldRuntime(`${manifestPath}.spec.valuesPaths`, template) && (
