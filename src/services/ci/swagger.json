@@ -20,6 +20,9 @@
       "name": "license-usage"
     },
     {
+      "name": "docker-runner"
+    },
+    {
       "name": "execution-limit"
     },
     {
@@ -950,6 +953,54 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponsePageActiveDevelopersDTO"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/docker-runner": {
+      "get": {
+        "tags": ["docker-runner"],
+        "summary": "get docker-runner command",
+        "description": "",
+        "operationId": "dockerRunnerCommand",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "os",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "arch",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
             }
           },
           "400": {

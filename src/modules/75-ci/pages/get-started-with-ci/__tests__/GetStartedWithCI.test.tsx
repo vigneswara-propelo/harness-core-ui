@@ -9,6 +9,7 @@ import React from 'react'
 
 import { render, fireEvent, act } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import { ResponseAccountCreditCardValidationResponse } from 'services/cd-ng'
 import GetStartedWithCI from '../GetStartedWithCI'
 import * as hostedBuilds from '../../../hooks/useProvisionDelegateForHostedBuilds'
 import { ProvisioningStatus } from '../InfraProvisioningWizard/Constants'
@@ -100,6 +101,17 @@ jest.mock('services/cd-ng', () => ({
       error: null,
       loading: false,
       cancel: jest.fn()
+    }
+  }),
+  useHasAValidCard: jest.fn().mockImplementation(() => {
+    return {
+      mutate: () =>
+        Promise.resolve({
+          data: {
+            hasAtleastOneValidCreditCard: true
+          },
+          status: 'SUCCESS'
+        } as ResponseAccountCreditCardValidationResponse)
     }
   })
 }))

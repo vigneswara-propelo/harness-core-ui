@@ -63,7 +63,7 @@
     "@harness/design-system": "1.5.2",
     "@harness/help-panel": "1.14.0",
     "@harness/icons": "^1.205.0",
-    "@harness/ng-tooltip": "^1.31.175",
+    "@harness/ng-tooltip": "^1.31.188",
     "@harness/telemetry": "^1.0.42",
     "@harness/ts-transform-paths": "1.0.1",
     "@harness/uicore": "^3.154.3",

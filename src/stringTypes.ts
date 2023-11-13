@@ -9273,6 +9273,7 @@ export interface StringsMap {
   'ci.buildInfra.awsVM.os': string
   'ci.buildInfra.cloud': string
   'ci.buildInfra.info.cloud': string
+  'ci.buildInfra.info.cloudDisabled': string
   'ci.buildInfra.info.local1': string
   'ci.buildInfra.info.local2': string
   'ci.buildInfra.info.localLink': string
@@ -9321,6 +9322,7 @@ export interface StringsMap {
   'ci.getStartedWithCI.carousel.labels.integration': string
   'ci.getStartedWithCI.carousel.labels.useCaching': string
   'ci.getStartedWithCI.chooseDiffInfra': string
+  'ci.getStartedWithCI.choosePlan': string
   'ci.getStartedWithCI.chooseStarterConfig': string
   'ci.getStartedWithCI.cloneGitRepo': string
   'ci.getStartedWithCI.cloneGitRepoHelpText': string
@@ -9346,12 +9348,15 @@ export interface StringsMap {
   'ci.getStartedWithCI.generatePipelineHelpText': string
   'ci.getStartedWithCI.generatingYAMLFromRepo': string
   'ci.getStartedWithCI.genericGit': string
+  'ci.getStartedWithCI.harnessCloudCard': string
   'ci.getStartedWithCI.hostedByHarness': string
   'ci.getStartedWithCI.hostedByHarnessBuildLocation': string
   'ci.getStartedWithCI.hosting': string
   'ci.getStartedWithCI.importExistingYAML': string
   'ci.getStartedWithCI.importExistingYAMLHelptext': string
   'ci.getStartedWithCI.infraProvisioningFailed': string
+  'ci.getStartedWithCI.infraSetupSuccess': string
+  'ci.getStartedWithCI.installHarnessOnLocal': string
   'ci.getStartedWithCI.integratedCICD': string
   'ci.getStartedWithCI.integratedCICDHelpText': string
   'ci.getStartedWithCI.k8sBuildLocation': string
@@ -9371,16 +9376,22 @@ export interface StringsMap {
   'ci.getStartedWithCI.provisioningFailed': string
   'ci.getStartedWithCI.provisioningHelpText': string
   'ci.getStartedWithCI.provisioningSuccessful': string
+  'ci.getStartedWithCI.runOnHarnessCloud': string
+  'ci.getStartedWithCI.runOnLocal': string
+  'ci.getStartedWithCI.runOnLocalCard': string
   'ci.getStartedWithCI.security': string
   'ci.getStartedWithCI.securityHelpText': string
   'ci.getStartedWithCI.selectInfra': string
   'ci.getStartedWithCI.setUpAuth': string
   'ci.getStartedWithCI.settingUpCIPipeline': string
+  'ci.getStartedWithCI.setupFinish': string
+  'ci.getStartedWithCI.setupInfra': string
   'ci.getStartedWithCI.starterPipeline': string
   'ci.getStartedWithCI.starterPipelineConfig': string
   'ci.getStartedWithCI.starterPipelineConfigHelptext': string
   'ci.getStartedWithCI.storeInGit': string
   'ci.getStartedWithCI.takeToTheNextLevel': string
+  'ci.getStartedWithCI.testInfra': string
   'ci.getStartedWithCI.ti': string
   'ci.getStartedWithCI.tiHelpText': string
   'ci.getStartedWithCI.troubleShootFailedProvisioning': string

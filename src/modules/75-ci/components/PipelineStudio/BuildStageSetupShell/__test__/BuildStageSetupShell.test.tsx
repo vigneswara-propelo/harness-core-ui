@@ -11,7 +11,11 @@ import type { IconName } from '@blueprintjs/core'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { UseGetReturnData } from '@common/utils/testUtils'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import type { ResponseConnectorResponse, ResponseSetupStatus } from 'services/cd-ng'
+import {
+  ResponseConnectorResponse,
+  ResponseSetupStatus,
+  ResponseAccountCreditCardValidationResponse
+} from 'services/cd-ng'
 import type { PipelineContextInterface } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
@@ -146,6 +150,17 @@ jest.mock('services/cd-ng', () => ({
           data: 'SUCCESS',
           status: 'SUCCESS'
         } as ResponseSetupStatus)
+    }
+  }),
+  useHasAValidCard: jest.fn().mockImplementation(() => {
+    return {
+      mutate: () =>
+        Promise.resolve({
+          data: {
+            hasAtleastOneValidCreditCard: true
+          },
+          status: 'SUCCESS'
+        } as ResponseAccountCreditCardValidationResponse)
     }
   })
 }))

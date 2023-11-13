@@ -33,6 +33,30 @@
   }
 }
 
+.getStartedInfraCard {
+  height: 350px;
+  width: 500px !important;
+  padding: var(--spacing-huge) !important;
+  background: var(--primary-1) !important;
+  margin: var(--spacing-huge) !important;
+}
+
+.recommended {
+  border-radius: 10px;
+  background: var(--ai-purple-800) !important;
+  height: var(--spacing-large);
+  width: fit-content;
+  padding: var(--spacing-small) !important;
+  display: flex;
+  align-items: center;
+}
+
+.cardIcon {
+  position: absolute;
+  left: 300px;
+  bottom: 20px;
+}
+
 .separator {
   border: 1px solid var(--grey-300);
   height: 55px;
@@ -124,4 +148,44 @@
 .main {
   height: var(--page-min-height);
   overflow-y: scroll;
+}
+
+.footer {
+  border-top: 1px solid var(--grey-200);
+}
+
+.creditCardPage {
+  padding-top: 80px !important;
+  padding-left: 80px !important;
+  height: 100vh;
+  background-size: contain !important;
+  background-position: right bottom !important;
+}
+
+.numberedList {
+  position: relative;
+
+  .line {
+    margin: 10px auto 0px auto;
+    width: 1px;
+    background-color: var(--grey-200);
+    height: 93%;
+    border-radius: 2px;
+  }
+
+  .bulletIndex {
+    display: inline-block;
+    vertical-align: top;
+    padding: 11px;
+    height: 18px;
+    width: auto;
+    line-height: 0;
+    background-color: var(--grey-600);
+    border-radius: 60% !important;
+    color: var(--white);
+  }
+
+  .content {
+    margin-right: 30px;
+  }
 }

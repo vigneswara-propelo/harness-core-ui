@@ -5263,6 +5263,55 @@ export const getUsagePromise = (
     signal
   )
 
+export interface DockerRunnerCommandQueryParams {
+  accountId?: string
+  os?: string
+  arch?: string
+}
+
+export type DockerRunnerCommandProps = Omit<
+  GetProps<string, Failure | Error, DockerRunnerCommandQueryParams, void>,
+  'path'
+>
+
+/**
+ * get docker-runner command
+ */
+export const DockerRunnerCommand = (props: DockerRunnerCommandProps) => (
+  <Get<string, Failure | Error, DockerRunnerCommandQueryParams, void>
+    path={`/docker-runner`}
+    base={getConfig('ci')}
+    {...props}
+  />
+)
+
+export type UseDockerRunnerCommandProps = Omit<
+  UseGetProps<string, Failure | Error, DockerRunnerCommandQueryParams, void>,
+  'path'
+>
+
+/**
+ * get docker-runner command
+ */
+export const useDockerRunnerCommand = (props: UseDockerRunnerCommandProps) =>
+  useGet<string, Failure | Error, DockerRunnerCommandQueryParams, void>(`/docker-runner`, {
+    base: getConfig('ci'),
+    ...props
+  })
+
+/**
+ * get docker-runner command
+ */
+export const dockerRunnerCommandPromise = (
+  props: GetUsingFetchProps<string, Failure | Error, DockerRunnerCommandQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<string, Failure | Error, DockerRunnerCommandQueryParams, void>(
+    getConfig('ci'),
+    `/docker-runner`,
+    props,
+    signal
+  )
 export interface DeleteExecutionConfigQueryParams {
   accountIdentifier: string
 }

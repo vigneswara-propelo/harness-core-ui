@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import * as yup from 'yup'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import {
@@ -22,7 +22,10 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   PageSpinner,
-  Icon
+  Icon,
+  Button,
+  ButtonVariation,
+  ButtonSize
 } from '@harness/uicore'
 import type { Item } from '@harness/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
 import { isEmpty, isUndefined, set, uniqBy, get } from 'lodash-es'
@@ -32,6 +35,8 @@ import cx from 'classnames'
 import { produce } from 'immer'
 import type { FormikProps } from 'formik'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
+import { useHasAValidCard } from 'services/cd-ng'
+import { useCreditCardWidget } from '@modules/27-platform/auth-settings/pages/Billing/CreditCardWidget'
 import { DelegateGroupDetails, useGetDelegateGroupsNGV2 } from 'services/portal'
 import Volumes, { VolumesTypes } from '@pipeline/components/Volumes/Volumes'
 import MultiTypeCustomMap from '@common/components/MultiTypeCustomMap/MultiTypeCustomMap'
@@ -385,13 +390,32 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<BuildInfraFormValues>>()
   const { initiateProvisioning, delegateProvisioningStatus } = useProvisionDelegateForHostedBuilds()
-  const { CIE_HOSTED_VMS, CIE_HOSTED_VMS_WINDOWS, ENABLE_K8_BUILDS } = useFeatureFlags()
+  const { CIE_HOSTED_VMS, CIE_HOSTED_VMS_WINDOWS, ENABLE_K8_BUILDS, CI_CREDIT_CARD_ONBOARDING } = useFeatureFlags()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
   const [isProvisionedByHarnessDelegateHealthy, setIsProvisionedByHarnessDelegateHealthy] = useState<boolean>(false)
   const { licenseInformation } = useLicenseStore()
   const isFreeEdition = isFreePlan(licenseInformation, ModuleName.CI)
   const isSecurityEnterprise =
     isEnterprisePlan(licenseInformation, ModuleName.STO) && licenseInformation['STO']?.status === 'ACTIVE'
+  const [isCloudInfraDisabled, setIsCloudInfraDisabled] = useState<boolean>(true)
+
+  const { data: validCard, refetch: refetchValidCard } = useHasAValidCard({
+    queryParams: { accountIdentifier: accountId }
+  })
+
+  const { openSubscribeModal } = useCreditCardWidget({
+    onClose: () => {
+      refetchValidCard()
+    }
+  })
+
+  useEffect(() => {
+    if (!validCard?.data?.hasAtleastOneValidCreditCard && CI_CREDIT_CARD_ONBOARDING) {
+      setIsCloudInfraDisabled(true)
+    } else {
+      setIsCloudInfraDisabled(false)
+    }
+  }, [validCard])
 
   const BuildInfraTypes: ThumbnailSelectProps['items'] = [
     ...(enabledHostedBuildsForFreeUsers && CIE_HOSTED_VMS
@@ -399,7 +423,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           {
             label: getString('ci.buildInfra.cloud'),
             icon: 'harness',
-            value: CIBuildInfrastructureType.Cloud
+            value: CIBuildInfrastructureType.Cloud,
+            disabled: isCloudInfraDisabled
           } as Item
         ]
       : []),
@@ -2282,30 +2307,58 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
     if (!BuildInfraTypes.some(item => item.value === infraType)) {
       return null
     }
+
+    const cloudDisabled = isCloudInfraDisabled ? (
+      <div className={cx(css.infoWrap)}>
+        {iconDiv}
+        <Layout.Horizontal>
+          <Text font={{ variation: FontVariation.FORM_INPUT_TEXT }} padding={{ right: 'medium' }}>
+            {getString('ci.buildInfra.info.cloudDisabled')}
+          </Text>
+          <Button
+            onClick={() => {
+              openSubscribeModal()
+            }}
+            variation={ButtonVariation.PRIMARY}
+            text={getString('platform.authSettings.updateCard')}
+            size={ButtonSize.SMALL}
+          />
+        </Layout.Horizontal>
+      </div>
+    ) : null
+
     switch (infraType) {
       case CIBuildInfrastructureType.Cloud:
         return (
-          <div className={cx(css.infoWrap)}>
-            {iconDiv}
-            <div>
-              <Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>{getString('ci.buildInfra.info.cloud')}</Text>
+          <>
+            <div className={cx(css.infoWrap)}>
+              {iconDiv}
+              <div>
+                <Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>{getString('ci.buildInfra.info.cloud')}</Text>
+              </div>
             </div>
-          </div>
+            {cloudDisabled}
+          </>
         )
       case CIBuildInfrastructureType.Docker:
         return (
-          <div className={cx(css.infoWrap)}>
-            {iconDiv}
-            <div>
-              <Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>{getString('ci.buildInfra.info.local1')}</Text>
-              <Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>
-                {getString('ci.buildInfra.info.local2')} {localLink}
-              </Text>
+          <>
+            <div className={cx(css.infoWrap)}>
+              {iconDiv}
+              <div>
+                <Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>
+                  {getString('ci.buildInfra.info.local1')}
+                </Text>
+                <Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>
+                  {getString('ci.buildInfra.info.local2')} {localLink}
+                </Text>
+              </div>
             </div>
-          </div>
+            {cloudDisabled}
+          </>
         )
       default:
-        return null
+        return cloudDisabled
     }
   }
 
