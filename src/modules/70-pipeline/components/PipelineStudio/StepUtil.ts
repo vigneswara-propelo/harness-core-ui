@@ -252,7 +252,7 @@ export const validateSteps = ({
     failureStrategies: failureStrategySchema
   })
   steps.forEach((stepObj, index) => {
-    if (stepObj.step) {
+    if (stepObj?.step) {
       const errorResponse = validateStep({
         step: stepObj.step,
         template: template?.[index]?.step,
@@ -263,9 +263,9 @@ export const validateSteps = ({
       if (!isEmpty(errorResponse)) {
         set(errors, `steps[${index}]`, errorResponse)
       }
-    } else if (stepObj.parallel) {
+    } else if (stepObj?.parallel) {
       stepObj.parallel.forEach((stepParallel, indexP) => {
-        if (stepParallel.step) {
+        if (stepParallel?.step) {
           const errorResponse = validateStep({
             step: stepParallel.step,
             template: template?.[index]?.parallel?.[indexP]?.step,
@@ -341,7 +341,7 @@ export const validateSteps = ({
           }
         }
       })
-    } else if (stepObj.stepGroup) {
+    } else if (stepObj?.stepGroup) {
       const originalStepGroup = getStepFromStage(
         stepObj.stepGroup.identifier,
         originalSteps,
@@ -374,7 +374,7 @@ export const validateSteps = ({
           getString,
           viewType
         })
-        if (stepObj.stepGroup.steps) {
+        if (stepObj.stepGroup?.steps) {
           const stepsErrorResponse = validateSteps({
             steps: stepObj.stepGroup.steps,
             template: template?.[index]?.stepGroup?.steps,
