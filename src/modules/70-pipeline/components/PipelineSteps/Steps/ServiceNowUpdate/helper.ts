@@ -67,39 +67,56 @@ export const getKVFields = (values: ServiceNowUpdateData): ServiceNowCreateField
 }
 
 export const processInitialValues = (values: ServiceNowUpdateData): ServiceNowUpdateData => {
+  const {
+    spec: {
+      delegateSelectors,
+      connectorRef,
+      useServiceNowTemplate,
+      ticketType,
+      fields,
+      ticketNumber,
+      templateName,
+      updateMultiple
+    }
+  } = values
+
   const initValues = {
     ...values,
     spec: {
-      delegateSelectors: values.spec.delegateSelectors,
-      connectorRef: values.spec.connectorRef,
-      useServiceNowTemplate: values.spec.useServiceNowTemplate,
+      delegateSelectors,
+      connectorRef,
+      useServiceNowTemplate,
 
-      fieldType: values.spec.useServiceNowTemplate ? FieldType.CreateFromTemplate : FieldType.ConfigureFields,
-      ticketType: values.spec.ticketType,
-      description: values.spec.fields
-        ?.find(field => field.name === ServiceNowStaticFields.description)
-        ?.value.toString() as string,
-      shortDescription: values.spec.fields
+      fieldType: useServiceNowTemplate ? FieldType.CreateFromTemplate : FieldType.ConfigureFields,
+      ticketType,
+      description: fields?.find(field => field.name === ServiceNowStaticFields.description)?.value.toString() as string,
+      shortDescription: fields
         ?.find(field => field.name === ServiceNowStaticFields.short_description)
         ?.value.toString() as string,
-      fields: omitDescNShortDesc(values.spec.fields),
-      ticketNumber: values.spec.ticketNumber,
-      templateName: values.spec.templateName,
+      fields: omitDescNShortDesc(fields),
+      ticketNumber,
+      templateName,
       selectedFields: [],
       templateFields: []
     }
   }
-  if (values.spec?.updateMultiple) {
+
+  if (updateMultiple) {
+    const ticketTypeValue = typeof ticketType === 'string' ? ticketType : ticketType.value
+
+    if ((ticketTypeValue as string).toUpperCase() === TaskTypes.CHANGE_TASK) {
+      delete initValues.spec.ticketNumber
+    }
+
     return {
       ...initValues,
       spec: {
         ...initValues.spec,
         updateMultipleFlag: true,
-        updateMultiple: {
-          ...values.spec?.updateMultiple
-        }
+        updateMultiple
       }
     }
   }
+
   return initValues
 }
