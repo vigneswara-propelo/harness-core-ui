@@ -31,7 +31,6 @@ import {
   allowedManifestTypes,
   getManifestsHeaderTooltipId
 } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import ConfigFilesSelection from '@pipeline/components/ConfigFilesSelection/ConfigFilesSelection'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -42,6 +41,7 @@ import ServiceHooksSelection from '@pipeline/components/ServiceHooks/ServiceHook
 import { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import type { KubernetesServiceInputFormProps } from '../../K8sServiceSpec/K8sServiceSpecInterface'
 import { setupMode, isMultiArtifactSourceEnabled } from '../../PipelineStepsUtil'
+import { ArtifactListViewHeader } from '../ArtifactListViewCommons/ArtifactListViewHeader'
 import css from './GenericServiceSpec.module.scss'
 
 const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
@@ -110,13 +110,11 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
             className={css.sectionCard}
             id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
           >
-            <div
-              className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
-              data-tooltip-id={getArtifactsHeaderTooltipId(selectedDeploymentType)}
-            >
-              {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
-              <HarnessDocTooltip tooltipId={getArtifactsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
-            </div>
+            <ArtifactListViewHeader
+              isPrimaryArtifactSources={isPrimaryArtifactSources}
+              isPropagating={isPropagating}
+              selectedDeploymentType={selectedDeploymentType}
+            />
             {isPrimaryArtifactSources ? (
               <ServiceV2ArtifactsSelection
                 deploymentType={selectedDeploymentType}

@@ -7135,6 +7135,7 @@ export interface StringsMap {
   'cd.selectGitopsCluster': string
   'cd.selectRepository': string
   'cd.selectedLabel': string
+  'cd.selectedPrimaryArtifact': string
   'cd.serverlessDeployCommandOptions': string
   'cd.serverlessVersionLabel': string
   'cd.serviceCreated': string

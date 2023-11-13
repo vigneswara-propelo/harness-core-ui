@@ -7,7 +7,7 @@
 
 import React, { useCallback } from 'react'
 import { Button, getMultiTypeFromValue, Icon, Layout, MultiTypeInputType, Text, Container } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
@@ -31,18 +31,20 @@ interface PrimaryArtifactViewProps {
   editArtifact: (view: ModalViewFor, type?: ArtifactType, index?: number) => void
   removePrimary?: () => void
   identifierElement?: JSX.Element
+  primaryArtifactRef?: string
 }
 
 interface ArtifactSourceTemplateViewProps {
   artifactSourceTemplateData: TemplateStepNode
   templateActionBtns: React.ReactElement | null
+  primaryArtifactRef?: string
 }
 
 export function ArtifactSourceTemplateView(props: ArtifactSourceTemplateViewProps) {
-  const { artifactSourceTemplateData, templateActionBtns } = props
+  const { artifactSourceTemplateData, templateActionBtns, primaryArtifactRef } = props
   const { identifier, template } = artifactSourceTemplateData
   const [fetchedArtifactDetails, setFetchedArtifactDetails] = React.useState<PrimaryArtifact | SidecarArtifact>()
-
+  const { getString } = useStrings()
   const handleFetchedTemplateDetails = React.useCallback((templateDetails: TemplateSummaryResponse) => {
     const artifactDetails = yamlParse<{ template: NGTemplateInfoConfig }>(defaultTo(templateDetails?.yaml, ''))
       ?.template?.spec as PrimaryArtifact | SidecarArtifact
@@ -64,9 +66,18 @@ export function ArtifactSourceTemplateView(props: ArtifactSourceTemplateViewProp
         <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} width={708}>
           <Container>
             {identifier && (
-              <Text padding={{ left: 'small' }} width={200} className={css.type} color={Color.BLACK} lineClamp={1}>
-                {identifier}
-              </Text>
+              <Layout.Horizontal spacing={'small'} width={200}>
+                <Text padding={{ left: 'small' }} className={css.type} color={Color.BLACK} lineClamp={1}>
+                  {identifier}
+                </Text>
+                {primaryArtifactRef && primaryArtifactRef === identifier && (
+                  <Container className={css.primaryArtifactBadge}>
+                    <Text color={Color.PRIMARY_7} font={{ variation: FontVariation.TABLE_HEADERS }}>
+                      {getString('primary')}
+                    </Text>
+                  </Container>
+                )}
+              </Layout.Horizontal>
             )}
           </Container>
           <Container>
@@ -105,7 +116,8 @@ function PrimaryArtifactView({
   fetchedConnectorResponse,
   editArtifact,
   removePrimary,
-  identifierElement
+  identifierElement,
+  primaryArtifactRef
 }: PrimaryArtifactViewProps): React.ReactElement | null {
   const { getString } = useStrings()
 
@@ -144,6 +156,7 @@ function PrimaryArtifactView({
     <ArtifactSourceTemplateView
       artifactSourceTemplateData={primaryArtifact as TemplateStepNode}
       templateActionBtns={templateActionBtns}
+      primaryArtifactRef={primaryArtifactRef}
     />
   ) : (
     <section className={cx(css.artifactList, css.rowItem, css.artifactRow)}>

@@ -21,7 +21,6 @@ import {
 } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
 import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
@@ -30,6 +29,7 @@ import { useServiceContext } from '@cd/context/ServiceContext'
 import { FeatureFlag } from '@common/featureFlags'
 import { isMultiArtifactSourceEnabled, setupMode } from '../PipelineStepsUtil'
 import type { ElastigroupServiceSpecFormProps } from './ElastigroupServiceSpecInterface'
+import { ArtifactListViewHeader } from '../Common/ArtifactListViewCommons/ArtifactListViewHeader'
 import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 const getStartupScriptHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
@@ -99,13 +99,11 @@ const ElastigroupServiceSpecEditable: React.FC<ElastigroupServiceSpecFormProps> 
             className={css.sectionCard}
             id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
           >
-            <div
-              className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
-              data-tooltip-id={getArtifactsHeaderTooltipId(selectedDeploymentType)}
-            >
-              {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
-              <HarnessDocTooltip tooltipId={getArtifactsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
-            </div>
+            <ArtifactListViewHeader
+              isPrimaryArtifactSources={isPrimaryArtifactSources}
+              isPropagating={isPropagating}
+              selectedDeploymentType={selectedDeploymentType}
+            />
             {isPrimaryArtifactSources ? (
               <ServiceV2ArtifactsSelection
                 deploymentType={selectedDeploymentType}

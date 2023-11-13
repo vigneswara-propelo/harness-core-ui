@@ -28,11 +28,7 @@ import {
   getManifestsHeaderTooltipId,
   ManifestDataType
 } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import {
-  allowedArtifactTypes,
-  ENABLED_ARTIFACT_TYPES,
-  getArtifactsHeaderTooltipId
-} from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+import { allowedArtifactTypes, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import {
   DeployTabs,
   isNewServiceEnvEntity
@@ -48,6 +44,7 @@ import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/Artif
 import { useServiceContext } from '@cd/context/ServiceContext'
 import { AddManifestSteps } from '@cd/components/CommonComponents/AddManifestSteps/AddManifestSteps'
 import { isMultiArtifactSourceEnabled, setupMode } from '../../PipelineStepsUtil'
+import { ArtifactListViewHeader } from '../../Common/ArtifactListViewCommons/ArtifactListViewHeader'
 import css from '../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface GoogleCloudFunctionServiceSpecInitialValues extends ServiceSpec {
@@ -184,13 +181,11 @@ const GoogleCloudFunctionServiceSpecEditable: React.FC<GoogleCloudFunctionServic
             className={css.sectionCard}
             id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
           >
-            <div
-              className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
-              data-tooltip-id={getArtifactsHeaderTooltipId(selectedDeploymentType)}
-            >
-              {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
-              <HarnessDocTooltip tooltipId={getArtifactsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
-            </div>
+            <ArtifactListViewHeader
+              isPrimaryArtifactSources={isPrimaryArtifactSources}
+              isPropagating={isPropagating}
+              selectedDeploymentType={selectedDeploymentType}
+            />
             {isPrimaryArtifactSources ? (
               <ServiceV2ArtifactsSelection
                 deploymentType={selectedDeploymentType}

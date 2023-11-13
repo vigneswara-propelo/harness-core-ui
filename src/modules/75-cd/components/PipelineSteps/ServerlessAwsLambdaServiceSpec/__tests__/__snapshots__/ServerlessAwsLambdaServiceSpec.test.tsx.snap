@@ -75,10 +75,13 @@ exports[`ServerlessAwsLambdaServiceSpec tests When stepViewType is Edit render p
       id="pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts"
     >
       <div
-        class="tabSubHeading listHeader ng-tooltip-native"
-        data-tooltip-id="ServerlessAwsLambdaDeploymentTypeArtifacts"
+        class="StyledProps--font StyledProps--main ng-tooltip-native StyledProps--font-variation-card-title StyledProps--padding-bottom-medium StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--margin-bottom-xsmall"
       >
-        pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts
+        <div
+          data-tooltip-id="ServerlessAwsLambdaDeploymentTypeArtifacts"
+        >
+          pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts
+        </div>
       </div>
       <div
         class="Layout--vertical StyledProps--main"

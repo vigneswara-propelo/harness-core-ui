@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text } from '@harness/uicore'
+import { Container, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
@@ -23,18 +23,26 @@ interface PrimaryArtifactSourcesProps {
   fetchedConnectorResponse: PageConnectorResponse | undefined
   editArtifact: (view: ModalViewFor, type?: ArtifactType, index?: number) => void
   removeArtifactSource?: (index: number) => void
+  primaryArtifactRef?: string
 }
 function PrimaryArtifactSources(props: PrimaryArtifactSourcesProps): React.ReactElement | null {
-  const { artifactSources, editArtifact, removeArtifactSource, ...rest } = props
+  const { artifactSources, editArtifact, removeArtifactSource, primaryArtifactRef, ...rest } = props
   const { getString } = useStrings()
 
   const renderIdentifier = (identifier: string): JSX.Element => {
     return (
-      <div>
-        <Text width={200} className={css.type} color={Color.BLACK} lineClamp={1}>
+      <Layout.Horizontal spacing={'small'} width={200}>
+        <Text className={css.type} color={Color.BLACK} lineClamp={1}>
           {identifier}
         </Text>
-      </div>
+        {primaryArtifactRef && primaryArtifactRef === identifier && (
+          <Container className={css.primaryArtifactBadge}>
+            <Text color={Color.PRIMARY_7} font={{ variation: FontVariation.TABLE_HEADERS }}>
+              {getString('primary')}
+            </Text>
+          </Container>
+        )}
+      </Layout.Horizontal>
     )
   }
   if (!artifactSources?.length) {
@@ -61,6 +69,7 @@ function PrimaryArtifactSources(props: PrimaryArtifactSourcesProps): React.React
           editArtifact={(view, type) => editArtifact(view, type, index)}
           removePrimary={() => removeArtifactSource?.(index)}
           identifierElement={renderIdentifier(artifactSource.identifier)}
+          primaryArtifactRef={primaryArtifactRef}
           {...rest}
         />
       ))}

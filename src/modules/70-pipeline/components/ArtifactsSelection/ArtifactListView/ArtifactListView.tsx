@@ -5,10 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Layout, Text, Button, ButtonSize, ButtonVariation } from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
+import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ArtifactSource, PrimaryArtifact } from 'services/cd-ng'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
@@ -64,14 +65,20 @@ function ArtifactListView({
   isSidecarAllowed,
   isMultiArtifactSource,
   handleUseArtifactSourceTemplate,
-  deploymentType
+  deploymentType,
+  stage
 }: ArtifactListViewProps): React.ReactElement {
   const { getString } = useStrings()
+  const primaryArtifactRef = useMemo((): string => {
+    return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts.primary.primaryArtifactRef', {})
+  }, [stage])
+
   const commonArtifactProps = {
     isReadonly,
     accountId,
     fetchedConnectorResponse,
-    editArtifact
+    editArtifact,
+    primaryArtifactRef
   }
 
   return (

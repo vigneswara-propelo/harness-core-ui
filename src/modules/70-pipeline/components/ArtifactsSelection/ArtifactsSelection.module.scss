@@ -145,3 +145,12 @@
   border: 1px solid var(--primary-5) !important;
   background: var(--primary-1) !important;
 }
+
+.primaryArtifactBadge {
+  display: flex;
+  padding: var(--spacing-1) 6px !important;
+  align-items: center;
+  border-radius: var(--spacing-2);
+  background: var(--primary-2) !important;
+  margin-right: var(--spacing-3) !important;
+}

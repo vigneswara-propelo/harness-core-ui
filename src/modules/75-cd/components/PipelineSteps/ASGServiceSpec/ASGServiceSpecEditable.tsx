@@ -26,7 +26,6 @@ import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/Artifact
 import ManifestSelection from '@pipeline/components/ManifestSelection/ManifestSelection'
 import { getSelectedDeploymentType, getVariablesHeaderTooltipId } from '@pipeline/utils/stageHelpers'
 import { getManifestsHeaderTooltipId, ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import {
   DeployTabs,
   isNewServiceEnvEntity
@@ -42,6 +41,7 @@ import StartupScriptSelection from '@pipeline/components/StartupScriptSelection/
 
 import { FeatureFlag } from '@common/featureFlags'
 import { isMultiArtifactSourceEnabled, setupMode } from '../PipelineStepsUtil'
+import { ArtifactListViewHeader } from '../Common/ArtifactListViewCommons/ArtifactListViewHeader'
 import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface ASGServiceSpecInitialValues extends ServiceSpec {
@@ -403,13 +403,11 @@ export const ASGServiceSpecEditable: React.FC<ASGServiceSpecEditableProps> = ({
             className={css.sectionCard}
             id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
           >
-            <div
-              className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
-              data-tooltip-id={getArtifactsHeaderTooltipId(selectedDeploymentType)}
-            >
-              {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
-              <HarnessDocTooltip tooltipId={getArtifactsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
-            </div>
+            <ArtifactListViewHeader
+              isPrimaryArtifactSources={isPrimaryArtifactSources}
+              isPropagating={isPropagating}
+              selectedDeploymentType={selectedDeploymentType}
+            />
             {isPrimaryArtifactSources ? (
               <ServiceV2ArtifactsSelection
                 deploymentType={selectedDeploymentType}

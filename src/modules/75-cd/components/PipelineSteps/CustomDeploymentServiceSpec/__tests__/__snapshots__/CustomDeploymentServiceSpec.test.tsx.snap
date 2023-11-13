@@ -10,10 +10,13 @@ exports[`CustomDeploymentServiceSpec tests When stepViewType is Edit render prop
       id="pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts"
     >
       <div
-        class="tabSubHeading ng-tooltip-native"
-        data-tooltip-id="CustomDeploymentDeploymentTypeArtifacts"
+        class="StyledProps--font StyledProps--main ng-tooltip-native StyledProps--font-variation-card-title StyledProps--padding-bottom-medium StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--margin-bottom-xsmall"
       >
-        pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts
+        <div
+          data-tooltip-id="CustomDeploymentDeploymentTypeArtifacts"
+        >
+          pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts
+        </div>
       </div>
       <div
         class="Layout--vertical StyledProps--main"

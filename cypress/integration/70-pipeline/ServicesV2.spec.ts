@@ -105,7 +105,9 @@ describe('Service V2', () => {
     cy.contains('p', 'GitHub').click()
     cy.contains('span', 'New GitHub Connector').should('be.visible')
     cy.contains('span', 'Select GitHub Connector').should('be.visible')
-    cy.get('span[data-icon="fixed-input"]').click()
+    cy.get('.StepWizard--stepDetails').within(() => {
+      cy.get('span[data-icon="fixed-input"]').click()
+    })
     cy.contains('span', 'Fixed value').should('be.visible')
     cy.contains('span', 'Runtime input').should('be.visible')
     cy.contains('span', 'Expression').should('be.visible')
@@ -115,7 +117,9 @@ describe('Service V2', () => {
     cy.contains('p', 'Organization').should('be.visible')
     cy.get('button[aria-label="Close"]').click()
 
-    cy.get('span[data-icon="fixed-input"]').click()
+    cy.get('.StepWizard--stepDetails').within(() => {
+      cy.get('span[data-icon="fixed-input"]').click()
+    })
     cy.contains('span', 'Runtime input').click()
     cy.get('input[value="<+input>"]').should('be.visible')
     cy.clickSubmit()
@@ -140,18 +144,22 @@ describe('Service V2', () => {
     cy.contains('p', 'Docker Registry').click()
     cy.clickSubmit()
 
-    cy.get('span[data-icon="fixed-input"]').eq(0).click()
+    cy.get('.StepWizard--stepDetails').within(() => {
+      cy.get('span[data-icon="fixed-input"]').eq(0).click()
+    })
     cy.contains('span', 'Runtime input').click()
     cy.get('input[value="<+input>"]').should('be.visible')
     cy.clickSubmit()
 
-    cy.get('span[data-icon="fixed-input"]').eq(0).click()
+    cy.get('.StepWizard--stepDetails').within(() => {
+      cy.get('span[data-icon="fixed-input"]').eq(0).click()
+    })
     cy.contains('span', 'Runtime input').click()
     cy.get('input[value="<+input>"]').should('be.visible')
     cy.get('input[name="identifier"]').type('test_artifact_source_name')
     cy.clickSubmit()
 
-    cy.contains('div', 'Unsaved changes').should('be.visible') //
+    cy.contains('div', 'Unsaved changes').should('be.visible')
     cy.contains('span', 'Save').click()
     cy.contains('span', 'Service updated successfully').should('be.visible')
 
@@ -182,12 +190,14 @@ describe('Service V2', () => {
     cy.contains('p', 'Artifactory').click()
     cy.contains('span', 'Change').should('be.visible')
     cy.clickSubmit()
-    cy.get('span[data-icon="fixed-input"]').click()
+    cy.get('.StepWizard--stepDetails').within(() => {
+      cy.get('span[data-icon="fixed-input"]').click()
+    })
     cy.contains('span', 'Runtime input').click()
     cy.get('input[value="<+input>"]').should('be.visible')
     cy.clickSubmit()
 
-    cy.get('button[class="MultiTypeInput--btn MultiTypeInput--FIXED"]').each($btn => {
+    cy.get('[class*=StepWizard--stepDetails] button[class="MultiTypeInput--btn MultiTypeInput--FIXED"]').each($btn => {
       cy.wrap($btn)
         .click()
         .then(() => {
@@ -203,7 +213,9 @@ describe('Service V2', () => {
     cy.contains('p', 'Harness').click()
     cy.clickSubmit()
     cy.get('input[name="identifier"]').type('testConfigFileIdentifier')
-    cy.get('span[data-icon="fixed-input"]').eq(0).click()
+    cy.get('.StepWizard--stepDetails').within(() => {
+      cy.get('span[data-icon="fixed-input"]').eq(0).click()
+    })
     cy.contains('span', 'Runtime input').click()
     cy.get('input[value="<+input>"]').should('be.visible')
 
@@ -246,12 +258,14 @@ describe('Service V2', () => {
     cy.contains('p', 'Artifactory').click()
     cy.contains('span', 'Change').should('be.visible')
     cy.clickSubmit()
-    cy.get('span[data-icon="fixed-input"]').click()
+    cy.get('.StepWizard--stepDetails').within(() => {
+      cy.get('span[data-icon="fixed-input"]').click()
+    })
     cy.contains('span', 'Runtime input').click()
     cy.get('input[value="<+input>"]').should('be.visible')
     cy.clickSubmit()
 
-    cy.get('button[class="MultiTypeInput--btn MultiTypeInput--FIXED"]').each($btn => {
+    cy.get('[class*=StepWizard--stepDetails] button[class="MultiTypeInput--btn MultiTypeInput--FIXED"]').each($btn => {
       cy.wrap($btn)
         .click()
         .then(() => {
@@ -259,6 +273,7 @@ describe('Service V2', () => {
         })
       cy.wait(100)
     })
+
     cy.get('input[name="identifier"]').type('test_artifact_source_name')
     cy.clickSubmit()
 
@@ -266,7 +281,9 @@ describe('Service V2', () => {
     cy.contains('p', 'Harness').click()
     cy.clickSubmit()
     cy.get('input[name="identifier"]').type('testConfigFileIdentifier')
-    cy.get('span[data-icon="fixed-input"]').eq(0).click()
+    cy.get('.StepWizard--stepDetails').within(() => {
+      cy.get('span[data-icon="fixed-input"]').eq(0).click()
+    })
     cy.contains('span', 'Runtime input').click()
     cy.get('input[value="<+input>"]').should('be.visible')
 

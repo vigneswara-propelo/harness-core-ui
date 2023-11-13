@@ -9,6 +9,7 @@ import React, { useEffect } from 'react'
 import { get, isEmpty, set } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
+import { Text } from '@harness/uicore'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
@@ -17,6 +18,7 @@ import { useQueryParams } from '@common/hooks'
 import type { SidecarArtifact } from 'services/cd-ng'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 import { useGetChildPipelineMetadata } from '@pipeline/hooks/useGetChildPipelineMetadata'
+import { useStrings } from 'framework/strings'
 import type { KubernetesArtifactsProps } from '../../K8sServiceSpecInterface'
 import { fromPipelineInputTriggerTab, getSidecarInitialValues } from '../../ArtifactSource/artifactSourceUtils'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
@@ -32,6 +34,7 @@ const ArtifactInputField = (props: KubernetesArtifactsProps): React.ReactElement
   const isArtifactsRuntime = runtimeMode && !!get(props.template, 'artifacts', false)
   const isPrimaryArtifactsRuntime = runtimeMode && !!get(props.template, 'artifacts.primary.sources', false)
   const isSidecarRuntime = runtimeMode && !!get(props.template, 'artifacts.sidecars', false)
+  const { getString } = useStrings()
 
   useEffect(() => {
     /* instanbul ignore else */
@@ -53,6 +56,11 @@ const ArtifactInputField = (props: KubernetesArtifactsProps): React.ReactElement
   }
   return (
     <div key={(props.artifact as SidecarArtifact).identifier}>
+      {!props.template.artifacts?.primary?.primaryArtifactRef && (
+        <Text className={css.inputheader}>
+          {getString('cd.selectedPrimaryArtifact', { artifactId: get(props.artifact, 'identifier', '') })}
+        </Text>
+      )}
       {artifactSource &&
         artifactSource.renderContent({
           ...props,
