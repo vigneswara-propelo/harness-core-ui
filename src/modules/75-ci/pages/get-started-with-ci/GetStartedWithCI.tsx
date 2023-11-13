@@ -73,11 +73,9 @@ export default function GetStartedWithCI(): React.ReactElement {
   const { mutate: fetchGitConnectors, loading: fetchingGitConnectors } = useGetConnectorListV2({
     queryParams: {
       accountIdentifier: accountId,
-      pageSize: 100,
       projectIdentifier,
       orgIdentifier,
-      includeAllConnectorsAvailableAtScope: true,
-      searchTerm: 'Account'
+      includeAllConnectorsAvailableAtScope: true
     }
   })
   const [isFetchingSecret, setIsFetchingSecret] = useState<boolean>()
@@ -127,14 +125,18 @@ export default function GetStartedWithCI(): React.ReactElement {
         const { status, data } = response
         if (status === Status.SUCCESS && Array.isArray(data?.content) && data?.content && data.content.length > 0) {
           const connectors = data.content
+          const filteredConnectors = connectors.filter(connector => connector?.connector?.spec?.type !== 'Repo')
           const connectorsListForSelection = connectors.map(
             (item: ConnectorResponse) => item.connector
           ) as ConnectorInfoDTO[]
+          const filteredConnectorsListForSelection = connectorsListForSelection.filter(
+            connector => connector?.spec?.type !== 'Repo'
+          )
           if (CODE_ENABLED) {
-            connectorsListForSelection.unshift(dummyGitnessHarnessConnector)
+            filteredConnectorsListForSelection.unshift(dummyGitnessHarnessConnector)
           }
-          setConnectorsEligibleForPreSelection(connectorsListForSelection)
-          const sortedConnectors = sortConnectorsByLastConnectedAtTsDescOrder(connectors)
+          setConnectorsEligibleForPreSelection(filteredConnectorsListForSelection)
+          const sortedConnectors = sortConnectorsByLastConnectedAtTsDescOrder(filteredConnectors)
           const selectedConnector =
             sortedConnectors.find(
               (item: ConnectorResponse) =>

@@ -443,7 +443,7 @@ export const getRepoNameForDefaultBranchFetch = (
 }
 
 const GIT_PROVIDER_BASE_URL = new Map<ConnectorInfoDTO['type'], string>([
-  [Connectors.GITHUB, 'https://github.com'],
-  [Connectors.GITLAB, 'https://gitlab.com'],
-  [Connectors.BITBUCKET, 'https://bitbucket.org']
+  [Connectors.GITHUB, 'github.com'],
+  [Connectors.GITLAB, 'gitlab.com'],
+  [Connectors.BITBUCKET, 'bitbucket.org']
 ])
