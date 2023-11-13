@@ -40,18 +40,6 @@ export default function SEISideNav(): React.ReactElement {
     permissions: [PermissionIdentifier.VIEW_SEI_CONFIGURATIONSETTINGS]
   })
 
-  const [canViewCollections] = usePermission({
-    resourceScope: {
-      accountIdentifier: accountId,
-      projectIdentifier,
-      orgIdentifier
-    },
-    resource: {
-      resourceType: ResourceType.SEI_COLLECTIONS
-    },
-    permissions: [PermissionIdentifier.VIEW_SEI_COLLECTIONS]
-  })
-
   const projectTabContent = useMemo(
     () => (
       <>
@@ -81,18 +69,14 @@ export default function SEISideNav(): React.ReactElement {
               defaultExpanded={false}
             >
               <Layout.Vertical spacing="small">
-                {hasAccountAccess && (
-                  <SidebarLink
-                    label={getString('sei.projectSettings.integrationMapping')}
-                    to={routes.toSEIIntegrationMapping({ accountId, projectIdentifier, orgIdentifier })}
-                  />
-                )}
-                {canViewCollections && (
-                  <SidebarLink
-                    label={getString('common.purpose.sei.collections')}
-                    to={routes.toSEICollection({ accountId, projectIdentifier, orgIdentifier })}
-                  />
-                )}
+                <SidebarLink
+                  label={getString('sei.projectSettings.integrationMapping')}
+                  to={routes.toSEIIntegrationMapping({ accountId, projectIdentifier, orgIdentifier })}
+                />
+                <SidebarLink
+                  label={getString('common.purpose.sei.collections')}
+                  to={routes.toSEICollection({ accountId, projectIdentifier, orgIdentifier })}
+                />
                 <SidebarLink
                   to={routes.toAccessControl({ accountId, projectIdentifier, orgIdentifier, module: 'sei' })}
                   label={getString('accessControl')}
@@ -103,18 +87,7 @@ export default function SEISideNav(): React.ReactElement {
         )}
       </>
     ),
-    [
-      accountId,
-      canViewCollections,
-      getString,
-      hasAccountAccess,
-      history,
-      orgIdentifier,
-      params,
-      projectIdentifier,
-      selectedProject,
-      updateAppStore
-    ]
+    [accountId, getString, history, orgIdentifier, params, projectIdentifier, selectedProject, updateAppStore]
   )
 
   const accountTabContent = useMemo(

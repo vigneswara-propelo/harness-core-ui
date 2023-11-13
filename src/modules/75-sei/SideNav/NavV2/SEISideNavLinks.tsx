@@ -40,18 +40,6 @@ const SEISideNavLinks = (mode: NAV_MODE): React.ReactElement => {
     permissions: [PermissionIdentifier.VIEW_SEI_CONFIGURATIONSETTINGS]
   })
 
-  const [canViewCollections] = usePermission({
-    resourceScope: {
-      accountIdentifier,
-      projectIdentifier,
-      orgIdentifier
-    },
-    resource: {
-      resourceType: ResourceType.SEI_COLLECTIONS
-    },
-    permissions: [PermissionIdentifier.VIEW_SEI_COLLECTIONS]
-  })
-
   const projectLevelRedirectionProps = getProjectLevelRedirectionProps(history, accountId, getString, hasAccountAccess)
   const accountLevelRedirectionProps = getAccountLevelRedirectionProps(history, accountId, getString)
 
@@ -64,24 +52,16 @@ const SEISideNavLinks = (mode: NAV_MODE): React.ReactElement => {
             to={routes.toSEIInsights({ accountId, projectIdentifier, orgIdentifier, module })}
             icon="graph-increase"
           />
-          {hasAccountAccess ? (
-            <SideNav.Link
-              label={getString('sei.projectSettings.integrationMapping')}
-              to={routes.toSEIIntegrationMapping({ accountId, projectIdentifier, orgIdentifier, module })}
-              icon="ccm-cloud-integration-settings"
-            />
-          ) : (
-            <></>
-          )}
-          {canViewCollections ? (
-            <SideNav.Link
-              label={getString('common.purpose.sei.collections')}
-              to={routes.toSEICollection({ accountId, projectIdentifier, orgIdentifier, module })}
-              icon="cascading"
-            />
-          ) : (
-            <></>
-          )}
+          <SideNav.Link
+            label={getString('sei.projectSettings.integrationMapping')}
+            to={routes.toSEIIntegrationMapping({ accountId, projectIdentifier, orgIdentifier, module })}
+            icon="ccm-cloud-integration-settings"
+          />
+          <SideNav.Link
+            label={getString('common.purpose.sei.collections')}
+            to={routes.toSEICollection({ accountId, projectIdentifier, orgIdentifier, module })}
+            icon="cascading"
+          />
         </SideNav.Scope>
         {hasAccountAccess ? (
           <>
