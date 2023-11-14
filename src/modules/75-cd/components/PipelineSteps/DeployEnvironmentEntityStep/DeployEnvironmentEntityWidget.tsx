@@ -350,6 +350,7 @@ export default function DeployEnvironmentEntityWidget({
               handleEnvironmentGroupToggle={handleEnvironmentGroupToggle}
               radioValue={radioValue}
               handleFilterRadio={handleFilterRadio}
+              environmentsTypeRef={environmentsTypeRef}
             />
           )
         }}

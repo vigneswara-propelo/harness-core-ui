@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { BaseSyntheticEvent, useCallback, useMemo, useRef, useState } from 'react'
+import React, { BaseSyntheticEvent, MutableRefObject, useCallback, useMemo, useState } from 'react'
 import { get, isEmpty } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { RadioGroup } from '@blueprintjs/core'
@@ -60,6 +60,7 @@ export interface BaseDeployEnvironmentEntityStepProps extends Required<DeployEnv
   handleEnvironmentGroupToggle(event: BaseSyntheticEvent): void
   radioValue: string
   handleFilterRadio(selectedRadioValue: InlineEntityFiltersRadioType): void
+  environmentsTypeRef?: MutableRefObject<MultiTypeInputType | null>
 }
 
 export default function BaseDeployEnvironmentEntityStep({
@@ -74,12 +75,11 @@ export default function BaseDeployEnvironmentEntityStep({
   handleMultiEnvironmentToggle,
   handleEnvironmentGroupToggle,
   radioValue,
-  handleFilterRadio
+  handleFilterRadio,
+  environmentsTypeRef
 }: BaseDeployEnvironmentEntityStepProps): JSX.Element {
   const { getString } = useStrings()
   const { values, setFieldValue } = useFormikContext<DeployEnvironmentEntityFormState>()
-
-  const environmentsTypeRef = useRef<MultiTypeInputType | null>(null)
 
   const {
     state: {
