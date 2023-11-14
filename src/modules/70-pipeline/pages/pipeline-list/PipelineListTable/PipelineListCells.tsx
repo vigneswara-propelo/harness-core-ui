@@ -93,7 +93,7 @@ export const PipelineNameCell: CellType = ({ row }) => {
     <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'start' }}>
       <div data-testid={data.identifier}>
         <Layout.Horizontal spacing="xsmall" flex={{ alignItems: 'center' }} margin={{ bottom: 'small' }}>
-          <Link to={routes.toPipelineStudio(getRouteProps(pathParams, data))}>
+          <Link to={routes.toPipelineStudio(getRouteProps(pathParams, data))} onClick={e => e.stopPropagation()}>
             <Text
               font={{ variation: FontVariation.LEAD }}
               color={Color.PRIMARY_7}
