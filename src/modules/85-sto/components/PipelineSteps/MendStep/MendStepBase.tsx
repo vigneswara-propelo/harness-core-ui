@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Formik, FormikForm } from '@harness/uicore'
+import { Formik, FormikForm, MultiTypeInputType } from '@harness/uicore'
 import { Divider } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
@@ -209,7 +209,8 @@ export const MendStepBase = (
                     selectItems:
                       formik.values.spec.mode === 'orchestration' ? orchestrationLookupTypes : extractionLookupTypes,
                     hide: formik.values.spec.mode === 'ingestion',
-                    tooltipId: tooltipIds.toolProductLookupType
+                    tooltipId: tooltipIds.toolProductLookupType,
+                    multiTypeInputProps: { allowableTypes: [MultiTypeInputType.FIXED] }
                   },
                   'spec.tool.product_token': {
                     label: 'sto.stepField.tool.productToken',

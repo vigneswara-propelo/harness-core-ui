@@ -106,7 +106,7 @@ describe('Mend Step', () => {
             ssl: RUNTIME_INPUT_VALUE
           },
           tool: {
-            product_lookup_type: RUNTIME_INPUT_VALUE,
+            product_lookup_type: 'appendToProductByToken',
             product_token: RUNTIME_INPUT_VALUE
           },
           mode: 'orchestration',

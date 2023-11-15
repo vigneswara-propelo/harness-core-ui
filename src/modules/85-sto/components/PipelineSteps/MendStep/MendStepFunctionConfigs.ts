@@ -21,7 +21,7 @@ import {
 import type { Field, InputSetViewValidateFieldsConfig } from '../types'
 import type { MendStepData } from './MendStep'
 
-const toolFieldsTransformConfig = (data: MendStepData) => {
+const toolFieldsTransformConfig = (data: MendStepData): Field[] => {
   if (data.spec.mode === 'ingestion') return []
 
   // orchestration
@@ -40,8 +40,19 @@ const toolFieldsTransformConfig = (data: MendStepData) => {
     }
   ]
 
-  // extraction || orchestration
-  // if (data.spec.mode === 'extraction') {
+  if (data.spec.tool?.product_lookup_type === 'appendToProductByName') {
+    config.push({
+      name: 'spec.tool.product_name',
+      type: TransformValuesTypes.Text
+    })
+  }
+  if (data.spec.tool?.product_lookup_type === 'appendToProductByToken') {
+    config.push({
+      name: 'spec.tool.product_token',
+      type: TransformValuesTypes.Text
+    })
+  }
+
   config.push(
     {
       name: 'spec.tool.include',
@@ -50,17 +61,8 @@ const toolFieldsTransformConfig = (data: MendStepData) => {
     {
       name: 'spec.tool.exclude',
       type: TransformValuesTypes.Text
-    },
-    {
-      name: 'spec.tool.product_token',
-      type: TransformValuesTypes.Text
-    },
-    {
-      name: 'spec.tool.product_name',
-      type: TransformValuesTypes.Text
     }
   )
-  // }
 
   return config
 }
