@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Text, Icon, Layout, Button, ButtonVariation, Container, ButtonSize, Card, PageSpinner } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { noop } from 'lodash-es'
@@ -67,7 +67,7 @@ export const CreditCardOnboarding = (props: CreditCardOnboardingProps): React.Re
                   variation={ButtonVariation.PRIMARY}
                 />
               )}
-              <Icon name="harness" size={100} className={css.cardIcon} />
+              <Icon name="harness-grey" size={100} className={css.cardIcon} />
             </Layout.Horizontal>
           </Card>
           <Card
@@ -93,7 +93,7 @@ export const CreditCardOnboarding = (props: CreditCardOnboardingProps): React.Re
                   variation={ButtonVariation.PRIMARY}
                 />
               )}
-              <Icon name="docker-step" size={100} className={css.cardIcon} />
+              <Icon name="docker-grey" size={100} className={css.cardIcon} />
             </Layout.Horizontal>
           </Card>
         </Layout.Horizontal>
@@ -113,6 +113,7 @@ export const LocalInfraOnboarding = (props: LocalInfraOnboardingProps): React.Re
   const [verifyButtonClicked, setVerifyButtonClicked] = useState<boolean>(false)
   const [isLocalInfraVerified, setIsLocalInfraVerified] = useState<boolean>(false)
   const [isTestInfraDisabled, setIsTestInfraDisabled] = useState<boolean>(false)
+  const [commandSnippet, setCommandSnippet] = useState<string>('')
 
   const { data: infraSnippet, loading } = useDockerRunnerCommand({
     queryParams: {
@@ -121,6 +122,10 @@ export const LocalInfraOnboarding = (props: LocalInfraOnboardingProps): React.Re
       arch: 'amd64'
     }
   })
+
+  useEffect(() => {
+    infraSnippet && setCommandSnippet(infraSnippet)
+  }, [infraSnippet])
 
   return loading ? (
     <PageSpinner />
@@ -141,7 +146,7 @@ export const LocalInfraOnboarding = (props: LocalInfraOnboardingProps): React.Re
                 <Text>{getString('ci.getStartedWithCI.installHarnessOnLocal')}</Text>
               </Layout.Horizontal>
               <Layout.Vertical padding={{ bottom: 'medium', left: 'medium' }}>
-                <CommandBlock ignoreWhiteSpaces={false} commandSnippet={infraSnippet || ''} allowCopy={true} />
+                <CommandBlock ignoreWhiteSpaces={false} commandSnippet={commandSnippet} allowCopy={true} />
               </Layout.Vertical>
             </Layout.Vertical>
           </Layout.Horizontal>
