@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import cx from 'classnames'
 import {
   Text,
@@ -25,6 +25,7 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { TemplateStudioPathProps } from '@modules/10-common/interfaces/RouteInterfaces'
 import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import { getCIShellOptions, Shell } from '@ci/utils/CIShellOptionsUtils'
@@ -84,6 +85,8 @@ export const RunStepBase = (
 
   const pathnameParams = useLocation()?.pathname?.split('/') || []
   const isTemplateStudio = pathnameParams.includes(PathnameParams.TEMPLATE_STUDIO)
+  const { templateType } = useParams<TemplateStudioPathProps>()
+  const allowEmptyConnectorImage = isTemplateStudio && (templateType === 'Step' || templateType === 'StepGroup')
 
   return (
     <Formik
@@ -118,7 +121,7 @@ export const RunStepBase = (
           errors,
           validate(
             valuesToValidate,
-            getEditViewValidateFieldsConfig(buildInfrastructureType, isTemplateStudio),
+            getEditViewValidateFieldsConfig(buildInfrastructureType, allowEmptyConnectorImage),
             {
               initialValues,
               steps: currentStage?.stage?.spec?.execution?.steps || {},
@@ -159,7 +162,7 @@ export const RunStepBase = (
               CIBuildInfrastructureType.VM,
               CIBuildInfrastructureType.Cloud,
               CIBuildInfrastructureType.Docker
-            ].includes(buildInfrastructureType) && !isTemplateStudio ? (
+            ].includes(buildInfrastructureType) && !allowEmptyConnectorImage ? (
               <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
@@ -250,7 +253,7 @@ export const RunStepBase = (
                       CIBuildInfrastructureType.VM,
                       CIBuildInfrastructureType.Cloud,
                       CIBuildInfrastructureType.Docker
-                    ].includes(buildInfrastructureType) || isTemplateStudio ? (
+                    ].includes(buildInfrastructureType) || allowEmptyConnectorImage ? (
                       <ConnectorRefWithImage
                         showOptionalSublabel={true}
                         readonly={readonly}

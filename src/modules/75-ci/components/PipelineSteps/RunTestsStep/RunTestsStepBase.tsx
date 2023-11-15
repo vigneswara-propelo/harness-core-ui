@@ -6,7 +6,7 @@
  */
 
 import React, { FormEvent, useCallback } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import {
   Text,
   Formik,
@@ -39,6 +39,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { TemplateStudioPathProps } from '@modules/10-common/interfaces/RouteInterfaces'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import StepCommonFields from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
@@ -290,6 +291,8 @@ export const RunTestsStepBase = (
 
   const pathnameParams = useLocation()?.pathname?.split('/') || []
   const isTemplateStudio = pathnameParams.includes(PathnameParams.TEMPLATE_STUDIO)
+  const { templateType } = useParams<TemplateStudioPathProps>()
+  const allowEmptyConnectorImage = isTemplateStudio && (templateType === 'Step' || templateType === 'StepGroup')
 
   const renderMultiTypeTextField = React.useCallback(
     ({
@@ -530,7 +533,7 @@ export const RunTestsStepBase = (
             getEditViewValidateFieldsConfig(
               buildInfrastructureType,
               (valuesToValidate?.spec?.language as any)?.value as Language,
-              isTemplateStudio
+              allowEmptyConnectorImage
             ),
             {
               initialValues,
@@ -578,7 +581,7 @@ export const RunTestsStepBase = (
               CIBuildInfrastructureType.VM,
               CIBuildInfrastructureType.Cloud,
               CIBuildInfrastructureType.Docker
-            ].includes(buildInfrastructureType) && !isTemplateStudio ? (
+            ].includes(buildInfrastructureType) && !allowEmptyConnectorImage ? (
               <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
@@ -853,7 +856,7 @@ gradle.projectsEvaluated {
                       CIBuildInfrastructureType.VM,
                       CIBuildInfrastructureType.Cloud,
                       CIBuildInfrastructureType.Docker
-                    ].includes(buildInfrastructureType) || isTemplateStudio ? (
+                    ].includes(buildInfrastructureType) || allowEmptyConnectorImage ? (
                       <ConnectorRefWithImage
                         showOptionalSublabel={true}
                         readonly={readonly}

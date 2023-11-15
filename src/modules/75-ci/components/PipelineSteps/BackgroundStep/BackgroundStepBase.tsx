@@ -20,7 +20,7 @@ import {
 import { isEmpty, get } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import { getCIShellOptions } from '@ci/utils/CIShellOptionsUtils'
 import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
@@ -33,6 +33,7 @@ import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
 import StepCommonFields from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
+import { TemplateStudioPathProps } from '@modules/10-common/interfaces/RouteInterfaces'
 import {
   getInitialValuesInCorrectFormat,
   getFormValuesInCorrectFormat
@@ -78,6 +79,8 @@ export const BackgroundStepBase = (
   const pathnameParams = useLocation()?.pathname?.split('/') || []
 
   const isTemplateStudio = pathnameParams.includes(PathnameParams.TEMPLATE_STUDIO)
+  const { templateType } = useParams<TemplateStudioPathProps>()
+  const allowEmptyConnectorImage = isTemplateStudio && (templateType === 'Step' || templateType === 'StepGroup')
 
   const EntryPointElement = (): JSX.Element => (
     <div className={cx(css.fieldsGroup, css.withoutSpacing, css.topPadding3, css.bottomPadding3)}>
@@ -136,7 +139,7 @@ export const BackgroundStepBase = (
         onChange?.(schemaValues)
         return validate(
           valuesToValidate,
-          getEditViewValidateFieldsConfig(isBuildInfrastructureTypeVM, isTemplateStudio),
+          getEditViewValidateFieldsConfig(isBuildInfrastructureTypeVM, allowEmptyConnectorImage),
           {
             initialValues,
             steps: currentStage?.stage?.spec?.execution?.steps || {},
@@ -170,7 +173,7 @@ export const BackgroundStepBase = (
                 description: {}
               }}
             />
-            {!isBuildInfrastructureTypeVM && !isTemplateStudio ? (
+            {!isBuildInfrastructureTypeVM && !allowEmptyConnectorImage ? (
               <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
@@ -201,7 +204,7 @@ export const BackgroundStepBase = (
               />
             </Container>
 
-            {!isBuildInfrastructureTypeVM && !isTemplateStudio ? <EntryPointElement /> : null}
+            {!isBuildInfrastructureTypeVM ? <EntryPointElement /> : null}
             <div className={cx(css.fieldsGroup, css.withoutSpacing, css.topPadding3, css.bottomPadding3)}>
               <MultiTypeFieldSelector
                 name="spec.command"
@@ -264,7 +267,7 @@ export const BackgroundStepBase = (
                 summary={getString('pipeline.additionalConfiguration')}
                 details={
                   <Container margin={{ top: 'medium' }}>
-                    {isBuildInfrastructureTypeVM || isTemplateStudio ? (
+                    {isBuildInfrastructureTypeVM || allowEmptyConnectorImage ? (
                       <>
                         <ConnectorRefWithImage
                           showOptionalSublabel={true}

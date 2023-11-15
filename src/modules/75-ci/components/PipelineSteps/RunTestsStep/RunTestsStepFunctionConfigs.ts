@@ -131,7 +131,7 @@ export const transformValuesFieldsConfig = [
 export const getEditViewValidateFieldsConfig = (
   buildInfrastructureType: CIBuildInfrastructureType,
   language: Language,
-  isTemplateView: boolean
+  allowEmptyConnectorImage: boolean
 ): { name: string; type: ValidationFieldTypes; label?: string; isRequired?: boolean }[] => [
   {
     name: 'identifier',
@@ -152,7 +152,7 @@ export const getEditViewValidateFieldsConfig = (
     isRequired:
       ![CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Docker].includes(
         buildInfrastructureType
-      ) && !isTemplateView
+      ) && !allowEmptyConnectorImage
   },
   {
     name: 'spec.image',
@@ -161,7 +161,7 @@ export const getEditViewValidateFieldsConfig = (
     isRequired:
       ![CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Docker].includes(
         buildInfrastructureType
-      ) && !isTemplateView
+      ) && !allowEmptyConnectorImage
   },
   {
     name: 'spec.language',

@@ -79,7 +79,10 @@ export const transformValuesFieldsConfig = [
   }
 ]
 
-export const getEditViewValidateFieldsConfig = (isBuildInfrastructureTypeVM: boolean, isTemplateView: boolean) => [
+export const getEditViewValidateFieldsConfig = (
+  isBuildInfrastructureTypeVM: boolean,
+  allowEmptyConnectorImage: boolean
+) => [
   {
     name: 'identifier',
     type: ValidationFieldTypes.Identifier,
@@ -96,13 +99,13 @@ export const getEditViewValidateFieldsConfig = (isBuildInfrastructureTypeVM: boo
     name: 'spec.connectorRef',
     type: ValidationFieldTypes.Text,
     label: 'pipelineSteps.connectorLabel',
-    isRequired: !isBuildInfrastructureTypeVM && !isTemplateView
+    isRequired: !isBuildInfrastructureTypeVM && !allowEmptyConnectorImage
   },
   {
     name: 'spec.image',
     type: ValidationFieldTypes.Text,
     label: 'imageLabel',
-    isRequired: !isBuildInfrastructureTypeVM && !isTemplateView
+    isRequired: !isBuildInfrastructureTypeVM && !allowEmptyConnectorImage
   },
   {
     name: 'spec.shell',
