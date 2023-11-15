@@ -208,7 +208,7 @@ describe('Jira Create process form data tests', () => {
     expect(returned).toStrictEqual(1)
     savedFields[1].value = 'P1'
     returned = getInitialValueForSelectedField(savedFields, selectOptionfield)
-    expect(returned).toStrictEqual({ label: 'P1', value: 'P1' })
+    expect(returned).toStrictEqual('P1')
 
     //Check SINGLE SELECT field values as expression
     savedFields[1].value = '<+pipeline.priority>'

@@ -86,21 +86,6 @@ export const getInitialValueForSelectedField = (
   if (typeof savedValue === 'number') {
     return savedValue as number
   } else if (typeof savedValue === 'string') {
-    if (
-      getMultiTypeFromValue(savedValue) === MultiTypeInputType.FIXED &&
-      field.allowedValues &&
-      field.schema.type === 'option'
-    ) {
-      if (field.schema.array) {
-        // multiselect
-        // return multiselectoption[]
-        return savedValue
-      } else {
-        // singleselect
-        // return selectoption
-        return { label: savedValue, value: savedValue } as SelectOption
-      }
-    }
     return savedValue as string
   }
   return ''
@@ -268,8 +253,8 @@ export const addSelectedOptionalFields = (
 
 export const getProcessedValueForNonKVField = (field: JiraFieldNGWithValue) => {
   return field?.schema?.type === 'option' && isFieldFixed(field.value as string)
-    ? field?.schema?.array
-      ? (field.value as MultiSelectOption[])?.map(i => i?.value)?.toString()
+    ? typeof field.value === 'string'
+      ? field?.value?.toString()
       : (field.value as SelectOption)?.value?.toString()
     : field?.value?.toString()
 }

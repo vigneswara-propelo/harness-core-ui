@@ -12,7 +12,6 @@ import {
   AllowedTypes,
   Button,
   FormError,
-  FormInput,
   Label,
   Layout,
   MultiSelectTypeInput,
@@ -116,7 +115,7 @@ function GetMappedFieldComponent({
 
   const formValue = get(props.formik?.values, formikFieldPath, '')
   const [multiType, setMultiType] = React.useState<MultiTypeInputType>(getMultiTypeFromValue(formValue))
-  const multiSelectTypeInputValue = isMultiTypeFixed(multiType)
+  const selectTypeInputValue = isMultiTypeFixed(multiType)
     ? processMultiSelectTypeInputRuntimeValues(formValue)
     : formValue
 
@@ -137,63 +136,49 @@ function GetMappedFieldComponent({
       />
     )
   } else if (shouldShowMultiSelectField(selectedField)) {
-    {
-      return props.deploymentMode ? (
-        <div className={css.btnPosition}>
-          <Label style={{ color: Color.GREY_900 }}>{selectedField?.name}</Label>
-          <MultiSelectTypeInput
-            width={400}
-            disabled={isApprovalStepFieldDisabled(props.readonly)}
-            name={formikFieldPath}
-            placeholder={selectedField.name}
-            className={cx(css.multiSelect, stepCss.md, {
-              [css.formError]: !isNil(get(props.formik?.errors, formikFieldPath))
-            })}
-            multiSelectProps={{
-              items: setAllowedValuesOptions(selectedField?.allowedValues)
-            }}
-            expressions={expressions}
-            allowableTypes={allowableTypes}
-            onTypeChange={setMultiType}
-            onChange={items => {
-              const valueArr = [] as string[]
-              if (Array.isArray(items)) {
-                items.forEach((opt: any) => {
-                  if (opt?.value) valueArr.push(opt?.value)
-                })
-              }
-
-              if (typeof items === 'string') {
-                valueArr.push(items)
-              }
-
-              props.formik.setFieldValue(formikFieldPath, valueArr.toString())
-            }}
-            value={multiSelectTypeInputValue}
-            resetExpressionOnFixedTypeChange
-          />
-          {!isNil(get(props.formik?.errors, formikFieldPath)) ? (
-            <FormError
-              className={css.marginTop}
-              name={formikFieldPath}
-              errorMessage={getString?.('pipeline.jiraApprovalStep.validations.requiredField')}
-            />
-          ) : null}
-        </div>
-      ) : (
-        <FormInput.MultiSelectTypeInput
-          selectItems={setAllowedValuesOptions(selectedField.allowedValues)}
-          label={selectedField.name}
+    return (
+      <div className={css.btnPosition}>
+        <Label style={{ color: Color.GREY_900 }}>{selectedField?.name}</Label>
+        <MultiSelectTypeInput
+          width={400}
           disabled={isApprovalStepFieldDisabled(props.readonly)}
           name={formikFieldPath}
           placeholder={selectedField.name}
-          className={cx(css.multiSelect, css.md)}
-          multiSelectTypeInputProps={{
-            expressions
+          className={cx(css.multiSelect, stepCss.md, {
+            [css.formError]: !isNil(get(props.formik?.errors, formikFieldPath))
+          })}
+          multiSelectProps={{
+            items: setAllowedValuesOptions(selectedField?.allowedValues)
           }}
+          expressions={expressions}
+          allowableTypes={allowableTypes}
+          onTypeChange={setMultiType}
+          onChange={items => {
+            const valueArr = [] as string[]
+            if (Array.isArray(items)) {
+              items.forEach((opt: any) => {
+                if (opt?.value) valueArr.push(opt?.value)
+              })
+            }
+
+            if (typeof items === 'string') {
+              valueArr.push(items)
+            }
+
+            props.formik.setFieldValue(formikFieldPath, valueArr.toString())
+          }}
+          value={selectTypeInputValue}
+          resetExpressionOnFixedTypeChange
         />
-      )
-    }
+        {!isNil(get(props.formik?.errors, formikFieldPath)) ? (
+          <FormError
+            className={css.marginTop}
+            name={formikFieldPath}
+            errorMessage={getString?.('pipeline.jiraApprovalStep.validations.requiredField')}
+          />
+        ) : null}
+      </div>
+    )
   } else if (shouldShowMultiTypeField(selectedField)) {
     return (
       <SelectInputSetView
@@ -207,9 +192,10 @@ function GetMappedFieldComponent({
         className={className}
         multiTypeInputProps={{
           expressions,
+          value: selectTypeInputValue,
           allowableTypes: allowableTypes
         }}
-        useValue={!!props.deploymentMode}
+        useValue
       />
     )
   } else if (ALLOW_USER_TYPE_FIELDS_JIRA && shouldShowJiraUserField(selectedField)) {
