@@ -28,7 +28,7 @@ import { isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { ChildPipelineMetadataType } from '@pipeline/components/PipelineInputSetForm/ChainedPipelineInputSetUtils'
 import { useGetChildPipelineMetadata } from '@pipeline/hooks/useGetChildPipelineMetadata'
-import { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import { ExecutionPathProps, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { usePipelineContext } from '@modules/70-pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { StoreMetadata } from '@modules/10-common/constants/GitSyncTypes'
 import ExperimentalInput from '../K8sServiceSpecForms/ExperimentalInput'
@@ -65,7 +65,7 @@ function PrimaryArtifactRef({
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { accountId, orgIdentifier, projectIdentifier } = useGetChildPipelineMetadata(childPipelineMetadata)
-  const { executionIdentifier } = useParams<PipelineType<ExecutionPathProps>>()
+  const { executionIdentifier, inputSetIdentifier } = useParams<PipelineType<ExecutionPathProps & InputSetPathProps>>()
   const { getStageFormTemplate, updateStageFormTemplate, pipelineGitMetaData } = useStageFormContext()
   const primaryRefFormikValue = get(formik?.values, `${path}.artifacts.primary.primaryArtifactRef`)
   const isExecutionView = !!executionIdentifier
@@ -120,7 +120,12 @@ function PrimaryArtifactRef({
       //Autoselect primary artifact if there is only 1 artifact source
       (!isEmpty(serviceInputsFormikValue) || isSingleArtifactSource)
     ) {
-      const shouldSetDefaultArtifactSource = isSingleArtifactSource && stepViewType !== StepViewType.TemplateUsage
+      const isTemplateUsageOrInputSetView = [StepViewType.TemplateUsage, StepViewType.InputSet].includes(
+        stepViewType as StepViewType
+      )
+      const isNewInputSet = inputSetIdentifier === '-1' && stepViewType === StepViewType.InputSet
+
+      const shouldSetDefaultArtifactSource = isSingleArtifactSource && (!isTemplateUsageOrInputSetView || isNewInputSet)
 
       const sourceIdentifierToSourceInputMap = get(
         artifactSourceResponse?.data?.sourceIdentifierToSourceInputMap,
