@@ -35,7 +35,7 @@ export class CiSscaOrchestrationStep extends PipelineStep<SscaCiOrchestrationSte
   }
 
   protected type = StepType.SscaOrchestration
-  protected stepName = 'SSCA Orchestration'
+  protected stepName = 'SBOM Orchestration'
   protected stepIcon: IconName = 'ssca-orchestrate'
   protected stepIconColor = Color.GREY_600
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.SscaOrchestration'

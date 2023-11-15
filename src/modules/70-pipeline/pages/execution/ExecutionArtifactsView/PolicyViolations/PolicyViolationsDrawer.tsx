@@ -101,7 +101,7 @@ export function PolicyViolationsDrawer({
       />
 
       <Heading level={2} color={Color.GREY_800} font={{ weight: 'bold' }} padding="large">
-        {getString('pipeline.policyViolationDetails')}
+        {getString('pipeline.sbomPolicyViolations')}
       </Heading>
 
       <Page.Body

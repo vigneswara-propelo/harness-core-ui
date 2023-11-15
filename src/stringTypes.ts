@@ -5163,7 +5163,6 @@ export interface StringsMap {
   'pipeline.policyEvaluations.warningHeadingEvaluationDetail': string
   'pipeline.policyNotConfigured': string
   'pipeline.policyStatus': string
-  'pipeline.policyViolationDetails': string
   'pipeline.poweredByHarness': string
   'pipeline.prTitle': string
   'pipeline.previewTemplateLabel': string
@@ -5235,6 +5234,7 @@ export interface StringsMap {
   'pipeline.runtimeInputsSubmittedMsg': string
   'pipeline.sameNodeExistsAtDropLocation': string
   'pipeline.savingInProgress': string
+  'pipeline.sbomPolicyViolations': string
   'pipeline.scriptInputVariables': string
   'pipeline.scriptOutputVariables': string
   'pipeline.selectApplications': string

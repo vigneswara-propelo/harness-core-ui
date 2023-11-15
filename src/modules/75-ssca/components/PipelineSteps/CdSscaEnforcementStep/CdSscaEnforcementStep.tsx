@@ -35,7 +35,7 @@ export class CdSscaEnforcementStep extends PipelineStep<SscaCdEnforcementStepDat
   }
 
   protected type = StepType.CdSscaEnforcement
-  protected stepName = 'SSCA Enforcement'
+  protected stepName = 'SBOM Policy Enforcement'
   protected stepIcon: IconName = 'ssca-enforce'
   protected stepIconColor = Color.GREY_600
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.SscaEnforcement'

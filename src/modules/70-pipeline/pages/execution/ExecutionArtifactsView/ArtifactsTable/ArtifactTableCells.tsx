@@ -17,6 +17,8 @@ import { useStrings } from 'framework/strings'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { EvaluationStatus } from '@pipeline/components/execution/StepDetails/common/ExecutionContent/PolicyEvaluationContent/EvaluationStatusLabel/EvaluationStatusLabel'
+import ExecutionStatusLabel from '@modules/70-pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
+import { ExecutionStatus } from '@modules/70-pipeline/utils/statusHelpers'
 import type { Artifact, ArtifactsColumnActions } from './ArtifactsTable'
 import css from './ArtifactsTable.module.scss'
 
@@ -186,24 +188,41 @@ export const SLSAVerificationCell: CellType = ({ row }) => {
     switch (status) {
       case EvaluationStatus.ERROR:
         return getString('failed')
-      case EvaluationStatus.PASS:
-        return getString('passed')
       case EvaluationStatus.WARNING:
         return getString('common.warning')
+      case EvaluationStatus.PASS:
+        return getString('passed')
 
       default:
         return getString('pipeline.policyNotConfigured')
     }
   }
 
+  const getPolicyEvaluationStatusLabel = (): ExecutionStatus => {
+    const status: EvaluationStatus | undefined = get(data.node, `outcomes.policyOutput.status`, undefined)
+    switch (status) {
+      case EvaluationStatus.ERROR:
+        return 'Errored'
+      case EvaluationStatus.WARNING:
+        return 'Errored'
+      case EvaluationStatus.PASS:
+        return 'Success'
+
+      default:
+        return 'Errored'
+    }
+  }
+
   return data.node?.stepType === StepType.SlsaVerification ? (
-    <Layout.Vertical spacing="small">
-      <Text font={{ variation: FontVariation.SMALL_SEMI }}> {getPolicyEvaluationStatus()}</Text>
+    <Layout.Vertical spacing="small" flex={{ alignItems: 'flex-start' }}>
+      <ExecutionStatusLabel label={getPolicyEvaluationStatus()} status={getPolicyEvaluationStatusLabel()} />
       <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600} lineClamp={1}>
         {verifyAttestationStatus()}
       </Text>
     </Layout.Vertical>
   ) : (
-    getString('na')
+    <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
+      {getString('na')}
+    </Text>
   )
 }

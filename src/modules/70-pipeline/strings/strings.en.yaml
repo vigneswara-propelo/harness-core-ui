@@ -1978,7 +1978,6 @@ requiredFieldDuringRuntime: This is a required field during runtime
 setVariableRequiredDuringRuntime: Set variable as required during runtime
 stageExecutedBefore: This stage has been re-executed.
 enableContainerBasedExecution: Enable container based execution
-policyViolationDetails: Policy Violation Details
 violationDetails: Violation details
 supplier: Supplier
 copilot:
@@ -2030,6 +2029,7 @@ chooseYamlSyntax: Choose a YAML Syntax
 includeInfrastructureSelectors: Include Infrastructure Selectors
 slsaVerification: SLSA Verification
 slsaProvenance: SLSA Provenance
+sbomPolicyViolations: SBOM Policy Violations
 policyStatus: Policy status
 attestationVerification: Attestation signature verification
 policyNotConfigured: Policy not configured

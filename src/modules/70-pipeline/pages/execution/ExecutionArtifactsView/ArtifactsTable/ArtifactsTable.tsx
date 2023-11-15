@@ -61,7 +61,7 @@ export function ArtifactsTable({ artifacts, showEnforcementViolations }: Artifac
         Cell: TypeCell
       },
       {
-        Header: getString('common.violations'),
+        Header: getString('pipeline.sbomPolicyViolations'),
         accessor: 'allowListViolationCount',
         Cell: ViolationsCell,
         showEnforcementViolations
