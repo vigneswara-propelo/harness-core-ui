@@ -665,7 +665,7 @@ const routes = {
   toSTOTargets: withModeModuleAndScopePrefix(() => '/targets'),
   toSTOSecurityReview: withModeModuleAndScopePrefix(() => '/security-review'),
   toSTOGettingStarted: withModeModuleAndScopePrefix(() => '/getting-started'),
-  toSTOTicketSummary: withModeModuleAndScopePrefix<{ issueId: string }>(() => '/issues'),
+  toSTOTicketSummary: withModeModuleAndScopePrefix<{ issueId: string }>(params => `/ticket-summary/${params?.issueId}`),
 
   // dashboards routes
   toDashboardsOverview: withModeModuleAndScopePrefix<AccountPathProps>(() => `/overview`),
