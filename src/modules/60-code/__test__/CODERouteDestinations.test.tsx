@@ -95,8 +95,12 @@ describe('CODERouteDestinations Tests', () => {
         '/account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/webhooks/:webhookId',
       toCODESearch:
         '/account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/search',
-      toCODESettings:
-        '/account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/settings'
+      toCODESettings: [
+        '/account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/settings',
+        '/account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/settings/:settingSection/:ruleId/:settingSectionMode',
+        '/account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/settings/:settingSection/:settingSectionMode',
+        '/account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/settings/:settingSection'
+      ]
     })
   })
 
@@ -136,8 +140,12 @@ describe('CODERouteDestinations Tests', () => {
         '/account/:accountId/all/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/webhooks/:webhookId',
       toCODESearch:
         '/account/:accountId/all/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/search',
-      toCODESettings:
-        '/account/:accountId/all/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/settings'
+      toCODESettings: [
+        '/account/:accountId/all/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/settings',
+        '/account/:accountId/all/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/settings/:settingSection/:ruleId/:settingSectionMode',
+        '/account/:accountId/all/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/settings/:settingSection/:settingSectionMode',
+        '/account/:accountId/all/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/settings/:settingSection'
+      ]
     })
   })
 

@@ -44,6 +44,9 @@ exports[`CODERouteDestinations Tests CODERouteDestinations should render correct
     code/Webhooks
   </div>
   /account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/settings
+  /account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/settings/:settingSection/:ruleId/:settingSectionMode
+  /account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/settings/:settingSection/:settingSectionMode
+  /account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/settings/:settingSection
   /
   <div>
     code/Settings

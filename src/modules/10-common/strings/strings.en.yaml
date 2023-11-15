@@ -354,7 +354,7 @@ purpose:
     criticalEvents: Critical Events
   code:
     name: Code
-    title: Source Code Management
+    title: Code Repository
   chaos:
     continuous: Chaos Engineering
     chaos: Chaos

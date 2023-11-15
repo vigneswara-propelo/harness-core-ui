@@ -193,7 +193,24 @@ export const buildCODERoutePaths = (mode: NAV_MODE): Record<string, string | str
       mode
     }),
     toCODESearch: routes.toCODESearch({ repoPath, mode }),
-    toCODESettings: routes.toCODESettings({ repoPath, mode })
+    toCODESettings: [
+      routes.toCODESettings({ repoPath, mode }),
+      routes.toCODESettings({
+        repoPath,
+        settingSection: codePathProps.settingSection,
+        settingSectionMode: codePathProps.settingSectionMode,
+        ruleId: codePathProps.ruleId,
+        mode
+      }),
+      routes.toCODESettings({
+        repoPath,
+        settingSection: codePathProps.settingSection,
+        settingSectionMode: codePathProps.settingSectionMode,
+        mode
+      }),
+
+      routes.toCODESettings({ repoPath, settingSection: codePathProps.settingSection, mode })
+    ]
   }
 }
 
