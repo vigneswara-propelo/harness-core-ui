@@ -6,7 +6,19 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Text, Icon, Layout, Button, ButtonVariation, Container, ButtonSize, Card, PageSpinner } from '@harness/uicore'
+import {
+  Text,
+  Icon,
+  Layout,
+  Button,
+  ButtonVariation,
+  Container,
+  ButtonSize,
+  Card,
+  PageSpinner,
+  useToaster,
+  getErrorInfoFromErrorObject
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
@@ -115,7 +127,13 @@ export const LocalInfraOnboarding = (props: LocalInfraOnboardingProps): React.Re
   const [isTestInfraDisabled, setIsTestInfraDisabled] = useState<boolean>(false)
   const [commandSnippet, setCommandSnippet] = useState<string>('')
 
-  const { data: infraSnippet, loading } = useDockerRunnerCommand({
+  const { showError } = useToaster()
+
+  const {
+    data: infraSnippet,
+    loading,
+    error
+  } = useDockerRunnerCommand({
     queryParams: {
       accountId: props.accountId,
       os: 'linux',
@@ -124,8 +142,14 @@ export const LocalInfraOnboarding = (props: LocalInfraOnboardingProps): React.Re
   })
 
   useEffect(() => {
-    infraSnippet && setCommandSnippet(infraSnippet)
+    infraSnippet?.resource && setCommandSnippet(infraSnippet?.resource)
   }, [infraSnippet])
+
+  useEffect(() => {
+    if (error) {
+      showError(getErrorInfoFromErrorObject(error))
+    }
+  }, [error])
 
   return loading ? (
     <PageSpinner />

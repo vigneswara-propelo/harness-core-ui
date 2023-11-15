@@ -107,7 +107,7 @@ export const checkRepoNameInConnectorSpec = (connector: ConnectorInfoDTO, repoNa
   const repoNameSplitBySlash = repoName.split('/')
 
   const filteredRepoName = repoNameSplitBySlash.filter((component: string) => {
-    return !connectorUrl.includes(component)
+    return !connectorUrl?.includes(component)
   })
 
   return filteredRepoName.join('/')

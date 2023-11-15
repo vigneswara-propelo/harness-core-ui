@@ -3847,6 +3847,14 @@ export interface ResponseYamlSchemaDetailsWrapper {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface RestResponseString {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: string
+  responseMessages?: ResponseMessage[]
+}
+
 export type RestoreCacheGCSStepInfo = StepSpecType & {
   archiveFormat?: 'Tar' | 'Gzip'
   baseImageConnectorRefs?: ParameterFieldListString
@@ -5274,19 +5282,8 @@ export type DockerRunnerCommandProps = Omit<
   'path'
 >
 
-/**
- * get docker-runner command
- */
-export const DockerRunnerCommand = (props: DockerRunnerCommandProps) => (
-  <Get<string, Failure | Error, DockerRunnerCommandQueryParams, void>
-    path={`/docker-runner`}
-    base={getConfig('ci')}
-    {...props}
-  />
-)
-
 export type UseDockerRunnerCommandProps = Omit<
-  UseGetProps<string, Failure | Error, DockerRunnerCommandQueryParams, void>,
+  UseGetProps<RestResponseString, Failure | Error, DockerRunnerCommandQueryParams, void>,
   'path'
 >
 
@@ -5294,7 +5291,7 @@ export type UseDockerRunnerCommandProps = Omit<
  * get docker-runner command
  */
 export const useDockerRunnerCommand = (props: UseDockerRunnerCommandProps) =>
-  useGet<string, Failure | Error, DockerRunnerCommandQueryParams, void>(`/docker-runner`, {
+  useGet<RestResponseString, Failure | Error, DockerRunnerCommandQueryParams, void>(`/docker-runner`, {
     base: getConfig('ci'),
     ...props
   })
@@ -5303,10 +5300,10 @@ export const useDockerRunnerCommand = (props: UseDockerRunnerCommandProps) =>
  * get docker-runner command
  */
 export const dockerRunnerCommandPromise = (
-  props: GetUsingFetchProps<string, Failure | Error, DockerRunnerCommandQueryParams, void>,
+  props: GetUsingFetchProps<RestResponseString, Failure | Error, DockerRunnerCommandQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<string, Failure | Error, DockerRunnerCommandQueryParams, void>(
+  getUsingFetch<RestResponseString, Failure | Error, DockerRunnerCommandQueryParams, void>(
     getConfig('ci'),
     `/docker-runner`,
     props,

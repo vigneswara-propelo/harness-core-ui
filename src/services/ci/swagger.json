@@ -1000,7 +1000,7 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/RestResponseString"
             }
           },
           "400": {
@@ -4854,6 +4854,26 @@
         },
         "empty": {
           "type": "boolean"
+        }
+      }
+    },
+    "RestResponseString": {
+      "type": "object",
+      "properties": {
+        "metaData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "resource": {
+          "type": "string"
+        },
+        "responseMessages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResponseMessage"
+          }
         }
       }
     },
