@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import {
   Button,
@@ -26,10 +26,13 @@ import { noop } from 'lodash-es'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetTasksLog, GetTasksLogQueryParams, DelegateStackDriverLog } from 'services/portal'
 import { String, useStrings } from 'framework/strings'
-import { useTrackEvent } from '@common/hooks/useTelemetry'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 import { DelegateActions } from '@common/constants/TrackingConstants'
 
 import css from './DelegateTaskLogs.module.scss'
+
+const delayWarningTimeoutSeconds = 60 * 10 // 10 minutes
+const timePaddingSeconds = 60 * 5 // 5 minutes
 
 export enum TaskContext {
   PipelineStep = 'Pipeline_Step',
@@ -65,18 +68,24 @@ export const DelegateTaskLogsModal: React.FC<DelegateTaskLogsModalProps> = ({
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [currentPageToken, setCurrentPageToken] = useState<string | undefined>('')
   const [previousPageStack, setPreviousPageStack] = useState<Array<string>>([])
-  useTrackEvent(DelegateActions.DelegateTaskLogsViewed, {
-    task_context: telemetry.taskContext,
-    has_error: telemetry.hasError
-  })
+  const { trackEvent } = useTelemetry()
+
+  useEffect(() => {
+    if (isOpen) {
+      trackEvent(DelegateActions.DelegateTaskLogsViewed, {
+        task_context: telemetry.taskContext,
+        has_error: telemetry.hasError
+      })
+    }
+  }, [isOpen])
 
   const queryParams: GetTasksLogQueryParams = {
     accountId,
     orgId: orgIdentifier,
     projectId: projectIdentifier,
     taskIds,
-    startTime,
-    endTime,
+    startTime: startTime - timePaddingSeconds,
+    endTime: endTime + timePaddingSeconds,
     pageSize: 100
   }
 
@@ -248,6 +257,9 @@ export const DelegateTaskLogsModal: React.FC<DelegateTaskLogsModalProps> = ({
         <Layout.Vertical flex={{ align: 'center-center' }} spacing="medium" margin="xlarge">
           <Icon name="delegates-icon" size={48} />
           <Text font={{ size: 'medium' }}>{getString('common.logs.noLogsText')}</Text>
+          {Date.now() / 1000 < startTime + delayWarningTimeoutSeconds ? (
+            <String stringID="common.logs.delayWarning" />
+          ) : null}
           <Button
             variation={ButtonVariation.SECONDARY}
             icon={'main-refresh'}

@@ -45,8 +45,8 @@ describe('Delegate Task Logs Modal', () => {
             hasError: false
           }}
           taskIds={['abc']}
-          startTime={-300}
-          endTime={300}
+          startTime={300}
+          endTime={600}
         />
       </TestWrapper>
     )
@@ -70,12 +70,12 @@ describe('Delegate Task Logs Modal', () => {
     expect(refetchLogs).toHaveBeenCalledWith({
       queryParams: {
         accountId: 'accountId',
-        endTime: 300,
+        startTime: 0,
+        endTime: 900,
         orgId: 'orgIdentifier',
         pageSize: 100,
         pageToken: 'testNextPage',
         projectId: 'projectIdentifier',
-        startTime: -300,
         taskIds: ['abc']
       }
     })
@@ -92,12 +92,12 @@ describe('Delegate Task Logs Modal', () => {
     expect(refetchLogs).toHaveBeenCalledWith({
       queryParams: {
         accountId: 'accountId',
-        endTime: 300,
+        startTime: 0,
+        endTime: 900,
         orgId: 'orgIdentifier',
         pageSize: 100,
         pageToken: '',
         projectId: 'projectIdentifier',
-        startTime: -300,
         taskIds: ['abc']
       }
     })

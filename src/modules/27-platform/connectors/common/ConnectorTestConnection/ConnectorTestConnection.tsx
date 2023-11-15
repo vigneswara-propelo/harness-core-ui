@@ -51,6 +51,7 @@ import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import DelegateTaskLogsButton from '@common/components/DelegateTaskLogs/DelegateTaskLogsButton'
 import { TaskContext } from '@common/components/DelegateTaskLogs/DelegateTaskLogs'
+import { DelegateActions } from '@modules/10-common/constants/TrackingConstants'
 import Suggestions from '../ErrorSuggestions/ErrorSuggestionsCe'
 import css from './ConnectorTestConnection.module.scss'
 
@@ -217,6 +218,11 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
     useEffect(() => {
       const eventName = connectorsTrackEventMap[props.type]
       eventName && trackEvent(eventName, {})
+
+      trackEvent(DelegateActions.TestConnection, {
+        connectorType: props.type,
+        executeOnDelegate: connectorInfo?.spec?.executeOnDelegate
+      })
     }, [])
 
     const { getString } = useStrings()
@@ -316,12 +322,11 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
       lazy: true
     })
 
-    const timePadding = 60 * 5 // 5 minutes
-    const testStartTimeForApi = Math.floor((testStartTime || 0) / 1000) - timePadding
-    const testEndTimeForApi = Math.floor((testEndTime || 0) / 1000) + timePadding * 2
+    const testStartTimeForApi = Math.floor((testStartTime || 0) / 1000)
+    const testEndTimeForApi = Math.floor((testEndTime || 0) / 1000)
     const metadata = (testConnectionResponse?.data as Error)?.metadata as ConnectorValidationErrorMetadataDTO
 
-    const renderError = () => {
+    const renderError = (): React.ReactElement => {
       const { responseMessages = null } = testConnectionResponse?.data as Error
       const genericHandler = (
         <Layout.Vertical>

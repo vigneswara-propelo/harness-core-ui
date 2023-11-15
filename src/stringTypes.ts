@@ -659,6 +659,7 @@ export interface StringsMap {
   'common.loadingFieldOptions': string
   'common.local': string
   'common.login': string
+  'common.logs.delayWarning': string
   'common.logs.delegateSelectionLogs': string
   'common.logs.delegateTaskLogs': string
   'common.logs.noLogsText': string

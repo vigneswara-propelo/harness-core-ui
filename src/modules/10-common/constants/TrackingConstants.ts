@@ -177,6 +177,7 @@ export enum DelegateActions {
   DelegateCommandLineCreationOpened = 'Delegate CommandLine Creation Opened',
   DelegateCommandLineCreationClosed = 'Delegate CommandLine Creation Closed',
 
+  TestConnection = 'Test Connection Started',
   DelegateTaskLogsViewed = 'Delegate Task Logs Viewed'
 }
 

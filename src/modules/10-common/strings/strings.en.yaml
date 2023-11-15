@@ -157,6 +157,7 @@ logs:
   noLogsText: 'No logs found'
   delegateSelectionLogs: Most Recent Delegate Selection Logs
   delegateTaskLogs: Delegate Tasks Logs
+  delayWarning: It can take upto 2 minutes for the logs to appear
 execute: Execute
 commentModal:
   addCommentPlaceholder: Add a comment

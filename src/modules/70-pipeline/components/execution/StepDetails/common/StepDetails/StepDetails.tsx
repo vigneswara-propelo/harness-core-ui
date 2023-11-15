@@ -122,10 +122,10 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
   const delegateLogsAvailable =
     (step.startTs !== undefined && !isEmpty(delegateInfoList)) ||
     (step.startTs !== undefined && step.stepDetails && Object.keys(step.stepDetails).length > 0)
-  const timePadding = 60 * 5 // 5 minutes
+
   const taskIds = delegateInfoList?.map(delegate => delegate.taskId || '')?.filter(a => a)
-  const startTime = Math.floor((step?.startTs as number) / 1000) - timePadding
-  const endTime = Math.floor((step?.endTs || Date.now()) / 1000) + timePadding
+  const startTime = Math.floor((step?.startTs as number) / 1000)
+  const endTime = Math.floor((step?.endTs || Date.now()) / 1000)
 
   const handleSelectionLogClick = (): void => {
     setLoader(true)
