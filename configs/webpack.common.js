@@ -31,8 +31,6 @@ const enableGitOpsUI = process.env.ENABLE_GITOPSUI !== 'false'
 const enableChaosUI = process.env.ENABLE_CHAOS !== 'false'
 const enableCDBUI = process.env.ENABLE_CDB_UI === 'true'
 const enableCCMUI = process.env.ENABLE_CCM_UI === 'true'
-const enableCIUI = process.env.ENABLE_CI_UI === 'true'
-const enableTIUI = process.env.ENABLE_TI_UI === 'true'
 const enableSTO = process.env.ENABLE_STO !== 'false'
 const enableCODE = process.env.ENABLE_CODE === 'true'
 const enableFFUI = process.env.ENABLE_FF_UI !== 'false'
@@ -49,8 +47,6 @@ console.table({
   enableChaosUI,
   enableCCMUI,
   enableCDBUI,
-  enableCIUI,
-  enableTIUI,
   enableSTO,
   enableCODE,
   enableFFUI,
@@ -213,8 +209,6 @@ const config = {
         enableChaosUI,
         enableCCMUI,
         enableCDBUI,
-        enableCIUI,
-        enableTIUI,
         enableCODE,
         enableFFUI,
         enableIACM,
@@ -269,19 +263,9 @@ if (!enableCDBUI) {
   config.resolve.alias['cdbui/MicroFrontendApp'] = ChildAppError
 }
 
-if (!enableCIUI) {
-  // render a mock app when CI MF is disabled
-  config.resolve.alias['ciui/MicroFrontendApp'] = ChildAppError
-}
-
 if (!enableSRMUI) {
   // render a mock app when SRM MF is disabled
   config.resolve.alias['srmui/MicroFrontendApp'] = ChildAppError
-}
-
-if (!enableTIUI) {
-  // render a mock app when TI MF is disabled
-  config.resolve.alias['tiui/MicroFrontendApp'] = ChildAppError
 }
 
 if (!enableChaosUI) {

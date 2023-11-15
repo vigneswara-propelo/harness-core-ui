@@ -32,8 +32,6 @@ module.exports = ({
   enableCDBUI,
   enableCODE,
   enableFFUI,
-  enableCIUI,
-  enableTIUI,
   enableIACM,
   enableSSCA,
   enableIDP,
@@ -78,16 +76,8 @@ module.exports = ({
     remotes.ffui = "ffui@[window.getApiBaseUrl('cf/web/remoteEntry.js')]"
   }
 
-  if (enableCIUI) {
-    remotes.ciui = "ciui@[window.getApiBaseUrl('ciui/remoteEntry.js')]"
-  }
-
   if (enableSRMUI) {
     remotes.srmui = "srmui@[window.getApiBaseUrl('srmui/remoteEntry.js')]"
-  }
-
-  if (enableTIUI) {
-    remotes.tiui = "tiui@[window.getApiBaseUrl('tiui/remoteEntry.js')]"
   }
 
   if (enableIACM) {

@@ -57,10 +57,6 @@ module.exports = {
     target: targetLocalHost ? 'http://localhost:3000' : baseUrl,
     pathRewrite: targetLocalHost ? { '^/cf': '/api/1.0' } : {}
   },
-  '/ciui': {
-    pathRewrite: { '^/ciui': '' },
-    target: 'https://localhost:9100'
-  },
   '/ci': {
     target: targetLocalHost ? 'https://localhost:7171' : baseUrl
   },
@@ -180,10 +176,6 @@ module.exports = {
   '/cdbui': {
     pathRewrite: { '^/cdbui': '' },
     target: process.env.CDB_UI_URL || 'https://localhost:8187'
-  },
-  '/tiui': {
-    pathRewrite: { '^/tiui': '' },
-    target: process.env.TI_UI_URL || 'https://localhost:9200'
   },
   '/iacm/api': {
     pathRewrite: { '^/iacm': '' },

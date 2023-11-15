@@ -6,7 +6,6 @@
  */
 
 import React from 'react'
-import ChildAppMounter from 'microfrontends/ChildAppMounter'
 
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { MinimalLayout } from '@common/layouts'
@@ -65,10 +64,6 @@ import GetStartedWithCI from './pages/get-started-with-ci/GetStartedWithCI'
 import CIDashboardPage from './pages/dashboard/CIDashboardPage'
 import CIHomePage from './pages/home/CIHomePage'
 import CITrialHomePage from './pages/home/CITrialHomePage'
-
-// eslint-disable-next-line import/no-unresolved
-const CiuiMicroFrontendPath = React.lazy(() => import('ciui/MicroFrontendApp'))
-const useCIMicroFrontend = false
 
 executionFactory.registerCardInfo(StageType.BUILD, {
   icon: 'ci-main',
@@ -187,11 +182,7 @@ featureFactory.registerFeaturesByModule('ci', {
 const RedirectToCIProject = RedirectToProjectFactory(ModuleName.CI, routes.toCIHome)
 
 const CIDashboardPageOrRedirect = (): React.ReactElement => {
-  if (useCIMicroFrontend) {
-    return <ChildAppMounter ChildApp={CiuiMicroFrontendPath} />
-  } else {
-    return <CIDashboardPage />
-  }
+  return <CIDashboardPage />
 }
 
 export const CISideNavProps: SidebarContext = {
