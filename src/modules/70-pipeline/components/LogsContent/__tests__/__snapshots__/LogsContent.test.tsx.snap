@@ -635,7 +635,6 @@ exports[`<LogsContent /> tests console-view error message test 1`] = `
         >
           <div
             class="StyledProps--font StyledProps--main errorMsgs"
-            style="width: 100%;"
           >
             <div
               class="errorMsgContainer"
@@ -1005,7 +1004,6 @@ exports[`<LogsContent /> tests console-view warning message test 1`] = `
         >
           <div
             class="StyledProps--font StyledProps--main errorMsgs isWarning"
-            style="width: 100%;"
           >
             <div
               class="errorMsgContainer"

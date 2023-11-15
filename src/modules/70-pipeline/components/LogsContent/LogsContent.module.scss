@@ -23,6 +23,7 @@
   }
 
   .errorMsgs {
+    flex: 1;
     background-color: var(--grey-800);
     padding: var(--spacing-large);
     font-family: 'Roboto Mono', 'Monaco', 'Ubuntu Mono', monospace;

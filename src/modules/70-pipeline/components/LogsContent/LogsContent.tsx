@@ -367,7 +367,7 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
       >
         {mode === 'console-view' && hasError ? (
           <Layout.Horizontal width={'100%'}>
-            <Container className={cx(css.errorMsgs, { [css.isWarning]: isWarning })} width={'100%'}>
+            <Container className={cx(css.errorMsgs, { [css.isWarning]: isWarning })}>
               {errorObjects.map((errorObject, index) => {
                 const { error = {}, explanations = [], hints = [] } = errorObject
                 return (
@@ -404,7 +404,7 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
               enableForCD: CD_AI_ENHANCED_REMEDIATIONS,
               isEULAccepted: aidaSettingResponse?.data?.value === 'true'
             }) ? (
-              <Container className={css.copilot} width="40%" flex={{ justifyContent: 'flex-end' }}>
+              <Container className={css.copilot} flex={{ justifyContent: 'flex-end' }}>
                 <HarnessCopilot mode="console-view" scope={ErrorScope.Step} />
               </Container>
             ) : null}
