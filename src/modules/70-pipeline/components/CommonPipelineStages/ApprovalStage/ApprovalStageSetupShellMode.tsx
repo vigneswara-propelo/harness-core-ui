@@ -65,7 +65,7 @@ export function ApprovalStageSetupShellMode(): React.ReactElement {
     if (sectionId?.length && tabHeadings.includes(_capitalize(sectionId))) {
       setSelectedTabId(_capitalize(sectionId))
     } else {
-      setSelectedSectionId(toUpper(tabHeadings[1]))
+      setSelectedSectionId(toUpper(tabHeadings[1]), true)
     }
   }, [selectedSectionId])
 

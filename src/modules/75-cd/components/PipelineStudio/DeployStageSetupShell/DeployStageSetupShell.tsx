@@ -223,7 +223,7 @@ export default function DeployStageSetupShell(): JSX.Element {
     if (sectionId?.length && (TabsOrder.includes(sectionId) || sectionId === DeployTabs.ENVIRONMENT)) {
       setSelectedTabId(isNewEnvDef && sectionId === DeployTabs.INFRASTRUCTURE ? DeployTabs.ENVIRONMENT : sectionId)
     } else {
-      setSelectedSectionId(defaultExecTab() ? DeployTabs.EXECUTION : DeployTabs.SERVICE)
+      setSelectedSectionId(defaultExecTab() ? DeployTabs.EXECUTION : DeployTabs.SERVICE, true)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedSectionId])

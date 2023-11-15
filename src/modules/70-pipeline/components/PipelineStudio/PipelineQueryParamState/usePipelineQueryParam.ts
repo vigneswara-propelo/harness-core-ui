@@ -23,7 +23,7 @@ export function usePipelineQuestParamState() {
    * Use null to clear state.
    * NOTE: Clearing 'stage' state will clear 'step' state too
    */
-  const setPipelineQueryParamState = (state: PipelineSelectionState) => {
+  const setPipelineQueryParamState = (state: PipelineSelectionState, replaceHistory?: boolean): void => {
     /*if (isNull(state.stageId)) {
       state.stepId = null
     }*/
@@ -34,7 +34,7 @@ export function usePipelineQuestParamState() {
       newState.stepId = null
     }
 
-    updateQueryParams({ stageId, stepId, sectionId, ...newState }, { skipNulls: true })
+    updateQueryParams({ stageId, stepId, sectionId, ...newState }, { skipNulls: true }, replaceHistory)
   }
   return { stageId, stepId, setPipelineQuestParamState: setPipelineQueryParamState, sectionId }
 }

@@ -158,7 +158,7 @@ export interface PipelineContextInterface {
   /** @deprecated use `setSelection` */
   setSelectedStepId: (selectedStepId: string | undefined) => void
   /** @deprecated use `setSelection` */
-  setSelectedSectionId: (selectedSectionId: string | undefined) => void
+  setSelectedSectionId: (selectedSectionId: string | undefined, replaceHistory?: boolean) => void
   setSelection: (selectionState: PipelineSelectionState) => void
   getStagePathFromPipeline(stageId: string, prefix?: string, pipeline?: PipelineInfoConfig): string
   /** Useful for setting any intermittent loading state. Eg. any API call loading, any custom loading, etc */
@@ -379,8 +379,8 @@ export function PipelineProvider({
     queryParamStateSelection.setPipelineQuestParamState({ stepId: selectedStepId })
   }
   /** @deprecated use `setSelection` */
-  const setSelectedSectionId = (selectedSectionId: string | undefined): void => {
-    queryParamStateSelection.setPipelineQuestParamState({ sectionId: selectedSectionId })
+  const setSelectedSectionId = (selectedSectionId: string | undefined, replaceHistory?: boolean): void => {
+    queryParamStateSelection.setPipelineQuestParamState({ sectionId: selectedSectionId }, replaceHistory)
   }
 
   const updateSelectionState = React.useCallback((data: SelectionState) => {

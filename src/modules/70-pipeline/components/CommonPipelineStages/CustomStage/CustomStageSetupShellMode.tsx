@@ -83,7 +83,7 @@ export function CustomStageSetupShellMode(): React.ReactElement {
     if (sectionId?.length && Object.values(tabHeadingsMap).includes(_capitalize(sectionId))) {
       setSelectedTabId(_capitalize(sectionId))
     } else {
-      setSelectedSectionId(toUpper(tabHeadingsMap[CustomTabs.EXECUTION]))
+      setSelectedSectionId(toUpper(tabHeadingsMap[CustomTabs.EXECUTION]), true)
     }
   }, [selectedSectionId])
 
