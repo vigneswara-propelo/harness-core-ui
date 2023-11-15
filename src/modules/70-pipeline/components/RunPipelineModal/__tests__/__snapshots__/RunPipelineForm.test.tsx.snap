@@ -109,8 +109,9 @@ exports[`EXECUTION VIEW should should have the values prefilled and fields as di
                           </p>
                         </div>
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
+                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-small"
                         >
+                           
                           -
                         </p>
                         <div
@@ -877,8 +878,9 @@ exports[`STUDIO MODE invalid input sets should not be applied 1`] = `
                           </p>
                         </div>
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
+                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-small"
                         >
+                           
                           -
                         </p>
                         <div
@@ -973,8 +975,9 @@ exports[`STUDIO MODE invalid input sets should not be applied 1`] = `
                           </p>
                         </div>
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
+                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-small"
                         >
+                           
                           -
                         </p>
                         <div
@@ -1665,8 +1668,9 @@ exports[`STUDIO MODE should accept values from input sets and submit the form: a
                           </p>
                         </div>
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
+                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-small"
                         >
+                           
                           -
                         </p>
                         <div
@@ -1761,8 +1765,9 @@ exports[`STUDIO MODE should accept values from input sets and submit the form: a
                           </p>
                         </div>
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
+                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-small"
                         >
+                           
                           -
                         </p>
                         <div

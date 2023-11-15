@@ -3546,8 +3546,9 @@ exports[`VARIABLES renders the service variables form: variables with default va
                 </p>
               </div>
               <p
-                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-small"
               >
+                 
                 -
               </p>
               <div

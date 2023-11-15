@@ -12,6 +12,7 @@ import cx from 'classnames'
 import { cloneDeep, defaultTo, get, isEmpty } from 'lodash-es'
 import { connect, FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
+import { Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
@@ -157,9 +158,24 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
               type={variable.type as string}
               required={isRequiredVariable}
             />
-            <Text color={Color.GREY_500} font={{ variation: FontVariation.BODY }}>
-              {isEmpty(description) ? '-' : description}
-            </Text>
+            {!isEmpty(description) ? (
+              <Text
+                icon="description"
+                inline
+                padding={'small'}
+                iconProps={{ size: 32 }}
+                tooltip={description}
+                tooltipProps={{
+                  position: Position.BOTTOM,
+                  isDark: true,
+                  className: css.descriptionContent
+                }}
+              />
+            ) : (
+              <Text color={Color.GREY_500} padding={'small'}>
+                &nbsp;{'-'}
+              </Text>
+            )}
             <div className={css.inputSetValueRow}>
               {(variable.type as CustomDeploymentNGVariable['type']) === VariableType.Connector ? (
                 <FormMultiTypeConnectorField

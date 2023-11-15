@@ -2676,8 +2676,9 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                   </p>
                                 </div>
                                 <p
-                                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
+                                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-small"
                                 >
+                                   
                                   -
                                 </p>
                                 <div
@@ -2771,8 +2772,9 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                   </p>
                                 </div>
                                 <p
-                                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
+                                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-small"
                                 >
+                                   
                                   -
                                 </p>
                                 <div
@@ -2866,8 +2868,9 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                   </p>
                                 </div>
                                 <p
-                                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
+                                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-small"
                                 >
+                                   
                                   -
                                 </p>
                                 <div
