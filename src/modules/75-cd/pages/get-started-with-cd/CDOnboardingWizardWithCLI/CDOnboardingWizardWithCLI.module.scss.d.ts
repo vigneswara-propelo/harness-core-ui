@@ -13,6 +13,8 @@ declare const styles: {
   readonly bold: string
   readonly bottom: string
   readonly buttons: string
+  readonly cdLogo: string
+  readonly cdTitleBanner: string
   readonly commandBlock: string
   readonly commandGap: string
   readonly copyButton: string

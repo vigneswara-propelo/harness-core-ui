@@ -23,21 +23,15 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { PLG_CD_GET_STARTED_VARIANTS } from '@common/components/ConfigureOptions/constants'
 import GetStartedWithCDV2 from './GetStartedWithCDv2'
 import css from './GetStartedWithCD.module.scss'
-
-function GetStartedWithCD(): React.ReactElement {
-  const { getString } = useStrings()
-
+interface GetStartedClickFn {
+  onGetStartedClick?: () => void
+}
+function GetStartedWithCD({ onGetStartedClick }: GetStartedClickFn): React.ReactElement {
   return (
     <Layout.Vertical flex>
-      <Container className={cx(css.topPage, css.oldGetStarted)}>
-        <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'start' }} className={css.getStartedTitle}>
-          <Icon name="cd-main" size={40} padding="xlarge" />
-          <Text font={{ variation: FontVariation.H1, weight: 'semi-bold' }} className={css.centerAlign}>
-            {getString('cd.getStartedWithCD.onboardingTitle')}
-          </Text>
-        </Layout.Horizontal>
+      <Container className={cx(css.topPage, css.oldGetStarted, css.fullscreenPage)}>
         <div className={css.getStartedGrid}>
-          <GetStartedSection />
+          <GetStartedSection onGetStartedClick={onGetStartedClick} />
           <HarnessInfoSection />
         </div>
       </Container>
@@ -45,13 +39,17 @@ function GetStartedWithCD(): React.ReactElement {
   )
 }
 
-function GetStartedSection(): JSX.Element {
+function GetStartedSection({ onGetStartedClick }: GetStartedClickFn): JSX.Element {
   const { trackEvent } = useTelemetry()
   const history = useHistory()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ServicePathProps>()
   const getStartedClickHandler = (): void => {
     trackEvent(CDOnboardingActions.GetStartedClicked, {})
-    history.push(routes.toCDOnboardingWizard({ accountId, orgIdentifier, projectIdentifier, module: 'cd' }))
+    if (onGetStartedClick) {
+      onGetStartedClick()
+    } else {
+      history.push(routes.toCDOnboardingWizard({ accountId, orgIdentifier, projectIdentifier, module: 'cd' }))
+    }
   }
   const { getString } = useStrings()
   const CDResources = [
@@ -193,22 +191,22 @@ function InfoRow({ title, subtitle }: { title: string; subtitle: string }): JSX.
   )
 }
 
-const GetStartedWithAB: React.FC = () => {
+const GetStartedWithAB: React.FC<GetStartedClickFn> = ({ onGetStartedClick }) => {
   const {
     currentUserInfo: { uuid }
   } = useAppStore()
   return (
     <WithABFFProvider
-      fallback={<GetStartedWithCDV2 />}
+      fallback={<GetStartedWithCD onGetStartedClick={onGetStartedClick} />}
       featureFlagsToken={window.HARNESS_PLG_FF_SDK_KEY}
       config={{ experimentKey: PLG_EXPERIMENTS.CD_GET_STARTED, identifier: uuid }}
     >
-      <GetStartedWithHooks />
+      <GetStartedWithHooks onGetStartedClick={onGetStartedClick} />
     </WithABFFProvider>
   )
 }
 
-const GetStartedWithHooks: React.FC = () => {
+const GetStartedWithHooks: React.FC<GetStartedClickFn> = ({ onGetStartedClick }) => {
   const FLOW_TYPE = useFeatureFlag(FeatureFlag.PLG_CD_GET_STARTED_AB)
   const trackExposure = useFeatureFlag(FeatureFlag.PLG_GET_STARTED_EXPOSURE_ENABLED)
   const { trackEvent } = useTelemetry()
@@ -219,6 +217,10 @@ const GetStartedWithHooks: React.FC = () => {
         variant: FLOW_TYPE
       })
   }, [])
-  return FLOW_TYPE === PLG_CD_GET_STARTED_VARIANTS.INFO_HEAVY ? <GetStartedWithCD /> : <GetStartedWithCDV2 />
+  return FLOW_TYPE === PLG_CD_GET_STARTED_VARIANTS.INFO_HEAVY ? (
+    <GetStartedWithCD onGetStartedClick={onGetStartedClick} />
+  ) : (
+    <GetStartedWithCDV2 />
+  )
 }
 export default GetStartedWithAB

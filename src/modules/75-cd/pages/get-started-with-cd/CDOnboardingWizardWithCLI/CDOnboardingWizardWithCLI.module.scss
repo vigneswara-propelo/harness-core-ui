@@ -172,3 +172,13 @@
 .commandGap {
   margin-bottom: var(--spacing-large) !important;
 }
+
+.cdTitleBanner {
+  border: solid var(--grey-200) 1px;
+  .cdLogo {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-small);
+    padding-left: var(--spacing-xxlarge);
+  }
+}

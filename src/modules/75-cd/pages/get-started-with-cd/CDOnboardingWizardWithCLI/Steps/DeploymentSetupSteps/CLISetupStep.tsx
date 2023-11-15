@@ -120,7 +120,9 @@ function CLILogin({
               'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.logincmd',
               {
                 accId: accountId,
-                apiKey: state?.apiKey
+                apiKey:
+                  state?.apiKey ||
+                  getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.prepareStep.apiKeyPlacholder')
               }
             )}
             downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}

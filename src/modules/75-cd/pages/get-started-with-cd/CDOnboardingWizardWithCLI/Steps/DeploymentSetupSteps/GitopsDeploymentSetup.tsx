@@ -1,3 +1,9 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
 import React from 'react'
 import { Layout, Text } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
@@ -7,7 +13,7 @@ import { AccountPathProps } from '@modules/10-common/interfaces/RouteInterfaces'
 import { String, useStrings } from 'framework/strings'
 import { InstallCLIInfo } from './CLISetupStep'
 import ApiKeySetup from './ApiKeySetup'
-import { CDOnboardingSteps, PipelineSetupState } from '../../types'
+import { CDOnboardingSteps, PipelineSetupState, WhereAndHowToDeployType } from '../../types'
 import VerifyGitopsEntities from '../VerificationComponents/VerifyGitopsEntities'
 import { useOnboardingStore } from '../../Store/OnboardingStore'
 import { getCommandStrWithNewline } from '../../utils'
@@ -28,9 +34,11 @@ export default function GitopsDeploymentSetup({
 
   const { stepsProgress } = useOnboardingStore()
   const deploymentData = stepsProgress?.[CDOnboardingSteps.WHAT_TO_DEPLOY]?.stepData
+  const agentInfo = stepsProgress?.[CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY]?.stepData as WhereAndHowToDeployType
   const dirPath = deploymentData?.artifactSubType?.id
     ? DEPLOYMENT_TYPE_TO_DIR_MAP[deploymentData?.artifactSubType?.id]
     : DEPLOYMENT_TYPE_TO_DIR_MAP[deploymentData?.artifactType?.id as string]
+
   return (
     <Layout.Vertical spacing="xlarge">
       <Text color={Color.BLACK}>
@@ -89,11 +97,12 @@ export default function GitopsDeploymentSetup({
             allowCopy
             ignoreWhiteSpaces={false}
             commandSnippet={getCommandStrWithNewline([
-              getString(
+              `${getString(
                 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.clonecmd',
                 { gitUser: 'harness-community' }
-              ),
-              getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.cddir')
+              )} && ${getString(
+                'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.cddir'
+              )}`
             ])}
             downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
             copyButtonText={getString('common.copy')}
@@ -113,7 +122,8 @@ export default function GitopsDeploymentSetup({
               {
                 accId: accountId,
                 apiKey: state?.apiKey,
-                dirPath
+                dirPath,
+                agentId: agentInfo?.agentInfo?.identifier
               }
             )}
             downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
@@ -134,7 +144,8 @@ export default function GitopsDeploymentSetup({
               {
                 accId: accountId,
                 apiKey: state?.apiKey,
-                dirPath
+                dirPath,
+                agentId: agentInfo?.agentInfo?.identifier
               }
             )}
             downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
@@ -155,7 +166,8 @@ export default function GitopsDeploymentSetup({
               {
                 accId: accountId,
                 apiKey: state?.apiKey,
-                dirPath
+                dirPath,
+                agentId: agentInfo?.agentInfo?.identifier
               }
             )}
             downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}

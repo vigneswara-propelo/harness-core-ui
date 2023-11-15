@@ -8,8 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import produce from 'immer'
-import { Container, Icon, Layout, Text } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Container, Layout } from '@harness/uicore'
 import { Stepper } from '@common/components/Stepper/Stepper'
 import { useStrings } from 'framework/strings'
 import WhatToDeploy from './Steps/WhatToDeploy'
@@ -52,18 +51,9 @@ export default function CDOnboardingWizardWithCLI(): JSX.Element {
 
   return (
     <Layout.Vertical flex={{ alignItems: 'start' }}>
-      <Container className={cx(css.topPage, css.oldGetStarted, css.cdwizardcli)}>
-        <Layout.Vertical>
-          <Layout.Horizontal className={css.alignicon}>
-            <Icon name="cd-main" size={30} />
-            <Text padding={{ left: 'xxlarge' }} font={{ variation: FontVariation.H1 }}>
-              {getString('cd.getStartedWithCD.getStartedPage.sampleDeployment')}
-            </Text>
-          </Layout.Horizontal>
-          <Text className={css.descriptionLeftpad} font={{ variation: FontVariation.BODY1 }}>
-            {getString('cd.getStartedWithCD.onBoardingSubTitle')}
-          </Text>
-        </Layout.Vertical>
+      <Container
+        className={cx(css.topPage, css.oldGetStarted, css.cdwizardcli, css.fullscreenPage, css.wizardPaddingFullscreen)}
+      >
         <Stepper
           id="cdOnboardingStepper"
           isStepValid={isStepValid}

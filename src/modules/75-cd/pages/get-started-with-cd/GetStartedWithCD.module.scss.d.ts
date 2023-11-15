@@ -31,6 +31,7 @@ declare const styles: {
   readonly containerItemCss: string
   readonly descriptionLeftpad: string
   readonly error: string
+  readonly fullscreenPage: string
   readonly getStartedGrid: string
   readonly getStartedTitle: string
   readonly harnessInfoSection: string
@@ -57,5 +58,6 @@ declare const styles: {
   readonly videoBtn: string
   readonly videoCard: string
   readonly videoframe: string
+  readonly wizardPaddingFullscreen: string
 }
 export default styles

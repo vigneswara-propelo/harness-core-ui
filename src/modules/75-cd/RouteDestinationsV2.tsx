@@ -44,9 +44,9 @@ import EnvironmentGroupsPage from './components/EnvironmentGroups/EnvironmentGro
 import { Services } from './components/Services/Services'
 import { EnvironmentsPage } from './RouteDestinations'
 import EnvironmentGroupDetails from './components/EnvironmentGroups/EnvironmentGroupDetails/EnvironmentGroupDetails'
-import GetStartedWithCD from './pages/get-started-with-cd/GetStartedWithCD'
 import ServiceOverrides from './components/ServiceOverrides/ServiceOverrides'
 import CDOnboardingWizard from './pages/get-started-with-cd/CDOnboardingWizardWithCLI/CDOnboardingWizard'
+import CDOnboardingFullScreen from './pages/get-started-with-cd/CDOnboardingWizardWithCLI/CDOnboardingFullScreen'
 
 const CDOnboardingWizardWithCLI = React.lazy(
   () => import('./pages/get-started-with-cd/CDOnboardingWizardWithCLI/CDOnboardingWizard')
@@ -206,7 +206,7 @@ const CDRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
         pageName={PAGE_NAME.GetStartedWithCD}
         path={routes.toGetStartedWithCD({ ...modulePathProps, ...projectPathProps, mode })}
       >
-        <GetStartedWithCD />
+        <CDOnboardingFullScreen />
       </RouteWithContext>
 
       {/* services routes */}

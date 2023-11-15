@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
@@ -42,10 +49,12 @@ export default function CodeBaseSetup({ state, onUpdate }: CodeBaseSetupProps): 
           allowCopy
           ignoreWhiteSpaces={false}
           commandSnippet={getCommandStrWithNewline([
-            getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.clonecmd', {
-              gitUser: isEmpty(state.githubUsername) ? 'GITHUB_USERNAME' : state.githubUsername
-            }),
-            getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.cddir')
+            `${getString(
+              'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.clonecmd',
+              { gitUser: isEmpty(state.githubUsername) ? 'GITHUB_USERNAME' : state.githubUsername }
+            )} && ${getString(
+              'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.cddir'
+            )}`
           ])}
           downloadFileProps={{ downloadFileName: 'harness-cli-clone-codebase', downloadFileExtension: 'xdf' }}
           copyButtonText={getString('common.copy')}
@@ -98,7 +107,13 @@ export function GitPatSetup({ onUpdate, state }: CodeBaseSetupProps): JSX.Elemen
           ignoreWhiteSpaces={false}
           commandSnippet={getString(
             'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.createsecret',
-            { gitPat: state.githubPat }
+            {
+              gitPat:
+                state.githubPat ||
+                getString(
+                  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitpatPlaceholder'
+                )
+            }
           )}
           downloadFileProps={{ downloadFileName: 'harness-cli-clone-codebase', downloadFileExtension: 'xdf' }}
           copyButtonText={getString('common.copy')}
