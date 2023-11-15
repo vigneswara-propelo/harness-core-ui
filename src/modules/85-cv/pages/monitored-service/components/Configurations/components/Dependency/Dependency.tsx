@@ -8,7 +8,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Layout, Text, Container, Pagination, PageError, NoDataCard } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { isEqual } from 'lodash-es'
+import { isEmpty, isEqual } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { MonitoredServiceDTO, useGetMonitoredServicePlatformList } from 'services/cv'
 import { PageSpinner } from '@common/components'
@@ -19,7 +19,11 @@ import { getErrorMessage } from '@cv/utils/CommonUtils'
 import type { MonitoredServiceForm } from '../Service/Service.types'
 import SelectServiceCard from './component/SelectServiceCard'
 import type { DependencyMetaData } from './component/SelectServiceCard.types'
-import { updateMonitoredServiceWithDependencies, initializeDependencyMap } from './Dependency.utils'
+import {
+  updateMonitoredServiceWithDependencies,
+  initializeDependencyMap,
+  validateDependencyMap
+} from './Dependency.utils'
 import { getEnvironmentRef } from './component/ServiceDependencyGraph/ServiceDependencyGraph.utils'
 import { ServiceDependencyGraph } from './component/ServiceDependencyGraph/ServiceDependencyGraph'
 import css from './Dependency.module.scss'
@@ -38,6 +42,7 @@ export default function Dependency({
 
   const [dependencyMap, setDependencyMap] = useState<Map<string, DependencyMetaData>>(new Map())
   const [isDirty, setIsDirty] = useState(false)
+  const [error, setError] = useState<Record<string, unknown>>()
   const { accountId, identifier, orgIdentifier, projectIdentifier } = useParams<
     ProjectPathProps & { identifier: string }
   >()
@@ -81,6 +86,15 @@ export default function Dependency({
     }
   }, [queryParams, value.environmentRef, value.environmentRefList])
 
+  useEffect(() => {
+    if (error) {
+      const updatedError = validateDependencyMap(Array.from(dependencyMap.values()))
+      if (!isEmpty(updatedError) && !isEqual(updatedError, error)) {
+        setError(updatedError)
+      }
+    }
+  }, [error, dependencyMap])
+
   const initialDependencies = useMemo(() => {
     const dependencies = initializeDependencyMap(value?.dependencies)
     setDependencyMap(dependencies)
@@ -109,7 +123,12 @@ export default function Dependency({
         className={css.saveDiscardBlock}
         isUpdated={isDirty}
         onSave={async () => {
-          await onSuccess(updateMonitoredServiceWithDependencies(Array.from(dependencyMap.values()), value))
+          const errors = validateDependencyMap(Array.from(dependencyMap.values()))
+          if (!isEmpty(errors)) {
+            setError(errors)
+          } else {
+            await onSuccess(updateMonitoredServiceWithDependencies(Array.from(dependencyMap.values()), value))
+          }
         }}
         onDiscard={() => {
           setDependencyMap(initialDependencies)
@@ -147,6 +166,7 @@ export default function Dependency({
                     return newMap
                   })
                 }
+                error={error}
               />
             ))
           )}
@@ -155,7 +175,14 @@ export default function Dependency({
             pageIndex={pageIndex}
             pageCount={totalPages}
             itemCount={totalItems - 1}
-            gotoPage={pageNumber => setQueryParams(prevParams => ({ ...prevParams, offset: pageNumber }))}
+            gotoPage={pageNumber => {
+              const errors = validateDependencyMap(Array.from(dependencyMap.values()))
+              if (!isEmpty(errors)) {
+                setError(errors)
+              } else {
+                setQueryParams(prevParams => ({ ...prevParams, offset: pageNumber }))
+              }
+            }}
           />
         </Container>
         <Container className={css.rightSection}>

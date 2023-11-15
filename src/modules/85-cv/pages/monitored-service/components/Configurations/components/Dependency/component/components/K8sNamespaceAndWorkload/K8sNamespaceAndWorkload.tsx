@@ -18,7 +18,7 @@ import { getSelectPlaceholder, getWorkloadNamespaceOptions } from './K8sNamespac
 import css from './K8sNamespaceAndWorkload.module.scss'
 
 export default function K8sNamespaceAndWorkload(props: K8sNamespaceAndWorkloadProps): JSX.Element {
-  const { connectorIdentifier, onChange, dependencyMetaData } = props
+  const { connectorIdentifier, onChange, dependencyMetaData, error } = props
   const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const [namespaceValue, setNamespaceValue] = useState<SelectOption | undefined>()
@@ -118,6 +118,10 @@ export default function K8sNamespaceAndWorkload(props: K8sNamespaceAndWorkloadPr
           />
           <Text intent="danger" lineClamp={1} className={css.errorMsg}>
             {getErrorMessage(namespaceError)}
+            {error?.includes('namespace') &&
+              getString('common.validation.fieldIsRequired', {
+                name: 'namespace'
+              })}
           </Text>
         </Container>
         <Container className={css.selectContainer}>
@@ -142,6 +146,10 @@ export default function K8sNamespaceAndWorkload(props: K8sNamespaceAndWorkloadPr
           />
           <Text intent="danger" lineClamp={1} className={css.errorMsg}>
             {getErrorMessage(workloadError)}
+            {error?.includes('workload') &&
+              getString('common.validation.fieldIsRequired', {
+                name: 'workload'
+              })}
           </Text>
         </Container>
       </Container>

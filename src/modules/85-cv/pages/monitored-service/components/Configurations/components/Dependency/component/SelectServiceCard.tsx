@@ -41,6 +41,16 @@ export default function SelectServiceCard(props: ServiceCardInterfaceProps): JSX
 export function ServiceCardContent(props: ServiceCardInterfaceProps): JSX.Element {
   const { monitoredService, dependencyMetaData, onChange } = props
   const { serviceRef, identifier, type } = monitoredService || {}
+  const isInfraType = type === 'Infrastructure'
+  const typeField = isInfraType
+    ? {
+        type: KUBERNETES_TYPE as typeof KUBERNETES_TYPE,
+        dependencyMetadata: {
+          namespace: '',
+          workload: ''
+        }
+      }
+    : undefined
   const { getString } = useStrings()
   return (
     <Container flex>
@@ -51,7 +61,8 @@ export function ServiceCardContent(props: ServiceCardInterfaceProps): JSX.Elemen
           className={css.selectService}
           onChange={event =>
             onChange(event.currentTarget.checked, {
-              monitoredServiceIdentifier: identifier
+              monitoredServiceIdentifier: identifier,
+              ...typeField
             })
           }
         />
@@ -122,25 +133,29 @@ export function KubernetesServiceAPIWrapper(props: ServiceCardInterfaceProps): J
 }
 
 export function KubernetesServiceCard(props: ServiceCardInterfaceProps): JSX.Element {
-  const { monitoredService, dependencyMetaData, onChange } = props
+  const { monitoredService, dependencyMetaData, onChange, error = {} } = props
   const connectorIdentifier = useMemo(
     () => (dependencyMetaData ? getConnectorRefFromChangeSourceService(monitoredService, 'K8sCluster') : undefined),
     [dependencyMetaData, monitoredService]
   )
+
   return (
-    <K8sNamespaceAndWorkload
-      connectorIdentifier={connectorIdentifier}
-      dependencyMetaData={dependencyMetaData as InfrastructureDependencyMetaData}
-      onChange={(namespace, workload) =>
-        onChange(true, {
-          type: KUBERNETES_TYPE,
-          monitoredServiceIdentifier: monitoredService?.identifier,
-          dependencyMetadata: {
-            namespace,
-            workload
-          }
-        })
-      }
-    />
+    <>
+      <K8sNamespaceAndWorkload
+        error={error[monitoredService.identifier] as string[]}
+        connectorIdentifier={connectorIdentifier}
+        dependencyMetaData={dependencyMetaData as InfrastructureDependencyMetaData}
+        onChange={(namespace, workload) =>
+          onChange(true, {
+            type: KUBERNETES_TYPE,
+            monitoredServiceIdentifier: monitoredService?.identifier,
+            dependencyMetadata: {
+              namespace,
+              workload
+            }
+          })
+        }
+      />
+    </>
   )
 }

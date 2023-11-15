@@ -11,6 +11,7 @@ export interface ServiceCardInterfaceProps {
   monitoredService: MonitoredServiceDTO
   dependencyMetaData?: DependencyMetaData
   onChange: (isChecked: boolean, dependencyMetaData?: DependencyMetaData) => void
+  error?: Record<string, unknown>
 }
 
 export interface ServiceCardWithAccordianInterfaceProps {

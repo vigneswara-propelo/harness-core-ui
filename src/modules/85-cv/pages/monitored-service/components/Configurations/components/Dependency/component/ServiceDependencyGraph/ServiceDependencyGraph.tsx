@@ -74,9 +74,16 @@ export const ServiceDependencyGraph = ({
     }
   }, [dependencyMap, mslist, value.identifier])
 
+  const hasNoMissingNodes =
+    [identifier, ...graphData.data.map(item => item.from)].sort().join(',') ===
+    graphData.nodes
+      .map(item => item.id)
+      .sort()
+      .join(',')
+
   return (
     <>
-      {(Boolean(graphData.data.length) || Boolean(graphData.nodes.length)) && (
+      {(Boolean(graphData.data.length) || Boolean(graphData.nodes.length)) && hasNoMissingNodes && (
         <DependencyGraph dependencyData={graphData} options={getDependencyGraphOptions(() => void 0, 500)} />
       )}
     </>

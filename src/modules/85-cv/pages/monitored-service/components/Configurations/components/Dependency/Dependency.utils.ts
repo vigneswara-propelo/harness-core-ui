@@ -34,3 +34,25 @@ export function initializeDependencyMap(
 
   return dependencyMap
 }
+
+export const validateDependencyMap = (dependencies: DependencyMetaData[]): { [key: string]: string[] } => {
+  const error: { [key: string]: string[] } = {}
+  const infraTypeDependencies = dependencies.filter(item => item.type === 'KUBERNETES')
+  const hasInfraDependency = infraTypeDependencies.length
+  if (hasInfraDependency) {
+    infraTypeDependencies.forEach(item => {
+      const { dependencyMetadata = {}, monitoredServiceIdentifier } = item
+      const missingKeys: string[] = []
+      const metadataList = Object.entries(dependencyMetadata)
+      metadataList.forEach(data => {
+        const [key, value] = data
+        if (!value) {
+          missingKeys.push(key)
+        }
+      })
+      error[monitoredServiceIdentifier] = missingKeys
+    })
+    return error
+  }
+  return {}
+}
