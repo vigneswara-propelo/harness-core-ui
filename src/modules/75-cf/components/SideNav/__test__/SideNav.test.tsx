@@ -7,9 +7,8 @@
 
 import React from 'react'
 import { fireEvent, render, screen } from '@testing-library/react'
-import { TestWrapper } from '@common/utils/testUtils'
+import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { useFeatureFlagTelemetry } from '@cf/hooks/useFeatureFlagTelemetry'
-import * as hooks from '@common/hooks/useFeatureFlag'
 import SideNav from '../SideNav'
 
 jest.mock('@cf/hooks/useFeatureFlagTelemetry', () => ({
@@ -38,10 +37,15 @@ jest.mock('@cf/components/PipelineSteps', () => ({
 }))
 
 describe('Sidenav', () => {
-  const Subject: React.FC<{ path?: string }> = ({
-    path = '/account/:accountId/cf/dashboard/orgs/:orgIdentifier/projects/:projectIdentifier'
+  const Subject: React.FC<{ path?: string; defaultAppStoreValues?: TestWrapperProps['defaultAppStoreValues'] }> = ({
+    path = '/account/:accountId/cf/dashboard/orgs/:orgIdentifier/projects/:projectIdentifier',
+    defaultAppStoreValues
   }) => (
-    <TestWrapper path={path} pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}>
+    <TestWrapper
+      path={path}
+      pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      defaultAppStoreValues={defaultAppStoreValues}
+    >
       <SideNav />
     </TestWrapper>
   )
@@ -51,44 +55,28 @@ describe('Sidenav', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('it should hide the Git Experience links when FF_GITSYNC is FALSE', async () => {
-    jest.spyOn(hooks, 'useFeatureFlags').mockImplementation(() => ({ FF_GITSYNC: false }))
-
+  test('it should hide the Git Experience links when isGitSimplificationEnabled FALSE', async () => {
     render(
-      <Subject path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/setup/access-control/users" />
+      <Subject
+        path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/setup/access-control/users"
+        defaultAppStoreValues={{ isGitSimplificationEnabled: false }}
+      />
     )
 
-    expect(screen.queryByText('connectorsLabel')).not.toBeInTheDocument()
+    expect(screen.queryByText('cf.shared.gitSync')).not.toBeInTheDocument()
     expect(screen.queryByText('common.secrets')).not.toBeInTheDocument()
-    expect(screen.queryByText('gitManagement')).not.toBeInTheDocument()
   })
 
-  test('it should show the Git Experience links when FF_GITSYNC is TRUE', async () => {
-    jest
-      .spyOn(hooks, 'useFeatureFlags')
-      .mockImplementation(() => ({ FF_GITSYNC: true, FF_FLAG_SYNC_THROUGH_GITEX_ENABLED: false }))
-
+  test('it should show the Git Experience links when isGitSimplificationEnabled is TRUE', async () => {
     render(
-      <Subject path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/setup/access-control/users" />
+      <Subject
+        path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/setup/access-control/users"
+        defaultAppStoreValues={{ isGitSimplificationEnabled: true }}
+      />
     )
 
-    expect(screen.getByText('connectorsLabel')).toBeInTheDocument()
+    expect(screen.getByText('cf.shared.gitSync')).toBeInTheDocument()
     expect(screen.getByText('common.secrets')).toBeInTheDocument()
-    expect(screen.getByText('gitManagement')).toBeInTheDocument()
-  })
-
-  test('it should NOT show the Git Management when FF_GITSYNC is TRUE and FF_FLAG_SYNC_THROUGH_GITEX_ENABLED = TRUE', async () => {
-    jest
-      .spyOn(hooks, 'useFeatureFlags')
-      .mockImplementation(() => ({ FF_GITSYNC: true, FF_FLAG_SYNC_THROUGH_GITEX_ENABLED: true }))
-
-    render(
-      <Subject path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/setup/access-control/users" />
-    )
-
-    expect(screen.getByText('connectorsLabel')).toBeInTheDocument()
-    expect(screen.getByText('common.secrets')).toBeInTheDocument()
-    expect(screen.queryByText('gitManagement')).not.toBeInTheDocument()
   })
 
   test('it should fire telemetry event when Feature Flags menu item clicked', () => {

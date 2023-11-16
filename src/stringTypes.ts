@@ -9142,6 +9142,8 @@ export interface StringsMap {
   'cf.shared.evaluations': string
   'cf.shared.flags': string
   'cf.shared.getStarted': string
+  'cf.shared.gitSync': string
+  'cf.shared.governancePolicies': string
   'cf.shared.lastEvaluated': string
   'cf.shared.pleaseSelectVariation': string
   'cf.shared.prerequisites': string

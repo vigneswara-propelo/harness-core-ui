@@ -23,6 +23,8 @@ shared:
   serveVariationToTargets: Serve variation to targets
   serveVariationToTargetGroups: Serve variation to target groups
   servePercentageRolloutToTargetGroup: Serve percentage rollout to target group
+  governancePolicies: '{{ $.governance.permissions.governancePolicies }}'
+  gitSync: '{{ $.gitsync.label }}'
 messages:
   flagCreated: Flag created.
   flagUpdated: Flag updated.

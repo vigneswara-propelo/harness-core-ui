@@ -19,7 +19,6 @@ import { useQueryParams } from '@common/hooks'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import NavExpandable from '@common/navigation/NavExpandable/NavExpandable'
 import { useFeatureFlagTelemetry } from '@cf/hooks/useFeatureFlagTelemetry'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { useAnyEnterpriseLicense } from '@common/hooks/useModuleLicenses'
 
@@ -33,8 +32,6 @@ export default function CFSideNav(): React.ReactElement {
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const events = useFeatureFlagTelemetry()
   const canUsePolicyEngine = useAnyEnterpriseLicense()
-
-  const { FF_GITSYNC, FF_FLAG_SYNC_THROUGH_GITEX_ENABLED } = useFeatureFlags()
 
   /* istanbul ignore next */
   const projectSelectHandler: ProjectSelectorProps['onSelect'] = data => {
@@ -71,11 +68,9 @@ export default function CFSideNav(): React.ReactElement {
             to={withActiveEnvironment(routes.toCFFeatureFlags(params))}
           />
           <SidebarLink
-            label={getString('cf.shared.targetManagement')}
+            label={getString('cf.shared.targets')}
             to={withActiveEnvironment(routes.toCFTargetManagement(params))}
           />
-          <SidebarLink label={getString('environments')} to={withActiveEnvironment(routes.toCFEnvironments(params))} />
-
           <SidebarLink
             label={getString('pipelines')}
             to={withActiveEnvironment(routes.toPipelines({ ...params, module: 'cf' }))}
@@ -84,35 +79,37 @@ export default function CFSideNav(): React.ReactElement {
             label={getString('cf.shared.getStarted')}
             to={withActiveEnvironment(routes.toCFOnboarding(params))}
           />
+
           <NavExpandable title={getString('common.projectSetup')} route={routes.toSetup({ ...params, module: 'cf' })}>
             <Layout.Vertical spacing="small">
               <SidebarLink
                 to={routes.toAccessControl({ ...params, module: 'cf' })}
                 label={getString('accessControl')}
               />
-              {((FF_GITSYNC && !isGitSimplificationEnabled) ||
-                (FF_FLAG_SYNC_THROUGH_GITEX_ENABLED && isGitSimplificationEnabled)) && (
-                <>
-                  <SidebarLink
-                    label={getString('connectorsLabel')}
-                    to={routes.toConnectors({ ...params, module: 'cf' })}
-                  />
-                  <SidebarLink label={getString('common.secrets')} to={routes.toSecrets({ ...params, module: 'cf' })} />
-                  {!FF_FLAG_SYNC_THROUGH_GITEX_ENABLED && (
-                    <SidebarLink
-                      label={getString('gitManagement')}
-                      to={routes.toGitSyncAdmin({ accountId, orgIdentifier, projectIdentifier, module: 'cf' })}
-                    />
-                  )}
-                </>
-              )}
-              <SidebarLink label={getString('common.templates')} to={routes.toTemplates({ ...params, module: 'cf' })} />
+
               {canUsePolicyEngine && (
                 <SidebarLink
-                  label={getString('common.governance')}
+                  label={getString('cf.shared.governancePolicies')}
                   to={routes.toGovernance({ accountId, orgIdentifier, projectIdentifier, module: 'cf' })}
                 />
               )}
+
+              <SidebarLink
+                label={getString('environments')}
+                to={withActiveEnvironment(routes.toCFEnvironments(params))}
+              />
+
+              {isGitSimplificationEnabled && (
+                <>
+                  <SidebarLink
+                    label={getString('cf.shared.gitSync')}
+                    to={routes.toConnectors({ ...params, module: 'cf' })}
+                  />
+                  <SidebarLink label={getString('common.secrets')} to={routes.toSecrets({ ...params, module: 'cf' })} />
+                </>
+              )}
+
+              <SidebarLink label={getString('common.templates')} to={routes.toTemplates({ ...params, module: 'cf' })} />
             </Layout.Vertical>
           </NavExpandable>
         </>

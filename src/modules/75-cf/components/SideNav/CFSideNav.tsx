@@ -37,20 +37,20 @@ const CFSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
             })}
           />
           <SideNav.Link
-            icon="nav-pipeline"
-            label={getString('pipelines')}
-            to={routes.toPipelines({ accountId, projectIdentifier, orgIdentifier, module })}
-            hidden={mode === NAV_MODE.ALL}
-          />
-          <SideNav.Link
             icon="target-management"
-            label={getString('cf.shared.targetManagement')}
+            label={getString('cf.shared.targets')}
             to={routes.toCFTargetManagement({
               accountId,
               projectIdentifier: projectIdentifier as string,
               orgIdentifier: orgIdentifier as string,
               module
             })}
+          />
+          <SideNav.Link
+            icon="nav-pipeline"
+            label={getString('pipelines')}
+            to={routes.toPipelines({ accountId, projectIdentifier, orgIdentifier, module })}
+            hidden={mode === NAV_MODE.ALL}
           />
           <SideNav.Link
             icon="get-started"
