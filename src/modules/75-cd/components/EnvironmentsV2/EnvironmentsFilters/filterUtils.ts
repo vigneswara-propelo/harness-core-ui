@@ -7,7 +7,7 @@
 
 import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 
-import type { EnvironmentFilterProperties, FilterDTO } from 'services/cd-ng'
+import type { EnvironmentFilterProperties, EnvironmentResponseDTO, FilterDTO } from 'services/cd-ng'
 
 import { StringUtils } from '@common/exports'
 import type { FilterDataInterface, FilterInterface } from '@common/components/Filter/Constants'
@@ -73,8 +73,16 @@ export const createRequestBodyPayload = ({
 export const getFilterByIdentifier = (identifier: string, filters?: FilterDTO[]): FilterDTO | undefined =>
   filters?.find((filter: FilterDTO) => filter.identifier?.toLowerCase() === identifier.toLowerCase())
 
-export const getMultiSelectFromOptions = (values?: any[]): SelectOption[] | undefined => {
-  return values?.map(item => {
-    return { label: item.name ?? item, value: item.identifier ?? item }
+type MultiSelectFromOptions = EnvironmentResponseDTO[] | MultiSelectOption[] | string[]
+
+export const getMultiSelectFromOptions = (values?: MultiSelectFromOptions): SelectOption[] | undefined => {
+  return values?.map?.(item => {
+    if (typeof item === 'string') {
+      return { label: item, value: item } as SelectOption
+    }
+    if ('label' in item && 'value' in item) {
+      return { label: item.label, value: item.value } as SelectOption
+    }
+    return { label: item.name ?? item, value: item.identifier ?? item } as SelectOption
   })
 }

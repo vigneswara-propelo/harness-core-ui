@@ -14,6 +14,11 @@ import { modulePathProps, projectPathProps } from '@common/utils/routeUtils'
 import { TestWrapper } from '@common/utils/testUtils'
 import { Environments } from '../Environments'
 import mockEnvironments from '../__mocks__/environments.json'
+import {
+  getFilterByIdentifier,
+  getHasFilterIdentifier,
+  getMultiSelectFromOptions
+} from '../EnvironmentsFilters/filterUtils'
 
 function getResolutionHelper(data: any, loading: boolean) {
   return { data, loading } as any
@@ -114,5 +119,39 @@ describe('Environments V2 test', () => {
     await waitFor(() => {
       expect(screen.getByText('cd.noEnvironment.title')).toBeInTheDocument()
     })
+  })
+
+  test('EnvironmentsFilters > filterUtils > getMultiSelectFromOptions: verify with array of string', () => {
+    const responseWithEmptyArr = getMultiSelectFromOptions([])
+    expect(responseWithEmptyArr).toStrictEqual([])
+
+    const responseWithArrObj = getMultiSelectFromOptions([{ name: 'filter_1', identifier: 'id_1' }])
+    expect(responseWithArrObj).toStrictEqual([{ label: 'filter_1', value: 'id_1' }])
+
+    const responseWithArrObj2 = getMultiSelectFromOptions([{ label: 'filter_1', value: 'id_1' }])
+    expect(responseWithArrObj2).toStrictEqual([{ label: 'filter_1', value: 'id_1' }])
+
+    const responseWithArrString = getMultiSelectFromOptions(['filter_1'])
+    expect(responseWithArrString).toStrictEqual([{ label: 'filter_1', value: 'filter_1' }])
+
+    const responseWithUndefinedInput = getMultiSelectFromOptions()
+    expect(responseWithUndefinedInput).toBeUndefined()
+  })
+
+  test('EnvironmentsFilters > filterUtils > getHasFilterIdentifier: verify scenarios', () => {
+    const response1 = getHasFilterIdentifier('Unsaved_Filter')
+    expect(response1).toBeFalsy()
+
+    const response2 = getHasFilterIdentifier('OTHER_UNSAVED_FILTER')
+    expect(response2).toBeTruthy()
+  })
+
+  test('EnvironmentsFilters > filterUtils > getFilterByIdentifier: verify scenarios', () => {
+    const filterObj = { name: 'filter_1', identifier: 'id_1', filterProperties: {} }
+    const response1 = getFilterByIdentifier('id_1', [filterObj])
+    expect(response1).toStrictEqual(filterObj)
+
+    const response2 = getFilterByIdentifier('id_2', [filterObj])
+    expect(response2).toBeUndefined()
   })
 })
