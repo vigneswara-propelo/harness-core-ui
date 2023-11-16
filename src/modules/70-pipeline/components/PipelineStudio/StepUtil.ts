@@ -251,7 +251,7 @@ export const validateSteps = ({
   const failureStrategy = Yup.object().shape({
     failureStrategies: failureStrategySchema
   })
-  steps.forEach((stepObj, index) => {
+  steps?.forEach((stepObj, index) => {
     if (stepObj?.step) {
       const errorResponse = validateStep({
         step: stepObj.step,
