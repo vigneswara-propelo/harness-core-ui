@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import {
   Container,
   Icon,
@@ -120,6 +120,7 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
       featureName: FeatureIdentifier.TEMPLATE_SERVICE
     }
   })
+  const history = useHistory()
 
   const readyOnly = isReadonly || !enabled
 
@@ -266,7 +267,7 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
     }
   })
 
-  const openTemplateInNewTab = () => {
+  const openTemplate = (newTab?: boolean) => {
     if (selectedTemplate) {
       const templateStudioPath = routes.toTemplateStudio({
         projectIdentifier: selectedTemplate.projectIdentifier,
@@ -280,7 +281,11 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
         branch: selectedTemplate.gitDetails?.branch
       })
 
-      window.open(`${window.location.origin}${getLocationPathName()}#${templateStudioPath}`, '_blank')
+      if (newTab) {
+        window.open(`${window.location.origin}${getLocationPathName()}#${templateStudioPath}`, '_blank')
+      } else {
+        history.push(templateStudioPath)
+      }
     }
   }
 
@@ -346,7 +351,12 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
             {
               icon: 'main-share',
               label: getString('pipeline.openTemplateInNewTabLabel'),
-              onClick: openTemplateInNewTab
+              onClick: () => openTemplate(true)
+            },
+            {
+              icon: 'main-view',
+              label: getString('platform.connectors.ceAws.crossAccountRoleExtention.step1.p2'),
+              onClick: openTemplate
             },
             {
               icon: 'main-view',
