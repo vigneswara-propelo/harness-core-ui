@@ -13,7 +13,7 @@ agent: Agent
 agents: Agents
 rolling: Rolling Update
 basic: Basic Deployment
-gitopsAgents: Gitops Agents
+gitopsAgents: GitOps Agents
 reloadFromGit: 'Reload from Git'
 perModule: Per Module
 application: Application
