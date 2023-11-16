@@ -18,7 +18,6 @@ sed -i "s|HARNESS_BROWSER_ROUTER_ENABLED|$HARNESS_BROWSER_ROUTER_ENABLED|" index
 sed -i "s|HARNESS_NO_AUTH_HEADER|$HARNESS_NO_AUTH_HEADER|" index.html
 sed -i "s|HARNESS_ENABLE_APPDY_EUM_PLACEHOLDER|$HARNESS_ENABLE_APPDY_EUM_PLACEHOLDER|" index.html
 sed -i "s|HARNESS_ENABLE_CDN_PLACEHOLDER|$HARNESS_ENABLE_CDN_PLACEHOLDER|" index.html
-sed -i "s|HARNESS_ENABLE_SABER_PLACEHOLDER|$HARNESS_ENABLE_SABER_PLACEHOLDER|" index.html
 sed -i "s|HARNESS_ENABLE_CANNY_PLACEHOLDER|$CANNY_ENABLE|" index.html
 sed -i "s|<\!-- segmentToken -->|<script>window.segmentToken = '$SEGMENT_TOKEN'</script>|" index.html
 sed -i "s|<\!-- bugsnagToken -->|<script>window.bugsnagToken = '$BUGSNAG_TOKEN'</script>|" index.html
@@ -26,7 +25,6 @@ sed -i "s|<\!-- appDyEUMToken -->|<script>window.appDyEUMToken = '$APPDY_EUM_TOK
 sed -i "s|<\!-- deploymentType -->|<script>window.deploymentType = '$DEPLOYMENT_TYPE'</script>|" index.html
 sed -i "s|<\!-- refinerProjectToken -->|<script>window.refinerProjectToken = '$REFINER_PROJECT_TOKEN'</script>|" index.html
 sed -i "s|<\!-- refinerFeedbackToken -->|<script>window.refinerFeedbackToken = '$REFINER_FEEDBACK_TOKEN'</script>|" index.html
-sed -i "s|<\!-- saberToken -->|<script>window.saberToken = '$SABER_TOKEN'</script>|" index.html
 sed -i "s|<\!-- helpPanelAccessToken -->|<script>window.helpPanelAccessToken = '$HELP_PANEL_ACCESS_TOKEN'</script>|" index.html
 sed -i "s|<\!-- helpPanelSpace -->|<script>window.helpPanelSpace = '$HELP_PANEL_SPACE'</script>|" index.html
 sed -i "s|<\!-- helpPanelEnvironment -->|<script>window.helpPanelEnvironment = '$HELP_PANEL_ENVIRONMENT'</script>|" index.html
@@ -55,7 +53,7 @@ fi
 
 if [ "$HARNESS_ENABLE_CSP_HEADERS" = "true" ]
 then
-  sed -i "s|#cspHeadersPlaceholder|add_header Content-Security-Policy-Report-Only \"script-src 'self' 'unsafe-inline' https://canny.io https://*.harness.io https://widget.saberfeedback.com https://cdn.segment.com https://js.refiner.io https://widget.intercom.io https://js.intercomcdn.com https://d2wy8f7a9ursnm.cloudfront.net https://cdn.appdynamics.com; style-src 'self' 'unsafe-inline' https://*.harness.io https://fonts.googleapis.com https://widget.saberfeedback.com https://js.refiner.io; img-src 'self' data: blob: https://*.harness.io https://widget.saberfeedback.com; font-src 'self' https://fonts.gstatic.com;\";|" $NGINX_CONFIG_FILE
+  sed -i "s|#cspHeadersPlaceholder|add_header Content-Security-Policy-Report-Only \"script-src 'self' 'unsafe-inline' https://canny.io https://*.harness.io https://cdn.segment.com https://js.refiner.io https://widget.intercom.io https://js.intercomcdn.com https://d2wy8f7a9ursnm.cloudfront.net https://cdn.appdynamics.com; style-src 'self' 'unsafe-inline' https://*.harness.io https://fonts.googleapis.com https://js.refiner.io; img-src 'self' data: blob: https://*.harness.io; font-src 'self' https://fonts.gstatic.com;\";|" $NGINX_CONFIG_FILE
 fi
 
 

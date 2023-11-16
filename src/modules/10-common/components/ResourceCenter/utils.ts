@@ -76,21 +76,7 @@ export function getReleaseNodeLink(): string {
       return SAAS_RELEASE_NODE_LINK
   }
 }
-export const openFileATicket = (
-  e: React.MouseEvent<Element, MouseEvent>,
-  currentUserInfo: UserInfo,
-  setShow?: React.Dispatch<React.SetStateAction<boolean>>
-): void => {
-  e.stopPropagation()
-  e.preventDefault()
-  window.Saber.do?.('set_options', {
-    feedback_values: {
-      Email: currentUserInfo.email // set default value for email field
-    }
-  })
-  setShow?.(false)
-  window.Saber.do?.('open')
-}
+
 export const openWhatsNew = (e: React.MouseEvent<Element, MouseEvent>): void => {
   e.stopPropagation()
   e.preventDefault()

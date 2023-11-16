@@ -31,7 +31,6 @@ import {
   HARNESS_API_DOCS_LINK,
   SITE_STATUS_LINK,
   HARNESS_TUTORIALS,
-  openFileATicket,
   cannySupportShareYourIdeas
 } from './utils'
 import { CommunitySubmitTicket } from './MenuItems'
@@ -58,7 +57,7 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link, isOpen: di
   const { isOpen, open: openSubmitTicketModal, close: closeSubmitTicketModal } = useToggleOpen(false)
 
   const isCommunity = useGetCommunity()
-  const { SPG_MODULE_VERSION_INFO, CDS_SUPPORT_TICKET_DEFLECTION } = useFeatureFlags()
+  const { SPG_MODULE_VERSION_INFO } = useFeatureFlags()
   useEffect(() => {
     _refiner('dismissForm', refinerSurveryId)
     _refiner('setProject', refinerProjectId)
@@ -97,12 +96,8 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link, isOpen: di
         icon: 'pipeline-deploy',
         iconClassname: css.iconFilled,
         className: css.bottom,
-        onClick: (e: React.MouseEvent<Element, MouseEvent>) => {
-          if (CDS_SUPPORT_TICKET_DEFLECTION) {
-            openSubmitTicketModal()
-          } else {
-            openFileATicket(e, currentUserInfo, setShow)
-          }
+        onClick: () => {
+          openSubmitTicketModal()
         },
         testId: 'submit-ticket'
       },

@@ -163,7 +163,6 @@
       window.HARNESS_ENABLE_NG_AUTH_UI = 'HARNESS_ENABLE_NG_AUTH_UI_PLACEHOLDER' === 'true'
       window.HARNESS_ENABLE_APPDY_EUM = 'HARNESS_ENABLE_APPDY_EUM_PLACEHOLDER' === 'true'
       window.HARNESS_ENABLE_CDN = 'HARNESS_ENABLE_CDN_PLACEHOLDER' === 'true'
-      window.HARNESS_ENABLE_SABER = 'HARNESS_ENABLE_SABER_PLACEHOLDER' === 'true'
       window.HARNESS_ENABLE_CANNY = 'HARNESS_ENABLE_CANNY_PLACEHOLDER' === 'true'
       window.HARNESS_PLG_FF_SDK_KEY = 'HARNESS_PLG_FF_SDK_KEY_PLACEHOLDER'
     </script>
@@ -210,33 +209,6 @@
     <script>
       window.resourceBasePath = window.HARNESS_ENABLE_CDN ? '//static.harness.io/ng-static/' : window.NON_CDN_BASE_PATH
     </script>
-
-    <!-- saberToken -->
-    <!-- Saber Feedback button -->
-    <script async type="text/javascript">
-      if (window.HARNESS_ENABLE_SABER && window.saberToken) {
-        ;(function () {
-          window.Saber = {
-            apiKey: window.saberToken,
-            com: [],
-            do: function () {
-              this.com.push(arguments)
-            }
-          }
-          var e = document.createElement('script')
-          e.setAttribute('type', 'text/javascript')
-          e.setAttribute('src', 'https://widget.saberfeedback.com/v2/widget.js')
-          e.setAttribute('defer', 'defer')
-          e.onload = function () {
-            Saber.do('set_option', 'hide_button', true)
-            Saber.do('set_option', 'show_thanks', false)
-            Saber.do('set_option', 'suppress_localhost_warning', true)
-          }
-          document.getElementsByTagName('head')[0].appendChild(e)
-        })()
-      }
-    </script>
-    <!-- End of Saber Feedback button -->
 
     <!-- Download Canny SDK -->
     <script>

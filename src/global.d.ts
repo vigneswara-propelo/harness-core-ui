@@ -69,8 +69,6 @@ declare interface Window {
   resourceBasePath: string
   refinerProjectToken: string
   refinerFeedbackToken: string
-  saberToken: string
-  Saber: any
   hj: any
   helpPanelAccessToken: string
   helpPanelSpace: string

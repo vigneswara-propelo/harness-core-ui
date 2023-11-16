@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { Button, Page, ButtonVariation, Layout, Card, Text } from '@harness/uicore'
+import { Button, Page, ButtonVariation, Layout, Card, Text, useToggleOpen } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -17,10 +17,10 @@ import { Editions, TimeType } from '@common/constants/SubscriptionTypes'
 import { ItemDTO, SubscriptionDetailDTO, useListSubscriptions } from 'services/cd-ng'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import { openFileATicket } from '@common/components/ResourceCenter/utils'
 import routes from '@common/RouteDefinitions'
 import { usePage } from '@common/pages/pageContext/PageProvider'
 import { getSubscriptionByPaymentFrequency } from '@auth-settings/components/Subscription/subscriptionUtils'
+import { SubmitTicketModal } from '@modules/10-common/components/ResourceCenter/SubmitTicketModal/SubmitTicketModal'
 import SubscriptionTable from './SubscriptionTable'
 import NoBills from './images/noBills.svg'
 import BillingAdminsCard from './BillingAdminsCard'
@@ -63,6 +63,7 @@ export default function BillingPage(_props: { children?: JSX.Element }): JSX.Ele
   const { trackPage, identifyUser } = useTelemetry()
   const history = useHistory()
   const [subscriptions, setsubscriptions] = useState<{ [key: string]: SubscriptionDetailDTO[] }>({})
+  const { isOpen, open: openSubmitTicketModal, close: closeSubmitTicketModal } = useToggleOpen(false)
 
   const { data, loading } = useListSubscriptions({ queryParams: { accountIdentifier: accountId } })
   useEffect(() => {
@@ -91,8 +92,7 @@ export default function BillingPage(_props: { children?: JSX.Element }): JSX.Ele
             variation={ButtonVariation.PRIMARY}
             icon="contact-support"
             text={getString('common.contactSupport')}
-            onClick={e => openFileATicket(e, currentUserInfo)}
-            disabled={!isEmpty(window.saberToken)}
+            onClick={() => openSubmitTicketModal()}
           />
         }
       />
@@ -116,6 +116,7 @@ export default function BillingPage(_props: { children?: JSX.Element }): JSX.Ele
           )}
         </Layout.Vertical>
       </Page.Body>
+      <SubmitTicketModal isOpen={isOpen} close={closeSubmitTicketModal} />
     </>
   )
 }

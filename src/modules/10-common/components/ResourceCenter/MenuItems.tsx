@@ -6,17 +6,12 @@
  */
 
 import React from 'react'
-import moment from 'moment'
 import cx from 'classnames'
 import { capitalize } from 'lodash-es'
 import { Button, ButtonVariation, Layout, Text, Popover, Icon } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { PopoverInteractionKind, Classes, Position } from '@blueprintjs/core'
-import { useGetCommunity } from '@common/utils/utils'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
-import Feedback from './Feedback'
-import { getMenuItems } from './ResourceCenterUtil'
 import css from './ResourceCenter.module.scss'
 
 export const CommunitySubmitTicket: React.FC = () => {
@@ -83,62 +78,3 @@ export const CommunitySubmitTicket: React.FC = () => {
     </Popover>
   )
 }
-
-interface MenuItemsProps {
-  closeResourceCenter: () => void
-}
-
-const timestamp = moment.now()
-const HARNESS_SUPPORT_LINK =
-  '/sso.html?action=login&brand_id=114095000394&locale_id=1&return_to=https%3A%2F%2Fsupport.harness.io%2Fhc%2Fen-us%2Frequests&src=zendesk&timestamp=' +
-  timestamp
-
-const MenuItems: React.FC<MenuItemsProps> = ({ closeResourceCenter }: MenuItemsProps) => {
-  const { getString } = useStrings()
-  const isCommunity = useGetCommunity()
-  const { currentUserInfo } = useAppStore()
-  const openZendeskSupport = (e: React.MouseEvent<Element, MouseEvent>): void => {
-    e.stopPropagation()
-    e.preventDefault()
-    window.open(HARNESS_SUPPORT_LINK)
-  }
-  const openFileATicket = (e: React.MouseEvent<Element, MouseEvent>): void => {
-    e.stopPropagation()
-    e.preventDefault()
-    window.Saber.do('set_options', {
-      feedback_values: {
-        Email: currentUserInfo.email // set default value for email field
-      }
-    })
-    closeResourceCenter()
-    window.Saber.do('open')
-  }
-
-  return isCommunity ? (
-    <CommunitySubmitTicket />
-  ) : (
-    <Layout.Vertical padding={'xlarge'} className={css.middleregion}>
-      <Feedback label={getString('common.resourceCenter.feedback.submit')} />
-      <Layout.Horizontal padding={{ top: 'medium' }} flex={{ justifyContent: 'space-between' }}>
-        {getMenuItems({
-          title: capitalize(getString('common.contactSupport')),
-          description: getString('common.resourceCenter.ticketmenu.submitDesc'),
-          onClick: e => {
-            openFileATicket(e)
-          }
-        })}
-      </Layout.Horizontal>
-      <Layout.Horizontal padding={{ top: 'medium' }} flex={{ justifyContent: 'space-between' }}>
-        {getMenuItems({
-          title: getString('common.resourceCenter.ticketmenu.tickets'),
-          description: getString('common.resourceCenter.ticketmenu.ticketsDesc'),
-          onClick: e => {
-            openZendeskSupport(e)
-          }
-        })}
-      </Layout.Horizontal>
-    </Layout.Vertical>
-  )
-}
-
-export default MenuItems
