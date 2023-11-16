@@ -31,6 +31,7 @@ import {
   LastActivity,
   WebhookMenu,
   WebhookName,
+  WebhookRepo,
   withWebhook
 } from './WebhooksListColumns'
 import NewWebhookModal from '../NewWebhookModal'
@@ -125,31 +126,37 @@ export default function WebhooksList({
       {
         Header: getString('name').toUpperCase(),
         id: 'webhook_name',
-        width: '15%',
+        width: '16%',
         Cell: withWebhook(WebhookName)
       },
       {
         Header: getString('platform.connectors.title.gitConnector').toUpperCase(),
         id: 'connector_ref',
-        width: '25%',
+        width: '20%',
         Cell: withWebhook(GitConnector)
+      },
+      {
+        Header: getString('pipeline.webhooks.gitRepo').toUpperCase(),
+        id: 'repo_name',
+        width: '16%',
+        Cell: withWebhook(WebhookRepo)
       },
       {
         Header: getString('common.git.folderPath').toUpperCase(),
         id: 'folder_paths',
-        width: '20%',
+        width: '24%',
         Cell: withWebhook(FolderPath)
       },
       {
         Header: getString('lastActivity').toUpperCase(),
         id: 'lastUpdatedBy',
-        width: '20%',
+        width: '8%',
         Cell: withWebhook(LastActivity)
       },
       {
         Header: getString('enabledLabel').toUpperCase(),
         id: 'is_enabled',
-        width: '10%',
+        width: '8%',
         Cell: withWebhook(Enabled),
         actions: {
           onToggleEnable: handleWebhookEnableToggle
@@ -157,7 +164,7 @@ export default function WebhooksList({
       },
       {
         id: 'modifiedBy',
-        width: '10%',
+        width: '8%',
         Cell: withWebhook(WebhookMenu),
         actions: {
           onEdit: handleWebhookEdit,

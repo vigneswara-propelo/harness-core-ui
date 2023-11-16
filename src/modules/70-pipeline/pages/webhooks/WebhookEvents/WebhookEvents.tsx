@@ -17,13 +17,15 @@ import {
   Container,
   DateRangePickerButton,
   DropDown,
-  ExpandingSearchInput
+  ExpandingSearchInput,
+  MultiSelectDropDown,
+  Icon
 } from '@harness/uicore'
-import type { SelectOption } from '@harness/uicore'
+import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useListGitxWebhookEventsQuery, useListGitxWebhooksQuery } from '@harnessio/react-ng-manager-client'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, flatten, has, isEmpty, uniqBy } from 'lodash-es'
 import { DateRange } from '@blueprintjs/datetime'
 import { useStrings } from 'framework/strings'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -36,7 +38,7 @@ import EmptyContentImg from '@common/images/EmptySearchResults.svg'
 import { WebhookEventsQueryParams, useWebhookEventsQueryParamOptions } from '@pipeline/pages/utils/requestUtils'
 import { DEFAULT_PAGE_INDEX } from '@modules/70-pipeline/utils/constants'
 import WebhooksEventsList from './WebhooksEventsList'
-import { STATUS, WebhookTabIds } from '../utils'
+import { STATUS, WebhookEventStatus, WebhookTabIds, getStatusList, stringsMap } from '../utils'
 import NoData from '../NoData'
 import WebhooksTabs from '../WebhooksTabs'
 import css from '../Webhooks.module.scss'
@@ -46,7 +48,7 @@ export default function WebhookEvents(): JSX.Element {
   const { module } = useParams<AccountPathProps & ModulePathParams>()
   const { updateQueryParams } = useUpdateQueryParams<WebhookEventsQueryParams>()
   const queryParamOptions = useWebhookEventsQueryParamOptions()
-  const { page, size, dateFilter, webhookIdentifier, eventId } = useQueryParams(queryParamOptions)
+  const { page, size, dateFilter, webhookIdentifier, eventId, eventStatus } = useQueryParams(queryParamOptions)
 
   const start = new Date()
   start.setDate(start.getDate() - 7)
@@ -74,7 +76,11 @@ export default function WebhookEvents(): JSX.Element {
       webhook_identifier: webhookIdentifier,
       event_start_time: dateFilter.startTime,
       event_end_time: dateFilter.endTime,
-      event_identifier: eventId
+      event_identifier: eventId,
+      event_status: eventStatus
+    },
+    stringifyQueryParamsOptions: {
+      arrayFormat: 'repeat'
     }
   })
 
@@ -129,6 +135,20 @@ export default function WebhookEvents(): JSX.Element {
   const noData = Boolean(!isLoading && response && isEmpty(response.content))
   const dateRange: DateRange = [new Date(Number(dateFilter.startTime)), new Date(Number(dateFilter.endTime))]
   const isLast7Days = dateRange[0]?.getTime() === start.getTime() && dateRange[1]?.getTime() === end.getTime()
+  const actualValue = React.useMemo(
+    () =>
+      uniqBy(
+        flatten(defaultTo(eventStatus, []))
+          .filter(val => has(stringsMap, val))
+          .map((val): MultiSelectOption => {
+            const key = stringsMap[val as WebhookEventStatus]
+
+            return { label: getString(key), value: val }
+          }),
+        row => row.label
+      ),
+    [getString, eventStatus]
+  )
 
   return (
     <main className={css.layout}>
@@ -163,6 +183,7 @@ export default function WebhookEvents(): JSX.Element {
             }
           />
           <DropDown
+            className={css.webhookIdentifierFilter}
             items={getShowWebhooksDropdownList()}
             filterable={false}
             addClearBtn={true}
@@ -176,6 +197,19 @@ export default function WebhookEvents(): JSX.Element {
                 webhookIdentifier: selected.value ? (selected.value as any) : undefined
               })
             }}
+          />
+          <MultiSelectDropDown
+            width={120}
+            buttonTestId="status-select"
+            value={actualValue}
+            onChange={option => {
+              updateQueryParams({
+                eventStatus: (option.flatMap(item => item.value) as WebhookEventStatus[]) || null
+              })
+            }}
+            items={getStatusList(getString)}
+            usePortal={true}
+            placeholder={getString('status')}
           />
         </Layout.Horizontal>
         <Layout.Horizontal>
@@ -199,6 +233,9 @@ export default function WebhookEvents(): JSX.Element {
             <Text color={Color.GREY_800} iconProps={{ size: 14 }}>
               {getString('total')}: {data?.pagination?.total}
             </Text>
+            <span className={css.reload}>
+              <Icon name="command-rollback" onClick={() => refetch()} />
+            </span>
           </Layout.Horizontal>
         )}
         {state === STATUS.ok ? (

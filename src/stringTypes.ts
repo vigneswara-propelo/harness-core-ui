@@ -4463,6 +4463,8 @@ export interface StringsMap {
   'pipeline.errorFramework.pipelineErrorsTitle': string
   'pipeline.errorFramework.templateErrorsTitle': string
   'pipeline.estimatedTimeRemaining': string
+  'pipeline.eventStatus.processing': string
+  'pipeline.eventStatus.queued': string
   'pipeline.execTargetLabel': string
   'pipeline.execution.actions.abortPipeline': string
   'pipeline.execution.actions.abortStage': string
@@ -5801,9 +5803,11 @@ export interface StringsMap {
   'pipeline.webhooks.deleted': string
   'pipeline.webhooks.editWebhook': string
   'pipeline.webhooks.folderPathWithRepo': string
+  'pipeline.webhooks.gitRepo': string
   'pipeline.webhooks.newWebhook': string
   'pipeline.webhooks.noWebhook': string
   'pipeline.webhooks.searchEventId': string
+  'pipeline.webhooks.searchWebhooks': string
   'pipeline.webhooks.settingUpWebhook': string
   'pipeline.webhooks.successMessage': string
   'pipeline.webhooks.successSubtitle': string

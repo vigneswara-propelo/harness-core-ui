@@ -9,6 +9,7 @@ import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { UseQueryParamsOptions, useQueryParamsOptions } from '@common/hooks/useQueryParams'
+import { WebhookEventStatus } from '../webhooks/utils'
 
 export interface EventsDateFilter {
   startTime: number
@@ -19,6 +20,7 @@ export type WebhookEventsQueryParams = {
   dateFilter?: EventsDateFilter
   webhookIdentifier?: string
   eventId?: string
+  eventStatus?: WebhookEventStatus[]
 } & CommonPaginationQueryParams
 
 export type WebhookEventsQueryParamsWithDefaults = RequiredPick<

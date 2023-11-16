@@ -63,6 +63,13 @@ export function GitConnector({ connector_ref: gitConnector }: { connector_ref: s
   )
 }
 
+export function WebhookRepo({ repo_name: repoName }: { repo_name: string }): JSX.Element {
+  return (
+    <Text color={Color.BLACK} lineClamp={1} padding={{ right: 'small' }}>
+      {repoName}
+    </Text>
+  )
+}
 export function FolderPath({
   folder_paths: folderPath,
   repo_name: repoName

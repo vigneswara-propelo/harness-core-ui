@@ -2057,6 +2057,11 @@ webhooks:
   webhooksListing: Listing
   folderPathWithRepo: https://github.com/{{repo}}/{{folderPath}}
   searchEventId: Search by Event ID
+  searchWebhooks: Search by Webhook ID
+  gitRepo: Git Repository
+eventStatus:
+  processing: Processing
+  queued: Queued
 webhookEvents:
   events: Webhook Events
   dateTime: DateTime

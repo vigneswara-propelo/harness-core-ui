@@ -16,6 +16,7 @@ import {
   ColumnTimeStamp,
   ColumnUser,
   EventId,
+  EventStatus,
   WebhookIdentifier,
   WebhooksPayloadDetails,
   withWebhookEvents
@@ -50,13 +51,13 @@ export default function WebhooksEventsList({
       {
         Header: getString('pipeline.webhookEvents.dateTime').toUpperCase(),
         id: 'datetime',
-        width: '20%',
+        width: '16%',
         Cell: withWebhookEvents(ColumnTimeStamp)
       },
       {
         Header: getString('pipeline.webhookEvents.author').toUpperCase(),
         id: 'pusher',
-        width: '20%',
+        width: '16%',
         Cell: withWebhookEvents(ColumnUser)
       },
       {
@@ -68,13 +69,19 @@ export default function WebhooksEventsList({
       {
         Header: getString('execution.triggerType.WEBHOOK').toUpperCase(),
         id: 'webhookIdentifier',
-        width: '20%',
+        width: '16%',
         Cell: withWebhookEvents(WebhookIdentifier)
+      },
+      {
+        Header: getString('status').toUpperCase(),
+        id: 'webhookStatus',
+        width: '16%',
+        Cell: withWebhookEvents(EventStatus)
       },
       {
         Header: '',
         id: 'payloadDetails',
-        width: '20%',
+        width: '16%',
         Cell: withWebhookEvents(WebhooksPayloadDetails),
         actions: {
           onClick: handlePayloadDetailsClick

@@ -25,3 +25,54 @@
 .builder {
   background-color: var(--grey-100);
 }
+
+.status {
+  --webhookEvent-status-bg-color: var(--grey-350);
+  --webhookEvent-status-color: var(--white);
+  white-space: nowrap !important;
+  font-size: var(--font-size-xsmall);
+  color: var(--webhookEvent-status-color) !important;
+  border: none;
+  background-color: var(--webhookEvent-status-bg-color) !important;
+  border-radius: var(--spacing-2);
+  padding: var(--spacing-1) var(--spacing-3) !important;
+  height: 18px;
+  line-height: var(--font-size-normal) !important;
+  font-weight: bold !important;
+  display: inline-flex !important;
+  justify-content: center;
+  align-items: center;
+  letter-spacing: 0.2px;
+
+  .text {
+    font-size: var(--font-size-xsmall) !important;
+    line-height: var(--font-size-normal) !important;
+    font-weight: bold !important;
+    color: var(--webhookEvent-status-color) !important;
+  }
+
+  &.failed {
+    --webhookEvent-status-bg-color: var(--red-50);
+    --webhookEvent-status-color: var(--red-900);
+  }
+
+  &.skipped,
+  &.queued {
+    --webhookEvent-status-bg-color: var(--grey-200);
+    --webhookEvent-status-color: var(--grey-700);
+  }
+
+  &.successful {
+    --webhookEvent-status-bg-color: var(--green-50);
+    --webhookEvent-status-color: var(--green-800);
+  }
+
+  &.processing {
+    --webhookEvent-status-bg-color: var(--primary-7);
+  }
+
+  .icon {
+    margin-right: var(--spacing-2) !important;
+    color: var(--webhookEvent-status-color) !important;
+  }
+}

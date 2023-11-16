@@ -16,7 +16,8 @@ import {
   Text,
   Container,
   Dialog,
-  useToaster
+  useToaster,
+  ExpandingSearchInput
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
@@ -39,6 +40,7 @@ import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationPro
 import EmptyContentImg from '@common/images/EmptySearchResults.svg'
 import RbacButton from '@rbac/components/Button/Button'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { DEFAULT_PAGE_INDEX } from '@modules/70-pipeline/utils/constants'
 import WebhooksList from './WebhooksList/WebhooksList'
 import NewWebhookModal from './NewWebhookModal'
 import { STATUS, initialWebhookModalData, Error, WebhookTabIds } from './utils'
@@ -54,12 +56,13 @@ export function Webhooks(): JSX.Element {
   const queryParams = useQueryParams<PageQueryParamsWithDefaults>(queryParamOptions)
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { page, size } = queryParams
+  const { page, size, searchTerm } = queryParams
 
   const { data, isInitialLoading, isFetching, error, refetch } = useListGitxWebhooksQuery({
     queryParams: {
       limit: size,
-      page: page ? page - 1 : 0
+      page: page ? page - 1 : 0,
+      webhook_identifier: searchTerm
     }
   })
 
@@ -144,6 +147,12 @@ export function Webhooks(): JSX.Element {
     dataTestid: 'add-webhook',
     onClick: showCreateModal
   }
+  const onSearchChange = (webhookIdentifier: string): void => {
+    updateQueryParams({
+      page: DEFAULT_PAGE_INDEX,
+      searchTerm: webhookIdentifier
+    })
+  }
 
   return (
     <main className={css.layout}>
@@ -162,6 +171,13 @@ export function Webhooks(): JSX.Element {
       </Page.SubHeader>
       <Page.SubHeader className={css.toolbar}>
         <RbacButton intent="primary" icon="plus" font={{ weight: 'bold' }} {...createButtonProps} />
+        <ExpandingSearchInput
+          throttle={300}
+          width={250}
+          alwaysExpanded
+          onChange={onSearchChange}
+          placeholder={getString('pipeline.webhooks.searchWebhooks')}
+        />
       </Page.SubHeader>
       <div className={css.content}>
         {state === STATUS.error && (

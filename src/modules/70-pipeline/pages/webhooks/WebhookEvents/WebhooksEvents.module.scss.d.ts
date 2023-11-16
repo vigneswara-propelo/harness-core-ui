@@ -11,7 +11,15 @@ declare const styles: {
   readonly builder: string
   readonly card: string
   readonly drawer: string
+  readonly failed: string
+  readonly icon: string
   readonly marginBottom: string
   readonly payloadBtn: string
+  readonly processing: string
+  readonly queued: string
+  readonly skipped: string
+  readonly status: string
+  readonly successful: string
+  readonly text: string
 }
 export default styles

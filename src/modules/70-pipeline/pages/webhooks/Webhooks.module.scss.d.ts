@@ -23,10 +23,12 @@ declare const styles: {
   readonly modalHeader: string
   readonly noWebhookHeading: string
   readonly noWebhookText: string
+  readonly reload: string
   readonly subHeader: string
   readonly textAlign: string
   readonly toolbar: string
   readonly trashBtn: string
+  readonly webhookIdentifierFilter: string
   readonly width: string
 }
 export default styles

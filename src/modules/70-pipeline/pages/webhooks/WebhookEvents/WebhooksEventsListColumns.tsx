@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
-import { Layout, Text, Avatar, Button } from '@harness/uicore'
+import { Layout, Text, Avatar, Button, Icon } from '@harness/uicore'
+import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { GitXWebhookEventResponse } from '@harnessio/react-ng-manager-client'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import { useStrings } from 'framework/strings'
+import { WebhookEventStatus, iconMap, stringsMap } from '../utils'
 import css from './WebhooksEvents.module.scss'
 
 interface WebhookRowColumn {
@@ -67,6 +69,20 @@ export function WebhookIdentifier({
     <Text color={Color.BLACK} lineClamp={1}>
       {webhookIdentifier}
     </Text>
+  )
+}
+
+export function EventStatus({ event_status: eventStatus }: { event_status: string }): JSX.Element {
+  const { getString } = useStrings()
+  return (
+    <div className={cx(css.status, css[eventStatus.toLowerCase() as keyof typeof css])}>
+      {iconMap[eventStatus as WebhookEventStatus] ? (
+        <Icon {...iconMap[eventStatus as WebhookEventStatus]} className={css.icon} />
+      ) : null}
+      <Text className={css.text} lineClamp={1}>
+        {getString(stringsMap[eventStatus as WebhookEventStatus] || 'pipeline.executionStatus.Unknown')}
+      </Text>
+    </div>
   )
 }
 

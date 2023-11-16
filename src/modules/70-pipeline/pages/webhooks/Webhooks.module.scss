@@ -135,3 +135,16 @@
 .textAlign {
   text-align: center;
 }
+
+.webhookIdentifierFilter {
+  margin-right: var(--margin-form-field) !important;
+}
+
+.reload {
+  cursor: pointer;
+  padding: var(--spacing-small);
+
+  &:hover {
+    background-color: var(--grey-100);
+  }
+}
