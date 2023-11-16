@@ -14,7 +14,8 @@ import type {
   ManifestConfigWrapper,
   PageConnectorResponse,
   ServiceDefinition,
-  TasManifest
+  TasManifest,
+  ManifestSourceWrapper
 } from 'services/cd-ng'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 
@@ -106,11 +107,21 @@ export interface ManifestListViewProps {
   availableManifestTypes: ManifestTypes[]
 }
 
+export type K8sManifest = 'K8sManifest'
+
+export interface ManifestSourceK8s extends Omit<ManifestSourceWrapper, 'type'> {
+  type: string
+}
+
 export interface ManifestStepInitData {
-  connectorRef: string | undefined | ConnectorSelectedValue
+  connectorRef?: string | ConnectorSelectedValue
   store: ManifestStores | string
   selectedManifest: ManifestTypes | null
   config?: OciHelmConfigData
+  manifestSource?: ManifestSourceWrapper
+  formValues?: ManifestSourceWrapper
+  selectedType?: string
+  valuesPaths?: string[]
 }
 
 export interface OciHelmConfigData {

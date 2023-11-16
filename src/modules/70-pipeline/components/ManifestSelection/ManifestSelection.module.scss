@@ -112,3 +112,42 @@
 .fsLinkWrapper {
   min-width: 200px;
 }
+
+.configField {
+  display: flex;
+  justify-content: space-between;
+  width: 100% !important;
+  height: 32px;
+  background: var(--grey-0);
+  border: 1px solid rgb(228, 228, 235);
+  align-items: center;
+  padding: 10px;
+  margin-top: 10px !important;
+}
+
+.configFile {
+  display: flex;
+  align-items: center;
+}
+
+.configLabel {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: var(--grey-900) !important;
+}
+.editBtn {
+  min-width: 24px !important;
+  width: 24px !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  &:hover {
+    cursor: pointer;
+  }
+}
+.configPlaceHolder {
+  color: var(--primary-7) !important;
+}
+
+.configPlaceHolder:hover {
+  text-decoration: none;
+}

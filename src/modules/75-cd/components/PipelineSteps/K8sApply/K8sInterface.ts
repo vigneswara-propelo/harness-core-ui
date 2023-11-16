@@ -5,10 +5,21 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import type { AllowedTypes } from '@harness/uicore'
+import { FormikContextType } from 'formik'
+
 import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { K8sApplyStepInfo, ManifestConfigWrapper, StepElementConfig } from 'services/cd-ng'
+import type {
+  K8sApplyStepInfo,
+  ManifestConfigWrapper,
+  StepElementConfig,
+  ManifestSourceWrapper,
+  PageConnectorResponse,
+  ServiceDefinition
+} from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
+import { ManifestTypes, ManifestStepInitData } from '@pipeline/components/ManifestSelection/ManifestInterface'
+
 export interface K8sApplyData extends StepElementConfig {
   spec: Omit<K8sApplyStepInfo, 'skipDryRun' | 'skipSteadyStateCheck' | 'skipRendering'> & {
     skipDryRun: boolean
@@ -24,6 +35,10 @@ export interface K8sApplyVariableStepProps {
   variablesData: K8sApplyData
 }
 
+export interface K8sManifestSource {
+  manifestSource?: ManifestSourceWrapper
+}
+
 export interface FilePathConfig {
   value: string
   id: string
@@ -35,6 +50,7 @@ export interface K8sApplyFormData extends StepElementConfig {
     skipRendering?: boolean
     filePaths?: FilePathConfig[] | string
     overrides?: ManifestConfigWrapper[]
+    manifestSource?: ManifestSourceWrapper
   }
 }
 
@@ -61,4 +77,16 @@ export interface K8sManifestStepInitData {
   connectorRef: string | undefined | ConnectorSelectedValue
   store: K8sManifestStores | string
   selectedManifest: K8sManifestTypes | null
+}
+
+export interface K8sApplyManifestProps {
+  connectors?: PageConnectorResponse | undefined
+  isReadonly?: boolean
+  deploymentType?: ServiceDefinition['type']
+  allowableTypes: AllowedTypes
+  preSelectedManifestType?: ManifestTypes
+  availableManifestTypes?: ManifestTypes[]
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  formik: FormikContextType<any>
+  onSubmit: (data: ManifestStepInitData) => void
 }

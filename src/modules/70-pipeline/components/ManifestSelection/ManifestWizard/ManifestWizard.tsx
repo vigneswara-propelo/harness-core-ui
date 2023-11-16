@@ -96,6 +96,7 @@ export function ManifestWizard<T, U>({
       handleStoreChange()
     }
   }
+
   /* istanbul ignore next */
   const changeManifestTypeRef = (arg: ManifestTypes | null): void => {
     changeManifestType?.(arg as unknown as U)

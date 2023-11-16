@@ -17,14 +17,15 @@ import {
   Label,
   Layout,
   MultiTypeInputType,
-  Text
+  Text,
+  Select
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { FieldArray, FormikErrors, FormikProps, yupToFormErrors } from 'formik'
 import * as Yup from 'yup'
 import { v4 as uuid } from 'uuid'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty, get } from 'lodash-es'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 
 import {
@@ -59,7 +60,10 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { ManifestStepInitData } from '@pipeline/components/ManifestSelection/ManifestInterface'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import MultiTypeListInputSet from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
+import SelectRemoteManifest from './K8sRemoteManifest/K8sRemoteManifest'
 import { K8sOverrideValuesRuntimeFields } from './K8sOverrideValuesRuntimeFields'
 import K8sOverrideValuesManifest from './K8sOverrideValuesManifest'
 import type {
@@ -104,6 +108,7 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+  const isK8sWithoutService = useFeatureFlag(FeatureFlag.CDS_K8S_APPLY_MANIFEST_WITHOUT_SERVICE)
 
   const selectedDeploymentType = useCallback((): GetExecutionStrategyYamlQueryParams['serviceDefinitionType'] => {
     return getServiceDefinitionType(
@@ -128,7 +133,8 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
               skipDryRun: defaultTo(values?.spec?.skipDryRun, false),
               skipSteadyStateCheck: defaultTo(values?.spec?.skipSteadyStateCheck, false),
               skipRendering: defaultTo(values?.spec?.skipRendering, false),
-              filePaths: values?.spec?.filePaths,
+              filePaths: values.spec?.manifestSource ? undefined : values?.spec?.filePaths,
+              manifestSource: values.spec?.filePaths ? undefined : values?.spec?.manifestSource,
               overrides: values?.spec?.overrides
             }
           }
@@ -155,22 +161,26 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
           timeout: getDurationValidationSchema({ minimum: '10s' }).required(
             getString('validation.timeout10SecMinimum')
           ),
-          spec: Yup.object().shape({
-            filePaths: Yup.lazy(value =>
-              getMultiTypeFromValue(value as boolean) === MultiTypeInputType.FIXED
-                ? Yup.array(
-                    Yup.object().shape({
-                      value: Yup.string().required(getString('cd.pathCannotBeEmpty'))
-                    })
-                  ).required(getString('cd.filePathRequired'))
-                : Yup.string()
-            )
+          spec: Yup.object().when(' ', {
+            is: !isK8sWithoutService,
+            then: Yup.object().shape({
+              filePaths: Yup.lazy(value =>
+                getMultiTypeFromValue(value as boolean) === MultiTypeInputType.FIXED
+                  ? Yup.array(
+                      Yup.object().shape({
+                        value: Yup.string().required(getString('cd.pathCannotBeEmpty'))
+                      })
+                    ).required(getString('cd.filePathRequired'))
+                  : Yup.string()
+              )
+            })
           })
         })}
       >
         {(formik: FormikProps<K8sApplyFormData>) => {
           const { values } = formik
           setFormikRef(formikRef, formik)
+
           return (
             <>
               {stepViewType === StepViewType.Template ? null : (
@@ -193,62 +203,101 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
                   multiTypeDurationProps={{ enableConfigureOptions: true, disabled: isDisabled, allowableTypes }}
                 />
               </div>
+
               <div className={stepCss.divider} />
-              <div className={stepCss.formGroup}>
-                <MultiTypeFieldSelector
-                  defaultValueToReset={defaultValueToReset}
-                  name={'spec.filePaths'}
-                  label={getString('common.git.filePath')}
-                  allowedTypes={
-                    (allowableTypes as MultiTypeInputType[]).filter(
-                      allowedType => allowedType !== MultiTypeInputType.EXPRESSION
-                    ) as AllowedTypes
-                  }
-                >
-                  <FieldArray
-                    name="spec.filePaths"
-                    render={arrayHelpers => (
-                      <Layout.Vertical>
-                        {(values?.spec?.filePaths as FilePathConfig[])?.map((path: FilePathConfig, index: number) => (
-                          <Layout.Horizontal key={path.id}>
-                            <FormInput.MultiTextInput
-                              label=""
-                              placeholder={getString('cd.filePathPlaceholder')}
-                              name={`spec.filePaths[${index}].value`}
-                              multiTextInputProps={{
-                                allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                                  item => !isMultiTypeRuntime(item)
-                                ) as AllowedTypes,
-                                expressions,
-                                textProps: { disabled: isDisabled }
+              {isK8sWithoutService && (
+                <Layout.Vertical width={430} margin={{ bottom: 'medium' }}>
+                  <Text margin={{ bottom: 'small' }} color={Color.GREY_800}>
+                    {getString('cd.getStartedWithCD.manifestStoreLabel')}
+                  </Text>
+                  <Select
+                    name="branch"
+                    value={
+                      isEmpty(get(formik.values, 'spec.filePaths'))
+                        ? { label: getString('remote'), value: 'remote' }
+                        : { label: getString('common.local'), value: 'local' }
+                    }
+                    items={[
+                      { label: getString('remote'), value: 'remote' },
+                      { label: getString('common.local'), value: 'local' }
+                    ]}
+                    onChange={selected => {
+                      if (selected.value === 'remote') {
+                        formik?.setFieldValue('spec.filePaths', undefined)
+                        formik?.setFieldValue('spec.manifestSource', {})
+                      } else {
+                        formik?.setFieldValue('spec.manifestSource', undefined)
+                      }
+                    }}
+                  />
+                </Layout.Vertical>
+              )}
+              {get(formik.values, 'spec.manifestSource') && isK8sWithoutService ? (
+                <SelectRemoteManifest
+                  formik={formik}
+                  allowableTypes={allowableTypes}
+                  onSubmit={(manifest: ManifestStepInitData) => {
+                    formik?.setFieldValue('spec.manifestSource', manifest.manifestSource)
+                    formik?.setFieldValue('spec.filePaths', undefined)
+                  }}
+                />
+              ) : (
+                <div className={stepCss.formGroup}>
+                  <MultiTypeFieldSelector
+                    defaultValueToReset={defaultValueToReset}
+                    name={'spec.filePaths'}
+                    label={getString('common.git.filePath')}
+                    allowedTypes={
+                      (allowableTypes as MultiTypeInputType[]).filter(
+                        allowedType => allowedType !== MultiTypeInputType.EXPRESSION
+                      ) as AllowedTypes
+                    }
+                  >
+                    <FieldArray
+                      name="spec.filePaths"
+                      render={arrayHelpers => (
+                        <Layout.Vertical>
+                          {(values?.spec?.filePaths as FilePathConfig[])?.map((path: FilePathConfig, index: number) => (
+                            <Layout.Horizontal key={path.id}>
+                              <FormInput.MultiTextInput
+                                label=""
+                                placeholder={getString('cd.filePathPlaceholder')}
+                                name={`spec.filePaths[${index}].value`}
+                                multiTextInputProps={{
+                                  allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                    item => !isMultiTypeRuntime(item)
+                                  ) as AllowedTypes,
+                                  expressions,
+                                  textProps: { disabled: isDisabled }
+                                }}
+                                disabled={isDisabled}
+                                style={{ width: '430px' }}
+                              />
+
+                              <Button
+                                variation={ButtonVariation.ICON}
+                                icon="main-trash"
+                                onClick={() => arrayHelpers.remove(index)}
+                                disabled={isDisabled}
+                              />
+                            </Layout.Horizontal>
+                          ))}
+                          <span>
+                            <Button
+                              variation={ButtonVariation.PRIMARY}
+                              text={getString('addFileText')}
+                              onClick={() => {
+                                arrayHelpers.push({ value: '', id: uuid() })
                               }}
                               disabled={isDisabled}
-                              style={{ width: '430px' }}
                             />
-
-                            <Button
-                              variation={ButtonVariation.ICON}
-                              icon="main-trash"
-                              onClick={() => arrayHelpers.remove(index)}
-                              disabled={isDisabled}
-                            />
-                          </Layout.Horizontal>
-                        ))}
-                        <span>
-                          <Button
-                            variation={ButtonVariation.PRIMARY}
-                            text={getString('addFileText')}
-                            onClick={() => {
-                              arrayHelpers.push({ value: '', id: uuid() })
-                            }}
-                            disabled={isDisabled}
-                          />
-                        </span>
-                      </Layout.Vertical>
-                    )}
-                  />
-                </MultiTypeFieldSelector>
-              </div>
+                          </span>
+                        </Layout.Vertical>
+                      )}
+                    />
+                  </MultiTypeFieldSelector>
+                </div>
+              )}
 
               <div className={cx(stepCss.formGroup, stepCss.md)}>
                 <FormMultiTypeCheckboxField
@@ -316,6 +365,81 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({
           template={inputSetData?.template}
           className={cx(stepCss.formGroup, stepCss.md)}
         />
+      )}
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.manifestSource?.spec?.store?.spec?.branch as string) ===
+        MultiTypeInputType.RUNTIME && (
+        <TextFieldInputSetView
+          name={`${inputSetData?.path}.spec.manifestSource.spec.store.spec.branch`}
+          label={getString('pipelineSteps.deploy.inputSet.branch')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          fieldPath={'spec.manifestSource.spec.store.spec.branch'}
+          template={inputSetData?.template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
+      )}
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.manifestSource?.spec?.store?.spec?.commitId as string) ===
+        MultiTypeInputType.RUNTIME && (
+        <TextFieldInputSetView
+          name={`${inputSetData?.path}.spec.manifestSource.spec.store.spec.commitId`}
+          label={getString('pipeline.manifestType.commitId')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          fieldPath={'spec.manifestSource.spec.store.spec.commitId'}
+          template={inputSetData?.template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
+      )}
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.manifestSource?.spec?.store?.spec?.paths) ===
+        MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <MultiTypeListInputSet
+            name={`${
+              isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+            }spec.manifestSource.spec.store.spec.paths`}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes: SupportedInputTypesForListItems
+            }}
+            multiTypeFieldSelectorProps={{
+              label: getString('common.git.filePath'),
+              allowedTypes: isTemplateUsageView ? SupportedInputTypesForListTypeField : [MultiTypeInputType.FIXED],
+              ...(!isTemplateUsageView && { disableTypeSelection: true })
+            }}
+            disabled={readonly}
+          />
+        </div>
+      )}
+
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.manifestSource?.spec?.valuesPaths) ===
+        MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <MultiTypeListInputSet
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.manifestSource.spec.valuesPaths`}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes: SupportedInputTypesForListItems
+            }}
+            multiTypeFieldSelectorProps={{
+              label: getString('pipeline.manifestType.valuesYamlPath'),
+              allowedTypes: isTemplateUsageView ? SupportedInputTypesForListTypeField : [MultiTypeInputType.FIXED],
+              ...(!isTemplateUsageView && { disableTypeSelection: true })
+            }}
+            disabled={readonly}
+          />
+        </div>
       )}
 
       {getMultiTypeFromValue(inputSetData?.template?.spec?.filePaths) === MultiTypeInputType.RUNTIME && (
@@ -547,15 +671,17 @@ export class K8sApplyStep extends PipelineStep<K8sApplyData> {
       ...initialValues,
       spec: {
         ...initialValues.spec,
-        filePaths:
-          getMultiTypeFromValue(initialValues?.spec?.filePaths) === MultiTypeInputType.RUNTIME
-            ? initialValues?.spec?.filePaths
-            : initialValues?.spec?.filePaths?.length
-            ? (initialValues?.spec?.filePaths || [])?.map((item: string) => ({
-                value: item,
-                id: uuid()
-              }))
-            : [{ value: '', id: uuid() }],
+        manifestSource: initialValues.spec?.filePaths ? undefined : initialValues.spec?.manifestSource,
+        filePaths: initialValues.spec?.manifestSource
+          ? undefined
+          : getMultiTypeFromValue(initialValues?.spec?.filePaths) === MultiTypeInputType.RUNTIME
+          ? initialValues?.spec?.filePaths
+          : initialValues?.spec?.filePaths?.length
+          ? (initialValues?.spec?.filePaths || [])?.map((item: string) => ({
+              value: item,
+              id: uuid()
+            }))
+          : [{ value: '', id: uuid() }],
         overrides: initialValues?.spec?.overrides
       }
     }
@@ -569,10 +695,12 @@ export class K8sApplyStep extends PipelineStep<K8sApplyData> {
         skipDryRun: data?.spec?.skipDryRun,
         skipSteadyStateCheck: data?.spec?.skipSteadyStateCheck,
         skipRendering: data?.spec?.skipRendering,
-        filePaths:
-          getMultiTypeFromValue(data?.spec?.filePaths) === MultiTypeInputType.RUNTIME
+        manifestSource: data?.spec?.filePaths ? undefined : data?.spec?.manifestSource,
+        filePaths: !data?.spec?.manifestSource
+          ? getMultiTypeFromValue(data?.spec?.filePaths) === MultiTypeInputType.RUNTIME
             ? data?.spec?.filePaths
-            : (data?.spec?.filePaths || [])?.map((item: FilePathConfig) => item.value),
+            : (data?.spec?.filePaths || [])?.map((item: FilePathConfig) => item.value)
+          : undefined,
         overrides: data?.spec?.overrides
       }
     }
@@ -590,7 +718,6 @@ export class K8sApplyStep extends PipelineStep<K8sApplyData> {
     name: '',
     type: StepType.K8sApply,
     spec: {
-      filePaths: [],
       skipDryRun: false,
       skipSteadyStateCheck: false,
       skipRendering: false,

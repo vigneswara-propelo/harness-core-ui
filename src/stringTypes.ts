@@ -6973,6 +6973,7 @@ export interface StringsMap {
   'cd.logoOfName': string
   'cd.manifestId': string
   'cd.manifestPathsCannotBeEmpty': string
+  'cd.manifestSelectPlaceHolder': string
   'cd.miniKube': string
   'cd.miniKubeCmd1': string
   'cd.miniKubeCmd2': string

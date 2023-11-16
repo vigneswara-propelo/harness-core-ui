@@ -12,10 +12,15 @@ declare const styles: {
   readonly addValuesYaml: string
   readonly borderRadius: string
   readonly columnId: string
+  readonly configField: string
+  readonly configFile: string
+  readonly configLabel: string
+  readonly configPlaceHolder: string
   readonly connectorName: string
   readonly connectorNameField: string
   readonly createConnectorWizard: string
   readonly crossIcon: string
+  readonly editBtn: string
   readonly fsLinkWrapper: string
   readonly listHeader: string
   readonly manifestList: string

@@ -241,6 +241,7 @@ setUpProvisionerBtnText: Set Up Provisioner
 filePathRequired: At least one file path is required
 pathCannotBeEmpty: File Path cannot be empty
 configFilePlaceHolder: 'Specify Config File...'
+manifestSelectPlaceHolder: 'Specify Kubernetes Manifest YAML Configuration'
 backendConfigFilePlaceHolder: 'Specify Backend Config File...'
 
 configIdentifer: Configuration Identifier
