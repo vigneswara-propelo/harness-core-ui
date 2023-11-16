@@ -173,7 +173,7 @@ export function CommonKuberetesInfraInputForm({
                 popoverClassName: cx(stepCss.formGroup, stepCss.md)
               }
             }}
-            label={getString('regionLabel')}
+            label={getString('optionalField', { name: getString('regionLabel') })}
             placeholder={getString('pipeline.regionPlaceholder')}
             disabled={readonly}
           />

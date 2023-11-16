@@ -228,7 +228,7 @@ export function CommonKuberetesInfraSpecEditable(props: CommonKuberetesInfraSpec
                 )
               }
             }}
-            label={getString('regionLabel')}
+            label={getString('optionalField', { name: getString('regionLabel') })}
             placeholder={regionLoading ? getString('loading') : getString('select')}
           />
 
