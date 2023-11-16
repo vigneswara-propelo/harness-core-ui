@@ -12,13 +12,15 @@ import {
   commonFieldsTransformConfig,
   commonFieldsValidationConfig,
   imageFieldsValidationConfig,
-  ingestionFieldValidationConfig
+  ingestionFieldValidationConfig,
+  sbomFieldsTransformConfig,
+  sbomFieldValidationConfig
 } from '../constants'
 import type { Field, InputSetViewValidateFieldsConfig } from '../types'
 import type { AquatrivyStepData } from './AquatrivyStep'
 
 export const transformValuesFieldsConfig = (data: AquatrivyStepData): Field[] => {
-  const transformValuesFieldsConfigValues = [...commonFieldsTransformConfig(data)]
+  const transformValuesFieldsConfigValues = [...commonFieldsTransformConfig(data), ...sbomFieldsTransformConfig(data)]
 
   return transformValuesFieldsConfigValues
 }
@@ -28,6 +30,7 @@ export const editViewValidateFieldsConfig = (data: AquatrivyStepData) => {
     ...commonFieldsValidationConfig,
     ...ingestionFieldValidationConfig(data),
     ...imageFieldsValidationConfig(data),
+    ...sbomFieldValidationConfig(),
     ...additionalFieldsValidationConfigEitView
   ]
 
@@ -39,6 +42,7 @@ export function getInputSetViewValidateFieldsConfig(data: AquatrivyStepData): In
     ...commonFieldsValidationConfig,
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     ...imageFieldsValidationConfig(data, StepViewType.InputSet),
+    ...sbomFieldValidationConfig(),
     ...additionalFieldsValidationConfigInputSet
   ]
 

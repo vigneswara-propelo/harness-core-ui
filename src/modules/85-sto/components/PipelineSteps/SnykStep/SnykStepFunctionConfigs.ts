@@ -14,13 +14,19 @@ import {
   commonFieldsTransformConfig,
   commonFieldsValidationConfig,
   imageFieldsValidationConfig,
-  ingestionFieldValidationConfig
+  ingestionFieldValidationConfig,
+  sbomFieldsTransformConfig,
+  sbomFieldValidationConfig
 } from '../constants'
 import type { Field, InputSetViewValidateFieldsConfig } from '../types'
 import type { SnykStepData } from './SnykStep'
 
 export const transformValuesFieldsConfig = (data: SnykStepData): Field[] => {
-  const transformValuesFieldsConfigValues = [...commonFieldsTransformConfig(data), ...authFieldsTransformConfig(data)]
+  const transformValuesFieldsConfigValues = [
+    ...commonFieldsTransformConfig(data),
+    ...authFieldsTransformConfig(data),
+    ...sbomFieldsTransformConfig(data)
+  ]
 
   return transformValuesFieldsConfigValues
 }
@@ -31,6 +37,7 @@ export const editViewValidateFieldsConfig = (data: SnykStepData) => {
     ...authFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
     ...imageFieldsValidationConfig(data),
+    ...sbomFieldValidationConfig(),
     ...additionalFieldsValidationConfigEitView
   ]
 
@@ -43,6 +50,7 @@ export function getInputSetViewValidateFieldsConfig(data: SnykStepData): InputSe
     ...authFieldsValidationConfig(data, StepViewType.InputSet),
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     ...imageFieldsValidationConfig(data, StepViewType.InputSet),
+    ...sbomFieldValidationConfig(),
     ...additionalFieldsValidationConfigInputSet
   ]
 

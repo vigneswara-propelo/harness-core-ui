@@ -24,6 +24,7 @@ import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './Aqu
 import type { AquatrivyStepProps, AquatrivyStepData } from './AquatrivyStep'
 import {
   AdditionalFields,
+  SbomFields,
   SecurityImageFields,
   SecurityIngestionFields,
   SecurityScanFields,
@@ -130,6 +131,8 @@ export const AquatrivyStepBase = (
             <SecurityImageFields allowableTypes={allowableTypes} formik={formik} />
 
             <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} />
+
+            <SbomFields allowableTypes={allowableTypes} formik={formik} />
 
             <AdditionalFields
               readonly={readonly}

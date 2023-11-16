@@ -24,6 +24,7 @@ import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './Sny
 import type { SnykStepProps, SnykStepData } from './SnykStep'
 import {
   AdditionalFields,
+  SbomFields,
   SecurityAuthFields,
   SecurityImageFields,
   SecurityIngestionFields,
@@ -132,6 +133,8 @@ export const SnykStepBase = (
             <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} />
 
             <SecurityAuthFields allowableTypes={allowableTypes} formik={formik} />
+
+            <SbomFields allowableTypes={allowableTypes} formik={formik} />
 
             <AdditionalFields
               readonly={readonly}
