@@ -200,6 +200,8 @@ export default function EnvironmentDetails(): React.ReactElement {
             cacheResponse={environmentDetails.cacheResponseMetadataDTO}
             reloadContent={getString('environment')}
             reloadFromCache={handleReloadFromCache}
+            repo={defaultTo(gitDetails.repoName, repoName)}
+            filePath={defaultTo(gitDetails.filePath, '')}
           />
         )}
       </div>

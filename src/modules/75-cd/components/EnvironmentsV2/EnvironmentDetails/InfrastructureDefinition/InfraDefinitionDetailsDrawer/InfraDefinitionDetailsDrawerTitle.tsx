@@ -113,6 +113,8 @@ export function InfraDefinitionDetailsDrawerTitle(props: {
             reloadContent={getString('infrastructureText')}
             cacheResponse={get(infrastructureResponse, 'cacheResponseMetadataDTO')}
             reloadFromCache={handleReloadFromCache}
+            repo={defaultTo(repoName, infraRepoName)}
+            filePath={filePath}
           />
         )}
       </div>
