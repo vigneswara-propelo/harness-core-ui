@@ -13,6 +13,7 @@ import {
   PipelineContextInterface
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { ServiceContext, ServiceContextValues } from '@cd/context/ServiceContext'
+import { ServiceDeploymentType } from '@modules/70-pipeline/utils/stageHelpers'
 import DeployServiceDefinition from '../DeployServiceDefinition'
 
 import {
@@ -45,6 +46,7 @@ const renderFunction = (pipelineContextValue: PipelineContextInterface, isDeploy
         projectIdentifier: 'dummy',
         serviceIdentifier: 'dummy'
       }}
+      defaultFeatureFlagValues={{ CDS_NG_K8S_SERVICE_RELEASE_NAME: true }}
     >
       <ServiceContext.Provider value={{ ...serviceContextData, isDeploymentTypeDisabled } as ServiceContextValues}>
         <PipelineContext.Provider value={pipelineContextValue}>
@@ -91,7 +93,22 @@ describe('DeployServiceDefinition', () => {
     const gitOpsElement = screen.queryByText('Gitops')
     expect(gitOpsElement).toBeNull()
   })
-
+  test('release name field should be visible if selected deployment type is Native Helm', async () => {
+    mockStageReturnWithoutManifestData.stage.stage.spec.serviceConfig.serviceDefinition.type =
+      ServiceDeploymentType.NativeHelm
+    const pipelineMockDataWithNativeHelm = getContextValue(mockStageReturnWithoutManifestData)
+    renderFunction(pipelineMockDataWithNativeHelm)
+    const releaseNameElement = screen.queryByText('common.releaseName') as HTMLElement
+    expect(releaseNameElement).toBeInTheDocument()
+  })
+  test('release name field should be visible if selected deployment type is Kubernetes', () => {
+    mockStageReturnWithoutManifestData.stage.stage.spec.serviceConfig.serviceDefinition.type =
+      ServiceDeploymentType.Kubernetes
+    const pipelineMockDataWithNativeHelm = getContextValue(mockStageReturnWithoutManifestData)
+    renderFunction(pipelineMockDataWithNativeHelm)
+    const releaseNameElement = screen.queryByText('common.releaseName')
+    expect(releaseNameElement).toBeInTheDocument()
+  })
   test('checking on the gitops with other stage data should render a dialogue confirmation', async () => {
     const pipelineMockDataWithManifest = getContextValue(mockStageReturnWithManifest)
     const { container, getByText } = renderFunction(pipelineMockDataWithManifest)

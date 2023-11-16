@@ -363,6 +363,7 @@ function DeployServiceDefinition(): React.ReactElement {
         handleGitOpsCheckChanged={handleGitOpsCheckChanged}
         templateLinkConfig={customDeploymentData}
         addOrUpdateTemplate={isServiceEntityModalView ? undefined : addOrUpdateTemplate}
+        isServiceStage={true}
         googleCloudFunctionsSpecificProps={{
           shouldShowGCFEnvTypeDropdown: true,
           googleCloudFunctionEnvType: defaultTo(

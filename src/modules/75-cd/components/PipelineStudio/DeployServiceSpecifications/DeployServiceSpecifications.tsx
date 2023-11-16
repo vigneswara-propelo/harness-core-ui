@@ -481,6 +481,7 @@ export default function DeployServiceSpecifications({
                 handleDeploymentTypeChange={handleDeploymentTypeChange}
                 shouldShowGitops={false}
                 onDeploymentTemplateSelect={noop}
+                isServiceStage={true}
               />
               <Layout.Horizontal>
                 <StepWidget<K8SDirectServiceStep>

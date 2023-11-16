@@ -258,6 +258,7 @@ interface SelectServiceDeploymentTypeProps {
   templateBarOverrideClassName?: string
   googleCloudFunctionsSpecificProps?: GoogleCloudFunctionsSpecificPropsType
   kubernetesReleaseNameProps?: KubernetesReleaseNameType
+  isServiceStage?: boolean
 }
 
 export default function SelectDeploymentType({
@@ -273,7 +274,8 @@ export default function SelectDeploymentType({
   addOrUpdateTemplate,
   templateBarOverrideClassName = '',
   googleCloudFunctionsSpecificProps = {},
-  kubernetesReleaseNameProps
+  kubernetesReleaseNameProps,
+  isServiceStage = false
 }: SelectServiceDeploymentTypeProps): JSX.Element {
   const { shouldShowGCFEnvTypeDropdown, googleCloudFunctionEnvType, handleGCFEnvTypeChange } =
     googleCloudFunctionsSpecificProps
@@ -402,7 +404,7 @@ export default function SelectDeploymentType({
   }
 
   const renderK8sReleaseName = (): JSX.Element | null => {
-    if (isKubernetesOrNativeHelm && CDS_NG_K8S_SERVICE_RELEASE_NAME) {
+    if (isKubernetesOrNativeHelm && CDS_NG_K8S_SERVICE_RELEASE_NAME && isServiceStage) {
       return (
         <FormInput.MultiTextInput
           name="release.name"
