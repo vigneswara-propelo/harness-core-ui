@@ -349,10 +349,7 @@ export function useSaveToGitDialog<T = Record<string, string>>(
     setCreateUpdateStatus(response.status)
 
     // if OPA policy evaluation fails, then close overlay modal
-    if (
-      response.status === 'FAILURE' &&
-      (response.governanceMetaData?.status === 'error' || response.governanceMetaData?.status === 'warning')
-    ) {
+    if (response.status === 'FAILURE' && response.governanceMetaData?.status === 'error') {
       hideCreateUpdateModal()
       hideCreateUpdateWithPRCreationModal()
     }

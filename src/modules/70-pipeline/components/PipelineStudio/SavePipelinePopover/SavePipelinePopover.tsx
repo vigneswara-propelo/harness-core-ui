@@ -123,6 +123,7 @@ function SavePipelinePopover(
   })
   const [governanceMetadata, setGovernanceMetadata] = React.useState<GovernanceMetadata>()
   const [savePipelineError, setSavePipelineError] = React.useState<Error>({})
+  const [OPAErrorModalClosePromise, setOPAErrorModalClosePromise] = React.useState<() => void | undefined>()
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
   const isPipelineInline = supportingGitSimplification && storeType === StoreType.INLINE
   const isErrorEnhancementFFEnabled = useFeatureFlag(FeatureFlag.PIE_ERROR_ENHANCEMENTS)
@@ -133,8 +134,10 @@ function SavePipelinePopover(
         isOpen
         onClose={() => {
           closeOPAErrorModal()
+          OPAErrorModalClosePromise?.()
           const { status, newPipelineId, updatedGitDetails } = governanceMetadata as GovernanceMetadata
-          if (status === 'warning') {
+          if (status === 'warning' && !isPipelineRemote) {
+            // For Remote pipeline, publishPipeline will be done as callback from SaveToGit modal
             publishPipeline(newPipelineId, updatedGitDetails)
           }
         }}
@@ -154,7 +157,7 @@ function SavePipelinePopover(
         />
       </OPAErrorDialog>
     ),
-    [governanceMetadata]
+    [governanceMetadata, OPAErrorModalClosePromise]
   )
   const { enabled: templatesFeatureEnabled } = useFeature({
     featureRequest: {
@@ -277,7 +280,24 @@ function SavePipelinePopover(
       setGovernanceMetadata({ ...governanceData, newPipelineId, updatedGitDetails })
       if (governanceData?.status === 'error' || governanceData?.status === 'warning') {
         showOPAErrorModal()
-        return { status: 'FAILURE', governanceMetaData: { ...governanceData, newPipelineId, updatedGitDetails } }
+        // Ignoring OPA warning in GitDialog as commit will be done successfully
+        // Also proceding with PR creation if applicable
+        const gitModalPromise: UseSaveSuccessResponse = {
+          status: isPipelineRemote && governanceData?.status === 'warning' ? 'SUCCESS' : 'FAILURE',
+          governanceMetaData: { ...governanceData, newPipelineId, updatedGitDetails },
+          nextCallback: () => publishPipeline(newPipelineId, updatedGitDetails)
+        }
+
+        return new Promise(resolve => {
+          setOPAErrorModalClosePromise(() => {
+            return () => resolve(gitModalPromise)
+          })
+
+          if (governanceData?.status === 'error') {
+            // Save failed due to OPA policy so can hide git modal
+            resolve(gitModalPromise)
+          }
+        })
       }
       // Handling cache and page navigation only when Governance is disabled, or Governance Evaluation is successful
       // Otherwise, keep current pipeline editing states, and show Governance evaluation error
