@@ -295,6 +295,7 @@ export function EnvironmentEntityCard({
                               customDeploymentRef={customDeploymentRef}
                               environmentPermission={environmentPermission}
                               serviceIdentifiers={serviceIdentifiers}
+                              environmentBranch={entityGitDetails?.branch}
                             />
                           )}
                         </>

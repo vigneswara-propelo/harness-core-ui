@@ -230,6 +230,16 @@ function BootstrapDeployInfraDefinition(
     description,
     tags
   })
+
+  useEffect(() => {
+    setFormValues({
+      name: infrastructureDefinition?.name,
+      identifier: infrastructureDefinition?.identifier,
+      description: infrastructureDefinition?.description,
+      tags: infrastructureDefinition?.tags
+    })
+  }, [infrastructureDefinition])
+
   const [selectedScopedServices, setSelectedScopedServices] = useState<string[] | undefined>(scopedServices)
 
   const { CDS_SCOPE_INFRA_TO_SERVICES } = useFeatureFlags()
@@ -845,28 +855,27 @@ function BootstrapDeployInfraDefinition(
   const isSaveDisabled = isSavingInfrastructure || (!!infrastructureDefinition && !isInfraUpdated)
   const isGitXEnabledForInfras = useFeatureFlag(FeatureFlag.CDS_INFRA_GITX)
 
-  const initialValues = React.useMemo(() => {
-    const initialGitFormValues = isEmpty(selectedInfrastructure)
-      ? {
-          connectorRef,
-          repo: repoName
-        }
-      : {
-          connectorRef: infrastructureResponse?.connectorRef,
-          repo: infrastructureResponse?.entityGitDetails?.repoName,
-          filePath: infrastructureResponse?.entityGitDetails?.filePath,
-          storeType: infrastructureResponse?.storeType
-        }
-    if (
-      isEmpty(selectedInfrastructure) ||
-      infraStoreType === 'REMOTE' ||
-      infrastructureResponse?.storeType === 'REMOTE'
-    ) {
-      return { ...formValues, ...initialGitFormValues }
-    } else {
-      return formValues
-    }
-  }, [infraStoreType, infrastructureResponse, selectedInfrastructure])
+  let initialValues = {}
+  const initialGitFormValues = isEmpty(selectedInfrastructure)
+    ? {
+        connectorRef,
+        repo: repoName
+      }
+    : {
+        connectorRef: infrastructureResponse?.connectorRef,
+        repo: infrastructureResponse?.entityGitDetails?.repoName,
+        filePath: infrastructureResponse?.entityGitDetails?.filePath,
+        storeType: infrastructureResponse?.storeType
+      }
+  if (
+    isEmpty(selectedInfrastructure) ||
+    infraStoreType === 'REMOTE' ||
+    infrastructureResponse?.storeType === 'REMOTE'
+  ) {
+    initialValues = { ...formValues, ...initialGitFormValues }
+  } else {
+    initialValues = formValues
+  }
 
   return (
     <>
@@ -902,6 +911,7 @@ function BootstrapDeployInfraDefinition(
                       ? { ...gitSyncFormSchema(getString) }
                       : {})
                   })}
+                  enableReinitialize={true} // added it to render updated details after reloading from git
                 >
                   {formikProps => {
                     formikRef.current = formikProps

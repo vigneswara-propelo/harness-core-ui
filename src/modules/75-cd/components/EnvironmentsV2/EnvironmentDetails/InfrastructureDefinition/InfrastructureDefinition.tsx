@@ -95,18 +95,26 @@ export default function InfrastructureDefinition({ isEnvPage }: { isEnvPage: boo
   })
 
   useEffect(() => {
-    const preSelectedInfrastructureYaml = get(
-      find(
-        data?.data?.content,
-        (infraDetails: InfrastructureResponse) => infraDetails.infrastructure?.identifier === infrastructureId
-      ),
-      'infrastructure.yaml'
-    )
+    let preSelectedInfrastructureYaml
+    if (
+      infraStoreType === 'REMOTE' &&
+      infrastructureFetchDetails?.data?.data?.infrastructure?.identifier === infrastructureId
+    ) {
+      preSelectedInfrastructureYaml = infrastructureFetchDetails?.data?.data?.infrastructure?.yaml
+    } else {
+      preSelectedInfrastructureYaml = get(
+        find(
+          data?.data?.content,
+          (infraDetails: InfrastructureResponse) => infraDetails.infrastructure?.identifier === infrastructureId
+        ),
+        'infrastructure.yaml'
+      )
+    }
 
     if (preSelectedInfrastructureYaml) {
       setSelectedInfrastructure(preSelectedInfrastructureYaml)
     }
-  }, [data?.data?.content, infrastructureId])
+  }, [data?.data?.content, infrastructureId, infrastructureFetchDetails?.data?.data?.infrastructure])
 
   useEffect(() => {
     if (selectedInfrastructure) {

@@ -115,8 +115,8 @@ export function BootstrapDeployInfraDefinitionWrapper(
           })
         )
       }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+
+    [allowSimultaneousDeployments, deploymentType, spec, type]
   )
 
   const [canEditInfrastructure] = usePermission(
