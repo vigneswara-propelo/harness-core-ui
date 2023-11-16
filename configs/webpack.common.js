@@ -18,44 +18,11 @@ const { RetryChunkLoadPlugin } = require('webpack-retry-chunk-load-plugin')
 
 const GenerateStringTypesPlugin = require('../scripts/webpack/GenerateStringTypesPlugin').GenerateStringTypesPlugin
 const moduleFederationConfig = require('./modulefederation.config')
-const CodeModules = require('../src/modules/60-code/modules')
 const {
   container: { ModuleFederationPlugin }
 } = webpack
 
 const CONTEXT = process.cwd()
-const ChildAppError = path.resolve(CONTEXT, './src/microfrontends/ChildAppError.tsx')
-
-const enableGovernance = process.env.ENABLE_GOVERNANCE !== 'false'
-const enableGitOpsUI = process.env.ENABLE_GITOPSUI !== 'false'
-const enableChaosUI = process.env.ENABLE_CHAOS !== 'false'
-const enableCDBUI = process.env.ENABLE_CDB_UI === 'true'
-const enableCCMUI = process.env.ENABLE_CCM_UI === 'true'
-const enableSTO = process.env.ENABLE_STO !== 'false'
-const enableCODE = process.env.ENABLE_CODE === 'true'
-const enableFFUI = process.env.ENABLE_FF_UI !== 'false'
-const enableIACM = process.env.ENABLE_IACM !== 'false'
-const enableSSCA = process.env.ENABLE_SSCA === 'true'
-const enableIDP = process.env.ENABLE_IDP === 'true'
-const enableSRMUI = process.env.ENABLE_SRM_UI === 'true'
-const enableSEI = process.env.ENABLE_SEI === 'true'
-
-console.log('Common build flags')
-console.table({
-  enableGovernance,
-  enableGitOpsUI,
-  enableChaosUI,
-  enableCCMUI,
-  enableCDBUI,
-  enableSTO,
-  enableCODE,
-  enableFFUI,
-  enableIACM,
-  enableSSCA,
-  enableIDP,
-  enableSRMUI,
-  enableSEI
-})
 
 const config = {
   context: CONTEXT,
@@ -201,23 +168,7 @@ const config = {
   },
   plugins: [
     new ExternalRemotesPlugin(),
-    new ModuleFederationPlugin(
-      moduleFederationConfig({
-        enableGovernance,
-        enableGitOpsUI,
-        enableSTO,
-        enableChaosUI,
-        enableCCMUI,
-        enableCDBUI,
-        enableCODE,
-        enableFFUI,
-        enableIACM,
-        enableSSCA,
-        enableIDP,
-        enableSRMUI,
-        enableSEI
-      })
-    ),
+    new ModuleFederationPlugin(moduleFederationConfig()),
     new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
     new webpack.DefinePlugin({
       'process.env': '{}' // required for @blueprintjs/core
@@ -244,82 +195,6 @@ const config = {
       maxRetries: 2
     })
   ]
-}
-
-if (!enableGitOpsUI) {
-  // render a mock app when Gitops MF is disabled
-  config.resolve.alias['gitopsui/MicroFrontendApp'] = ChildAppError
-  config.resolve.alias['gitopsui/VerifyGitopsAgent'] = ChildAppError
-  config.resolve.alias['gitopsui/CreateGitOpsAgent'] = ChildAppError
-}
-
-if (!enableCCMUI) {
-  // render a mock app when CCM MF is disabled
-  config.resolve.alias['ccmui/MicroFrontendApp'] = ChildAppError
-}
-
-if (!enableCDBUI) {
-  // render a mock app when CDB MF is disabled
-  config.resolve.alias['cdbui/MicroFrontendApp'] = ChildAppError
-}
-
-if (!enableSRMUI) {
-  // render a mock app when SRM MF is disabled
-  config.resolve.alias['srmui/MicroFrontendApp'] = ChildAppError
-}
-
-if (!enableChaosUI) {
-  // render a mock app when Chaos MF is disabled
-  config.resolve.alias['chaos/MicroFrontendApp'] = ChildAppError
-  config.resolve.alias['chaos/SelectPipelineExperiment'] = ChildAppError
-  config.resolve.alias['chaos/ExperimentPreview'] = ChildAppError
-  config.resolve.alias['chaos/ChaosStepExecution'] = ChildAppError
-  config.resolve.alias['chaos/ResilienceViewContent'] = ChildAppError
-  config.resolve.alias['chaos/ResilienceViewCTA'] = ChildAppError
-}
-
-if (!enableSTO) {
-  // render a mock app when STO MF is disabled
-  config.resolve.alias['sto/App'] = ChildAppError
-  config.resolve.alias['stoV2/App'] = ChildAppError
-  config.resolve.alias['sto/PipelineSecurityView'] = ChildAppError
-  config.resolve.alias['stoV2/PipelineSecurityView'] = ChildAppError
-}
-
-// render a mock app when CODE MF is disabled
-if (!enableCODE) {
-  CodeModules.forEach(mod => (config.resolve.alias[mod] = ChildAppError))
-}
-
-if (!enableFFUI) {
-  config.resolve.alias['ffui/MicroFrontendApp'] = ChildAppError
-}
-
-if (!enableIACM) {
-  // render a mock app when IACM MF is disabled
-  config.resolve.alias['iacm/MicroFrontendApp'] = ChildAppError
-  config.resolve.alias['iacm/IACMStage'] = ChildAppError
-  config.resolve.alias['iacm/IACMStageInputSet'] = ChildAppError
-  config.resolve.alias['iacm/IACMPipelineResources'] = ChildAppError
-  config.resolve.alias['iacm/IACMApproval'] = ChildAppError
-  config.resolve.alias['iacm/IACMApprovalConsoleView'] = ChildAppError
-}
-
-if (!enableSSCA) {
-  config.resolve.alias['ssca/MicroFrontendApp'] = ChildAppError
-}
-
-if (!enableIDP) {
-  config.resolve.alias['idp/MicroFrontendApp'] = ChildAppError
-  config.resolve.alias['idpadmin/MicroFrontendApp'] = ChildAppError
-}
-
-if (!enableSEI) {
-  config.resolve.alias['sei/MicroFrontendApp'] = ChildAppError
-  config.resolve.alias['sei/CollectionResourceModalBody'] = ChildAppError
-  config.resolve.alias['sei/CollectionResourcesRenderer'] = ChildAppError
-  config.resolve.alias['sei/InsightsResourceModalBody'] = ChildAppError
-  config.resolve.alias['sei/InsightsResourceRenderer'] = ChildAppError
 }
 
 module.exports = config

@@ -6,7 +6,7 @@
  */
 
 const packageJSON = require('../package.json')
-const { pick, omit, mapValues } = require('lodash')
+const { pick, mapValues } = require('lodash')
 
 /**
  * These packages must be strictly shared with exact versions
@@ -24,81 +24,24 @@ const ExactSharedPackages = [
   'urql'
 ]
 
-module.exports = ({
-  enableGitOpsUI,
-  enableSTO,
-  enableChaosUI,
-  enableCCMUI,
-  enableCDBUI,
-  enableCODE,
-  enableFFUI,
-  enableIACM,
-  enableSSCA,
-  enableIDP,
-  enableSRMUI,
-  enableSEI
-}) => {
-  const remotes = {}
-
-  if (enableGitOpsUI) {
-    // use of single quotes within function call is required to make this work
-    remotes.gitopsui = "gitopsui@[window.getApiBaseUrl('gitops/remoteEntry.js')]"
-  }
-
-  // TODO (tnhu): Use build an environment variable to enable Governance
-  // if (enableGovernance) {
-  remotes.governance = "governance@[window.getApiBaseUrl('pm/remoteEntry.js')]"
-  // }
-
-  if (enableIDP) {
-    remotes.idp = "idp@[window.getIDPBaseUrl('idp/remoteEntry.js')]"
-    remotes.idpadmin = "idpadmin@[window.getApiBaseUrl('idp-admin/remoteEntry.js')]"
-  }
-
-  if (enableCCMUI) {
-    remotes.ccmui = "ccmui@[window.getApiBaseUrl('ccmui/remoteEntry.js')]"
-  }
-
-  if (enableSTO) {
-    remotes.sto = "sto@[window.getApiBaseUrl('sto/remoteEntry.js')]"
-    remotes.stoV2 = "stoV2@[window.getApiBaseUrl('sto/v2/remoteEntry.js')]"
-  }
-
-  if (enableChaosUI) {
-    remotes.chaos = "chaos@[window.getApiBaseUrl('chaos/remoteEntry.js')]"
-  }
-
-  if (enableCODE) {
-    remotes.code = "codeRemote@[window.getApiBaseUrl('code/remoteEntry.js')]"
-  }
-
-  if (enableFFUI) {
-    remotes.ffui = "ffui@[window.getApiBaseUrl('cf/web/remoteEntry.js')]"
-  }
-
-  if (enableSRMUI) {
-    remotes.srmui = "srmui@[window.getApiBaseUrl('srmui/remoteEntry.js')]"
-  }
-
-  if (enableIACM) {
-    remotes.iacm = "remoteIACM@[window.getApiBaseUrl('iacm/remoteEntry.js')]"
-  }
-
-  if (enableCDBUI) {
-    remotes.cdbui = "cdbui@[window.getApiBaseUrl('cdbui/remoteEntry.js')]"
-  }
-  if (enableSEI) {
-    remotes.sei = "sei@[window.getApiBaseUrl('sei/remoteEntry.js')]"
-  }
-
-  if (process.env.TARGET_LOCALHOST) {
-    remotes.errortracking = 'errortracking@http://localhost:3091/remoteEntry.js'
-  } else {
-    remotes.errortracking = "errortracking@[window.getApiBaseUrl('et/remoteEntry.js')]"
-  }
-
-  if (enableSSCA) {
-    remotes.ssca = "ssca@[window.getApiBaseUrl('ssca/remoteEntry.js')]"
+module.exports = () => {
+  const remotes = {
+    gitopsui: "gitopsui@[window.getApiBaseUrl('gitops/remoteEntry.js')]",
+    governance: "governance@[window.getApiBaseUrl('pm/remoteEntry.js')]",
+    idp: "idp@[window.getIDPBaseUrl('idp/remoteEntry.js')]",
+    idpadmin: "idpadmin@[window.getApiBaseUrl('idp-admin/remoteEntry.js')]",
+    ccmui: "ccmui@[window.getApiBaseUrl('ccmui/remoteEntry.js')]",
+    sto: "sto@[window.getApiBaseUrl('sto/remoteEntry.js')]",
+    stoV2: "stoV2@[window.getApiBaseUrl('sto/v2/remoteEntry.js')]",
+    chaos: "chaos@[window.getApiBaseUrl('chaos/remoteEntry.js')]",
+    code: "codeRemote@[window.getApiBaseUrl('code/remoteEntry.js')]",
+    ffui: "ffui@[window.getApiBaseUrl('cf/web/remoteEntry.js')]",
+    srmui: "srmui@[window.getApiBaseUrl('srmui/remoteEntry.js')]",
+    iacm: "remoteIACM@[window.getApiBaseUrl('iacm/remoteEntry.js')]",
+    cdbui: "cdbui@[window.getApiBaseUrl('cdbui/remoteEntry.js')]",
+    sei: "sei@[window.getApiBaseUrl('sei/remoteEntry.js')]",
+    errortracking: "errortracking@[window.getApiBaseUrl('et/remoteEntry.js')]",
+    ssca: "ssca@[window.getApiBaseUrl('ssca/remoteEntry.js')]"
   }
 
   const shared = {
