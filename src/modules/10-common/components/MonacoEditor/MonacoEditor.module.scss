@@ -15,6 +15,7 @@
   --vscode-editorMarkerNavigation-background: var(--disabled-bg);
 }
 
-.isolate {
-  isolation: isolate;
+.editor {
+  position: relative;
+  z-index: 1;
 }
