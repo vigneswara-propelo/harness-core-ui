@@ -26,7 +26,9 @@ import {
   onSubmitPayload,
   healthSourcePayload,
   NewRelicInputFormData,
-  mockedFormDataCreate
+  mockedFormDataCreate,
+  NewRelicInputDataTemplate,
+  NewRelicInputDataRuntime
 } from './NewRelic.mock'
 import { createNewRelicFormData } from '../NewRelicHealthSource.utils'
 import { newRelicDefaultMetricName } from '../NewRelicHealthSource.constants'
@@ -183,6 +185,40 @@ describe('Unit tests for NewRelic health source', () => {
     await waitFor(() =>
       expect(getByText('cv.monitoringSources.prometheus.querySpecificationsAndMappings')).toBeTruthy()
     )
+  })
+
+  test('should render multitype input as expression for application name if it is a template and value was given as expression', () => {
+    const submitData = jest.fn()
+    render(
+      <TestWrapper {...createModeProps}>
+        <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
+          <NewRelicHealthSource
+            isTemplate
+            data={NewRelicInputDataTemplate}
+            onSubmit={submitData}
+            onPrevious={jest.fn()}
+          />
+        </SetupSourceTabs>
+      </TestWrapper>
+    )
+    expect(screen.getByPlaceholderText(/<\+expression>/)).toBeInTheDocument()
+  })
+
+  test('should render multitype input as runtime for application name if it is a template and value was given as runtime', () => {
+    const submitData = jest.fn()
+    render(
+      <TestWrapper {...createModeProps}>
+        <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
+          <NewRelicHealthSource
+            isTemplate
+            data={NewRelicInputDataRuntime}
+            onSubmit={submitData}
+            onPrevious={jest.fn()}
+          />
+        </SetupSourceTabs>
+      </TestWrapper>
+    )
+    expect(screen.getByPlaceholderText(/<\+input>/)).toBeInTheDocument()
   })
 
   describe('Metric thresholds', () => {

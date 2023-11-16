@@ -360,8 +360,12 @@ export const persistCustomMetric = ({
 export const setNewRelicMultiTypeApplication = (
   appdApplication: string | SelectOption,
   tierOptions: SelectOption[],
-  multiType?: MultiTypeInputType
+  multiType?: MultiTypeInputType,
+  propsApplicationName?: string
 ): SelectOption | string | undefined => {
+  if (propsApplicationName && !appdApplication) {
+    return propsApplicationName
+  }
   const applicationValue = typeof appdApplication === 'string' ? appdApplication : appdApplication.label
   const value = !appdApplication ? undefined : tierOptions.find((item: SelectOption) => item.label === applicationValue)
 

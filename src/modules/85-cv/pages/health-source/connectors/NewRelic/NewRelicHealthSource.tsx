@@ -88,6 +88,7 @@ export default function NewRelicHealthSource({
   const defailtMetricName = getString('cv.monitoringSources.newRelic.defaultNewRelicMetricName')
   const [selectedMetricPacks, setSelectedMetricPacks] = useState<TimeSeriesMetricPackDTO[]>([])
   const [validationResultData, setValidationResultData] = useState<MetricPackValidationResponse[]>()
+  const [applicationNameForEdit, setApplicationNameForEdit] = useState(newRelicData?.applicationName)
   const [newRelicValidation, setNewRelicValidation] = useState<{
     status: string
     result: MetricPackValidationResponse[] | []
@@ -219,7 +220,7 @@ export default function NewRelicHealthSource({
   }, [])
 
   const [inputType, setInputType] = React.useState<MultiTypeInputType | undefined>(() =>
-    getTypeOfInput(newRelicData?.newRelicApplication)
+    getTypeOfInput(applicationNameForEdit)
   )
 
   const handleMetricPackUpdate = useCallback(
@@ -298,6 +299,7 @@ export default function NewRelicHealthSource({
           formikValues: formik.values,
           setMappedMetrics
         })
+
         return (
           <FormikForm className={css.formFullheight}>
             <CardWithOuterTitle title={'Application'}>
@@ -316,6 +318,14 @@ export default function NewRelicHealthSource({
                           items: applicationOptions
                         }}
                         expressions={expressions}
+                        onTypeChange={type => {
+                          setInputType(type)
+                          setApplicationNameForEdit(null)
+                          setNonCustomFeilds({
+                            ...nonCustomFeilds,
+                            newRelicApplication: ''
+                          })
+                        }}
                         allowableTypes={
                           isConnectorRuntimeOrExpression
                             ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
@@ -325,7 +335,8 @@ export default function NewRelicHealthSource({
                         value={setNewRelicMultiTypeApplication(
                           formik.values?.newRelicApplication,
                           applicationOptions,
-                          inputType
+                          inputType,
+                          applicationNameForEdit
                         )}
                         onChange={(item, _valueType, type) => {
                           if (type === MultiTypeInputType.FIXED) {

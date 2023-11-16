@@ -403,6 +403,16 @@ export const NewRelicInputFormData = {
   mappedServicesAndEnvs: new Map()
 }
 
+export const NewRelicInputDataTemplate = {
+  ...NewRelicInputFormData,
+  applicationName: '<+test>'
+}
+
+export const NewRelicInputDataRuntime = {
+  ...NewRelicInputFormData,
+  applicationName: '<+input>'
+}
+
 export const NewRelicInputFormTemplateData = {
   name: 'New_relic',
   identifier: 'New_relic',
