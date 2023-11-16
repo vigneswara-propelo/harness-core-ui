@@ -18,7 +18,9 @@ import {
   IconName,
   Container,
   ButtonSize,
-  PageSpinner
+  PageSpinner,
+  useToaster,
+  getErrorInfoFromErrorObject
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import type { IconProps } from '@harness/icons'
@@ -80,6 +82,7 @@ export default function GetStartedWithCI(): React.ReactElement {
   })
   const [isFetchingSecret, setIsFetchingSecret] = useState<boolean>()
   const scrollRef = useRef<Element>()
+  const { showError } = useToaster()
 
   const [showCreditCardFlow, setShowCreditCardFlow] = useState<boolean>(!!CI_CREDIT_CARD_ONBOARDING)
   const [showLocalInfraSetup, setShowLocalInfraSetup] = useState<boolean>(false)
@@ -98,7 +101,8 @@ export default function GetStartedWithCI(): React.ReactElement {
   const {
     data: validCard,
     loading: fetchingCards,
-    refetch: refetchValidCard
+    refetch: refetchValidCard,
+    error
   } = useHasAValidCard({
     queryParams: { accountIdentifier: accountId }
   })
@@ -108,6 +112,12 @@ export default function GetStartedWithCI(): React.ReactElement {
       refetchValidCard()
     }
   })
+
+  useEffect(() => {
+    if (error) {
+      showError(getErrorInfoFromErrorObject(error))
+    }
+  }, [error])
 
   useEffect(() => {
     if ((validCard?.data?.hasAtleastOneValidCreditCard && CI_CREDIT_CARD_ONBOARDING) || !CI_CREDIT_CARD_ONBOARDING) {
@@ -299,7 +309,7 @@ export default function GetStartedWithCI(): React.ReactElement {
               }}
             />
           ) : null}
-          {showCreditCardFlow && !showLocalInfraSetup ? (
+          {showCreditCardFlow && !showLocalInfraSetup && !showPageLoader ? (
             <CreditCardOnboarding
               setShowLocalInfraSetup={setShowLocalInfraSetup}
               openSubscribeModal={openSubscribeModal}

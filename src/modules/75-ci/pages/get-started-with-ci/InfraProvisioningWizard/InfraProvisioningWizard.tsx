@@ -243,7 +243,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
 
   const constructV0PipelinePayloadWithCodebase = React.useCallback(
     (repository?: UserRepoResponse, gitnessRepoName?: string, pipelineName?: string): string => {
-      const repositoryName = gitnessRepoName || repository?.name || ''
+      const repositoryName = repository ? getFullRepoName(repository) : gitnessRepoName || ''
       if (((!repository?.name || !repository?.namespace) && !gitnessRepoName) || !configuredGitConnector?.identifier) {
         return ''
       }

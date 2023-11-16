@@ -153,7 +153,7 @@ export const addDetailsToPipeline = ({
     return set(updatedPipeline, 'name', name)
   }
   updatedPipeline = set(updatedPipeline, 'pipeline.name', name)
-  updatedPipeline = set(updatedPipeline, 'pipeline.identifier', identifier.replace('.', '_'))
+  updatedPipeline = set(updatedPipeline, 'pipeline.identifier', identifier.replace(/[-.]/g, '_'))
   updatedPipeline = set(updatedPipeline, 'pipeline.projectIdentifier', projectIdentifier)
   updatedPipeline = set(updatedPipeline, 'pipeline.orgIdentifier', orgIdentifier)
   if (connectorRef) {
@@ -211,7 +211,7 @@ export const getPayloadForPipelineCreation = ({
   return addDetailsToPipeline({
     originalPipeline: parse(pipelineYaml),
     name: pipelineName?.length ? pipelineName : `${getString('buildText')} ${repositoryName}`,
-    identifier: `${getString('buildText')}_${repositoryName?.replace(/[-.]/g, '_')}_${UNIQUE_PIPELINE_ID}`,
+    identifier: `${getString('buildText')}_${repositoryName?.replace(/[-./]/g, '_')}_${UNIQUE_PIPELINE_ID}`,
     projectIdentifier,
     orgIdentifier,
     connectorRef:
