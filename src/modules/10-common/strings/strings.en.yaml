@@ -617,10 +617,10 @@ subscriptions:
     freeCredits: free credits
     developers: Developers
     developer: Developer
-    cloudSpend: Total Annual Cloud Spend Till Date
+    cloudSpend: Total Cloud Spend Till Date
     annualizedCloudSpend: Total Annualized Cloud Spend
     ccmUsers: Active CCM Users
-    ccmTooltip: Cloud Spend refers to the total spend (dollars) managed and optimized by Harness Cloud Cost Management.
+    ccmTooltip: Actual Cloud Spend refers to the total cloud spend subscribed so far since your current financial year.
     annualizedSpendTooltip: Forecasted annualized cloud spend basis last 30 days of actual spend from your current financial year.
     cetAgents: Active Agents
     cetAgentToolTip: An agent is an independent unit of software that you install on a host or in a container that tracks for errors continuously and sends the error tracking data to the Harness Platform.
