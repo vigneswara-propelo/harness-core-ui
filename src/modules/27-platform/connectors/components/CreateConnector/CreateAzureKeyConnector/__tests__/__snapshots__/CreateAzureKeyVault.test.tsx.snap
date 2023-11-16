@@ -1049,6 +1049,32 @@ exports[`Create Secret Manager Wizard edit connector 2`] = `
                     </label>
                   </div>
                 </div>
+                <div
+                  class="bp3-form-group"
+                >
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <label
+                      class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main StyledProps--padding-left-xxlarge StyledProps--inline"
+                    >
+                      <input
+                        checked=""
+                        name="enablePurge"
+                        type="checkbox"
+                      />
+                      <span
+                        class="bp3-control-indicator"
+                      />
+                      <span
+                        class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                        data-tooltip-id="azureKeyVaultForm_enablePurge"
+                      >
+                        platform.connectors.hashiCorpVault.purgeSecrets
+                      </span>
+                    </label>
+                  </div>
+                </div>
               </div>
               <div
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
@@ -3723,6 +3749,32 @@ exports[`Create Secret Manager Wizard should be able to render first step form 2
                         data-tooltip-id="azureKeyVaultForm_default"
                       >
                         platform.connectors.hashiCorpVault.defaultVault
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <div
+                  class="bp3-form-group"
+                >
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <label
+                      class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main StyledProps--padding-left-xxlarge StyledProps--inline"
+                    >
+                      <input
+                        checked=""
+                        name="enablePurge"
+                        type="checkbox"
+                      />
+                      <span
+                        class="bp3-control-indicator"
+                      />
+                      <span
+                        class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                        data-tooltip-id="azureKeyVaultForm_enablePurge"
+                      >
+                        platform.connectors.hashiCorpVault.purgeSecrets
                       </span>
                     </label>
                   </div>

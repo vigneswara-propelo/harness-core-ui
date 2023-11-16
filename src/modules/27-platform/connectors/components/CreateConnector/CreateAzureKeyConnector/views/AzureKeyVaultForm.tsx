@@ -46,6 +46,7 @@ export interface AzureKeyVaultFormData {
   tenantId?: string
   subscription?: string
   default?: boolean
+  enablePurge?: boolean
   delegateType?: string
   managedIdentity?: string
   azureEnvironmentType?: string
@@ -65,6 +66,7 @@ const AzureKeyVaultForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetails
     subscription: undefined,
     secretKey: undefined,
     default: false,
+    enablePurge: true,
     delegateType: undefined,
     managedIdentity: AzureManagedIdentityTypes.SYSTEM_MANAGED,
     azureEnvironmentType: AzureEnvironments.AZURE_GLOBAL
@@ -181,6 +183,13 @@ const AzureKeyVaultForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetails
                     />
                   ) : null
                 }
+                {formikProps.values.delegateType ? (
+                  <FormInput.CheckBox
+                    name="enablePurge"
+                    label={getString('platform.connectors.hashiCorpVault.purgeSecrets')}
+                    padding={{ left: 'xxlarge' }}
+                  />
+                ) : null}
               </Container>
               <Layout.Horizontal spacing="medium">
                 <Button

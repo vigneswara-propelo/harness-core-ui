@@ -794,6 +794,7 @@ describe('Connector Utils', () => {
         },
         tenantId: '123',
         subscription: '123',
+        enablePurge: true,
         default: false,
         delegateType: DelegateTypes.DELEGATE_OUT_CLUSTER
       })

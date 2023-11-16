@@ -16,7 +16,8 @@
         "vaultName": "QAAutomationKeyVault",
         "subscription": "20d6a917-dfsfdsfdsf-4b1b-9b2e-a3d624e9dcf0",
         "delegateSelectors": [],
-        "default": false
+        "default": false,
+        "enablePurge": true
       }
     },
     "createdAt": 1670417352969,

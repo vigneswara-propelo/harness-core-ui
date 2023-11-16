@@ -1184,6 +1184,7 @@ connectors:
     readOnlyVault: 'Read-only Vault'
     default: '{{$.common.default}}'
     defaultVault: 'Use as Default Secrets Manager'
+    purgeSecrets: 'Purge Secrets'
     fetchEngines: Fetch Engines
     setupEngine: Setup Engine
     saveInProgress: Saving Connector Details

@@ -1991,6 +1991,7 @@ export const buildAzureKeyVaultMetadataPayload = (
       tenantId: formData.tenantId?.trim(),
       subscription: formData.subscription?.trim(),
       delegateSelectors: formData.delegateSelectors,
+      enablePurge: formData?.enablePurge,
       ...delegateOutClusterFields,
       ...delegateInClusterFields
     } as AzureKeyVaultMetadataRequestSpecDTO
@@ -2020,7 +2021,7 @@ export const buildAzureKeyVaultPayload = (formData: FormData): BuildAzureKeyVaul
     ...pick(formData, ['name', 'description', 'projectIdentifier', 'identifier', 'orgIdentifier', 'tags']),
     type: Connectors.AZURE_KEY_VAULT,
     spec: {
-      ...pick(formData, ['tenantId', 'default', 'subscription', 'vaultName', 'delegateSelectors']),
+      ...pick(formData, ['tenantId', 'default', 'subscription', 'vaultName', 'delegateSelectors', 'enablePurge']),
       ...delegateOutClusterFields,
       ...delegateInClusterFields,
       vaultConfiguredManually: formData.vaultType === VaultType.MANUAL
@@ -2567,6 +2568,7 @@ export const setupAzureKeyVaultFormData = async (
     subscription: connectorInfoSpec?.subscription || undefined,
     default: connectorInfoSpec?.default || false,
     delegateType: DelegateTypes.DELEGATE_OUT_CLUSTER,
+    enablePurge: defaultTo(connectorInfoSpec?.enablePurge, true),
     ...delegateInClusterFields
   }
 }
