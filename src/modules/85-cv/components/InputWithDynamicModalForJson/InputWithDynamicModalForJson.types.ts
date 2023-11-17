@@ -12,7 +12,7 @@ export interface InputWithDynamicModalForJsonProps {
   isQueryExecuted: boolean
   isDisabled: boolean
   sampleRecord: Record<string, any> | null
-  inputLabel: string
+  inputLabel?: string
   inputName: string
   noRecordModalHeader?: string
   noRecordInputLabel?: string

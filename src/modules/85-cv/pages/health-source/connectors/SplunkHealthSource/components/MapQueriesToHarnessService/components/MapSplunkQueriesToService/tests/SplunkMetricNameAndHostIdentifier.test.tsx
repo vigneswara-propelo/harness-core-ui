@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
+import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import { SplunkMetricNameAndHostIdentifier } from '../SplunkMetricNameAndHostIdentifier'
 
@@ -21,7 +22,9 @@ describe('Unit tests for MapSplunkQueriesToService', () => {
   test('Ensure that query name is present', async () => {
     const { getByText } = render(
       <TestWrapper>
-        <SplunkMetricNameAndHostIdentifier {...initialProps} />
+        <Formik initialValues={{}} onSubmit={Promise.resolve}>
+          <SplunkMetricNameAndHostIdentifier {...initialProps} />
+        </Formik>
       </TestWrapper>
     )
     await waitFor(() => expect(getByText('cv.monitoringSources.queryNameLabel')).not.toBeNull())
@@ -30,9 +33,23 @@ describe('Unit tests for MapSplunkQueriesToService', () => {
   test('Ensure that service instance field is present', async () => {
     const { getByText } = render(
       <TestWrapper>
-        <SplunkMetricNameAndHostIdentifier {...initialProps} />
+        <Formik initialValues={{}} onSubmit={Promise.resolve}>
+          <SplunkMetricNameAndHostIdentifier {...initialProps} />
+        </Formik>
       </TestWrapper>
     )
     await waitFor(() => expect(getByText('cv.monitoringSources.gcoLogs.serviceInstance')).not.toBeNull())
+  })
+
+  test('should render json selector in templates for service instance', async () => {
+    const { container } = render(
+      <TestWrapper>
+        <Formik initialValues={{}} onSubmit={Promise.resolve}>
+          <SplunkMetricNameAndHostIdentifier {...initialProps} isTemplate />
+        </Formik>
+      </TestWrapper>
+    )
+
+    expect(container.querySelector('svg[data-icon="plus"]')).toBeTruthy()
   })
 })
