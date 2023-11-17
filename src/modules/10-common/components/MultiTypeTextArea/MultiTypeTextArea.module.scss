@@ -21,6 +21,7 @@
   right: var(--spacing-3) !important;
   border: 1px solid var(--form-field-border) !important;
   border-radius: var(--spacing-2) !important;
+  z-index: 2;
 
   &::before {
     display: none;
