@@ -12,7 +12,8 @@ import type {
   useGetEnvironment,
   useGetEnvironmentListForProject,
   useGetOrganizationAggregateDTOList,
-  useGetOrganizationList
+  useGetOrganizationList,
+  useGetProjectAggregateDTOList
 } from 'services/cd-ng'
 import type { useConfirmAction, useLocalStorage, useQueryParams } from '@common/hooks'
 import type { useQueryParamsState } from '@common/hooks/useQueryParamsState'
@@ -43,6 +44,7 @@ export interface FFCustomMicroFrontendProps {
     useCDGetEnvironmentListForProject: typeof useGetEnvironmentListForProject
     useCDGetOrganizationAggregateDTOList: typeof useGetOrganizationAggregateDTOList
     useCDGetOrganizationList: typeof useGetOrganizationList
+    useCDGetProjectAggregateDTOList: typeof useGetProjectAggregateDTOList
   }
   customHooks: {
     useActiveEnvironment: typeof useActiveEnvironment

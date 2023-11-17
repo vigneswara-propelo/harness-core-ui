@@ -15,7 +15,8 @@ import {
   useDeleteEnvironmentV2 as useCDDeleteEnvironment,
   useCreateEnvironment as useCDCreateEnvironment,
   useGetOrganizationAggregateDTOList as useCDGetOrganizationAggregateDTOList,
-  useGetOrganizationList as useCDGetOrganizationList
+  useGetOrganizationList as useCDGetOrganizationList,
+  useGetProjectAggregateDTOList as useCDGetProjectAggregateDTOList
 } from 'services/cd-ng'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useConfirmAction, useLocalStorage, useQueryParams } from '@common/hooks'
@@ -51,7 +52,8 @@ const FFUIApp: FC = () => (
       useCDGetEnvironment,
       useCDGetEnvironmentListForProject,
       useCDGetOrganizationAggregateDTOList,
-      useCDGetOrganizationList
+      useCDGetOrganizationList,
+      useCDGetProjectAggregateDTOList
     }}
     customHooks={{
       useActiveEnvironment,
