@@ -529,8 +529,21 @@ const CENonMFERoutes = (
 
 const CERoutes: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
-  const { CCM_MICRO_FRONTEND } = useFeatureFlags()
+  const { CCM_MICRO_FRONTEND, CCM_COMMORCH } = useFeatureFlags()
   const enableMicroFrontend = CCM_MICRO_FRONTEND
+  if (CCM_COMMORCH) {
+    RbacFactory.registerResourceTypeHandler(ResourceType.CCM_COMMITMENT_ORCHESTRATOR, {
+      icon: 'ccm-solid',
+      label: 'ce.commitmentOrchestration.sideNavLabel',
+      category: ResourceCategory.CLOUD_COSTS,
+      permissionLabels: {
+        [PermissionIdentifier.VIEW_CCM_COMMITMENT_ORCHESTRATOR]: <LocaleString stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.EDIT_CCM_COMMITMENT_ORCHESTRATOR]: (
+          <LocaleString stringID="rbac.permissionLabels.createEdit" />
+        )
+      }
+    })
+  }
 
   const urqlClient = React.useMemo(() => {
     const url = getConfig(`ccm/api/graphql?accountIdentifier=${accountId}&routingId=${accountId}`)

@@ -45,6 +45,7 @@ import { SettingType } from '@common/constants/Utils'
 import { RouteWithContext } from '@common/router/RouteWithContext/RouteWithContext'
 import { Connectors } from '@connectors/constants'
 import NotFoundPage from '@common/pages/404/NotFoundPage'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import CEHomePage from './pages/home/CEHomePage'
 import CETrialHomePage from './pages/home/CETrialHomePage'
 
@@ -522,7 +523,22 @@ const getRequestOptions = (): Partial<RequestInit> => {
 
 const CERouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
   const { accountId } = useParams<AccountPathProps>()
+  const { CCM_COMMORCH } = useFeatureFlags()
   // const enableMicroFrontend = CCM_MICRO_FRONTEND
+
+  if (CCM_COMMORCH) {
+    RbacFactory.registerResourceTypeHandler(ResourceType.CCM_COMMITMENT_ORCHESTRATOR, {
+      icon: 'ccm-solid',
+      label: 'ce.commitmentOrchestration.sideNavLabel',
+      category: ResourceCategory.CLOUD_COSTS,
+      permissionLabels: {
+        [PermissionIdentifier.VIEW_CCM_COMMITMENT_ORCHESTRATOR]: <LocaleString stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.EDIT_CCM_COMMITMENT_ORCHESTRATOR]: (
+          <LocaleString stringID="rbac.permissionLabels.createEdit" />
+        )
+      }
+    })
+  }
 
   const urqlClient = React.useMemo(() => {
     const url = getConfig(`ccm/api/graphql?accountIdentifier=${accountId}&routingId=${accountId}`)

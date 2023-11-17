@@ -238,6 +238,9 @@ export enum PermissionIdentifier {
   DELETE_CCM_CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT = 'ccm_cloudAssetGovernanceEnforcement_delete',
   VIEW_CCM_ANOMALIES = 'ccm_anomalies_view',
   VIEW_CCM_RECOMMENDATIONS = 'ccm_recommendations_view',
+  VIEW_CCM_COMMITMENT_ORCHESTRATOR = 'ccm_commitmentOrchestrator_view',
+  EDIT_CCM_COMMITMENT_ORCHESTRATOR = 'ccm_commitmentOrchestrator_edit',
+
   // Billing Permissions
   EDIT_LICENSE = 'core_license_edit',
   DELETE_LICENSE = 'core_license_delete',
