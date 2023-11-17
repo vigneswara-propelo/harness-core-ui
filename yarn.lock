@@ -2921,9 +2921,9 @@
     webpack "^4.0.0"
 
 "@harness/ng-tooltip@^1.31.188":
-  version "1.31.189"
-  resolved "https://npm.pkg.github.com/download/@harness/ng-tooltip/1.31.189/02e40c16b448246bd2fc79b35d69abea9ed3d63f#02e40c16b448246bd2fc79b35d69abea9ed3d63f"
-  integrity sha512-YfP3qQJtBCY3qzvA3kWCPTuek9i/FecbmWJc+70WorSDJqApw0VgvNhIEva+DJ+QHyXfwbo7kp/u3VhJPmA4cQ==
+  version "1.31.192"
+  resolved "https://npm.pkg.github.com/download/@harness/ng-tooltip/1.31.192/a75225ef6af58dd9733038380a9ec4dcfff499de#a75225ef6af58dd9733038380a9ec4dcfff499de"
+  integrity sha512-Nfp/RwehWZky3YOATMdzJA88JsCLpkr1ZGt6htQgx+HMdXRTQPFPteyhNaeHy9SZnoapLooLFHRNa1CZ/vFp1w==
 
 "@harness/telemetry@^1.0.42":
   version "1.0.42"
