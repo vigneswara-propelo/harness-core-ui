@@ -33,6 +33,7 @@ import {
 } from '@pipeline/components/PipelineSteps/Steps/CustomApproval/types'
 import { ApprovalRejectionCriteria } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalRejectionCriteria'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { CustomApprovalFormData } from './types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './CustomApproval.module.scss'
@@ -53,6 +54,7 @@ export default function BaseCustomApproval(props: {
   const { values: formValues, setFieldValue } = formik
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const scriptType: ScriptType = formValues.spec?.shell || /* istanbul ignore next */ 'Bash'
 
   return (
@@ -187,7 +189,8 @@ export default function BaseCustomApproval(props: {
                           multiTextInputProps={{
                             allowableTypes,
                             expressions,
-                            disabled: readonly
+                            disabled: readonly,
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                           }}
                           label=""
                           disabled={readonly}

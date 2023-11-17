@@ -32,7 +32,7 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import MultiTypeSecretInput from '@platform/secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -433,6 +433,7 @@ export function OptionalVariables({
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { values: formValues, setFieldValue } = useFormikContext()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const variablePath = `${variableSpec}.value`
   const variableTypePath = `${variableSpec}.type`
@@ -444,7 +445,7 @@ export function OptionalVariables({
   const commasInAllowedValues = useFeatureFlag(FeatureFlag.PIE_MULTISELECT_AND_COMMA_IN_ALLOWED_VALUES)
 
   return (
-    <Layout.Horizontal>
+    <Layout.Horizontal className={NG_EXPRESSIONS_NEW_INPUT_ELEMENT ? css.textAreaWidth : ''}>
       {variableType === 'Secret' && stepName === StepType.SHELLSCRIPT ? (
         <MultiTypeSecretInput name={variablePath} label="" disabled={readonly} />
       ) : (
@@ -454,7 +455,8 @@ export function OptionalVariables({
           multiTextInputProps={{
             allowableTypes,
             expressions,
-            disabled: readonly
+            disabled: readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           label=""
           disabled={readonly}

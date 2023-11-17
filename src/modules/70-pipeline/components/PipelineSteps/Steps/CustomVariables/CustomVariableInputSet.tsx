@@ -24,7 +24,7 @@ import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { CustomDeploymentNGVariable } from 'services/cd-ng'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { getAllowedValuesFromTemplate, shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
 import {
@@ -81,6 +81,7 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
   const basePath = path?.length ? `${path}.variables` : 'variables'
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const formikValue = get(formik?.values, basePath)
   const formikVariables = Array.isArray(formikValue) ? formikValue : []
   // get doesn't return defaultValue if it gets null
@@ -222,6 +223,9 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
                     )
                   }}
                   label=""
+                  multiTextInputProps={{
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                 />
               ) : (
                 <TextFieldInputSetView
@@ -231,7 +235,8 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
                     textProps: { type: variable.type === 'Number' ? 'number' : 'text' },
                     allowableTypes,
                     expressions,
-                    defaultValueToReset: ''
+                    defaultValueToReset: '',
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                   label=""
                   disabled={inputSetData?.readonly}

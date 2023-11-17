@@ -36,7 +36,7 @@ import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/Time
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import MultiTypeConfigFileSelect from '@pipeline/components/StartupScriptSelection/MultiTypeConfigFileSelect'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import {
   MultiSelectVariableAllowedValues,
@@ -98,6 +98,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const scriptType: ScriptType = get(initialValues, 'spec.shell') || 'Bash'
   const prefix = isEmpty(path) ? '' : `${path}.`
   const isExecutionTimeFieldDisabledForStep = isExecutionTimeFieldDisabled(stepViewType)
@@ -331,6 +332,9 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                                 formik.setFieldValue(`${formikEnvironmentVariablePath}.value`, finalValue)
                               }}
                               label=""
+                              multiTextInputProps={{
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                              }}
                             />
                           ) : (
                             <TextFieldInputSetView
@@ -339,7 +343,8 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                                 allowableTypes,
                                 expressions,
                                 disabled: readonly,
-                                defaultValueToReset: ''
+                                defaultValueToReset: '',
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                               }}
                               label=""
                               placeholder={getString('valueLabel')}

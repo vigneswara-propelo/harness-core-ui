@@ -17,6 +17,7 @@ import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/Config
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { ENABLED_ARTIFACT_TYPES, tagOptions } from '../../../ArtifactHelper'
 import { getArtifactPathToFetchTags, helperTextData, resetFieldValue, resetTag } from '../../../ArtifactUtils'
 import type { ArtifactImagePathTagViewProps } from '../../../ArtifactInterface'
@@ -91,6 +92,8 @@ function ArtifactImagePathTagView({
       }
     : {}
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
+
   const getSelectItems = useCallback(selectItemsMapper.bind(null, tagList, isServerlessDeploymentTypeSelected), [
     tagList,
     isServerlessDeploymentTypeSelected
@@ -248,6 +251,7 @@ function ArtifactImagePathTagView({
             multiTypeInputProps={{
               expressions,
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               selectProps: {
                 defaultSelectedItem: formik?.values?.tag,
                 noResults: (
@@ -309,7 +313,11 @@ function ArtifactImagePathTagView({
             }
             name="tagRegex"
             placeholder={getString('pipeline.artifactsSelection.existingDocker.enterTagRegex')}
-            multiTextInputProps={{ expressions, allowableTypes }}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
           />
           {getMultiTypeFromValue(formik?.values?.tagRegex) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>

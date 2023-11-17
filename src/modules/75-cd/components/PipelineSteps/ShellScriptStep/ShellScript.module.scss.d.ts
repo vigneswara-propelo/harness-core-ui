@@ -22,6 +22,7 @@ declare const styles: {
   readonly stepDesc: string
   readonly stepType: string
   readonly stepValue: string
+  readonly textAreaWidth: string
   readonly variablesList: string
 }
 export default styles

@@ -17,6 +17,7 @@ import { useStrings } from 'framework/strings'
 import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { BuildDetailsDTO, getTagError, isExecutionTimeFieldDisabled } from '../artifactSourceUtils'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
@@ -57,6 +58,7 @@ const ArtifactTagRuntimeField = (props: TagsRenderContent): JSX.Element => {
     ? getString('pipeline.artifactsSelection.loadingArtifactPaths')
     : getString('pipeline.artifactsSelection.loadingTags')
   const { showError } = useToaster()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const [tagsList, setTagsList] = useState<SelectOption[]>([])
 
@@ -136,6 +138,7 @@ const ArtifactTagRuntimeField = (props: TagsRenderContent): JSX.Element => {
             fetchTags()
           }
         },
+        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
         selectProps: {
           items: fetchingTags
             ? [
