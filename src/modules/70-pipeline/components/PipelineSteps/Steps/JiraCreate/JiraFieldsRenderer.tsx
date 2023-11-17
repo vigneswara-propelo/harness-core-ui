@@ -108,7 +108,7 @@ function GetMappedFieldComponent({
     /* if we have issue type as runtime then required fields are added on UI in runtime form
     so we don't have names in spec for fields as expected. To add object of required fields with name and value,
      we have set value of fields using below condition */
-    if (isNil(selectedFieldName)) {
+    if (isNil(selectedFieldName) && props.fieldPrefix) {
       set(props.formik?.values, `${props.fieldPrefix}spec.fields[${index}].name`, selectedField.name)
     }
   }, [index, selectedField])

@@ -26,6 +26,7 @@ import {
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { IItemRendererProps } from '@blueprintjs/select'
+import produce from 'immer'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
@@ -451,6 +452,7 @@ function FormContent({
     formik.values.spec.fields,
     formik.values.spec.issueKey,
     issueMetaResponse,
+    issueUpdateMetadataResponse,
     projectMetaResponse,
     fetchingProjectMetadata,
     fetchingIssueMetadata
@@ -729,7 +731,16 @@ function FormContent({
                         if (transitionObj) {
                           const targetStatus = statusOptions.find(status => status.value === transitionObj?.to?.name)
                           if (targetStatus) {
-                            formik.setFieldValue('spec.transitionTo.status', targetStatus?.value)
+                            formik.setValues(
+                              produce(formik.values, draft => {
+                                set(draft, `spec.transitionTo.status`, targetStatus?.value)
+                                set(
+                                  draft,
+                                  `spec.transitionTo.transitionName`,
+                                  defaultTo((value as SelectOption)?.value, value)
+                                )
+                              })
+                            )
                           }
                         }
                       }
@@ -781,6 +792,7 @@ function FormContent({
                   formik.setFieldValue('spec.fields', customFields)
                 }}
                 connectorRef={defaultTo(connectorRefFixedValue, '')}
+                formik={formik}
               />
 
               {issueUpdateMetadataLoading || fetchingIssueMetadata ? (
