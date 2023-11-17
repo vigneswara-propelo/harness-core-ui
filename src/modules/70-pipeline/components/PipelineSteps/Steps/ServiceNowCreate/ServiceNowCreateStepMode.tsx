@@ -455,25 +455,6 @@ function FormContent({
     )
   }, [connectorRefFixedValue, formik.values.spec.selectedFields, formik.values.spec.fields])
 
-  function AddFieldsButton(): React.ReactElement {
-    return (
-      <Text
-        onClick={() => {
-          if (!isApprovalStepFieldDisabled(readonly)) {
-            showDynamicFieldsModal()
-          }
-        }}
-        style={{
-          cursor: isApprovalStepFieldDisabled(readonly) ? 'not-allowed' : 'pointer'
-        }}
-        tooltipProps={{ dataTooltipId: 'serviceNowCreateAddFields' }}
-        intent="primary"
-      >
-        {getString('pipeline.jiraCreateStep.fieldSelectorAdd')}
-      </Text>
-    )
-  }
-
   const ticketTypesLoading = serviceNowTicketTypesQuery.loading
   const ticketTypesFetchError = defaultTo(
     (serviceNowTicketTypesQuery?.error?.data as Error)?.message,
@@ -852,8 +833,20 @@ function FormContent({
                 ) : null}
               </>
             )}
-
-            <AddFieldsButton />
+            <Text
+              onClick={() => {
+                if (!isApprovalStepFieldDisabled(readonly)) {
+                  showDynamicFieldsModal()
+                }
+              }}
+              style={{
+                cursor: isApprovalStepFieldDisabled(readonly) ? 'not-allowed' : 'pointer'
+              }}
+              tooltipProps={{ dataTooltipId: 'serviceNowCreateAddFields' }}
+              intent="primary"
+            >
+              {getString('pipeline.jiraCreateStep.fieldSelectorAdd')}
+            </Text>
           </div>
         )}
         {formik.values.spec.fieldType === FieldType.CreateFromTemplate && (
@@ -1056,7 +1049,6 @@ function FormContent({
                         items: defaultTo(getTemplates(), []),
                         loadingItems: fetchingTemplate,
                         itemRenderer: serviceItemRenderer,
-                        // itemListRenderer,
                         noResults: (
                           <Text lineClamp={1} width={384} margin="small">
                             {getString('common.filters.noResultsFound')}

@@ -391,25 +391,6 @@ function FormContent({
     )
   }, [connectorRefFixedValue, formik.values.spec.selectedFields, formik.values.spec.fields])
 
-  function AddFieldsButton(): React.ReactElement {
-    return (
-      <Text
-        onClick={() => {
-          if (!isApprovalStepFieldDisabled(readonly)) {
-            showDynamicFieldsModal()
-          }
-        }}
-        style={{
-          cursor: isApprovalStepFieldDisabled(readonly) ? 'not-allowed' : 'pointer'
-        }}
-        tooltipProps={{ dataTooltipId: 'serviceNowCreateAddFields' }}
-        intent="primary"
-      >
-        {getString('pipeline.jiraCreateStep.fieldSelectorAdd')}
-      </Text>
-    )
-  }
-
   const descriptionValueFromServiceNow = ticketFieldDetailsMap['description']?.displayValue
   const shortDescriptionValueFromServiceNow = ticketFieldDetailsMap['short_description']?.displayValue
 
@@ -837,7 +818,20 @@ function FormContent({
               </>
             )}
 
-            <AddFieldsButton />
+            <Text
+              onClick={() => {
+                if (!isApprovalStepFieldDisabled(readonly)) {
+                  showDynamicFieldsModal()
+                }
+              }}
+              style={{
+                cursor: isApprovalStepFieldDisabled(readonly) ? 'not-allowed' : 'pointer'
+              }}
+              tooltipProps={{ dataTooltipId: 'serviceNowCreateAddFields' }}
+              intent="primary"
+            >
+              {getString('pipeline.jiraCreateStep.fieldSelectorAdd')}
+            </Text>
           </div>
         )}
         {formik.values.spec.fieldType === FieldType.CreateFromTemplate && (
