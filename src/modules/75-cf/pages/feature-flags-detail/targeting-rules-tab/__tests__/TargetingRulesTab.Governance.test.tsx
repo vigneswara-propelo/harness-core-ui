@@ -106,7 +106,23 @@ describe('TargetingRulesTab Governance', () => {
       details: { governanceMetadata: { status: 'warning', message: 'governance warning' } }
     })
 
-    renderComponent()
+    renderComponent({
+      featureFlagData: {
+        ...mockFeature,
+        envProperties: {
+          pipelineConfigured: false,
+          pipelineDetails: undefined,
+          defaultServe: { variation: 'false' },
+          environment: 'qatest',
+          modifiedAt: 1635333973373,
+          offVariation: 'false',
+          rules: [],
+          state: 'on',
+          variationMap: [],
+          version: 56
+        }
+      }
+    })
 
     // toggle flag off
     const flagToggle = screen.getByTestId('flag-status-switch')
@@ -127,7 +143,23 @@ describe('TargetingRulesTab Governance', () => {
       data: { details: { governanceMetadata: { status: 'error', message: 'governance error' } } }
     })
 
-    renderComponent()
+    renderComponent({
+      featureFlagData: {
+        ...mockFeature,
+        envProperties: {
+          pipelineConfigured: false,
+          pipelineDetails: undefined,
+          defaultServe: { variation: 'false' },
+          environment: 'qatest',
+          modifiedAt: 1635333973373,
+          offVariation: 'false',
+          rules: [],
+          state: 'on',
+          variationMap: [],
+          version: 56
+        }
+      }
+    })
 
     // toggle flag off
     const flagToggle = screen.getByTestId('flag-status-switch')

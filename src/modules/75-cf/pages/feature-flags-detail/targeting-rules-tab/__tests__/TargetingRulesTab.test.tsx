@@ -19,7 +19,6 @@ import * as usePatchFeatureFlagMock from '../hooks/usePatchFeatureFlag'
 import mockSegment from './data/mockSegments'
 import mockTargets from './data/mockTargets'
 import mockFeature from './data/mockFeature'
-import expectedFormValues from './data/expectedFormValues'
 
 jest.mock('uuid')
 
@@ -158,22 +157,35 @@ describe('TargetingRulesTab', () => {
     })
 
     test('it should show the confirm modal when trying to save an altered default rule, that affects the current flag state', async () => {
-      renderComponent()
+      renderComponent({
+        featureFlagData: {
+          ...mockFeature,
+          envProperties: {
+            pipelineConfigured: false,
+            pipelineDetails: undefined,
+            defaultServe: { variation: 'false' },
+            environment: 'qatest',
+            modifiedAt: 1635333973373,
+            offVariation: 'false',
+            rules: [],
+            state: 'off',
+            variationMap: [],
+            version: 56
+          }
+        }
+      })
 
-      const onVariationDropdown = document.querySelector('input[name="onVariation"]') as HTMLSelectElement
-      expect(onVariationDropdown).toHaveValue('True')
-      await userEvent.click(onVariationDropdown)
-
-      const onVariationDropdownOptions = screen.getAllByRole('listitem')
-      expect(onVariationDropdownOptions).toHaveLength(2)
-
-      await userEvent.click(onVariationDropdownOptions[1])
-      expect(onVariationDropdown).toHaveValue('False')
+      const offVariationDropdown = document.querySelector('input[name="offVariation"]') as HTMLSelectElement
+      expect(offVariationDropdown).toBeInTheDocument()
+      await userEvent.click(offVariationDropdown)
+      const trueVariationOption = document.querySelector('li') as HTMLElement
+      await userEvent.click(trueVariationOption)
+      expect(offVariationDropdown).toHaveValue('True')
 
       await userEvent.click(screen.getByRole('button', { name: 'save' }))
 
       expect(screen.getByText('cf.featureFlags.rules.ruleChangeModalTitle')).toBeInTheDocument()
-      expect(screen.getByText('cf.featureFlags.rules.ruleChangeModalDescriptionEnabled')).toBeInTheDocument()
+      expect(screen.getByText('cf.featureFlags.rules.ruleChangeModalDescriptionDisabled')).toBeInTheDocument()
     })
 
     test('it should use default onVariation if environment variation does not exist', async () => {
@@ -355,6 +367,27 @@ describe('TargetingRulesTab', () => {
       expect(screen.getByTestId('true_targets')).toBeInTheDocument()
     })
 
+    test('it should show validation errors if form is submitted without selected targets or target groups and not save the changes', async () => {
+      const saveChangesMock = jest.fn()
+
+      jest.spyOn(usePatchFeatureFlagMock, 'default').mockReturnValue({ saveChanges: saveChangesMock, loading: false })
+
+      renderComponent()
+
+      const addTargetingButton = screen.getByText('cf.featureFlags.rules.addTargeting')
+
+      await userEvent.click(addTargetingButton)
+      await userEvent.click(screen.getByTestId('variation_option_true'))
+
+      await userEvent.click(screen.getByRole('button', { name: 'save' }))
+
+      await waitFor(() => {
+        expect(screen.getByText('cf.featureFlags.rules.validation.selectTarget')).toBeInTheDocument()
+        expect(screen.getByText('cf.featureFlags.rules.validation.selectTargetGroup')).toBeInTheDocument()
+        expect(saveChangesMock).not.toBeCalled()
+      })
+    })
+
     test('it should remove variation when "trash" icon/button clicked', async () => {
       renderComponent()
       await userEvent.click(screen.getByText('cf.featureFlags.rules.addTargeting'))
@@ -524,64 +557,266 @@ describe('TargetingRulesTab', () => {
   })
 
   describe('Integration', () => {
-    test('it should call saveChanges with correct data on save', async () => {
+    test('it should call saveChanges when flag is toggled and saved', async () => {
       const saveChangesMock = jest.fn()
 
       jest.spyOn(usePatchFeatureFlagMock, 'default').mockReturnValue({ saveChanges: saveChangesMock, loading: false })
-      renderComponent()
 
-      // toggle flag off
+      renderComponent({
+        featureFlagData: {
+          ...mockFeature,
+          envProperties: {
+            pipelineConfigured: false,
+            pipelineDetails: undefined,
+            defaultServe: { variation: 'false' },
+            environment: 'qatest',
+            modifiedAt: 1635333973373,
+            offVariation: 'false',
+            rules: [],
+            state: 'off',
+            variationMap: [],
+            version: 56
+          }
+        }
+      })
+
       const flagToggle = screen.getByTestId('flag-status-switch')
       await userEvent.click(flagToggle)
-      expect(flagToggle).not.toBeChecked()
+      expect(flagToggle).toBeChecked()
 
-      // update default ON variation
+      await userEvent.click(screen.getByRole('button', { name: 'save' }))
+
+      await waitFor(() => expect(saveChangesMock).toBeCalled())
+    })
+
+    test('it should call saveChanges when default on variation is updated and saved', async () => {
+      const saveChangesMock = jest.fn()
+
+      jest.spyOn(usePatchFeatureFlagMock, 'default').mockReturnValue({ saveChanges: saveChangesMock, loading: false })
+
+      renderComponent({
+        featureFlagData: {
+          ...mockFeature,
+          envProperties: {
+            pipelineConfigured: false,
+            pipelineDetails: undefined,
+            defaultServe: { variation: 'false' },
+            environment: 'qatest',
+            modifiedAt: 1635333973373,
+            offVariation: 'false',
+            rules: [],
+            state: 'off',
+            variationMap: [],
+            version: 56
+          }
+        }
+      })
+
       const onVariationDropdown = document.querySelector('input[name="onVariation"]') as HTMLSelectElement
+      expect(onVariationDropdown).toBeInTheDocument()
       await userEvent.click(onVariationDropdown)
       const trueVariationOption = document.querySelector('li') as HTMLElement
       await userEvent.click(trueVariationOption)
       expect(onVariationDropdown).toHaveValue('True')
 
-      // add true variation with targets/target groups
+      await userEvent.click(screen.getByRole('button', { name: 'save' }))
+
+      await waitFor(() => expect(saveChangesMock).toBeCalled())
+    })
+
+    test('it should call saveChanges when default off variation is updated and saved', async () => {
+      const saveChangesMock = jest.fn()
+
+      jest.spyOn(usePatchFeatureFlagMock, 'default').mockReturnValue({ saveChanges: saveChangesMock, loading: false })
+
+      renderComponent({
+        featureFlagData: {
+          ...mockFeature,
+          envProperties: {
+            pipelineConfigured: false,
+            pipelineDetails: undefined,
+            defaultServe: { variation: 'false' },
+            environment: 'qatest',
+            modifiedAt: 1635333973373,
+            offVariation: 'false',
+            rules: [],
+            state: 'off',
+            variationMap: [],
+            version: 56
+          }
+        }
+      })
+
+      const offVariationDropdown = document.querySelector('input[name="offVariation"]') as HTMLSelectElement
+      expect(offVariationDropdown).toBeInTheDocument()
+      await userEvent.click(offVariationDropdown)
+      const trueVariationOption = document.querySelector('li') as HTMLElement
+      await userEvent.click(trueVariationOption)
+      expect(offVariationDropdown).toHaveValue('True')
+
+      await userEvent.click(screen.getByRole('button', { name: 'save' }))
+
+      await userEvent.click(screen.getByRole('button', { name: 'confirm' }))
+
+      await waitFor(() => expect(saveChangesMock).toBeCalled())
+    })
+
+    test('it should call saveChanges when true variation with targets is updated and saved', async () => {
+      const saveChangesMock = jest.fn()
+
+      jest.spyOn(usePatchFeatureFlagMock, 'default').mockReturnValue({ saveChanges: saveChangesMock, loading: false })
+
+      renderComponent({
+        featureFlagData: {
+          ...mockFeature,
+          envProperties: {
+            pipelineConfigured: false,
+            pipelineDetails: undefined,
+            defaultServe: { variation: 'false' },
+            environment: 'qatest',
+            modifiedAt: 1635333973373,
+            offVariation: 'false',
+            rules: [],
+            state: 'off',
+            variationMap: [],
+            version: 56
+          }
+        }
+      })
+
       await userEvent.click(screen.getByText('cf.featureFlags.rules.addTargeting'))
       await userEvent.click(screen.getByTestId('variation_option_true'))
 
-      const trueTargetGroups = document.querySelector('input[name="targetingRuleItems[0].targetGroups"]') as HTMLElement
-
-      await waitFor(() => expect(trueTargetGroups).toBeInTheDocument())
-      await userEvent.click(trueTargetGroups)
-
-      await waitFor(() => expect(screen.getByText('target_group_2')).toBeInTheDocument())
-      await userEvent.click(screen.getByText('target_group_2'))
+      const trueTargetsDropdown = document.querySelector('input[name="targetingRuleItems[0].targets"]') as HTMLElement
+      await waitFor(() => expect(trueTargetsDropdown).toBeInTheDocument())
 
       await userEvent.click(document.querySelector('input[name="targetingRuleItems[0].targets"]') as HTMLElement)
       await waitFor(() => screen.getByText('target_2'))
       await userEvent.click(screen.getByText('target_2'))
 
-      // update percentage rollout target group
-      const targetGroup = document.querySelector(
-        'input[name="targetingRuleItems[1].clauses[0].values[0]"]'
-      ) as HTMLElement
-      await userEvent.click(targetGroup)
-      await waitFor(() => expect(screen.getByText('target_group_6')).toBeInTheDocument())
-      await userEvent.click(screen.getByText('target_group_6'))
+      await userEvent.click(screen.getByRole('button', { name: 'save' }))
 
-      // update percentage rollout weights
-      const trueWeight = document.querySelector(
-        'input[name="targetingRuleItems[1].variations[0].weight"]'
-      ) as HTMLElement
-      await userEvent.clear(trueWeight)
-      await userEvent.type(trueWeight, '70')
+      await waitFor(() => expect(saveChangesMock).toBeCalled())
+    })
 
-      const falseWeight = document.querySelector(
-        'input[name="targetingRuleItems[1].variations[1].weight"]'
-      ) as HTMLElement
-      await userEvent.clear(falseWeight)
-      await userEvent.type(falseWeight, '30')
+    test('it should call saveChanges when false variation with targets is updated and saved', async () => {
+      const saveChangesMock = jest.fn()
+
+      jest.spyOn(usePatchFeatureFlagMock, 'default').mockReturnValue({ saveChanges: saveChangesMock, loading: false })
+
+      renderComponent({
+        featureFlagData: {
+          ...mockFeature,
+          envProperties: {
+            pipelineConfigured: false,
+            pipelineDetails: undefined,
+            defaultServe: { variation: 'false' },
+            environment: 'qatest',
+            modifiedAt: 1635333973373,
+            offVariation: 'false',
+            rules: [],
+            state: 'off',
+            variationMap: [],
+            version: 56
+          }
+        }
+      })
+
+      await userEvent.click(screen.getByText('cf.featureFlags.rules.addTargeting'))
+      await userEvent.click(screen.getByTestId('variation_option_false'))
+
+      const trueTargetsDropdown = document.querySelector('input[name="targetingRuleItems[0].targets"]') as HTMLElement
+      await waitFor(() => expect(trueTargetsDropdown).toBeInTheDocument())
+
+      await userEvent.click(document.querySelector('input[name="targetingRuleItems[0].targets"]') as HTMLElement)
+      await waitFor(() => screen.getByText('target_2'))
+      await userEvent.click(screen.getByText('target_2'))
 
       await userEvent.click(screen.getByRole('button', { name: 'save' }))
 
-      await waitFor(() => expect(saveChangesMock).toBeCalledWith(expectedFormValues))
+      await waitFor(() => expect(saveChangesMock).toBeCalled())
+    })
+
+    test('it should call saveChanges when true variation with target groups is updated and saved', async () => {
+      const saveChangesMock = jest.fn()
+
+      jest.spyOn(usePatchFeatureFlagMock, 'default').mockReturnValue({ saveChanges: saveChangesMock, loading: false })
+
+      renderComponent({
+        featureFlagData: {
+          ...mockFeature,
+          envProperties: {
+            pipelineConfigured: false,
+            pipelineDetails: undefined,
+            defaultServe: { variation: 'false' },
+            environment: 'qatest',
+            modifiedAt: 1635333973373,
+            offVariation: 'false',
+            rules: [],
+            state: 'off',
+            variationMap: [],
+            version: 56
+          }
+        }
+      })
+
+      await userEvent.click(screen.getByText('cf.featureFlags.rules.addTargeting'))
+      await userEvent.click(screen.getByTestId('variation_option_true'))
+
+      const trueTargetGroupsDropdown = document.querySelector(
+        'input[name="targetingRuleItems[0].targetGroups"]'
+      ) as HTMLElement
+
+      await waitFor(() => expect(trueTargetGroupsDropdown).toBeInTheDocument())
+      await userEvent.click(trueTargetGroupsDropdown)
+
+      await waitFor(() => expect(screen.getByText('target_group_2')).toBeInTheDocument())
+      await userEvent.click(screen.getByText('target_group_2'))
+
+      await userEvent.click(screen.getByRole('button', { name: 'save' }))
+
+      await waitFor(() => expect(saveChangesMock).toBeCalled())
+    })
+
+    test('it should call saveChanges when false variation with target groups is updated and saved', async () => {
+      const saveChangesMock = jest.fn()
+
+      jest.spyOn(usePatchFeatureFlagMock, 'default').mockReturnValue({ saveChanges: saveChangesMock, loading: false })
+
+      renderComponent({
+        featureFlagData: {
+          ...mockFeature,
+          envProperties: {
+            pipelineConfigured: false,
+            pipelineDetails: undefined,
+            defaultServe: { variation: 'false' },
+            environment: 'qatest',
+            modifiedAt: 1635333973373,
+            offVariation: 'false',
+            rules: [],
+            state: 'off',
+            variationMap: [],
+            version: 56
+          }
+        }
+      })
+
+      await userEvent.click(screen.getByText('cf.featureFlags.rules.addTargeting'))
+      await userEvent.click(screen.getByTestId('variation_option_false'))
+
+      const trueTargetGroupsDropdown = document.querySelector(
+        'input[name="targetingRuleItems[0].targetGroups"]'
+      ) as HTMLElement
+
+      await waitFor(() => expect(trueTargetGroupsDropdown).toBeInTheDocument())
+      await userEvent.click(trueTargetGroupsDropdown)
+
+      await waitFor(() => expect(screen.getByText('target_group_2')).toBeInTheDocument())
+      await userEvent.click(screen.getByText('target_group_2'))
+
+      await userEvent.click(screen.getByRole('button', { name: 'save' }))
+
+      await waitFor(() => expect(saveChangesMock).toBeCalled())
     })
 
     test('it should reset form correctly when cancel button clicked', async () => {

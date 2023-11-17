@@ -204,7 +204,8 @@ featureFlags:
     searchTargetGroups: 'Search Target Groups'
     searchTargets: 'Search Targets'
     validation:
-      selectTargetGroup: Please select a Target Group
+      selectTarget: Please select a target
+      selectTargetGroup: Please select a target group
       valueRequired: Please enter a value
       valueMustAddTo100: Values must add up to 100%
   jira:

@@ -108,7 +108,23 @@ describe('TargetingRulesTab GitSync', () => {
   })
 
   test('it should open Git Modal and send correct data on save', async () => {
-    renderComponent()
+    renderComponent({
+      featureFlagData: {
+        ...mockFeature,
+        envProperties: {
+          pipelineConfigured: false,
+          pipelineDetails: undefined,
+          defaultServe: { variation: 'false' },
+          environment: 'qatest',
+          modifiedAt: 1635333973373,
+          offVariation: 'false',
+          rules: [],
+          state: 'on',
+          variationMap: [],
+          version: 56
+        }
+      }
+    })
 
     // toggle flag off
     const flagToggle = screen.getByTestId('flag-status-switch')
@@ -159,7 +175,23 @@ describe('TargetingRulesTab GitSync', () => {
 
   test('it should send correct data on save with auto commit ON', async () => {
     setUseGitRepoMock({ autoCommit: true })
-    renderComponent()
+    renderComponent({
+      featureFlagData: {
+        ...mockFeature,
+        envProperties: {
+          pipelineConfigured: false,
+          pipelineDetails: undefined,
+          defaultServe: { variation: 'false' },
+          environment: 'qatest',
+          modifiedAt: 1635333973373,
+          offVariation: 'false',
+          rules: [],
+          state: 'on',
+          variationMap: [],
+          version: 56
+        }
+      }
+    })
 
     // toggle flag off
     const flagToggle = screen.getByTestId('flag-status-switch')
@@ -201,7 +233,23 @@ describe('TargetingRulesTab GitSync', () => {
       data: { message: 'error with git sync service' }
     })
 
-    renderComponent()
+    renderComponent({
+      featureFlagData: {
+        ...mockFeature,
+        envProperties: {
+          pipelineConfigured: false,
+          pipelineDetails: undefined,
+          defaultServe: { variation: 'false' },
+          environment: 'qatest',
+          modifiedAt: 1635333973373,
+          offVariation: 'false',
+          rules: [],
+          state: 'on',
+          variationMap: [],
+          version: 56
+        }
+      }
+    })
 
     // toggle flag off
     const flagToggle = screen.getByTestId('flag-status-switch')

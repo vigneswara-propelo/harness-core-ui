@@ -8891,6 +8891,7 @@ export interface StringsMap {
   'cf.featureFlags.rules.specificTargeting': string
   'cf.featureFlags.rules.toTargetGroups': string
   'cf.featureFlags.rules.toTargets': string
+  'cf.featureFlags.rules.validation.selectTarget': string
   'cf.featureFlags.rules.validation.selectTargetGroup': string
   'cf.featureFlags.rules.validation.valueMustAddTo100': string
   'cf.featureFlags.rules.validation.valueRequired': string
