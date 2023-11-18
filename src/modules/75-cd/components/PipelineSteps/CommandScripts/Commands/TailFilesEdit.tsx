@@ -31,14 +31,20 @@ export function TailFilesEdit(props: TailFilesEditProps): React.ReactElement {
   return (
     <Layout.Vertical margin={{ bottom: 'small' }} data-testid="tail-files-edit">
       <Container className={css.filesPatternsHeaderContainer}>
-        <Text className={css.filesPatternsHeader}>{getString('cd.steps.commands.filesAndPatterns')}</Text>
+        <Text className={css.filesPatternsHeader} tooltipProps={{ dataTooltipId: 'filesAndPatterns' }}>
+          {getString('cd.steps.commands.filesAndPatterns')}
+        </Text>
         <Text className={css.filesPatternsHeaderOptional}>{getString('optionalField')}</Text>
       </Container>
       <div className={css.panel}>
         <div className={css.header}>
           <div></div>
-          <Text color={Color.GREY_600}>{getString('cd.steps.commands.fileToTail')}</Text>
-          <Text color={Color.GREY_600}>{getString('cd.steps.commands.patternToSearch')}</Text>
+          <Text color={Color.GREY_600} tooltipProps={{ dataTooltipId: 'fileToTail' }}>
+            {getString('cd.steps.commands.fileToTail')}
+          </Text>
+          <Text color={Color.GREY_600} tooltipProps={{ dataTooltipId: 'patternToSearch' }}>
+            {getString('cd.steps.commands.patternToSearch')}
+          </Text>
           <div></div>
         </div>
         <DragDropContext
