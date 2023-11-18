@@ -199,6 +199,23 @@ exports[`Test Trigger Detail Page Test should test snapshot view 1`] = `
             </p>
           </div>
         </div>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main TabNavigation--container"
+        >
+          <a
+            aria-current="page"
+            class="TabNavigation--tags TabNavigation--small TabNavigation--active"
+            href="/account/testAcc/cd/orgs/testOrg/projects/test/pipelines/pipeline/triggers/triggerIdentifier/detail"
+          >
+            details
+          </a>
+          <a
+            class="TabNavigation--tags TabNavigation--small"
+            href="/account/testAcc/cd/orgs/testOrg/projects/test/pipelines/pipeline/triggers/triggerIdentifier/activity-history"
+          >
+            activityHistoryLabel
+          </a>
+        </div>
       </div>
     </div>
   </div>

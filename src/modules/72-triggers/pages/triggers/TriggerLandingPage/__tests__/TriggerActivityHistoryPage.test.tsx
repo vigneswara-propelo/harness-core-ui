@@ -13,7 +13,6 @@ import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, triggerPathProps } from '@common/utils/routeUtils'
 import * as pipelineServices from 'services/pipeline-ng'
-import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import TriggerActivityHistoryPage from '../TriggerActivityHistoryPage/TriggerActivityHistoryPage'
 import {
@@ -27,9 +26,6 @@ jest.mock('react-monaco-editor', () => ({
 }))
 
 jest.mock('@common/components/MonacoEditor/MonacoEditor', () => MonacoEditor)
-jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-  CDS_TRIGGER_ACTIVITY_PAGE: true
-})
 
 const TEST_PATH = routes.toTriggersActivityHistoryPage({
   ...accountPathProps,

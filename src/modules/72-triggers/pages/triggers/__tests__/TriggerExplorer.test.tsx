@@ -33,7 +33,6 @@ function WrapperComponent(): JSX.Element {
       queryParams={{
         sectionId: 'EXPLORER'
       }}
-      defaultFeatureFlagValues={{ CDS_TRIGGER_ACTIVITY_PAGE: true }}
     >
       <TriggerExplorer />
     </TestWrapper>

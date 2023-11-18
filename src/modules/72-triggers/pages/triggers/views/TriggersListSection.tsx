@@ -148,7 +148,6 @@ const RenderColumnMenu: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
       }
     }
   })
-  const { CDS_TRIGGER_ACTIVITY_PAGE } = useFeatureFlags()
   return (
     <Layout.Horizontal style={{ justifyContent: 'flex-end' }}>
       <Popover
@@ -191,7 +190,7 @@ const RenderColumnMenu: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
             data-testid={`${data.identifier}-edit-button`}
           />
           <Menu.Divider />
-          {CDS_TRIGGER_ACTIVITY_PAGE && data.type !== 'Scheduled' && (
+          {data.type !== 'Scheduled' && (
             <>
               <Menu.Item
                 icon="history"

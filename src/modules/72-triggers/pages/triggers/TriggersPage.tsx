@@ -17,7 +17,6 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { PageQueryParams } from '@common/constants/Pagination'
 import TriggersList from './views/TriggersList'
 import type { TriggerDataInterface } from './utils/TriggersListUtils'
@@ -36,7 +35,6 @@ const TriggersPage: React.FC = (): React.ReactElement => {
   const { updateQueryParams } = useUpdateQueryParams<
     TriggersQueryParams & Pick<PageQueryParams, 'page' | 'searchTerm'>
   >()
-  const { CDS_TRIGGER_ACTIVITY_PAGE } = useFeatureFlags()
 
   const history = useHistory()
   const { repoIdentifier, branch, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
@@ -104,7 +102,7 @@ const TriggersPage: React.FC = (): React.ReactElement => {
     setSelectedTabId(tabId)
   }
 
-  return CDS_TRIGGER_ACTIVITY_PAGE ? (
+  return (
     <Container className={css.triggersPageBody}>
       <Tabs
         id="triggerDetails"
@@ -135,14 +133,6 @@ const TriggersPage: React.FC = (): React.ReactElement => {
         <Expander />
       </Tabs>
     </Container>
-  ) : (
-    <TriggersList
-      onNewTriggerClick={onNewTriggerClick}
-      repoIdentifier={repoIdentifier}
-      branch={branch}
-      isPipelineInvalid={isPipelineInvalid}
-      gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
-    />
   )
 }
 

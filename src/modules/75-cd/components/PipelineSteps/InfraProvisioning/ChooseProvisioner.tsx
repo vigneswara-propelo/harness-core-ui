@@ -27,7 +27,7 @@ interface ProvDialogProps {
 
 const ProvDialog = ({ onClose, hideModal, provData, onSubmit }: ProvDialogProps) => {
   const { getString } = useStrings()
-  const { NG_SVC_ENV_REDESIGN, CDS_AWS_CDK } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
   const [provisioner, setProvisioner] = useState<ProvisionerTypes>(ProvisionerTypes.Terraform)
   const modalProps = {
     isOpen: true,
@@ -73,7 +73,7 @@ const ProvDialog = ({ onClose, hideModal, provData, onSubmit }: ProvDialogProps)
     {
       name: ProvisionerTypes.AwsCdk,
       icon: 'cdk',
-      enabled: !!(NG_SVC_ENV_REDESIGN && CDS_AWS_CDK)
+      enabled: !!NG_SVC_ENV_REDESIGN
     }
   ]
   return (

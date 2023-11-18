@@ -77,7 +77,7 @@ describe('Create AWS connector Wizard', () => {
     expect(container).toMatchSnapshot()
   })
   test('Should render form for edit', async () => {
-    const { container } = render(
+    const { container, getByText } = render(
       <TestWrapper path={testPath} pathParams={testPathParams}>
         <CreateAWSConnector
           {...commonProps}
@@ -104,6 +104,14 @@ describe('Create AWS connector Wizard', () => {
     expect(container).toMatchSnapshot()
 
     //connectivity mode step
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
+    //backoff strategy step
+    expect(getByText('platform.connectors.aws.fixedDelay')).toBeDefined()
+    expect(getByText('platform.connectors.aws.equalJitter')).toBeDefined()
+    expect(getByText('platform.connectors.aws.fullJitter')).toBeDefined()
     await act(async () => {
       fireEvent.click(container.querySelector('button[type="submit"]')!)
     })
@@ -159,6 +167,11 @@ describe('Create AWS connector Wizard', () => {
     // step 2
     expect(queryByText(container, 'AWS Access Key')).toBeDefined()
     expect(container).toMatchSnapshot()
+
+    // backoff strategy step
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
 
     //connectivity mode step
     await act(async () => {
@@ -222,6 +235,11 @@ describe('Create AWS connector Wizard', () => {
       fireEvent.click(container.querySelector('button[type="submit"]')!)
     })
 
+    // backoff strategy step
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
     //connectivity mode step
     await act(async () => {
       fireEvent.click(container.querySelector('button[type="submit"]')!)
@@ -280,6 +298,17 @@ describe('Create AWS connector Wizard', () => {
 
     //connectivity mode step
     await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
+    //backoff strategy step
+    expect(getByText('platform.connectors.aws.fixedDelay')).toBeDefined()
+    expect(getByText('platform.connectors.aws.equalJitter')).toBeDefined()
+    expect(getByText('platform.connectors.aws.fullJitter')).toBeDefined()
+    const fixedDelayCard = getByText('platform.connectors.aws.fixedDelay')
+
+    await act(async () => {
+      fireEvent.click(fixedDelayCard)
       fireEvent.click(container.querySelector('button[type="submit"]')!)
     })
 

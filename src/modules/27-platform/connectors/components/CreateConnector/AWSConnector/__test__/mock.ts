@@ -20,6 +20,13 @@ export const mockConnector = {
       type: 'Aws',
       spec: {
         delegateSelectors: ['dummyDelegateSelector'],
+        awsSdkClientBackOffStrategyOverride: {
+          spec: {
+            fixedBackoff: 0,
+            retryCount: 0
+          },
+          type: 'FixedDelayBackoffStrategy'
+        },
         credential: {
           crossAccountAccess: { crossAccountRoleArn: 'mock URN', externalId: 'externalId' },
           type: 'ManualConfig',

@@ -46,7 +46,7 @@ const TriggerLandingPage: React.FC = ({ children }) => {
     >
   >()
   const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
-  const { CDS_TRIGGER_ACTIVITY_PAGE, CDS_NAV_2_0 } = useFeatureFlags()
+  const { CDS_NAV_2_0 } = useFeatureFlags()
   const routes = CDS_NAV_2_0 ? routesv2 : routesv1
 
   const {
@@ -206,7 +206,7 @@ const TriggerLandingPage: React.FC = ({ children }) => {
                   </Text>
                 </Layout.Vertical>
               </Layout.Horizontal>
-              {CDS_TRIGGER_ACTIVITY_PAGE && <TabNavigation links={triggerLinks} size={'small'} />}
+              <TabNavigation links={triggerLinks} size={'small'} />
             </Layout.Horizontal>
           )}
         </Layout.Vertical>
