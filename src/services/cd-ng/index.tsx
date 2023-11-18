@@ -183,6 +183,7 @@ export interface AccessControlCheckError {
     | 'LICENSE_EXPIRED'
     | 'NOT_LICENSED'
     | 'REQUEST_TIMEOUT'
+    | 'SCM_REQUEST_TIMEOUT'
     | 'WORKFLOW_ALREADY_TRIGGERED'
     | 'JENKINS_ERROR'
     | 'INVALID_ARTIFACT_SOURCE'
@@ -479,6 +480,7 @@ export interface Account {
   accountPreferences?: AccountPreferences
   appId: string
   authenticationMechanism?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
+  cannyUsernameAbbreviationEnabled?: boolean
   ceAutoCollectK8sEvents?: boolean
   ceLicenseInfo?: CeLicenseInfo
   cloudCostEnabled?: boolean
@@ -535,6 +537,7 @@ export interface AccountDTO {
   companyName?: string
   createdAt?: number
   crossGenerationAccessEnabled?: boolean
+  cannyUsernameAbbreviationEnabled?: boolean
   defaultExperience?: 'NG' | 'CG'
   harnessSupportAccessAllowed?: boolean
   identifier?: string
@@ -1019,6 +1022,13 @@ export interface ApplicationSettingsConfiguration {
   store: StoreConfigWrapper
 }
 
+export type ArtifactBundleStore = StoreConfig & {
+  artifactBundleType: 'ZIP' | 'TAR'
+  deployableUnitPath: string
+  manifestPath: string
+  metadata?: string
+}
+
 export interface ArtifactConfig {
   [key: string]: any
 }
@@ -1333,6 +1343,12 @@ export type AsgScheduledUpdateGroupActionManifest = ManifestAttributes & {
 
 export type AsgServiceSpec = ServiceSpec & {
   userData?: UserDataConfiguration
+}
+
+export type AsgShiftTrafficStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  downsizeOldAsg: boolean
+  weight: number
 }
 
 export type AuditFilterProperties = FilterProperties & {
@@ -2553,6 +2569,12 @@ export interface CDStageModuleInfo {
   serviceInfo?: ServiceExecutionSummary
 }
 
+export interface CDStageSummaryResponseDTO {
+  Environment?: string
+  'Infrastructure Definition'?: string
+  Service?: string
+}
+
 export type CEAwsConnector = ConnectorConfigDTO & {
   awsAccountId?: string
   crossAccountAccess: CrossAccountAccess
@@ -2901,6 +2923,7 @@ export interface ClusterResponse {
 }
 
 export interface ClusterYaml {
+  agentIdentifier?: string
   identifier: string
   metadata?: string
 }
@@ -3055,6 +3078,7 @@ export interface ConnectorConfigDTO {
 export interface ConnectorConnectivityDetails {
   errorSummary?: string
   errors?: ErrorDetail[]
+  lastAlertSent?: number
   lastConnectedAt?: number
   lastTestedAt?: number
   status?: 'SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN'
@@ -3815,6 +3839,8 @@ export interface DelegateFilterProperties {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+    | 'Override'
+    | 'InputSet'
   hostName?: string
   labels?: {
     [key: string]: string
@@ -3828,7 +3854,9 @@ export interface DelegateFilterProperties {
 export interface DelegateGroup {
   accountId?: string
   delegateConfigurationId?: string
+  delegateExpiryAlertNextIteration?: number
   delegateType?: string
+  delegatesExpireOn?: number
   description?: string
   identifier?: string
   k8sConfigDetails?: K8sConfigDetails
@@ -3959,6 +3987,8 @@ export interface DelegateProfileFilterProperties {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+    | 'Override'
+    | 'InputSet'
   identifier?: string
   labels?: {
     [key: string]: string
@@ -3997,6 +4027,7 @@ export interface DelegateSetupDetails {
   size?: 'LAPTOP' | 'SMALL' | 'MEDIUM' | 'LARGE'
   tags?: string[]
   tokenName?: string
+  version?: string
 }
 
 export interface DelegateSizeDetails {
@@ -4914,6 +4945,9 @@ export interface EntityDetail {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
     | 'ChaosHub'
 }
 
@@ -5065,6 +5099,8 @@ export interface EnvironmentFilterProperties {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+    | 'Override'
+    | 'InputSet'
   labels?: {
     [key: string]: string
   }
@@ -5367,6 +5403,7 @@ export interface Error {
     | 'LICENSE_EXPIRED'
     | 'NOT_LICENSED'
     | 'REQUEST_TIMEOUT'
+    | 'SCM_REQUEST_TIMEOUT'
     | 'WORKFLOW_ALREADY_TRIGGERED'
     | 'JENKINS_ERROR'
     | 'INVALID_ARTIFACT_SOURCE'
@@ -5759,6 +5796,7 @@ export interface ErrorMetadata {
     | 'LICENSE_EXPIRED'
     | 'NOT_LICENSED'
     | 'REQUEST_TIMEOUT'
+    | 'SCM_REQUEST_TIMEOUT'
     | 'WORKFLOW_ALREADY_TRIGGERED'
     | 'JENKINS_ERROR'
     | 'INVALID_ARTIFACT_SOURCE'
@@ -6204,6 +6242,7 @@ export interface Failure {
     | 'LICENSE_EXPIRED'
     | 'NOT_LICENSED'
     | 'REQUEST_TIMEOUT'
+    | 'SCM_REQUEST_TIMEOUT'
     | 'WORKFLOW_ALREADY_TRIGGERED'
     | 'JENKINS_ERROR'
     | 'INVALID_ARTIFACT_SOURCE'
@@ -7036,6 +7075,8 @@ export interface FilterProperties {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+    | 'Override'
+    | 'InputSet'
   labels?: {
     [key: string]: string
   }
@@ -7761,6 +7802,10 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
+    | 'ChaosHub'
   )[]
   moduleType?:
     | 'CD'
@@ -8026,6 +8071,10 @@ export interface GitEntityFilterProperties {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
+    | 'ChaosHub'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -8370,6 +8419,10 @@ export interface GitFullSyncEntityInfoDTO {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
+    | 'ChaosHub'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -8625,6 +8678,10 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
+    | 'ChaosHub'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -9011,6 +9068,10 @@ export interface GitSyncEntityDTO {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
+    | 'ChaosHub'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -9260,6 +9321,10 @@ export interface GitSyncEntityListDTO {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
+    | 'ChaosHub'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -9526,6 +9591,10 @@ export interface GitSyncErrorDTO {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
+    | 'ChaosHub'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -10337,6 +10406,7 @@ export interface InfrastructureDefinitionConfig {
   name?: string
   orgIdentifier?: string
   projectIdentifier?: string
+  scopedServices?: string[]
   spec: Infrastructure
   tags?: {
     [key: string]: string
@@ -10546,6 +10616,10 @@ export type InputSetErrorWrapper = ErrorMetadataDTO & {
   uuidToErrorResponseMap?: {
     [key: string]: InputSetErrorResponse
   }
+}
+
+export type InputSetFilterProperties = FilterProperties & {
+  inputSetIdsWithPipelineIds?: string[]
 }
 
 export type InputSetReference = EntityReference & {
@@ -11050,6 +11124,10 @@ export interface JwksPublicKeyDTO {
   use?: string
 }
 
+export interface JwksPublicKeysDTO {
+  keys?: JwksPublicKeyDTO[]
+}
+
 export type K8SDirectInfrastructure = Infrastructure & {
   connectorRef: string
   namespace: string
@@ -11173,6 +11251,7 @@ export type K8sInfrastructureDetails = InfrastructureDetails & {
 
 export type K8sInstanceInfoDTO = InstanceInfoDTO & {
   blueGreenColor?: string
+  canary?: boolean
   containerList: K8sContainer[]
   helmChartInfo?: HelmChartInfo
   namespace: string
@@ -11355,7 +11434,7 @@ export interface KustomizeValues {
   replicas?: KustomizeReplicas[]
 }
 
-export interface LDAPSettings {
+export type LDAPSettings = NGAuthSettings & {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -11363,7 +11442,6 @@ export interface LDAPSettings {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
-  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -11781,6 +11859,7 @@ export type MicrosoftTeamsConfigDTO = NotificationSettingConfigDTO & {
 export interface ModuleLicenseDTO {
   accountIdentifier?: string
   createdAt?: number
+  developerLicenseCount?: number
   edition?: 'COMMUNITY' | 'FREE' | 'TEAM' | 'ENTERPRISE'
   expiryTime?: number
   id?: string
@@ -12062,6 +12141,10 @@ export interface NGEntityList {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
+    | 'ChaosHub'
   )[]
 }
 
@@ -12402,10 +12485,9 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export interface OAuthSettings {
+export type OAuthSettings = NGAuthSettings & {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
-  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -12659,6 +12741,36 @@ export interface OverlayConfiguration {
 
 export type OverlayInputSetErrorWrapper = ErrorMetadataDTO & {
   invalidReferences?: {
+    [key: string]: string
+  }
+}
+
+export interface OverrideFilterProperties {
+  environmentRefs?: string[]
+  filterType?:
+    | 'Connector'
+    | 'DelegateProfile'
+    | 'Delegate'
+    | 'PipelineSetup'
+    | 'PipelineExecution'
+    | 'Deployment'
+    | 'Audit'
+    | 'Template'
+    | 'Trigger'
+    | 'EnvironmentGroup'
+    | 'FileStore'
+    | 'CCMRecommendation'
+    | 'Anomaly'
+    | 'Environment'
+    | 'RuleExecution'
+    | 'Override'
+    | 'InputSet'
+  infraIdentifiers?: string[]
+  labels?: {
+    [key: string]: string
+  }
+  serviceRefs?: string[]
+  tags?: {
     [key: string]: string
   }
 }
@@ -14041,6 +14153,10 @@ export interface ReferencedByDTO {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
+    | 'ChaosHub'
 }
 
 export interface RefreshResponse {
@@ -14175,6 +14291,7 @@ export interface ResourceDTO {
     | 'GITOPS_GNUPG_KEY'
     | 'GITOPS_PROJECT_MAPPING'
     | 'GITOPS_APPLICATION'
+    | 'CODE_REPOSITORY'
   uniqueId?: string
 }
 
@@ -15234,13 +15351,6 @@ export interface ResponseJsonNode {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponseJwksPublicKeyDTO {
-  correlationId?: string
-  data?: JwksPublicKeyDTO
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
 export interface ResponseLandingPageDeploymentCount {
   correlationId?: string
   data?: LandingPageDeploymentCount
@@ -15610,6 +15720,10 @@ export interface ResponseListEntityType {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
+    | 'ChaosHub'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -15699,6 +15813,13 @@ export interface ResponseListGitSyncEntityListDTO {
 export interface ResponseListHostValidationDTO {
   correlationId?: string
   data?: HostValidationDTO[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseListInfrastructureResponse {
+  correlationId?: string
+  data?: InfrastructureResponse[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -15941,6 +16062,15 @@ export interface ResponseMapServiceDefinitionTypeListExecutionStrategyType {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseMapStringCDStageSummaryResponseDTO {
+  correlationId?: string
+  data?: {
+    [key: string]: CDStageSummaryResponseDTO
+  }
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseMapStringString {
   correlationId?: string
   data?: {
@@ -16057,6 +16187,7 @@ export interface ResponseMessage {
     | 'LICENSE_EXPIRED'
     | 'NOT_LICENSED'
     | 'REQUEST_TIMEOUT'
+    | 'SCM_REQUEST_TIMEOUT'
     | 'WORKFLOW_ALREADY_TRIGGERED'
     | 'JENKINS_ERROR'
     | 'INVALID_ARTIFACT_SOURCE'
@@ -16409,13 +16540,6 @@ export interface ResponseNexusResponseDTO {
 export interface ResponseNgSmtpDTO {
   correlationId?: string
   data?: NgSmtpDTO
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseOidcConfiguration {
-  correlationId?: string
-  data?: OidcConfiguration
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -19593,6 +19717,7 @@ export interface StepData {
     | 'EcsServiceSetup'
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
+    | 'AsgShiftTraffic'
 }
 
 export interface StepElementConfig {
@@ -21524,11 +21649,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
+export type DeleteManyFreezesBodyRequestBody = string[]
+
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
-
-export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateHarnessSupportAccessNGBodyRequestBody = boolean
 
@@ -22486,6 +22611,10 @@ export interface ListActivitiesQueryParams {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
+    | 'ChaosHub'
   referredByEntityType?: (
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -22727,6 +22856,10 @@ export interface ListActivitiesQueryParams {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
+    | 'ChaosHub'
   )[]
   activityTypes?: ('CONNECTIVITY_CHECK' | 'ENTITY_USAGE' | 'ENTITY_CREATION' | 'ENTITY_UPDATE')[]
   searchTerm?: string
@@ -23070,6 +23203,10 @@ export interface GetUniqueReferredByEntitiesQueryParams {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
+    | 'ChaosHub'
   activityTypes?: ('CONNECTIVITY_CHECK' | 'ENTITY_USAGE' | 'ENTITY_CREATION' | 'ENTITY_UPDATE')[]
 }
 
@@ -23366,6 +23503,10 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
+    | 'ChaosHub'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -23607,6 +23748,10 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
+    | 'ChaosHub'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -36189,6 +36334,161 @@ export const getCdDeployStageMetadataPromise = (
     signal
   )
 
+export interface ListStageExecutionFormattedSummaryByStageExecutionIdentifiersQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  stageExecutionIdentifiers: string[]
+}
+
+export type ListStageExecutionFormattedSummaryByStageExecutionIdentifiersProps = Omit<
+  GetProps<
+    ResponseMapStringCDStageSummaryResponseDTO,
+    Failure | Error,
+    ListStageExecutionFormattedSummaryByStageExecutionIdentifiersQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Lists summary of execution of deployment stages filtered by stage execution identifiers
+ */
+export const ListStageExecutionFormattedSummaryByStageExecutionIdentifiers = (
+  props: ListStageExecutionFormattedSummaryByStageExecutionIdentifiersProps
+) => (
+  <Get<
+    ResponseMapStringCDStageSummaryResponseDTO,
+    Failure | Error,
+    ListStageExecutionFormattedSummaryByStageExecutionIdentifiersQueryParams,
+    void
+  >
+    path={`/cdStageSummary/listStageExecutionFormattedSummary`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseListStageExecutionFormattedSummaryByStageExecutionIdentifiersProps = Omit<
+  UseGetProps<
+    ResponseMapStringCDStageSummaryResponseDTO,
+    Failure | Error,
+    ListStageExecutionFormattedSummaryByStageExecutionIdentifiersQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Lists summary of execution of deployment stages filtered by stage execution identifiers
+ */
+export const useListStageExecutionFormattedSummaryByStageExecutionIdentifiers = (
+  props: UseListStageExecutionFormattedSummaryByStageExecutionIdentifiersProps
+) =>
+  useGet<
+    ResponseMapStringCDStageSummaryResponseDTO,
+    Failure | Error,
+    ListStageExecutionFormattedSummaryByStageExecutionIdentifiersQueryParams,
+    void
+  >(`/cdStageSummary/listStageExecutionFormattedSummary`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Lists summary of execution of deployment stages filtered by stage execution identifiers
+ */
+export const listStageExecutionFormattedSummaryByStageExecutionIdentifiersPromise = (
+  props: GetUsingFetchProps<
+    ResponseMapStringCDStageSummaryResponseDTO,
+    Failure | Error,
+    ListStageExecutionFormattedSummaryByStageExecutionIdentifiersQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseMapStringCDStageSummaryResponseDTO,
+    Failure | Error,
+    ListStageExecutionFormattedSummaryByStageExecutionIdentifiersQueryParams,
+    void
+  >(getConfig('ng/api'), `/cdStageSummary/listStageExecutionFormattedSummary`, props, signal)
+
+export interface ListStagePlanCreationFormattedSummaryByStageIdentifiersQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  planExecutionId: string
+  stageIdentifiers: string[]
+}
+
+export type ListStagePlanCreationFormattedSummaryByStageIdentifiersProps = Omit<
+  GetProps<
+    ResponseMapStringCDStageSummaryResponseDTO,
+    Failure | Error,
+    ListStagePlanCreationFormattedSummaryByStageIdentifiersQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Lists summary of deployment stages available at plan creation filtered by stage identifiers
+ */
+export const ListStagePlanCreationFormattedSummaryByStageIdentifiers = (
+  props: ListStagePlanCreationFormattedSummaryByStageIdentifiersProps
+) => (
+  <Get<
+    ResponseMapStringCDStageSummaryResponseDTO,
+    Failure | Error,
+    ListStagePlanCreationFormattedSummaryByStageIdentifiersQueryParams,
+    void
+  >
+    path={`/cdStageSummary/listStagePlanCreationFormattedSummary`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseListStagePlanCreationFormattedSummaryByStageIdentifiersProps = Omit<
+  UseGetProps<
+    ResponseMapStringCDStageSummaryResponseDTO,
+    Failure | Error,
+    ListStagePlanCreationFormattedSummaryByStageIdentifiersQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Lists summary of deployment stages available at plan creation filtered by stage identifiers
+ */
+export const useListStagePlanCreationFormattedSummaryByStageIdentifiers = (
+  props: UseListStagePlanCreationFormattedSummaryByStageIdentifiersProps
+) =>
+  useGet<
+    ResponseMapStringCDStageSummaryResponseDTO,
+    Failure | Error,
+    ListStagePlanCreationFormattedSummaryByStageIdentifiersQueryParams,
+    void
+  >(`/cdStageSummary/listStagePlanCreationFormattedSummary`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Lists summary of deployment stages available at plan creation filtered by stage identifiers
+ */
+export const listStagePlanCreationFormattedSummaryByStageIdentifiersPromise = (
+  props: GetUsingFetchProps<
+    ResponseMapStringCDStageSummaryResponseDTO,
+    Failure | Error,
+    ListStagePlanCreationFormattedSummaryByStageIdentifiersQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseMapStringCDStageSummaryResponseDTO,
+    Failure | Error,
+    ListStagePlanCreationFormattedSummaryByStageIdentifiersQueryParams,
+    void
+  >(getConfig('ng/api'), `/cdStageSummary/listStagePlanCreationFormattedSummary`, props, signal)
+
 export interface GetConnectorListQueryParams {
   pageIndex?: number
   pageSize?: number
@@ -42949,6 +43249,9 @@ export interface ListReferredByEntitiesQueryParams {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
     | 'ChaosHub'
   searchTerm?: string
   branch?: string
@@ -43252,6 +43555,9 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
     | 'ChaosHub'
   searchTerm?: string
 }
@@ -46984,6 +47290,10 @@ export interface GetReferencedByQueryParams {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
+    | 'ChaosHub'
   searchTerm?: string
 }
 
@@ -47067,6 +47377,8 @@ export interface GetFilterListQueryParams {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+    | 'Override'
+    | 'InputSet'
 }
 
 export type GetFilterListProps = Omit<
@@ -47234,6 +47546,8 @@ export interface DeleteFilterQueryParams {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+    | 'Override'
+    | 'InputSet'
 }
 
 export type DeleteFilterProps = Omit<
@@ -47302,6 +47616,8 @@ export interface GetFilterQueryParams {
     | 'Anomaly'
     | 'Environment'
     | 'RuleExecution'
+    | 'Override'
+    | 'InputSet'
 }
 
 export interface GetFilterPathParams {
@@ -47443,7 +47759,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -47457,7 +47773,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -47472,7 +47788,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -47486,7 +47802,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -47498,7 +47814,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -47507,7 +47823,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -48070,7 +48386,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -48084,7 +48400,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -48099,7 +48415,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -48113,7 +48429,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -48125,7 +48441,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -48134,7 +48450,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    UpdateFreezeStatusBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -49946,6 +50262,10 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
+    | 'ChaosHub'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -50255,6 +50575,10 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'ChaosInfrastructure'
       | 'Anchore'
       | 'Overrides'
+      | 'AsgShiftTraffic'
+      | 'AquaSecurity'
+      | 'IDPStage'
+      | 'ChaosHub'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -52590,6 +52914,85 @@ export const getInfrastructureYamlAndRuntimeInputsPromise = (
     InfrastructureYamlMetadataApiInputRequestBody,
     void
   >('POST', getConfig('ng/api'), `/infrastructures/infrastructureYamlMetadata`, props, signal)
+
+export interface GetInfrastructureAccessListQueryParams {
+  page?: number
+  size?: number
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  searchTerm?: string
+  infraIdentifiers?: string[]
+  deploymentType?:
+    | 'Kubernetes'
+    | 'NativeHelm'
+    | 'Ssh'
+    | 'WinRm'
+    | 'ServerlessAwsLambda'
+    | 'AzureWebApp'
+    | 'CustomDeployment'
+    | 'ECS'
+    | 'Elastigroup'
+    | 'TAS'
+    | 'Asg'
+    | 'GoogleCloudFunctions'
+    | 'AwsLambda'
+    | 'AWS_SAM'
+  deploymentTemplateIdentifier?: string
+  versionLabel?: string
+  sort?: string[]
+  serviceRefs?: string[]
+  repoName?: string
+}
+
+export type GetInfrastructureAccessListProps = Omit<
+  GetProps<ResponseListInfrastructureResponse, Failure | Error, GetInfrastructureAccessListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets Infrastructure access list
+ */
+export const GetInfrastructureAccessList = (props: GetInfrastructureAccessListProps) => (
+  <Get<ResponseListInfrastructureResponse, Failure | Error, GetInfrastructureAccessListQueryParams, void>
+    path={`/infrastructures/list-access`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetInfrastructureAccessListProps = Omit<
+  UseGetProps<ResponseListInfrastructureResponse, Failure | Error, GetInfrastructureAccessListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets Infrastructure access list
+ */
+export const useGetInfrastructureAccessList = (props: UseGetInfrastructureAccessListProps) =>
+  useGet<ResponseListInfrastructureResponse, Failure | Error, GetInfrastructureAccessListQueryParams, void>(
+    `/infrastructures/list-access`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets Infrastructure access list
+ */
+export const getInfrastructureAccessListPromise = (
+  props: GetUsingFetchProps<
+    ResponseListInfrastructureResponse,
+    Failure | Error,
+    GetInfrastructureAccessListQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListInfrastructureResponse, Failure | Error, GetInfrastructureAccessListQueryParams, void>(
+    getConfig('ng/api'),
+    `/infrastructures/list-access`,
+    props,
+    signal
+  )
 
 export interface MergeInfraInputsQueryParams {
   accountIdentifier: string
@@ -56637,7 +57040,7 @@ export interface GetHarnessOpenIdConfigPathParams {
 }
 
 export type GetHarnessOpenIdConfigProps = Omit<
-  GetProps<ResponseOidcConfiguration, Failure | Error, void, GetHarnessOpenIdConfigPathParams>,
+  GetProps<OidcConfiguration, Failure | Error, void, GetHarnessOpenIdConfigPathParams>,
   'path'
 > &
   GetHarnessOpenIdConfigPathParams
@@ -56646,7 +57049,7 @@ export type GetHarnessOpenIdConfigProps = Omit<
  * Gets the openid configuration for Harness
  */
 export const GetHarnessOpenIdConfig = ({ accountId, ...props }: GetHarnessOpenIdConfigProps) => (
-  <Get<ResponseOidcConfiguration, Failure | Error, void, GetHarnessOpenIdConfigPathParams>
+  <Get<OidcConfiguration, Failure | Error, void, GetHarnessOpenIdConfigPathParams>
     path={`/oidc/account/${accountId}/.well-known/openid-configuration`}
     base={getConfig('ng/api')}
     {...props}
@@ -56654,7 +57057,7 @@ export const GetHarnessOpenIdConfig = ({ accountId, ...props }: GetHarnessOpenId
 )
 
 export type UseGetHarnessOpenIdConfigProps = Omit<
-  UseGetProps<ResponseOidcConfiguration, Failure | Error, void, GetHarnessOpenIdConfigPathParams>,
+  UseGetProps<OidcConfiguration, Failure | Error, void, GetHarnessOpenIdConfigPathParams>,
   'path'
 > &
   GetHarnessOpenIdConfigPathParams
@@ -56663,7 +57066,7 @@ export type UseGetHarnessOpenIdConfigProps = Omit<
  * Gets the openid configuration for Harness
  */
 export const useGetHarnessOpenIdConfig = ({ accountId, ...props }: UseGetHarnessOpenIdConfigProps) =>
-  useGet<ResponseOidcConfiguration, Failure | Error, void, GetHarnessOpenIdConfigPathParams>(
+  useGet<OidcConfiguration, Failure | Error, void, GetHarnessOpenIdConfigPathParams>(
     (paramsInPath: GetHarnessOpenIdConfigPathParams) =>
       `/oidc/account/${paramsInPath.accountId}/.well-known/openid-configuration`,
     { base: getConfig('ng/api'), pathParams: { accountId }, ...props }
@@ -56676,12 +57079,12 @@ export const getHarnessOpenIdConfigPromise = (
   {
     accountId,
     ...props
-  }: GetUsingFetchProps<ResponseOidcConfiguration, Failure | Error, void, GetHarnessOpenIdConfigPathParams> & {
+  }: GetUsingFetchProps<OidcConfiguration, Failure | Error, void, GetHarnessOpenIdConfigPathParams> & {
     accountId: string
   },
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseOidcConfiguration, Failure | Error, void, GetHarnessOpenIdConfigPathParams>(
+  getUsingFetch<OidcConfiguration, Failure | Error, void, GetHarnessOpenIdConfigPathParams>(
     getConfig('ng/api'),
     `/oidc/account/${accountId}/.well-known/openid-configuration`,
     props,
@@ -56693,7 +57096,7 @@ export interface GetHarnessOpenIdJwksPathParams {
 }
 
 export type GetHarnessOpenIdJwksProps = Omit<
-  GetProps<ResponseJwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>,
+  GetProps<JwksPublicKeysDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>,
   'path'
 > &
   GetHarnessOpenIdJwksPathParams
@@ -56702,7 +57105,7 @@ export type GetHarnessOpenIdJwksProps = Omit<
  * Gets the openid configuration for Harness
  */
 export const GetHarnessOpenIdJwks = ({ accountId, ...props }: GetHarnessOpenIdJwksProps) => (
-  <Get<ResponseJwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>
+  <Get<JwksPublicKeysDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>
     path={`/oidc/account/${accountId}/.wellknown/jwks`}
     base={getConfig('ng/api')}
     {...props}
@@ -56710,7 +57113,7 @@ export const GetHarnessOpenIdJwks = ({ accountId, ...props }: GetHarnessOpenIdJw
 )
 
 export type UseGetHarnessOpenIdJwksProps = Omit<
-  UseGetProps<ResponseJwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>,
+  UseGetProps<JwksPublicKeysDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>,
   'path'
 > &
   GetHarnessOpenIdJwksPathParams
@@ -56719,7 +57122,7 @@ export type UseGetHarnessOpenIdJwksProps = Omit<
  * Gets the openid configuration for Harness
  */
 export const useGetHarnessOpenIdJwks = ({ accountId, ...props }: UseGetHarnessOpenIdJwksProps) =>
-  useGet<ResponseJwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>(
+  useGet<JwksPublicKeysDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>(
     (paramsInPath: GetHarnessOpenIdJwksPathParams) => `/oidc/account/${paramsInPath.accountId}/.wellknown/jwks`,
     { base: getConfig('ng/api'), pathParams: { accountId }, ...props }
   )
@@ -56731,12 +57134,12 @@ export const getHarnessOpenIdJwksPromise = (
   {
     accountId,
     ...props
-  }: GetUsingFetchProps<ResponseJwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams> & {
+  }: GetUsingFetchProps<JwksPublicKeysDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams> & {
     accountId: string
   },
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseJwksPublicKeyDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>(
+  getUsingFetch<JwksPublicKeysDTO, Failure | Error, void, GetHarnessOpenIdJwksPathParams>(
     getConfig('ng/api'),
     `/oidc/account/${accountId}/.wellknown/jwks`,
     props,
@@ -57419,6 +57822,10 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
+    | 'ChaosHub'
   yamlGroup?: string
 }
 
@@ -57788,6 +58195,10 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
+    | 'ChaosHub'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -61824,6 +62235,95 @@ export const getServiceOverrideListV2Promise = (
     props,
     signal
   )
+
+export interface GetServiceOverrideListV3QueryParams {
+  page?: number
+  size?: number
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  type?:
+    | 'ENV_GLOBAL_OVERRIDE'
+    | 'ENV_SERVICE_OVERRIDE'
+    | 'INFRA_GLOBAL_OVERRIDE'
+    | 'INFRA_SERVICE_OVERRIDE'
+    | 'CLUSTER_GLOBAL_OVERRIDE'
+    | 'CLUSTER_SERVICE_OVERRIDE'
+  searchTerm?: string
+}
+
+export type GetServiceOverrideListV3Props = Omit<
+  MutateProps<
+    ResponsePageServiceOverridesResponseDTOV2,
+    Failure | Error,
+    GetServiceOverrideListV3QueryParams,
+    OverrideFilterProperties,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets Service Override List
+ */
+export const GetServiceOverrideListV3 = (props: GetServiceOverrideListV3Props) => (
+  <Mutate<
+    ResponsePageServiceOverridesResponseDTOV2,
+    Failure | Error,
+    GetServiceOverrideListV3QueryParams,
+    OverrideFilterProperties,
+    void
+  >
+    verb="POST"
+    path={`/serviceOverrides/list`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetServiceOverrideListV3Props = Omit<
+  UseMutateProps<
+    ResponsePageServiceOverridesResponseDTOV2,
+    Failure | Error,
+    GetServiceOverrideListV3QueryParams,
+    OverrideFilterProperties,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets Service Override List
+ */
+export const useGetServiceOverrideListV3 = (props: UseGetServiceOverrideListV3Props) =>
+  useMutate<
+    ResponsePageServiceOverridesResponseDTOV2,
+    Failure | Error,
+    GetServiceOverrideListV3QueryParams,
+    OverrideFilterProperties,
+    void
+  >('POST', `/serviceOverrides/list`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Gets Service Override List
+ */
+export const getServiceOverrideListV3Promise = (
+  props: MutateUsingFetchProps<
+    ResponsePageServiceOverridesResponseDTOV2,
+    Failure | Error,
+    GetServiceOverrideListV3QueryParams,
+    OverrideFilterProperties,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePageServiceOverridesResponseDTOV2,
+    Failure | Error,
+    GetServiceOverrideListV3QueryParams,
+    OverrideFilterProperties,
+    void
+  >('POST', getConfig('ng/api'), `/serviceOverrides/list`, props, signal)
 
 export interface MigrateServiceOverrideQueryParams {
   accountIdentifier: string
@@ -74711,6 +75211,10 @@ export interface GetYamlSchemaQueryParams {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
+    | 'ChaosHub'
   subtype?:
     | 'K8sCluster'
     | 'Git'

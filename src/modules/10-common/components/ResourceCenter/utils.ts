@@ -38,6 +38,16 @@ export const openZendeskSupport = (e: React.MouseEvent<Element, MouseEvent>): vo
   window.open(HARNESS_SUPPORT_LINK)
 }
 
+const getInitials = (name: string) => {
+  const parts = name.split('.')
+  let initials = ''
+  for (let i = 0; i < parts.length; i++) {
+    if (parts[i].length > 0 && parts[i] !== '') {
+      initials += parts[i][0]
+    }
+  }
+  return initials
+}
 const initCanny = (currentUserInfo: UserInfo, account?: AccountDTO) => {
   Canny('identify', {
     appID: window.cannyAppId,
@@ -50,7 +60,11 @@ const initCanny = (currentUserInfo: UserInfo, account?: AccountDTO) => {
       ],
       email: currentUserInfo.email,
       id: currentUserInfo.uuid,
-      name: currentUserInfo.name
+      name: account?.cannyUsernameAbbreviationEnabled
+        ? currentUserInfo.name?.includes('@')
+          ? getInitials(currentUserInfo.name.split('@')[0] || '') || ''
+          : getInitials(currentUserInfo.name || '') || ''
+        : currentUserInfo.name || ''
     }
   })
 }
