@@ -112,7 +112,7 @@ const RenderColumnRoleAssignments: Renderer<CellProps<ServiceAccountAggregateDTO
 const RenderColumnApiKeyCount: Renderer<CellProps<ServiceAccountAggregateDTO>> = ({ row }) => {
   const data = row.original
   return (
-    <Text padding={{ right: 'small' }} lineClamp={1}>
+    <Text padding={{ left: 'large' }} lineClamp={1}>
       {data.tokensCount}
     </Text>
   )
