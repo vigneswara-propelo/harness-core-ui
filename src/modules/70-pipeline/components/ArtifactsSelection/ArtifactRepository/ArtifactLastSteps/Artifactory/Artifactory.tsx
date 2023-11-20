@@ -129,7 +129,6 @@ function Artifactory({
   const isArtifactTemplate = isTemplateView(context)
   const [lastQueryData, setLastQueryData] = useState({ artifactPath: '', repository: '', artifactFilter: '' })
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
-  const [error, setError] = useState<boolean>(false)
   const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType)
   const isSSHWinRmDeploymentType = isSshOrWinrmDeploymentType(selectedDeploymentType)
   const isAzureWebAppDeploymentTypeSelected = isAzureWebAppDeploymentType(selectedDeploymentType)
@@ -347,13 +346,12 @@ function Artifactory({
     }
   }, [lastQueryData, refetchArtifactoryTag])
   useEffect(() => {
-    if (artifactoryTagError && !error) {
-      setError(true)
+    if (artifactoryTagError && tagList?.length) {
       setTagList([])
     } else if (Array.isArray(data?.data?.buildDetailsList) && !isEqual(data?.data?.buildDetailsList, tagList)) {
       setTagList(data?.data?.buildDetailsList)
     }
-  }, [data?.data?.buildDetailsList, artifactoryTagError, error, tagList])
+  }, [data?.data?.buildDetailsList, artifactoryTagError])
 
   const canFetchTags = useCallback(
     (artifactPath: string, repository: string, artifactFilter: string, filterType: ARTIFACT_FILTER_TYPES): boolean => {
