@@ -476,7 +476,10 @@ function HarnessApprovalStepMode(
                         })
                       return true
                     }
-                  })
+                  }),
+                timeZone: Yup.string().required(
+                  getString('common.validation.fieldIsRequired', { name: getString('common.timezone') })
+                )
               })
             })
           })
