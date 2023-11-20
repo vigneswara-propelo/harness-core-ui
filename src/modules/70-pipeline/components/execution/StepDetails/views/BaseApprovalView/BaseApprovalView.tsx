@@ -22,7 +22,8 @@ import {
   isExecutionWaiting,
   isExecutionFailed,
   isExecutionWaitingForInput,
-  isExecutionWaitingForIntervention
+  isExecutionWaitingForIntervention,
+  isRefreshApprovalStepAllowed
 } from '@pipeline/utils/statusHelpers'
 import { usePolling } from '@common/hooks/usePolling'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -99,6 +100,7 @@ export function BaseApprovalView(props: BaseApprovalViewProps): React.ReactEleme
   const isManualInterruption = isExecutionWaitingForIntervention(step.status)
   const shouldPollForTicketStatus =
     step?.stepType === StepType.JiraApproval || step?.stepType === StepType.ServiceNowApproval
+  const shouldShowRefreshInApprovalStep = isRefreshApprovalStepAllowed(step?.stepType)
   const shouldShowExecutionInputs = !!step.executionInputConfigured
   const shouldShowPolicyEnforcement = !!step?.outcomes?.policyOutput?.policySetDetails
   const { message, responseMessages } = step.failureInfo || {}
@@ -264,17 +266,21 @@ export function BaseApprovalView(props: BaseApprovalViewProps): React.ReactEleme
           }
         />
       ) : null}
-      <Tabs.Expander />
-      <Button
-        minimal
-        intent="primary"
-        icon="refresh"
-        iconProps={{ size: 12, style: { marginRight: 'var(--spacing-2)' } }}
-        style={{ transform: 'translateY(-5px)' }}
-        onClick={() => fetchApprovalInstanceData()}
-      >
-        {getString('common.refresh')}
-      </Button>
+      {shouldShowRefreshInApprovalStep && (
+        <>
+          <Tabs.Expander />
+          <Button
+            minimal
+            intent="primary"
+            icon="refresh"
+            iconProps={{ size: 12, style: { marginRight: 'var(--spacing-2)' } }}
+            style={{ transform: 'translateY(-5px)' }}
+            onClick={() => fetchApprovalInstanceData()}
+          >
+            {getString('common.refresh')}
+          </Button>
+        </>
+      )}
     </Tabs>
   )
 }

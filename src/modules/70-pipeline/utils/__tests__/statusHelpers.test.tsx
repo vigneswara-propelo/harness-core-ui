@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { StepType } from '../../components/PipelineSteps/PipelineStepInterface'
 import * as utils from '../statusHelpers'
 
 describe('statusHelpers tests', () => {
@@ -31,6 +32,24 @@ describe('statusHelpers tests', () => {
       ['QueuedExecutionConcurrencyReached']
     ])('Status "%s" marks stage as in-progress', status => {
       expect(utils.isExecutionActive(status)).toBe(true)
+    })
+  })
+
+  describe('isRefreshApprovalStepAllowed  tests', () => {
+    test.each<[StepType]>([[StepType.JiraApproval], [StepType.ServiceNowApproval], [StepType.CustomApproval]])(
+      'should not show refresh button in approval step if step type is "%s" ',
+      stepType => {
+        expect(utils.isRefreshApprovalStepAllowed(stepType)).toBe(false)
+      }
+    )
+    test.each<[StepType]>([[StepType.HarnessApproval]])(
+      'should show refresh button in approval step if step type is "%s" ',
+      stepType => {
+        expect(utils.isRefreshApprovalStepAllowed(stepType)).toBe(true)
+      }
+    )
+    test('should return false if input is undefined', () => {
+      expect(utils.isRefreshApprovalStepAllowed()).toBe(false)
     })
   })
 })

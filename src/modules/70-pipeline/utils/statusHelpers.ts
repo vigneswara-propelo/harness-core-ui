@@ -7,6 +7,7 @@
 
 import { camelCase } from 'lodash-es'
 import type { RecentExecutionInfoDTO } from 'services/pipeline-ng'
+import { StepType } from '../components/PipelineSteps/PipelineStepInterface'
 
 export type ExecutionStatus = Exclude<
   Required<RecentExecutionInfoDTO>['status'],
@@ -209,4 +210,16 @@ export const isRetryPipelineAllowed = (status?: string): boolean => {
     isExecutionApprovalRejected(status) ||
     isExecutionAborted(status)
   )
+}
+
+export const isRefreshApprovalStepAllowed = (step?: string): boolean => {
+  if (!step) return false
+  switch (step) {
+    case StepType.JiraApproval:
+    case StepType.ServiceNowApproval:
+    case StepType.CustomApproval:
+      return false
+    default:
+      return true
+  }
 }

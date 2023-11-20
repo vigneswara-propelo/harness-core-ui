@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import { useGetApprovalInstance } from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ServiceNowApprovalView } from '../ServiceNowApprovalView/ServiceNowApprovalView'
@@ -49,7 +49,7 @@ describe('SUCCESS', () => {
     useGetApprovalInstance.mockImplementation(() => mockServiceNowApprovalData)
   })
   test('show tabs when data is present and authorized', async () => {
-    const { container, getByText } = render(
+    const { container, queryByText } = render(
       <TestWrapper>
         <ServiceNowApprovalView
           step={{
@@ -65,10 +65,7 @@ describe('SUCCESS', () => {
 
     expect(container).toMatchSnapshot('ServiceNow approval execution view')
 
-    act(() => {
-      fireEvent.click(getByText('common.refresh'))
-    })
-    await waitFor(() => expect(mockServiceNowApprovalData.refetch).toBeCalled())
+    expect(queryByText('common.refresh')).not.toBeInTheDocument()
   })
 
   test('show spinner when approvalInstanceId is absent', async () => {

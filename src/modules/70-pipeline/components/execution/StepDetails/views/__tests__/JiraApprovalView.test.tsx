@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor, act, fireEvent } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import { useGetApprovalInstance } from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import { JiraApprovalView } from '../JiraApprovalView/JiraApprovalView'
@@ -38,7 +38,7 @@ describe('SUCCESS', () => {
     useGetApprovalInstance.mockImplementation(() => mockJiraApprovalData)
   })
   test('show tabs when data is present and authorized', async () => {
-    const { container, getByText } = render(
+    const { container, queryByText } = render(
       <TestWrapper>
         <JiraApprovalView
           step={{
@@ -54,10 +54,7 @@ describe('SUCCESS', () => {
 
     expect(container).toMatchSnapshot('jira approval execution view')
 
-    act(() => {
-      fireEvent.click(getByText('common.refresh'))
-    })
-    await waitFor(() => expect(mockJiraApprovalData.refetch).toBeCalled())
+    expect(queryByText('common.refresh')).not.toBeInTheDocument()
   })
 
   test('show spinner when approvalInstanceId is absent', async () => {
