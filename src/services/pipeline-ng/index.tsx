@@ -167,6 +167,7 @@ export interface AccessControlCheckError {
     | 'LICENSE_EXPIRED'
     | 'NOT_LICENSED'
     | 'REQUEST_TIMEOUT'
+    | 'SCM_REQUEST_TIMEOUT'
     | 'WORKFLOW_ALREADY_TRIGGERED'
     | 'JENKINS_ERROR'
     | 'INVALID_ARTIFACT_SOURCE'
@@ -725,6 +726,12 @@ export type AuditFilterProperties = FilterProperties & {
   scopes?: ResourceScopeDTO[]
   startTime?: number
   staticFilter?: 'EXCLUDE_LOGIN_EVENTS' | 'EXCLUDE_SYSTEM_EVENTS'
+}
+
+export interface AutoApprovalDTO {
+  action: 'APPROVE'
+  comments?: string
+  scheduledDeadline: ScheduledDeadlineDTO
 }
 
 export interface AutoApprovalParams {
@@ -1626,6 +1633,7 @@ export interface Error {
     | 'LICENSE_EXPIRED'
     | 'NOT_LICENSED'
     | 'REQUEST_TIMEOUT'
+    | 'SCM_REQUEST_TIMEOUT'
     | 'WORKFLOW_ALREADY_TRIGGERED'
     | 'JENKINS_ERROR'
     | 'INVALID_ARTIFACT_SOURCE'
@@ -2012,6 +2020,7 @@ export interface ErrorMetadata {
     | 'LICENSE_EXPIRED'
     | 'NOT_LICENSED'
     | 'REQUEST_TIMEOUT'
+    | 'SCM_REQUEST_TIMEOUT'
     | 'WORKFLOW_ALREADY_TRIGGERED'
     | 'JENKINS_ERROR'
     | 'INVALID_ARTIFACT_SOURCE'
@@ -2646,6 +2655,7 @@ export interface Failure {
     | 'LICENSE_EXPIRED'
     | 'NOT_LICENSED'
     | 'REQUEST_TIMEOUT'
+    | 'SCM_REQUEST_TIMEOUT'
     | 'WORKFLOW_ALREADY_TRIGGERED'
     | 'JENKINS_ERROR'
     | 'INVALID_ARTIFACT_SOURCE'
@@ -3321,6 +3331,7 @@ export type HarnessApprovalInstanceDetails = ApprovalInstanceDetailsDTO & {
   approvalMessage: string
   approverInputs?: ApproverInputInfoDTO[]
   approvers: ApproversDTO
+  autoApprovalParams?: AutoApprovalDTO
   autoRejectEnabled?: boolean
   includePipelineExecutionHistory?: boolean
   validatedApprovalUserGroups?: ApprovalUserGroupDTO[]
@@ -5069,6 +5080,7 @@ export interface PollingInfoForTriggers {
 
 export interface PollingSubscriptionStatus {
   detailedMessage?: string
+  errorStatusValidUntil?: number
   lastPolled?: string[]
   lastPollingUpdate?: number
   statusResult?: 'SUCCESS' | 'FAILED' | 'UNKNOWN' | 'PENDING'
@@ -5076,6 +5088,7 @@ export interface PollingSubscriptionStatus {
 
 export interface PollingTriggerStatusUpdateDTO {
   errorMessage?: string
+  errorStatusValidUntil?: number
   lastCollectedTime?: number
   lastCollectedVersions?: string[]
   signatures?: string[]
@@ -5293,6 +5306,7 @@ export interface ResourceDTO {
     | 'GITOPS_GNUPG_KEY'
     | 'GITOPS_PROJECT_MAPPING'
     | 'GITOPS_APPLICATION'
+    | 'CODE_REPOSITORY'
   uniqueId?: string
 }
 
@@ -5741,6 +5755,7 @@ export interface ResponseMessage {
     | 'LICENSE_EXPIRED'
     | 'NOT_LICENSED'
     | 'REQUEST_TIMEOUT'
+    | 'SCM_REQUEST_TIMEOUT'
     | 'WORKFLOW_ALREADY_TRIGGERED'
     | 'JENKINS_ERROR'
     | 'INVALID_ARTIFACT_SOURCE'
@@ -6419,13 +6434,6 @@ export interface ResponseYamlDiffResponseDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponseYamlSchemaResponse {
-  correlationId?: string
-  data?: YamlSchemaResponse
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
 export interface RestResponse {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -6679,6 +6687,11 @@ export interface SbomSourceSpec {
 }
 
 export interface ScheduledDeadline {
+  time: ParameterFieldString
+  timeZone: ParameterFieldString
+}
+
+export interface ScheduledDeadlineDTO {
   time: string
   timeZone: string
 }
@@ -6690,10 +6703,6 @@ export type ScheduledTriggerConfig = NGTriggerSpecV2 & {
 
 export interface ScheduledTriggerSpec {
   [key: string]: any
-}
-
-export interface SchemaErrorResponse {
-  message?: string
 }
 
 export type ScmErrorMetadataDTO = ErrorMetadataDTO & {
@@ -7713,11 +7722,6 @@ export interface YamlSchemaErrorDTO {
 
 export type YamlSchemaErrorWrapperDTO = ErrorMetadataDTO & {
   schemaErrors?: YamlSchemaErrorDTO[]
-}
-
-export interface YamlSchemaResponse {
-  schema?: JsonNode
-  schemaErrorResponse?: SchemaErrorResponse
 }
 
 export interface ExecutionSummaryInfo {
@@ -15826,8 +15830,8 @@ export const getStepsV2Promise = (
 
 export interface CreateVariablesV2QueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -19607,6 +19611,10 @@ export interface GetSchemaYamlQueryParams {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
+    | 'ChaosHub'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -19698,299 +19706,6 @@ export const dummyApiForSwaggerSchemaCheckPromise = (
   getUsingFetch<ResponsePipelineConfig, Failure | Error, void, void>(
     getConfig('pipeline/api'),
     `/yaml-schema/dummyApiForSwaggerSchemaCheck`,
-    props,
-    signal
-  )
-
-export interface GetStepYamlSchemaQueryParams {
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  yamlGroup?: string
-  entityType?:
-    | 'CreatePR'
-    | 'GITOPS_MERGE_PR'
-    | 'Projects'
-    | 'Pipelines'
-    | 'PipelineSteps'
-    | 'Http'
-    | 'Email'
-    | 'JiraCreate'
-    | 'JiraUpdate'
-    | 'JiraApproval'
-    | 'HarnessApproval'
-    | 'CustomApproval'
-    | 'Barrier'
-    | 'Queue'
-    | 'FlagConfiguration'
-    | 'ShellScript'
-    | 'K8sCanaryDeploy'
-    | 'K8sApply'
-    | 'K8sBlueGreenDeploy'
-    | 'K8sRollingDeploy'
-    | 'K8sRollingRollback'
-    | 'K8sScale'
-    | 'K8sDelete'
-    | 'K8sBGSwapServices'
-    | 'K8sCanaryDelete'
-    | 'TerraformApply'
-    | 'TerraformPlan'
-    | 'TerraformDestroy'
-    | 'TerraformRollback'
-    | 'HelmDeploy'
-    | 'HelmRollback'
-    | 'Connectors'
-    | 'Secrets'
-    | 'Files'
-    | 'Service'
-    | 'Environment'
-    | 'EnvironmentGroup'
-    | 'InputSets'
-    | 'CvConfig'
-    | 'Verify'
-    | 'Delegates'
-    | 'DelegateConfigurations'
-    | 'CvVerificationJob'
-    | 'IntegrationStage'
-    | 'IntegrationSteps'
-    | 'SecurityStage'
-    | 'SecuritySteps'
-    | 'CvKubernetesActivitySource'
-    | 'DeploymentSteps'
-    | 'DeploymentStage'
-    | 'ApprovalStage'
-    | 'PipelineStage'
-    | 'FeatureFlagStage'
-    | 'Template'
-    | 'TemplateStage'
-    | 'CustomDeployment'
-    | 'Triggers'
-    | 'MonitoredService'
-    | 'GitRepositories'
-    | 'FeatureFlags'
-    | 'ServiceNowApproval'
-    | 'ServiceNowCreate'
-    | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
-    | 'GovernancePolicies'
-    | 'POLICY_STEP'
-    | 'Run'
-    | 'RunTests'
-    | 'Plugin'
-    | 'RestoreCacheGCS'
-    | 'RestoreCacheS3'
-    | 'SaveCacheGCS'
-    | 'SaveCacheS3'
-    | 'Security'
-    | 'AquaTrivy'
-    | 'AWSECR'
-    | 'Bandit'
-    | 'BlackDuck'
-    | 'Brakeman'
-    | 'Burp'
-    | 'Checkmarx'
-    | 'Clair'
-    | 'DataTheorem'
-    | 'DockerContentTrust'
-    | 'External'
-    | 'FortifyOnDemand'
-    | 'Grype'
-    | 'JfrogXray'
-    | 'Mend'
-    | 'Metasploit'
-    | 'Nessus'
-    | 'NexusIQ'
-    | 'Nikto'
-    | 'Nmap'
-    | 'Openvas'
-    | 'Owasp'
-    | 'PrismaCloud'
-    | 'Prowler'
-    | 'Qualys'
-    | 'Reapsaw'
-    | 'ShiftLeft'
-    | 'Sniper'
-    | 'Snyk'
-    | 'Sonarqube'
-    | 'Sysdig'
-    | 'Tenable'
-    | 'Veracode'
-    | 'Zap'
-    | 'GitClone'
-    | 'ArtifactoryUpload'
-    | 'GCSUpload'
-    | 'S3Upload'
-    | 'BuildAndPushGCR'
-    | 'BuildAndPushGAR'
-    | 'BuildAndPushECR'
-    | 'BuildAndPushDockerRegistry'
-    | 'CreateStack'
-    | 'DeleteStack'
-    | 'ServerlessAwsLambdaDeploy'
-    | 'ServerlessAwsLambdaRollback'
-    | 'CustomStage'
-    | 'RollbackStack'
-    | 'Infrastructure'
-    | 'Command'
-    | 'StrategyNode'
-    | 'AZURE_SLOT_DEPLOYMENT_STEP'
-    | 'AzureTrafficShift'
-    | 'FetchInstanceScript'
-    | 'AzureSwapSlot'
-    | 'AzureWebAppRollback'
-    | 'JenkinsBuild'
-    | 'EcsRollingDeploy'
-    | 'EcsRollingRollback'
-    | 'EcsCanaryDeploy'
-    | 'EcsCanaryDelete'
-    | 'AzureCreateARMResource'
-    | 'BuildAndPushACR'
-    | 'AzureCreateBPResource'
-    | 'AzureARMRollback'
-    | 'Background'
-    | 'Wait'
-    | 'ArtifactSource'
-    | 'EcsBlueGreenCreateService'
-    | 'EcsBlueGreenSwapTargetGroups'
-    | 'EcsBlueGreenRollback'
-    | 'ShellScriptProvision'
-    | 'Freeze'
-    | 'GitOpsUpdateReleaseRepo'
-    | 'GitOpsFetchLinkedApps'
-    | 'EcsRunTask'
-    | 'Chaos'
-    | 'ElastigroupDeploy'
-    | 'ElastigroupRollback'
-    | 'Action'
-    | 'ElastigroupSetup'
-    | 'Bitrise'
-    | 'TerraformPlan'
-    | 'TerraformApply'
-    | 'TerraformDestroy'
-    | 'TerraformRollback'
-    | 'IACMStage'
-    | 'IACMStep'
-    | 'IACM'
-    | 'Container'
-    | 'IACM'
-    | 'IACM'
-    | 'ElastigroupBGStageSetup'
-    | 'ElastigroupSwapRoute'
-    | 'AsgCanaryDeploy'
-    | 'AsgCanaryDelete'
-    | 'SwapRoutes'
-    | 'SwapRollback'
-    | 'AppResize'
-    | 'AppRollback'
-    | 'CanaryAppSetup'
-    | 'BGAppSetup'
-    | 'BasicAppSetup'
-    | 'TanzuCommand'
-    | 'AsgRollingDeploy'
-    | 'AsgRollingRollback'
-    | 'GovernanceRuleAWS'
-    | 'TasRollingDeploy'
-    | 'TasRollingRollback'
-    | 'K8sDryRun'
-    | 'AsgBlueGreenSwapService'
-    | 'AsgBlueGreenDeploy'
-    | 'AsgBlueGreenRollback'
-    | 'TerraformCloudRun'
-    | 'TerraformCloudRollback'
-    | 'DeployCloudFunction'
-    | 'DeployCloudFunctionWithNoTraffic'
-    | 'CloudFunctionTrafficShift'
-    | 'CloudFunctionRollback'
-    | 'AwsLambdaDeploy'
-    | 'AwsSamDeploy'
-    | 'AwsSamRollback'
-    | 'SscaOrchestration'
-    | 'AwsLambdaRollback'
-    | 'GITOPS_SYNC'
-    | 'BambooBuild'
-    | 'CdSscaOrchestration'
-    | 'RouteMapping'
-    | 'AWSSecurityHub'
-    | 'CustomIngest'
-    | 'BackstageEnvironmentVariable'
-    | 'Fossa'
-    | 'CodeQL'
-    | 'Gitleaks'
-    | 'DeployCloudFunctionGenOne'
-    | 'RollbackCloudFunctionGenOne'
-    | 'K8sBlueGreenStageScaleDown'
-    | 'AwsSamBuild'
-    | 'Semgrep'
-    | 'SscaEnforcement'
-    | 'IdpConnector'
-    | 'CdSscaEnforcement'
-    | 'DownloadManifests'
-    | 'ServerlessAwsLambdaPrepareRollbackV2'
-    | 'ServerlessAwsLambdaRollbackV2'
-    | 'Coverity'
-    | 'ServerlessAwsLambdaDeployV2'
-    | 'AnalyzeDeploymentImpact'
-    | 'ServerlessAwsLambdaPackageV2'
-    | 'RevertPR'
-    | 'AwsCdkBootstrap'
-    | 'AwsCdkSynth'
-    | 'AwsCdkDiff'
-    | 'AwsCdkDeploy'
-    | 'AwsCdkDestroy'
-    | 'IdpScorecard'
-    | 'IdpCheck'
-    | 'AwsCdkRollback'
-    | 'SlsaVerification'
-    | 'UpdateGitOpsApp'
-    | 'EcsServiceSetup'
-    | 'EcsUpgradeContainer'
-    | 'EcsBasicRollback'
-    | 'ChaosInfrastructure'
-    | 'Anchore'
-    | 'Overrides'
-  scope?: 'account' | 'org' | 'project' | 'unknown'
-}
-
-export type GetStepYamlSchemaProps = Omit<
-  GetProps<ResponseYamlSchemaResponse, Failure | Error, GetStepYamlSchemaQueryParams, void>,
-  'path'
->
-
-/**
- * Get step YAML schema
- */
-export const GetStepYamlSchema = (props: GetStepYamlSchemaProps) => (
-  <Get<ResponseYamlSchemaResponse, Failure | Error, GetStepYamlSchemaQueryParams, void>
-    path={`/yaml-schema/get`}
-    base={getConfig('pipeline/api')}
-    {...props}
-  />
-)
-
-export type UseGetStepYamlSchemaProps = Omit<
-  UseGetProps<ResponseYamlSchemaResponse, Failure | Error, GetStepYamlSchemaQueryParams, void>,
-  'path'
->
-
-/**
- * Get step YAML schema
- */
-export const useGetStepYamlSchema = (props: UseGetStepYamlSchemaProps) =>
-  useGet<ResponseYamlSchemaResponse, Failure | Error, GetStepYamlSchemaQueryParams, void>(`/yaml-schema/get`, {
-    base: getConfig('pipeline/api'),
-    ...props
-  })
-
-/**
- * Get step YAML schema
- */
-export const getStepYamlSchemaPromise = (
-  props: GetUsingFetchProps<ResponseYamlSchemaResponse, Failure | Error, GetStepYamlSchemaQueryParams, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponseYamlSchemaResponse, Failure | Error, GetStepYamlSchemaQueryParams, void>(
-    getConfig('pipeline/api'),
-    `/yaml-schema/get`,
     props,
     signal
   )
