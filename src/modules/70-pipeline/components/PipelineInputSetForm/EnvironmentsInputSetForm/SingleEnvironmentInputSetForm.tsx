@@ -391,7 +391,8 @@ export default function SingleEnvironmentInputSetForm({
                   showEnvironmentsSelectionInputField,
                   lazyInfrastructure:
                     isMultiTypeExpression(environmentRefType) ||
-                    isValueExpression(environmentInDeploymentStage?.environmentRef)
+                    isValueExpression(environmentInDeploymentStage?.environmentRef),
+                  environmentBranch: environmentInDeploymentStage?.gitBranch
                 }}
                 onUpdate={data => {
                   const environmentAtIndex = get(formik.values, `${path}.environment`)

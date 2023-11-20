@@ -23,4 +23,5 @@ export interface DeployInfrastructureEntityCustomInputStepProps extends DeployIn
   areEnvironmentFiltersAdded?: boolean
   lazyInfrastructure?: boolean
   serviceIdentifiers: string[]
+  environmentBranch?: string
 }

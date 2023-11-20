@@ -357,7 +357,8 @@ export function MultiEnvironmentsInputSetForm({
                             showEnvironmentsSelectionInputField: deploymentStage?.environmentGroup?.deployToAll
                               ? false
                               : showEnvironmentsSelectionInputField,
-                            areEnvironmentFiltersAdded
+                            areEnvironmentFiltersAdded,
+                            environmentBranch: environmentInDeploymentStage?.gitBranch
                           }}
                           onUpdate={data => {
                             const environmentAtIndex = get(formik.values, `${path}.${pathToEnvironments}[${index}]`)

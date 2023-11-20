@@ -10553,6 +10553,11 @@ export interface InfrastructureYamlMetadataApiInput {
   infrastructureIdentifiers: string[]
 }
 
+export interface InfrastructureYamlMetadataApiInputV2 {
+  environmentBranch?: string
+  infrastructureIdentifiers: string[]
+}
+
 export interface InfrastructureYamlMetadataDTO {
   infrastructureYamlMetadataList?: InfrastructureYamlMetadata[]
 }
@@ -17132,6 +17137,13 @@ export interface ResponseServiceInstanceUsageDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseServiceMoveConfigResponse {
+  correlationId?: string
+  data?: ServiceMoveConfigResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseServiceNowTicketNG {
   correlationId?: string
   data?: ServiceNowTicketNG
@@ -18872,6 +18884,10 @@ export interface ServiceInstanceUsageDTO {
   cdLicenseType?: 'SERVICES' | 'SERVICE_INSTANCES'
   module?: string
   timestamp?: number
+}
+
+export interface ServiceMoveConfigResponse {
+  serviceIdentifier?: string
 }
 
 export type ServiceNowADFSDTO = ServiceNowAuthCredentialsDTO & {
@@ -21584,8 +21600,6 @@ export type GitSyncSettingsDTORequestBody = GitSyncSettingsDTO
 export type HostValidationParamsRequestBody = HostValidationParams
 
 export type InfrastructureRequestDTORequestBody = InfrastructureRequestDTO
-
-export type InfrastructureYamlMetadataApiInputRequestBody = InfrastructureYamlMetadataApiInput
 
 export type LDAPSettingsRequestBody = LDAPSettings
 
@@ -52847,7 +52861,7 @@ export type GetInfrastructureYamlAndRuntimeInputsProps = Omit<
     ResponseInfrastructureYamlMetadataDTO,
     Failure | Error,
     GetInfrastructureYamlAndRuntimeInputsQueryParams,
-    InfrastructureYamlMetadataApiInputRequestBody,
+    InfrastructureYamlMetadataApiInput,
     void
   >,
   'path' | 'verb'
@@ -52861,7 +52875,7 @@ export const GetInfrastructureYamlAndRuntimeInputs = (props: GetInfrastructureYa
     ResponseInfrastructureYamlMetadataDTO,
     Failure | Error,
     GetInfrastructureYamlAndRuntimeInputsQueryParams,
-    InfrastructureYamlMetadataApiInputRequestBody,
+    InfrastructureYamlMetadataApiInput,
     void
   >
     verb="POST"
@@ -52876,7 +52890,7 @@ export type UseGetInfrastructureYamlAndRuntimeInputsProps = Omit<
     ResponseInfrastructureYamlMetadataDTO,
     Failure | Error,
     GetInfrastructureYamlAndRuntimeInputsQueryParams,
-    InfrastructureYamlMetadataApiInputRequestBody,
+    InfrastructureYamlMetadataApiInput,
     void
   >,
   'path' | 'verb'
@@ -52890,7 +52904,7 @@ export const useGetInfrastructureYamlAndRuntimeInputs = (props: UseGetInfrastruc
     ResponseInfrastructureYamlMetadataDTO,
     Failure | Error,
     GetInfrastructureYamlAndRuntimeInputsQueryParams,
-    InfrastructureYamlMetadataApiInputRequestBody,
+    InfrastructureYamlMetadataApiInput,
     void
   >('POST', `/infrastructures/infrastructureYamlMetadata`, { base: getConfig('ng/api'), ...props })
 
@@ -52902,7 +52916,7 @@ export const getInfrastructureYamlAndRuntimeInputsPromise = (
     ResponseInfrastructureYamlMetadataDTO,
     Failure | Error,
     GetInfrastructureYamlAndRuntimeInputsQueryParams,
-    InfrastructureYamlMetadataApiInputRequestBody,
+    InfrastructureYamlMetadataApiInput,
     void
   >,
   signal?: RequestInit['signal']
@@ -52911,7 +52925,7 @@ export const getInfrastructureYamlAndRuntimeInputsPromise = (
     ResponseInfrastructureYamlMetadataDTO,
     Failure | Error,
     GetInfrastructureYamlAndRuntimeInputsQueryParams,
-    InfrastructureYamlMetadataApiInputRequestBody,
+    InfrastructureYamlMetadataApiInput,
     void
   >('POST', getConfig('ng/api'), `/infrastructures/infrastructureYamlMetadata`, props, signal)
 
@@ -53244,7 +53258,7 @@ export type GetInfrastructureYamlAndRuntimeInputsV2Props = Omit<
     ResponseInfrastructureYamlMetadataDTO,
     Failure | Error,
     GetInfrastructureYamlAndRuntimeInputsV2QueryParams,
-    InfrastructureYamlMetadataApiInputRequestBody,
+    InfrastructureYamlMetadataApiInputV2,
     void
   >,
   'path' | 'verb'
@@ -53258,7 +53272,7 @@ export const GetInfrastructureYamlAndRuntimeInputsV2 = (props: GetInfrastructure
     ResponseInfrastructureYamlMetadataDTO,
     Failure | Error,
     GetInfrastructureYamlAndRuntimeInputsV2QueryParams,
-    InfrastructureYamlMetadataApiInputRequestBody,
+    InfrastructureYamlMetadataApiInputV2,
     void
   >
     verb="POST"
@@ -53273,7 +53287,7 @@ export type UseGetInfrastructureYamlAndRuntimeInputsV2Props = Omit<
     ResponseInfrastructureYamlMetadataDTO,
     Failure | Error,
     GetInfrastructureYamlAndRuntimeInputsV2QueryParams,
-    InfrastructureYamlMetadataApiInputRequestBody,
+    InfrastructureYamlMetadataApiInputV2,
     void
   >,
   'path' | 'verb'
@@ -53287,7 +53301,7 @@ export const useGetInfrastructureYamlAndRuntimeInputsV2 = (props: UseGetInfrastr
     ResponseInfrastructureYamlMetadataDTO,
     Failure | Error,
     GetInfrastructureYamlAndRuntimeInputsV2QueryParams,
-    InfrastructureYamlMetadataApiInputRequestBody,
+    InfrastructureYamlMetadataApiInputV2,
     void
   >('POST', `/infrastructures/v2/infrastructure-yaml-metadata`, { base: getConfig('ng/api'), ...props })
 
@@ -53299,7 +53313,7 @@ export const getInfrastructureYamlAndRuntimeInputsV2Promise = (
     ResponseInfrastructureYamlMetadataDTO,
     Failure | Error,
     GetInfrastructureYamlAndRuntimeInputsV2QueryParams,
-    InfrastructureYamlMetadataApiInputRequestBody,
+    InfrastructureYamlMetadataApiInputV2,
     void
   >,
   signal?: RequestInit['signal']
@@ -53308,7 +53322,7 @@ export const getInfrastructureYamlAndRuntimeInputsV2Promise = (
     ResponseInfrastructureYamlMetadataDTO,
     Failure | Error,
     GetInfrastructureYamlAndRuntimeInputsV2QueryParams,
-    InfrastructureYamlMetadataApiInputRequestBody,
+    InfrastructureYamlMetadataApiInputV2,
     void
   >('POST', getConfig('ng/api'), `/infrastructures/v2/infrastructure-yaml-metadata`, props, signal)
 
@@ -65776,6 +65790,106 @@ export const mergeServiceInputsPromise = (
     ListTagsForAMIArtifactBodyRequestBody,
     MergeServiceInputsPathParams
   >('POST', getConfig('ng/api'), `/servicesV2/mergeServiceInputs/${serviceIdentifier}`, props, signal)
+
+export interface MoveServiceConfigsQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  connectorRef?: string
+  repoName?: string
+  branch?: string
+  filePath?: string
+  commitMsg?: string
+  isNewBranch?: boolean
+  baseBranch?: string
+  moveConfigType?: 'INLINE_TO_REMOTE' | 'REMOTE_TO_INLINE'
+}
+
+export interface MoveServiceConfigsPathParams {
+  serviceIdentifier: string
+}
+
+export type MoveServiceConfigsProps = Omit<
+  MutateProps<
+    ResponseServiceMoveConfigResponse,
+    Failure | Error,
+    MoveServiceConfigsQueryParams,
+    void,
+    MoveServiceConfigsPathParams
+  >,
+  'path' | 'verb'
+> &
+  MoveServiceConfigsPathParams
+
+/**
+ * Move Service YAML from inline to remote
+ */
+export const MoveServiceConfigs = ({ serviceIdentifier, ...props }: MoveServiceConfigsProps) => (
+  <Mutate<
+    ResponseServiceMoveConfigResponse,
+    Failure | Error,
+    MoveServiceConfigsQueryParams,
+    void,
+    MoveServiceConfigsPathParams
+  >
+    verb="POST"
+    path={`/servicesV2/move-config/${serviceIdentifier}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseMoveServiceConfigsProps = Omit<
+  UseMutateProps<
+    ResponseServiceMoveConfigResponse,
+    Failure | Error,
+    MoveServiceConfigsQueryParams,
+    void,
+    MoveServiceConfigsPathParams
+  >,
+  'path' | 'verb'
+> &
+  MoveServiceConfigsPathParams
+
+/**
+ * Move Service YAML from inline to remote
+ */
+export const useMoveServiceConfigs = ({ serviceIdentifier, ...props }: UseMoveServiceConfigsProps) =>
+  useMutate<
+    ResponseServiceMoveConfigResponse,
+    Failure | Error,
+    MoveServiceConfigsQueryParams,
+    void,
+    MoveServiceConfigsPathParams
+  >(
+    'POST',
+    (paramsInPath: MoveServiceConfigsPathParams) => `/servicesV2/move-config/${paramsInPath.serviceIdentifier}`,
+    { base: getConfig('ng/api'), pathParams: { serviceIdentifier }, ...props }
+  )
+
+/**
+ * Move Service YAML from inline to remote
+ */
+export const moveServiceConfigsPromise = (
+  {
+    serviceIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseServiceMoveConfigResponse,
+    Failure | Error,
+    MoveServiceConfigsQueryParams,
+    void,
+    MoveServiceConfigsPathParams
+  > & { serviceIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseServiceMoveConfigResponse,
+    Failure | Error,
+    MoveServiceConfigsQueryParams,
+    void,
+    MoveServiceConfigsPathParams
+  >('POST', getConfig('ng/api'), `/servicesV2/move-config/${serviceIdentifier}`, props, signal)
 
 export interface GetRuntimeInputsServiceEntityQueryParams {
   accountIdentifier: string

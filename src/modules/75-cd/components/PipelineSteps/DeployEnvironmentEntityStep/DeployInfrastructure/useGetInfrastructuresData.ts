@@ -11,8 +11,8 @@ import { defaultTo, isEmpty, isEqual } from 'lodash-es'
 
 import { shouldShowError, useToaster } from '@harness/uicore'
 
-import { useDeepCompareEffect, useMutateAsGet } from '@common/hooks'
-import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import { useDeepCompareEffect, useMutateAsGet, useQueryParams } from '@common/hooks'
+import type { GitQueryParams, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -77,6 +77,7 @@ export function useGetInfrastructuresData({
   const [nonExistingInfrastructureIdentifiers, setNonExistingInfrastructureIdentifiers] = useState<string[]>([])
 
   const { CDS_SCOPE_INFRA_TO_SERVICES } = useFeatureFlags()
+  const { branch, repoName } = useQueryParams<GitQueryParams>()
 
   const {
     data: infrastructuresListResponse,
@@ -137,9 +138,13 @@ export function useGetInfrastructuresData({
       orgIdentifier,
       projectIdentifier,
       environmentIdentifier,
-      branch: environmentBranch
+      branch,
+      repoName
     },
-    body: { infrastructureIdentifiers: sortedInfrastructureIdentifiers },
+    body: {
+      infrastructureIdentifiers: sortedInfrastructureIdentifiers,
+      environmentBranch
+    },
     lazy: sortedInfrastructureIdentifiers.length === 0 || !isGitXEnabledForInfras
   })
 

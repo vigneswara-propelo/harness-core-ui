@@ -73,7 +73,8 @@ export default function DeployInfrastructureEntityInputStep({
   areEnvironmentFiltersAdded,
   lazyInfrastructure,
   scopePrefix,
-  serviceIdentifiers
+  serviceIdentifiers,
+  environmentBranch
 }: DeployInfrastructureEntityInputStepProps): React.ReactElement {
   const { getString } = useStrings()
   const { showWarning } = useToaster()
@@ -141,6 +142,7 @@ export default function DeployInfrastructureEntityInputStep({
         ? []
         : infrastructureIdentifiers,
     environmentIdentifier: defaultTo(scopePrefix, '') + environmentIdentifier,
+    environmentBranch: initialValues?.gitBranch || environmentBranch,
     deploymentType,
     serviceIdentifiers,
     ...(shouldAddCustomDeploymentData && {
