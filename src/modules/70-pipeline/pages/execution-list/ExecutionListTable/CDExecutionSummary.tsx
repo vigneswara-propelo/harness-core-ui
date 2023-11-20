@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Icon, Layout } from '@harness/uicore'
 
@@ -15,6 +15,12 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getIdentifierFromScopedRef } from '@common/utils/utils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
+import { EnvironmentResponseDTO, ServiceResponseDTO } from 'services/cd-ng'
+import { fetchServicesMetadata } from '@modules/70-pipeline/components/FormMultiTypeServiceFeild/Utils'
+import { fetchEnvironmentsMetadata } from '@modules/70-pipeline/components/FormMultiTypeEnvironmentField/Utils'
+import { getRemoteServiceQueryParams } from '@modules/75-cd/components/Services/utils/ServiceUtils'
+import { getRemoteEnvironmentQueryParams } from '@modules/75-cd/components/EnvironmentsV2/utils'
 import css from './ExecutionListTable.module.scss'
 
 export interface CDExecutionSummaryProps {
@@ -25,6 +31,10 @@ export function CDExecutionSummary(props: CDExecutionSummaryProps): React.ReactE
   const { stageInfo } = props
   const serviceDisplayName = stageInfo.serviceInfo?.displayName
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const { CDS_SERVICE_GITX, CDS_ENV_GITX } = useFeatureFlags()
+
+  const [serviceMetadata, setServiceMetadata] = useState<ServiceResponseDTO>({})
+  const [environmentMetadata, setEnvironmentMetadata] = useState<EnvironmentResponseDTO>({})
 
   const gitOpsEnvironments = stageInfo.gitopsExecutionSummary?.environments || []
   const environment = gitOpsEnvironments.length
@@ -38,6 +48,31 @@ export function CDExecutionSummary(props: CDExecutionSummaryProps): React.ReactE
   const infrastructureScope = getScopeFromValue(stageInfo.infraExecutionSummary?.identifier)
 
   const chartVersion = stageInfo.serviceInfo?.manifestInfo?.chartVersion
+  const serviceId = getIdentifierFromScopedRef(stageInfo.serviceInfo?.identifier || '')
+  const environmentId = getIdentifierFromScopedRef(stageInfo.infraExecutionSummary?.identifier || '')
+
+  React.useEffect(() => {
+    if (CDS_SERVICE_GITX) {
+      fetchServicesMetadata({
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        serviceIdentifiers: [serviceId]
+      }).then(responseData => {
+        responseData?.length && responseData?.[0]?.service && setServiceMetadata(responseData?.[0]?.service)
+      })
+    }
+    if (CDS_ENV_GITX) {
+      fetchEnvironmentsMetadata({
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        envIdentifiers: [environmentId]
+      }).then(responseData => {
+        responseData?.length && responseData?.[0]?.environment && setEnvironmentMetadata(responseData?.[0]?.environment)
+      })
+    }
+  }, [CDS_SERVICE_GITX, CDS_ENV_GITX, accountId, orgIdentifier, projectIdentifier, serviceId, environmentId])
 
   return serviceDisplayName || environment ? (
     <Layout.Horizontal spacing="medium" className={css.cdExecutionSummary}>
@@ -45,14 +80,14 @@ export function CDExecutionSummary(props: CDExecutionSummaryProps): React.ReactE
         <Layout.Horizontal spacing="xsmall" style={{ alignItems: 'center', flexShrink: 'unset' }}>
           <Icon name="services" size={14} />
           <Link
-            to={routes.toServiceStudio({
+            to={`${routes.toServiceStudio({
               module: 'cd',
               accountId,
               ...(serviceScope !== Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
               ...(serviceScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
-              serviceId: getIdentifierFromScopedRef(stageInfo.serviceInfo?.identifier || ''),
+              serviceId: serviceId,
               accountRoutePlacement: 'settings'
-            })}
+            })}?${getRemoteServiceQueryParams(serviceMetadata)}`}
             target="_blank"
             rel="noreferrer noopener"
           >
@@ -75,9 +110,10 @@ export function CDExecutionSummary(props: CDExecutionSummaryProps): React.ReactE
               accountId,
               ...(infrastructureScope !== Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
               ...(infrastructureScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
-              environmentIdentifier: getIdentifierFromScopedRef(stageInfo.infraExecutionSummary?.identifier || ''),
+              environmentIdentifier: environmentId,
               sectionId: 'INFRASTRUCTURE',
-              accountRoutePlacement: 'settings'
+              accountRoutePlacement: 'settings',
+              ...getRemoteEnvironmentQueryParams(environmentMetadata)
             })}
             target="_blank"
             rel="noreferrer noopener"

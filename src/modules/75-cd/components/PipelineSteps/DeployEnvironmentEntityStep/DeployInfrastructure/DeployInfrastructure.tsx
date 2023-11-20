@@ -14,6 +14,7 @@ import { v4 as uuid } from 'uuid'
 import {
   AllowedTypes,
   getMultiTypeFromValue,
+  Layout,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
   Text,
@@ -21,7 +22,7 @@ import {
 } from '@harness/uicore'
 
 import { Color } from '@harness/design-system'
-
+import type { Error } from 'services/cd-ng'
 import { StageElementWrapperConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 
@@ -37,6 +38,7 @@ import { usePipelineVariables } from '@pipeline/components/PipelineVariablesCont
 import { PropagateSelectOption } from '@pipeline/components/PipelineInputSetForm/EnvironmentsInputSetForm/utils'
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { ErrorHandler } from '@modules/10-common/components/ErrorHandler/ErrorHandler'
 import InfrastructureEntitiesList from '../InfrastructureEntitiesList/InfrastructureEntitiesList'
 import type {
   DeployEnvironmentEntityCustomStepProps,
@@ -115,6 +117,7 @@ export default function DeployInfrastructure({
   const {
     infrastructuresList,
     infrastructuresData,
+    remoteFetchError,
     loadingInfrastructuresList,
     loadingInfrastructuresData,
     // This is required only when updating the entities list
@@ -134,8 +137,18 @@ export default function DeployInfrastructure({
       deploymentTemplateIdentifier,
       versionLabel
     }),
-    lazyInfrastructure
+    lazyInfrastructure,
+    showRemoteFetchError: true
   })
+
+  const remoteFetchErrorMessages = (remoteFetchError as Error)?.responseMessages
+
+  const showRemoteFetchError =
+    remoteFetchErrorMessages &&
+    isFixed &&
+    !isEmpty(selectedInfrastructures) &&
+    !loadingInfrastructuresData &&
+    !updatingInfrastructuresData
 
   useEffect(() => {
     if (!values.infrastructure && isEmpty(values.infrastructures)) {
@@ -331,6 +344,11 @@ export default function DeployInfrastructure({
           setSelectedInfrastructures={setSelectedInfrastructures}
         />
       )}
+      {showRemoteFetchError ? (
+        <Layout.Vertical>
+          <ErrorHandler responseMessages={remoteFetchErrorMessages} />
+        </Layout.Vertical>
+      ) : null}
     </>
   )
 }

@@ -14,7 +14,13 @@ import { Layout, Popover, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
 import { String as StrTemplate } from 'framework/strings'
-import type { Application, EnvironmentResponseDTO, GitOpsExecutionSummary, ServiceResponseDTO } from 'services/cd-ng'
+import type {
+  Application,
+  EnvironmentResponseDTO,
+  GitOpsExecutionSummary,
+  InfrastructureResponseDTO,
+  ServiceResponseDTO
+} from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import routesV2 from '@common/RouteDefinitionsV2'
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
@@ -26,9 +32,12 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { StageDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import { ServicePopoverCard } from '@cd/components/ServicePopoverCard/ServicePopoverCard'
 import { fetchServicesMetadata } from '@modules/70-pipeline/components/FormMultiTypeServiceFeild/Utils'
-import { fetchEnvironmentsMetadata } from '@modules/70-pipeline/components/FormMultiTypeEnvironmentField/Utils'
+import {
+  fetchEnvironmentsMetadata,
+  fetchInfrastructuresMetadata
+} from '@modules/70-pipeline/components/FormMultiTypeEnvironmentField/Utils'
 import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
-import { EnvironmentDetailsTab } from '../EnvironmentsV2/utils'
+import { EnvironmentDetailsTab, getRemoteInfrastructureQueryParams } from '../EnvironmentsV2/utils'
 import { InfraDefinitionTabs } from '../EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfraDefinitionDetailsDrawer/InfraDefinitionDetailsDrawer'
 
 import { getRemoteServiceQueryParams } from '../Services/utils/ServiceUtils'
@@ -112,7 +121,7 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
   const { stage } = props
   const gitOpsApps = get(stage, 'moduleInfo.cd.gitOpsAppSummary.applications') || []
   const { orgIdentifier, projectIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
-  const { CDS_NAV_2_0, CDS_SERVICE_GITX, CDS_ENV_GITX } = useFeatureFlags()
+  const { CDS_NAV_2_0, CDS_SERVICE_GITX, CDS_ENV_GITX, CDS_INFRA_GITX } = useFeatureFlags()
 
   const gitOpsEnvironments = Array.isArray(get(stage, 'moduleInfo.cd.gitopsExecutionSummary.environments'))
     ? (get(stage, 'moduleInfo.cd.gitopsExecutionSummary') as Required<GitOpsExecutionSummary>).environments.map(
@@ -134,8 +143,10 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
   }
   const serviceId = getIdentifierFromScopedRef(get(stage, 'moduleInfo.cd.serviceInfo.identifier', ''))
   const environmentId = getIdentifierFromScopedRef(get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', ''))
+  const infrastructureId = get(stage, 'moduleInfo.cd.infraExecutionSummary.infrastructureIdentifier', '')
   const [serviceMetadata, setServiceMetadata] = useState<ServiceResponseDTO>({})
   const [environmentMetadata, setEnvironmentMetadata] = useState<EnvironmentResponseDTO>({})
+  const [infrastructuretMetadata, setInfrastructureMetadata] = useState<InfrastructureResponseDTO>({})
 
   useEffect(() => {
     if (CDS_SERVICE_GITX) {
@@ -158,7 +169,30 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
         responseData?.length && responseData?.[0]?.environment && setEnvironmentMetadata(responseData?.[0]?.environment)
       })
     }
-  }, [CDS_SERVICE_GITX, CDS_ENV_GITX, accountId, orgIdentifier, projectIdentifier, serviceId, environmentId])
+    if (CDS_INFRA_GITX) {
+      fetchInfrastructuresMetadata({
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        environmentIdentifier: environmentId,
+        infraIdentifiers: [infrastructureId]
+      }).then(responseData => {
+        responseData?.length &&
+          responseData?.[0]?.infrastructure &&
+          setInfrastructureMetadata(responseData?.[0]?.infrastructure)
+      })
+    }
+  }, [
+    CDS_SERVICE_GITX,
+    CDS_ENV_GITX,
+    CDS_INFRA_GITX,
+    accountId,
+    orgIdentifier,
+    projectIdentifier,
+    serviceId,
+    environmentId,
+    infrastructureId
+  ])
 
   const toServiceStudio = useMemo(
     () =>
@@ -213,26 +247,23 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
           })
         })
 
+  const environmentInfrastructureDefinationQueryParams = {
+    accountId,
+    orgIdentifier,
+    projectIdentifier,
+    environmentIdentifier: get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', ''),
+    sectionId: EnvironmentDetailsTab.INFRASTRUCTURE,
+    infraDetailsTab: InfraDefinitionTabs.CONFIGURATION,
+    infrastructureId: infrastructureId,
+    ...getRemoteInfrastructureQueryParams(infrastructuretMetadata)
+  }
+
   const toEnvironmentInfrastructureDefinitionDetails =
     CDS_NAV_2_0 && !module
-      ? routesV2.toSettingsEnvironmentDetails({
-          accountId,
-          orgIdentifier,
-          projectIdentifier,
-          environmentIdentifier: get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', ''),
-          sectionId: EnvironmentDetailsTab.INFRASTRUCTURE,
-          infraDetailsTab: InfraDefinitionTabs.CONFIGURATION,
-          infrastructureId: get(stage, 'moduleInfo.cd.infraExecutionSummary.infrastructureIdentifier', '')
-        })
+      ? routesV2.toSettingsEnvironmentDetails(environmentInfrastructureDefinationQueryParams)
       : routes.toEnvironmentDetails({
-          accountId,
-          orgIdentifier,
-          projectIdentifier,
-          environmentIdentifier: get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', ''),
-          sectionId: EnvironmentDetailsTab.INFRASTRUCTURE,
-          infraDetailsTab: InfraDefinitionTabs.CONFIGURATION,
-          infrastructureId: get(stage, 'moduleInfo.cd.infraExecutionSummary.infrastructureIdentifier', ''),
-          module
+          module,
+          ...environmentInfrastructureDefinationQueryParams
         })
 
   return (

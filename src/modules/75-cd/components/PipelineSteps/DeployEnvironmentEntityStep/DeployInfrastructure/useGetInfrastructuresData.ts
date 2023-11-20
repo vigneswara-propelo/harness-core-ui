@@ -20,6 +20,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
 import {
   AccessControlCheckError,
+  Failure,
   ServiceDefinition,
   TemplateLinkConfig,
   useGetInfrastructureList,
@@ -39,6 +40,7 @@ export interface UseGetInfrastructuresDataProps {
   lazyInfrastructure?: boolean
   serviceIdentifiers: string[]
   environmentBranch?: string
+  showRemoteFetchError?: boolean
 }
 
 export interface UseGetInfrastructuresDataReturn {
@@ -46,6 +48,7 @@ export interface UseGetInfrastructuresDataReturn {
   infrastructuresList: InfrastructureYaml[]
   /** Contains list of infrastructure objects with inputs */
   infrastructuresData: InfrastructureData[]
+  remoteFetchError: Failure | undefined
   loadingInfrastructuresList: boolean
   loadingInfrastructuresData: boolean
   /** Used only for loading state while updating data */
@@ -65,7 +68,8 @@ export function useGetInfrastructuresData({
   versionLabel,
   lazyInfrastructure,
   serviceIdentifiers,
-  environmentBranch
+  environmentBranch,
+  showRemoteFetchError = false
 }: UseGetInfrastructuresDataProps): UseGetInfrastructuresDataReturn {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { showError } = useToaster()
@@ -75,6 +79,7 @@ export function useGetInfrastructuresData({
   const [infrastructuresList, setInfrastructuresList] = useState<InfrastructureYaml[]>([])
   const [infrastructuresData, setInfrastructuresData] = useState<InfrastructureData[]>([])
   const [nonExistingInfrastructureIdentifiers, setNonExistingInfrastructureIdentifiers] = useState<string[]>([])
+  const [remoteFetchError, setRemoteFetchError] = useState<Failure | undefined>()
 
   const { CDS_SCOPE_INFRA_TO_SERVICES } = useFeatureFlags()
   const { branch, repoName } = useQueryParams<GitQueryParams>()
@@ -192,6 +197,16 @@ export function useGetInfrastructuresData({
         )
       }
 
+      if (
+        (infrastructuresDataError?.data as Failure)?.status === 'ERROR' &&
+        (infrastructuresDataError?.data as Failure)?.code === 'HINT' &&
+        showRemoteFetchError
+      ) {
+        setRemoteFetchError(infrastructuresDataError?.data as Failure)
+      } else {
+        setRemoteFetchError(undefined)
+      }
+
       const yamlMetadataList = infrastructuresDataResponse?.data?.infrastructureYamlMetadataList
       /* istanbul ignore else */
       if (yamlMetadataList?.length) {
@@ -250,7 +265,7 @@ export function useGetInfrastructuresData({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, infrastructuresDataResponse?.data?.infrastructureYamlMetadataList])
+  }, [loading, infrastructuresDataResponse?.data?.infrastructureYamlMetadataList, infrastructuresDataError])
 
   useEffect(() => {
     /* istanbul ignore else */
@@ -276,8 +291,16 @@ export function useGetInfrastructuresData({
 
   useEffect(() => {
     /* istanbul ignore else */
-    if (infrastructuresDataError?.message) {
+    if (
+      infrastructuresDataError?.message &&
+      (!(
+        (infrastructuresDataError?.data as Failure)?.status === 'ERROR' &&
+        (infrastructuresDataError?.data as Failure)?.code === 'HINT'
+      ) ||
+        !showRemoteFetchError)
+    ) {
       /* istanbul ignore else */
+
       if (shouldShowError(infrastructuresDataError)) {
         showError(getRBACErrorMessage(infrastructuresDataError))
       }
@@ -295,6 +318,7 @@ export function useGetInfrastructuresData({
   return {
     infrastructuresList,
     infrastructuresData,
+    remoteFetchError,
     loadingInfrastructuresList,
     loadingInfrastructuresData,
     updatingInfrastructuresData,

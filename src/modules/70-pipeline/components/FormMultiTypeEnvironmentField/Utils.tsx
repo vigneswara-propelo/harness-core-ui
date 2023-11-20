@@ -20,6 +20,9 @@ import {
   getEnvironmentListPromise,
   GetEnvironmentListQueryParams,
   getEnvironmentListV2Promise,
+  getInfrastructureListPromise,
+  GetInfrastructureListQueryParams,
+  InfrastructureResponse,
   PageEnvironmentResponse,
   ResponseListEnvironmentResponse,
   ResponsePageEnvironmentResponse
@@ -195,6 +198,25 @@ export async function fetchEnvironmentsMetadata(
 ): Promise<EnvironmentResponse[]> {
   try {
     const response = await getEnvironmentListPromise({
+      queryParams,
+      queryParamStringifyOptions: {
+        arrayFormat: 'repeat'
+      }
+    })
+    return response?.data?.content || []
+  } catch {
+    return []
+  }
+}
+
+export async function fetchInfrastructuresMetadata(
+  queryParams: Pick<
+    GetInfrastructureListQueryParams,
+    'accountIdentifier' | 'orgIdentifier' | 'projectIdentifier' | 'infraIdentifiers' | 'environmentIdentifier'
+  >
+): Promise<InfrastructureResponse[]> {
+  try {
+    const response = await getInfrastructureListPromise({
       queryParams,
       queryParamStringifyOptions: {
         arrayFormat: 'repeat'
