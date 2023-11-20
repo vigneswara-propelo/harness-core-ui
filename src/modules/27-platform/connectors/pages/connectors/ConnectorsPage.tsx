@@ -555,6 +555,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
   )
 
   const attributeFilterName = resourceAttributeMap.get(ResourceType.CONNECTOR)
+  const filterProperties = appliedFilter?.filterProperties || {}
   /* #endregion */
 
   return (
@@ -665,7 +666,13 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
                 onFilterSelect={handleFilterSelection}
                 fieldToLabelMapping={fieldToLabelMapping}
                 filterWithValidFields={removeNullAndEmpty(
-                  pick(flattenObject(appliedFilter?.filterProperties || {}), ...fieldToLabelMapping.keys())
+                  pick(
+                    flattenObject({
+                      ...filterProperties,
+                      tags: Object.keys(filterProperties?.tags || {})
+                    }),
+                    ...fieldToLabelMapping.keys()
+                  )
                 )}
               />
             </Layout.Horizontal>
