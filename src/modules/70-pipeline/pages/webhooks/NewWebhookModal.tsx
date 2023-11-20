@@ -14,14 +14,13 @@ import cx from 'classnames'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
-import { useCreateGitxWebhookMutation, useUpdateGitxWebhookMutation } from '@harnessio/react-ng-manager-client'
+import { useCreateGitxWebhookRefMutation, useUpdateGitxWebhookRefMutation } from '@harnessio/react-ng-manager-client'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import ConnectorReferenceField from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import RepositorySelect from '@common/components/RepositorySelect/RepositorySelect'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getSupportedProviders } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import { useStrings } from 'framework/strings'
-import { Scope } from '@common/interfaces/SecretsInterface'
 import { getConnectorIdentifierWithScope } from '@platform/connectors/utils/utils'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { NameIdentifierSchema } from '@common/utils/Validation'
@@ -30,7 +29,7 @@ import { AddWebhookModalData, NewWebhookModalProps } from './utils'
 import css from './Webhooks.module.scss'
 
 export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Element {
-  const { initialData, entityScope = Scope.ACCOUNT, isEdit, closeModal } = props
+  const { initialData, isEdit, closeModal } = props
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const formikRef = React.useRef<FormikProps<AddWebhookModalData>>()
@@ -41,21 +40,25 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
     isLoading: loading,
     mutate: createWebhook,
     error: webhookCreateError
-  } = useCreateGitxWebhookMutation({})
+  } = useCreateGitxWebhookRefMutation({})
 
   const {
     data: webhookUpdateData,
     isLoading: loadingUpdateWebhook,
     mutate: updateWebhook,
     error: webhookUpdateError
-  } = useUpdateGitxWebhookMutation({})
+  } = useUpdateGitxWebhookRefMutation({})
 
   function handleSubmit(values: AddWebhookModalData): void {
     const folder_paths = values.folderPaths.map(path => path.value)
 
     isEdit
       ? updateWebhook({
-          'gitx-webhook': values.identifier,
+          pathParams: {
+            org: orgIdentifier,
+            project: projectIdentifier,
+            'gitx-webhook': values.identifier
+          },
           body: {
             connector_ref: values.connectorRef,
             folder_paths: folder_paths,
@@ -64,6 +67,10 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
           }
         })
       : createWebhook({
+          pathParams: {
+            org: orgIdentifier,
+            project: projectIdentifier
+          },
           body: {
             connector_ref: values.connectorRef,
             folder_paths: folder_paths,
@@ -170,8 +177,8 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
                     label={getString('platform.connectors.title.gitConnector')}
                     placeholder={`- ${getString('select')} -`}
                     accountIdentifier={accountId}
-                    {...(entityScope === Scope.ACCOUNT ? {} : { orgIdentifier })}
-                    {...(entityScope === Scope.PROJECT ? { projectIdentifier } : {})}
+                    orgIdentifier={orgIdentifier}
+                    projectIdentifier={projectIdentifier}
                     onChange={(value, scope) => {
                       const connectorRefWithScope = getConnectorIdentifierWithScope(scope, value?.identifier)
 

@@ -10,7 +10,11 @@ import type { Column } from 'react-table'
 import { TableV2 } from '@harness/uicore'
 
 import { isUndefined } from 'lodash-es'
-import { GitXWebhookEventResponse, ListGitxWebhookEventsOkResponse } from '@harnessio/react-ng-manager-client'
+import {
+  GitXWebhookEventResponse,
+  ListGitXWebhookEventResponseResponse,
+  ResponseWithPagination
+} from '@harnessio/react-ng-manager-client'
 import { useStrings } from 'framework/strings'
 import {
   ColumnTimeStamp,
@@ -34,7 +38,7 @@ export type CustomColumn<T extends Record<string, any>> = Column<T>
 export default function WebhooksEventsList({
   response
 }: {
-  response: ListGitxWebhookEventsOkResponse | undefined
+  response: ResponseWithPagination<ListGitXWebhookEventResponseResponse> | undefined
 }): JSX.Element {
   const [showPayloadDetails, setShowPayloadDetails] = React.useState<boolean>(false)
   const [payloadDetails, setPayloadDetails] = React.useState<PayloadDetails>()

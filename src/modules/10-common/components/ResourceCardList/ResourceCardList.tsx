@@ -73,7 +73,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
     queryParams: {
       accountIdentifier: accountId
     },
-    lazy: !PIE_GIT_BI_DIRECTIONAL_SYNC || !!orgIdentifier
+    lazy: !PIE_GIT_BI_DIRECTIONAL_SYNC
   })
 
   React.useEffect(() => {

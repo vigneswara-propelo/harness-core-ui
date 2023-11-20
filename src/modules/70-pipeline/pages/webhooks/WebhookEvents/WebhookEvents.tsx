@@ -24,12 +24,12 @@ import {
 import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import { useListGitxWebhookEventsQuery, useListGitxWebhooksQuery } from '@harnessio/react-ng-manager-client'
+import { useListGitxWebhookEventsRefQuery, useListGitxWebhooksRefQuery } from '@harnessio/react-ng-manager-client'
 import { defaultTo, flatten, has, isEmpty, uniqBy } from 'lodash-es'
 import { DateRange } from '@blueprintjs/datetime'
 import { useStrings } from 'framework/strings'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
-import { AccountPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { PAGE_TEMPLATE_DEFAULT_PAGE_INDEX } from '@common/constants/Pagination'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
@@ -37,6 +37,7 @@ import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationPro
 import EmptyContentImg from '@common/images/EmptySearchResults.svg'
 import { WebhookEventsQueryParams, useWebhookEventsQueryParamOptions } from '@pipeline/pages/utils/requestUtils'
 import { DEFAULT_PAGE_INDEX } from '@modules/70-pipeline/utils/constants'
+import { useDocumentTitle } from '@modules/10-common/hooks/useDocumentTitle'
 import WebhooksEventsList from './WebhooksEventsList'
 import { STATUS, WebhookEventStatus, WebhookTabIds, getStatusList, stringsMap } from '../utils'
 import NoData from '../NoData'
@@ -45,10 +46,11 @@ import css from '../Webhooks.module.scss'
 
 export default function WebhookEvents(): JSX.Element {
   const { getString } = useStrings()
-  const { module } = useParams<AccountPathProps & ModulePathParams>()
+  const { orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { updateQueryParams } = useUpdateQueryParams<WebhookEventsQueryParams>()
   const queryParamOptions = useWebhookEventsQueryParamOptions()
   const { page, size, dateFilter, webhookIdentifier, eventId, eventStatus } = useQueryParams(queryParamOptions)
+  useDocumentTitle(getString('common.webhooks'))
 
   const start = new Date()
   start.setDate(start.getDate() - 7)
@@ -57,10 +59,14 @@ export default function WebhookEvents(): JSX.Element {
   const end = new Date()
   end.setHours(23, 59, 59, 999)
 
-  const { data: webhooksResponse, isInitialLoading: loadingWebhooksResponse } = useListGitxWebhooksQuery({
+  const { data: webhooksResponse, isInitialLoading: loadingWebhooksResponse } = useListGitxWebhooksRefQuery({
     queryParams: {
       limit: size,
       page: page ? page - 1 : 0
+    },
+    pathParams: {
+      org: orgIdentifier,
+      project: projectIdentifier
     }
   })
   const {
@@ -69,7 +75,7 @@ export default function WebhookEvents(): JSX.Element {
     isFetching: _loading,
     error,
     refetch
-  } = useListGitxWebhookEventsQuery({
+  } = useListGitxWebhookEventsRefQuery({
     queryParams: {
       limit: size,
       page: page ? page - 1 : 0,
@@ -81,6 +87,10 @@ export default function WebhookEvents(): JSX.Element {
     },
     stringifyQueryParamsOptions: {
       arrayFormat: 'repeat'
+    },
+    pathParams: {
+      org: orgIdentifier,
+      project: projectIdentifier
     }
   })
 

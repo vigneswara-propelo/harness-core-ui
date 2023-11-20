@@ -12,10 +12,11 @@ import { defaultTo } from 'lodash-es'
 import cx from 'classnames'
 import {
   GitXWebhookResponse,
-  ListGitxWebhooksOkResponse,
-  UpdateGitxWebhookOkResponse,
-  UpdateGitxWebhookProps,
-  deleteGitxWebhook
+  ListGitXWebhookResponseResponse,
+  ResponseWithPagination,
+  UpdateGitXWebhookResponse,
+  UpdateGitxWebhookRefProps,
+  deleteGitxWebhookRef
 } from '@harnessio/react-ng-manager-client'
 import { useModalHook } from '@harness/use-modal'
 import { useHistory, useParams } from 'react-router-dom'
@@ -23,7 +24,9 @@ import { UseMutateFunction } from '@tanstack/react-query'
 import { useStrings } from 'framework/strings'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import routes from '@common/RouteDefinitions'
+import routesv1 from '@common/RouteDefinitions'
+import routesv2 from '@common/RouteDefinitionsV2'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   Enabled,
   FolderPath,
@@ -43,17 +46,24 @@ export default function WebhooksList({
   refetch,
   updateWebhook
 }: {
-  response: ListGitxWebhooksOkResponse | undefined
+  response: ResponseWithPagination<ListGitXWebhookResponseResponse> | undefined
   refetch: () => void
-  updateWebhook: UseMutateFunction<UpdateGitxWebhookOkResponse, unknown, UpdateGitxWebhookProps, unknown>
+  updateWebhook: UseMutateFunction<
+    ResponseWithPagination<UpdateGitXWebhookResponse>,
+    unknown,
+    UpdateGitxWebhookRefProps,
+    unknown
+  >
 }): JSX.Element {
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const { showError, showSuccess } = useToaster()
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
+  const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const [rowData, setRowData] = React.useState<GitXWebhookResponse>()
   const [editable, setEditable] = React.useState(false)
   const history = useHistory()
+  const { CDS_NAV_2_0: newLeftNav } = useFeatureFlags()
+  const routes = newLeftNav ? routesv2 : routesv1
   const [showCreateModal, hideCreateModal] = useModalHook(
     /* istanbul ignore next */ () => {
       const onClosehandler = (): void => {
@@ -100,8 +110,12 @@ export default function WebhooksList({
   }
   const handleWebhookDelete = async (name: string, identifier: string): Promise<void> => {
     try {
-      await deleteGitxWebhook({
-        'gitx-webhook': identifier
+      await deleteGitxWebhookRef({
+        pathParams: {
+          'gitx-webhook': identifier,
+          org: orgIdentifier,
+          project: projectIdentifier
+        }
       })
       showSuccess(getString('pipeline.webhooks.deleted', { name: name }))
       refetch()
@@ -112,7 +126,11 @@ export default function WebhooksList({
 
   const handleWebhookEnableToggle = (id: string, enabled: boolean): void => {
     updateWebhook({
-      'gitx-webhook': id,
+      pathParams: {
+        org: orgIdentifier,
+        project: projectIdentifier,
+        'gitx-webhook': id
+      },
       body: {
         is_enabled: enabled
       }
@@ -183,6 +201,9 @@ export default function WebhooksList({
         history.push(
           routes.toWebhooksDetails({
             accountId,
+            orgIdentifier,
+            projectIdentifier,
+            module,
             webhookIdentifier: defaultTo(rowDetails.webhook_identifier, '')
           })
         )

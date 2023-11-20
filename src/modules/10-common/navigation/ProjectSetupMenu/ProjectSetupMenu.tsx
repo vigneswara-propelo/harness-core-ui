@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout } from '@harness/uicore'
+import { Layout, getErrorInfoFromErrorObject, useToaster } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import routes from '@common/RouteDefinitions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -18,6 +18,8 @@ import { isEnterprisePlan, useLicenseStore } from 'framework/LicenseStore/Licens
 import { ModuleName } from 'framework/types/ModuleName'
 import { useAnyEnterpriseLicense } from '@common/hooks/useModuleLicenses'
 import { useSideNavContext } from 'framework/SideNavStore/SideNavContext'
+import { useGetSettingValue } from 'services/cd-ng'
+import { SettingType } from '@modules/10-common/constants/Utils'
 import { SidebarLink } from '../SideNav/SideNav'
 import NavExpandable from '../NavExpandable/NavExpandable'
 
@@ -40,7 +42,8 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
     USE_OLD_GIT_SYNC,
     PL_DISCOVERY_ENABLE,
     IACM_OPA_WORKSPACE_GOVERNANCE,
-    PL_CENTRAL_NOTIFICATIONS
+    PL_CENTRAL_NOTIFICATIONS,
+    PIE_GIT_BI_DIRECTIONAL_SYNC
   } = useFeatureFlags()
   const { showGetStartedTabInMainMenu } = useSideNavContext()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
@@ -53,6 +56,23 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
     projectIdentifier,
     module
   }
+  const { showError } = useToaster()
+  const { data: enableBidirectionalSyncSettings, error: enableBidirectionalSyncSettingsError } = useGetSettingValue({
+    identifier: SettingType.ENABLE_BI_DIRECTIONAL_SYNC,
+    queryParams: {
+      accountIdentifier: accountId
+    },
+    lazy: !PIE_GIT_BI_DIRECTIONAL_SYNC
+  })
+
+  React.useEffect(() => {
+    if (enableBidirectionalSyncSettingsError) {
+      showError(getErrorInfoFromErrorObject(enableBidirectionalSyncSettingsError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enableBidirectionalSyncSettingsError])
+
+  const isBidirectionalSyncEnabled = enableBidirectionalSyncSettings?.data?.value === 'true'
   // Get and set the visibility of the "cd" getStarted link
   const isCDGetStartedVisible = showGetStartedTabInMainMenu['cd']
   const isCIGetStartedVisible = showGetStartedTabInMainMenu['ci']
@@ -99,6 +119,13 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
         <SidebarLink to={routes.toAccessControl(params)} label={getString('accessControl')} />
         <SidebarLink label={getString('delegate.delegates')} to={routes.toDelegates(params)} />
         <SidebarLink label={getString('common.defaultSettings')} to={routes.toDefaultSettings(params)} />
+
+        {isBidirectionalSyncEnabled && (
+          <SidebarLink
+            label={getString('common.webhooks')}
+            to={routes.toWebhooks({ accountId, orgIdentifier, projectIdentifier, module })}
+          />
+        )}
 
         {isGitSyncSupported && (
           <SidebarLink

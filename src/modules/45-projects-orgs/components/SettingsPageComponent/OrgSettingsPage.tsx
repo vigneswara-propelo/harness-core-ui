@@ -30,7 +30,8 @@ import styles from '@modules/27-platform/notifications/Notifications.module.scss
 export const OrgSettingsPage: React.FC = () => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { getString } = useStrings()
-  const { CDS_SERVICE_OVERRIDES_2_0, STO_JIRA_INTEGRATION, PL_CENTRAL_NOTIFICATIONS } = useFeatureFlags()
+  const { CDS_SERVICE_OVERRIDES_2_0, STO_JIRA_INTEGRATION, PL_CENTRAL_NOTIFICATIONS, PIE_GIT_BI_DIRECTIONAL_SYNC } =
+    useFeatureFlags()
   const showGovCard = useAnyEnterpriseLicense()
   const { licenseInformation, CD_LICENSE_STATE, CI_LICENSE_STATE, STO_LICENSE_STATE } = useLicenseStore()
   const isEnterpriseEdition = isEnterprisePlan(licenseInformation, ModuleName.CD)
@@ -56,6 +57,17 @@ export const OrgSettingsPage: React.FC = () => {
 
   //Gitops
   const showGitOpsCard = (accountId || orgIdentifier) && !projectIdentifier
+
+  // Webhooks
+  const { data: enableBidirectionalSyncSettings } = useGetSettingValue({
+    identifier: SettingType.ENABLE_BI_DIRECTIONAL_SYNC,
+    queryParams: {
+      accountIdentifier: accountId
+    },
+    lazy: !PIE_GIT_BI_DIRECTIONAL_SYNC
+  })
+
+  const isBidirectionalSyncEnabled = enableBidirectionalSyncSettings?.data?.value === 'true'
 
   return (
     <>
@@ -150,6 +162,13 @@ export const OrgSettingsPage: React.FC = () => {
               icon={'layers-outline'}
               route={routesV2.toSettingsServiceOverrides({ accountId, orgIdentifier, module })}
               hidden={!(isServiceOverridesEnabled && haveCD)}
+            />
+            <SettingsResourceCard
+              label={<String stringID="common.webhooks" />}
+              hidden={!isBidirectionalSyncEnabled}
+              id={SettingsResources.Webhooks}
+              icon={'code-webhook'}
+              route={routesV2.toWebhooks({ accountId, orgIdentifier, projectIdentifier, module })}
             />
           </SettingsPage.group>
           <SettingsPage.group

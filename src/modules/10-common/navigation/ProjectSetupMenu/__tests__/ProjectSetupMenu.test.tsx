@@ -24,7 +24,11 @@ jest.mock('framework/PreferenceStore/PreferenceStoreContext')
   }
 })
 
-jest.mock('services/cd-ng')
+jest.mock('services/cd-ng', () => ({
+  useGetSettingValue: jest.fn().mockImplementation(() => {
+    return { data: { data: { value: 'false' } } }
+  })
+}))
 
 describe('Project Setup Menu', () => {
   test('should render correctly condensed', () => {

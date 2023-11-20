@@ -22,7 +22,7 @@ import {
 import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { useListGitxWebhooksQuery, useUpdateGitxWebhookMutation } from '@harnessio/react-ng-manager-client'
+import { useListGitxWebhooksRefQuery, useUpdateGitxWebhookRefMutation } from '@harnessio/react-ng-manager-client'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
 import { useStrings } from 'framework/strings'
@@ -41,6 +41,7 @@ import EmptyContentImg from '@common/images/EmptySearchResults.svg'
 import RbacButton from '@rbac/components/Button/Button'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { DEFAULT_PAGE_INDEX } from '@modules/70-pipeline/utils/constants'
+import { useDocumentTitle } from '@modules/10-common/hooks/useDocumentTitle'
 import WebhooksList from './WebhooksList/WebhooksList'
 import NewWebhookModal from './NewWebhookModal'
 import { STATUS, initialWebhookModalData, Error, WebhookTabIds } from './utils'
@@ -57,12 +58,17 @@ export function Webhooks(): JSX.Element {
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { page, size, searchTerm } = queryParams
+  useDocumentTitle(getString('common.webhooks'))
 
-  const { data, isInitialLoading, isFetching, error, refetch } = useListGitxWebhooksQuery({
+  const { data, isInitialLoading, isFetching, error, refetch } = useListGitxWebhooksRefQuery({
     queryParams: {
       limit: size,
       page: page ? page - 1 : 0,
       webhook_identifier: searchTerm
+    },
+    pathParams: {
+      org: orgIdentifier,
+      project: projectIdentifier
     }
   })
 
@@ -71,7 +77,7 @@ export function Webhooks(): JSX.Element {
     error: webhookUpdateError,
     isLoading: loadingUpdateWebhook,
     mutate: updateWebhook
-  } = useUpdateGitxWebhookMutation({})
+  } = useUpdateGitxWebhookRefMutation({})
 
   const isLoading = isInitialLoading || isFetching || loadingUpdateWebhook
 

@@ -22,9 +22,10 @@ import {
   useToaster
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { GitXWebhookEventResponse, useListGitxWebhookEventsQuery } from '@harnessio/react-ng-manager-client'
+import { GitXWebhookEventResponse, useListGitxWebhookEventsRefQuery } from '@harnessio/react-ng-manager-client'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { DateRange } from '@blueprintjs/datetime'
+import { useParams } from 'react-router-dom'
 import EmptyContentImg from '@common/images/EmptySearchResults.svg'
 import { drawerStates } from '@audit-trail/components/EventSummary/EventSummary'
 import { useStrings } from 'framework/strings'
@@ -33,6 +34,7 @@ import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerS
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { PAGE_TEMPLATE_DEFAULT_PAGE_INDEX } from '@common/constants/Pagination'
 import { EventsDateFilter } from '@pipeline/pages/utils/requestUtils'
+import { ProjectPathProps } from '@modules/10-common/interfaces/RouteInterfaces'
 import { ColumnTimeStamp, ColumnUser, EventId, withWebhookEvents } from '../WebhookEvents/WebhooksEventsListColumns'
 import { CustomColumn } from '../WebhookEvents/WebhooksEventsList'
 import css from './WebhookSyncDrawer.module.scss'
@@ -79,6 +81,7 @@ interface PaginationStateInterface {
 
 export default function WebhookSyncDrawer(props: WebhookSyncDrawerInterface): JSX.Element {
   const { onClose, repoName, filePath } = props
+  const { orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [payload, setPayload] = React.useState<string>('')
   const [dateFilter, setDateFilter] = React.useState<EventsDateFilter>(() => getDefaultDateState())
   const [search, setSearch] = React.useState<string>('')
@@ -94,7 +97,7 @@ export default function WebhookSyncDrawer(props: WebhookSyncDrawerInterface): JS
     isInitialLoading: loading,
     refetch,
     error
-  } = useListGitxWebhookEventsQuery({
+  } = useListGitxWebhookEventsRefQuery({
     queryParams: {
       limit: paginationState.size,
       page: paginationState.index,
@@ -103,6 +106,10 @@ export default function WebhookSyncDrawer(props: WebhookSyncDrawerInterface): JS
       event_start_time: dateFilter.startTime,
       event_end_time: dateFilter.endTime,
       event_identifier: search
+    },
+    pathParams: {
+      org: orgIdentifier,
+      project: projectIdentifier
     }
   })
   const { startTime, endTime } = getDefaultDateState()

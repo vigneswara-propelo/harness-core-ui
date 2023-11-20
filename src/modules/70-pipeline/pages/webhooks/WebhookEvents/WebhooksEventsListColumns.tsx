@@ -75,7 +75,7 @@ export function WebhookIdentifier({
 export function EventStatus({ event_status: eventStatus }: { event_status: string }): JSX.Element {
   const { getString } = useStrings()
   return (
-    <div className={cx(css.status, css[eventStatus.toLowerCase() as keyof typeof css])}>
+    <div className={cx(css.status, css[eventStatus?.toLowerCase() as keyof typeof css])}>
       {iconMap[eventStatus as WebhookEventStatus] ? (
         <Icon {...iconMap[eventStatus as WebhookEventStatus]} className={css.icon} />
       ) : null}

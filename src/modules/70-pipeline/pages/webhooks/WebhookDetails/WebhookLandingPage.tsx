@@ -25,20 +25,22 @@ import {
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import {
-  useGetGitxWebhookQuery,
-  useListGitxWebhookEventsQuery,
-  useUpdateGitxWebhookMutation
+  useGetGitxWebhookRefQuery,
+  useListGitxWebhookEventsRefQuery,
+  useUpdateGitxWebhookRefMutation
 } from '@harnessio/react-ng-manager-client'
 import cx from 'classnames'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
 import EmptyContentImg from '@common/images/EmptySearchResults.svg'
-import { ProjectPathProps, WebhooksPathProps } from '@common/interfaces/RouteInterfaces'
+import { ModulePathParams, ProjectPathProps, WebhooksPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { UseStringsReturn, useStrings } from 'framework/strings'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import routes from '@common/RouteDefinitions'
+import routesv1 from '@common/RouteDefinitions'
+import routesv2 from '@common/RouteDefinitionsV2'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import NewWebhookModal from '../NewWebhookModal'
 import { processFolderPaths, Error } from '../utils'
 import css from './WebhookLandingPage.module.scss'
@@ -97,11 +99,15 @@ const getDetailsContent = ({ folderPaths, repoName }: { folderPaths?: string[]; 
   }
 ]
 export default function WebhookLandingPage(): JSX.Element {
-  const { webhookIdentifier, accountId } = useParams<WebhooksPathProps & ProjectPathProps>()
+  const { webhookIdentifier, accountId, orgIdentifier, projectIdentifier, module } = useParams<
+    WebhooksPathProps & ProjectPathProps & ModulePathParams
+  >()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const history = useHistory()
   const { showSuccess, showError } = useToaster()
+  const { CDS_NAV_2_0: newLeftNav } = useFeatureFlags()
+  const routes = newLeftNav ? routesv2 : routesv1
 
   const {
     data: webhookResponse,
@@ -109,8 +115,12 @@ export default function WebhookLandingPage(): JSX.Element {
     isFetching,
     refetch,
     error: webhooksDetailsError
-  } = useGetGitxWebhookQuery({
-    'gitx-webhook': webhookIdentifier
+  } = useGetGitxWebhookRefQuery({
+    pathParams: {
+      'gitx-webhook': webhookIdentifier,
+      org: orgIdentifier,
+      project: projectIdentifier
+    }
   })
 
   const {
@@ -118,13 +128,17 @@ export default function WebhookLandingPage(): JSX.Element {
     error: webhookUpdateError,
     isLoading: loadingUpdateWebhook,
     mutate: updateWebhook
-  } = useUpdateGitxWebhookMutation({})
+  } = useUpdateGitxWebhookRefMutation({})
 
   const {
     data: webhookEvent,
     isInitialLoading: loadingWebhookEvent,
     error: webhookEventError
-  } = useListGitxWebhookEventsQuery({
+  } = useListGitxWebhookEventsRefQuery({
+    pathParams: {
+      org: orgIdentifier,
+      project: projectIdentifier
+    },
     queryParams: {
       limit: 1,
       page: 0,
@@ -135,7 +149,7 @@ export default function WebhookLandingPage(): JSX.Element {
   React.useEffect(() => {
     if (webhooksDetailsError) {
       showError(getRBACErrorMessage((webhooksDetailsError as Error).message))
-      history.replace(routes.toWebhooks({ accountId }))
+      history.replace(routes.toWebhooks({ accountId, orgIdentifier, projectIdentifier, module }))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [webhooksDetailsError])
@@ -183,6 +197,9 @@ export default function WebhookLandingPage(): JSX.Element {
     history.replace(
       routes.toWebhooksEvents({
         accountId,
+        orgIdentifier,
+        projectIdentifier,
+        module,
         webhookIdentifier
       })
     )
@@ -221,7 +238,7 @@ export default function WebhookLandingPage(): JSX.Element {
           <NGBreadcrumbs
             links={[
               {
-                url: routes.toWebhooks({ accountId }),
+                url: routes.toWebhooks({ accountId, orgIdentifier, projectIdentifier, module }),
                 label: getString('common.webhooks')
               }
             ]}
@@ -241,7 +258,12 @@ export default function WebhookLandingPage(): JSX.Element {
                       checked={webhookResponse.content.is_enabled ?? false}
                       onChange={e => {
                         updateWebhook({
-                          'gitx-webhook': webhookIdentifier,
+                          pathParams: {
+                            'gitx-webhook': webhookIdentifier,
+                            org: orgIdentifier,
+                            project: projectIdentifier
+                          },
+
                           body: {
                             is_enabled: e.currentTarget.checked
                           }

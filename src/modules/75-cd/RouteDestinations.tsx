@@ -682,6 +682,30 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
+      sidebarProps={CDSideNavProps}
+      path={routes.toWebhooks({ ...projectPathProps, ...moduleParams })}
+      pageName={PAGE_NAME.Webhooks}
+    >
+      <Webhooks />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      sidebarProps={ProjectDetailsSideNavProps}
+      path={routes.toWebhooks({ ...projectPathProps })}
+      pageName={PAGE_NAME.Webhooks}
+    >
+      <Webhooks />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      sidebarProps={AccountSideNavProps}
+      path={routes.toWebhooks({ ...orgPathProps })}
+      pageName={PAGE_NAME.Webhooks}
+    >
+      <Webhooks />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
       sidebarProps={AccountSideNavProps}
       path={routes.toWebhooks({ ...accountPathProps })}
       pageName={PAGE_NAME.Webhooks}
@@ -690,11 +714,59 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       exact
+      sidebarProps={CDSideNavProps}
+      path={routes.toWebhooksEvents({ ...projectPathProps, ...moduleParams })}
+      pageName={PAGE_NAME.WebhookEvents}
+    >
+      <WebhookEvents />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      sidebarProps={ProjectDetailsSideNavProps}
+      path={routes.toWebhooksEvents({ ...projectPathProps })}
+      pageName={PAGE_NAME.WebhookEvents}
+    >
+      <WebhookEvents />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      sidebarProps={AccountSideNavProps}
+      path={routes.toWebhooksEvents({ ...orgPathProps })}
+      pageName={PAGE_NAME.WebhookEvents}
+    >
+      <WebhookEvents />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
       sidebarProps={AccountSideNavProps}
       path={routes.toWebhooksEvents({ ...accountPathProps })}
       pageName={PAGE_NAME.WebhookEvents}
     >
       <WebhookEvents />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      sidebarProps={CDSideNavProps}
+      path={routes.toWebhooksDetails({ ...projectPathProps, ...moduleParams, ...webhooksPathProps })}
+      pageName={PAGE_NAME.WebhooksDetails}
+    >
+      <WebhookLandingPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      sidebarProps={ProjectDetailsSideNavProps}
+      path={routes.toWebhooksDetails({ ...projectPathProps, ...webhooksPathProps })}
+      pageName={PAGE_NAME.WebhooksDetails}
+    >
+      <WebhookLandingPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      sidebarProps={AccountSideNavProps}
+      path={routes.toWebhooksDetails({ ...orgPathProps, ...webhooksPathProps })}
+      pageName={PAGE_NAME.WebhooksDetails}
+    >
+      <WebhookLandingPage />
     </RouteWithLayout>
     <RouteWithLayout
       exact

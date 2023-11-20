@@ -7,7 +7,6 @@
 
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { IconProps, SelectOption } from '@harness/uicore'
-import { Scope } from '@common/interfaces/SecretsInterface'
 import { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { StringsMap } from 'stringTypes'
 import { StringKeys } from 'framework/strings'
@@ -23,7 +22,6 @@ export interface AddWebhookModalData {
 export interface NewWebhookModalProps {
   isEdit: boolean
   initialData: AddWebhookModalData
-  entityScope?: Scope
   closeModal: () => void
 }
 export function processFolderPaths(folderPaths: string[]): { id: string; value: string }[] {

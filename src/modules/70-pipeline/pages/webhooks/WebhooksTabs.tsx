@@ -25,7 +25,7 @@ export default function WebhooksTabs(props: WebhooksTabsProps): React.ReactEleme
   const { defaultTabId } = props
   const [selectedTabId, setSelectedTabId] = useState<WebhookTabIds>(defaultTabId)
   const { getString } = useStrings()
-  const { accountId } = useParams<ProjectPathProps & ModulePathParams>()
+  const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { CDS_NAV_2_0: newLeftNav } = useFeatureFlags()
   const routes = newLeftNav ? routesv2 : routesv1
   const history = useHistory()
@@ -36,9 +36,9 @@ export default function WebhooksTabs(props: WebhooksTabsProps): React.ReactEleme
       selectedTabId={selectedTabId}
       onChange={newTabId => {
         if (newTabId === WebhookTabIds.ListTab) {
-          history.push(routes.toWebhooks({ accountId }))
+          history.push(routes.toWebhooks({ accountId, orgIdentifier, projectIdentifier, module }))
         } else {
-          history.push(routes.toWebhooksEvents({ accountId }))
+          history.push(routes.toWebhooksEvents({ accountId, orgIdentifier, projectIdentifier, module }))
         }
         setSelectedTabId(newTabId as WebhookTabIds)
       }}

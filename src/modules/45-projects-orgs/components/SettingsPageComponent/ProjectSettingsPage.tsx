@@ -42,7 +42,8 @@ export const ProjectSettingsPage: React.FC = () => {
     PL_DISCOVERY_ENABLE,
     USE_OLD_GIT_SYNC,
     CVNG_TEMPLATE_MONITORED_SERVICE,
-    PL_CENTRAL_NOTIFICATIONS
+    PL_CENTRAL_NOTIFICATIONS,
+    PIE_GIT_BI_DIRECTIONAL_SYNC
   } = useFeatureFlags()
   const { currentModule, isGitSimplificationEnabled, isGitSyncEnabled, gitSyncEnabledOnlyForFF } = useAppStore()
   const module = moduleFromProps || currentModule
@@ -85,6 +86,17 @@ export const ProjectSettingsPage: React.FC = () => {
     lazy: false
   })
   const isServiceOverridesEnabled = CDS_SERVICE_OVERRIDES_2_0 && enableServiceOverrideSettings?.data?.value === 'true'
+
+  //Webhooks
+  const { data: enableBidirectionalSyncSettings } = useGetSettingValue({
+    identifier: SettingType.ENABLE_BI_DIRECTIONAL_SYNC,
+    queryParams: {
+      accountIdentifier: accountId
+    },
+    lazy: !PIE_GIT_BI_DIRECTIONAL_SYNC
+  })
+
+  const isBidirectionalSyncEnabled = enableBidirectionalSyncSettings?.data?.value === 'true'
 
   return (
     <>
@@ -234,6 +246,13 @@ export const ProjectSettingsPage: React.FC = () => {
               id={SettingsResources.CETCriticalEvents}
               icon={'connectors-blue'}
               route={routesV2.toCETCriticalEvents({ accountId, orgIdentifier, projectIdentifier, module: 'cet' })}
+            />
+            <SettingsResourceCard
+              label={<String stringID="common.webhooks" />}
+              hidden={!isBidirectionalSyncEnabled}
+              id={SettingsResources.Webhooks}
+              icon={'code-webhook'}
+              route={routesV2.toWebhooks({ accountId, orgIdentifier, projectIdentifier, module })}
             />
           </SettingsPage.group>
           <SettingsPage.group
