@@ -85,6 +85,7 @@ export interface RemoteVar {
   varFile?: {
     identifier: string
     spec?: {
+      optional?: boolean
       store?: {
         type?: string
         spec?: {

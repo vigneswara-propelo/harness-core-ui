@@ -22,6 +22,7 @@ import {
 import { useStrings } from 'framework/strings'
 import List from '@pipeline/components/List/List'
 import { isValueRuntimeInput } from '@common/utils/utils'
+import { FormMultiTypeCheckboxField } from '@common/components'
 import { Connectors } from '@platform/connectors/constants'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -176,6 +177,20 @@ function TFRemoteSectionRef(
           multiTextInputProps={{
             expressions,
             allowableTypes
+          }}
+        />
+      )}
+      {getMultiTypeFromValue(remoteVar?.varFile?.spec?.optional) === MultiTypeInputType.RUNTIME && (
+        <FormMultiTypeCheckboxField
+          name={`${path}.spec.${fieldPath}.spec.varFiles[${index}].varFile.spec.optional`}
+          label={getString('projectsOrgs.optional')}
+          multiTypeTextbox={{ expressions, allowableTypes }}
+          enableConfigureOptions={true}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          tooltipProps={{
+            dataTooltipId: 'varFileOptional'
           }}
         />
       )}

@@ -18,7 +18,8 @@ import {
   MultiTypeInputType,
   SelectOption,
   StepProps,
-  Text
+  Text,
+  Container
 } from '@harness/uicore'
 import React from 'react'
 import { Color } from '@harness/design-system'
@@ -33,6 +34,9 @@ import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+
+import { FormMultiTypeCheckboxField } from '@common/components'
 
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelper'
@@ -56,6 +60,7 @@ export const RemoteWizard: React.FC<StepProps<any> & RemoteWizardProps> = ({
   allowableTypes
 }) => {
   const { getString } = useStrings()
+  const { CDS_TERRAFORM_SUPPORT_OPTIONAL_VAR_FILE_PATHS_NG } = useFeatureFlags()
   const prevStepDataSpec = prevStepData?.varFile?.spec?.store?.spec
   const initialValues = isEditMode
     ? {
@@ -63,6 +68,7 @@ export const RemoteWizard: React.FC<StepProps<any> & RemoteWizardProps> = ({
           identifier: prevStepData?.varFile?.identifier,
           type: TerraformStoreTypes.Remote,
           spec: {
+            optional: prevStepData?.varFile?.spec.optional,
             store: {
               spec: {
                 gitFetchType: prevStepDataSpec?.gitFetchType,
@@ -85,6 +91,7 @@ export const RemoteWizard: React.FC<StepProps<any> & RemoteWizardProps> = ({
         varFile: {
           type: TerraformStoreTypes.Remote,
           spec: {
+            optional: false,
             store: {
               spec: {
                 gitFetchType: 'Branch',
@@ -125,6 +132,7 @@ export const RemoteWizard: React.FC<StepProps<any> & RemoteWizardProps> = ({
               type: payload.varFile.type,
               identifier: payload.varFile.identifier,
               spec: {
+                optional: payload?.varFile?.spec.optional || undefined,
                 store: {
                   /* istanbul ignore next */
                   type: prevStepData?.selectedType,
@@ -396,6 +404,24 @@ export const RemoteWizard: React.FC<StepProps<any> & RemoteWizardProps> = ({
                     />
                   )}
                 </div>
+                {CDS_TERRAFORM_SUPPORT_OPTIONAL_VAR_FILE_PATHS_NG && (
+                  <Container className={cx(stepCss.formGroup, stepCss.md)}>
+                    <FormMultiTypeCheckboxField
+                      name={'varFile.spec.optional'}
+                      label={getString('projectsOrgs.optional')}
+                      multiTypeTextbox={{
+                        expressions,
+                        allowableTypes,
+                        disabled: isReadonly
+                      }}
+                      tooltipProps={{
+                        dataTooltipId: 'varFileOptional'
+                      }}
+                      disabled={isReadonly}
+                      configureOptionsProps={{ hideExecutionTimeField: true }}
+                    />
+                  </Container>
+                )}
               </div>
 
               <Layout.Horizontal spacing="xxlarge">

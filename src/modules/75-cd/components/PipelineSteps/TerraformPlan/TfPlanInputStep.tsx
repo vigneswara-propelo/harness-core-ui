@@ -46,6 +46,7 @@ export default function TfPlanInputStep(
     orgIdentifier: string
     accountId: string
   }>()
+
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const fieldPath = inputSetData?.template?.spec?.configuration ? 'configuration' : 'cloudCliConfiguration'
   const cmdFlagPath = get(inputSetData?.template?.spec, `${fieldPath}.commandFlags`)

@@ -26,6 +26,7 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
 import { useQueryParams } from '@common/hooks'
+import { FormMultiTypeCheckboxField } from '@common/components'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
@@ -50,6 +51,7 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [connectorRepos, setConnectorRepos] = useState<SelectOption[]>()
   const { readonly, initialValues, path } = props
+
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
     orgIdentifier: string
@@ -166,6 +168,20 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
           multiTextInputProps={{
             expressions,
             allowableTypes
+          }}
+        />
+      )}
+      {getMultiTypeFromValue(remoteVar?.varFile?.spec?.optional) === MultiTypeInputType.RUNTIME && (
+        <FormMultiTypeCheckboxField
+          name={`${path}.spec.${fieldPath}.spec.varFiles[${index}].varFile.spec.optional`}
+          label={getString('projectsOrgs.optional')}
+          multiTypeTextbox={{ expressions, allowableTypes }}
+          enableConfigureOptions={true}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          tooltipProps={{
+            dataTooltipId: 'varFileOptional'
           }}
         />
       )}
