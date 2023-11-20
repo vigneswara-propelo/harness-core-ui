@@ -66,6 +66,11 @@ export interface ServiceNowCreateData extends StepElementConfig {
   }
 }
 
+export enum SERVICENOW_TYPE {
+  CREATE = 'create',
+  UPDATE = 'update'
+}
+
 export interface ServiceNowCreateVariableListModeProps {
   variablesData: ServiceNowCreateData
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']

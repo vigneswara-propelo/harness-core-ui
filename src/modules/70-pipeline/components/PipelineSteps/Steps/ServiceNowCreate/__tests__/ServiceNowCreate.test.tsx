@@ -171,6 +171,11 @@ describe('ServiceNow Create tests', () => {
     await waitFor(() => {
       expect(queryByText('pipeline.serviceNowApprovalStep.validations.ticketType')).toBeTruthy()
     })
+    fireEvent.click(getByText('pipeline.serviceNowCreateStep.fieldType.createFromTemplate'))
+    act(() => ref.current?.submitForm()!)
+    await waitFor(() => {
+      expect(queryByText('pipeline.serviceNowCreateStep.validations.templateName')).toBeTruthy()
+    })
   })
 
   test('Open a saved step - edit stage view', async () => {

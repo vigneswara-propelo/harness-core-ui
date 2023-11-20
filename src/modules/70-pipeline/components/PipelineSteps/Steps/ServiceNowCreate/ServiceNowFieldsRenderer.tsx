@@ -16,7 +16,7 @@ import { FormMultiTypeTextAreaField } from '@common/components'
 import type { ServiceNowFieldNG } from 'services/cd-ng'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import { setServiceNowFieldAllowedValuesOptions } from './helper'
-import type { ServiceNowFieldNGWithValue } from './types'
+import { ServiceNowFieldNGWithValue, SERVICENOW_TYPE } from './types'
 import css from './ServiceNowCreate.module.scss'
 
 export type TicketFieldDetailsMap = {
@@ -30,6 +30,7 @@ export interface ServiceNowFieldsRendererProps {
   onRefresh?: (index: number, selectedField: ServiceNowFieldNGWithValue, valueToUpdate: ServiceNowFieldValueNG) => void
   allowableTypes: AllowedTypes
   ticketFieldDetailsMap?: TicketFieldDetailsMap
+  serviceNowType?: SERVICENOW_TYPE
 }
 
 interface MappedComponentInterface {
@@ -61,6 +62,9 @@ function GetMappedFieldComponent({ selectedField, props, expressions, index }: M
   }, [selectedField])
 
   const showExpandableTextField = () => defaultTo(selectedField?.schema?.multilineText, false)
+  const isFieldDisabled = isApprovalStepFieldDisabled(
+    props.readonly || (props.serviceNowType === SERVICENOW_TYPE.UPDATE && selectedField.readOnly)
+  )
 
   if (showMultiTypeField()) {
     return (
@@ -69,7 +73,7 @@ function GetMappedFieldComponent({ selectedField, props, expressions, index }: M
         label={selectedField.name}
         name={`spec.selectedFields[${index}].value`}
         placeholder={selectedField.name}
-        disabled={isApprovalStepFieldDisabled(props.readonly || selectedField.readOnly)}
+        disabled={isFieldDisabled}
         className={cx(css.multiSelect, css.md)}
         multiTypeInputProps={{ allowableTypes: props.allowableTypes, expressions }}
       />
@@ -81,7 +85,7 @@ function GetMappedFieldComponent({ selectedField, props, expressions, index }: M
         name={`spec.selectedFields[${index}].value`}
         placeholder={selectedField.name}
         multiTypeTextArea={{ enableConfigureOptions: false, expressions, allowableTypes: props.allowableTypes }}
-        disabled={isApprovalStepFieldDisabled(props.readonly || selectedField.readOnly)}
+        disabled={isFieldDisabled}
         className={css.md}
       />
     )
@@ -89,7 +93,7 @@ function GetMappedFieldComponent({ selectedField, props, expressions, index }: M
     return (
       <FormInput.MultiTextInput
         label={selectedField.name}
-        disabled={isApprovalStepFieldDisabled(props.readonly || selectedField.readOnly)}
+        disabled={isFieldDisabled}
         name={`spec.selectedFields[${index}].value`}
         placeholder={selectedField.name}
         className={css.deploymentViewMedium}

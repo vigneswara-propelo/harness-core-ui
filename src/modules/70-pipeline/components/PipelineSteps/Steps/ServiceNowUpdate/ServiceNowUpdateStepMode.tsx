@@ -63,7 +63,8 @@ import {
   FieldType,
   ServiceNowCreateFieldType,
   ServiceNowFieldNGWithValue,
-  ServiceNowStaticFields
+  ServiceNowStaticFields,
+  SERVICENOW_TYPE
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types'
 import {
   convertTemplateFieldsForDisplay,
@@ -749,6 +750,7 @@ function FormContent({
                       })
                     }
                   }}
+                  serviceNowType={SERVICENOW_TYPE.UPDATE}
                   allowableTypes={allowableTypes}
                 />
 
