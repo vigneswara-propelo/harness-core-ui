@@ -12,3 +12,25 @@ exports[`<ExecutionPolicyEvaluationsView /> tests Should render empty when gover
 `;
 
 exports[`<ExecutionPolicyEvaluationsView /> tests Should render empty when governanceMetadata is null 1`] = `<div />`;
+
+exports[`<ExecutionPolicyEvaluationsView /> tests Should render empty when iacm data status of error 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main"
+    style="width: 100%; height: 100%;"
+  >
+    <div />
+  </div>
+</div>
+`;
+
+exports[`<ExecutionPolicyEvaluationsView /> tests Should render empty when iacm data status of warning 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main"
+    style="width: 100%; height: 100%;"
+  >
+    <div />
+  </div>
+</div>
+`;
