@@ -189,24 +189,25 @@ export default function SEISideNav(): React.ReactElement {
   }, [history.location.pathname])
 
   return (
-    <Layout.Vertical spacing="small" className={css.seiSideNav}>
-      {hasAccountAccess ? (
-        <Tabs
-          id={'seiNavigationTabs'}
-          selectedTabId={selectedTabId}
-          tabList={[
-            {
-              id: 'project',
-              title: getString('projectLabel'),
-              panel: projectTabContent
-            },
-            { id: 'account', title: getString('account'), panel: accountTabContent }
-          ]}
-          onChange={nextTab => setSelectedTabId(nextTab as string)}
-        />
-      ) : (
-        projectTabContent
-      )}
-    </Layout.Vertical>
+    <Container className={css.seiSideNav}>
+      <Tabs
+        id={'seiNavigationTabs'}
+        selectedTabId={selectedTabId}
+        tabList={[
+          {
+            id: 'project',
+            title: <Text color="white">{getString('projectLabel')}</Text>,
+            panel: projectTabContent
+          },
+          {
+            id: 'account',
+            disabled: !hasAccountAccess,
+            title: <Text color="white">{getString('account')}</Text>,
+            panel: accountTabContent
+          }
+        ]}
+        onChange={nextTab => setSelectedTabId(nextTab as string)}
+      />
+    </Container>
   )
 }
