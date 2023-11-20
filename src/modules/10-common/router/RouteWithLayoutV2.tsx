@@ -15,7 +15,7 @@ interface LayoutContextProps {
   setDisableSideNavCollapse?: (disable: boolean) => void
 }
 
-const LayoutContext = React.createContext<LayoutContextProps>({
+export const LayoutContext = React.createContext<LayoutContextProps>({
   sideNavState: SIDE_NAV_STATE.EXPANDED,
   setSideNavState: () => void 0
 })
