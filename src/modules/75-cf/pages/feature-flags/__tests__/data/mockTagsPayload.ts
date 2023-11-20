@@ -1,3 +1,5 @@
+import type { Tag } from 'services/cf'
+
 const mockTagsPayload = {
   itemCount: 7,
   pageCount: 1,
@@ -12,6 +14,14 @@ const mockTagsPayload = {
     { identifier: 'tag_6', name: 'tag6' },
     { identifier: 'tag_7', name: 'tag7' }
   ]
+}
+
+export function generateTags(numOfTags: number): Tag[] {
+  const tags = []
+  for (let i = 0; i <= numOfTags; i++) {
+    tags.push({ name: `tag${i}`, identifier: `tag_${i}` })
+  }
+  return tags
 }
 
 export default mockTagsPayload

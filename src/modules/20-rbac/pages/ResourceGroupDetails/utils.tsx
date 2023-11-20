@@ -36,7 +36,8 @@ export enum SelectorScope {
 
 export const resourceAttributeMap = new Map<ResourceType, string>([
   [ResourceType.CONNECTOR, 'category'],
-  [ResourceType.ENVIRONMENT, 'type']
+  [ResourceType.ENVIRONMENT, 'type'],
+  [ResourceType.FEATUREFLAG, 'tag']
 ])
 
 export type ResourceSelectorValue = string[] | AttributeFilter | RbacResourceGroupTypes

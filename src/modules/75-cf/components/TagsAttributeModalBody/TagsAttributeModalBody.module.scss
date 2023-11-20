@@ -1,0 +1,12 @@
+.modalBody {
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+}
+
+.modalContent {
+  width: 100%;
+  height: -webkit-fill-available;
+}

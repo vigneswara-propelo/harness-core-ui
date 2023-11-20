@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { FC, ReactElement } from 'react'
 import { Redirect, Switch, useParams } from 'react-router-dom'
 import routes from '@common/RouteDefinitionsV2'
 import type { AccountPathProps, ProjectPathProps, Module } from '@common/interfaces/RouteInterfaces'
@@ -46,6 +46,7 @@ import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStor
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
 import TriggersRouteDestinations from '@triggers/TriggersRouteDestinations'
+import TagsAttributeModalBody from './components/TagsAttributeModalBody/TagsAttributeModalBody'
 import { registerFeatureFlagPipelineStage } from './pages/pipeline-studio/views/FeatureFlagStage'
 import { registerFlagConfigurationPipelineStep } from './components/PipelineSteps'
 import { TargetsPage } from './pages/target-management/targets/TargetsPage'
@@ -133,6 +134,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.FEATUREFLAG, {
   label: 'cf.rbac.featureflag.label',
   labelSingular: 'common.moduleTitles.cf',
   category: ResourceCategory.FEATUREFLAG_FUNCTIONS,
+  addAttributeModalBody: props => <TagsAttributeModalBody {...props} />,
   permissionLabels: {
     [PermissionIdentifier.TOGGLE_FF_FEATUREFLAG]: <String stringID="cf.rbac.featureflag.toggle" />,
     [PermissionIdentifier.EDIT_FF_FEATUREFLAG]: <String stringID="rbac.permissionLabels.createEdit" />,
@@ -150,14 +152,14 @@ RbacFactory.registerResourceTypeHandler(ResourceType.TARGETGROUP, {
   }
 })
 
-const RedirectToTargets = (): React.ReactElement => {
+const RedirectToTargets = (): ReactElement => {
   const { withActiveEnvironment } = useActiveEnvironment()
   const params = useParams<ProjectPathProps & AccountPathProps>()
 
   return <Redirect to={withActiveEnvironment(routes.toCFTargets(params))} />
 }
 
-const RedirectToCFProject = (): React.ReactElement => {
+const RedirectToCFProject = (): ReactElement => {
   const params = useParams<ProjectPathProps>()
   const { selectedProject } = useAppStore()
 
@@ -171,7 +173,7 @@ const RedirectToCFProject = (): React.ReactElement => {
 registerFeatureFlagPipelineStage()
 registerFlagConfigurationPipelineStep()
 
-const CFRedirect: React.FC = () => {
+const CFRedirect: FC = () => {
   const { scope, params } = useGetSelectedScope()
   const { accountId } = useParams<AccountPathProps>()
 
@@ -199,7 +201,7 @@ const CFRedirect: React.FC = () => {
   return <CFHomePage />
 }
 
-const CFRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
+const CFRouteDestinations = (mode = NAV_MODE.MODULE): ReactElement => {
   const {
     FFM_3959_FF_MFE_Environment_Detail,
     FFM_5939_MFE_TARGET_GROUPS_LISTING,

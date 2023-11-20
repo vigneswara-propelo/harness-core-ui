@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC } from 'react'
+import React, { FC, ReactElement } from 'react'
 import { Redirect, Route, useParams } from 'react-router-dom'
 import { RouteWithLayout } from '@common/router'
 import routes from '@common/RouteDefinitions'
@@ -54,6 +54,7 @@ import { TemplateStudio } from '@templates-library/components/TemplateStudio/Tem
 import type { AuditEventData, ResourceDTO } from 'services/audit'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import { PipelineDeploymentList } from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
+import TagsAttributeModalBody from './components/TagsAttributeModalBody/TagsAttributeModalBody'
 import { registerFeatureFlagPipelineStage } from './pages/pipeline-studio/views/FeatureFlagStage'
 import { registerFlagConfigurationPipelineStep } from './components/PipelineSteps'
 import { TargetsPage } from './pages/target-management/targets/TargetsPage'
@@ -84,13 +85,13 @@ featureFactory.registerFeaturesByModule('cf', {
   }
 })
 
-const RedirectToCFHome = (): React.ReactElement => {
+const RedirectToCFHome = (): ReactElement => {
   const params = useParams<AccountPathProps>()
 
   return <Redirect to={routes.toCFHome(params)} />
 }
 
-const RedirectToCFProject = (): React.ReactElement => {
+const RedirectToCFProject = (): ReactElement => {
   const params = useParams<ProjectPathProps>()
   const { selectedProject } = useAppStore()
 
@@ -101,7 +102,7 @@ const RedirectToCFProject = (): React.ReactElement => {
   }
 }
 
-const RedirectToTargets = (): React.ReactElement => {
+const RedirectToTargets = (): ReactElement => {
   const { withActiveEnvironment } = useActiveEnvironment()
   const params = useParams<ProjectPathProps & AccountPathProps>()
 
@@ -169,6 +170,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.FEATUREFLAG, {
   label: 'cf.rbac.featureflag.label',
   labelSingular: 'common.moduleTitles.cf',
   category: ResourceCategory.FEATUREFLAG_FUNCTIONS,
+  addAttributeModalBody: props => <TagsAttributeModalBody {...props} />,
   permissionLabels: {
     [PermissionIdentifier.TOGGLE_FF_FEATUREFLAG]: <String stringID="cf.rbac.featureflag.toggle" />,
     [PermissionIdentifier.EDIT_FF_FEATUREFLAG]: <String stringID="rbac.permissionLabels.createEdit" />,
