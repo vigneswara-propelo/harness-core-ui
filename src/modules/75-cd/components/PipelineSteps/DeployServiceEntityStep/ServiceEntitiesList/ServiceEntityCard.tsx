@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Draggable } from 'react-beautiful-dnd'
 import {
   Button,
@@ -25,6 +25,7 @@ import { useFormikContext } from 'formik'
 import { defaultTo, get, isNil, pick, set } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
+import routes from '@common/RouteDefinitions'
 
 import { getStepTypeByDeploymentType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { deploymentIconMap } from '@cd/utils/deploymentUtils'
@@ -36,13 +37,14 @@ import type { EntityGitDetails, NGServiceV2InfoConfig, ServiceSpec } from 'servi
 import { StageFormContextProvider } from '@pipeline/context/StageFormContext'
 
 import { useDeepCompareEffect } from '@common/hooks'
-import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import { StoreMetadata, StoreType } from '@modules/10-common/constants/GitSyncTypes'
 import GitRemoteDetails from '@modules/10-common/components/GitRemoteDetails/GitRemoteDetails'
+import { getRemoteServiceQueryParams } from '@modules/75-cd/components/Services/utils/ServiceUtils'
 import type { FormState, ServiceData } from '../DeployServiceEntityUtils'
 import css from './ServiceEntitiesList.module.scss'
 
@@ -99,7 +101,7 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
   const { storeType, connectorRef } = storeMetadata
   const type = service.serviceDefinition?.type as ServiceDeploymentType
 
-  const { accountId } = useParams<PipelinePathProps>()
+  const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<PipelinePathProps>>()
 
   useDeepCompareEffect(() => {
     setTemplate(serviceInputs?.serviceDefinition?.spec)
@@ -144,9 +146,20 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
                       {type ? <Icon name={deploymentIconMap[type]} size={24} /> : null}
                     </span>
                     <span className={css.serviceNameWrapper}>
-                      <Text color={Color.PRIMARY_7} font="normal" lineClamp={1}>
-                        {service.name}
-                      </Text>
+                      <Link
+                        target="_blank"
+                        to={`${routes.toServiceStudio({
+                          accountId,
+                          orgIdentifier,
+                          projectIdentifier,
+                          serviceId: service.identifier,
+                          module
+                        })}?${getRemoteServiceQueryParams(storeMetadata)}`}
+                      >
+                        <Text color={Color.PRIMARY_7} font="normal" lineClamp={1}>
+                          {service.name}
+                        </Text>
+                      </Link>
                       <Text color={Color.GREY_500} font="small">
                         {getString('idLabel', { id: service.identifier })}
                       </Text>

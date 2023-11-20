@@ -136,7 +136,8 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
                 {servicesData.map((row, index: number) => {
                   const serviceStoreMetadata: StoreMetadata = {
                     storeType: row?.storeType,
-                    connectorRef: row?.connectorRef
+                    connectorRef: row?.connectorRef,
+                    repoName: row?.entityGitDetails?.repoName
                   }
                   return (
                     <ServiceEntityCard

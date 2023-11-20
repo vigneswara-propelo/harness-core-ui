@@ -237,12 +237,17 @@ exports[`DeployServiceEntityWidget - single service tests user can delete select
                     <span
                       class="serviceNameWrapper"
                     >
-                      <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
-                        style="--text-line-clamp: 1;"
+                      <a
+                        href="/account/undefined/services/svc_3"
+                        target="_blank"
                       >
-                        Service 3
-                      </p>
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                          style="--text-line-clamp: 1;"
+                        >
+                          Service 3
+                        </p>
+                      </a>
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-small"
                       >
@@ -411,12 +416,17 @@ exports[`DeployServiceEntityWidget - single service tests user can delete select
                     <span
                       class="serviceNameWrapper"
                     >
-                      <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
-                        style="--text-line-clamp: 1;"
+                      <a
+                        href="/account/undefined/services/svc_2"
+                        target="_blank"
                       >
-                        Service 2
-                      </p>
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                          style="--text-line-clamp: 1;"
+                        >
+                          Service 2
+                        </p>
+                      </a>
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-small"
                       >
@@ -541,12 +551,17 @@ exports[`DeployServiceEntityWidget - single service tests user can delete select
                     <span
                       class="serviceNameWrapper"
                     >
-                      <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
-                        style="--text-line-clamp: 1;"
+                      <a
+                        href="/account/undefined/services/svc_1"
+                        target="_blank"
                       >
-                        Service 1
-                      </p>
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                          style="--text-line-clamp: 1;"
+                        >
+                          Service 1
+                        </p>
+                      </a>
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-small"
                       >
@@ -914,12 +929,17 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
                     <span
                       class="serviceNameWrapper"
                     >
-                      <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
-                        style="--text-line-clamp: 1;"
+                      <a
+                        href="/account/undefined/services/svc_3"
+                        target="_blank"
                       >
-                        Service 3
-                      </p>
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                          style="--text-line-clamp: 1;"
+                        >
+                          Service 3
+                        </p>
+                      </a>
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-small"
                       >
@@ -1088,12 +1108,17 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
                     <span
                       class="serviceNameWrapper"
                     >
-                      <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
-                        style="--text-line-clamp: 1;"
+                      <a
+                        href="/account/undefined/services/svc_2"
+                        target="_blank"
                       >
-                        Service 2
-                      </p>
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                          style="--text-line-clamp: 1;"
+                        >
+                          Service 2
+                        </p>
+                      </a>
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-small"
                       >
@@ -1218,12 +1243,17 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
                     <span
                       class="serviceNameWrapper"
                     >
-                      <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
-                        style="--text-line-clamp: 1;"
+                      <a
+                        href="/account/undefined/services/svc_1"
+                        target="_blank"
                       >
-                        Service 1
-                      </p>
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                          style="--text-line-clamp: 1;"
+                        >
+                          Service 1
+                        </p>
+                      </a>
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-small"
                       >
@@ -2175,12 +2205,17 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
                     <span
                       class="serviceNameWrapper"
                     >
-                      <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
-                        style="--text-line-clamp: 1;"
+                      <a
+                        href="/account/undefined/services/svc_3"
+                        target="_blank"
                       >
-                        Service 3
-                      </p>
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                          style="--text-line-clamp: 1;"
+                        >
+                          Service 3
+                        </p>
+                      </a>
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-small"
                       >
@@ -2305,12 +2340,17 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
                     <span
                       class="serviceNameWrapper"
                     >
-                      <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
-                        style="--text-line-clamp: 1;"
+                      <a
+                        href="/account/undefined/services/svc_1"
+                        target="_blank"
                       >
-                        Service 1
-                      </p>
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                          style="--text-line-clamp: 1;"
+                        >
+                          Service 1
+                        </p>
+                      </a>
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-small"
                       >
@@ -2435,12 +2475,17 @@ exports[`DeployServiceEntityWidget - single service tests user can select a serv
                     <span
                       class="serviceNameWrapper"
                     >
-                      <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
-                        style="--text-line-clamp: 1;"
+                      <a
+                        href="/account/undefined/services/svc_2"
+                        target="_blank"
                       >
-                        Service 2
-                      </p>
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-normal"
+                          style="--text-line-clamp: 1;"
+                        >
+                          Service 2
+                        </p>
+                      </a>
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-small"
                       >
