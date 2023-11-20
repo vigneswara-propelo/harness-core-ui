@@ -8,7 +8,7 @@
 
 import { Color, FontVariation } from '@harness/design-system'
 import { Button, ButtonSize, ButtonVariation, Icon, Layout, Text } from '@harness/uicore'
-import React from 'react'
+import React, { FC } from 'react'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance, UseTableCellProps } from 'react-table'
 import { defaultTo, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -174,17 +174,30 @@ export const TypeCell: CellType = ({ row }) => {
 }
 
 export const SLSAVerificationCell: CellType = ({ row }) => {
-  const { getString } = useStrings()
   const data = row.original
 
-  const verifyAttestationStatus = (): string => {
-    return `${getString('pipeline.attestationVerification')}: ${
-      data.provenance ? getString('passed') : getString('failed')
-    }`
-  }
+  const slsaPolicyOutcomeStatus = get(data.node, `outcomes.policyOutput.status`, undefined)
 
-  const getPolicyEvaluationStatus = (): string => {
-    const status: EvaluationStatus | undefined = get(data.node, `outcomes.policyOutput.status`, undefined)
+  return (
+    <SLSAVerification
+      hasSlsaVerification={data.node?.stepType === StepType.SlsaVerification}
+      slsaPolicyOutcomeStatus={slsaPolicyOutcomeStatus}
+      provenance={data.provenance}
+    />
+  )
+}
+
+// common component shared to MFE
+export const SLSAVerification: FC<{
+  hasSlsaVerification: boolean
+  slsaPolicyOutcomeStatus: string | undefined
+  provenance: string | undefined
+}> = ({ hasSlsaVerification, slsaPolicyOutcomeStatus, provenance }) => {
+  const { getString } = useStrings()
+
+  const status = slsaPolicyOutcomeStatus as EvaluationStatus
+
+  const getPolicyEvaluationStatusLabel = (): string => {
     switch (status) {
       case EvaluationStatus.ERROR:
         return getString('failed')
@@ -198,8 +211,7 @@ export const SLSAVerificationCell: CellType = ({ row }) => {
     }
   }
 
-  const getPolicyEvaluationStatusLabel = (): ExecutionStatus => {
-    const status: EvaluationStatus | undefined = get(data.node, `outcomes.policyOutput.status`, undefined)
+  const getPolicyEvaluationStatus = (): ExecutionStatus => {
     switch (status) {
       case EvaluationStatus.ERROR:
         return 'Errored'
@@ -213,11 +225,11 @@ export const SLSAVerificationCell: CellType = ({ row }) => {
     }
   }
 
-  return data.node?.stepType === StepType.SlsaVerification ? (
+  return hasSlsaVerification ? (
     <Layout.Vertical spacing="small" flex={{ alignItems: 'flex-start' }}>
-      <ExecutionStatusLabel label={getPolicyEvaluationStatus()} status={getPolicyEvaluationStatusLabel()} />
+      <ExecutionStatusLabel label={getPolicyEvaluationStatusLabel()} status={getPolicyEvaluationStatus()} />
       <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600} lineClamp={1}>
-        {verifyAttestationStatus()}
+        {getString('pipeline.attestationVerification')}: {provenance ? getString('passed') : getString('failed')}
       </Text>
     </Layout.Vertical>
   ) : (

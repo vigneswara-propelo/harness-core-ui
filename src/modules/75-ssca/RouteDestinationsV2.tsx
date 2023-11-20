@@ -8,7 +8,7 @@
 import React, { lazy } from 'react'
 import { Redirect, Switch, useParams } from 'react-router-dom'
 import routes from '@common/RouteDefinitionsV2'
-import { Duration } from '@common/components'
+import { Duration, TimeAgoPopover } from '@common/components'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useQueryParamsOptions } from '@common/hooks/useQueryParams'
 import { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
@@ -19,6 +19,7 @@ import { Scope } from 'framework/types/types'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
 import { PolicyViolationsDrawer } from '@modules/70-pipeline/pages/execution/ExecutionArtifactsView/PolicyViolations/PolicyViolationsDrawer'
+import { SLSAVerification } from '@modules/70-pipeline/pages/execution/ExecutionArtifactsView/ArtifactsTable/ArtifactTableCells'
 
 const module: Module = 'ssca'
 
@@ -78,7 +79,7 @@ const SSCARouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
       >
         <ChildAppMounter
           ChildApp={RemoteSSCAApp}
-          customComponents={{ Duration, PolicyViolationsDrawer }}
+          customComponents={{ Duration, PolicyViolationsDrawer, SLSAVerification, TimeAgoPopover }}
           customHooks={{ useQueryParams, useUpdateQueryParams, useQueryParamsOptions }}
         />
       </RouteWithContext>
@@ -86,7 +87,7 @@ const SSCARouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
       <RouteWithContext path={[routes.toSSCAArtifacts({ ...projectPathProps, module, mode })]}>
         <ChildAppMounter
           ChildApp={RemoteSSCAApp}
-          customComponents={{ Duration, PolicyViolationsDrawer }}
+          customComponents={{ Duration, PolicyViolationsDrawer, SLSAVerification, TimeAgoPopover }}
           customHooks={{ useQueryParams, useUpdateQueryParams, useQueryParamsOptions }}
         />
       </RouteWithContext>

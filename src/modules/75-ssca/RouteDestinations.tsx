@@ -17,7 +17,7 @@ import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
 import { PipelineDeploymentList } from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
 import { PipelineRouteDestinations } from '@pipeline/RouteDestinations'
 import './components/PipelineSteps'
-import { Duration } from '@common/exports'
+import { Duration, TimeAgoPopover } from '@common/exports'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import { ConnectorRouteDestinations } from '@platform/connectors/RouteDestinations'
@@ -28,6 +28,7 @@ import { DelegateRouteDestinations } from '@platform/delegates/RouteDestinations
 import { VariableRouteDestinations } from '@platform/variables/RouteDestinations'
 import { useQueryParamsOptions } from '@common/hooks/useQueryParams'
 import { PolicyViolationsDrawer } from '@modules/70-pipeline/pages/execution/ExecutionArtifactsView/PolicyViolations/PolicyViolationsDrawer'
+import { SLSAVerification } from '@modules/70-pipeline/pages/execution/ExecutionArtifactsView/ArtifactsTable/ArtifactTableCells'
 import { SSCACustomMicroFrontendProps } from './interfaces/SSCACustomMicroFrontendProps.types'
 import SSCASideNav from './components/SSCASideNav'
 
@@ -80,7 +81,7 @@ export default (
       <ChildAppMounter<SSCACustomMicroFrontendProps>
         ChildApp={RemoteSSCAApp}
         customHooks={{ useQueryParams, useUpdateQueryParams, useQueryParamsOptions }}
-        customComponents={{ Duration, PolicyViolationsDrawer }}
+        customComponents={{ Duration, PolicyViolationsDrawer, SLSAVerification, TimeAgoPopover }}
       />
     </RouteWithLayout>
 
@@ -93,7 +94,7 @@ export default (
       <ChildAppMounter<SSCACustomMicroFrontendProps>
         ChildApp={RemoteSSCAApp}
         customHooks={{ useQueryParams, useUpdateQueryParams, useQueryParamsOptions }}
-        customComponents={{ Duration, PolicyViolationsDrawer }}
+        customComponents={{ Duration, PolicyViolationsDrawer, SLSAVerification, TimeAgoPopover }}
       />
     </RouteWithLayout>
 
