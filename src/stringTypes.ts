@@ -6252,11 +6252,14 @@ export interface StringsMap {
   'cd.asgBlueGreenDeployStepDescription': string
   'cd.asgBlueGreenRollbackStepDescription': string
   'cd.asgBlueGreenSwapServiceStepDescription': string
+  'cd.asgBlueGreenTrafficShiftStepDescription': string
   'cd.asgCanaryDeleteStepDescription': string
   'cd.asgLoadBalancer': string
   'cd.asgPlaceholder': string
   'cd.asgRollingDeployStepDescription': string
   'cd.asgRollingRollbackStepDescription': string
+  'cd.asgWeight': string
+  'cd.asgWeightError': string
   'cd.attributeFilters': string
   'cd.awsCli': string
   'cd.awsClusterCreate': string

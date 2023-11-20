@@ -124,6 +124,7 @@ import { AwsLambdaServiceSpec } from './AwsLambda/AwsLambdaServiceSpec/AwsLambda
 import { AwsLambdaInfraSpec } from './AwsLambda/AwsLambdaInfraSpec/AwsLambdaInfraSpec'
 import { AwsLambdaDeployStep } from './AwsLambda/AwsLambdaDeployStep/AwsLambdaDeployStep'
 import { AwsLambdaRollbackStep } from './AwsLambda/AwsLambdaRollbackStep/AwsLambdaRollbackStep'
+import { AsgTrafficShift } from './AsgTrafficShiftStep/AsgTrafficShiftStep'
 import { TerraformCloudRun } from './TerraformCloudRunStep/TerraformCloudRun'
 import { TerraformCloudRollback } from './TerraformCloudRollbackStep/TerraformCloudRollback'
 import { RouteMappingStep } from './RouteMappingStep/RouteMappingStep'
@@ -272,6 +273,7 @@ factory.registerStep(new DeployCloudFunctionTrafficShiftStep())
 factory.registerStep(new AsgSwapService())
 factory.registerStep(new AsgBlueGreenRollbackStep())
 factory.registerStep(new AsgBlueGreenDeployStep())
+factory.registerStep(new AsgTrafficShift())
 factory.registerStep(new AwsLambdaServiceSpec())
 factory.registerStep(new AwsLambdaInfraSpec())
 factory.registerStep(new AwsLambdaDeployStep())

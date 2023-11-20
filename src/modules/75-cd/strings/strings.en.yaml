@@ -661,7 +661,10 @@ asgRollingDeployStepDescription: ASG Rolling Deploy
 asgRollingRollbackStepDescription: ASG Rolling Rollback
 asgBlueGreenRollbackStepDescription: ASG Blue Green Rollback
 asgBlueGreenSwapServiceStepDescription: ASG Blue Green Swap Service
+asgBlueGreenTrafficShiftStepDescription: ASG Blue Green Traffic Shift
 downsizeOldAsg: Downsize old ASG
+asgWeight: New Autoscaling Group Weight (%)
+asgWeightError: New Autoscaling Group Weight is required
 asgBlueGreenDeployStepDescription: ASG Blue Green Deploy
 minimumHealthyPercentageMaxLimit: Minimum Healthy Percentage should be less than 100%
 minimumHealthyPercentageMinLimit: Minimum Healthy Percentage should be positive percentage

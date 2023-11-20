@@ -199,6 +199,7 @@ export enum StepType {
   AsgCanaryDeploy = 'AsgCanaryDeploy',
   AsgRollingRollback = 'AsgRollingRollback',
   AsgRollingDeploy = 'AsgRollingDeploy',
+  AsgShiftTraffic = 'AsgShiftTraffic',
   PrismaCloud = 'PrismaCloud',
   GoogleCloudFunctionsService = 'GoogleCloudFunctionsService',
   GoogleCloudFunctionsInfra = 'GoogleCloudFunctionsInfra',
