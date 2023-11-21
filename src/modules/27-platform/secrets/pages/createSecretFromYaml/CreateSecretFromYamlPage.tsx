@@ -98,7 +98,7 @@ const CreateSecretFromYamlPage: React.FC<{ mockSchemaData?: UseGetMockData<Respo
         if (err.status === AUTHORIZATION_ERROR_CODE) {
           showError(getRBACErrorMessage(err))
         } else {
-          showError(err.data.details)
+          showError(err.data.message)
         }
       }
     } else {
