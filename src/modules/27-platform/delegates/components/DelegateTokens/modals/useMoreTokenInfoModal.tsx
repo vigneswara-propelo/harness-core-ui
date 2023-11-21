@@ -34,7 +34,11 @@ export const useMoreTokenInfoModalModal = ({ onSuccess }: MoreTokenInfoModalProp
     title: (
       <>
         <Heading level={3} font={{ variation: FontVariation.H3 }}>
-          {getString('platform.delegates.tokens.moreInfoTitle', { token })}
+          {
+            <span
+              dangerouslySetInnerHTML={{ __html: getString('platform.delegates.tokens.moreInfoTitle', { token }) }}
+            />
+          }
         </Heading>
         <Text margin={{ top: 'small' }}>{getString('platform.delegates.tokens.moreInfoSubtitle')}</Text>
       </>
