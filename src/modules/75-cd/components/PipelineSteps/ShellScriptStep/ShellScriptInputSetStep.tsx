@@ -35,7 +35,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import MultiTypeConfigFileSelect from '@pipeline/components/StartupScriptSelection/MultiTypeConfigFileSelect'
-import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { getAllowableTypesWithoutExpression, isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import {
@@ -160,7 +160,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
       ) : null}
 
       {getMultiTypeFromValue(template?.spec?.onDelegate) === MultiTypeInputType.RUNTIME && (
-        <>
+        <div className={cx(stepCss.md)}>
           <Label>
             <HarnessDocTooltip tooltipId={'exec-target'} labelText={getString('pipeline.executionTarget')} />
           </Label>
@@ -169,7 +169,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             name={`${prefix}spec.onDelegate`}
             formik={formik}
             readonly={readonly}
-            allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXECUTION_TIME]}
+            allowableTypes={getAllowableTypesWithoutExpression(allowableTypes)}
           />
 
           <FixedExecTargetGroup
@@ -178,7 +178,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             prefix={prefix}
             delegate={`${prefix}spec.onDelegate`}
           />
-        </>
+        </div>
       )}
       {getMultiTypeFromValue(template?.spec?.source?.spec?.file) === MultiTypeInputType.RUNTIME ? (
         <div className={cx(stepCss.formGroup, stepCss.alignStart, stepCss.md)}>

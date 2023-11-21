@@ -98,214 +98,218 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
               </div>
             </div>
           </div>
-          <label
-            class="Label--main execTargetLabel"
-          >
-            <span
-              class="Tooltip--acenter"
-              data-tooltip-id="exec-target"
-            >
-              pipeline.executionTarget
-            </span>
-          </label>
           <div
-            class="bp3-form-group"
-            data-id="Blueprint3.RadioGroup-1-1"
+            class="md"
           >
+            <label
+              class="Label--main execTargetLabel"
+            >
+              <span
+                class="Tooltip--acenter"
+                data-tooltip-id="exec-target"
+              >
+                pipeline.executionTarget
+              </span>
+            </label>
             <div
-              class="bp3-form-content"
+              class="bp3-form-group"
+              data-id="Blueprint3.RadioGroup-1-1"
             >
               <div
-                class="StyledProps--font StyledProps--main fieldSelectorContainer"
+                class="bp3-form-content"
               >
                 <div
-                  class="bp3-form-group"
-                  data-id="Blueprint3.RadioGroup-1-2"
-                  style="flex-grow: 1; margin-bottom: 0px;"
+                  class="StyledProps--font StyledProps--main fieldSelectorContainer"
                 >
-                  <label
-                    class="bp3-label"
-                    for="spec.onDelegate"
+                  <div
+                    class="bp3-form-group"
+                    data-id="Blueprint3.RadioGroup-1-2"
+                    style="flex-grow: 1; margin-bottom: 0px;"
                   >
-                    <div
-                      class="formLabel"
+                    <label
+                      class="bp3-label"
+                      for="spec.onDelegate"
                     >
-                      <span
-                        class="Tooltip--acenter"
-                        data-tooltip-id="scriptOptionalForm_spec.onDelegate"
-                      >
-                        pipeline.execTargetLabel
-                      </span>
                       <div
-                        class="bp3-popover-wrapper typeSelectorWrapper"
+                        class="formLabel"
                       >
-                        <div
-                          class="bp3-popover-target typeSelector"
+                        <span
+                          class="Tooltip--acenter"
+                          data-tooltip-id="scriptOptionalForm_spec.onDelegate"
                         >
-                          <button
-                            class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
-                            type="button"
+                          pipeline.execTargetLabel
+                        </span>
+                        <div
+                          class="bp3-popover-wrapper typeSelectorWrapper"
+                        >
+                          <div
+                            class="bp3-popover-target typeSelector"
                           >
-                            <span
-                              class="bp3-button-text"
+                            <button
+                              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
+                              type="button"
                             >
                               <span
-                                class="bp3-icon StyledProps--main icon fixed"
-                                data-icon="fixed-input"
+                                class="bp3-button-text"
                               >
-                                <svg
-                                  height="12"
-                                  viewBox="0 0 9 9"
-                                  width="12"
-                                  xmlns="http://www.w3.org/2000/svg"
+                                <span
+                                  class="bp3-icon StyledProps--main icon fixed"
+                                  data-icon="fixed-input"
                                 >
-                                  <path
-                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                    fill="currentColor"
-                                  />
-                                </svg>
+                                  <svg
+                                    height="12"
+                                    viewBox="0 0 9 9"
+                                    width="12"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                      fill="currentColor"
+                                    />
+                                  </svg>
+                                </span>
                               </span>
-                            </span>
-                          </button>
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                     
-                    <span
-                      class="bp3-text-muted"
-                    />
-                  </label>
-                  <div
-                    class="bp3-form-content"
-                  >
-                    <div>
-                      <label
-                        class="bp3-control bp3-radio bp3-inline"
-                      >
-                        <input
-                          name="Blueprint3.RadioGroup-1"
-                          type="radio"
-                          value="targethost"
-                        />
-                        <span
-                          class="bp3-control-indicator"
-                        />
-                        cd.specifyTargetHost
-                      </label>
-                      <label
-                        class="bp3-control bp3-radio bp3-inline"
-                      >
-                        <input
-                          checked=""
-                          name="Blueprint3.RadioGroup-1"
-                          type="radio"
-                          value="delegate"
-                        />
-                        <span
-                          class="bp3-control-indicator"
-                        />
-                        pipeline.delegateLabel
-                      </label>
+                       
+                      <span
+                        class="bp3-text-muted"
+                      />
+                    </label>
+                    <div
+                      class="bp3-form-content"
+                    >
+                      <div>
+                        <label
+                          class="bp3-control bp3-radio bp3-inline"
+                        >
+                          <input
+                            name="Blueprint3.RadioGroup-1"
+                            type="radio"
+                            value="targethost"
+                          />
+                          <span
+                            class="bp3-control-indicator"
+                          />
+                          cd.specifyTargetHost
+                        </label>
+                        <label
+                          class="bp3-control bp3-radio bp3-inline"
+                        >
+                          <input
+                            checked=""
+                            name="Blueprint3.RadioGroup-1"
+                            type="radio"
+                            value="delegate"
+                          />
+                          <span
+                            class="bp3-control-indicator"
+                          />
+                          pipeline.delegateLabel
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            class="bp3-form-group"
-            data-id="spec.delegateSelectors-3"
-          >
             <div
-              class="bp3-form-content"
+              class="bp3-form-group"
+              data-id="spec.delegateSelectors-3"
             >
               <div
-                class="StyledProps--font StyledProps--main fieldSelectorContainer"
+                class="bp3-form-content"
               >
                 <div
-                  class="bp3-form-group"
-                  data-id="spec.delegateSelectors-4"
-                  style="flex-grow: 1; margin-bottom: 0px;"
+                  class="StyledProps--font StyledProps--main fieldSelectorContainer"
                 >
-                  <label
-                    class="bp3-label"
-                    for="spec.delegateSelectors"
-                  >
-                    <div
-                      class="formLabel"
-                    >
-                      <span
-                        class="Tooltip--acenter"
-                        data-tooltip-id="scriptOptionalForm_spec.delegateSelectors"
-                      >
-                        common.defineDelegateSelector
-                      </span>
-                      <div
-                        class="bp3-popover-wrapper typeSelectorWrapper"
-                      >
-                        <div
-                          class="bp3-popover-target typeSelector"
-                        >
-                          <button
-                            class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
-                            type="button"
-                          >
-                            <span
-                              class="bp3-button-text"
-                            >
-                              <span
-                                class="bp3-icon StyledProps--main icon fixed"
-                                data-icon="fixed-input"
-                              >
-                                <svg
-                                  height="12"
-                                  viewBox="0 0 9 9"
-                                  width="12"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                    fill="currentColor"
-                                  />
-                                </svg>
-                              </span>
-                            </span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                     
-                    <span
-                      class="bp3-text-muted"
-                    />
-                  </label>
                   <div
-                    class="bp3-form-content"
+                    class="bp3-form-group"
+                    data-id="spec.delegateSelectors-4"
+                    style="flex-grow: 1; margin-bottom: 0px;"
                   >
-                    <div
-                      class="wrapper wrapper"
-                      data-name="DelegateSelectors"
+                    <label
+                      class="bp3-label"
+                      for="spec.delegateSelectors"
                     >
                       <div
-                        class="bp3-popover-wrapper delegatePopover bp3-fill"
+                        class="formLabel"
                       >
+                        <span
+                          class="Tooltip--acenter"
+                          data-tooltip-id="scriptOptionalForm_spec.delegateSelectors"
+                        >
+                          common.defineDelegateSelector
+                        </span>
                         <div
-                          class="bp3-popover-target"
+                          class="bp3-popover-wrapper typeSelectorWrapper"
                         >
                           <div
-                            class=""
+                            class="bp3-popover-target typeSelector"
+                          >
+                            <button
+                              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
+                              type="button"
+                            >
+                              <span
+                                class="bp3-button-text"
+                              >
+                                <span
+                                  class="bp3-icon StyledProps--main icon fixed"
+                                  data-icon="fixed-input"
+                                >
+                                  <svg
+                                    height="12"
+                                    viewBox="0 0 9 9"
+                                    width="12"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                      fill="currentColor"
+                                    />
+                                  </svg>
+                                </span>
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                       
+                      <span
+                        class="bp3-text-muted"
+                      />
+                    </label>
+                    <div
+                      class="bp3-form-content"
+                    >
+                      <div
+                        class="wrapper wrapper"
+                        data-name="DelegateSelectors"
+                      >
+                        <div
+                          class="bp3-popover-wrapper delegatePopover bp3-fill"
+                        >
+                          <div
+                            class="bp3-popover-target"
                           >
                             <div
-                              class="bp3-input bp3-tag-input bp3-fill bp3-multi-select delegateInput"
+                              class=""
                             >
                               <div
-                                class="bp3-tag-input-values"
+                                class="bp3-input bp3-tag-input bp3-fill bp3-multi-select delegateInput"
                               >
-                                <input
-                                  class="bp3-input-ghost bp3-multi-select-tag-input-input"
-                                  placeholder="delegate.Delegate_Selector_placeholder"
-                                  value=""
-                                />
+                                <div
+                                  class="bp3-tag-input-values"
+                                >
+                                  <input
+                                    class="bp3-input-ghost bp3-multi-select-tag-input-input"
+                                    placeholder="delegate.Delegate_Selector_placeholder"
+                                    value=""
+                                  />
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -316,8 +320,8 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
                 </div>
               </div>
             </div>
+            <div />
           </div>
-          <div />
         </div>
       </div>
     </form>
@@ -423,214 +427,218 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
               </div>
             </div>
           </div>
-          <label
-            class="Label--main execTargetLabel"
-          >
-            <span
-              class="Tooltip--acenter"
-              data-tooltip-id="exec-target"
-            >
-              pipeline.executionTarget
-            </span>
-          </label>
           <div
-            class="bp3-form-group"
-            data-id="Blueprint3.RadioGroup-0-1"
+            class="md"
           >
+            <label
+              class="Label--main execTargetLabel"
+            >
+              <span
+                class="Tooltip--acenter"
+                data-tooltip-id="exec-target"
+              >
+                pipeline.executionTarget
+              </span>
+            </label>
             <div
-              class="bp3-form-content"
+              class="bp3-form-group"
+              data-id="Blueprint3.RadioGroup-0-1"
             >
               <div
-                class="StyledProps--font StyledProps--main fieldSelectorContainer"
+                class="bp3-form-content"
               >
                 <div
-                  class="bp3-form-group"
-                  data-id="Blueprint3.RadioGroup-0-2"
-                  style="flex-grow: 1; margin-bottom: 0px;"
+                  class="StyledProps--font StyledProps--main fieldSelectorContainer"
                 >
-                  <label
-                    class="bp3-label"
-                    for="spec.onDelegate"
+                  <div
+                    class="bp3-form-group"
+                    data-id="Blueprint3.RadioGroup-0-2"
+                    style="flex-grow: 1; margin-bottom: 0px;"
                   >
-                    <div
-                      class="formLabel"
+                    <label
+                      class="bp3-label"
+                      for="spec.onDelegate"
                     >
-                      <span
-                        class="Tooltip--acenter"
-                        data-tooltip-id="scriptOptionalForm_spec.onDelegate"
-                      >
-                        pipeline.execTargetLabel
-                      </span>
                       <div
-                        class="bp3-popover-wrapper typeSelectorWrapper"
+                        class="formLabel"
                       >
-                        <div
-                          class="bp3-popover-target typeSelector"
+                        <span
+                          class="Tooltip--acenter"
+                          data-tooltip-id="scriptOptionalForm_spec.onDelegate"
                         >
-                          <button
-                            class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
-                            type="button"
+                          pipeline.execTargetLabel
+                        </span>
+                        <div
+                          class="bp3-popover-wrapper typeSelectorWrapper"
+                        >
+                          <div
+                            class="bp3-popover-target typeSelector"
                           >
-                            <span
-                              class="bp3-button-text"
+                            <button
+                              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
+                              type="button"
                             >
                               <span
-                                class="bp3-icon StyledProps--main icon fixed"
-                                data-icon="fixed-input"
+                                class="bp3-button-text"
                               >
-                                <svg
-                                  height="12"
-                                  viewBox="0 0 9 9"
-                                  width="12"
-                                  xmlns="http://www.w3.org/2000/svg"
+                                <span
+                                  class="bp3-icon StyledProps--main icon fixed"
+                                  data-icon="fixed-input"
                                 >
-                                  <path
-                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                    fill="currentColor"
-                                  />
-                                </svg>
+                                  <svg
+                                    height="12"
+                                    viewBox="0 0 9 9"
+                                    width="12"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                      fill="currentColor"
+                                    />
+                                  </svg>
+                                </span>
                               </span>
-                            </span>
-                          </button>
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                     
-                    <span
-                      class="bp3-text-muted"
-                    />
-                  </label>
-                  <div
-                    class="bp3-form-content"
-                  >
-                    <div>
-                      <label
-                        class="bp3-control bp3-radio bp3-inline"
-                      >
-                        <input
-                          name="Blueprint3.RadioGroup-0"
-                          type="radio"
-                          value="targethost"
-                        />
-                        <span
-                          class="bp3-control-indicator"
-                        />
-                        cd.specifyTargetHost
-                      </label>
-                      <label
-                        class="bp3-control bp3-radio bp3-inline"
-                      >
-                        <input
-                          checked=""
-                          name="Blueprint3.RadioGroup-0"
-                          type="radio"
-                          value="delegate"
-                        />
-                        <span
-                          class="bp3-control-indicator"
-                        />
-                        pipeline.delegateLabel
-                      </label>
+                       
+                      <span
+                        class="bp3-text-muted"
+                      />
+                    </label>
+                    <div
+                      class="bp3-form-content"
+                    >
+                      <div>
+                        <label
+                          class="bp3-control bp3-radio bp3-inline"
+                        >
+                          <input
+                            name="Blueprint3.RadioGroup-0"
+                            type="radio"
+                            value="targethost"
+                          />
+                          <span
+                            class="bp3-control-indicator"
+                          />
+                          cd.specifyTargetHost
+                        </label>
+                        <label
+                          class="bp3-control bp3-radio bp3-inline"
+                        >
+                          <input
+                            checked=""
+                            name="Blueprint3.RadioGroup-0"
+                            type="radio"
+                            value="delegate"
+                          />
+                          <span
+                            class="bp3-control-indicator"
+                          />
+                          pipeline.delegateLabel
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            class="bp3-form-group"
-            data-id="spec.delegateSelectors-3"
-          >
             <div
-              class="bp3-form-content"
+              class="bp3-form-group"
+              data-id="spec.delegateSelectors-3"
             >
               <div
-                class="StyledProps--font StyledProps--main fieldSelectorContainer"
+                class="bp3-form-content"
               >
                 <div
-                  class="bp3-form-group"
-                  data-id="spec.delegateSelectors-4"
-                  style="flex-grow: 1; margin-bottom: 0px;"
+                  class="StyledProps--font StyledProps--main fieldSelectorContainer"
                 >
-                  <label
-                    class="bp3-label"
-                    for="spec.delegateSelectors"
-                  >
-                    <div
-                      class="formLabel"
-                    >
-                      <span
-                        class="Tooltip--acenter"
-                        data-tooltip-id="scriptOptionalForm_spec.delegateSelectors"
-                      >
-                        common.defineDelegateSelector
-                      </span>
-                      <div
-                        class="bp3-popover-wrapper typeSelectorWrapper"
-                      >
-                        <div
-                          class="bp3-popover-target typeSelector"
-                        >
-                          <button
-                            class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
-                            type="button"
-                          >
-                            <span
-                              class="bp3-button-text"
-                            >
-                              <span
-                                class="bp3-icon StyledProps--main icon fixed"
-                                data-icon="fixed-input"
-                              >
-                                <svg
-                                  height="12"
-                                  viewBox="0 0 9 9"
-                                  width="12"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                    fill="currentColor"
-                                  />
-                                </svg>
-                              </span>
-                            </span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                     
-                    <span
-                      class="bp3-text-muted"
-                    />
-                  </label>
                   <div
-                    class="bp3-form-content"
+                    class="bp3-form-group"
+                    data-id="spec.delegateSelectors-4"
+                    style="flex-grow: 1; margin-bottom: 0px;"
                   >
-                    <div
-                      class="wrapper wrapper"
-                      data-name="DelegateSelectors"
+                    <label
+                      class="bp3-label"
+                      for="spec.delegateSelectors"
                     >
                       <div
-                        class="bp3-popover-wrapper delegatePopover bp3-fill"
+                        class="formLabel"
                       >
+                        <span
+                          class="Tooltip--acenter"
+                          data-tooltip-id="scriptOptionalForm_spec.delegateSelectors"
+                        >
+                          common.defineDelegateSelector
+                        </span>
                         <div
-                          class="bp3-popover-target"
+                          class="bp3-popover-wrapper typeSelectorWrapper"
                         >
                           <div
-                            class=""
+                            class="bp3-popover-target typeSelector"
+                          >
+                            <button
+                              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
+                              type="button"
+                            >
+                              <span
+                                class="bp3-button-text"
+                              >
+                                <span
+                                  class="bp3-icon StyledProps--main icon fixed"
+                                  data-icon="fixed-input"
+                                >
+                                  <svg
+                                    height="12"
+                                    viewBox="0 0 9 9"
+                                    width="12"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                      fill="currentColor"
+                                    />
+                                  </svg>
+                                </span>
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                       
+                      <span
+                        class="bp3-text-muted"
+                      />
+                    </label>
+                    <div
+                      class="bp3-form-content"
+                    >
+                      <div
+                        class="wrapper wrapper"
+                        data-name="DelegateSelectors"
+                      >
+                        <div
+                          class="bp3-popover-wrapper delegatePopover bp3-fill"
+                        >
+                          <div
+                            class="bp3-popover-target"
                           >
                             <div
-                              class="bp3-input bp3-tag-input bp3-fill bp3-multi-select delegateInput"
+                              class=""
                             >
                               <div
-                                class="bp3-tag-input-values"
+                                class="bp3-input bp3-tag-input bp3-fill bp3-multi-select delegateInput"
                               >
-                                <input
-                                  class="bp3-input-ghost bp3-multi-select-tag-input-input"
-                                  placeholder="delegate.Delegate_Selector_placeholder"
-                                  value=""
-                                />
+                                <div
+                                  class="bp3-tag-input-values"
+                                >
+                                  <input
+                                    class="bp3-input-ghost bp3-multi-select-tag-input-input"
+                                    placeholder="delegate.Delegate_Selector_placeholder"
+                                    value=""
+                                  />
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -641,8 +649,8 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
                 </div>
               </div>
             </div>
+            <div />
           </div>
-          <div />
         </div>
       </div>
     </form>
@@ -890,214 +898,218 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
                   </div>
                 </div>
               </div>
-              <label
-                class="Label--main execTargetLabel"
-              >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="exec-target"
-                >
-                  pipeline.executionTarget
-                </span>
-              </label>
               <div
-                class="bp3-form-group"
-                data-id="Blueprint3.RadioGroup-2-1"
+                class="md"
               >
+                <label
+                  class="Label--main execTargetLabel"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="exec-target"
+                  >
+                    pipeline.executionTarget
+                  </span>
+                </label>
                 <div
-                  class="bp3-form-content"
+                  class="bp3-form-group"
+                  data-id="Blueprint3.RadioGroup-2-1"
                 >
                   <div
-                    class="StyledProps--font StyledProps--main fieldSelectorContainer"
+                    class="bp3-form-content"
                   >
                     <div
-                      class="bp3-form-group"
-                      data-id="Blueprint3.RadioGroup-2-2"
-                      style="flex-grow: 1; margin-bottom: 0px;"
+                      class="StyledProps--font StyledProps--main fieldSelectorContainer"
                     >
-                      <label
-                        class="bp3-label"
-                        for="spec.onDelegate"
+                      <div
+                        class="bp3-form-group"
+                        data-id="Blueprint3.RadioGroup-2-2"
+                        style="flex-grow: 1; margin-bottom: 0px;"
                       >
-                        <div
-                          class="formLabel"
+                        <label
+                          class="bp3-label"
+                          for="spec.onDelegate"
                         >
-                          <span
-                            class="Tooltip--acenter"
-                            data-tooltip-id="scriptOptionalForm_spec.onDelegate"
-                          >
-                            pipeline.execTargetLabel
-                          </span>
                           <div
-                            class="bp3-popover-wrapper typeSelectorWrapper"
+                            class="formLabel"
                           >
-                            <div
-                              class="bp3-popover-target typeSelector"
+                            <span
+                              class="Tooltip--acenter"
+                              data-tooltip-id="scriptOptionalForm_spec.onDelegate"
                             >
-                              <button
-                                class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
-                                type="button"
+                              pipeline.execTargetLabel
+                            </span>
+                            <div
+                              class="bp3-popover-wrapper typeSelectorWrapper"
+                            >
+                              <div
+                                class="bp3-popover-target typeSelector"
                               >
-                                <span
-                                  class="bp3-button-text"
+                                <button
+                                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
+                                  type="button"
                                 >
                                   <span
-                                    class="bp3-icon StyledProps--main icon fixed"
-                                    data-icon="fixed-input"
+                                    class="bp3-button-text"
                                   >
-                                    <svg
-                                      height="12"
-                                      viewBox="0 0 9 9"
-                                      width="12"
-                                      xmlns="http://www.w3.org/2000/svg"
+                                    <span
+                                      class="bp3-icon StyledProps--main icon fixed"
+                                      data-icon="fixed-input"
                                     >
-                                      <path
-                                        d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                        fill="currentColor"
-                                      />
-                                    </svg>
+                                      <svg
+                                        height="12"
+                                        viewBox="0 0 9 9"
+                                        width="12"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <path
+                                          d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                          fill="currentColor"
+                                        />
+                                      </svg>
+                                    </span>
                                   </span>
-                                </span>
-                              </button>
+                                </button>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                         
-                        <span
-                          class="bp3-text-muted"
-                        />
-                      </label>
-                      <div
-                        class="bp3-form-content"
-                      >
-                        <div>
-                          <label
-                            class="bp3-control bp3-radio bp3-inline"
-                          >
-                            <input
-                              name="Blueprint3.RadioGroup-2"
-                              type="radio"
-                              value="targethost"
-                            />
-                            <span
-                              class="bp3-control-indicator"
-                            />
-                            cd.specifyTargetHost
-                          </label>
-                          <label
-                            class="bp3-control bp3-radio bp3-inline"
-                          >
-                            <input
-                              checked=""
-                              name="Blueprint3.RadioGroup-2"
-                              type="radio"
-                              value="delegate"
-                            />
-                            <span
-                              class="bp3-control-indicator"
-                            />
-                            pipeline.delegateLabel
-                          </label>
+                           
+                          <span
+                            class="bp3-text-muted"
+                          />
+                        </label>
+                        <div
+                          class="bp3-form-content"
+                        >
+                          <div>
+                            <label
+                              class="bp3-control bp3-radio bp3-inline"
+                            >
+                              <input
+                                name="Blueprint3.RadioGroup-2"
+                                type="radio"
+                                value="targethost"
+                              />
+                              <span
+                                class="bp3-control-indicator"
+                              />
+                              cd.specifyTargetHost
+                            </label>
+                            <label
+                              class="bp3-control bp3-radio bp3-inline"
+                            >
+                              <input
+                                checked=""
+                                name="Blueprint3.RadioGroup-2"
+                                type="radio"
+                                value="delegate"
+                              />
+                              <span
+                                class="bp3-control-indicator"
+                              />
+                              pipeline.delegateLabel
+                            </label>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div
-                class="bp3-form-group"
-                data-id="spec.delegateSelectors-3"
-              >
                 <div
-                  class="bp3-form-content"
+                  class="bp3-form-group"
+                  data-id="spec.delegateSelectors-3"
                 >
                   <div
-                    class="StyledProps--font StyledProps--main fieldSelectorContainer"
+                    class="bp3-form-content"
                   >
                     <div
-                      class="bp3-form-group"
-                      data-id="spec.delegateSelectors-4"
-                      style="flex-grow: 1; margin-bottom: 0px;"
+                      class="StyledProps--font StyledProps--main fieldSelectorContainer"
                     >
-                      <label
-                        class="bp3-label"
-                        for="spec.delegateSelectors"
-                      >
-                        <div
-                          class="formLabel"
-                        >
-                          <span
-                            class="Tooltip--acenter"
-                            data-tooltip-id="scriptOptionalForm_spec.delegateSelectors"
-                          >
-                            common.defineDelegateSelector
-                          </span>
-                          <div
-                            class="bp3-popover-wrapper typeSelectorWrapper"
-                          >
-                            <div
-                              class="bp3-popover-target typeSelector"
-                            >
-                              <button
-                                class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
-                                type="button"
-                              >
-                                <span
-                                  class="bp3-button-text"
-                                >
-                                  <span
-                                    class="bp3-icon StyledProps--main icon fixed"
-                                    data-icon="fixed-input"
-                                  >
-                                    <svg
-                                      height="12"
-                                      viewBox="0 0 9 9"
-                                      width="12"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                        fill="currentColor"
-                                      />
-                                    </svg>
-                                  </span>
-                                </span>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                         
-                        <span
-                          class="bp3-text-muted"
-                        />
-                      </label>
                       <div
-                        class="bp3-form-content"
+                        class="bp3-form-group"
+                        data-id="spec.delegateSelectors-4"
+                        style="flex-grow: 1; margin-bottom: 0px;"
                       >
-                        <div
-                          class="wrapper wrapper"
-                          data-name="DelegateSelectors"
+                        <label
+                          class="bp3-label"
+                          for="spec.delegateSelectors"
                         >
                           <div
-                            class="bp3-popover-wrapper delegatePopover bp3-fill"
+                            class="formLabel"
                           >
+                            <span
+                              class="Tooltip--acenter"
+                              data-tooltip-id="scriptOptionalForm_spec.delegateSelectors"
+                            >
+                              common.defineDelegateSelector
+                            </span>
                             <div
-                              class="bp3-popover-target"
+                              class="bp3-popover-wrapper typeSelectorWrapper"
                             >
                               <div
-                                class=""
+                                class="bp3-popover-target typeSelector"
+                              >
+                                <button
+                                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
+                                  type="button"
+                                >
+                                  <span
+                                    class="bp3-button-text"
+                                  >
+                                    <span
+                                      class="bp3-icon StyledProps--main icon fixed"
+                                      data-icon="fixed-input"
+                                    >
+                                      <svg
+                                        height="12"
+                                        viewBox="0 0 9 9"
+                                        width="12"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <path
+                                          d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                          fill="currentColor"
+                                        />
+                                      </svg>
+                                    </span>
+                                  </span>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                           
+                          <span
+                            class="bp3-text-muted"
+                          />
+                        </label>
+                        <div
+                          class="bp3-form-content"
+                        >
+                          <div
+                            class="wrapper wrapper"
+                            data-name="DelegateSelectors"
+                          >
+                            <div
+                              class="bp3-popover-wrapper delegatePopover bp3-fill"
+                            >
+                              <div
+                                class="bp3-popover-target"
                               >
                                 <div
-                                  class="bp3-input bp3-tag-input bp3-fill bp3-multi-select delegateInput"
+                                  class=""
                                 >
                                   <div
-                                    class="bp3-tag-input-values"
+                                    class="bp3-input bp3-tag-input bp3-fill bp3-multi-select delegateInput"
                                   >
-                                    <input
-                                      class="bp3-input-ghost bp3-multi-select-tag-input-input"
-                                      placeholder="delegate.Delegate_Selector_placeholder"
-                                      value=""
-                                    />
+                                    <div
+                                      class="bp3-tag-input-values"
+                                    >
+                                      <input
+                                        class="bp3-input-ghost bp3-multi-select-tag-input-input"
+                                        placeholder="delegate.Delegate_Selector_placeholder"
+                                        value=""
+                                      />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -1108,8 +1120,8 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
                     </div>
                   </div>
                 </div>
+                <div />
               </div>
-              <div />
             </div>
           </div>
         </form>

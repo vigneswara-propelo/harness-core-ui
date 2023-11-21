@@ -77,7 +77,7 @@ export const FixedExecTargetGroup = ({
   if (!onDelegateVal) {
     return (
       <div>
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
+        <div className={cx(stepCss.formGroup)}>
           <FormInput.MultiTextInput
             name={prefix ? `${prefix}spec.executionTarget.host` : 'spec.executionTarget.host'}
             placeholder={getString('cd.specifyTargetHost')}
@@ -99,7 +99,7 @@ export const FixedExecTargetGroup = ({
             />
           )}
         </div>
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
+        <div className={cx(stepCss.formGroup)}>
           <MultiTypeSecretInput
             type={formValues.spec?.shell === 'PowerShell' ? 'WinRmCredentials' : 'SSHKey'}
             name={prefix ? `${prefix}spec.executionTarget.connectorRef` : 'spec.executionTarget.connectorRef'}
@@ -131,7 +131,7 @@ export const FixedExecTargetGroup = ({
             />
           )}
         </div>
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
+        <div className={cx(stepCss.formGroup)}>
           <FormInput.MultiTextInput
             name={prefix ? `${prefix}spec.executionTarget.workingDirectory` : 'spec.executionTarget.workingDirectory'}
             placeholder={getString('cd.enterWorkDirectory')}
@@ -378,8 +378,8 @@ export default function OptionalConfiguration(props: {
             </div>
           </>
         ) : null}
-        {stepName === StepType.SHELLSCRIPT ? (
-          <>
+        {stepName === StepType.SHELLSCRIPT && (
+          <div className={cx(stepCss.md)}>
             <Label className={css.execTargetLabel}>
               <HarnessDocTooltip tooltipId={'exec-target'} labelText={getString('pipeline.executionTarget')} />
             </Label>
@@ -392,14 +392,14 @@ export default function OptionalConfiguration(props: {
               allowableTypes={allowableTypes}
               enableConfigureOptions={true}
             />
-            {getMultiTypeFromValue(formValues.spec?.onDelegate) === MultiTypeInputType.FIXED ? (
+            {getMultiTypeFromValue(formValues.spec?.onDelegate) === MultiTypeInputType.FIXED && (
               <FixedExecTargetGroup
                 expressions={expressions}
                 readonly={readonly}
                 allowableTypes={allowableTypes}
                 formik={formik}
               />
-            ) : null}
+            )}
             {getMultiTypeFromValue(formValues.spec.onDelegate) === MultiTypeInputType.RUNTIME && (
               <ConfigureOptions
                 value={formValues.spec.onDelegate as string}
@@ -412,8 +412,8 @@ export default function OptionalConfiguration(props: {
                 isReadonly={readonly}
               />
             )}
-          </>
-        ) : null}
+          </div>
+        )}
       </div>
     </FormikForm>
   )

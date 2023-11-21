@@ -67,15 +67,13 @@ export function OptionalConfigurations(
         setFormikRef(formikRef, formik)
 
         return (
-          <React.Fragment>
-            <OptionalConfiguration
-              formik={formik}
-              readonly={readonly}
-              allowableTypes={allowableTypes}
-              enableOutputVar={false}
-              stepName={fromScriptTemplate ? '' : StepType.SHELLSCRIPT}
-            />
-          </React.Fragment>
+          <OptionalConfiguration
+            formik={formik}
+            readonly={readonly}
+            allowableTypes={allowableTypes}
+            enableOutputVar={false}
+            stepName={fromScriptTemplate ? '' : StepType.SHELLSCRIPT}
+          />
         )
       }}
     </Formik>
