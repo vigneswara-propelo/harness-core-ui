@@ -100,7 +100,7 @@ describe('Test ConfigureOptions', () => {
     const submitBtn = getByTextBody(dialog, 'submit')
     fireEvent.click(submitBtn)
     await waitFor(() => expect(onChange).toBeCalledTimes(1))
-    expect(onChange).toBeCalledWith(`${RUNTIME_INPUT_VALUE}.regex(^abc$)`, 'abc', true)
+    expect(onChange).toBeCalledWith(`${RUNTIME_INPUT_VALUE}.default(abc).regex(^abc$)`, 'abc', true)
   })
 
   test('test empty default for regular expression error', async () => {
@@ -154,7 +154,7 @@ describe('Test ConfigureOptions', () => {
     const submitBtn = getByTextBody(dialog, 'submit')
     fireEvent.click(submitBtn)
     await waitFor(() => expect(onChange).toBeCalledTimes(1))
-    expect(onChange).toBeCalledWith(`${RUNTIME_INPUT_VALUE}.allowedValues(abc,xyz)`, 'abc', true)
+    expect(onChange).toBeCalledWith(`${RUNTIME_INPUT_VALUE}.default(abc).allowedValues(abc,xyz)`, 'abc', true)
   })
 
   test('test empty default for allowed values error', async () => {
@@ -334,7 +334,7 @@ describe('Test ConfigureOptions', () => {
   test('runtime execution input', async () => {
     onChange.mockReset()
     const { container } = render(
-      <TestWrapper defaultFeatureFlagValues={{ NG_EXECUTION_INPUT: true }}>
+      <TestWrapper>
         <ConfigureOptions {...getProps(`${RUNTIME_INPUT_VALUE}.executionInput()`, 'Number', 'var-test')} />
       </TestWrapper>
     )
@@ -352,7 +352,7 @@ describe('Test ConfigureOptions', () => {
   test('default value via function', async () => {
     onChange.mockReset()
     const { container } = render(
-      <TestWrapper defaultFeatureFlagValues={{ NG_EXECUTION_INPUT: true }}>
+      <TestWrapper>
         <ConfigureOptions {...getProps(`${RUNTIME_INPUT_VALUE}.default(123)`, 'Number', 'var-test')} />
       </TestWrapper>
     )

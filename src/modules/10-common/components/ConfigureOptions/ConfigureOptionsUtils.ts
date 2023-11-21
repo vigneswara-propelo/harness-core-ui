@@ -289,14 +289,14 @@ export const getStringValueWithComma = (
   return value
 }
 
-export const getInputStr = (data: FormValues, shouldUseNewDefaultFormat: boolean): string => {
+export const getInputStr = (data: FormValues): string => {
   let inputStr = RUNTIME_INPUT_VALUE
 
   if (data.isExecutionInput) {
     inputStr = EXECUTION_TIME_INPUT_VALUE
   }
 
-  if (shouldUseNewDefaultFormat && data.defaultValue) {
+  if (data.defaultValue) {
     inputStr += `.${InputSetFunction.DEFAULT}(${getStringValueWithComma(data.defaultValue)})`
   }
 

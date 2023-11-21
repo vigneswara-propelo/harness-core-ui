@@ -637,11 +637,37 @@ exports[`Test ConfigureOptions should render configure options 1`] = `
               class="division"
             />
             <div
+              class="bp3-form-group"
+              data-id="isExecutionInput-2"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <label
+                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkbox StyledProps--main StyledProps--inline"
+                >
+                  <input
+                    name="isExecutionInput"
+                    type="checkbox"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  <span
+                    class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                    data-tooltip-id="configureOptionsForm_isExecutionInput"
+                  >
+                    common.configureOptions.askDuringExecution
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div
               class="validationOptions"
             >
               <div
                 class="bp3-form-group"
-                data-id="validation-2"
+                data-id="validation-3"
               >
                 <label
                   class="bp3-label"
@@ -718,7 +744,7 @@ exports[`Test ConfigureOptions should render configure options 1`] = `
             </div>
             <div
               class="bp3-form-group"
-              data-id="defaultValue-3"
+              data-id="defaultValue-4"
             >
               <label
                 class="bp3-label"
@@ -880,11 +906,37 @@ exports[`Test ConfigureOptions test allowed advanced values 1`] = `
               class="division"
             />
             <div
+              class="bp3-form-group"
+              data-id="isExecutionInput-2"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <label
+                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkbox StyledProps--main StyledProps--inline"
+                >
+                  <input
+                    name="isExecutionInput"
+                    type="checkbox"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  <span
+                    class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                    data-tooltip-id="configureOptionsForm_isExecutionInput"
+                  >
+                    common.configureOptions.askDuringExecution
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div
               class="validationOptions"
             >
               <div
                 class="bp3-form-group"
-                data-id="validation-2"
+                data-id="validation-3"
               >
                 <label
                   class="bp3-label"
@@ -961,7 +1013,7 @@ exports[`Test ConfigureOptions test allowed advanced values 1`] = `
               <div>
                 <div
                   class="bp3-form-group"
-                  data-id="allowedValues-3"
+                  data-id="allowedValues-4"
                 >
                   <label
                     class="bp3-label"
@@ -1266,11 +1318,37 @@ exports[`Test ConfigureOptions test allowed values 1`] = `
               </div>
             </div>
             <div
+              class="bp3-form-group"
+              data-id="isExecutionInput-3"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <label
+                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkbox StyledProps--main StyledProps--inline"
+                >
+                  <input
+                    name="isExecutionInput"
+                    type="checkbox"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  <span
+                    class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                    data-tooltip-id="configureOptionsForm_isExecutionInput"
+                  >
+                    common.configureOptions.askDuringExecution
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div
               class="validationOptions"
             >
               <div
                 class="bp3-form-group"
-                data-id="validation-3"
+                data-id="validation-4"
               >
                 <label
                   class="bp3-label"
@@ -1347,7 +1425,7 @@ exports[`Test ConfigureOptions test allowed values 1`] = `
               <div>
                 <div
                   class="bp3-form-group"
-                  data-id="allowedValues-4"
+                  data-id="allowedValues-5"
                 >
                   <label
                     class="bp3-label"
@@ -1462,7 +1540,7 @@ exports[`Test ConfigureOptions test allowed values 1`] = `
             </div>
             <div
               class="bp3-form-group"
-              data-id="defaultValue-5"
+              data-id="defaultValue-6"
             >
               <label
                 class="bp3-label"
@@ -1626,11 +1704,37 @@ exports[`Test ConfigureOptions test regex expression 1`] = `
               class="division"
             />
             <div
+              class="bp3-form-group"
+              data-id="isExecutionInput-2"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <label
+                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkbox StyledProps--main StyledProps--inline"
+                >
+                  <input
+                    name="isExecutionInput"
+                    type="checkbox"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  <span
+                    class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                    data-tooltip-id="configureOptionsForm_isExecutionInput"
+                  >
+                    common.configureOptions.askDuringExecution
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div
               class="validationOptions"
             >
               <div
                 class="bp3-form-group"
-                data-id="validation-2"
+                data-id="validation-3"
               >
                 <label
                   class="bp3-label"
@@ -1706,7 +1810,7 @@ exports[`Test ConfigureOptions test regex expression 1`] = `
               </div>
               <div
                 class="bp3-form-group"
-                data-id="regExValues-3"
+                data-id="regExValues-4"
               >
                 <label
                   class="bp3-label"
@@ -1739,7 +1843,7 @@ exports[`Test ConfigureOptions test regex expression 1`] = `
             </div>
             <div
               class="bp3-form-group"
-              data-id="defaultValue-4"
+              data-id="defaultValue-5"
             >
               <label
                 class="bp3-label"

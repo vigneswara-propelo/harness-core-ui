@@ -10,7 +10,6 @@ import { FormInput, MultiTypeInputType } from '@harness/uicore'
 import { FormikContextType, useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FormValues, Validation } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import AllowedValuesFields from '@common/components/ConfigureOptions/AllowedValuesField'
 import { usePipelineContextY1 } from '../../PipelineContext/PipelineContextY1'
@@ -21,7 +20,6 @@ import css from './AddEditRuntimeInputs.module.scss'
 export default function OptionalConfiguration({ index }: { index: number }): JSX.Element {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { NG_EXECUTION_INPUT } = useFeatureFlags()
 
   const formik = useFormikContext<RuntimeInputsFormData>()
   const {
@@ -33,12 +31,10 @@ export default function OptionalConfiguration({ index }: { index: number }): JSX
 
   return (
     <>
-      {NG_EXECUTION_INPUT ? (
-        <FormInput.CheckBox
-          label={getString('common.configureOptions.askDuringExecution')}
-          name={`inputs[${index}].runtime`}
-        />
-      ) : null}
+      <FormInput.CheckBox
+        label={getString('common.configureOptions.askDuringExecution')}
+        name={`inputs[${index}].runtime`}
+      />
       {inputs[index]?.type !== RuntimeInputType.object ? (
         <>
           <div className={css.validationOptions}>

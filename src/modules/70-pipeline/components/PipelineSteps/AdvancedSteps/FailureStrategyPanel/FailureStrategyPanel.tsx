@@ -65,7 +65,7 @@ export function FailureStrategyPanel(props: FailureStrategyPanelProps): React.Re
   const addedAllErrors = filterTypes.includes(ErrorType.AllErrors)
   const addedAllStratgies = filterTypes.length === errorTypes.length
   const isAddBtnDisabled = addedAllErrors || addedAllStratgies || isReadonly || currentTabHasErrors
-  const { NG_EXECUTION_INPUT, PIE_RETRY_STEP_GROUP } = useFeatureFlags()
+  const { PIE_RETRY_STEP_GROUP } = useFeatureFlags()
 
   async function handleTabChange(n: number): Promise<void> {
     await formik.submitForm()
@@ -124,9 +124,6 @@ export function FailureStrategyPanel(props: FailureStrategyPanelProps): React.Re
 
   if (!PIE_RETRY_STEP_GROUP) {
     allowedStrategies = allowedStrategies.filter(st => st !== Strategy.RetryStepGroup)
-  }
-  if (!NG_EXECUTION_INPUT) {
-    allowedStrategies = allowedStrategies.filter(st => st !== Strategy.ProceedWithDefaultValues)
   }
 
   return (

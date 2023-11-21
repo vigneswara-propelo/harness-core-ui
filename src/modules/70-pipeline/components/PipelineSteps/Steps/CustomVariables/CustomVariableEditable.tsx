@@ -136,11 +136,8 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
   const updatedPath = path?.replace('pipeline.', '')
   const tableRef = React.useRef()
   const { openNestedPath } = useNestedAccordion()
-  const {
-    NG_EXECUTION_INPUT,
-    NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
-    PIE_MULTISELECT_AND_COMMA_IN_ALLOWED_VALUES: commasInAllowedValues
-  } = useFeatureFlags()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT, PIE_MULTISELECT_AND_COMMA_IN_ALLOWED_VALUES: commasInAllowedValues } =
+    useFeatureFlags()
 
   React.useLayoutEffect(() => {
     if (tableRef.current) {
@@ -360,12 +357,9 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                                 type={variable.type || /* istanbul ignore next */ 'String'}
                                 variableName={variable.name || /* istanbul ignore next */ ''}
                                 hideExecutionTimeField={hideExecutionTimeField}
-                                onChange={(value, defaultValue) => {
+                                onChange={value => {
                                   setFieldValue(`variables[${index}].value`, value)
-                                  setFieldValue(
-                                    `variables[${index}].default`,
-                                    NG_EXECUTION_INPUT ? undefined : defaultValue
-                                  )
+                                  setFieldValue(`variables[${index}].default`, undefined)
                                 }}
                                 isReadonly={readonly}
                                 allowedValuesType={

@@ -29,7 +29,6 @@ import { PipelineActions } from '@pipeline/factories/PubSubPipelineAction/types'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDeepCompareEffect } from '@common/hooks'
 import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { PipelineGitMetaData, StageFormContextProvider } from '@pipeline/context/StageFormContext'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { ConfigureOptionsContextProvider } from '@common/components/ConfigureOptions/ConfigureOptionsContext'
@@ -667,7 +666,6 @@ export function PipelineInputSetForm(props: Omit<PipelineInputSetFormProps, 'all
   const { disableRuntimeInputConfigureOptions: disableConfigureOptions, isRunPipelineForm } = props
   const [template, setTemplate] = React.useState(props.template)
   const accountPathProps = useParams<AccountPathProps>()
-  const { NG_EXECUTION_INPUT } = useFeatureFlags()
 
   useDeepCompareEffect(() => {
     if (isRunPipelineForm) {
@@ -686,11 +684,7 @@ export function PipelineInputSetForm(props: Omit<PipelineInputSetFormProps, 'all
       <PipelineInputSetFormInternal
         {...props}
         template={template}
-        allowableTypes={
-          NG_EXECUTION_INPUT
-            ? [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.EXECUTION_TIME]
-            : [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
-        }
+        allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.EXECUTION_TIME]}
       />
     </ConfigureOptionsContextProvider>
   )

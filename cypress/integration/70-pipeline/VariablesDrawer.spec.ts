@@ -140,7 +140,7 @@ describe('Pipeline Variables', () => {
 
     cy.get('input[name="variables[0].value"]')
       .should('be.disabled')
-      .should('have.value', '<+input>.allowedValues(1,2,3,4,5)')
+      .should('have.value', '<+input>.default(1).allowedValues(1,2,3,4,5)')
   })
 
   it('delete pipeline variable', () => {

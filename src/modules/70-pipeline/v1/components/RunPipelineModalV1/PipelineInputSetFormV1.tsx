@@ -10,7 +10,6 @@ import { Layout, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
 import cx from 'classnames'
 import type { InputsResponseBody } from '@harnessio/react-pipeline-service-client'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ConfigureOptionsContextProvider } from '@common/components/ConfigureOptions/ConfigureOptionsContext'
 import type { PipelineV1InfoConfig } from './RunPipelineFormV1'
 import { CICodebaseInputSetFormV1 } from './CICodebaseInputSetFormV1'
@@ -79,17 +78,12 @@ export function PipelineInputSetFormV1Internal(props: PipelineInputSetFormV1Prop
 
 export function PipelineInputSetFormV1(props: Omit<PipelineInputSetFormV1Props, 'allowableTypes'>): React.ReactElement {
   const { disableRuntimeInputConfigureOptions: disableConfigureOptions } = props
-  const { NG_EXECUTION_INPUT } = useFeatureFlags()
 
   return (
     <ConfigureOptionsContextProvider disableConfigureOptions={!!disableConfigureOptions}>
       <PipelineInputSetFormV1Internal
         {...props}
-        allowableTypes={
-          NG_EXECUTION_INPUT
-            ? [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.EXECUTION_TIME]
-            : [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
-        }
+        allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.EXECUTION_TIME]}
       />
     </ConfigureOptionsContextProvider>
   )

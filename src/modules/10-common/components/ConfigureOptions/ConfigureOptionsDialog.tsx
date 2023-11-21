@@ -22,7 +22,6 @@ import {
 } from '@harness/uicore'
 import { FormGroup } from '@blueprintjs/core'
 
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useStrings, String } from 'framework/strings'
 import AllowedValuesFields from './AllowedValuesField'
 import { ALLOWED_VALUES_TYPE } from './constants'
@@ -87,7 +86,6 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
   const [input, setInput] = React.useState(value)
   const { showError } = useToaster()
   const { getString } = useStrings()
-  const { NG_EXECUTION_INPUT } = useFeatureFlags()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const parsedValues = parseInput(input, { variableType: type as any })
 
@@ -170,7 +168,7 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
           data.defaultValue = undefined
         }
         data.allowedValues = formAllowedValues
-        const inputStr = getInputStr(data, !!NG_EXECUTION_INPUT)
+        const inputStr = getInputStr(data)
         setInput(inputStr)
         closeModal(inputStr, getStringValueWithComma(data.defaultValue) as string | number | undefined, data.isRequired)
       }}
@@ -196,7 +194,7 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
                   disabled={isReadonly}
                 />
               )}
-              {NG_EXECUTION_INPUT && !hideExecutionTimeField ? (
+              {!hideExecutionTimeField ? (
                 <FormInput.CheckBox
                   className={css.checkbox}
                   label={getString('common.configureOptions.askDuringExecution')}
@@ -237,7 +235,7 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
                   />
                 ) : null}
               </div>
-              {showDefaultField || NG_EXECUTION_INPUT ? (
+              {showDefaultField ? (
                 <FormInput.Text
                   inputGroup={{ type: type === 'Number' ? 'number' : 'text' }}
                   label={getString('common.configureOptions.defaultValue')}
