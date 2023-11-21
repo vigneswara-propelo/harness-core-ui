@@ -115,7 +115,16 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
     }
   }, [orderedModules])
 
+  // When Module Configuration Screen is open and user tries to go back & forth using browser's navigation, module configuration screen is closed and user can see the visited page without the screen overlay
+  useEffect(() => {
+    window.addEventListener('popstate', onClose)
+    return () => {
+      window.removeEventListener('popstate', onClose)
+    }
+  }, [])
+
   const activeModule = orderedModules[activeModuleIndex]
+
   return (
     <Layout.Vertical
       className={cx(css.container, className, {
