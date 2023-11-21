@@ -39,8 +39,8 @@ const KuberntesManifestSizingTable: React.FC<KuberntesManifestSizingTableProps> 
       },
       { replicas: '1', memory: '2 GB / 0.5 CPU', builds: '10' },
       { replicas: '2', memory: '4 GB / 1 CPU', builds: '20' },
-      { replicas: '3', memory: '8 GB / 2 CPU', builds: '40' },
-      { replicas: '4', memory: '16 GB / 4 CPU', builds: '80' }
+      { replicas: '4', memory: '8 GB / 2 CPU', builds: '40' },
+      { replicas: '8', memory: '16 GB / 4 CPU', builds: '80' }
     ],
     []
   )
