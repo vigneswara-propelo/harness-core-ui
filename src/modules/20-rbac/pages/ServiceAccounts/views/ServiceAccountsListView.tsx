@@ -31,6 +31,7 @@ import {
 import { useStrings } from 'framework/strings'
 import { TagsPopover, useToaster } from '@common/components'
 import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
+import DescriptionPopover from '@rbac/components/DescriptionPopover/DescriptionPopover'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
@@ -66,6 +67,7 @@ const RenderColumnDetails: Renderer<CellProps<ServiceAccountAggregateDTO>> = ({ 
           <Text color={Color.BLACK} lineClamp={1} className={css.wordBreak}>
             {data.name}
           </Text>
+          {data.description ? <DescriptionPopover description={data.description} /> : null}
           {data.tags && Object.keys(data.tags).length ? <TagsPopover tags={data.tags} /> : null}
         </Layout.Horizontal>
         <Text color={Color.GREY_400} lineClamp={1} font={{ size: 'small' }} className={css.wordBreak}>

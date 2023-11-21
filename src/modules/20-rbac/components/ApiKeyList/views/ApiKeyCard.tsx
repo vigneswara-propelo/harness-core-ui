@@ -29,6 +29,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import DescriptionPopover from '@rbac/components/DescriptionPopover/DescriptionPopover'
 import css from '../ApiKeyList.module.scss'
 
 interface ApiKeyCardProps {
@@ -47,6 +48,7 @@ const RenderColumnDetails = (data: ApiKeyDTO): React.ReactElement => {
         <Text font={{ variation: FontVariation.BODY2 }} color={Color.BLACK} lineClamp={1} className={css.wordBreak}>
           {data.name}
         </Text>
+        {data.description ? <DescriptionPopover description={data.description} /> : null}
         {data.tags && Object.keys(data.tags).length ? <TagsPopover tags={data.tags} /> : null}
       </Layout.Horizontal>
       <Text color={Color.GREY_400} lineClamp={1} font={{ size: 'small' }} className={css.wordBreak}>
