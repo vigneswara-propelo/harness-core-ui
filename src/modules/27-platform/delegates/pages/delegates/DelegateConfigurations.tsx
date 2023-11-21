@@ -444,7 +444,8 @@ export const DelegateConfigurations: React.FC<DelegatesListProps> = ({ filtersMo
             height: 200,
             borderRadius: '5px',
             display: 'flex',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            overflowY: 'auto'
           }}
         >
           <Layout.Horizontal>
@@ -589,10 +590,7 @@ export const DelegateConfigurations: React.FC<DelegatesListProps> = ({ filtersMo
           />
         </Layout.Horizontal>
       </Layout.Horizontal>
-      <Container
-        style={{ width: 'calc(100vw - 270px)', overflow: 'hidden', minHeight: 'calc(100vh - 205px)' }}
-        padding="xxlarge"
-      >
+      <Container style={{ overflow: 'hidden', minHeight: 'calc(100vh - 205px)' }} padding="xxlarge">
         <Page.Body>
           {isFetchingDelegateProfiles ? (
             <Container style={fullSizeContentStyle}>

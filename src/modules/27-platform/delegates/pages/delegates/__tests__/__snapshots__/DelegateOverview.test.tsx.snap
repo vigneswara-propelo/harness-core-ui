@@ -233,7 +233,7 @@ exports[`Delegates Overview Page render data 1`] = `
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="display: inline-flex; flex-wrap: wrap;"
+          style="display: inline-flex; flex-wrap: wrap; word-break: break-all;"
         >
           <p
             class="StyledProps--font StyledProps--main"

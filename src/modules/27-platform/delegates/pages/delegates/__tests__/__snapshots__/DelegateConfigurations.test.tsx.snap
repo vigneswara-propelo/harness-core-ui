@@ -136,7 +136,7 @@ exports[`Delegates Configurations Page check filter panel 1`] = `
     </div>
     <div
       class="StyledProps--font StyledProps--main StyledProps--padding-xxlarge"
-      style="width: calc(100vw - 270px); overflow: hidden; min-height: calc(100vh - 205px);"
+      style="overflow: hidden; min-height: calc(100vh - 205px);"
     >
       <div
         class="StyledProps--font StyledProps--main PageBody--pageBody"
@@ -151,7 +151,7 @@ exports[`Delegates Configurations Page check filter panel 1`] = `
             tabindex="0"
           >
             <div
-              style="width: 250px; height: 200px; border-radius: 5px; display: flex; flex-direction: column;"
+              style="width: 250px; height: 200px; border-radius: 5px; display: flex; flex-direction: column; overflow-y: auto;"
             >
               <div
                 class="Layout--horizontal StyledProps--main"
@@ -216,7 +216,7 @@ exports[`Delegates Configurations Page check filter panel 1`] = `
                 </p>
                 <div
                   class="StyledProps--font StyledProps--main"
-                  style="display: inline-flex; flex-wrap: wrap;"
+                  style="display: inline-flex; flex-wrap: wrap; word-break: break-all;"
                 />
               </div>
               <div
@@ -265,7 +265,7 @@ exports[`Delegates Configurations Page check filter panel 1`] = `
             tabindex="0"
           >
             <div
-              style="width: 250px; height: 200px; border-radius: 5px; display: flex; flex-direction: column;"
+              style="width: 250px; height: 200px; border-radius: 5px; display: flex; flex-direction: column; overflow-y: auto;"
             >
               <div
                 class="Layout--horizontal StyledProps--main"
@@ -330,7 +330,7 @@ exports[`Delegates Configurations Page check filter panel 1`] = `
                 </p>
                 <div
                   class="StyledProps--font StyledProps--main"
-                  style="display: inline-flex; flex-wrap: wrap;"
+                  style="display: inline-flex; flex-wrap: wrap; word-break: break-all;"
                 />
               </div>
               <div
@@ -517,7 +517,7 @@ exports[`Delegates Configurations Page render data 1`] = `
     </div>
     <div
       class="StyledProps--font StyledProps--main StyledProps--padding-xxlarge"
-      style="width: calc(100vw - 270px); overflow: hidden; min-height: calc(100vh - 205px);"
+      style="overflow: hidden; min-height: calc(100vh - 205px);"
     >
       <div
         class="StyledProps--font StyledProps--main PageBody--pageBody"
@@ -697,7 +697,7 @@ exports[`Delegates Configurations Page render data and add new 1`] = `
     </div>
     <div
       class="StyledProps--font StyledProps--main StyledProps--padding-xxlarge"
-      style="width: calc(100vw - 270px); overflow: hidden; min-height: calc(100vh - 205px);"
+      style="overflow: hidden; min-height: calc(100vh - 205px);"
     >
       <div
         class="StyledProps--font StyledProps--main PageBody--pageBody"
@@ -874,7 +874,7 @@ exports[`Delegates Configurations Page test name search configs debounce 1`] = `
     </div>
     <div
       class="StyledProps--font StyledProps--main StyledProps--padding-xxlarge"
-      style="width: calc(100vw - 270px); overflow: hidden; min-height: calc(100vh - 205px);"
+      style="overflow: hidden; min-height: calc(100vh - 205px);"
     >
       <div
         class="StyledProps--font StyledProps--main PageBody--pageBody"
@@ -889,7 +889,7 @@ exports[`Delegates Configurations Page test name search configs debounce 1`] = `
             tabindex="0"
           >
             <div
-              style="width: 250px; height: 200px; border-radius: 5px; display: flex; flex-direction: column;"
+              style="width: 250px; height: 200px; border-radius: 5px; display: flex; flex-direction: column; overflow-y: auto;"
             >
               <div
                 class="Layout--horizontal StyledProps--main"
@@ -954,7 +954,7 @@ exports[`Delegates Configurations Page test name search configs debounce 1`] = `
                 </p>
                 <div
                   class="StyledProps--font StyledProps--main"
-                  style="display: inline-flex; flex-wrap: wrap;"
+                  style="display: inline-flex; flex-wrap: wrap; word-break: break-all;"
                 />
               </div>
               <div
@@ -1003,7 +1003,7 @@ exports[`Delegates Configurations Page test name search configs debounce 1`] = `
             tabindex="0"
           >
             <div
-              style="width: 250px; height: 200px; border-radius: 5px; display: flex; flex-direction: column;"
+              style="width: 250px; height: 200px; border-radius: 5px; display: flex; flex-direction: column; overflow-y: auto;"
             >
               <div
                 class="Layout--horizontal StyledProps--main"
@@ -1068,7 +1068,7 @@ exports[`Delegates Configurations Page test name search configs debounce 1`] = `
                 </p>
                 <div
                   class="StyledProps--font StyledProps--main"
-                  style="display: inline-flex; flex-wrap: wrap;"
+                  style="display: inline-flex; flex-wrap: wrap; word-break: break-all;"
                 />
               </div>
               <div

@@ -39,6 +39,7 @@ export const TagsViewer: React.FC<TagsViewerProps> = ({ tags, style }) => (
     style={{
       display: 'inline-flex',
       flexWrap: 'wrap' /*, gap: 'var(--spacing-xsmall)' -> Safari does not support it yet (Feb 2021) :( */,
+      wordBreak: 'break-all',
       margin: 'calc(-1 * var(--spacing-xsmall)) 0 0 calc(-1 * var(--spacing-xsmall))',
       width: 'calc(100% + var(--spacing-xsmall))'
     }}
