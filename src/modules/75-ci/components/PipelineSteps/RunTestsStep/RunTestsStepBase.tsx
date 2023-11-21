@@ -887,7 +887,7 @@ gradle.projectsEvaluated {
                         })}
                       </Container>
                     )}
-                    {CI_PYTHON_TI && selectedLanguageValue === Language.Python && (
+                    {![Language.Java, Language.Kotlin, Language.Scala].includes(selectedLanguageValue) && (
                       <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
                         {renderMultiTypeTextField({
                           name: 'spec.testGlobs',
