@@ -29,6 +29,7 @@ import {
 } from 'services/cd-ng'
 
 import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
+import { usePipelineContext } from '@modules/70-pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { InfrastructureData, InfrastructureYaml } from '../types'
 
 export interface UseGetInfrastructuresDataProps {
@@ -83,6 +84,9 @@ export function useGetInfrastructuresData({
 
   const { CDS_SCOPE_INFRA_TO_SERVICES } = useFeatureFlags()
   const { branch, repoName } = useQueryParams<GitQueryParams>()
+  const {
+    state: { storeMetadata }
+  } = usePipelineContext()
 
   const {
     data: infrastructuresListResponse,
@@ -143,8 +147,8 @@ export function useGetInfrastructuresData({
       orgIdentifier,
       projectIdentifier,
       environmentIdentifier,
-      branch,
-      repoName
+      branch: defaultTo(branch, storeMetadata?.branch),
+      repoName: defaultTo(repoName, storeMetadata?.repoName)
     },
     body: {
       infrastructureIdentifiers: sortedInfrastructureIdentifiers,
