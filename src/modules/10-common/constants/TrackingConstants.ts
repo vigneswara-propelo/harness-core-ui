@@ -128,7 +128,7 @@ export enum DelegateActions {
   DelegateCommandLineKubernetes = 'Delegate Command Line Kubernetes',
   DelegateCommandLineVerify = 'Delegate Command Line Verify Clicked',
   DelegateCommandLineKubernetesManifest = 'Delegate Command Line Kubernetes Manifest',
-  DelegateCommandLineKubernetesManifestCommandCopy1 = 'curl -LO https://raw.githubusercontent.com/harness/delegate-kubernetes-manifest/main/harness-delegate.yaml copied',
+  DelegateCommandLineKubernetesManifestCommandCopy1 = 'git clone https://github.com/harness/delegate-kubernetes-manifest.git copied',
   DelegateCommandLineKubernetesManifestBasic = 'Kubernetes Manifest Basic button clicked',
   DelegateCommandLineKubernetesManifestCustom = 'Kubernetes Manifest Custom button clicked',
   DelegateCommandLineKubernetesManifestDownloadYaml = 'Kubernetes Manifest YAML Downloaded',

@@ -301,7 +301,7 @@ delegates:
     firstCommandHelmSecondLine: helm repo update harness-delegate
     secondCommandHeadingHelm: Now we are ready to install the delegate
     firstComandHeadingKubernetes: Create your own YAML from a Kubernetes manifest template
-    firstComandKubernetesFirstLine: curl -LO https://raw.githubusercontent.com/harness/delegate-kubernetes-manifest/main/harness-delegate.yaml
+    firstComandKubernetesFirstLine: git clone https://github.com/harness/delegate-kubernetes-manifest.git
     lastCommandKubernetesLastLine: kubectl apply -f harness-delegate.yml
     lastCommandKubernetesLastLineWithYaml: kubectl apply -f harness-delegate.yaml
     commandsKubernetesHeading: Update the downloaded template by replacing the placeholders with the following values. You will now have a Kubernetes manifest YAML ready for installation.
