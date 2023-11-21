@@ -72,7 +72,7 @@ const HelmChartCommands: React.FC<HelmChartCommandsProps> = ({ command, helmComm
               category: Category.DELEGATE
             })
           }}
-          href={'https://raw.githubusercontent.com/harness/delegate-helm-chart/main/harness-delegate-ng/values.yaml'}
+          href={'https://github.com/harness/delegate-helm-chart/blob/main/harness-delegate-ng/values.yaml'}
         >
           {getString('platform.delegates.commandLineCreation.defaultValuesYaml')}
         </a>
