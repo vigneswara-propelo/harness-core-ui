@@ -18,6 +18,7 @@ import { useStrings } from 'framework/strings'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import { useDeepCompareEffect } from '@common/hooks'
 import { VAR_REGEX } from '../YAMLBuilder/YAMLBuilderConstants'
+import { getStartColumnForMonacoRange } from './utils'
 import css from './ShellScriptMonaco.module.scss'
 
 export type ScriptType = 'Bash' | 'PowerShell' | 'Python'
@@ -59,18 +60,22 @@ export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React
 
           provideCompletionItems(model, position) {
             const word = model.getWordUntilPosition(position)
-            const range: monaco.IRange = {
-              startLineNumber: position.lineNumber,
-              endLineNumber: position.lineNumber,
-              startColumn: word.startColumn,
-              endColumn: word.endColumn
-            }
             const prevText = model.getValueInRange({
               startLineNumber: position.lineNumber,
               startColumn: 0,
               endLineNumber: position.lineNumber,
               endColumn: position.column
             })
+            const startColumn = getStartColumnForMonacoRange(prevText)
+            if (startColumn === undefined) {
+              return { suggestions: [] }
+            }
+            const range: monaco.IRange = {
+              startLineNumber: position.lineNumber,
+              endLineNumber: position.lineNumber,
+              startColumn,
+              endColumn: word.endColumn
+            }
             const suggestions = expressions
               .filter(label => label)
               .map(label => ({
