@@ -11,12 +11,9 @@ import {
   Button,
   ButtonSize,
   ButtonVariation,
-  Container,
   ExpandingSearchInput,
   Icon,
   Layout,
-  PageError,
-  PageSpinner,
   Popover,
   sortByCreated,
   sortByLastModified,
@@ -26,7 +23,7 @@ import {
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Menu, PopoverInteractionKind, Position } from '@blueprintjs/core'
-import { Error, ResponsePageSecretResponseWrapper, useListSecretsV2 } from 'services/cd-ng'
+import { ResponsePageSecretResponseWrapper, useListSecretsV2 } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import useCreateUpdateSecretModal from '@secrets/modals/CreateSecretModal/useCreateUpdateSecretModal'
 import useCreateSSHCredModal from '@secrets/modals/CreateSSHCredModal/useCreateSSHCredModal'
@@ -53,6 +50,7 @@ import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { usePermission } from '@rbac/hooks/usePermission'
+import useRBACError from '@modules/20-rbac/utils/useRBACError/useRBACError'
 import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import SecretsList from './views/SecretsListView/SecretsList'
 import SecretEmptyState from './secrets-empty-state.png'
@@ -119,6 +117,8 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
       refetch()
     }
   })
+  const { getRBACErrorMessage } = useRBACError()
+
   const [canCreateSecret] = usePermission(
     {
       permissions: [PermissionIdentifier.UPDATE_SECRET],
@@ -249,6 +249,9 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
 
       <Page.Body
         className={css.body}
+        loading={loading}
+        error={error ? getRBACErrorMessage(error) : ''}
+        retryOnError={() => refetch()}
         noData={{
           when: () => !loading && !secretsResponse?.data?.content?.length,
           image: SecretEmptyState,
@@ -263,34 +266,17 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
           ) : undefined
         }}
       >
-        {loading ? (
-          <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
-            <PageSpinner />
-          </div>
-        ) : error ? (
-          <div style={{ paddingTop: '200px' }}>
-            <PageError
-              message={(error.data as Error)?.message || error.message}
-              onClick={/* istanbul ignore next */ () => refetch()}
-            />
-          </div>
-        ) : !secretsResponse?.data?.empty ? (
-          <>
-            <ListHeader
-              selectedSortMethod={sortPreference}
-              sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName]}
-              onSortMethodChange={option => {
-                setSortPreference(option.value as SortMethod)
-              }}
-              totalCount={secretsResponse?.data?.totalItems}
-            />
-            <SecretsList secrets={secretsResponse?.data} refetch={refetch} />
-          </>
-        ) : (
-          <Container flex={{ align: 'center-center' }} padding="xxlarge">
-            No Data
-          </Container>
-        )}
+        <>
+          <ListHeader
+            selectedSortMethod={sortPreference}
+            sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName]}
+            onSortMethodChange={option => {
+              setSortPreference(option.value as SortMethod)
+            }}
+            totalCount={secretsResponse?.data?.totalItems}
+          />
+          <SecretsList secrets={secretsResponse?.data} refetch={refetch} />
+        </>
       </Page.Body>
     </>
   )

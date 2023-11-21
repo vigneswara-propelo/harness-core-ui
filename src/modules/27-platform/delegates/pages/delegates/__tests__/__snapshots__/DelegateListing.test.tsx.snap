@@ -754,7 +754,7 @@ exports[`Test delegate buttons click on filter 1`] = `
                             >
                               <span
                                 class="bp3-tag"
-                                style="max-width: 80px;"
+                                style="max-width: 240px;"
                               >
                                 <span
                                   class="bp3-text-overflow-ellipsis bp3-fill"
@@ -764,31 +764,17 @@ exports[`Test delegate buttons click on filter 1`] = `
                               </span>
                             </span>
                             <span
-                              class="Tag--main"
+                              class="bp3-popover-wrapper"
                             >
                               <span
-                                class="bp3-tag"
-                                style="max-width: 80px;"
+                                class="bp3-popover-target"
                               >
-                                <span
-                                  class="bp3-text-overflow-ellipsis bp3-fill"
+                                <p
+                                  class="StyledProps--font StyledProps--main"
+                                  tabindex="0"
                                 >
-                                  customtag1
-                                </span>
-                              </span>
-                            </span>
-                            <span
-                              class="Tag--main"
-                            >
-                              <span
-                                class="bp3-tag"
-                                style="max-width: 80px;"
-                              >
-                                <span
-                                  class="bp3-text-overflow-ellipsis bp3-fill"
-                                >
-                                  customtag2
-                                </span>
+                                  plus2
+                                </p>
                               </span>
                             </span>
                           </div>
@@ -1471,7 +1457,7 @@ exports[`Test delegate buttons click on new delegate 1`] = `
                             >
                               <span
                                 class="bp3-tag"
-                                style="max-width: 80px;"
+                                style="max-width: 240px;"
                               >
                                 <span
                                   class="bp3-text-overflow-ellipsis bp3-fill"
@@ -1481,31 +1467,17 @@ exports[`Test delegate buttons click on new delegate 1`] = `
                               </span>
                             </span>
                             <span
-                              class="Tag--main"
+                              class="bp3-popover-wrapper"
                             >
                               <span
-                                class="bp3-tag"
-                                style="max-width: 80px;"
+                                class="bp3-popover-target"
                               >
-                                <span
-                                  class="bp3-text-overflow-ellipsis bp3-fill"
+                                <p
+                                  class="StyledProps--font StyledProps--main"
+                                  tabindex="0"
                                 >
-                                  customtag1
-                                </span>
-                              </span>
-                            </span>
-                            <span
-                              class="Tag--main"
-                            >
-                              <span
-                                class="bp3-tag"
-                                style="max-width: 80px;"
-                              >
-                                <span
-                                  class="bp3-text-overflow-ellipsis bp3-fill"
-                                >
-                                  customtag2
-                                </span>
+                                  plus2
+                                </p>
                               </span>
                             </span>
                           </div>

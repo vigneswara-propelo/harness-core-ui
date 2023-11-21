@@ -81,7 +81,7 @@ const RenderTags: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => {
   return Object.keys(delegateTags).length > 0 ? (
     <>
       <Text lineClamp={1} margin={{ right: 'medium' }}>
-        <TagsRenderer tags={delegateTags} length={3} />
+        <TagsRenderer tags={delegateTags} length={1} />
       </Text>
     </>
   ) : null
