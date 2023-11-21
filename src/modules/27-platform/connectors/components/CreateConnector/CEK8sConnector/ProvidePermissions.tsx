@@ -138,7 +138,7 @@ const ProvidePermissions: React.FC<StepProps<StepSecretManagerProps> & ProvidePe
       <Text icon={'info'} iconProps={{ color: Color.PRIMARY_7 }} color={Color.PRIMARY_7}>
         {getString('platform.connectors.ceK8.providePermissionsStep.info')}
         <a
-          href="https://docs.harness.io/article/ltt65r6k39-set-up-cost-visibility-for-kubernetes#prerequisites"
+          href="https://developer.harness.io/docs/cloud-cost-management/get-started/onboarding-guide/set-up-cost-visibility-for-kubernetes#prerequisites"
           target="_blank"
           rel="noreferrer"
         >

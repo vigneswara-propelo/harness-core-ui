@@ -1128,7 +1128,7 @@ exports[`Create CE K8s Connector Wizard Proceed with following steps 3`] = `
               </span>
               platform.connectors.ceK8.providePermissionsStep.info
               <a
-                href="https://docs.harness.io/article/ltt65r6k39-set-up-cost-visibility-for-kubernetes#prerequisites"
+                href="https://developer.harness.io/docs/cloud-cost-management/get-started/onboarding-guide/set-up-cost-visibility-for-kubernetes#prerequisites"
                 rel="noreferrer"
                 target="_blank"
               >
