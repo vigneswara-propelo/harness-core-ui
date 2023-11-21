@@ -5821,6 +5821,7 @@ export interface StringsMap {
   'freezeWindows.freezeNotifications.customizedMessagePlaceholder': string
   'freezeWindows.freezeNotifications.rejectedDeployments': string
   'freezeWindows.freezeNotifications.windowEnabled': string
+  'freezeWindows.freezeNotifications.windowEnabledAndActive': string
   'freezeWindows.freezeStudio.activeFreeze': string
   'freezeWindows.freezeStudio.defineResources': string
   'freezeWindows.freezeStudio.excludeEnvironments': string

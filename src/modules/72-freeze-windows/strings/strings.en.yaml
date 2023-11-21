@@ -46,8 +46,9 @@ globalFreeze:
   enableFreezeFailure: Failed to enable global deployment freeze
 
 freezeNotifications:
-  windowEnabled: Freeze window is enabled and active
+  windowEnabledAndActive: Freeze window is enabled and active
   rejectedDeployments: Deployments are rejected due to freeze window
+  windowEnabled: Freeze window is enabled
   customizedMessagePlaceholder: A custom message can be provided here which will be available as part of the notification message.
   customMessageTitle: Freeze Notification Message
 

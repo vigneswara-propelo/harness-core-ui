@@ -7,7 +7,17 @@
 
 import React from 'react'
 import { isEmpty, noop } from 'lodash-es'
-import { Button, ButtonVariation, Formik, FormikForm, FormInput, Layout, StepProps, Text } from '@harness/uicore'
+import {
+  Button,
+  ButtonVariation,
+  Formik,
+  FormikForm,
+  FormInput,
+  Layout,
+  SelectOption,
+  StepProps,
+  Text
+} from '@harness/uicore'
 import { Color, FontVariation, Intent } from '@harness/design-system'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import type { FreezeNotificationRules, FreezeEvent } from '@freeze-windows/types'
@@ -15,17 +25,22 @@ import css from '@pipeline/components/Notifications/useNotificationModal.module.
 
 export enum EventType {
   FREEZE_WINDOW_ENABLED = 'FreezeWindowEnabled',
-  DEPLOYMENT_REJECTED_DUE_TO_FREEZE = 'DeploymentRejectedDueToFreeze'
+  DEPLOYMENT_REJECTED_DUE_TO_FREEZE = 'DeploymentRejectedDueToFreeze',
+  ON_ENABLE_FREEZE_WINDOW = 'OnEnableFreezeWindow'
 }
 
-const getEventItems = (getString: UseStringsReturn['getString']) => [
+const getEventItems = (getString: UseStringsReturn['getString']): SelectOption[] => [
   {
-    label: getString('freezeWindows.freezeNotifications.windowEnabled'),
+    label: getString('freezeWindows.freezeNotifications.windowEnabledAndActive'),
     value: EventType.FREEZE_WINDOW_ENABLED
   },
   {
     label: getString('freezeWindows.freezeNotifications.rejectedDeployments'),
     value: EventType.DEPLOYMENT_REJECTED_DUE_TO_FREEZE
+  },
+  {
+    label: getString('freezeWindows.freezeNotifications.windowEnabled'),
+    value: EventType.ON_ENABLE_FREEZE_WINDOW
   }
 ]
 
@@ -82,12 +97,15 @@ export const FreezeEvents = ({ nextStep, prevStepData }: StepProps<FreezeNotific
                   </Text>
                 )}
                 {eventItems.map(event => {
+                  const { label, value } = event
+                  const eventValue = value as string
+
                   return (
-                    <Layout.Vertical key={event.label}>
+                    <Layout.Vertical key={label}>
                       <Layout.Horizontal margin={{ bottom: 'small' }} flex>
                         <FormInput.CheckBox
-                          className={formikProps.values.types[event.value] ? 'checked' : 'unchecked'}
-                          name={`types.${event.value}`}
+                          className={formikProps.values.types[eventValue] ? 'checked' : 'unchecked'}
+                          name={`types.${eventValue}`}
                           checked={formikProps.values.types[event.label]}
                           label={event.label}
                           padding={{ left: 'xxxlarge' }}
