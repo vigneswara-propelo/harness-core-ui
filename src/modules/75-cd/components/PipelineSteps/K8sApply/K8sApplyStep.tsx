@@ -108,7 +108,7 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
-  const isK8sWithoutService = useFeatureFlag(FeatureFlag.CDS_K8S_APPLY_MANIFEST_WITHOUT_SERVICE)
+  const isK8sWithoutService = useFeatureFlag(FeatureFlag.CDS_K8S_APPLY_MANIFEST_WITHOUT_SERVICE_NG)
 
   const selectedDeploymentType = useCallback((): GetExecutionStrategyYamlQueryParams['serviceDefinitionType'] => {
     return getServiceDefinitionType(

@@ -76,7 +76,7 @@ function SelectRemoteManifest({
 }: K8sApplyManifestProps): JSX.Element {
   const [selectedManifest, setSelectedManifest] = useState<ManifestTypes | null>(ManifestDataType.K8sManifest)
   const [connectorView, setConnectorView] = useState(false)
-  const [manifestStore, setManifestStore] = useState('Git')
+  const [manifestStore, setManifestStore] = useState('')
   const [isEditMode, setIsEditMode] = useState(false)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -118,7 +118,7 @@ function SelectRemoteManifest({
           spec: {
             valuesPaths: defaultTo(get(manifestSourceSpec, 'valuesPaths'), ['']),
             store: {
-              type: manifestSourceStoreType,
+              type: manifestStore || manifestSourceStoreType,
               spec: {
                 connectorRef: getConnectorPath(manifestSourceStoreType, manifestSource),
                 ...manifestSourceStoreSpec
@@ -140,7 +140,7 @@ function SelectRemoteManifest({
         spec: {
           valuesPaths: [{ value: '', id: uuid() }],
           store: {
-            type: '',
+            type: manifestStore,
             spec: {
               connectorRef: '',
               gitFetchType: '',
@@ -317,7 +317,7 @@ function SelectRemoteManifest({
             types={[ManifestDataType.K8sManifest]}
             manifestStoreTypes={getManifestStoresByDeploymentType('Kubernetes', 'K8sManifest', {
               CDS_SERVERLESS_V2
-            })}
+            }).filter((store: ManifestStores) => store !== 'CustomRemote')}
             labels={getLabels()}
             selectedManifest={selectedManifest}
             newConnectorView={connectorView}
