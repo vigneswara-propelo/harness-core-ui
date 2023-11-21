@@ -58,7 +58,7 @@ export interface SecretInputProps {
   allowSelection?: boolean
   privateSecret?: boolean
   tooltipProps?: DataTooltipInterface
-  /**  To enable File and Text Secret Selection both */
+  // To enable File and Text Secret Selection both.
   isMultiTypeSelect?: boolean
   scope?: ScopedObjectDTO
   /** when true, multiple secrets can be selected */
@@ -114,10 +114,10 @@ const SecretInput: React.FC<FormikSecretInput> = props => {
     },
     [formikSetFieldValue, name]
   )
+
   const { openCreateOrSelectSecretModal } = useCreateOrSelectSecretModal(
     {
       type: isMultiTypeSelect ? undefined : type,
-      isMultiTypeSelect,
       onSuccess: secret => {
         if (isMultiSelect) return
 

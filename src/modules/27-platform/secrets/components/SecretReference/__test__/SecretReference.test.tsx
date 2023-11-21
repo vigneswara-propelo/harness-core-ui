@@ -66,17 +66,10 @@ describe('Secret Reference', () => {
     )
     await waitFor(() => getByText(container, 'entityReference.apply'))
     expect(getByText(container, 'platform.secrets.secret.noSecretsFound')).toBeTruthy()
-    expect(container).toMatchSnapshot()
-  })
-
-  test('render with isMultiTypeSelect', async () => {
-    const { container } = render(
-      <TestWrapper>
-        <SecretReference isMultiTypeSelect accountIdentifier="dummy" mock={mockData as any} onSelect={noop} />
-      </TestWrapper>
-    )
     await waitFor(() => {
+      // for SelectTypeDropdown (text/file)
       expect(getByText(container, 'platform.secrets.secret.labelSecretType')).toBeInTheDocument()
     })
+    expect(container).toMatchSnapshot()
   })
 })
