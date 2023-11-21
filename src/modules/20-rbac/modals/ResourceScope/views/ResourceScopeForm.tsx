@@ -54,7 +54,7 @@ const ResourceScopeForm: React.FC<ResourceScopeFormProps> = ({ scopes, onSubmit,
             projectIdentifier,
             filter: 'EXCLUDING_CHILD_SCOPES'
           },
-          ...scopeArray
+          ...scopeArray.filter(scope => !isCurrentScope(scope))
         ],
         isEqual
       )
