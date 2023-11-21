@@ -259,7 +259,8 @@ export const ServicesListPage = ({
   const {
     loading,
     data: serviceList,
-    refetch
+    refetch,
+    error
   } = useGetServiceList({
     queryParams: {
       accountIdentifier: accountId,
@@ -294,7 +295,7 @@ export const ServicesListPage = ({
   )
 
   return (
-    <Page.Body className={css.pageBody}>
+    <Page.Body className={css.pageBody} error={error ? getRBACErrorMessage(error) : ''} retryOnError={() => refetch()}>
       <>
         <Layout.Horizontal
           padding={{ left: 'xlarge', right: 'xlarge', top: 'medium' }}

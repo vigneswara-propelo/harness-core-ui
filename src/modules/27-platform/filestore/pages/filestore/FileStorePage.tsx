@@ -176,7 +176,7 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange, isFullScreen
     }
   })
 
-  const { data: createdByListResponse } = useGetCreatedByList({
+  const { data: createdByListResponse, error } = useGetCreatedByList({
     queryParams
   })
 
@@ -445,6 +445,12 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange, isFullScreen
     setFilters(fetchedFilterResponse?.data?.content || [])
     setIsRefreshingFilters(isFetchingFilters)
   }, [fetchedFilterResponse])
+
+  useEffect(() => {
+    if (error) {
+      showError(getRBACErrorMessage(error))
+    }
+  }, [error])
 
   const handleFilterSelection = (
     option: SelectOption,

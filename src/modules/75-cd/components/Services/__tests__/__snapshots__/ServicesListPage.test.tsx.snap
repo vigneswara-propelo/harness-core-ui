@@ -7,6 +7,7 @@ exports[`ServicesListPage ServicesListPage should render data correctly 1`] = `
     data-name="page-body"
     data-testid="page-body"
   >
+    
     <div
       class="Layout--horizontal StyledProps--main StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--padding-top-medium StyledProps--flex StyledProps--flex-distribution-space-between"
     >
@@ -822,6 +823,7 @@ exports[`ServicesListPage Should open Add-ServiceModal, grid and list view on cl
     data-name="page-body"
     data-testid="page-body"
   >
+    
     <div
       class="Layout--horizontal StyledProps--main StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--padding-top-medium StyledProps--flex StyledProps--flex-distribution-space-between"
     >
