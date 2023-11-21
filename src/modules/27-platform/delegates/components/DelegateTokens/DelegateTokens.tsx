@@ -68,7 +68,8 @@ export const DelegateListing: React.FC = () => {
       projectIdentifier,
       orgIdentifier,
       status: 'ACTIVE'
-    } as GetDelegateTokensQueryParams
+    } as GetDelegateTokensQueryParams,
+    lazy: true
   })
 
   const filteredTokens = useMemo(() => {
