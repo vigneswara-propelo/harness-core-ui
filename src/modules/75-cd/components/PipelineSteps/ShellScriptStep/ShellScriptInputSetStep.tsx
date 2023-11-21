@@ -165,7 +165,12 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             <HarnessDocTooltip tooltipId={'exec-target'} labelText={getString('pipeline.executionTarget')} />
           </Label>
 
-          <MultiTypeExecutionTargetGroup name={`${prefix}spec.onDelegate`} formik={formik} readonly={readonly} />
+          <MultiTypeExecutionTargetGroup
+            name={`${prefix}spec.onDelegate`}
+            formik={formik}
+            readonly={readonly}
+            allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXECUTION_TIME]}
+          />
 
           <FixedExecTargetGroup
             allowableTypes={allowableTypes}
