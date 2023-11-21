@@ -42,7 +42,7 @@ import {
   checkIfLastAdminPromise,
   resetTwoFactorAuthPromise
 } from 'services/cd-ng'
-import { useStrings } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
 import { PrincipalType, useRbacQueryParamOptions } from '@rbac/utils/utils'
@@ -186,19 +186,21 @@ const RenderColumnMenu: Renderer<CellProps<UserAggregate>> = ({ row, column }) =
     }
   })
 
-  const getContentText = (): string => {
+  const getContentText = (): JSX.Element => {
     if (!isLastAdmin) {
-      return data.externallyManaged
-        ? getString('rbac.usersPage.deleteExternallyManagedUserConfirmation', { name })
-        : getString('rbac.usersPage.deleteConfirmation', { name })
+      return data.externallyManaged ? (
+        <String useRichText stringID="rbac.usersPage.deleteExternallyManagedUserConfirmation" vars={{ name }} />
+      ) : (
+        <String useRichText stringID="rbac.usersPage.deleteConfirmation" vars={{ name }} />
+      )
     }
     switch (scope) {
       case Scope.PROJECT:
-        return getString('rbac.usersPage.deleteLastAdminProjectConfirmation', { name })
+        return <String useRichText stringID="rbac.usersPage.deleteLastAdminProjectConfirmation" vars={{ name }} />
       case Scope.ORG:
-        return getString('rbac.usersPage.deleteLastAdminOrgConfirmation', { name })
+        return <String useRichText stringID="rbac.usersPage.deleteLastAdminOrgConfirmation" vars={{ name }} />
       default: {
-        return getString('rbac.usersPage.deleteConfirmation', { name })
+        return <String useRichText stringID="rbac.usersPage.deleteConfirmation" vars={{ name }} />
       }
     }
   }
