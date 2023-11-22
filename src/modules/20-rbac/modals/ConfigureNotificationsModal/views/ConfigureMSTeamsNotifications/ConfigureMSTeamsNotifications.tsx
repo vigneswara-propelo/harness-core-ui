@@ -17,7 +17,8 @@ import {
   Formik,
   ButtonVariation,
   getErrorInfoFromErrorObject,
-  MultiTypeInputType
+  MultiTypeInputType,
+  getMultiTypeFromValue
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
@@ -170,6 +171,9 @@ function TeamsUrlListInputInternal(props: TeamsUrlListInputProps) {
 const TeamsUrlListInput = connect(TeamsUrlListInputInternal)
 
 const ConfigureMSTeamsNotifications: React.FC<ConfigureMSTeamsNotificationsProps> = props => {
+  const [webhookUrlType, setWebhookUrlType] = useState<MultiTypeInputType>(
+    getMultiTypeFromValue(props.config?.msTeamKeys)
+  )
   const [disableTestConnection, setDisableTestConnection] = useState<boolean>(false)
   const { getString } = useStrings()
 
@@ -195,7 +199,14 @@ const ConfigureMSTeamsNotifications: React.FC<ConfigureMSTeamsNotificationsProps
           validationSchema={Yup.object().shape({
             msTeamKeys: Yup.array().when('userGroups', {
               is: val => isEmpty(val),
-              then: Yup.array().of(Yup.string().required(getString('rbac.notifications.errors.msTeamUrlRequired')))
+              then:
+                webhookUrlType === MultiTypeInputType.FIXED
+                  ? Yup.array().of(
+                      Yup.string()
+                        .url(getString('rbac.notifications.errors.msTeamUrlRequired'))
+                        .required(getString('rbac.notifications.errors.msTeamUrlRequired'))
+                    )
+                  : Yup.array().of(Yup.string().required(getString('rbac.notifications.errors.msTeamUrlRequired')))
             })
           })}
           initialValues={{
@@ -213,7 +224,9 @@ const ConfigureMSTeamsNotifications: React.FC<ConfigureMSTeamsNotificationsProps
                   label={getString('rbac.notifications.labelMSTeam')}
                   expressions={props.expressions}
                   onTypeChange={map => {
-                    setDisableTestConnection(Object.values(map).includes(MultiTypeInputType.EXPRESSION))
+                    const expressionType = Object.values(map).includes(MultiTypeInputType.EXPRESSION)
+                    setWebhookUrlType(expressionType ? MultiTypeInputType.EXPRESSION : MultiTypeInputType.FIXED)
+                    setDisableTestConnection(expressionType)
                   }}
                 />
                 <Layout.Horizontal margin={{ bottom: 'xxlarge' }} style={{ alignItems: 'center' }}>
