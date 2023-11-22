@@ -12,5 +12,6 @@ declare const styles: {
   readonly collapseHeaderClassName: string
   readonly configurationTabs: string
   readonly height60: string
+  readonly isCollapsed: string
 }
 export default styles

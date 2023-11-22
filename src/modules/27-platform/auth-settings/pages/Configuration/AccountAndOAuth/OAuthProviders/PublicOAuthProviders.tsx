@@ -8,6 +8,7 @@
 import React, { Dispatch, SetStateAction } from 'react'
 import { useParams } from 'react-router-dom'
 import { Collapse, Text, Container, Card, Switch, useConfirmationDialog } from '@harness/uicore'
+import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { useToaster } from '@common/components'
 import { useStrings } from 'framework/strings'
@@ -173,7 +174,9 @@ const PublicOAuthProviders: React.FC<Props> = ({ authSettings, refetchAuthSettin
   return (
     <Collapse
       isOpen={oauthEnabled && featureEnabled}
-      collapseHeaderClassName={cssConfiguration.collapseHeaderClassName}
+      collapseHeaderClassName={cx(cssConfiguration.collapseHeaderClassName, {
+        [cssConfiguration.isCollapsed]: !oauthEnabled
+      })}
       collapseClassName={cssConfiguration.collapseClassName}
       collapsedIcon="main-chevron-down"
       expandedIcon="main-chevron-up"
