@@ -6,16 +6,19 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Button, ButtonVariation, Card, Collapse, DropDown, Layout, Text } from '@harness/uicore'
+import { ButtonVariation, Card, Collapse, DropDown, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { groupBy } from 'lodash-es'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
 import type { ResourceGroupDetailsPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useResourceScopeModal } from '@rbac/modals/ResourceScope/ResourceScopeModal'
 import type { ResourceGroupV2, ScopeSelector } from 'services/resourcegroups'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import RbacButton from '@modules/20-rbac/components/Button/Button'
 import {
   getScopeDropDownItems,
   getSelectedScopeType,
@@ -40,7 +43,9 @@ const ResourceGroupScope: React.FC<ResourceGroupScopeProps> = ({
   onSuccess,
   setIsUpdated
 }) => {
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ResourceGroupDetailsPathProps & ModulePathParams>()
+  const { accountId, projectIdentifier, orgIdentifier, resourceGroupIdentifier } = useParams<
+    ResourceGroupDetailsPathProps & ModulePathParams
+  >()
   const { getString } = useStrings()
   const [isOpen, setIsOpen] = useState(false)
   const scope = getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
@@ -89,12 +94,19 @@ const ResourceGroupScope: React.FC<ResourceGroupScopeProps> = ({
         <Text color={Color.GREY_400}>{getString('rbac.scopeItems.noProjects')}</Text>
       )}
 
-      <Button
+      <RbacButton
         icon="Edit"
         text={getString('edit')}
         variation={ButtonVariation.LINK}
         onClick={() => {
           openResourceScopeModal(includedScopes)
+        }}
+        permission={{
+          resource: {
+            resourceType: ResourceType.RESOURCEGROUP,
+            resourceIdentifier: resourceGroupIdentifier
+          },
+          permission: PermissionIdentifier.UPDATE_RESOURCEGROUP
         }}
       />
     </Layout.Horizontal>
