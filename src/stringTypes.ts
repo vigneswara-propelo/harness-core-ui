@@ -3134,12 +3134,7 @@ export interface StringsMap {
   'platform.defaultSettings.addPagerdutyNotificationFilterValues': string
   'platform.defaultSettings.addSlackNotificationFilterValues': string
   'platform.defaultSettings.addWebhookNotificationFilterValues': string
-  'platform.defaultSettings.aida.accept': string
   'platform.defaultSettings.aida.aida': string
-  'platform.defaultSettings.aida.aidaEULAText': string
-  'platform.defaultSettings.aida.ifTermsAccepted': string
-  'platform.defaultSettings.aida.reject': string
-  'platform.defaultSettings.aida.terms': string
   'platform.defaultSettings.allowDifferentRepoForInputSets': string
   'platform.defaultSettings.allowOverrides': string
   'platform.defaultSettings.allowUserToMarkStepAsFailedExplicitly': string

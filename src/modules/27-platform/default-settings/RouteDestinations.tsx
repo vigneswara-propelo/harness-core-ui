@@ -40,7 +40,7 @@ import {
   DefaultSettingsTagInput,
   DefaultSettingsToggle
 } from './components/ReusableHandlers'
-import { AIDASettingsRenderer } from './components/EULAComponents'
+import { AIDASettingsRenderer } from './components/AIDASettingsRenderer'
 
 DefaultSettingsFactory.registerCategory('CORE', {
   icon: 'cog',
