@@ -65,7 +65,6 @@ export const responseSLODashboardDetail: ResponseSLODashboardDetail = {
       environmentName: 'Environment 1',
       serviceName: 'Service 1',
       tags: {},
-      type: 'Latency',
       burnRate: {
         currentRatePercentage: 606.4356435643564
       },
@@ -107,7 +106,6 @@ export const responseSLODashboardDetail2: ResponseSLODashboardDetail = {
       environmentName: 'Environment 1',
       serviceName: 'Service 1',
       tags: {},
-      type: 'Availability',
       burnRate: {
         currentRatePercentage: 606.4356435643564
       },

@@ -11,13 +11,7 @@ import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import * as cvServices from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
 import CVSLODetailsPage from '../CVSLODetailsPage'
-import {
-  responseSLODashboardDetail,
-  testWrapperProps,
-  errorMessage,
-  pathParams,
-  responseSLODashboardDetail2
-} from './CVSLODetailsPage.mock'
+import { responseSLODashboardDetail, testWrapperProps, errorMessage, pathParams } from './CVSLODetailsPage.mock'
 import DowntimeBanner from '../DetailsPanel/views/DowntimeBanner'
 
 jest.mock('@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2', () => ({
@@ -137,19 +131,6 @@ describe('Test cases for CVSLODetailsPage', () => {
         }
       })
     })
-  })
-
-  test('it should handle the suffix day/days', () => {
-    jest
-      .spyOn(cvServices, 'useGetSLODetails')
-      .mockReturnValue({ data: responseSLODashboardDetail2, loading: false, refetch: jest.fn } as any)
-    jest
-      .spyOn(cvServices, 'useGetSecondaryEvents')
-      .mockReturnValue({ data: {}, loading: false, refetch: jest.fn } as any)
-
-    renderComponent()
-
-    expect(screen.getByText('cv.slos.slis.type.availability')).toBeInTheDocument()
   })
 })
 

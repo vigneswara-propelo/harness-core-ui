@@ -49,8 +49,8 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = ({ sloDashboardWidget }) =
   })
 
   const { title: Evaluationlabel, value: EvaluationValue } = useMemo(
-    () => getEvaluationTitleAndValue(getString, sloDashboardWidget, enableRequestSLO),
-    [sloDashboardWidget.type, enableRequestSLO]
+    () => getEvaluationTitleAndValue(getString, sloDashboardWidget),
+    [sloDashboardWidget.evaluationType, enableRequestSLO]
   )
 
   return (

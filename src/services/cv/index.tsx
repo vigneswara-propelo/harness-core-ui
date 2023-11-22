@@ -986,7 +986,7 @@ export interface ClusteredLog {
 }
 
 export type CompositeServiceLevelObjectiveSpec = ServiceLevelObjectiveSpec & {
-  evaluationType?: 'Window' | 'Request'
+  evaluationType?: 'Window' | 'Request' | 'MetricLess'
   serviceLevelObjectivesDetails: ServiceLevelObjectiveDetailsDTO[]
   sloFormulaType?: 'WeightedAverage' | 'LeastPerformance'
 }
@@ -1724,6 +1724,7 @@ export interface Error {
     | 'ACCOUNT_DOES_NOT_EXIST'
     | 'INACTIVE_ACCOUNT'
     | 'ACCOUNT_MIGRATED'
+    | 'ACCOUNT_MIGRATED_TO_NEXT_GEN'
     | 'USER_DOMAIN_NOT_ALLOWED'
     | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
     | 'RESOURCE_NOT_FOUND'
@@ -1805,6 +1806,7 @@ export interface Error {
     | 'LICENSE_EXPIRED'
     | 'NOT_LICENSED'
     | 'REQUEST_TIMEOUT'
+    | 'SCM_REQUEST_TIMEOUT'
     | 'WORKFLOW_ALREADY_TRIGGERED'
     | 'JENKINS_ERROR'
     | 'INVALID_ARTIFACT_SOURCE'
@@ -2116,8 +2118,12 @@ export interface ErrorMetadataDTO {
 }
 
 export type ErrorTrackingConditionSpec = NotificationRuleConditionSpec & {
+  aggregated?: boolean
   errorTrackingEventStatus?: ('NewEvents' | 'CriticalEvents' | 'ResurfacedEvents')[]
   errorTrackingEventTypes?: ('Exceptions' | 'LogErrors' | 'HttpErrors' | 'CustomErrors' | 'TimeoutErrors')[]
+  savedFilterId?: number
+  volumeThresholdCount?: number
+  volumeThresholdMinutes?: number
 }
 
 export type ErrorTrackingConnectorDTO = ConnectorConfigDTO & {
@@ -2175,6 +2181,7 @@ export interface Failure {
     | 'ACCOUNT_DOES_NOT_EXIST'
     | 'INACTIVE_ACCOUNT'
     | 'ACCOUNT_MIGRATED'
+    | 'ACCOUNT_MIGRATED_TO_NEXT_GEN'
     | 'USER_DOMAIN_NOT_ALLOWED'
     | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
     | 'RESOURCE_NOT_FOUND'
@@ -2256,6 +2263,7 @@ export interface Failure {
     | 'LICENSE_EXPIRED'
     | 'NOT_LICENSED'
     | 'REQUEST_TIMEOUT'
+    | 'SCM_REQUEST_TIMEOUT'
     | 'WORKFLOW_ALREADY_TRIGGERED'
     | 'JENKINS_ERROR'
     | 'INVALID_ARTIFACT_SOURCE'
@@ -3373,6 +3381,7 @@ export interface KubernetesCredentialSpecDTO {
 export type KubernetesDependencyMetadata = ServiceDependencyMetadata & {
   namespace?: string
   workload?: string
+  workloads?: string[]
 }
 
 export type KubernetesOpenIdConnectDTO = KubernetesAuthCredentialDTO & {
@@ -3726,6 +3735,7 @@ export interface LogRecordsResponse {
 }
 
 export interface LogSampleRequestDTO {
+  indexes?: string[]
   query?: string
 }
 
@@ -3801,6 +3811,8 @@ export interface MetricHistory {
   metricName?: string
   value?: number[]
 }
+
+export type MetricLessServiceLevelIndicatorSpec = ServiceLevelIndicatorSpec & { [key: string]: any }
 
 export interface MetricOnboardingGraph {
   metricGraphs?: {
@@ -4682,12 +4694,13 @@ export interface PartialSchemaDTO {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   namespace?: string
   nodeName?: string
@@ -5148,6 +5161,7 @@ export interface ResponseMessage {
     | 'ACCOUNT_DOES_NOT_EXIST'
     | 'INACTIVE_ACCOUNT'
     | 'ACCOUNT_MIGRATED'
+    | 'ACCOUNT_MIGRATED_TO_NEXT_GEN'
     | 'USER_DOMAIN_NOT_ALLOWED'
     | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
     | 'RESOURCE_NOT_FOUND'
@@ -5229,6 +5243,7 @@ export interface ResponseMessage {
     | 'LICENSE_EXPIRED'
     | 'NOT_LICENSED'
     | 'REQUEST_TIMEOUT'
+    | 'SCM_REQUEST_TIMEOUT'
     | 'WORKFLOW_ALREADY_TRIGGERED'
     | 'JENKINS_ERROR'
     | 'INVALID_ARTIFACT_SOURCE'
@@ -6507,7 +6522,6 @@ export interface SLOConsumptionBreakdown {
   projectParams: ProjectParams
   serviceName?: string
   sliStatusPercentage: number
-  sliType?: 'Availability' | 'Latency'
   sloError?: SLOError
   sloIdentifier: string
   sloName: string
@@ -6520,10 +6534,9 @@ export interface SLODashboardApiFilter {
   compositeSLOIdentifier?: string
   envIdentifiers?: string[]
   errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
-  evaluationType?: 'Window' | 'Request'
+  evaluationType?: 'Window' | 'Request' | 'MetricLess'
   monitoredServiceIdentifier?: string
   searchFilter?: string
-  sliTypes?: ('Availability' | 'Latency')[]
   sloTargetFilterDTO?: SLOTargetFilterDTO
   targetTypes?: ('Rolling' | 'Calender')[]
   type?: 'Simple' | 'Composite'
@@ -6550,7 +6563,7 @@ export interface SLODashboardWidget {
   errorBudgetRemaining: number
   errorBudgetRemainingPercentage: number
   errorBudgetRisk: 'EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY'
-  evaluationType?: 'Window' | 'Request'
+  evaluationType?: 'Window' | 'Request' | 'MetricLess'
   healthSourceIdentifier?: string
   healthSourceName?: string
   monitoredServiceDetails?: MonitoredServiceDetail[]
@@ -6572,7 +6585,6 @@ export interface SLODashboardWidget {
   title: string
   totalErrorBudget: number
   totalErrorBudgetApplicable?: boolean
-  type?: 'Availability' | 'Latency'
 }
 
 export interface SLOError {
@@ -6605,7 +6617,7 @@ export interface SLOHealthListView {
   errorBudgetRemaining: number
   errorBudgetRemainingPercentage: number
   errorBudgetRisk: 'EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY'
-  evaluationType: 'Window' | 'Request'
+  evaluationType: 'Window' | 'Request' | 'MetricLess'
   healthSourceIdentifier?: string
   healthSourceName?: string
   monitoredServiceIdentifier?: string
@@ -6617,7 +6629,6 @@ export interface SLOHealthListView {
   projectParams: ProjectParams
   serviceIdentifier?: string
   serviceName?: string
-  sliType?: 'Availability' | 'Latency'
   sloError?: SLOError
   sloIdentifier: string
   sloTargetPercentage: number
@@ -6786,7 +6797,7 @@ export interface ServiceLevelIndicatorDTO {
   identifier?: string
   name?: string
   spec: ServiceLevelIndicatorSpec
-  type?: 'Window' | 'Request'
+  type?: 'Window' | 'Request' | 'MetricLess'
 }
 
 export interface ServiceLevelIndicatorSpec {
@@ -6919,9 +6930,8 @@ export type SignalFXConnectorDTO = ConnectorConfigDTO & {
 }
 
 export type SimpleServiceLevelObjectiveSpec = ServiceLevelObjectiveSpec & {
-  healthSourceRef: string
+  healthSourceRef?: string
   monitoredServiceRef: string
-  serviceLevelIndicatorType?: 'Availability' | 'Latency'
   serviceLevelIndicators: ServiceLevelIndicatorDTO[]
 }
 
@@ -7091,7 +7101,11 @@ export type TasManualDetails = TasCredentialSpec & {
 }
 
 export interface TemplateDTO {
+  inputSetYaml?: string
+  lastReconciliationTime?: number
+  templateByReference?: boolean
   templateRef: string
+  templateVersionNumber?: number
   versionLabel?: string
 }
 
@@ -7737,12 +7751,13 @@ export interface YamlSchemaMetadata {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   )[]
   namespace?: string
@@ -7764,12 +7779,13 @@ export interface YamlSchemaWithDetails {
     | 'SRM'
     | 'IACM'
     | 'CET'
+    | 'IDP'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
+    | 'SSCA'
     | 'GOVERNANCE'
-    | 'IDP'
     | 'SEI'
   schema?: JsonNode
   schemaClassName?: string
@@ -7807,6 +7823,8 @@ export type ServiceGuardTimeSeriesAnalysisDTORequestBody = ServiceGuardTimeSerie
 export type ServiceLevelIndicatorDTORequestBody = ServiceLevelIndicatorDTO
 
 export type ServiceLevelObjectiveV2DTORequestBody = ServiceLevelObjectiveV2DTO
+
+export type SimpleServiceLevelObjectiveSpecRequestBody = SimpleServiceLevelObjectiveSpec
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
@@ -13983,6 +14001,7 @@ export interface ListMonitoredServiceQueryParams {
   projectIdentifier: string
   environmentIdentifier?: string
   environmentIdentifiers?: string[]
+  serviceIdentifier?: string
   offset: number
   pageSize: number
   filter?: string
@@ -17272,12 +17291,11 @@ export interface GetServiceLevelObjectivesRiskCountQueryParams {
   projectIdentifier?: string
   userJourneyIdentifiers?: string[]
   monitoredServiceIdentifier?: string
-  sliTypes?: ('Availability' | 'Latency')[]
   targetTypes?: ('Rolling' | 'Calender')[]
   errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
   filter?: string
   sloType?: 'Simple' | 'Composite'
-  evaluationType?: 'Window' | 'Request'
+  evaluationType?: 'Window' | 'Request' | 'MetricLess'
   envIdentifiers?: string[]
 }
 
@@ -17602,12 +17620,11 @@ export interface GetSLOHealthListViewQueryParams {
   projectIdentifier?: string
   userJourneyIdentifiers?: string[]
   monitoredServiceIdentifier?: string
-  sliTypes?: ('Availability' | 'Latency')[]
   targetTypes?: ('Rolling' | 'Calender')[]
   errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
   filter?: string
   sloType?: 'Simple' | 'Composite'
-  evaluationType?: 'Window' | 'Request'
+  evaluationType?: 'Window' | 'Request' | 'MetricLess'
   envIdentifiers?: string[]
   pageNumber?: number
   pageSize?: number
@@ -17746,7 +17763,6 @@ export interface GetServiceLevelObjectivesV2QueryParams {
   pageSize: number
   userJourneys?: string[]
   identifiers?: string[]
-  sliTypes?: ('Availability' | 'Latency')[]
   targetTypes?: ('Rolling' | 'Calender')[]
   errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
 }

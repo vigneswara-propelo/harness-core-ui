@@ -15,7 +15,7 @@ import {
   getSLORefIdWithOrgAndProject
 } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
 import type { SLOObjective } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
-import type { ServiceLevelObjectiveDetailsDTO, SLOConsumptionBreakdown, SLOHealthListView } from 'services/cv'
+import type { ServiceLevelObjectiveDetailsDTO, SLOHealthListView } from 'services/cv'
 
 export const getUpdatedSLOObjectives = (
   selectedSlos: SLOHealthListView[],
@@ -112,11 +112,10 @@ export const RenderTarget: Renderer<CellProps<SLOHealthListView>> = ({ row }) =>
   )
 }
 
-export const RenderSLIType: Renderer<CellProps<SLOHealthListView | SLOConsumptionBreakdown>> = ({ row }) => {
-  const slo = row.original
+export const RenderSLIType = (): JSX.Element => {
   return (
     <Text lineClamp={1} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
-      {slo?.sliType}
+      {''}
     </Text>
   )
 }

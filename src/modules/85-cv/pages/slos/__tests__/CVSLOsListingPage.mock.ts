@@ -17,7 +17,7 @@ import routes from '@common/RouteDefinitions'
 import { projectPathProps } from '@common/utils/routeUtils'
 import { RiskValues } from '@cv/utils/CommonUtils'
 import { SLIMetricEnum } from '../common/SLI/SLI.constants'
-import { PeriodTypes, SLITypes } from '../components/CVCreateSLOV2/CVCreateSLOV2.types'
+import { PeriodTypes } from '../components/CVCreateSLOV2/CVCreateSLOV2.types'
 
 export const errorMessage = 'TEST ERROR MESSAGE'
 
@@ -82,7 +82,6 @@ export const dashboardWidgetsContent: SLODashboardWidget = {
   timeRemainingDays: 10,
   title: 'Title',
   totalErrorBudget: 100,
-  type: SLITypes.AVAILABILITY,
   serviceIdentifier: 'service',
   environmentIdentifier: 'env',
   environmentName: 'env',

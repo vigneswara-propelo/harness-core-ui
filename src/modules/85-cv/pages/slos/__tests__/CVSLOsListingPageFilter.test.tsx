@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useEffect, useState } from 'react'
 import userEvent from '@testing-library/user-event'
 import { act } from 'react-test-renderer'
@@ -120,7 +127,6 @@ describe('Filters reset on project change assertions', () => {
           pageNumber: 0,
           pageSize: 10,
           projectIdentifier: 'project1',
-          sliTypes: ['All'],
           targetTypes: ['All'],
           evaluationType: ['All'],
           userJourneyIdentifiers: ['All']
@@ -145,7 +151,6 @@ describe('Filters reset on project change assertions', () => {
           pageNumber: 0,
           pageSize: 10,
           projectIdentifier: 'project2',
-          sliTypes: ['All'],
           targetTypes: ['All'],
           evaluationType: ['All'],
           userJourneyIdentifiers: ['All']

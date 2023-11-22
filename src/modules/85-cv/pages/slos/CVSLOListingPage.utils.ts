@@ -40,7 +40,6 @@ import {
   GetSLOAndErrorBudgetGraphOptions,
   SLORiskFilter,
   RiskTypes,
-  SLITypesParams,
   TargetTypesParams,
   SLOActionPayload,
   SLOFilterAction,
@@ -568,7 +567,7 @@ export const getSLOCommonQueryParams = ({
   filterState,
   monitoredServiceIdentifier
 }: GetSLOCommonQueryParamsProps): SLODashboardWidgetsParams => {
-  const { monitoredService, search, sliTypes, targetTypes, userJourney, evaluationType } = filterState
+  const { monitoredService, search, targetTypes, userJourney, evaluationType } = filterState
   const evaluationTypeOption = getEvaluationTypeOption(getString, evaluationType)
   const filterParam = search ? { filter: search } : {}
   return {
@@ -578,7 +577,6 @@ export const getSLOCommonQueryParams = ({
         monitoredServiceIdentifier || getMonitoredServiceSLODashboardParams(getString, monitoredService),
       userJourneyIdentifiers: getFilterValueForSLODashboardParams(getString, userJourney),
       targetTypes: getFilterValueForSLODashboardParams(getString, targetTypes) as TargetTypesParams[],
-      sliTypes: getFilterValueForSLODashboardParams(getString, sliTypes) as SLITypesParams[],
       ...evaluationTypeOption,
       ...filterParam
     },

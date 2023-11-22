@@ -7,28 +7,19 @@
 
 import type { UseStringsReturn } from 'framework/strings'
 import type { SLODashboardWidget } from 'services/cv'
-import { SLITypeEnum } from '../../common/SLI/SLI.constants'
 import { EvaluationType } from '../../components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { SLOType } from '../../components/CVCreateSLOV2/CVCreateSLOV2.constants'
 
 export const getEvaluationTitleAndValue = (
   getString: UseStringsReturn['getString'],
-  sloDashboardWidget?: SLODashboardWidget,
-  enableRequestSLO?: boolean
+  sloDashboardWidget?: SLODashboardWidget
 ): { title: string; value: string } => {
   return {
-    title: enableRequestSLO ? getString('cv.slos.evaluationType') : getString('cv.slos.sliType'),
-    value: enableRequestSLO
-      ? getString(
-          sloDashboardWidget?.evaluationType === EvaluationType.WINDOW
-            ? 'cv.slos.slis.evaluationType.window'
-            : 'common.request'
-        )
-      : getString(
-          sloDashboardWidget?.type === SLITypeEnum.AVAILABILITY
-            ? 'cv.slos.slis.type.availability'
-            : 'cv.slos.slis.type.latency'
-        )
+    title: getString('cv.slos.evaluationType'),
+    value:
+      sloDashboardWidget?.evaluationType === EvaluationType.WINDOW
+        ? getString('cv.slos.slis.evaluationType.window')
+        : getString('common.request')
   }
 }
 
