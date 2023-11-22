@@ -100,6 +100,9 @@ exports[`SubscribedModules should NOT render modules when api call returns modul
               </div>
             </div>
           </div>
+          <span
+            style="flex-grow: 1;"
+          />
           <div
             class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-top StyledProps--padding-top-large StyledProps--padding-bottom-large StyledProps--padding-left-large"
           >
@@ -249,6 +252,9 @@ exports[`SubscribedModules should render modules when api call returns modules 1
               </div>
             </div>
           </div>
+          <span
+            style="flex-grow: 1;"
+          />
           <div
             class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-top StyledProps--padding-top-large StyledProps--padding-bottom-large StyledProps--padding-left-large"
           >

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { capitalize, clone } from 'lodash-es'
-import { Container, Text, Card, Layout, Icon, PageError, PageSpinner, IconName } from '@harness/uicore'
+import { Container, Text, Card, Layout, Icon, PageError, PageSpinner, IconName, FlexExpander } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import moment from 'moment'
 import { useParams, Link } from 'react-router-dom'
@@ -77,6 +77,7 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module }) => {
           </Layout.Horizontal>
         </Layout.Vertical>
       </Container>
+      <FlexExpander />
       <Container
         border={{ top: true, color: Color.GREY_250 }}
         padding={{ top: 'large', bottom: 'large', left: 'large' }}
