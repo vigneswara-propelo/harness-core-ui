@@ -37,9 +37,9 @@ const webhookTriggerCategoryItems = [
     iconName: 'bitbucket-selected'
   },
   {
-    itemLabel: 'common.repo_provider.awscodecommit',
-    value: 'AwsCodeCommit',
-    iconName: 'service-aws-code-deploy'
+    itemLabel: 'common.repo_provider.azureRepos',
+    value: 'AzureRepo',
+    iconName: 'service-azure'
   },
   {
     itemLabel: 'common.repo_provider.customLabel',

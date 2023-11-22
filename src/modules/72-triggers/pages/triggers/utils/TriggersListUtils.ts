@@ -306,13 +306,13 @@ const TriggerCategoryToLabelMap: Record<Required<TriggerCatalogItem>['category']
   Scheduled: 'triggers.scheduledLabel'
 }
 
-type TriggerCatalogType = Required<TriggerCatalogItem>['triggerCatalogType'][number]
+export type TriggerCatalogType = Required<TriggerCatalogItem>['triggerCatalogType'][number]
 
 export const TriggerCatalogTypeToLabelMap: Record<TriggerCatalogType, StringKeys> = {
   Github: 'common.repo_provider.githubLabel',
   Gitlab: 'common.repo_provider.gitlabLabel',
   Bitbucket: 'common.repo_provider.bitbucketLabel',
-  AwsCodeCommit: 'common.repo_provider.awscodecommit',
+  AzureRepo: 'common.repo_provider.azureRepos',
   Custom: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.CustomArtifact],
   Gcr: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Gcr],
   Ecr: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Ecr],
@@ -323,7 +323,6 @@ export const TriggerCatalogTypeToLabelMap: Record<TriggerCatalogType, StringKeys
   GoogleArtifactRegistry: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry],
   CustomArtifact: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.CustomArtifact],
   GithubPackageRegistry: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.GithubPackageRegistry],
-  Nexus2Registry: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus2Registry],
   Nexus3Registry: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus3Registry],
   Jenkins: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Jenkins],
   AzureArtifacts: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AzureArtifacts],
@@ -338,7 +337,7 @@ const TriggerCatalogTypeToIconMap: Record<TriggerCatalogType, IconName> = {
   Github: GitSourceProviders.GITHUB.iconName,
   Gitlab: GitSourceProviders.GITLAB.iconName,
   Bitbucket: GitSourceProviders.BITBUCKET.iconName,
-  AwsCodeCommit: GitSourceProviders.AWS_CODECOMMIT.iconName,
+  AzureRepo: GitSourceProviders.AZURE_REPO.iconName,
   Custom: GitSourceProviders.CUSTOM.iconName,
   Gcr: ArtifactIconByType.Gcr,
   Ecr: ArtifactIconByType.Ecr,
@@ -349,7 +348,6 @@ const TriggerCatalogTypeToIconMap: Record<TriggerCatalogType, IconName> = {
   GoogleArtifactRegistry: ArtifactIconByType.GoogleArtifactRegistry,
   GithubPackageRegistry: ArtifactIconByType.GithubPackageRegistry,
   CustomArtifact: ArtifactIconByType.CustomArtifact,
-  Nexus2Registry: ArtifactIconByType.Nexus2Registry,
   Nexus3Registry: ArtifactIconByType.Nexus3Registry,
   Jenkins: ArtifactIconByType.Jenkins,
   AzureArtifacts: ArtifactIconByType.AzureArtifacts,

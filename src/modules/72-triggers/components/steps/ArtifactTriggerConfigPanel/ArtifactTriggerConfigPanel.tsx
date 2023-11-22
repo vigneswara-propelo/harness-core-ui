@@ -12,8 +12,7 @@ import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'
 import StageSelection from '@triggers/components/StageSelection/StageSelection'
 
-import { TriggerArtifactType } from '@triggers/components/Triggers/TriggerInterface'
-import { TriggerCatalogTypeToLabelMap } from '@triggers/pages/triggers/utils/TriggersListUtils'
+import { TriggerCatalogType, TriggerCatalogTypeToLabelMap } from '@triggers/pages/triggers/utils/TriggersListUtils'
 import ArtifactsSelection from './ArtifactsSelection/ArtifactsSelection'
 
 import css from './ArtifactTriggerConfigPanel.module.scss'
@@ -29,7 +28,7 @@ const ArtifactTriggerConfigPanel: React.FC<ArtifactTriggerConfigPanelPropsInterf
   const { getString } = useStrings()
 
   const artifactText = getString('pipeline.artifactTriggerConfigPanel.artifact')
-  const artifactType = formikProps?.values?.source?.spec?.type as TriggerArtifactType
+  const artifactType = formikProps?.values?.source?.spec?.type as TriggerCatalogType
   const artifactName = artifactType ? getString(TriggerCatalogTypeToLabelMap[artifactType]) : ''
 
   return (

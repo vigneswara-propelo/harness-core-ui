@@ -7414,7 +7414,7 @@ export interface TriggerCatalogItem {
     | 'Github'
     | 'Gitlab'
     | 'Bitbucket'
-    | 'AwsCodeCommit'
+    | 'AzureRepo'
     | 'Custom'
     | 'Gcr'
     | 'Ecr'
@@ -7425,13 +7425,12 @@ export interface TriggerCatalogItem {
     | 'GoogleArtifactRegistry'
     | 'CustomArtifact'
     | 'GithubPackageRegistry'
-    | 'Nexus2Registry'
-    | 'Nexus3Registry'
     | 'Jenkins'
+    | 'Nexus3Registry'
     | 'AzureArtifacts'
     | 'AmazonMachineImage'
-    | 'GoogleCloudStorage'
     | 'Bamboo'
+    | 'GoogleCloudStorage'
     | 'HelmChart'
     | 'Cron'
   )[]
@@ -19615,6 +19614,7 @@ export interface GetSchemaYamlQueryParams {
     | 'AquaSecurity'
     | 'IDPStage'
     | 'ChaosHub'
+    | 'IdpCookieCutter'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
