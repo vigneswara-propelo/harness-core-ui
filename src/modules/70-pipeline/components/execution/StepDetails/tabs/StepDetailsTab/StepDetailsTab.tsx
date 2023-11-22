@@ -41,7 +41,7 @@ export function StepDetailsTab(props: ExecutionStepDetailsTabProps): React.React
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const queryParams = useQueryParams<ExecutionQueryParams>()
   const { pipelineStagesMap, selectedStageId, pipelineExecutionDetail } = useExecutionContext()
-  const { CI_AI_ENHANCED_REMEDIATIONS, CD_AI_ENHANCED_REMEDIATIONS } = useFeatureFlags()
+  const { CI_AI_ENHANCED_REMEDIATIONS } = useFeatureFlags()
 
   const logUrl = `${pathname}?${qs.stringify({ ...queryParams, view: 'log' })}`
 
@@ -70,7 +70,7 @@ export function StepDetailsTab(props: ExecutionStepDetailsTabProps): React.React
         selectedStageId,
         pipelineExecutionDetail,
         enableForCI: CI_AI_ENHANCED_REMEDIATIONS,
-        enableForCD: CD_AI_ENHANCED_REMEDIATIONS,
+        enableForCD: true,
         isEULAccepted: aidaSettingResponse?.data?.value === 'true'
       }) ? (
         <Container

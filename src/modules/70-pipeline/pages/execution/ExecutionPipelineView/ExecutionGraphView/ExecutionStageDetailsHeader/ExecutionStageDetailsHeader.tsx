@@ -154,7 +154,7 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
       )}
     </div>
   )
-  const { CI_YAML_VERSIONING, CI_AI_ENHANCED_REMEDIATIONS, CD_AI_ENHANCED_REMEDIATIONS } = useFeatureFlags()
+  const { CI_YAML_VERSIONING, CI_AI_ENHANCED_REMEDIATIONS } = useFeatureFlags()
   const runPipeline = (): void => {
     isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING) ? openRunPipelineModalV1() : openRunPipelineModal()
   }
@@ -344,7 +344,7 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
             selectedStageId,
             pipelineExecutionDetail,
             enableForCI: CI_AI_ENHANCED_REMEDIATIONS,
-            enableForCD: CD_AI_ENHANCED_REMEDIATIONS,
+            enableForCD: true,
             isEULAccepted: aidaSettingResponse?.data?.value === 'true'
           }) ? (
             <Layout.Horizontal flex={{ justifyContent: 'space-between' }} padding={{ right: 'small' }} width="100%">

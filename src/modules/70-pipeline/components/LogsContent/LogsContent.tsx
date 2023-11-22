@@ -177,8 +177,7 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
   const hasLogs = state.units.length > 0
   const isSingleSectionLogs = state.units.length === 1
   const { openDialog } = useLogSettings()
-  const { CI_AI_ENHANCED_REMEDIATIONS, CD_AI_ENHANCED_REMEDIATIONS, SPG_LOG_SERVICE_ENABLE_DOWNLOAD_LOGS } =
-    useFeatureFlags()
+  const { CI_AI_ENHANCED_REMEDIATIONS, SPG_LOG_SERVICE_ENABLE_DOWNLOAD_LOGS } = useFeatureFlags()
   const { copyToClipboard } = useCopyToClipboard()
 
   const virtuosoRef = React.useRef<null | GroupedVirtuosoHandle | VirtuosoHandle>(null)
@@ -401,7 +400,7 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
               selectedStageId,
               pipelineExecutionDetail,
               enableForCI: CI_AI_ENHANCED_REMEDIATIONS,
-              enableForCD: CD_AI_ENHANCED_REMEDIATIONS,
+              enableForCD: true,
               isEULAccepted: aidaSettingResponse?.data?.value === 'true'
             }) ? (
               <Container className={css.copilot} flex={{ justifyContent: 'flex-end' }}>
@@ -462,7 +461,7 @@ export function DefaultConsoleViewStepDetails(props: ConsoleViewStepDetailProps)
   const manuallySelected = React.useRef(false)
   const isWaitingOnExecInputs = isExecutionWaitingForInput(status)
   const shouldShowInputOutput = ((stepType ?? '') as string) !== 'liteEngineTask' && !isStageExecutionInputConfigured
-  const { CI_AI_ENHANCED_REMEDIATIONS, CD_AI_ENHANCED_REMEDIATIONS } = useFeatureFlags()
+  const { CI_AI_ENHANCED_REMEDIATIONS } = useFeatureFlags()
   const { pipelineStagesMap, selectedStageId, pipelineExecutionDetail, allNodeMap } = useExecutionContext()
 
   React.useEffect(() => {
@@ -543,7 +542,7 @@ export function DefaultConsoleViewStepDetails(props: ConsoleViewStepDetailProps)
               selectedStageId,
               pipelineExecutionDetail,
               enableForCI: CI_AI_ENHANCED_REMEDIATIONS,
-              enableForCD: CD_AI_ENHANCED_REMEDIATIONS,
+              enableForCD: true,
               isEULAccepted: aidaSettingResponse?.data?.value === 'true'
             }) ? (
               <Layout.Horizontal flex={{ justifyContent: 'space-between' }} padding={{ right: 'small' }} width="100%">

@@ -99,7 +99,7 @@ jest.mock('../useLogsContent.tsx', () => ({
 }))
 
 mockImport('@common/hooks/useFeatureFlag', {
-  useFeatureFlags: () => ({ CI_AI_ENHANCED_REMEDIATIONS: true, CD_AI_ENHANCED_REMEDIATIONS: true })
+  useFeatureFlags: () => ({ CI_AI_ENHANCED_REMEDIATIONS: true })
 })
 
 describe('<LogsContent /> tests', () => {
