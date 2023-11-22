@@ -20,7 +20,7 @@ import {
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
-import { pick, cloneDeep } from 'lodash-es'
+import { pick, cloneDeep, isEmpty } from 'lodash-es'
 import { NameIdDescriptionTags, useToaster } from '@common/components'
 import { useStrings } from 'framework/strings'
 import { UserGroupAggregateDTO, UserGroupDTO, usePostUserGroupV2, usePutUserGroupV2, useGetUsers } from 'services/cd-ng'
@@ -49,6 +49,7 @@ interface UserGroupFormDTO extends UserGroupDTO {
 const UserGroupForm: React.FC<UserGroupModalData> = props => {
   const { data: userGroupAggregateData, onSubmit, isEdit, isAddMember, onCancel } = props
   const userGroupData = userGroupAggregateData?.userGroupDTO
+  const isNotificationsDataPresent = !isEmpty(userGroupData?.notificationConfigs)
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getRBACErrorMessage } = useRBACError()
@@ -97,6 +98,10 @@ const UserGroupForm: React.FC<UserGroupModalData> = props => {
     delete values.userList
     const dataToSubmit: UserGroupDTO = values
     if (userDetails) dataToSubmit['users']?.push(...userDetails)
+    if (isNotificationsDataPresent) {
+      dataToSubmit['notificationConfigs'] = userGroupData?.notificationConfigs
+    }
+
     try {
       const edited = await editUserGroup(dataToSubmit)
       /* istanbul ignore else */ if (edited) {
