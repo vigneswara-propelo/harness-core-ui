@@ -17,8 +17,6 @@ import { ProjectSelector } from '@projects-orgs/components/ProjectSelector/Proje
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@modules/10-common/hooks/useFeatureFlag'
 
 const module = 'ssca'
 
@@ -27,7 +25,6 @@ export default function SSCASideNav(): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { updateAppStore } = useAppStore()
   const history = useHistory()
-  const SSCA_ARTIFACTS_ENABLED = useFeatureFlag(FeatureFlag.SSCA_ARTIFACTS_ENABLED)
 
   const showLinks = projectIdentifier && orgIdentifier
   const params: ProjectPathProps & ModulePathParams = {
@@ -55,8 +52,8 @@ export default function SSCASideNav(): React.ReactElement {
       {showLinks && (
         <>
           <SidebarLink label={getString('overview')} to={routes.toProjectOverview(params)} />
-          {SSCA_ARTIFACTS_ENABLED && <SidebarLink label={getString('artifacts')} to={routes.toSSCAArtifacts(params)} />}
-
+          <SidebarLink label={getString('artifacts')} to={routes.toSSCAArtifacts(params)} />
+          <SidebarLink label={getString('pipelines')} to={routes.toPipelines(params)} />
           <ProjectSetupMenu module={module} />
         </>
       )}

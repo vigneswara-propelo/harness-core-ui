@@ -1,6 +1,13 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+/* istanbul ignore file - no sidenavs are tested in Unit tests rather test in integration tests, currently other sidenav do a just snapshot which is not correct way to do*/
+
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { SideNav } from '@common/navigation/SideNavV2/SideNavV2'
 import routes from '@common/RouteDefinitionsV2'
 import { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
@@ -16,7 +23,6 @@ const SSCASideNavLinks = (mode: NAV_MODE): React.ReactElement => {
   const { accountId } = useParams<AccountPathProps>()
   const { params } = useGetSelectedScope()
   const { projectIdentifier = '', orgIdentifier = '' } = params || {}
-  const { SSCA_ARTIFACTS_ENABLED } = useFeatureFlags()
 
   return (
     <SideNav.Main>
@@ -31,7 +37,12 @@ const SSCASideNavLinks = (mode: NAV_MODE): React.ReactElement => {
             icon="ssca-artifacts"
             label={getString('artifacts')}
             to={routes.toSSCAArtifacts({ accountId, projectIdentifier, orgIdentifier, module })}
-            hidden={!SSCA_ARTIFACTS_ENABLED}
+          />
+          <SideNav.Link
+            icon="nav-pipeline"
+            label={getString('pipelines')}
+            to={routes.toPipelines({ accountId, projectIdentifier, orgIdentifier, module })}
+            hidden={mode === NAV_MODE.ALL}
           />
         </SideNav.Scope>
       </SideNav.Section>
