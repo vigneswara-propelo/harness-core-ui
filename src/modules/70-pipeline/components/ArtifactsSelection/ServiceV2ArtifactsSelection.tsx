@@ -54,7 +54,6 @@ import { createTemplate } from '@pipeline/utils/templateUtils'
 import type { StepFormikRef } from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { useGetLastStepConnectorValue } from '@pipeline/hooks/useGetLastStepConnectorValue'
-import { isSshOrWinrmDeploymentType } from '@pipeline/utils/stageHelpers'
 // eslint-disable-next-line no-restricted-imports
 import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
@@ -163,17 +162,12 @@ export default function ServiceV2ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const { CDS_SERVERLESS_V2, CDS_ENABLE_GCS_ARTIFACT_TYPE } = useFeatureFlags()
+  const { CDS_SERVERLESS_V2 } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   const artifactTypes = React.useMemo(() => {
-    if (!CDS_ENABLE_GCS_ARTIFACT_TYPE && isSshOrWinrmDeploymentType(deploymentType)) {
-      return allowedArtifactTypes[deploymentType].filter(
-        (artifact: string) => artifact !== ENABLED_ARTIFACT_TYPES.GoogleCloudStorage
-      )
-    }
     return allowedArtifactTypes[deploymentType]
-  }, [deploymentType, CDS_ENABLE_GCS_ARTIFACT_TYPE])
+  }, [deploymentType])
 
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
