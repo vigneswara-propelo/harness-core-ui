@@ -62,7 +62,7 @@
     "@emotion/styled": "^10.0.27",
     "@harness/design-system": "1.5.2",
     "@harness/help-panel": "1.14.0",
-    "@harness/icons": "^1.207.0",
+    "@harness/icons": "^1.208.0",
     "@harness/ng-tooltip": "^1.31.193",
     "@harness/telemetry": "^1.0.42",
     "@harness/ts-transform-paths": "1.0.1",

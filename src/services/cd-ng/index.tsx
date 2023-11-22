@@ -19818,6 +19818,7 @@ export interface StoreConfigWrapper {
     | 'Harness'
     | 'OciHelmChart'
     | 'AzureRepo'
+    | 'ArtifactBundle'
 }
 
 export interface StoreConfigWrapperParameters {

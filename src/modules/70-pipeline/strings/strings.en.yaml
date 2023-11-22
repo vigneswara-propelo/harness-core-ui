@@ -505,6 +505,10 @@ manifestType:
   fetchHelmChartMetadata: Fetch Helm Chart Metadata
   awsSamDirectory:
     samTemplateFile: SAM Template File
+  artifactBundle:
+    title: Artifact Bundle
+    artifactBundleType: Artifact Bundle Type
+    deployableArtifactPath: Deployable Artifact Path
 manifestTypeLabels:
   K8sManifest: K8s Manifest
   ValuesYaml: Values YAML
@@ -1795,6 +1799,7 @@ phasesForm:
     war: 'War'
     rpm: 'Rpm'
     zip: 'Zip'
+    tar_gzip: 'Tar Gzip'
   packageTypesWinrm:
     application: 'IIS Application'
     website: 'IIS Website'

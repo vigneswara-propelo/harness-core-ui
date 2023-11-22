@@ -68,13 +68,20 @@ export type ManifestStores =
   | 'Harness'
   | 'CustomRemote'
   | 'AzureRepo'
+  | 'ArtifactBundle'
 
-export type ManifestStoreTypeWithoutConnector = 'InheritFromManifest' | 'Harness' | 'Inline' | 'CustomRemote'
+export type ManifestStoreTypeWithoutConnector =
+  | 'InheritFromManifest'
+  | 'Harness'
+  | 'Inline'
+  | 'CustomRemote'
+  | 'ArtifactBundle'
 
 export type HelmOCIVersionOptions = 'V380'
 export type HelmVersionOptions = 'V2' | 'V3'
 export type CLIVersionOptions = TasManifest['cfCliVersion']
 export type ManifestStoreWithoutConnector = Exclude<ManifestStores, ManifestStoreTypeWithoutConnector>
+export type ArtifactBundleType = 'ZIP' | 'TAR' | 'TAR_GZIP'
 
 export interface ManifestSelectionProps {
   isPropagating?: boolean
@@ -216,6 +223,17 @@ export interface TASManifestDataType {
   autoScalerPath?: any
   cfCliVersion?: TasManifest['cfCliVersion']
 }
+
+export interface TASManifestWithArtifactBuildDataType {
+  identifier: string
+  manifestPath: string
+  deployableUnitPath: string
+  artifactBundleType: 'TAR' | 'ZIP'
+  varsPaths?: { path: string }[] | string
+  autoScalerPath?: { path: string }[] | string
+  cfCliVersion?: TasManifest['cfCliVersion']
+}
+
 export interface HelmWithGcsDataType extends HelmWithHTTPDataType {
   bucketName: SelectOption | string
   folderPath: string

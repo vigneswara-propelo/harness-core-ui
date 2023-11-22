@@ -71,7 +71,8 @@ import {
   isECSTypeManifest,
   TASManifestAllowedPaths,
   TASManifestTypes,
-  getManifestStoresByDeploymentType
+  getManifestStoresByDeploymentType,
+  doesStorehasConnector
 } from '../Manifesthelper'
 import type { ConnectorRefLabelType } from '../../ArtifactsSelection/ArtifactInterface'
 import type {
@@ -128,6 +129,7 @@ import { ServerlessLambdaWithS3 } from '../ManifestWizardSteps/ServerlessLambdaW
 import TasManifest from '../ManifestWizardSteps/TasManifest/TasManifest'
 import TASWithHarnessStore from '../ManifestWizardSteps/TASWithHarnessStore/TASWithHarnessStore'
 import { AwsSamDirectoryManifest } from '../ManifestWizardSteps/AwsSamDirectoryManifest/AwsSamDirectoryManifest'
+import { TasManifestWithArtifactBundle } from '../ManifestWizardSteps/TasManifestWithArtifactBundle/TasManifestWithArtifactBundle'
 import { LocationValue } from '../../ConfigFilesSelection/ConfigFilesListView/LocationValue'
 import css from '../ManifestSelection.module.scss'
 
@@ -181,7 +183,7 @@ function ManifestListView({
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
-  const { CDS_SERVERLESS_V2 } = useFeatureFlags()
+  const { CDS_SERVERLESS_V2, CDS_ENABLE_TAS_ARTIFACT_AS_MANIFEST_SOURCE_NG } = useFeatureFlags()
 
   useEffect(() => {
     setIsManifestEditMode(manifestIndex < listOfManifests.length)
@@ -334,7 +336,13 @@ function ManifestListView({
   }
 
   const shouldPassPrevStepData = (): boolean => {
-    return isManifestEditMode && !!selectedConnector
+    if (isManifestEditMode) {
+      if (doesStorehasConnector(manifestStore as ManifestStores)) {
+        return true
+      }
+      return !!selectedConnector
+    }
+    return false
   }
 
   const lastSteps = React.useMemo((): Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> => {
@@ -512,6 +520,14 @@ function ManifestListView({
           />
         )
         break
+      case selectedManifest === ManifestDataType.TasManifest && manifestStore === ManifestStoreMap.ArtifactBundle:
+        manifestDetailStep = (
+          <TasManifestWithArtifactBundle
+            {...lastStepProps()}
+            {...((shouldPassPrevStepData() ? prevStepProps() : {}) as TASManifestLastStepPrevStepData)}
+          />
+        )
+        break
       case selectedManifest === ManifestDataType.TasManifest:
         manifestDetailStep = (
           <TasManifest
@@ -655,7 +671,8 @@ function ManifestListView({
           <ManifestWizard
             types={availableManifestTypes}
             manifestStoreTypes={getManifestStoresByDeploymentType(deploymentType, selectedManifest, {
-              CDS_SERVERLESS_V2
+              CDS_SERVERLESS_V2,
+              CDS_ENABLE_TAS_ARTIFACT_AS_MANIFEST_SOURCE_NG
             })}
             labels={getLabels()}
             selectedManifest={selectedManifest}

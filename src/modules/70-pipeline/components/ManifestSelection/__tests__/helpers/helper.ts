@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { ManifestDataType } from '../../Manifesthelper'
+import { ManifestDataType, ManifestStoreMap } from '../../Manifesthelper'
 
 /**
  * Amazon ECS related
@@ -118,6 +118,28 @@ export const updateManifestListFirstArgAwsLambdaFunctionAliasDefinition = {
           paths: ['test-path']
         },
         type: 'Git'
+      }
+    }
+  }
+}
+
+/**
+ * TAS related
+ */
+
+export const updateManifestListFirstArgTasManifestArtifactBundle = {
+  manifest: {
+    identifier: 'testidentifier',
+    type: ManifestDataType.TasManifest,
+    spec: {
+      cfCliVersion: 'V7',
+      store: {
+        type: ManifestStoreMap.ArtifactBundle,
+        spec: {
+          artifactBundleType: 'ZIP',
+          deployableUnitPath: 'dup',
+          manifestPath: 'mp'
+        }
       }
     }
   }

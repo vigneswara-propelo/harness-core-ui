@@ -779,3 +779,46 @@ export const pipelineContextAwsSamManifests = {
   allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
   updateStage: jest.fn()
 } as any
+
+const stateWithTASDeploymentType = {
+  state: {
+    pipeline: {
+      name: 'Pipeline 1',
+      identifier: 'Pipeline_1',
+      description: '',
+      tags: {},
+      stages: [
+        {
+          stage: {
+            name: 'Stage 1',
+            identifier: 'Stage_1',
+            description: '',
+            type: 'Deployment',
+            spec: {
+              serviceConfig: {
+                serviceRef: 'Service_1',
+                serviceDefinition: {
+                  type: ServiceDeploymentType.TAS,
+                  spec: {
+                    artifacts: { sidecars: [], primary: null },
+                    manifests: []
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    selectionState: { selectedStageId: 'Stage_1' }
+  }
+}
+
+export const pipelineContextTAS = {
+  ...stateWithTASDeploymentType,
+  getStageFromPipeline: jest.fn(() => {
+    return { stage: stateWithTASDeploymentType.state.pipeline.stages[0], parent: undefined }
+  }),
+  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  updateStage: jest.fn()
+} as any

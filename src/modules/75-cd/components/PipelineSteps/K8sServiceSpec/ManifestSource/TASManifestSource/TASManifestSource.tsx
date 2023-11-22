@@ -16,6 +16,7 @@ import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import ManifestGitStoreRuntimeFields from '../ManifestSourceRuntimeFields/ManifestGitStoreRuntimeFields'
 import CustomRemoteManifestRuntimeFields from '../ManifestSourceRuntimeFields/CustomRemoteManifestRuntimeFields'
+import { ArtifactBundleStoreRuntimeFields } from '../ManifestSourceRuntimeFields/ArtifactBundleStoreRuntimeFields'
 import MultiTypeListOrFileSelectList from '../MultiTypeListOrFileSelectList'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
@@ -56,6 +57,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
     >
       <ManifestGitStoreRuntimeFields {...props} />
       <CustomRemoteManifestRuntimeFields {...props} />
+      <ArtifactBundleStoreRuntimeFields {...props} />
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.store.spec.files`, template) && (
           <div className={css.verticalSpacingInput}>

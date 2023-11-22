@@ -4893,6 +4893,9 @@ export interface StringsMap {
   'pipeline.manifestType.addManifestLabel': string
   'pipeline.manifestType.addValuesYamlPath': string
   'pipeline.manifestType.addVarsYAMLPath': string
+  'pipeline.manifestType.artifactBundle.artifactBundleType': string
+  'pipeline.manifestType.artifactBundle.deployableArtifactPath': string
+  'pipeline.manifestType.artifactBundle.title': string
   'pipeline.manifestType.associatedValues': string
   'pipeline.manifestType.attachPath': string
   'pipeline.manifestType.autoScalerPathRequired': string
@@ -5095,6 +5098,7 @@ export interface StringsMap {
   'pipeline.phasesForm.packageTypes.jar': string
   'pipeline.phasesForm.packageTypes.rpm': string
   'pipeline.phasesForm.packageTypes.tar': string
+  'pipeline.phasesForm.packageTypes.tar_gzip': string
   'pipeline.phasesForm.packageTypes.war': string
   'pipeline.phasesForm.packageTypes.zip': string
   'pipeline.phasesForm.packageTypesWinrm.application': string

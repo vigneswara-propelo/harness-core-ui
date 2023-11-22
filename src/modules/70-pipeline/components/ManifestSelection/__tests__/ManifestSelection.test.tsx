@@ -6,7 +6,18 @@
  */
 
 import React from 'react'
-import { render, findByText, fireEvent, findAllByText, waitFor } from '@testing-library/react'
+import {
+  render,
+  findByText,
+  fireEvent,
+  findAllByText,
+  waitFor,
+  queryByAttribute,
+  findByTestId,
+  getByText,
+  queryByText
+} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 
 import type { ManifestConfigWrapper, ServiceDefinition } from 'services/cd-ng'
@@ -15,16 +26,17 @@ import {
   PipelineContext,
   PipelineContextInterface
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { ServiceDeploymentType } from '@modules/70-pipeline/utils/stageHelpers'
 import ManifestSelection from '../ManifestSelection'
 import ManifestListView from '../ManifestListView/ManifestListView'
 import pipelineContextMock from './pipeline_mock.json'
 import gitOpsEnabledPipeline from './gitops_pipeline.json'
 import connectorsData from './connectors_mock.json'
-import { allowedManifestTypes } from '../Manifesthelper'
+import { ManifestDataType, allowedManifestTypes } from '../Manifesthelper'
+import { pipelineContextTAS } from '../../PipelineStudio/PipelineContext/__tests__/helper'
+import { updateManifestListFirstArgTasManifestArtifactBundle } from './helpers/helper'
 
 const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
-
-jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 jest.mock('services/cd-ng', () => ({
   getConnectorListV2Promise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
@@ -65,6 +77,82 @@ const manifestListCommonProps = {
     MultiTypeInputType.EXPRESSION
   ] as AllowedTypesWithRunTime[],
   availableManifestTypes: allowedManifestTypes['Kubernetes']
+}
+
+const testManifestStoreStepForTasManifest = async (
+  portal: HTMLElement,
+  storeNameToSelect: string,
+  isConnectorAllowed: boolean
+): Promise<void> => {
+  const queryByValueAttribute = (value: string): HTMLElement | null => queryByAttribute('value', portal, value)
+
+  await waitFor(() => expect(queryByValueAttribute('Github')).toBeInTheDocument())
+
+  const Git = queryByValueAttribute('Git')
+  expect(Git).toBeInTheDocument()
+  const GitLab = queryByValueAttribute('GitLab')
+  expect(GitLab).toBeInTheDocument()
+  const Bitbucket = queryByValueAttribute('Bitbucket')
+  expect(Bitbucket).toBeInTheDocument()
+  const Harness = queryByValueAttribute('Harness')
+  expect(Harness).toBeInTheDocument()
+  const CustomRemote = queryByValueAttribute('CustomRemote')
+  expect(CustomRemote).toBeInTheDocument()
+  const ArtifactBundle = queryByValueAttribute('ArtifactBundle')
+  expect(ArtifactBundle).toBeInTheDocument()
+
+  const storeToSelect = queryByValueAttribute(storeNameToSelect)
+  await userEvent.click(storeToSelect!)
+
+  if (isConnectorAllowed) {
+    const connnectorRefInput = await findByTestId(portal, /connectorRef/)
+    expect(connnectorRefInput).toBeTruthy()
+    await userEvent.click(connnectorRefInput!)
+
+    const connectorSelectorDialog = document.getElementsByClassName('bp3-dialog')[1] as HTMLElement
+    const githubConnector1 = await findByText(connectorSelectorDialog, 'Git CTR')
+    expect(githubConnector1).toBeTruthy()
+    const githubConnector2 = await findByText(connectorSelectorDialog, 'Sample')
+    expect(githubConnector2).toBeTruthy()
+    await userEvent.click(githubConnector1)
+    const applySelected = getByText(connectorSelectorDialog, 'entityReference.apply')
+    await userEvent.click(applySelected)
+    await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(1))
+  }
+
+  const continueButton = getByText(portal, 'continue').parentElement as HTMLElement
+  await waitFor(() => expect(continueButton).not.toBeDisabled())
+  await userEvent.click(continueButton)
+}
+
+const testTasManifestArtifactBundleLastStep = async (portal: HTMLElement): Promise<void> => {
+  await waitFor(() => expect(getByText(portal, 'pipeline.manifestType.manifestIdentifier')).toBeInTheDocument())
+
+  const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', portal, name)
+
+  fireEvent.change(queryByNameAttribute('identifier')!, { target: { value: 'testidentifier' } })
+
+  const allDropdownIcons = portal.querySelectorAll('[data-icon="chevron-down"]')
+  expect(allDropdownIcons).toHaveLength(2)
+  const artifactBundleTypeDropDownIcon = allDropdownIcons[1]
+  expect(artifactBundleTypeDropDownIcon).toBeInTheDocument()
+  fireEvent.click(artifactBundleTypeDropDownIcon!)
+  const zipBundleTypeItem = queryByText(portal, 'pipeline.phasesForm.packageTypes.zip')
+  await waitFor(() => expect(zipBundleTypeItem).toBeInTheDocument())
+  fireEvent.click(zipBundleTypeItem!)
+  const artifactBundleTypeSelect = queryByNameAttribute('artifactBundleType') as HTMLInputElement
+  expect(artifactBundleTypeSelect.value).toBe('pipeline.phasesForm.packageTypes.zip')
+
+  const deployableUnitPathInput = queryByNameAttribute('deployableUnitPath')
+  expect(deployableUnitPathInput).toBeInTheDocument()
+  fireEvent.change(deployableUnitPathInput!, { target: { value: 'dup' } })
+
+  const manifestPathInput = queryByNameAttribute('manifestPath')
+  expect(manifestPathInput).toBeInTheDocument()
+  fireEvent.change(manifestPathInput!, { target: { value: 'mp' } })
+
+  const submitButton = getByText(portal, 'submit').parentElement as HTMLElement
+  await userEvent.click(submitButton)
 }
 
 describe('ManifestSelection tests', () => {
@@ -428,5 +516,102 @@ describe('ManifestSelection tests', () => {
     )
 
     expect(container).toMatchSnapshot()
+  })
+
+  test('for PCF deployment type, ArtifactBundle store should not be allowed for TasManifest if FF is not turned on', async () => {
+    const updateManifestList = jest.fn()
+
+    const { container } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={pipelineContextTAS}>
+          <ManifestSelection
+            isReadonlyServiceMode={false}
+            readonly={false}
+            deploymentType={ServiceDeploymentType.TAS}
+            initialManifestList={[]}
+            updateManifestList={updateManifestList}
+            preSelectedManifestType={ManifestDataType.TasManifest}
+            availableManifestTypes={[
+              ManifestDataType.TasManifest,
+              ManifestDataType.TasVars,
+              ManifestDataType.TasAutoScaler
+            ]}
+            deleteManifest={jest.fn()}
+          />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const addManifestButton = await findByText(container, 'pipeline.manifestType.addManifestLabel')
+    await userEvent.click(addManifestButton)
+    const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
+
+    const TasManifest = queryByAttribute('value', portal, 'TasManifest')
+    await waitFor(() => expect(TasManifest).toBeInTheDocument())
+    fireEvent.click(TasManifest!)
+    const continueButton = getByText(portal, 'continue').parentElement as HTMLElement
+    await waitFor(() => expect(continueButton).not.toBeDisabled())
+    await userEvent.click(continueButton)
+
+    const queryByValueAttribute = (value: string): HTMLElement | null => queryByAttribute('value', portal, value)
+
+    await waitFor(() => expect(queryByValueAttribute('Github')).toBeInTheDocument())
+    const Git = queryByValueAttribute('Git')
+    expect(Git).toBeInTheDocument()
+    const GitLab = queryByValueAttribute('GitLab')
+    expect(GitLab).toBeInTheDocument()
+    const Bitbucket = queryByValueAttribute('Bitbucket')
+    expect(Bitbucket).toBeInTheDocument()
+    const Harness = queryByValueAttribute('Harness')
+    expect(Harness).toBeInTheDocument()
+    const CustomRemote = queryByValueAttribute('CustomRemote')
+    expect(CustomRemote).toBeInTheDocument()
+    const ArtifactBundle = queryByValueAttribute('ArtifactBundle')
+    expect(ArtifactBundle).not.toBeInTheDocument() // Because FF is not turned on
+  })
+
+  test('for PCF deployment type, add manifest of TasManifest type with ArtifactBundle store when FF is true', async () => {
+    const updateManifestList = jest.fn()
+
+    const { container } = render(
+      <TestWrapper defaultFeatureFlagValues={{ CDS_ENABLE_TAS_ARTIFACT_AS_MANIFEST_SOURCE_NG: true }}>
+        <PipelineContext.Provider value={pipelineContextTAS}>
+          <ManifestSelection
+            isReadonlyServiceMode={false}
+            readonly={false}
+            deploymentType={ServiceDeploymentType.TAS}
+            initialManifestList={[]}
+            updateManifestList={updateManifestList}
+            preSelectedManifestType={ManifestDataType.TasManifest}
+            availableManifestTypes={[
+              ManifestDataType.TasManifest,
+              ManifestDataType.TasVars,
+              ManifestDataType.TasAutoScaler
+            ]}
+            deleteManifest={jest.fn()}
+          />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const addManifestButton = await findByText(container, 'pipeline.manifestType.addManifestLabel')
+    await userEvent.click(addManifestButton)
+    const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
+
+    const TasManifest = queryByAttribute('value', portal, 'TasManifest')
+    await waitFor(() => expect(TasManifest).toBeInTheDocument())
+    fireEvent.click(TasManifest!)
+    const continueButton = getByText(portal, 'continue').parentElement as HTMLElement
+    await waitFor(() => expect(continueButton).not.toBeDisabled())
+    await userEvent.click(continueButton)
+
+    await testManifestStoreStepForTasManifest(portal, 'ArtifactBundle', false)
+
+    // Fill in required field and submit manifest
+    await testTasManifestArtifactBundleLastStep(portal)
+
+    await waitFor(() => {
+      expect(updateManifestList).toHaveBeenCalledWith(updateManifestListFirstArgTasManifestArtifactBundle, 0)
+    })
   })
 })

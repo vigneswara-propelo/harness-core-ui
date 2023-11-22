@@ -312,6 +312,32 @@ export class TasServiceSpec extends Step<ServiceSpec> {
         )
       }
 
+      // ArtifactBundle manifest store specific fields
+      if (
+        isEmpty(manifest?.manifest?.spec?.store?.spec?.deployableUnitPath) &&
+        isRequired &&
+        getMultiTypeFromValue(currentManifestTemplate?.deployableUnitPath) === MultiTypeInputType.RUNTIME
+      ) {
+        set(
+          errors,
+          `manifests[${index}].manifest.spec.store.spec.deployableUnitPath`,
+          getString?.('fieldRequired', {
+            field: getString?.('pipeline.manifestType.artifactBundle.deployableArtifactPath')
+          })
+        )
+      }
+      if (
+        isEmpty(manifest?.manifest?.spec?.store?.spec?.manifestPath) &&
+        isRequired &&
+        getMultiTypeFromValue(currentManifestTemplate?.manifestPath) === MultiTypeInputType.RUNTIME
+      ) {
+        set(
+          errors,
+          `manifests[${index}].manifest.spec.store.spec.manifestPath`,
+          getString?.('fieldRequired', { field: getString?.('pipelineSteps.manifestPathLabel') })
+        )
+      }
+
       if (
         isEmpty(manifest?.manifest?.spec?.varsPaths) &&
         isRequired &&

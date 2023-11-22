@@ -16,6 +16,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ManifestWizard } from '@pipeline/components/ManifestSelection/ManifestWizard/ManifestWizard'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper, ServiceDefinition } from 'services/cd-ng'
 import {
+  doesStorehasConnector,
   getBuildPayload,
   isECSTypeManifest,
   isGitTypeManifestStore,
@@ -74,7 +75,7 @@ import StepHelmAuth from '@platform/connectors/components/CreateConnector/HelmRe
 import HelmRepoOverrideManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/HelmRepoOverrideManifest/HelmRepoOverrideManifest'
 import { useGetLastStepConnectorValue } from '@pipeline/hooks/useGetLastStepConnectorValue'
 import { ECSWithS3 } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/ECSWithS3/ECSWithS3'
-
+import { TasManifestWithArtifactBundle } from '@modules/70-pipeline/components/ManifestSelection/ManifestWizardSteps/TasManifestWithArtifactBundle/TasManifestWithArtifactBundle'
 import {
   OverrideManifestTypes,
   OverrideManifestStores,
@@ -87,7 +88,6 @@ import {
   AllowedManifestOverrideTypes,
   TASOverrideManifests
 } from '@cd/components/EnvironmentsV2/EnvironmentDetails/ServiceOverrides/ServiceManifestOverride/ServiceManifestOverrideUtils'
-
 import css from '@cd/components/EnvironmentsV2/EnvironmentDetails/ServiceOverrides/ServiceManifestOverride/ServiceManifestOverride.module.scss'
 
 interface ManifestVariableOverrideProps {
@@ -263,7 +263,13 @@ export default function useManifestOverride({
   }, [getInitialValues, selectedConnector])
 
   const shouldPassPrevStepData = (): boolean => {
-    return isManifestEditMode && !!selectedConnector
+    if (isManifestEditMode) {
+      if (doesStorehasConnector(manifestStore as ManifestStores)) {
+        return true
+      }
+      return !!selectedConnector
+    }
+    return false
   }
 
   const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> => {
@@ -355,7 +361,14 @@ export default function useManifestOverride({
             />
           )
           break
-
+        case selectedManifest === OverrideManifests.TasManifest && manifestStore === ManifestStoreMap.ArtifactBundle:
+          manifestDetailStep = (
+            <TasManifestWithArtifactBundle
+              {...lastStepProps()}
+              {...((shouldPassPrevStepData() ? prevStepProps() : {}) as TASManifestLastStepPrevStepData)}
+            />
+          )
+          break
         case selectedManifest === OverrideManifests.TasManifest:
           manifestDetailStep = (
             <TasManifest

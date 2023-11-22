@@ -6,15 +6,16 @@
  */
 
 import type { Schema } from 'yup'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 import { isBoolean } from 'lodash-es'
-import { Connectors } from '@platform/connectors/constants'
+import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
+
+import { StringsMap } from 'stringTypes'
 import type { ConnectorConfigDTO, ConnectorInfoDTO, ServiceDefinition, ManifestConfigWrapper } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import { FeatureFlag } from '@common/featureFlags'
 import { IdentifierSchemaWithOutName, NameSchema } from '@common/utils/Validation'
-import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { Connectors } from '@platform/connectors/constants'
 import {
   buildAzureRepoPayload,
   buildBitbucketPayload,
@@ -22,7 +23,9 @@ import {
   buildGitlabPayload,
   buildGitPayload
 } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type {
+  ArtifactBundleType,
   CLIVersionOptions,
   HelmVersionOptions,
   ManifestStores,
@@ -125,7 +128,8 @@ export const ManifestStoreMap: { [key: string]: ManifestStores } = {
   Inline: 'Inline',
   Harness: 'Harness',
   CustomRemote: 'CustomRemote',
-  AzureRepo: 'AzureRepo'
+  AzureRepo: 'AzureRepo',
+  ArtifactBundle: 'ArtifactBundle'
 }
 
 export const allowedManifestTypes: Record<ServiceDefinition['type'], Array<ManifestTypes>> = {
@@ -211,7 +215,7 @@ export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
   EcsServiceDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.AzureRepo, ManifestStoreMap.S3],
   EcsScalingPolicyDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.AzureRepo, ManifestStoreMap.S3],
   EcsScalableTargetDefinition: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.AzureRepo, ManifestStoreMap.S3],
-  TasManifest: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote],
+  TasManifest: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote, ManifestStoreMap.ArtifactBundle],
   TasVars: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote],
   TasAutoScaler: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote],
   AsgLaunchTemplate: gitStoreTypesWithHarnessStoreType,
@@ -231,14 +235,21 @@ export const getManifestStoresByDeploymentType = (
   selectedManifest: ManifestTypes | null,
   featureFlagMap: Partial<Record<FeatureFlag, boolean>>
 ): ManifestStores[] => {
+  const valuesManifestStores = ManifestTypetoStoreMap[selectedManifest as ManifestTypes]
   if (
     selectedDeploymentType === ServiceDeploymentType.AwsSam ||
     (selectedDeploymentType === ServiceDeploymentType.ServerlessAwsLambda && featureFlagMap.CDS_SERVERLESS_V2)
   ) {
-    const valuesManifestStores = ManifestTypetoStoreMap[selectedManifest as ManifestTypes]
     return valuesManifestStores?.filter(manifestStore => isGitTypeManifestStore(manifestStore))
   }
-  return ManifestTypetoStoreMap[selectedManifest as ManifestTypes]
+  if (
+    selectedDeploymentType === ServiceDeploymentType.TAS &&
+    selectedManifest === ManifestDataType.TasManifest &&
+    !featureFlagMap.CDS_ENABLE_TAS_ARTIFACT_AS_MANIFEST_SOURCE_NG
+  ) {
+    return valuesManifestStores?.filter(manifestStore => manifestStore !== ManifestStoreMap.ArtifactBundle)
+  }
+  return valuesManifestStores
 }
 
 export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
@@ -306,6 +317,14 @@ export const cfCliVersions: Array<{ label: string; value: CLIVersionOptions }> =
   { label: 'CLI Version 7.0', value: 'V7' }
 ]
 
+export const getArtifactBundleTypes = (
+  getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
+): Array<{ label: string; value: ArtifactBundleType }> => [
+  { label: getString('pipeline.phasesForm.packageTypes.zip'), value: 'ZIP' },
+  { label: getString('pipeline.phasesForm.packageTypes.tar'), value: 'TAR' },
+  { label: getString('pipeline.phasesForm.packageTypes.tar_gzip'), value: 'TAR_GZIP' }
+]
+
 export const ManifestIconByType: Record<ManifestStores, IconName> = {
   Git: 'service-github',
   Github: 'github',
@@ -319,7 +338,8 @@ export const ManifestIconByType: Record<ManifestStores, IconName> = {
   Inline: 'custom-artifact',
   Harness: 'harness',
   CustomRemote: 'custom-remote-manifest',
-  AzureRepo: 'service-azure'
+  AzureRepo: 'service-azure',
+  ArtifactBundle: 'store-artifact-bundle'
 }
 
 export const ManifestStoreTitle: Record<ManifestStores, StringKeys> = {
@@ -335,7 +355,8 @@ export const ManifestStoreTitle: Record<ManifestStores, StringKeys> = {
   Inline: 'inline',
   Harness: 'harness',
   CustomRemote: 'pipeline.manifestType.customRemote',
-  AzureRepo: 'pipeline.manifestType.azureRepoConnectorLabel'
+  AzureRepo: 'pipeline.manifestType.azureRepoConnectorLabel',
+  ArtifactBundle: 'pipeline.manifestType.artifactBundle.title'
 }
 
 export const ManifestToConnectorMap: Record<ManifestStores | string, ConnectorInfoDTO['type']> = {
@@ -427,12 +448,13 @@ export const ManifestIdentifierValidation = (
   }
 }
 
-export const doesStorehasConnector = (selectedStore: ManifestStoreWithoutConnector): boolean => {
+export const doesStorehasConnector = (selectedStore: ManifestStores): boolean => {
   return [
     ManifestStoreMap.InheritFromManifest,
     ManifestStoreMap.Harness,
     ManifestStoreMap.Inline,
-    ManifestStoreMap.CustomRemote
+    ManifestStoreMap.CustomRemote,
+    ManifestStoreMap.ArtifactBundle
   ].includes(selectedStore)
 }
 
@@ -462,6 +484,8 @@ export function getManifestLocation(manifestType: ManifestTypes, manifestStore: 
       return 'store.spec.files'
     case manifestStore === ManifestStoreMap.CustomRemote:
       return 'store.spec.filePath'
+    case manifestStore === ManifestStoreMap.ArtifactBundle:
+      return 'store.spec.manifestPath'
     case [
       ManifestDataType.K8sManifest,
       ManifestDataType.Values,
