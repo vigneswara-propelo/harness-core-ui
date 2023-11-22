@@ -11,8 +11,6 @@ import { render, fireEvent, act } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ResponseAccountCreditCardValidationResponse } from 'services/cd-ng'
 import GetStartedWithCI from '../GetStartedWithCI'
-import * as hostedBuilds from '../../../hooks/useProvisionDelegateForHostedBuilds'
-import { ProvisioningStatus } from '../InfraProvisioningWizard/Constants'
 import { repos } from '../InfraProvisioningWizard/mocks/repositories'
 
 jest.useFakeTimers()
@@ -116,11 +114,6 @@ jest.mock('services/cd-ng', () => ({
   })
 }))
 
-jest.spyOn(hostedBuilds, 'useProvisionDelegateForHostedBuilds').mockReturnValue({
-  initiateProvisioning: jest.fn(),
-  delegateProvisioningStatus: ProvisioningStatus.SUCCESS,
-  fetchingDelegateDetails: false
-})
 jest.mock('services/code', () => ({
   useListRepos: jest.fn().mockImplementation(() => Promise.resolve([]))
 }))

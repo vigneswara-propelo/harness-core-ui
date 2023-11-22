@@ -46,9 +46,7 @@ import { CIOnboardingActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@platform/connectors/constants'
 import { useCreditCardWidget } from '@platform/auth-settings/pages/Billing/CreditCardWidget'
 import { InfraProvisioningWizard } from './InfraProvisioningWizard/InfraProvisioningWizard'
-import { InfraProvisiongWizardStepId, ProvisioningStatus } from './InfraProvisioningWizard/Constants'
-import { InfraProvisioningCarousel } from './InfraProvisioningCarousel/InfraProvisioningCarousel'
-import { useProvisionDelegateForHostedBuilds } from '../../hooks/useProvisionDelegateForHostedBuilds'
+import { InfraProvisiongWizardStepId } from './InfraProvisioningWizard/Constants'
 import { sortConnectorsByLastConnectedAtTsDescOrder } from '../../utils/HostedBuildsUtils'
 import { CreditCardOnboarding, LocalInfraOnboarding } from './GetStartedWithCICreditCard'
 
@@ -64,11 +62,8 @@ export default function GetStartedWithCI(): React.ReactElement {
   const { trackEvent } = useTelemetry()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
-  const { CIE_HOSTED_VMS, CODE_ENABLED, CI_CREDIT_CARD_ONBOARDING } = useFeatureFlags()
+  const { CODE_ENABLED, CI_CREDIT_CARD_ONBOARDING } = useFeatureFlags()
   const [showWizard, setShowWizard] = useState<boolean>(false)
-  const [showProvisioningCarousel, setShowProvisioningCarousel] = useState<boolean>(false)
-  const { initiateProvisioning, delegateProvisioningStatus, fetchingDelegateDetails } =
-    useProvisionDelegateForHostedBuilds()
   const [preSelectedGitConnector, setPreselectedGitConnector] = useState<ConnectorInfoDTO>()
   const [connectorsEligibleForPreSelection, setConnectorsEligibleForPreSelection] = useState<ConnectorInfoDTO[]>()
   const [secretForPreSelectedConnector, setSecretForPreSelectedConnector] = useState<SecretDTOV2>()
@@ -188,12 +183,6 @@ export default function GetStartedWithCI(): React.ReactElement {
     }
   }, [showWizard])
 
-  useEffect(() => {
-    if (delegateProvisioningStatus === ProvisioningStatus.IN_PROGRESS) {
-      setShowProvisioningCarousel(true)
-    }
-  }, [delegateProvisioningStatus])
-
   const renderBuildPipelineStep = React.useCallback(
     ({ iconProps, label, isLastStep }: { iconProps: IconProps; label: keyof StringsMap; isLastStep?: boolean }) => (
       <Layout.Horizontal flex padding={{ right: 'xsmall' }} spacing="xsmall">
@@ -296,19 +285,6 @@ export default function GetStartedWithCI(): React.ReactElement {
         />
       ) : (
         <>
-          {showProvisioningCarousel ? (
-            <InfraProvisioningCarousel
-              show={showProvisioningCarousel}
-              provisioningStatus={delegateProvisioningStatus}
-              onClose={() => {
-                if (delegateProvisioningStatus === ProvisioningStatus.FAILURE) {
-                  setShowProvisioningCarousel(false)
-                } else if (delegateProvisioningStatus === ProvisioningStatus.SUCCESS) {
-                  setShowWizard(true)
-                }
-              }}
-            />
-          ) : null}
           {showCreditCardFlow && !showLocalInfraSetup && !showPageLoader ? (
             <CreditCardOnboarding
               setShowLocalInfraSetup={setShowLocalInfraSetup}
@@ -376,13 +352,8 @@ export default function GetStartedWithCI(): React.ReactElement {
                           } catch (e) {
                             // ignore error
                           }
-                          if (CIE_HOSTED_VMS || delegateProvisioningStatus === ProvisioningStatus.SUCCESS) {
-                            setShowWizard(true)
-                          } else {
-                            initiateProvisioning()
-                          }
+                          setShowWizard(true)
                         }}
-                        disabled={fetchingDelegateDetails}
                       />
                     </Container>
                   </Layout.Vertical>
