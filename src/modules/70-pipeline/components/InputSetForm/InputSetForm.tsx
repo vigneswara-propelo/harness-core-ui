@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { defaultTo, isEmpty, merge, noop, omit } from 'lodash-es'
-import { NestedAccordionProvider, PageBody, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
+import { PageBody, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import { flushSync } from 'react-dom'
@@ -15,14 +15,14 @@ import type { InputSetResponse, PipelineConfig, PipelineInfoConfig } from 'servi
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
   useGetTemplateFromPipeline,
-  useGetPipeline,
   useCreateInputSetForPipeline,
   useGetInputSetForPipeline,
   useUpdateInputSetForPipeline,
   ResponseInputSetResponse,
   useGetMergeInputSetFromPipelineTemplateWithListInput,
   ResponsePMSPipelineResponseDTO,
-  ResponseInputSetTemplateWithReplacedExpressionsResponse
+  ResponseInputSetTemplateWithReplacedExpressionsResponse,
+  useGetPipeline
 } from 'services/pipeline-ng'
 
 import { useToaster } from '@common/exports'
@@ -42,7 +42,7 @@ import type { GitContextProps } from '@common/components/GitContextForm/GitConte
 import { parse, stringify, yamlParse } from '@common/utils/YamlHelperMethods'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { InputSetDTO, InputSetType, Pipeline, InputSet } from '@pipeline/utils/types'
-import { InputSetOnCreateUpdate, hasStoreTypeMismatch, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
+import { hasStoreTypeMismatch, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
@@ -52,11 +52,11 @@ import useDiffDialog from '@common/hooks/useDiffDialog'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { GitProviderOptions } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeGitProviderAndConnector'
-import { withInputSetsOnCreateUpdateSuccess } from '@pipeline/utils/withInputSetsOnCreateUpdateSuccess'
 import { FormikInputSetForm } from './FormikInputSetForm'
 import { useSaveInputSet } from './useSaveInputSet'
 import { PipelineVariablesContextProvider } from '../PipelineVariablesContext/PipelineVariablesContext'
 import { InputSetFormHeader } from './InputSetFormHeader'
+import { InputSetFormProps } from './types'
 
 const getDefaultInputSet = (
   template: PipelineInfoConfig,
@@ -72,14 +72,6 @@ const getDefaultInputSet = (
   repo: '',
   branch: ''
 })
-
-export interface InputSetFormProps extends InputSetOnCreateUpdate {
-  executionView?: boolean
-
-  // Props to support embedding InputSetForm (create new) in a modal
-  // @see src/modules/70-pipeline/components/InputSetForm/NewInputSetModal.tsx
-  inputSetInitialValue?: InputSetDTO
-}
 
 const getInputSet = (
   orgIdentifier: string,
@@ -143,7 +135,7 @@ const getInputSet = (
   )
 }
 
-function InputSetForm(props: InputSetFormProps): React.ReactElement {
+export function InputSetForm(props: InputSetFormProps): React.ReactElement {
   const { executionView, inputSetInitialValue, isNewInModal, className, onCancel, onCreateUpdateSuccess } = props
   const { getString } = useStrings()
   const [isEdit, setIsEdit] = React.useState(false)
@@ -759,13 +751,3 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
     </React.Fragment>
   )
 }
-
-export function EnhancedInputSetForm(props: InputSetFormProps): React.ReactElement {
-  return (
-    <NestedAccordionProvider>
-      <InputSetForm {...props} />
-    </NestedAccordionProvider>
-  )
-}
-
-export const EnhancedInputSetFormForRoute = withInputSetsOnCreateUpdateSuccess<InputSetFormProps>(EnhancedInputSetForm)

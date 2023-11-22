@@ -20,11 +20,11 @@ export interface InputSetSummaryResponseExtended extends InputSetSummaryResponse
   inputFieldSummary?: string
 }
 
-export interface InputSetOnCreateUpdate {
+export interface InputSetOnCreateUpdate<T = ResponseInputSetResponse> {
   isNewInModal?: boolean
   className?: string
   onCancel?: () => void
-  onCreateUpdateSuccess: (response?: ResponseInputSetResponse) => void
+  onCreateUpdateSuccess: (response?: T) => void
 }
 
 export const isInputSetInvalid = (data: InputSetSummaryResponseExtended): boolean => {

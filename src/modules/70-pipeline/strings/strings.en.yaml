@@ -989,6 +989,10 @@ inputSets:
   lastApplied: 'Last Applied: '
   noReconcileOccured: Input set is valid and currently in sync with the Pipeline. No YAML reconciliation occured for the input set.
   inputSetNotFoundInBranch: Input Set not found in branch [{{branch}}]
+  manageInputSetTooltip: Inputs that are listed below but left as empty value will be null by default. You may manage it here.
+  selectedOutOf: Selected {{selected}} out of {{all}}
+  manageInputsInProgress: Save is disabled while manage inputs is active. Apply or cancel manage inputs to save input set.
+  emptyStringInfoTooltip: Values that are left empty will be null by default. To pass an empty string, you may enter double quotation ("")
 provisionerSteps: Provisioner Steps
 addStage:
   title: Select Stage Type

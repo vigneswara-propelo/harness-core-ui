@@ -31,7 +31,7 @@ import { StoreType } from '@common/constants/GitSyncTypes'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import { GetInputSetYamlDiffInline } from '@pipeline/components/InputSetErrorHandling/__tests__/InputSetErrorHandlingMocks'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
-import { EnhancedInputSetForm } from '../InputSetForm'
+import { EnhancedInputSetForm } from '../EnhancedInputSetForm'
 import {
   TemplateResponse,
   PipelineResponse,

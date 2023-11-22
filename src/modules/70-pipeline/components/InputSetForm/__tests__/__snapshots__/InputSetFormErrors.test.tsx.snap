@@ -147,12 +147,16 @@ exports[`Input Set - error scenarios By default save button should be disabled 1
         class="Layout--horizontal StyledProps--main"
         style="width: 42%;"
       >
-        <p
-          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4 StyledProps--margin-right-medium"
-          style="--text-line-clamp: 1;"
+        <div
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-left StyledProps--flex-alignItems-center"
         >
-          inputSets.editTitle
-        </p>
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4 StyledProps--margin-right-medium"
+            style="--text-line-clamp: 1;"
+          >
+            inputSets.editTitle
+          </p>
+        </div>
         <div
           class="optionBtns"
         >

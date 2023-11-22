@@ -28,7 +28,7 @@ import {
   pipelinePathProps,
   projectPathProps
 } from '@common/utils/routeUtils'
-import { EnhancedInputSetFormForRoute } from '@pipeline/components/InputSetForm/InputSetForm'
+import { EnhancedInputSetFormForRoute } from '@modules/70-pipeline/components/InputSetForm/EnhancedInputSetForm'
 import { InputSetFormV1ForRoute } from '@pipeline/v1/components/InputSetFormV1/InputSetFormV1'
 import ExecutionArtifactsView from '@pipeline/pages/execution/ExecutionArtifactsView/ExecutionArtifactsView'
 import ExecutionInputsView from '@pipeline/pages/execution/ExecutionInputsView/ExecutionInputsView'

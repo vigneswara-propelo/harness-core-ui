@@ -23,7 +23,7 @@ import { GitSyncTestWrapper } from '@common/utils/gitSyncTestUtils'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import gitSyncListResponse from '@common/utils/__tests__/mocks/gitSyncRepoListMock.json'
 import { gitHubMock } from '@gitsync/components/gitSyncRepoForm/__tests__/mockData'
-import { EnhancedInputSetForm } from '../../InputSetForm/InputSetForm'
+import { EnhancedInputSetForm } from '../../InputSetForm/EnhancedInputSetForm'
 import {
   TemplateResponse,
   PipelineResponse,

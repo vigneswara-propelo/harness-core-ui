@@ -4762,6 +4762,7 @@ export interface StringsMap {
   'pipeline.inputSets.deleteInputSet': string
   'pipeline.inputSets.deleteOverlayIS': string
   'pipeline.inputSets.editInYamlView': string
+  'pipeline.inputSets.emptyStringInfoTooltip': string
   'pipeline.inputSets.goBackToInputSetList': string
   'pipeline.inputSets.inputSetApplied': string
   'pipeline.inputSets.inputSetNameLabel': string
@@ -4777,6 +4778,8 @@ export interface StringsMap {
   'pipeline.inputSets.invalidOverlayISDesc1': string
   'pipeline.inputSets.invalidOverlayISDesc2': string
   'pipeline.inputSets.lastApplied': string
+  'pipeline.inputSets.manageInputSetTooltip': string
+  'pipeline.inputSets.manageInputsInProgress': string
   'pipeline.inputSets.noInputSetsCreated': string
   'pipeline.inputSets.noReconcileOccured': string
   'pipeline.inputSets.noRuntimeInputsCurrently': string
@@ -4785,6 +4788,7 @@ export interface StringsMap {
   'pipeline.inputSets.overlayISUpdated': string
   'pipeline.inputSets.removeInvalidFields': string
   'pipeline.inputSets.selectPlaceholder': string
+  'pipeline.inputSets.selectedOutOf': string
   'pipeline.inputs.description': string
   'pipeline.inputs.inputNamePlaceholder': string
   'pipeline.inputs.name': string

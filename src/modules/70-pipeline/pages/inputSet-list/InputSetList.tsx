@@ -125,7 +125,8 @@ function InputSetList(): React.ReactElement {
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
-  const { CI_YAML_VERSIONING } = useFeatureFlags()
+  const { CI_YAML_VERSIONING, CDS_YAML_SIMPLIFICATION } = useFeatureFlags()
+
   let inputsError: { data: Error }
 
   useEffect(() => {
@@ -186,10 +187,11 @@ function InputSetList(): React.ReactElement {
   const [pipelineHasRuntimeInputs, setPipelineHasRuntimeInputs] = useState(true)
   useEffect(() => {
     const pipelineHasNoRuntimeInputs =
-      (!isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING) && !template?.data?.inputSetTemplateYaml) ||
-      (isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING) &&
-        isEmpty(pipelineInputs?.inputs) &&
-        isEmpty(pipelineInputs.options?.clone))
+      ((!isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING) && !template?.data?.inputSetTemplateYaml) ||
+        (isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING) &&
+          isEmpty(pipelineInputs?.inputs) &&
+          isEmpty(pipelineInputs.options?.clone))) &&
+      !(CDS_YAML_SIMPLIFICATION && pipelineMetadata?.data?.yamlVersion === '1')
 
     setPipelineHasRuntimeInputs(!pipelineHasNoRuntimeInputs)
   }, [template, pipelineInputs])

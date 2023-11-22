@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import cx from 'classnames'
 import {
@@ -29,13 +36,15 @@ import GitRemoteDetails from '@modules/10-common/components/GitRemoteDetails/Git
 import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
 import { useQueryParams, useUpdateQueryParams } from '@modules/10-common/hooks'
 import { GitQueryParams, InputSetPathProps, PipelineType } from '@modules/10-common/interfaces/RouteInterfaces'
+import { YamlVersionBadge } from '@modules/70-pipeline/common/components/YamlVersionBadge/YamlVersionBadge'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
+import { YamlVersion } from '@modules/70-pipeline/common/hooks/useYamlVersion'
 import GitPopover from '../GitPopover/GitPopover'
 import { OutOfSyncErrorStrip } from '../InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import {
   EntityCachedCopy,
   EntityCachedCopyHandle
 } from '../PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
-
 import css from './InputSetForm.module.scss'
 
 export interface InputSetFormHeaderProps {
@@ -64,6 +73,8 @@ export interface InputSetFormHeaderProps {
   inputSetUpdateResponseHandler?: (responseData: InputSetResponse) => void
   pipelineGitDetails?: EntityGitDetails
   pipelineName: string
+  yamlVersion?: YamlVersion
+  manageInputsActive?: boolean
 }
 
 export function InputSetFormHeader(props: InputSetFormHeaderProps): React.ReactElement {
@@ -84,18 +95,20 @@ export function InputSetFormHeader(props: InputSetFormHeaderProps): React.ReactE
     onCancel,
     inputSetUpdateResponseHandler,
     pipelineGitDetails,
-    pipelineName
+    pipelineName,
+    yamlVersion,
+    manageInputsActive
   } = props
   const { projectIdentifier, orgIdentifier, accountId, module, pipelineIdentifier } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
   >()
   const { connectorRef, repoIdentifier, repoName, branch, storeType } = useQueryParams<GitQueryParams>()
-
   const [menuOpen, setMenuOpen] = React.useState(false)
 
   const { updateQueryParams } = useUpdateQueryParams()
   const { getString } = useStrings()
   const history = useHistory()
+  const { CDS_YAML_SIMPLIFICATION } = useFeatureFlags()
 
   const inputCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
 
@@ -113,16 +126,21 @@ export function InputSetFormHeader(props: InputSetFormHeaderProps): React.ReactE
         className={css.pageHeaderStyles}
         title={
           <Layout.Horizontal width="42%">
-            <Text
-              lineClamp={1}
-              color={Color.GREY_800}
-              font={{ weight: 'bold', variation: FontVariation.H4 }}
-              margin={{ right: 'medium' }}
-            >
-              {isEdit
-                ? getString('inputSets.editTitle', { name: inputSet.name })
-                : getString('inputSets.newInputSetLabel')}
-            </Text>
+            <Layout.Horizontal flex={{ justifyContent: 'left', alignItems: 'center' }}>
+              {CDS_YAML_SIMPLIFICATION && typeof yamlVersion !== 'undefined' && (
+                <YamlVersionBadge version={yamlVersion} minimal border className={css.yamlVersionBadge} />
+              )}
+              <Text
+                lineClamp={1}
+                color={Color.GREY_800}
+                font={{ weight: 'bold', variation: FontVariation.H4 }}
+                margin={{ right: 'medium' }}
+              >
+                {isEdit
+                  ? getString('inputSets.editTitle', { name: inputSet.name })
+                  : getString('inputSets.newInputSetLabel')}
+              </Text>
+            </Layout.Horizontal>
             {isGitSyncEnabled && isEdit && (
               <GitPopover
                 data={defaultTo(inputSet.gitDetails, {})}
@@ -184,8 +202,9 @@ export function InputSetFormHeader(props: InputSetFormHeaderProps): React.ReactE
               <Button
                 variation={ButtonVariation.PRIMARY}
                 type="submit"
-                disabled={!isEditable}
+                disabled={!isEditable || manageInputsActive}
                 text={getString('save')}
+                tooltip={manageInputsActive ? getString('pipeline.inputSets.manageInputsInProgress') : undefined}
                 onClick={async e => {
                   e.preventDefault()
                   handleSaveInputSetForm()

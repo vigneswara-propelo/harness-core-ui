@@ -17,7 +17,7 @@ import { accountPathProps, pipelineModuleParams, inputSetFormPathProps } from '@
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import { queryByNameAttribute } from '@common/utils/testUtils'
 
-import { EnhancedInputSetForm } from '../InputSetForm'
+import { EnhancedInputSetForm } from '../EnhancedInputSetForm'
 import {
   TemplateResponse,
   PipelineResponse,

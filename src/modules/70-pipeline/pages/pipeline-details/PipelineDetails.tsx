@@ -38,6 +38,8 @@ import { StoreType } from '@common/constants/GitSyncTypes'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { BannerEOL } from '@pipeline/components/BannerEOL/BannerEOL'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
+import { YamlVersionBadge } from '@modules/70-pipeline/common/components/YamlVersionBadge/YamlVersionBadge'
+import type { YamlVersion } from '@modules/70-pipeline/common/hooks/useYamlVersion'
 import NoEntityFound from '../utils/NoEntityFound/NoEntityFound'
 import css from './PipelineDetails.module.scss'
 
@@ -119,7 +121,8 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
   const [pipelineName, setPipelineName] = React.useState('')
   const [triggerTabDisabled, setTriggerTabDisabled] = React.useState(false)
   const [showBanner, setShowBanner] = React.useState<boolean>(false)
-  const { CI_YAML_VERSIONING, CDS_V1_EOL_BANNER, PL_EULA_ENABLED, PL_AI_SUPPORT_CHATBOT } = useFeatureFlags()
+  const { CI_YAML_VERSIONING, CDS_V1_EOL_BANNER, PL_EULA_ENABLED, PL_AI_SUPPORT_CHATBOT, CDS_YAML_SIMPLIFICATION } =
+    useFeatureFlags()
   const isAuxNavNotEnabled = !PL_EULA_ENABLED || !PL_AI_SUPPORT_CHATBOT
   const isYAMLSimplicationEnabledForCI = isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
   const abortControllerRef = React.useRef<AbortController | null>(null)
@@ -308,6 +311,14 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
             )}
             {!isPipelineStudioRoute && (
               <Layout.Horizontal spacing="xsmall" flex={{ justifyContent: 'left', alignItems: 'center' }}>
+                {CDS_YAML_SIMPLIFICATION && pipeline?.data && (
+                  <YamlVersionBadge
+                    version={pipeline?.data?.yamlVersion as YamlVersion}
+                    minimal
+                    border
+                    className={css.yamlVersionBadge}
+                  />
+                )}
                 <Heading level={2} color={Color.GREY_800} font={{ weight: 'bold' }}>
                   {pipelineName}
                 </Heading>

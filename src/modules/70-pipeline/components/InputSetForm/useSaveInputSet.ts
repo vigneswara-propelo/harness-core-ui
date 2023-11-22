@@ -31,33 +31,7 @@ import { useStrings } from 'framework/strings'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { clearNullUndefined } from '@pipeline/utils/inputSetUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-
-interface GetUpdatedGitDetailsReturnType extends EntityGitDetails {
-  lastObjectId?: string
-  lastCommitId?: string
-  baseBranch?: string
-}
-
-const getUpdatedGitDetails = (
-  isEdit: boolean,
-  gitDetails: SaveToGitFormInterface | undefined,
-  lastObjectId: string,
-  initialGitDetails: EntityGitDetails,
-  conflictCommitId?: string
-): GetUpdatedGitDetailsReturnType => {
-  let updatedGitDetails: GetUpdatedGitDetailsReturnType = {}
-  if (gitDetails) {
-    updatedGitDetails = { ...gitDetails }
-    if (isEdit) {
-      updatedGitDetails['lastObjectId'] = lastObjectId
-      updatedGitDetails['lastCommitId'] = conflictCommitId || initialGitDetails.commitId
-    }
-    if (gitDetails.isNewBranch) {
-      updatedGitDetails['baseBranch'] = initialGitDetails.branch
-    }
-  }
-  return updatedGitDetails
-}
+import { getUpdatedGitDetails } from './utils'
 
 interface UseSaveInputSetReturnType {
   handleSubmit: (

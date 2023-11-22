@@ -8,7 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { InputSetFormProps } from '@pipeline/components/InputSetForm/InputSetForm'
+import { InputSetFormProps } from '@modules/70-pipeline/components/InputSetForm/types'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { withInputSetsOnCreateUpdateSuccess } from '../withInputSetsOnCreateUpdateSuccess'

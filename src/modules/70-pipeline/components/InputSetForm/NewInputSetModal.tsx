@@ -10,7 +10,7 @@ import cx from 'classnames'
 import { Dialog } from '@blueprintjs/core'
 import type { ResponseInputSetResponse } from 'services/pipeline-ng'
 import type { InputSetDTO } from '@pipeline/utils/types'
-import { EnhancedInputSetForm } from '@pipeline/components/InputSetForm/InputSetForm'
+import { EnhancedInputSetForm } from '@modules/70-pipeline/components/InputSetForm/EnhancedInputSetForm'
 import InputSetFormV1 from '@pipeline/v1/components/InputSetFormV1/InputSetFormV1'
 import css from './InputSetForm.module.scss'
 

@@ -305,6 +305,21 @@ export const getFormattedErrors = (apiErrorMap?: { [key: string]: InputSetErrorR
   return toReturn
 }
 
+// Used in Input Set form and save as input set call in run pipeline (Open API)
+export const getFormattedErrorsOpenAPI = (
+  errors?: { field_name: string; message: string }[]
+): Record<string, string> => {
+  const toReturn: Record<string, string> = {}
+  if (errors) {
+    errors.forEach(error => {
+      if (error.field_name) {
+        toReturn[error.field_name] = `${error.field_name}: ${error.message}`
+      }
+    })
+  }
+  return toReturn
+}
+
 export const getOverlayErrors = (invalidReferences: Record<string, string>): Record<string, any> => {
   const toReturn: Record<string, any> = {}
   if (invalidReferences) {

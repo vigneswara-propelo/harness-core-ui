@@ -24,7 +24,11 @@ declare const styles: {
   readonly inModal: string
   readonly inputSetForm: string
   readonly inputSetcard: string
+  readonly inputsForm: string
   readonly inputsetGrid: string
+  readonly manageHolder: string
+  readonly manageTitle: string
+  readonly metadataHolder: string
   readonly nameiddescription: string
   readonly noCacheDetails: string
   readonly optionBtns: string
@@ -34,5 +38,6 @@ declare const styles: {
   readonly treeSidebar: string
   readonly unsavedChanges: string
   readonly withError: string
+  readonly yamlVersionBadge: string
 }
 export default styles

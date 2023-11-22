@@ -25,7 +25,7 @@ import { accountPathProps, pipelineModuleParams, inputSetFormPathProps } from '@
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import { gitHubMock } from '@gitsync/components/gitSyncRepoForm/__tests__/mockData'
-import { EnhancedInputSetForm } from '../InputSetForm'
+import { EnhancedInputSetForm } from '../EnhancedInputSetForm'
 import {
   TemplateResponse,
   PipelineResponse,

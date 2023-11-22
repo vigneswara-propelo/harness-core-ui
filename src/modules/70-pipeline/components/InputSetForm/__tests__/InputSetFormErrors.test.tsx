@@ -20,7 +20,7 @@ import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@platform/conn
 import { useUpdateInputSetForPipeline } from 'services/pipeline-ng'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { mockBranches } from '@pipeline/components/InputSetErrorHandling/__tests__/InputSetErrorHandlingMocks'
-import { EnhancedInputSetForm } from '../InputSetForm'
+import { EnhancedInputSetForm } from '../EnhancedInputSetForm'
 import {
   TemplateResponse,
   PipelineResponse,
