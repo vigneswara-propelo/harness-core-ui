@@ -92,6 +92,9 @@ export const ServicesListPage = ({
   const { preference: savedSortOption, setPreference: setSavedSortOption } = usePreferenceStore<
     [SortFields, Sort] | undefined
   >(PreferenceScope.USER, 'sortOptionManageService')
+  const { preference: servicesViewType = Views.LIST, setPreference: setServicesViewType } = usePreferenceStore<
+    Views | undefined
+  >(PreferenceScope.MACHINE, 'servicesViewType')
 
   const queryParamOptions = useServicesQueryParamOptions()
   const queryParams = useQueryParams(queryParamOptions)
@@ -99,7 +102,6 @@ export const ServicesListPage = ({
   const { page, size, searchTerm, repoName } = queryParams
 
   const [sort, setSort] = useState<[SortFields, Sort]>(savedSortOption ?? queryParams.sort)
-  const [view, setView] = useState(Views.LIST)
   const [mode, setMode] = useState<SelectedView>(SelectedView.VISUAL)
   const [isEdit, setIsEdit] = useState(false)
   const searchRef = useRef<ExpandingSearchInputHandle>()
@@ -347,7 +349,7 @@ export const ServicesListPage = ({
                 updateQueryParams({ sort: newSort })
               }}
             />
-            <GridListToggle initialSelectedView={Views.LIST} onViewToggle={setView} />
+            <GridListToggle initialSelectedView={servicesViewType} onViewToggle={setServicesViewType} />
           </Layout.Horizontal>
         </Layout.Horizontal>
 
@@ -356,7 +358,7 @@ export const ServicesListPage = ({
           className={css.container}
         >
           {(serviceList && serviceList.data?.content?.length) || loading ? (
-            view === Views.GRID ? (
+            servicesViewType === Views.GRID ? (
               <ServicesGridView
                 data={serviceList}
                 loading={loading}

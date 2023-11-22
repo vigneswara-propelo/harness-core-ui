@@ -175,6 +175,7 @@ export function Environments({ calledFromSettingsPage }: { calledFromSettingsPag
         FilterComponent={EnvironmentsFilters}
         isForceDeleteAllowed
         calledFromSettingsPage={calledFromSettingsPage}
+        viewTypeIdentifier="environmentsViewType"
       />
     </PageStoreContext.Provider>
   )

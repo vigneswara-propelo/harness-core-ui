@@ -18,7 +18,8 @@ import {
   sortByLastUpdated,
   sortByName,
   SortMethod,
-  ListHeader
+  ListHeader,
+  Views
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { useHistory, useParams } from 'react-router-dom'
@@ -74,6 +75,7 @@ import RepoFilter from '@common/components/RepoFilter/RepoFilter'
 import { TemplateListFilter } from '@templates-library/components/TemplateFilter/TemplateFilter'
 import { getIsSavedFilterApplied } from '@pipeline/pages/execution-list/utils/executionListUtil'
 import { getFilterByIdentifier } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 
 import css from './TemplatesPage.module.scss'
 
@@ -81,8 +83,12 @@ export default function TemplatesPage(): React.ReactElement {
   const { getString } = useStrings()
   const history = useHistory()
   const queryParamOptions = useTemplatesQueryParamOptions()
-  const { templateType, repoName, page, view, size, sort, searchTerm, filterIdentifier, filters } =
+  const { templateType, repoName, page, size, sort, searchTerm, filterIdentifier, filters } =
     useQueryParams(queryParamOptions)
+  const { preference: view = Views.GRID, setPreference: setView } = usePreferenceStore<Views | undefined>(
+    PreferenceScope.MACHINE,
+    'templatesViewType'
+  )
   const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<TemplatesQueryParams>()
   const isSavedFilterApplied = getIsSavedFilterApplied(filterIdentifier)
   const [filterList, setFilterList] = useState<FilterDTO[] | undefined>()
@@ -319,10 +325,7 @@ export default function TemplatesPage(): React.ReactElement {
             className={css.expandSearch}
           />
           <TemplateListFilter onFilterListUpdate={setFilterList} />
-          <GridListToggle
-            initialSelectedView={view}
-            onViewToggle={selectedView => updateQueryParams({ view: selectedView })}
-          />
+          <GridListToggle initialSelectedView={view} onViewToggle={setView} />
         </Layout.Horizontal>
       </Page.SubHeader>
       <Page.Body

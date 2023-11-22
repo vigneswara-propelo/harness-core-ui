@@ -16,11 +16,12 @@ import {
   RenderResult,
   waitFor
 } from '@testing-library/react'
-
+import { Views, SortMethod } from '@harness/uicore'
 import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import { clickSubmit, fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
+import { usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import Roles from '../Roles'
 import { createRoleMockData, rolesMockList } from './RolesMock'
 
@@ -41,6 +42,22 @@ jest.mock('services/rbac', () => ({
   usePutRole: jest.fn().mockImplementation(() => createRoleMockData)
 }))
 
+jest.mock('framework/PreferenceStore/PreferenceStoreContext')
+;(usePreferenceStore as jest.Mock).mockImplementation((_, type) => {
+  if (type.includes('sort')) {
+    return {
+      setPreference: jest.fn,
+      preference: SortMethod.Newest,
+      clearPreference: jest.fn
+    }
+  }
+  return {
+    setPreference: jest.fn,
+    preference: Views.GRID,
+    clearPreference: jest.fn
+  }
+})
+
 describe('Role Details Page', () => {
   let container: HTMLElement
   let getAllByText: RenderResult['getAllByText']
@@ -59,10 +76,26 @@ describe('Role Details Page', () => {
     getAllByRole = renderObj.getAllByRole
     await waitFor(() => getAllByText('newRole'))
   })
+
   test('render grid view', () => {
     expect(container).toMatchSnapshot()
   })
   test('render list view', () => {
+    ;(usePreferenceStore as jest.Mock).mockImplementation((_, type) => {
+      if (type.includes('sort')) {
+        return {
+          setPreference: jest.fn,
+          preference: SortMethod.Newest,
+          clearPreference: jest.fn
+        }
+      }
+      return {
+        setPreference: jest.fn,
+        preference: Views.LIST,
+        clearPreference: jest.fn
+      }
+    })
+
     const listViewButton = getByTestId('list-view')
     act(() => {
       fireEvent.click(listViewButton)
@@ -84,6 +117,21 @@ describe('Role Details Page', () => {
     expect(getByTestId('location').innerHTML).toBe('/account/testAcc/settings/access-control/roles/role1')
   })
   test('Create Role', async () => {
+    ;(usePreferenceStore as jest.Mock).mockImplementation((_, type) => {
+      if (type.includes('sort')) {
+        return {
+          setPreference: jest.fn,
+          preference: SortMethod.Newest,
+          clearPreference: jest.fn
+        }
+      }
+      return {
+        setPreference: jest.fn,
+        preference: Views.GRID,
+        clearPreference: jest.fn
+      }
+    })
+
     const newRole = getByTestId('createRole')
     await act(async () => {
       fireEvent.click(newRole)

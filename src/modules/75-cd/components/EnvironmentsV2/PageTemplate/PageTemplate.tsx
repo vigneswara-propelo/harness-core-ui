@@ -91,6 +91,7 @@ export interface PageTemplateProps {
   FilterComponent: React.VoidFunctionComponent
   isForceDeleteAllowed?: boolean
   calledFromSettingsPage?: boolean
+  viewTypeIdentifier: string
 }
 
 export default function PageTemplate({

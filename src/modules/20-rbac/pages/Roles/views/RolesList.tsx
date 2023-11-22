@@ -208,7 +208,10 @@ const RolesList: React.FC = () => {
     pageSizeOptions: ROLES_PAGE_SIZE_OPTIONS
   })
 
-  const [view, setView] = useState<Views>(Views.GRID)
+  const { preference: view = Views.LIST, setPreference: setView } = usePreferenceStore<Views | undefined>(
+    PreferenceScope.MACHINE,
+    'rolesViewType'
+  )
 
   const RenderColumnMenu: Renderer<CellProps<RoleResponse>> = ({ row: { original: _data } }) => {
     const [menuOpen, setMenuOpen] = useState(false)
