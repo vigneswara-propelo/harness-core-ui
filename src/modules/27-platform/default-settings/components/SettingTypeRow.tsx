@@ -66,6 +66,8 @@ const getLowestAvailableScope = (allowedScopes: SettingDTO['allowedScopes'] | un
 type SettingChangedViaType = 'RESTORE' | 'UPDATE' | undefined
 
 export const SettingTypeRowHeader: React.FC = () => {
+  const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
+  const currentScope = getCurrentScope({ projectIdentifier, orgIdentifier, accountId })
   const { getString } = useStrings()
   return (
     <Layout.Horizontal padding={{ top: 'small', bottom: 'small' }} className={css.settingRowHeader}>
@@ -83,9 +85,11 @@ export const SettingTypeRowHeader: React.FC = () => {
           </Text>
         </Layout.Horizontal>
       </Container>
-      <Container flex={{ alignItems: 'center' }} className={css.settingOverride}>
-        <Text font={{ variation: FontVariation.BODY2 }}>{getString('platform.defaultSettings.allowOverrides')}</Text>
-      </Container>
+      {currentScope === 'PROJECT' ? null : (
+        <Container flex={{ alignItems: 'center' }} className={css.settingOverride}>
+          <Text font={{ variation: FontVariation.BODY2 }}>{getString('platform.defaultSettings.allowOverrides')}</Text>
+        </Container>
+      )}
     </Layout.Horizontal>
   )
 }
