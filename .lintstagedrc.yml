@@ -1,0 +1,10 @@
+'*': 'sh scripts/license/stamp.sh'
+# p1,p2,p3 are dummy extensions to allow multiple commands for the same extensions
+'*.{ts,tsx,p1}': 'prettier --check'
+'*.{ts,tsx,p2}': 'eslint --rulesdir ./scripts/eslint-rules'
+'*.{ts,tsx,p3}': 'sh scripts/typecheck-staged.sh'
+'*.scss,p1': 'stylelint --max-warnings 0'
+'*.scss,p2': 'prettier --check'
+'strings.*.yaml': 'yarn strings:check'
+'webpack.devServerProxy.config.js': "echo 'Changes to proxy config should not be committed' && exit 1"
+'*.i18n.ts': 'exit 1'

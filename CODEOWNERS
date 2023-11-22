@@ -2,6 +2,7 @@
 .eslintrc.yml @harness/ui-council
 .prettierignore @harness/ui-council
 .prettierrc.yml @harness/ui-council
+.lintstagedrc.yml @harness/ui-council
 package.json @harness/ui-council
 tsconfig.json @harness/ui-council
 tsconfig-eslint.json @harness/ui-council

@@ -254,29 +254,6 @@
   "engines": {
     "node": "^16"
   },
-  "lint-staged": {
-    "*": [
-      "sh scripts/license/stamp.sh"
-    ],
-    "*.{ts,tsx}": [
-      "eslint --rulesdir ./scripts/eslint-rules",
-      "sh scripts/typecheck-staged.sh",
-      "prettier --check"
-    ],
-    "*.scss": [
-      "stylelint --max-warnings 0",
-      "prettier --check"
-    ],
-    "strings.*.yaml": [
-      "yarn strings:check"
-    ],
-    "webpack.devServerProxy.config.js": [
-      "exit 1"
-    ],
-    "*.i18n.ts": [
-      "exit 1"
-    ]
-  },
   "i18nSettings": {
     "extensionToLanguageMap": {
       "es": [
