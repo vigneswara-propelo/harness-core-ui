@@ -148,3 +148,11 @@
     background-color: var(--grey-100);
   }
 }
+
+.gitFilePath {
+  display: block;
+
+  :global(.bp3-popover-content) {
+    padding: var(--spacing-small);
+  }
+}

@@ -25,7 +25,7 @@ import { getConnectorIdentifierWithScope } from '@platform/connectors/utils/util
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { NameIdentifierSchema } from '@common/utils/Validation'
 import { ErrorHandler, ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
-import { AddWebhookModalData, NewWebhookModalProps } from './utils'
+import { AddWebhookModalData, NewWebhookModalProps, gitFilePath } from './utils'
 import css from './Webhooks.module.scss'
 
 export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Element {
@@ -228,11 +228,23 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
                                   )}
                                 </div>
                                 {index === value.length - 1 && get(formik.values, `folderPaths[${index}].value`, '') && (
-                                  <Text padding={{ left: 'medium' }}>
-                                    {getString('pipeline.webhooks.folderPathWithRepo', {
-                                      repo: formik.values.repo,
-                                      folderPath: get(formik.values, `folderPaths[${index}].value`, '')
-                                    })}
+                                  <Text
+                                    padding={{ left: 'medium' }}
+                                    lineClamp={1}
+                                    alwaysShowTooltip
+                                    tooltip={gitFilePath(
+                                      formik.values.repo,
+                                      get(formik.values, `folderPaths[${index}].value`, '')
+                                    )}
+                                    tooltipProps={{
+                                      isDark: true,
+                                      popoverClassName: css.gitFilePath
+                                    }}
+                                  >
+                                    {gitFilePath(
+                                      formik.values.repo,
+                                      get(formik.values, `folderPaths[${index}].value`, '')
+                                    )}
                                   </Text>
                                 )}
                               </Layout.Vertical>

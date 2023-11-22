@@ -5,11 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import React from 'react'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { IconProps, SelectOption } from '@harness/uicore'
 import { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { StringsMap } from 'stringTypes'
-import { StringKeys } from 'framework/strings'
+import { String, StringKeys } from 'framework/strings'
 
 export interface AddWebhookModalData {
   name: string
@@ -76,4 +77,17 @@ export const iconMap: Record<WebhookEventStatus, IconProps> = {
   PROCESSING: { name: 'loading', size: 10 },
   QUEUED: { name: 'queued', size: 10 },
   SKIPPED: { name: 'skipped', size: 8 }
+}
+
+export function gitFilePath(repo: string | undefined, filePath: string | undefined): JSX.Element {
+  return (
+    <String
+      useRichText
+      stringID="pipeline.webhooks.folderPathWithRepo"
+      vars={{
+        repo: repo,
+        folderPath: filePath
+      }}
+    />
+  )
 }

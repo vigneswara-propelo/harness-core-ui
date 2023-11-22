@@ -16,6 +16,7 @@ declare const styles: {
   readonly folderPath: string
   readonly folderPathIndex: string
   readonly footer: string
+  readonly gitFilePath: string
   readonly group: string
   readonly header: string
   readonly layout: string
