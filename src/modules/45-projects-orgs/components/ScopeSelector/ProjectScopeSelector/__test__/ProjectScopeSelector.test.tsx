@@ -12,7 +12,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import * as cdngServices from 'services/cd-ng'
 import { useGetProjectAggregateDTOList, useGetOrganizationAggregateDTOList } from 'services/cd-ng'
 import { ProjectScopeSelector } from '../ProjectScopeSelector'
-import { projectMockDataWithModules, organizations } from './Mocks'
+import { projectMockDataWithModules, organizations } from '../../__tests__/Mocks'
 
 jest.mock('services/cd-ng', () => ({
   useGetOrganizationAggregateDTOList: jest.fn().mockImplementation(() => {

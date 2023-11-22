@@ -90,66 +90,6 @@ export const organizations = {
         templatesCount: 0,
         admins: null,
         collaborators: null
-      },
-      {
-        organizationResponse: {
-          organization: { identifier: 'aa2ndOrgSunny', name: 'aa2ndOrgSunny', description: '', tags: {} },
-          createdAt: 1625751127249,
-          lastModifiedAt: 1625751127249,
-          harnessManaged: false
-        },
-        projectsCount: 0,
-        connectorsCount: 0,
-        secretsCount: 0,
-        delegatesCount: 0,
-        templatesCount: 0,
-        admins: null,
-        collaborators: null
-      },
-      {
-        organizationResponse: {
-          organization: { identifier: 'aaaaaaaaaDeepakOrg', name: 'aaaaaaaaaDeepakOrg', description: '', tags: {} },
-          createdAt: 1626271064829,
-          lastModifiedAt: 1626271064829,
-          harnessManaged: false
-        },
-        projectsCount: 0,
-        connectorsCount: 0,
-        secretsCount: 0,
-        delegatesCount: 0,
-        templatesCount: 0,
-        admins: null,
-        collaborators: null
-      },
-      {
-        organizationResponse: {
-          organization: { identifier: 'aaaaaaaaaorggg', name: 'aaaaaaaaaorggg', description: '', tags: {} },
-          createdAt: 1626168918103,
-          lastModifiedAt: 1626168918103,
-          harnessManaged: false
-        },
-        projectsCount: 0,
-        connectorsCount: 0,
-        secretsCount: 0,
-        delegatesCount: 0,
-        templatesCount: 0,
-        admins: null,
-        collaborators: null
-      },
-      {
-        organizationResponse: {
-          organization: { identifier: 'AAAAJasmeet', name: 'AAAAJasmeet', description: '', tags: {} },
-          createdAt: 1624712161731,
-          lastModifiedAt: 1624712161731,
-          harnessManaged: false
-        },
-        projectsCount: 0,
-        connectorsCount: 0,
-        secretsCount: 0,
-        delegatesCount: 0,
-        templatesCount: 0,
-        admins: null,
-        collaborators: null
       }
     ],
     pageIndex: 0,
