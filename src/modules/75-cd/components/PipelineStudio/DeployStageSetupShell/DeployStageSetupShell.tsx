@@ -487,9 +487,10 @@ export default function DeployStageSetupShell(): JSX.Element {
     const stageSpec = get(selectedStage, 'stage.spec')
     const { environments, environmentGroup, environment } = stageSpec || {}
     const areAllEnvironmentRelatedConfigurationAbsent = !environments && !environmentGroup && !environment
-    const canEnvBeInitialisedAsRuntime = !(scope === Scope.PROJECT && !isContextTypeTemplateType(contextType))
+    const canSvcEnvBeInitialisedAsRuntime = !(scope === Scope.PROJECT && !isContextTypeTemplateType(contextType))
+    let finalStageData
 
-    if (isNewEnvDef && areAllEnvironmentRelatedConfigurationAbsent && canEnvBeInitialisedAsRuntime) {
+    if (isNewEnvDef && areAllEnvironmentRelatedConfigurationAbsent && canSvcEnvBeInitialisedAsRuntime) {
       const initialValues = {
         environment: {
           environmentRef: RUNTIME_INPUT_VALUE
@@ -507,15 +508,36 @@ export default function DeployStageSetupShell(): JSX.Element {
       const processedInitialValues = processInitialValues(initialValues, customStepPropsToBeProvided)
       const finalProcessedValuesToBeUpdated = processFormValues(processedInitialValues, customStepPropsToBeProvided)
 
-      const stageData = produce(selectedStage, draft => {
+      finalStageData = produce(selectedStage, draft => {
         const specObject: DeploymentStageConfig = get(draft, 'stage.spec', {})
         if (specObject) {
           specObject.environment = finalProcessedValuesToBeUpdated.environment
         }
       })
-      debounceUpdateStage(stageData?.stage)
     }
-  }, [isNewEnvDef, scope, contextType, selectedStage, isOverridesEnabled])
+
+    const areAllSvcRelatedConfigurationAbsent =
+      isEmpty(get(selectedStage, 'stage.spec.service.serviceRef')) &&
+      isEmpty(get(selectedStage, 'stage.spec.services.values')) &&
+      isEmpty(get(selectedStage, 'stage.spec.service.useFromStage')) &&
+      isEmpty(get(selectedStage, 'stage.spec.services.useFromStage')) &&
+      selectedStage?.stage?.type === StageType.DEPLOY
+
+    if (isNewService && areAllSvcRelatedConfigurationAbsent && canSvcEnvBeInitialisedAsRuntime) {
+      finalStageData = produce(finalStageData, draft => {
+        if (draft) {
+          set(draft, 'stage.spec.service', {
+            serviceRef: RUNTIME_INPUT_VALUE,
+            serviceInputs: RUNTIME_INPUT_VALUE
+          })
+        }
+      })
+    }
+
+    if (finalStageData) {
+      debounceUpdateStage(finalStageData?.stage)
+    }
+  }, [isNewEnvDef, scope, contextType, selectedStage, isOverridesEnabled, isNewService])
 
   const originalStage = selectedStageId
     ? getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId, originalPipeline).stage
