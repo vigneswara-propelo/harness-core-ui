@@ -16,8 +16,6 @@ import type { UserMetadataDTO } from 'services/cd-ng'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 
-const PR_ENV_HOST_NAME = 'pr.harness.io'
-
 interface SetPageNumberProps {
   setPage: (value: number) => void
   pageItemsCount?: number
@@ -116,18 +114,6 @@ export const suppressHotJarRecording = (elements: Element[] | null | undefined):
 // Utility to generate { 'data-hj-suppress': true } attribute if HotJar is available
 export const addHotJarSuppressionAttribute = (): { [HOTJAR_SUPPRESSION_ATTR]: boolean } | undefined =>
   window.hj ? { [HOTJAR_SUPPRESSION_ATTR]: true } : undefined
-
-// Utility to check if environment is a PR environment
-export const isPR = (): boolean => {
-  return location.hostname?.includes(PR_ENV_HOST_NAME)
-}
-
-export const getPREnvNameFromURL = (url: string): string => {
-  if (!url) {
-    return ''
-  }
-  return isPR() ? url.split(PR_ENV_HOST_NAME)?.[1]?.split('/')?.[1] : ''
-}
 
 export function isMultiTypeFixed(type: MultiTypeInputType): boolean {
   return type === MultiTypeInputType.FIXED

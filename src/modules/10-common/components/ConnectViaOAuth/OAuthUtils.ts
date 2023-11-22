@@ -6,7 +6,6 @@
  */
 
 import { Environment, Status } from '@common/utils/Constants'
-import { getPREnvNameFromURL, isPR } from '@common/utils/utils'
 
 export const getBackendServerUrl = (): string => {
   return `${location.protocol}//${location.hostname}`
@@ -20,7 +19,7 @@ export const isEnvironmentAllowedForOAuth = (): boolean => {
 
 export const getGatewayUrlPrefix = (): string => {
   const urlPrefix = `${location.protocol}//${location.host}`
-  return isPR() ? `${urlPrefix}/${getPREnvNameFromURL(location.href)}/gateway` : `${urlPrefix}/gateway`
+  return `${urlPrefix}/gateway`
 }
 
 export const OAUTH_REDIRECT_URL_PREFIX = `${getGatewayUrlPrefix()}/api/secrets/oauth2Redirect`

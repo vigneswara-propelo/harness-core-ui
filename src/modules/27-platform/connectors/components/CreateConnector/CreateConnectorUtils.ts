@@ -7,7 +7,6 @@
 import * as Yup from 'yup'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { isPR, getPREnvNameFromURL } from '@common/utils/utils'
 import { GitConnectionType } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import { GitAuthTypes } from '@platform/connectors/pages/connectors/utils/ConnectorHelper'
 import type { StringsMap } from 'stringTypes'
@@ -59,5 +58,5 @@ export const getCommonConnectorsValidationSchema = (
 
 export const getGatewayUrlPrefix = (): string => {
   const urlPrefix = `${location.protocol}//${location.host}`
-  return isPR() ? `${urlPrefix}/${getPREnvNameFromURL(location.href)}/gateway` : `${urlPrefix}/gateway`
+  return `${urlPrefix}/gateway`
 }
