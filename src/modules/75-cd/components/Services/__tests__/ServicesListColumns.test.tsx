@@ -6,10 +6,11 @@
  */
 
 import React from 'react'
-import { render, getAllByText, fireEvent, getByText, waitFor } from '@testing-library/react'
+import { render, getAllByText, fireEvent, getByText, waitFor, queryByText } from '@testing-library/react'
 import { serviceListResponse, serviceRow } from '@cd/mock'
 import mockImport from 'framework/utils/mockImport'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
+import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
 import { ServiceName, ServiceDescription, ServiceMenu } from '../ServicesListColumns/ServicesListColumns'
 
 jest.mock('services/cd-ng', () => {
@@ -114,5 +115,46 @@ describe('ServiceMenu', () => {
     expect(getByText(document.body, 'cancel')).toBeDefined()
     fireEvent.click(getByText(document.body, 'cancel') as HTMLButtonElement)
     expect(findDialogContainer()).toBeFalsy()
+  })
+
+  test('Should render option Move To Git, for Inline service if all required FF is on', () => {
+    const { container } = render(
+      <TestWrapper defaultAppStoreValues={{ featureFlags: { NG_SVC_ENV_REDESIGN: true, CDS_SERVICE_GITX: true } }}>
+        <ServiceMenu data={{ ...services[0], storeType: StoreType.INLINE }} isForceDeleteEnabled />
+      </TestWrapper>
+    )
+    fireEvent.click(container.querySelector('[data-icon="Options"]') as HTMLElement)
+
+    expect(getByText(document.body, 'common.moveToGit')).toBeInTheDocument()
+  })
+
+  test('Should not render option Move To Git, if NG_SVC_ENV_REDESIGN (V2 FF) is off', () => {
+    const { container } = render(
+      <TestWrapper defaultAppStoreValues={{ featureFlags: { NG_SVC_ENV_REDESIGN: false, CDS_SERVICE_GITX: true } }}>
+        <ServiceMenu data={services[0]} isForceDeleteEnabled />
+      </TestWrapper>
+    )
+    fireEvent.click(container.querySelector('[data-icon="Options"]') as HTMLElement)
+    expect(queryByText(document.body, 'common.moveToGit')).not.toBeInTheDocument()
+  })
+
+  test('Should not render option Move To Git, if CDS_SERVICE_GITX FF is off', () => {
+    const { container } = render(
+      <TestWrapper defaultAppStoreValues={{ featureFlags: { NG_SVC_ENV_REDESIGN: true, CDS_SERVICE_GITX: false } }}>
+        <ServiceMenu data={services[0]} isForceDeleteEnabled />
+      </TestWrapper>
+    )
+    fireEvent.click(container.querySelector('[data-icon="Options"]') as HTMLElement)
+    expect(queryByText(document.body, 'common.moveToGit')).not.toBeInTheDocument()
+  })
+
+  test('Should not render option Move To Git for Remote services', () => {
+    const { container } = render(
+      <TestWrapper defaultAppStoreValues={{ featureFlags: { NG_SVC_ENV_REDESIGN: true, CDS_SERVICE_GITX: true } }}>
+        <ServiceMenu data={{ ...services[0], storeType: StoreType.REMOTE }} isForceDeleteEnabled />
+      </TestWrapper>
+    )
+    fireEvent.click(container.querySelector('[data-icon="Options"]') as HTMLElement)
+    expect(queryByText(document.body, 'common.moveToGit')).not.toBeInTheDocument()
   })
 })

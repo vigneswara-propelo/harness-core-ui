@@ -40,6 +40,7 @@ import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { yamlPathRegex } from '@common/utils/StringUtils'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import { ResponseServiceMoveConfigResponse, moveServiceConfigsPromise } from 'services/cd-ng'
 import {
   ExtraQueryParams,
   getDisableFields,
@@ -85,16 +86,21 @@ export default function MoveResource({
   const formikRef = useRef<FormikProps<ModifiedInitialValuesType>>(null)
   const { getRBACErrorMessage } = useRBACError()
   const getReourceTypeText = useCallback((): string => {
-    if (resourceType === ResourceType.PIPELINES) {
-      return getString('common.pipeline')
+    switch (resourceType) {
+      case ResourceType.PIPELINES:
+        return getString('common.pipeline')
+      case ResourceType.INPUT_SETS:
+        return getString('common.pipeline')
+      case ResourceType.SERVICE:
+        return getString('service')
+      default:
+        return getString('common.resourceLabel')
     }
-    if (resourceType === ResourceType.INPUT_SETS) {
-      return getString('inputSets.inputSetLabel')
-    }
-    return getString('common.resourceLabel')
   }, [getString, resourceType])
 
-  const handleResponse = (response: ResponseMoveConfigResponse | ResponseInputSetMoveConfigResponseDTO): void => {
+  const handleResponse = (
+    response: ResponseMoveConfigResponse | ResponseInputSetMoveConfigResponseDTO | ResponseServiceMoveConfigResponse
+  ): void => {
     if (response.status === 'SUCCESS') {
       setIsLoading(false)
       showSuccess(getString('pipeline.moveSuccessMessage', { resourceType: getReourceTypeText() }))
@@ -175,6 +181,34 @@ export default function MoveResource({
       .catch(handleError)
   }
 
+  const moveService = (formValues: ModifiedInitialValuesType): void => {
+    const { identifier, connectorRef, repo, branch, filePath, commitMsg, baseBranch } = formValues
+    setIsLoading(true)
+    moveServiceConfigsPromise({
+      serviceIdentifier: identifier,
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        connectorRef: typeof connectorRef === 'string' ? connectorRef : (connectorRef as any).value,
+        repoName: repo,
+        branch,
+        filePath,
+        moveConfigType: migrationType as MoveConfigsQueryParams['moveConfigType'],
+        ...(baseBranch ? { isNewBranch: true, baseBranch } : { isNewBranch: false }),
+        commitMsg
+      },
+      requestOptions: {
+        headers: {
+          'content-type': 'application/json'
+        }
+      },
+      body: undefined
+    })
+      .then(handleResponse)
+      .catch(handleError)
+  }
+
   const moveEntity = (formValues: ModifiedInitialValuesType): void => {
     switch (resourceType) {
       case ResourceType.PIPELINES:
@@ -182,6 +216,9 @@ export default function MoveResource({
         break
       case ResourceType.INPUT_SETS:
         moveInputSet(formValues)
+        break
+      case ResourceType.SERVICE:
+        moveService(formValues)
         break
     }
   }

@@ -49,9 +49,10 @@ import { SettingType } from '@common/constants/Utils'
 import { ChangeRate, IconDTO, ServiceDetailsDTOV2, useDeleteServiceV2, useGetSettingValue } from 'services/cd-ng'
 import { DeploymentTypeIcons } from '@cd/components/DeploymentTypeIcons/DeploymentTypeIcons'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { ResourceType as GitResourceType } from '@common/interfaces/GitSyncInterface'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 import { isExecutionIgnoreFailed, isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
@@ -61,6 +62,9 @@ import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
 import { RateTrend, TrendPopover } from '@cd/pages/dashboard/dashboardUtils'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import type { Sort, SortFields } from '@common/utils/listUtils'
+import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
+import useMigrateResource from '@modules/70-pipeline/components/MigrateResource/useMigrateResource'
+import { MigrationType } from '@modules/70-pipeline/components/MigrateResource/MigrateUtils'
 import { ServiceTabs, getRemoteServiceQueryParams } from '../utils/ServiceUtils'
 import { ServiceCodeSourceCell } from '../ServicesListColumns/ServicesListColumns'
 import css from '@cd/components/Services/ServicesList/ServiceList.module.scss'
@@ -386,7 +390,7 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const history = useHistory()
-  const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+  const { NG_SVC_ENV_REDESIGN, CDS_SERVICE_GITX } = useFeatureFlags()
   const [hideReferencedByButton, setHideReferencedByButton] = useState(false)
   const [customErrorMessage, setCustomErrorMessage] = useState<string | undefined>()
   const [showOverlay, setShowOverlay] = useState(false)
@@ -493,7 +497,7 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
   const handleEdit = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
     e.stopPropagation()
     setMenuOpen(false)
-    if (isSvcEnvEntityEnabled) {
+    if (NG_SVC_ENV_REDESIGN) {
       history.push({
         pathname: routes.toServiceStudio({
           accountId,
@@ -514,6 +518,14 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
     setMenuOpen(false)
     openDialog()
   }
+
+  const { showMigrateResourceModal: showMoveResourceModal } = useMigrateResource({
+    resourceType: GitResourceType.SERVICE,
+    modalTitle: getString('common.moveEntitytoGit', { resourceType: getString('service') }),
+    migrationType: MigrationType.INLINE_TO_REMOTE,
+    extraQueryParams: { name: data?.name, identifier: data?.identifier },
+    onSuccess: () => (column as any).reload?.()
+  })
 
   const openInNewTab = `${routes.toServiceStudio({
     accountId,
@@ -563,6 +575,25 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
               permission: PermissionIdentifier.EDIT_SERVICE
             }}
           />
+          {NG_SVC_ENV_REDESIGN && CDS_SERVICE_GITX && data?.storeType !== StoreType.REMOTE ? (
+            <RbacMenuItem
+              icon="git-merge"
+              text={getString('common.moveToGit')}
+              permission={{
+                resource: {
+                  resourceType: ResourceType.SERVICE,
+                  resourceIdentifier: defaultTo(data.identifier, '')
+                },
+                permission: PermissionIdentifier.EDIT_SERVICE
+              }}
+              onClick={e => {
+                e.stopPropagation()
+                setMenuOpen(false)
+                showMoveResourceModal()
+              }}
+              data-testid="moveConfigToRemote"
+            />
+          ) : null}
           <RbacMenuItem
             icon="trash"
             text={getString('delete')}

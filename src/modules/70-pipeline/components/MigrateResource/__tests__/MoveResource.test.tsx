@@ -28,6 +28,7 @@ const fetchBranches = jest.fn(() => Promise.resolve(mockBranches))
 
 jest.mock('services/cd-ng', () => ({
   getConnectorListV2Promise: jest.fn(() => Promise.resolve(gitConnectorMock)),
+  moveServiceConfigsPromise: jest.fn(() => Promise.resolve({ status: 'SUCCESS' })),
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: gitConnectorMock.data.content[0], refetch: getGitConnector, loading: false }
   }),
@@ -69,7 +70,7 @@ const pipelineInitialValues = {
   name: 'test pipeline'
 }
 
-const inputSetInitialValues = {
+const mockInitialValues = {
   branch: 'master',
   connectorRef: 'account.SunnyAcctScopeRepoTypeGit',
   description: '',
@@ -152,7 +153,7 @@ describe('Move Resource to Remote', () => {
         <MoveResource
           resourceType={ResourceType.INPUT_SETS}
           migrationType={MigrationType.INLINE_TO_REMOTE}
-          initialValues={inputSetInitialValues}
+          initialValues={mockInitialValues}
           extraQueryParams={{
             inputSetIdentifier: 'is_2',
             name: 'is 2',
@@ -244,7 +245,7 @@ describe('Move Resource to Remote', () => {
           onCancelClick={onCancelClick}
           onSuccess={onSuccess}
           onFailure={onFailure}
-          initialValues={inputSetInitialValues}
+          initialValues={mockInitialValues}
         />
       </TestWrapper>
     )
@@ -271,7 +272,7 @@ describe('Move Resource to Remote', () => {
           onCancelClick={onCancelClick}
           onSuccess={onSuccess}
           onFailure={onFailure}
-          initialValues={inputSetInitialValues}
+          initialValues={mockInitialValues}
         />
       </TestWrapper>
     )
@@ -320,7 +321,7 @@ describe('Move Resource to Remote', () => {
           onCancelClick={onCancelClick}
           onSuccess={onSuccess}
           onFailure={onFailure}
-          initialValues={inputSetInitialValues}
+          initialValues={mockInitialValues}
         />
       </TestWrapper>
     )
@@ -335,5 +336,28 @@ describe('Move Resource to Remote', () => {
     expect(container).toMatchSnapshot()
     expect(onFailure).toHaveBeenCalledTimes(1)
     expect(onSuccess).toHaveBeenCalledTimes(0)
+  })
+
+  test('Test for move service', async () => {
+    const { getByText } = render(
+      <TestWrapper path={TEST_PIPELINES_PATH} pathParams={TEST_PATH_PARAMS}>
+        <MoveResource
+          resourceType={ResourceType.SERVICE}
+          migrationType={MigrationType.INLINE_TO_REMOTE}
+          onCancelClick={onCancelClick}
+          onSuccess={onSuccess}
+          onFailure={onFailure}
+          initialValues={mockInitialValues}
+        />
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(getByText('common.git.commitMessage')).toBeDefined())
+    const moveButton = getByText('common.moveToGit')
+    act(async () => {
+      await userEvent.click(moveButton)
+      expect(onFailure).toHaveBeenCalledTimes(0)
+      expect(onSuccess).toHaveBeenCalledTimes(1)
+    })
   })
 })

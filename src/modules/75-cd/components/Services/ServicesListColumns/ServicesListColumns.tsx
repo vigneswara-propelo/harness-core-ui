@@ -25,6 +25,7 @@ import { Classes, Intent, Menu, Popover, PopoverInteractionKind, Position } from
 import { useModalHook } from '@harness/use-modal'
 import routes from '@common/RouteDefinitions'
 import { StoreType } from '@common/constants/GitSyncTypes'
+import { ResourceType as GitResourceType } from '@common/interfaces/GitSyncInterface'
 import routesV2 from '@common/RouteDefinitionsV2'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -39,6 +40,8 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 import { CodeSourceWrapper } from '@pipeline/components/CommonPipelineStages/PipelineStage/utils'
+import useMigrateResource from '@modules/70-pipeline/components/MigrateResource/useMigrateResource'
+import { MigrationType } from '@modules/70-pipeline/components/MigrateResource/MigrateUtils'
 import { ServiceTabs, getRemoteServiceQueryParams } from '../utils/ServiceUtils'
 import css from './ServicesListColumns.module.scss'
 
@@ -68,6 +71,7 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
   const history = useHistory()
   const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
   const newLeftNav = useFeatureFlag(FeatureFlag.CDS_NAV_2_0)
+  const gitXEnabled = useFeatureFlag(FeatureFlag.CDS_SERVICE_GITX)
   const [hideReferencedByButton, setHideReferencedByButton] = useState(false)
   const [customErrorMessage, setCustomErrorMessage] = useState<string | undefined>()
   const remoteQueryParams = getRemoteServiceQueryParams(service)
@@ -206,6 +210,14 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
     openDialog()
   }
 
+  const { showMigrateResourceModal: showMoveResourceModal } = useMigrateResource({
+    resourceType: GitResourceType.SERVICE,
+    modalTitle: getString('common.moveEntitytoGit', { resourceType: getString('service') }),
+    migrationType: MigrationType.INLINE_TO_REMOTE,
+    extraQueryParams: { name: service?.name, identifier: service?.identifier },
+    onSuccess: () => onRefresh?.()
+  })
+
   return (
     <Layout.Horizontal>
       <Popover
@@ -237,6 +249,25 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
               permission: PermissionIdentifier.EDIT_SERVICE
             }}
           />
+          {isSvcEnvEntityEnabled && gitXEnabled && service?.storeType !== StoreType.REMOTE ? (
+            <RbacMenuItem
+              icon="git-merge"
+              text={getString('common.moveToGit')}
+              permission={{
+                resource: {
+                  resourceType: ResourceType.SERVICE,
+                  resourceIdentifier: defaultTo(service.identifier, '')
+                },
+                permission: PermissionIdentifier.EDIT_SERVICE
+              }}
+              onClick={e => {
+                e.stopPropagation()
+                setMenuOpen(false)
+                showMoveResourceModal()
+              }}
+              data-testid="moveConfigToRemote"
+            />
+          ) : null}
           <RbacMenuItem
             icon="trash"
             text={getString('delete')}

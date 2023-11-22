@@ -109,7 +109,7 @@ export default function useMigrateResource(props: UseMigrateResourceProps): UseM
               identifier: defaultTo(
                 resourceType === ResourceType.INPUT_SETS
                   ? extraQueryParams?.inputSetIdentifier
-                  : extraQueryParams?.pipelineIdentifier,
+                  : extraQueryParams?.pipelineIdentifier || extraQueryParams?.identifier,
                 ''
               ),
               name: defaultTo(extraQueryParams?.name, ''),
