@@ -165,6 +165,9 @@ describe('ECSRollingDeployStep tests', () => {
     ) as HTMLInputElement
     await userEvent.click(sameAsAlreadyRunningInstancesCheckbox)
 
+    const updateGreenServiceCheckbox = queryByNameAttribute('spec.updateGreenService', container) as HTMLInputElement
+    await userEvent.click(updateGreenServiceCheckbox)
+
     const enableAutoScalingInSwapStepCheckbox = queryByNameAttribute(
       'spec.enableAutoScalingInSwapStep',
       container
@@ -186,6 +189,7 @@ describe('ECSRollingDeployStep tests', () => {
           stageListener: 'abc-ghi-def',
           stageListenerRuleArn: 'Listener_Rule_2',
           sameAsAlreadyRunningInstances: true,
+          updateGreenService: true,
           enableAutoScalingInSwapStep: true
         },
         type: StepType.EcsBlueGreenCreateService
@@ -391,6 +395,7 @@ describe('ECSRollingDeployStep tests', () => {
             stageListener: RUNTIME_INPUT_VALUE,
             stageListenerRuleArn: RUNTIME_INPUT_VALUE,
             sameAsAlreadyRunningInstances: RUNTIME_INPUT_VALUE,
+            updateGreenService: RUNTIME_INPUT_VALUE,
             enableAutoScalingInSwapStep: RUNTIME_INPUT_VALUE
           },
           type: StepType.EcsBlueGreenCreateService
@@ -525,6 +530,7 @@ describe('ECSRollingDeployStep tests', () => {
             stageListener: '',
             stageListenerRuleArn: '',
             sameAsAlreadyRunningInstances: false,
+            updateGreenService: false,
             enableAutoScalingInSwapStep: false
           },
           type: StepType.EcsBlueGreenCreateService
@@ -540,6 +546,7 @@ describe('ECSRollingDeployStep tests', () => {
             stageListener: RUNTIME_INPUT_VALUE,
             stageListenerRuleArn: RUNTIME_INPUT_VALUE,
             sameAsAlreadyRunningInstances: RUNTIME_INPUT_VALUE,
+            updateGreenService: RUNTIME_INPUT_VALUE,
             enableAutoScalingInSwapStep: RUNTIME_INPUT_VALUE
           },
           type: StepType.EcsBlueGreenCreateService
@@ -595,6 +602,7 @@ describe('ECSRollingDeployStep tests', () => {
             stageListener: 'abc-def-ghi',
             stageListenerRuleArn: '',
             sameAsAlreadyRunningInstances: false,
+            updateGreenService: false,
             enableAutoScalingInSwapStep: false
           },
           type: StepType.EcsBlueGreenCreateService
@@ -610,6 +618,7 @@ describe('ECSRollingDeployStep tests', () => {
             stageListener: RUNTIME_INPUT_VALUE,
             stageListenerRuleArn: RUNTIME_INPUT_VALUE,
             sameAsAlreadyRunningInstances: RUNTIME_INPUT_VALUE,
+            updateGreenService: RUNTIME_INPUT_VALUE,
             enableAutoScalingInSwapStep: RUNTIME_INPUT_VALUE
           },
           type: StepType.EcsBlueGreenCreateService
@@ -715,6 +724,9 @@ describe('ECSRollingDeployStep tests', () => {
     ) as HTMLInputElement
     await userEvent.click(sameAsAlreadyRunningInstancesCheckbox)
 
+    const updateGreenServiceCheckbox = queryByNameAttribute('spec.updateGreenService', container) as HTMLInputElement
+    await userEvent.click(updateGreenServiceCheckbox)
+
     const enableAutoScalingInSwapStepCheckbox = queryByNameAttribute(
       'spec.enableAutoScalingInSwapStep',
       container
@@ -735,6 +747,7 @@ describe('ECSRollingDeployStep tests', () => {
         stageListener: 'abc-ghi-def',
         stageListenerRuleArn: 'Listener_Rule_2',
         sameAsAlreadyRunningInstances: true,
+        updateGreenService: true,
         enableAutoScalingInSwapStep: true
       },
       type: StepType.EcsBlueGreenCreateService

@@ -9,7 +9,7 @@ import React from 'react'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
-import { AllowedTypes, Formik, FormikForm } from '@harness/uicore'
+import { AllowedTypes, Container, Formik, FormikForm } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -70,7 +70,7 @@ const ECSRollingDeployStepEdit = (
                 stepViewType={stepViewType}
               />
 
-              <div className={cx(stepCss.formGroup, stepCss.lg)}>
+              <Container className={cx(stepCss.formGroup, stepCss.lg)} margin={{ top: 'medium' }}>
                 <FormMultiTypeCheckboxField
                   className={css.checkbox}
                   name="spec.sameAsAlreadyRunningInstances"
@@ -82,9 +82,9 @@ const ECSRollingDeployStepEdit = (
                     defaultValueToReset: false
                   }}
                 />
-              </div>
+              </Container>
 
-              <div className={cx(stepCss.formGroup, stepCss.lg)}>
+              <Container className={cx(stepCss.formGroup, stepCss.lg)} margin={{ top: 'medium' }}>
                 <FormMultiTypeCheckboxField
                   className={css.checkbox}
                   name="spec.forceNewDeployment"
@@ -96,7 +96,7 @@ const ECSRollingDeployStepEdit = (
                     defaultValueToReset: false
                   }}
                 />
-              </div>
+              </Container>
             </FormikForm>
           )
         }}

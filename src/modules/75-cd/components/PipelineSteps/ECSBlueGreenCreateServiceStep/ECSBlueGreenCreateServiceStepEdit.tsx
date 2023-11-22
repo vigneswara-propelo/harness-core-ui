@@ -14,11 +14,11 @@ import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import {
   AllowedTypes,
+  Container,
   Formik,
   FormikForm,
   FormInput,
   getMultiTypeFromValue,
-  Layout,
   MultiTypeInputType,
   SelectOption
 } from '@harness/uicore'
@@ -619,11 +619,7 @@ const ECSBlueGreenCreateServiceStepEdit = (
                 )}
               </div>
 
-              <Layout.Horizontal
-                flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
-                className={cx(stepCss.formGroup, stepCss.lg)}
-                margin={{ top: 'medium' }}
-              >
+              <Container className={cx(stepCss.formGroup, stepCss.lg)} margin={{ top: 'medium' }}>
                 <FormMultiTypeCheckboxField
                   className={css.checkbox}
                   name="spec.sameAsAlreadyRunningInstances"
@@ -635,13 +631,23 @@ const ECSBlueGreenCreateServiceStepEdit = (
                     defaultValueToReset: false
                   }}
                 />
-              </Layout.Horizontal>
+              </Container>
 
-              <Layout.Horizontal
-                flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
-                className={cx(stepCss.formGroup, stepCss.lg)}
-                margin={{ top: 'medium' }}
-              >
+              <Container className={cx(stepCss.formGroup, stepCss.lg)} margin={{ top: 'medium' }}>
+                <FormMultiTypeCheckboxField
+                  className={css.checkbox}
+                  name="spec.updateGreenService"
+                  label={getString('cd.steps.ecsBGCreateServiceStep.labels.updateGreenService')}
+                  disabled={readonly}
+                  multiTypeTextbox={{
+                    expressions,
+                    allowableTypes,
+                    defaultValueToReset: false
+                  }}
+                />
+              </Container>
+
+              <Container className={cx(stepCss.formGroup, stepCss.lg)} margin={{ top: 'medium' }}>
                 <FormMultiTypeCheckboxField
                   className={css.checkbox}
                   name="spec.enableAutoScalingInSwapStep"
@@ -653,7 +659,7 @@ const ECSBlueGreenCreateServiceStepEdit = (
                     defaultValueToReset: false
                   }}
                 />
-              </Layout.Horizontal>
+              </Container>
             </FormikForm>
           )
         }}

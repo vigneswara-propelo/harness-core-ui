@@ -11,7 +11,7 @@ import produce from 'immer'
 import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import { connect, FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
-import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypes, SelectOption, Layout } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypes, SelectOption, Container } from '@harness/uicore'
 
 import {
   DeploymentStageConfig,
@@ -508,11 +508,7 @@ const ECSBlueGreenCreateServiceStepInputSet = (
       )}
 
       {isValueRuntimeInput(template?.spec?.sameAsAlreadyRunningInstances) && (
-        <Layout.Horizontal
-          flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
-          className={cx(stepCss.formGroup, stepCss.md)}
-          margin={{ top: 'medium' }}
-        >
+        <Container className={cx(stepCss.formGroup, stepCss.md)} margin={{ top: 'medium' }}>
           <FormMultiTypeCheckboxField
             className={css.checkbox}
             name={`${prefix}spec.sameAsAlreadyRunningInstances`}
@@ -526,15 +522,29 @@ const ECSBlueGreenCreateServiceStepInputSet = (
             }}
             setToFalseWhenEmpty={true}
           />
-        </Layout.Horizontal>
+        </Container>
+      )}
+
+      {isValueRuntimeInput(template?.spec?.updateGreenService) && (
+        <Container className={cx(stepCss.formGroup, stepCss.md)} margin={{ top: 'medium' }}>
+          <FormMultiTypeCheckboxField
+            className={css.checkbox}
+            name={`${prefix}spec.updateGreenService`}
+            label={getString('cd.steps.ecsBGCreateServiceStep.labels.updateGreenService')}
+            disabled={readonly}
+            multiTypeTextbox={{
+              expressions,
+              allowableTypes,
+              disabled: readonly,
+              defaultValueToReset: false
+            }}
+            setToFalseWhenEmpty={true}
+          />
+        </Container>
       )}
 
       {isValueRuntimeInput(template?.spec?.enableAutoScalingInSwapStep) && (
-        <Layout.Horizontal
-          flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
-          className={cx(stepCss.formGroup, stepCss.md)}
-          margin={{ top: 'medium' }}
-        >
+        <Container className={cx(stepCss.formGroup, stepCss.md)} margin={{ top: 'medium' }}>
           <FormMultiTypeCheckboxField
             className={css.checkbox}
             name={`${prefix}spec.enableAutoScalingInSwapStep`}
@@ -548,7 +558,7 @@ const ECSBlueGreenCreateServiceStepInputSet = (
             }}
             setToFalseWhenEmpty={true}
           />
-        </Layout.Horizontal>
+        </Container>
       )}
     </>
   )

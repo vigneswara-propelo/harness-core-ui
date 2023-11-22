@@ -31,6 +31,7 @@ export interface ECSBlueGreenCreateServiceStepInitialValues extends StepElementC
     stageListener: string
     stageListenerRuleArn: string
     sameAsAlreadyRunningInstances?: boolean | string
+    updateGreenService?: boolean | string
     enableAutoScalingInSwapStep?: boolean | string
   }
 }

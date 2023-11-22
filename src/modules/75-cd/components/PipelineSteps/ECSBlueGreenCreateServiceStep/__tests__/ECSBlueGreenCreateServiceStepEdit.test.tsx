@@ -82,6 +82,7 @@ const emptyInitialValuesRuntime: ECSBlueGreenCreateServiceStepInitialValues = {
     stageListener: RUNTIME_INPUT_VALUE,
     stageListenerRuleArn: RUNTIME_INPUT_VALUE,
     sameAsAlreadyRunningInstances: RUNTIME_INPUT_VALUE,
+    updateGreenService: RUNTIME_INPUT_VALUE,
     enableAutoScalingInSwapStep: RUNTIME_INPUT_VALUE
   }
 }
@@ -97,6 +98,7 @@ const existingInitialValues: ECSBlueGreenCreateServiceStepInitialValues = {
     stageListener: 'abc-def-ghi',
     stageListenerRuleArn: 'Listener_Rule_3',
     sameAsAlreadyRunningInstances: false,
+    updateGreenService: false,
     enableAutoScalingInSwapStep: false
   }
 }
@@ -255,6 +257,9 @@ describe('GenericExecutionStepEdit tests', () => {
     ) as HTMLInputElement
     await userEvent.click(sameAsAlreadyRunningInstancesCheckbox)
 
+    const updateGreenServiceCheckbox = queryByNameAttribute('spec.updateGreenService') as HTMLInputElement
+    await userEvent.click(updateGreenServiceCheckbox)
+
     const enableAutoScalingInSwapStepCheckbox = queryByNameAttribute(
       'spec.enableAutoScalingInSwapStep'
     ) as HTMLInputElement
@@ -275,6 +280,7 @@ describe('GenericExecutionStepEdit tests', () => {
           stageListener: 'abc-ghi-def',
           stageListenerRuleArn: 'Listener_Rule_2',
           sameAsAlreadyRunningInstances: true,
+          updateGreenService: true,
           enableAutoScalingInSwapStep: true
         },
         type: StepType.EcsBlueGreenCreateService
@@ -322,7 +328,7 @@ describe('GenericExecutionStepEdit tests', () => {
     const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
     expect(dropdownIcons.length).toBe(5)
     const fixedInputIcons = container.querySelectorAll('span[data-icon="fixed-input"]')
-    expect(fixedInputIcons.length).toBe(8)
+    expect(fixedInputIcons.length).toBe(9)
     let runtimeInputIcons = container.querySelectorAll('span[data-icon="runtime-input"]')
     expect(runtimeInputIcons.length).toBe(0)
     const portalDivs = document.getElementsByClassName('bp3-portal')
@@ -404,6 +410,7 @@ describe('GenericExecutionStepEdit tests', () => {
           stageListener: RUNTIME_INPUT_VALUE,
           stageListenerRuleArn: RUNTIME_INPUT_VALUE,
           sameAsAlreadyRunningInstances: RUNTIME_INPUT_VALUE,
+          updateGreenService: RUNTIME_INPUT_VALUE,
           enableAutoScalingInSwapStep: RUNTIME_INPUT_VALUE
         }
       })
@@ -475,6 +482,7 @@ describe('GenericExecutionStepEdit tests', () => {
           stageListener: '<+input>.regex(<+input>.includes(/test/))',
           stageListenerRuleArn: '<+input>.regex(<+input>.includes(/test/))',
           sameAsAlreadyRunningInstances: RUNTIME_INPUT_VALUE,
+          updateGreenService: RUNTIME_INPUT_VALUE,
           enableAutoScalingInSwapStep: RUNTIME_INPUT_VALUE
         },
         type: StepType.EcsBlueGreenCreateService

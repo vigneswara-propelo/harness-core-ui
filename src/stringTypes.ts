@@ -7335,6 +7335,7 @@ export interface StringsMap {
   'cd.steps.ecsBGCreateServiceStep.labels.prodListenerRuleARN': string
   'cd.steps.ecsBGCreateServiceStep.labels.stageListener': string
   'cd.steps.ecsBGCreateServiceStep.labels.stageListenerRuleARN': string
+  'cd.steps.ecsBGCreateServiceStep.labels.updateGreenService': string
   'cd.steps.ecsBGCreateServiceStep.sectionHeaders.configureProductionService': string
   'cd.steps.ecsBGCreateServiceStep.sectionHeaders.configureStageService': string
   'cd.steps.ecsBGSwapTargetGroupsStep.doNotDownsizeOldService': string

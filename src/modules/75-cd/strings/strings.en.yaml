@@ -129,6 +129,7 @@ steps:
       stageListener: Stage Listener
       stageListenerRuleARN: Stage Listener Rule ARN
       enableAutoScalingInSwapStep: Enable Auto Scaling In Swap Step
+      updateGreenService: Update Green Service
   elastigroup:
     infraDetailHeader: Elastigroup Infrastructure Details
     connectorSpot: Spot Connector
