@@ -7,7 +7,7 @@
 
 import React, { useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Classes, Menu, Position } from '@blueprintjs/core'
+import { Classes, Expander, Menu, Position } from '@blueprintjs/core'
 import {
   Container,
   Tabs,
@@ -422,52 +422,53 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
 
           <Tab id={ServiceTabs.REFERENCED_BY} title={getString('referencedBy')} panel={props.refercedByPanel} />
           {/* <Tab id={ServiceTabs.ActivityLog} title={getString('activityLog')} panel={<></>} /> */}
+          <Expander />
+          {selectedTabId === ServiceTabs.Configuration && (
+            <Layout.Horizontal className={css.btnContainer}>
+              {isUpdated && !isReadonly && <div className={css.tagRender}>{getString('unsavedChanges')}</div>}
+              <Button
+                variation={ButtonVariation.PRIMARY}
+                disabled={!isUpdated || hasYamlValidationErrors}
+                text={getString('save')}
+                onClick={saveAndPublishService}
+                className={css.saveButton}
+              />
+              <Button
+                disabled={!isUpdated}
+                onClick={() => {
+                  updatePipelineView({ ...pipelineView, isYamlEditable: false })
+                  fetchPipeline()
+                }}
+                className={css.discardBtn}
+                variation={ButtonVariation.SECONDARY}
+                text={getString('pipeline.discard')}
+              />
+              <Popover className={Classes.DARK} position={Position.LEFT}>
+                <Button variation={ButtonVariation.ICON} icon="Options" aria-label="service studio menu actions" />
+                <Menu style={{ backgroundColor: 'unset' }}>
+                  <RbacMenuItem
+                    icon="refresh"
+                    text={getString('pipeline.outOfSyncErrorStrip.reconcile')}
+                    disabled={isReadonly}
+                    onClick={handleReconcileClick}
+                    permission={{
+                      permission: PermissionIdentifier.EDIT_SERVICE,
+                      resource: {
+                        resourceType: ResourceType.SERVICE,
+                        resourceIdentifier: serviceId
+                      },
+                      resourceScope: {
+                        accountIdentifier: accountId,
+                        orgIdentifier: serviceData?.orgIdentifier,
+                        projectIdentifier: serviceData?.projectIdentifier
+                      }
+                    }}
+                  />
+                </Menu>
+              </Popover>
+            </Layout.Horizontal>
+          )}
         </Tabs>
-        {selectedTabId === ServiceTabs.Configuration && (
-          <Layout.Horizontal className={css.btnContainer}>
-            {isUpdated && !isReadonly && <div className={css.tagRender}>{getString('unsavedChanges')}</div>}
-            <Button
-              variation={ButtonVariation.PRIMARY}
-              disabled={!isUpdated || hasYamlValidationErrors}
-              text={getString('save')}
-              onClick={saveAndPublishService}
-              className={css.saveButton}
-            />
-            <Button
-              disabled={!isUpdated}
-              onClick={() => {
-                updatePipelineView({ ...pipelineView, isYamlEditable: false })
-                fetchPipeline()
-              }}
-              className={css.discardBtn}
-              variation={ButtonVariation.SECONDARY}
-              text={getString('pipeline.discard')}
-            />
-            <Popover className={Classes.DARK} position={Position.LEFT}>
-              <Button variation={ButtonVariation.ICON} icon="Options" aria-label="service studio menu actions" />
-              <Menu style={{ backgroundColor: 'unset' }}>
-                <RbacMenuItem
-                  icon="refresh"
-                  text={getString('pipeline.outOfSyncErrorStrip.reconcile')}
-                  disabled={isReadonly}
-                  onClick={handleReconcileClick}
-                  permission={{
-                    permission: PermissionIdentifier.EDIT_SERVICE,
-                    resource: {
-                      resourceType: ResourceType.SERVICE,
-                      resourceIdentifier: serviceId
-                    },
-                    resourceScope: {
-                      accountIdentifier: accountId,
-                      orgIdentifier: serviceData?.orgIdentifier,
-                      projectIdentifier: serviceData?.projectIdentifier
-                    }
-                  }}
-                />
-              </Menu>
-            </Popover>
-          </Layout.Horizontal>
-        )}
       </Container>
     )
   }

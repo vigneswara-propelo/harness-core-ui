@@ -415,6 +415,9 @@ exports[`ServiceStudioDetails renders correctly 1`] = `
         >
           referencedBy
         </div>
+        <div
+          class="bp3-flex-expander"
+        />
       </div>
     </div>
   </div>
