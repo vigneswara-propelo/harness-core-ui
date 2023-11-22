@@ -385,3 +385,25 @@ export const includesCurrentScope = (scopes: ScopeSelector[], resourceScope: Sco
 export const useGetResourceTypeHandler = (resourceType: ResourceType): ResourceHandler | undefined => {
   return RbacFactory.getResourceTypeHandler(resourceType)
 }
+
+export const getLabelForAttributeBasedSelection = (
+  getString: UseStringsReturn['getString'],
+  resourceType: ResourceType
+): string => {
+  switch (resourceType) {
+    case ResourceType.FEATUREFLAG:
+      return getString('common.byTag')
+  }
+  return getString('common.byType')
+}
+
+export const getLabelForResourceModalTitle = (
+  getString: UseStringsReturn['getString'],
+  resourceType?: ResourceType
+): string => {
+  switch (resourceType) {
+    case ResourceType.FEATUREFLAG:
+      return getString('tagsLabel')
+  }
+  return getString('common.types')
+}

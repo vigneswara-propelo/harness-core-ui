@@ -12,6 +12,7 @@ import { useModalHook } from '@harness/use-modal'
 import type { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
 import RbacFactory from '@rbac/factories/RbacFactory'
+import { getLabelForResourceModalTitle } from '@rbac/pages/ResourceGroupDetails/utils'
 import AddResourceModal from './views/AddResourceModal'
 import css from './useAddResourceModal.module.scss'
 
@@ -46,7 +47,7 @@ const useAddResourceModal = (props: UseAddResourceModalProps): UseAddResourceMod
         className={cx(css.dialog)}
         title={
           isAttributeFilter
-            ? `${getString('add')} ${resourceLabelSingular} ${getString('common.types')}`
+            ? `${getString('add')} ${resourceLabelSingular} ${getLabelForResourceModalTitle(getString, resource)}`
             : `${getString('add')} ${resourceLabel}`
         }
       >

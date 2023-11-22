@@ -157,6 +157,7 @@ export interface StringsMap {
   'common.bucketName': string
   'common.buildsIn': string
   'common.by': string
+  'common.byTag': string
   'common.byType': string
   'common.cantDeleteEntity': string
   'common.capsAll': string

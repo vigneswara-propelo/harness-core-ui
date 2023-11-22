@@ -896,6 +896,7 @@ templateServiceLabel: Template Service
 customPricing: for Custom Pricing
 specified: Specified
 byType: By Type
+byTag: By Tag
 types: Types
 file: File
 entityReferenceTitle: 'Create or Select an Existing {{compName}}'

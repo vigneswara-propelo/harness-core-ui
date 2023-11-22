@@ -15,6 +15,7 @@ import type { ResourceType } from '@rbac/interfaces/ResourceType'
 import useAddResourceModal from '@rbac/modals/AddResourceModal/useAddResourceModal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { isAtrributeFilterSelector, isDynamicResourceSelector } from '@rbac/utils/utils'
+import { getLabelForAttributeBasedSelection } from '@rbac/pages/ResourceGroupDetails/utils'
 import type { ResourceSelectorValue } from '@rbac/pages/ResourceGroupDetails/utils'
 import type { AttributeFilter } from 'services/resourcegroups'
 import css from './ResourcesCard.module.scss'
@@ -95,7 +96,7 @@ const ResourcesCard: React.FC<ResourcesCardProps> = ({
             <Container className={css.radioBtnCtr} flex={true} padding={{ left: 'huge' }}>
               {attributeSelectionEnabled && (
                 <Radio
-                  label={getString('common.byType')}
+                  label={getLabelForAttributeBasedSelection(getString, resourceType)}
                   data-testid={`attr-${resourceType}`}
                   checked={isAtrributeFilterEnabled}
                   onChange={e => onResourceSelectionChange(resourceType, e.currentTarget.checked, undefined, [])}
