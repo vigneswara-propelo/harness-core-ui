@@ -48,6 +48,23 @@ export function NameSchema(
   return NameSchemaWithoutHook(getString, config)
 }
 
+export function TokenNameSchema(
+  getString: UseStringsReturn['getString'],
+  config?: { requiredErrorMsg?: string }
+): Yup.Schema<string> {
+  return Yup.string()
+    .trim()
+    .required(config?.requiredErrorMsg ? config?.requiredErrorMsg : getString('common.validation.nameIsRequired'))
+    .matches(regexName, getString('common.validation.namePatternIsNotValid'))
+    .max(
+      MAX_VERSION_LABEL_LENGTH,
+      getString('common.validation.fieldCannotbeLongerThanN', {
+        name: getString('common.tokenName'),
+        n: MAX_VERSION_LABEL_LENGTH
+      })
+    )
+}
+
 export function IdentifierSchemaWithOutName(
   getString: UseStringsReturn['getString'],
   config?: { requiredErrorMsg?: string; regexErrorMsg?: string }

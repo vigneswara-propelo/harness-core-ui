@@ -1433,6 +1433,7 @@ export interface StringsMap {
   'common.timeRangeLimitWarning.upgradeOffer': string
   'common.timeframe': string
   'common.timezone': string
+  'common.tokenName': string
   'common.tokens': string
   'common.totalLines': string
   'common.totalSelected': string

@@ -24,7 +24,7 @@ import { useParams } from 'react-router-dom'
 import type { FormikHelpers } from 'formik'
 import * as Yup from 'yup'
 import type { IDialogProps } from '@blueprintjs/core'
-import { NameSchema } from '@common/utils/Validation'
+import { TokenNameSchema } from '@common/utils/Validation'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
 import { useStrings } from 'framework/strings'
 import { useCreateDelegateToken, CreateDelegateTokenQueryParams } from 'services/cd-ng'
@@ -110,7 +110,7 @@ export const useCreateTokenModal = ({ onSuccess }: CreateTokenModalProps): Creat
             onSubmit={onSubmit}
             formName="createTokenForm"
             validationSchema={Yup.object().shape({
-              name: NameSchema(getString, {
+              name: TokenNameSchema(getString, {
                 requiredErrorMsg: getString('platform.delegates.tokens.tokenNameRequired')
               }),
               tokenValue: Yup.string()

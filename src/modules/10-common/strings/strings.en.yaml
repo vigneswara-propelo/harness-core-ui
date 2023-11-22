@@ -756,6 +756,7 @@ apiKeys: API Keys
 noAPIKeys: No API Keys
 noDeployments: No Deployments
 tokens: Tokens
+tokenName: 'Token name'
 lastModifiedTime: Last modified
 modified: Modified
 expiration: Expiration
