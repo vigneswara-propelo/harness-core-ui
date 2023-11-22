@@ -28,7 +28,7 @@ import { useStrings, String } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
-import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import GitPopover from '@pipeline/components/GitPopover/GitPopover'
 import GenericErrorHandler from '@common/pages/GenericErrorHandler/GenericErrorHandler'
@@ -38,7 +38,6 @@ import { StoreType } from '@common/constants/GitSyncTypes'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { BannerEOL } from '@pipeline/components/BannerEOL/BannerEOL'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
-import { FeatureFlag } from '@common/featureFlags'
 import NoEntityFound from '../utils/NoEntityFound/NoEntityFound'
 import css from './PipelineDetails.module.scss'
 
@@ -120,8 +119,8 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
   const [pipelineName, setPipelineName] = React.useState('')
   const [triggerTabDisabled, setTriggerTabDisabled] = React.useState(false)
   const [showBanner, setShowBanner] = React.useState<boolean>(false)
-  const { CI_YAML_VERSIONING, CDS_V1_EOL_BANNER } = useFeatureFlags()
-  const auxNavEnabled = useFeatureFlag(FeatureFlag.PL_AI_SUPPORT_CHATBOT)
+  const { CI_YAML_VERSIONING, CDS_V1_EOL_BANNER, PL_EULA_ENABLED, PL_AI_SUPPORT_CHATBOT } = useFeatureFlags()
+  const isAuxNavNotEnabled = !PL_EULA_ENABLED || !PL_AI_SUPPORT_CHATBOT
   const isYAMLSimplicationEnabledForCI = isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
   const abortControllerRef = React.useRef<AbortController | null>(null)
   const routeParams = {
@@ -296,7 +295,7 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
     <>
       <BannerEOL isVisible={showBanner} />
       <Page.Header
-        className={isPipelineStudioV0Route && !auxNavEnabled ? css.rightMargin : ''}
+        className={isPipelineStudioV0Route && isAuxNavNotEnabled ? css.rightMargin : ''}
         testId={isPipelineStudioRoute ? 'pipeline-studio' : 'not-pipeline-studio'}
         size={isPipelineStudioRoute ? 'small' : 'standard'}
         title={
@@ -418,7 +417,7 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
           />
         }
       />
-      <Page.Body className={isPipelineStudioV0Route && !auxNavEnabled ? css.rightMargin : ''}>{children}</Page.Body>
+      <Page.Body className={isPipelineStudioV0Route && isAuxNavNotEnabled ? css.rightMargin : ''}>{children}</Page.Body>
     </>
   )
 }

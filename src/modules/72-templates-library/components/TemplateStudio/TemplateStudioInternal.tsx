@@ -109,7 +109,8 @@ export function TemplateStudioInternal(): React.ReactElement {
   const [shouldShowOutOfSyncError, setShouldShowOutOfSyncError] = React.useState(false)
   const [showBanner, setShowBanner] = React.useState<boolean>(false)
 
-  const { CDS_V1_EOL_BANNER, PL_AI_SUPPORT_CHATBOT: auxNavEnabled, CDS_NAV_2_0 } = useFeatureFlags()
+  const { CDS_V1_EOL_BANNER, PL_AI_SUPPORT_CHATBOT, PL_EULA_ENABLED, CDS_NAV_2_0 } = useFeatureFlags()
+  const isAuxNavNotEnabled = !PL_EULA_ENABLED || !PL_AI_SUPPORT_CHATBOT
   const routes = CDS_NAV_2_0 ? routesV2 : routesV1
 
   useDocumentTitle([parse(defaultTo(template?.name, getString('common.templates')))])
@@ -446,11 +447,11 @@ export function TemplateStudioInternal(): React.ReactElement {
       />
       <BannerEOL isVisible={showBanner} />
       <Page.Header
-        className={classNames({ [css.rightMargin]: !auxNavEnabled })}
+        className={classNames({ [css.rightMargin]: isAuxNavNotEnabled })}
         size={'small'}
         title={<TemplateStudioHeader templateType={templateType as TemplateType} />}
       />
-      <Page.Body className={classNames({ [css.rightMargin]: !auxNavEnabled }, css.studioWrapper)}>
+      <Page.Body className={classNames({ [css.rightMargin]: isAuxNavNotEnabled }, css.studioWrapper)}>
         {isLoading ? (
           <PageSpinner />
         ) : (
