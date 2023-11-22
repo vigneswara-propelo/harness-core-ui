@@ -150,6 +150,7 @@ const Authentication: React.FC = () => {
                 enabled={data.resource.publicAccessEnabled}
                 refetchAuthSettings={refetchAuthSettings}
                 canEdit={canEdit}
+                setUpdating={setUpdating}
               />
             )}
             <SessionTimeOut timeout={data.resource.sessionTimeoutInMinutes} />

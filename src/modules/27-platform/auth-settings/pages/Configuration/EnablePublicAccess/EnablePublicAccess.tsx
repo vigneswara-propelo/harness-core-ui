@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 import { defaultTo, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Intent } from '@blueprintjs/core'
@@ -22,9 +22,15 @@ interface EnablePublicAccessProps {
   enabled?: boolean
   refetchAuthSettings: () => void
   canEdit: boolean
+  setUpdating: Dispatch<SetStateAction<boolean>>
 }
 
-const EnablePublicAccess: React.FC<EnablePublicAccessProps> = ({ enabled, refetchAuthSettings, canEdit }) => {
+const EnablePublicAccess: React.FC<EnablePublicAccessProps> = ({
+  enabled,
+  refetchAuthSettings,
+  canEdit,
+  setUpdating
+}) => {
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const [loading, setLoading] = useState(false)
@@ -47,6 +53,7 @@ const EnablePublicAccess: React.FC<EnablePublicAccessProps> = ({ enabled, refetc
 
         try {
           setLoading(true)
+          setUpdating(true)
           const res = await setPublicAccessPromise({
             queryParams: {
               accountIdentifier: accountId
@@ -64,6 +71,7 @@ const EnablePublicAccess: React.FC<EnablePublicAccessProps> = ({ enabled, refetc
           showError(defaultTo(get(error, 'data.message'), get(error, 'message')))
         } finally {
           setLoading(false)
+          setUpdating(false)
         }
       }
     }

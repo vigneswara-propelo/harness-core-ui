@@ -14,6 +14,7 @@ import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import EnablePublicAccess from '../EnablePublicAccess'
 
 jest.mock('services/cd-ng')
+const setUpdating = jest.fn()
 
 describe('EnablePublicAccess', () => {
   test('that setPublicAccess operation was successful', async () => {
@@ -29,7 +30,12 @@ describe('EnablePublicAccess', () => {
 
     const { getByTestId } = render(
       <TestWrapper>
-        <EnablePublicAccess enabled={false} refetchAuthSettings={refetchAuthSettings} canEdit={true} />
+        <EnablePublicAccess
+          enabled={false}
+          refetchAuthSettings={refetchAuthSettings}
+          canEdit={true}
+          setUpdating={setUpdating}
+        />
       </TestWrapper>
     )
 
@@ -60,7 +66,12 @@ describe('EnablePublicAccess', () => {
 
     const { getByTestId, queryByText } = render(
       <TestWrapper>
-        <EnablePublicAccess enabled={false} refetchAuthSettings={refetchAuthSettings} canEdit={true} />
+        <EnablePublicAccess
+          enabled={false}
+          refetchAuthSettings={refetchAuthSettings}
+          canEdit={true}
+          setUpdating={setUpdating}
+        />
       </TestWrapper>
     )
 
@@ -88,7 +99,12 @@ describe('EnablePublicAccess', () => {
 
     const { getByTestId } = render(
       <TestWrapper>
-        <EnablePublicAccess enabled={false} refetchAuthSettings={refetchAuthSettings} canEdit={true} />
+        <EnablePublicAccess
+          enabled={false}
+          refetchAuthSettings={refetchAuthSettings}
+          canEdit={true}
+          setUpdating={setUpdating}
+        />
       </TestWrapper>
     )
 
