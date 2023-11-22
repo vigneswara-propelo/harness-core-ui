@@ -121,7 +121,15 @@ const StepOverview: React.FC<StepProps<OverviewForm> & StepOverviewProps> = prop
                       inputName: 'name',
                       idName: 'identifier',
                       isIdentifierEditable: !isEdit,
-                      maxInput: 128
+                      maxInput: 128,
+                      inputGroupProps: {
+                        inputGroup: {
+                          onPaste: e => {
+                            formikProps.setFieldValue('name', e.clipboardData.getData('Text'))
+                            formikProps.validateField('name')
+                          }
+                        }
+                      }
                     }}
                   />
                 </Container>
