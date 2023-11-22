@@ -102,7 +102,13 @@ export class CustomVariables extends Step<CustomVariablesData> {
     allValues
   }: ValidateInputSetProps<CustomVariablesData>): FormikErrors<CustomVariablesData> {
     const errors: FormikErrors<CustomVariablesData> = {}
+
+    if (!Array.isArray(data?.variables)) {
+      return errors
+    }
+
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
+
     data?.variables?.forEach((variable: AllNGVariables, index: number) => {
       let isRequiredVariable = defaultTo(
         get(allValues, 'variables', []).find((fVar: AllNGVariables) => variable.name === fVar.name)?.required,
