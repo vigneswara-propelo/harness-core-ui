@@ -27,6 +27,11 @@ export enum PermissionIdentifier {
   DELETE_PIPELINE = 'core_pipeline_delete',
   EXECUTE_PIPELINE = 'core_pipeline_execute',
 
+  // Input Set Permission
+  VIEW_INPUTSET = 'core_inputset_view',
+  EDIT_INPUTSET = 'core_inputset_edit',
+  DELETE_INPUTSET = 'core_inputset_delete',
+
   // service permissions
   VIEW_SERVICE = 'core_service_view',
   EDIT_SERVICE = 'core_service_edit',

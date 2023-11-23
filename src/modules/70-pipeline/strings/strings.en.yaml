@@ -1745,6 +1745,7 @@ recentExecutions: 'Recent Executions'
 mostRecentDirection: 'Latest one on right side'
 lastExecution: 'Last Execution'
 executionId: Execution Id
+pipelineId: 'Pipeline Id: {{id}}'
 imageTag: 'image: {{image}}'
 fileSource: 'File Source'
 configSource: Configuration Source

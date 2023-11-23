@@ -5137,6 +5137,7 @@ export interface StringsMap {
   'pipeline.pipelineExecutionEventData.projectIdentifier': string
   'pipeline.pipelineExecutionEventData.stageIdentifier': string
   'pipeline.pipelineExecutionEventData.stageType': string
+  'pipeline.pipelineId': string
   'pipeline.pipelineInputPanel.automaticallyExtractedFromText': string
   'pipeline.pipelineInputPanel.existing': string
   'pipeline.pipelineInputPanel.noRuntimeInputs': string

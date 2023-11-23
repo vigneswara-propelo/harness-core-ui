@@ -1,0 +1,50 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalPages": 1,
+    "totalItems": 5,
+    "pageItemCount": 5,
+    "pageSize": 10,
+    "content": [
+      {
+        "identifier": "inp",
+        "name": "inp",
+        "pipelineIdentifier": "testPip",
+        "inputSetIdWithPipelineId": "testPip-inp",
+        "inputSetType": "INPUT_SET"
+      },
+      {
+        "identifier": "iptest",
+        "name": "iptest",
+        "pipelineIdentifier": "XXXX_testPip",
+        "inputSetIdWithPipelineId": "XXXX_testPip-iptest",
+        "inputSetType": "INPUT_SET"
+      },
+      {
+        "identifier": "inp1",
+        "name": "inp1",
+        "pipelineIdentifier": "buildTypeChildPip",
+        "inputSetIdWithPipelineId": "buildTypeChildPip-inp1",
+        "inputSetType": "INPUT_SET"
+      },
+      {
+        "identifier": "inp",
+        "name": "inp",
+        "pipelineIdentifier": "testParPip",
+        "inputSetIdWithPipelineId": "testParPip-inp",
+        "inputSetType": "INPUT_SET",
+        "description": "test input set"
+      },
+      {
+        "identifier": "inp1",
+        "name": "inp1",
+        "pipelineIdentifier": "buildTypeParPip",
+        "inputSetIdWithPipelineId": "buildTypeParPip-inp1",
+        "inputSetType": "INPUT_SET"
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false,
+    "pageToken": null
+  }
+}
