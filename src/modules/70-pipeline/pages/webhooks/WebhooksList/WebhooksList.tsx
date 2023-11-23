@@ -168,13 +168,13 @@ export default function WebhooksList({
       {
         Header: getString('lastActivity').toUpperCase(),
         id: 'lastUpdatedBy',
-        width: '8%',
+        width: '14%',
         Cell: withWebhook(LastActivity)
       },
       {
         Header: getString('enabledLabel').toUpperCase(),
         id: 'is_enabled',
-        width: '8%',
+        width: '6%',
         Cell: withWebhook(Enabled),
         actions: {
           onToggleEnable: handleWebhookEnableToggle
@@ -182,7 +182,7 @@ export default function WebhooksList({
       },
       {
         id: 'modifiedBy',
-        width: '8%',
+        width: '4%',
         Cell: withWebhook(WebhookMenu),
         actions: {
           onEdit: handleWebhookEdit,
