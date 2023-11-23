@@ -486,6 +486,10 @@ export interface EntityDetail {
     | 'ChaosInfrastructure'
     | 'Anchore'
     | 'Overrides'
+    | 'AsgShiftTraffic'
+    | 'AquaSecurity'
+    | 'IDPStage'
+    | 'ChaosHub'
 }
 
 export interface EntityDetailProtoDTO {
@@ -651,6 +655,7 @@ export interface Error {
     | 'LICENSE_EXPIRED'
     | 'NOT_LICENSED'
     | 'REQUEST_TIMEOUT'
+    | 'SCM_REQUEST_TIMEOUT'
     | 'WORKFLOW_ALREADY_TRIGGERED'
     | 'JENKINS_ERROR'
     | 'INVALID_ARTIFACT_SOURCE'
@@ -1037,6 +1042,7 @@ export interface ErrorMetadata {
     | 'LICENSE_EXPIRED'
     | 'NOT_LICENSED'
     | 'REQUEST_TIMEOUT'
+    | 'SCM_REQUEST_TIMEOUT'
     | 'WORKFLOW_ALREADY_TRIGGERED'
     | 'JENKINS_ERROR'
     | 'INVALID_ARTIFACT_SOURCE'
@@ -1429,6 +1435,7 @@ export interface Failure {
     | 'LICENSE_EXPIRED'
     | 'NOT_LICENSED'
     | 'REQUEST_TIMEOUT'
+    | 'SCM_REQUEST_TIMEOUT'
     | 'WORKFLOW_ALREADY_TRIGGERED'
     | 'JENKINS_ERROR'
     | 'INVALID_ARTIFACT_SOURCE'
@@ -1746,6 +1753,7 @@ export interface FilterProperties {
     | 'Environment'
     | 'RuleExecution'
     | 'Override'
+    | 'InputSet'
   labels?: {
     [key: string]: string
   }
@@ -1784,6 +1792,10 @@ export type InputSetErrorWrapper = ErrorMetadataDTO & {
   uuidToErrorResponseMap?: {
     [key: string]: InputSetErrorResponse
   }
+}
+
+export type InputSetFilterProperties = FilterProperties & {
+  inputSetIdsWithPipelineIds?: string[]
 }
 
 export type InputSetReference = EntityReference & {
@@ -2040,6 +2052,7 @@ export interface ResourceDTO {
     | 'GITOPS_GNUPG_KEY'
     | 'GITOPS_PROJECT_MAPPING'
     | 'GITOPS_APPLICATION'
+    | 'CODE_REPOSITORY'
   uniqueId?: string
 }
 
@@ -2192,6 +2205,7 @@ export interface ResponseMessage {
     | 'LICENSE_EXPIRED'
     | 'NOT_LICENSED'
     | 'REQUEST_TIMEOUT'
+    | 'SCM_REQUEST_TIMEOUT'
     | 'WORKFLOW_ALREADY_TRIGGERED'
     | 'JENKINS_ERROR'
     | 'INVALID_ARTIFACT_SOURCE'
@@ -2711,6 +2725,7 @@ export interface TemplateFilterProperties {
     | 'Environment'
     | 'RuleExecution'
     | 'Override'
+    | 'InputSet'
   labels?: {
     [key: string]: string
   }
@@ -3037,6 +3052,7 @@ export interface GetFilterListQueryParams {
     | 'Environment'
     | 'RuleExecution'
     | 'Override'
+    | 'InputSet'
 }
 
 export type GetFilterListProps = Omit<
@@ -3205,6 +3221,7 @@ export interface DeleteFilterQueryParams {
     | 'Environment'
     | 'RuleExecution'
     | 'Override'
+    | 'InputSet'
 }
 
 export type DeleteFilterProps = Omit<
@@ -3274,6 +3291,7 @@ export interface GetFilterQueryParams {
     | 'Environment'
     | 'RuleExecution'
     | 'Override'
+    | 'InputSet'
 }
 
 export interface GetFilterPathParams {
@@ -3794,7 +3812,7 @@ export type GetRefreshedYamlProps = Omit<
 >
 
 /**
- * This refreshes and update template inputs in given yaml
+ * This refreshes Template Inputs in given yaml
  */
 export const GetRefreshedYaml = (props: GetRefreshedYamlProps) => (
   <Mutate<ResponseRefreshResponse, Failure | Error, GetRefreshedYamlQueryParams, RefreshRequest, void>
@@ -3811,7 +3829,7 @@ export type UseGetRefreshedYamlProps = Omit<
 >
 
 /**
- * This refreshes and update template inputs in given yaml
+ * This refreshes Template Inputs in given yaml
  */
 export const useGetRefreshedYaml = (props: UseGetRefreshedYamlProps) =>
   useMutate<ResponseRefreshResponse, Failure | Error, GetRefreshedYamlQueryParams, RefreshRequest, void>(
@@ -3821,7 +3839,7 @@ export const useGetRefreshedYaml = (props: UseGetRefreshedYamlProps) =>
   )
 
 /**
- * This refreshes and update template inputs in given yaml
+ * This refreshes Template Inputs in given yaml
  */
 export const getRefreshedYamlPromise = (
   props: MutateUsingFetchProps<

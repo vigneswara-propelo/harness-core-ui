@@ -101,7 +101,7 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
     isCreateFilterLoading || isUpdateFilterLoading || isDeleteFilterLoading || isFilterListLoading
   const appliedFilter =
     queryParams.filterIdentifier && queryParams.filterIdentifier !== UNSAVED_FILTER_IDENTIFIER
-      ? (getFilterByIdentifier(queryParams.filterIdentifier, filterList) as FilterDTO)
+      ? getFilterByIdentifier(queryParams.filterIdentifier, filterList)
       : !isEmpty(queryParams.filters)
       ? ({
           name: UNSAVED_FILTER,
