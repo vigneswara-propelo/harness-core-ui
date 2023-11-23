@@ -28,6 +28,10 @@ import { useQueryParams } from '@common/hooks'
 import type { PromiseExtraArgs } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import { SaveTemplateAsType, StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import {
+  getScopeBasedProjectPathParams,
+  getScopeFromDTO
+} from '@modules/10-common/components/EntityReference/EntityReference'
 
 export interface FetchTemplateUnboundProps {
   forceFetch?: boolean
@@ -104,14 +108,13 @@ export function useSaveTemplate({
     storeMetadata?: StoreMetadata,
     saveAsType?: SaveTemplateAsType.NEW_LABEL_VERSION | SaveTemplateAsType.NEW_TEMPALTE
   ): Promise<UseSaveSuccessResponse> => {
+    const scope = getScopeFromDTO(latestTemplate || {})
     const response = await updateExistingTemplateVersionPromise({
       templateIdentifier: latestTemplate.identifier,
       versionLabel: latestTemplate.versionLabel,
       body: stringifyTemplate(latestTemplate),
       queryParams: {
-        accountIdentifier: accountId,
-        projectIdentifier,
-        orgIdentifier,
+        ...getScopeBasedProjectPathParams({ projectIdentifier, orgIdentifier, accountId }, scope),
         comments,
         ...(updatedGitDetails ?? {}),
         ...(lastObject ?? {}),
