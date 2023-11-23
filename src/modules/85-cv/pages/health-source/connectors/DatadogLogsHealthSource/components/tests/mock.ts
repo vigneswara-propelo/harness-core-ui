@@ -30,3 +30,13 @@ export const MockRecordsData = [
     }
   }
 ]
+
+export const queryParamsMock = {
+  queryParams: {
+    accountId: ':accountId',
+    connectorIdentifier: undefined,
+    orgIdentifier: ':orgIdentifier',
+    projectIdentifier: ':projectIdentifier',
+    tracingId: expect.any(String)
+  }
+}

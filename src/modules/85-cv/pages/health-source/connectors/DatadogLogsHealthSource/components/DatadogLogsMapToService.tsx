@@ -74,10 +74,20 @@ export default function DatadogLogsMapToService(props: DatadogLogsMapToServicePr
   })
 
   const fetchDatadogRecords = useCallback(async () => {
-    const recordsData = await queryDatadog({ query: query }, { queryParams: { ...logsSampleDataQueryParams } })
+    const { indexes: indexValues } = values || {}
+    const recordsData = await queryDatadog(
+      {
+        query: query,
+        indexes:
+          typeof indexValues === 'string'
+            ? [indexValues]
+            : indexValues?.map(logIndexOption => logIndexOption.value as string)
+      },
+      { queryParams: { ...logsSampleDataQueryParams } }
+    )
     setRecords(recordsData?.data as Record<string, any>[])
     setIsQueryExecuted(true)
-  }, [query, queryDatadog, logsSampleDataQueryParams])
+  }, [query, queryDatadog, logsSampleDataQueryParams, values?.indexes])
 
   const hostIdentifierKeysOptions = useMemo(() => {
     const record = records?.length > 0 ? records[0] : null

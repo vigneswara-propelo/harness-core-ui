@@ -18,7 +18,8 @@ import type { QueryViewerProps } from '@cv/components/QueryViewer/types'
 import type { DatadogLogsMapToServiceProps } from '@cv/pages/health-source/connectors/DatadogLogsHealthSource/components/DatadogLogsMapToService.type'
 import {
   DatadogLogQueryMock,
-  MockRecordsData
+  MockRecordsData,
+  queryParamsMock
 } from '@cv/pages/health-source/connectors/DatadogLogsHealthSource/components/tests/mock'
 
 const sampleDataRecordsValidationMock = jest.fn()
@@ -122,6 +123,9 @@ describe('DatadogLogsMapToService unit tests', () => {
     // click will trigger fetchRecords
     fireEvent.click(triggerFetchRecordsContainerMock)
 
+    await waitFor(() => {
+      expect(mutateMock).toHaveBeenCalledWith({ indexes: [], query: '*' }, queryParamsMock)
+    })
     await waitFor(() => {
       expect(sampleDataRecordsValidationMock).toHaveBeenNthCalledWith(2, MockRecordsData)
     })
