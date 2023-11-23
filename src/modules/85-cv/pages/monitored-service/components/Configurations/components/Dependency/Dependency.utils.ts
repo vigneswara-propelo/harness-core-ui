@@ -46,11 +46,13 @@ export const validateDependencyMap = (dependencies: DependencyMetaData[]): { [ke
       const metadataList = Object.entries(dependencyMetadata)
       metadataList.forEach(data => {
         const [key, value] = data
-        if (!value) {
+        if (!value || !(value as string[])?.length) {
           missingKeys.push(key)
         }
       })
-      error[monitoredServiceIdentifier] = missingKeys
+      if (missingKeys.length) {
+        error[monitoredServiceIdentifier] = missingKeys
+      }
     })
     return error
   }

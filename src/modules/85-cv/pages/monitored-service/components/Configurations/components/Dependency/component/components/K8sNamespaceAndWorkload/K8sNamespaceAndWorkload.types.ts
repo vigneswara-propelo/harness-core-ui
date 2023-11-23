@@ -9,7 +9,7 @@ import type { InfrastructureDependencyMetaData } from '../../SelectServiceCard.t
 
 export interface K8sNamespaceAndWorkloadProps {
   connectorIdentifier?: string
-  onChange: (namespace?: string, workload?: string) => void
+  onChange: (namespace?: string, workloads?: string[]) => void
   dependencyMetaData?: InfrastructureDependencyMetaData
   error?: string[]
 }

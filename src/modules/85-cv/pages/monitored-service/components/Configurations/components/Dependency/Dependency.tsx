@@ -89,7 +89,7 @@ export default function Dependency({
   useEffect(() => {
     if (error) {
       const updatedError = validateDependencyMap(Array.from(dependencyMap.values()))
-      if (!isEmpty(updatedError) && !isEqual(updatedError, error)) {
+      if (!isEqual(updatedError, error)) {
         setError(updatedError)
       }
     }

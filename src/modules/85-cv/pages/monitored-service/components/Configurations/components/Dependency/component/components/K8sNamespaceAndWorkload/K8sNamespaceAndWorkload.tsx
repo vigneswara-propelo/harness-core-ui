@@ -8,7 +8,8 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { Container, Select, Text, SelectOption } from '@harness/uicore'
+import { Container, Select, Text, SelectOption, MultiSelect } from '@harness/uicore'
+import { isEqual } from 'lodash-es'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetNamespaces, useGetWorkloads } from 'services/cv'
 import { useStrings } from 'framework/strings'
@@ -22,7 +23,7 @@ export default function K8sNamespaceAndWorkload(props: K8sNamespaceAndWorkloadPr
   const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const [namespaceValue, setNamespaceValue] = useState<SelectOption | undefined>()
-  const [workloadValue, setWorkloadValue] = useState<SelectOption | undefined>()
+  const [workloadsList, setWorkloadsList] = useState<SelectOption[] | []>([])
   const {
     error: namespaceError,
     loading: namespaceLoading,
@@ -42,7 +43,7 @@ export default function K8sNamespaceAndWorkload(props: K8sNamespaceAndWorkloadPr
         queryParams: { orgIdentifier, projectIdentifier, accountId, connectorIdentifier, pageSize: 10000, offset: 0 }
       })
       setNamespaceValue(undefined)
-      setWorkloadValue(undefined)
+      setWorkloadsList([])
     }
   }, [connectorIdentifier, orgIdentifier, projectIdentifier])
 
@@ -63,12 +64,21 @@ export default function K8sNamespaceAndWorkload(props: K8sNamespaceAndWorkloadPr
   }, [namespaceValue, orgIdentifier, projectIdentifier])
 
   useEffect(() => {
-    const { workload, namespace } = dependencyMetaData?.dependencyMetadata || {}
+    const { namespace, workloads } = dependencyMetaData?.dependencyMetadata || {}
     if (namespace !== namespaceValue?.value) {
       setNamespaceValue(namespace ? { label: namespace, value: namespace } : undefined)
     }
-    if (workload !== workloadValue?.value) {
-      setWorkloadValue(workload ? { label: workload, value: workload } : undefined)
+    if (
+      !isEqual(
+        workloads,
+        workloadsList.map(load => load.value)
+      )
+    ) {
+      const workloadsSelectedOptions =
+        workloads?.map(item => {
+          return { label: item || '', value: item || '' }
+        }) || []
+      setWorkloadsList(workloadsSelectedOptions)
     }
   }, [dependencyMetaData])
 
@@ -112,7 +122,7 @@ export default function K8sNamespaceAndWorkload(props: K8sNamespaceAndWorkloadPr
             items={namespaceOptions}
             onChange={val => {
               setNamespaceValue(val)
-              setWorkloadValue(undefined)
+              setWorkloadsList([])
               onChange(val?.value as string, undefined)
             }}
           />
@@ -125,28 +135,41 @@ export default function K8sNamespaceAndWorkload(props: K8sNamespaceAndWorkloadPr
           </Text>
         </Container>
         <Container className={css.selectContainer}>
-          <Select
-            disabled={!namespaceValue}
-            key={workloadValue?.label}
-            inputProps={{
-              placeholder: getSelectPlaceholder({
-                error: Boolean(workloadError),
-                loading: workloadLoading,
-                getString,
-                options: workloadOptions
-              }),
-              name: 'workload'
-            }}
+          <MultiSelect
+            name="workload"
             items={workloadOptions}
-            value={workloadValue}
+            value={workloadsList}
+            placeholder={getSelectPlaceholder({
+              error: Boolean(workloadError),
+              loading: workloadLoading,
+              getString,
+              options: workloadOptions
+            })}
+            tagInputProps={{
+              tagProps: () => {
+                return { onRemove: undefined }
+              }
+            }}
+            tagRenderer={val => {
+              if (workloadsList[0].value === val.value) {
+                return val.value
+              } else if (workloadsList[1].value === val.value) {
+                return `+ ${workloadsList.length - 1}`
+              } else {
+                return null
+              }
+            }}
             onChange={val => {
-              setWorkloadValue(val)
-              onChange(namespaceValue?.value as string, val?.value as string)
+              setWorkloadsList(val)
+              onChange(
+                namespaceValue?.value as string,
+                val?.map(item => item.value as string)
+              )
             }}
           />
           <Text intent="danger" lineClamp={1} className={css.errorMsg}>
             {getErrorMessage(workloadError)}
-            {error?.includes('workload') &&
+            {error?.includes('workloads') &&
               getString('common.validation.fieldIsRequired', {
                 name: 'workload'
               })}

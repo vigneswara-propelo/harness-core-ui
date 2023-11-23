@@ -94,12 +94,14 @@ describe('SelectServiceCard', () => {
     fireEvent.click(getByText('namespace1'))
     await waitFor(() => expect(container.querySelector('input[name="workload"][disabled]')).toBeNull())
 
-    fireEvent.click(carets[1])
-    await waitFor(() => container.querySelector('[class*="menuItem"]'))
-    fireEvent.click(getByText('workload1'))
+    const workload = container.getElementsByClassName('bp3-multi-select-tag-input-input')[0]
+    fireEvent.click(workload)
+    await waitFor(() => expect(container.querySelector('input[value="workload1"]')).toBeInTheDocument())
+    fireEvent.click(container.querySelector('input[value="workload1"]')!)
+
     await waitFor(() =>
       expect(onChange).toHaveBeenLastCalledWith(true, {
-        dependencyMetadata: { namespace: 'namespace1', workload: 'workload1' },
+        dependencyMetadata: { namespace: 'namespace1', workloads: ['workload1'] },
         monitoredServiceIdentifier: '1234_identifier',
         type: 'KUBERNETES'
       })

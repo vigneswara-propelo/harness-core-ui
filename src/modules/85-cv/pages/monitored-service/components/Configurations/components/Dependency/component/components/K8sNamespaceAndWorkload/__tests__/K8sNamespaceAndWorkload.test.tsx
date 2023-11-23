@@ -122,10 +122,12 @@ describe('Unit tests for K8sNamespaceAndWorkload', () => {
     fireEvent.click(getByText('namespace1'))
     await waitFor(() => expect(container.querySelector('input[name="workload"][disabled]')).toBeNull())
 
-    fireEvent.click(carets[1])
-    await waitFor(() => container.querySelector('[class*="menuItem"]'))
-    fireEvent.click(getByText('workload1'))
-    await waitFor(() => expect(onChange).toHaveBeenLastCalledWith('namespace1', 'workload1'))
+    const workload = container.getElementsByClassName('bp3-multi-select-tag-input-input')[0]
+    fireEvent.click(workload)
+    await waitFor(() => expect(container.querySelector('input[value="workload1"]')).toBeInTheDocument())
+    fireEvent.click(container.querySelector('input[value="workload1"]')!)
+
+    await waitFor(() => expect(onChange).toHaveBeenLastCalledWith('namespace1', ['workload1']))
   })
 
   test('Ensure edit mode works', async () => {
@@ -157,7 +159,7 @@ describe('Unit tests for K8sNamespaceAndWorkload', () => {
             type: 'KUBERNETES',
             dependencyMetadata: {
               namespace: 'namespace2',
-              workload: 'workload2'
+              workloads: ['workload2']
             }
           }}
         />
@@ -165,6 +167,6 @@ describe('Unit tests for K8sNamespaceAndWorkload', () => {
     )
 
     await waitFor(() => expect(container.querySelector('input[name="namespace"][value="namespace2"]')).not.toBeNull())
-    await waitFor(() => expect(container.querySelector('input[name="workload"][value="workload2"]')).not.toBeNull())
+    await waitFor(() => expect(container.querySelector('span[data-tag-index="0"]')).not.toBeNull())
   })
 })

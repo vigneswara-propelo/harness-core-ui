@@ -145,13 +145,13 @@ export function KubernetesServiceCard(props: ServiceCardInterfaceProps): JSX.Ele
         error={error[monitoredService.identifier] as string[]}
         connectorIdentifier={connectorIdentifier}
         dependencyMetaData={dependencyMetaData as InfrastructureDependencyMetaData}
-        onChange={(namespace, workload) =>
+        onChange={(namespace, workloads) =>
           onChange(true, {
             type: KUBERNETES_TYPE,
             monitoredServiceIdentifier: monitoredService?.identifier,
             dependencyMetadata: {
               namespace,
-              workload
+              workloads
             }
           })
         }

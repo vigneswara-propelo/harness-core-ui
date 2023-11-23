@@ -30,5 +30,6 @@ export interface InfrastructureDependencyMetaData extends DependencyMetaData {
   dependencyMetadata: {
     namespace?: string
     workload?: string
+    workloads?: string[]
   }
 }
