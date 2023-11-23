@@ -29,6 +29,18 @@ export interface YamlSanityConfig {
   removeEmptyObject?: boolean
   removeNull?: boolean
 }
+
+export interface CodeLensCommand {
+  title: string
+  onClick: (arg: { path: string[]; range: monaco.IRange }, ...args: unknown[]) => void
+  args?: unknown[]
+}
+
+export interface CodeLensConfig
+  extends Partial<Pick<monaco.languages.DocumentSymbol, 'name' | 'containerName' | 'kind'>> {
+  commands: CodeLensCommand[]
+}
+
 export interface YamlBuilderProps {
   /* Only YAMLBuilder related props */
   height?: React.CSSProperties['height']
@@ -63,6 +75,7 @@ export interface YamlBuilderProps {
   setPluginOpnStatus?: (status: Status) => void
   /* onValidate gets called every time errors in the editor change */
   onValidate?: (errorMap?: Map<number, string>) => void
+  codeLensConfigs?: CodeLensConfig[]
 }
 
 // `range` in `monaco.languages.CompletionItem` is not optional in the latest version,

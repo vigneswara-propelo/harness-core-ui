@@ -60,7 +60,8 @@ import {
   getValidStepPositions,
   extractStepsFromStage,
   getClosestStepIndexInCurrentStage,
-  getValidationErrorMapFromMarkers
+  getValidationErrorMapFromMarkers,
+  useCodeLenses
 } from './YAMLBuilderUtils'
 import {
   DEFAULT_EDITOR_HEIGHT,
@@ -176,7 +177,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     customCss,
     setPlugin,
     setPluginOpnStatus,
-    onValidate
+    onValidate,
+    codeLensConfigs
   } = props
   const comparableYamlJson = parse(defaultTo(comparableYaml, ''))
 
@@ -753,7 +755,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         minimap: {
           enabled: false
         },
-        codeLens: codeLensRegistrations.current.size > 0,
+        codeLens: true,
         tabSize: 2,
         theme: getTheme(theme)
       }}
@@ -1084,6 +1086,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     },
     [currentCursorPosition]
   )
+
+  useCodeLenses({ editor: editorRef.current, codeLensConfigs })
 
   return shouldShowPluginsPanel ? (
     <Layout.Horizontal>

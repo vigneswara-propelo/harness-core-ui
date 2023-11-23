@@ -18,4 +18,8 @@
 .editor {
   position: relative;
   z-index: 1;
+
+  :global(.codelens-decoration) > a {
+    color: var(--vscode-editorCodeLens-foreground);
+  }
 }
