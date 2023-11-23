@@ -1265,6 +1265,7 @@ last12Hours: Last 12 hours
 showingLogsFor: Showing logs for
 showingLogs: Showing logs
 logs:
+  refreshData: Refresh data
   priorityOrRiskSelectionRequired: 'Priority or Risk selection is required'
   eventMarkedAs: This event was marked as
   eventPriorityUpdate: This event was marked with priority

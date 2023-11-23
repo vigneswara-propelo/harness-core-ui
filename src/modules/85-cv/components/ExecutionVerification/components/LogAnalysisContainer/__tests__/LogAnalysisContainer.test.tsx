@@ -7,12 +7,14 @@
 
 import React from 'react'
 import { render, waitFor, screen, fireEvent } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cvService from 'services/cv'
 import { useQueryParams } from '@common/hooks'
 import type { ExecutionNode } from 'services/pipeline-ng'
 import {
   defaultOverviewData,
+  initialRunningStepProps,
   logsNodeNamesMock,
   mockLogAnalysisDataWithAllEvent,
   mockLogAnalysisDataWithNewEvent,
@@ -376,6 +378,21 @@ describe('Unit tests for LogAnalysisContainer', () => {
     fireEvent.click(screen.getByText('V'))
 
     expect(filter.querySelector('.MultiSelectDropDown--counter')).toBeInTheDocument()
+  })
+  test('should show refresh data button when the step is running', async () => {
+    render(<WrapperComponent {...initialRunningStepProps} hostName={undefined} />)
+
+    const refetchButton = screen.getByTestId(/logsRefreshButton/)
+
+    expect(refetchButton).toBeInTheDocument()
+
+    fetchLogsAnalysisData.mockClear()
+    fetchChartsAnalysisData.mockClear()
+
+    await userEvent.click(refetchButton)
+
+    await waitFor(() => expect(fetchLogsAnalysisData).toHaveBeenCalled())
+    await waitFor(() => expect(fetchChartsAnalysisData).toHaveBeenCalled())
   })
 
   test('should render error UI if logs API fails', () => {

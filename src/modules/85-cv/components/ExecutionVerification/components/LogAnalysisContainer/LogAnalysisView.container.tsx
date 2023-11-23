@@ -48,6 +48,7 @@ export default function LogAnalysisContainer({
 
   const isMounted = useRef(false)
   const isFirstFilterCall = useRef(true)
+  const isFirstFetchCall = useRef(true)
   const [selectedHealthSource] = useState<string>()
   const [pageNumber, setPageNumber] = useState<number>(0)
   const [pollingIntervalId, setPollingIntervalId] = useState<any>(-1)
@@ -228,6 +229,14 @@ export default function LogAnalysisContainer({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [minMaxAngle])
 
+  const handleRefreshData = useCallback(() => {
+    Promise.all([
+      fetchLogAnalysis({ queryParams: { ...logsDataQueryParams, pageNumber: 0 } }),
+      fetchClusterAnalysis({ queryParams: radarChartDataQueryParams })
+    ])
+    setPageNumber(0)
+  }, [fetchClusterAnalysis, fetchLogAnalysis, logsDataQueryParams, radarChartDataQueryParams])
+
   // Polling for Logs and Cluster Chart data
   useEffect(() => {
     let intervalId = pollingIntervalId
@@ -266,7 +275,10 @@ export default function LogAnalysisContainer({
   }, [pageNumber, fetchLogAnalysis, logsDataQueryParams])
 
   useEffect(() => {
-    fetchPaginatedLogAnalysisRowData()
+    if (!isFirstFetchCall.current) {
+      fetchPaginatedLogAnalysisRowData()
+    }
+    isFirstFetchCall.current = false
   }, [pageNumber])
 
   const goToLogsPage = useCallback(
@@ -326,6 +338,8 @@ export default function LogAnalysisContainer({
         handleNodeNameChange={handleNodeNameChange}
         nodeNamesError={nodeNamesError}
         nodeNamesLoading={nodeNamesLoading}
+        stepStatus={step?.status}
+        onRefreshData={handleRefreshData}
       />
       {renderContent()}
     </Container>

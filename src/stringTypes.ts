@@ -9937,6 +9937,7 @@ export interface StringsMap {
   'cv.logs.priorityOrRiskSelectionRequired': string
   'cv.logs.radarChartInfo': string
   'cv.logs.reasonPlaceholder': string
+  'cv.logs.refreshData': string
   'cv.logs.reportedBy': string
   'cv.logs.riskPriorityLabel': string
   'cv.logs.riskPriorityValidation': string

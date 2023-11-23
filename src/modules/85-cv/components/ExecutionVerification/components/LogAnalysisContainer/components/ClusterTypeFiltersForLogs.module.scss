@@ -3,6 +3,10 @@
   border-bottom: 1px solid var(--grey-200) !important;
   margin-bottom: var(--spacing-small) !important;
 
+  .filterContainerWithRefresh {
+    grid-template-columns: 140px 180px 1fr !important;
+  }
+
   .filterContainer {
     display: grid;
     grid-template-columns: 180px 1fr;

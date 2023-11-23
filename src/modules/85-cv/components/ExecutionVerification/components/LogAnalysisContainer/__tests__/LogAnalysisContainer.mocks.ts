@@ -6,6 +6,7 @@
  */
 
 import type { RestResponseLogAnalysisRadarChartListWithCountDTO } from 'services/cv'
+import { ExecutionNode } from 'services/pipeline-ng'
 
 export const mockedLogAnalysisData: RestResponseLogAnalysisRadarChartListWithCountDTO = {
   metaData: {},
@@ -439,4 +440,14 @@ export const overviewDataWithBaselineDataWithTimestamp = {
       }
     ]
   }
+}
+
+export const initialRunningStepProps = {
+  step: {
+    status: 'Running',
+    progressData: {
+      activityId: 'activityId-1'
+    }
+  } as unknown as ExecutionNode,
+  hostName: 'hostName-1'
 }

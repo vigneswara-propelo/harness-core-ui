@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom'
 import { Container, Tabs, Tab, NoDataCard, Layout, FlexExpander, Button, ButtonVariation, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { useQueryParams } from '@common/hooks'
+import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import type { ExecutionNode } from 'services/pipeline-ng'
 import { useLogContentHook } from '@cv/hooks/useLogContentHook/useLogContentHook'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -69,12 +69,12 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
   const canEnableMetricsTab = getCanEnableTabByType(healthSourcesData, MetricsProviderType)
   const canEnableLogsTab = getCanEnableTabByType(healthSourcesData, LogsProviderType)
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     fetchHealthSources()
     const newTabId = getDefaultTabId({ getString, tabName: type, canEnableMetricsTab, canEnableLogsTab })
 
     setSelectedTab(newTabId)
-  }, [step])
+  }, [step?.setupId])
 
   const [selectedTab, setSelectedTab] = useState(() =>
     getDefaultTabId({ getString, tabName: type, canEnableMetricsTab, canEnableLogsTab })

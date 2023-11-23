@@ -25,7 +25,7 @@ import { getTotalClustersData, getTotalMetrics } from './ExecutionVerificationSu
 import AbortVerificationBanner from './components/AbortVerificationBanner/AbortVerificationBanner'
 import css from './ExecutionVerificationSummary.module.scss'
 
-const POLLING_INTERVAL = 15000
+const POLLING_INTERVAL = 90000
 
 export function ExecutionVerificationSummary(props: VerifyExecutionProps): JSX.Element {
   const {
