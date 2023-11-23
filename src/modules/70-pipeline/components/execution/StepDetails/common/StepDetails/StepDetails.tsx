@@ -39,6 +39,9 @@ import css from './StepDetails.module.scss'
 interface Task {
   taskId: string
   taskName: string
+  delegateName?: string
+  delegateId?: string
+  name?: string
 }
 export interface StepLabels {
   label: string
@@ -97,7 +100,10 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
           (item: Task) => item !== undefined
         )
         stepDelegateInfos?.forEach((stepDelegateInfo: Task) => {
-          tasks.push(stepDelegateInfo)
+          tasks.push({
+            ...stepDelegateInfo,
+            name: defaultTo(stepDelegateInfo?.delegateName, stepDelegateInfo.name)
+          })
         })
       })
     }
@@ -250,7 +256,7 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
                       <Text font={{ size: 'small', weight: 'bold' }}>
                         <String
                           stringID="common.delegateForTask"
-                          vars={{ delegate: item.name, taskName: item.taskName }}
+                          vars={{ delegate: defaultTo(item.name, ''), taskName: item.taskName }}
                           useRichText
                         />
                       </Text>{' '}
@@ -319,7 +325,7 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
                           <Text font={{ size: 'small', weight: 'bold' }}>
                             <String
                               stringID="common.delegateForTask"
-                              vars={{ delegate: item.name, taskName: item.taskName }}
+                              vars={{ delegate: defaultTo(item.name, ''), taskName: item.taskName }}
                               useRichText
                             />
                           </Text>
