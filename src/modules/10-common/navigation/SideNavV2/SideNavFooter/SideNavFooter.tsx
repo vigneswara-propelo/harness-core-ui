@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { matchPath, useHistory, useLocation, useRouteMatch } from 'react-router-dom'
+import { NavLink, matchPath, useHistory, useLocation, useRouteMatch } from 'react-router-dom'
 import { Avatar, Container, Layout, Popover, Text, useToaster } from '@harness/uicore'
 import { PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
@@ -80,11 +80,15 @@ const UserProfilePopoverContent: React.FC = () => {
         padding={{ top: 'small', right: 'xlarge', bottom: 'xlarge', left: 'xlarge' }}
         className={css.section}
       >
-        <SideNavLink
+        <NavLink
           to={routes.toUserProfile({ module: match?.params.module, ...params })}
-          label={getString('common.profileOverview')}
+          activeClassName={css.selected}
           className={css.link}
-        />
+        >
+          <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_800}>
+            {getString('common.profileOverview')}
+          </Text>
+        </NavLink>
         <Text
           className={css.signout}
           icon="log-out"

@@ -49,7 +49,21 @@
 }
 
 .link {
-  padding-left: var(--spacing-small) !important;
+  padding: var(--spacing-small) var(--spacing-medium) !important;
+  border-radius: 4px;
+  text-decoration: none;
+  margin-bottom: var(--spacing-tiny) !important;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: none;
+    color: var(--primary-8);
+    background-color: rgba(210, 230, 255);
+  }
+
+  &.selected {
+    background-color: rgba(210, 230, 255);
+  }
 }
 
 .section {

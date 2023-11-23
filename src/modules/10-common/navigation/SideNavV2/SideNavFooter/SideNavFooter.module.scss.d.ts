@@ -13,6 +13,7 @@ declare const styles: {
   readonly link: string
   readonly profileLink: string
   readonly section: string
+  readonly selected: string
   readonly signout: string
   readonly userProfileContent: string
   readonly width100: string
