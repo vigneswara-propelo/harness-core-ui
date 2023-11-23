@@ -10,7 +10,7 @@ import { Text, Layout, Icon, Button, Popover, TagsPopover, TableV2 } from '@harn
 import type { CellProps, Renderer, Column } from 'react-table'
 import { Color } from '@harness/design-system'
 import { Classes, Position } from '@blueprintjs/core'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory, useParams, useLocation } from 'react-router-dom'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import type { Project, ProjectAggregateDTO, ResponsePageProjectAggregateDTO } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
@@ -262,6 +262,7 @@ const ProjectListView: React.FC<ProjectListViewProps> = props => {
   const history = useHistory()
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
+  const locationProps = useLocation()
 
   const columns: CustomColumn<ProjectAggregateDTO>[] = useMemo(
     () => [
@@ -334,13 +335,16 @@ const ProjectListView: React.FC<ProjectListViewProps> = props => {
       name="ProjectListView"
       data={data?.data?.content || []}
       onRowClick={project => {
-        history.push(
-          routes.toProjectDetails({
+        history.push({
+          pathname: routes.toProjectDetails({
             projectIdentifier: project.projectResponse.project.identifier,
             orgIdentifier: project.projectResponse.project.orgIdentifier || '',
             accountId
-          })
-        )
+          }),
+          state: {
+            prevPageUrl: locationProps.pathname
+          }
+        })
       }}
       getRowClassName={() => css.row}
       pagination={paginationProps}

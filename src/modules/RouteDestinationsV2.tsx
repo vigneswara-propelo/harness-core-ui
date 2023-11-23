@@ -61,23 +61,49 @@ export const RedirectToMode = ({ mode }: { mode?: NAV_MODE }): React.ReactElemen
 
 const RedirectHomeRoutes = (): React.ReactElement => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ModulePathParams & ProjectPathProps>()
+  const locationParams = useLocation()
 
   return (
     <Switch>
       <Route path="/account/:accountId/home/orgs/:orgIdentifier/projects/:projectIdentifier/details">
-        <Redirect to={routes.toProjectDetails({ projectIdentifier, orgIdentifier, accountId, mode: NAV_MODE.ADMIN })} />
+        <Redirect
+          to={{
+            ...locationParams,
+            pathname: routes.toProjectDetails({ projectIdentifier, orgIdentifier, accountId, mode: NAV_MODE.ADMIN })
+          }}
+        />
       </Route>
       <Route path="/account/:accountId/home/projects/all">
-        <Redirect to={routes.toProjects({ accountId, mode: NAV_MODE.ADMIN })} />
+        <Redirect
+          to={{
+            ...locationParams,
+            pathname: routes.toProjects({ accountId, mode: NAV_MODE.ADMIN })
+          }}
+        />
       </Route>
       <Route path="/account/:accountId/home/orgs/:orgIdentifier/projects/:projectIdentifier/services*">
-        <Redirect to={routes.toSettingsServices({ mode: NAV_MODE.ALL, projectIdentifier, orgIdentifier })} />
+        <Redirect
+          to={{
+            ...locationParams,
+            pathname: routes.toSettingsServices({ mode: NAV_MODE.ALL, projectIdentifier, orgIdentifier })
+          }}
+        />
       </Route>
       <Route path="/account/:accountId/home/orgs/:orgIdentifier/projects/:projectIdentifier/environments*">
-        <Redirect to={routes.toSettingsEnvironments({ mode: NAV_MODE.ALL, projectIdentifier, orgIdentifier })} />
+        <Redirect
+          to={{
+            ...locationParams,
+            pathname: routes.toSettingsEnvironments({ mode: NAV_MODE.ALL, projectIdentifier, orgIdentifier })
+          }}
+        />
       </Route>
       <Route path="/account/:accountId/home/orgs/:orgIdentifier/projects/:projectIdentifier/monitoredservices*">
-        <Redirect to={routes.toMonitoredServicesSettings({ mode: NAV_MODE.ALL, projectIdentifier, orgIdentifier })} />
+        <Redirect
+          to={{
+            ...locationParams,
+            pathname: routes.toMonitoredServicesSettings({ mode: NAV_MODE.ALL, projectIdentifier, orgIdentifier })
+          }}
+        />
       </Route>
       <Route path="/account/:accountId/home/orgs/:orgIdentifier/projects/:projectIdentifier/:path*">
         <RedirectToMode mode={NAV_MODE.ALL} />

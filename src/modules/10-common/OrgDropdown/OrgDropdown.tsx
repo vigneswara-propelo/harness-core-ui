@@ -17,10 +17,11 @@ interface OrgDropdownProps {
   value?: SelectOption
   className?: string
   fallbackAccountId?: string
+  disabled?: boolean
 }
 
 const OrgDropdown: React.FC<OrgDropdownProps> = props => {
-  const { fallbackAccountId = '' } = props
+  const { fallbackAccountId = '', disabled } = props
   const { accountId } = useParams<AccountPathProps>()
   const [query, setQuery] = useState<string>()
   const { getString } = useStrings()
@@ -65,6 +66,7 @@ const OrgDropdown: React.FC<OrgDropdownProps> = props => {
       query={query}
       onQueryChange={setQuery}
       placeholder={getString('orgsText')}
+      disabled={disabled}
     />
   )
 }

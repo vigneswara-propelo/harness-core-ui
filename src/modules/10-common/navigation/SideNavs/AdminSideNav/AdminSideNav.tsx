@@ -5,34 +5,59 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
 import { defaultTo } from 'lodash-es'
+import { useLocation } from 'react-router-dom'
 import { Scope } from 'framework/types/types'
 import { SideNav } from '@common/navigation/SideNavV2/SideNavV2'
 import routes from '@common/RouteDefinitionsV2'
 import { useStrings } from 'framework/strings'
-import { NAV_MODE } from '@common/utils/routeUtils'
+import { NAV_MODE, getRouteParams } from '@common/utils/routeUtils'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 const AdminSideNav: React.FC = (): React.ReactElement => {
   const { getString } = useStrings()
   const { selectedProject } = useAppStore()
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const { accountId, orgIdentifier, projectIdentifier } = getRouteParams<ProjectPathProps>()
+  const locationProps = useLocation<{ prevPageUrl: string }>()
+  const [prevPageUrl, setPrevPageUrl] = useState<string | undefined>()
+
+  useEffect(() => {
+    if (projectIdentifier && orgIdentifier) {
+      if (locationProps?.state?.prevPageUrl) {
+        setPrevPageUrl(locationProps?.state?.prevPageUrl)
+      }
+    } else {
+      setPrevPageUrl(undefined)
+    }
+  }, [locationProps])
 
   return (
     <SideNav.Main disableScopeSelector>
-      <SideNav.Section>
-        <SideNav.Link to={routes.toOverview()} label={getString('common.accountOverview')} icon="nav-home" />
-      </SideNav.Section>
-      <SideNav.Section>
-        <SideNav.Scope scope={Scope.PROJECT}>
+      <SideNav.Scope scope={Scope.ACCOUNT}>
+        <SideNav.Section>
+          <SideNav.Link to={routes.toOverview()} label={getString('common.accountOverview')} icon="nav-home" />
+        </SideNav.Section>
+        <SideNav.Section>
+          <SideNav.Link to={routes.toOrgs()} label={getString('orgsText')} icon="nav-organization" />
+          <SideNav.Link to={routes.toProjects()} label={getString('projectsText')} icon="nav-project" />
           <SideNav.Link
-            to={routes.toProjects()}
-            label={getString('common.backToProjects')}
+            to={routes.toSettings({ mode: NAV_MODE.ADMIN })}
+            label={getString('common.accountSettings')}
+            icon={'setting'}
+          />
+        </SideNav.Section>
+      </SideNav.Scope>
+
+      <SideNav.Scope scope={Scope.PROJECT}>
+        <SideNav.Section>
+          <SideNav.Link
+            to={prevPageUrl || routes.toProjects()}
+            label={getString('back')}
             icon="arrow-left"
             iconProps={{ size: 14, padding: { right: 'xsmall' }, style: { alignSelf: 'center' } }}
+            disableHighlightOnActive={true}
           />
           <SideNav.Link
             to={routes.toProjectDetails({
@@ -43,27 +68,25 @@ const AdminSideNav: React.FC = (): React.ReactElement => {
             label={getString('common.projectOverview')}
             icon="nav-project"
           />
-        </SideNav.Scope>
-        <SideNav.Scope scope={Scope.ORGANIZATION}>
+        </SideNav.Section>
+        <SideNav.Section>
+          <SideNav.SettingsLink mode={NAV_MODE.ADMIN} />
+        </SideNav.Section>
+      </SideNav.Scope>
+      <SideNav.Scope scope={Scope.ORGANIZATION}>
+        <SideNav.Section>
           <SideNav.Link
-            to={routes.toOrgs()}
-            label={getString('common.backToOrgs')}
+            to={prevPageUrl || routes.toOrgs()}
+            label={getString('back')}
             icon="arrow-left"
             iconProps={{ size: 14, padding: { right: 'xsmall' }, style: { alignSelf: 'center' } }}
+            disableHighlightOnActive={true}
           />
-        </SideNav.Scope>
-        <SideNav.Scope scope={Scope.ACCOUNT}>
-          <SideNav.Link to={routes.toOrgs()} label={getString('orgsText')} icon="nav-organization" />
-          <SideNav.Link to={routes.toProjects()} label={getString('projectsText')} icon="nav-project" />
-          <SideNav.Link
-            to={routes.toSettings({ mode: NAV_MODE.ADMIN })}
-            label={getString('common.accountSettings')}
-            icon={'setting'}
-          />
-        </SideNav.Scope>
-      </SideNav.Section>
-      <SideNav.Scope scope={[Scope.PROJECT, Scope.ORGANIZATION]}>
-        <SideNav.SettingsLink mode={NAV_MODE.ADMIN} />
+          <SideNav.Link label="Projects in Org" icon="nav-project" to={routes.toProjects({ orgIdentifier })} />
+        </SideNav.Section>
+        <SideNav.Section>
+          <SideNav.SettingsLink mode={NAV_MODE.ADMIN} />
+        </SideNav.Section>
       </SideNav.Scope>
     </SideNav.Main>
   )

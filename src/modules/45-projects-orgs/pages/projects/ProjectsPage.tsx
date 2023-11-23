@@ -34,7 +34,7 @@ import { useCollaboratorModal } from '@projects-orgs/modals/ProjectModal/useColl
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/components'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import type { AccountPathProps, OrgPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
@@ -57,7 +57,7 @@ const ProjectsListPage: React.FC = () => {
   const { preference: sortPreference = SortMethod.Newest, setPreference: setSortPreference } =
     usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.ProjectListing}`)
 
-  const { accountId } = useParams<AccountPathProps>()
+  const { accountId, orgIdentifier: orgFromPath } = useParams<AccountPathProps & OrgPathProps>()
   const {
     verify,
     orgIdentifier: orgIdentifierQuery,
@@ -77,7 +77,7 @@ const ProjectsListPage: React.FC = () => {
   )
   const [searchParam, setSearchParam] = useState<string>()
   const { updateQueryParams } = useUpdateQueryParams<ProjectsPageQueryParams>()
-  const orgFilter = orgIdentifierQuery || orgFilterPreference
+  const orgFilter = orgFromPath || orgIdentifierQuery || orgFilterPreference
 
   const { showSuccess } = useToaster()
 
@@ -152,6 +152,7 @@ const ProjectsListPage: React.FC = () => {
               }
               updateQueryParams({ orgIdentifier: item.value.toString() })
             }}
+            disabled={!!orgFromPath}
           />
 
           {PL_FAVORITES && (

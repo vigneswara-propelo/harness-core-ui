@@ -10,7 +10,7 @@ import cx from 'classnames'
 import { Card, Text, Layout, CardBody, Container } from '@harness/uicore'
 import { Classes } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory, useParams, useLocation } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { Project, ProjectAggregateDTO } from 'services/cd-ng'
 import DefaultRenderer from '@projects-orgs/components/ModuleRenderer/DefaultRenderer'
@@ -53,6 +53,7 @@ const ProjectCard: React.FC<ProjectCardProps> = props => {
     avatarClassName
   } = props
   const [menuOpen, setMenuOpen] = useState(false)
+  const locationProps = useLocation()
   const {
     projectResponse,
     organization,
@@ -134,7 +135,10 @@ const ProjectCard: React.FC<ProjectCardProps> = props => {
                   projectIdentifier: data.identifier,
                   orgIdentifier: data.orgIdentifier || /* istanbul ignore next */ '',
                   accountId
-                })
+                }),
+                state: {
+                  prevPageUrl: locationProps.pathname
+                }
               })
           }}
         >

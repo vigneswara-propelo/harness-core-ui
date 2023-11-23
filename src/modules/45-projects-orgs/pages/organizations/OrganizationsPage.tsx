@@ -119,7 +119,7 @@ const OrganizationsPage: React.FC = () => {
                 onClick={() =>
                   history.push(
                     CDS_NAV_2_0
-                      ? routesV2.toSettings({ orgIdentifier: org.organizationResponse.organization.identifier })
+                      ? routesV2.toProjects({ orgIdentifier: org.organizationResponse.organization.identifier })
                       : routes.toOrganizationDetails({
                           orgIdentifier: org.organizationResponse.organization.identifier as string,
                           accountId

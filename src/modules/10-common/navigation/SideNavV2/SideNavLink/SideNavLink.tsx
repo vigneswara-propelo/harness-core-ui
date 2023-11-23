@@ -31,10 +31,22 @@ export interface SideNavLinkProps extends NavLinkProps {
   hidden?: boolean
   __TYPE?: string
   className?: string
+  disableHighlightOnActive?: boolean
 }
 
 export const SideNavLink: React.FC<SideNavLinkProps> = props => {
-  const { icon, iconProps, label, scope, className, hidden, isRenderedInAccordion, to, ...rest } = props
+  const {
+    icon,
+    iconProps,
+    label,
+    scope,
+    className,
+    hidden,
+    isRenderedInAccordion,
+    to,
+    disableHighlightOnActive,
+    ...rest
+  } = props
   const { path, module, projectIdentifier, orgIdentifier } = getRouteParams<
     { path: string } & ModulePathParams & ProjectPathProps & ModePathProps
   >(true, to as string)
@@ -166,7 +178,7 @@ export const SideNavLink: React.FC<SideNavLinkProps> = props => {
           { [css.collapsed]: isCollapsed, [css.center]: isCollapsed && !isRenderedInAccordion },
           className
         )}
-        activeClassName={cx({ [css.selected]: !!to })}
+        activeClassName={cx({ [css.selected]: !!to && !disableHighlightOnActive })}
         to={to}
         {...rest}
         onClick={rest.onClick || handleLinkClick}

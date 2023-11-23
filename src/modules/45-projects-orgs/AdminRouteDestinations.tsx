@@ -66,7 +66,10 @@ const AdminRouteDestinations = (): React.ReactElement => {
       <RouteWithContext path={routes.toProjects({ ...accountPathProps, ...modePathProps })}>
         <ProjectsListPage />
       </RouteWithContext>
-      <RouteWithContext path={routes.toProjectDetails({ ...projectPathProps, ...modePathProps })}>
+      <RouteWithContext exact path={routes.toProjects({ ...orgPathProps, ...modePathProps })}>
+        <ProjectsListPage />
+      </RouteWithContext>
+      <RouteWithContext exact path={routes.toProjectDetails({ ...projectPathProps, ...modePathProps })}>
         <ProjectDetails />
       </RouteWithContext>
       {CommonRouteDestinations({ mode: NAV_MODE.ADMIN }).props.children}
