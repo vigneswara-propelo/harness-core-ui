@@ -79,14 +79,14 @@ import { TasManifestWithArtifactBundle } from '@modules/70-pipeline/components/M
 import {
   OverrideManifestTypes,
   OverrideManifestStores,
-  OverrideManifestStoreMap,
   ManifestLabels,
   ManifestIcons,
   OverrideManifests,
   OverrideManifestStoresTypes,
   getAllowedOverrideManifests,
   AllowedManifestOverrideTypes,
-  TASOverrideManifests
+  TASOverrideManifests,
+  getManifestStoresByDeploymentType
 } from '@cd/components/EnvironmentsV2/EnvironmentDetails/ServiceOverrides/ServiceManifestOverride/ServiceManifestOverrideUtils'
 import css from '@cd/components/EnvironmentsV2/EnvironmentDetails/ServiceOverrides/ServiceManifestOverride/ServiceManifestOverride.module.scss'
 
@@ -97,7 +97,7 @@ interface ManifestVariableOverrideProps {
   expressions: string[]
   allowableTypes: AllowedTypes
   fromEnvConfigPage?: boolean
-  serviceType?: string
+  serviceType?: ServiceDefinition['type']
 }
 const DIALOG_PROPS: IDialogProps = {
   isOpen: true,
@@ -130,6 +130,8 @@ export default function useManifestOverride({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+
+  const { CDS_ENABLE_TAS_ARTIFACT_AS_MANIFEST_SOURCE_NG } = useFeatureFlags()
 
   useEffect(() => {
     setIsManifestEditMode(manifestIndex < manifestOverrides.length)
@@ -545,7 +547,9 @@ export default function useManifestOverride({
         <div className={css.createConnectorWizard}>
           <ManifestWizard
             types={allowedOverrideManifestTypes}
-            manifestStoreTypes={OverrideManifestStoreMap[selectedManifest as OverrideManifestTypes]}
+            manifestStoreTypes={getManifestStoresByDeploymentType(serviceType, selectedManifest, {
+              CDS_ENABLE_TAS_ARTIFACT_AS_MANIFEST_SOURCE_NG
+            })}
             labels={getLabels()}
             selectedManifest={selectedManifest}
             newConnectorView={connectorView}

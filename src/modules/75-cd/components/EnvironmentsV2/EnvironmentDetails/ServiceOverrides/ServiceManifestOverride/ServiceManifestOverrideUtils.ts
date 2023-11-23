@@ -6,7 +6,11 @@
  */
 
 import type { IconName } from '@harness/icons'
+import { FeatureFlag } from '@modules/10-common/featureFlags'
+import { ManifestStores } from '@modules/70-pipeline/components/ManifestSelection/ManifestInterface'
+import { ServiceDeploymentType } from '@modules/70-pipeline/utils/stageHelpers'
 import type { StringKeys } from 'framework/strings'
+import { ServiceDefinition } from 'services/cd-ng'
 
 export type OverrideManifestTypes =
   | 'Values'
@@ -34,6 +38,7 @@ export type OverrideManifestStoresTypes =
   | 'Http'
   | 'OciHelmChart'
   | 'S3'
+  | 'ArtifactBundle'
 
 export const OverrideManifests: Record<OverrideManifestTypes, OverrideManifestTypes> = {
   Values: 'Values',
@@ -60,7 +65,8 @@ export const OverrideManifestStores: Record<OverrideManifestStoresTypes, Overrid
   Gcs: 'Gcs',
   Http: 'Http',
   OciHelmChart: 'OciHelmChart',
-  S3: 'S3'
+  S3: 'S3',
+  ArtifactBundle: 'ArtifactBundle'
 }
 export const AllowedManifestOverrideTypes = [
   OverrideManifests.Values,
@@ -96,7 +102,12 @@ export const OverrideManifestStoreMap: Record<OverrideManifestTypes, OverrideMan
     OverrideManifestStores.InheritFromManifest,
     OverrideManifestStores.Harness
   ],
-  TasManifest: [...gitStoreTypes, OverrideManifestStores.Harness, OverrideManifestStores.CustomRemote],
+  TasManifest: [
+    ...gitStoreTypes,
+    OverrideManifestStores.Harness,
+    OverrideManifestStores.CustomRemote,
+    OverrideManifestStores.ArtifactBundle
+  ],
   TasVars: [...gitStoreTypes, OverrideManifestStores.Harness, OverrideManifestStores.CustomRemote],
   TasAutoScaler: [...gitStoreTypes, OverrideManifestStores.Harness, OverrideManifestStores.CustomRemote],
   HelmRepoOverride: [
@@ -130,6 +141,23 @@ export const OverrideManifestStoreMap: Record<OverrideManifestTypes, OverrideMan
     OverrideManifestStores.S3
   ]
 }
+
+export const getManifestStoresByDeploymentType = (
+  selectedDeploymentType: ServiceDefinition['type'] | undefined,
+  selectedManifest: OverrideManifestTypes | null,
+  featureFlagMap: Partial<Record<FeatureFlag, boolean>>
+): ManifestStores[] => {
+  const valuesManifestStores = OverrideManifestStoreMap[selectedManifest as OverrideManifestTypes]
+  if (
+    selectedDeploymentType === ServiceDeploymentType.TAS &&
+    selectedManifest === OverrideManifests.TasManifest &&
+    !featureFlagMap.CDS_ENABLE_TAS_ARTIFACT_AS_MANIFEST_SOURCE_NG
+  ) {
+    return valuesManifestStores?.filter(manifestStore => manifestStore !== OverrideManifestStores.ArtifactBundle)
+  }
+  return valuesManifestStores
+}
+
 export const ManifestLabels: Record<OverrideManifestTypes, StringKeys> = {
   Values: 'pipeline.manifestTypeLabels.ValuesYaml',
   OpenshiftParam: 'pipeline.manifestTypeLabels.OpenshiftParam',

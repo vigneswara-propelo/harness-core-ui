@@ -15,7 +15,8 @@ import type {
   PageConnectorResponse,
   ServiceDefinition,
   TasManifest,
-  ManifestSourceWrapper
+  ManifestSourceWrapper,
+  ArtifactBundleStore
 } from 'services/cd-ng'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 
@@ -81,8 +82,7 @@ export type HelmOCIVersionOptions = 'V380'
 export type HelmVersionOptions = 'V2' | 'V3'
 export type CLIVersionOptions = TasManifest['cfCliVersion']
 export type ManifestStoreWithoutConnector = Exclude<ManifestStores, ManifestStoreTypeWithoutConnector>
-export type ArtifactBundleType = 'ZIP' | 'TAR' | 'TAR_GZIP'
-
+export type ArtifactBundleType = ArtifactBundleStore['artifactBundleType']
 export interface ManifestSelectionProps {
   isPropagating?: boolean
   deploymentType: ServiceDefinition['type']
@@ -228,7 +228,7 @@ export interface TASManifestWithArtifactBuildDataType {
   identifier: string
   manifestPath: string
   deployableUnitPath: string
-  artifactBundleType: 'TAR' | 'ZIP'
+  artifactBundleType: ArtifactBundleType
   varsPaths?: { path: string }[] | string
   autoScalerPath?: { path: string }[] | string
   cfCliVersion?: TasManifest['cfCliVersion']

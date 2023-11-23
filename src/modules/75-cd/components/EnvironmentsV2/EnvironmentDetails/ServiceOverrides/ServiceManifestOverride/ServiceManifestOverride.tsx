@@ -91,7 +91,6 @@ import { TasManifestWithArtifactBundle } from '@modules/70-pipeline/components/M
 import {
   OverrideManifestTypes,
   OverrideManifestStores,
-  OverrideManifestStoreMap,
   ManifestLabels,
   ManifestIcons,
   OverrideManifests,
@@ -99,7 +98,8 @@ import {
   getAllowedOverrideManifests,
   AllowedManifestOverrideTypes,
   TASOverrideManifests,
-  ECSOverrideManifests
+  ECSOverrideManifests,
+  getManifestStoresByDeploymentType
 } from './ServiceManifestOverrideUtils'
 import ServiceManifestOverridesList from './ServiceManifestOverridesList'
 import css from './ServiceManifestOverride.module.scss'
@@ -112,7 +112,7 @@ interface ManifestVariableOverrideProps {
   expressions: string[]
   allowableTypes: AllowedTypes
   fromEnvConfigPage?: boolean
-  serviceType?: string
+  serviceType?: ServiceDefinition['type']
 }
 const DIALOG_PROPS: IDialogProps = {
   isOpen: true,
@@ -145,6 +145,8 @@ function ServiceManifestOverride({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+
+  const { CDS_ENABLE_TAS_ARTIFACT_AS_MANIFEST_SOURCE_NG } = useFeatureFlags()
 
   useEffect(() => {
     setIsManifestEditMode(manifestIndex < manifestOverrides.length)
@@ -573,7 +575,9 @@ function ServiceManifestOverride({
         <div className={css.createConnectorWizard}>
           <ManifestWizard
             types={allowedOverrideManifestTypes}
-            manifestStoreTypes={OverrideManifestStoreMap[selectedManifest as OverrideManifestTypes]}
+            manifestStoreTypes={getManifestStoresByDeploymentType(serviceType, selectedManifest, {
+              CDS_ENABLE_TAS_ARTIFACT_AS_MANIFEST_SOURCE_NG
+            })}
             labels={getLabels()}
             selectedManifest={selectedManifest}
             newConnectorView={connectorView}

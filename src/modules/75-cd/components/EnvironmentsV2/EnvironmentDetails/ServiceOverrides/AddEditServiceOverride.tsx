@@ -34,6 +34,7 @@ import {
   ConnectionStringsConfiguration,
   ManifestConfigWrapper,
   NGServiceOverrideConfig,
+  ServiceDefinition,
   ServiceOverrideResponseDTO,
   ServiceResponse,
   useUpsertServiceOverride
@@ -115,14 +116,14 @@ export default function AddEditServiceOverride({
     svcOverride => svcOverride.serviceRef === defaultTo(selectedService, formikRef.current?.values.serviceRef)
   )
 
-  const getServiceType = (serviceRef: string | null): string | undefined => {
+  const getServiceType = (serviceRef: string | null): ServiceDefinition['type'] | undefined => {
     const service = services?.find(ser => ser?.service?.identifier === serviceRef)?.service
     const parsedService = service?.yaml && parse(service?.yaml)
 
     return parsedService?.service?.serviceDefinition?.type
   }
 
-  const [serviceType, setServiceType] = useState<string | undefined>(getServiceType(selectedService))
+  const [serviceType, setServiceType] = useState<ServiceDefinition['type'] | undefined>(getServiceType(selectedService))
 
   const { mutate: upsertServiceOverride, loading: upsertServiceOverrideLoading } = useUpsertServiceOverride({
     queryParams: {

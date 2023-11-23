@@ -518,7 +518,7 @@ describe('ManifestSelection tests', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('for PCF deployment type, ArtifactBundle store should not be allowed for TasManifest if FF is not turned on', async () => {
+  test('should NOT allow ArtifactBundle store TasManifest if FF is NOT true', async () => {
     const updateManifestList = jest.fn()
 
     const { container } = render(
@@ -570,7 +570,7 @@ describe('ManifestSelection tests', () => {
     expect(ArtifactBundle).not.toBeInTheDocument() // Because FF is not turned on
   })
 
-  test('for PCF deployment type, add manifest of TasManifest type with ArtifactBundle store when FF is true', async () => {
+  test('should allow addition of TasManifest with ArtifactBundle store for TAS deployment type when FF is true', async () => {
     const updateManifestList = jest.fn()
 
     const { container } = render(
