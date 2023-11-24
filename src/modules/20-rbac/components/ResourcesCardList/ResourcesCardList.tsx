@@ -12,9 +12,10 @@ import { defaultTo } from 'lodash-es'
 import ResourcesCard from '@rbac/components/ResourcesCard/ResourcesCard'
 import { useStrings } from 'framework/strings'
 import type { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
-import type { ResourceSelectorValue } from '@rbac/pages/ResourceGroupDetails/utils'
+import type { ResourceSelectorValue, SelectorScope } from '@rbac/pages/ResourceGroupDetails/utils'
 
 export interface ResourcesCardListProps {
+  selectedScope: SelectorScope | null
   selectedResourcesMap: Map<ResourceType, ResourceSelectorValue>
   resourceCategoryMap?: Map<ResourceType | ResourceCategory, ResourceType[] | undefined>
   onResourceSelectionChange: (
@@ -30,6 +31,7 @@ export interface ResourcesCardListProps {
 
 const ResourcesCardList: React.FC<ResourcesCardListProps> = ({
   selectedResourcesMap,
+  selectedScope,
   resourceCategoryMap,
   onResourceSelectionChange,
   onResourceCategorySelect,
@@ -79,6 +81,7 @@ const ResourcesCardList: React.FC<ResourcesCardListProps> = ({
         {Array.from(selectedResourcesMap.keys()).map(resourceType => {
           return (
             <ResourcesCard
+              selectedScope={selectedScope}
               key={resourceType}
               resourceType={resourceType}
               resourceValues={defaultTo(selectedResourcesMap.get(resourceType), [])}

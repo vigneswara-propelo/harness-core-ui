@@ -388,26 +388,6 @@ exports[`Resource Groups Page render data 1`] = `
                     orgsText
                   </p>
                 </div>
-                <div
-                  class="Layout--horizontal StyledProps--main resourceSubList StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
-                >
-                  <label
-                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
-                  >
-                    <input
-                      data-testid="CHECK-BOX-PROJECT"
-                      type="checkbox"
-                    />
-                    <span
-                      class="bp3-control-indicator"
-                    />
-                  </label>
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-small StyledProps--color StyledProps--color-grey800"
-                  >
-                    projectsText
-                  </p>
-                </div>
               </div>
             </div>
             <div

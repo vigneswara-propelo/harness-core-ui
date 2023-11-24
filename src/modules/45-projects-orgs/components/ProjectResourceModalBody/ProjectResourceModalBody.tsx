@@ -28,6 +28,14 @@ const RenderColumnProject: Renderer<CellProps<Project>> = ({ row }) => {
     </Layout.Vertical>
   )
 }
+const RenderColumnOrg: Renderer<CellProps<Project>> = ({ row }) => {
+  const data = row.original
+  return (
+    <Text color={Color.BLACK} lineClamp={1}>
+      {data.orgIdentifier}
+    </Text>
+  )
+}
 
 const ProjectResourceModalBody: React.FC<RbacResourceModalProps> = ({
   searchTerm,
@@ -35,12 +43,13 @@ const ProjectResourceModalBody: React.FC<RbacResourceModalProps> = ({
   selectedData,
   resourceScope
 }) => {
-  const { accountIdentifier } = resourceScope
+  const { accountIdentifier, orgIdentifier } = resourceScope
   const [page, setPage] = useState(0)
   const { getString } = useStrings()
   const { data, loading } = useGetProjectList({
     queryParams: {
       accountIdentifier,
+      orgIdentifier,
       searchTerm,
       pageIndex: page,
       pageSize: 5
@@ -62,6 +71,14 @@ const ProjectResourceModalBody: React.FC<RbacResourceModalProps> = ({
             accessor: 'name',
             width: '25%',
             Cell: RenderColumnProject,
+            disableSortBy: true
+          },
+          {
+            Header: getString('orgLabel'),
+            id: 'orgId',
+            accessor: 'name',
+            width: '25%',
+            Cell: RenderColumnOrg,
             disableSortBy: true
           }
         ]}

@@ -36,6 +36,18 @@ exports[`Project Resource Modal Body test initializes ok  1`] = `
             projectLabel
           </p>
         </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 25%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            orgLabel
+          </p>
+        </div>
       </div>
       <div
         class="TableV2--body"
@@ -85,6 +97,18 @@ exports[`Project Resource Modal Body test initializes ok  1`] = `
                 </p>
               </div>
             </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 25%;"
+            >
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                style="--text-line-clamp: 1;"
+              >
+                default
+              </p>
+            </div>
           </div>
         </div>
         <div
@@ -131,6 +155,18 @@ exports[`Project Resource Modal Body test initializes ok  1`] = `
                   
                 </p>
               </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 25%;"
+            >
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                style="--text-line-clamp: 1;"
+              >
+                default
+              </p>
             </div>
           </div>
         </div>
@@ -179,6 +215,18 @@ exports[`Project Resource Modal Body test initializes ok  1`] = `
                 </p>
               </div>
             </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 25%;"
+            >
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                style="--text-line-clamp: 1;"
+              >
+                default
+              </p>
+            </div>
           </div>
         </div>
         <div
@@ -225,6 +273,18 @@ exports[`Project Resource Modal Body test initializes ok  1`] = `
                   
                 </p>
               </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 25%;"
+            >
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                style="--text-line-clamp: 1;"
+              >
+                default
+              </p>
             </div>
           </div>
         </div>

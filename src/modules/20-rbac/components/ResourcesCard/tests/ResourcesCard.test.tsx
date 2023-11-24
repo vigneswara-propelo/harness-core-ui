@@ -11,6 +11,7 @@ import { act } from 'react-test-renderer'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { getResourceTypeHandlerMock } from '@rbac/utils/RbacFactoryMockData'
+import { SelectorScope } from '@modules/20-rbac/pages/ResourceGroupDetails/utils'
 import ResourcesCard from '../ResourcesCard'
 
 jest.mock('@rbac/factories/RbacFactory', () => ({
@@ -22,6 +23,7 @@ describe('Resource Card', () => {
     renderObj = render(
       <TestWrapper pathParams={{ accountId: 'dummy' }}>
         <ResourcesCard
+          selectedScope={SelectorScope.CURRENT}
           resourceType={ResourceType.ENVIRONMENT}
           resourceValues={{ attributeName: 'test', attributeValues: ['testVal', 'testVal2'] }}
           onResourceSelectionChange={jest.fn()}
@@ -44,6 +46,7 @@ describe('Resource Card', () => {
     renderObj = render(
       <TestWrapper pathParams={{ accountId: 'dummy' }}>
         <ResourcesCard
+          selectedScope={SelectorScope.CURRENT}
           resourceType={ResourceType.CONNECTOR}
           resourceValues={{ attributeName: 'test', attributeValues: ['testVal'] }}
           onResourceSelectionChange={jest.fn()}

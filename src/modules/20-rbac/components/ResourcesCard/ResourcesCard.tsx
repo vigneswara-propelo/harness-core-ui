@@ -15,13 +15,17 @@ import type { ResourceType } from '@rbac/interfaces/ResourceType'
 import useAddResourceModal from '@rbac/modals/AddResourceModal/useAddResourceModal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { isAtrributeFilterSelector, isDynamicResourceSelector } from '@rbac/utils/utils'
-import { getLabelForAttributeBasedSelection } from '@rbac/pages/ResourceGroupDetails/utils'
-import type { ResourceSelectorValue } from '@rbac/pages/ResourceGroupDetails/utils'
+import {
+  getLabelForAttributeBasedSelection,
+  ResourceSelectorValue,
+  SelectorScope
+} from '@rbac/pages/ResourceGroupDetails/utils'
 import type { AttributeFilter } from 'services/resourcegroups'
 import css from './ResourcesCard.module.scss'
 
 interface ResourcesCardProps {
   resourceType: ResourceType
+  selectedScope: SelectorScope | null
   resourceValues: ResourceSelectorValue
   onResourceSelectionChange: (
     resourceType: ResourceType,
@@ -34,6 +38,7 @@ interface ResourcesCardProps {
 }
 
 const ResourcesCard: React.FC<ResourcesCardProps> = ({
+  selectedScope,
   resourceType,
   resourceValues,
   onResourceSelectionChange,
@@ -58,6 +63,7 @@ const ResourcesCard: React.FC<ResourcesCardProps> = ({
   const { label, icon, addResourceModalBody, addAttributeModalBody, staticResourceRenderer, attributeRenderer } =
     resourceDetails
   const attributeSelectionEnabled = addAttributeModalBody
+  const isCurrentOnly = selectedScope === SelectorScope.CURRENT
   const staticResourcesSelectionEnabled = !disableSpecificResourcesSelection && addResourceModalBody
   const hideRadioBtnSet = (disableSpecificResourcesSelection && !attributeSelectionEnabled) || disableAddingResources
   const staticResourceValues = isAtrributeFilterEnabled
@@ -105,7 +111,7 @@ const ResourcesCard: React.FC<ResourcesCardProps> = ({
               )}
             </Container>
             <Container className={css.radioBtnCtr}>
-              {staticResourcesSelectionEnabled && (
+              {staticResourcesSelectionEnabled && isCurrentOnly && (
                 <Layout.Horizontal spacing="small" flex padding={{ left: 'huge' }}>
                   <Radio
                     label={getString('common.specified')}
@@ -119,7 +125,7 @@ const ResourcesCard: React.FC<ResourcesCardProps> = ({
               )}
             </Container>
             <Container className={css.radioBtnCtr}>
-              {(attributeSelectionEnabled || staticResourcesSelectionEnabled) && (
+              {staticResourcesSelectionEnabled && isCurrentOnly && (
                 <Button
                   variation={ButtonVariation.LINK}
                   data-testid={`addResources-${resourceType}`}

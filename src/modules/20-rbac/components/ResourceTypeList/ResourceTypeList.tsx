@@ -8,10 +8,15 @@
 import React from 'react'
 import { Card, Layout, Text, Checkbox, Radio } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
+import { useParams } from 'react-router-dom'
 import RbacFactory from '@rbac/factories/RbacFactory'
-import type { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
+import { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
 import { SelectionType } from '@rbac/utils/utils'
+import { SelectorScope } from '@modules/20-rbac/pages/ResourceGroupDetails/utils'
+import { ProjectPathProps } from '@modules/10-common/interfaces/RouteInterfaces'
+import { getScopeFromDTO } from '@modules/10-common/components/EntityReference/EntityReference.types'
+import { Scope } from '@modules/10-common/interfaces/SecretsInterface'
 import css from './ResourceTypeList.module.scss'
 
 interface ResourceTypeListProps {
@@ -23,9 +28,11 @@ interface ResourceTypeListProps {
   preSelectedResourceList: ResourceType[]
   disableAddingResources?: boolean
   isHarnessManaged?: boolean
+  selectedScope: SelectorScope | null
 }
 const ResourceTypeList: React.FC<ResourceTypeListProps> = props => {
   const {
+    selectedScope,
     selectionType,
     resourceCategoryMap,
     onSelectionTypeChange,
@@ -37,6 +44,12 @@ const ResourceTypeList: React.FC<ResourceTypeListProps> = props => {
   } = props
 
   const { getString } = useStrings()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const scope = getScopeFromDTO({
+    accountIdentifier: accountId,
+    projectIdentifier: projectIdentifier,
+    orgIdentifier: orgIdentifier
+  })
 
   const getChecked = (resourceCategory: ResourceType | ResourceCategory, resourceTypes?: ResourceType[]): boolean => {
     if (resourceTypes) {
@@ -49,6 +62,18 @@ const ResourceTypeList: React.FC<ResourceTypeListProps> = props => {
   const getIntermittent = (resourceTypes: ResourceType[]): boolean =>
     Array.from(resourceTypes).some(value => preSelectedResourceList.includes(value))
 
+  const getResourceTypes = (resourceCategory: ResourceType | ResourceCategory) => {
+    const resourceTypes = resourceCategoryMap?.get(resourceCategory)
+    if (
+      scope === Scope.ACCOUNT &&
+      resourceCategory === ResourceCategory.ADMINSTRATIVE_FUNCTIONS &&
+      selectedScope === SelectorScope.CURRENT
+    )
+      return resourceTypes?.filter(item => {
+        return item !== ResourceType.PROJECT
+      })
+    return resourceTypes
+  }
   return (
     <Layout.Vertical flex spacing="small" className={css.resourceTypeList}>
       <Layout.Horizontal flex className={css.resourcePicker} padding={{ bottom: 'small' }}>
@@ -84,7 +109,7 @@ const ResourceTypeList: React.FC<ResourceTypeListProps> = props => {
           const resourceCategoryHandler =
             RbacFactory.getResourceCategoryHandler(resourceCategory as ResourceCategory) ||
             RbacFactory.getResourceTypeHandler(resourceCategory as ResourceType)
-          const resourceTypes = resourceCategoryMap.get(resourceCategory)
+          const resourceTypes = getResourceTypes(resourceCategory)
           return (
             resourceCategoryHandler && (
               <Card

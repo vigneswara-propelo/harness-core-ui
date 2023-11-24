@@ -28,6 +28,7 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import routes from '@common/RouteDefinitions'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import { Scope } from '@modules/10-common/interfaces/SecretsInterface'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { usePermission } from '@rbac/hooks/usePermission'
@@ -140,6 +141,17 @@ const ResourceGroupDetails: React.FC = () => {
     setResourceCategoryMap(_map => RbacFactory.getResourceCategoryList(types))
   }, [selectedScope, resourceTypeData, includedScopes])
 
+  useDeepCompareEffect(() => {
+    if (selectedResourcesMap) {
+      if (resourceGroupScope === Scope.ACCOUNT && selectedScope === SelectorScope.CURRENT) {
+        if (selectedResourcesMap.has(ResourceType.PROJECT)) {
+          const updatedMap = new Map(selectedResourcesMap)
+          updatedMap.delete(ResourceType.PROJECT)
+          setSelectedResourceMap(updatedMap)
+        }
+      }
+    }
+  }, [selectedResourcesMap, selectedScope])
   const { mutate: updateResourceGroup, loading: updating } = useUpdateResourceGroupV2({
     identifier: defaultTo(resourceGroupIdentifier, ''),
     queryParams: {
@@ -337,6 +349,7 @@ const ResourceGroupDetails: React.FC = () => {
           <Container className={css.pageContainer}>
             <Container padding="xlarge" className={css.resourceTypeListContainer}>
               <ResourceTypeList
+                selectedScope={selectedScope}
                 selectionType={selectionType}
                 resourceCategoryMap={resourceCategoryMap}
                 onResourceSelectionChange={onResourceSelectionChange}
@@ -359,6 +372,7 @@ const ResourceGroupDetails: React.FC = () => {
             </Container>
             <Layout.Vertical spacing="small">
               <ResourcesCardList
+                selectedScope={selectedScope}
                 selectedResourcesMap={selectedResourcesMap}
                 resourceCategoryMap={resourceCategoryMap}
                 onResourceSelectionChange={onResourceSelectionChange}
