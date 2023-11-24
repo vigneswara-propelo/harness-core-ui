@@ -108,7 +108,9 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
   const registryIdPath = isOciHelmChart
     ? `${manifestPath}.spec.store.spec.config.spec.registryId`
     : `${manifestPath}.spec.store.spec.registryId`
-
+  const branchPath = isOciHelmChart
+    ? `${manifestPath}.spec.store.spec.config.spec.branch`
+    : `${manifestPath}.spec.store.spec.branch`
   const { data: regionData } = useListAwsRegions({
     queryParams: {
       accountId
@@ -139,7 +141,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       region: get(initialValues, regionPath),
       bucketName: get(initialValues, `${manifestPath}.spec.store.spec.bucketName`),
       folderPath: get(initialValues, folderPath),
-      registryId: get(initialValues, registryIdPath)
+      registryId: get(initialValues, registryIdPath),
+      branch: defaultTo(get(initialValues, branchPath), branch)
     },
     lazy: true
   })
