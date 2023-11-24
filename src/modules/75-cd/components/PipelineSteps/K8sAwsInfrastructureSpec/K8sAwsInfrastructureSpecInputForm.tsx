@@ -22,7 +22,8 @@ export const K8sAwsInfrastructureSpecInputForm: React.FC<K8sAwsInfrastructureSpe
   onUpdate,
   allowableTypes,
   allValues,
-  stepViewType
+  stepViewType,
+  provisioner
 }) => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -131,6 +132,7 @@ export const K8sAwsInfrastructureSpecInputForm: React.FC<K8sAwsInfrastructureSpe
       fetchClusters={fetchClusterNames}
       connectorType={'Aws'}
       connectorRef={connectorRef}
+      provisioner={provisioner}
     />
   )
 }

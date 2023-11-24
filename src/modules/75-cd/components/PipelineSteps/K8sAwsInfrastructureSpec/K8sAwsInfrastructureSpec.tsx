@@ -14,7 +14,12 @@ import { CompletionItemKind } from 'vscode-languageserver-types'
 import { FormikErrors, yupToFormErrors } from 'formik'
 import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 
-import { getConnectorListV2Promise, K8sAwsInfrastructure, getEKSClusterNamesPromise } from 'services/cd-ng'
+import {
+  getConnectorListV2Promise,
+  K8sAwsInfrastructure,
+  getEKSClusterNamesPromise,
+  ExecutionElementConfig
+} from 'services/cd-ng'
 
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 
@@ -45,6 +50,7 @@ export interface K8sAwsInfrastructureSpecEditableProps {
   variablesData: K8sAwsInfrastructure
   allowableTypes: AllowedTypes
   isSingleEnv?: boolean
+  provisioner?: ExecutionElementConfig['steps']
 }
 
 const K8sAwsInfrastructureSpecVariablesForm: React.FC<K8sAwsInfrastructureSpecEditableProps> = ({
@@ -267,6 +273,7 @@ export class K8sAwsInfrastructureSpec extends PipelineStep<K8sAwsInfrastructureS
           allValues={inputSetData?.allValues}
           path={inputSetData?.path || ''}
           allowableTypes={allowableTypes}
+          provisioner={get(customStepProps, 'provisioner')}
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {
