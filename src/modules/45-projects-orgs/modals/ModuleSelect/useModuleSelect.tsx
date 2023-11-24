@@ -306,6 +306,11 @@ export const useModuleSelectModal = ({
       name: ModuleName.CET
     })
   }
+  if (licenseInformation[ModuleName.SEI]?.status === LICENSE_STATE_VALUES.ACTIVE) {
+    infoCards.push({
+      name: ModuleName.SEI
+    })
+  }
   const { CDS_NAV_2_0 } = useFeatureFlags()
 
   const [showModal, hideModal] = useModalHook(

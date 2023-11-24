@@ -17,7 +17,7 @@ accountSettings:
     investment: Investment
     trellis: Trellis
   advancedFeature:
-    label: Advanced fetures
+    label: Advanced features
     tables: Tables
     propels: Propels
   seiSettings:

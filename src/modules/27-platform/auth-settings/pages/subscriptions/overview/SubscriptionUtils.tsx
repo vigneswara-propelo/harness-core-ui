@@ -22,7 +22,8 @@ import type {
   ModuleLicenseDTO,
   ChaosModuleLicenseDTO,
   CVModuleLicenseDTO,
-  CETModuleLicenseDTO
+  CETModuleLicenseDTO,
+  SEIModuleLicenseDTO
 } from 'services/cd-ng'
 import css from './SubscriptionDetailsCard.module.scss'
 
@@ -279,6 +280,20 @@ function getLicenseCountByModule({
         <Layout.Vertical spacing="medium">
           <Text color={Color.BLACK} font={{ weight: 'semi-bold' }} margin={{ bottom: 5 }}>
             {getString('common.subscriptions.cet.agents', { agents: agents })}
+          </Text>
+        </Layout.Vertical>
+      )
+    }
+    case ModuleName.SEI: {
+      const seiModuleLicenseDTO = licenseData as SEIModuleLicenseDTO
+      const contributors =
+        seiModuleLicenseDTO?.numberOfContributors === UNLIMITED
+          ? getString('common.unlimited')
+          : seiModuleLicenseDTO?.numberOfContributors?.toLocaleString()
+      return (
+        <Layout.Vertical spacing="medium">
+          <Text color={Color.BLACK} font={{ weight: 'semi-bold' }} margin={{ bottom: 5 }}>
+            {getString('common.subscriptions.sei.contributors', { contributors: contributors })}
           </Text>
         </Layout.Vertical>
       )

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Redirect } from 'react-router-dom'
+import { Redirect, useParams } from 'react-router-dom'
 import routes from '@common/RouteDefinitions'
 import { RouteWithLayout } from '@common/router'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
@@ -28,12 +28,16 @@ import { NameSchema } from '@common/utils/Validation'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
 import ChildComponentMounter from 'microfrontends/ChildComponentMounter'
-import { ModulePathParams } from '@modules/10-common/interfaces/RouteInterfaces'
+import { AccountPathProps, ModulePathParams } from '@modules/10-common/interfaces/RouteInterfaces'
 import { SidebarContext } from '@modules/10-common/navigation/SidebarProvider'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { PAGE_NAME } from '@modules/10-common/pages/pageContext/PageName'
-import { SEICustomMicroFrontendProps } from './SEICustomMicroFrontendProps.types'
+import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
+import { RedirectToSubscriptionsFactory } from '@modules/10-common/Redirects'
+import { ModuleName } from 'framework/types/ModuleName'
 import SEISideNav from './SideNav/NavV1/SEISideNav'
+import { SEICustomMicroFrontendProps } from './SEICustomMicroFrontendProps.types'
+import { module } from './constants'
 
 // eslint-disable-next-line import/no-unresolved
 const SEIMicroFrontend = React.lazy(() => import('sei/MicroFrontendApp'))
@@ -148,15 +152,26 @@ export default function SEIRoutes(): React.ReactElement {
       useFeatureFlags
     }
   }
-  // const licenseRedirectData: LicenseRedirectProps = {
-  //   licenseStateName: LICENSE_STATE_NAMES.SEI_LICENSE_STATE,
-  //   startTrialRedirect: () => <TrialRedirect />,
-  //   expiredTrialRedirect: RedirectToSubscriptionsFactory(ModuleName.SEI)
-  // }
+  const TrialRedirect: React.FC = () => {
+    const { accountId } = useParams<AccountPathProps>()
+    return (
+      <Redirect
+        to={routes.toModuleTrialHome({
+          accountId,
+          module
+        })}
+      />
+    )
+  }
+  const licenseRedirectData: LicenseRedirectProps = {
+    licenseStateName: LICENSE_STATE_NAMES.SEI_LICENSE_STATE,
+    startTrialRedirect: () => <TrialRedirect />,
+    expiredTrialRedirect: RedirectToSubscriptionsFactory(ModuleName.SEI)
+  }
   return (
     <>
       <RouteWithLayout
-        // licenseRedirectData={licenseRedirectData}
+        licenseRedirectData={licenseRedirectData}
         path={routes.toSEI({ ...projectPathProps })}
         exact
         pageName={PAGE_NAME.SEIHomePage}
@@ -166,12 +181,12 @@ export default function SEIRoutes(): React.ReactElement {
       {
         AccessControlRouteDestinations({
           moduleParams,
-          // licenseRedirectData,
+          licenseRedirectData,
           sidebarProps: SEISideNavProps
         })?.props.children
       }
       <RouteWithLayout
-        // licenseRedirectData={licenseRedirectData}
+        licenseRedirectData={licenseRedirectData}
         sidebarProps={SEISideNavProps}
         path={[routes.toSEIMicroFrontend({ ...projectPathProps }), routes.toSEI({ ...accountPathProps })]}
       >

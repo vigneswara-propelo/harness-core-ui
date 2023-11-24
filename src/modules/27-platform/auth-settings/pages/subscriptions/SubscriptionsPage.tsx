@@ -78,6 +78,10 @@ const MODULE_SELECT_CARDS: ModuleSelectCard[] = [
   {
     icon: 'cet-with-dark-text',
     module: ModuleName.CET
+  },
+  {
+    icon: 'sei-with-dark-text',
+    module: ModuleName.SEI
   }
 ]
 const SubscriptionsPage: React.FC = () => {
@@ -119,6 +123,9 @@ const SubscriptionsPage: React.FC = () => {
           break
         case ModuleName.CET:
           licenseInformation[ModuleName.CET]?.status === LICENSE_STATE_VALUES.ACTIVE && accumulator.push(card)
+          break
+        case ModuleName.SEI:
+          licenseInformation[ModuleName.SEI]?.status === LICENSE_STATE_VALUES.ACTIVE && accumulator.push(card)
       }
       return accumulator
     },

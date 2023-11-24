@@ -577,6 +577,8 @@ subscriptions:
   chaos:
     experiments: '{{ experiments }} Experiment Runs per month'
     infrastructures: '{{ infrastructures }} Chaos Infrastructures'
+  sei:
+    contributors: '{{ contributors }} Contributors'
   expiryCountdown: expires in {{ days }} days
   expired: expired {{ days }} days ago
   banner:

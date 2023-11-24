@@ -1311,6 +1311,7 @@ export interface StringsMap {
   'common.subscriptions.overview.subscribe': string
   'common.subscriptions.overview.trialExpiry': string
   'common.subscriptions.paid': string
+  'common.subscriptions.sei.contributors': string
   'common.subscriptions.sto.developers': string
   'common.subscriptions.tabs.breakdown': string
   'common.subscriptions.tabs.overview': string

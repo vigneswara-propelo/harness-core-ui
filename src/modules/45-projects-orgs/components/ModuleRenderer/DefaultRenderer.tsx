@@ -42,6 +42,9 @@ const DefaultRenderer: React.FC = () => {
         {licenseInformation[ModuleName.CET]?.status === LICENSE_STATE_VALUES.ACTIVE ? (
           <Icon name="cet" size={20} />
         ) : null}
+        {licenseInformation[ModuleName.SEI]?.status === LICENSE_STATE_VALUES.ACTIVE ? (
+          <Icon name="sei-main" size={20} />
+        ) : null}
       </Layout.Horizontal>
     </Layout.Vertical>
   )
