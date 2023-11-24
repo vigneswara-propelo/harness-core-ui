@@ -5,19 +5,19 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useEffect, useRef, useState, ReactElement } from 'react'
+import React, { FC, useEffect, useMemo, useRef, useState, ReactElement } from 'react'
 import { Button, ButtonVariation, Container, Heading, Layout, Popover, TagsPopover, Text, Utils } from '@harness/uicore'
 import { noop } from 'lodash-es'
 import { Classes, Position, Switch, PopoverInteractionKind } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import type { Cell } from 'react-table'
 import { useToaster } from '@common/exports'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { Feature, GitSyncErrorResponse } from 'services/cf'
 import { useStrings, String } from 'framework/strings'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
-import { usePermission } from '@rbac/hooks/usePermission'
 import type { UseToggleFeatureFlag } from '@cf/hooks/useToggleFeatureFlag'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { featureFlagHasCustomRules, getErrorMessage, isFeatureFlagOn } from '@cf/utils/CFUtils'
@@ -29,6 +29,7 @@ import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useFeature } from '@common/hooks/useFeatures'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
+import useFeatureEnabled from '@cf/hooks/useFeatureEnabled'
 import css from './RenderFeatureFlag.module.scss'
 
 export interface RenderFeatureFlagProps {
@@ -48,29 +49,24 @@ export const RenderFeatureFlag: FC<RenderFeatureFlagProps> = ({
   cell: { row },
   refetchFlags
 }) => {
+  const { FFM_8184_FEATURE_FLAG_TAGGING } = useFeatureFlags()
+
   const data = row.original
   const [status, setStatus] = useState(isFeatureFlagOn(data))
+  const [flagNameTextSize, setFlagNameTextSize] = useState(300)
+  const [isSaveToggleModalOpen, setIsSaveToggleModalOpen] = useState(false)
+
   const { getString } = useStrings()
   const { showError } = useToaster()
-  const [flagNameTextSize, setFlagNameTextSize] = useState(300)
   const ref = useRef<HTMLDivElement>(null)
   const { activeEnvironment } = useActiveEnvironment()
   const { handleError: handleGovernanceError, isGovernanceError } = governance
 
-  const [isSaveToggleModalOpen, setIsSaveToggleModalOpen] = useState(false)
-
   const { gitSyncInitialValues, gitSyncValidationSchema } = gitSync.getGitSyncFormMeta(GIT_COMMIT_MESSAGES.TOGGLED_FLAG)
 
-  const [canToggle] = usePermission(
-    {
-      resource: {
-        resourceType: ResourceType.ENVIRONMENT,
-        resourceIdentifier: activeEnvironment
-      },
-      permissions: [PermissionIdentifier.TOGGLE_FF_FEATUREFLAG]
-    },
-    [activeEnvironment]
-  )
+  const flagTags = useMemo(() => data.tags?.map(tag => tag.identifier), [data.tags])
+
+  const { canToggle } = useFeatureEnabled(flagTags)
 
   const handleFlagToggle = async (gitSyncFormValues?: GitSyncFormValues): Promise<void> => {
     let gitDetails: GitDetails | undefined
@@ -126,7 +122,7 @@ export const RenderFeatureFlag: FC<RenderFeatureFlagProps> = ({
   )
 
   const switchTooltip = (
-    <Container width={'350px'} padding="xxxlarge" className={css.switchTooltip}>
+    <Container width="350px" padding="xxxlarge" className={css.switchTooltip}>
       <Heading level={2} color={Color.GREY_800} font={{ variation: FontVariation.H3 }}>
         {getString(status ? 'cf.featureFlags.turnOffHeading' : 'cf.featureFlags.turnOnHeading')}
       </Heading>
@@ -258,8 +254,9 @@ export const RenderFeatureFlag: FC<RenderFeatureFlagProps> = ({
                 ({getString('cf.shared.archived')})
               </Text>
             )}
-            {!!data?.tags?.length && (
+            {FFM_8184_FEATURE_FLAG_TAGGING && !!data?.tags?.length && (
               <TagsPopover
+                className={css.tagsPopover}
                 iconProps={{ size: 12, color: Color.GREY_600 }}
                 tags={data.tags.reduce((tagsObj, currentTag) => {
                   return Object.assign(tagsObj, { [currentTag.name]: '' })

@@ -9,7 +9,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { TestWrapper } from '@common/utils/testUtils'
-import * as useFeatureEnabledMock from '@cf/pages/feature-flags-detail/targeting-rules-tab/hooks/useFeatureEnabled'
+import * as useFeatureEnabledMock from '@cf/hooks/useFeatureEnabled'
 import DisabledFeatureTooltip from '../DisabledFeatureTooltip'
 
 const renderComponent = (): void => {

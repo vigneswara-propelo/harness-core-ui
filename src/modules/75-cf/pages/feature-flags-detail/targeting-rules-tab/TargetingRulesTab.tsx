@@ -7,7 +7,7 @@
 
 import { Card, Container, Formik, FormikForm, Layout, Tag, useConfirmationDialog } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
-import React, { FC, useCallback, useState } from 'react'
+import React, { FC, useCallback, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
 import { FieldArray, FieldArrayRenderProps } from 'formik'
@@ -23,6 +23,7 @@ import {
 import { FeatureFlagActivationStatus } from '@cf/utils/CFUtils'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { String, useStrings } from 'framework/strings'
+import useFeatureEnabled from '@cf/hooks/useFeatureEnabled'
 import usePatchFeatureFlag from './hooks/usePatchFeatureFlag'
 import TargetingRulesTabFooter from './components/tab-targeting-footer/TargetingRulesTabFooter'
 import FlagEnabledRulesCard from './components/flag-enabled-rules-card/FlagEnabledRulesCard'
@@ -33,7 +34,6 @@ import {
   TargetingRuleItemStatus,
   TargetingRulesFormValues
 } from './types'
-import useFeatureEnabled from './hooks/useFeatureEnabled'
 import DefaultRules from './components/default-rules/DefaultRules'
 import useTargetingRulesFormValidation from './hooks/useTargetingRulesFormValidation'
 import useTargetingRulesFormData from './hooks/useTargetingRulesFormData'
@@ -51,6 +51,8 @@ const TargetingRulesTab: FC<TargetingRulesTabProps> = ({ featureFlagData, refetc
   const { getString } = useStrings()
   const [newValues, setNewValues] = useState<TargetingRulesFormValues>()
   const [variationValue, setVariationValue] = useState<string>()
+
+  const flagTags = useMemo(() => featureFlagData.tags?.map(tag => tag.identifier), [featureFlagData.tags])
 
   const debounce = 500
 
@@ -85,9 +87,8 @@ const TargetingRulesTab: FC<TargetingRulesTabProps> = ({ featureFlagData, refetc
     refetchFlag
   })
 
-  const { featureEnabled, canEdit, canToggle } = useFeatureEnabled()
+  const { featureEnabled, canEdit, canToggle } = useFeatureEnabled(flagTags)
   const disabled = patchFeatureLoading || refetchFlagLoading || !featureEnabled || !!featureFlagData?.archived
-
   // const handleRefetchSegments = async (searchTerm: string): Promise<void> => {
   //   await refetchSegments({
   //     queryParams: searchTerm.trim()

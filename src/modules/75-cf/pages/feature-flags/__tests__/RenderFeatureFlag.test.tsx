@@ -11,6 +11,7 @@ import { render, waitFor, RenderResult, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { cloneDeep } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
+import * as useFeatureEnabled from '@cf/hooks/useFeatureEnabled'
 import mockGitSync from '@cf/utils/testData/data/mockGitSync'
 import mockGovernance from '@cf/utils/testData/data/mockGovernance'
 import { RenderFeatureFlag, RenderFeatureFlagProps } from '../components/RenderFeatureFlag'
@@ -21,15 +22,6 @@ describe('RenderFeatureFlag', () => {
     jest.clearAllMocks()
   })
 
-  const toggleFeatureFlag = {
-    on: jest.fn(),
-    off: jest.fn(),
-    loading: false,
-    error: undefined
-  }
-
-  const refetchFlags = jest.fn()
-
   const renderFlagComponent = (props: Partial<RenderFeatureFlagProps> = {}): RenderResult =>
     render(
       <TestWrapper
@@ -38,10 +30,15 @@ describe('RenderFeatureFlag', () => {
       >
         <RenderFeatureFlag
           gitSync={{ ...mockGitSync, isGitSyncEnabled: true }}
-          toggleFeatureFlag={toggleFeatureFlag}
+          toggleFeatureFlag={{
+            on: jest.fn(),
+            off: jest.fn(),
+            loading: false,
+            error: undefined
+          }}
           cell={cellMock}
           governance={mockGovernance}
-          refetchFlags={refetchFlags}
+          refetchFlags={jest.fn()}
           {...props}
         />
       </TestWrapper>
@@ -88,5 +85,22 @@ describe('RenderFeatureFlag', () => {
     renderFlagComponent({ numberOfEnvs: 1, cell: archivedFeatureFlag })
 
     expect(screen.getByRole('checkbox')).toBeDisabled()
+  })
+
+  test('it should disable the toggle if user does not have the correct tags', async () => {
+    const flagsWithTags = cloneDeep(cellMock)
+    flagsWithTags.row.original.tags = ['tag1']
+
+    jest.spyOn(useFeatureEnabled, 'default').mockReturnValue({
+      enabledByPlanEnforcement: true,
+      featureEnabled: true,
+      enabledByPermission: true,
+      canEdit: true,
+      canToggle: false
+    })
+
+    renderFlagComponent({ numberOfEnvs: 1, cell: flagsWithTags })
+
+    expect(await screen.findByRole('button')).toBeDisabled()
   })
 })

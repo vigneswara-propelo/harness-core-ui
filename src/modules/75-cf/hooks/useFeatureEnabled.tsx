@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { useMemo } from 'react'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { useFeature } from '@common/hooks/useFeatures'
 import { usePermission } from '@rbac/hooks/usePermission'
@@ -12,7 +13,7 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
-interface UseFeatureEnabledReturn {
+export interface UseFeatureEnabledReturn {
   enabledByPermission: boolean
   enabledByPlanEnforcement: boolean
   featureEnabled: boolean
@@ -20,7 +21,7 @@ interface UseFeatureEnabledReturn {
   canToggle: boolean
 }
 
-const useFeatureEnabled = (): UseFeatureEnabledReturn => {
+const useFeatureEnabled = (tags: string[] = []): UseFeatureEnabledReturn => {
   const { activeEnvironment } = useActiveEnvironment()
 
   const { enabled: enabledByPlanEnforcement } = useFeature({
@@ -29,7 +30,25 @@ const useFeatureEnabled = (): UseFeatureEnabledReturn => {
     }
   })
 
-  const [canEdit, canToggle] = usePermission(
+  const permissionParams = useMemo(() => {
+    if (tags.length) {
+      return {
+        resource: {
+          resourceType: ResourceType.FEATUREFLAG
+        },
+        attributeFilter: {
+          attributeName: 'tag',
+          attributeValues: tags
+        },
+        permissions: [PermissionIdentifier.TOGGLE_FF_FEATUREFLAG]
+      }
+    }
+  }, [tags])
+
+  const [canToggleBasedOnTags] = usePermission(permissionParams)
+
+  // ability to edit a flag is not dependent on the tags associated with a flag
+  const [canEdit, canToggleBasedOnEnvironment] = usePermission(
     {
       resource: {
         resourceType: ResourceType.ENVIRONMENT,
@@ -40,7 +59,9 @@ const useFeatureEnabled = (): UseFeatureEnabledReturn => {
     [activeEnvironment]
   )
 
-  const hasPermission = canEdit || canToggle
+  const hasPermission = canEdit || canToggleBasedOnEnvironment
+
+  const canToggle = canToggleBasedOnEnvironment && canToggleBasedOnTags
 
   return {
     enabledByPermission: hasPermission,

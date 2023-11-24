@@ -10,7 +10,7 @@ import React from 'react'
 import * as rbacHooksMock from '@rbac/hooks/usePermission'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as useFeaturesMock from '@common/hooks/useFeatures'
-import * as useFeatureEnabled from '@cf/pages/feature-flags-detail/targeting-rules-tab/hooks/useFeatureEnabled'
+import * as useFeatureEnabled from '@cf/hooks/useFeatureEnabled'
 import FlagToggleSwitch, { FlagToggleSwitchProps } from '../FlagToggleSwitch'
 
 const renderComponent = (props: Partial<FlagToggleSwitchProps> = {}): RenderResult => {

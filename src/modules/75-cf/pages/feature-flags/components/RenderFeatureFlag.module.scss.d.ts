@@ -9,6 +9,7 @@
 declare const styles: {
   readonly generalInfo: string
   readonly switchTooltip: string
+  readonly tagsPopover: string
   readonly toggleFlagButton: string
   readonly tooltip: string
   readonly tooltipText: string

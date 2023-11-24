@@ -12,7 +12,7 @@ import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import useFeatureEnabled from '../../hooks/useFeatureEnabled'
+import useFeatureEnabled from '@cf/hooks/useFeatureEnabled'
 
 export interface DisabledFeatureTooltipContentProps {
   permission?: PermissionIdentifier.TOGGLE_FF_FEATUREFLAG | PermissionIdentifier.EDIT_FF_FEATUREFLAG
