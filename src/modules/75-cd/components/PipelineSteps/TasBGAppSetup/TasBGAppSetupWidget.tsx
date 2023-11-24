@@ -47,12 +47,12 @@ export function TasBGAppSetupWidget(
         })
       })
     }
-    if (value < 1) {
+    if (value < 0) {
       /* istanbul ignore next */
       return this.createError({
         message: getString('cd.ElastigroupStep.valueCannotBeLessThan', {
           value: valueString,
-          value2: 1
+          value2: 0
         })
       })
     }
@@ -67,9 +67,12 @@ export function TasBGAppSetupWidget(
       existingVersionToKeep: Yup.mixed().test({
         test(value): boolean | Yup.ValidationError {
           if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED) {
-            if (value < 1) {
+            if (value < 0) {
               return this.createError({
-                message: getString?.('pipeline.approvalStep.validation.minimumCountOne')
+                message: getString?.('cd.ElastigroupStep.valueCannotBeLessThan', {
+                  value: getString('cd.steps.tas.existingVersionToKeep'),
+                  value2: 0
+                })
               })
             }
           }

@@ -58,7 +58,7 @@ export default function TasBasicAppSetupInputSet<T>(props: TasBasicAppSetupInput
       )}
       {getMultiTypeFromValue((template?.spec as any)?.existingVersionToKeep) === MultiTypeInputType.RUNTIME && (
         <TextFieldInputSetView
-          name={`${path}.spec.existingVersionToKeep`}
+          name={`${prefix}spec.existingVersionToKeep`}
           disabled={readonly}
           label={getString('cd.steps.tas.existingVersionToKeep')}
           multiTextInputProps={{
@@ -74,7 +74,7 @@ export default function TasBasicAppSetupInputSet<T>(props: TasBasicAppSetupInput
       {getMultiTypeFromValue((template?.spec as any)?.resizeStrategy) === MultiTypeInputType.RUNTIME && (
         <SelectInputSetView
           label={getString('cd.steps.tas.resizeStrategy')}
-          name={`${path}.spec.resizeStrategy`}
+          name={`${prefix}spec.resizeStrategy`}
           useValue
           fieldPath={'spec.resizeStrategy'}
           template={template}
@@ -97,7 +97,7 @@ export default function TasBasicAppSetupInputSet<T>(props: TasBasicAppSetupInput
       {getMultiTypeFromValue((template?.spec as any)?.additionalRoutes) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeKVTagInput
-            name={`${path}.spec.additionalRoutes`}
+            name={`${prefix}spec.additionalRoutes`}
             tagsProps={{ placeholder: getString('cd.steps.tas.typeAndEnterForRouteAdd') }}
             multiTypeProps={{
               expressions,
@@ -114,7 +114,7 @@ export default function TasBasicAppSetupInputSet<T>(props: TasBasicAppSetupInput
       {getMultiTypeFromValue((template?.spec as any)?.tempRoutes) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeKVTagInput
-            name={`${path}.spec.tempRoutes`}
+            name={`${prefix}spec.tempRoutes`}
             tagsProps={{ placeholder: getString('cd.steps.tas.typeAndEnterForRouteAdd') }}
             multiTypeProps={{
               expressions,

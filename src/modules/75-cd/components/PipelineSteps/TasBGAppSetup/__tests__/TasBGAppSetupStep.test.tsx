@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, queryByAttribute, render, screen, waitFor } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import userEvent from '@testing-library/user-event'
@@ -22,7 +22,15 @@ const queryByNameAttribute = (container: HTMLElement, name: string): HTMLElement
 
 factory.registerStep(new TasBGAppSetupStep())
 
+const onUpdate = jest.fn()
+const onChange = jest.fn()
+
 describe('Test TAS Setup Steps', () => {
+  beforeEach(() => {
+    onUpdate.mockReset()
+    onChange.mockReset()
+  })
+
   test('should render edit view as new step - with initial snapshot', () => {
     const { container } = render(
       <TestStepWidget initialValues={{}} type={StepType.BGAppSetup} stepViewType={StepViewType.Edit} />
@@ -32,8 +40,6 @@ describe('Test TAS Setup Steps', () => {
   })
 
   test('should render in edit view with initial values and toggle From Manifest to submit', async () => {
-    const onUpdate = jest.fn()
-    const onChange = jest.fn()
     const ref = React.createRef<StepFormikRef<unknown>>()
     const { container } = render(
       <TestStepWidget
@@ -76,8 +82,6 @@ describe('Test TAS Setup Steps', () => {
   })
 
   test('edit view validation test', async () => {
-    const onUpdate = jest.fn()
-    const onChange = jest.fn()
     const ref = React.createRef<StepFormikRef<unknown>>()
     const { container, getByText } = render(
       <TestStepWidget
@@ -109,7 +113,7 @@ describe('Test TAS Setup Steps', () => {
 
     await act(() => ref.current?.submitForm()!)
     await waitFor(() => {
-      expect(getByText('pipeline.approvalStep.validation.minimumCountOne')).toBeTruthy()
+      expect(getByText('cd.ElastigroupStep.valueCannotBeLessThan')).toBeInTheDocument()
     })
   })
 })
@@ -128,9 +132,11 @@ describe('TAS BG Setup Step variable view ', () => {
   })
 })
 describe('TAS BGAppSetupStep - runtime view and validation test', () => {
+  beforeEach(() => {
+    onUpdate.mockReset()
+    onChange.mockReset()
+  })
   test('should submit runtime values', async () => {
-    const onUpdate = jest.fn()
-    const onChange = jest.fn()
     const ref = React.createRef<StepFormikRef<unknown>>()
     render(
       <TestStepWidget
@@ -157,44 +163,60 @@ describe('TAS BGAppSetupStep - runtime view and validation test', () => {
       type: 'BGAppSetup'
     })
   })
-  test('runtime view inputSet view', async () => {
+
+  test('should show errors for empty fields in runtime view', async () => {
+    const ref = React.createRef<StepFormikRef<unknown>>()
+
     const { container } = render(
       <TestStepWidget
-        initialValues={runtimeValues}
+        ref={ref}
         type={StepType.BGAppSetup}
         stepViewType={StepViewType.DeploymentForm}
-        template={runtimeValues}
+        onUpdate={onUpdate}
+        initialValues={{
+          name: 'TASBGAppSetup',
+          identifier: 'TASBGAppSetup',
+          timeout: '1s',
+          type: 'BGAppSetup',
+          spec: {
+            tasInstanceCountType: InstancesType.FromManifest,
+            existingVersionToKeep: '',
+            additionalRoutes: '',
+            tempRoutes: ''
+          }
+        }}
+        template={{
+          name: 'TASBGAppSetup',
+          identifier: 'TASBGAppSetup',
+          timeout: RUNTIME_INPUT_VALUE,
+          type: 'BGAppSetup',
+          spec: {
+            tasInstanceCountType: InstancesType.FromManifest,
+            existingVersionToKeep: RUNTIME_INPUT_VALUE,
+            additionalRoutes: RUNTIME_INPUT_VALUE,
+            tempRoutes: RUNTIME_INPUT_VALUE
+          }
+        }}
       />
     )
-    expect(container).toMatchSnapshot()
-    expect(container.querySelector('input[placeholder="cd.steps.tas.typeAndEnterForRouteAdd"]')).toBeTruthy()
-  })
-  test('Input set view validation for timeout', () => {
-    const response = new TasBGAppSetupStep().validateInputSet({
-      data: {
-        name: 'TASBGAppSetup',
-        identifier: 'TASBGAppSetup',
-        timeout: '1s',
-        type: 'BGAppSetup',
-        spec: {
-          tasInstanceCountType: InstancesType.FromManifest,
-          existingVersionToKeep: '',
-          additionalRoutes: '',
-          tempRoutes: ''
-        }
-      } as any,
-      template: {
-        timeout: RUNTIME_INPUT_VALUE,
-        spec: {
-          tasInstanceCountType: InstancesType.FromManifest,
-          existingVersionToKeep: RUNTIME_INPUT_VALUE,
-          additionalRoutes: RUNTIME_INPUT_VALUE,
-          tempRoutes: RUNTIME_INPUT_VALUE
-        }
-      } as any,
-      getString: jest.fn(),
-      viewType: StepViewType.TriggerForm
-    })
-    expect(response).toMatchSnapshot('Value must be greater than or equal to "10s"')
+
+    // Check for all fields presence which are marked as runtime input
+    const timeoutInput = queryByNameAttribute(container, 'timeout')
+    expect(timeoutInput).toBeInTheDocument()
+    const existingVersionToKeepInput = queryByNameAttribute(container, 'spec.existingVersionToKeep')
+    expect(existingVersionToKeepInput).toBeInTheDocument()
+    const additionalRoutesInputLabel = screen.getByText('cd.steps.tas.additionalRoutes')
+    expect(additionalRoutesInputLabel).toBeInTheDocument()
+    const tempRoutesInputLabel = screen.getByText('cd.steps.tas.tempRoutes')
+    expect(tempRoutesInputLabel).toBeInTheDocument()
+
+    // Submit and check for errors
+    const submitBtn = screen.getByText('Submit')
+    await userEvent.click(submitBtn)
+
+    const timeoutErr = screen.queryByText('Value must be greater than or equal to "10s"')
+    await waitFor(() => expect(timeoutErr).toBeInTheDocument())
+    const existingVersionToKeepErr = screen.queryByText('cd.ElastigroupStep.valueCannotBeLessThan')
+    await waitFor(() => expect(existingVersionToKeepErr).toBeInTheDocument())
   })
 })

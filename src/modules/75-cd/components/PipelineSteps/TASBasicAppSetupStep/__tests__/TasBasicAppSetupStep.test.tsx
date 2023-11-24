@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, queryByAttribute, render, screen, waitFor } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import userEvent from '@testing-library/user-event'
@@ -168,43 +168,58 @@ describe('TAS BasicAppSetupStep - runtime view and validation test', () => {
       type: 'BasicAppSetup'
     })
   })
-  test('runtime view inputSet view', async () => {
+
+  test('should show errors for empty fields in runtime view', async () => {
+    const onUpdate = jest.fn()
+    const ref = React.createRef<StepFormikRef<unknown>>()
+
     const { container } = render(
       <TestStepWidget
-        initialValues={runtimeValues}
+        ref={ref}
         type={StepType.BasicAppSetup}
         stepViewType={StepViewType.DeploymentForm}
-        template={runtimeValues}
+        onUpdate={onUpdate}
+        initialValues={{
+          type: StepType.BasicAppSetup,
+          name: 'TASBasicAppSetup',
+          identifier: 'TASBasicAppSetup',
+          timeout: '1s',
+          spec: {
+            tasInstanceCountType: InstancesType.FromManifest,
+            existingVersionToKeep: '',
+            additionalRoutes: ''
+          }
+        }}
+        template={{
+          type: StepType.BasicAppSetup,
+          name: 'TASBasicAppSetup',
+          identifier: 'TASBasicAppSetup',
+          timeout: RUNTIME_INPUT_VALUE,
+          spec: {
+            tasInstanceCountType: InstancesType.FromManifest,
+            existingVersionToKeep: RUNTIME_INPUT_VALUE,
+            additionalRoutes: RUNTIME_INPUT_VALUE
+          }
+        }}
       />
     )
-    expect(container).toMatchSnapshot()
-    expect(container.querySelector('input[placeholder="cd.steps.tas.typeAndEnterForRouteAdd"]')).toBeTruthy()
-  })
-  test('Input set view validation for timeout', () => {
-    const response = new TASBasicAppSetupStep().validateInputSet({
-      data: {
-        name: 'TASBasicAppSetup',
-        identifier: 'TASBasicAppSetup',
-        timeout: '1s',
-        type: 'BasicAppSetup',
-        spec: {
-          tasInstanceCountType: InstancesType.FromManifest,
-          existingVersionToKeep: '',
-          additionalRoutes: ''
-        }
-      } as any,
-      template: {
-        timeout: RUNTIME_INPUT_VALUE,
-        spec: {
-          tasInstanceCountType: InstancesType.FromManifest,
-          existingVersionToKeep: RUNTIME_INPUT_VALUE,
-          additionalRoutes: RUNTIME_INPUT_VALUE
-        }
-      } as any,
-      getString: jest.fn(),
-      viewType: StepViewType.TriggerForm
-    })
-    expect(response).toMatchSnapshot('Value must be greater than or equal to "10s"')
+
+    // Check for all fields presence which are marked as runtime input
+    const timeoutInput = queryByNameAttribute(container, 'timeout')
+    expect(timeoutInput).toBeInTheDocument()
+    const existingVersionToKeepInput = queryByNameAttribute(container, 'spec.existingVersionToKeep')
+    expect(existingVersionToKeepInput).toBeInTheDocument()
+    const additionalRoutesInputLabel = screen.getByText('cd.steps.tas.additionalRoutes')
+    expect(additionalRoutesInputLabel).toBeInTheDocument()
+
+    // Submit and check for errors
+    const submitBtn = screen.getByText('Submit')
+    await userEvent.click(submitBtn)
+
+    const timeoutErr = screen.queryByText('Value must be greater than or equal to "10s"')
+    await waitFor(() => expect(timeoutErr).toBeInTheDocument())
+    const existingVersionToKeepErr = screen.queryByText('cd.ElastigroupStep.valueCannotBeLessThan')
+    await waitFor(() => expect(existingVersionToKeepErr).toBeInTheDocument())
   })
 })
 

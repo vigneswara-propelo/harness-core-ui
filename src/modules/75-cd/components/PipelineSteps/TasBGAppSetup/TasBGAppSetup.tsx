@@ -160,14 +160,14 @@ export class TasBGAppSetupStep extends PipelineStep<TasBGAppSetupData> {
     if (
       getMultiTypeFromValue(template?.spec?.existingVersionToKeep) === MultiTypeInputType.RUNTIME &&
       isRequired &&
-      checkEmptyOrLessThan(data?.spec?.existingVersionToKeep, 1)
+      checkEmptyOrLessThan(data?.spec?.existingVersionToKeep, 0)
     ) {
       set(
         errors,
         'spec.existingVersionToKeep',
         getString?.('cd.ElastigroupStep.valueCannotBeLessThan', {
           value: getString('cd.steps.tas.existingVersionToKeep'),
-          value2: 1
+          value2: 0
         })
       )
     }
