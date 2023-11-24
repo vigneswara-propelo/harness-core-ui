@@ -184,67 +184,65 @@ describe('<useInputSets /> tests', () => {
     await waitFor(() =>
       expect(result.current.inputSetYamlResponse?.data?.inputSetTemplateYaml).toEqual(runtimeInputsYaml)
     )
-    expect(result.current.inputSet).toMatchInlineSnapshot(`
-      Object {
-        "pipeline": Object {
-          "identifier": "RPF_Bugs",
-          "stages": Array [
-            Object {
-              "stage": Object {
-                "identifier": "Stage_1",
-                "spec": Object {
-                  "serviceConfig": Object {
-                    "serviceDefinition": Object {
-                      "spec": Object {
-                        "variables": Array [
-                          Object {
-                            "name": "var1",
-                            "type": "String",
-                            "value": "123",
-                          },
-                        ],
-                      },
-                      "type": "Kubernetes",
+    expect(result.current.inputSet).toEqual({
+      pipeline: {
+        identifier: 'RPF_Bugs',
+        stages: [
+          {
+            stage: {
+              identifier: 'Stage_1',
+              spec: {
+                serviceConfig: {
+                  serviceDefinition: {
+                    spec: {
+                      variables: [
+                        {
+                          name: 'var1',
+                          type: 'String',
+                          value: '123'
+                        }
+                      ]
                     },
-                  },
-                },
-                "type": "Deployment",
+                    type: 'Kubernetes'
+                  }
+                }
               },
-            },
-            Object {
-              "stage": Object {
-                "execution": Object {
-                  "steps": Array [
-                    Object {
-                      "step": Object {
-                        "identifier": "Step_1",
-                        "timeout": "",
-                        "type": "ShellScript",
-                      },
-                    },
-                  ],
-                },
-                "identifier": "Stage_3",
-                "spec": null,
-                "type": "Deployment",
+              type: 'Deployment'
+            }
+          },
+          {
+            stage: {
+              execution: {
+                steps: [
+                  {
+                    step: {
+                      identifier: 'Step_1',
+                      timeout: '',
+                      type: 'ShellScript'
+                    }
+                  }
+                ]
               },
-            },
-          ],
-          "variables": Array [
-            Object {
-              "name": "test2",
-              "type": "String",
-              "value": "test2",
-            },
-            Object {
-              "name": "test1",
-              "type": "String",
-              "value": "test1",
-            },
-          ],
-        },
+              identifier: 'Stage_3',
+              spec: null,
+              type: 'Deployment'
+            }
+          }
+        ],
+        variables: [
+          {
+            name: 'test2',
+            type: 'String',
+            value: 'test2'
+          },
+          {
+            name: 'test1',
+            type: 'String',
+            value: 'test1'
+          }
+        ]
       }
-    `)
+    })
   })
 
   test('works with rerun', async () => {
@@ -270,67 +268,65 @@ describe('<useInputSets /> tests', () => {
     await waitFor(() =>
       expect(result.current.inputSetYamlResponse?.data?.inputSetTemplateYaml).toEqual(runtimeInputsYaml)
     )
-    expect(result.current.inputSet).toMatchInlineSnapshot(`
-      Object {
-        "pipeline": Object {
-          "identifier": "RPF_Bugs",
-          "stages": Array [
-            Object {
-              "stage": Object {
-                "identifier": "Stage_1",
-                "spec": Object {
-                  "serviceConfig": Object {
-                    "serviceDefinition": Object {
-                      "spec": Object {
-                        "variables": Array [
-                          Object {
-                            "name": "var1",
-                            "type": "String",
-                            "value": "123",
-                          },
-                        ],
-                      },
-                      "type": "Kubernetes",
+    expect(result.current.inputSet).toEqual({
+      pipeline: {
+        identifier: 'RPF_Bugs',
+        stages: [
+          {
+            stage: {
+              identifier: 'Stage_1',
+              spec: {
+                serviceConfig: {
+                  serviceDefinition: {
+                    spec: {
+                      variables: [
+                        {
+                          name: 'var1',
+                          type: 'String',
+                          value: '123'
+                        }
+                      ]
                     },
-                  },
-                },
-                "type": "Deployment",
+                    type: 'Kubernetes'
+                  }
+                }
               },
-            },
-            Object {
-              "stage": Object {
-                "execution": Object {
-                  "steps": Array [
-                    Object {
-                      "step": Object {
-                        "identifier": "Step_1",
-                        "timeout": "",
-                        "type": "ShellScript",
-                      },
-                    },
-                  ],
-                },
-                "identifier": "Stage_3",
-                "spec": null,
-                "type": "Deployment",
+              type: 'Deployment'
+            }
+          },
+          {
+            stage: {
+              execution: {
+                steps: [
+                  {
+                    step: {
+                      identifier: 'Step_1',
+                      timeout: '',
+                      type: 'ShellScript'
+                    }
+                  }
+                ]
               },
-            },
-          ],
-          "variables": Array [
-            Object {
-              "name": "test2",
-              "type": "String",
-              "value": "test2",
-            },
-            Object {
-              "name": "test1",
-              "type": "String",
-              "value": "test1",
-            },
-          ],
-        },
+              identifier: 'Stage_3',
+              spec: null,
+              type: 'Deployment'
+            }
+          }
+        ],
+        variables: [
+          {
+            name: 'test2',
+            type: 'String',
+            value: 'test2'
+          },
+          {
+            name: 'test1',
+            type: 'String',
+            value: 'test1'
+          }
+        ]
       }
-    `)
+    })
     expect(result.current.inputSetTemplate).toEqual(parsed)
   })
 
@@ -357,67 +353,65 @@ describe('<useInputSets /> tests', () => {
     await waitFor(() =>
       expect(result.current.inputSetYamlResponse?.data?.inputSetTemplateYaml).toEqual(runtimeInputsYaml)
     )
-    expect(result.current.inputSet).toMatchInlineSnapshot(`
-      Object {
-        "pipeline": Object {
-          "identifier": "RPF_Bugs",
-          "stages": Array [
-            Object {
-              "stage": Object {
-                "identifier": "Stage_1",
-                "spec": Object {
-                  "serviceConfig": Object {
-                    "serviceDefinition": Object {
-                      "spec": Object {
-                        "variables": Array [
-                          Object {
-                            "name": "var1",
-                            "type": "String",
-                            "value": "123",
-                          },
-                        ],
-                      },
-                      "type": "Kubernetes",
+    expect(result.current.inputSet).toEqual({
+      pipeline: {
+        identifier: 'RPF_Bugs',
+        stages: [
+          {
+            stage: {
+              identifier: 'Stage_1',
+              spec: {
+                serviceConfig: {
+                  serviceDefinition: {
+                    spec: {
+                      variables: [
+                        {
+                          name: 'var1',
+                          type: 'String',
+                          value: '123'
+                        }
+                      ]
                     },
-                  },
-                },
-                "type": "Deployment",
+                    type: 'Kubernetes'
+                  }
+                }
               },
-            },
-            Object {
-              "stage": Object {
-                "execution": Object {
-                  "steps": Array [
-                    Object {
-                      "step": Object {
-                        "identifier": "Step_1",
-                        "timeout": "",
-                        "type": "ShellScript",
-                      },
-                    },
-                  ],
-                },
-                "identifier": "Stage_3",
-                "spec": null,
-                "type": "Deployment",
+              type: 'Deployment'
+            }
+          },
+          {
+            stage: {
+              execution: {
+                steps: [
+                  {
+                    step: {
+                      identifier: 'Step_1',
+                      timeout: '',
+                      type: 'ShellScript'
+                    }
+                  }
+                ]
               },
-            },
-          ],
-          "variables": Array [
-            Object {
-              "name": "test2",
-              "type": "String",
-              "value": "test2",
-            },
-            Object {
-              "name": "test1",
-              "type": "String",
-              "value": "test1",
-            },
-          ],
-        },
+              identifier: 'Stage_3',
+              spec: null,
+              type: 'Deployment'
+            }
+          }
+        ],
+        variables: [
+          {
+            name: 'test2',
+            type: 'String',
+            value: 'test2'
+          },
+          {
+            name: 'test1',
+            type: 'String',
+            value: 'test1'
+          }
+        ]
       }
-    `)
+    })
     expect(result.current.inputSetTemplate).toEqual(parsed)
   })
 

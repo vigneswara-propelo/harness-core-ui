@@ -3,3 +3,4 @@
 
 npx lint-staged
 sh .husky/form-name-data-tooltip
+sh .husky/no-external-snapshots

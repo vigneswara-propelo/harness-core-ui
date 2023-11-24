@@ -1,0 +1,9 @@
+#!/bin/sh
+
+gitDiff="$(git diff --staged --diff-filter=AM -- '*.snap' --unified=0 | egrep "^(\+)" | grep -l --invert-match ".snap")"
+
+if [[ -n "$gitDiff" ]]; then
+  >&2 echo "${red}ERROR - Creating new external snapshot or adding to existing external snapshots is not allowed!"
+  echo $gitDiff
+  exit 1
+fi
