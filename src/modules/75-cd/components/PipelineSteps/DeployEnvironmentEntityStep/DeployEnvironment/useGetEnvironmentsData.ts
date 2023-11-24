@@ -146,6 +146,7 @@ export function useGetEnvironmentsData({
         : { ...(envGroupIdentifier && { envGroupIdentifier }) }),
       serviceIdentifiers
     },
+    headers: { 'Load-From-Cache': 'true' },
     lazy: !(envGroupIdentifier || sortedEnvIdentifiers.length) || !isGitXEnabledForEnvironments
   })
 

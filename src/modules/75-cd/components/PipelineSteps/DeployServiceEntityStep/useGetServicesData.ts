@@ -139,7 +139,8 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
         serviceWithGitInfoList: sortedServiceIdentifiers.map(id => {
           return { ref: id, ...(serviceGitBranches?.[id] ? { branch: serviceGitBranches[id] } : {}) }
         })
-      }
+      },
+      headers: { 'Load-From-Cache': 'true' }
     },
     {
       enabled: !lazyService && isGitXEnabledForServices && sortedServiceIdentifiers.length > 0,

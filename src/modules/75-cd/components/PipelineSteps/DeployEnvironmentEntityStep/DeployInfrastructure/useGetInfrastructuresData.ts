@@ -154,6 +154,7 @@ export function useGetInfrastructuresData({
       infrastructureIdentifiers: sortedInfrastructureIdentifiers,
       environmentBranch
     },
+    headers: { 'Load-From-Cache': 'true' },
     lazy: sortedInfrastructureIdentifiers.length === 0 || !isGitXEnabledForInfras
   })
 
