@@ -3195,7 +3195,6 @@ export interface StringsMap {
   'platform.defaultSettings.showUnallocatedClusterCost': string
   'platform.defaultSettings.slackPlaceholder': string
   'platform.defaultSettings.stageTimeout': string
-  'platform.defaultSettings.stepTimeout': string
   'platform.defaultSettings.ticketingPreferences': string
   'platform.defaultSettings.ticketingToolConnectorLabel': string
   'platform.defaultSettings.ticketingToolLabel': string

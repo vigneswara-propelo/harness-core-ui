@@ -507,7 +507,12 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.TRIGGER_FOR_ALL_ARTIFA
 })
 
 export default function DefaultSettingsRoutes(): React.ReactElement {
-  const { PIE_PIPELINE_SETTINGS_ENFORCEMENT_LIMIT, PIE_GIT_BI_DIRECTIONAL_SYNC, PL_EULA_ENABLED } = useFeatureFlags()
+  const {
+    PIE_PIPELINE_SETTINGS_ENFORCEMENT_LIMIT,
+    PIE_GIT_BI_DIRECTIONAL_SYNC,
+    PL_EULA_ENABLED,
+    CDS_DISABLE_MAX_TIMEOUT_CONFIG
+  } = useFeatureFlags()
   const { getString } = useStrings()
 
   if (PL_EULA_ENABLED) {
@@ -549,7 +554,7 @@ export default function DefaultSettingsRoutes(): React.ReactElement {
     settingCategory: 'CORE'
   })
 
-  if (PIE_PIPELINE_SETTINGS_ENFORCEMENT_LIMIT) {
+  if (!CDS_DISABLE_MAX_TIMEOUT_CONFIG) {
     DefaultSettingsFactory.registerSettingHandler(SettingType.PIPELINE_TIMEOUT, {
       label: 'platform.defaultSettings.pipelineTimeout',
       settingRenderer: props => <DefaultSettingDurationField {...props} />,
@@ -563,14 +568,9 @@ export default function DefaultSettingsRoutes(): React.ReactElement {
       yupValidation: getDurationValidationSchema().required(getString('validation.timeout10SecMinimum')),
       settingCategory: 'PMS'
     })
+  }
 
-    DefaultSettingsFactory.registerSettingHandler(SettingType.STEP_TIMEOUT, {
-      label: 'platform.defaultSettings.stepTimeout',
-      settingRenderer: props => <DefaultSettingDurationField {...props} />,
-      yupValidation: getDurationValidationSchema().required(getString('validation.timeout10SecMinimum')),
-      settingCategory: 'PMS'
-    })
-
+  if (PIE_PIPELINE_SETTINGS_ENFORCEMENT_LIMIT) {
     DefaultSettingsFactory.registerSettingHandler(SettingType.CONCURRENT_ACTIVE_PIPELINE_EXECUTIONS, {
       label: 'platform.defaultSettings.concurrentActivePipelineExecutions',
       settingRenderer: props => <DefaultSettingNumberTextbox {...props} />,
