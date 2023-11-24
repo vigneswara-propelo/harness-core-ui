@@ -1,0 +1,8 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "refreshedYaml": "template:\n  name: orgstagetemplate\n  identifier: orgstagetemplate\n  versionLabel: v1\n  type: Stage\n  orgIdentifier: default\n  tags: {}\n  spec:\n    type: Custom\n    spec:\n      execution:\n        steps:\n          - step:\n              name: step1\n              identifier: step1\n              template:\n                templateRef: account.accstepTemplate\n                versionLabel: v1\n          - step:\n              type: ShellScript\n              name: ShellScript_1\n              identifier: ShellScript_1\n              spec:\n                shell: Bash\n                onDelegate: true\n                source:\n                  type: Inline\n                  spec:\n                    script: <+input>\n                environmentVariables: []\n                outputVariables: []\n              timeout: 10m\n    variables:\n      - name: a1\n        type: String\n        description: \"\"\n        required: false\n        value: <+input>\n"
+  },
+  "metaData": null,
+  "correlationId": "4caff6bf-932c-4b75-ba33-c2092cbda369"
+}

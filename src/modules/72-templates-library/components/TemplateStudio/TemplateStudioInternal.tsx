@@ -8,7 +8,7 @@
 import React from 'react'
 import { matchPath, useHistory, useParams } from 'react-router-dom'
 import { parse } from 'yaml'
-import { defaultTo, isEmpty, merge } from 'lodash-es'
+import { defaultTo, get, isEmpty, merge } from 'lodash-es'
 import {
   Container,
   Layout,
@@ -267,7 +267,7 @@ export function TemplateStudioInternal(): React.ReactElement {
                 templateIdentifier: defaultTo(templateIdentifier, '-1'),
                 accountId,
                 module,
-                templateType: template.type,
+                templateType: template?.type,
                 versionLabel: template.versionLabel,
                 branch: selectedFilter.branch,
                 repoIdentifier: selectedFilter.repo
@@ -286,7 +286,7 @@ export function TemplateStudioInternal(): React.ReactElement {
       module,
       orgIdentifier,
       projectIdentifier,
-      template.type,
+      template?.type,
       template.versionLabel,
       templateIdentifier
     ]
@@ -302,7 +302,7 @@ export function TemplateStudioInternal(): React.ReactElement {
   React.useEffect(() => {
     if (!shouldShowOutOfSyncError) return
 
-    if (errorData?.data?.validYaml === false && errorData?.data.errorNodeSummary) {
+    if (errorData?.data?.validYaml === false && get(errorData, 'data.errorNodeSummary')) {
       // This is handled by <OutOfSyncErrorStrip/>
       clear()
     } else {
@@ -376,9 +376,9 @@ export function TemplateStudioInternal(): React.ReactElement {
         entityType={'template'}
         errorObj={templateYamlError}
         gitDetails={{
-          connectorRef: storeMetadata?.connectorRef,
-          repoName: storeMetadata?.repoName,
-          branch: storeMetadata?.branch,
+          connectorRef: get(storeMetadata, 'connectorRef'),
+          repoName: get(storeMetadata, 'repoName'),
+          branch: get(storeMetadata, 'branch'),
           onBranchChange: onGitBranchChange
         }}
       />
