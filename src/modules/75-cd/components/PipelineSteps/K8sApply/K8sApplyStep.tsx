@@ -161,10 +161,12 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
           timeout: getDurationValidationSchema({ minimum: '10s' }).required(
             getString('validation.timeout10SecMinimum')
           ),
-          spec: Yup.object().when(' ', {
-            is: !isK8sWithoutService,
-            then: Yup.object().shape({
-              filePaths: Yup.lazy(value =>
+          spec: Yup.object().shape({
+            filePaths: Yup.mixed().when(' ', {
+              is: spec => {
+                return spec?.filePaths && isEmpty(spec?.manifestSource?.type)
+              },
+              then: Yup.lazy(value =>
                 getMultiTypeFromValue(value as boolean) === MultiTypeInputType.FIXED
                   ? Yup.array(
                       Yup.object().shape({
@@ -173,6 +175,15 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
                     ).required(getString('cd.filePathRequired'))
                   : Yup.string()
               )
+            }),
+            manifestSource: Yup.mixed().when(' ', {
+              is: manifest => {
+                return !manifest.filePaths && isEmpty(manifest?.manifestSource?.type)
+              },
+              then: Yup.object().shape({
+                spec: Yup.object().required(getString('cd.manifestYamlEmpty')),
+                type: Yup.string()
+              })
             })
           })
         })}
@@ -180,7 +191,6 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
         {(formik: FormikProps<K8sApplyFormData>) => {
           const { values } = formik
           setFormikRef(formikRef, formik)
-
           return (
             <>
               {stepViewType === StepViewType.Template ? null : (
@@ -215,11 +225,11 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
                     value={
                       isEmpty(get(formik.values, 'spec.filePaths'))
                         ? { label: getString('remote'), value: 'remote' }
-                        : { label: getString('common.local'), value: 'local' }
+                        : { label: getString('service'), value: 'local' }
                     }
                     items={[
                       { label: getString('remote'), value: 'remote' },
-                      { label: getString('common.local'), value: 'local' }
+                      { label: getString('service'), value: 'local' }
                     ]}
                     onChange={selected => {
                       if (selected.value === 'remote') {
@@ -227,6 +237,7 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
                         formik?.setFieldValue('spec.manifestSource', {})
                       } else {
                         formik?.setFieldValue('spec.manifestSource', undefined)
+                        formik?.setFieldValue('spec.filePaths', [{ value: '', id: uuid() }])
                       }
                     }}
                   />
@@ -240,6 +251,8 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
                     formik?.setFieldValue('spec.manifestSource', manifest.manifestSource)
                     formik?.setFieldValue('spec.filePaths', undefined)
                   }}
+                  name={'spec.manifestSource.spec'}
+                  expressions={expressions}
                 />
               ) : (
                 <div className={stepCss.formGroup}>

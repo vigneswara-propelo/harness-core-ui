@@ -70,6 +70,7 @@ const TestComponent = (props: TestProps): React.ReactElement => (
             formik={formik}
             onSubmit={jest.fn()}
             isReadonly={!!props.isReadonly}
+            name="spec.manfiestSource.spec"
           />
         </Form>
       )}

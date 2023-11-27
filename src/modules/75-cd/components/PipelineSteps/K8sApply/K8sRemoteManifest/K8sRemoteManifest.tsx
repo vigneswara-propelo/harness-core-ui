@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from 'react'
 import { get, noop, defaultTo } from 'lodash-es'
-import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
+import { Dialog, IDialogProps, Classes, Intent, FormGroup } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { connect } from 'formik'
 import { v4 as uuid } from 'uuid'
 
-import { Layout, Text, StepWizard, StepProps, Button, Label, ButtonVariation } from '@harness/uicore'
+import { Layout, Text, StepWizard, StepProps, Button, Label, ButtonVariation, FormError } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import type { IconProps } from '@harness/icons'
@@ -15,6 +15,7 @@ import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig } from 'services/cd-ng'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
+import { errorCheck } from '@common/utils/formikHelpers'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ConnectorDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
 import GitDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/GitDetailsStep'
@@ -31,7 +32,6 @@ import DelegateSelectorStep from '@platform/connectors/components/CreateConnecto
 import { useGetLastStepConnectorValue } from '@pipeline/hooks/useGetLastStepConnectorValue'
 import { ManifestWizard } from '@pipeline/components/ManifestSelection/ManifestWizard/ManifestWizard'
 
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import {
   ManifestDataType,
   ManifestToConnectorMap,
@@ -72,7 +72,9 @@ function SelectRemoteManifest({
   preSelectedManifestType = ManifestDataType.K8sManifest,
   availableManifestTypes = [],
   formik,
-  onSubmit
+  onSubmit,
+  name,
+  expressions
 }: K8sApplyManifestProps): JSX.Element {
   const [selectedManifest, setSelectedManifest] = useState<ManifestTypes | null>(ManifestDataType.K8sManifest)
   const [connectorView, setConnectorView] = useState(false)
@@ -81,7 +83,6 @@ function SelectRemoteManifest({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
-  const { expressions } = useVariablesExpression()
   const initValues = get(formik.values, 'spec', null)
   const manifestSource = initValues?.manifestSource
   const manifestSourceSpec = manifestSource?.spec
@@ -116,7 +117,7 @@ function SelectRemoteManifest({
         manifestSource: {
           type: get(formik.values, 'spec.manifestSource.type', null),
           spec: {
-            valuesPaths: defaultTo(get(manifestSourceSpec, 'valuesPaths'), ['']),
+            valuesPaths: defaultTo(get(manifestSourceSpec, 'valuesPaths'), []),
             store: {
               type: manifestStore || manifestSourceStoreType,
               spec: {
@@ -138,7 +139,7 @@ function SelectRemoteManifest({
       manifestSource: {
         type: get(formik.values, 'manifestSource.type', null),
         spec: {
-          valuesPaths: [{ value: '', id: uuid() }],
+          valuesPaths: [],
           store: {
             type: manifestStore,
             spec: {
@@ -357,42 +358,50 @@ function SelectRemoteManifest({
 
   const ManifestType = defaultTo(get(getInitialValues(), 'manifestSource.type'), null)
 
-  return (
-    <Layout.Vertical width={430} margin={{ bottom: 'medium' }}>
-      <Label style={{ color: Color.GREY_900 }} className={css.configLabel} data-tooltip-id="k8s-apply-remote">
-        {getString('cd.configurationFile')}
-      </Label>
-      <div className={cx(css.configFile)}>
-        <div className={css.configField}>
-          {!ManifestType ? (
-            <a
-              data-testid="editConfigButton"
-              className={css.configPlaceHolder}
-              data-name="config-edit"
-              onClick={addNewManifest}
-            >
-              {getString('cd.manifestSelectPlaceHolder')}
-            </a>
-          ) : (
-            <Text font="normal" lineClamp={1} width={200}>
-              /{ManifestType}
-            </Text>
-          )}
+  const error = get(formik?.errors, name)
+  const hasError = errorCheck(name, formik) && typeof error === 'string'
+  const showError = hasError
+  const intent = showError ? Intent.DANGER : Intent.NONE
+  const helperText = showError ? <FormError name={name} errorMessage={get(formik?.errors, name)} /> : null
 
-          <Button
-            minimal
-            icon="Edit"
-            withoutBoxShadow
-            iconProps={{ size: 16 }}
-            onClick={addNewManifest}
-            data-name="config-edit"
-            withoutCurrentColor={true}
-            className={css.editBtn}
-            variation={ButtonVariation.LINK}
-          />
+  return (
+    <FormGroup intent={intent} helperText={helperText}>
+      <Layout.Vertical width={430} margin={{ bottom: 'medium' }}>
+        <Label style={{ color: Color.GREY_900 }} className={css.configLabel} data-tooltip-id="k8s-apply-remote">
+          {getString('cd.configurationFile')}
+        </Label>
+        <div className={cx(css.configFile)}>
+          <div className={css.configField}>
+            {!ManifestType ? (
+              <a
+                data-testid="editConfigButton"
+                className={css.configPlaceHolder}
+                data-name="config-edit"
+                onClick={addNewManifest}
+              >
+                {getString('cd.manifestSelectPlaceHolder')}
+              </a>
+            ) : (
+              <Text font="normal" lineClamp={1} width={200}>
+                /{ManifestType}
+              </Text>
+            )}
+
+            <Button
+              minimal
+              icon="Edit"
+              withoutBoxShadow
+              iconProps={{ size: 16 }}
+              onClick={addNewManifest}
+              data-name="config-edit"
+              withoutCurrentColor={true}
+              className={css.editBtn}
+              variation={ButtonVariation.LINK}
+            />
+          </div>
         </div>
-      </div>
-    </Layout.Vertical>
+      </Layout.Vertical>
+    </FormGroup>
   )
 }
 export default connect(SelectRemoteManifest)

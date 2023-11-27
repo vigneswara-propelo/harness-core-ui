@@ -6988,6 +6988,7 @@ export interface StringsMap {
   'cd.manifestId': string
   'cd.manifestPathsCannotBeEmpty': string
   'cd.manifestSelectPlaceHolder': string
+  'cd.manifestYamlEmpty': string
   'cd.miniKube': string
   'cd.miniKubeCmd1': string
   'cd.miniKubeCmd2': string

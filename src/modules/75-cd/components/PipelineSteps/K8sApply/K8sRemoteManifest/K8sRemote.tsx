@@ -13,11 +13,12 @@ import {
   AllowedTypes
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import * as Yup from 'yup'
 import cx from 'classnames'
 import { Form, FieldArray } from 'formik'
 import { get, defaultTo } from 'lodash-es'
+import { v4 as uuid } from 'uuid'
 import type { StartupCommandConfiguration } from 'services/cd-ng'
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -36,6 +37,7 @@ interface K8sRemoteManifestStepTwoProps {
   isBackendConfig?: boolean
   isTerragruntPlan?: boolean
   fieldPath: string
+  expressions: string[]
 }
 interface FormInputPaths {
   connectorRef: string
@@ -51,15 +53,16 @@ interface FormInputPaths {
 
 export const K8sRemoteFile: React.FC<StepProps<ManifestStepInitData> & K8sRemoteManifestStepTwoProps> = props => {
   const { getString } = useStrings()
-  const { expressions } = useVariablesExpression()
-  const { previousStep, prevStepData, onSubmitCallBack, isReadonly, allowableTypes, name, fieldPath } = props
+
+  const { previousStep, prevStepData, onSubmitCallBack, isReadonly, allowableTypes, name, fieldPath, expressions } =
+    props
+
   const storeType = get(prevStepData, 'manifestSource.spec.store.type')
   const isHarnessStore = storeType === 'Harness'
   const gitFetchTypes: SelectOption[] = [
     { label: getString('gitFetchTypes.fromBranch'), value: GitFetchTypes.Branch },
     { label: getString('gitFetchTypes.fromCommit'), value: GitFetchTypes.Commit }
   ]
-
   const formInputNames = (path: string): FormInputPaths => ({
     connectorRef: `${path}.store.spec.connectorRef`,
     repoName: `${path}.store.spec.repoName`,
@@ -90,6 +93,38 @@ export const K8sRemoteFile: React.FC<StepProps<ManifestStepInitData> & K8sRemote
       <Formik<ManifestStepInitData>
         formName={'k8sapply'}
         initialValues={prevStepData as ManifestStepInitData}
+        validationSchema={Yup.object().shape({
+          manifestSource: Yup.object().shape({
+            spec: Yup.object().shape({
+              store: Yup.object().shape({
+                spec: Yup.object().shape({
+                  gitFetchType: Yup.string(),
+                  branch: Yup.string().when('gitFetchType', {
+                    is: GitFetchTypes.Branch,
+                    then: Yup.string().trim().required(getString('validation.branchName'))
+                  }),
+                  commitId: Yup.string().when('gitFetchType', {
+                    is: GitFetchTypes.Commit,
+                    then: Yup.string().trim().required(getString('validation.commitId'))
+                  }),
+                  paths: Yup.mixed().when(' ', {
+                    is: () => {
+                      return !isHarnessStore
+                    },
+                    then: Yup.lazy(value => {
+                      if (!value) {
+                        return Yup.string().required(getString('cd.pathCannotBeEmpty'))
+                      }
+                      return getMultiTypeFromValue(value as boolean) === MultiTypeInputType.FIXED
+                        ? Yup.array().of(Yup.string().min(1).required(getString('cd.pathCannotBeEmpty')))
+                        : Yup.string()
+                    })
+                  })
+                })
+              })
+            })
+          })
+        })}
         onSubmit={data => {
           onSubmitCallBack({
             ...prevStepData,
@@ -121,54 +156,56 @@ export const K8sRemoteFile: React.FC<StepProps<ManifestStepInitData> & K8sRemote
           return (
             <Form>
               {isHarnessStore ? (
-                <div className={cx(stepCss.formGroup, stepCss.md)}>
-                  <MultiTypeFieldSelector
-                    defaultValueToReset={['']}
-                    name={formInputNames(fieldPath).files}
-                    label={getString('fileFolderPathText')}
-                    allowedTypes={allowableTypes}
-                  >
-                    <FieldArray
+                <>
+                  <div className={cx(stepCss.formGroup, stepCss.md)}>
+                    <MultiTypeFieldSelector
+                      defaultValueToReset={['']}
                       name={formInputNames(fieldPath).files}
-                      render={arrayHelpers => (
-                        <Layout.Vertical>
-                          {defaultTo(get(formikValues, `${fieldPath}.store.spec.files`), []).map(
-                            (path: string, index: number) => (
-                              <Layout.Horizontal key={index} data-testid={`${path}-${index}`}>
-                                <FileStoreSelectField
-                                  name={`${fieldPath}.store.spec.files[${index}]`}
-                                  onChange={(newValue: string) => {
-                                    formik?.setFieldValue(`${fieldPath}.store.spec.files[${index}]`, newValue)
-                                  }}
-                                />
-                                <Button
-                                  variation={ButtonVariation.ICON}
-                                  icon="main-trash"
-                                  onClick={() => arrayHelpers.remove(index)}
-                                  disabled={isReadonly}
-                                  data-testid={`removeFileStorePath${index}`}
-                                />
-                              </Layout.Horizontal>
-                            )
-                          )}
-                          <span>
-                            <Button
-                              margin={{ top: 'medium' }}
-                              variation={ButtonVariation.LINK}
-                              text={getString('addFileText')}
-                              onClick={() => {
-                                arrayHelpers.push('')
-                              }}
-                              disabled={isReadonly}
-                              data-testid={`addFilePath-file-store`}
-                              icon="add"
-                            />
-                          </span>
-                        </Layout.Vertical>
-                      )}
-                    />
-                  </MultiTypeFieldSelector>
-                </div>
+                      label={getString('fileFolderPathText')}
+                      allowedTypes={allowableTypes}
+                    >
+                      <FieldArray
+                        name={formInputNames(fieldPath).files}
+                        render={arrayHelpers => (
+                          <Layout.Vertical>
+                            {defaultTo(get(formikValues, `${fieldPath}.store.spec.files`), ['']).map(
+                              (path: string, index: number) => (
+                                <Layout.Horizontal key={index} data-testid={`${path}-${index}`}>
+                                  <FileStoreSelectField
+                                    name={`${fieldPath}.store.spec.files[${index}]`}
+                                    onChange={(newValue: string) => {
+                                      formik?.setFieldValue(`${fieldPath}.store.spec.files[${index}]`, newValue)
+                                    }}
+                                  />
+                                  <Button
+                                    variation={ButtonVariation.ICON}
+                                    icon="main-trash"
+                                    onClick={() => arrayHelpers.remove(index)}
+                                    disabled={isReadonly}
+                                    data-testid={`removeFileStorePath${index}`}
+                                  />
+                                </Layout.Horizontal>
+                              )
+                            )}
+                            <span>
+                              <Button
+                                margin={{ top: 'medium' }}
+                                variation={ButtonVariation.LINK}
+                                text={getString('addFileText')}
+                                onClick={() => {
+                                  arrayHelpers.push('')
+                                }}
+                                disabled={isReadonly}
+                                data-testid={`addFilePath-file-store`}
+                                icon="add"
+                              />
+                            </span>
+                          </Layout.Vertical>
+                        )}
+                      />
+                    </MultiTypeFieldSelector>
+                  </div>
+                </>
               ) : (
                 <div>
                   <div className={cx(stepCss.formGroup, stepCss.md)}>
@@ -231,7 +268,7 @@ export const K8sRemoteFile: React.FC<StepProps<ManifestStepInitData> & K8sRemote
                     </div>
                   )}
 
-                  <div className={stepCss.formGroup}>
+                  <div className={cx(stepCss.formGroup, stepCss.md)}>
                     <MultiTypeFieldSelector
                       defaultValueToReset={['']}
                       name={formInputNames(fieldPath).paths}
@@ -242,33 +279,33 @@ export const K8sRemoteFile: React.FC<StepProps<ManifestStepInitData> & K8sRemote
                         name={formInputNames(fieldPath).paths}
                         render={arrayHelpers => (
                           <Layout.Vertical>
-                            {defaultTo(get(formikValues, `${fieldPath}.store.spec.paths`), []).map(
-                              (path: string, index: number) => (
-                                <Layout.Horizontal key={index}>
-                                  <FormInput.MultiTextInput
-                                    label=""
-                                    placeholder={getString('cd.filePathPlaceholder')}
-                                    name={`${fieldPath}.store.spec.paths[${index}]`}
-                                    multiTextInputProps={{
-                                      allowableTypes,
-                                      expressions,
-                                      textProps: { disabled: isReadonly }
-                                    }}
-                                    disabled={isReadonly}
-                                    style={{ width: '430px' }}
-                                    data-testid={`${path}-${index}`}
-                                  />
+                            {defaultTo(get(formikValues, `${fieldPath}.store.spec.paths`), [
+                              { value: '', id: uuid() }
+                            ]).map((path: string, index: number) => (
+                              <Layout.Horizontal key={index}>
+                                <FormInput.MultiTextInput
+                                  label=""
+                                  placeholder={getString('cd.filePathPlaceholder')}
+                                  name={`${fieldPath}.store.spec.paths[${index}]`}
+                                  multiTextInputProps={{
+                                    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                                    expressions,
+                                    textProps: { disabled: isReadonly }
+                                  }}
+                                  disabled={isReadonly}
+                                  style={{ width: '430px' }}
+                                  data-testid={`${path}-${index}`}
+                                />
 
-                                  <Button
-                                    variation={ButtonVariation.ICON}
-                                    icon="main-trash"
-                                    onClick={() => arrayHelpers.remove(index)}
-                                    disabled={isReadonly}
-                                    data-testid={`removeFilePath${index}`}
-                                  />
-                                </Layout.Horizontal>
-                              )
-                            )}
+                                <Button
+                                  variation={ButtonVariation.ICON}
+                                  icon="main-trash"
+                                  onClick={() => arrayHelpers.remove(index)}
+                                  disabled={isReadonly}
+                                  data-testid={`removeFilePath${index}`}
+                                />
+                              </Layout.Horizontal>
+                            ))}
                             <span>
                               <Button
                                 variation={ButtonVariation.LINK}
@@ -288,7 +325,7 @@ export const K8sRemoteFile: React.FC<StepProps<ManifestStepInitData> & K8sRemote
                   </div>
                 </div>
               )}
-              <div className={stepCss.formGroup}>
+              <div className={cx(stepCss.formGroup, stepCss.md)}>
                 <MultiTypeFieldSelector
                   defaultValueToReset={['']}
                   name={formInputNames(fieldPath).valuesPaths}
@@ -302,19 +339,28 @@ export const K8sRemoteFile: React.FC<StepProps<ManifestStepInitData> & K8sRemote
                         {defaultTo(get(formikValues, `${fieldPath}.valuesPaths`), []).map(
                           (path: string, index: number) => (
                             <Layout.Horizontal key={index}>
-                              <FormInput.MultiTextInput
-                                label=""
-                                placeholder={getString('pipeline.manifestType.pathPlaceholder')}
-                                name={`${fieldPath}.valuesPaths[${index}]`}
-                                multiTextInputProps={{
-                                  allowableTypes,
-                                  expressions,
-                                  textProps: { disabled: isReadonly }
-                                }}
-                                disabled={isReadonly}
-                                style={{ width: '430px' }}
-                                data-testid={`${path}-${index}`}
-                              />
+                              {isHarnessStore ? (
+                                <FileStoreSelectField
+                                  name={`${fieldPath}.valuesPaths[${index}]`}
+                                  onChange={(newValue: string) => {
+                                    formik?.setFieldValue(`${fieldPath}.valuesPaths[${index}]`, newValue)
+                                  }}
+                                />
+                              ) : (
+                                <FormInput.MultiTextInput
+                                  label=""
+                                  placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+                                  name={`${fieldPath}.valuesPaths[${index}]`}
+                                  multiTextInputProps={{
+                                    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                                    expressions,
+                                    textProps: { disabled: isReadonly }
+                                  }}
+                                  disabled={isReadonly}
+                                  style={{ width: '430px' }}
+                                  data-testid={`${path}-${index}`}
+                                />
+                              )}
 
                               <Button
                                 variation={ButtonVariation.ICON}

@@ -244,7 +244,7 @@ pathCannotBeEmpty: File Path cannot be empty
 configFilePlaceHolder: 'Specify Config File...'
 manifestSelectPlaceHolder: 'Specify Kubernetes Manifest YAML Configuration'
 backendConfigFilePlaceHolder: 'Specify Backend Config File...'
-
+manifestYamlEmpty: Manifest Yaml cannot be empty
 configIdentifer: Configuration Identifier
 addInline: Add Inline
 addRemote: Add Remote

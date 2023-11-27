@@ -80,13 +80,15 @@ export interface K8sManifestStepInitData {
 }
 
 export interface K8sApplyManifestProps {
+  expressions: string[]
+  name: string
   connectors?: PageConnectorResponse | undefined
   isReadonly?: boolean
   deploymentType?: ServiceDefinition['type']
   allowableTypes: AllowedTypes
   preSelectedManifestType?: ManifestTypes
   availableManifestTypes?: ManifestTypes[]
+  onSubmit: (data: ManifestStepInitData) => void
   /* eslint-disable @typescript-eslint/no-explicit-any */
   formik: FormikContextType<any>
-  onSubmit: (data: ManifestStepInitData) => void
 }
