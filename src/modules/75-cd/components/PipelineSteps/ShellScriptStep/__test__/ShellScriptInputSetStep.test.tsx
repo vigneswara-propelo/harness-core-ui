@@ -23,7 +23,7 @@ const allValuesCommon = {
   timeout: '10m',
   spec: {
     shell: 'Bash',
-    onDelegate: 'targethost',
+    onDelegate: false,
     source: {
       type: 'Inline',
       spec: {
@@ -257,7 +257,7 @@ describe('ShellScriptInputSetStep tests', () => {
       name: 'SSH',
       spec: {
         shell: 'Bash',
-        onDelegate: 'targethost',
+        onDelegate: false,
         source: {
           type: 'Inline',
           spec: {

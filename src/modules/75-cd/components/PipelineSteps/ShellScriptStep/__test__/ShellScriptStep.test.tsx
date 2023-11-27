@@ -109,7 +109,7 @@ describe('Test Shell Script Step', () => {
       name: 'SSH',
       spec: {
         shell: 'Bash',
-        onDelegate: 'targethost',
+        onDelegate: false,
         source: {
           type: 'Inline',
           spec: {

@@ -99,7 +99,7 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
             </div>
           </div>
           <div
-            class="md"
+            class="lg"
           >
             <label
               class="Label--main execTargetLabel"
@@ -428,7 +428,7 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
             </div>
           </div>
           <div
-            class="md"
+            class="lg"
           >
             <label
               class="Label--main execTargetLabel"
@@ -899,7 +899,7 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
                 </div>
               </div>
               <div
-                class="md"
+                class="lg"
               >
                 <label
                   class="Label--main execTargetLabel"

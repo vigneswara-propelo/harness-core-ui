@@ -142,10 +142,11 @@ describe('Test Shell Script Step', () => {
   test('export variables panel with scope and key', async () => {
     const onUpdate = jest.fn()
     const ref = React.createRef<StepFormikRef<unknown>>()
-    const { container, getByText } = render(
+    const { container, getByText, findByText } = render(
       <TestStepWidget
         initialValues={{
           spec: {
+            shell: 'Bash',
             outputAlias: {
               scope: 'Pipeline'
             }
@@ -161,7 +162,19 @@ describe('Test Shell Script Step', () => {
 
     await act(async () => {
       fireEvent.change(queryByNameAttribute('name')!, { target: { value: 'SSH' } })
-      fireEvent.change(queryByNameAttribute('spec.shell')!, { target: { value: 'Bash' } })
+      const scriptTypeDropdown = container.querySelector('[data-icon="chevron-down"]')
+
+      // Change Script Type
+      act(() => {
+        fireEvent.click(scriptTypeDropdown!)
+      })
+
+      expect(await findByText('PowerShell')).toBeInTheDocument()
+
+      act(() => {
+        fireEvent.click(getByText('PowerShell'))
+      })
+
       fireEvent.change(queryByNameAttribute('timeout')!, { target: { value: '10m' } })
       fireEvent.input(queryByNameAttribute('spec.source.spec.script')!, {
         target: { value: 'script test' },
@@ -200,7 +213,7 @@ describe('Test Shell Script Step', () => {
       timeout: '10m',
       type: 'ShellScript',
       spec: {
-        shell: 'Bash',
+        shell: 'PowerShell',
         onDelegate: true,
         delegateSelectors: [],
         source: {

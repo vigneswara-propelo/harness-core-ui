@@ -99,8 +99,7 @@ export const secretManagerTemplateMockWithExecutionTarget: NGTemplateInfoConfig 
         type: 'Inline'
       }
     },
-    onDelegate: 'targethost',
-
+    onDelegate: false,
     outputVariables: [{ name: 'key', type: 'String', value: 1 }],
     executionTarget: {
       connectorRef: 'acc.connectorId',

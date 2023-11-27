@@ -17,7 +17,6 @@ import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { listSecretsV2Promise, SecretResponseWrapper } from 'services/cd-ng'
-import type { ShellScriptStepInfo } from 'services/pipeline-ng'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -31,7 +30,7 @@ import { ShellScriptData, ShellScriptFormData, variableSchema } from './shellScr
 import ShellScriptInputSetStep from './ShellScriptInputSetStep'
 import { ShellScriptWidgetWithRef } from './ShellScriptWidget'
 import { ShellScriptVariablesView, ShellScriptVariablesViewProps } from './ShellScriptVariablesView'
-import { getInitialValues } from './helper'
+import { getInitialValues, getShellScriptConnectionLabel } from './helper'
 
 const logger = loggerFor(ModuleName.CD)
 const ConnectorRefRegex = /^.+step\.spec\.executionTarget\.connectorRef$/
@@ -53,6 +52,57 @@ const getConnectorName = (connector?: SecretResponseWrapper): string =>
       ? `${connector?.secret?.type}[Org]: ${connector?.secret?.name}`
       : `${connector?.secret?.type}[Account]: ${connector?.secret?.name}`
   }` || ''
+
+export const processShellScriptFormData = (data: ShellScriptFormData): ShellScriptData => {
+  const dataSpec = data?.spec
+  const specSource = dataSpec?.source
+  const sourceSpec = specSource?.spec
+  const specExecutionTarget = dataSpec?.executionTarget
+  const connectorRef = specExecutionTarget?.connectorRef
+
+  const modifiedData = {
+    ...data,
+    spec: {
+      ...dataSpec,
+      onDelegate: dataSpec?.onDelegate,
+      delegateSelectors: dataSpec?.delegateSelectors,
+      source: {
+        ...specSource,
+        spec: {
+          ...sourceSpec,
+          script: sourceSpec?.script
+        }
+      },
+
+      executionTarget:
+        getMultiTypeFromValue(dataSpec?.onDelegate) === MultiTypeInputType.FIXED
+          ? {
+              ...specExecutionTarget,
+              connectorRef: (connectorRef?.value as string) || connectorRef?.toString()
+            }
+          : null,
+
+      environmentVariables: Array.isArray(dataSpec?.environmentVariables)
+        ? dataSpec?.environmentVariables.map(({ id, ...variable }) => ({
+            ...variable,
+            value: defaultTo(variable.value, '')
+          }))
+        : undefined,
+
+      outputVariables: Array.isArray(dataSpec?.outputVariables)
+        ? dataSpec?.outputVariables.map(({ id, ...variable }) => ({
+            ...variable,
+            value: defaultTo(variable.value, '')
+          }))
+        : undefined
+    }
+  }
+
+  if (modifiedData?.spec?.onDelegate) {
+    delete modifiedData.spec.executionTarget
+  }
+  return modifiedData
+}
 
 export class ShellScriptStep extends PipelineStep<ShellScriptData> {
   constructor() {
@@ -88,11 +138,6 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
           template={inputSetData?.template}
           path={inputSetData?.path || ''}
           allowableTypes={allowableTypes}
-          connectorType={
-            (inputSetData?.allValues?.spec?.shell as ShellScriptStepInfo['shell']) === 'PowerShell'
-              ? 'WinRmCredentials'
-              : 'SSHKey'
-          }
           shellScriptType={inputSetData?.allValues?.spec?.shell}
         />
       )
@@ -129,7 +174,8 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
     data,
     template,
     getString,
-    viewType
+    viewType,
+    allValues
   }: ValidateInputSetProps<ShellScriptData>): FormikErrors<ShellScriptData> {
     const errors: FormikErrors<ShellScriptData> = {}
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
@@ -220,7 +266,7 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
         getMultiTypeFromValue(template?.spec?.onDelegate) === MultiTypeInputType.RUNTIME &&
         !data?.spec?.onDelegate)
     ) {
-      set(errors, 'spec.executionTarget.host', getString?.('fieldRequired', { field: 'Target Host' }))
+      set(errors, 'spec.executionTarget.host', getString?.('fieldRequired', { field: getString('targetHost') }))
     }
 
     /* istanbul ignore else */
@@ -235,7 +281,7 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
       set(
         errors,
         'spec.executionTarget.connectorRef',
-        getString?.('fieldRequired', { field: 'SSH Connection Attribute' })
+        getString?.('fieldRequired', { field: getShellScriptConnectionLabel(getString, allValues?.spec?.shell) })
       )
     }
 
@@ -248,7 +294,11 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
         getMultiTypeFromValue(template?.spec?.onDelegate) === MultiTypeInputType.RUNTIME &&
         !data?.spec?.onDelegate)
     ) {
-      set(errors, 'spec.executionTarget.workingDirectory', getString?.('fieldRequired', { field: 'Working Directory' }))
+      set(
+        errors,
+        'spec.executionTarget.workingDirectory',
+        getString?.('fieldRequired', { field: getString('workingDirectory') })
+      )
     }
     return errors
   }
@@ -330,53 +380,6 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
   }
 
   processFormData(data: ShellScriptFormData): ShellScriptData {
-    const dataSpec = data?.spec
-    const specSource = dataSpec?.source
-    const sourceSpec = specSource?.spec
-    const specExecutionTarget = dataSpec?.executionTarget
-    const connectorRef = specExecutionTarget?.connectorRef
-
-    const modifiedData = {
-      ...data,
-      spec: {
-        ...data.spec,
-        onDelegate: data.spec?.onDelegate,
-        delegateSelectors: data?.spec?.delegateSelectors,
-        source: {
-          ...specSource,
-          spec: {
-            ...sourceSpec,
-            script: sourceSpec?.script
-          }
-        },
-
-        executionTarget:
-          getMultiTypeFromValue(dataSpec?.onDelegate) === MultiTypeInputType.FIXED
-            ? {
-                ...specExecutionTarget,
-                connectorRef: (connectorRef?.value as string) || connectorRef?.toString()
-              }
-            : null,
-
-        environmentVariables: Array.isArray(data.spec?.environmentVariables)
-          ? data.spec?.environmentVariables.map(({ id, ...variable }) => ({
-              ...variable,
-              value: defaultTo(variable.value, '')
-            }))
-          : undefined,
-
-        outputVariables: Array.isArray(data.spec?.outputVariables)
-          ? data.spec?.outputVariables.map(({ id, ...variable }) => ({
-              ...variable,
-              value: defaultTo(variable.value, '')
-            }))
-          : undefined
-      }
-    }
-
-    if (modifiedData?.spec?.onDelegate) {
-      delete modifiedData.spec.executionTarget
-    }
-    return modifiedData
+    return processShellScriptFormData(data)
   }
 }

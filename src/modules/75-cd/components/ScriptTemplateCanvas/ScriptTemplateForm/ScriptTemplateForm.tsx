@@ -33,7 +33,7 @@ enum ScriptTemplateFormTabs {
   Configurations = 'Configurations'
 }
 
-export default function ScriptTemplateForm(
+function ScriptTemplateForm(
   { updateTemplate, template, onChange }: ScriptTemplateFormInterface,
   formikRef: TemplateFormRef
 ): JSX.Element {

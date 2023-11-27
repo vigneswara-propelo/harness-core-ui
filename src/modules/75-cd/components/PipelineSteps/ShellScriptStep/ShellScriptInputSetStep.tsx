@@ -24,7 +24,6 @@ import cx from 'classnames'
 import { FieldArray, useFormikContext } from 'formik'
 
 import { useStrings } from 'framework/strings'
-import type { SecretDTOV2 } from 'services/cd-ng'
 import { ShellScriptMonacoField, ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { FileUsage } from '@platform/filestore/interfaces/FileStore'
@@ -45,6 +44,7 @@ import {
 } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/MultiSelectVariableAllowedValues/MultiSelectVariableAllowedValues'
 import { getAllowedValuesFromTemplate, shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
 import { FormMultiTypeCheckboxField } from '@common/components'
+import { ShellScriptStepInfo } from 'services/pipeline-ng'
 import {
   scriptOutputType,
   ShellScriptData,
@@ -55,6 +55,7 @@ import {
 import { MultiTypeExecutionTargetGroup } from './ExecutionTargetGroup'
 import { FixedExecTargetGroup } from './OptionalConfiguration'
 
+import { getShellScriptSecretType, getShellScriptConnectionLabel } from './helper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ShellScript.module.scss'
 
@@ -67,8 +68,7 @@ export interface ShellScriptInputSetStepProps {
   readonly?: boolean
   template?: ShellScriptData
   path?: string
-  connectorType: Exclude<SecretDTOV2['type'], 'SecretFile' | 'SecretText'>
-  shellScriptType?: ScriptType
+  shellScriptType?: ShellScriptStepInfo['shell']
 }
 
 type variablesInfo = {
@@ -93,13 +93,12 @@ const getMultiSelectProps = (
 }
 
 export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepProps): React.ReactElement {
-  const { template, path, readonly, initialValues, allowableTypes, stepViewType, connectorType, shellScriptType } =
-    props
+  const { template, path, readonly, initialValues, allowableTypes, stepViewType, shellScriptType } = props
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
-  const scriptType: ScriptType = get(initialValues, 'spec.shell') || 'Bash'
+  const scriptType: ScriptType = shellScriptType || 'Bash'
   const prefix = isEmpty(path) ? '' : `${path}.`
   const isExecutionTimeFieldDisabledForStep = isExecutionTimeFieldDisabled(stepViewType)
   const multiSelectSupportForAllowedValues = useFeatureFlag(FeatureFlag.PIE_MULTISELECT_AND_COMMA_IN_ALLOWED_VALUES)
@@ -160,25 +159,28 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
       ) : null}
 
       {getMultiTypeFromValue(template?.spec?.onDelegate) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.md)}>
-          <Label>
-            <HarnessDocTooltip tooltipId={'exec-target'} labelText={getString('pipeline.executionTarget')} />
-          </Label>
+        <>
+          <div className={cx(stepCss.lg)}>
+            <Label>
+              <HarnessDocTooltip tooltipId={'exec-target'} labelText={getString('pipeline.executionTarget')} />
+            </Label>
 
-          <MultiTypeExecutionTargetGroup
-            name={`${prefix}spec.onDelegate`}
-            formik={formik}
-            readonly={readonly}
-            allowableTypes={getAllowableTypesWithoutExpression(allowableTypes)}
-          />
-
-          <FixedExecTargetGroup
-            allowableTypes={allowableTypes}
-            formik={formik as any}
-            prefix={prefix}
-            delegate={`${prefix}spec.onDelegate`}
-          />
-        </div>
+            <MultiTypeExecutionTargetGroup
+              name={`${prefix}spec.onDelegate`}
+              formik={formik}
+              readonly={readonly}
+              allowableTypes={getAllowableTypesWithoutExpression(allowableTypes)}
+            />
+          </div>
+          <div className={cx(stepCss.md)}>
+            <FixedExecTargetGroup
+              allowableTypes={allowableTypes}
+              formik={formik as any}
+              prefix={prefix}
+              shellScriptType={shellScriptType}
+            />
+          </div>
+        </>
       )}
       {getMultiTypeFromValue(template?.spec?.source?.spec?.file) === MultiTypeInputType.RUNTIME ? (
         <div className={cx(stepCss.formGroup, stepCss.alignStart, stepCss.md)}>
@@ -527,7 +529,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
       {getMultiTypeFromValue(template?.spec?.executionTarget?.connectorRef) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <MultiTypeSecretInput
-            type={connectorType}
+            type={getShellScriptSecretType(shellScriptType)}
             expressions={expressions}
             allowableTypes={allowableTypes}
             enableConfigureOptions={true}
@@ -535,7 +537,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
             }}
             name={`${prefix}spec.executionTarget.connectorRef`}
-            label={connectorType === 'SSHKey' ? getString('sshConnector') : getString('platform.secrets.typeWinRM')}
+            label={getShellScriptConnectionLabel(getString, shellScriptType)}
             disabled={readonly}
           />
         </div>

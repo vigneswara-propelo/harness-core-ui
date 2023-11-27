@@ -43,7 +43,7 @@ export function OptionalConfigurations(
         ...initialValues.spec?.executionTarget
       },
       ...initialValues.spec,
-      onDelegate: initialValues.spec?.onDelegate ? 'delegate' : 'targethost'
+      onDelegate: initialValues.spec?.onDelegate ?? true
     }
   }
 

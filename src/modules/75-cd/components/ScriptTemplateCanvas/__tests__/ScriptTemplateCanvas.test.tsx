@@ -110,10 +110,7 @@ describe('Test ScriptTemplateCanvasWithRef', () => {
           },
           onDelegate: true,
           environmentVariables: [{ name: 'key', type: 'String', value: 1 }],
-          variables: undefined,
-          executionTarget: {
-            connectorRef: undefined
-          }
+          variables: undefined
         }
       })
     )

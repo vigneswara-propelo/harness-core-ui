@@ -17,7 +17,7 @@ describe('Execution target group tests', () => {
         <Formik<ShellScriptFormData>
           formName="test-form"
           initialValues={{
-            spec: { onDelegate: 'targethost' },
+            spec: { onDelegate: false },
             name: 'test',
             identifier: 'test',
             type: StepType.SHELLSCRIPT

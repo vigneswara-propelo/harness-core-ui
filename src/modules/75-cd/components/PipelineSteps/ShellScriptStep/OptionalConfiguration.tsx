@@ -39,6 +39,7 @@ import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
 import { SecretConfigureOptions } from '@modules/27-platform/secrets/components/SecretConfigureOptions/SecretConfigureOptions'
+import { ShellScriptStepInfo } from 'services/pipeline-ng'
 import {
   scriptInputType,
   scriptOutputType,
@@ -49,6 +50,7 @@ import {
 } from './shellScriptTypes'
 import { MultiTypeExecutionTargetGroup } from './ExecutionTargetGroup'
 
+import { getShellScriptSecretType, getShellScriptConnectionLabel } from './helper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ShellScript.module.scss'
 
@@ -58,7 +60,7 @@ interface FixedExecTargetGroupProps {
   allowableTypes: AllowedTypes
   formik: FormikProps<ShellScriptFormData>
   prefix?: string
-  delegate?: string
+  shellScriptType?: ShellScriptStepInfo['shell']
 }
 
 export const FixedExecTargetGroup = ({
@@ -66,20 +68,21 @@ export const FixedExecTargetGroup = ({
   readonly,
   allowableTypes,
   formik,
-  prefix
+  prefix,
+  shellScriptType
 }: FixedExecTargetGroupProps): React.ReactElement => {
   const { getString } = useStrings()
-  const formValues = formik.values
-  const { setFieldValue } = formik
-  const fieldName = prefix ? `${prefix}spec.onDelegate` : 'spec.onDelegate'
-  const onDelegateVal = get(formValues, fieldName)
+  const { values: formValues, setFieldValue } = formik
+  const delegateFieldPath = prefix ? `${prefix}spec.onDelegate` : 'spec.onDelegate'
+  const executionTargetPth = prefix ? `${prefix}spec.executionTarget` : 'spec.executionTarget'
+  const onDelegateVal = get(formValues, delegateFieldPath)
 
   if (!onDelegateVal) {
     return (
       <div>
         <div className={cx(stepCss.formGroup)}>
           <FormInput.MultiTextInput
-            name={prefix ? `${prefix}spec.executionTarget.host` : 'spec.executionTarget.host'}
+            name={`${executionTargetPth}.host`}
             placeholder={getString('cd.specifyTargetHost')}
             label={getString('targetHost')}
             style={{ marginTop: 'var(--spacing-small)' }}
@@ -101,13 +104,9 @@ export const FixedExecTargetGroup = ({
         </div>
         <div className={cx(stepCss.formGroup)}>
           <MultiTypeSecretInput
-            type={formValues.spec?.shell === 'PowerShell' ? 'WinRmCredentials' : 'SSHKey'}
-            name={prefix ? `${prefix}spec.executionTarget.connectorRef` : 'spec.executionTarget.connectorRef'}
-            label={
-              formValues.spec?.shell === 'PowerShell'
-                ? getString('platform.secrets.typeWinRM')
-                : getString('sshConnector')
-            }
+            type={getShellScriptSecretType(shellScriptType)}
+            name={`${executionTargetPth}.connectorRef`}
+            label={getShellScriptConnectionLabel(getString, shellScriptType)}
             expressions={expressions}
             allowableTypes={allowableTypes}
             disabled={readonly}
@@ -133,7 +132,7 @@ export const FixedExecTargetGroup = ({
         </div>
         <div className={cx(stepCss.formGroup)}>
           <FormInput.MultiTextInput
-            name={prefix ? `${prefix}spec.executionTarget.workingDirectory` : 'spec.executionTarget.workingDirectory'}
+            name={`${executionTargetPth}.workingDirectory`}
             placeholder={getString('cd.enterWorkDirectory')}
             label={getString('workingDirectory')}
             style={{ marginTop: 'var(--spacing-medium)' }}
@@ -379,7 +378,7 @@ export default function OptionalConfiguration(props: {
           </>
         ) : null}
         {stepName === StepType.SHELLSCRIPT && (
-          <div className={cx(stepCss.md)}>
+          <div className={cx(stepCss.lg)}>
             <Label className={css.execTargetLabel}>
               <HarnessDocTooltip tooltipId={'exec-target'} labelText={getString('pipeline.executionTarget')} />
             </Label>
@@ -398,6 +397,7 @@ export default function OptionalConfiguration(props: {
                 readonly={readonly}
                 allowableTypes={allowableTypes}
                 formik={formik}
+                shellScriptType={formValues.spec?.shell}
               />
             )}
             {getMultiTypeFromValue(formValues.spec.onDelegate) === MultiTypeInputType.RUNTIME && (

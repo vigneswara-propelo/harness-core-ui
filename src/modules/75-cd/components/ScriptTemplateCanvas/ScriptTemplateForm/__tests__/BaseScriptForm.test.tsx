@@ -8,7 +8,6 @@
 import React from 'react'
 import { MultiTypeInputType, Formik } from '@harness/uicore'
 import { render, waitFor, fireEvent, queryByAttribute } from '@testing-library/react'
-import { Form } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import { BaseScriptWithRef } from '../BaseScriptForm'
 
@@ -25,8 +24,8 @@ const defaultInitialValuesCorrect = {
   spec: {
     shell: 'Bash',
     source: {
+      type: 'Inline',
       spec: {
-        type: 'Inline',
         script: 'check'
       }
     }
@@ -125,27 +124,25 @@ describe('Test BaseScriptWithRef', () => {
         <Formik<any> formName="test-form" initialValues={defaultInitialValuesCorrect} onSubmit={jest.fn()}>
           {formik => {
             return (
-              <Form>
-                <BaseScriptWithRef
-                  initialValues={defaultInitialValuesCorrect}
-                  allowableTypes={[]}
-                  ref={formik as any}
-                  onChange={onChangeMock}
-                />
-              </Form>
+              <BaseScriptWithRef
+                initialValues={defaultInitialValuesCorrect}
+                allowableTypes={[]}
+                ref={formik as any}
+                onChange={onChangeMock}
+              />
             )
           }}
         </Formik>
       </TestWrapper>
     )
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
-    const shell = container.querySelector('input[name="spec.shell"]')
-    await waitFor(() => expect(shell).toBeDefined())
+    await waitFor(() => expect(queryByNameAttribute('spec.shell')).toBeDefined())
+
     const radioButtons = container.querySelectorAll('input[type="radio"]')
 
     await fireEvent.click(radioButtons[1])
     fireEvent.input(queryByNameAttribute('spec.source.spec.script')!, {
-      target: { value: 'check' },
+      target: { value: 'echo Hello World' },
       bubbles: true
     })
 
@@ -155,12 +152,12 @@ describe('Test BaseScriptWithRef', () => {
       type: 'PowerShell',
       spec: {
         executionTarget: {},
-        onDelegate: 'targethost',
+        onDelegate: true,
         shell: 'Bash',
         source: {
+          type: 'Inline',
           spec: {
-            type: 'Inline',
-            script: 'check'
+            script: 'echo Hello World'
           }
         }
       }

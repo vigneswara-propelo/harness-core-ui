@@ -30,7 +30,7 @@ export function BaseScriptForm(
 ): JSX.Element {
   const { getString } = useStrings()
 
-  const defaultSSHSchema = Yup.object().shape({
+  const validationSchema = Yup.object().shape({
     spec: Yup.object().shape({
       shell: Yup.string().trim().required(getString('validation.scriptTypeRequired')),
       source: Yup.object().shape({
@@ -67,11 +67,9 @@ export function BaseScriptForm(
       executionTarget: {
         ...initialValues.spec?.executionTarget
       },
-      onDelegate: initialValues.spec?.onDelegate ? 'delegate' : 'targethost'
+      onDelegate: initialValues.spec?.onDelegate ?? true
     }
   }
-
-  const validationSchema = defaultSSHSchema
 
   return (
     <Formik<ShellScriptFormData>

@@ -8,7 +8,7 @@
 import React, { FormEvent } from 'react'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import { get } from 'lodash-es'
+import { get, set } from 'lodash-es'
 
 import {
   FormInput,
@@ -19,6 +19,7 @@ import {
   ExpressionInput,
   EXPRESSION_INPUT_PLACEHOLDER
 } from '@harness/uicore'
+import produce from 'immer'
 import { useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -46,7 +47,7 @@ export default function BaseScript(props: {
   const { formik, readonly, allowableTypes } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { values: formValues, setFieldValue } = formik
+  const { values: formValues, setFieldValue, setValues } = formik
   const scriptType: ScriptType = formValues.spec.shell || 'Bash'
 
   return (
@@ -58,8 +59,15 @@ export default function BaseScript(props: {
           disabled={readonly}
           label={getString('common.scriptType')}
           placeholder={getString('common.scriptType')}
-          onChange={() => {
-            setFieldValue('spec.onDelegate', 'delegate')
+          onChange={value => {
+            // Using setValues as values were not updating in template. Values update on 2nd times
+            setValues(
+              produce(formValues, draft => {
+                set(draft, 'spec.onDelegate', true)
+                set(draft, 'spec.shell', value.value)
+                return draft
+              })
+            )
           }}
         />
       </div>
@@ -78,14 +86,23 @@ export default function BaseScript(props: {
         ]}
         radioGroup={{ inline: true }}
         onChange={(e: FormEvent<HTMLInputElement>) => {
-          if (e.currentTarget?.value === LocationType.HARNESS) {
-            setFieldValue('spec.source.spec.script', undefined)
-          } else {
-            setFieldValue('spec.source.spec.file', undefined)
-          }
+          const sourceType = e.currentTarget?.value
+          // Using setValues as values were not updating in template. Values update on 2nd times
+          setValues(
+            produce(formValues, draft => {
+              set(draft, 'spec.source.type', sourceType)
+              set(
+                draft,
+                sourceType === LocationType.HARNESS ? 'spec.source.spec.script' : 'spec.source.spec.file',
+                undefined
+              )
+              return draft
+            })
+          )
         }}
+        disabled={readonly}
       />
-      {formik?.values?.spec?.source?.type === LocationType.INLINE ? (
+      {formValues.spec?.source?.type === LocationType.INLINE && (
         <div className={cx(stepCss.formGroup)}>
           <MultiTypeFieldSelector
             name="spec.source.spec.script"
@@ -126,8 +143,8 @@ export default function BaseScript(props: {
             />
           )}
         </div>
-      ) : null}
-      {formik?.values?.spec?.source?.type === LocationType.HARNESS ? (
+      )}
+      {formValues?.spec?.source?.type === LocationType.HARNESS && (
         <MultiTypeConfigFileSelect
           name={'spec.source.spec.file'}
           label={''}
@@ -137,41 +154,39 @@ export default function BaseScript(props: {
           disableTypeSelection={false}
           supportListOfExpressions={true}
           onTypeChange={() => {
-            formik?.setFieldValue('spec.source.spec.script', undefined)
+            setFieldValue('spec.source.spec.script', undefined)
           }}
-          defaultType={getMultiTypeFromValue(
-            get(formik?.values, 'spec.source.spec.file'),
-            [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME],
-            true
-          )}
-          allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]}
+          defaultType={getMultiTypeFromValue(get(formValues, 'spec.source.spec.file'), allowableTypes, true)}
+          allowedTypes={allowableTypes}
           expressionRender={() => {
             return (
               <ExpressionInput
                 name={'spec.source.spec.file'}
-                value={get(formik?.values, 'spec.source.spec.file')}
+                value={get(formValues, 'spec.source.spec.file')}
                 disabled={false}
                 inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
                 items={expressions}
                 onChange={val =>
                   /* istanbul ignore next */
-                  formik?.setFieldValue('spec.source.spec.file', val)
+                  setFieldValue('spec.source.spec.file', val)
                 }
               />
             )
           }}
+          disabled={readonly}
         >
           <FileStoreSelectField
             label={getString('common.git.filePath')}
             name="spec.source.spec.file"
             onChange={newValue => {
-              formik?.setFieldValue('spec.source.spec.file', newValue)
-              formik?.setFieldValue('spec.source.spec.script', undefined)
+              setFieldValue('spec.source.spec.file', newValue)
+              setFieldValue('spec.source.spec.script', undefined)
             }}
             fileUsage={FileUsage.SCRIPT}
+            readonly={readonly}
           />
         </MultiTypeConfigFileSelect>
-      ) : null}
+      )}
     </>
   )
 }

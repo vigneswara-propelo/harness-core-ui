@@ -11,36 +11,13 @@ import { sanitize } from '@common/utils/JSONUtils'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { ScriptTemplateFormWithRef } from './ScriptTemplateForm/ScriptTemplateForm'
-import type { ShellScriptFormData } from '../PipelineSteps/ShellScriptStep/shellScriptTypes'
+import type { ShellScriptData, ShellScriptFormData } from '../PipelineSteps/ShellScriptStep/shellScriptTypes'
+import { processShellScriptFormData } from '../PipelineSteps/ShellScriptStep/ShellScriptStep'
 
-function getProcessedTemplate(formikValue: ShellScriptFormData) {
-  return {
-    ...formikValue.spec,
-    onDelegate: formikValue.spec.onDelegate !== 'targethost',
-    source: {
-      ...formikValue.spec.source,
+function getProcessedTemplate(formikValue: ShellScriptFormData): ShellScriptData['spec'] {
+  const modifiedData = processShellScriptFormData(formikValue)
 
-      spec: {
-        ...formikValue.spec.source?.spec,
-        type: 'Inline',
-        script: formikValue.spec.source?.spec?.script
-      }
-    },
-
-    executionTarget:
-      formikValue.spec.onDelegate === 'targethost'
-        ? {
-            ...formikValue.spec.executionTarget,
-            connectorRef:
-              (formikValue.spec.executionTarget?.connectorRef?.value as string) ||
-              formikValue.spec.executionTarget?.connectorRef?.toString()
-          }
-        : {},
-
-    environmentVariables: Array.isArray(formikValue.spec.environmentVariables)
-      ? formikValue.spec.environmentVariables.filter(variable => variable.value).map(({ id, ...variable }) => variable)
-      : undefined
-  }
+  return modifiedData.spec
 }
 
 const ScriptTemplateCanvas = (_props: unknown, formikRef: TemplateFormRef) => {

@@ -90,7 +90,16 @@ export function ShellScriptWidget(
     )
   }
 
-  const defaultSSHSchema = Yup.object().shape({
+  const executionTargetBaseSchema = Yup.object().shape({
+    host: Yup.string()
+      .trim()
+      .required(getString('fieldRequired', { field: getString('targetHost') })),
+    workingDirectory: Yup.string()
+      .trim()
+      .required(getString('fieldRequired', { field: getString('workingDirectory') }))
+  })
+
+  const validationSchema = Yup.object().shape({
     timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
     spec: Yup.object().shape({
       shell: Yup.string().trim().required(getString('validation.scriptTypeRequired')),
@@ -118,19 +127,19 @@ export function ShellScriptWidget(
       environmentVariables: variableSchema(getString, StepType.SHELLSCRIPT),
       outputVariables: variableSchema(getString, StepType.SHELLSCRIPT),
       executionTarget: Yup.object().when(['onDelegate'], {
-        is: onDelegate => {
-          return !onDelegate
-        },
-        then: Yup.object().shape({
-          host: Yup.string()
-            .trim()
-            .required(getString('fieldRequired', { field: getString('cd.specifyTargetHost') })),
-          connectorRef: Yup.string()
-            .trim()
-            .required(getString('fieldRequired', { field: getString('sshConnector') })),
-          workingDirectory: Yup.string()
-            .trim()
-            .required(getString('fieldRequired', { field: getString('workingDirectory') }))
+        is: onDelegate => !onDelegate,
+        then: Yup.object().when(['shell'], {
+          is: shell => shell === 'PowerShell',
+          then: executionTargetBaseSchema.shape({
+            connectorRef: Yup.string()
+              .trim()
+              .required(getString('fieldRequired', { field: getString('platform.secrets.typeWinRM') }))
+          }),
+          otherwise: executionTargetBaseSchema.shape({
+            connectorRef: Yup.string()
+              .trim()
+              .required(getString('fieldRequired', { field: getString('sshConnector') }))
+          })
         })
       })
     }),
@@ -154,8 +163,6 @@ export function ShellScriptWidget(
           : initialValues.spec.executionTarget
     }
   }
-
-  const validationSchema = defaultSSHSchema
 
   return (
     <Formik<ShellScriptFormData>
