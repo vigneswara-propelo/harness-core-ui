@@ -49,6 +49,33 @@ jest
             }),
           loading: false
         }
+      case 'Canary':
+        return {
+          mutate: () =>
+            Promise.resolve({
+              status: 'SUCCESS',
+              data: canaryYaml.data
+            }),
+          loading: false
+        }
+      case 'Default':
+        return {
+          mutate: () =>
+            Promise.resolve({
+              status: 'SUCCESS',
+              data: defaultYaml.data
+            }),
+          loading: false
+        }
+      case 'BlueGreen':
+        return {
+          mutate: () =>
+            Promise.resolve({
+              status: 'SUCCESS',
+              data: blueGreenYaml.data
+            }),
+          loading: false
+        }
     }
   })
 jest

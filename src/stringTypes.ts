@@ -4596,6 +4596,9 @@ export interface StringsMap {
   'pipeline.executionStrategy.strategies.rolling.steps.step1.description': string
   'pipeline.executionStrategy.strategies.rolling.steps.step2.description': string
   'pipeline.executionStrategy.strategies.rolling.steps.step3.description': string
+  'pipeline.executionStrategy.trafficShift': string
+  'pipeline.executionStrategy.trafficShiftDescription': string
+  'pipeline.executionStrategy.trafficShiftTitle': string
   'pipeline.executionStrategy.useStrategy': string
   'pipeline.executionTarget': string
   'pipeline.executionTriggeredBy': string

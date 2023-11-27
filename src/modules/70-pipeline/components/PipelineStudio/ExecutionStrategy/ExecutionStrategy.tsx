@@ -8,7 +8,19 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { Switch } from '@blueprintjs/core'
-import { Text, Icon, Layout, Button, Card, IconName, ButtonVariation, Container, PageError } from '@harness/uicore'
+import {
+  Text,
+  Icon,
+  Layout,
+  Button,
+  Card,
+  IconName,
+  ButtonVariation,
+  Container,
+  PageError,
+  Checkbox,
+  useToaster
+} from '@harness/uicore'
 import { defaultTo, isEmpty, set, startCase } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
@@ -17,7 +29,8 @@ import {
   DeploymentStageConfig,
   GetExecutionStrategyYamlQueryParams,
   useGetExecutionStrategyList,
-  useGetExecutionStrategyYaml
+  useGetExecutionStrategyYaml,
+  usePostExecutionStrategyYaml
 } from 'services/cd-ng'
 import type { StageElementConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
@@ -35,6 +48,7 @@ import { FeatureFlag } from '@common/featureFlags'
 import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { executionStrategyTypes } from '@pipeline/utils/DeploymentTypeUtils'
 import { useTelemetry } from '@common/hooks/useTelemetry'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerTypes } from '../PipelineContext/PipelineActions'
 import Default from './resources/BlankCanvas.png'
@@ -56,7 +70,8 @@ export enum ExecutionType {
   BASIC = 'Basic',
   CANARY = 'Canary',
   ROLLING = 'Rolling',
-  DEFAULT = 'Default'
+  DEFAULT = 'Default',
+  BLUE_GREEN = 'BlueGreen'
 }
 
 export interface ExecutionStrategyProps {
@@ -111,14 +126,18 @@ function ExecutionStrategyRef(
   } = usePipelineContext()
   const { getString } = useStrings()
   const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
-  const { CDS_ECS_BASIC_DEPLOYMENT_STRATEGY } = useFeatureFlags()
+  const { CDS_ECS_BASIC_DEPLOYMENT_STRATEGY, CDS_ASG_SHIFT_TRAFFIC_STEP_NG } = useFeatureFlags()
   const { accountId } = useParams<AccountPathProps>()
   const { trackEvent } = useTelemetry()
+  const { showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
 
   const [strategiesByDeploymentType, setStrategies] = useState([])
   const [isSubmitDisabled, disableSubmit] = useState(false)
   const [isVerifyEnabled, setIsVerifyEnabled] = useState(false)
   const [showPlayButton, setShowPlayButton] = useState<boolean>(false)
+  const [isAsgTrafficShift, setAsgTrafficShift] = useState<boolean>(false)
+
   const logger = loggerFor(ModuleName.CD)
 
   const serviceDefinitionType = useCallback((): GetExecutionStrategyYamlQueryParams['serviceDefinitionType'] => {
@@ -318,9 +337,47 @@ function ExecutionStrategyRef(
       refetchStrategyYaml?.()
     }
   }
+
+  const isAsgBluGreen = React.useMemo(() => {
+    return serviceDefinitionType() === ServiceDeploymentType.Asg && selectedStrategy === ExecutionType.BLUE_GREEN
+  }, [serviceDefinitionType, selectedStrategy])
+
+  const { mutate, loading: postLoading } = usePostExecutionStrategyYaml({
+    queryParams: {
+      accountIdentifier: accountId,
+      serviceDefinitionType: serviceDefinitionType(),
+      strategyType: selectedStrategy !== 'BlankCanvas' ? selectedStrategy : ExecutionType.ROLLING,
+      ...(isVerifyEnabled && { includeVerify: true })
+    }
+  })
+
+  const handleAsgBlueGreenSubmit = async (shiftTrafficState: boolean): Promise<void> => {
+    try {
+      const snippet = await mutate({ shiftTraffic: shiftTrafficState })
+
+      if (snippet) {
+        const newStage = produce(selectedStage, draft => {
+          const jsonFromYaml = parse(defaultTo(snippet?.data, '')) as StageElementConfig
+          if (draft.stage && draft.stage.spec) {
+            draft.stage.failureStrategies = jsonFromYaml?.failureStrategies
+            ;(draft.stage.spec as DeploymentStageConfig).execution = (jsonFromYaml?.spec as DeploymentStageConfig)
+              ?.execution ?? { steps: [], rollbackSteps: [] }
+          }
+        }).stage
+
+        if (newStage) {
+          updateStage(newStage).then(() => {
+            updatePipelineViewState()
+          })
+        }
+      }
+    } catch (e) {
+      showError(getRBACErrorMessage(e))
+    }
+  }
   return (
     <>
-      {(loading || loadingStrategiesYaml) && (
+      {(loading || loadingStrategiesYaml || postLoading) && (
         <Container data-test="executionStrategyListLoader">
           <PageSpinner />
         </Container>
@@ -363,6 +420,24 @@ function ExecutionStrategyRef(
                   </Card>
                 ))}
               </section>
+              {isAsgBluGreen && CDS_ASG_SHIFT_TRAFFIC_STEP_NG ? (
+                <Layout.Vertical margin={{ top: 'medium' }} width={335}>
+                  <Text className={css.headerText} margin={{ bottom: 'small', top: 'medium' }}>
+                    {getString('pipeline.executionStrategy.trafficShiftTitle')}
+                  </Text>
+                  <Text font={{ size: 'xsmall' }} margin={{ bottom: 'medium' }}>
+                    {getString('pipeline.executionStrategy.trafficShiftDescription')}
+                  </Text>
+                  <Checkbox
+                    margin={{ bottom: 'medium' }}
+                    checked={isAsgTrafficShift}
+                    onChange={(e: React.FormEvent<HTMLInputElement>) => {
+                      setAsgTrafficShift(e.currentTarget.checked)
+                    }}
+                    label={getString('pipeline.executionStrategy.trafficShift')}
+                  />
+                </Layout.Vertical>
+              ) : null}
               <Container className={css.phaseContainer}>
                 {isSshOrWinrmDeploymentType(serviceDefinitionType()) && selectedStrategy !== ExecutionType.DEFAULT ? (
                   <Phases
@@ -495,7 +570,11 @@ function ExecutionStrategyRef(
                       })
                     }
                     if (getServiceDefintionType) {
-                      refetchStrategyYaml?.()
+                      if (isAsgBluGreen && CDS_ASG_SHIFT_TRAFFIC_STEP_NG) {
+                        handleAsgBlueGreenSubmit(isAsgTrafficShift)
+                      } else {
+                        refetchStrategyYaml?.()
+                      }
                     }
                   }}
                   disabled={isSubmitDisabled}

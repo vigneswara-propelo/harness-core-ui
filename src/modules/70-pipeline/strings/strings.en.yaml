@@ -1426,6 +1426,11 @@ stepDescription:
 
 executionStrategy:
   executionStrategies: Execution Strategies
+  trafficShiftTitle: Enable Traffic Shifting for ASG Deployment
+  trafficShiftDescription:
+    By enabling the Traffic Shifting Option, Harness will configure the deployment stage with the blue
+    green asg stage deployment step along with the traffic shifting steps
+  trafficShift: Add Traffic Shifting Steps
   useStrategy: Use Strategy
   strategies:
     rolling:

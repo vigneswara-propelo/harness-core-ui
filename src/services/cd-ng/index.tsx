@@ -19913,6 +19913,7 @@ export interface StrategyParameters {
     | 'IIS_VirtualDirectory'
   instances?: number
   phases?: number[]
+  shiftTraffic?: boolean
   unitType?: 'COUNT' | 'PERCENTAGE'
 }
 
