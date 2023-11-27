@@ -375,7 +375,7 @@ function K8sOverrideValuesListView({
       <Dialog onClose={onClose} {...DIALOG_PROPS} className={cx(css.modal, Classes.DIALOG)}>
         <div className={css.createConnectorWizard}>
           <ManifestWizard
-            types={allowedManifestTypes[deploymentType]}
+            types={allowedManifestTypes[defaultTo(deploymentType, 'Kubernetes')]}
             manifestStoreTypes={K8sManifestTypetoStoreMap[selectedManifest as K8sManifestTypes]}
             labels={getLabels()}
             selectedManifest={selectedManifest}
@@ -395,7 +395,16 @@ function K8sOverrideValuesListView({
         <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />
       </Dialog>
     )
-  }, [selectedManifest, connectorView, manifestIndex, manifestStore, expressions, allowableTypes, isEditMode])
+  }, [
+    selectedManifest,
+    connectorView,
+    manifestIndex,
+    manifestStore,
+    expressions,
+    allowableTypes,
+    isEditMode,
+    deploymentType
+  ])
 
   const [list, updateList] = useState(listOfManifests)
   /* istanbul ignore next */
