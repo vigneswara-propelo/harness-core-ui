@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import cx from 'classnames'
 import { defaultTo, get } from 'lodash-es'
@@ -30,6 +30,7 @@ import GetStartedWithCDButton from '@pipeline/components/GetStartedWithCDButton/
 import RbacButton from '@rbac/components/Button/Button'
 import { useGetFreeOrCommunityCD } from '@common/utils/utils'
 import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PageStoreContext } from './PageTemplate/PageContext'
 import PageTemplate from './PageTemplate/PageTemplate'
 import { Sort, SortFields } from './PageTemplate/utils'
@@ -40,7 +41,10 @@ import EnvironmentsFilters from './EnvironmentsFilters/EnvironmentsFilters'
 import css from './Environments.module.scss'
 
 export function Environments({ calledFromSettingsPage }: { calledFromSettingsPage?: boolean }): React.ReactElement {
-  const [view, setView] = useState(Views.LIST)
+  const { preference: view = Views.LIST, setPreference: setView } = usePreferenceStore<Views | undefined>(
+    PreferenceScope.MACHINE,
+    'environmentsViewType'
+  )
 
   const { getString } = useStrings()
   const history = useHistory()

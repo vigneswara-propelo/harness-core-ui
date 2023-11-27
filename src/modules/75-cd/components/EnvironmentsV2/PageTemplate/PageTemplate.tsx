@@ -280,7 +280,7 @@ export default function PageTemplate({
               ref={searchRef}
             />
             <FilterComponent />
-            <GridListToggle initialSelectedView={Views.LIST} onViewToggle={setView} />
+            <GridListToggle initialSelectedView={view} onViewToggle={setView} />
           </Layout.Horizontal>
         </Page.SubHeader>
 
