@@ -336,7 +336,7 @@ function ServiceManifestOverride({
           OverrideManifests.EcsTaskDefinition,
           OverrideManifests.EcsScalableTargetDefinition,
           OverrideManifests.EcsScalingPolicyDefinition,
-          OverrideManifests.EcsTaskDefinition
+          OverrideManifests.EcsServiceDefinition
         ].includes(selectedManifest as OverrideManifestTypes) && manifestStore === OverrideManifestStores.Harness:
           manifestDetailStep = (
             <HarnessFileStore
@@ -354,7 +354,7 @@ function ServiceManifestOverride({
           OverrideManifests.EcsTaskDefinition,
           OverrideManifests.EcsScalableTargetDefinition,
           OverrideManifests.EcsScalingPolicyDefinition,
-          OverrideManifests.EcsTaskDefinition
+          OverrideManifests.EcsServiceDefinition
         ].includes(selectedManifest as OverrideManifestTypes) && manifestStore === OverrideManifestStores.CustomRemote:
           manifestDetailStep = (
             <CustomRemoteManifest
