@@ -179,7 +179,10 @@ export const handleCIConnectorRefOnChange = ({
     setFieldValue(codeBaseInputFieldFormName?.branch || 'branch', '')
   }
   if (connectorRefType === MultiTypeInputType.FIXED) {
-    const connectionType = newConnectorRef?.record?.spec?.type
+    const connectorType = newConnectorRef?.record?.type
+    // spec.connectionType property is used in old custom git connectors instead of spec.type
+    const connectionType =
+      connectorType === 'Git' ? newConnectorRef?.record?.spec?.connectionType : newConnectorRef?.record?.spec?.type
     if (connectionType === ConnectionType.Account) {
       setConnectionType(ConnectionType.Account)
       setConnectorUrl(newConnectorRef.record?.spec?.url || '')
