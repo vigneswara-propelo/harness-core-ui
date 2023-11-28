@@ -80,7 +80,13 @@ export const formatMetaData = (
   }
 
   if (IACM_ENABLED && iacmStatus !== govData.status) {
-    govData.status = iacmStatus === EvaluationStatus.ERROR ? EvaluationStatus.ERROR : EvaluationStatus.WARNING
+    if (govData.status === EvaluationStatus.ERROR || iacmStatus === EvaluationStatus.ERROR) {
+      govData.status = EvaluationStatus.ERROR
+    } else if (govData.status === EvaluationStatus.WARNING || iacmStatus === EvaluationStatus.WARNING) {
+      govData.status = EvaluationStatus.WARNING
+    } else {
+      govData.status = EvaluationStatus.PASS
+    }
   }
 
   return govData
