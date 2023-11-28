@@ -13,8 +13,7 @@ import languageLoader from 'strings/languageLoader'
 import type { LangLocale } from 'strings/languageLoader'
 
 import { AppWithAuthentication, AppWithoutAccountId } from './App'
-
-const ignoredErrorClasses = ['YAMLSemanticError', 'YAMLSyntaxError', 'AbortError']
+import { shouldIgnoreEvent } from './Utils'
 
 const DefaultRouter: React.FC<React.PropsWithChildren<unknown>> = props => {
   return <BrowserRouter basename={`${window.harnessNameSpace}/ng`}>{props.children}</BrowserRouter>
@@ -30,14 +29,7 @@ export default async function render(): Promise<void> {
       appVersion: __BUGSNAG_RELEASE_VERSION__,
       releaseStage: `ng-ui-${window.location.hostname.split('.')[0]}`,
       onError: (event: any): boolean => {
-        if (Array.isArray(event.errors) && ignoredErrorClasses.includes(event.errors[0]?.errorClass)) {
-          return false
-        }
-
-        event.addMetadata('NETWORK STATUS', {
-          online: navigator.onLine
-        })
-
+        if (shouldIgnoreEvent(event)) return false
         return true
       }
     })
