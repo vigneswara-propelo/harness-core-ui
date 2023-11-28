@@ -21,7 +21,6 @@ import {
   PatchFeaturePathParams,
   PatchFeatureQueryParams
 } from 'services/cf'
-import { renderMultiSelectListItem } from '@cf/components/MultiSelectListItem/MultiSelectListItem'
 import { showToaster } from '@cf/utils/CFUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
@@ -197,10 +196,9 @@ const useEditFlagDetailsModal = (props: UseEditFlagDetailsModalProps): UseEditFl
                     name="tags"
                     multiSelectProps={{
                       allowCreatingNewItems: true,
-                      placeholder: getString('tagsLabel'),
-                      itemRender: renderMultiSelectListItem
+                      placeholder: getString('tagsLabel')
                     }}
-                    items={tagsData || []}
+                    items={tagsData}
                   />
                 )}
                 <FormInput.CheckBox name="permanent" label={getString('cf.editDetails.permaFlag')} />

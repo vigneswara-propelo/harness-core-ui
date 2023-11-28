@@ -1,33 +1,40 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { FC } from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Formik } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockFeature from '@cf/components/EditFlagTabs/__tests__/mockFeature'
 import { Feature } from 'services/cf'
-import mockGitSync from '@modules/75-cf/utils/testData/data/mockGitSync'
+import { mockDisabledGitSync } from '@modules/75-cf/utils/testData/data/mockGitSync'
 import useEditFlagDetailsModal, { UseEditFlagDetailsModalProps } from '../useEditFlagDetailsModal'
 
 const mockAllTags = [
   {
-    label: 'tag,4',
-    value: 'tag4'
+    label: 'tag4',
+    value: 'tag4Id'
   },
   {
     label: 'hello',
-    value: 'hello'
+    value: 'helloId'
   },
   {
     label: 'tag3',
-    value: 'tag3'
+    value: 'tag3Id'
   },
   {
     label: 'tag2',
-    value: 'tag2'
+    value: 'tag2Id'
   },
   {
     label: 'tag1',
-    value: 'tag1'
+    value: 'tag1Id'
   }
 ]
 
@@ -58,10 +65,10 @@ const WrapperComponent: FC<UseEditFlagDetailsModalProps> = ({
 const renderComponent = (props: Partial<UseEditFlagDetailsModalProps> = {}, isTaggingFFOn: boolean): RenderResult => {
   return render(
     <TestWrapper defaultFeatureFlagValues={{ FFM_8184_FEATURE_FLAG_TAGGING: isTaggingFFOn }}>
-      <Formik initialValues={{ name: mockFeature }} onSubmit={jest.fn()} formName="test">
+      <Formik initialValues={{}} onSubmit={jest.fn()} formName="test">
         <WrapperComponent
           featureFlag={mockFeature as Feature}
-          gitSync={mockGitSync}
+          gitSync={mockDisabledGitSync}
           refetchFlag={jest.fn()}
           submitPatch={jest.fn()}
           setGovernanceMetadata={jest.fn()}
@@ -75,6 +82,8 @@ const renderComponent = (props: Partial<UseEditFlagDetailsModalProps> = {}, isTa
 }
 
 describe('useEditFlagDetailsModal', () => {
+  beforeEach(() => jest.clearAllMocks())
+
   test('it should open the modal correctly', async () => {
     const isTaggingFFOn = false
     renderComponent(
@@ -108,5 +117,51 @@ describe('useEditFlagDetailsModal', () => {
     )
     await userEvent.click(screen.getByRole('button', { name: openEditFlagModalBtn }))
     expect(screen.getByText('tagsLabel').closest('div')).toHaveClass('bp3-form-group bp3-disabled')
+  })
+
+  test('it should allow user to create a new tag and assign existing tags to a flag correctly', async () => {
+    const isTaggingFFOn = true
+    const submitPatchMock = jest.fn(() => Promise.resolve({}))
+
+    renderComponent(
+      {
+        featureFlag: mockFeature as Feature,
+        tagsData: mockAllTags,
+        tagsDisabled: false,
+        submitPatch: submitPatchMock
+      },
+      isTaggingFFOn
+    )
+
+    await userEvent.click(screen.getByRole('button', { name: openEditFlagModalBtn }))
+
+    expect(screen.getByText(mockFeature.tags[0].name)).toBeInTheDocument()
+
+    const tagDropdown = document.querySelector('[class="bp3-input-ghost bp3-multi-select-tag-input-input"]')!
+
+    const myNewTag = 'RBAC_TEAM'
+
+    await userEvent.type(tagDropdown, myNewTag)
+
+    await waitFor(() => expect(tagDropdown).toHaveValue(myNewTag))
+
+    await waitFor(() => userEvent.click(document.querySelector('[data-icon="plus"]')!))
+
+    await userEvent.click(screen.getByText(mockAllTags[0].label))
+    await userEvent.click(screen.getByText(mockAllTags[1].label))
+
+    await waitFor(() => expect(submitPatchMock).not.toHaveBeenCalled())
+
+    await userEvent.click(screen.getByRole('button', { name: 'save' }))
+
+    await waitFor(() =>
+      expect(submitPatchMock).toHaveBeenCalledWith({
+        instructions: [
+          { kind: 'addTag', parameters: { identifier: 'RBAC_TEAM', name: 'RBAC_TEAM' } },
+          { kind: 'addTag', parameters: { identifier: 'tag4', name: 'tag4Id' } },
+          { kind: 'addTag', parameters: { identifier: 'hello', name: 'helloId' } }
+        ]
+      })
+    )
   })
 })
