@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import React from 'react'
@@ -39,7 +46,7 @@ describe('getProjectLevelRedirectionProps function', () => {
 
     const accountId = '123'
 
-    const result = getProjectLevelRedirectionProps(history, accountId, getString, true) as Partial<
+    const result = getProjectLevelRedirectionProps(history, accountId, getString) as Partial<
       Record<Scope, ScopeSwitchProps>
     >
 
@@ -49,23 +56,6 @@ describe('getProjectLevelRedirectionProps function', () => {
 
     result?.[Scope.ACCOUNT]?.link?.onClick()
     expect(history.push).toHaveBeenCalledWith('/account/123/sei/configuration/integrations')
-  })
-
-  test('should return the correct object for Scope.ACCOUNT when account access is not present', () => {
-    const history = { push: jest.fn() } as any
-
-    const accountId = '123'
-
-    const result = getProjectLevelRedirectionProps(history, accountId, getString, false) as Partial<
-      Record<Scope, ScopeSwitchProps>
-    >
-
-    expect(result?.[Scope.ACCOUNT]?.link?.icon).toBe('nav-settings')
-    expect(result?.[Scope.ACCOUNT]?.link?.label).toBe('common.viewSettings')
-    expect(typeof result?.[Scope.ACCOUNT]?.link?.onClick).toBe('function')
-
-    result?.[Scope.ACCOUNT]?.link?.onClick()
-    expect(history.push).toHaveBeenCalledWith('/account/123/sei/settings')
   })
 })
 

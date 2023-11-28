@@ -9,15 +9,12 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Container, Layout, Tabs, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { ResourceType } from '@modules/20-rbac/interfaces/ResourceType'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import routes from '@common/RouteDefinitions'
 import { ProjectSelector } from '@projects-orgs/components/ProjectSelector/ProjectSelector'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
-import { usePermission } from '@modules/20-rbac/hooks/usePermission'
-import { PermissionIdentifier } from '@modules/20-rbac/interfaces/PermissionIdentifier'
 import NavExpandable from '@modules/10-common/navigation/NavExpandable/NavExpandable'
 import css from './SEISideNav.module.scss'
 
@@ -29,16 +26,6 @@ export default function SEISideNav(): React.ReactElement {
   const { updateAppStore, selectedProject } = useAppStore()
   const { identifier: projectIdentifier = '', orgIdentifier = '' } = selectedProject || {}
   const history = useHistory()
-
-  const [hasAccountAccess] = usePermission({
-    resourceScope: {
-      accountIdentifier: accountId
-    },
-    resource: {
-      resourceType: ResourceType.SEI_CONFIGURATION_SETTINGS
-    },
-    permissions: [PermissionIdentifier.VIEW_SEI_CONFIGURATIONSETTINGS]
-  })
 
   const projectTabContent = useMemo(
     () => (
@@ -201,7 +188,6 @@ export default function SEISideNav(): React.ReactElement {
           },
           {
             id: 'account',
-            disabled: !hasAccountAccess,
             title: <Text color="white">{getString('account')}</Text>,
             panel: accountTabContent
           }

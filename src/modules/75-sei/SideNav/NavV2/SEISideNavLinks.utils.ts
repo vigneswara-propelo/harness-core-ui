@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import type { History } from 'history'
 import { Scope } from 'framework/types/types'
 import routes from '@common/RouteDefinitionsV2'
@@ -9,32 +16,16 @@ import { module } from '../../constants'
 export const getProjectLevelRedirectionProps = (
   history: History,
   accountId: string,
-  getString: UseStringsReturn['getString'],
-  hasAccountAccess?: boolean
+  getString: UseStringsReturn['getString']
 ): Partial<Record<Scope, ScopeSwitchProps>> => {
-  if (!hasAccountAccess) {
-    return {
-      [Scope.ACCOUNT]: {
-        link: {
-          icon: 'nav-settings',
-          label: getString('common.viewSettings', { scope: Scope.ACCOUNT }),
-          info: getString('common.viewAndManageSettings', { scope: Scope.ACCOUNT }),
-          onClick: () => {
-            history.push(routes.toSettings({ accountId, module }))
-          }
-        }
-      }
-    }
-  } else {
-    return {
-      [Scope.ACCOUNT]: {
-        link: {
-          icon: 'ccm-cloud-integration-settings',
-          label: getString('sei.goToIntegrations'),
-          info: getString('sei.integrationsInfo'),
-          onClick: () => {
-            history.push(routes.toSEIIntegrations({ accountId, module }))
-          }
+  return {
+    [Scope.ACCOUNT]: {
+      link: {
+        icon: 'ccm-cloud-integration-settings',
+        label: getString('sei.goToIntegrations'),
+        info: getString('sei.integrationsInfo'),
+        onClick: () => {
+          history.push(routes.toSEIIntegrations({ accountId, module }))
         }
       }
     }
