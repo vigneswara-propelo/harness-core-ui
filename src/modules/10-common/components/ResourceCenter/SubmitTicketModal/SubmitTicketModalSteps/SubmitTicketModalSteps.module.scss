@@ -10,8 +10,18 @@
   bottom: 0;
   width: 125px;
 }
+
+.aidaResponse {
+  color: #000000;
+  font-size: 13px;
+  line-height: var(--spacing-large);
+}
 .inputWidth {
   width: 600px;
+  margin-bottom: var(--spacing-large);
+}
+.aidaInputWidth {
+  width: 550px;
   margin-bottom: var(--spacing-large);
 }
 
@@ -40,7 +50,7 @@
 }
 
 .suggestionsPanel {
-  padding-left: 20px;
+  padding: 0 20px;
   border: 1px solid var(--grey);
   background-color: var(--white);
   height: 580px;
@@ -53,4 +63,8 @@
   padding: var(--spacing-medium) var(--spacing-small) !important;
   margin-bottom: var(--spacing-large) !important;
   background-color: var(--grey-100) !important;
+}
+
+.aidaBtn {
+  margin-top: 22px !important;
 }

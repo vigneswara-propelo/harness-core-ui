@@ -1,10 +1,13 @@
 import React from 'react'
-import { Layout, Text } from '@harness/uicore'
+import { Icon, Layout, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
+import { getHTMLFromMarkdown } from '@common/utils/MarkdownUtils'
 import { useStrings } from 'framework/strings'
 import css from './SubmitTicketModalSteps.module.scss'
 
 interface SuggestionsPanelProps {
   data: any
+  loading?: boolean
 }
 
 const SuggestionsCard = (suggestionItem: any): JSX.Element => {
@@ -30,6 +33,33 @@ const SuggestionsPanel = (props: SuggestionsPanelProps): JSX.Element => {
         {data.map((result: any) => (
           <SuggestionsCard suggestionItem={result} key={result.uri} />
         ))}
+      </div>
+    </div>
+  )
+}
+
+export const AidaResponsePanel = (props: SuggestionsPanelProps): JSX.Element => {
+  const { data, loading } = props
+  const { getString } = useStrings()
+  return (
+    <div className={css.suggestionsPanel}>
+      <div>
+        {loading ? (
+          <Layout.Horizontal margin={{ top: 'xlarge', bottom: 'xlarge' }}>
+            <Icon name="harness-copilot" size={32} margin={{ right: 'small' }} />
+            <Text font={{ variation: FontVariation.H4 }}>{getString('common.resourceCenter.aida.generating')}</Text>
+          </Layout.Horizontal>
+        ) : (
+          <>
+            <Layout.Horizontal margin={{ top: 'xlarge', bottom: 'xlarge' }}>
+              <Icon name="harness-copilot" size={32} margin={{ right: 'small' }} />
+              <Text font={{ variation: FontVariation.H4 }}>
+                {getString('common.resourceCenter.aida.displayedResults')}
+              </Text>
+            </Layout.Horizontal>
+            <p className={css.aidaResponse} dangerouslySetInnerHTML={{ __html: getHTMLFromMarkdown(data) }} />
+          </>
+        )}
       </div>
     </div>
   )

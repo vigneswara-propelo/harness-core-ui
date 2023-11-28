@@ -1047,6 +1047,7 @@ resourceCenter:
     shareYourIdeas: Share your Ideas
     ticketSubject: Ticket Subject
     ticketDetails: Ticket Details
+    ticketSubjectDescription: Describe your concern or raise a question
     ticketIssue: What is the problem you are facing?
     ticketSuccess: Ticket Created Successfully
     issueType: Issue Type
@@ -1072,6 +1073,10 @@ resourceCenter:
     submit: Give us feedback
   communityLevelUp: Customer Support is available in Team and Enterprise plans.
   communitySlack: Community Slack
+  aida:
+    generating: Generating...
+    tryAidaSupport: Try AIDA™ Support
+    displayedResults: Check out suggestions from Harness AIDA™
 currentlyAvailable: Currently Available
 supportedInFirstGeneration: Currently supported on Harness Continuous Delivery First Generation
 currentlySupportedOn: Currently supported on

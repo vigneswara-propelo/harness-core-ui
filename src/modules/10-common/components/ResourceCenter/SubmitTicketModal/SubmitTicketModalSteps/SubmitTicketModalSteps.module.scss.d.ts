@@ -7,6 +7,9 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly aidaBtn: string
+  readonly aidaInputWidth: string
+  readonly aidaResponse: string
   readonly backBtn: string
   readonly cannyText: string
   readonly fieldWidth: string

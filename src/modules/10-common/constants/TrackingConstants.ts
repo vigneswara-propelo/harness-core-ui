@@ -478,7 +478,10 @@ export enum PipelineExecutionActions {
 export enum SupportTicketActions {
   SubmitTicketModalOpen = 'Opens the support ticket submit modal',
   SubmitTicketModalStepTwo = 'Entered submit ticket modal step two',
-  SubmitZendeskSupportTicket = 'Requested to create a support zendesk ticket'
+  SubmitZendeskSupportTicket = 'Requested to create a support zendesk ticket',
+  SubmitTicketModalStepTwoAfterAIDA = 'Entered submit ticket modal step two after AIDA support',
+  SubmitZendeskSupportTicketAfterAIDA = 'Requested to create a support zendesk ticket after AIDA support',
+  AIDASupportAnswerReceived = 'AIDA support answer received'
 }
 
 export enum NavActions {

@@ -10,8 +10,10 @@ import React from 'react'
 import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, SupportTicketActions } from '@common/constants/TrackingConstants'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { SubmitTicketModalStepOne } from './SubmitTicketModalSteps/SubmitTicketModalStepOne'
 import { SubmitTicketModalStepTwo } from './SubmitTicketModalSteps/SubmitTicketModalStepTwo'
+import { AIDASupportStep } from './SubmitTicketModalSteps/AIDASupportStep'
 import { useCoveoControllers } from './Controllers/useCoveoControllers'
 import css from './SubmitTicketModal.module.scss'
 
@@ -24,6 +26,7 @@ export const SubmitTicketModal = ({ isOpen, close }: SubmitTicketModalProps): JS
   const { resultList, searchBox } = useCoveoControllers()
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
+  const { CDS_AIDA_SUPPORT_DEFLECTION } = useFeatureFlags()
 
   React.useEffect(() => {
     trackEvent(SupportTicketActions.SubmitTicketModalOpen, {
@@ -46,12 +49,16 @@ export const SubmitTicketModal = ({ isOpen, close }: SubmitTicketModalProps): JS
         iconProps={{ size: 37, className: css.icon }}
         title={getString('common.resourceCenter.ticketmenu.submitTicket')}
       >
-        <SubmitTicketModalStepOne
-          name="Ticket Subject"
-          stepName="Ticket Subject"
-          searchBoxController={searchBox}
-          resultListController={resultList}
-        />
+        {CDS_AIDA_SUPPORT_DEFLECTION ? (
+          <AIDASupportStep name="Ticket Subject" stepName="Ticket Subject" />
+        ) : (
+          <SubmitTicketModalStepOne
+            name="Ticket Subject"
+            stepName="Ticket Subject"
+            searchBoxController={searchBox}
+            resultListController={resultList}
+          />
+        )}
         <SubmitTicketModalStepTwo name="Ticket Details" stepName="Ticket Details" onCloseHandler={close} />
       </StepWizard>
     </ModalDialog>

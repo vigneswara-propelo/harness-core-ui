@@ -1032,6 +1032,9 @@ export interface StringsMap {
   'common.request': string
   'common.requestFreeTrial': string
   'common.resolveConflict': string
+  'common.resourceCenter.aida.displayedResults': string
+  'common.resourceCenter.aida.generating': string
+  'common.resourceCenter.aida.tryAidaSupport': string
   'common.resourceCenter.bottomlayout.apiDocs': string
   'common.resourceCenter.bottomlayout.desc': string
   'common.resourceCenter.bottomlayout.docs': string
@@ -1064,6 +1067,7 @@ export interface StringsMap {
   'common.resourceCenter.ticketmenu.ticketDetails': string
   'common.resourceCenter.ticketmenu.ticketIssue': string
   'common.resourceCenter.ticketmenu.ticketSubject': string
+  'common.resourceCenter.ticketmenu.ticketSubjectDescription': string
   'common.resourceCenter.ticketmenu.ticketSuccess': string
   'common.resourceCenter.ticketmenu.tickets': string
   'common.resourceCenter.ticketmenu.ticketsDesc': string

@@ -116,11 +116,17 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
                 subject: val.subject
               }
             })
-      trackEvent(SupportTicketActions.SubmitZendeskSupportTicket, {
-        category: Category.SUPPORT_TICKET_DEFLECTION,
-        ticketDetails: formData
-      })
-
+      if (prevStepData.prevStep === 'AIDA') {
+        trackEvent(SupportTicketActions.SubmitZendeskSupportTicketAfterAIDA, {
+          category: Category.SUPPORT_TICKET_DEFLECTION,
+          ticketDetails: formData
+        })
+      } else {
+        trackEvent(SupportTicketActions.SubmitZendeskSupportTicket, {
+          category: Category.SUPPORT_TICKET_DEFLECTION,
+          ticketDetails: formData
+        })
+      }
       if (val.issueType === IssueType.FEATURE_REQUEST) {
         if (response) {
           showSuccess(
@@ -186,10 +192,17 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
   }, [cannyModulesList?.data?.boards, moduleOptions])
 
   React.useEffect(() => {
-    trackEvent(SupportTicketActions.SubmitTicketModalStepTwo, {
-      category: Category.SUPPORT_TICKET_DEFLECTION,
-      ticketSubject: prevStepData.subject
-    })
+    if (prevStepData.prevStep === 'AIDA') {
+      trackEvent(SupportTicketActions.SubmitTicketModalStepTwoAfterAIDA, {
+        category: Category.SUPPORT_TICKET_DEFLECTION,
+        ticketSubject: prevStepData.subject
+      })
+    } else {
+      trackEvent(SupportTicketActions.SubmitTicketModalStepTwo, {
+        category: Category.SUPPORT_TICKET_DEFLECTION,
+        ticketSubject: prevStepData.subject
+      })
+    }
   }, [])
 
   React.useEffect(() => {
