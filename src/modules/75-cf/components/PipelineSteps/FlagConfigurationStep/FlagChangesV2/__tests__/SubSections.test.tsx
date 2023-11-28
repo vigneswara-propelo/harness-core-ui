@@ -23,11 +23,7 @@ const FakeSubSection: SubSectionComponent = ({ title, onRemove, prefixPath }) =>
   )
 }
 
-jest.mock('../subSection.types', () => ({
-  subSectionNames: {
-    FakeSubSection: 'Fake Subsection Name'
-  }
-}))
+FakeSubSection.stringIdentifier = 'FakeSubsection' as SubSectionComponent['stringIdentifier']
 
 const renderComponent = (props: Partial<SubSectionsProps> = {}): RenderResult =>
   render(
@@ -48,7 +44,7 @@ describe('SubSections', () => {
   test('it should render passed sub sections', async () => {
     renderComponent({ subSections: [FakeSubSection] })
 
-    expect(screen.getByText('Fake Subsection Name')).toBeInTheDocument()
+    expect(screen.getByText('FakeSubsection')).toBeInTheDocument()
   })
 
   test('it should prefix with the appropriate spec path', async () => {

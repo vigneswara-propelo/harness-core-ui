@@ -31,4 +31,6 @@ const DefaultOnRule: SubSectionComponent = props => {
   return <DefaultRule instructionType={CFPipelineInstructionType.SET_DEFAULT_ON_VARIATION} {...props} />
 }
 
+DefaultOnRule.stringIdentifier = 'cf.pipeline.flagConfiguration.setDefaultOnRule'
+
 export default DefaultOnRule

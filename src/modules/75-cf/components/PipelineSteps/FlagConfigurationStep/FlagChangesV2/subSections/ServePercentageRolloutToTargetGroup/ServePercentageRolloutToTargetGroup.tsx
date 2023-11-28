@@ -102,4 +102,6 @@ const ServePercentageRolloutToTargetGroup: SubSectionComponent = ({ prefixPath, 
   )
 }
 
+ServePercentageRolloutToTargetGroup.stringIdentifier = 'cf.shared.servePercentageRolloutToTargetGroup'
+
 export default ServePercentageRolloutToTargetGroup

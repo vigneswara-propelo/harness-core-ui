@@ -108,4 +108,6 @@ const ServeVariationToTargetGroups: SubSectionComponent = ({ prefixPath, ...prop
   )
 }
 
+ServeVariationToTargetGroups.stringIdentifier = 'cf.shared.serveVariationToTargetGroups'
+
 export default ServeVariationToTargetGroups

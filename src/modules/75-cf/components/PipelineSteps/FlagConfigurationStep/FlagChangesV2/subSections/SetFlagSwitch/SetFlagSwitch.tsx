@@ -62,4 +62,6 @@ const SetFlagSwitch: SubSectionComponent = ({ prefixPath, ...props }) => {
   )
 }
 
+SetFlagSwitch.stringIdentifier = 'cf.pipeline.flagConfiguration.setFlagSwitch'
+
 export default SetFlagSwitch

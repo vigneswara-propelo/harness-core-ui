@@ -17,7 +17,7 @@ import {
   FeatureFlagConfigurationInstruction,
   FlagConfigurationStepFormDataValues
 } from '../types'
-import { SubSectionComponent, subSectionNames } from './subSection.types'
+import { SubSectionComponent } from './subSection.types'
 import SubSections from './SubSections'
 import { useFlagChanges } from '../FlagChangesContextProvider'
 import { withPrefix } from './utils/withPrefix'
@@ -155,7 +155,7 @@ const FlagChangesForm: FC<FlagChangesFormProps> = ({ prefixPath, initialInstruct
               {availableSubSections.map(subSection => (
                 <Menu.Item
                   key={subSection.name}
-                  text={getString(subSectionNames[subSection.name])}
+                  text={getString(subSection.stringIdentifier)}
                   onClick={() => onAddSubSection(subSection)}
                 />
               ))}

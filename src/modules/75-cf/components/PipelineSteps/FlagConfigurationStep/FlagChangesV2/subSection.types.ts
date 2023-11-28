@@ -12,13 +12,4 @@ import type { SubSectionProps } from './SubSection'
 export interface SubSectionComponentProps extends Omit<SubSectionProps, 'children'> {
   prefixPath: string
 }
-export type SubSectionComponent = FC<SubSectionComponentProps>
-
-export const subSectionNames: Record<string, StringKeys> = {
-  SetFlagSwitch: 'cf.pipeline.flagConfiguration.setFlagSwitch',
-  DefaultOnRule: 'cf.pipeline.flagConfiguration.setDefaultOnRule',
-  DefaultOffRule: 'cf.pipeline.flagConfiguration.setDefaultOffRule',
-  ServeVariationToTargets: 'cf.shared.serveVariationToTargets',
-  ServeVariationToTargetGroups: 'cf.shared.serveVariationToTargetGroups',
-  ServePercentageRolloutToTargetGroup: 'cf.shared.servePercentageRolloutToTargetGroup'
-}
+export type SubSectionComponent = FC<SubSectionComponentProps> & { stringIdentifier: StringKeys }
