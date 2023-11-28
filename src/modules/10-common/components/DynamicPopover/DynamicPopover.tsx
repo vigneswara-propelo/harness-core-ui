@@ -186,6 +186,7 @@ export function DynamicPopover<T>(props: DynamicPopoverProps<T>): JSX.Element {
       {visible && (
         <span
           ref={setPopperElement}
+          data-testid="dynamic-popover"
           className={cx(css.dynamicPopover, { [css.dark]: darkModeState }, className)}
           style={popperStyle}
           {...attributes.popper}

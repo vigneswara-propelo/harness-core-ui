@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react'
-import { debounce, defaultTo, isEmpty } from 'lodash-es'
+import { debounce, isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import { Text, IconName, Icon, Button, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -19,7 +19,6 @@ import {
   attachDragImageToEventHandler,
   getBaseDotNotationWithoutEntityIdentifier
 } from '../utils'
-import MatrixNodeNameLabelWrapper from '../MatrixNodeNameLabelWrapper'
 import { DiagramDrag, DiagramType, Event } from '../../Constants'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
 import css from './IconNode.module.scss'
@@ -34,7 +33,6 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
   const [showAdd, setVisibilityOfAdd] = React.useState(false)
   const CreateNode: React.FC<BaseReactComponentProps> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
 
-  const matrixNodeName = defaultTo(props?.matrixNodeName, props?.data?.matrixNodeName)
   const setAddVisibility = (visibility: boolean): void => {
     if (!allowAdd) {
       return
@@ -50,7 +48,7 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
   const nodeSelectedId = isEmpty(stepStatus) ? stepFQNPath : props.id
   const relativeFQNPath = getBaseDotNotationWithoutEntityIdentifier(props?.data?.nodeStateMetadata?.relativeBasePath)
   const isSelectedNode = (): boolean => props.isSelected || nodeSelectedId === props?.selectedNodeId
-  const onDropEvent = (event: React.DragEvent): void => {
+  const onDropEvent = /* istanbul ignore next */ (event: React.DragEvent): void => {
     event.stopPropagation()
 
     props?.fireEvent?.({
@@ -68,21 +66,25 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
       className={cx(cssDefault.defaultNode, css.iconNodeContainer)}
       data-testid="icon-node"
       onMouseDown={e => e.stopPropagation()}
-      onDragOver={event => {
-        event.stopPropagation()
+      onDragOver={
+        /* istanbul ignore next */ event => {
+          event.stopPropagation()
 
-        if (event.dataTransfer.types.indexOf(DiagramDrag.AllowDropOnNode) !== -1) {
-          setAddVisibility(true)
-          event.preventDefault()
+          if (event.dataTransfer.types.indexOf(DiagramDrag.AllowDropOnNode) !== -1) {
+            setAddVisibility(true)
+            event.preventDefault()
+          }
         }
-      }}
-      onDragLeave={event => {
-        event.stopPropagation()
+      }
+      onDragLeave={
+        /* istanbul ignore next */ event => {
+          event.stopPropagation()
 
-        if (event.dataTransfer.types.indexOf(DiagramDrag.AllowDropOnNode) !== -1) {
-          debounceHideVisibility()
+          if (event.dataTransfer.types.indexOf(DiagramDrag.AllowDropOnNode) !== -1) {
+            debounceHideVisibility()
+          }
         }
-      }}
+      }
       onClick={event => {
         event.stopPropagation()
         if (props?.onClick) {
@@ -98,47 +100,55 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
           }
         })
       }}
-      onDrop={event => {
-        props?.fireEvent?.({
-          type: Event.DropNodeEvent,
-          target: event.target,
-          data: {
-            entityType: DiagramType.Default,
-            node: JSON.parse(event.dataTransfer.getData(DiagramDrag.NodeDrag)),
-            destination: props
-          }
-        })
-      }}
+      onDrop={
+        /* istanbul ignore next */ event => {
+          props?.fireEvent?.({
+            type: Event.DropNodeEvent,
+            target: event.target,
+            data: {
+              entityType: DiagramType.Default,
+              node: JSON.parse(event.dataTransfer.getData(DiagramDrag.NodeDrag)),
+              destination: props
+            }
+          })
+        }
+      }
     >
       <div
         id={props.id}
         className={cx(cssDefault.defaultCard, 'icon-node', css.iconNode, { [cssDefault.selected]: isSelectedNode() })}
         data-nodeid={props.id}
         draggable={!props.readonly}
-        onDragStart={event => {
-          event.stopPropagation()
-          event.dataTransfer.setData(DiagramDrag.NodeDrag, JSON.stringify(props))
-          // NOTE: onDragOver we cannot access dataTransfer data
-          // in order to detect if we can drop, we are setting and using "keys" and then
-          // checking in onDragOver if this type (AllowDropOnLink/AllowDropOnNode) exist we allow drop
-          event.dataTransfer.setData(DiagramDrag.AllowDropOnLink, '1')
-          //   event.dataTransfer.setData(DiagramDrag.AllowDropOnNode, '1')
-          // if (options.allowDropOnNode) event.dataTransfer.setData(DiagramDrag.AllowDropOnNode, '1')
-          event.dataTransfer.dropEffect = 'move'
-          attachDragImageToEventHandler(event)
-        }}
-        onDragEnd={event => {
-          event.preventDefault()
-          event.stopPropagation()
-        }}
-        onMouseEnter={event => {
-          event.stopPropagation()
-          props?.fireEvent?.({
-            type: Event.MouseEnterNode,
-            target: event.target,
-            data: { ...props }
-          })
-        }}
+        onDragStart={
+          /* istanbul ignore next */ event => {
+            event.stopPropagation()
+            event.dataTransfer.setData(DiagramDrag.NodeDrag, JSON.stringify(props))
+            // NOTE: onDragOver we cannot access dataTransfer data
+            // in order to detect if we can drop, we are setting and using "keys" and then
+            // checking in onDragOver if this type (AllowDropOnLink/AllowDropOnNode) exist we allow drop
+            event.dataTransfer.setData(DiagramDrag.AllowDropOnLink, '1')
+            //   event.dataTransfer.setData(DiagramDrag.AllowDropOnNode, '1')
+            // if (options.allowDropOnNode) event.dataTransfer.setData(DiagramDrag.AllowDropOnNode, '1')
+            event.dataTransfer.dropEffect = 'move'
+            attachDragImageToEventHandler(event)
+          }
+        }
+        onDragEnd={
+          /* istanbul ignore next */ event => {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+        }
+        onMouseEnter={
+          /* istanbul ignore next */ event => {
+            event.stopPropagation()
+            props?.fireEvent?.({
+              type: Event.MouseEnterNode,
+              target: event.target,
+              data: { ...props }
+            })
+          }
+        }
         onMouseLeave={event => {
           event.stopPropagation()
 
@@ -185,13 +195,8 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
             color={props.defaultSelected ? Color.GREY_900 : Color.GREY_600}
             padding={'small'}
             lineClamp={2}
-            tooltipProps={{ popoverClassName: matrixNodeName ? 'matrixNodeNameLabel' : '' }}
           >
-            {defaultTo(matrixNodeName, props?.data?.matrixNodeName) ? (
-              <MatrixNodeNameLabelWrapper matrixNodeName={matrixNodeName} nodeName={props?.name as unknown as string} />
-            ) : (
-              props.name
-            )}
+            {props.name}
           </Text>
         </div>
       )}

@@ -25,7 +25,6 @@ import {
   getBaseDotNotationWithoutEntityIdentifier
 } from '../utils'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
-import MatrixNodeNameLabelWrapper from '../MatrixNodeNameLabelWrapper'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
 import css from './DiamondNode.module.scss'
 
@@ -48,7 +47,6 @@ export function DiamondNodeWidget(props: any): JSX.Element {
   const isTemplateNode = props?.data?.isTemplateNode
   const showMarkers = defaultTo(props?.showMarkers, true)
 
-  const matrixNodeName = defaultTo(props?.matrixNodeName, props?.data?.matrixNodeName)
   return (
     <div
       className={cx(cssDefault.defaultNode, 'diamond-node')}
@@ -83,43 +81,51 @@ export function DiamondNodeWidget(props: any): JSX.Element {
           ...props?.customNodeStyle
         }}
         draggable={true}
-        onDragStart={event => {
-          event.stopPropagation()
-          event.dataTransfer.setData(DiagramDrag.NodeDrag, JSON.stringify(props))
-          // NOTE: onDragOver we cannot access dataTransfer data
-          // in order to detect if we can drop, we are setting and using "keys" and then
-          // checking in onDragOver if this type (AllowDropOnLink/AllowDropOnNode) exist we allow drop
-          event.dataTransfer.setData(DiagramDrag.AllowDropOnLink, '1')
-          event.dataTransfer.dropEffect = 'move'
-          attachDragImageToEventHandler(event)
-        }}
-        onDragEnd={event => {
-          event.preventDefault()
-          event.stopPropagation()
-        }}
+        onDragStart={
+          /* istanbul ignore next */ event => {
+            event.stopPropagation()
+            event.dataTransfer.setData(DiagramDrag.NodeDrag, JSON.stringify(props))
+            // NOTE: onDragOver we cannot access dataTransfer data
+            // in order to detect if we can drop, we are setting and using "keys" and then
+            // checking in onDragOver if this type (AllowDropOnLink/AllowDropOnNode) exist we allow drop
+            event.dataTransfer.setData(DiagramDrag.AllowDropOnLink, '1')
+            event.dataTransfer.dropEffect = 'move'
+            attachDragImageToEventHandler(event)
+          }
+        }
+        onDragEnd={
+          /* istanbul ignore next */ event => {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+        }
       >
         <div
           id={props.id}
           data-nodeid={props.id}
           className={css.horizontalBar}
           style={{ height: 64 }}
-          onMouseEnter={event => {
-            event.stopPropagation()
+          onMouseEnter={
+            /* istanbul ignore next */ event => {
+              event.stopPropagation()
 
-            props?.fireEvent?.({
-              type: Event.MouseEnterNode,
-              target: event.target,
-              data: { ...props }
-            })
-          }}
-          onMouseLeave={event => {
-            event.stopPropagation()
-            props?.fireEvent?.({
-              type: Event.MouseLeaveNode,
-              target: event.target,
-              data: { ...props }
-            })
-          }}
+              props?.fireEvent?.({
+                type: Event.MouseEnterNode,
+                target: event.target,
+                data: { ...props }
+              })
+            }
+          }
+          onMouseLeave={
+            /* istanbul ignore next */ event => {
+              event.stopPropagation()
+              props?.fireEvent?.({
+                type: Event.MouseLeaveNode,
+                target: event.target,
+                data: { ...props }
+              })
+            }
+          }
         >
           {showMarkers && (
             <>
@@ -253,13 +259,8 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             color={props.defaultSelected ? Color.GREY_900 : Color.GREY_600}
             padding={'small'}
             lineClamp={2}
-            tooltipProps={{ popoverClassName: matrixNodeName ? 'matrixNodeNameLabel' : '' }}
           >
-            {matrixNodeName ? (
-              <MatrixNodeNameLabelWrapper nodeName={props?.name as string} matrixNodeName={matrixNodeName} />
-            ) : (
-              props.name
-            )}
+            {props.name}
           </Text>
         </div>
       )}

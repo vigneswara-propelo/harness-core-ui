@@ -12,6 +12,7 @@ declare const styles: {
   readonly groupIcon: string
   readonly icon: string
   readonly item: string
+  readonly name: string
   readonly nameWrapper: string
   readonly parallelIcon: string
   readonly retryMenu: string

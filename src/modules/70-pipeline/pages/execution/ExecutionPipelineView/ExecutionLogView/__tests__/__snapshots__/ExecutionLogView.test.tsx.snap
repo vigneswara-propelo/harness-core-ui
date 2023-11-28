@@ -235,8 +235,7 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
                     </svg>
                   </span>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-semi-bold"
-                    style="--text-line-clamp: 1;"
+                    class="StyledProps--font StyledProps--main entityName StyledProps--font-weight-semi-bold"
                   >
                     Google1
                   </p>
@@ -294,8 +293,7 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
                         </svg>
                       </span>
                       <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main name"
-                        style="--text-line-clamp: 1;"
+                        class="StyledProps--font StyledProps--main name entityName"
                       >
                         Service
                       </p>
@@ -335,8 +333,7 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
                         </svg>
                       </span>
                       <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main name"
-                        style="--text-line-clamp: 1;"
+                        class="StyledProps--font StyledProps--main name entityName"
                       >
                         Infrastructure
                       </p>
@@ -378,8 +375,7 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
                         </svg>
                       </span>
                       <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main name"
-                        style="--text-line-clamp: 1;"
+                        class="StyledProps--font StyledProps--main name entityName"
                       >
                         Rollout Deployment
                       </p>
@@ -415,8 +411,7 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
                         </svg>
                       </span>
                       <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main name"
-                        style="--text-line-clamp: 1;"
+                        class="StyledProps--font StyledProps--main name entityName"
                       >
                         RolloutSecond
                       </p>
@@ -474,8 +469,7 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
                     </svg>
                   </span>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-semi-bold"
-                    style="--text-line-clamp: 1;"
+                    class="StyledProps--font StyledProps--main entityName StyledProps--font-weight-semi-bold"
                   >
                     Google2
                   </p>
@@ -531,8 +525,7 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
                     </svg>
                   </span>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-semi-bold"
-                    style="--text-line-clamp: 1;"
+                    class="StyledProps--font StyledProps--main entityName StyledProps--font-weight-semi-bold"
                   />
                 </div>
               </div>
@@ -586,8 +579,7 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
                     </svg>
                   </span>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-semi-bold"
-                    style="--text-line-clamp: 1;"
+                    class="StyledProps--font StyledProps--main entityName StyledProps--font-weight-semi-bold"
                   />
                 </div>
               </div>

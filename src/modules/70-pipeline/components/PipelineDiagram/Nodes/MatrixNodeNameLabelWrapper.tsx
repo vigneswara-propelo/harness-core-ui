@@ -9,13 +9,7 @@ import React from 'react'
 import { transformMatrixLabels } from './utils'
 import css from './MatrixNodeLabelWrapper.module.scss'
 
-function MatrixNodeNameLabelWrapper({
-  nodeName = '',
-  matrixNodeName = ''
-}: {
-  nodeName: string
-  matrixNodeName: string
-}): JSX.Element {
+function MatrixNodeNameLabelWrapper({ matrixNodeName = '' }): JSX.Element {
   return (
     <div className={css.matrixLabelWrapper}>
       {Object.entries(matrixNodeName).map(([key, value]) => {
@@ -43,7 +37,6 @@ function MatrixNodeNameLabelWrapper({
           </React.Fragment>
         )
       })}
-      <b>{nodeName}</b>
     </div>
   )
 }

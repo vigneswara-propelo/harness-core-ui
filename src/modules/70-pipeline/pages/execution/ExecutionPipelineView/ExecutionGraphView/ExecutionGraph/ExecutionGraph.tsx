@@ -44,6 +44,7 @@ import { MatrixNode } from '@pipeline/components/PipelineDiagram/Nodes/MatrixNod
 import type { ExecutionGraph as IExecutionGraph } from 'services/pipeline-ng'
 import { NodeMetadataProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeMetadataContext'
 import CDInfo from './components/CD/CDInfo/CDInfo'
+import { barrierSupportedStageTypes } from '../../utils'
 import css from './ExecutionGraph.module.scss'
 
 const diagram = new DiagramFactory('graph')
@@ -56,8 +57,6 @@ diagram.registerNode([DiagramNodeType.MatrixNode, DiagramNodeType.LoopNode, Diag
 diagram.registerNode(['Approval', 'JiraApproval', 'HarnessApproval', 'default-diamond'], DiamondNodeWidget)
 
 export const CDPipelineStudioNew = diagram.render()
-const barrierSupportedStageTypes = [StageType.DEPLOY, StageType.APPROVAL]
-
 export interface ExecutionGraphProps {
   onSelectedStage(stage: string, parentStage?: string, stageExecId?: string): void
 }

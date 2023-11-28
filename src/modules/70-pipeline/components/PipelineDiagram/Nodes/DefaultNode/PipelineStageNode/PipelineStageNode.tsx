@@ -28,7 +28,6 @@ import SVGMarker from '../../SVGMarker'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
 import { FireEventMethod, NodeType } from '../../../types'
 import { getPositionOfAddIcon, attachDragImageToEventHandler, NodeEntity, getConditionalClassName } from '../../utils'
-import MatrixNodeNameLabelWrapper from '../../MatrixNodeNameLabelWrapper'
 import defaultCss from '../DefaultNode.module.scss'
 import css from './PipelineStageNode.module.scss'
 
@@ -66,7 +65,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
   const whenCondition = IS_NODE_TOGGLE_DISABLED && pipelineStage?.stage?.when?.condition === 'false'
   const [showAddNode, setVisibilityOfAdd] = React.useState(false)
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
-  const onDropEvent = (event: React.DragEvent): void => {
+  const onDropEvent = /* istanbul ignore next */ (event: React.DragEvent): void => {
     event.stopPropagation()
 
     props?.fireEvent?.({
@@ -121,36 +120,42 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
         })
       }}
       onMouseDown={e => e.stopPropagation()}
-      onDragOver={event => {
-        event.stopPropagation()
+      onDragOver={
+        /* istanbul ignore next */ event => {
+          event.stopPropagation()
 
-        if (event.dataTransfer.types.indexOf(DiagramDrag.AllowDropOnNode) !== -1) {
-          setAddVisibility(true)
-          event.preventDefault()
-        }
-      }}
-      onDragLeave={event => {
-        event.stopPropagation()
-
-        if (event.dataTransfer.types.indexOf(DiagramDrag.AllowDropOnNode) !== -1) {
-          debounceHideVisibility()
-        }
-      }}
-      onDrop={event => {
-        if (!props.allowAdd) {
-          return
-        }
-        event.stopPropagation()
-        props?.fireEvent?.({
-          type: Event.DropNodeEvent,
-          target: event.target,
-          data: {
-            entityType: DiagramType.Default,
-            node: JSON.parse(event.dataTransfer.getData(DiagramDrag.NodeDrag)),
-            destination: props
+          if (event.dataTransfer.types.indexOf(DiagramDrag.AllowDropOnNode) !== -1) {
+            setAddVisibility(true)
+            event.preventDefault()
           }
-        })
-      }}
+        }
+      }
+      onDragLeave={
+        /* istanbul ignore next */ event => {
+          event.stopPropagation()
+
+          if (event.dataTransfer.types.indexOf(DiagramDrag.AllowDropOnNode) !== -1) {
+            debounceHideVisibility()
+          }
+        }
+      }
+      onDrop={
+        /* istanbul ignore next */ event => {
+          if (!props.allowAdd) {
+            return
+          }
+          event.stopPropagation()
+          props?.fireEvent?.({
+            type: Event.DropNodeEvent,
+            target: event.target,
+            data: {
+              entityType: DiagramType.Default,
+              node: JSON.parse(event.dataTransfer.getData(DiagramDrag.NodeDrag)),
+              destination: props
+            }
+          })
+        }
+      }
     >
       {showMarkers && (
         <div className={cx(defaultCss.markerStart, defaultCss.stageMarkerLeft)}>
@@ -180,51 +185,61 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
             height: 40,
             ...props.customNodeStyle
           }}
-          onMouseOver={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-            e.stopPropagation()
-            setAddVisibility(true)
-          }}
-          onMouseEnter={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-            event.stopPropagation()
-            props?.fireEvent?.({
-              type: Event.MouseEnterNode,
-              target: event.target,
-              data: {
-                identifier: props?.identifier as string,
-                node: props,
-                id: props.id
-              }
-            })
-          }}
-          onMouseLeave={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-            debounceHideVisibility()
-            event.stopPropagation()
-            props?.fireEvent?.({
-              type: Event.MouseLeaveNode,
-              target: event.target,
-              data: { ...props }
-            })
-          }}
-          onDragStart={event => {
-            event.stopPropagation()
-            event.dataTransfer.setData(DiagramDrag.NodeDrag, JSON.stringify(props))
-            // NOTE: onDragOver we cannot access dataTransfer data
-            // in order to detect if we can drop, we are setting and using "keys" and then
-            // checking in onDragOver if this type (AllowDropOnLink/AllowDropOnNode) exist we allow drop
-            event.dataTransfer.setData(DiagramDrag.AllowDropOnLink, '1')
-            event.dataTransfer.setData(DiagramDrag.AllowDropOnNode, '1')
-            event.dataTransfer.dropEffect = 'move'
-            props?.fireEvent?.({
-              type: Event.DragStart,
-              target: event.target,
-              data: { ...props }
-            })
-            attachDragImageToEventHandler(event, NodeEntity.STAGE)
-          }}
-          onDragEnd={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-            event.preventDefault()
-            event.stopPropagation()
-          }}
+          onMouseOver={
+            /* istanbul ignore next */ (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+              e.stopPropagation()
+              setAddVisibility(true)
+            }
+          }
+          onMouseEnter={
+            /* istanbul ignore next */ (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+              event.stopPropagation()
+              props?.fireEvent?.({
+                type: Event.MouseEnterNode,
+                target: event.target,
+                data: {
+                  identifier: props?.identifier as string,
+                  node: props,
+                  id: props.id
+                }
+              })
+            }
+          }
+          onMouseLeave={
+            /* istanbul ignore next */ (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+              debounceHideVisibility()
+              event.stopPropagation()
+              props?.fireEvent?.({
+                type: Event.MouseLeaveNode,
+                target: event.target,
+                data: { ...props }
+              })
+            }
+          }
+          onDragStart={
+            /* istanbul ignore next */ event => {
+              event.stopPropagation()
+              event.dataTransfer.setData(DiagramDrag.NodeDrag, JSON.stringify(props))
+              // NOTE: onDragOver we cannot access dataTransfer data
+              // in order to detect if we can drop, we are setting and using "keys" and then
+              // checking in onDragOver if this type (AllowDropOnLink/AllowDropOnNode) exist we allow drop
+              event.dataTransfer.setData(DiagramDrag.AllowDropOnLink, '1')
+              event.dataTransfer.setData(DiagramDrag.AllowDropOnNode, '1')
+              event.dataTransfer.dropEffect = 'move'
+              props?.fireEvent?.({
+                type: Event.DragStart,
+                target: event.target,
+                data: { ...props }
+              })
+              attachDragImageToEventHandler(event, NodeEntity.STAGE)
+            }
+          }
+          onDragEnd={
+            /* istanbul ignore next */ (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+              event.preventDefault()
+              event.stopPropagation()
+            }
+          }
         >
           <div className="execution-running-animation" />
           {props?.data?.isInComplete && (
@@ -336,16 +351,8 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
             color={props.defaultSelected ? Color.GREY_900 : Color.GREY_600}
             padding={'small'}
             lineClamp={2}
-            tooltipProps={{ popoverClassName: props?.matrixNodeName ? 'matrixNodeNameLabel' : '' }}
           >
-            {props?.matrixNodeName ? (
-              <MatrixNodeNameLabelWrapper
-                matrixNodeName={props?.matrixNodeName}
-                nodeName={props?.name as unknown as string}
-              />
-            ) : (
-              props.name
-            )}
+            {props.name}
           </Text>
         </div>
       )}

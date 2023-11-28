@@ -13,7 +13,6 @@ import { StepsTree } from '../StepsTree'
 
 import data from './data.json'
 import retryData from './retryData.json'
-import { NodeDisplayName } from '../utils'
 describe('<StepsTree /> tests', () => {
   jest.mock('services/pipeline-ng', () => ({
     useGetExecutionSubGraphForNodeExecution: jest.fn()
@@ -90,29 +89,5 @@ describe('<StepsTree /> tests', () => {
     fireEvent.click(step[0])
 
     expect(onStepSelect).toHaveBeenCalledWith('step_1', 'retrystep_1')
-  })
-
-  test('NodeDisplayName with matrixStrategy', () => {
-    const { getByText } = render(
-      <TestWrapper>
-        <NodeDisplayName
-          name="Stage1_chrome_500Mi"
-          matrixNodeName={{ memoryLimit: '500Mi', browser: 'chrome' }}
-          isStageNode
-        />
-      </TestWrapper>
-    )
-    expect(getByText('memoryLimit')).toBeInTheDocument()
-    expect(getByText('browser')).toBeInTheDocument()
-    expect(getByText('Stage1_chrome_500Mi')).toBeInTheDocument()
-  })
-
-  test('NodeDisplayName without matrixStrategy', () => {
-    const { getByText } = render(
-      <TestWrapper>
-        <NodeDisplayName name="Stage1_chrome_500Mi" />
-      </TestWrapper>
-    )
-    expect(getByText('Stage1_chrome_500Mi')).toBeInTheDocument()
   })
 })

@@ -90,6 +90,16 @@ $height: 40px;
       }
     }
 
+    .name {
+      display: inline-block !important;
+      white-space: nowrap !important;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: currentColor !important;
+      width: 100%;
+      font-weight: 500;
+    }
+
     .icon {
       color: var(--icon-color, var(--grey-600));
     }

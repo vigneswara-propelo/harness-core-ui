@@ -14,10 +14,11 @@ import { Menu } from '@blueprintjs/core'
 import type { ExecutionNode } from 'services/pipeline-ng'
 import { String as Template, useStrings } from 'framework/strings'
 import type {
+  ExecutionPipelineGroupInfo,
   ExecutionPipelineItem,
   ExecutionPipelineNode
 } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
-import { Duration } from '@common/components'
+import { Duration, DynamicPopover } from '@common/components'
 import {
   isExecutionRunning,
   isExecutionSuccess,
@@ -29,10 +30,17 @@ import {
 } from '@pipeline/utils/statusHelpers'
 import { getInterruptHistoriesFromType, getStepsTreeStatus, Interrupt } from '@pipeline/utils/executionUtils'
 import { useGetRetryStepGroupData } from '@pipeline/components/PipelineDiagram/Nodes/StepGroupNode/useGetRetryStepGroupData'
+import { DynamicPopoverHandlerBinding } from '@modules/10-common/components/DynamicPopover/DynamicPopover'
+import HoverCard from '@modules/70-pipeline/components/HoverCard/HoverCard'
+import ConditionalExecutionTooltipWrapper from '@modules/70-pipeline/components/ConditionalExecutionToolTip/ConditionalExecutionTooltipWrapper'
+import { StepType } from '@modules/70-pipeline/components/PipelineSteps/PipelineStepInterface'
+import { StepMode as Modes } from '@pipeline/utils/stepUtils'
+import { getRetryInterrupts, getStepDisplayName } from './utils'
 import { StatusIcon } from './StatusIcon'
-import { NodeDisplayName, getRetryInterrupts, getStepDisplayName } from './utils'
-import css from './StepsTree.module.scss'
+import VerifyStepTooltip from '../../ExecutionGraphView/ExecutionStageDetails/components/VerifyStepTooltip/VerifyStepTooltip'
+import { FailureInfo } from '../../ExecutionGraphView/ExecutionStageDetails/components/VerifyStepTooltip/VerifyStepTooltip.types'
 import stageCss from '../StageSelection/StageSelection.module.scss'
+import css from './StepsTree.module.scss'
 
 export interface StepsTreeProps {
   nodes: Array<ExecutionPipelineNode<ExecutionNode>>
@@ -43,6 +51,9 @@ export interface StepsTreeProps {
   allNodeMap: Record<string, ExecutionNode>
   openExecutionTimeInputsForStep(node?: ExecutionNode): void
 }
+
+type StepOrStepGroupPopoverData = ExecutionPipelineGroupInfo<ExecutionNode> | ExecutionPipelineItem<ExecutionNode>
+
 interface RetryStepGroupDropdownProps {
   stepGroupData: ExecutionPipelineNode<ExecutionNode>
   commonProps: Omit<StepsTreeProps, 'nodes' | 'isRoot'>
@@ -143,6 +154,9 @@ export function RetryStepGroupDropdown(props: RetryStepGroupDropdownProps): JSX.
 export function StepsTree(props: StepsTreeProps): React.ReactElement {
   const { nodes, selectedStepId, onStepSelect, isRoot, retryStep, allNodeMap, openExecutionTimeInputsForStep } = props
   const { getString } = useStrings()
+  const [dynamicPopoverHandler, setDynamicPopoverHandler] = React.useState<
+    DynamicPopoverHandlerBinding<{ data: StepOrStepGroupPopoverData }> | undefined
+  >()
   const commonProps: Omit<StepsTreeProps, 'nodes' | 'isRoot'> = {
     selectedStepId,
     onStepSelect,
@@ -159,181 +173,232 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
     onStepSelect(identifier, retryId)
   }
 
+  const renderPopover = ({ data: stepInfo }: { data: StepOrStepGroupPopoverData }): JSX.Element => {
+    return (
+      <HoverCard data={stepInfo}>
+        {stepInfo?.when && <ConditionalExecutionTooltipWrapper data={stepInfo.when} mode={Modes.STEP} />}
+        {stepInfo?.data?.stepType === StepType.Verify && stepInfo?.data?.status === 'Skipped' && (
+          <VerifyStepTooltip failureInfo={stepInfo?.data?.failureInfo as FailureInfo} />
+        )}
+      </HoverCard>
+    )
+  }
+
+  const onMouseLeave = (): void => {
+    dynamicPopoverHandler?.hide()
+  }
+
+  const onMouseEnter = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, data?: StepOrStepGroupPopoverData): void => {
+    dynamicPopoverHandler?.show(
+      e.target as Element,
+      {
+        data: data as StepOrStepGroupPopoverData
+      },
+      { useArrows: true, darkMode: false, fixedPosition: false, placement: 'right' }
+    )
+  }
+
   return (
-    <ul className={css.root}>
-      {nodes.map((step, i) => {
-        if (step.item) {
-          const status = getStepsTreeStatus({ step, allNodeMap }) || step.item.status
-          const statusLower = status.toLowerCase()
-          const retryInterrupts = getRetryInterrupts(step)
+    <>
+      <ul className={css.root}>
+        {nodes.map((step, i) => {
+          if (step.item) {
+            const status = getStepsTreeStatus({ step, allNodeMap }) || step.item.status
+            const statusLower = status.toLowerCase()
+            const retryInterrupts = getRetryInterrupts(step)
 
-          if (retryInterrupts.length > 0) {
-            const retryNodes: Array<ExecutionPipelineNode<ExecutionNode>> = getInterruptHistoriesFromType(
-              step.item.data?.interruptHistories,
-              Interrupt.RETRY
-            ).map((node, k): { item: ExecutionPipelineItem<ExecutionNode> } => ({
-              item: {
-                ...(step.item as ExecutionPipelineItem<ExecutionNode>),
-                name: getString('pipeline.execution.retryStepCount', { num: k + 1 }),
-                retryId: defaultTo(node.interruptConfig.retryInterruptConfig?.retryId, ''),
-                status: ExecutionStatusEnum.Failed,
-                // override data in order to stop infinite loop
-                data: defaultTo(
-                  omit(
-                    get(allNodeMap, defaultTo(node.interruptConfig.retryInterruptConfig?.retryId, '')),
-                    'interruptHistories'
-                  ),
-                  {}
-                )
-              }
-            }))
+            if (retryInterrupts.length > 0) {
+              const retryNodes: Array<ExecutionPipelineNode<ExecutionNode>> = getInterruptHistoriesFromType(
+                step.item.data?.interruptHistories,
+                Interrupt.RETRY
+              ).map((node, k): { item: ExecutionPipelineItem<ExecutionNode> } => ({
+                item: {
+                  ...(step.item as ExecutionPipelineItem<ExecutionNode>),
+                  name: getString('pipeline.execution.retryStepCount', { num: k + 1 }),
+                  retryId: defaultTo(node.interruptConfig.retryInterruptConfig?.retryId, ''),
+                  status: ExecutionStatusEnum.Failed,
+                  // override data in order to stop infinite loop
+                  data: defaultTo(
+                    omit(
+                      get(allNodeMap, defaultTo(node.interruptConfig.retryInterruptConfig?.retryId, '')),
+                      'interruptHistories'
+                    ),
+                    {}
+                  )
+                }
+              }))
 
-            const num = retryNodes.length + 1
+              const num = retryNodes.length + 1
 
-            retryNodes.push({
-              item: {
-                ...(step.item as ExecutionPipelineItem<ExecutionNode>),
-                name: getString('pipeline.execution.retryStepCount', { num }),
-                data: omit(step.item.data, 'interruptHistories') // override data in order to stop infinite loop
-              }
-            })
+              retryNodes.push({
+                item: {
+                  ...(step.item as ExecutionPipelineItem<ExecutionNode>),
+                  name: getString('pipeline.execution.retryStepCount', { num }),
+                  data: omit(step.item.data, 'interruptHistories') // override data in order to stop infinite loop
+                }
+              })
+              const name = getStepDisplayName(step.item)
+              return (
+                <li key={step.item.identifier} className={css.item} data-type="retry-item">
+                  <div
+                    className={css.step}
+                    data-status={statusLower}
+                    onMouseEnter={e => {
+                      onMouseEnter(e, step.item)
+                    }}
+                    onMouseLeave={onMouseLeave}
+                  >
+                    <StatusIcon className={css.icon} status={status as ExecutionStatus} />
+                    <Text className={cx(css.name, stageCss.entityName)}>{name}</Text>
+                  </div>
+                  <StepsTree nodes={retryNodes} {...commonProps} />
+                </li>
+              )
+            }
+
+            const shouldShowExecutionInputs =
+              !!step.item.data?.executionInputConfigured && isExecutionWaitingForInput(step.item.status)
+            const key = defaultTo(step.item.retryId, step.item.identifier)
             const name = getStepDisplayName(step.item)
-            const matrixNodeName = step.item?.data?.strategyMetadata?.matrixmetadata?.matrixvalues
             return (
-              <li key={step.item.identifier} className={css.item} data-type="retry-item">
-                <div className={css.step} data-status={statusLower}>
+              <li
+                className={cx(css.item, {
+                  [css.active]: step.item?.retryId === retryStep && selectedStepId === step.item.identifier
+                })}
+                key={key}
+                data-type="item"
+              >
+                <div
+                  className={css.step}
+                  data-status={statusLower}
+                  onClick={() =>
+                    handleStepSelect(step.item?.identifier as string, step.item?.status, step.item?.retryId)
+                  }
+                  onMouseEnter={e => {
+                    onMouseEnter(e, step.item)
+                  }}
+                  onMouseLeave={onMouseLeave}
+                >
                   <StatusIcon className={css.icon} status={status as ExecutionStatus} />
-                  <NodeDisplayName name={name} matrixNodeName={matrixNodeName} />
+                  <Text className={cx(css.name, stageCss.entityName)}>{name}</Text>
+                  {shouldShowExecutionInputs ? (
+                    <button
+                      className={stageCss.inputWaiting}
+                      onClick={() => openExecutionTimeInputsForStep(step.item?.data)}
+                    >
+                      <Icon name="runtime-input" size={12} />
+                    </button>
+                  ) : (
+                    <Duration
+                      className={css.duration}
+                      startTime={step.item.data?.startTs}
+                      endTime={step.item.data?.endTs}
+                      durationText={' '}
+                      icon={null}
+                    />
+                  )}
                 </div>
-                <StepsTree nodes={retryNodes} {...commonProps} />
               </li>
             )
           }
 
-          const shouldShowExecutionInputs =
-            !!step.item.data?.executionInputConfigured && isExecutionWaitingForInput(step.item.status)
-          const key = defaultTo(step.item.retryId, step.item.identifier)
-          const name = getStepDisplayName(step.item)
-          const matrixNodeName = step.item?.data?.strategyMetadata?.matrixmetadata?.matrixvalues
-          return (
-            <li
-              className={cx(css.item, {
-                [css.active]: step.item?.retryId === retryStep && selectedStepId === step.item.identifier
-              })}
-              key={key}
-              data-type="item"
-            >
-              <div
-                className={css.step}
-                data-status={statusLower}
-                onClick={() => handleStepSelect(step.item?.identifier as string, step.item?.status, step.item?.retryId)}
-              >
-                <StatusIcon className={css.icon} status={status as ExecutionStatus} />
-                <NodeDisplayName name={name} matrixNodeName={matrixNodeName} />
-                {shouldShowExecutionInputs ? (
-                  <button
-                    className={stageCss.inputWaiting}
-                    onClick={() => openExecutionTimeInputsForStep(step.item?.data)}
-                  >
-                    <Icon name="runtime-input" size={12} />
-                  </button>
-                ) : (
+          if (step.group) {
+            const status = getStepsTreeStatus({ step, allNodeMap }) || step.group.status
+            const statusLower = status.toLowerCase()
+            const name = getStepDisplayName(step.group)
+            return (
+              <li className={css.item} key={step.group.identifier} data-type="group">
+                <div
+                  className={css.step}
+                  data-status={statusLower}
+                  onMouseEnter={e => {
+                    onMouseEnter(e, step.group)
+                  }}
+                  onMouseLeave={onMouseLeave}
+                >
+                  <StatusIcon className={css.icon} status={status as ExecutionStatus} />
+                  <div className={css.nameWrapper}>
+                    {isRoot ? null : <div className={css.groupIcon} />}
+                    {name ? (
+                      <Text className={cx(css.name, stageCss.entityName)}>{name}</Text>
+                    ) : (
+                      <Template className={css.name} stringID="stepGroup" />
+                    )}
+                  </div>
+
                   <Duration
                     className={css.duration}
-                    startTime={step.item.data?.startTs}
-                    endTime={step.item.data?.endTs}
+                    startTime={step.group.data?.startTs}
+                    endTime={step.group.data?.endTs}
                     durationText={' '}
                     icon={null}
                   />
-                )}
-              </div>
-            </li>
-          )
-        }
-
-        if (step.group) {
-          const status = getStepsTreeStatus({ step, allNodeMap }) || step.group.status
-          const statusLower = status.toLowerCase()
-          const name = getStepDisplayName(step.group)
-          const matrixNodeName = step.group?.data?.strategyMetadata?.matrixmetadata?.matrixvalues
-          return (
-            <li className={css.item} key={step.group.identifier} data-type="group">
-              <div className={css.step} data-status={statusLower}>
-                <StatusIcon className={css.icon} status={status as ExecutionStatus} />
-                <div className={css.nameWrapper}>
-                  {isRoot ? null : <div className={css.groupIcon} />}
-                  {name ? (
-                    <NodeDisplayName name={name} matrixNodeName={matrixNodeName} />
-                  ) : (
-                    <Template className={stageCss.name} stringID="stepGroup" />
-                  )}
                 </div>
-
-                <Duration
-                  className={css.duration}
-                  startTime={step.group.data?.startTs}
-                  endTime={step.group.data?.endTs}
-                  durationText={' '}
-                  icon={null}
-                />
-              </div>
-              <RetryStepGroupDropdown stepGroupData={step} commonProps={commonProps} />
-            </li>
-          )
-        }
-
-        /* istanbul ignore else */
-        if (step.parallel) {
-          // here assumption is that parallel steps cannot have nested parallel steps
-          const isRunning =
-            step.parallel.some(pStep => isExecutionRunning(defaultTo(pStep.item?.status, pStep.group?.status))) ||
-            step.parallel.some(pStep =>
-              isExecutionRunning(
-                getStepsTreeStatus({
-                  step: pStep,
-                  allNodeMap
-                }) as ExecutionStatus
-              )
+                <RetryStepGroupDropdown stepGroupData={step} commonProps={commonProps} />
+              </li>
             )
-          const isSuccess = step.parallel.every(pStep =>
-            isExecutionSuccess(defaultTo(pStep.item?.status, pStep.group?.status))
-          )
-
-          let status = ''
-
-          if (isRunning) {
-            status = ExecutionStatusEnum.Running
-          } else if (isSuccess) {
-            status = ExecutionStatusEnum.Success
-          } else {
-            // find first non success state
-            const nonSuccessStep = step.parallel.find(
-              pStep => !isExecutionSuccess(defaultTo(pStep.item?.status, pStep.group?.status))
-            )
-
-            /* istanbul ignore else */
-            if (nonSuccessStep) {
-              status = defaultTo(defaultTo(nonSuccessStep.item?.status, nonSuccessStep.group?.status), '')
-            }
           }
 
-          return (
-            <li className={css.item} key={i} data-type="parallel">
-              <div className={css.step} data-status={status.toLowerCase()}>
-                <StatusIcon className={css.icon} status={status as ExecutionStatus} />
-                <div className={css.nameWrapper}>
-                  {isRoot ? null : <div className={css.parallelIcon} />}
-                  <Template className={stageCss.name} stringID="parallelSteps" />
-                </div>
-              </div>
-              <StepsTree nodes={step.parallel} {...commonProps} />
-            </li>
-          )
-        }
+          /* istanbul ignore else */
+          if (step.parallel) {
+            // here assumption is that parallel steps cannot have nested parallel steps
+            const isRunning =
+              step.parallel.some(pStep => isExecutionRunning(defaultTo(pStep.item?.status, pStep.group?.status))) ||
+              step.parallel.some(pStep =>
+                isExecutionRunning(
+                  getStepsTreeStatus({
+                    step: pStep,
+                    allNodeMap
+                  }) as ExecutionStatus
+                )
+              )
+            const isSuccess = step.parallel.every(pStep =>
+              isExecutionSuccess(defaultTo(pStep.item?.status, pStep.group?.status))
+            )
 
-        /* istanbul ignore next */
-        return null
-      })}
-    </ul>
+            let status = ''
+
+            if (isRunning) {
+              status = ExecutionStatusEnum.Running
+            } else if (isSuccess) {
+              status = ExecutionStatusEnum.Success
+            } else {
+              // find first non success state
+              const nonSuccessStep = step.parallel.find(
+                pStep => !isExecutionSuccess(defaultTo(pStep.item?.status, pStep.group?.status))
+              )
+
+              /* istanbul ignore else */
+              if (nonSuccessStep) {
+                status = defaultTo(defaultTo(nonSuccessStep.item?.status, nonSuccessStep.group?.status), '')
+              }
+            }
+
+            return (
+              <li className={css.item} key={i} data-type="parallel">
+                <div className={css.step} data-status={status.toLowerCase()}>
+                  <StatusIcon className={css.icon} status={status as ExecutionStatus} />
+                  <div className={css.nameWrapper}>
+                    {isRoot ? null : <div className={css.parallelIcon} />}
+                    <Template className={css.name} stringID="parallelSteps" />
+                  </div>
+                </div>
+                <StepsTree nodes={step.parallel} {...commonProps} />
+              </li>
+            )
+          }
+
+          /* istanbul ignore next */
+          return null
+        })}
+      </ul>
+      <DynamicPopover
+        hoverHideDelay={50}
+        render={renderPopover}
+        bind={setDynamicPopoverHandler}
+        closeOnMouseOut
+        usePortal
+      />
+    </>
   )
 }

@@ -12,12 +12,12 @@ declare const styles: {
   readonly accordionDetails: string
   readonly accordionPanel: string
   readonly accordionSummary: string
+  readonly entityName: string
   readonly heatmap: string
   readonly icon: string
   readonly inputWaiting: string
   readonly mainAccordion: string
   readonly mainContainer: string
-  readonly name: string
   readonly pipelineRollback: string
   readonly pipelineRollbackIcon: string
   readonly spinner: string

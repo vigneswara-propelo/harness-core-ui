@@ -8,7 +8,7 @@
 import React from 'react'
 import { Icon, timeToDisplayText, Text, Layout, Container } from '@harness/uicore'
 import moment from 'moment'
-import { defaultTo, isNil } from 'lodash-es'
+import { defaultTo, get, isNil } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
 import { Popover, Position } from '@blueprintjs/core'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
@@ -16,6 +16,7 @@ import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { StringUtils } from '@common/exports'
 import { useStrings } from 'framework/strings'
+import MatrixNodeNameLabelWrapper from '@modules/70-pipeline/components/PipelineDiagram/Nodes/MatrixNodeNameLabelWrapper'
 import defaultNodeCss from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/DefaultNode.module.scss'
 import css from './StageHeader.module.scss'
 
@@ -40,6 +41,10 @@ export default function StageHeader(props: StageHeaderProps): React.ReactElement
   let delta = stageDetails?.startTs ? Math.abs(stageDetails?.startTs - (stageDetails?.endTs || Date.now())) : 0
   delta = Math.round(delta / 1000) * 1000
   const timeText = timeToDisplayText(delta)
+  const matrixMetadata = defaultTo(
+    get(data, 'data.strategyMetadata.matrixmetadata.matrixvalues'),
+    get(data, 'strategyMetadata.matrixmetadata.matrixvalues')
+  )
   return (
     <Container>
       <Layout.Vertical style={{ flex: 1 }} flex={{ alignItems: 'flex-start' }} padding="medium">
@@ -70,6 +75,11 @@ export default function StageHeader(props: StageHeaderProps): React.ReactElement
             <ExecutionStatusLabel className={css.label} status={stageDetails?.status} />
           </Layout.Horizontal>
         </div>
+        {matrixMetadata && (
+          <Container padding={{ top: 'small', bottom: 'small' }}>
+            <MatrixNodeNameLabelWrapper matrixNodeName={matrixMetadata} />
+          </Container>
+        )}
         {stageDetails.status !== ExecutionStatusEnum.Skipped && (
           <Layout.Horizontal spacing={'xsmall'}>
             {!!stageDetails?.startTs && (
@@ -100,6 +110,7 @@ export default function StageHeader(props: StageHeaderProps): React.ReactElement
         <Layout.Horizontal
           background={Color.RED_100}
           padding={{ right: 'medium', top: 'small', bottom: 'small', left: 'small' }}
+          data-testid="failure-info"
         >
           <Container flex={{ justifyContent: 'center', alignItems: 'start' }} width={32}>
             <Icon name="warning-sign" color={Color.RED_500} size={16} />

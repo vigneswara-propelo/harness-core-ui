@@ -33,8 +33,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
           </svg>
         </span>
         <p
-          class="StyledProps--font Text--lineclamp StyledProps--main name"
-          style="--text-line-clamp: 1;"
+          class="StyledProps--font StyledProps--main name entityName"
         >
           Step 1
         </p>
@@ -77,8 +76,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
           class="nameWrapper"
         >
           <p
-            class="StyledProps--font Text--lineclamp StyledProps--main name"
-            style="--text-line-clamp: 1;"
+            class="StyledProps--font StyledProps--main name entityName"
           >
             Step 2
           </p>
@@ -121,8 +119,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
               </svg>
             </span>
             <p
-              class="StyledProps--font Text--lineclamp StyledProps--main name"
-              style="--text-line-clamp: 1;"
+              class="StyledProps--font StyledProps--main name entityName"
             >
               Success
             </p>
@@ -164,8 +161,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
               </svg>
             </span>
             <p
-              class="StyledProps--font Text--lineclamp StyledProps--main name"
-              style="--text-line-clamp: 1;"
+              class="StyledProps--font StyledProps--main name entityName"
             >
               Running
             </p>
@@ -203,8 +199,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
               </svg>
             </span>
             <p
-              class="StyledProps--font Text--lineclamp StyledProps--main name"
-              style="--text-line-clamp: 1;"
+              class="StyledProps--font StyledProps--main name entityName"
             >
               Failed
             </p>
@@ -242,8 +237,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
               </svg>
             </span>
             <p
-              class="StyledProps--font Text--lineclamp StyledProps--main name"
-              style="--text-line-clamp: 1;"
+              class="StyledProps--font StyledProps--main name entityName"
             >
               Expired
             </p>
@@ -281,8 +275,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
               </svg>
             </span>
             <p
-              class="StyledProps--font Text--lineclamp StyledProps--main name"
-              style="--text-line-clamp: 1;"
+              class="StyledProps--font StyledProps--main name entityName"
             >
               Aborted
             </p>
@@ -320,8 +313,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
               </svg>
             </span>
             <p
-              class="StyledProps--font Text--lineclamp StyledProps--main name"
-              style="--text-line-clamp: 1;"
+              class="StyledProps--font StyledProps--main name entityName"
             >
               Suspended
             </p>
@@ -357,8 +349,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
               </svg>
             </span>
             <p
-              class="StyledProps--font Text--lineclamp StyledProps--main name"
-              style="--text-line-clamp: 1;"
+              class="StyledProps--font StyledProps--main name entityName"
             >
               Queued
             </p>
@@ -394,8 +385,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
               </svg>
             </span>
             <p
-              class="StyledProps--font Text--lineclamp StyledProps--main name"
-              style="--text-line-clamp: 1;"
+              class="StyledProps--font StyledProps--main name entityName"
             >
               Not Started
             </p>
@@ -435,8 +425,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
               </svg>
             </span>
             <p
-              class="StyledProps--font Text--lineclamp StyledProps--main name"
-              style="--text-line-clamp: 1;"
+              class="StyledProps--font StyledProps--main name entityName"
             >
               Paused
             </p>
@@ -457,8 +446,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
             data-status="waiting"
           >
             <p
-              class="StyledProps--font Text--lineclamp StyledProps--main name"
-              style="--text-line-clamp: 1;"
+              class="StyledProps--font StyledProps--main name entityName"
             >
               Waiting
             </p>
@@ -494,8 +482,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
               </svg>
             </span>
             <p
-              class="StyledProps--font Text--lineclamp StyledProps--main name"
-              style="--text-line-clamp: 1;"
+              class="StyledProps--font StyledProps--main name entityName"
             >
               Skipped
             </p>
@@ -540,8 +527,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
           class="nameWrapper"
         >
           <p
-            class="StyledProps--font Text--lineclamp StyledProps--main name"
-            style="--text-line-clamp: 1;"
+            class="StyledProps--font StyledProps--main name entityName"
           >
             Step 3
           </p>
@@ -627,8 +613,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
                   </svg>
                 </span>
                 <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main name"
-                  style="--text-line-clamp: 1;"
+                  class="StyledProps--font StyledProps--main name entityName"
                 >
                   Success
                 </p>
@@ -668,8 +653,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
                   </svg>
                 </span>
                 <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main name"
-                  style="--text-line-clamp: 1;"
+                  class="StyledProps--font StyledProps--main name entityName"
                 >
                   Success
                 </p>
@@ -752,8 +736,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
                   </svg>
                 </span>
                 <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main name"
-                  style="--text-line-clamp: 1;"
+                  class="StyledProps--font StyledProps--main name entityName"
                 >
                   Success
                 </p>
@@ -791,8 +774,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
                   </svg>
                 </span>
                 <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main name"
-                  style="--text-line-clamp: 1;"
+                  class="StyledProps--font StyledProps--main name entityName"
                 >
                   Failed
                 </p>
@@ -879,8 +861,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
                   </svg>
                 </span>
                 <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main name"
-                  style="--text-line-clamp: 1;"
+                  class="StyledProps--font StyledProps--main name entityName"
                 >
                   Success
                 </p>
@@ -922,8 +903,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
                   </svg>
                 </span>
                 <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main name"
-                  style="--text-line-clamp: 1;"
+                  class="StyledProps--font StyledProps--main name entityName"
                 >
                   Running
                 </p>
@@ -969,8 +949,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
                     class="groupIcon"
                   />
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main name"
-                    style="--text-line-clamp: 1;"
+                    class="StyledProps--font StyledProps--main name entityName"
                   >
                     Step 3_7
                   </p>
@@ -1013,8 +992,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
                       </svg>
                     </span>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main name"
-                      style="--text-line-clamp: 1;"
+                      class="StyledProps--font StyledProps--main name entityName"
                     >
                       Success
                     </p>
@@ -1116,8 +1094,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
                 class="groupIcon"
               />
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main name"
-                style="--text-line-clamp: 1;"
+                class="StyledProps--font StyledProps--main name entityName"
               >
                 Step 4
               </p>
@@ -1160,8 +1137,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
                   </svg>
                 </span>
                 <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main name"
-                  style="--text-line-clamp: 1;"
+                  class="StyledProps--font StyledProps--main name entityName"
                 >
                   a very long name for no reason
                 </p>
@@ -1197,8 +1173,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
                   </svg>
                 </span>
                 <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main name"
-                  style="--text-line-clamp: 1;"
+                  class="StyledProps--font StyledProps--main name entityName"
                 >
                   step_4_1_2
                 </p>
@@ -1251,8 +1226,7 @@ exports[`<StepsTree /> tests works for retry steps 1`] = `
           </svg>
         </span>
         <p
-          class="StyledProps--font Text--lineclamp StyledProps--main name"
-          style="--text-line-clamp: 1;"
+          class="StyledProps--font StyledProps--main name entityName"
         >
           Step 1
         </p>
@@ -1286,8 +1260,7 @@ exports[`<StepsTree /> tests works for retry steps 1`] = `
               </svg>
             </span>
             <p
-              class="StyledProps--font Text--lineclamp StyledProps--main name"
-              style="--text-line-clamp: 1;"
+              class="StyledProps--font StyledProps--main name entityName"
             >
               pipeline.execution.retryStepCount
             </p>
@@ -1325,8 +1298,7 @@ exports[`<StepsTree /> tests works for retry steps 1`] = `
               </svg>
             </span>
             <p
-              class="StyledProps--font Text--lineclamp StyledProps--main name"
-              style="--text-line-clamp: 1;"
+              class="StyledProps--font StyledProps--main name entityName"
             >
               pipeline.execution.retryStepCount
             </p>
@@ -1366,8 +1338,7 @@ exports[`<StepsTree /> tests works for retry steps 1`] = `
               </svg>
             </span>
             <p
-              class="StyledProps--font Text--lineclamp StyledProps--main name"
-              style="--text-line-clamp: 1;"
+              class="StyledProps--font StyledProps--main name entityName"
             >
               pipeline.execution.retryStepCount
             </p>

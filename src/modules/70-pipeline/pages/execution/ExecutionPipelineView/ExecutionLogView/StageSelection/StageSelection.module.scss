@@ -113,30 +113,10 @@
   cursor: pointer;
 }
 
-.name {
-  white-space: nowrap !important;
+.entityName {
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
   overflow: hidden;
-  text-overflow: ellipsis;
-  color: currentColor !important;
-  font-weight: 500;
-}
-
-:global {
-  .matrixNodeNameLabel {
-    .bp3-popover-content div {
-      padding: var(--spacing-medium);
-      max-width: 500px;
-      max-height: 500px;
-      overflow: auto;
-      overflow-wrap: break-word;
-      word-wrap: break-word;
-      hyphens: auto;
-
-      br {
-        display: block;
-        content: '';
-        margin-top: var(--spacing-xsmall);
-      }
-    }
-  }
+  word-break: break-all;
 }
