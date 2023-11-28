@@ -13,7 +13,7 @@ import * as Yup from 'yup'
 import cx from 'classnames'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { useParams } from 'react-router-dom'
-import { get } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import { useCreateGitxWebhookRefMutation, useUpdateGitxWebhookRefMutation } from '@harnessio/react-ng-manager-client'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import ConnectorReferenceField from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
@@ -25,6 +25,7 @@ import { getConnectorIdentifierWithScope } from '@platform/connectors/utils/util
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { NameIdentifierSchema } from '@common/utils/Validation'
 import { ErrorHandler, ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
+import { Error } from 'services/cd-ng-rq'
 import { AddWebhookModalData, NewWebhookModalProps, gitFilePath } from './utils'
 import css from './Webhooks.module.scss'
 
@@ -84,10 +85,18 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
   React.useEffect(() => {
     const errorMessage = [...errorMessages]
     if (webhookCreateError) {
-      errorMessage.push({ message: (webhookCreateError as Error).message, level: 'ERROR' })
+      if (defaultTo((webhookCreateError as Error)?.responseMessages, []).length > 0) {
+        errorMessage.push(...defaultTo((webhookCreateError as Error).responseMessages, []))
+      } else if ((webhookCreateError as Error).message) {
+        errorMessage.push({ message: (webhookCreateError as Error).message, level: 'ERROR' })
+      }
     }
     if (webhookUpdateError) {
-      errorMessage.push({ message: (webhookUpdateError as Error).message, level: 'ERROR' })
+      if (defaultTo((webhookUpdateError as Error)?.responseMessages, []).length > 0) {
+        errorMessage.push(...defaultTo((webhookUpdateError as Error).responseMessages, []))
+      } else if ((webhookUpdateError as Error).message) {
+        errorMessage.push({ message: (webhookUpdateError as Error).message, level: 'ERROR' })
+      }
     }
     setErrorMessages(errorMessage)
     // eslint-disable-next-line react-hooks/exhaustive-deps
