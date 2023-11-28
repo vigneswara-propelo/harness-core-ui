@@ -27,13 +27,13 @@ export const getValuesFromOptions = (
 
   if (allOptionSelected) {
     /** If 'Select All' option is selected and any other option is deselected, remove 'Select All' */
-    if (previousOptions.find(opt => opt.value === ALL_STAGES.value)) {
+    if (previousOptions && previousOptions.find(opt => opt.value === ALL_STAGES.value)) {
       selectedOptions = options.filter(opt => opt.value !== ALL_STAGES.value)
     } else {
       //select 'Select All'
       selectedOptions = [ALL_STAGES]
     }
-  } else if (previousOptions.find(opt => opt.value === ALL_STAGES.value)) {
+  } else if (previousOptions && previousOptions.find(opt => opt.value === ALL_STAGES.value)) {
     /** If 'Select All' is deselected, clear selected options */
     selectedOptions = []
   } else {

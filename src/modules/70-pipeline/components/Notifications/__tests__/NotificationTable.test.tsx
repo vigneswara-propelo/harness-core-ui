@@ -102,56 +102,67 @@ describe('Notification Table test', () => {
     getByText = renderObj.getByText
     getAllByText = renderObj.getAllByText
   })
-  test('render', () => {
-    expect(container).toMatchSnapshot()
-  }),
-    test('Edit Notfication', async () => {
-      const menu = container.querySelector(`[data-icon="Options"]`)
-      fireEvent.click(menu!)
-      const editMenu = getAllByText('edit')
-      expect(editMenu).toBeDefined()
-      act(() => {
-        fireEvent.click(editMenu[0])
-      })
-      let form = findDialogContainer()
-      expect(form).toBeTruthy()
-      await act(async () => {
-        //Step 1
-        if (form) clickSubmit(form)
-        await waitFor(() => getAllByTextGlobal(document.body, 'rbac.notifications.selectPipelineEvents')[0])
-      })
-      form = findDialogContainer()
-      await act(async () => {
-        //Step 2
-        if (form) clickSubmit(form)
-        await waitFor(() => getAllByTextGlobal(document.body, 'rbac.notifications.notificationMethod')[1])
-      })
-      form = findDialogContainer()
-      await act(async () => {
-        //Step 3
-        if (form) clickSubmit(form)
-      })
-    }),
-    test('Delete Notfication', async () => {
-      const menu = container.querySelector(`[data-icon="Options"]`)
-      fireEvent.click(menu!)
-      const deleteMenu = getByText('delete')
-      expect(deleteMenu).toBeDefined()
-      await act(async () => {
-        fireEvent.click(deleteMenu!)
-      })
-    }),
-    test('New Notfication', async () => {
-      const addNotification = getByText('rbac.notifications.name')
-      await act(async () => {
-        fireEvent.click(addNotification!)
-      })
-      let form = findDialogContainer()
-      expect(form).toBeTruthy()
-      fireEvent.click(form?.querySelector('[icon="cross"]')!)
-      form = findDialogContainer()
-      expect(form).not.toBeTruthy()
+  test('render component and assert notifications', () => {
+    expect(getByText('ENABLEDLABEL')).toBeDefined()
+    expect(getByText('RBAC.NOTIFICATIONS.NAMEOFTHERULE')).toBeDefined()
+    expect(getByText('RBAC.NOTIFICATIONS.PIPELINEEVENTS')).toBeDefined()
+    expect(getByText('RBAC.NOTIFICATIONS.NOTIFICATIONMETHOD')).toBeDefined()
+    //  assert added notification event to be present
+    expect(getAllByText('All Events')).toHaveLength(3)
+    expect(getByText('name1')).toBeDefined()
+    expect(getByText('Slack')).toBeDefined()
+    expect(getByText('name2')).toBeDefined()
+    expect(getByText('Email')).toBeDefined()
+    expect(getByText('name3')).toBeDefined()
+    expect(getByText('PagerDuty')).toBeDefined()
+  })
+  test('Edit Notfication', async () => {
+    const menu = container.querySelector(`[data-icon="Options"]`)
+    fireEvent.click(menu!)
+    const editMenu = getAllByText('edit')
+    expect(editMenu).toBeDefined()
+    act(() => {
+      fireEvent.click(editMenu[0])
     })
+    let form = findDialogContainer()
+    expect(form).toBeTruthy()
+    await act(async () => {
+      //Step 1
+      if (form) clickSubmit(form)
+      await waitFor(() => getAllByTextGlobal(document.body, 'rbac.notifications.selectPipelineEvents')[0])
+    })
+    form = findDialogContainer()
+    await act(async () => {
+      //Step 2
+      if (form) clickSubmit(form)
+      await waitFor(() => getAllByTextGlobal(document.body, 'rbac.notifications.notificationMethod')[1])
+    })
+    form = findDialogContainer()
+    await act(async () => {
+      //Step 3
+      if (form) clickSubmit(form)
+    })
+  })
+  test('Delete Notfication', async () => {
+    const menu = container.querySelector(`[data-icon="Options"]`)
+    fireEvent.click(menu!)
+    const deleteMenu = getByText('delete')
+    expect(deleteMenu).toBeDefined()
+    await act(async () => {
+      fireEvent.click(deleteMenu!)
+    })
+  })
+  test('New Notfication', async () => {
+    const addNotification = getByText('rbac.notifications.name')
+    await act(async () => {
+      fireEvent.click(addNotification!)
+    })
+    let form = findDialogContainer()
+    expect(form).toBeTruthy()
+    fireEvent.click(form?.querySelector('[icon="cross"]')!)
+    form = findDialogContainer()
+    expect(form).not.toBeTruthy()
+  })
 })
 
 describe('testing notification method', () => {
