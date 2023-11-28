@@ -183,17 +183,14 @@ const FeatureFlagsPage: FC = () => {
   }, [queryParams])
 
   const emptyFeatureFlags = !features?.features?.length
-  // use emptyFeatureFlags below as temp fallback to ensure FilterCards still display in case featureCounts is unavailable or flag STALE_FLAGS_FFM_1510 is toggled off on backend only
+  // use emptyFeatureFlags below as temp fallback to ensure FilterCards still display in case featureCounts is unavailable
   const hasFeatureFlags =
     !!features?.featureCounts?.totalFeatures || !emptyFeatureFlags || !!features?.featureCounts?.totalArchived
 
   const title = getString('featureFlagsText')
-  const {
-    STALE_FLAGS_FFM_1510: FILTER_FEATURE_FLAGS,
-    FFM_8344_FLAG_CLEANUP,
-    FFM_8184_FEATURE_FLAG_TAGGING
-  } = useFeatureFlags()
-  const showFilterCards = FILTER_FEATURE_FLAGS && hasFeatureFlags && environmentIdentifier
+  const { FFM_8344_FLAG_CLEANUP, FFM_8184_FEATURE_FLAG_TAGGING } = useFeatureFlags()
+
+  const showFilterCards = hasFeatureFlags && environmentIdentifier
 
   const onClearFilter = (): void => {
     defer(() => setFlagFilter({}))

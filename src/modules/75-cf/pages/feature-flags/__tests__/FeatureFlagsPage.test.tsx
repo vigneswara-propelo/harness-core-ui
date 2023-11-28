@@ -38,7 +38,6 @@ const renderComponent = (): RenderResult =>
         projectIdentifier: 'dummy'
       }}
       defaultFeatureFlagValues={{
-        STALE_FLAGS_FFM_1510: true,
         FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW: true,
         FFM_6683_ALL_ENVIRONMENTS_FLAGS: true,
         FFM_7258_INTERCOM_VIDEO_LINKS: true,
