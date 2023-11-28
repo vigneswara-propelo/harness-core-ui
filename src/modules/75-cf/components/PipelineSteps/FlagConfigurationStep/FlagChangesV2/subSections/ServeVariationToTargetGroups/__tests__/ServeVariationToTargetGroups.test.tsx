@@ -31,7 +31,7 @@ const renderComponent = (
 ): RenderResult =>
   render(
     <SubSectionTestWrapper {...testWrapperProps}>
-      <ServeVariationToTargetGroups prefixPath="test" title="Serve variation to targets" {...props} />
+      <ServeVariationToTargetGroups prefixPath="test" title="Serve variation to target groups" {...props} />
     </SubSectionTestWrapper>
   )
 
@@ -117,16 +117,14 @@ describe('serveVariationToTargetGroupsSchema', () => {
   test('it should throw when variation is not set', async () => {
     const schema = serveVariationToTargetGroupsSchema(str => str)
 
-    expect(() => schema.validateSync({ spec: { segments: ['a', 'b', 'c'] } })).toThrow(
-      'cf.featureFlags.flagPipeline.validation.serveVariationToTargetGroups.variation'
-    )
+    expect(() => schema.validateSync({ spec: { segments: ['a', 'b', 'c'] } })).toThrow('cf.shared.variationRequired')
   })
 
   test('it should throw when variation is empty', async () => {
     const schema = serveVariationToTargetGroupsSchema(str => str)
 
     expect(() => schema.validateSync({ spec: { variation: '', segments: ['a', 'b', 'c'] } })).toThrow(
-      'cf.featureFlags.flagPipeline.validation.serveVariationToTargetGroups.variation'
+      'cf.shared.variationRequired'
     )
   })
 

@@ -113,16 +113,14 @@ describe('serveVariationToTargetsSchema', () => {
   test('it should throw when variation is not set', async () => {
     const schema = serveVariationToTargetsSchema(str => str)
 
-    expect(() => schema.validateSync({ spec: { targets: ['a', 'b', 'c'] } })).toThrow(
-      'cf.featureFlags.flagPipeline.validation.serveVariationToTargets.variation'
-    )
+    expect(() => schema.validateSync({ spec: { targets: ['a', 'b', 'c'] } })).toThrow('cf.shared.variationRequired')
   })
 
   test('it should throw when variation is empty', async () => {
     const schema = serveVariationToTargetsSchema(str => str)
 
     expect(() => schema.validateSync({ spec: { variation: '', targets: ['a', 'b', 'c'] } })).toThrow(
-      'cf.featureFlags.flagPipeline.validation.serveVariationToTargets.variation'
+      'cf.shared.variationRequired'
     )
   })
 

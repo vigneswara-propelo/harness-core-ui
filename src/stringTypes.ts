@@ -8852,9 +8852,7 @@ export interface StringsMap {
   'cf.featureFlags.flagPipeline.validation.serveVariationToIndividualTarget.variationTargets': string
   'cf.featureFlags.flagPipeline.validation.serveVariationToTargetGroup.variationTargetGroups': string
   'cf.featureFlags.flagPipeline.validation.serveVariationToTargetGroups.segments': string
-  'cf.featureFlags.flagPipeline.validation.serveVariationToTargetGroups.variation': string
   'cf.featureFlags.flagPipeline.validation.serveVariationToTargets.targets': string
-  'cf.featureFlags.flagPipeline.validation.serveVariationToTargets.variation': string
   'cf.featureFlags.flagPipeline.validation.setFlagSwitch.state': string
   'cf.featureFlags.flagVideoLabel': string
   'cf.featureFlags.flagWillTurnOff': string
@@ -9079,12 +9077,9 @@ export interface StringsMap {
   'cf.pipeline.flagConfiguration.selectVariation': string
   'cf.pipeline.flagConfiguration.serve': string
   'cf.pipeline.flagConfiguration.servePercentageRollout': string
-  'cf.pipeline.flagConfiguration.servePercentageRolloutToTargetGroup': string
   'cf.pipeline.flagConfiguration.serveVariation': string
   'cf.pipeline.flagConfiguration.serveVariationToIndividualTarget': string
   'cf.pipeline.flagConfiguration.serveVariationToTargetGroup': string
-  'cf.pipeline.flagConfiguration.serveVariationToTargetGroups': string
-  'cf.pipeline.flagConfiguration.serveVariationToTargets': string
   'cf.pipeline.flagConfiguration.setDefaultOffRule': string
   'cf.pipeline.flagConfiguration.setDefaultOnRule': string
   'cf.pipeline.flagConfiguration.setFlagSwitch': string

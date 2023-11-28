@@ -23,9 +23,7 @@ import ServeVariationToItems from '../ServeVariationToItems/ServeVariationToItem
 export const serveVariationToTargetsSchema = (getString: UseStringsReturn['getString']): Yup.Schema<unknown> =>
   Yup.object({
     spec: Yup.object({
-      variation: Yup.string().required(
-        getString('cf.featureFlags.flagPipeline.validation.serveVariationToTargets.variation')
-      ),
+      variation: Yup.string().required(getString('cf.shared.variationRequired')),
       targets: Yup.lazy(val =>
         (Array.isArray(val) ? Yup.array().of(Yup.string()) : Yup.string()).required(
           getString('cf.featureFlags.flagPipeline.validation.serveVariationToTargets.targets')

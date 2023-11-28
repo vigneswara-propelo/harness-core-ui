@@ -271,10 +271,8 @@ featureFlags:
       defaultOffRule:
         offVariation: OFF variation is required
       serveVariationToTargets:
-        variation: '{{ $.cf.shared.variationRequired }}'
         targets: Targets are required
       serveVariationToTargetGroups:
-        variation: '{{ $.cf.shared.variationRequired }}'
         segments: Target groups are required
       serveVariationToIndividualTarget:
         variationTargets: Targets/variation is required
@@ -515,11 +513,8 @@ pipeline:
     setFlagSwitch: Set flag switch
     setDefaultOnRule: Set default ON rule
     setDefaultOffRule: Set default OFF rule
-    serveVariationToTargets: '{{ $.cf.shared.serveVariationToTargets }}'
     serveVariationToIndividualTarget: Serve Variation to Individual Target
     serveVariationToTargetGroup: Serve Variation to Target Group
-    serveVariationToTargetGroups: '{{ $.cf.shared.serveVariationToTargetGroups }}'
-    servePercentageRolloutToTargetGroup: '{{ $.cf.shared.servePercentageRolloutToTargetGroup }}'
     servePercentageRollout: Serve Percentage Rollout
     selectOnOrOff: Select ON or OFF
     whenTheFlagIsOnServe: 'When the flag is ON, serve:'
