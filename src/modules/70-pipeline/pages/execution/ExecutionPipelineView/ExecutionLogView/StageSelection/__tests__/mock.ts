@@ -930,6 +930,11 @@ export const executionContextMock = {
                 matrixkeystoskipinname: [],
                 nodename: ''
               },
+              // Not idealistic, but for jest added in the same object
+              formetadata: {
+                value: 'brave',
+                partition: []
+              },
               identifierpostfix: '_stable_v0'
             },
             isRollbackStageNode: false

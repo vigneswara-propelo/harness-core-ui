@@ -45,6 +45,10 @@ export default function StageHeader(props: StageHeaderProps): React.ReactElement
     get(data, 'data.strategyMetadata.matrixmetadata.matrixvalues'),
     get(data, 'strategyMetadata.matrixmetadata.matrixvalues')
   )
+  const strategyMetadata = defaultTo(
+    get(data, 'data.strategyMetadata.formetadata.value'),
+    get(data, 'strategyMetadata.formetadata.value')
+  )
   return (
     <Container>
       <Layout.Vertical style={{ flex: 1 }} flex={{ alignItems: 'flex-start' }} padding="medium">
@@ -79,6 +83,11 @@ export default function StageHeader(props: StageHeaderProps): React.ReactElement
           <Container padding={{ top: 'small', bottom: 'small' }}>
             <MatrixNodeNameLabelWrapper matrixNodeName={matrixMetadata} />
           </Container>
+        )}
+        {strategyMetadata && (
+          <Text inline className={css.entityName} padding={{ top: 'xsmall' }} color={Color.BLACK}>
+            {strategyMetadata}
+          </Text>
         )}
         {stageDetails.status !== ExecutionStatusEnum.Skipped && (
           <Layout.Horizontal spacing={'xsmall'}>

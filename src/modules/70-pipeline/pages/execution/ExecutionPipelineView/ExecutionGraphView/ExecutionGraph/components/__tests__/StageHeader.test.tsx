@@ -39,6 +39,7 @@ describe('StageHeader component', () => {
     expect(getByText(/sample_service_1675875039143/i)).toBeInTheDocument()
     expect(getByText(/devcluster_1667983075245/i)).toBeInTheDocument()
     expect(getByText(/dev_1667983075245/i)).toBeInTheDocument()
+    expect(getByText(/repeat_strategy_label/i)).toBeInTheDocument()
     // Stage time and duration
     expect(getByText(/pipeline.startTime/i)).toBeInTheDocument()
     expect(getByText(/pipeline.duration/i)).toBeInTheDocument()

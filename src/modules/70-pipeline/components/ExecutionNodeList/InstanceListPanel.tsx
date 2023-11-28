@@ -7,11 +7,12 @@
  */
 
 import React, { useMemo, useState } from 'react'
-import { Checkbox, DropDown, DropDownProps, ExpandingSearchInput, TableV2, Text } from '@harness/uicore'
+import { Checkbox, DropDown, DropDownProps, ExpandingSearchInput, Popover, TableV2, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo, get } from 'lodash-es'
 import type { CellProps, Column, HeaderProps, Renderer } from 'react-table'
 import type { CheckboxProps } from '@harness/uicore/dist/components/Checkbox/Checkbox'
+import { PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import type { ExecutionGraph, ExecutionNode, PipelineExecutionDetail } from 'services/pipeline-ng'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
@@ -21,6 +22,7 @@ import { getExecutionNodeName } from '@pipeline/utils/execUtils'
 import { CollapsedNodeActionType, useCollapsedNodeStore } from './CollapsedNodeStore'
 import { ExecutionStatusIcon } from '../ExecutionStatusIcon/ExecutionStatusIcon'
 import ExecutionStatusLabel from '../ExecutionStatusLabel/ExecutionStatusLabel'
+import HoverCard from '../HoverCard/HoverCard'
 import styles from './InstanceListPanel.module.scss'
 
 type HeaderRenderer = Renderer<HeaderProps<ExecutionNode>>
@@ -126,12 +128,14 @@ const NameAndIconCell: CellRenderer = ({ row }) => {
   const node = row.original
 
   return (
-    <div className={styles.nameAndIconCell}>
-      {node?.status && <ExecutionStatusIcon status={node.status as ExecutionStatus} size={20} />}
-      <Text lineClamp={1} font={{ variation: FontVariation.SMALL_SEMI }}>
-        {getExecutionNodeName(node)}
-      </Text>
-    </div>
+    <Popover position={Position.TOP} interactionKind={PopoverInteractionKind.HOVER} content={<HoverCard data={node} />}>
+      <div className={styles.nameAndIconCell}>
+        {node?.status && <ExecutionStatusIcon status={node.status as ExecutionStatus} size={20} />}
+        <Text lineClamp={1} font={{ variation: FontVariation.SMALL_SEMI }}>
+          {getExecutionNodeName(node)}
+        </Text>
+      </div>
+    </Popover>
   )
 }
 

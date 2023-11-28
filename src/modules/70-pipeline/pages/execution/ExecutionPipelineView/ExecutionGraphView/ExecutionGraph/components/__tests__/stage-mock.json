@@ -66,6 +66,10 @@
           "matrixkeystoskipinname": ["environmentInputs", "serviceInputs", "infraInputs"],
           "nodename": ""
         },
+        "formetadata": {
+          "value": "repeat_strategy_label",
+          "partition": []
+        },
         "identifierpostfix": "_dev_1667983075245_devcluster_1667983075245_sample_service_1675875039143"
       }
     }

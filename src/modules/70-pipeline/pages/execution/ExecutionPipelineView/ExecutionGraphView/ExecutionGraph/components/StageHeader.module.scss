@@ -17,3 +17,11 @@
     width: fit-content;
   }
 }
+
+.entityName {
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  word-break: break-all;
+}
