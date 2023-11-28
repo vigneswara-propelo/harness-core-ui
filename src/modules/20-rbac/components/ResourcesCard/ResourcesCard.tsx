@@ -125,7 +125,7 @@ const ResourcesCard: React.FC<ResourcesCardProps> = ({
               )}
             </Container>
             <Container className={css.radioBtnCtr}>
-              {staticResourcesSelectionEnabled && isCurrentOnly && (
+              {(attributeSelectionEnabled || staticResourcesSelectionEnabled) && isCurrentOnly && (
                 <Button
                   variation={ButtonVariation.LINK}
                   data-testid={`addResources-${resourceType}`}
