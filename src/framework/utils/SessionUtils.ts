@@ -14,7 +14,8 @@ import { getLocationPathName } from './WindowLocation'
 // Enum for ErrorCode that are handled by ng-auth-ui
 export enum ErrorCode {
   GATEWAY_SSO_REDIRECT_ERROR = 'GATEWAY_SSO_REDIRECT_ERROR',
-  unauth = 'unauth',
+  NOT_WHITELISTED_IP = 'NOT_WHITELISTED_IP',
+  UNAUTHORIZED = 'UNAUTHORIZED',
   invalidsso = 'invalidsso',
   email_verify_fail = 'email_verify_fail',
   INVITE_EXPIRED = 'INVITE_EXPIRED',

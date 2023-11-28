@@ -39,13 +39,13 @@ describe('Session Utils', () => {
     const { result } = renderHook(() => useLogout())
     expect(typeof result.current.forceLogout).toBe('function')
     act(() => {
-      result.current.forceLogout(ErrorCode.unauth)
+      result.current.forceLogout(ErrorCode.UNAUTHORIZED)
     })
     expect(mockHistoryPush).toBeCalledTimes(1)
     expect(mockHistoryPush).toBeCalledWith({
       pathname: '/redirect',
       search:
-        '?returnUrl=%2F%23%2Flogin%3Faction%3Dsignout%26returnUrl%3Dhttp%253A%252F%252Flocalhost%252F%26errorCode%3Dunauth'
+        '?returnUrl=%2F%23%2Flogin%3Faction%3Dsignout%26returnUrl%3Dhttp%253A%252F%252Flocalhost%252F%26errorCode%3DUNAUTHORIZED'
     })
 
     act(() => {

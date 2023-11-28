@@ -45,6 +45,7 @@ import './App.scss'
 const RouteDestinations = React.lazy(() => import('modules/RouteDestinations'))
 
 const NOT_WHITELISTED_IP_MESSAGE = 'NOT_WHITELISTED_IP_MESSAGE'
+const UNAUTHORIZED = 'UNAUTHORIZED'
 
 FocusStyleManager.onlyShowFocusOnTabs()
 SecureStorage.registerCleanupException(PREFERENCES_TOP_LEVEL_KEY)
@@ -52,6 +53,7 @@ SecureStorage.registerCleanupException(MULTI_TYPE_INPUT_MENU_LEARN_MORE_STORAGE_
 SecureStorage.registerCleanupException(HELP_PANEL_STORAGE_KEY)
 SecureStorage.registerCleanupException(REFERER_URL)
 SecureStorage.registerCleanupSessionException(NOT_WHITELISTED_IP_MESSAGE)
+SecureStorage.registerCleanupSessionException(UNAUTHORIZED)
 
 // set up Immer
 setAutoFreeze(false)
@@ -80,8 +82,8 @@ export const getRequestOptions = (): Partial<RequestInit> => {
   return { headers }
 }
 
-const getNotWhitelistedMessage = (res: any): any => {
-  return (res?.body || res)?.responseMessages?.find((message: any) => message?.code === 'NOT_WHITELISTED_IP')
+const getErrorMessage = (res: any, errorMessage: string): any => {
+  return (res?.body || res)?.responseMessages?.find((message: any) => message?.code === errorMessage)
 }
 
 const notifyBugsnag = (
@@ -106,6 +108,30 @@ const notifyBugsnag = (
   )
 }
 
+const errorEventMessageHandler = ({
+  response,
+  showError,
+  forceLogout,
+  sessionStorageErrorCode,
+  enumErrorCode,
+  clonedResponse,
+  sessionStorage
+}: {
+  response: any
+  showError: (message: string | ReactNode, timeout?: number, key?: string) => void
+  sessionStorageErrorCode: string
+  forceLogout: UseLogoutReturn['forceLogout']
+  enumErrorCode: ErrorCode
+  clonedResponse: Response
+  sessionStorage: Storage
+}) => {
+  const msg = response.message
+  showError(msg)
+  // NG-Auth-UI expects to read "sessionStorageErrorCode" from session
+  sessionStorage.setItem(sessionStorageErrorCode, msg)
+  forceLogout(clonedResponse.status === 401 ? enumErrorCode : undefined)
+}
+
 export const globalResponseHandler = async (
   username: string,
   accountId: string,
@@ -124,13 +150,30 @@ export const globalResponseHandler = async (
         switch (clonedResponse.status) {
           case 401:
           case 400: {
-            const notWhitelistedMessage = getNotWhitelistedMessage(res)
+            // Passed string is statusCode from BE
+            const notWhitelistedMessage = getErrorMessage(res, ErrorCode.NOT_WHITELISTED_IP)
+            const unauthorizedErrorMessage = getErrorMessage(res, ErrorCode.UNAUTHORIZED)
+
             if (notWhitelistedMessage) {
-              const msg = notWhitelistedMessage.message
-              showError(msg)
-              // NG-Auth-UI expects to read "NOT_WHITELISTED_IP_MESSAGE" from session
-              sessionStorage.setItem('NOT_WHITELISTED_IP_MESSAGE', msg)
-              forceLogout(clonedResponse.status === 401 ? ErrorCode.unauth : undefined)
+              errorEventMessageHandler({
+                response: notWhitelistedMessage,
+                sessionStorageErrorCode: 'NOT_WHITELISTED_IP_MESSAGE',
+                enumErrorCode: ErrorCode.NOT_WHITELISTED_IP,
+                sessionStorage,
+                showError,
+                forceLogout,
+                clonedResponse
+              })
+            } else if (unauthorizedErrorMessage) {
+              errorEventMessageHandler({
+                response: unauthorizedErrorMessage,
+                sessionStorageErrorCode: 'UNAUTHORIZED',
+                enumErrorCode: ErrorCode.UNAUTHORIZED,
+                sessionStorage,
+                showError,
+                forceLogout,
+                clonedResponse
+              })
             }
 
             // if 401 occurred due to a reason other than whitelist, logout nevertheless

@@ -22,6 +22,9 @@ describe('GlobalResponseHandler Tests', () => {
   let showError: () => unknown
   let forceLogout: () => unknown
 
+  const unauthorizedErrorMessage =
+    'Account login is blocked as the account is being deleted. Please reach out to Harness Support if this is incorrect.'
+
   beforeEach(() => {
     username = 'dummy username'
     accountId = 'accountId'
@@ -173,6 +176,69 @@ describe('GlobalResponseHandler Tests', () => {
     expect(showError).toHaveBeenCalled()
   })
 
+  test('that GlobalResponseHandler handles json 400 use case with Unauthorized error', async () => {
+    const response = new ResponseFromNodeFetch(
+      `{
+        "responseMessages": [
+          {
+            "code": "UNAUTHORIZED",
+            "message":"${unauthorizedErrorMessage}"
+          }
+        ]
+      }`,
+
+      {
+        status: 400,
+        headers: { 'content-type': 'application/json' }
+      }
+    )
+
+    await globalResponseHandler(
+      username,
+      accountId,
+      showError,
+      forceLogout,
+      sessionStorage,
+      response as unknown as Response
+    )
+
+    jest.runAllTicks()
+
+    expect(forceLogout).toHaveBeenCalled()
+    expect(showError).toHaveBeenCalledWith(unauthorizedErrorMessage)
+  })
+
+  test('that GlobalResponseHandler handles json 401 use case with Unauthorized error', async () => {
+    const response = new ResponseFromNodeFetch(
+      `{
+        "responseMessages": [
+          {
+            "code": "UNAUTHORIZED",
+            "message":"${unauthorizedErrorMessage}"
+          }
+        ]
+      }`,
+
+      {
+        status: 401,
+        headers: { 'content-type': 'application/json' }
+      }
+    )
+
+    await globalResponseHandler(
+      username,
+      accountId,
+      showError,
+      forceLogout,
+      sessionStorage,
+      response as unknown as Response
+    )
+
+    jest.runAllTicks()
+
+    expect(forceLogout).toHaveBeenCalled()
+    expect(showError).toHaveBeenCalledWith(unauthorizedErrorMessage)
+  })
   test('that GlobalResponseHandler handles json 429 use case with Whitelisted error', async () => {
     const errorMessage429 = 'Too many requests received, please try again later'
     const response = new ResponseFromNodeFetch(
