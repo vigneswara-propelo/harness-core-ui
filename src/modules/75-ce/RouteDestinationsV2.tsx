@@ -524,7 +524,6 @@ const getRequestOptions = (): Partial<RequestInit> => {
 const CERouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
   const { accountId } = useParams<AccountPathProps>()
   const { CCM_COMMORCH } = useFeatureFlags()
-  // const enableMicroFrontend = CCM_MICRO_FRONTEND
 
   if (CCM_COMMORCH) {
     RbacFactory.registerResourceTypeHandler(ResourceType.CCM_COMMITMENT_ORCHESTRATOR, {

@@ -52,7 +52,6 @@ import { Connectors } from '@connectors/constants'
 import CEHomePage from './pages/home/CEHomePage'
 import CETrialHomePage from './pages/home/CETrialHomePage'
 
-import OverviewPage from './pages/overview/OverviewPage'
 import formatCost from './utils/formatCost'
 import OverviewAddCluster from './components/OverviewPage/OverviewAddCluster'
 import GatewayListFilters from './components/COGatewayList/GatewayListFilters'
@@ -514,23 +513,10 @@ const getRequestOptions = (): Partial<RequestInit> => {
   return { headers }
 }
 
-const CENonMFERoutes = (
-  <>
-    <RouteWithLayout
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CESideNavProps}
-      path={routes.toCEOverview({ ...accountPathProps, ...projectPathProps })}
-      pageName={PAGE_NAME.CEOverviewPage}
-    >
-      <OverviewPage />
-    </RouteWithLayout>
-  </>
-)
-
 const CERoutes: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
-  const { CCM_MICRO_FRONTEND, CCM_COMMORCH } = useFeatureFlags()
-  const enableMicroFrontend = CCM_MICRO_FRONTEND
+  const { CCM_COMMORCH } = useFeatureFlags()
+
   if (CCM_COMMORCH) {
     RbacFactory.registerResourceTypeHandler(ResourceType.CCM_COMMITMENT_ORCHESTRATOR, {
       icon: 'ccm-solid',
@@ -555,103 +541,101 @@ const CERoutes: React.FC = () => {
     })
   }, [accountId])
 
-  const mfePaths = enableMicroFrontend
-    ? [
-        routes.toCEBudgets({ ...accountPathProps }),
-        routes.toCEBudgetDetails({ ...accountPathProps, budgetId: ':budgetId', budgetName: ':budgetName' }),
-        routes.toCERecommendations({ ...accountPathProps, ...projectPathProps }),
-        routes.toCERecommendationDetails({
-          ...accountPathProps,
-          ...projectPathProps,
-          recommendationName: ':recommendationName',
-          recommendation: ':recommendation'
-        }),
-        routes.toCEOverview({ ...accountPathProps }),
-        routes.toCENodeRecommendationDetails({
-          ...accountPathProps,
-          ...projectPathProps,
-          recommendationName: ':recommendationName',
-          recommendation: ':recommendation'
-        }),
-        routes.toCEECSRecommendationDetails({
-          ...accountPathProps,
-          ...projectPathProps,
-          recommendationName: ':recommendationName',
-          recommendation: ':recommendation'
-        }),
-        routes.toBusinessMapping({ ...accountPathProps }),
-        routes.toCEAnomalyDetection({ ...accountPathProps }),
-        routes.toCEPerspectives({ ...accountPathProps }),
-        routes.toCECreatePerspective({ ...accountPathProps, perspectiveId: ':perspectiveId' }),
-        routes.toCECORuleDetails({ ...accountPathProps, id: ':ruleId' }),
-        routes.toPerspectiveDetails({
-          ...accountPathProps,
-          perspectiveId: ':perspectiveId',
-          perspectiveName: ':perspectiveName'
-        }),
-        routes.toCEPerspectiveWorkloadDetails({
-          ...accountPathProps,
-          perspectiveId: ':perspectiveId',
-          perspectiveName: ':perspectiveName',
-          clusterName: ':clusterName',
-          namespace: ':namespace',
-          workloadName: ':workloadName'
-        }),
-        routes.toCERecommendationWorkloadDetails({
-          ...accountPathProps,
-          recommendation: ':recommendation',
-          recommendationName: ':recommendationName',
-          clusterName: ':clusterName',
-          namespace: ':namespace',
-          workloadName: ':workloadName'
-        }),
-        routes.toCEPerspectiveServiceDetails({
-          ...accountPathProps,
-          perspectiveId: ':perspectiveId',
-          perspectiveName: ':perspectiveName',
-          clusterName: ':clusterName',
-          serviceName: ':serviceName'
-        }),
-        routes.toCERecommendationServiceDetails({
-          ...accountPathProps,
-          recommendation: ':recommendation',
-          recommendationName: ':recommendationName',
-          clusterName: ':clusterName',
-          serviceName: ':serviceName'
-        }),
-        routes.toCEPerspectiveNodeDetails({
-          ...accountPathProps,
-          perspectiveId: ':perspectiveId',
-          perspectiveName: ':perspectiveName',
-          clusterName: ':clusterName',
-          nodeId: ':nodeId'
-        }),
-        routes.toCEDashboards({ ...accountPathProps }),
-        routes.toCECOCreateGateway({ ...accountPathProps, ...projectPathProps }),
-        routes.toCECOAccessPoints({ ...accountPathProps, ...projectPathProps }),
-        routes.toCECOEditGateway({
-          ...accountPathProps,
-          ...projectPathProps,
-          gatewayIdentifier: ':gatewayIdentifier'
-        }),
-        routes.toCECORules({ ...accountPathProps, params: '' }),
-        routes.toCommitmentOrchestration({ ...accountPathProps }),
-        routes.toCommitmentOrchestrationSetup({ ...accountPathProps }),
-        routes.toCEGovernance({ ...accountPathProps }),
-        routes.toCEGovernanceRules({ ...accountPathProps }),
-        routes.toCEGovernanceEnforcements({ ...accountPathProps }),
-        routes.toCEGovernanceEvaluations({ ...accountPathProps }),
-        routes.toCEGovernanceRuleEditor({ ...accountPathProps, ruleId: ':ruleId' }),
-        routes.toCECurrencyPreferences({ ...accountPathProps }),
-        routes.toClusterOrchestrator({ ...accountPathProps }),
-        routes.toClusterDetailsPage({ ...accountPathProps, id: ':id' }),
-        routes.toClusterWorkloadsDetailsPage({ ...accountPathProps, id: ':id' }),
-        routes.toClusterNodepoolDetailsPage({ ...accountPathProps, id: ':id' }),
-        routes.toComputeGroupsSetup({ ...accountPathProps, id: ':id' }),
-        routes.toCECloudIntegration({ ...accountPathProps }),
-        routes.toCEManagedServiceProvider({ ...accountPathProps })
-      ]
-    : []
+  const mfePaths = [
+    routes.toCEBudgets({ ...accountPathProps }),
+    routes.toCEBudgetDetails({ ...accountPathProps, budgetId: ':budgetId', budgetName: ':budgetName' }),
+    routes.toCERecommendations({ ...accountPathProps, ...projectPathProps }),
+    routes.toCERecommendationDetails({
+      ...accountPathProps,
+      ...projectPathProps,
+      recommendationName: ':recommendationName',
+      recommendation: ':recommendation'
+    }),
+    routes.toCEOverview({ ...accountPathProps }),
+    routes.toCENodeRecommendationDetails({
+      ...accountPathProps,
+      ...projectPathProps,
+      recommendationName: ':recommendationName',
+      recommendation: ':recommendation'
+    }),
+    routes.toCEECSRecommendationDetails({
+      ...accountPathProps,
+      ...projectPathProps,
+      recommendationName: ':recommendationName',
+      recommendation: ':recommendation'
+    }),
+    routes.toBusinessMapping({ ...accountPathProps }),
+    routes.toCEAnomalyDetection({ ...accountPathProps }),
+    routes.toCEPerspectives({ ...accountPathProps }),
+    routes.toCECreatePerspective({ ...accountPathProps, perspectiveId: ':perspectiveId' }),
+    routes.toCECORuleDetails({ ...accountPathProps, id: ':ruleId' }),
+    routes.toPerspectiveDetails({
+      ...accountPathProps,
+      perspectiveId: ':perspectiveId',
+      perspectiveName: ':perspectiveName'
+    }),
+    routes.toCEPerspectiveWorkloadDetails({
+      ...accountPathProps,
+      perspectiveId: ':perspectiveId',
+      perspectiveName: ':perspectiveName',
+      clusterName: ':clusterName',
+      namespace: ':namespace',
+      workloadName: ':workloadName'
+    }),
+    routes.toCERecommendationWorkloadDetails({
+      ...accountPathProps,
+      recommendation: ':recommendation',
+      recommendationName: ':recommendationName',
+      clusterName: ':clusterName',
+      namespace: ':namespace',
+      workloadName: ':workloadName'
+    }),
+    routes.toCEPerspectiveServiceDetails({
+      ...accountPathProps,
+      perspectiveId: ':perspectiveId',
+      perspectiveName: ':perspectiveName',
+      clusterName: ':clusterName',
+      serviceName: ':serviceName'
+    }),
+    routes.toCERecommendationServiceDetails({
+      ...accountPathProps,
+      recommendation: ':recommendation',
+      recommendationName: ':recommendationName',
+      clusterName: ':clusterName',
+      serviceName: ':serviceName'
+    }),
+    routes.toCEPerspectiveNodeDetails({
+      ...accountPathProps,
+      perspectiveId: ':perspectiveId',
+      perspectiveName: ':perspectiveName',
+      clusterName: ':clusterName',
+      nodeId: ':nodeId'
+    }),
+    routes.toCEDashboards({ ...accountPathProps }),
+    routes.toCECOCreateGateway({ ...accountPathProps, ...projectPathProps }),
+    routes.toCECOAccessPoints({ ...accountPathProps, ...projectPathProps }),
+    routes.toCECOEditGateway({
+      ...accountPathProps,
+      ...projectPathProps,
+      gatewayIdentifier: ':gatewayIdentifier'
+    }),
+    routes.toCECORules({ ...accountPathProps, params: '' }),
+    routes.toCommitmentOrchestration({ ...accountPathProps }),
+    routes.toCommitmentOrchestrationSetup({ ...accountPathProps }),
+    routes.toCEGovernance({ ...accountPathProps }),
+    routes.toCEGovernanceRules({ ...accountPathProps }),
+    routes.toCEGovernanceEnforcements({ ...accountPathProps }),
+    routes.toCEGovernanceEvaluations({ ...accountPathProps }),
+    routes.toCEGovernanceRuleEditor({ ...accountPathProps, ruleId: ':ruleId' }),
+    routes.toCECurrencyPreferences({ ...accountPathProps }),
+    routes.toClusterOrchestrator({ ...accountPathProps }),
+    routes.toClusterDetailsPage({ ...accountPathProps, id: ':id' }),
+    routes.toClusterWorkloadsDetailsPage({ ...accountPathProps, id: ':id' }),
+    routes.toClusterNodepoolDetailsPage({ ...accountPathProps, id: ':id' }),
+    routes.toComputeGroupsSetup({ ...accountPathProps, id: ':id' }),
+    routes.toCECloudIntegration({ ...accountPathProps }),
+    routes.toCEManagedServiceProvider({ ...accountPathProps })
+  ]
 
   return (
     <Provider value={urqlClient}>
@@ -675,8 +659,6 @@ const CERoutes: React.FC = () => {
         <RouteWithLayout licenseRedirectData={licenseRedirectData} path={routes.toCE({ ...accountPathProps })} exact>
           <RedirectToOverviewPage />
         </RouteWithLayout>
-
-        {!enableMicroFrontend && CENonMFERoutes.props.children}
 
         <RouteWithLayout
           licenseRedirectData={licenseRedirectData}
@@ -704,23 +686,25 @@ const CERoutes: React.FC = () => {
         >
           <RedirectToNewNodeRecommendationDetailsRoute />
         </RouteWithLayout>
-        {enableMicroFrontend ? (
-          <RouteWithLayout path={[...mfePaths, routes.toCCMMFE({ ...accountPathProps })]} sidebarProps={CESideNavProps}>
-            <ChildAppMounter<CCMUIAppCustomProps>
-              customComponents={{
-                OverviewAddCluster,
-                ConnectorReferenceField,
-                GatewayListFilters,
-                FeatureWarningBanner,
-                FeatureWarningTooltip
-              }}
-              customHooks={{
-                useTestConnectionModal
-              }}
-              ChildApp={CcmMicroFrontendPath}
-            />
-          </RouteWithLayout>
-        ) : null}
+        <RouteWithLayout
+          path={[...mfePaths, routes.toCCMMFE({ ...accountPathProps })]}
+          sidebarProps={CESideNavProps}
+          licenseRedirectData={licenseRedirectData}
+        >
+          <ChildAppMounter<CCMUIAppCustomProps>
+            customComponents={{
+              OverviewAddCluster,
+              ConnectorReferenceField,
+              GatewayListFilters,
+              FeatureWarningBanner,
+              FeatureWarningTooltip
+            }}
+            customHooks={{
+              useTestConnectionModal
+            }}
+            ChildApp={CcmMicroFrontendPath}
+          />
+        </RouteWithLayout>
 
         <Route path="*">
           <NotFoundPage />

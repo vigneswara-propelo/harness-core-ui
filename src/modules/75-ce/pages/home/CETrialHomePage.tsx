@@ -13,8 +13,6 @@ import routesV2 from '@common/RouteDefinitionsV2'
 import routes from '@common/RouteDefinitions'
 import { StartTrialTemplate } from '@rbac/components/TrialHomePageTemplate/StartTrialTemplate'
 import { useStartFreeLicense, ResponseModuleLicenseDTO } from 'services/cd-ng'
-import useCreateConnector from '@ce/components/CreateConnector/CreateConnector'
-import useCETrialModal from '@ce/modals/CETrialModal/useCETrialModal'
 import { useToaster } from '@common/components'
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { Module } from 'framework/types/ModuleName'
@@ -36,17 +34,8 @@ const CETrialHomePage: React.FC = () => {
   const isFreeEnabled = !isOnPrem()
   const module = 'ce' as Module
   const moduleType = 'CE'
-  const microfrontendEnabled = useFeatureFlag(FeatureFlag.CCM_MICRO_FRONTEND)
   const isDefaultProjectCreated = useFeatureFlag(FeatureFlag.CREATE_DEFAULT_PROJECT)
   const isNewNavEnabled = useFeatureFlag(FeatureFlag.CDS_NAV_2_0)
-  const { openModal } = useCreateConnector({
-    onSuccess: /* istanbul ignore next */ () => {
-      history.push(isNewNavEnabled ? routesV2.toCEOverview({ accountId, module }) : routes.toCEOverview({ accountId }))
-    },
-    onClose: /* istanbul ignore next */ () => {
-      history.push(isNewNavEnabled ? routesV2.toCEOverview({ accountId, module }) : routes.toCEOverview({ accountId }))
-    }
-  })
 
   const refererURL = getSavedRefererURL()
   const gaClientID = getGaClientID()
@@ -62,21 +51,6 @@ const CETrialHomePage: React.FC = () => {
         'content-type': 'application/json'
       }
     }
-  })
-
-  function getExperience(): ModuleLicenseType {
-    if (experience) {
-      return experience
-    }
-    return isFreeEnabled ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
-  }
-
-  const { showModal, hideModal } = useCETrialModal({
-    onContinue: /* istanbul ignore next */ () => {
-      hideModal()
-      openModal()
-    },
-    experience: getExperience()
   })
 
   const { showError } = useToaster()
@@ -97,11 +71,7 @@ const CETrialHomePage: React.FC = () => {
           : routes.toCEHome({ accountId })
       )
     } else {
-      microfrontendEnabled
-        ? history.push(
-            isNewNavEnabled ? routesV2.toCEOverview({ accountId, module }) : routes.toCEOverview({ accountId })
-          )
-        : showModal()
+      history.push(isNewNavEnabled ? routesV2.toCEOverview({ accountId, module }) : routes.toCEOverview({ accountId }))
     }
     return data
   }
@@ -119,11 +89,7 @@ const CETrialHomePage: React.FC = () => {
       }
 
       handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module as Module, updatedLicenseInfo)
-      microfrontendEnabled
-        ? history.push(
-            isNewNavEnabled ? routesV2.toCEOverview({ accountId, module }) : routes.toCEOverview({ accountId })
-          )
-        : showModal()
+      history.push(isNewNavEnabled ? routesV2.toCEOverview({ accountId, module }) : routes.toCEOverview({ accountId }))
     } catch (error) {
       showError(error.data?.message)
     }
@@ -147,11 +113,7 @@ const CETrialHomePage: React.FC = () => {
 
   useEffect(() => {
     if (experience) {
-      microfrontendEnabled
-        ? history.push(
-            isNewNavEnabled ? routesV2.toCEOverview({ accountId, module }) : routes.toCEOverview({ accountId })
-          )
-        : showModal()
+      history.push(isNewNavEnabled ? routesV2.toCEOverview({ accountId, module }) : routes.toCEOverview({ accountId }))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [experience])
