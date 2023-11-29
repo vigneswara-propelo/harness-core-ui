@@ -1296,6 +1296,50 @@ export function StageInputSetFormInternal({
           </div>
         </div>
       )}
+      {deploymentStageTemplate.environment?.provisioner && (
+        <div id={`Stage.${stageIdentifier}.environment.provisioner`} className={cx(css.accordionSummary)}>
+          <div className={css.inputheader}>{getString('pipeline.provisionerSteps')}</div>
+
+          <div className={css.nestedAccordions}>
+            {deploymentStageTemplate.environment?.provisioner?.steps && (
+              <ExecutionWrapperInputSetForm
+                executionIdentifier={executionIdentifier}
+                stepsTemplate={deploymentStageTemplate.environment?.provisioner?.steps}
+                path={`${path}.environment.provisioner.steps`}
+                allValues={deploymentStage?.environment?.provisioner?.steps}
+                values={deploymentStageInputSet?.environment?.provisioner?.steps}
+                formik={formik}
+                readonly={readonly}
+                viewType={viewType}
+                allowableTypes={allowableTypes}
+                customStepProps={{
+                  stageIdentifier: stageIdentifier as string,
+                  stageType,
+                  selectedStage: deploymentStage
+                }}
+              />
+            )}
+            {deploymentStageTemplate.environment?.provisioner?.rollbackSteps && (
+              <ExecutionWrapperInputSetForm
+                executionIdentifier={executionIdentifier}
+                stepsTemplate={deploymentStageTemplate.environment?.provisioner?.rollbackSteps}
+                path={`${path}.environment.provisioner.rollbackSteps`}
+                allValues={deploymentStage?.environment?.provisioner?.rollbackSteps}
+                values={deploymentStageInputSet?.environment?.provisioner?.rollbackSteps}
+                formik={formik}
+                readonly={readonly}
+                viewType={viewType}
+                allowableTypes={allowableTypes}
+                customStepProps={{
+                  stageIdentifier: stageIdentifier as string,
+                  stageType,
+                  selectedStage: deploymentStage
+                }}
+              />
+            )}
+          </div>
+        </div>
+      )}
     </>
   )
 }

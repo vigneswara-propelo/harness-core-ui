@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, findLast, set, snakeCase } from 'lodash-es'
+import { defaultTo, findLast, set, snakeCase, isEmpty } from 'lodash-es'
 
 import {
   isExecutionComplete,
@@ -14,7 +14,7 @@ import {
   isExecutionSuccess,
   isExecutionWaitingForIntervention
 } from '@pipeline/utils/statusHelpers'
-import type { ExecutionNode } from 'services/pipeline-ng'
+import type { ExecutionNode, UnitProgress } from 'services/pipeline-ng'
 
 import { getDefaultReducerState } from './utils'
 import type { Action, ActionType, LogSectionData, State, ProgressMapValue, UnitLoadingStatus } from './types'
@@ -76,16 +76,28 @@ export function createSections(state: State, action: Action<ActionType.CreateSec
   }
 
   if (Array.isArray(node.unitProgresses)) {
-    node.unitProgresses.forEach(row => {
-      /* istanbul ignore else */
-      if (row.unitName) {
-        progressMap.set(row.unitName, {
-          status: row.status as UnitLoadingStatus,
-          startTime: row.startTime,
-          endTime: row.endTime
-        })
-      }
-    })
+    if (isEmpty(node.unitProgresses) && !isEmpty(node?.progressData?.unitProgresses)) {
+      node.progressData?.unitProgresses.forEach((row: UnitProgress) => {
+        if (row.unitName) {
+          progressMap.set(row.unitName, {
+            status: row.status as UnitLoadingStatus,
+            startTime: row.startTime,
+            endTime: row.endTime
+          })
+        }
+      })
+    } else {
+      node.unitProgresses.forEach(row => {
+        /* istanbul ignore else */
+        if (row.unitName) {
+          progressMap.set(row.unitName, {
+            status: row.status as UnitLoadingStatus,
+            startTime: row.startTime,
+            endTime: row.endTime
+          })
+        }
+      })
+    }
   }
 
   const dataMap: Record<string, LogSectionData> = units.reduce(
