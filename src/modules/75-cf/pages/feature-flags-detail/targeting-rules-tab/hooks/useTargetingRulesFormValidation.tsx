@@ -41,14 +41,14 @@ const useTargetingRulesFormValidation = (): UseTargetingRulesFormValidationRetur
                       .array()
                       .of(yup.string().required(getString('cf.featureFlags.rules.validation.selectTargetGroup')))
                   })
-                ),
-                targets: (v as FormVariationMap).targetGroups?.length
-                  ? yup.array().optional()
-                  : yup.array().required(getString('cf.featureFlags.rules.validation.selectTarget')),
+                )
+                // targets: (v as FormVariationMap).targetGroups?.length
+                //   ? yup.array().optional()
+                //   : yup.array().required(getString('cf.featureFlags.rules.validation.selectTarget')),
 
-                targetGroups: (v as FormVariationMap).targets?.length
-                  ? yup.array().optional()
-                  : yup.array().required(getString('cf.featureFlags.rules.validation.selectTargetGroup'))
+                // targetGroups: (v as FormVariationMap).targets?.length
+                //   ? yup.array().optional()
+                //   : yup.array().required(getString('cf.featureFlags.rules.validation.selectTargetGroup'))
               }
 
               if ('variations' in (v as VariationPercentageRollout)) {

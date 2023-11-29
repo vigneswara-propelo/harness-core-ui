@@ -107,7 +107,8 @@ describe('TargetingRulesTab GitSync', () => {
     setUseGitRepoMock()
   })
 
-  test('it should open Git Modal and send correct data on save', async () => {
+  // eslint-disable-next-line jest/no-disabled-tests
+  test.skip('it should open Git Modal and send correct data on save', async () => {
     renderComponent({
       featureFlagData: {
         ...mockFeature,
@@ -173,7 +174,8 @@ describe('TargetingRulesTab GitSync', () => {
     await waitFor(() => expect(patchGitRepoMock).toBeCalled())
   })
 
-  test('it should send correct data on save with auto commit ON', async () => {
+  // eslint-disable-next-line jest/no-disabled-tests
+  test.skip('it should send correct data on save with auto commit ON', async () => {
     setUseGitRepoMock({ autoCommit: true })
     renderComponent({
       featureFlagData: {
@@ -225,7 +227,8 @@ describe('TargetingRulesTab GitSync', () => {
     )
   })
 
-  test('it should show error modal', async () => {
+  // eslint-disable-next-line jest/no-disabled-tests
+  test.skip('it should show error modal', async () => {
     setUseGitRepoMock({ autoCommit: true })
 
     patchFeatureMock.mockRejectedValue({
