@@ -81,7 +81,7 @@ const RenderTags: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) => {
   return Object.keys(delegateTags).length > 0 ? (
     <>
       <Text lineClamp={1} margin={{ right: 'medium' }}>
-        <TagsRenderer tags={delegateTags} length={1} />
+        <TagsRenderer tags={delegateTags} length={1} width={200} />
       </Text>
     </>
   ) : null
@@ -326,7 +326,7 @@ export const DelegateListingItem: React.FC<DelegateProps> = props => {
       {
         Header: getString('tagsLabel'),
         id: 'tags',
-        width: '17%',
+        width: '20%',
         Cell: RenderTags
       },
       {
@@ -344,7 +344,7 @@ export const DelegateListingItem: React.FC<DelegateProps> = props => {
       {
         Header: getString('delegate.LastHeartBeat'),
         id: 'heartbeat',
-        width: '12%',
+        width: '9%',
         Cell: RenderHeartbeat
       },
       {
