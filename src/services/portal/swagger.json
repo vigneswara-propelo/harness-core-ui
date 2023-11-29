@@ -514,6 +514,9 @@
     },
     {
       "name": "setup-as-codeyaml"
+    },
+    {
+      "name": "ngaccountsexternal"
     }
   ],
   "schemes": ["https", "http"],
@@ -41952,6 +41955,30 @@
             "headers": {},
             "schema": {
               "$ref": "#/definitions/RestResponseBoolean"
+            }
+          }
+        }
+      }
+    },
+    "/ng/accounts/external/trustLevel": {
+      "get": {
+        "tags": ["ngaccountsexternal"],
+        "operationId": "getAccountTrustLevel",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "headers": {},
+            "schema": {
+              "$ref": "#/definitions/RestResponseInteger"
             }
           }
         }

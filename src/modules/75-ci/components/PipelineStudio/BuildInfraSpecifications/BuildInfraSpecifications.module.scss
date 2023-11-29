@@ -231,6 +231,11 @@
   gap: 10px;
 }
 
+.infoContainer {
+  display: inline-grid;
+  background: var(--grey-100);
+}
+
 .infoIcon {
   display: flex;
   align-items: center;

@@ -118,7 +118,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     lastConfiguredWizardStepId = InfraProvisiongWizardStepId.SelectGitProvider,
     precursorData,
     enableImportYAMLOption,
-    dummyGitnessHarnessConnector
+    dummyGitnessHarnessConnector,
+    useVerifiedLocalInfra
   } = props
   const { preSelectedGitConnector, connectorsEligibleForPreSelection } = precursorData || {}
   const { getString } = useStrings()
@@ -217,7 +218,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           } else {
             setGeneratedYAMLAsJSON(
               addDetailsToPipeline({
-                originalPipeline: getCIStarterPipeline(yamlVersion),
+                originalPipeline: getCIStarterPipeline(yamlVersion, useVerifiedLocalInfra ? 'Docker' : ''),
                 ...commonArgs
               })
             )
@@ -254,7 +255,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             pipelineYaml: yamlStringify(
               id && StarterConfigIdToOptionMap[id] === PipelineConfigurationOption.GenerateYAML
                 ? generatedYAMLAsJSON
-                : getCloudPipelinePayloadWithCodebase()
+                : getCloudPipelinePayloadWithCodebase(useVerifiedLocalInfra ? 'Docker' : '')
             ),
             configuredGitConnector,
             orgIdentifier,
@@ -277,7 +278,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const constructPipelinePayloadWithoutCodebase = React.useCallback((): string => {
     const UNIQUE_PIPELINE_ID = new Date().getTime().toString()
     const payload = addDetailsToPipeline({
-      originalPipeline: getCloudPipelinePayloadWithoutCodebase(),
+      originalPipeline: getCloudPipelinePayloadWithoutCodebase(useVerifiedLocalInfra ? 'Docker' : ''),
       name: `${getString('buildText')} ${getString('common.pipeline').toLowerCase()}`,
       identifier: `${getString('buildText')}_${getString('common.pipeline').toLowerCase()}_${UNIQUE_PIPELINE_ID}`,
       projectIdentifier,

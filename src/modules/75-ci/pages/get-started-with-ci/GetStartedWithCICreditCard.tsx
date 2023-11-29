@@ -118,6 +118,7 @@ interface LocalInfraOnboardingProps {
   setShowLocalInfraSetup: (value: boolean) => void
   setShowCreditCardFlow: (value: boolean) => void
   accountId: string
+  setUseVerifiedLocalInfra: (value: boolean) => void
 }
 
 export const LocalInfraOnboarding = (props: LocalInfraOnboardingProps): React.ReactElement => {
@@ -203,10 +204,12 @@ export const LocalInfraOnboarding = (props: LocalInfraOnboardingProps): React.Re
                 <VerifyDelegateConnection
                   onSuccessHandler={() => {
                     setIsLocalInfraVerified(true)
+                    props.setUseVerifiedLocalInfra(true)
                     setIsTestInfraDisabled(true)
                   }}
                   onErrorHandler={() => {
                     setIsLocalInfraVerified(false)
+                    props.setUseVerifiedLocalInfra(false)
                     setIsTestInfraDisabled(true)
                   }}
                   onDone={noop}

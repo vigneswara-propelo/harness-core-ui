@@ -36,7 +36,10 @@ import {
   useGetConnectorListV2,
   useHasAValidCard
 } from 'services/cd-ng'
+import { useGetAccountTrustLevel } from 'services/portal'
 import { useStrings } from 'framework/strings'
+import { isFreePlan, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { ModuleName } from 'framework/types/ModuleName'
 import type { StringsMap } from 'stringTypes'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Status } from '@common/utils/Constants'
@@ -79,8 +82,11 @@ export default function GetStartedWithCI(): React.ReactElement {
   const scrollRef = useRef<Element>()
   const { showError } = useToaster()
 
-  const [showCreditCardFlow, setShowCreditCardFlow] = useState<boolean>(!!CI_CREDIT_CARD_ONBOARDING)
+  const [showCreditCardFlow, setShowCreditCardFlow] = useState<boolean>(false)
   const [showLocalInfraSetup, setShowLocalInfraSetup] = useState<boolean>(false)
+  const [useVerifiedLocalInfra, setUseVerifiedLocalInfra] = useState<boolean>(false)
+  const { licenseInformation } = useLicenseStore()
+  const isFreeEdition = isFreePlan(licenseInformation, ModuleName.CI)
 
   const dummyGitnessHarnessConnector: ConnectorInfoDTO = {
     accountIdentifier: accountId,
@@ -114,11 +120,20 @@ export default function GetStartedWithCI(): React.ReactElement {
     }
   }, [error])
 
+  const { data: trustLevelData, loading: fetchingTrustLevel } = useGetAccountTrustLevel({
+    queryParams: { accountId: accountId }
+  })
+
   useEffect(() => {
-    if ((validCard?.data?.hasAtleastOneValidCreditCard && CI_CREDIT_CARD_ONBOARDING) || !CI_CREDIT_CARD_ONBOARDING) {
-      setShowCreditCardFlow(false)
+    if (
+      CI_CREDIT_CARD_ONBOARDING &&
+      isFreeEdition &&
+      (trustLevelData?.resource === 0 || trustLevelData?.resource === -1) &&
+      !validCard?.data?.hasAtleastOneValidCreditCard
+    ) {
+      setShowCreditCardFlow(true)
     }
-  }, [validCard])
+  }, [validCard, trustLevelData])
 
   useEffect(() => {
     if (showWizard) {
@@ -265,7 +280,7 @@ export default function GetStartedWithCI(): React.ReactElement {
 
   const Divider = <div className={css.divider}></div>
 
-  const showPageLoader = fetchingGitConnectors || isFetchingSecret || fetchingCards
+  const showPageLoader = fetchingGitConnectors || isFetchingSecret || fetchingCards || fetchingTrustLevel
 
   return (
     <Container className={css.main}>
@@ -282,6 +297,7 @@ export default function GetStartedWithCI(): React.ReactElement {
               : InfraProvisiongWizardStepId.SelectGitProvider
           }
           dummyGitnessHarnessConnector={dummyGitnessHarnessConnector}
+          useVerifiedLocalInfra={useVerifiedLocalInfra}
         />
       ) : (
         <>
@@ -295,6 +311,7 @@ export default function GetStartedWithCI(): React.ReactElement {
               setShowLocalInfraSetup={setShowLocalInfraSetup}
               setShowCreditCardFlow={setShowCreditCardFlow}
               accountId={accountId}
+              setUseVerifiedLocalInfra={setUseVerifiedLocalInfra}
             />
           ) : (
             <Layout.Vertical flex>

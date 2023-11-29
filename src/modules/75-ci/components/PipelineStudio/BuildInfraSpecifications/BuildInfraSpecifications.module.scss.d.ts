@@ -20,6 +20,7 @@ declare const styles: {
   readonly fieldsGroup: string
   readonly formGroup: string
   readonly helptext: string
+  readonly infoContainer: string
   readonly infoIcon: string
   readonly infoWrap: string
   readonly label: string

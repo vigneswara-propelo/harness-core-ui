@@ -37,7 +37,7 @@ import type { FormikProps } from 'formik'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { useHasAValidCard } from 'services/cd-ng'
 import { useCreditCardWidget } from '@modules/27-platform/auth-settings/pages/Billing/CreditCardWidget'
-import { DelegateGroupDetails, useGetDelegateGroupsNGV2 } from 'services/portal'
+import { DelegateGroupDetails, useGetAccountTrustLevel, useGetDelegateGroupsNGV2 } from 'services/portal'
 import Volumes, { VolumesTypes } from '@pipeline/components/Volumes/Volumes'
 import MultiTypeCustomMap from '@common/components/MultiTypeCustomMap/MultiTypeCustomMap'
 import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
@@ -397,10 +397,14 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   const isFreeEdition = isFreePlan(licenseInformation, ModuleName.CI)
   const isSecurityEnterprise =
     isEnterprisePlan(licenseInformation, ModuleName.STO) && licenseInformation['STO']?.status === 'ACTIVE'
-  const [isCloudInfraDisabled, setIsCloudInfraDisabled] = useState<boolean>(true)
+  const [isCloudInfraDisabled, setIsCloudInfraDisabled] = useState<boolean>(false)
 
   const { data: validCard, refetch: refetchValidCard } = useHasAValidCard({
     queryParams: { accountIdentifier: accountId }
+  })
+
+  const { data: trustLevelData } = useGetAccountTrustLevel({
+    queryParams: { accountId: accountId }
   })
 
   const { openSubscribeModal } = useCreditCardWidget({
@@ -410,12 +414,17 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   })
 
   useEffect(() => {
-    if (!validCard?.data?.hasAtleastOneValidCreditCard && CI_CREDIT_CARD_ONBOARDING) {
+    if (
+      CI_CREDIT_CARD_ONBOARDING &&
+      isFreeEdition &&
+      (trustLevelData?.resource === 0 || trustLevelData?.resource === -1) &&
+      !validCard?.data?.hasAtleastOneValidCreditCard
+    ) {
       setIsCloudInfraDisabled(true)
     } else {
       setIsCloudInfraDisabled(false)
     }
-  }, [validCard])
+  }, [validCard, trustLevelData])
 
   const BuildInfraTypes: ThumbnailSelectProps['items'] = [
     ...(enabledHostedBuildsForFreeUsers && CIE_HOSTED_VMS
@@ -2331,30 +2340,36 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
       case CIBuildInfrastructureType.Cloud:
         return (
           <>
-            <div className={cx(css.infoWrap)}>
-              {iconDiv}
-              <div>
-                <Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>{getString('ci.buildInfra.info.cloud')}</Text>
+            <div className={cx(css.infoContainer)}>
+              <div className={cx(css.infoWrap)}>
+                {iconDiv}
+                <div>
+                  <Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>
+                    {getString('ci.buildInfra.info.cloud')}
+                  </Text>
+                </div>
               </div>
+              {cloudDisabled}
             </div>
-            {cloudDisabled}
           </>
         )
       case CIBuildInfrastructureType.Docker:
         return (
           <>
-            <div className={cx(css.infoWrap)}>
-              {iconDiv}
-              <div>
-                <Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>
-                  {getString('ci.buildInfra.info.local1')}
-                </Text>
-                <Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>
-                  {getString('ci.buildInfra.info.local2')} {localLink}
-                </Text>
+            <div className={cx(css.infoContainer)}>
+              <div className={cx(css.infoWrap)}>
+                {iconDiv}
+                <div>
+                  <Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>
+                    {getString('ci.buildInfra.info.local1')}
+                  </Text>
+                  <Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>
+                    {getString('ci.buildInfra.info.local2')} {localLink}
+                  </Text>
+                </div>
               </div>
+              {cloudDisabled}
             </div>
-            {cloudDisabled}
           </>
         )
       default:

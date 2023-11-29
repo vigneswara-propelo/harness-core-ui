@@ -19,6 +19,7 @@ import type {
   ResponseSetupStatus,
   ResponseAccountCreditCardValidationResponse
 } from 'services/cd-ng'
+import { RestResponseInteger } from 'services/portal'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import BuildInfraSpecifications from '../BuildInfraSpecifications'
 
@@ -108,6 +109,17 @@ jest.mock('services/portal', () => ({
       refetch: jest.fn(),
       error: null,
       loading: false
+    }
+  }),
+  useGetAccountTrustLevel: jest.fn().mockImplementation(() => {
+    return {
+      mutate: () =>
+        Promise.resolve({
+          data: {
+            resource: 1
+          },
+          status: 'SUCCESS'
+        } as RestResponseInteger)
     }
   })
 }))

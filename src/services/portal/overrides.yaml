@@ -60,6 +60,7 @@ allowpaths:
   - '/users/userAccounts'
   - '/delegate/taskslog'
   - '/delegate-feedbacks'
+  - '/ng/accounts/external/trustLevel'
 operationIdOverrides:
   /setup/delegates.get: getDelegates
   /setup/delegates/status.get: getDelegatesStatus
@@ -114,3 +115,4 @@ operationIdOverrides:
   /sso/ldap/iterations: getCronExpressionIterations
   /users/userAccounts: getUserAccounts
   /setup/delegates/installation-command.get: getInstallationCommand
+  /ng/accounts/external/trustLevel: getAccountTrustLevel

@@ -25006,6 +25006,45 @@ export const save6Promise = (
     signal
   )
 
+export interface GetAccountTrustLevelQueryParams {
+  accountId?: string
+}
+
+export type GetAccountTrustLevelProps = Omit<
+  GetProps<RestResponseInteger, unknown, GetAccountTrustLevelQueryParams, void>,
+  'path'
+>
+
+export const GetAccountTrustLevel = (props: GetAccountTrustLevelProps) => (
+  <Get<RestResponseInteger, unknown, GetAccountTrustLevelQueryParams, void>
+    path={`/ng/accounts/external/trustLevel`}
+    base={getConfig('api')}
+    {...props}
+  />
+)
+
+export type UseGetAccountTrustLevelProps = Omit<
+  UseGetProps<RestResponseInteger, unknown, GetAccountTrustLevelQueryParams, void>,
+  'path'
+>
+
+export const useGetAccountTrustLevel = (props: UseGetAccountTrustLevelProps) =>
+  useGet<RestResponseInteger, unknown, GetAccountTrustLevelQueryParams, void>(`/ng/accounts/external/trustLevel`, {
+    base: getConfig('api'),
+    ...props
+  })
+
+export const getAccountTrustLevelPromise = (
+  props: GetUsingFetchProps<RestResponseInteger, unknown, GetAccountTrustLevelQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseInteger, unknown, GetAccountTrustLevelQueryParams, void>(
+    getConfig('api'),
+    `/ng/accounts/external/trustLevel`,
+    props,
+    signal
+  )
+
 export interface GetSelectionLogsV2QueryParams {
   accountId?: string
   taskId?: string

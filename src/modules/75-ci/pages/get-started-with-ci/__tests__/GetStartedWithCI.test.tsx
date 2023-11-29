@@ -10,6 +10,7 @@ import React from 'react'
 import { render, fireEvent, act } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ResponseAccountCreditCardValidationResponse } from 'services/cd-ng'
+import { RestResponseInteger } from 'services/portal'
 import GetStartedWithCI from '../GetStartedWithCI'
 import { repos } from '../InfraProvisioningWizard/mocks/repositories'
 
@@ -116,6 +117,20 @@ jest.mock('services/cd-ng', () => ({
 
 jest.mock('services/code', () => ({
   useListRepos: jest.fn().mockImplementation(() => Promise.resolve([]))
+}))
+
+jest.mock('services/portal', () => ({
+  useGetAccountTrustLevel: jest.fn().mockImplementation(() => {
+    return {
+      mutate: () =>
+        Promise.resolve({
+          data: {
+            resource: 1
+          },
+          status: 'SUCCESS'
+        } as RestResponseInteger)
+    }
+  })
 }))
 
 describe('Test Get Started With CI', () => {

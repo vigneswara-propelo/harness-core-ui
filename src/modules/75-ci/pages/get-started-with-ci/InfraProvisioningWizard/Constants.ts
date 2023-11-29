@@ -21,6 +21,7 @@ export interface InfraProvisioningWizardProps {
   lastConfiguredWizardStepId?: InfraProvisiongWizardStepId
   enableImportYAMLOption?: boolean
   dummyGitnessHarnessConnector?: ConnectorInfoDTO
+  useVerifiedLocalInfra?: boolean
 }
 
 export const enum Hosting {

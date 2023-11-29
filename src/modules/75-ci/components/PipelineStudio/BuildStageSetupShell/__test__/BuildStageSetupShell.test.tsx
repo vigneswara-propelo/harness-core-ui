@@ -16,6 +16,7 @@ import {
   ResponseSetupStatus,
   ResponseAccountCreditCardValidationResponse
 } from 'services/cd-ng'
+import { RestResponseInteger } from 'services/portal'
 import type { PipelineContextInterface } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
@@ -187,6 +188,17 @@ jest.mock('services/portal', () => ({
   useGetDelegateSelectorsUpTheHierarchyV2: jest.fn().mockImplementation(args => {
     mockGetCallFunction(args)
     return []
+  }),
+  useGetAccountTrustLevel: jest.fn().mockImplementation(() => {
+    return {
+      mutate: () =>
+        Promise.resolve({
+          data: {
+            resource: 1
+          },
+          status: 'SUCCESS'
+        } as RestResponseInteger)
+    }
   })
 }))
 

@@ -335,22 +335,22 @@ export const getCIStarterPipelineV1 = (): Record<string, any> => {
   }
 }
 
-export const getCIStarterPipeline = (yamlVersion: YAMLVersion): PipelineConfig => {
-  return yamlVersion === YAMLVersion.V1 ? getCIStarterPipelineV1() : getCloudPipelinePayloadWithCodebase()
+export const getCIStarterPipeline = (yamlVersion: YAMLVersion, infraType?: string): PipelineConfig => {
+  return yamlVersion === YAMLVersion.V1 ? getCIStarterPipelineV1() : getCloudPipelinePayloadWithCodebase(infraType)
 }
 
-export const getCloudPipelinePayloadWithoutCodebase = (): PipelineConfig => {
+export const getCloudPipelinePayloadWithoutCodebase = (infraType?: string): PipelineConfig => {
   const originalPipeline = getPipelinePayloadWithoutCodebase()
   set(originalPipeline, 'pipeline.stages.0.stage.spec.infrastructure', undefined)
   set(originalPipeline, 'pipeline.stages.0.stage.spec.execution.steps.0.step.spec.image', undefined)
   set(originalPipeline, 'pipeline.stages.0.stage.spec.execution.steps.0.step.spec.connectorRef', undefined)
   set(originalPipeline, 'pipeline.stages.0.stage.spec.platform', { os: 'Linux', arch: 'Amd64' })
-  set(originalPipeline, 'pipeline.stages.0.stage.spec.runtime', { type: 'Cloud', spec: {} })
+  set(originalPipeline, 'pipeline.stages.0.stage.spec.runtime', { type: infraType ?? 'Cloud', spec: {} })
   return originalPipeline
 }
 
-export const getCloudPipelinePayloadWithCodebase = (): PipelineConfig => {
-  const originalPipeline = getCloudPipelinePayloadWithoutCodebase()
+export const getCloudPipelinePayloadWithCodebase = (infraType?: string): PipelineConfig => {
+  const originalPipeline = getCloudPipelinePayloadWithoutCodebase(infraType)
   return set(
     set(originalPipeline, 'pipeline.properties', CodebaseProperties),
     'pipeline.stages.0.stage.spec.cloneCodebase',
