@@ -306,13 +306,15 @@ const getDocumentSymbols = async (model: editor.ITextModel): Promise<languages.D
 }
 
 const getPathFromRange = (range: IRange, symbols: languages.DocumentSymbol[]): string[] => {
-  return symbols.reduce<string[]>((path, symbol) => {
-    if (!Range.containsRange(symbol.range, range)) return path
+  const path: string[] = []
+  for (const symbol of symbols) {
+    if (!Range.containsRange(symbol.range, range)) continue
     path.push(symbol.name)
-    if (!symbol.children) return path
+    if (Range.equalsRange(symbol.range, range)) break
+    if (!symbol.children) continue
     path.push(...getPathFromRange(range, symbol.children))
-    return path
-  }, [])
+  }
+  return path
 }
 
 interface CommandArg extends Pick<CodeLensCommand, 'onClick' | 'args'> {
