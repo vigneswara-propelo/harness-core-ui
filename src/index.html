@@ -146,7 +146,7 @@
     <% if (!__DEV__) { %>
     <script>
       window.NON_CDN_BASE_PATH = `${window.harnessNameSpace ? '/' + window.harnessNameSpace : ''}/ng/static/`
-      if (window.deploymentType === 'SAAS') {
+      if (window.bugsnagToken) {
         var e = document.createElement('script')
         e.setAttribute('type', 'text/javascript')
         e.setAttribute('src', '//d2wy8f7a9ursnm.cloudfront.net/v7/bugsnag.min.js')

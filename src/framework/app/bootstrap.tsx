@@ -23,7 +23,7 @@ export default async function render(): Promise<void> {
   const lang: LangLocale = 'en'
   const strings = await languageLoader(lang)
 
-  if (window.bugsnagToken && typeof Bugsnag !== 'undefined' && Bugsnag.start && window.deploymentType === 'SAAS') {
+  if (window.bugsnagToken && typeof Bugsnag !== 'undefined' && Bugsnag.start) {
     window.bugsnagClient = Bugsnag.start({
       apiKey: window.bugsnagToken,
       appVersion: __BUGSNAG_RELEASE_VERSION__,
