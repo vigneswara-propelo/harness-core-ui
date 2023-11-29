@@ -372,10 +372,10 @@ const SAMLProviderForm: React.FC<Props> = ({ onSubmit, onCancel, samlProvider })
       </Layout.Vertical>
       <Layout.Vertical width={290} padding={{ left: 'xxxlarge' }} margin={{ bottom: 'large' }} border={{ left: true }}>
         <Heading level={6} color={Color.BLACK} font={{ weight: 'semi-bold' }} margin={{ bottom: 'medium' }}>
-          {getString('platform.authSettings.friendlyReminder')}
+          {getString('platform.authSettings.importantReminder')}
         </Heading>
         <Text color={Color.GREY_800} font={{ size: 'small' }} margin={{ bottom: 'xxlarge' }} className={css.notes}>
-          {getString('platform.authSettings.friendlyReminderDescription')}
+          {getString('platform.authSettings.importantReminderDescription')}
         </Text>
         {hasSamlProvider && (
           <React.Fragment>

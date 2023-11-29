@@ -2015,8 +2015,6 @@ export interface StringsMap {
   'platform.authSettings.finalReview.premiumSupport': string
   'platform.authSettings.finalReview.subscribeNPay': string
   'platform.authSettings.finalReview.upgradeToPlan': string
-  'platform.authSettings.friendlyReminder': string
-  'platform.authSettings.friendlyReminderDescription': string
   'platform.authSettings.goToSettings': string
   'platform.authSettings.groupAttributeName': string
   'platform.authSettings.haveOneDigit': string
@@ -2025,6 +2023,8 @@ export interface StringsMap {
   'platform.authSettings.haveOneUppercase': string
   'platform.authSettings.identityProvider': string
   'platform.authSettings.identityProviderLabel': string
+  'platform.authSettings.importantReminder': string
+  'platform.authSettings.importantReminderDescription': string
   'platform.authSettings.ipAddress.aPartOfAllowlist': string
   'platform.authSettings.ipAddress.addIpAddresses': string
   'platform.authSettings.ipAddress.allowedAsAPartOf': string

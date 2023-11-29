@@ -107,10 +107,10 @@ const SelectProvider: React.FC<StepProps<FormValues>> = props => {
         border={{ left: true }}
       >
         <Heading level={6} color={Color.BLACK} font={{ weight: 'semi-bold' }} margin={{ bottom: 'medium' }}>
-          {getString('platform.authSettings.friendlyReminder')}
+          {getString('platform.authSettings.importantReminder')}
         </Heading>
         <Text color={Color.GREY_800} font={{ size: 'small' }} margin={{ bottom: 'xxlarge' }} className={css.notes}>
-          {getString('platform.authSettings.friendlyReminderDescription')}
+          {getString('platform.authSettings.importantReminderDescription')}
         </Text>
       </Layout.Vertical>
     </Layout.Horizontal>
