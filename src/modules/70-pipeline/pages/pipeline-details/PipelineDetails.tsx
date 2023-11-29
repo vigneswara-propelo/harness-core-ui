@@ -281,6 +281,15 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
       module
     })
   })
+  const isInputSetView = !!matchPath(location.pathname, {
+    path: routes.toInputSetList({
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      accountId,
+      module
+    })
+  })
 
   const onGitBranchChange = (selectedFilter: GitFilterScope): void => {
     if (branch !== selectedFilter.branch) {
@@ -332,7 +341,7 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
                       fileUrl={pipeline?.data?.gitDetails?.fileUrl}
                       onBranchChange={onGitBranchChange}
                       flags={{
-                        readOnly: isTriggersView,
+                        readOnly: isTriggersView || isInputSetView,
                         showBranch: !isExecutionHistoryView
                       }}
                     />

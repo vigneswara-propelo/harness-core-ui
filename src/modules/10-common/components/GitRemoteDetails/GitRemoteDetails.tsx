@@ -104,6 +104,7 @@ const GitRemoteDetails = ({
             data-tooltip-id={
               branch === defaultGitContextBranchPlaceholder ? 'defaultGitContextBranchPlaceholder' : undefined
             }
+            data-testid="readonly-gitbranch"
           >
             {branch}
           </Text>

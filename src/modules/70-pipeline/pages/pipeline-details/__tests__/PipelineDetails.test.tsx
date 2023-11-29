@@ -76,6 +76,12 @@ const PIPELINE_STUDIO_V1_PATH = routes.toPipelineStudioV1({
   ...pipelineModuleParams
 })
 
+const INPUT_SET_PATH = routes.toInputSetList({
+  ...accountPathProps,
+  ...pipelinePathProps,
+  ...pipelineModuleParams
+})
+
 jest.mock('@common/hooks', () => ({
   ...(jest.requireActual('@common/hooks') as any),
   useQueryParams: jest.fn().mockImplementation(() => ({}))
@@ -274,6 +280,28 @@ describe('Pipeline Details tests', () => {
     const pipelineStudio = getByTestId('pipeline-studio')
     expect(pipelineStudio).toBeTruthy()
     expect(getByText('inputSetsText')).toBeInTheDocument()
+  })
+  test('branch dropdown should be disabled in input set view', async () => {
+    jest
+      .spyOn(commonHooks, 'useQueryParams')
+      .mockImplementation(() => ({ branch: 'main', repoName: 'gitExpRepo', storeType: 'REMOTE' }))
+    const { getByText, getByTestId } = render(
+      <TestWrapper
+        path={INPUT_SET_PATH}
+        pathParams={{
+          accountId: 'testAcc',
+          orgIdentifier: 'testOrg',
+          projectIdentifier: 'test',
+          pipelineIdentifier: 'pipeline',
+          module: 'cd'
+        }}
+        defaultAppStoreValues={{ ...defaultAppStoreValues, supportingGitSimplification: true }}
+      >
+        <PipelineDetails />
+      </TestWrapper>
+    )
+    expect(getByText('inputSetsText')).toBeInTheDocument()
+    expect(getByTestId('readonly-gitbranch')).toBeInTheDocument()
   })
 
   test('should render correct view when api errors out and renders error handler component', () => {
