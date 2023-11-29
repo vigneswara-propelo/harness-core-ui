@@ -28,8 +28,8 @@ export default function ViewGitopsApp(): JSX.Element {
       accountId,
       module: 'cd',
       applicationId: entityIds.application as string,
-      agentId: (stepsProgress?.[CDOnboardingSteps.WHAT_TO_DEPLOY]?.stepData as WhereAndHowToDeployType)?.agentInfo
-        ?.identifier
+      agentId: (stepsProgress?.[CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY]?.stepData as WhereAndHowToDeployType)
+        ?.agentInfo?.identifier
     })
 
     history.push(`${routeUrl}&tab=ResourceView`)
