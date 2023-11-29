@@ -1,5 +1,12 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { FC, useMemo, useState } from 'react'
-import { Container, Icon, Layout, Text, Page } from '@harness/uicore'
+import { Container, ExpandingSearchInput, Icon, Layout, Text, Page } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
 import { Spinner } from '@blueprintjs/core'
@@ -9,6 +16,7 @@ import { useGetAllTags } from 'services/cf'
 import { useStrings } from 'framework/strings'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import css from './TagsAttributeModalBody.module.scss'
+
 export interface TagsAttributeModalBodyProps {
   onSelectChange: (items: string[]) => void
   selectedData: string[]
@@ -25,7 +33,9 @@ const TagsAttributeModalBody: FC<TagsAttributeModalBodyProps> = ({ onSelectChang
   const { orgIdentifier, accountId: accountIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const { activeEnvironment: environmentIdentifier } = useActiveEnvironment()
   const { getString } = useStrings()
+
   const [pageNumber, setPageNumber] = useState<number>(0)
+  const [searchTerm, setSearchTerm] = useState<string>('')
 
   const {
     data: tagsData,
@@ -39,8 +49,10 @@ const TagsAttributeModalBody: FC<TagsAttributeModalBodyProps> = ({ onSelectChang
       accountIdentifier,
       orgIdentifier,
       pageSize: CF_DEFAULT_PAGE_SIZE,
-      pageNumber
-    }
+      pageNumber,
+      tagIdentifierFilter: searchTerm
+    },
+    debounce: 300
   })
 
   const state = useMemo(() => {
@@ -75,8 +87,21 @@ const TagsAttributeModalBody: FC<TagsAttributeModalBodyProps> = ({ onSelectChang
   ]
 
   return (
-    <Container className={css.modalBody}>
-      <Container className={css.modalContent}>
+    <Container flex={{ justifyContent: 'center', alignItems: 'center' }} height="500px" className={css.modalBody}>
+      <Container width="100%" className={css.modalContent}>
+        <Layout.Horizontal padding="small">
+          <ExpandingSearchInput
+            disabled={!!tagsError}
+            width="100%"
+            autoFocus={false}
+            name="tagsSearch"
+            alwaysExpanded
+            placeholder={getString('cf.featureFlags.tagging.search')}
+            throttle={200}
+            defaultValue={searchTerm}
+            onChange={(query: string) => setSearchTerm(query)}
+          />
+        </Layout.Horizontal>
         {state === STATUS.ok && (
           <ResourceHandlerTable
             data={tagsData?.tags || []}

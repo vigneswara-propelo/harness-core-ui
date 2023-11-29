@@ -31,6 +31,8 @@ describe('TagsAttributeModalBody', () => {
       error: null,
       refetch: jest.fn()
     } as any)
+
+    jest.clearAllMocks()
   })
 
   test('it should display empty state correctly', async () => {
@@ -109,5 +111,110 @@ describe('TagsAttributeModalBody', () => {
 
     expect(await screen.findByRole('button', { name: 'Prev' })).toBeInTheDocument()
     expect(await screen.findByRole('button', { name: 'Next' })).toBeInTheDocument()
+  })
+
+  test('it should call the tags api for searched tags', async () => {
+    useGetAllTagsMock.mockReturnValue({
+      data: mockTagsPayload,
+      error: null,
+      loading: false,
+      refetch: jest.fn()
+    } as any)
+
+    renderComponent()
+
+    const searchBar = screen.getByRole('searchbox')
+
+    await userEvent.type(searchBar, mockTagsPayload.tags[2].identifier)
+
+    expect(searchBar).toHaveValue(mockTagsPayload.tags[2].identifier)
+
+    const searchedTagsPayload = cloneDeep(mockTagsPayload)
+    searchedTagsPayload.itemCount = 1
+    searchedTagsPayload.tags = [{ identifier: 'tag_3', name: 'tag3' }]
+
+    useGetAllTagsMock.mockReturnValue({
+      data: searchedTagsPayload,
+      error: null,
+      loading: false
+    } as any)
+
+    await waitFor(() => {
+      expect(useGetAllTagsMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          queryParams: expect.objectContaining({ tagIdentifierFilter: mockTagsPayload.tags[2].identifier })
+        })
+      )
+    })
+
+    expect(await screen.findByText(mockTagsPayload.tags[2].name)).toBeInTheDocument()
+
+    expect(screen.queryByText(mockTagsPayload.tags[0].name)).not.toBeInTheDocument()
+    expect(screen.queryByText(mockTagsPayload.tags[1].name)).not.toBeInTheDocument()
+
+    for (let i = 3; i < mockTagsPayload.tags.length; i++) {
+      expect(screen.queryByText(mockTagsPayload.tags[i].name)).not.toBeInTheDocument()
+    }
+  })
+
+  test('it should return no searched results if the searched tag does not exist', async () => {
+    const nonExistentTag = 'FOOBAR'
+
+    const noTagsPayload = cloneDeep(mockTagsPayload)
+    noTagsPayload.itemCount = 0
+    noTagsPayload.tags = []
+
+    useGetAllTagsMock.mockReturnValue({
+      data: mockTagsPayload,
+      error: null,
+      loading: false,
+      refetch: jest.fn()
+    } as any)
+
+    renderComponent()
+
+    const searchBar = screen.getByRole('searchbox')
+
+    await userEvent.type(searchBar, nonExistentTag)
+
+    expect(searchBar).toHaveValue(nonExistentTag)
+
+    await userEvent.clear(searchBar)
+
+    expect(searchBar).not.toHaveValue()
+
+    await userEvent.type(searchBar, nonExistentTag)
+
+    useGetAllTagsMock.mockReturnValue({
+      data: noTagsPayload,
+      error: null,
+      loading: false,
+      refetch: jest.fn()
+    } as any)
+
+    await waitFor(() => {
+      expect(useGetAllTagsMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          queryParams: expect.objectContaining({
+            tagIdentifierFilter: nonExistentTag
+          })
+        })
+      )
+    })
+
+    expect(await screen.findByText('noData')).toBeInTheDocument()
+  })
+
+  test('it should disable the search bar if the tags api fails to fetch', async () => {
+    useGetAllTagsMock.mockReturnValue({
+      data: null,
+      error: 'ERROR FETCHING TAGS',
+      loading: false,
+      refetch: jest.fn()
+    } as any)
+
+    renderComponent()
+
+    expect(screen.getByRole('searchbox')).toBeDisabled()
   })
 })

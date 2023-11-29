@@ -8922,6 +8922,7 @@ export interface StringsMap {
   'cf.featureFlags.startVariation': string
   'cf.featureFlags.tagging.emptyState': string
   'cf.featureFlags.tagging.maxTagsError': string
+  'cf.featureFlags.tagging.search': string
   'cf.featureFlags.targetUsers': string
   'cf.featureFlags.targeting': string
   'cf.featureFlags.testChanges': string
