@@ -8,6 +8,7 @@
 import type { AllowedTypes, IconName } from '@harness/uicore'
 import type { FormikErrors, FormikProps } from 'formik'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
+import type { FeatureFlagMap } from 'framework/AppStore/AppStoreContext'
 import type { UseStringsReturn } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import type { AbstractStepFactory } from './AbstractStepFactory'
@@ -30,13 +31,13 @@ export interface InputSetData<T> {
   path: string
   readonly?: boolean
 }
-
 export interface ValidateInputSetProps<T> {
   data: T
   template?: T
   getString?: UseStringsReturn['getString']
   viewType: StepViewType
   allValues?: T
+  featureFlagValues?: FeatureFlagMap
 }
 
 export type StepFormikRef<T> = Pick<FormikProps<T>, 'submitForm' | 'errors'>

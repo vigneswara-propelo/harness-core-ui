@@ -12,6 +12,7 @@ import React from 'react'
 import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType, Formik } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 
@@ -20,6 +21,8 @@ import { FormMultiTypeKVTagInput } from '@common/components/MutliTypeKVTagInput/
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { TasBGAppSetupData } from './TasBGAppSetup'
 import TasSetupSource from '../TASBasicAppSetupStep/TASSetupSource'
+import { ExistingVersionToKeep } from '../TASBasicAppSetupStep/TASBasicAppSetupTypes'
+
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface TasBGAppSetupWidgetProps {
@@ -38,6 +41,9 @@ export function TasBGAppSetupWidget(
 ): JSX.Element {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { CDS_PCF_SUPPORT_BG_WITH_2_APPS_NG } = useFeatureFlags()
+
+  const MIN = CDS_PCF_SUPPORT_BG_WITH_2_APPS_NG ? ExistingVersionToKeep.MIN_NEW : ExistingVersionToKeep.MIN_OLD
 
   function commonValidation(this: Yup.TestContext, value: any, valueString: string): boolean | Yup.ValidationError {
     if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED && typeof value !== 'number') {
@@ -47,12 +53,12 @@ export function TasBGAppSetupWidget(
         })
       })
     }
-    if (value < 0) {
+    if (value < MIN) {
       /* istanbul ignore next */
       return this.createError({
         message: getString('cd.ElastigroupStep.valueCannotBeLessThan', {
           value: valueString,
-          value2: 0
+          value2: MIN
         })
       })
     }
@@ -67,11 +73,11 @@ export function TasBGAppSetupWidget(
       existingVersionToKeep: Yup.mixed().test({
         test(value): boolean | Yup.ValidationError {
           if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED) {
-            if (value < 0) {
+            if (value < MIN) {
               return this.createError({
                 message: getString?.('cd.ElastigroupStep.valueCannotBeLessThan', {
                   value: getString('cd.steps.tas.existingVersionToKeep'),
-                  value2: 0
+                  value2: MIN
                 })
               })
             }

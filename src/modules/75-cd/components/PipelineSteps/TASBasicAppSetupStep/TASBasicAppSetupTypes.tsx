@@ -20,3 +20,8 @@ export enum ResizeStrategyType {
 export type TASBasicAppSetupTemplate<T> = StepElementConfig & {
   spec: T
 }
+
+export enum ExistingVersionToKeep {
+  MIN_NEW = 0,
+  MIN_OLD = 1
+}

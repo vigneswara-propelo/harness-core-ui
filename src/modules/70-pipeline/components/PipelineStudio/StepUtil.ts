@@ -11,7 +11,7 @@ import { isEmpty, has, set, isBoolean, get, pick, defaultTo, uniqWith, isEqual }
 import * as Yup from 'yup'
 import type { K8sDirectInfraYaml } from 'services/ci'
 import type { DeploymentStageConfig, Infrastructure, ServiceYamlV2, StepGroupElementConfig } from 'services/cd-ng'
-
+import { FeatureFlagMap } from 'framework/AppStore/AppStoreContext'
 import type { UseStringsReturn } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import {
@@ -170,6 +170,7 @@ export interface ValidateStepProps {
   viewType: StepViewType
   template?: StepElementConfig | TemplateStepNode | StepGroupElementConfig
   originalStep?: ExecutionWrapperConfig
+  featureFlagValues?: FeatureFlagMap
 }
 
 export const validateStep = ({
@@ -177,7 +178,8 @@ export const validateStep = ({
   template,
   originalStep,
   getString,
-  viewType
+  viewType,
+  featureFlagValues
 }: ValidateStepProps): FormikErrors<StepElementConfig | StepGroupElementConfig> => {
   const errors = {}
   const isTemplateStep = !!(originalStep?.step as unknown as TemplateStepNode)?.template
@@ -196,10 +198,11 @@ export const validateStep = ({
   const errorResponse = defaultTo(
     pipelineStep?.validateInputSet({
       data: step,
-      template: template,
+      template,
       getString,
       viewType,
-      allValues: originalStep?.step
+      allValues: originalStep?.step,
+      featureFlagValues
     }),
     {}
   )
@@ -237,6 +240,7 @@ export interface ValidateStepsProps {
   viewType: StepViewType
   template?: ExecutionWrapperConfig[]
   originalSteps?: ExecutionWrapperConfig[]
+  featureFlagValues?: FeatureFlagMap
 }
 
 export const validateSteps = ({
@@ -244,7 +248,8 @@ export const validateSteps = ({
   template,
   originalSteps,
   getString,
-  viewType
+  viewType,
+  featureFlagValues
 }: ValidateStepsProps): FormikErrors<ExecutionWrapperConfig> => {
   const errors = {}
   const failureStrategySchema = getFailureStrategiesValidationSchema(getString)
@@ -258,7 +263,8 @@ export const validateSteps = ({
         template: template?.[index]?.step,
         originalStep: getStepFromStage(stepObj.step.identifier, originalSteps, NodeWrapperEntity.step),
         getString,
-        viewType
+        viewType,
+        featureFlagValues
       })
       if (!isEmpty(errorResponse)) {
         set(errors, `steps[${index}]`, errorResponse)
@@ -271,7 +277,8 @@ export const validateSteps = ({
             template: template?.[index]?.parallel?.[indexP]?.step,
             originalStep: getStepFromStage(stepParallel.step.identifier, originalSteps, NodeWrapperEntity.step),
             getString,
-            viewType
+            viewType,
+            featureFlagValues
           })
           if (!isEmpty(errorResponse)) {
             set(errors, `steps[${index}].parallel[${indexP}]`, errorResponse)
@@ -288,7 +295,8 @@ export const validateSteps = ({
                 NodeWrapperEntity.stepGroup
               )?.stepGroup?.template?.templateInputs?.steps,
               getString,
-              viewType
+              viewType,
+              featureFlagValues
             })
             try {
               failureStrategy.validateSync(stepParallel?.stepGroup?.template?.templateInputs)
@@ -311,7 +319,8 @@ export const validateSteps = ({
                 NodeWrapperEntity.stepGroup
               ),
               getString,
-              viewType
+              viewType,
+              featureFlagValues
             })
             if (stepParallel?.stepGroup?.steps) {
               const stepsErrorResponse = validateSteps({
@@ -323,7 +332,8 @@ export const validateSteps = ({
                   NodeWrapperEntity.stepGroup
                 )?.stepGroup?.steps,
                 getString,
-                viewType
+                viewType,
+                featureFlagValues
               })
               try {
                 failureStrategy.validateSync(stepParallel?.stepGroup)
@@ -353,7 +363,8 @@ export const validateSteps = ({
           template: template?.[index]?.stepGroup?.template?.templateInputs?.steps,
           originalSteps: originalStepGroup?.stepGroup?.template?.templateInputs?.steps,
           getString,
-          viewType
+          viewType,
+          featureFlagValues
         })
         try {
           failureStrategy.validateSync(stepObj.stepGroup?.template?.templateInputs)
@@ -372,7 +383,8 @@ export const validateSteps = ({
           template: template?.[index]?.stepGroup,
           originalStep: getStepFromStage(stepObj.stepGroup.identifier, originalSteps, NodeWrapperEntity.stepGroup),
           getString,
-          viewType
+          viewType,
+          featureFlagValues
         })
         if (stepObj.stepGroup?.steps) {
           const stepsErrorResponse = validateSteps({
@@ -380,7 +392,8 @@ export const validateSteps = ({
             template: template?.[index]?.stepGroup?.steps,
             originalSteps: originalStepGroup?.stepGroup?.steps,
             getString,
-            viewType
+            viewType,
+            featureFlagValues
           })
           try {
             failureStrategy.validateSync(stepObj?.stepGroup)
@@ -409,6 +422,7 @@ interface ValidateStageProps {
   template?: StageElementConfig
   originalStage?: StageElementConfig
   resolvedStage?: StageElementConfig
+  featureFlagValues?: FeatureFlagMap
 }
 
 export const validateStage = ({
@@ -417,7 +431,8 @@ export const validateStage = ({
   viewType,
   originalStage,
   getString,
-  resolvedStage
+  resolvedStage,
+  featureFlagValues
 }: ValidateStageProps): FormikErrors<StageElementConfig> => {
   if (originalStage?.template) {
     const errors = validateStage({
@@ -426,7 +441,8 @@ export const validateStage = ({
       viewType,
       originalStage: originalStage.template.templateInputs as StageElementConfig,
       getString,
-      resolvedStage
+      resolvedStage,
+      featureFlagValues
     })
     if (!isEmpty(errors)) {
       return set({}, 'template.templateInputs', errors)
@@ -696,7 +712,8 @@ export const validateStage = ({
         template: templateStageConfig?.execution?.steps,
         originalSteps: originalStageConfig?.execution?.steps,
         getString,
-        viewType
+        viewType,
+        featureFlagValues
       })
       if (!isEmpty(errorsResponse)) {
         set(errors, 'spec.execution', errorsResponse)
@@ -708,7 +725,8 @@ export const validateStage = ({
         template: templateStageConfig?.execution?.rollbackSteps,
         originalSteps: originalStageConfig?.execution?.rollbackSteps,
         getString,
-        viewType
+        viewType,
+        featureFlagValues
       })
       if (!isEmpty(errorsResponse)) {
         set(errors, 'spec.execution.rollbackSteps', errorsResponse)
@@ -761,6 +779,7 @@ interface ValidatePipelineProps {
   viewTypeMetadata?: { [key: string]: boolean }
   selectedStageData?: StageSelectionData
   stagesToExecute?: string[]
+  featureFlagValues?: FeatureFlagMap
 }
 
 /**
@@ -948,7 +967,8 @@ export const validatePipeline = ({
   path,
   viewTypeMetadata,
   selectedStageData,
-  stagesToExecute
+  stagesToExecute,
+  featureFlagValues
 }: ValidatePipelineProps): FormikErrors<PipelineInfoConfig> => {
   if (template?.template) {
     const errors = validatePipeline({
@@ -958,7 +978,8 @@ export const validatePipeline = ({
       originalPipeline: originalPipeline?.template?.templateInputs as PipelineInfoConfig,
       resolvedPipeline,
       getString,
-      viewTypeMetadata
+      viewTypeMetadata,
+      featureFlagValues
     })
     if (!isEmpty(errors)) {
       return set({}, 'template.templateInputs', errors)
@@ -1064,7 +1085,8 @@ export const validatePipeline = ({
             getString,
             path,
             viewTypeMetadata,
-            selectedStageData
+            selectedStageData,
+            featureFlagValues
           })
           if (!isEmpty(chainedPipelineErrorsResponse)) {
             set(
@@ -1080,7 +1102,8 @@ export const validatePipeline = ({
             originalStage: originalStage?.stage,
             resolvedStage: resolvedStage?.stage,
             getString,
-            viewType
+            viewType,
+            featureFlagValues
           })
           if (!isEmpty(errorsResponse)) {
             set(errors, `${isEmpty(path) ? '' : `${path}.`}stages[${index}].stage`, errorsResponse)

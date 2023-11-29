@@ -203,6 +203,8 @@ function RunPipelineFormBasic({
   const [runPipelineError, setRunPipelineError] = useState<Error>({})
   const isErrorEnhancementFFEnabled = useFeatureFlag(FeatureFlag.PIE_ERROR_ENHANCEMENTS)
   const loadFromCache = useFeatureFlag(FeatureFlag.CDS_ENABLE_LOAD_FROM_CACHE_FOR_RETRY_FORM).toString()
+  const isTasBgValidationEnabled = useFeatureFlag(FeatureFlag.CDS_PCF_SUPPORT_BG_WITH_2_APPS_NG)
+
   const validateFormRef = useRef<(values?: PipelineInfoConfig) => Promise<FormikErrors<PipelineInfoConfig>>>()
   const [stageToRetryState, setStageToRetryState] = useState<SelectStageToRetryState | null>(null)
 
@@ -847,7 +849,10 @@ function RunPipelineFormBasic({
             resolvedPipeline: resolvedMergedPipeline,
             getString,
             viewType: StepViewType.DeploymentForm,
-            selectedStageData: selectedStages
+            selectedStageData: selectedStages,
+            featureFlagValues: {
+              [FeatureFlag.CDS_PCF_SUPPORT_BG_WITH_2_APPS_NG]: isTasBgValidationEnabled
+            }
           }) as any) || formErrors
         resolve(validatedErrors)
       })

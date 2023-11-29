@@ -10,6 +10,7 @@ import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/ui
 import { defaultTo, set } from 'lodash-es'
 import * as Yup from 'yup'
 import { FormikErrors, yupToFormErrors } from 'formik'
+import { FeatureFlagMap } from 'framework/AppStore/AppStoreContext'
 import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -21,13 +22,18 @@ import type { StepElementConfig, TasBGAppSetupStepInfo } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { TasBGAppSetupWidgetWithRef } from './TasBGAppSetupWidget'
-import { InstancesType, TASBasicAppSetupTemplate } from '../TASBasicAppSetupStep/TASBasicAppSetupTypes'
+import {
+  InstancesType,
+  TASBasicAppSetupTemplate,
+  ExistingVersionToKeep
+} from '../TASBasicAppSetupStep/TASBasicAppSetupTypes'
 import TasBasicAppSetupInputSet from '../TASBasicAppSetupStep/TasBasicAppSetupInputSet'
 import { checkEmptyOrLessThan } from '../PipelineStepsUtil'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 export interface TasBGAppSetupData extends StepElementConfig {
   spec: TasBGAppSetupStepInfo
+  featureFlagValues?: FeatureFlagMap
 }
 
 export interface TasBGAppSetupVariableStepProps {
@@ -125,13 +131,11 @@ export class TasBGAppSetupStep extends PipelineStep<TasBGAppSetupData> {
     )
   }
 
-  validateInputSet({
-    data,
-    template,
-    getString,
-    viewType
-  }: ValidateInputSetProps<TasBGAppSetupData>): FormikErrors<TasBGAppSetupData> {
+  validateInputSet(props: ValidateInputSetProps<TasBGAppSetupData>): FormikErrors<TasBGAppSetupData> {
+    const { data, template, getString, viewType, featureFlagValues } = props
+    const { CDS_PCF_SUPPORT_BG_WITH_2_APPS_NG } = featureFlagValues || {}
     const errors: FormikErrors<TASBasicAppSetupTemplate<TasBGAppSetupStepInfo>> = {}
+    const MIN = CDS_PCF_SUPPORT_BG_WITH_2_APPS_NG ? ExistingVersionToKeep.MIN_NEW : ExistingVersionToKeep.MIN_OLD
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     /* istanbul ignore else */
     if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
@@ -160,14 +164,14 @@ export class TasBGAppSetupStep extends PipelineStep<TasBGAppSetupData> {
     if (
       getMultiTypeFromValue(template?.spec?.existingVersionToKeep) === MultiTypeInputType.RUNTIME &&
       isRequired &&
-      checkEmptyOrLessThan(data?.spec?.existingVersionToKeep, 0)
+      checkEmptyOrLessThan(data?.spec?.existingVersionToKeep, MIN)
     ) {
       set(
         errors,
         'spec.existingVersionToKeep',
         getString?.('cd.ElastigroupStep.valueCannotBeLessThan', {
           value: getString('cd.steps.tas.existingVersionToKeep'),
-          value2: 0
+          value2: MIN
         })
       )
     }
