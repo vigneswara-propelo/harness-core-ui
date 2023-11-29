@@ -76,6 +76,8 @@ export interface YamlBuilderProps {
   /* onValidate gets called every time errors in the editor change */
   onValidate?: (errorMap?: Map<number, string>) => void
   codeLensConfigs?: CodeLensConfig[]
+  /* Used for decorating the code in `selectedPath` */
+  selectedPath?: string[]
 }
 
 // `range` in `monaco.languages.CompletionItem` is not optional in the latest version,

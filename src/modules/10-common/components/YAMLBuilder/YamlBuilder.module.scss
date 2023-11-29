@@ -112,3 +112,12 @@
 .headerBorder {
   border-bottom: 1px solid var(--grey-100);
 }
+
+.validDecoration {
+  background-color: #e3f8ff80;
+}
+
+.invalidDecoration {
+  // TODO: use a transparent color
+  background-color: #fcedec;
+}

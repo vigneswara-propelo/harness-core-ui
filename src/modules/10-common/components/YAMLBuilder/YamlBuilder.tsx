@@ -61,7 +61,8 @@ import {
   extractStepsFromStage,
   getClosestStepIndexInCurrentStage,
   getValidationErrorMapFromMarkers,
-  useCodeLenses
+  useCodeLenses,
+  useDecoration
 } from './YAMLBuilderUtils'
 import {
   DEFAULT_EDITOR_HEIGHT,
@@ -178,7 +179,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     setPlugin,
     setPluginOpnStatus,
     onValidate,
-    codeLensConfigs
+    codeLensConfigs,
+    selectedPath
   } = props
   const comparableYamlJson = parse(defaultTo(comparableYaml, ''))
 
@@ -190,6 +192,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     !defaultTo(existingYaml, existingJSON)
   )
   const [yamlValidationErrors, setYamlValidationErrors] = useState<Map<number, string>>(new Map())
+  const [modelMarkers, setModelMarkers] = useState<monaco.editor.IMarker[]>([])
 
   const editorRef = useRef<MonacoCodeEditorRef>(null)
   const onValidateRef = useTrackedRef(onValidate)
@@ -306,8 +309,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   const changeMarkersListener = useRef<IDisposable>()
 
-  useEffect(() => changeMarkersListener.current?.dispose, [])
-
   // updates yamlValidationErrors when markers change and calls onValidate
   const validate = useCallback(() => {
     changeMarkersListener.current = monaco.editor.onDidChangeMarkers(uris => {
@@ -322,10 +323,13 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       })
       const errorMap = getValidationErrorMapFromMarkers(markers)
 
+      setModelMarkers(markers)
       setYamlValidationErrors(errorMap)
       onValidateRef.current?.(errorMap)
     })
   }, [onValidateRef])
+
+  useEffect(() => changeMarkersListener.current?.dispose, [])
 
   // focus editor when it is not readonly
   useEffect(() => {
@@ -688,7 +692,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         ) : null}
       </Layout.Horizontal>
     )
-  }, [currentYaml, showCopyIcon, shouldShowPluginsPanel])
+  }, [showCopyIcon, shouldShowPluginsPanel])
 
   const renderHeader = useCallback((): JSX.Element => {
     const showEntityDetails = fileName && entityType
@@ -1087,7 +1091,17 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     [currentCursorPosition]
   )
 
-  useCodeLenses({ editor: editorRef.current, codeLensConfigs })
+  useCodeLenses({ editorRef, codeLensConfigs })
+
+  useDecoration({
+    editorRef,
+    yaml: currentYaml,
+    path: selectedPath,
+    theme: getTheme(theme),
+    validClassName: css.validDecoration,
+    invalidClassName: css.invalidDecoration,
+    modelMarkers
+  })
 
   return shouldShowPluginsPanel ? (
     <Layout.Horizontal>

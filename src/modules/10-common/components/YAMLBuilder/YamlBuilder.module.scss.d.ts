@@ -18,6 +18,7 @@ declare const styles: {
   readonly flexCenter: string
   readonly header: string
   readonly headerBorder: string
+  readonly invalidDecoration: string
   readonly invalidYaml: string
   readonly item: string
   readonly layout: string
@@ -27,6 +28,7 @@ declare const styles: {
   readonly resizeIcon: string
   readonly splitPanel: string
   readonly summaryPopover: string
+  readonly validDecoration: string
   readonly validationIcon: string
   readonly validationStatus: string
 }

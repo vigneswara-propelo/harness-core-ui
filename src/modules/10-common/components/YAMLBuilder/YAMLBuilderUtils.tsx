@@ -5,12 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo, useState, RefObject } from 'react'
 import type { DetailedReactHTMLElement } from 'react'
 import * as monaco from 'monaco-editor'
 import type { Diagnostic } from 'vscode-languageserver-types'
 import { parse } from 'yaml'
-import { get, isEmpty, noop, pick } from 'lodash-es'
+import { debounce, get, isEmpty, noop, pick } from 'lodash-es'
 import { Range } from 'monaco-editor'
 import type { editor, Position, languages, IRange } from 'monaco-editor'
 import { ILanguageFeaturesService } from 'monaco-editor/esm/vs/editor/common/services/languageFeatures.js'
@@ -317,21 +317,32 @@ const getPathFromRange = (range: IRange, symbols: languages.DocumentSymbol[]): s
   return path
 }
 
+const getRangeFromPath = (path: string[], symbols: languages.DocumentSymbol[]): IRange | undefined => {
+  if (!path.length) return undefined
+
+  let pathIndex = 0
+
+  return symbols.find(symbol => {
+    if (symbol.name !== path[pathIndex]) return false
+    if (pathIndex++ === path.length - 1) return true
+  })?.range
+}
+
 interface CommandArg extends Pick<CodeLensCommand, 'onClick' | 'args'> {
   range: monaco.IRange
   symbols: monaco.languages.DocumentSymbol[]
 }
 
 export type UseCodeLenses = (arg: {
-  editor?: editor.IStandaloneCodeEditor | null
+  editorRef?: RefObject<monaco.editor.IStandaloneCodeEditor>
   codeLensConfigs?: CodeLensConfig[]
 }) => void
 
-const useCodeLenses: UseCodeLenses = ({ editor, codeLensConfigs }): void => {
+const useCodeLenses: UseCodeLenses = ({ editorRef, codeLensConfigs }): void => {
   useEffect(() => {
     if (!codeLensConfigs) return
 
-    const commandId = editor?.addCommand(0, (_, { range, symbols, onClick, args }: CommandArg) => {
+    const commandId = editorRef?.current?.addCommand(0, (_, { range, symbols, onClick, args }: CommandArg) => {
       const path = getPathFromRange(range, symbols)
       onClick({ path, range }, ...(args ? args : []))
     })
@@ -385,7 +396,83 @@ const useCodeLenses: UseCodeLenses = ({ editor, codeLensConfigs }): void => {
     })
 
     return disposable.dispose
-  }, [codeLensConfigs, editor])
+  }, [codeLensConfigs, editorRef])
+}
+
+type UseDecoration = (arg: {
+  editorRef?: RefObject<monaco.editor.IStandaloneCodeEditor>
+  yaml: string
+  path?: string[]
+  modelMarkers: editor.IMarker[]
+  invalidClassName: string
+  validClassName: string
+  theme: editor.BuiltinTheme
+}) => void
+
+const useDecoration: UseDecoration = ({
+  editorRef,
+  yaml,
+  path,
+  modelMarkers,
+  theme,
+  invalidClassName,
+  validClassName
+}) => {
+  const [range, setRange] = useState<IRange>()
+
+  const computeRange = useMemo(
+    () =>
+      debounce(
+        async (_editorRef?: RefObject<monaco.editor.IStandaloneCodeEditor>, _path?: string[]) => {
+          const model = editorRef?.current?.getModel()
+          if (!model || !_path) return setRange(undefined)
+
+          const symbols = await getDocumentSymbols(model)
+          const rangeFromPath = getRangeFromPath(_path, symbols)
+
+          if (rangeFromPath) setRange(rangeFromPath)
+        },
+        300,
+        {
+          leading: true,
+          trailing: true
+        }
+      ),
+    []
+  )
+
+  useEffect(() => {
+    computeRange(editorRef, path)
+  }, [path, editorRef, yaml, computeRange])
+
+  useEffect(() => computeRange.cancel, [computeRange])
+
+  const isSelectedRangeInvalid = useMemo(() => {
+    if (!range) return false
+
+    return modelMarkers.some(({ startLineNumber, startColumn, endLineNumber, endColumn }) =>
+      monaco.Range.areIntersectingOrTouching(range, { startLineNumber, startColumn, endLineNumber, endColumn })
+    )
+  }, [modelMarkers, range])
+
+  useEffect(() => {
+    if (!range) return
+
+    const decorations = editorRef?.current?.createDecorationsCollection([
+      {
+        range,
+        options: {
+          overviewRuler: {
+            position: monaco.editor.OverviewRulerLane.Left,
+            color: theme
+          },
+          isWholeLine: false,
+          className: isSelectedRangeInvalid ? invalidClassName : validClassName
+        }
+      }
+    ])
+    return () => decorations?.clear()
+  }, [range, theme, editorRef, invalidClassName, validClassName, isSelectedRangeInvalid])
 }
 
 export {
@@ -404,5 +491,6 @@ export {
   getClosestStepIndexInCurrentStage,
   getDocumentSymbols,
   getPathFromRange,
-  useCodeLenses
+  useCodeLenses,
+  useDecoration
 }
