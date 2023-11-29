@@ -40,6 +40,8 @@ export function ChangeSourceDrawer({
   tableData,
   onSuccess,
   hideDrawer,
+  isTemplate,
+  expressions,
   monitoredServiceType
 }: ChangeSoureDrawerInterface): JSX.Element {
   const { getString } = useStrings()
@@ -74,7 +76,9 @@ export function ChangeSourceDrawer({
 
       switch (changeSourceType) {
         case ChangeSourceTypes.PagerDuty:
-          changeSource = <PageDutyChangeSource formik={formik} isEdit={isEdit} />
+          changeSource = (
+            <PageDutyChangeSource formik={formik} isEdit={isEdit} isTemplate={isTemplate} expressions={expressions} />
+          )
           break
         case ChangeSourceTypes.HarnessCD:
           changeSource = <HarnessCDCurrentGenChangeSource formik={formik} />

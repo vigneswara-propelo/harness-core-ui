@@ -49,6 +49,23 @@ const TestComponent = ({ initialValues }: { initialValues: InitValue }): React.R
   </TestWrapper>
 )
 
+const TemplateComponent = ({ initialValues }: { initialValues: InitValue }): React.ReactElement => (
+  <TestWrapper>
+    <Formik<UpdatedChangeSourceDTO> initialValues={{ spec: initialValues.spec }} onSubmit={noop}>
+      {formik => {
+        return (
+          <PagerDutyChangeSource
+            formik={formik}
+            isEdit={initialValues.isEdit}
+            isTemplate
+            expressions={['expression1']}
+          />
+        )
+      }}
+    </Formik>
+  </TestWrapper>
+)
+
 describe('Test PagerDuty Change Source', () => {
   test('PagerDuty ChangeSource shows empty service message', async () => {
     jest.spyOn(cvServices, 'useGetServicesFromPagerDuty').mockImplementation(
@@ -153,5 +170,22 @@ describe('Test PagerDuty Change Source', () => {
     await waitFor(() => expect(menuItemLabels.length).toEqual(2))
     await waitFor(() => expect(menuItemLabels[0].innerHTML).toEqual('cvng'))
     await waitFor(() => expect(menuItemLabels[1].innerHTML).toEqual('Sowmya'))
+  })
+
+  test('should render in template', async () => {
+    const { container } = render(
+      <TemplateComponent
+        initialValues={{
+          isEdit: true,
+          spec: {
+            pagerDutyServiceId: '<+input>',
+            connectorRef: '<+input>'
+          }
+        }}
+      />
+    )
+    await waitFor(() => expect(container.querySelector('input[value="<+input>"]')).toBeInTheDocument())
+    expect(container.querySelector('input[name="spec.connectorRef"]')).toHaveValue('<+input>')
+    expect(container.querySelector('input[name="spec.pagerDutyServiceId"]')).toHaveValue('<+input>')
   })
 })

@@ -109,7 +109,7 @@ function Service(
 
   const { showDrawer, hideDrawer } = useDrawer({
     createHeader: createChangeSourceDrawerHeader,
-    createDrawerContent: props => <ChangeSourceDrawer {...props} />
+    createDrawerContent: props => <ChangeSourceDrawer {...props} isTemplate={isTemplate} expressions={expressions} />
   })
 
   const openChangeSourceDrawer = useCallback(

@@ -25,6 +25,8 @@ export interface ChangeSoureDrawerInterface {
   onSuccess: (value: UpdatedChangeSourceDTO[]) => void
   hideDrawer?: () => void
   monitoredServiceType?: MonitoredServiceDTO['type']
+  isTemplate?: boolean
+  expressions?: string[]
 }
 export interface CardSelectOption extends Item {
   category?: string
