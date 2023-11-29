@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Redirect, useLocation, useParams } from 'react-router-dom'
-import { useGetStatusInfoByTypeQuery } from '@harnessio/react-idp-service-client'
+import { useGetStatusInfoTypeV2Query } from '@harnessio/react-idp-service-client'
 import { isEmpty } from 'lodash-es'
 import routes from '@common/RouteDefinitions'
 import { RouteWithLayout } from '@common/router'
@@ -49,14 +49,14 @@ function RedirectToIDPDefaultPath(): React.ReactElement {
   const params = useParams<AccountPathProps>()
   const location = useLocation()
 
-  const { data } = useGetStatusInfoByTypeQuery(
+  const { data } = useGetStatusInfoTypeV2Query(
     { type: 'onboarding' },
     {
       enabled: location.pathname.includes('/idp-default'),
       staleTime: 15 * 60 * 1000
     }
   )
-  const onboardingStatus = data?.content?.status?.current_status
+  const onboardingStatus = data?.content?.onboarding?.current_status
 
   if (!isEmpty(onboardingStatus)) {
     if (onboardingStatus === 'COMPLETED') {

@@ -8,7 +8,7 @@
 import React from 'react'
 import { Redirect, Switch, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash-es'
-import { useGetStatusInfoByTypeQuery } from '@harnessio/react-idp-service-client'
+import { useGetStatusInfoTypeV2Query } from '@harnessio/react-idp-service-client'
 import routes from '@common/RouteDefinitionsV2'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import { NAV_MODE, accountPathProps } from '@common/utils/routeUtils'
@@ -26,13 +26,13 @@ const IDPRouteDestinations = (): React.ReactElement => {
   function RedirectToIDPDefaultPath(): React.ReactElement {
     const { accountId } = useParams<AccountPathProps>()
 
-    const { data } = useGetStatusInfoByTypeQuery(
+    const { data } = useGetStatusInfoTypeV2Query(
       { type: 'onboarding' },
       {
         staleTime: 15 * 60 * 1000
       }
     )
-    const onboardingStatus = data?.content?.status?.current_status
+    const onboardingStatus = data?.content?.onboarding?.current_status
 
     if (!isEmpty(onboardingStatus)) {
       if (onboardingStatus === 'COMPLETED') {

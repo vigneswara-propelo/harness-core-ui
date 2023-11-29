@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { useGetStatusInfoByTypeQuery } from '@harnessio/react-idp-service-client'
+import { useGetStatusInfoTypeV2Query } from '@harnessio/react-idp-service-client'
 import { isEmpty } from 'lodash-es'
 import { useToggleOpen } from '@harness/uicore'
 import { Project } from 'services/cd-ng'
@@ -35,13 +35,13 @@ function IDPAdminSideNavLinks(): React.ReactElement {
   const { identifier: projectIdentifier = '', orgIdentifier = '' } = selectedProject || {}
   const { isOpen: isScopeSelectorOpen, toggle: toggleScopeSelector, close: closeScopeSelector } = useToggleOpen()
 
-  const { data } = useGetStatusInfoByTypeQuery(
+  const { data } = useGetStatusInfoTypeV2Query(
     { type: 'onboarding' },
     {
       staleTime: 15 * 60 * 1000
     }
   )
-  const onboardingStatus = data?.content?.status?.current_status
+  const onboardingStatus = data?.content?.onboarding?.current_status
   const [showGetStarted, setShowGetStarted] = useState(false)
 
   useEffect(() => {

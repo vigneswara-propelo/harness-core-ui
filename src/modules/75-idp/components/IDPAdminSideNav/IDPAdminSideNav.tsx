@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { Layout } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { useGetStatusInfoByTypeQuery } from '@harnessio/react-idp-service-client'
+import { useGetStatusInfoTypeV2Query } from '@harnessio/react-idp-service-client'
 import { isEmpty } from 'lodash-es'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
@@ -24,13 +24,13 @@ export default function IDPAdminSideNav(): React.ReactElement {
   const params = useParams<ProjectPathProps>()
   const IDPScorecardsEnabled = useFeatureFlag(FeatureFlag.IDP_ENABLE_SCORECARDS)
 
-  const { data } = useGetStatusInfoByTypeQuery(
+  const { data } = useGetStatusInfoTypeV2Query(
     { type: 'onboarding' },
     {
       staleTime: 15 * 60 * 1000
     }
   )
-  const onboardingStatus = data?.content?.status?.current_status
+  const onboardingStatus = data?.content?.onboarding?.current_status
   const [showGetStarted, setShowGetStarted] = useState(false)
 
   useEffect(() => {

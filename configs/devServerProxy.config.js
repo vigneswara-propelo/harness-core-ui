@@ -15,6 +15,9 @@ module.exports = {
   '/v1': {
     target: `${baseUrl}` // localhost is not supported for OpenAPI yet
   },
+  '/v2': {
+    target: `${baseUrl}` // localhost is not supported for OpenAPI yet
+  },
   '/ng/api': {
     pathRewrite: { '^/ng/api': '' },
     target: targetLocalHost ? 'https://localhost:7090' : `${baseUrl}/ng/api`

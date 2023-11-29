@@ -13,8 +13,8 @@ import { accountPathProps, orgPathProps, projectPathProps } from '@common/utils/
 import IDPAdminSideNav from '../IDPAdminSideNav'
 
 jest.mock('@harnessio/react-idp-service-client', () => ({
-  useGetStatusInfoByTypeQuery: jest.fn().mockImplementation(() => {
-    return { data: { status: { currentStatus: 'NOT_FOUND' } } }
+  useGetStatusInfoTypeV2Query: jest.fn().mockImplementation(() => {
+    return { data: { onboarding: { currentStatus: 'NOT_FOUND' } } }
   })
 }))
 
