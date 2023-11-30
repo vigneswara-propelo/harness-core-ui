@@ -12,7 +12,6 @@ import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { VariablesCompiledModeHeader } from './VariablesCompiledModeHeader'
 import css from '../PipelineVariables.module.scss'
 
@@ -43,8 +42,6 @@ export function VariablesHeader(props: VariablesHeaderProps): JSX.Element {
     goToNextSearchResult,
     goToPrevSearchResult
   } = usePipelineVariables()
-
-  const { PIE_EXPRESSION_PLAYGROUND } = useFeatureFlags()
 
   const { getString } = useStrings()
   return (
@@ -84,7 +81,7 @@ export function VariablesHeader(props: VariablesHeaderProps): JSX.Element {
           <Button minimal size={ButtonSize.SMALL} text={getString('pipeline.discard')} onClick={discardChanges} />
         </div>
       </div>
-      {PIE_EXPRESSION_PLAYGROUND && !isTemplateView && (
+      {!isTemplateView && (
         <VariablesCompiledModeHeader
           handleCompiledModeChange={handleCompiledModeChange}
           isCompiledMode={isCompiledMode}

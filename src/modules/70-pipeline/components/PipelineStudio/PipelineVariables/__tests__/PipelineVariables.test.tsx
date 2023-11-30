@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { AllowedTypesWithRunTime, MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 
 import produce from 'immer'
@@ -101,6 +102,12 @@ jest.mock('services/cd-ng-rq', () => ({
 jest.mock('services/pipeline-ng', () => ({
   useCreateVariablesV2: jest.fn().mockReturnValue({
     mutate: jest.fn()
+  }),
+  useGetListOfExecutionIdentifier: jest.fn().mockReturnValue({
+    mutate: jest.fn()
+  }),
+  useGetExpressionEvaluated: jest.fn().mockReturnValue({
+    mutate: jest.fn()
   })
 }))
 
@@ -123,7 +130,7 @@ describe('<PipelineVariables /> tests', () => {
     factory.registerStep(new CustomVariables())
   })
 
-  test('snapshot test', async () => {
+  test('basic rendering with and without compiled mode', async () => {
     ;(useCreateVariablesV2 as jest.Mock).mockReturnValue({
       mutate: jest.fn(() =>
         Promise.resolve({
@@ -133,7 +140,8 @@ describe('<PipelineVariables /> tests', () => {
           }
         })
       ),
-      loading: false
+      loading: false,
+      initLoading: false
     })
     ;(useGetYamlWithTemplateRefsResolved as jest.Mock).mockReturnValue({
       mutate: jest.fn(() =>
@@ -146,17 +154,32 @@ describe('<PipelineVariables /> tests', () => {
       loading: false
     })
 
-    const { container, findByText } = render(
+    const { findByText, getByText, getByTestId, queryAllByText } = render(
       <TestWrapper>
         <PipelineContext.Provider value={pipelineContext}>
           <PipelineVariables pipeline={pipelineJson as PipelineInfoConfig} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
-
+    const user = userEvent.setup()
     await findByText('common.variables')
 
-    expect(container).toMatchSnapshot()
+    expect(getByText('applyChanges')).toBeDefined()
+    expect(getByText('pipeline.discard')).toBeDefined()
+    expect(getByTestId('pipeline-details')).toBeDefined()
+    expect(getByTestId('pipeline.stage_1-panel')).toBeDefined()
+    expect(getByTestId('pipeline.stage_2-panel')).toBeDefined()
+    expect(getByTestId('pipeline.parallel_stage_-panel')).toBeDefined()
+    expect(getByTestId('pipeline.parallel_stage_2-panel')).toBeDefined()
+    expect(getByText('customVariables.title')).toBeDefined()
+    expect(queryAllByText('common.addVariable')).toHaveLength(6)
+
+    const btnViewCompiled = getByText('pipeline.viewInCompiledMode')
+    expect(btnViewCompiled).toBeDefined()
+
+    await user.click(btnViewCompiled)
+    expect(getByText('customVariables.title')).toBeDefined()
+    expect(queryAllByText('common.addVariable')).toHaveLength(0)
   })
 
   test('should call PipelineCard with unresolved pipeline ', async () => {
