@@ -23,6 +23,7 @@ exports[`RouteDefinitions routes should render links correctly 1`] = `
     /account/harness/code/default/test/repo1/webhooks
     /account/harness/code/default/test/repo1/webhooks/new
     /account/harness/code/default/test/repo1/webhooks/1234
+    /account/harness/code/default/test/search
     /account/harness/code/default/test/repo1/search
   </pre>
 </div>

@@ -143,6 +143,7 @@ export enum PAGE_NAME {
   CODEHomePage = 'CODEHomePage',
   CODERepositories = 'CODERepositories',
   CODERepository = 'CODERepository',
+  CODESearch = 'CODESearch',
   CODESettings = 'CODESettings',
   CODEWebhooks = 'CODEWebhooks',
   CODEWebhookNew = 'CODEWebhookNew',

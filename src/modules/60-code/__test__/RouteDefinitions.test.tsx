@@ -66,7 +66,8 @@ describe('RouteDefinitions', () => {
         {routes.toCODEWebhooks({ repoPath: 'harness/default/test/repo1' })}
         {routes.toCODEWebhookNew({ repoPath: 'harness/default/test/repo1' })}
         {routes.toCODEWebhookDetails({ repoPath: 'harness/default/test/repo1', webhookId: '1234' })}
-        {routes.toCODESearch({ repoPath: 'harness/default/test/repo1' })}
+        {routes.toCODEProjectSearch({ space: 'harness/default/test/' })}
+        {routes.toCODERepositorySearch({ repoPath: 'harness/default/test/repo1' })}
       </pre>
     )
 

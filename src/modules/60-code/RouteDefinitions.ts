@@ -196,17 +196,6 @@ export const routesV2 = {
     })
   },
 
-  toCODESearch: ({ repoPath, mode }: Required<Pick<CODEProps, 'repoPath'>> & NavMode) => {
-    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return withModeModuleAndScopePrefix<ProjectPathProps>(() => `${REPOS_PREFIX}/${repoName}/search`)({
-      module: CODE,
-      accountId,
-      orgIdentifier,
-      projectIdentifier,
-      ...(mode ? { mode } : undefined)
-    })
-  },
-
   toCODESettings: ({
     repoPath,
     mode,
@@ -259,6 +248,28 @@ export const routesV2 = {
   }: Required<Pick<CODEProps, 'repoPath' | 'webhookId'>> & NavMode) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
     return withModeModuleAndScopePrefix<ProjectPathProps>(() => `${REPOS_PREFIX}/${repoName}/webhooks/${webhookId}`)({
+      module: CODE,
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      ...(mode ? { mode } : undefined)
+    })
+  },
+
+  toCODEProjectSearch: ({ space, mode }: Required<Pick<CODEProps, 'space'>> & NavMode) => {
+    const [accountId, orgIdentifier, projectIdentifier] = space.split('/')
+    return withModeModuleAndScopePrefix<ProjectPathProps>(() => '/search')({
+      module: CODE,
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      ...(mode ? { mode } : undefined)
+    })
+  },
+
+  toCODERepositorySearch: ({ repoPath, mode }: Required<Pick<CODEProps, 'repoPath'>> & NavMode) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return withModeModuleAndScopePrefix<ProjectPathProps>(() => `${REPOS_PREFIX}/${repoName}/search`)({
       module: CODE,
       accountId,
       orgIdentifier,
@@ -337,10 +348,6 @@ export default {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/pulls/compare/${diffRefs}`
   },
-  toCODESearch: ({ repoPath }: Required<Pick<CODEProps, 'repoPath'>>) => {
-    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/search`
-  },
   toCODESettings: ({
     repoPath,
     settingSection,
@@ -363,5 +370,13 @@ export default {
   toCODEWebhookDetails: ({ repoPath, webhookId }: Required<Pick<CODEProps, 'repoPath' | 'webhookId'>>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/webhooks/${webhookId}`
+  },
+  toCODEProjectSearch: ({ space }: Required<Pick<CODEProps, 'space'>>) => {
+    const [accountId, orgIdentifier, projectIdentifier] = space.split('/')
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/search`
+  },
+  toCODERepositorySearch: ({ repoPath }: Required<Pick<CODEProps, 'repoPath'>>) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/search`
   }
 }

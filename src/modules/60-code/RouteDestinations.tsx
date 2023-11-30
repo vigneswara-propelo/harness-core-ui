@@ -159,9 +159,14 @@ export default function CODERouteDestinations(): React.ReactElement {
       </RouteWithLayout>
 
       <RouteWithLayout
-        path={routes.toCODESearch({ repoPath })}
+        path={[
+          routes.toCODEProjectSearch({
+            space: [codePathProps.accountId, codePathProps.orgIdentifier, codePathProps.projectIdentifier].join('/')
+          }),
+          routes.toCODERepositorySearch({ repoPath })
+        ]}
         sidebarProps={sidebarProps}
-        pageName={PAGE_NAME.CODERepository}
+        pageName={PAGE_NAME.CODESearch}
         exact
       >
         <Search />

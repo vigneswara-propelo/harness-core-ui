@@ -57,19 +57,15 @@ export default function CODESideNavLinks(mode: NAV_MODE): React.ReactElement {
 
   return (
     <SideNav.Main>
-      <SideNav.Section>
-        <SideNav.Scope scope={[Scope.PROJECT]}>
+      {repoName ? (
+        <SideNav.Section>
           <SideNav.Link
-            label={getString('repositories')}
+            icon="arrow-left"
+            label={getString('code.backToRepositories')}
             data-code-nav-version="2"
             to={routes.toCODERepositories({ space: [accountId, orgIdentifier, projectIdentifier].join('/') })}
             isActive={() => matchedRouteKey === 'toCODERepositories' && !location.pathname.endsWith('/settings')}
           />
-        </SideNav.Scope>
-      </SideNav.Section>
-
-      {repoName ? (
-        <SideNav.Section>
           <SideNav.Scope scope={[Scope.PROJECT]}>
             <SideNav.Link
               className={css.link}
@@ -140,7 +136,7 @@ export default function CODESideNavLinks(mode: NAV_MODE): React.ReactElement {
               className={css.link}
               icon="main-search"
               label={getString('search')}
-              to={routes.toCODESearch({
+              to={routes.toCODERepositorySearch({
                 repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/')
               })}
               iconProps={{
@@ -159,7 +155,22 @@ export default function CODESideNavLinks(mode: NAV_MODE): React.ReactElement {
           </SideNav.Scope>
         </SideNav.Section>
       ) : (
-        <></>
+        <SideNav.Section>
+          <SideNav.Scope scope={[Scope.PROJECT]}>
+            <SideNav.Link
+              label={getString('repositories')}
+              data-code-nav-version="2"
+              to={routes.toCODERepositories({ space: [accountId, orgIdentifier, projectIdentifier].join('/') })}
+              isActive={() => matchedRouteKey === 'toCODERepositories' && !location.pathname.endsWith('/settings')}
+            />
+            <SideNav.Link
+              exact
+              label={getString('search')}
+              data-code-nav-version="2"
+              to={routes.toCODEProjectSearch({ space: [accountId, orgIdentifier, projectIdentifier].join('/') })}
+            />
+          </SideNav.Scope>
+        </SideNav.Section>
       )}
 
       <SideNav.SettingsLink mode={mode} module={CODE} />

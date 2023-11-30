@@ -3949,6 +3949,7 @@ export interface StringsMap {
   'projectsOrgs.welcomeSecondLine': string
   'projectsOrgs.whyCreateProject': string
   'projectsOrgs.youHaveNoProjects': string
+  'code.backToRepositories': string
   'code.branches': string
   'code.homepageHeading': string
   'code.learnMore': string

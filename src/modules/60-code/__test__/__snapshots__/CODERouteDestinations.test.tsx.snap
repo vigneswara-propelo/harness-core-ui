@@ -28,6 +28,7 @@ exports[`CODERouteDestinations Tests CODERouteDestinations should render correct
   <div>
     code/WebhookNew
   </div>
+  /account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier/search
   /account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/search
   /
   <div>

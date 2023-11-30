@@ -192,7 +192,13 @@ export const buildCODERoutePaths = (mode: NAV_MODE): Record<string, string | str
       webhookId: codePathProps.webhookId,
       mode
     }),
-    toCODESearch: routes.toCODESearch({ repoPath, mode }),
+    toCODESearch: [
+      routes.toCODEProjectSearch({
+        mode,
+        space: [codePathProps.accountId, codePathProps.orgIdentifier, codePathProps.projectIdentifier].join('/')
+      }),
+      routes.toCODERepositorySearch({ repoPath, mode })
+    ],
     toCODESettings: [
       routes.toCODESettings({ repoPath, mode }),
       routes.toCODESettings({

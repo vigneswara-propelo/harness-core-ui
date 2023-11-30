@@ -93,8 +93,10 @@ describe('CODERouteDestinations Tests', () => {
         '/account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/webhooks/new',
       toCODEWebhookDetails:
         '/account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/webhooks/:webhookId',
-      toCODESearch:
-        '/account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/search',
+      toCODESearch: [
+        '/account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier/search',
+        '/account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/search'
+      ],
       toCODESettings: [
         '/account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/settings',
         '/account/:accountId/module/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/settings/:settingSection/:ruleId/:settingSectionMode',
@@ -138,8 +140,10 @@ describe('CODERouteDestinations Tests', () => {
         '/account/:accountId/all/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/webhooks/new',
       toCODEWebhookDetails:
         '/account/:accountId/all/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/webhooks/:webhookId',
-      toCODESearch:
-        '/account/:accountId/all/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/search',
+      toCODESearch: [
+        '/account/:accountId/all/code/orgs/:orgIdentifier/projects/:projectIdentifier/search',
+        '/account/:accountId/all/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/search'
+      ],
       toCODESettings: [
         '/account/:accountId/all/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/settings',
         '/account/:accountId/all/code/orgs/:orgIdentifier/projects/:projectIdentifier/repos/:repoName/settings/:settingSection/:ruleId/:settingSectionMode',

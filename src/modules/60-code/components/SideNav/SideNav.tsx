@@ -76,6 +76,7 @@ export default function CODESideNav(): React.ReactElement {
       {projectIdentifier && orgIdentifier && (
         <>
           <SidebarLink
+            exact
             label={getString('repositories')}
             to={routes.toCODERepositories({ space: [accountId, orgIdentifier, projectIdentifier].join('/') })}
             {...(repoName ? { activeClassName: '' } : {})}
@@ -197,7 +198,7 @@ export default function CODESideNav(): React.ReactElement {
                 }
               }}
               label={getString('search')}
-              to={routes.toCODESearch({
+              to={routes.toCODERepositorySearch({
                 repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/')
               })}
             />
@@ -219,6 +220,12 @@ export default function CODESideNav(): React.ReactElement {
               })}
             />
           )}
+
+          <SidebarLink
+            exact
+            label={getString('search')}
+            to={routes.toCODEProjectSearch({ space: [accountId, orgIdentifier, projectIdentifier].join('/') })}
+          />
         </>
       )}
     </Layout.Vertical>

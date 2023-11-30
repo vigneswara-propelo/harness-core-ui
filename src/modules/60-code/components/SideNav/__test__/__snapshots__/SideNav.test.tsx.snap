@@ -77,6 +77,16 @@ exports[`Code Sidenav Nav should render Repositories link 1`] = `
         repositories
       </p>
     </a>
+    <a
+      class="link"
+      href="/account/dummy/code/dummy/dummy/search"
+    >
+      <p
+        class="StyledProps--font StyledProps--main text"
+      >
+        search
+      </p>
+    </a>
   </div>
 </div>
 `;
