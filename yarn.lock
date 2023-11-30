@@ -2920,10 +2920,10 @@
   optionalDependencies:
     webpack "^4.0.0"
 
-"@harness/ng-tooltip@^1.31.199":
-  version "1.31.199"
-  resolved "https://npm.pkg.github.com/download/@harness/ng-tooltip/1.31.199/8272697a659c549f5efb3fbff6000f56bcd5a183#8272697a659c549f5efb3fbff6000f56bcd5a183"
-  integrity sha512-9pEISSGkqJBU/o7V86zcA3ZgRJ+kgJgAdcCnaEp4DFKDENRXZD5ulAlcvE9Rk08Z/UkFaurBVXM446udD1AqRA==
+"@harness/ng-tooltip@^1.31.204":
+  version "1.31.204"
+  resolved "https://npm.pkg.github.com/download/@harness/ng-tooltip/1.31.204/894c70d3e636958c95ff5747fb4e734822d26f6f#894c70d3e636958c95ff5747fb4e734822d26f6f"
+  integrity sha512-MryUqL7fYAslrtXS8FYCIxrmoJvMEzmINpSmWr6RwWEd0WVJeO5NhgiQLiQGKd5OV1UaciEO/AyGzhS/Bqic0g==
 
 "@harness/telemetry@^1.0.42":
   version "1.0.42"
