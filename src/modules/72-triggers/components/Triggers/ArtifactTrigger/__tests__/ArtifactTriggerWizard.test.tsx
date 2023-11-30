@@ -97,7 +97,6 @@ describe('ArtifactTriggerWizard Triggers tests', () => {
   test('Create new GCR trigger', async () => {
     jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
       CI_YAML_VERSIONING: false,
-      PIE_STATIC_YAML_SCHEMA: false,
       NG_SVC_ENV_REDESIGN: true,
       CD_TRIGGERS_REFACTOR: true
     })

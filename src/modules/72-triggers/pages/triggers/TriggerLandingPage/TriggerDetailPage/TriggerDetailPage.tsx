@@ -36,7 +36,6 @@ import { useQueryParams } from '@common/hooks'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import useTriggerView from '@common/components/Wizard/useTriggerView'
 import { useIsTriggerCreatePermission } from '@triggers/components/Triggers/useIsTriggerCreatePermission'
-import { negateImplication } from '@modules/10-common/utils/conditionalUtils'
 import { getTriggerBaseType } from '../../utils/TriggersListUtils'
 import css from '../TriggerLandingPage.module.scss'
 
@@ -196,7 +195,7 @@ export default function TriggerDetailPage(): JSX.Element {
     >
   >()
 
-  const { CI_YAML_VERSIONING, PIE_STATIC_YAML_SCHEMA } = useFeatureFlags()
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
 
   const { data: triggerResponse, loading: loadingTrigger } = useGetTriggerDetails({
     triggerIdentifier,
@@ -242,7 +241,7 @@ export default function TriggerDetailPage(): JSX.Element {
       accountIdentifier: accountId,
       scope: getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
     },
-    lazy: negateImplication(__DEV__, !!PIE_STATIC_YAML_SCHEMA)
+    lazy: !__DEV__
   })
 
   const { data: triggerStaticSchema, isLoading: loadingStaticYamlSchema } = useGetIndividualStaticSchemaQuery(
@@ -252,7 +251,7 @@ export default function TriggerDetailPage(): JSX.Element {
       }
     },
     {
-      enabled: negateImplication(__DEV__, !!PIE_STATIC_YAML_SCHEMA)
+      enabled: !__DEV__
     }
   )
 

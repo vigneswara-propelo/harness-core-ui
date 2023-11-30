@@ -26,7 +26,6 @@ import { getScopeFromDTO } from '@common/components/EntityReference/EntityRefere
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { useEnableEditModes } from '@pipeline/components/PipelineStudio/hooks/useEnableEditModes'
-import { negateImplication } from '@modules/10-common/utils/conditionalUtils'
 import { TemplateTypes } from '../TemplateStudioUtils'
 import css from './TemplateYamlView.module.scss'
 
@@ -60,8 +59,7 @@ const TemplateYamlView: React.FC = () => {
   const { enableEditMode } = useEnableEditModes()
   const { expressions } = useVariablesExpression()
 
-  const { DISABLE_TEMPLATE_SCHEMA_VALIDATION: isTemplateSchemaValidationDisabled, PIE_STATIC_YAML_SCHEMA } =
-    useFeatureFlags()
+  const { DISABLE_TEMPLATE_SCHEMA_VALIDATION: isTemplateSchemaValidationDisabled } = useFeatureFlags()
   const expressionRef = React.useRef<string[]>([])
   expressionRef.current = expressions
 
@@ -121,7 +119,7 @@ const TemplateYamlView: React.FC = () => {
     queryParams: {
       ...commonQueryParams
     },
-    lazy: isTemplateSchemaValidationDisabled || negateImplication(__DEV__, !!PIE_STATIC_YAML_SCHEMA)
+    lazy: isTemplateSchemaValidationDisabled || !__DEV__
   })
 
   const { data: templateStaticSchema } = useGetTemplateSchemaQuery(
@@ -132,7 +130,7 @@ const TemplateYamlView: React.FC = () => {
       }
     },
     {
-      enabled: !isTemplateSchemaValidationDisabled && negateImplication(__DEV__, !!PIE_STATIC_YAML_SCHEMA)
+      enabled: !isTemplateSchemaValidationDisabled && !__DEV__
     }
   )
 

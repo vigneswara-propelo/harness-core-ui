@@ -17,8 +17,6 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useToaster } from '@common/exports'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { negateImplication } from '@modules/10-common/utils/conditionalUtils'
 
 export interface PipelineSchemaData {
   pipelineSchema: ResponseJsonNode | null
@@ -45,7 +43,6 @@ export function PipelineSchemaContextProvider(
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { PIE_STATIC_YAML_SCHEMA } = useFeatureFlags()
   const { isYAMLV1 } = props
 
   const commonQueryParams = {
@@ -60,7 +57,7 @@ export function PipelineSchemaContextProvider(
     queryParams: {
       ...commonQueryParams
     } as GetSchemaYamlQueryParams,
-    lazy: negateImplication(__DEV__, !!PIE_STATIC_YAML_SCHEMA)
+    lazy: !__DEV__
   })
 
   const { data: pipelineStaticSchema, error: staticSchemaError } = useGetIndividualStaticSchemaQuery(
@@ -71,7 +68,7 @@ export function PipelineSchemaContextProvider(
       }
     },
     {
-      enabled: negateImplication(__DEV__, !!PIE_STATIC_YAML_SCHEMA)
+      enabled: !__DEV__
     }
   )
 
