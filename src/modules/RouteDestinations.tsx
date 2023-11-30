@@ -75,8 +75,6 @@ export default function RouteDestinations(): React.ReactElement {
     licenseInformation[ModuleName.CD]?.status === LICENSE_STATE_VALUES.ACTIVE ||
     CVNG_ENABLED
 
-  const isCETModuleEnabled = licenseInformation[ModuleName.CET]?.status === LICENSE_STATE_VALUES.ACTIVE
-
   return (
     <Switch>
       {CDS_NAV_2_0 ? OldNavRedirects().props.children : undefined}
@@ -120,7 +118,7 @@ export default function RouteDestinations(): React.ReactElement {
       {!CDS_NAV_2_0 ? (CDB_MFE_ENABLED ? CdbMfeRoutes.props.children : CdbNonMfeRoutes.props.children) : null}
       {IACM_ENABLED ? IACMRoutes().props.children : null}
       {SSCA_ENABLED ? SSCARoutes.props.children : null}
-      {isCETModuleEnabled ? ETRoutes({})?.props.children : null}
+      {ETRoutes({})?.props.children}
 
       {CDS_NAV_2_0 ? <RoutesV2 /> : undefined}
 
