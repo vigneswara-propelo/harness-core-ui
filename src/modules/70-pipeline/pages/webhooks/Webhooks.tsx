@@ -23,7 +23,7 @@ import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { useListGitxWebhooksRefQuery, useUpdateGitxWebhookRefMutation } from '@harnessio/react-ng-manager-client'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
 import { useStrings } from 'framework/strings'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -39,12 +39,12 @@ import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerS
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import EmptyContentImg from '@common/images/EmptySearchResults.svg'
 import RbacButton from '@rbac/components/Button/Button'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { DEFAULT_PAGE_INDEX } from '@modules/70-pipeline/utils/constants'
 import { useDocumentTitle } from '@modules/10-common/hooks/useDocumentTitle'
 import WebhooksList from './WebhooksList/WebhooksList'
 import NewWebhookModal from './NewWebhookModal'
-import { STATUS, initialWebhookModalData, Error, WebhookTabIds } from './utils'
+import { STATUS, initialWebhookModalData, WebhookTabIds } from './utils'
 import NoData from './NoData'
 import WebhooksTabs from './WebhooksTabs'
 import css from './Webhooks.module.scss'
@@ -91,7 +91,7 @@ export function Webhooks(): JSX.Element {
       refetch()
     }
     if (webhookUpdateError) {
-      showError(getRBACErrorMessage((webhookUpdateError as Error).message))
+      showError(getRBACErrorMessage(webhookUpdateError as RBACError))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [webhookUpdateData, webhookUpdateError])
@@ -110,10 +110,10 @@ export function Webhooks(): JSX.Element {
     updateQueryParams({ page: index + 1 })
 
   const paginationProps = useDefaultPaginationProps({
-    itemCount: defaultTo(data?.pagination?.total, 0),
-    pageSize: defaultTo(data?.pagination?.pageSize, 0),
-    pageCount: defaultTo(data?.pagination?.pageCount, 0),
-    pageIndex: defaultTo(data?.pagination?.pageNumber, 0),
+    itemCount: defaultTo(get(data, 'pagination.total'), 0),
+    pageSize: defaultTo(get(data, 'pagination.pageSize'), 0),
+    pageCount: defaultTo(get(data, 'pagination.pageCount'), 0),
+    pageIndex: defaultTo(get(data, 'pagination.pageNumber'), 0),
     gotoPage: handlePageIndexChange,
     onPageSizeChange: newSize => updateQueryParams({ page: PAGE_TEMPLATE_DEFAULT_PAGE_INDEX, size: newSize })
   })
@@ -194,8 +194,8 @@ export function Webhooks(): JSX.Element {
             flex={{ justifyContent: 'space-between' }}
             padding={{ top: 'large', right: 'xlarge', left: 'xlarge' }}
           >
-            <Text color={Color.GREY_800} iconProps={{ size: 14 }}>
-              {getString('total')}: {data?.pagination?.total}
+            <Text color={Color.GREY_800} iconProps={{ size: 14 }} data-testid="webhooks-total">
+              {getString('total')}: {get(data, 'pagination.total', '')}
             </Text>
           </Layout.Horizontal>
         )}

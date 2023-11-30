@@ -45,7 +45,7 @@ export default function NoData({
           >
             {getString('common.filters.noMatchingFilterData')}
           </Text>
-          <Button variation={ButtonVariation.LINK} onClick={clearFilters} minimal>
+          <Button variation={ButtonVariation.LINK} onClick={clearFilters} minimal data-testid="clear-filters">
             {getString('common.filters.clearFilters')}
           </Button>
         </Layout.Vertical>
