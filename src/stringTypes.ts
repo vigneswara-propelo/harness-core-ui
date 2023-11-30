@@ -5254,6 +5254,7 @@ export interface StringsMap {
   'pipeline.sbomPolicyViolations': string
   'pipeline.scriptInputVariables': string
   'pipeline.scriptOutputVariables': string
+  'pipeline.seeDetailsInExecutionView': string
   'pipeline.selectApplications': string
   'pipeline.selectArtifactPathPlaceholder': string
   'pipeline.selectBambooBuildsPlaceholder': string

@@ -29,6 +29,7 @@ import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import type {
   ExecutionPathProps,
   GitQueryParams,
+  ModulePathParams,
   PipelinePathProps,
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
@@ -51,86 +52,21 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
-import type { PipelineExecutionSummary, PipelineStageInfo, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
+import type { PipelineExecutionSummary, PipelineStageInfo } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
-import type { PipelineListPagePathParams } from '@pipeline/pages/pipeline-list/types'
 import { DateTimeContent } from '@common/components/TimeAgoPopover/TimeAgoPopover'
 import { useNotesModal } from '@pipeline/pages/execution/ExecutionLandingPage/ExecutionHeader/NotesModal/useNotesModal'
 import FrozenExecutionDrawer from './FrozenExecutionDrawer/FrozenExecutionDrawer'
 import { CITriggerInfo, CITriggerInfoProps } from './CITriggerInfoCell'
 import type { ExecutionListColumnActions, ExecutionListExpandedColumnProps } from './ExecutionListTable'
+import { useExecutionListQueryParams } from '../utils/executionListUtil'
+import { FailureInfoPopover } from './FailureInfoPopover/FailureInfoPopover'
+import {
+  getChildExecutionPipelineViewLink,
+  getExecutionPipelineViewLink,
+  parserForFailedStatus
+} from './executionListUtils'
 import css from './ExecutionListTable.module.scss'
-
-export const getExecutionPipelineViewLink = (
-  pipelineExecutionSummary: PipelineExecutionSummary,
-  pathParams: PipelineType<PipelinePathProps>,
-  queryParams: GitQueryParams
-): string => {
-  const { planExecutionId, pipelineIdentifier: rowDataPipelineIdentifier } = pipelineExecutionSummary
-  const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier, module } = pathParams
-  const { branch, repoIdentifier, repoName, connectorRef, storeType } = queryParams
-  const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
-
-  return routes.toExecutionPipelineView({
-    orgIdentifier,
-    projectIdentifier,
-    pipelineIdentifier: pipelineIdentifier || rowDataPipelineIdentifier || '-1',
-    accountId,
-    module,
-    executionIdentifier: planExecutionId || '-1',
-    source,
-    connectorRef: pipelineExecutionSummary.connectorRef ?? connectorRef,
-    repoName: defaultTo(
-      pipelineExecutionSummary.gitDetails?.repoName ?? repoName,
-      pipelineExecutionSummary.gitDetails?.repoIdentifier ?? repoIdentifier
-    ),
-    branch: pipelineExecutionSummary.gitDetails?.branch ?? branch,
-    storeType: pipelineExecutionSummary.storeType ?? storeType
-  })
-}
-
-export function getChildExecutionPipelineViewLink<T>(
-  data: T,
-  pathParams: PipelineType<PipelinePathProps | PipelineListPagePathParams>,
-  queryParams: GitQueryParams
-): string {
-  const {
-    executionid,
-    identifier: pipelineIdentifier,
-    orgid,
-    projectid,
-    stagenodeid
-  } = get(
-    data,
-    'parentStageInfo',
-    get(
-      (data as unknown as PMSPipelineSummaryResponse)?.recentExecutionsInfo,
-      [0, 'parentStageInfo'],
-      {} as PipelineStageInfo
-    )
-  )
-  const { accountId, module } = pathParams
-  const { branch, repoIdentifier, repoName, connectorRef, storeType } = queryParams
-  const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
-
-  return routes.toExecutionPipelineView({
-    accountId: accountId,
-    orgIdentifier: orgid,
-    projectIdentifier: projectid,
-    pipelineIdentifier: pipelineIdentifier || '-1',
-    executionIdentifier: executionid || '-1',
-    module,
-    source,
-    stage: stagenodeid,
-    connectorRef: get(data, 'connectorRef', connectorRef),
-    repoName: defaultTo(
-      get(data, ['gitDetails', 'repoName'], repoName),
-      get(data, ['gitDetails', 'repoIdentifier'], repoIdentifier)
-    ),
-    branch: get(data, ['gitDetails', 'branch'], branch),
-    storeType: get(data, 'storeType', storeType)
-  })
-}
 
 type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance<D> & {
   column: ColumnInstance<D> & ExecutionListColumnActions
@@ -283,6 +219,9 @@ export const PipelineNameCell: CellType = ({ row }) => {
 export const StatusCell: CellType = ({ row }) => {
   const planExecutionId = row.original.planExecutionId
   const isAbortedByFreeze = ExecutionStatusEnum.AbortedByFreeze === (row.original.status as ExecutionStatus)
+  const isFailedStatus = ExecutionStatusEnum.Failed === (row.original.status as ExecutionStatus)
+  const pathParams = useParams<PipelineType<PipelinePathProps & ModulePathParams>>()
+  const queryParams = useExecutionListQueryParams()
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false)
   const { getString } = useStrings()
   const { module } = useModuleInfo()
@@ -343,6 +282,8 @@ export const StatusCell: CellType = ({ row }) => {
     )
   }
 
+  const failureInfo = isFailedStatus ? parserForFailedStatus(row.original) : []
+
   return (
     <div onClick={e => e.stopPropagation()}>
       <Layout.Horizontal>
@@ -357,6 +298,14 @@ export const StatusCell: CellType = ({ row }) => {
         </Popover>
         {!isEmpty(row.original?.abortedBy) && <AbortedByUserPopover />}
       </Layout.Horizontal>
+      {failureInfo.length ? (
+        <FailureInfoPopover
+          failureInfo={failureInfo}
+          pathParams={pathParams}
+          queryParams={queryParams}
+          rowData={row.original}
+        />
+      ) : null}
       {drawerOpen && (
         <FrozenExecutionDrawer
           drawerOpen={drawerOpen}

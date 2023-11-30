@@ -52,7 +52,6 @@ import useMigrateResource from '@pipeline/components/MigrateResource/useMigrateR
 import { MigrationType } from '@pipeline/components/MigrateResource/MigrateUtils'
 import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { getChildExecutionPipelineViewLink } from '@pipeline/pages/execution-list/ExecutionListTable/ExecutionListCells'
 import { useQueryParams } from '@common/hooks/useQueryParams'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import useEditGitMetadata from '@pipeline/components/MigrateResource/useEditGitMetadata'
@@ -60,6 +59,7 @@ import { VersionTag } from '@pipeline/common/components/VersionTag/VersionTag'
 import { getRouteProps } from '../PipelineListUtils'
 import type { PipelineListPagePathParams } from '../types'
 import type { PipelineListColumnActions } from './PipelineListTable'
+import { getChildExecutionPipelineViewLink } from '../../execution-list/ExecutionListTable/executionListUtils'
 import css from './PipelineListTable.module.scss'
 
 export const LabeValue = ({ label, value }: { label: string; value: ReactNode }): JSX.Element => {

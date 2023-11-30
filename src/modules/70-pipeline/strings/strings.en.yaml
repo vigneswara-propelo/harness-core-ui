@@ -2113,3 +2113,4 @@ totalVariableCount: 'There are a total of {{ count }} variables referencing to t
 validations:
   setInputRequiredDuringRuntime: Set runtime input as required during runtime
   inputAlreadyExists: Runtime Input with same name already exists
+seeDetailsInExecutionView: 'See details in Execution View'

@@ -27,7 +27,6 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
   DurationCell,
   ExecutionCell,
-  getExecutionPipelineViewLink,
   MenuCell,
   PipelineNameCell,
   RowSelectCell,
@@ -37,6 +36,7 @@ import {
 import { ExecutionStageList } from './ExecutionStageList'
 import type { SortBy } from '../types'
 import { useExecutionListQueryParams } from '../utils/executionListUtil'
+import { getExecutionPipelineViewLink } from './executionListUtils'
 import css from './ExecutionListTable.module.scss'
 
 export interface ExecutionListColumnActions {
