@@ -21,7 +21,7 @@ import {
   ModalDialog
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { useHistory, useLocation, useParams } from 'react-router-dom'
+import { matchPath, useHistory, useLocation, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, merge } from 'lodash-es'
 import produce from 'immer'
 import { parse } from '@common/utils/YamlHelperMethods'
@@ -64,6 +64,8 @@ import { getPipelineUrl } from '@common/hooks/useGetEntityMetadata'
 import { getDefaultStoreType, getSettingValue } from '@default-settings/utils/utils'
 import { PipelineMetadataForRouter } from '@pipeline/components/CreatePipelineButton/useCreatePipelineModalY1'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { NavigationCheck } from '@modules/10-common/exports'
+import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@modules/10-common/utils/routeUtils'
 import { usePipelineContextY1 } from '../PipelineContext/PipelineContextY1'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActionsY1'
 import PipelineYamlViewY1 from '../PipelineYamlView/PipelineYamlViewY1'
@@ -261,7 +263,6 @@ export function PipelineCanvasY1(): React.ReactElement {
   })
 
   const { openPipelineErrorsModal } = usePipelineErrors()
-  // TODO const isYaml = view === SelectedView.YAML
   const [isYamlError, setYamlError] = React.useState(false)
   const [blockNavigation, setBlockNavigation] = React.useState(false)
   const [selectedBranch, setSelectedBranch] = React.useState(defaultTo(branch, ''))
@@ -806,48 +807,18 @@ export function PipelineCanvasY1(): React.ReactElement {
             e.stopPropagation()
           }}
         >
-          {/* TODO */}
-          {/* <NavigationCheck
-            when={getOtherModal && pipeline.identifier !== ''}
+          <NavigationCheck
+            when={!!pipelineMetadata.identifier}
             shouldBlockNavigation={nextLocation => {
-              let localUpdated = isUpdated
               const matchDefault = matchPath(nextLocation.pathname, {
                 path: routes.toPipelineStudio({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams }),
                 exact: true
               })
-
-              // This is special handler when user update yaml and immediately click on run
-              // With the new flow  (where user can not run without saving) this block may not be required at all
-              if (isYaml && yamlHandler && isYamlEditable && !localUpdated) {
-                try {
-                  const parsedYaml = parse<Pipeline>(yamlHandler.getLatestYaml())
-                  if (!parsedYaml) {
-                    clear()
-                    showError(getString('invalidYamlText'), undefined, 'pipeline.parse.yaml.error')
-                    return true
-                  }
-                  if (yamlHandler.getYAMLValidationErrorMap()?.size > 0) {
-                    setYamlError(true)
-                    return true
-                  }
-                  localUpdated = !isEqual(omit(originalPipeline, 'repo', 'branch'), parsedYaml.pipeline)
-                  // If selected branch and branch are not equal, then fetching is in progress,
-                  // and below code will call updatePipeline with older data and set loading as false while fetching
-                  selectedBranch === branch && updatePipeline(parsedYaml.pipeline)
-                } catch (e) {
-                  setYamlError(true)
-                  return true
-                }
-              }
-              setYamlError(false)
               const shouldBlockNavigation =
-                !matchDefault?.isExact &&
-                localUpdated &&
-                !isReadonly &&
-                !(pipelineIdentifier === DefaultNewPipelineId && isEmpty(pipeline?.name)) &&
-                !(useTemplate && isEmpty(pipeline?.template))
-              if (!shouldBlockNavigation) {
-                !matchDefault?.isExact && deletePipelineCache(gitDetails)
+                !matchDefault?.isExact && isUpdated && !isReadonly && !(useTemplate && isEmpty(pipeline?.template))
+
+              if (!shouldBlockNavigation && !matchDefault?.isExact) {
+                deletePipelineCache(gitDetails)
               }
               return shouldBlockNavigation
             }}
@@ -857,13 +828,13 @@ export function PipelineCanvasY1(): React.ReactElement {
             }}
             navigate={newPath => {
               const isPipeline = matchPath(newPath, {
-                path: toPipelineStudio({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams }),
+                path: routes.toPipelineStudio({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams }),
                 exact: true
               })
               !isPipeline?.isExact && deletePipelineCache(gitDetails)
               history.push(newPath)
             }}
-          /> */}
+          />
           <Layout.Vertical height={'100%'}>
             <PipelineCanvasHeaderY1
               isPipelineRemote={!!isPipelineRemote}

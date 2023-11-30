@@ -43,6 +43,7 @@ function PipelineYamlViewY1(): React.ReactElement {
       pipelineMetadata,
       pipelineView: { isDrawerOpened, isYamlEditable },
       pipelineView,
+      isInitialized,
       gitDetails,
       entityValidityDetails,
       storeMetadata
@@ -169,7 +170,7 @@ function PipelineYamlViewY1(): React.ReactElement {
   return (
     <div className={css.yamlBuilder}>
       <>
-        {!isDrawerOpened && (
+        {!isDrawerOpened && isInitialized && (
           <YamlBuilderMemo
             fileName={isPipelineRemote ? remoteFileName : defaultTo(yamlFileName, defaultFileName)}
             entityType="Pipelines"
