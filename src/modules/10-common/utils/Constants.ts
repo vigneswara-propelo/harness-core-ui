@@ -20,13 +20,4 @@ export enum Status {
   TO_DO = 'TO_DO'
 }
 
-export enum Environment {
-  LOCALHOST = 'localhost',
-  PR = 'pr',
-  QA = 'qa',
-  PRE_QA = 'stress',
-  UAT = 'uat',
-  APP = 'app'
-}
-
 export const YAML_FILE_EXTENSIONS = ['.yaml', '.yml']

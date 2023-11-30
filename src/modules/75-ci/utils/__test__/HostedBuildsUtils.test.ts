@@ -10,7 +10,7 @@ import type { ConnectorInfoDTO } from 'services/cd-ng'
 import type { PipelineConfig } from 'services/pipeline-ng'
 import { Connectors } from '@platform/connectors/constants'
 import { YAMLVersion } from '@pipeline/utils/CIUtils'
-import { getBackendServerUrl, isEnvironmentAllowedForOAuth } from '@common/components/ConnectViaOAuth/OAuthUtils'
+import { getBackendServerUrl } from '@common/components/ConnectViaOAuth/OAuthUtils'
 import {
   addDetailsToPipeline,
   getFullRepoName,
@@ -97,47 +97,6 @@ describe('Test HostedBuildsUtils methods', () => {
       hostname: 'app.harness.io'
     }
     expect(getBackendServerUrl()).toBe('https//app.harness.io')
-  })
-
-  test('Test isEnvironmentAllowedForOAuth method', () => {
-    expect(isEnvironmentAllowedForOAuth()).toBe(true)
-    delete (window as any).location
-
-    global.window.location = {
-      ...window.location,
-      hostname: 'app.harness.io'
-    }
-    expect(isEnvironmentAllowedForOAuth()).toBe(true)
-
-    global.window.location = {
-      ...window.location,
-      hostname: 'qa.harness.io'
-    }
-    expect(isEnvironmentAllowedForOAuth()).toBe(true)
-
-    global.window.location = {
-      ...window.location,
-      hostname: 'pr.harness.io'
-    }
-    expect(isEnvironmentAllowedForOAuth()).toBe(true)
-
-    global.window.location = {
-      ...window.location,
-      hostname: 'uat.harness.io'
-    }
-    expect(isEnvironmentAllowedForOAuth()).toBe(true)
-
-    global.window.location = {
-      ...window.location,
-      hostname: 'stress.harness.io'
-    }
-    expect(isEnvironmentAllowedForOAuth()).toBe(true)
-
-    global.window.location = {
-      ...window.location,
-      hostname: 'cloudflare.harness.io'
-    }
-    expect(isEnvironmentAllowedForOAuth()).toBe(false)
   })
 
   test('Test getPRTriggerActions method', () => {

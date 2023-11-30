@@ -53,7 +53,6 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { Connectors } from '@platform/connectors/constants'
 import {
   getBackendServerUrl,
-  isEnvironmentAllowedForOAuth,
   OAUTH_REDIRECT_URL_PREFIX,
   OAUTH_PLACEHOLDER_VALUE,
   MAX_TIMEOUT_OAUTH
@@ -188,7 +187,7 @@ const SelectGitProviderRef = (
         if (!gitProvider) {
           return
         }
-        if (event.origin !== getBackendServerUrl() && !isEnvironmentAllowedForOAuth()) {
+        if (event.origin !== getBackendServerUrl()) {
           return
         }
         if (!event || !event.data) {

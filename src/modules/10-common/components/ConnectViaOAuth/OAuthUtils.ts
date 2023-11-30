@@ -5,16 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Environment, Status } from '@common/utils/Constants'
+import { Status } from '@common/utils/Constants'
 
 export const getBackendServerUrl = (): string => {
   return `${location.protocol}//${location.hostname}`
-}
-
-export const isEnvironmentAllowedForOAuth = (): boolean => {
-  return Object.values(Environment).some((env: Environment) =>
-    location.hostname.toLowerCase().startsWith(env.toLowerCase())
-  )
 }
 
 export const getGatewayUrlPrefix = (): string => {
@@ -48,8 +42,7 @@ export const handleOAuthEventProcessing = ({
   onSuccessCallback: (response: OAuthEventProcessingResponse) => void
 }): OAuthEventProcessingResponse | undefined => {
   if (oAuthStatus === Status.IN_PROGRESS) {
-    // For local dev this condtion of same origin should be skipped
-    if (event.origin !== getBackendServerUrl() && !isEnvironmentAllowedForOAuth()) {
+    if (event.origin !== getBackendServerUrl()) {
       return
     }
     if (!event || !event.data) {

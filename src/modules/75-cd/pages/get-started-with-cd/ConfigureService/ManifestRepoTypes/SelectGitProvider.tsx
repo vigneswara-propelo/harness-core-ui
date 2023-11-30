@@ -49,7 +49,6 @@ import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { Connectors } from '@platform/connectors/constants'
 import {
   getBackendServerUrl,
-  isEnvironmentAllowedForOAuth,
   OAUTH_REDIRECT_URL_PREFIX,
   OAUTH_PLACEHOLDER_VALUE,
   MAX_TIMEOUT_OAUTH
@@ -191,7 +190,7 @@ const SelectGitProviderRef = (
         if (!selectedGitProvider) {
           return
         }
-        if (event.origin !== getBackendServerUrl() && !isEnvironmentAllowedForOAuth()) {
+        if (event.origin !== getBackendServerUrl()) {
           return
         }
         if (!event || !event.data) {
