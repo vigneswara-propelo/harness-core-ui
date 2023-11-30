@@ -386,6 +386,9 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
     )
   }
 
+  // Logic to display 'all' tab . This is written here to help with css
+  const displayAllTab = showAllTab && !!(projectIdentifier || orgIdentifier)
+
   const renderTab = (
     show: boolean,
     id: TAB_ID,
@@ -402,12 +405,11 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
             flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
             padding={{ left: 'xsmall', right: 'xsmall' }}
             spacing="xsmall"
+            className={cx(css.tabs, { [css.tabsWhenAllPresent]: displayAllTab })}
           >
             {icon && <Icon name={icon} {...iconProps} className={css.tabIcon} />}
 
-            <Text lineClamp={1} font={{ variation: FontVariation.H6, weight: 'light' }}>
-              {getString(title)}
-            </Text>
+            <Text font={{ variation: FontVariation.H6, weight: 'light' }}>{getString(title)}</Text>
             {renderTabSubHeading && tabDesc && (
               <Text
                 lineClamp={1}
@@ -472,7 +474,7 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
             setSelectedTab(newTabId as TAB_ID)
           }}
         >
-          {renderTab(showAllTab && !!(projectIdentifier || orgIdentifier), TAB_ID.ALL, 'common.all')}
+          {renderTab(displayAllTab, TAB_ID.ALL, 'common.all')}
           {renderTab(!!projectIdentifier, TAB_ID.PROJECT, 'projectLabel', 'projects-wizard', selectedProject?.name)}
           {renderTab(!!orgIdentifier, TAB_ID.ORGANIZATION, 'orgLabel', 'diagram-tree', selectedOrg?.name)}
           {renderTab(true, TAB_ID.ACCOUNT, 'account', 'layers', selectedAccount?.accountName)}

@@ -16,6 +16,8 @@ declare const styles: {
   readonly tabIcon: string
   readonly tabTitleContainer: string
   readonly tabValue: string
+  readonly tabs: string
   readonly tabsContainer: string
+  readonly tabsWhenAllPresent: string
 }
 export default styles

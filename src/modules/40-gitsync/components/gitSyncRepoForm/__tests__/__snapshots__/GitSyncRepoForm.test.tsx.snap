@@ -97,11 +97,10 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
               tabindex="0"
             >
               <div
-                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall"
+                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main tabs tabsWhenAllPresent StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall"
               >
                 <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-h6 StyledProps--font-weight-light"
-                  style="--text-line-clamp: 1;"
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--font-weight-light"
                 >
                   common.all
                 </p>
@@ -120,7 +119,7 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
               tabindex="0"
             >
               <div
-                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall"
+                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main tabs tabsWhenAllPresent StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall"
               >
                 <span
                   class="bp3-icon StyledProps--main tabIcon"
@@ -140,8 +139,7 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
                   </svg>
                 </span>
                 <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-h6 StyledProps--font-weight-light"
-                  style="--text-line-clamp: 1;"
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--font-weight-light"
                 >
                   projectLabel
                 </p>
@@ -165,7 +163,7 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
               tabindex="0"
             >
               <div
-                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall"
+                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main tabs tabsWhenAllPresent StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall"
               >
                 <span
                   class="bp3-icon bp3-icon-diagram-tree StyledProps--main tabIcon"
@@ -187,8 +185,7 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
                   </svg>
                 </span>
                 <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-h6 StyledProps--font-weight-light"
-                  style="--text-line-clamp: 1;"
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--font-weight-light"
                 >
                   orgLabel
                 </p>
@@ -207,7 +204,7 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
               tabindex="0"
             >
               <div
-                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall"
+                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main tabs tabsWhenAllPresent StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall"
               >
                 <span
                   class="bp3-icon bp3-icon-layers StyledProps--main tabIcon"
@@ -229,8 +226,7 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
                   </svg>
                 </span>
                 <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-h6 StyledProps--font-weight-light"
-                  style="--text-line-clamp: 1;"
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--font-weight-light"
                 >
                   account
                 </p>
@@ -2251,11 +2247,10 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
               tabindex="0"
             >
               <div
-                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall"
+                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main tabs tabsWhenAllPresent StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall"
               >
                 <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-h6 StyledProps--font-weight-light"
-                  style="--text-line-clamp: 1;"
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--font-weight-light"
                 >
                   common.all
                 </p>
@@ -2274,7 +2269,7 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
               tabindex="0"
             >
               <div
-                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall"
+                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main tabs tabsWhenAllPresent StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall"
               >
                 <span
                   class="bp3-icon StyledProps--main tabIcon"
@@ -2294,8 +2289,7 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
                   </svg>
                 </span>
                 <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-h6 StyledProps--font-weight-light"
-                  style="--text-line-clamp: 1;"
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--font-weight-light"
                 >
                   projectLabel
                 </p>
@@ -2319,7 +2313,7 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
               tabindex="0"
             >
               <div
-                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall"
+                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main tabs tabsWhenAllPresent StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall"
               >
                 <span
                   class="bp3-icon bp3-icon-diagram-tree StyledProps--main tabIcon"
@@ -2341,8 +2335,7 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
                   </svg>
                 </span>
                 <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-h6 StyledProps--font-weight-light"
-                  style="--text-line-clamp: 1;"
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--font-weight-light"
                 >
                   orgLabel
                 </p>
@@ -2361,7 +2354,7 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
               tabindex="0"
             >
               <div
-                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall"
+                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main tabs tabsWhenAllPresent StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall"
               >
                 <span
                   class="bp3-icon bp3-icon-layers StyledProps--main tabIcon"
@@ -2383,8 +2376,7 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
                   </svg>
                 </span>
                 <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-h6 StyledProps--font-weight-light"
-                  style="--text-line-clamp: 1;"
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--font-weight-light"
                 >
                   account
                 </p>
