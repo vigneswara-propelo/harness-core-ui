@@ -616,6 +616,12 @@ function FormContent({
                     name={`spec.updateMultiple.spec.changeTaskType`}
                     disabled={isApprovalStepFieldDisabled(readonly)}
                     items={taskTypeOptions}
+                    onChange={item =>
+                      formik.setFieldValue(
+                        'spec.updateMultiple.spec.changeTaskType',
+                        item.value ? item.value : undefined
+                      )
+                    }
                     addClearButton
                     value={
                       taskTypeOptions.find(
