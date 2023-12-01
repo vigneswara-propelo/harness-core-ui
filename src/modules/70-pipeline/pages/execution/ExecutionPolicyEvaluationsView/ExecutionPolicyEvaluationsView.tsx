@@ -7,7 +7,7 @@
 
 import React, { useMemo, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, useToaster } from '@harness/uicore'
+import { Container, getErrorInfoFromErrorObject, shouldShowError, useToaster } from '@harness/uicore'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'
@@ -29,16 +29,22 @@ export default function ExecutionPolicyEvaluationsView(): React.ReactElement | n
     projectIdentifier,
     includeChildScopes: true,
     module: 'iacm',
-    entity: `iacm-${executionIdentifier}`,
-    lazy: !IACM_ENABLED
+    entity: `iacm-${executionIdentifier}`
   }
-  const { data, loading, error } = useGetEvaluationList({ queryParams })
+  const { data, loading, error, refetch } = useGetEvaluationList({ queryParams, lazy: true })
 
   useEffect(() => {
-    if (error) {
-      showError(error)
+    if (IACM_ENABLED) {
+      refetch()
     }
-  }, [error])
+  }, [IACM_ENABLED])
+
+  useEffect(() => {
+    if (error?.message && shouldShowError(error)) {
+      const errorMessage = getErrorInfoFromErrorObject(error)
+      showError(errorMessage)
+    }
+  }, [error, showError])
 
   const metaData = useMemo(() => {
     if (!data && !governanceMetadata) {

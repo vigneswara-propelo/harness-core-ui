@@ -16,7 +16,7 @@ jest.mock('services/pm', () => ({
   useGetEvaluationList: jest.fn(() => ({
     data: null,
     loading: false,
-    refetch: jest.fn().mockReturnValue({}),
+    refetch: jest.fn(),
     error: null
   }))
 }))
@@ -96,7 +96,8 @@ describe('<ExecutionPolicyEvaluationsView /> tests', () => {
         }
       ],
       loading: false,
-      error: null
+      error: null,
+      refetch: jest.fn()
     }))
     mockImport('@pipeline/context/ExecutionContext', {
       useExecutionContext: () => {
@@ -139,7 +140,8 @@ describe('<ExecutionPolicyEvaluationsView /> tests', () => {
         }
       ],
       loading: false,
-      error: null
+      error: null,
+      refetch: jest.fn()
     }))
     mockImport('@pipeline/context/ExecutionContext', {
       useExecutionContext: () => {

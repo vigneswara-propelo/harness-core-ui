@@ -1,9 +1,16 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { defaultTo, forEach, includes, map } from 'lodash-es'
 import { GovernanceMetadata } from 'services/cd-ng'
 import { Evaluation } from 'services/pm'
 import { EvaluationStatus, IacmFormattedData } from './types'
 
-const defaultEmpty = (value: string | number | undefined): string => defaultTo(value, '') as string
+const defaultEmpty = (value: unknown): string => defaultTo(value, '') as string
 
 const formatIacmGovernanceData = (
   data?: Evaluation[]
@@ -27,7 +34,7 @@ const formatIacmGovernanceData = (
         orgId: defaultEmpty(policySet.org_id),
         projectId: defaultEmpty(policySet.project_id),
         policyMetadata: map(policySet.details, policy => ({
-          id: id,
+          id,
           policyId: defaultEmpty(policy?.policy?.identifier),
           policyName: defaultEmpty(policy?.policy?.name),
           severity: defaultEmpty(policySet.status),
@@ -74,12 +81,14 @@ export const formatMetaData = (
     }
   }
 
+  if (!IACM_ENABLED) return govData
+
   const { iacmData, iacmStatus } = formatIacmGovernanceData(data)
-  if (IACM_ENABLED && iacmData && !isLoading) {
+  if (iacmData && !isLoading) {
     govData.details = [...defaultTo(govData.details, []), ...iacmData]
   }
 
-  if (IACM_ENABLED && iacmStatus !== govData.status) {
+  if (iacmStatus !== govData.status) {
     if (govData.status === EvaluationStatus.ERROR || iacmStatus === EvaluationStatus.ERROR) {
       govData.status = EvaluationStatus.ERROR
     } else if (govData.status === EvaluationStatus.WARNING || iacmStatus === EvaluationStatus.WARNING) {
