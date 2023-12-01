@@ -75,7 +75,7 @@ function WhatToDeploy({ saveProgress }: WhatToDeployProps): JSX.Element {
 
   const resetDeploymentFlowType = (): void => {
     saveProgress(CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY, {
-      type: DEPLOYMENT_FLOW_TYPES[DEPLOYMENT_FLOW_ENUMS.CDPipeline]
+      type: DEPLOYMENT_FLOW_TYPES[DEPLOYMENT_FLOW_ENUMS.Gitops]
     })
   }
 

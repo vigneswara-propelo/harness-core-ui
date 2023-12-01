@@ -51,7 +51,7 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
         isDelegateVerified: false,
         delegateStatus: 'PENDING',
         delegateProblemType: deploymentTypeDetails.artifactType?.id,
-        type: DEPLOYMENT_FLOW_TYPES['cd-pipeline']
+        type: DEPLOYMENT_FLOW_TYPES['gitops']
       }
     )
   })
@@ -151,8 +151,8 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
   }
   const deploymentTypes = React.useMemo((): DeploymentFlowType[] => {
     const deploymentTypeMap = new Map<DEPLOYMENT_FLOW_ENUMS, DeploymentFlowType>([
-      [DEPLOYMENT_FLOW_ENUMS.CDPipeline, DEPLOYMENT_FLOW_TYPES[DEPLOYMENT_FLOW_ENUMS.CDPipeline]],
-      [DEPLOYMENT_FLOW_ENUMS.Gitops, DEPLOYMENT_FLOW_TYPES[DEPLOYMENT_FLOW_ENUMS.Gitops]]
+      [DEPLOYMENT_FLOW_ENUMS.Gitops, DEPLOYMENT_FLOW_TYPES[DEPLOYMENT_FLOW_ENUMS.Gitops]],
+      [DEPLOYMENT_FLOW_ENUMS.CDPipeline, DEPLOYMENT_FLOW_TYPES[DEPLOYMENT_FLOW_ENUMS.CDPipeline]]
     ])
     const finalDeploymentTypes: DeploymentFlowType[] = []
     Array.from(deploymentTypeMap.entries()).forEach(([_key, deploymentType]) => {
