@@ -13,7 +13,6 @@ import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { ModuleLicenseDTO, CreditDTO } from 'services/cd-ng'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import UsageInfoCard, { ErrorContainer } from './UsageInfoCard'
 
 interface ActiveDevelopersProps {
@@ -102,7 +101,6 @@ export const creditSum = (creditsData: CreditDTO[]): number => {
 }
 const CIUsageInfo: React.FC<CIUsageInfoProps> = props => {
   const { creditsData, creditsUsed, loadingCredits } = props
-  const { BUILD_CREDITS_VIEW } = useFeatureFlags()
   let totalCredits = 0
 
   let expiryDate = ''
@@ -146,11 +144,9 @@ const CIUsageInfo: React.FC<CIUsageInfoProps> = props => {
         activeUsers={usage?.ci?.activeCommitters?.count || 0}
         useCredits={false}
       />
-      {BUILD_CREDITS_VIEW === true ? (
-        <OverlaySpinner show={loadingCredits || false}>
-          <CreditInfo creditsUsed={creditsUsed} totalCredits={totalCredits} expiryDate={expiryDate} useCredits={true} />
-        </OverlaySpinner>
-      ) : null}
+      <OverlaySpinner show={loadingCredits || false}>
+        <CreditInfo creditsUsed={creditsUsed} totalCredits={totalCredits} expiryDate={expiryDate} useCredits={true} />
+      </OverlaySpinner>
     </Layout.Horizontal>
   )
 }

@@ -34,7 +34,6 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
   const { accountName, licenseData, module, trialInformation } = props
   const enabled = useFeatureFlag(FeatureFlag.VIEW_USAGE_ENABLED)
   const [filteredSmallestTime, setfilteredSmallestTime] = useState<number>(0)
-  const buildCreditsView = useFeatureFlag(FeatureFlag.BUILD_CREDITS_VIEW)
   const { accountId } = useParams<AccountPathProps>()
   const { data: creditsData } = useGetCreditsByAccount({
     accountIdentifier: accountId
@@ -91,7 +90,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
         accountId={accountId}
         licenseType={(licenseData as CDModuleLicenseDTO)?.cdLicenseType}
       />
-      {buildCreditsView && module === 'CI' ? (
+      {module === 'CI' ? (
         <BuildCreditInfoTable
           creditsUsed={creditsUsed?.data?.credits || 0}
           data={creditsData?.data || []}

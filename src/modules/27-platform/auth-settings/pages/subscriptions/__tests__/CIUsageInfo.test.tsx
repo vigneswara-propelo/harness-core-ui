@@ -41,7 +41,7 @@ const useGetUsageAndLimitReturnMock = {
 describe('CIUsageInfo', () => {
   test('CIUsageInfo', () => {
     const { container } = render(
-      <TestWrapper defaultFeatureFlagValues={{ BUILD_CREDITS_VIEW: true }}>
+      <TestWrapper>
         <CIUsageInfo
           module={ModuleName.CI}
           licenseData={{
