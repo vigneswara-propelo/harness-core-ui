@@ -37,12 +37,12 @@ import { ModulePathParams, ProjectPathProps, WebhooksPathProps } from '@common/i
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { UseStringsReturn, useStrings } from 'framework/strings'
 import { getReadableDateTime } from '@common/utils/dateUtils'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import routesv1 from '@common/RouteDefinitions'
 import routesv2 from '@common/RouteDefinitionsV2'
 import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import NewWebhookModal from '../NewWebhookModal'
-import { processFolderPaths, Error } from '../utils'
+import { processFolderPaths } from '../utils'
 import css from './WebhookLandingPage.module.scss'
 
 const loadingHeaderHeight = 43
@@ -77,27 +77,35 @@ const getOverviewContent = ({
     value: repo
   }
 ]
-const getDetailsContent = ({ folderPaths, repoName }: { folderPaths?: string[]; repoName?: string }): Content[] => [
-  {
-    label: '',
-    type: ContentType.CUSTOM,
-    value: (
-      <Layout.Vertical>
-        {folderPaths?.map((folderPath, index) => {
-          let folderPathContent = folderPath
-          if (index === 0 && isEmpty(folderPath)) {
-            folderPathContent = defaultTo(repoName, '')
-          }
-          return (
-            <Text color={Color.BLACK} lineClamp={1} margin={{ bottom: 'small' }} key={folderPath}>
-              {`${index + 1}. ${folderPathContent}`}
+const getDetailsContent = ({ folderPaths, repoName }: { folderPaths?: string[]; repoName?: string }): Content[] => {
+  return [
+    {
+      label: '',
+      type: ContentType.CUSTOM,
+      value: (
+        <Layout.Vertical>
+          {defaultTo(folderPaths, []).length > 0 ? (
+            folderPaths?.map((folderPath, index) => {
+              let folderPathContent = folderPath
+              if (index === 0 && isEmpty(folderPath)) {
+                folderPathContent = defaultTo(repoName, '')
+              }
+              return (
+                <Text color={Color.BLACK} lineClamp={1} margin={{ bottom: 'small' }} key={folderPath}>
+                  {`${index + 1}. ${folderPathContent}`}
+                </Text>
+              )
+            })
+          ) : (
+            <Text color={Color.BLACK} lineClamp={1} margin={{ bottom: 'small' }} key={repoName}>
+              {`1. ${repoName}`}
             </Text>
-          )
-        })}
-      </Layout.Vertical>
-    )
-  }
-]
+          )}
+        </Layout.Vertical>
+      )
+    }
+  ]
+}
 export default function WebhookLandingPage(): JSX.Element {
   const { webhookIdentifier, accountId, orgIdentifier, projectIdentifier, module } = useParams<
     WebhooksPathProps & ProjectPathProps & ModulePathParams
@@ -148,7 +156,7 @@ export default function WebhookLandingPage(): JSX.Element {
 
   React.useEffect(() => {
     if (webhooksDetailsError) {
-      showError(getRBACErrorMessage((webhooksDetailsError as Error).message))
+      showError(getRBACErrorMessage(webhooksDetailsError as RBACError))
       history.replace(routes.toWebhooks({ accountId, orgIdentifier, projectIdentifier, module }))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -187,8 +195,8 @@ export default function WebhookLandingPage(): JSX.Element {
     },
     [webhookResponse]
   )
-  const time = getReadableDateTime(webhookEvent?.content[0]?.event_trigger_time, 'hh:mm a')
-  const date = getReadableDateTime(webhookEvent?.content[0]?.event_trigger_time, 'MMM DD, YYYY')
+  const time = getReadableDateTime(get(webhookEvent, 'content.[0].event_trigger_time'), 'hh:mm a')
+  const date = getReadableDateTime(get(webhookEvent, 'content.[0].event_trigger_time'), 'MMM DD, YYYY')
 
   const hasData = Boolean(!loadingWebhookEvent && webhookEvent && !isEmpty(webhookEvent.content))
   const noData = Boolean(!loadingWebhookEvent && webhookEvent && isEmpty(webhookEvent.content))
@@ -207,7 +215,7 @@ export default function WebhookLandingPage(): JSX.Element {
 
   React.useEffect(() => {
     if (webhookEventError) {
-      showError(getRBACErrorMessage((webhookEventError as Error).message))
+      showError(getRBACErrorMessage(webhookEventError as RBACError))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [webhookEventError])
@@ -221,11 +229,15 @@ export default function WebhookLandingPage(): JSX.Element {
       )
       refetch()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [webhookUpdateData])
+
+  React.useEffect(() => {
     if (webhookUpdateError) {
-      showError(getRBACErrorMessage((webhookUpdateError as Error).message))
+      showError(getRBACErrorMessage(webhookUpdateError as RBACError))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [webhookUpdateData, webhookUpdateError])
+  }, [webhookUpdateError])
 
   return (
     <>
@@ -249,12 +261,13 @@ export default function WebhookLandingPage(): JSX.Element {
               <Layout.Horizontal spacing="small" data-testid={webhookResponse.content.webhook_identifier} width={'78%'}>
                 <Layout.Vertical padding={{ left: 'small' }}>
                   <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
-                    <Text style={{ fontSize: 20, fontWeight: 600 }} color={Color.GREY_700}>
+                    <Text style={{ fontSize: 20, fontWeight: 600 }} color={Color.GREY_700} data-testid="webhook-title">
                       {get(webhookResponse.content, 'webhook_name')}
                     </Text>
                     <Switch
                       padding={{ left: 'xxxlarge' }}
                       label={getString('enabledLabel')}
+                      data-testid="webhook-enable-toggle"
                       checked={webhookResponse.content.is_enabled ?? false}
                       onChange={e => {
                         updateWebhook({
@@ -271,7 +284,7 @@ export default function WebhookLandingPage(): JSX.Element {
                       }}
                     />
                   </Layout.Horizontal>
-                  <Text>
+                  <Text data-testid="webhook-id">
                     {getString('common.ID')}: {get(webhookResponse.content, 'webhook_identifier')}
                   </Text>
                 </Layout.Vertical>
@@ -342,7 +355,12 @@ export default function WebhookLandingPage(): JSX.Element {
                 >
                   {webhookEvent?.content[0]?.event_identifier}
                 </Text>
-                <Button minimal onClick={handleViewAllEventsClick} className={css.viewAllBtn}>
+                <Button
+                  minimal
+                  onClick={handleViewAllEventsClick}
+                  className={css.viewAllBtn}
+                  data-testid="view-all-events"
+                >
                   {getString('pipeline.webhookEvents.viewAll')}
                 </Button>
               </Layout.Vertical>
