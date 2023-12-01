@@ -2787,6 +2787,7 @@ export interface StringsMap {
   'platform.connectors.delegate.delegateSelectorSelective': string
   'platform.connectors.delegate.delegateSelectors': string
   'platform.connectors.delegate.delegateselectionPlaceholder': string
+  'platform.connectors.delegate.errorWhileSelectingDelegates': string
   'platform.connectors.delegate.hearbeat': string
   'platform.connectors.delegate.matchesSelectors': string
   'platform.connectors.delegate.matchingDelegates': string

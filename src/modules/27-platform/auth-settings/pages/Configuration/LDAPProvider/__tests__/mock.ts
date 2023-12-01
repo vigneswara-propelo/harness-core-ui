@@ -25,7 +25,8 @@ export const mockAuthSettingsResponse = {
         responseTimeout: 8000,
         useRecursiveGroupMembershipSearch: false,
         accountId: null,
-        settingType: 'LDAP'
+        settingType: 'LDAP',
+        delegateSelectors: ['a-delegate-selector']
       },
       identifier: 'vBnRLowtTCKHdAFA-22_fg',
       userSettingsList: [

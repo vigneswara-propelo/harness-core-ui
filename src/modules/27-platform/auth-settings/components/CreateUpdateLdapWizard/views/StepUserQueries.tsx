@@ -502,7 +502,7 @@ export const StepUserQueries: React.FC<
           icon="chevron-left"
           margin={{ right: 'small' }}
           variation={ButtonVariation.SECONDARY}
-          data-testid="back-to-connection-step"
+          data-testid="back-to-delegate-step"
         />
         <Button
           intent="primary"

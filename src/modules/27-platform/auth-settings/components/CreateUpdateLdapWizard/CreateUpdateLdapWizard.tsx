@@ -21,6 +21,7 @@ import {
   useUpdateLdapSettings
 } from 'services/cd-ng'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
+import DelegateSelectorStepForNonConnectors from '@platform/connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectprStepForNonConnectors'
 import StepOverview, { LdapOverview } from './views/StepOverview'
 import StepConnectionSettings from './views/StepConnectionSettings'
 import StepUserQueries from './views/StepUserQueries'
@@ -185,6 +186,24 @@ const CreateUpdateLdapWizard: React.FC<CreateUpdateLdapWizardProps> = props => {
         identifier={identifier || ''}
         isEdit={isEdit}
         updateStepData={(val: LdapConnectionSettings) => setConnectionSettingsState(val)}
+      />
+      <DelegateSelectorStepForNonConnectors
+        name={getString('delegate.DelegateselectionLabel')}
+        buildPayloadForNonConnectors={data => {
+          const delegateSelectors = data?.delegateSelectors
+          setConnectionSettingsState(prevState => {
+            if (prevState) {
+              return { ...prevState, delegateSelectors }
+            }
+          })
+          return undefined
+        }}
+        delegateSelectorSourceForNonConnectors={{ delegateSelectors: [], ...connectionSettingsState }}
+        disableGitSync
+        {...props}
+        isEditMode={!!props.isEdit}
+        connectorInfo={undefined}
+        dialogTitle={getString('platform.connectors.delegate.configureForNonConnectors')}
       />
       <StepUserQueries
         name={getString('platform.authSettings.ldap.userQueries')}

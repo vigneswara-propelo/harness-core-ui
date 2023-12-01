@@ -99,6 +99,30 @@ const mockUpdateAuthMechanismFailure = jest.fn().mockReturnValue(
   })
 )
 
+const mockDataDelegates = {
+  metaData: {},
+  resource: ['delegate-selector-sample', 'primary', 'a-delegate-selector'],
+  responseMessages: []
+}
+const emptyDataDelegates: [] = []
+
+jest.spyOn(portalServices, 'useGetDelegateSelectorsUpTheHierarchy').mockImplementation(
+  () =>
+    ({
+      loading: false,
+      data: mockDataDelegates
+    } as any)
+)
+
+jest.spyOn(portalServices, 'useGetDelegatesUpTheHierarchy').mockImplementation(
+  () =>
+    ({
+      loading: false,
+      error: undefined,
+      data: emptyDataDelegates
+    } as any)
+)
+
 describe('LDAP Provider', () => {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -469,10 +493,9 @@ describe('LDAP setup Wizard', () => {
     await act(async () => {
       fireEvent.click(getByTestId('submit-overview-step'))
     })
-    await act(async () => {
-      fireEvent.click(getByTestId('submit-connection-step'))
-    })
-    expect(wizardDialog).toMatchSnapshot()
+
+    // Submit button—a part of StepConnectionSettings—should be present & visible
+    expect(getByTestId('submit-connection-step')).toBeInTheDocument()
   })
 
   test('Connection Settings step works in LDAP wizard ADD mode ', async () => {
@@ -484,7 +507,7 @@ describe('LDAP setup Wizard', () => {
       error: null
     } as any)
 
-    const { getByTestId, getByText } = render(
+    const { getByTestId, getByText, getByRole } = render(
       <TestWrapper pathParams={{ accountId: 'testAcc' }}>
         <LDAPProvider
           authSettings={mockAuthSettingsResponseWithoutLdap}
@@ -531,12 +554,24 @@ describe('LDAP setup Wizard', () => {
     await act(async () => {
       fireEvent.click(getByTestId('submit-connection-step'))
     })
-    await waitFor(() => expect(getByTestId('back-to-connection-step')).toBeVisible())
-    expect(wizardDialog).toMatchSnapshot()
+
+    // DelegateSelectorStepForNonConnectors
+    await waitFor(() => expect(getByTestId('delegateSaveAndContinue')).toBeVisible())
+    fireEvent.click(getByTestId('delegateSaveAndContinue'))
+
+    await waitFor(() => expect(getByTestId('back-to-delegate-step')).toBeVisible())
+
     await act(async () => {
-      fireEvent.click(getByTestId('back-to-connection-step'))
+      fireEvent.click(getByTestId('back-to-delegate-step'))
     })
-    await waitFor(() => expect(getByTestId('submit-connection-step')).toBeVisible())
+
+    // DelegateSelectorStepForNonConnectors
+    await waitFor(() => expect(getByTestId('delegateSaveAndContinue')).toBeVisible())
+
+    // click on back to go to ConnectionSettings Step
+    const backBtnDelegateStep = getByRole('button', { name: 'back' })
+    fireEvent.click(backBtnDelegateStep!)
+
     expect((wizardDialog?.querySelector('[name="responseTimeout"]') as HTMLInputElement).value).toBe('7000')
   })
   test('Group Settings step works in LDAP wizard ADD mode ', async () => {
@@ -593,6 +628,11 @@ describe('LDAP setup Wizard', () => {
     await act(async () => {
       fireEvent.click(getByTestId('submit-connection-step'))
     })
+
+    // DelegateSelectorStepForNonConnectors
+    await waitFor(() => expect(getByTestId('delegateSaveAndContinue')).toBeVisible())
+    fireEvent.click(getByTestId('delegateSaveAndContinue'))
+
     await waitFor(() => expect(getByTestId('add-first-user-query-btn')).toBeVisible())
     expect(wizardDialog.querySelector("[data-testid='add-another-user-query-btn']")).toBeNull()
 
@@ -723,10 +763,16 @@ describe('LDAP setup Wizard', () => {
 
     fillAtForm(getConnectionFormFieldValues(wizardDialog))
 
+    await waitFor(() => expect(getByTestId('submit-connection-step')).toBeVisible())
     await act(async () => {
       fireEvent.click(getByTestId('submit-connection-step'))
     })
 
+    // DelegateSelectorStepForNonConnectors
+    await waitFor(() => expect(getByTestId('delegateSaveAndContinue')).toBeVisible())
+    fireEvent.click(getByTestId('delegateSaveAndContinue'))
+
+    await waitFor(() => expect(getByTestId('add-first-user-query-btn')).toBeVisible())
     await act(async () => {
       fireEvent.click(getByTestId('add-first-user-query-btn'))
     })
@@ -748,14 +794,16 @@ describe('LDAP setup Wizard', () => {
     })
 
     await act(async () => {
-      fireEvent.click(getByTestId('back-to-connection-step'))
+      fireEvent.click(getByTestId('back-to-delegate-step'))
     })
 
-    await act(async () => {
-      fireEvent.click(getByTestId('submit-connection-step'))
-    })
+    // DelegateSelectorStepForNonConnectors
+    await waitFor(() => expect(getByTestId('delegateSaveAndContinue')).toBeVisible())
+    fireEvent.click(getByTestId('delegateSaveAndContinue'))
 
-    expect(getByText('ou=Users,o=611a119873e7186e37f75599,dc=jumpcloud,dc=com')).toBeVisible()
+    await waitFor(() => {
+      expect(getByText('ou=Users,o=611a119873e7186e37f75599,dc=jumpcloud,dc=com')).toBeVisible()
+    })
 
     await act(async () => {
       fireEvent.click(getByTestId('submit-usery-query-step'))
@@ -869,9 +917,23 @@ describe('LDAP Wizard in edit mode', () => {
     const crossIcon = document.querySelector('[class*="bp3-icon-cross"]')
     expect(crossIcon).toBeTruthy()
 
+    await waitFor(() => expect(getByTestId('submit-connection-step')).toBeVisible())
     await act(async () => {
       fireEvent.click(getByTestId('submit-connection-step'))
     })
+
+    // DelegateSelectorStepForNonConnectors
+    await waitFor(() => {
+      expect(getByTestId('delegateSaveAndContinue')).toBeVisible()
+
+      const delegateSelectorFromMockApi =
+        mockAuthSettingsResponse.ngAuthSettings[0].connectionSettings.delegateSelectors[0]
+
+      // ensure that delegateSelector received from API is visible
+      expect(getByText(delegateSelectorFromMockApi)).toBeVisible()
+    })
+    fireEvent.click(getByTestId('delegateSaveAndContinue'))
+
     await waitFor(() => expect(getByTestId('edit-user-query-btn')).toBeVisible())
     await act(async () => {
       fireEvent.click(getByTestId('edit-user-query-btn'))
@@ -1001,9 +1063,15 @@ describe('LDAP Wizard in edit mode', () => {
       fireEvent.click(getByTestId('submit-overview-step'))
     })
 
+    await waitFor(() => expect(getByTestId('submit-connection-step')).toBeVisible())
     await act(async () => {
       fireEvent.click(getByTestId('submit-connection-step'))
     })
+
+    // DelegateSelectorStepForNonConnectors
+    await waitFor(() => expect(getByTestId('delegateSaveAndContinue')).toBeVisible())
+    fireEvent.click(getByTestId('delegateSaveAndContinue'))
+
     await waitFor(() => expect(getByTestId('edit-user-query-btn')).toBeVisible())
     await act(async () => {
       fireEvent.click(getByTestId('edit-user-query-btn'))

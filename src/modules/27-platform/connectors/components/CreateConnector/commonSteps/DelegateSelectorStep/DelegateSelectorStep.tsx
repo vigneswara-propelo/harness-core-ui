@@ -62,6 +62,8 @@ export interface DelegateSelectorProps {
   customHandleUpdate?: (payload: ConnectorConfigDTO) => Promise<ConnectorInfoDTO | undefined>
   helpPanelReferenceId?: string
   dialogTitle?: string
+  isNonConnector?: boolean
+  delegateSelectorSourceForNonConnectors?: { delegateSelectors: string[] }
   onSubmitForNonConnectors?: (data: DelegateSelectorStepData) => void
 }
 
@@ -96,14 +98,21 @@ const NoMatchingDelegateWarning: React.FC<{ delegatesFound: DelegatesFoundState;
 function getInitialDelegateSelectors(
   isEditMode: boolean,
   connectorInfo: ConnectorInfoDTO | void,
-  prevStepData: ConnectorConfigDTO | undefined
-) {
+  prevStepData: ConnectorConfigDTO | undefined,
+  isNonConnector?: DelegateSelectorProps['isNonConnector'],
+  delegateSelectorSourceForNonConnectors?: { delegateSelectors: string[] }
+): string[] {
   if (!isEditMode) {
     return []
   }
-  let delegate = (connectorInfo as ConnectorInfoDTO & InitialFormData)?.spec?.delegateSelectors || []
-  if (prevStepData?.delegateSelectors) {
-    delegate = prevStepData.delegateSelectors
+  let delegate = []
+  if (!isNonConnector) {
+    delegate = (connectorInfo as ConnectorInfoDTO & InitialFormData)?.spec?.delegateSelectors || []
+    if (prevStepData?.delegateSelectors) {
+      delegate = prevStepData.delegateSelectors
+    }
+  } else {
+    delegate = delegateSelectorSourceForNonConnectors?.delegateSelectors || []
   }
   return delegate
 }
@@ -128,7 +137,9 @@ const DelegateSelectorStep: React.FC<StepProps<ConnectorConfigDTO> & DelegateSel
     customHandleUpdate,
     connectorInfo,
     onSubmitForNonConnectors,
-    dialogTitle
+    dialogTitle,
+    isNonConnector,
+    delegateSelectorSourceForNonConnectors
   } = props
   const {
     accountId,
@@ -165,7 +176,13 @@ const DelegateSelectorStep: React.FC<StepProps<ConnectorConfigDTO> & DelegateSel
     }
   }
 
-  const initialDelegateSelectors = getInitialDelegateSelectors(props.isEditMode, props.connectorInfo, prevStepData)
+  const initialDelegateSelectors = getInitialDelegateSelectors(
+    props.isEditMode,
+    props.connectorInfo,
+    prevStepData,
+    isNonConnector,
+    delegateSelectorSourceForNonConnectors
+  )
 
   const initialValues = { delegateSelectors: initialDelegateSelectors }
   const [delegateSelectors, setDelegateSelectors] = useState<Array<string>>(initialDelegateSelectors)
