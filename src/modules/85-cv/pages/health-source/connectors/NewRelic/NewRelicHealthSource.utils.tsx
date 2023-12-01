@@ -68,9 +68,10 @@ export const validateMapping = (
   }
 
   if (
-    getMultiTypeFromValue(values?.newRelicApplication) === MultiTypeInputType.FIXED &&
-    values?.newRelicApplication &&
-    (!values.newRelicApplication.value || values.newRelicApplication.value === 'loading')
+    (getMultiTypeFromValue(values?.newRelicApplication) === MultiTypeInputType.FIXED &&
+      values?.metricData?.Performance &&
+      (!values.newRelicApplication?.value || values.newRelicApplication.value === 'loading')) ||
+    (getMultiTypeFromValue(values?.newRelicApplication) !== MultiTypeInputType.FIXED && !values.newRelicApplication)
   ) {
     errors['newRelicApplication'] = getString('cv.healthSource.connectors.NewRelic.validations.application')
   }
@@ -214,9 +215,9 @@ export const initializeNonCustomFields = (newRelicData: NewRelicData): NonCustom
 
   return {
     newRelicApplication:
-      getMultiTypeFromValue(newRelicData?.applicationName) === MultiTypeInputType.FIXED
+      getMultiTypeFromValue(newRelicData?.applicationId) === MultiTypeInputType.FIXED
         ? { label: newRelicData?.applicationName, value: newRelicData?.applicationId }
-        : newRelicData?.applicationName,
+        : newRelicData?.applicationId,
     metricPacks: newRelicData?.metricPacks || undefined,
     metricData: convertMetricPackToMetricData(newRelicData?.metricPacks),
     ignoreThresholds,
@@ -229,7 +230,7 @@ export const createNewRelicFormData = (
   mappedMetrics: Map<string, CustomMappedMetric>,
   selectedMetric: string,
   nonCustomFeilds: {
-    newRelicApplication: SelectOption | string
+    newRelicApplication?: SelectOption | string
     metricPacks?: MetricPackDTO[]
     metricData: {
       [key: string]: boolean
@@ -358,22 +359,23 @@ export const persistCustomMetric = ({
 }
 
 export const setNewRelicMultiTypeApplication = (
-  appdApplication: string | SelectOption,
+  formikAppValue: string | SelectOption,
   tierOptions: SelectOption[],
   multiType?: MultiTypeInputType,
   propsApplicationName?: string
 ): SelectOption | string | undefined => {
-  if (propsApplicationName && !appdApplication) {
-    return propsApplicationName
-  }
-  const applicationValue = typeof appdApplication === 'string' ? appdApplication : appdApplication.label
-  const value = !appdApplication ? undefined : tierOptions.find((item: SelectOption) => item.label === applicationValue)
-
   if (multiType && isMultiTypeRuntime(multiType)) {
-    return appdApplication
+    return RUNTIME_INPUT_VALUE
   }
   if (multiType === MultiTypeInputType.EXPRESSION) {
-    return appdApplication
+    return formikAppValue
   }
+
+  if (propsApplicationName && !formikAppValue) {
+    return propsApplicationName
+  }
+  const applicationValue = typeof formikAppValue === 'string' ? formikAppValue : formikAppValue?.value
+  const value = !formikAppValue ? undefined : tierOptions.find((item: SelectOption) => item.value === applicationValue)
+
   return value
 }

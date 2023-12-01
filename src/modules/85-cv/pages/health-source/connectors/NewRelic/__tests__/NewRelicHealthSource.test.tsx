@@ -146,6 +146,27 @@ describe('Unit tests for NewRelic health source', () => {
     await waitFor(() => expect(getByText('submit')).not.toBeNull())
     const performanceCheckbox = container.querySelector('input[name="Performance"]')
     expect(performanceCheckbox).toBeChecked()
+
+    act(() => {
+      fireEvent.click(getByText('submit'))
+    })
+
+    await waitFor(() => expect(getByText('cv.healthSource.connectors.NewRelic.validations.application')).toBeTruthy())
+    expect(container).toMatchSnapshot()
+  })
+
+  test('Application validation should not show if performance metric pack is unchecked', async () => {
+    const submitData = jest.fn()
+    const { container, getByText } = render(
+      <TestWrapper {...createModeProps}>
+        <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
+          <NewRelicHealthSourceContainer data={{}} onSubmit={submitData} />
+        </SetupSourceTabs>
+      </TestWrapper>
+    )
+    await waitFor(() => expect(getByText('submit')).not.toBeNull())
+    const performanceCheckbox = container.querySelector('input[name="Performance"]')
+    expect(performanceCheckbox).toBeChecked()
     act(() => {
       fireEvent.click(performanceCheckbox!)
     })
@@ -153,8 +174,10 @@ describe('Unit tests for NewRelic health source', () => {
     act(() => {
       fireEvent.click(getByText('submit'))
     })
-    await waitFor(() => expect(getByText('cv.healthSource.connectors.NewRelic.validations.application')).toBeTruthy())
-    expect(container).toMatchSnapshot()
+
+    await waitFor(() =>
+      expect(screen.queryByText('cv.healthSource.connectors.NewRelic.validations.application')).not.toBeInTheDocument()
+    )
   })
 
   test('createNewRelicFormData utils method', () => {
@@ -187,7 +210,7 @@ describe('Unit tests for NewRelic health source', () => {
     )
   })
 
-  test('should render multitype input as expression for application name if it is a template and value was given as expression', () => {
+  test('should render multitype input as expression for application id if it is a template and value was given as expression', () => {
     const submitData = jest.fn()
     render(
       <TestWrapper {...createModeProps}>
@@ -204,7 +227,7 @@ describe('Unit tests for NewRelic health source', () => {
     expect(screen.getByPlaceholderText(/<\+expression>/)).toBeInTheDocument()
   })
 
-  test('should render multitype input as runtime for application name if it is a template and value was given as runtime', () => {
+  test('should render multitype input as runtime for application id if it is a template and value was given as runtime', () => {
     const submitData = jest.fn()
     render(
       <TestWrapper {...createModeProps}>

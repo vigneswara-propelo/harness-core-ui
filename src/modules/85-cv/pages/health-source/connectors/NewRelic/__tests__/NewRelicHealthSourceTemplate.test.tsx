@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor, act } from '@testing-library/react'
+import { fireEvent, render, waitFor, act, screen } from '@testing-library/react'
 import { Connectors } from '@platform/connectors/constants'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cvServices from 'services/cv'
@@ -78,12 +78,16 @@ describe('Unit tests for NewRelic health source', () => {
     )
 
     // should be default runtime
-    expect(container.querySelector('input[name="newRelicApplication"]')).toHaveValue('<+input>')
+    const applicationInput = screen.queryByTestId(/newRelicApplicationValue/)
+    expect(applicationInput).not.toBeInTheDocument()
+    expect(container.querySelector('input[name="newRelicApplication"]')).toBeNull()
     const performanceCheckbox = container.querySelector('input[name="Performance"]')
     act(() => {
       fireEvent.click(performanceCheckbox!)
     })
     await waitFor(() => expect(performanceCheckbox).toBeChecked())
+    expect(container.querySelector('input[name="newRelicApplication"]')).toHaveValue('<+input>')
+
     await act(() => {
       fireEvent.click(getByText('submit'))
     })

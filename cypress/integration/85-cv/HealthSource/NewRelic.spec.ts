@@ -62,13 +62,14 @@ describe('Create empty monitored service', () => {
     // Validation
     cy.contains('span', 'Submit').click({ force: true })
 
-    cy.contains('span', 'Please select application').should('be.visible')
     cy.contains('span', validations.metricPack).should('be.visible')
 
     cy.get('input[name="Performance"]').check({ force: true })
     cy.contains('span', validations.metricPack).should('not.exist')
 
-    cy.get('input[name="newRelicApplication"]').click()
+    cy.contains('span', 'Please select application').should('be.visible')
+
+    cy.findByTestId('applicationIdDropdown').should('exist').scrollIntoView().click()
     cy.contains('p', 'My Application').click({ force: true })
     cy.contains('span', 'Please select applications').should('not.exist')
 
@@ -77,7 +78,7 @@ describe('Create empty monitored service', () => {
     cy.contains('div', 'NewRelic HS').click({ force: true })
     cy.contains('span', 'Next').click()
 
-    cy.get('input[name="newRelicApplication"]').should('have.value', 'My Application')
+    cy.findByTestId('newRelicApplicationValue').should('have.text', '107019083')
     cy.get('input[name="Performance"]').should('be.checked')
     cy.contains('span', 'Submit').click({ force: true })
 
@@ -103,9 +104,9 @@ describe('Create empty monitored service', () => {
     cy.wait('@ApplicationCall')
     cy.wait('@MetricPackCall')
 
-    cy.get('input[name="newRelicApplication"]').click()
-    cy.contains('p', 'My Application').click({ force: true })
     cy.get('input[name="Performance"]').check({ force: true })
+
+    cy.get('input[name="Performance"]').should('be.checked')
 
     cy.contains('span', 'Add Metric').click()
 
@@ -138,6 +139,11 @@ describe('Create empty monitored service', () => {
 
     cy.contains('div', 'Assign').click({ force: true })
     cy.get('input[name="sli"]').click({ force: true })
+
+    cy.findByTestId('applicationIdDropdown').should('exist').scrollIntoView().click({ force: true })
+    cy.contains('p', '107019083').click({ force: true })
+
+    cy.findByTestId('newRelicApplicationValue').should('have.text', '107019083')
 
     cy.contains('span', 'Submit').click({ force: true })
 
@@ -226,8 +232,10 @@ describe('Create empty monitored service', () => {
       cy.wait('@ApplicationCall')
       cy.wait('@MetricPackCall')
 
-      cy.get('input[name="newRelicApplication"]').click()
-      cy.contains('p', 'My Application').click({ force: true })
+      cy.findByTestId('applicationIdDropdown').should('exist').scrollIntoView().click({ force: true })
+      cy.contains('p', '107019083').click({ force: true })
+
+      cy.findByTestId('newRelicApplicationValue').should('have.text', '107019083')
 
       cy.contains('.Accordion--label', 'Advanced (Optional)').should('exist')
 
@@ -255,8 +263,10 @@ describe('Create empty monitored service', () => {
       cy.wait('@ApplicationCall')
       cy.wait('@MetricPackCall')
 
-      cy.get('input[name="newRelicApplication"]').click()
-      cy.contains('p', 'My Application').click({ force: true })
+      cy.findByTestId('applicationIdDropdown').should('exist').scrollIntoView().click({ force: true })
+      cy.contains('p', '107019083').click({ force: true })
+
+      cy.findByTestId('newRelicApplicationValue').should('have.text', '107019083')
 
       cy.contains('.Accordion--label', 'Advanced (Optional)').should('exist')
 
@@ -368,8 +378,10 @@ describe('Create empty monitored service', () => {
       cy.wait('@ApplicationCall')
       cy.wait('@MetricPackCall')
 
-      cy.get('input[name="newRelicApplication"]').click()
-      cy.contains('p', 'My Application').click({ force: true })
+      cy.findByTestId('applicationIdDropdown').should('exist').scrollIntoView().click({ force: true })
+      cy.contains('p', '107019083').click({ force: true })
+
+      cy.findByTestId('newRelicApplicationValue').should('have.text', '107019083')
 
       cy.contains('.Accordion--label', 'Advanced (Optional)').should('exist')
 
@@ -407,8 +419,10 @@ describe('Create empty monitored service', () => {
       cy.wait('@ApplicationCall')
       cy.wait('@MetricPackCall')
 
-      cy.get('input[name="newRelicApplication"]').click()
-      cy.contains('p', 'My Application').click({ force: true })
+      cy.findByTestId('applicationIdDropdown').should('exist').scrollIntoView().click({ force: true })
+      cy.contains('p', '107019083').click({ force: true })
+
+      cy.findByTestId('newRelicApplicationValue').should('have.text', '107019083')
 
       // Adding custom metrics
       cy.contains('span', 'Add Metric').click()

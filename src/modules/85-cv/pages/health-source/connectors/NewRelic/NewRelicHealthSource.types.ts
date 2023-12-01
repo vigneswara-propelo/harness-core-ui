@@ -68,7 +68,7 @@ export interface InitNewRelicCustomFormInterface {
 }
 
 export interface NonCustomMetricFields {
-  newRelicApplication:
+  newRelicApplication?:
     | string
     | {
         label: string

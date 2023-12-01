@@ -10302,6 +10302,7 @@ export interface StringsMap {
   'cv.monitoringSources.newRelic.mappingServiceAndEnvSubheading': string
   'cv.monitoringSources.newRelic.newRelicAppColumn': string
   'cv.monitoringSources.newRelic.oneMetricMappingValidationSubtext': string
+  'cv.monitoringSources.newRelic.selectApplication': string
   'cv.monitoringSources.newRelic.selectedApplications': string
   'cv.monitoringSources.newRelic.totalMappedApplications': string
   'cv.monitoringSources.oneMetricMappingValidation': string

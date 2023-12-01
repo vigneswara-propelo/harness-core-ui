@@ -1,0 +1,41 @@
+.popoverContainer {
+  box-shadow: var(--elevation-4) !important;
+  overflow: hidden;
+}
+
+.selectContainer {
+  color: var(--grey-900);
+  border: 1px solid var(--grey-200) !important;
+  padding: var(--spacing-small);
+  border-radius: 4px;
+  white-space: nowrap;
+  display: flex !important;
+  width: calc(100% - 42px) !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  cursor: pointer;
+  height: 34px !important;
+  background-color: var(--white) !important;
+  margin-bottom: var(--spacing-medium) !important;
+
+  &.selectContainer-template {
+    height: 32px !important;
+    width: calc(100% - 26px) !important;
+  }
+}
+
+.option {
+  min-height: 64px;
+  padding: var(--spacing-small) var(--spacing-large) !important;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--primary-1);
+  }
+}
+
+.menuContainer {
+  width: 470px !important;
+  max-height: 400px !important;
+  overflow: auto;
+}

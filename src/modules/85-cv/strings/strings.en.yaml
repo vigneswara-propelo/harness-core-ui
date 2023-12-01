@@ -442,6 +442,7 @@ monitoringSources:
     mapNewRelicAppsToServicesAndEnvs: Map New Relic Applications to Harness Environments and Services
     mappingServiceAndEnvSubheading: Select Harness Environments and Services to map to New Relic Applications
     newRelicAppColumn: NEW RELIC APPLICATION
+    selectApplication: Select an Application ID
     selectedApplications: Selected Applications
     oneMetricMappingValidationSubtext: You need to map an application to a Harness Environment and Service.
     totalMappedApplications: '{{total}} Application(s) mapped'
@@ -812,7 +813,7 @@ healthSource:
         submitQuery: Submit query to see chart
       groupModalTitle: New CloudWatch Group Name
     NewRelic:
-      applicationLabel: Find an NewRelic application
+      applicationLabel: Find a NewRelic application ID
       nrqlQuery: NRQL Query
       groupName: New Relic Group Name
       submitQueryNoRecords: Submit query to see response from New Relic

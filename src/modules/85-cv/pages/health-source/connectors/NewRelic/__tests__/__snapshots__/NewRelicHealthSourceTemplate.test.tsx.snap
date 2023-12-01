@@ -16,6 +16,58 @@ exports[`Unit tests for NewRelic health source Template should work with custom 
           <p
             class="StyledProps--font StyledProps--main header StyledProps--color StyledProps--color-black"
           >
+            metricPacks
+          </p>
+          <div
+            class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
+          >
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black"
+              >
+                cv.healthSource.connectors.AppDynamics.metricPackLabel
+              </p>
+              <div
+                class="Layout--horizontal Layout--layout-spacing-large StyledProps--main horizontalCenterAlign"
+              >
+                <div
+                  class="bp3-form-group"
+                  data-id="Performance-0"
+                >
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="StyledProps--font StyledProps--main metricPack"
+                    >
+                      <label
+                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main"
+                      >
+                        <input
+                          checked=""
+                          name="Performance"
+                          type="checkbox"
+                        />
+                        <span
+                          class="bp3-control-indicator"
+                        />
+                        Performance
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-medium"
+        >
+          <p
+            class="StyledProps--font StyledProps--main header StyledProps--color StyledProps--color-black"
+          >
             Application
           </p>
           <div
@@ -88,58 +140,6 @@ exports[`Unit tests for NewRelic health source Template should work with custom 
                 class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black"
                 style="width: 300px;"
               />
-            </div>
-          </div>
-        </div>
-        <div
-          class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-medium"
-        >
-          <p
-            class="StyledProps--font StyledProps--main header StyledProps--color StyledProps--color-black"
-          >
-            metricPacks
-          </p>
-          <div
-            class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
-          >
-            <div
-              class="Layout--vertical StyledProps--main"
-            >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black"
-              >
-                cv.healthSource.connectors.AppDynamics.metricPackLabel
-              </p>
-              <div
-                class="Layout--horizontal Layout--layout-spacing-large StyledProps--main horizontalCenterAlign"
-              >
-                <div
-                  class="bp3-form-group"
-                  data-id="Performance-0"
-                >
-                  <div
-                    class="bp3-form-content"
-                  >
-                    <div
-                      class="StyledProps--font StyledProps--main metricPack"
-                    >
-                      <label
-                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main"
-                      >
-                        <input
-                          checked=""
-                          name="Performance"
-                          type="checkbox"
-                        />
-                        <span
-                          class="bp3-control-indicator"
-                        />
-                        Performance
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>

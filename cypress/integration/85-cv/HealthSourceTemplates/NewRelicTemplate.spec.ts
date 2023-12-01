@@ -81,23 +81,24 @@ describe('Create empty monitored service', () => {
     // Validation
     cy.contains('span', 'Submit').click({ force: true })
 
-    cy.contains('span', 'Please select application').should('be.visible')
     cy.contains('span', validations.metricPack).should('be.visible')
 
     cy.get('input[name="Performance"]').check({ force: true })
     cy.contains('span', validations.metricPack).should('not.exist')
 
-    cy.get('[data-testid="newRelicApplication"] input').click()
-    cy.get('.bp3-popover-content').within(() => {
-      cy.contains('li', 'My Application').click({ force: true })
-    })
+    cy.contains('span', 'Please select application').should('be.visible')
+
+    cy.findByTestId('applicationIdDropdown').should('exist').scrollIntoView().click({ force: true })
+    cy.contains('p', '107019083').click({ force: true })
+
+    cy.findByTestId('newRelicApplicationValue').should('have.text', '107019083')
 
     cy.contains('span', 'Submit').click({ force: true })
 
     cy.contains('div', 'NewRelic HS').click({ force: true })
     cy.contains('span', 'Next').click()
 
-    cy.get('[data-testid="newRelicApplication"] input').should('have.value', 'My Application')
+    cy.findByTestId('newRelicApplicationValue').should('have.text', '107019083')
     cy.get('input[name="Performance"]').should('be.checked')
     cy.contains('span', 'Submit').click({ force: true })
 
@@ -127,11 +128,6 @@ describe('Create empty monitored service', () => {
     cy.wait('@ApplicationCall')
     cy.wait('@MetricPackCall')
 
-    cy.get('[data-testid="newRelicApplication"] input').click()
-    cy.get('.bp3-popover-content').within(() => {
-      cy.contains('li', 'My Application').click({ force: true })
-    })
-
     cy.contains('span', 'Add Metric').click()
 
     // Custom validation
@@ -151,7 +147,10 @@ describe('Create empty monitored service', () => {
 
     cy.contains('div', 'Metric values and charts').click({ force: true })
 
-    cy.get('[class*=InputWithDynamicModalForJson-module] button.bp3-minimal span').first().click({ force: true })
+    cy.get('[class*=InputWithDynamicModalForJson-module] button.bp3-minimal span')
+      .first()
+      .scrollIntoView()
+      .click({ force: true })
     cy.wait(1000)
     cy.get('[class*="JsonSelector-module_selectableKey"]').first().click({ force: true })
 
@@ -165,13 +164,18 @@ describe('Create empty monitored service', () => {
     cy.get('input[value="Performance_Throughput"]').click({ force: true })
     cy.get('input[name="higherBaselineDeviation"]').click({ force: true })
 
+    cy.findByTestId('applicationIdDropdown').should('exist').scrollIntoView().click({ force: true })
+    cy.contains('p', '107019083').click({ force: true })
+
+    cy.findByTestId('newRelicApplicationValue').should('have.text', '107019083')
+
     cy.contains('span', 'Submit').click({ force: true })
 
     // Open again
     cy.contains('div', 'NewRelic HS').click({ force: true })
     cy.wait(1000)
     cy.contains('span', 'Next').click({ force: true })
-    cy.get('[data-testid="newRelicApplication"] input').should('have.value', 'My Application')
+    cy.findByTestId('newRelicApplicationValue').should('have.text', '107019083')
     cy.get('input[name="Performance"]').should('be.checked')
     cy.contains('div', 'Query Specifications and mapping').click({ force: true })
     cy.get('.view-lines').should(

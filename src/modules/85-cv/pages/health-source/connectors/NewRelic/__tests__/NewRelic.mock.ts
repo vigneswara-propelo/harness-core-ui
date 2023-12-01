@@ -405,12 +405,14 @@ export const NewRelicInputFormData = {
 
 export const NewRelicInputDataTemplate = {
   ...NewRelicInputFormData,
-  applicationName: '<+test>'
+  applicationName: '<+test>',
+  applicationId: '<+test>'
 }
 
 export const NewRelicInputDataRuntime = {
   ...NewRelicInputFormData,
-  applicationName: '<+input>'
+  applicationName: '<+input>',
+  applicationId: '<+input>'
 }
 
 export const NewRelicInputFormTemplateData = {
