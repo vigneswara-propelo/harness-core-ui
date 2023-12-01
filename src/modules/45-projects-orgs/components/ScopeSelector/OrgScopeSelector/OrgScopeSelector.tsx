@@ -21,6 +21,7 @@ import {
 } from '@harness/uicore'
 
 import { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { DEFAULT_PAGE_SIZE_OPTION } from '@modules/10-common/constants/Pagination'
 import { useStrings } from 'framework/strings'
 import { Organization, useGetOrganizationAggregateDTOList } from 'services/cd-ng'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
@@ -48,7 +49,7 @@ export const OrgScopeSelector = (props: OrgScopeSelectorProps): JSX.Element => {
       accountIdentifier: accountId,
       searchTerm,
       pageIndex: page,
-      pageSize: 30,
+      pageSize: DEFAULT_PAGE_SIZE_OPTION,
       sortOrders: [sortPreference]
     },
     queryParamStringifyOptions: { arrayFormat: 'repeat' },

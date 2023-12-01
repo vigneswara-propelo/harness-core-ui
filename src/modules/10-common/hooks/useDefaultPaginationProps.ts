@@ -7,7 +7,7 @@
 
 import { PopoverPosition } from '@blueprintjs/core'
 import type { PaginationProps } from '@harness/uicore'
-import { COMMON_PAGE_SIZE_OPTIONS } from '@common/constants/Pagination'
+import { COMMON_PAGE_SIZE_OPTIONS, DEFAULT_PAGE_SIZE_OPTIONS } from '@common/constants/Pagination'
 import { useFeatureFlags } from './useFeatureFlag'
 import { useUpdateQueryParams } from './useUpdateQueryParams'
 
@@ -35,7 +35,7 @@ export const useDefaultPaginationProps = (props: PaginationProps): PaginationPro
         position: PopoverPosition.TOP
       }
     },
-    pageSizeOptions: PL_NEW_PAGE_SIZE ? COMMON_PAGE_SIZE_OPTIONS : [10, 20, 50, 100],
+    pageSizeOptions: PL_NEW_PAGE_SIZE ? COMMON_PAGE_SIZE_OPTIONS : DEFAULT_PAGE_SIZE_OPTIONS,
     ...props
   }
 }

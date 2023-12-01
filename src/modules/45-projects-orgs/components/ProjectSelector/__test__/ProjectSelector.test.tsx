@@ -8,6 +8,7 @@
 import React from 'react'
 import { render, act, fireEvent } from '@testing-library/react'
 import { TestWrapper, findPopoverContainer } from '@common/utils/testUtils'
+import { DEFAULT_PAGE_SIZE_OPTION } from '@modules/10-common/constants/Pagination'
 import { useGetProjectAggregateDTOList } from 'services/cd-ng'
 import { ProjectSelector } from '../ProjectSelector'
 
@@ -105,7 +106,7 @@ describe('ProjectSelector', () => {
         onlyFavorites: false,
         orgIdentifier: undefined,
         pageIndex: 0,
-        pageSize: 50,
+        pageSize: DEFAULT_PAGE_SIZE_OPTION,
         searchTerm: undefined,
         sortOrders: ['lastModifiedAt,DESC']
       }

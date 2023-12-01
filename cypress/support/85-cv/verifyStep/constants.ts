@@ -52,7 +52,7 @@ export const pipelinesSummaryFetchCall = `/pipeline/api/pipelines/summary/NG_Doc
 export const pipelinesYamlFetchCall = `/pipeline/api/yaml-schema?*`
 // git sync call
 export const gitSyncCall = `/ng/api/git-sync?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${org}&projectIdentifier=${project}`
-export const aggregateProjectsCall = `/ng/api/aggregate/projects?routingId=${accountId}&accountIdentifier=${accountId}&pageIndex=0&pageSize=50&*`
+export const aggregateProjectsCall = `/ng/api/aggregate/projects?routingId=${accountId}&accountIdentifier=${accountId}&pageIndex=0&pageSize=20&*`
 export const sourceCodeManagerCall = `/ng/api/source-code-manager?routingId=${accountId}&accountIdentifier=${accountId}`
 
 // logs initial call

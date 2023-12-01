@@ -10,7 +10,7 @@ import { Container, Layout, Pagination } from '@harness/uicore'
 import type { Project, ProjectAggregateDTO, ResponsePageProjectAggregateDTO } from 'services/cd-ng'
 import ProjectCard from '@projects-orgs/components/ProjectCard/ProjectCard'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
-import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
+import { DEFAULT_PAGE_SIZE_OPTIONS, DEFAULT_PAGE_SIZE_OPTION } from '@common/constants/Pagination'
 import css from './ProjectGridView.module.scss'
 
 interface ProjectGridViewProps {
@@ -23,12 +23,15 @@ interface ProjectGridViewProps {
 const ProjectGridView: React.FC<ProjectGridViewProps> = props => {
   const { data, showEditProject, collaborators, reloadPage } = props
 
-  const paginationProps = useDefaultPaginationProps({
-    itemCount: data?.data?.totalItems || 0,
-    pageSize: data?.data?.pageSize || COMMON_DEFAULT_PAGE_SIZE,
-    pageCount: data?.data?.totalPages || 0,
-    pageIndex: data?.data?.pageIndex || 0
-  })
+  const paginationProps = {
+    ...useDefaultPaginationProps({
+      itemCount: data?.data?.totalItems || 0,
+      pageSize: data?.data?.pageSize || DEFAULT_PAGE_SIZE_OPTION,
+      pageCount: data?.data?.totalPages || 0,
+      pageIndex: data?.data?.pageIndex || 0
+    }),
+    pageSizeOptions: DEFAULT_PAGE_SIZE_OPTIONS
+  }
 
   return (
     <>

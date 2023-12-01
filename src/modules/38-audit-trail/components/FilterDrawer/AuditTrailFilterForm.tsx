@@ -13,6 +13,7 @@ import { orderBy } from 'lodash-es'
 import { useMutateAsGet } from '@common/hooks'
 import { StringKeys, useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { DEFAULT_PAGE_SIZE_OPTION } from '@modules/10-common/constants/Pagination'
 import { useGetUsers, useGetOrganizationAggregateDTOList, useGetProjectListWithMultiOrgFilter } from 'services/cd-ng'
 import { actionToLabelMap, getOrgDropdownList, getProjectDropdownList } from '@audit-trail/utils/RequestUtil'
 import UserItemRenderer from '@common/components/UserItemRenderer/UserItemRenderer'
@@ -45,7 +46,7 @@ const AuditTrailFilterForm: React.FC<AuditTrailFormProps> = props => {
       accountIdentifier: accountId,
       searchTerm: orgQuery,
       sortOrders: [SortMethod.NameAsc],
-      pageSize: 100
+      pageSize: DEFAULT_PAGE_SIZE_OPTION
     },
     queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300

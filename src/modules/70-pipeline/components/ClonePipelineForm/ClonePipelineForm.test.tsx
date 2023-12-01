@@ -10,6 +10,7 @@ import { render, queryByAttribute, waitFor, findByText as findByTextGlobal, scre
 import userEvent from '@testing-library/user-event'
 import { useToaster } from '@harness/uicore'
 import { TestWrapper, CurrentLocation } from '@common/utils/testUtils'
+import { DEFAULT_PAGE_SIZE_OPTION } from '@modules/10-common/constants/Pagination'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useClonePipeline } from 'services/pipeline-ng'
@@ -346,7 +347,8 @@ describe('<ClonePipelineForm /> tests', () => {
           searchTerm: undefined,
           queryParams: {
             accountIdentifier: 'TEST_ACCOUNT1',
-            orgIdentifier: 'TEST_ORG2'
+            orgIdentifier: 'TEST_ORG2',
+            pageSize: DEFAULT_PAGE_SIZE_OPTION
           }
         })
       )

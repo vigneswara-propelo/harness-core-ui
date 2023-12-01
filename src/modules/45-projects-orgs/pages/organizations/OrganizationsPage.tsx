@@ -13,6 +13,7 @@ import routes from '@common/RouteDefinitions'
 import routesV2 from '@common/RouteDefinitionsV2'
 import { OrganizationAggregateDTO, useGetOrganizationAggregateDTOList, Error } from 'services/cd-ng'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
+import { DEFAULT_PAGE_SIZE_OPTION } from '@modules/10-common/constants/Pagination'
 import { useOrganizationModal } from '@projects-orgs/modals/OrganizationModal/useOrganizationModal'
 import { OrganizationCard } from '@projects-orgs/components/OrganizationCard/OrganizationCard'
 import { useCollaboratorModal } from '@projects-orgs/modals/ProjectModal/useCollaboratorModal'
@@ -35,7 +36,12 @@ const OrganizationsPage: React.FC = () => {
   const { getString } = useStrings()
   useDocumentTitle(getString('orgsText'))
   const { loading, data, refetch, error } = useGetOrganizationAggregateDTOList({
-    queryParams: { accountIdentifier: accountId, searchTerm: searchParam, pageIndex: page, pageSize: 30 },
+    queryParams: {
+      accountIdentifier: accountId,
+      searchTerm: searchParam,
+      pageIndex: page,
+      pageSize: DEFAULT_PAGE_SIZE_OPTION
+    },
     debounce: 300
   })
   const { openOrganizationModal } = useOrganizationModal({

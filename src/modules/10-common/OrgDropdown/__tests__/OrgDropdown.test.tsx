@@ -10,6 +10,7 @@ import { render } from '@testing-library/react'
 import type { SelectOption } from '@harness/uicore'
 import { noop } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
+import { DEFAULT_PAGE_SIZE_OPTION } from '@modules/10-common/constants/Pagination'
 import { getOrganizationListPromise } from 'services/cd-ng'
 import OrgDropdown from '../OrgDropdown'
 
@@ -115,7 +116,7 @@ describe('org dropdown test', () => {
       </TestWrapper>
     )
     expect(getOrganizationListPromise).toBeCalledWith({
-      queryParams: { accountIdentifier: 'fallbackAccountId', searchTerm: undefined }
+      queryParams: { accountIdentifier: 'fallbackAccountId', searchTerm: undefined, pageSize: DEFAULT_PAGE_SIZE_OPTION }
     })
   })
 })

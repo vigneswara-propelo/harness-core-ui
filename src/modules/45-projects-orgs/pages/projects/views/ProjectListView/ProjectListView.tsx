@@ -26,7 +26,7 @@ import DescriptionPopover from '@common/components/DescriptionPopover.tsx/Descri
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
-import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
+import { COMMON_DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE_OPTIONS } from '@common/constants/Pagination'
 import FavoriteStar from '@common/components/FavoriteStar/FavoriteStar'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import useDeleteProjectDialog from '../../DeleteProject'
@@ -321,13 +321,15 @@ const ProjectListView: React.FC<ProjectListViewProps> = props => {
     [reloadPage, showEditProject, collaborators]
   )
 
-  const paginationProps = useDefaultPaginationProps({
-    itemCount: data?.data?.totalItems || 0,
-    pageSize: data?.data?.pageSize || COMMON_DEFAULT_PAGE_SIZE,
-    pageCount: data?.data?.totalPages || 0,
-    pageIndex: data?.data?.pageIndex || 0
-  })
-
+  const paginationProps = {
+    ...useDefaultPaginationProps({
+      itemCount: data?.data?.totalItems || 0,
+      pageSize: data?.data?.pageSize || COMMON_DEFAULT_PAGE_SIZE,
+      pageCount: data?.data?.totalPages || 0,
+      pageIndex: data?.data?.pageIndex || 0
+    }),
+    pageSizeOptions: DEFAULT_PAGE_SIZE_OPTIONS
+  }
   return (
     <TableV2<ProjectAggregateDTO>
       className={css.table}

@@ -43,6 +43,7 @@ import { Project, ProjectAggregateDTO, useGetProjectAggregateDTOList } from 'ser
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { DEFAULT_PAGE_SIZE_OPTION } from '@modules/10-common/constants/Pagination'
 import ProjectCard from '@projects-orgs/components/ProjectCard/ProjectCard'
 import { PageSpinner } from '@common/components'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
@@ -97,7 +98,7 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect, fallbackAccou
       orgIdentifier: selectedOrg?.value as string,
       searchTerm,
       pageIndex: page,
-      pageSize: 50,
+      pageSize: DEFAULT_PAGE_SIZE_OPTION,
       sortOrders: [sortPreference],
       onlyFavorites: favorite
     },

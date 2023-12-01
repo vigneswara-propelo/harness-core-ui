@@ -46,6 +46,7 @@ import {
   useGetPipelineSummary
 } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
+import { DEFAULT_PAGE_SIZE_OPTION } from '@modules/10-common/constants/Pagination'
 import type { PipelineListPageQueryParams } from '@pipeline/pages/pipeline-list/types'
 import CDPipelineIllustration from '@pipeline/pages/pipeline-list/images/cd-pipeline-illustration.svg'
 import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
@@ -109,7 +110,8 @@ export function PipelineStageMinimalMode(props: any): React.ReactElement {
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier: selectedOrg.value as string,
-      searchTerm: projectsQuery || undefined
+      searchTerm: projectsQuery || undefined,
+      pageSize: DEFAULT_PAGE_SIZE_OPTION
     },
     debounce: 400
   })

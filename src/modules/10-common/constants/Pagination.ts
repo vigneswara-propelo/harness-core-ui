@@ -12,6 +12,9 @@ import { useQueryParamsOptions, UseQueryParamsOptions } from '@common/hooks/useQ
 export const COMMON_PAGE_SIZE_OPTIONS = [25, 50, 100]
 export const COMMON_DEFAULT_PAGE_SIZE = COMMON_PAGE_SIZE_OPTIONS[2]
 
+export const DEFAULT_PAGE_SIZE_OPTIONS = [10, 20, 50, 100]
+export const DEFAULT_PAGE_SIZE_OPTION = DEFAULT_PAGE_SIZE_OPTIONS[1]
+
 export interface PageQueryParams {
   page?: number
   size?: number

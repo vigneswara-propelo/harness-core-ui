@@ -38,6 +38,7 @@ import {
 } from 'services/cd-ng'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { DEFAULT_PAGE_SIZE_OPTION } from '@modules/10-common/constants/Pagination'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -108,7 +109,8 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier: selectedOrg,
-      searchTerm: projectsQuery || undefined
+      searchTerm: projectsQuery || undefined,
+      pageSize: DEFAULT_PAGE_SIZE_OPTION
     },
     debounce: 400,
     lazy: !isOpen

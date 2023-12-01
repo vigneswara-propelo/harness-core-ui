@@ -40,6 +40,7 @@ import { ProjectAggregateDTO, useGetOrganizationAggregateDTOList, useGetProjectA
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import type { OrgPathProps } from '@common/interfaces/RouteInterfaces'
+import { DEFAULT_PAGE_SIZE_OPTION } from '@modules/10-common/constants/Pagination'
 import ProjectCard from '@projects-orgs/components/ProjectCard/ProjectCard'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
@@ -93,7 +94,7 @@ export const ProjectScopeSelector: React.FC<ProjectScopeSelectorProps> = ({ onPr
       orgIdentifier: selectedOrg,
       searchTerm,
       pageIndex: page,
-      pageSize: 50,
+      pageSize: DEFAULT_PAGE_SIZE_OPTION,
       sortOrders: [sortPreference],
       onlyFavorites: favorite
     },
@@ -105,7 +106,7 @@ export const ProjectScopeSelector: React.FC<ProjectScopeSelectorProps> = ({ onPr
       accountIdentifier: accountId,
       searchTerm: orgSearchTerm,
       pageIndex: orgPage,
-      pageSize: 100
+      pageSize: DEFAULT_PAGE_SIZE_OPTION
     },
     queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300

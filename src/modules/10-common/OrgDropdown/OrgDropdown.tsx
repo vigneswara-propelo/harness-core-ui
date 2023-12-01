@@ -11,6 +11,7 @@ import { useParams } from 'react-router-dom'
 import { getOrganizationListPromise, OrganizationResponse } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { DEFAULT_PAGE_SIZE_OPTION } from '../constants/Pagination'
 
 interface OrgDropdownProps {
   onChange: (item: SelectOption) => void
@@ -29,7 +30,11 @@ const OrgDropdown: React.FC<OrgDropdownProps> = props => {
   function orgListPromise(): Promise<SelectOption[]> {
     return new Promise<SelectOption[]>(resolve => {
       getOrganizationListPromise({
-        queryParams: { accountIdentifier: accountId ?? fallbackAccountId, searchTerm: query }
+        queryParams: {
+          accountIdentifier: accountId ?? fallbackAccountId,
+          searchTerm: query,
+          pageSize: DEFAULT_PAGE_SIZE_OPTION
+        }
       })
         .then(result => {
           let selectItems: Array<SelectOption> = []

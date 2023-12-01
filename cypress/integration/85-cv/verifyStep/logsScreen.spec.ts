@@ -131,7 +131,7 @@ describe('Verify step', () => {
     cy.intercept('GET', gitSyncCall, {}).as('gitSyncCall')
     cy.intercept('GET', pipelinesYamlFetchCall, {}).as('pipelinesYamlFetchCall')
     cy.intercept('GET', sourceCodeManagerCall, {}).as('sourceCodeManagerCall')
-    cy.intercept('GET', aggregateProjectsCall, {}).as('aggregateProjectsCall')
+    cy.intercept('GET', aggregateProjectsCall).as('aggregateProjectsCall')
 
     cy.login('test', 'test')
     cy.visitPageAssertion('[class^=SideNav-module_main]')
