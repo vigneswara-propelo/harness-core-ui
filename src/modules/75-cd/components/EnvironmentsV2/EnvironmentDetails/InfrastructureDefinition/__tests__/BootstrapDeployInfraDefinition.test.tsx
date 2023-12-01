@@ -6,13 +6,27 @@
  */
 
 import React from 'react'
-import { findByText, queryAllByAttribute, queryByAttribute, render, screen, waitFor } from '@testing-library/react'
+import {
+  findByText,
+  getByText,
+  queryAllByAttribute,
+  queryByAttribute,
+  queryByText,
+  render,
+  screen,
+  waitFor
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { Scope } from '@modules/10-common/interfaces/SecretsInterface'
 import { TestWrapper, testConnectorRefChange } from '@modules/10-common/utils/testUtils'
 import routes from '@modules/10-common/RouteDefinitions'
-import { accountPathProps, orgPathProps, projectPathProps } from '@modules/10-common/utils/routeUtils'
+import {
+  accountPathProps,
+  environmentPathProps,
+  orgPathProps,
+  projectPathProps
+} from '@modules/10-common/utils/routeUtils'
 import { awsConnectorListResponse } from '@modules/27-platform/connectors/components/ConnectorReferenceField/__tests__/mocks'
 import { ServiceDeploymentType } from '@modules/70-pipeline/utils/stageHelpers'
 import { PipelineContext } from '@modules/70-pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -250,5 +264,123 @@ describe('BootstrapDeployInfraDefinition tests', () => {
     expect(scopeToSpecificServicesCheckbox).not.toBeInTheDocument()
     const scopedServicesInput = await screen.queryByText('cd.pipelineSteps.serviceTab.selectServices')
     await waitFor(() => expect(scopedServicesInput).not.toBeInTheDocument())
+  })
+
+  test('it should allow only account level services for scoping if account level infra is selected', async () => {
+    const ref = React.createRef<InfraDefinitionWrapperRef>()
+
+    const { container } = render(
+      <TestWrapper
+        path={routes.toEnvironmentDetails({ ...accountPathProps, ...environmentPathProps })}
+        pathParams={{
+          accountId: 'testAcc',
+          environmentIdentifier: 'testEnv'
+        }}
+        defaultFeatureFlagValues={{ CDS_SCOPE_INFRA_TO_SERVICES: true, NG_SVC_ENV_REDESIGN: true, CDP_AWS_SAM: true }}
+      >
+        <BootstrapDeployInfraDefinitionWithRef
+          closeInfraDefinitionDetails={jest.fn()}
+          refetch={refetchInfrastructureList}
+          environmentIdentifier={'env1'}
+          isReadOnly={false}
+          scope={Scope.ACCOUNT}
+          handleInfrastructureUpdate={handleInfrastructureUpdate}
+          isInfraUpdated={false}
+          isSingleEnv={true}
+          ref={ref}
+          selectedInfrastructure="abc"
+          infrastructureDefinition={{
+            identifier: 'abc',
+            name: 'Account Level Infra',
+            deploymentType: ServiceDeploymentType.AwsSam,
+            type: 'AWS_SAM',
+            spec: {
+              connectorRef: '',
+              region: ''
+            }
+          }}
+        />
+      </TestWrapper>
+    )
+
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+
+    const portalDivs = document.getElementsByClassName('bp3-portal')
+    expect(portalDivs.length).toBe(0)
+
+    const scopeToSpecificServicesCheckbox = queryByNameAttribute('scopeToSpecificServices')
+    expect(scopeToSpecificServicesCheckbox).toBeInTheDocument()
+    await userEvent.click(scopeToSpecificServicesCheckbox!)
+    await waitFor(() => expect(scopeToSpecificServicesCheckbox).toBeChecked())
+
+    const scopedServicesInput = await screen.findByText('cd.pipelineSteps.serviceTab.selectServices')
+    await waitFor(() => expect(scopedServicesInput).toBeInTheDocument())
+    await userEvent.click(scopedServicesInput!)
+    await waitFor(() => expect(portalDivs.length).toBe(1))
+    const serviceSelectPortalDiv = portalDivs[0] as HTMLElement
+
+    expect(getByText(serviceSelectPortalDiv, 'account')).toBeInTheDocument()
+    expect(queryByText(serviceSelectPortalDiv, 'orgLabel')).not.toBeInTheDocument()
+    expect(queryByText(serviceSelectPortalDiv, 'projectLabel')).not.toBeInTheDocument()
+  })
+
+  test('it should allow only account and org level services for scoping if org level infra is selected', async () => {
+    const ref = React.createRef<InfraDefinitionWrapperRef>()
+
+    const { container } = render(
+      <TestWrapper
+        path={routes.toEnvironmentDetails({ ...accountPathProps, ...orgPathProps, ...environmentPathProps })}
+        pathParams={{
+          accountId: 'testAcc',
+          orgIdentifier: 'testOrg',
+          environmentIdentifier: 'testEnv'
+        }}
+        defaultFeatureFlagValues={{ CDS_SCOPE_INFRA_TO_SERVICES: true, NG_SVC_ENV_REDESIGN: true, CDP_AWS_SAM: true }}
+      >
+        <BootstrapDeployInfraDefinitionWithRef
+          closeInfraDefinitionDetails={jest.fn()}
+          refetch={refetchInfrastructureList}
+          environmentIdentifier={'env1'}
+          isReadOnly={false}
+          scope={Scope.ORG}
+          handleInfrastructureUpdate={handleInfrastructureUpdate}
+          isInfraUpdated={false}
+          isSingleEnv={true}
+          ref={ref}
+          selectedInfrastructure="abc"
+          infrastructureDefinition={{
+            identifier: 'abc',
+            orgIdentifier: 'testOrg',
+            name: 'Account Level Infra',
+            deploymentType: ServiceDeploymentType.AwsSam,
+            type: 'AWS_SAM',
+            spec: {
+              connectorRef: '',
+              region: ''
+            }
+          }}
+        />
+      </TestWrapper>
+    )
+
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+
+    const portalDivs = document.getElementsByClassName('bp3-portal')
+    expect(portalDivs.length).toBe(0)
+
+    const scopeToSpecificServicesCheckbox = queryByNameAttribute('scopeToSpecificServices')
+    expect(scopeToSpecificServicesCheckbox).toBeInTheDocument()
+    await userEvent.click(scopeToSpecificServicesCheckbox!)
+    await waitFor(() => expect(scopeToSpecificServicesCheckbox).toBeChecked())
+
+    const scopedServicesInput = await screen.findByText('cd.pipelineSteps.serviceTab.selectServices')
+    await waitFor(() => expect(scopedServicesInput).toBeInTheDocument())
+    await userEvent.click(scopedServicesInput!)
+    await waitFor(() => expect(portalDivs.length).toBe(1))
+    const serviceSelectPortalDiv = portalDivs[0] as HTMLElement
+
+    expect(queryByText(serviceSelectPortalDiv, 'account')).toBeInTheDocument()
+    expect(queryByText(serviceSelectPortalDiv, 'orgLabel')).toBeInTheDocument()
+    expect(queryByText(serviceSelectPortalDiv, 'projectLabel')).not.toBeInTheDocument()
   })
 })

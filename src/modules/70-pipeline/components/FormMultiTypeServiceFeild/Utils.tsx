@@ -36,6 +36,8 @@ export function getReferenceFieldProps({
   defaultScope,
   projectIdentifier,
   orgIdentifier,
+  showProjectScopedEntities,
+  showOrgScopedEntities,
   name,
   width,
   selected,
@@ -111,8 +113,8 @@ export function getReferenceFieldProps({
           throw err.message
         })
     },
-    projectIdentifier,
-    orgIdentifier,
+    projectIdentifier: showProjectScopedEntities ? projectIdentifier : undefined,
+    orgIdentifier: showOrgScopedEntities ? orgIdentifier : undefined,
     noRecordsText: getString('pipeline.noServicesFound'),
     componentName: getString('service'),
     noDataCard: {

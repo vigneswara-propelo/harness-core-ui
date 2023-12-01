@@ -776,7 +776,7 @@ function BootstrapDeployInfraDefinition(
 
   const refreshYAMLBuilder = React.useMemo(() => JSON.stringify({ ...stage, isYamlEditable }), [stage, isYamlEditable])
 
-  const handleFormOnChange = (latestFormValues: Partial<InfrastructureDefinitionConfig>) => {
+  const handleFormOnChange = (latestFormValues: Partial<InfrastructureDefinitionConfig>): void => {
     const updatedInfradefinitionConfig = getInfraDefinitionConfig({
       formikValues: latestFormValues,
       scope,
@@ -788,7 +788,7 @@ function BootstrapDeployInfraDefinition(
     handleInfrastructureUpdate?.({ infrastructureDefinition: updatedInfradefinitionConfig })
   }
 
-  const handleSaveInfrastructure = () => {
+  const handleSaveInfrastructure = (): void => {
     if (selectedView === SelectedView.YAML) {
       if (yamlHandler?.getYAMLValidationErrorMap()?.size) {
         clear()
@@ -981,6 +981,8 @@ function BootstrapDeployInfraDefinition(
                                 isOnlyFixedType
                                 isMultiSelect={true}
                                 onMultiSelectChange={noop}
+                                showProjectScopedEntities={scope === Scope.PROJECT}
+                                showOrgScopedEntities={scope === Scope.ORG}
                               />
                             </Container>
                           )}

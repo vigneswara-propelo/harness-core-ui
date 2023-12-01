@@ -78,6 +78,8 @@ export interface ServiceReferenceFieldProps extends Omit<IFormGroupProps, 'label
   formikProps?: FormikProps<any>
   parentStoreMetadata?: StoreMetadata
   hideRemoteDetails?: boolean
+  showProjectScopedEntities?: boolean
+  showOrgScopedEntities?: boolean
 }
 
 export function getSelectedRenderer(selected: any): JSX.Element {
@@ -128,6 +130,8 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
     width,
     hideRemoteDetails,
     formikProps,
+    showProjectScopedEntities = true,
+    showOrgScopedEntities = true,
     ...restProps
   } = props
   const formik = useFormikContext() || formikProps
@@ -157,6 +161,8 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
     accountIdentifier: accountId,
     projectIdentifier,
     orgIdentifier,
+    showProjectScopedEntities,
+    showOrgScopedEntities,
     name,
     width,
     selected,

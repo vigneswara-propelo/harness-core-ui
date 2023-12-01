@@ -82,6 +82,8 @@ export interface ReferenceSelectProps<T extends MinimalObject>
   isRecordDisabled?: (item: any) => boolean
   renderRecordDisabledWarning?: JSX.Element
   useGitProviderComponent?: boolean
+  showProjectScopedEntities?: boolean
+  showOrgScopedEntities?: boolean
 }
 
 export const ReferenceSelectDialogTitle = (props: ReferenceSelectDialogTitleProps): JSX.Element => {
