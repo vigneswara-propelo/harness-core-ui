@@ -47,7 +47,8 @@ import {
   getOnlyValueTypeArray,
   pageSize,
   routeToEntityUrl,
-  filterData
+  filterData,
+  usageTypeToLabelMap
 } from '../../utils'
 import css from '../EntityUsageListView/EntityUsageList.module.scss'
 
@@ -127,12 +128,8 @@ const RenderColumnEntity: Renderer<CellProps<RuntimeSetupUsageDTOColumnData>> = 
 
 const RenderColumnEvent: Renderer<CellProps<Activity>> = ({ row }) => {
   const data = row.original.detail
-  const usageDetail = get(data, 'usageDetail', '')
-  return (
-    <Text color={Color.GREY_400} lineClamp={1}>
-      {usageDetail.usagetype}
-    </Text>
-  )
+  const usageDetail = get(data, 'usageDetail', {})
+  return usageTypeToLabelMap(usageDetail)
 }
 
 const RenderColumnActivity: Renderer<CellProps<Activity>> = ({ row }) => {

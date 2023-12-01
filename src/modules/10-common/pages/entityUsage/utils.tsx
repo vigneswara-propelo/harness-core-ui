@@ -4,15 +4,18 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
-import { useMemo } from 'react'
-import { useParams } from 'react-router-dom'
-import { MultiSelectOption } from '@harness/uicore'
-import { ProjectPathProps, SecretsPathProps } from '@common/interfaces/RouteInterfaces'
-import { ListActivitiesQueryParams } from 'services/cd-ng'
+import React, { useMemo } from 'react'
+import { CellProps, Renderer } from 'react-table'
+import { Link, useParams } from 'react-router-dom'
+import { MultiSelectOption, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
+import { defaultTo, isEmpty } from 'lodash-es'
+import { ExecutionPathProps, ProjectPathProps, SecretsPathProps } from '@common/interfaces/RouteInterfaces'
+import { Activity, ListActivitiesQueryParams } from 'services/cd-ng'
 import { StringKeys } from 'framework/strings'
 import { COMMON_PAGE_SIZE_OPTIONS } from '@modules/10-common/constants/Pagination'
 import { getWindowLocationUrl } from 'framework/utils/WindowLocation'
+import routes from '@common/RouteDefinitions'
 import { EntityType } from './EntityConstants'
 
 export const pageSize = COMMON_PAGE_SIZE_OPTIONS[1]
@@ -21,6 +24,11 @@ enum FilterScope {
   ACCOUNT = 'account',
   ORG = 'org',
   PROJECT = 'project'
+}
+
+enum UsageType {
+  PipelineExecution = 'Pipeline Execution',
+  TestConnection = 'Test Connection'
 }
 export const getScopeSelectOptions = (getString: (key: StringKeys) => string): MultiSelectOption[] => {
   const scopeList = [
@@ -99,4 +107,49 @@ export const filterData = (
       scopeFilter: [...itemsWithOnlyValueType]
     }
   else return {}
+}
+
+export const usageTypeToLabelMap = (usageDetail: any): Renderer<CellProps<Activity>> => {
+  const usageType: UsageType = !isEmpty(usageDetail.usagetype) ? usageDetail.usagetype : ''
+  switch (usageType) {
+    case UsageType.PipelineExecution: {
+      const pipelineExecutionUsageData = usageDetail?.pipelineexecutionusagedata
+
+      const {
+        identifier: pipelineIdentifier,
+        accountidentifier: accountId,
+        orgidentifier: orgIdentifier,
+        projectidentifier: projectIdentifier
+      } = defaultTo(usageDetail?.identifierref, {})
+
+      const planExecutionId = pipelineExecutionUsageData?.planexecutionid
+      const stageExecutionId = pipelineExecutionUsageData?.stageexecutionid
+      const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
+
+      return (
+        <Link
+          to={routes.toExecutionPipelineView({
+            orgIdentifier,
+            projectIdentifier,
+            accountId,
+            source,
+            executionIdentifier: planExecutionId || '-1',
+            stageExecId: stageExecutionId || '-1',
+            pipelineIdentifier: pipelineIdentifier || '-1'
+          })}
+          target="_blank"
+        >
+          {usageType}
+        </Link>
+      )
+    }
+    case UsageType.TestConnection:
+      return (
+        <Text color={Color.GREY_400} lineClamp={1}>
+          {usageType}
+        </Text>
+      )
+    default:
+      return ''
+  }
 }

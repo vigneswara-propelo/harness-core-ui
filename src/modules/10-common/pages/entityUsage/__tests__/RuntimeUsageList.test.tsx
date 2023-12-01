@@ -20,6 +20,9 @@ import { filterData } from '../utils'
 
 const projectEntityUrl =
   'http://localhost/ng/account/dummy/settings/organizations/orgId/setup/resources/connectors/PreCertified_Instance'
+const pipelineExecutionUrl =
+  '/account/dummy/home/orgs/dummy_org/projects/dummy_project/pipelines/test_shell_2/executions/Q0RlktaBSTuD7FTw9QSDdQ/pipeline?stageExecId=QCMjddLYQ2uV7ttM9DM3Dg'
+
 window.open = jest.fn()
 const listActivitiesPromise = jest.fn(() =>
   Promise.resolve({ data: secretRuntimeUsageData, refetch: () => Promise.resolve(secretRuntimeUsageData) })
@@ -112,6 +115,12 @@ describe('RuntimeUsageList component', () => {
     // opening link of connector PreCertified_Instance and org
     const secretRuntimeUsageConnectorEntity = screen.getByText('PreCertified_Instance') as HTMLAnchorElement
     const secretRuntimeUsageProjectEntity = screen.getByText('orgId') as HTMLAnchorElement
+
+    // expect Pipeline Executions Events
+    const pipelineExecutionRowEvent = screen.getByText('Pipeline Execution') as HTMLAnchorElement
+    expect(pipelineExecutionRowEvent).toBeVisible()
+    expect(pipelineExecutionRowEvent).toHaveAttribute('href', pipelineExecutionUrl)
+
     await waitFor(() => {
       userEvent.click(secretRuntimeUsageConnectorEntity)
       expect(window.open).toHaveBeenCalled()
