@@ -15,3 +15,16 @@ export const runtimeEnvDST: Partial<DeploymentStageConfig> = {
     infrastructureDefinitions: '<+input>' as any
   }
 }
+
+export const runtimeEnvWithInfraAsExpression: Partial<DeploymentStageConfig> = {
+  environment: {
+    environmentRef: '<+input>',
+    environmentInputs: '<+input>' as any,
+    serviceOverrideInputs: '<+input>' as any,
+    infrastructureDefinitions: [
+      {
+        identifier: '<+pipeline.name>'
+      }
+    ]
+  }
+}

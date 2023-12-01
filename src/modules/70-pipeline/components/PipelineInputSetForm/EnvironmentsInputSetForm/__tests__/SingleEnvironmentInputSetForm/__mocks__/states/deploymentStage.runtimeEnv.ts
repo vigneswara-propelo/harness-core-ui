@@ -45,3 +45,25 @@ export const runtimeEnvDS: DeploymentStageConfig = {
     rollbackSteps: []
   }
 }
+
+export const runtimeEnvWithInfraAsExpressionDepStage: DeploymentStageConfig = {
+  deploymentType: 'Kubernetes',
+  service: {
+    serviceRef: 'svc_to_override'
+  },
+  environment: {
+    environmentRef: '<+input>',
+    deployToAll: false,
+    environmentInputs: '<+input>' as any,
+    serviceOverrideInputs: '<+input>' as any,
+    infrastructureDefinitions: [
+      {
+        identifier: '<+pipeline.name>'
+      }
+    ]
+  },
+  execution: {
+    steps: [],
+    rollbackSteps: []
+  }
+}

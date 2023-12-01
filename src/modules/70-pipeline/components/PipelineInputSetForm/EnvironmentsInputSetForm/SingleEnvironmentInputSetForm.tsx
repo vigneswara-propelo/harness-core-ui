@@ -117,12 +117,21 @@ export default function SingleEnvironmentInputSetForm({
   /** Show the infrastructures selection field in the following scenarios
    * 1. environmentTemplate.infrastructureDefinitions is a runtime value - condition 1
    * 2. When 1 is true and the user selects the infrastructures, we need to still continue to show it - condition 2
-   *    a. The check for infrastructureDefinitions in 'deploymentStage' is required to show the field in case of 1 and 2 */
-  const showInfrastructuresSelectionInputField = isMultiTypeExpression(environmentRefType)
+   *    a. The check for infrastructureDefinitions in 'deploymentStage' is required to show the field in case of 1 and 2
+   * 3. When env is selected as runtime, and infrastructureDefinitions is not already configured in environmentInDeploymentStage (pipeline yaml)
+   *    */
+  const isInfrastructureRuntimeInTemplate = isMultiTypeExpression(environmentRefType)
     ? isValueExpression(environment.environmentRef)
     : isValueRuntimeInput(environmentTemplate?.infrastructureDefinitions as unknown as string) ||
       (Array.isArray(environmentTemplate?.infrastructureDefinitions) &&
         !Array.isArray(environmentInDeploymentStage?.infrastructureDefinitions))
+
+  const isInfrastructureInputAlreadyConfigured =
+    Array.isArray(environmentInDeploymentStage?.infrastructureDefinitions) &&
+    isValueExpression(defaultTo(environmentInDeploymentStage?.infrastructureDefinitions?.[0]?.identifier, ''))
+
+  const showInfrastructuresSelectionInputField =
+    isInfrastructureRuntimeInTemplate && !isInfrastructureInputAlreadyConfigured
 
   /** Show the clusters selection field in the following scenarios
    * 1. pathToEnvironments is a runtime value - condition 1

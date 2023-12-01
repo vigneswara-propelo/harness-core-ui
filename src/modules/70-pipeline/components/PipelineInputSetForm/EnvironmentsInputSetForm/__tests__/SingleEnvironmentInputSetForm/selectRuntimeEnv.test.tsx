@@ -28,8 +28,8 @@ import { GenericServiceSpec } from '@cd/components/PipelineSteps/K8sServiceSpec/
 // eslint-disable-next-line no-restricted-imports
 import { KubernetesInfraSpec } from '@cd/components/PipelineSteps/KubernetesInfraSpec/KubernetesInfraSpec'
 
-import { runtimeEnvDS } from './__mocks__/states/deploymentStage.runtimeEnv'
-import { runtimeEnvDST } from './__mocks__/states/deploymentStageTemplate.runtimeEnv'
+import { runtimeEnvDS, runtimeEnvWithInfraAsExpressionDepStage } from './__mocks__/states/deploymentStage.runtimeEnv'
+import { runtimeEnvDST, runtimeEnvWithInfraAsExpression } from './__mocks__/states/deploymentStageTemplate.runtimeEnv'
 
 import environmentAccessListData from './__mocks__/responses/environmentAccessList.json'
 import environmentMetadata from './__mocks__/responses/environmentInputYamlAndServiceOverridesMetadata.json'
@@ -164,6 +164,105 @@ describe('Single Environment Input Set Form - Runtime Env in pipeline studio', (
     await waitFor(() =>
       expect(screen.getByTestId('finalFormikValues')).toHaveTextContent(
         '{"template":{"templateInputs":{"spec":{"environment":{"environmentRef":"env_with_both_inputs","environmentInputs":{"identifier":"env_with_both_inputs","type":"Production","variables":[{"name":"envVar3","type":"String","value":"envVarValue1"}]},"serviceOverrideInputs":{"variables":[{"name":"svcVar1","type":"String","value":"svcOverrideVal1"}]},"infrastructureDefinitions":[{"identifier":"Infra_4","inputs":{"identifier":"Infra_4","type":"KubernetesDirect","spec":{"namespace":"mynamespace"}}}]}}}}}'
+      )
+    )
+  })
+
+  test('runtime environment with infra as expression', async () => {
+    jest.spyOn(cdNgServices, 'useGetEnvironmentAccessList').mockReturnValue({
+      data: environmentAccessListData,
+      loading: false,
+      error: null,
+      refetch: jest.fn()
+    } as any)
+
+    jest.spyOn(cdNgServices, 'getEnvironmentAccessListPromise').mockResolvedValue(environmentAccessListData as any)
+
+    jest.spyOn(cdNgServices, 'useGetEnvironmentsInputYamlAndServiceOverrides').mockReturnValue({
+      mutate: jest.fn().mockResolvedValue(environmentMetadata),
+      loading: false,
+      error: null,
+      refetch: jest.fn()
+    } as any)
+
+    jest.spyOn(cdNgServices, 'useGetInfrastructureList').mockReturnValue({
+      data: infrastructureListData,
+      loading: false,
+      error: null,
+      refetch: jest.fn()
+    } as any)
+
+    jest.spyOn(cdNgServices, 'useGetInfrastructureYamlAndRuntimeInputs').mockReturnValue({
+      mutate: jest.fn().mockResolvedValue(infrastructureMetadata),
+      loading: false,
+      error: null,
+      refetch: jest.fn()
+    } as any)
+
+    render(
+      <TestWrapper
+        path={routes.toPipelineStudio({
+          accountId: ':accountId',
+          orgIdentifier: ':orgIdentifier',
+          projectIdentifier: ':projectIdentifier',
+          pipelineIdentifier: ':pipelineIdentifier'
+        })}
+        pathParams={{
+          accountId: 'dummyAcc',
+          orgIdentifier: 'dummyOrg',
+          projectIdentifier: 'dummyProj',
+          pipelineIdentifier: 'dummyPipeline'
+        }}
+      >
+        <Formik initialValues={{}} onSubmit={noop}>
+          {formik => (
+            <>
+              <StageFormContextTestWrapper
+                path={'template.templateInputs.spec'}
+                deploymentStage={runtimeEnvWithInfraAsExpressionDepStage}
+                deploymentStageTemplate={runtimeEnvWithInfraAsExpression as cdNgServices.DeploymentStageConfig}
+                viewType={StepViewType.DeploymentForm}
+                stageIdentifier={'RT_env'}
+              />
+              <div data-testid="finalFormikValues">{JSON.stringify(formik.values)}</div>
+            </>
+          )}
+        </Formik>
+      </TestWrapper>
+    )
+
+    await waitFor(() =>
+      expect(screen.getByText('cd.pipelineSteps.environmentTab.specifyYourEnvironment')).toBeVisible()
+    )
+
+    // open environment select modal
+    await userEvent.click(screen.getByTestId('cr-field-environment.environmentRef'))
+
+    const environmentSelectDialog = findDialogContainer()
+
+    await waitFor(() =>
+      expect(queryByText(environmentSelectDialog!, 'entityReference.apply')?.parentElement).toBeDisabled()
+    )
+
+    // select environment
+    const environmentWithInputsButton = queryByText(environmentSelectDialog!, 'env with both inputs')
+    await waitFor(() => expect(environmentWithInputsButton).toBeVisible())
+
+    await userEvent.click(environmentWithInputsButton!)
+
+    // apply changes
+    const applySelectedButton = queryByText(environmentSelectDialog!, 'entityReference.apply')
+    await waitFor(() => expect(applySelectedButton?.parentElement).not.toBeDisabled())
+
+    await userEvent.click(applySelectedButton!)
+
+    // wait for data to load
+    await waitFor(() => expect(screen.getByText('common.environmentPrefix')).toBeVisible())
+    expect(screen.queryByText('cd.pipelineSteps.environmentTab.specifyYourInfrastructure')).toBeNull()
+
+    await waitFor(() =>
+      expect(screen.getByTestId('finalFormikValues')).toHaveTextContent(
+        '{"template":{"templateInputs":{"spec":{"environment":{"environmentRef":"env_with_both_inputs","environmentInputs":{"identifier":"env_with_both_inputs","type":"Production","variables":[{"name":"envVar3","type":"String","value":""}]},"serviceOverrideInputs":{"variables":[{"name":"svcVar1","type":"String","value":""}]}}}}}}'
       )
     )
   })
