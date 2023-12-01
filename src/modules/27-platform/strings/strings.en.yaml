@@ -23,6 +23,7 @@ defaultSettings:
   pipelineTimeout: Pipeline Timeout
   stageTimeout: Stage Timeout
   concurrentActivePipelineExecutions: Concurrent Active Pipeline Executions
+  skipFailFastValidationChecksForPipelineExecute: Skip Fail Fast Validation Checks for Pipeline Execute
   enablePipelineExecutionAuditEvents: Enable Pipeline Execution Audit Events
   allowUserToMarkStepAsFailedExplicitly: Allow users to mark a running Step as failure
   defaultImagePullPolicyForAddOnContainer: Default Image Pull Policy For Add On Container

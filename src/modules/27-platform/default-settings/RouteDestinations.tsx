@@ -369,6 +369,14 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_NODE_EXECUTION_
   yupValidation: Yup.boolean(),
   settingCategory: 'PMS'
 })
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.SKIP_FAIL_FAST_VALIDATION_CHECKS_FOR_PIPELINE_EXECUTE, {
+  label: 'platform.defaultSettings.skipFailFastValidationChecksForPipelineExecute',
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'PMS'
+})
+
 DefaultSettingsFactory.registerSettingHandler(SettingType.DO_NOT_DELETE_PIPELINE_EXECUTION_DETAILS, {
   label: 'platform.defaultSettings.doNotDeletePipelineExecutionDetails',
   settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,

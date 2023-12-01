@@ -3197,6 +3197,7 @@ export interface StringsMap {
   'platform.defaultSettings.showGcpCostAs': string
   'platform.defaultSettings.showOthers': string
   'platform.defaultSettings.showUnallocatedClusterCost': string
+  'platform.defaultSettings.skipFailFastValidationChecksForPipelineExecute': string
   'platform.defaultSettings.slackPlaceholder': string
   'platform.defaultSettings.stageTimeout': string
   'platform.defaultSettings.ticketingPreferences': string
