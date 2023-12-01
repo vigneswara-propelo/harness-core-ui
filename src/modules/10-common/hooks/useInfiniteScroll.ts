@@ -75,9 +75,9 @@ export const useInfiniteScroll = (props: InfiniteScrollProps): InfiniteScrollRet
       limit
     })
       .then(response => {
+        setFetching(false)
         if (!response) return
         if (response.data) {
-          setFetching(false)
           // If the cuurent fetch count exceeds totalItems, set hasMore as false
           const responseContent = defaultTo(response.data.content, response.data)
 

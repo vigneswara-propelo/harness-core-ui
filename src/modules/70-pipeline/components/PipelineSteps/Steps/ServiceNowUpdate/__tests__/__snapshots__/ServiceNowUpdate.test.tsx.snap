@@ -1720,42 +1720,50 @@ exports[`ServiceNow Update tests Edit Stage - readonly view for Template type: e
           <div
             class="Layout--horizontal StyledProps--main alignCenter"
           >
-            <div
-              class="bp3-form-group bp3-disabled deploymentViewMedium"
+            <span
+              class="bp3-popover-wrapper"
             >
-              <label
-                class="bp3-label"
-                for="spec.editableFields[undefined].value"
-              >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="serviceNowCreate_spec.editableFields[undefined].value"
-                >
-                  fieldName
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
+              <span
+                class="bp3-popover-target"
               >
                 <div
-                  class="bp3-input-group bp3-disabled"
+                  class="bp3-form-group bp3-disabled deploymentViewMedium"
                 >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    disabled=""
-                    name="spec.editableFields[undefined].value"
-                    placeholder="value"
-                    type="text"
-                    value=""
-                  />
+                  <label
+                    class="bp3-label"
+                    for="spec.editableFields[undefined].value"
+                  >
+                    <span
+                      class="Tooltip--acenter"
+                      data-tooltip-id="serviceNowCreate_spec.editableFields[undefined].value"
+                    >
+                      fieldName
+                    </span>
+                     
+                    <span
+                      class="bp3-text-muted"
+                    />
+                  </label>
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="bp3-input-group bp3-disabled"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        disabled=""
+                        name="spec.editableFields[undefined].value"
+                        placeholder="value"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </span>
+            </span>
           </div>
         </div>
       </div>

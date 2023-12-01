@@ -193,7 +193,8 @@ function FormContent({
     return !fetchingTemplate && !fetchTemplateError && isEmpty(templateResponse)
   }, [fetchingTemplate, fetchTemplateError, templateResponse])
 
-  const isTicketTypeChangeRequest = (get(formik, 'values.spec.ticketType') as string).toLowerCase() === 'change_request'
+  const isTicketTypeChangeRequest =
+    (get(formik, 'values.spec.ticketType') as string)?.toLowerCase() === 'change_request'
 
   useEffect(() => {
     if (connectorRefFixedValue && connectorValueType === MultiTypeInputType.FIXED) {
@@ -947,6 +948,7 @@ function FormContent({
                     </div>
                     <ServiceNowTemplateFieldsRenderer
                       isError={istemplateErrorString}
+                      ticketFieldList={ticketFieldList}
                       errorData={fetchTemplateError}
                       templateFields={formik.values.spec.templateFields}
                       templateName={formik.values.spec.templateName}
@@ -965,7 +967,6 @@ function FormContent({
                           <FormInput.MultiTextInput
                             label={getString('pipeline.serviceNowCreateStep.templateName')}
                             name={`spec.templateName`}
-                            disabled={isApprovalStepFieldDisabled(readonly)}
                             multiTextInputProps={{
                               placeholder: getString('pipeline.serviceNowCreateStep.templateNamePlaceholder'),
                               textProps: {
@@ -992,6 +993,7 @@ function FormContent({
                           )}
                         </div>
                         <ServiceNowTemplateFieldsRenderer
+                          ticketFieldList={ticketFieldList}
                           isError={istemplateErrorString}
                           errorData={templateErrorString}
                           templateFields={formik.values.spec.templateFields}
@@ -1099,6 +1101,7 @@ function FormContent({
                   )}
                 </div>
                 <ServiceNowTemplateFieldsRenderer
+                  ticketFieldList={ticketFieldList}
                   editableFields={get(formik, 'values.spec.editableFields')}
                   isError={istemplateErrorString}
                   errorData={fetchTemplateError}

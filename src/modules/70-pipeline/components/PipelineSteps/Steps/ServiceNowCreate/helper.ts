@@ -27,6 +27,9 @@ export const resetForm = (
   if (parent === 'connectorRef') {
     formik.setFieldValue('spec.ticketType', '')
     formik.setFieldValue('spec.fields', [])
+    formik.setFieldValue('spec.editableFields', [])
+    formik.setFieldValue('spec.templateFields', [])
+    formik.setFieldValue('spec.templateName', '')
   }
 
   if (parent === 'ticketType') {

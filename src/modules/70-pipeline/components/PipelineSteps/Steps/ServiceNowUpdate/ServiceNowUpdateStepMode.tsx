@@ -876,6 +876,7 @@ function FormContent({
                   )}
                 </div>
                 <ServiceNowTemplateFieldsRenderer
+                  ticketFieldList={ticketFieldList}
                   isError={istemplateErrorString}
                   errorData={templateErrorString}
                   templateFields={formik.values.spec.templateFields}
