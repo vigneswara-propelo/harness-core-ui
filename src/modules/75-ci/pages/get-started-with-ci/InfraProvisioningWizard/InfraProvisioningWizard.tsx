@@ -98,7 +98,8 @@ import {
   getGitConnectorRepoBasedOnRepoUrl,
   getCIStarterPipeline,
   getRemoteInputSetPayload,
-  getCloudPipelinePayloadWithCodebase
+  getCloudPipelinePayloadWithCodebase,
+  updateRuntimeTypeToDocker
 } from '../../../utils/HostedBuildsUtils'
 import css from './InfraProvisioningWizard.module.scss'
 
@@ -209,9 +210,13 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             yamlVersion
           }
           if (status === Status.SUCCESS && generatedPipelineYAML) {
+            const generatedParsedYaml = parse<PipelineConfig>(generatedPipelineYAML)
+            const originalPipeline = useVerifiedLocalInfra
+              ? updateRuntimeTypeToDocker(generatedParsedYaml)
+              : generatedParsedYaml
             setGeneratedYAMLAsJSON(
               addDetailsToPipeline({
-                originalPipeline: parse<PipelineConfig>(generatedPipelineYAML),
+                originalPipeline: originalPipeline,
                 ...commonArgs
               })
             )

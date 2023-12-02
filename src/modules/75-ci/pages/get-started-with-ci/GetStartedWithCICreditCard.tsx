@@ -237,6 +237,7 @@ export const LocalInfraOnboarding = (props: LocalInfraOnboardingProps): React.Re
             variation={ButtonVariation.PRIMARY}
             rightIcon="chevron-right"
             onClick={() => {
+              props.setUseVerifiedLocalInfra(true)
               props.setShowCreditCardFlow(false)
               props.setShowLocalInfraSetup(false)
             }}

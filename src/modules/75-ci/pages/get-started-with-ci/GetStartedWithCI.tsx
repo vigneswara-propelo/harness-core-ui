@@ -129,11 +129,15 @@ export default function GetStartedWithCI(): React.ReactElement {
       CI_CREDIT_CARD_ONBOARDING &&
       isFreeEdition &&
       (trustLevelData?.resource === 0 || trustLevelData?.resource === -1) &&
+      !fetchingTrustLevel &&
+      !fetchingCards &&
       !validCard?.data?.hasAtleastOneValidCreditCard
     ) {
       setShowCreditCardFlow(true)
+    } else {
+      setShowCreditCardFlow(false)
     }
-  }, [validCard, trustLevelData])
+  }, [validCard, trustLevelData, fetchingCards, fetchingTrustLevel])
 
   useEffect(() => {
     if (showWizard) {

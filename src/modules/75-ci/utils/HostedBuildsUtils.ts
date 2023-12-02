@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { get, omit, set, unset } from 'lodash-es'
+import { cloneDeep, get, isEmpty, omit, set, unset } from 'lodash-es'
 import { parse } from 'yaml'
 import type { ConnectorInfoDTO, ConnectorRequestBody, ConnectorResponse, UserRepoResponse } from 'services/cd-ng'
 import type { PipelineConfig } from 'services/pipeline-ng'
@@ -447,3 +447,17 @@ const GIT_PROVIDER_BASE_URL = new Map<ConnectorInfoDTO['type'], string>([
   [Connectors.GITLAB, 'gitlab.com'],
   [Connectors.BITBUCKET, 'bitbucket.org']
 ])
+
+export const updateRuntimeTypeToDocker = (pipelineYaml: PipelineConfig) => {
+  const clonedPipeline = cloneDeep(pipelineYaml)
+  // Iterate over each stage in the 'stages' array
+  clonedPipeline.pipeline?.stages?.forEach((stage, index) => {
+    // Construct the path to the 'runtime.type' property using the index
+    if (!isEmpty(stage)) {
+      const path = `pipeline.stages.${index}.stage.spec.runtime.type`
+      set(clonedPipeline, path, 'Docker')
+    }
+  })
+
+  return clonedPipeline
+}
