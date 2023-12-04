@@ -1,3 +1,4 @@
+/* istanbul ignore file - no sidenavs are tested in Unit tests rather test in integration tests */
 /*
  * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
@@ -39,6 +40,7 @@ export default function IACMSideNav(): React.ReactElement {
       />
       {projectIdentifier && orgIdentifier && (
         <>
+          <SidebarLink label={getString('overview')} to={routes.toIACMProjectOverview({ ...params })} />
           <SidebarLink label={getString('iacm.workspaces')} to={routes.toIACMWorkspaces({ ...params })} />
           <SidebarLink label={getString('pipelines')} to={routes.toPipelines({ ...params, module: 'iacm' })} />
           <ProjectSetupMenu module="iacm" />

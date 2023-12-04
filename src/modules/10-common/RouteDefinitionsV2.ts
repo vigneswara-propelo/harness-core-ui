@@ -1024,7 +1024,8 @@ const routes = {
 
   // iacm routes
   toIACM: withModeModuleAndScopePrefix<ProjectPathProps>(() => '/'),
-  toIACMOverview: withModeModuleAndScopePrefix<ProjectPathProps>(() => '/overview'),
+  toIACMOverview: withModeModuleAndScopePrefix<AccountPathProps>(() => '/overview'),
+  toIACMProjectOverview: withModeModuleAndScopePrefix<ProjectPathProps>(() => '/overview'),
   toIACMWorkspaces: withModeModuleAndScopePrefix<ProjectPathProps>(() => `/workspaces`),
   toIACMWorkspace: withModeModuleAndScopePrefix<ProjectPathProps & IACMPathProps>(
     params => `/workspaces/${params?.workspaceIdentifier}/resources`
