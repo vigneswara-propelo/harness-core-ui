@@ -199,7 +199,7 @@ export const ProjectSettingsPage: React.FC = () => {
             <SettingsResourceCard
               label={<String stringID="common.sloDowntimeLabel" />}
               id={SettingsResources.SLODowntime}
-              icon={'connectors-blue'}
+              icon={'slo-downtime'}
               route={routesV2.toCVSLODowntime({ accountId, orgIdentifier, projectIdentifier, module })}
             />
             <SettingsResourceCard //todo-test
@@ -232,19 +232,19 @@ export const ProjectSettingsPage: React.FC = () => {
             <SettingsResourceCard
               label={<String stringID="common.agents" />}
               id={SettingsResources.CETAgents}
-              icon={'connectors-blue'}
+              icon={'agents'}
               route={routesV2.toCETAgents({ accountId, orgIdentifier, projectIdentifier, module: 'cet' })}
             />
             <SettingsResourceCard
               label={<String stringID="common.purpose.errorTracking.agentTokens" />}
               id={SettingsResources.CETTokens}
-              icon={'connectors-blue'}
+              icon={'agent-tokens'}
               route={routesV2.toCETAgentsTokens({ accountId, orgIdentifier, projectIdentifier, module: 'cet' })}
             />
             <SettingsResourceCard
               label={<String stringID="common.purpose.errorTracking.criticalEvents" />}
               id={SettingsResources.CETCriticalEvents}
-              icon={'connectors-blue'}
+              icon={'critical-events'}
               route={routesV2.toCETCriticalEvents({ accountId, orgIdentifier, projectIdentifier, module: 'cet' })}
             />
             <SettingsResourceCard
