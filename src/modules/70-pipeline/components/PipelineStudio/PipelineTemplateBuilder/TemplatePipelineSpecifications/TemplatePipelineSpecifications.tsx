@@ -129,11 +129,10 @@ export function TemplatePipelineSpecifications({
   // All values need to be updated when pipelineResponse changes, even if mergedPipelineYaml is the same - this can happen when
   // version of linked pipeline template is changed. This ensures all values is updated after reset due to version change.
   React.useEffect(() => {
-    if (!pipelineLoading) {
+    if (pipelineResponse?.data?.mergedPipelineYaml) {
       setAllValues(parse<Pipeline>(defaultTo(pipelineResponse?.data?.mergedPipelineYaml, ''))?.pipeline)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pipelineResponse?.data?.mergedPipelineYaml, pipelineLoading])
+  }, [pipelineResponse?.data?.mergedPipelineYaml])
 
   /**
    * This function is used to set the original entity yaml with the newly updated template inputs
@@ -234,11 +233,10 @@ export function TemplatePipelineSpecifications({
   }, [templateInputSetLoading])
 
   React.useEffect(() => {
-    if (!isEmpty(formValues) && !allValues && !isEmpty(originalEntityYaml)) {
+    if (!isEmpty(formValues) && !allValues && !isEmpty(originalEntityYaml) && !pipelineLoading) {
       refetchPipeline()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [originalEntityYaml])
+  }, [allValues, formValues, originalEntityYaml, pipelineLoading, refetchPipeline])
 
   React.useEffect(() => {
     if (schemaErrors) {
