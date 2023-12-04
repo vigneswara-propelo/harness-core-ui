@@ -46,6 +46,7 @@ import VariableSettingsRouteDestinations from '@platform/variables/SettingsRoute
 import { CESettingsRouteDestination } from '@ce/RouteDestinationsV2'
 import CFSettingsRouteDestinations from '@modules/75-cf/SettingsRouteDestinations'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import CETSettingsRouteDestinations from '@cet/CETSettingsRouteDestinations'
 
 const licenseRedirectDataCD: LicenseRedirectProps = {
   licenseStateName: LICENSE_STATE_NAMES.CD_LICENSE_STATE,
@@ -124,6 +125,8 @@ function SettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactEle
       {CVSettingsRouteDestinations({ mode }).props.children}
 
       {CFSettingsRouteDestinations({ mode }).props.children}
+
+      {CETSettingsRouteDestinations({ mode }).props.children}
 
       {PL_CENTRAL_NOTIFICATIONS && NotificationsManagementSettingsRouteDestinations({ mode }).props.children}
 
