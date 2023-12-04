@@ -21,7 +21,14 @@ import {
 import { useStrings } from 'framework/strings'
 import { NameSchema } from '@common/utils/Validation'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
-import { CommandType, commandTypeOptions, CommandUnitType, LocationType } from '../CommandScriptsTypes'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import {
+  CommandType,
+  commandTypeOptions,
+  CommandUnitType,
+  LocationType,
+  scriptTypeOptions
+} from '../CommandScriptsTypes'
 import { CopyCommandEdit } from './CopyCommandEdit'
 import { ScriptCommandEdit } from './ScriptCommandEdit'
 import { DownloadArtifactCommandEdit } from './DownloadArtifactCommandEdit'
@@ -103,6 +110,17 @@ export function CommandEdit(props: CommandEditProps): React.ReactElement {
     })
   })
 
+  const isWinRm = deploymentType === ServiceDeploymentType.WinRm
+
+  const defaultShellType = isWinRm ? 'PowerShell' : 'Bash'
+
+  const scriptTypes = React.useMemo(() => {
+    if (isWinRm) {
+      return scriptTypeOptions.filter((script: SelectOption) => script.value === 'PowerShell')
+    }
+    return scriptTypeOptions
+  }, [isWinRm])
+
   return (
     <Formik<CommandUnitType>
       initialValues={initialValues}
@@ -133,7 +151,7 @@ export function CommandEdit(props: CommandEditProps): React.ReactElement {
               items={commandTypeOptions}
               onChange={(selected: SelectOption) => {
                 formik.setFieldValue('type', selected.value)
-                formik.setFieldValue('spec.shell', 'Bash')
+                formik.setFieldValue('spec.shell', defaultShellType)
                 formik.setFieldValue('spec.source.type', 'Inline')
               }}
             />
@@ -147,7 +165,12 @@ export function CommandEdit(props: CommandEditProps): React.ReactElement {
             )}
 
             {formik.values.type === CommandType.Script && (
-              <ScriptCommandEdit formik={formik} allowableTypes={allowableTypes} />
+              <ScriptCommandEdit
+                formik={formik}
+                allowableTypes={allowableTypes}
+                defaultScriptType={defaultShellType}
+                scriptTypes={scriptTypes}
+              />
             )}
           </Container>
 

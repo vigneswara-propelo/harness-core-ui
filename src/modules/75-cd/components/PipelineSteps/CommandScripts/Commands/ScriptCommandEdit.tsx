@@ -20,6 +20,7 @@ import {
 import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
+
 import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -27,7 +28,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import FileStoreSelectField from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
 import { FileUsage } from '@filestore/interfaces/FileStore'
-import { CommandUnitType, CustomScriptCommandUnit, LocationType, scriptTypeOptions } from '../CommandScriptsTypes'
+import { CommandUnitType, CustomScriptCommandUnit, LocationType } from '../CommandScriptsTypes'
 import { TailFilesEdit } from './TailFilesEdit'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './CommandEdit.module.scss'
@@ -36,10 +37,12 @@ interface ScriptCommandEditProps {
   formik: FormikProps<CommandUnitType>
   allowableTypes: AllowedTypes
   readonly?: boolean
+  defaultScriptType: ScriptType
+  scriptTypes: SelectOption[]
 }
 
 export function ScriptCommandEdit(props: ScriptCommandEditProps): React.ReactElement {
-  const { formik, readonly = false, allowableTypes } = props
+  const { formik, readonly = false, allowableTypes, defaultScriptType, scriptTypes } = props
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -47,7 +50,7 @@ export function ScriptCommandEdit(props: ScriptCommandEditProps): React.ReactEle
     (formik.values as CustomScriptCommandUnit).spec.source.type as LocationType
   )
 
-  const scriptType: ScriptType = defaultTo((formik.values as CustomScriptCommandUnit).spec?.shell, 'Bash')
+  const scriptType: ScriptType = defaultTo((formik.values as CustomScriptCommandUnit).spec?.shell, defaultScriptType)
 
   const onLocationChange = (value: LocationType) => {
     setLocationType(value)
@@ -101,7 +104,7 @@ export function ScriptCommandEdit(props: ScriptCommandEditProps): React.ReactEle
         label={getString('common.scriptType')}
         placeholder={getString('cd.steps.commands.scriptTypePlaceholder')}
         disabled={readonly}
-        items={scriptTypeOptions}
+        items={scriptTypes}
         onChange={(selected: SelectOption) => {
           formik.setFieldValue('shell', selected.value)
         }}
