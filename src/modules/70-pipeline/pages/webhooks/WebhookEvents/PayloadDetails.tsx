@@ -50,13 +50,13 @@ export default function PayloadDetails(props: PayloadDetailsInterface): JSX.Elem
               <Text className={css.marginBottom} color={Color.BLACK}>
                 {getString('common.secret.timestamp')}
               </Text>
-              <Text>{`${time} ${date}`}</Text>
+              <Text data-testid="payload-details-timestamp">{`${time} ${date}`}</Text>
             </Layout.Vertical>
             <Layout.Vertical>
               <Text className={css.marginBottom} color={Color.BLACK}>
                 {getString('pipeline.webhookEvents.eventId')}
               </Text>
-              <Text>{payloadDetails.eventId}</Text>
+              <Text data-testid="payload-details-event-id">{payloadDetails.eventId}</Text>
             </Layout.Vertical>
             <Layout.Vertical></Layout.Vertical>
           </Layout.Horizontal>

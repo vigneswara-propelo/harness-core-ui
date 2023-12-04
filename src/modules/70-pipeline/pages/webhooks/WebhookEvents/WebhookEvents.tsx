@@ -25,7 +25,7 @@ import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useListGitxWebhookEventsRefQuery, useListGitxWebhooksRefQuery } from '@harnessio/react-ng-manager-client'
-import { defaultTo, flatten, has, isEmpty, uniqBy } from 'lodash-es'
+import { defaultTo, flatten, get, has, isEmpty, uniqBy } from 'lodash-es'
 import { DateRange } from '@blueprintjs/datetime'
 import { useStrings } from 'framework/strings'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -110,10 +110,10 @@ export default function WebhookEvents(): JSX.Element {
     updateQueryParams({ page: index + 1 })
 
   const paginationProps = useDefaultPaginationProps({
-    itemCount: defaultTo(data?.pagination?.total, 0),
-    pageSize: defaultTo(data?.pagination?.pageSize, 0),
-    pageCount: defaultTo(data?.pagination?.pageCount, 0),
-    pageIndex: defaultTo(data?.pagination?.pageNumber, 0),
+    itemCount: defaultTo(get(data, 'pagination.total'), 0),
+    pageSize: defaultTo(get(data, 'pagination.pageSize'), 0),
+    pageCount: defaultTo(get(data, 'pagination.pageCount'), 0),
+    pageIndex: defaultTo(get(data, 'pagination.pageNumber'), 0),
     gotoPage: handlePageIndexChange,
     onPageSizeChange: newSize => updateQueryParams({ page: PAGE_TEMPLATE_DEFAULT_PAGE_INDEX, size: newSize })
   })
@@ -241,7 +241,7 @@ export default function WebhookEvents(): JSX.Element {
             padding={{ top: 'large', right: 'xlarge', left: 'xlarge' }}
           >
             <Text color={Color.GREY_800} iconProps={{ size: 14 }}>
-              {getString('total')}: {data?.pagination?.total}
+              {getString('total')}: {get(data, 'pagination.total')}
             </Text>
             <span className={css.reload}>
               <Icon name="command-rollback" onClick={() => refetch()} />
