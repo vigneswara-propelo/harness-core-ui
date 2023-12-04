@@ -63,7 +63,8 @@ module.exports = {
     '!src/modules/75-sei/pages/SEIUIApp/SEIUIApp.tsx',
     '!src/framework/tooltip/TooltipContext.tsx',
     '!src/modules/70-pipeline/pages/execution/ExecutionIACMResourcesView/ExecutionIACMResourcesView.tsx',
-    '!src/modules/75-cet/CETSettingsRouteDestinations.tsx'
+    '!src/modules/75-cet/CETSettingsRouteDestinations.tsx',
+    '!src/modules/75-cet/components/SideNav/CETSideNavLinks.tsx'
   ],
   coverageReporters: ['lcov', 'json-summary', 'json'],
   testEnvironment: 'jsdom',

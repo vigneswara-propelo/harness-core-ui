@@ -28,11 +28,6 @@ const CETSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
       <SideNav.Section>
         <SideNav.Scope scope={Scope.PROJECT}>
           <SideNav.Link
-            icon="nav-home"
-            label={getString('overview')}
-            to={routes.toCETHome({ accountId, projectIdentifier, orgIdentifier, module })}
-          />
-          <SideNav.Link
             icon="services"
             label={getString('auditTrail.eventSummary')}
             to={routes.toCETEventsSummary({ accountId, projectIdentifier, orgIdentifier, module })}
