@@ -73,11 +73,8 @@ export const ServicesListPage = ({
 }: ServicesListPageProps): React.ReactElement => {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const isCommunity = useGetCommunity()
-  // const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
-  // const isCdsV1EOLEnabled = useFeatureFlag(FeatureFlag.CDS_V1_EOL_BANNER)
   const {
     NG_SVC_ENV_REDESIGN: isSvcEnvEntityEnabled,
-    CDS_V1_EOL_BANNER: isCdsV1EOLEnabled,
     CDS_NAV_2_0: newLeftNav,
     CDS_SERVICE_GITX: isGitXEnabled
   } = useFeatureFlags()
@@ -273,13 +270,13 @@ export const ServicesListPage = ({
       sort,
       searchTerm,
       repoName,
-      includeVersionInfo: isCdsV1EOLEnabled
+      includeVersionInfo: true
     },
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
 
   useEffect(() => {
-    if (serviceList?.data?.content?.length && isCdsV1EOLEnabled) {
+    if (serviceList?.data?.content?.length) {
       const existV1Service = !!serviceList?.data?.content.find(({ service }: ServiceResponse) => !service?.v2Service)
       if (existV1Service && setShowBanner) {
         setShowBanner(true)

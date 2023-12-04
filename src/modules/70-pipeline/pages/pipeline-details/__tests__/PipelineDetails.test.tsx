@@ -18,7 +18,7 @@ import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@platform/conn
 import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import PipelineDetails from '../PipelineDetails'
-import { PipelineResponse } from './PipelineDetailsMocks'
+import { PipelineResponse, serviceV1BannerResponse } from './PipelineDetailsMocks'
 
 jest.mock('services/pipeline-rq', () => ({
   useGetPipelineSummaryQuery: jest.fn(() => PipelineResponse)
@@ -50,7 +50,9 @@ jest.mock('services/cd-ng', () => ({
   useListGitSync: jest.fn().mockImplementation(() => {
     return { data: gitConfigs, refetch: getListGitSync }
   }),
-  checkIfPipelineUsingV1StagePromise: jest.fn()
+  checkIfPipelineUsingV1StagePromise: jest.fn().mockResolvedValue(() => {
+    return { data: serviceV1BannerResponse, refetch: jest.fn(), loading: false }
+  })
 }))
 
 jest.mock('services/cd-ng-rq', () => ({

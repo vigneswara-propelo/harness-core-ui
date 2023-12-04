@@ -109,7 +109,7 @@ export function TemplateStudioInternal(): React.ReactElement {
   const [shouldShowOutOfSyncError, setShouldShowOutOfSyncError] = React.useState(false)
   const [showBanner, setShowBanner] = React.useState<boolean>(false)
 
-  const { CDS_V1_EOL_BANNER, PL_AI_SUPPORT_CHATBOT, PL_EULA_ENABLED, CDS_NAV_2_0 } = useFeatureFlags()
+  const { PL_AI_SUPPORT_CHATBOT, PL_EULA_ENABLED, CDS_NAV_2_0 } = useFeatureFlags()
   const isAuxNavNotEnabled = !PL_EULA_ENABLED || !PL_AI_SUPPORT_CHATBOT
   const routes = CDS_NAV_2_0 ? routesV2 : routesV1
 
@@ -133,7 +133,6 @@ export function TemplateStudioInternal(): React.ReactElement {
 
   React.useEffect(() => {
     if (
-      CDS_V1_EOL_BANNER &&
       isPipelineOrStageType(templateType as TemplateType) &&
       !isNewTemplate(templateIdentifier) // Check if Template Using V1 Stage only for edit flow
     ) {

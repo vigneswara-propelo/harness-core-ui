@@ -121,8 +121,7 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
   const [pipelineName, setPipelineName] = React.useState('')
   const [triggerTabDisabled, setTriggerTabDisabled] = React.useState(false)
   const [showBanner, setShowBanner] = React.useState<boolean>(false)
-  const { CI_YAML_VERSIONING, CDS_V1_EOL_BANNER, PL_EULA_ENABLED, PL_AI_SUPPORT_CHATBOT, CDS_YAML_SIMPLIFICATION } =
-    useFeatureFlags()
+  const { CI_YAML_VERSIONING, PL_EULA_ENABLED, PL_AI_SUPPORT_CHATBOT, CDS_YAML_SIMPLIFICATION } = useFeatureFlags()
   const isAuxNavNotEnabled = !PL_EULA_ENABLED || !PL_AI_SUPPORT_CHATBOT
   const isYAMLSimplicationEnabledForCI = isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
   const abortControllerRef = React.useRef<AbortController | null>(null)
@@ -141,7 +140,7 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
 
   React.useEffect(() => {
     // Check if Pipeline is Using V1 Stage only for the Edit flow.
-    if (CDS_V1_EOL_BANNER && pipelineIdentifier !== DefaultNewPipelineId) {
+    if (pipelineIdentifier !== DefaultNewPipelineId) {
       abortControllerRef.current = new AbortController()
       checkIfPipelineUsingV1StagePromise(
         {
@@ -170,7 +169,7 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
         abortControllerRef.current.abort()
       }
     }
-  }, [orgIdentifier, projectIdentifier, pipelineIdentifier, CDS_V1_EOL_BANNER, accountId])
+  }, [orgIdentifier, projectIdentifier, pipelineIdentifier, accountId])
 
   React.useEffect(() => {
     if (repoIdentifier && !storeType) {

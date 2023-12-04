@@ -42,3 +42,5 @@ export const PipelineDetailsResponse: UseGetReturnData<ResponsePMSPipelineRespon
     correlationId: '537bada2-d369-443f-9827-7ca8008b576d'
   }
 }
+
+export const serviceV1BannerResponse = { showBanner: false, stageIdentifiers: [], failures: [] }
