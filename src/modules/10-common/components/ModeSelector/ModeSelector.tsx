@@ -9,7 +9,7 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Container, Icon, Layout, Text, useToggleOpen } from '@harness/uicore'
-import { Position, PopoverInteractionKind, Divider, Popover } from '@blueprintjs/core'
+import { Position, PopoverInteractionKind, Divider, Popover, Classes } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import routes from '@common/RouteDefinitionsV2'
 import { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -81,18 +81,25 @@ export const ModeSelector: React.FC = () => {
           window.scrollTo({ top: 0 })
         }}
       >
-        <Container
-          className={cx(css.gridIconContent, { [css.active]: isModeSelectorOpen })}
-          onClick={() => toggleModeSelector()}
-          flex={{ justifyContent: 'center' }}
+        <Popover
+          content={
+            <Text color={Color.WHITE} padding="small">
+              {getString('common.selectViewOrModule')}
+            </Text>
+          }
+          hoverOpenDelay={500}
+          interactionKind={PopoverInteractionKind.HOVER}
+          popoverClassName={Classes.DARK}
+          position={Position.RIGHT}
         >
-          <Icon
-            name="nine-dot-options"
-            size={24}
-            color={isModeSelectorOpen ? Color.PRIMARY_7 : Color.GREY_400}
-            className={css.clickable}
-          />
-        </Container>
+          <Container
+            className={cx(css.gridIconContent, { [css.active]: isModeSelectorOpen })}
+            onClick={() => toggleModeSelector()}
+            flex={{ justifyContent: 'center' }}
+          >
+            <Icon name="nine-dot-options" size={24} className={css.nineDotIcon} />
+          </Container>
+        </Popover>
         <Container width={460} padding="xlarge" className={css.modeSelectorPanel}>
           <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
             <ModeCard

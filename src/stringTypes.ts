@@ -1170,9 +1170,11 @@ export interface StringsMap {
   'common.selectType': string
   'common.selectUserGroups': string
   'common.selectVersion': string
+  'common.selectViewOrModule': string
   'common.selectWorkload': string
   'common.selectYourRepo': string
   'common.selected': string
+  'common.selectedScope': string
   'common.serviceAccounts': string
   'common.serviceCreated': string
   'common.serviceDetails': string
@@ -1382,6 +1384,7 @@ export interface StringsMap {
   'common.switchAccountMessage': string
   'common.switchAccountSearch': string
   'common.switchAccountWarning': string
+  'common.switchScope': string
   'common.switchToBarChart': string
   'common.switchToLineChart': string
   'common.sync': string

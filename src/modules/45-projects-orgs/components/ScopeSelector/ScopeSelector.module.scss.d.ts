@@ -16,6 +16,7 @@ declare const styles: {
   readonly listHeader: string
   readonly orgDropdown: string
   readonly orgwidth: string
+  readonly overflowHidden: string
   readonly pageSpinnerStyle: string
   readonly pagination: string
   readonly pickScopeHelp: string
@@ -26,10 +27,12 @@ declare const styles: {
   readonly projectSearch: string
   readonly row: string
   readonly scopeLabelText: string
+  readonly scopePopoverContainer: string
   readonly selectButton: string
   readonly selectContainer: string
   readonly selectedProject: string
   readonly splitViewContainer: string
+  readonly textEllipsis: string
   readonly viewAllProjects: string
 }
 export default styles

@@ -11,7 +11,7 @@ import { Scope } from 'framework/types/types'
 import * as routUtils from '@common/utils/routeUtils'
 import * as commonHooks from '@common/hooks'
 import mockImport from 'framework/utils/mockImport'
-import { useGetSelectedScope } from '../SideNavV2.utils'
+import { getScopeIcon, useGetSelectedScope } from '../SideNavV2.utils'
 
 mockImport('framework/AppStore/AppStoreContext', {
   useAppStore: jest.fn().mockImplementation(() => ({
@@ -80,5 +80,11 @@ describe('SideNavV2 Utils', () => {
         projectIdentifier: 'identifier'
       }
     })
+  })
+
+  test('test getScopeIcon', () => {
+    expect(getScopeIcon(Scope.PROJECT)).toEqual('nav-project')
+    expect(getScopeIcon(Scope.ORGANIZATION)).toEqual('nav-organization')
+    expect(getScopeIcon(Scope.ACCOUNT)).toEqual('Account')
   })
 })

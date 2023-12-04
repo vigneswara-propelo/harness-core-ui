@@ -22,7 +22,7 @@ import usePrimaryScopeSwitchDialog from '@common/navigation/SideNavV2/ScopeSwitc
 import { LinkInfo } from '@common/navigation/SideNavV2/SideNavV2'
 import { SIDE_NAV_STATE, useLayoutV2 } from '@modules/10-common/router/RouteWithLayoutV2'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
+import { getScopeIcon, useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
 import pointerImageDark from './pointer-dark.svg'
 import { ProjectScopeSelector } from './ProjectScopeSelector/ProjectScopeSelector'
 import { OrgScopeSelector } from './OrgScopeSelector/OrgScopeSelector'
@@ -84,8 +84,8 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
     return routes.replace({ orgIdentifier: undefined, projectIdentifier: undefined, path })
   }
 
-  const renderSelectedScopeButtonContent = () => {
-    const scopeInfoMap: Record<Scope, { label: string; identifier?: string; name?: string }> = {
+  const getScopeInfoMap = (): Record<Scope, { label: string; identifier?: string; name?: string }> => {
+    return {
       [Scope.PROJECT]: {
         label: getString('projectLabel').toUpperCase(),
         identifier: params?.projectIdentifier,
@@ -102,6 +102,10 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
         name: accountInfo?.name
       }
     }
+  }
+
+  const renderSelectedScopeButtonContent = () => {
+    const scopeInfoMap: Record<Scope, { label: string; identifier?: string; name?: string }> = getScopeInfoMap()
 
     if (!selectedScope || noScopeSelected) {
       return (
@@ -118,10 +122,18 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
 
     return (
       <>
-        <Text className={css.scopeLabelText} color={Color.GREY_350}>
-          {scopeInfoMap[selectedScope].label}
-        </Text>
-        <Text color={Color.GREY_1000} font={{ variation: FontVariation.BODY }} lineClamp={1}>
+        <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
+          <Icon
+            color={Color.GREY_350}
+            name={scopeSelected ? getScopeIcon(scopeSelected) : 'nav-project'}
+            size={12}
+            margin={{ right: 'xsmall' }}
+          />
+          <Text className={css.scopeLabelText} color={Color.GREY_350}>
+            {scopeInfoMap[selectedScope].label}
+          </Text>
+        </Layout.Horizontal>
+        <Text className={css.textEllipsis} color={Color.GREY_1000} font={{ variation: FontVariation.BODY }}>
           {scopeInfoMap[selectedScope].name}
         </Text>
       </>
@@ -246,19 +258,35 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
             tooltipProps={{
               isDark: true,
               usePortal: true,
-              fill: true
+              fill: true,
+              position: Position.RIGHT,
+              hoverOpenDelay: 500
             }}
             tooltip={
               !selectedScope ? (
                 <Text padding="small" color={Color.WHITE}>
                   {getString('selectProject')}
                 </Text>
-              ) : undefined
+              ) : (
+                <Layout.Vertical padding="medium" className={css.scopePopoverContainer}>
+                  <Text color={Color.GREY_100} margin={{ bottom: 'medium' }}>
+                    {getString('common.switchScope')}
+                  </Text>
+                  {scopeSelected && (
+                    <Layout.Vertical>
+                      <Text color={Color.GREY_300} margin={{ bottom: 'xsmall' }}>
+                        {getString('common.selectedScope', { targetScope: scopeSelected })}
+                      </Text>
+                      <Text color={Color.GREY_100}>{getScopeInfoMap()[scopeSelected].name}</Text>
+                    </Layout.Vertical>
+                  )}
+                </Layout.Vertical>
+              )
             }
             onClick={onButtonClick}
           >
             {isCollapsed ? (
-              <Icon name="nav-project" size={20} />
+              <Icon name={scopeSelected ? getScopeIcon(scopeSelected) : 'nav-project'} size={20} />
             ) : (
               <Layout.Vertical spacing="xsmall">{renderSelectedScopeButtonContent()}</Layout.Vertical>
             )}

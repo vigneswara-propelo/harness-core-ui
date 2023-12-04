@@ -1744,3 +1744,6 @@ noFiltersAvailable: No filters available
 fetchNextFilters: Fetching more filters
 adminSettingsLabel: Admin Settings
 selectAll: Select All
+selectViewOrModule: Select a view or module to work in
+switchScope: Switching between Project, Orgnanization, Account
+selectedScope: 'Selected {{targetScope}}:'

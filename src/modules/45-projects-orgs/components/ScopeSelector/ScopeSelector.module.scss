@@ -109,6 +109,7 @@
   background: var(--grey-0) !important;
   padding: var(--spacing-3) var(--spacing-3) var(--spacing-3) var(--spacing-4) !important;
   justify-content: space-between;
+  overflow: hidden;
   &:hover {
     border: 1px solid var(--primary-6) !important;
     color: var(--primary-6) !important;
@@ -157,6 +158,11 @@
   line-height: 14px !important;
 }
 
+.textEllipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .link {
   display: flex;
   padding: var(--spacing-small) var(--spacing-medium) !important;
@@ -188,4 +194,12 @@
   div[data-testid='page-spinner'] {
     height: calc(100vh - 210px);
   }
+}
+
+.scopePopoverContainer {
+  max-width: 450px;
+}
+
+.overflowHidden {
+  overflow: hidden;
 }

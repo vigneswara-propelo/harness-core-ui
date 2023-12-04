@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { IconName } from '@harness/icons'
 import { useQueryParams } from '@common/hooks'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getRouteParams } from '@common/utils/routeUtils'
@@ -72,5 +73,16 @@ export const useGetSelectedScope = (): useGetSelectedScopeReturnType => {
 
   return {
     scope: Scope.ACCOUNT
+  }
+}
+
+export const getScopeIcon = (scope: Scope): IconName => {
+  switch (scope) {
+    case Scope.PROJECT:
+      return 'nav-project'
+    case Scope.ORGANIZATION:
+      return 'nav-organization'
+    case Scope.ACCOUNT:
+      return 'Account'
   }
 }

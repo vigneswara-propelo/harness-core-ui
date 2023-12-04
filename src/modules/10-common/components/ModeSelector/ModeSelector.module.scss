@@ -10,10 +10,18 @@
   border-radius: 100%;
   width: 36px;
   height: 36px;
+  cursor: pointer;
 
+  &:hover,
   &.active {
     background-color: var(--primary-2) !important;
     opacity: 0.8;
+
+    .nineDotIcon {
+      svg path {
+        fill: var(--primary-7);
+      }
+    }
   }
 }
 
