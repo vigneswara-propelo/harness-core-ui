@@ -12,14 +12,10 @@ import { Button, ButtonVariation } from '@harness/uicore'
 import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import {
-  CFPipelineInstructionType,
-  FeatureFlagConfigurationInstruction,
-  FlagConfigurationStepFormDataValues
-} from '../types'
+import { CFPipelineInstructionType, FlagConfigurationStepFormDataValues } from '../types'
 import { SubSectionComponent } from './subSection.types'
 import SubSections from './SubSections'
-import { useFlagChanges } from '../FlagChangesContextProvider'
+import { FlagChangesContextProviderProps, useFlagChanges } from '../FlagChangesContextProvider'
 import { withPrefix } from './utils/withPrefix'
 
 // sub-sections
@@ -47,20 +43,24 @@ export const allSubSections: SubSectionComponent[] = [
 
 export interface FlagChangesFormProps {
   prefixPath: string
-  initialInstructions?: FeatureFlagConfigurationInstruction[]
 }
 
-const FlagChangesForm: FC<FlagChangesFormProps> = ({ prefixPath, initialInstructions }) => {
+const FlagChangesForm: FC<FlagChangesFormProps> = ({ prefixPath }) => {
   const { getString } = useStrings()
   const { setFieldValue, values } = useFormikContext<FlagConfigurationStepFormDataValues>()
-  const { mode } = useFlagChanges()
+  const { mode, allRuntime, initialInstructions: contextInstructions, readonly } = useFlagChanges()
+
+  const initialInstructions = useMemo<FlagChangesContextProviderProps>(
+    () => (allRuntime ? get(values, withPrefix(prefixPath, 'spec.instructions')) : contextInstructions),
+    [allRuntime, contextInstructions, prefixPath, values]
+  )
 
   const [subSections, setSubSections] = useState<SubSectionComponent[]>(() => {
     if (!Array.isArray(initialInstructions) || initialInstructions.length === 0) {
       return []
     }
 
-    if (mode === StepViewType.DeploymentForm) {
+    if (!allRuntime && mode === StepViewType.DeploymentForm) {
       return initialInstructions.reduce<SubSectionComponent[]>((components, instruction) => {
         if (hasSetFlagSwitchRuntime(instruction)) {
           return [...components, SetFlagSwitch]
@@ -114,8 +114,10 @@ const FlagChangesForm: FC<FlagChangesFormProps> = ({ prefixPath, initialInstruct
 
   const availableSubSections = useMemo<SubSectionComponent[]>(
     () =>
-      mode === StepViewType.DeploymentForm ? [] : allSubSections.filter(section => !subSections.includes(section)),
-    [mode, subSections]
+      mode === StepViewType.DeploymentForm && !allRuntime
+        ? []
+        : allSubSections.filter(section => !subSections.includes(section)),
+    [allRuntime, mode, subSections]
   )
 
   const onAddSubSection = useCallback((subSection: SubSectionComponent): void => {
@@ -135,15 +137,18 @@ const FlagChangesForm: FC<FlagChangesFormProps> = ({ prefixPath, initialInstruct
     })
   }
 
+  const showRemoveButton = !readonly && (mode === StepViewType.Edit || allRuntime)
+  const showAddButton = !readonly && !!availableSubSections.length && (mode === StepViewType.Edit || allRuntime)
+
   return (
     <>
       <SubSections
         prefixPath={prefixPath}
         subSections={subSections}
-        onRemove={mode === StepViewType.Edit ? removeSubSection : undefined}
+        onRemove={showRemoveButton ? removeSubSection : undefined}
       />
 
-      {!!availableSubSections.length && (
+      {showAddButton && (
         <Button
           variation={ButtonVariation.SECONDARY}
           icon="plus"

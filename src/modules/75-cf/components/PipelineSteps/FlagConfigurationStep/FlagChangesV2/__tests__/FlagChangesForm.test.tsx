@@ -6,15 +6,17 @@
  */
 
 import React from 'react'
-import { get } from 'lodash-es'
+import { cloneDeep, get, set } from 'lodash-es'
 import { render, RenderResult, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { FlagConfigurationStepFormDataValues } from '../../types'
 import { CFPipelineInstructionType } from '../../types'
 import FlagChangesForm, { allSubSections, FlagChangesFormProps } from '../FlagChangesForm'
 import SubSection, { SubSectionProps } from '../SubSection'
+import FlagChangesContextProvider from '../../FlagChangesContextProvider'
 
 const mockInitialValues = {
   identifier: 'step',
@@ -34,7 +36,14 @@ const renderComponent = (
   render(
     <TestWrapper>
       <Formik onSubmit={jest.fn()} initialValues={initialValues}>
-        <FlagChangesForm prefixPath="prefix" initialInstructions={get(initialValues, 'spec.instructions')} {...props} />
+        <FlagChangesContextProvider
+          flag={get(initialValues, 'spec.feature')}
+          environmentIdentifier={get(initialValues, 'spec.environment')}
+          initialInstructions={get(initialValues, 'spec.instructions')}
+          mode={StepViewType.Edit}
+        >
+          <FlagChangesForm prefixPath="prefix" {...props} />
+        </FlagChangesContextProvider>
       </Formik>
     </TestWrapper>
   )
@@ -122,7 +131,10 @@ describe('FlagChangesForm', () => {
       }
     ]
 
-    renderComponent({ initialInstructions })
+    const initialValues = cloneDeep(mockInitialValues)
+    set(initialValues, 'spec.instructions', initialInstructions)
+
+    renderComponent(undefined, initialValues)
 
     expect(await screen.findAllByTestId('flag-changes-subsection')).toHaveLength(initialInstructions.length)
   })

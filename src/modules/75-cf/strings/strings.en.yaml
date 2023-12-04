@@ -506,6 +506,16 @@ pipeline:
     serve: Serve
     serveVariation: Serve variation
     flagChanges: Flag Changes
+    flagChangesV2Runtime: >
+      <p>At runtime, you may choose the following flag configuration changes:</p>
+      <ul>
+        <li>Set flag switch</li>
+        <li>Set default ON rule</li>
+        <li>Set default OFF rule</li>
+        <li>Serve variation to targets</li>
+        <li>Serve variation to target groups</li>
+        <li>Serve percentage rollout to target group</li>
+      </ul>
     flagChangesRuntime: 'At runtime, you may choose the following flag configuration changes:'
     flagChangesRuntimeSetDefaultRules: Set default rules
     flagChangesRuntimeServeVariationToTargets: '{{ $.cf.shared.serveVariationToTargets }}'

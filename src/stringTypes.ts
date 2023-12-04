@@ -9067,6 +9067,7 @@ export interface StringsMap {
   'cf.pipeline.flagConfiguration.flagChangesRuntimeServeVariationToTargetGroups': string
   'cf.pipeline.flagConfiguration.flagChangesRuntimeServeVariationToTargets': string
   'cf.pipeline.flagConfiguration.flagChangesRuntimeSetDefaultRules': string
+  'cf.pipeline.flagConfiguration.flagChangesV2Runtime': string
   'cf.pipeline.flagConfiguration.flagRequired': string
   'cf.pipeline.flagConfiguration.noFlagChanges': string
   'cf.pipeline.flagConfiguration.pleaseSelectAFeatureFlag': string

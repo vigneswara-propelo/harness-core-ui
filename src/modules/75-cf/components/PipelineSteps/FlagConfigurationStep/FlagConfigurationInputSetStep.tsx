@@ -20,6 +20,7 @@ import { getErrorMessage } from '@cf/utils/CFUtils'
 import type { FlagConfigurationStepData } from './types'
 import FlagChanges from './FlagChanges/FlagChanges'
 import FlagChangesRuntime from './FlagChangesV2/FlagChangesRuntime'
+import { withPrefix } from './FlagChangesV2/utils/withPrefix'
 import FlagChangesContextProvider from './FlagChangesContextProvider'
 import { hasSetFlagSwitchRuntime } from './FlagChangesV2/subSections/SetFlagSwitch/SetFlagSwitch'
 import { hasDefaultOnRuleRuntime } from './FlagChangesV2/subSections/DefaultOnRule/DefaultOnRule'
@@ -41,7 +42,7 @@ const FlagConfigurationInputSetStep = connect<FlagConfigurationInputSetStepProps
     const expressionSupportEnabled = useFeatureFlag(FeatureFlag.FFM_8261_EXPRESSIONS_IN_PIPELINE_STEP)
 
     const prefix = useCallback<(fieldName: string) => string>(
-      fieldName => (pathPrefix ? `${pathPrefix}.${fieldName}` : fieldName),
+      fieldName => withPrefix(pathPrefix, fieldName),
       [pathPrefix]
     )
 
@@ -111,7 +112,6 @@ const FlagConfigurationInputSetStep = connect<FlagConfigurationInputSetStepProps
       [featuresData?.features, selectedFeatureId]
     )
 
-    const flattenedInstructions = JSON.stringify(template?.spec.instructions)
     const hasFlagChangesRuntimeInputs = useMemo<boolean>(() => {
       if (!Array.isArray(template?.spec?.instructions)) {
         return false
@@ -126,8 +126,7 @@ const FlagConfigurationInputSetStep = connect<FlagConfigurationInputSetStepProps
           hasServeVariationToTargetGroupsRuntime(instruction) ||
           hasServePercentageRolloutToTargetGroupRuntime(instruction)
       )
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [flattenedInstructions])
+    }, [template?.spec.instructions])
 
     if (errorFeatures || errorEnvironments) {
       return (
@@ -166,7 +165,7 @@ const FlagConfigurationInputSetStep = connect<FlagConfigurationInputSetStepProps
           />
         )}
 
-        {template?.spec?.instructions === RUNTIME_INPUT_VALUE && (
+        {template?.spec?.instructions === RUNTIME_INPUT_VALUE && !expressionSupportEnabled && (
           <FlagChanges
             selectedFeature={selectedFeature}
             selectedEnvironmentId={selectedEnvironmentId}
@@ -178,24 +177,19 @@ const FlagConfigurationInputSetStep = connect<FlagConfigurationInputSetStepProps
           />
         )}
 
-        {expressionSupportEnabled && hasFlagChangesRuntimeInputs && (
-          <FlagChangesContextProvider
-            flag={selectedFeature || selectedFeatureId}
-            environmentIdentifier={selectedEnvironmentId}
-            mode={stepViewType}
-            readonly={readonly}
-            initialInstructions={
-              Array.isArray(existingValues?.spec?.instructions) ? existingValues?.spec?.instructions : undefined
-            }
-          >
-            <FlagChangesRuntime
-              selectedFeature={selectedFeature}
-              selectedEnvironmentId={selectedEnvironmentId}
+        {expressionSupportEnabled &&
+          (hasFlagChangesRuntimeInputs || template?.spec?.instructions === RUNTIME_INPUT_VALUE) && (
+            <FlagChangesContextProvider
+              flag={selectedFeature || selectedFeatureId}
+              environmentIdentifier={selectedEnvironmentId}
+              mode={stepViewType}
+              readonly={readonly}
               initialInstructions={existingValues?.spec?.instructions}
-              pathPrefix={pathPrefix}
-            />
-          </FlagChangesContextProvider>
-        )}
+              allRuntime={template?.spec?.instructions === RUNTIME_INPUT_VALUE}
+            >
+              <FlagChangesRuntime pathPrefix={pathPrefix} />
+            </FlagChangesContextProvider>
+          )}
       </>
     )
   }

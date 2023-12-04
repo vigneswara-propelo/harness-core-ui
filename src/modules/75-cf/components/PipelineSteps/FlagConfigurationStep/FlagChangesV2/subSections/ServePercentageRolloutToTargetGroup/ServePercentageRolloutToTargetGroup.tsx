@@ -83,14 +83,16 @@ const ServePercentageRolloutToTargetGroup: SubSectionComponent = ({ prefixPath, 
   const displayTargetGroupField = useMemo<boolean>(
     () =>
       mode !== StepViewType.DeploymentForm ||
-      !!initialInstructions?.some(instruction => hasTargetGroupRuntime(instruction)),
+      (Array.isArray(initialInstructions) &&
+        initialInstructions.some(instruction => hasTargetGroupRuntime(instruction))),
     [initialInstructions, mode]
   )
 
   const displayPercentageRolloutField = useMemo<boolean>(
     () =>
       mode !== StepViewType.DeploymentForm ||
-      !!initialInstructions?.some(instruction => hasPercentageRolloutRuntime(instruction)),
+      (Array.isArray(initialInstructions) &&
+        initialInstructions.some(instruction => hasPercentageRolloutRuntime(instruction))),
     [initialInstructions, mode]
   )
 

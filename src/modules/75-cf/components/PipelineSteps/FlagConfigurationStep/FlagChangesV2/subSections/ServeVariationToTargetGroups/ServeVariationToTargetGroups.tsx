@@ -83,14 +83,15 @@ const ServeVariationToTargetGroups: SubSectionComponent = ({ prefixPath, ...prop
   const displayVariationField = useMemo<boolean>(
     () =>
       mode !== StepViewType.DeploymentForm ||
-      !!initialInstructions?.some(instruction => hasVariationRuntime(instruction)),
+      (Array.isArray(initialInstructions) && initialInstructions.some(instruction => hasVariationRuntime(instruction))),
     [initialInstructions, mode]
   )
 
   const displayTargetGroupsField = useMemo<boolean>(
     () =>
       mode !== StepViewType.DeploymentForm ||
-      !!initialInstructions?.some(instruction => hasTargetGroupsRuntime(instruction)),
+      (Array.isArray(initialInstructions) &&
+        initialInstructions.some(instruction => hasTargetGroupsRuntime(instruction))),
     [initialInstructions, mode]
   )
 

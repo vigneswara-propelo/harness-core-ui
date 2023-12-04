@@ -6,22 +6,17 @@
  */
 
 import React, { FC } from 'react'
-import { Container, Heading, Layout, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { Container, Heading, Layout } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import type { Feature } from 'services/cf'
-import type { FeatureFlagConfigurationInstruction } from '../types'
-import FlagChangesForm, { FlagChangesFormProps } from './FlagChangesForm'
+import FlagChangesForm from './FlagChangesForm'
 import css from './FlagChanges.module.scss'
 
 export interface FlagChangesRuntimeProps {
-  selectedFeature?: Feature | typeof RUNTIME_INPUT_VALUE | string
-  selectedEnvironmentId?: string | typeof RUNTIME_INPUT_VALUE
-  initialInstructions?: FeatureFlagConfigurationInstruction[] | typeof RUNTIME_INPUT_VALUE
   pathPrefix?: string
 }
 
-const FlagChangesRuntime: FC<FlagChangesRuntimeProps> = ({ initialInstructions, pathPrefix = '' }) => {
+const FlagChangesRuntime: FC<FlagChangesRuntimeProps> = ({ pathPrefix = '' }) => {
   const { getString } = useStrings()
 
   return (
@@ -31,10 +26,7 @@ const FlagChangesRuntime: FC<FlagChangesRuntimeProps> = ({ initialInstructions, 
       </Heading>
 
       <Container className={css.formWrapper}>
-        <FlagChangesForm
-          prefixPath={pathPrefix}
-          initialInstructions={initialInstructions as FlagChangesFormProps['initialInstructions']}
-        />
+        <FlagChangesForm prefixPath={pathPrefix} />
       </Container>
     </Layout.Vertical>
   )

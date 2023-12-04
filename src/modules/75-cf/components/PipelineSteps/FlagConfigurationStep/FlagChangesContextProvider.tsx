@@ -6,6 +6,7 @@
  */
 
 import React, { createContext, FC, PropsWithChildren, useContext } from 'react'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { Feature } from 'services/cf'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { FeatureFlagConfigurationInstruction } from '@cf/components/PipelineSteps/FlagConfigurationStep/types'
@@ -15,14 +16,16 @@ export interface FlagChangesContextProviderProps {
   environmentIdentifier: string
   mode: StepViewType
   readonly?: boolean
-  initialInstructions?: FeatureFlagConfigurationInstruction[]
+  initialInstructions?: FeatureFlagConfigurationInstruction[] | typeof RUNTIME_INPUT_VALUE
+  allRuntime?: boolean
 }
 
 const FlagChangesContext = createContext<FlagChangesContextProviderProps>({
   flag: '',
   environmentIdentifier: '',
   mode: StepViewType.Edit,
-  initialInstructions: []
+  initialInstructions: [],
+  allRuntime: false
 })
 
 const FlagChangesContextProvider: FC<PropsWithChildren<FlagChangesContextProviderProps>> = ({
@@ -31,10 +34,13 @@ const FlagChangesContextProvider: FC<PropsWithChildren<FlagChangesContextProvide
   mode,
   readonly,
   initialInstructions = [],
+  allRuntime = false,
   children
 }) => {
   return (
-    <FlagChangesContext.Provider value={{ flag, environmentIdentifier, mode, readonly, initialInstructions }}>
+    <FlagChangesContext.Provider
+      value={{ flag, environmentIdentifier, mode, readonly, initialInstructions, allRuntime }}
+    >
       {children}
     </FlagChangesContext.Provider>
   )
