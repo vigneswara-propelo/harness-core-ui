@@ -5,16 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useImperativeHandle } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useImperativeHandle, useState, useMemo } from 'react'
+import { useParams, useHistory } from 'react-router-dom'
 import cx from 'classnames'
-import { Classes, Position } from '@blueprintjs/core'
-import { Button, ButtonSize, Icon, Layout, Popover, Text } from '@harness/uicore'
+import { Classes, Position, Menu } from '@blueprintjs/core'
+import { Button, ButtonSize, Icon, Layout, Popover, Text, ButtonVariation } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { useGetServiceHeaderInfo } from 'services/cd-ng'
+import { ServiceResponseDTO, useGetServiceHeaderInfo, useGetSettingValue } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { Page } from '@common/exports'
@@ -30,7 +30,7 @@ import type {
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import type { ServiceHeaderRefetchRef } from '@cd/components/Services/ServiceStudio/ServiceStudio'
 import { useServiceContext } from '@cd/context/ServiceContext'
-import { ServiceTabs } from '@cd/components/Services/utils/ServiceUtils'
+import { ServiceTabs, getRemoteServiceQueryParams } from '@cd/components/Services/utils/ServiceUtils'
 import { DeploymentTypeIcons } from '@cd/components/DeploymentTypeIcons/DeploymentTypeIcons'
 import {
   EntityCachedCopy,
@@ -38,11 +38,14 @@ import {
 } from '@pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { StoreType } from '@common/constants/GitSyncTypes'
+import { SettingType } from '@modules/10-common/constants/Utils'
+import ServiceDeleteMenuItem from '../../Services/ServicesListColumns/ServiceDeleteMenuItem'
 import notificationImg from './notificationImg.svg'
 import css from '@cd/components/ServiceDetails/ServiceDetailsHeader/ServiceDetailsHeader.module.scss'
 
 interface ServiceDetailHeaderProps {
   handleReloadFromCache: () => void
+  service: ServiceResponseDTO
 }
 
 export const ServiceDetailsHeader = (
@@ -52,7 +55,7 @@ export const ServiceDetailsHeader = (
   const { accountId, orgIdentifier, projectIdentifier, serviceId, module } = useParams<
     ProjectPathProps & ModulePathParams & ServicePathProps
   >()
-  const { handleReloadFromCache } = props
+  const { handleReloadFromCache, service } = props
   const { getString } = useStrings()
   const {
     serviceResponse,
@@ -65,6 +68,9 @@ export const ServiceDetailsHeader = (
   const { CDC_SERVICE_DASHBOARD_REVAMP_NG, CDS_SERVICE_GITX } = useFeatureFlags()
   const showNotificationIcon = CDC_SERVICE_DASHBOARD_REVAMP_NG && (!tab || tab === ServiceTabs.SUMMARY)
   const { updateQueryParams } = useUpdateQueryParams()
+  const history = useHistory()
+  const [menuOpen, setMenuOpen] = useState(false)
+
   const gitDetails = serviceResponse?.entityGitDetails
 
   const { loading, error, data, refetch } = useGetServiceHeaderInfo({
@@ -83,6 +89,16 @@ export const ServiceDetailsHeader = (
     }
   })
 
+  const { data: forceDeleteSettings } = useGetSettingValue({
+    identifier: SettingType.ENABLE_FORCE_DELETE,
+    queryParams: {
+      accountIdentifier: accountId
+    },
+    lazy: false
+  })
+
+  const remoteQueryParams = getRemoteServiceQueryParams(service)
+
   //handler for attaching refetch function to the parent ref
   useImperativeHandle(ref, () => ({
     refetchData() {
@@ -94,6 +110,11 @@ export const ServiceDetailsHeader = (
 
   const serviceCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
   const isServiceRemote = storeType === StoreType.REMOTE
+
+  const isForceDeleteEnabled = useMemo(
+    () => forceDeleteSettings?.data?.value === 'true',
+    [forceDeleteSettings?.data?.value]
+  )
 
   const onGitBranchChange = (selectedFilter: { branch: string }): void => {
     updateQueryParams({ branch: selectedFilter.branch })
@@ -129,7 +150,7 @@ export const ServiceDetailsHeader = (
 
   const TitleComponent =
     data?.data && !loading && !error ? (
-      <Layout.Horizontal padding={{ top: 'small', right: 'medium' }} width="100%">
+      <Layout.Horizontal padding={{ right: 'medium' }} width="100%">
         <Layout.Horizontal margin={{ right: 'small' }}>
           <DeploymentTypeIcons
             deploymentTypes={defaultTo(data.data.deploymentTypes, [])}
@@ -157,7 +178,7 @@ export const ServiceDetailsHeader = (
             </Layout.Vertical>
             {renderRemoteDetails()}
           </Layout.Horizontal>
-          <Layout.Horizontal>
+          <Layout.Horizontal flex>
             <Layout.Vertical padding={{ right: showNotificationIcon ? 'xxlarge' : '' }}>
               <Layout.Horizontal margin={{ bottom: 'small' }}>
                 <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.BLACK} margin={{ right: 'small' }}>
@@ -174,52 +195,92 @@ export const ServiceDetailsHeader = (
                 </Text>
               </Layout.Horizontal>
             </Layout.Vertical>
-            {showNotificationIcon && (
-              <Popover
-                interactionKind="click"
-                popoverClassName={Classes.DARK}
-                position={Position.LEFT}
-                isOpen={notificationPopoverVisibility}
-                content={
-                  <Layout.Horizontal className={css.notificationPopover}>
-                    <img src={notificationImg} alt={getString('cd.openTask.notificationImgAlt')} height={80} />
-                    <Layout.Vertical padding={{ left: 'medium' }}>
-                      <Text
-                        font={{ variation: FontVariation.SMALL, weight: 'bold' }}
-                        color={Color.GREY_100}
-                        padding={{ bottom: 'xsmall' }}
-                      >
-                        {getString('cd.openTask.notificationPopoverExpression')}
-                      </Text>
-                      <Text
-                        font={{ variation: FontVariation.SMALL }}
-                        color={Color.GREY_100}
-                        lineClamp={2}
-                        padding={{ bottom: 'medium' }}
-                      >
-                        {getString('cd.openTask.notificationPopoverMsg')}
-                      </Text>
-                      <Button
-                        size={ButtonSize.SMALL}
-                        className={css.notificationPopoverBtn}
-                        text={getString('common.gotIt')}
-                        onClick={() => setNotificationPopoverVisibility?.(false)}
-                      />
-                    </Layout.Vertical>
-                  </Layout.Horizontal>
+            <Layout.Vertical flex>
+              {showNotificationIcon && (
+                <Popover
+                  interactionKind="click"
+                  popoverClassName={Classes.DARK}
+                  position={Position.LEFT}
+                  isOpen={notificationPopoverVisibility}
+                  content={
+                    <Layout.Horizontal className={css.notificationPopover}>
+                      <img src={notificationImg} alt={getString('cd.openTask.notificationImgAlt')} height={80} />
+                      <Layout.Vertical padding={{ left: 'medium' }}>
+                        <Text
+                          font={{ variation: FontVariation.SMALL, weight: 'bold' }}
+                          color={Color.GREY_100}
+                          padding={{ bottom: 'xsmall' }}
+                        >
+                          {getString('cd.openTask.notificationPopoverExpression')}
+                        </Text>
+                        <Text
+                          font={{ variation: FontVariation.SMALL }}
+                          color={Color.GREY_100}
+                          lineClamp={2}
+                          padding={{ bottom: 'medium' }}
+                        >
+                          {getString('cd.openTask.notificationPopoverMsg')}
+                        </Text>
+                        <Button
+                          size={ButtonSize.SMALL}
+                          className={css.notificationPopoverBtn}
+                          text={getString('common.gotIt')}
+                          onClick={() => setNotificationPopoverVisibility?.(false)}
+                        />
+                      </Layout.Vertical>
+                    </Layout.Horizontal>
+                  }
+                >
+                  <Icon
+                    name="right-bar-notification"
+                    size={24}
+                    className={css.cursor}
+                    onClick={() => {
+                      setDrawerOpen?.(true)
+                      setNotificationPopoverVisibility?.(false)
+                    }}
+                  />
+                </Popover>
+              )}
+
+              <Button
+                variation={ButtonVariation.ICON}
+                icon="Options"
+                tooltip={
+                  <Menu
+                    className={css.optionsMenu}
+                    onClick={e => {
+                      e.stopPropagation()
+                    }}
+                  >
+                    <ServiceDeleteMenuItem
+                      identifier={data?.data?.identifier || ''}
+                      name={data?.data?.name || ''}
+                      remoteQueryParams={remoteQueryParams}
+                      onServiceDeleteSuccess={() => {
+                        history.push(routes.toServices({ accountId, projectIdentifier, orgIdentifier, module }))
+                      }}
+                      onDeleteModalClose={() => {
+                        setMenuOpen(false)
+                      }}
+                      isForceDeleteEnabled={isForceDeleteEnabled}
+                    />
+                  </Menu>
                 }
-              >
-                <Icon
-                  name="right-bar-notification"
-                  size={24}
-                  className={css.cursor}
-                  onClick={() => {
-                    setDrawerOpen?.(true)
-                    setNotificationPopoverVisibility?.(false)
-                  }}
-                />
-              </Popover>
-            )}
+                tooltipProps={{
+                  interactionKind: 'click',
+                  onInteraction: nextOpenState => {
+                    setMenuOpen(nextOpenState)
+                  },
+                  isOpen: menuOpen,
+                  position: Position.LEFT,
+                  className: Classes.DARK
+                }}
+                onClick={() => {
+                  setMenuOpen(true)
+                }}
+              />
+            </Layout.Vertical>
           </Layout.Horizontal>
         </Layout.Horizontal>
       </Layout.Horizontal>

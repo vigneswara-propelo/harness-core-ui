@@ -11,6 +11,18 @@ import { TestWrapper } from '@common/utils/testUtils'
 import * as cdngServices from 'services/cd-ng'
 import { ServiceDetailHeaderRef } from '../ServiceDetailsHeader/ServiceDetailsHeader'
 
+const settingMock = {
+  loading: false,
+  data: {
+    data: {
+      valueType: 'Boolean',
+      value: 'true'
+    }
+  }
+}
+
+jest.spyOn(cdngServices, 'useGetSettingValue').mockImplementation(() => settingMock as any)
+
 describe('ServiceDetailsHeader', () => {
   test('should render ServiceDetailsHeader', () => {
     jest.spyOn(cdngServices, 'useGetServiceHeaderInfo').mockImplementation(() => {
@@ -29,23 +41,28 @@ describe('ServiceDetailsHeader', () => {
         refetch: jest.fn()
       } as any
     })
-    const { container } = render(
-      <TestWrapper>
-        <ServiceDetailHeaderRef ref={jest.fn()} handleReloadFromCache={jest.fn} />
+    const { getByText, getAllByText } = render(
+      <TestWrapper pathParams={{ serviceId: 'testServiceId' }}>
+        <ServiceDetailHeaderRef ref={jest.fn()} handleReloadFromCache={jest.fn} service={{}} />
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
+    expect(getByText('common.accountSettings')).toBeDefined()
+    expect(getByText('services')).toBeDefined()
+    expect(getByText('lastUpdated')).toBeDefined()
+    expect(getAllByText('Feb 12, 2022 06:50 am').length).toBe(2)
   })
   test('render no data', () => {
     jest.spyOn(cdngServices, 'useGetServiceHeaderInfo').mockImplementation(() => {
       return { loading: false, error: false, data: [], refetch: jest.fn() } as any
     })
-    const { container } = render(
+    const { queryByText, getByText } = render(
       <TestWrapper>
-        <ServiceDetailHeaderRef ref={jest.fn()} handleReloadFromCache={jest.fn} />
+        <ServiceDetailHeaderRef ref={jest.fn()} handleReloadFromCache={jest.fn} service={{}} />
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
+    expect(getByText('common.accountSettings')).toBeDefined()
+    expect(getByText('services')).toBeDefined()
+    expect(queryByText('lastUpdated')).toBeNull()
   })
 })
 
@@ -70,7 +87,7 @@ const renderSetup = () => {
   })
   return render(
     <TestWrapper>
-      <ServiceDetailHeaderRef ref={jest.fn()} handleReloadFromCache={jest.fn} />
+      <ServiceDetailHeaderRef ref={jest.fn()} handleReloadFromCache={jest.fn} service={{}} />
     </TestWrapper>
   )
 }

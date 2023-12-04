@@ -14,6 +14,18 @@ import ServiceStudio from '@cd/components/Services/ServiceStudio/ServiceStudio'
 jest.mock('highcharts-react-official', () => () => <></>)
 jest.mock('@common/utils/YamlUtils', () => ({}))
 
+const settingMock = {
+  loading: false,
+  data: {
+    data: {
+      valueType: 'Boolean',
+      value: 'true'
+    }
+  }
+}
+
+jest.spyOn(cdngServices, 'useGetSettingValue').mockImplementation(() => settingMock as any)
+
 jest.spyOn(cdngServices, 'useGetActiveServiceInstanceSummaryV2').mockImplementation(() => {
   return { loading: false, error: false, data: [], refetch: jest.fn() } as any
 })
@@ -65,5 +77,27 @@ describe('ServiceStudio', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+  })
+
+  test('test loading state', () => {
+    jest.spyOn(cdngServices, 'useGetServiceV2').mockImplementation(() => {
+      return { loading: true, error: false, data: [], refetch: jest.fn() } as any
+    })
+
+    const { container } = render(
+      <TestWrapper
+        path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/service/:serviceId"
+        pathParams={{
+          accountId: 'dummy',
+          orgIdentifier: 'dummy',
+          projectIdentifier: 'dummy',
+          serviceId: 'testServiceId'
+        }}
+      >
+        <ServiceStudio />
+      </TestWrapper>
+    )
+
+    expect(container.querySelector('div[data-testid="page-spinner"]')).toBeInTheDocument()
   })
 })

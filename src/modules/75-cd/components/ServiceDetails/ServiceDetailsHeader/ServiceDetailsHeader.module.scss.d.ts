@@ -15,6 +15,7 @@ declare const styles: {
   readonly headerWithDescShown: string
   readonly notificationPopover: string
   readonly notificationPopoverBtn: string
+  readonly optionsMenu: string
   readonly serviceDetails: string
   readonly textOverflow: string
 }

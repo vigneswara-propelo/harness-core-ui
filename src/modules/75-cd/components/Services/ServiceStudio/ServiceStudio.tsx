@@ -108,7 +108,11 @@ function ServiceStudio(): React.ReactElement | null {
         setIsDeploymentTypeDisabled={setIsDeploymentTypeDisabled}
         setServiceResponse={setUpdatedServiceResponse}
       >
-        <ServiceDetailHeaderRef ref={refetch} handleReloadFromCache={handleReloadFromCache} />
+        <ServiceDetailHeaderRef
+          ref={refetch}
+          handleReloadFromCache={handleReloadFromCache}
+          service={serviceResponse?.data?.service as ServiceResponseDTO}
+        />
         {hasRemoteFetchFailed ? (
           <NoEntityFound identifier={serviceId} entityType={'service'} errorObj={error?.data as unknown as Error} />
         ) : (

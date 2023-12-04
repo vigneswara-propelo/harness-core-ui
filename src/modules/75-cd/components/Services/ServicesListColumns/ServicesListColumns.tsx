@@ -12,7 +12,6 @@ import {
   Layout,
   TagsPopover,
   Text,
-  useConfirmationDialog,
   useToaster,
   getErrorInfoFromErrorObject,
   Icon,
@@ -21,7 +20,7 @@ import {
 import { Color, FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, pick } from 'lodash-es'
-import { Classes, Intent, Menu, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
+import { Classes, Menu, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { useModalHook } from '@harness/use-modal'
 import routes from '@common/RouteDefinitions'
 import { StoreType } from '@common/constants/GitSyncTypes'
@@ -43,6 +42,7 @@ import { CodeSourceWrapper } from '@pipeline/components/CommonPipelineStages/Pip
 import useMigrateResource from '@modules/70-pipeline/components/MigrateResource/useMigrateResource'
 import { MigrationType } from '@modules/70-pipeline/components/MigrateResource/MigrateUtils'
 import { ServiceTabs, getRemoteServiceQueryParams } from '../utils/ServiceUtils'
+import ServiceDeleteMenuItem from './ServiceDeleteMenuItem'
 import css from './ServicesListColumns.module.scss'
 
 interface ServiceRow {
@@ -178,19 +178,6 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
     forceDeleteCallback: () => deleteHandler(true)
   })
 
-  const { openDialog } = useConfirmationDialog({
-    titleText: getString('common.deleteService'),
-    contentText: getString('common.deleteServiceConfirmation', { name: service?.name }),
-    cancelButtonText: getString('cancel'),
-    confirmButtonText: getString('confirm'),
-    intent: Intent.DANGER,
-    onCloseDialog: async isConfirmed => {
-      if (isConfirmed) {
-        deleteHandler(false)
-      }
-    }
-  })
-
   const handleEdit = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
     e.stopPropagation()
     setMenuOpen(false)
@@ -202,12 +189,6 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
     } else {
       showModal()
     }
-  }
-
-  const handleDelete = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
-    e.stopPropagation()
-    setMenuOpen(false)
-    openDialog()
   }
 
   const { showMigrateResourceModal: showMoveResourceModal } = useMigrateResource({
@@ -268,16 +249,16 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
               data-testid="moveConfigToRemote"
             />
           ) : null}
-          <RbacMenuItem
-            icon="trash"
-            text={getString('delete')}
-            onClick={handleDelete}
-            permission={{
-              resource: {
-                resourceType: ResourceType.SERVICE,
-                resourceIdentifier: defaultTo(service?.identifier, '')
-              },
-              permission: PermissionIdentifier.DELETE_SERVICE
+          <ServiceDeleteMenuItem
+            identifier={service?.identifier}
+            name={service?.name}
+            remoteQueryParams={remoteQueryParams}
+            isForceDeleteEnabled={isForceDeleteEnabled}
+            onDeleteModalClose={() => {
+              setMenuOpen(false)
+            }}
+            onServiceDeleteSuccess={() => {
+              onRefresh?.()
             }}
           />
         </Menu>
