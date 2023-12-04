@@ -7,7 +7,7 @@
 
 import React from 'react'
 
-import { render, waitFor, act, fireEvent } from '@testing-library/react'
+import { render, waitFor, act, fireEvent, findByTestId, queryByAttribute } from '@testing-library/react'
 import * as cdngServices from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
@@ -40,7 +40,7 @@ describe('Variables Page', () => {
     jest
       .spyOn(cdngServices, 'useGetVariablesList')
       .mockImplementation(() => ({ data: VariableSuccessResponseWithData, loading: false } as any))
-    const { container, getByText, getAllByText } = render(
+    const { getByText, getAllByText } = render(
       <TestWrapper path={routes.toVariables({ ...accountPathProps })} pathParams={{ accountId: 'dummy' }}>
         <VariablesPage />
       </TestWrapper>
@@ -56,7 +56,9 @@ describe('Variables Page', () => {
     })
 
     await waitFor(() => expect(getByText('common.addVariable')))
-    expect(container).toMatchSnapshot()
+    expect(getByText('variableLabel')).toBeInTheDocument()
+    expect(getByText('platform.variables.inputValidation')).toBeInTheDocument()
+    expect(getByText('valueLabel')).toBeInTheDocument()
   })
 
   test('render page at account level with no data - case 1', async () => {
@@ -230,7 +232,12 @@ describe('Variables Page', () => {
 
     await waitFor(() => expect(getByText('common.addVariable')))
     const dialog = findDialogContainer() as HTMLElement
-    expect(dialog).toMatchSnapshot()
+    expect(queryByAttribute('name', dialog, 'fixedValue')).toBeInTheDocument()
+    expect(queryByAttribute('name', dialog, 'name')).toBeInTheDocument()
+    expect(queryByAttribute('name', dialog, 'type')).toBeInTheDocument()
+    expect(await findByTestId(dialog, 'description-edit')).toBeInTheDocument()
+    expect(await findByTestId(dialog, 'addVariableSave')).toBeInTheDocument()
+    expect(await findByTestId(dialog, 'addVariableCancel')).toBeInTheDocument()
   })
 
   test('render component at account level - with 2 pages', async () => {

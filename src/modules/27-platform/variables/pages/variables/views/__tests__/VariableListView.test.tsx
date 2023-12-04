@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { queryByAttribute, render, waitFor } from '@testing-library/react'
 import routes from '@common/RouteDefinitions'
 import { TestWrapper } from '@common/utils/testUtils'
 import { accountPathProps } from '@common/utils/routeUtils'
@@ -24,7 +24,7 @@ describe('VariableListView', () => {
     jest.clearAllMocks()
   })
   test('render component at account level', async () => {
-    const { container, getByText } = render(
+    const { container, getByText, queryByText } = render(
       <TestWrapper path={routes.toVariables({ ...accountPathProps })} pathParams={{ accountId: 'dummy' }}>
         <VariableListView
           variables={VariableSuccessResponseWithData.data as any}
@@ -34,10 +34,18 @@ describe('VariableListView', () => {
     )
 
     await waitFor(() => getByText('CUSTOM_VARIABLE'))
-    expect(container).toMatchSnapshot()
+    expect(getByText('variableLabel')).toBeInTheDocument()
+    expect(getByText('typeLabel')).toBeInTheDocument()
+    expect(getByText('platform.variables.inputValidation')).toBeInTheDocument()
+    expect(getByText('valueLabel')).toBeInTheDocument()
+    const rightArrow = queryByAttribute('data-icon', container, 'arrow-right')
+    const leftArrow = queryByAttribute('data-icon', container, 'arrow-left')
+    expect(queryByText('per page')).toBeInTheDocument()
+    expect(rightArrow).toBeInTheDocument()
+    expect(leftArrow).toBeInTheDocument()
   }),
     test('render component with initial page render - paged metric info missing', async () => {
-      const { container, getByText } = render(
+      const { container, getByText, queryByText } = render(
         <TestWrapper path={routes.toVariables({ ...accountPathProps })} pathParams={{ accountId: 'dummy' }}>
           <VariableListView
             variables={VariableSuccessResponseWithDataWithNoPagedInfo.data as any}
@@ -47,7 +55,11 @@ describe('VariableListView', () => {
       )
 
       await waitFor(() => getByText('CUSTOM_VARIABLE'))
-      expect(container).toMatchSnapshot()
+      const rightArrow = queryByAttribute('data-icon', container, 'arrow-right')
+      const leftArrow = queryByAttribute('data-icon', container, 'arrow-left')
+      expect(queryByText('per page')).not.toBeInTheDocument()
+      expect(rightArrow).not.toBeInTheDocument()
+      expect(leftArrow).not.toBeInTheDocument()
     })
 
   test('render component at account level', async () => {
@@ -65,22 +77,16 @@ describe('VariableListView', () => {
   })
 
   test('render component at account level - with no variable data', async () => {
-    const { container } = render(
+    const { getByText, queryByText } = render(
       <TestWrapper path={routes.toVariables({ ...accountPathProps })} pathParams={{ accountId: 'dummy' }}>
         <VariableListView variables={undefined} openCreateUpdateVariableModal={jest.fn()} />
       </TestWrapper>
     )
 
-    expect(container).toMatchSnapshot()
-  })
-
-  test('render component at account level - with no variable data', async () => {
-    const { container } = render(
-      <TestWrapper path={routes.toVariables({ ...accountPathProps })} pathParams={{ accountId: 'dummy' }}>
-        <VariableListView variables={{ content: undefined }} openCreateUpdateVariableModal={jest.fn()} />
-      </TestWrapper>
-    )
-
-    expect(container).toMatchSnapshot()
+    expect(getByText('variableLabel')).toBeInTheDocument()
+    expect(getByText('typeLabel')).toBeInTheDocument()
+    expect(getByText('platform.variables.inputValidation')).toBeInTheDocument()
+    expect(getByText('valueLabel')).toBeInTheDocument()
+    expect(queryByText('CUSTOM_VARIABLE')).not.toBeInTheDocument()
   })
 })

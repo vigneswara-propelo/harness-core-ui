@@ -42,15 +42,15 @@ export const RenderColumnVariable: Renderer<CellProps<VariableResponseDTO>> = ({
   const data = row.original.variable
   const { getString } = useStrings()
   return (
-    <Layout.Horizontal>
-      <Layout.Vertical>
-        <Layout.Horizontal width={230}>
+    <Layout.Horizontal padding={{ right: 'medium' }}>
+      <Layout.Vertical className={css.nameIdContainer}>
+        <Layout.Horizontal>
           <Text color={Color.BLACK} lineClamp={1}>
             {data.name}
           </Text>
           {data.description && <DescriptionPopover text={data.description} />}
         </Layout.Horizontal>
-        <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }} width={230} lineClamp={1}>
+        <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
           {`${getString('common.ID')}: ${data.identifier}`}
         </Text>
       </Layout.Vertical>
@@ -91,21 +91,21 @@ export function VariableListColumnHeader(getString: UseStringsReturn['getString'
       Header: getString('variableLabel'),
       accessor: row => row.variable.name,
       id: 'name',
-      width: '30%',
+      width: '40%',
       Cell: RenderColumnVariable
     },
     {
       Header: getString('typeLabel'),
       accessor: row => row.variable.type,
       id: 'type',
-      width: '20%',
+      width: '15%',
       Cell: RenderColumnType
     },
     {
       Header: getString('platform.variables.inputValidation'),
       accessor: row => row.variable.spec.valueType,
       id: 'validation',
-      width: '20%',
+      width: '15%',
       Cell: RenderColumnValidation
     },
     {

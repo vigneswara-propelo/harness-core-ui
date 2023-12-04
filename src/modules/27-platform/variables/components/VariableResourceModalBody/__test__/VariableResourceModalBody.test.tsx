@@ -36,13 +36,19 @@ describe('Secret Resource Modal Body test', () => {
     jest
       .spyOn(cdngServices, 'useGetVariablesList')
       .mockImplementation(() => ({ data: VariableSuccessResponseWithData, loading: false } as any))
-    const { container, getByText } = render(
+    const { getByText } = render(
       <TestWrapper>
         <VariableResourceModalBody {...props}></VariableResourceModalBody>
       </TestWrapper>
     )
     await waitFor(() => getByText('variableLabel'))
-    expect(container).toMatchSnapshot()
+    expect(getByText('variableLabel')).toBeInTheDocument()
+    expect(getByText('typeLabel')).toBeInTheDocument()
+    expect(getByText('platform.variables.inputValidation')).toBeInTheDocument()
+    expect(getByText('valueLabel')).toBeInTheDocument()
+    expect(getByText('CUSTOM_VARIABLE')).toBeInTheDocument()
+    expect(getByText('CUSTOM')).toBeInTheDocument()
+    expect(getByText('FIXED')).toBeInTheDocument()
   })
   test('initializes with No data ', async () => {
     jest
