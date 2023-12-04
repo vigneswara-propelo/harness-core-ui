@@ -11,7 +11,7 @@ import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Layout, Dialog, getErrorInfoFromErrorObject, useToaster } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { loadStripe } from '@stripe/stripe-js'
+import { loadStripe } from '@stripe/stripe-js/pure'
 import { Elements } from '@stripe/react-stripe-js'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { Success } from '@auth-settings/components/Subscription/Success/Success'
@@ -32,6 +32,7 @@ interface ViewProps {
 }
 
 /* istanbul ignore next */
+
 const stripePromise = window.stripeApiKey ? loadStripe(window.stripeApiKey) : Promise.resolve(null)
 
 const View: React.FC<ViewProps> = ({ onClose }) => {
