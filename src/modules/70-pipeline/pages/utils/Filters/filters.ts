@@ -68,7 +68,8 @@ export const useExecutionListFilterFieldToLabelMapping = () => {
       ['artifactDisplayNames', getString('artifacts')],
       ['gitOpsAppIdentifiers', getString('applications')],
       ['triggerTypes', getString('pipeline.filters.triggerType')],
-      ['triggerIdentifiers', getString('pipeline.filters.triggerIdentifier')]
+      ['triggerIdentifiers', getString('pipeline.filters.triggerIdentifier')],
+      ['executionModeFilter', getString('pipeline.filters.executionMode')]
     ])
   }, [])
 }

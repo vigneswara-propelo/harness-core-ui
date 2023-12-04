@@ -96,6 +96,8 @@ filters:
   builtTypePlaceholder: Select Build Type
   triggerType: Trigger Type
   triggerIdentifier: Trigger Identifier
+  executionMode: Execution Mode
+  executionModePlaceholder: Select Execution Mode
 selectStagePlaceholder: Search/Select Stage
 selectStage: Select Stage
 stepNamePlaceholder: 'Enter Step Name'

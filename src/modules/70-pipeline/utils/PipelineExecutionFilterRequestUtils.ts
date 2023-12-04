@@ -163,7 +163,8 @@ export const createRequestBodyPayload = ({
     timeRange,
     moduleProperties: _moduleProperties,
     triggerTypes,
-    triggerIdentifiers
+    triggerIdentifiers,
+    executionModeFilter
   } = getValidFilterArguments(formValues, filterType)
   return {
     name: _name,
@@ -178,6 +179,7 @@ export const createRequestBodyPayload = ({
       status: _statuses,
       triggerTypes,
       triggerIdentifiers,
+      executionModeFilter,
       timeRange: timeRange,
       moduleProperties: _moduleProperties as PipelineExecutionFilterProperties['moduleProperties']
     } as PipelineExecutionFilterProperties
@@ -225,6 +227,12 @@ export const enum BUILD_TYPE {
   PULL_OR_MERGE_REQUEST = 'PULL_OR_MERGE_REQUEST',
   BRANCH = 'BRANCH',
   TAG = 'TAG'
+}
+
+export const enum ExecutionModeFilter {
+  ROLLBACK = 'ROLLBACK',
+  ALL = 'ALL',
+  DEFAULT = 'DEFAULT'
 }
 
 export const getBuildType = (moduleProperties: {

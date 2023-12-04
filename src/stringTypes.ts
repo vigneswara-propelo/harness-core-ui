@@ -4706,6 +4706,8 @@ export interface StringsMap {
   'pipeline.filters.builtTypePlaceholder': string
   'pipeline.filters.deploymentTypePlaceholder': string
   'pipeline.filters.environmentPlaceholder': string
+  'pipeline.filters.executionMode': string
+  'pipeline.filters.executionModePlaceholder': string
   'pipeline.filters.pipelineNamePlaceholder': string
   'pipeline.filters.servicePlaceholder': string
   'pipeline.filters.triggerIdentifier': string

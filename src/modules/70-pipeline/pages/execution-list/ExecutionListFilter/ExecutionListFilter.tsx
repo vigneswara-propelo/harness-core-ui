@@ -234,8 +234,16 @@ export function ExecutionListFilter(): React.ReactElement {
         } as FilterDTO)
       : null
   const { name = '', filterVisibility, identifier = '', filterProperties } = appliedFilter || {}
-  const { pipelineName, status, triggerTypes, triggerIdentifiers, moduleProperties, timeRange, pipelineTags } =
-    (filterProperties as PipelineExecutionFilterProperties) || {}
+  const {
+    pipelineName,
+    status,
+    triggerTypes,
+    triggerIdentifiers,
+    moduleProperties,
+    timeRange,
+    pipelineTags,
+    executionModeFilter
+  } = (filterProperties as PipelineExecutionFilterProperties) || {}
   const { ci, cd } = moduleProperties || {}
   const {
     serviceDefinitionTypes,
@@ -395,6 +403,7 @@ export function ExecutionListFilter(): React.ReactElement {
               getExecutorTriggerTypeOption(triggerType as ExecutorTriggerType)
             ),
             triggerIdentifiers: triggerIdentifiersOptions,
+            executionModeFilter,
             branch,
             tag,
             timeRange,

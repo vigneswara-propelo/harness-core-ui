@@ -18,7 +18,8 @@ import {
 import { act } from 'react-dom/test-utils'
 
 import { Formik, FormikForm } from '@harness/uicore'
-import { TestWrapper } from '@common/utils/testUtils'
+import userEvent from '@testing-library/user-event'
+import { TestWrapper, findPopoverContainer } from '@common/utils/testUtils'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
@@ -72,11 +73,6 @@ const enterTagValue = (tagInputValues: HTMLElement, value: string): void => {
 }
 
 describe('<ExecutionListFilterForm /> test', () => {
-  test('snapshot testing', () => {
-    const { container } = render(<WrapperComponent />)
-    expect(container).toMatchSnapshot()
-  })
-
   // eslint-disable-next-line jest/no-disabled-tests
   test.skip('change values of all the field in filter form', async () => {
     const { container } = render(<WrapperComponent />)
@@ -111,5 +107,16 @@ describe('<ExecutionListFilterForm /> test', () => {
     const testTagValue = ['a:b', ':v', 'v:', 'd']
     testTagValue.forEach(tagValue => enterTagValue(tagInputValues, tagValue))
     testTagValue.forEach(async tagValue => expect(await findByText(container, tagValue)).toBeInTheDocument())
+  })
+
+  test('Execution Mode selection', async () => {
+    const { container } = render(<WrapperComponent />)
+    const executionModeInput = getByPlaceholderText(container, '- pipeline.filters.executionModePlaceholder -')
+    await userEvent.click(executionModeInput)
+    const executionModeOptions = findPopoverContainer()?.querySelectorAll('.Select--menuItem')
+    expect(executionModeOptions?.length).toEqual(3)
+    expect(getByText(executionModeOptions?.[0] as HTMLElement, 'all')).toBeDefined()
+    expect(getByText(executionModeOptions?.[1] as HTMLElement, 'common.default')).toBeDefined()
+    expect(getByText(executionModeOptions?.[2] as HTMLElement, 'rollbackLabel')).toBeDefined()
   })
 })

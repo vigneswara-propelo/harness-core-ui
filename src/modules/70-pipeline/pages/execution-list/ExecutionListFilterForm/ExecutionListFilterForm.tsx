@@ -13,7 +13,7 @@ import { IItemRendererProps, ItemListRenderer } from '@blueprintjs/select'
 import { defaultTo, isEmpty, isNil, isUndefined } from 'lodash-es'
 import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
-import type { FilterProperties } from 'services/pipeline-ng'
+import type { FilterProperties, PipelineExecutionFilterProperties } from 'services/pipeline-ng'
 import {
   getExecutionStatusOptions,
   BUILD_TYPE,
@@ -21,7 +21,8 @@ import {
   BuildTypeContext,
   getMultiSelectFormOptions,
   ExecutorTriggerType,
-  getExecutorTriggerTypeOption
+  getExecutorTriggerTypeOption,
+  ExecutionModeFilter
 } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 
 import type { ModulePathParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -83,6 +84,7 @@ export function ExecutionListFilterForm<
     buildType?: BuildTypeContext['buildType']
     deploymentType?: DeploymentTypeContext['deploymentType']
     infrastructureType?: DeploymentTypeContext['infrastructureType']
+    executionModeFilter?: PipelineExecutionFilterProperties['executionModeFilter']
   }
 >(props: ExecutionListFilterFormProps<T>): React.ReactElement {
   const { getString } = useStrings()
@@ -348,8 +350,14 @@ export function ExecutionListFilterForm<
 
   const getPipelineFormCommonFields = (): React.ReactElement => {
     const isPipeSetupType = type === 'PipelineSetup'
-
     const { triggers = [] } = initialValues as DeploymentTypeContext
+    const executionModeFilterValue = formikProps?.values?.executionModeFilter
+
+    const executionModeFilterOptions = [
+      { label: getString('all'), value: ExecutionModeFilter.ALL },
+      { label: getString('common.default'), value: ExecutionModeFilter.DEFAULT },
+      { label: getString('rollbackLabel'), value: ExecutionModeFilter.ROLLBACK }
+    ]
 
     return (
       <>
@@ -393,6 +401,21 @@ export function ExecutionListFilterForm<
               multiSelectProps={{
                 allowCreatingNewItems: false
               }}
+            />
+            <FormInput.Select
+              name="executionModeFilter"
+              label={getString('pipeline.filters.executionMode')}
+              placeholder={getString('pipeline.filters.executionModePlaceholder')}
+              key="executionModeFilter"
+              selectProps={{
+                addClearBtn: true
+              }}
+              items={executionModeFilterOptions}
+              value={
+                executionModeFilterValue
+                  ? executionModeFilterOptions.find((option: SelectOption) => option.value === executionModeFilterValue)
+                  : NO_SELECTION
+              }
             />
             <FormInput.MultiSelect
               key="triggerTypes"
