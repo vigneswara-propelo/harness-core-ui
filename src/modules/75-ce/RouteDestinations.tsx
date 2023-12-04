@@ -638,79 +638,87 @@ const CERoutes: React.FC = () => {
   ]
 
   return (
-    <Provider value={urqlClient}>
-      <Switch>
-        <RouteWithLayout
-          layout={MinimalLayout}
-          path={routes.toModuleTrialHome({ ...accountPathProps, module: 'ce' })}
-          exact
-          pageName={PAGE_NAME.CETrialHomePage}
-        >
-          <CETrialHomePage />
-        </RouteWithLayout>
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          path={routes.toCEHome({ ...accountPathProps })}
-          exact
-          pageName={PAGE_NAME.CEHomePage}
-        >
-          <CEHomePage />
-        </RouteWithLayout>
-        <RouteWithLayout licenseRedirectData={licenseRedirectData} path={routes.toCE({ ...accountPathProps })} exact>
-          <RedirectToOverviewPage />
-        </RouteWithLayout>
+    <>
+      <Route path="/account/:accountId/:module(ce)">
+        <Provider value={urqlClient}>
+          <Switch>
+            <RouteWithLayout
+              layout={MinimalLayout}
+              path={routes.toModuleTrialHome({ ...accountPathProps, module: 'ce' })}
+              exact
+              pageName={PAGE_NAME.CETrialHomePage}
+            >
+              <CETrialHomePage />
+            </RouteWithLayout>
+            <RouteWithLayout
+              licenseRedirectData={licenseRedirectData}
+              path={routes.toCEHome({ ...accountPathProps })}
+              exact
+              pageName={PAGE_NAME.CEHomePage}
+            >
+              <CEHomePage />
+            </RouteWithLayout>
+            <RouteWithLayout
+              licenseRedirectData={licenseRedirectData}
+              path={routes.toCE({ ...accountPathProps })}
+              exact
+            >
+              <RedirectToOverviewPage />
+            </RouteWithLayout>
 
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCEBudgetDetailsOld({
-            ...accountPathProps,
-            budgetId: ':budgetId',
-            budgetName: ':budgetName'
-          })}
-          pageName={PAGE_NAME.CEBudgetDetails}
-        >
-          <RedirectToBudgetDetails />
-        </RouteWithLayout>
+            <RouteWithLayout
+              licenseRedirectData={licenseRedirectData}
+              sidebarProps={CESideNavProps}
+              path={routes.toCEBudgetDetailsOld({
+                ...accountPathProps,
+                budgetId: ':budgetId',
+                budgetName: ':budgetName'
+              })}
+              pageName={PAGE_NAME.CEBudgetDetails}
+            >
+              <RedirectToBudgetDetails />
+            </RouteWithLayout>
 
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toOldCENodeRecommendationDetails({
-            ...accountPathProps,
-            ...projectPathProps,
-            recommendationName: ':recommendationName',
-            recommendation: ':recommendation'
-          })}
-          exact
-        >
-          <RedirectToNewNodeRecommendationDetailsRoute />
-        </RouteWithLayout>
-        <RouteWithLayout
-          path={[...mfePaths, routes.toCCMMFE({ ...accountPathProps })]}
-          sidebarProps={CESideNavProps}
-          licenseRedirectData={licenseRedirectData}
-        >
-          <ChildAppMounter<CCMUIAppCustomProps>
-            customComponents={{
-              OverviewAddCluster,
-              ConnectorReferenceField,
-              GatewayListFilters,
-              FeatureWarningBanner,
-              FeatureWarningTooltip
-            }}
-            customHooks={{
-              useTestConnectionModal
-            }}
-            ChildApp={CcmMicroFrontendPath}
-          />
-        </RouteWithLayout>
+            <RouteWithLayout
+              licenseRedirectData={licenseRedirectData}
+              sidebarProps={CESideNavProps}
+              path={routes.toOldCENodeRecommendationDetails({
+                ...accountPathProps,
+                ...projectPathProps,
+                recommendationName: ':recommendationName',
+                recommendation: ':recommendation'
+              })}
+              exact
+            >
+              <RedirectToNewNodeRecommendationDetailsRoute />
+            </RouteWithLayout>
+            <RouteWithLayout
+              path={[...mfePaths, routes.toCCMMFE({ ...accountPathProps })]}
+              sidebarProps={CESideNavProps}
+              licenseRedirectData={licenseRedirectData}
+            >
+              <ChildAppMounter<CCMUIAppCustomProps>
+                customComponents={{
+                  OverviewAddCluster,
+                  ConnectorReferenceField,
+                  GatewayListFilters,
+                  FeatureWarningBanner,
+                  FeatureWarningTooltip
+                }}
+                customHooks={{
+                  useTestConnectionModal
+                }}
+                ChildApp={CcmMicroFrontendPath}
+              />
+            </RouteWithLayout>
 
-        <Route path="*">
-          <NotFoundPage />
-        </Route>
-      </Switch>
-    </Provider>
+            <Route path="*">
+              <NotFoundPage />
+            </Route>
+          </Switch>
+        </Provider>
+      </Route>
+    </>
   )
 }
 

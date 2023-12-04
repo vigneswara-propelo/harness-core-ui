@@ -109,11 +109,9 @@ export default function RouteDestinations(): React.ReactElement {
       {IDP_ENABLED ? IDPRoutes().props.children : null}
       {STORoutes({})?.props.children}
       {CFRoutes({})?.props.children}
+      {CERoutes({})?.props.children}
       <Route path="/account/:accountId/settings">
         <AuthSettingsRoutes />
-      </Route>
-      <Route path="/account/:accountId/:module(ce)">
-        <CERoutes />
       </Route>
       {!CDS_NAV_2_0 ? (CDB_MFE_ENABLED ? CdbMfeRoutes.props.children : CdbNonMfeRoutes.props.children) : null}
       {IACM_ENABLED ? IACMRoutes().props.children : null}
