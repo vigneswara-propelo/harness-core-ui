@@ -27,7 +27,7 @@ export default function CFSideNav(): React.ReactElement {
   const params = useParams<PipelinePathProps>()
   const { accountId, projectIdentifier, orgIdentifier } = params
   const history = useHistory()
-  const { updateAppStore, isGitSimplificationEnabled } = useAppStore()
+  const { updateAppStore } = useAppStore()
   const { withActiveEnvironment } = useActiveEnvironment()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const events = useFeatureFlagTelemetry()
@@ -99,15 +99,11 @@ export default function CFSideNav(): React.ReactElement {
                 to={withActiveEnvironment(routes.toCFEnvironments(params))}
               />
 
-              {isGitSimplificationEnabled && (
-                <>
-                  <SidebarLink
-                    label={getString('cf.shared.gitSync')}
-                    to={routes.toConnectors({ ...params, module: 'cf' })}
-                  />
-                  <SidebarLink label={getString('common.secrets')} to={routes.toSecrets({ ...params, module: 'cf' })} />
-                </>
-              )}
+              <SidebarLink
+                label={getString('cf.shared.gitSync')}
+                to={routes.toConnectors({ ...params, module: 'cf' })}
+              />
+              <SidebarLink label={getString('common.secrets')} to={routes.toSecrets({ ...params, module: 'cf' })} />
 
               <SidebarLink label={getString('common.templates')} to={routes.toTemplates({ ...params, module: 'cf' })} />
             </Layout.Vertical>
