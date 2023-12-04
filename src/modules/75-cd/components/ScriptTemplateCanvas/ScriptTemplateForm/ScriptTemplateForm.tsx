@@ -113,7 +113,7 @@ function ScriptTemplateForm(
             <BaseScriptWithRef
               initialValues={{ name: '', identifier: '', spec: { shell: 'Bash' }, type: 'Script', ...template }}
               updateTemplate={updateTemplate}
-              allowableTypes={[]}
+              allowableTypes={[MultiTypeInputType.FIXED]}
               readonly={false}
               ref={scriptRef as StepFormikFowardRef}
               onChange={onChange}
