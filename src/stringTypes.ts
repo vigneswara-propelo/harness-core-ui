@@ -4026,6 +4026,7 @@ export interface StringsMap {
   'pipeline.approvalStep.approverInputsOptional': string
   'pipeline.approvalStep.approvers': string
   'pipeline.approvalStep.approversWithColon': string
+  'pipeline.approvalStep.autoApprovalScheduled': string
   'pipeline.approvalStep.autoApproveDeadline': string
   'pipeline.approvalStep.autoApproveLabel': string
   'pipeline.approvalStep.disallowPipelineExecutor': string

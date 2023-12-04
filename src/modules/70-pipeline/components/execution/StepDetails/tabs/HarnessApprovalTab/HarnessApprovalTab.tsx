@@ -11,6 +11,7 @@ import { Formik } from 'formik'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { Link } from 'react-router-dom'
+import { isEmpty } from 'lodash-es'
 import {
   useAddHarnessApprovalActivity,
   ApprovalInstanceResponse,
@@ -18,7 +19,9 @@ import {
   HarnessApprovalInstanceDetails,
   ResponseHarnessApprovalInstanceAuthorization,
   ApprovalUserGroupDTO,
-  ExecutionGraph
+  ExecutionGraph,
+  ScheduledDeadlineDTO,
+  AutoApprovalDTO
 } from 'services/pipeline-ng'
 import { String, useStrings } from 'framework/strings'
 import { Duration } from '@common/exports'
@@ -76,6 +79,9 @@ export function HarnessApprovalTab(props: HarnessApprovalTabProps): React.ReactE
     const newState = await submitApproval({ ...data, action: action.current })
     updateState(newState?.data as ApprovalData)
   }
+  const autoApprovalParams = (approvalData?.details?.autoApprovalParams || {}) as AutoApprovalDTO
+  const { time, timeZone } = (autoApprovalParams.scheduledDeadline || {}) as ScheduledDeadlineDTO
+  const isAutoApprovalScheduled = !isEmpty(autoApprovalParams)
 
   const generateUserGroupsLinkElements = React.useCallback((): JSX.Element[] => {
     const userGroups: JSX.Element[] = []
@@ -106,7 +112,26 @@ export function HarnessApprovalTab(props: HarnessApprovalTabProps): React.ReactE
     })
     return userGroups
   }, [approvalData])
+
   const { getString } = useStrings()
+
+  const labelsListToDisplay = React.useMemo(() => {
+    const labelsListDefault = [
+      { label: getString('common.userGroups'), value: generateUserGroupsLinkElements() },
+      {
+        label: getString('pipeline.approvalStep.autoApprovalScheduled'),
+        value: isAutoApprovalScheduled ? getString('yes') : getString('no')
+      }
+    ]
+
+    return isAutoApprovalScheduled && timeZone && time
+      ? [
+          ...labelsListDefault,
+          { label: getString('common.timezone'), value: timeZone },
+          { label: getString('timeLabel'), value: time }
+        ]
+      : labelsListDefault
+  }, [getString, generateUserGroupsLinkElements, isAutoApprovalScheduled, time, timeZone])
 
   return (
     <React.Fragment>
@@ -153,7 +178,7 @@ export function HarnessApprovalTab(props: HarnessApprovalTabProps): React.ReactE
               stepParameters: props.stepParameters
             }}
             executionMetadata={executionMetadata}
-            labels={[{ label: getString('common.userGroups'), value: generateUserGroupsLinkElements() }]}
+            labels={labelsListToDisplay}
           />
         </React.Fragment>
       ) : null}

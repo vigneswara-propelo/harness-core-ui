@@ -57,7 +57,7 @@ describe('<HarnessApprovalTab /> tests', () => {
     })
 
     test('shows form if user is authorized', async () => {
-      const { container, findByText } = render(
+      const { container, findByText, getByText } = render(
         <TestWrapper>
           <HarnessApprovalTab {...commonProps} authData={{ data: { authorized: true } }} />
         </TestWrapper>
@@ -65,11 +65,14 @@ describe('<HarnessApprovalTab /> tests', () => {
 
       await findByText('common.approve', { selector: '.bp3-button-text > span' })
 
-      expect(container).toMatchSnapshot()
+      expect(getByText('Comments')).toBeInTheDocument()
+      expect(container.querySelector('textarea[name="comments"]')).toBeInTheDocument()
+      expect(getByText('common.approve')).toBeInTheDocument()
+      expect(getByText('common.reject')).toBeInTheDocument()
     })
 
     test('does not shows form if user is authorized', async () => {
-      const { container, getByText } = render(
+      const { getByText } = render(
         <TestWrapper>
           <HarnessApprovalTab {...commonProps} authData={{ data: { authorized: false } }} />
         </TestWrapper>
@@ -77,13 +80,13 @@ describe('<HarnessApprovalTab /> tests', () => {
 
       expect(() => getByText('common.approve', { selector: '.bp3-button-text > span' })).toThrowError()
 
-      expect(container).toMatchSnapshot()
+      expect(getByText('pipeline.approvalStep.disallowedApproverExecution')).toBeInTheDocument()
     })
 
     test('Approving works', async () => {
       const mutate = jest.fn()
       ;(useAddHarnessApprovalActivity as jest.Mock).mockImplementation(() => ({ mutate }))
-      const { findByText, container } = render(
+      const { findByText, container, getByText } = render(
         <TestWrapper>
           <HarnessApprovalTab {...commonProps} authData={{ data: { authorized: true } }} />
         </TestWrapper>
@@ -109,6 +112,13 @@ describe('<HarnessApprovalTab /> tests', () => {
           comments: 'my comments'
         })
       )
+      // Checks if scheduled auto approval params are rendered
+      expect(getByText('pipeline.approvalStep.autoApprovalScheduled:')).toBeInTheDocument()
+      expect(getByText('yes')).toBeInTheDocument()
+      expect(getByText('common.timezone:')).toBeInTheDocument()
+      expect(getByText('Asia/Calcutta')).toBeInTheDocument()
+      expect(getByText('timeLabel:')).toBeInTheDocument()
+      expect(getByText('2023-12-04 01:31 AM')).toBeInTheDocument()
 
       await waitFor(() => expect(commonProps.updateState).toHaveBeenCalled())
     })
@@ -156,7 +166,7 @@ describe('<HarnessApprovalTab /> tests', () => {
       authData: { data: { authorized: false } }
     }
     test('form is not shown', async () => {
-      const { container, getByText } = render(
+      const { container, getByText, queryByText } = render(
         <TestWrapper>
           <HarnessApprovalTab {...commonProps} />
         </TestWrapper>
@@ -164,7 +174,9 @@ describe('<HarnessApprovalTab /> tests', () => {
 
       expect(() => getByText('common.approve', { selector: '.bp3-button-text > span' })).toThrowError()
 
-      expect(container).toMatchSnapshot()
+      expect(container.querySelector('textarea[name="comments"]')).toBeNull()
+      expect(queryByText('common.approve')).toBeNull()
+      expect(queryByText('common.reject')).toBeNull()
     })
   })
 })

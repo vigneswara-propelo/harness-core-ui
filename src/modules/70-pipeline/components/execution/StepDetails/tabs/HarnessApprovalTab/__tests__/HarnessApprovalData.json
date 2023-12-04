@@ -79,6 +79,14 @@
         "name": "var2",
         "defaultValue": "val20"
       }
-    ]
+    ],
+    "autoApprovalParams": {
+      "scheduledDeadline": {
+        "timeZone": "Asia/Calcutta",
+        "time": "2023-12-04 01:31 AM"
+      },
+      "action": "APPROVE",
+      "comments": "Auto approved by Harness via Harness Approval step"
+    }
   }
 }

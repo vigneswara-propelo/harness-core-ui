@@ -151,6 +151,7 @@ approvalStep:
   minimumCount: 'Number of approvers that are required at this step'
   disallowPipelineExecutor: 'Disallow the executor from approving the pipeline'
   scheduleAutoApprovalOptional: Schedule Auto Approval (optional)
+  autoApprovalScheduled: Auto Approval Scheduled
   approverInputsOptional: Approver Inputs (optional)
   addApproverInputs: Add Approver Inputs
   autoApproveDeadline: Enter the auto approve deadline
