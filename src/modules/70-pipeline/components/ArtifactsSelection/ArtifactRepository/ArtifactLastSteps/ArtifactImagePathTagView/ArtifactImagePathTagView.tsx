@@ -42,7 +42,7 @@ export function NoTagResults({
       })
     }
     return defaultErrorText || getString('pipelineSteps.deploy.errors.notags')
-  }, [isServerlessDeploymentTypeSelected, getString])
+  }, [isServerlessDeploymentTypeSelected, getString, defaultErrorText])
 
   return (
     <Text lineClamp={1} width={384} margin="small">
