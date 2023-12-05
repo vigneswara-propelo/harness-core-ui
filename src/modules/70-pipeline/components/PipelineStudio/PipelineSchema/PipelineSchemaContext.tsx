@@ -57,7 +57,7 @@ export function PipelineSchemaContextProvider(
     queryParams: {
       ...commonQueryParams
     } as GetSchemaYamlQueryParams,
-    lazy: !__DEV__
+    lazy: isYAMLV1 || !__DEV__
   })
 
   const { data: pipelineStaticSchema, error: staticSchemaError } = useGetIndividualStaticSchemaQuery(
@@ -68,7 +68,7 @@ export function PipelineSchemaContextProvider(
       }
     },
     {
-      enabled: !__DEV__
+      enabled: isYAMLV1 || !__DEV__
     }
   )
 
