@@ -174,10 +174,11 @@ For development \*NIX system is preferred. On Windows 10 you can use [Ubuntu via
 
 #### Running scripts
 
-To run various scripts of package.json , you need to install dev dependency "cross-env": "^7.0.3"(any latest version) in package.json.
+To run various scripts of package.json , you need to modify the scripts.
 Example:-
 
-1. To run this script "dev": "NODE_ENV=development webpack-dev-server --progress", just change it to "dev": "cross-env NODE_ENV=development webpack-dev-server --progress"
-2. To run shell script "setup-github-registry": "sh scripts/setup-github-registry.sh", just change it to "setup-github-registry": "cross-env scripts/setup-github-registry.sh"
+1. To run this script "dev": "NODE_ENV=development webpack-dev-server --progress", just change it to "dev": "SET NODE_ENV=development & webpack-dev-server --progress"
+2. To run this script "generate-certificate": "sh scripts/generate-certificate.sh", just change the path at the end of the script from (nodes -subj '/C=US') to (nodes -subj '//C=US')
+3. Make sure you have Microsoft Visual C++ Redistributable installed , you can download it from here (https://learn.microsoft.com/en-US/cpp/windows/latest-supported-vc-redist?view=msvc-170)
 
 > Note: Similarly you can update the scripts part wherever needed as per above to run in Windows environment.
