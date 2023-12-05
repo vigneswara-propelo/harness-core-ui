@@ -281,13 +281,13 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               label={getString('regionLabel')}
               name={`${path}.artifacts.${artifactPath}.spec.region`}
               useValue
-              placeholder={getString('pipeline.regionPlaceholder')}
+              placeholder={getString('pipeline.regionPlaceholderAMI')}
               multiTypeInputProps={{
+                width: 270,
                 onTypeChange: (type: MultiTypeInputType) =>
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.region`, type),
                 expressions,
                 selectProps: {
-                  allowCreatingNewItems: true,
                   addClearBtn: !readonly,
                   items: defaultTo(regions, [])
                 },

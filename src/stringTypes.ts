@@ -5216,6 +5216,7 @@ export interface StringsMap {
   'pipeline.reconcileDialog.updatedTemplateInfo': string
   'pipeline.referencedIn': string
   'pipeline.regionPlaceholder': string
+  'pipeline.regionPlaceholderAMI': string
   'pipeline.releaseRepo': string
   'pipeline.releaseRepoStore': string
   'pipeline.removeRuntimeInput': string
