@@ -63,7 +63,7 @@ export function MonacoText(props: ConnectedMonacoTextFieldProps): React.ReactEle
   const { formik, name, disabled, expressions, height = 70, fullScreenAllowed, fullScreenTitle } = props
   const [isFullScreen, setFullScreen] = React.useState(false)
   const { getString } = useStrings()
-  const value = get(formik.values, name) || ''
+  const value = get(formik.values, name)?.toString() || ''
 
   useDeepCompareEffect(() => {
     let disposable: IDisposable | null = null

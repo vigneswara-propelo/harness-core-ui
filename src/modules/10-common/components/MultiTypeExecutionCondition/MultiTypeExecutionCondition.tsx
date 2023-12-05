@@ -42,7 +42,7 @@ export function MultiTypeExecutionCondition(props: MultiTypeExecutionConditionPr
   const { path, allowableTypes, isInputDisabled, readonly, multiType, setMultiType, expressions } = props
   const formik = useFormikContext()
 
-  const conditionValue = get(formik.values, path)
+  const conditionValue = get(formik.values, path)?.toString() || ''
 
   return (
     <Container className={cx(css.conditionInputContainer)}>
