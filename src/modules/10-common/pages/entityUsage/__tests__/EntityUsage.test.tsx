@@ -15,7 +15,7 @@ import referencedData from './mocks/entity-usage-data.json'
 import referencedDataWithGit from './mocks/entity-usage-data-with-git.json'
 import referencedDataWithDetails from './mocks/entity-usage-connector-data.json'
 
-const getPipelineSummryMock = jest.fn(() => Promise.resolve({}))
+const getPipelineSummryMock = jest.fn(() => Promise.resolve({ status: 'SUCCESS' }))
 
 jest.mock('services/pipeline-ng', () => ({
   getPipelineSummaryPromise: jest.fn().mockImplementation(() => getPipelineSummryMock())
@@ -66,8 +66,7 @@ describe('Entity Usage', () => {
   })
 
   test('render for connector data with gitSync', async () => {
-    const windowOpenMock = jest.fn()
-    window.open = windowOpenMock
+    window.open = jest.fn()
     const { container } = render(
       <TestWrapper
         path={routes.toConnectorDetails({ ...projectPathProps, ...connectorPathProps })}
@@ -92,12 +91,13 @@ describe('Entity Usage', () => {
     )
     expect(container).toMatchSnapshot()
     await waitFor(() => expect(queryByText(container, 'Refer test')).toBeInTheDocument())
+
     await act(async () => {
       fireEvent.click(queryByText(container, 'Refer test')!)
     })
-    expect(getPipelineSummryMock).toBeCalledTimes(1)
-    // Redirecting to list page with no Pipeline summary data in a new tab
-    expect(windowOpenMock).toHaveBeenCalledWith(
+
+    await waitFor(() => expect(window.open).toHaveBeenCalledTimes(1))
+    expect(window.open).toBeCalledWith(
       expect.stringContaining('/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/AaTestOrg/projects/dev7/pipelines'),
       '_blank'
     )

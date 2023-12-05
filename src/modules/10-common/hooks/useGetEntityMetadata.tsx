@@ -125,8 +125,7 @@ export const getPipelineUrl = async (scope: EntityScope, identifier: string, isN
     : routesV1.toPipelines({ orgIdentifier, projectIdentifier, accountId: accountIdentifier })
 
   if (pipelineMetadataResponse?.status !== 'SUCCESS') {
-    // Without metadata can not open pipelineStudio so redirecting to list
-    return Promise.resolve(pipelineListUrl)
+    return Promise.reject(pipelineMetadataResponse)
   } else if (pipelineMetadata?.storeType === StoreType.REMOTE) {
     return Promise.resolve(
       isNewNav

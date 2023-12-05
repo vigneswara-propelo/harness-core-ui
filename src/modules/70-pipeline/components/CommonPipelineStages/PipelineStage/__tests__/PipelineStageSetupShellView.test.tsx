@@ -27,7 +27,7 @@ import {
   getModuleParams
 } from './PipelineStageHelper'
 
-const getPipelineSummryMock = jest.fn(() => Promise.resolve({}))
+const getPipelineSummryMock = jest.fn(() => Promise.resolve({ status: 'SUCCESS' }))
 
 jest.mock('services/pipeline-ng', () => ({
   useGetPipeline: jest.fn(() => getMockFor_useGetPipeline()),

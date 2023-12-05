@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Classes, Dialog, IDialogProps, Intent } from '@blueprintjs/core'
 import cx from 'classnames'
 import {
@@ -25,7 +25,7 @@ import { matchPath, useHistory, useLocation, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, merge } from 'lodash-es'
 import produce from 'immer'
 import { parse } from '@common/utils/YamlHelperMethods'
-import type { Error, PipelineInfoConfig } from 'services/pipeline-ng'
+import type { Error, PipelineInfoConfig, ResponsePMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { EntityGitDetails, InputSetSummaryResponse, useGetInputsetYaml } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -162,6 +162,7 @@ export function PipelineCanvasY1(): React.ReactElement {
   >()
   const history = useHistory()
   const { state: routerState } = useLocation<Optional<PipelineMetadataForRouter>>()
+  const [pipelineSummaryError, setPipelineSummaryError] = useState<ResponsePMSPipelineSummaryResponse | undefined>()
 
   React.useEffect(() => {
     // Populating pipeline context with pipeline metadata after DB is initialised with DefaultPipeline with state property of the location object
@@ -235,9 +236,13 @@ export function PipelineCanvasY1(): React.ReactElement {
         },
         defaultTo(pipelineMetadata?.identifier, pipeline?.identifier),
         !!CDS_NAV_2_0
-      ).then((remotePiplineRoute: string) => {
-        history.push(remotePiplineRoute)
-      })
+      )
+        .then((remotePiplineRoute: string) => {
+          history.push(remotePiplineRoute)
+        })
+        .catch(err => {
+          setPipelineSummaryError(err)
+        })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gitDetails?.branch, storeType])
@@ -785,11 +790,13 @@ export function PipelineCanvasY1(): React.ReactElement {
     )
   }
 
-  if (templateError?.data && !isGitSyncEnabled && !isPipelineRemote) {
+  if (pipelineSummaryError || (templateError?.data && !isGitSyncEnabled && !isPipelineRemote)) {
     return (
       <GenericErrorHandler
-        errStatusCode={templateError?.status}
-        errorMessage={(templateError?.data as Error)?.message}
+        errStatusCode={pipelineSummaryError ? (pipelineSummaryError as Error)?.code : templateError?.status}
+        errorMessage={
+          pipelineSummaryError ? (pipelineSummaryError as Error)?.message : (templateError?.data as Error)?.message
+        }
       />
     )
   }

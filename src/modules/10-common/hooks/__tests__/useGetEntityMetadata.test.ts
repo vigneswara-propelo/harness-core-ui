@@ -79,18 +79,6 @@ describe('useGetEntityMetadata tests', () => {
     )
   })
 
-  test('If pipeline metadata is not available, url should be of pipelineList', async () => {
-    getPipelineSummaryMock = jest.fn().mockImplementation(() => Promise.resolve({ status: 'FAILURE', data: {} }))
-    const { result } = renderUseGetEntityMetadataHook({
-      type: 'Pipelines',
-      entityRef: { identifier: 'reference_test_remote', ...entityMockScope }
-    })
-
-    const pipelineUrl = await result.current.getEntityURL()
-
-    expect(pipelineUrl).toBe('/account/mockAccount/home/orgs/mockOrg/projects/mockProject/pipelines')
-  })
-
   test('If pipeline metadata available without storeType, url should be of pipelineList', async () => {
     getPipelineSummaryMock = jest
       .fn()

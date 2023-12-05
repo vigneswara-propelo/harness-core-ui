@@ -22,6 +22,7 @@ import {
   mockPipelineTemplateYaml
 } from './PipelineCanvasTestHelper'
 import duplicateStepIdentifierPipeline from './mock/duplicateStepIdentifierPipeline.json'
+
 const getProps = (): PipelineCanvasProps => ({
   toPipelineStudio: jest.fn(),
   toPipelineDetail: jest.fn(),
@@ -68,7 +69,8 @@ jest.mock('services/pipeline-ng', () => ({
   useGetInputsetYaml: () => jest.fn(),
   useGetTemplateFromPipeline: jest.fn(),
   useGetPipelineValidateResult: jest.fn(() => ({})),
-  useValidatePipelineAsync: jest.fn(() => ({}))
+  useValidatePipelineAsync: jest.fn(() => ({})),
+  getPipelineSummaryPromise: jest.fn(() => Promise.reject({ status: 'ERROR', message: 'entity not found' }))
 }))
 
 jest.mock('services/pipeline-rq', () => ({
@@ -265,6 +267,25 @@ describe('Pipeline Canvas - new pipeline', () => {
     expect(queryByText('Invalid request:'))
     expect(queryByText('Pipeline with the given ID: testPipeline_Cypressss does not exist or has been deleted'))
     expect(container).toMatchSnapshot()
+  })
+
+  test('opening remote pipeline which doesnt exist in git should show entity not found error', async () => {
+    const props = getProps()
+    const contextValue = getDummyPipelineCanvasContextValue({ isLoading: false })
+    contextValue.state.storeMetadata = {
+      storeType: 'REMOTE'
+    }
+
+    const { getByText } = render(
+      <TestWrapper {...testWrapperProps}>
+        <PipelineContext.Provider value={contextValue}>
+          <PipelineCanvas {...props} />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    await waitFor(() => {
+      expect(getByText('entity not found')).toBeInTheDocument()
+    })
   })
 
   test('with git sync enabled - new pipeline', async () => {
