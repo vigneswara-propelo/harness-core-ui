@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { cloneDeep, debounce, defaultTo, get, isEmpty, noop } from 'lodash-es'
+import { cloneDeep, debounce, defaultTo, get, isEmpty, isUndefined, noop } from 'lodash-es'
 import { Formik, FieldArray, FormikProps } from 'formik'
 import { v4 as uuid } from 'uuid'
 import {
@@ -61,7 +61,7 @@ export function VariableOutputPanel({ formikRef: formikRefProp }: VariableOutput
   const uids = React.useRef<string[]>([])
   const outputTypeRef = React.useRef<MultiTypeInputType[]>([])
   const [pipelineOutputs, setPipelineOutputs] = useState<PipelineStageOutputs[]>(
-    get(cloneOriginalData?.stage as PipelineStageElementConfig, 'spec.outputs', [])
+    get(cloneOriginalData?.stage as PipelineStageElementConfig, 'spec.outputs')
   )
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
@@ -83,7 +83,7 @@ export function VariableOutputPanel({ formikRef: formikRefProp }: VariableOutput
   }, [])
 
   useEffect(() => {
-    formikRef.current?.setValues({ outputs: pipelineOutputs })
+    if (!isUndefined(pipelineOutputs)) formikRef.current?.setValues({ outputs: pipelineOutputs })
   }, [pipelineOutputs])
 
   const getYamlPropertiesForOutputs = (): YamlProperties[] =>
@@ -176,13 +176,13 @@ export function VariableOutputPanel({ formikRef: formikRefProp }: VariableOutput
 
               return (
                 <div className={css.outputVariablesContainer}>
-                  {values.outputs?.length > 0 ? (
+                  {Array.isArray(values.outputs) && values.outputs.length > 0 ? (
                     <div className={cx(css.tableRow, css.headerRow)}>
                       <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('name')}</Text>
                       <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('valueLabel')}</Text>
                     </div>
                   ) : null}
-                  {values.outputs.map?.((output, index) => {
+                  {values.outputs?.map?.((output, index) => {
                     if (!uids.current[index]) {
                       uids.current[index] = uuid()
                     }
