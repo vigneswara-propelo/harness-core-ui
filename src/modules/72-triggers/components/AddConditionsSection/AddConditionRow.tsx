@@ -41,6 +41,7 @@ const AddConditionRow: React.FC<AddConditionRowInterface> = ({
       items={mockOperators}
       name={`${fieldId}.${[index]}.operator`}
       label=""
+      usePortal={true}
     />
     <FormInput.Text
       className={css.textContainer}

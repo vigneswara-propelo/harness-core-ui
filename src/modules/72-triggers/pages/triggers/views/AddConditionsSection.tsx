@@ -82,6 +82,7 @@ export const ConditionRow = ({
           items={mockOperators}
           name={operatorKey}
           placeholder={getString('pipeline.operatorPlaceholder')}
+          usePortal={true}
           onChange={() => {
             /*
              * Set operatorKey field touched to show error message
@@ -125,6 +126,7 @@ const AddConditionRow: React.FC<AddConditionRowInterface> = ({
       items={mockOperators}
       name={`${fieldId}.${[index]}.operator`}
       label=""
+      usePortal={true}
     />
     <FormInput.Text
       className={css.textContainer}

@@ -74,6 +74,7 @@ export const ConditionRow = ({
         name={operatorKey}
         label=""
         placeholder={getString('pipeline.operatorPlaceholder')}
+        usePortal={true}
         onChange={() => {
           formikProps.setFieldTouched(valueKey, true, false)
         }}
