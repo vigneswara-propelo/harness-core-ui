@@ -1,0 +1,62 @@
+{
+  "content": [
+    {
+      "resourceGroup": {
+        "accountIdentifier": "dummy",
+        "orgIdentifier": "default",
+        "projectIdentifier": "defaultproject",
+        "identifier": "testResourceGroup",
+        "name": "testResourceGroup",
+        "color": "#0063f7",
+        "tags": {},
+        "description": "",
+        "allowedScopeLevels": ["project"],
+        "includedScopes": [
+          {
+            "filter": "EXCLUDING_CHILD_SCOPES",
+            "accountIdentifier": "dummy",
+            "orgIdentifier": "default",
+            "projectIdentifier": "defaultproject"
+          }
+        ],
+        "resourceFilter": {
+          "resources": [
+            {
+              "resourceType": "CONNECTOR",
+              "attributeFilter": {
+                "attributeName": "category",
+                "attributeValues": ["CODE_REPO", "MONITORING"]
+              }
+            }
+          ],
+          "includeAllResources": false
+        }
+      },
+      "createdAt": 1692262493619,
+      "lastModifiedAt": 1692262493619,
+      "harnessManaged": false
+    },
+    {
+      "resourceGroup": {
+        "identifier": "_all_project_level_resources",
+        "name": "All Project Level Resources",
+        "color": "#0063F7",
+        "tags": {},
+        "description": "All the resources at this project scope are included in this resource group.",
+        "allowedScopeLevels": ["project"],
+        "includedScopes": [
+          {
+            "filter": "EXCLUDING_CHILD_SCOPES"
+          }
+        ],
+        "resourceFilter": {
+          "resources": [],
+          "includeAllResources": true
+        }
+      },
+      "createdAt": 1648440917295,
+      "lastModifiedAt": 1650893869788,
+      "harnessManaged": true
+    }
+  ]
+}

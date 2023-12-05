@@ -12,7 +12,7 @@ import ReactTimeago from 'react-timeago'
 import { Layout, Text, Button, ButtonVariation, NoDataCard, TableV2 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
-import { defaultTo, get } from 'lodash-es'
+import { defaultTo, get, isUndefined } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type {
   PageResourceGroupResponse,
@@ -89,6 +89,11 @@ const RenderColumnSummary: Renderer<CellProps<ResourceGroupV2Response>> = ({ row
             let label = resourceTemp?.label
             if (label) {
               if (!resource.identifiers?.length) {
+                if (!isUndefined(resource?.attributeFilter)) {
+                  return `${getString(label)} ${getString('common.types')}: ${
+                    resource?.attributeFilter?.attributeValues
+                  }`
+                }
                 return getString('common.all', {
                   name: getString(label)
                 })

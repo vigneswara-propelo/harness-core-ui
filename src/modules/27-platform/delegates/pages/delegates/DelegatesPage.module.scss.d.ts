@@ -19,6 +19,7 @@ declare const styles: {
   readonly delegateItemSubcontainer: string
   readonly delegateListContainer: string
   readonly delegateListHeader: string
+  readonly delegateMain: string
   readonly delegateProfileElements: string
   readonly delegateProfilesContainer: string
   readonly delegateTable: string

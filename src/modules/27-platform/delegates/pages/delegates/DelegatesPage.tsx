@@ -88,7 +88,7 @@ const DelegatesPage: React.FC = ({ children }) => {
   })
 
   return (
-    <>
+    <div className={css.delegateMain}>
       {!isBannerDismissed && (
         <Callout className={css.callout} intent="warning" icon={null}>
           <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
@@ -137,7 +137,7 @@ const DelegatesPage: React.FC = ({ children }) => {
         toolbar={<TabNavigation size={'small'} links={links} />}
       />
       <Page.Body>{children}</Page.Body>
-    </>
+    </div>
   )
 }
 
