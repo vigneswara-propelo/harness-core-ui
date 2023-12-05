@@ -81,7 +81,7 @@ function AsgRollingDeployWidget(
   const { initialValues, onUpdate, isNewStep, readonly, allowableTypes, stepViewType, onChange } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { CDS_BASIC_ASG, CDS_ASG_V2 } = useFeatureFlags()
+  const { CDS_BASIC_ASG } = useFeatureFlags()
 
   function commonValidation(this: Yup.TestContext, value: any, valueString: string): boolean | Yup.ValidationError {
     if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED && typeof value !== 'number') {
@@ -103,28 +103,25 @@ function AsgRollingDeployWidget(
   }
 
   const getInititalValues = React.useCallback(() => {
-    if (CDS_ASG_V2) {
-      return {
-        ...initialValues,
-        spec: {
-          ...initialValues.spec,
-          instances:
-            !initialValues.spec?.instances && !!initialValues.spec?.useAlreadyRunningInstances
-              ? { type: InstancesType.CurrentRunning, spec: {} }
-              : !initialValues.spec?.instances && initialValues.spec?.useAlreadyRunningInstances === false
-              ? {
-                  type: InstancesType.Fixed,
-                  spec: {
-                    desired: 1,
-                    max: 1,
-                    min: 1
-                  }
+    return {
+      ...initialValues,
+      spec: {
+        ...initialValues.spec,
+        instances:
+          !initialValues.spec?.instances && !!initialValues.spec?.useAlreadyRunningInstances
+            ? { type: InstancesType.CurrentRunning, spec: {} }
+            : !initialValues.spec?.instances && initialValues.spec?.useAlreadyRunningInstances === false
+            ? {
+                type: InstancesType.Fixed,
+                spec: {
+                  desired: 1,
+                  max: 1,
+                  min: 1
                 }
-              : ({ ...initialValues.spec?.instances } as Instances)
-        }
+              }
+            : ({ ...initialValues.spec?.instances } as Instances)
       }
     }
-    return initialValues
   }, [initialValues])
 
   const formikRefValues = (): AsgRollingDeployData =>
@@ -150,82 +147,79 @@ function AsgRollingDeployWidget(
           spec: Yup.object().shape({
             minimumHealthyPercentage: minimumHealthyPercentageSchema(getString),
             instanceWarmup: instanceWarmupSchema(getString),
-            instances: Yup.object().when(' ', {
-              is: () => !!CDS_ASG_V2,
-              then: Yup.object().shape({
-                type: Yup.string().trim().required(getString('common.validation.typeIsRequired')),
-                spec: Yup.object().when('type', {
-                  is: 'Fixed',
-                  then: Yup.object().shape({
-                    desired: Yup.mixed().test({
-                      test(value): boolean | Yup.ValidationError {
-                        const otherValues = formikRefValues()?.spec?.instances?.spec as AsgFixedInstances
-                        if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED) {
-                          if (value < otherValues?.min) {
-                            return this.createError({
-                              message: getString('cd.ElastigroupStep.valueCannotBeLessThan', {
-                                value: getString('cd.ElastigroupStep.desiredInstances'),
-                                value2: getString('cd.ElastigroupStep.minInstances')
-                              })
+            instances: Yup.object().shape({
+              type: Yup.string().trim().required(getString('common.validation.typeIsRequired')),
+              spec: Yup.object().when('type', {
+                is: 'Fixed',
+                then: Yup.object().shape({
+                  desired: Yup.mixed().test({
+                    test(value): boolean | Yup.ValidationError {
+                      const otherValues = formikRefValues()?.spec?.instances?.spec as AsgFixedInstances
+                      if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED) {
+                        if (value < otherValues?.min) {
+                          return this.createError({
+                            message: getString('cd.ElastigroupStep.valueCannotBeLessThan', {
+                              value: getString('cd.ElastigroupStep.desiredInstances'),
+                              value2: getString('cd.ElastigroupStep.minInstances')
                             })
-                          } else if (value > otherValues?.max) {
-                            return this.createError({
-                              message: getString('cd.ElastigroupStep.valueCannotBeGreaterThan', {
-                                value: getString('cd.ElastigroupStep.desiredInstances'),
-                                value2: getString('cd.ElastigroupStep.maxInstances')
-                              })
+                          })
+                        } else if (value > otherValues?.max) {
+                          return this.createError({
+                            message: getString('cd.ElastigroupStep.valueCannotBeGreaterThan', {
+                              value: getString('cd.ElastigroupStep.desiredInstances'),
+                              value2: getString('cd.ElastigroupStep.maxInstances')
                             })
-                          }
+                          })
                         }
-                        return commonValidation.call(this, value, getString('cd.ElastigroupStep.desiredInstances'))
                       }
-                    }),
-                    min: Yup.mixed().test({
-                      test(value): boolean | Yup.ValidationError {
-                        const otherValues = formikRefValues()?.spec?.instances?.spec as AsgFixedInstances
-                        if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED) {
-                          if (value > otherValues?.desired) {
-                            return this.createError({
-                              message: getString('cd.ElastigroupStep.valueCannotBeGreaterThan', {
-                                value: getString('cd.ElastigroupStep.minInstances'),
-                                value2: getString('cd.ElastigroupStep.desiredInstances')
-                              })
+                      return commonValidation.call(this, value, getString('cd.ElastigroupStep.desiredInstances'))
+                    }
+                  }),
+                  min: Yup.mixed().test({
+                    test(value): boolean | Yup.ValidationError {
+                      const otherValues = formikRefValues()?.spec?.instances?.spec as AsgFixedInstances
+                      if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED) {
+                        if (value > otherValues?.desired) {
+                          return this.createError({
+                            message: getString('cd.ElastigroupStep.valueCannotBeGreaterThan', {
+                              value: getString('cd.ElastigroupStep.minInstances'),
+                              value2: getString('cd.ElastigroupStep.desiredInstances')
                             })
-                          } else if (value > otherValues?.max) {
-                            return this.createError({
-                              message: getString('cd.ElastigroupStep.valueCannotBeGreaterThan', {
-                                value: getString('cd.ElastigroupStep.minInstances'),
-                                value2: getString('cd.ElastigroupStep.maxInstances')
-                              })
+                          })
+                        } else if (value > otherValues?.max) {
+                          return this.createError({
+                            message: getString('cd.ElastigroupStep.valueCannotBeGreaterThan', {
+                              value: getString('cd.ElastigroupStep.minInstances'),
+                              value2: getString('cd.ElastigroupStep.maxInstances')
                             })
-                          }
+                          })
                         }
-                        return commonValidation.call(this, value, getString('cd.ElastigroupStep.minInstances'))
                       }
-                    }),
-                    max: Yup.mixed().test({
-                      test(value): boolean | Yup.ValidationError {
-                        const otherValues = formikRefValues()?.spec?.instances?.spec as AsgFixedInstances
-                        if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED) {
-                          if (value < otherValues?.min) {
-                            return this.createError({
-                              message: getString('cd.ElastigroupStep.valueCannotBeLessThan', {
-                                value: getString('cd.ElastigroupStep.maxInstances'),
-                                value2: getString('cd.ElastigroupStep.minInstances')
-                              })
+                      return commonValidation.call(this, value, getString('cd.ElastigroupStep.minInstances'))
+                    }
+                  }),
+                  max: Yup.mixed().test({
+                    test(value): boolean | Yup.ValidationError {
+                      const otherValues = formikRefValues()?.spec?.instances?.spec as AsgFixedInstances
+                      if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED) {
+                        if (value < otherValues?.min) {
+                          return this.createError({
+                            message: getString('cd.ElastigroupStep.valueCannotBeLessThan', {
+                              value: getString('cd.ElastigroupStep.maxInstances'),
+                              value2: getString('cd.ElastigroupStep.minInstances')
                             })
-                          } else if (value < otherValues?.desired) {
-                            return this.createError({
-                              message: getString('cd.ElastigroupStep.valueCannotBeLessThan', {
-                                value: getString('cd.ElastigroupStep.maxInstances'),
-                                value2: getString('cd.ElastigroupStep.desiredInstances')
-                              })
+                          })
+                        } else if (value < otherValues?.desired) {
+                          return this.createError({
+                            message: getString('cd.ElastigroupStep.valueCannotBeLessThan', {
+                              value: getString('cd.ElastigroupStep.maxInstances'),
+                              value2: getString('cd.ElastigroupStep.desiredInstances')
                             })
-                          }
+                          })
                         }
-                        return commonValidation.call(this, value, getString('cd.ElastigroupStep.maxInstances'))
                       }
-                    })
+                      return commonValidation.call(this, value, getString('cd.ElastigroupStep.maxInstances'))
+                    }
                   })
                 })
               })
@@ -283,18 +277,7 @@ function AsgRollingDeployWidget(
                 </div>
               ) : null}
               <Text margin={{ bottom: 'medium' }}>{getString('instanceFieldOptions.instances')}</Text>
-              {CDS_ASG_V2 ? (
-                <AsgSelectInstance formik={formik} readonly={readonly} allowableTypes={allowableTypes} />
-              ) : (
-                <div className={cx(stepCss.formGroup, stepCss.md)}>
-                  <FormMultiTypeCheckboxField
-                    name="spec.useAlreadyRunningInstances"
-                    label={getString('cd.useAlreadyRunningInstance')}
-                    disabled={readonly}
-                    multiTypeTextbox={{ expressions, allowableTypes }}
-                  />
-                </div>
-              )}
+              <AsgSelectInstance formik={formik} readonly={readonly} allowableTypes={allowableTypes} />
               <Accordion className={stepCss.accordion}>
                 <Accordion.Panel
                   id="optional-config"
@@ -392,7 +375,7 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { CDS_BASIC_ASG, CDS_ASG_V2 } = useFeatureFlags()
+  const { CDS_BASIC_ASG } = useFeatureFlags()
   const prefix = isEmpty(path) ? '' : `${path}.`
   return (
     <>
@@ -429,43 +412,38 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
           />
         </div>
       )}
-      {CDS_ASG_V2 ? (
-        <>
-          {getMultiTypeFromValue((template?.spec?.instances as Instances)?.spec?.min) === MultiTypeInputType.RUNTIME ? (
-            <div className={cx(stepCss.formGroup, stepCss.md)}>
-              <FormInput.MultiTextInput
-                name={`${prefix}spec.instances.spec.min`}
-                placeholder={getString('cd.ElastigroupStep.minInstances')}
-                label={getString('cd.ElastigroupStep.minInstances')}
-                disabled={readonly}
-                multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
-              />
-            </div>
-          ) : null}
-          {getMultiTypeFromValue((template?.spec?.instances as Instances)?.spec?.max) === MultiTypeInputType.RUNTIME ? (
-            <div className={cx(stepCss.formGroup, stepCss.md)}>
-              <FormInput.MultiTextInput
-                name={`${prefix}spec.instances.spec.max`}
-                placeholder={getString('cd.ElastigroupStep.maxInstances')}
-                label={getString('cd.ElastigroupStep.maxInstances')}
-                disabled={readonly}
-                multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
-              />
-            </div>
-          ) : null}
-          {getMultiTypeFromValue((template?.spec?.instances as Instances)?.spec?.desired) ===
-          MultiTypeInputType.RUNTIME ? (
-            <div className={cx(stepCss.formGroup, stepCss.md, stepCss.bottomMargin4)}>
-              <FormInput.MultiTextInput
-                name={`${prefix}spec.instances.spec.desired`}
-                placeholder={getString('cd.ElastigroupStep.desiredInstances')}
-                label={getString('cd.ElastigroupStep.desiredInstances')}
-                disabled={readonly}
-                multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
-              />
-            </div>
-          ) : null}
-        </>
+      {getMultiTypeFromValue((template?.spec?.instances as Instances)?.spec?.min) === MultiTypeInputType.RUNTIME ? (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormInput.MultiTextInput
+            name={`${prefix}spec.instances.spec.min`}
+            placeholder={getString('cd.ElastigroupStep.minInstances')}
+            label={getString('cd.ElastigroupStep.minInstances')}
+            disabled={readonly}
+            multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
+          />
+        </div>
+      ) : null}
+      {getMultiTypeFromValue((template?.spec?.instances as Instances)?.spec?.max) === MultiTypeInputType.RUNTIME ? (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormInput.MultiTextInput
+            name={`${prefix}spec.instances.spec.max`}
+            placeholder={getString('cd.ElastigroupStep.maxInstances')}
+            label={getString('cd.ElastigroupStep.maxInstances')}
+            disabled={readonly}
+            multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
+          />
+        </div>
+      ) : null}
+      {getMultiTypeFromValue((template?.spec?.instances as Instances)?.spec?.desired) === MultiTypeInputType.RUNTIME ? (
+        <div className={cx(stepCss.formGroup, stepCss.md, stepCss.bottomMargin4)}>
+          <FormInput.MultiTextInput
+            name={`${prefix}spec.instances.spec.desired`}
+            placeholder={getString('cd.ElastigroupStep.desiredInstances')}
+            label={getString('cd.ElastigroupStep.desiredInstances')}
+            disabled={readonly}
+            multiTextInputProps={{ expressions, disabled: readonly, allowableTypes, textProps: { type: 'number' } }}
+          />
+        </div>
       ) : null}
       {getMultiTypeFromValue(get(template, 'spec.useAlreadyRunningInstances')) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>

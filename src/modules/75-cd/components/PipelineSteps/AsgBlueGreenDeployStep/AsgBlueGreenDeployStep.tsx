@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { FormikErrors } from 'formik'
-import { isEmpty, set } from 'lodash-es'
+import { isEmpty, set, get } from 'lodash-es'
 import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 
 import type { StepElementConfig, AsgFixedInstances, AsgCurrentRunningInstances } from 'services/cd-ng'
@@ -148,73 +148,24 @@ export class AsgBlueGreenDeployStep extends PipelineStep<AsgBlueGreenDeployStepI
       getString,
       viewType
     }) as FormikErrors<AsgBlueGreenDeployStepInitialValues>
-
     if (
       isRequired &&
-      getMultiTypeFromValue(template?.spec?.loadBalancer) === MultiTypeInputType.RUNTIME &&
-      isEmpty(data?.spec?.loadBalancer)
+      getMultiTypeFromValue(get(template, 'spec.loadBalancers')) === MultiTypeInputType.RUNTIME &&
+      !isEmpty(get(data, 'spec.loadBalancers'))
     ) {
-      set(
-        errors,
-        'spec.loadBalancer',
-        getString?.('common.validation.fieldIsRequired', {
-          name: getString('common.loadBalancer')
-        })
-      )
-    }
-
-    if (
-      isRequired &&
-      getMultiTypeFromValue(template?.spec?.prodListener) === MultiTypeInputType.RUNTIME &&
-      isEmpty(data?.spec?.prodListener)
-    ) {
-      set(
-        errors,
-        'spec.prodListener',
-        getString?.('common.validation.fieldIsRequired', {
-          name: getString('cd.steps.ecsBGCreateServiceStep.labels.prodListener')
-        })
-      )
-    }
-    if (
-      isRequired &&
-      getMultiTypeFromValue(template?.spec?.prodListenerRuleArn) === MultiTypeInputType.RUNTIME &&
-      isEmpty(data?.spec?.prodListenerRuleArn)
-    ) {
-      set(
-        errors,
-        'spec.prodListenerRuleArn',
-        getString?.('common.validation.fieldIsRequired', {
-          name: getString('cd.steps.ecsBGCreateServiceStep.labels.prodListenerRuleARN')
-        })
-      )
-    }
-
-    if (
-      isRequired &&
-      getMultiTypeFromValue(template?.spec?.stageListener) === MultiTypeInputType.RUNTIME &&
-      isEmpty(data?.spec?.stageListener)
-    ) {
-      set(
-        errors,
-        'spec.stageListener',
-        getString?.('common.validation.fieldIsRequired', {
-          name: getString('cd.steps.ecsBGCreateServiceStep.labels.stageListener')
-        })
-      )
-    }
-    if (
-      isRequired &&
-      getMultiTypeFromValue(template?.spec?.stageListenerRuleArn) === MultiTypeInputType.RUNTIME &&
-      isEmpty(data?.spec?.stageListenerRuleArn)
-    ) {
-      set(
-        errors,
-        'spec.stageListenerRuleArn',
-        getString?.('common.validation.fieldIsRequired', {
-          name: getString('cd.steps.ecsBGCreateServiceStep.labels.stageListenerRuleARN')
-        })
-      )
+      get(data, 'spec.loadBalancers').forEach((balancer: AsgAwsLoadBalancerConfigYaml, i: number) => {
+        for (const prop in balancer) {
+          if (isEmpty(balancer[prop as keyof AsgAwsLoadBalancerConfigYaml])) {
+            set(
+              errors,
+              `spec.loadBalancers[${i}].${prop}`,
+              getString?.('common.validation.fieldIsRequired', {
+                name: getString('common.loadBalancer')
+              })
+            )
+          }
+        }
+      })
     }
 
     if (isEmpty(errors.spec)) {

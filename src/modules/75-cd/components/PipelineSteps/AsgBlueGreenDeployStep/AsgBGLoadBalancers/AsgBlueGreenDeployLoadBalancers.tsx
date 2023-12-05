@@ -42,18 +42,18 @@ export default function AsgBGStageSetupLoadBalancer(props: {
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
-  const [showInputs, setShow] = useState(!isEmpty(formik.errors.spec?.loadBalancers?.[index]))
+  const loadBalancersErrors = isEmpty(path)
+    ? defaultTo(formik.errors?.spec?.loadBalancers, [])
+    : defaultTo(get(formik?.errors, `${path}spec.loadBalancers`), [])
+
+  const [showInputs, setShow] = useState(isEmpty(loadBalancersErrors?.[index]))
 
   //this is for opening the card when the error is there -- for better user exp.
   useEffect(() => {
-    if (!isEmpty(formik.errors.spec?.loadBalancers?.[index])) {
+    if (!isEmpty(loadBalancersErrors?.[index])) {
       setShow(true)
     }
-  }, [formik.errors.spec?.loadBalancers, index])
-
-  function toggle(): void {
-    setShow(show => !show)
-  }
+  }, [loadBalancersErrors, index])
 
   const [listenerList, setListenerList] = useState<SelectOption[]>([])
   const [prodListenerRules, setProdListenerRules] = useState<SelectOption[]>([])
@@ -84,7 +84,6 @@ export default function AsgBGStageSetupLoadBalancer(props: {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-
       envId: defaultTo(envId, ''),
       infraDefinitionId: defaultTo(infraId, '')
     },
@@ -176,7 +175,6 @@ export default function AsgBGStageSetupLoadBalancer(props: {
     if (e?.target?.type !== 'text' || (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)) {
       return
     }
-
     if (!loadingListeners) {
       if (shouldFetchFieldData([envId, infraId, selectedLoadBalancer])) {
         refetchListeners({
@@ -184,7 +182,6 @@ export default function AsgBGStageSetupLoadBalancer(props: {
             accountIdentifier: accountId,
             orgIdentifier,
             projectIdentifier,
-
             elasticLoadBalancer: selectedLoadBalancer,
             envId: defaultTo(envId, ''),
             infraDefinitionId: defaultTo(infraId, '')
@@ -336,14 +333,16 @@ export default function AsgBGStageSetupLoadBalancer(props: {
 
   return (
     <Card key={index} className={css.cardStyle}>
-      <Layout.Horizontal
-        className={css.collapseHeader}
-        onClick={() => {
-          toggle()
-        }}
-      >
+      <Layout.Horizontal className={css.collapseHeader}>
         <Layout.Horizontal flex={{ alignItems: 'center' }}>
-          <Icon name={showInputs ? 'chevron-up' : 'chevron-down'} style={{ marginRight: 6 }} color={Color.PRIMARY_7} />
+          <Icon
+            onClick={() => {
+              setShow(show => !show)
+            }}
+            name={showInputs ? 'chevron-up' : 'chevron-down'}
+            style={{ marginRight: 6 }}
+            color={Color.PRIMARY_7}
+          />
           <Text font={{ variation: FontVariation.BODY2 }} color={Color.GREY_900} style={{ marginRight: 12 }}>
             {getString('cd.asgLoadBalancer')}
           </Text>
@@ -354,7 +353,16 @@ export default function AsgBGStageSetupLoadBalancer(props: {
           ) : null}
         </Layout.Horizontal>
         <Layout.Horizontal>
-          {!showInputs ? <Button minimal icon="edit" disabled={readonly} /> : null}
+          {!showInputs ? (
+            <Button
+              minimal
+              icon="edit"
+              disabled={readonly}
+              onClick={() => {
+                setShow(true)
+              }}
+            />
+          ) : null}
           {loadBalancersValue.length > 1 ? (
             <Button
               minimal

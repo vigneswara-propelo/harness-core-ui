@@ -6,17 +6,9 @@
  */
 
 import React from 'react'
-import {
-  act,
-  fireEvent,
-  queryByAttribute,
-  render,
-  waitFor,
-  getByText as getElementByText
-} from '@testing-library/react'
+import { act, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
-import mockImport from 'framework/utils/mockImport'
 
 import { TestWrapper } from '@common/utils/testUtils'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -40,21 +32,6 @@ jest.mock('services/cd-ng', () => ({
   })
 }))
 
-const doConfigureOptionsTesting = async (cogModal: HTMLElement, fieldElement: HTMLInputElement) => {
-  // Type regex and submit
-  // check if field has desired value
-  await waitFor(() => expect(getElementByText(cogModal, 'common.configureOptions.regex')).toBeInTheDocument())
-  const regexRadio = getElementByText(cogModal, 'common.configureOptions.regex')
-  await userEvent.click(regexRadio)
-  const regexTextArea = queryByAttribute('name', cogModal, 'regExValues')
-  act(() => {
-    fireEvent.change(regexTextArea!, { target: { value: '<+input>.includes(/test/)' } })
-  })
-  const cogSubmit = getElementByText(cogModal, 'submit')
-  await userEvent.click(cogSubmit)
-  await waitFor(() => expect(fieldElement.value).toBe('<+input>.regex(<+input>.includes(/test/))'))
-}
-
 const emptyInitialValues: AsgBlueGreenDeployStepInitialValues = {
   identifier: '',
   name: '',
@@ -67,24 +44,18 @@ const emptyInitialValues: AsgBlueGreenDeployStepInitialValues = {
     prodListenerRuleArn: '',
     stageListener: '',
     stageListenerRuleArn: '',
-    loadBalancers: []
+    loadBalancers: [
+      {
+        loadBalancer: '',
+        prodListener: '',
+        prodListenerRuleArn: '',
+        stageListener: '',
+        stageListenerRuleArn: ''
+      }
+    ]
   }
 }
-const emptyInitialValuesRuntime: AsgBlueGreenDeployStepInitialValues = {
-  identifier: '',
-  name: '',
-  timeout: '',
-  type: StepType.AsgBlueGreenDeploy,
-  spec: {
-    useAlreadyRunningInstances: false,
-    loadBalancer: RUNTIME_INPUT_VALUE,
-    prodListener: RUNTIME_INPUT_VALUE,
-    prodListenerRuleArn: RUNTIME_INPUT_VALUE,
-    stageListener: RUNTIME_INPUT_VALUE,
-    stageListenerRuleArn: RUNTIME_INPUT_VALUE,
-    loadBalancers: []
-  }
-}
+
 const existingInitialValues: AsgBlueGreenDeployStepInitialValues = {
   identifier: 'Existing_Name',
   name: 'Existing Name',
@@ -97,7 +68,15 @@ const existingInitialValues: AsgBlueGreenDeployStepInitialValues = {
     prodListenerRuleArn: 'Listener_Rule_2',
     stageListener: 'abc-def-ghi',
     stageListenerRuleArn: 'Listener_Rule_3',
-    loadBalancers: []
+    loadBalancers: [
+      {
+        loadBalancer: 'Load_Balancer_3',
+        prodListener: 'abc-ghi-def',
+        prodListenerRuleArn: 'Listener_Rule_2',
+        stageListener: 'abc-def-ghi',
+        stageListenerRuleArn: 'Listener_Rule_3'
+      }
+    ]
   }
 }
 const customStepProps: AsgBlueGreenDeployCustomStepProps = {
@@ -150,7 +129,7 @@ describe('GenericExecutionStepEdit tests', () => {
   })
 
   test(`making load balancer Runtime input should make all the dependent field options list empty`, async () => {
-    const { container, getByText, queryByText } = render(
+    const { container, getByText } = render(
       <TestWrapper>
         <AsgBlueGreenDeployStepEditRef
           initialValues={emptyInitialValues}
@@ -189,164 +168,46 @@ describe('GenericExecutionStepEdit tests', () => {
     const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
     expect(dropdownIcons.length).toBe(5)
     const fixedInputIcons = container.querySelectorAll('span[data-icon="fixed-input"]')
-    expect(fixedInputIcons.length).toBe(7)
+    expect(fixedInputIcons.length).toBe(10)
     let runtimeInputIcons = container.querySelectorAll('span[data-icon="runtime-input"]')
     expect(runtimeInputIcons.length).toBe(0)
     const portalDivs = document.getElementsByClassName('bp3-portal')
     expect(portalDivs.length).toBe(0)
 
-    let loadBalancerSelect = queryByNameAttribute('spec.loadBalancer') as HTMLInputElement
-    const loadBalancerFixedInputIcon = fixedInputIcons[2]
-    await userEvent.click(loadBalancerFixedInputIcon)
+    const loadBalancer = queryByNameAttribute('spec.loadBalancers[0].loadBalancer') as HTMLInputElement
+    await waitFor(() => expect(loadBalancer).toBeInTheDocument())
+
+    const loadBalancerProdListener = queryByNameAttribute('spec.loadBalancers[0].prodListener') as HTMLInputElement
+    expect(loadBalancerProdListener).toBeInTheDocument()
+    const loadBalancerProdListenerRuleArn = queryByNameAttribute(
+      'spec.loadBalancers[0].prodListenerRuleArn'
+    ) as HTMLInputElement
+    expect(loadBalancerProdListenerRuleArn).toBeInTheDocument()
+
+    const loadBalancerStageListener = queryByNameAttribute('spec.loadBalancers[0].stageListener') as HTMLInputElement
+    expect(loadBalancerStageListener).toBeInTheDocument()
+
+    const loadBalancerStageListenerRuleArn = queryByNameAttribute(
+      'spec.loadBalancers[0].stageListenerRuleArn'
+    ) as HTMLInputElement
+    expect(loadBalancerStageListenerRuleArn).toBeInTheDocument()
+
+    const loadBalancerFixedInputIcon = fixedInputIcons[4]
+    userEvent.click(loadBalancerFixedInputIcon)
     await waitFor(() => expect(getByText('Runtime input')).toBeInTheDocument())
     await userEvent.click(getByText('Runtime input'))
     runtimeInputIcons = container.querySelectorAll('span[data-icon="runtime-input"]')
     await waitFor(() => expect(runtimeInputIcons.length).toBe(1))
-    loadBalancerSelect = queryByNameAttribute('spec.loadBalancer') as HTMLInputElement
-    await waitFor(() => expect(loadBalancerSelect.value).toBe(RUNTIME_INPUT_VALUE))
 
-    const prodListenerDropdownIcon = dropdownIcons[1].parentElement
-    await userEvent.click(prodListenerDropdownIcon!)
-    await waitFor(() => expect(portalDivs.length).toBe(2))
-    const listenerOption1 = queryByText('HTTP 80')
-    expect(listenerOption1).not.toBeInTheDocument()
+    const loadBalancers = queryByNameAttribute('spec.loadBalancers') as HTMLInputElement
+    await waitFor(() => expect(loadBalancers).toBeInTheDocument())
 
-    const prodListenerRuleDropdownIcon = dropdownIcons[2].parentElement
-    await userEvent.click(prodListenerRuleDropdownIcon!)
-    await waitFor(() => expect(portalDivs.length).toBe(3))
-    const listenerRuleOption1 = queryByText('Listener_Rule_1')
-    expect(listenerRuleOption1).not.toBeInTheDocument()
+    await waitFor(() => expect(loadBalancers.value).toBe(RUNTIME_INPUT_VALUE))
 
-    const stageListenerDropdownIcon = dropdownIcons[3].parentElement
-    await userEvent.click(stageListenerDropdownIcon!)
-    await waitFor(() => expect(portalDivs.length).toBe(4))
-    const listenerOption2 = queryByText('HTTP 81')
-    expect(listenerOption2).not.toBeInTheDocument()
-
-    const stageListenerRuleDropdownIcon = dropdownIcons[4].parentElement
-    await userEvent.click(stageListenerRuleDropdownIcon!)
-    await waitFor(() => expect(portalDivs.length).toBe(5))
-    const listenerRuleOption2 = queryByText('Listener_Rule_2')
-    expect(listenerRuleOption2).not.toBeInTheDocument()
-  })
-
-  test(`configure values should work fine when all values are runtime inputs`, async () => {
-    const { container } = render(
-      <TestWrapper>
-        <AsgBlueGreenDeployStepEditRef
-          initialValues={emptyInitialValuesRuntime}
-          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
-          readonly={false}
-          stepViewType={StepViewType.Edit}
-          onUpdate={onUpdate}
-          onChange={onChange}
-          ref={formikRef}
-          customStepProps={customStepProps}
-        />
-      </TestWrapper>
-    )
-
-    const queryByNameAttribute = (name: string) => queryByAttribute('name', container, name)
-
-    const identifierEditIcon = queryByAttribute('data-icon', container, 'Edit')
-    expect(identifierEditIcon).toBeInTheDocument()
-
-    const nameInput = queryByNameAttribute('name') as HTMLInputElement
-    expect(nameInput).toBeInTheDocument()
-    expect(nameInput.value).toBe('')
-    act((): void => {
-      fireEvent.change(nameInput, { target: { value: 'Test Name' } })
-    })
-    expect(nameInput.value).toBe('Test Name')
-    await waitFor(() =>
-      expect(onChange).toHaveBeenCalledWith({
-        identifier: 'Test_Name',
-        name: 'Test Name',
-        timeout: '',
-        type: StepType.AsgBlueGreenDeploy,
-        spec: {
-          useAlreadyRunningInstances: false,
-          loadBalancer: RUNTIME_INPUT_VALUE,
-          prodListener: RUNTIME_INPUT_VALUE,
-          prodListenerRuleArn: RUNTIME_INPUT_VALUE,
-          stageListener: RUNTIME_INPUT_VALUE,
-          stageListenerRuleArn: RUNTIME_INPUT_VALUE,
-          loadBalancers: []
-        }
-      })
-    )
-
-    const timeoutInput = queryByNameAttribute('timeout') as HTMLInputElement
-    expect(timeoutInput).toBeInTheDocument()
-    expect(timeoutInput.value).toBe('')
-    act(() => {
-      fireEvent.change(timeoutInput, { target: { value: '20m' } })
-    })
-    expect(timeoutInput.value).toBe('20m')
-
-    const modals = document.getElementsByClassName('bp3-dialog')
-    expect(modals.length).toBe(0)
-
-    const loadBalancerSelect = queryByNameAttribute('spec.loadBalancer') as HTMLInputElement
-    expect(loadBalancerSelect).toBeInTheDocument()
-    const cogLoadBalancer = document.getElementById('configureOptions_spec.loadBalancer')
-    await userEvent.click(cogLoadBalancer!)
-    await waitFor(() => expect(modals.length).toBe(1))
-    const loadBalancerCOGModal = modals[0] as HTMLElement
-    await doConfigureOptionsTesting(loadBalancerCOGModal, loadBalancerSelect)
-
-    const prodListenerSelect = queryByNameAttribute('spec.prodListener') as HTMLInputElement
-    expect(prodListenerSelect).toBeInTheDocument()
-    const cogProdListener = document.getElementById('configureOptions_spec.prodListener')
-    await userEvent.click(cogProdListener!)
-    await waitFor(() => expect(modals.length).toBe(1))
-    const prodListenerCOGModal = modals[0] as HTMLElement
-    await doConfigureOptionsTesting(prodListenerCOGModal, prodListenerSelect)
-
-    const prodListenerRuleSelect = queryByNameAttribute('spec.prodListenerRuleArn') as HTMLInputElement
-    expect(prodListenerRuleSelect).toBeInTheDocument()
-    const cogProdListenerRuleArn = document.getElementById('configureOptions_spec.prodListenerRuleArn')
-    await userEvent.click(cogProdListenerRuleArn!)
-    await waitFor(() => expect(modals.length).toBe(1))
-    const prodListenerRuleArnCOGModal = modals[0] as HTMLElement
-    await doConfigureOptionsTesting(prodListenerRuleArnCOGModal, prodListenerRuleSelect)
-
-    const stageListenerSelect = queryByNameAttribute('spec.stageListener') as HTMLInputElement
-    expect(stageListenerSelect).toBeInTheDocument()
-    const cogStageListener = document.getElementById('configureOptions_spec.stageListener')
-    await userEvent.click(cogStageListener!)
-    await waitFor(() => expect(modals.length).toBe(1))
-    const stageListenerCOGModal = modals[0] as HTMLElement
-    await doConfigureOptionsTesting(stageListenerCOGModal, stageListenerSelect)
-
-    const stageListenerRuleSelect = queryByNameAttribute('spec.stageListenerRuleArn') as HTMLInputElement
-    expect(stageListenerRuleSelect).toBeInTheDocument()
-    const cogStageListenerRuleArn = document.getElementById('configureOptions_spec.stageListenerRuleArn')
-    await userEvent.click(cogStageListenerRuleArn!)
-    await waitFor(() => expect(modals.length).toBe(1))
-    const stageListenerRuleArnCOGModal = modals[0] as HTMLElement
-    await doConfigureOptionsTesting(stageListenerRuleArnCOGModal, stageListenerRuleSelect)
-
-    act(() => {
-      formikRef.current?.submitForm()
-    })
-    await waitFor(() =>
-      expect(onUpdate).toHaveBeenCalledWith({
-        identifier: 'Test_Name',
-        name: 'Test Name',
-        timeout: '20m',
-        spec: {
-          useAlreadyRunningInstances: false,
-          loadBalancer: '<+input>.regex(<+input>.includes(/test/))',
-          prodListener: '<+input>.regex(<+input>.includes(/test/))',
-          prodListenerRuleArn: '<+input>.regex(<+input>.includes(/test/))',
-          stageListener: '<+input>.regex(<+input>.includes(/test/))',
-          stageListenerRuleArn: '<+input>.regex(<+input>.includes(/test/))',
-          loadBalancers: []
-        },
-        type: StepType.AsgBlueGreenDeploy
-      })
-    )
+    expect(loadBalancerProdListener).not.toBeInTheDocument()
+    expect(loadBalancerProdListenerRuleArn).not.toBeInTheDocument()
+    expect(loadBalancerStageListener).not.toBeInTheDocument()
+    expect(loadBalancerStageListenerRuleArn).not.toBeInTheDocument()
   })
 
   test('identifier should not be editable when isNewStep is false', () => {
@@ -370,29 +231,6 @@ describe('GenericExecutionStepEdit tests', () => {
   })
 
   test('onUpdate should not be called if it is not passed as prop', async () => {
-    render(
-      <TestWrapper>
-        <AsgBlueGreenDeployStepEditRef
-          initialValues={existingInitialValues}
-          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
-          isNewStep={false}
-          readonly={false}
-          stepViewType={StepViewType.Edit}
-          onChange={onChange}
-          ref={formikRef}
-          customStepProps={customStepProps}
-        />
-      </TestWrapper>
-    )
-    act(() => {
-      formikRef.current?.submitForm()
-    })
-    await waitFor(() => expect(onUpdate).not.toHaveBeenCalled())
-  })
-  test('onUpdate should not be called if it is not passed as prop with FF', async () => {
-    mockImport('@common/hooks/useFeatureFlag', {
-      useFeatureFlags: () => ({ CDS_ASG_V2: true })
-    })
     render(
       <TestWrapper>
         <AsgBlueGreenDeployStepEditRef

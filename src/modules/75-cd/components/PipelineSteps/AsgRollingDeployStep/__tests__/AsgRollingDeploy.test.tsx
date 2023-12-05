@@ -57,7 +57,7 @@ describe('Asg Canary Delete Step tests', () => {
     await waitFor(() => expect(timeoutInput).toHaveDisplayValue('20m'))
 
     const instancesCheckbox = queryByNameAttribute('spec.useAlreadyRunningInstances', container)
-    expect(instancesCheckbox!).not.toBeChecked()
+    expect(instancesCheckbox!).not.toBeInTheDocument()
 
     const instanceRefreshAccordian = getByText('cd.instanceRefresh')
     await userEvent.click(instanceRefreshAccordian!)
@@ -91,7 +91,15 @@ describe('Asg Canary Delete Step tests', () => {
           minimumHealthyPercentage: 100,
           instanceWarmup: 100,
           skipMatching: true,
-          asgName: ''
+          asgName: '',
+          instances: {
+            type: 'Fixed',
+            spec: {
+              desired: 1,
+              max: 1,
+              min: 1
+            }
+          }
         }
       })
     )

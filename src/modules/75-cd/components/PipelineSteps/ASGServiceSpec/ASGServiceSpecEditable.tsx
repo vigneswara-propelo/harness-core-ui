@@ -20,7 +20,7 @@ import type {
   ManifestConfig
 } from 'services/cd-ng'
 
-import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
 import ManifestSelection from '@pipeline/components/ManifestSelection/ManifestSelection'
@@ -75,7 +75,6 @@ export const ASGServiceSpecEditable: React.FC<ASGServiceSpecEditableProps> = ({
   } = usePipelineContext()
   const { isServiceEntityPage } = useServiceContext()
   const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
-  const { CDS_ASG_V2 } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(defaultTo(selectedStageId, ''))
   const selectedDeploymentType =
     deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating, templateServiceData)
@@ -316,24 +315,19 @@ export const ASGServiceSpecEditable: React.FC<ASGServiceSpecEditableProps> = ({
               />
             </Card>
           </Card>
-          {CDS_ASG_V2 ? (
-            <Card className={css.sectionCard} id={getString('pipeline.startup.userData.name')}>
-              <div
-                className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
-                data-tooltip-id={'asgUserData'}
-              >
-                {getString('pipeline.startup.userData.name')}
-                <HarnessDocTooltip data-tooltip-id={'asgUserData'} useStandAlone={true} />
-              </div>
-              <StartupScriptSelection
-                isPropagating={isPropagating}
-                deploymentType={selectedDeploymentType}
-                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-                readonly={defaultTo(readonly, true)}
-                updateStage={updateStageUserData}
-              />
-            </Card>
-          ) : null}
+          <Card className={css.sectionCard} id={getString('pipeline.startup.userData.name')}>
+            <div className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')} data-tooltip-id={'asgUserData'}>
+              {getString('pipeline.startup.userData.name')}
+              <HarnessDocTooltip data-tooltip-id={'asgUserData'} useStandAlone={true} />
+            </div>
+            <StartupScriptSelection
+              isPropagating={isPropagating}
+              deploymentType={selectedDeploymentType}
+              isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+              readonly={defaultTo(readonly, true)}
+              updateStage={updateStageUserData}
+            />
+          </Card>
           <Card
             className={css.sectionCard}
             id={getString('cd.pipelineSteps.serviceTab.manifest.scalingPolicy')}
