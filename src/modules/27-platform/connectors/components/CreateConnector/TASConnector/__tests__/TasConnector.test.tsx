@@ -9,6 +9,7 @@ import { fireEvent, render, within, waitFor } from '@testing-library/react'
 import React from 'react'
 import { act } from 'react-dom/test-utils'
 import { TestWrapper } from '@common/utils/testUtils'
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import TASConnector from '../TASConnector'
 import { commonProps, connectorInfoMock, mockResponse, mockSecret, mockSecretList } from './mocks'
@@ -40,8 +41,12 @@ describe('<TASConnector />', () => {
     createConnector.mockReset()
   })
 
+  jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+    CDS_CF_TOKEN_AUTH: true
+  })
+
   test('TAS Connector Wizard Steps Flow', async () => {
-    const { getByText, container } = render(
+    const { getByText, container, getAllByText } = render(
       <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
         <TASConnector {...commonProps} isEditMode={false} connectorInfo={connectorInfoMock} mock={mockResponse} />
       </TestWrapper>
@@ -80,7 +85,7 @@ describe('<TASConnector />', () => {
     })
 
     // Change token
-    fireEvent.click(getByText('createOrSelectSecret'))
+    fireEvent.click(getAllByText('createOrSelectSecret')[0])
 
     await waitFor(() => getByText('common.entityReferenceTitle'))
 
@@ -89,6 +94,17 @@ describe('<TASConnector />', () => {
     fireEvent.click(getByText('entityReference.apply')!)
     expect(getByText('platform.secrets.secret.configureSecret')).toBeInTheDocument()
     expect(getByText('<TasToken>')).toBeInTheDocument()
+
+    // Change refresh token
+    fireEvent.click(getAllByText('createOrSelectSecret')[0])
+
+    await waitFor(() => getByText('common.entityReferenceTitle'))
+
+    fireEvent.click(getByText('TasTokenRefresh')!)
+
+    fireEvent.click(getByText('entityReference.apply')!)
+    expect(getAllByText('platform.secrets.secret.configureSecret')[1]).toBeInTheDocument()
+    expect(getByText('<TasTokenRefresh>')).toBeInTheDocument()
 
     await act(async () => {
       fireEvent.click(getByText('continue')!)
@@ -116,7 +132,8 @@ describe('<TASConnector />', () => {
               spec: {
                 endpointUrl: 'http://sample_url_tas.com/',
                 passwordRef: 'account.TasToken',
-                username: 'AdminUser'
+                username: 'AdminUser',
+                refreshTokenRef: 'account.TasTokenRefresh'
               }
             },
             executeOnDelegate: false
@@ -148,7 +165,7 @@ describe('<TASConnector />', () => {
     await act(async () => {
       fireEvent.click(getByText('continue')!)
     })
-    expect(getAllByText('<TasToken>').length).toBe(1)
+    expect(getAllByText('<TasToken>').length).toBe(2)
 
     await act(async () => {
       fireEvent.click(getByText('continue')!)
@@ -185,7 +202,8 @@ describe('<TASConnector />', () => {
               spec: {
                 endpointUrl: 'http://sample_url.com/',
                 passwordRef: 'tasToken',
-                username: 'admin'
+                username: 'admin',
+                refreshTokenRef: 'tasTokenRefresh'
               }
             },
             executeOnDelegate: true,

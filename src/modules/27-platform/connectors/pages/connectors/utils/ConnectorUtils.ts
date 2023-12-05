@@ -379,7 +379,8 @@ export const buildTasPayload = (formData: FormData): ConnectorRequestBody => {
         spec: {
           endpointUrl: formData.endpointUrl.trim(),
           [formData.username?.type === ValueType.TEXT ? 'username' : 'usernameRef']: formData.username?.value,
-          passwordRef: formData.passwordRef.referenceString
+          passwordRef: formData.passwordRef.referenceString,
+          refreshTokenRef: formData?.refreshTokenRef?.referenceString
         }
       }
     } as TasConnector
@@ -920,6 +921,7 @@ export const setupTasFormData = async (connectorInfo: ConnectorInfoDTO, accountI
           }
         : undefined,
     passwordRef: await setSecretField(authdata?.passwordRef, scopeQueryParams),
+    refreshTokenRef: await setSecretField(authdata?.refreshTokenRef, scopeQueryParams),
     endpointUrl: authdata.endpointUrl || '',
     connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate),
     delegate: connectorInfo?.spec?.delegateSelectors

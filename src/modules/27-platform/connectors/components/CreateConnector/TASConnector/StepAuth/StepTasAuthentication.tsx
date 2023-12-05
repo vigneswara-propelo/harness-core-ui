@@ -27,6 +27,7 @@ import { useStrings } from 'framework/strings'
 import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@platform/connectors/constants'
 import { useConnectorWizard } from '@platform/connectors/components/CreateConnectorWizard/ConnectorWizardContext'
@@ -58,16 +59,20 @@ interface TasFormInterface {
   endpointUrl: string
   username: TextReferenceInterface | void
   passwordRef: SecretReferenceInterface | void
+  refreshTokenRef?: SecretReferenceInterface | void
 }
 
 const StepTasAuthentication: React.FC<StepProps<StepConfigureProps> & TasAuthenticationProps> = props => {
   const { prevStepData, nextStep, accountId } = props
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
+  const { CDS_CF_TOKEN_AUTH } = useFeatureFlags()
+
   const [initialValues, setInitialValues] = useState<TasFormInterface>({
     endpointUrl: '',
     username: undefined,
-    passwordRef: undefined
+    passwordRef: undefined,
+    refreshTokenRef: undefined
   })
 
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = useState(props.isEditMode)
@@ -153,6 +158,15 @@ const StepTasAuthentication: React.FC<StepProps<StepConfigureProps> & TasAuthent
                   type={formikProps.values.username ? formikProps.values.username?.type : ValueType.TEXT}
                 />
                 <SecretInput name="passwordRef" label={getString('password')} scope={scope} />
+                {CDS_CF_TOKEN_AUTH && (
+                  <SecretInput
+                    name="refreshTokenRef"
+                    label={getString('optionalField', {
+                      name: getString('platform.connectors.serviceNow.refreshToken')
+                    })}
+                    scope={scope}
+                  />
+                )}
               </div>
             </Layout.Vertical>
             <Layout.Horizontal padding={{ top: 'small' }} spacing="medium">

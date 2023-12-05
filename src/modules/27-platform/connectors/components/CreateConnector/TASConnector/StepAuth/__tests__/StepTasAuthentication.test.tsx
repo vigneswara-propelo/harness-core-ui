@@ -9,6 +9,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import React from 'react'
 import { act } from 'react-dom/test-utils'
 import { TestWrapper } from '@common/utils/testUtils'
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/connectors/constants'
 import StepTasAuthentication from '../StepTasAuthentication'
 import { commonProps, connectorInfoMock, mockSecret, mockSecretList } from '../../__tests__/mocks'
@@ -19,9 +20,12 @@ jest.mock('services/cd-ng', () => ({
 }))
 
 describe('<StepTasAuthentication />', () => {
+  jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+    CDS_CF_TOKEN_AUTH: true
+  })
   test('nextStep coverage and called with inputs', async () => {
     const nextStep = jest.fn()
-    const { getByText, container } = render(
+    const { getByText, container, getAllByText } = render(
       <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
         <StepTasAuthentication
           {...commonProps}
@@ -45,7 +49,7 @@ describe('<StepTasAuthentication />', () => {
     })
 
     // Change token
-    fireEvent.click(getByText('createOrSelectSecret'))
+    fireEvent.click(getAllByText('createOrSelectSecret')[0])
 
     await waitFor(() => getByText('common.entityReferenceTitle'))
 
@@ -53,12 +57,23 @@ describe('<StepTasAuthentication />', () => {
 
     fireEvent.click(getByText('entityReference.apply')!)
 
+    // Change refresh token
+    fireEvent.click(getAllByText('createOrSelectSecret')[0])
+
+    await waitFor(() => getByText('common.entityReferenceTitle'))
+
+    fireEvent.click(getByText('TasTokenRefresh')!)
+
+    fireEvent.click(getByText('entityReference.apply')!)
+
     await act(async () => {
       fireEvent.click(container.querySelector('button[type="submit"]')!)
     })
 
-    expect(getByText('platform.secrets.secret.configureSecret')).toBeInTheDocument()
+    expect(getAllByText('platform.secrets.secret.configureSecret')[0]).toBeInTheDocument()
     expect(getByText('<TasToken>')).toBeInTheDocument()
+    expect(getAllByText('platform.secrets.secret.configureSecret')[1]).toBeInTheDocument()
+    expect(getByText('<TasTokenRefresh>')).toBeInTheDocument()
 
     expect(nextStep).toBeCalledWith({
       passwordRef: {
@@ -78,6 +93,7 @@ describe('<StepTasAuthentication />', () => {
           spec: {
             endpointUrl: 'http://sample_url.com/',
             passwordRef: 'tasToken',
+            refreshTokenRef: 'tasTokenRefresh',
             username: 'admin',
             usernameRef: null
           },
@@ -87,6 +103,12 @@ describe('<StepTasAuthentication />', () => {
         executeOnDelegate: true
       },
       tags: { tag1: '', tag2: '', tag3: '' },
+      refreshTokenRef: {
+        identifier: 'TasTokenRefresh',
+        name: 'TasTokenRefresh',
+        referenceString: 'account.TasTokenRefresh',
+        type: 'SecretText'
+      },
       type: 'Tas',
       username: { type: 'TEXT', value: 'AdminUser' },
       usernamefieldType: 'TEXT',

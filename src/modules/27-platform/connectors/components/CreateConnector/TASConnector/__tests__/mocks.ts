@@ -39,7 +39,8 @@ export const connectorInfoMock: ConnectorInfoDTO = {
         username: 'admin',
         endpointUrl: 'http://sample_url.com/',
         usernameRef: null,
-        passwordRef: 'tasToken'
+        passwordRef: 'tasToken',
+        refreshTokenRef: 'tasTokenRefresh'
       }
     },
     delegateSelectors: ['account-delegate-1668077546'],
@@ -71,6 +72,23 @@ export const mockSecretList = {
         },
         createdAt: 1604055063891,
         updatedAt: 1604055063891,
+        draft: false
+      },
+      {
+        secret: {
+          type: 'SecretText',
+          name: 'TasTokenRefresh',
+          identifier: 'TasTokenRefresh',
+          tags: {},
+          description: '',
+          spec: {
+            secretManagerIdentifier: 'harnessSecretManager',
+            valueType: 'Inline',
+            value: null
+          }
+        },
+        createdAt: 1604055063892,
+        updatedAt: 1604055063892,
         draft: false
       }
     ],

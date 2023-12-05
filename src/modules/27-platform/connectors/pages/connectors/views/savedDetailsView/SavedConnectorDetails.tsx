@@ -423,6 +423,10 @@ const getTasSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInte
     {
       label: 'password',
       value: connector?.spec?.credential?.spec?.passwordRef
+    },
+    {
+      label: 'platform.connectors.serviceNow.refreshToken',
+      value: connector?.spec?.credential?.spec?.refreshTokenRef
     }
   ]
 }
