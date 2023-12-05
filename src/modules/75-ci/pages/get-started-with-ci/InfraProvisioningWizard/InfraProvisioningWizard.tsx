@@ -223,7 +223,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           } else {
             setGeneratedYAMLAsJSON(
               addDetailsToPipeline({
-                originalPipeline: getCIStarterPipeline(yamlVersion, useVerifiedLocalInfra ? 'Docker' : ''),
+                originalPipeline: getCIStarterPipeline(yamlVersion, useVerifiedLocalInfra ? 'Docker' : undefined),
                 ...commonArgs
               })
             )
@@ -260,7 +260,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             pipelineYaml: yamlStringify(
               id && StarterConfigIdToOptionMap[id] === PipelineConfigurationOption.GenerateYAML
                 ? generatedYAMLAsJSON
-                : getCloudPipelinePayloadWithCodebase(useVerifiedLocalInfra ? 'Docker' : '')
+                : getCloudPipelinePayloadWithCodebase(useVerifiedLocalInfra ? 'Docker' : undefined)
             ),
             configuredGitConnector,
             orgIdentifier,
@@ -283,7 +283,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const constructPipelinePayloadWithoutCodebase = React.useCallback((): string => {
     const UNIQUE_PIPELINE_ID = new Date().getTime().toString()
     const payload = addDetailsToPipeline({
-      originalPipeline: getCloudPipelinePayloadWithoutCodebase(useVerifiedLocalInfra ? 'Docker' : ''),
+      originalPipeline: getCloudPipelinePayloadWithoutCodebase(useVerifiedLocalInfra ? 'Docker' : undefined),
       name: `${getString('buildText')} ${getString('common.pipeline').toLowerCase()}`,
       identifier: `${getString('buildText')}_${getString('common.pipeline').toLowerCase()}_${UNIQUE_PIPELINE_ID}`,
       projectIdentifier,
