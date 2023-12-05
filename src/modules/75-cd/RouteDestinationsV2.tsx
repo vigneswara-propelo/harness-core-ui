@@ -149,11 +149,11 @@ const CDRedirect: React.FC = () => {
   }
 
   if (scope === Scope.ORGANIZATION) {
-    return <Redirect to={routes.toSettings({ orgIdentifier: params?.orgIdentifier, module: 'cd' })} />
+    return <Redirect to={routes.toProjects({ orgIdentifier: params?.orgIdentifier, module: 'cd' })} />
   }
 
   if (scope === Scope.ACCOUNT) {
-    return <Redirect to={routes.toSettings({ module: 'cd' })} />
+    return <Redirect to={routes.toOrgs({ module: 'cd' })} />
   }
 
   return <CDHomePage />

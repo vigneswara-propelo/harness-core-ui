@@ -910,6 +910,7 @@ export interface StringsMap {
   'common.projectSetup': string
   'common.projectViewer': string
   'common.projects': string
+  'common.projectsInOrgLabel': string
   'common.provisioner': string
   'common.publicAccess.oopsPageNotPublic': string
   'common.publicAccess.tryOtherOptions': string
@@ -3948,6 +3949,7 @@ export interface StringsMap {
   'projectsOrgs.toDelete': string
   'projectsOrgs.urlMessageOrg': string
   'projectsOrgs.urlMessageProject': string
+  'projectsOrgs.viewAllOrgs': string
   'projectsOrgs.viewAllProjects': string
   'projectsOrgs.viewProjects': string
   'projectsOrgs.welcome': string

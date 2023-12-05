@@ -7,7 +7,7 @@
 
 import React, { useMemo, useState } from 'react'
 import { Classes } from '@blueprintjs/core'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import {
   Layout,
@@ -48,8 +48,6 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import FavoriteStar from '@common/components/FavoriteStar/FavoriteStar'
 import { OrgProjectSplitView } from '@projects-orgs/pages/projects/views/OrgProjectSplitView/OrgProjectSplitView'
-import routes from '@modules/10-common/RouteDefinitionsV2'
-import { NAV_MODE } from '@modules/10-common/utils/routeUtils'
 import css from '../ScopeSelector.module.scss'
 
 const RenderColumnMenu: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) => {
@@ -67,11 +65,14 @@ const RenderColumnMenu: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) => 
 
 interface ProjectScopeSelectorProps {
   onProjectClick?: (project: ProjectAggregateDTO) => void
+  clickOnViewAllProjects?: () => void
 }
 
-export const ProjectScopeSelector: React.FC<ProjectScopeSelectorProps> = ({ onProjectClick }): JSX.Element => {
+export const ProjectScopeSelector: React.FC<ProjectScopeSelectorProps> = ({
+  onProjectClick,
+  clickOnViewAllProjects
+}): JSX.Element => {
   const { getString } = useStrings()
-  const history = useHistory()
   const { accountId } = useParams<OrgPathProps>()
   const { selectedProject } = useAppStore()
   const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
@@ -183,9 +184,7 @@ export const ProjectScopeSelector: React.FC<ProjectScopeSelectorProps> = ({ onPr
           variation={ButtonVariation.LINK}
           className={css.viewAllProjects}
           text={getString('projectsOrgs.viewAllProjects')}
-          onClick={() => {
-            history.push(routes.toProjects({ accountId, mode: NAV_MODE.ADMIN }))
-          }}
+          onClick={clickOnViewAllProjects}
         />
       </Layout.Horizontal>
 

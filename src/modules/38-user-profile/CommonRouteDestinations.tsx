@@ -6,12 +6,13 @@
  */
 
 import React from 'react'
-import { Redirect, Switch, useParams } from 'react-router-dom'
+import { Redirect, Switch, useHistory, useParams } from 'react-router-dom'
 import routes from '@common/RouteDefinitionsV2'
 import { RouteWithContext } from '@common/router/RouteWithContext/RouteWithContext'
 import {
   NAV_MODE,
   accountPathProps,
+  getRouteParams,
   modulePathProps,
   orgPathProps,
   pathArrayForAllScopes,
@@ -19,7 +20,9 @@ import {
 } from '@common/utils/routeUtils'
 import UserProfilePage from '@user-profile/pages/UserProfile/UserProfilePage'
 import SettingsRouteDestinations from '@modules/SettingsRouteDestinations'
+import ProjectsListPage from '@modules/45-projects-orgs/pages/projects/ProjectsPage'
 import { ModulePathParams } from '@modules/10-common/interfaces/RouteInterfaces'
+import OrganizationsPage from '@modules/45-projects-orgs/pages/organizations/OrganizationsPage'
 import UserPreferencesPage from './pages/UserPreferences/UserPreferences'
 
 const RedirectToUserHome = ({ mode }: { mode: NAV_MODE }): React.ReactElement => {
@@ -28,6 +31,9 @@ const RedirectToUserHome = ({ mode }: { mode: NAV_MODE }): React.ReactElement =>
 }
 
 function CommonRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactElement {
+  const history = useHistory()
+  const { module } = getRouteParams<ModulePathParams>()
+
   return (
     <Switch>
       <RouteWithContext
@@ -45,6 +51,40 @@ function CommonRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactEleme
       <RouteWithContext
         exact
         path={[
+          routes.toOrgs({ ...accountPathProps, ...modulePathProps, mode }),
+          routes.toOrgs({ ...accountPathProps, mode })
+        ]}
+      >
+        <OrganizationsPage
+          onOrgClick={org => {
+            history.push(routes.toMode({ module, orgIdentifier: org.organizationResponse.organization.identifier }))
+          }}
+        />
+      </RouteWithContext>
+      <RouteWithContext
+        exact
+        path={[
+          routes.toProjects({ ...modulePathProps, ...orgPathProps, mode }),
+          routes.toProjects({ ...modulePathProps, ...accountPathProps, mode }),
+          routes.toProjects({ ...orgPathProps, mode }),
+          routes.toProjects({ ...accountPathProps, mode })
+        ]}
+      >
+        <ProjectsListPage
+          onProjectClick={project => {
+            history.push(
+              routes.toMode({
+                projectIdentifier: project.projectResponse.project.identifier,
+                orgIdentifier: project.projectResponse.project.orgIdentifier,
+                module
+              })
+            )
+          }}
+        />
+      </RouteWithContext>
+      <RouteWithContext
+        exact
+        path={[
           routes.toUser({ ...accountPathProps, ...modulePathProps, mode }),
           routes.toUser({ ...accountPathProps, mode })
         ]}
@@ -54,6 +94,7 @@ function CommonRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactEleme
       <RouteWithContext exact path={pathArrayForAllScopes(routes.toUserPreferences, mode)}>
         <UserPreferencesPage />
       </RouteWithContext>
+
       {SettingsRouteDestinations({ mode }).props.children}
     </Switch>
   )

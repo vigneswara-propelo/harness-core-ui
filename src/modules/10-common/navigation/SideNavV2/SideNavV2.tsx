@@ -7,7 +7,7 @@
 
 import React, { useEffect } from 'react'
 import cx from 'classnames'
-import { Layout, Text, useToggleOpen } from '@harness/uicore'
+import { Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { ModalProvider } from '@harness/use-modal'
 import { useStrings } from 'framework/strings'
@@ -26,7 +26,6 @@ import { SideNavContextProvider } from './SideNavV2Context'
 import SideNavSectionComponent, { SideNavSectionComponentProps } from './SideNavSection/SideNavSection'
 import { SideNavLink as SideNavLinkComponent, SideNavLinkProps } from './SideNavLink/SideNavLink'
 import { useGetSelectedScope } from './SideNavV2.utils'
-import ModulesConfigurationScreen from '../ModuleConfigurationScreen/ModuleConfigurationScreen'
 import css from './SideNavV2.module.scss'
 
 // scope selector should be moved to common component
@@ -35,7 +34,7 @@ type ScopeComponent = React.FunctionComponent<SideNavScopeProps>
 type SectionComponent = React.FunctionComponent<SideNavSectionComponentProps>
 type LinkComponent = React.FunctionComponent<SideNavLinkProps>
 type MainComponent = React.FunctionComponent<SideNavMainProps>
-type SideNavSettingsLink = React.FunctionComponent<SettingsLinkProps>
+type CommonScopeLinks = React.FunctionComponent<CommonScopeLinksProps>
 type SettingsTitle = React.FunctionComponent<{ label: keyof StringsMap; __TYPE?: string }>
 
 type SideNavComponent<T> = React.FunctionComponent<T> & {
@@ -43,7 +42,7 @@ type SideNavComponent<T> = React.FunctionComponent<T> & {
   Section: SectionComponent
   Link: LinkComponent
   Main: MainComponent
-  SettingsLink: SideNavSettingsLink
+  CommonScopeLinks: CommonScopeLinks
   Title: SettingsTitle
 }
 
@@ -211,10 +210,10 @@ export const SideNav: SideNavComponent<React.PropsWithChildren<unknown>> = (prop
   )
 }
 
-interface SettingsLinkProps {
+interface CommonScopeLinksProps {
   module?: Module
   mode: NAV_MODE
-  showConfigurationLink?: boolean
+  projectsLinkLabel?: string
 }
 
 const SettingsTitle = (props: { label: keyof StringsMap }): JSX.Element => {
@@ -241,11 +240,10 @@ SettingsTitle.defaultProps = {
   __TYPE: 'SIDENAV_TITLE'
 }
 
-const SettingsLink: React.FC<SettingsLinkProps> = props => {
-  const { module, mode, showConfigurationLink = false } = props
+const CommonScopeLinks: React.FC<CommonScopeLinksProps> = props => {
+  const { module, mode, projectsLinkLabel } = props
   const { params } = useGetSelectedScope()
   const { getString } = useStrings()
-  const { isOpen: isModuleConfigOpen, toggle: toggleModuleConfig, close: closeModuleConfig } = useToggleOpen(false)
 
   if (mode === NAV_MODE.ALL && module) {
     return null
@@ -254,6 +252,8 @@ const SettingsLink: React.FC<SettingsLinkProps> = props => {
   return (
     <SideNavSectionComponent>
       <SideNav.Scope scope={Scope.ACCOUNT}>
+        <SideNav.Link to={routes.toOrgs({ module, mode })} label={getString('orgsText')} icon="nav-organization" />
+        <SideNav.Link to={routes.toProjects({ module, mode })} label={getString('projectsText')} icon="nav-project" />
         <SideNav.Link
           to={routes.toSettings({ mode, module })}
           label={getString('common.accountSettings')}
@@ -261,6 +261,11 @@ const SettingsLink: React.FC<SettingsLinkProps> = props => {
         />
       </SideNav.Scope>
       <SideNav.Scope scope={Scope.ORGANIZATION}>
+        <SideNav.Link
+          to={routes.toProjects({ mode, module, orgIdentifier: params?.orgIdentifier })}
+          label={projectsLinkLabel || getString('projectsText')}
+          icon="nav-project"
+        />
         <SideNav.Link
           to={routes.toSettings({ mode, module, orgIdentifier: params?.orgIdentifier })}
           label={getString('common.settingsPage.title.orgSettingsTitle')}
@@ -279,25 +284,6 @@ const SettingsLink: React.FC<SettingsLinkProps> = props => {
           icon={'setting'}
         />
       </SideNav.Scope>
-      {showConfigurationLink && (
-        <SideNav.Link
-          icon="list-view"
-          label={getString('common.configureNavigation')}
-          to=""
-          onClick={e => {
-            e.stopPropagation()
-            e.preventDefault()
-            toggleModuleConfig()
-          }}
-        />
-      )}
-      {isModuleConfigOpen ? (
-        <ModulesConfigurationScreen
-          onClose={() => {
-            closeModuleConfig()
-          }}
-        />
-      ) : null}
     </SideNavSectionComponent>
   )
 }
@@ -306,5 +292,5 @@ SideNav.Scope = SideNavScope
 SideNav.Link = SideNavLinkComponent
 SideNav.Main = SideNavMainComponent
 SideNav.Section = SideNavSectionComponent
-SideNav.SettingsLink = SettingsLink
+SideNav.CommonScopeLinks = CommonScopeLinks
 SideNav.Title = SettingsTitle

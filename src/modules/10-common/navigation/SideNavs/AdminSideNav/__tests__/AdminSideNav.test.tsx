@@ -95,7 +95,7 @@ describe('Admin Sidenav', () => {
         <AdminSideNav />
       </TestWrapper>
     )
-    expect(queryByText('back')).toBeInTheDocument()
+    expect(queryByText('common.backToOrgs')).toBeInTheDocument()
   })
   test('should render back to projects link in project scope', () => {
     jest.spyOn(SideNavUtils, 'useGetSelectedScope').mockReturnValue({

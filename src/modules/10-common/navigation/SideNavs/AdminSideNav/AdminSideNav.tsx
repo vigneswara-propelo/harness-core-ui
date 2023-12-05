@@ -39,15 +39,6 @@ const AdminSideNav: React.FC = (): React.ReactElement => {
         <SideNav.Section>
           <SideNav.Link to={routes.toOverview()} label={getString('common.accountOverview')} icon="nav-home" />
         </SideNav.Section>
-        <SideNav.Section>
-          <SideNav.Link to={routes.toOrgs()} label={getString('orgsText')} icon="nav-organization" />
-          <SideNav.Link to={routes.toProjects()} label={getString('projectsText')} icon="nav-project" />
-          <SideNav.Link
-            to={routes.toSettings({ mode: NAV_MODE.ADMIN })}
-            label={getString('common.accountSettings')}
-            icon={'setting'}
-          />
-        </SideNav.Section>
       </SideNav.Scope>
 
       <SideNav.Scope scope={Scope.PROJECT}>
@@ -69,25 +60,19 @@ const AdminSideNav: React.FC = (): React.ReactElement => {
             icon="nav-project"
           />
         </SideNav.Section>
-        <SideNav.Section>
-          <SideNav.SettingsLink mode={NAV_MODE.ADMIN} />
-        </SideNav.Section>
       </SideNav.Scope>
       <SideNav.Scope scope={Scope.ORGANIZATION}>
         <SideNav.Section>
           <SideNav.Link
             to={prevPageUrl || routes.toOrgs()}
-            label={getString('back')}
+            label={getString('common.backToOrgs')}
             icon="arrow-left"
             iconProps={{ size: 14, padding: { right: 'xsmall' }, style: { alignSelf: 'center' } }}
             disableHighlightOnActive={true}
           />
-          <SideNav.Link label="Projects in Org" icon="nav-project" to={routes.toProjects({ orgIdentifier })} />
-        </SideNav.Section>
-        <SideNav.Section>
-          <SideNav.SettingsLink mode={NAV_MODE.ADMIN} />
         </SideNav.Section>
       </SideNav.Scope>
+      <SideNav.CommonScopeLinks mode={NAV_MODE.ADMIN} projectsLinkLabel={getString('common.projectsInOrgLabel')} />
     </SideNav.Main>
   )
 }

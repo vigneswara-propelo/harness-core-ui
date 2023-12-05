@@ -134,7 +134,7 @@ const CDSideNavLinks = (mode: NAV_MODE, sideNavProps?: ModuleLinksProps): React.
           />
         </SideNav.Scope>
       </SideNav.Section>
-      <SideNav.SettingsLink mode={mode} module={module} />
+      <SideNav.CommonScopeLinks mode={mode} module={module} />
       {sideNavProps?.sideNavState === SIDE_NAV_STATE.EXPANDED && (
         <Container className={css.flex1}>
           <Button

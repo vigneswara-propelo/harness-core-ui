@@ -98,7 +98,7 @@ const CISideNavLinks = (mode: NAV_MODE): React.ReactElement => {
           />
         </SideNav.Scope>
       </SideNav.Section>
-      <SideNav.SettingsLink mode={mode} module={module} />
+      <SideNav.CommonScopeLinks mode={mode} module={module} />
     </SideNav.Main>
   )
 }

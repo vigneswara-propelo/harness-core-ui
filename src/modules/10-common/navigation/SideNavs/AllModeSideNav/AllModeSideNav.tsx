@@ -49,7 +49,7 @@ const AllModeSideNav = (): React.ReactElement => {
       <SideNav.Section>
         <ModulesAccordion />
       </SideNav.Section>
-      <SideNav.SettingsLink mode={NAV_MODE.ALL} showConfigurationLink={true} />
+      <SideNav.CommonScopeLinks mode={NAV_MODE.ALL} />
     </SideNav.Main>
   )
 }

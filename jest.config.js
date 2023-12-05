@@ -44,6 +44,7 @@ module.exports = {
     '!src/**/TemplateYamlView.tsx',
     '!src/**/RouteDestinations.tsx',
     '!src/**/RouteDestinationsV2.tsx',
+    '!src/**/CommonRouteDestinations.tsx',
     '!src/**/AdminRouteDestinations.tsx',
     '!src/**/SettingsRouteDestinations.tsx',
     '!src/modules/RouteDestinationsWithoutAccountId.tsx',

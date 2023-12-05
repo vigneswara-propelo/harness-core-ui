@@ -41,10 +41,10 @@ jest.mock('services/cd-ng', () => ({
 
 const onProjectClick = jest.fn()
 
-function WrapperComponent(): JSX.Element {
+function WrapperComponent({ clickOnViewAllProjects }: { clickOnViewAllProjects?: () => void }): JSX.Element {
   return (
     <TestWrapper defaultFeatureFlagValues={{ PL_FAVORITES: true }}>
-      <ProjectScopeSelector onProjectClick={onProjectClick} />
+      <ProjectScopeSelector onProjectClick={onProjectClick} clickOnViewAllProjects={clickOnViewAllProjects} />
     </TestWrapper>
   )
 }
@@ -97,10 +97,10 @@ describe('ProjectScopeSelector', () => {
     expect(container.querySelector('.PageSpinner--spinner')).toBeDefined()
   })
   test('View all projects button is working as expected', async () => {
-    const { findByText, getByTestId } = render(<WrapperComponent />)
+    const clickOnViewAllProjects = jest.fn()
+    const { findByText } = render(<WrapperComponent clickOnViewAllProjects={clickOnViewAllProjects} />)
     fireEvent.click(await findByText('projectsOrgs.viewAllProjects'))
-    await waitFor(() => getByTestId('location'))
-    expect(getByTestId('location')).toHaveTextContent('/projects')
+    expect(clickOnViewAllProjects).toBeCalled()
   })
   test('test search functionality', async () => {
     jest

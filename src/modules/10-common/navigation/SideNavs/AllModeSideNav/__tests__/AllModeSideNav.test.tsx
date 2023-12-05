@@ -124,7 +124,6 @@ describe('All mode side nav', () => {
     expect(screen.getByText('pipelines')).toBeInTheDocument()
     expect(screen.getByText('executionsText')).toBeInTheDocument()
     expect(screen.getByText('common.settingsPage.title.projectSettingsTitle')).toBeInTheDocument()
-    expect(screen.getByText('common.configureNavigation')).toBeInTheDocument()
     expect(document.querySelector('[data-testid="CD-summary"]')).toBeInTheDocument()
   })
   test('should render modules accordion on click', async () => {

@@ -173,7 +173,7 @@ export default function CODESideNavLinks(mode: NAV_MODE): React.ReactElement {
         </SideNav.Section>
       )}
 
-      <SideNav.SettingsLink mode={mode} module={CODE} />
+      <SideNav.CommonScopeLinks mode={mode} module={CODE} />
     </SideNav.Main>
   )
 }

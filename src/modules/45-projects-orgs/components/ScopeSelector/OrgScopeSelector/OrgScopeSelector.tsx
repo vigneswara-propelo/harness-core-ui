@@ -17,7 +17,9 @@ import {
   sortByLastModified,
   sortByName,
   SortMethod,
-  Page
+  Page,
+  Button,
+  ButtonVariation
 } from '@harness/uicore'
 
 import { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -33,10 +35,11 @@ import css from './OrgScopeSelector.module.scss'
 interface OrgScopeSelectorProps {
   onClose?: () => void
   onClick?: (org: Organization) => void
+  clickOnViewAllOrgs?: () => void
 }
 
 export const OrgScopeSelector = (props: OrgScopeSelectorProps): JSX.Element => {
-  const { onClick } = props
+  const { onClick, clickOnViewAllOrgs } = props
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
@@ -68,6 +71,11 @@ export const OrgScopeSelector = (props: OrgScopeSelectorProps): JSX.Element => {
             setSearchTerm(text.trim())
             setPage(0)
           }}
+        />
+        <Button
+          variation={ButtonVariation.LINK}
+          text={getString('projectsOrgs.viewAllOrgs')}
+          onClick={clickOnViewAllOrgs}
         />
       </Layout.Horizontal>
       <ListHeader

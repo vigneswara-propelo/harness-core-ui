@@ -87,4 +87,18 @@ describe('SideNavV2 Utils', () => {
     expect(getScopeIcon(Scope.ORGANIZATION)).toEqual('nav-organization')
     expect(getScopeIcon(Scope.ACCOUNT)).toEqual('Account')
   })
+
+  test('test noscope true', () => {
+    mockImport('framework/AppStore/AppStoreContext', {
+      useAppStore: jest.fn().mockImplementation(() => ({
+        selectedProject: undefined
+      }))
+    })
+    jest.spyOn(routUtils, 'getRouteParams').mockReturnValue({ accountId: 'accountId' })
+    jest.spyOn(commonHooks, 'useQueryParams').mockImplementation(() => ({ noscope: true }))
+    const { result } = renderHook(() => useGetSelectedScope(), {
+      wrapper: TestWrapper
+    })
+    expect(result.current).toEqual({})
+  })
 })

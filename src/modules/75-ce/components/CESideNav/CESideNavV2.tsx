@@ -158,7 +158,15 @@ const CCMSideNavLinks = (mode: NAV_MODE): React.ReactElement => {
           />
         </SideNav.Scope>
       </SideNav.Section>
-      <SideNav.SettingsLink mode={mode} module={module} />
+      <SideNav.Section>
+        <SideNav.Scope scope={Scope.ACCOUNT}>
+          <SideNav.Link
+            to={routes.toSettings({ mode, module })}
+            label={getString('common.accountSettings')}
+            icon={'setting'}
+          />
+        </SideNav.Scope>
+      </SideNav.Section>
     </SideNav.Main>
   )
 }

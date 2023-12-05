@@ -27,7 +27,11 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './OrganizationsPage.module.scss'
 
-const OrganizationsPage: React.FC = () => {
+interface OrganizationsPageProps {
+  onOrgClick?: (org: OrganizationAggregateDTO) => void
+}
+
+const OrganizationsPage: React.FC<OrganizationsPageProps> = ({ onOrgClick }) => {
   const { accountId } = useParams<AccountPathProps>()
   const [searchParam, setSearchParam] = useState<string>()
   const [page, setPage] = useState(0)
@@ -122,16 +126,20 @@ const OrganizationsPage: React.FC = () => {
                   openCollaboratorModal({ orgIdentifier: org.organizationResponse.organization.identifier })
                 }
                 reloadOrgs={() => refetch()}
-                onClick={() =>
-                  history.push(
-                    CDS_NAV_2_0
-                      ? routesV2.toProjects({ orgIdentifier: org.organizationResponse.organization.identifier })
-                      : routes.toOrganizationDetails({
-                          orgIdentifier: org.organizationResponse.organization.identifier as string,
-                          accountId
-                        })
-                  )
-                }
+                onClick={() => {
+                  if (onOrgClick) {
+                    onOrgClick(org)
+                  } else {
+                    history.push(
+                      CDS_NAV_2_0
+                        ? routesV2.toProjects({ orgIdentifier: org.organizationResponse.organization.identifier })
+                        : routes.toOrganizationDetails({
+                            orgIdentifier: org.organizationResponse.organization.identifier as string,
+                            accountId
+                          })
+                    )
+                  }
+                }}
               />
             )}
             keyOf={(org: OrganizationAggregateDTO) => org.organizationResponse.organization.identifier as string}

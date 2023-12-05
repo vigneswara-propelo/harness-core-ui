@@ -21,8 +21,8 @@ import routes from '@common/RouteDefinitionsV2'
 import usePrimaryScopeSwitchDialog from '@common/navigation/SideNavV2/ScopeSwitchDialog/usePrimaryScopeSwitchDialog'
 import { LinkInfo } from '@common/navigation/SideNavV2/SideNavV2'
 import { SIDE_NAV_STATE, useLayoutV2 } from '@modules/10-common/router/RouteWithLayoutV2'
-import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getScopeIcon, useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
+import { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import pointerImageDark from './pointer-dark.svg'
 import { ProjectScopeSelector } from './ProjectScopeSelector/ProjectScopeSelector'
 import { OrgScopeSelector } from './OrgScopeSelector/OrgScopeSelector'
@@ -55,6 +55,7 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
   const { getString } = useStrings()
   const { accountId } = useParams<ProjectPathProps>()
   const { scope: scopeSelected, params } = useGetSelectedScope()
+  const { module } = getRouteParams<ModulePathParams>()
 
   const selectedScope = allowedScopes && allowedScopes.length === 1 ? allowedScopes[0] : scopeSelected
 
@@ -198,6 +199,10 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
                 ? onScopeChange(project.projectResponse.project)
                 : handleScopeChange(Scope.PROJECT, project.projectResponse.project)
             }}
+            clickOnViewAllProjects={() => {
+              onClose()
+              history.push(routes.toProjects({ accountId, module }))
+            }}
           />
         )
       },
@@ -210,6 +215,10 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
             onClose={() => onClose()}
             onClick={(organization: Organization) => {
               handleScopeChange(Scope.ORGANIZATION, organization)
+            }}
+            clickOnViewAllOrgs={() => {
+              onClose()
+              history.push(routes.toOrgs({ accountId, module }))
             }}
           />
         )

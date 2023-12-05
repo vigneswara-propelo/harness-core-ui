@@ -37,6 +37,7 @@ interface ProjectListViewProps {
   showEditProject?: (project: Project) => void
   collaborators?: (project: Project) => void
   reloadPage: () => Promise<void>
+  onProjectClick?: (project: ProjectAggregateDTO) => void
 }
 
 type CustomColumn<T extends Record<string, any>> = Column<T> & {
@@ -258,7 +259,7 @@ const RenderColumnMenu: Renderer<CellProps<ProjectAggregateDTO>> = ({ row, colum
 }
 
 const ProjectListView: React.FC<ProjectListViewProps> = props => {
-  const { data, showEditProject, collaborators, reloadPage } = props
+  const { data, showEditProject, collaborators, reloadPage, onProjectClick } = props
   const history = useHistory()
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
@@ -337,16 +338,20 @@ const ProjectListView: React.FC<ProjectListViewProps> = props => {
       name="ProjectListView"
       data={data?.data?.content || []}
       onRowClick={project => {
-        history.push({
-          pathname: routes.toProjectDetails({
-            projectIdentifier: project.projectResponse.project.identifier,
-            orgIdentifier: project.projectResponse.project.orgIdentifier || '',
-            accountId
-          }),
-          state: {
-            prevPageUrl: locationProps.pathname
-          }
-        })
+        if (onProjectClick) {
+          onProjectClick(project)
+        } else {
+          history.push({
+            pathname: routes.toProjectDetails({
+              projectIdentifier: project.projectResponse.project.identifier,
+              orgIdentifier: project.projectResponse.project.orgIdentifier || '',
+              accountId
+            }),
+            state: {
+              prevPageUrl: locationProps.pathname
+            }
+          })
+        }
       }}
       getRowClassName={() => css.row}
       pagination={paginationProps}

@@ -28,7 +28,7 @@ import {
 import { Color } from '@harness/design-system'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useGetProjectAggregateDTOList } from 'services/cd-ng'
-import type { Project } from 'services/cd-ng'
+import type { Project, ProjectAggregateDTO } from 'services/cd-ng'
 import { useProjectModal } from '@projects-orgs/modals/ProjectModal/useProjectModal'
 import { useCollaboratorModal } from '@projects-orgs/modals/ProjectModal/useCollaboratorModal'
 import { useStrings } from 'framework/strings'
@@ -49,7 +49,11 @@ import ProjectsEmptyState from './projects-empty-state.png'
 
 import css from './ProjectsPage.module.scss'
 
-const ProjectsListPage: React.FC = () => {
+interface ProjectsListPageProps {
+  onProjectClick?: (project: ProjectAggregateDTO) => void
+}
+
+const ProjectsListPage: React.FC<ProjectsListPageProps> = ({ onProjectClick }) => {
   const { getString } = useStrings()
   const { PL_FAVORITES } = useFeatureFlags()
 
@@ -235,6 +239,7 @@ const ProjectsListPage: React.FC = () => {
             showEditProject={showEditProject}
             collaborators={showCollaborators}
             reloadPage={refetch}
+            onProjectClick={onProjectClick}
           />
         ) : null}
       </Page.Body>
