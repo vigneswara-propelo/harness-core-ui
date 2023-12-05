@@ -57,7 +57,15 @@ function NewRelicConfigStep(props: ConnectionConfigProps): JSX.Element {
   const { nextStep, prevStepData, connectorInfo, isEditMode, accountId, projectIdentifier, orgIdentifier } = props
   const { getString } = useStrings()
   const { showError, clear } = useToaster()
-  const { data: endPoints, error: endPointError, loading: loadingEndpoints } = useGetNewRelicEndPoints({})
+  const {
+    data: endPoints,
+    error: endPointError,
+    loading: loadingEndpoints
+  } = useGetNewRelicEndPoints({
+    queryParams: {
+      accountId
+    }
+  })
   const [initialValues, setInitialValues] = useState(
     initializeNewRelicConnector({ prevStepData, accountId, projectIdentifier, orgIdentifier })
   )

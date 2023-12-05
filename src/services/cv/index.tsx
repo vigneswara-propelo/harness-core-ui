@@ -335,6 +335,7 @@ export type AwsConnector = ConnectorConfigDTO & {
   credential: AwsCredential
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
+  proxy?: boolean
 }
 
 export interface AwsCredential {
@@ -663,6 +664,7 @@ export type BitbucketConnector = ConnectorConfigDTO & {
   authentication: BitbucketAuthentication
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
+  proxy?: boolean
   type: 'Account' | 'Repo' | 'Project'
   url: string
   validationRepo?: string
@@ -1474,6 +1476,7 @@ export type DockerConnectorDTO = ConnectorConfigDTO & {
   dockerRegistryUrl: string
   executeOnDelegate?: boolean
   providerType: 'DockerHub' | 'Harbor' | 'Quay' | 'Other'
+  proxy?: boolean
 }
 
 export type DockerUserNamePasswordDTO = DockerAuthCredentialsDTO & {
@@ -1866,6 +1869,7 @@ export interface Error {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
+    | 'AZURE_KEY_VAULT_INTERRUPT_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -2087,6 +2091,7 @@ export interface Error {
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
     | 'ABORT_ALL_ALREADY_NG'
+    | 'WEBHOOK_EXCEPTION'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2098,6 +2103,21 @@ export interface Error {
 export interface ErrorAnalysisSummary {
   anomalousClusterCount?: number
   totalClusterCount?: number
+}
+
+export interface ErrorBudgetBurnDownDTO {
+  endTime: number
+  message: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  sloIdentifier: string
+  startTime: number
+}
+
+export interface ErrorBudgetBurnDownResponse {
+  createdAt?: number
+  errorBudgetBurnDown: ErrorBudgetBurnDownDTO
+  lastModifiedAt?: number
 }
 
 export type ErrorBudgetBurnRateConditionSpec = NotificationRuleConditionSpec & {
@@ -2120,7 +2140,17 @@ export interface ErrorMetadataDTO {
 export type ErrorTrackingConditionSpec = NotificationRuleConditionSpec & {
   aggregated?: boolean
   errorTrackingEventStatus?: ('NewEvents' | 'CriticalEvents' | 'ResurfacedEvents')[]
-  errorTrackingEventTypes?: ('Exceptions' | 'LogErrors' | 'HttpErrors' | 'CustomErrors' | 'TimeoutErrors')[]
+  errorTrackingEventTypes?: (
+    | 'Exceptions'
+    | 'LogErrors'
+    | 'HttpErrors'
+    | 'CustomErrors'
+    | 'TimeoutErrors'
+    | 'SwallowedExceptions'
+    | 'CaughtExceptions'
+    | 'UncaughtExceptions'
+    | 'LogWarnings'
+  )[]
   savedFilterId?: number
   volumeThresholdCount?: number
   volumeThresholdMinutes?: number
@@ -2323,6 +2353,7 @@ export interface Failure {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
+    | 'AZURE_KEY_VAULT_INTERRUPT_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -2544,6 +2575,7 @@ export interface Failure {
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
     | 'ABORT_ALL_ALREADY_NG'
+    | 'WEBHOOK_EXCEPTION'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2584,6 +2616,7 @@ export type GcpConnector = ConnectorConfigDTO & {
   credential: GcpConnectorCredential
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
+  proxy?: boolean
 }
 
 export interface GcpConnectorCredential {
@@ -2625,6 +2658,7 @@ export type GitConfigDTO = ConnectorConfigDTO & {
   connectionType: 'Account' | 'Repo' | 'Project'
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
+  proxy?: boolean
   spec: GitAuthenticationDTO
   type: 'Http' | 'Ssh'
   url: string
@@ -2676,6 +2710,7 @@ export type GithubConnector = ConnectorConfigDTO & {
   authentication: GithubAuthentication
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
+  proxy?: boolean
   type: 'Account' | 'Repo' | 'Project'
   url: string
   validationRepo?: string
@@ -2737,6 +2772,7 @@ export type GitlabConnector = ConnectorConfigDTO & {
   authentication: GitlabAuthentication
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
+  proxy?: boolean
   type: 'Account' | 'Repo' | 'Project'
   url: string
   validationRepo?: string
@@ -4077,6 +4113,20 @@ export interface MonitoredServicePlatformResponse {
   type?: 'Application' | 'Infrastructure'
 }
 
+export interface MonitoredServiceReference {
+  accountIdentifier?: string
+  environmentIdentifiers?: string[]
+  identifier?: string
+  lastReconciledTimestamp?: number
+  orgIdentifier?: string
+  projectIdentifier?: string
+  reconciliationStatus?:
+    | 'NO_RECONCILIATION_REQUIRED'
+    | 'INPUT_REQUIRED_FOR_RECONCILIATION'
+    | 'NO_INPUT_REQUIRED_FOR_RECONCILIATION'
+  serviceIdentifier?: string
+}
+
 export interface MonitoredServiceResponse {
   createdAt?: number
   lastModifiedAt?: number
@@ -4428,6 +4478,17 @@ export interface PageEnvironmentIdentifierResponse {
   totalPages?: number
 }
 
+export interface PageErrorBudgetBurnDownDTO {
+  content?: ErrorBudgetBurnDownDTO[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  pageToken?: string
+  totalItems?: number
+  totalPages?: number
+}
+
 export interface PageLogAnalysisClusterDTO {
   content?: LogAnalysisClusterDTO[]
   empty?: boolean
@@ -4485,6 +4546,17 @@ export interface PageMonitoredServiceListItemDTO {
 
 export interface PageMonitoredServicePlatformResponse {
   content?: MonitoredServicePlatformResponse[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  pageToken?: string
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface PageMonitoredServiceReference {
+  content?: MonitoredServiceReference[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -5303,6 +5375,7 @@ export interface ResponseMessage {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
+    | 'AZURE_KEY_VAULT_INTERRUPT_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -5524,6 +5597,7 @@ export interface ResponseMessage {
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
     | 'ABORT_ALL_ALREADY_NG'
+    | 'WEBHOOK_EXCEPTION'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -5876,6 +5950,14 @@ export interface RestResponseDowntimeResponse {
     [key: string]: { [key: string]: any }
   }
   resource?: DowntimeResponse
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseErrorBudgetBurnDownResponse {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: ErrorBudgetBurnDownResponse
   responseMessages?: ResponseMessage[]
 }
 
@@ -6285,11 +6367,27 @@ export interface RestResponsePageChangeEventDTO {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponsePageErrorBudgetBurnDownDTO {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: PageErrorBudgetBurnDownDTO
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponsePageLogAnalysisClusterDTO {
   metaData?: {
     [key: string]: { [key: string]: any }
   }
   resource?: PageLogAnalysisClusterDTO
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponsePageMonitoredServiceReference {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: PageMonitoredServiceReference
   responseMessages?: ResponseMessage[]
 }
 
@@ -6535,6 +6633,7 @@ export interface SLODashboardApiFilter {
   envIdentifiers?: string[]
   errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
   evaluationType?: 'Window' | 'Request' | 'MetricLess'
+  evaluationTypes?: ('Window' | 'Request' | 'MetricLess')[]
   monitoredServiceIdentifier?: string
   searchFilter?: string
   sloTargetFilterDTO?: SLOTargetFilterDTO
@@ -7101,9 +7200,9 @@ export type TasManualDetails = TasCredentialSpec & {
 }
 
 export interface TemplateDTO {
-  inputSetYaml?: string
+  isTemplateByReference?: boolean
   lastReconciliationTime?: number
-  templateByReference?: boolean
+  templateInputs?: string
   templateRef: string
   templateVersionNumber?: number
   versionLabel?: string
@@ -16168,26 +16267,36 @@ export const getNewRelicApplicationsPromise = (
     signal
   )
 
-export type GetNewRelicEndPointsProps = Omit<GetProps<ResponseListString, Failure | Error, void, void>, 'path'>
+export interface GetNewRelicEndPointsQueryParams {
+  accountId: string
+}
+
+export type GetNewRelicEndPointsProps = Omit<
+  GetProps<ResponseListString, Failure | Error, GetNewRelicEndPointsQueryParams, void>,
+  'path'
+>
 
 /**
  * get all newrelic endpoints
  */
 export const GetNewRelicEndPoints = (props: GetNewRelicEndPointsProps) => (
-  <Get<ResponseListString, Failure | Error, void, void>
+  <Get<ResponseListString, Failure | Error, GetNewRelicEndPointsQueryParams, void>
     path={`/newrelic/endpoints`}
     base={getConfig('cv/api')}
     {...props}
   />
 )
 
-export type UseGetNewRelicEndPointsProps = Omit<UseGetProps<ResponseListString, Failure | Error, void, void>, 'path'>
+export type UseGetNewRelicEndPointsProps = Omit<
+  UseGetProps<ResponseListString, Failure | Error, GetNewRelicEndPointsQueryParams, void>,
+  'path'
+>
 
 /**
  * get all newrelic endpoints
  */
 export const useGetNewRelicEndPoints = (props: UseGetNewRelicEndPointsProps) =>
-  useGet<ResponseListString, Failure | Error, void, void>(`/newrelic/endpoints`, {
+  useGet<ResponseListString, Failure | Error, GetNewRelicEndPointsQueryParams, void>(`/newrelic/endpoints`, {
     base: getConfig('cv/api'),
     ...props
   })
@@ -16196,10 +16305,10 @@ export const useGetNewRelicEndPoints = (props: UseGetNewRelicEndPointsProps) =>
  * get all newrelic endpoints
  */
 export const getNewRelicEndPointsPromise = (
-  props: GetUsingFetchProps<ResponseListString, Failure | Error, void, void>,
+  props: GetUsingFetchProps<ResponseListString, Failure | Error, GetNewRelicEndPointsQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseListString, Failure | Error, void, void>(
+  getUsingFetch<ResponseListString, Failure | Error, GetNewRelicEndPointsQueryParams, void>(
     getConfig('cv/api'),
     `/newrelic/endpoints`,
     props,
@@ -17296,6 +17405,7 @@ export interface GetServiceLevelObjectivesRiskCountQueryParams {
   filter?: string
   sloType?: 'Simple' | 'Composite'
   evaluationType?: 'Window' | 'Request' | 'MetricLess'
+  evaluationTypes?: ('Window' | 'Request' | 'MetricLess')[]
   envIdentifiers?: string[]
 }
 
@@ -17625,6 +17735,7 @@ export interface GetSLOHealthListViewQueryParams {
   filter?: string
   sloType?: 'Simple' | 'Composite'
   evaluationType?: 'Window' | 'Request' | 'MetricLess'
+  evaluationTypes?: ('Window' | 'Request' | 'MetricLess')[]
   envIdentifiers?: string[]
   pageNumber?: number
   pageSize?: number
