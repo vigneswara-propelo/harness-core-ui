@@ -60,7 +60,7 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
     getStageFromPipeline
   } = usePipelineContext()
   const { isServiceEntityPage } = useServiceContext()
-  const { NG_SVC_ENV_REDESIGN, CDS_K8S_SERVICE_HOOKS_NG, CDS_SERVERLESS_V2 } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN, CDS_SERVERLESS_V2 } = useFeatureFlags()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const selectedDeploymentType =
@@ -151,28 +151,26 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
             </Card>
           )}
 
-          {(isNewService || isServiceEntityPage) &&
-            isServiceHooksAllowed(selectedDeploymentType) &&
-            CDS_K8S_SERVICE_HOOKS_NG && (
-              <Card className={css.sectionCard} id={getString('pipeline.serviceHooks.label')}>
-                <div
-                  className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
-                  data-tooltip-id={getServiceHooksHeaderTooltipId(selectedDeploymentType)}
-                >
-                  {getString('pipeline.serviceHooks.label')}
-                  <HarnessDocTooltip
-                    tooltipId={getServiceHooksHeaderTooltipId(selectedDeploymentType)}
-                    useStandAlone={true}
-                  />
-                </div>
-                <ServiceHooksSelection
-                  isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-                  isPropagating={isPropagating}
-                  deploymentType={selectedDeploymentType}
-                  readonly={!!readonly}
+          {(isNewService || isServiceEntityPage) && isServiceHooksAllowed(selectedDeploymentType) && (
+            <Card className={css.sectionCard} id={getString('pipeline.serviceHooks.label')}>
+              <div
+                className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
+                data-tooltip-id={getServiceHooksHeaderTooltipId(selectedDeploymentType)}
+              >
+                {getString('pipeline.serviceHooks.label')}
+                <HarnessDocTooltip
+                  tooltipId={getServiceHooksHeaderTooltipId(selectedDeploymentType)}
+                  useStandAlone={true}
                 />
-              </Card>
-            )}
+              </div>
+              <ServiceHooksSelection
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                isPropagating={isPropagating}
+                deploymentType={selectedDeploymentType}
+                readonly={!!readonly}
+              />
+            </Card>
+          )}
         </>
       )}
 
