@@ -230,36 +230,27 @@ export const ProjectSettingsPage: React.FC = () => {
               route={routesV2.toSettingsServiceOverrides({ accountId, orgIdentifier, projectIdentifier, module })}
               hidden={!(isServiceOverridesEnabled && haveCD)}
             />
-            {licenseInformation[ModuleName.CET]?.status === LICENSE_STATE_VALUES.ACTIVE ? (
-              <SettingsResourceCard
-                label={<String stringID="common.agents" />}
-                id={SettingsResources.CETAgents}
-                icon={'cet-agents-settings'}
-                route={routesV2.toCETAgents({ accountId, orgIdentifier, projectIdentifier, module: 'cet' })}
-              />
-            ) : (
-              <></>
-            )}
-            {licenseInformation[ModuleName.CET]?.status === LICENSE_STATE_VALUES.ACTIVE ? (
-              <SettingsResourceCard
-                label={<String stringID="common.purpose.errorTracking.agentTokens" />}
-                id={SettingsResources.CETTokens}
-                icon={'cet-agent-tokens-settings'}
-                route={routesV2.toCETAgentsTokens({ accountId, orgIdentifier, projectIdentifier, module: 'cet' })}
-              />
-            ) : (
-              <></>
-            )}
-            {licenseInformation[ModuleName.CET]?.status === LICENSE_STATE_VALUES.ACTIVE ? (
-              <SettingsResourceCard
-                label={<String stringID="common.purpose.errorTracking.criticalEvents" />}
-                id={SettingsResources.CETCriticalEvents}
-                icon={'cet-critical-events-settings'}
-                route={routesV2.toCETCriticalEvents({ accountId, orgIdentifier, projectIdentifier, module: 'cet' })}
-              />
-            ) : (
-              <></>
-            )}
+            <SettingsResourceCard
+              label={<String stringID="common.agents" />}
+              id={SettingsResources.CETAgents}
+              icon={'cet-agents-settings'}
+              route={routesV2.toCETAgents({ accountId, orgIdentifier, projectIdentifier, module: 'cet' })}
+              hidden={licenseInformation[ModuleName.CET]?.status !== LICENSE_STATE_VALUES.ACTIVE}
+            />
+            <SettingsResourceCard
+              label={<String stringID="common.purpose.errorTracking.agentTokens" />}
+              id={SettingsResources.CETTokens}
+              icon={'cet-agent-tokens-settings'}
+              route={routesV2.toCETAgentsTokens({ accountId, orgIdentifier, projectIdentifier, module: 'cet' })}
+              hidden={licenseInformation[ModuleName.CET]?.status !== LICENSE_STATE_VALUES.ACTIVE}
+            />
+            <SettingsResourceCard
+              label={<String stringID="common.purpose.errorTracking.criticalEvents" />}
+              id={SettingsResources.CETCriticalEvents}
+              icon={'cet-critical-events-settings'}
+              route={routesV2.toCETCriticalEvents({ accountId, orgIdentifier, projectIdentifier, module: 'cet' })}
+              hidden={licenseInformation[ModuleName.CET]?.status !== LICENSE_STATE_VALUES.ACTIVE}
+            />
             <SettingsResourceCard
               label={<String stringID="common.webhooks" />}
               hidden={!isBidirectionalSyncEnabled}
