@@ -1071,7 +1071,9 @@ export function Nexus3Artifact({
                 tagDisabled={isTagDisabled(formik?.values)}
                 isArtifactPath={false}
                 isImagePath={false}
-                tooltipId="nexus3-tag"
+                tooltipId={
+                  formik.values?.repositoryFormat === RepositoryFormatTypes.Maven ? 'nexus3-maven-tag' : 'nexus3-tag'
+                }
                 defaultErrorText={
                   formik.values?.repositoryFormat === RepositoryFormatTypes.NPM
                     ? getString('pipeline.artifacts.nexus3Artifact.noTags')
