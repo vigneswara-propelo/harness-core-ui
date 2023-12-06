@@ -96,7 +96,6 @@ export default function DeployServiceEntitySpecifications({
   const { index: stageIndex } = getStageIndexFromPipeline(pipeline, selectedStageId || '')
   const { submitFormsForTab } = useContext(StageErrorContext)
   const { errorMap } = useValidationErrors()
-  const { CDS_MULTI_SERVICE_PROPAGATION: isMultiServicePropagationAllowed } = useFeatureFlags()
   const params = useParams<ProjectPathProps>()
 
   const useFromStageValue = stage?.stage?.spec?.service?.useFromStage || stage?.stage?.spec?.services?.useFromStage
@@ -151,11 +150,7 @@ export default function DeployServiceEntitySpecifications({
       // 2. Stage type should be same (example - Both Should be deploy stages)
       // 3. Deployment details such as deployment type or custom deployment config should be same
 
-      if (isMultiServicePropagationAllowed) {
-        return (!isSingleSvcEmpty || !isMultiSvcEmpty) && isStageTypeSame && areDeploymentDetailsSame
-      }
-
-      return !isSingleSvcEmpty && isStageTypeSame && areDeploymentDetailsSame
+      return (!isSingleSvcEmpty || !isMultiSvcEmpty) && isStageTypeSame && areDeploymentDetailsSame
     }
   }
 

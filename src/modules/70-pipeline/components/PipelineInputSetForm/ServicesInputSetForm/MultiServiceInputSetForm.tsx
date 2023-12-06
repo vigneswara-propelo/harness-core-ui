@@ -20,7 +20,6 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { getStepTypeByDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 // eslint-disable-next-line no-restricted-imports
 import PropagateFromServiceV2 from '@cd/components/PipelineStudio/DeployServiceSpecifications/PropagateWidget/PropagateFromServiceV2'
 // eslint-disable-next-line no-restricted-imports
@@ -60,8 +59,6 @@ export default function MultiServiceInputSetForm({
   } = usePipelineContext()
 
   const { index: stageIndex } = getStageIndexFromPipeline(pipeline, stageIdentifier)
-
-  const { CDS_MULTI_SERVICE_PROPAGATION: isMultiServicePropagationAllowed } = useFeatureFlags()
 
   const deploymentStageInputSet = get(formik?.values, path, {})
 
@@ -159,8 +156,7 @@ export default function MultiServiceInputSetForm({
     }
   }
 
-  const shouldShowPropagateFromStage =
-    !isEmpty(previousStageList) && isMultiServiceConfigRuntime && isMultiServicePropagationAllowed
+  const shouldShowPropagateFromStage = !isEmpty(previousStageList) && isMultiServiceConfigRuntime
 
   if (!deploymentStageTemplate?.services) return null
 
