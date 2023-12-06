@@ -84,7 +84,6 @@ const CIRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
       <RouteWithLayout
         exact
         path={routes.toModuleTrialHome({ ...accountPathProps, mode, module: 'ci' })}
-        licenseRedirectData={licenseRedirectData}
         pageName={PAGE_NAME.CITrialHomePage}
       >
         <CITrialHomePage />
