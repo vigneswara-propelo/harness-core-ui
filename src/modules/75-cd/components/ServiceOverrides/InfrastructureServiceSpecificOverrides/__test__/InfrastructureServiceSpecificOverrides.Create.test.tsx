@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { getByText, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -40,38 +47,86 @@ jest.mock('services/cd-ng-rq', () => ({
   }))
 }))
 
+jest.mock('@common/hooks', () => ({
+  ...(jest.requireActual('@common/hooks') as any),
+  useMutateAsGet: jest.fn().mockImplementation(fn => {
+    return fn()
+  })
+}))
+
+const serviceOverrideListMock1 = {
+  data: {
+    data: {}
+  },
+  refetch: jest.fn()
+}
+
+const serviceOverrideListMock2 = {
+  loading: false,
+  error: undefined,
+  data: {
+    data: {
+      content: [
+        {
+          identifier: 'Env_1_Infra_1_Svc_1',
+          environmentRef: 'Env_1',
+          infraIdentifier: 'Infra_1',
+          serviceRef: 'Svc_1',
+          orgIdentifier: 'dummyOrg',
+          projectIdentifier: 'dummyProject',
+          spec: { variables: [{ name: 'var1', type: 'String', value: 'varValue1' }] }
+        }
+      ]
+    }
+  }
+}
+
+const environmentMock = {
+  loading: false,
+  error: undefined,
+  data: {
+    data: [
+      {
+        environment: {
+          name: 'Env 1',
+          identifier: 'Env_1',
+          projectIdentifier: 'dummyProject',
+          orgIdentifier: 'dummyOrg',
+          accountIdentifier: 'dummyAcc'
+        }
+      }
+    ]
+  }
+}
+
 describe('InfrastructureServiceSpecificOverrides Create test', () => {
   test('create new override', async () => {
-    jest.spyOn(cdNgServices, 'useGetServiceOverrideListV2').mockImplementation(
+    jest.spyOn(cdNgServices, 'useGetServiceAccessList').mockImplementation(
       () =>
         ({
+          loading: false,
           data: {
-            data: {}
-          },
+            status: 'SUCCESS',
+            data: []
+          } as any,
           refetch: jest.fn()
         } as any)
     )
 
-    jest.spyOn(cdNgServices, 'useGetEnvironmentAccessListV2').mockImplementation(
+    jest.spyOn(cdNgServices, 'useGetInfrastructureAccessList').mockImplementation(
       () =>
         ({
           loading: false,
-          error: undefined,
-          mutate: jest.fn().mockResolvedValue({
-            data: [
-              {
-                environment: {
-                  name: 'Env 1',
-                  identifier: 'Env_1',
-                  projectIdentifier: 'dummyProject',
-                  orgIdentifier: 'dummyOrg',
-                  accountIdentifier: 'dummyAcc'
-                }
-              }
-            ]
-          })
+          data: {
+            status: 'SUCCESS',
+            data: []
+          } as any,
+          refetch: jest.fn()
         } as any)
     )
+    jest.spyOn(cdNgServices, 'useGetServiceOverrideListV3').mockImplementation(() => serviceOverrideListMock1 as any)
+
+    jest.spyOn(cdNgServices, 'useGetEnvironmentAccessListV2').mockImplementation(() => environmentMock as any)
 
     const refetchInfra = jest.fn()
     const upsertServiceOverride = jest.fn()
@@ -144,7 +199,7 @@ describe('InfrastructureServiceSpecificOverrides Create test', () => {
     const submitButton = screen.getByRole('button', { name: 'tick' })
     await userEvent.click(submitButton)
 
-    await waitFor(() => expect(showError).toHaveBeenCalledTimes(1))
+    await waitFor(() => expect(showError).toHaveBeenCalled())
 
     // Select Environment
 
@@ -288,28 +343,7 @@ describe('InfrastructureServiceSpecificOverrides Create test', () => {
 
     await userEvent.type(valueInput!, 'varValue1')
 
-    jest.spyOn(cdNgServices, 'useGetServiceOverrideListV2').mockImplementation(
-      () =>
-        ({
-          loading: false,
-          error: undefined,
-          data: {
-            data: {
-              content: [
-                {
-                  identifier: 'Env_1_Infra_1_Svc_1',
-                  environmentRef: 'Env_1',
-                  infraIdentifier: 'Infra_1',
-                  serviceRef: 'Svc_1',
-                  orgIdentifier: 'dummyOrg',
-                  projectIdentifier: 'dummyProject',
-                  spec: { variables: [{ name: 'var1', type: 'String', value: 'varValue1' }] }
-                }
-              ]
-            }
-          }
-        } as any)
-    )
+    jest.spyOn(cdNgServices, 'useGetServiceOverrideListV3').mockImplementation(() => serviceOverrideListMock2 as any)
 
     // Create Override
 

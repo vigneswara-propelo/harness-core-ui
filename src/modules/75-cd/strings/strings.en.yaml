@@ -553,6 +553,7 @@ selectRepository: Select a repository
 fetchingRepository: Fetching repositories...
 selectArtifact: Select an artifact
 artifactName: Artifact Name
+overridesFilter: Overrides Filter
 selectArtifactSource: Select Artifact Source
 artifactFormErrors:
   artifactFilePath: Enter the artifact path. You can use wildcards such as `todo/*/*`
@@ -582,6 +583,7 @@ serviceOverrides:
   helperText: Override existing variables or define new variables based on the selected service
   deleted: Successfully deleted Service Override
   deletedOneVariable: Successfully deleted variable from service override
+  searchOrSelectInfrastructure: Search/Select Infrastructure
 infrastructure:
   infrastructureDefinitions: Infrastructure Definitions
   infrastructureDetails: Infrastructure Details

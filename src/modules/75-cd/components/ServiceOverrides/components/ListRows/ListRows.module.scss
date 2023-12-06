@@ -10,8 +10,9 @@
    * 20px is the default top margin of tab panel 
    * 49px is the height of the new override button with bottom padding
    * 50px is the height of the headers
+   * 64px is the height of the pagination container
    */
-  height: calc(100vh - var(--page-header-height) - 43px - 20px - 49px - 50px);
+  height: calc(100vh - var(--page-header-height) - 43px - 20px - 49px - 50px - 64px);
   min-width: 1454px;
   overflow-y: scroll;
 }
@@ -60,4 +61,8 @@
 
 .flex-grow {
   flex-grow: 1 !important;
+}
+
+.footer {
+  padding: 0 var(--spacing-xlarge);
 }

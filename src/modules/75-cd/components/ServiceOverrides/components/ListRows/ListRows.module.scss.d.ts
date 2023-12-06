@@ -11,6 +11,7 @@ declare const styles: {
   readonly editableRow: string
   readonly flexGrow: string
   readonly flexWrap: string
+  readonly footer: string
   readonly listRowCard: string
   readonly listRowContainer: string
   readonly newOrEditCard: string

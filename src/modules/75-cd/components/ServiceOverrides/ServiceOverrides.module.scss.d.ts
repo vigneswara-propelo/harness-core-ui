@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly noServiceOverrideContainer: string
+  readonly serviceOverrideFilterSection: string
   readonly serviceOverridePageBody: string
 }
 export default styles

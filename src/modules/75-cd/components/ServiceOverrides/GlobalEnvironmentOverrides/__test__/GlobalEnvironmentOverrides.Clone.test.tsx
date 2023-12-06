@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -10,32 +17,88 @@ import { TestWrapper } from '@common/utils/testUtils'
 
 import ServiceOverrides from '../../ServiceOverrides'
 
+jest.mock('@common/hooks', () => ({
+  ...(jest.requireActual('@common/hooks') as any),
+  useMutateAsGet: jest.fn().mockImplementation(fn => {
+    return fn()
+  })
+}))
+
+const refetchOverrideList = jest.fn()
+
+const overrideListMock1 = {
+  data: {
+    data: {
+      content: [
+        {
+          identifier: 'Env_1',
+          environmentRef: 'Env_1',
+          infraIdentifier: undefined,
+          serviceRef: undefined,
+          orgIdentifier: 'dummyOrg',
+          projectIdentifier: 'dummyProject',
+          spec: { variables: [{ name: 'var1', type: 'String', value: 'varValue1' }] }
+        }
+      ]
+    }
+  },
+  refetch: refetchOverrideList
+}
+
+const overrideListMock2 = {
+  loading: false,
+  data: {
+    data: {
+      content: [
+        {
+          identifier: 'Env_1',
+          environmentRef: 'Env_1',
+          infraIdentifier: undefined,
+          serviceRef: undefined,
+          orgIdentifier: 'dummyOrg',
+          projectIdentifier: 'dummyProject',
+          spec: {
+            variables: [
+              { name: 'var1', type: 'String', value: 'varValue1' },
+              { name: 'var2', type: 'String', value: 'varValue2' }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  refetch: jest.fn()
+}
+
 describe('EnvironmentServiceSpecificOverrides Edit test', () => {
   test('edit existing new override', async () => {
-    const user = userEvent.setup()
-    const refetchOverrideList = jest.fn()
-
-    jest.spyOn(cdNgServices, 'useGetServiceOverrideListV2').mockImplementation(
+    jest.spyOn(cdNgServices, 'useGetServiceAccessList').mockImplementation(
       () =>
         ({
+          loading: false,
           data: {
-            data: {
-              content: [
-                {
-                  identifier: 'Env_1',
-                  environmentRef: 'Env_1',
-                  infraIdentifier: undefined,
-                  serviceRef: undefined,
-                  orgIdentifier: 'dummyOrg',
-                  projectIdentifier: 'dummyProject',
-                  spec: { variables: [{ name: 'var1', type: 'String', value: 'varValue1' }] }
-                }
-              ]
-            }
-          },
-          refetch: refetchOverrideList
+            status: 'SUCCESS',
+            data: []
+          } as any,
+          refetch: jest.fn()
         } as any)
     )
+
+    jest.spyOn(cdNgServices, 'useGetInfrastructureAccessList').mockImplementation(
+      () =>
+        ({
+          loading: false,
+          data: {
+            status: 'SUCCESS',
+            data: []
+          } as any,
+          refetch: jest.fn()
+        } as any)
+    )
+
+    const user = userEvent.setup()
+
+    jest.spyOn(cdNgServices, 'useGetServiceOverrideListV3').mockImplementation(() => overrideListMock1 as any)
 
     jest.spyOn(cdNgServices, 'useGetEnvironmentAccessListV2').mockImplementation(
       () =>
@@ -125,33 +188,7 @@ describe('EnvironmentServiceSpecificOverrides Edit test', () => {
     await user.clear(valueInput!)
     await user.type(valueInput!, 'varValue2')
 
-    jest.spyOn(cdNgServices, 'useGetServiceOverrideListV2').mockImplementation(
-      () =>
-        ({
-          loading: false,
-          data: {
-            data: {
-              content: [
-                {
-                  identifier: 'Env_1',
-                  environmentRef: 'Env_1',
-                  infraIdentifier: undefined,
-                  serviceRef: undefined,
-                  orgIdentifier: 'dummyOrg',
-                  projectIdentifier: 'dummyProject',
-                  spec: {
-                    variables: [
-                      { name: 'var1', type: 'String', value: 'varValue1' },
-                      { name: 'var2', type: 'String', value: 'varValue2' }
-                    ]
-                  }
-                }
-              ]
-            }
-          },
-          refetch: jest.fn()
-        } as any)
-    )
+    jest.spyOn(cdNgServices, 'useGetServiceOverrideListV3').mockImplementation(() => overrideListMock2 as any)
 
     // Submit Override
     const submitButton = screen.getByRole('button', { name: 'tick' })

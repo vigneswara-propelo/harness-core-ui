@@ -15,8 +15,15 @@ import { ServiceOverridesProvider } from '@modules/75-cd/components/ServiceOverr
 import { VariableOverrideEditable } from '../VariableOverrideEditable'
 import { serviceOverrideListV2ResponseDataMock } from './mock'
 
+jest.mock('@common/hooks', () => ({
+  ...(jest.requireActual('@common/hooks') as any),
+  useMutateAsGet: jest.fn().mockImplementation(fn => {
+    return fn()
+  })
+}))
+
 jest.mock('services/cd-ng', () => ({
-  useGetServiceOverrideListV2: jest.fn().mockImplementation(() => ({
+  useGetServiceOverrideListV3: jest.fn().mockImplementation(() => ({
     data: serviceOverrideListV2ResponseDataMock,
     refetch: jest.fn(),
     loading: false,

@@ -18,6 +18,12 @@
   }
 }
 
+.serviceOverrideFilterSection {
+  position: absolute;
+  right: 0px;
+  top: 5px;
+}
+
 .no-service-override-container {
   /* 43px is the height of the tabs
    * 20px is the default top margin of tab panel 

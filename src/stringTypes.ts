@@ -1193,6 +1193,7 @@ export interface StringsMap {
   'common.serviceOverrides.labelText': string
   'common.serviceOverrides.newOverride': string
   'common.serviceOverrides.noOverrides.environmentServiceSpecific': string
+  'common.serviceOverrides.noOverrides.filterCriteria': string
   'common.serviceOverrides.noOverrides.globalEnvironment': string
   'common.serviceOverrides.noOverrides.globalInfrastructure': string
   'common.serviceOverrides.noOverrides.infrastructureServiceSpecific': string
@@ -7052,6 +7053,7 @@ export interface StringsMap {
   'cd.openTask.title': string
   'cd.overrideValue': string
   'cd.overrideYaml': string
+  'cd.overridesFilter': string
   'cd.pathCannotBeEmpty': string
   'cd.pathValue': string
   'cd.pipelineCreation': string
@@ -7282,6 +7284,7 @@ export interface StringsMap {
   'cd.serviceOverrides.helperText': string
   'cd.serviceOverrides.manifestOverrides': string
   'cd.serviceOverrides.newConfigFile': string
+  'cd.serviceOverrides.searchOrSelectInfrastructure': string
   'cd.serviceOverrides.variableOverrides': string
   'cd.serviceUpdated': string
   'cd.setUpProvisionerBtnText': string

@@ -1,0 +1,132 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.filterSelector {
+  width: auto !important;
+  padding: 0;
+}
+
+.filter-button-container {
+  padding-left: var(--spacing-large);
+}
+
+.ngFilter {
+  mask {
+    display: none;
+  }
+  svg {
+    path:last-of-type {
+      fill: var(--black) !important;
+    }
+  }
+  border: none !important;
+  padding: 0 !important;
+}
+
+.summaryPopover {
+  max-width: 50vw !important;
+  svg {
+    path {
+      fill: var(--black) !important;
+    }
+  }
+}
+
+.fieldCount {
+  display: block;
+  height: var(--spacing-6);
+  width: var(--spacing-6);
+  line-height: var(--spacing-6);
+  border-radius: 50%;
+  background-color: var(--primary-9);
+  color: var(--white);
+  text-align: center;
+  font-weight: bold;
+  transform: translate(calc(-1 * var(--spacing-small)));
+}
+
+.menuItem {
+  height: var(--spacing-8);
+  padding: 0 var(--spacing-4);
+  color: var(--black);
+  align-items: center;
+  cursor: pointer;
+  font-weight: 400;
+  font-size: var(--font-size-small);
+  &:hover {
+    background: var(--primary-1);
+    color: var(--black);
+  }
+}
+
+.filterSelector {
+  max-width: fit-content;
+}
+
+.trash {
+  color: var(--red-500) !important;
+}
+
+.main {
+  display: flex;
+  flex-direction: row;
+}
+
+.formSection {
+  flex: 3;
+}
+
+.filterSection {
+  flex: 2;
+}
+
+.title {
+  width: 100%;
+  padding-bottom: var(--spacing-small);
+  border-bottom: 1px solid var(--grey-400);
+  font-size: large;
+  color: var(--grey-400);
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1 !important;
+  min-height: 0;
+}
+
+.fieldsContainer {
+  flex: 1;
+  overflow-y: auto;
+  max-width: calc(700px - var(--spacing-7));
+  padding-right: var(--spacing-7);
+
+  :last-child {
+    margin-bottom: 0;
+  }
+}
+
+.titleLayout {
+  display: flex;
+  align-items: center;
+}
+
+.loading {
+  margin: auto;
+  height: 100vh;
+}
+
+.filterDrawerCloseButton {
+  position: absolute;
+  inset: 0 100% auto auto;
+  opacity: 0.5;
+  border-radius: 4px 0 0 4px !important;
+  padding: 0 !important;
+  background: var(--primary-5) !important;
+  color: var(--white) !important;
+}

@@ -1607,6 +1607,7 @@ serviceOverrides:
     environmentServiceSpecific: You have no Environment Service specific Overrides
     globalInfrastructure: You have no global Infrastructure Overrides
     infrastructureServiceSpecific: You have no Infrastructure Service specific Overrides
+    filterCriteria: which satisfy the applied filter criteria
   editablePlaceholderExists: Override in Edit state already exists. Finalize the current override to switch to a new entity
   fillValuesBeforeSubmit: Please enter the following values before submitting
 cloudSpends: Cloud Spends

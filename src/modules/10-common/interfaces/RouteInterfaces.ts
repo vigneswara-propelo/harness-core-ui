@@ -224,6 +224,11 @@ export interface ServiceOverridesQueryParams {
     | 'ENV_SERVICE_OVERRIDE'
     | 'INFRA_GLOBAL_OVERRIDE'
     | 'INFRA_SERVICE_OVERRIDE'
+  page?: number
+  filters?: {
+    serviceIdentifiers?: string[]
+    environmentIdentifiers?: string[]
+  }
 }
 
 export interface CVDataSourceTypePathProps {

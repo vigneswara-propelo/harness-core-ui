@@ -1,17 +1,32 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { cloneDeep, defaultTo, isEmpty, noop, omit } from 'lodash-es'
 
 import { PageSpinner, useToaster } from '@harness/uicore'
 import {
+  PageServiceOverridesResponseDTOV2,
   useDeleteServiceOverrideV2,
-  useGetServiceOverrideListV2,
+  useGetServiceOverrideListV3,
   useUpdateServiceOverrideV2,
   useUpsertServiceOverrideV2
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 
 import type { ProjectPathProps, RequiredField } from '@common/interfaces/RouteInterfaces'
+import {
+  getSanitizedFilter,
+  ServiceOverridesPageQueryParams
+} from '@cd/components/ServiceOverrides/components/ServiceOverrideFilters/filterUtils'
+import { useRbacQueryParamOptions } from '@rbac/utils/utils'
+import { useMutateAsGet, useQueryParams } from '@common/hooks'
+import { PageQueryParamsWithDefaults } from '@common/constants/Pagination'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type {
   ServiceOverrideRowFormState,
@@ -37,6 +52,8 @@ interface ServiceOverridesContextInterface {
   onDelete(rowIndex: number): void
   onDiscard(): void
   listRowItems: ServiceOverrideRowProps[]
+  serviceOverrideResponse?: PageServiceOverridesResponseDTOV2
+  loadingServiceOverrideData?: boolean
 }
 
 interface ServiceOverridesProviderProps {
@@ -54,7 +71,8 @@ const ServiceOverridesContext = createContext<ServiceOverridesContextInterface>(
   onUpdate: noop,
   onDelete: noop,
   onDiscard: noop,
-  listRowItems: []
+  listRowItems: [],
+  loadingServiceOverrideData: false
 })
 
 export function ServiceOverridesProvider({
@@ -65,38 +83,65 @@ export function ServiceOverridesProvider({
   const { showSuccess, showError, showWarning } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const queryParamOptions = useRbacQueryParamOptions()
+  const queryParams = useQueryParams<PageQueryParamsWithDefaults>(queryParamOptions)
+  const { page, size } = queryParams
+
   const commonQueryParams = useMemo(
     () => ({
       accountIdentifier: accountId,
       orgIdentifier,
-      projectIdentifier
+      projectIdentifier,
+      size,
+      page
     }),
-    [accountId, orgIdentifier, projectIdentifier]
+    [accountId, orgIdentifier, projectIdentifier, page, size]
   )
-
-  const [page] = useState(0)
 
   const [canCreateNew, setCanCreateNewOrEdit] = useState(true)
   const [listRowItems, setListRowItems] = useState<ServiceOverrideRowProps[]>([])
+  const [serviceOverrideResponse, setServiceOverrideResponse] = useState<PageServiceOverridesResponseDTOV2>({})
+
+  const sanitizedAppliedFilter = React.useMemo(
+    () => getSanitizedFilter(queryParams.filters as ServiceOverridesPageQueryParams['filters']),
+    [queryParams.filters]
+  )
+
+  const { environmentIdentifiers, serviceIdentifiers, infraIdentifiers } = sanitizedAppliedFilter
+
+  const svcOverridesRequestBody = React.useMemo(
+    () =>
+      !isEmpty(sanitizedAppliedFilter)
+        ? {
+            serviceRefs: defaultTo(serviceIdentifiers, []),
+            environmentRefs: defaultTo(environmentIdentifiers, []),
+            infraIdentifiers: defaultTo(infraIdentifiers, []),
+            filterType: 'Override'
+          }
+        : null,
+    [serviceIdentifiers, environmentIdentifiers, infraIdentifiers, sanitizedAppliedFilter]
+  )
 
   const {
     data,
     loading: loadingServiceOverridesList,
     refetch: refetchServiceOverridesList
-  } = useGetServiceOverrideListV2({
+  } = useMutateAsGet(useGetServiceOverrideListV3, {
     queryParams: {
       ...commonQueryParams,
-      type: serviceOverrideType,
-      page: 0
-    }
+      type: serviceOverrideType
+    },
+    body: svcOverridesRequestBody
   })
 
   useEffect(() => {
-    if (!loadingServiceOverridesList && data?.data?.content && !isEmpty(data)) {
-      setListRowItems(formListRowItems(data?.data?.content as ServiceOverridesResponseDTOV2[]))
+    if (!loadingServiceOverridesList) {
+      const svcOverridesList = defaultTo(data?.data?.content, []) as ServiceOverridesResponseDTOV2[]
+      setListRowItems(formListRowItems(svcOverridesList))
+      setServiceOverrideResponse(defaultTo(data?.data, {}) as PageServiceOverridesResponseDTOV2)
+      setCanCreateNewOrEdit(true)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingServiceOverridesList])
+  }, [loadingServiceOverridesList, data?.data?.content])
 
   const handleNewOverride = (): void => {
     if (canCreateNew) {
@@ -149,7 +194,8 @@ export function ServiceOverridesProvider({
             projectIdentifier,
             type: serviceOverrideType,
             page
-          }
+          },
+          body: svcOverridesRequestBody
         })
       })
       .catch(e => {
@@ -182,7 +228,8 @@ export function ServiceOverridesProvider({
               ...commonQueryParams,
               type: serviceOverrideType,
               page
-            }
+            },
+            body: svcOverridesRequestBody
           })
           showSuccess('Successfully deleted service override with identifier: ' + overrideResponse?.identifier)
         })
@@ -204,7 +251,8 @@ export function ServiceOverridesProvider({
               projectIdentifier,
               type: serviceOverrideType,
               page
-            }
+            },
+            body: svcOverridesRequestBody
           })
           showSuccess('Successfully deleted service override')
         })
@@ -247,7 +295,8 @@ export function ServiceOverridesProvider({
             orgIdentifier,
             projectIdentifier,
             type: serviceOverrideType,
-            page
+            page,
+            body: svcOverridesRequestBody
           }
         })
         showSuccess('Successfully updated service override')
@@ -295,7 +344,9 @@ export function ServiceOverridesProvider({
         onUpdate,
         onDelete,
         onDiscard,
-        listRowItems
+        listRowItems,
+        serviceOverrideResponse,
+        loadingServiceOverrideData: loading
       }}
     >
       {loading && <PageSpinner />}

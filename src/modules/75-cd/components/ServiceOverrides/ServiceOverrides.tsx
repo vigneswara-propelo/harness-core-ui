@@ -9,7 +9,7 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 
-import { HarnessDocTooltip, Heading, Page, Tabs } from '@harness/uicore'
+import { HarnessDocTooltip, Heading, Page, Tabs, Container } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 
@@ -23,6 +23,7 @@ import type {
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import ServiceOverrideFiltersContainer from '@cd/components/ServiceOverrides/components/ServiceOverrideFilters/ServiceOverrideFiltersContainer'
 
 import { ServiceOverridesTab } from './ServiceOverridesUtils'
 
@@ -47,7 +48,8 @@ export default function ServiceOverrides(): React.ReactElement {
 
   const handleTabChange = (tabId: ServiceOverridesTab): void => {
     updateQueryParams({
-      serviceOverrideType: ServiceOverridesTab[ServiceOverridesTab[tabId]]
+      serviceOverrideType: ServiceOverridesTab[ServiceOverridesTab[tabId]],
+      page: undefined
     })
     setSelectedTabId(tabId)
   }
@@ -94,6 +96,9 @@ export default function ServiceOverrides(): React.ReactElement {
               }
             ]}
           />
+          <Container className={css.serviceOverrideFilterSection}>
+            <ServiceOverrideFiltersContainer />
+          </Container>
         </Page.Body>
       </main>
     </>
