@@ -93,6 +93,7 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
   const { getRBACErrorMessage } = useRBACError()
   const { supportingGitSimplification, selectedProject } = useAppStore()
   const [projectsQuery, setProjectsQuery] = React.useState('')
+  const [orgsQuery, setOrgsQuery] = React.useState('')
   const [selectedOrg, setSelectedOrg] = React.useState(orgIdentifier)
   const [governanceMetadata, setGovernanceMetadata] = useState<Evaluation | undefined>()
   const { CI_YAML_VERSIONING } = useFeatureFlags()
@@ -101,8 +102,10 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
   const { data: orgData, loading: orgDataLoading } = useGetOrganizationList({
     queryParams: {
       accountIdentifier: accountId,
+      searchTerm: orgsQuery || undefined,
       pageSize: 200
     },
+    debounce: 400,
     lazy: !isOpen
   })
   const { data: projectData, loading: projectDataLoading } = useGetProjectAggregateDTOList({
@@ -287,7 +290,9 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
                           label={getString('orgLabel')}
                           name="destinationConfig.orgIdentifier"
                           items={organizations}
+                          value={{ label: selectedOrg, value: selectedOrg }}
                           onChange={handleOrgChange}
+                          onQueryChange={setOrgsQuery}
                         />
                         {orgDataLoading ? <Icon name="steps-spinner" size={18} color={Color.PRIMARY_7} /> : null}
                       </div>

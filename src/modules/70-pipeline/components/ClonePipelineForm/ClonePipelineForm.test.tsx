@@ -119,14 +119,13 @@ describe('<ClonePipelineForm /> tests', () => {
   })
   describe('supportingGitSimplification = false', () => {
     test('snapshot test', async () => {
-      const { findByTestId } = render(
+      const { findByTestId, findByText } = render(
         <TestWrapper path={TEST_PATH} pathParams={PATH_PARAMS as any}>
           <ClonePipelineForm originalPipeline={originalPipeline} onClose={jest.fn()} isOpen />
         </TestWrapper>
       )
 
       const form = await findByTestId(FORM_ID)
-      expect(form).toMatchSnapshot()
 
       const name = queryByAttribute('name', form, 'name') as HTMLInputElement
       const description = queryByAttribute('name', form, 'description') as HTMLInputElement
@@ -136,9 +135,12 @@ describe('<ClonePipelineForm /> tests', () => {
 
       expect(name.value).toBe('My Pipeline - Clone')
       expect(id.textContent).toBe('My_Pipeline_Clone')
-      expect(org.value).toBe('Test Org 1')
+      expect(org.value).toBe('TEST_ORG1')
       expect(proj.value).toBe('Test Project 1')
       expect(description.value).toBe(originalPipeline.description)
+
+      expect(await findByText('MyTag1')).toBeInTheDocument()
+      expect(await findByTestId('clone')).toBeInTheDocument()
     })
 
     test('org and proj loading', async () => {
@@ -158,7 +160,6 @@ describe('<ClonePipelineForm /> tests', () => {
 
       const form = await findByTestId(FORM_ID)
       expect(form.querySelectorAll('[data-icon="steps-spinner"]').length).toBe(2)
-      expect(form).toMatchSnapshot()
     })
 
     test('submit flow', async () => {
@@ -203,15 +204,9 @@ describe('<ClonePipelineForm /> tests', () => {
           { queryParams: { accountIdentifier: 'TEST_ACCOUNT1', storeType: 'INLINE' } }
         )
       )
-      const newLocation = await findByTestId('location')
-
-      expect(newLocation).toMatchInlineSnapshot(`
-        <div
-          data-testid="location"
-        >
-          /account/TEST_ACCOUNT1/cd/orgs/TEST_ORG1/projects/TEST_PROJECT1/pipelines/My_Pipeline_Clone/pipeline-studio/?storeType=INLINE
-        </div>
-      `)
+      expect(await findByTestId('location')).toHaveTextContent(
+        '/account/TEST_ACCOUNT1/cd/orgs/TEST_ORG1/projects/TEST_PROJECT1/pipelines/My_Pipeline_Clone/pipeline-studio/?storeType=INLINE'
+      )
     })
 
     test('renders policy evaluation view if clone API returns policy errors', async () => {
@@ -378,7 +373,6 @@ describe('<ClonePipelineForm /> tests', () => {
       )
 
       const form = await findByTestId(FORM_ID)
-      expect(form).toMatchSnapshot()
 
       const name = queryByAttribute('name', form, 'name') as HTMLInputElement
       const description = queryByAttribute('name', form, 'description') as HTMLInputElement
@@ -389,37 +383,11 @@ describe('<ClonePipelineForm /> tests', () => {
 
       expect(name.value).toBe('My Pipeline - Clone')
       expect(id.textContent).toBe('My_Pipeline_Clone')
-      expect(org.value).toBe('Test Org 1')
+      expect(org.value).toBe('TEST_ORG1')
       expect(proj.value).toBe('Test Project 1')
       expect(description.value).toBe(originalPipeline.description)
       expect(inlineRemoteSelect).toBeInTheDocument()
-
-      const selectedStore = await findByText('common.git.inlineStoreLabel')
-
-      expect(getCardTick(selectedStore)).toBeInTheDocument()
-    })
-
-    test('store = INLINE snapshot', async () => {
-      const { findByTestId, findByText } = render(
-        <TestWrapper
-          path={TEST_PATH}
-          pathParams={PATH_PARAMS as any}
-          defaultAppStoreValues={{ supportingGitSimplification: true }}
-        >
-          <ClonePipelineForm
-            originalPipeline={{ ...originalPipeline, storeType: 'INLINE' }}
-            onClose={jest.fn()}
-            isOpen
-          />
-        </TestWrapper>
-      )
-
-      const form = await findByTestId(FORM_ID)
-      expect(form).toMatchSnapshot()
-
-      const inlineRemoteSelect = queryByAttribute('class', form, 'inlineRemoteSelect') as HTMLInputElement
-
-      expect(inlineRemoteSelect).toBeInTheDocument()
+      expect(await findByText('pipeline.createPipeline.choosePipelineSetupHeader')).toBeInTheDocument()
 
       const selectedStore = await findByText('common.git.inlineStoreLabel')
 
@@ -442,7 +410,6 @@ describe('<ClonePipelineForm /> tests', () => {
       )
 
       const form = await findByTestId(FORM_ID)
-      expect(form).toMatchSnapshot()
 
       const inlineRemoteSelect = queryByAttribute('class', form, 'inlineRemoteSelect') as HTMLInputElement
 
@@ -450,6 +417,19 @@ describe('<ClonePipelineForm /> tests', () => {
       const selectedStore = await findByText('common.git.remoteStoreLabel')
 
       expect(getCardTick(selectedStore)).toBeInTheDocument()
+      expect(await findByText('platform.connectors.title.gitConnector')).toBeInTheDocument()
+      expect(await findByText('repository')).toBeInTheDocument()
+      expect(await findByText('gitBranch')).toBeInTheDocument()
+      expect(await findByText('gitsync.gitSyncForm.yamlPathLabel')).toBeInTheDocument()
+      expect(await findByText('common.git.commitMessage')).toBeInTheDocument()
+
+      expect(await findByTestId('cr-field-connectorRef')).toBeInTheDocument()
+      const repository = queryByAttribute('name', form, 'repo') as HTMLInputElement
+      const branch = queryByAttribute('name', form, 'branch') as HTMLInputElement
+      const path = queryByAttribute('name', form, 'filePath') as HTMLInputElement
+      expect(repository).toBeInTheDocument()
+      expect(branch).toBeInTheDocument()
+      expect(path).toBeInTheDocument()
     })
 
     test('store switch works', async () => {
@@ -544,15 +524,9 @@ describe('<ClonePipelineForm /> tests', () => {
           }
         )
       )
-      const newLocation = await findByTestId('location')
-
-      expect(newLocation).toMatchInlineSnapshot(`
-        <div
-          data-testid="location"
-        >
-          /account/TEST_ACCOUNT1/cd/orgs/TEST_ORG1/projects/TEST_PROJECT1/pipelines/My_Pipeline_Clone/pipeline-studio/?storeType=REMOTE&repoName=MyRepo&branch=main&connectorRef=MyConnector
-        </div>
-      `)
+      expect(await findByTestId('location')).toHaveTextContent(
+        '/account/TEST_ACCOUNT1/cd/orgs/TEST_ORG1/projects/TEST_PROJECT1/pipelines/My_Pipeline_Clone/pipeline-studio/?storeType=REMOTE&repoName=MyRepo&branch=main&connectorRef=MyConnector'
+      )
     })
 
     test('re-routes to V1 pipeline studio route if YAML simplification is enabled for CI', async () => {
@@ -627,15 +601,10 @@ describe('<ClonePipelineForm /> tests', () => {
           }
         )
       )
-      const newLocation = await findByTestId('location')
 
-      expect(newLocation).toMatchInlineSnapshot(`
-        <div
-          data-testid="location"
-        >
-          /account/TEST_ACCOUNT1/home/orgs/TEST_ORG1/projects/TEST_PROJECT1/pipelines/My_Pipeline_Clone/pipeline-studio/?storeType=REMOTE&repoName=MyRepo&branch=main&connectorRef=MyConnector
-        </div>
-      `)
+      expect(await findByTestId('location')).toHaveTextContent(
+        '/account/TEST_ACCOUNT1/home/orgs/TEST_ORG1/projects/TEST_PROJECT1/pipelines/My_Pipeline_Clone/pipeline-studio/?storeType=REMOTE&repoName=MyRepo&branch=main&connectorRef=MyConnector'
+      )
     })
   })
 })
