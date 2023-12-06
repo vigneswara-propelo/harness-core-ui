@@ -425,7 +425,8 @@ export const packageTypesList: SelectOption[] = [
 ]
 
 export const getPackageTypeList = (deploymentType: string): SelectOption[] => {
-  if (isSshOrWinrmDeploymentType(deploymentType)) {
+  // below we added !deployment type to support both container and maven in the atifact source template where we dont have any deployment type selectecd
+  if (isSshOrWinrmDeploymentType(deploymentType) || !deploymentType) {
     return [
       { label: 'Container', value: PACKAGE_TYPES.CONTAINER },
       { label: 'Maven', value: PACKAGE_TYPES.MAVEN }

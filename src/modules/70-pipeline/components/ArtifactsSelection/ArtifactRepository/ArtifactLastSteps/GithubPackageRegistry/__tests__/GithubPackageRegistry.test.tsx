@@ -280,7 +280,8 @@ describe('GithubPackageRegistry tests', () => {
         packageType: 'Nuget',
         org: 'testOrg',
         packageName: 'testPackage',
-        version: 'xyz.zip'
+        version: 'xyz.zip',
+        digest: 'test'
       }
     }
     const { container, getByText } = render(
@@ -316,10 +317,11 @@ describe('GithubPackageRegistry tests', () => {
         identifier: 'test_id',
         spec: {
           connectorRef: 'testConnector',
-          packageType: 'container',
+          packageType: 'Nuget',
           org: 'testOrg',
           packageName: 'testPackage',
-          version: 'xyz.zip'
+          version: 'xyz.zip',
+          digest: 'test'
         }
       })
     })

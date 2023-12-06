@@ -118,15 +118,6 @@ function FormComponent({
     [getString]
   )
 
-  useEffect(() => {
-    if (isSshOrWinrm) {
-      return formik.setFieldValue('spec.packageType', defaultTo(packageTypeValue, defaultPackageType.value))
-    }
-    if (packageTypeValue !== defaultPackageType.value) {
-      formik.setFieldValue('spec.packageType', defaultPackageType.value)
-    }
-  }, [packageTypeValue, defaultPackageType, deploymentType])
-
   const {
     data: packageDetails,
     refetch: refetchPackageDetails,
@@ -213,6 +204,11 @@ function FormComponent({
     )
   })
 
+  /* Mappeing of supported packages wrt deployment type ->
+   -- winrm/ssh =>  Maven/Container
+   -- Kubernetes/Custom/TAS => Container
+   -- Artifact Source Template => Maven/Container
+   */
   const packageTypesList = React.useMemo(() => {
     return getPackageTypeList(deploymentType)
   }, [deploymentType])
@@ -249,8 +245,8 @@ function FormComponent({
               items={packageTypesList}
               name="spec.packageType"
               // Fixing the default value to container since the input is disabled, this ensures value doesn't get cleared in case of artifact source template
-              value={isSshOrWinrm ? getValue(formik.values?.spec?.packageType) : defaultPackageType}
-              disabled={!isSshOrWinrm}
+              value={defaultTo(getValue(formik.values?.spec?.packageType), defaultPackageType)}
+              disabled={deploymentType && !isSshOrWinrm}
               onChange={value => {
                 formik.setValues({
                   ...omit(formik.values, ['packageSource']),
