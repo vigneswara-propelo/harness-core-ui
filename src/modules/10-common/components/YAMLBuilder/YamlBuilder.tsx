@@ -680,7 +680,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const editorControls = useMemo((): React.ReactElement => {
     return (
       <Layout.Horizontal spacing="small">
-        {showCopyIcon && <CopyToClipboard content={defaultTo(currentYamlRef.current, '')} showFeedback={true} />}
+        {showCopyIcon && <CopyToClipboard content={defaultTo(currentYaml, '')} showFeedback={true} />}
         {shouldShowPluginsPanel ? (
           <Icon
             className={css.resizeIcon}
@@ -692,7 +692,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         ) : null}
       </Layout.Horizontal>
     )
-  }, [showCopyIcon, shouldShowPluginsPanel])
+  }, [showCopyIcon, shouldShowPluginsPanel, currentYaml])
 
   const renderHeader = useCallback((): JSX.Element => {
     const showEntityDetails = fileName && entityType
