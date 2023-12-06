@@ -125,7 +125,7 @@ function InputSetList(): React.ReactElement {
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
-  const { CI_YAML_VERSIONING, CDS_YAML_SIMPLIFICATION } = useFeatureFlags()
+  const { CI_YAML_VERSIONING, CDS_YAML_SIMPLIFICATION, PIE_INPUTSET_RBAC_PERMISSIONS } = useFeatureFlags()
 
   let inputsError: { data: Error }
 
@@ -270,13 +270,19 @@ function InputSetList(): React.ReactElement {
         orgIdentifier,
         projectIdentifier
       },
-      resource: {
-        resourceType: ResourceType.PIPELINE,
-        resourceIdentifier: pipelineIdentifier
-      },
-      permissions: [PermissionIdentifier.EDIT_PIPELINE]
+      resource: PIE_INPUTSET_RBAC_PERMISSIONS
+        ? {
+            resourceType: ResourceType.INPUT_SET
+          }
+        : {
+            resourceType: ResourceType.PIPELINE,
+            resourceIdentifier: pipelineIdentifier
+          },
+      permissions: PIE_INPUTSET_RBAC_PERMISSIONS
+        ? [PermissionIdentifier.EDIT_INPUTSET]
+        : [PermissionIdentifier.EDIT_PIPELINE]
     },
-    [accountId, orgIdentifier, projectIdentifier, pipelineIdentifier]
+    [accountId, orgIdentifier, projectIdentifier, pipelineIdentifier, PIE_INPUTSET_RBAC_PERMISSIONS]
   )
 
   const [showOverlayInputSetForm, hideOverlayInputSetForm] = useModalHook(
@@ -379,13 +385,22 @@ function InputSetList(): React.ReactElement {
         text={getString('inputSets.newInputSet')}
         rightIcon="caret-down"
         variation={ButtonVariation.PRIMARY}
-        permission={{
-          resource: {
-            resourceType: ResourceType.PIPELINE,
-            resourceIdentifier: pipelineIdentifier
-          },
-          permission: PermissionIdentifier.EDIT_PIPELINE
-        }}
+        permission={
+          PIE_INPUTSET_RBAC_PERMISSIONS
+            ? {
+                resource: {
+                  resourceType: ResourceType.INPUT_SET
+                },
+                permission: PermissionIdentifier.EDIT_INPUTSET
+              }
+            : {
+                resource: {
+                  resourceType: ResourceType.PIPELINE,
+                  resourceIdentifier: pipelineIdentifier
+                },
+                permission: PermissionIdentifier.EDIT_PIPELINE
+              }
+        }
         disabled={!pipelineHasRuntimeInputs || isPipelineInvalid}
         tooltip={getTooltipText()}
       />

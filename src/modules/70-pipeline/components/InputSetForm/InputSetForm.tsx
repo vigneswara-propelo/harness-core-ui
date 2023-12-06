@@ -52,6 +52,7 @@ import useDiffDialog from '@common/hooks/useDiffDialog'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { GitProviderOptions } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeGitProviderAndConnector'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FormikInputSetForm } from './FormikInputSetForm'
 import { useSaveInputSet } from './useSaveInputSet'
 import { PipelineVariablesContextProvider } from '../PipelineVariablesContext/PipelineVariablesContext'
@@ -701,6 +702,7 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
     PipelineType<InputSetPathProps> & { accountId: string }
   >()
   const { storeType } = useQueryParams<GitQueryParams>()
+  const { PIE_INPUTSET_RBAC_PERMISSIONS } = useFeatureFlags()
 
   const [hasEditPermission] = usePermission(
     {
@@ -709,16 +711,30 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
         orgIdentifier,
         accountIdentifier: accountId
       },
-      resource: {
-        resourceType: ResourceType.PIPELINE,
-        resourceIdentifier: pipelineIdentifier
-      },
-      permissions: [PermissionIdentifier.EDIT_PIPELINE],
+      resource: PIE_INPUTSET_RBAC_PERMISSIONS
+        ? {
+            resourceType: ResourceType.INPUT_SET,
+            resourceIdentifier: `${pipelineIdentifier}-${inputSet?.identifier}`
+          }
+        : {
+            resourceType: ResourceType.PIPELINE,
+            resourceIdentifier: pipelineIdentifier
+          },
+      permissions: PIE_INPUTSET_RBAC_PERMISSIONS
+        ? [PermissionIdentifier.EDIT_INPUTSET]
+        : [PermissionIdentifier.EDIT_PIPELINE],
       options: {
         skipCache: true
       }
     },
-    [projectIdentifier, orgIdentifier, accountId, pipelineIdentifier]
+    [
+      projectIdentifier,
+      orgIdentifier,
+      accountId,
+      pipelineIdentifier,
+      PIE_INPUTSET_RBAC_PERMISSIONS,
+      inputSet?.identifier
+    ]
   )
 
   const inputSetStoreType = isGitSyncEnabled ? undefined : inputSet.storeType

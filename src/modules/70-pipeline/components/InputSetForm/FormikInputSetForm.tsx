@@ -52,6 +52,7 @@ import {
 } from '@pipeline/utils/inputSetUtils'
 import { SettingType } from '@common/constants/Utils'
 import { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import factory from '../PipelineSteps/PipelineStepFactory'
@@ -220,6 +221,7 @@ export function FormikInputSetForm(props: FormikInputSetFormProps): React.ReactE
     ...inputSet?.gitDetails,
     connectorRef: inputSet?.connectorRef
   })
+  const { PIE_INPUTSET_RBAC_PERMISSIONS } = useFeatureFlags()
 
   const inputSetStoreType = isGitSyncEnabled ? undefined : inputSet.storeType
 
@@ -267,16 +269,30 @@ export function FormikInputSetForm(props: FormikInputSetFormProps): React.ReactE
         orgIdentifier,
         accountIdentifier: accountId
       },
-      resource: {
-        resourceType: ResourceType.PIPELINE,
-        resourceIdentifier: pipelineIdentifier
-      },
-      permissions: [PermissionIdentifier.EDIT_PIPELINE],
+      resource: PIE_INPUTSET_RBAC_PERMISSIONS
+        ? {
+            resourceType: ResourceType.INPUT_SET,
+            resourceIdentifier: `${pipelineIdentifier}-${inputSet?.identifier}`
+          }
+        : {
+            resourceType: ResourceType.PIPELINE,
+            resourceIdentifier: pipelineIdentifier
+          },
+      permissions: PIE_INPUTSET_RBAC_PERMISSIONS
+        ? [PermissionIdentifier.EDIT_INPUTSET]
+        : [PermissionIdentifier.EDIT_PIPELINE],
       options: {
         skipCache: true
       }
     },
-    [projectIdentifier, orgIdentifier, accountId, pipelineIdentifier]
+    [
+      projectIdentifier,
+      orgIdentifier,
+      accountId,
+      pipelineIdentifier,
+      PIE_INPUTSET_RBAC_PERMISSIONS,
+      inputSet?.identifier
+    ]
   )
 
   const isEditable =

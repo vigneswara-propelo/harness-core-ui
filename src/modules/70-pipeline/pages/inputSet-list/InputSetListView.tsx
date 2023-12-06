@@ -39,6 +39,7 @@ import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { MigrationType } from '@pipeline/components/MigrateResource/MigrateUtils'
 import useEditGitMetadata from '@pipeline/components/MigrateResource/useEditGitMetadata'
+import { usePermission } from '@modules/20-rbac/hooks/usePermission'
 import useDeleteConfirmationDialog from '../utils/DeleteConfirmDialog'
 import { Badge } from '../utils/Badge/Badge'
 import { INPUT_SETS_PAGE_SIZE } from './Util'
@@ -145,8 +146,35 @@ const RenderColumnMenu: Renderer<CellProps<InputSetLocal>> = ({ row, column }) =
   const data = row.original
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { getString } = useStrings()
+  const { projectIdentifier, orgIdentifier, accountId } = useParams<{
+    projectIdentifier: string
+    orgIdentifier: string
+    accountId: string
+  }>()
+  const { PIE_INPUTSET_RBAC_PERMISSIONS } = useFeatureFlags()
   const isPipelineInvalid = (column as any)?.isPipelineInvalid
   const pipelineStoreType = (column as CustomColumn<InputSetLocal>)?.pipelineStoreType
+
+  const [canEditWithInputSetRbacPermissions, canDelete] = usePermission(
+    {
+      resourceScope: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier
+      },
+      resource: {
+        resourceType: ResourceType.INPUT_SET,
+        resourceIdentifier: `${data.pipelineIdentifier}-${data.identifier}`
+      },
+      permissions: [PermissionIdentifier.EDIT_INPUTSET, PermissionIdentifier.DELETE_INPUTSET]
+    },
+    [accountId, orgIdentifier, projectIdentifier, data.identifier, data.pipelineIdentifier]
+  )
+
+  const canUpdateInputSet = PIE_INPUTSET_RBAC_PERMISSIONS
+    ? canEditWithInputSetRbacPermissions
+    : (column as any).canUpdate
+  const canDeleteInputSet = PIE_INPUTSET_RBAC_PERMISSIONS ? canDelete : (column as any).canUpdate
 
   const { showMigrateResourceModal: showMoveResourceModal } = useMigrateResource({
     resourceType: GitResourceType.INPUT_SETS,
@@ -214,7 +242,7 @@ const RenderColumnMenu: Renderer<CellProps<InputSetLocal>> = ({ row, column }) =
               ;(column as any).goToInputSetDetail?.(data)
               setMenuOpen(false)
             }}
-            disabled={!(column as any).canUpdate || isPipelineInvalid}
+            disabled={!canUpdateInputSet || isPipelineInvalid}
           />
           {showMoveToGitOption(pipelineStoreType, data.storeType) ? (
             <Menu.Item
@@ -224,7 +252,7 @@ const RenderColumnMenu: Renderer<CellProps<InputSetLocal>> = ({ row, column }) =
                 showMoveResourceModal()
                 setMenuOpen(false)
               }}
-              disabled={!(column as any).canUpdate}
+              disabled={!canUpdateInputSet}
             />
           ) : null}
           <Menu.Item
@@ -236,7 +264,7 @@ const RenderColumnMenu: Renderer<CellProps<InputSetLocal>> = ({ row, column }) =
               confirmDelete()
               setMenuOpen(false)
             }}
-            disabled={!(column as any).canUpdate}
+            disabled={!canDeleteInputSet}
           />
           {data?.storeType === StoreType.REMOTE ? (
             <Menu.Item
@@ -246,6 +274,7 @@ const RenderColumnMenu: Renderer<CellProps<InputSetLocal>> = ({ row, column }) =
                 showEditGitMetadataModal()
               }}
               data-testid="editGitMetadata"
+              disabled={!canUpdateInputSet}
             />
           ) : null}
         </Menu>
