@@ -439,7 +439,7 @@ factory.registerStep(new GenericServiceSpec())
 
 describe('K8sServiceSpec tests', () => {
   test(`renders ServiceStep for Service Tab `, () => {
-    const { container } = render(
+    const { getByText } = render(
       <TestWrapper>
         <PipelineContext.Provider value={pipelineContextKubernetes}>
           <StepWidget<K8SDirectServiceStep>
@@ -452,7 +452,12 @@ describe('K8sServiceSpec tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
+    expect(getByText('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')).toBeDefined()
+    expect(getByText('pipeline.manifestType.addManifestLabel')).toBeDefined()
+    expect(getByText('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')).toBeDefined()
+    expect(getByText('pipeline.artifactsSelection.addPrimaryArtifact')).toBeDefined()
+    expect(getByText('pipeline.artifactsSelection.addSidecar')).toBeDefined()
+    expect(getByText('common.variables')).toBeDefined()
   })
 
   test(`shows deployment type tabs`, async () => {

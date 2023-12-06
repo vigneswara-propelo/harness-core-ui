@@ -11,7 +11,6 @@ import { useParams } from 'react-router-dom'
 import { defaultTo, get, set } from 'lodash-es'
 import produce from 'immer'
 import { useGetConnectorListV2, PageConnectorResponse, StageElementConfig, ManifestConfigWrapper } from 'services/cd-ng'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
@@ -61,7 +60,6 @@ export default function ManifestSelection({
   const [fetchedConnectorResponse, setFetchedConnectorResponse] = React.useState<PageConnectorResponse | undefined>()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { CDS_HELM_MULTIPLE_MANIFEST_SUPPORT_NG } = useFeatureFlags()
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<
     PipelineType<{
@@ -150,7 +148,7 @@ export default function ManifestSelection({
       updateStage(
         produce(stage, draft => {
           set(draft, path, listOfManifests)
-          if (CDS_HELM_MULTIPLE_MANIFEST_SUPPORT_NG && isKubernetesOrNativeHelm) {
+          if (isKubernetesOrNativeHelm) {
             const mainManifests = getOnlyMainManifests(listOfManifests, deploymentType, MultiManifestsTypes.MANIFESTS)
             const isOnlyHelm = isOnlyHelmChartManifests(mainManifests)
             const manifestConfigurations = get(draft, multiManifestPath)
@@ -196,7 +194,7 @@ export default function ManifestSelection({
             : 'stage.spec.serviceConfig.serviceDefinition.spec.manifestConfigurations'
           const newStage = produce(stage, draft => {
             set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests', listOfManifests)
-            if (CDS_HELM_MULTIPLE_MANIFEST_SUPPORT_NG && isKubernetesOrNativeHelm) {
+            if (isKubernetesOrNativeHelm) {
               if (
                 isOnlyHelmChartManifests(
                   getOnlyMainManifests(listOfManifests, deploymentType, MultiManifestsTypes.MANIFESTS)
@@ -260,7 +258,7 @@ export default function ManifestSelection({
     <Layout.Vertical>
       {!isGitOpsEnabled ? (
         <>
-          {CDS_HELM_MULTIPLE_MANIFEST_SUPPORT_NG && isKubernetesOrNativeHelm ? (
+          {isKubernetesOrNativeHelm ? (
             <ManifestListViewMultiple
               {...manifestListViewCommonProps}
               pipeline={pipeline}

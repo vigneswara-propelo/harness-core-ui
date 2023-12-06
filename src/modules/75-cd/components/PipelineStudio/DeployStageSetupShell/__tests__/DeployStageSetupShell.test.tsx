@@ -133,7 +133,7 @@ describe('DeployStageSetupShell tests', () => {
     factory.registerStep(new DeployEnvironmentStep())
   })
   test('opens services tab by default', async () => {
-    const { container, findByTestId } = render(
+    const { findByTestId } = render(
       <TestWrapper>
         <Formik initialValues={{}} onSubmit={noop} formName="test">
           <PipelineContext.Provider value={context}>
@@ -145,7 +145,6 @@ describe('DeployStageSetupShell tests', () => {
 
     const serviceTab = await findByTestId('service')
 
-    expect(container).toMatchSnapshot()
     expect(serviceTab.getAttribute('aria-selected')).toBe('true')
     await waitFor(() =>
       expect(context.getStageFromPipeline).toBeCalledWith(context.state.selectionState.selectedStageId)

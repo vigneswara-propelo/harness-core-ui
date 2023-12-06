@@ -89,11 +89,7 @@ describe('Service V2', () => {
 
     cy.contains('p', 'Kustomize').should('be.visible')
     cy.contains('p', 'K8s Manifest').should('be.visible')
-    cy.contains('p', 'Values YAML').should('be.visible')
     cy.contains('p', 'Helm Chart').should('be.visible')
-    cy.contains('p', 'OpenShift Template').should('be.visible')
-    cy.contains('p', 'OpenShift Param').should('be.visible')
-    cy.contains('p', 'Kustomize Patches').should('be.visible')
     cy.contains('p', 'K8s Manifest').click()
     cy.clickSubmit()
 

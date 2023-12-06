@@ -183,7 +183,7 @@ describe('ManifestSelection tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addFileButton = await findByText(container, 'pipeline.manifestType.addManifestLabel')
+    const addFileButton = await findByText(container, 'pipeline.manifestType.addAdditionalOverride')
     expect(addFileButton).toBeDefined()
     fireEvent.click(addFileButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -209,7 +209,7 @@ describe('ManifestSelection tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addFileButton = await findByText(container, 'pipeline.manifestType.addManifestLabel')
+    const addFileButton = await findByText(container, 'pipeline.manifestType.addAdditionalOverride')
     expect(addFileButton).toBeDefined()
     fireEvent.click(addFileButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -218,7 +218,7 @@ describe('ManifestSelection tests', () => {
     )
     expect(manifestLabel).toBeDefined()
     const manifestTypes = await waitFor(() =>
-      findAllByText(portal as HTMLElement, 'pipeline.manifestTypeLabels.K8sManifest')
+      findAllByText(portal as HTMLElement, 'pipeline.manifestTypeLabels.ValuesYaml')
     )
     expect(manifestTypes).toBeDefined()
     fireEvent.click(manifestTypes[0])
@@ -262,7 +262,7 @@ describe('ManifestSelection tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addFileButton = await findByText(container, 'pipeline.manifestType.addManifestLabel')
+    const addFileButton = await findByText(container, 'pipeline.manifestType.addAdditionalOverride')
     expect(addFileButton).toBeDefined()
     fireEvent.click(addFileButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
