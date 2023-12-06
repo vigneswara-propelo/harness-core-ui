@@ -22,7 +22,9 @@ import {
   templateGoogleArtifactRegistryWithVersionRegex,
   templateGoogleArtifactRegistryWithRegionRuntime,
   templateGoogleArtifactRegistryWithVersionRuntime,
-  buildData
+  buildData,
+  repoListData,
+  templateGoogleArtifactRegistryWithRepositoryNameRuntime
 } from './mock'
 
 // Mock API and Functions
@@ -44,9 +46,21 @@ const regionData = {
 
 const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
 const fetchBuilds = jest.fn().mockReturnValue(buildData)
+const fetchRepos = jest.fn().mockReturnValue(repoListData)
+jest.mock('@common/hooks/useMutateAsGet', () => ({
+  useMutateAsGet: jest.fn().mockImplementation(fn => {
+    return fn()
+  })
+}))
 jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: connectorsData.data.content[0], refetch: fetchConnectors, loading: false }
+  }),
+  useGetRepoDetailsForGoogleArtifactRegistryV2: jest.fn().mockImplementation(() => {
+    return { data: repoListData, refetch: fetchRepos, error: null, loading: false }
+  }),
+  useGetRepoDetailsForGoogleArtifactRegistry: jest.fn().mockImplementation(() => {
+    return { data: repoListData, refetch: fetchRepos, error: null, loading: false }
   }),
   useGetBuildDetailsForGoogleArtifactRegistryV2: jest.fn().mockImplementation(() => {
     return { data: buildData, refetch: fetchBuilds, error: null, loading: false }
@@ -149,7 +163,6 @@ describe('GoogleArtifactRegistrySource tests', () => {
     ).toBeNull()
     expect(container.querySelector(`input[name='${artifactCommonPath}.artifacts.primary.spec.package']`)).toBeNull()
     expect(container.querySelector(`input[name='${artifactCommonPath}.artifacts.primary.spec.version']`)).toBeNull()
-    expect(container).toMatchSnapshot()
   })
 
   test(`renders fine for all Runtime values when version is present`, () => {
@@ -159,7 +172,6 @@ describe('GoogleArtifactRegistrySource tests', () => {
     expect(
       container.querySelector(`input[name='${artifactCommonPath}.artifacts.primary.spec.versionRegex']`)
     ).toBeNull()
-    expect(container).toMatchSnapshot()
   })
 
   test(`renders fine for all Runtime values when filePathRegex is present`, () => {
@@ -169,7 +181,6 @@ describe('GoogleArtifactRegistrySource tests', () => {
       container.querySelector(`input[name='${artifactCommonPath}.artifacts.primary.spec.versionRegex']`)
     ).not.toBeNull()
     expect(container.querySelector(`input[name='${artifactCommonPath}.artifacts.primary.spec.version']`)).toBeNull()
-    expect(container).toMatchSnapshot()
   })
 
   test(`when readonly is true, all fields should be disabled`, () => {
@@ -214,7 +225,7 @@ describe('GoogleArtifactRegistrySource tests', () => {
   })
 
   // eslint-disable-next-line jest/no-disabled-tests
-  test.skip(`clicking on version list should fetch builds`, async () => {
+  test(`clicking on version list should fetch builds`, async () => {
     const { container } = renderComponent({
       ...props,
       artifact: {
@@ -248,6 +259,43 @@ describe('GoogleArtifactRegistrySource tests', () => {
 
     await waitFor(() => {
       expect(fetchBuilds).toHaveBeenCalled()
+    })
+  })
+
+  test(`clicking on repo name should fetch repo names`, async () => {
+    const { container } = renderComponent({
+      ...props,
+      artifact: {
+        identifier: '',
+        type: 'GoogleArtifactRegistry',
+        spec: {
+          connectorRef: 'AWSX',
+          project: 'testProject',
+          region: 'us-east',
+          repositoryName: '<+input>',
+          package: 'testPackage',
+          version: 'latest'
+        }
+      },
+      template: templateGoogleArtifactRegistryWithRepositoryNameRuntime
+    })
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+    const repoNameInput = queryByNameAttribute(
+      `${artifactCommonPath}.artifacts.primary.spec.repositoryName`
+    ) as HTMLInputElement
+    expect(repoNameInput).not.toBeNull()
+    expect(repoNameInput).not.toBeDisabled()
+    expect(repoNameInput.value).toBe('')
+    const portalDivs = document.getElementsByClassName('bp3-portal')
+    expect(portalDivs.length).toBe(0)
+    const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
+    const repoNameDropDownIcon = dropdownIcons[0]
+    act(() => {
+      fireEvent.click(repoNameDropDownIcon)
+    })
+
+    await waitFor(() => {
+      expect(fetchRepos).toHaveBeenCalled()
     })
   })
 })

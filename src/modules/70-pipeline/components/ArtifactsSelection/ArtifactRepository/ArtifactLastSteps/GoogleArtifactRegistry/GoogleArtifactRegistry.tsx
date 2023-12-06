@@ -22,18 +22,19 @@ import {
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import * as Yup from 'yup'
-import { Menu } from '@blueprintjs/core'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo, get, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
 import {
   getConnectorIdValue,
   getArtifactFormData,
   helperTextData,
-  isFieldFixedAndNonEmpty,
   shouldHideHeaderAndNavBtns,
-  resetFieldValue
+  resetFieldValue,
+  isAllFieldsAreFixedInGAR,
+  isAllFieldsAreFixedForFetchRepos
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   ArtifactType,
@@ -45,15 +46,18 @@ import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/Config
 import {
   ConnectorConfigDTO,
   GARBuildDetailsDTO,
+  GARRepoDetailsDTO,
   RegionGar,
   useGetBuildDetailsForGoogleArtifactRegistry,
-  useGetRegionsForGoogleArtifactRegistry
+  useGetRegionsForGoogleArtifactRegistry,
+  useGetRepoDetailsForGoogleArtifactRegistry
 } from 'services/cd-ng'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import ItemRendererWithMenuItem from '@modules/10-common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -92,7 +96,7 @@ function FormComponent(
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [regions, setRegions] = useState<SelectOption[]>([])
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-
+  const [repoSelectItems, setRepoSelectItems] = useState<SelectOption[]>([])
   const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
 
   const commonParams = {
@@ -103,12 +107,29 @@ function FormComponent(
     branch
   }
   const connectorRefValue = getConnectorIdValue(modifiedPrevStepData)
+  const repoType = defaultTo(formik.values.spec.repositoryType, initialValues?.spec?.repositoryType)
   const packageValue = defaultTo(formik.values.spec.package, initialValues?.spec?.package)
   const projectValue = defaultTo(formik.values.spec.project, initialValues?.spec?.project)
   const regionValue = defaultTo(formik.values.spec.region, initialValues?.spec?.region)
   const repositoryNameValue = defaultTo(formik.values?.spec.repositoryName, initialValues?.spec?.repositoryName)
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const isTemplateContext = context === ModalViewFor.Template
+
+  const {
+    data: repoDetails,
+    refetch: refetchRepoDetails,
+    loading: fetchingRepos,
+    error: fetchRepoError
+  } = useGetRepoDetailsForGoogleArtifactRegistry({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      repositoryType: repoType,
+      connectorRef: connectorRefValue,
+      project: projectValue,
+      region: regionValue
+    }
+  })
 
   const {
     data: buildDetails,
@@ -138,18 +159,8 @@ function FormComponent(
     }
   }, [regionsData])
 
-  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
-    <div key={item.label.toString()}>
-      <Menu.Item
-        text={
-          <Layout.Horizontal spacing="small">
-            <Text>{item.label}</Text>
-          </Layout.Horizontal>
-        }
-        disabled={fetchingBuilds}
-        onClick={handleClick}
-      />
-    </div>
+  const itemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingBuilds} />
   ))
 
   const selectItems = useMemo(() => {
@@ -159,21 +170,49 @@ function FormComponent(
     }))
   }, [buildDetails?.data])
 
-  const getBuilds = (): { label: string; value: string }[] => {
+  useEffect(() => {
+    if (fetchRepoError) {
+      setRepoSelectItems([])
+      return
+    }
+    const repoItems =
+      repoDetails?.data?.garRepositoryDTOList?.map((repo: GARRepoDetailsDTO) => ({
+        value: defaultTo(repo.repository, ''),
+        label: defaultTo(repo.repository, '')
+      })) || []
+    setRepoSelectItems(repoItems)
+  }, [repoDetails?.data, fetchRepoError])
+
+  const getBuilds = (): SelectOption[] => {
     if (fetchingBuilds) {
-      return [{ label: 'Loading Builds...', value: 'Loading Builds...' }]
+      return [
+        {
+          label: getString('common.loadingFieldOptions', {
+            fieldName: getString('buildText')
+          }),
+          value: getString('common.loadingFieldOptions', {
+            fieldName: getString('buildText')
+          })
+        }
+      ]
     }
     return defaultTo(selectItems, [])
   }
 
-  const isAllFieldsAreFixed = (): boolean => {
-    return (
-      isFieldFixedAndNonEmpty(formik.values.spec.project) &&
-      isFieldFixedAndNonEmpty(formik.values.spec.region) &&
-      isFieldFixedAndNonEmpty(formik.values.spec.repositoryName) &&
-      isFieldFixedAndNonEmpty(formik.values.spec.package) &&
-      isFieldFixedAndNonEmpty(connectorRefValue)
-    )
+  const getRepos = (): SelectOption[] => {
+    if (fetchingRepos) {
+      return [
+        {
+          label: getString('common.loadingFieldOptions', {
+            fieldName: getString('repository')
+          }),
+          value: getString('common.loadingFieldOptions', {
+            fieldName: getString('repository')
+          })
+        }
+      ]
+    }
+    return defaultTo(repoSelectItems, [])
   }
 
   const getConnectorRefQueryData = (): string => {
@@ -189,6 +228,11 @@ function FormComponent(
         false
       )
     )
+  }
+
+  const clearRepoField = (): void => {
+    resetFieldValue(formik, 'spec.repositoryName')
+    setRepoSelectItems([])
   }
 
   return (
@@ -211,6 +255,7 @@ function FormComponent(
             label={getString('pipelineSteps.projectIDLabel')}
             placeholder={getString('pipeline.artifactsSelection.projectIDPlaceholder')}
             disabled={isReadonly}
+            onChange={clearRepoField}
             multiTextInputProps={{
               expressions,
               allowableTypes
@@ -237,6 +282,7 @@ function FormComponent(
             useValue
             placeholder={getString('pipeline.regionPlaceholder')}
             multiTypeInputProps={{
+              onChange: clearRepoField,
               onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.region', type),
               expressions,
               selectProps: {
@@ -268,14 +314,53 @@ function FormComponent(
           )}
         </div>
         <div className={css.imagePathContainer}>
-          <FormInput.MultiTextInput
+          <FormInput.MultiTypeInput
+            selectItems={getRepos()}
             name="spec.repositoryName"
             label={getString('common.repositoryName')}
             placeholder={getString('pipeline.manifestType.repoNamePlaceholder')}
+            useValue
             disabled={isReadonly}
-            multiTextInputProps={{
+            multiTypeInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              selectProps: {
+                noResults: (
+                  <NoTagResults
+                    tagError={fetchRepoError}
+                    isServerlessDeploymentTypeSelected={false}
+                    defaultErrorText={getString('pipeline.artifactsSelection.validation.noRepo')}
+                  />
+                ),
+                itemRenderer: itemRenderer,
+                items: getRepos(),
+                allowCreatingNewItems: true,
+                usePortal: isTemplateContext
+              },
+              onChange: () => {
+                resetFieldValue(formik, 'spec.package')
+                resetFieldValue(formik, 'spec.version')
+                resetFieldValue(formik, 'spec.digest')
+              },
+              onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                if (
+                  e?.target?.type !== 'text' ||
+                  (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                ) {
+                  return
+                }
+                if (isAllFieldsAreFixedForFetchRepos(projectValue, regionValue, connectorRefValue)) {
+                  refetchRepoDetails({
+                    queryParams: {
+                      ...commonParams,
+                      connectorRef: connectorRefValue,
+                      project: projectValue,
+                      region: regionValue,
+                      repositoryType: repoType
+                    }
+                  })
+                }
+              }
             }}
           />
           {getMultiTypeFromValue(formik.values.spec.repositoryName) === MultiTypeInputType.RUNTIME && (
@@ -371,7 +456,15 @@ function FormComponent(
                   ) {
                     return
                   }
-                  if (isAllFieldsAreFixed()) {
+                  if (
+                    isAllFieldsAreFixedInGAR(
+                      projectValue,
+                      regionValue,
+                      repositoryNameValue,
+                      packageValue,
+                      connectorRefValue
+                    )
+                  ) {
                     refetchBuildDetails({
                       queryParams: {
                         ...commonParams,

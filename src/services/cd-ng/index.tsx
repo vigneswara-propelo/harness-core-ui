@@ -7276,8 +7276,14 @@ export interface GARBuildDetailsDTO {
   version?: string
 }
 
+export interface GARRepoDetailsDTO {
+  repository?: string
+  format?: string
+}
+
 export interface GARResponseDTO {
   buildDetailsList?: GARBuildDetailsDTO[]
+  garRepositoryDTOList?: GARRepoDetailsDTO[]
 }
 
 export type GARStepInfo = StepSpecType & {
@@ -29872,6 +29878,104 @@ export const useGetBuildDetailsForGoogleArtifactRegistry = (props: UseGetBuildDe
     `/artifacts/gar/getBuildDetails`,
     { base: getConfig('ng/api'), ...props }
   )
+
+export interface GetRepoDetailsForGoogleArtifactRegistryQueryParams {
+  connectorRef?: string
+  region?: string
+  repositoryName?: string
+  project?: string
+  package?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  version?: string
+  versionRegex?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+  repositoryType?: string
+}
+
+export type UseGetRepoDetailsForGoogleArtifactRegistryProps = Omit<
+  UseGetProps<ResponseGARResponseDTO, Failure | Error, GetRepoDetailsForGoogleArtifactRegistryQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets google artifact registry repo details
+ */
+export const useGetRepoDetailsForGoogleArtifactRegistry = (props: UseGetRepoDetailsForGoogleArtifactRegistryProps) =>
+  useGet<ResponseGARResponseDTO, Failure | Error, GetRepoDetailsForGoogleArtifactRegistryQueryParams, void>(
+    `/artifacts/gar/getRepositories`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+export interface GetRepoDetailsForGoogleArtifactRegistryV2QueryParams {
+  connectorRef?: string
+  region?: string
+  repositoryName?: string
+  project?: string
+  package?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  pipelineIdentifier?: string
+  version?: string
+  versionRegex?: string
+  fqnPath: string
+  serviceId?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+}
+
+export type GetRepoDetailsForGoogleArtifactRegistryV2Props = Omit<
+  MutateProps<
+    ResponseGARResponseDTO,
+    Failure | Error,
+    GetRepoDetailsForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+export type UseGetRepoDetailsForGoogleArtifactRegistryV2Props = Omit<
+  UseMutateProps<
+    ResponseGARResponseDTO,
+    Failure | Error,
+    GetRepoDetailsForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets google artifact registry repo details v2
+ */
+export const useGetRepoDetailsForGoogleArtifactRegistryV2 = (
+  props: UseGetRepoDetailsForGoogleArtifactRegistryV2Props
+) =>
+  useMutate<
+    ResponseGARResponseDTO,
+    Failure | Error,
+    GetRepoDetailsForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', `/artifacts/gar/v2/getRepositories`, { base: getConfig('ng/api'), ...props })
 
 /**
  * Gets google artifact registry build details

@@ -626,6 +626,34 @@ export const isFieldFixedAndNonEmpty = (field: string): boolean => {
   return getMultiTypeFromValue(field) === MultiTypeInputType.FIXED ? field?.length > 0 : false
 }
 
+export const isAllFieldsAreFixedInGAR = (
+  project: string,
+  region: string,
+  repositoryName: string,
+  packageName: string,
+  connectorRefValue: string
+): boolean => {
+  return (
+    isFieldFixedAndNonEmpty(project) &&
+    isFieldFixedAndNonEmpty(region) &&
+    isFieldFixedAndNonEmpty(repositoryName) &&
+    isFieldFixedAndNonEmpty(packageName) &&
+    isFieldFixedAndNonEmpty(connectorRefValue)
+  )
+}
+
+export const isAllFieldsAreFixedForFetchRepos = (
+  project: string | undefined,
+  region: string | undefined,
+  connectorRefValue: string | undefined
+): boolean => {
+  return (
+    isFieldFixedAndNonEmpty(defaultTo(project, '')) &&
+    isFieldFixedAndNonEmpty(defaultTo(region, '')) &&
+    isFieldFixedAndNonEmpty(defaultTo(connectorRefValue, ''))
+  )
+}
+
 export const formFillingMethod = {
   MANUAL: 'manual',
   SCRIPT: 'script'

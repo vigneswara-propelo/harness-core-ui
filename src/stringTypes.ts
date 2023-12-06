@@ -4186,6 +4186,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.validation.noBuild': string
   'pipeline.artifactsSelection.validation.noFeeds': string
   'pipeline.artifactsSelection.validation.noPackage': string
+  'pipeline.artifactsSelection.validation.noRepo': string
   'pipeline.artifactsSelection.validation.noVersion': string
   'pipeline.artifactsSelection.validation.packageName': string
   'pipeline.artifactsSelection.validation.packageType': string

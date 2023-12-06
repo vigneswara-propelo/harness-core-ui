@@ -22,10 +22,27 @@ import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
+import { useParams } from 'react-router-dom'
+import { defaultTo, memoize } from 'lodash-es'
+import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
-import { ConnectorConfigDTO, RegionGar, useGetRegionsForGoogleArtifactRegistry } from 'services/cd-ng'
+import {
+  ConnectorConfigDTO,
+  GARRepoDetailsDTO,
+  RegionGar,
+  useGetRegionsForGoogleArtifactRegistry,
+  useGetRepoDetailsForGoogleArtifactRegistry
+} from 'services/cd-ng'
 import type { GarSpec } from 'services/pipeline-ng'
-import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import {
+  getConnectorIdValue,
+  isAllFieldsAreFixedForFetchRepos,
+  resetFieldValue
+} from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { NoTagResults } from '@modules/70-pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
+import { GitQueryParams, ProjectPathProps } from '@modules/10-common/interfaces/RouteInterfaces'
+import { useQueryParams } from '@modules/10-common/hooks'
+import { EXPRESSION_STRING } from '@modules/70-pipeline/utils/constants'
 import type { ImagePathProps } from '../../../ArtifactInterface'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -42,10 +59,42 @@ export const repositoryType: SelectOption[] = [
 function FormComponent(
   props: StepProps<ConnectorConfigDTO> & ImagePathProps<GarSpec> & { formik: FormikProps<GarSpec> }
 ): React.ReactElement {
-  const { prevStepData, previousStep } = props
+  const { prevStepData, previousStep, initialValues, formik } = props
   const { getString } = useStrings()
   const [regions, setRegions] = useState<SelectOption[]>([])
   const { data: regionsData } = useGetRegionsForGoogleArtifactRegistry({})
+  const [repoSelectItems, setRepoSelectItems] = useState<SelectOption[]>([])
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+
+  const commonParams = {
+    accountIdentifier: accountId,
+    projectIdentifier,
+    orgIdentifier,
+    repoIdentifier,
+    branch
+  }
+
+  const connectorRefValue = getConnectorIdValue(prevStepData)
+  const repoType = defaultTo(formik.values.repositoryType, initialValues?.repositoryType)
+  const projectValue = defaultTo(formik.values.project, initialValues?.project)
+  const regionValue = defaultTo(formik.values.region, initialValues?.region)
+
+  const {
+    data: repoDetails,
+    refetch: refetchRepoDetails,
+    loading: fetchingRepos,
+    error: fetchRepoError
+  } = useGetRepoDetailsForGoogleArtifactRegistry({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      repositoryType: repoType,
+      connectorRef: connectorRefValue,
+      project: projectValue,
+      region: regionValue
+    }
+  })
 
   useEffect(() => {
     if (regionsData?.data) {
@@ -56,6 +105,49 @@ function FormComponent(
       )
     }
   }, [regionsData])
+
+  useEffect(() => {
+    if (fetchRepoError) {
+      setRepoSelectItems([])
+      return
+    }
+    const repoItems =
+      repoDetails?.data?.garRepositoryDTOList?.map((repo: GARRepoDetailsDTO) => ({
+        value: defaultTo(repo.repository, ''),
+        label: defaultTo(repo.repository, '')
+      })) || []
+    setRepoSelectItems(repoItems)
+  }, [repoDetails?.data, fetchRepoError])
+
+  const getRepos = (): SelectOption[] => {
+    if (fetchingRepos) {
+      return [
+        {
+          label: getString('common.loadingFieldOptions', {
+            fieldName: getString('repository')
+          }),
+          value: getString('common.loadingFieldOptions', {
+            fieldName: getString('repository')
+          })
+        }
+      ]
+    }
+    return defaultTo(repoSelectItems, [])
+  }
+
+  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
+    <div key={item.label.toString()}>
+      <Menu.Item
+        text={
+          <Layout.Horizontal spacing="small">
+            <Text>{item.label}</Text>
+          </Layout.Horizontal>
+        }
+        disabled={fetchingRepos}
+        onClick={handleClick}
+      />
+    </div>
+  ))
 
   return (
     <FormikForm>
@@ -88,12 +180,48 @@ function FormComponent(
           />
         </div>
         <div className={css.jenkinsFieldContainer}>
-          <FormInput.MultiTextInput
+          <FormInput.MultiTypeInput
+            selectItems={getRepos()}
             name="repositoryName"
             label={getString('common.repositoryName')}
             placeholder={getString('pipeline.manifestType.repoNamePlaceholder')}
-            multiTextInputProps={{
-              allowableTypes: [MultiTypeInputType.FIXED]
+            useValue
+            multiTypeInputProps={{
+              allowableTypes: [MultiTypeInputType.FIXED],
+              selectProps: {
+                noResults: (
+                  <NoTagResults
+                    tagError={fetchRepoError}
+                    isServerlessDeploymentTypeSelected={false}
+                    defaultErrorText={getString('pipeline.artifactsSelection.validation.noRepo')}
+                  />
+                ),
+                itemRenderer: itemRenderer,
+                items: getRepos(),
+                allowCreatingNewItems: true
+              },
+              onChange: () => {
+                resetFieldValue(formik, 'package')
+              },
+              onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                if (
+                  e?.target?.type !== 'text' ||
+                  (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                ) {
+                  return
+                }
+                if (isAllFieldsAreFixedForFetchRepos(projectValue, regionValue, connectorRefValue)) {
+                  refetchRepoDetails({
+                    queryParams: {
+                      ...commonParams,
+                      connectorRef: connectorRefValue,
+                      project: projectValue,
+                      region: regionValue,
+                      repositoryType: repoType
+                    }
+                  })
+                }
+              }
             }}
           />
         </div>

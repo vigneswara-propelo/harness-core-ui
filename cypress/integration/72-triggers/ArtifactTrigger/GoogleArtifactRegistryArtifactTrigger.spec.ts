@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getGARRegions } from '../constants'
+import { getGARRegions, getGARRepo } from '../constants'
 import { visitTriggersPage } from '../triggers-helpers/visitTriggersPage'
 import { getGoogleArtifactRegistryTriggerArtifactData } from './ArtifactTriggerConfig'
 import { editArtifactTriggerHelper } from './artifact-trigger-helpers/editArtifactTriggerHelper'
@@ -20,6 +20,10 @@ describe('Google Artifact Registry Artifact Trigger', () => {
     cy.intercept('GET', getGARRegions, {
       fixture: 'pipeline/api/triggers/Cypress_Test_Trigger_GAR_Regions.json'
     }).as('getGARRegions')
+
+    cy.intercept('GET', getGARRepo({ connectorId, region, project }), {
+      fixture: 'pipeline/api/triggers/Cypress_Test_Trigger_GAR_Repo.json'
+    }).as('getGARRepo')
   })
 
   describe('1: Create new trigger', () => {
@@ -33,6 +37,7 @@ describe('Google Artifact Registry Artifact Trigger', () => {
       cy.get('input[name="region"]').clear().type(region)
       cy.contains('p', region).click()
       cy.get('input[name="repositoryName"]').clear().type(repositoryName)
+      cy.contains('p', repositoryName).should('be.visible').click()
       cy.get('input[name="package"]').clear().type(pkg)
     }
 

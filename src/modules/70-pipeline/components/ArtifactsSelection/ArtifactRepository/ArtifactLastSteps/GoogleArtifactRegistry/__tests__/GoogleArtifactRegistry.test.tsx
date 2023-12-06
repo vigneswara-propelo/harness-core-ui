@@ -43,6 +43,22 @@ const commonInitialValues: GoogleArtifactRegistryInitialValuesType = {
   }
 }
 
+const repoListData = {
+  status: 'SUCCESS',
+  data: {
+    garRepositoryDTOList: [
+      {
+        repository: 'testRepo',
+        format: 'DOCKER'
+      },
+      {
+        repository: 'testRepo 2',
+        format: 'DOCKER'
+      }
+    ]
+  }
+}
+
 const buildData = {
   status: 'SUCCESS',
   data: {
@@ -77,9 +93,13 @@ const regionData = {
   metaData: null,
   correlationId: '441c6388-e3df-44cd-86f8-ccc6f1a4558b'
 }
+const fetchRepos = jest.fn().mockReturnValue(repoListData)
 const fetchBuilds = jest.fn().mockReturnValue(buildData)
 
 jest.mock('services/cd-ng', () => ({
+  useGetRepoDetailsForGoogleArtifactRegistry: jest.fn().mockImplementation(() => {
+    return { data: repoListData, refetch: fetchRepos, error: null, loading: false }
+  }),
   useGetBuildDetailsForGoogleArtifactRegistry: jest.fn().mockImplementation(() => {
     return { data: buildData, refetch: fetchBuilds, error: null, loading: false }
   }),
@@ -140,7 +160,9 @@ const doConfigureOptionsTesting = async (cogModal: HTMLElement, fieldElement: HT
 
 describe('GoogleArtifactRegistry tests', () => {
   beforeEach(() => {
-    fetchBuilds.mockReset(), onSubmit.mockReset()
+    fetchBuilds.mockReset()
+    onSubmit.mockReset()
+    fetchRepos.mockReset()
   })
   test(`renders fine for the NEW artifact`, () => {
     const { container } = render(
@@ -457,10 +479,97 @@ describe('GoogleArtifactRegistry tests', () => {
       </TestWrapper>
     )
     const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
-    const versionNameDropDownIcon = dropdownIcons[2]
+    const versionNameDropDownIcon = dropdownIcons[3]
     act(() => {
       fireEvent.click(versionNameDropDownIcon)
     })
     await waitFor(() => expect(fetchBuilds).toHaveBeenCalled())
+  })
+
+  test(`clicking on version list should not fetch builds if required fields are empty`, async () => {
+    const initialValues = {
+      type: 'GoogleArtifactRegistry',
+      ...commonInitialValues,
+      spec: {
+        ...commonInitialValues.spec,
+        project: 'testProject',
+        package: '',
+        region: 'testRegion',
+        repositoryName: '',
+        version: 'xyz'
+      }
+    }
+    const { container } = render(
+      <TestWrapper>
+        <GoogleArtifactRegistry initialValues={initialValues as any} {...props} />
+      </TestWrapper>
+    )
+    const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
+    const versionNameDropDownIcon = dropdownIcons[3]
+    act(() => {
+      fireEvent.click(versionNameDropDownIcon)
+    })
+    await waitFor(() => expect(fetchBuilds).not.toHaveBeenCalled())
+  })
+
+  test(`clicking on repository name list should fetch repo list`, async () => {
+    const initialValues = {
+      type: 'GoogleArtifactRegistry',
+      ...commonInitialValues,
+      spec: {
+        ...commonInitialValues.spec,
+        project: 'testProject',
+        package: 'testPackage',
+        region: 'testRegion',
+        repositoryName: 'testRepo',
+        version: 'xyz'
+      }
+    }
+    const { container } = render(
+      <TestWrapper>
+        <GoogleArtifactRegistry initialValues={initialValues as any} {...props} />
+      </TestWrapper>
+    )
+    const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
+    const repositoryNameDropDownIcon = dropdownIcons[2]
+    act(() => {
+      fireEvent.click(repositoryNameDropDownIcon)
+    })
+    await waitFor(() =>
+      expect(fetchRepos).toHaveBeenCalledWith({
+        queryParams: {
+          connectorRef: 'testConnector',
+          project: 'testProject',
+          region: 'testRegion',
+          repositoryType: 'docker'
+        }
+      })
+    )
+  })
+
+  test(`clicking on repository name list should not fetch repo list if required fields are empty`, async () => {
+    const initialValues = {
+      type: 'GoogleArtifactRegistry',
+      ...commonInitialValues,
+      spec: {
+        ...commonInitialValues.spec,
+        project: '',
+        package: '',
+        region: '',
+        repositoryName: 'testRepo',
+        version: 'xyz'
+      }
+    }
+    const { container } = render(
+      <TestWrapper>
+        <GoogleArtifactRegistry initialValues={initialValues as any} {...props} />
+      </TestWrapper>
+    )
+    const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
+    const repositoryNameDropDownIcon = dropdownIcons[2]
+    act(() => {
+      fireEvent.click(repositoryNameDropDownIcon)
+    })
+    await waitFor(() => expect(fetchRepos).not.toHaveBeenCalled())
   })
 })

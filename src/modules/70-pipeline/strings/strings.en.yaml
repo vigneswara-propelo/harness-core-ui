@@ -1130,6 +1130,7 @@ artifactsSelection:
     artifactsArrayPath: Artifact array path is required
     artifactsFilter: Artifact filter is required
     versionPath: Version path is required
+    noRepo: No repository found with given details
     noBuild: No build found with given details
     noPackage: No package found with given details
     noFeeds: No feeds found with given details

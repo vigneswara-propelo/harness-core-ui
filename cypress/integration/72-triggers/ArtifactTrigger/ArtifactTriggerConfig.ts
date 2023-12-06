@@ -142,7 +142,7 @@ export const getGoogleArtifactRegistryTriggerArtifactData = (): {
   const connectorId = 'testAWS'
   const project = 'test-project'
   const region = 'asia'
-  const repositoryName = 'test-repository-name'
+  const repositoryName = 'demo'
   const pkg = 'test-package'
   const yaml = `trigger:\n  name: ${identifier}\n  identifier: ${identifier}\n  enabled: true\n  description: test description\n  tags:\n    tag1: ""\n    tag2: ""\n  orgIdentifier: default\n  projectIdentifier: project1\n  pipelineIdentifier: testPipeline_Cypress\n  stagesToExecute: []\n  source:\n    type: Artifact\n    spec:\n      type: GoogleArtifactRegistry\n      spec:\n        package: ${pkg}\n        connectorRef: ${connectorId}\n        eventConditions:\n          - key: build\n            operator: Equals\n            value: "1"\n        project: ${project}\n        region: ${region}\n        repositoryName: ${repositoryName}\n        version: <+trigger.artifact.build>\n        metaDataConditions:\n          - key: <+trigger.artifact.metadata.field>\n            operator: Equals\n            value: "1"\n        jexlCondition: <+trigger.payload.repository.owner.name> == "harness"\n  inputYaml: |\n    pipeline:\n      identifier: GCR_Trigger\n      stages:\n        - stage:\n            identifier: S1\n            type: Deployment\n            spec:\n              execution:\n                steps:\n                  - step:\n                      identifier: ShellScript_1\n                      type: ShellScript\n                      timeout: 10m\n`
 

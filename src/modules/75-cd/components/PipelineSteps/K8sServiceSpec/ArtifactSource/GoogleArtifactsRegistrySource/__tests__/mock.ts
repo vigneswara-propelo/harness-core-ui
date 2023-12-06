@@ -30,6 +30,22 @@ export const bucketListData = {
   correlationId: '631fb63d-b587-42fd-983f-9cbeba3df618'
 }
 
+export const repoListData = {
+  status: 'SUCCESS',
+  data: {
+    garRepositoryDTOList: [
+      {
+        repository: 'testRepo',
+        format: 'DOCKER'
+      },
+      {
+        repository: 'testRepo 2',
+        format: 'DOCKER'
+      }
+    ]
+  }
+}
+
 export const buildData = {
   status: 'SUCCESS',
   data: {
@@ -79,6 +95,17 @@ export const templateGoogleArtifactRegistryWithVersionRuntime: ServiceSpec = {
     primary: {
       spec: {
         version: '<+input>'
+      },
+      type: 'GoogleArtifactRegistry'
+    }
+  }
+}
+
+export const templateGoogleArtifactRegistryWithRepositoryNameRuntime: ServiceSpec = {
+  artifacts: {
+    primary: {
+      spec: {
+        repositoryName: '<+input>'
       },
       type: 'GoogleArtifactRegistry'
     }

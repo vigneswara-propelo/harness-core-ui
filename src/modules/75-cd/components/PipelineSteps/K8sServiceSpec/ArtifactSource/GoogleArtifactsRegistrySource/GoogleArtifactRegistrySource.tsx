@@ -6,10 +6,11 @@
  */
 
 import React, { useMemo, useEffect, useState } from 'react'
-import { defaultTo, get, memoize } from 'lodash-es'
+import { defaultTo, get, memoize, set } from 'lodash-es'
 
-import { Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
-import { Menu } from '@blueprintjs/core'
+import { Layout, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import produce from 'immer'
+import { IItemRendererProps } from '@blueprintjs/select'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useStrings } from 'framework/strings'
@@ -18,11 +19,14 @@ import { FormMultiTypeConnectorField } from '@platform/connectors/components/Con
 import {
   ArtifactSource,
   GARBuildDetailsDTO,
+  GARRepoDetailsDTO,
   RegionGar,
   SidecarArtifact,
   useGetBuildDetailsForGoogleArtifactRegistry,
   useGetBuildDetailsForGoogleArtifactRegistryV2,
-  useGetRegionsForGoogleArtifactRegistry
+  useGetRegionsForGoogleArtifactRegistry,
+  useGetRepoDetailsForGoogleArtifactRegistry,
+  useGetRepoDetailsForGoogleArtifactRegistryV2
 } from 'services/cd-ng'
 import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { TriggerDefaultFieldList } from '@triggers/components/Triggers/utils'
@@ -31,8 +35,13 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
-import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import {
+  isAllFieldsAreFixedForFetchRepos,
+  isAllFieldsAreFixedInGAR,
+  isArtifactInMultiService
+} from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { useIsTagRegex } from '@pipeline/hooks/useIsTagRegex'
+import ItemRendererWithMenuItem from '@modules/10-common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -80,6 +89,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
 
   const { getString } = useStrings()
   const [regions, setRegions] = useState<SelectOption[]>([])
+  const [repoSelectItems, setRepoSelectItems] = useState<SelectOption[]>([])
   const { expressions } = useVariablesExpression()
   const commonParams = {
     accountIdentifier: accountId,
@@ -145,6 +155,23 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     }
   })
 
+  // v1 tags api is required to fetch tags for artifact source template usage while linking to service
+  // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
+  const {
+    data: reposV1Detail,
+    refetch: refetchReposV1Details,
+    loading: fetchingV1Repos,
+    error: fetchingV1ReposError
+  } = useGetRepoDetailsForGoogleArtifactRegistry({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
+      project: getFinalQueryParamValue(projectValue),
+      region: getFinalQueryParamValue(regionValue)
+    }
+  })
+
   const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
   const pipelineRuntimeYaml = getYamlData(formik?.values, stepViewType as StepViewType, path as string)
 
@@ -187,6 +214,43 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     }
   })
 
+  const {
+    data: reposV2Detail,
+    refetch: refetchReposV2Details,
+    loading: fetchingV2Repos,
+    error: fetchingV2ReposError
+  } = useMutateAsGet(useGetRepoDetailsForGoogleArtifactRegistryV2, {
+    lazy: true,
+    body: pipelineRuntimeYaml,
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
+    queryParams: {
+      ...commonParams,
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
+      project: getFinalQueryParamValue(projectValue),
+      region: getFinalQueryParamValue(regionValue),
+      pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
+      serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+      fqnPath: getFqnPath(
+        path as string,
+        !!isPropagatedStage,
+        stageIdentifier,
+        defaultTo(
+          isSidecar
+            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+            : artifactPath,
+          ''
+        ),
+        'repositoryName',
+        serviceIdentifier as string,
+        isMultiService
+      )
+    }
+  })
+
   const { refetchBuildDetails, fetchingBuilds, error, buildsDetail } = useArtifactV1Data
     ? {
         refetchBuildDetails: refetchBuildV1Details,
@@ -199,6 +263,20 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
         fetchingBuilds: fetchingV2Builds,
         error: fetchingV2BuildsError,
         buildsDetail: buildsV2Detail
+      }
+
+  const { refetchRepoDetails, fetchingRepos, errorFetchingRepos, reposDetail } = useArtifactV1Data
+    ? {
+        refetchRepoDetails: refetchReposV1Details,
+        fetchingRepos: fetchingV1Repos,
+        errorFetchingRepos: fetchingV1ReposError,
+        reposDetail: reposV1Detail
+      }
+    : {
+        refetchRepoDetails: refetchReposV2Details,
+        fetchingRepos: fetchingV2Repos,
+        errorFetchingRepos: fetchingV2ReposError,
+        reposDetail: reposV2Detail
       }
 
   const {
@@ -231,18 +309,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     stepViewType
   })
 
-  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
-    <div key={item.label.toString()}>
-      <Menu.Item
-        text={
-          <Layout.Horizontal spacing="small">
-            <Text>{item.label}</Text>
-          </Layout.Horizontal>
-        }
-        disabled={fetchingBuilds}
-        onClick={handleClick}
-      />
-    </div>
+  const itemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingBuilds} />
   ))
 
   const selectItems = useMemo(() => {
@@ -254,9 +322,47 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
 
   const getBuildDetails = (): { label: string; value: string }[] => {
     if (fetchingBuilds) {
-      return [{ label: 'Loading Builds...', value: 'Loading Builds...' }]
+      return [
+        {
+          label: getString('common.loadingFieldOptions', {
+            fieldName: getString('buildText')
+          }),
+          value: getString('common.loadingFieldOptions', {
+            fieldName: getString('buildText')
+          })
+        }
+      ]
     }
     return defaultTo(selectItems, [])
+  }
+
+  useEffect(() => {
+    if (errorFetchingRepos) {
+      setRepoSelectItems([])
+      return
+    }
+    const repoItems =
+      reposDetail?.data?.garRepositoryDTOList?.map((repo: GARRepoDetailsDTO) => ({
+        value: defaultTo(repo.repository, ''),
+        label: defaultTo(repo.repository, '')
+      })) || []
+    setRepoSelectItems(repoItems)
+  }, [reposDetail?.data, errorFetchingRepos])
+
+  const getRepoDetails = (): SelectOption[] => {
+    if (fetchingRepos) {
+      return [
+        {
+          label: getString('common.loadingFieldOptions', {
+            fieldName: getString('repository')
+          }),
+          value: getString('common.loadingFieldOptions', {
+            fieldName: getString('repository')
+          })
+        }
+      ]
+    }
+    return defaultTo(repoSelectItems, [])
   }
 
   const { data: regionData } = useGetRegionsForGoogleArtifactRegistry({})
@@ -329,6 +435,15 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               label={getString('pipelineSteps.projectIDLabel')}
               placeholder={getString('pipeline.artifactsSelection.projectIDPlaceholder')}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.project`)}
+              onChange={value => {
+                formik.setValues(
+                  produce(formik.values, (draft: any) => {
+                    set(draft, `${path}.artifacts.${artifactPath}.spec.project`, value)
+                    set(draft, `${path}.artifacts.${artifactPath}.spec.repositoryName`, '')
+                  })
+                )
+                setRepoSelectItems([])
+              }}
               multiTextInputProps={{
                 expressions,
                 allowableTypes
@@ -345,6 +460,19 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               placeholder={getString('pipeline.regionPlaceholder')}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.region`)}
               multiTypeInputProps={{
+                onChange: value => {
+                  setRepoSelectItems([])
+                  formik.setValues(
+                    produce(formik.values, (draft: any) => {
+                      set(
+                        draft,
+                        `${path}.artifacts.${artifactPath}.spec.region`,
+                        defaultTo((value as SelectOption)?.value, value)
+                      )
+                      set(draft, `${path}.artifacts.${artifactPath}.spec.repositoryName`, '')
+                    })
+                  )
+                },
                 onTypeChange: (type: MultiTypeInputType) =>
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.region`, type),
                 expressions,
@@ -359,16 +487,40 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.repositoryName`, template) && (
-            <TextFieldInputSetView
+            <SelectInputSetView
               fieldPath={`artifacts.${artifactPath}.spec.repositoryName`}
               template={template}
+              selectItems={getRepoDetails()}
               name={`${path}.artifacts.${artifactPath}.spec.repositoryName`}
               label={getString('common.repositoryName')}
               placeholder={getString('pipeline.manifestType.repoNamePlaceholder')}
+              useValue
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.repositoryName`)}
-              multiTextInputProps={{
+              multiTypeInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                selectProps: {
+                  noResults: (
+                    <NoTagResults
+                      tagError={errorFetchingRepos}
+                      isServerlessDeploymentTypeSelected={false}
+                      defaultErrorText={getString('pipeline.artifactsSelection.validation.noRepo')}
+                    />
+                  ),
+                  itemRenderer: itemRenderer,
+                  items: getRepoDetails(),
+                  allowCreatingNewItems: true
+                },
+                onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                  if (
+                    e?.target?.type !== 'text' ||
+                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                  ) {
+                    return
+                  }
+                  if (isAllFieldsAreFixedForFetchRepos(projectValue, regionValue, connectorRefValue))
+                    refetchRepoDetails()
+                }
               }}
             />
           )}
@@ -418,7 +570,16 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                   ) {
                     return
                   }
-                  refetchBuildDetails()
+                  if (
+                    isAllFieldsAreFixedInGAR(
+                      projectValue,
+                      regionValue,
+                      repositoryNameValue,
+                      packageValue,
+                      connectorRefValue
+                    )
+                  )
+                    refetchBuildDetails()
                 }
               }}
             />
