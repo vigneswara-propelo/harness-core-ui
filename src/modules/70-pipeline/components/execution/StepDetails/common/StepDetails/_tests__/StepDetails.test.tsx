@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, fireEvent, screen, waitFor, getAllByRole } from '@testing-library/react'
+import { render, fireEvent, screen, waitFor, getAllByRole, within } from '@testing-library/react'
 
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
@@ -169,5 +169,30 @@ describe('StepDetails tests', () => {
     expect(getByText('pipeline.failureStrategies.appliedBy:')).toBeInTheDocument()
     expect(getByText('IGNORE')).toBeInTheDocument()
     expect(getByText(/user@abc\.com/)).toBeInTheDocument()
+  })
+  test('should render fine when retryInterval IS NOT empty inside step prop', async () => {
+    render(
+      <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS}>
+        <StepDetails
+          step={{
+            startTs: 123,
+            endTs: 456,
+            name: 'step name',
+            stepParameters: { spec: { retryInterval: { timeoutString: '10m' } } },
+            delegateInfoList: [{ taskId: 'abc', taskName: 'ABC' }]
+          }}
+          executionMetadata={{
+            accountId,
+            orgIdentifier,
+            projectIdentifier
+          }}
+        />
+      </TestWrapper>
+    )
+    const retryInterval = screen.getByText('pipeline.customApprovalStep.retryInterval' + ':')
+    expect(retryInterval).toBeInTheDocument()
+    const parent = screen.getByTestId('retry-interval-row') as HTMLElement
+    const retryIntervalValue = within(parent).getByText('10m')
+    expect(retryIntervalValue).toBeInTheDocument()
   })
 })

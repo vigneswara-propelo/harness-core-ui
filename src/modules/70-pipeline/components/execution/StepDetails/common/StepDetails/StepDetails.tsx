@@ -84,6 +84,7 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
   const estimatedRemainingTime = step?.progressData?.estimatedRemainingTime
   const progressPercentage = step?.progressData?.progressPercentage
   const timeout = step?.stepParameters?.timeout as any
+  const retryInterval = step?.stepParameters?.spec?.retryInterval?.timeoutString as string | undefined
   const [taskList, setTaskList] = React.useState<Array<ExecutableResponse>>([])
   const { openDelegateSelectionLogsModal } = useDelegateSelectionLogsModal()
 
@@ -195,6 +196,12 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
           <tr>
             <th>{`${getString('pipelineSteps.timeoutLabel')}:`}</th>
             <td>{timeout}</td>
+          </tr>
+        )}
+        {typeof retryInterval === 'string' && (
+          <tr data-testid="retry-interval-row">
+            <th>{`${getString('pipeline.customApprovalStep.retryInterval')}:`}</th>
+            <td>{retryInterval}</td>
           </tr>
         )}
         {interruptHistoryData && !isEmpty(interruptHistoryData) && (
