@@ -183,7 +183,7 @@ function ManifestListView({
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
-  const { CDS_SERVERLESS_V2, CDS_ENABLE_TAS_ARTIFACT_AS_MANIFEST_SOURCE_NG } = useFeatureFlags()
+  const { CDS_ENABLE_TAS_ARTIFACT_AS_MANIFEST_SOURCE_NG } = useFeatureFlags()
 
   useEffect(() => {
     setIsManifestEditMode(manifestIndex < listOfManifests.length)
@@ -671,7 +671,6 @@ function ManifestListView({
           <ManifestWizard
             types={availableManifestTypes}
             manifestStoreTypes={getManifestStoresByDeploymentType(deploymentType, selectedManifest, {
-              CDS_SERVERLESS_V2,
               CDS_ENABLE_TAS_ARTIFACT_AS_MANIFEST_SOURCE_NG
             })}
             labels={getLabels()}
@@ -703,8 +702,7 @@ function ManifestListView({
     expressions,
     allowableTypes,
     isManifestEditMode,
-    lastSteps,
-    CDS_SERVERLESS_V2
+    lastSteps
   ])
 
   const renderConnectorField = useCallback(

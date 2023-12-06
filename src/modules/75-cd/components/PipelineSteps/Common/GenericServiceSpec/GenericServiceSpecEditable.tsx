@@ -60,7 +60,7 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
     getStageFromPipeline
   } = usePipelineContext()
   const { isServiceEntityPage } = useServiceContext()
-  const { NG_SVC_ENV_REDESIGN, CDS_SERVERLESS_V2 } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const selectedDeploymentType =
@@ -73,7 +73,7 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
   )
 
   const getAllowedManifestTypes = (): ManifestTypes[] => {
-    if (deploymentType === ServiceDeploymentType.ServerlessAwsLambda && CDS_SERVERLESS_V2) {
+    if (deploymentType === ServiceDeploymentType.ServerlessAwsLambda) {
       return [...allowedManifestTypes[selectedDeploymentType], ManifestDataType.Values]
     }
     return allowedManifestTypes[selectedDeploymentType]
@@ -99,10 +99,7 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
               deploymentType={selectedDeploymentType}
               isReadonlyServiceMode={isReadonlyServiceMode as boolean}
               readonly={!!readonly}
-              allowOnlyOneManifest={isOnlyOneManifestAllowedForDeploymentType(
-                selectedDeploymentType,
-                CDS_SERVERLESS_V2
-              )}
+              allowOnlyOneManifest={isOnlyOneManifestAllowedForDeploymentType(selectedDeploymentType)}
               availableManifestTypes={getAllowedManifestTypes()}
             />
           </Card>

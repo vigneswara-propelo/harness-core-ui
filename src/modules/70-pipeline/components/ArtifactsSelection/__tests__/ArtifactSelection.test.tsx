@@ -421,11 +421,7 @@ describe('ArtifactsSelection tests', () => {
 
   test('is artifacts type list containing all applicable types for Kubernetes', async () => {
     const { container } = render(
-      <TestWrapper
-        defaultAppStoreValues={{
-          featureFlags: {}
-        }}
-      >
+      <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
           <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
@@ -451,11 +447,7 @@ describe('ArtifactsSelection tests', () => {
 
   test('is artifacts type list containing all applicable types for NativeHelm', async () => {
     const { container } = render(
-      <TestWrapper
-        defaultAppStoreValues={{
-          featureFlags: {}
-        }}
-      >
+      <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
           <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="NativeHelm" />
         </PipelineContext.Provider>
@@ -481,11 +473,7 @@ describe('ArtifactsSelection tests', () => {
 
   test('is artifacts type list containing all applicable types for NativeHelm', async () => {
     const { container } = render(
-      <TestWrapper
-        defaultAppStoreValues={{
-          featureFlags: {}
-        }}
-      >
+      <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
           <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="NativeHelm" />
         </PipelineContext.Provider>
@@ -551,7 +539,7 @@ describe('ArtifactsSelection tests', () => {
     expect(custom).toBeNull()
   })
 
-  test('clicking on Add Sidecar should show all applicable types for ServerlessAwsLambda', async () => {
+  test('clicking on Add Sidecar should not be possible for ServerlessAwsLambda', async () => {
     const context = {
       ...pipelineContextWithoutArtifactsMock,
       getStageFromPipeline: jest.fn(() => {
@@ -559,40 +547,15 @@ describe('ArtifactsSelection tests', () => {
       })
     } as any
 
-    const { container } = render(
-      <TestWrapper
-        defaultAppStoreValues={{
-          featureFlags: {}
-        }}
-      >
+    const { queryByText } = render(
+      <TestWrapper>
         <PipelineContext.Provider value={context}>
           <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="ServerlessAwsLambda" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
 
-    const addSidecarButton = await findByText(container, 'pipeline.artifactsSelection.addSidecar')
-    expect(addSidecarButton).toBeDefined()
-    fireEvent.click(addSidecarButton)
-    const portal = document.getElementsByClassName('bp3-dialog')[0]
-    const artifactLabel = await waitFor(() =>
-      findByText(portal as HTMLElement, 'platform.connectors.specifyArtifactRepoType')
-    )
-    expect(artifactLabel).toBeDefined()
-    // Artifactory, ECR, AmazonS3 should be rendered
-    const artifactory = await portal.querySelector('input[value="ArtifactoryRegistry"]')
-    expect(artifactory).not.toBeNull()
-    const ecr = await portal.querySelector('input[value="Ecr"]')
-    expect(ecr).not.toBeNull()
-    const amazonS3 = await portal.querySelector('input[value="AmazonS3"]')
-    expect(amazonS3).not.toBeNull()
-    // Nexus, ACR, Custom should NOT be rendered
-    const nexus = await portal.querySelector('input[value="Nexus3Registry"]')
-    expect(nexus).toBeNull()
-    const acr = await portal.querySelector('input[value="Acr"]')
-    expect(acr).toBeNull()
-    const custom = await portal.querySelector('input[value="CustomArtifact"]')
-    expect(custom).toBeNull()
+    expect(queryByText('pipeline.artifactsSelection.addSidecar')).toBeNull()
   })
 
   test('clicking on Create Artifactory Connector should show create view when deployment type is ServerlessAwsLambda', async () => {
@@ -604,11 +567,7 @@ describe('ArtifactsSelection tests', () => {
     } as any
 
     const { container } = render(
-      <TestWrapper
-        defaultAppStoreValues={{
-          featureFlags: {}
-        }}
-      >
+      <TestWrapper>
         <PipelineContext.Provider value={context}>
           <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="ServerlessAwsLambda" />
         </PipelineContext.Provider>

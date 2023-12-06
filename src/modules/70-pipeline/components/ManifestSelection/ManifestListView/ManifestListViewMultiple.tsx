@@ -31,7 +31,6 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { useQueryParams } from '@common/hooks'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { ManifestActions } from '@common/constants/TrackingConstants'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
@@ -165,7 +164,6 @@ function ManifestListViewMultiple({
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const [multiManifestType, setMultiManifestType] = useState<MultiManifestsTypes>(MultiManifestsTypes.MANIFESTS)
-  const { CDS_SERVERLESS_V2 } = useFeatureFlags()
 
   useEffect(() => {
     setIsManifestEditMode(manifestIndex < listOfManifests.length)
@@ -645,9 +643,7 @@ function ManifestListViewMultiple({
               deploymentType,
               multiManifestType
             )}
-            manifestStoreTypes={getManifestStoresByDeploymentType(deploymentType, selectedManifest, {
-              CDS_SERVERLESS_V2
-            })}
+            manifestStoreTypes={getManifestStoresByDeploymentType(deploymentType, selectedManifest, {})}
             labels={getLabels()}
             selectedManifest={selectedManifest}
             newConnectorView={connectorView}
@@ -678,7 +674,6 @@ function ManifestListViewMultiple({
     allowableTypes,
     isManifestEditMode,
     lastSteps,
-    CDS_SERVERLESS_V2,
     multiManifestType,
     deploymentType,
     listOfManifests

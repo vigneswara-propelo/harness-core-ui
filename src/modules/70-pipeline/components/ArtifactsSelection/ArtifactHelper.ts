@@ -13,7 +13,6 @@ import type { IOptionProps } from '@blueprintjs/core'
 import type { ArtifactSource, ConnectorInfoDTO, PrimaryArtifact, ServiceDefinition } from 'services/cd-ng'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import { IdentifierSchemaWithOutName, NameSchema } from '@common/utils/Validation'
-import { FeatureFlag } from '@common/featureFlags'
 import { Connectors } from '@connectors/constants'
 import { ServiceDeploymentType, isSshOrWinrmDeploymentType } from '@pipeline/utils/stageHelpers'
 import { ArtifactType, ARTIFACT_FILTER_TYPES } from './ArtifactInterface'
@@ -45,12 +44,8 @@ export const isAllowedBambooArtifactDeploymentTypes = (deploymentType: ServiceDe
     ServiceDeploymentType.TAS
   ].includes(deploymentType as ServiceDeploymentType)
 
-export const isSidecarAllowed = (
-  deploymentType: ServiceDefinition['type'],
-  isReadOnly: boolean,
-  featureFlags: Partial<Record<FeatureFlag, boolean>>
-): boolean => {
-  if (deploymentType === ServiceDeploymentType.ServerlessAwsLambda && featureFlags.CDS_SERVERLESS_V2) {
+export const isSidecarAllowed = (deploymentType: ServiceDefinition['type'], isReadOnly: boolean): boolean => {
+  if (deploymentType === ServiceDeploymentType.ServerlessAwsLambda) {
     return false
   }
   return (

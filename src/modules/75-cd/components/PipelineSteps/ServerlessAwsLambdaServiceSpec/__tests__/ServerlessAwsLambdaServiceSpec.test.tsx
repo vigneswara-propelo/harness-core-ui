@@ -159,7 +159,7 @@ describe('ServerlessAwsLambdaServiceSpec tests', () => {
       const contextValue = getDummyPipelineCanvasContextValue({
         isLoading: false
       })
-      const { container } = render(
+      const { getByText, queryByText } = render(
         <TestWrapper>
           <PipelineContext.Provider value={contextValue}>
             <StepWidget<K8SDirectServiceStep>
@@ -173,16 +173,16 @@ describe('ServerlessAwsLambdaServiceSpec tests', () => {
         </TestWrapper>
       )
 
-      expect(container).toMatchSnapshot()
+      expect(getByText('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')).toBeDefined()
+      expect(getByText('pipeline.manifestType.addManifestLabel')).toBeDefined()
+      expect(getByText('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')).toBeDefined()
+      expect(getByText('pipeline.artifactsSelection.addPrimaryArtifact')).toBeDefined()
+      expect(queryByText('pipeline.artifactsSelection.addSidecar')).toBeNull()
     })
 
     test('for ServerlessAwsLambda V2 deployment type, ServerlessAwsLambda and Values manifest types should be allowed', async () => {
       const { container } = render(
-        <TestWrapper
-          path={TEST_PATH}
-          pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}
-          defaultFeatureFlagValues={{ CDS_SERVERLESS_V2: true }}
-        >
+        <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
           <PipelineContext.Provider value={pipelineContextServerlessAwsLambda}>
             <StepWidget<K8SDirectServiceStep>
               factory={factory}
@@ -206,13 +206,9 @@ describe('ServerlessAwsLambdaServiceSpec tests', () => {
       expect(ValuesYAML).not.toBeNull()
     })
 
-    test('it should allow only primary artifact source, no Sidecars when CDS_SERVERLESS_V2 is on', async () => {
+    test('it should allow only primary artifact source, no Sidecars', async () => {
       const { container } = render(
-        <TestWrapper
-          path={TEST_PATH}
-          pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}
-          defaultFeatureFlagValues={{ CDS_SERVERLESS_V2: true }}
-        >
+        <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
           <PipelineContext.Provider value={pipelineContextServerlessAwsLambda}>
             <StepWidget<K8SDirectServiceStep>
               factory={factory}

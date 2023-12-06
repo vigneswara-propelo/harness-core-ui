@@ -238,7 +238,7 @@ export const getManifestStoresByDeploymentType = (
   const valuesManifestStores = ManifestTypetoStoreMap[selectedManifest as ManifestTypes]
   if (
     selectedDeploymentType === ServiceDeploymentType.AwsSam ||
-    (selectedDeploymentType === ServiceDeploymentType.ServerlessAwsLambda && featureFlagMap.CDS_SERVERLESS_V2)
+    selectedDeploymentType === ServiceDeploymentType.ServerlessAwsLambda
   ) {
     return valuesManifestStores?.filter(manifestStore => isGitTypeManifestStore(manifestStore))
   }

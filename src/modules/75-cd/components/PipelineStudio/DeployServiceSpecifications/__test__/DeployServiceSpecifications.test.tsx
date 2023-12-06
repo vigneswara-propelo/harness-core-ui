@@ -7,7 +7,7 @@
 
 /* eslint-disable jest/no-disabled-tests */
 import React from 'react'
-import { act, fireEvent, render, waitFor, getByText as getElementByText, within, screen } from '@testing-library/react'
+import { act, fireEvent, render, waitFor, within, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { noop } from 'lodash-es'
 import { Formik } from '@harness/uicore'
@@ -230,54 +230,6 @@ describe('Deploy service stage specifications', () => {
     const serverlessLambda = getByText('pipeline.serviceDeploymentTypes.serverlessAwsLambda')
     await userEvent.click(serverlessLambda)
     await waitFor(() => expect(getByText('pipeline.manifestType.addManifestLabel')).toBeInTheDocument())
-  })
-
-  test('Add manifest dialog should display manifest store screen directly if Serverless Lambda is deployment type', async () => {
-    getOverrideContextValue().state.selectionState.selectedStageId = 'st1'
-    const { getByText } = render(
-      <TestWrapper>
-        <PipelineContext.Provider value={getOverrideContextValue()}>
-          <DeployServiceSpecifications setDefaultServiceSchema={setDefaultServiceSchema}>
-            {mockchildren}
-          </DeployServiceSpecifications>
-        </PipelineContext.Provider>
-      </TestWrapper>
-    )
-    expect(getByText('deploymentTypeText')).toBeDefined()
-
-    const serverlessLambda = getByText('pipeline.serviceDeploymentTypes.serverlessAwsLambda')
-    await userEvent.click(serverlessLambda)
-    await waitFor(() => expect(getByText('pipeline.manifestType.addManifestLabel')).toBeDefined())
-    const addManifestButton = getByText('pipeline.manifestType.addManifestLabel')
-    await userEvent.click(addManifestButton)
-
-    // Find Add Manifest dialog portal div
-    const portalDivElements = document.getElementsByClassName('bp3-portal')
-    await waitFor(() => expect(portalDivElements.length).toBe(1))
-    const portalDiv = portalDivElements[0] as HTMLElement
-
-    // Check if second tab is opened by default
-    expect(
-      getElementByText(portalDiv, 'common.specify pipeline.manifestTypeLabels.ServerlessAwsLambda store')
-    ).toBeDefined()
-
-    // Check if tab names are appearing properly, first step should be completed and should have
-    // chosen manifest type as subtitle
-    const completedStepDivElements = portalDiv.getElementsByClassName('StepWizard--completedStep')
-    expect(completedStepDivElements.length).toBe(1)
-    expect(getElementByText(portalDiv, 'pipeline.manifestType.manifestRepoType')).toBeDefined()
-    const subTitleDivElements = portalDiv.getElementsByClassName('subtitle')
-    expect(subTitleDivElements.length).toBe(1)
-    expect(getElementByText(portalDiv, 'pipeline.manifestTypeLabels.ServerlessAwsLambda')).toBeDefined()
-
-    expect(getElementByText(portalDiv, 'pipeline.manifestType.manifestSource')).toBeDefined()
-    expect(getElementByText(portalDiv, 'pipeline.manifestType.manifestDetails')).toBeDefined()
-
-    // Check for all store types and select GitHub
-    expect(getElementByText(portalDiv, 'pipeline.manifestType.gitConnectorLabel')).toBeDefined()
-    expect(getElementByText(portalDiv, 'common.repo_provider.githubLabel')).toBeDefined()
-    expect(getElementByText(portalDiv, 'common.repo_provider.gitlabLabel')).toBeDefined()
-    expect(getElementByText(portalDiv, 'common.repo_provider.bitbucketLabel')).toBeDefined()
   })
 
   test('when deploymentType is ECS, ECS related UI should appear', async () => {

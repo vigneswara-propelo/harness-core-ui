@@ -37,7 +37,6 @@ import type { GitQueryParams, ProjectPathProps, ServicePathProps } from '@common
 import { ArtifactActions } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { parse } from '@common/utils/YamlHelperMethods'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/connectors/constants'
 import {
@@ -162,7 +161,6 @@ export default function ServiceV2ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const { CDS_SERVERLESS_V2 } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   const artifactTypes = React.useMemo(() => {
@@ -745,7 +743,7 @@ export default function ServiceV2ArtifactsSelection({
         accountId={accountId}
         refetchConnectors={refetchConnectorList}
         isReadonly={readonly}
-        isSidecarAllowed={isSidecarAllowed(deploymentType, readonly, { CDS_SERVERLESS_V2 })}
+        isSidecarAllowed={isSidecarAllowed(deploymentType, readonly)}
         isMultiArtifactSource
       />
       <ArtifactConfigDrawer

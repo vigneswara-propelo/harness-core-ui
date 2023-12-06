@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useCallback, useState } from 'react'
 import { get, noop, defaultTo } from 'lodash-es'
 import { Dialog, IDialogProps, Classes, Intent, FormGroup } from '@blueprintjs/core'
@@ -16,7 +23,6 @@ import type { ConnectorConfigDTO, ManifestConfig } from 'services/cd-ng'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { errorCheck } from '@common/utils/formikHelpers'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ConnectorDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
 import GitDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import ConnectorTestConnection from '@platform/connectors/common/ConnectorTestConnection/ConnectorTestConnection'
@@ -89,8 +95,6 @@ function SelectRemoteManifest({
   const manifestSourceSpecStore = manifestSourceSpec?.store
   const manifestSourceStoreSpec = manifestSourceSpecStore?.spec
   const manifestSourceStoreType = manifestSourceSpecStore?.type
-
-  const { CDS_SERVERLESS_V2 } = useFeatureFlags()
 
   const addNewManifest = (): void => {
     setSelectedManifest(getManifestTypeToSelect(availableManifestTypes, preSelectedManifestType))
@@ -316,9 +320,9 @@ function SelectRemoteManifest({
         <div className={css.createConnectorWizard}>
           <ManifestWizard
             types={[ManifestDataType.K8sManifest]}
-            manifestStoreTypes={getManifestStoresByDeploymentType('Kubernetes', 'K8sManifest', {
-              CDS_SERVERLESS_V2
-            }).filter((store: ManifestStores) => store !== 'CustomRemote')}
+            manifestStoreTypes={getManifestStoresByDeploymentType('Kubernetes', 'K8sManifest', {}).filter(
+              (store: ManifestStores) => store !== 'CustomRemote'
+            )}
             labels={getLabels()}
             selectedManifest={selectedManifest}
             newConnectorView={connectorView}
@@ -337,16 +341,7 @@ function SelectRemoteManifest({
         <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />
       </Dialog>
     )
-  }, [
-    selectedManifest,
-    connectorView,
-    manifestStore,
-    expressions,
-    allowableTypes,
-    lastSteps,
-    CDS_SERVERLESS_V2,
-    formik
-  ])
+  }, [selectedManifest, connectorView, manifestStore, expressions, allowableTypes, lastSteps, formik])
   /* istanbul ignore next */
   const onClose = (): void => {
     setConnectorView(false)
