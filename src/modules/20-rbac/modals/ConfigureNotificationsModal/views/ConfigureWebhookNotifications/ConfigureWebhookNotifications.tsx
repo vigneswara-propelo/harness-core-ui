@@ -20,6 +20,7 @@ import * as Yup from 'yup'
 import { URLValidationSchema } from '@common/utils/Validation'
 import { NotificationType, WebhookNotificationConfiguration } from '@rbac/interfaces/Notifications'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { TestWebhookNotifications } from './TestWebhookNotification'
 import css from '../../ConfigureNotificationsModal.module.scss'
 
@@ -43,6 +44,7 @@ const ConfigureWebhookNotifications: React.FC<ConfigureWebhookNotificationsProps
     getMultiTypeFromValue(props.config?.webhookUrl)
   )
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const handleSubmit = (formData: WebhookNotificationData): void => {
     props.onSuccess(convertFormData(formData))
@@ -83,7 +85,8 @@ const ConfigureWebhookNotifications: React.FC<ConfigureWebhookNotificationsProps
                     multiTextInputProps={{
                       expressions: props.expressions,
                       allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
-                      onTypeChange: setWebhookUrlType
+                      onTypeChange: setWebhookUrlType,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                     }}
                   />
                 ) : (

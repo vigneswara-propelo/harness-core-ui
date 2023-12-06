@@ -37,6 +37,7 @@ import { getNotificationByConfig } from '@rbac/utils/NotificationUtils'
 import { EmailSchema, EmailSchemaWithoutRequired, URLValidationSchema } from '@common/utils/Validation'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import ManagePrincipalButton from '../ManagePrincipalButton/ManagePrincipalButton'
 import css from './NotificationList.module.scss'
 
@@ -94,6 +95,7 @@ const ChannelRow: React.FC<ChannelRow> = ({
   const [selectedInputType, setSelectedInputType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue(getNotificationByConfig(data)?.value)
   )
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const { mutate: updateNotifications, loading } = usePutUserGroup({
     queryParams: {
@@ -203,7 +205,8 @@ const ChannelRow: React.FC<ChannelRow> = ({
         placeholder={textPlaceholder}
         multiTextInputProps={{
           allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
-          onTypeChange: setSelectedInputType
+          onTypeChange: setSelectedInputType,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
         }}
       />
     )

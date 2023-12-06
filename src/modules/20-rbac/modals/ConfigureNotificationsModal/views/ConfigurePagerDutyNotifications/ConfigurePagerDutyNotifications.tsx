@@ -31,6 +31,7 @@ import { useTestNotificationSetting, PagerDutySettingDTO } from 'services/notifi
 import type { PagerDutyNotificationConfiguration } from '@rbac/interfaces/Notifications'
 import { TestStatus, NotificationType } from '@rbac/interfaces/Notifications'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from '../../ConfigureNotificationsModal.module.scss'
 
 interface ConfigurePagerDutyNotificationsProps {
@@ -103,6 +104,7 @@ const ConfigurePagerDutyNotifications: React.FC<ConfigurePagerDutyNotificationsP
   const [selectedInputType, setSelectedInputType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue(props.config?.key)
   )
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const handleSubmit = (formData: PagerDutyNotificationData): void => {
     props.onSuccess({
@@ -149,7 +151,8 @@ const ConfigurePagerDutyNotifications: React.FC<ConfigurePagerDutyNotificationsP
                     multiTextInputProps={{
                       expressions: props.expressions,
                       allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
-                      onTypeChange: setSelectedInputType
+                      onTypeChange: setSelectedInputType,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                     }}
                   />
                 ) : (

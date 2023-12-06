@@ -32,6 +32,7 @@ import { useTestNotificationSetting, SlackSettingDTO } from 'services/notificati
 import { NotificationType, SlackNotificationConfiguration, TestStatus } from '@rbac/interfaces/Notifications'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from '../../ConfigureNotificationsModal.module.scss'
 
 interface ConfigureSlackNotificationsProps {
@@ -110,6 +111,7 @@ const ConfigureSlackNotifications: React.FC<ConfigureSlackNotificationsProps> = 
     getMultiTypeFromValue(props.config?.webhookUrl)
   )
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const handleSubmit = (formData: SlackNotificationData): void => {
     props.onSuccess(convertFormData(formData))
@@ -167,7 +169,8 @@ const ConfigureSlackNotifications: React.FC<ConfigureSlackNotificationsProps> = 
                     multiTextInputProps={{
                       expressions: props.expressions,
                       allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
-                      onTypeChange: setWebhookUrlType
+                      onTypeChange: setWebhookUrlType,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                     }}
                   />
                 ) : (

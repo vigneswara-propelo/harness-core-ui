@@ -34,6 +34,7 @@ import { ListInput } from '@common/components/ListInput/ListInput'
 import UserGroupsInput from '@rbac/components/UserGroupsInput/UserGroupsInput'
 import { MSTeamsNotificationConfiguration, NotificationType, TestStatus } from '@rbac/interfaces/Notifications'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from '@rbac/modals/ConfigureNotificationsModal/ConfigureNotificationsModal.module.scss'
 
 interface MSTeamsNotificationsData {
@@ -118,6 +119,7 @@ function TeamsUrlListInputInternal(props: TeamsUrlListInputProps) {
   const [urlTypeMap, setUrlTypeMap] = useState<Record<string, string>>({})
   const { name, label, formik, expressions } = props
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const value = get(formik?.values, name)
 
@@ -144,6 +146,7 @@ function TeamsUrlListInputInternal(props: TeamsUrlListInputProps) {
               className={css.urlInput}
               multiTextInputProps={{
                 allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 expressions,
                 onTypeChange: type => {
                   const map = {

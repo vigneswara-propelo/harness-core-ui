@@ -12,6 +12,7 @@ import { AllowedTypes, FormInput, Layout, SelectOption } from '@harness/uicore'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from './ScriptVariablesRuntimeInput.module.scss'
 
 export interface InputSetSchema {
@@ -64,6 +65,7 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
   } = props
 
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const prefix = isEmpty(path) ? '' : `${path}`
 
   return (
@@ -119,7 +121,7 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
                             name={`${prefix}.environmentVariables[${i}].value`}
                             multiTextInputProps={{
                               allowableTypes,
-
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                               disabled: readonly
                             }}
                             label=""
