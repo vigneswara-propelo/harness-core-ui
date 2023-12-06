@@ -255,7 +255,7 @@ describe('Custom remote tests', () => {
       handleSubmit: jest.fn()
     }
 
-    const { container, getByText, getByPlaceholderText } = render(
+    const { container, getByText, getByPlaceholderText, getByTestId } = render(
       <TestWrapper>
         <CustomRemoteManifest {...defaultProps} />
       </TestWrapper>
@@ -267,7 +267,10 @@ describe('Custom remote tests', () => {
     //check command flag dropdown
     const defaultSelectDropdown = getByPlaceholderText('- pipeline.fieldPlaceholders.commandType -')
     await waitFor(() => expect(defaultSelectDropdown).toBeInTheDocument())
-    expect(container).toMatchSnapshot()
+    const addCommandFlag = getByTestId('add-command-flags')
+    expect(addCommandFlag).toBeInTheDocument()
+    await userEvent.click(addCommandFlag)
+    expect(container.querySelector('input[name="commandFlags[1].commandType"]')).toBeInTheDocument()
   })
 
   test('going back to prev step and submitting to next step works as expected', async () => {

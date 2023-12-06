@@ -249,6 +249,7 @@ function CustomRemoteAdvancedStepSection({
                       <Button
                         minimal
                         text={getString('add')}
+                        data-testid="add-command-flags"
                         variation={ButtonVariation.PRIMARY}
                         onClick={() => push({ commandType: '', flag: '', id: uuid('', nameSpace()) })}
                       />
