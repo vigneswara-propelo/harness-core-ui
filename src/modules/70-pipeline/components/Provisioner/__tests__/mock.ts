@@ -127,3 +127,57 @@ export const provisionersMock = [
     }
   }
 ]
+
+export const stepGroupTemplateProvisioner = {
+  stepGroup: {
+    name: 'StepGroupTest',
+    identifier: 'StepGroupTest',
+    template: {
+      templateRef: 'testRef',
+      versionLabel: 'v1',
+      templateInputs: {
+        steps: [
+          {
+            step: {
+              identifier: 'ShellScriptProvision_4',
+              type: 'ShellScriptProvision',
+              spec: {
+                source: {
+                  type: 'Inline',
+                  spec: {
+                    script: '<+input>'
+                  }
+                }
+              }
+            }
+          },
+          {
+            parallel: [
+              {
+                step: {
+                  identifier: 'shellHarnessEcsInfrastructureParameters',
+                  type: 'ShellScriptProvision',
+                  timeout: '<+input>'
+                }
+              },
+              {
+                step: {
+                  identifier: 'ShellScriptProvision_2',
+                  type: 'ShellScriptProvision',
+                  spec: {
+                    source: {
+                      type: 'Inline',
+                      spec: {
+                        script: '<+input>'
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

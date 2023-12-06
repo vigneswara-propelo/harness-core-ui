@@ -43,14 +43,15 @@ function ProvisionerSelectField(props: ProvisionerSelectFieldProps): React.React
 
   const getProvisionerSteps = (arr: ExecutionWrapperConfig[]): ExecutionWrapperConfig[] => {
     let result: ExecutionWrapperConfig[] = []
-
-    arr.forEach((obj: ExecutionWrapperConfig) => {
+    arr?.forEach((obj: ExecutionWrapperConfig) => {
       if (obj?.step) {
         result.push(obj)
       } else if (obj.parallel) {
         result = result.concat(getProvisionerSteps(obj.parallel))
       } else if (obj.stepGroup) {
-        result = result.concat(getProvisionerSteps(obj.stepGroup.steps as ExecutionWrapperConfig[]))
+        const steps = obj?.stepGroup?.steps || obj?.stepGroup?.template?.templateInputs?.steps || []
+
+        result = result.concat(getProvisionerSteps(steps as ExecutionWrapperConfig[]))
       }
     })
     return result.filter(({ step }) => step?.type && includeProvisioner.includes(step.type as StepType))
@@ -61,7 +62,7 @@ function ProvisionerSelectField(props: ProvisionerSelectFieldProps): React.React
       setOptions(
         getProvisionerSteps(provisioners).map(({ step }: ExecutionWrapperConfig) => {
           return {
-            label: /* istanbul ignore next */ step?.name,
+            label: /* istanbul ignore next */ step?.name || step?.identifier,
             value: /* istanbul ignore next */ step?.identifier
           }
         }) as SelectOption[]

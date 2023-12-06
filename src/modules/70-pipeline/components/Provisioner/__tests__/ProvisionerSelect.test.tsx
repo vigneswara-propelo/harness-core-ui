@@ -6,13 +6,15 @@
  */
 
 import React from 'react'
-import { render, fireEvent, waitFor } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+
 import { Formik } from '@harness/uicore'
-import { TestWrapper } from '@common/utils/testUtils'
+import { TestWrapper, queryByNameAttribute } from '@common/utils/testUtils'
 import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import type { ExecutionWrapperConfig } from 'services/cd-ng'
 
-import { provisionersMock } from './mock'
+import { provisionersMock, stepGroupTemplateProvisioner } from './mock'
 
 import ProvisionerSelectField from '../ProvisionerSelect'
 
@@ -34,10 +36,30 @@ describe('<ProvisionerSelectField /> tests', () => {
         </Formik>
       </TestWrapper>
     )
-    const provSelectField = container.querySelector('.bp3-input-group')
-    expect(provSelectField).toBeInTheDocument()
 
-    fireEvent.click(provSelectField!)
-    await waitFor(() => expect(container.querySelector('.bp3-menu')).toBeNull())
+    const provisionerSelectField = queryByNameAttribute('provisioner', container)
+    expect(provisionerSelectField).toBeInTheDocument()
+    await userEvent.click(provisionerSelectField!)
+    const provisionerList = document.querySelectorAll('li[class*="Select--menuItem')
+    await waitFor(() => expect(provisionerList).toHaveLength(2))
+  })
+  test('should render Provisioner select field from stepGroupTemplate', async () => {
+    const { container } = render(
+      <TestWrapper>
+        <Formik initialValues={{ provisioner: 'test1' }} onSubmit={() => undefined} formName="TestWrapper">
+          <ProvisionerSelectField
+            name="provisioner"
+            provisioners={[...provisionersMock, stepGroupTemplateProvisioner] as ExecutionWrapperConfig[]}
+            path={''}
+          />
+        </Formik>
+      </TestWrapper>
+    )
+
+    const provisionerSelectField = queryByNameAttribute('provisioner', container)
+    expect(provisionerSelectField).toBeInTheDocument()
+    await userEvent.click(provisionerSelectField!)
+    const provisionerList = document.querySelectorAll('li[class*="Select--menuItem')
+    await waitFor(() => expect(provisionerList).toHaveLength(5))
   })
 })
