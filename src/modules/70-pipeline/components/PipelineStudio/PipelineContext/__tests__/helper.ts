@@ -651,7 +651,12 @@ export const pipelineContextAwsSam = {
     return { stage: stateWithAwsSamDeploymentType.state.pipeline.stages[0], parent: undefined }
   }),
   allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
-  updateStage: jest.fn(),
+  updateStage: jest.fn().mockImplementation(updatedStage => {
+    const foundStageIndex = stateWithAwsSamDeploymentType.state.pipeline.stages.findIndex(
+      (stage: any) => stage.identifier === updatedStage.identifier
+    )
+    stateWithAwsSamDeploymentType.state.pipeline.stages[foundStageIndex] = updatedStage
+  }),
   setSelection: jest.fn()
 } as any
 

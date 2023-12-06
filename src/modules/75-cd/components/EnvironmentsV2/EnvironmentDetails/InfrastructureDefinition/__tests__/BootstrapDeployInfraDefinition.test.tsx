@@ -8,6 +8,7 @@
 import React from 'react'
 import {
   findByText,
+  fireEvent,
   getByText,
   queryAllByAttribute,
   queryByAttribute,
@@ -32,6 +33,7 @@ import { ServiceDeploymentType } from '@modules/70-pipeline/utils/stageHelpers'
 import { PipelineContext } from '@modules/70-pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { pipelineContextAwsSam } from '@modules/70-pipeline/components/PipelineStudio/PipelineContext/__tests__/helper'
 import factory from '@modules/70-pipeline/components/PipelineSteps/PipelineStepFactory'
+import { StageErrorContext } from '@modules/70-pipeline/context/StageErrorContext'
 import { awsRegions } from '@modules/75-cd/components/PipelineSteps/Common/mocks/aws'
 import { updatedInfra } from '@modules/75-cd/pages/get-started-with-cd/DeployProvisioningWizard/__tests__/mocks'
 import { AwsSamInfraSpec } from '@modules/75-cd/components/PipelineSteps/AwsSam/AwsSamInfraSpec/AwsSamInfraSpec'
@@ -99,17 +101,30 @@ describe('BootstrapDeployInfraDefinition tests', () => {
         defaultFeatureFlagValues={{ CDS_SCOPE_INFRA_TO_SERVICES: true, NG_SVC_ENV_REDESIGN: true, CDP_AWS_SAM: true }}
       >
         <PipelineContext.Provider value={pipelineContextAwsSam}>
-          <BootstrapDeployInfraDefinitionWithRef
-            closeInfraDefinitionDetails={jest.fn()}
-            refetch={refetchInfrastructureList}
-            environmentIdentifier={'env1'}
-            isReadOnly={false}
-            scope={Scope.PROJECT}
-            handleInfrastructureUpdate={handleInfrastructureUpdate}
-            isInfraUpdated={false}
-            isSingleEnv={true}
-            ref={ref}
-          />
+          <StageErrorContext.Provider
+            value={{
+              state: {
+                forms: {},
+                errors: {}
+              },
+              subscribeForm: jest.fn(),
+              unSubscribeForm: jest.fn(),
+              checkErrorsForTab: jest.fn(),
+              submitFormsForTab: jest.fn()
+            }}
+          >
+            <BootstrapDeployInfraDefinitionWithRef
+              closeInfraDefinitionDetails={jest.fn()}
+              refetch={refetchInfrastructureList}
+              environmentIdentifier={'env1'}
+              isReadOnly={false}
+              scope={Scope.PROJECT}
+              handleInfrastructureUpdate={handleInfrastructureUpdate}
+              isInfraUpdated={false}
+              isSingleEnv={true}
+              ref={ref}
+            />
+          </StageErrorContext.Provider>
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -212,6 +227,30 @@ describe('BootstrapDeployInfraDefinition tests', () => {
     const saveBtn = screen.getByText('save')
     expect(saveBtn).toBeInTheDocument()
     expect(saveBtn).not.toBeDisabled()
+    fireEvent.click(saveBtn)
+    await waitFor(() => expect(createInfra).toHaveBeenCalled())
+    expect(createInfra).toHaveBeenCalledWith({
+      deploymentType: 'AWS_SAM',
+      description: undefined,
+      environmentRef: 'env1',
+      identifier: 'Test_Infra',
+      name: 'Test Infra',
+      orgIdentifier: 'testOrg',
+      projectIdentifier: 'testProject',
+      scopedServices: ['Service_1'],
+      tags: undefined,
+      type: undefined,
+      yaml: `infrastructureDefinition:
+  name: Test Infra
+  identifier: Test_Infra
+  orgIdentifier: testOrg
+  projectIdentifier: testProject
+  environmentRef: env1
+  deploymentType: AWS_SAM
+  scopedServices:
+    - Service_1
+`
+    })
   })
 
   test('it should render infra creation visual view WITHOUT scope service field when CDS_SCOPE_INFRA_TO_SERVICES is false', async () => {
@@ -382,5 +421,72 @@ describe('BootstrapDeployInfraDefinition tests', () => {
     expect(queryByText(serviceSelectPortalDiv, 'account')).toBeInTheDocument()
     expect(queryByText(serviceSelectPortalDiv, 'orgLabel')).toBeInTheDocument()
     expect(queryByText(serviceSelectPortalDiv, 'projectLabel')).not.toBeInTheDocument()
+  })
+
+  test('it should allow services from all scopes for scoping if project level infra is selected', async () => {
+    const ref = React.createRef<InfraDefinitionWrapperRef>()
+
+    const { container } = render(
+      <TestWrapper
+        path={routes.toEnvironmentDetails({
+          ...accountPathProps,
+          ...orgPathProps,
+          ...projectPathProps,
+          ...environmentPathProps
+        })}
+        pathParams={{
+          accountId: 'testAcc',
+          orgIdentifier: 'testOrg',
+          projectIdentifier: 'testProject',
+          environmentIdentifier: 'testEnv'
+        }}
+        defaultFeatureFlagValues={{ CDS_SCOPE_INFRA_TO_SERVICES: true, NG_SVC_ENV_REDESIGN: true, CDP_AWS_SAM: true }}
+      >
+        <BootstrapDeployInfraDefinitionWithRef
+          closeInfraDefinitionDetails={jest.fn()}
+          refetch={refetchInfrastructureList}
+          environmentIdentifier={'env1'}
+          isReadOnly={false}
+          scope={Scope.PROJECT}
+          handleInfrastructureUpdate={handleInfrastructureUpdate}
+          isInfraUpdated={false}
+          isSingleEnv={true}
+          ref={ref}
+          selectedInfrastructure="abc"
+          infrastructureDefinition={{
+            identifier: 'abc',
+            orgIdentifier: 'testOrg',
+            projectIdentifier: 'testProject',
+            name: 'Project Level Infra',
+            deploymentType: ServiceDeploymentType.AwsSam,
+            type: 'AWS_SAM',
+            spec: {
+              connectorRef: '',
+              region: ''
+            }
+          }}
+        />
+      </TestWrapper>
+    )
+
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+
+    const portalDivs = document.getElementsByClassName('bp3-portal')
+    expect(portalDivs.length).toBe(0)
+
+    const scopeToSpecificServicesCheckbox = queryByNameAttribute('scopeToSpecificServices')
+    expect(scopeToSpecificServicesCheckbox).toBeInTheDocument()
+    await userEvent.click(scopeToSpecificServicesCheckbox!)
+    await waitFor(() => expect(scopeToSpecificServicesCheckbox).toBeChecked())
+
+    const scopedServicesInput = await screen.findByText('cd.pipelineSteps.serviceTab.selectServices')
+    await waitFor(() => expect(scopedServicesInput).toBeInTheDocument())
+    await userEvent.click(scopedServicesInput!)
+    await waitFor(() => expect(portalDivs.length).toBe(1))
+    const serviceSelectPortalDiv = portalDivs[0] as HTMLElement
+
+    expect(queryByText(serviceSelectPortalDiv, 'account')).toBeInTheDocument()
+    expect(queryByText(serviceSelectPortalDiv, 'orgLabel')).toBeInTheDocument()
+    expect(queryByText(serviceSelectPortalDiv, 'projectLabel')).toBeInTheDocument()
   })
 })

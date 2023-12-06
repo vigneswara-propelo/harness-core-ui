@@ -438,6 +438,9 @@ function BootstrapDeployInfraDefinition(
         repo: formikRefValues?.repo
       })
     })
+
+    setSelectedScopedServices(infrastructureDefinitionConfig.scopedServices)
+
     const stageData = produce(stage, draft => {
       const infraDefinition = get(draft, 'stage.spec.infrastructure', {})
       if (infrastructureDefinitionConfig.spec) {
@@ -826,7 +829,7 @@ function BootstrapDeployInfraDefinition(
   }))
 
   const initialScopedServices =
-    scopedServices?.map(scopedService => ({ label: scopedService, value: scopedService })) || []
+    selectedScopedServices?.map(scopedService => ({ label: scopedService, value: scopedService })) || []
   const scopedServicesInitialValues: ScopedServiceFormikValues = {
     scopedServices: initialScopedServices,
     scopeToSpecificServices: !!initialScopedServices.length
@@ -982,7 +985,7 @@ function BootstrapDeployInfraDefinition(
                                 isMultiSelect={true}
                                 onMultiSelectChange={noop}
                                 showProjectScopedEntities={scope === Scope.PROJECT}
-                                showOrgScopedEntities={scope === Scope.ORG}
+                                showOrgScopedEntities={scope === Scope.PROJECT || scope === Scope.ORG}
                               />
                             </Container>
                           )}
