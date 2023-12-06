@@ -40,6 +40,7 @@ export interface ConnectivityCardItem extends CollapsableSelectOptions {
 
 export interface ConnectivityModeForm {
   connectivityMode: ConnectivityModeType | undefined
+  proxy?: boolean
 }
 
 interface ConnectivityModeProps {

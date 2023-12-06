@@ -935,6 +935,8 @@ connectors:
     validation: 'Please select connectivity mode'
     connectToProvider: 'Connect to the provider'
     selectText: 'Select how you would like to connect to the provider'
+    enableProxy: 'Enable Secure Connect'
+    proxyDescription: 'Securely connect to your on-premises and air gapped build assets, such as source code repositories and container image registries.'
   title:
     customSecretManager: 'Custom Secrets Manager'
     gcpSecretManager: 'GCP Secrets Manager'

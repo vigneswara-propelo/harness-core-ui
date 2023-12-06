@@ -15,3 +15,8 @@
 .formCss {
   min-height: 460px;
 }
+.toggle {
+  > span {
+    width: 35px !important;
+  }
+}

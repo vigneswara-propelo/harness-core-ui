@@ -444,6 +444,9 @@ export const buildGithubPayload = (formData: FormData) => {
   } else {
     delete savedData.spec.apiAccess
   }
+  if (formData.connectionType === GitConnectionType.HTTP) {
+    savedData.spec.proxy = formData.proxy
+  }
   return { connector: savedData }
 }
 
@@ -496,6 +499,10 @@ export const buildGitlabPayload = (formData: FormData) => {
   } else {
     delete savedData.spec.apiAccess
   }
+
+  if (formData.connectionType === GitConnectionType.HTTP) {
+    savedData.spec.proxy = formData.proxy
+  }
   return { connector: savedData }
 }
 
@@ -537,6 +544,10 @@ export const buildBitbucketPayload = (formData: FormData) => {
     }
   } else {
     delete savedData.spec.apiAccess
+  }
+
+  if (formData.connectionType === GitConnectionType.HTTP) {
+    savedData.spec.proxy = formData.proxy
   }
   return { connector: savedData }
 }
@@ -1362,7 +1373,8 @@ export const buildAWSPayload = (formData: FormData) => {
       },
       awsSdkClientBackOffStrategyOverride: formData.awsSdkClientBackOffStrategyOverride?.type
         ? formData.awsSdkClientBackOffStrategyOverride
-        : undefined
+        : undefined,
+      proxy: formData?.proxy
     }
   }
 
@@ -1430,7 +1442,8 @@ export const buildGcpSMPayload = (formData: FormData): ConnectorRequestBody => {
       ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
       credentialsRef: formData?.credentialsRef?.referenceString,
       assumeCredentialsOnDelegate: formData?.assumeCredentialsOnDelegate,
-      default: formData.default
+      default: formData.default,
+      proxy: formData?.proxy
     }
   }
   return { connector: savedData }
@@ -1558,7 +1571,8 @@ export const buildDockerPayload = (formData: FormData) => {
             }
           : {
               type: formData.authType
-            }
+            },
+      proxy: formData?.proxy
     }
   }
   return { connector: savedData }
@@ -2049,6 +2063,7 @@ export const buildGitPayload = (formData: FormData) => {
       url: formData.url,
       type: formData.connectionType,
       ...(formData.validationRepo ? { validationRepo: formData.validationRepo } : {}),
+      proxy: formData.connectionType === GitConnectionType.HTTP ? formData.proxy : null,
       spec:
         formData.connectionType === GitConnectionType.SSH
           ? { sshKeyRef: formData.sshKey.referenceString }

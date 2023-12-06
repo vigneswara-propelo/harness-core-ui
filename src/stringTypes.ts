@@ -2749,6 +2749,8 @@ export interface StringsMap {
   'platform.connectors.confirmDeleteTitle': string
   'platform.connectors.connectAndSave': string
   'platform.connectors.connectivityMode.connectToProvider': string
+  'platform.connectors.connectivityMode.enableProxy': string
+  'platform.connectors.connectivityMode.proxyDescription': string
   'platform.connectors.connectivityMode.selectText': string
   'platform.connectors.connectivityMode.title': string
   'platform.connectors.connectivityMode.validation': string

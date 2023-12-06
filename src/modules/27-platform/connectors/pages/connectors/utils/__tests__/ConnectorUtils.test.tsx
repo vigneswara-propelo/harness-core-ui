@@ -58,7 +58,8 @@ describe('Connector Utils', () => {
         username: 'usename',
         secretKeyRef: { name: 'mysecretappd', identifier: 'mysecretappd', referenceString: 'account.mysecretappd' },
         crossAccountAccess: false,
-        accessKey: { type: 'TEXT', value: 'accesskey' }
+        accessKey: { type: 'TEXT', value: 'accesskey' },
+        proxy: false
       })
     ).toEqual({
       connector: {
@@ -75,7 +76,8 @@ describe('Connector Utils', () => {
             spec: { accessKey: 'accesskey', accessKeyRef: undefined, secretKeyRef: 'account.mysecretappd' },
             crossAccountAccess: null
           },
-          executeOnDelegate: true
+          executeOnDelegate: true,
+          proxy: false
         }
       }
     })
@@ -121,7 +123,8 @@ describe('Connector Utils', () => {
           url: 'url',
           urlType: 'Repo',
           connectType: 'Ssh',
-          sshKey: { referenceString: 'sshKeyRef' }
+          sshKey: { referenceString: 'sshKeyRef' },
+          proxy: false
         })
       ).toEqual({
         connector: {
@@ -139,7 +142,8 @@ describe('Connector Utils', () => {
             type: 'Ssh',
             spec: {
               sshKeyRef: 'sshKeyRef'
-            }
+            },
+            proxy: null
           }
         }
       })
@@ -726,7 +730,8 @@ describe('Connector Utils', () => {
           apiAuthType: 'Token',
           usernamefieldType: 'TEXT',
           usernametextField: 'username',
-          delegateSelectors: []
+          delegateSelectors: [],
+          proxy: true
         })
       ).toEqual({
         connector: {
@@ -758,7 +763,8 @@ describe('Connector Utils', () => {
               spec: {
                 tokenRef: 'account.secretdevxDDUx'
               }
-            }
+            },
+            proxy: true
           }
         }
       })

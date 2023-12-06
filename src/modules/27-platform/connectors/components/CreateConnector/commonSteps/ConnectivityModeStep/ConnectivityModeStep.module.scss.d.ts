@@ -9,5 +9,6 @@
 declare const styles: {
   readonly cardClass: string
   readonly formCss: string
+  readonly toggle: string
 }
 export default styles

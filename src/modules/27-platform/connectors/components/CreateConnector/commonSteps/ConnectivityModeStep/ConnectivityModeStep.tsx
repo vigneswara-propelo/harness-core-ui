@@ -15,7 +15,9 @@ import {
   ModalErrorHandler,
   ModalErrorHandlerBinding,
   StepProps,
-  Text
+  Text,
+  Toggle,
+  Card
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation, Color } from '@harness/design-system'
@@ -36,10 +38,12 @@ import ConnectivityMode, {
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { ConnectorLabels } from '@platform/connectors/constants'
+import { ConnectorLabels, Connectors } from '@platform/connectors/constants'
 import useCreateEditConnector, { BuildPayloadProps } from '@platform/connectors/hooks/useCreateEditConnector'
+import { GitConnectionType } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import css from './ConnectivityModeStep.module.scss'
 
@@ -67,6 +71,14 @@ interface ConnectivityModeStepProps {
   platformImage?: string
 }
 
+const EnableProxyForConnectorTypes: ConnectorInfoDTO['type'][] = [Connectors.AWS, Connectors.DOCKER, Connectors.GCP]
+const EnableProxyForGitConnectorTypes: ConnectorInfoDTO['type'][] = [
+  Connectors.GITHUB,
+  Connectors.GITLAB,
+  Connectors.BITBUCKET,
+  Connectors.GIT
+]
+
 const ConnectivityModeStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectivityModeStepProps> = props => {
   const {
     prevStepData,
@@ -84,6 +96,8 @@ const ConnectivityModeStep: React.FC<StepProps<ConnectorConfigDTO> & Connectivit
     projectIdentifier: projectIdentifierFromUrl,
     orgIdentifier: orgIdentifierFromUrl
   } = useParams<ProjectPathProps>()
+
+  const { CI_SECURE_TUNNEL } = useFeatureFlags()
   useConnectorWizard({
     helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 1040 } : undefined
   })
@@ -131,6 +145,9 @@ const ConnectivityModeStep: React.FC<StepProps<ConnectorConfigDTO> & Connectivit
   useTrackEvent(ConnectorActions.ConnectivityModeStepLoad, {
     category: Category.CONNECTOR
   })
+
+  const showSecureConnectForGitConnectors =
+    EnableProxyForGitConnectorTypes.includes(props?.type) && prevStepData?.connectionType === GitConnectionType.HTTP
 
   return (
     <>
@@ -204,6 +221,32 @@ const ConnectivityModeStep: React.FC<StepProps<ConnectorConfigDTO> & Connectivit
                     platformImage={platformImage}
                     delegateType={prevStepData?.delegateType}
                   />
+                  {(showSecureConnectForGitConnectors || EnableProxyForConnectorTypes.includes(props?.type)) &&
+                  formik.values.connectivityMode === ConnectivityModeType.Manager &&
+                  CI_SECURE_TUNNEL ? (
+                    <Card>
+                      <Layout.Horizontal padding={{ top: 'medium', left: 'medium' }}>
+                        <Toggle
+                          disabled={false}
+                          onChange={() => {
+                            formik.setFieldValue('proxy', !formik.values.proxy)
+                          }}
+                          className={css.toggle}
+                          checked={formik.values.proxy}
+                        />
+                        <Text
+                          font={{ variation: FontVariation.CARD_TITLE }}
+                          color={Color.BLACK}
+                          padding={{ left: 'small' }}
+                        >
+                          {getString('platform.connectors.connectivityMode.enableProxy')}
+                        </Text>
+                      </Layout.Horizontal>
+                      <Text padding={{ top: 'medium', bottom: 'medium', left: 'medium' }}>
+                        {getString('platform.connectors.connectivityMode.proxyDescription')}
+                      </Text>
+                    </Card>
+                  ) : null}
                 </Layout.Vertical>
                 <Layout.Horizontal padding={{ top: 'medium' }} margin={{ top: 'xxxlarge' }} spacing="medium">
                   <Button
