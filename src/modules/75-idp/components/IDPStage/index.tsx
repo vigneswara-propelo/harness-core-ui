@@ -39,4 +39,6 @@ export const getStageEditorImplementation = (
   />
 )
 
-stagesCollection.registerStageFactory(StageType.IDP, getStageAttributes, getStageEditorImplementation)
+export function registerIDPPipelineStage(): void {
+  stagesCollection.registerStageFactory(StageType.IDP, getStageAttributes, getStageEditorImplementation)
+}

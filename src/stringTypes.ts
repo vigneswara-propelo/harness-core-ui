@@ -9504,10 +9504,20 @@ export interface StringsMap {
   'ci.welcome': string
   'idp.adminHome': string
   'idp.backtoIDP': string
+  'idp.cookieCutterStep.configureTemplate': string
+  'idp.cookieCutterStep.cookieCutterStepDesciption': string
+  'idp.cookieCutterStep.cookieCutterTemplateURL': string
+  'idp.cookieCutterStep.cookieCutterTemplateURLDesc': string
+  'idp.cookieCutterStep.outputDir': string
+  'idp.cookieCutterStep.outputDirPlaceHolder': string
+  'idp.cookieCutterStep.private': string
+  'idp.cookieCutterStep.provideRepoDetails': string
+  'idp.cookieCutterStep.public': string
   'idp.homepage.idpOverviewDescription': string
   'idp.homepage.learnMore': string
   'idp.idpStageHoverText': string
   'idp.layout': string
+  'idp.newKeyValue': string
   'idp.oAuthConfig': string
   'idp.scorecards': string
   'idp.urlAllowList': string

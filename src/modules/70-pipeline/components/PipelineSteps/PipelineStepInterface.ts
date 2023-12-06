@@ -262,7 +262,8 @@ export enum StepType {
   Provenance = 'provenance',
   CUSTOM_STAGE_ENVIRONMENT = 'CUSTOM_STAGE_ENVIRONMENT',
   Anchore = 'Anchore',
-  AquaSecurity = 'AquaSecurity'
+  AquaSecurity = 'AquaSecurity',
+  Cookiecutter = 'Cookiecutter'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

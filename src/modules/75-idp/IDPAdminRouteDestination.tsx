@@ -26,12 +26,16 @@ import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.util
 import { Scope } from 'framework/types/types'
 import type { IDPCustomMicroFrontendProps } from './interfaces/IDPCustomMicroFrontendProps.types'
 import IDPPipelinesOverview from './components/IDPPipelinesOverview/IDPPipelinesOverview'
-import '@idp/components/IDPStage'
+import { registerIDPPipelineStage } from './components/IDPStage'
+import { registerIDPPipelineStep } from './components/PipelineSteps'
 
 // eslint-disable-next-line import/no-unresolved
 const IDPAdminMicroFrontend = React.lazy(() => import('idpadmin/MicroFrontendApp'))
 const mode = NAV_MODE.MODULE
 const module: Module = 'idp-admin'
+
+registerIDPPipelineStage()
+registerIDPPipelineStep()
 
 const IDPAdminRedirect: React.FC = () => {
   const { scope, params } = useGetSelectedScope()

@@ -8,3 +8,14 @@ homepage:
   idpOverviewDescription: Eliminate cognitive overload by letting developers manage their software effortlessly and access everything at their fingertips.
   learnMore: Learn more about Internal Developer Portal
 idpStageHoverText: Create new Service Onboarding Pipelines or any other self service workflow.
+cookieCutterStep:
+  cookieCutterStepDesciption: Cookiecutter is a tool for quickly creating project templates, enabling developers to generate consistent project structures with minimal effort.
+  provideRepoDetails: Provide Repository details
+  public: Public
+  private: Private
+  cookieCutterTemplateURL: Provide URL of cookiecutter template
+  cookieCutterTemplateURLDesc: Provide the URL or choose a suggested template
+  outputDir: Provide the output directory link
+  outputDirPlaceHolder: Add a custom URL or cookie cutter template link
+  configureTemplate: Configure  the template
+newKeyValue: New key-value pair
