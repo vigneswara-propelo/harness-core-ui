@@ -47,6 +47,10 @@ export const transformValuesFieldsConfig = (stepType?: StepType) => [
     name: 'spec.policy.store.spec.file',
     type: TransformValuesTypes.Text
   },
+  {
+    name: 'spec.policy.policySets',
+    type: TransformValuesTypes.Text
+  },
   ...(stepType === StepType.CdSscaEnforcement
     ? [
         {
@@ -86,7 +90,7 @@ export const transformValuesFieldsConfig = (stepType?: StepType) => [
   }
 ]
 
-export const editViewValidateFieldsConfig = (stepType: StepType) => [
+export const editViewValidateFieldsConfig = (stepType: StepType, isOpa: boolean) => [
   {
     name: 'identifier',
     type: ValidationFieldTypes.Identifier,
@@ -126,7 +130,13 @@ export const editViewValidateFieldsConfig = (stepType: StepType) => [
     name: 'spec.policy.store.spec.file',
     type: ValidationFieldTypes.Text,
     label: 'common.git.filePath',
-    isRequired: true
+    isRequired: !isOpa
+  },
+  {
+    name: 'spec.policy.policySets',
+    type: ValidationFieldTypes.Text,
+    label: 'common.policy.policysets',
+    isRequired: isOpa
   },
   ...(stepType === StepType.CdSscaEnforcement
     ? [
@@ -209,6 +219,11 @@ export const getInputSetViewValidateFieldsConfig =
         name: 'spec.verifyAttestation.spec.publicKey',
         type: ValidationFieldTypes.Text,
         label: 'ssca.publicKey'
+      },
+      {
+        name: 'spec.policy.policySets',
+        type: ValidationFieldTypes.Text,
+        label: 'common.policy.policysets'
       },
       ...((stepType === StepType.CdSscaEnforcement
         ? [

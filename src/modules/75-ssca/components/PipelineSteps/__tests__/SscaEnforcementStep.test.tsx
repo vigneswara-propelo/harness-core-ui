@@ -13,8 +13,23 @@ import { StepViewType, StepFormikRef, ValidateInputSetProps } from '@pipeline/co
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { doConfigureOptionsTesting, queryByNameAttribute } from '@common/utils/testUtils'
-import { CiSscaEnforcementStep } from '../CiSscaEnforcementStep/CiSscaEnforcementStep'
-import { SscaCiEnforcementStepData } from '../common/types'
+import { kubernetesConnectorListResponse } from '@modules/27-platform/connectors/components/ConnectorReferenceField/__tests__/mocks'
+import { SscaEnforcementStep } from '../SscaEnforcementStep/SscaEnforcementStep'
+import { SscaEnforcementStepData } from '../common/types'
+import { ciSpecValues, commonDefaultEnforcementSpecValues } from '../common/utils'
+
+const fetchConnector = jest.fn().mockReturnValue({ data: kubernetesConnectorListResponse.data?.content?.[1] })
+
+jest.mock('services/cd-ng', () => ({
+  getConnectorListV2Promise: () => Promise.resolve(kubernetesConnectorListResponse),
+  useGetConnector: jest.fn().mockImplementation(() => {
+    return {
+      data: { data: kubernetesConnectorListResponse.data?.content?.[1] },
+      refetch: fetchConnector,
+      loading: false
+    }
+  })
+}))
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
@@ -37,12 +52,7 @@ const runtimeValues = {
       }
     },
     policy: {
-      store: {
-        type: 'Harness',
-        spec: {
-          file: 'testFilePath'
-        }
-      }
+      policySets: RUNTIME_INPUT_VALUE
     },
     resources: {
       limits: {
@@ -53,7 +63,7 @@ const runtimeValues = {
   }
 }
 
-const fixedValues = {
+const existingFixedValues = {
   identifier: 'Ssca_Enforcement_Step',
   name: 'SSCA Enforcement Step',
   timeout: '10s',
@@ -88,17 +98,76 @@ const fixedValues = {
   }
 }
 
-describe('CI SSCA Enforcement Step', () => {
+const emptyInitialValues = {
+  identifier: 'Ssca_Enforcement_Step',
+  name: 'SSCA Enforcement Step',
+  timeout: '10s',
+  spec: {
+    ...commonDefaultEnforcementSpecValues,
+    ...ciSpecValues
+  }
+}
+
+describe('SBOM Enforcement Step', () => {
   beforeAll(() => {
-    factory.registerStep(new CiSscaEnforcementStep())
+    factory.registerStep(new SscaEnforcementStep())
   })
 
-  test('edit view as new step', () => {
-    render(<TestStepWidget initialValues={{}} type={StepType.SscaEnforcement} stepViewType={StepViewType.Edit} />)
-    expect(screen.getByText('pipelineSteps.stepNameLabel')).toBeInTheDocument()
+  test('new step | OPA policy FF Off', async () => {
+    render(
+      <TestStepWidget
+        initialValues={emptyInitialValues}
+        type={StepType.SscaEnforcement}
+        stepViewType={StepViewType.Edit}
+      />
+    )
+    expect(await screen.findByTestId('file-store-select')).toBeInTheDocument()
+    expect(screen.queryByText('ssca.useOpaPolicy')).not.toBeInTheDocument()
+    expect(screen.queryByText('common.policiesSets.addOrModifyPolicySet')).not.toBeInTheDocument()
   })
 
-  test('edit view renders with runtime inputs', async () => {
+  test('new step | OPA policy FF On', async () => {
+    render(
+      <TestStepWidget
+        initialValues={emptyInitialValues}
+        type={StepType.SscaEnforcement}
+        stepViewType={StepViewType.Edit}
+        testWrapperProps={{
+          defaultFeatureFlagValues: { SSCA_ENFORCEMENT_WITH_BOTH_NATIVE_AND_OPA_POLICIES_ENABLED: true }
+        }}
+      />
+    )
+    expect(await screen.findByText('common.policiesSets.addOrModifyPolicySet')).toBeInTheDocument()
+  })
+
+  test('existing step | OPA policy FF On', async () => {
+    const onUpdate = jest.fn()
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    render(
+      <TestStepWidget
+        initialValues={existingFixedValues}
+        type={StepType.SscaEnforcement}
+        stepViewType={StepViewType.Edit}
+        onUpdate={onUpdate}
+        ref={ref}
+        testWrapperProps={{
+          defaultFeatureFlagValues: { SSCA_ENFORCEMENT_WITH_BOTH_NATIVE_AND_OPA_POLICIES_ENABLED: true }
+        }}
+      />
+    )
+    // existing filesore in edit mode
+    const existingFilestore = await screen.findByTestId('file-store-select')
+
+    expect(existingFilestore).toBeInTheDocument()
+    await userEvent.click(screen.getByText('ssca.useOpaPolicy'))
+    expect(await screen.findByText('common.policiesSets.addOrModifyPolicySet')).toBeInTheDocument()
+    expect(existingFilestore).not.toBeInTheDocument()
+    await act(() => ref.current?.submitForm()!)
+
+    expect(await screen.findByText('fieldRequired')).toBeInTheDocument()
+  })
+
+  test('runtime values edit view', async () => {
     const onUpdate = jest.fn()
     const ref = React.createRef<StepFormikRef<unknown>>()
     render(
@@ -109,9 +178,11 @@ describe('CI SSCA Enforcement Step', () => {
         stepViewType={StepViewType.Edit}
         onUpdate={onUpdate}
         ref={ref}
+        testWrapperProps={{
+          defaultFeatureFlagValues: { SSCA_ENFORCEMENT_WITH_BOTH_NATIVE_AND_OPA_POLICIES_ENABLED: true }
+        }}
       />
     )
-
     await act(() => ref.current?.submitForm()!)
     expect(onUpdate).toHaveBeenLastCalledWith(runtimeValues)
   })
@@ -120,17 +191,22 @@ describe('CI SSCA Enforcement Step', () => {
     render(
       <TestStepWidget
         initialValues={runtimeValues}
+        template={runtimeValues}
         type={StepType.SscaEnforcement}
         stepViewType={StepViewType.InputSet}
+        testWrapperProps={{
+          defaultFeatureFlagValues: { SSCA_ENFORCEMENT_WITH_BOTH_NATIVE_AND_OPA_POLICIES_ENABLED: true }
+        }}
       />
     )
+    expect(await screen.findByText('common.policiesSets.policyset')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Submit' })).toBeInTheDocument()
   })
 
   test('variable view', async () => {
     render(
       <TestStepWidget
-        initialValues={fixedValues}
+        initialValues={existingFixedValues}
         type={StepType.SscaEnforcement}
         stepViewType={StepViewType.InputVariable}
       />
@@ -146,16 +222,16 @@ describe('CI SSCA Enforcement Step', () => {
       },
       template: {
         type: StepType.SscaEnforcement,
-        ...fixedValues
+        ...runtimeValues
       },
       viewType: StepViewType.DeploymentForm,
       getString: jest.fn().mockImplementation(val => val)
     }
-    const response = new CiSscaEnforcementStep().validateInputSet(
-      data as ValidateInputSetProps<SscaCiEnforcementStepData>
+    const response = new SscaEnforcementStep().validateInputSet(
+      data as unknown as ValidateInputSetProps<SscaEnforcementStepData>
     )
     expect(response).toEqual({})
-    expect(new CiSscaEnforcementStep().processFormData(runtimeValues)).toEqual(runtimeValues)
+    expect(new SscaEnforcementStep().processFormData(runtimeValues)).toEqual(runtimeValues)
   })
 
   test('configure values should work fine for runtime inputs', async () => {

@@ -18,3 +18,4 @@ enforcementStep:
 publicKey: Public Key
 components: Components
 registryType: Registry Type
+useOpaPolicy: Use OPA Policy

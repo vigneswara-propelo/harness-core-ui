@@ -9,7 +9,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import { Accordion, FormInput, Formik, FormikForm, Icon, Layout, SelectOption, Text } from '@harness/uicore'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
-import { get } from 'lodash-es'
+import { get, set } from 'lodash-es'
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -39,9 +39,11 @@ import { useStrings } from 'framework/strings'
 import type { SbomSource } from 'services/ci'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { isValueRuntimeInput } from '@common/utils/utils'
+import MultiTypePolicySetSelector from '@modules/70-pipeline/components/PipelineSteps/Common/PolicySets/MultiTypePolicySetSelector/MultiTypePolicySetSelector'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { editViewValidateFieldsConfig, transformValuesFieldsConfig } from './SscaEnforcementStepFunctionConfigs'
-import { SscaStepProps } from './types'
-import { AllMultiTypeInputTypesForStep } from './utils'
+import { SscaCdEnforcementStepData, SscaEnforcementStepData, SscaStepProps } from './types'
+import { AllMultiTypeInputTypesForStep, commonDefaultEnforcementSpecValues } from './utils'
 import css from './SscaStep.module.scss'
 
 const getTypedOptions = <T extends string>(input: T[]): SelectOption[] => {
@@ -53,7 +55,7 @@ const artifactTypeOptions = getTypedOptions<SbomSource['type']>(['image'])
 const setFormikField = (formik: FormikProps<any>, field: string) => (value: unknown) => {
   formik.setFieldValue(field, value)
 }
-const SscaEnforcementStepEdit = <T,>(
+const SscaEnforcementStepEdit = <T extends SscaEnforcementStepData | SscaCdEnforcementStepData>(
   {
     initialValues,
     onUpdate,
@@ -69,6 +71,7 @@ const SscaEnforcementStepEdit = <T,>(
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const isExecutionTimeFieldDisabledForStep = isExecutionTimeFieldDisabled(stepViewType)
+  const { SSCA_ENFORCEMENT_WITH_BOTH_NATIVE_AND_OPA_POLICIES_ENABLED } = useFeatureFlags()
 
   const { getStageFromPipeline, state } = usePipelineContext()
   const { stage: currentStage } = getStageFromPipeline<BuildStageElementConfig>(
@@ -79,16 +82,27 @@ const SscaEnforcementStepEdit = <T,>(
 
   const gitScope = useGitScope()
 
+  const _initialValues = getInitialValuesInCorrectFormat<T, T>(initialValues, transformValuesFieldsConfig(stepType))
+
+  // for an existing step set opa true if there isn't a filestore
+  if (
+    SSCA_ENFORCEMENT_WITH_BOTH_NATIVE_AND_OPA_POLICIES_ENABLED &&
+    !get(_initialValues, 'spec.policy.store.spec.file')
+  ) {
+    set(_initialValues, 'spec.policy.opa', true)
+    set(_initialValues, 'spec.policy.store', undefined)
+  }
+
   return (
     <Formik
-      initialValues={getInitialValuesInCorrectFormat<T, T>(initialValues, transformValuesFieldsConfig(stepType))}
+      initialValues={_initialValues}
       formName={stepType}
       validate={valuesToValidate => {
         const schemaValues = getFormValuesInCorrectFormat<T, T>(valuesToValidate, transformValuesFieldsConfig(stepType))
         onChange?.(schemaValues)
         return validate(
           valuesToValidate,
-          editViewValidateFieldsConfig(stepType),
+          editViewValidateFieldsConfig(stepType, !!get(valuesToValidate, 'spec.policy.opa')),
           {
             initialValues,
             steps: currentStage?.stage?.spec?.execution?.steps || {},
@@ -204,11 +218,35 @@ const SscaEnforcementStepEdit = <T,>(
                 {getString('ssca.enforcementStep.policyConfiguration')}
               </Text>
 
-              <FileStoreSelectField
-                label={getString('common.git.filePath')}
-                name="spec.policy.store.spec.file"
-                onChange={setFormikField(formik, 'spec.policy.store.spec.file')}
-              />
+              {SSCA_ENFORCEMENT_WITH_BOTH_NATIVE_AND_OPA_POLICIES_ENABLED && (
+                <FormInput.Toggle
+                  name="spec.policy.opa"
+                  label={getString('ssca.useOpaPolicy')}
+                  onToggle={enabled => {
+                    if (enabled) {
+                      set(formik, 'values.spec.policy.store', undefined)
+                    } else {
+                      set(formik, 'values.spec.policy.policySets', undefined)
+                      set(formik, 'values.spec.policy.store', commonDefaultEnforcementSpecValues.policy.store)
+                    }
+                  }}
+                />
+              )}
+
+              {get(formik.values, 'spec.policy.opa') ? (
+                <MultiTypePolicySetSelector
+                  name={'spec.policy.policySets'}
+                  label={getString('common.policy.policysets')}
+                  disabled={readonly}
+                  expressions={expressions}
+                />
+              ) : (
+                <FileStoreSelectField
+                  label={getString('common.git.filePath')}
+                  name="spec.policy.store.spec.file"
+                  onChange={setFormikField(formik, 'spec.policy.store.spec.file')}
+                />
+              )}
 
               {stepType === StepType.CdSscaEnforcement && (
                 <>

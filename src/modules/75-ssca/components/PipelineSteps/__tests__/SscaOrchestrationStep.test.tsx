@@ -13,7 +13,7 @@ import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { queryByNameAttribute, doConfigureOptionsTesting } from '@common/utils/testUtils'
-import { CiSscaOrchestrationStep } from '../CiSscaOrchestrationStep/CiSscaOrchestrationStep'
+import { SscaOrchestrationStep } from '../SscaOrchestrationStep/SscaOrchestrationStep'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
@@ -82,9 +82,9 @@ const fixedValues = {
   }
 }
 
-describe('CI SSCA Orchestration Step', () => {
+describe('SBOM Orchestration Step', () => {
   beforeAll(() => {
-    factory.registerStep(new CiSscaOrchestrationStep())
+    factory.registerStep(new SscaOrchestrationStep())
   })
 
   test('edit view as new step', () => {

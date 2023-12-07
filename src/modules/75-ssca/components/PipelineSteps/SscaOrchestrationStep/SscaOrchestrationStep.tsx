@@ -27,7 +27,7 @@ import { SscaOrchestrationStepEditWithRef } from '../common/SscaOrchestrationSte
 import SscaOrchestrationStepInputSet from '../common/SscaOrchestrationStepInputSet'
 import { commonDefaultOrchestrationSpecValues, ciSpecValues } from '../common/utils'
 
-export class CiSscaOrchestrationStep extends PipelineStep<SscaCiOrchestrationStepData> {
+export class SscaOrchestrationStep extends PipelineStep<SscaCiOrchestrationStepData> {
   constructor() {
     super()
     this._hasStepVariables = true

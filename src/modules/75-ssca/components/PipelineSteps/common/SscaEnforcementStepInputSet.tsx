@@ -21,11 +21,12 @@ import { Connectors } from '@platform/connectors/constants'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useQueryParams } from '@common/hooks'
 import type { ProjectPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import { SscaStepProps, SscaCdEnforcementStepData, SscaCiEnforcementStepData } from './types'
+import MultiTypePolicySetSelector from '@modules/70-pipeline/components/PipelineSteps/Common/PolicySets/MultiTypePolicySetSelector/MultiTypePolicySetSelector'
+import { SscaStepProps, SscaCdEnforcementStepData, SscaEnforcementStepData } from './types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export default function SscaEnforcementStepInputSet(
-  props: SscaStepProps<SscaCdEnforcementStepData | SscaCiEnforcementStepData>
+  props: SscaStepProps<SscaCdEnforcementStepData | SscaEnforcementStepData>
 ): React.ReactElement {
   const { template, path, readonly, stepViewType, allowableTypes, stepType } = props
   const { getString } = useStrings()
@@ -67,6 +68,19 @@ export default function SscaEnforcementStepInputSet(
           />
         </div>
       )}
+
+      {isValueRuntimeInput(get(template, 'spec.policy.policySets', '')) && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <MultiTypePolicySetSelector
+            name={`${prefix}spec.policy.policySets`}
+            label={getString('common.policiesSets.policyset')}
+            expressions={expressions}
+            allowableTypes={allowableTypes}
+            disabled={readonly}
+          />
+        </div>
+      )}
+
       {stepType === StepType.CdSscaEnforcement ? (
         <>
           {isValueRuntimeInput(get(template, 'spec.infrastructure.spec.connectorRef')) && (

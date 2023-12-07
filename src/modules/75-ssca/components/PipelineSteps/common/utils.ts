@@ -68,7 +68,8 @@ export const commonDefaultEnforcementSpecValues: CommonSscaEnforcementStepSpec =
       spec: {
         file: ''
       }
-    }
+    },
+    policySets: []
   }
 }
 

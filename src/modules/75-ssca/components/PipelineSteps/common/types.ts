@@ -29,7 +29,7 @@ export interface SscaCdEnforcementStepData extends SscaCommonStepData {
   spec: CommonSscaEnforcementStepSpec & CdResourcesSpec
 }
 
-export interface SscaCiEnforcementStepData extends SscaCommonStepData {
+export interface SscaEnforcementStepData extends SscaCommonStepData {
   spec: CommonSscaEnforcementStepSpec & CiResourcesSpec
 }
 
@@ -85,10 +85,12 @@ export interface CommonSscaEnforcementStepSpec {
     spec: CosignVerifyAttestation
   }
   policy: {
-    store: {
+    store?: {
       type: PolicyStore['type']
       spec: HarnessStore
     }
+    policySets?: string[] | string
+    opa?: boolean
   }
 }
 
