@@ -17,6 +17,7 @@ import { RouteWithContext } from '@common/router/RouteWithContext/RouteWithConte
 import { NAV_MODE, accountPathProps, modulePathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
 
+import CETHomePage from './pages/CETHomePage'
 import { CETEventsSummary } from './pages/events-summary/CETEventsSummary'
 import { CETMonitoredServices } from './pages/CETMonitoredServices'
 import CETTrialPage from './pages/trialPage/CETTrialPage'
@@ -42,14 +43,16 @@ const CETRedirect: React.FC<{ mode: NAV_MODE }> = props => {
   }
 
   return (
-    <Redirect
-      to={routes.toCETSettings({
-        accountId: accountId,
-        orgIdentifier: params?.orgIdentifier,
-        module: ModuleName.CET.toLowerCase() as Module,
-        mode: props.mode
-      })}
-    />
+    <RouteWithContext
+      exact
+      path={[
+        routes.toMode({ ...orgPathProps, module: 'cet', mode: props.mode }),
+        routes.toMode({ ...accountPathProps, module: 'cet', mode: props.mode })
+      ]}
+      licenseRedirectData={licenseRedirectData}
+    >
+      <CETHomePage />
+    </RouteWithContext>
   )
 }
 
@@ -86,6 +89,7 @@ const CETRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
       <RouteWithContext
         exact
         path={[
+          routes.toMode({ module: 'cet', mode }),
           routes.toMode({ ...projectPathProps, module: 'cet', mode }),
           routes.toMode({ ...orgPathProps, module: 'cet', mode }),
           routes.toMode({ ...accountPathProps, module: 'cet', mode })
@@ -93,7 +97,6 @@ const CETRouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
       >
         <CETRedirect mode={mode} />
       </RouteWithContext>
-
       <RouteWithContext
         exact
         path={routes.toCETTrial({ ...accountPathProps, ...modulePathProps, mode })}
