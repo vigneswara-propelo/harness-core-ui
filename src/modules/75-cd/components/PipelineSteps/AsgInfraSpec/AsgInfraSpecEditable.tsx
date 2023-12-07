@@ -142,6 +142,10 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
         {formik => {
           window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.INFRASTRUCTURE }))
           formikRef.current = formik as FormikProps<unknown> | null
+          const isBaseNameFixed = getMultiTypeFromValue(get(formik.values, 'baseAsgName')) === MultiTypeInputType.FIXED
+          if (get(formik.errors, 'region') && get(formik.values, 'region')) {
+            formik.setFieldError('region', undefined)
+          }
           return (
             <FormikForm>
               <Layout.Horizontal className={css.formRow} spacing="medium">
@@ -167,7 +171,7 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
                   type={connectorTypes.Aws}
                   gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                   onChange={() => {
-                    if (CDS_BASIC_ASG) {
+                    if (CDS_BASIC_ASG && isBaseNameFixed) {
                       formik.setFieldValue('baseAsgName', '')
                       setAsgBaseNames([])
                     }
@@ -187,9 +191,9 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
                     showDefaultField={false}
                     onChange={value => {
                       formik.setFieldValue('connectorRef', value)
-                      if (CDS_BASIC_ASG) {
-                        formik.setFieldValue('baseAsgName', '')
+                      if (CDS_BASIC_ASG && isBaseNameFixed) {
                         setAsgBaseNames([])
+                        formik.setFieldValue('baseAsgName', '')
                       }
                     }}
                     isReadonly={readonly}
@@ -205,15 +209,16 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
                   selectItems={regions}
                   useValue
                   multiTypeInputProps={{
+                    expressions,
                     selectProps: {
                       items: regions,
                       popoverClassName: css.regionPopover,
                       allowCreatingNewItems: true
                     },
                     onChange: () => {
-                      if (CDS_BASIC_ASG) {
-                        formik.setFieldValue('baseAsgName', '')
+                      if (CDS_BASIC_ASG && isBaseNameFixed) {
                         setAsgBaseNames([])
+                        formik.setFieldValue('baseAsgName', '')
                       }
                     }
                   }}
@@ -244,6 +249,7 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
                     selectItems={getItems(loading, asgBaseNames)}
                     useValue
                     multiTypeInputProps={{
+                      expressions,
                       selectProps: {
                         items: asgBaseNames,
                         popoverClassName: css.regionPopover,
