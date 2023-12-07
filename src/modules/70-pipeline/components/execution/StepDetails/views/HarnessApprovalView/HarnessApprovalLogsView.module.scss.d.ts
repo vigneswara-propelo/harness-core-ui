@@ -11,6 +11,7 @@ declare const styles: {
   readonly approvalRow: string
   readonly approveRejectModal: string
   readonly error: string
+  readonly harnessApprovalLogs: string
   readonly harnessApprovalLogsView: string
 }
 export default styles

@@ -5,6 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+.harnessApprovalLogs {
+  overflow-y: auto;
+}
+
 .approvalRow {
   align-items: center;
   background-color: var(--grey-800);
@@ -14,17 +18,18 @@
   height: auto;
   justify-content: space-between;
   margin: var(--spacing-medium) var(--spacing-xxlarge) 0 var(--spacing-medium);
-  padding: 0 var(--spacing-xxlarge) 0 var(--spacing-large);
+  padding: var(--spacing-small) var(--spacing-xxlarge) var(--spacing-small) var(--spacing-large);
 }
 
 .approvalMessageContent {
-  margin: var(--spacing-medium) 0px;
+  margin: var(--spacing-small) 0;
   word-break: break-word;
   white-space: pre-wrap;
 }
 
 .error {
   color: var(--orange-700);
+  align-items: flex-start;
 }
 
 .approveRejectModal {

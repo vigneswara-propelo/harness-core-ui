@@ -2,6 +2,7 @@
 
 exports[`HarnessApprovalLogsView - Loading No spinner in case of Loading - missing approvalInstanceId: Loading State - missing approvalInstanceId 1`] = `
 <div
+  class="harnessApprovalLogs"
   data-testid="harnessApprovalLogsTest"
 >
   <pre
@@ -184,6 +185,7 @@ exports[`HarnessApprovalLogsView - Success Render proper in case of successful A
             </div>
           </div>
           <div
+            class="harnessApprovalLogs"
             data-testid="harnessApprovalLogsTest"
           >
             <div
@@ -210,6 +212,7 @@ exports[`HarnessApprovalLogsView - Success Render proper in case of successful A
 
 exports[`HarnessApprovalLogsView - Success Render proper in case of successful API, waiting and auth=true 1`] = `
 <div
+  class="harnessApprovalLogs"
   data-testid="harnessApprovalLogsTest"
 >
   <div

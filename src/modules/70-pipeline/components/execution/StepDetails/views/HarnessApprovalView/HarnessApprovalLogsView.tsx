@@ -113,7 +113,7 @@ export function HarnessApprovalLogsView(props: ConsoleViewStepDetailProps): Reac
 
   const renderLogs = (renderLogsProps: RenderLogsInterface): React.ReactElement => {
     return (
-      <div data-testid="harnessApprovalLogsTest">
+      <div data-testid="harnessApprovalLogsTest" className={css.harnessApprovalLogs}>
         {approveButtonNode}
         {logsRenderer(renderLogsProps)}
       </div>
