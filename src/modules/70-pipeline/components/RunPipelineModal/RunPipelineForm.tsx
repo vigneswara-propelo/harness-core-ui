@@ -1084,7 +1084,8 @@ function RunPipelineFormBasic({
                       pipeline={pipeline}
                       currentPipeline={{ pipeline: values }}
                       getTemplateError={inputSetsError}
-                      resolvedPipeline={resolvedMergedPipeline}
+                      resolvedMergedPipeline={resolvedMergedPipeline}
+                      resolvedPipeline={resolvedPipeline}
                       submitForm={submitForm}
                       setRunClicked={setRunClicked}
                       hasInputSets={hasInputSets}

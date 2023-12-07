@@ -46,6 +46,7 @@ export interface VisualViewProps {
   templateError?: GetDataError<Failure | Error> | null
   pipeline?: PipelineInfoConfig
   resolvedPipeline?: PipelineInfoConfig
+  resolvedMergedPipeline?: PipelineInfoConfig
   currentPipeline?: {
     pipeline?: PipelineInfoConfig
   }
@@ -88,6 +89,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
     pipeline,
     currentPipeline,
     getTemplateError,
+    resolvedMergedPipeline,
     resolvedPipeline,
     setRunClicked,
     submitForm,
@@ -118,7 +120,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
         return <ErrorHandler responseMessages={templateErrorObj?.responseMessages as ResponseMessage[]} />
       }
       return getString('pipeline.inputSets.noRuntimeInputsWhileExecution')
-    } else if (!executionView && resolvedPipeline && currentPipeline && !hasRuntimeInputs && !getTemplateError) {
+    } else if (!executionView && resolvedMergedPipeline && currentPipeline && !hasRuntimeInputs && !getTemplateError) {
       /*
       We don't have any runtime inputs required for running this pipeline
         - if API doesn't fail and
@@ -234,6 +236,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
                 executionIdentifier={executionIdentifier}
                 hasRuntimeInputs={hasRuntimeInputs}
                 template={template}
+                resolvedMergedPipeline={resolvedMergedPipeline}
                 resolvedPipeline={resolvedPipeline}
                 selectedStageData={selectedStageData}
                 showDivider={!executionView && !reRunInputSetYaml}
@@ -261,6 +264,7 @@ export interface PipelineInputSetFormWrapperProps {
   hasRuntimeInputs?: boolean
   template: PipelineInfoConfig
   resolvedPipeline?: PipelineInfoConfig
+  resolvedMergedPipeline?: PipelineInfoConfig
   selectedStageData: StageSelectionData
   maybeContainerClassOverride?: string
   showDivider?: boolean
@@ -278,6 +282,7 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
     hasRuntimeInputs,
     template,
     executionIdentifier,
+    resolvedMergedPipeline,
     resolvedPipeline,
     selectedStageData,
     showDivider,
@@ -288,7 +293,7 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
     connectorRef
   } = props
 
-  if (currentPipeline?.pipeline && resolvedPipeline && (hasRuntimeInputs || executionView)) {
+  if (currentPipeline?.pipeline && resolvedMergedPipeline && (hasRuntimeInputs || executionView)) {
     return (
       <>
         {showDivider && (
@@ -297,7 +302,8 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
           </div>
         )}
         <PipelineInputSetForm
-          originalPipeline={resolvedPipeline}
+          originalPipeline={resolvedMergedPipeline}
+          resolvedPipeline={resolvedPipeline}
           template={template}
           readonly={executionView}
           path=""

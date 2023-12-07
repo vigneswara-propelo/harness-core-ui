@@ -31,6 +31,7 @@ export interface ChainedPipelineInputSetFormProps extends Optional<PipelineGitMe
   stagePath: string
   viewType: StepViewType
   allowableTypes: AllowedTypes
+  resolvedValues?: StageElementWrapperConfig
   allValues?: StageElementWrapperConfig
   readonly?: boolean
   executionIdentifier?: string

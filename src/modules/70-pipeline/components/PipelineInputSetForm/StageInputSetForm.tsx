@@ -134,6 +134,7 @@ export interface StageInputSetFormProps {
   executionIdentifier?: string
   allowableTypes: AllowedTypes
   stageType: StageType
+  resolvedStage?: DeploymentStageConfig
   childPipelineMetadata?: ChildPipelineMetadataType
   viewTypeMetadata?: Record<string, boolean>
 }
@@ -149,6 +150,7 @@ export function StageInputSetFormInternal({
   executionIdentifier,
   allowableTypes,
   stageType,
+  resolvedStage,
   childPipelineMetadata,
   viewTypeMetadata
 }: StageInputSetFormProps): React.ReactElement {
@@ -577,6 +579,7 @@ export function StageInputSetFormInternal({
         viewType={viewType}
         readonly={readonly}
         stageIdentifier={stageIdentifier}
+        resolvedStage={resolvedStage}
         childPipelineMetadata={childPipelineMetadata}
         viewTypeMetadata={viewTypeMetadata}
       />

@@ -41,10 +41,12 @@ import type { DeployServiceEntityData } from './ServicesInputSetForm'
 import css from '../PipelineInputSetForm.module.scss'
 
 export default function SingleServiceInputSetForm({
-  // This is the resolved pipeline yaml
+  // This is the resolved merged pipeline yaml
   deploymentStage,
   // This is the resolved/updated template yaml
   deploymentStageTemplate,
+  // This is the resolved pipeline yaml
+  resolvedStage,
   path,
   readonly,
   viewType,
@@ -71,11 +73,24 @@ export default function SingleServiceInputSetForm({
 
   // This is the value of AllValues
   const deploymentStageInputSet = get(formik?.values, path, {})
-
-  const serviceIdentifier = defaultTo(
+  const deploymentStageServiceIdentifier = defaultTo(
     deploymentStageInputSet?.service?.serviceRef,
     deploymentStage?.service?.serviceRef
   )
+
+  /*
+     'resolvedStage' will be visible exclusively when dealing with a chained pipeline. 
+      In situations where the service is included in the child pipeline, there are three possible scenarios:
+      * When the serviceId is not runtime, and the service inputs are runtime, the serviceId is set to deploymentStageServiceIdentifier
+      * When the serviceId is runtime ->
+          - If configured before opening the run pipeline form, specifically on the chained pipeline inputs tab,
+            and the serviceId is now fixed while the service inputs remain runtime, then the serviceId is assigned as resolvedStage?.service?.serviceRef
+          - If configured on the run pipeline form     
+  */
+
+  const serviceIdentifier = isValueRuntimeInput(resolvedStage?.service?.serviceRef)
+    ? deploymentStageServiceIdentifier
+    : defaultTo(resolvedStage?.service?.serviceRef, deploymentStageServiceIdentifier)
 
   const useFromStageInputSetValue = get(deploymentStageInputSet, 'service.useFromStage.stage')
 

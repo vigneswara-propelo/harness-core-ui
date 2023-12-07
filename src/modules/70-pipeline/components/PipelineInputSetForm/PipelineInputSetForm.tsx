@@ -61,6 +61,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 export interface PipelineInputSetFormProps extends Optional<PipelineGitMetaData> {
   originalPipeline: PipelineInfoConfig
   template: PipelineInfoConfig
+  resolvedPipeline?: PipelineInfoConfig
   path?: string
   executionIdentifier?: string
   readonly?: boolean
@@ -91,6 +92,7 @@ export function StageFormInternal({
   stageClassName = '',
   allowableTypes,
   executionIdentifier,
+  resolvedValues,
   childPipelineMetadata,
   viewTypeMetadata
 }: {
@@ -102,6 +104,7 @@ export function StageFormInternal({
   stageClassName?: string
   allowableTypes: AllowedTypes
   executionIdentifier?: string
+  resolvedValues?: StageElementWrapperConfig
   childPipelineMetadata?: ChildPipelineMetadataType
   viewTypeMetadata?: Record<string, boolean>
 }): JSX.Element {
@@ -163,6 +166,7 @@ export function StageFormInternal({
           viewType={viewType}
           executionIdentifier={executionIdentifier}
           allowableTypes={allowableTypes}
+          resolvedStage={resolvedValues?.stage?.spec as DeploymentStageConfig}
           childPipelineMetadata={childPipelineMetadata}
           viewTypeMetadata={viewTypeMetadata}
         />
@@ -198,6 +202,7 @@ export function StageForm({
   stageClassName = '',
   allowableTypes,
   executionIdentifier,
+  resolvedValues,
   childPipelineMetadata,
   viewTypeMetadata,
   stageTooltip,
@@ -214,6 +219,7 @@ export function StageForm({
   stageClassName?: string
   executionIdentifier?: string
   allowableTypes: AllowedTypes
+  resolvedValues?: StageElementWrapperConfig
   childPipelineMetadata?: ChildPipelineMetadataType
   viewTypeMetadata?: Record<string, boolean>
   stageTooltip?: {
@@ -306,6 +312,11 @@ export function StageForm({
               ? { stage: allValues?.stage?.template?.templateInputs as StageElementConfig }
               : allValues
           }
+          resolvedValues={
+            resolvedValues?.stage?.template
+              ? { stage: resolvedValues?.stage?.template?.templateInputs as StageElementConfig }
+              : resolvedValues
+          }
           path={isTemplateStage ? `${path}.${TEMPLATE_INPUT_PATH}` : path}
           readonly={readonly}
           viewType={viewType}
@@ -329,6 +340,7 @@ export function ChainedPipelineInputSetForm(props: ChainedPipelineInputSetFormPr
     viewType,
     allowableTypes,
     allValues,
+    resolvedValues,
     readonly,
     executionIdentifier,
     maybeContainerClass,
@@ -339,6 +351,7 @@ export function ChainedPipelineInputSetForm(props: ChainedPipelineInputSetFormPr
     connectorRef
   } = props
   const originalPipeline = (allValues?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
+  const resolvedPipeline = (resolvedValues?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
   const pipelineStageTemplate = (stageObj?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
   const pipelineStageOutputs = (stageObj?.stage?.spec as PipelineStageConfig)?.outputs
   const childPipelineMetadata = React.useMemo(() => getChildPipelineMetadata(allValues), [allValues])
@@ -395,6 +408,7 @@ export function ChainedPipelineInputSetForm(props: ChainedPipelineInputSetFormPr
         <PipelineInputSetFormInternal
           originalPipeline={originalPipeline}
           template={pipelineStageTemplate}
+          resolvedPipeline={resolvedPipeline}
           path={inputPath}
           readonly={readonly}
           viewType={viewType}
@@ -418,6 +432,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
   const {
     originalPipeline,
     template,
+    resolvedPipeline,
     path = '',
     readonly,
     viewType,
@@ -563,6 +578,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
             const pathPrefix = !isEmpty(finalPath) ? `${finalPath}.` : ''
             if (stageObj.stage) {
               const allValues = getStageFromPipeline(stageObj.stage?.identifier || '', originalPipeline)
+              const resolvedValues = getStageFromPipeline(stageObj.stage?.identifier || '', resolvedPipeline)
 
               return (
                 <Layout.Vertical key={stageObj?.stage?.identifier || index}>
@@ -576,6 +592,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                         viewType={viewType}
                         allowableTypes={allowableTypes}
                         allValues={allValues}
+                        resolvedValues={resolvedValues}
                         readonly={readonly}
                         executionIdentifier={executionIdentifier}
                         maybeContainerClass={maybeContainerClass}
@@ -602,6 +619,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                       repoIdentifier={repoName}
                       branch={branch}
                       connectorRef={connectorRef}
+                      {...(childPipelineMetadata && { resolvedValues })}
                     />
                   )}
                 </Layout.Vertical>
@@ -609,6 +627,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
             } else if (stageObj.parallel) {
               return stageObj.parallel.map((stageP, indexp) => {
                 const allValues = getStageFromPipeline(stageP?.stage?.identifier || '', originalPipeline)
+                const resolvedValues = getStageFromPipeline(stageP?.stage?.identifier || '', resolvedPipeline)
 
                 return (
                   <Layout.Vertical key={`${stageObj?.stage?.identifier}-${stageP.stage?.identifier}-${indexp}`}>
@@ -622,6 +641,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                           viewType={viewType}
                           allowableTypes={allowableTypes}
                           allValues={allValues}
+                          resolvedValues={resolvedValues}
                           readonly={readonly}
                           executionIdentifier={executionIdentifier}
                           maybeContainerClass={maybeContainerClass}
@@ -647,6 +667,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                         repoIdentifier={repoName}
                         branch={branch}
                         connectorRef={connectorRef}
+                        {...(childPipelineMetadata && { resolvedValues })}
                       />
                     )}
                   </Layout.Vertical>
