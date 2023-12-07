@@ -10,23 +10,28 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   StepProps,
-  AllowedTypes
+  AllowedTypes,
+  Label,
+  Container
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { Form, FieldArray } from 'formik'
-import { get, defaultTo } from 'lodash-es'
+import { get, defaultTo, isEmpty } from 'lodash-es'
 import { v4 as uuid } from 'uuid'
-import type { StartupCommandConfiguration } from 'services/cd-ng'
-import { useStrings } from 'framework/strings'
+import type { StartupCommandConfiguration, ConnectorConfigDTO } from 'services/cd-ng'
+import { useStrings, String } from 'framework/strings'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import type { ManifestStepInitData } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import FileStoreSelectField from '@platform/filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
+import { MultiConfigSelectField } from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
+import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
+import { isRuntimeInput } from '@pipeline/utils/CIUtils'
 
 import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
-import { GitFetchTypes } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import { GitFetchTypes, GitRepoName, ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface K8sRemoteManifestStepTwoProps {
@@ -49,6 +54,10 @@ interface FormInputPaths {
   useConnectorCredentials: string
   valuesPaths: string
   files: string
+}
+
+const getAccountUrl = (prevStepData?: ConnectorConfigDTO): string => {
+  return prevStepData?.connectorRef ? prevStepData?.connectorRef?.connector?.spec?.url : prevStepData?.url
 }
 
 export const K8sRemoteFile: React.FC<StepProps<ManifestStepInitData> & K8sRemoteManifestStepTwoProps> = props => {
@@ -85,6 +94,15 @@ export const K8sRemoteFile: React.FC<StepProps<ManifestStepInitData> & K8sRemote
     valuesPaths: `${path}.valuesPaths`
   })
 
+  const gitConnectionType: string = prevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
+  const connectionType =
+    defaultTo(get(prevStepData, `connectorRef.connector.spec.[${gitConnectionType}]`), '') === GitRepoName.Repo ||
+    defaultTo(get(prevStepData, 'urlType'), '') === GitRepoName.Repo
+      ? GitRepoName.Repo
+      : GitRepoName.Account
+
+  const accountUrl = connectionType === GitRepoName.Account ? getAccountUrl(prevStepData) : ''
+
   return (
     <Layout.Vertical>
       <Heading level={2} style={{ color: Color.BLACK, fontSize: 24, fontWeight: 'bold' }} margin={{ bottom: 'xlarge' }}>
@@ -98,18 +116,46 @@ export const K8sRemoteFile: React.FC<StepProps<ManifestStepInitData> & K8sRemote
             spec: Yup.object().shape({
               store: Yup.object().shape({
                 spec: Yup.object().shape({
-                  gitFetchType: Yup.string(),
+                  gitFetchType: Yup.string().when(' ', {
+                    is: () => {
+                      return !isHarnessStore
+                    },
+                    then: Yup.string().required(getString('cd.gitFetchTypeRequired'))
+                  }),
                   branch: Yup.string().when('gitFetchType', {
-                    is: GitFetchTypes.Branch,
+                    is: !isHarnessStore && GitFetchTypes.Branch,
                     then: Yup.string().trim().required(getString('validation.branchName'))
                   }),
                   commitId: Yup.string().when('gitFetchType', {
-                    is: GitFetchTypes.Commit,
+                    is: !isHarnessStore && GitFetchTypes.Commit,
                     then: Yup.string().trim().required(getString('validation.commitId'))
+                  }),
+                  repoName: Yup.string().when('connectorRef', {
+                    is: connectorRef => {
+                      return (
+                        !isHarnessStore &&
+                        !!(connectionType === GitRepoName.Account || accountUrl) &&
+                        !isRuntimeInput(connectorRef)
+                      )
+                    },
+                    then: Yup.string().trim().required(getString('common.validation.repositoryName'))
                   }),
                   paths: Yup.mixed().when(' ', {
                     is: () => {
                       return !isHarnessStore
+                    },
+                    then: Yup.lazy(value => {
+                      if (!value) {
+                        return Yup.string().required(getString('cd.pathCannotBeEmpty'))
+                      }
+                      return getMultiTypeFromValue(value as boolean) === MultiTypeInputType.FIXED
+                        ? Yup.array().of(Yup.string().min(1).required(getString('cd.pathCannotBeEmpty')))
+                        : Yup.string()
+                    })
+                  }),
+                  files: Yup.mixed().when(' ', {
+                    is: () => {
+                      return isHarnessStore
                     },
                     then: Yup.lazy(value => {
                       if (!value) {
@@ -135,12 +181,25 @@ export const K8sRemoteFile: React.FC<StepProps<ManifestStepInitData> & K8sRemote
                   type: defaultTo(get(data, 'store'), ''),
                   spec: {
                     ...data?.manifestSource?.spec.store.spec,
+                    files: isHarnessStore ? data?.manifestSource?.spec.store.spec.files : undefined,
+                    paths: !isHarnessStore ? data?.manifestSource?.spec.store.spec.paths : undefined,
+                    branch: !isHarnessStore ? data?.manifestSource?.spec.store.spec.branch : undefined,
+                    gitFetchType: !isHarnessStore ? data?.manifestSource?.spec.store.spec.gitFetchType : undefined,
+                    repoName:
+                      (!isRuntimeInput(get(data, `manifestSource.spec.store.spec.connectorRef`)) &&
+                        !!(connectionType === GitRepoName.Account || accountUrl) &&
+                        data?.manifestSource?.spec.store.spec?.repoName) ||
+                      undefined,
                     connectorRef:
                       /* istanbul ignore next */
-                      ((data?.connectorRef as ConnectorSelectedValue)?.value as string) || data?.connectorRef
+                      isHarnessStore
+                        ? undefined
+                        : ((data?.connectorRef as ConnectorSelectedValue)?.value as string) || data?.connectorRef
                   }
                 },
-                valuesPaths: defaultTo(get(data, 'manifestSource.spec.valuesPaths'), [])
+                valuesPaths: !get(data, 'manifestSource.spec.valuesPaths')[0]
+                  ? undefined
+                  : defaultTo(get(data, 'manifestSource.spec.valuesPaths'), [])
               }
             }
           } as ManifestStepInitData)
@@ -158,52 +217,17 @@ export const K8sRemoteFile: React.FC<StepProps<ManifestStepInitData> & K8sRemote
               {isHarnessStore ? (
                 <>
                   <div className={cx(stepCss.formGroup, stepCss.md)}>
-                    <MultiTypeFieldSelector
-                      defaultValueToReset={['']}
+                    <MultiConfigSelectField
                       name={formInputNames(fieldPath).files}
-                      label={getString('fileFolderPathText')}
-                      allowedTypes={allowableTypes}
-                    >
-                      <FieldArray
-                        name={formInputNames(fieldPath).files}
-                        render={arrayHelpers => (
-                          <Layout.Vertical>
-                            {defaultTo(get(formikValues, `${fieldPath}.store.spec.files`), ['']).map(
-                              (path: string, index: number) => (
-                                <Layout.Horizontal key={index} data-testid={`${path}-${index}`}>
-                                  <FileStoreSelectField
-                                    name={`${fieldPath}.store.spec.files[${index}]`}
-                                    onChange={(newValue: string) => {
-                                      formik?.setFieldValue(`${fieldPath}.store.spec.files[${index}]`, newValue)
-                                    }}
-                                  />
-                                  <Button
-                                    variation={ButtonVariation.ICON}
-                                    icon="main-trash"
-                                    onClick={() => arrayHelpers.remove(index)}
-                                    disabled={isReadonly}
-                                    data-testid={`removeFileStorePath${index}`}
-                                  />
-                                </Layout.Horizontal>
-                              )
-                            )}
-                            <span>
-                              <Button
-                                margin={{ top: 'medium' }}
-                                variation={ButtonVariation.LINK}
-                                text={getString('addFileText')}
-                                onClick={() => {
-                                  arrayHelpers.push('')
-                                }}
-                                disabled={isReadonly}
-                                data-testid={`addFilePath-file-store`}
-                                icon="add"
-                              />
-                            </span>
-                          </Layout.Vertical>
-                        )}
-                      />
-                    </MultiTypeFieldSelector>
+                      fileType={FILE_TYPE_VALUES.FILE_STORE}
+                      formik={formik}
+                      expressions={expressions}
+                      values={defaultTo(get(formikValues, `${fieldPath}.store.spec.files`), [''])}
+                      multiTypeFieldSelectorProps={{
+                        disableTypeSelection: false,
+                        label: <Label htmlFor="files">{getString('fileFolderPathText')}</Label>
+                      }}
+                    />
                   </div>
                 </>
               ) : (
@@ -241,7 +265,40 @@ export const K8sRemoteFile: React.FC<StepProps<ManifestStepInitData> & K8sRemote
                       )}
                     </div>
                   )}
+                  {!isRuntimeInput(get(formikValues, `${fieldPath}.store.spec.connectorRef`)) &&
+                    !!(connectionType === GitRepoName.Account || accountUrl) && (
+                      <>
+                        <div className={cx(stepCss.formGroup, stepCss.md)}>
+                          <FormInput.MultiTextInput
+                            multiTextInputProps={{ expressions, allowableTypes }}
+                            placeholder={getString('pipeline.manifestType.repoNamePlaceholder')}
+                            label={getString('common.repositoryName')}
+                            name={formInputNames(fieldPath).repoName}
+                          />
+                          {getMultiTypeFromValue(get(formikValues, `${fieldPath}.store.spec.repoName`)) ===
+                            MultiTypeInputType.RUNTIME && (
+                            <ConfigureOptions
+                              style={{ marginTop: 2 }}
+                              value={get(formikValues, `${fieldPath}.store.spec.repoName`)}
+                              type="String"
+                              variableName={`${fieldPath}.store.spec.repoName`}
+                              showRequiredField={false}
+                              showDefaultField={false}
+                              onChange={value => {
+                                formik.setFieldValue(`${fieldPath}.store.spec.repoName`, value)
+                              }}
+                              isReadonly={isReadonly}
+                            />
+                          )}
+                        </div>
 
+                        {!isEmpty(accountUrl) && (
+                          <Container margin={{ bottom: 'medium' }}>
+                            <String stringID="common.git.gitAccountUrl" />:<span>{`${accountUrl}`}</span>
+                          </Container>
+                        )}
+                      </>
+                    )}
                   {get(store, 'gitFetchType') === gitFetchTypes[1].value && (
                     <div className={cx(stepCss.formGroup, stepCss.md)}>
                       <FormInput.MultiTextInput
@@ -270,7 +327,7 @@ export const K8sRemoteFile: React.FC<StepProps<ManifestStepInitData> & K8sRemote
 
                   <div className={cx(stepCss.formGroup, stepCss.md)}>
                     <MultiTypeFieldSelector
-                      defaultValueToReset={['']}
+                      defaultValueToReset={[{ value: '', id: uuid() }]}
                       name={formInputNames(fieldPath).paths}
                       label={getString('fileFolderPathText')}
                       allowedTypes={allowableTypes}
@@ -297,13 +354,15 @@ export const K8sRemoteFile: React.FC<StepProps<ManifestStepInitData> & K8sRemote
                                   data-testid={`${path}-${index}`}
                                 />
 
-                                <Button
-                                  variation={ButtonVariation.ICON}
-                                  icon="main-trash"
-                                  onClick={() => arrayHelpers.remove(index)}
-                                  disabled={isReadonly}
-                                  data-testid={`removeFilePath${index}`}
-                                />
+                                {get(formikValues, `${fieldPath}.store.spec.paths`)?.length > 1 && (
+                                  <Button
+                                    variation={ButtonVariation.ICON}
+                                    icon="main-trash"
+                                    onClick={() => arrayHelpers.remove(index)}
+                                    disabled={isReadonly}
+                                    data-testid={`removeFilePath${index}`}
+                                  />
+                                )}
                               </Layout.Horizontal>
                             ))}
                             <span>
@@ -326,68 +385,82 @@ export const K8sRemoteFile: React.FC<StepProps<ManifestStepInitData> & K8sRemote
                 </div>
               )}
               <div className={cx(stepCss.formGroup, stepCss.md)}>
-                <MultiTypeFieldSelector
-                  defaultValueToReset={['']}
-                  name={formInputNames(fieldPath).valuesPaths}
-                  label={getString('pipeline.manifestType.valuesYamlPath')}
-                  allowedTypes={allowableTypes}
-                >
-                  <FieldArray
+                {isHarnessStore ? (
+                  <MultiConfigSelectField
                     name={formInputNames(fieldPath).valuesPaths}
-                    render={arrayHelpers => (
-                      <Layout.Vertical>
-                        {defaultTo(get(formikValues, `${fieldPath}.valuesPaths`), []).map(
-                          (path: string, index: number) => (
-                            <Layout.Horizontal key={index}>
-                              {isHarnessStore ? (
-                                <FileStoreSelectField
-                                  name={`${fieldPath}.valuesPaths[${index}]`}
-                                  onChange={(newValue: string) => {
-                                    formik?.setFieldValue(`${fieldPath}.valuesPaths[${index}]`, newValue)
-                                  }}
-                                />
-                              ) : (
-                                <FormInput.MultiTextInput
-                                  label=""
-                                  placeholder={getString('pipeline.manifestType.pathPlaceholder')}
-                                  name={`${fieldPath}.valuesPaths[${index}]`}
-                                  multiTextInputProps={{
-                                    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
-                                    expressions,
-                                    textProps: { disabled: isReadonly }
-                                  }}
-                                  disabled={isReadonly}
-                                  style={{ width: '430px' }}
-                                  data-testid={`${path}-${index}`}
-                                />
-                              )}
-
-                              <Button
-                                variation={ButtonVariation.ICON}
-                                icon="main-trash"
-                                onClick={() => arrayHelpers.remove(index)}
-                                disabled={isReadonly}
-                                data-testid={`removeValuesPath${index}`}
-                              />
-                            </Layout.Horizontal>
-                          )
-                        )}
-                        <span>
-                          <Button
-                            variation={ButtonVariation.LINK}
-                            text={getString('pipeline.manifestType.addValuesYamlPath')}
-                            onClick={() => {
-                              arrayHelpers.push('')
-                            }}
-                            disabled={isReadonly}
-                            data-testid={`addValuesPath`}
-                            icon="add"
-                          />
-                        </span>
-                      </Layout.Vertical>
-                    )}
+                    fileType={FILE_TYPE_VALUES.FILE_STORE}
+                    formik={formik}
+                    expressions={expressions}
+                    values={defaultTo(get(formikValues, `${fieldPath}.valuesPaths`), [''])}
+                    multiTypeFieldSelectorProps={{
+                      disableTypeSelection: false,
+                      label: <Label htmlFor="files">{getString('pipeline.manifestType.valuesYamlPath')}</Label>
+                    }}
                   />
-                </MultiTypeFieldSelector>
+                ) : (
+                  <MultiTypeFieldSelector
+                    defaultValueToReset={['']}
+                    name={formInputNames(fieldPath).valuesPaths}
+                    label={getString('pipeline.manifestType.valuesYamlPath')}
+                    allowedTypes={allowableTypes}
+                  >
+                    <FieldArray
+                      name={formInputNames(fieldPath).valuesPaths}
+                      render={arrayHelpers => (
+                        <Layout.Vertical>
+                          {defaultTo(get(formikValues, `${fieldPath}.valuesPaths`), []).map(
+                            (path: string, index: number) => (
+                              <Layout.Horizontal key={index}>
+                                {isHarnessStore ? (
+                                  <FileStoreSelectField
+                                    name={`${fieldPath}.valuesPaths[${index}]`}
+                                    onChange={(newValue: string) => {
+                                      formik?.setFieldValue(`${fieldPath}.valuesPaths[${index}]`, newValue)
+                                    }}
+                                  />
+                                ) : (
+                                  <FormInput.MultiTextInput
+                                    label=""
+                                    placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+                                    name={`${fieldPath}.valuesPaths[${index}]`}
+                                    multiTextInputProps={{
+                                      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                                      expressions,
+                                      textProps: { disabled: isReadonly }
+                                    }}
+                                    disabled={isReadonly}
+                                    style={{ width: '430px' }}
+                                    data-testid={`${path}-${index}`}
+                                  />
+                                )}
+
+                                <Button
+                                  variation={ButtonVariation.ICON}
+                                  icon="main-trash"
+                                  onClick={() => arrayHelpers.remove(index)}
+                                  disabled={isReadonly}
+                                  data-testid={`removeValuesPath${index}`}
+                                />
+                              </Layout.Horizontal>
+                            )
+                          )}
+                          <span>
+                            <Button
+                              variation={ButtonVariation.LINK}
+                              text={getString('pipeline.manifestType.addValuesYamlPath')}
+                              onClick={() => {
+                                arrayHelpers.push('')
+                              }}
+                              disabled={isReadonly}
+                              data-testid={`addValuesPath`}
+                              icon="add"
+                            />
+                          </span>
+                        </Layout.Vertical>
+                      )}
+                    />
+                  </MultiTypeFieldSelector>
+                )}
               </div>
               <Layout.Horizontal spacing="xxlarge">
                 <Button

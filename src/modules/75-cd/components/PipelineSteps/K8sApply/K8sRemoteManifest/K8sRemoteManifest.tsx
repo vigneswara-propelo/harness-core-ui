@@ -6,14 +6,24 @@
  */
 
 import React, { useCallback, useState } from 'react'
-import { get, noop, defaultTo } from 'lodash-es'
+import { get, noop, defaultTo, isEmpty } from 'lodash-es'
 import { Dialog, IDialogProps, Classes, Intent, FormGroup } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { connect } from 'formik'
 import { v4 as uuid } from 'uuid'
 
-import { Layout, Text, StepWizard, StepProps, Button, Label, ButtonVariation, FormError } from '@harness/uicore'
+import {
+  Layout,
+  Text,
+  StepWizard,
+  StepProps,
+  Button,
+  Label,
+  ButtonVariation,
+  FormError,
+  Container
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import type { IconProps } from '@harness/icons'
@@ -27,7 +37,6 @@ import ConnectorDetailsStep from '@platform/connectors/components/CreateConnecto
 import GitDetailsStep from '@platform/connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import ConnectorTestConnection from '@platform/connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import StepGitAuthentication from '@platform/connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
-
 import StepGithubAuthentication from '@platform/connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
 import StepBitbucketAuthentication from '@platform/connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
 import StepGitlabAuthentication from '@platform/connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
@@ -113,19 +122,26 @@ function SelectRemoteManifest({
 
   const getInitialValues = (): ManifestStepInitData => {
     if (initValues) {
+      const isNewStore = defaultTo(get(initValues, 'manifestSource.spec.store.type'), '') !== manifestStore
       const values = {
         ...initValues,
-        store: manifestSourceStoreType,
+        store: manifestSourceStoreType || manifestStore,
         connectorRef: manifestSourceStoreSpec?.connectorRef,
         selectedManifest: ManifestDataType.K8sManifest,
         manifestSource: {
           type: get(formik.values, 'spec.manifestSource.type', null),
           spec: {
-            valuesPaths: defaultTo(get(manifestSourceSpec, 'valuesPaths'), []),
+            valuesPaths: isNewStore ? [] : defaultTo(get(manifestSourceSpec, 'valuesPaths'), []),
             store: {
               type: manifestStore || manifestSourceStoreType,
               spec: {
                 connectorRef: getConnectorPath(manifestSourceStoreType, manifestSource),
+                files: isNewStore
+                  ? ['']
+                  : defaultTo(get(manifestSourceStoreSpec, 'files'), [{ value: '', id: uuid() }]),
+                paths: isNewStore
+                  ? ['']
+                  : defaultTo(get(manifestSourceStoreSpec, 'paths'), [{ value: '', id: uuid() }]),
                 ...manifestSourceStoreSpec
               }
             }
@@ -177,7 +193,6 @@ function SelectRemoteManifest({
 
   const initialValues = getLastStepInitialData()
   const initialConnectorRef = getConnectorPath(initialValues?.spec?.store?.type, initialValues)
-
   const { selectedConnector } = useGetLastStepConnectorValue({
     initialConnectorRef,
     isEditMode: false,
@@ -199,7 +214,7 @@ function SelectRemoteManifest({
     }
 
     return manifestDetailsProps
-  }, [selectedManifest, manifestStore, getLastStepInitialData, formik])
+  }, [selectedManifest, manifestStore, getLastStepInitialData, formik, initialValues])
 
   const prevStepProps = useCallback((): { editManifestModePrevStepData: ConnectorConfigDTO } => {
     return {
@@ -359,15 +374,21 @@ function SelectRemoteManifest({
   const intent = showError ? Intent.DANGER : Intent.NONE
   const helperText = showError ? <FormError name={name} errorMessage={get(formik?.errors, name)} /> : null
 
+  const paths =
+    get(initValues, 'manifestSource.spec.store.spec.paths') ||
+    get(initValues, 'manifestSource.spec.store.spec.files') ||
+    []
+
   return (
     <FormGroup intent={intent} helperText={helperText}>
       <Layout.Vertical width={430} margin={{ bottom: 'medium' }}>
         <Label style={{ color: Color.GREY_900 }} className={css.configLabel} data-tooltip-id="k8s-apply-remote">
           {getString('cd.configurationFile')}
         </Label>
+
         <div className={cx(css.configFile)}>
           <div className={css.configField}>
-            {!ManifestType ? (
+            {isEmpty(paths) && !ManifestType ? (
               <a
                 data-testid="editConfigButton"
                 className={css.configPlaceHolder}
@@ -377,11 +398,23 @@ function SelectRemoteManifest({
                 {getString('cd.manifestSelectPlaceHolder')}
               </a>
             ) : (
-              <Text font="normal" lineClamp={1} width={200}>
-                /{ManifestType}
+              <Text
+                width={200}
+                tooltip={
+                  <Layout.Vertical padding={'medium'}>
+                    {defaultTo(paths, []).map((path: string) => {
+                      return (
+                        <Container margin={{ bottom: 'medium' }} key={path}>
+                          {path}
+                        </Container>
+                      )
+                    })}
+                  </Layout.Vertical>
+                }
+              >
+                {paths[0]}
               </Text>
             )}
-
             <Button
               minimal
               icon="Edit"

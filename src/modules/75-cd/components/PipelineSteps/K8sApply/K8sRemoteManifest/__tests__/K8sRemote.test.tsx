@@ -81,7 +81,8 @@ const initialValues: ManifestStepInitData = {
           connectorRef: 'account.autosync',
           paths: ['sa', 'a'],
           gitFetchType: 'Branch',
-          branch: 'ds'
+          branch: 'ds',
+          repoName: 'repotest'
         }
       }
     }
