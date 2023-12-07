@@ -1599,6 +1599,8 @@ export interface ResourceDTO {
     | 'API_KEY'
     | 'TOKEN'
     | 'DELEGATE_TOKEN'
+    | 'DASHBOARD'
+    | 'DASHBOARD_FOLDER'
     | 'GOVERNANCE_POLICY'
     | 'GOVERNANCE_POLICY_SET'
     | 'VARIABLE'

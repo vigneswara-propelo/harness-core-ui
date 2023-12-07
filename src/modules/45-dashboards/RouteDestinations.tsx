@@ -15,6 +15,8 @@ import { MinimalLayout } from '@common/layouts'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
+import type { ResourceDTO } from 'services/audit'
+import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import DashboardResourceModalBody from '@dashboards/components/DashboardResourceModalBody/DashboardResourceModalBody'
 import DashboardResourceRenderer from '@dashboards/components/DashboardResourceRenderer/DashboardResourceRenderer'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -49,6 +51,24 @@ RbacFactory.registerResourceTypeHandler(ResourceType.DASHBOARDS, {
   addResourceModalBody: props => <DashboardResourceModalBody {...props} />,
   // eslint-disable-next-line react/display-name
   staticResourceRenderer: props => <DashboardResourceRenderer {...props} />
+})
+
+/**
+ * Register for Audit Trail
+ * */
+AuditTrailFactory.registerResourceHandler('DASHBOARD', {
+  moduleIcon: {
+    name: 'dashboards-solid-border'
+  },
+  moduleLabel: 'common.resourceCenter.ticketmenu.platform',
+  resourceLabel: 'dashboardLabel',
+  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+    const { identifier, labels } = resource
+    const { accountIdentifier } = resourceScope
+    const folderId = labels?.folderId || 'shared'
+
+    return routes.toViewCustomDashboard({ accountId: accountIdentifier, viewId: identifier, folderId: folderId })
+  }
 })
 
 // eslint-disable-next-line import/no-unresolved
