@@ -110,7 +110,7 @@ describe('Test TerragruntRollback', () => {
   })
 
   test('should render edit view as new step', () => {
-    const { container } = render(
+    const { getByPlaceholderText, getByText, getAllByTestId } = render(
       <TestStepWidget
         initialValues={{}}
         type={StepType.TerragruntRollback}
@@ -118,7 +118,12 @@ describe('Test TerragruntRollback', () => {
         isNewStep
       />
     )
-    expect(container).toMatchSnapshot()
+    expect(getByPlaceholderText('pipeline.stepNamePlaceholder')).toBeDefined()
+    expect(getByText('pipelineSteps.timeoutLabel')).toBeDefined()
+    expect(getByPlaceholderText('Enter w/d/h/m/s/ms')).toBeDefined()
+    expect(getAllByTestId('multi-type-button')).toHaveLength(2)
+    expect(getByText('pipelineSteps.provisionerIdentifier')).toBeDefined()
+    expect(getByPlaceholderText('pipeline.terraformStep.provisionerIdentifier')).toBeDefined()
   })
 
   test('Basic functions - edit stage view', async () => {
@@ -162,7 +167,7 @@ describe('Test TerragruntRollback', () => {
   test('Render edit view with runtime input values', async () => {
     const ref = React.createRef<StepFormikRef<unknown>>()
     const onUpdate = jest.fn()
-    const { container } = render(
+    const { getByText, getByPlaceholderText } = render(
       <TestStepWidget
         initialValues={{
           type: 'TerragruntRollback',
@@ -182,7 +187,15 @@ describe('Test TerragruntRollback', () => {
     )
     await act(() => ref.current?.submitForm()!)
     expect(onUpdate).toHaveBeenCalled()
-    expect(container).toMatchSnapshot()
+    expect(getByText('Test_A')).toBeDefined()
+    expect(getByText('name')).toBeDefined()
+    expect(getByPlaceholderText('pipeline.stepNamePlaceholder')).toHaveValue('Test A')
+    const timeoutInput = getByText('pipelineSteps.timeoutLabel').parentElement?.parentElement?.querySelector('input')
+    expect(timeoutInput).toHaveValue('<+input>')
+    const provisionerIdentifier = getByText(
+      'pipelineSteps.provisionerIdentifier'
+    ).parentElement?.parentElement?.querySelector('input')
+    expect(provisionerIdentifier).toHaveValue('<+input>')
   })
 
   test('Basic snapshot- InputSet mode', async () => {

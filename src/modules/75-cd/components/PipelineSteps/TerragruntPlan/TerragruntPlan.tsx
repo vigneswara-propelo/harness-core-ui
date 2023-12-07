@@ -80,7 +80,6 @@ import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/con
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
   ConnectorMap,
   ConnectorTypes,
@@ -119,7 +118,6 @@ function TerragruntPlanWidget(
   const { expressions } = useVariablesExpression()
   const [connectorView, setConnectorView] = useState(false)
   const [selectedConnector, setSelectedConnector] = useState<ConnectorTypes | ''>('')
-  const { CDS_TERRAGRUNT_CLI_OPTIONS_NG } = useFeatureFlags()
 
   const commandTypeOptions: IOptionProps[] = [
     { label: getString('filters.apply'), value: CommandTypes.Apply },
@@ -870,23 +868,21 @@ function TerragruntPlanWidget(
                     </>
                   }
                 />
-                {CDS_TERRAGRUNT_CLI_OPTIONS_NG && (
-                  <Accordion.Panel
-                    id="step-2"
-                    summary={getString('cd.commandLineOptions')}
-                    details={
-                      <>
-                        <CommandFlags
-                          formik={formik}
-                          stepType="PLAN"
-                          allowableTypes={allowableTypes}
-                          path={'spec.configuration.commandFlags'}
-                          isTerragrunt={true}
-                        />
-                      </>
-                    }
-                  />
-                )}
+                <Accordion.Panel
+                  id="step-2"
+                  summary={getString('cd.commandLineOptions')}
+                  details={
+                    <>
+                      <CommandFlags
+                        formik={formik}
+                        stepType="PLAN"
+                        allowableTypes={allowableTypes}
+                        path={'spec.configuration.commandFlags'}
+                        isTerragrunt={true}
+                      />
+                    </>
+                  }
+                />
               </Accordion>
             </>
             {

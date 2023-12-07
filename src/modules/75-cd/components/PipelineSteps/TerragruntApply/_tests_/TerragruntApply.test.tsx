@@ -7,7 +7,7 @@
 
 import React from 'react'
 import userEvent from '@testing-library/user-event'
-import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { queryByNameAttribute } from '@common/utils/testUtils'
 import { getIdentifierFromName } from '@common/utils/StringUtils'
@@ -134,10 +134,18 @@ describe('Test TerragruntApply', () => {
   })
 
   test('should render edit view as new step', () => {
-    const { container } = render(
+    const { container, getByPlaceholderText, getByText } = render(
       <TestStepWidget initialValues={{}} type={StepType.TerragruntApply} stepViewType={StepViewType.Edit} />
     )
-    expect(container).toMatchSnapshot()
+
+    expect(getByText('Id')).toBeDefined()
+    expect(queryByAttribute('data-icon', container, 'Edit')).toBeDefined()
+    expect(getByPlaceholderText('pipeline.stepNamePlaceholder')).toHaveValue('')
+    expect(getByPlaceholderText('Enter w/d/h/m/s/ms')).toHaveValue('10m')
+    expect(getByPlaceholderText('- pipelineSteps.configurationType -')).toHaveValue('inline')
+    expect(getByPlaceholderText('pipeline.terraformStep.provisionerIdentifier')).toHaveValue('')
+    expect(getByText('cd.configFilePlaceHolder')).toBeDefined()
+    expect(getByPlaceholderText('Enter path')).toHaveValue('')
   })
 
   test('Basic functions - edit stage view validations', async () => {
@@ -222,7 +230,7 @@ describe('Test TerragruntApply', () => {
   test('should submit form for inline config', async () => {
     const ref = React.createRef<StepFormikRef<unknown>>()
     const onUpdate = jest.fn()
-    const { container } = render(
+    const { container, getByText, getByPlaceholderText } = render(
       <TestStepWidget
         initialValues={mockData}
         type={StepType.TerragruntApply}
@@ -233,7 +241,15 @@ describe('Test TerragruntApply', () => {
     )
     await act(() => ref.current?.submitForm()!)
     expect(onUpdate).toHaveBeenCalled()
-    expect(container).toMatchSnapshot()
+
+    expect(getByText('Id')).toBeDefined()
+    expect(queryByAttribute('data-icon', container, 'Edit')).toBeDefined()
+    expect(getByPlaceholderText('pipeline.stepNamePlaceholder')).toHaveValue('Test A')
+    expect(getByPlaceholderText('Enter w/d/h/m/s/ms')).toHaveValue('10m')
+    expect(getByPlaceholderText('- pipelineSteps.configurationType -')).toHaveValue('inline')
+    expect(getByPlaceholderText('pipeline.terraformStep.provisionerIdentifier')).toHaveValue('test')
+    expect(getByText('cd.configFilePlaceHolder')).toBeDefined()
+    expect(getByPlaceholderText('Enter path')).toHaveValue('./d')
   })
 
   test('should render variable view', () => {
@@ -421,7 +437,11 @@ describe('Test TerragruntApply', () => {
         getString: jest.fn().mockImplementation(val => val),
         viewType: StepViewType.TriggerForm
       })
-      expect(response).toMatchSnapshot('Value must be greater than or equal to "10s"')
+      expect(response).toMatchInlineSnapshot(`
+        Object {
+          "timeout": "Value must be greater than or equal to \\"10s\\"",
+        }
+      `)
     })
   })
 })

@@ -190,10 +190,18 @@ describe('Test TerragruntPlan', () => {
 
   describe('Terragrunt edit view test', () => {
     test('should render edit view as new step', () => {
-      const { container } = render(
+      const { getByText, getByPlaceholderText, getByTestId } = render(
         <TestStepWidget initialValues={{}} type={StepType.TerragruntPlan} stepViewType={StepViewType.Edit} />
       )
-      expect(container).toMatchSnapshot()
+      expect(getByText('Id')).toBeDefined()
+      expect(getByPlaceholderText('pipeline.stepNamePlaceholder')).toBeDefined()
+      expect(getByPlaceholderText('Enter w/d/h/m/s/ms')).toHaveValue('10m')
+      expect(getByText('pipelineSteps.destroy')).toBeDefined()
+      expect(getByPlaceholderText('pipeline.terraformStep.provisionerIdentifier')).toHaveValue('')
+      expect(getByTestId('cr-field-spec.configuration.secretManagerRef')).toBeDefined()
+      expect(getByText('cd.configFilePlaceHolder')).toBeDefined()
+      expect(getByText('cd.moduleConfiguration')).toBeDefined()
+      expect(getByPlaceholderText('Enter path')).toHaveValue('')
     })
 
     test('Basic functions - edit stage view validations', async () => {

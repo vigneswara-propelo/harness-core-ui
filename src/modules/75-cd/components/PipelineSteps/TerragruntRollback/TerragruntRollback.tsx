@@ -33,7 +33,6 @@ import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/S
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { TFRollbackData } from '../Common/Terraform/TerraformInterfaces'
 import type {
   TerragruntRollbackProps,
@@ -52,7 +51,6 @@ function TerragruntRollbackWidget(
   const { initialValues, onUpdate, onChange, allowableTypes, stepViewType, isNewStep, readonly = false } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { CDS_TERRAGRUNT_CLI_OPTIONS_NG } = useFeatureFlags()
 
   return (
     <>
@@ -138,23 +136,21 @@ function TerragruntRollbackWidget(
                   />
                 )}
               </div>
-              {CDS_TERRAGRUNT_CLI_OPTIONS_NG && (
-                <Accordion className={stepCss.accordion}>
-                  <Accordion.Panel
-                    id="step-1"
-                    summary={getString('cd.commandLineOptions')}
-                    details={
-                      <CommandFlags
-                        formik={formik}
-                        stepType="ROLLBACK"
-                        allowableTypes={allowableTypes}
-                        path={'spec.commandFlags'}
-                        isTerragrunt={true}
-                      />
-                    }
-                  />
-                </Accordion>
-              )}
+              <Accordion className={stepCss.accordion}>
+                <Accordion.Panel
+                  id="step-1"
+                  summary={getString('cd.commandLineOptions')}
+                  details={
+                    <CommandFlags
+                      formik={formik}
+                      stepType="ROLLBACK"
+                      allowableTypes={allowableTypes}
+                      path={'spec.commandFlags'}
+                      isTerragrunt={true}
+                    />
+                  }
+                />
+              </Accordion>
             </>
           )
         }}

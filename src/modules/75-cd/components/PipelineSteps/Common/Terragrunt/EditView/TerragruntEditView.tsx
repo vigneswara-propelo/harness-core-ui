@@ -59,7 +59,6 @@ import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
 import { isMultiTypeRuntime } from '@common/utils/utils'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
   ConnectorMap,
   ConnectorTypes,
@@ -141,7 +140,6 @@ export default function TerragruntEditView(
   const [showBackendConfigRemoteWizard, setShowBackendConfigRemoteWizard] = React.useState(false)
   const [connectorView, setConnectorView] = React.useState(false)
   const [selectedConnector, setSelectedConnector] = React.useState<ConnectorTypes | ''>('')
-  const { CDS_TERRAGRUNT_CLI_OPTIONS_NG } = useFeatureFlags()
 
   const { sectionId } = useQueryParams<any>()
 
@@ -774,13 +772,11 @@ export default function TerragruntEditView(
                         </div>
                       }
                     />
-                    {CDS_TERRAGRUNT_CLI_OPTIONS_NG && (
-                      <Accordion.Panel
-                        id="step-2"
-                        summary={getString('cd.commandLineOptions')}
-                        details={renderCommandFlags(formik)}
-                      />
-                    )}
+                    <Accordion.Panel
+                      id="step-2"
+                      summary={getString('cd.commandLineOptions')}
+                      details={renderCommandFlags(formik)}
+                    />
                   </Accordion>
 
                   {showModal && (
@@ -826,7 +822,7 @@ export default function TerragruntEditView(
                     </Dialog>
                   )}
                 </>
-              ) : CDS_TERRAGRUNT_CLI_OPTIONS_NG ? (
+              ) : (
                 <Accordion className={stepCss.accordion}>
                   <Accordion.Panel
                     id="step-1"
@@ -834,8 +830,6 @@ export default function TerragruntEditView(
                     details={renderCommandFlags(formik)}
                   />
                 </Accordion>
-              ) : (
-                <></>
               )}
             </>
           )

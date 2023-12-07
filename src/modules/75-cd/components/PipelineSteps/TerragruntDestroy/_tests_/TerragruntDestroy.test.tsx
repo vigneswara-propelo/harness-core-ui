@@ -134,10 +134,16 @@ describe('Test TerragruntDestroy', () => {
   })
 
   test('should render edit view as new step', () => {
-    const { container } = render(
+    const { getByPlaceholderText, getByText, getAllByTestId } = render(
       <TestStepWidget initialValues={{}} type={StepType.TerragruntDestroy} stepViewType={StepViewType.Edit} />
     )
-    expect(container).toMatchSnapshot()
+    expect(getByPlaceholderText('pipeline.stepNamePlaceholder')).toBeDefined()
+    expect(getByText('pipelineSteps.timeoutLabel')).toBeDefined()
+    expect(getByPlaceholderText('Enter w/d/h/m/s/ms')).toBeDefined()
+    expect(getAllByTestId('multi-type-button')).toHaveLength(2)
+    expect(getByText('pipelineSteps.provisionerIdentifier')).toBeDefined()
+    expect(getByPlaceholderText('pipeline.terraformStep.provisionerIdentifier')).toBeDefined()
+    expect(getByText('cd.commandLineOptions')).toBeDefined()
   })
 
   test('Basic functions - edit stage view validations', async () => {
@@ -223,7 +229,7 @@ describe('Test TerragruntDestroy', () => {
   test('should submit form for inline config', async () => {
     const ref = React.createRef<StepFormikRef<unknown>>()
     const onUpdate = jest.fn()
-    const { container } = render(
+    const { getByText, getByPlaceholderText, getAllByTestId } = render(
       <TestStepWidget
         initialValues={mockData}
         type={StepType.TerragruntDestroy}
@@ -234,7 +240,14 @@ describe('Test TerragruntDestroy', () => {
     )
     await act(() => ref.current?.submitForm()!)
     expect(onUpdate).toHaveBeenCalled()
-    expect(container).toMatchSnapshot()
+    // expect(container).toMatchSnapshot()
+    expect(getByPlaceholderText('pipeline.stepNamePlaceholder')).toBeDefined()
+    expect(getByText('pipelineSteps.timeoutLabel')).toBeDefined()
+    expect(getByPlaceholderText('Enter w/d/h/m/s/ms')).toHaveValue('10m')
+    expect(getAllByTestId('multi-type-button')).toHaveLength(3)
+    expect(getByText('pipelineSteps.provisionerIdentifier')).toBeDefined()
+    expect(getByPlaceholderText('pipeline.terraformStep.provisionerIdentifier')).toBeDefined()
+    expect(getByText('cd.commandLineOptions')).toBeDefined()
   })
 
   test('should render variable view', () => {
@@ -423,7 +436,11 @@ describe('Test TerragruntDestroy', () => {
         getString: jest.fn().mockImplementation(val => val),
         viewType: StepViewType.TriggerForm
       })
-      expect(response).toMatchSnapshot('Value must be greater than or equal to "10s"')
+      expect(response).toMatchInlineSnapshot(`
+        Object {
+          "timeout": "Value must be greater than or equal to \\"10s\\"",
+        }
+      `)
     })
   })
 })
