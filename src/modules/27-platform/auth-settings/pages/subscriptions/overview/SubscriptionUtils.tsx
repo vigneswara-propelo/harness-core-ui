@@ -25,6 +25,8 @@ import type {
   CETModuleLicenseDTO,
   SEIModuleLicenseDTO
 } from 'services/cd-ng'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
+
 import css from './SubscriptionDetailsCard.module.scss'
 
 interface SubscriptionDetailsCardExpiryDateProps {
@@ -57,6 +59,7 @@ function getExpiryMsg({
   )
 }
 
+export const MAX_LICENSES = 1000000
 const AccountName = ({ accountName }: { accountName?: string }): React.ReactElement => {
   const { getString } = useStrings()
   return (
@@ -162,9 +165,11 @@ const SubscriptionDetailsCardPlan = ({
 }
 
 function getLicenseCountByModule({
+  licenseFF,
   licenseData,
   getString
 }: {
+  licenseFF?: boolean
   licenseData?: ModuleLicenseDTO
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
 }): React.ReactElement | undefined {
@@ -214,19 +219,21 @@ function getLicenseCountByModule({
     }
     case ModuleName.CD: {
       const cdModuleLicenseDTO = licenseData as CDModuleLicenseDTO
-      const workloads = cdModuleLicenseDTO?.workloads?.toLocaleString()
+
+      const workloadsCnt = cdModuleLicenseDTO?.workloads ?? 0
       // # disabled reading serviceInstances as part of https://harness.atlassian.net/browse/PLG-1382
       // const serviceInstances = cdModuleLicenseDTO?.serviceInstances?.toLocaleString()
       const cdLicenseType = cdModuleLicenseDTO?.cdLicenseType
+      const totalLicenses = workloadsCnt > MAX_LICENSES && licenseFF ? workloadsCnt - MAX_LICENSES : workloadsCnt
       const serviceStr =
         cdLicenseType === CDLicenseType.SERVICES
-          ? getString('common.subscriptions.cd.services', { workloads })
-          : getString('common.subscriptions.cd.serviceInstances', { workloads })
+          ? getString('common.subscriptions.cd.services', { workloads: workloadsCnt })
+          : getString('common.subscriptions.cd.serviceInstances', { workloads: workloadsCnt })
 
       return (
         <Layout.Vertical spacing="medium">
           <Text color={Color.BLACK} font={{ weight: 'semi-bold' }} margin={{ bottom: 5 }}>
-            {serviceStr}
+            {licenseFF && workloadsCnt > MAX_LICENSES ? `${totalLicenses} ${getString('users')}` : serviceStr}
           </Text>
         </Layout.Vertical>
       )
@@ -310,7 +317,10 @@ const SubscriptionDetailsCardLicenseCount = ({
   licenseData?: ModuleLicenseDTO
 }): React.ReactElement => {
   const { getString } = useStrings()
-  const licenseCount = getLicenseCountByModule({ licenseData, getString })
+
+  const { CDS_USER_CD_LICENSE_VIEW: hasUserCDLicenseView } = useFeatureFlags()
+
+  const licenseCount = getLicenseCountByModule({ licenseFF: hasUserCDLicenseView, licenseData, getString })
   return (
     <React.Fragment key="licenseCount">
       <Text color={Color.GREY_600}>{getString('common.account.licenseCount')}</Text>

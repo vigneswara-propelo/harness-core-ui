@@ -1750,3 +1750,4 @@ selectViewOrModule: Select a view or module to work in
 switchScope: Switching between Project, Orgnanization, Account
 selectedScope: 'Selected {{targetScope}}:'
 projectsInOrgLabel: Projects in Org
+activeUsers: Active User(s)

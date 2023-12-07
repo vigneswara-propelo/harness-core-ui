@@ -43,6 +43,7 @@ export interface StringsMap {
   'common.accountSetting.connector.saveSettingSuccess': string
   'common.accountSettings': string
   'common.accountSetup': string
+  'common.activeUsers': string
   'common.addAccountName': string
   'common.addAttribute': string
   'common.addName': string
