@@ -207,7 +207,7 @@ export const renderConnectorAndRepoName = ({
         <>
           <Container width={repoNameWidth} className={cx(css.bottomMargin3)}>
             <MultiTypeTextField
-              key={`connector-runtimeinput-${codebaseRuntimeInputs.connectorRef}`} // handle reload RepoName from ConnectorRef as Runtime to Fixed
+              key={`connector-runtimeinput-${codebaseRuntimeInputs.connectorRef}_${isRuntimeInput(connectorValue)}`}
               label={
                 <Text
                   font={{ variation: FontVariation.FORM_LABEL }}
