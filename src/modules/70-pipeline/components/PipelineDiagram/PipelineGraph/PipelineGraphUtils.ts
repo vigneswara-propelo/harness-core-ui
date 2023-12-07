@@ -494,9 +494,20 @@ const getPipelineGraphData = ({
 
 function getIsConditionalExecutionEnabled(entity: any): boolean {
   if (entity?.when) {
+    // step condition
+    if (entity.when?.stageStatus) {
+      return entity.when?.stageStatus !== 'Success' || !!entity.when?.condition?.trim()
+    }
     return entity.when?.pipelineStatus !== 'Success' || !!entity.when?.condition?.trim()
   }
   if (entity?.template?.templateInputs?.when) {
+    // step condition
+    if (entity.when?.stageStatus) {
+      return (
+        entity.template.templateInputs.when?.stageStatus !== 'Success' ||
+        !!entity.template.templateInputs.when?.condition?.trim()
+      )
+    }
     return (
       entity.template.templateInputs.when?.pipelineStatus !== 'Success' ||
       !!entity.template.templateInputs.when?.condition?.trim()
