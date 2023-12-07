@@ -1241,23 +1241,18 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
       </>
     )
 
-  const renderPlatformInfraSection = (formik: FormikProps<BuildInfraFormValues>): React.ReactElement => {
+  const renderPlatformInfraSection = (): React.ReactElement => {
     let buildInfraSelectOptions: { label: string; value: OsTypes }[] = []
     const buildArchSelectOptions = [
       {
         label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
         value: ArchTypes.Arm64
-      }
-    ]
-
-    if (formik.values.os !== OsTypes.MacOS) {
-      buildArchSelectOptions.push({
+      },
+      {
         label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
         value: ArchTypes.Amd64
-      })
-    } else if (formik.values.os === OsTypes.MacOS && formik.values?.arch === ArchTypes.Amd64) {
-      formik.setValues({ ...formik.values, arch: ArchTypes.Arm64 })
-    }
+      }
+    ]
 
     switch (buildInfraType) {
       case CIBuildInfrastructureType.KubernetesDirect:
@@ -2285,7 +2280,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           </Layout.Horizontal>
           {currentMode === Modes.NewConfiguration ? (
             <>
-              <Container margin={{ top: 'large' }}>{renderPlatformInfraSection(formik)}</Container>
+              <Container margin={{ top: 'large' }}>{renderPlatformInfraSection()}</Container>
               <Container margin={{ top: 'large' }}>{renderBuildInfraMainSection()}</Container>
             </>
           ) : null}
@@ -2440,8 +2435,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                         {getString('common.resourceCenter.ticketmenu.platform')}
                       </Text>
                       <Card disabled={isReadonly} className={cx(css.sectionCard)}>
-                        {buildInfraType !== CIBuildInfrastructureType.KubernetesHosted &&
-                          renderPlatformInfraSection(formik)}
+                        {buildInfraType !== CIBuildInfrastructureType.KubernetesHosted && renderPlatformInfraSection()}
                         {buildInfraType &&
                         ![
                           CIBuildInfrastructureType.Cloud,
