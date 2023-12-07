@@ -37,6 +37,7 @@ export enum SettingsResources {
   Services = 'Services',
   Environments = 'Environments',
   ServiceOverride = 'ServiceOverride',
+  Certificates = 'Certificates',
   Connectors = 'Connectors',
   Delegates = 'Delegates',
   Secrets = 'Secrets',

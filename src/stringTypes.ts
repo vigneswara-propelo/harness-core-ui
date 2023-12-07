@@ -175,6 +175,7 @@ export interface StringsMap {
   'common.ce.visibilityLaunchButton': string
   'common.ce.visibilityWarning': string
   'common.certificate': string
+  'common.certificates': string
   'common.cgLaunchText': string
   'common.changeDefaultAccountMessage': string
   'common.changeDefaultAccountTitle': string
@@ -2231,6 +2232,7 @@ export interface StringsMap {
   'platform.authSettings.whitelistedDomainsDisabled': string
   'platform.authSettings.yesIamSure': string
   'platform.authSettings.yourAccountWillBeLockedOut': string
+  'platform.certificates.certificatesTitle': string
   'platform.connectors.ECR.fullName': string
   'platform.connectors.ECR.name': string
   'platform.connectors.GCP.delegateInClusterInfo': string

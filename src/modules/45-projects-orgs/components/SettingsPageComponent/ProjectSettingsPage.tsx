@@ -44,7 +44,8 @@ export const ProjectSettingsPage: React.FC = () => {
     USE_OLD_GIT_SYNC,
     CVNG_TEMPLATE_MONITORED_SERVICE,
     PL_CENTRAL_NOTIFICATIONS,
-    PIE_GIT_BI_DIRECTIONAL_SYNC
+    PIE_GIT_BI_DIRECTIONAL_SYNC,
+    PL_CENTRAL_CERTIFICATES_MANAGEMENT
   } = useFeatureFlags()
   const { currentModule, isGitSimplificationEnabled, isGitSyncEnabled, gitSyncEnabledOnlyForFF } = useAppStore()
   const module = moduleFromProps || currentModule
@@ -229,6 +230,13 @@ export const ProjectSettingsPage: React.FC = () => {
               icon={'layers-outline'}
               route={routesV2.toSettingsServiceOverrides({ accountId, orgIdentifier, projectIdentifier, module })}
               hidden={!(isServiceOverridesEnabled && haveCD)}
+            />
+            <SettingsResourceCard
+              label={<String stringID="common.certificates" />}
+              id={SettingsResources.Certificates}
+              icon={'layers-outline'} // TODO
+              route={routesV2.toCertificates({ accountId, orgIdentifier, projectIdentifier, module })}
+              hidden={!PL_CENTRAL_CERTIFICATES_MANAGEMENT}
             />
             <SettingsResourceCard
               label={<String stringID="common.agents" />}

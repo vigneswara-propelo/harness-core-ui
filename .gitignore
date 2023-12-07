@@ -18,6 +18,6 @@ cypress/videos/
 src/microfrontends/types
 src/microfrontends/declarations
 src/microfrontends/dist
-certificates
+/certificates/
 .npmrc
 .vscode/launch.json

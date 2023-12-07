@@ -18,6 +18,7 @@ reloadFromGit: 'Reload from Git'
 perModule: Per Module
 application: Application
 certificate: Certificate
+certificates: Certificates
 subscriptionId: Subscription Id
 cardSuccessMessage: Card successfully saved
 repositoryCertificates: Repository Certificates

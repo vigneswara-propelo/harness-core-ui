@@ -681,6 +681,7 @@ const routes = {
   ),
   //settings routes
   toConnectors: withModeModuleAndScopePrefix(() => `/settings/connectors`),
+  toCertificates: withModeModuleAndScopePrefix(() => `/settings/certificates`),
   toConnectorDetails: withModeModuleAndScopePrefix<ConnectorPathProps>(
     params => `/settings/connectors/${params?.connectorId}`
   ),

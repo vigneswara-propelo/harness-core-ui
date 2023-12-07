@@ -1914,3 +1914,5 @@ connectors:
   terraformCloud:
     url: Terraform Cloud URL
     urlValidation: Terraform Cloud URL is required
+certificates:
+  certificatesTitle: 'Resources: Certificates'

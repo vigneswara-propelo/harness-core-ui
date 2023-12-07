@@ -28,6 +28,7 @@
       "@auth-settings/*": ["modules/27-platform/auth-settings/*"],
       "@secrets/*": ["modules/27-platform/secrets/*"],
       "@variables/*": ["modules/27-platform/variables/*"],
+      "@certificates/*": ["modules/27-platform/certificates/*"],
       "@connectors/*": ["modules/27-platform/connectors/*"],
       "@user-profile/*": ["modules/38-user-profile/*"],
       "@projects-orgs/*": ["modules/45-projects-orgs/*"],

@@ -21,6 +21,7 @@ import fileStoreRoutes from '@filestore/RouteDestinations'
 import RbacRoutes from '@rbac/RouteDestinations'
 import projectsOrgsRoutes from '@projects-orgs/RouteDestinations'
 import connectorRoutes from '@platform/connectors/RouteDestinations'
+import certificatesRoutes from '@modules/27-platform/certificates/RouteDestinations'
 import tempatesRoutes from '@templates-library/RouteDestinations'
 import freezeWindowRoutes from '@freeze-windows/RouteDestinations'
 import userProfileRoutes from '@user-profile/RouteDestinations'
@@ -66,7 +67,8 @@ export default function RouteDestinations(): React.ReactElement {
     PL_DISCOVERY_ENABLE,
     SEI_ENABLED,
     CDS_NAV_2_0,
-    PL_CENTRAL_NOTIFICATIONS
+    PL_CENTRAL_NOTIFICATIONS,
+    PL_CENTRAL_CERTIFICATES_MANAGEMENT
   } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
@@ -92,6 +94,7 @@ export default function RouteDestinations(): React.ReactElement {
       {GovernanceRoutes().props.children}
       {CODE_ENABLED ? CODERouteDestinations().props.children : null}
       {connectorRoutes.props.children}
+      {PL_CENTRAL_CERTIFICATES_MANAGEMENT && certificatesRoutes.props.children}
       {tempatesRoutes.props.children}
       {freezeWindowRoutes.props.children}
       {userProfileRoutes.props.children}

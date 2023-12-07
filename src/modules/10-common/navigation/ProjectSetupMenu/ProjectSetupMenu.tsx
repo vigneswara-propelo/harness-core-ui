@@ -43,7 +43,8 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
     PL_DISCOVERY_ENABLE,
     IACM_OPA_WORKSPACE_GOVERNANCE,
     PL_CENTRAL_NOTIFICATIONS,
-    PIE_GIT_BI_DIRECTIONAL_SYNC
+    PIE_GIT_BI_DIRECTIONAL_SYNC,
+    PL_CENTRAL_CERTIFICATES_MANAGEMENT
   } = useFeatureFlags()
   const { showGetStartedTabInMainMenu } = useSideNavContext()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
@@ -125,6 +126,10 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
             label={getString('common.webhooks')}
             to={routes.toWebhooks({ accountId, orgIdentifier, projectIdentifier, module })}
           />
+        )}
+
+        {PL_CENTRAL_CERTIFICATES_MANAGEMENT && (
+          <SidebarLink label={getString('common.certificates')} to={routes.toCertificates({ ...params })} />
         )}
 
         {isGitSyncSupported && (

@@ -55,7 +55,8 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
     PL_DISCOVERY_ENABLE,
     PIE_GIT_BI_DIRECTIONAL_SYNC,
     FFM_9497_PROXY_KEY_MANAGEMENT: ffProxyKeyEnabled,
-    PL_CENTRAL_NOTIFICATIONS
+    PL_CENTRAL_NOTIFICATIONS,
+    PL_CENTRAL_CERTIFICATES_MANAGEMENT
   } = useFeatureFlags()
 
   const { showError } = useToaster()
@@ -223,6 +224,12 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       icon: 'code-webhook',
       hidden: !isBidirectionalSyncEnabled,
       route: routes.toWebhooks({ accountId, orgIdentifier })
+    } as ResourceOption,
+    {
+      label: <String stringID="common.certificates" />,
+      icon: 'layers-outline', // TODO
+      hidden: !PL_CENTRAL_CERTIFICATES_MANAGEMENT,
+      route: routes.toCertificates({ accountId, orgIdentifier })
     } as ResourceOption,
     {
       label: <String stringID="common.ffProxy" />,

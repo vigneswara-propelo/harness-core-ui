@@ -50,7 +50,8 @@ export const AccountSettingsPage: React.FC = () => {
     NG_LICENSES_ENABLED,
     CCM_CURRENCY_PREFERENCES,
     FFM_9497_PROXY_KEY_MANAGEMENT: proxyKeysEnabled,
-    PL_CENTRAL_NOTIFICATIONS
+    PL_CENTRAL_NOTIFICATIONS,
+    PL_CENTRAL_CERTIFICATES_MANAGEMENT
   } = useFeatureFlags()
   const showGovCard = useAnyEnterpriseLicense()
   const { licenseInformation, CD_LICENSE_STATE, CI_LICENSE_STATE, STO_LICENSE_STATE, CV_LICENSE_STATE } =
@@ -298,6 +299,13 @@ export const AccountSettingsPage: React.FC = () => {
               icon={'code-webhook'}
               hidden={!isBidirectionalSyncEnabled}
               route={routesV2.toWebhooks({ accountId, module })}
+            />
+            <SettingsResourceCard
+              label={<String stringID="common.certificates" />}
+              id={SettingsResources.Certificates}
+              icon={'layers-outline'} // TODO
+              route={routesV2.toCertificates({ accountId, module })}
+              hidden={!PL_CENTRAL_CERTIFICATES_MANAGEMENT}
             />
             <SettingsResourceCard
               label={<String stringID="common.variables" />}

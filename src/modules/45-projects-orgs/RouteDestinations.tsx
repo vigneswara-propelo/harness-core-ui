@@ -42,6 +42,7 @@ import AddProjectResourceModalBody from '@projects-orgs/components/ProjectResour
 import OrgResourceModalBody from '@projects-orgs/components/OrgResourceModalBody/OrgResourceModalBody'
 import type { Module, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import ConnectorsPage from '@platform/connectors/pages/connectors/ConnectorsPage'
+import CertificatesPage from '@platform/certificates/pages/certificates/CertificatesPage'
 import SecretsPage from '@secrets/pages/secrets/SecretsPage'
 import DelegatesPage from '@delegates/pages/delegates/DelegatesPage'
 import DelegateListing from '@delegates/pages/delegates/DelegateListing'
@@ -269,6 +270,13 @@ export default (
       exact
     >
       <ConnectorsPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      sidebarProps={ProjectDetailsSideNavProps}
+      path={routesV1.toCertificates({ ...projectPathProps })}
+      exact
+    >
+      <CertificatesPage />
     </RouteWithLayout>
     <RouteWithLayout
       sidebarProps={ProjectDetailsSideNavProps}
@@ -521,6 +529,9 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout sidebarProps={AccountSideNavProps} path={routesV1.toConnectors({ ...orgPathProps })} exact>
       <ConnectorsPage />
+    </RouteWithLayout>
+    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routesV1.toCertificates({ ...orgPathProps })} exact>
+      <CertificatesPage />
     </RouteWithLayout>
     <RouteWithLayout sidebarProps={AccountSideNavProps} path={routesV1.toVariables({ ...orgPathProps })} exact>
       <VariablesPage />

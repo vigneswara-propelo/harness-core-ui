@@ -32,6 +32,7 @@ export enum PAGE_NAME {
   CreateSecretFromYamlPage = 'CreateSecretFromYamlPage',
   CITrialHomePage = 'CITrialHomePage',
   CIHomePage = 'CIHomePage',
+  CertificatesPage = 'CertificatesPage',
   ConnectorsPage = 'ConnectorsPage',
   VariablesPage = 'VariablesPage',
   DiscoveryPage = 'DiscoveryPage',

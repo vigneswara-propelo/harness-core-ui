@@ -25,6 +25,7 @@ import ExternalTicketSettings from '@sto/components/ExternalTickets/Settings/Ext
 import { OrgSettingsPage } from '@projects-orgs/components/SettingsPageComponent/OrgSettingsPage'
 import { ProjectSettingsPage } from '@projects-orgs/components/SettingsPageComponent/ProjectSettingsPage'
 import CDSettingsRouteDestinations from '@modules/75-cd/SettingsRouteDestinations'
+import CertificatesSettingsRouteDestinations from '@platform/certificates/SettingsRouteDestinations'
 import ConnectorsSettingsRouteDestinations from '@platform/connectors/SettingsRouteDestinations'
 import TemplateSettingsRouteDestinations from '@modules/72-templates-library/SettingsRouteDestinations'
 import AuthSettingsRouteDestinations from '@modules/27-platform/auth-settings/SettingsRouteDestinations'
@@ -55,7 +56,7 @@ const licenseRedirectDataCD: LicenseRedirectProps = {
 }
 
 function SettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactElement {
-  const { PL_CENTRAL_NOTIFICATIONS } = useFeatureFlags()
+  const { PL_CENTRAL_NOTIFICATIONS, PL_CENTRAL_CERTIFICATES_MANAGEMENT } = useFeatureFlags()
   return (
     <>
       {/* Settings Pages */}
@@ -91,6 +92,8 @@ function SettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactEle
       {CDSettingsRouteDestinations({ mode, licenseRedirectData: licenseRedirectDataCD }).props.children}
 
       {DelegateSettingsRouteDestinations({ mode }).props.children}
+
+      {PL_CENTRAL_CERTIFICATES_MANAGEMENT && CertificatesSettingsRouteDestinations({ mode }).props.children}
 
       {ConnectorsSettingsRouteDestinations({ mode }).props.children}
 

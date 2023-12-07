@@ -405,6 +405,21 @@ const routes = {
     }
   ),
 
+  toCertificates: withAccountId(
+    ({ accountId, orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
+      const path = `resources/certificates`
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          accountId,
+          module
+        },
+        path
+      })
+    }
+  ),
+
   toFileStore: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
       const path = `resources/file-store`

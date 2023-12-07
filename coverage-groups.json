@@ -15,6 +15,7 @@
       "src/modules/27-platform/connectors/components/CreateConnector/SplunkConnector/**"
     ],
     "Variables": ["src/modules/27-platform/variables/**"],
+    "Certificates": ["src/modules/27-platform/certificates/**"],
     "Connectors": ["src/modules/27-platform/connectors/**", "src/modules/10-common/components/YAMLBuilder/**"],
     "Delegates": ["src/modules/27-platform/delegates/**"],
     "STO": ["src/modules/85-sto/**"],
