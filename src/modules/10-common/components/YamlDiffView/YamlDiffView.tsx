@@ -100,7 +100,6 @@ export function YamlDiffView({
             options={{
               fontFamily: "'Roboto Mono', monospace",
               fontSize: 13,
-              ignoreTrimWhitespace: true,
               readOnly: true,
               inDiffEditor: true,
               scrollBeyondLastLine: false,

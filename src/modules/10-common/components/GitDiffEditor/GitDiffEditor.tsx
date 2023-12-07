@@ -96,7 +96,6 @@ export const GitDiffEditor = ({
           original={remote.content}
           value={currentContent}
           options={{
-            ignoreTrimWhitespace: true,
             minimap: { enabled: true },
             codeLens: true,
             renderSideBySide: true,

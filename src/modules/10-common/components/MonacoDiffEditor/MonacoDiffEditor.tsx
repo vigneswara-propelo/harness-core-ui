@@ -47,6 +47,7 @@ const MonacoDiffEditor = forwardRef<MonacoDiffEditorRef, ExtendedMonacoDiffEdito
     return (
       <ReactMonacoDiffEditor
         {...props}
+        options={{ ignoreTrimWhitespace: false, ...props.options }}
         value={props.value ?? ''}
         original={props.original ?? ''}
         theme={theme}

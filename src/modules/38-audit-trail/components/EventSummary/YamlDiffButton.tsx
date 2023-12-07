@@ -22,7 +22,6 @@ interface YamlDiffButtonProps {
 }
 
 const DIFF_VIEWER_OPTIONS: MonacoDiffEditorProps['options'] = {
-  ignoreTrimWhitespace: true,
   minimap: { enabled: false },
   codeLens: false,
   readOnly: true,
