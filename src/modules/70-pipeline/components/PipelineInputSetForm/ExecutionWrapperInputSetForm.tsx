@@ -124,8 +124,8 @@ function StepGroupRuntimeForm(props: {
     ? !isEmpty(stepGroupItem?.template?.templateInputs?.when as unknown as string)
     : !isEmpty(stepGroupItem?.when as unknown as string)
   const isStepGroupLoopingStrategyRuntime = isTemplateStepGroup
-    ? isValueRuntimeInput(stepGroupItem?.template?.templateInputs?.strategy as unknown as string)
-    : isValueRuntimeInput(stepGroupItem?.strategy as unknown as string)
+    ? !isEmpty(stepGroupItem?.template?.templateInputs?.strategy as unknown as string)
+    : !isEmpty(stepGroupItem?.strategy as unknown as string)
   const isStepGroupFailureStrategyRuntime = isTemplateStepGroup
     ? isValueRuntimeInput(stepGroupItem?.template?.templateInputs?.failureStrategies as unknown as string)
     : isValueRuntimeInput(stepGroupItem?.failureStrategies as unknown as string)
