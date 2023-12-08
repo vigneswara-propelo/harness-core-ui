@@ -5,6 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { capitalize } from 'lodash-es'
+
 interface ConditionObject {
   status?: string
   condition: string
@@ -44,4 +46,8 @@ export const constructConditionString = (conditionObject: ConditionObject): stri
   } else {
     return conditionObject.condition
   }
+}
+
+export const generateReadableLabel = (name = ''): string => {
+  return capitalize(name.split('_').join(' '))
 }

@@ -25,7 +25,7 @@ function JenkinsJobNameInternal(props: InputProps<InputsFormValues>): JSX.Elemen
     accountId: string
   }>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const inputDependencies = useInputDependencies(input.dependencies)
+  const inputDependencies = useInputDependencies(input.dependencies ?? [])
   const { values, setFieldValue } = useFormikContext()
   const lastOpenedJob = useRef<string>()
   const [jobDetails, setJobDetails] = useState<SelectWithBiLevelOption[]>([])
@@ -33,7 +33,7 @@ function JenkinsJobNameInternal(props: InputProps<InputsFormValues>): JSX.Elemen
   const [jobDetailsType, setJobDetailsType] = useState<MultiTypeInputType>(getMultiTypeFromValue(get(values, path)))
   const [childJob, setChildJob] = useState<SelectWithBiLevelOption>({} as SelectWithBiLevelOption)
 
-  const connectorRef = inputDependencies.connectorRef as string | undefined
+  const connectorRef = inputDependencies?.connectorRef as string | undefined
 
   const getJobItems = (jobs: JobDetails[]): SelectWithBiLevelOption[] => {
     return jobs?.map(job => {

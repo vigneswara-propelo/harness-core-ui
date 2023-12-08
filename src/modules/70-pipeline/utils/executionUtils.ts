@@ -185,7 +185,10 @@ export const StepV2TypeIconsMap: {
   K8S_BLUE_GREEN_STAGE_SCALE_DOWN_V2: 'bg-scale-down-step',
   K8S_DRY_RUN_V2: 'dry-run',
   HELM_DEPLOY_V2: 'service-helm',
-  HELM_ROLLBACK_V2: 'helm-rollback'
+  HELM_ROLLBACK_V2: 'helm-rollback',
+  // yaml-simplification v1 step types
+  http: 'http-step',
+  'shell-script': 'command-shell-script'
 }
 
 export const ExecutionStatusIconMap: Record<ExecutionStatus, IconName> = {
@@ -432,11 +435,18 @@ export function getActiveStep(
   return selectedStep
 }
 
+export const stageTypeY1ToIconMap: Record<string, IconName> = {
+  custom: 'custom-stage-icon'
+}
+
 export function getIconFromStageModule(stageModule: 'cd' | 'ci' | string | undefined, stageType?: string): IconName {
   if (stageType) {
     const icon = stagesCollection.getStageAttributes(stageType, (key: string) => key)?.icon
     if (icon) {
       return icon
+    }
+    if (stageTypeY1ToIconMap[stageType]) {
+      return stageTypeY1ToIconMap[stageType]
     }
   }
   switch (stageModule) {

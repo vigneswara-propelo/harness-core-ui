@@ -12,12 +12,13 @@ import { InputComponent, InputProps } from '../InputComponent'
 import { PrimitiveInputType } from '../InputComponentType'
 
 function DurationInputInternal(props: InputProps<InputsFormValues>): JSX.Element {
-  const { allowableTypes, readonly, path } = props
+  const { allowableTypes, readonly, path, input } = props
+  const { label = '' } = input
 
   return (
     <FormMultiTypeDurationField
       name={path}
-      label=""
+      label={label}
       disabled={readonly}
       multiTypeDurationProps={{
         enableConfigureOptions: true,

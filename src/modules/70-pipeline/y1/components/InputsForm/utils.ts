@@ -124,7 +124,7 @@ export function transformDataToUIInput(inputObject?: RuntimeInputField[]): Pipel
       runtime,
       ...(validator?.validation !== Validation.None && {
         validator: {
-          ...(!isEmpty(validator?.allowedValues) && { allowedValues: validator?.allowedValues }),
+          ...(!isEmpty(validator?.allowed) && { allowed: validator?.allowed }),
           ...(validator?.regex && { regex: validator?.regex })
         }
       })

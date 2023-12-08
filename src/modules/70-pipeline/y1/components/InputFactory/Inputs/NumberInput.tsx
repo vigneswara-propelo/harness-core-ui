@@ -14,15 +14,16 @@ import { InputProps, InputComponent } from '../InputComponent'
 import { PrimitiveInputType } from '../InputComponentType'
 
 function NumberInternal(props: InputProps<InputsFormValues>): JSX.Element {
-  const { allowableTypes, readonly, path } = props
+  const { allowableTypes, readonly, path, input } = props
+  const { label = '' } = input
   const { expressions } = useVariablesExpression()
   const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <FormInput.MultiTextInput
       className="variableInput"
-      name={path} // inputs.keyName
-      label=""
+      name={path}
+      label={label}
       disabled={readonly}
       multiTextInputProps={{
         newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,

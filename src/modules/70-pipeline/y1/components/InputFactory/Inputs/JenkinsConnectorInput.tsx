@@ -9,7 +9,8 @@ import { InputComponent, InputProps } from '../InputComponent'
 import { DerivedInputType } from '../InputComponentType'
 
 function JenkinsConnectorInputInternal(props: InputProps<InputsFormValues>): JSX.Element {
-  const { allowableTypes, readonly, path } = props
+  const { allowableTypes, readonly, path, input } = props
+  const { label = '' } = input
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -21,7 +22,7 @@ function JenkinsConnectorInputInternal(props: InputProps<InputsFormValues>): JSX
   return (
     <FormMultiTypeConnectorField
       name={path}
-      label=""
+      label={label}
       placeholder={getString('common.entityPlaceholderText')}
       accountIdentifier={accountId}
       projectIdentifier={projectIdentifier}

@@ -12,9 +12,10 @@ import { InputComponent, InputProps } from '../InputComponent'
 import { InputsFormValues } from '../../InputsForm/InputsForm'
 
 function TextAreaInternal(props: InputProps<InputsFormValues>): JSX.Element {
-  const { readonly, path } = props
+  const { readonly, path, input } = props
+  const { label = '' } = input
 
-  return <FormInput.TextArea label="" name={path} disabled={readonly} />
+  return <FormInput.TextArea label={label} name={path} disabled={readonly} />
 }
 
 export class TextAreaInput extends InputComponent<InputsFormValues> {

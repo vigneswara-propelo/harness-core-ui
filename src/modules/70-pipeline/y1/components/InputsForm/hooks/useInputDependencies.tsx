@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { useFormikContext } from 'formik'
+import { get } from 'lodash-es'
 import { UIInputDependency } from '../types'
 import { InputsFormValues } from '../InputsForm'
 
@@ -24,7 +25,7 @@ export const useInputDependencies: UseInputDependencies = dependencies => {
 
       // if dependency is a runtime input
       if (!input_name) return acc
-      acc[field_name] = values[input_name]
+      acc[field_name] = get(values, input_name)
       return acc
     }, {})
   }, [dependencies, values])

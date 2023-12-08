@@ -19,7 +19,7 @@ export interface RuntimeInput {
   default?: string
   runtime?: boolean
   validator?: {
-    allowedValues?: string[] | number[] | boolean[]
+    allowed?: string[] | number[] | boolean[]
     regex?: string
   }
 }
@@ -30,6 +30,8 @@ export interface UIRuntimeInput extends RuntimeInput {
   metadata: UIInputMetadata
   allMetadata: UIInputMetadata[]
   hasMultiUsage: boolean
+  label?: string
+  internal_type?: string
 }
 
 export interface UIInputMetadata {

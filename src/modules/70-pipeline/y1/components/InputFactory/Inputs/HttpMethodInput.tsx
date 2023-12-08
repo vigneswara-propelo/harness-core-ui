@@ -22,7 +22,8 @@ export const httpStepType: SelectOption[] = [
 ]
 
 function HttpMethodInputInternal(props: InputProps<InputsFormValues>): JSX.Element {
-  const { allowableTypes, readonly, path } = props
+  const { allowableTypes, readonly, path, input } = props
+  const { label = '' } = input
   return (
     <FormInput.MultiTypeInput
       selectItems={httpStepType}
@@ -33,7 +34,7 @@ function HttpMethodInputInternal(props: InputProps<InputsFormValues>): JSX.Eleme
         disabled: readonly,
         allowableTypes
       }}
-      label=""
+      label={label}
       name={path}
     />
   )

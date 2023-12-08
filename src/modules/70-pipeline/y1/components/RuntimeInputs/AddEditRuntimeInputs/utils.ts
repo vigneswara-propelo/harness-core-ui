@@ -13,6 +13,6 @@ export const DEFAULT_RUNTIME_INPUT = {
   selected: false,
   validator: {
     validation: Validation.None,
-    allowedValues: []
+    allowed: []
   }
 }

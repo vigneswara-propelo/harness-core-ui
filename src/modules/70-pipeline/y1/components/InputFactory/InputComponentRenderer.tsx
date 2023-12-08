@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { Text } from '@harness/uicore'
+import { defaultTo, get } from 'lodash-es'
 import { InputProps } from './InputComponent'
 
 export interface InputComponentRendererProps<T = unknown> extends InputProps<T> {
@@ -23,7 +24,7 @@ export function InputComponentRenderer<T = unknown>({
   initialValues,
   input
 }: InputComponentRendererProps<T>): JSX.Element | null {
-  const internalType = input.metadata.internal_type
+  const internalType = defaultTo(get(input, 'metadata.internal_type'), get(input, 'internal_type'))
   const primitiveType = input.type
   const inputComponent = factory?.getComponent<T>(internalType)
   // Fallback to primitive component

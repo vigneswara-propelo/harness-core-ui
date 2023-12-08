@@ -726,7 +726,7 @@ function RunPipelineFormBasic({
         org: orgIdentifier,
         pipeline: pipelineMetadata?.identifier as string,
         project: projectIdentifier,
-        body: { yaml: yamlStringify(valuesPipeline) },
+        body: { yaml: yamlStringify({ inputs: valuesPipeline }) },
         queryParams: {}
       })
       const data = response?.content

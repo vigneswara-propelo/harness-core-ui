@@ -13,14 +13,15 @@ import { InputComponent, InputProps } from '../InputComponent'
 import { PrimitiveInputType } from '../InputComponentType'
 
 function EmailInputInternal(props: InputProps<InputsFormValues>): JSX.Element {
-  const { allowableTypes, readonly, path } = props
+  const { allowableTypes, readonly, path, input } = props
+  const { label = '' } = input
   const { getString } = useStrings()
 
   return (
     <FormInput.MultiTextInput
       name={path}
       placeholder={getString('pipeline.utilitiesStep.to')}
-      label=""
+      label={label}
       disabled={readonly}
       multiTextInputProps={{ expressions: [], disabled: readonly, allowableTypes }}
     />

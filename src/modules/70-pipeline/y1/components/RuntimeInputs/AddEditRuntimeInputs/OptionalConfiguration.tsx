@@ -52,12 +52,12 @@ export default function OptionalConfiguration({ index }: { index: number }): JSX
 
             {inputs[index]?.validator?.validation === Validation.AllowedValues ? (
               <AllowedValuesFields
-                name={`inputs[${index}].validator.allowedValues`}
+                name={`inputs[${index}].validator.allowed`}
                 isReadonly={isReadonly}
                 variableType={inputs[index]?.type}
                 formik={formik as unknown as FormikContextType<FormValues>}
                 onChange={values => {
-                  setFieldValue(`inputs[${index}].validator.allowedValues`, values)
+                  setFieldValue(`inputs[${index}].validator.allowed`, values)
                 }}
               />
             ) : null}

@@ -12,12 +12,13 @@ import { InputComponent, InputProps } from '../InputComponent'
 import { InputsFormValues } from '../../InputsForm/InputsForm'
 
 function BooleanInputInternal(props: InputProps<InputsFormValues>): JSX.Element {
-  const { allowableTypes, readonly, path } = props
+  const { allowableTypes, readonly, path, input } = props
+  const { label = '' } = input
 
   return (
     <FormMultiTypeCheckboxField
       name={path}
-      label=""
+      label={label}
       multiTypeTextbox={{ expressions: [], disabled: readonly, allowableTypes }}
       disabled={readonly}
     />

@@ -18,7 +18,8 @@ import { InputsFormValues } from '../../InputsForm/InputsForm'
 import css from './inputs.module.scss'
 
 function ObjectInputInternal(props: InputProps<InputsFormValues>): JSX.Element {
-  const { allowableTypes, readonly, path } = props
+  const { allowableTypes, readonly, path, input } = props
+  const { label = '' } = input
   const formik = useFormikContext()
   const value = get(formik.values, path)?.toString() || ''
 
@@ -44,7 +45,7 @@ function ObjectInputInternal(props: InputProps<InputsFormValues>): JSX.Element {
   return (
     <MultiTypeFieldSelector
       name={path}
-      label={''}
+      label={label}
       defaultValueToReset=""
       disabled={readonly}
       allowedTypes={allowableTypes}

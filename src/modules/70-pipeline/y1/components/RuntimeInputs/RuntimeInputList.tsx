@@ -78,7 +78,7 @@ export function RuntimeInputList(props: RuntimeInputsListWithRefProps): JSX.Elem
       inputs: generateInputsFromPipelineInputs(pipelineInputs).inputs.map(input => {
         const { validator } = input
         const validationType =
-          validator?.allowedValues && validator.allowedValues.length > 0
+          validator?.allowed && validator.allowed.length > 0
             ? Validation.AllowedValues
             : validator?.regex && validator.regex.length > 0
             ? Validation.Regex
@@ -90,7 +90,7 @@ export function RuntimeInputList(props: RuntimeInputsListWithRefProps): JSX.Elem
           id: nanoid(10),
           validator: {
             validation: validationType,
-            allowedValues: defaultTo(validator?.allowedValues, []),
+            allowed: defaultTo(validator?.allowed, []),
             regex: defaultTo(validator?.regex, '')
           }
         }
@@ -177,7 +177,7 @@ export function RuntimeInputList(props: RuntimeInputsListWithRefProps): JSX.Elem
                 }
               })
           }),
-          allowedValues: Yup.array(Yup.string()).when('validation', {
+          allowed: Yup.array(Yup.string()).when('validation', {
             is: Validation.AllowedValues,
             then: Yup.array(Yup.string()).min(
               1,
@@ -215,7 +215,7 @@ export function RuntimeInputList(props: RuntimeInputsListWithRefProps): JSX.Elem
               'isAllowedValue',
               getString('common.configureOptions.validationErrors.defaultAllowedValid'),
               function (value) {
-                return this.parent.validator.allowedValues.includes(value)
+                return this.parent.validator.allowed.includes(value)
               }
             )
           })
