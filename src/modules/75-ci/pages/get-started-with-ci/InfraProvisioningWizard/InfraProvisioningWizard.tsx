@@ -103,8 +103,8 @@ import {
 } from '../../../utils/HostedBuildsUtils'
 import css from './InfraProvisioningWizard.module.scss'
 
-export const checkRepoNameInConnectorSpec = (connector: ConnectorInfoDTO, repoName: string): string => {
-  const connectorUrl = connector.spec.url
+export const checkRepoNameInConnectorSpec = (connector: ConnectorInfoDTO | undefined, repoName: string): string => {
+  const connectorUrl = connector?.spec?.url
   const repoNameSplitBySlash = repoName.split('/')
 
   const filteredRepoName = repoNameSplitBySlash.filter((component: string) => {
@@ -206,7 +206,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             projectIdentifier,
             orgIdentifier,
             connectorRef,
-            repoName: repoNameWithNamespace,
+            repoName: checkRepoNameInConnectorSpec(configuredGitConnector, repoNameWithNamespace),
             yamlVersion
           }
           if (status === Status.SUCCESS && generatedPipelineYAML) {
@@ -249,7 +249,9 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
 
   const constructV0PipelinePayloadWithCodebase = React.useCallback(
     (repository?: UserRepoResponse, gitnessRepoName?: string, pipelineName?: string): string => {
-      const repositoryName = repository ? getFullRepoName(repository) : gitnessRepoName || ''
+      const repositoryName = repository
+        ? checkRepoNameInConnectorSpec(configuredGitConnector, getFullRepoName(repository))
+        : gitnessRepoName || ''
       if (((!repository?.name || !repository?.namespace) && !gitnessRepoName) || !configuredGitConnector?.identifier) {
         return ''
       }
@@ -353,7 +355,10 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                     ? getScopedValueFromDTO(configuredGitConnector)
                     : '',
                 repoName: selectRepositoryRef.current?.repository
-                  ? getFullRepoName(selectRepositoryRef.current?.repository)
+                  ? checkRepoNameInConnectorSpec(
+                      configuredGitConnector,
+                      getFullRepoName(selectRepositoryRef.current?.repository)
+                    )
                   : selectRepositoryRef.current?.gitnessRepository?.uid || '',
                 autoAbortPreviousExecutions: false,
                 actions: [eventTypes.PULL_REQUEST, eventTypes.MERGE_REQUEST].includes(eventType)
