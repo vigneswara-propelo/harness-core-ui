@@ -142,4 +142,32 @@ describe('Project List', () => {
         )
       ).toBeTruthy()
     })
+
+  test('Click row when project on click is passed', async () => {
+    const onProjectClick = jest.fn()
+    const { container: renderObj } = render(
+      <TestWrapper
+        path={routes.toProjects({ ...accountPathProps })}
+        pathParams={{ accountId: 'testAcc' }}
+        defaultAppStoreValues={defaultAppStoreValues}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
+      >
+        <ProjectListView
+          data={projectPageMock.data as any}
+          showEditProject={showEditProject}
+          collaborators={collaborators}
+          reloadPage={jest.fn()}
+          onProjectClick={onProjectClick}
+        />
+      </TestWrapper>
+    )
+
+    const row = renderObj.getElementsByClassName('TableV2--row TableV2--card TableV2--clickable')[0]
+    await fireEvent.click(row!)
+    expect(onProjectClick).toBeCalledTimes(1)
+  })
 })

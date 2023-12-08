@@ -231,6 +231,7 @@ const ProjectsListPage: React.FC<ProjectsListPageProps> = ({ onProjectClick }) =
             showEditProject={showEditProject}
             collaborators={showCollaborators}
             reloadPage={refetch}
+            onProjectClick={onProjectClick}
           />
         ) : null}
         {view === Views.LIST ? (

@@ -38,6 +38,7 @@ export interface ProjectCardProps {
   handleInviteCollaborators?: (project: Project) => void
   avatarClassName?: string
   hideAddOption?: boolean
+  onProjectClick?: (project: ProjectAggregateDTO) => void
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = props => {
@@ -50,7 +51,8 @@ const ProjectCard: React.FC<ProjectCardProps> = props => {
     minimal,
     selected,
     onClick,
-    avatarClassName
+    avatarClassName,
+    onProjectClick
   } = props
   const [menuOpen, setMenuOpen] = useState(false)
   const locationProps = useLocation()
@@ -129,17 +131,22 @@ const ProjectCard: React.FC<ProjectCardProps> = props => {
         <Container
           data-testid="card-content"
           onClick={() => {
-            allowInteraction &&
-              history.push({
-                pathname: routes.toProjectDetails({
-                  projectIdentifier: data.identifier,
-                  orgIdentifier: data.orgIdentifier || /* istanbul ignore next */ '',
-                  accountId
-                }),
-                state: {
-                  prevPageUrl: locationProps.pathname
-                }
-              })
+            if (allowInteraction) {
+              if (onProjectClick) {
+                onProjectClick(projectAggregateDTO)
+              } else {
+                history.push({
+                  pathname: routes.toProjectDetails({
+                    projectIdentifier: data.identifier,
+                    orgIdentifier: data.orgIdentifier || /* istanbul ignore next */ '',
+                    accountId
+                  }),
+                  state: {
+                    prevPageUrl: locationProps.pathname
+                  }
+                })
+              }
+            }
           }}
         >
           <div className={css.colorBar} style={{ backgroundColor: data.color }} />

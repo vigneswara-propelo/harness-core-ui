@@ -18,10 +18,11 @@ interface ProjectGridViewProps {
   showEditProject?: (project: Project) => void
   collaborators?: (project: Project) => void
   reloadPage: () => Promise<void>
+  onProjectClick?: (project: ProjectAggregateDTO) => void
 }
 
 const ProjectGridView: React.FC<ProjectGridViewProps> = props => {
-  const { data, showEditProject, collaborators, reloadPage } = props
+  const { data, showEditProject, collaborators, reloadPage, onProjectClick } = props
 
   const paginationProps = {
     ...useDefaultPaginationProps({
@@ -46,6 +47,7 @@ const ProjectGridView: React.FC<ProjectGridViewProps> = props => {
               reloadProjects={reloadPage}
               editProject={showEditProject}
               handleInviteCollaborators={collaborators}
+              onProjectClick={onProjectClick}
             />
           )}
           keyOf={(projectDTO: ProjectAggregateDTO) =>
