@@ -15,7 +15,7 @@ import {
   templatesListRoute
 } from '../70-pipeline/constants'
 
-import { getTriggerListAPI } from '../../integration/72-triggers/constants'
+import { getTriggerCatalogAPI, getTriggerListAPI } from '../../integration/72-triggers/constants'
 
 import {
   pipelineStudioRoute,
@@ -248,6 +248,9 @@ export const addInputSet = () => {
 
 export const visitTriggersPage = (type: BasePipelineTypeValues): void => {
   cy.initializeRoute()
+  cy.intercept('GET', getTriggerCatalogAPI, {
+    fixture: 'pipeline/api/triggers/Cypress_Test_Trigger_Catalog.json'
+  })
   cy.intercept('GET', getTriggerListAPI, { fixture: 'pipeline/api/triggers/emptyTriggersList' }).as('emptyTriggersList')
   switch (type) {
     case BasePipelineTypes.INPUT_SET_RUN_STEP:

@@ -423,27 +423,6 @@ export const artifactRepoTypes = [
   'ACR'
 ]
 
-export const triggersListData = {
-  Webhook: ['GitHub', 'GitLab', 'Bitbucket', 'Azure Repos', 'Custom'],
-  Artifact: [
-    'GCR',
-    'ECR',
-    'Docker Registry',
-    'Artifactory',
-    'Amazon S3',
-    'ACR',
-    'Custom',
-    'Github Package Registry',
-    'Google Artifact Registry',
-    'Google Cloud Storage',
-    'Jenkins',
-    'Nexus3',
-    'Bamboo'
-  ],
-  Manifest: ['Helm Chart'],
-  Scheduled: ['Cron']
-}
-
 export const invalidYAMLErrorMsgOnEmptyStageSave =
   'Invalid yaml: $.pipeline.stages[0].stage.spec.execution: is missing but it is required\n$.pipeline.stages[0].stage.spec.infrastructure.infrastructureDefinition: is missing but it is required\n$.pipeline.stages[0].stage.tags: is not defined in the schema and the schema does not allow additional properties\n$.pipeline.stages[0].stage.spec.infrastructure.useFromStage: is missing but it is required\n$.pipeline.stages[0].stage.type: is not defined in the schema and the schema does not allow additional properties\n$.pipeline.stages[0].stage.spec: is not defined in the schema and the schema does not allow additional properties\n$.pipeline.stages[0].stage.spec.infrastructure.environmentRef: is missing but it is required\n$.pipeline.stages[0].stage.spec.infrastructure.environment: is missing but it is required\n$.pipeline.stages[0].stage.type: does not have a value in the enumeration [CI, Approval, FeatureFlag]'
 

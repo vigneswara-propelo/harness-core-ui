@@ -633,8 +633,8 @@ export const GetTriggerListForTargetResponse: UseGetReturnData<ResponsePageNGTri
     status: 'SUCCESS',
     data: {
       totalPages: 1,
-      totalItems: 6,
-      pageItemCount: 6,
+      totalItems: 4,
+      pageItemCount: 4,
       pageSize: 25,
       content: [
         {
@@ -688,78 +688,6 @@ export const GetTriggerListForTargetResponse: UseGetReturnData<ResponsePageNGTri
           executions: [0, 0, 0, 0, 0, 0, 0],
           yaml: '',
           enabled: false
-        },
-        {
-          name: 'sdfsdfdsfdfd',
-          identifier: 'sdfsdfdsfdfd',
-          type: 'Manifest',
-          enabled: false,
-          yaml: 'trigger:\n    name: sdfsdfdsfdfd\n    identifier: sdfsdfdsfdfd\n    enabled: true\n    tags: {}\n    orgIdentifier: default\n    projectIdentifier: test\n    pipelineIdentifier: TestPipelineABC\n    source:\n        type: Manifest\n        spec:\n            stageIdentifier: stagea\n            manifestRef: testhelmmanifest\n            type: HelmChart\n            spec:\n                store:\n                    type: S3\n                    spec:\n                        connectorRef: testecr2\n                        bucketName: ""\n                        folderPath: sdfds\n                        region: ""\n                chartName: sdfds\n                chartVersion: <+trigger.manifest.version>\n                helmVersion: V2\n                skipResourceVersioning: false\n                eventConditions: []\n    inputYaml: |\n        pipeline:\n            identifier: TestPipelineABC\n            stages:\n                - stage:\n                      identifier: stagea\n                      type: Deployment\n                      spec:\n                          serviceConfig:\n                              serviceDefinition:\n                                  type: Kubernetes\n                                  spec:\n                                      manifests:\n                                          - manifest:\n                                                identifier: sdfds\n                                                type: HelmChart\n                                                spec:\n                                                    store:\n                                                        type: S3\n                                                        spec:\n                                                            bucketName: ""\n                                                            folderPath: ""\n                                                    chartName: ""\n                                                    chartVersion: ""\n                                          - manifest:\n                                                identifier: testhelmmanifest\n                                                type: HelmChart\n                                                spec:\n                                                    store:\n                                                        type: S3\n                                                        spec:\n                                                            connectorRef: testecr2\n                                                            bucketName: ""\n                                                            folderPath: sdfds\n                                                            region: ""\n                                                    chartName: sdfds\n                                                    chartVersion: <+trigger.manifest.version>\n                                                    helmVersion: V2\n                                                    skipResourceVersioning: false\n'
-        },
-        {
-          name: 'gcr-manifest',
-          identifier: 'gcrmanifest',
-          type: 'Manifest',
-          triggerStatus: {
-            pollingSubscriptionStatus: null as unknown as undefined,
-            validationStatus: {
-              statusResult: 'FAILED',
-              detailedMessage:
-                'Exception while applying ManifestTriggerValidation for Trigger: px7xd_BFRCi-pfWPYXVjvw:harness:mtran:testmanifest:gcrmanifest. Exception: Manifest With Given StageIdentifier and ManifestRef in Trigger does not exist in Pipeline'
-            },
-            webhookAutoRegistrationStatus: null as unknown as undefined
-          },
-          buildDetails: {
-            buildType: 'io.harness.ngtriggers.beans.source.artifact.HelmManifestSpec'
-          },
-          tags: {},
-          executions: [0, 0, 0, 0, 0, 0, 0],
-          yaml: 'trigger:\n    name: gcr-manifest\n    identifier: gcrmanifest\n    enabled: true\n    tags: {}\n    orgIdentifier: harness\n    projectIdentifier: mtran\n    pipelineIdentifier: testmanifest\n    source:\n        type: Manifest\n        spec:\n            stageIdentifier: stage\n            manifestRef: gcrIdentifier\n            type: HelmChart\n            spec:\n                store:\n                    type: Gcs\n                    spec:\n                        connectorRef: account.gcpconnector\n                        bucketName: sdaf\n                        folderPath: chartPath\n                chartName: chartName\n                chartVersion: <+trigger.manifest.version>\n                helmVersion: V2\n                skipResourceVersioning: false\n                eventConditions: []\n    inputYaml: |\n        pipeline:\n            identifier: testmanifest\n            stages:\n                - stage:\n                      identifier: stage\n                      type: Deployment\n                      spec:\n                          serviceConfig:\n                              serviceDefinition:\n                                  type: Kubernetes\n                                  spec:\n                                      manifests:\n                                          - manifest:\n                                                identifier: s3manifestid\n                                                type: HelmChart\n                                                spec:\n                                                    store:\n                                                        type: S3\n                                                        spec:\n                                                            connectorRef: ""\n                                                            region: ""\n                                                            bucketName: ""\n                                                    chartVersion: ""\n                                                    chartName: ""\n                                          - manifest:\n                                                identifier: gcrManifestId\n                                                type: HelmChart\n                                                spec:\n                                                    store:\n                                                        type: Gcs\n                                                        spec:\n                                                            connectorRef: ""\n                                          - manifest:\n                                                identifier: gcrIdentifier\n                                                type: HelmChart\n                                                spec:\n                                                    store:\n                                                        type: Gcs\n                                                        spec:\n                                                            connectorRef: account.gcpconnector\n                                                            bucketName: sdaf\n                                                            folderPath: chartPath\n                                                    chartName: chartName\n                                                    chartVersion: <+trigger.manifest.version>\n                                                    helmVersion: V2\n                                                    skipResourceVersioning: false\n                              serviceRef: ""\n                          infrastructure:\n                              environmentRef: ""\n                              infrastructureDefinition:\n                                  type: KubernetesDirect\n                                  spec:\n                                      connectorRef: ""\n                                      namespace: ""\n                                      releaseName: ""\n                              infrastructureKey: ""\n                - stage:\n                      identifier: stage2\n                      type: Deployment\n                      spec:\n                          serviceConfig:\n                              stageOverrides:\n                                  manifests:\n                                      - manifest:\n                                            identifier: s3manifestid\n                                            type: HelmChart\n                                            spec:\n                                                store:\n                                                    type: S3\n                                                    spec:\n                                                        folderPath: ""\n                                                chartVersion: ""\n                              serviceDefinition:\n                                  type: Kubernetes\n                                  spec:\n                                      artifacts:\n                                          primary:\n                                              type: DockerRegistry\n                                              spec:\n                                                  tag: ""\n                                      manifests:\n                                          - manifest:\n                                                identifier: manifestId\n                                                type: HelmChart\n                                                spec:\n                                                    store:\n                                                        type: S3\n                                                        spec:\n                                                            bucketName: ""\n                                                            folderPath: ""\n                              serviceRef: ""\n                          infrastructure:\n                              environmentRef: ""\n                - stage:\n                      identifier: manifeststage\n                      type: Deployment\n                      spec:\n                          serviceConfig:\n                              serviceDefinition:\n                                  type: Kubernetes\n                                  spec:\n                                      manifests:\n                                          - manifest:\n                                                identifier: manifest\n                                                type: K8sManifest\n                                                spec:\n                                                    store:\n                                                        type: Github\n                                                        spec:\n                                                            branch: ""\n                              serviceRef: ""\n                          infrastructure:\n                              environmentRef: ""\n',
-          webhookUrl: '',
-          enabled: false
-        },
-        {
-          name: 'H1',
-          identifier: 'H1',
-          type: 'Manifest',
-          triggerStatus: {
-            pollingSubscriptionStatus: {
-              statusResult: 'FAILED',
-              detailedMessage: 'Failed to subscribe with error: error'
-            },
-            validationStatus: {
-              statusResult: 'SUCCESS',
-              detailedMessage: null as unknown as undefined
-            },
-            webhookAutoRegistrationStatus: null as unknown as undefined
-          },
-          buildDetails: {
-            buildType: 'io.harness.ngtriggers.beans.source.artifact.HelmManifestSpec'
-          },
-          tags: {},
-          executions: [0, 0, 0, 0, 0, 0, 0],
-          yaml: 'trigger:\n    name: H1\n    identifier: H1\n    enabled: true\n    tags: {}\n    orgIdentifier: default\n    projectIdentifier: trigger\n    pipelineIdentifier: pipeline\n    source:\n        type: Manifest\n        spec:\n            stageIdentifier: stage1\n            manifestRef: m1\n            type: HelmChart\n            spec:\n                store:\n                    type: Http\n                    spec:\n                        connectorRef: test\n                chartName: c1\n                chartVersion: <+trigger.manifest.version>\n                helmVersion: V2\n                skipResourceVersioning: false\n                eventConditions: []\n    inputYaml: |\n        pipeline:\n            identifier: pipeline\n            stages:\n                - stage:\n                      identifier: stage1\n                      type: Deployment\n                      spec:\n                          serviceConfig:\n                              serviceDefinition:\n                                  type: Kubernetes\n                                  spec:\n                                      manifests:\n                                          - identifier: m1\n                                            type: HelmChart\n                                            spec:\n                                                store:\n                                                    type: Http\n                                                    spec:\n                                                        connectorRef: test\n                                                chartName: c1\n                                                chartVersion: <+trigger.manifest.version>\n                                                helmVersion: V2\n                                                skipResourceVersioning: false\n',
-          webhookUrl: '',
-          enabled: true
-        },
-        {
-          name: 'webhookAutoRegistrationFailed',
-          identifier: 'webhookautoregistrationfailed',
-          type: 'Webhook',
-          triggerStatus: {
-            webhookAutoRegistrationStatus: {
-              registrationResult: 'FAILED',
-              detailedMessage: 'Failed to register webhook with error: error'
-            }
-          },
-          buildDetails: {
-            buildType: 'io.harness.ngtriggers.beans.source.artifact.HelmManifestSpec'
-          },
-          tags: {},
-          executions: [0, 0, 0, 0, 0, 0, 0],
-          yaml: 'trigger:\n    name: H1\n    identifier: H1\n    enabled: true\n    tags: {}\n    orgIdentifier: default\n    projectIdentifier: trigger\n    pipelineIdentifier: pipeline\n    source:\n        type: Manifest\n        spec:\n            stageIdentifier: stage1\n            manifestRef: m1\n            type: HelmChart\n            spec:\n                store:\n                    type: Http\n                    spec:\n                        connectorRef: test\n                chartName: c1\n                chartVersion: <+trigger.manifest.version>\n                helmVersion: V2\n                skipResourceVersioning: false\n                eventConditions: []\n    inputYaml: |\n        pipeline:\n            identifier: pipeline\n            stages:\n                - stage:\n                      identifier: stage1\n                      type: Deployment\n                      spec:\n                          serviceConfig:\n                              serviceDefinition:\n                                  type: Kubernetes\n                                  spec:\n                                      manifests:\n                                          - identifier: m1\n                                            type: HelmChart\n                                            spec:\n                                                store:\n                                                    type: Http\n                                                    spec:\n                                                        connectorRef: test\n                                                chartName: c1\n                                                chartVersion: <+trigger.manifest.version>\n                                                helmVersion: V2\n                                                skipResourceVersioning: false\n',
-          webhookUrl: '',
-          enabled: true
         }
       ],
       pageIndex: 0,

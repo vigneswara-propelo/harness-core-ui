@@ -6,7 +6,6 @@
  */
 
 import type { IconName } from '@harness/uicore'
-// temporary mock data
 import { parse } from 'yaml'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import type { AddDrawerMapInterface, CategoryInterface } from '@common/components/AddDrawer/AddDrawer'
@@ -32,6 +31,25 @@ import type {
   ScheduleType
 } from '@triggers/components/Triggers/TriggerInterface'
 import { AWS_CODECOMMIT, AwsCodeCommit } from './TriggersWizardPageUtils'
+
+export type TriggerCatalogType = Required<TriggerCatalogItem>['triggerCatalogType'][number]
+
+export interface ItemInterface {
+  itemLabel: string
+  iconName: IconName
+  value: string
+  visible?: boolean
+  disabled?: boolean
+  categoryValue?: string
+}
+
+export interface TriggerDataInterface {
+  triggerType: TriggerBaseType
+  sourceRepo?: SourceRepo
+  manifestType?: ManifestType
+  artifactType?: TriggerArtifactType
+  scheduleType?: ScheduleType
+}
 
 export const GitSourceProviders: Record<
   string,
@@ -76,179 +94,6 @@ export const getTriggerIcon = ({
   return 'yaml-builder-trigger'
 }
 
-const triggerDrawerMap = (
-  getString: (key: StringKeys) => string,
-  isNewService: boolean,
-  allowV2Artifacts: boolean | undefined
-): AddDrawerMapInterface => ({
-  drawerLabel: getString('common.triggersLabel'),
-  showAllLabel: getString('triggers.showAllTriggers'),
-  categories: [
-    {
-      categoryLabel: getString('execution.triggerType.WEBHOOK'),
-      categoryValue: 'Webhook',
-      items: [
-        {
-          itemLabel: getString('common.repo_provider.githubLabel'),
-          value: GitSourceProviders.GITHUB.value,
-          iconName: GitSourceProviders.GITHUB.iconName
-        },
-        {
-          itemLabel: getString('common.repo_provider.gitlabLabel'),
-          value: GitSourceProviders.GITLAB.value,
-          iconName: GitSourceProviders.GITLAB.iconName
-        },
-        {
-          itemLabel: getString('common.repo_provider.bitbucketLabel'),
-          value: GitSourceProviders.BITBUCKET.value,
-          iconName: GitSourceProviders.BITBUCKET.iconName
-        },
-        {
-          itemLabel: getString('common.repo_provider.azureRepos'),
-          value: GitSourceProviders.AZURE_REPO.value,
-          iconName: GitSourceProviders.AZURE_REPO.iconName
-        },
-        {
-          itemLabel: getString('common.repo_provider.customLabel'),
-          value: GitSourceProviders.CUSTOM.value,
-          iconName: GitSourceProviders.CUSTOM.iconName
-        }
-      ]
-    },
-    ...(isNewService
-      ? [
-          {
-            categoryLabel: getString('common.comingSoon'),
-            categoryValue: 'ArtifactComingSoon'
-          }
-        ]
-      : []),
-    {
-      categoryLabel: getString('pipeline.artifactTriggerConfigPanel.artifact'),
-      categoryValue: 'Artifact',
-      items: [
-        {
-          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Gcr]),
-          value: ENABLED_ARTIFACT_TYPES.Gcr,
-          iconName: ArtifactIconByType.Gcr,
-          disabled: isNewService
-        },
-        {
-          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Ecr]),
-          value: ENABLED_ARTIFACT_TYPES.Ecr,
-          iconName: ArtifactIconByType.Ecr,
-          disabled: isNewService
-        },
-        {
-          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.DockerRegistry]),
-          value: ENABLED_ARTIFACT_TYPES.DockerRegistry,
-          iconName: ArtifactIconByType.DockerRegistry,
-          disabled: isNewService
-        },
-        {
-          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry]),
-          value: ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
-          iconName: ArtifactIconByType.ArtifactoryRegistry,
-          disabled: isNewService
-        },
-        {
-          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Acr]),
-          value: ENABLED_ARTIFACT_TYPES.Acr,
-          iconName: ArtifactIconByType.Acr,
-          disabled: isNewService
-        },
-        {
-          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AmazonS3]),
-          value: ENABLED_ARTIFACT_TYPES.AmazonS3,
-          iconName: ArtifactIconByType.AmazonS3 as IconName,
-          disabled: isNewService
-        },
-        {
-          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry]),
-          value: ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry,
-          iconName: ArtifactIconByType.GoogleArtifactRegistry as IconName,
-          disabled: isNewService
-        },
-        {
-          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.CustomArtifact]),
-          value: ENABLED_ARTIFACT_TYPES.CustomArtifact,
-          iconName: ArtifactIconByType.CustomArtifact as IconName,
-          disabled: isNewService
-        },
-        {
-          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.GithubPackageRegistry]),
-          value: ENABLED_ARTIFACT_TYPES.GithubPackageRegistry,
-          iconName: ArtifactIconByType.GithubPackageRegistry as IconName,
-          disabled: isNewService
-        },
-        {
-          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Jenkins]),
-          value: ENABLED_ARTIFACT_TYPES.Jenkins,
-          iconName: ArtifactIconByType.Jenkins as IconName,
-          disabled: isNewService
-        },
-        {
-          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus3Registry]),
-          value: ENABLED_ARTIFACT_TYPES.Nexus3Registry,
-          iconName: ArtifactIconByType.Nexus3Registry as IconName,
-          disabled: isNewService
-        },
-        ...(allowV2Artifacts
-          ? [
-              {
-                itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AzureArtifacts]),
-                value: ENABLED_ARTIFACT_TYPES.AzureArtifacts,
-                iconName: ArtifactIconByType.AzureArtifacts as IconName,
-                disabled: isNewService
-              },
-              {
-                itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AmazonMachineImage]),
-                value: ENABLED_ARTIFACT_TYPES.AmazonMachineImage,
-                iconName: ArtifactIconByType.AmazonMachineImage as IconName,
-                disabled: isNewService
-              }
-            ]
-          : []),
-        {
-          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Bamboo]),
-          value: ENABLED_ARTIFACT_TYPES.Bamboo,
-          iconName: ArtifactIconByType.Bamboo as IconName,
-          disabled: isNewService
-        },
-        {
-          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.GoogleCloudStorage]),
-          value: ENABLED_ARTIFACT_TYPES.GoogleCloudStorage,
-          iconName: ArtifactIconByType.GoogleCloudStorage as IconName,
-          disabled: isNewService
-        }
-      ]
-    },
-    {
-      categoryLabel: getString('manifestsText'),
-      categoryValue: 'Manifest',
-      items: [
-        {
-          itemLabel: getString(manifestTypeLabels.HelmChart),
-          value: ManifestDataType.HelmChart,
-          iconName: manifestTypeIcons.HelmChart,
-          disabled: isNewService
-        }
-      ]
-    },
-    {
-      categoryLabel: getString('triggers.scheduledLabel'),
-      categoryValue: 'Scheduled',
-      items: [
-        {
-          itemLabel: getString('triggers.cronLabel'),
-          value: 'Cron',
-          iconName: TriggerTypeIcons.SCHEDULE as IconName
-        }
-      ]
-    }
-  ]
-})
-
 export const getSourceRepoOptions = (getString: (str: StringKeys) => string): { label: string; value: string }[] => [
   { label: getString('common.repo_provider.githubLabel'), value: GitSourceProviders.GITHUB.value },
   { label: getString('common.repo_provider.gitlabLabel'), value: GitSourceProviders.GITLAB.value },
@@ -256,29 +101,6 @@ export const getSourceRepoOptions = (getString: (str: StringKeys) => string): { 
   { label: getString('common.repo_provider.azureRepos'), value: GitSourceProviders.AZURE_REPO.value },
   { label: getString('common.repo_provider.customLabel'), value: GitSourceProviders.CUSTOM.value }
 ]
-
-export const getCategoryItems = (
-  getString: (key: StringKeys) => string,
-  isNewService: boolean,
-  allowV2Artifacts: boolean | undefined
-): AddDrawerMapInterface => triggerDrawerMap(getString, isNewService, allowV2Artifacts)
-
-export interface ItemInterface {
-  itemLabel: string
-  iconName: IconName
-  value: string
-  visible?: boolean
-  disabled?: boolean
-  categoryValue?: string
-}
-
-export interface TriggerDataInterface {
-  triggerType: TriggerBaseType
-  sourceRepo?: SourceRepo
-  manifestType?: ManifestType
-  artifactType?: TriggerArtifactType
-  scheduleType?: ScheduleType
-}
 
 export const getEnabledStatusTriggerValues = ({
   data,
@@ -298,89 +120,127 @@ export const getEnabledStatusTriggerValues = ({
   }
 }
 
-const TriggerCategoryToLabelMap: Record<Required<TriggerCatalogItem>['category'], StringKeys> = {
-  Webhook: 'execution.triggerType.WEBHOOK',
-  Artifact: 'pipeline.artifactTriggerConfigPanel.artifact',
-  MultiRegionArtifact: 'pipeline.artifactTriggerConfigPanel.artifact',
-  Manifest: 'manifestsText',
-  Scheduled: 'triggers.scheduledLabel'
-}
+export const getTriggerLabel = (triggerType: TriggerCatalogType, getString: UseStringsReturn['getString']): string => {
+  const [itemLabel] = getTriggerLabelAndIcon(triggerType)
 
-export type TriggerCatalogType = Required<TriggerCatalogItem>['triggerCatalogType'][number]
+  if (itemLabel) {
+    getString(itemLabel)
+  }
 
-export const TriggerCatalogTypeToLabelMap: Record<TriggerCatalogType, StringKeys> = {
-  Github: 'common.repo_provider.githubLabel',
-  Gitlab: 'common.repo_provider.gitlabLabel',
-  Bitbucket: 'common.repo_provider.bitbucketLabel',
-  AzureRepo: 'common.repo_provider.azureRepos',
-  Custom: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.CustomArtifact],
-  Gcr: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Gcr],
-  Ecr: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Ecr],
-  DockerRegistry: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.DockerRegistry],
-  ArtifactoryRegistry: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry],
-  Acr: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Acr],
-  AmazonS3: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AmazonS3],
-  GoogleArtifactRegistry: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry],
-  CustomArtifact: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.CustomArtifact],
-  GithubPackageRegistry: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.GithubPackageRegistry],
-  Nexus3Registry: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus3Registry],
-  Jenkins: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Jenkins],
-  AzureArtifacts: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AzureArtifacts],
-  AmazonMachineImage: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AmazonMachineImage],
-  GoogleCloudStorage: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.GoogleCloudStorage],
-  Bamboo: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Bamboo],
-  HelmChart: manifestTypeLabels.HelmChart,
-  Cron: 'triggers.cronLabel'
-}
-
-const TriggerCatalogTypeToIconMap: Record<TriggerCatalogType, IconName> = {
-  Github: GitSourceProviders.GITHUB.iconName,
-  Gitlab: GitSourceProviders.GITLAB.iconName,
-  Bitbucket: GitSourceProviders.BITBUCKET.iconName,
-  AzureRepo: GitSourceProviders.AZURE_REPO.iconName,
-  Custom: GitSourceProviders.CUSTOM.iconName,
-  Gcr: ArtifactIconByType.Gcr,
-  Ecr: ArtifactIconByType.Ecr,
-  DockerRegistry: ArtifactIconByType.DockerRegistry,
-  ArtifactoryRegistry: ArtifactIconByType.ArtifactoryRegistry,
-  Acr: ArtifactIconByType.Acr,
-  AmazonS3: ArtifactIconByType.AmazonS3,
-  GoogleArtifactRegistry: ArtifactIconByType.GoogleArtifactRegistry,
-  GithubPackageRegistry: ArtifactIconByType.GithubPackageRegistry,
-  CustomArtifact: ArtifactIconByType.CustomArtifact,
-  Nexus3Registry: ArtifactIconByType.Nexus3Registry,
-  Jenkins: ArtifactIconByType.Jenkins,
-  AzureArtifacts: ArtifactIconByType.AzureArtifacts,
-  AmazonMachineImage: ArtifactIconByType.AmazonMachineImage,
-  GoogleCloudStorage: ArtifactIconByType.GoogleCloudStorage,
-  Bamboo: ArtifactIconByType.Bamboo,
-  HelmChart: manifestTypeIcons.HelmChart,
-  Cron: TriggerTypeIcons.SCHEDULE
+  return ''
 }
 
 export const getTriggerCategoryDrawerMapFromTriggerCatalogItem = (
   getString: UseStringsReturn['getString'],
   triggerCatalogItems: TriggerCatalogItem[]
 ): AddDrawerMapInterface => {
-  const categories: CategoryInterface[] = triggerCatalogItems.map(catalog => {
+  const categories = triggerCatalogItems.map(catalog => {
     const { category, triggerCatalogType } = catalog
-    return {
-      categoryLabel: getString(TriggerCategoryToLabelMap[category]),
-      categoryValue: category,
-      items: triggerCatalogType.map(item => ({
-        itemLabel: getString(TriggerCatalogTypeToLabelMap[item]),
-        value: item,
-        iconName: TriggerCatalogTypeToIconMap[item]
-      }))
+    const triggerCategoryLabel = getTriggerCategoryLabel(category)
+    if (triggerCategoryLabel) {
+      const categoryItems = triggerCatalogType.map(item => {
+        const [itemLabel, iconName] = getTriggerLabelAndIcon(item)
+        if (itemLabel && iconName) {
+          return {
+            itemLabel: getString(itemLabel),
+            value: item,
+            iconName: iconName
+          }
+        }
+      })
+
+      return {
+        categoryLabel: getString(triggerCategoryLabel),
+        categoryValue: category,
+        // Filter out empty values from categoryItems
+        items: categoryItems.filter(categoryItem => Boolean(categoryItem))
+      } as CategoryInterface
     }
   })
 
   return {
     drawerLabel: getString('common.triggersLabel'),
     showAllLabel: getString('triggers.showAllTriggers'),
-    categories
+    // Filter out empty categories
+    categories: categories.filter(category => Boolean(category)) as CategoryInterface[]
   }
 }
 
 export const getTriggerBaseType = (triggerType?: TriggerType): TriggerBaseType | undefined =>
   triggerType === 'MultiRegionArtifact' ? 'Artifact' : triggerType
+
+const getTriggerCategoryLabel = (triggerCategory: TriggerCatalogItem['category']): StringKeys | undefined => {
+  // Using function instead of object, to prevent the page break when new triggerCategory is added to API and UI does add that triggerCategory to object
+  switch (triggerCategory) {
+    case 'Webhook':
+      return 'execution.triggerType.WEBHOOK'
+    case 'Artifact':
+      return 'pipeline.artifactTriggerConfigPanel.artifact'
+    case 'MultiRegionArtifact':
+      return 'pipeline.artifactTriggerConfigPanel.artifact'
+    case 'Manifest':
+      return 'manifestsText'
+    case 'Scheduled':
+      return 'triggers.scheduledLabel'
+    default:
+      return
+  }
+}
+
+const getTriggerLabelAndIcon = (triggerType: TriggerCatalogType): [itemLabel?: StringKeys, iconName?: IconName] => {
+  // Using function instead of object, to prevent the page break when new triggerType is added to API and UI does add that triggerType to object
+  switch (triggerType) {
+    case 'Github':
+      return ['common.repo_provider.githubLabel', GitSourceProviders.GITHUB.iconName]
+    case 'Gitlab':
+      return ['common.repo_provider.gitlabLabel', GitSourceProviders.GITLAB.iconName]
+    case 'Bitbucket':
+      return ['common.repo_provider.bitbucketLabel', GitSourceProviders.BITBUCKET.iconName]
+    case 'AzureRepo':
+      return ['common.repo_provider.azureRepos', GitSourceProviders.AZURE_REPO.iconName]
+    case 'Custom':
+      return [ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.CustomArtifact], GitSourceProviders.CUSTOM.iconName]
+    case 'Gcr':
+      return [ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Gcr], ArtifactIconByType.Gcr]
+    case 'Ecr':
+      return [ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Ecr], ArtifactIconByType.Ecr]
+    case 'DockerRegistry':
+      return [ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.DockerRegistry], ArtifactIconByType.DockerRegistry]
+    case 'ArtifactoryRegistry':
+      return [ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry], ArtifactIconByType.ArtifactoryRegistry]
+    case 'Acr':
+      return [ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Acr], ArtifactIconByType.Acr]
+    case 'AmazonS3':
+      return [ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AmazonS3], ArtifactIconByType.AmazonS3]
+    case 'GoogleArtifactRegistry':
+      return [
+        ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry],
+        ArtifactIconByType.GoogleArtifactRegistry
+      ]
+    case 'CustomArtifact':
+      return [ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.CustomArtifact], ArtifactIconByType.CustomArtifact]
+    case 'GithubPackageRegistry':
+      return [
+        ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.GithubPackageRegistry],
+        ArtifactIconByType.GithubPackageRegistry
+      ]
+    case 'Nexus3Registry':
+      return [ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus3Registry], ArtifactIconByType.Nexus3Registry]
+    case 'Jenkins':
+      return [ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Jenkins], ArtifactIconByType.Jenkins]
+    case 'AzureArtifacts':
+      return [ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AzureArtifacts], ArtifactIconByType.AzureArtifacts]
+    case 'AmazonMachineImage':
+      return [ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AmazonMachineImage], ArtifactIconByType.AmazonMachineImage]
+    case 'GoogleCloudStorage':
+      return [ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.GoogleCloudStorage], ArtifactIconByType.GoogleCloudStorage]
+    case 'Bamboo':
+      return [ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Bamboo], ArtifactIconByType.Bamboo]
+    case 'HelmChart':
+      return [manifestTypeLabels.HelmChart, manifestTypeIcons.HelmChart]
+    case 'Cron':
+      return ['triggers.cronLabel', TriggerTypeIcons.SCHEDULE]
+    default:
+      return [undefined, undefined]
+  }
+}

@@ -13,7 +13,7 @@ import {
   projectId,
   pipelineIdentifier
 } from '../../../support/70-pipeline/constants'
-import { getTriggerAPI, getTriggerListAPI, mergeInputSets, updateTriggerAPI } from '../constants'
+import { getTriggerAPI, getTriggerCatalogAPI, getTriggerListAPI, mergeInputSets, updateTriggerAPI } from '../constants'
 
 export const visitTriggersPage = (
   getTriggerListAPIFixture = 'pipeline/api/triggers/Cypress_Test_Trigger_Get_Empty_Trigger_List.json'
@@ -25,7 +25,6 @@ export const visitTriggersPage = (
         resource: [
           ...featureFlagsData.resource,
           { uuid: null, name: 'NG_SVC_ENV_REDESIGN', enabled: true, lastUpdatedAt: 0 },
-          { uuid: null, name: 'CD_TRIGGER_V2', enabled: true, lastUpdatedAt: 0 },
           { uuid: null, name: 'BAMBOO_ARTIFACT_NG', enabled: true, lastUpdatedAt: 0 },
           { uuid: null, name: 'CDS_NEXUS_GROUPID_ARTIFACTID_DROPDOWN', enabled: true, lastUpdatedAt: 0 },
           { uuid: null, name: 'CDS_NG_TRIGGER_MULTI_ARTIFACTS', enabled: true, lastUpdatedAt: 0 }
@@ -50,6 +49,10 @@ export const visitTriggersPage = (
 
       cy.intercept('GET', pipelineInputSetTemplate, {
         fixture: 'pipeline/api/triggers/Cypress_Test_Trigger_Templates_Apply_Templates.json'
+      })
+
+      cy.intercept('GET', getTriggerCatalogAPI, {
+        fixture: 'pipeline/api/triggers/Cypress_Test_Trigger_Catalog.json'
       })
 
       cy.fixture(getTriggerListAPIFixture).then(getTriggerListAPIData => {
@@ -92,7 +95,6 @@ export const visitTriggerPage = ({
         resource: [
           ...featureFlagsData.resource,
           { uuid: null, name: 'NG_SVC_ENV_REDESIGN', enabled: true, lastUpdatedAt: 0 },
-          { uuid: null, name: 'CD_TRIGGER_V2', enabled: true, lastUpdatedAt: 0 },
           { uuid: null, name: 'BAMBOO_ARTIFACT_NG', enabled: true, lastUpdatedAt: 0 },
           { uuid: null, name: 'CDS_NEXUS_GROUPID_ARTIFACTID_DROPDOWN', enabled: true, lastUpdatedAt: 0 },
           { uuid: null, name: 'CDS_NG_TRIGGER_MULTI_ARTIFACTS', enabled: true, lastUpdatedAt: 0 }

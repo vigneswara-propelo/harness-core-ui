@@ -21,7 +21,7 @@ import {
 } from '../../support/70-pipeline/constants'
 import { getRuntimeInputKeys } from '../../utils/step-utils'
 import templatesData from '../../fixtures/ci/api/runStep/inputSetTemplateResponse.json'
-import { getTriggerListAPI } from '../72-triggers/constants'
+import { getTriggerCatalogAPI, getTriggerListAPI } from '../72-triggers/constants'
 import { addTemplate, selectStepInStepLibrary } from '../../support/75-ci/CIpipeline.utils'
 import { enterNameDescriptionAndTags } from '../72-triggers/triggers-helpers/enterNameDescriptionAndTags'
 // Data from QA, CI Automation Account
@@ -198,6 +198,9 @@ describe('Triggers', () => {
     cy.intercept('GET', pipelineDetailsWithRoutingIdCall, {
       fixture: 'ci/api/runStep/fetchPipelineTemplate'
     }).as('fetchPipelineTemplate')
+    cy.intercept('GET', getTriggerCatalogAPI, {
+      fixture: 'pipeline/api/triggers/Cypress_Test_Trigger_Catalog.json'
+    })
     cy.visit(triggersRoute, {
       timeout: 30000
     })

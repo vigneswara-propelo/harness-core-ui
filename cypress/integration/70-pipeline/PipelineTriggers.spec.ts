@@ -7,9 +7,9 @@ import {
   servicesV2AccessResponse,
   triggerPipelineDetails,
   triggersAPI,
-  triggersListData,
   triggersRoute
 } from '../../support/70-pipeline/constants'
+import { getTriggerCatalogAPI } from '../72-triggers/constants'
 
 describe('Triggers for Pipeline', () => {
   const visitTriggersPageWithAssertion = (): void => {
@@ -26,6 +26,9 @@ describe('Triggers for Pipeline', () => {
 
     cy.intercept('GET', pipelineSummaryCallAPI, { fixture: '/ng/api/pipelineSummary' }).as('pipelineSummary')
     cy.intercept('GET', triggersAPI, { fixture: 'ng/api/triggers/triggersList.empty.json' }).as('emptyTriggersList')
+    cy.intercept('GET', getTriggerCatalogAPI, {
+      fixture: 'pipeline/api/triggers/Cypress_Test_Trigger_Catalog.json'
+    })
 
     switch (Cypress.currentTest.title) {
       case 'Pipeline Trigger List assertion': {
@@ -38,41 +41,6 @@ describe('Triggers for Pipeline', () => {
         break
       }
     }
-  })
-
-  it('Triggers Drawer & List Assertion', () => {
-    cy.wait(1000)
-    cy.wait('@emptyTriggersList')
-    cy.contains('span', '+ New Trigger').should('be.visible')
-    cy.contains('span', 'Add New Trigger').should('be.visible').click()
-
-    cy.get('*[class^="AddDrawer"]').should('be.visible')
-    cy.get('[class*="AddDrawer"][class*="stepsRenderer"]')
-      .should('be.visible')
-      .within(() => {
-        cy.contains('h2', 'Triggers').should('be.visible')
-        Object.entries(triggersListData).forEach(([key, values]) => {
-          cy.contains('div', key)
-            .should('be.visible')
-            .parent()
-            .siblings()
-            .eq(0)
-            .within(() => {
-              values.forEach(value => {
-                cy.contains('section', value).scrollIntoView().should('be.visible')
-              })
-            })
-        })
-      })
-    cy.get('[class*="AddDrawer"][class*="categoriesRenderer"]')
-      .should('be.visible')
-      .within(() => {
-        cy.contains('p', 'Triggers').should('be.visible')
-        cy.contains('p', 'Show All Triggers').should('be.visible')
-        Object.entries(triggersListData).forEach(([key, values]) => {
-          cy.contains('section', `${key} (${values.length})`).should('be.visible')
-        })
-      })
   })
 
   it('Cron Trigger Flow', () => {

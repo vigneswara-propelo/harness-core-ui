@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor, fireEvent, getByText, screen, queryByText } from '@testing-library/react'
+import { render, waitFor, fireEvent, screen, queryByText, getByText as globalGetByText } from '@testing-library/react'
 import { renderHook } from '@testing-library/react-hooks'
 import { useStrings } from 'framework/strings'
 import {
@@ -21,7 +21,7 @@ import routes from '@common/RouteDefinitions'
 import { pipelinePathProps } from '@common/utils/routeUtils'
 import * as useIsTriggerCreatePermission from '@triggers/components/Triggers/useIsTriggerCreatePermission'
 import { PreferenceStoreProvider } from 'framework/PreferenceStore/PreferenceStoreContext'
-import { GetTriggerResponse } from './webhookMockResponses'
+import { GetTriggerResponse, triggersCatalogResponse } from './webhookMockResponses'
 import { GetTriggerListForTargetResponse } from './sharedMockResponses'
 import { PipelineResponse as PipelineDetailsMockResponse } from './PipelineDetailsMocks'
 import TriggersPage from '../TriggersPage'
@@ -38,7 +38,8 @@ jest.mock('services/pipeline-ng', () => ({
   }),
   useGetTrigger: jest.fn(() => GetTriggerResponse),
   useDeleteTrigger: jest.fn().mockImplementation(() => ({ mutate: mockDelete })),
-  useUpdateTrigger: jest.fn().mockImplementation(() => ({ mutate: mockUpdateTrigger }))
+  useUpdateTrigger: jest.fn().mockImplementation(() => ({ mutate: mockUpdateTrigger })),
+  useGetTriggerCatalog: jest.fn(() => ({ data: triggersCatalogResponse, loading: false }))
 }))
 
 jest.mock('services/pipeline-rq', () => ({
@@ -102,7 +103,7 @@ const changeSortFilter = async (filter: string, sort: string[]): Promise<void> =
       projectIdentifier: 'projectIdentifier',
       targetIdentifier: 'pipelineIdentifier',
       searchTerm: undefined,
-      page: 0,
+      page: '0',
       size: 20,
       sort
     },
@@ -113,25 +114,58 @@ const changeSortFilter = async (filter: string, sort: string[]): Promise<void> =
 describe('TriggersPage Triggers tests', () => {
   describe('Renders/snapshots', () => {
     test('Initial Render - Shows Trigger List', async () => {
-      render(<WrapperComponent />)
+      const { getByText, getByPlaceholderText } = render(<WrapperComponent />)
       await waitFor(() => expect(result.current.getString('common.triggerLabel').toUpperCase()).not.toBeNull())
-      // eslint-disable-next-line no-document-body-snapshot
-      expect(document.body).toMatchSnapshot()
+
+      // Check for trigger page header
+      expect(getByText('triggers.newTrigger')).toBeInTheDocument()
+      expect(getByPlaceholderText('search')).toBeInTheDocument()
+      expect(getByText('Total: 4')).toBeInTheDocument()
+      expect(getByText('Newest')).toBeInTheDocument()
+
+      // Check for trigger table header
+      expect(getByText('COMMON.TRIGGERLABEL')).toBeInTheDocument()
+      expect(getByText('STATUS')).toBeInTheDocument()
+      expect(getByText('ACTIVITY')).toBeInTheDocument()
+      expect(getByText('triggers.lastActivationLabel')).toBeInTheDocument()
+      expect(getByText('EXECUTION.TRIGGERTYPE.WEBHOOK')).toBeInTheDocument()
+      expect(getByText('ENABLEDLABEL')).toBeInTheDocument()
+
+      // Check for the triggers in the table
+      expect(getByText('Webhook Custom')).toBeInTheDocument()
+      expect(getByText('Webhook GITHUB')).toBeInTheDocument()
+      expect(getByText('trigger-2')).toBeInTheDocument()
+      expect(getByText('testcustomtrigger1')).toBeInTheDocument()
+      expect(getByText('4 of 4')).toBeInTheDocument()
     })
     test('Initial Render - New Triggers Drawer', async () => {
-      const { container } = render(
+      const { getByText } = render(
         <TestWrapper>
           <TriggersPage />
         </TestWrapper>
       )
       await waitFor(() => expect(result.current.getString('common.triggerLabel').toUpperCase()).not.toBeNull())
-      const addTriggerButton = getByText(container, result.current.getString('triggers.newTrigger'))
+
+      const addTriggerButton = getByText('triggers.newTrigger')
+
       if (!addTriggerButton) {
         throw Error('No action button')
       }
+
       fireEvent.click(addTriggerButton)
-      // eslint-disable-next-line no-document-body-snapshot
-      expect(document.body).toMatchSnapshot()
+
+      // Check for trigger in the Trigger Catalog Drawer
+      expect(screen.getAllByText('common.triggersLabel')).toHaveLength(2)
+      expect(screen.getByText('execution.triggerType.WEBHOOK')).toBeInTheDocument()
+      expect(screen.getByText('common.repo_provider.githubLabel')).toBeInTheDocument()
+      expect(screen.getByText('common.repo_provider.gitlabLabel')).toBeInTheDocument()
+      expect(screen.getByText('pipeline.artifactTriggerConfigPanel.artifact')).toBeInTheDocument()
+      expect(screen.getByText('platform.connectors.GCR.name')).toBeInTheDocument()
+      expect(screen.getByText('platform.connectors.ECR.name')).toBeInTheDocument()
+      expect(screen.getByText('manifestsText')).toBeInTheDocument()
+      expect(screen.getByText('common.HelmChartLabel')).toBeInTheDocument()
+      expect(screen.getByText('triggers.scheduledLabel')).toBeInTheDocument()
+      expect(screen.getByText('triggers.cronLabel')).toBeInTheDocument()
     })
   })
   describe('Interactivity', () => {
@@ -139,12 +173,12 @@ describe('TriggersPage Triggers tests', () => {
     jest.spyOn(useIsTriggerCreatePermission, 'useIsTriggerCreatePermission').mockImplementation(() => true)
 
     test('Add a trigger redirects to Trigger Wizard', async () => {
-      const { container, getByTestId } = render(<WrapperComponent />)
-      fireEvent.click(getByText(container, result.current.getString('triggers.newTrigger')))
+      const { getByTestId, getByText } = render(<WrapperComponent />)
+      fireEvent.click(getByText('triggers.newTrigger'))
 
       const triggerDrawer = findDrawerContainer()
       await waitFor(() => expect(triggerDrawer).toBeInTheDocument())
-      fireEvent.click(getByText(triggerDrawer!, 'common.repo_provider.githubLabel'))
+      fireEvent.click(getByText('common.repo_provider.githubLabel'))
 
       await waitFor(() =>
         expect(getByTestId('location')).toMatchInlineSnapshot(`
@@ -220,9 +254,9 @@ describe('TriggersPage Triggers tests', () => {
       fireEvent.click(getByTestId(getDeleteTestId(triggerIdentifier)))
 
       // Delete Dialog Container
-      const deleteConfirmationDialog = findDialogContainer()
+      const deleteConfirmationDialog = findDialogContainer() as HTMLDivElement
       await waitFor(() => expect(deleteConfirmationDialog).toBeInTheDocument())
-      const confirmDeleteButton = getByText(deleteConfirmationDialog as HTMLElement, 'delete')
+      const confirmDeleteButton = globalGetByText(deleteConfirmationDialog, 'delete')
       if (!confirmDeleteButton) {
         throw Error('No error button')
       }

@@ -1427,3 +1427,26 @@ export const GetSecretV2PromiseResponse = {
     governanceMetadata: null
   }
 }
+
+export const triggersCatalogResponse = {
+  data: {
+    catalog: [
+      {
+        category: 'Webhook',
+        triggerCatalogType: ['Github', 'Gitlab']
+      },
+      {
+        category: 'Artifact',
+        triggerCatalogType: ['Gcr', 'Ecr']
+      },
+      {
+        category: 'Manifest',
+        triggerCatalogType: ['HelmChart']
+      },
+      {
+        category: 'Scheduled',
+        triggerCatalogType: ['Cron']
+      }
+    ]
+  }
+}

@@ -5,7 +5,7 @@ import {
   pipelineStudioRoute,
   s3bucketData
 } from '../../support/70-pipeline/constants'
-import { createTriggerAPI, getTriggerListAPI } from './constants'
+import { createTriggerAPI, getTriggerCatalogAPI, getTriggerListAPI } from './constants'
 
 describe('AmazonS3 Trigger', () => {
   const visitTriggersPageWithAssertion = (): void => {
@@ -34,6 +34,10 @@ describe('AmazonS3 Trigger', () => {
     cy.intercept('POST', s3bucketData, {
       fixture: 'pipeline/api/triggers/s3BucketResponse.json'
     }).as('s3bucketData')
+
+    cy.intercept('GET', getTriggerCatalogAPI, {
+      fixture: 'pipeline/api/triggers/Cypress_Test_Trigger_Catalog.json'
+    })
 
     visitTriggersPageWithAssertion()
   })

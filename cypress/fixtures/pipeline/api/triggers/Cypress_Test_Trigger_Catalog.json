@@ -1,0 +1,41 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "catalog": [
+      {
+        "category": "Webhook",
+        "triggerCatalogType": ["Github", "Gitlab", "Bitbucket", "AzureRepo", "Custom"]
+      },
+      {
+        "category": "Artifact",
+        "triggerCatalogType": [
+          "Gcr",
+          "Ecr",
+          "DockerRegistry",
+          "ArtifactoryRegistry",
+          "Acr",
+          "AmazonS3",
+          "GoogleArtifactRegistry",
+          "CustomArtifact",
+          "GithubPackageRegistry",
+          "Jenkins",
+          "Nexus3Registry",
+          "AzureArtifacts",
+          "AmazonMachineImage",
+          "Bamboo",
+          "GoogleCloudStorage"
+        ]
+      },
+      {
+        "category": "Manifest",
+        "triggerCatalogType": ["HelmChart"]
+      },
+      {
+        "category": "Scheduled",
+        "triggerCatalogType": ["Cron"]
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "7dba97d0-3785-4d2e-b016-11b2c2a7162a"
+}
