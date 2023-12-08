@@ -147,7 +147,8 @@ export const onSubmit = async ({
     sources = {},
     dependencies = [],
     type,
-    notificationRuleRefs
+    notificationRuleRefs,
+    template
   } = formikValues
   const payload: ExtendedMonitoredServiceDTO = {
     orgIdentifier,
@@ -161,7 +162,8 @@ export const onSubmit = async ({
     tags,
     sources,
     dependencies: cachedInitialValues?.dependencies || dependencies,
-    type
+    type,
+    template
   }
   if (Array.isArray(environmentRef)) {
     const isSelectionOption = environmentRef.some(item => Boolean(item.label) && Boolean(item.value))

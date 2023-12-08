@@ -1,0 +1,62 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.reconciletable {
+  div[class*='TableV2--header'] {
+    div[class*='TableV2--cell']:last-child {
+      > p {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.statusText {
+  border-radius: 2px;
+  font-size: small;
+}
+
+.reconcileDrawerHeader {
+  padding: var(--spacing-large) var(--spacing-xlarge) !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--white) !important;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 600px !important;
+  z-index: 1;
+}
+
+.actionButton {
+  cursor: pointer !important;
+}
+
+.serviceEnvCard {
+  width: 100% !important;
+  margin-top: 15% !important;
+}
+
+.serviceEnvCardMS {
+  width: 100% !important;
+  margin-top: 5% !important;
+}
+
+.healthsourceCard {
+  width: 100% !important;
+  margin-top: 5% !important;
+}
+
+.reconcileTag {
+  border-radius: var(--spacing-small) !important;
+  background-color: var(--primary-2) !important;
+  span {
+    font-size: 10px !important;
+    color: var(--primary-7) !important;
+  }
+}

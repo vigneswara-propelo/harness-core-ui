@@ -27,6 +27,7 @@ import css from './OrgAccountLevelServiceEnvField.module.scss'
 export default function OrgAccountLevelServiceEnvField({
   isInputSet,
   isTemplate,
+  noHeaderLabel,
   serviceOnSelect,
   environmentOnSelect
 }: OrgAccountLevelServiceEnvFieldProps): JSX.Element {
@@ -43,12 +44,14 @@ export default function OrgAccountLevelServiceEnvField({
     <>
       {showService && (
         <>
-          <Layout.Vertical padding={{ top: 'large' }}>
-            <Text font={{ weight: 'semi-bold', size: 'medium' }} color={Color.BLACK} padding={{ bottom: 'small' }}>
-              {getString('service')}
-            </Text>
-            <Text>{getString('cv.monitoredServices.serviceDescription')}</Text>
-          </Layout.Vertical>
+          {!noHeaderLabel && (
+            <Layout.Vertical padding={{ top: 'large' }}>
+              <Text font={{ weight: 'semi-bold', size: 'medium' }} color={Color.BLACK} padding={{ bottom: 'small' }}>
+                {getString('service')}
+              </Text>
+              <Text>{getString('cv.monitoredServices.serviceDescription')}</Text>
+            </Layout.Vertical>
+          )}
           <MultiTypeServiceField
             name="serviceRef"
             placeholder={getString('cv.selectCreateService')}
@@ -63,12 +66,14 @@ export default function OrgAccountLevelServiceEnvField({
       )}
       {showEnvironment && (
         <>
-          <Layout.Vertical padding={{ top: 'large' }}>
-            <Text font={{ weight: 'semi-bold', size: 'medium' }} color={Color.BLACK} padding={{ bottom: 'small' }}>
-              {getString('environment')}
-            </Text>
-            <Text>{getString('cv.monitoredServices.environmentDescription')}</Text>
-          </Layout.Vertical>
+          {!noHeaderLabel && (
+            <Layout.Vertical padding={{ top: 'large' }}>
+              <Text font={{ weight: 'semi-bold', size: 'medium' }} color={Color.BLACK} padding={{ bottom: 'small' }}>
+                {getString('environment')}
+              </Text>
+              <Text>{getString('cv.monitoredServices.environmentDescription')}</Text>
+            </Layout.Vertical>
+          )}
           <MultiTypeEnvironmentField
             name="environmentRef"
             labelClass={cx({ [css.multiSelectEnvDropdown]: isInfra })}

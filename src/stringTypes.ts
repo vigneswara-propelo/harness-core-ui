@@ -9911,6 +9911,9 @@ export interface StringsMap {
   'cv.healthSource.defineYourSource': string
   'cv.healthSource.deleteHealthSource': string
   'cv.healthSource.deleteHealthSourceWarning': string
+  'cv.healthSource.detachHealthSource': string
+  'cv.healthSource.detachHealthSourceWarning': string
+  'cv.healthSource.detachLabel': string
   'cv.healthSource.editHealthSource': string
   'cv.healthSource.environmentLabel': string
   'cv.healthSource.featureLabel': string
@@ -10018,6 +10021,12 @@ export interface StringsMap {
   'cv.minutes': string
   'cv.minutesRemaining': string
   'cv.monday': string
+  'cv.monitoredServices.ReconcileTab.InputRequiredReconcile': string
+  'cv.monitoredServices.ReconcileTab.lastReconciled': string
+  'cv.monitoredServices.ReconcileTab.monitoredServiceIdentifier': string
+  'cv.monitoredServices.ReconcileTab.noLinkedMS': string
+  'cv.monitoredServices.ReconcileTab.reconcileAll': string
+  'cv.monitoredServices.ReconcileTab.serviceAndenv': string
   'cv.monitoredServices.addNewMonitoredServices': string
   'cv.monitoredServices.assignLabel': string
   'cv.monitoredServices.changeCustomMetricTooltip': string

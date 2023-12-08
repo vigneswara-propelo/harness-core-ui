@@ -107,7 +107,8 @@ export const getInitFormData = (
       dependencies: [],
       ...(templateValue?.notificationRuleRefs && {
         notificationRuleRefs: templateValue?.notificationRuleRefs
-      })
+      }),
+      templateValue
     }
   }
 
@@ -123,7 +124,8 @@ export const getInitFormData = (
     sources,
     dependencies = [],
     type,
-    notificationRuleRefs = []
+    notificationRuleRefs = [],
+    template
   } = (monitoredServiceData || {}) as MonitoredServiceDTO
 
   return {
@@ -138,7 +140,8 @@ export const getInitFormData = (
     environmentRef: getEnvironmentRefBasedOnMonitoredServiveType({ type, environmentRef, environmentRefList }),
     environmentRefList,
     sources,
-    dependencies
+    dependencies,
+    template
   }
 }
 

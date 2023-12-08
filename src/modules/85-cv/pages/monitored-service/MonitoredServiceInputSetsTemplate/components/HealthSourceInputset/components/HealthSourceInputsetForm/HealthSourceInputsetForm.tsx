@@ -9,6 +9,7 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import { Card, FormInput, MultiTypeInputType, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import { omit } from 'lodash-es'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import type { HealthSource } from 'services/cv'
@@ -28,22 +29,28 @@ import css from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/M
 interface HealthSourceInputsetFormInterface {
   healthSources?: HealthSource[]
   isReadOnlyInputSet?: boolean
+  isReconcile?: boolean
 }
 
 export default function HealthSourceInputsetForm({
   healthSources,
-  isReadOnlyInputSet
+  isReadOnlyInputSet,
+  isReconcile
 }: HealthSourceInputsetFormInterface): JSX.Element {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const content = healthSources?.map((healthSourceData, index: number) => {
     const spec = healthSourceData?.spec
     const path = `sources.healthSources.${index}.spec`
-    const runtimeInputs = Object.entries(spec)
-      .filter(item => item[1] === '<+input>')
-      .map(item => {
-        return { name: item[0], path: `${path}.${item[0]}` }
-      })
+    const runtimeInputs = isReconcile
+      ? Object.entries(omit(spec, ['metricDefinitions'])).map(item => {
+          return { name: item[0], path: `${path}.${item[0]}` }
+        })
+      : Object.entries(spec)
+          .filter(item => item[1] === '<+input>')
+          .map(item => {
+            return { name: item[0], path: `${path}.${item[0]}` }
+          })
 
     // TODO - this can be removed once the templateInputs api gives version also in healthsoure entity.
     const healthSource = enrichHealthSourceWithVersionForHealthsourceType(
@@ -102,6 +109,7 @@ export default function HealthSourceInputsetForm({
             path={metricDefinitionInptsetFormPath}
             metricDefinitions={metricDefinitions}
             sourceType={sourceType as HealthSourceTypes}
+            isReconcile={isReconcile}
           />
         )}
       </Card>

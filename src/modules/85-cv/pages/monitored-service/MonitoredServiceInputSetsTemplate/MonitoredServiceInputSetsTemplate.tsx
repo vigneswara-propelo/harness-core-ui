@@ -155,6 +155,8 @@ export default function MonitoredServiceInputSetsTemplate({
     }
   })
 
+  const templateVersionNumber = useMemo(() => msTemplateResponse?.data?.version, [msTemplateResponse?.data?.version])
+
   const templateScope = useMemo(
     () => msTemplateResponse?.data?.templateScope,
     [msTemplateResponse?.data?.templateScope]
@@ -183,6 +185,8 @@ export default function MonitoredServiceInputSetsTemplate({
         template: {
           templateRef: templateIdentifierWithScope,
           versionLabel: templateRefData?.versionLabel,
+          templateVersionNumber,
+          isTemplateByReference: true,
           templateInputs: {
             ...monitoredServiceInputSet,
             ...populateSource,

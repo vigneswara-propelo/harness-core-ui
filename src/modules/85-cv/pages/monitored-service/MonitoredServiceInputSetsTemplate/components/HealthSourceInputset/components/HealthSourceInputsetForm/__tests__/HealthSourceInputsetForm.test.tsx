@@ -104,6 +104,28 @@ describe('Validate HealthSourceInputsetForm', () => {
     )
     expect(container).toMatchSnapshot()
   })
+
+  test('should render HealthSourceInputsetForm with isReconcile', () => {
+    const healthSourcesMockWithEmptyString = JSON.parse(JSON.stringify(healthSourcesMock).replace(/<\+input>/g, ''))
+    const { container } = render(
+      <TestWrapper>
+        <Formik
+          initialValues={{ sources: { healthSources: healthSourcesMockWithEmptyString } }}
+          onSubmit={() => undefined}
+          formName="wrapperComponent"
+        >
+          <HealthSourceInputsetForm
+            isReconcile
+            isReadOnlyInputSet={false}
+            healthSources={healthSourcesMockWithEmptyString as HealthSource[]}
+          />
+        </Formik>
+      </TestWrapper>
+    )
+    expect(container.querySelector('input[name="sources.healthSources.0.spec.tierName"]')).toHaveValue('')
+    expect(container.querySelector('input[name="sources.healthSources.0.spec.applicationName"]')).toHaveValue('')
+  })
+
   test('should render HealthSourceInputsetForm with no data', () => {
     const { container, rerender } = render(
       <TestWrapper>

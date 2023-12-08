@@ -221,6 +221,11 @@ allowpaths:
   - /auto-discovery/create
   - /auto-discovery/re-import
   - /auto-discovery/status/{correlationId}
+  - /monitored-service/reconciliation-required
+  - /monitored-service/reconciliation-status
+  - /monitored-service/{identifier}/resolved-template-inputs
+  - /monitored-service/{identifier}/detach-template
+  - /monitored-service/{identifier}/yaml
 
 operationIdOverrides:
   /appdynamics/applications.get: getAppDynamicsApplications

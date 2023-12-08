@@ -7195,6 +7195,7 @@ export interface TasCredentialSpec {
 export type TasManualDetails = TasCredentialSpec & {
   endpointUrl: string
   passwordRef: string
+  refreshTokenRef?: string
   username?: string
   usernameRef?: string
 }
@@ -14650,6 +14651,137 @@ export const getMonitoredServicePlatformListPromise = (
     void
   >(getConfig('cv/api'), `/monitored-service/platform/list`, props, signal)
 
+export interface IsReconciliationRequiredForMonitoredServicesQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  templateIdentifier: string
+  versionLabel: string
+  templateVersionNumber: number
+  monitoredServiceIdentifier?: string
+}
+
+export type IsReconciliationRequiredForMonitoredServicesProps = Omit<
+  GetProps<ResponseBoolean, unknown, IsReconciliationRequiredForMonitoredServicesQueryParams, void>,
+  'path'
+>
+
+/**
+ * check if a template referenced monitored service(s) require reconciliation
+ */
+export const IsReconciliationRequiredForMonitoredServices = (
+  props: IsReconciliationRequiredForMonitoredServicesProps
+) => (
+  <Get<ResponseBoolean, unknown, IsReconciliationRequiredForMonitoredServicesQueryParams, void>
+    path={`/monitored-service/reconciliation-required`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseIsReconciliationRequiredForMonitoredServicesProps = Omit<
+  UseGetProps<ResponseBoolean, unknown, IsReconciliationRequiredForMonitoredServicesQueryParams, void>,
+  'path'
+>
+
+/**
+ * check if a template referenced monitored service(s) require reconciliation
+ */
+export const useIsReconciliationRequiredForMonitoredServices = (
+  props: UseIsReconciliationRequiredForMonitoredServicesProps
+) =>
+  useGet<ResponseBoolean, unknown, IsReconciliationRequiredForMonitoredServicesQueryParams, void>(
+    `/monitored-service/reconciliation-required`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * check if a template referenced monitored service(s) require reconciliation
+ */
+export const isReconciliationRequiredForMonitoredServicesPromise = (
+  props: GetUsingFetchProps<ResponseBoolean, unknown, IsReconciliationRequiredForMonitoredServicesQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseBoolean, unknown, IsReconciliationRequiredForMonitoredServicesQueryParams, void>(
+    getConfig('cv/api'),
+    `/monitored-service/reconciliation-required`,
+    props,
+    signal
+  )
+
+export interface GetMonitoredServiceReconciliationStatusesQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  templateIdentifier: string
+  versionLabel: string
+  pageNumber?: number
+  pageSize?: number
+}
+
+export type GetMonitoredServiceReconciliationStatusesProps = Omit<
+  GetProps<
+    RestResponsePageMonitoredServiceReference,
+    unknown,
+    GetMonitoredServiceReconciliationStatusesQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * fetch reconciliation status for template referenced monitored services
+ */
+export const GetMonitoredServiceReconciliationStatuses = (props: GetMonitoredServiceReconciliationStatusesProps) => (
+  <Get<RestResponsePageMonitoredServiceReference, unknown, GetMonitoredServiceReconciliationStatusesQueryParams, void>
+    path={`/monitored-service/reconciliation-status`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetMonitoredServiceReconciliationStatusesProps = Omit<
+  UseGetProps<
+    RestResponsePageMonitoredServiceReference,
+    unknown,
+    GetMonitoredServiceReconciliationStatusesQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * fetch reconciliation status for template referenced monitored services
+ */
+export const useGetMonitoredServiceReconciliationStatuses = (
+  props: UseGetMonitoredServiceReconciliationStatusesProps
+) =>
+  useGet<
+    RestResponsePageMonitoredServiceReference,
+    unknown,
+    GetMonitoredServiceReconciliationStatusesQueryParams,
+    void
+  >(`/monitored-service/reconciliation-status`, { base: getConfig('cv/api'), ...props })
+
+/**
+ * fetch reconciliation status for template referenced monitored services
+ */
+export const getMonitoredServiceReconciliationStatusesPromise = (
+  props: GetUsingFetchProps<
+    RestResponsePageMonitoredServiceReference,
+    unknown,
+    GetMonitoredServiceReconciliationStatusesQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    RestResponsePageMonitoredServiceReference,
+    unknown,
+    GetMonitoredServiceReconciliationStatusesQueryParams,
+    void
+  >(getConfig('cv/api'), `/monitored-service/reconciliation-status`, props, signal)
+
 export interface GetMSSecondaryEventsDetailsQueryParams {
   accountId: string
   secondaryEventType: 'Downtime' | 'DataCollectionFailure' | 'Annotation' | 'ErrorBudgetReset' | 'SrmAnalysisImpact'
@@ -15169,6 +15301,105 @@ export const getAnomaliesSummaryPromise = (
     GetAnomaliesSummaryPathParams
   >(getConfig('cv/api'), `/monitored-service/${identifier}/anomaliesCount`, props, signal)
 
+export interface DetachMonitoredServiceFromTemplateQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface DetachMonitoredServiceFromTemplatePathParams {
+  identifier: string
+}
+
+export type DetachMonitoredServiceFromTemplateProps = Omit<
+  MutateProps<
+    ResponseBoolean,
+    unknown,
+    DetachMonitoredServiceFromTemplateQueryParams,
+    void,
+    DetachMonitoredServiceFromTemplatePathParams
+  >,
+  'path' | 'verb'
+> &
+  DetachMonitoredServiceFromTemplatePathParams
+
+/**
+ * delete template reference from monitored service
+ */
+export const DetachMonitoredServiceFromTemplate = ({
+  identifier,
+  ...props
+}: DetachMonitoredServiceFromTemplateProps) => (
+  <Mutate<
+    ResponseBoolean,
+    unknown,
+    DetachMonitoredServiceFromTemplateQueryParams,
+    void,
+    DetachMonitoredServiceFromTemplatePathParams
+  >
+    verb="PUT"
+    path={`/monitored-service/${identifier}/detach-template`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseDetachMonitoredServiceFromTemplateProps = Omit<
+  UseMutateProps<
+    ResponseBoolean,
+    unknown,
+    DetachMonitoredServiceFromTemplateQueryParams,
+    void,
+    DetachMonitoredServiceFromTemplatePathParams
+  >,
+  'path' | 'verb'
+> &
+  DetachMonitoredServiceFromTemplatePathParams
+
+/**
+ * delete template reference from monitored service
+ */
+export const useDetachMonitoredServiceFromTemplate = ({
+  identifier,
+  ...props
+}: UseDetachMonitoredServiceFromTemplateProps) =>
+  useMutate<
+    ResponseBoolean,
+    unknown,
+    DetachMonitoredServiceFromTemplateQueryParams,
+    void,
+    DetachMonitoredServiceFromTemplatePathParams
+  >(
+    'PUT',
+    (paramsInPath: DetachMonitoredServiceFromTemplatePathParams) =>
+      `/monitored-service/${paramsInPath.identifier}/detach-template`,
+    { base: getConfig('cv/api'), pathParams: { identifier }, ...props }
+  )
+
+/**
+ * delete template reference from monitored service
+ */
+export const detachMonitoredServiceFromTemplatePromise = (
+  {
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseBoolean,
+    unknown,
+    DetachMonitoredServiceFromTemplateQueryParams,
+    void,
+    DetachMonitoredServiceFromTemplatePathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseBoolean,
+    unknown,
+    DetachMonitoredServiceFromTemplateQueryParams,
+    void,
+    DetachMonitoredServiceFromTemplatePathParams
+  >('PUT', getConfig('cv/api'), `/monitored-service/${identifier}/detach-template`, props, signal)
+
 export interface SetHealthMonitoringFlagQueryParams {
   accountId: string
   orgIdentifier: string
@@ -15450,6 +15681,99 @@ export const getMonitoredServiceOverAllHealthScorePromise = (
     GetMonitoredServiceOverAllHealthScorePathParams
   >(getConfig('cv/api'), `/monitored-service/${identifier}/overall-health-score`, props, signal)
 
+export interface GetMonitoredServiceResolvedTemplateInputsQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  templateIdentifier: string
+  versionLabel: string
+}
+
+export interface GetMonitoredServiceResolvedTemplateInputsPathParams {
+  identifier: string
+}
+
+export type GetMonitoredServiceResolvedTemplateInputsProps = Omit<
+  GetProps<
+    ResponseString,
+    unknown,
+    GetMonitoredServiceResolvedTemplateInputsQueryParams,
+    GetMonitoredServiceResolvedTemplateInputsPathParams
+  >,
+  'path'
+> &
+  GetMonitoredServiceResolvedTemplateInputsPathParams
+
+/**
+ * get monitored service resolved template inputs
+ */
+export const GetMonitoredServiceResolvedTemplateInputs = ({
+  identifier,
+  ...props
+}: GetMonitoredServiceResolvedTemplateInputsProps) => (
+  <Get<
+    ResponseString,
+    unknown,
+    GetMonitoredServiceResolvedTemplateInputsQueryParams,
+    GetMonitoredServiceResolvedTemplateInputsPathParams
+  >
+    path={`/monitored-service/${identifier}/resolved-template-inputs`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetMonitoredServiceResolvedTemplateInputsProps = Omit<
+  UseGetProps<
+    ResponseString,
+    unknown,
+    GetMonitoredServiceResolvedTemplateInputsQueryParams,
+    GetMonitoredServiceResolvedTemplateInputsPathParams
+  >,
+  'path'
+> &
+  GetMonitoredServiceResolvedTemplateInputsPathParams
+
+/**
+ * get monitored service resolved template inputs
+ */
+export const useGetMonitoredServiceResolvedTemplateInputs = ({
+  identifier,
+  ...props
+}: UseGetMonitoredServiceResolvedTemplateInputsProps) =>
+  useGet<
+    ResponseString,
+    unknown,
+    GetMonitoredServiceResolvedTemplateInputsQueryParams,
+    GetMonitoredServiceResolvedTemplateInputsPathParams
+  >(
+    (paramsInPath: GetMonitoredServiceResolvedTemplateInputsPathParams) =>
+      `/monitored-service/${paramsInPath.identifier}/resolved-template-inputs`,
+    { base: getConfig('cv/api'), pathParams: { identifier }, ...props }
+  )
+
+/**
+ * get monitored service resolved template inputs
+ */
+export const getMonitoredServiceResolvedTemplateInputsPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseString,
+    unknown,
+    GetMonitoredServiceResolvedTemplateInputsQueryParams,
+    GetMonitoredServiceResolvedTemplateInputsPathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseString,
+    unknown,
+    GetMonitoredServiceResolvedTemplateInputsQueryParams,
+    GetMonitoredServiceResolvedTemplateInputsPathParams
+  >(getConfig('cv/api'), `/monitored-service/${identifier}/resolved-template-inputs`, props, signal)
+
 export interface GetMonitoredServiceScoresQueryParams {
   accountId: string
   orgIdentifier: string
@@ -15594,6 +15918,98 @@ export const getMSSecondaryEventsPromise = (
     GetMSSecondaryEventsQueryParams,
     GetMSSecondaryEventsPathParams
   >(getConfig('cv/api'), `/monitored-service/${identifier}/secondary-events`, props, signal)
+
+export interface UpdateMonitoredServiceFromYamlQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface UpdateMonitoredServiceFromYamlPathParams {
+  identifier: string
+}
+
+export type UpdateMonitoredServiceFromYamlProps = Omit<
+  MutateProps<
+    RestResponseMonitoredServiceResponse,
+    unknown,
+    UpdateMonitoredServiceFromYamlQueryParams,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateMonitoredServiceFromYamlPathParams
+
+/**
+ * update monitored service from yaml or template
+ */
+export const UpdateMonitoredServiceFromYaml = ({ identifier, ...props }: UpdateMonitoredServiceFromYamlProps) => (
+  <Mutate<
+    RestResponseMonitoredServiceResponse,
+    unknown,
+    UpdateMonitoredServiceFromYamlQueryParams,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlPathParams
+  >
+    verb="PUT"
+    path={`/monitored-service/${identifier}/yaml`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateMonitoredServiceFromYamlProps = Omit<
+  UseMutateProps<
+    RestResponseMonitoredServiceResponse,
+    unknown,
+    UpdateMonitoredServiceFromYamlQueryParams,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateMonitoredServiceFromYamlPathParams
+
+/**
+ * update monitored service from yaml or template
+ */
+export const useUpdateMonitoredServiceFromYaml = ({ identifier, ...props }: UseUpdateMonitoredServiceFromYamlProps) =>
+  useMutate<
+    RestResponseMonitoredServiceResponse,
+    unknown,
+    UpdateMonitoredServiceFromYamlQueryParams,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlPathParams
+  >(
+    'PUT',
+    (paramsInPath: UpdateMonitoredServiceFromYamlPathParams) => `/monitored-service/${paramsInPath.identifier}/yaml`,
+    { base: getConfig('cv/api'), pathParams: { identifier }, ...props }
+  )
+
+/**
+ * update monitored service from yaml or template
+ */
+export const updateMonitoredServiceFromYamlPromise = (
+  {
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseMonitoredServiceResponse,
+    unknown,
+    UpdateMonitoredServiceFromYamlQueryParams,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlPathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseMonitoredServiceResponse,
+    unknown,
+    UpdateMonitoredServiceFromYamlQueryParams,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlPathParams
+  >('PUT', getConfig('cv/api'), `/monitored-service/${identifier}/yaml`, props, signal)
 
 export interface GetMonitoredServiceChangeDetailsQueryParams {
   accountId: string

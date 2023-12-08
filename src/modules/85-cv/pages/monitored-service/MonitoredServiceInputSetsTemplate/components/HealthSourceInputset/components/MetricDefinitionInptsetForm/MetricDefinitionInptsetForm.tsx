@@ -12,6 +12,7 @@ import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import {
   getLabelByName,
+  getNestedEmptyFieldsWithPath,
   getNestedRuntimeInputs
 } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 import { spacingMedium } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.constants'
@@ -21,29 +22,40 @@ interface MetricDefinitionInptsetFormInterface {
   path: string
   metricDefinitions: any
   sourceType?: HealthSourceTypes
+  isReconcile?: boolean
 }
 
 export default function MetricDefinitionInptsetForm({
   metricDefinitions,
   path,
-  sourceType
+  sourceType,
+  isReconcile
 }: MetricDefinitionInptsetFormInterface): JSX.Element {
   const { getString } = useStrings()
   const { setFieldValue: onChange } = useFormikContext()
-  const runtimeMetricDefinitions = metricDefinitions.filter(
-    (metricDefinition: any, index: number) => getNestedRuntimeInputs(metricDefinition, [], `${path}.${index}`)?.length
+  const runtimeMetricDefinitions = metricDefinitions.filter((metricDefinition: any, index: number) =>
+    isReconcile
+      ? getNestedEmptyFieldsWithPath(metricDefinition, [], `${path}.${index}`)?.length
+      : getNestedRuntimeInputs(metricDefinition, [], `${path}.${index}`)?.length
   )
 
   return runtimeMetricDefinitions?.map((item: any, idx: number) => {
     const runtimeItems = getNestedRuntimeInputs(item, [], `${path}.${idx}`)
+    const emptyItems = getNestedEmptyFieldsWithPath(item, [], `${path}.${idx}`)
     const runTimeInputsPresent = Array.isArray(runtimeItems) && runtimeItems?.length
+    const emptyInputsPresent = Array.isArray(emptyItems) && emptyItems?.length
+
+    const { isPresent, items } = isReconcile
+      ? { isPresent: emptyInputsPresent, items: emptyItems }
+      : { isPresent: runTimeInputsPresent, items: runtimeItems }
+
     return (
       <div key={item?.metricName}>
         <Text font={'normal'} color={Color.BLACK} style={{ paddingBottom: spacingMedium }}>
           {getString('cv.monitoringSources.metricLabel')}: {item?.metricName || item?.name}
         </Text>
-        {runTimeInputsPresent
-          ? runtimeItems.map(input => {
+        {isPresent
+          ? items.map(input => {
               if (input.name === 'indexes') {
                 return (
                   <FormInput.MultiTextInput

@@ -674,6 +674,13 @@ monitoredServices:
   defineServiceEnvironmentDescription: To set up a monitored service for a particular application service, simply choose the service type and let Harness automatically create a Monitored Service by combining the names of the Service and Environment.
   serviceDescription: A Service represents your microservices and other workloads.
   environmentDescription: Location or system where the service is deployed (QA, Prod, etc).
+  ReconcileTab:
+    lastReconciled: Last reconciled
+    reconcileAll: Reconcile all that do not require input
+    monitoredServiceIdentifier: Monitored Service identifier
+    InputRequiredReconcile: Input required to reconcile
+    serviceAndenv: Service & Environment
+    noLinkedMS: No monitored service linked with template
 commonMonitoredServices:
   goTo: go to
   agentConfiguration: agent configuration
@@ -782,6 +789,9 @@ healthSource:
   defineHealthSource: Define Health Source
   deleteHealthSourceWarning: Are you sure you want to delete Health Source
   deleteHealthSource: Delete Health Source
+  detachHealthSourceWarning: Are you sure you want to detach Health Source
+  detachHealthSource: Detach Health Source
+  detachLabel: Detach
   invalidMetric: '{{ metricName }} metric is invalid'
   selectConnectionTypeInfo: Select the connection type to see your hosted entities directly in Harness
   awsRegionLabel: Select AWS Region

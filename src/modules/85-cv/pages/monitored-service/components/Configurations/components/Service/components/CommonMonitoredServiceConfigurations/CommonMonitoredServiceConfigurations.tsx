@@ -24,6 +24,7 @@ import { ModuleName } from 'framework/types/ModuleName'
 import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
+import { NGTemplateInfoConfig } from 'services/template-ng'
 import {
   getIsAgentConfigSectionHidden,
   getIsChangeSrcSectionHidden,
@@ -41,6 +42,8 @@ import MonitoredServiceNotificationsContainer from '../MonitoredServiceNotificat
 import Dependency from '../../../Dependency/Dependency'
 import { MonitoredServiceConfigurationsTabsEnum } from './CommonMonitoredServiceConfigurations.constants'
 import { handleTabChange } from './CommonMonitoredServiceConfigurations.utils'
+import MonitoredServiceReconcileList from '../MonitoredServiceReconcileList/MonitoredServiceReconcileList'
+import { ReconcileMonitoredServiceFormInMS } from '../MonitoredServiceReconcileList/ReconcileMonitoredServiceFormInMS'
 import css from './CommonMonitoredServiceConfigurations.module.scss'
 
 export interface CommonMonitoredServiceConfigurationsProps {
@@ -91,7 +94,11 @@ export default function CommonMonitoredServiceConfigurations(
   } = props
   const formik = useFormikContext<MonitoredServiceForm>()
   const { licenseInformation } = useLicenseStore()
-  const { CET_PLATFORM_MONITORED_SERVICE, CDS_NAV_2_0 } = useFeatureFlags()
+  const {
+    CET_PLATFORM_MONITORED_SERVICE,
+    CDS_NAV_2_0,
+    SRM_ENABLE_MS_TEMPLATE_RECONCILIATION: showInputsets
+  } = useFeatureFlags()
   const isCETLicensePresentAndActive = licenseInformation[ModuleName.CET]?.status === LICENSE_STATE_VALUES.ACTIVE
   const isChangeSrcSectionHidden = getIsChangeSrcSectionHidden(config, identifier)
   const isHealthSrcSectionHidden = getIsHealthSrcSectionHidden(config, identifier)
@@ -348,6 +355,27 @@ export default function CommonMonitoredServiceConfigurations(
                   identifier={identifier}
                 />
               </>
+            }
+          />
+        )}
+        {showInputsets && (
+          <Tab
+            disabled={areOtherTabsDisabled}
+            id={getString('inputSets.inputSetLabel')}
+            title={getString('inputSets.inputSetLabel')}
+            panel={
+              isTemplate ? (
+                <MonitoredServiceReconcileList templateValue={initialValues.templateValue as NGTemplateInfoConfig} />
+              ) : (
+                <Container width={'100%'} flex={{ justifyContent: 'center' }}>
+                  {formik.values.template && (
+                    <ReconcileMonitoredServiceFormInMS
+                      templateData={formik.values.template}
+                      monitoredServiceIdentifier={identifier}
+                    />
+                  )}
+                </Container>
+              )
             }
           />
         )}
