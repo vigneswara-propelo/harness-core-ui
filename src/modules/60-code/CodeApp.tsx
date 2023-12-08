@@ -8,7 +8,8 @@
 import React, { Suspense, lazy, useMemo, useState } from 'react'
 import { useHistory, useRouteMatch } from 'react-router-dom'
 import { ButtonProps, Container } from '@harness/uicore'
-import { omit } from 'lodash-es'
+import { omit, isEmpty } from 'lodash-es'
+import { GetDataError } from 'restful-react'
 import AppErrorBoundary from 'framework/utils/AppErrorBoundary/AppErrorBoundary'
 import { useStrings } from 'framework/strings'
 import SessionToken from 'framework/utils/SessionToken'
@@ -17,10 +18,18 @@ import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
 import { PermissionsRequest, usePermission } from '@rbac/hooks/usePermission'
 import { useCreateToken } from 'services/cd-ng'
 import type { ResponseString } from 'services/cd-ng'
+import { Failure, ResponsePipelineExecutionDetail, useGetExecutionDetailV2 } from 'services/pipeline-ng'
 import { useDeepCompareEffect } from '@common/hooks'
 import commonRoutes from '@common/RouteDefinitions'
 import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import routes, { routesV2 } from './RouteDefinitions'
+
+export interface CodeExecutionDataResponse {
+  data: ResponsePipelineExecutionDetail | null
+  refetch: () => Promise<void>
+  loading: boolean
+  error: GetDataError<Failure | Error> | null
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type RemoteViewProps = Record<string, any>
@@ -101,7 +110,8 @@ const CODERemoteComponentMounter: React.FC<{
           hooks={{
             useGetToken,
             usePermissionTranslate,
-            useGenerateToken
+            useGenerateToken,
+            useExecutionDataHook
           }}
           currentUserProfileURL={commonRoutes.toUserProfile({ accountId: params.accountId })}
         >
@@ -142,6 +152,34 @@ export function useGenerateToken(hash?: string, parentId?: string, deps?: any[])
     }
   }, [deps])
   return token
+}
+
+export function useExecutionDataHook(
+  executionIdentifier: string,
+  selectedStageId: string,
+  selectedStageExecutionId?: string,
+  selectedChildStageId?: string
+): CodeExecutionDataResponse | undefined {
+  const { params } = useRouteMatch<ProjectPathProps>()
+  const { data, refetch, loading, error } = useGetExecutionDetailV2({
+    planExecutionId: executionIdentifier,
+    queryParams: {
+      orgIdentifier: params.orgIdentifier,
+      projectIdentifier: params.projectIdentifier,
+      accountIdentifier: params.accountId,
+      stageNodeId: selectedStageId || undefined,
+      ...(selectedStageId !== selectedStageExecutionId &&
+        !isEmpty(selectedStageExecutionId) && {
+          stageNodeExecutionId: selectedStageExecutionId
+        }),
+      ...(!isEmpty(selectedChildStageId) && {
+        childStageNodeId: selectedChildStageId
+      })
+    },
+    debounce: 500
+  })
+
+  return { data, refetch, loading, error }
 }
 
 // return tooltip from here and can be more specific or generic

@@ -11,7 +11,7 @@ import { PermissionsProvider } from 'framework/rbac/PermissionsContext'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { usePermissionTranslate, useGenerateToken } from '../CodeApp'
+import { usePermissionTranslate, useGenerateToken, useExecutionDataHook } from '../CodeApp'
 import mocks from './permissionMocks.json'
 
 // eslint-disable-next-line jest-no-mock
@@ -214,6 +214,12 @@ describe('CodeApp hooks', () => {
   test('should mock usegeneratetoken', () => {
     renderHook(() => {
       const data = useGenerateToken('hash', 'user', true as any)
+      expect(data).toBe(undefined)
+    }, {})
+  })
+  test('should mock useExecutionDatahook', () => {
+    renderHook(() => {
+      const data = useExecutionDataHook('id123', 'id1234')
       expect(data).toBe(undefined)
     }, {})
   })
