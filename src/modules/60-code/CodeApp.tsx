@@ -23,6 +23,7 @@ import { useDeepCompareEffect } from '@common/hooks'
 import commonRoutes from '@common/RouteDefinitions'
 import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import routes, { routesV2 } from './RouteDefinitions'
+import { useLogsContentHook } from './hooks/useLogsContentHook'
 
 export interface CodeExecutionDataResponse {
   data: ResponsePipelineExecutionDetail | null
@@ -111,7 +112,8 @@ const CODERemoteComponentMounter: React.FC<{
             useGetToken,
             usePermissionTranslate,
             useGenerateToken,
-            useExecutionDataHook
+            useExecutionDataHook,
+            useLogsContentHook
           }}
           currentUserProfileURL={commonRoutes.toUserProfile({ accountId: params.accountId })}
         >

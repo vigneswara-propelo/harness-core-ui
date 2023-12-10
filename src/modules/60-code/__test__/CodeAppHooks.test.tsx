@@ -11,8 +11,10 @@ import { PermissionsProvider } from 'framework/rbac/PermissionsContext'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import * as pipelineNg from 'services/pipeline-ng'
 import { usePermissionTranslate, useGenerateToken, useExecutionDataHook } from '../CodeApp'
 import mocks from './permissionMocks.json'
+import { useLogsContentHook } from '../hooks/useLogsContentHook'
 
 // eslint-disable-next-line jest-no-mock
 jest.mock('react-router-dom', () => ({
@@ -218,11 +220,24 @@ describe('CodeApp hooks', () => {
     }, {})
   })
   test('should mock useExecutionDatahook', () => {
+    jest.spyOn(pipelineNg, 'useGetExecutionDetailV2').mockReturnValue({
+      loading: false,
+      error: {},
+      data: { pipelineExecutionSummary: { pipelineIdentifier: 'golint' } },
+      refetch: jest.fn()
+    } as any)
     renderHook(() => {
-      const data = useExecutionDataHook('id123', 'id1234')
+      const hookData = useExecutionDataHook('id123', 'id1234')
+      expect(hookData?.data).toBe({ pipelineExecutionSummary: { pipelineIdentifier: 'golint' } })
+    }, {})
+  })
+  test('should mock useLogDataHook', () => {
+    renderHook(() => {
+      const data = useLogsContentHook(['id12234'], [])
       expect(data).toBe(undefined)
     }, {})
   })
+
   afterEach(() => {
     jest.clearAllMocks()
   })
