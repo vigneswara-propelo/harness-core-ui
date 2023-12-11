@@ -18,7 +18,6 @@ import { NameIdDescriptionTags } from '@common/components'
 import type { ApprovalStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
 import { createTemplate, getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
-import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import { useQueryParams } from '@common/hooks/useQueryParams'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
@@ -105,21 +104,14 @@ export function ApprovalStageMinimalMode(props: ApprovalStageMinimalModeProps): 
               {getString('pipelineSteps.build.create.aboutYourStage')}
             </Text>
 
-            {isContextTypeNotStageTemplate(contextType) &&
-              (template ? (
-                <NameId
-                  identifierProps={{
-                    inputLabel: getString('stageNameLabel')
-                  }}
-                />
-              ) : (
-                <NameIdDescriptionTags
-                  formikProps={formikProps}
-                  identifierProps={{
-                    inputLabel: getString('stageNameLabel')
-                  }}
-                />
-              ))}
+            {isContextTypeNotStageTemplate(contextType) && (
+              <NameIdDescriptionTags
+                formikProps={formikProps}
+                identifierProps={{
+                  inputLabel: getString('stageNameLabel')
+                }}
+              />
+            )}
 
             {template ? (
               <Text

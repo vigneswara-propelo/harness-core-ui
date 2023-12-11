@@ -14,7 +14,7 @@ import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
-import { NameId, NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
+import { NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import type { CustomStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
@@ -103,21 +103,14 @@ export function CustomStageMinimalMode(props: CustomStageMinimalModeProps): Reac
               {getString('pipelineSteps.build.create.aboutYourStage')}
             </Text>
 
-            {isContextTypeNotStageTemplate(contextType) &&
-              (template ? (
-                <NameId
-                  identifierProps={{
-                    inputLabel: getString('stageNameLabel')
-                  }}
-                />
-              ) : (
-                <NameIdDescriptionTags
-                  formikProps={formikProps}
-                  identifierProps={{
-                    inputLabel: getString('stageNameLabel')
-                  }}
-                />
-              ))}
+            {isContextTypeNotStageTemplate(contextType) && (
+              <NameIdDescriptionTags
+                formikProps={formikProps}
+                identifierProps={{
+                  inputLabel: getString('stageNameLabel')
+                }}
+              />
+            )}
             <Button
               type="submit"
               intent="primary"

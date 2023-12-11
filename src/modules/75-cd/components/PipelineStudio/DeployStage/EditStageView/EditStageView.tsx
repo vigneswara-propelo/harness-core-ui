@@ -37,7 +37,7 @@ import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { AllNGVariables } from '@pipeline/utils/types'
-import { NameId, NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
+import { NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
@@ -402,6 +402,32 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
     return !template && shouldRenderDeploymentType() && isEmpty(selectedDeploymentType)
   }
 
+  const renderNameIdDescriptionComponent = (
+    formikProps: FormikProps<EditStageFormikType>,
+    removeMarginClass:
+      | false
+      | {
+          className: string
+        }
+  ): JSX.Element => {
+    return (
+      <NameIdDescriptionTags
+        formikProps={formikProps}
+        identifierProps={{
+          inputLabel: getString('stageNameLabel'),
+          isIdentifierEditable: !context && !isReadonly,
+          inputGroupProps: {
+            disabled: isReadonly,
+            ...removeMarginClass
+          }
+        }}
+        descriptionProps={{ disabled: isReadonly }}
+        tagsProps={{ disabled: isReadonly }}
+        className={css.nameIdDescriptionTags}
+      />
+    )
+  }
+
   return (
     <div className={stageCss.deployStage}>
       {!CDS_PIPELINE_STUDIO_UPGRADES && (
@@ -468,45 +494,11 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                       {context ? (
                         <div>
                           <Card className={stageCss.sectionCard}>
-                            <NameIdDescriptionTags
-                              formikProps={formikProps}
-                              identifierProps={{
-                                inputLabel: getString('stageNameLabel'),
-                                isIdentifierEditable: !context,
-                                inputGroupProps: {
-                                  disabled: isReadonly,
-                                  ...removeMarginClass
-                                }
-                              }}
-                              descriptionProps={{ disabled: isReadonly }}
-                              tagsProps={{ disabled: isReadonly }}
-                              className={css.nameIdDescriptionTags}
-                            />
+                            {renderNameIdDescriptionComponent(formikProps, removeMarginClass)}
                           </Card>
                         </div>
-                      ) : template ? (
-                        <NameId
-                          identifierProps={{
-                            inputLabel: getString('stageNameLabel'),
-                            isIdentifierEditable: !context && !isReadonly,
-                            inputGroupProps: { disabled: isReadonly }
-                          }}
-                        />
                       ) : (
-                        <NameIdDescriptionTags
-                          formikProps={formikProps}
-                          identifierProps={{
-                            inputLabel: getString('stageNameLabel'),
-                            isIdentifierEditable: !context && !isReadonly,
-                            inputGroupProps: {
-                              disabled: isReadonly,
-                              ...removeMarginClass
-                            }
-                          }}
-                          descriptionProps={{ disabled: isReadonly }}
-                          tagsProps={{ disabled: isReadonly }}
-                          className={css.nameIdDescriptionTags}
-                        />
+                        renderNameIdDescriptionComponent(formikProps, removeMarginClass)
                       )}
                     </>
                   )}

@@ -131,6 +131,12 @@ export const createTemplate = <T extends PipelineInfoConfig | StageElementConfig
   return produce({} as T, draft => {
     draft.name = defaultTo(data?.name, '')
     draft.identifier = defaultTo(data?.identifier, '')
+    if ((data as StageElementConfig)?.description) {
+      set(draft as StageElementConfig, 'description', (data as StageElementConfig).description)
+    }
+    if ((data as StageElementConfig)?.tags) {
+      set(draft as StageElementConfig, 'tags', (data as StageElementConfig).tags)
+    }
     if (template) {
       set(draft, 'template.templateRef', getScopeBasedTemplateRef(template))
       if (template.versionLabel) {

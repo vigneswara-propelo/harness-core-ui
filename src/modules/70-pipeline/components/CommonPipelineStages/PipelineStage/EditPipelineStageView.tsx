@@ -13,7 +13,7 @@ import type { FormikErrors } from 'formik'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
-import { NameId, NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
+import { NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { IdentifierSchemaWithoutHook, NameSchemaWithoutHook } from '@common/utils/Validation'
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import type { PipelineStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
@@ -158,31 +158,20 @@ export function EditPipelineStageView({
               >
                 {getString('pipelineSteps.build.create.aboutYourStage')}
               </Text>
-              {isContextTypeNotStageTemplate(contextType) &&
-                (template ? (
-                  <NameId
-                    identifierProps={{
-                      inputLabel: getString('stageNameLabel'),
-                      inputGroupProps: {
-                        disabled: isReadonly,
-                        placeholder: getString('pipeline.aboutYourStage.stageNamePlaceholder')
-                      }
-                    }}
-                  />
-                ) : (
-                  <NameIdDescriptionTags
-                    formikProps={formikProps}
-                    identifierProps={{
-                      inputLabel: getString('stageNameLabel'),
-                      inputGroupProps: {
-                        disabled: isReadonly,
-                        placeholder: getString('pipeline.aboutYourStage.stageNamePlaceholder')
-                      }
-                    }}
-                    descriptionProps={{ disabled: isReadonly }}
-                    tagsProps={{ disabled: isReadonly }}
-                  />
-                ))}
+              {isContextTypeNotStageTemplate(contextType) && (
+                <NameIdDescriptionTags
+                  formikProps={formikProps}
+                  identifierProps={{
+                    inputLabel: getString('stageNameLabel'),
+                    inputGroupProps: {
+                      disabled: isReadonly,
+                      placeholder: getString('pipeline.aboutYourStage.stageNamePlaceholder')
+                    }
+                  }}
+                  descriptionProps={{ disabled: isReadonly }}
+                  tagsProps={{ disabled: isReadonly }}
+                />
+              )}
               <Button
                 type="submit"
                 intent="primary"

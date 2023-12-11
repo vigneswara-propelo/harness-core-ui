@@ -37,36 +37,7 @@ const renderComponent = (template?: TemplateSummaryResponse): RenderResult => {
 }
 
 describe('Edit Pipeline stage view test', () => {
-  test('should onSubmit be called on submit button click when template is provided', async () => {
-    renderComponent({
-      accountId: 'accountId',
-      description: 'description',
-      identifier: 'identifier',
-      name: 'name',
-      orgIdentifier: 'orgIdentifier',
-      projectIdentifier: 'projectIdentifier'
-    })
-
-    userEvent.type(screen.getByRole('textbox'), 'stagename')
-    userEvent.click(screen.getByText('pipelineSteps.build.create.setupStage'))
-    await waitFor(() =>
-      expect(mockSubmit).toBeCalledWith(
-        {
-          stage: {
-            name: 'stagename',
-            identifier: 'stagename',
-            template: {
-              templateInputs: undefined,
-              templateRef: 'identifier'
-            }
-          }
-        },
-        'stagename'
-      )
-    )
-  })
-
-  test('should onSubmit be called on submit button click when no template is provided', async () => {
+  test('should onSubmit be called on submit button click', async () => {
     renderComponent()
 
     await userEvent.click(screen.getByText('pipelineSteps.build.create.setupStage'))

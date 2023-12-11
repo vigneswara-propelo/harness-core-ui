@@ -45,7 +45,7 @@ describe('Edit stage view test', () => {
     expect(container.getElementsByClassName('accordion')[0]).toBeInTheDocument()
   })
 
-  test('Should match snapshot when template is provided', () => {
+  test('Should show description, name, tags fields when template is provided', () => {
     const errorContextProvider = {
       state: {} as any,
       checkErrorsForTab: jest.fn().mockResolvedValue(Promise.resolve()),
@@ -54,7 +54,7 @@ describe('Edit stage view test', () => {
       submitFormsForTab: jest.fn()
     }
 
-    const { container } = render(
+    const { container, getByTestId } = render(
       <TestWrapper>
         <StageErrorContext.Provider value={errorContextProvider}>
           <EditStageView
@@ -67,13 +67,23 @@ describe('Edit stage view test', () => {
               orgIdentifier: 'orgIdentifier',
               projectIdentifier: 'projectIdentifier'
             }}
+            data={{
+              stage: {
+                identifier: 'stg1',
+                name: 'stg1',
+                description: 'stgDescription',
+                tags: {}
+              }
+            }}
           />
         </StageErrorContext.Provider>
       </TestWrapper>
     )
 
-    expect(container).toMatchSnapshot()
     expect(container.querySelector('[data-icon="template-library"]')).toBeInTheDocument()
+    expect(container.querySelector('input[name="name"]')).toHaveValue('stg1')
+    expect(container.querySelector('textarea[name="description"]')).toHaveValue('stgDescription')
+    expect(getByTestId('tags-edit')).toBeInTheDocument()
   })
 
   test('Should call submitFormsForTab when errorMap is not empty', async () => {

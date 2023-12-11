@@ -29,7 +29,7 @@ import { ConnectorInfoDTO, useGetConnector } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
 import type { ConnectorReferenceFieldProps } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
-import { NameId, NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
+import { NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import {
   getIdentifierFromValue,
   getScopeFromDTO,
@@ -272,31 +272,20 @@ export const EditStageView: React.FC<EditStageView> = ({
               >
                 {getString('pipelineSteps.build.create.aboutYourStage')}
               </Text>
-              {isContextTypeNotStageTemplate(contextType) &&
-                (template ? (
-                  <NameId
-                    identifierProps={{
-                      inputLabel: getString('stageNameLabel'),
-                      inputGroupProps: {
-                        disabled: isReadonly,
-                        placeholder: getString('pipeline.aboutYourStage.stageNamePlaceholder')
-                      }
-                    }}
-                  />
-                ) : (
-                  <NameIdDescriptionTags
-                    formikProps={formikProps}
-                    identifierProps={{
-                      inputLabel: getString('stageNameLabel'),
-                      inputGroupProps: {
-                        disabled: isReadonly,
-                        placeholder: getString('pipeline.aboutYourStage.stageNamePlaceholder')
-                      }
-                    }}
-                    descriptionProps={{ disabled: isReadonly }}
-                    tagsProps={{ disabled: isReadonly }}
-                  />
-                ))}
+              {isContextTypeNotStageTemplate(contextType) && (
+                <NameIdDescriptionTags
+                  formikProps={formikProps}
+                  identifierProps={{
+                    inputLabel: getString('stageNameLabel'),
+                    inputGroupProps: {
+                      disabled: isReadonly,
+                      placeholder: getString('pipeline.aboutYourStage.stageNamePlaceholder')
+                    }
+                  }}
+                  descriptionProps={{ disabled: isReadonly }}
+                  tagsProps={{ disabled: isReadonly }}
+                />
+              )}
               {template ? (
                 <Text
                   icon={'template-library'}

@@ -228,9 +228,11 @@ describe('Approval Stage minimal view when a template is used', () => {
           stage: {
             name: 'stagename',
             identifier: 'stagename',
+            tags: {},
             template: {
               templateRef: 'Approval_Stage_Test',
-              versionLabel: 'v1'
+              versionLabel: 'v1',
+              templateInputs: undefined
             }
           }
         },
