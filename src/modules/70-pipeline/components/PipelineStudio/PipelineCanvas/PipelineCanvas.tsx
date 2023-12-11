@@ -916,12 +916,12 @@ export function PipelineCanvas({
               openRunPipelineModal={openRunPipelineModal}
             />
             {remoteFetchError ? (
-              handleFetchFailure(
-                'pipeline',
-                pipelineIdentifier,
-                !isGitSyncEnabled && storeType !== StoreType.REMOTE,
-                remoteFetchError as unknown as Error
-              )
+              handleFetchFailure({
+                entityType: 'pipeline',
+                identifier: pipelineIdentifier,
+                isInline: !isGitSyncEnabled && storeType !== StoreType.REMOTE,
+                fetchError: remoteFetchError as unknown as Error
+              })
             ) : (
               <Container className={css.builderContainer}>
                 {isYaml ? <PipelineYamlView /> : pipeline.template ? <TemplatePipelineBuilder /> : <StageBuilder />}

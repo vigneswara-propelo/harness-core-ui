@@ -620,12 +620,25 @@ export const savePipeline = (
   isEdit = false,
   pipelineMetadata: PipelineMetadata
 ): Promise<Failure | undefined> => {
+  const git_details: PipelineUpdateRequestBody['git_details'] = {
+    base_branch: params.baseBranch,
+    branch_name: params.branch,
+    commit_message: params.commitMsg,
+    connector_ref: params.connectorRef,
+    last_commit_id: params.lastCommitId,
+    last_object_id: params.lastObjectId,
+    repo_name: params.repoName,
+    store_type: params.storeType,
+    file_path: params.filePath
+  } as PipelineUpdateRequestBody['git_details']
+
   const body: PipelineUpdateRequestBody = {
     identifier: pipelineMetadata?.identifier,
     name: pipelineMetadata?.name,
     tags: pipelineMetadata?.tags,
     description: pipelineMetadata?.description,
-    pipeline_yaml: yamlStringify(omit(pipeline, ...pipelineMetadataKeys))
+    pipeline_yaml: yamlStringify(omit(pipeline, ...pipelineMetadataKeys)),
+    git_details
   }
 
   return isEdit

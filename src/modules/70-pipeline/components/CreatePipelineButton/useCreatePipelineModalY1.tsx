@@ -203,7 +203,7 @@ const useCreatePipelineModalY1 = (): UseCreatePipelineModalY1Return => {
             branch: branch || '',
             connectorRef: defaultTo(connectorRef, ''),
             storeType: getPipelineStoreType(),
-            filePath: ''
+            filePath: defaultTo(gitDetails?.filePath, '')
           })}
           closeModal={onCloseCreate}
           gitDetails={{ remoteFetchFailed: false } as IGitContextFormProps}

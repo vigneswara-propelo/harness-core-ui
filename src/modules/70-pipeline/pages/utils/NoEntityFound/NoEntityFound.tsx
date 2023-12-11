@@ -29,6 +29,7 @@ import type { Error, Failure, GitErrorMetadataDTO, ResponseMessage } from 'servi
 import type { Error as TemplateError } from 'services/template-ng'
 import GenericErrorHandler from '@common/pages/GenericErrorHandler/GenericErrorHandler'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { FetchPipelineProps } from '@modules/70-pipeline/components/PipelineStudio/PipelineContext/PipelineAsyncActions'
 import noEntityFoundImage from './images/no-entity-found.svg'
 import css from './NoEntityFound.module.scss'
 
@@ -44,6 +45,14 @@ interface NoEntityFoundProps {
   entityConnectorRef?: string
   errorPlacement?: ErrorPlacement
   onBranchChange?: (branch: string) => void
+  fetchPipelineCallback?: (args?: FetchPipelineProps | undefined) => void
+}
+interface HandleFetchFailureParams {
+  entityType: NoEntityFoundProps['entityType']
+  identifier: string
+  isInline: boolean
+  fetchError?: Error
+  fetchPipelineCallback?: (args?: FetchPipelineProps | undefined) => void
 }
 
 const entityTypeLabelMapping = {
@@ -68,7 +77,8 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
     gitDetails,
     errorPlacement = ErrorPlacement.TOP,
     entityConnectorRef,
-    onBranchChange
+    onBranchChange,
+    fetchPipelineCallback
   } = props
   const { repoIdentifier, branch, versionLabel, connectorRef, storeType, repoName } =
     useQueryParams<TemplateStudioQueryParams>()
@@ -77,8 +87,8 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
   const { supportingGitSimplification } = useAppStore()
   const { replaceQueryParams, updateQueryParams } =
     useUpdateQueryParams<Partial<InputSetGitQueryParams & InfrastructureGitQueryParams>>()
-  const { fetchPipeline } = usePipelineContext()
-
+  const { fetchPipeline: fetchPipelineFromContext } = usePipelineContext()
+  const fetchPipeline = fetchPipelineCallback ?? fetchPipelineFromContext
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
 
   const { accountId, projectIdentifier, orgIdentifier, module, templateType } = useParams<
@@ -167,7 +177,7 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
         }
       },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [repoIdentifier, branch, identifier, orgIdentifier, projectIdentifier, accountId, module]
+    [repoIdentifier, branch, identifier, orgIdentifier, projectIdentifier, accountId, module, fetchPipeline]
   )
 
   const Error = !isEmpty(errorObj?.responseMessages) && (
@@ -218,17 +228,25 @@ export const handleEntityNotFound = (fetchError?: Error): JSX.Element => {
   )
 }
 
-export const handleFetchFailure = (
-  entityType: NoEntityFoundProps['entityType'],
-  identifier: string,
-  isInline: boolean,
-  fetchError?: Error
-): JSX.Element => {
+export const handleFetchFailure = ({
+  entityType,
+  identifier,
+  isInline,
+  fetchError,
+  fetchPipelineCallback
+}: HandleFetchFailureParams): JSX.Element => {
   if (isInline || fetchError?.code === 'ENTITY_NOT_FOUND') {
     return handleEntityNotFound(fetchError)
   } else {
     // This is for remote entities with support to change branch
-    return <NoEntityFound identifier={identifier} entityType={entityType} errorObj={fetchError} />
+    return (
+      <NoEntityFound
+        identifier={identifier}
+        entityType={entityType}
+        errorObj={fetchError}
+        fetchPipelineCallback={fetchPipelineCallback}
+      />
+    )
   }
 }
 

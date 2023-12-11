@@ -47,15 +47,12 @@ import type { Error } from 'services/pipeline-ng'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useQueryParams } from '@common/hooks'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-// TODO start
 import type { Pipeline } from '@pipeline/utils/types'
 import { ValidationBadge } from '@pipeline/components/PipelineStudio/AsyncValidation/ValidationBadge'
-import StudioGitPopover from '@pipeline/components/PipelineStudio/StudioGitPopover'
 import {
   EntityCachedCopy,
   EntityCachedCopyHandle
 } from '@pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
-// TODO end
 import { useYamlVersion } from '@pipeline/common/hooks/useYamlVersion'
 import { VersionTag } from '@pipeline/common/components/VersionTag/VersionTag'
 import { usePipelineContextY1 } from '../PipelineContext/PipelineContextY1'
@@ -65,7 +62,6 @@ import css from './PipelineCanvasY1.module.scss'
 
 export interface PipelineCanvasHeaderProps {
   isPipelineRemote: boolean
-  isGitSyncEnabled: boolean
   disableVisualView: boolean
   onGitBranchChange(selectedFilter: GitFilterScope, defaultSelected?: boolean): void
   setModalMode(mode: 'edit' | 'create'): void
@@ -82,7 +78,6 @@ function getStudioSelectedView(isYaml: boolean, disableVisualView: boolean): Sel
 export function PipelineCanvasHeaderY1(props: PipelineCanvasHeaderProps): React.ReactElement {
   const {
     isPipelineRemote,
-    isGitSyncEnabled,
     onGitBranchChange,
     setModalMode,
     setYamlError,
@@ -329,21 +324,7 @@ export function PipelineCanvasHeaderY1(props: PipelineCanvasHeaderProps): React.
                       <TagsPopover tags={tags} />
                     </Container>
                   )}
-                  {description && (
-                    <Container className={cx({ [css.tagsContainer]: isGitSyncEnabled })}>
-                      <DescriptionPopover text={description} />
-                    </Container>
-                  )}
-                  {isGitSyncEnabled && (
-                    <StudioGitPopover
-                      gitDetails={gitDetails}
-                      identifier={pipelineIdentifier}
-                      isReadonly={isReadonly}
-                      entityData={{ ...pipeline, versionLabel: '', type: 'Step' }} // Just to avoid type issues
-                      onGitBranchChange={onGitBranchChange}
-                      entityType={'Pipeline'}
-                    />
-                  )}
+                  {description && <DescriptionPopover text={description} />}
                   {isYaml ? null : (
                     <Button
                       variation={ButtonVariation.ICON}

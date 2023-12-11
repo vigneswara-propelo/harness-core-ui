@@ -75,6 +75,7 @@ import useTemplateErrors from '@pipeline/components/TemplateErrors/useTemplateEr
 import { AccessControlCheckError /*, ErrorNodeSummary, YamlSchemaErrorDTO */ } from 'services/cd-ng'
 import usePipelineErrors from '@pipeline/components/PipelineStudio/PipelineCanvas/PipelineErrors/usePipelineErrors'
 // TODO end
+import { Status } from '@modules/10-common/utils/Constants'
 import { savePipeline, usePipelineContextY1 } from '../../PipelineContext/PipelineContextY1'
 // TODO add usePipelineErrors
 import { pipelineMetadataKeys } from '../../PipelineContext/PipelineAsyncActionsY1'
@@ -353,7 +354,9 @@ function SavePipelinePopoverY1(
         }
       }
     }
-    return { status: response?.status, nextCallback: () => publishPipeline(newPipelineId, updatedGitDetails) }
+    // Since API response does not include status, added additional condition to interpret SUCCESS if identifier is received
+    const status = (response as CreatePipelineOkResponse)?.content?.identifier ? Status.SUCCESS : undefined
+    return { status: response?.status || status, nextCallback: () => publishPipeline(newPipelineId, updatedGitDetails) }
   }
 
   const saveAndPublishWithGitInfo = async (
@@ -417,8 +420,8 @@ function SavePipelinePopoverY1(
           isEditing: pipelineIdentifier !== DefaultNewPipelineId,
           resource: {
             type: 'Pipelines',
-            name: latestPipeline.name,
-            identifier: latestPipeline.identifier,
+            name: pipelineMetadata.name,
+            identifier: pipelineMetadata.identifier,
             gitDetails: gitDetails ?? {},
             storeMetadata: storeMetadata?.storeType ? storeMetadata : undefined
           },

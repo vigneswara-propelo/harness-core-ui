@@ -105,12 +105,7 @@ const runModalProps: IDialogProps = {
 }
 
 export function PipelineCanvasY1(): React.ReactElement {
-  const {
-    isGitSyncEnabled: isGitSyncEnabledForProject,
-    gitSyncEnabledOnlyForFF,
-    supportingGitSimplification
-  } = useAppStore()
-  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+  const { supportingGitSimplification } = useAppStore()
   const {
     state,
     updatePipeline,
@@ -184,12 +179,7 @@ export function PipelineCanvasY1(): React.ReactElement {
         if (updatedGitDetails) {
           updateGitDetails(updatedGitDetails, latestPipeline).then(() => {
             if (updatedGitDetails) {
-              if (isGitSyncEnabled) {
-                updateQueryParams(
-                  { repoIdentifier: updatedGitDetails.repoIdentifier, branch: updatedGitDetails.branch },
-                  { skipNulls: true }
-                )
-              } else if (supportingGitSimplification && updatedStoreMetadata?.storeType === StoreType.REMOTE) {
+              if (supportingGitSimplification && updatedStoreMetadata?.storeType === StoreType.REMOTE) {
                 updateQueryParams(
                   {
                     connectorRef: updatedStoreMetadata.connectorRef,
@@ -206,7 +196,7 @@ export function PipelineCanvasY1(): React.ReactElement {
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isGitSyncEnabled, routerState, supportingGitSimplification, updateQueryParams, state.isInitialized])
+  }, [routerState, supportingGitSimplification, updateQueryParams, state.isInitialized])
 
   // For remote pipeline queryParam will always as branch as selected branch except coming from list view
   // While opening studio from list view, selected branch can be any branch as in pipeline response
@@ -278,11 +268,11 @@ export function PipelineCanvasY1(): React.ReactElement {
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
 
   React.useEffect(() => {
-    if (isGitSyncEnabled || isPipelineRemote) {
+    if (isPipelineRemote) {
       openPipelineErrorsModal(yamlSchemaErrorWrapper?.schemaErrors)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [yamlSchemaErrorWrapper, isGitSyncEnabled, isPipelineRemote])
+  }, [yamlSchemaErrorWrapper, isPipelineRemote])
 
   const { openDialog: openUnsavedChangesDialog } = useConfirmationDialog({
     cancelButtonText: getString('common.stayOnThisPage'),
@@ -331,7 +321,7 @@ export function PipelineCanvasY1(): React.ReactElement {
       orgIdentifier,
       projectIdentifier
     },
-    lazy: isGitSyncEnabled || pipelineIdentifier !== DefaultNewPipelineId
+    lazy: pipelineIdentifier !== DefaultNewPipelineId
   })
 
   const getPipelineStoreType = (): StoreMetadata['storeType'] => {
@@ -353,10 +343,8 @@ export function PipelineCanvasY1(): React.ReactElement {
   const dialogWidth = React.useMemo<number | undefined>(() => {
     if (supportingGitSimplification) {
       return 800
-    } else if (isGitSyncEnabled) {
-      return 614
     }
-  }, [supportingGitSimplification, isGitSyncEnabled])
+  }, [supportingGitSimplification])
 
   const [showModal, hideModal] = useModalHook(() => {
     // TODO
@@ -399,7 +387,6 @@ export function PipelineCanvasY1(): React.ReactElement {
     //}
   }, [
     supportingGitSimplification,
-    isGitSyncEnabled,
     loadingSetting,
     getSettingValue(gitXSetting, SettingType.DEFAULT_STORE_TYPE_FOR_ENTITIES),
     getSettingValue(gitXSetting, SettingType.ENFORCE_GIT_EXPERIENCE),
@@ -522,12 +509,7 @@ export function PipelineCanvasY1(): React.ReactElement {
         }
         updateGitDetails(updatedGitDetails).then(() => {
           if (updatedGitDetails) {
-            if (isGitSyncEnabled) {
-              updateQueryParams(
-                { repoIdentifier: updatedGitDetails.repoIdentifier, branch: updatedGitDetails.branch },
-                { skipNulls: true }
-              )
-            } else if (supportingGitSimplification && currStoreMetadata?.storeType === StoreType.REMOTE) {
+            if (supportingGitSimplification && currStoreMetadata?.storeType === StoreType.REMOTE) {
               updateQueryParams(
                 {
                   connectorRef: currStoreMetadata.connectorRef,
@@ -574,11 +556,7 @@ export function PipelineCanvasY1(): React.ReactElement {
   }
 
   React.useEffect(() => {
-    if (
-      useTemplate &&
-      (!isGitSyncEnabled || !isEmpty(gitDetails)) &&
-      (!supportingGitSimplification || !isEmpty(storeMetadata))
-    ) {
+    if (useTemplate && !isEmpty(gitDetails) && (!supportingGitSimplification || !isEmpty(storeMetadata))) {
       getPipelineTemplate()
         .catch(_ => {
           // Do nothing.. user cancelled template selection
@@ -587,7 +565,7 @@ export function PipelineCanvasY1(): React.ReactElement {
           setUseTemplate(false)
         })
     }
-  }, [useTemplate, gitDetails, isGitSyncEnabled, storeMetadata, supportingGitSimplification])
+  }, [useTemplate, gitDetails, storeMetadata, supportingGitSimplification])
 
   const [inputSetYaml, setInputSetYaml] = React.useState('')
 
@@ -790,7 +768,7 @@ export function PipelineCanvasY1(): React.ReactElement {
     )
   }
 
-  if (pipelineSummaryError || (templateError?.data && !isGitSyncEnabled && !isPipelineRemote)) {
+  if (pipelineSummaryError || (templateError?.data && !isPipelineRemote)) {
     return (
       <GenericErrorHandler
         errStatusCode={pipelineSummaryError ? (pipelineSummaryError as Error)?.code : templateError?.status}
@@ -801,8 +779,10 @@ export function PipelineCanvasY1(): React.ReactElement {
     )
   }
 
-  if (templateError?.data && isEmpty(pipeline) && (isGitSyncEnabled || isPipelineRemote)) {
-    return <NoEntityFound identifier={pipelineIdentifier} entityType={'pipeline'} />
+  if (templateError?.data && isEmpty(pipeline) && isPipelineRemote) {
+    return (
+      <NoEntityFound identifier={pipelineIdentifier} entityType={'pipeline'} fetchPipelineCallback={fetchPipeline} />
+    )
   }
 
   return (
@@ -845,7 +825,6 @@ export function PipelineCanvasY1(): React.ReactElement {
           <Layout.Vertical height={'100%'}>
             <PipelineCanvasHeaderY1
               isPipelineRemote={!!isPipelineRemote}
-              isGitSyncEnabled={!!isGitSyncEnabled}
               onGitBranchChange={onGitBranchChange}
               setModalMode={setModalMode}
               setYamlError={setYamlError}
@@ -855,12 +834,13 @@ export function PipelineCanvasY1(): React.ReactElement {
               openRunPipelineModal={openRunPipelineModal}
             />
             {remoteFetchError ? (
-              handleFetchFailure(
-                'pipeline',
-                pipelineIdentifier,
-                !isGitSyncEnabled && storeType !== StoreType.REMOTE,
-                remoteFetchError as unknown as Error
-              )
+              handleFetchFailure({
+                entityType: 'pipeline',
+                identifier: pipelineIdentifier,
+                isInline: storeType !== StoreType.REMOTE,
+                fetchError: remoteFetchError as unknown as Error,
+                fetchPipelineCallback: fetchPipeline
+              })
             ) : (
               <Container className={css.builderContainer}>
                 {pipelineMetadata.identifier !== DefaultNewPipelineId && <PipelineYamlViewY1 />}
