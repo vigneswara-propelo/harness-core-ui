@@ -113,7 +113,7 @@ export function InputSetFormHeader(props: InputSetFormHeaderProps): React.ReactE
   const inputCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
 
   function showReloadFromGitOption(): boolean {
-    return Boolean(inputSet.storeType === StoreType.REMOTE)
+    return Boolean(inputSet.storeType === StoreType.REMOTE) && !inputSet.cacheResponse?.isSyncEnabled
   }
 
   function handleReloadFromGitClick(): void {

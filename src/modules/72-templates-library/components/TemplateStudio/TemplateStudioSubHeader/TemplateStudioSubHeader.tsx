@@ -62,7 +62,15 @@ function TemplateStudioSubHeader(
 ): React.ReactElement {
   const { onViewChange, getErrors, onGitBranchChange, onReconcile } = props
   const { state, fetchTemplate, view, isReadonly } = React.useContext(TemplateContext)
-  const { template, originalTemplate, isUpdated, entityValidityDetails, templateYamlError, storeMetadata } = state
+  const {
+    template,
+    originalTemplate,
+    isUpdated,
+    entityValidityDetails,
+    templateYamlError,
+    storeMetadata,
+    cacheResponseMetadata: cacheResponse
+  } = state
   const { getString } = useStrings()
   const { templateIdentifier, accountId, projectIdentifier, orgIdentifier } = useParams<TemplateStudioPathProps>()
   const isYaml = view === SelectedView.YAML
@@ -154,7 +162,7 @@ function TemplateStudioSubHeader(
                       <Popover className={Classes.DARK} position={Position.LEFT}>
                         <Button variation={ButtonVariation.ICON} icon="Options" aria-label="pipeline menu actions" />
                         <Menu style={{ backgroundColor: 'unset' }}>
-                          {isPipelineRemote ? (
+                          {isPipelineRemote && !cacheResponse.isSyncEnabled ? (
                             <RbacMenuItem
                               icon="repeat"
                               text={getString('common.reloadFromGit')}

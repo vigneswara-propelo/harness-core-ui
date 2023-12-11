@@ -125,7 +125,7 @@ function EntityCachedCopyInner(
         )}`}</Text>
       )}
       <Layout.Horizontal padding={{ top: 'medium' }}>
-        {inlineReload && (
+        {inlineReload && !get(cacheResponse, 'isSyncEnabled', false) && (
           <Button
             variation={ButtonVariation.PRIMARY}
             text={getString('common.reload')}
