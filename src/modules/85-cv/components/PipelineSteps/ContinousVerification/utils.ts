@@ -279,8 +279,7 @@ export function doesHealthSourceHasQueries(healthSource: any): boolean {
   return healthSource?.spec?.queries !== undefined
 }
 
-export const getDurationOptions = (enableVerifyStepLongDuration?: boolean): SelectOption[] =>
-  enableVerifyStepLongDuration ? [...durationOptions, ...extendedDurationOptions] : durationOptions
+export const getDurationOptions = (): SelectOption[] => [...durationOptions, ...extendedDurationOptions]
 
 export const setCommaSeperatedList = (
   value: string,

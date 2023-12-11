@@ -288,7 +288,7 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
   })
 
   describe('Node filtering', () => {
-    test('Should not render node filtering if both regex and CD nodes feature flag is disabled', () => {
+    test('Should render node filtering if both regex and CD nodes feature flag is disabled', () => {
       render(
         <TestWrapper
           defaultFeatureFlagValues={{
@@ -304,7 +304,7 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
         </TestWrapper>
       )
 
-      expect(screen.queryByTestId(/NodeFilteringFields-panel/)).not.toBeInTheDocument()
+      expect(screen.queryByTestId(/NodeFilteringFields-panel/)).toBeInTheDocument()
     })
     test('Should render node filtering if regex feature flag is enabled', async () => {
       render(
@@ -425,7 +425,7 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
       )
     })
 
-    test('Should not render optional accordion if Auto type is selected and nodes from CD FF is disabled', async () => {
+    test('Should render optional accordion if Auto type is selected and nodes from CD FF is disabled', async () => {
       render(
         <TestWrapper
           defaultFeatureFlagValues={{
@@ -441,10 +441,10 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
         </TestWrapper>
       )
 
-      expect(screen.queryByTestId(/NodeFilteringFields-panel/)).not.toBeInTheDocument()
+      expect(screen.queryByTestId(/NodeFilteringFields-panel/)).toBeInTheDocument()
     })
 
-    test('Should not render node filtering if unsupported deployment type is chosen', () => {
+    test('Should render node filtering if SimpleVerification deployment type is chosen', () => {
       render(
         <TestWrapper
           defaultFeatureFlagValues={{
@@ -463,18 +463,14 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
         </TestWrapper>
       )
 
-      expect(screen.queryByTestId(/NodeFilteringFields-panel/)).not.toBeInTheDocument()
+      expect(screen.queryByTestId(/NodeFilteringFields-panel/)).toBeInTheDocument()
     })
   })
 
   describe('Fail if any custom metrics fails', () => {
-    test('Should render optional accordion when CV_UI_DISPLAY_FAIL_IF_ANY_CUSTOM_METRIC_IN_NO_ANALYSIS feature flag is enabled', async () => {
+    test('Should render optional accordion', async () => {
       render(
-        <TestWrapper
-          defaultFeatureFlagValues={{
-            CV_UI_DISPLAY_FAIL_IF_ANY_CUSTOM_METRIC_IN_NO_ANALYSIS: true
-          }}
-        >
+        <TestWrapper>
           <Formik initialValues={formikMockValuesWithSimpleVerification.values} onSubmit={jest.fn()}>
             <div>
               <SelectVerificationType
@@ -493,27 +489,6 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
       await waitFor(() =>
         expect(document.querySelector('input[name="spec.spec.failIfAnyCustomMetricInNoAnalysis"]')).toBeInTheDocument()
       )
-    })
-
-    test('Should not render optional accordion when CV_UI_DISPLAY_FAIL_IF_ANY_CUSTOM_METRIC_IN_NO_ANALYSIS and other feature flag is disabled', () => {
-      render(
-        <TestWrapper
-          defaultFeatureFlagValues={{
-            CV_UI_DISPLAY_FAIL_IF_ANY_CUSTOM_METRIC_IN_NO_ANALYSIS: false
-          }}
-        >
-          <Formik initialValues={formikMockValuesWithSimpleVerification.values} onSubmit={jest.fn()}>
-            <div>
-              <SelectVerificationType
-                allowableTypes={[MultiTypeInputType.FIXED]}
-                formik={formikMockValuesWithSimpleVerification}
-              />
-            </div>
-          </Formik>
-        </TestWrapper>
-      )
-
-      expect(screen.queryByTestId(/NodeFilteringFields-panel/)).not.toBeInTheDocument()
     })
   })
 

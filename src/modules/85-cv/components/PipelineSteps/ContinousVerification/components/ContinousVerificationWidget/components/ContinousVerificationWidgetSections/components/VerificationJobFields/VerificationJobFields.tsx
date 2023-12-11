@@ -77,8 +77,7 @@ export function VerificationSensitivity(props: BaseFieldProps): JSX.Element {
 }
 
 export function Duration(props: BaseFieldProps): JSX.Element {
-  const extendedDurationFlag = useFeatureFlag(FeatureFlag.SRM_ENABLE_VERIFY_STEP_LONG_DURATION)
-  const selectProps = useMemo(() => ({ items: getDurationOptions(extendedDurationFlag) }), [extendedDurationFlag])
+  const selectProps = useMemo(() => ({ items: getDurationOptions() }), [])
 
   const { zIndex, label, name, expressions, formik, isSimpleDropdown, allowableTypes } = props
   const style: CSSProperties = useMemo(() => ({ zIndex: zIndex ?? 8 }), [zIndex]) as CSSProperties

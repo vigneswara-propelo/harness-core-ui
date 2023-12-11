@@ -14,25 +14,3 @@ export function isValidNodeFilteringType(type?: string): boolean {
 
   return NodeFilteringEnabledTypes.includes(type as VerificationTypes)
 }
-
-export function canShowNodeFilterOptions({
-  isRegexNodeFilterFFEnabled,
-  isFilterFromCDEnabled,
-  analysisType,
-  isFailOnNoCustomMetricsAnalysisEnabled
-}: {
-  isRegexNodeFilterFFEnabled?: boolean
-  isFilterFromCDEnabled?: boolean
-  isFailOnNoCustomMetricsAnalysisEnabled?: boolean
-  analysisType?: string
-}): boolean {
-  if (analysisType === VerificationTypes.Auto && !isFilterFromCDEnabled && !isFailOnNoCustomMetricsAnalysisEnabled) {
-    return false
-  }
-
-  if (isFailOnNoCustomMetricsAnalysisEnabled) {
-    return true
-  }
-
-  return Boolean((isRegexNodeFilterFFEnabled || isFilterFromCDEnabled) && isValidNodeFilteringType(analysisType))
-}

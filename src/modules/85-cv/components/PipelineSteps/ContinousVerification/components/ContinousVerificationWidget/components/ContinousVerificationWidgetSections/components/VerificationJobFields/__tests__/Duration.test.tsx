@@ -76,9 +76,9 @@ describe('Verify Duration component', () => {
     await act(() => {
       fireEvent.click(durationDropdown)
     })
-    const durationList = [...durationOptions]
+    const durationList = [...durationOptions, ...extendedDurationOptions]
     await waitFor(() => {
-      expect(document.querySelectorAll('ul.bp3-menu li').length).toEqual(4)
+      expect(document.querySelectorAll('ul.bp3-menu li').length).toEqual(8)
       document.querySelectorAll('ul.bp3-menu li').forEach((item, index) => {
         expect(item.textContent).toEqual(durationList[index]?.label)
       })

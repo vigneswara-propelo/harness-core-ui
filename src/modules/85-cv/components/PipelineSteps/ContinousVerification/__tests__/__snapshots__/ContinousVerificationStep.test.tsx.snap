@@ -1432,6 +1432,38 @@ exports[`Test ContinousVerificationStep Step should render editView when current
             </div>
           </div>
         </div>
+        <div
+          class="Accordion--accordion"
+        >
+          <div
+            class="Accordion--panel"
+            data-open="false"
+            data-testid="NodeFilteringFields-panel"
+          >
+            <div
+              class="Accordion--summary"
+              data-testid="NodeFilteringFields-summary"
+            >
+              <div
+                class="Accordion--label"
+              >
+                projectsOrgs.optional
+              </div>
+              <div
+                class="Accordion--chevron"
+              />
+            </div>
+            <div
+              class="bp3-collapse Accordion--collapse"
+            >
+              <div
+                aria-hidden="false"
+                class="bp3-collapse-body"
+                style="transform: translateY(-undefinedpx);"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div
@@ -2279,6 +2311,38 @@ exports[`Test ContinousVerificationStep Step should render editView when current
                   platform.connectors.cdng.failOnNoAnalysis
                 </span>
               </label>
+            </div>
+          </div>
+        </div>
+        <div
+          class="Accordion--accordion"
+        >
+          <div
+            class="Accordion--panel"
+            data-open="false"
+            data-testid="NodeFilteringFields-panel"
+          >
+            <div
+              class="Accordion--summary"
+              data-testid="NodeFilteringFields-summary"
+            >
+              <div
+                class="Accordion--label"
+              >
+                projectsOrgs.optional
+              </div>
+              <div
+                class="Accordion--chevron"
+              />
+            </div>
+            <div
+              class="bp3-collapse Accordion--collapse"
+            >
+              <div
+                aria-hidden="false"
+                class="bp3-collapse-body"
+                style="transform: translateY(-undefinedpx);"
+              />
             </div>
           </div>
         </div>
