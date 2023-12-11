@@ -1916,3 +1916,4 @@ connectors:
     urlValidation: Terraform Cloud URL is required
 certificates:
   certificatesTitle: 'Resources: Certificates'
+secretManagerConnectorSecretSelectorDisclaimer: For connectors of type secret manager, only secrets stored in Harness secret manager are available.

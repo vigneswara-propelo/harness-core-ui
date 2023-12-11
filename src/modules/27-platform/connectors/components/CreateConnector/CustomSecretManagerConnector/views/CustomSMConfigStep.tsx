@@ -269,6 +269,7 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
                       disabled={false}
                       formik={formik}
                       allowableTypes={[]}
+                      connectorTypeContext={'CustomSecretManager'}
                     />
 
                     <FormInput.Text

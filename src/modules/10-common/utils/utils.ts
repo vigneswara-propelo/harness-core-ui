@@ -308,3 +308,11 @@ export const setForwardedRef = <T>(ref: ForwardedRef<T>, value: T): void => {
 
   ref.current = value
 }
+
+export const getIdentifierWithScopedPrefix = (identifier: string, scope?: Scope): string => {
+  if (scope === Scope.ORG || scope === Scope.ACCOUNT) {
+    return `${scope}.${identifier}`
+  }
+
+  return identifier
+}

@@ -19,14 +19,14 @@ import { FormMultiTypeConnectorField } from '@platform/connectors/components/Con
 import {
   ArtifactSource,
   GARBuildDetailsDTO,
-  GARRepoDetailsDTO,
+  GarRepositoryDTO,
   RegionGar,
   SidecarArtifact,
   useGetBuildDetailsForGoogleArtifactRegistry,
   useGetBuildDetailsForGoogleArtifactRegistryV2,
   useGetRegionsForGoogleArtifactRegistry,
-  useGetRepoDetailsForGoogleArtifactRegistry,
-  useGetRepoDetailsForGoogleArtifactRegistryV2
+  useGetRepositoriesForGoogleArtifactRegistry,
+  useGetRepositoriesForGoogleArtifactRegistryV2
 } from 'services/cd-ng'
 import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { TriggerDefaultFieldList } from '@triggers/components/Triggers/utils'
@@ -162,7 +162,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     refetch: refetchReposV1Details,
     loading: fetchingV1Repos,
     error: fetchingV1ReposError
-  } = useGetRepoDetailsForGoogleArtifactRegistry({
+  } = useGetRepositoriesForGoogleArtifactRegistry({
     lazy: true,
     queryParams: {
       ...commonParams,
@@ -219,7 +219,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     refetch: refetchReposV2Details,
     loading: fetchingV2Repos,
     error: fetchingV2ReposError
-  } = useMutateAsGet(useGetRepoDetailsForGoogleArtifactRegistryV2, {
+  } = useMutateAsGet(useGetRepositoriesForGoogleArtifactRegistryV2, {
     lazy: true,
     body: pipelineRuntimeYaml,
     requestOptions: {
@@ -342,7 +342,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       return
     }
     const repoItems =
-      reposDetail?.data?.garRepositoryDTOList?.map((repo: GARRepoDetailsDTO) => ({
+      reposDetail?.data?.garRepositoryDTOList?.map((repo: GarRepositoryDTO) => ({
         value: defaultTo(repo.repository, ''),
         label: defaultTo(repo.repository, '')
       })) || []

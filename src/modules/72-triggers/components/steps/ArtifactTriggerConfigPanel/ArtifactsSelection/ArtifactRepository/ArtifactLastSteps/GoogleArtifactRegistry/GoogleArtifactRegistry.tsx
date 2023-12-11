@@ -28,10 +28,10 @@ import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import {
   ConnectorConfigDTO,
-  GARRepoDetailsDTO,
+  GarRepositoryDTO,
   RegionGar,
   useGetRegionsForGoogleArtifactRegistry,
-  useGetRepoDetailsForGoogleArtifactRegistry
+  useGetRepositoriesForGoogleArtifactRegistry
 } from 'services/cd-ng'
 import type { GarSpec } from 'services/pipeline-ng'
 import {
@@ -76,7 +76,6 @@ function FormComponent(
   }
 
   const connectorRefValue = getConnectorIdValue(prevStepData)
-  const repoType = defaultTo(formik.values.repositoryType, initialValues?.repositoryType)
   const projectValue = defaultTo(formik.values.project, initialValues?.project)
   const regionValue = defaultTo(formik.values.region, initialValues?.region)
 
@@ -85,11 +84,10 @@ function FormComponent(
     refetch: refetchRepoDetails,
     loading: fetchingRepos,
     error: fetchRepoError
-  } = useGetRepoDetailsForGoogleArtifactRegistry({
+  } = useGetRepositoriesForGoogleArtifactRegistry({
     lazy: true,
     queryParams: {
       ...commonParams,
-      repositoryType: repoType,
       connectorRef: connectorRefValue,
       project: projectValue,
       region: regionValue
@@ -112,7 +110,7 @@ function FormComponent(
       return
     }
     const repoItems =
-      repoDetails?.data?.garRepositoryDTOList?.map((repo: GARRepoDetailsDTO) => ({
+      repoDetails?.data?.garRepositoryDTOList?.map((repo: GarRepositoryDTO) => ({
         value: defaultTo(repo.repository, ''),
         label: defaultTo(repo.repository, '')
       })) || []
@@ -216,8 +214,7 @@ function FormComponent(
                       ...commonParams,
                       connectorRef: connectorRefValue,
                       project: projectValue,
-                      region: regionValue,
-                      repositoryType: repoType
+                      region: regionValue
                     }
                   })
                 }

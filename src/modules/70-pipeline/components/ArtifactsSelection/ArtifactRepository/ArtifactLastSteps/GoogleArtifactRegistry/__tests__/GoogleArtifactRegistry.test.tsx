@@ -97,7 +97,7 @@ const fetchRepos = jest.fn().mockReturnValue(repoListData)
 const fetchBuilds = jest.fn().mockReturnValue(buildData)
 
 jest.mock('services/cd-ng', () => ({
-  useGetRepoDetailsForGoogleArtifactRegistry: jest.fn().mockImplementation(() => {
+  useGetRepositoriesForGoogleArtifactRegistry: jest.fn().mockImplementation(() => {
     return { data: repoListData, refetch: fetchRepos, error: null, loading: false }
   }),
   useGetBuildDetailsForGoogleArtifactRegistry: jest.fn().mockImplementation(() => {
@@ -540,8 +540,7 @@ describe('GoogleArtifactRegistry tests', () => {
         queryParams: {
           connectorRef: 'testConnector',
           project: 'testProject',
-          region: 'testRegion',
-          repositoryType: 'docker'
+          region: 'testRegion'
         }
       })
     )

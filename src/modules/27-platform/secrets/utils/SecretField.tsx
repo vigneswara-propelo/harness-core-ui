@@ -8,7 +8,7 @@
 import { clone } from 'lodash-es'
 import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { getSecretV2Promise, GetSecretV2QueryParams } from 'services/cd-ng'
+import { ConnectorInfoDTO, getSecretV2Promise, GetSecretV2QueryParams, ListSecretsV2QueryParams } from 'services/cd-ng'
 
 export interface SecretReferenceInterface {
   identifier: string
@@ -57,4 +57,32 @@ export interface SecretMultiSelectProps {
   selectedSecrets?: ScopeAndIdentifier[]
   isMultiSelect?: boolean
   onMultiSelect?: (selected: ScopeAndIdentifier[]) => void
+}
+
+export const isConnectorContenxtTypeOfSecretManagerAndSecretTypeOfTextAndFile = ({
+  connectorTypeContext,
+  secretType
+}: {
+  connectorTypeContext?: ConnectorInfoDTO['type']
+  secretType: ListSecretsV2QueryParams['type']
+}): boolean => {
+  const secretManagerTypesForIdentifiers = [
+    'AwsKms',
+    'AzureKeyVault',
+    'Vault',
+    'AwsSecretManager',
+    'GcpKms',
+    'GcpSecretManager',
+    'CustomSecretManager'
+  ]
+  const typesForSecretManagerIdentifiers: ListSecretsV2QueryParams['type'][] = ['SecretText', 'SecretFile']
+
+  if (
+    connectorTypeContext &&
+    secretManagerTypesForIdentifiers.includes(connectorTypeContext) &&
+    typesForSecretManagerIdentifiers.includes(secretType)
+  ) {
+    return true
+  }
+  return false
 }

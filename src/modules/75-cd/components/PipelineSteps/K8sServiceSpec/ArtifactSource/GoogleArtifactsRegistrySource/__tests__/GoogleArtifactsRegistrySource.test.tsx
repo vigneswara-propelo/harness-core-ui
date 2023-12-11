@@ -56,10 +56,10 @@ jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: connectorsData.data.content[0], refetch: fetchConnectors, loading: false }
   }),
-  useGetRepoDetailsForGoogleArtifactRegistryV2: jest.fn().mockImplementation(() => {
+  useGetRepositoriesForGoogleArtifactRegistryV2: jest.fn().mockImplementation(() => {
     return { data: repoListData, refetch: fetchRepos, error: null, loading: false }
   }),
-  useGetRepoDetailsForGoogleArtifactRegistry: jest.fn().mockImplementation(() => {
+  useGetRepositoriesForGoogleArtifactRegistry: jest.fn().mockImplementation(() => {
     return { data: repoListData, refetch: fetchRepos, error: null, loading: false }
   }),
   useGetBuildDetailsForGoogleArtifactRegistryV2: jest.fn().mockImplementation(() => {

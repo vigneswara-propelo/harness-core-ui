@@ -46,11 +46,11 @@ import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/Config
 import {
   ConnectorConfigDTO,
   GARBuildDetailsDTO,
-  GARRepoDetailsDTO,
+  GarRepositoryDTO,
   RegionGar,
   useGetBuildDetailsForGoogleArtifactRegistry,
   useGetRegionsForGoogleArtifactRegistry,
-  useGetRepoDetailsForGoogleArtifactRegistry
+  useGetRepositoriesForGoogleArtifactRegistry
 } from 'services/cd-ng'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
@@ -107,7 +107,6 @@ function FormComponent(
     branch
   }
   const connectorRefValue = getConnectorIdValue(modifiedPrevStepData)
-  const repoType = defaultTo(formik.values.spec.repositoryType, initialValues?.spec?.repositoryType)
   const packageValue = defaultTo(formik.values.spec.package, initialValues?.spec?.package)
   const projectValue = defaultTo(formik.values.spec.project, initialValues?.spec?.project)
   const regionValue = defaultTo(formik.values.spec.region, initialValues?.spec?.region)
@@ -120,11 +119,10 @@ function FormComponent(
     refetch: refetchRepoDetails,
     loading: fetchingRepos,
     error: fetchRepoError
-  } = useGetRepoDetailsForGoogleArtifactRegistry({
+  } = useGetRepositoriesForGoogleArtifactRegistry({
     lazy: true,
     queryParams: {
       ...commonParams,
-      repositoryType: repoType,
       connectorRef: connectorRefValue,
       project: projectValue,
       region: regionValue
@@ -176,7 +174,7 @@ function FormComponent(
       return
     }
     const repoItems =
-      repoDetails?.data?.garRepositoryDTOList?.map((repo: GARRepoDetailsDTO) => ({
+      repoDetails?.data?.garRepositoryDTOList?.map((repo: GarRepositoryDTO) => ({
         value: defaultTo(repo.repository, ''),
         label: defaultTo(repo.repository, '')
       })) || []
@@ -355,8 +353,7 @@ function FormComponent(
                       ...commonParams,
                       connectorRef: connectorRefValue,
                       project: projectValue,
-                      region: regionValue,
-                      repositoryType: repoType
+                      region: regionValue
                     }
                   })
                 }

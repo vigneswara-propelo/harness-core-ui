@@ -28,9 +28,13 @@ import {
 } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
+import { getIdentifierWithScopedPrefix } from '@modules/10-common/utils/utils'
 import { useStrings } from 'framework/strings'
 import useCreateUpdateSecretModal from '@secrets/modals/CreateSecretModal/useCreateUpdateSecretModal'
-import type { SecretMultiSelectProps } from '@secrets/utils/SecretField'
+import {
+  SecretMultiSelectProps,
+  isConnectorContenxtTypeOfSecretManagerAndSecretTypeOfTextAndFile
+} from '@secrets/utils/SecretField'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
@@ -99,11 +103,29 @@ const fetchRecords = (
     'AwsSecretManager',
     'GcpKms'
   ]
+
   const identifiers = getIdentifiersOfScope(identifiersFilter, allTabSelected ? undefined : scope)
 
   let sourceCategory: ListSecretsV2QueryParams['source_category'] | undefined
   if (connectorTypeContext && secretManagerTypes.includes(connectorTypeContext)) {
     sourceCategory = 'SECRET_MANAGER'
+  }
+
+  const shouldPassSecretManagerIdentifiers = (): boolean => {
+    return isConnectorContenxtTypeOfSecretManagerAndSecretTypeOfTextAndFile({ connectorTypeContext, secretType: type })
+  }
+
+  let secretManagerIdentifiers: ListSecretsV2QueryParams['secretManagerIdentifiers'] | undefined
+  if (shouldPassSecretManagerIdentifiers()) {
+    if (allTabSelected) {
+      secretManagerIdentifiers = [
+        getIdentifierWithScopedPrefix('harnessSecretManager', Scope.PROJECT),
+        getIdentifierWithScopedPrefix('harnessSecretManager', Scope.ORG),
+        getIdentifierWithScopedPrefix('harnessSecretManager', Scope.ACCOUNT)
+      ]
+    } else {
+      secretManagerIdentifiers = [getIdentifierWithScopedPrefix('harnessSecretManager', scope)]
+    }
   }
 
   listSecretsV2Promise({
@@ -117,7 +139,8 @@ const fetchRecords = (
       pageIndex: pageIndex,
       pageSize: 10,
       includeAllSecretsAccessibleAtScope: !scope && allTabSelected,
-      identifiers
+      identifiers,
+      secretManagerIdentifiers
     },
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'

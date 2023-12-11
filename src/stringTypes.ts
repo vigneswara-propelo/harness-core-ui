@@ -3466,6 +3466,7 @@ export interface StringsMap {
   'platform.filestore.view.lastModifiedBy': string
   'platform.filestore.view.noPreview': string
   'platform.filestore.view.replaceFile': string
+  'platform.secretManagerConnectorSecretSelectorDisclaimer': string
   'platform.secrets.blank': string
   'platform.secrets.confirmDelete': string
   'platform.secrets.confirmDeleteTitle': string

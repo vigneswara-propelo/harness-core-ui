@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { useModalHook } from '@harness/use-modal'
-import type { SelectOption } from '@harness/uicore'
+import { SelectOption, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { Dialog } from '@blueprintjs/core'
 import { pick } from 'lodash-es'
 import cx from 'classnames'
@@ -20,7 +21,10 @@ import type { ConnectorInfoDTO, ResponsePageSecretResponseWrapper, SecretRespons
 import { ReferenceSelectDialogTitle } from '@common/components/ReferenceSelect/ReferenceSelect'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { SecretFormData } from '@secrets/components/CreateUpdateSecret/CreateUpdateSecret'
-import type { SecretMultiSelectProps } from '@secrets/utils/SecretField'
+import {
+  SecretMultiSelectProps,
+  isConnectorContenxtTypeOfSecretManagerAndSecretTypeOfTextAndFile
+} from '@secrets/utils/SecretField'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
 import useCreateUpdateSecretModal from '../CreateSecretModal/useCreateUpdateSecretModal'
@@ -47,7 +51,7 @@ const useCreateOrSelectSecretModal = (
   inputs?: any[],
   selectedSecret?: string
 ): UseCreateOrSelectSecretModalReturn => {
-  const { isMultiSelect = false, selectedSecrets = [], onMultiSelect, identifiersFilter } = props
+  const { isMultiSelect = false, selectedSecrets = [], onMultiSelect, identifiersFilter, connectorTypeContext } = props
   const { getString } = useStrings()
 
   const secretTypeOptions: SelectOption[] = [
@@ -84,7 +88,8 @@ const useCreateOrSelectSecretModal = (
         referenceString: getReference(secret.scope, secret.identifier) as string
       })
       hideModal()
-    }
+    },
+    connectorTypeContext
   })
 
   const getLabelByType = (type: SecretTypeEnum): string => {
@@ -98,6 +103,21 @@ const useCreateOrSelectSecretModal = (
         return getString('platform.secrets.secret.newSecretText')
       default:
         return getString('platform.secrets.secret.newSecretFile')
+    }
+  }
+
+  const getDisclaimerMessage = (): JSX.Element | undefined => {
+    if (
+      isConnectorContenxtTypeOfSecretManagerAndSecretTypeOfTextAndFile({
+        connectorTypeContext: props.connectorTypeContext,
+        secretType: props.type
+      })
+    ) {
+      return (
+        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_500}>
+          {getString('platform.secretManagerConnectorSecretSelectorDisclaimer')}
+        </Text>
+      )
     }
   }
 
@@ -127,6 +147,7 @@ const useCreateOrSelectSecretModal = (
               )
             }
           },
+          disclaimerMessage: getDisclaimerMessage(),
           ...(isMultiSelect && {
             title: getString('platform.secrets.selectSecrets'),
             isNewConnectorLabelVisible: false

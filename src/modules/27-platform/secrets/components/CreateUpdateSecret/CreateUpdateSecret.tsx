@@ -61,6 +61,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, SecretActions } from '@common/constants/TrackingConstants'
 import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
 import type { InputSetSchema } from '@secrets/components/ScriptVariableRuntimeInput/ScriptVariablesRuntimeInput'
+import { isConnectorContenxtTypeOfSecretManagerAndSecretTypeOfTextAndFile } from '../../utils/SecretField'
 import VaultFormFields from './views/VaultFormFields'
 import LocalFormFields from './views/LocalFormFields'
 import CustomFormFields from './views/CustomFormFields/CustomFormFields'
@@ -550,7 +551,13 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
                     label={getString('platform.secrets.labelSecretsManager')}
                     name={'secretManagerIdentifier'}
                     componentName={getString('platform.connectors.title.secretManager')}
-                    disabled={editing}
+                    disabled={
+                      editing ||
+                      isConnectorContenxtTypeOfSecretManagerAndSecretTypeOfTextAndFile({
+                        connectorTypeContext,
+                        secretType: props.type
+                      })
+                    }
                     width={'100%'}
                     type={[
                       Connectors.GCP_KMS,

@@ -29,6 +29,7 @@ import useCreateSSHCredModal from '@secrets/modals/CreateSSHCredModal/useCreateS
 import useCreateOrSelectSecretModal from '@secrets/modals/CreateOrSelectSecretModal/useCreateOrSelectSecretModal'
 import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
 import type { SecretResponseWrapper, ResponsePageSecretResponseWrapper } from 'services/cd-ng'
+import { ConnectorInfoDTO } from 'services/portal'
 import { useStrings } from 'framework/strings'
 import { errorCheck } from '@common/utils/formikHelpers'
 import {
@@ -96,6 +97,7 @@ export interface MultiTypeSecretInputProps extends IFormGroupProps {
     templateValue: string | undefined
   }
   isOptional?: boolean
+  connectorTypeContext?: ConnectorInfoDTO['type']
 }
 
 export interface ConnectedMultiTypeSecretInputProps extends MultiTypeSecretInputProps {
@@ -119,6 +121,7 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
     configureOptionsProps,
     templateProps,
     isOptional = false,
+    connectorTypeContext,
     ...restProps
   } = props
   const { getString } = useStrings()
@@ -171,7 +174,8 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
       secretsListMockData,
       handleInlineSSHSecretCreation: (record?: SecretRef) => openCreateSSHCredModal(record),
       handleInlineWinRmSecretCreation: (record?: SecretRef) => openCreateWinRmCredModal(record),
-      identifiersFilter
+      identifiersFilter,
+      connectorTypeContext
     },
     [name, onSuccess, value, identifiersFilter],
     value

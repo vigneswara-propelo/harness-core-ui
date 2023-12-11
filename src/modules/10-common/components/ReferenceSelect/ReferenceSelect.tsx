@@ -53,6 +53,7 @@ export interface ReferenceSelectDialogTitleProps {
   isNewConnectorLabelVisible?: boolean
   title?: string
   isSortingEnabled?: boolean
+  disclaimerMessage?: JSX.Element
 }
 export interface ReferenceSelectProps<T extends MinimalObject>
   extends Omit<EntityReferenceProps<T>, 'onSelect' | 'onMultiSelect' | 'selectedRecords'>,
@@ -94,7 +95,8 @@ export const ReferenceSelectDialogTitle = (props: ReferenceSelectDialogTitleProp
     createNewLabel,
     createNewBtnComponent,
     isNewConnectorLabelVisible,
-    isSortingEnabled
+    isSortingEnabled,
+    disclaimerMessage
   } = props
   return (
     <Layout.Horizontal flex={{ distribution: 'space-between' }}>
@@ -110,6 +112,7 @@ export const ReferenceSelectDialogTitle = (props: ReferenceSelectDialogTitleProp
             {getString('common.sortedByCreatedTime')}
           </Text>
         )}
+        {disclaimerMessage}
       </Layout.Vertical>
 
       {createNewBtnComponent

@@ -465,6 +465,7 @@ export interface AccessControlCheckError {
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
     | 'ABORT_ALL_ALREADY_NG'
+    | 'WEBHOOK_EXCEPTION'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -549,6 +550,7 @@ export interface AccountDTO {
   ringName?: string
   serviceAccountConfig?: ServiceAccountConfig
   sessionTimeoutInMinutes?: number
+  subdomainURL?: string
   twoFactorAdminEnforced?: boolean
 }
 
@@ -1595,6 +1597,7 @@ export type AwsConnector = ConnectorConfigDTO & {
   credential: AwsCredential
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
+  proxy?: boolean
 }
 
 export interface AwsCredential {
@@ -2403,6 +2406,7 @@ export type BitbucketConnector = ConnectorConfigDTO & {
   authentication: BitbucketAuthentication
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
+  proxy?: boolean
   type: 'Account' | 'Repo' | 'Project'
   url: string
   validationRepo?: string
@@ -2572,8 +2576,12 @@ export interface CDStageModuleInfo {
 
 export interface CDStageSummaryResponseDTO {
   Environment?: string
+  'Environment Group'?: string
+  Environments?: string
   'Infrastructure Definition'?: string
+  'Infrastructure Definitions'?: string
   Service?: string
+  Services?: string
 }
 
 export type CEAwsConnector = ConnectorConfigDTO & {
@@ -3082,7 +3090,7 @@ export interface ConnectorConnectivityDetails {
   lastAlertSent?: number
   lastConnectedAt?: number
   lastTestedAt?: number
-  status?: 'SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN'
+  status?: 'SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN' | 'PENDING'
   testedAt?: number
 }
 
@@ -3097,7 +3105,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'TICKETING'
   )[]
   ccmConnectorFilter?: CcmConnectorFilter
-  connectivityStatuses?: ('SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN')[]
+  connectivityStatuses?: ('SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN' | 'PENDING')[]
   connectorConnectivityModes?: ('DELEGATE' | 'MANAGER')[]
   connectorIdentifiers?: string[]
   connectorIds?: string[]
@@ -3225,7 +3233,7 @@ export interface ConnectorInfoDTO {
 export type ConnectorInternalFilterProperties = FilterProperties & {
   accountIdentifiers?: string[]
   ccmConnectorFilter?: CcmConnectorFilter
-  connectivityStatuses?: ('SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN')[]
+  connectivityStatuses?: ('SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN' | 'PENDING')[]
   types?: (
     | 'K8sCluster'
     | 'Git'
@@ -3304,7 +3312,7 @@ export interface ConnectorStatistics {
 
 export interface ConnectorStatusStatistics {
   count?: number
-  status?: 'SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN'
+  status?: 'SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN' | 'PENDING'
 }
 
 export interface ConnectorTypeStatistics {
@@ -3370,7 +3378,7 @@ export interface ConnectorValidationResult {
   delegateId?: string
   errorSummary?: string
   errors?: ErrorDetail[]
-  status?: 'SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN'
+  status?: 'SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN' | 'PENDING'
   taskId?: string
   testedAt?: number
 }
@@ -4177,11 +4185,16 @@ export interface DeploymentsInfo {
   deployments?: ExecutionStatusInfo[]
 }
 
+export interface DestinationSpec {
+  host?: string
+  weight?: number
+}
+
 export interface DeveloperMappingDTO {
-  accountIdentifier?: string
-  developerCount?: number
+  accountIdentifier: string
+  developerCount: number
   id?: string
-  moduleType?:
+  moduleType:
     | 'CD'
     | 'CI'
     | 'CV'
@@ -4200,8 +4213,18 @@ export interface DeveloperMappingDTO {
     | 'SSCA'
     | 'GOVERNANCE'
     | 'SEI'
-  secondaryEntitlement?: 'WORK_LOADS'
-  secondaryEntitlementCount?: number
+  secondaryEntitlement:
+    | 'NUMBER_OF_AGENTS'
+    | 'NUMBER_OF_COMMITTERS'
+    | 'NUMBER_OF_CONTRIBUTORS'
+    | 'NUMBER_OF_CLIENT_MAUS'
+    | 'NUMBER_OF_DEVELOPERS'
+    | 'NUMBER_OF_EXECUTION_APPLIES'
+    | 'NUMBER_OF_SECURITY_ASSESSMENT'
+    | 'NUMBER_OF_SECURITY_SCANS'
+    | 'NUMBER_OF_SERVICES'
+    | 'NUMBER_OF_USERS'
+  secondaryEntitlementCount: number
 }
 
 export type DockerArtifactSummary = ArtifactSummary & {
@@ -4236,6 +4259,7 @@ export type DockerConnectorDTO = ConnectorConfigDTO & {
   dockerRegistryUrl: string
   executeOnDelegate?: boolean
   providerType: 'DockerHub' | 'Harbor' | 'Quay' | 'Other'
+  proxy?: boolean
 }
 
 export type DockerHubArtifactConfig = ArtifactConfig & {
@@ -4343,6 +4367,18 @@ export interface DocumentType {
 
 export type DownloadArtifactCommandUnitSpec = CommandUnitBaseSpec & {
   destinationPath: string
+}
+
+export type DownloadAwsS3StepInfo = StepSpecType & {
+  bucketName?: string
+  connectorRef?: string
+  delegateSelectors?: string[]
+  downloadPath?: string
+  outputFilePathsContent?: string[]
+  paths?: string[]
+  region?: string
+  resources?: ContainerResource
+  runAsUser?: number
 }
 
 export type DownloadManifestsStepInfo = StepSpecType & {
@@ -4979,6 +5015,10 @@ export interface EntityDetail {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
 }
 
 export interface EntityDetailProtoDTO {
@@ -5715,6 +5755,7 @@ export interface Error {
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
     | 'ABORT_ALL_ALREADY_NG'
+    | 'WEBHOOK_EXCEPTION'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -6109,6 +6150,7 @@ export interface ErrorMetadata {
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
     | 'ABORT_ALL_ALREADY_NG'
+    | 'WEBHOOK_EXCEPTION'
   errorMessage?: string
 }
 
@@ -6556,6 +6598,7 @@ export interface Failure {
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
     | 'ABORT_ALL_ALREADY_NG'
+    | 'WEBHOOK_EXCEPTION'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -7276,14 +7319,22 @@ export interface GARBuildDetailsDTO {
   version?: string
 }
 
-export interface GARRepoDetailsDTO {
-  repository?: string
-  format?: string
+export interface GARPackageDTO {
+  createTime?: string
+  packageName?: string
+  updateTime?: string
+}
+
+export interface GARPackageDTOList {
+  garPackageDTOList?: GARPackageDTO[]
+}
+
+export interface GARRepositoryDTOList {
+  garRepositoryDTOList?: GarRepositoryDTO[]
 }
 
 export interface GARResponseDTO {
   buildDetailsList?: GARBuildDetailsDTO[]
-  garRepositoryDTOList?: GARRepoDetailsDTO[]
 }
 
 export type GARStepInfo = StepSpecType & {
@@ -7346,6 +7397,13 @@ export type GarArtifactSummary = ArtifactSummary & {
   version?: string
 }
 
+export interface GarRepositoryDTO {
+  createTime?: string
+  format?: string
+  repository?: string
+  updateTime?: string
+}
+
 export interface GarRequestDTO {
   runtimeInputYaml?: string
   version?: string
@@ -7385,6 +7443,7 @@ export type GcpConnector = ConnectorConfigDTO & {
   credential: GcpConnectorCredential
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
+  proxy?: boolean
 }
 
 export interface GcpConnectorCredential {
@@ -7528,6 +7587,7 @@ export type GitCloneStepInfo = StepSpecType & {
   connectorRef: string
   depth?: number
   outputFilePathsContent?: string[]
+  privileged?: boolean
   projectName?: string
   repoName?: string
   resources?: ContainerResource
@@ -7541,6 +7601,7 @@ export type GitConfigDTO = ConnectorConfigDTO & {
   connectionType: 'Account' | 'Repo' | 'Project'
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
+  proxy?: boolean
   spec: GitAuthenticationDTO
   type: 'Http' | 'Ssh'
   url: string
@@ -7846,6 +7907,10 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
   )[]
   moduleType?:
     | 'CD'
@@ -8116,6 +8181,10 @@ export interface GitEntityFilterProperties {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -8465,6 +8534,10 @@ export interface GitFullSyncEntityInfoDTO {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -8725,6 +8798,10 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -9116,6 +9193,10 @@ export interface GitSyncEntityDTO {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -9370,6 +9451,10 @@ export interface GitSyncEntityListDTO {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -9641,6 +9726,10 @@ export interface GitSyncErrorDTO {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -9734,6 +9823,7 @@ export type GithubConnector = ConnectorConfigDTO & {
   authentication: GithubAuthentication
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
+  proxy?: boolean
   type: 'Account' | 'Repo' | 'Project'
   url: string
   validationRepo?: string
@@ -9848,6 +9938,7 @@ export type GitlabConnector = ConnectorConfigDTO & {
   authentication: GitlabAuthentication
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
+  proxy?: boolean
   type: 'Account' | 'Repo' | 'Project'
   url: string
   validationRepo?: string
@@ -10110,6 +10201,12 @@ export type HarnessTokenSpec = HarnessApiAccessSpecDTO & {
 export type HarnessUsernameToken = HarnessHttpCredentialsSpecDTO & {
   tokenRef: string
   username?: string
+}
+
+export interface HeaderSpec {
+  key?: string
+  matchType?: 'EXACT' | 'PREFIX' | 'REGEX'
+  value?: string
 }
 
 export interface HealthDeploymentDashboard {
@@ -11241,6 +11338,7 @@ export type K8sBlueGreenStepInfo = StepSpecType & {
   pruningEnabled?: boolean
   skipDryRun?: boolean
   skipUnchangedManifest?: boolean
+  trafficRouting?: K8sTrafficRouting
 }
 
 export type K8sCanaryDeleteStepInfo = StepSpecType & {
@@ -11252,6 +11350,7 @@ export type K8sCanaryStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   instanceSelection: InstanceSelectionWrapper
   skipDryRun?: boolean
+  trafficRouting?: K8sTrafficRouting
 }
 
 export interface K8sConfigDetails {
@@ -11355,6 +11454,62 @@ export interface K8sStepCommandFlag {
 
 export type K8sStepInstanceInfo = StepInstanceInfo & {
   podName?: string
+}
+
+export interface K8sTrafficRouting {
+  provider: 'SMI' | 'ISTIO'
+  spec: K8sTrafficRoutingProvider
+}
+
+export type K8sTrafficRoutingAuthorityRuleSpec = K8sTrafficRoutingRuleSpec & {
+  matchType?: 'EXACT' | 'PREFIX' | 'REGEX'
+  value?: string
+}
+
+export interface K8sTrafficRoutingDestination {
+  destination?: DestinationSpec
+}
+
+export type K8sTrafficRoutingHeaderRuleSpec = K8sTrafficRoutingRuleSpec & {
+  values?: HeaderSpec[]
+}
+
+export type K8sTrafficRoutingMethodRuleSpec = K8sTrafficRoutingRuleSpec & {
+  matchType?: 'EXACT' | 'PREFIX' | 'REGEX'
+  value?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'HEAD' | 'CONNECT' | 'OPTION' | 'TRACE' | 'PATCH'
+  values?: ('GET' | 'POST' | 'PUT' | 'DELETE' | 'HEAD' | 'CONNECT' | 'OPTION' | 'TRACE' | 'PATCH')[]
+}
+
+export type K8sTrafficRoutingPortRuleSpec = K8sTrafficRoutingRuleSpec & {
+  value?: number
+  values?: number[]
+}
+
+export interface K8sTrafficRoutingProvider {
+  destinations?: K8sTrafficRoutingDestination[]
+  routes?: K8sTrafficRoutingRoute[]
+}
+
+export interface K8sTrafficRoutingRoute {
+  route: RouteSpec
+}
+
+export interface K8sTrafficRoutingRule {
+  rule?: Rule
+}
+
+export interface K8sTrafficRoutingRuleSpec {
+  name?: string
+}
+
+export type K8sTrafficRoutingSchemaRuleSpec = K8sTrafficRoutingRuleSpec & {
+  matchType?: 'EXACT' | 'PREFIX' | 'REGEX'
+  value?: string
+}
+
+export type K8sTrafficRoutingURIRuleSpec = K8sTrafficRoutingRuleSpec & {
+  matchType?: 'EXACT' | 'PREFIX' | 'REGEX'
+  value?: string
 }
 
 export type KerberosConfigDTO = BaseSSHSpecDTO & {
@@ -11480,7 +11635,17 @@ export interface KustomizeReplicas {
 }
 
 export interface KustomizeValues {
+  commonAnnotations?: {
+    [key: string]: string
+  }
+  commonLabels?: {
+    [key: string]: string
+  }
+  forceCommonAnnotations?: boolean
+  forceCommonLabels?: boolean
   images?: string[]
+  namePrefix?: string
+  nameSuffix?: string
   namespace?: string
   replicas?: KustomizeReplicas[]
 }
@@ -11911,11 +12076,13 @@ export type MicrosoftTeamsConfigDTO = NotificationSettingConfigDTO & {
 export interface ModuleLicenseDTO {
   accountIdentifier?: string
   createdAt?: number
+  createdBy?: EmbeddedUser
   developerLicenseCount?: number
   edition?: 'COMMUNITY' | 'FREE' | 'TEAM' | 'ENTERPRISE'
   expiryTime?: number
   id?: string
   lastModifiedAt?: number
+  lastUpdatedBy?: EmbeddedUser
   licenseType?: 'TRIAL' | 'PAID'
   moduleType?:
     | 'CD'
@@ -12198,6 +12365,10 @@ export interface NGEntityList {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
   )[]
 }
 
@@ -12747,6 +12918,7 @@ export interface Organization {
   description?: string
   identifier: string
   name: string
+  parentUniqueId?: string
   tags?: {
     [key: string]: string
   }
@@ -13794,6 +13966,7 @@ export interface Project {
   )[]
   name: string
   orgIdentifier?: string
+  parentUniqueId?: string
   tags?: {
     [key: string]: string
   }
@@ -14212,6 +14385,10 @@ export interface ReferencedByDTO {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
 }
 
 export interface RefreshResponse {
@@ -14297,6 +14474,8 @@ export interface ResourceDTO {
     | 'API_KEY'
     | 'TOKEN'
     | 'DELEGATE_TOKEN'
+    | 'DASHBOARD'
+    | 'DASHBOARD_FOLDER'
     | 'GOVERNANCE_POLICY'
     | 'GOVERNANCE_POLICY_SET'
     | 'VARIABLE'
@@ -14347,6 +14526,7 @@ export interface ResourceDTO {
     | 'GITOPS_PROJECT_MAPPING'
     | 'GITOPS_APPLICATION'
     | 'CODE_REPOSITORY'
+    | 'MODULE_LICENSE'
   uniqueId?: string
 }
 
@@ -15066,6 +15246,20 @@ export interface ResponseFrozenExecutionDetails {
 export interface ResponseGARBuildDetailsDTO {
   correlationId?: string
   data?: GARBuildDetailsDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseGARPackageDTOList {
+  correlationId?: string
+  data?: GARPackageDTOList
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseGARRepositoryDTOList {
+  correlationId?: string
+  data?: GARRepositoryDTOList
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -15794,6 +15988,10 @@ export interface ResponseListEntityType {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -16539,6 +16737,7 @@ export interface ResponseMessage {
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
     | 'ABORT_ALL_ALREADY_NG'
+    | 'WEBHOOK_EXCEPTION'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -17467,6 +17666,13 @@ export interface ResponseTriggerFullSyncResponseDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseTunnelResponseDTO {
+  correlationId?: string
+  data?: TunnelResponseDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseTwoFactorAuthSettingsInfo {
   correlationId?: string
   data?: TwoFactorAuthSettingsInfo
@@ -17954,6 +18160,16 @@ export interface RoleResponse {
   lastModifiedAt?: number
   role: Role
   scope: Scope
+}
+
+export interface RouteSpec {
+  rules?: K8sTrafficRoutingRule[]
+  type: 'HTTP'
+}
+
+export interface Rule {
+  spec?: K8sTrafficRoutingRuleSpec
+  type?: 'URI' | 'SCHEME' | 'METHOD' | 'AUTHORITY' | 'HEADER' | 'PORT'
 }
 
 export type RunStepInfo = StepSpecType & {
@@ -19094,6 +19310,7 @@ export interface ServiceOverrideRequestDTOV2 {
     | 'CLUSTER_GLOBAL_OVERRIDE'
     | 'CLUSTER_SERVICE_OVERRIDE'
   v1Api?: boolean
+  yaml?: string
   yamlInternal?: string
 }
 
@@ -19136,6 +19353,7 @@ export interface ServiceOverridesResponseDTOV2 {
     | 'INFRA_SERVICE_OVERRIDE'
     | 'CLUSTER_GLOBAL_OVERRIDE'
     | 'CLUSTER_SERVICE_OVERRIDE'
+  yaml?: string
   yamlInternal?: string
 }
 
@@ -19800,6 +20018,7 @@ export interface StepData {
     | 'EcsUpgradeContainer'
     | 'EcsBasicRollback'
     | 'AsgShiftTraffic'
+    | 'DownloadAwsS3'
 }
 
 export interface StepElementConfig {
@@ -20253,6 +20472,7 @@ export type TasManifest = ManifestAttributes & {
 export type TasManualDetails = TasCredentialSpec & {
   endpointUrl: string
   passwordRef: string
+  refreshTokenRef?: string
   username?: string
   usernameRef?: string
 }
@@ -20886,6 +21106,15 @@ export interface TotalDeploymentInfoV2 {
   rate?: ChangeRate
 }
 
+export type TrafficRoutingIstioProvider = K8sTrafficRoutingProvider & {
+  gateways?: string[]
+  hosts?: string[]
+}
+
+export type TrafficRoutingSMIProvider = K8sTrafficRoutingProvider & {
+  rootService?: string
+}
+
 export interface TrialSignupOptions {
   assistedOption?: boolean
   productsSelected?: ('CD' | 'CE' | 'CI')[]
@@ -20898,6 +21127,15 @@ export interface TriggerFullSyncResponseDTO {
 export type TriggerReference = EntityReference & {
   isDefault?: boolean
   pipelineIdentifier?: string
+}
+
+export interface TunnelRegisterRequestDTO {
+  port: string
+}
+
+export interface TunnelResponseDTO {
+  port: string
+  serverUrl: string
 }
 
 export interface TwoFactorAdminOverrideSettings {
@@ -21635,6 +21873,8 @@ export type DelegateProfileDetailsNgRequestBody = DelegateProfileDetailsNg
 
 export type DelegateResponseDataRequestBody = DelegateResponseData
 
+export type DeveloperMappingDTORequestBody = DeveloperMappingDTO
+
 export type DockerRequestDTORequestBody = DockerRequestDTO
 
 export type EOLBannerRequestDTORequestBody = EOLBannerRequestDTO
@@ -21731,11 +21971,11 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type DeleteManyFreezesBodyRequestBody = string[]
-
 export type GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
+
+export type UpdateFreezeStatusBodyRequestBody = string[]
 
 export type UpdateHarnessSupportAccessNGBodyRequestBody = boolean
 
@@ -22698,6 +22938,10 @@ export interface ListActivitiesQueryParams {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
   referredByEntityType?: (
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -22944,6 +23188,10 @@ export interface ListActivitiesQueryParams {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
   )[]
   activityTypes?: ('CONNECTIVITY_CHECK' | 'ENTITY_USAGE' | 'ENTITY_CREATION' | 'ENTITY_UPDATE')[]
   searchTerm?: string
@@ -23292,6 +23540,10 @@ export interface GetUniqueReferredByEntitiesQueryParams {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
   activityTypes?: ('CONNECTIVITY_CHECK' | 'ENTITY_USAGE' | 'ENTITY_CREATION' | 'ENTITY_UPDATE')[]
 }
 
@@ -23593,6 +23845,10 @@ export interface GetActivitiesSummaryQueryParams {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -23839,6 +24095,10 @@ export interface GetActivitiesSummaryQueryParams {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -24110,88 +24370,76 @@ export const adminDeleteCustomerCreditPromise = (
     signal
   )
 
-export interface GetAccountLevelDeveloperMappingPathParams {
+export interface GetDeveloperMappingPathParams {
   accountIdentifier: string
 }
 
-export type GetAccountLevelDeveloperMappingProps = Omit<
-  GetProps<ResponseListDeveloperMappingDTO, Failure | Error, void, GetAccountLevelDeveloperMappingPathParams>,
+export type GetDeveloperMappingProps = Omit<
+  GetProps<ResponseListDeveloperMappingDTO, Failure | Error, void, GetDeveloperMappingPathParams>,
   'path'
 > &
-  GetAccountLevelDeveloperMappingPathParams
+  GetDeveloperMappingPathParams
 
-export const GetAccountLevelDeveloperMapping = ({
-  accountIdentifier,
-  ...props
-}: GetAccountLevelDeveloperMappingProps) => (
-  <Get<ResponseListDeveloperMappingDTO, Failure | Error, void, GetAccountLevelDeveloperMappingPathParams>
+export const GetDeveloperMapping = ({ accountIdentifier, ...props }: GetDeveloperMappingProps) => (
+  <Get<ResponseListDeveloperMappingDTO, Failure | Error, void, GetDeveloperMappingPathParams>
     path={`/admin/developer-license-mapping/${accountIdentifier}`}
     base={getConfig('ng/api')}
     {...props}
   />
 )
 
-export type UseGetAccountLevelDeveloperMappingProps = Omit<
-  UseGetProps<ResponseListDeveloperMappingDTO, Failure | Error, void, GetAccountLevelDeveloperMappingPathParams>,
+export type UseGetDeveloperMappingProps = Omit<
+  UseGetProps<ResponseListDeveloperMappingDTO, Failure | Error, void, GetDeveloperMappingPathParams>,
   'path'
 > &
-  GetAccountLevelDeveloperMappingPathParams
+  GetDeveloperMappingPathParams
 
-export const useGetAccountLevelDeveloperMapping = ({
-  accountIdentifier,
-  ...props
-}: UseGetAccountLevelDeveloperMappingProps) =>
-  useGet<ResponseListDeveloperMappingDTO, Failure | Error, void, GetAccountLevelDeveloperMappingPathParams>(
-    (paramsInPath: GetAccountLevelDeveloperMappingPathParams) =>
+export const useGetDeveloperMapping = ({ accountIdentifier, ...props }: UseGetDeveloperMappingProps) =>
+  useGet<ResponseListDeveloperMappingDTO, Failure | Error, void, GetDeveloperMappingPathParams>(
+    (paramsInPath: GetDeveloperMappingPathParams) =>
       `/admin/developer-license-mapping/${paramsInPath.accountIdentifier}`,
     { base: getConfig('ng/api'), pathParams: { accountIdentifier }, ...props }
   )
 
-export const getAccountLevelDeveloperMappingPromise = (
+export const getDeveloperMappingPromise = (
   {
     accountIdentifier,
     ...props
-  }: GetUsingFetchProps<
-    ResponseListDeveloperMappingDTO,
-    Failure | Error,
-    void,
-    GetAccountLevelDeveloperMappingPathParams
-  > & { accountIdentifier: string },
+  }: GetUsingFetchProps<ResponseListDeveloperMappingDTO, Failure | Error, void, GetDeveloperMappingPathParams> & {
+    accountIdentifier: string
+  },
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseListDeveloperMappingDTO, Failure | Error, void, GetAccountLevelDeveloperMappingPathParams>(
+  getUsingFetch<ResponseListDeveloperMappingDTO, Failure | Error, void, GetDeveloperMappingPathParams>(
     getConfig('ng/api'),
     `/admin/developer-license-mapping/${accountIdentifier}`,
     props,
     signal
   )
 
-export interface CreateAccountLevelDeveloperMappingPathParams {
+export interface CreateDeveloperMappingPathParams {
   accountIdentifier: string
 }
 
-export type CreateAccountLevelDeveloperMappingProps = Omit<
+export type CreateDeveloperMappingProps = Omit<
   MutateProps<
     ResponseDeveloperMappingDTO,
     Failure | Error,
     void,
-    DeveloperMappingDTO,
-    CreateAccountLevelDeveloperMappingPathParams
+    DeveloperMappingDTORequestBody,
+    CreateDeveloperMappingPathParams
   >,
   'path' | 'verb'
 > &
-  CreateAccountLevelDeveloperMappingPathParams
+  CreateDeveloperMappingPathParams
 
-export const CreateAccountLevelDeveloperMapping = ({
-  accountIdentifier,
-  ...props
-}: CreateAccountLevelDeveloperMappingProps) => (
+export const CreateDeveloperMapping = ({ accountIdentifier, ...props }: CreateDeveloperMappingProps) => (
   <Mutate<
     ResponseDeveloperMappingDTO,
     Failure | Error,
     void,
-    DeveloperMappingDTO,
-    CreateAccountLevelDeveloperMappingPathParams
+    DeveloperMappingDTORequestBody,
+    CreateDeveloperMappingPathParams
   >
     verb="POST"
     path={`/admin/developer-license-mapping/${accountIdentifier}`}
@@ -24200,36 +24448,33 @@ export const CreateAccountLevelDeveloperMapping = ({
   />
 )
 
-export type UseCreateAccountLevelDeveloperMappingProps = Omit<
+export type UseCreateDeveloperMappingProps = Omit<
   UseMutateProps<
     ResponseDeveloperMappingDTO,
     Failure | Error,
     void,
-    DeveloperMappingDTO,
-    CreateAccountLevelDeveloperMappingPathParams
+    DeveloperMappingDTORequestBody,
+    CreateDeveloperMappingPathParams
   >,
   'path' | 'verb'
 > &
-  CreateAccountLevelDeveloperMappingPathParams
+  CreateDeveloperMappingPathParams
 
-export const useCreateAccountLevelDeveloperMapping = ({
-  accountIdentifier,
-  ...props
-}: UseCreateAccountLevelDeveloperMappingProps) =>
+export const useCreateDeveloperMapping = ({ accountIdentifier, ...props }: UseCreateDeveloperMappingProps) =>
   useMutate<
     ResponseDeveloperMappingDTO,
     Failure | Error,
     void,
-    DeveloperMappingDTO,
-    CreateAccountLevelDeveloperMappingPathParams
+    DeveloperMappingDTORequestBody,
+    CreateDeveloperMappingPathParams
   >(
     'POST',
-    (paramsInPath: CreateAccountLevelDeveloperMappingPathParams) =>
+    (paramsInPath: CreateDeveloperMappingPathParams) =>
       `/admin/developer-license-mapping/${paramsInPath.accountIdentifier}`,
     { base: getConfig('ng/api'), pathParams: { accountIdentifier }, ...props }
   )
 
-export const createAccountLevelDeveloperMappingPromise = (
+export const createDeveloperMappingPromise = (
   {
     accountIdentifier,
     ...props
@@ -24237,8 +24482,8 @@ export const createAccountLevelDeveloperMappingPromise = (
     ResponseDeveloperMappingDTO,
     Failure | Error,
     void,
-    DeveloperMappingDTO,
-    CreateAccountLevelDeveloperMappingPathParams
+    DeveloperMappingDTORequestBody,
+    CreateDeveloperMappingPathParams
   > & { accountIdentifier: string },
   signal?: RequestInit['signal']
 ) =>
@@ -24246,9 +24491,87 @@ export const createAccountLevelDeveloperMappingPromise = (
     ResponseDeveloperMappingDTO,
     Failure | Error,
     void,
-    DeveloperMappingDTO,
-    CreateAccountLevelDeveloperMappingPathParams
+    DeveloperMappingDTORequestBody,
+    CreateDeveloperMappingPathParams
   >('POST', getConfig('ng/api'), `/admin/developer-license-mapping/${accountIdentifier}`, props, signal)
+
+export interface UpdateDeveloperMappingPathParams {
+  accountIdentifier: string
+}
+
+export type UpdateDeveloperMappingProps = Omit<
+  MutateProps<
+    ResponseDeveloperMappingDTO,
+    Failure | Error,
+    void,
+    DeveloperMappingDTORequestBody,
+    UpdateDeveloperMappingPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateDeveloperMappingPathParams
+
+export const UpdateDeveloperMapping = ({ accountIdentifier, ...props }: UpdateDeveloperMappingProps) => (
+  <Mutate<
+    ResponseDeveloperMappingDTO,
+    Failure | Error,
+    void,
+    DeveloperMappingDTORequestBody,
+    UpdateDeveloperMappingPathParams
+  >
+    verb="PUT"
+    path={`/admin/developer-license-mapping/${accountIdentifier}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateDeveloperMappingProps = Omit<
+  UseMutateProps<
+    ResponseDeveloperMappingDTO,
+    Failure | Error,
+    void,
+    DeveloperMappingDTORequestBody,
+    UpdateDeveloperMappingPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateDeveloperMappingPathParams
+
+export const useUpdateDeveloperMapping = ({ accountIdentifier, ...props }: UseUpdateDeveloperMappingProps) =>
+  useMutate<
+    ResponseDeveloperMappingDTO,
+    Failure | Error,
+    void,
+    DeveloperMappingDTORequestBody,
+    UpdateDeveloperMappingPathParams
+  >(
+    'PUT',
+    (paramsInPath: UpdateDeveloperMappingPathParams) =>
+      `/admin/developer-license-mapping/${paramsInPath.accountIdentifier}`,
+    { base: getConfig('ng/api'), pathParams: { accountIdentifier }, ...props }
+  )
+
+export const updateDeveloperMappingPromise = (
+  {
+    accountIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseDeveloperMappingDTO,
+    Failure | Error,
+    void,
+    DeveloperMappingDTORequestBody,
+    UpdateDeveloperMappingPathParams
+  > & { accountIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseDeveloperMappingDTO,
+    Failure | Error,
+    void,
+    DeveloperMappingDTORequestBody,
+    UpdateDeveloperMappingPathParams
+  >('PUT', getConfig('ng/api'), `/admin/developer-license-mapping/${accountIdentifier}`, props, signal)
 
 export interface CheckAgentMtlsEndpointDomainPrefixAvailabilityQueryParams {
   /**
@@ -29879,104 +30202,6 @@ export const useGetBuildDetailsForGoogleArtifactRegistry = (props: UseGetBuildDe
     { base: getConfig('ng/api'), ...props }
   )
 
-export interface GetRepoDetailsForGoogleArtifactRegistryQueryParams {
-  connectorRef?: string
-  region?: string
-  repositoryName?: string
-  project?: string
-  package?: string
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  version?: string
-  versionRegex?: string
-  branch?: string
-  repoIdentifier?: string
-  getDefaultFromOtherRepo?: boolean
-  parentEntityConnectorRef?: string
-  parentEntityRepoName?: string
-  parentEntityAccountIdentifier?: string
-  parentEntityOrgIdentifier?: string
-  parentEntityProjectIdentifier?: string
-  repoName?: string
-  repositoryType?: string
-}
-
-export type UseGetRepoDetailsForGoogleArtifactRegistryProps = Omit<
-  UseGetProps<ResponseGARResponseDTO, Failure | Error, GetRepoDetailsForGoogleArtifactRegistryQueryParams, void>,
-  'path'
->
-
-/**
- * Gets google artifact registry repo details
- */
-export const useGetRepoDetailsForGoogleArtifactRegistry = (props: UseGetRepoDetailsForGoogleArtifactRegistryProps) =>
-  useGet<ResponseGARResponseDTO, Failure | Error, GetRepoDetailsForGoogleArtifactRegistryQueryParams, void>(
-    `/artifacts/gar/getRepositories`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-export interface GetRepoDetailsForGoogleArtifactRegistryV2QueryParams {
-  connectorRef?: string
-  region?: string
-  repositoryName?: string
-  project?: string
-  package?: string
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  pipelineIdentifier?: string
-  version?: string
-  versionRegex?: string
-  fqnPath: string
-  serviceId?: string
-  branch?: string
-  repoIdentifier?: string
-  getDefaultFromOtherRepo?: boolean
-  parentEntityConnectorRef?: string
-  parentEntityRepoName?: string
-  parentEntityAccountIdentifier?: string
-  parentEntityOrgIdentifier?: string
-  parentEntityProjectIdentifier?: string
-  repoName?: string
-}
-
-export type GetRepoDetailsForGoogleArtifactRegistryV2Props = Omit<
-  MutateProps<
-    ResponseGARResponseDTO,
-    Failure | Error,
-    GetRepoDetailsForGoogleArtifactRegistryV2QueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-export type UseGetRepoDetailsForGoogleArtifactRegistryV2Props = Omit<
-  UseMutateProps<
-    ResponseGARResponseDTO,
-    Failure | Error,
-    GetRepoDetailsForGoogleArtifactRegistryV2QueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Gets google artifact registry repo details v2
- */
-export const useGetRepoDetailsForGoogleArtifactRegistryV2 = (
-  props: UseGetRepoDetailsForGoogleArtifactRegistryV2Props
-) =>
-  useMutate<
-    ResponseGARResponseDTO,
-    Failure | Error,
-    GetRepoDetailsForGoogleArtifactRegistryV2QueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    void
-  >('POST', `/artifacts/gar/v2/getRepositories`, { base: getConfig('ng/api'), ...props })
-
 /**
  * Gets google artifact registry build details
  */
@@ -30084,6 +30309,74 @@ export const getLastSuccessfulBuildForGoogleArtifactRegistryPromise = (
     void
   >('POST', getConfig('ng/api'), `/artifacts/gar/getLastSuccessfulBuild`, props, signal)
 
+export interface GetPackagesForGoogleArtifactRegistryQueryParams {
+  connectorRef?: string
+  region?: string
+  repositoryName?: string
+  project?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+}
+
+export type GetPackagesForGoogleArtifactRegistryProps = Omit<
+  GetProps<ResponseGARPackageDTOList, Failure | Error, GetPackagesForGoogleArtifactRegistryQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets google artifact registry packages
+ */
+export const GetPackagesForGoogleArtifactRegistry = (props: GetPackagesForGoogleArtifactRegistryProps) => (
+  <Get<ResponseGARPackageDTOList, Failure | Error, GetPackagesForGoogleArtifactRegistryQueryParams, void>
+    path={`/artifacts/gar/getPackages`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetPackagesForGoogleArtifactRegistryProps = Omit<
+  UseGetProps<ResponseGARPackageDTOList, Failure | Error, GetPackagesForGoogleArtifactRegistryQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets google artifact registry packages
+ */
+export const useGetPackagesForGoogleArtifactRegistry = (props: UseGetPackagesForGoogleArtifactRegistryProps) =>
+  useGet<ResponseGARPackageDTOList, Failure | Error, GetPackagesForGoogleArtifactRegistryQueryParams, void>(
+    `/artifacts/gar/getPackages`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets google artifact registry packages
+ */
+export const getPackagesForGoogleArtifactRegistryPromise = (
+  props: GetUsingFetchProps<
+    ResponseGARPackageDTOList,
+    Failure | Error,
+    GetPackagesForGoogleArtifactRegistryQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseGARPackageDTOList, Failure | Error, GetPackagesForGoogleArtifactRegistryQueryParams, void>(
+    getConfig('ng/api'),
+    `/artifacts/gar/getPackages`,
+    props,
+    signal
+  )
+
 export type GetRegionsForGoogleArtifactRegistryProps = Omit<
   GetProps<ResponseListRegionGar, Failure | Error, void, void>,
   'path'
@@ -30127,6 +30420,73 @@ export const getRegionsForGoogleArtifactRegistryPromise = (
     props,
     signal
   )
+
+export interface GetRepositoriesForGoogleArtifactRegistryQueryParams {
+  connectorRef?: string
+  region?: string
+  project?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+}
+
+export type GetRepositoriesForGoogleArtifactRegistryProps = Omit<
+  GetProps<ResponseGARRepositoryDTOList, Failure | Error, GetRepositoriesForGoogleArtifactRegistryQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets Repositories google artifact registry
+ */
+export const GetRepositoriesForGoogleArtifactRegistry = (props: GetRepositoriesForGoogleArtifactRegistryProps) => (
+  <Get<ResponseGARRepositoryDTOList, Failure | Error, GetRepositoriesForGoogleArtifactRegistryQueryParams, void>
+    path={`/artifacts/gar/getRepositories`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetRepositoriesForGoogleArtifactRegistryProps = Omit<
+  UseGetProps<ResponseGARRepositoryDTOList, Failure | Error, GetRepositoriesForGoogleArtifactRegistryQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets Repositories google artifact registry
+ */
+export const useGetRepositoriesForGoogleArtifactRegistry = (props: UseGetRepositoriesForGoogleArtifactRegistryProps) =>
+  useGet<ResponseGARRepositoryDTOList, Failure | Error, GetRepositoriesForGoogleArtifactRegistryQueryParams, void>(
+    `/artifacts/gar/getRepositories`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets Repositories google artifact registry
+ */
+export const getRepositoriesForGoogleArtifactRegistryPromise = (
+  props: GetUsingFetchProps<
+    ResponseGARRepositoryDTOList,
+    Failure | Error,
+    GetRepositoriesForGoogleArtifactRegistryQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseGARRepositoryDTOList,
+    Failure | Error,
+    GetRepositoriesForGoogleArtifactRegistryQueryParams,
+    void
+  >(getConfig('ng/api'), `/artifacts/gar/getRepositories`, props, signal)
 
 export interface GetBuildDetailsForGoogleArtifactRegistryV2QueryParams {
   connectorRef?: string
@@ -30327,6 +30687,197 @@ export const getLastSuccessfulBuildForGoogleArtifactRegistryV2Promise = (
     GarRequestDTORequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/gar/v2/getLastSuccessfulBuild`, props, signal)
+
+export interface GetPackagesForGoogleArtifactRegistryV2QueryParams {
+  connectorRef?: string
+  region?: string
+  repositoryName?: string
+  project?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  pipelineIdentifier?: string
+  fqnPath: string
+  serviceId?: string
+  projectIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+}
+
+export type GetPackagesForGoogleArtifactRegistryV2Props = Omit<
+  MutateProps<
+    ResponseGARPackageDTOList,
+    Failure | Error,
+    GetPackagesForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets Repositories google artifact packages V2
+ */
+export const GetPackagesForGoogleArtifactRegistryV2 = (props: GetPackagesForGoogleArtifactRegistryV2Props) => (
+  <Mutate<
+    ResponseGARPackageDTOList,
+    Failure | Error,
+    GetPackagesForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/artifacts/gar/v2/getPackages`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetPackagesForGoogleArtifactRegistryV2Props = Omit<
+  UseMutateProps<
+    ResponseGARPackageDTOList,
+    Failure | Error,
+    GetPackagesForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets Repositories google artifact packages V2
+ */
+export const useGetPackagesForGoogleArtifactRegistryV2 = (props: UseGetPackagesForGoogleArtifactRegistryV2Props) =>
+  useMutate<
+    ResponseGARPackageDTOList,
+    Failure | Error,
+    GetPackagesForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', `/artifacts/gar/v2/getPackages`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Gets Repositories google artifact packages V2
+ */
+export const getPackagesForGoogleArtifactRegistryV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseGARPackageDTOList,
+    Failure | Error,
+    GetPackagesForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseGARPackageDTOList,
+    Failure | Error,
+    GetPackagesForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/artifacts/gar/v2/getPackages`, props, signal)
+
+export interface GetRepositoriesForGoogleArtifactRegistryV2QueryParams {
+  connectorRef?: string
+  region?: string
+  project?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  pipelineIdentifier?: string
+  fqnPath: string
+  serviceId?: string
+  projectIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+}
+
+export type GetRepositoriesForGoogleArtifactRegistryV2Props = Omit<
+  MutateProps<
+    ResponseGARRepositoryDTOList,
+    Failure | Error,
+    GetRepositoriesForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets Repositories google artifact registry V2
+ */
+export const GetRepositoriesForGoogleArtifactRegistryV2 = (props: GetRepositoriesForGoogleArtifactRegistryV2Props) => (
+  <Mutate<
+    ResponseGARRepositoryDTOList,
+    Failure | Error,
+    GetRepositoriesForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/artifacts/gar/v2/getRepositories`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetRepositoriesForGoogleArtifactRegistryV2Props = Omit<
+  UseMutateProps<
+    ResponseGARRepositoryDTOList,
+    Failure | Error,
+    GetRepositoriesForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets Repositories google artifact registry V2
+ */
+export const useGetRepositoriesForGoogleArtifactRegistryV2 = (
+  props: UseGetRepositoriesForGoogleArtifactRegistryV2Props
+) =>
+  useMutate<
+    ResponseGARRepositoryDTOList,
+    Failure | Error,
+    GetRepositoriesForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', `/artifacts/gar/v2/getRepositories`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Gets Repositories google artifact registry V2
+ */
+export const getRepositoriesForGoogleArtifactRegistryV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseGARRepositoryDTOList,
+    Failure | Error,
+    GetRepositoriesForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseGARRepositoryDTOList,
+    Failure | Error,
+    GetRepositoriesForGoogleArtifactRegistryV2QueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/artifacts/gar/v2/getRepositories`, props, signal)
 
 export interface GetBuildDetailsForGcrQueryParams {
   imagePath: string
@@ -43599,6 +44150,10 @@ export interface ListReferredByEntitiesQueryParams {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -43906,6 +44461,10 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
   searchTerm?: string
 }
 
@@ -47642,6 +48201,10 @@ export interface GetReferencedByQueryParams {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
   searchTerm?: string
 }
 
@@ -48107,7 +48670,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -48121,7 +48684,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -48136,7 +48699,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -48150,7 +48713,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -48162,7 +48725,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -48171,7 +48734,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -48734,7 +49297,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -48748,7 +49311,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -48763,7 +49326,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -48777,7 +49340,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -48789,7 +49352,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -48798,7 +49361,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -50615,6 +51178,10 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -50929,6 +51496,10 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'IDPStage'
       | 'ChaosHub'
       | 'IdpCookieCutter'
+      | 'IdpCreateRepo'
+      | 'DownloadAwsS3'
+      | 'IdpCodePush'
+      | 'RegisterCatalog'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -58177,6 +58748,10 @@ export interface GetStepYamlSchemaQueryParams {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
   yamlGroup?: string
 }
 
@@ -58551,6 +59126,10 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -69898,6 +70477,161 @@ export const provisionResourcesForCIPromise = (
     signal
   )
 
+export interface DeleteTunnelQueryParams {
+  accountIdentifier: string
+}
+
+export type DeleteTunnelProps = Omit<
+  MutateProps<ResponseBoolean, Failure | Error, DeleteTunnelQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Delete the tunnel
+ */
+export const DeleteTunnel = (props: DeleteTunnelProps) => (
+  <Mutate<ResponseBoolean, Failure | Error, DeleteTunnelQueryParams, void, void>
+    verb="DELETE"
+    path={`/tunnel`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseDeleteTunnelProps = Omit<
+  UseMutateProps<ResponseBoolean, Failure | Error, DeleteTunnelQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Delete the tunnel
+ */
+export const useDeleteTunnel = (props: UseDeleteTunnelProps) =>
+  useMutate<ResponseBoolean, Failure | Error, DeleteTunnelQueryParams, void, void>('DELETE', `/tunnel`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Delete the tunnel
+ */
+export const deleteTunnelPromise = (
+  props: MutateUsingFetchProps<ResponseBoolean, Failure | Error, DeleteTunnelQueryParams, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseBoolean, Failure | Error, DeleteTunnelQueryParams, void, void>(
+    'DELETE',
+    getConfig('ng/api'),
+    `/tunnel`,
+    props,
+    signal
+  )
+
+export interface GetTunnelQueryParams {
+  accountIdentifier: string
+}
+
+export type GetTunnelProps = Omit<
+  GetProps<ResponseTunnelResponseDTO, Failure | Error, GetTunnelQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get the tunnel
+ */
+export const GetTunnel = (props: GetTunnelProps) => (
+  <Get<ResponseTunnelResponseDTO, Failure | Error, GetTunnelQueryParams, void>
+    path={`/tunnel`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetTunnelProps = Omit<
+  UseGetProps<ResponseTunnelResponseDTO, Failure | Error, GetTunnelQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get the tunnel
+ */
+export const useGetTunnel = (props: UseGetTunnelProps) =>
+  useGet<ResponseTunnelResponseDTO, Failure | Error, GetTunnelQueryParams, void>(`/tunnel`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get the tunnel
+ */
+export const getTunnelPromise = (
+  props: GetUsingFetchProps<ResponseTunnelResponseDTO, Failure | Error, GetTunnelQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseTunnelResponseDTO, Failure | Error, GetTunnelQueryParams, void>(
+    getConfig('ng/api'),
+    `/tunnel`,
+    props,
+    signal
+  )
+
+export interface RegisterTunnelQueryParams {
+  accountIdentifier: string
+}
+
+export type RegisterTunnelProps = Omit<
+  MutateProps<ResponseBoolean, Failure | Error, RegisterTunnelQueryParams, TunnelRegisterRequestDTO, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Register the tunnel
+ */
+export const RegisterTunnel = (props: RegisterTunnelProps) => (
+  <Mutate<ResponseBoolean, Failure | Error, RegisterTunnelQueryParams, TunnelRegisterRequestDTO, void>
+    verb="POST"
+    path={`/tunnel`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseRegisterTunnelProps = Omit<
+  UseMutateProps<ResponseBoolean, Failure | Error, RegisterTunnelQueryParams, TunnelRegisterRequestDTO, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Register the tunnel
+ */
+export const useRegisterTunnel = (props: UseRegisterTunnelProps) =>
+  useMutate<ResponseBoolean, Failure | Error, RegisterTunnelQueryParams, TunnelRegisterRequestDTO, void>(
+    'POST',
+    `/tunnel`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Register the tunnel
+ */
+export const registerTunnelPromise = (
+  props: MutateUsingFetchProps<
+    ResponseBoolean,
+    Failure | Error,
+    RegisterTunnelQueryParams,
+    TunnelRegisterRequestDTO,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseBoolean, Failure | Error, RegisterTunnelQueryParams, TunnelRegisterRequestDTO, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/tunnel`,
+    props,
+    signal
+  )
+
 export interface GetCDLicenseUsageForServiceInstancesQueryParams {
   accountIdentifier?: string
   timestamp?: number
@@ -73900,6 +74634,7 @@ export interface ListSecretsV2QueryParams {
   pageSize?: number
   sortOrders?: string[]
   pageToken?: string
+  secretManagerIdentifiers?: string[]
 }
 
 export type ListSecretsV2Props = Omit<
@@ -75681,6 +76416,10 @@ export interface GetYamlSchemaQueryParams {
     | 'IDPStage'
     | 'ChaosHub'
     | 'IdpCookieCutter'
+    | 'IdpCreateRepo'
+    | 'DownloadAwsS3'
+    | 'IdpCodePush'
+    | 'RegisterCatalog'
   subtype?:
     | 'K8sCluster'
     | 'Git'

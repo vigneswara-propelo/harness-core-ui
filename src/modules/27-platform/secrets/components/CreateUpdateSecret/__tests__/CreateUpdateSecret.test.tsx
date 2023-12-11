@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, fireEvent, findByText, act, queryByText, waitFor } from '@testing-library/react'
+import { render, fireEvent, findByText, act, queryByText, waitFor, screen } from '@testing-library/react'
 
 import { TestWrapper } from '@common/utils/testUtils'
 
@@ -70,7 +70,35 @@ describe('CreateUpdateSecret', () => {
 
     await waitFor(() => expect(getByText('platform.secrets.labelValue')).toBeTruthy())
 
+    const secretManagerField = screen.getByTestId(/secretManagerIdentifier/)
+    expect(secretManagerField).toBeInTheDocument()
+    expect(secretManagerField).not.toBeDisabled()
+
     expect(container).toMatchSnapshot()
+  })
+
+  test('it should disable secret manager field when connectorTypeContext is of secret manager type and secret type is of text or file type', async () => {
+    const { getByText } = render(
+      <TestWrapper path="/account/:accountId/resources/secrets" pathParams={{ accountId: 'dummy' }}>
+        <CreateUpdateSecret type={'SecretText'} connectorTypeContext="GcpSecretManager" />
+      </TestWrapper>
+    )
+    await waitFor(() => expect(getByText('platform.secrets.labelValue')).toBeInTheDocument())
+    expect(getByText('platform.secrets.labelSecretName')).toBeInTheDocument()
+    const secretManagerField = screen.getByTestId(/secretManagerIdentifier/)
+    expect(secretManagerField).toBeInTheDocument()
+    expect(secretManagerField).toBeDisabled()
+  })
+
+  test('it should NOT disable secret manager field when secret type is of SSHKey type', async () => {
+    render(
+      <TestWrapper path="/account/:accountId/resources/secrets" pathParams={{ accountId: 'dummy' }}>
+        <CreateUpdateSecret type={'SSHKey'} connectorTypeContext="GcpSecretManager" />
+      </TestWrapper>
+    )
+    const secretManagerField = await screen.findByTestId(/secretManagerIdentifier/)
+    expect(secretManagerField).toBeInTheDocument()
+    expect(secretManagerField).not.toBeDisabled()
   })
 
   test('Create File Secret', async () => {
@@ -81,7 +109,9 @@ describe('CreateUpdateSecret', () => {
     )
     await waitFor(() => expect(getByText('platform.secrets.labelSecretName')).toBeTruthy())
     await waitFor(() => expect(getByText('platform.secrets.secret.labelSecretFile')).toBeTruthy())
-
+    const secretManagerField = screen.getByTestId(/secretManagerIdentifier/)
+    expect(secretManagerField).toBeInTheDocument()
+    expect(secretManagerField).not.toBeDisabled()
     expect(container).toMatchSnapshot()
   })
 
@@ -94,6 +124,9 @@ describe('CreateUpdateSecret', () => {
     await waitFor(() => expect(getByText('platform.secrets.secret.labelSecretType')).toBeTruthy())
     expect(getByText('platform.secrets.secret.labelSecretType')).toBeDefined()
     expect(getByText('platform.secrets.labelValue')).toBeDefined()
+    const secretManagerField = screen.getByTestId(/secretManagerIdentifier/)
+    expect(secretManagerField).toBeInTheDocument()
+    expect(secretManagerField).not.toBeDisabled()
     expect(container).toMatchSnapshot()
   })
 
