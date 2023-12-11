@@ -34,6 +34,7 @@ export interface AsgAwsLoadBalancerConfigYaml {
   prodListenerRuleArn: string
   stageListener: string
   stageListenerRuleArn: string
+  isTrafficShift?: boolean
 }
 
 export interface AsgBlueGreenDeployStepInitialValues extends StepElementConfig {
@@ -139,9 +140,11 @@ export class AsgBlueGreenDeployStep extends PipelineStep<AsgBlueGreenDeployStepI
     data,
     template,
     getString,
-    viewType
+    viewType,
+    featureFlagValues
   }: ValidateInputSetProps<AsgBlueGreenDeployStepInitialValues>): FormikErrors<AsgBlueGreenDeployStepInitialValues> {
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
+    const { CDS_ASG_SHIFT_TRAFFIC_STEP_NG } = featureFlagValues || {}
     const errors: FormikErrors<AsgBlueGreenDeployStepInitialValues> = validateGenericFields({
       data,
       template,
@@ -154,8 +157,17 @@ export class AsgBlueGreenDeployStep extends PipelineStep<AsgBlueGreenDeployStepI
       !isEmpty(get(data, 'spec.loadBalancers'))
     ) {
       get(data, 'spec.loadBalancers').forEach((balancer: AsgAwsLoadBalancerConfigYaml, i: number) => {
+        const LoadBalancersOptionlField = ['stageListener', 'stageListenerRuleArn']
         for (const prop in balancer) {
           if (isEmpty(balancer[prop as keyof AsgAwsLoadBalancerConfigYaml])) {
+            if (
+              (CDS_ASG_SHIFT_TRAFFIC_STEP_NG &&
+                LoadBalancersOptionlField.includes(prop) &&
+                !!balancer['isTrafficShift']) ||
+              prop === 'isTrafficShift'
+            ) {
+              return
+            }
             set(
               errors,
               `spec.loadBalancers[${i}].${prop}`,

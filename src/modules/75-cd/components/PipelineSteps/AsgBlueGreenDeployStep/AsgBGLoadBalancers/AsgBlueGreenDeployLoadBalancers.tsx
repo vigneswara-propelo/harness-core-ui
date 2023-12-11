@@ -12,7 +12,9 @@ import {
   Layout,
   MultiTypeInputType,
   SelectOption,
-  Text
+  Text,
+  Checkbox,
+  Container
 } from '@harness/uicore'
 import { Collapse } from '@blueprintjs/core'
 import { defaultTo, get, isEmpty } from 'lodash-es'
@@ -21,6 +23,7 @@ import { useStrings } from 'framework/strings'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { listenerRulesPromise, ResponseListString, useElasticLoadBalancers, useListeners } from 'services/cd-ng'
 import { extractPort } from '@cd/components/PipelineSteps/ElastigroupBGStageSetupStep/ElastigroupBGStageSetupLoadbalancers'
 import { shouldFetchFieldData } from '../../PipelineStepsUtil'
@@ -36,11 +39,13 @@ export default function AsgBGStageSetupLoadBalancer(props: {
   envId: string
   infraId: string
   path?: string
+  trafficShift?: boolean
 }): React.ReactElement {
   const { formik, readonly, index, remove, envId, infraId, path } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { CDS_ASG_SHIFT_TRAFFIC_STEP_NG } = useFeatureFlags()
 
   const loadBalancersErrors = isEmpty(path)
     ? defaultTo(formik.errors?.spec?.loadBalancers, [])
@@ -382,6 +387,20 @@ export default function AsgBGStageSetupLoadBalancer(props: {
       <Collapse keepChildrenMounted={true} isOpen={true} className={css.collapseCardStyle}>
         {showInputs ? (
           <>
+            {CDS_ASG_SHIFT_TRAFFIC_STEP_NG && (
+              <Container margin={{ bottom: 'medium' }} className={cx(stepCss.formGroup, stepCss.lg)}>
+                <Checkbox
+                  disabled={false}
+                  label={getString('cd.ElastigroupBGStageSetup.useTrafficShift')}
+                  checked={get(formik?.values, getFieldName('isTrafficShift'))}
+                  onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                    formik.setFieldValue(getFieldName('isTrafficShift'), event.currentTarget.checked)
+                    formik.setFieldValue(getFieldName('stageListener'), '')
+                    formik.setFieldValue(getFieldName('stageListenerRuleArn'), '')
+                  }}
+                />
+              </Container>
+            )}
             <div className={cx(stepCss.formGroup, stepCss.lg)}>
               <FormInput.MultiTypeInput
                 name={getFieldName('loadBalancer')}
@@ -487,79 +506,82 @@ export default function AsgBGStageSetupLoadBalancer(props: {
               />
             </div>
 
-            <div className={css.loadBalancerTitles} color={Color.GREY_900}>
-              {getString('cd.ElastigroupBGStageSetup.configureStageListener')}
-            </div>
-
-            <div className={cx(stepCss.formGroup, stepCss.lg)}>
-              <FormInput.MultiTypeInput
-                name={getFieldName('stageListener')}
-                selectItems={listenerList}
-                useValue
-                multiTypeInputProps={{
-                  expressions,
-                  selectProps: {
-                    items: listenerList,
-                    popoverClassName: css.dropdownMenu,
-                    allowCreatingNewItems: true,
-                    loadingItems: loadingListeners
-                  },
-                  width: 400,
-                  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
-                  onChange: selectedValue => {
-                    const selectedValueString =
-                      typeof selectedValue === 'string'
-                        ? selectedValue
-                        : ((selectedValue as SelectOption)?.value as string)
-                    const updatedValues = produce(formik.values, draft => {
-                      draft.spec.loadBalancers[index].stageListener = selectedValueString
-                      if (
-                        getMultiTypeFromValue(draft.spec.loadBalancers[index]?.stageListenerRuleArn) ===
-                        MultiTypeInputType.FIXED
-                      ) {
-                        draft.spec.loadBalancers[index].stageListenerRuleArn = ''
+            {!get(formik?.values, getFieldName('isTrafficShift')) && (
+              <>
+                <div className={css.loadBalancerTitles} color={Color.GREY_900}>
+                  {getString('cd.ElastigroupBGStageSetup.configureStageListener')}
+                </div>
+                <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                  <FormInput.MultiTypeInput
+                    name={getFieldName('stageListener')}
+                    selectItems={listenerList}
+                    useValue
+                    multiTypeInputProps={{
+                      expressions,
+                      selectProps: {
+                        items: listenerList,
+                        popoverClassName: css.dropdownMenu,
+                        allowCreatingNewItems: true,
+                        loadingItems: loadingListeners
+                      },
+                      width: 400,
+                      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                      onChange: selectedValue => {
+                        const selectedValueString =
+                          typeof selectedValue === 'string'
+                            ? selectedValue
+                            : ((selectedValue as SelectOption)?.value as string)
+                        const updatedValues = produce(formik.values, draft => {
+                          draft.spec.loadBalancers[index].stageListener = selectedValueString
+                          if (
+                            getMultiTypeFromValue(draft.spec.loadBalancers[index]?.stageListenerRuleArn) ===
+                            MultiTypeInputType.FIXED
+                          ) {
+                            draft.spec.loadBalancers[index].stageListenerRuleArn = ''
+                          }
+                        })
+                        formik.setValues(updatedValues)
+                      },
+                      onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                        fetchListeners(e, defaultTo(loadBalancersValue[index]?.loadBalancer, ''))
                       }
-                    })
-                    formik.setValues(updatedValues)
-                  },
-                  onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-                    fetchListeners(e, defaultTo(loadBalancersValue[index]?.loadBalancer, ''))
-                  }
-                }}
-                label={getString('cd.steps.ecsBGCreateServiceStep.labels.stageListener')}
-                placeholder={onLoadingText(loadingListeners)}
-                disabled={readonly}
-              />
-            </div>
+                    }}
+                    label={getString('cd.steps.ecsBGCreateServiceStep.labels.stageListener')}
+                    placeholder={onLoadingText(loadingListeners)}
+                    disabled={readonly}
+                  />
+                </div>
 
-            <div className={cx(stepCss.formGroup, stepCss.lg)}>
-              <FormInput.MultiTypeInput
-                name={getFieldName('stageListenerRuleArn')}
-                selectItems={stageListenerRules}
-                useValue
-                multiTypeInputProps={{
-                  expressions,
-                  selectProps: {
-                    items: stageListenerRules,
-                    popoverClassName: css.dropdownMenu,
-                    allowCreatingNewItems: true,
-                    loadingItems: stageListenerRulesLoading
-                  },
-                  width: 400,
-                  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
-                  onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-                    fetchStageListenerRules(
-                      defaultTo(loadBalancersValue[index]?.loadBalancer, ''),
-                      defaultTo(loadBalancersValue[index]?.stageListener, ''),
-                      e
-                    )
-                  }
-                }}
-                label={getString('cd.steps.ecsBGCreateServiceStep.labels.stageListenerRuleARN')}
-                placeholder={onLoadingText(stageListenerRulesLoading)}
-                disabled={readonly}
-              />
-            </div>
+                <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                  <FormInput.MultiTypeInput
+                    name={getFieldName('stageListenerRuleArn')}
+                    selectItems={stageListenerRules}
+                    useValue
+                    multiTypeInputProps={{
+                      expressions,
+                      selectProps: {
+                        items: stageListenerRules,
+                        popoverClassName: css.dropdownMenu,
+                        allowCreatingNewItems: true,
+                        loadingItems: stageListenerRulesLoading
+                      },
+                      width: 400,
+                      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                      onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                        fetchStageListenerRules(
+                          defaultTo(loadBalancersValue[index]?.loadBalancer, ''),
+                          defaultTo(loadBalancersValue[index]?.stageListener, ''),
+                          e
+                        )
+                      }
+                    }}
+                    label={getString('cd.steps.ecsBGCreateServiceStep.labels.stageListenerRuleARN')}
+                    placeholder={onLoadingText(stageListenerRulesLoading)}
+                    disabled={readonly}
+                  />
+                </div>
+              </>
+            )}
           </>
         ) : (
           <Layout.Vertical>

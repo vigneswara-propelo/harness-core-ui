@@ -84,11 +84,11 @@ const AsgBlueGreenDeployStepEdit = (
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { CDS_BASIC_ASG } = useFeatureFlags()
+  const { CDS_BASIC_ASG, CDS_ASG_SHIFT_TRAFFIC_STEP_NG } = useFeatureFlags()
   const selectedStageSpec = selectedStage?.stage?.spec
   const selectedStageSpecEnv = selectedStageSpec?.environment
   const selectedStageSpecInfra = selectedStageSpec?.infrastructure
-
+  const defaultTrafficShift = CDS_ASG_SHIFT_TRAFFIC_STEP_NG ? false : undefined
   const environmentRef = defaultTo(selectedStageSpecEnv?.environmentRef, selectedStageSpecInfra?.environmentRef)
   const infrastructureRef = selectedStageSpecEnv?.infrastructureDefinitions?.[0].identifier
   const shouldFetchLoadBalancers = shouldFetchFieldData([
@@ -133,6 +133,22 @@ const AsgBlueGreenDeployStepEdit = (
       ]
     } else if (isEmpty(loadBalancersToUpdate)) {
       loadBalancersToUpdate = [initialLoadBalancer]
+    } else if (CDS_ASG_SHIFT_TRAFFIC_STEP_NG && isArray(loadBalancersToUpdate)) {
+      loadBalancersToUpdate = loadBalancersToUpdate.map(
+        (loadBalancerItem: AsgAwsLoadBalancerConfigYaml): AsgAwsLoadBalancerConfigYaml => {
+          if (
+            !isEmpty(loadBalancerItem.loadBalancer) &&
+            isEmpty(loadBalancerItem.stageListener) &&
+            isEmpty(loadBalancerItem.stageListenerRuleArn)
+          ) {
+            return { ...loadBalancerItem, isTrafficShift: true }
+          }
+          return {
+            ...loadBalancerItem,
+            isTrafficShift: false
+          }
+        }
+      )
     }
 
     const initVals = {
@@ -220,16 +236,28 @@ const AsgBlueGreenDeployStepEdit = (
                       name: getString('cd.steps.ecsBGCreateServiceStep.labels.prodListenerRuleARN')
                     })
                   ),
-                  stageListener: Yup.string().required(
-                    getString('common.validation.fieldIsRequired', {
-                      name: getString('cd.steps.ecsBGCreateServiceStep.labels.stageListener')
-                    })
-                  ),
-                  stageListenerRuleArn: Yup.string().required(
-                    getString('common.validation.fieldIsRequired', {
-                      name: getString('cd.steps.ecsBGCreateServiceStep.labels.stageListenerRuleARN')
-                    })
-                  )
+                  stageListener: Yup.string().when('isTrafficShift', {
+                    is: isTrafficShift => {
+                      return !isTrafficShift
+                    },
+                    then: Yup.string().required(
+                      getString('common.validation.fieldIsRequired', {
+                        name: getString('cd.steps.ecsBGCreateServiceStep.labels.stageListener')
+                      })
+                    ),
+                    otherwise: Yup.string().nullable()
+                  }),
+                  stageListenerRuleArn: Yup.string().when('isTrafficShift', {
+                    is: isTrafficShift => {
+                      return !isTrafficShift
+                    },
+                    then: Yup.string().required(
+                      getString('common.validation.fieldIsRequired', {
+                        name: getString('cd.steps.ecsBGCreateServiceStep.labels.stageListenerRuleARN')
+                      })
+                    ),
+                    otherwise: Yup.string().nullable()
+                  })
                 })
               )
               .nullable(),
@@ -315,6 +343,7 @@ const AsgBlueGreenDeployStepEdit = (
       >
         {(formik: FormikProps<AsgBlueGreenDeployStepInitialValues>) => {
           setFormikRef(formikRef, formik)
+
           return (
             <FormikForm>
               <NameTimeoutField
@@ -379,7 +408,8 @@ const AsgBlueGreenDeployStepEdit = (
                                     prodListener: '',
                                     prodListenerRuleArn: '',
                                     stageListener: '',
-                                    stageListenerRuleArn: ''
+                                    stageListenerRuleArn: '',
+                                    isTrafficShift: defaultTrafficShift
                                   })
                                 }
                               >
@@ -396,7 +426,8 @@ const AsgBlueGreenDeployStepEdit = (
                                         prodListener: '',
                                         prodListenerRuleArn: '',
                                         stageListener: '',
-                                        stageListenerRuleArn: ''
+                                        stageListenerRuleArn: '',
+                                        isTrafficShift: defaultTrafficShift
                                       }
                                     ])
                                   } else {
@@ -444,7 +475,8 @@ const AsgBlueGreenDeployStepEdit = (
                                     prodListener: '',
                                     prodListenerRuleArn: '',
                                     stageListener: '',
-                                    stageListenerRuleArn: ''
+                                    stageListenerRuleArn: '',
+                                    isTrafficShift: defaultTrafficShift
                                   }
                                 ])
                               } else {

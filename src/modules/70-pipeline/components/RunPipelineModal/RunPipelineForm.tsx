@@ -204,6 +204,7 @@ function RunPipelineFormBasic({
   const isErrorEnhancementFFEnabled = useFeatureFlag(FeatureFlag.PIE_ERROR_ENHANCEMENTS)
   const loadFromCache = useFeatureFlag(FeatureFlag.CDS_ENABLE_LOAD_FROM_CACHE_FOR_RETRY_FORM).toString()
   const isTasBgValidationEnabled = useFeatureFlag(FeatureFlag.CDS_PCF_SUPPORT_BG_WITH_2_APPS_NG)
+  const isAsgBgTrafficShiftValidationEnabled = useFeatureFlag(FeatureFlag.CDS_ASG_SHIFT_TRAFFIC_STEP_NG)
 
   const validateFormRef = useRef<(values?: PipelineInfoConfig) => Promise<FormikErrors<PipelineInfoConfig>>>()
   const [stageToRetryState, setStageToRetryState] = useState<SelectStageToRetryState | null>(null)
@@ -851,7 +852,8 @@ function RunPipelineFormBasic({
             viewType: StepViewType.DeploymentForm,
             selectedStageData: selectedStages,
             featureFlagValues: {
-              [FeatureFlag.CDS_PCF_SUPPORT_BG_WITH_2_APPS_NG]: isTasBgValidationEnabled
+              [FeatureFlag.CDS_PCF_SUPPORT_BG_WITH_2_APPS_NG]: isTasBgValidationEnabled,
+              [FeatureFlag.CDS_ASG_SHIFT_TRAFFIC_STEP_NG]: isAsgBgTrafficShiftValidationEnabled
             }
           }) as any) || formErrors
         resolve(validatedErrors)

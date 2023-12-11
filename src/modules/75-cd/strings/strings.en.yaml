@@ -1327,6 +1327,7 @@ ElastigroupBGStageSetup:
   configureStageListener: Configure your Stage Listener
   listenerColon: 'Listener :'
   ruleColon: 'Rule :'
+  useTrafficShift: 'Use Shift Traffic'
 moduleConfiguration: Module Configuration
 inlineEntityFilters:
   filterIdentifier: Filter identifier

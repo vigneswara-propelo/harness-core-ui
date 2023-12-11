@@ -6248,6 +6248,7 @@ export interface StringsMap {
   'cd.ElastigroupBGStageSetup.connectedCloudProvider': string
   'cd.ElastigroupBGStageSetup.listenerColon': string
   'cd.ElastigroupBGStageSetup.ruleColon': string
+  'cd.ElastigroupBGStageSetup.useTrafficShift': string
   'cd.ElastigroupStep.appName': string
   'cd.ElastigroupStep.desiredInstances': string
   'cd.ElastigroupStep.maxInstances': string
