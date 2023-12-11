@@ -616,7 +616,7 @@ describe('VARIABLES', () => {
   })
   test(`renders the service variables form`, async () => {
     const onUpdateMock = jest.fn()
-    const { container, queryByText } = render(
+    const { container, queryByText, getByText } = render(
       <Formik
         initialValues={{ variables: [{ name: 'testvar1', type: 'String', value: 'somedefaultvalue' }] }}
         formName="dummy"
@@ -639,7 +639,8 @@ describe('VARIABLES', () => {
                       {
                         name: 'testvar1',
                         type: 'String',
-                        default: 'somedefaultvalue'
+                        default: 'somedefaultvalue',
+                        description: 'Test description'
                       }
                     ] as AllNGVariables[]
                   }
@@ -661,7 +662,17 @@ describe('VARIABLES', () => {
     )
 
     await waitFor(() => expect(queryByText('common.variables')).toBeTruthy())
-    expect(container).toMatchSnapshot('variables with default value')
+    // Check for the header labels
+    expect(getByText('name')).toBeInTheDocument()
+    expect(getByText('description')).toBeInTheDocument()
+    expect(getByText('valueLabel')).toBeInTheDocument()
+
+    // Check for the variables
+    expect(getByText('testvar1')).toBeInTheDocument()
+    expect(getByText('common.optionalLabel')).toBeInTheDocument()
+    expect(getByText('String')).toBeInTheDocument()
+    expect(container.querySelector('[data-icon="description"]')).toBeInTheDocument()
+    expect(container.querySelector('input[value="somedefaultvalue"]')).toBeInTheDocument()
   })
 })
 

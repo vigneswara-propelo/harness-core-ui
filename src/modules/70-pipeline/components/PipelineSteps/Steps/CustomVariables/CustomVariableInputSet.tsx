@@ -6,7 +6,14 @@
  */
 
 import React from 'react'
-import { Text, MultiTypeInputType, getMultiTypeFromValue, AllowedTypes, MultiSelectOption } from '@harness/uicore'
+import {
+  Text,
+  MultiTypeInputType,
+  getMultiTypeFromValue,
+  AllowedTypes,
+  MultiSelectOption,
+  SelectOption
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { cloneDeep, defaultTo, get, isEmpty } from 'lodash-es'
@@ -66,7 +73,6 @@ export interface ConectedCustomVariableInputSetProps extends CustomVariableInput
 
 function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps): React.ReactElement {
   const {
-    initialValues,
     template,
     path,
     variableNamePrefix = '',
@@ -84,6 +90,7 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
   const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const formikValue = get(formik?.values, basePath)
   const formikVariables = Array.isArray(formikValue) ? formikValue : []
+  const allValuesVariables = get(allValues, 'variables', [])
   // get doesn't return defaultValue if it gets null
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -119,7 +126,8 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
 
   return (
     <div className={cx(css.customVariablesInputSets, 'customVariables', className)} id={domId}>
-      {initialValues?.variables && initialValues.variables?.length > 0 && (
+      {/* Show Header only when there is any template variables to show */}
+      {template?.variables && template?.variables?.length > 0 && (
         <section className={css.subHeader}>
           <Text font={{ variation: FontVariation.SMALL_BOLD, size: 'normal' }} color={Color.GREY_500}>
             {getString('name')}
@@ -133,25 +141,57 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
         </section>
       )}
       {template?.variables?.map?.((variable, templateIndex) => {
-        // find Index from values, not from template variables
-        // because the order of the variables might not be the same
-        const index = formikVariables.findIndex((fVar: AllNGVariables) => variable.name === fVar.name)
-
-        const selectOpt = defaultTo(getAllowedValuesFromTemplate(template, `variables[${index}].value`), [])
         const value = defaultTo(variable.value, '')
+
         if (getMultiTypeFromValue(value as string) !== MultiTypeInputType.RUNTIME) {
           return
         }
-        const variableFromAllValues = get(allValues, 'variables', []).find(
-          (fVar: AllNGVariables) => variable.name === fVar.name
-        )
-        const description = defaultTo(variableFromAllValues?.description, '')
+
+        // find Index from values, not from template variables
+        // because the order of the variables might not be the same
+        let index = templateIndex
+        const templateVariableName = defaultTo(variable.name, '')
+        const formikVariableName = defaultTo(formikVariables[templateIndex]?.name, '')
+        const allValuesVariableName = defaultTo(allValuesVariables[templateIndex]?.name, '')
+        /*
+         * Checking for the template variable name and formik variable name for performance improvement.(Some pipelines have more than 100 variables)
+         * As variables name are unique, do not iterate on the array again to find the index if template and formik variable name are same.
+         */
+        if (templateVariableName !== formikVariableName) {
+          index = formikVariables.findIndex((fVar: AllNGVariables) => variable.name === fVar.name)
+        }
+
+        let variableFromAllValues =
+          templateIndex > allValuesVariables.length ? undefined : allValuesVariables[templateIndex]
+
+        /*
+         * Checking for the template variable name and allValues variable name for performance improvement.
+         * As variables name are unique, do not iterate on the array again to find the index if template and allValues variable name are same.
+         */
+        if (templateVariableName !== allValuesVariableName) {
+          variableFromAllValues = allValuesVariables.find((fVar: AllNGVariables) => variable.name === fVar.name)
+        }
+
+        const description = variableFromAllValues?.description
         const isRequiredVariable = !!variableFromAllValues?.required
         const allowMultiSelectAllowedValues =
           multiSelectSupportForAllowedValues &&
           variable.type === 'String' &&
-          shouldRenderRunTimeInputViewWithAllowedValues(`variables[${index}].value`, template) &&
+          /*
+           * Check if the field need to be rendered with allowed values.
+           * Field value with runtime allowed value: <+input>.allowedValues(1,2,3)
+           */
+          shouldRenderRunTimeInputViewWithAllowedValues(`variables[${templateIndex}].value`, template) &&
           isFixedInput(formik, `${basePath}[${index}].value`)
+
+        let selectOpt: SelectOption[] = []
+
+        // Get allowed values from template only if we need to show that in the field
+        if (allowMultiSelectAllowedValues) {
+          // Get Dropdown Options for the allowed values runtime input field from the field value in template
+          selectOpt = getAllowedValuesFromTemplate(template, `variables[${templateIndex}].value`)
+        }
+
         return (
           <div key={`${variable.name}${index}`} className={css.variableListTable}>
             <NameTypeColumn
