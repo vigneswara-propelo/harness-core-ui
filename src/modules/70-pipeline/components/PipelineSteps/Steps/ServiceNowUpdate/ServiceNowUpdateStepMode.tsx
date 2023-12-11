@@ -748,7 +748,7 @@ function FormContent({
                   }}
                   onRefresh={(index, selectedField, valueObjToUpdate) => {
                     if (isEmpty(selectedField.allowedValues)) {
-                      formik.setFieldValue(`spec.selectedFields[${index}].value`, valueObjToUpdate.displayValue)
+                      formik.setFieldValue(`spec.selectedFields[${index}].value`, valueObjToUpdate.value)
                     } else {
                       formik.setFieldValue(`spec.selectedFields[${index}].value`, {
                         value: valueObjToUpdate.value,
