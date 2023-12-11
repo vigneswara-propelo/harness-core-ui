@@ -37,19 +37,19 @@ export type NavModuleName =
 // Default order of modules on side nav, please add modules to this list accordingly.
 // For any module to be visible on side nav, it has to be added in this list
 export const DEFAULT_MODULES_ORDER: NavModuleName[] = [
-  ModuleName.CODE,
   ModuleName.CD,
   ModuleName.CI,
   ModuleName.CF,
   ModuleName.CE,
-  ModuleName.CV,
   ModuleName.STO,
   ModuleName.CHAOS,
+  ModuleName.SEI,
+  ModuleName.CODE,
+  ModuleName.IDP,
   ModuleName.IACM,
   ModuleName.SSCA,
-  ModuleName.IDP,
-  ModuleName.CET,
-  ModuleName.SEI
+  ModuleName.CV,
+  ModuleName.CET
 ]
 
 export interface useNavModuleInfoReturnType {
@@ -63,6 +63,7 @@ export interface useNavModuleInfoReturnType {
   backgroundColorLight?: string
   shortLabel: StringKeys
   moduleIntro?: StringKeys
+  isNew?: boolean
 }
 
 export interface ModuleInfo {
@@ -75,6 +76,7 @@ export interface ModuleInfo {
   backgroundColorLight?: string
   shortLabel: StringKeys
   moduleIntro?: StringKeys
+  isNew?: boolean
 }
 
 export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
@@ -221,7 +223,8 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     color: '--code-border',
     backgroundColor: '--code-background',
     backgroundColorLight: '--code-background-light',
-    shortLabel: 'common.purpose.code.name'
+    shortLabel: 'common.purpose.code.name',
+    isNew: true
   },
   [ModuleName.IACM]: {
     icon: 'iacm',
@@ -237,7 +240,8 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
         : routes.toIACM({ accountId }),
     featureFlagName: FeatureFlag.IACM_ENABLED,
     color: '--iacm-border',
-    shortLabel: 'common.infrastructures'
+    shortLabel: 'common.infrastructures',
+    isNew: true
   },
   [ModuleName.SSCA]: {
     icon: 'ssca-main',
@@ -254,7 +258,8 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     featureFlagName: FeatureFlag.SSCA_ENABLED,
     color: '--default-module-border',
     shortLabel: 'common.sscaShortLabel',
-    moduleIntro: 'common.moduleIntro.softwareSupplyChainAssurance'
+    moduleIntro: 'common.moduleIntro.softwareSupplyChainAssurance',
+    isNew: true
   },
   [ModuleName.IDP]: {
     icon: 'idp',
@@ -272,7 +277,8 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     shortLabel: 'common.purpose.idp.name',
     moduleIntro: 'common.moduleIntro.idp',
     backgroundColor: '--idp-background',
-    backgroundColorLight: '--idp-background-light'
+    backgroundColorLight: '--idp-background-light',
+    isNew: true
   },
   [ModuleName.CET]: {
     icon: 'cet',
@@ -343,7 +349,7 @@ const getModuleInfo = (
   backgroundColor?: string,
   isNewSidenavEnabled?: boolean
 ): useNavModuleInfoReturnType => {
-  const { icon: moduleIcon, label, getHomePageUrl, shortLabel, moduleIntro } = moduleInfo
+  const { icon: moduleIcon, label, getHomePageUrl, shortLabel, moduleIntro, isNew } = moduleInfo
 
   return {
     icon: moduleIcon,
@@ -354,7 +360,8 @@ const getModuleInfo = (
     color,
     backgroundColor,
     shortLabel,
-    moduleIntro
+    moduleIntro,
+    isNew
   }
 }
 

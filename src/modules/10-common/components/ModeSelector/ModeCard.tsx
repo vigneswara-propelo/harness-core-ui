@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Container, Icon, IconName, IconProps, Layout, Text } from '@harness/uicore'
+import { Icon, IconName, IconProps, Layout, Text } from '@harness/uicore'
 import { Position, Popover } from '@blueprintjs/core'
 import { NavLink, NavLinkProps } from 'react-router-dom'
 import { Color, FontVariation } from '@harness/design-system'
@@ -35,10 +35,10 @@ interface ModeCardProps extends NavLinkProps {
   isSelected?: boolean
   iconprops?: Partial<IconProps>
   leftIcon?: boolean
-  shouldOpenInNewTab?: boolean
   popoverProps: ModeInfoPopoverProps
   learnMoreOnClick?: () => void
   hideLearnMore?: boolean
+  showNewTag?: boolean
 }
 
 const navModeToClassMap: Record<NavModuleName, string> = {
@@ -104,17 +104,15 @@ export function ModeCard(props: ModeCardProps): JSX.Element {
     iconprops,
     leftIcon,
     isSelected,
-    shouldOpenInNewTab,
     popoverProps,
     onClick,
     modeBorderCss,
+    showNewTag,
     ...rest
   } = props
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
   const { mode } = getRouteParams<ModePathProps>()
-
-  const newTabProps = shouldOpenInNewTab ? { target: '_blank', rel: 'noreferrer' } : {}
 
   return (
     <Popover
@@ -140,7 +138,6 @@ export function ModeCard(props: ModeCardProps): JSX.Element {
           onClick?.(e)
           trackEvent(NavActions.ModeChange, { currentMode: mode, newMode: shortLabel })
         }}
-        {...newTabProps}
         {...rest}
       >
         {leftIcon ? (
@@ -152,7 +149,17 @@ export function ModeCard(props: ModeCardProps): JSX.Element {
         {leftIcon ? null : (
           <Icon name={icon} size={32} {...iconprops} className={cx(css.modeIcon, { [css.active]: isSelected })} />
         )}
-        {shouldOpenInNewTab ? <Container className={css.newTabContainer} /> : null}
+        {showNewTag && (
+          <Text
+            font={{ variation: FontVariation.TINY_SEMI }}
+            padding="xxsmall"
+            color={Color.PURPLE_800}
+            background={Color.PURPLE_50}
+            className={css.newTag}
+          >
+            {getString('common.new').toUpperCase()}
+          </Text>
+        )}
       </NavLink>
     </Popover>
   )
@@ -162,6 +169,7 @@ interface ModuleCardProps extends NavLinkProps {
   moduleName: NavModuleName
   onModuleClick: (module: NavModuleName) => void
   learnMoreOnClick?: () => void
+  showNewTag?: boolean
 }
 
 export function ModuleCard({ moduleName, onModuleClick, ...rest }: ModuleCardProps): JSX.Element {

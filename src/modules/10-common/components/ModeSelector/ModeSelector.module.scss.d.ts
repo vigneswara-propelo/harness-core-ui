@@ -26,7 +26,7 @@ declare const styles: {
   readonly modeIcon: string
   readonly modeSelectorPanel: string
   readonly moduleCardWrapper: string
-  readonly newTabContainer: string
+  readonly newTag: string
   readonly nineDotIcon: string
   readonly nonModuleSections: string
   readonly popover: string

@@ -150,6 +150,7 @@ export const ModeSelector: React.FC = () => {
                         toggleModuleConfig()
                         toggleModeSelector()
                       }}
+                      showNewTag={moduleMap[moduleName].isNew}
                     />
                   )
                 })}

@@ -21,7 +21,8 @@ const navModuleInfoMapMock = {
     color: '--cd-border',
     backgroundColor: '',
     shortLabel: 'deploymentsText',
-    moduleIntro: 'common.moduleIntro.deployments'
+    moduleIntro: 'common.moduleIntro.deployments',
+    isNew: true
   },
   CI: {
     icon: 'ci-main',
@@ -232,6 +233,7 @@ describe('Mode selector', () => {
         <ModeSelector />
       </TestWrapper>
     )
+
     const modeSelectorButton = container.querySelector('[data-icon="nine-dot-options"]') as HTMLInputElement
     await act(async () => {
       fireEvent.click(modeSelectorButton)
@@ -246,5 +248,7 @@ describe('Mode selector', () => {
       fireEvent.click(screen.getByText('cross'))
     })
     expect(screen.queryByText('common.moduleConfig.selectModulesNav')).not.toBeInTheDocument()
+    const cdCard = popover.querySelector('[class="modeCard cd"]')
+    expect(queryByText(cdCard as HTMLElement, 'COMMON.NEW')).toBeDefined()
   })
 })
