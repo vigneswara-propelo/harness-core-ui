@@ -57,6 +57,8 @@ import { getStageFromPipeline, validateStage } from '@pipeline/components/Pipeli
 import { isExecutionComplete } from '@pipeline/utils/statusHelpers'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useNotesModal } from '@pipeline/pages/execution/ExecutionLandingPage/ExecutionHeader/NotesModal/useNotesModal'
+import MultiTypeDelegateSelector from '@modules/10-common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
+import { isValueRuntimeInput } from '@modules/10-common/utils/utils'
 import css from './ExecutionInputs.module.scss'
 
 export interface ExecutionInputsProps {
@@ -357,16 +359,26 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
               />
             ) : null
           ) : (
-            <StepWidget<Partial<StepElementConfig>>
-              factory={factory}
-              type={stepType}
-              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
-              stepViewType={StepViewType.DeploymentForm}
-              initialValues={initialValues}
-              template={parsedStep}
-              readonly={isDone}
-              allValues={fieldYaml.step}
-            />
+            <>
+              <StepWidget<Partial<StepElementConfig>>
+                factory={factory}
+                type={stepType}
+                allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+                stepViewType={StepViewType.DeploymentForm}
+                initialValues={initialValues}
+                template={parsedStep}
+                readonly={isDone}
+                allValues={fieldYaml.step}
+              />
+              {isValueRuntimeInput((parsedStep as StepElementConfig)?.spec?.delegateSelectors) && (
+                <MultiTypeDelegateSelector
+                  inputProps={{ projectIdentifier, orgIdentifier }}
+                  allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+                  name="spec.delegateSelectors"
+                  disabled={isDone}
+                />
+              )}
+            </>
           )}
           {isDone ? null : (
             <Layout.Horizontal spacing="medium">
