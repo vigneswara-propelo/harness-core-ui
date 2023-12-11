@@ -15,6 +15,14 @@
   }
 }
 
+.tagDropdown {
+  :global {
+    .MultiSelect--popover .bp3-menu {
+      max-height: 200px !important;
+    }
+  }
+}
+
 .footerBtns {
   position: absolute;
   bottom: 0;

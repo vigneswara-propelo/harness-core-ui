@@ -100,7 +100,6 @@ describe('useEditFlagDetailsModal', () => {
 
     expect(screen.getByRole('button', { name: 'save' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'cancel' })).toBeInTheDocument()
-
     expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument()
   })
 
@@ -139,7 +138,7 @@ describe('useEditFlagDetailsModal', () => {
 
     const tagDropdown = document.querySelector('[class="bp3-input-ghost bp3-multi-select-tag-input-input"]')!
 
-    const myNewTag = 'RBAC_TEAM'
+    const myNewTag = 'RBAC TEAM'
 
     await userEvent.type(tagDropdown, myNewTag)
 
@@ -157,10 +156,103 @@ describe('useEditFlagDetailsModal', () => {
     await waitFor(() =>
       expect(submitPatchMock).toHaveBeenCalledWith({
         instructions: [
-          { kind: 'addTag', parameters: { identifier: 'RBAC_TEAM', name: 'RBAC_TEAM' } },
-          { kind: 'addTag', parameters: { identifier: 'tag4', name: 'tag4Id' } },
-          { kind: 'addTag', parameters: { identifier: 'hello', name: 'helloId' } }
+          { kind: 'addTag', parameters: { identifier: 'RBAC_TEAM', name: 'RBAC TEAM' } },
+          { kind: 'addTag', parameters: { identifier: 'tag4Id', name: 'tag4' } },
+          { kind: 'addTag', parameters: { identifier: 'helloId', name: 'hello' } }
         ]
+      })
+    )
+  })
+
+  test('it should validate if a tag is over 100 characters long', async () => {
+    const isTaggingFFOn = true
+    const submitPatchMock = jest.fn()
+
+    renderComponent(
+      {
+        featureFlag: mockFeature as Feature,
+        tagsData: mockAllTags,
+        tagsDisabled: false,
+        submitPatch: submitPatchMock
+      },
+      isTaggingFFOn
+    )
+
+    await userEvent.click(screen.getByRole('button', { name: openEditFlagModalBtn }))
+
+    const tagDropdown = document.querySelector('[class="bp3-input-ghost bp3-multi-select-tag-input-input"]')!
+
+    const reallyLongTagName =
+      'erthyretyyttmbtepytisqfbhyecpkuiegaadwqrebspzrfswxskupfawwylzxjbpchjcfbawbyqosuqhiafvvuqncgsnxvvovnynuzfmfrghwzwvifz'
+
+    await userEvent.type(tagDropdown, reallyLongTagName)
+
+    await userEvent.click(screen.getByRole('button', { name: reallyLongTagName }))
+
+    expect(await screen.findByText('cf.featureFlags.tagging.inputErrorMessage')).toBeInTheDocument()
+    expect(await screen.findByRole('button', { name: 'save' })).toBeDisabled()
+    expect(submitPatchMock).not.toHaveBeenCalled()
+  })
+
+  test('it should validate if a tag contains a comma', async () => {
+    const isTaggingFFOn = true
+    const submitPatchMock = jest.fn()
+
+    renderComponent(
+      {
+        featureFlag: mockFeature as Feature,
+        tagsData: mockAllTags,
+        tagsDisabled: false,
+        submitPatch: submitPatchMock
+      },
+      isTaggingFFOn
+    )
+
+    await userEvent.click(screen.getByRole('button', { name: openEditFlagModalBtn }))
+
+    const tagDropdown = document.querySelector('[class="bp3-input-ghost bp3-multi-select-tag-input-input"]')!
+
+    const invalidTagName = 'tagwithacomma,'
+
+    await userEvent.type(tagDropdown, invalidTagName)
+
+    await userEvent.click(screen.getByRole('button', { name: invalidTagName }))
+
+    expect(await screen.findByText('cf.featureFlags.tagging.inputErrorMessage')).toBeInTheDocument()
+    expect(await screen.findByRole('button', { name: 'save' })).toBeDisabled()
+    expect(submitPatchMock).not.toHaveBeenCalled()
+  })
+
+  test('it should allow user to insert a space in the tag name but replace the space with an underscore', async () => {
+    const isTaggingFFOn = true
+    const submitPatchMock = jest.fn(() => Promise.resolve({}))
+
+    renderComponent(
+      {
+        featureFlag: mockFeature as Feature,
+        tagsData: mockAllTags,
+        tagsDisabled: false,
+        submitPatch: submitPatchMock
+      },
+      isTaggingFFOn
+    )
+
+    await userEvent.click(screen.getByRole('button', { name: openEditFlagModalBtn }))
+
+    const tagDropdown = document.querySelector('[class="bp3-input-ghost bp3-multi-select-tag-input-input"]')!
+
+    const tagName = 'tag name with spaces'
+
+    await userEvent.type(tagDropdown, tagName)
+
+    await userEvent.click(screen.getByRole('button', { name: tagName }))
+
+    expect(screen.queryByText('cf.featureFlags.tagging.inputErrorMessage')).not.toBeInTheDocument()
+    userEvent.click(await screen.findByRole('button', { name: 'save' }))
+
+    await waitFor(() =>
+      expect(submitPatchMock).toHaveBeenCalledWith({
+        instructions: [{ kind: 'addTag', parameters: { identifier: 'tag_name_with_spaces', name: tagName } }]
       })
     )
   })

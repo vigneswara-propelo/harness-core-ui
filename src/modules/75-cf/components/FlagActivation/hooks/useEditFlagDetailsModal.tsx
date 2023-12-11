@@ -6,13 +6,14 @@
  */
 
 import React, { useMemo } from 'react'
-import { Button, ButtonVariation, Container, FormInput, Layout, ModalDialog } from '@harness/uicore'
+import { Button, ButtonVariation, Container, FormError, FormInput, Layout, ModalDialog } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Divider } from '@blueprintjs/core'
 import { Form, Formik } from 'formik'
 import { differenceBy } from 'lodash-es'
 import * as yup from 'yup'
 import type { MutateMethod } from 'restful-react/dist/Mutate'
+import { getIdentifierFromName } from '@modules/10-common/utils/StringUtils'
 import {
   Feature,
   FeatureResponseMetadata,
@@ -27,8 +28,10 @@ import { GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
 import { useGovernance } from '@cf/hooks/useGovernance'
 import { useStrings } from 'framework/strings'
 import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
+import { MAX_TAG_NAME_LENGTH } from '@cf/constants'
 import patch from '../../../utils/instructions'
 import SaveFlagToGitSubForm from '../../SaveFlagToGitSubForm/SaveFlagToGitSubForm'
+import css from './useEditFlagDetailsModal.module.scss'
 
 export interface tagsDropdownData {
   value: string
@@ -96,18 +99,22 @@ const useEditFlagDetailsModal = (props: UseEditFlagDetailsModalProps): UseEditFl
 
         const sanitizedNewOrAssignedTags = newOrAssignedTags.map(tag => ({
           name: tag.label,
-          identifier: tag.value
+          identifier: getIdentifierFromName(tag.value)
         }))
 
         const removedTags = differenceBy(initialValues.tags, tags, 'value')
-        const sanitizedRemovedTags = removedTags.map(tag => ({ name: tag.label, identifier: tag.value }))
+
+        const sanitizedRemovedTags = removedTags.map(tag => ({
+          name: tag.label,
+          identifier: getIdentifierFromName(tag.value)
+        }))
 
         sanitizedNewOrAssignedTags.forEach(tag =>
-          patch.feature.addInstruction(patch.creators.addTag(tag.identifier, tag.name))
+          patch.feature.addInstruction(patch.creators.addTag(tag.name, tag.identifier))
         )
 
         sanitizedRemovedTags.forEach(tag =>
-          patch.feature.addInstruction(patch.creators.removeTag(tag.identifier, tag.name))
+          patch.feature.addInstruction(patch.creators.removeTag(tag.name, tag.identifier))
         )
       }
 
@@ -153,11 +160,23 @@ const useEditFlagDetailsModal = (props: UseEditFlagDetailsModalProps): UseEditFl
         initialValues={initialValues}
         validationSchema={yup.object().shape({
           name: yup.string().required(getString('cf.creationModal.aboutFlag.nameRequired')),
-          gitDetails: gitSyncFormMeta.gitSyncValidationSchema
+          gitDetails: gitSyncFormMeta.gitSyncValidationSchema,
+          tags: yup
+            .array()
+            .of(
+              yup.object().shape({
+                label: yup
+                  .string()
+                  .trim()
+                  .max(MAX_TAG_NAME_LENGTH, getString('cf.featureFlags.tagging.inputErrorMessage'))
+                  .matches(/^[A-Za-z0-9.@_ -]*$/, getString('cf.featureFlags.tagging.inputErrorMessage'))
+              })
+            )
+            .max(10, getString('cf.featureFlags.tagging.inputErrorMessage'))
         })}
         onSubmit={handleSubmit}
       >
-        {({ submitForm, isValid }) => (
+        {({ submitForm, isValid, errors }) => (
           <ModalDialog
             enforceFocus={false}
             onClose={hideEditDetailsModal}
@@ -183,23 +202,28 @@ const useEditFlagDetailsModal = (props: UseEditFlagDetailsModalProps): UseEditFl
             <Form data-testid="edit-flag-form">
               <Layout.Vertical spacing="medium">
                 <FormInput.Text name="name" label={getString('name')} />
-
                 <FormInput.TextArea
                   name="description"
                   label={getString('description')}
                   textArea={{ style: { minHeight: '5rem' } }}
                 />
                 {FFM_8184_FEATURE_FLAG_TAGGING && (
-                  <FormInput.MultiSelect
-                    label={getString('tagsLabel')}
-                    disabled={tagsDisabled}
-                    name="tags"
-                    multiSelectProps={{
-                      allowCreatingNewItems: true,
-                      placeholder: getString('tagsLabel')
-                    }}
-                    items={tagsData}
-                  />
+                  <>
+                    <FormInput.MultiSelect
+                      className={css.dropdown}
+                      label={getString('tagsLabel')}
+                      disabled={tagsDisabled}
+                      name="tags"
+                      multiSelectProps={{
+                        allowCreatingNewItems: true,
+                        placeholder: getString('tagsLabel')
+                      }}
+                      items={tagsData}
+                    />
+                    {errors.tags && (
+                      <FormError name="tags" errorMessage={getString('cf.featureFlags.tagging.inputErrorMessage')} />
+                    )}
+                  </>
                 )}
                 <FormInput.CheckBox name="permanent" label={getString('cf.editDetails.permaFlag')} />
                 {gitSync?.isGitSyncEnabled && !gitSync?.isAutoCommitEnabled && (

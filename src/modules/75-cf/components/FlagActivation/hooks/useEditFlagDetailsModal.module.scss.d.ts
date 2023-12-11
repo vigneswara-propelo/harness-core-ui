@@ -7,8 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly aboutFlagTooltip: string
-  readonly footerBtns: string
-  readonly tagDropdown: string
+  readonly dropdown: string
 }
 export default styles

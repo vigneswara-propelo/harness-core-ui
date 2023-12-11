@@ -8943,7 +8943,7 @@ export interface StringsMap {
   'cf.featureFlags.setupGitSync': string
   'cf.featureFlags.startVariation': string
   'cf.featureFlags.tagging.emptyState': string
-  'cf.featureFlags.tagging.maxTagsError': string
+  'cf.featureFlags.tagging.inputErrorMessage': string
   'cf.featureFlags.tagging.search': string
   'cf.featureFlags.targetUsers': string
   'cf.featureFlags.targeting': string

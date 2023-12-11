@@ -185,8 +185,8 @@ featureFlags:
       Please ensure all references to this flag are removed prior to archiving. <br/><br/>'
   tagging:
     emptyState: No tags assigned
-    maxTagsError: Exceeded max number of tags allowed per flag (10)
     search: Search for tags
+    inputErrorMessage: Tags must be less than 100 characters, must not include special characters and not exceed 10 tags per flag
   rules:
     whenFlagEnabled: When the Flag is Enabled
     whenFlagDisabled: When the Flag is Disabled

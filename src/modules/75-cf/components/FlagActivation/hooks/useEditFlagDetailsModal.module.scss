@@ -1,0 +1,7 @@
+.dropdown {
+  :global {
+    .MultiSelect--popover .bp3-menu {
+      max-height: 150px !important;
+    }
+  }
+}

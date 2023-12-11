@@ -121,3 +121,5 @@ export const CFSideNavProps: SidebarContext = {
 export const DEFAULT_FLAG_GIT_REPO_PATH = '/flags.yaml'
 
 export const PERCENTAGE_ROLLOUT_VALUE = 'Percentage Rollout'
+
+export const MAX_TAG_NAME_LENGTH = 100

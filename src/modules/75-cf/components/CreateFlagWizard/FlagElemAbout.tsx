@@ -9,6 +9,7 @@ import React, { FC, useEffect, useMemo } from 'react'
 import {
   Formik,
   FormikForm as Form,
+  FormError,
   FormInput,
   Heading,
   Layout,
@@ -27,6 +28,7 @@ import { illegalIdentifiers } from '@common/utils/StringUtils'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import type { Tag } from 'services/cf'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { MAX_TAG_NAME_LENGTH } from '@cf/constants'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import type { FlagWizardFormValues } from './FlagWizard'
 import css from './FlagElemAbout.module.scss'
@@ -43,7 +45,7 @@ const AboutForm: FC<AboutFormProps> = props => {
   const { getString } = useStrings()
   const { FFM_8184_FEATURE_FLAG_TAGGING } = useFeatureFlags()
 
-  const { tags = [], disabled, handleSubmit, goBackToTypeSelections } = props
+  const { tags = [], disabled, handleSubmit, goBackToTypeSelections, errors } = props
 
   const tagItems = useMemo(
     () =>
@@ -72,16 +74,22 @@ const AboutForm: FC<AboutFormProps> = props => {
           />
           <FormInput.TextArea label={getString('description')} name="description" />
           {FFM_8184_FEATURE_FLAG_TAGGING && (
-            <FormInput.MultiSelect
-              label={getString('tagsLabel')}
-              disabled={disabled}
-              name="tags"
-              multiSelectProps={{
-                allowCreatingNewItems: true,
-                placeholder: getString('tagsLabel')
-              }}
-              items={tagItems}
-            />
+            <>
+              <FormInput.MultiSelect
+                className={css.tagDropdown}
+                label={getString('tagsLabel')}
+                disabled={disabled}
+                name="tags"
+                multiSelectProps={{
+                  allowCreatingNewItems: true,
+                  placeholder: getString('tagsLabel')
+                }}
+                items={tagItems}
+              />
+              {Array.isArray(errors.tags) && (
+                <FormError name="tags" errorMessage={getString('cf.featureFlags.tagging.inputErrorMessage')} />
+              )}
+            </>
           )}
         </Container>
         <Layout.Horizontal padding={{ top: 'medium' }} spacing="xsmall">
@@ -157,7 +165,16 @@ const FlagElemAbout: FC<StepProps<Partial<FlagWizardFormValues>> & FlagElemAbout
           .required(getString('cf.creationModal.aboutFlag.idRequired'))
           .matches(/^(?![0-9])[0-9a-zA-Z_$]*$/, getString('cf.creationModal.aboutFlag.ffRegex'))
           .notOneOf(illegalIdentifiers),
-        tags: Yup.array().max(10, getString('cf.featureFlags.tagging.maxTagsError'))
+        tags: Yup.array()
+          .of(
+            Yup.object().shape({
+              label: Yup.string()
+                .trim()
+                .max(MAX_TAG_NAME_LENGTH, getString('cf.featureFlags.tagging.inputErrorMessage'))
+                .matches(/^[A-Za-z0-9.@_ -]*$/, getString('cf.featureFlags.tagging.inputErrorMessage'))
+            })
+          )
+          .max(10, getString('cf.featureFlags.tagging.inputErrorMessage'))
       })}
       onSubmit={vals => {
         trackEvent(FeatureActions.AboutTheFlagNext, {

@@ -125,7 +125,64 @@ describe('FlagElemAbout', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'next' }))
 
-    expect(screen.getByText('cf.featureFlags.tagging.maxTagsError')).toBeInTheDocument()
+    expect(screen.getByText('cf.featureFlags.tagging.inputErrorMessage')).toBeInTheDocument()
     expect(screen.getByText('cf.creationModal.aboutFlag.nameRequired')).toBeInTheDocument()
+  })
+
+  test('it should validate if tag name contains over 100 characters', async () => {
+    const isTaggingFlagOn = true
+    const reallyLongTagName =
+      'wziauacethgbagnmrqzmwcbegijpjdibeknxcjlxdzmtfkiwcpcfpdpqtuhysgrgbtccuuvmaibwqduiojrnfjxnkjuxeidrpjjtb'
+
+    renderComponent(isTaggingFlagOn, { tags: mockTags })
+
+    await userEvent.type(screen.getAllByRole('textbox')[0], 'my_flag_name')
+
+    const tagsDropdownInput = screen.getByPlaceholderText('- tagsLabel -')
+
+    await userEvent.type(tagsDropdownInput, reallyLongTagName)
+
+    expect(tagsDropdownInput).toHaveValue(reallyLongTagName)
+
+    await userEvent.click(screen.getByText(reallyLongTagName))
+
+    await userEvent.click(screen.getByRole('button', { name: 'next' }))
+
+    expect(screen.getByText('cf.featureFlags.tagging.inputErrorMessage')).toBeInTheDocument()
+  })
+
+  test('it should allow user to insert a space in the tag name', async () => {
+    const isTaggingFlagOn = true
+    const tagName = 'tag name with spaces'
+
+    renderComponent(isTaggingFlagOn, { tags: mockTags })
+
+    await userEvent.type(screen.getAllByRole('textbox')[0], 'my_flag_name')
+
+    const tagsDropdownInput = screen.getByPlaceholderText('- tagsLabel -')
+
+    await userEvent.type(tagsDropdownInput, tagName)
+
+    await userEvent.click(screen.getByRole('button', { name: 'next' }))
+
+    expect(screen.queryByText('cf.featureFlags.tagging.inputErrorMessage')).not.toBeInTheDocument()
+  })
+
+  test('it should validate if a tag contains a comma', async () => {
+    const isTaggingFlagOn = true
+
+    renderComponent(isTaggingFlagOn, { tags: mockTags })
+
+    const tagDropdown = document.querySelector('[class="bp3-input-ghost bp3-multi-select-tag-input-input"]')!
+
+    const invalidTagName = 'tagwithacomma,'
+
+    await userEvent.type(tagDropdown, invalidTagName)
+
+    await userEvent.click(screen.getByRole('button', { name: invalidTagName }))
+
+    await userEvent.click(screen.getByRole('button', { name: 'next' }))
+
+    expect(await screen.findByText('cf.featureFlags.tagging.inputErrorMessage')).toBeInTheDocument()
   })
 })
