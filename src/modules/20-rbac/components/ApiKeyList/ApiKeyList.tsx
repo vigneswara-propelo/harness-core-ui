@@ -21,23 +21,26 @@ import ApiKeyCard from '@rbac/components/ApiKeyList/views/ApiKeyCard'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacButton from '@rbac/components/Button/Button'
+import { ScopedObjectDTO } from '@modules/10-common/components/EntityReference/EntityReference.types'
 
 import css from './ApiKeyList.module.scss'
 
 interface ApiKeyListProps {
   apiKeyType?: TokenDTO['apiKeyType']
   parentIdentifier?: string
+  scopeValues: ScopedObjectDTO
 }
 
-const ApiKeyList: React.FC<ApiKeyListProps> = ({ apiKeyType = 'SERVICE_ACCOUNT', parentIdentifier }) => {
-  const { accountId, projectIdentifier, orgIdentifier, serviceAccountIdentifier } = useParams<
+const ApiKeyList: React.FC<ApiKeyListProps> = ({ apiKeyType = 'SERVICE_ACCOUNT', parentIdentifier, scopeValues }) => {
+  const { accountId: accountFromParam, serviceAccountIdentifier } = useParams<
     ProjectPathProps & ServiceAccountPathProps
   >()
+  const { accountIdentifier: accountId, projectIdentifier, orgIdentifier } = scopeValues
   const { getString } = useStrings()
   const [refetchTokens, setRefetchTokens] = useState<boolean>(false)
   const { data, refetch, error, loading } = useListAggregatedApiKeys({
     queryParams: {
-      accountIdentifier: accountId,
+      accountIdentifier: accountId || accountFromParam,
       orgIdentifier,
       projectIdentifier,
       apiKeyType,

@@ -6,25 +6,27 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import { Layout } from '@harness/uicore'
 import SourceCodeManagerList from '@user-profile/components/UserSummary/SourceCodeManagerList'
 import MyProjectsList from '@user-profile/components/UserSummary/MyProjectsList'
 import ApiKeyList from '@rbac/components/ApiKeyList/ApiKeyList'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { ProjectPathProps } from '@modules/10-common/interfaces/RouteInterfaces'
 
 const UserSummaryTab: React.FC = () => {
   const { currentUserInfo } = useAppStore()
+  const { accountId } = useParams<ProjectPathProps>()
+
   return (
     <Layout.Vertical spacing="large">
       <MyProjectsList />
-      {/* <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.BLACK}>
-        {getString('userProfile.myGroups')}
-      </Text> */}
       <SourceCodeManagerList />
-      <ApiKeyList apiKeyType="USER" parentIdentifier={currentUserInfo.uuid} />
-      {/* <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.BLACK}>
-        {getString('userProfile.myTools')}
-      </Text> */}
+      <ApiKeyList
+        apiKeyType="USER"
+        parentIdentifier={currentUserInfo.uuid}
+        scopeValues={{ accountIdentifier: accountId }}
+      />
     </Layout.Vertical>
   )
 }

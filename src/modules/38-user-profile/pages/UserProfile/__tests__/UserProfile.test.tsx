@@ -23,6 +23,7 @@ import { InputTypes, setFieldValue, clickSubmit } from '@common/utils/JestFormHe
 import * as cdngServices from 'services/cd-ng'
 import type { ResponseBoolean } from 'services/cd-ng'
 import { ChangePasswordResponse } from '@user-profile/modals/useChangePassword/views/ChangePasswordForm'
+import { ScopedObjectDTO } from '@modules/10-common/components/EntityReference/EntityReference.types'
 import {
   connectorMockData,
   enabledTwoFactorAuth,
@@ -142,11 +143,11 @@ describe('User Profile Page', () => {
   let getByText: RenderResult['getByText']
   let getByTestId: RenderResult['getByTestId']
 
-  const testSetup = (isCommunity?: boolean): void => {
+  const testSetup = (isCommunity?: boolean, pathParams?: ScopedObjectDTO): void => {
     const renderObj = render(
       <TestWrapper
         path="/account/:accountId/projects"
-        pathParams={{ accountId: 'testAcc' }}
+        pathParams={{ accountId: 'testAcc' } || pathParams}
         defaultAppStoreValues={enabledAuth ? enabledTwoFactorAuth : defaultAppStoreValues}
         defaultLicenseStoreValues={isCommunity ? communityLicenseStoreValues : {}}
       >
@@ -387,5 +388,28 @@ describe('User Profile Page', () => {
   test('Hide SwitchAccount button for community edition', async () => {
     testSetup(true)
     expect(queryByText(document.body, 'common.switchAccount')).toBeNull()
+  })
+
+  test('user profile overview page when scope is project', () => {
+    const fetchAPIKeys = jest.fn().mockImplementation(() => {
+      return { data: { data: { content: [] } } }
+    })
+    ;(cdngServices.useListAggregatedApiKeys as jest.Mock).mockImplementation(fetchAPIKeys)
+
+    testSetup(false, {
+      accountIdentifier: 'testAccountId',
+      projectIdentifier: 'testProjectId',
+      orgIdentifier: 'testOrgId'
+    })
+
+    expect(fetchAPIKeys).toBeCalledWith({
+      queryParams: {
+        accountIdentifier: 'testAcc',
+        apiKeyType: 'USER',
+        orgIdentifier: undefined,
+        parentIdentifier: 'dummyId',
+        projectIdentifier: undefined
+      }
+    })
   })
 })

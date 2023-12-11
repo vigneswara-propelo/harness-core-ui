@@ -158,7 +158,7 @@ const ServiceAccountDetails: React.FC = () => {
           </Layout.Horizontal>
         </Layout.Vertical>
 
-        <ApiKeyList />
+        <ApiKeyList scopeValues={{ accountIdentifier: accountId, projectIdentifier, orgIdentifier }} />
       </Page.Body>
     </>
   )
