@@ -6,22 +6,12 @@
  */
 
 import React from 'react'
-import {
-  render,
-  fireEvent,
-  getByText,
-  waitFor,
-  RenderResult,
-  screen,
-  act,
-  getAllByRole,
-  getAllByTestId
-} from '@testing-library/react'
+import { render, waitFor, RenderResult, screen, act, getAllByRole, getAllByTestId } from '@testing-library/react'
 import { cloneDeep } from 'lodash-es'
 import userEvent from '@testing-library/user-event'
 import * as cfServices from 'services/cf'
+import * as cdServices from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
-import mockImport from 'framework/utils/mockImport'
 import mockEnvironments from '@cf/pages/environments/__tests__/mockEnvironments'
 import FeatureFlagsPage from '../FeatureFlagsPage'
 import mockFeatureFlags from './mockFeatureFlags'
@@ -49,42 +39,46 @@ const renderComponent = (): RenderResult =>
     </TestWrapper>
   )
 
-const mockEnvs = (includeEnvs = true): void => {
-  const data = cloneDeep(mockEnvironments)
-  let newLocation = `path?activeEnvironment=Mock_Environment`
+describe('FeatureFlagsPage', () => {
+  const useGetAllTagsMock = jest.spyOn(cfServices, 'useGetAllTags')
+  const useGetFeaturesMetricsMock = jest.spyOn(cfServices, 'useGetFeatureMetrics')
+  const useGetAllFeaturesMock = jest.spyOn(cfServices, 'useGetAllFeatures')
+  const useGetProjectFlagsMock = jest.spyOn(cfServices, 'useGetProjectFlags')
 
-  if (!includeEnvs) {
-    data.data.content = []
-    newLocation = 'path'
-  }
+  const useGetEnvironmentListForProject = jest.spyOn(cdServices, 'useGetEnvironmentListForProject')
 
-  mockImport('services/cd-ng', {
-    useGetEnvironmentListForProject: () => ({
+  const mockEnvs = (includeEnvs = true): void => {
+    const data = cloneDeep(mockEnvironments)
+    let newLocation = `path?activeEnvironment=Mock_Environment`
+
+    if (!includeEnvs) {
+      data.data.content = []
+      newLocation = 'path'
+    }
+
+    useGetEnvironmentListForProject.mockReturnValue({
       data,
       loading: false,
-      error: undefined,
+      error: null,
       refetch: jest.fn()
-    })
-  })
+    } as any)
 
-  window.location.hash = newLocation
-}
+    window.location.hash = newLocation
+  }
 
-describe('FeatureFlagsPage', () => {
   beforeEach(() => {
     jest.useFakeTimers({ advanceTimers: true })
     jest.runAllTimers()
-    mockImport('services/cf', {
-      useGetAllFeatures: () => ({ data: mockFeatureFlags, refetch: jest.fn() })
-    })
-    mockImport('services/cf', {
-      useGetFeatureMetrics: () => ({ data: [], refetch: jest.fn() })
-    })
-    mockImport('services/cf', {
-      useGetAllTags: () => ({ data: mockTagsPayload, refetch: jest.fn() })
-    })
 
-    mockEnvs()
+    useGetAllFeaturesMock.mockReturnValue({
+      data: mockFeatureFlags,
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    } as any)
+
+    useGetFeaturesMetricsMock.mockReturnValue({ data: [], refetch: jest.fn(), error: null, loading: false } as any)
+    useGetAllTagsMock.mockReturnValue({ data: [], refetch: jest.fn(), loading: false, error: null } as any)
 
     jest.mock('@cf/hooks/useGitSync', () => ({
       useGitSync: jest.fn(() => ({
@@ -98,38 +92,37 @@ describe('FeatureFlagsPage', () => {
         handleAutoCommit: jest.fn()
       }))
     }))
+
+    jest.clearAllMocks()
   })
 
-  afterEach(() => {
-    jest.resetAllMocks()
-  })
+  test('it should render loading correctly', async () => {
+    useGetEnvironmentListForProject.mockReturnValue({
+      loading: true,
+      refetch: jest.fn(),
+      error: null,
+      data: undefined
+    } as any)
 
-  test('It should render loading correctly', async () => {
-    mockImport('services/cd-ng', {
-      useGetEnvironmentListForProject: () => ({ loading: true, refetch: jest.fn() })
-    })
-    mockImport('services/cf', {
-      useGetAllFeatures: () => ({ loading: true, refetch: jest.fn() })
-    })
+    useGetAllFeaturesMock.mockReturnValue({ loading: true, refetch: jest.fn(), error: null, data: undefined } as any)
 
     renderComponent()
 
     expect(document.querySelector('[data-icon="steps-spinner"]')).toBeDefined()
   })
 
-  test('It should render data correctly and call metrics', async () => {
-    const metricsSpy = jest.spyOn(cfServices, 'useGetFeatureMetrics')
+  test('it should render data correctly and call metrics', async () => {
     renderComponent()
 
     await waitFor(() => {
       expect(screen.getAllByText(mockFeatureFlags.features[0].name)).toBeDefined()
       expect(screen.getAllByText(mockFeatureFlags.features[1].name)).toBeDefined()
       expect(screen.getByRole('button', { name: 'cf.featureFlags.setupGitSync' })).toBeVisible()
-      expect(metricsSpy).toHaveBeenCalled()
+      expect(useGetFeaturesMetricsMock).toHaveBeenCalled()
     })
   })
 
-  test('It should have an option for "All Environments" in the EnvironmentSelect dropdown', async () => {
+  test('it should have an option for "All Environments" in the EnvironmentSelect dropdown', async () => {
     renderComponent()
 
     const environmentSelect = screen.getByRole('textbox', { name: 'cf.shared.selectEnvironment' })
@@ -154,17 +147,15 @@ describe('FeatureFlagsPage', () => {
     expect(screen.getByRole('link', { name: /cf.featureFlags.flagVideoLabel/ })).toBeInTheDocument()
   })
 
-  test('It should show All Environments Flags view on click of "All Environments" in the EnvironmentSelect dropdown', async () => {
-    const refetchAllEnvironmentsFlags = jest.fn()
+  test('it should show All Environments Flags view on click of "All Environments" in the EnvironmentSelect dropdown', async () => {
+    const refetchProjectsFlags = jest.fn()
 
-    mockImport('services/cf', {
-      useGetProjectFlags: () => ({
-        loading: false,
-        data: mockGetAllEnvironmentsFlags,
-        refetch: refetchAllEnvironmentsFlags,
-        error: null
-      })
-    })
+    useGetProjectFlagsMock.mockReturnValue({
+      loading: false,
+      data: mockGetAllEnvironmentsFlags,
+      refetch: refetchProjectsFlags,
+      error: null
+    } as any)
 
     renderComponent()
 
@@ -174,22 +165,22 @@ describe('FeatureFlagsPage', () => {
 
     await userEvent.click(environmentSelect)
 
-    expect(refetchAllEnvironmentsFlags).not.toHaveBeenCalled()
+    expect(refetchProjectsFlags).not.toHaveBeenCalled()
     expect(screen.getByText('common.allEnvironments')).toBeInTheDocument()
     expect(screen.getByText('QB')).toBeInTheDocument()
 
     await userEvent.click(screen.getByText('common.allEnvironments'))
 
-    expect(refetchAllEnvironmentsFlags).toHaveBeenCalled()
+    expect(refetchProjectsFlags).toHaveBeenCalled()
     expect(screen.getAllByText('cf.environments.nonProd')).toHaveLength(17)
     expect(screen.getAllByText('cf.environments.prod')).toHaveLength(17)
   })
 
-  test('It should go to edit page by clicking a row', async () => {
+  test('it should go to edit page by clicking a row', async () => {
     renderComponent()
 
     await act(async () => {
-      await fireEvent.click(
+      await userEvent.click(
         document.getElementsByClassName('TableV2--row TableV2--card TableV2--clickable')[0] as HTMLElement
       )
     })
@@ -197,18 +188,18 @@ describe('FeatureFlagsPage', () => {
     expect(screen.getByTestId('location')).toHaveTextContent('dummy/feature-flags/hello_world')
   })
 
-  test('Should go to edit page by clicking edit', async () => {
+  test('it should go to edit page by clicking edit', async () => {
     renderComponent()
 
     await act(async () => {
-      await fireEvent.click(document.querySelector('[data-icon="Options"]') as HTMLElement)
-      await fireEvent.click(document.querySelector('[icon="edit"]') as HTMLElement)
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLElement)
+      await userEvent.click(document.querySelector('[icon="edit"]') as HTMLElement)
     })
 
     expect(screen.getByTestId('location')).toHaveTextContent('feature-flags/hello_world')
   })
 
-  test('It should render error correctly', async () => {
+  test('it should render error correctly when api fails to fetch environments list', async () => {
     const message = 'ERROR OCCURS'
 
     // Mock setTimeout
@@ -216,29 +207,29 @@ describe('FeatureFlagsPage', () => {
     localGlobal.window = Object.create(window)
     localGlobal.window.setTimeout = jest.fn()
 
-    mockImport('services/cd-ng', {
-      useGetEnvironmentListForProject: () => ({ error: { message }, refetch: jest.fn() })
-    })
-    mockImport('services/cf', {
-      useGetAllFeatures: () => ({ data: undefined, refetch: jest.fn() })
-    })
+    useGetEnvironmentListForProject.mockReturnValue({
+      loading: false,
+      refetch: jest.fn(),
+      error: { message },
+      data: undefined
+    } as any)
+
+    useGetAllFeaturesMock.mockReturnValue({ data: undefined, refetch: jest.fn(), loading: false, error: null } as any)
 
     renderComponent()
 
-    expect(getByText(document.body, message)).toBeDefined()
+    expect(screen.getByText(message)).toBeInTheDocument()
   })
 
-  test('It should go to Feature Flag details page on click of an environment in All Environments view', async () => {
+  test('it should go to Feature Flag details page on click of an environment in All Environments view', async () => {
     const refetchProjectFlags = jest.fn()
 
-    mockImport('services/cf', {
-      useGetProjectFlags: () => ({
-        loading: false,
-        data: mockGetAllEnvironmentsFlags,
-        refetch: refetchProjectFlags,
-        error: null
-      })
-    })
+    useGetProjectFlagsMock.mockReturnValue({
+      loading: false,
+      data: mockGetAllEnvironmentsFlags,
+      refetch: refetchProjectFlags,
+      error: null
+    } as any)
 
     renderComponent()
 
@@ -275,34 +266,35 @@ describe('FeatureFlagsPage', () => {
   })
 
   describe('FilterCards', () => {
-    test('It should not render if there is no active Environment', async () => {
+    test('it should not render if there is no active Environment', async () => {
       mockEnvs(false)
       renderComponent()
 
       expect(screen.queryAllByTestId('filter-card')).toHaveLength(0)
     })
 
-    test('It should render when Feature Flags exist and there is an active Environment', async () => {
+    test('it should render when Feature Flags exist and there is an active Environment', async () => {
       mockEnvs()
       renderComponent()
 
       expect(screen.queryAllByTestId('filter-card')).toHaveLength(7)
     })
 
-    test('It should not render if there is an active Environment but no flags', async () => {
+    test('it should not render if there is an active Environment but no flags', async () => {
       mockEnvs()
-      mockImport('services/cf', {
-        useGetAllFeatures: () => ({ data: undefined, refetch: jest.fn() })
-      })
+
+      useGetAllFeaturesMock.mockReturnValue({ data: undefined, refetch: jest.fn(), loading: false, error: null } as any)
+
       renderComponent()
 
       expect(screen.queryAllByTestId('filter-card')).toHaveLength(0)
     })
 
-    test('It should render if there are only archived flags', async () => {
+    test('it should render if there are only archived flags', async () => {
       mockEnvs()
 
       renderComponent()
+
       expect(screen.getAllByTestId('filter-card')).toHaveLength(7)
     })
   })
@@ -353,76 +345,89 @@ describe('FeatureFlagsPage', () => {
   })
 
   describe('TagFilter', () => {
-    test('it should refetch flags on tag filter change', async () => {
-      const refetchFlags = jest.fn()
-
-      jest
-        .spyOn(cfServices, 'useGetAllFeatures')
-        .mockReturnValue({ data: mockFeatureFlags, loading: false, error: null, refetch: refetchFlags } as any)
+    test('it should call the feature flags api with searched tag when the user selects a tag in the tag filter', async () => {
+      useGetAllTagsMock.mockReturnValue({
+        data: mockTagsPayload,
+        loading: false,
+        error: null,
+        refetch: jest.fn()
+      } as any)
 
       renderComponent()
 
-      const tagsDropdown = screen.getByPlaceholderText('- tagsLabel -')
+      const tagsDropdown = screen.getByText('tagsLabel')
       expect(tagsDropdown).toBeInTheDocument()
 
-      const TAG1 = 'tag1'
+      await userEvent.click(tagsDropdown)
 
-      await userEvent.type(tagsDropdown, TAG1)
-      expect(tagsDropdown).toHaveValue(TAG1)
+      const TAG1 = mockTagsPayload.tags[0].name
+
+      await userEvent.type(screen.getAllByRole('searchbox')[1], TAG1)
+      expect(screen.getAllByRole('searchbox')[1]).toHaveValue(TAG1)
 
       await userEvent.click(screen.getByText(TAG1))
 
-      expect(refetchFlags).toHaveBeenCalled()
-
-      const TAG2 = 'tag2'
-
-      await userEvent.type(tagsDropdown, TAG2)
-      await userEvent.click(screen.getByText(TAG2))
-
-      expect(refetchFlags).toHaveBeenCalled()
+      await waitFor(() => {
+        expect(useGetAllFeaturesMock).toHaveBeenCalledWith(
+          expect.objectContaining({
+            queryParams: expect.objectContaining({ tags: mockTagsPayload.tags[0].identifier })
+          })
+        )
+      })
     })
 
     test('it should be disabled if tags are loading', async () => {
-      mockImport('services/cf', {
-        useGetAllTags: () => ({ data: null, refetch: jest.fn(), loading: true })
-      })
+      useGetAllTagsMock.mockReturnValue({ data: undefined, refetch: jest.fn(), loading: true } as any)
 
       renderComponent()
 
-      expect(screen.getByPlaceholderText('- tagsLabel -')).toBeDisabled()
+      expect(
+        document.querySelector('[class="bp3-popover-wrapper MultiSelectDropDown--main MultiSelectDropDown--disabled"]')
+      ).toBeInTheDocument()
     })
 
     test('it should be disabled if it fails to fetch tags', async () => {
-      mockImport('services/cf', {
-        useGetAllTags: () => ({
-          data: null,
-          refetch: jest.fn(),
-          loading: false,
-          error: 'ERROR FETCHING TAGS'
-        })
-      })
+      useGetAllTagsMock.mockReturnValue({
+        data: undefined,
+        refetch: jest.fn(),
+        loading: false,
+        error: 'ERROR FETCHING TAGS'
+      } as any)
 
       renderComponent()
 
-      expect(screen.getByPlaceholderText('- tagsLabel -')).toBeDisabled()
+      expect(
+        document.querySelector('[class="bp3-popover-wrapper MultiSelectDropDown--main MultiSelectDropDown--disabled"]')
+      ).toBeInTheDocument()
     })
 
     test('it should call the tags endpoint when a tag is being searched', async () => {
-      const useGetAllTagsMock = jest
-        .spyOn(cfServices, 'useGetAllTags')
-        .mockReturnValue({ data: mockTagsPayload, loading: false, error: null, refetch: jest.fn() } as any)
+      useGetAllTagsMock.mockReturnValue({
+        data: mockTagsPayload,
+        loading: false,
+        error: null,
+        refetch: jest.fn()
+      } as any)
 
       renderComponent()
 
-      const SEARCHED_TAG = 'tag1'
+      await userEvent.click(screen.getByText('tagsLabel'))
 
-      await userEvent.type(await screen.findByPlaceholderText('- tagsLabel -'), SEARCHED_TAG)
+      const searchedTag = 'tag1'
 
-      await waitFor(() => {
+      await userEvent.type(screen.getAllByRole('searchbox')[1], searchedTag)
+
+      await waitFor(() =>
         expect(useGetAllTagsMock).toHaveBeenCalledWith(
-          expect.objectContaining({ queryParams: expect.objectContaining({ tagIdentifierFilter: SEARCHED_TAG }) })
+          expect.objectContaining({ queryParams: expect.objectContaining({ tagIdentifierFilter: searchedTag }) })
         )
-      })
+      )
+
+      await waitFor(() => expect(screen.getByText(searchedTag)).toBeInTheDocument())
+
+      for (let i = 1; i < mockTagsPayload.tags.length; i++) {
+        await waitFor(() => expect(screen.queryByText(mockTagsPayload.tags[i].name)).not.toBeInTheDocument())
+      }
     })
   })
 })

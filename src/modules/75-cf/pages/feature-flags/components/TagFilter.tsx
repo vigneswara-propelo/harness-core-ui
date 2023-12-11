@@ -5,18 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useEffect, useMemo } from 'react'
-import { FormikForm, FormInput } from '@harness/uicore'
+import React, { FC, useMemo } from 'react'
+import { MultiSelectDropDown } from '@harness/uicore'
 import type { MultiSelectOption } from '@harness/uicore'
-import { useFormikContext } from 'formik'
 import type { Tag } from 'services/cf'
 import { useStrings } from 'framework/strings'
-import css from './TagFilter.module.scss'
 
 export interface TagFilterProps {
-  tagsData?: Tag[]
+  tagsData: Tag[]
   onFilterChange: (tags: MultiSelectOption[]) => void
-  tagFilter: tagsDropdownValue[]
+  tagFilter: MultiSelectOption[]
   disabled: boolean
   onTagSearch: (tagSearch: string) => void
 }
@@ -26,13 +24,7 @@ export interface tagsDropdownValue {
   value: string
 }
 
-const TagFilter: FC<TagFilterProps> = ({
-  tagsData = [],
-  onFilterChange,
-  tagFilter = [],
-  disabled = false,
-  onTagSearch
-}) => {
+const TagFilter: FC<TagFilterProps> = ({ tagsData = [], onFilterChange, disabled = false, tagFilter, onTagSearch }) => {
   const tags = useMemo(() => {
     return tagsData.map(tag => ({
       label: tag.name,
@@ -41,32 +33,21 @@ const TagFilter: FC<TagFilterProps> = ({
   }, [tagsData])
 
   const { getString } = useStrings()
-  const formik = useFormikContext()
-
-  useEffect(() => {
-    if (tagFilter.length === 0 && formik.dirty) {
-      formik.setFieldValue('tags', [])
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tagFilter.length])
 
   return (
-    <FormikForm>
-      <FormInput.MultiSelect
-        aria-label={getString('tagsLabel')}
-        className={css.filter}
-        disabled={disabled}
-        items={tags}
-        name="tags"
-        usePortal
-        onChange={value => onFilterChange(value)}
-        multiSelectProps={{
-          placeholder: getString('tagsLabel'),
-          allowCreatingNewItems: false,
-          onQueryChange: query => onTagSearch(query)
-        }}
-      />
-    </FormikForm>
+    <MultiSelectDropDown
+      allowSearch
+      aria-label={getString('tagsLabel')}
+      buttonTestId="tags-dropdown"
+      disabled={disabled}
+      hideItemCount={false}
+      items={tags}
+      onChange={onFilterChange}
+      placeholder={getString('tagsLabel')}
+      value={[...tagFilter]}
+      usePortal
+      expandingSearchInputProps={{ onChange: onTagSearch }}
+    />
   )
 }
 

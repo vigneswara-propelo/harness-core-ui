@@ -6,7 +6,6 @@
  */
 
 import React from 'react'
-import { Formik } from '@harness/uicore'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -15,36 +14,37 @@ import mockTagsPayload from '../../__tests__/data/mockTagsPayload'
 
 const renderComponent = (props: Partial<TagFilterProps>): RenderResult =>
   render(
-    <Formik initialValues={{}} onSubmit={jest.fn()} formName="tag-filter">
-      <TestWrapper
-        path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
-        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
-      >
-        <TagFilter
-          disabled={false}
-          tagsData={mockTagsPayload.tags}
-          onTagSearch={jest.fn()}
-          onFilterChange={jest.fn()}
-          tagFilter={[]}
-          {...props}
-        />
-      </TestWrapper>
-    </Formik>
+    <TestWrapper>
+      <TagFilter
+        disabled={false}
+        tagsData={mockTagsPayload.tags}
+        onTagSearch={jest.fn()}
+        onFilterChange={jest.fn()}
+        tagFilter={[]}
+        {...props}
+      />
+    </TestWrapper>
   )
 
 describe('TagFilter', () => {
-  test('it should return the correct tag name when searched', async () => {
-    renderComponent({ tagsData: mockTagsPayload.tags, disabled: false, tagFilter: [{ label: 't1', value: 't1' }] })
+  test('it should display a list of tags', async () => {
+    renderComponent({
+      tagsData: mockTagsPayload.tags,
+      disabled: false,
+      tagFilter: [],
+      onFilterChange: jest.fn()
+    })
 
-    const tagsDropdown = screen.getByRole('textbox')
+    await userEvent.click(screen.getByText('tagsLabel'))
 
-    await userEvent.type(tagsDropdown, mockTagsPayload.tags[0].name)
-
-    expect(tagsDropdown).toHaveValue(mockTagsPayload.tags[0].name)
+    mockTagsPayload.tags.forEach(tag => {
+      expect(screen.getByText(tag.name)).toBeInTheDocument()
+    })
   })
 
-  test('it should display a list of tags', async () => {
+  test('it should call the filter callback on tag selection', async () => {
     const onFilterChangeMock = jest.fn()
+
     renderComponent({
       tagsData: mockTagsPayload.tags,
       disabled: false,
@@ -52,44 +52,73 @@ describe('TagFilter', () => {
       onFilterChange: onFilterChangeMock
     })
 
-    const tagsDropdown = screen.getByRole('textbox')
+    await userEvent.click(screen.getByText('tagsLabel'))
 
-    await userEvent.type(tagsDropdown, 'tag')
-
-    mockTagsPayload.tags.forEach(tag => {
-      expect(screen.getByText(tag.name)).toBeInTheDocument()
-    })
+    expect(onFilterChangeMock).not.toHaveBeenCalled()
 
     await userEvent.click(screen.getByText('tag5'))
-
     await waitFor(() => expect(onFilterChangeMock).toHaveBeenCalledWith([{ label: 'tag5', value: 'tag_5' }]))
+
+    await userEvent.click(screen.getByText('tag1'))
+    await waitFor(() => expect(onFilterChangeMock).toHaveBeenCalledWith([{ label: 'tag1', value: 'tag_1' }]))
+
+    // deselecting a tag
+    await userEvent.click(screen.getByText('tag1'))
+    await waitFor(() => expect(onFilterChangeMock).toHaveBeenCalledWith([{ label: 'tag1', value: 'tag_1' }]))
   })
 
   test('it should not be clickable if tag dropdown is disabled', async () => {
     renderComponent({ tagsData: [], disabled: true, tagFilter: [] })
 
-    expect(screen.getByRole('textbox')).toBeDisabled()
+    expect(
+      document.querySelector('[class="bp3-popover-wrapper MultiSelectDropDown--main MultiSelectDropDown--disabled"]')
+    ).toBeInTheDocument()
+
+    await userEvent.click(screen.getByText('tagsLabel'))
+
+    mockTagsPayload.tags.forEach(tag => {
+      expect(screen.queryByText(tag.name)).not.toBeInTheDocument()
+    })
   })
 
   test('it should show correct empty state when there are no available tags', async () => {
-    renderComponent({ tagsData: undefined, disabled: undefined, tagFilter: undefined, onFilterChange: undefined })
+    renderComponent({ tagsData: undefined, disabled: undefined, tagFilter: [] })
 
-    const tagsDropdown = screen.getByRole('textbox')
+    await userEvent.click(screen.getByText('tagsLabel'))
 
-    await userEvent.click(tagsDropdown)
-
-    await waitFor(() => expect(tagsDropdown).toHaveValue(''))
+    expect(screen.getByText('No matching results found')).toBeInTheDocument()
   })
 
-  test('it should allow tags to be searched', async () => {
+  test('it should call the tagSearch callback with the correct value when user performs a search', async () => {
     const onTagSearchMock = jest.fn()
+    const input = 'tag7'
 
-    renderComponent({ onTagSearch: onTagSearchMock })
+    renderComponent({ tagsData: mockTagsPayload.tags, disabled: false, tagFilter: [], onTagSearch: onTagSearchMock })
 
-    await waitFor(() => expect(onTagSearchMock).not.toHaveBeenCalled())
+    await userEvent.click(screen.getByText('tagsLabel'))
 
-    await userEvent.type(screen.getByRole('textbox'), 'tag1')
+    expect(onTagSearchMock).not.toHaveBeenCalled()
 
-    await waitFor(() => expect(onTagSearchMock).toHaveBeenCalled())
+    const tagsSearchbox = screen.getByRole('searchbox')
+
+    await userEvent.type(tagsSearchbox, input)
+
+    await waitFor(() => expect(onTagSearchMock).toHaveBeenCalledWith(input))
+
+    expect(screen.getByRole('checkbox', { name: input })).toBeInTheDocument()
+
+    for (let i = 0; i < mockTagsPayload.tags.length - 1; i++) {
+      expect(screen.queryByText(mockTagsPayload.tags[i].name)).not.toBeInTheDocument()
+    }
+
+    await userEvent.clear(tagsSearchbox)
+
+    await userEvent.type(tagsSearchbox, 'NONEXISTENT_TAG')
+
+    await waitFor(() => expect(onTagSearchMock).toHaveBeenCalledWith('NONEXISTENT_TAG'))
+
+    for (let i = 0; i <= mockTagsPayload.tags.length - 1; i++) {
+      await waitFor(() => expect(screen.queryByText(mockTagsPayload.tags[i].name)).not.toBeInTheDocument())
+    }
   })
 })

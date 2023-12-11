@@ -7,9 +7,14 @@
 
 import React, { FC, useMemo, useCallback, useEffect, useRef } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Container, ExpandingSearchInput, ExpandingSearchInputHandle, Pagination } from '@harness/uicore'
+import {
+  Container,
+  ExpandingSearchInput,
+  ExpandingSearchInputHandle,
+  Pagination,
+  MultiSelectOption
+} from '@harness/uicore'
 import { defer } from 'lodash-es'
-import { Formik } from 'formik'
 import {
   FeatureMetric,
   GetAllFeaturesQueryParams,
@@ -42,7 +47,7 @@ import FeatureFlagsListing from './components/FeatureFlagsListing'
 import { StaleFlagActions } from './components/StaleFlagActions/StaleFlagActions'
 import { useIsStaleFlagsView } from './hooks/useIsStaleFlagsView'
 import StaleFlagsForm from './components/StaleFlagActions/StaleFlagsForm'
-import TagFilter, { tagsDropdownValue } from './components/TagFilter'
+import TagFilter from './components/TagFilter'
 import css from './FeatureFlagsPage.module.scss'
 
 const FeatureFlagsPage: FC = () => {
@@ -55,7 +60,8 @@ const FeatureFlagsPage: FC = () => {
   const [searchTerm, setSearchTerm] = useQueryParamsState('search', '')
   const [tagSearchTerm, setTagSearchTerm] = useQueryParamsState('tagIdentifierFilter', '')
   const [flagFilter, setFlagFilter] = useQueryParamsState<Optional<FilterProps>>('filter', {})
-  const [tagFilter, setTagFilter] = useQueryParamsState<tagsDropdownValue[]>('tag', [])
+  const [tagFilter, setTagFilter] = useQueryParamsState<MultiSelectOption[]>('tag', [])
+
   const flatTagsFilter = JSON.stringify(tagFilter)
 
   const queryParams = useMemo<GetAllFeaturesQueryParams | GetFeatureMetricsQueryParams>(() => {
@@ -159,13 +165,6 @@ const FeatureFlagsPage: FC = () => {
     [setSearchTerm, setPageNumber]
   )
 
-  const onTagFilterChange = useCallback(
-    tag => {
-      setTagFilter(tag)
-    },
-    [setTagFilter]
-  )
-
   const handleTagSearch = useCallback(
     tagSearchString => {
       setTagSearchTerm(tagSearchString)
@@ -237,15 +236,13 @@ const FeatureFlagsPage: FC = () => {
               </div>
               <div className={css.rightToolbar}>
                 {FFM_8184_FEATURE_FLAG_TAGGING && (
-                  <Formik formName="tag-filter" initialValues={{ tags: tagFilter }} onSubmit={() => void 0}>
-                    <TagFilter
-                      tagsData={tagsData?.tags || []}
-                      onFilterChange={onTagFilterChange}
-                      tagFilter={tagFilter}
-                      disabled={!!tagsError || !!tagsLoading}
-                      onTagSearch={handleTagSearch}
-                    />
-                  </Formik>
+                  <TagFilter
+                    tagsData={tagsData?.tags || []}
+                    onFilterChange={setTagFilter}
+                    tagFilter={tagFilter}
+                    disabled={!!tagsError || !!tagsLoading}
+                    onTagSearch={handleTagSearch}
+                  />
                 )}
                 <ExpandingSearchInput
                   ref={searchRef}
@@ -334,7 +331,7 @@ const FeatureFlagsPage: FC = () => {
             clearFilter={onClearFilter}
             clearTagFilter={onClearTagFilter}
             clearSearch={onClearSearch}
-            tags={tagsData?.tags || []}
+            tags={tagsData?.tags}
             tagsError={tagsError}
           />
         )}
