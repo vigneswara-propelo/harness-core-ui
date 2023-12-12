@@ -15,6 +15,8 @@ import { useStrings } from 'framework/strings'
 import { Scope } from 'framework/types/types'
 import { NAV_MODE } from '@common/utils/routeUtils'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
+import { useFeatureFlag } from '@modules/10-common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@modules/10-common/featureFlags'
 
 const module: Module = 'ssca'
 
@@ -22,6 +24,7 @@ const SSCASideNavLinks = (mode: NAV_MODE): React.ReactElement => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const { params } = useGetSelectedScope()
+  const showRemediationTracker = useFeatureFlag(FeatureFlag.SSCA_REMEDIATION_TRACKER)
   const { projectIdentifier = '', orgIdentifier = '' } = params || {}
 
   return (
@@ -44,9 +47,14 @@ const SSCASideNavLinks = (mode: NAV_MODE): React.ReactElement => {
             to={routes.toPipelines({ accountId, projectIdentifier, orgIdentifier, module })}
             hidden={mode === NAV_MODE.ALL}
           />
+          <SideNav.Link
+            icon="ssca-remediation"
+            label={getString('ssca.remediationTracker')}
+            to={routes.toRemediationTracker({ accountId, projectIdentifier, orgIdentifier, module })}
+            hidden={!showRemediationTracker}
+          />
         </SideNav.Scope>
       </SideNav.Section>
-
       <SideNav.CommonScopeLinks mode={mode} module={module} />
     </SideNav.Main>
   )

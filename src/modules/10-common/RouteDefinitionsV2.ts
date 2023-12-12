@@ -974,6 +974,7 @@ const routes = {
   // ssca module routes
   toSSCA: withModeModuleAndScopePrefix(() => ''),
   toSSCAArtifacts: withModeModuleAndScopePrefix(() => '/artifacts'),
+  toRemediationTracker: withModeModuleAndScopePrefix(() => '/remediation-trackers'),
 
   //cet routes
   toCET: withModeModuleAndScopePrefix<ModulePathParams>(() => ''),

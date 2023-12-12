@@ -2418,6 +2418,7 @@ const routes = {
   toSSCA: withAccountId(() => '/ssca'),
   toSSCAOverview: withAccountId(() => '/ssca/overview'),
   toSSCAArtifacts: withProjectLevelRoute(() => '/artifacts'),
+  toRemediationTracker: withProjectLevelRoute(() => '/remediation-trackers'),
   // IDP
   toIDPDefaultPath: withAccountId(() => '/idp-default'),
   toIDP: withAccountId(() => '/idp'),

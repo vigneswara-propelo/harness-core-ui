@@ -9574,6 +9574,7 @@ export interface StringsMap {
   'ssca.orchestrationStep.stepMode': string
   'ssca.publicKey': string
   'ssca.registryType': string
+  'ssca.remediationTracker': string
   'ssca.useOpaPolicy': string
   'cv.CompositeSLO.AddSLO': string
   'cv.CompositeSLO.AddSLOMessage': string

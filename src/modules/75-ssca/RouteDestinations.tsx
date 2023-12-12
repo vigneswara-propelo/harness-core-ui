@@ -89,7 +89,10 @@ export default (
     also not that wildcard pattern of /account/:accountId/:module(ssca) is matched for pipeline routes */}
     <RouteWithLayout
       sidebarProps={SSCASideNavProps}
-      path={[routes.toSSCAArtifacts({ ...projectPathProps, ...moduleParams })]}
+      path={[
+        routes.toSSCAArtifacts({ ...projectPathProps, ...moduleParams }),
+        routes.toRemediationTracker({ ...projectPathProps, ...moduleParams })
+      ]}
     >
       <ChildAppMounter<SSCACustomMicroFrontendProps>
         ChildApp={RemoteSSCAApp}

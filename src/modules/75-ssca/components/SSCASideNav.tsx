@@ -17,6 +17,8 @@ import { ProjectSelector } from '@projects-orgs/components/ProjectSelector/Proje
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
+import { useFeatureFlag } from '@modules/10-common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@modules/10-common/featureFlags'
 
 const module = 'ssca'
 
@@ -27,6 +29,7 @@ export default function SSCASideNav(): React.ReactElement {
   const history = useHistory()
 
   const showLinks = projectIdentifier && orgIdentifier
+  const showRemediationTracker = useFeatureFlag(FeatureFlag.SSCA_REMEDIATION_TRACKER)
   const params: ProjectPathProps & ModulePathParams = {
     accountId,
     projectIdentifier,
@@ -54,6 +57,11 @@ export default function SSCASideNav(): React.ReactElement {
           <SidebarLink label={getString('overview')} to={routes.toProjectOverview(params)} />
           <SidebarLink label={getString('artifacts')} to={routes.toSSCAArtifacts(params)} />
           <SidebarLink label={getString('pipelines')} to={routes.toPipelines(params)} />
+          <SidebarLink
+            label={getString('ssca.remediationTracker')}
+            to={routes.toRemediationTracker(params)}
+            hidden={showRemediationTracker}
+          />
           <ProjectSetupMenu module={module} />
         </>
       )}

@@ -84,7 +84,12 @@ const SSCARouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
         />
       </RouteWithContext>
 
-      <RouteWithContext path={[routes.toSSCAArtifacts({ ...projectPathProps, module, mode })]}>
+      <RouteWithContext
+        path={[
+          routes.toSSCAArtifacts({ ...projectPathProps, module, mode }),
+          routes.toRemediationTracker({ ...projectPathProps, module, mode })
+        ]}
+      >
         <ChildAppMounter
           ChildApp={RemoteSSCAApp}
           customComponents={{ Duration, PolicyViolationsDrawer, SLSAVerification, TimeAgoPopover }}
