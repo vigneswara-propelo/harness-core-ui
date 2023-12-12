@@ -5,10 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
-import type { ServiceOverrideInputsYaml } from 'services/cd-ng'
+
+import { getScopeAppendedToIdentifier } from '@modules/10-common/utils/StringUtils'
+import type { EnvironmentYamlV2, ServiceOverrideInputsYaml } from 'services/cd-ng'
 import type {
+  ClusterOption,
   DeployEnvironmentEntityConfig,
   DeployEnvironmentEntityCustomStepProps,
   DeployEnvironmentEntityFormState
@@ -151,13 +154,21 @@ export function processSingleEnvironmentGitOpsFormValues(
       }
     } else {
       const selectedClusters = data.clusters?.[data.environment as string]
-
       const deployToAll =
-        getMultiTypeFromValue(selectedClusters) === MultiTypeInputType.RUNTIME
+        getMultiTypeFromValue(selectedClusters as SelectOption[] | string) === MultiTypeInputType.RUNTIME
           ? (RUNTIME_INPUT_VALUE as any)
           : isEmpty(selectedClusters)
 
-      return {
+      const gitOpsClusters = Array.isArray(selectedClusters as ClusterOption[])
+        ? ((selectedClusters || []) as ClusterOption[])?.map((cluster: ClusterOption) => ({
+            identifier: cluster.scope
+              ? getScopeAppendedToIdentifier(cluster.identifier as string, cluster.scope as string)
+              : cluster.identifier || cluster.value,
+            agentIdentifier: cluster.agentIdentifier as string
+          }))
+        : selectedClusters
+
+      const dataObj: DeployEnvironmentEntityConfig = {
         environment: {
           environmentRef: data.environment,
           ...(!!data.environmentInputs?.[data.environment] && {
@@ -166,14 +177,15 @@ export function processSingleEnvironmentGitOpsFormValues(
           ...(!isEmpty(data.provisioner) && { provisioner: data.provisioner }),
           deployToAll,
           ...(!isEmpty(data.clusters) && {
-            gitOpsClusters: Array.isArray(selectedClusters)
-              ? selectedClusters?.map(cluster => ({
-                  identifier: cluster.value as string
-                }))
-              : selectedClusters
+            gitOpsClusters
           })
-        }
+        } as EnvironmentYamlV2
       }
+      if (!selectedClusters?.length) {
+        delete dataObj.environment?.gitOpsClusters
+      }
+
+      return dataObj
     }
   }
 

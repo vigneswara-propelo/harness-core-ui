@@ -78,7 +78,6 @@ export default function DeployEnvironmentEntityInputStep({
   const {
     state: { storeMetadata }
   } = usePipelineContext()
-
   const { pipelineGitMetaData } = useStageFormContext()
 
   const parentGitData = !isEmpty(storeMetadata) ? storeMetadata : pipelineGitMetaData

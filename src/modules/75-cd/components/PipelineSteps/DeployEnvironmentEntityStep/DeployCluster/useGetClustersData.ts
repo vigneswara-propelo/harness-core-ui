@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 
@@ -38,9 +38,6 @@ export function useGetClustersData({
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
 
-  // State
-  const [clustersList, setClustersList] = useState<ClusterData[]>([])
-
   const {
     data: clustersListResponse,
     error: clustersListError,
@@ -57,7 +54,7 @@ export function useGetClustersData({
 
   const loading = loadingClustersList
 
-  useEffect(() => {
+  const clustersList: ClusterData[] = useMemo(() => {
     if (!loadingClustersList) {
       let _clustersList: ClusterData[] = []
 
@@ -65,12 +62,15 @@ export function useGetClustersData({
       if (clustersListResponse?.data?.content && Array.isArray(clustersListResponse?.data?.content)) {
         _clustersList = clustersListResponse.data.content.map(clusterInResponse => ({
           name: defaultTo(clusterInResponse?.name, ''),
-          clusterRef: defaultTo(clusterInResponse?.clusterRef, '')
+          clusterRef: defaultTo(clusterInResponse?.clusterRef, ''),
+          agentIdentifier: defaultTo(clusterInResponse?.agentIdentifier, '')
         }))
       }
 
-      setClustersList(_clustersList)
+      return _clustersList
     }
+
+    return []
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, clustersListResponse?.data])
 

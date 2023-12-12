@@ -25,12 +25,13 @@ export function ClusterEntityCard({
   name,
   clusterRef,
   readonly,
+  agentIdentifier,
   onDeleteClick
 }: ClusterEntityCardProps): React.ReactElement {
   const { getString } = useStrings()
 
   return (
-    <Card className={css.card}>
+    <Card className={css.card} data-testid={`clusterEntity-${name}`}>
       <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
         <Layout.Vertical>
           <Layout.Horizontal
@@ -41,8 +42,8 @@ export function ClusterEntityCard({
             <Text color={Color.PRIMARY_7}>{name}</Text>
           </Layout.Horizontal>
 
-          <Text color={Color.GREY_500} font={{ size: 'small' }} lineClamp={1}>
-            {getString('common.ID')}: {clusterRef}
+          <Text lineClamp={1} font={{ size: 'small', weight: 'light' }} color={Color.GREY_600}>
+            {getString('cd.agentID')}: {agentIdentifier}
           </Text>
         </Layout.Vertical>
 
@@ -52,7 +53,7 @@ export function ClusterEntityCard({
             icon="remove-minus"
             data-testid={`delete-cluster-${clusterRef}`}
             disabled={readonly}
-            onClick={() => onDeleteClick({ name, clusterRef })}
+            onClick={() => onDeleteClick({ name, clusterRef, agentIdentifier })}
           />
         </Container>
       </Layout.Horizontal>

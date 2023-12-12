@@ -5393,6 +5393,7 @@ export interface StringsMap {
   'pipeline.skipInstances.title': string
   'pipeline.slsaProvenance': string
   'pipeline.slsaVerification': string
+  'pipeline.specifyGitOpsClusters': string
   'pipeline.specifyTargetHostLabel': string
   'pipeline.sslVerify': string
   'pipeline.stageDataDeleteWarningText': string
@@ -7110,7 +7111,6 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.singleEnvironmentDialogTitleText': string
   'cd.pipelineSteps.environmentTab.specifyEnvironmentOrGroup': string
   'cd.pipelineSteps.environmentTab.specifyGitOpsCluster': string
-  'cd.pipelineSteps.environmentTab.specifyGitOpsClusters': string
   'cd.pipelineSteps.environmentTab.specifyYourEnvironment': string
   'cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup': string
   'cd.pipelineSteps.environmentTab.specifyYourEnvironments': string
@@ -7166,6 +7166,7 @@ export interface StringsMap {
   'cd.preProduction': string
   'cd.preProductionType': string
   'cd.previewYAML': string
+  'cd.reConfigurePipelineClusters': string
   'cd.releaseNameValidation': string
   'cd.removeStepTemplate': string
   'cd.removeStepTemplateConfirmationLabel': string

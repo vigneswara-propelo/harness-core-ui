@@ -5,33 +5,28 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
-import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
+import React, { useState } from 'react'
+import { isEmpty, set } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import produce from 'immer'
 import { v4 as uuid } from 'uuid'
 
 import {
   AllowedTypes,
-  FormInput,
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
-  SelectOption
+  SelectOption,
+  Text
 } from '@harness/uicore'
-
-import { useStrings } from 'framework/strings'
-
-import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
-import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
+import { Intent } from '@harness/design-system'
 import { isValueRuntimeInput } from '@common/utils/utils'
-import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
-import { Scope } from '@common/interfaces/SecretsInterface'
+import { useStrings } from 'framework/strings'
+import GitOpsCluster from '@modules/75-cd/components/EnvironmentsV2/EnvironmentDetails/GitOpsCluster/GitOpsCluster'
 
 import ClusterEntitiesList from '../ClusterEntitiesList/ClusterEntitiesList'
-import type { DeployEnvironmentEntityFormState } from '../types'
-import { useGetClustersData } from './useGetClustersData'
+import type { ClusterItem, ClusterOption, DeployEnvironmentEntityFormState } from '../types'
 
 interface DeployClusterProps {
   initialValues: DeployEnvironmentEntityFormState
@@ -42,122 +37,89 @@ interface DeployClusterProps {
   lazyCluster?: boolean
 }
 
-export function getAllFixedClusters(data: DeployEnvironmentEntityFormState, environmentIdentifier: string): string[] {
+export function getAllFixedClusters(
+  data: DeployEnvironmentEntityFormState,
+  environmentIdentifier: string
+): ClusterItem[] | any {
   if (data.cluster && getMultiTypeFromValue(data.cluster) === MultiTypeInputType.FIXED) {
     return [data.cluster as string]
   } else if (data.clusters?.[environmentIdentifier] && Array.isArray(data.clusters[environmentIdentifier])) {
-    return data.clusters[environmentIdentifier].map(cluster => cluster.value as string)
+    return (data.clusters[environmentIdentifier] as ClusterOption[]).map(cluster => ({
+      clusterRef: cluster.value,
+      value: cluster.value as string,
+      agentIdentifier: cluster.agentIdentifier as string,
+      name: cluster.label
+    })) as ClusterItem[]
   }
 
   return []
 }
 
-export function getSelectedClustersFromOptions(items: SelectOption[]): string[] {
+export function getSelectedClustersFromOptions(items: ClusterOption[] | any): ClusterOption[] {
   if (Array.isArray(items)) {
-    return items.map(item => item.value as string)
+    const selItems: ClusterOption[] = items.map(item => ({
+      value: item.value || item.identifier,
+      agentIdentifier: item.agentIdentifier,
+      name: item.identifier
+    }))
+    return selItems
   }
 
   return []
+}
+
+const getName = (environmentIdentifier: string): string => {
+  if (environmentIdentifier) {
+    return `clusters.['${environmentIdentifier}']`
+  }
+  return 'gitOpsClusters'
 }
 
 export default function DeployCluster({
   initialValues,
   readonly,
-  allowableTypes,
   environmentIdentifier,
-  isMultiCluster,
-  lazyCluster
+  isMultiCluster
 }: DeployClusterProps): JSX.Element {
   const { values, setFieldValue, setValues } = useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
   const uniquePathForClusters = React.useRef(`_pseudo_field_${uuid()}`)
-
   // State
   const [selectedClusters, setSelectedClusters] = useState(getAllFixedClusters(initialValues, environmentIdentifier))
 
-  let envToFetchClusters = environmentIdentifier
-
-  if (get(values, 'category') === 'group') {
-    const scope = getScopeFromValue(get(values, 'environmentGroup') as string)
-    envToFetchClusters = scope !== Scope.PROJECT ? `${scope}.${environmentIdentifier}` : environmentIdentifier
-  }
-
-  // Constants
   const isFixed =
-    getMultiTypeFromValue(isMultiCluster ? values.clusters?.[environmentIdentifier] : values.cluster) ===
-    MultiTypeInputType.FIXED
+    getMultiTypeFromValue(
+      isMultiCluster ? (values.clusters?.[environmentIdentifier] as SelectOption[]) : values.cluster
+    ) === MultiTypeInputType.FIXED
 
-  // API
-  const { clustersList, loadingClustersList } = useGetClustersData({
-    environmentIdentifier: envToFetchClusters,
-    lazyCluster
-  })
-
-  const selectOptions = useMemo(() => {
+  React.useEffect(() => {
+    // update clusters in formik
     /* istanbul ignore else */
-    if (!isNil(clustersList)) {
-      return clustersList.map(cluster => ({
-        label: cluster.name || cluster.clusterRef,
-        value: cluster.clusterRef
-      }))
-    }
 
-    return []
-  }, [clustersList])
-
-  const loading = loadingClustersList
-
-  useEffect(() => {
-    if (!loading) {
-      // update clusters in formik
-      /* istanbul ignore else */
-      if (values && selectedClusters.length > 0) {
-        if (values.clusters && Array.isArray(values.clusters?.[environmentIdentifier])) {
-          setValues({
-            ...values,
-            // set value of unique path created to handle clusters if some clusters are already selected, else select All
-            [uniquePathForClusters.current]: selectedClusters.map(clusterId => ({
-              label: defaultTo(
-                clustersList.find(clusterInList => clusterInList.clusterRef === clusterId)?.name,
-                clusterId
-              ),
-              value: clusterId
-            }))
-          })
-        }
-      } else if (isMultiCluster && isEmpty(selectedClusters)) {
-        // set value of unique path to All in case no clusters are selected or runtime if clusters are set to runtime
-        // This is specifically used for on load
-        const clusterIdentifierValue =
-          getMultiTypeFromValue(values.clusters?.[environmentIdentifier]) === MultiTypeInputType.RUNTIME
-            ? values.clusters?.[environmentIdentifier]
-            : [SELECT_ALL_OPTION]
-
-        // This if condition is used to show runtime value for the cluster when it is shown for filtering
-        if (readonly && isValueRuntimeInput(initialValues.environments)) {
-          setFieldValue(`${uniquePathForClusters.current}`, RUNTIME_INPUT_VALUE)
-        } else {
-          setFieldValue(`${uniquePathForClusters.current}`, clusterIdentifierValue)
-        }
+    if (values && selectedClusters.length > 0) {
+      if (values.clusters && Array.isArray(values.clusters?.[environmentIdentifier])) {
+        setValues({
+          ...values,
+          // set value of unique path created to handle clusters if some clusters are already selected, else select All
+          [uniquePathForClusters.current]: selectedClusters
+        })
+      }
+    } else if (isMultiCluster && isEmpty(selectedClusters)) {
+      // This if condition is used to show runtime value for the cluster when it is shown for filtering
+      if (readonly && isValueRuntimeInput(initialValues.environments)) {
+        setFieldValue(`${uniquePathForClusters.current}`, RUNTIME_INPUT_VALUE)
       }
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, selectedClusters])
+  }, [selectedClusters])
 
-  const disabled = readonly || (isFixed && loading)
-
-  let placeHolderForClusters =
-    values.clusters && Array.isArray(values.clusters[environmentIdentifier])
-      ? getString('common.clusters')
-      : getString('common.allClusters')
-
-  if (loading) {
-    placeHolderForClusters = getString('loading')
-  }
-
-  const placeHolderForCluster = loading
-    ? getString('loading')
-    : getString('cd.pipelineSteps.environmentTab.specifyGitOpsCluster')
+  const error = React.useMemo(() => {
+    const nonAgentClusters = selectedClusters.find((item: ClusterItem) => !item.agentIdentifier)
+    if (nonAgentClusters) {
+      return getString('cd.reConfigurePipelineClusters')
+    }
+  }, [selectedClusters])
 
   const updateFormikAndLocalState = (newFormValues: DeployEnvironmentEntityFormState): void => {
     // this sets the form values
@@ -168,77 +130,60 @@ export default function DeployCluster({
 
   const onRemoveClusterFromList = (clusterToDelete: string): void => {
     const newFormValues = produce(values, draft => {
+      // istanbul ignore next
       if (draft.cluster) {
         draft.cluster = ''
         delete draft.clusters
       } else if (draft.clusters && Array.isArray(draft.clusters[environmentIdentifier])) {
-        const filteredClusters = draft.clusters[environmentIdentifier].filter(
+        const filteredClusters = (draft.clusters[environmentIdentifier] as ClusterOption[]).filter(
           cluster => cluster.value !== clusterToDelete
         )
         draft.clusters[environmentIdentifier] = filteredClusters
         set(draft, uniquePathForClusters.current, filteredClusters)
       }
     })
-
     updateFormikAndLocalState(newFormValues)
   }
 
   return (
     <>
-      <Layout.Horizontal spacing="medium" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
-        {isMultiCluster ? (
-          <FormMultiTypeMultiSelectDropDown
-            label={getString('cd.pipelineSteps.environmentTab.specifyGitOpsClusters')}
-            tooltipProps={{ dataTooltipId: 'specifyGitOpsClusters' }}
-            name={uniquePathForClusters.current}
-            // Form group disabled
-            disabled={disabled}
-            dropdownProps={{
-              placeholder: placeHolderForClusters,
-              items: selectOptions,
-              // Field disabled
-              disabled,
-              isAllSelectionSupported: true
-            }}
-            onChange={items => {
-              if (items?.at(0)?.value === 'All') {
-                setFieldValue(`clusters.['${environmentIdentifier}']`, undefined)
-                setSelectedClusters([])
+      <Layout.Vertical spacing="medium" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
+        {error ? <Text intent={Intent.WARNING}>{error}</Text> : null}
+        <GitOpsCluster
+          envRef={environmentIdentifier}
+          showLinkedClusters={false}
+          allowMultiple={isMultiCluster}
+          headerText={getString('pipeline.specifyGitOpsClusters')}
+          label={
+            selectedClusters?.length
+              ? `${getString('common.clusters')}: (${selectedClusters.length})`
+              : getString('common.allClusters')
+          }
+          onSubmit={(val: ClusterOption[] | ClusterOption) => {
+            // istanbul ignore next
+            if (isMultiCluster) {
+              if (!isValueRuntimeInput(val as SelectOption)) {
+                const filterVal = (val as ClusterOption[]).filter(item => item.agentIdentifier)
+                setFieldValue(`clusters.['${environmentIdentifier}']`, filterVal)
+                setSelectedClusters(getSelectedClustersFromOptions(filterVal as ClusterOption[]))
               } else {
-                setFieldValue(`clusters.['${environmentIdentifier}']`, items)
-                setSelectedClusters(getSelectedClustersFromOptions(items))
+                setFieldValue(`clusters.['${environmentIdentifier}']`, val)
+                setSelectedClusters(getSelectedClustersFromOptions(val as ClusterOption[]))
               }
-            }}
-            multiTypeProps={{
-              width: 280,
-              allowableTypes
-            }}
-          />
-        ) : (
-          <FormInput.MultiTypeInput
-            tooltipProps={{ dataTooltipId: 'specifyGitOpsCluster' }}
-            label={getString('cd.pipelineSteps.environmentTab.specifyGitOpsCluster')}
-            name="cluster"
-            useValue
-            disabled={disabled}
-            placeholder={placeHolderForCluster}
-            multiTypeInputProps={{
-              width: 300,
-              selectProps: { items: selectOptions },
-              allowableTypes,
-              defaultValueToReset: '',
-              onChange: item => {
-                setSelectedClusters(getSelectedClustersFromOptions([item as SelectOption]))
-              }
-            }}
-            selectItems={selectOptions}
-          />
-        )}
-      </Layout.Horizontal>
+            } // istanbul ignore else
+            else {
+              setFieldValue('clusters', [])
+              setSelectedClusters(getSelectedClustersFromOptions([val]))
+            }
+          }}
+          selectedData={selectedClusters}
+          name={isMultiCluster ? getName(environmentIdentifier) : 'clusters'}
+          disabled={readonly}
+        />
+      </Layout.Vertical>
       {isFixed && !isEmpty(selectedClusters) && (
         <ClusterEntitiesList
-          loading={loading}
-          clustersData={clustersList.filter(clusterInList => selectedClusters.includes(clusterInList.clusterRef))}
+          clustersData={selectedClusters}
           readonly={readonly}
           onRemoveClusterFromList={onRemoveClusterFromList}
         />

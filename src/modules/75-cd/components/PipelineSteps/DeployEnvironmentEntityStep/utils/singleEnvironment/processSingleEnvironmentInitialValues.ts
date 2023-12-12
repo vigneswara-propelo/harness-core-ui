@@ -197,6 +197,7 @@ export function processSingleEnvironmentGitOpsInitialValues(
       if (filters.length) {
         set(formState, 'environmentFilters.runtime', filters)
       }
+      set(formState, 'gitOpsClusters', RUNTIME_INPUT_VALUE)
     } else {
       set(formState, 'environment', environment.environmentRef)
       set(formState, 'gitMetadata', { [environment.environmentRef as string]: environment.gitBranch })
@@ -216,7 +217,8 @@ export function processSingleEnvironmentGitOpsInitialValues(
           Array.isArray(environment.gitOpsClusters)
             ? environment.gitOpsClusters?.map(gitOpsCluster => ({
                 label: gitOpsCluster.identifier,
-                value: gitOpsCluster.identifier
+                value: gitOpsCluster.identifier,
+                agentIdentifier: gitOpsCluster.agentIdentifier
               }))
             : environment.gitOpsClusters
         )

@@ -10,6 +10,7 @@ import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import type { EnvironmentYamlV2, ServiceOverrideInputsYaml } from 'services/cd-ng'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import type {
+  ClusterOption,
   DeployEnvironmentEntityConfig,
   DeployEnvironmentEntityCustomStepProps,
   DeployEnvironmentEntityFormState
@@ -34,7 +35,6 @@ export function getEnvironmentsFormValuesFromFormState(
         if (data.environmentInputs?.[environment.value as string]) {
           set(environmentsFormState, 'environmentInputs', data.environmentInputs[environment.value as string])
         }
-
         if (
           isOverridesEnabled &&
           !isEmpty(data.serviceOverrideInputs?.[environment.value as string]) &&
@@ -72,7 +72,6 @@ export function getEnvironmentsFormValuesFromFormState(
         }
 
         const environmentFilters = defaultTo(data?.environmentFilters?.[environment.value as string], [])
-
         if (environmentFilters.length) {
           set(environmentsFormState, 'filters', environmentFilters)
         } else {
@@ -88,9 +87,10 @@ export function getEnvironmentsFormValuesFromFormState(
               set(
                 environmentsFormState,
                 'gitOpsClusters',
-                Array.isArray(selectedClusters)
-                  ? selectedClusters.map(cluster => ({
-                      identifier: cluster.value as string
+                Array.isArray(selectedClusters as unknown as ClusterOption[])
+                  ? (selectedClusters as ClusterOption[])?.map((cluster: ClusterOption) => ({
+                      identifier: cluster.value as string,
+                      agentIdentifier: cluster.agentIdentifier as string
                     }))
                   : selectedClusters
               )

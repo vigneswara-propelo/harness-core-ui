@@ -42,7 +42,6 @@ export class DeployClusterEntityStep extends Step<DeployClusterEntityStepProps> 
       customStepProps,
       onUpdate
     } = props
-
     if (isTemplatizedView(stepViewType)) {
       return (
         <Formik initialValues={initialValues} validate={onUpdate} onSubmit={noop}>

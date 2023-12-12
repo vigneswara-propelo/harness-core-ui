@@ -143,7 +143,6 @@ export const createEnvValues = (
         ? (RUNTIME_INPUT_VALUE as any)
         : newEnvironmentObject?.infrastructureDefinitions
       : undefined
-
     const gitOpsClusters = !isEmpty(newEnvironmentObject?.gitOpsClusters)
       ? // This condition marks the field as RUNTIME when used in templates
         deployToAllEnvironments && stepViewType === StepViewType.TemplateUsage

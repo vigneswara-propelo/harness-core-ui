@@ -277,7 +277,6 @@ pipelineSteps:
     specifyYourInfrastructures: Specify Infrastructures
     specifyEnvironmentOrGroup: Specify environment or environment group
     specifyGitOpsCluster: Specify GitOps Cluster
-    specifyGitOpsClusters: Specify GitOps Clusters
     selectEnvironment: '{{$.common.entityPlaceholderText}}'
     selectEnvironments: '{{$.common.entityPlaceholderText}}'
     selectEnvironmentGroup: '{{$.common.entityPlaceholderText}}'
@@ -1390,3 +1389,4 @@ asgPlaceholder: Enter ASG Name
 asgLoadBalancer: ASG Load Balancer
 scopeToSpecificServices: Scope to Specific Services
 selectedPrimaryArtifact: 'Selected Primary Artifact: {{artifactId}}'
+reConfigurePipelineClusters: 'Your cluster setup is out of date, please reselect the cluster(s) you want to deploy to in this PR Pipeline to continue'

@@ -16,17 +16,17 @@ import type { ClusterData } from '../types'
 import { ClusterEntityCard } from './ClusterEntityCard'
 
 export interface ClusterEntitiesListProps {
-  loading: boolean
+  loading?: boolean
   clustersData: ClusterData[]
   readonly: boolean
   onRemoveClusterFromList: (id: string) => void
 }
 
 export default function ClusterEntitiesList({
-  loading,
   clustersData,
   readonly,
-  onRemoveClusterFromList
+  onRemoveClusterFromList,
+  loading = false
 }: ClusterEntitiesListProps): React.ReactElement {
   const { getString } = useStrings()
 
@@ -59,7 +59,7 @@ export default function ClusterEntitiesList({
 
   return (
     <>
-      <Layout.Vertical spacing={'medium'} margin={{ top: 'medium' }}>
+      <Layout.Vertical spacing={'medium'} margin={{ top: 'medium' }} data-testid="cluster-entities-list">
         {clustersData.map(row => {
           return (
             <ClusterEntityCard
@@ -68,6 +68,7 @@ export default function ClusterEntitiesList({
               clusterRef={row.clusterRef}
               onDeleteClick={setClusterToDelete}
               readonly={readonly}
+              agentIdentifier={row.agentIdentifier}
             />
           )
         })}

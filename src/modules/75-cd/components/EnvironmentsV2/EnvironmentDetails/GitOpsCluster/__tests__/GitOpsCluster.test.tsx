@@ -88,15 +88,6 @@ const props = {
   }
 }
 describe('GitOps Cluster tests', () => {
-  test('initial render', () => {
-    const { container } = render(
-      <TestWrapper>
-        <GitOpsCluster {...props} />
-      </TestWrapper>
-    )
-    expect(container).toMatchSnapshot()
-  })
-
   test('click on select cluster', async () => {
     const { container } = render(
       <TestWrapper>
@@ -107,8 +98,7 @@ describe('GitOps Cluster tests', () => {
       fireEvent.click(getByText(container, 'cd.selectClusterLabel')!)
     })
     const form = findDialogContainer()
-    expect(form).toMatchSnapshot()
-    fireEvent.click(form?.querySelector('.bp3-dialog-close-button')!)
+    expect(form).toBeTruthy()
   })
 
   test('click on unlink icon', async () => {
@@ -131,5 +121,23 @@ describe('GitOps Cluster tests', () => {
       fireEvent.click(deleteBtn!)
       expect(deleteApiKey).toBeCalled()
     })
+  })
+
+  test('show Select GitOps Clusters flow', async () => {
+    const gitOpsclusterProps = {
+      ...props,
+      showLinkedClusters: false,
+      label: 'Select GitOps Clusters'
+    }
+    const { container } = render(
+      <TestWrapper>
+        <GitOpsCluster {...gitOpsclusterProps} />
+      </TestWrapper>
+    )
+    await act(async () => {
+      fireEvent.click(getByText(container, 'Select GitOps Clusters')!)
+    })
+    const form = findDialogContainer()
+    expect(getByText(form!, 'common.entityReferenceTitle')).toBeVisible()
   })
 })

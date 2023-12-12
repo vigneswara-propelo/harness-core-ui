@@ -115,7 +115,6 @@ export function processFormValues(
   customStepProps: DeployEnvironmentEntityCustomStepProps
 ): DeployEnvironmentEntityConfig {
   const gitOpsEnabled = !!customStepProps.gitOpsEnabled
-
   // istanbul ignore else
   if (data.category === 'single') {
     if (gitOpsEnabled) {

@@ -450,11 +450,13 @@ describe('get environments form values from form state', () => {
           Env_3: [
             {
               label: 'Cluster_1',
-              value: 'Cluster_1'
+              value: 'Cluster_1',
+              agentIdentifier: 'meena'
             },
             {
               label: 'Cluster_2',
-              value: 'Cluster_2'
+              value: 'Cluster_2',
+              agentIdentifier: 'meena'
             }
           ]
         }
@@ -487,10 +489,12 @@ describe('get environments form values from form state', () => {
         deployToAll: false,
         gitOpsClusters: [
           {
-            identifier: 'Cluster_1'
+            identifier: 'Cluster_1',
+            agentIdentifier: 'meena'
           },
           {
-            identifier: 'Cluster_2'
+            identifier: 'Cluster_2',
+            agentIdentifier: 'meena'
           }
         ]
       }
