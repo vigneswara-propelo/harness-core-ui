@@ -367,7 +367,16 @@ export enum CIOnboardingActions {
   SelectGitProvider = 'Git Provider Selected',
   GetStartedClicked = 'Clicked on Get Started for CI',
   ConfigurePipelineClicked = 'Clicked on Configure Pipeline',
-  CreatePipelineClicked = 'Clicked on Create Pipeline'
+  CreatePipelineClicked = 'Clicked on Create Pipeline',
+  CreditCardValidated = 'User clicked validate card',
+  ValidCreditCardEntered = 'User entered a valid card',
+  InvalidCreditCardEntered = 'User entered an invalid card',
+  LocalRunnerSetup = 'Clicked local runner setup instructions',
+  LocalRunnerSetupCopied = 'Copied the local runner setup instructions',
+  LocalRunnerSetupSuccessful = 'Local Runner Setup was successful',
+  GetStartedWithValidCardClicked = 'Clicked on getting started with valid card',
+  GetStartedWithLocalRunnerClicked = 'Clicked on getting started with local runner setup',
+  PipelineCreatedWithLocalRunner = 'Created a pipeline using the local runner'
 }
 
 export enum CDOnboardingActions {

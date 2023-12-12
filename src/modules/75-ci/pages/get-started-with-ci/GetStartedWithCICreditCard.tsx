@@ -24,6 +24,8 @@ import { noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useDockerRunnerCommand } from 'services/ci'
 import CommandBlock from '@modules/10-common/CommandBlock/CommandBlock'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { CIOnboardingActions } from '@common/constants/TrackingConstants'
 import VerifyDelegateConnection from '@modules/27-platform/delegates/pages/delegates/delegateCommandLineCreation/components/VerifyDelegateConnection'
 import { DelegateCommonProblemTypes } from '@modules/27-platform/delegates/constants'
 import css from './GetStartedWithCI.module.scss'
@@ -35,12 +37,13 @@ export enum GetStartedInfraTypes {
 
 interface CreditCardOnboardingProps {
   setShowLocalInfraSetup: (value: boolean) => void
-  openSubscribeModal: () => void
+  openCreditCardModal: () => void
 }
 
 export const CreditCardOnboarding = (props: CreditCardOnboardingProps): React.ReactElement => {
   const [selectedInfra, setSelectedInfra] = useState<GetStartedInfraTypes>()
   const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
   return (
     <Layout.Vertical flex>
       <Container className={css.creditCardPage}>
@@ -74,7 +77,7 @@ export const CreditCardOnboarding = (props: CreditCardOnboardingProps): React.Re
                   intent="primary"
                   rightIcon="chevron-right"
                   onClick={() => {
-                    props.openSubscribeModal()
+                    props.openCreditCardModal()
                   }}
                   variation={ButtonVariation.PRIMARY}
                 />
@@ -101,6 +104,7 @@ export const CreditCardOnboarding = (props: CreditCardOnboardingProps): React.Re
                   rightIcon="chevron-right"
                   onClick={() => {
                     props.setShowLocalInfraSetup(true)
+                    trackEvent(CIOnboardingActions.LocalRunnerSetup, {})
                   }}
                   variation={ButtonVariation.PRIMARY}
                 />
@@ -118,17 +122,19 @@ interface LocalInfraOnboardingProps {
   setShowLocalInfraSetup: (value: boolean) => void
   setShowCreditCardFlow: (value: boolean) => void
   accountId: string
-  setUseVerifiedLocalInfra: (value: boolean) => void
+  setUseLocalRunnerInfra: (value: boolean) => void
 }
 
 export const LocalInfraOnboarding = (props: LocalInfraOnboardingProps): React.ReactElement => {
   const { getString } = useStrings()
   const [verifyButtonClicked, setVerifyButtonClicked] = useState<boolean>(false)
   const [isLocalInfraVerified, setIsLocalInfraVerified] = useState<boolean>(false)
-  const [isTestInfraDisabled, setIsTestInfraDisabled] = useState<boolean>(false)
+  const [isTestInfraEnabled, setIsTestInfraEnabled] = useState<boolean>(true)
   const [commandSnippet, setCommandSnippet] = useState<string>('')
+  const [isFinishEnabled, setIsFinishEnabled] = useState<boolean>(false)
 
   const { showError } = useToaster()
+  const { trackEvent } = useTelemetry()
 
   const {
     data: infraSnippet,
@@ -171,7 +177,17 @@ export const LocalInfraOnboarding = (props: LocalInfraOnboardingProps): React.Re
                 <Text>{getString('ci.getStartedWithCI.installHarnessOnLocal')}</Text>
               </Layout.Horizontal>
               <Layout.Vertical padding={{ bottom: 'medium', left: 'medium' }}>
-                <CommandBlock ignoreWhiteSpaces={false} commandSnippet={commandSnippet} allowCopy={true} />
+                <CommandBlock
+                  ignoreWhiteSpaces={false}
+                  commandSnippet={commandSnippet}
+                  allowCopy={true}
+                  telemetryProps={{
+                    copyTelemetryProps: {
+                      eventName: CIOnboardingActions.LocalRunnerSetupCopied,
+                      properties: {}
+                    }
+                  }}
+                />
               </Layout.Vertical>
             </Layout.Vertical>
           </Layout.Horizontal>
@@ -186,7 +202,7 @@ export const LocalInfraOnboarding = (props: LocalInfraOnboardingProps): React.Re
                   text={getString('ci.getStartedWithCI.testInfra')}
                   minimal
                   size={ButtonSize.SMALL}
-                  disabled={isTestInfraDisabled}
+                  disabled={!isTestInfraEnabled}
                   onClick={() => setVerifyButtonClicked(true)}
                 />
                 {isLocalInfraVerified && (
@@ -204,23 +220,29 @@ export const LocalInfraOnboarding = (props: LocalInfraOnboardingProps): React.Re
                 <VerifyDelegateConnection
                   onSuccessHandler={() => {
                     setIsLocalInfraVerified(true)
-                    props.setUseVerifiedLocalInfra(true)
-                    setIsTestInfraDisabled(true)
+                    props.setUseLocalRunnerInfra(true)
+                    setIsTestInfraEnabled(true)
+                    setIsFinishEnabled(true)
+                    trackEvent(CIOnboardingActions.LocalRunnerSetupSuccessful, {})
                   }}
                   onErrorHandler={() => {
                     setIsLocalInfraVerified(false)
-                    props.setUseVerifiedLocalInfra(false)
-                    setIsTestInfraDisabled(true)
+                    props.setUseLocalRunnerInfra(true)
+                    setIsTestInfraEnabled(true)
+                    setIsFinishEnabled(true)
                   }}
                   onDone={noop}
                   name={'docker-delegate'}
                   delegateType={DelegateCommonProblemTypes.DOCKER}
                   showDoneButton={false}
                   verificationInProgressLabel={'delegate.successVerification.checkDelegateInstalled'}
-                  onVerificationStart={() => setIsTestInfraDisabled(true)}
+                  onVerificationStart={() => setIsTestInfraEnabled(false)}
+                  showDelegateErrorPanel={false}
                 />
               )}
-              <Text padding={{ top: 'small', left: 'medium' }}>{getString('ci.getStartedWithCI.setupFinish')}</Text>
+              {isFinishEnabled && (
+                <Text padding={{ top: 'small', left: 'medium' }}>{getString('ci.getStartedWithCI.setupFinish')}</Text>
+              )}
             </Layout.Vertical>
           </Layout.Horizontal>
         </Layout.Vertical>
@@ -237,11 +259,11 @@ export const LocalInfraOnboarding = (props: LocalInfraOnboardingProps): React.Re
             variation={ButtonVariation.PRIMARY}
             rightIcon="chevron-right"
             onClick={() => {
-              props.setUseVerifiedLocalInfra(true)
+              props.setUseLocalRunnerInfra(true)
               props.setShowCreditCardFlow(false)
               props.setShowLocalInfraSetup(false)
             }}
-            disabled={!isLocalInfraVerified}
+            disabled={!isFinishEnabled}
           />
         </Layout.Horizontal>
       </Container>

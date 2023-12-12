@@ -33,6 +33,7 @@ interface VerifyDelegateConnectionProps {
   showDoneButton?: boolean
   verificationInProgressLabel?: keyof StringsMap
   onVerificationStart?: () => void
+  showDelegateErrorPanel?: boolean
 }
 
 const VerifyDelegateConnection: FC<VerifyDelegateConnectionProps> = props => {
@@ -44,7 +45,8 @@ const VerifyDelegateConnection: FC<VerifyDelegateConnectionProps> = props => {
     onErrorHandler,
     showDoneButton = true,
     verificationInProgressLabel,
-    onVerificationStart
+    onVerificationStart,
+    showDelegateErrorPanel = true
   } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
@@ -98,7 +100,7 @@ const VerifyDelegateConnection: FC<VerifyDelegateConnectionProps> = props => {
     }
   }, [data, loading])
   const getVerifyDelegateDetails = () => {
-    if (showError) {
+    if (showError && showDelegateErrorPanel) {
       return (
         <Layout.Vertical>
           <Container className={css.delegateErrorContainer} padding="large" margin={{ bottom: 'xlarge' }}>
@@ -167,7 +169,7 @@ const VerifyDelegateConnection: FC<VerifyDelegateConnectionProps> = props => {
           </Layout.Horizontal>
         </Container>
       )
-    } else
+    } else if (showDelegateErrorPanel || (!showDelegateErrorPanel && !showError)) {
       return (
         <Layout.Horizontal padding="large">
           <Icon size={16} name="steps-spinner" color={Color.BLUE_800} style={{ marginRight: '12px' }} />
@@ -178,6 +180,7 @@ const VerifyDelegateConnection: FC<VerifyDelegateConnectionProps> = props => {
           </Text>
         </Layout.Horizontal>
       )
+    }
   }
 
   return (

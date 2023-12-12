@@ -84,7 +84,8 @@ export default function GetStartedWithCI(): React.ReactElement {
 
   const [showCreditCardFlow, setShowCreditCardFlow] = useState<boolean>(false)
   const [showLocalInfraSetup, setShowLocalInfraSetup] = useState<boolean>(false)
-  const [useVerifiedLocalInfra, setUseVerifiedLocalInfra] = useState<boolean>(false)
+  const [useLocalRunnerInfra, setUseLocalRunnerInfra] = useState<boolean>(false)
+  const [creditCardModalOpenedOnce, setCreditCardModalOpenedOnce] = useState<boolean>(false)
   const { licenseInformation } = useLicenseStore()
   const isFreeEdition = isFreePlan(licenseInformation, ModuleName.CI)
 
@@ -111,8 +112,14 @@ export default function GetStartedWithCI(): React.ReactElement {
   const { openSubscribeModal } = useCreditCardWidget({
     onClose: () => {
       refetchValidCard()
+      trackEvent(CIOnboardingActions.CreditCardValidated, {})
     }
   })
+
+  const openCreditCardModal = () => {
+    openSubscribeModal()
+    setCreditCardModalOpenedOnce(true)
+  }
 
   useEffect(() => {
     if (error) {
@@ -138,6 +145,14 @@ export default function GetStartedWithCI(): React.ReactElement {
       setShowCreditCardFlow(false)
     }
   }, [validCard, trustLevelData, fetchingCards, fetchingTrustLevel])
+
+  useEffect(() => {
+    if (creditCardModalOpenedOnce && validCard?.data?.hasAtleastOneValidCreditCard) {
+      trackEvent(CIOnboardingActions.ValidCreditCardEntered, {})
+    } else if (creditCardModalOpenedOnce && !validCard?.data?.hasAtleastOneValidCreditCard) {
+      trackEvent(CIOnboardingActions.InvalidCreditCardEntered, {})
+    }
+  }, [validCard])
 
   useEffect(() => {
     if (showWizard) {
@@ -301,21 +316,21 @@ export default function GetStartedWithCI(): React.ReactElement {
               : InfraProvisiongWizardStepId.SelectGitProvider
           }
           dummyGitnessHarnessConnector={dummyGitnessHarnessConnector}
-          useVerifiedLocalInfra={useVerifiedLocalInfra}
+          useLocalRunnerInfra={useLocalRunnerInfra}
         />
       ) : (
         <>
           {showCreditCardFlow && !showLocalInfraSetup && !showPageLoader ? (
             <CreditCardOnboarding
               setShowLocalInfraSetup={setShowLocalInfraSetup}
-              openSubscribeModal={openSubscribeModal}
+              openCreditCardModal={openCreditCardModal}
             />
           ) : showLocalInfraSetup ? (
             <LocalInfraOnboarding
               setShowLocalInfraSetup={setShowLocalInfraSetup}
               setShowCreditCardFlow={setShowCreditCardFlow}
               accountId={accountId}
-              setUseVerifiedLocalInfra={setUseVerifiedLocalInfra}
+              setUseLocalRunnerInfra={setUseLocalRunnerInfra}
             />
           ) : (
             <Layout.Vertical flex>
@@ -369,7 +384,13 @@ export default function GetStartedWithCI(): React.ReactElement {
                         text={getString('getStarted')}
                         onClick={() => {
                           try {
-                            trackEvent(CIOnboardingActions.GetStartedClicked, {})
+                            if (creditCardModalOpenedOnce && validCard?.data?.hasAtleastOneValidCreditCard) {
+                              trackEvent(CIOnboardingActions.GetStartedWithValidCardClicked, {})
+                            } else if (useLocalRunnerInfra) {
+                              trackEvent(CIOnboardingActions.GetStartedClicked, {})
+                            } else {
+                              trackEvent(CIOnboardingActions.GetStartedWithLocalRunnerClicked, {})
+                            }
                           } catch (e) {
                             // ignore error
                           }

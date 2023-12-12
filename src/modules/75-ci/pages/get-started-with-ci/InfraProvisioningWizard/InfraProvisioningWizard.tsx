@@ -120,7 +120,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     precursorData,
     enableImportYAMLOption,
     dummyGitnessHarnessConnector,
-    useVerifiedLocalInfra
+    useLocalRunnerInfra
   } = props
   const { preSelectedGitConnector, connectorsEligibleForPreSelection } = precursorData || {}
   const { getString } = useStrings()
@@ -211,7 +211,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           }
           if (status === Status.SUCCESS && generatedPipelineYAML) {
             const generatedParsedYaml = parse<PipelineConfig>(generatedPipelineYAML)
-            const originalPipeline = useVerifiedLocalInfra
+            const originalPipeline = useLocalRunnerInfra
               ? updateRuntimeTypeToDocker(generatedParsedYaml)
               : generatedParsedYaml
             setGeneratedYAMLAsJSON(
@@ -223,7 +223,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           } else {
             setGeneratedYAMLAsJSON(
               addDetailsToPipeline({
-                originalPipeline: getCIStarterPipeline(yamlVersion, useVerifiedLocalInfra ? 'Docker' : undefined),
+                originalPipeline: getCIStarterPipeline(yamlVersion, useLocalRunnerInfra ? 'Docker' : undefined),
                 ...commonArgs
               })
             )
@@ -262,7 +262,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             pipelineYaml: yamlStringify(
               id && StarterConfigIdToOptionMap[id] === PipelineConfigurationOption.GenerateYAML
                 ? generatedYAMLAsJSON
-                : getCloudPipelinePayloadWithCodebase(useVerifiedLocalInfra ? 'Docker' : undefined)
+                : getCloudPipelinePayloadWithCodebase(useLocalRunnerInfra ? 'Docker' : undefined)
             ),
             configuredGitConnector,
             orgIdentifier,
@@ -285,7 +285,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const constructPipelinePayloadWithoutCodebase = React.useCallback((): string => {
     const UNIQUE_PIPELINE_ID = new Date().getTime().toString()
     const payload = addDetailsToPipeline({
-      originalPipeline: getCloudPipelinePayloadWithoutCodebase(useVerifiedLocalInfra ? 'Docker' : undefined),
+      originalPipeline: getCloudPipelinePayloadWithoutCodebase(useLocalRunnerInfra ? 'Docker' : undefined),
       name: `${getString('buildText')} ${getString('common.pipeline').toLowerCase()}`,
       identifier: `${getString('buildText')}_${getString('common.pipeline').toLowerCase()}_${UNIQUE_PIPELINE_ID}`,
       projectIdentifier,
@@ -581,6 +581,9 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                 wrapUpAPIOperation(createPRTriggerInputSetErr)
                 return
               }
+            }
+            if (useLocalRunnerInfra) {
+              trackEvent(CIOnboardingActions.PipelineCreatedWithLocalRunner, {})
             }
             // For yaml version V0, if pipeline and input set for PR trigger both are created successfully, then create the PR trigger
             // For yaml version V1, if pipeline is created successfully, then create a PR trigger
