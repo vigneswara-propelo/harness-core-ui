@@ -133,11 +133,12 @@ describe('SBOM Enforcement Step', () => {
         type={StepType.SscaEnforcement}
         stepViewType={StepViewType.Edit}
         testWrapperProps={{
-          defaultFeatureFlagValues: { SSCA_ENFORCEMENT_WITH_BOTH_NATIVE_AND_OPA_POLICIES_ENABLED: true }
+          defaultFeatureFlagValues: { SSCA_ENFORCEMENT_OPA: true }
         }}
       />
     )
     expect(await screen.findByText('common.policiesSets.addOrModifyPolicySet')).toBeInTheDocument()
+    expect(screen.getByText('ssca.useOpaPolicy')).toBeInTheDocument()
   })
 
   test('existing step | OPA policy FF On', async () => {
@@ -151,7 +152,7 @@ describe('SBOM Enforcement Step', () => {
         onUpdate={onUpdate}
         ref={ref}
         testWrapperProps={{
-          defaultFeatureFlagValues: { SSCA_ENFORCEMENT_WITH_BOTH_NATIVE_AND_OPA_POLICIES_ENABLED: true }
+          defaultFeatureFlagValues: { SSCA_ENFORCEMENT_OPA: true }
         }}
       />
     )
@@ -179,7 +180,7 @@ describe('SBOM Enforcement Step', () => {
         onUpdate={onUpdate}
         ref={ref}
         testWrapperProps={{
-          defaultFeatureFlagValues: { SSCA_ENFORCEMENT_WITH_BOTH_NATIVE_AND_OPA_POLICIES_ENABLED: true }
+          defaultFeatureFlagValues: { SSCA_ENFORCEMENT_OPA: true }
         }}
       />
     )
@@ -195,7 +196,7 @@ describe('SBOM Enforcement Step', () => {
         type={StepType.SscaEnforcement}
         stepViewType={StepViewType.InputSet}
         testWrapperProps={{
-          defaultFeatureFlagValues: { SSCA_ENFORCEMENT_WITH_BOTH_NATIVE_AND_OPA_POLICIES_ENABLED: true }
+          defaultFeatureFlagValues: { SSCA_ENFORCEMENT_OPA: true }
         }}
       />
     )

@@ -71,7 +71,7 @@ const SscaEnforcementStepEdit = <T extends SscaEnforcementStepData | SscaCdEnfor
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const isExecutionTimeFieldDisabledForStep = isExecutionTimeFieldDisabled(stepViewType)
-  const { SSCA_ENFORCEMENT_WITH_BOTH_NATIVE_AND_OPA_POLICIES_ENABLED } = useFeatureFlags()
+  const { SSCA_ENFORCEMENT_OPA } = useFeatureFlags()
 
   const { getStageFromPipeline, state } = usePipelineContext()
   const { stage: currentStage } = getStageFromPipeline<BuildStageElementConfig>(
@@ -85,10 +85,7 @@ const SscaEnforcementStepEdit = <T extends SscaEnforcementStepData | SscaCdEnfor
   const _initialValues = getInitialValuesInCorrectFormat<T, T>(initialValues, transformValuesFieldsConfig(stepType))
 
   // for an existing step set opa true if there isn't a filestore
-  if (
-    SSCA_ENFORCEMENT_WITH_BOTH_NATIVE_AND_OPA_POLICIES_ENABLED &&
-    !get(_initialValues, 'spec.policy.store.spec.file')
-  ) {
+  if (SSCA_ENFORCEMENT_OPA && !get(_initialValues, 'spec.policy.store.spec.file')) {
     set(_initialValues, 'spec.policy.opa', true)
     set(_initialValues, 'spec.policy.store', undefined)
   }
@@ -218,7 +215,7 @@ const SscaEnforcementStepEdit = <T extends SscaEnforcementStepData | SscaCdEnfor
                 {getString('ssca.enforcementStep.policyConfiguration')}
               </Text>
 
-              {SSCA_ENFORCEMENT_WITH_BOTH_NATIVE_AND_OPA_POLICIES_ENABLED && (
+              {SSCA_ENFORCEMENT_OPA && (
                 <FormInput.Toggle
                   name="spec.policy.opa"
                   label={getString('ssca.useOpaPolicy')}
