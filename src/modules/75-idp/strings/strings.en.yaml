@@ -8,14 +8,32 @@ homepage:
   idpOverviewDescription: Eliminate cognitive overload by letting developers manage their software effortlessly and access everything at their fingertips.
   learnMore: Learn more about Internal Developer Portal
 idpStageHoverText: Create new Service Onboarding Pipelines or any other self service workflow.
+newKeyValue: New key-value pair
 cookieCutterStep:
-  cookieCutterStepDesciption: Cookiecutter is a tool for quickly creating project templates, enabling developers to generate consistent project structures with minimal effort.
+  cookieCutterStepDesciption: Use cookiecutter.io for quickly generate new code from an existing template. You can use any public template from our library or write your own.
   provideRepoDetails: Provide Repository details
   public: Public
   private: Private
   cookieCutterTemplateURL: Provide URL of cookiecutter template
   cookieCutterTemplateURLDesc: Provide the URL or choose a suggested template
-  outputDir: Provide the output directory link
+  outputDir: Provide the output directory path
   outputDirPlaceHolder: Add a custom URL or cookie cutter template link
   configureTemplate: Configure  the template
-newKeyValue: New key-value pair
+  pathForTemplate: Path for Template
+  pathForTemplatePlaceholder: Enter template path
+createRepoStep:
+  createRepoStepDescription: Create a new repository on a git provider.
+  createRepoinGit: Create a repository in a git provider
+  selectRepoConnector: Select codebase repo connector
+  repoDescription: Repository Description
+  repoDescPlaceholder: Enter Repository Description
+directPushStep:
+  directPushStepDescription: Use git push and upload files on an existing repository.
+  provideRepoDetailstoPublish: Provide Repository details to publish code
+  codebaseRepoConnector: Codebase repo connector
+  codeDirectory: Code Directory
+  codeDirectoryPlaceholder: Enter Code Directory
+  outputCodeDir: Provide output directory path
+  outputCodeDirPlaceholder: Path where cookiecutter will generate output files e.g. cookiecutter-output
+registerCatalogStep:
+  registerCatalogStepDescription: Use the newly created Software Component’s catalog-info.yaml to register it in the Software Catalog.

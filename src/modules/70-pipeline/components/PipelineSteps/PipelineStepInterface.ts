@@ -263,7 +263,10 @@ export enum StepType {
   CUSTOM_STAGE_ENVIRONMENT = 'CUSTOM_STAGE_ENVIRONMENT',
   Anchore = 'Anchore',
   AquaSecurity = 'AquaSecurity',
-  Cookiecutter = 'Cookiecutter',
+  Cookiecutter = 'CookieCutter',
+  CreateRepo = 'CreateRepo',
+  DirectPush = 'DirectPush',
+  RegisterCatalog = 'RegisterCatalog',
   // yaml-simplification v1 step types
   'shell-script' = 'ShellScript',
   http = 'Http'

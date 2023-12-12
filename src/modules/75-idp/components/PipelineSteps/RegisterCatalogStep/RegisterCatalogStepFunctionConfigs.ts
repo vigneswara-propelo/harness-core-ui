@@ -18,24 +18,24 @@ export const transformValuesFieldsConfig = [
     type: TransformValuesTypes.Text
   },
   {
-    name: 'spec.templateType',
+    name: 'spec.connectorRef',
+    type: TransformValuesTypes.ConnectorRef
+  },
+  {
+    name: 'spec.organization',
     type: TransformValuesTypes.Text
   },
   {
-    name: 'spec.publicTemplateUrl',
+    name: 'spec.repository',
     type: TransformValuesTypes.Text
   },
   {
-    name: 'spec.pathForTemplate',
+    name: 'spec.filePath',
     type: TransformValuesTypes.Text
   },
   {
-    name: 'spec.outputDirectory',
+    name: 'spec.branch',
     type: TransformValuesTypes.Text
-  },
-  {
-    name: 'spec.cookieCutterVariables',
-    type: TransformValuesTypes.Map
   }
 ]
 
@@ -44,7 +44,7 @@ export const getInputSetViewValidateFieldsConfig = (
 ): Array<{ name: string; type: ValidationFieldTypes; label?: string; isRequired?: boolean }> => {
   return [
     {
-      name: 'spec.publicTemplateUrl',
+      name: 'spec.connectorRef',
       type: ValidationFieldTypes.Text,
       label: 'idp.cookieCutterStep.cookieCutterTemplateURL',
       isRequired
@@ -52,9 +52,7 @@ export const getInputSetViewValidateFieldsConfig = (
   ]
 }
 
-export const editViewValidateFieldsConfig = (
-  templateType: string
-): Array<{ name: string; type: ValidationFieldTypes; label: string; isRequired: boolean }> => [
+export const editViewValidateFieldsConfig = [
   {
     name: 'identifier',
     type: ValidationFieldTypes.Identifier,
@@ -68,26 +66,9 @@ export const editViewValidateFieldsConfig = (
     isRequired: true
   },
   {
-    name: 'spec.outputDirectory',
+    name: 'spec.connectorRef',
     type: ValidationFieldTypes.Text,
-    label: 'idp.cookieCutterStep.outputDir',
-    isRequired: false
-  },
-  ...(templateType === 'public'
-    ? [
-        {
-          name: 'spec.publicTemplateUrl',
-          type: ValidationFieldTypes.Text,
-          label: 'idp.cookieCutterStep.cookieCutterTemplateURL',
-          isRequired: false
-        }
-      ]
-    : [
-        {
-          name: 'spec.pathForTemplate',
-          type: ValidationFieldTypes.Text,
-          label: 'idp.cookieCutterStep.pathForTemplate',
-          isRequired: false
-        }
-      ])
+    label: 'idp.cookieCutterStep.cookieCutterTemplateURL',
+    isRequired: true
+  }
 ]

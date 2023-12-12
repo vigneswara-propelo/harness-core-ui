@@ -7,7 +7,13 @@
 
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { CookieCutterStep } from './CookieCutterStep/CookieCutterStep'
+import { CreateRepoStep } from './CreateRepoStep/CreateRepoStep'
+import { DirectPushStep } from './DirectPushStep/DirectPushStep'
+import { RegisterCatalogStep } from './RegisterCatalogStep/RegisterCatalogStep'
 
 export function registerIDPPipelineStep(): void {
   factory.registerStep(new CookieCutterStep())
+  factory.registerStep(new CreateRepoStep())
+  factory.registerStep(new DirectPushStep())
+  factory.registerStep(new RegisterCatalogStep())
 }

@@ -9520,15 +9520,30 @@ export interface StringsMap {
   'idp.cookieCutterStep.cookieCutterTemplateURLDesc': string
   'idp.cookieCutterStep.outputDir': string
   'idp.cookieCutterStep.outputDirPlaceHolder': string
+  'idp.cookieCutterStep.pathForTemplate': string
+  'idp.cookieCutterStep.pathForTemplatePlaceholder': string
   'idp.cookieCutterStep.private': string
   'idp.cookieCutterStep.provideRepoDetails': string
   'idp.cookieCutterStep.public': string
+  'idp.createRepoStep.createRepoStepDescription': string
+  'idp.createRepoStep.createRepoinGit': string
+  'idp.createRepoStep.repoDescPlaceholder': string
+  'idp.createRepoStep.repoDescription': string
+  'idp.createRepoStep.selectRepoConnector': string
+  'idp.directPushStep.codeDirectory': string
+  'idp.directPushStep.codeDirectoryPlaceholder': string
+  'idp.directPushStep.codebaseRepoConnector': string
+  'idp.directPushStep.directPushStepDescription': string
+  'idp.directPushStep.outputCodeDir': string
+  'idp.directPushStep.outputCodeDirPlaceholder': string
+  'idp.directPushStep.provideRepoDetailstoPublish': string
   'idp.homepage.idpOverviewDescription': string
   'idp.homepage.learnMore': string
   'idp.idpStageHoverText': string
   'idp.layout': string
   'idp.newKeyValue': string
   'idp.oAuthConfig': string
+  'idp.registerCatalogStep.registerCatalogStepDescription': string
   'idp.scorecards': string
   'idp.urlAllowList': string
   'sei.accountSettings.advancedFeature.label': string

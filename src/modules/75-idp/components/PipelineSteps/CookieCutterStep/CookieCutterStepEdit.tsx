@@ -18,8 +18,10 @@ import {
   Text
 } from '@harness/uicore'
 import { FieldArray, FormikProps } from 'formik'
-import React from 'react'
+import React, { FormEvent } from 'react'
 import { v4 as uuid } from 'uuid'
+import { get, set } from 'lodash-es'
+import produce from 'immer'
 import { StepFormikFowardRef, StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
@@ -31,7 +33,7 @@ import { BuildStageElementConfig } from '@modules/70-pipeline/utils/pipelineType
 import MultiTypeFieldSelector from '@modules/10-common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { editViewValidateFieldsConfig, transformValuesFieldsConfig } from './CookieCutterStepFunctionConfigs'
 import { getFormValuesInCorrectFormat, getInitialValuesInCorrectFormat } from '../utils'
-import css from './CookieCutterStep.module.scss'
+import css from '../IDPSteps.module.scss'
 
 export interface CookieCutterStepData {
   name?: string
@@ -40,7 +42,8 @@ export interface CookieCutterStepData {
   timeout?: string
   spec: {
     templateType: string
-    publicTemplateUrl: string
+    publicTemplateUrl?: string
+    pathForTemplate?: string
     cookieCutterVariables: Array<Record<string, string>>
     outputDirectory: string
   }
@@ -93,7 +96,7 @@ const CookieCutterStepEdit = (
 
         return validate(
           valuesToValidate,
-          editViewValidateFieldsConfig,
+          editViewValidateFieldsConfig(get(schemaValues, 'spec.templateType')),
           {
             initialValues,
             steps: currentStage?.stage?.spec?.execution?.steps || {},
@@ -113,6 +116,7 @@ const CookieCutterStepEdit = (
     >
       {formik => {
         setFormikRef?.(formikRef, formik)
+        const templateType = get(formik.values, 'spec.templateType')
 
         return (
           <FormikForm>
@@ -129,7 +133,7 @@ const CookieCutterStepEdit = (
 
               <Text
                 font={{ variation: FontVariation.FORM_SUB_SECTION }}
-                color={Color.GREY_900}
+                color={Color.GREY_800}
                 margin={{ bottom: 'small' }}
               >
                 {getString('idp.cookieCutterStep.provideRepoDetails')}
@@ -150,32 +154,70 @@ const CookieCutterStepEdit = (
                     }
                   ]}
                   radioGroup={{ inline: true }}
+                  onChange={(e: FormEvent<HTMLInputElement>) => {
+                    const repoType = e.currentTarget?.value
+                    // Using setValues as values were not updating in template. Values update on 2nd times
+                    formik.setValues(
+                      produce(formik.values, draft => {
+                        set(draft, 'spec.templateType', repoType)
+                        set(draft, repoType === 'public' ? 'spec.pathForTemplate' : 'spec.publicTemplateUrl', undefined)
+                        return draft
+                      })
+                    )
+                  }}
                   disabled={readonly}
                 />
-                <MultiTypeTextField
-                  name="spec.publicTemplateUrl"
-                  className={css.publicTemplateUrl}
-                  label={
-                    <Text
-                      tooltipProps={{ dataTooltipId: 'publicTemplateUrl' }}
-                      className={css.formLabel}
-                      margin={{ bottom: 'medium' }}
-                    >
-                      {getString('idp.cookieCutterStep.cookieCutterTemplateURL')}
-                    </Text>
-                  }
-                  multiTextInputProps={{
-                    disabled: readonly,
-                    placeholder: getString('idp.cookieCutterStep.cookieCutterTemplateURLDesc'),
-                    multiTextInputProps: {
-                      expressions,
-                      allowableTypes
+                {templateType === 'public' ? (
+                  <MultiTypeTextField
+                    name="spec.publicTemplateUrl"
+                    className={css.publicTemplateUrl}
+                    label={
+                      <Text
+                        tooltipProps={{ dataTooltipId: 'publicTemplateUrl' }}
+                        className={css.formLabel}
+                        margin={{ bottom: 'medium' }}
+                      >
+                        {getString('idp.cookieCutterStep.cookieCutterTemplateURL')}
+                      </Text>
                     }
-                  }}
-                  configureOptionsProps={{
-                    hideExecutionTimeField: isExecutionTimeFieldDisabledForStep
-                  }}
-                />
+                    multiTextInputProps={{
+                      disabled: readonly,
+                      placeholder: getString('idp.cookieCutterStep.cookieCutterTemplateURLDesc'),
+                      multiTextInputProps: {
+                        expressions,
+                        allowableTypes
+                      }
+                    }}
+                    configureOptionsProps={{
+                      hideExecutionTimeField: isExecutionTimeFieldDisabledForStep
+                    }}
+                  />
+                ) : (
+                  <MultiTypeTextField
+                    name="spec.pathForTemplate"
+                    className={css.publicTemplateUrl}
+                    label={
+                      <Text
+                        tooltipProps={{ dataTooltipId: 'pathForTemplate' }}
+                        className={css.formLabel}
+                        margin={{ bottom: 'medium' }}
+                      >
+                        {getString('idp.cookieCutterStep.pathForTemplate')}
+                      </Text>
+                    }
+                    multiTextInputProps={{
+                      disabled: readonly,
+                      placeholder: getString('idp.cookieCutterStep.pathForTemplatePlaceholder'),
+                      multiTextInputProps: {
+                        expressions,
+                        allowableTypes
+                      }
+                    }}
+                    configureOptionsProps={{
+                      hideExecutionTimeField: isExecutionTimeFieldDisabledForStep
+                    }}
+                  />
+                )}
 
                 <MultiTypeFieldSelector
                   defaultValueToReset={['']}
@@ -235,7 +277,7 @@ const CookieCutterStepEdit = (
 
               <Text
                 font={{ variation: FontVariation.FORM_SUB_SECTION }}
-                color={Color.GREY_900}
+                color={Color.GREY_800}
                 margin={{ top: 'xlarge', bottom: 'small' }}
               >
                 {getString('advancedTitle')}
@@ -246,7 +288,7 @@ const CookieCutterStepEdit = (
                   name="spec.outputDirectory"
                   label={
                     <Text tooltipProps={{ dataTooltipId: 'outputDirectory' }} className={css.formLabel}>
-                      {getString('idp.cookieCutterStep.outputDir')}
+                      {`${getString('idp.cookieCutterStep.outputDir')} ${getString('common.optionalLabel')}`}
                     </Text>
                   }
                   multiTextInputProps={{

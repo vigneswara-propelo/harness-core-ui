@@ -30,6 +30,8 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import IDPAdminSideNav from './components/IDPAdminSideNav/IDPAdminSideNav'
 import type { IDPCustomMicroFrontendProps } from './interfaces/IDPCustomMicroFrontendProps.types'
+import { registerIDPPipelineStage } from './components/IDPStage'
+import { registerIDPPipelineStep } from './components/PipelineSteps'
 import './idp.module.scss'
 
 // eslint-disable-next-line import/no-unresolved
@@ -44,6 +46,9 @@ const IDPAdminSideNavProps: SidebarContext = {
   title: 'Portal',
   icon: 'idp'
 }
+
+registerIDPPipelineStage()
+registerIDPPipelineStep()
 
 function RedirectToIDPDefaultPath(): React.ReactElement {
   const params = useParams<AccountPathProps>()

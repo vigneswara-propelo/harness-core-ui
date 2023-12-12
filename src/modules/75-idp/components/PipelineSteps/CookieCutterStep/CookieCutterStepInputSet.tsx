@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -18,7 +18,7 @@ import { TextFieldInputSetView } from '@modules/70-pipeline/components/InputSetV
 import MultiTypeFieldSelector from '@modules/10-common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { CookieCutterStepData, CookieCutterStepEditProps } from './CookieCutterStepEdit'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-import css from './CookieCutterStep.module.scss'
+import css from '../IDPSteps.module.scss'
 
 export default function CookieCutterStepInputSet(
   props: CookieCutterStepEditProps & { formik?: FormikContextType<CookieCutterStepData> }
@@ -43,6 +43,24 @@ export default function CookieCutterStepInputSet(
           }}
           placeholder={getString('idp.cookieCutterStep.cookieCutterTemplateURLDesc')}
           fieldPath="spec.publicTemplateUrl"
+          template={template}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
+      )}
+      {isValueRuntimeInput(get(template, 'spec.pathForTemplate')) && (
+        <TextFieldInputSetView
+          name={`${path}.spec.pathForTemplate`}
+          label={getString('idp.cookieCutterStep.pathForTemplate')}
+          disabled={readonly}
+          multiTextInputProps={{
+            allowableTypes,
+            expressions
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          placeholder={getString('idp.cookieCutterStep.pathForTemplatePlaceholder')}
+          fieldPath="spec.pathForTemplate"
           template={template}
           className={cx(stepCss.formGroup, stepCss.md)}
         />
