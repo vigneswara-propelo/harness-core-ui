@@ -47,7 +47,7 @@ import type { GetErrorResponse } from '@templates-library/components/TemplateStu
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { useQueryParams } from '@common/hooks'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
+import NoEntityFound, { handleFetchFailure } from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { TemplateVariablesContextProvider } from '@pipeline/components/TemplateVariablesContext/TemplateVariablesContext'
 import { RightBar } from '@templates-library/components/TemplateStudio/RightBar/RightBar'
 import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
@@ -370,17 +370,12 @@ export function TemplateStudioInternal(): React.ReactElement {
 
   const ErrorPanel = (): JSX.Element => (
     <Container style={{ maxWidth: '570px', alignSelf: 'center' }} padding={'huge'}>
-      <NoEntityFound
-        identifier={templateIdentifier}
-        entityType={'template'}
-        errorObj={templateYamlError}
-        gitDetails={{
-          connectorRef: get(storeMetadata, 'connectorRef'),
-          repoName: get(storeMetadata, 'repoName'),
-          branch: get(storeMetadata, 'branch'),
-          onBranchChange: onGitBranchChange
-        }}
-      />
+      {handleFetchFailure({
+        entityType: 'template',
+        identifier: template?.identifier,
+        isInline: !isGitSyncEnabled,
+        fetchError: templateYamlError
+      })}
     </Container>
   )
 

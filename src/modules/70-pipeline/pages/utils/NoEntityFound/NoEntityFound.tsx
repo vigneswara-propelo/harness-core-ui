@@ -235,7 +235,7 @@ export const handleFetchFailure = ({
   fetchError,
   fetchPipelineCallback
 }: HandleFetchFailureParams): JSX.Element => {
-  if (isInline || fetchError?.code === 'ENTITY_NOT_FOUND') {
+  if (isInline || fetchError?.code === 'ENTITY_NOT_FOUND' || fetchError?.code === 'RESOURCE_NOT_FOUND_EXCEPTION') {
     return handleEntityNotFound(fetchError)
   } else {
     // This is for remote entities with support to change branch

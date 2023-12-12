@@ -434,7 +434,6 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
             branch: (error as any)?.metadata?.branch ?? gitDetails?.branch,
             filePath: template?.gitDetails?.filePath
           }
-
           if (template?.templateEntityType)
             dispatch(
               TemplateContextActions.error({
@@ -456,6 +455,12 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
                 cacheResponseMetadata: undefined
               })
             )
+        } else if ((error as Error).code === 'RESOURCE_NOT_FOUND_EXCEPTION') {
+          dispatch(
+            TemplateContextActions.error({
+              templateYamlError: error as Error
+            })
+          )
         }
         dispatch(TemplateContextActions.initialized())
         logger.info('Failed to fetch template')

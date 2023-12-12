@@ -282,6 +282,34 @@ describe('<TemplateStudioInternal /> tests', () => {
     expect(getByText('pipeline.gitExperience.noEntityFound')).toBeInTheDocument()
     expect(getByText('pipeline.gitExperience.selectDiffBranch')).toBeInTheDocument()
   })
+
+  test('show generic error if template has been deleted', async () => {
+    const templateProps = {
+      pathParams: {
+        ...testWrapperProps.pathParams,
+        templateIdentifier: '-1'
+      },
+      templateContextValues: {
+        state: {
+          templateYamlError: {
+            status: 'FAILURE',
+            code: 'RESOURCE_NOT_FOUND_EXCEPTION',
+            message: 'Template with the given Identifier: d and versionLabel: fc does not exist or has been deleted',
+            errors: null
+          }
+        }
+      }
+    }
+    const { getByText } = render(
+      <TemplateContextTestWrapper {...(templateProps as any)}>
+        <TemplateStudioInternal />
+      </TemplateContextTestWrapper>
+    )
+    expect(getByText('RESOURCE_NOT_FOUND_EXCEPTION')).toBeInTheDocument()
+    expect(
+      getByText('Template with the given Identifier: d and versionLabel: fc does not exist or has been deleted')
+    ).toBeInTheDocument()
+  })
 })
 
 describe('yaml validation in template studio', () => {
