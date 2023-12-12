@@ -158,7 +158,7 @@ export default function CreatePipelines({
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit])
+  }, [isEdit, initialValues.storeType])
 
   const handleSubmit = (values: CreatePipelinesValue): void => {
     logger.info(JSON.stringify(values))
