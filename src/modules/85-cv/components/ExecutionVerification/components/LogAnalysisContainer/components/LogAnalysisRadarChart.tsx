@@ -9,6 +9,7 @@ import React, { useCallback, useMemo } from 'react'
 import { Container, Icon, NoDataCard, Text, PageError, MinMaxSlider } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import Highcharts from 'highcharts'
+import highchartsMore from 'highcharts/highcharts-more'
 import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost'
 import noDataImage from '@cv/assets/noData.svg'
@@ -24,6 +25,7 @@ import {
 import styles from '../LogAnalysis.module.scss'
 
 Boost(Highcharts)
+highchartsMore(Highcharts)
 
 const LogAnalysisRadarChart: React.FC<LogAnalysisRadarChartProps> = ({
   clusterChartLoading,
