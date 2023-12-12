@@ -13,10 +13,8 @@ import { useToggleOpen } from '@harness/uicore'
 import { Project } from 'services/cd-ng'
 import { SideNav } from '@common/navigation/SideNavV2/SideNavV2'
 import routes from '@common/RouteDefinitionsV2'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
-import { FeatureFlag } from '@common/featureFlags'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { Scope } from 'framework/types/types'
 import { ScopeSelector } from '@projects-orgs/components/ScopeSelector/ScopeSelector'
@@ -29,7 +27,6 @@ function IDPAdminSideNavLinks(): React.ReactElement {
   const { getString } = useStrings()
   const history = useHistory()
   const { accountId } = useParams<AccountPathProps>()
-  const IDPScorecardsEnabled = useFeatureFlag(FeatureFlag.IDP_ENABLE_SCORECARDS)
   const { selectedProject } = useAppStore()
 
   const { identifier: projectIdentifier = '', orgIdentifier = '' } = selectedProject || {}
@@ -97,14 +94,12 @@ function IDPAdminSideNavLinks(): React.ReactElement {
               iconProps={{ padding: { right: 'xsmall' } }}
               to={routes.toIDPOAuthConfig({ accountId, module: IDPAdminModule })}
             />
-            {IDPScorecardsEnabled && (
-              <SideNav.Link
-                label={getString('idp.scorecards')}
-                icon="idp-nav-scorecards"
-                iconProps={{ padding: { right: 'xsmall' } }}
-                to={routes.toScorecards({ accountId, module: IDPAdminModule })}
-              />
-            )}
+            <SideNav.Link
+              label={getString('idp.scorecards')}
+              icon="idp-nav-scorecards"
+              iconProps={{ padding: { right: 'xsmall' } }}
+              to={routes.toScorecards({ accountId, module: IDPAdminModule })}
+            />
             <SideNav.Link
               label={getString('idp.layout')}
               icon="idp-nav-layout"

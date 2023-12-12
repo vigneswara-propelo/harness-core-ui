@@ -32,7 +32,6 @@ describe('IDP Sidenav', () => {
           projectIdentifier: 'projectID',
           orgIdentifier: 'default'
         }}
-        defaultFeatureFlagValues={{ IDP_ENABLE_SCORECARDS: true }}
       >
         <IDPAdminSideNavLinks />
       </TestWrapper>

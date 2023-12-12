@@ -10,19 +10,16 @@ import { Layout } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useGetStatusInfoTypeV2Query } from '@harnessio/react-idp-service-client'
 import { isEmpty } from 'lodash-es'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { FeatureFlag } from '@common/featureFlags'
 import css from './IDPAdminSideNav.module.scss'
 
 export default function IDPAdminSideNav(): React.ReactElement {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const params = useParams<ProjectPathProps>()
-  const IDPScorecardsEnabled = useFeatureFlag(FeatureFlag.IDP_ENABLE_SCORECARDS)
 
   const { data } = useGetStatusInfoTypeV2Query(
     { type: 'onboarding' },
@@ -54,7 +51,7 @@ export default function IDPAdminSideNav(): React.ReactElement {
           <SidebarLink label={getString('common.plugins')} to={routes.toPluginsPage(params)} />
           <SidebarLink label={getString('common.configurations')} to={routes.toConfigurations(params)} />
           <SidebarLink label={getString('idp.oAuthConfig')} to={routes.toIDPOAuthConfig(params)} />
-          {IDPScorecardsEnabled && <SidebarLink label={getString('idp.scorecards')} to={routes.toScorecards(params)} />}
+          <SidebarLink label={getString('idp.scorecards')} to={routes.toScorecards(params)} />
           <SidebarLink label={getString('idp.layout')} to={routes.toLayoutConfig(params)} />
           <SidebarLink label={getString('accessControl')} to={routes.toIDPAccessControl(params)} />
           <SidebarLink label={getString('connectorsLabel')} to={routes.toConnectorsPage(params)} />
