@@ -22,6 +22,7 @@ import { withPrefix } from '../../utils/withPrefix'
 import SubSection from '../../SubSection'
 import TargetGroupField from './TargetGroupField'
 import PercentageRolloutField from './PercentageRolloutField'
+import BucketByField from './BucketByField'
 
 export const servePercentageRolloutToTargetGroupSchema = (
   getString: UseStringsReturn['getString']
@@ -36,9 +37,9 @@ export const servePercentageRolloutToTargetGroupSchema = (
               values: Yup.array()
                 .default([''])
                 .of(
-                  Yup.string()
-                    .trim()
-                    .min(1, getString('cf.featureFlags.flagPipeline.validation.servePercentageRollout.targetGroup'))
+                  Yup.string().required(
+                    getString('cf.featureFlags.flagPipeline.validation.servePercentageRollout.targetGroup')
+                  )
                 )
             })
           ),
@@ -50,7 +51,10 @@ export const servePercentageRolloutToTargetGroupSchema = (
               getString('cf.featureFlags.flagPipeline.validation.servePercentageRollout.variations')
             )
           }
-        })
+        }),
+        bucketBy: Yup.string().required(
+          getString('cf.featureFlags.flagPipeline.validation.servePercentageRollout.bucketBy')
+        )
       })
     })
   })
@@ -59,13 +63,18 @@ const hasPercentageRolloutRuntime = (instruction: FeatureFlagConfigurationInstru
   instruction.type === CFPipelineInstructionType.ADD_RULE &&
   instruction.spec.distribution.variations === RUNTIME_INPUT_VALUE
 
+const hasBucketByRuntime = (instruction: FeatureFlagConfigurationInstruction): boolean =>
+  instruction.type === CFPipelineInstructionType.ADD_RULE &&
+  instruction.spec.distribution.bucketBy === RUNTIME_INPUT_VALUE
+
 const hasTargetGroupRuntime = (instruction: FeatureFlagConfigurationInstruction): boolean =>
   instruction.type === CFPipelineInstructionType.ADD_RULE &&
-  instruction.spec.distribution.clauses[0].values[0] === RUNTIME_INPUT_VALUE
+  instruction.spec.distribution?.clauses?.[0]?.values?.[0] === RUNTIME_INPUT_VALUE
 
 export const hasServePercentageRolloutToTargetGroupRuntime = (
   instruction: FeatureFlagConfigurationInstruction
-): boolean => hasPercentageRolloutRuntime(instruction) || hasTargetGroupRuntime(instruction)
+): boolean =>
+  hasPercentageRolloutRuntime(instruction) || hasTargetGroupRuntime(instruction) || hasBucketByRuntime(instruction)
 
 const ServePercentageRolloutToTargetGroup: SubSectionComponent = ({ prefixPath, ...props }) => {
   const { setFieldValue } = useFormikContext()
@@ -75,7 +84,6 @@ const ServePercentageRolloutToTargetGroup: SubSectionComponent = ({ prefixPath, 
     setFieldValue(withPrefix(prefixPath, 'identifier'), `${CFPipelineInstructionType.ADD_RULE}Identifier`)
     setFieldValue(withPrefix(prefixPath, 'type'), CFPipelineInstructionType.ADD_RULE)
     setFieldValue(withPrefix(prefixPath, 'spec.priority'), 100)
-    setFieldValue(withPrefix(prefixPath, 'spec.bucketBy'), 'identifier')
     setFieldValue(withPrefix(prefixPath, 'spec.distribution.clauses[0].op'), 'segmentMatch')
     setFieldValue(withPrefix(prefixPath, 'spec.distribution.clauses[0].attribute'), '')
   }, [prefixPath, setFieldValue])
@@ -85,6 +93,13 @@ const ServePercentageRolloutToTargetGroup: SubSectionComponent = ({ prefixPath, 
       mode !== StepViewType.DeploymentForm ||
       (Array.isArray(initialInstructions) &&
         initialInstructions.some(instruction => hasTargetGroupRuntime(instruction))),
+    [initialInstructions, mode]
+  )
+
+  const displayBucketByField = useMemo<boolean>(
+    () =>
+      mode !== StepViewType.DeploymentForm ||
+      (Array.isArray(initialInstructions) && initialInstructions.some(instruction => hasBucketByRuntime(instruction))),
     [initialInstructions, mode]
   )
 
@@ -99,6 +114,7 @@ const ServePercentageRolloutToTargetGroup: SubSectionComponent = ({ prefixPath, 
   return (
     <SubSection data-testid="flagChanges-servePercentageRolloutToTargetGroup" {...props}>
       {displayTargetGroupField && <TargetGroupField prefixPath={prefixPath} />}
+      {displayBucketByField && <BucketByField prefixPath={prefixPath} />}
       {displayPercentageRolloutField && <PercentageRolloutField prefixPath={prefixPath} />}
     </SubSection>
   )

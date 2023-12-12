@@ -19,6 +19,7 @@ export interface TargetManagementFlagConfigurationPanelFormRow {
   added?: boolean
   variation: string
   percentageRollout?: {
+    bucketBy: string
     variations: WeightedVariation[]
   }
 }

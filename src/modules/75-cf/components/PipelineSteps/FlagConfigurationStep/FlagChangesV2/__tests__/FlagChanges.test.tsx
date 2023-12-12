@@ -10,6 +10,7 @@ import { Formik } from 'formik'
 import { render, RenderResult, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import * as cfServices from 'services/cf'
 import { TestWrapper } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import mockFeature from '@cf/utils/testData/data/mockFeature'
@@ -42,6 +43,10 @@ const renderComponent = (
   )
 
 describe('FlagChanges', () => {
+  jest
+    .spyOn(cfServices, 'useGetAllTargetAttributes')
+    .mockReturnValue({ data: [], loading: false, error: null, refetch: jest.fn() } as any)
+
   test('it should display the form if the flag and environment are selected', async () => {
     renderComponent({ spec: { environment: 'env123', feature: 'feat123' } })
 

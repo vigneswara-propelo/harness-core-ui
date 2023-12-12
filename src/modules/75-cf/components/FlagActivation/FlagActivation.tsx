@@ -54,6 +54,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import TargetingRulesTab from '@cf/pages/feature-flags-detail/targeting-rules-tab/TargetingRulesTab'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import FlagPipelineTab from '@cf/pages/feature-flags-detail/flag-pipeline-tab/FlagPipelineTab'
+import { TargetAttributesProvider } from '@cf/hooks/useTargetAttributes'
 import TabActivity from '../EditFlagTabs/TabActivity'
 import { CFEnvironmentSelect } from '../CFEnvironmentSelect/CFEnvironmentSelect'
 import patch, { ClauseData, getDiff } from '../../utils/instructions'
@@ -499,11 +500,18 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
                         id={FFDetailPageTab.TARGETING}
                         title={<Text className={css.tabTitle}>{getString('cf.featureFlags.targeting')}</Text>}
                         panel={
-                          <TargetingRulesTab
-                            featureFlagData={flagData}
-                            refetchFlag={refetchFlag}
-                            refetchFlagLoading={refetchFlagLoading}
-                          />
+                          <TargetAttributesProvider
+                            projectIdentifier={projectIdentifier}
+                            orgIdentifier={orgIdentifier}
+                            accountIdentifier={accountIdentifier}
+                            environmentIdentifier={environmentIdentifier}
+                          >
+                            <TargetingRulesTab
+                              featureFlagData={flagData}
+                              refetchFlag={refetchFlag}
+                              refetchFlagLoading={refetchFlagLoading}
+                            />
+                          </TargetAttributesProvider>
                         }
                       />
 

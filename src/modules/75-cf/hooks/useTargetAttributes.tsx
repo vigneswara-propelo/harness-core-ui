@@ -6,12 +6,14 @@
  */
 
 import React, { createContext, ReactElement, ReactNode, useContext, useMemo } from 'react'
+import type { SelectOption } from '@harness/uicore'
 import { useGetAllTargetAttributes } from 'services/cf'
 import { sortStrings } from '@cf/utils/sortStrings'
 
 export interface UseTargetAttributesHookAPI {
   loading: boolean
   targetAttributes: string[]
+  targetAttributeOptions: SelectOption[]
 }
 
 export interface TargetAttributesProviderProps {
@@ -22,7 +24,11 @@ export interface TargetAttributesProviderProps {
   children?: ReactNode | ReactNode[]
 }
 
-const TargetAttributesContext = createContext<UseTargetAttributesHookAPI>({ loading: false, targetAttributes: [] })
+const TargetAttributesContext = createContext<UseTargetAttributesHookAPI>({
+  loading: false,
+  targetAttributes: [],
+  targetAttributeOptions: []
+})
 
 export const TargetAttributesProvider = ({
   projectIdentifier,
@@ -36,9 +42,13 @@ export const TargetAttributesProvider = ({
   })
 
   const targetAttributes = useMemo<string[]>(() => sortStrings(data || []), [data])
+  const targetAttributeOptions = useMemo<SelectOption[]>(
+    () => targetAttributes.map(attr => ({ label: attr, value: attr })),
+    [targetAttributes]
+  )
 
   return (
-    <TargetAttributesContext.Provider value={{ loading, targetAttributes }}>
+    <TargetAttributesContext.Provider value={{ loading, targetAttributes, targetAttributeOptions }}>
       {children}
     </TargetAttributesContext.Provider>
   )

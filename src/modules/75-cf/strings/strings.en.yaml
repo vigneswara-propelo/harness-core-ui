@@ -281,6 +281,7 @@ featureFlags:
         variationTargetGroups: Target Groups/variation is required
       servePercentageRollout:
         targetGroup: Target Group is required
+        bucketBy: Bucket by attribute is required
         variations: Variations are required
   flagVideoLabel: 'What is a feature flag?'
 featureFlagDetail:
@@ -2227,5 +2228,10 @@ cfTrialHomePage:
     startBtn:
       description: Start 14 day FF Enterprise trial
 percentageRollout:
-  toTargetGroup: 'To Target Group:'
+  toTargetGroup: 'To target group'
   assignToVariation: '% needs to be assigned to a Variation.'
+  bucketBy:
+    label: 'Bucket targets by'
+    placeholder: Select target attribute
+    identifierDefault: Identifier (default)
+    name: '{{ $.name }}'

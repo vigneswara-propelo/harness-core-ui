@@ -24,6 +24,7 @@ import { FeatureFlagActivationStatus } from '@cf/utils/CFUtils'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { String, useStrings } from 'framework/strings'
 import useFeatureEnabled from '@cf/hooks/useFeatureEnabled'
+import { useTargetAttributes } from '@cf/hooks/useTargetAttributes'
 import usePatchFeatureFlag from './hooks/usePatchFeatureFlag'
 import TargetingRulesTabFooter from './components/tab-targeting-footer/TargetingRulesTabFooter'
 import FlagEnabledRulesCard from './components/flag-enabled-rules-card/FlagEnabledRulesCard'
@@ -87,8 +88,15 @@ const TargetingRulesTab: FC<TargetingRulesTabProps> = ({ featureFlagData, refetc
     refetchFlag
   })
 
+  const { loading: loadingTargetAttributes } = useTargetAttributes()
+
   const { featureEnabled, canEdit, canToggle } = useFeatureEnabled(flagTags)
-  const disabled = patchFeatureLoading || refetchFlagLoading || !featureEnabled || !!featureFlagData?.archived
+  const disabled =
+    patchFeatureLoading ||
+    refetchFlagLoading ||
+    !featureEnabled ||
+    !!featureFlagData?.archived ||
+    loadingTargetAttributes
   // const handleRefetchSegments = async (searchTerm: string): Promise<void> => {
   //   await refetchSegments({
   //     queryParams: searchTerm.trim()

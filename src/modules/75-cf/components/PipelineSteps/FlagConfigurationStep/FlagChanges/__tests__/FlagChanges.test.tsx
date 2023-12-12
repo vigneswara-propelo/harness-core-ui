@@ -10,6 +10,7 @@ import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
+import * as cfServices from 'services/cf'
 import type { Feature } from 'services/cf'
 import FlagChanges, { FlagChangesProps } from '../FlagChanges'
 import { mockVariations } from '../subSections/__tests__/utils.mocks'
@@ -41,6 +42,10 @@ const renderComponent = (props: Partial<FlagChangesProps> = {}): RenderResult =>
   )
 
 describe('FlagChanges', () => {
+  jest
+    .spyOn(cfServices, 'useGetAllTargetAttributes')
+    .mockReturnValue({ data: [], loading: false, error: null, refetch: jest.fn() } as any)
+
   test('it should display the Flag Changes heading', async () => {
     renderComponent()
 

@@ -41,6 +41,13 @@ const renderComponent = (
   )
 
 describe('TargetingRulesTab', () => {
+  jest.spyOn(cfServicesMock, 'useGetAllTargetAttributes').mockReturnValue({
+    data: [],
+    loading: false,
+    refetch: jest.fn(),
+    error: null
+  } as any)
+
   beforeAll(() => {
     jest.spyOn(uuid, 'v4').mockReturnValue('UUID')
   })

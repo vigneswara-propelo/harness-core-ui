@@ -108,4 +108,37 @@ describe('PercentageRollout', () => {
     await userEvent.type(variationInputs[2], '34')
     expect(total).toHaveTextContent('100%')
   })
+
+  test('it should display the bucket by input and passed bucket by attributes', async () => {
+    const bucketByAttributes = [
+      { label: 'Attribute 1', value: 'attr1' },
+      { label: 'Attribute 2', value: 'attr2' },
+      { label: 'Attribute 3', value: 'attr3' }
+    ]
+    renderComponent({ bucketByAttributes })
+
+    const bucketByInput = await screen.findByPlaceholderText('- cf.percentageRollout.bucketBy.placeholder -')
+
+    expect(screen.queryByText('cf.percentageRollout.bucketBy.identifierDefault')).not.toBeInTheDocument()
+    expect(screen.queryByText('cf.percentageRollout.bucketBy.name')).not.toBeInTheDocument()
+
+    for (const { label } of bucketByAttributes) {
+      expect(screen.queryByText(label)).not.toBeInTheDocument()
+    }
+
+    await userEvent.click(bucketByInput)
+
+    expect(await screen.findByText('cf.percentageRollout.bucketBy.identifierDefault')).toBeInTheDocument()
+    expect(await screen.findByText('cf.percentageRollout.bucketBy.name')).toBeInTheDocument()
+
+    for (const { label } of bucketByAttributes) {
+      expect(await screen.findByText(label)).toBeInTheDocument()
+    }
+  })
+
+  test('it should hide the bucket by input if hideBucketBy is set', async () => {
+    renderComponent({ hideBucketBy: true })
+
+    expect(screen.queryByPlaceholderText('- cf.percentageRollout.bucketBy.placeholder -')).not.toBeInTheDocument()
+  })
 })

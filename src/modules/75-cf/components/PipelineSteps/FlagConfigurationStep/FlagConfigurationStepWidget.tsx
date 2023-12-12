@@ -326,6 +326,9 @@ const FlagConfigurationStepWidget = forwardRef(
                 <FlagChangesContextProvider
                   flag={currentFeature || formValues?.spec.feature}
                   environmentIdentifier={formValues?.spec.environment}
+                  accountIdentifier={accountIdentifier}
+                  orgIdentifier={orgIdentifier}
+                  projectIdentifier={projectIdentifier}
                   mode={StepViewType.Edit}
                   initialInstructions={initialValues.spec.instructions}
                 >

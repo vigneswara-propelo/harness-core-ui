@@ -251,6 +251,7 @@ describe('flagSettingsInstructions', () => {
       const rowValues: TargetManagementFlagConfigurationPanelFormRow = {
         variation: PERCENTAGE_ROLLOUT_VALUE,
         percentageRollout: {
+          bucketBy: 'identifier',
           variations: [
             { variation: 'var1', weight: 60 },
             { variation: 'var2', weight: 40 }

@@ -23,6 +23,7 @@ import { useStrings } from 'framework/strings'
 import type { Feature } from 'services/cf'
 import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import { TargetAttributesProvider } from '@cf/hooks/useTargetAttributes'
 import type { FeatureFlagConfigurationInstruction, FlagConfigurationStepFormDataValues } from '../types'
 import FlagChangesForm, { FlagChangesFormProps } from './FlagChangesForm'
 import subSectionCSS from './SubSection.module.scss'
@@ -56,7 +57,7 @@ const FlagChanges: FC<FlagChangesProps> = ({
   flagType = MultiTypeInputType.FIXED
 }) => {
   const { getString } = useStrings()
-  const { orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
+  const { orgIdentifier, projectIdentifier, accountId: accountIdentifier } = useParams<Record<string, string>>()
   const prefix = useCallback<(path: string) => string>(
     path => (pathPrefix ? `${pathPrefix}.${path}` : path),
     [pathPrefix]
@@ -130,15 +131,22 @@ const FlagChanges: FC<FlagChangesProps> = ({
       )}
 
       {status === UI_STATE.DISPLAY_FORM && (
-        <FlagChangesForm
-          prefix={prefix}
-          initialInstructions={initialInstructions as FlagChangesFormProps['initialInstructions']}
-          clearField={clearField}
-          setField={setField}
-          fieldValues={fieldValues}
-          selectedFeature={selectedFeature as FlagChangesFormProps['selectedFeature']}
+        <TargetAttributesProvider
+          projectIdentifier={projectIdentifier}
+          orgIdentifier={orgIdentifier}
+          accountIdentifier={accountIdentifier}
           environmentIdentifier={selectedEnvironmentId as string}
-        />
+        >
+          <FlagChangesForm
+            prefix={prefix}
+            initialInstructions={initialInstructions as FlagChangesFormProps['initialInstructions']}
+            clearField={clearField}
+            setField={setField}
+            fieldValues={fieldValues}
+            selectedFeature={selectedFeature as FlagChangesFormProps['selectedFeature']}
+            environmentIdentifier={selectedEnvironmentId as string}
+          />
+        </TargetAttributesProvider>
       )}
     </Layout.Vertical>
   )

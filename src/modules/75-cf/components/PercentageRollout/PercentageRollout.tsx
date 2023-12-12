@@ -26,18 +26,22 @@ export interface PercentageRolloutProps {
   addClearButton?: boolean
   distributionWidth?: string | number
   disabled?: boolean
+  hideBucketBy?: boolean
+  bucketByAttributes?: SelectOption[]
   [propName: string]: unknown
 }
 
 const PercentageRollout: FC<PercentageRolloutProps> = ({
   prefix,
-  variations = [],
+  variations,
   fieldValues,
   targetGroups,
   targetGroupValue,
   distributionWidth = '100%',
   addClearButton = false,
   disabled = false,
+  hideBucketBy = false,
+  bucketByAttributes,
   ...restProps
 }) => {
   const { getString } = useStrings()
@@ -65,18 +69,42 @@ const PercentageRollout: FC<PercentageRolloutProps> = ({
     [distributionSegments]
   )
 
+  const bucketByItems = useMemo<SelectOption[]>(
+    () => [
+      { label: getString('cf.percentageRollout.bucketBy.identifierDefault'), value: 'identifier' },
+      { label: getString('cf.percentageRollout.bucketBy.name'), value: 'name' },
+      ...(bucketByAttributes || [])
+    ],
+    [bucketByAttributes, getString]
+  )
+
   return (
     <Layout.Vertical spacing="large" {...restProps}>
-      {targetGroups && (
-        <FormInput.Select
-          value={targetGroupValue}
-          className={css.targetGroup}
-          name={prefix('clauses[0].values[0]')}
-          items={targetGroupItems}
-          label={getString('cf.percentageRollout.toTargetGroup')}
-          addClearButton={addClearButton}
-          disabled={disabled}
-        />
+      {(targetGroups || !hideBucketBy) && (
+        <Layout.Horizontal spacing="medium">
+          {targetGroups && (
+            <FormInput.Select
+              value={targetGroupValue}
+              className={css.targetGroupAndBucketBy}
+              name={prefix('clauses[0].values[0]')}
+              items={targetGroupItems}
+              label={getString('cf.percentageRollout.toTargetGroup')}
+              addClearButton={addClearButton}
+              disabled={disabled}
+            />
+          )}
+          {!hideBucketBy && (
+            <FormInput.Select
+              name={prefix('bucketBy')}
+              className={css.targetGroupAndBucketBy}
+              items={bucketByItems}
+              label={getString('cf.percentageRollout.bucketBy.label')}
+              placeholder={getString('cf.percentageRollout.bucketBy.placeholder')}
+              tooltipProps={{ dataTooltipId: 'ff_bucketBy_field' }}
+              disabled={disabled}
+            />
+          )}
+        </Layout.Horizontal>
       )}
 
       <Container className={css.distribution} width={distributionWidth}>

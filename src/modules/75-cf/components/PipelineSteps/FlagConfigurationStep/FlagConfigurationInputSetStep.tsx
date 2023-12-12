@@ -182,6 +182,9 @@ const FlagConfigurationInputSetStep = connect<FlagConfigurationInputSetStepProps
             <FlagChangesContextProvider
               flag={selectedFeature || selectedFeatureId}
               environmentIdentifier={selectedEnvironmentId}
+              accountIdentifier={accountIdentifier}
+              projectIdentifier={projectIdentifier}
+              orgIdentifier={orgIdentifier}
               mode={stepViewType}
               readonly={readonly}
               initialInstructions={existingValues?.spec?.instructions}

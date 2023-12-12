@@ -11,7 +11,7 @@ import { CFPipelineInstructionType } from '../../types'
 describe('flagChangesValidationSchema', () => {
   const getStringMock = jest.fn().mockImplementation(str => str)
 
-  test('it should throw with 7 errors when each type is specified but not valid', async () => {
+  test('it should throw with 8 errors when each type is specified but not valid', async () => {
     expect(() =>
       flagChangesValidationSchema(getStringMock).validateSync(
         [
@@ -23,7 +23,7 @@ describe('flagChangesValidationSchema', () => {
         ],
         { abortEarly: false }
       )
-    ).toThrow('7 errors occurred')
+    ).toThrow('8 errors occurred')
   })
 
   test('it should not throw when no instructions are specified', async () => {

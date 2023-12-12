@@ -19,6 +19,7 @@ import type { TargetManagementFlagConfigurationPanelFormValues as FormValues } f
 import TargetManagementFlagConfigurationPanel from '@cf/components/TargetManagementFlagConfigurationPanel/TargetManagementFlagConfigurationPanel'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import { useGovernance } from '@cf/hooks/useGovernance'
+import { useTargetAttributes } from '@cf/hooks/useTargetAttributes'
 import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import useGetTargetGroupFlags from '../../hooks/useGetTargetGroupFlags'
 import { getAddFlagsInstruction, getFlagSettingsInstructions } from './flagSettingsInstructions'
@@ -31,6 +32,7 @@ const FlagSettingsPanel: FC<FlagSettingsPanelProps> = ({ targetGroup }) => {
   const { getString } = useStrings()
   const { showSuccess } = useToaster()
   const { saveWithGit } = useFFGitSyncContext()
+  const { loading: targetAttributesLoading } = useTargetAttributes()
 
   const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const { handleError: handleGovernanceError, isGovernanceError } = useGovernance()
@@ -136,7 +138,7 @@ const FlagSettingsPanel: FC<FlagSettingsPanelProps> = ({ targetGroup }) => {
     return <PageError message={getErrorMessage(error)} onClick={() => refetch()} />
   }
 
-  if (loading) {
+  if (loading || targetAttributesLoading) {
     return <ContainerSpinner height="100%" flex={{ align: 'center-center' }} />
   }
 

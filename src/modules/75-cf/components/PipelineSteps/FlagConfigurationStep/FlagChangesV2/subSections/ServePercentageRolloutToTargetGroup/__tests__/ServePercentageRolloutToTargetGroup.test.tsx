@@ -39,6 +39,10 @@ const renderComponent = (
   )
 
 describe('ServePercentageRolloutToTargetGroup', () => {
+  jest
+    .spyOn(cfServices, 'useGetAllTargetAttributes')
+    .mockReturnValue({ data: [], loading: false, error: null, refetch: jest.fn() } as any)
+
   const useGetAllSegmentsMock = jest.spyOn(cfServices, 'useGetAllSegments')
 
   beforeEach(() => {
@@ -96,7 +100,8 @@ describe('servePercentageRolloutToTargetGroupSchema', () => {
       schema.validateSync({
         spec: {
           distribution: {
-            clauses: [{ values: ['abc'] }]
+            clauses: [{ values: ['abc'] }],
+            bucketBy: 'identifier'
           }
         }
       })
@@ -111,7 +116,8 @@ describe('servePercentageRolloutToTargetGroupSchema', () => {
         spec: {
           distribution: {
             variations: '',
-            clauses: [{ values: ['abc'] }]
+            clauses: [{ values: ['abc'] }],
+            bucketBy: 'identifier'
           }
         }
       })
@@ -128,7 +134,8 @@ describe('servePercentageRolloutToTargetGroupSchema', () => {
             variations: [
               { variation: 'a', weight: 50 },
               { variation: 'b', weight: 50 }
-            ]
+            ],
+            bucketBy: 'identifier'
           }
         }
       })
@@ -146,6 +153,7 @@ describe('servePercentageRolloutToTargetGroupSchema', () => {
               { variation: 'a', weight: 50 },
               { variation: 'b', weight: 50 }
             ],
+            bucketBy: 'identifier',
             clauses: [{ values: [''] }]
           }
         }
@@ -153,7 +161,7 @@ describe('servePercentageRolloutToTargetGroupSchema', () => {
     ).toThrow('cf.featureFlags.flagPipeline.validation.servePercentageRollout.targetGroup')
   })
 
-  test('it should not throw when variations and target group are set', async () => {
+  test('it should throw when bucket by is not set', async () => {
     const schema = servePercentageRolloutToTargetGroupSchema(str => str)
 
     expect(() =>
@@ -164,6 +172,44 @@ describe('servePercentageRolloutToTargetGroupSchema', () => {
               { variation: 'a', weight: 50 },
               { variation: 'b', weight: 50 }
             ],
+            clauses: [{ values: ['abc'] }]
+          }
+        }
+      })
+    ).toThrow('cf.featureFlags.flagPipeline.validation.servePercentageRollout.bucketBy')
+  })
+
+  test('it should throw when bucket by is empty', async () => {
+    const schema = servePercentageRolloutToTargetGroupSchema(str => str)
+
+    expect(() =>
+      schema.validateSync({
+        spec: {
+          distribution: {
+            variations: [
+              { variation: 'a', weight: 50 },
+              { variation: 'b', weight: 50 }
+            ],
+            clauses: [{ values: ['abc'] }],
+            bucketBy: ''
+          }
+        }
+      })
+    ).toThrow('cf.featureFlags.flagPipeline.validation.servePercentageRollout.bucketBy')
+  })
+
+  test('it should not throw when variations, target group and bucket by are set', async () => {
+    const schema = servePercentageRolloutToTargetGroupSchema(str => str)
+
+    expect(() =>
+      schema.validateSync({
+        spec: {
+          distribution: {
+            variations: [
+              { variation: 'a', weight: 50 },
+              { variation: 'b', weight: 50 }
+            ],
+            bucketBy: 'identifier',
             clauses: [{ values: ['abc'] }]
           }
         }

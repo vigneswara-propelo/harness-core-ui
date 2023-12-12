@@ -14,6 +14,9 @@ import { FeatureFlagConfigurationInstruction } from '@cf/components/PipelineStep
 export interface FlagChangesContextProviderProps {
   flag: Feature | string
   environmentIdentifier: string
+  projectIdentifier?: string
+  accountIdentifier?: string
+  orgIdentifier?: string
   mode: StepViewType
   readonly?: boolean
   initialInstructions?: FeatureFlagConfigurationInstruction[] | typeof RUNTIME_INPUT_VALUE
@@ -23,6 +26,9 @@ export interface FlagChangesContextProviderProps {
 const FlagChangesContext = createContext<FlagChangesContextProviderProps>({
   flag: '',
   environmentIdentifier: '',
+  projectIdentifier: '',
+  accountIdentifier: '',
+  orgIdentifier: '',
   mode: StepViewType.Edit,
   initialInstructions: [],
   allRuntime: false
@@ -31,6 +37,9 @@ const FlagChangesContext = createContext<FlagChangesContextProviderProps>({
 const FlagChangesContextProvider: FC<PropsWithChildren<FlagChangesContextProviderProps>> = ({
   flag,
   environmentIdentifier,
+  accountIdentifier,
+  projectIdentifier,
+  orgIdentifier,
   mode,
   readonly,
   initialInstructions = [],
@@ -39,7 +48,17 @@ const FlagChangesContextProvider: FC<PropsWithChildren<FlagChangesContextProvide
 }) => {
   return (
     <FlagChangesContext.Provider
-      value={{ flag, environmentIdentifier, mode, readonly, initialInstructions, allRuntime }}
+      value={{
+        flag,
+        environmentIdentifier,
+        projectIdentifier,
+        accountIdentifier,
+        orgIdentifier,
+        mode,
+        readonly,
+        initialInstructions,
+        allRuntime
+      }}
     >
       {children}
     </FlagChangesContext.Provider>

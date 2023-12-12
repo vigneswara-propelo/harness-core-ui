@@ -115,7 +115,7 @@ export function getVariationOrServe(
     return {
       serve: {
         distribution: {
-          bucketBy: 'identifier',
+          bucketBy: row.percentageRollout?.bucketBy || 'identifier',
           variations: row.percentageRollout?.variations || []
         }
       }

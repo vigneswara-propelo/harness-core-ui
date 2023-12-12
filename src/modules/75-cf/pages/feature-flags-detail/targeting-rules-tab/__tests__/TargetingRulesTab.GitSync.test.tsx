@@ -47,6 +47,13 @@ const renderComponent = (props: Partial<TargetingRulesTabProps> = {}): void => {
   )
 }
 const setUseGitRepoMock = (repoDetails: Partial<GitRepo> = {}, repoSet = true): void => {
+  jest.spyOn(cfServicesMock, 'useGetAllTargetAttributes').mockReturnValue({
+    data: [],
+    loading: false,
+    refetch: jest.fn(),
+    error: null
+  } as any)
+
   jest.spyOn(cfServicesMock, 'useGetGitRepo').mockReturnValue({
     loading: false,
     refetch: jest.fn(),

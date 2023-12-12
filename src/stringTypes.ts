@@ -8872,6 +8872,7 @@ export interface StringsMap {
   'cf.featureFlags.flagPipeline.validation.defaultOffRule.offVariation': string
   'cf.featureFlags.flagPipeline.validation.defaultOnRule.onVariation': string
   'cf.featureFlags.flagPipeline.validation.defaultRules.onOrOffVariation': string
+  'cf.featureFlags.flagPipeline.validation.servePercentageRollout.bucketBy': string
   'cf.featureFlags.flagPipeline.validation.servePercentageRollout.targetGroup': string
   'cf.featureFlags.flagPipeline.validation.servePercentageRollout.variations': string
   'cf.featureFlags.flagPipeline.validation.serveVariationToIndividualTarget.variationTargets': string
@@ -9073,6 +9074,10 @@ export interface StringsMap {
   'cf.onboarding.youreUsing': string
   'cf.onboarding.youveSelected': string
   'cf.percentageRollout.assignToVariation': string
+  'cf.percentageRollout.bucketBy.identifierDefault': string
+  'cf.percentageRollout.bucketBy.label': string
+  'cf.percentageRollout.bucketBy.name': string
+  'cf.percentageRollout.bucketBy.placeholder': string
   'cf.percentageRollout.toTargetGroup': string
   'cf.pipeline.advanced.title': string
   'cf.pipeline.flagConfiguration.addEditVariationToSpecificTargets': string

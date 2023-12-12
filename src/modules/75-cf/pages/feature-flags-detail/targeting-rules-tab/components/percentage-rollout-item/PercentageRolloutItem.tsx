@@ -12,6 +12,7 @@ import { useFormikContext } from 'formik'
 import { get } from 'lodash-es'
 import PercentageRollout from '@cf/components/PercentageRollout/PercentageRollout'
 import usePercentageRolloutEqualiser from '@cf/hooks/usePercentageRolloutEqualiser'
+import { useTargetAttributes } from '@cf/hooks/useTargetAttributes'
 import type { Segment, Variation } from 'services/cf'
 import { useStrings } from 'framework/strings'
 import type { VariationPercentageRollout } from '../../types'
@@ -38,6 +39,7 @@ const PercentageRolloutItem = ({
 }: VariationPercentageRolloutProps): ReactElement => {
   const { getString } = useStrings()
   const { errors } = useFormikContext<unknown>()
+  const { targetAttributeOptions } = useTargetAttributes()
 
   const variationWeightIds = useMemo<string[]>(
     () =>
@@ -77,6 +79,7 @@ const PercentageRolloutItem = ({
 
       <Container border={{ bottom: true }} padding={{ bottom: 'large' }}>
         <PercentageRollout
+          bucketByAttributes={targetAttributeOptions}
           targetGroups={segments}
           variations={featureFlagVariations}
           fieldValues={variationPercentageRollout}

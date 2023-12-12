@@ -14,6 +14,7 @@ import type { Segment, Variation } from 'services/cf'
 import PercentageRollout from '@cf/components/PercentageRollout/PercentageRollout'
 import usePercentageRolloutEqualiser from '@cf/hooks/usePercentageRolloutEqualiser'
 import { getPercentageRolloutVariationsArrayTest } from '@cf/hooks/usePercentageRolloutValidationSchema'
+import { useTargetAttributes } from '@cf/hooks/useTargetAttributes'
 import type { UseStringsReturn } from 'framework/strings'
 import SubSection, { SubSectionProps } from '../SubSection'
 import { CFPipelineInstructionType, FlagConfigurationStepFormDataValues } from '../../types'
@@ -60,12 +61,12 @@ const ServePercentageRollout: FC<ServePercentageRolloutProps> = ({
 }) => {
   const [initialLoad, setInitialLoad] = useState<boolean>(true)
   const { errors } = useFormikContext()
+  const { targetAttributeOptions } = useTargetAttributes()
 
   useEffect(() => {
     setField('identifier', 'AddRuleIdentifier')
     setField('type', CFPipelineInstructionType.ADD_RULE)
     setField('spec.priority', 100)
-    setField('spec.distribution.bucketBy', 'identifier')
     setField('spec.distribution.clauses[0].op', 'segmentMatch')
     setField('spec.distribution.clauses[0].attribute', '')
   }, [])
@@ -101,6 +102,7 @@ const ServePercentageRollout: FC<ServePercentageRolloutProps> = ({
   return (
     <SubSection data-testid="flagChanges-servePercentageRollout" {...props}>
       <PercentageRollout
+        bucketByAttributes={targetAttributeOptions}
         targetGroups={targetGroups}
         variations={variations}
         fieldValues={get(fieldValues, prefix('spec.distribution'))}

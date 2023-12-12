@@ -21,7 +21,10 @@ jest.mock('services/cf', () => ({
     .mockReturnValue({ data: { features: [{ identifier: 'f1', name: 'f1' }] }, loading: false, reload: jest.fn() }),
   useGetFeatureFlag: jest
     .fn()
-    .mockReturnValue({ data: { identifier: 'f1', name: 'f1' }, loading: false, reload: jest.fn() })
+    .mockReturnValue({ data: { identifier: 'f1', name: 'f1' }, loading: false, reload: jest.fn() }),
+  useGetAllTargetAttributes: jest
+    .fn()
+    .mockReturnValue({ data: [], loading: false, error: null, refetch: jest.fn() } as any)
 }))
 
 jest.mock('../FlagChanges/FlagChangesForm', () => ({

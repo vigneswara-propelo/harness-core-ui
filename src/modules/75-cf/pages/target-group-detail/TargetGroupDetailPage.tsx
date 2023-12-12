@@ -15,6 +15,7 @@ import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerS
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import { AuditLogObjectType } from '@cf/utils/CFUtils'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
+import { TargetAttributesProvider } from '@cf/hooks/useTargetAttributes'
 import { AuditLogs } from '@cf/components/AuditLogs/AuditLogs'
 import TargetManagementDetailPageTemplate from '@cf/components/TargetManagementDetailPageTemplate/TargetManagementDetailPageTemplate'
 import TargetGroupCriteria from './components/TargetGroupCriteria'
@@ -81,37 +82,44 @@ const TargetGroupDetailPage: FC = () => {
   }
 
   return (
-    <TargetManagementDetailPageTemplate
-      item={targetGroup as Segment}
-      openDeleteDialog={deleteTargetGroupDialog}
-      metaData={{ environment: envData?.data?.name as string }}
-      leftBar={<TargetGroupCriteria targetGroup={targetGroup as Segment} reloadTargetGroup={refetchTargetGroup} />}
+    <TargetAttributesProvider
+      projectIdentifier={projectIdentifier}
+      orgIdentifier={orgIdentifier}
+      accountIdentifier={accountIdentifier}
+      environmentIdentifier={environmentIdentifier}
     >
-      <div className={css.tabs}>
-        <Tabs
-          id="TargetGroupDetailPageTabs"
-          tabList={[
-            {
-              id: 'FlagSettingsTab',
-              title: (
-                <StringWithTooltip
-                  stringId="cf.targetDetail.flagSetting"
-                  tooltipId="ff_targetGroupDetail_flagSettings_heading"
-                />
-              ),
-              panel: <FlagSettingsPanel targetGroup={targetGroup as Segment} />,
-              panelClassName: css.panel
-            },
-            {
-              id: 'AuditLogsTab',
-              title: getString('activityLog'),
-              panel: <AuditLogs flagData={targetGroup as Feature} objectType={AuditLogObjectType.Segment} />,
-              panelClassName: css.panel
-            }
-          ]}
-        />
-      </div>
-    </TargetManagementDetailPageTemplate>
+      <TargetManagementDetailPageTemplate
+        item={targetGroup as Segment}
+        openDeleteDialog={deleteTargetGroupDialog}
+        metaData={{ environment: envData?.data?.name as string }}
+        leftBar={<TargetGroupCriteria targetGroup={targetGroup as Segment} reloadTargetGroup={refetchTargetGroup} />}
+      >
+        <div className={css.tabs}>
+          <Tabs
+            id="TargetGroupDetailPageTabs"
+            tabList={[
+              {
+                id: 'FlagSettingsTab',
+                title: (
+                  <StringWithTooltip
+                    stringId="cf.targetDetail.flagSetting"
+                    tooltipId="ff_targetGroupDetail_flagSettings_heading"
+                  />
+                ),
+                panel: <FlagSettingsPanel targetGroup={targetGroup as Segment} />,
+                panelClassName: css.panel
+              },
+              {
+                id: 'AuditLogsTab',
+                title: getString('activityLog'),
+                panel: <AuditLogs flagData={targetGroup as Feature} objectType={AuditLogObjectType.Segment} />,
+                panelClassName: css.panel
+              }
+            ]}
+          />
+        </div>
+      </TargetManagementDetailPageTemplate>
+    </TargetAttributesProvider>
   )
 }
 

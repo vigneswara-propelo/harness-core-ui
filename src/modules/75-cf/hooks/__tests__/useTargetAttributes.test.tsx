@@ -46,11 +46,12 @@ describe('useTargetAttributes', () => {
 
   beforeEach(() => jest.resetAllMocks())
 
-  test('it should return loading and targetAttributes', async () => {
+  test('it should return loading, targetAttributes and targetAttributeOptions', async () => {
     const { result } = renderTargetAttributesHook()
 
     expect(result.current).toHaveProperty('loading', false)
     expect(result.current).toHaveProperty('targetAttributes')
+    expect(result.current).toHaveProperty('targetAttributeOptions')
   })
 
   test('it should sort the targetAttributes into alphabetical order', () => {
@@ -75,5 +76,13 @@ describe('useTargetAttributes', () => {
     expect(params).toHaveProperty('orgIdentifier', orgIdentifier)
     expect(params).toHaveProperty('accountIdentifier', accountIdentifier)
     expect(params).toHaveProperty('environmentIdentifier', environmentIdentifier)
+  })
+
+  test('it should return targetAttributeOptions as an array of SelectOption objects', async () => {
+    const { result } = renderTargetAttributesHook()
+
+    expect(result.current.targetAttributeOptions).toEqual(
+      expect.arrayContaining(sampleTargetAttributes.map(attr => ({ label: attr, value: attr })))
+    )
   })
 })

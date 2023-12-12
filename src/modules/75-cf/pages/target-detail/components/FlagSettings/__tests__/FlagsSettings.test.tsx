@@ -95,6 +95,10 @@ describe('FlagSettings', () => {
   const patchTargetMock = jest.fn()
   const usePatchTargetMock = jest.spyOn(cfServices, 'usePatchTarget')
 
+  jest
+    .spyOn(cfServices, 'useGetAllTargetAttributes')
+    .mockReturnValue({ data: [], loading: false, error: null, refetch: jest.fn() } as any)
+
   beforeEach(() => {
     jest.clearAllMocks()
 

@@ -14,6 +14,7 @@ import type { Feature } from 'services/cf'
 import { CFVariationColors, PERCENTAGE_ROLLOUT_VALUE } from '@cf/constants'
 import PercentageRollout from '@cf/components/PercentageRollout/PercentageRollout'
 import usePercentageRolloutEqualiser from '@cf/hooks/usePercentageRolloutEqualiser'
+import { useTargetAttributes } from '@cf/hooks/useTargetAttributes'
 
 import css from './VariationsCell.module.scss'
 
@@ -32,6 +33,7 @@ const VariationsWithPercentageRolloutCell: FC<VariationsWithPercentageRolloutCel
   const { getString } = useStrings()
   const { values, setFieldValue, errors } = useFormikContext()
   const fieldPrefix = `flags.${flag.identifier}`
+  const { targetAttributeOptions } = useTargetAttributes()
 
   const flagItems = useMemo<SelectOption[]>(
     () => [
@@ -91,6 +93,7 @@ const VariationsWithPercentageRolloutCell: FC<VariationsWithPercentageRolloutCel
         <>
           <ReasonTooltip>
             <PercentageRollout
+              bucketByAttributes={targetAttributeOptions}
               variations={flag.variations}
               prefix={field => `${fieldPrefix}.percentageRollout.${field}`}
               fieldValues={rowValues.percentageRollout}

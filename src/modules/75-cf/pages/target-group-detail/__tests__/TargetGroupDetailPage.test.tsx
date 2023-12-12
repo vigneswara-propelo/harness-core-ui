@@ -53,6 +53,13 @@ describe('TargetGroupDetailPage', () => {
   const useGitSyncMock = jest.spyOn(gitSync, 'useGitSync')
   const usePlanEnforcementMock = jest.spyOn(planEnforcement, 'default')
 
+  jest.spyOn(cfServices, 'useGetAllTargetAttributes').mockReturnValue({
+    data: [],
+    loading: false,
+    error: null,
+    refetch: jest.fn()
+  } as any)
+
   beforeEach(() => {
     jest.clearAllMocks()
 

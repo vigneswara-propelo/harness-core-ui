@@ -66,6 +66,7 @@ const FixedPercentageRollout: FC<FixedPercentageRolloutProps> = ({ prefixPath, o
     <FormGroup label={getString('cf.featureFlags.percentageRollout')} disabled={readonly}>
       <Layout.Horizontal spacing="xsmall" flex={{ alignItems: 'flex-start' }}>
         <PercentageRollout
+          hideBucketBy
           variations={typeof flag === 'object' ? flag.variations : []}
           fieldValues={get(values, withPrefix(prefixPath, 'spec.distribution'))}
           prefix={(fieldName: string) => withPrefix(prefixPath, `spec.distribution.${fieldName}`)}
