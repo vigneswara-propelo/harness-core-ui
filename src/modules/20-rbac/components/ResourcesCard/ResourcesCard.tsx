@@ -11,7 +11,7 @@ import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { useStrings } from 'framework/strings'
-import type { ResourceType } from '@rbac/interfaces/ResourceType'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
 import useAddResourceModal from '@rbac/modals/AddResourceModal/useAddResourceModal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { isAtrributeFilterSelector, isDynamicResourceSelector } from '@rbac/utils/utils'
@@ -63,7 +63,9 @@ const ResourcesCard: React.FC<ResourcesCardProps> = ({
   const { label, icon, addResourceModalBody, addAttributeModalBody, staticResourceRenderer, attributeRenderer } =
     resourceDetails
   const attributeSelectionEnabled = addAttributeModalBody
-  const isCurrentOnly = selectedScope === SelectorScope.CURRENT
+  const isProjectAndOrgResourceInCurrentScope =
+    selectedScope === SelectorScope.CURRENT &&
+    (resourceType === ResourceType.PROJECT || resourceType === ResourceType.ORGANIZATION)
   const staticResourcesSelectionEnabled = !disableSpecificResourcesSelection && addResourceModalBody
   const hideRadioBtnSet = (disableSpecificResourcesSelection && !attributeSelectionEnabled) || disableAddingResources
   const staticResourceValues = isAtrributeFilterEnabled
@@ -111,7 +113,7 @@ const ResourcesCard: React.FC<ResourcesCardProps> = ({
               )}
             </Container>
             <Container className={css.radioBtnCtr}>
-              {staticResourcesSelectionEnabled && isCurrentOnly && (
+              {staticResourcesSelectionEnabled && !isProjectAndOrgResourceInCurrentScope && (
                 <Layout.Horizontal spacing="small" flex padding={{ left: 'huge' }}>
                   <Radio
                     label={getString('common.specified')}
@@ -125,22 +127,23 @@ const ResourcesCard: React.FC<ResourcesCardProps> = ({
               )}
             </Container>
             <Container className={css.radioBtnCtr}>
-              {(attributeSelectionEnabled || staticResourcesSelectionEnabled) && isCurrentOnly && (
-                <Button
-                  variation={ButtonVariation.LINK}
-                  data-testid={`addResources-${resourceType}`}
-                  disabled={disableAddingResources || isDynamicResourceSelector(resourceValues)}
-                  onClick={() => {
-                    openAddResourceModal(
-                      resourceType,
-                      Array.isArray(staticResourceValues) ? staticResourceValues : [],
-                      isAtrributeFilterEnabled
-                    )
-                  }}
-                >
-                  {getString('plusAdd')}
-                </Button>
-              )}
+              {(attributeSelectionEnabled || staticResourcesSelectionEnabled) &&
+                !isProjectAndOrgResourceInCurrentScope && (
+                  <Button
+                    variation={ButtonVariation.LINK}
+                    data-testid={`addResources-${resourceType}`}
+                    disabled={disableAddingResources || isDynamicResourceSelector(resourceValues)}
+                    onClick={() => {
+                      openAddResourceModal(
+                        resourceType,
+                        Array.isArray(staticResourceValues) ? staticResourceValues : [],
+                        isAtrributeFilterEnabled
+                      )
+                    }}
+                  >
+                    {getString('plusAdd')}
+                  </Button>
+                )}
             </Container>
           </Layout.Horizontal>
         )}
