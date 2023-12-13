@@ -17,15 +17,14 @@ import { getIdentifierFromName } from '@modules/10-common/utils/StringUtils'
 import {
   Feature,
   FeatureResponseMetadata,
-  GitSyncErrorResponse,
   GitSyncPatchOperation,
   PatchFeaturePathParams,
   PatchFeatureQueryParams
 } from 'services/cf'
 import { showToaster } from '@cf/utils/CFUtils'
+import useResponseError from '@cf/hooks/useResponseError'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
-import { useGovernance } from '@cf/hooks/useGovernance'
+import { UseGitSync } from '@cf/hooks/useGitSync'
 import { useStrings } from 'framework/strings'
 import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import { MAX_TAG_NAME_LENGTH } from '@cf/constants'
@@ -61,8 +60,8 @@ interface UseEditFlagDetailsModalReturn {
 const useEditFlagDetailsModal = (props: UseEditFlagDetailsModalProps): UseEditFlagDetailsModalReturn => {
   const { featureFlag, gitSync, refetchFlag, submitPatch, setGovernanceMetadata, tagsData, tagsDisabled } = props
   const { getString } = useStrings()
-  const { handleError: handleGovernanceError, isGovernanceError } = useGovernance()
   const { FFM_8184_FEATURE_FLAG_TAGGING } = useFeatureFlags()
+  const { handleResponseError } = useResponseError()
 
   const existingTags = useMemo(() => {
     return featureFlag?.tags?.map(t => ({ value: t.identifier, label: t.name })) || []
@@ -140,15 +139,8 @@ const useEditFlagDetailsModal = (props: UseEditFlagDetailsModalProps): UseEditFl
               showToaster(getString('cf.messages.flagUpdated'))
             })
             .catch(error => {
-              if (error.status === GIT_SYNC_ERROR_CODE) {
-                gitSync?.handleError(error.data as GitSyncErrorResponse)
-              } else {
-                if (isGovernanceError(error?.data)) {
-                  handleGovernanceError(error?.data)
-                } else {
-                  patch.feature.reset()
-                }
-              }
+              handleResponseError(error)
+              patch.feature.reset()
             })
         })
         .onEmptyPatch(hideEditDetailsModal)

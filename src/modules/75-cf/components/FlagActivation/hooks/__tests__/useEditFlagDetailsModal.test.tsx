@@ -103,6 +103,48 @@ describe('useEditFlagDetailsModal', () => {
     expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument()
   })
 
+  test('it should submit all values correcly', async () => {
+    const isTaggingFFOn = true
+
+    const refetchFlagMock = jest.fn()
+    const submitPatchMock = jest.fn(() => Promise.resolve({}))
+
+    renderComponent(
+      {
+        featureFlag: mockFeature as Feature,
+        tagsData: mockAllTags,
+        tagsDisabled: false,
+        submitPatch: submitPatchMock,
+        refetchFlag: refetchFlagMock
+      },
+      isTaggingFFOn
+    )
+
+    await userEvent.click(screen.getByRole('button', { name: openEditFlagModalBtn }))
+
+    const flagNameTextbox = screen.getAllByRole('textbox')[0]
+    await userEvent.type(flagNameTextbox, ' edited')
+
+    const flagDescriptionTextbox = screen.getAllByRole('textbox')[1]
+    await userEvent.type(flagDescriptionTextbox, ' edited')
+
+    await userEvent.click(screen.getByRole('checkbox', { name: 'cf.editDetails.permaFlag' }))
+
+    await userEvent.click(await screen.findByRole('button', { name: 'save' }))
+
+    await waitFor(() =>
+      expect(submitPatchMock).toHaveBeenCalledWith({
+        instructions: [
+          { kind: 'updateName', parameters: { name: 'Test Bool Flag edited' } },
+          { kind: 'updateDescription', parameters: { description: 'Test Bool Flag Description edited' } },
+          { kind: 'updatePermanent', parameters: { permanent: true } }
+        ]
+      })
+    )
+
+    expect(refetchFlagMock).toHaveBeenCalled()
+  })
+
   test('it should disable the Tags dropdown if there is a tags error or it is loading', async () => {
     const isTaggingFFOn = true
 
@@ -159,6 +201,42 @@ describe('useEditFlagDetailsModal', () => {
           { kind: 'addTag', parameters: { identifier: 'RBAC_TEAM', name: 'RBAC TEAM' } },
           { kind: 'addTag', parameters: { identifier: 'tag4Id', name: 'tag4' } },
           { kind: 'addTag', parameters: { identifier: 'helloId', name: 'hello' } }
+        ]
+      })
+    )
+  })
+
+  test('it should remove a tag from a flag correctly', async () => {
+    const isTaggingFFOn = true
+    const submitPatchMock = jest.fn(() => Promise.resolve({}))
+
+    renderComponent(
+      {
+        featureFlag: mockFeature as Feature,
+        tagsData: mockAllTags,
+        tagsDisabled: false,
+        submitPatch: submitPatchMock
+      },
+      isTaggingFFOn
+    )
+
+    await userEvent.click(screen.getByRole('button', { name: openEditFlagModalBtn }))
+
+    expect(screen.getByText(mockFeature.tags[0].name)).toBeInTheDocument()
+
+    await userEvent.click(document.querySelector('[data-icon="small-cross"]') as HTMLElement)
+
+    await waitFor(() => expect(submitPatchMock).not.toHaveBeenCalled())
+
+    await userEvent.click(screen.getByRole('button', { name: 'save' }))
+
+    await waitFor(() =>
+      expect(submitPatchMock).toHaveBeenCalledWith({
+        instructions: [
+          {
+            kind: 'removeTag',
+            parameters: { identifier: mockFeature.tags[0].identifier, name: mockFeature.tags[0].name }
+          }
         ]
       })
     )
@@ -255,5 +333,35 @@ describe('useEditFlagDetailsModal', () => {
         instructions: [{ kind: 'addTag', parameters: { identifier: 'tag_name_with_spaces', name: tagName } }]
       })
     )
+  })
+
+  test('it should handle patch submission error', async () => {
+    const isTaggingFFOn = true
+    const patchErrorMessage = 'FAIL TO SUBMIT PATCH'
+
+    const refetchFlagMock = jest.fn()
+    const submitPatchMock = jest.fn(() => Promise.reject({ message: patchErrorMessage }))
+
+    renderComponent(
+      {
+        featureFlag: mockFeature as Feature,
+        tagsData: mockAllTags,
+        tagsDisabled: false,
+        submitPatch: submitPatchMock,
+        refetchFlag: refetchFlagMock
+      },
+      isTaggingFFOn
+    )
+
+    await userEvent.click(screen.getByRole('button', { name: openEditFlagModalBtn }))
+
+    const flagNameTextbox = screen.getAllByRole('textbox')[0]
+
+    await userEvent.type(flagNameTextbox, ' edited')
+
+    await userEvent.click(await screen.findByRole('button', { name: 'save' }))
+
+    expect(await screen.findByText(patchErrorMessage)).toBeInTheDocument()
+    expect(refetchFlagMock).not.toHaveBeenCalled()
   })
 })
