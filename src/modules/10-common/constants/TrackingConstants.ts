@@ -42,10 +42,10 @@ export enum StageActions {
 }
 
 export enum AidaActions {
-  ChatStarted = 'CS Bot chat started',
   AnswerReceived = 'CS Bot answer',
   VoteReceived = 'AIDA Vote Received',
-  FeedbackReceived = 'AIDA Feedback Received'
+  FeedbackReceived = 'AIDA Feedback Received',
+  AIDAInteractionStarted = 'AIDA Interaction Started'
 }
 
 export enum SecretActions {

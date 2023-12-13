@@ -15,11 +15,14 @@ import { Color, FontVariation } from '@harness/design-system'
 import { Container, Icon, Layout, Popover, Text } from '@harness/uicore'
 import { RcaRequestBody, ResponseRemediation, rcaPromise, Error } from 'services/logs'
 import { useStrings } from 'framework/strings'
+import type { Module } from 'framework/types/ModuleName'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 import { pluralize } from '@common/utils/StringUtils'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useLocalStorage } from '@common/hooks'
 import { createFormDataFromObjectPayload } from '@common/constants/Utils'
 import { getHTMLFromMarkdown } from '@common/utils/MarkdownUtils'
+import { AidaActions } from '@modules/10-common/constants/TrackingConstants'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import {
   getCommandFromCurrentStep,
@@ -85,6 +88,7 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
     ) as Map<string, GraphLayoutNode>
     currentModule = getSelectedStageModule(pipelineStagesMapFromExecutionDetails, selectedStageId)
   }
+  const { trackEvent } = useTelemetry()
 
   useEffect(() => {
     let timerId: NodeJS.Timeout
@@ -212,6 +216,16 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
     currentModule
   ])
 
+  const getAIDAClient = (module: Module): AidaClient | undefined => {
+    switch (module) {
+      case 'cd':
+        return AidaClient.CD_RCA
+      case 'ci':
+        return AidaClient.CI_RCA
+      default:
+    }
+  }
+
   const renderCTA = useCallback((): JSX.Element => {
     const hasRemediations = Array.isArray(remediations) && remediations.length > 0
     const errorMssg = (error as Error)?.error_msg ?? getString('errorTitle')
@@ -237,7 +251,21 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
                 <Text
                   font={{ variation: FontVariation.BODY }}
                   color={Color.AI_PURPLE_700}
-                  onClick={fetchAnalysis}
+                  onClick={() => {
+                    fetchAnalysis()
+                    if (currentModule) {
+                      const aidaClient = getAIDAClient(currentModule)
+                      if (aidaClient) {
+                        trackEvent(AidaActions.AIDAInteractionStarted, {
+                          aidaClient,
+                          executionInfo: {
+                            errorMssg,
+                            stepType: selectedStep.stepType as StepType
+                          }
+                        })
+                      }
+                    }
+                  }}
                   tooltip={
                     <Container className={css.tooltipPadding}>
                       <Container flex={{ justifyContent: 'flex-end' }}>

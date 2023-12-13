@@ -54,8 +54,6 @@ function DocsChat(): JSX.Element {
   const [messages, setMessages] = useState<Array<Message>>(chatHistory.length > 0 ? chatHistory : sampleMessages)
   const [placeholderIndex, setPlaceholderIndex] = useState(0)
 
-  useTrackEvent(AidaActions.ChatStarted, {})
-
   const getAnswer = async (oldMessages: Array<Message>, query: string): Promise<void> => {
     try {
       const answer = await askQuestion({ question: query })
@@ -150,6 +148,8 @@ function DocsChat(): JSX.Element {
       </div>
     </div>
   )
+
+  useTrackEvent(AidaActions.AIDAInteractionStarted, { aidaClient: AidaClient.CS_BOT })
 
   return (
     <div className={css.container}>
