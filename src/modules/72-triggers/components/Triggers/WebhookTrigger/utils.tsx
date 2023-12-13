@@ -17,7 +17,7 @@ import { connectorUrlType } from '@platform/connectors/constants'
 import type { AddConditionInterface } from '@triggers/components/AddConditionsSection/AddConditionsSection'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
 import type { SourceRepo, TriggerBaseType, TriggerType } from '../TriggerInterface'
-import { ciCodebaseBuild, ciCodebaseBuildPullRequest, CUSTOM, TriggerGitEvent } from '../utils'
+import { ciCodebaseBuild, ciCodebaseBuildPullRequest, GitSourceProviders, TriggerGitEvent } from '../utils'
 
 export function getDefaultPipelineReferenceBranch(event = ''): string {
   switch (event) {
@@ -59,7 +59,13 @@ const checkValidTriggerConfiguration = ({
     return false
   }
 
-  if (sourceRepo !== CUSTOM) {
+  if (sourceRepo !== GitSourceProviders.Custom.value) {
+    if (sourceRepo === GitSourceProviders.Harness.value) {
+      if (!formikValues['repoName'] || !formikValues['event'] || !formikValues['actions']) {
+        return false
+      }
+      return true
+    }
     if (
       !formikValues['connectorRef'] ||
       !formikValues['event'] ||
@@ -260,7 +266,7 @@ export const getValidationSchema = (
       getString('triggers.validation.event'),
       getString('triggers.validation.event'),
       function (event) {
-        return this.parent.sourceRepo === CUSTOM || event
+        return this.parent.sourceRepo === GitSourceProviders.Custom.value || event
       }
     ),
     ...(isGitWebhookPollingEnabled && {
@@ -280,13 +286,23 @@ export const getValidationSchema = (
       getString('triggers.validation.connector'),
       function (connectorRef) {
         // connectorRef is an object keeping track of whether repoName should be required
-        return this.parent.sourceRepo === CUSTOM || connectorRef?.value
+        return (
+          this.parent.sourceRepo === GitSourceProviders.Custom.value ||
+          this.parent.sourceRepo === GitSourceProviders.Harness.value ||
+          connectorRef?.value
+        )
       }
     ),
     repoName: string()
       .nullable()
       .test(getString('triggers.validation.repoName'), getString('triggers.validation.repoName'), function (repoName) {
         const connectorURLType = this.parent.connectorRef?.connector?.spec?.type
+        // Check if sourceRepo is  Harness
+        if (this.parent && this.parent.sourceRepo === GitSourceProviders.Harness.value) {
+          if (repoName) return true
+          return false
+        }
+
         return (
           !connectorURLType ||
           (connectorURLType === connectorUrlType.ACCOUNT && repoName?.trim()) ||
@@ -301,7 +317,7 @@ export const getValidationSchema = (
       function (actions) {
         return (
           this.parent.anyAction ||
-          this.parent.sourceRepo === CUSTOM ||
+          this.parent.sourceRepo === GitSourceProviders.Custom.value ||
           actions?.length !== 0 ||
           this.parent.event === eventTypes.PUSH
         )

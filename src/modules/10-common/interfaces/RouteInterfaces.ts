@@ -136,7 +136,7 @@ export interface TriggerPathProps extends PipelinePathProps, TriggerQueryParams 
 export interface TriggerQueryParams {
   triggerIdentifier: string
   triggerType?: Exclude<NGTriggerSourceV2['type'], 'MultiRegionArtifact'>
-  sourceRepo?: Exclude<WebhookTriggerConfigV2['type'], 'AwsCodeCommit' | 'Harness'>
+  sourceRepo?: Exclude<WebhookTriggerConfigV2['type'], 'AwsCodeCommit'>
   artifactType?: ArtifactTriggerConfig['type']
   manifestType?: ManifestTriggerConfig['type']
   scheduleType?: Extract<TriggerCatalogItem['triggerCatalogType'][number], 'Cron'>

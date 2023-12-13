@@ -44,6 +44,11 @@ const webhookTriggerCategoryItems = [
     itemLabel: 'common.repo_provider.customLabel',
     value: 'Custom',
     iconName: 'build'
+  },
+  {
+    itemLabel: 'harness',
+    value: 'Harness',
+    iconName: 'code'
   }
 ]
 

@@ -7,7 +7,7 @@
 
 import type { IconName } from '@harness/uicore'
 import { parse } from 'yaml'
-import type { ConnectorInfoDTO } from 'services/cd-ng'
+import { capitalize } from 'lodash-es'
 import type { AddDrawerMapInterface, CategoryInterface } from '@common/components/AddDrawer/AddDrawer'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import {
@@ -20,7 +20,7 @@ import {
   ArtifactTitleIdByType,
   ENABLED_ARTIFACT_TYPES
 } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
-import type { NGTriggerDetailsResponse, TriggerCatalogItem } from 'services/pipeline-ng'
+import type { NGTriggerDetailsResponse, TriggerCatalogItem, WebhookTriggerConfigV2 } from 'services/pipeline-ng'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import type {
   TriggerType,
@@ -30,7 +30,7 @@ import type {
   ManifestType,
   ScheduleType
 } from '@triggers/components/Triggers/TriggerInterface'
-import { AWS_CODECOMMIT, AwsCodeCommit } from './TriggersWizardPageUtils'
+import { AZURE_REPO, GitSourceProviders } from '@modules/72-triggers/components/Triggers/utils'
 
 export type TriggerCatalogType = Required<TriggerCatalogItem>['triggerCatalogType'][number]
 
@@ -51,18 +51,6 @@ export interface TriggerDataInterface {
   scheduleType?: ScheduleType
 }
 
-export const GitSourceProviders: Record<
-  string,
-  { value: ConnectorInfoDTO['type'] | 'AwsCodeCommit' | 'Custom'; iconName: IconName }
-> = {
-  GITHUB: { value: 'Github', iconName: 'github' },
-  GITLAB: { value: 'Gitlab', iconName: 'service-gotlab' },
-  BITBUCKET: { value: 'Bitbucket', iconName: 'bitbucket-selected' },
-  AZURE_REPO: { value: 'AzureRepo', iconName: 'service-azure' },
-  AWS_CODECOMMIT: { value: 'AwsCodeCommit', iconName: 'service-aws-code-deploy' },
-  CUSTOM: { value: 'Custom', iconName: 'build' }
-}
-
 const TriggerTypeIcons: Record<'SCHEDULE' | 'NEW_ARTIFACT', IconName> = {
   SCHEDULE: 'trigger-schedule',
   NEW_ARTIFACT: 'new-artifact'
@@ -76,12 +64,14 @@ export const getTriggerIcon = ({
   webhookSourceRepo?: string // string temporary until backend
   buildType?: string
 }): IconName => {
-  const updatedWebhookSourceRepo =
-    webhookSourceRepo === AwsCodeCommit ? AWS_CODECOMMIT : webhookSourceRepo?.toUpperCase()
-  const webhookSourceRepoIconName =
-    webhookSourceRepo && updatedWebhookSourceRepo && GitSourceProviders[updatedWebhookSourceRepo]?.iconName
-  if (type === 'Webhook' && webhookSourceRepoIconName) {
-    return webhookSourceRepoIconName as IconName
+  if (type === 'Webhook' && webhookSourceRepo) {
+    if (webhookSourceRepo === AZURE_REPO) {
+      return GitSourceProviders.AzureRepo.iconName
+    } else {
+      const sourceRepo = capitalize(webhookSourceRepo) as Required<WebhookTriggerConfigV2>['type']
+
+      return GitSourceProviders[sourceRepo]?.iconName
+    }
   } else if (type === 'Scheduled') {
     return TriggerTypeIcons.SCHEDULE as IconName
   } else if (type === 'Manifest' && buildType) {
@@ -93,14 +83,6 @@ export const getTriggerIcon = ({
   }
   return 'yaml-builder-trigger'
 }
-
-export const getSourceRepoOptions = (getString: (str: StringKeys) => string): { label: string; value: string }[] => [
-  { label: getString('common.repo_provider.githubLabel'), value: GitSourceProviders.GITHUB.value },
-  { label: getString('common.repo_provider.gitlabLabel'), value: GitSourceProviders.GITLAB.value },
-  { label: getString('common.repo_provider.bitbucketLabel'), value: GitSourceProviders.BITBUCKET.value },
-  { label: getString('common.repo_provider.azureRepos'), value: GitSourceProviders.AZURE_REPO.value },
-  { label: getString('common.repo_provider.customLabel'), value: GitSourceProviders.CUSTOM.value }
-]
 
 export const getEnabledStatusTriggerValues = ({
   data,
@@ -140,6 +122,7 @@ export const getTriggerCategoryDrawerMapFromTriggerCatalogItem = (
     if (triggerCategoryLabel) {
       const categoryItems = triggerCatalogType.map(item => {
         const [itemLabel, iconName] = getTriggerLabelAndIcon(item)
+
         if (itemLabel && iconName) {
           return {
             itemLabel: getString(itemLabel),
@@ -191,15 +174,17 @@ const getTriggerLabelAndIcon = (triggerType: TriggerCatalogType): [itemLabel?: S
   // Using function instead of object, to prevent the page break when new triggerType is added to API and UI does add that triggerType to object
   switch (triggerType) {
     case 'Github':
-      return ['common.repo_provider.githubLabel', GitSourceProviders.GITHUB.iconName]
+      return ['common.repo_provider.githubLabel', GitSourceProviders.Github.iconName]
     case 'Gitlab':
-      return ['common.repo_provider.gitlabLabel', GitSourceProviders.GITLAB.iconName]
+      return ['common.repo_provider.gitlabLabel', GitSourceProviders.Gitlab.iconName]
     case 'Bitbucket':
-      return ['common.repo_provider.bitbucketLabel', GitSourceProviders.BITBUCKET.iconName]
+      return ['common.repo_provider.bitbucketLabel', GitSourceProviders.Bitbucket.iconName]
     case 'AzureRepo':
-      return ['common.repo_provider.azureRepos', GitSourceProviders.AZURE_REPO.iconName]
+      return ['common.repo_provider.azureRepos', GitSourceProviders.AzureRepo.iconName]
+    case 'Harness':
+      return ['harness', GitSourceProviders.Harness.iconName]
     case 'Custom':
-      return [ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.CustomArtifact], GitSourceProviders.CUSTOM.iconName]
+      return [ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.CustomArtifact], GitSourceProviders.Custom.iconName]
     case 'Gcr':
       return [ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Gcr], ArtifactIconByType.Gcr]
     case 'Ecr':

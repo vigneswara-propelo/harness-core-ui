@@ -378,7 +378,7 @@ export default function WebhookTriggerWizard(
       sourceRepo,
       identifier: '',
       tags: {},
-      ...(sourceRepo === GitSourceProviders.GITHUB.value && {
+      ...(sourceRepo === GitSourceProviders.Github.value && {
         encryptedWebhookSecretIdentifier: '',
         isGithubWebhookAuthenticationEnabled
       }),
@@ -391,7 +391,7 @@ export default function WebhookTriggerWizard(
       pipelineBranchName: getDefaultPipelineReferenceBranch(baseType) || branch,
       // setDefaultValue only when polling is enabled and for Github Webhook Trigger
       ...(isGitWebhookPollingEnabled &&
-        sourceRepo === GitSourceProviders.GITHUB.value && { pollInterval: '0', webhookId: '' })
+        sourceRepo === GitSourceProviders.Github.value && { pollInterval: '0', webhookId: '' })
     }
   }
 
@@ -407,7 +407,7 @@ export default function WebhookTriggerWizard(
         : newInitialValues
     }
 
-    const isGitHubWebhookTrigger = sourceRepo === GitSourceProviders.GITHUB.value
+    const isGitHubWebhookTrigger = sourceRepo === GitSourceProviders.Github.value
 
     if (isGitHubWebhookTrigger) {
       Object.assign(newInitialValues, { isGithubWebhookAuthenticationEnabled })
@@ -618,7 +618,7 @@ export default function WebhookTriggerWizard(
     try {
       const triggerResponseJson = triggerResponseYaml ? parse(triggerResponseYaml) : triggerYaml
 
-      if (triggerResponseJson?.trigger?.source?.spec?.type !== GitSourceProviders.CUSTOM.value) {
+      if (triggerResponseJson?.trigger?.source?.spec?.type !== GitSourceProviders.Custom.value) {
         // non-custom flow #github | gitlab | bitbucket
         const {
           trigger: {
@@ -696,7 +696,7 @@ export default function WebhookTriggerWizard(
           identifier,
           description,
           tags,
-          ...(sourceRepoForYaml === GitSourceProviders.GITHUB.value && { encryptedWebhookSecretIdentifier }),
+          ...(sourceRepoForYaml === GitSourceProviders.Github.value && { encryptedWebhookSecretIdentifier }),
           stagesToExecute,
           pipeline: pipelineJson,
           sourceRepo: sourceRepoForYaml,
@@ -933,7 +933,7 @@ export default function WebhookTriggerWizard(
       pipeline: clearNullUndefined(pipelineRuntimeInput)
     })
 
-    if (formikValueSourceRepo !== GitSourceProviders.CUSTOM.value) {
+    if (formikValueSourceRepo !== GitSourceProviders.Custom.value) {
       if (
         ((targetBranchOperator && targetBranchValue?.trim()) ||
           (persistIncomplete && (targetBranchOperator || targetBranchValue?.trim()))) &&
@@ -993,7 +993,7 @@ export default function WebhookTriggerWizard(
         stagesToExecute,
         description,
         tags,
-        ...(formikValueSourceRepo === GitSourceProviders.GITHUB.value && {
+        ...(formikValueSourceRepo === GitSourceProviders.Github.value && {
           encryptedWebhookSecretIdentifier: referenceString
         }),
         orgIdentifier,
@@ -1002,7 +1002,7 @@ export default function WebhookTriggerWizard(
         source: {
           type: formikValueTriggerType,
           ...(isGitWebhookPollingEnabled &&
-            formikValueSourceRepo === GitSourceProviders.GITHUB.value && { pollInterval, webhookId }),
+            formikValueSourceRepo === GitSourceProviders.Github.value && { pollInterval, webhookId }),
           spec: {
             type: formikValueSourceRepo, // Github
             spec: {
@@ -1499,11 +1499,11 @@ export default function WebhookTriggerWizard(
         validationSchema: getValidationSchema(
           getString,
           isGitWebhookPollingEnabled &&
-            (sourceRepo === GitSourceProviders.GITHUB.value ||
-              (onEditInitialValues as any).sourceRepo === GitSourceProviders.GITHUB.value),
+            (sourceRepo === GitSourceProviders.Github.value ||
+              (onEditInitialValues as any).sourceRepo === GitSourceProviders.Github.value),
           isGithubWebhookAuthenticationEnabled &&
-            (sourceRepo === GitSourceProviders.GITHUB.value ||
-              (onEditInitialValues as any).sourceRepo === GitSourceProviders.GITHUB.value)
+            (sourceRepo === GitSourceProviders.Github.value ||
+              (onEditInitialValues as any).sourceRepo === GitSourceProviders.Github.value)
         ),
         validate: validateTriggerPipeline,
         enableReinitialize: true

@@ -11,7 +11,12 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import { Page, useToaster } from '@common/exports'
-import { useGetTriggerDetails, useUpdateTrigger, useGetPipelineSummary } from 'services/pipeline-ng'
+import {
+  useGetTriggerDetails,
+  useUpdateTrigger,
+  useGetPipelineSummary,
+  WebhookTriggerConfigV2
+} from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
@@ -149,7 +154,10 @@ const TriggerLandingPage: React.FC = ({ children }) => {
                   triggerResponse.data?.type
                     ? getTriggerIcon({
                         type: triggerResponse.data.type,
-                        webhookSourceRepo: get(triggerResponse.data.webhookDetails, 'webhookSourceRepo'),
+                        webhookSourceRepo: get(
+                          triggerResponse.data.webhookDetails,
+                          'webhookSourceRepo'
+                        ) as WebhookTriggerConfigV2['type'],
                         buildType: get(triggerResponse.data.buildDetails, 'buildType')
                       })
                     : 'yaml-builder-trigger'

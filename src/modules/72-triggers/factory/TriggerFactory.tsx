@@ -11,6 +11,7 @@ import { Gitlab } from '@triggers/components/Triggers/WebhookTrigger/Gitlab/Gitl
 import { Bitbucket } from '@triggers/components/Triggers/WebhookTrigger/Bitbucket/Bitbucket'
 import { AzureRepo } from '@triggers/components/Triggers/WebhookTrigger/AzureRepo/AzureRepo'
 import { Custom } from '@triggers/components/Triggers/WebhookTrigger/Custom/Custom'
+import { Harness } from '@triggers/components/Triggers/WebhookTrigger/Harness/Harness'
 
 // Artifact Triggers
 import { Acr } from '@triggers/components/Triggers/ArtifactTrigger/Acr/Acr'
@@ -49,6 +50,7 @@ TriggerFactory.registerTrigger(new Github())
 TriggerFactory.registerTrigger(new Gitlab())
 TriggerFactory.registerTrigger(new Bitbucket())
 TriggerFactory.registerTrigger(new AzureRepo())
+TriggerFactory.registerTrigger(new Harness())
 
 // Scheduled Triggers
 TriggerFactory.registerTrigger(new Cron())

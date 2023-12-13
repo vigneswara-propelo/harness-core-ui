@@ -33,6 +33,7 @@ import { getDurationValidationSchema } from '@common/components/MultiTypeDuratio
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
 import type { TriggerType } from '@triggers/components/Triggers/TriggerInterface'
 import { CronFormat, isCronValid } from '@common/components/SchedulePanel/components/utils'
+import { GitSourceProviders } from '@modules/72-triggers/components/Triggers/utils'
 import type { AddConditionInterface } from '../views/AddConditionsSection'
 import type {
   artifactManifestData,
@@ -42,9 +43,7 @@ import type {
   TriggerConfigDTO,
   FlatOnEditValuesInterface
 } from '../interface/TriggersWizardInterface'
-export const CUSTOM = 'Custom'
 export const AWS_CODECOMMIT = 'AWS_CODECOMMIT'
-export const AwsCodeCommit = 'AwsCodeCommit'
 export const PRIMARY_ARTIFACT = 'primary'
 export const AZURE_REPO = 'AZURE_REPO'
 
@@ -171,15 +170,21 @@ const checkValidTriggerConfiguration = ({
   if (formikErrors.pollInterval) {
     return false
   }
-
-  if (sourceRepo !== CUSTOM) {
+  if (sourceRepo !== GitSourceProviders.Custom.value) {
+    if (sourceRepo === GitSourceProviders.Harness.value) {
+      if (!formikValues['repoName'] || !formikValues['event'] || !formikValues['actions']) {
+        return false
+      }
+      return true
+    }
     if (
       !formikValues['connectorRef'] ||
       !formikValues['event'] ||
       !formikValues['actions'] ||
       (formikValues['isGithubWebhookAuthenticationEnabled'] && !formikValues['encryptedWebhookSecretIdentifier'])
-    )
+    ) {
       return false
+    }
     // onEdit case, waiting for api response
     else if (formikValues['connectorRef']?.value && !formikValues['connectorRef'].connector) return true
     else if (
@@ -371,7 +376,7 @@ export const getValidationSchema = (
         getString('triggers.validation.event'),
         getString('triggers.validation.event'),
         function (event) {
-          return this.parent.sourceRepo === CUSTOM || event
+          return this.parent.sourceRepo === GitSourceProviders.Custom.value || event
         }
       ),
       ...(isGithubWebhookAuthenticationEnabled && {
@@ -400,7 +405,11 @@ export const getValidationSchema = (
         getString('triggers.validation.connector'),
         function (connectorRef) {
           // connectorRef is an object keeping track of whether repoName should be required
-          return this.parent.sourceRepo === CUSTOM || connectorRef?.value
+          return (
+            this.parent.sourceRepo === GitSourceProviders.Custom.value ||
+            this.parent.sourceRepo === GitSourceProviders.Harness.value ||
+            connectorRef?.value
+          )
         }
       ),
       repoName: string()
@@ -410,6 +419,12 @@ export const getValidationSchema = (
           getString('triggers.validation.repoName'),
           function (repoName) {
             const connectorType = this.parent.connectorRef?.connector?.spec?.type
+            // Check if sourceRepo is  Harness
+            if (this.parent && this.parent.sourceRepo === GitSourceProviders.Harness.value) {
+              if (repoName) return true
+              return false
+            }
+
             return (
               !connectorType ||
               (connectorType === connectorUrlType.ACCOUNT && repoName?.trim()) ||
@@ -425,7 +440,7 @@ export const getValidationSchema = (
         function (actions) {
           return (
             this.parent.anyAction ||
-            this.parent.sourceRepo === CUSTOM ||
+            this.parent.sourceRepo === GitSourceProviders.Custom.value ||
             actions?.length !== 0 ||
             this.parent.event === eventTypes.PUSH
           )

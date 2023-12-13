@@ -22,8 +22,8 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import useCreateConnectorModal from '@platform/connectors/modals/ConnectorModal/useCreateConnectorModal'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
+import { GitSourceProviders } from '@modules/72-triggers/components/Triggers/utils'
 import { AWS_CODECOMMIT, AZURE_REPO } from '../utils/TriggersWizardPageUtils'
-import { GitSourceProviders } from '../utils/TriggersListUtils'
 import css from './ConnectorSection.module.scss'
 interface ConnectorSectionInterface {
   formikProps?: any
@@ -68,9 +68,9 @@ export const ConnectorSection: React.FC<ConnectorSectionInterface> = ({ formikPr
 
   const getSourceRepo = useCallback((repoProvider: ConnectorConfigDTO['type']): string => {
     switch (repoProvider) {
-      case GitSourceProviders.AWS_CODECOMMIT.value:
+      case GitSourceProviders.AwsCodeCommit.value:
         return AWS_CODECOMMIT
-      case GitSourceProviders.AZURE_REPO.value:
+      case GitSourceProviders.AzureRepo.value:
         return AZURE_REPO
       default:
         return repoProvider

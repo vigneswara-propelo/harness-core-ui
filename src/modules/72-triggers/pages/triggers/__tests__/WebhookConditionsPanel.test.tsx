@@ -12,6 +12,7 @@ import { renderHook } from '@testing-library/react-hooks'
 import { useStrings } from 'framework/strings'
 import { setFieldValue, InputTypes } from '@common/utils/JestFormHelper'
 import { TestWrapper } from '@common/utils/testUtils'
+import { GitSourceProviders } from '@modules/72-triggers/components/Triggers/utils'
 import { getTriggerConfigDefaultProps, getTriggerConfigInitialValues } from './webhookMockConstants'
 import WebhookConditionsPanel from '../views/WebhookConditionsPanel'
 const defaultTriggerConfigDefaultProps = getTriggerConfigDefaultProps({})
@@ -59,7 +60,9 @@ describe('WebhookConditionsPanel Triggers tests', () => {
 
     test('Initial Render - Custom Trigger Conditions Panel', async () => {
       const { container } = render(
-        <WrapperComponent initialValues={getTriggerConfigInitialValues({ sourceRepo: 'CUSTOM' })} />
+        <WrapperComponent
+          initialValues={getTriggerConfigInitialValues({ sourceRepo: GitSourceProviders.Custom.value })}
+        />
       )
       await waitFor(() => queryByText(container, result.current.getString('conditions')))
       expect(container).toMatchSnapshot()
@@ -266,7 +269,9 @@ describe('WebhookConditionsPanel Triggers tests', () => {
     // eslint-disable-next-line jest/no-disabled-tests
     test('Delete Header Conditions row (3rd of 3 rows)', async () => {
       const { container } = render(
-        <WrapperComponent initialValues={getTriggerConfigInitialValues({ sourceRepo: 'CUSTOM' })} />
+        <WrapperComponent
+          initialValues={getTriggerConfigInitialValues({ sourceRepo: GitSourceProviders.Custom.value })}
+        />
       )
 
       await waitFor(() => queryByText(container, result.current.getString('conditions')))

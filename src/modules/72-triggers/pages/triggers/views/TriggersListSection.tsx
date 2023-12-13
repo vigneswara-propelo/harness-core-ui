@@ -52,12 +52,8 @@ import type { TriggerBaseType } from '@triggers/components/Triggers/TriggerInter
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import {
-  getTriggerIcon,
-  GitSourceProviders,
-  getEnabledStatusTriggerValues,
-  getTriggerBaseType
-} from '../utils/TriggersListUtils'
+import { GitSourceProviders } from '@modules/72-triggers/components/Triggers/utils'
+import { getTriggerIcon, getEnabledStatusTriggerValues, getTriggerBaseType } from '../utils/TriggersListUtils'
 import { TriggerTypes, clearNullUndefined, ResponseStatus } from '../utils/TriggersWizardPageUtils'
 import TriggerStatusCell from './subviews/TriggerStatusCell'
 import css from './TriggersListSection.module.scss'
@@ -352,7 +348,7 @@ const RenderWebhookIcon = ({
     return <Text color={Color.GREY_400}>{column.getString('na')}</Text>
   }
 
-  if (webhookSourceRepo?.toLowerCase() === GitSourceProviders.CUSTOM.value.toLowerCase()) {
+  if (webhookSourceRepo?.toLowerCase() === GitSourceProviders.Custom.value.toLowerCase()) {
     return (
       <Popover
         isOpen={optionsOpen}

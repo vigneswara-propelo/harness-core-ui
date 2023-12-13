@@ -77,7 +77,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
 import useIsGithubWebhookAuthenticationEnabled from '@triggers/components/Triggers/WebhookTrigger/useIsGithubWebhookAuthenticationEnabled'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
-import { isNewTrigger } from '@triggers/components/Triggers/utils'
+import { GitSourceProviders, isNewTrigger } from '@triggers/components/Triggers/utils'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import { useIsTriggerCreatePermission } from '@triggers/components/Triggers/useIsTriggerCreatePermission'
 import type { TriggerType } from '@triggers/components/Triggers/TriggerInterface'
@@ -90,7 +90,6 @@ import {
 } from '@common/components/SchedulePanel/components/utils'
 import SchedulePanel from '@common/components/SchedulePanel/SchedulePanel'
 import type { AddConditionInterface } from './views/AddConditionsSection'
-import { GitSourceProviders } from './utils/TriggersListUtils'
 import {
   getConnectorName,
   getConnectorValue,
@@ -643,7 +642,7 @@ const TriggersWizardPage = (): JSX.Element => {
 
     const execStages = val?.resolvedPipeline?.allowStageExecutions ? stagesToExecute : []
 
-    if (formikValueSourceRepo !== GitSourceProviders.CUSTOM.value) {
+    if (formikValueSourceRepo !== GitSourceProviders.Custom.value) {
       if (
         ((targetBranchOperator && targetBranchValue?.trim()) ||
           (persistIncomplete && (targetBranchOperator || targetBranchValue?.trim()))) &&
@@ -700,7 +699,7 @@ const TriggersWizardPage = (): JSX.Element => {
         name,
         identifier,
         enabled: enabledStatus,
-        ...(formikValueSourceRepo === GitSourceProviders.GITHUB.value && {
+        ...(formikValueSourceRepo === GitSourceProviders.Github.value && {
           encryptedWebhookSecretIdentifier: referenceString
         }),
         description,
@@ -824,7 +823,7 @@ const TriggersWizardPage = (): JSX.Element => {
     try {
       const triggerResponseJson = triggerResponseYaml ? parse(triggerResponseYaml) : triggerYaml
 
-      if (triggerResponseJson?.trigger?.source?.spec?.type !== GitSourceProviders.CUSTOM.value) {
+      if (triggerResponseJson?.trigger?.source?.spec?.type !== GitSourceProviders.Custom.value) {
         // non-custom flow #github | gitlab | bitbucket
         const {
           trigger: {
@@ -902,7 +901,7 @@ const TriggersWizardPage = (): JSX.Element => {
           description,
           stagesToExecute,
           tags,
-          ...(sourceRepo === GitSourceProviders.GITHUB.value && { encryptedWebhookSecretIdentifier }),
+          ...(sourceRepo === GitSourceProviders.Github.value && { encryptedWebhookSecretIdentifier }),
           pipeline: pipelineJson,
           sourceRepo,
           triggerType: 'Webhook',
@@ -1521,7 +1520,7 @@ const TriggersWizardPage = (): JSX.Element => {
         identifier: '',
         tags: {},
         inputSetTemplateYamlObj,
-        ...(sourceRepoOnNew === GitSourceProviders.GITHUB.value && {
+        ...(sourceRepoOnNew === GitSourceProviders.Github.value && {
           encryptedWebhookSecretIdentifier: '',
           isGithubWebhookAuthenticationEnabled
         }),
@@ -1534,7 +1533,7 @@ const TriggersWizardPage = (): JSX.Element => {
         pipelineBranchName: getDefaultPipelineReferenceBranch(triggerType),
         // setDefaultValue only when polling is enabled and for Github Webhook Trigger
         ...(isGitWebhookPollingEnabled &&
-          sourceRepoOnNew === GitSourceProviders.GITHUB.value && { pollInterval: '0', webhookId: '' })
+          sourceRepoOnNew === GitSourceProviders.Github.value && { pollInterval: '0', webhookId: '' })
       }
     } else if (triggerType === TriggerTypes.SCHEDULE) {
       return {
@@ -1581,7 +1580,7 @@ const TriggersWizardPage = (): JSX.Element => {
         : newInitialValues
     }
 
-    const isGitHubWebhookTrigger = newInitialValues.sourceRepo === GitSourceProviders.GITHUB.value
+    const isGitHubWebhookTrigger = newInitialValues.sourceRepo === GitSourceProviders.Github.value
 
     if (isGitHubWebhookTrigger) {
       Object.assign(newInitialValues, { isGithubWebhookAuthenticationEnabled })
@@ -2011,11 +2010,11 @@ const TriggersWizardPage = (): JSX.Element => {
             'Webhook',
             getString,
             isGitWebhookPollingEnabled &&
-              (sourceRepoOnNew === GitSourceProviders.GITHUB.value ||
-                (onEditInitialValues as any).sourceRepo === GitSourceProviders.GITHUB.value),
+              (sourceRepoOnNew === GitSourceProviders.Github.value ||
+                (onEditInitialValues as any).sourceRepo === GitSourceProviders.Github.value),
             isGithubWebhookAuthenticationEnabled &&
-              (sourceRepoOnNew === GitSourceProviders.GITHUB.value ||
-                (onEditInitialValues as any).sourceRepo === GitSourceProviders.GITHUB.value)
+              (sourceRepoOnNew === GitSourceProviders.Github.value ||
+                (onEditInitialValues as any).sourceRepo === GitSourceProviders.Github.value)
           ),
           validate: validateTriggerPipeline,
           validateOnChange: true,

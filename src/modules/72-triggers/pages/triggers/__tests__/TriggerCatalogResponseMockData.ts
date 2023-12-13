@@ -13,7 +13,7 @@ export const triggerCatalogSuccessResponse: ResponseTriggerCatalogResponse = {
     catalog: [
       {
         category: 'Webhook',
-        triggerCatalogType: ['Github', 'Gitlab', 'Bitbucket', 'AzureRepo', 'Custom']
+        triggerCatalogType: ['Github', 'Gitlab', 'Bitbucket', 'AzureRepo', 'Custom', 'Harness']
       },
       {
         category: 'Artifact',

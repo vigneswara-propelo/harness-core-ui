@@ -7433,6 +7433,7 @@ export interface TriggerCatalogItem {
     | 'GoogleCloudStorage'
     | 'HelmChart'
     | 'Cron'
+    | 'Harness'
   )[]
 }
 

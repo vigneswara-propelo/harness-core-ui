@@ -9,37 +9,37 @@ import type { IconName } from '@harness/uicore'
 // temporary mock data
 
 import { isNull, isUndefined, omitBy, get, set } from 'lodash-es'
-import type { ConnectorResponse, ConnectorInfoDTO } from 'services/cd-ng'
+import type { ConnectorResponse } from 'services/cd-ng'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import type { NGVariable } from 'services/pipeline-ng'
+import type { NGVariable, WebhookTriggerConfigV2 } from 'services/pipeline-ng'
 import type { StringKeys } from 'framework/strings'
 import type { AddConditionInterface } from '../AddConditionsSection/AddConditionsSection'
 import type { TriggerConfigDTO } from './TriggerWizardInterface'
 
 export const GitSourceProviders: Record<
-  string,
-  { value: ConnectorInfoDTO['type'] | 'AwsCodeCommit' | 'Custom'; iconName: IconName }
+  Required<WebhookTriggerConfigV2>['type'],
+  { value: Required<WebhookTriggerConfigV2>['type']; iconName: IconName }
 > = {
-  GITHUB: { value: 'Github', iconName: 'github' },
-  GITLAB: { value: 'Gitlab', iconName: 'service-gotlab' },
-  BITBUCKET: { value: 'Bitbucket', iconName: 'bitbucket-selected' },
-  AZURE_REPO: { value: 'AzureRepo', iconName: 'service-azure' },
-  AWS_CODECOMMIT: { value: 'AwsCodeCommit', iconName: 'service-aws-code-deploy' },
-  CUSTOM: { value: 'Custom', iconName: 'build' }
+  Harness: { value: 'Harness', iconName: 'code' },
+  Github: { value: 'Github', iconName: 'github' },
+  Gitlab: { value: 'Gitlab', iconName: 'service-gotlab' },
+  Bitbucket: { value: 'Bitbucket', iconName: 'bitbucket-selected' },
+  AzureRepo: { value: 'AzureRepo', iconName: 'service-azure' },
+  AwsCodeCommit: { value: 'AwsCodeCommit', iconName: 'service-aws-code-deploy' },
+  Custom: { value: 'Custom', iconName: 'build' }
 }
 
 export const getSourceRepoOptions = (getString: (str: StringKeys) => string): { label: string; value: string }[] => [
-  { label: getString('common.repo_provider.githubLabel'), value: GitSourceProviders.GITHUB.value },
-  { label: getString('common.repo_provider.gitlabLabel'), value: GitSourceProviders.GITLAB.value },
-  { label: getString('common.repo_provider.bitbucketLabel'), value: GitSourceProviders.BITBUCKET.value },
-  { label: getString('common.repo_provider.azureRepos'), value: GitSourceProviders.AZURE_REPO.value },
-  { label: getString('common.repo_provider.codecommit'), value: GitSourceProviders.AWS_CODECOMMIT.value },
-  { label: getString('common.repo_provider.customLabel'), value: GitSourceProviders.CUSTOM.value }
+  { label: getString('harness'), value: GitSourceProviders.Harness.value },
+  { label: getString('common.repo_provider.githubLabel'), value: GitSourceProviders.Github.value },
+  { label: getString('common.repo_provider.gitlabLabel'), value: GitSourceProviders.Gitlab.value },
+  { label: getString('common.repo_provider.bitbucketLabel'), value: GitSourceProviders.Bitbucket.value },
+  { label: getString('common.repo_provider.azureRepos'), value: GitSourceProviders.AzureRepo.value },
+  { label: getString('common.repo_provider.codecommit'), value: GitSourceProviders.AwsCodeCommit.value },
+  { label: getString('common.repo_provider.customLabel'), value: GitSourceProviders.Custom.value }
 ]
 
-export const CUSTOM = 'Custom'
 export const AWS_CODECOMMIT = 'AWS_CODECOMMIT'
-export const AwsCodeCommit = 'AwsCodeCommit'
 export const PRIMARY_ARTIFACT = 'primary'
 export const AZURE_REPO = 'AZURE_REPO'
 

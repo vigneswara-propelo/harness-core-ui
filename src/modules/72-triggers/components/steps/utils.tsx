@@ -15,6 +15,7 @@ import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration
 import { eventTypes } from '../Triggers/WebhookTrigger/utils'
 import ConnectorSection from '../ConnectorSection/ConnectorSection'
 import { GitSourceProviders } from '../Triggers/utils'
+import { SourceRepo } from '../Triggers/TriggerInterface'
 import css from './WebhookTriggerConfigPanel/WebhookTriggerConfigPanel.module.scss' //? Why is css here
 
 export const autoAbortPreviousExecutionsTypes = [
@@ -51,9 +52,10 @@ export const renderNonCustomEventFields = ({
   getString,
   actionsOptions,
   actions,
-  isGitWebhookPollingEnabled
+  isGitWebhookPollingEnabled,
+  repoOptions
 }: {
-  sourceRepo?: string
+  sourceRepo?: SourceRepo
   formikProps: any
   event?: string
   eventOptions: SelectOption[]
@@ -61,10 +63,19 @@ export const renderNonCustomEventFields = ({
   actionsOptions: SelectOption[]
   actions: SelectOption[]
   isGitWebhookPollingEnabled: boolean
+  repoOptions: SelectOption[]
 }): JSX.Element => {
   return (
     <>
-      {sourceRepo && <ConnectorSection formikProps={formikProps} />}
+      {sourceRepo && sourceRepo !== GitSourceProviders.Harness.value && <ConnectorSection formikProps={formikProps} />}
+      {sourceRepo === GitSourceProviders.Harness.value && (
+        <FormInput.Select
+          name={'repoName'}
+          label={getString('repository')}
+          placeholder={getString('common.selectRepository')}
+          items={repoOptions}
+        ></FormInput.Select>
+      )}
       <FormInput.Select
         className={cx(!event && css.bottomMarginZero)}
         key={event}
@@ -153,7 +164,7 @@ export const renderNonCustomEventFields = ({
               <Text className={css.autoAbortDescription}>{getAutoAbortDescription({ event, getString })}</Text>
             </>
           )}
-          {isGitWebhookPollingEnabled && sourceRepo === GitSourceProviders.GITHUB.value && (
+          {isGitWebhookPollingEnabled && sourceRepo === GitSourceProviders.Github.value && (
             <>
               <FormMultiTypeDurationField
                 name="pollInterval"
@@ -214,7 +225,7 @@ export const getEventAndActions = ({
 }): { eventOptions: SelectOption[]; actionsOptionsMap: ActionsOptionsMapInterface } => {
   const filteredData = data?.[sourceRepo] || {}
   const shouldSortByAlphabetically =
-    sourceRepo === GitSourceProviders.GITLAB.value || sourceRepo === GitSourceProviders.BITBUCKET.value
+    sourceRepo === GitSourceProviders.Gitlab.value || sourceRepo === GitSourceProviders.Bitbucket.value
   let eventOptions = Object.keys(filteredData).map(event => ({
     label: getEventLabelMap(event),
     value: event

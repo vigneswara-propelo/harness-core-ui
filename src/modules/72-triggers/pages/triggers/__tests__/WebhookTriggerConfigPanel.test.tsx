@@ -12,6 +12,7 @@ import { renderHook } from '@testing-library/react-hooks'
 import { InputTypes, setFieldValue, fillAtForm } from '@common/utils/JestFormHelper'
 import * as pipelineNg from 'services/pipeline-ng'
 import * as cdng from 'services/cd-ng'
+
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import routes from '@common/RouteDefinitions'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -131,7 +132,6 @@ describe('WebhookTriggerConfigPanel Triggers tests', () => {
       jest
         .spyOn(pipelineNg, 'useGetMergeInputSetFromPipelineTemplateWithListInput')
         .mockReturnValue(mergeResponse as any)
-
       const getGitTriggerEventDetails = jest.spyOn(pipelineNg, 'useGetGitTriggerEventDetails')
       getGitTriggerEventDetails.mockReturnValue(GetGitTriggerEventDetailsResponse as any)
 

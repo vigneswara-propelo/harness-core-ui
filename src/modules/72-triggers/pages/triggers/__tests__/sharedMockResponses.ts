@@ -15,6 +15,7 @@ import type {
   PMSPipelineResponseDTO
 } from 'services/pipeline-ng'
 import type { ResponseConnectorResponse, ResponseListEnvironmentResponse } from 'services/cd-ng'
+import { GitSourceProviders } from '@modules/72-triggers/components/Triggers/utils'
 
 export const GetPipelineResponse: UseGetReturnData<ResponsePMSPipelineResponseDTO> = {
   loading: false,
@@ -647,7 +648,7 @@ export const GetTriggerListForTargetResponse: UseGetReturnData<ResponsePageNGTri
           webhookCurlCommand: 'webhookCurlCommand',
           webhookUrl: 'webhookUrl',
           webhookDetails: {
-            webhookSourceRepo: 'CUSTOM'
+            webhookSourceRepo: GitSourceProviders.Custom.value
           },
           yaml: 'trigger:\n  name: Webhook Custom\n  identifier: WebhookCustom\n  enabled: true\n  description: ""\n  tags: {}\n  stagesToExecute: []\n  orgIdentifier: default\n  projectIdentifier: Pankaj\n  pipelineIdentifier: dockerdigestissue\n  source:\n    type: Webhook\n    spec:\n      type: Custom\n      spec:\n        payloadConditions: []\n        headerConditions: []\n  inputSetRefs:\n    - Input_Set_1\n'
         },
@@ -681,7 +682,7 @@ export const GetTriggerListForTargetResponse: UseGetReturnData<ResponsePageNGTri
           type: 'Webhook',
           webhookDetails: {
             webhookSecret: 'token',
-            webhookSourceRepo: 'CUSTOM'
+            webhookSourceRepo: GitSourceProviders.Custom.value
           },
           webhookUrl: 'http://localhost:12001/api/webhook/trigger?accountIdentifier=accountIdentifier',
           tags: {},

@@ -17,8 +17,8 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import WebhookSecretInputWithDialog from '@triggers/components/steps/WebhookTriggerConfigPanel/WebhookSecretInputWithDialog'
 import StageSelection from '@triggers/components/StageSelection/StageSelection'
-
-import { GitSourceProviders, getSourceRepoOptions } from '../utils/TriggersListUtils'
+import { useGetHarnessReposList } from '@modules/72-triggers/components/steps/WebhookTriggerConfigPanel/useGetHarnessReposList'
+import { GitSourceProviders, getSourceRepoOptions } from '@modules/72-triggers/components/Triggers/utils'
 import {
   renderNonCustomEventFields,
   getEventAndActions,
@@ -44,6 +44,8 @@ const WebhookTriggerConfigPanel: React.FC<WebhookTriggerConfigPanelPropsInterfac
   } = useGetGitTriggerEventDetails({
     lazy: true
   })
+
+  const repoOptions = useGetHarnessReposList(sourceRepo)
 
   const [eventOptions, setEventOptions] = useState<SelectOption[]>([])
   const [actionsOptions, setActionsOptions] = useState<SelectOption[]>([])
@@ -77,7 +79,7 @@ const WebhookTriggerConfigPanel: React.FC<WebhookTriggerConfigPanelPropsInterfac
   }, [event, actions])
 
   useEffect(() => {
-    if (sourceRepo !== GitSourceProviders.CUSTOM.value && !eventDetailsResponse && !loadingGetGitTriggerEventDetails) {
+    if (sourceRepo !== GitSourceProviders.Custom.value && !eventDetailsResponse && !loadingGetGitTriggerEventDetails) {
       refetchEventDetails()
     }
   }, [sourceRepo])
@@ -137,11 +139,11 @@ const WebhookTriggerConfigPanel: React.FC<WebhookTriggerConfigPanelPropsInterfac
               </Text>
             }
             name="sourceRepo"
-            className={cx(sourceRepo === GitSourceProviders.CUSTOM.value && css.bottomMarginZero)}
+            className={cx(sourceRepo === GitSourceProviders.Custom.value && css.bottomMarginZero)}
             items={getSourceRepoOptions(getString)}
             disabled={true}
           />
-          {sourceRepo !== GitSourceProviders.CUSTOM.value &&
+          {sourceRepo !== GitSourceProviders.Custom.value &&
             renderNonCustomEventFields({
               sourceRepo,
               formikProps,
@@ -150,9 +152,10 @@ const WebhookTriggerConfigPanel: React.FC<WebhookTriggerConfigPanelPropsInterfac
               getString,
               actionsOptions,
               actions,
-              isGitWebhookPollingEnabled
+              isGitWebhookPollingEnabled,
+              repoOptions
             })}
-          {sourceRepo === GitSourceProviders.GITHUB.value && <WebhookSecretInputWithDialog formikProps={formikProps} />}
+          {sourceRepo === GitSourceProviders.Github.value && <WebhookSecretInputWithDialog formikProps={formikProps} />}
         </section>
       </div>
       <StageSelection formikProps={formikProps} />

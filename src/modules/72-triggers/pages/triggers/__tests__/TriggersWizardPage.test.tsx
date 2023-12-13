@@ -16,6 +16,7 @@ import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 import { useToaster } from '@common/exports'
 import * as cdng from 'services/cd-ng'
+
 import { TestWrapper } from '@common/utils/testUtils'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@platform/connectors/mocks/mock'
 import * as hooks from '@common/hooks'
@@ -117,6 +118,7 @@ jest.mock('@pipeline/factories/ArtifactTriggerInputFactory', () => ({
     }
   })
 }))
+jest.spyOn(pipelineNg, 'useGetTemplateFromPipeline').mockReturnValue(GetTemplateFromPipelineResponse as any)
 
 function WrapperComponent(): JSX.Element {
   return (
@@ -138,7 +140,6 @@ describe('TriggersWizardPage Triggers tests', () => {
 
     test('OnEdit Render - GitHub Show all fields filled', async () => {
       jest.spyOn(cdng, 'useGetConnector').mockReturnValue(ConnectorResponse as any)
-
       jest.spyOn(pipelineNg, 'useGetSchemaYaml').mockImplementation(() => {
         return {
           data: GetSchemaYaml as any,
@@ -162,9 +163,19 @@ describe('TriggersWizardPage Triggers tests', () => {
           response: null
         }
       })
+      jest.spyOn(pipelineNg, 'useGetStagesExecutionList').mockImplementation(() => {
+        return {
+          data: [] as any,
+          refetch: jest.fn(),
+          error: null,
+          loading: false,
+          absolutePath: '',
+          cancel: jest.fn(),
+          response: null
+        }
+      })
 
       jest.spyOn(pipelineNg, 'useGetGitTriggerEventDetails').mockReturnValue(GetGitTriggerEventDetailsResponse as any)
-
       jest.spyOn(pipelineNg, 'useGetInputSetsListForPipeline').mockReturnValue(GetInputSetsResponse as any)
       jest.spyOn(pipelineNg, 'useGetPipeline').mockReturnValue(GetPipelineResponse as any)
       jest.spyOn(pipelineNg, 'useGetTemplateFromPipeline').mockReturnValue(GetTemplateFromPipelineResponse as any)
@@ -214,6 +225,7 @@ describe('TriggersWizardPage Triggers tests', () => {
           response: null
         }
       })
+      jest.spyOn(pipelineNg, 'useGetGitTriggerEventDetails').mockReturnValue(GetGitTriggerEventDetailsResponse as any)
 
       jest.spyOn(pipelineNg, 'useGetGitTriggerEventDetails').mockReturnValue(GetGitTriggerEventDetailsResponse as any)
       jest.spyOn(pipelineNg, 'useGetInputSetsListForPipeline').mockReturnValue(GetInputSetsResponse as any)
@@ -309,7 +321,6 @@ describe('TriggersWizardPage Triggers tests', () => {
           response: null
         }
       })
-
       jest.spyOn(pipelineNg, 'useGetGitTriggerEventDetails').mockReturnValue(GetGitTriggerEventDetailsResponse as any)
       jest.spyOn(pipelineNg, 'useGetInputSetsListForPipeline').mockReturnValue(GetInputSetsResponse as any)
       jest.spyOn(pipelineNg, 'useGetPipeline').mockReturnValue(GetPipelineResponse as any)
@@ -429,7 +440,6 @@ describe('TriggersWizardPage Triggers tests', () => {
           response: null
         }
       })
-
       jest.spyOn(pipelineNg, 'useGetGitTriggerEventDetails').mockReturnValue(GetGitTriggerEventDetailsResponse as any)
       jest.spyOn(pipelineNg, 'useGetInputSetsListForPipeline').mockReturnValue(GetInputSetsResponse as any)
       jest.spyOn(pipelineNg, 'useGetPipeline').mockReturnValue(GetPipelineResponse as any)
@@ -485,7 +495,7 @@ describe('TriggersWizardPage Triggers tests', () => {
       expect(mockUpdate).toBeCalled()
     })
 
-    test('OnEdit CUSTOM Webhook to yaml and back renders correct values', async () => {
+    test('OnEdit Custom Webhook to yaml and back renders correct values', async () => {
       // jest.spyOn(cdng, 'useGetConnector').mockReturnValue(ConnectorResponse as any)
       jest.spyOn(pipelineNg, 'useGetSchemaYaml').mockImplementation(() => {
         return {
@@ -509,7 +519,6 @@ describe('TriggersWizardPage Triggers tests', () => {
           response: null
         }
       })
-
       jest.spyOn(pipelineNg, 'useGetGitTriggerEventDetails').mockReturnValue(GetGitTriggerEventDetailsResponse as any)
       jest.spyOn(pipelineNg, 'useGetInputSetsListForPipeline').mockReturnValue(GetInputSetsResponse as any)
       jest.spyOn(pipelineNg, 'useGetPipeline').mockReturnValue(GetPipelineResponse as any)

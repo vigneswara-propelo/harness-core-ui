@@ -17,7 +17,7 @@ export type TriggerType = NGTriggerSourceV2['type']
 
 export type TriggerBaseType = Exclude<TriggerType, 'MultiRegionArtifact'>
 
-export type SourceRepo = Exclude<Required<WebhookTriggerConfigV2>['type'], 'AwsCodeCommit' | 'Harness'>
+export type SourceRepo = Exclude<Required<WebhookTriggerConfigV2>['type'], 'AwsCodeCommit'>
 
 export type ScheduleType = Extract<TriggerCatalogItem['triggerCatalogType'][number], 'Cron'>
 
