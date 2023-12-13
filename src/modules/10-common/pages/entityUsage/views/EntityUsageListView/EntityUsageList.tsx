@@ -16,7 +16,8 @@ import type {
   EntityDetail,
   EntityReference,
   EntitySetupUsageDTO,
-  ResponsePageEntitySetupUsageDTO
+  ResponsePageEntitySetupUsageDTO,
+  SetupUsageDetail
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import ResourceDetailFactory from '@common/factories/ResourceDetailFactory'
@@ -43,6 +44,7 @@ export interface EntitySetupUsageDTOColumnData extends EntitySetupUsageDTO {
   getString?: (key: StringKeys, vars?: Record<string, any>) => string
   enableURLLinkToScope?: boolean
   history?: any
+  detail?: SetupUsageDetail
 }
 
 const getReferredByEntityName = (referredByEntity?: ReferredByEntity) => {
@@ -74,6 +76,7 @@ const RenderColumnEntity: Renderer<CellProps<EntitySetupUsageDTOColumnData>> = (
   )
 
   const entityData = useGetEntityMetadata({
+    detail: data?.detail,
     entityInfo: data.referredByEntity,
     isNewNav: !!CDS_NAV_2_0
   })

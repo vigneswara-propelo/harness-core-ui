@@ -945,7 +945,9 @@ const routes = {
     Partial<{ accountRoutePlacement?: AccountRoutePlacement }> & ServiceOverridesQueryParams
   >(params => {
     const queryParams: ServiceOverridesQueryParams = {
-      serviceOverrideType: params?.serviceOverrideType
+      serviceOverrideType: params?.serviceOverrideType,
+      page: params?.page,
+      filters: params?.filters
     }
     const queryString = qs.stringify(queryParams, { skipNulls: true })
     return queryString.length > 0 ? `/serviceOverrides?${queryString}` : '/serviceOverrides'

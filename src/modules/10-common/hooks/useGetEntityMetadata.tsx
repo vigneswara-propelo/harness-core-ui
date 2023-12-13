@@ -11,7 +11,7 @@ import { StoreType } from '@common/constants/GitSyncTypes'
 import type { Module, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import routesV1 from '@common/RouteDefinitions'
 import routesV2 from '@common/RouteDefinitionsV2'
-import type { EntityDetail, NGTemplateReference } from 'services/cd-ng'
+import type { EntityDetail, NGTemplateReference, SetupUsageDetail } from 'services/cd-ng'
 import { getPipelineSummaryPromise, ResponsePMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { getTemplateMetadataListPromise, TemplateMetadataSummaryResponse } from 'services/template-ng'
 import { getScopeBasedProjectPathParams } from '@common/components/EntityReference/EntityReference'
@@ -29,6 +29,7 @@ export interface EntityScope {
 }
 
 export interface UseGetEntityUrlProp {
+  detail?: SetupUsageDetail
   entityInfo?: EntityDetail & {
     entityRef?: NGTemplateReference & { envIdentifier?: string; pipelineIdentifier?: string }
   }
@@ -401,6 +402,24 @@ export const useGetEntityMetadata = (
               orgIdentifier,
               projectIdentifier,
               secretId: identifier
+            })}`
+        break
+      case 'Overrides':
+        entityUrl = isNewNav
+          ? `${routesV2.toServiceOverrides({
+              accountId: accountIdentifier,
+              orgIdentifier,
+              projectIdentifier,
+              mode: NAV_MODE.ALL,
+              module,
+              serviceOverrideType: prop?.detail?.overrideType
+            })}`
+          : `${routesV1.toServiceOverrides({
+              accountId: accountIdentifier,
+              orgIdentifier,
+              projectIdentifier,
+              module,
+              serviceOverrideType: prop?.detail?.overrideType
             })}`
         break
       case 'Environment':
