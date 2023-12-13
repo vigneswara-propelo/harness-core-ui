@@ -226,6 +226,7 @@ function ManifestStore({
                           isReadonly={isReadonly}
                           selectedConnectorType={get(formik.values, 'config.type')}
                           onChange={configType => {
+                            if (configType === formik.values.config?.type) return
                             formik.setFieldValue('config.type', configType)
                             formik.setFieldValue('connectorRef', '')
                           }}
@@ -240,7 +241,9 @@ function ManifestStore({
                       className={css.connectorContainer}
                     >
                       <FormMultiTypeConnectorField
-                        key={formik.values.store}
+                        key={`${formik.values.store}_${
+                          getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME
+                        }`}
                         onLoadingFinish={() => {
                           setIsLoadingConnectors(false)
                         }}
