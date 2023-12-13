@@ -558,7 +558,7 @@ function BootstrapDeployInfraDefinition(
             }
           )
         : updateInfrastructure(
-            { ..._payload, orgIdentifier, projectIdentifier },
+            { ..._payload },
             {
               queryParams: {
                 accountIdentifier: accountId,
@@ -624,8 +624,6 @@ function BootstrapDeployInfraDefinition(
         },
         payload: {
           ...omit(values, ['storeType', 'connectorRef', 'repo', 'branch', 'filePath']),
-          orgIdentifier,
-          projectIdentifier,
           yaml: yamlStringify({
             infrastructureDefinition: {
               ...omit(values, ['storeType', 'connectorRef', 'repo', 'branch', 'filePath'])
