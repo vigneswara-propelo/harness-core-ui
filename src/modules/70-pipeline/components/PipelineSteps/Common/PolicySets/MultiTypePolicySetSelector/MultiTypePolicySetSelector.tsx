@@ -27,12 +27,14 @@ export interface MultiTypePolicySetSelectorProps extends Omit<IFormGroupProps, '
   label: string
   expressions?: string[]
   allowableTypes?: AllowedTypes
+  policyType?: string
 }
 
 interface PolicySetFixedTypeSelectorProps<T> extends IFormGroupProps {
   name: string
   policySetIds: string[]
   formik?: FormikContextType<T>
+  policyType?: string
 }
 
 export default function MultiTypePolicySetSelector<T>(props: MultiTypePolicySetSelectorProps): React.ReactElement {
@@ -41,7 +43,8 @@ export default function MultiTypePolicySetSelector<T>(props: MultiTypePolicySetS
     label,
     expressions = [],
     allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
-    disabled
+    disabled,
+    policyType
   } = props
   const formik = useFormikContext<T>()
 
@@ -64,7 +67,13 @@ export default function MultiTypePolicySetSelector<T>(props: MultiTypePolicySetS
       )}
       onTypeChange={onTypeChange}
     >
-      <PolicySetFixedTypeSelector<T> name={name} disabled={disabled} formik={formik} policySetIds={policySetIds} />
+      <PolicySetFixedTypeSelector<T>
+        name={name}
+        disabled={disabled}
+        formik={formik}
+        policySetIds={policySetIds}
+        policyType={policyType}
+      />
     </MultiTypeFieldSelector>
   )
 }
@@ -73,7 +82,8 @@ function PolicySetFixedTypeSelector<T>({
   formik,
   name,
   policySetIds,
-  disabled
+  disabled,
+  policyType
 }: PolicySetFixedTypeSelectorProps<T>): React.ReactElement {
   const { getString } = useStrings()
 
@@ -90,6 +100,7 @@ function PolicySetFixedTypeSelector<T>({
           }
           closeModal()
         }}
+        policyType={policyType}
       />
     ),
     [name, formik, policySetIds]

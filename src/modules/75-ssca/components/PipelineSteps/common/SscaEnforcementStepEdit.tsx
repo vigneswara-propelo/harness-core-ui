@@ -236,6 +236,7 @@ const SscaEnforcementStepEdit = <T extends SscaEnforcementStepData | SscaCdEnfor
                   label={getString('common.policy.policysets')}
                   disabled={readonly}
                   expressions={expressions}
+                  policyType="sbom"
                 />
               ) : (
                 <FileStoreSelectField

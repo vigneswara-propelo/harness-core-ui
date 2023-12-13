@@ -45,6 +45,7 @@ export interface PolicySetModalProps<T> {
   formikProps?: FormikProps<T>
   policySetIds: string[]
   closeModal: (action?: string) => void
+  policyType?: string
 }
 
 const modalProps: IDialogProps = {
@@ -64,7 +65,8 @@ export function PolicySetModal<T>({
   name,
   formikProps,
   policySetIds,
-  closeModal
+  closeModal,
+  policyType
 }: PolicySetModalProps<T>): JSX.Element {
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -137,7 +139,7 @@ export function PolicySetModal<T>({
   } = useGetPolicySetList({
     queryParams: {
       ...reqQueryParams,
-      type: defaultTo((formikProps?.values as any)?.spec?.type?.toLowerCase(), 'custom'),
+      type: policyType || defaultTo((formikProps?.values as any)?.spec?.type?.toLowerCase(), 'custom'),
       action: 'onstep'
     },
     debounce: 300
