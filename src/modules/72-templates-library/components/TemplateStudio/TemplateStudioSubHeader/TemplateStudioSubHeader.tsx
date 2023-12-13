@@ -162,7 +162,7 @@ function TemplateStudioSubHeader(
                       <Popover className={Classes.DARK} position={Position.LEFT}>
                         <Button variation={ButtonVariation.ICON} icon="Options" aria-label="pipeline menu actions" />
                         <Menu style={{ backgroundColor: 'unset' }}>
-                          {isPipelineRemote && !cacheResponse.isSyncEnabled ? (
+                          {isPipelineRemote && !cacheResponse?.isSyncEnabled ? (
                             <RbacMenuItem
                               icon="repeat"
                               text={getString('common.reloadFromGit')}
