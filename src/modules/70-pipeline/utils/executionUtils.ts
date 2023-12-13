@@ -701,6 +701,39 @@ export const hasOnlyLiteEngineTask = (children?: string[], graph?: ExecutionGrap
   )
 }
 
+const processGroupNodeData = (
+  nodeMap: ExecutionGraph['nodeMap'],
+  nodeAdjacencyListMap: ExecutionGraph['nodeAdjacencyListMap'],
+  nodeId: string,
+  items: ExecutionPipelineNode<ExecutionNode>[],
+  isRollback?: boolean
+): void => {
+  const nodeData = nodeMap?.[nodeId]
+  if (nodeData) {
+    items.push({
+      group: {
+        name: nodeData.name || /* istanbul ignore next */ '',
+        identifier: nodeId,
+        data: nodeData,
+        skipCondition: nodeData.skipInfo?.evaluatedCondition ? nodeData.skipInfo.skipCondition : undefined,
+        when: nodeData.nodeRunInfo,
+        containerCss: {
+          ...(RollbackIdentifier === nodeData.identifier || isRollback ? RollbackContainerCss : {})
+        },
+        status: nodeData.status as ExecutionStatus,
+        isOpen: true,
+        ...getIconDataBasedOnType(nodeData),
+        items: processNodeData(
+          nodeAdjacencyListMap?.[nodeId].children || /* istanbul ignore next */ [],
+          nodeMap,
+          nodeAdjacencyListMap,
+          items
+        )
+      }
+    })
+  }
+}
+
 export const processExecutionData = (graph?: ExecutionGraph): Array<ExecutionPipelineNode<ExecutionNode>> => {
   const items: Array<ExecutionPipelineNode<ExecutionNode>> = []
 
@@ -718,27 +751,6 @@ export const processExecutionData = (graph?: ExecutionGraph): Array<ExecutionPip
       /* istanbul ignore else */
       if (nodeData) {
         const isRollback = nodeData.name?.endsWith(StepGroupRollbackIdentifier) ?? false
-        const groupNodeData = {
-          group: {
-            name: nodeData.name || /* istanbul ignore next */ '',
-            identifier: nodeId,
-            data: nodeData,
-            skipCondition: nodeData.skipInfo?.evaluatedCondition ? nodeData.skipInfo.skipCondition : undefined,
-            when: nodeData.nodeRunInfo,
-            containerCss: {
-              ...(RollbackIdentifier === nodeData.identifier || isRollback ? RollbackContainerCss : {})
-            },
-            status: nodeData.status as ExecutionStatus,
-            isOpen: true,
-            ...getIconDataBasedOnType(nodeData),
-            items: processNodeData(
-              nodeAdjacencyListMap[nodeId].children || /* istanbul ignore next */ [],
-              graph?.nodeMap,
-              graph?.nodeAdjacencyListMap,
-              items
-            )
-          }
-        }
         if (nodeData.stepType && (TopLevelStepNodes.indexOf(nodeData.stepType as StepNodeType) > -1 || isRollback)) {
           // NOTE: exception if we have only lite task engine in Execution group
           if (hasOnlyLiteEngineTask(nodeAdjacencyListMap[nodeId].children, graph)) {
@@ -755,7 +767,7 @@ export const processExecutionData = (graph?: ExecutionGraph): Array<ExecutionPip
                 )
               )
             } else {
-              items.push(groupNodeData)
+              processGroupNodeData(graph?.nodeMap, nodeAdjacencyListMap, nodeId, items, isRollback)
             }
           }
         } else if (nodeData.stepType === StepNodeType.FORK) {
@@ -768,7 +780,7 @@ export const processExecutionData = (graph?: ExecutionGraph): Array<ExecutionPip
             )
           })
         } else if (nodeData.stepType === StepNodeType.STEP_GROUP) {
-          items.push(groupNodeData)
+          processGroupNodeData(graph?.nodeMap, nodeAdjacencyListMap, nodeId, items, isRollback)
         } else {
           items.push({
             item: {
