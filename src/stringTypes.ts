@@ -428,6 +428,7 @@ export interface StringsMap {
   'common.ffProxy': string
   'common.file': string
   'common.fileOrFolderPath': string
+  'common.filename': string
   'common.files': string
   'common.filter': string
   'common.filterOnName': string
@@ -8466,7 +8467,6 @@ export interface StringsMap {
   'ce.perspectives.excludeRowswithCost': string
   'ce.perspectives.exportCSV': string
   'ce.perspectives.exportRowsUpto': string
-  'ce.perspectives.filename': string
   'ce.perspectives.folders.allPerspective': string
   'ce.perspectives.folders.createNewFolder': string
   'ce.perspectives.folders.createNewFolderHeading': string
@@ -9530,6 +9530,8 @@ export interface StringsMap {
   'idp.cookieCutterStep.private': string
   'idp.cookieCutterStep.provideRepoDetails': string
   'idp.cookieCutterStep.public': string
+  'idp.createCatalogStep.createCatalogFormHeader': string
+  'idp.createCatalogStep.createCatalogStepDescription': string
   'idp.createRepoStep.createRepoStepDescription': string
   'idp.createRepoStep.createRepoinGit': string
   'idp.createRepoStep.repoDescPlaceholder': string
@@ -9550,6 +9552,10 @@ export interface StringsMap {
   'idp.oAuthConfig': string
   'idp.registerCatalogStep.registerCatalogStepDescription': string
   'idp.scorecards': string
+  'idp.slackNotifyStep.slackChannelId': string
+  'idp.slackNotifyStep.slackIdPlaceholder': string
+  'idp.slackNotifyStep.slackNotifyStepDescription': string
+  'idp.slackNotifyStep.slackSecretKey': string
   'idp.urlAllowList': string
   'sei.accountSettings.advancedFeature.label': string
   'sei.accountSettings.advancedFeature.propels': string

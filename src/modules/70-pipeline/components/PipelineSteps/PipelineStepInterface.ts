@@ -267,6 +267,8 @@ export enum StepType {
   CreateRepo = 'CreateRepo',
   DirectPush = 'DirectPush',
   RegisterCatalog = 'RegisterCatalog',
+  CreateCatalog = 'CreateCatalog',
+  SlackNotify = 'SlackNotify',
   // yaml-simplification v1 step types
   'shell-script' = 'ShellScript',
   http = 'Http'

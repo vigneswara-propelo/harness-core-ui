@@ -37,3 +37,11 @@ directPushStep:
   outputCodeDirPlaceholder: Path where cookiecutter will generate output files e.g. cookiecutter-output
 registerCatalogStep:
   registerCatalogStepDescription: Use the newly created Software Component’s catalog-info.yaml to register it in the Software Catalog.
+createCatalogStep:
+  createCatalogStepDescription: Create the catalog_info.yaml to register back to catalog when needed
+  createCatalogFormHeader: Generate the catalog info YAML
+slackNotifyStep:
+  slackNotifyStepDescription: Automatically send your custom messages to a Slack channel
+  slackChannelId: Slack Channel ID
+  slackSecretKey: Slack secret key
+  slackIdPlaceholder: Enter Slack ID

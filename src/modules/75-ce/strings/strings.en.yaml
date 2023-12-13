@@ -748,7 +748,6 @@ perspectives:
   perspectiveReportsTxt: 'Reports {{ reportInfo }}'
   perspectiveReportsMoreTxt: ' +{{ count }} more'
   exportCSV: Export CSV
-  filename: File Name
   enterAmount: Enter amount
   exportRowsUpto: Export rows upto
   largeNoOfRowsWarning: Note that rows >500 may take longer to download.
