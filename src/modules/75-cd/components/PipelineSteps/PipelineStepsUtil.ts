@@ -258,23 +258,15 @@ export function getECSInfraValidationSchema(getString: UseStringsReturn['getStri
   })
 }
 
-export function getAsgInfraValidationSchema(
-  getString: UseStringsReturn['getString'],
-  baseAsgFF?: boolean
-): Yup.ObjectSchema {
+export function getAsgInfraValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
     connectorRef: getConnectorSchema(getString),
     region: Yup.lazy((): Yup.Schema<unknown> => {
       return Yup.string().required(getString('validation.regionRequired'))
     }),
-    baseAsgName: Yup.string().when(' ', {
-      is: () => {
-        return !!baseAsgFF
-      },
-      then: Yup.string().required(
-        getString('common.validation.fieldIsRequired', { name: getString('cd.serviceDashboard.asgName') })
-      )
-    })
+    baseAsgName: Yup.string().required(
+      getString('common.validation.fieldIsRequired', { name: getString('cd.serviceDashboard.asgName') })
+    )
   })
 }
 

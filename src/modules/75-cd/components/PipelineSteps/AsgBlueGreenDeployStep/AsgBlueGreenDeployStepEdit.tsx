@@ -31,8 +31,8 @@ import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/
 import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
 import AsgSelectInstance from './AsgSelectInstance/AsgSelectInstance'
 import AsgBGStageSetupLoadBalancer from './AsgBGLoadBalancers/AsgBlueGreenDeployLoadBalancers'
@@ -84,7 +84,7 @@ const AsgBlueGreenDeployStepEdit = (
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { CDS_BASIC_ASG, CDS_ASG_SHIFT_TRAFFIC_STEP_NG } = useFeatureFlags()
+  const { CDS_ASG_SHIFT_TRAFFIC_STEP_NG } = useFeatureFlags()
   const selectedStageSpec = selectedStage?.stage?.spec
   const selectedStageSpecEnv = selectedStageSpec?.environment
   const selectedStageSpecInfra = selectedStageSpec?.infrastructure
@@ -354,34 +354,32 @@ const AsgBlueGreenDeployStepEdit = (
               />
 
               <div className={stepCss.divider} />
-              {CDS_BASIC_ASG ? (
-                <Container className={cx(stepCss.formGroup, stepCss.lg)}>
-                  <FormInput.MultiTextInput
-                    name="spec.asgName"
-                    label={getString('cd.serviceDashboard.asgName')}
-                    placeholder={getString('cd.asgPlaceholder')}
-                    disabled={readonly}
-                    multiTextInputProps={{
-                      expressions,
-                      disabled: readonly,
-                      allowableTypes
+              <Container className={cx(stepCss.formGroup, stepCss.lg)}>
+                <FormInput.MultiTextInput
+                  name="spec.asgName"
+                  label={getString('cd.serviceDashboard.asgName')}
+                  placeholder={getString('cd.asgPlaceholder')}
+                  disabled={readonly}
+                  multiTextInputProps={{
+                    expressions,
+                    disabled: readonly,
+                    allowableTypes
+                  }}
+                />
+                {getMultiTypeFromValue(formik.values.spec?.asgName) === MultiTypeInputType.RUNTIME && !readonly && (
+                  <ConfigureOptions
+                    value={formik.values.spec?.asgName as string}
+                    type="String"
+                    variableName="spec.asgName"
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    onChange={value => {
+                      formik.setFieldValue('spec.asgName', value)
                     }}
+                    isReadonly={readonly}
                   />
-                  {getMultiTypeFromValue(formik.values.spec?.asgName) === MultiTypeInputType.RUNTIME && !readonly && (
-                    <ConfigureOptions
-                      value={formik.values.spec?.asgName as string}
-                      type="String"
-                      variableName="spec.asgName"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      onChange={value => {
-                        formik.setFieldValue('spec.asgName', value)
-                      }}
-                      isReadonly={readonly}
-                    />
-                  )}
-                </Container>
-              ) : null}
+                )}
+              </Container>
 
               <AsgSelectInstance formik={formik} readonly={readonly} allowableTypes={allowableTypes} />
 

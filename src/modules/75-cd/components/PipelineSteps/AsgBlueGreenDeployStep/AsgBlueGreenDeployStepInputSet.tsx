@@ -24,7 +24,6 @@ import { useStrings } from 'framework/strings'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeCheckboxField } from '@common/components'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import type { AsgBlueGreenDeployStepInitialValues, AsgBlueGreenDeployCustomStepProps } from './AsgBlueGreenDeployStep'
 import AsgBGStageSetupLoadBalancer from './AsgBGLoadBalancers/AsgBlueGreenDeployLoadBalancers'
@@ -52,7 +51,6 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { CDS_BASIC_ASG } = useFeatureFlags()
 
   const prefix = isEmpty(path) ? '' : `${path}.`
 
@@ -115,7 +113,7 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
           />
         </div>
       )}
-      {getMultiTypeFromValue(template?.spec?.asgName) === MultiTypeInputType.RUNTIME && !!CDS_BASIC_ASG && (
+      {getMultiTypeFromValue(template?.spec?.asgName) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <TextFieldInputSetView
             name={`${prefix}spec.asgName`}
@@ -131,21 +129,20 @@ const AsgBlueGreenDeployStepInputSet = (props: AsgBlueGreenDeployStepInputSetPro
           />
         </div>
       )}
-      {getMultiTypeFromValue(template?.spec?.useAlreadyRunningInstances) === MultiTypeInputType.RUNTIME &&
-        !CDS_BASIC_ASG && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormMultiTypeCheckboxField
-              multiTypeTextbox={{
-                expressions,
-                allowableTypes
-              }}
-              name={`${prefix}spec.useAlreadyRunningInstances`}
-              label={getString('cd.useAlreadyRunningInstance')}
-              disabled={readonly}
-              setToFalseWhenEmpty={true}
-            />
-          </div>
-        )}
+      {getMultiTypeFromValue(template?.spec?.useAlreadyRunningInstances) === MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            multiTypeTextbox={{
+              expressions,
+              allowableTypes
+            }}
+            name={`${prefix}spec.useAlreadyRunningInstances`}
+            label={getString('cd.useAlreadyRunningInstance')}
+            disabled={readonly}
+            setToFalseWhenEmpty={true}
+          />
+        </div>
+      )}
       <>
         {getMultiTypeFromValue(inputSetData.template?.spec?.instances?.spec?.min) === MultiTypeInputType.RUNTIME ? (
           <div className={cx(stepCss.formGroup, stepCss.md)}>

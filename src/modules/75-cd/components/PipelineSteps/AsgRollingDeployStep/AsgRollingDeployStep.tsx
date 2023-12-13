@@ -41,7 +41,6 @@ import type { StringsMap } from 'stringTypes'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { instanceWarmupSchema, minimumHealthyPercentageSchema } from './utils'
 import AsgSelectInstance from '../AsgBlueGreenDeployStep/AsgSelectInstance/AsgSelectInstance'
 import { InstancesType } from '../ElastigroupSetupStep/ElastigroupSetupTypes'
@@ -81,7 +80,6 @@ function AsgRollingDeployWidget(
   const { initialValues, onUpdate, isNewStep, readonly, allowableTypes, stepViewType, onChange } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { CDS_BASIC_ASG } = useFeatureFlags()
 
   function commonValidation(this: Yup.TestContext, value: any, valueString: string): boolean | Yup.ValidationError {
     if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED && typeof value !== 'number') {
@@ -259,23 +257,21 @@ function AsgRollingDeployWidget(
                 />
               </div>
               <div className={stepCss.divider} />
-              {CDS_BASIC_ASG ? (
-                <div className={cx(stepCss.formGroup, stepCss.lg)}>
-                  <FormInput.MultiTextInput
-                    name="spec.asgName"
-                    disabled={readonly}
-                    tooltipProps={{
-                      dataTooltipId: 'asgName'
-                    }}
-                    label={getString('cd.serviceDashboard.asgName')}
-                    placeholder={getString('cd.asgPlaceholder')}
-                    multiTextInputProps={{
-                      expressions,
-                      allowableTypes
-                    }}
-                  />
-                </div>
-              ) : null}
+              <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                <FormInput.MultiTextInput
+                  name="spec.asgName"
+                  disabled={readonly}
+                  tooltipProps={{
+                    dataTooltipId: 'asgName'
+                  }}
+                  label={getString('cd.serviceDashboard.asgName')}
+                  placeholder={getString('cd.asgPlaceholder')}
+                  multiTextInputProps={{
+                    expressions,
+                    allowableTypes
+                  }}
+                />
+              </div>
               <Text margin={{ bottom: 'medium' }}>{getString('instanceFieldOptions.instances')}</Text>
               <AsgSelectInstance formik={formik} readonly={readonly} allowableTypes={allowableTypes} />
               <Accordion className={stepCss.accordion}>
@@ -375,7 +371,6 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { CDS_BASIC_ASG } = useFeatureFlags()
   const prefix = isEmpty(path) ? '' : `${path}.`
   return (
     <>
@@ -396,7 +391,7 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
           />
         </div>
       )}
-      {getMultiTypeFromValue(template?.spec?.asgName) === MultiTypeInputType.RUNTIME && !!CDS_BASIC_ASG && (
+      {getMultiTypeFromValue(template?.spec?.asgName) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <TextFieldInputSetView
             name={`${prefix}spec.asgName`}

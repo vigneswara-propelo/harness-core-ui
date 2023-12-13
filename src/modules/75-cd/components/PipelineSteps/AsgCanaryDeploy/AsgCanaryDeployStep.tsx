@@ -29,7 +29,6 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { useStrings } from 'framework/strings'
 import { getInstanceDropdownSchema } from '@common/components/InstanceDropdownField/InstanceDropdownField'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StringsMap } from 'stringTypes'
@@ -72,7 +71,6 @@ function AsgCanaryDeployWidget(
   const { initialValues, onUpdate, isNewStep = true, readonly, allowableTypes, stepViewType, onChange } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { CDS_BASIC_ASG } = useFeatureFlags()
   return (
     <Formik<AsgCanaryDeployData>
       onSubmit={(values: AsgCanaryDeployData) => {
@@ -123,34 +121,32 @@ function AsgCanaryDeployWidget(
               />
             </div>
             <div className={stepCss.divider} />
-            {CDS_BASIC_ASG ? (
-              <div className={cx(stepCss.formGroup, stepCss.lg)}>
-                <FormInput.MultiTextInput
-                  name="spec.asgName"
-                  label={getString('cd.serviceDashboard.asgName')}
-                  placeholder={getString('cd.serviceDashboard.asgName')}
-                  disabled={readonly}
-                  multiTextInputProps={{
-                    expressions,
-                    disabled: readonly,
-                    allowableTypes
+            <div className={cx(stepCss.formGroup, stepCss.lg)}>
+              <FormInput.MultiTextInput
+                name="spec.asgName"
+                label={getString('cd.serviceDashboard.asgName')}
+                placeholder={getString('cd.serviceDashboard.asgName')}
+                disabled={readonly}
+                multiTextInputProps={{
+                  expressions,
+                  disabled: readonly,
+                  allowableTypes
+                }}
+              />
+              {getMultiTypeFromValue(formik.values.spec?.asgName) === MultiTypeInputType.RUNTIME && !readonly && (
+                <ConfigureOptions
+                  value={formik.values.spec?.asgName as string}
+                  type="String"
+                  variableName="spec.asgName"
+                  showRequiredField={false}
+                  showDefaultField={false}
+                  onChange={value => {
+                    formik.setFieldValue('spec.asgName', value)
                   }}
+                  isReadonly={readonly}
                 />
-                {getMultiTypeFromValue(formik.values.spec?.asgName) === MultiTypeInputType.RUNTIME && !readonly && (
-                  <ConfigureOptions
-                    value={formik.values.spec?.asgName as string}
-                    type="String"
-                    variableName="spec.asgName"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    onChange={value => {
-                      formik.setFieldValue('spec.asgName', value)
-                    }}
-                    isReadonly={readonly}
-                  />
-                )}
-              </div>
-            ) : null}
+              )}
+            </div>
             <div className={cx(stepCss.formGroup, stepCss.md)}>
               <FormInstanceDropdown
                 name={'spec.instanceSelection'}
@@ -198,7 +194,6 @@ const AsgCanaryDeployInputStep: React.FC<AsgCanaryDeployProps> = ({
   const { expressions } = useVariablesExpression()
   const prefix = isEmpty(path) ? '' : `${path}.`
   const isTemplateUsageView = stepViewType === StepViewType.TemplateUsage
-  const { CDS_BASIC_ASG } = useFeatureFlags()
   return (
     <>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME && (
@@ -219,7 +214,7 @@ const AsgCanaryDeployInputStep: React.FC<AsgCanaryDeployProps> = ({
           className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
-      {getMultiTypeFromValue(template?.spec?.asgName) === MultiTypeInputType.RUNTIME && !!CDS_BASIC_ASG && (
+      {getMultiTypeFromValue(template?.spec?.asgName) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <TextFieldInputSetView
             name={`${prefix}spec.asgName`}

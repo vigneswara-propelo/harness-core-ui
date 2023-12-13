@@ -130,6 +130,7 @@ describe('AsgInfraSpecSpecInputForm tests', () => {
     await userEvent.click(submitBtn)
     await waitFor(() =>
       expect(onUpdate).toHaveBeenCalledWith({
+        baseAsgName: '',
         connectorRef: 'Aws_Connector_1',
         region: 'us-east-1'
       })

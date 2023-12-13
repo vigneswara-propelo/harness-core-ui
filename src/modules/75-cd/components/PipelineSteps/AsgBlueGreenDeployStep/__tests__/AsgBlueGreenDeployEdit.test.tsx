@@ -168,7 +168,7 @@ describe('GenericExecutionStepEdit tests', () => {
     const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
     expect(dropdownIcons.length).toBe(5)
     const fixedInputIcons = container.querySelectorAll('span[data-icon="fixed-input"]')
-    expect(fixedInputIcons.length).toBe(10)
+    expect(fixedInputIcons.length).toBe(11)
     let runtimeInputIcons = container.querySelectorAll('span[data-icon="runtime-input"]')
     expect(runtimeInputIcons.length).toBe(0)
     const portalDivs = document.getElementsByClassName('bp3-portal')
@@ -192,7 +192,7 @@ describe('GenericExecutionStepEdit tests', () => {
     ) as HTMLInputElement
     expect(loadBalancerStageListenerRuleArn).toBeInTheDocument()
 
-    const loadBalancerFixedInputIcon = fixedInputIcons[4]
+    const loadBalancerFixedInputIcon = fixedInputIcons[5]
     userEvent.click(loadBalancerFixedInputIcon)
     await waitFor(() => expect(getByText('Runtime input')).toBeInTheDocument())
     await userEvent.click(getByText('Runtime input'))

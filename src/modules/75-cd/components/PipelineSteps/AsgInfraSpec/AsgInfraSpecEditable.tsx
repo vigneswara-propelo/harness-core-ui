@@ -28,7 +28,6 @@ import { useListAwsRegions } from 'services/portal'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getIconByType } from '@platform/connectors/pages/connectors/utils/ConnectorUtils'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -55,7 +54,6 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
 }): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const { CDS_BASIC_ASG } = useFeatureFlags()
   const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 300)).current
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
@@ -108,7 +106,7 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
     setAsgBaseNames([])
   }, [error])
 
-  const validationSchema = getAsgInfraValidationSchema(getString, !!CDS_BASIC_ASG)
+  const validationSchema = getAsgInfraValidationSchema(getString)
 
   const getItems = (isFetching: boolean, items: SelectOption[]): SelectOption[] => {
     if (isFetching) {
@@ -171,7 +169,7 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
                   type={connectorTypes.Aws}
                   gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                   onChange={() => {
-                    if (CDS_BASIC_ASG && isBaseNameFixed) {
+                    if (isBaseNameFixed) {
                       formik.setFieldValue('baseAsgName', '')
                       setAsgBaseNames([])
                     }
@@ -191,7 +189,7 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
                     showDefaultField={false}
                     onChange={value => {
                       formik.setFieldValue('connectorRef', value)
-                      if (CDS_BASIC_ASG && isBaseNameFixed) {
+                      if (isBaseNameFixed) {
                         setAsgBaseNames([])
                         formik.setFieldValue('baseAsgName', '')
                       }
@@ -216,7 +214,7 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
                       allowCreatingNewItems: true
                     },
                     onChange: () => {
-                      if (CDS_BASIC_ASG && isBaseNameFixed) {
+                      if (isBaseNameFixed) {
                         setAsgBaseNames([])
                         formik.setFieldValue('baseAsgName', '')
                       }
@@ -241,61 +239,58 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
                   />
                 )}
               </Layout.Horizontal>
-              {CDS_BASIC_ASG ? (
-                <Layout.Horizontal className={css.formRow} spacing="medium">
-                  <FormInput.MultiTypeInput
-                    className={css.inputWidth}
-                    name="baseAsgName"
-                    selectItems={getItems(loading, asgBaseNames)}
-                    useValue
-                    multiTypeInputProps={{
-                      expressions,
-                      selectProps: {
-                        items: asgBaseNames,
-                        popoverClassName: css.regionPopover,
-                        allowCreatingNewItems: true,
-                        loadingItems: loading,
-                        noResults: (
-                          <Text padding={'small'}>
-                            {loading
-                              ? getString('common.loadingFieldOptions', { fieldName: 'Base Asg Names' })
-                              : get(error, 'data.message', null) || getString('common.filters.noResultsFound')}
-                          </Text>
-                        )
-                      },
-
-                      onClick: () => {
-                        refetch({
-                          queryParams: {
-                            accountIdentifier: accountId,
-                            region: formik?.values?.region,
-                            awsConnectorRef: get(formik?.values, 'connectorRef.value'),
-                            projectIdentifier,
-                            orgIdentifier
-                          }
-                        })
-                      }
+              <Layout.Horizontal className={css.formRow} spacing="medium">
+                <FormInput.MultiTypeInput
+                  className={css.inputWidth}
+                  name="baseAsgName"
+                  selectItems={getItems(loading, asgBaseNames)}
+                  useValue
+                  multiTypeInputProps={{
+                    expressions,
+                    selectProps: {
+                      items: asgBaseNames,
+                      popoverClassName: css.regionPopover,
+                      allowCreatingNewItems: true,
+                      loadingItems: loading,
+                      noResults: (
+                        <Text padding={'small'}>
+                          {loading
+                            ? getString('common.loadingFieldOptions', { fieldName: 'Base Asg Names' })
+                            : get(error, 'data.message', null) || getString('common.filters.noResultsFound')}
+                        </Text>
+                      )
+                    },
+                    onClick: () => {
+                      refetch({
+                        queryParams: {
+                          accountIdentifier: accountId,
+                          region: formik?.values?.region,
+                          awsConnectorRef: get(formik?.values, 'connectorRef.value'),
+                          projectIdentifier,
+                          orgIdentifier
+                        }
+                      })
+                    }
+                  }}
+                  label={getString('cd.baseAsgLabel')}
+                  placeholder={getString('cd.baseAsgPlaceholder')}
+                  disabled={readonly}
+                />
+                {getMultiTypeFromValue(formik.values.baseAsgName) === MultiTypeInputType.RUNTIME && (
+                  <ConfigureOptions
+                    value={formik.values?.baseAsgName as string}
+                    type="String"
+                    variableName="baseAsgName"
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    onChange={value => {
+                      formik.setFieldValue('baseAsgName', value)
                     }}
-                    label={getString('cd.baseAsgLabel')}
-                    placeholder={getString('cd.baseAsgPlaceholder')}
-                    disabled={readonly}
+                    isReadonly={readonly}
+                    className={css.marginTop}
                   />
-                  {getMultiTypeFromValue(formik.values.baseAsgName) === MultiTypeInputType.RUNTIME && (
-                    <ConfigureOptions
-                      value={formik.values?.baseAsgName as string}
-                      type="String"
-                      variableName="baseAsgName"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      onChange={value => {
-                        formik.setFieldValue('baseAsgName', value)
-                      }}
-                      isReadonly={readonly}
-                      className={css.marginTop}
-                    />
-                  )}
-                </Layout.Horizontal>
-              ) : null}
+                )}
+              </Layout.Horizontal>
               <Layout.Horizontal
                 spacing="medium"
                 style={{ alignItems: 'center' }}

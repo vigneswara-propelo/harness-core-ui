@@ -84,13 +84,16 @@ describe('Asg Canary Delete Step tests', () => {
     await userEvent.type(instanceInput!, '20')
     await waitFor(() => expect(instanceInput).toHaveDisplayValue('20'))
 
+    const asgNameInput = getByPlaceholderText('cd.serviceDashboard.asgName')
+    await userEvent.type(asgNameInput!, 'asgName')
+
     const fixedInputIcons = container.querySelectorAll('span[data-icon="fixed-input"]')
-    expect(fixedInputIcons.length).toBe(2)
+    expect(fixedInputIcons.length).toBe(3)
 
     let runtimeInputIcons = container.querySelectorAll('span[data-icon="runtime-input"]')
     expect(runtimeInputIcons.length).toBe(0)
 
-    const instanceFixedInputBtn = fixedInputIcons[1]
+    const instanceFixedInputBtn = fixedInputIcons[2]
     await userEvent.click(instanceFixedInputBtn)
     await waitFor(() => expect(getByText('Runtime input')).toBeInTheDocument())
 
@@ -119,6 +122,7 @@ describe('Asg Canary Delete Step tests', () => {
         timeout: '20m',
         type: StepType.AsgCanaryDeploy,
         spec: {
+          asgName: 'asgName',
           instanceSelection: {
             type: InstanceTypes.Instances,
             spec: {

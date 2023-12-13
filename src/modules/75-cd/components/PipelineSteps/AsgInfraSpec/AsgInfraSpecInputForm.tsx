@@ -25,7 +25,6 @@ import { useListAwsRegions } from 'services/portal'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { connectorTypes } from '@pipeline/utils/constants'
@@ -52,7 +51,6 @@ const AsgInfraSpecInputForm = (props: AsgInfraSpecInputFormProps) => {
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
   const [asgBaseNames, setAsgBaseNames] = React.useState<SelectOption[]>([])
-  const { CDS_BASIC_ASG } = useFeatureFlags()
 
   const connectorFieldName = isEmpty(path) ? 'connectorRef' : `${path}.connectorRef`
   const regionFieldName = isEmpty(path) ? 'region' : `${path}.region`
@@ -110,10 +108,8 @@ const AsgInfraSpecInputForm = (props: AsgInfraSpecInputFormProps) => {
   }
 
   const handleChangeConnector = (): void => {
-    if (CDS_BASIC_ASG) {
-      formik?.setFieldValue(baseAsgName, '')
-      setAsgBaseNames([])
-    }
+    formik?.setFieldValue(baseAsgName, '')
+    setAsgBaseNames([])
   }
 
   return (
@@ -157,10 +153,8 @@ const AsgInfraSpecInputForm = (props: AsgInfraSpecInputFormProps) => {
                 popoverClassName: cx(stepCss.formGroup, stepCss.md)
               },
               onChange: () => {
-                if (CDS_BASIC_ASG) {
-                  formik?.setFieldValue(baseAsgName, '')
-                  setAsgBaseNames([])
-                }
+                formik?.setFieldValue(baseAsgName, '')
+                setAsgBaseNames([])
               }
             }}
             label={getString('regionLabel')}
@@ -169,7 +163,7 @@ const AsgInfraSpecInputForm = (props: AsgInfraSpecInputFormProps) => {
           />
         </div>
       )}
-      {getMultiTypeFromValue(template?.baseAsgName) === MultiTypeInputType.RUNTIME && CDS_BASIC_ASG && (
+      {getMultiTypeFromValue(template?.baseAsgName) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormInput.MultiTypeInput
             name={baseAsgName}
