@@ -57,7 +57,10 @@ describe('Deployment Template - Infrastructures Page', () => {
 
     cy.visitPageAssertion('[id*="bp3-tab-title_environmentDetails_CONFIGURATION"]')
 
-    cy.contains('div', 'Infrastructure Definitions').click({ force: true })
+    cy.get('.bp3-tab-list').within(() => {
+      cy.contains('div', 'Infrastructure Definitions').click({ force: true })
+    })
+
     cy.contains('span', 'Infrastructure Definition').click()
     cy.fillField('name', 'testInfra_Cypress')
 
@@ -94,7 +97,9 @@ describe('Deployment Template - Infrastructures Page', () => {
 
     cy.visitPageAssertion('[id*="bp3-tab-title_environmentDetails_CONFIGURATION"]')
 
-    cy.contains('div', 'Infrastructure Definitions').click({ force: true })
+    cy.get('.bp3-tab-list').within(() => {
+      cy.contains('div', 'Infrastructure Definitions').click({ force: true })
+    })
     cy.contains('p', 'testReconcileInfra').click()
 
     cy.get('span[icon="warning-sign"]').should('be.visible')

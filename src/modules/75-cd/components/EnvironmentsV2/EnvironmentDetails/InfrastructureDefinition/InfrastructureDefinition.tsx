@@ -30,6 +30,10 @@ import InfrastructureModal from './InfrastructureModal'
 
 import css from './InfrastructureDefinition.module.scss'
 
+// TODO: To be removed once pagination and search support is available for Infrastructure Definitions
+// Ticket - https://harness.atlassian.net/browse/CDS-86868
+const DEFAULT_PAGE_SIZE_FOR_INFRASTRUCTURES = 1000
+
 export default function InfrastructureDefinition({ isEnvPage }: { isEnvPage: boolean }): JSX.Element {
   const { accountId, orgIdentifier, projectIdentifier, environmentIdentifier } = useParams<
     ProjectPathProps & EnvironmentPathProps
@@ -61,7 +65,8 @@ export default function InfrastructureDefinition({ isEnvPage }: { isEnvPage: boo
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      environmentIdentifier
+      environmentIdentifier,
+      size: DEFAULT_PAGE_SIZE_FOR_INFRASTRUCTURES
     }
   })
   const scopeFromDTO = getScopeFromDTO({ accountId, orgIdentifier, projectIdentifier })
