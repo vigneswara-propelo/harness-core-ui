@@ -15,12 +15,15 @@ import routes from '@common/RouteDefinitionsV2'
 import { NAV_MODE, accountPathProps, getRouteParams, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { Module } from 'framework/types/ModuleName'
 import { Scope } from 'framework/types/types'
+import { useIsPublicAccess } from 'framework/hooks/usePublicAccess'
 import { SIDE_NAV_STATE, useLayoutV2 } from '@modules/10-common/router/RouteWithLayoutV2'
 import { StringsMap } from 'stringTypes'
 import SideNavToggleButton from './SideNavToggleButton/SideNavToggleButton'
 import SideNavHeader from './SideNavHeader/SideNavHeader'
+import SideNavHeaderPublic from './SideNavHeader/SideNavHeaderPublic'
 import { useSideNavV2 } from './useSideNavV2'
 import SideNavFooter from './SideNavFooter/SideNavFooter'
+import SideNavFooterPublic from './SideNavFooter/SideNavFooterPublic'
 import { ScopeLinkParams } from './ScopeSwitchDialog/usePrimaryScopeSwitchDialog'
 import { SideNavContextProvider } from './SideNavV2Context'
 import SideNavSectionComponent, { SideNavSectionComponentProps } from './SideNavSection/SideNavSection'
@@ -186,6 +189,7 @@ const SideNavMainComponent: React.FC<SideNavMainProps> = props => {
 
 export const SideNav: SideNavComponent<React.PropsWithChildren<unknown>> = (props): JSX.Element => {
   const { sideNavState, disableSideNavCollapse } = useLayoutV2()
+  const isCurrentSessionPublic = useIsPublicAccess()
   const { children } = props
 
   if (sideNavState === SIDE_NAV_STATE.HIDDEN) {
@@ -198,12 +202,22 @@ export const SideNav: SideNavComponent<React.PropsWithChildren<unknown>> = (prop
       <Layout.Vertical
         className={cx(css.container, {
           [css.expanded]: !isCollapsed,
-          [css.collapsed]: isCollapsed
+          [css.collapsed]: isCollapsed,
+          [css.publicAccessMode]: isCurrentSessionPublic
         })}
       >
-        <SideNavHeader />
-        {children}
-        <SideNavFooter />
+        {isCurrentSessionPublic ? (
+          <>
+            <SideNavHeaderPublic />
+            <SideNavFooterPublic />
+          </>
+        ) : (
+          <>
+            <SideNavHeader />
+            {children}
+            <SideNavFooter />
+          </>
+        )}
         {!disableSideNavCollapse && <SideNavToggleButton />}
       </Layout.Vertical>
     </ModalProvider>

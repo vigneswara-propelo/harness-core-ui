@@ -16,16 +16,13 @@ import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { useIsPublicAccess } from 'framework/hooks/usePublicAccess'
 import PageNotPublic from 'framework/components/PublicAccess/PageNotPublic'
+import type { PublicViewProps } from '@common/interfaces/RouteInterfaces'
 import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import type { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import PageProvider from '@common/pages/pageContext/PageProvider'
 import { TemplateSelectorContextProvider } from 'framework/Templates/TemplateSelectorContext/TemplateSelectorContext'
 import { TemplateSelectorDrawer } from 'framework/Templates/TemplateSelectorDrawer/TemplateSelectorDrawer'
 import { DefaultLayoutProps } from '@common/layouts/DefaultLayout'
-
-interface PublicViewProps {
-  hideSidebar?: boolean
-}
 
 export interface RouteWithLayoutProps extends RouterRouteprops {
   layout: React.ComponentType

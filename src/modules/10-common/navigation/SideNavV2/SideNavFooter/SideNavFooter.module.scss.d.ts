@@ -11,7 +11,10 @@ declare const styles: {
   readonly container: string
   readonly helpLink: string
   readonly link: string
+  readonly loginButtonContainer: string
+  readonly loginIcon: string
   readonly profileLink: string
+  readonly public: string
   readonly section: string
   readonly selected: string
   readonly signout: string

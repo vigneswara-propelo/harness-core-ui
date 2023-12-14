@@ -8,9 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly bg: string
-  readonly buttonModification: string
   readonly center: string
   readonly content: string
-  readonly gradient: string
 }
 export default styles

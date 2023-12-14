@@ -11,6 +11,7 @@ import { LayoutContext, SIDE_NAV_STATE } from '@modules/10-common/router/RouteWi
 import * as routUtils from '@common/utils/routeUtils'
 import { TestWrapper } from '@common/utils/testUtils'
 import SideNavHeader from '../SideNavHeader'
+import SideNavHeaderPublic from '../SideNavHeaderPublic'
 
 const renderComponent = (): RenderResult =>
   render(
@@ -27,6 +28,25 @@ const renderComponent = (): RenderResult =>
       defaultFeatureFlagValues={{ CDS_NAV_2_0: true }}
     >
       <SideNavHeader />
+    </TestWrapper>
+  )
+
+const renderComponentPublic = (sideNavState: SIDE_NAV_STATE = SIDE_NAV_STATE.EXPANDED): RenderResult =>
+  render(
+    <TestWrapper
+      defaultAppStoreValues={{ isCurrentSessionPublic: true }}
+      path="/account/:accountId/:mode/:module/orgs/:orgIdentifier/projects/:projectIdentifier"
+      pathParams={{
+        accountId: 'abcd',
+        orgIdentifier: 'abcd',
+        projectIdentifier: 'abcd',
+        mode: routUtils.NAV_MODE.MODULE,
+        module: 'cd'
+      }}
+    >
+      <LayoutContext.Provider value={{ sideNavState, setSideNavState: jest.fn() }}>
+        <SideNavHeaderPublic />
+      </LayoutContext.Provider>
     </TestWrapper>
   )
 
@@ -62,5 +82,25 @@ describe('Sidenav header', () => {
       'href',
       '/account/abcd/module/cd/orgs/orgIdentifier/projects/projectIdentifier'
     )
+  })
+
+  test('Render SideNavHeaderPublic with EXPANDED STATE', async () => {
+    const { container } = renderComponentPublic(SIDE_NAV_STATE.EXPANDED)
+
+    // harnessLogoBlackIcon should be visible in EXPANDED state
+    const harnessLogoBlackIcon = queryByAttribute('data-icon', container, 'harness-logo-black')
+    expect(harnessLogoBlackIcon).toBeInTheDocument()
+  })
+
+  test('Render SideNavHeaderPublic with COLLAPSED STATE', async () => {
+    const { container } = renderComponentPublic(SIDE_NAV_STATE.COLLAPSED)
+
+    // navHarnessIcon should be visible in COLLAPSED state
+    const navHarnessIcon = queryByAttribute('data-icon', container, 'nav-harness')
+    expect(navHarnessIcon).toBeInTheDocument()
+
+    // harnessLogoBlackIcon should NOT be visible in COLLAPSED state
+    const harnessLogoBlackIcon = queryByAttribute('data-icon', container, 'harness-logo-black')
+    expect(harnessLogoBlackIcon).not.toBeInTheDocument()
   })
 })

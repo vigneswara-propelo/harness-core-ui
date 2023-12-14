@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { fireEvent, render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { Link } from 'react-router-dom'
 
 import { TestWrapper } from '@common/utils/testUtils'
@@ -204,6 +205,35 @@ describe('<DefaultLayout /> tests', () => {
       )
       expect(getByText('common.levelUp')).toBeInTheDocument()
       expect(container).toMatchSnapshot()
+    })
+
+    test('that PageNotPublic component renders when isCurrentSessionPublic but route is not public', async () => {
+      const { queryByText, getByRole } = render(
+        <TestWrapper
+          path="/account/:accountId/projects"
+          pathParams={{ accountId: 'dummy' }}
+          defaultAppStoreValues={{
+            isCurrentSessionPublic: true,
+            // defaultAppStoreValues overrides "defaultFeatureFlagValues" in TestWrapper.
+            // So, added "featureFlags" key within defaultAppStoreValues obj.
+            // When cleaning up FF "CDS_NAV_2_0", remove the entire key "featureFlags"
+            featureFlags: { CDS_NAV_2_0: true }
+          }}
+        >
+          <DefaultLayout public={false}>
+            <div>matched-route</div>
+          </DefaultLayout>
+        </TestWrapper>
+      )
+
+      expect(queryByText('matched-route')).not.toBeTruthy()
+
+      // 'common.publicAccess.oopsPageNotPublic' is used inside PageNotPublic.tsx
+      expect(queryByText('common.publicAccess.oopsPageNotPublic')).toBeTruthy()
+
+      const signInBtn = getByRole('button', { name: 'signUp.signIn' })
+      await userEvent.click(signInBtn!)
+      expect(queryByText('common.publicAccess.oopsPageNotPublic')).not.toBeTruthy()
     })
   })
 })

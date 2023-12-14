@@ -12,6 +12,7 @@ declare const styles: {
   readonly configureNavigation: string
   readonly container: string
   readonly expanded: string
+  readonly publicAccessMode: string
   readonly section: string
   readonly sectionTitle: string
 }

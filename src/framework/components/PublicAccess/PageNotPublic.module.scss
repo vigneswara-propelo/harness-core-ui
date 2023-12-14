@@ -6,11 +6,7 @@
  */
 
 .bg {
-  background: var(--primary-10, --theme-light-nav-panel-bg) url('./harness-logo-page-not-public.svg') no-repeat 100% 50%;
-}
-
-.gradient {
-  background: radial-gradient(50% 50% at 50% 50%, rgba(0, 173, 228, 0.4) 0%, rgba(0, 0, 0, 0.28) 100%);
+  background: var(--primary-bg) url('./harness-logo-page-not-public.svg') no-repeat 100% 50%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -18,13 +14,9 @@
   margin: 0;
 }
 
-.buttonModification.buttonModification.buttonModification.buttonModification {
-  background-color: transparent !important;
-}
-
 .content {
-  width: 660px;
-  max-width: 660px;
+  width: 622px;
+  max-width: 622px;
 }
 
 .center {

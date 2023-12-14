@@ -338,6 +338,10 @@ export interface DiscoveredResourceQueryParams {
   tab?: string
 }
 
+export interface PublicViewProps {
+  hideSidebar?: boolean
+}
+
 export interface FileStoreResourceQueryParams {
   path?: string
 }

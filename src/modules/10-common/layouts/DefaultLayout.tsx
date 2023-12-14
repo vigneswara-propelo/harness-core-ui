@@ -20,6 +20,8 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { usePage } from '@common/pages/pageContext/PageProvider'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import DocsChat from '@common/components/DocsChat/DocsChat'
+import { useIsPublicAccess } from 'framework/hooks/usePublicAccess'
+import PageNotPublic from 'framework/components/PublicAccess/PageNotPublic'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { String } from 'framework/strings'
 import { ModePathProps } from '../interfaces/RouteInterfaces'
@@ -32,10 +34,11 @@ import css from './layouts.module.scss'
 export interface DefaultLayoutProps {
   disableAuxNav?: boolean
   sideNavState?: SIDE_NAV_STATE
+  public?: boolean
 }
 
 export function DefaultLayout(props: React.PropsWithChildren<DefaultLayoutProps>): React.ReactElement {
-  const { disableAuxNav, sideNavState } = props
+  const { disableAuxNav, sideNavState, public: isRoutePublic } = props
   const { title, subtitle, icon, navComponent: NavComponent, launchButtonText, launchButtonRedirectUrl } = useSidebar()
 
   const { pageName } = usePage()
@@ -46,6 +49,7 @@ export function DefaultLayout(props: React.PropsWithChildren<DefaultLayoutProps>
   const { PL_AI_SUPPORT_CHATBOT, PL_EULA_ENABLED, CDS_NAV_2_0 } = useFeatureFlags()
   const { mode } = getRouteParams<ModePathProps>()
   const { setSideNavState } = useLayoutV2()
+  const isCurrentSessionPublic = useIsPublicAccess()
 
   useEffect(() => {
     if (pageName) {
@@ -69,6 +73,11 @@ export function DefaultLayout(props: React.PropsWithChildren<DefaultLayoutProps>
   useEffect(() => {
     setSideNavState(sideNavState)
   }, [sideNavState])
+
+  if (CDS_NAV_2_0 && !isRoutePublic && isCurrentSessionPublic) {
+    // render ERROR page/component
+    return <PageNotPublic />
+  }
 
   return (
     <div className={cx(css.main, css.flex)} data-layout="default">

@@ -9,7 +9,9 @@ import React from 'react'
 import { render, waitFor, screen, RenderResult } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper, findDrawerContainer, findPopoverContainer } from '@common/utils/testUtils'
+import { LayoutContext, SIDE_NAV_STATE } from '@common/router/RouteWithLayoutV2'
 import SideNavFooter from '../SideNavFooter'
+import SideNavFooterPublic from '../SideNavFooterPublic'
 
 const mockHistoryPush = jest.fn()
 // eslint-disable-next-line jest-no-mock
@@ -64,6 +66,21 @@ const renderComponent = (): RenderResult =>
       pathParams={{ accountId: 'abcd', orgIdentifier: 'abcd', projectIdentifier: 'abcd' }}
     >
       <SideNavFooter />
+    </TestWrapper>
+  )
+
+const renderComponentPublic = (sideNavState: SIDE_NAV_STATE = SIDE_NAV_STATE.EXPANDED): RenderResult =>
+  render(
+    <TestWrapper
+      path="/account/:accountId/orgs/:orgIdentifier/projects/:projectIdentifier"
+      pathParams={{ accountId: 'abcd', orgIdentifier: 'abcd', projectIdentifier: 'abcd' }}
+      defaultAppStoreValues={{
+        isCurrentSessionPublic: true
+      }}
+    >
+      <LayoutContext.Provider value={{ sideNavState, setSideNavState: jest.fn() }}>
+        <SideNavFooterPublic />
+      </LayoutContext.Provider>
     </TestWrapper>
   )
 
@@ -127,6 +144,56 @@ describe('SideNav Footer', () => {
       expect(popover).toBeInTheDocument()
     })
     await user.click(screen.getByText('signOut'))
+    expect(mockHistoryPush).toHaveBeenCalledWith({
+      pathname: '/redirect',
+      search: '?returnUrl=%2F%23%2Flogin%3Faction%3Dsignout'
+    })
+  })
+
+  test('Render SideNavFooterPublic with EXPANDED STATE', async () => {
+    const { getByText } = renderComponentPublic(SIDE_NAV_STATE.EXPANDED)
+
+    // SignIn button should be visible in EXPANDED state (even without any hover)
+    const signInBtn = getByText('signUp.signIn')
+    expect(signInBtn).toBeInTheDocument()
+
+    const helpBtn = getByText('common.help')
+    expect(helpBtn).toBeInTheDocument()
+
+    // Clicking on helpBtn button should open ResourceCenter
+    await userEvent.click(helpBtn)
+    expect(screen.getByText('common.resourceCenter.title')).toBeInTheDocument()
+
+    // Clicking on SignIn button should call history.push()
+    await userEvent.click(signInBtn)
+    expect(mockHistoryPush).toHaveBeenCalledWith({
+      pathname: '/redirect',
+      search: '?returnUrl=%2F%23%2Flogin%3Faction%3Dsignout'
+    })
+  })
+
+  test('Render SideNavFooterPublic with COLLAPSED STATE', async () => {
+    const { container } = renderComponentPublic(SIDE_NAV_STATE.COLLAPSED)
+    const user = userEvent.setup()
+    const loginIcon = container.querySelector('span[icon="log-in"]')
+    expect(loginIcon).toBeInTheDocument()
+
+    // SignIn button not visible BEFORE hover
+    expect(screen.queryByText('signUp.signIn')).not.toBeInTheDocument()
+
+    // hover action
+    await user.hover(loginIcon!)
+    await waitFor(() => {
+      const popover = findPopoverContainer() as HTMLElement
+      expect(popover).toBeInTheDocument()
+    })
+
+    // SignIn button should be visible AFTER hover
+    const signInBtn = screen.queryByText('signUp.signIn')
+    expect(signInBtn).toBeInTheDocument()
+
+    // Clicking on SignIn button should call history.push()
+    await userEvent.click(signInBtn!)
     expect(mockHistoryPush).toHaveBeenCalledWith({
       pathname: '/redirect',
       search: '?returnUrl=%2F%23%2Flogin%3Faction%3Dsignout'

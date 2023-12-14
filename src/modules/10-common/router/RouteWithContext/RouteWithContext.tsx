@@ -15,6 +15,7 @@ import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import type { PAGE_NAME } from '@common/pages/pageContext/PageName'
+import type { PublicViewProps } from '@common/interfaces/RouteInterfaces'
 import PageProvider from '@common/pages/pageContext/PageProvider'
 import { TemplateSelectorContextProvider } from 'framework/Templates/TemplateSelectorContext/TemplateSelectorContext'
 import { TemplateSelectorDrawer } from 'framework/Templates/TemplateSelectorDrawer/TemplateSelectorDrawer'
@@ -25,10 +26,20 @@ export interface RouteWithContextProps extends RouterRouteprops {
   pageName?: PAGE_NAME
   sideNavState?: SIDE_NAV_STATE
   disableAuxNav?: boolean
+  public?: boolean
+  publicViewProps?: PublicViewProps
 }
 
 export function RouteWithContext(props: React.PropsWithChildren<RouteWithContextProps>): React.ReactElement {
-  const { children, licenseRedirectData, pageName, sideNavState, disableAuxNav, ...rest } = props
+  const {
+    children,
+    licenseRedirectData,
+    pageName,
+    sideNavState,
+    disableAuxNav,
+    public: isRoutePublic = false,
+    ...rest
+  } = props
   const licenseStore = useLicenseStore()
 
   const childComponent = (
@@ -36,7 +47,7 @@ export function RouteWithContext(props: React.PropsWithChildren<RouteWithContext
       <ModalProvider>
         <TemplateSelectorContextProvider>
           <PageProvider pageName={pageName}>
-            <DefaultLayout sideNavState={sideNavState} disableAuxNav={disableAuxNav}>
+            <DefaultLayout sideNavState={sideNavState} disableAuxNav={disableAuxNav} public={isRoutePublic}>
               {children}
             </DefaultLayout>
           </PageProvider>

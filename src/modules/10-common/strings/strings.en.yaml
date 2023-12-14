@@ -1682,7 +1682,7 @@ workflow: Workflow
 chartVersions: Chart Versions
 login: Login
 publicAccess:
-  oopsPageNotPublic: Oooops! The page you are trying to access is not public.
+  oopsPageNotPublic: Oops! The page you are trying to access is not public.
   tryOtherOptions: You can try the following option instead to get back on track.
 ipAddress: IP Address
 nav:

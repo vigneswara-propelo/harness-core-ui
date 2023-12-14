@@ -167,6 +167,7 @@ function PipelineRouteDestinations({
         <RedirectToExecutionPipeline />
       </RouteWithContext>
       <RouteWithContext
+        public
         exact
         licenseRedirectData={licenseRedirectData}
         sideNavState={SIDE_NAV_STATE.COLLAPSED}
