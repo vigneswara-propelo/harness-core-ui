@@ -56,14 +56,16 @@ import type { PipelineType, GitQueryParams } from '@common/interfaces/RouteInter
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { Connectors } from '@platform/connectors/constants'
-import { GitProviderOptions } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeGitProviderAndConnector'
 import { useQueryParams } from '@common/hooks'
 import { useAnyEnterpriseLicense } from '@common/hooks/useModuleLicenses'
 import { isRuntimeInput } from '@pipeline/utils/CIUtils'
+import { getGitProviderCards } from '@modules/10-common/components/GitProviderSelect/GitProviderSelect'
+import { CardSelectInterface } from '@common/components/GitProviderSelect/GitProviderSelect'
 import { PipelineContextType, usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerTypes } from '../PipelineContext/PipelineActions'
 import { RightDrawer } from '../RightDrawer/RightDrawer'
-import { blankspacesRegex, renderConnectorAndRepoName, validateCIForm } from './RightBarUtils'
+import { blankspacesRegex, validateCIForm } from './RightBarUtils'
+import CloneCodebaseForm from '../CloneCodebaseForm/CloneCodebaseForm'
 import css from './RightBar.module.scss'
 
 export interface CodebaseRuntimeInputsInterface {
@@ -79,7 +81,8 @@ interface CodebaseValues {
   prCloneStrategy?: MultiTypeSelectOption
   memoryLimit?: string
   cpuLimit?: string
-  provider?: SelectOption | string
+  provider?: CardSelectInterface | string
+  repositoryName?: SelectOption | string
 }
 
 enum CodebaseStatuses {
@@ -154,11 +157,14 @@ export function RightBar(): JSX.Element {
         ? prCloneStrategyOptions.find(option => option.value === codebase?.prCloneStrategy)
         : codebase?.prCloneStrategy,
     cpuLimit: codebase?.resources?.limits?.cpu,
-    provider: codebase?.connectorRef
-      ? codebase?.connectorRef === RUNTIME_INPUT_VALUE
-        ? RUNTIME_INPUT_VALUE
-        : { label: getString('stepPalette.others'), value: getString('stepPalette.others') }
-      : GitProviderOptions(getString)[0]
+    provider:
+      !CODE_ENABLED || codebase?.connectorRef ? getGitProviderCards(getString)[1] : getGitProviderCards(getString)[0],
+    repositoryName:
+      !codebase?.connectorRef && codebase?.repoName
+        ? getMultiTypeFromValue(codebase?.repoName) === MultiTypeInputType.FIXED
+          ? { label: codebase?.repoName, value: codebase?.repoName }
+          : codebase?.repoName
+        : undefined
   }
 
   const isYaml = view === SelectedView.YAML
@@ -583,34 +589,36 @@ export function RightBar(): JSX.Element {
               <>
                 <div className={Classes.DIALOG_BODY}>
                   <FormikForm>
-                    {renderConnectorAndRepoName({
-                      values,
-                      setFieldValue,
-                      connectorUrl,
-                      connectionType,
-                      setConnectionType,
-                      setConnectorUrl,
-                      connector: connector?.data?.connector,
-                      getString,
-                      errors,
-                      loading,
-                      accountId,
-                      projectIdentifier,
-                      orgIdentifier,
-                      repoIdentifier,
-                      branch,
-                      expressions,
-                      isReadonly,
-                      setCodebaseRuntimeInputs,
-                      codebaseRuntimeInputs,
-                      allowableTypes: [
-                        MultiTypeInputType.FIXED,
-                        MultiTypeInputType.EXPRESSION,
-                        MultiTypeInputType.RUNTIME
-                      ],
-                      configureOptionsProps: { hideExecutionTimeField: true },
-                      isCodeEnabled: CODE_ENABLED
-                    })}
+                    <CloneCodebaseForm
+                      {...{
+                        values,
+                        setFieldValue,
+                        connectorUrl,
+                        connectionType,
+                        setConnectionType,
+                        setConnectorUrl,
+                        connector: connector?.data?.connector,
+                        getString,
+                        errors,
+                        loading,
+                        accountId,
+                        projectIdentifier,
+                        orgIdentifier,
+                        repoIdentifier,
+                        branch,
+                        expressions,
+                        isReadonly,
+                        setCodebaseRuntimeInputs,
+                        codebaseRuntimeInputs,
+                        allowableTypes: [
+                          MultiTypeInputType.FIXED,
+                          MultiTypeInputType.EXPRESSION,
+                          MultiTypeInputType.RUNTIME
+                        ],
+                        configureOptionsProps: { hideExecutionTimeField: true },
+                        isCodeEnabled: CODE_ENABLED
+                      }}
+                    />
                     <Accordion>
                       <Accordion.Panel
                         id="advanced"

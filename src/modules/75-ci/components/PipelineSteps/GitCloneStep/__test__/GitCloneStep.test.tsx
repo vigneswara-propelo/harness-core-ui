@@ -19,11 +19,23 @@ import {
   RepositoryURLConnectorResponse,
   onEditInitialValuesFixed,
   onEditInitialValuesFixed2,
-  onEditInitialValuesAllRuntimeInputs
+  onEditInitialValuesAllRuntimeInputs,
+  gitnessRepos
 } from './mock'
 import { GitCloneStep } from '../GitCloneStep'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
+
+jest.mock('services/code', () => ({
+  useListRepos: jest.fn().mockImplementation(() => {
+    return {
+      data: gitnessRepos,
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    }
+  })
+}))
 
 describe('Git Clone Step', () => {
   beforeAll(() => {

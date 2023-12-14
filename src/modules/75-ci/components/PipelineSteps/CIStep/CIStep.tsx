@@ -27,11 +27,9 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
-import {
-  renderConnectorAndRepoName,
-  runtimeInputGearWidth
-} from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils'
+import { runtimeInputGearWidth } from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils'
 import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
+import CloneCodebaseForm from '@modules/70-pipeline/components/PipelineStudio/CloneCodebaseForm/CloneCodebaseForm'
 import {
   AllMultiTypeInputTypesForInputSet,
   AllMultiTypeInputTypesForStep,
@@ -283,35 +281,37 @@ export const CIStep: React.FC<CIStepProps> = props => {
       ) : null}
       {get(enableFields, 'spec.connectorAndRepo') && formik && (
         <Container className={(css.formGroup, stepCss, connectorAndRepoNameCss)}>
-          {renderConnectorAndRepoName({
-            values: formik.values,
-            setFieldValue: formik.setFieldValue,
-            connectorUrl: enableFields['spec.connectorAndRepo'].connectorUrl,
-            connectionType: enableFields['spec.connectorAndRepo'].connectionType,
-            connectorWidth: isTemplateConnectorRefPanel
-              ? enableFields['spec.connectorAndRepo'].connectorWidth - runtimeInputGearWidth
-              : enableFields['spec.connectorAndRepo'].connectorWidth,
-            setConnectionType: enableFields['spec.connectorAndRepo'].setConnectionType,
-            setConnectorUrl: enableFields['spec.connectorAndRepo'].setConnectorUrl,
-            connector: enableFields['spec.connectorAndRepo'].connector,
-            onConnectorChange: enableFields['spec.connectorAndRepo'].onConnectorChange,
-            getString,
-            errors: formik.errors,
-            loading: enableFields['spec.connectorAndRepo'].loading,
-            accountId,
-            projectIdentifier,
-            orgIdentifier,
-            repoIdentifier: enableFields['spec.connectorAndRepo'].repoIdentifier,
-            branch: enableFields['spec.connectorAndRepo'].branch,
-            expressions,
-            isReadonly: enableFields['spec.connectorAndRepo'].isReadonly,
-            setCodebaseRuntimeInputs: enableFields['spec.connectorAndRepo'].setCodebaseRuntimeInputs,
-            codebaseRuntimeInputs: enableFields['spec.connectorAndRepo'].codebaseRuntimeInputs,
-            connectorAndRepoNamePath: `${prefix}spec`,
-            allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep,
-            codeBaseInputFieldFormName: { repoName: `${prefix}spec.repoName` },
-            configureOptionsProps: { hideExecutionTimeField: true }
-          })}
+          <CloneCodebaseForm
+            {...{
+              values: formik.values,
+              setFieldValue: formik.setFieldValue,
+              connectorUrl: enableFields['spec.connectorAndRepo'].connectorUrl,
+              connectionType: enableFields['spec.connectorAndRepo'].connectionType,
+              connectorWidth: isTemplateConnectorRefPanel
+                ? enableFields['spec.connectorAndRepo'].connectorWidth - runtimeInputGearWidth
+                : enableFields['spec.connectorAndRepo'].connectorWidth,
+              setConnectionType: enableFields['spec.connectorAndRepo'].setConnectionType,
+              setConnectorUrl: enableFields['spec.connectorAndRepo'].setConnectorUrl,
+              connector: enableFields['spec.connectorAndRepo'].connector,
+              onConnectorChange: enableFields['spec.connectorAndRepo'].onConnectorChange,
+              getString,
+              errors: formik.errors,
+              loading: enableFields['spec.connectorAndRepo'].loading,
+              accountId,
+              projectIdentifier,
+              orgIdentifier,
+              repoIdentifier: enableFields['spec.connectorAndRepo'].repoIdentifier,
+              branch: enableFields['spec.connectorAndRepo'].branch,
+              expressions,
+              isReadonly: enableFields['spec.connectorAndRepo'].isReadonly,
+              setCodebaseRuntimeInputs: enableFields['spec.connectorAndRepo'].setCodebaseRuntimeInputs,
+              codebaseRuntimeInputs: enableFields['spec.connectorAndRepo'].codebaseRuntimeInputs,
+              connectorAndRepoNamePath: `${prefix}spec`,
+              allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep,
+              codeBaseInputFieldFormName: { repoName: `${prefix}spec.repoName` },
+              configureOptionsProps: { hideExecutionTimeField: true }
+            }}
+          />
         </Container>
       )}
       {get(enableFields, 'spec.repoName') && (

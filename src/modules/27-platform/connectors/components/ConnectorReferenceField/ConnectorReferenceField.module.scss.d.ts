@@ -21,7 +21,6 @@ declare const styles: {
   readonly gitDetailMaxWidth: string
   readonly gitHubConnectorDetails: string
   readonly gitInfo: string
-  readonly gitProviderListItem: string
   readonly gitUrl: string
   readonly gitUrlStyle: string
   readonly gitUrlStyleInPopover: string

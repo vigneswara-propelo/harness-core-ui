@@ -97,7 +97,10 @@ entityType: Entity Type
 cantDeleteEntity: Can't delete {{entity}}
 entityPlaceholderText: '- Select -' #used at placeholder places to select Svc, Infra, Env, Connector
 gitProvider: Select Git Provider
-selectOtherGitProviders: Select Connector (for other git providers)
+harnessCodeRepo: Harness Code Repository
+harnessCodeRepoInfo: Store pipeline in Harness repository
+thirdPartyGitProvider: Third-party Git provider
+thirdPartyGitProviderInfo: Store pipeline in a third party Git provider
 approve: Approve
 reject: Reject
 disable: Disable

@@ -26,6 +26,26 @@ jest.mock('services/cd-ng', () => ({
   })
 }))
 
+jest.mock('services/code', () => ({
+  useListRepos: jest.fn().mockImplementation(() => {
+    return {
+      data: gitnessRepos,
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    }
+  })
+}))
+
+export const gitnessRepos = [
+  {
+    uid: 'nextgenui'
+  },
+  {
+    uid: 'learning'
+  }
+]
+
 jest.mock('../../RightDrawer/RightDrawer', () => ({
   RightDrawer: () => <div />
 }))

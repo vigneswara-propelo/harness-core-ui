@@ -564,7 +564,7 @@ exports[`EditStageView snapshot test should render properly without data 1`] = `
               >
                 <div
                   class="connectorLabel"
-                  style="width: 366px;"
+                  style="width: 402px;"
                 >
                   <div
                     class="StyledProps--font StyledProps--main"
@@ -715,7 +715,7 @@ exports[`EditStageView snapshot test should render properly without data 1`] = `
               </div>
               <div
                 class="StyledProps--font StyledProps--main bottomMargin3"
-                style="width: 366px;"
+                style="width: 402px;"
               >
                 <div>
                   <div

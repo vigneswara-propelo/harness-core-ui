@@ -43,12 +43,32 @@ export const connectorMock = {
   }
 }
 
+export const gitnessRepos = [
+  {
+    uid: 'nextgenui'
+  },
+  {
+    uid: 'learning'
+  }
+]
+
 jest.mock('services/cd-ng', () => ({
   getConnectorPromise: () => Promise.resolve(connectorMock),
   useGetConnector: () => ({
     loading: false,
     data: connectorMock,
     refetch: jest.fn()
+  })
+}))
+
+jest.mock('services/code', () => ({
+  useListRepos: jest.fn().mockImplementation(() => {
+    return {
+      data: gitnessRepos,
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    }
   })
 }))
 

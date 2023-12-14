@@ -49,12 +49,10 @@ import {
 import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { ConnectorRefWidthKeys, getPrCloneStrategyOptions, sslVerifyOptions } from '@pipeline/utils/constants'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { FormMultiTypeGitProviderAndConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeGitProviderAndConnector'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
   CodebaseTypes,
   getCodebaseRepoNameFromConnector,
@@ -65,6 +63,7 @@ import {
 } from '@pipeline/utils/CIUtils'
 import type { StageSelectionData } from '@pipeline/utils/runPipelineUtils'
 import { StageType } from '@pipeline/utils/stageHelpers'
+import { getGitProviderCards } from '@modules/10-common/components/GitProviderSelect/GitProviderSelect'
 import { getSelectedStagesFromPipeline } from '../PipelineStudio/CommonUtils/CommonUtils'
 import { StepViewType } from '../AbstractSteps/Step'
 import css from './CICodebaseInputSetForm.module.scss'
@@ -341,7 +340,6 @@ function CICodebaseInputSetFormInternal({
   const [codebaseConnector, setCodebaseConnector] = useState<ConnectorInfoDTO>()
   const [isFetchingBranches, setIsFetchingBranches] = useState<boolean>(false)
   const [isDefaultBranchSet, setIsDefaultBranchSet] = useState<boolean>(false)
-  const { CODE_ENABLED } = useFeatureFlags()
 
   const radioLabels = getBuildTypeLabels(getString)
   const codebaseTypeError = get(formik?.errors, codeBaseTypePath)
@@ -540,6 +538,17 @@ function CICodebaseInputSetFormInternal({
     }
   }, [formik?.values])
 
+  useEffect(() => {
+    if (!get(formik?.values, 'provider')) {
+      const ctrRef = get(originalPipeline, 'properties.ci.codebase.connectorRef') as string
+      if (!ctrRef) {
+        formik?.setFieldValue('provider', getGitProviderCards(getString)[0])
+      } else {
+        formik?.setFieldValue('provider', getGitProviderCards(getString)[1])
+      }
+    }
+  }, [formik?.values])
+
   let filteredStages: StageElementWrapperConfig[] | undefined = originalPipeline?.stages
   if (selectedStageData && !selectedStageData.allStagesSelected) {
     filteredStages = getSelectedStagesFromPipeline(originalPipeline, selectedStageData)
@@ -689,7 +698,7 @@ function CICodebaseInputSetFormInternal({
   }, [readonly, codeBaseType, isFetchingBranches])
 
   const renderConnectorField = (): JSX.Element => {
-    const commonArgs = {
+    const args = {
       name: codeBaseInputFieldFormName.connectorRef,
       width: connectorWidth,
       error: formik?.errors?.connectorRef,
@@ -728,11 +737,7 @@ function CICodebaseInputSetFormInternal({
           setIsConnectorExpression
         })
     }
-    return CODE_ENABLED ? (
-      <FormMultiTypeGitProviderAndConnectorField {...commonArgs} />
-    ) : (
-      <FormMultiTypeConnectorField {...commonArgs} setRefValue />
-    )
+    return <FormMultiTypeConnectorField {...args} setRefValue />
   }
 
   return pipelineHasCodebaseSection ? (

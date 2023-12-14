@@ -196,3 +196,15 @@ export const onEditInitialValuesAllRuntimeInputs = {
   description: '<+input>',
   timeout: '<+input>'
 }
+
+export const gitnessRepos = [
+  {
+    uid: 'someverylongnameforarepothatisprobablymeantotestoverflowwhileselectinguserrepotostartusingciasaproduct'
+  },
+  {
+    uid: 'nextgenui'
+  },
+  {
+    uid: 'learning'
+  }
+]

@@ -12,6 +12,7 @@ import { TestWrapper, UseGetReturnData } from '@common/utils/testUtils'
 import { getDummyPipelineContextValue } from '@ci/components/PipelineStudio/BuildStageSpecifications/__test__/BuildStageSpecificationsTestHelpers'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { EditStageView } from '../EditStageView'
+import { gitnessRepos } from './EditStageView.mock'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
@@ -47,6 +48,17 @@ const getStepData = () => {
     }
   }
 }
+
+jest.mock('services/code', () => ({
+  useListRepos: jest.fn().mockImplementation(() => {
+    return {
+      data: gitnessRepos,
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    }
+  })
+}))
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const renderComponent = ({ stepData, onSubmit }: { stepData?: any; context?: string; onSubmit?: () => void }) => {

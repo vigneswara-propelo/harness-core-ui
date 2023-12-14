@@ -7,14 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly bottomMargin5: string
-  readonly iconButton: string
-  readonly inpLabel: string
-  readonly labelWrapper: string
-  readonly policySetsIcon: string
-  readonly rightBar: string
-  readonly selected: string
-  readonly topMargin5: string
-  readonly variablesIcon: string
+  readonly bottomMargin3: string
+  readonly popover: string
+  readonly predefinedValue: string
 }
 export default styles

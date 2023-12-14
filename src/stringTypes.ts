@@ -586,6 +586,8 @@ export interface StringsMap {
   'common.governance': string
   'common.gpgkey': string
   'common.harnessClusterHostingAccount': string
+  'common.harnessCodeRepo': string
+  'common.harnessCodeRepoInfo': string
   'common.harnessCommunityTitle': string
   'common.harnessDelegate': string
   'common.harnessFirstGeneration': string
@@ -1164,7 +1166,6 @@ export interface StringsMap {
   'common.selectModules': string
   'common.selectName': string
   'common.selectNameManually': string
-  'common.selectOtherGitProviders': string
   'common.selectProject': string
   'common.selectRepository': string
   'common.selectScopeSubtitle': string
@@ -1421,6 +1422,8 @@ export interface StringsMap {
   'common.test.connectionSuccessful': string
   'common.test.inProgress': string
   'common.test.retest': string
+  'common.thirdPartyGitProvider': string
+  'common.thirdPartyGitProviderInfo': string
   'common.tickets.connector': string
   'common.tickets.defaultIssueType': string
   'common.tickets.defaultProjectName': string

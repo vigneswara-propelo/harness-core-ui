@@ -50,10 +50,14 @@ import { Category, StageActions } from '@common/constants/TrackingConstants'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
 
 import {
-  renderConnectorAndRepoName,
   CodebaseRuntimeInputsInterface,
   blankspacesRegex
 } from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils'
+import CloneCodebaseForm from '@modules/70-pipeline/components/PipelineStudio/CloneCodebaseForm/CloneCodebaseForm'
+import {
+  CardSelectInterface,
+  getGitProviderCards
+} from '@modules/10-common/components/GitProviderSelect/GitProviderSelect'
 import css from './EditStageView.module.scss'
 
 export interface EditStageView {
@@ -74,6 +78,7 @@ interface Values {
   description?: string
   tags?: { [key: string]: string }
   cloneCodebase?: boolean
+  provider?: CardSelectInterface
   connectorRef?: ConnectorReferenceFieldProps['selected']
   repoName?: string
 }
@@ -121,7 +126,8 @@ export const EditStageView: React.FC<EditStageView> = ({
         ? parse(defaultTo(template.yaml, '')).template.spec.spec.cloneCodebase
         : data?.stage?.spec?.cloneCodebase,
       true
-    )
+    ),
+    provider: CODE_ENABLED ? getGitProviderCards(getString)[0] : getGitProviderCards(getString)[1]
   }
 
   const codebase = (pipeline as PipelineInfoConfig)?.properties?.ci?.codebase
@@ -322,37 +328,39 @@ export const EditStageView: React.FC<EditStageView> = ({
                   <Text margin={{ bottom: 'medium' }}>
                     {getString('pipelineSteps.build.create.configureCodebaseHelperText')}
                   </Text>
-                  {renderConnectorAndRepoName({
-                    values: formikProps.values,
-                    setFieldValue: formikProps.setFieldValue,
-                    connectorUrl,
-                    connectionType,
-                    setConnectionType,
-                    setConnectorUrl,
-                    getString,
-                    errors: formikProps.errors,
-                    loading,
-                    accountId,
-                    projectIdentifier,
-                    orgIdentifier,
-                    repoIdentifier,
-                    branch,
-                    expressions,
-                    isReadonly,
-                    setCodebaseRuntimeInputs,
-                    codebaseRuntimeInputs,
-                    connectorWidth: 366,
-                    fixRepoNameWidth: true,
-                    setConnectorType,
-                    connectorType,
-                    allowableTypes: [
-                      MultiTypeInputType.FIXED,
-                      MultiTypeInputType.EXPRESSION,
-                      MultiTypeInputType.RUNTIME
-                    ],
-                    configureOptionsProps: { hideExecutionTimeField: true },
-                    isCodeEnabled: CODE_ENABLED
-                  })}
+                  <CloneCodebaseForm
+                    {...{
+                      values: formikProps.values,
+                      setFieldValue: formikProps.setFieldValue,
+                      connectorUrl,
+                      connectionType,
+                      setConnectionType,
+                      setConnectorUrl,
+                      getString,
+                      errors: formikProps.errors,
+                      loading,
+                      accountId,
+                      projectIdentifier,
+                      orgIdentifier,
+                      repoIdentifier,
+                      branch,
+                      expressions,
+                      isReadonly,
+                      setCodebaseRuntimeInputs,
+                      codebaseRuntimeInputs,
+                      connectorWidth: 402,
+                      fixRepoNameWidth: true,
+                      setConnectorType,
+                      connectorType,
+                      allowableTypes: [
+                        MultiTypeInputType.FIXED,
+                        MultiTypeInputType.EXPRESSION,
+                        MultiTypeInputType.RUNTIME
+                      ],
+                      configureOptionsProps: { hideExecutionTimeField: true },
+                      isCodeEnabled: CODE_ENABLED
+                    }}
+                  />
                 </div>
               )}
               <Button
