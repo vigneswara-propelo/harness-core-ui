@@ -62,6 +62,7 @@ permissionLabels:
   toggleFlag: Toggle Feature Flag
   deleteFFSDKKey: Delete FF SDK Key
   createFFSDKKey: Create FF SDK Key
+  toggle: '{{ $.common.toggle }}'
 categoryLabels:
   sharedResources: Shared Resources
 roleBindings: Role Bindings

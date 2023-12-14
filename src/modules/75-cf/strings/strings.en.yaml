@@ -41,7 +41,7 @@ rbac:
   featureflag:
     label: Feature flags
     delete: '{{ $.delete }}'
-    toggle: Toggle
+    toggle: '{{ $.common.toggle }}'
   targetgroup:
     label: '{{ $.cf.shared.targetManagement }}'
     delete: '{{ $.delete }}'

@@ -21,7 +21,7 @@ import { ConnectorReferenceField } from '@platform/connectors/components/Connect
 import { MultiTypeSecretInput } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { MultiTypeDelegateSelector } from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String } from 'framework/strings'
 import RbacFactory from '@rbac/factories/RbacFactory'
@@ -76,12 +76,79 @@ function IDPRoutes(): React.ReactElement {
   const isIDPEnabled = useFeatureFlag(FeatureFlag.IDP_ENABLED)
 
   if (isIDPEnabled) {
+    RbacFactory.registerResourceCategory(ResourceCategory.IDP, {
+      icon: 'idp',
+      label: 'common.purpose.idp.name'
+    })
+
     RbacFactory.registerResourceTypeHandler(ResourceType.IDP_SETTINGS, {
       icon: 'idp',
-      label: 'common.purpose.idp.name',
-      labelSingular: 'common.purpose.idp.name',
+      label: 'idp.idpManage',
+      category: ResourceCategory.IDP,
       permissionLabels: {
         [PermissionIdentifier.IDP_SETTINGS_MANAGE]: <String stringID="rbac.permissionLabels.manage" />
+      }
+    })
+    RbacFactory.registerResourceTypeHandler(ResourceType.IDP_PLUGIN, {
+      icon: 'idp-nav-plugins',
+      label: 'common.plugins',
+      category: ResourceCategory.IDP,
+      permissionLabels: {
+        [PermissionIdentifier.IDP_PLUGINS_VIEW]: <String stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.IDP_PLUGINS_EDIT]: <String stringID="rbac.permissionLabels.createEdit" />,
+        [PermissionIdentifier.IDP_PLUGINS_TOGGLE]: <String stringID="rbac.permissionLabels.toggle" />,
+        [PermissionIdentifier.IDP_PLUGINS_DELETE]: <String stringID="rbac.permissionLabels.delete" />
+      }
+    })
+    RbacFactory.registerResourceTypeHandler(ResourceType.IDP_INTEGRATION, {
+      icon: 'idp-nav-oauth',
+      label: 'common.purpose.ci.integration',
+      category: ResourceCategory.IDP,
+      permissionLabels: {
+        [PermissionIdentifier.IDP_INTEGRATION_VIEW]: <String stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.IDP_INTEGRATION_CREATE]: <String stringID="rbac.permissionLabels.create" />,
+        [PermissionIdentifier.IDP_INTEGRATION_EDIT]: <String stringID="rbac.permissionLabels.edit" />,
+        [PermissionIdentifier.IDP_INTEGRATION_DELETE]: <String stringID="rbac.permissionLabels.delete" />
+      }
+    })
+    RbacFactory.registerResourceTypeHandler(ResourceType.IDP_SCORECARD, {
+      icon: 'idp-nav-scorecards',
+      label: 'idp.scorecards',
+      category: ResourceCategory.IDP,
+      permissionLabels: {
+        [PermissionIdentifier.IDP_SCORECARD_VIEW]: <String stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.IDP_SCORECARD_EDIT]: <String stringID="rbac.permissionLabels.createEdit" />,
+        [PermissionIdentifier.IDP_SCORECARD_DELETE]: <String stringID="rbac.permissionLabels.delete" />
+      }
+    })
+    RbacFactory.registerResourceTypeHandler(ResourceType.IDP_LAYOUT, {
+      icon: 'idp-nav-layout',
+      label: 'idp.layouts',
+      category: ResourceCategory.IDP,
+      permissionLabels: {
+        [PermissionIdentifier.IDP_LAYOUT_VIEW]: <String stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.IDP_LAYOUT_EDIT]: <String stringID="rbac.permissionLabels.createEdit" />
+      }
+    })
+    RbacFactory.registerResourceTypeHandler(ResourceType.IDP_CATALOG_ACCESS_POLICY, {
+      icon: 'user',
+      label: 'idp.catalogAccessPolicy',
+      category: ResourceCategory.IDP,
+      permissionLabels: {
+        [PermissionIdentifier.IDP_CATALOGACCESSPOLICY_VIEW]: <String stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.IDP_CATALOGACCESSPOLICY_CREATE]: <String stringID="rbac.permissionLabels.create" />,
+        [PermissionIdentifier.IDP_CATALOGACCESSPOLICY_EDIT]: <String stringID="rbac.permissionLabels.edit" />,
+        [PermissionIdentifier.IDP_CATALOGACCESSPOLICY_DELETE]: <String stringID="rbac.permissionLabels.delete" />
+      }
+    })
+    RbacFactory.registerResourceTypeHandler(ResourceType.IDP_ADVANCED_CONFIGURATION, {
+      icon: 'idp-nav-pluginconfig',
+      label: 'pipeline.advancedConfiguration',
+      category: ResourceCategory.IDP,
+      permissionLabels: {
+        [PermissionIdentifier.IDP_ADVANCEDCONFIG_VIEW]: <String stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.IDP_ADVANCEDCONFIG_EDIT]: <String stringID="rbac.permissionLabels.createEdit" />,
+        [PermissionIdentifier.IDP_ADVANCEDCONFIG_DELETE]: <String stringID="rbac.permissionLabels.delete" />
       }
     })
   }

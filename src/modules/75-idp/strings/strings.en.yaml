@@ -45,3 +45,6 @@ slackNotifyStep:
   slackChannelId: Slack Channel ID
   slackSecretKey: Slack secret key
   slackIdPlaceholder: Enter Slack ID
+idpManage: IDP Manage
+catalogAccessPolicy: Catalog Access Policies
+layouts: Layouts

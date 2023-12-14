@@ -1447,6 +1447,7 @@ export interface StringsMap {
   'common.timeRangeLimitWarning.upgradeOffer': string
   'common.timeframe': string
   'common.timezone': string
+  'common.toggle': string
   'common.tokenName': string
   'common.tokens': string
   'common.totalLines': string
@@ -1691,6 +1692,7 @@ export interface StringsMap {
   'rbac.permissionLabels.manage': string
   'rbac.permissionLabels.pipelineExecution': string
   'rbac.permissionLabels.push': string
+  'rbac.permissionLabels.toggle': string
   'rbac.permissionLabels.toggleFlag': string
   'rbac.permissionLabels.view': string
   'rbac.permissionOn': string
@@ -9518,6 +9520,7 @@ export interface StringsMap {
   'ci.welcome': string
   'idp.adminHome': string
   'idp.backtoIDP': string
+  'idp.catalogAccessPolicy': string
   'idp.cookieCutterStep.configureTemplate': string
   'idp.cookieCutterStep.cookieCutterStepDesciption': string
   'idp.cookieCutterStep.cookieCutterTemplateURL': string
@@ -9545,8 +9548,10 @@ export interface StringsMap {
   'idp.directPushStep.provideRepoDetailstoPublish': string
   'idp.homepage.idpOverviewDescription': string
   'idp.homepage.learnMore': string
+  'idp.idpManage': string
   'idp.idpStageHoverText': string
   'idp.layout': string
+  'idp.layouts': string
   'idp.newKeyValue': string
   'idp.oAuthConfig': string
   'idp.registerCatalogStep.registerCatalogStepDescription': string

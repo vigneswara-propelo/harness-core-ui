@@ -1752,3 +1752,4 @@ selectedScope: 'Selected {{targetScope}}:'
 projectsInOrgLabel: Projects in Org
 activeUsers: Active User(s)
 filename: File Name
+toggle: Toggle

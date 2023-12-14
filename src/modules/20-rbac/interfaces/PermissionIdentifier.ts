@@ -267,6 +267,26 @@ export enum PermissionIdentifier {
 
   //IDP Permisssions
   IDP_SETTINGS_MANAGE = 'idp_idpsettings_manage',
+  IDP_PLUGINS_VIEW = 'idp_plugin_view',
+  IDP_PLUGINS_EDIT = 'idp_plugin_edit',
+  IDP_PLUGINS_TOGGLE = 'idp_plugin_toggle',
+  IDP_PLUGINS_DELETE = 'idp_plugin_delete',
+  IDP_SCORECARD_VIEW = 'idp_scorecard_view',
+  IDP_SCORECARD_EDIT = 'idp_scorecard_edit',
+  IDP_SCORECARD_DELETE = 'idp_scorecard_delete',
+  IDP_LAYOUT_VIEW = 'idp_layout_view',
+  IDP_LAYOUT_EDIT = 'idp_layout_edit',
+  IDP_CATALOGACCESSPOLICY_VIEW = 'idp_catalogaccesspolicy_view',
+  IDP_CATALOGACCESSPOLICY_CREATE = 'idp_catalogaccesspolicy_create',
+  IDP_CATALOGACCESSPOLICY_EDIT = 'idp_catalogaccesspolicy_edit',
+  IDP_CATALOGACCESSPOLICY_DELETE = 'idp_catalogaccesspolicy_delete',
+  IDP_INTEGRATION_VIEW = 'idp_integration_view',
+  IDP_INTEGRATION_CREATE = 'idp_integration_create',
+  IDP_INTEGRATION_EDIT = 'idp_integration_edit',
+  IDP_INTEGRATION_DELETE = 'idp_integration_delete',
+  IDP_ADVANCEDCONFIG_VIEW = 'idp_advancedconfiguration_view',
+  IDP_ADVANCEDCONFIG_EDIT = 'idp_advancedconfiguration_edit',
+  IDP_ADVANCEDCONFIG_DELETE = 'idp_advancedconfiguration_delete',
 
   //Harness Code permissions
   CODE_REPO_EDIT = 'code_repo_edit',
