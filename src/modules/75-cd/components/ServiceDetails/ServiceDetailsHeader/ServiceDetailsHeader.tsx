@@ -62,7 +62,8 @@ export const ServiceDetailsHeader = (
     hasRemoteFetchFailed,
     setDrawerOpen,
     notificationPopoverVisibility,
-    setNotificationPopoverVisibility
+    setNotificationPopoverVisibility,
+    setServiceResponse
   } = useServiceContext()
   const { tab, storeType, connectorRef, repoName, branch = '' } = useQueryParams<{ tab: string } & GitQueryParams>()
   const { CDC_SERVICE_DASHBOARD_REVAMP_NG, CDS_SERVICE_GITX } = useFeatureFlags()
@@ -118,6 +119,7 @@ export const ServiceDetailsHeader = (
 
   const onGitBranchChange = (selectedFilter: { branch: string }): void => {
     updateQueryParams({ branch: selectedFilter.branch })
+    setServiceResponse?.(undefined)
   }
 
   const renderRemoteDetails = (): JSX.Element | null => {

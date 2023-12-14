@@ -12,7 +12,7 @@ import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 
 export interface ServiceContextValues {
   serviceResponse: ServiceResponseDTO
-  setServiceResponse?: (resposne: ServiceResponseDTO) => void
+  setServiceResponse?: (resposne: ServiceResponseDTO | undefined) => void
   onCloseModal: () => void
   onServiceCreate: (serviceInfo: ServiceYaml, service?: ServiceResponseDTO) => void
   isServiceEntityModalView: boolean
