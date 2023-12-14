@@ -20,7 +20,7 @@ import {
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { StoreMetadata } from '@common/constants/GitSyncTypes'
 import type { ServiceData } from './DeployServiceEntityUtils'
 
@@ -34,6 +34,7 @@ export interface UseGetServicesDataProps {
   deploymentTemplateIdentifier?: string
   versionLabel?: string
   lazyService?: boolean
+  showRemoteFetchError?: boolean
 }
 
 export interface UseGetServicesDataReturn {
@@ -61,7 +62,8 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
     versionLabel,
     lazyService,
     deploymentMetadata,
-    parentStoreMetadata
+    parentStoreMetadata,
+    showRemoteFetchError = false
   } = props
 
   const [servicesList, setServicesList] = useState<ServiceYaml[]>([])
@@ -172,7 +174,7 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
         }))
       }
 
-      if (serviceFetchError?.status === 'ERROR' && serviceFetchError?.code === 'HINT') {
+      if (serviceFetchError?.status === 'ERROR' && serviceFetchError?.code === 'HINT' && showRemoteFetchError) {
         setRemoteFetchError(serviceFetchError)
       } else {
         setRemoteFetchError(undefined)
@@ -228,7 +230,11 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
       const _nonExistingServiceIdentifiers = serviceIdentifiers.filter(
         svcInList => serviceListIdentifiers.indexOf(svcInList) === -1
       )
-      if (!isEqual(_nonExistingServiceIdentifiers, nonExistingServiceIdentifiers) && !lazyService) {
+      if (
+        !isEqual(_nonExistingServiceIdentifiers, nonExistingServiceIdentifiers) &&
+        !lazyService &&
+        _servicesData.length > 0
+      ) {
         setNonExistingServiceIdentifiers(_nonExistingServiceIdentifiers)
       }
     }
@@ -251,6 +257,18 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error])
+
+  useEffect(() => {
+    if (
+      serviceFetchError?.message &&
+      (!(serviceFetchError?.status === 'ERROR' && serviceFetchError?.code === 'HINT') || !showRemoteFetchError)
+    ) {
+      if (shouldShowError(serviceFetchError)) {
+        showError(getRBACErrorMessage(serviceFetchError as RBACError))
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [serviceFetchError])
 
   return {
     servicesData,

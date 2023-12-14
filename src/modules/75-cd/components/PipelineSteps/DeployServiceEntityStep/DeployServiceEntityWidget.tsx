@@ -154,11 +154,11 @@ export default function DeployServiceEntityWidget({
     serviceGitBranches,
     deploymentType: deploymentType as ServiceDefinition['type'],
     ...(shouldAddCustomDeploymentData ? { deploymentTemplateIdentifier, versionLabel } : {}),
-    lazyService: isMultiTypeExpression(serviceInputType)
+    lazyService: isMultiTypeExpression(serviceInputType),
+    showRemoteFetchError: true
   })
 
-  const { nonExistingServiceIdentifiers, loadingServicesList, loadingServicesData, remoteFetchError } =
-    useGetServicesDataReturn
+  const { nonExistingServiceIdentifiers, loadingServicesList, loadingServicesData } = useGetServicesDataReturn
 
   useEffect(() => {
     subscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
@@ -172,9 +172,7 @@ export default function DeployServiceEntityWidget({
   }, [initialValues])
 
   useDeepCompareEffect(() => {
-    if (remoteFetchError?.message) {
-      showWarning(remoteFetchError?.message)
-    } else if (nonExistingServiceIdentifiers.length) {
+    if (nonExistingServiceIdentifiers.length) {
       showWarning(
         getString('cd.identifiersDoNotExist', {
           entity: getString('service'),
@@ -182,7 +180,7 @@ export default function DeployServiceEntityWidget({
         })
       )
     }
-  }, [nonExistingServiceIdentifiers, remoteFetchError])
+  }, [nonExistingServiceIdentifiers])
 
   const loading = loadingServicesList || loadingServicesData || isFetchingMergeServiceInputs
 
