@@ -135,6 +135,7 @@ export function InputSetFormHeader(props: InputSetFormHeaderProps): React.ReactE
                 color={Color.GREY_800}
                 font={{ weight: 'bold', variation: FontVariation.H4 }}
                 margin={{ right: 'medium' }}
+                className={cx(isEdit && storeType === StoreType.REMOTE ? css.editTitle : '')}
               >
                 {isEdit
                   ? getString('inputSets.editTitle', { name: inputSet.name })

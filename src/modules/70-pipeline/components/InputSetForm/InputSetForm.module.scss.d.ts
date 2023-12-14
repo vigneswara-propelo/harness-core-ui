@@ -14,6 +14,7 @@ declare const styles: {
   readonly drag: string
   readonly dragOver: string
   readonly dragging: string
+  readonly editTitle: string
   readonly editor: string
   readonly errorHeader: string
   readonly footer: string
