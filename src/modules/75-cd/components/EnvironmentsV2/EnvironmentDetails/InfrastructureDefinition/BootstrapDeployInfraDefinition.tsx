@@ -964,6 +964,12 @@ function BootstrapDeployInfraDefinition(
                           <FormInput.CheckBox
                             name="scopeToSpecificServices"
                             label={getString('cd.scopeToSpecificServices')}
+                            onChange={event => {
+                              const isChecked = event.currentTarget.checked
+                              if (!isChecked) {
+                                scopedServiceFormikProps.setFieldValue('scopedServices', [])
+                              }
+                            }}
                           />
                           {scopedServiceFormikProps.values.scopeToSpecificServices && (
                             <Container className={css.inputWidth}>
