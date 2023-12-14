@@ -27,7 +27,7 @@ import {
   AllowedTypesWithRunTime
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { FontVariation, Color } from '@harness/design-system'
+import { FontVariation, Color, Intent } from '@harness/design-system'
 import {
   ApplicationSettingsConfiguration,
   ConfigFileWrapper,
@@ -300,6 +300,15 @@ export function ServiceOverrides(): React.ReactElement {
         <Text>{getString('cd.serviceOverrides.helperText')}</Text>
         <Accordion activeId={serviceOverrides[0]?.serviceRef} allowMultiOpen>
           {serviceOverrides.map((serviceOverride: ServiceOverrideResponseDTO) => {
+            let yamlParsingErrorMessage = ''
+            let serviceOverrideConfig = {} as NGServiceOverrideConfig
+            // Added try catch block to handle the case of invalid yaml. As page breaks with invalid yaml
+            try {
+              serviceOverrideConfig = parse(defaultTo(serviceOverride.yaml?.trim(), '{}')) as NGServiceOverrideConfig
+            } catch (error) {
+              yamlParsingErrorMessage = error?.message
+            }
+
             const {
               serviceOverrides: {
                 serviceRef,
@@ -309,7 +318,7 @@ export function ServiceOverrides(): React.ReactElement {
                 applicationSettings = undefined,
                 connectionStrings = undefined
               } = {}
-            } = parse(defaultTo(serviceOverride.yaml, '{}')) as NGServiceOverrideConfig
+            } = serviceOverrideConfig
             const applicationSettingsNumber = applicationSettings ? 1 : 0
             const connectionStringsNumber = connectionStrings ? 1 : 0
             const isSingleOverride =
@@ -324,7 +333,7 @@ export function ServiceOverrides(): React.ReactElement {
                 (serviceObject: ServiceResponse) => serviceRef === serviceObject.service?.identifier
               ),
               'service.name',
-              serviceRef
+              serviceOverride.serviceRef
             )
 
             return (
@@ -342,259 +351,273 @@ export function ServiceOverrides(): React.ReactElement {
                   </Text>
                 }
                 details={
-                  <Layout.Vertical spacing="medium">
-                    {!!manifests.length && (
-                      <Card>
-                        <Accordion
-                          activeId={`${serviceRef}-manifests`}
-                          allowMultiOpen
-                          panelClassName={css.overridesAccordionPanel}
-                          detailsClassName={css.overridesAccordionDetails}
-                        >
-                          <Accordion.Panel
-                            key={`${serviceRef}-manifests`}
-                            id={`${serviceRef}-manifests` as string}
-                            addDomId={true}
-                            summary={
-                              <Text
-                                font={{ variation: FontVariation.CARD_TITLE, weight: 'bold' }}
-                                margin={{ right: 'small' }}
-                                color={Color.GREY_700}
-                                data-tooltip-id="serviceManifestOverrides"
-                              >
-                                {getString('cd.serviceOverrides.manifestOverrides')}
-                                <HarnessDocTooltip useStandAlone={true} tooltipId="serviceManifestOverrides" />
-                              </Text>
-                            }
-                            details={
-                              <>
-                                <ServiceManifestOverridesList
-                                  manifestOverridesList={manifests}
-                                  isReadonly={!canEdit}
-                                  editManifestOverride={() => {
-                                    openModal(ServiceOverrideTab.MANIFEST, serviceRef)
-                                  }}
-                                  removeManifestConfig={index =>
-                                    handleDeleteOverride('manifests', manifests, index, isSingleOverride, serviceRef)
-                                  }
-                                />
-                                <RbacButton
-                                  {...getAddOverrideBtnProps(ServiceOverrideTab.MANIFEST, serviceRef)}
-                                  text={`${getString('common.newName', {
-                                    name: getString('manifestsText')
-                                  })} ${getString('common.override')}`}
-                                />
-                              </>
-                            }
-                          />
-                        </Accordion>
-                      </Card>
-                    )}
-                    {!!configFiles.length && (
-                      <Card>
-                        <Accordion
-                          activeId={`${serviceRef}-configFiles`}
-                          allowMultiOpen
-                          panelClassName={css.overridesAccordionPanel}
-                          detailsClassName={css.overridesAccordionDetails}
-                        >
-                          <Accordion.Panel
-                            key={`${serviceRef}-configFiles`}
-                            id={`${serviceRef}-configFiles` as string}
-                            addDomId={true}
-                            summary={
-                              <Text
-                                font={{ variation: FontVariation.CARD_TITLE, weight: 'bold' }}
-                                margin={{ right: 'small' }}
-                                color={Color.GREY_700}
-                                data-tooltip-id="serviceFilesOverrides"
-                              >
-                                {getString('cd.serviceOverrides.configFileOverrides')}
-                                <HarnessDocTooltip useStandAlone={true} tooltipId="serviceFilesOverrides" />
-                              </Text>
-                            }
-                            details={
-                              <>
-                                <ServiceConfigFileOverridesList
-                                  configFileOverrideList={configFiles}
-                                  isReadonly={!canEdit}
-                                  editFileOverride={() => {
-                                    openModal(ServiceOverrideTab.CONFIG, serviceRef)
-                                  }}
-                                  handleServiceFileDelete={index =>
-                                    handleDeleteOverride(
-                                      'configFiles',
-                                      configFiles,
-                                      index,
-                                      isSingleOverride,
-                                      serviceRef
-                                    )
-                                  }
-                                />
-                                <RbacButton
-                                  {...getAddOverrideBtnProps(ServiceOverrideTab.CONFIG, serviceRef)}
-                                  text={`${getString('common.newName', {
-                                    name: getString('cd.configFileStoreTitle')
-                                  })} ${getString('common.override')}`}
-                                />
-                              </>
-                            }
-                          />
-                        </Accordion>
-                      </Card>
-                    )}
-                    {applicationSettings && (
-                      <Card>
-                        <Accordion
-                          activeId={`${serviceRef}-applicationSettings`}
-                          allowMultiOpen
-                          panelClassName={css.overridesAccordionPanel}
-                          detailsClassName={css.overridesAccordionDetails}
-                        >
-                          <Accordion.Panel
-                            key={`${serviceRef}-applicationSettings`}
-                            id={`${serviceRef}-applicationSettings` as string}
-                            addDomId={true}
-                            summary={
-                              <Text
-                                font={{ variation: FontVariation.CARD_TITLE, weight: 'bold' }}
-                                margin={{ right: 'small' }}
-                                color={Color.GREY_700}
-                                data-tooltip-id="serviceApplicationSettingsOverride"
-                              >
-                                {getString('pipeline.appServiceConfig.applicationSettings.overrides')}
-                                <HarnessDocTooltip
-                                  useStandAlone={true}
-                                  tooltipId="serviceApplicationSettingsOverride"
-                                />
-                              </Text>
-                            }
-                            details={
-                              <Layout.Vertical>
-                                <ApplicationConfigSelection
-                                  allowableTypes={allowableTypes}
-                                  readonly={!canEdit}
-                                  showApplicationSettings={true}
-                                  data={applicationSettings as ApplicationSettingsConfiguration}
-                                  selectionType={ApplicationConfigSelectionTypes.SERVICE_OVERRIDE}
-                                  handleDeleteConfig={index =>
-                                    handleDeleteOverride(
-                                      'applicationSettings',
-                                      applicationSettings,
-                                      index,
-                                      isSingleOverride,
-                                      serviceRef
-                                    )
-                                  }
-                                  editServiceOverride={() => {
-                                    openModal(ServiceOverrideTab.APPLICATIONSETTING, serviceRef)
-                                  }}
-                                />
-                              </Layout.Vertical>
-                            }
-                          />
-                        </Accordion>
-                      </Card>
-                    )}
-                    {connectionStrings && (
-                      <Card>
-                        <Accordion
-                          activeId={`${serviceRef}-connectionStrings`}
-                          allowMultiOpen
-                          panelClassName={css.overridesAccordionPanel}
-                          detailsClassName={css.overridesAccordionDetails}
-                        >
-                          <Accordion.Panel
-                            key={`${serviceRef}-connectionStrings`}
-                            id={`${serviceRef}-connectionStrings` as string}
-                            addDomId={true}
-                            summary={
-                              <Text
-                                font={{ variation: FontVariation.CARD_TITLE, weight: 'bold' }}
-                                margin={{ right: 'small' }}
-                                color={Color.GREY_700}
-                                data-tooltip-id="serviceConnectionStringsOverride"
-                              >
-                                {getString('pipeline.appServiceConfig.connectionStrings.overrides')}
-                                <HarnessDocTooltip useStandAlone={true} tooltipId="serviceConnectionStringsOverride" />
-                              </Text>
-                            }
-                            details={
-                              <Layout.Vertical>
-                                <ApplicationConfigSelection
-                                  allowableTypes={allowableTypes}
-                                  readonly={!canEdit}
-                                  showConnectionStrings={true}
-                                  data={connectionStrings as ConnectionStringsConfiguration}
-                                  selectionType={ApplicationConfigSelectionTypes.SERVICE_OVERRIDE}
-                                  handleDeleteConfig={index =>
-                                    handleDeleteOverride(
-                                      'connectionStrings',
-                                      connectionStrings,
-                                      index,
-                                      isSingleOverride,
-                                      serviceRef
-                                    )
-                                  }
-                                  editServiceOverride={() => {
-                                    openModal(ServiceOverrideTab.CONNECTIONSTRING, serviceRef)
-                                  }}
-                                />
-                              </Layout.Vertical>
-                            }
-                          />
-                        </Accordion>
-                      </Card>
-                    )}
-                    {!!variables.length && (
-                      <Card>
-                        <Accordion
-                          activeId={`${serviceRef}-variables`}
-                          allowMultiOpen
-                          panelClassName={css.overridesAccordionPanel}
-                          detailsClassName={css.overridesAccordionDetails}
-                        >
-                          <Accordion.Panel
-                            key={`${serviceRef}-variables`}
-                            id={`${serviceRef}-variables` as string}
-                            addDomId={true}
-                            summary={
-                              <Text
-                                font={{ variation: FontVariation.CARD_TITLE, weight: 'bold' }}
-                                margin={{ right: 'small' }}
-                                color={Color.GREY_700}
-                                data-tooltip-id="serviceVariableOverrides"
-                              >
-                                {getString('cd.serviceOverrides.variableOverrides')}
-                                <HarnessDocTooltip useStandAlone={true} tooltipId="serviceVariableOverrides" />
-                              </Text>
-                            }
-                            details={
-                              <>
-                                <ServiceVariablesOverridesList
-                                  variableOverrides={variables}
-                                  isReadonly={!canEdit}
-                                  onServiceVarEdit={() => {
-                                    setSelectedTab(ServiceOverrideTab.VARIABLE)
-                                    openModal(ServiceOverrideTab.VARIABLE, serviceRef)
-                                  }}
-                                  onServiceVarDelete={index =>
-                                    handleDeleteOverride('variables', variables, index, isSingleOverride, serviceRef)
-                                  }
-                                />
-                                <RbacButton
-                                  {...getAddOverrideBtnProps(ServiceOverrideTab.VARIABLE, serviceRef)}
-                                  text={`${getString('common.newName', {
-                                    name: getString('variableLabel')
-                                  })} ${getString('common.override')}`}
-                                />
-                              </>
-                            }
-                          />
-                        </Accordion>
-                      </Card>
-                    )}
-                  </Layout.Vertical>
+                  yamlParsingErrorMessage ? (
+                    <>
+                      <Text intent={Intent.DANGER} font={{ weight: 'bold' }}>
+                        {getString('navigationYamlErrorTitle')}
+                      </Text>
+                      <Text intent={Intent.DANGER}>
+                        {getString('error')}:<pre>{yamlParsingErrorMessage}</pre>
+                      </Text>
+                    </>
+                  ) : (
+                    <Layout.Vertical spacing="medium">
+                      {!!manifests.length && (
+                        <Card>
+                          <Accordion
+                            activeId={`${serviceRef}-manifests`}
+                            allowMultiOpen
+                            panelClassName={css.overridesAccordionPanel}
+                            detailsClassName={css.overridesAccordionDetails}
+                          >
+                            <Accordion.Panel
+                              key={`${serviceRef}-manifests`}
+                              id={`${serviceRef}-manifests` as string}
+                              addDomId={true}
+                              summary={
+                                <Text
+                                  font={{ variation: FontVariation.CARD_TITLE, weight: 'bold' }}
+                                  margin={{ right: 'small' }}
+                                  color={Color.GREY_700}
+                                  data-tooltip-id="serviceManifestOverrides"
+                                >
+                                  {getString('cd.serviceOverrides.manifestOverrides')}
+                                  <HarnessDocTooltip useStandAlone={true} tooltipId="serviceManifestOverrides" />
+                                </Text>
+                              }
+                              details={
+                                <>
+                                  <ServiceManifestOverridesList
+                                    manifestOverridesList={manifests}
+                                    isReadonly={!canEdit}
+                                    editManifestOverride={() => {
+                                      openModal(ServiceOverrideTab.MANIFEST, serviceRef)
+                                    }}
+                                    removeManifestConfig={index =>
+                                      handleDeleteOverride('manifests', manifests, index, isSingleOverride, serviceRef)
+                                    }
+                                  />
+                                  <RbacButton
+                                    {...getAddOverrideBtnProps(ServiceOverrideTab.MANIFEST, serviceRef)}
+                                    text={`${getString('common.newName', {
+                                      name: getString('manifestsText')
+                                    })} ${getString('common.override')}`}
+                                  />
+                                </>
+                              }
+                            />
+                          </Accordion>
+                        </Card>
+                      )}
+                      {!!configFiles.length && (
+                        <Card>
+                          <Accordion
+                            activeId={`${serviceRef}-configFiles`}
+                            allowMultiOpen
+                            panelClassName={css.overridesAccordionPanel}
+                            detailsClassName={css.overridesAccordionDetails}
+                          >
+                            <Accordion.Panel
+                              key={`${serviceRef}-configFiles`}
+                              id={`${serviceRef}-configFiles` as string}
+                              addDomId={true}
+                              summary={
+                                <Text
+                                  font={{ variation: FontVariation.CARD_TITLE, weight: 'bold' }}
+                                  margin={{ right: 'small' }}
+                                  color={Color.GREY_700}
+                                  data-tooltip-id="serviceFilesOverrides"
+                                >
+                                  {getString('cd.serviceOverrides.configFileOverrides')}
+                                  <HarnessDocTooltip useStandAlone={true} tooltipId="serviceFilesOverrides" />
+                                </Text>
+                              }
+                              details={
+                                <>
+                                  <ServiceConfigFileOverridesList
+                                    configFileOverrideList={configFiles}
+                                    isReadonly={!canEdit}
+                                    editFileOverride={() => {
+                                      openModal(ServiceOverrideTab.CONFIG, serviceRef)
+                                    }}
+                                    handleServiceFileDelete={index =>
+                                      handleDeleteOverride(
+                                        'configFiles',
+                                        configFiles,
+                                        index,
+                                        isSingleOverride,
+                                        serviceRef
+                                      )
+                                    }
+                                  />
+                                  <RbacButton
+                                    {...getAddOverrideBtnProps(ServiceOverrideTab.CONFIG, serviceRef)}
+                                    text={`${getString('common.newName', {
+                                      name: getString('cd.configFileStoreTitle')
+                                    })} ${getString('common.override')}`}
+                                  />
+                                </>
+                              }
+                            />
+                          </Accordion>
+                        </Card>
+                      )}
+                      {applicationSettings && (
+                        <Card>
+                          <Accordion
+                            activeId={`${serviceRef}-applicationSettings`}
+                            allowMultiOpen
+                            panelClassName={css.overridesAccordionPanel}
+                            detailsClassName={css.overridesAccordionDetails}
+                          >
+                            <Accordion.Panel
+                              key={`${serviceRef}-applicationSettings`}
+                              id={`${serviceRef}-applicationSettings` as string}
+                              addDomId={true}
+                              summary={
+                                <Text
+                                  font={{ variation: FontVariation.CARD_TITLE, weight: 'bold' }}
+                                  margin={{ right: 'small' }}
+                                  color={Color.GREY_700}
+                                  data-tooltip-id="serviceApplicationSettingsOverride"
+                                >
+                                  {getString('pipeline.appServiceConfig.applicationSettings.overrides')}
+                                  <HarnessDocTooltip
+                                    useStandAlone={true}
+                                    tooltipId="serviceApplicationSettingsOverride"
+                                  />
+                                </Text>
+                              }
+                              details={
+                                <Layout.Vertical>
+                                  <ApplicationConfigSelection
+                                    allowableTypes={allowableTypes}
+                                    readonly={!canEdit}
+                                    showApplicationSettings={true}
+                                    data={applicationSettings as ApplicationSettingsConfiguration}
+                                    selectionType={ApplicationConfigSelectionTypes.SERVICE_OVERRIDE}
+                                    handleDeleteConfig={index =>
+                                      handleDeleteOverride(
+                                        'applicationSettings',
+                                        applicationSettings,
+                                        index,
+                                        isSingleOverride,
+                                        serviceRef
+                                      )
+                                    }
+                                    editServiceOverride={() => {
+                                      openModal(ServiceOverrideTab.APPLICATIONSETTING, serviceRef)
+                                    }}
+                                  />
+                                </Layout.Vertical>
+                              }
+                            />
+                          </Accordion>
+                        </Card>
+                      )}
+                      {connectionStrings && (
+                        <Card>
+                          <Accordion
+                            activeId={`${serviceRef}-connectionStrings`}
+                            allowMultiOpen
+                            panelClassName={css.overridesAccordionPanel}
+                            detailsClassName={css.overridesAccordionDetails}
+                          >
+                            <Accordion.Panel
+                              key={`${serviceRef}-connectionStrings`}
+                              id={`${serviceRef}-connectionStrings` as string}
+                              addDomId={true}
+                              summary={
+                                <Text
+                                  font={{ variation: FontVariation.CARD_TITLE, weight: 'bold' }}
+                                  margin={{ right: 'small' }}
+                                  color={Color.GREY_700}
+                                  data-tooltip-id="serviceConnectionStringsOverride"
+                                >
+                                  {getString('pipeline.appServiceConfig.connectionStrings.overrides')}
+                                  <HarnessDocTooltip
+                                    useStandAlone={true}
+                                    tooltipId="serviceConnectionStringsOverride"
+                                  />
+                                </Text>
+                              }
+                              details={
+                                <Layout.Vertical>
+                                  <ApplicationConfigSelection
+                                    allowableTypes={allowableTypes}
+                                    readonly={!canEdit}
+                                    showConnectionStrings={true}
+                                    data={connectionStrings as ConnectionStringsConfiguration}
+                                    selectionType={ApplicationConfigSelectionTypes.SERVICE_OVERRIDE}
+                                    handleDeleteConfig={index =>
+                                      handleDeleteOverride(
+                                        'connectionStrings',
+                                        connectionStrings,
+                                        index,
+                                        isSingleOverride,
+                                        serviceRef
+                                      )
+                                    }
+                                    editServiceOverride={() => {
+                                      openModal(ServiceOverrideTab.CONNECTIONSTRING, serviceRef)
+                                    }}
+                                  />
+                                </Layout.Vertical>
+                              }
+                            />
+                          </Accordion>
+                        </Card>
+                      )}
+                      {!!variables.length && (
+                        <Card>
+                          <Accordion
+                            activeId={`${serviceRef}-variables`}
+                            allowMultiOpen
+                            panelClassName={css.overridesAccordionPanel}
+                            detailsClassName={css.overridesAccordionDetails}
+                          >
+                            <Accordion.Panel
+                              key={`${serviceRef}-variables`}
+                              id={`${serviceRef}-variables` as string}
+                              addDomId={true}
+                              summary={
+                                <Text
+                                  font={{ variation: FontVariation.CARD_TITLE, weight: 'bold' }}
+                                  margin={{ right: 'small' }}
+                                  color={Color.GREY_700}
+                                  data-tooltip-id="serviceVariableOverrides"
+                                >
+                                  {getString('cd.serviceOverrides.variableOverrides')}
+                                  <HarnessDocTooltip useStandAlone={true} tooltipId="serviceVariableOverrides" />
+                                </Text>
+                              }
+                              details={
+                                <>
+                                  <ServiceVariablesOverridesList
+                                    variableOverrides={variables}
+                                    isReadonly={!canEdit}
+                                    onServiceVarEdit={() => {
+                                      setSelectedTab(ServiceOverrideTab.VARIABLE)
+                                      openModal(ServiceOverrideTab.VARIABLE, serviceRef)
+                                    }}
+                                    onServiceVarDelete={index =>
+                                      handleDeleteOverride('variables', variables, index, isSingleOverride, serviceRef)
+                                    }
+                                  />
+                                  <RbacButton
+                                    {...getAddOverrideBtnProps(ServiceOverrideTab.VARIABLE, serviceRef)}
+                                    text={`${getString('common.newName', {
+                                      name: getString('variableLabel')
+                                    })} ${getString('common.override')}`}
+                                  />
+                                </>
+                              }
+                            />
+                          </Accordion>
+                        </Card>
+                      )}
+                    </Layout.Vertical>
+                  )
                 }
               />
             )

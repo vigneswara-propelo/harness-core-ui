@@ -1497,7 +1497,7 @@ python: Python
 networkMap: Network Map
 successfullyAdded: Successfully added
 successfullyUpdated: Successfully updated
-errorOccured: 'Error occured while {{verb}} {{entity}}'
+errorOccured: 'Error occurred while {{verb}} {{entity}}'
 seeAdvancedOptions: See Advanced Options
 addedEntityLabel: 'Added {{entity}}'
 bucketName: Bucket Name
