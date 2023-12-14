@@ -57,6 +57,7 @@ export function LocationValue(props: ILocationValueItem): React.ReactElement {
       key={`${directPath}`}
       onClick={() => handleClick(directPath)}
       flex={{ justifyContent: 'flex-start' }}
+      style={{ flex: 1 }}
     >
       {isHarnessFileStore && <Icon name="main-view" margin={{ right: 'xsmall' }} />}
       <Text color={Color.BLACK} className={isHarnessFileStore ? css.locationLink : ''} lineClamp={1}>

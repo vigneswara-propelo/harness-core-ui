@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 .multiManifestId {
   border: 1px solid var(--grey-300);
   border-right: none;
@@ -85,6 +92,9 @@
   width: 850px;
   position: relative;
   margin-top: var(--spacing-medium);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
 }
 .pathLine {
   position: absolute;
@@ -92,14 +102,9 @@
   height: 35px;
   left: -25px;
   top: -15px;
-  border: 0px solid var(--grey-200);
+  border: 0 solid var(--grey-200);
   border-left: 1px solid var(--grey-300);
   border-bottom: 1px solid var(--grey-300);
-}
-.manifestAttachItem {
-  margin-top: var(--spacing-medium);
-  display: flex;
-  align-items: center;
 }
 
 .multiOverrideWrapper {
