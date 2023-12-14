@@ -45,7 +45,8 @@ jest.mock('services/template-ng', () => ({
 const refetchSaveTemplateYaml = jest.fn().mockResolvedValue({})
 jest.mock('services/cv', () => ({
   ...(jest.requireActual('services/cv') as any),
-  useSaveMonitoredServiceFromYaml: jest.fn().mockImplementation(() => ({ mutate: refetchSaveTemplateYaml }))
+  useSaveMonitoredServiceFromYaml: jest.fn().mockImplementation(() => ({ mutate: refetchSaveTemplateYaml })),
+  useIsReconciliationRequiredForMonitoredServices: jest.fn().mockImplementation(() => ({ data: {} }))
 }))
 
 jest.mock('@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironment', () => ({

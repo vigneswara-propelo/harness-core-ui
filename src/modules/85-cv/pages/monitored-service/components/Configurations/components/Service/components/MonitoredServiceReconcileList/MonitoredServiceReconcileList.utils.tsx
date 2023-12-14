@@ -6,30 +6,43 @@
  */
 
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import moment from 'moment'
 import { Icon, Layout, Tag, Text, useConfirmationDialog, useToaster } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { Renderer, CellProps } from 'react-table'
 import { MonitoredServiceReference, useDetachMonitoredServiceFromTemplate } from 'services/cv'
 import DetachIcon from '@cv/assets/Detach.svg'
+import routes from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
 import { TemplateContextInterface } from '@modules/72-templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
-import { getErrorMessage } from '@modules/85-cv/utils/CommonUtils'
+import { getCVMonitoringServicesSearchParam, getErrorMessage } from '@modules/85-cv/utils/CommonUtils'
+import { MonitoredServiceEnum } from '@modules/85-cv/pages/monitored-service/MonitoredServicePage.constants'
 import { ReconileDrawerProp } from './useReconcileDrawer'
 import css from './MonitoredServiceReconcileList.module.scss'
 
 export const RenderMonitoredServiceIdentifier: Renderer<CellProps<MonitoredServiceReference>> = ({ row }) => {
-  const { identifier, serviceIdentifier } = row.original
+  const { identifier, serviceIdentifier, accountIdentifier = '', projectIdentifier, orgIdentifier } = row.original
 
   return (
-    <>
+    <Link
+      to={`${routes.toCVAddMonitoringServicesEdit({
+        accountId: accountIdentifier,
+        orgIdentifier,
+        projectIdentifier,
+        identifier,
+        module: 'cv'
+      })}${getCVMonitoringServicesSearchParam({
+        tab: MonitoredServiceEnum.Configurations
+      })}`}
+    >
       <Text color={Color.PRIMARY_7} title={identifier} font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}>
         {identifier}
       </Text>
       <Text title={serviceIdentifier} font={{ align: 'left', size: 'small' }}>
         {serviceIdentifier}
       </Text>
-    </>
+    </Link>
   )
 }
 
@@ -78,7 +91,7 @@ export const RenderActionButtons: React.FC<
   }
 > = ({ row, refetch, tempcontext, openInputsetModal, templateIdentifier, versionLabel }) => {
   const { identifier = '', orgIdentifier = '', accountIdentifier = '', projectIdentifier = '' } = row.original
-  const { showError } = useToaster()
+  const { showSuccess, showError } = useToaster()
   const { getString } = useStrings()
   const [rowToDetach, setRowToDetach] = useState<MonitoredServiceReference>()
   const {
@@ -103,6 +116,8 @@ export const RenderActionButtons: React.FC<
       if (shouldDelete) {
         try {
           await detachMonitoredService()
+          showSuccess(getString('cv.monitoredServices.ReconcileTab.detachSuccess'))
+          await refetch()
         } catch (_) {
           showError(getErrorMessage(detachError))
         }

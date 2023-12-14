@@ -137,7 +137,11 @@ export default function PageDutyChangeSource({
   }, [pagerDutyServiceOptions])
 
   useEffect(() => {
-    if (formik?.values?.spec?.connectorRef === '<+input>' && formik?.values?.spec.pagerDutyServiceId !== '<+input>') {
+    if (
+      formik?.values?.spec?.connectorRef === '<+input>' &&
+      formik?.values?.spec.pagerDutyServiceId !== '<+input>' &&
+      serviceType === MultiTypeInputType.FIXED
+    ) {
       formik.setFieldValue('spec.pagerDutyServiceId', '<+input>')
       setServiceType(MultiTypeInputType.RUNTIME)
     }

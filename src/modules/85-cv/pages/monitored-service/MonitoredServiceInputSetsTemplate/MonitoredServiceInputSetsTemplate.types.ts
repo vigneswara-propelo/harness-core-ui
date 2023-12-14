@@ -17,6 +17,7 @@ export interface TemplateDataInterface {
   versionLabel: string
   templateScope?: TemplateSummaryResponse['templateScope']
   gitDetails?: TemplateSummaryResponse['gitDetails']
+  isTemplateByReference?: boolean
 }
 
 export interface MonitoredServiceInputSetInterface {

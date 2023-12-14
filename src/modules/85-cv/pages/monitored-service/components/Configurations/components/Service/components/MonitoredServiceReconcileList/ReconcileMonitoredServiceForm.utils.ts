@@ -9,7 +9,7 @@ import { parse } from 'yaml'
 import { cloneDeep } from 'lodash-es'
 import { MonitoredServiceInputSetInterface } from '@modules/85-cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.types'
 import { NGTemplateInfoConfig } from 'services/template-ng'
-import { HealthSource, ResponseString } from 'services/cv'
+import { ChangeSourceDTO, HealthSource, ResponseString } from 'services/cv'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const copyMatchingKeyValues = (Target: any, Source: any): { [key: string]: string | object } => {
@@ -26,7 +26,7 @@ export const copyMatchingKeyValues = (Target: any, Source: any): { [key: string]
   return Target
 }
 
-export const getHealthsourcewithName = (
+export const getHealthSourceWithName = (
   templateJSON: MonitoredServiceInputSetInterface,
   templateValue: NGTemplateInfoConfig
 ): HealthSource[] | [] => {
@@ -34,6 +34,23 @@ export const getHealthsourcewithName = (
     templateJSON?.sources?.healthSources?.map(item => {
       const hsdata = templateValue?.spec?.sources?.healthSources?.find(
         (hs: HealthSource) => hs?.identifier === item?.identifier
+      )
+      return {
+        ...item,
+        name: hsdata?.name
+      }
+    }) || []
+  )
+}
+
+export const getChangeSourceWithName = (
+  templateJSON: MonitoredServiceInputSetInterface,
+  templateValue: NGTemplateInfoConfig
+): ChangeSourceDTO[] | [] => {
+  return (
+    templateJSON?.sources?.changeSources?.map(item => {
+      const hsdata = templateValue?.spec?.sources?.changeSources?.find(
+        (hs: ChangeSourceDTO) => hs?.identifier === item?.identifier
       )
       return {
         ...item,

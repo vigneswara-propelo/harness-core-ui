@@ -5,11 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Container, Tab, Tabs, Views } from '@harness/uicore'
+import { Container, Layout, Tab, Tabs, Text, Views } from '@harness/uicore'
 import React, { useEffect, useState } from 'react'
+import { Color } from '@harness/design-system'
 import { FormikContextType, useFormikContext } from 'formik'
 import { useHistory, useParams } from 'react-router-dom'
-import type { ChangeSourceDTO, MonitoredServiceDTO } from 'services/cv'
+import {
+  useIsReconciliationRequiredForMonitoredServices,
+  ChangeSourceDTO,
+  MonitoredServiceDTO,
+  IsReconciliationRequiredForMonitoredServicesQueryParams
+} from 'services/cv'
 import type { MonitoredServiceConfig } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.types'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import SaveAndDiscardButton from '@cv/components/SaveAndDiscardButton/SaveAndDiscardButton'
@@ -24,7 +30,9 @@ import { ModuleName } from 'framework/types/ModuleName'
 import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
+import ReconcileIcon from '@cv/assets/Running.svg'
 import { NGTemplateInfoConfig } from 'services/template-ng'
+import NoResultsView from '@modules/72-templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import {
   getIsAgentConfigSectionHidden,
   getIsChangeSrcSectionHidden,
@@ -127,6 +135,44 @@ export default function CommonMonitoredServiceConfigurations(
     ProjectPathProps & { identifier: string; templateIdentifier?: string }
   >()
   const [areOtherTabsDisabled, setAreOtherTabsDisabled] = useState<boolean>(true)
+  const { isTemplateByReference } = formik.values?.template || {}
+
+  const getQueryParms = (): IsReconciliationRequiredForMonitoredServicesQueryParams => {
+    const templateMS = formik?.values?.template
+    const templateData = initialValues.templateValue
+
+    const templateQueryParam = isTemplate
+      ? {
+          templateIdentifier: templateData?.identifier || '',
+          versionLabel: templateData?.versionLabel || '',
+          monitoredServiceIdentifier: identifier
+        }
+      : {
+          templateIdentifier: templateMS?.templateRef || '',
+          versionLabel: templateMS?.versionLabel || '',
+          monitoredServiceIdentifier: identifier
+        }
+
+    return {
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      ...templateQueryParam
+    }
+  }
+
+  const queryParams = getQueryParms()
+
+  const { refetch, data: isReconcileRequiredData } = useIsReconciliationRequiredForMonitoredServices({
+    queryParams,
+    lazy: true
+  })
+
+  useEffect(() => {
+    if (showInputsets && isTemplateByReference) {
+      refetch()
+    }
+  }, [showInputsets, isTemplateByReference])
 
   useEffect(() => {
     const shouldDisableTabs = !(formik.values.serviceRef && formik.values.environmentRef)
@@ -362,17 +408,28 @@ export default function CommonMonitoredServiceConfigurations(
           <Tab
             disabled={areOtherTabsDisabled}
             id={getString('inputSets.inputSetLabel')}
-            title={getString('inputSets.inputSetLabel')}
+            title={
+              <Layout.Horizontal flex={{ alignItems: 'baseline' }}>
+                <Text color={Color.BLACK}>{getString('inputSets.inputSetLabel')}</Text>
+                {Boolean(isReconcileRequiredData?.data) && <img src={ReconcileIcon} />}
+              </Layout.Horizontal>
+            }
             panel={
               isTemplate ? (
                 <MonitoredServiceReconcileList templateValue={initialValues.templateValue as NGTemplateInfoConfig} />
               ) : (
-                <Container width={'100%'} flex={{ justifyContent: 'center' }}>
-                  {formik.values.template && (
+                <Container
+                  width={'100%'}
+                  flex={{ justifyContent: 'center' }}
+                  margin={{ top: !isTemplateByReference ? 'large' : '' }}
+                >
+                  {formik.values.template && isTemplateByReference ? (
                     <ReconcileMonitoredServiceFormInMS
                       templateData={formik.values.template}
                       monitoredServiceIdentifier={identifier}
                     />
+                  ) : (
+                    <NoResultsView minimal={true} text={getString('templatesLibrary.noInputsRequired')} />
                   )}
                 </Container>
               )

@@ -134,7 +134,10 @@ const MonitoredService = (props: MonitoredServiceProps) => {
   const appliedSearchAndFilter = useMemo(() => areFiltersApplied(search, environment), [environment, search])
 
   const onUseTemplate = async () => {
-    const { template } = await getTemplate({ templateType: 'MonitoredService', allowedUsages: [TemplateUsage.USE] })
+    const { template, isCopied } = await getTemplate({
+      templateType: 'MonitoredService',
+      allowedUsages: [TemplateUsage.USE, TemplateUsage.COPY]
+    })
     const { identifier, versionLabel, templateScope } = template
     const templateRefData = {
       identifier,
@@ -142,7 +145,8 @@ const MonitoredService = (props: MonitoredServiceProps) => {
       orgIdentifier: orgIdentifier,
       projectIdentifier: projectIdentifier,
       versionLabel,
-      templateScope
+      templateScope,
+      isTemplateByReference: !isCopied
     }
     history.push({
       pathname: routes.toCVMonitoringServicesInputSets(pathParams),

@@ -10,7 +10,11 @@ import { useParams } from 'react-router-dom'
 import { Container, TableV2, Page } from '@harness/uicore'
 import type { CellProps } from 'react-table'
 import { ProjectPathProps } from '@modules/10-common/interfaces/RouteInterfaces'
-import { MonitoredServiceReference, useGetMonitoredServiceReconciliationStatuses } from 'services/cv'
+import {
+  GetMonitoredServiceReconciliationStatusesQueryParams,
+  MonitoredServiceReference,
+  useGetMonitoredServiceReconciliationStatuses
+} from 'services/cv'
 import { NGTemplateInfoConfig } from 'services/template-ng'
 import { useStrings } from 'framework/strings'
 
@@ -21,6 +25,7 @@ import {
 import { TemplateContext } from '@modules/72-templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import NoResultsView from '@modules/72-templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import { getErrorMessage } from '@modules/85-cv/utils/CommonUtils'
+import { getScopedValueFromDTO } from '@modules/10-common/components/EntityReference/EntityReference.types'
 import {
   RenderAccount,
   RenderLastReconciled,
@@ -40,17 +45,26 @@ const MonitoredServiceReconcileList = ({ templateValue }: { templateValue: NGTem
   const tempcontext = React.useContext(TemplateContext)
 
   const { versionLabel, identifier, orgIdentifier = '', projectIdentifier = '' } = templateValue
+  const orgAndProjectIdentifiers = {
+    orgIdentifier: orgIdentifier ? { orgIdentifier } : {},
+    projectIdentifier: projectIdentifier ? { projectIdentifier } : {}
+  }
+
+  const scopedIdentifier = getScopedValueFromDTO(templateValue)
+
   const queryParams = {
     accountId,
-    orgIdentifier,
-    projectIdentifier,
-    templateIdentifier: identifier,
+    ...orgAndProjectIdentifiers.orgIdentifier,
+    ...orgAndProjectIdentifiers.projectIdentifier,
+    templateIdentifier: scopedIdentifier,
     versionLabel,
     pageNumber,
     pageSize: 10
-  }
+  } as unknown as GetMonitoredServiceReconciliationStatusesQueryParams
 
-  const { data, loading, error, refetch } = useGetMonitoredServiceReconciliationStatuses({ queryParams })
+  const { data, loading, error, refetch } = useGetMonitoredServiceReconciliationStatuses({
+    queryParams
+  })
   const { content, totalItems = 0, totalPages = 0, pageIndex = 0, pageSize = 10 } = data?.resource || {}
 
   const columns = [

@@ -681,6 +681,8 @@ monitoredServices:
     InputRequiredReconcile: Input required to reconcile
     serviceAndenv: Service & Environment
     noLinkedMS: No monitored service linked with template
+    reconcileSuccess: Reconciled successfully
+    detachSuccess: Detached successfully
 commonMonitoredServices:
   goTo: go to
   agentConfiguration: agent configuration
@@ -720,6 +722,7 @@ changeSource:
   alertText: Alert
   incident: Incident
   noChangeSource: No Change Sources Present
+  noChangeSourceInputset: No Change Sources
   noData: No changes data available
   addChangeSource: Add New Change Source
   selectChangeSource: Select Change Source
@@ -789,8 +792,8 @@ healthSource:
   defineHealthSource: Define Health Source
   deleteHealthSourceWarning: Are you sure you want to delete Health Source
   deleteHealthSource: Delete Health Source
-  detachHealthSourceWarning: Are you sure you want to detach Health Source
-  detachHealthSource: Detach Health Source
+  detachHealthSourceWarning: Are you sure you want to detach monitored service
+  detachHealthSource: Detach Monitored Service
   detachLabel: Detach
   invalidMetric: '{{ metricName }} metric is invalid'
   selectConnectionTypeInfo: Select the connection type to see your hosted entities directly in Harness

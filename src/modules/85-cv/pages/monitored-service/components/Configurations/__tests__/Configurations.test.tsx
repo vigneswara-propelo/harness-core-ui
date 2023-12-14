@@ -90,7 +90,8 @@ jest.mock('services/cv', () => ({
     .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
   useGetMonitoredServiceList: jest
     .fn()
-    .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() }))
+    .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
+  useIsReconciliationRequiredForMonitoredServices: jest.fn().mockImplementation(() => ({ data: {} }))
 }))
 
 mockImport('framework/LicenseStore/LicenseStoreContext', {

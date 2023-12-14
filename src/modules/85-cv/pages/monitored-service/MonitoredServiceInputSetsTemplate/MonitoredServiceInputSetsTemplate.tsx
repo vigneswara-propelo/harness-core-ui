@@ -44,6 +44,7 @@ import type {
   TemplateDataInterface,
   MonitoredServiceInputSetInterface
 } from './MonitoredServiceInputSetsTemplate.types'
+import { ChangeSourceInputset } from './components/ChangeSourceInputset/ChangeSourceInputset'
 import css from './MonitoredServiceInputSetsTemplate.module.scss'
 
 export default function MonitoredServiceInputSetsTemplate({
@@ -186,7 +187,7 @@ export default function MonitoredServiceInputSetsTemplate({
           templateRef: templateIdentifierWithScope,
           versionLabel: templateRefData?.versionLabel,
           templateVersionNumber,
-          isTemplateByReference: true,
+          isTemplateByReference: templateRefData?.isTemplateByReference,
           templateInputs: {
             ...monitoredServiceInputSet,
             ...populateSource,
@@ -239,6 +240,9 @@ export default function MonitoredServiceInputSetsTemplate({
   let content = <></>
   const healthSourcesWithRuntimeList = monitoredServiceInputSet?.sources?.healthSources?.map(
     healthSource => healthSource.identifier as string
+  )
+  const changeSourcesWithRuntimeList = monitoredServiceInputSet?.sources?.changeSources?.map(
+    changeSource => changeSource.identifier as string
   )
   if (loadingTemplateYaml) {
     content = <PageSpinner />
@@ -305,6 +309,15 @@ export default function MonitoredServiceInputSetsTemplate({
                   environmentValue={formik.values.environmentRef}
                   onChange={formik.setFieldValue}
                   isReadOnlyInputSet={isReadOnlyInputSet}
+                />
+                <ChangeSourceInputset
+                  templateRefData={templateRefData}
+                  isReadOnlyInputSet={isReadOnlyInputSet}
+                  data={msTemplateResponse}
+                  loading={msTemplateLoading}
+                  error={msTemplateError}
+                  refetch={msTemplateRefetch}
+                  changeSourcesWithRuntimeList={defaultTo(changeSourcesWithRuntimeList, [])}
                 />
                 <HealthSourceInputset
                   templateRefData={templateRefData}

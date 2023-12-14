@@ -88,7 +88,8 @@ jest.mock('services/cv', () => ({
     .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
   useUpdateNotificationRuleData: jest
     .fn()
-    .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() }))
+    .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
+  useIsReconciliationRequiredForMonitoredServices: jest.fn().mockImplementation(() => ({ data: {} }))
 }))
 
 describe('Test MonitoredTemplateCanvasWithRef', () => {

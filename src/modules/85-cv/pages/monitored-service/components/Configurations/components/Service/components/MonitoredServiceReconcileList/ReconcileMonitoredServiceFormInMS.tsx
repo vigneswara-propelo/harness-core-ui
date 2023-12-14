@@ -19,6 +19,7 @@ import HealthSourceInputsetTable from '@modules/85-cv/pages/monitored-service/Mo
 import HealthSourceInputsetForm from '@modules/85-cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/components/HealthSourceInputset/components/HealthSourceInputsetForm/HealthSourceInputsetForm'
 import { useGetTemplate, useGetTemplateInputSetYaml } from 'services/template-ng'
 import {
+  getIdentifierFromValue,
   getScopeBasedProjectPathParams,
   getScopeFromValue
 } from '@modules/10-common/components/EntityReference/EntityReference'
@@ -30,7 +31,13 @@ import { validateInputSet } from '@modules/85-cv/pages/monitored-service/Monitor
 import { yamlStringify } from '@modules/10-common/utils/YamlHelperMethods'
 import { getErrorMessage } from '@modules/85-cv/utils/CommonUtils'
 import NoResultsView from '@modules/72-templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
-import { getHealthsourcewithName, getInitialFormData } from './ReconcileMonitoredServiceForm.utils'
+import { ChangeSourcetable } from '@modules/85-cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/components/ChangeSourceInputset/ChangeSourcetable/ChangeSourcetable'
+import { ChangeSourceInputsetForm } from '@modules/85-cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/components/ChangeSourceInputset/ChangeSourceInputsetForm/ChangeSourceInputsetForm'
+import {
+  getHealthSourceWithName,
+  getChangeSourceWithName,
+  getInitialFormData
+} from './ReconcileMonitoredServiceForm.utils'
 import OrgAccountLevelServiceEnvField from '../MonitoredServiceOverview/component/OrgAccountLevelServiceEnvField/OrgAccountLevelServiceEnvField'
 import css from './MonitoredServiceReconcileList.module.scss'
 
@@ -42,7 +49,7 @@ export const ReconcileMonitoredServiceFormInMS = ({
   monitoredServiceIdentifier: string
 }): JSX.Element => {
   const pathParams = useParams<ProjectPathProps>()
-  const { showError } = useToaster()
+  const { showError, showSuccess } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = pathParams
   const { templateInputs = '' } = templateData
   const { getTemplate } = useTemplateSelector()
@@ -52,7 +59,7 @@ export const ReconcileMonitoredServiceFormInMS = ({
   const { templateRef, versionLabel = '' } = selectedTemplate
 
   const templateScope = getScopeFromValue(defaultTo(templateRef, ''))
-  const templateIdentifier = defaultTo(templateRef, '')
+  const templateIdentifier = getIdentifierFromValue(templateRef)
 
   const queryParams = {
     ...getScopeBasedProjectPathParams({ accountId, orgIdentifier, projectIdentifier }, templateScope),
@@ -91,14 +98,17 @@ export const ReconcileMonitoredServiceFormInMS = ({
 
   const templateValue = parse(templateResponse?.data?.yaml || '')?.template
   const healthSource = templateValue?.spec?.sources?.healthSources || []
+  const changeSource = templateValue?.spec?.sources?.changeSources || []
 
   const { templateJSON, initialFormData } = getInitialFormData({ data: templateInputs }, templateInputYaml)
 
-  const healthsourcewithName = getHealthsourcewithName(templateJSON, templateValue)
+  const healthSourceWithName = getHealthSourceWithName(templateJSON, templateValue)
+  const changeSourceSithName = getChangeSourceWithName(templateJSON, templateValue)
 
   return (
     <Container width={600}>
       <TemplateBar
+        supportVersionChange
         templateLinkConfig={{ templateRef, versionLabel }}
         isReadonly={false}
         onOpenTemplateSelector={async () => {
@@ -141,6 +151,7 @@ export const ReconcileMonitoredServiceFormInMS = ({
               }
               const yamlResponse = yamlStringify(structure)
               await saveReconcile(yamlResponse)
+              showSuccess(getString('cv.monitoredServices.ReconcileTab.reconcileSuccess'))
             } catch (_) {
               showError(getErrorMessage(errorReconcile))
             }
@@ -170,6 +181,14 @@ export const ReconcileMonitoredServiceFormInMS = ({
                   />
                 </Card>
                 <Card className={css.healthsourceCard}>
+                  <ChangeSourcetable changeSources={changeSource} />
+                  <ChangeSourceInputsetForm
+                    isReconcile
+                    isReadOnlyInputSet={false}
+                    changeSources={changeSourceSithName}
+                  />
+                </Card>
+                <Card className={css.healthsourceCard}>
                   <Text
                     font={{ variation: FontVariation.CARD_TITLE }}
                     color={Color.BLACK}
@@ -179,7 +198,8 @@ export const ReconcileMonitoredServiceFormInMS = ({
                   </Text>
                   <HealthSourceInputsetTable healthSources={healthSource} />
                 </Card>
-                <HealthSourceInputsetForm healthSources={healthsourcewithName} isReadOnlyInputSet={false} isReconcile />
+                <HealthSourceInputsetForm healthSources={healthSourceWithName} isReadOnlyInputSet={false} isReconcile />
+
                 <Button
                   width="100%"
                   margin={{ top: 'small' }}

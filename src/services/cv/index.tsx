@@ -2092,6 +2092,7 @@ export interface Error {
     | 'PARAMETER_FIELD_CAST_ERROR'
     | 'ABORT_ALL_ALREADY_NG'
     | 'WEBHOOK_EXCEPTION'
+    | 'INVALID_OIDC_CONFIGURATION'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2576,6 +2577,7 @@ export interface Failure {
     | 'PARAMETER_FIELD_CAST_ERROR'
     | 'ABORT_ALL_ALREADY_NG'
     | 'WEBHOOK_EXCEPTION'
+    | 'INVALID_OIDC_CONFIGURATION'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2875,10 +2877,13 @@ export type HarnessCDEventMetadata = ChangeEventMetadata & {
 }
 
 export type HarnessConnector = ConnectorConfigDTO & {
+  accountId?: string
   apiAccess?: HarnessApiAccess
   apiUrl?: string
   authentication: HarnessAuthentication
   executeOnDelegate?: boolean
+  orgId?: string
+  projectId?: string
   slug?: string
   type: 'Account' | 'Repo' | 'Project'
   url: string
@@ -5598,6 +5603,7 @@ export interface ResponseMessage {
     | 'PARAMETER_FIELD_CAST_ERROR'
     | 'ABORT_ALL_ALREADY_NG'
     | 'WEBHOOK_EXCEPTION'
+    | 'INVALID_OIDC_CONFIGURATION'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -7205,7 +7211,6 @@ export interface TemplateDTO {
   lastReconciliationTime?: number
   templateInputs?: string
   templateRef: string
-  templateVersionNumber?: number
   versionLabel?: string
 }
 
@@ -14657,7 +14662,6 @@ export interface IsReconciliationRequiredForMonitoredServicesQueryParams {
   projectIdentifier: string
   templateIdentifier: string
   versionLabel: string
-  templateVersionNumber: number
   monitoredServiceIdentifier?: string
 }
 

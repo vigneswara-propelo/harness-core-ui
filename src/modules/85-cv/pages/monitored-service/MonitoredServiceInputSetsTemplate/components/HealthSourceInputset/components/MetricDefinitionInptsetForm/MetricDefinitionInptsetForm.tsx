@@ -52,7 +52,7 @@ export default function MetricDefinitionInptsetForm({
     return (
       <div key={item?.metricName}>
         <Text font={'normal'} color={Color.BLACK} style={{ paddingBottom: spacingMedium }}>
-          {getString('cv.monitoringSources.metricLabel')}: {item?.metricName || item?.name}
+          {getString('cv.monitoringSources.metricLabel')}: {item?.metricName || item?.name || item?.identifier}
         </Text>
         {isPresent
           ? items.map(input => {

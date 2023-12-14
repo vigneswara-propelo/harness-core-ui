@@ -18,6 +18,7 @@ import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/C
 import { getValidationLabelByNameForTemplateInputs } from '../CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
 import type { MonitoredServiceInputSetInterface } from './MonitoredServiceInputSetsTemplate.types'
 import { GcoQueryKey } from './MonitoredServiceInputSetsTemplate.constants'
+import { ChangeSourceTypes } from '../../ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 
 export const getLabelByName = (
   name: string,
@@ -142,6 +143,15 @@ export const getNestedEmptyFieldsWithPath = (
   basePath: string
 ): { name: string; path: string }[] => {
   return getNestedByCondition(spec, list, basePath, value => isEmpty(value as string))
+}
+
+export const changeSourceTypeMapping = (type: string): ConnectorInfoDTO['type'] => {
+  switch (type) {
+    case ChangeSourceTypes.PagerDuty:
+      return Connectors.PAGER_DUTY
+    default:
+      return type as ConnectorInfoDTO['type']
+  }
 }
 
 export const healthSourceTypeMapping = (type: HealthSourceTypes): ConnectorInfoDTO['type'] => {

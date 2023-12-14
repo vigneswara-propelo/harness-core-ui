@@ -36,8 +36,14 @@ import {
   getScopeBasedProjectPathParams,
   getScopeFromDTO
 } from '@modules/10-common/components/EntityReference/EntityReference'
+import { ChangeSourcetable } from '@modules/85-cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/components/ChangeSourceInputset/ChangeSourcetable/ChangeSourcetable'
+import { ChangeSourceInputsetForm } from '@modules/85-cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/components/ChangeSourceInputset/ChangeSourceInputsetForm/ChangeSourceInputsetForm'
 import OrgAccountLevelServiceEnvField from '../MonitoredServiceOverview/component/OrgAccountLevelServiceEnvField/OrgAccountLevelServiceEnvField'
-import { getHealthsourcewithName, getInitialFormData } from './ReconcileMonitoredServiceForm.utils'
+import {
+  getChangeSourceWithName,
+  getHealthSourceWithName,
+  getInitialFormData
+} from './ReconcileMonitoredServiceForm.utils'
 import css from './MonitoredServiceReconcileList.module.scss'
 
 export default function ReconcileMonitoredServiceFormInTemplate({
@@ -50,7 +56,7 @@ export default function ReconcileMonitoredServiceFormInTemplate({
   closeDrawer: () => void
 }): JSX.Element {
   const { getString } = useStrings()
-  const { showError } = useToaster()
+  const { showSuccess, showError } = useToaster()
   const { identifier, versionLabel, orgIdentifier: templateOrgId, projectIdentifier: templateProjectId } = templateValue
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const templateRefScope = getScopeFromDTO({
@@ -108,7 +114,8 @@ export default function ReconcileMonitoredServiceFormInTemplate({
 
   const { templateJSON, initialFormData } = getInitialFormData(resolvedTemplateData, templateInputYaml)
 
-  const healthsourcewithName = getHealthsourcewithName(templateJSON, templateValue)
+  const healthSourceWithName = getHealthSourceWithName(templateJSON, templateValue)
+  const changeSourceWithName = getChangeSourceWithName(templateJSON, templateValue)
 
   return (
     <Page.Body
@@ -143,6 +150,7 @@ export default function ReconcileMonitoredServiceFormInTemplate({
                 const yamlResponse = yamlStringify(structure)
                 await saveReconcile(yamlResponse)
                 closeDrawer()
+                showSuccess(getString('cv.monitoredServices.ReconcileTab.reconcileSuccess'))
               } catch (error) {
                 showError(getErrorMessage(errorReconcile))
               }
@@ -199,6 +207,14 @@ export default function ReconcileMonitoredServiceFormInTemplate({
                     />
                   </Card>
                   <Card className={css.healthsourceCard}>
+                    <ChangeSourcetable changeSources={templateValue?.spec?.sources?.changeSources || []} />
+                    <ChangeSourceInputsetForm
+                      isReconcile
+                      isReadOnlyInputSet={false}
+                      changeSources={changeSourceWithName}
+                    />
+                  </Card>
+                  <Card className={css.healthsourceCard}>
                     <Text
                       font={{ variation: FontVariation.CARD_TITLE }}
                       color={Color.BLACK}
@@ -209,7 +225,7 @@ export default function ReconcileMonitoredServiceFormInTemplate({
                     <HealthSourceInputsetTable healthSources={templateValue?.spec?.sources?.healthSources || []} />
                   </Card>
                   <HealthSourceInputsetForm
-                    healthSources={healthsourcewithName}
+                    healthSources={healthSourceWithName}
                     isReadOnlyInputSet={false}
                     isReconcile
                   />

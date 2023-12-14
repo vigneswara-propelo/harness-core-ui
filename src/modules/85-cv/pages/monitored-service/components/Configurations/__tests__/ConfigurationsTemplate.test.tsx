@@ -75,7 +75,8 @@ jest.mock('services/cv', () => ({
     .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
   useGetMonitoredServiceList: jest
     .fn()
-    .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() }))
+    .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
+  useIsReconciliationRequiredForMonitoredServices: jest.fn().mockImplementation(() => ({ data: {} }))
 }))
 
 describe('Unit tests for Configuration Template', () => {

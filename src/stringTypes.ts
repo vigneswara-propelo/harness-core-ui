@@ -9764,6 +9764,7 @@ export interface StringsMap {
   'cv.changeSource.kubernetes.invalidConnector': string
   'cv.changeSource.kubernetes.validatingConnector': string
   'cv.changeSource.noChangeSource': string
+  'cv.changeSource.noChangeSourceInputset': string
   'cv.changeSource.noData': string
   'cv.changeSource.noDataAvaiableForCard': string
   'cv.changeSource.noDataAvailableForChangeScore': string
@@ -10051,10 +10052,12 @@ export interface StringsMap {
   'cv.minutesRemaining': string
   'cv.monday': string
   'cv.monitoredServices.ReconcileTab.InputRequiredReconcile': string
+  'cv.monitoredServices.ReconcileTab.detachSuccess': string
   'cv.monitoredServices.ReconcileTab.lastReconciled': string
   'cv.monitoredServices.ReconcileTab.monitoredServiceIdentifier': string
   'cv.monitoredServices.ReconcileTab.noLinkedMS': string
   'cv.monitoredServices.ReconcileTab.reconcileAll': string
+  'cv.monitoredServices.ReconcileTab.reconcileSuccess': string
   'cv.monitoredServices.ReconcileTab.serviceAndenv': string
   'cv.monitoredServices.addNewMonitoredServices': string
   'cv.monitoredServices.assignLabel': string
