@@ -25,7 +25,8 @@ const renderComponent = (config: Partial<Window['featureFlagsConfig']> = {}): Re
       baseUrl: 'https://url.com',
       eventUrl: 'https://url.com',
       enableStream: false,
-      async: true
+      async: true,
+      cache: true
     },
     ...config
   }

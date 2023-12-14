@@ -2945,21 +2945,20 @@
   resolved "https://npm.pkg.github.com/download/@harness/use-modal/1.1.0/693a3bb3e6ea5d3ec02d301316a8a940773fefec4d88019302fc57428fc913c6#98ff8498247e27c239626ff1b195797e4c69882c"
   integrity sha512-cpbd8xUfbkz1jA9ANGlbLjd1bC+aP3/SJ66j7V3ErsHIv6apK6B8eTgL4N7pnMiTemuTNyjhGvsGCZOF9FO6Pg==
 
-"@harnessio/ff-javascript-client-sdk@^1.13.0":
-  version "1.14.0"
-  resolved "https://registry.yarnpkg.com/@harnessio/ff-javascript-client-sdk/-/ff-javascript-client-sdk-1.14.0.tgz#30ddd3f6e1c70b31c95c94d304e05b72db62bca4"
-  integrity sha512-7v973dhKK7efEs92RZEFe7YustK6L638wQQoFDjcGGIeK6M+ytMlnzxyHoFVc5p0nlQonZkYA3u28uuDocgnIA==
+"@harnessio/ff-javascript-client-sdk@^1.21.0":
+  version "1.21.0"
+  resolved "https://registry.yarnpkg.com/@harnessio/ff-javascript-client-sdk/-/ff-javascript-client-sdk-1.21.0.tgz#50f675b0cf7902d0a55c3eddc943a612fd82504b"
+  integrity sha512-4/JHbpRCe41bkOuJPNN3rW63Rn+nOyGCNVfwfvOHxpDZeSk54w0RjkcHwPXzp4MB5MLNAfg5Owup5GEdBmtRbg==
   dependencies:
-    event-source-polyfill "1.0.31"
     jwt-decode "^3.1.2"
     mitt "^2.1.0"
 
-"@harnessio/ff-react-client-sdk@1.4.0":
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/@harnessio/ff-react-client-sdk/-/ff-react-client-sdk-1.4.0.tgz#31fe7b4ef0b0b834b66a5403ea4146c07da1d548"
-  integrity sha512-pXyZzbUCHyXipdGWc+Rge7qr4CTIuLTE3lb8H9AapRWHuMXyuIlL8bLCcs6SRSPab0qDtF+XdrePKWPE2xBPMA==
+"@harnessio/ff-react-client-sdk@1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@harnessio/ff-react-client-sdk/-/ff-react-client-sdk-1.6.0.tgz#052a72ebfe7e775cc5de1959770c4363174c37df"
+  integrity sha512-Vs3GbnfWKxZksRos9gknt/k/kUxffEMyi444sfdvdI8QKezP3kHWiqr7ue2N9Ub7fcvPtRq19CuiJW0OhT2W6w==
   dependencies:
-    "@harnessio/ff-javascript-client-sdk" "^1.13.0"
+    "@harnessio/ff-javascript-client-sdk" "^1.21.0"
     lodash.omit "^4.5.0"
 
 "@harnessio/oats-cli@^2.1.0":
@@ -9625,7 +9624,7 @@ ev-emitter@^1.0.0:
   resolved "https://registry.yarnpkg.com/ev-emitter/-/ev-emitter-1.1.1.tgz#8f18b0ce5c76a5d18017f71c0a795c65b9138f2a"
   integrity "sha1-jxiwzlx2pdGAF/ccCnlcZbkTjyo= sha512-ipiDYhdQSCZ4hSbX4rMW+XzNKMD1prg/sTvoVmSLkuQ1MVlwjJQQA+sW8tMYR3BLUr9KjodFV4pvzunvRhd33Q=="
 
-event-source-polyfill@1.0.31, event-source-polyfill@^1.0.22:
+event-source-polyfill@^1.0.22:
   version "1.0.31"
   resolved "https://registry.yarnpkg.com/event-source-polyfill/-/event-source-polyfill-1.0.31.tgz#45fb0a6fc1375b2ba597361ba4287ffec5bf2e0c"
   integrity sha512-4IJSItgS/41IxN5UVAVuAyczwZF7ZIEsM1XAoUzIHA6A+xzusEZUutdXz2Nr+MQPLxfTiCvqE79/C8HT8fKFvA==

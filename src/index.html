@@ -250,7 +250,8 @@
         eventUrl: '<%= HARNESS_FF_SDK_EVENT_URL_DEV %>' || 'https://event.feature-flags.uat.harness.io/api/1.0',
         enableStream: '<%= HARNESS_FF_SDK_ENABLE_STREAM_DEV %>' === 'true',
         sdkKey: '<%= HARNESS_FF_SDK_KEY_DEV %>',
-        async: '<%= HARNESS_FF_SDK_ASYNC_DEV %>' !== 'false'
+        async: '<%= HARNESS_FF_SDK_ASYNC_DEV %>' !== 'false',
+        cache: '<%= HARNESS_FF_SDK_CACHE_DEV %>' !== 'false'
       }
     </script>
     <% } else { %>
@@ -261,7 +262,8 @@
         eventUrl: 'HARNESS_FF_SDK_EVENT_URL_PLACEHOLDER' || 'https://event.feature-flags.uat.harness.io/api/1.0',
         enableStream: 'HARNESS_FF_SDK_ENABLE_STREAM_PLACEHOLDER' === 'true',
         sdkKey: 'HARNESS_FF_SDK_KEY_PLACEHOLDER',
-        async: 'HARNESS_FF_SDK_ASYNC_PLACEHOLDER' !== 'false'
+        async: 'HARNESS_FF_SDK_ASYNC_PLACEHOLDER' !== 'false',
+        cache: 'HARNESS_FF_SDK_CACHE_PLACEHOLDER' !== 'false'
       }
     </script>
     <% } %>

@@ -17,7 +17,8 @@ export function FeatureFlagsProvider({ children }: PropsWithChildren<unknown>): 
     baseUrl,
     eventUrl,
     enableStream: streamEnabled,
-    async
+    async,
+    cache
   } = window.featureFlagsConfig
   const { accountId } = useParams<Record<string, string>>()
 
@@ -38,7 +39,7 @@ export function FeatureFlagsProvider({ children }: PropsWithChildren<unknown>): 
       async={async}
       apiKey={sdkKey}
       target={target}
-      options={{ baseUrl, streamEnabled, eventUrl }}
+      options={{ baseUrl, streamEnabled, eventUrl, cache }}
       fallback={<PageSpinner />}
     >
       {children}

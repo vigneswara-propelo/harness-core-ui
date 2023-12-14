@@ -84,6 +84,7 @@ declare interface Window {
     enableStream: boolean
     sdkKey: string
     async: boolean
+    cache: boolean
   }
   noAuthHeader: boolean
   YT?: any

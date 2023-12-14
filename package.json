@@ -68,7 +68,7 @@
     "@harness/ts-transform-paths": "1.0.1",
     "@harness/uicore": "^3.155.0",
     "@harness/use-modal": "1.1.0",
-    "@harnessio/ff-react-client-sdk": "1.4.0",
+    "@harnessio/ff-react-client-sdk": "1.6.0",
     "@harnessio/react-audit-service-client": "^0.3.0",
     "@harnessio/react-idp-service-client": "0.45.2",
     "@harnessio/react-ng-manager-client": "^1.18.0",
