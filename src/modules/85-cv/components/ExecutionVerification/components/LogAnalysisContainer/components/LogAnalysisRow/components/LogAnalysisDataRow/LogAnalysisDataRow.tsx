@@ -2,33 +2,27 @@ import React, { useCallback } from 'react'
 import { Container, Text, Layout } from '@harness/uicore'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
-import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import ContextMenuActions from '@cv/components/ContextMenuActions/ContextMenuActions'
-import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { getEventTypeColor, getEventTypeLightColor } from '@cv/utils/CommonUtils'
 import LogAnalysisRowContextMenu from './components/LogAnalysisRowContextMenu'
 import type { LogAnalysisDataRowProps } from '../../LogAnalysisRow.types'
-import { getEventTypeFromClusterType, onClickErrorTrackingRow } from '../../LogAnalysisRow.utils'
+import { getEventTypeFromClusterType } from '../../LogAnalysisRow.utils'
 import LogAnalysisRiskDisplay from './components/LogAnalysisRiskDisplay'
-import { getContextMenuItems, getDisplayMessage } from './LogAnalysisDataRow.utils'
+import { getContextMenuItems } from './LogAnalysisDataRow.utils'
 import { LogAnalysisRowMetadata } from './components/LogAnalysisRowMetadata'
 import css from '../../LogAnalysisRow.module.scss'
 
 export default function LogAnalysisDataRow(props: LogAnalysisDataRowProps): JSX.Element | null {
-  const { rowData, isErrorTracking, onDrawOpen, index, onUpdateEventPreferenceDrawer, onJiraModalOpen } = props
+  const { rowData, onDrawOpen, index, onUpdateEventPreferenceDrawer, onJiraModalOpen } = props
 
   const { getString } = useStrings()
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
+
   const onShowRiskEditModalCallback = useCallback(() => {
-    if (isErrorTracking) {
-      onClickErrorTrackingRow(rowData.message, accountId, projectIdentifier, orgIdentifier)
-    } else {
-      onDrawOpen(index)
-    }
-  }, [isErrorTracking, rowData.message, accountId, projectIdentifier, orgIdentifier, index, onDrawOpen])
+    onDrawOpen(index)
+  }, [index, onDrawOpen])
 
   const isLogFeedbackEnabled = useFeatureFlag(FeatureFlag.SRM_LOG_FEEDBACK_ENABLE_UI)
 
@@ -58,8 +52,6 @@ export default function LogAnalysisDataRow(props: LogAnalysisDataRowProps): JSX.
 
   const isFeedbackTicketPresent = Boolean(feedbackTicketId)
 
-  const displayMessage = getDisplayMessage(message, isErrorTracking)
-
   return (
     <Layout.Vertical className={css.rowContainer}>
       <Container className={css.mainRow}>
@@ -81,7 +73,7 @@ export default function LogAnalysisDataRow(props: LogAnalysisDataRowProps): JSX.
             )}
           </Container>
           <Container className={cx(css.logText, css.openModalColumn)}>
-            <Text className={css.logRowText}>{displayMessage}</Text>
+            <Text className={css.logRowText}>{message}</Text>
           </Container>
         </Container>
 

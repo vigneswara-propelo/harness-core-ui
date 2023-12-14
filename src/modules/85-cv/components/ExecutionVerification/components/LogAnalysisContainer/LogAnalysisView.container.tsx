@@ -17,7 +17,6 @@ import {
 } from 'services/cv'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import noDataImage from '@cv/assets/noData.svg'
-import LogAnalysisForServiceHealth from '@cv/components/LogsAnalysis/components/LogAnalysisForServiceHealth/LogAnalysisForServiceHealth'
 import { useQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import LogAnalysis from './LogAnalysis'
@@ -37,7 +36,6 @@ import logAnalysisStyles from './LogAnalysis.module.scss'
 export default function LogAnalysisContainer({
   step,
   hostName,
-  isErrorTracking,
   overviewData,
   overviewLoading
 }: LogAnalysisContainerProps): React.ReactElement {
@@ -317,19 +315,14 @@ export default function LogAnalysisContainer({
       clusterChartLoading,
       goToPage: goToLogsPage,
       activityId,
-      isErrorTracking,
       handleAngleChange: handleMinMaxChange
-    }
-
-    if (isErrorTracking) {
-      return <LogAnalysisForServiceHealth {...componentProps} />
     }
 
     return <LogAnalysis {...componentProps} />
   }
 
   return (
-    <Container className={cx(css.main, { [css.logAnalysis]: !isErrorTracking })}>
+    <Container className={cx(css.main, css.logAnalysis)}>
       <ClusterTypeFiltersForLogs
         nodeNames={nodeNames}
         clusterTypeFilters={clusterTypeFilters}

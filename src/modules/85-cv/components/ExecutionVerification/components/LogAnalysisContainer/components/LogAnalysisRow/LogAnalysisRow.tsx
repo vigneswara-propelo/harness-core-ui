@@ -11,11 +11,7 @@ import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import {
-  LogAnalysisRadarChartListDTO,
-  useGetAllRadarChartLogsData,
-  useGetVerifyStepDeploymentLogAnalysisRadarChartResult
-} from 'services/cv'
+import { LogAnalysisRadarChartListDTO, useGetVerifyStepDeploymentLogAnalysisRadarChartResult } from 'services/cv'
 import { getSingleLogData } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.utils'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
@@ -27,7 +23,7 @@ import type {
   UpdateEventPreferenceOpenFn,
   InitialDrawerValuesType
 } from './LogAnalysisRow.types'
-import { getCorrectLogsData, isNoLogSelected } from './LogAnalysisRow.utils'
+import { isNoLogSelected } from './LogAnalysisRow.utils'
 import LogAnalysisDataRow from './components/LogAnalysisDataRow/LogAnalysisDataRow'
 import LogAnalysisPagination from './components/LogAnalysisPagination'
 import UpdateEventPreferenceDrawer from './components/UpdateEventPreferenceDrawer/UpdateEventPreferenceDrawer'
@@ -48,20 +44,7 @@ function ColumnHeaderRow(): JSX.Element {
 }
 
 export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
-  const {
-    data = [],
-    isErrorTracking,
-    logResourceData,
-    selectedLog,
-    activityId,
-    resetSelectedLog,
-    refetchLogAnalysis,
-    goToPage,
-    isServicePage,
-    startTime,
-    endTime,
-    monitoredServiceIdentifier
-  } = props
+  const { data = [], logResourceData, selectedLog, activityId, resetSelectedLog, refetchLogAnalysis, goToPage } = props
   const [dataToCompare] = useState<CompareLogEventsInfo[]>([])
 
   const [riskEditModalData, setRiskEditModalData] = useState<{
@@ -83,12 +66,12 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
 
   const isJiraCreationEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_JIRA_INTEGRATION)
 
-  const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps>()
+  const { accountId } = useParams<ProjectPathProps>()
 
   const {
-    data: verifyStepLogsData,
-    loading: verifyStepLogsLoading,
-    error: verifyStepLogsError,
+    data: logsData,
+    loading: logsLoading,
+    error: logsError,
     refetch: fetchLogAnalysisVerifyScreen
   } = useGetVerifyStepDeploymentLogAnalysisRadarChartResult({
     verifyStepExecutionId: activityId as string,
@@ -100,48 +83,6 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
     },
     lazy: true
   })
-
-  const {
-    data: serviceScreenLogsData,
-    refetch: fetchLogAnalysisServiceScreen,
-    loading: serviceScreenLogsLoading,
-    error: serviceScreenLogsError
-  } = useGetAllRadarChartLogsData({
-    queryParams: {
-      orgIdentifier,
-      projectIdentifier,
-      accountId,
-      startTime: startTime as number,
-      endTime: endTime as number,
-      monitoredServiceIdentifier
-    },
-    queryParamStringifyOptions: {
-      arrayFormat: 'repeat'
-    },
-    lazy: true
-  })
-
-  const logsDataToDrawer = useMemo(() => {
-    return getCorrectLogsData({
-      serviceScreenLogsData,
-      verifyStepLogsData,
-      serviceScreenLogsLoading,
-      verifyStepLogsLoading,
-      serviceScreenLogsError,
-      verifyStepLogsError,
-      isServicePage
-    })
-  }, [
-    isServicePage,
-    serviceScreenLogsData,
-    verifyStepLogsData,
-    serviceScreenLogsLoading,
-    verifyStepLogsLoading,
-    serviceScreenLogsError,
-    verifyStepLogsError
-  ])
-
-  const { logsData, logsLoading, logsError } = logsDataToDrawer
 
   useEffect(() => {
     let drawerData: LogAnalysisRowData = {} as LogAnalysisRowData
@@ -162,22 +103,9 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
 
   const fetchLogData = useCallback(
     queryParams => {
-      if (isServicePage) {
-        fetchLogAnalysisServiceScreen({
-          queryParams: {
-            ...queryParams,
-            startTime: startTime as number,
-            endTime: endTime as number,
-            monitoredServiceIdentifier,
-            orgIdentifier,
-            projectIdentifier
-          }
-        })
-      } else {
-        fetchLogAnalysisVerifyScreen({
-          queryParams
-        })
-      }
+      fetchLogAnalysisVerifyScreen({
+        queryParams
+      })
     },
     [fetchLogAnalysisVerifyScreen]
   )
@@ -358,7 +286,6 @@ export function LogAnalysisRow(props: LogAnalysisRowProps): JSX.Element {
               onUpdateEventPreferenceDrawer={onUpdatePreferenceDrawerOpen}
               onJiraModalOpen={onJiraModalOpen}
               isSelected={selectedIndices.has(index)}
-              isErrorTracking={isErrorTracking}
             />
           )
         })}

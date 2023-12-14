@@ -5,9 +5,6 @@ import type { LogAnalysisDataRowProps } from '../../LogAnalysisRow.types'
 import { getJiraDrawerButtonTitle } from '../JiraCreationDrawer/JiraCreationDrawer.utils'
 import type { LogAnalysisRowContextMenuItemType } from './components/LogAnalysisDataRow.types'
 
-export const getDisplayMessage = (message: string, isErrorTracking?: boolean): string =>
-  isErrorTracking ? message.split('|').slice(0, 4).join('|') : message
-
 export const getContextMenuItems = ({
   getString,
   onLogDetailsOpen,

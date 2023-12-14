@@ -29,7 +29,6 @@ import {
 } from './LogAnalysisRow.mocks'
 import type { LogAnalysisRowProps } from '../LogAnalysisRow.types'
 import type { LogAnalysisRowData } from '../../../LogAnalysis.types'
-import * as utils from '../LogAnalysisRow.utils'
 
 interface FeatureFlagType {
   featureFlagValues?: TestWrapperProps['defaultFeatureFlagValues']
@@ -97,18 +96,6 @@ describe('Unit tests for LogAnalysisRow', () => {
     expect(screen.getByText('cv.sampleMessage')).toBeInTheDocument()
   })
 
-  test('Verify if clicking on an error row that it calls onClickErrorTrackingRow', async () => {
-    const clickErrorTrackingSpy = jest.spyOn(utils, 'onClickErrorTrackingRow').mockReturnValue()
-
-    render(<WrapperComponent isErrorTracking={true} {...initialProps} />)
-
-    const firstRowError = screen.getAllByTestId('logs-data-row')[0]
-    await waitFor(() => {
-      fireEvent.click(firstRowError.childNodes[0].childNodes[0])
-    })
-    expect(clickErrorTrackingSpy).toHaveBeenCalled()
-  })
-
   test('should open the drawer if correct selectedLog is passed as props', () => {
     const resetSelectedLog = jest.fn()
     const { rerender } = render(
@@ -143,36 +130,6 @@ describe('Unit tests for LogAnalysisRow', () => {
     expect(fetchLogsAnalysisData).toHaveBeenCalledWith({
       queryParams: { accountId: '1234_accountId', clusterId: 'def' }
     })
-    expect(screen.queryByTestId('LogAnalysis_detailsDrawer')).toBeInTheDocument()
-  })
-
-  test('should make service page API call to fetch logs data if the data is not already present', () => {
-    const resetSelectedLog = jest.fn()
-
-    const props = {
-      ...initialProps,
-      startTime: 33,
-      endTime: 6786,
-      monitoredServiceIdentifier: 'sdfs',
-      isServicePage: true,
-      selectedLog: 'tyu',
-      resetSelectedLog
-    }
-
-    render(<WrapperComponent {...props} />)
-
-    expect(fetchLogsAnalysisDataForServicePage).toHaveBeenCalledWith({
-      queryParams: {
-        accountId: '1234_accountId',
-        clusterId: 'tyu',
-        endTime: 6786,
-        monitoredServiceIdentifier: 'sdfs',
-        startTime: 33,
-        orgIdentifier: '1234_ORG',
-        projectIdentifier: '1234_project'
-      }
-    })
-
     expect(screen.queryByTestId('LogAnalysis_detailsDrawer')).toBeInTheDocument()
   })
 

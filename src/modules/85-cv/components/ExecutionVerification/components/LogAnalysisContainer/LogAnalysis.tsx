@@ -26,7 +26,6 @@ export default function LogAnalysis(props: LogAnalysisProps): JSX.Element {
     goToPage,
     logsLoading,
     clusterChartLoading,
-    isErrorTracking,
     handleAngleChange,
     filteredAngle,
     activityId,
@@ -37,7 +36,7 @@ export default function LogAnalysis(props: LogAnalysisProps): JSX.Element {
     startTime,
     endTime,
     monitoredServiceIdentifier,
-    isServicePage = false
+    isServicePage
   } = props
   const { getString } = useStrings()
 
@@ -82,14 +81,12 @@ export default function LogAnalysis(props: LogAnalysisProps): JSX.Element {
         <LogAnalysisRow
           className={styles.logAnalysisRow}
           data={logAnalysisData}
-          isErrorTracking={isErrorTracking}
           logResourceData={data?.resource?.logAnalysisRadarCharts}
           goToPage={goToPage}
           selectedLog={selectedLog}
           resetSelectedLog={resetSelectedLog}
           refetchLogAnalysis={refetchLogAnalysis}
           activityId={activityId}
-          isServicePage={isServicePage}
           startTime={startTime}
           endTime={endTime}
           monitoredServiceIdentifier={monitoredServiceIdentifier}
@@ -127,7 +124,7 @@ export default function LogAnalysis(props: LogAnalysisProps): JSX.Element {
         clusterChartError={clusterChartError}
         refetchClusterAnalysis={refetchClusterAnalysis}
         logsLoading={logsLoading}
-        showBaseline={!isServicePage}
+        showBaseline
       />
     )
   }
