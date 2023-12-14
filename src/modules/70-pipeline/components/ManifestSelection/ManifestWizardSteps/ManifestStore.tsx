@@ -32,7 +32,6 @@ import type { ConnectorConfigDTO } from 'services/cd-ng'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { usePermission } from '@rbac/hooks/usePermission'
@@ -84,7 +83,6 @@ function ManifestStore({
   const [isLoadingConnectors, setIsLoadingConnectors] = useState<boolean>(true)
   const [selectedStore, setSelectedStore] = useState(prevStepData?.store ?? initialValues.store)
   const [multitypeInputValue, setMultiTypeValue] = useState<MultiTypeInputType | undefined>(undefined)
-  const { CDS_OCI_HELM_ECR_CONFIG_SUPPORT_NG } = useFeatureFlags()
 
   function isValidConnectorStore(): boolean {
     return !!selectedStore && !doesStorehasConnector(selectedStore)
@@ -210,7 +208,7 @@ function ManifestStore({
                       layoutProps={{ className: style.wrapping }}
                     />
                   </Layout.Horizontal>
-                  {isOciHelmChart && CDS_OCI_HELM_ECR_CONFIG_SUPPORT_NG ? (
+                  {isOciHelmChart ? (
                     <Layout.Horizontal
                       spacing={'medium'}
                       flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
