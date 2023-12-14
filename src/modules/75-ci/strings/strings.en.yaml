@@ -247,7 +247,7 @@ getStartedWithCI:
   harnessCloudCard: To use Harness Cloud, you must provide a credit card to validate your account. This requirement discourages and reduces abuse of Harness infrastructure.
   runOnLocal: Run Pipelines on Your Local Machine
   runOnLocalCard: Host everything on your local machine
-  setupInfra: How to setup infrastructure
+  setupInfra: How to set up infrastructure
   installHarnessOnLocal: To install the Harness CI in your local machine directly, copy and run the below command
   infraSetupSuccess: Infrastructure successfully set up!
   setupFinish: Select Finish to continue to pipeline creation.

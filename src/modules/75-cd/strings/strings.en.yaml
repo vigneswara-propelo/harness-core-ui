@@ -343,7 +343,7 @@ pipelineSteps:
     servicesAreRequired: Services are required
     useFromStageRequired: Service or Propagate From is required
     aboutYourService: About the Service
-    chooseServiceSetupHeader: How do you want to setup your service?
+    chooseServiceSetupHeader: How do you want to set up your service?
     manifest:
       taskDefinition: Task Definition
       taskDefinitionARNPlaceholder: Enter Task Definition ARN
@@ -481,7 +481,7 @@ addEnvironment: Add Environment
 existingEnvironment: 'Existing Environment'
 editIdError: 'ID: {{id}} cannot be edited'
 typeError: 'Type should not be empty and contain either "Production" or "PreProduction"'
-chooseEnvironmentSetupHeader: How do you want to setup your environment?
+chooseEnvironmentSetupHeader: How do you want to set up your environment?
 newAdapter: New Adapter
 newGitOpsServer: New GitOps Server
 adapterDetails: Adapter Details
@@ -589,7 +589,7 @@ infrastructure:
   noInfrastructureInEnvironment: You have no infrastructures in this environment
   createNew: Create New Infrastructure
   edit: Edit Infrastructure
-  chooseInfrastructureSetupHeader: How do you want to setup your infrastructure?
+  chooseInfrastructureSetupHeader: How do you want to set up your infrastructure?
   created: Successfully created Infrastructure {{ identifier }}
   updated: Successfully updated Infrastructure {{ identifier }}
   delete: Delete Infrastructure

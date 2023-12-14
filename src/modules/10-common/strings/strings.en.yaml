@@ -135,7 +135,7 @@ switchToLineChart: Switch to line chart
 accountSetting:
   connector:
     loading: 'Loading settings...'
-    disabledState: 'To change this setting, make sure you have a Secret Manager other than Harness Built-In Secret Manager setup at the Account level.'
+    disabledState: 'To change this setting, make sure you have a Secret Manager other than Harness Built-In Secret Manager set up at the Account level.'
     saveSettingSuccess: 'Connector Settings saved successfully.'
     disableBISMHeading: 'Disable Harness Secret Manager'
     disableBISMSubHeading: 'When this setting is enabled, users cannot use Harness built-in secret manager.'
@@ -287,7 +287,7 @@ purpose:
   developer: DEVELOPER
   moduleSuccess: Module Added Successfully
   startATrial: Start A Trial
-  setup: 15 min setup
+  setup: 15 min set up
   selectAModule: Select a module below to get started
   changeSelection: Change Selection
   cd:
@@ -485,8 +485,8 @@ git:
   startPRLabel: Start a pull request to merge
   noBranchesFound: No branches found for configured git repository
   onlyDefaultBranchFound: Cannot find additional branches to raise a pull request.
-  inlineStoreLabel: '{{entityType}}  is stored in Harness'
-  remoteStoreLabel: '{{entityType}} content is stored in a Git repository'
+  inlineStoreLabel: '{{entityType}} is stored in Harness'
+  remoteStoreLabel: '{{entityType}} is stored in your Git repository'
   validation:
     filePath: '{{$.common.git.filePath}} is required'
     commitMessage: '{{$.common.git.commitMessage}} is required'
@@ -916,7 +916,7 @@ explorePlans: Explore plans
 feature:
   upgradeRequired:
     title: Upgrade Required
-    description: 'Requires upgrade to setup '
+    description: 'Requires upgrade to set up '
     requiredPlans: Please upgrade to {{requiredPlans}}
     pleaseUpgrade: Please upgrade
   overuse:

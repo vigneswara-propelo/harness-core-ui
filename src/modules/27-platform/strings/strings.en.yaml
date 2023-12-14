@@ -486,7 +486,7 @@ authSettings:
   enablingAuthorization: Enabling Authorization
   enablingAuthorizationDescription: To enable SAML authorization in Harness, you need to associate a user group in Harness with a user group in the identity provider. When a user logs into Harness, they are automatically assigned to the linked Harness user group, and they inherit all the Role-Based Access Control (RBAC) settings for that user group.
   testingSSO: Testing SSO
-  testingSSODescription: When testing SAML SSO in Harness, you will be prompted to sign in to your SAML provider in a new browser tab. It is important to have at least two user accounts that correspond to each other during the setup and testing process. This enables you to set up the account using a Harness Administrator account and test it using a Harness user account. This will help ensure that your SAML SSO is functioning properly.
+  testingSSODescription: When testing SAML SSO in Harness, you will be prompted to sign in to your SAML provider in a new browser tab. It is important to have at least two user accounts that correspond to each other during the set up and testing process. This enables you to set up the account using a Harness Administrator account and test it using a Harness user account. This will help ensure that your SAML SSO is functioning properly.
   azure: '{{ $.common.azure }}'
   okta: Okta
   oneLogin: OneLogin
@@ -1445,7 +1445,7 @@ connectors:
       optimization:
         heading: 'KUBERNETES OPTIMIZATION BY'
         subheading: '{{ $.common.ce.autostopping }}'
-        description: '<ul><li>Works for custom clusters and EKS, AKS, GKE, etc</li><li> Orchestrate pods based on idleness</li><li> Set dependencies between workloads like pods, VMs, etc.</li><li> Granular savings visibility</li><li> Simple one-time setup</li></ul>'
+        description: '<ul><li>Works for custom clusters and EKS, AKS, GKE, etc</li><li> Orchestrate pods based on idleness</li><li> Set dependencies between workloads like pods, VMs, etc.</li><li> Granular savings visibility</li><li> Simple one-time set up</li></ul>'
     secretCreationStep:
       step1: 'Create an API key'
       step2: 'Run the following command to create a namespace'
@@ -1759,7 +1759,7 @@ connectors:
         feat1: Orchestrate VMs based on idleness
         feat2: Set dependencies between VMs
         feat3: Granular savings visibility
-        feat4: Simple one-time setup
+        feat4: Simple one-time set up
         prefix: AZURE OPTIMIZATION BY
         footer1: '{{ $.platform.connectors.ceAws.crossAccountRoleStep1.adding }}'
         footer2: to a Service Principal in the next step.
@@ -1779,7 +1779,7 @@ connectors:
     testConnection:
       heading: '{{ $.common.labelTestConnection }}'
       validatePermission: '{{ $.platform.connectors.testConnectionStep.validationText.azure }}'
-      verifyExport: Verifying Azure Billing Export setup
+      verifyExport: Verifying Azure Billing Export set up
     validation:
       storageAccountName: Storage account name is required
       directoryName: Directory name is required
@@ -1869,7 +1869,7 @@ connectors:
         completePermissionStep: 'Click on Edit Principal and add Compute Viewer role available in the Basic category'
     testConnection:
       heading: '{{ $.common.labelTestConnection }}'
-      step1: 'Verifying GCP connector setup'
+      step1: 'Verifying GCP connector set up'
       error: 'Could not verify connectivity'
   pdc:
     selectLabel: 'Select how you would like to define your list of hosts'

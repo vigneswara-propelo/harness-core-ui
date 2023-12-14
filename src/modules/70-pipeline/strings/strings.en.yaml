@@ -644,7 +644,7 @@ createPipeline:
   setupSubtitle: Let’s get you started on your pipeline.
   setupLater: Setup Later
   learnMore: Learn More
-  choosePipelineSetupHeader: How do you want to setup your pipeline?
+  choosePipelineSetupHeader: How do you want to set up your pipeline?
 selectOrCreateForm:
   description: '{{$.common.selectAVersion.description}}'
 execution:
@@ -1391,7 +1391,7 @@ stepDescription:
   GitClone: Clone a Git repository to a directory in addition to the codebase Git clone
   Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
   ElastigroupRollback: Rollback for the Elastigroup steps
-  ElastigroupSetup: Elastigroup setup step
+  ElastigroupSetup: Elastigroup set up step
   SwapRoute: Swap between Active and InActive TAS Applications
   SwapRollback: Rollback the Swap to Active in Blue Green Deployments
   TasRollback: Rollback to previous deployment during failure

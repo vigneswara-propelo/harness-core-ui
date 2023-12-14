@@ -109,7 +109,7 @@ harnessEnvironment: 'Harness Environment'
 selectOrCreateEnv: 'Select or create an environment'
 verificationErrored: 'Verification errored'
 getRiskAssessment: 'Get risk assessment'
-setup: Setup Continuous Verification
+setup: Set up Continuous Verification
 riskScore: Risk Score
 noAnalysis: No Analysis
 noAnomalies: No anomalies detected
@@ -162,7 +162,7 @@ onboarding:
     skipToMonitoringSource: Skip to Monitoring Sources
     monitoringSourceInfo: Verification Monitoring Sources provide the metrics and log data that CV uses to score the risk of your deployment and infrastructure
     specifyConnector: Specify your {{type}} Connector
-    firstTimeSetupText: First time? You can setup a new Connector to {{type}}. It takes 2 minutes.
+    firstTimeSetupText: First time? You can set up a new Connector to {{type}}. It takes 2 minutes.
     selectConnector: Select your {{type}} Connector
     addConnector: + Add {{type}} Connector
     selectProduct: Select the {{type}} product that you would like to select {{entity}} from
@@ -363,7 +363,7 @@ monitoringSources:
       selectTier: Please select tier and its service
       selectMetricPack: Please select atleast one metric pack
     connectToMonitoringSource: Connect to your AppDynamics Monitoring Source
-    firstTimeSetupText: 'First time? You can setup a new Connector to AppDynamics. It takes 2 minutes.'
+    firstTimeSetupText: 'First time? You can set up a new Connector to AppDynamics. It takes 2 minutes.'
     createConnectorText: '+ New AppDynamics Connector'
     selectProduct: 'Select the AppDynamics Product that you would like to select applications from'
     product:
@@ -381,7 +381,7 @@ monitoringSources:
     noMetricData: No data for current metric
     connectToMonitoringSource: Connect to your Google Cloud Platform
     defaultName: 'My Google Cloud Operations Monitoring Source'
-    firstTimeSetupText: 'First time? You can setup a new Connector to Google Cloud Platform. It takes 2 minutes.'
+    firstTimeSetupText: 'First time? You can set up a new Connector to Google Cloud Platform. It takes 2 minutes.'
     createConnectorText: '+ New Google Cloud Platform Connector'
     addManualInputQuery: '+ Manually input query'
     selectProduct: 'Select the Google Cloud Operations feature that you would like to choose dashboards from'

@@ -237,7 +237,7 @@ co:
       instanceFulfilment: 'Instance fulfilment'
     setupAccess:
       pageName: 'Setup Access'
-      noSetupRequired: No need to setup access for {{source}}. Please move to Review step.
+      noSetupRequired: No need to set up access for {{source}}. Please move to Review step.
       noSetupRequiredForRds:
         title: 'AutoStopping for RDS can be leveraged for several use cases. Some examples are listed below.'
         example1:
