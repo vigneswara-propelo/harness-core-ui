@@ -136,11 +136,13 @@ export function LastActivity({ event_trigger_time: lastUpdatedAt }: { event_trig
 export function Enabled({
   webhook_identifier: identifier,
   is_enabled: enabled,
+  folder_paths: folderPaths,
   onToggleEnable
 }: {
   webhook_identifier: string
   is_enabled: boolean
-  onToggleEnable: (id: string, enabled: boolean) => void
+  folder_paths: string[]
+  onToggleEnable: (id: string, enabled: boolean, folderPaths: string[]) => void
 }): JSX.Element {
   return (
     <div onClick={e => e.stopPropagation()}>
@@ -148,7 +150,7 @@ export function Enabled({
         label=""
         checked={enabled}
         onChange={e => {
-          onToggleEnable(identifier, e.currentTarget.checked)
+          onToggleEnable(identifier, e.currentTarget.checked, folderPaths)
         }}
       />
     </div>

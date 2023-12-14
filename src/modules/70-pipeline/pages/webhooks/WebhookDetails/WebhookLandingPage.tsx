@@ -278,7 +278,8 @@ export default function WebhookLandingPage(): JSX.Element {
                           },
 
                           body: {
-                            is_enabled: e.currentTarget.checked
+                            is_enabled: e.currentTarget.checked,
+                            folder_paths: webhookResponse.content.folder_paths
                           }
                         })
                       }}

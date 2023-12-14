@@ -102,7 +102,8 @@ describe('Webhook Landing Page tests', () => {
     await userEvent.click(isEnabledCheckbox)
     expect(mutate).toHaveBeenCalledWith({
       body: {
-        is_enabled: true
+        is_enabled: true,
+        folder_paths: ['']
       },
       pathParams: {
         'gitx-webhook': 'vikranttestwebhook',

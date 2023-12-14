@@ -124,7 +124,7 @@ export default function WebhooksList({
     }
   }
 
-  const handleWebhookEnableToggle = (id: string, enabled: boolean): void => {
+  const handleWebhookEnableToggle = (id: string, enabled: boolean, folderPaths: string[]): void => {
     updateWebhook({
       pathParams: {
         org: orgIdentifier,
@@ -132,7 +132,8 @@ export default function WebhooksList({
         'gitx-webhook': id
       },
       body: {
-        is_enabled: enabled
+        is_enabled: enabled,
+        folder_paths: folderPaths
       }
     })
   }
