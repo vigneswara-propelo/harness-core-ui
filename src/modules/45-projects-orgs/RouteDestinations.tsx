@@ -82,11 +82,9 @@ import VariablesPage from '@variables/pages/variables/VariablesPage'
 import FileStorePage from '@filestore/pages/filestore/FileStorePage'
 import SettingsList from '@default-settings/pages/SettingsList'
 import { NotificationPageList } from '@modules/27-platform/notifications/NotificationsPageList'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 // eslint-disable-next-line no-restricted-imports
 import ExternalTicketSettings from '@sto/components/ExternalTickets/Settings/ExternalTicketSettings'
 import SecretRuntimeUsage from '@common/pages/entityUsage/views/RuntimeUsageView/SecretRuntimeUsage'
-import LandingDashboardPageV2 from './pages/LandingDashboardPageV2/LandingDashboardPageV2'
 import LandingDashboardPage from './pages/LandingDashboardPage/LandingDashboardPage'
 
 const DiscoveryDetails = React.lazy(
@@ -215,22 +213,6 @@ const ProjectsRedirect = (): React.ReactElement => {
   )
 }
 
-const MainDashboardRedirect = (): React.ReactElement => {
-  const { LANDING_OVERVIEW_PAGE_V2 } = useFeatureFlags()
-
-  return LANDING_OVERVIEW_PAGE_V2 ? <LandingDashboardPageV2 /> : <LandingDashboardPage />
-}
-
-const LandingDashboardPageRedirect = (): React.ReactElement => {
-  const { LANDING_OVERVIEW_PAGE_V2 } = useFeatureFlags()
-
-  if (LANDING_OVERVIEW_PAGE_V2) {
-    return <LandingDashboardPageV2 />
-  }
-
-  return <LandingDashboardPage />
-}
-
 export default (
   <>
     <RouteWithLayout
@@ -246,7 +228,7 @@ export default (
     </RouteWithLayout>
 
     <RouteWithLayout sidebarProps={HomeSideNavProps} path={routesV1.toLandingDashboard({ ...accountPathProps })} exact>
-      <LandingDashboardPageRedirect />
+      <LandingDashboardPage />
     </RouteWithLayout>
 
     <RouteWithLayout
@@ -254,7 +236,7 @@ export default (
       path={routesV1.toMainDashboard({ ...accountPathProps })}
       exact
     >
-      <MainDashboardRedirect />
+      <LandingDashboardPage />
     </RouteWithLayout>
 
     <RouteWithLayout
