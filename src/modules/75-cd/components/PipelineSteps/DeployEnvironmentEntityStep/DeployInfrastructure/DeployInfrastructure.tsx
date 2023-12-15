@@ -28,7 +28,7 @@ import { useStrings } from 'framework/strings'
 
 import { useDeepCompareEffect } from '@common/hooks'
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
-import { isValueRuntimeInput } from '@common/utils/utils'
+import { isValueFixed, isValueRuntimeInput } from '@common/utils/utils'
 
 import { ButtonProps } from '@rbac/components/Button/Button'
 
@@ -52,7 +52,10 @@ import { getAllFixedInfrastructures, getSelectedInfrastructuresWhenPropagating }
 
 interface DeployInfrastructureProps
   extends Required<
-    Omit<DeployEnvironmentEntityCustomStepProps, 'gitOpsEnabled' | 'stageIdentifier' | 'serviceIdentifiers'>
+    Omit<
+      DeployEnvironmentEntityCustomStepProps,
+      'gitOpsEnabled' | 'stageIdentifier' | 'serviceIdentifiers' | 'isCustomStage'
+    >
   > {
   initialValues: DeployEnvironmentEntityFormState
   readonly: boolean
@@ -65,6 +68,7 @@ interface DeployInfrastructureProps
   selectedPropagatedState?: PropagateSelectOption | string
   serviceIdentifiers: string[]
   environmentBranch?: string
+  isCustomStage?: boolean
 }
 
 export default function DeployInfrastructure({
@@ -80,7 +84,8 @@ export default function DeployInfrastructure({
   previousStages,
   selectedPropagatedState,
   serviceIdentifiers,
-  environmentBranch
+  environmentBranch,
+  isCustomStage
 }: DeployInfrastructureProps): JSX.Element {
   const { values, setFieldValue, setValues, setFieldTouched, validateForm } =
     useFormikContext<DeployEnvironmentEntityFormState>()
@@ -158,6 +163,13 @@ export default function DeployInfrastructure({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values.propagateFrom?.value])
+
+  useEffect(() => {
+    if (isValueRuntimeInput(values.environment) && isValueFixed(values.infrastructure) && isCustomStage) {
+      setSelectedInfrastructures([])
+      setInfrastructureRefType(MultiTypeInputType.FIXED)
+    }
+  }, [values.environment, isCustomStage, values.infrastructure])
 
   useDeepCompareEffect(() => {
     if (nonExistingInfrastructureIdentifiers.length) {

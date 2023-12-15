@@ -35,7 +35,8 @@ export default function EnvironmentsInputSetForm({
   viewType,
   stageIdentifier,
   allowableTypes,
-  stageType
+  stageType,
+  resolvedStage
 }: EnvironmentsInputSetFormProps): React.ReactElement {
   const { getString } = useStrings()
   const { NG_SVC_ENV_REDESIGN: isSvcEnvEntityEnabled } = useFeatureFlags()
@@ -62,6 +63,7 @@ export default function EnvironmentsInputSetForm({
             readonly={readonly}
             stageIdentifier={stageIdentifier}
             stageType={stageType as StageType}
+            resolvedStage={resolvedStage}
           />
         ))}
 

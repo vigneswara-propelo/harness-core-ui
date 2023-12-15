@@ -591,6 +591,7 @@ export function StageInputSetFormInternal({
         viewType={viewType}
         readonly={readonly}
         stageIdentifier={stageIdentifier}
+        resolvedStage={resolvedStage}
         stageType={stageType}
       />
       {IACM_ENABLED && iacmRequired && (

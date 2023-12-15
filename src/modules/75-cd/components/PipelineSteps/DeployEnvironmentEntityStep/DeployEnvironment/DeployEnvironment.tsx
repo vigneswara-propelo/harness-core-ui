@@ -239,11 +239,26 @@ export default function DeployEnvironment({
 
   const loading = isFixed && (loadingEnvironmentsList || loadingEnvironmentsData)
 
-  const shouldRenderChildEntity = isExpression
-    ? isValueExpression(values.environment)
-    : nonExistingEnvironmentIdentifiers.length
-    ? false
-    : shouldRenderEnvironmentEntitiesList
+  const isCustomStageRuntimeEnv = isCustomStage && isRuntime
+
+  // Child Entity (Cluster in case of git ops and infrastructure in case of non git ops) should be rendered when -
+  // 1. Env is runtime for custom stage
+  // 2. Env is non-empty expression
+  // 3. If env is fixed value then it does not contain invalid identifiers or empty value
+
+  const getShouldRenderChildEntity = () => {
+    if (isCustomStageRuntimeEnv) {
+      return true
+    } else if (isExpression) {
+      return isValueExpression(values.environment)
+    } else if (nonExistingEnvironmentIdentifiers.length) {
+      return false
+    } else {
+      return shouldRenderEnvironmentEntitiesList
+    }
+  }
+
+  const shouldRenderChildEntity = getShouldRenderChildEntity()
 
   useEffect(() => {
     // This condition is required to clear the list when switching from multi environment to single environment
@@ -531,10 +546,11 @@ export default function DeployEnvironment({
                 environmentBranch={selectedEnvironentsGitDetails?.[selectedEnvironments[0]]}
                 deploymentType={deploymentType}
                 customDeploymentRef={customDeploymentRef}
-                lazyInfrastructure={isExpression}
+                lazyInfrastructure={isExpression || isCustomStageRuntimeEnv}
                 previousStages={previousStages}
                 selectedPropagatedState={selectedPropagatedState}
                 serviceIdentifiers={serviceIdentifiers}
+                isCustomStage={isCustomStage}
               />
             )}
           </>

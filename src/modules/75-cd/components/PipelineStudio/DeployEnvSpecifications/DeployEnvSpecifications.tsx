@@ -194,7 +194,8 @@ export default function DeployEnvSpecifications(
             gitOpsEnabled: defaultTo(stage?.stage?.spec?.gitOpsEnabled, false),
             customDeploymentRef: stage?.stage?.spec?.customDeploymentRef,
             isOverridesEnabled,
-            stages
+            stages,
+            isCustomStage
           }}
         />
         <Container margin={{ top: 'xxlarge' }}>{props.children}</Container>

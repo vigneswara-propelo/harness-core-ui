@@ -67,7 +67,8 @@ export default function DeployEnvironmentEntityInputStep({
   stepViewType,
   areFiltersAdded,
   setEnvironmentRefType,
-  serviceIdentifiers
+  serviceIdentifiers,
+  isCustomStage
 }: DeployEnvironmentEntityInputStepProps): React.ReactElement {
   const { getString } = useStrings()
   const { showWarning } = useToaster()
@@ -257,12 +258,22 @@ export default function DeployEnvironmentEntityInputStep({
 
           formik.setValues(newFormikValues)
         } else {
-          const valueToReset = environmentsSelectedType === 'runtime' ? RUNTIME_INPUT_VALUE : ''
+          const isEnvironmentSelectedTypeRuntime = environmentsSelectedType === 'runtime'
+          const valueToReset = isEnvironmentSelectedTypeRuntime ? RUNTIME_INPUT_VALUE : ''
+
+          // Service override inputs are not applicable for custom stage & infrastructureDefinitions is configured independently
+          const isExistingInfraValueRuntime = isValueRuntimeInput(
+            get(formik.values, `${pathToEnvironments}.infrastructureDefinitions`)
+          )
           const newEnvironmentObject = {
             environmentRef: valueToReset,
             environmentInputs: valueToReset,
-            serviceOverrideInputs: valueToReset,
-            infrastructureDefinitions: valueToReset
+            ...(isCustomStage
+              ? {
+                  infrastructureDefinitions:
+                    isEnvironmentSelectedTypeRuntime && isExistingInfraValueRuntime ? RUNTIME_INPUT_VALUE : undefined
+                }
+              : { serviceOverrideInputs: valueToReset, infrastructureDefinitions: valueToReset })
           }
 
           updateStageFormTemplate({ ...newEnvironmentObject, environmentRef: RUNTIME_INPUT_VALUE }, fullPath)
@@ -330,7 +341,7 @@ export default function DeployEnvironmentEntityInputStep({
       formik.setFieldValue(mainEntityPath, newEnvironmentsValues[0])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [environmentsData, environmentIdentifiers, environmentsSelectedType, envGroupIdentifier])
+  }, [environmentsData, environmentIdentifiers, environmentsSelectedType, envGroupIdentifier, isCustomStage])
 
   function handleSingleEnvironmentChange(
     item?: ExpressionAndRuntimeTypeProps['value'],

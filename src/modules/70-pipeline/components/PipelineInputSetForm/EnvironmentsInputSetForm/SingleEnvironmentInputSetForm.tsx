@@ -52,7 +52,8 @@ export default function SingleEnvironmentInputSetForm({
   viewType,
   stageIdentifier,
   allowableTypes,
-  stageType
+  stageType,
+  resolvedStage
 }: SingleEnvironmentInputSetFormProps): React.ReactElement {
   const {
     state: { pipeline, templateTypes }
@@ -68,6 +69,7 @@ export default function SingleEnvironmentInputSetForm({
   const deploymentType = defaultTo(deploymentStage?.deploymentType, '')
   const environmentTemplate = deploymentStageTemplate?.environment
   const environmentInDeploymentStage = deploymentStage?.environment
+  const environmentInResolvedStage = resolvedStage?.environment
 
   const deploymentStageInputSet: DeploymentStageConfig = get(formik?.values, path, {})
   const environment: EnvironmentYamlV2 = get(deploymentStageInputSet, `environment`, {})
@@ -103,9 +105,17 @@ export default function SingleEnvironmentInputSetForm({
   // This state is required to prevent parallel formik updates with environments and infrastructures
   const [isEnvironmentLoading, setIsEnvironmentLoading] = useState(showEnvironmentsSelectionInputField)
 
-  const environmentIdentifier = showEnvironmentsSelectionInputField
-    ? deploymentStageInputSet?.environment?.environmentRef
-    : environmentInDeploymentStage?.environmentRef
+  const getEnvironmentIdentifier = () => {
+    if (showEnvironmentsSelectionInputField) {
+      return deploymentStageInputSet?.environment?.environmentRef
+    } else if (isCustomStage && environmentInResolvedStage) {
+      return environmentInResolvedStage?.environmentRef
+    } else {
+      return environmentInDeploymentStage?.environmentRef
+    }
+  }
+
+  const environmentIdentifier = getEnvironmentIdentifier()
 
   const showEnvironmentVariables = Array.isArray(environmentTemplate?.environmentInputs?.variables)
   const showEnvironmentOverrides = !isEmpty(environmentTemplate?.environmentInputs?.overrides)
@@ -130,8 +140,13 @@ export default function SingleEnvironmentInputSetForm({
     Array.isArray(environmentInDeploymentStage?.infrastructureDefinitions) &&
     isValueExpression(defaultTo(environmentInDeploymentStage?.infrastructureDefinitions?.[0]?.identifier, ''))
 
-  const showInfrastructuresSelectionInputField =
-    isInfrastructureRuntimeInTemplate && !isInfrastructureInputAlreadyConfigured
+  const isInfraRuntimeInDeploymentStageAndTemplate =
+    isValueRuntimeInput(environmentInDeploymentStage?.infrastructureDefinitions as unknown as string) &&
+    isInfrastructureRuntimeInTemplate
+
+  const showInfrastructuresSelectionInputField = isCustomStage
+    ? isInfraRuntimeInDeploymentStageAndTemplate
+    : isInfrastructureRuntimeInTemplate && !isInfrastructureInputAlreadyConfigured
 
   /** Show the clusters selection field in the following scenarios
    * 1. pathToEnvironments is a runtime value - condition 1
@@ -242,7 +257,8 @@ export default function SingleEnvironmentInputSetForm({
             pathToEnvironments: 'environment',
             isMultiEnvironment: false,
             setEnvironmentRefType,
-            serviceIdentifiers: isValueFixed(singleServiceIdentifier) ? [singleServiceIdentifier] : []
+            serviceIdentifiers: isValueFixed(singleServiceIdentifier) ? [singleServiceIdentifier] : [],
+            isCustomStage
           }}
           onUpdate={data => {
             formik.setFieldValue(
@@ -401,7 +417,8 @@ export default function SingleEnvironmentInputSetForm({
                   lazyInfrastructure:
                     isMultiTypeExpression(environmentRefType) ||
                     isValueExpression(environmentInDeploymentStage?.environmentRef),
-                  environmentBranch: environmentInDeploymentStage?.gitBranch
+                  environmentBranch: environmentInDeploymentStage?.gitBranch,
+                  isCustomStage
                 }}
                 onUpdate={data => {
                   const environmentAtIndex = get(formik.values, `${path}.environment`)

@@ -7,6 +7,7 @@
 
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
+import { isValueFixed } from '@common/utils/utils'
 
 import { getScopeAppendedToIdentifier } from '@modules/10-common/utils/StringUtils'
 import type { EnvironmentYamlV2, ServiceOverrideInputsYaml } from 'services/cd-ng'
@@ -17,11 +18,33 @@ import type {
   DeployEnvironmentEntityFormState
 } from '../../types'
 
+const getInfrastructureDefinitionObj = (data: DeployEnvironmentEntityFormState) => {
+  if (data.environment && !!data.infrastructure) {
+    return {
+      infrastructureDefinitions:
+        getMultiTypeFromValue(data.infrastructure) === MultiTypeInputType.RUNTIME
+          ? (data.infrastructure as any)
+          : [
+              {
+                identifier: data.infrastructure,
+                inputs: get(
+                  data,
+                  `infrastructureInputs.environment.infrastructure.expression`,
+                  get(data, `infrastructureInputs.['${data.environment}'].${data.infrastructure}`)
+                )
+              }
+            ]
+    }
+  }
+
+  return {}
+}
+
 export function processSingleEnvironmentFormValues(
   data: DeployEnvironmentEntityFormState,
-  customStepProps: DeployEnvironmentEntityCustomStepProps
+  customStepProps: DeployEnvironmentEntityCustomStepProps & { isCustomStage?: boolean }
 ): DeployEnvironmentEntityConfig {
-  const { gitOpsEnabled, serviceIdentifiers } = customStepProps
+  const { gitOpsEnabled, serviceIdentifiers, isCustomStage = false } = customStepProps
   const isOverridesEnabled = (customStepProps as any).isOverridesEnabled
   if (!isNil(data.propagateFrom)) {
     return {
@@ -36,6 +59,21 @@ export function processSingleEnvironmentFormValues(
   if (!isNil(data.environment)) {
     // ! Do not merge this with the other returns even if they look similar. It makes it confusing to read
     if (getMultiTypeFromValue(data.environment) === MultiTypeInputType.RUNTIME) {
+      if (isCustomStage) {
+        // Svc override inputs, git ops and provisioners are not supported for custom stage
+        // and infrastructureDefinitions is independent of environment
+        // Fixed value of infrastructure is not be retained
+        const isInfrastructureNotFixed = !isValueFixed(data.infrastructure)
+        return {
+          environment: {
+            environmentRef: RUNTIME_INPUT_VALUE,
+            deployToAll: false,
+            environmentInputs: RUNTIME_INPUT_VALUE as any,
+            ...(isInfrastructureNotFixed ? getInfrastructureDefinitionObj(data) : {})
+          }
+        }
+      }
+
       return {
         environment: {
           environmentRef: RUNTIME_INPUT_VALUE,
@@ -94,22 +132,7 @@ export function processSingleEnvironmentFormValues(
             : {}),
           deployToAll: false,
           ...(!isEmpty(data.provisioner) && { provisioner: data.provisioner }),
-          ...(data.environment &&
-            !!data.infrastructure && {
-              infrastructureDefinitions:
-                getMultiTypeFromValue(data.infrastructure) === MultiTypeInputType.RUNTIME
-                  ? (data.infrastructure as any)
-                  : [
-                      {
-                        identifier: data.infrastructure,
-                        inputs: get(
-                          data,
-                          `infrastructureInputs.environment.infrastructure.expression`,
-                          get(data, `infrastructureInputs.['${data.environment}'].${data.infrastructure}`)
-                        )
-                      }
-                    ]
-            }),
+          ...getInfrastructureDefinitionObj(data),
           ...(data.environment &&
             !!data.cluster && {
               gitOpsClusters:

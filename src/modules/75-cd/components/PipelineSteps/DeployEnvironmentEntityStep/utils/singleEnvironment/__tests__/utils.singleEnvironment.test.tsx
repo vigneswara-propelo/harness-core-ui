@@ -103,6 +103,45 @@ describe('process single environment initial values', () => {
     } as DeployEnvironmentEntityFormState)
   })
 
+  test('env runtime & infra expression for custom stage', () => {
+    const output = processSingleEnvironmentInitialValues(
+      {
+        environmentRef: '<+input>',
+        infrastructureDefinitions: [
+          {
+            identifier: '<+expressionpart3.expressionpart4>',
+            inputs: {
+              identifier: '<+expressionpart3.expressionpart4>',
+              spec: {
+                connectorRef: '<+input>'
+              },
+              type: 'Kubernetes'
+            }
+          }
+        ]
+      },
+      { gitOpsEnabled: false, isCustomStage: true }
+    )
+    expect(output).toEqual({
+      category: 'single',
+      environment: '<+input>',
+      infrastructure: '<+expressionpart3.expressionpart4>',
+      infrastructureInputs: {
+        environment: {
+          infrastructure: {
+            expression: {
+              identifier: '<+expressionpart3.expressionpart4>',
+              spec: {
+                connectorRef: '<+input>'
+              },
+              type: 'Kubernetes'
+            }
+          }
+        }
+      }
+    } as DeployEnvironmentEntityFormState)
+  })
+
   test('env & cluster fixed values', () => {
     const output = processSingleEnvironmentInitialValues(
       {
@@ -619,6 +658,86 @@ describe('process single environment form values', () => {
             }
           ]
         },
+        deployToAll: false
+      }
+    } as DeployEnvironmentEntityConfig)
+  })
+
+  test('environment runtime for custom stage', () => {
+    const output = processSingleEnvironmentFormValues(
+      {
+        category: 'single',
+        environment: '<+input>',
+        // Validation when all the below remains as is, will the form get updated correctly
+        environmentInputs: '<+input>' as any,
+        infrastructure: '<+expressionpart3.expressionpart4>',
+        infrastructureInputs: {
+          environment: {
+            infrastructure: {
+              expression: {
+                identifier: '<+expressionpart3.expressionpart4>',
+                type: 'Kubernetes',
+                spec: {
+                  connectorRef: '<+input>'
+                }
+              }
+            }
+          }
+        }
+      },
+      { gitOpsEnabled: false, isCustomStage: true }
+    )
+
+    expect(output).toEqual({
+      environment: {
+        environmentRef: '<+input>',
+        environmentInputs: '<+input>' as any,
+        infrastructureDefinitions: [
+          {
+            identifier: '<+expressionpart3.expressionpart4>',
+            inputs: {
+              identifier: '<+expressionpart3.expressionpart4>',
+              spec: {
+                connectorRef: '<+input>'
+              },
+              type: 'Kubernetes'
+            }
+          }
+        ],
+        deployToAll: false
+      }
+    } as DeployEnvironmentEntityConfig)
+  })
+
+  test('environment runtime and infra fixed for custom stage - infra should not be retained', () => {
+    const output = processSingleEnvironmentFormValues(
+      {
+        category: 'single',
+        environment: '<+input>',
+        // Validation when all the below remains as is, will the form get updated correctly
+        environmentInputs: '<+input>' as any,
+        infrastructure: 'fixedInfra',
+        infrastructureInputs: {
+          environment: {
+            infrastructure: {
+              expression: {
+                identifier: 'fixedInfra',
+                type: 'Kubernetes',
+                spec: {
+                  connectorRef: '<+input>'
+                }
+              }
+            }
+          }
+        }
+      },
+      { gitOpsEnabled: false, isCustomStage: true }
+    )
+
+    expect(output).toEqual({
+      environment: {
+        environmentRef: '<+input>',
+        environmentInputs: '<+input>' as any,
         deployToAll: false
       }
     } as DeployEnvironmentEntityConfig)

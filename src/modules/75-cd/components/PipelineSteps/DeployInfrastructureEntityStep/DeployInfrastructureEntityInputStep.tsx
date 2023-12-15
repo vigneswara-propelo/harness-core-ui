@@ -74,7 +74,8 @@ export default function DeployInfrastructureEntityInputStep({
   lazyInfrastructure,
   scopePrefix,
   serviceIdentifiers,
-  environmentBranch
+  environmentBranch,
+  isCustomStage
 }: DeployInfrastructureEntityInputStepProps): React.ReactElement {
   const { getString } = useStrings()
   const { showWarning } = useToaster()
@@ -214,10 +215,18 @@ export default function DeployInfrastructureEntityInputStep({
     if (infrastructureIdentifiers.length === 0) {
       // 'runtime' is for when field is marked runtime, whereas 'other' is for emptying selection
       if (infrastructuresSelectedType === 'runtime' || infrastructuresSelectedType === 'other') {
+        const isCustomStageEmptyInfraConfigPresent = isCustomStage && infrastructuresSelectedType === 'other'
         updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${fullPathPrefix}infrastructureDefinitions`)
 
         const newFormikValues = { ...formik.values }
-        set(newFormikValues, localPath, infrastructuresSelectedType === 'runtime' ? RUNTIME_INPUT_VALUE : [])
+
+        if (infrastructuresSelectedType === 'runtime') {
+          set(newFormikValues, localPath, RUNTIME_INPUT_VALUE)
+        } else if (isCustomStageEmptyInfraConfigPresent) {
+          set(newFormikValues, localPath, undefined)
+        } else {
+          set(newFormikValues, localPath, [])
+        }
 
         if (isMultipleInfrastructure) {
           if (!isBoolean(deployToAllInfrastructures)) {
@@ -343,7 +352,7 @@ export default function DeployInfrastructureEntityInputStep({
       formik.setValues(newFormikValues)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [infrastructuresData, infrastructureIdentifiers, infrastructuresSelectedType])
+  }, [infrastructuresData, infrastructureIdentifiers, infrastructuresSelectedType, isCustomStage])
 
   function handleSingleInfrastructureChange(
     item?: ExpressionAndRuntimeTypeProps['value'],

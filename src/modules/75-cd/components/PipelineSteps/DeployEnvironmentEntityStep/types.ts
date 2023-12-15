@@ -104,6 +104,7 @@ export interface DeployEnvironmentEntityCustomInputStepProps extends DeployEnvir
   isMultiEnvironment?: boolean
   deployToAllEnvironments?: boolean
   areFiltersAdded?: boolean
+  isCustomStage?: boolean
 }
 
 // Environments

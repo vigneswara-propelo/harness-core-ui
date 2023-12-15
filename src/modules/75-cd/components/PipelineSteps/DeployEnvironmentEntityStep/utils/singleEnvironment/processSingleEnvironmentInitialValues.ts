@@ -15,18 +15,58 @@ import type {
   DeployEnvironmentEntityFormState
 } from '../../types'
 
+const setInfrastructureDetails = (
+  environment: DeployEnvironmentEntityConfig['environment'],
+  formState: DeployEnvironmentEntityFormState
+) => {
+  const infrastructureDefinitions = environment!.infrastructureDefinitions
+
+  // infrastructure is 1st identifier if infrastructureDefinitions is an array
+  const infrastructure = Array.isArray(infrastructureDefinitions)
+    ? infrastructureDefinitions[0]?.identifier
+    : infrastructureDefinitions
+
+  set(formState, 'infrastructure', infrastructure)
+  // if infrastructureDefinitions is an array and contains selected infrastructure
+
+  if (isValueExpression(infrastructure)) {
+    set(formState, 'infrastructureInputs', {
+      environment: {
+        infrastructure: { expression: infrastructureDefinitions?.[0]?.inputs }
+      }
+    })
+  } else if (Array.isArray(infrastructureDefinitions) && infrastructure) {
+    set(formState, 'infrastructureInputs', {
+      [environment!.environmentRef as string]: {
+        [infrastructure]: infrastructureDefinitions?.[0]?.inputs
+      }
+    })
+  } else {
+    set(formState, 'infrastructureInputs', {})
+  }
+}
+
 export function processSingleEnvironmentInitialValues(
   environment: DeployEnvironmentEntityConfig['environment'],
-  customStepProps: DeployEnvironmentEntityCustomStepPropsWithStages
+  customStepProps: DeployEnvironmentEntityCustomStepPropsWithStages & { isCustomStage?: boolean }
 ): DeployEnvironmentEntityFormState {
   const formState: DeployEnvironmentEntityFormState = {}
-  const { gitOpsEnabled, serviceIdentifiers, stages = [] as StageElementWrapperConfig[] } = customStepProps
+  const {
+    gitOpsEnabled,
+    serviceIdentifiers,
+    stages = [] as StageElementWrapperConfig[],
+    isCustomStage = false
+  } = customStepProps
   const isOverridesEnabled = (customStepProps as any).isOverridesEnabled
 
   if (environment) {
     if (getMultiTypeFromValue(environment.environmentRef) === MultiTypeInputType.RUNTIME) {
       set(formState, 'environment', RUNTIME_INPUT_VALUE)
       set(formState, 'provisioner', environment.provisioner)
+      if (isCustomStage) {
+        // Handling for infrastructureDefinitions is required for custom stage as Infra can be Optional/Independently configured when Env is runtime
+        setInfrastructureDetails(environment, formState)
+      }
     } else {
       const useFromStageValue = environment?.useFromStage?.stage
       if (useFromStageValue) {
@@ -149,32 +189,7 @@ export function processSingleEnvironmentInitialValues(
 
           set(formState, 'cluster', cluster)
         } else {
-          const infrastructureDefinitions = environment.infrastructureDefinitions
-
-          // infrastructure is 1st identifier if infrastructureDefinitions is an array
-          const infrastructure = Array.isArray(infrastructureDefinitions)
-            ? infrastructureDefinitions[0]?.identifier
-            : infrastructureDefinitions
-
-          set(formState, 'infrastructure', infrastructure)
-          // if infrastructureDefinitions is an array and contains selected infrastructure
-          set(
-            formState,
-            'infrastructureInputs',
-            isValueExpression(infrastructure)
-              ? {
-                  environment: {
-                    infrastructure: { expression: infrastructureDefinitions?.[0]?.inputs }
-                  }
-                }
-              : Array.isArray(infrastructureDefinitions) && infrastructure
-              ? {
-                  [environment.environmentRef as string]: {
-                    [infrastructure]: infrastructureDefinitions?.[0]?.inputs
-                  }
-                }
-              : {}
-          )
+          setInfrastructureDetails(environment, formState)
         }
       }
     }
