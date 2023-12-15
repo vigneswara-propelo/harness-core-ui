@@ -4,6 +4,8 @@ switchToGridView: 'Switch to grid view'
 switchToListView: 'Switch to list view'
 shared: 'shared'
 sharedFolderTitle: 'Organization Shared Folder'
+audit:
+  folder: Dashboard Folder
 sideNav:
   byHarness: 'BY HARNESS'
   custom: 'CUSTOM'

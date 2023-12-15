@@ -71,6 +71,20 @@ AuditTrailFactory.registerResourceHandler('DASHBOARD', {
   }
 })
 
+AuditTrailFactory.registerResourceHandler('DASHBOARD_FOLDER', {
+  moduleIcon: {
+    name: 'folder'
+  },
+  moduleLabel: 'common.resourceCenter.ticketmenu.platform',
+  resourceLabel: 'dashboards.audit.folder',
+  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+    const { identifier } = resource
+    const { accountIdentifier } = resourceScope
+
+    return routes.toCustomDashboardHome({ accountId: accountIdentifier, folderId: identifier })
+  }
+})
+
 // eslint-disable-next-line import/no-unresolved
 const CdbMicroFrontendPath = React.lazy(() => import('cdbui/MicroFrontendApp'))
 

@@ -3770,6 +3770,7 @@ export interface StringsMap {
   'dashboards.aida.selectExplore': string
   'dashboards.aida.successGeneratingTile': string
   'dashboards.aida.trouble': string
+  'dashboards.audit.folder': string
   'dashboards.cloneDashboardModal.submitFail': string
   'dashboards.cloneDashboardModal.success': string
   'dashboards.cloneDashboardModal.title': string
