@@ -11,15 +11,10 @@ import { render, RenderResult, screen } from '@testing-library/react'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import * as cdServiceMock from 'services/cd-ng'
 import * as cfServiceMock from 'services/cf'
-import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
 import FeatureFlagsLandingPage from '../FeatureFlagsLandingPage'
 
 jest.mock('../FeatureFlagsPage', () => () => <div>FeatureFlagsPage</div>)
 jest.mock('../SelectFlagGitRepoPage', () => () => <div>SelectFeatureFlagGitRepoPage</div>)
-
-const setUseFeatureFlagMock = (ffGitSync: boolean): void => {
-  jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(ffGitSync)
-}
 
 const setCdServiceMock = (gitSyncEnabled: boolean, loading = false): void => {
   jest.spyOn(cdServiceMock, 'useIsGitSyncEnabled').mockReturnValue({ loading, data: { gitSyncEnabled } } as any)
@@ -46,12 +41,9 @@ describe('FeatureFlagsLandingPage', () => {
     jest.clearAllMocks()
   })
 
-  test('it should render feature flags page when FF_GITSYNC is FALSE or gitSyncEnabled = false', async () => {
+  test('it should render feature flags page when gitSyncEnabled = false', async () => {
     const gitSyncEnabled = false
     setCdServiceMock(gitSyncEnabled)
-
-    const FF_GITSYNC = false
-    setUseFeatureFlagMock(FF_GITSYNC)
 
     const repoSet = false
     setCfServiceMock(repoSet)
@@ -62,9 +54,6 @@ describe('FeatureFlagsLandingPage', () => {
   })
 
   test('it should render feature flag page when gitSyncEnabled = false and repoSet = false', async () => {
-    const FF_GITSYNC = true
-    setUseFeatureFlagMock(FF_GITSYNC)
-
     const gitSyncEnabled = false
     setCdServiceMock(gitSyncEnabled)
 
@@ -77,9 +66,6 @@ describe('FeatureFlagsLandingPage', () => {
   })
 
   test('it should render feature flags page when gitSyncEnabled = true and repoSet = true', async () => {
-    const FF_GITSYNC = true
-    setUseFeatureFlagMock(FF_GITSYNC)
-
     const gitSyncEnabled = true
     setCdServiceMock(gitSyncEnabled)
 
@@ -98,7 +84,7 @@ describe('FeatureFlagsLandingPage', () => {
     const repoSet = false
     setCfServiceMock(repoSet)
 
-    renderComponent({ defaultFeatureFlagValues: { FF_GITSYNC: true, FF_FLAG_SYNC_THROUGH_GITEX_ENABLED: false } })
+    renderComponent({ defaultFeatureFlagValues: { FF_FLAG_SYNC_THROUGH_GITEX_ENABLED: false } })
 
     expect(screen.getByText('SelectFeatureFlagGitRepoPage')).toBeInTheDocument()
   })
@@ -110,7 +96,7 @@ describe('FeatureFlagsLandingPage', () => {
     const repoSet = false
     setCfServiceMock(repoSet)
 
-    renderComponent({ defaultFeatureFlagValues: { FF_GITSYNC: true, FF_FLAG_SYNC_THROUGH_GITEX_ENABLED: true } })
+    renderComponent({ defaultFeatureFlagValues: { FF_FLAG_SYNC_THROUGH_GITEX_ENABLED: true } })
 
     expect(screen.queryByText('SelectFeatureFlagGitRepoPage')).not.toBeInTheDocument()
     expect(screen.getByText('FeatureFlagsPage')).toBeInTheDocument()
@@ -118,9 +104,6 @@ describe('FeatureFlagsLandingPage', () => {
 
   test('it should show spinner when requests in progress', async () => {
     const loading = true
-
-    const FF_GITSYNC = true
-    setUseFeatureFlagMock(FF_GITSYNC)
 
     const gitSyncEnabled = true
     setCdServiceMock(gitSyncEnabled, loading)

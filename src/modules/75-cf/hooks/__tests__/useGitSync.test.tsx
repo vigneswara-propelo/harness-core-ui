@@ -156,17 +156,17 @@ describe('useGitSync', () => {
   })
 
   test.each([
-    [true, true, true, true, true],
-    [false, true, true, false, true],
-    [false, true, true, true, false]
+    [true, true, true, true],
+    [false, true, false, true],
+    [false, true, true, false]
   ])(
-    'it should return %p for isAutoCommitEnabled if FF_GITSYNC = %p, repoSet = %p, autoCommit = %p',
-    async (expectedResult, ffGitSync, ffGitEx, repoSet, autoCommit) => {
+    'it should return %p for isAutoCommitEnabled if repoSet = %p and autoCommit = %p',
+    async (expectedResult, ffGitEx, repoSet, autoCommit) => {
       setUseGitRepoMock({ autoCommit: autoCommit }, repoSet)
 
       jest
         .spyOn(useFeatureFlagMock, 'useFeatureFlags')
-        .mockImplementation(() => ({ FF_GITSYNC: ffGitSync, FF_FLAG_SYNC_THROUGH_GITEX_ENABLED: ffGitEx }))
+        .mockImplementation(() => ({ FF_FLAG_SYNC_THROUGH_GITEX_ENABLED: ffGitEx }))
 
       const { result } = renderHookUnderTest()
 
@@ -175,21 +175,18 @@ describe('useGitSync', () => {
   )
 
   test.each([
-    [true, true, true, true],
-    [false, true, true, false],
-    [false, false, false, false]
-  ])(
-    'it should return %p for isGitSyncEnabled if FF_GITSYNC = %p, repoSet = %p',
-    async (expectedResult, ffGitSync, ffGitEx, repoSet) => {
-      setUseGitRepoMock({}, repoSet)
+    [true, true, true],
+    [false, true, false],
+    [false, false, false]
+  ])('it should return %p for isGitSyncEnabled if repoSet = %p', async (expectedResult, ffGitEx, repoSet) => {
+    setUseGitRepoMock({}, repoSet)
 
-      jest
-        .spyOn(useFeatureFlagMock, 'useFeatureFlags')
-        .mockImplementation(() => ({ FF_GITSYNC: ffGitSync, FF_FLAG_SYNC_THROUGH_GITEX_ENABLED: ffGitEx }))
+    jest
+      .spyOn(useFeatureFlagMock, 'useFeatureFlags')
+      .mockImplementation(() => ({ FF_FLAG_SYNC_THROUGH_GITEX_ENABLED: ffGitEx }))
 
-      const { result } = renderHookUnderTest()
+    const { result } = renderHookUnderTest()
 
-      expect(result.current.isGitSyncEnabled).toBe(expectedResult)
-    }
-  )
+    expect(result.current.isGitSyncEnabled).toBe(expectedResult)
+  })
 })

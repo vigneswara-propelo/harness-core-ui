@@ -23,7 +23,7 @@ const FeatureFlagsLandingPage: React.FC = () => {
     accountId: accountIdentifier,
     orgIdentifier
   } = useParams<ProjectPathProps & ModulePathParams>()
-  const { FF_GITSYNC, FF_FLAG_SYNC_THROUGH_GITEX_ENABLED } = useFeatureFlags()
+  const { FF_FLAG_SYNC_THROUGH_GITEX_ENABLED } = useFeatureFlags()
 
   const isGitSyncEnabled = useIsGitSyncEnabled({
     queryParams: {
@@ -45,12 +45,7 @@ const FeatureFlagsLandingPage: React.FC = () => {
     return <ContainerSpinner className={css.spinner} />
   }
 
-  if (
-    !FF_FLAG_SYNC_THROUGH_GITEX_ENABLED &&
-    FF_GITSYNC &&
-    isGitSyncEnabled.data?.gitSyncEnabled &&
-    !gitRepo?.data?.repoSet
-  ) {
+  if (!FF_FLAG_SYNC_THROUGH_GITEX_ENABLED && isGitSyncEnabled.data?.gitSyncEnabled && !gitRepo?.data?.repoSet) {
     return <SelectFlagGitRepoPage gitRepoRefetch={gitRepo?.refetch} />
   }
 
