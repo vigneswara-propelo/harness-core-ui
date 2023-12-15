@@ -18,7 +18,6 @@ import { getRouteParams } from '@common/utils/routeUtils'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitionsV2'
-import usePrimaryScopeSwitchDialog from '@common/navigation/SideNavV2/ScopeSwitchDialog/usePrimaryScopeSwitchDialog'
 import { LinkInfo } from '@common/navigation/SideNavV2/SideNavV2'
 import { SIDE_NAV_STATE, useLayoutV2 } from '@modules/10-common/router/RouteWithLayoutV2'
 import { getScopeIcon, useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
@@ -63,7 +62,6 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
   const { path } = getRouteParams<ProjectPathProps & { path: string }>(true, activeLink?.url)
   const history = useHistory()
   const { sideNavState } = useLayoutV2()
-  const { showDialog: showPrimaryScopeSwitchDialog } = usePrimaryScopeSwitchDialog({ closeScopeSelector: onClose })
 
   const handleTabChange = (tabId: Scope): void => {
     setSelectedTabId(tabId)
@@ -163,24 +161,14 @@ export const ScopeSelector: React.FC<ScopeSelectorProps> = props => {
       history.push(targetUrl)
       return
     } else {
-      showPrimaryScopeSwitchDialog({
-        targetScope,
-        targetScopeParams:
-          targetScope === Scope.PROJECT
-            ? {
-                projectIdentifier: data?.identifier || '',
-                orgIdentifier: (data as Project).orgIdentifier || '',
-                accountId
-              }
-            : targetScope === Scope.ORGANIZATION
-            ? { orgIdentifier: data?.identifier || '', accountId }
-            : undefined,
-        pageName: activeLink?.label,
-        link: activeLink?.scopeSwitchProps?.[targetScope]?.link,
-        handleSelectScopeClick: () => {
-          // show scope selector here
-        }
-      })
+      onClose()
+      history.push(
+        routes.toMode({
+          module,
+          projectIdentifier: targetScope === Scope.PROJECT ? data?.identifier : undefined,
+          orgIdentifier: targetScope === Scope.PROJECT ? (data as Project).orgIdentifier : data?.identifier
+        })
+      )
     }
   }
 

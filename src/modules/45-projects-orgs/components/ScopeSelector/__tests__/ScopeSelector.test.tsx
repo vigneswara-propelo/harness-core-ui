@@ -6,8 +6,8 @@
  */
 
 import React from 'react'
-import { render, getByText, fireEvent, act } from '@testing-library/react'
-import { TestWrapper, findDialogContainer, findPopoverContainer } from '@common/utils/testUtils'
+import { render, getByText, fireEvent, act, waitFor } from '@testing-library/react'
+import { TestWrapper, findPopoverContainer } from '@common/utils/testUtils'
 import { ScopeSelector } from '@projects-orgs/components/ScopeSelector/ScopeSelector'
 import { projectMockDataWithModules, organizations } from './Mocks'
 
@@ -60,7 +60,7 @@ describe('Scope Selector', () => {
     expect(getByText(popover, 'account')).toBeDefined()
   })
   test('should be able to click on a project', async () => {
-    render(<WrapperComponent />)
+    const { getByTestId } = render(<WrapperComponent />)
     const popover = findPopoverContainer() as HTMLElement
     expect(popover).toBeDefined()
     expect(getByText(popover, 'projectLabel')).toBeDefined()
@@ -72,12 +72,12 @@ describe('Scope Selector', () => {
     act(() => {
       fireEvent.click(card as HTMLElement)
     })
-    const scopeSwitchDialog = findDialogContainer() as HTMLElement
-    expect(scopeSwitchDialog).toBeDefined()
-    expect(getByText(scopeSwitchDialog, 'common.viewSettings')).toBeDefined()
+
+    await waitFor(() => getByTestId('location'))
+    expect(getByTestId('location')).toHaveTextContent('/orgs/AAAsunnyGitExp/projects/gitX_CDC')
   })
   test('should be able to click on an org', async () => {
-    render(<WrapperComponent />)
+    const { getByTestId } = render(<WrapperComponent />)
     const popover = findPopoverContainer() as HTMLElement
     expect(popover).toBeDefined()
     expect(getByText(popover, 'orgLabel')).toBeDefined()
@@ -89,8 +89,8 @@ describe('Scope Selector', () => {
       expect(card).toBeDefined()
       fireEvent.click(card as HTMLElement)
     })
-    const scopeSwitchDialog = findDialogContainer() as HTMLElement
-    expect(scopeSwitchDialog).toBeDefined()
-    expect(getByText(scopeSwitchDialog, 'common.viewSettings')).toBeDefined()
+
+    await waitFor(() => getByTestId('location'))
+    expect(getByTestId('location')).toHaveTextContent('/orgs/aaaaaaaaaaaaaaaaDeepakOrg')
   })
 })
