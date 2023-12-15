@@ -370,6 +370,13 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_NODE_EXECUTION_
   settingCategory: 'PMS'
 })
 
+DefaultSettingsFactory.registerSettingHandler(SettingType.RUN_RBAC_VALIDATION_BEFORE_EXECUTING_INLINE_PIPELINES, {
+  label: 'platform.defaultSettings.runRbacValidationBeforeExecutingInlinePipelines',
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
+  yupValidation: Yup.boolean(),
+  settingCategory: 'PMS'
+})
+
 DefaultSettingsFactory.registerSettingHandler(SettingType.DO_NOT_DELETE_PIPELINE_EXECUTION_DETAILS, {
   label: 'platform.defaultSettings.doNotDeletePipelineExecutionDetails',
   settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,

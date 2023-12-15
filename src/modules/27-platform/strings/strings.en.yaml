@@ -24,6 +24,7 @@ defaultSettings:
   stageTimeout: Stage Timeout
   concurrentActivePipelineExecutions: Concurrent Active Pipeline Executions
   enablePipelineExecutionAuditEvents: Enable Pipeline Execution Audit Events
+  runRbacValidationBeforeExecutingInlinePipelines: Run RBAC Validation before executing Inline Pipelines
   allowUserToMarkStepAsFailedExplicitly: Allow users to mark a running Step as failure
   defaultImagePullPolicyForAddOnContainer: Default Image Pull Policy For Add On Container
   emailToNonHarnessUsers: Enable Emails to be sent to non-Harness Users

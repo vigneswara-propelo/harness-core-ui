@@ -3208,6 +3208,7 @@ export interface StringsMap {
   'platform.defaultSettings.pipelineTimeout': string
   'platform.defaultSettings.projectScopedResourceConstraintQueue': string
   'platform.defaultSettings.restoreToDefault': string
+  'platform.defaultSettings.runRbacValidationBeforeExecutingInlinePipelines': string
   'platform.defaultSettings.showAnomalies': string
   'platform.defaultSettings.showAwsCostAs': string
   'platform.defaultSettings.showAzureCostAs': string

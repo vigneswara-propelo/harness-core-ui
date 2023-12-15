@@ -88,6 +88,7 @@ export enum SettingType {
   STAGE_TIMEOUT = 'stage_timeout',
   CONCURRENT_ACTIVE_PIPELINE_EXECUTIONS = 'concurrent_active_pipeline_executions',
   ALLOW_USER_TO_MARK_STEP_AS_FAILED_EXPLICITLY = 'allow_user_to_mark_step_as_failed_explicitly',
+  RUN_RBAC_VALIDATION_BEFORE_EXECUTING_INLINE_PIPELINES = 'run_rbac_validation_before_executing_inline_pipelines',
   ENABLE_NODE_EXECUTION_AUDIT_EVENTS = 'enable_node_execution_audit_events',
   ENABLE_MATRIX_FIELD_NAME_SETTING = 'enable_matrix_label_by_name',
   ENABLE_EXPRESSION_ENGINE_V2 = 'enable_expression_engine_v2',
