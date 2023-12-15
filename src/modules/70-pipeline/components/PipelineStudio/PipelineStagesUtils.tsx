@@ -50,6 +50,7 @@ export const getPipelineStages: (args: GetPipelineStagesArgs) => React.ReactElem
         {stagesCollection.getStage(StageType.PIPELINE, isPipelineChainingEnabled, getString)}
         {stagesCollection.getStage(StageType.CUSTOM, true, getString)}
         {stagesCollection.getStage(StageType.Template, false, getString)}
+        {stagesCollection.getStage(StageType.IACM, isIACMEnabled, getString)}
         {stagesCollection.getStage(StageType.IDP, isIDPEnabled, getString)}
       </PipelineStages>
     )
@@ -64,6 +65,7 @@ export const getPipelineStages: (args: GetPipelineStagesArgs) => React.ReactElem
         {stagesCollection.getStage(StageType.PIPELINE, isPipelineChainingEnabled, getString)}
         {stagesCollection.getStage(StageType.CUSTOM, true, getString)}
         {stagesCollection.getStage(StageType.Template, false, getString)}
+        {stagesCollection.getStage(StageType.IACM, isIACMEnabled, getString)}
         {stagesCollection.getStage(StageType.IDP, isIDPEnabled, getString)}
       </PipelineStages>
     )
