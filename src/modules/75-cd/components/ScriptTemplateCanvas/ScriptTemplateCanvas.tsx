@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { debounce, isEqual, set } from 'lodash-es'
+import { debounce, isEmpty, isEqual, set } from 'lodash-es'
 import { sanitize } from '@common/utils/JSONUtils'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
@@ -15,9 +15,17 @@ import type { ShellScriptData, ShellScriptFormData } from '../PipelineSteps/Shel
 import { processShellScriptFormData } from '../PipelineSteps/ShellScriptStep/ShellScriptStep'
 
 function getProcessedTemplate(formikValue: ShellScriptFormData): ShellScriptData['spec'] {
-  const modifiedData = processShellScriptFormData(formikValue)
+  const { spec } = processShellScriptFormData(formikValue)
 
-  return modifiedData.spec
+  // Add onDelegate to SecretManager Template to maintain the same flow
+  const isOnDelegate = isEmpty(spec?.executionTarget)
+  spec.onDelegate = isOnDelegate
+
+  if (isOnDelegate) {
+    delete spec.executionTarget
+  }
+
+  return spec
 }
 
 const ScriptTemplateCanvas = (_props: unknown, formikRef: TemplateFormRef) => {

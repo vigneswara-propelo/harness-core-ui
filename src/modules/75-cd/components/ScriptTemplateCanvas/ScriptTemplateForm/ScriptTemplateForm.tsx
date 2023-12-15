@@ -38,7 +38,7 @@ function ScriptTemplateForm(
   formikRef: TemplateFormRef
 ): JSX.Element {
   const { getString } = useStrings()
-  const [selectedTabID, setselectedTabID] = useState<TabId>(ScriptTemplateFormTabs.Script)
+  const [selectedTabID, setSelectedTabID] = useState<TabId>(ScriptTemplateFormTabs.Script)
   const scriptRef = useRef<FormikProps<unknown> | null>(null)
   const configfRef = useRef<FormikProps<unknown> | null>(null)
 
@@ -90,13 +90,13 @@ function ScriptTemplateForm(
       await scriptRef.current.submitForm()
 
       if (isEmpty(scriptRef.current.errors)) {
-        setselectedTabID(newTab)
+        setSelectedTabID(newTab)
       }
     } else if (prevTab === ScriptTemplateFormTabs.Configurations && configfRef.current) {
       await configfRef.current.submitForm()
 
       if (isEmpty(configfRef.current.errors)) {
-        setselectedTabID(newTab)
+        setSelectedTabID(newTab)
       }
     }
   }

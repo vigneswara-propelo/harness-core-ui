@@ -8,7 +8,7 @@
 import React, { FormEvent } from 'react'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import { get, set } from 'lodash-es'
+import { get, set, isUndefined } from 'lodash-es'
 
 import {
   FormInput,
@@ -47,7 +47,7 @@ export default function BaseScript(props: {
   const { formik, readonly, allowableTypes } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { values: formValues, setFieldValue, setValues } = formik
+  const { values: formValues, setValues } = formik
   const scriptType: ScriptType = formValues.spec.shell || 'Bash'
 
   return (
@@ -60,11 +60,16 @@ export default function BaseScript(props: {
           label={getString('common.scriptType')}
           placeholder={getString('common.scriptType')}
           onChange={value => {
-            // Using setValues as values were not updating in template. Values update on 2nd times
+            const onDelegatePath = 'spec.onDelegate'
+            // Using setValues to ensure both values are updated simultaneously
             setValues(
               produce(formValues, draft => {
-                set(draft, 'spec.onDelegate', true)
+                // Update executionTarget target instead of onDelegate as we are removing onDelegate field from YAML
+                set(draft, 'spec.executionTarget', {})
                 set(draft, 'spec.shell', value.value)
+                if (!isUndefined(get(draft, onDelegatePath))) {
+                  set(draft, onDelegatePath, true)
+                }
                 return draft
               })
             )
@@ -87,7 +92,7 @@ export default function BaseScript(props: {
         radioGroup={{ inline: true }}
         onChange={(e: FormEvent<HTMLInputElement>) => {
           const sourceType = e.currentTarget?.value
-          // Using setValues as values were not updating in template. Values update on 2nd times
+          // Using setValues to ensure both values are updated simultaneously
           setValues(
             produce(formValues, draft => {
               set(draft, 'spec.source.type', sourceType)
@@ -138,7 +143,17 @@ export default function BaseScript(props: {
               className={css.minConfigBtn}
               showRequiredField={false}
               showDefaultField={false}
-              onChange={/* istanbul ignore next */ value => setFieldValue('spec.source.spec.script', value)}
+              onChange={
+                /* istanbul ignore next */ value => {
+                  setValues(
+                    produce(formValues, draft => {
+                      set(draft, 'spec.source.spec.script', value)
+
+                      return draft
+                    })
+                  )
+                }
+              }
               isReadonly={readonly}
             />
           )}
@@ -153,9 +168,6 @@ export default function BaseScript(props: {
           style={{ marginBottom: 0, marginTop: 0 }}
           disableTypeSelection={false}
           supportListOfExpressions={true}
-          onTypeChange={() => {
-            setFieldValue('spec.source.spec.script', undefined)
-          }}
           defaultType={getMultiTypeFromValue(get(formValues, 'spec.source.spec.file'), allowableTypes, true)}
           allowedTypes={allowableTypes}
           expressionRender={() => {
@@ -166,10 +178,15 @@ export default function BaseScript(props: {
                 disabled={false}
                 inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
                 items={expressions}
-                onChange={val =>
-                  /* istanbul ignore next */
-                  setFieldValue('spec.source.spec.file', val)
-                }
+                onChange={val => {
+                  setValues(
+                    produce(formValues, draft => {
+                      set(draft, 'spec.source.spec.file', val)
+
+                      return draft
+                    })
+                  )
+                }}
               />
             )
           }}
@@ -179,8 +196,14 @@ export default function BaseScript(props: {
             label={getString('common.git.filePath')}
             name="spec.source.spec.file"
             onChange={newValue => {
-              setFieldValue('spec.source.spec.file', newValue)
-              setFieldValue('spec.source.spec.script', undefined)
+              setValues(
+                produce(formValues, draft => {
+                  set(draft, 'spec.source.spec.file', newValue)
+                  set(draft, 'spec.source.spec.script', undefined)
+
+                  return draft
+                })
+              )
             }}
             fileUsage={FileUsage.SCRIPT}
             readonly={readonly}

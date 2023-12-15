@@ -6,10 +6,11 @@
  */
 
 import React from 'react'
-import { Accordion, AllowedTypes, Formik, FormikForm, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { Accordion, AllowedTypes, Formik, FormikForm } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 
+import { isEmpty } from 'lodash-es'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
@@ -93,7 +94,7 @@ export function ShellScriptWidget(
   const executionTargetBaseSchema = Yup.object().shape({
     host: Yup.string()
       .trim()
-      .required(getString('fieldRequired', { field: getString('targetHost') })),
+      .required(getString('fieldRequired', { field: getString('cd.specifyTargetHost') })),
     workingDirectory: Yup.string()
       .trim()
       .required(getString('fieldRequired', { field: getString('workingDirectory') }))
@@ -106,63 +107,48 @@ export function ShellScriptWidget(
       source: Yup.object().shape({
         spec: Yup.object()
           .when(['type'], {
-            is: type => {
-              return type === LocationType.INLINE
-            },
+            is: type => type === LocationType.INLINE,
             then: Yup.object().shape({
               script: Yup.string().trim().required(getString('common.scriptRequired'))
             })
           })
           .when(['type'], {
-            is: type => {
-              return type === LocationType.HARNESS
-            },
+            is: type => type === LocationType.HARNESS,
             then: Yup.object().shape({
               file: Yup.string()
                 .trim()
-                .required(getString('fieldRequired', { field: 'File Path' }))
+                .required(getString('fieldRequired', { field: getString('common.git.filePath') }))
             })
           })
       }),
       environmentVariables: variableSchema(getString, StepType.SHELLSCRIPT),
       outputVariables: variableSchema(getString, StepType.SHELLSCRIPT),
-      executionTarget: Yup.object().when(['onDelegate'], {
-        is: onDelegate => !onDelegate,
-        then: Yup.object().when(['shell'], {
-          is: shell => shell === 'PowerShell',
-          then: executionTargetBaseSchema.shape({
-            connectorRef: Yup.string()
-              .trim()
-              .required(getString('fieldRequired', { field: getString('platform.secrets.typeWinRM') }))
-          }),
-          otherwise: executionTargetBaseSchema.shape({
-            connectorRef: Yup.string()
-              .trim()
-              .required(getString('fieldRequired', { field: getString('sshConnector') }))
+      executionTarget: Yup.lazy(executionTarget => {
+        // executionTarget as runtime field
+        if (typeof executionTarget === 'string') {
+          return Yup.string().required(getString('fieldRequired', { field: getString('pipeline.executionTarget') }))
+        } else if (isEmpty(executionTarget)) {
+          // executionTarget value {} is to select On Delegate. So do not validate field
+          return Yup.object()
+        } else {
+          return Yup.object().when(['shell'], {
+            is: shell => shell === 'PowerShell',
+            then: executionTargetBaseSchema.shape({
+              connectorRef: Yup.string()
+                .trim()
+                .required(getString('fieldRequired', { field: getString('platform.secrets.typeWinRM') }))
+            }),
+            otherwise: executionTargetBaseSchema.shape({
+              connectorRef: Yup.string()
+                .trim()
+                .required(getString('fieldRequired', { field: getString('sshConnector') }))
+            })
           })
-        })
+        }
       })
     }),
     ...getNameAndIdentifierSchema(getString, stepViewType)
   })
-
-  const values: ShellScriptFormData = {
-    ...initialValues,
-    spec: {
-      ...initialValues.spec,
-      delegateSelectors: initialValues.spec.delegateSelectors,
-      onDelegate: initialValues.spec?.onDelegate ?? true,
-      executionTarget:
-        getMultiTypeFromValue(initialValues.spec.executionTarget) === MultiTypeInputType.FIXED
-          ? {
-              ...initialValues.spec.executionTarget,
-              connectorRef:
-                (initialValues.spec.executionTarget?.connectorRef?.value as string) ||
-                initialValues.spec.executionTarget?.connectorRef?.toString()
-            }
-          : initialValues.spec.executionTarget
-    }
-  }
 
   return (
     <Formik<ShellScriptFormData>
@@ -187,7 +173,7 @@ export function ShellScriptWidget(
         onChange?.(formValues)
       }}
       formName="shellScriptForm"
-      initialValues={values}
+      initialValues={initialValues}
       validationSchema={validationSchema}
     >
       {(formik: FormikProps<ShellScriptFormData>) => {

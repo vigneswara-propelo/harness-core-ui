@@ -13,6 +13,7 @@ import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
+import { ExecutionTarget } from 'services/pipeline-ng'
 import css from './ScriptVariablesRuntimeInput.module.scss'
 
 export interface InputSetSchema {
@@ -20,12 +21,6 @@ export interface InputSetSchema {
   type: 'String' | 'Number'
   value: string
   useAsDefault?: boolean
-}
-
-export interface ExecutionTarget {
-  host: string
-  connectorRef: string
-  workingDirectory: string
 }
 
 export interface SceretManagerTemplateInputs {

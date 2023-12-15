@@ -1,7 +1,14 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 
 import { render } from '@testing-library/react'
-import { Formik, FormikForm } from '@harness/uicore'
+import { Formik, FormikForm, MultiTypeInputType } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 
 import { TestWrapper } from '@common/utils/testUtils'
@@ -27,12 +34,14 @@ describe('Execution target group tests', () => {
           {formik => (
             <FormikForm>
               <MultiTypeExecutionTargetGroup
-                name="spec.onDelegate"
+                executionTargetPath="spec.executionTarget"
+                onDelegatePath="spec.onDelegate"
                 formik={formik as any}
                 readonly={false}
                 tooltipProps={{ dataTooltipId: 'targetGrp' }}
                 label={'onDelegate'}
                 intent={Intent.PRIMARY}
+                allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
               />
             </FormikForm>
           )}
@@ -59,11 +68,13 @@ describe('Execution target group tests', () => {
           {formik => (
             <FormikForm>
               <MultiTypeExecutionTargetGroup
-                name="spec.onDelegate"
+                executionTargetPath="spec.executionTarget"
+                onDelegatePath="spec.onDelegate"
                 formik={formik as any}
                 readonly={false}
                 label={'onDelegate'}
                 tooltipProps={{ dataTooltipId: 'targetGrp' }}
+                allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
               />
             </FormikForm>
           )}
@@ -90,11 +101,13 @@ describe('Execution target group tests', () => {
           {formik => (
             <FormikForm>
               <MultiTypeExecutionTargetGroup
-                name="spec.onDelegate"
+                executionTargetPath="spec.executionTarget"
+                onDelegatePath="spec.onDelegate"
                 formik={formik as any}
                 readonly={false}
                 label={'onDelegate'}
                 tooltipProps={{ dataTooltipId: 'targetGrp' }}
+                allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
               />
             </FormikForm>
           )}

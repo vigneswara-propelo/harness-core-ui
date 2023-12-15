@@ -45,7 +45,7 @@ exports[`Test BaseScriptWithRef initial render 1`] = `
                   placeholder="- common.scriptType -"
                   style="padding-right: 0px;"
                   type="text"
-                  value=""
+                  value="Bash"
                 />
                 <span
                   class="bp3-input-action"

@@ -34,7 +34,10 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import MultiTypeConfigFileSelect from '@pipeline/components/StartupScriptSelection/MultiTypeConfigFileSelect'
-import { getAllowableTypesWithoutExpression, isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import {
+  isExecutionTimeFieldDisabled,
+  getAllowableTypesWithoutExpressionAndExecutionTime
+} from '@pipeline/utils/runPipelineUtils'
 import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import {
@@ -45,6 +48,7 @@ import {
 import { getAllowedValuesFromTemplate, shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { ShellScriptStepInfo } from 'services/pipeline-ng'
+import { isValueRuntimeInput } from '@modules/10-common/utils/utils'
 import {
   scriptOutputType,
   ShellScriptData,
@@ -102,7 +106,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
   const prefix = isEmpty(path) ? '' : `${path}.`
   const isExecutionTimeFieldDisabledForStep = isExecutionTimeFieldDisabled(stepViewType)
   const multiSelectSupportForAllowedValues = useFeatureFlag(FeatureFlag.PIE_MULTISELECT_AND_COMMA_IN_ALLOWED_VALUES)
-  const formik = useFormikContext()
+  const formik = useFormikContext<ShellScriptFormData>()
   return (
     <FormikForm>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME && (
@@ -123,7 +127,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
           className={cx(stepCss.formGroup, stepCss.sm)}
         />
       )}
-      {getMultiTypeFromValue(template?.spec?.source?.spec?.script) === MultiTypeInputType.RUNTIME ? (
+      {getMultiTypeFromValue(template?.spec?.source?.spec?.script) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.alignStart, stepCss.md)}>
           <MultiTypeFieldSelector
             name={`${prefix}spec.source.spec.script`}
@@ -156,33 +160,8 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             />
           </MultiTypeFieldSelector>
         </div>
-      ) : null}
-
-      {getMultiTypeFromValue(template?.spec?.onDelegate) === MultiTypeInputType.RUNTIME && (
-        <>
-          <div className={cx(stepCss.lg)}>
-            <Label>
-              <HarnessDocTooltip tooltipId={'exec-target'} labelText={getString('pipeline.executionTarget')} />
-            </Label>
-
-            <MultiTypeExecutionTargetGroup
-              name={`${prefix}spec.onDelegate`}
-              formik={formik}
-              readonly={readonly}
-              allowableTypes={getAllowableTypesWithoutExpression(allowableTypes)}
-            />
-          </div>
-          <div className={cx(stepCss.md)}>
-            <FixedExecTargetGroup
-              allowableTypes={allowableTypes}
-              formik={formik as any}
-              prefix={prefix}
-              shellScriptType={shellScriptType}
-            />
-          </div>
-        </>
       )}
-      {getMultiTypeFromValue(template?.spec?.source?.spec?.file) === MultiTypeInputType.RUNTIME ? (
+      {getMultiTypeFromValue(template?.spec?.source?.spec?.file) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.alignStart, stepCss.md)}>
           <MultiTypeConfigFileSelect
             name={`${prefix}spec.source.spec.file`}
@@ -228,7 +207,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             />
           </MultiTypeConfigFileSelect>
         </div>
-      ) : null}
+      )}
 
       {getMultiTypeFromValue(template?.spec?.includeInfraSelectors) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
@@ -251,7 +230,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
         </div>
       )}
 
-      {isArray(template?.spec?.environmentVariables) && template?.spec?.environmentVariables ? (
+      {isArray(template?.spec?.environmentVariables) && template?.spec?.environmentVariables && (
         <div className={stepCss.formGroup}>
           <MultiTypeFieldSelector
             name="spec.environmentVariables"
@@ -373,8 +352,8 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             />
           </MultiTypeFieldSelector>
         </div>
-      ) : null}
-      {isArray(template?.spec?.outputVariables) && template?.spec?.outputVariables ? (
+      )}
+      {isArray(template?.spec?.outputVariables) && template?.spec?.outputVariables && (
         <div className={stepCss.formGroup}>
           <MultiTypeFieldSelector
             name="spec.outputVariables"
@@ -487,7 +466,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             />
           </MultiTypeFieldSelector>
         </div>
-      ) : null}
+      )}
 
       {getMultiTypeFromValue(template?.spec?.outputAlias?.key) === MultiTypeInputType.RUNTIME && (
         <TextFieldInputSetView
@@ -506,6 +485,36 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
           template={template}
           className={cx(stepCss.formGroup, stepCss.md)}
         />
+      )}
+      {/*
+       * Check for both onDelegate & executionTarget to make changes backward compatible.
+       */}
+      {(isValueRuntimeInput(template?.spec?.onDelegate) || isValueRuntimeInput(template?.spec?.executionTarget)) && (
+        <>
+          <div className={cx(stepCss.lg)}>
+            <Label>
+              <HarnessDocTooltip tooltipId={'exec-target'} labelText={getString('pipeline.executionTarget')} />
+            </Label>
+
+            <MultiTypeExecutionTargetGroup
+              executionTargetPath={`${prefix}spec.executionTarget`}
+              onDelegatePath={`${prefix}spec.onDelegate`}
+              formik={formik}
+              readonly={readonly}
+              allowableTypes={getAllowableTypesWithoutExpressionAndExecutionTime(allowableTypes)}
+            />
+          </div>
+          <div className={cx(stepCss.md)}>
+            <FixedExecTargetGroup
+              allowableTypes={allowableTypes}
+              formik={formik as any}
+              prefix={prefix}
+              expressions={expressions}
+              readonly={readonly}
+              shellScriptType={shellScriptType}
+            />
+          </div>
+        </>
       )}
       {getMultiTypeFromValue(template?.spec?.executionTarget?.host) === MultiTypeInputType.RUNTIME && (
         <TextFieldInputSetView

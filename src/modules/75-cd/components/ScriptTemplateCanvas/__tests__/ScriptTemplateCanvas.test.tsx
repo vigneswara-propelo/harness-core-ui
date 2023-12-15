@@ -103,14 +103,13 @@ describe('Test ScriptTemplateCanvasWithRef', () => {
         spec: {
           shell: 'Bash',
           source: {
+            type: 'Inline',
             spec: {
-              script: 'echo hi',
-              type: 'Inline'
+              script: 'echo hi'
             }
           },
           onDelegate: true,
-          environmentVariables: [{ name: 'key', type: 'String', value: 1 }],
-          variables: undefined
+          environmentVariables: [{ name: 'key', type: 'String', value: 1 }]
         }
       })
     )
@@ -143,14 +142,13 @@ describe('Test ScriptTemplateCanvasWithRef', () => {
         spec: {
           shell: 'Bash',
           source: {
+            type: 'Inline',
             spec: {
-              script: 'echo hi',
-              type: 'Inline'
+              script: 'echo hi'
             }
           },
-          onDelegate: false,
-          environmentVariables: undefined,
           outputVariables: [{ name: 'key', type: 'String', value: 1 }],
+          onDelegate: false,
           executionTarget: {
             connectorRef: 'acc.connectorId',
             host: 'host',

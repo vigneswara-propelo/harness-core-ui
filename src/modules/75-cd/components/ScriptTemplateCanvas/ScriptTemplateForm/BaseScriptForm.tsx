@@ -15,6 +15,7 @@ import { useStrings } from 'framework/strings'
 import { LocationType } from '@cd/components/PipelineSteps/CommandScripts/CommandScriptsTypes'
 import { ShellScriptFormData, variableSchema } from '@cd/components/PipelineSteps/ShellScriptStep/shellScriptTypes'
 import BaseScript from '@cd/components/BaseScript/BaseScript'
+import { getInitialValues } from '../../PipelineSteps/ShellScriptStep/helper'
 
 interface ShellScriptWidgetProps {
   initialValues: ShellScriptFormData
@@ -50,7 +51,7 @@ export function BaseScriptForm(
             then: Yup.object().shape({
               file: Yup.string()
                 .trim()
-                .required(getString('fieldRequired', { field: 'File Path' }))
+                .required(getString('fieldRequired', { field: getString('common.git.filePath') }))
             })
           })
       }),
@@ -59,18 +60,6 @@ export function BaseScriptForm(
     })
   })
 
-  const values: any = {
-    ...initialValues,
-    spec: {
-      ...initialValues.spec,
-
-      executionTarget: {
-        ...initialValues.spec?.executionTarget
-      },
-      onDelegate: initialValues.spec?.onDelegate ?? true
-    }
-  }
-
   return (
     <Formik<ShellScriptFormData>
       onSubmit={/* istanbul ignore next */ submit => updateTemplate?.(submit)}
@@ -78,7 +67,7 @@ export function BaseScriptForm(
         onChange?.(formValues)
       }}
       formName="shellScriptForm"
-      initialValues={values}
+      initialValues={getInitialValues(initialValues)}
       validationSchema={validationSchema}
     >
       {(formik: FormikProps<ShellScriptFormData>) => {

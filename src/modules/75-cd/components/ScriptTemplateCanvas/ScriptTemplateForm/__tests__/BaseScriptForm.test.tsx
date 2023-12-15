@@ -152,14 +152,16 @@ describe('Test BaseScriptWithRef', () => {
       type: 'PowerShell',
       spec: {
         executionTarget: {},
-        onDelegate: true,
         shell: 'Bash',
         source: {
           type: 'Inline',
           spec: {
             script: 'echo Hello World'
           }
-        }
+        },
+        delegateSelectors: [],
+        environmentVariables: [],
+        outputVariables: []
       }
     })
   })

@@ -273,7 +273,7 @@ describe('Test Shell Script Step', () => {
       type: 'ShellScript',
       spec: {
         shell: 'Bash',
-        onDelegate: true,
+        executionTarget: {},
         delegateSelectors: [],
         source: {
           type: 'Inline',
@@ -314,7 +314,7 @@ describe('Test Shell Script Step', () => {
       name: 'SSH',
       spec: {
         shell: 'Bash',
-        onDelegate: true,
+        onDelegate: false,
         source: {
           type: 'Inline',
           spec: {
@@ -394,7 +394,6 @@ describe('Test Shell Script Step', () => {
       spec: {
         shell: 'Bash',
         delegateSelectors: [],
-        onDelegate: false,
         source: {
           type: 'Inline',
           spec: {

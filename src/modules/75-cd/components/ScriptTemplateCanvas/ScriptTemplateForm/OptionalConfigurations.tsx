@@ -15,6 +15,7 @@ import { useStrings } from 'framework/strings'
 import { ShellScriptFormData, variableSchema } from '@cd/components/PipelineSteps/ShellScriptStep/shellScriptTypes'
 import OptionalConfiguration from '@cd/components/PipelineSteps/ShellScriptStep/OptionalConfiguration'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { getInitialValues } from '../../PipelineSteps/ShellScriptStep/helper'
 
 interface ShellScriptWidgetProps {
   initialValues: ShellScriptFormData
@@ -31,23 +32,11 @@ export function OptionalConfigurations(
 ): JSX.Element {
   const { getString } = useStrings()
 
-  const defaultSSHSchema = Yup.object().shape({
+  const validationSchema = Yup.object().shape({
     spec: Yup.object().shape({
       environmentVariables: variableSchema(getString)
     })
   })
-  const values = {
-    ...initialValues,
-    spec: {
-      executionTarget: {
-        ...initialValues.spec?.executionTarget
-      },
-      ...initialValues.spec,
-      onDelegate: initialValues.spec?.onDelegate ?? true
-    }
-  }
-
-  const validationSchema = defaultSSHSchema
 
   return (
     <Formik<ShellScriptFormData>
@@ -60,7 +49,7 @@ export function OptionalConfigurations(
         onChange?.(formValues)
       }}
       formName="scriptOptionalForm"
-      initialValues={values}
+      initialValues={getInitialValues(initialValues)}
       validationSchema={validationSchema}
     >
       {(formik: FormikProps<ShellScriptFormData>) => {

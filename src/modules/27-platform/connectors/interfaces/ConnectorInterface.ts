@@ -20,6 +20,7 @@ import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import type { ModalViewFor } from '@platform/connectors/components/CreateConnector/CreateConnectorUtils'
 import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
+import { ExecutionTarget } from 'services/pipeline-ng'
 
 export interface KubFormData {
   name?: string
@@ -162,11 +163,6 @@ export interface AzureFormInterface {
   secretFile?: SecretReferenceInterface | void
   clientId?: string
   managedIdentity?: string
-}
-export interface ExecutionTarget {
-  connectorRef?: string
-  host?: string
-  workingDirectory?: string
 }
 
 export interface CustomSMFormInterface {

@@ -9,7 +9,6 @@ import React from 'react'
 import { FormikProps, FieldArray } from 'formik'
 import { Button, ButtonVariation, FormikForm, FormInput, AllowedTypes } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
-import type { IOptionProps } from '@blueprintjs/core'
 
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -22,17 +21,6 @@ import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { scriptInputType, CustomApprovalFormData, CustomApprovalStepVariable } from './types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './CustomApproval.module.scss'
-
-export const targetTypeOptions: IOptionProps[] = [
-  {
-    label: 'Specify Target Host',
-    value: 'targethost'
-  },
-  {
-    label: 'On Delegate',
-    value: 'delegate'
-  }
-]
 
 export default function OptionalConfiguration(props: {
   formik: FormikProps<CustomApprovalFormData>

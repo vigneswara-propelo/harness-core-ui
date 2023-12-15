@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-
+import * as uuid from 'uuid'
 import { render, act, fireEvent, waitFor } from '@testing-library/react'
 import { Form } from 'formik'
 
@@ -17,31 +17,17 @@ import { mockDelegateSelectorsResponse } from '@common/components/DelegateSelect
 
 import { OptionalConfigurationWithRef } from '../OptionalConfigurations'
 
+jest.mock('uuid')
+
 const initialValues = {
   identifier: 'id',
   name: 'name',
-  type: '',
+  type: 'ShellScript',
   spec: {
     shell: 'Bash',
     source: {
+      type: 'Inline',
       spec: {
-        type: 'Inline',
-        script: 'echo test'
-      }
-    }
-  }
-}
-const initialValuesWithData = {
-  identifier: 'id',
-  name: 'name',
-  type: '',
-  spec: {
-    executionTarget: {},
-    onDelegate: 'delegate',
-    shell: 'Bash',
-    source: {
-      spec: {
-        type: 'Inline',
         script: 'echo test'
       }
     }
@@ -56,28 +42,33 @@ jest.mock('services/portal', () => ({
 }))
 
 describe('Test OptionalConfigurations', () => {
-  test('should match snapshot for OptionalConfigurations without initial values ', async () => {
-    const { container } = render(
+  test('Should render OptionalConfigurations without initial values ', async () => {
+    const { getByText, container } = render(
       <TestWrapper>
         <OptionalConfigurationWithRef initialValues={initialValues} allowableTypes={[]} />
       </TestWrapper>
     )
 
-    expect(container).toMatchSnapshot()
-  })
-
-  test('should match snapshot for OptionalConfigurations with initial values ', async () => {
-    const { container } = render(
-      <TestWrapper>
-        <OptionalConfigurationWithRef initialValues={initialValuesWithData} allowableTypes={[]} />
-      </TestWrapper>
-    )
-
-    expect(container).toMatchSnapshot()
+    expect(getByText('pipeline.scriptInputVariables common.optionalLabel')).toBeInTheDocument()
+    expect(getByText('name')).toBeInTheDocument()
+    expect(getByText('typeLabel')).toBeInTheDocument()
+    expect(getByText('valueLabel')).toBeInTheDocument()
+    expect(getByText('addInputVar')).toBeInTheDocument()
+    expect(getByText('pipeline.executionTarget')).toBeInTheDocument()
+    expect(getByText('pipeline.execTargetLabel')).toBeInTheDocument()
+    expect(getByText('cd.specifyTargetHost')).toBeInTheDocument()
+    expect(getByText('pipeline.delegateLabel')).toBeInTheDocument()
+    expect(container.querySelector('[value="delegate"]')).toBeChecked()
+    expect(getByText('common.defineDelegateSelector')).toBeInTheDocument()
   })
 
   test('should match snapshot for OptionalConfigurations without initial values ', async () => {
+    const name = 'Var1'
+    const value = 'hello'
+    const mockedID = 'MockedUUID'
+
     let formikCopy: any
+    jest.spyOn(uuid, 'v4').mockReturnValue(mockedID)
     const onChangeMock = jest.fn()
     const updateTemplateMock = jest.fn()
     const { container, getByTestId } = render(
@@ -107,19 +98,50 @@ describe('Test OptionalConfigurations', () => {
     act(() => {
       fireEvent.click(addEnvVars)
     })
-    const envVar = container.querySelector('input[name="spec.environmentVariables[0].value"]')
-    await waitFor(() => expect(envVar).toBeDefined())
+    const envVarName = container.querySelector('input[name="spec.environmentVariables[0].name"]')
+    await waitFor(() => expect(envVarName).toBeDefined())
     act(() => {
-      fireEvent.change(container.querySelector('input[name="spec.environmentVariables[0].value"]')!, {
-        target: { value: 'hello' }
+      fireEvent.change(envVarName!, {
+        target: { value: name }
+      })
+    })
+    const envVarValue = container.querySelector('input[name="spec.environmentVariables[0].value"]')
+    await waitFor(() => expect(envVarValue).toBeDefined())
+    act(() => {
+      fireEvent.change(envVarValue!, {
+        target: { value }
       })
     })
     expect(onChangeMock).toBeCalled()
+
     act(() => {
       formikCopy.submitForm()
     })
-    expect(onChangeMock).toBeCalled()
 
-    expect(container).toMatchSnapshot()
+    expect(onChangeMock).toHaveBeenCalledWith({
+      identifier: 'id',
+      name: 'name',
+      type: 'ShellScript',
+      spec: {
+        shell: 'Bash',
+        source: {
+          type: 'Inline',
+          spec: {
+            script: 'echo test'
+          }
+        },
+        executionTarget: {},
+        delegateSelectors: [],
+        environmentVariables: [
+          {
+            id: mockedID,
+            name,
+            type: 'String',
+            value
+          }
+        ],
+        outputVariables: []
+      }
+    })
   })
 })

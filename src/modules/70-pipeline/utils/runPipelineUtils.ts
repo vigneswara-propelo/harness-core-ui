@@ -16,7 +16,12 @@ import type { UseStringsReturn } from 'framework/strings'
 import type { InputSetErrorResponse, PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { isMultiTypeExpression, isMultiTypeFixed, isMultiTypeRuntime } from '@common/utils/utils'
+import {
+  isMultiTypeExecutionTime,
+  isMultiTypeExpression,
+  isMultiTypeFixed,
+  isMultiTypeRuntime
+} from '@common/utils/utils'
 import cdExecutionListIllustration from '../pages/execution-list/images/cd-execution-illustration.svg'
 import ciExecutionListIllustration from '../pages/execution-list/images/ci-execution-illustration.svg'
 import stoExecutionListIllustration from '../pages/execution-list/images/sto-execution-illustration.svg'
@@ -487,6 +492,14 @@ export function getAllowableTypesWithoutFixedValue(allowableTypes: MultiTypeInpu
 
 export function getAllowableTypesWithoutExpression(allowableTypes: MultiTypeInputType[]): AllowedTypes {
   return allowableTypes.filter(type => !isMultiTypeExpression(type)) as AllowedTypes
+}
+
+export function getAllowableTypesWithoutExecutionTime(allowableTypes: MultiTypeInputType[]): AllowedTypes {
+  return allowableTypes.filter(type => !isMultiTypeExecutionTime(type)) as AllowedTypes
+}
+
+export function getAllowableTypesWithoutExpressionAndExecutionTime(allowableTypes: MultiTypeInputType[]): AllowedTypes {
+  return getAllowableTypesWithoutExecutionTime(getAllowableTypesWithoutExpression(allowableTypes))
 }
 
 export const isExecutionTimeFieldDisabled = (viewType?: StepViewType): boolean => {

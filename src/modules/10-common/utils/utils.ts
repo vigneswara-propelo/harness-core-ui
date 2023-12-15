@@ -143,6 +143,10 @@ export function isMultiTypeExpression(type: MultiTypeInputType): boolean {
   return type === MultiTypeInputType.EXPRESSION
 }
 
+export function isMultiTypeExecutionTime(type: MultiTypeInputType): boolean {
+  return type === MultiTypeInputType.EXECUTION_TIME
+}
+
 export function getLastURLPathParam(URL: string): string {
   const splitArray = URL.split('/')
   return splitArray.length > 0 ? splitArray[splitArray.length - 1]?.split('-')?.join('') : ''

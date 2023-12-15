@@ -7,43 +7,76 @@
 
 import { v4 as uuid } from 'uuid'
 
-import { ShellScriptStepInfo } from 'services/pipeline-ng'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { isEmpty, isUndefined } from 'lodash-es'
+import { ShellScriptStepInfo, ExecutionTarget } from 'services/pipeline-ng'
 import { SecretDTOV2 } from 'services/cd-ng'
 import { UseStringsReturn } from 'framework/strings'
+import { isValueRuntimeInput } from '@modules/10-common/utils/utils'
 import { ShellScriptData, ShellScriptFormData } from './shellScriptTypes'
 
-const getOnDelegateValue = (values: ShellScriptData): string | boolean => {
-  return values.spec?.onDelegate !== '' ? values.spec?.onDelegate : true
+export const getExecutionTargetValue = (
+  executionTarget: ExecutionTarget | string = {},
+  onDelegate: false | string = false
+): ExecutionTarget | Record<string, never> | string => {
+  // To make backward compatible, set default value to {} to select On Delegate by default
+  const executionTargetDefaultValue = {}
+
+  if (typeof executionTarget === 'string') {
+    // To handle executionTarget as runtime field
+    return isValueRuntimeInput(executionTarget) ? executionTarget : executionTargetDefaultValue
+  } else if (typeof onDelegate === 'string') {
+    // To handle executionTarget as runtime field
+    return isValueRuntimeInput(onDelegate) ? RUNTIME_INPUT_VALUE : executionTargetDefaultValue
+  } else {
+    const { host = '', connectorRef = '', workingDirectory = '' } = executionTarget
+
+    /*
+     * Select On Delegate if
+     * 1: onDelegate: true // To make changes backward compatible
+     * 2: executionTarget: {}
+     */
+    return onDelegate || isEmpty(executionTarget)
+      ? executionTargetDefaultValue
+      : { host, connectorRef, workingDirectory }
+  }
 }
 
 export const getInitialValues = (initialValues: ShellScriptData): ShellScriptFormData => {
   const initSpec = initialValues?.spec
-  return {
+  const modifiedData: ShellScriptFormData = {
     ...initialValues,
     spec: {
       ...initSpec,
       shell: initialValues.spec?.shell || 'Bash',
-      onDelegate: getOnDelegateValue(initialValues),
-      delegateSelectors: initialValues.spec?.delegateSelectors || [],
+      executionTarget: getExecutionTargetValue(initSpec?.executionTarget, initSpec?.onDelegate),
+      delegateSelectors: initSpec?.delegateSelectors || [],
       source: {
         ...(initSpec?.source || {})
       },
 
-      environmentVariables: Array.isArray(initialValues.spec?.environmentVariables)
-        ? initialValues.spec?.environmentVariables.map(variable => ({
+      environmentVariables: Array.isArray(initSpec?.environmentVariables)
+        ? initSpec?.environmentVariables.map(variable => ({
             ...variable,
             id: uuid()
           }))
         : [],
 
-      outputVariables: Array.isArray(initialValues.spec?.outputVariables)
-        ? initialValues.spec?.outputVariables.map(variable => ({
+      outputVariables: Array.isArray(initSpec?.outputVariables)
+        ? initSpec?.outputVariables.map(variable => ({
             ...variable,
             id: uuid()
           }))
         : []
     }
   }
+
+  // Delete onDelegate so that already created data also get fixed
+  if (!isUndefined(modifiedData.spec?.onDelegate)) {
+    delete modifiedData.spec.onDelegate
+  }
+
+  return modifiedData
 }
 
 export const getShellScriptSecretType = (

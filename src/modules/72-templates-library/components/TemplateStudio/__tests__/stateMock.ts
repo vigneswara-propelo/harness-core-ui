@@ -74,9 +74,9 @@ export const secretManagerTemplateMock: NGTemplateInfoConfig = {
   spec: {
     shell: 'Bash',
     source: {
+      type: 'Inline',
       spec: {
-        script: 'echo hi',
-        type: 'Inline'
+        script: 'echo hi'
       }
     },
     onDelegate: true,
@@ -94,9 +94,9 @@ export const secretManagerTemplateMockWithExecutionTarget: NGTemplateInfoConfig 
   spec: {
     shell: 'Bash',
     source: {
+      type: 'Inline',
       spec: {
-        script: 'echo hi',
-        type: 'Inline'
+        script: 'echo hi'
       }
     },
     onDelegate: false,

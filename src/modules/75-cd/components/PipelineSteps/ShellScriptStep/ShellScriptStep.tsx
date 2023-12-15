@@ -8,7 +8,7 @@
 import React from 'react'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { isEmpty, set, get, isArray, defaultTo, merge } from 'lodash-es'
+import { isEmpty, set, get, isArray, defaultTo, merge, isUndefined } from 'lodash-es'
 import * as Yup from 'yup'
 import { FormikErrors, yupToFormErrors } from 'formik'
 import { CompletionItemKind } from 'vscode-languageserver-types'
@@ -54,43 +54,38 @@ const getConnectorName = (connector?: SecretResponseWrapper): string =>
   }` || ''
 
 export const processShellScriptFormData = (data: ShellScriptFormData): ShellScriptData => {
-  const dataSpec = data?.spec
-  const specSource = dataSpec?.source
-  const sourceSpec = specSource?.spec
-  const specExecutionTarget = dataSpec?.executionTarget
-  const connectorRef = specExecutionTarget?.connectorRef
+  const { spec: dataSpec = {} } = data ?? {}
+  const { executionTarget = {}, onDelegate, delegateSelectors, source = {} } = dataSpec
+  const { spec: sourceSpec } = source
+  const { connectorRef } = executionTarget
+
+  if (connectorRef) {
+    executionTarget.connectorRef = (connectorRef?.value as string) || connectorRef?.toString()
+  }
 
   const modifiedData = {
     ...data,
     spec: {
       ...dataSpec,
-      onDelegate: dataSpec?.onDelegate,
-      delegateSelectors: dataSpec?.delegateSelectors,
+      delegateSelectors,
+      onDelegate,
       source: {
-        ...specSource,
+        ...source,
         spec: {
           ...sourceSpec,
           script: sourceSpec?.script
         }
       },
-
-      executionTarget:
-        getMultiTypeFromValue(dataSpec?.onDelegate) === MultiTypeInputType.FIXED
-          ? {
-              ...specExecutionTarget,
-              connectorRef: (connectorRef?.value as string) || connectorRef?.toString()
-            }
-          : null,
-
-      environmentVariables: Array.isArray(dataSpec?.environmentVariables)
-        ? dataSpec?.environmentVariables.map(({ id, ...variable }) => ({
+      executionTarget,
+      environmentVariables: Array.isArray(data.spec?.environmentVariables)
+        ? data.spec?.environmentVariables.map(({ id, ...variable }) => ({
             ...variable,
             value: defaultTo(variable.value, '')
           }))
         : undefined,
 
-      outputVariables: Array.isArray(dataSpec?.outputVariables)
-        ? dataSpec?.outputVariables.map(({ id, ...variable }) => ({
+      outputVariables: Array.isArray(data.spec?.outputVariables)
+        ? data.spec?.outputVariables.map(({ id, ...variable }) => ({
             ...variable,
             value: defaultTo(variable.value, '')
           }))
@@ -98,9 +93,10 @@ export const processShellScriptFormData = (data: ShellScriptFormData): ShellScri
     }
   }
 
-  if (modifiedData?.spec?.onDelegate) {
-    delete modifiedData.spec.executionTarget
+  if (!isUndefined(modifiedData.spec?.onDelegate)) {
+    delete modifiedData.spec.onDelegate
   }
+
   return modifiedData
 }
 
@@ -257,26 +253,51 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
       )
     }
 
+    const executionTarget = data?.spec?.executionTarget
+
+    /*
+     * Validate executionTarget fields when
+     */
+    // Case 1: The field is itself a runtime and required
+    const isHostRuntime =
+      getMultiTypeFromValue(template?.spec?.executionTarget?.host) === MultiTypeInputType.RUNTIME && isRequired
+    const isConnectorRefRuntime =
+      getMultiTypeFromValue(template?.spec?.executionTarget?.connectorRef) === MultiTypeInputType.RUNTIME && isRequired
+    const isWorkingDirectoryRuntime =
+      getMultiTypeFromValue(template?.spec?.executionTarget?.workingDirectory) === MultiTypeInputType.RUNTIME &&
+      isRequired
+
+    // Case 2 (For backward compatibility): onDelegate is runtime and and Specify Target Host selected with non execution time condition
+    const isOnDelegateRuntimeAndTargetHostSelected =
+      getMultiTypeFromValue(template?.spec?.onDelegate) === MultiTypeInputType.RUNTIME &&
+      ((isUndefined(data.spec?.onDelegate) && !data?.spec?.onDelegate) || !isEmpty(executionTarget))
+    // To check for execution time condition
+    const isOnDelegateRuntimeAndTargetHostSelectedWithValues =
+      isOnDelegateRuntimeAndTargetHostSelected && typeof executionTarget !== 'string'
+
+    // Case 3: executionTarget is runtime and Specify Target Host Selected with non execution time condition
+    const isExecutionTargetRuntimeAndTargetHostSelected =
+      getMultiTypeFromValue(template?.spec?.executionTarget) === MultiTypeInputType.RUNTIME && !isEmpty(executionTarget)
+    // To check for execution time condition
+    const isExecutionTargetRuntimeAndTargetHostSelectedWithValues =
+      isExecutionTargetRuntimeAndTargetHostSelected && typeof executionTarget !== 'string'
+
     /* istanbul ignore else */
     if (
-      (getMultiTypeFromValue(template?.spec?.executionTarget?.host) === MultiTypeInputType.RUNTIME &&
-        isRequired &&
-        isEmpty(data?.spec?.executionTarget?.host)) ||
-      (isEmpty(data?.spec?.executionTarget?.host) &&
-        getMultiTypeFromValue(template?.spec?.onDelegate) === MultiTypeInputType.RUNTIME &&
-        !data?.spec?.onDelegate)
+      (isHostRuntime ||
+        isOnDelegateRuntimeAndTargetHostSelectedWithValues ||
+        isExecutionTargetRuntimeAndTargetHostSelectedWithValues) &&
+      isEmpty(executionTarget?.host)
     ) {
       set(errors, 'spec.executionTarget.host', getString?.('fieldRequired', { field: getString('targetHost') }))
     }
 
     /* istanbul ignore else */
     if (
-      (getMultiTypeFromValue(template?.spec?.executionTarget?.connectorRef) === MultiTypeInputType.RUNTIME &&
-        isRequired &&
-        isEmpty(data?.spec?.executionTarget?.connectorRef)) ||
-      (isEmpty(data?.spec?.executionTarget?.connectorRef) &&
-        getMultiTypeFromValue(template?.spec?.onDelegate) === MultiTypeInputType.RUNTIME &&
-        !data?.spec?.onDelegate)
+      (isConnectorRefRuntime ||
+        isOnDelegateRuntimeAndTargetHostSelectedWithValues ||
+        isExecutionTargetRuntimeAndTargetHostSelectedWithValues) &&
+      isEmpty(executionTarget?.connectorRef)
     ) {
       set(
         errors,
@@ -287,12 +308,10 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
 
     /* istanbul ignore else */
     if (
-      (getMultiTypeFromValue(template?.spec?.executionTarget?.workingDirectory) === MultiTypeInputType.RUNTIME &&
-        isRequired &&
-        isEmpty(data?.spec?.executionTarget?.workingDirectory)) ||
-      (isEmpty(data?.spec?.executionTarget?.workingDirectory) &&
-        getMultiTypeFromValue(template?.spec?.onDelegate) === MultiTypeInputType.RUNTIME &&
-        !data?.spec?.onDelegate)
+      (isWorkingDirectoryRuntime ||
+        isOnDelegateRuntimeAndTargetHostSelectedWithValues ||
+        isExecutionTargetRuntimeAndTargetHostSelectedWithValues) &&
+      isEmpty(executionTarget?.workingDirectory)
     ) {
       set(
         errors,
@@ -322,7 +341,8 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
     type: StepType.SHELLSCRIPT,
     spec: {
       shell: shellScriptType[0].value,
-      onDelegate: true,
+      // Set default value to {} to select On Delegate by default
+      executionTarget: {},
       delegateSelectors: [],
       source: {
         type: 'Inline',

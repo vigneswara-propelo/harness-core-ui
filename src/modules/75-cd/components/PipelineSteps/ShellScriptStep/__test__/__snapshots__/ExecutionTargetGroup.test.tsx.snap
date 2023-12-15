@@ -16,7 +16,7 @@ exports[`Execution target group tests when execution target group- delegate is s
         >
           <label
             class="bp3-label"
-            for="spec.onDelegate"
+            for="spec.executionTarget"
           >
             <span
               class="Tooltip--acenter"
@@ -42,14 +42,14 @@ exports[`Execution target group tests when execution target group- delegate is s
               >
                 <label
                   class="bp3-label"
-                  for="spec.onDelegate"
+                  for="spec.executionTarget"
                 >
                   <div
                     class="formLabel"
                   >
                     <span
                       class="Tooltip--acenter"
-                      data-tooltip-id="test-form_spec.onDelegate"
+                      data-tooltip-id="test-form_spec.executionTarget"
                     >
                       pipeline.execTargetLabel
                     </span>
@@ -151,7 +151,7 @@ exports[`Execution target group tests when execution target group- targethost is
         >
           <label
             class="bp3-label"
-            for="spec.onDelegate"
+            for="spec.executionTarget"
           >
             <span
               class="Tooltip--acenter"
@@ -177,14 +177,14 @@ exports[`Execution target group tests when execution target group- targethost is
               >
                 <label
                   class="bp3-label"
-                  for="spec.onDelegate"
+                  for="spec.executionTarget"
                 >
                   <div
                     class="formLabel"
                   >
                     <span
                       class="Tooltip--acenter"
-                      data-tooltip-id="test-form_spec.onDelegate"
+                      data-tooltip-id="test-form_spec.executionTarget"
                     >
                       pipeline.execTargetLabel
                     </span>
@@ -286,7 +286,7 @@ exports[`Execution target group tests when intent hasError 1`] = `
         >
           <label
             class="bp3-label"
-            for="spec.onDelegate"
+            for="spec.executionTarget"
           >
             <span
               class="Tooltip--acenter"
@@ -312,14 +312,14 @@ exports[`Execution target group tests when intent hasError 1`] = `
               >
                 <label
                   class="bp3-label"
-                  for="spec.onDelegate"
+                  for="spec.executionTarget"
                 >
                   <div
                     class="formLabel"
                   >
                     <span
                       class="Tooltip--acenter"
-                      data-tooltip-id="test-form_spec.onDelegate"
+                      data-tooltip-id="test-form_spec.executionTarget"
                     >
                       pipeline.execTargetLabel
                     </span>

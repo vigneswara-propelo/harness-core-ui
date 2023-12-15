@@ -29,7 +29,7 @@ import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import { isValueRuntimeInput } from '@common/utils/utils'
+import { isValueFixed, isValueRuntimeInput } from '@common/utils/utils'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -40,6 +40,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 
 import { SecretConfigureOptions } from '@modules/27-platform/secrets/components/SecretConfigureOptions/SecretConfigureOptions'
 import { ShellScriptStepInfo } from 'services/pipeline-ng'
+import { getAllowableTypesWithoutExpressionAndExecutionTime } from '@modules/70-pipeline/utils/runPipelineUtils'
 import {
   scriptInputType,
   scriptOutputType,
@@ -48,7 +49,7 @@ import {
   ShellScriptOutputStepVariable,
   ShellScriptStepVariable
 } from './shellScriptTypes'
-import { MultiTypeExecutionTargetGroup } from './ExecutionTargetGroup'
+import { getShowExecutionTarget, MultiTypeExecutionTargetGroup } from './ExecutionTargetGroup'
 
 import { getShellScriptSecretType, getShellScriptConnectionLabel } from './helper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -74,15 +75,18 @@ export const FixedExecTargetGroup = ({
   const { getString } = useStrings()
   const { values: formValues, setFieldValue } = formik
   const delegateFieldPath = prefix ? `${prefix}spec.onDelegate` : 'spec.onDelegate'
-  const executionTargetPth = prefix ? `${prefix}spec.executionTarget` : 'spec.executionTarget'
+  const executionTargetPath = prefix ? `${prefix}spec.executionTarget` : 'spec.executionTarget'
   const onDelegateVal = get(formValues, delegateFieldPath)
+  const executionTargetVal = get(formValues, executionTargetPath)
 
-  if (!onDelegateVal) {
+  const showExecutionTarget = getShowExecutionTarget(onDelegateVal, executionTargetVal)
+
+  if (showExecutionTarget) {
     return (
       <div>
         <div className={cx(stepCss.formGroup)}>
           <FormInput.MultiTextInput
-            name={`${executionTargetPth}.host`}
+            name={`${executionTargetPath}.host`}
             placeholder={getString('cd.specifyTargetHost')}
             label={getString('targetHost')}
             style={{ marginTop: 'var(--spacing-small)' }}
@@ -105,7 +109,7 @@ export const FixedExecTargetGroup = ({
         <div className={cx(stepCss.formGroup)}>
           <MultiTypeSecretInput
             type={getShellScriptSecretType(shellScriptType)}
-            name={`${executionTargetPth}.connectorRef`}
+            name={`${executionTargetPath}.connectorRef`}
             label={getShellScriptConnectionLabel(getString, shellScriptType)}
             expressions={expressions}
             allowableTypes={allowableTypes}
@@ -132,7 +136,7 @@ export const FixedExecTargetGroup = ({
         </div>
         <div className={cx(stepCss.formGroup)}>
           <FormInput.MultiTextInput
-            name={`${executionTargetPth}.workingDirectory`}
+            name={`${executionTargetPath}.workingDirectory`}
             placeholder={getString('cd.enterWorkDirectory')}
             label={getString('workingDirectory')}
             style={{ marginTop: 'var(--spacing-medium)' }}
@@ -382,16 +386,14 @@ export default function OptionalConfiguration(props: {
             <Label className={css.execTargetLabel}>
               <HarnessDocTooltip tooltipId={'exec-target'} labelText={getString('pipeline.executionTarget')} />
             </Label>
-            <MultiTypeExecutionTargetGroup name="spec.onDelegate" formik={formik} readonly={readonly} />
-            <MultiTypeDelegateSelector
-              name={'spec.delegateSelectors'}
-              disabled={readonly}
-              inputProps={{ projectIdentifier, orgIdentifier }}
-              expressions={expressions}
-              allowableTypes={allowableTypes}
-              enableConfigureOptions={true}
+            <MultiTypeExecutionTargetGroup
+              executionTargetPath="spec.executionTarget"
+              onDelegatePath="spec.onDelegate"
+              formik={formik}
+              readonly={readonly}
+              allowableTypes={getAllowableTypesWithoutExpressionAndExecutionTime(allowableTypes)}
             />
-            {getMultiTypeFromValue(formValues.spec?.onDelegate) === MultiTypeInputType.FIXED && (
+            {isValueFixed(formValues.spec?.executionTarget) && (
               <FixedExecTargetGroup
                 expressions={expressions}
                 readonly={readonly}
@@ -400,18 +402,14 @@ export default function OptionalConfiguration(props: {
                 shellScriptType={formValues.spec?.shell}
               />
             )}
-            {getMultiTypeFromValue(formValues.spec.onDelegate) === MultiTypeInputType.RUNTIME && (
-              <ConfigureOptions
-                value={formValues.spec.onDelegate as string}
-                type="String"
-                variableName="spec.onDelegate"
-                className={css.minConfigBtn}
-                showRequiredField={false}
-                showDefaultField={false}
-                onChange={value => setFieldValue('spec.onDelegate', value)}
-                isReadonly={readonly}
-              />
-            )}
+            <MultiTypeDelegateSelector
+              name={'spec.delegateSelectors'}
+              disabled={readonly}
+              inputProps={{ projectIdentifier, orgIdentifier }}
+              expressions={expressions}
+              allowableTypes={allowableTypes}
+              enableConfigureOptions={true}
+            />
           </div>
         )}
       </div>
