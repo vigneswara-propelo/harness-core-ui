@@ -29,11 +29,13 @@ import { useHistory, useParams } from 'react-router-dom'
 import { getTimeAgo } from '@pipeline/utils/CIUtils'
 import type { DiscoveryPathProps, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { DatabaseNetworkMapCollection, useDeleteNetworkMap, useListNetworkMap } from 'services/servicediscovery'
-import routes from '@common/RouteDefinitions'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import { useQueryParams } from '@common/hooks'
 import { CommonPaginationQueryParams, useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@discovery/interface/filters'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import EmptyStateNetworkMap from './EmptyStateNetworkMap'
 import css from './NetworkMapTable.module.scss'
 
@@ -43,6 +45,8 @@ interface NetworkMapTableProps {
 }
 
 const NetworkMapTable: React.FC<NetworkMapTableProps> = ({ agentName, connectorID }) => {
+  const { CDS_NAV_2_0 } = useFeatureFlags()
+  const routes = CDS_NAV_2_0 ? routesV2 : routesV1
   const { dAgentId, accountId, orgIdentifier, projectIdentifier, module } = useParams<
     ProjectPathProps & ModulePathParams & DiscoveryPathProps
   >()

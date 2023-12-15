@@ -12,11 +12,15 @@ import { useHistory, useParams } from 'react-router-dom'
 import CELogo from '@discovery/images/chaos-engineering-logo.svg'
 import NetworkMapVisual from '@discovery/images/network-map-visual.svg'
 import { useStrings } from 'framework/strings'
-import routes from '@common/RouteDefinitions'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import type { DiscoveryPathProps, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from './NetworkMapTable.module.scss'
 
 const EmptyStateNetworkMap: React.FC = () => {
+  const { CDS_NAV_2_0 } = useFeatureFlags()
+  const routes = CDS_NAV_2_0 ? routesV2 : routesV1
   const { getString } = useStrings()
   const history = useHistory()
   const { dAgentId, accountId, orgIdentifier, projectIdentifier, module } = useParams<

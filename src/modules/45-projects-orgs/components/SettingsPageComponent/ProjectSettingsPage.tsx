@@ -215,7 +215,7 @@ export const ProjectSettingsPage: React.FC = () => {
               label={<String stringID="common.discovery" />}
               id={SettingsResources.Discovery}
               icon={'chaos-service-discovery'}
-              route={routesV2.toDiscoverySettings({ accountId, orgIdentifier, projectIdentifier, module })}
+              route={routesV2.toDiscovery({ accountId, orgIdentifier, projectIdentifier, module })}
               hidden={!(PL_DISCOVERY_ENABLE && isActiveLicense(CHAOS_LICENSE_STATE))}
             />
             <SettingsResourceCard

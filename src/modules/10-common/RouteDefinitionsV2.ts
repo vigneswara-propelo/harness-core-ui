@@ -961,11 +961,11 @@ const routes = {
   toGitSyncErrors: withModeModuleAndScopePrefix(() => `/settings/git-sync/errors`),
   toGitSyncConfig: withModeModuleAndScopePrefix(() => `/settings/git-sync/config`),
 
-  toDiscoverySettings: withModeModuleAndScopePrefix(() => `/settings/discovery`),
-  toDiscoveryDetailsSettings: withModeModuleAndScopePrefix<DiscoveryPathProps>(
+  toDiscovery: withModeModuleAndScopePrefix(() => `/settings/discovery`),
+  toDiscoveredResource: withModeModuleAndScopePrefix<DiscoveryPathProps>(
     params => `/settings/discovery/${params?.dAgentId}`
   ),
-  toCreateNetworkMapSettings: withModeModuleAndScopePrefix<NetworkMapPathProps>(
+  toCreateNetworkMap: withModeModuleAndScopePrefix<Partial<NetworkMapPathProps>>(
     params => `/settings/discovery/${params?.dAgentId}/network-map-studio/${params?.networkMapId ?? '-1'}`
   ),
 

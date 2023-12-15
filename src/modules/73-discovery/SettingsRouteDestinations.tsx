@@ -23,18 +23,14 @@ const NetworkMapStudio = React.lazy(
 function DiscoverySettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React.ReactElement {
   return (
     <>
-      <RouteWithContext
-        exact
-        path={pathArrayForAllScopes(routes.toDiscoverySettings, mode)}
-        pageName={PAGE_NAME.DiscoveryPage}
-      >
+      <RouteWithContext exact path={pathArrayForAllScopes(routes.toDiscovery, mode)} pageName={PAGE_NAME.DiscoveryPage}>
         <React.Suspense fallback={<PageSpinner />}>
           <DiscoveryPage />
         </React.Suspense>
       </RouteWithContext>
       <RouteWithContext
         exact
-        path={pathArrayForAllScopes(routes.toDiscoveryDetailsSettings, mode, { dAgentId: ':dAgentId' })}
+        path={pathArrayForAllScopes(routes.toDiscoveredResource, mode, { dAgentId: ':dAgentId' })}
         pageName={PAGE_NAME.DiscoveryDetails}
       >
         <React.Suspense fallback={<PageSpinner />}>
@@ -43,7 +39,7 @@ function DiscoverySettingsRouteDestinations({ mode }: { mode: NAV_MODE }): React
       </RouteWithContext>
       <RouteWithContext
         exact
-        path={pathArrayForAllScopes(routes.toCreateNetworkMapSettings, mode, {
+        path={pathArrayForAllScopes(routes.toCreateNetworkMap, mode, {
           dAgentId: ':dAgentId',
           networkMapId: ':networkMapId'
         })}

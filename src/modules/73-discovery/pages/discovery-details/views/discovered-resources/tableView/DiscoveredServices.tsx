@@ -22,7 +22,8 @@ import {
 import { DiscoveryPathProps, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import ServiceDetails from '@discovery/components/ServiceDetails/ServiceDetails'
-import routes from '@common/RouteDefinitions'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
 import { CommonPaginationQueryParams, useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { useQueryParams } from '@common/hooks'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@discovery/interface/filters'
@@ -30,6 +31,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import TagCount from '@discovery/components/TagCount/TagCount'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from './DiscoveryServices.module.scss'
 
 export interface K8SCustomService extends DatabaseDiscoveredServiceCollection {
@@ -47,6 +49,8 @@ export default function DiscoveredServices({
   search,
   namespace
 }: DiscoveredServicesProps): React.ReactElement {
+  const { CDS_NAV_2_0 } = useFeatureFlags()
+  const routes = CDS_NAV_2_0 ? routesV2 : routesV1
   const { dAgentId, accountId, orgIdentifier, projectIdentifier, module } = useParams<
     ProjectPathProps & DiscoveryPathProps & ModulePathParams
   >()
