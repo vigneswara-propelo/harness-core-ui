@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, RenderResult, queryByAttribute } from '@testing-library/react'
-import { LayoutContext, SIDE_NAV_STATE } from '@modules/10-common/router/RouteWithLayoutV2'
+import { SIDE_NAV_STATE } from '@modules/10-common/router/RouteWithLayoutV2'
 import * as routUtils from '@common/utils/routeUtils'
 import { TestWrapper } from '@common/utils/testUtils'
 import SideNavHeader from '../SideNavHeader'
@@ -43,10 +43,9 @@ const renderComponentPublic = (sideNavState: SIDE_NAV_STATE = SIDE_NAV_STATE.EXP
         mode: routUtils.NAV_MODE.MODULE,
         module: 'cd'
       }}
+      defaultLayoutValue={{ sideNavState, setSideNavState: jest.fn() }}
     >
-      <LayoutContext.Provider value={{ sideNavState, setSideNavState: jest.fn() }}>
-        <SideNavHeaderPublic />
-      </LayoutContext.Provider>
+      <SideNavHeaderPublic />
     </TestWrapper>
   )
 
@@ -58,10 +57,8 @@ describe('Sidenav header', () => {
   })
   test('collapsed state', () => {
     const { container } = render(
-      <TestWrapper>
-        <LayoutContext.Provider value={{ sideNavState: SIDE_NAV_STATE.COLLAPSED, setSideNavState: jest.fn() }}>
-          <SideNavHeader />
-        </LayoutContext.Provider>
+      <TestWrapper defaultLayoutValue={{ sideNavState: SIDE_NAV_STATE.COLLAPSED, setSideNavState: jest.fn() }}>
+        <SideNavHeader />
       </TestWrapper>
     )
     expect(queryByAttribute('data-icon', container, 'nav-harness')).toBeInTheDocument()

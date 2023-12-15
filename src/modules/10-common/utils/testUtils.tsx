@@ -18,6 +18,7 @@ import { enableMapSet } from 'immer'
 import userEvent from '@testing-library/user-event'
 import { AppStoreContext, AppStoreContextProps } from 'framework/AppStore/AppStoreContext'
 import { LicenseStoreContext, LicenseStoreContextProps } from 'framework/LicenseStore/LicenseStoreContext'
+import { LayoutContext, SIDE_NAV_STATE, LayoutContextProps } from '@modules/10-common/router/RouteWithLayoutV2'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { withAccountId, accountPathProps } from '@common/utils/routeUtils'
 import type { Project } from 'services/cd-ng'
@@ -79,6 +80,7 @@ export interface TestWrapperProps {
   defaultTemplateSelectorValues?: Partial<TemplatesSelectorContextInterface>
   defaultFeaturesValues?: Partial<FeaturesContextProps>
   defaultFeatureFlagValues?: Partial<Record<FeatureFlag, boolean>>
+  defaultLayoutValue?: Partial<LayoutContextProps>
   projects?: Project[]
   enableBrowserView?: boolean
   stringsData?: Record<string, string>
@@ -141,6 +143,7 @@ export const TestWrapper: React.FC<TestWrapperProps> = props => {
     defaultTemplateSelectorValues,
     defaultFeaturesValues,
     defaultFeatureFlagValues = {},
+    defaultLayoutValue = {},
     stringsData = {},
     getString = (key: string) => key
   } = props
@@ -239,36 +242,44 @@ export const TestWrapper: React.FC<TestWrapperProps> = props => {
                     ...defaultFeaturesValues
                   }}
                 >
-                  <ModalProvider>
-                    <TemplateSelectorContext.Provider
-                      value={{
-                        state: {
-                          isDrawerOpened: false,
-                          selectorData: {
-                            templateType: 'Step',
-                            onSubmit: jest.fn(),
-                            onCancel: jest.fn()
-                          }
-                        },
-                        openTemplateSelector: jest.fn(),
-                        closeTemplateSelector: jest.fn(),
-                        ...defaultTemplateSelectorValues
-                      }}
-                    >
-                      <RestfulProvider base="/">
-                        <BrowserView enable={props.enableBrowserView}>
-                          <Switch>
-                            <Route exact path={path}>
-                              {props.children}
-                            </Route>
-                            <Route>
-                              <CurrentLocation />
-                            </Route>
-                          </Switch>
-                        </BrowserView>
-                      </RestfulProvider>
-                    </TemplateSelectorContext.Provider>
-                  </ModalProvider>
+                  <LayoutContext.Provider
+                    value={{
+                      sideNavState: SIDE_NAV_STATE.EXPANDED,
+                      setSideNavState: jest.fn(),
+                      ...defaultLayoutValue
+                    }}
+                  >
+                    <ModalProvider>
+                      <TemplateSelectorContext.Provider
+                        value={{
+                          state: {
+                            isDrawerOpened: false,
+                            selectorData: {
+                              templateType: 'Step',
+                              onSubmit: jest.fn(),
+                              onCancel: jest.fn()
+                            }
+                          },
+                          openTemplateSelector: jest.fn(),
+                          closeTemplateSelector: jest.fn(),
+                          ...defaultTemplateSelectorValues
+                        }}
+                      >
+                        <RestfulProvider base="/">
+                          <BrowserView enable={props.enableBrowserView}>
+                            <Switch>
+                              <Route exact path={path}>
+                                {props.children}
+                              </Route>
+                              <Route>
+                                <CurrentLocation />
+                              </Route>
+                            </Switch>
+                          </BrowserView>
+                        </RestfulProvider>
+                      </TemplateSelectorContext.Provider>
+                    </ModalProvider>
+                  </LayoutContext.Provider>
                 </FeaturesContext.Provider>
               </PermissionsContext.Provider>
             </LicenseStoreContext.Provider>

@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useEffect, useState } from 'react'
 import { Route, RouteProps } from 'react-router-dom'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
@@ -8,7 +15,7 @@ export enum SIDE_NAV_STATE {
   HIDDEN = 'HIDDEN'
 }
 
-interface LayoutContextProps {
+export interface LayoutContextProps {
   sideNavState: SIDE_NAV_STATE
   setSideNavState: (state?: SIDE_NAV_STATE, changeDefaultExperience?: boolean) => void
   disableSideNavCollapse?: boolean

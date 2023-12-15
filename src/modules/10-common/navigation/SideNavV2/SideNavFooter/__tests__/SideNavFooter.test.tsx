@@ -9,7 +9,7 @@ import React from 'react'
 import { render, waitFor, screen, RenderResult } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper, findDrawerContainer, findPopoverContainer } from '@common/utils/testUtils'
-import { LayoutContext, SIDE_NAV_STATE } from '@common/router/RouteWithLayoutV2'
+import { SIDE_NAV_STATE } from '@common/router/RouteWithLayoutV2'
 import SideNavFooter from '../SideNavFooter'
 import SideNavFooterPublic from '../SideNavFooterPublic'
 
@@ -77,10 +77,9 @@ const renderComponentPublic = (sideNavState: SIDE_NAV_STATE = SIDE_NAV_STATE.EXP
       defaultAppStoreValues={{
         isCurrentSessionPublic: true
       }}
+      defaultLayoutValue={{ sideNavState, setSideNavState: jest.fn() }}
     >
-      <LayoutContext.Provider value={{ sideNavState, setSideNavState: jest.fn() }}>
-        <SideNavFooterPublic />
-      </LayoutContext.Provider>
+      <SideNavFooterPublic />
     </TestWrapper>
   )
 

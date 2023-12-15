@@ -8,7 +8,7 @@
 import React from 'react'
 import { render, screen, waitFor, queryByText } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { LayoutContext, SIDE_NAV_STATE } from '@modules/10-common/router/RouteWithLayoutV2'
+import { SIDE_NAV_STATE } from '@modules/10-common/router/RouteWithLayoutV2'
 import { Scope } from 'framework/types/types'
 import * as SideNavUtils from '@common/navigation/SideNavV2/SideNavV2.utils'
 import routes from '@common/RouteDefinitionsV2'
@@ -180,18 +180,17 @@ describe('sidenav links rendered differently', () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{ selectedProject: { orgIdentifier: 'orgIdentifier', identifier: '', name: '' } }}
+        defaultLayoutValue={{ sideNavState: SIDE_NAV_STATE.COLLAPSED, setSideNavState: jest.fn() }}
       >
-        <LayoutContext.Provider value={{ sideNavState: SIDE_NAV_STATE.COLLAPSED, setSideNavState: jest.fn() }}>
-          <SideNavLink
-            label={'text'}
-            scope={Scope.PROJECT}
-            to={routes.toOverview({
-              accountId: 'abcd',
-              orgIdentifier: 'abcd',
-              module: 'cd'
-            })}
-          />
-        </LayoutContext.Provider>
+        <SideNavLink
+          label={'text'}
+          scope={Scope.PROJECT}
+          to={routes.toOverview({
+            accountId: 'abcd',
+            orgIdentifier: 'abcd',
+            module: 'cd'
+          })}
+        />
       </TestWrapper>
     )
 
@@ -212,18 +211,16 @@ describe('sidenav links rendered differently', () => {
       <TestWrapper
         defaultAppStoreValues={{ selectedProject: { orgIdentifier: 'orgIdentifier', identifier: '', name: '' } }}
       >
-        <LayoutContext.Provider value={{ sideNavState: SIDE_NAV_STATE.EXPANDED, setSideNavState: jest.fn() }}>
-          <SideNavLink
-            label={'text'}
-            isRenderedInAccordion={true}
-            scope={Scope.PROJECT}
-            to={routes.toOverview({
-              accountId: 'abcd',
-              orgIdentifier: 'abcd',
-              module: 'cd'
-            })}
-          />
-        </LayoutContext.Provider>
+        <SideNavLink
+          label={'text'}
+          isRenderedInAccordion={true}
+          scope={Scope.PROJECT}
+          to={routes.toOverview({
+            accountId: 'abcd',
+            orgIdentifier: 'abcd',
+            module: 'cd'
+          })}
+        />
       </TestWrapper>
     )
 
