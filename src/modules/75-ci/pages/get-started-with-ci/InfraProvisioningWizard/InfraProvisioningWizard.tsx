@@ -349,9 +349,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
               type: eventType,
               spec: {
                 connectorRef:
-                  configuredGitConnector?.identifier === dummyGitnessHarnessConnector?.identifier
-                    ? ''
-                    : configuredGitConnector
+                  configuredGitConnector &&
+                  configuredGitConnector?.identifier !== dummyGitnessHarnessConnector?.identifier
                     ? getScopedValueFromDTO(configuredGitConnector)
                     : '',
                 repoName: selectRepositoryRef.current?.repository
@@ -448,7 +447,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       pipelineIdentifier: string
       branch: string
       repo: string
-      connectorRef: string
+      connectorRef?: string
       triggerType: BuildCodebaseType
     }): Promise<ResponseInputSetResponse> => {
       const inputSetName =
@@ -499,7 +498,10 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         pipelineName = ''
       } = (configurePipelineRef.current?.values as SavePipelineToRemoteInterface) || {}
       const shouldSavePipelineToGit = (enableSavePipelinetoRemoteOption && storeInGit) || false
-      const connectorRef = getScopedValueFromDTO(configuredGitConnector as ScopedValueObjectDTO)
+      const connectorRef =
+        configuredGitConnector && configuredGitConnector.type !== Connectors.Harness
+          ? getScopedValueFromDTO(configuredGitConnector as ScopedValueObjectDTO)
+          : ''
       if (
         (selectRepositoryRef.current?.repository || (CODE_ENABLED && selectRepositoryRef.current?.gitnessRepository)) &&
         configuredGitConnector

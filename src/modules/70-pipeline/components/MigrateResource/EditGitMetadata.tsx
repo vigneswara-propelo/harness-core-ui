@@ -188,6 +188,7 @@ export default function EditGitMetadata({
                   initialValues={{
                     filePath: formikProps.submitCount > 0 ? formikProps.values?.filePath : ''
                   }}
+                  disableFields={{ provider: true }}
                   isEdit={false}
                   errorData={errorResponse}
                   skipBranch={true}

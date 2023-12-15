@@ -39,6 +39,7 @@ import { getScopedValueFromDTO, ScopedValueObjectDTO } from '@common/components/
 import { Status } from '@common/utils/Constants'
 import { isValidYAMLFilePath } from '@common/constants/Utils'
 import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
+import { Connectors } from '@modules/27-platform/connectors/constants'
 import { SupportedGitProvidersForCIOnboarding } from './SelectGitProvider'
 import { getRepoNameForDefaultBranchFetch, getValidRepoName } from '../../../utils/HostedBuildsUtils'
 
@@ -266,7 +267,9 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
                                     name="branch"
                                     noLabel={true}
                                     connectorIdentifierRef={
-                                      configuredGitConnector ? getScopedValueFromDTO(configuredGitConnector) : ''
+                                      configuredGitConnector && configuredGitConnector.type !== Connectors.Harness
+                                        ? getScopedValueFromDTO(configuredGitConnector)
+                                        : ''
                                     }
                                     repoName={repoName}
                                     onChange={(selected: SelectOption) => {
@@ -336,7 +339,10 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
       setIsFetchingDefaultBranch(true)
       getListOfBranchesByRefConnectorV2Promise({
         queryParams: {
-          connectorRef: getScopedValueFromDTO(configuredGitConnector as ScopedValueObjectDTO),
+          connectorRef:
+            configuredGitConnector && configuredGitConnector.type !== Connectors.Harness
+              ? getScopedValueFromDTO(configuredGitConnector as ScopedValueObjectDTO)
+              : undefined,
           accountIdentifier: accountId,
           orgIdentifier,
           projectIdentifier,
