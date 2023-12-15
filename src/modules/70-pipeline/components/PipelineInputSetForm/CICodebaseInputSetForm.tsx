@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect, useRef, Dispatch, SetStateAction, useMemo, useCallback } from 'react'
-import { useParams } from 'react-router-dom'
+import { matchPath, useLocation, useParams } from 'react-router-dom'
 import { debounce, get, isEmpty, set, omit } from 'lodash-es'
 import produce from 'immer'
 import {
@@ -27,6 +27,9 @@ import {
 import { FontVariation, Color } from '@harness/design-system'
 import { connect } from 'formik'
 import { StringKeys, useStrings, UseStringsReturn } from 'framework/strings'
+import routesV1 from '@common/RouteDefinitions'
+import routesV2 from '@common/RouteDefinitionsV2'
+import { accountPathProps, executionPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
 import {
   getIdentifierFromValue,
   getScopeFromDTO,
@@ -52,6 +55,7 @@ import { FormMultiTypeConnectorField } from '@platform/connectors/components/Con
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { useQueryParams } from '@common/hooks'
 import {
   CodebaseTypes,
@@ -274,6 +278,7 @@ function CICodebaseInputSetFormInternal({
   chainedPipelineStagePath
 }: CICodebaseInputSetFormProps): JSX.Element {
   const { triggerIdentifier, accountId, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()
+  const location = useLocation()
   const [isInputTouched, setIsInputTouched] = useState(false)
   const [connectorType, setConnectorType] = useState<ConnectorInfoDTO['type']>()
   const [connectorId, setConnectorId] = useState<string>('')
@@ -340,6 +345,9 @@ function CICodebaseInputSetFormInternal({
   const [codebaseConnector, setCodebaseConnector] = useState<ConnectorInfoDTO>()
   const [isFetchingBranches, setIsFetchingBranches] = useState<boolean>(false)
   const [isDefaultBranchSet, setIsDefaultBranchSet] = useState<boolean>(false)
+  const { CDS_NAV_2_0 } = useFeatureFlags()
+  const routes = CDS_NAV_2_0 ? routesV2 : routesV1
+  const routeParams = { ...accountPathProps, ...executionPathProps, ...pipelineModuleParams }
 
   const radioLabels = getBuildTypeLabels(getString)
   const codebaseTypeError = get(formik?.errors, codeBaseTypePath)
@@ -447,7 +455,13 @@ function CICodebaseInputSetFormInternal({
   )
 
   useEffect(() => {
-    if (codebaseConnector) {
+    const isInputsView = !!matchPath(location.pathname, {
+      path: [
+        routes.toExecutionInputsView(routeParams),
+        routes.toExecutionInputsView({ ...routeParams, module: undefined })
+      ]
+    })
+    if (codebaseConnector && !isInputsView) {
       const codebaseConnectorConnectionType = get(codebaseConnector, 'spec.type')
       if (codebaseConnectorConnectionType === ConnectionType.Repo) {
         fetchBranchesForRepo(getCodebaseRepoNameFromConnector(codebaseConnector))
@@ -457,7 +471,7 @@ function CICodebaseInputSetFormInternal({
       ) {
         fetchBranchesForRepo(get(originalPipeline, 'properties.ci.codebase.repoName', ''))
       }
-    } else if (codeBaseType === CodebaseTypes.BRANCH) {
+    } else if (codeBaseType === CodebaseTypes.BRANCH && !isInputsView) {
       // fetch branches without connector for gitness
       fetchBranchesForRepo(get(originalPipeline, 'properties.ci.codebase.repoName', ''))
     }
