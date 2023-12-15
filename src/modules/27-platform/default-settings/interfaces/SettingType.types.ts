@@ -16,6 +16,7 @@ export enum SettingGroups {
   SLACK_NOTIFICATION_SETTINGS_GROUP = 'slack_notification_settings',
   MSTEAM_NOTIFICATION_SETTINGS_GROUP = 'msTeam_notification_settings',
   WEBHOOK_NOTIFICATION_SETTINGS_GROUP = 'webhook_notification_settings',
+  STO_DEFAULT_BASELINE_REGEX = 'sto_default_baseline_regex',
   PAGERDUTY_NOTIFICATION_SETTINGS_GROUP = 'pagerduty_notification_settings'
 }
 export type YupValidation =

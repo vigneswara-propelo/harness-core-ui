@@ -104,3 +104,9 @@ trial:
 sbom:
   fieldsHeading: Software Bill of Materials
   generateSbom: Generate SBOM
+re2RegularExpression: RE2-compatible Regular Expression
+defaultBaselineRegExForTargets: Default Baseline RegEx for Targets
+codeRepositories: Code repositories
+containerImages: Container images
+webOrApiInstances: Web/API instances
+infrastructureConfigurations: Infrastructure configurations

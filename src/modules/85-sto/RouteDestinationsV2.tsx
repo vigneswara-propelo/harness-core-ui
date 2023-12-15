@@ -28,6 +28,7 @@ import PipelineRouteDestinations from '@pipeline/PipelineRouteDestinations'
 import { useGetSelectedScope } from '@common/navigation/SideNavV2/SideNavV2.utils'
 import { useGetPipelineSummary } from 'services/pipeline-ng'
 import { useGetSettingValue } from 'services/cd-ng'
+import useStoRegistrations from '@sto/Registrations'
 
 const module: Module = 'sto'
 
@@ -70,6 +71,7 @@ const RemoteSTOApp = lazy(() => import(`stoV2/App`))
 
 const STORouteDestinations = (mode = NAV_MODE.MODULE): React.ReactElement => {
   const { STO_ALL_ISSUES_PAGE, STO_JIRA_INTEGRATION } = useFeatureFlags()
+  useStoRegistrations()
 
   return (
     <Switch>

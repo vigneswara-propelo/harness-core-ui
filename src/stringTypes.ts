@@ -10860,15 +10860,20 @@ export interface StringsMap {
   'sto.Critical': string
   'sto.Info': string
   'sto.Unassigned': string
+  'sto.codeRepositories': string
+  'sto.containerImages': string
   'sto.continuous': string
+  'sto.defaultBaselineRegExForTargets': string
   'sto.exemptions': string
   'sto.failedToGetIssueCounts': string
   'sto.fetchingSecurityResults': string
   'sto.gettingStarted': string
+  'sto.infrastructureConfigurations': string
   'sto.issues': string
   'sto.noSecurityIssues': string
   'sto.noSecurityResults': string
   'sto.processingSecurityResults': string
+  'sto.re2RegularExpression': string
   'sto.sbom.fieldsHeading': string
   'sto.sbom.generateSbom': string
   'sto.scans': string
@@ -10948,6 +10953,7 @@ export interface StringsMap {
   'sto.trial.comingSoon': string
   'sto.trial.description': string
   'sto.trial.learnMore': string
+  'sto.webOrApiInstances': string
   'sto.zeroNorthImagePlaceholder': string
   /**
    * @deprecated migrate this string to module level file
