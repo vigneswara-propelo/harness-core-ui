@@ -163,16 +163,17 @@ export default function CommonMonitoredServiceConfigurations(
 
   const queryParams = getQueryParms()
 
-  const { refetch, data: isReconcileRequiredData } = useIsReconciliationRequiredForMonitoredServices({
-    queryParams,
-    lazy: true
-  })
+  const { refetch: refetchReconileRequired, data: isReconcileRequiredData } =
+    useIsReconciliationRequiredForMonitoredServices({
+      queryParams,
+      lazy: true
+    })
 
   useEffect(() => {
-    if (showInputsets && isTemplateByReference) {
-      refetch()
+    if (showInputsets && queryParams.templateIdentifier && queryParams.versionLabel) {
+      refetchReconileRequired()
     }
-  }, [showInputsets, isTemplateByReference])
+  }, [showInputsets, queryParams.templateIdentifier, queryParams.versionLabel])
 
   useEffect(() => {
     const shouldDisableTabs = !(formik.values.serviceRef && formik.values.environmentRef)
@@ -416,7 +417,10 @@ export default function CommonMonitoredServiceConfigurations(
             }
             panel={
               isTemplate ? (
-                <MonitoredServiceReconcileList templateValue={initialValues.templateValue as NGTemplateInfoConfig} />
+                <MonitoredServiceReconcileList
+                  templateValue={initialValues.templateValue as NGTemplateInfoConfig}
+                  refetchReconileRequired={refetchReconileRequired}
+                />
               ) : (
                 <Container
                   width={'100%'}
@@ -427,6 +431,7 @@ export default function CommonMonitoredServiceConfigurations(
                     <ReconcileMonitoredServiceFormInMS
                       templateData={formik.values.template}
                       monitoredServiceIdentifier={identifier}
+                      refetchReconileRequired={refetchReconileRequired}
                     />
                   ) : (
                     <NoResultsView minimal={true} text={getString('templatesLibrary.noInputsRequired')} />

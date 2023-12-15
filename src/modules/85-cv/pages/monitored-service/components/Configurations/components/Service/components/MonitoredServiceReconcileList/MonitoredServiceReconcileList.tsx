@@ -36,7 +36,13 @@ import {
 import useReconcileDrawer from './useReconcileDrawer'
 import css from './MonitoredServiceReconcileList.module.scss'
 
-const MonitoredServiceReconcileList = ({ templateValue }: { templateValue: NGTemplateInfoConfig }): JSX.Element => {
+const MonitoredServiceReconcileList = ({
+  templateValue,
+  refetchReconileRequired
+}: {
+  templateValue: NGTemplateInfoConfig
+  refetchReconileRequired?: () => void
+}): JSX.Element => {
   const { getString } = useStrings()
   const { accountId } = useParams<ProjectPathProps>()
   const [pageNumber, setPageNumber] = useState(0)
@@ -84,7 +90,10 @@ const MonitoredServiceReconcileList = ({ templateValue }: { templateValue: NGTem
       Cell: (props: CellProps<MonitoredServiceReference>) => (
         <RenderActionButtons
           {...props}
-          refetch={refetch}
+          refetch={() => {
+            refetch()
+            refetchReconileRequired?.()
+          }}
           tempcontext={tempcontext}
           versionLabel={versionLabel}
           templateIdentifier={identifier}

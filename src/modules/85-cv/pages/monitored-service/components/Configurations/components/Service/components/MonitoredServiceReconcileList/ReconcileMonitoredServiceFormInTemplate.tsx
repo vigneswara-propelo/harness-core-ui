@@ -38,6 +38,7 @@ import {
 } from '@modules/10-common/components/EntityReference/EntityReference'
 import { ChangeSourcetable } from '@modules/85-cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/components/ChangeSourceInputset/ChangeSourcetable/ChangeSourcetable'
 import { ChangeSourceInputsetForm } from '@modules/85-cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/components/ChangeSourceInputset/ChangeSourceInputsetForm/ChangeSourceInputsetForm'
+import MonitoredServiceInputsetVariables from '@modules/85-cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/components/MonitoredServiceInputsetVariables/MonitoredServiceInputsetVariables'
 import OrgAccountLevelServiceEnvField from '../MonitoredServiceOverview/component/OrgAccountLevelServiceEnvField/OrgAccountLevelServiceEnvField'
 import {
   getChangeSourceWithName,
@@ -134,6 +135,7 @@ export default function ReconcileMonitoredServiceFormInTemplate({
             formName="MonitoredServiceForm"
             onSubmit={async value => {
               try {
+                const populateVariables = value.variables ? { variables: value.variables } : {}
                 const structure = {
                   monitoredService: {
                     template: {
@@ -142,7 +144,8 @@ export default function ReconcileMonitoredServiceFormInTemplate({
                       isTemplateByReference: true,
                       templateInputs: {
                         ...value,
-                        sources: value?.sources
+                        sources: value?.sources,
+                        ...populateVariables
                       }
                     }
                   }
@@ -207,6 +210,13 @@ export default function ReconcileMonitoredServiceFormInTemplate({
                     />
                   </Card>
                   <Card className={css.healthsourceCard}>
+                    <Text
+                      font={{ variation: FontVariation.CARD_TITLE }}
+                      color={Color.BLACK}
+                      style={{ paddingBottom: 'var(--spacing-medium)' }}
+                    >
+                      {getString('cv.changesPage.changeSourceDetails')}
+                    </Text>
                     <ChangeSourcetable changeSources={templateValue?.spec?.sources?.changeSources || []} />
                     <ChangeSourceInputsetForm
                       isReconcile
@@ -223,12 +233,13 @@ export default function ReconcileMonitoredServiceFormInTemplate({
                       {getString('cv.templates.healthSourceDetails')}
                     </Text>
                     <HealthSourceInputsetTable healthSources={templateValue?.spec?.sources?.healthSources || []} />
+                    <HealthSourceInputsetForm
+                      healthSources={healthSourceWithName}
+                      isReadOnlyInputSet={false}
+                      isReconcile
+                    />
                   </Card>
-                  <HealthSourceInputsetForm
-                    healthSources={healthSourceWithName}
-                    isReadOnlyInputSet={false}
-                    isReconcile
-                  />
+                  <MonitoredServiceInputsetVariables monitoredServiceVariables={templateJSON?.variables} />
                 </>
               )
             }}

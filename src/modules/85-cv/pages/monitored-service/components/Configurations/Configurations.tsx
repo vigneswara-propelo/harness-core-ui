@@ -45,6 +45,7 @@ import { getInitFormData } from './components/Service/Service.utils'
 import type { MonitoredServiceForm } from './components/Service/Service.types'
 import { determineUnSaveState, onSubmit, getImperativeHandleRef } from './Configurations.utils'
 import { useMonitoredServiceContext } from '../../MonitoredServiceContext'
+import { ConfigurationContextProvider } from './ConfigurationContext'
 import css from './Configurations.module.scss'
 
 interface ConfigurationsInterface {
@@ -418,33 +419,37 @@ export default function Configurations(
       {(loadingGetMonitoredService || loadingFetchMonitoredServiceYAML || loadingUpdateMonitoredService) && (
         <PageSpinner />
       )}
-      <ServiceComponent
-        value={initialValues}
-        {...ServiceProps}
-        onSuccess={async payload => onSuccess(payload, getString('service'))}
-        onDependencySuccess={async payload => onSuccess(payload, getString('pipelines-studio.dependenciesGroupTitle'))}
-        serviceTabformRef={serviceTabformRef}
-        cachedInitialValues={!isTemplate ? cachedInitialValues : undefined}
-        setDBData={setDBData}
-        onDiscard={onDiscard}
-        isTemplate={isTemplate}
-        expressions={expressions}
-        updateTemplate={updateTemplate}
-        onChangeMonitoredServiceType={updatedDTO => {
-          setDefaultMonitoredService(omit(updatedDTO, ['isEdit']) as MonitoredServiceDTO)
-          setCachedInitialValue(updatedDTO)
-          fetchMonitoredServiceYAML({
-            queryParams: {
-              orgIdentifier,
-              projectIdentifier,
-              accountId,
-              type: updatedDTO.type
-            }
-          })
-        }}
-        config={config}
-        dependencyTabformRef={dependencyTabformRef}
-      />
+      <ConfigurationContextProvider fetchMonitoredService={fetchMonitoredService}>
+        <ServiceComponent
+          value={initialValues}
+          {...ServiceProps}
+          onSuccess={async payload => onSuccess(payload, getString('service'))}
+          onDependencySuccess={async payload =>
+            onSuccess(payload, getString('pipelines-studio.dependenciesGroupTitle'))
+          }
+          serviceTabformRef={serviceTabformRef}
+          cachedInitialValues={!isTemplate ? cachedInitialValues : undefined}
+          setDBData={setDBData}
+          onDiscard={onDiscard}
+          isTemplate={isTemplate}
+          expressions={expressions}
+          updateTemplate={updateTemplate}
+          onChangeMonitoredServiceType={updatedDTO => {
+            setDefaultMonitoredService(omit(updatedDTO, ['isEdit']) as MonitoredServiceDTO)
+            setCachedInitialValue(updatedDTO)
+            fetchMonitoredServiceYAML({
+              queryParams: {
+                orgIdentifier,
+                projectIdentifier,
+                accountId,
+                type: updatedDTO.type
+              }
+            })
+          }}
+          config={config}
+          dependencyTabformRef={dependencyTabformRef}
+        />
+      </ConfigurationContextProvider>
       {!isTemplate && (
         <NavigationCheck
           when={true}

@@ -5,19 +5,32 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { parse } from 'yaml'
-import { Container, Formik, Card, Text, SelectOption, useToaster, Button, ButtonVariation } from '@harness/uicore'
+import {
+  Container,
+  Formik,
+  Card,
+  Text,
+  SelectOption,
+  useToaster,
+  Button,
+  ButtonVariation,
+  Layout
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { TemplateBar } from '@modules/70-pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
 import { TemplateDTO, useUpdateMonitoredServiceFromYaml } from 'services/cv'
-import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import {
+  PreSelectedTemplate,
+  useTemplateSelector
+} from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { useStrings } from 'framework/strings'
 import HealthSourceInputsetTable from '@modules/85-cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/components/HealthSourceInputset/components/HealthSourceInputsetTable/HealthSourceInputsetTable'
 import HealthSourceInputsetForm from '@modules/85-cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/components/HealthSourceInputset/components/HealthSourceInputsetForm/HealthSourceInputsetForm'
-import { useGetTemplate, useGetTemplateInputSetYaml } from 'services/template-ng'
+import { getTemplatePromise, useGetTemplate, useGetTemplateInputSetYaml } from 'services/template-ng'
 import {
   getIdentifierFromValue,
   getScopeBasedProjectPathParams,
@@ -33,6 +46,9 @@ import { getErrorMessage } from '@modules/85-cv/utils/CommonUtils'
 import NoResultsView from '@modules/72-templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import { ChangeSourcetable } from '@modules/85-cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/components/ChangeSourceInputset/ChangeSourcetable/ChangeSourcetable'
 import { ChangeSourceInputsetForm } from '@modules/85-cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/components/ChangeSourceInputset/ChangeSourceInputsetForm/ChangeSourceInputsetForm'
+import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
+import { useConfigurationContext } from '@cv/pages/monitored-service/components/Configurations/ConfigurationContext'
+import MonitoredServiceInputsetVariables from '@modules/85-cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/components/MonitoredServiceInputsetVariables/MonitoredServiceInputsetVariables'
 import {
   getHealthSourceWithName,
   getChangeSourceWithName,
@@ -43,10 +59,12 @@ import css from './MonitoredServiceReconcileList.module.scss'
 
 export const ReconcileMonitoredServiceFormInMS = ({
   templateData,
+  refetchReconileRequired,
   monitoredServiceIdentifier
 }: {
   templateData: TemplateDTO
   monitoredServiceIdentifier: string
+  refetchReconileRequired?: () => void
 }): JSX.Element => {
   const pathParams = useParams<ProjectPathProps>()
   const { showError, showSuccess } = useToaster()
@@ -54,6 +72,7 @@ export const ReconcileMonitoredServiceFormInMS = ({
   const { templateInputs = '' } = templateData
   const { getTemplate } = useTemplateSelector()
   const { getString } = useStrings()
+  const { fetchMonitoredService } = useConfigurationContext()
 
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateDTO>(templateData)
   const { templateRef, versionLabel = '' } = selectedTemplate
@@ -96,6 +115,48 @@ export const ReconcileMonitoredServiceFormInMS = ({
     }
   })
 
+  const switchTemplateVersion = useCallback(
+    async (selectedversion: string, selectedTemplateVer?: PreSelectedTemplate) => {
+      return new Promise((resolve, reject) => {
+        getTemplatePromise({
+          templateIdentifier: selectedTemplateVer?.identifier || '',
+          queryParams: {
+            versionLabel: selectedversion,
+            projectIdentifier: selectedTemplateVer?.projectIdentifier,
+            orgIdentifier: selectedTemplateVer?.orgIdentifier,
+            accountIdentifier: selectedTemplateVer?.accountId || '',
+            ...(selectedTemplateVer?.storeType === StoreType.REMOTE
+              ? { branch: selectedTemplateVer?.gitDetails?.branch }
+              : {})
+          },
+          requestOptions: {
+            headers:
+              selectedTemplateVer?.storeType === StoreType.REMOTE
+                ? {
+                    'Load-From-Cache': 'true'
+                  }
+                : {}
+          }
+        })
+          .then(async response => {
+            if (response?.status === 'SUCCESS' && response?.data) {
+              setSelectedTemplate({
+                templateRef: response.data.identifier || '',
+                versionLabel: response.data.versionLabel || ''
+              })
+              resolve(response?.data)
+            } else {
+              reject()
+            }
+          })
+          .catch(() => {
+            reject()
+          })
+      })
+    },
+    []
+  )
+
   const templateValue = parse(templateResponse?.data?.yaml || '')?.template
   const healthSource = templateValue?.spec?.sources?.healthSources || []
   const changeSource = templateValue?.spec?.sources?.changeSources || []
@@ -111,6 +172,7 @@ export const ReconcileMonitoredServiceFormInMS = ({
         supportVersionChange
         templateLinkConfig={{ templateRef, versionLabel }}
         isReadonly={false}
+        switchTemplateVersion={switchTemplateVersion}
         onOpenTemplateSelector={async () => {
           const { template } = await getTemplate({
             templateType: TemplateType.MonitoredService,
@@ -136,6 +198,7 @@ export const ReconcileMonitoredServiceFormInMS = ({
           validate={value => validateInputSet(value as MonitoredServiceInputSetInterface, getString)}
           onSubmit={async value => {
             try {
+              const populateVariables = value.variables ? { variables: value.variables } : {}
               const structure = {
                 monitoredService: {
                   template: {
@@ -144,7 +207,8 @@ export const ReconcileMonitoredServiceFormInMS = ({
                     isTemplateByReference: true,
                     templateInputs: {
                       ...value,
-                      sources: value?.sources
+                      sources: value?.sources,
+                      ...populateVariables
                     }
                   }
                 }
@@ -152,6 +216,8 @@ export const ReconcileMonitoredServiceFormInMS = ({
               const yamlResponse = yamlStringify(structure)
               await saveReconcile(yamlResponse)
               showSuccess(getString('cv.monitoredServices.ReconcileTab.reconcileSuccess'))
+              fetchMonitoredService?.()
+              refetchReconileRequired?.()
             } catch (_) {
               showError(getErrorMessage(errorReconcile))
             }
@@ -181,6 +247,13 @@ export const ReconcileMonitoredServiceFormInMS = ({
                   />
                 </Card>
                 <Card className={css.healthsourceCard}>
+                  <Text
+                    font={{ variation: FontVariation.CARD_TITLE }}
+                    color={Color.BLACK}
+                    style={{ paddingBottom: 'var(--spacing-medium)' }}
+                  >
+                    {getString('cv.changesPage.changeSourceDetails')}
+                  </Text>
                   <ChangeSourcetable changeSources={changeSource} />
                   <ChangeSourceInputsetForm
                     isReconcile
@@ -197,18 +270,33 @@ export const ReconcileMonitoredServiceFormInMS = ({
                     {getString('cv.templates.healthSourceDetails')}
                   </Text>
                   <HealthSourceInputsetTable healthSources={healthSource} />
+                  <HealthSourceInputsetForm
+                    healthSources={healthSourceWithName}
+                    isReadOnlyInputSet={false}
+                    isReconcile
+                  />
                 </Card>
-                <HealthSourceInputsetForm healthSources={healthSourceWithName} isReadOnlyInputSet={false} isReconcile />
-
-                <Button
-                  width="100%"
-                  margin={{ top: 'small' }}
-                  variation={ButtonVariation.PRIMARY}
-                  onClick={() => formik.submitForm()}
-                  data-testid="reconcileButton"
-                >
-                  {getString('pipeline.outOfSyncErrorStrip.reconcile')}
-                </Button>
+                <MonitoredServiceInputsetVariables monitoredServiceVariables={templateJSON?.variables} />
+                <Layout.Horizontal flex={{ justifyContent: 'space-evenly' }} margin={{ bottom: 'large' }}>
+                  <Button
+                    width="25%"
+                    margin={{ top: 'small' }}
+                    variation={ButtonVariation.PRIMARY}
+                    onClick={() => formik.submitForm()}
+                    data-testid="reconcileButton"
+                  >
+                    {getString('pipeline.outOfSyncErrorStrip.reconcile')}
+                  </Button>
+                  <Button
+                    width="25%"
+                    margin={{ top: 'small' }}
+                    variation={ButtonVariation.SECONDARY}
+                    onClick={() => formik.resetForm()}
+                    data-testid="reconcileButton"
+                  >
+                    {getString('common.discard')}
+                  </Button>
+                </Layout.Horizontal>
               </Container>
             )
           }}
