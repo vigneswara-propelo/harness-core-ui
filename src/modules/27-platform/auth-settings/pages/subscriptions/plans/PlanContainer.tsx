@@ -22,7 +22,7 @@ import { ModuleName, Module as ModuleType } from 'framework/types/ModuleName'
 import { ModuleLicenseType, Editions, SubscriptionTabNames } from '@common/constants/SubscriptionTypes'
 import type { FetchPlansQuery } from 'services/common/services'
 import { useSubscribeModal } from '@auth-settings/modals/Subscription/useSubscriptionModal'
-import { getSavedRefererURL, getGaClientID, isOnPrem } from '@common/utils/utils'
+import { getSavedRefererURL, getGaClientID } from '@common/utils/utils'
 import type { TimeType } from '@common/constants/SubscriptionTypes'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
@@ -155,7 +155,6 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
     }
   })
   const isSelfService = licenseInformation?.[moduleType]?.selfService === true
-  const isSelfServiceEnabled = !isOnPrem() && isSelfService
 
   useEffect(() => {
     refetchLicense()?.then(() => {
@@ -203,7 +202,7 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
       },
       btnLoading,
       actions: actions?.data,
-      isSelfServiceEnabled
+      isSelfServiceEnabled: isSelfService
     })
 
     return {

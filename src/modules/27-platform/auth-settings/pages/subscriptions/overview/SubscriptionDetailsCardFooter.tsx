@@ -15,7 +15,6 @@ import { ModuleName } from 'framework/types/ModuleName'
 import type { ModuleLicenseDTO } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
-import { isOnPrem } from '@common/utils/utils'
 
 interface SubscriptionDetailsCardFooterProps {
   openMarketoContactSales: () => void
@@ -39,7 +38,6 @@ const SubscriptionDetailsCardFooter = ({
     moduleCloned = ModuleName.CV
   }
   const { accountId } = useParams<AccountPathProps>()
-  const FREE_PLAN_ENABLED = !isOnPrem()
   function handleSubscribeClick(): void {
     history.push(
       routes.toModuleTrialHome({
@@ -67,7 +65,7 @@ const SubscriptionDetailsCardFooter = ({
   return (
     <Layout.Horizontal spacing="xxlarge">
       <React.Fragment>
-        {!licenseData && FREE_PLAN_ENABLED && subscribeButton}
+        {!licenseData && subscribeButton}
         {licenseData?.licenseType !== ModuleLicenseType.PAID && contactSalesButton}
         {licenseData?.licenseType !== ModuleLicenseType.PAID && isExpired && expiredDays < 15 && extendTrialButton}
       </React.Fragment>
