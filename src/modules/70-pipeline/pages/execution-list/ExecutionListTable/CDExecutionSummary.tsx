@@ -19,8 +19,8 @@ import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { EnvironmentResponseDTO, ServiceResponseDTO } from 'services/cd-ng'
 import { fetchServicesMetadata } from '@modules/70-pipeline/components/FormMultiTypeServiceFeild/Utils'
 import { fetchEnvironmentsMetadata } from '@modules/70-pipeline/components/FormMultiTypeEnvironmentField/Utils'
-import { getRemoteServiceQueryParams } from '@modules/75-cd/components/Services/utils/ServiceUtils'
 import { getRemoteEnvironmentQueryParams } from '@modules/75-cd/components/EnvironmentsV2/utils'
+import { getScopedServiceUrl } from '@modules/70-pipeline/utils/scopedUrlUtils'
 import css from './ExecutionListTable.module.scss'
 
 export interface CDExecutionSummaryProps {
@@ -31,7 +31,7 @@ export function CDExecutionSummary(props: CDExecutionSummaryProps): React.ReactE
   const { stageInfo } = props
   const serviceDisplayName = stageInfo.serviceInfo?.displayName
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const { CDS_SERVICE_GITX, CDS_ENV_GITX } = useFeatureFlags()
+  const { CDS_SERVICE_GITX, CDS_ENV_GITX, CDS_NAV_2_0 = false } = useFeatureFlags()
 
   const [serviceMetadata, setServiceMetadata] = useState<ServiceResponseDTO>({})
   const [environmentMetadata, setEnvironmentMetadata] = useState<EnvironmentResponseDTO>({})
@@ -44,7 +44,6 @@ export function CDExecutionSummary(props: CDExecutionSummaryProps): React.ReactE
     stageInfo.infraExecutionSummary?.infrastructureName || stageInfo.infraExecutionSummary?.infrastructureIdentifier
   const { tag } = stageInfo.serviceInfo?.artifacts?.primary || {}
 
-  const serviceScope = getScopeFromValue(stageInfo.serviceInfo?.identifier)
   const infrastructureScope = getScopeFromValue(stageInfo.infraExecutionSummary?.identifier)
 
   const chartVersion = stageInfo.serviceInfo?.manifestInfo?.chartVersion
@@ -80,14 +79,18 @@ export function CDExecutionSummary(props: CDExecutionSummaryProps): React.ReactE
         <Layout.Horizontal spacing="xsmall" style={{ alignItems: 'center', flexShrink: 'unset' }}>
           <Icon name="services" size={14} />
           <Link
-            to={`${routes.toServiceStudio({
-              module: 'cd',
-              accountId,
-              ...(serviceScope !== Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
-              ...(serviceScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
-              serviceId: serviceId,
-              accountRoutePlacement: 'settings'
-            })}?${getRemoteServiceQueryParams(serviceMetadata)}`}
+            to={getScopedServiceUrl(
+              {
+                accountId,
+                orgIdentifier,
+                projectIdentifier,
+                scopedServiceIdentifier: stageInfo.serviceInfo?.identifier,
+                module: 'cd',
+                accountRoutePlacement: 'settings',
+                serviceMetadata
+              },
+              CDS_NAV_2_0
+            )}
             target="_blank"
             rel="noreferrer noopener"
           >

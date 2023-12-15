@@ -98,7 +98,7 @@ export const ServiceDetailsHeader = (
     lazy: false
   })
 
-  const remoteQueryParams = getRemoteServiceQueryParams(service)
+  const remoteQueryParams = getRemoteServiceQueryParams(service, true)
 
   //handler for attaching refetch function to the parent ref
   useImperativeHandle(ref, () => ({

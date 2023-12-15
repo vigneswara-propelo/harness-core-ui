@@ -74,7 +74,7 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
   const gitXEnabled = useFeatureFlag(FeatureFlag.CDS_SERVICE_GITX)
   const [hideReferencedByButton, setHideReferencedByButton] = useState(false)
   const [customErrorMessage, setCustomErrorMessage] = useState<string | undefined>()
-  const remoteQueryParams = getRemoteServiceQueryParams(service)
+  const remoteQueryParams = getRemoteServiceQueryParams(service, true)
   const serviceDetailRoute =
     newLeftNav && calledFromSettingsPage
       ? routesV2.toSettingsServiceDetails({

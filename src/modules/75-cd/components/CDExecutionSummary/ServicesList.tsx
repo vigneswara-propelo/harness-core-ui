@@ -16,13 +16,11 @@ import cx from 'classnames'
 
 import { String } from 'framework/strings'
 import type { ServiceExecutionSummary } from 'services/cd-ng'
-import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
-import { getIdentifierFromScopedRef } from '@common/utils/utils'
-import routes from '@common/RouteDefinitions'
 
-import { Scope } from '@common/interfaces/SecretsInterface'
 import type { ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 
+import { getScopedServiceUrl } from '@modules/70-pipeline/utils/scopedUrlUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { ServicePopoverCard } from '../ServicePopoverCard/ServicePopoverCard'
 import { ServicesTable } from './ServicesTable'
 import css from './CDExecutionSummary.module.scss'
@@ -35,14 +33,13 @@ interface ServicesListProps {
 
 export function ServicesList({ services, limit = 2, className }: ServicesListProps): React.ReactElement {
   const { orgIdentifier, projectIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
-
+  const { CDS_NAV_2_0 = false } = useFeatureFlags()
   return (
     <div className={cx(css.main, className)}>
       <Icon name="services" className={css.servicesIcon} size={18} />
       <div className={css.servicesList}>
         {services.slice(0, limit).map(service => {
           const { identifier } = service
-          const serviceScope = getScopeFromValue(defaultTo(identifier, ''))
 
           return (
             <Popover
@@ -55,14 +52,18 @@ export function ServicesList({ services, limit = 2, className }: ServicesListPro
             >
               <Text className={css.serviceName} lineClamp={1} color="grey800">
                 <Link
-                  to={`${routes.toServiceStudio({
-                    accountId,
-                    ...(serviceScope !== Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
-                    ...(serviceScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
-                    serviceId: getIdentifierFromScopedRef(defaultTo(identifier, '')),
-                    module,
-                    accountRoutePlacement: 'settings'
-                  })}`}
+                  to={getScopedServiceUrl(
+                    {
+                      accountId,
+                      orgIdentifier,
+                      projectIdentifier,
+                      scopedServiceIdentifier: defaultTo(identifier, ''),
+                      module,
+                      accountRoutePlacement: 'settings',
+                      serviceMetadata: {}
+                    },
+                    CDS_NAV_2_0
+                  )}
                 >
                   {service.displayName}
                 </Link>

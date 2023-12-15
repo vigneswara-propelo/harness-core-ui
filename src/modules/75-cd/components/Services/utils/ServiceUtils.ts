@@ -83,18 +83,26 @@ export const useServicesQueryParamOptions = (): UseQueryParamsOptions<ServicesQu
   })
 }
 
-export const getRemoteServiceQueryParams = (service: ServiceResponseDTO): string => {
+export const getRemoteServiceQueryParams = (service: ServiceResponseDTO, withLeadingAmpersand: boolean): string => {
   let remoteQueryParams = ''
 
   if (service?.storeType === StoreType.REMOTE) {
-    remoteQueryParams = `&${qs.stringify(
+    remoteQueryParams = qs.stringify(
       {
         storeType: service?.storeType,
         connectorRef: service?.connectorRef,
         repoName: service.entityGitDetails?.repoName
       },
       { skipNulls: true }
-    )}`
+    )
+
+    /*
+     * withLeadingAmpersand: true = When used as query params with other param before
+     * withLeadingAmpersand: false = When used alone as query params param
+     */
+    if (withLeadingAmpersand) {
+      remoteQueryParams = `&${remoteQueryParams}`
+    }
   }
   return remoteQueryParams
 }

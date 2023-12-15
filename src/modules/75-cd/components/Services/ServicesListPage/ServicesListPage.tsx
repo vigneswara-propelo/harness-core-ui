@@ -172,7 +172,7 @@ export const ServicesListPage = ({
         return
       }
       if (selectedService?.identifier) {
-        const remoteQueryParams = getRemoteServiceQueryParams(selectedService)
+        const remoteQueryParams = getRemoteServiceQueryParams(selectedService, true)
         const serviceDetailRoute =
           newLeftNav && calledFromSettingsPage
             ? routesV2.toSettingsServiceDetails({

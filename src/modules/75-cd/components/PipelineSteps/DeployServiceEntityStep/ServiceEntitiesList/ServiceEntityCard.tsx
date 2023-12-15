@@ -25,7 +25,6 @@ import { useFormikContext } from 'formik'
 import { defaultTo, get, isNil, pick, set } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
-import routes from '@common/RouteDefinitions'
 
 import { getStepTypeByDeploymentType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { deploymentIconMap } from '@cd/utils/deploymentUtils'
@@ -44,7 +43,8 @@ import RbacButton from '@rbac/components/Button/Button'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import { StoreMetadata, StoreType } from '@modules/10-common/constants/GitSyncTypes'
 import GitRemoteDetails from '@modules/10-common/components/GitRemoteDetails/GitRemoteDetails'
-import { getRemoteServiceQueryParams } from '@modules/75-cd/components/Services/utils/ServiceUtils'
+import { getScopedServiceUrl } from '@modules/70-pipeline/utils/scopedUrlUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { FormState, ServiceData } from '../DeployServiceEntityUtils'
 import css from './ServiceEntitiesList.module.scss'
 
@@ -100,6 +100,7 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
   const arifactsSpecPath = `serviceInputs.['${scopedServiceRef}'].serviceDefinition.spec`
   const { storeType, connectorRef } = storeMetadata
   const type = service.serviceDefinition?.type as ServiceDeploymentType
+  const { CDS_NAV_2_0 = false } = useFeatureFlags()
 
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<PipelinePathProps>>()
 
@@ -148,13 +149,18 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
                     <span className={css.serviceNameWrapper}>
                       <Link
                         target="_blank"
-                        to={`${routes.toServiceStudio({
-                          accountId,
-                          orgIdentifier,
-                          projectIdentifier,
-                          serviceId: service.identifier,
-                          module
-                        })}?${getRemoteServiceQueryParams(storeMetadata)}`}
+                        rel="noreferrer noopener"
+                        to={getScopedServiceUrl(
+                          {
+                            accountId,
+                            orgIdentifier,
+                            projectIdentifier,
+                            scopedServiceIdentifier: scopedServiceRef,
+                            module,
+                            serviceMetadata: storeMetadata
+                          },
+                          CDS_NAV_2_0
+                        )}
                       >
                         <Text color={Color.PRIMARY_7} font="normal" lineClamp={1}>
                           {service.name}

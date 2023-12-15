@@ -37,10 +37,10 @@ import {
   fetchInfrastructuresMetadata
 } from '@modules/70-pipeline/components/FormMultiTypeEnvironmentField/Utils'
 import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
+import { getScopedServiceUrl } from '@modules/70-pipeline/utils/scopedUrlUtils'
 import { EnvironmentDetailsTab, getRemoteInfrastructureQueryParams } from '../EnvironmentsV2/utils'
 import { InfraDefinitionTabs } from '../EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfraDefinitionDetailsDrawer/InfraDefinitionDetailsDrawer'
 
-import { getRemoteServiceQueryParams } from '../Services/utils/ServiceUtils'
 import serviceCardCSS from '@cd/components/ServicePopoverCard/ServicePopoverCard.module.scss'
 import css from './CDStageDetails.module.scss'
 
@@ -121,7 +121,7 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
   const { stage } = props
   const gitOpsApps = get(stage, 'moduleInfo.cd.gitOpsAppSummary.applications') || []
   const { orgIdentifier, projectIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
-  const { CDS_NAV_2_0, CDS_SERVICE_GITX, CDS_ENV_GITX, CDS_INFRA_GITX } = useFeatureFlags()
+  const { CDS_NAV_2_0 = false, CDS_SERVICE_GITX, CDS_ENV_GITX, CDS_INFRA_GITX } = useFeatureFlags()
 
   const gitOpsEnvironments = Array.isArray(get(stage, 'moduleInfo.cd.gitopsExecutionSummary.environments'))
     ? (get(stage, 'moduleInfo.cd.gitopsExecutionSummary') as Required<GitOpsExecutionSummary>).environments.map(
@@ -129,7 +129,6 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
           defaultTo({ name: envForGitOps.name, identifier: envForGitOps.identifier }, { name: '', identifier: '' })
       )
     : []
-  const serviceScope = getScopeFromValue(get(stage, 'moduleInfo.cd.serviceInfo.identifier', ''))
   const infrastructureScope = getScopeFromValue(get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', ''))
 
   const getGitopsClusters = (envId: string) => {
@@ -141,7 +140,8 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
         )
       : []
   }
-  const serviceId = getIdentifierFromScopedRef(get(stage, 'moduleInfo.cd.serviceInfo.identifier', ''))
+  const scopedServiceIdentifier = get(stage, 'moduleInfo.cd.serviceInfo.identifier', '')
+  const serviceId = getIdentifierFromScopedRef(scopedServiceIdentifier)
   const environmentId = getIdentifierFromScopedRef(get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', ''))
   const infrastructureId = get(stage, 'moduleInfo.cd.infraExecutionSummary.infrastructureIdentifier', '')
   const [serviceMetadata, setServiceMetadata] = useState<ServiceResponseDTO>({})
@@ -196,22 +196,19 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
 
   const toServiceStudio = useMemo(
     () =>
-      CDS_NAV_2_0 && !module
-        ? `${routesV2.toSettingsServiceDetails({
-            accountId,
-            ...(serviceScope !== Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
-            ...(serviceScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
-            serviceId
-          })}?${getRemoteServiceQueryParams(serviceMetadata)}`
-        : `${routes.toServiceStudio({
-            accountId,
-            ...(serviceScope !== Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
-            ...(serviceScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
-            serviceId,
-            module,
-            accountRoutePlacement: 'settings'
-          })}?${getRemoteServiceQueryParams(serviceMetadata)}`,
-    [CDS_NAV_2_0, accountId, module, orgIdentifier, projectIdentifier, serviceId, serviceMetadata, serviceScope]
+      getScopedServiceUrl(
+        {
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          scopedServiceIdentifier,
+          module,
+          serviceMetadata,
+          accountRoutePlacement: 'settings'
+        },
+        CDS_NAV_2_0
+      ),
+    [CDS_NAV_2_0, accountId, module, orgIdentifier, projectIdentifier, scopedServiceIdentifier, serviceMetadata]
   )
 
   const toEnvironmentDetails =

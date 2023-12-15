@@ -176,7 +176,7 @@ const RenderServiceName: Renderer<CellProps<ServiceListItem>> = ({ row }) => {
               projectIdentifier,
               serviceId: row.original.identifier,
               module
-            })}?${getRemoteServiceQueryParams(row.original)}`}
+            })}?${getRemoteServiceQueryParams(row.original, false)}`}
             onClick={e => e.stopPropagation()}
           >
             <Text
@@ -479,7 +479,7 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
         serviceId: data.identifier,
         module
       }),
-      search: `tab=${ServiceTabs.REFERENCED_BY}${getRemoteServiceQueryParams(data)}`
+      search: `tab=${ServiceTabs.REFERENCED_BY}${getRemoteServiceQueryParams(data, true)}`
     })
   }
 
@@ -506,7 +506,7 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
           serviceId: data.identifier,
           module
         }),
-        search: `tab=${ServiceTabs.Configuration}${getRemoteServiceQueryParams(data)}`
+        search: `tab=${ServiceTabs.Configuration}${getRemoteServiceQueryParams(data, true)}`
       })
     } else {
       showModal()
@@ -533,7 +533,7 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
     projectIdentifier,
     serviceId: data.identifier,
     module
-  })}?${getRemoteServiceQueryParams(data)}`
+  })}?${getRemoteServiceQueryParams(data, false)}`
 
   return (
     <Layout.Horizontal>
@@ -731,7 +731,7 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
           serviceId: selectedService?.identifier,
           module
         }),
-        search: `${getRemoteServiceQueryParams(selectedService)}`
+        search: `${getRemoteServiceQueryParams(selectedService, false)}`
       })
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

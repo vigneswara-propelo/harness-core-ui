@@ -10,11 +10,5 @@
       "identifier": "svc_2",
       "name": "Service 2"
     }
-  },
-  {
-    "service": {
-      "identifier": "svc_3",
-      "name": "Service 3"
-    }
   }
 ]

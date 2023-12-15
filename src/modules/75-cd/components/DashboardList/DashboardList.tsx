@@ -149,7 +149,7 @@ export const DashboardList = <T extends Record<string, any>>(props: DashboardLis
         return
       }
       if (selectedService?.identifier) {
-        const remoteQueryParams = getRemoteServiceQueryParams(selectedService)
+        const remoteQueryParams = getRemoteServiceQueryParams(selectedService, true)
         history.push({
           pathname: routes.toServiceStudio({
             accountId,
