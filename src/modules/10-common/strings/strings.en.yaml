@@ -1689,8 +1689,8 @@ publicAccess:
   tryOtherOptions: You can try the following option instead to get back on track.
 ipAddress: IP Address
 nav:
-  allModules: All modules
-  allModulesInfo: Work with the modules available in your panel in one single view
+  productivityViewTitle: Productivity View
+  productivityViewInfo: Display selected modules that are applicable to the Account, Organization or Project that you have chosen.
   accountAdmin: Administrative Settings
   accountAdminInfo: Focus on managing general resources in your Account, Organizations, and Projects
   dashboardInfo: Get an end to end visibility of software delivery lifecycle across various Harness product modules

@@ -98,6 +98,10 @@ jest.mock('@modules/ModuleRouteConfig', () => ({
   CD: {
     sideNavLinks: jest.fn().mockImplementation(() => mockSideNavLinks),
     routes: jest.fn().mockImplementation(() => CDRouteDestinations())
+  },
+  IDP: {
+    sideNavLinks: jest.fn().mockImplementation(() => undefined),
+    routes: jest.fn().mockImplementation(() => undefined)
   }
 }))
 

@@ -200,7 +200,7 @@ describe('Mode selector', () => {
     const popover = findPopoverContainer() as HTMLElement
     expect(popover).toBeInTheDocument()
 
-    checkModuleCard(popover, 'common.nav.allModules', '/all?noscope=true')
+    checkModuleCard(popover, 'common.nav.productivityViewTitle', '/all?noscope=true')
     checkModuleCard(popover, 'common.nav.accountAdmin', '/admin')
     checkModuleCard(popover, 'common.dashboards', '/dashboards')
     checkModuleCard(popover, 'common.cdAndGitops', '/account/px7xd_BFRCi-pfWPYXVjvw/module/cd?noscope=true')
@@ -223,7 +223,7 @@ describe('Mode selector', () => {
     checkModuleCard(popover, 'common.purpose.idp.fullName', '/account/px7xd_BFRCi-pfWPYXVjvw/module/idp/default')
     checkModuleCard(popover, 'common.purpose.cet.continuous', '/account/px7xd_BFRCi-pfWPYXVjvw/module/cet?noscope=true')
 
-    fireEvent.click(queryByText(popover, 'common.nav.allModules') as HTMLElement)
+    fireEvent.click(queryByText(popover, 'common.nav.productivityViewTitle') as HTMLElement)
     expect(popover).not.toBeInTheDocument()
   })
 

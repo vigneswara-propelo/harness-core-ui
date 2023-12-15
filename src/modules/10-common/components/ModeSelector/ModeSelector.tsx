@@ -103,7 +103,7 @@ export const ModeSelector: React.FC = () => {
         <Container width={460} padding="xlarge" className={css.modeSelectorPanel}>
           <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
             <ModeCard
-              shortLabel="common.nav.allModules"
+              shortLabel="common.nav.productivityViewTitle"
               icon="harness"
               modeBorderCss={css.default}
               to={routes.toMode({ accountId, mode: NAV_MODE.ALL, noscope: true })}
@@ -112,8 +112,8 @@ export const ModeSelector: React.FC = () => {
                 closeModeSelector()
               }}
               popoverProps={{
-                modeLabel: 'common.nav.allModules',
-                modeContent: getString('common.nav.allModulesInfo')
+                modeLabel: 'common.nav.productivityViewTitle',
+                modeContent: getString('common.nav.productivityViewInfo')
               }}
               hideLearnMore
             />

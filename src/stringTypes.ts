@@ -774,10 +774,10 @@ export interface StringsMap {
   'common.namespace': string
   'common.nav.accountAdmin': string
   'common.nav.accountAdminInfo': string
-  'common.nav.allModules': string
-  'common.nav.allModulesInfo': string
   'common.nav.configure': string
   'common.nav.dashboardInfo': string
+  'common.nav.productivityViewInfo': string
+  'common.nav.productivityViewTitle': string
   'common.networkMap': string
   'common.new': string
   'common.newLines': string
