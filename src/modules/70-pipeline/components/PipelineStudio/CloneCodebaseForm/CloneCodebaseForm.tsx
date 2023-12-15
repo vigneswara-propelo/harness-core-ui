@@ -195,6 +195,7 @@ export default function CloneCodebaseForm({
               onConnectorChange
             })
           }}
+          className={css.gitProviderSelect}
         />
       )}
       {gitProvider.type !== Connectors.Harness && (

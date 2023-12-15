@@ -21,6 +21,7 @@ import {
   useGetListOfBranchesByRefConnectorV2
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { Connectors } from '@modules/27-platform/connectors/constants'
 import { ErrorHandler, ResponseMessage } from '../ErrorHandler/ErrorHandler'
 import css from './RepoBranchSelectV2.module.scss'
 
@@ -29,6 +30,7 @@ export interface RepoBranchSelectProps {
   label?: string
   noLabel?: boolean
   disabled?: boolean
+  gitProvider?: string
   connectorIdentifierRef?: string
   repoName?: string
   selectedValue?: string
@@ -76,22 +78,24 @@ const getDefaultSelectedOption = (defaultToBranch: string, selected?: string): S
 
 const hasToRefetchBranches = (
   disabled: boolean,
-  connectorIdentifierRef: string | undefined,
-  repoName: string | undefined
-) => !disabled && connectorIdentifierRef && repoName
+  gitProvider?: string,
+  connectorIdentifierRef?: string,
+  repoName?: string
+) => !disabled && (gitProvider === Connectors.Harness || connectorIdentifierRef) && repoName
 
 const triggerOnChange = (disabled: boolean, selectedValue?: string) => !disabled && !selectedValue
 
 const showRefetchButon = (
   disabled: boolean,
-  connectorIdentifierRef: string | undefined,
-  repoName: string | undefined,
-  error: GetDataError<Failure | Error> | null
+  error: GetDataError<Failure | Error> | null,
+  gitProvider?: string,
+  connectorIdentifierRef?: string,
+  repoName?: string
 ) => {
   const responseMessages = (error?.data as Error)?.responseMessages
   return (
     !disabled &&
-    connectorIdentifierRef &&
+    (gitProvider === Connectors.Harness || connectorIdentifierRef) &&
     repoName &&
     ((responseMessages?.length && responseMessages?.length > 0) || !!error)
   )
@@ -102,6 +106,7 @@ const responseHasBranches = (response: ResponseGitBranchesResponseDTO | null): b
 
 const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
   const {
+    gitProvider,
     connectorIdentifierRef,
     repoName,
     selectedValue,
@@ -129,7 +134,7 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
     refetch
   } = useGetListOfBranchesByRefConnectorV2({
     queryParams: {
-      connectorRef: connectorIdentifierRef,
+      ...(gitProvider !== Connectors.Harness ? { connectorRef: connectorIdentifierRef } : {}),
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
@@ -145,11 +150,10 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
 
   useEffect(() => {
     setBranchSelectOptions([])
-    if (hasToRefetchBranches(disabled, connectorIdentifierRef, repoName)) {
+    if (hasToRefetchBranches(disabled, gitProvider, connectorIdentifierRef, repoName)) {
       refetch()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [connectorIdentifierRef, repoName, disabled])
+  }, [gitProvider, connectorIdentifierRef, repoName, disabled])
 
   useEffect(() => {
     if (loading) {
@@ -222,7 +226,7 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
         >
           <Icon name="steps-spinner" size={18} color={Color.PRIMARY_7} />
         </Layout.Horizontal>
-      ) : showRefetchButon(disabled, connectorIdentifierRef, repoName, error) ? (
+      ) : showRefetchButon(disabled, error, gitProvider, connectorIdentifierRef, repoName) ? (
         <Layout.Horizontal
           spacing="small"
           flex={{ alignItems: 'flex-start' }}

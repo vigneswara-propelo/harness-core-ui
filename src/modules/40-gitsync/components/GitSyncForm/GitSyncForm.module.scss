@@ -15,6 +15,25 @@
     }
   }
 
+  .gitProviderCardWrapper {
+    display: flex;
+    gap: 20px;
+
+    :global {
+      .Card--card {
+        flex: 1;
+      }
+    }
+  }
+
+  .gitRepoLocationHeader {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 600;
+    margin-top: var(--spacing-medium) !important;
+    margin-bottom: var(--spacing-medium) !important;
+  }
+
   .branchSection {
     :global {
       .bp3-form-group {

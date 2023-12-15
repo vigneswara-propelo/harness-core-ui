@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly bottomMargin3: string
+  readonly gitProviderSelect: string
   readonly popover: string
   readonly predefinedValue: string
 }

@@ -22,7 +22,7 @@ import type {
   Connector
 } from 'services/cd-ng'
 
-interface ConnectorType {
+export interface ConnectorType {
   [key: string]: ConnectorInfoDTO['type']
 }
 interface ConnectorStatusType {

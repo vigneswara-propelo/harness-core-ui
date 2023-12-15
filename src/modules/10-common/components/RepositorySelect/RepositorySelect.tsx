@@ -14,6 +14,7 @@ import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { Error, GitRepositoryResponseDTO, useGetListOfReposByRefConnector, validateRepoPromise } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { Connectors } from '@modules/27-platform/connectors/constants'
 import type { ResponseMessage } from '../ErrorHandler/ErrorHandler'
 import css from '../RepoBranchSelectV2/RepoBranchSelectV2.module.scss'
 
@@ -23,6 +24,7 @@ export interface NewRepoSelectOption extends SelectOption {
 
 export interface RepositorySelectProps<T> {
   formikProps?: FormikContextType<T>
+  gitProvider?: string
   connectorRef?: string
   selectedValue?: string
   onChange?: (selected: SelectOption, options?: SelectOption[]) => void
@@ -42,19 +44,19 @@ export const getRepoSelectOptions = (data: GitRepositoryResponseDTO[] = []): Sel
 }
 
 const RepositorySelect: React.FC<RepositorySelectProps<any>> = props => {
-  const { connectorRef, selectedValue, formikProps, disabled, setErrorResponse, customClassName } = props
+  const { gitProvider, connectorRef, selectedValue, formikProps, disabled, setErrorResponse, customClassName } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [repoSelectOptions, setRepoSelectOptions] = useState<SelectOption[]>([])
   const [isValidating, setIsValidating] = useState(false)
   const { getString } = useStrings()
   const commonQueryParams = useMemo(
     () => ({
-      connectorRef,
+      ...(gitProvider !== Connectors.Harness ? { connectorRef } : {}),
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier
     }),
-    [accountId, connectorRef, orgIdentifier, projectIdentifier]
+    [accountId, gitProvider, connectorRef, orgIdentifier, projectIdentifier]
   )
 
   const {
@@ -77,11 +79,11 @@ const RepositorySelect: React.FC<RepositorySelectProps<any>> = props => {
   useEffect(() => {
     if (!disabled) {
       setRepoSelectOptions([])
-      if (connectorRef) {
+      if (connectorRef || gitProvider === Connectors.Harness) {
         refetch()
       }
     }
-  }, [connectorRef, disabled, refetch])
+  }, [gitProvider, connectorRef, disabled, refetch])
 
   useEffect(() => {
     if (loading || disabled) {
@@ -187,7 +189,7 @@ const RepositorySelect: React.FC<RepositorySelectProps<any>> = props => {
             onClick={() => {
               setErrorResponse?.([])
               setRepoSelectOptions([])
-              connectorRef && refetch()
+              ;(connectorRef || gitProvider === Connectors.Harness) && refetch()
             }}
           />
         </Layout.Horizontal>

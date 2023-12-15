@@ -353,6 +353,7 @@ function SaveAsInputSet({
                           formikProps={createInputSetFormikProps as any}
                           isEdit={false}
                           disableFields={{
+                            provider: true,
                             connectorRef: true,
                             repoName: true,
                             branch: true,

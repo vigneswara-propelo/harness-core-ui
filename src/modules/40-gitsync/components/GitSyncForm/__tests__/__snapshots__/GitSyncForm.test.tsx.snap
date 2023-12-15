@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`GitSyncForm test Rendering GitSyncForm for while create and filling form 1`] = `
+exports[`GitSyncForm test Rendering GitSyncForm for create flow and filling form 1`] = `
 <div>
   <div
     class="OverlaySpinner--overlaySpinner"

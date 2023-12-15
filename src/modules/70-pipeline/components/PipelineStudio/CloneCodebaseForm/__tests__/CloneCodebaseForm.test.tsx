@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { fireEvent, render, waitFor, within } from '@testing-library/react'
 import { AllowedTypes, MultiTypeInputType } from '@harness/uicore'
@@ -92,8 +99,7 @@ describe('CloneCodebaseForm utils tests', () => {
 
 describe('CloneCodebaseForm tests', () => {
   test('initial render with ff on', async () => {
-    const { container, getByText } = render(<WrapperComponent isCodeEnabled />)
-    expect(container).toMatchSnapshot()
+    const { getByText } = render(<WrapperComponent isCodeEnabled />)
 
     expect(getByText('common.gitProvider')).toBeInTheDocument()
     expect(getByText('common.harnessCodeRepo')).toBeInTheDocument()

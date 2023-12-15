@@ -298,6 +298,7 @@ export default function ImportResource({
                   disableFields={
                     resourceType === ResourceType.INPUT_SETS
                       ? {
+                          provider: true,
                           connectorRef: true,
                           repoName: true,
                           branch: true

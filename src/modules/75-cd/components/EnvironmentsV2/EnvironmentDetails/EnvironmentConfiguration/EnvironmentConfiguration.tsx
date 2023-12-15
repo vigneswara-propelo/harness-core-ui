@@ -402,6 +402,7 @@ export default function EnvironmentConfiguration({
                 disableFields={
                   isEdit
                     ? {
+                        provider: true,
                         connectorRef: true,
                         repoName: true,
                         filePath: false

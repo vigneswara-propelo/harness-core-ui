@@ -518,6 +518,7 @@ export interface StringsMap {
   'common.git.gitLabUrlPlaceholder': string
   'common.git.gitLabUrlPlaceholderSSH': string
   'common.git.gitRepoUrl': string
+  'common.git.gitRepositoryLocation': string
   'common.git.gitSHACommit': string
   'common.git.inlineStoreLabel': string
   'common.git.installationId': string

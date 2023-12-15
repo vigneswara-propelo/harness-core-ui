@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import cx from 'classnames'
-import { defaultTo, get, isNull, isUndefined, omit, omitBy, remove, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNull, isUndefined, omit, omitBy, remove, set } from 'lodash-es'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
 import { Callout, Classes, Dialog, IDialogProps, Menu, PopoverPosition, Position } from '@blueprintjs/core'
 import * as Yup from 'yup'
@@ -79,6 +79,10 @@ import type { ConnectorSelectedValue } from '@platform/connectors/components/Con
 import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { isValueExpression } from '@common/utils/utils'
+import {
+  CardSelectInterface,
+  getGitProviderCards
+} from '@modules/10-common/components/GitProviderSelect/GitProviderSelect'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import { InputSetSelector, InputSetSelectorProps } from '../InputSetSelector/InputSetSelector'
 import {
@@ -93,6 +97,7 @@ import css from './OverlayInputSetForm.module.scss'
 export interface OverlayInputSetDTO extends Omit<OverlayInputSetResponse, 'identifier'> {
   pipeline?: PipelineInfoConfig
   identifier?: string
+  provider?: CardSelectInterface
   repo?: string
   branch?: string
 }
@@ -749,6 +754,11 @@ export function OverlayInputSetForm({
                 {isEdit && overlayInputSetResponse?.data?.storeType === StoreType.REMOTE && (
                   <Container>
                     <GitRemoteDetails
+                      gitProvider={
+                        isEmpty(overlayInputSetResponse?.data?.connectorRef)
+                          ? getGitProviderCards(getString)[0].type
+                          : getGitProviderCards(getString)[1].type
+                      }
                       connectorRef={overlayInputSetResponse?.data?.connectorRef}
                       repoName={inputSet?.gitDetails?.repoName}
                       branch={inputSet?.gitDetails?.branch}
@@ -798,7 +808,8 @@ export function OverlayInputSetForm({
                 connectorRef: defaultTo(connectorRef, ''),
                 repoName: defaultTo(repoName, ''),
                 storeType: defaultTo(storeType, StoreType.INLINE),
-                filePath: defaultTo(inputSet.gitDetails?.filePath, `.harness/${inputSet.identifier}.yaml`)
+                filePath: defaultTo(inputSet.gitDetails?.filePath, `.harness/${inputSet.identifier}.yaml`),
+                provider: connectorRef ? getGitProviderCards(getString)[1] : getGitProviderCards(getString)[0]
               }}
               formName="overlayInputSet"
               enableReinitialize={true}
@@ -870,6 +881,7 @@ export function OverlayInputSetForm({
                                   disableFields={
                                     shouldDisableGitDetailsFields(isEdit, allowDifferentRepoSettings?.data?.value)
                                       ? {
+                                          provider: true,
                                           connectorRef: true,
                                           repoName: true,
                                           branch: true,
@@ -877,6 +889,7 @@ export function OverlayInputSetForm({
                                         }
                                       : {}
                                   }
+                                  differentRepoAllowedSettings={allowDifferentRepoSettings?.data?.value === 'true'}
                                 ></GitSyncForm>
                               </Container>
                             )}
@@ -944,6 +957,7 @@ export function OverlayInputSetForm({
                                   'repo',
                                   'branch',
                                   'connectorRef',
+                                  'provider',
                                   'repoName',
                                   'filePath',
                                   'storeType'

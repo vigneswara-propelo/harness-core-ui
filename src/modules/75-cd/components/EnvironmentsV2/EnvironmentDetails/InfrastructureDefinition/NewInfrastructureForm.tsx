@@ -76,6 +76,7 @@ export function NewInfrastructureForm(props: NewInfrastructureFormProps): JSX.El
           isEdit={isEdit}
           skipBranch={isEdit}
           disableFields={{
+            provider: isEdit,
             connectorRef: isEdit,
             repoName: isEdit,
             filePath: isEdit

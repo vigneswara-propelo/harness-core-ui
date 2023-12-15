@@ -60,7 +60,7 @@ describe('GitSyncForm test', () => {
     fetchSupportedConnectorsList.mockReset()
   })
 
-  test('Rendering GitSyncForm for while create and filling form', async () => {
+  test('Rendering GitSyncForm for create flow and filling form', async () => {
     const { container, getByText } = render(
       <TestWrapper
         path="/account/:accountId/ci/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/-1/pipeline-studio/"
@@ -113,6 +113,98 @@ describe('GitSyncForm test', () => {
     await waitFor(() => expect(fetchRepos).toBeCalledTimes(1))
     expect(getByText('repository')).toBeInTheDocument()
     expect(container).toMatchSnapshot()
+  })
+
+  test('Rendering GitSyncForm for create flow with FF on', async () => {
+    const { getByText } = render(
+      <TestWrapper
+        path="/account/:accountId/ci/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/-1/pipeline-studio/"
+        pathParams={pathParams}
+        defaultFeatureFlagValues={{ CODE_ENABLED: true }}
+      >
+        <Formik<GitSyncFormFields>
+          initialValues={{
+            identifier: 'testIdentifier',
+            connectorRef: {} as ConnectorSelectedValue,
+            repo: '',
+            branch: '',
+            filePath: ''
+          }}
+          onSubmit={() => undefined}
+          formName="GitSyncForm"
+        >
+          {formikProps => (
+            <FormikForm>
+              <GitSyncForm formikProps={formikProps} isEdit={false} />
+            </FormikForm>
+          )}
+        </Formik>
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(fetchRepos).toBeCalledTimes(1))
+    expect(getByText('common.git.gitRepositoryLocation')).toBeInTheDocument()
+    expect(getByText('common.harnessCodeRepo')).toBeInTheDocument()
+    expect(getByText('common.harnessCodeRepoInfo')).toBeInTheDocument()
+    expect(getByText('common.thirdPartyGitProvider')).toBeInTheDocument()
+    expect(getByText('common.thirdPartyGitProviderInfo')).toBeInTheDocument()
+    expect(getByText('repository')).toBeInTheDocument()
+    expect(getByText('gitBranch')).toBeInTheDocument()
+    expect(getByText('gitsync.gitSyncForm.yamlPathLabel')).toBeInTheDocument()
+  })
+
+  test('Rendering GitSyncForm for create flow and switching to third-party provider and filling form with FF on', async () => {
+    const { getByText } = render(
+      <TestWrapper
+        path="/account/:accountId/ci/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/-1/pipeline-studio/"
+        pathParams={pathParams}
+        defaultFeatureFlagValues={{ CODE_ENABLED: true }}
+      >
+        <Formik<GitSyncFormFields>
+          initialValues={{
+            identifier: 'testIdentifier',
+            connectorRef: {} as ConnectorSelectedValue,
+            repo: '',
+            branch: '',
+            filePath: ''
+          }}
+          onSubmit={() => undefined}
+          formName="GitSyncForm"
+        >
+          {formikProps => (
+            <FormikForm>
+              <GitSyncForm formikProps={formikProps} isEdit={false} />
+            </FormikForm>
+          )}
+        </Formik>
+      </TestWrapper>
+    )
+
+    const form = document.getElementsByClassName('gitSyncForm')[0] as HTMLElement
+    fireEvent.click(getByText('common.thirdPartyGitProvider'))
+    const connectorRefInput = queryByAttribute('data-testid', form, /connectorRef/)
+    expect(connectorRefInput).toBeTruthy()
+    if (connectorRefInput) {
+      act(() => {
+        fireEvent.click(connectorRefInput)
+      })
+    }
+
+    expect(fetchSupportedConnectorsList).toBeCalledTimes(1)
+    expect(fetchSupportedConnectorsList).toBeCalledWith(fetchSupportedConnectorsListPayload)
+
+    await act(async () => {
+      const githubConnector = await getByText('ValidGithubRepo')
+      expect(githubConnector).toBeTruthy()
+      fireEvent.click(githubConnector)
+      const applySelected = getByText('entityReference.apply')
+      await act(async () => {
+        fireEvent.click(applySelected)
+      })
+    })
+
+    await waitFor(() => expect(fetchRepos).toBeCalledTimes(1))
+    expect(getByText('repository')).toBeInTheDocument()
   })
 
   test('Rendering GitSyncForm for while edit : all field should be disabled', async () => {
@@ -188,8 +280,54 @@ describe('GitSyncForm test', () => {
     await waitFor(() => expect(getGitConnector).toBeCalled())
     expect(getByText('ValidGithubRepo')).toBeInTheDocument()
     const repoInput = queryByAttribute('name', container, 'repo')
-    expect(repoInput).toHaveValue('gitX2')
-    await waitFor(() => expect(fetchRepos).toBeCalledTimes(1))
+    await waitFor(() => expect(repoInput).toHaveValue('gitX2'))
+    await waitFor(() => expect(fetchRepos).toBeCalledTimes(2))
+    await waitFor(() => expect(fetchBranches).toBeCalledTimes(1))
+    const branchInput = queryByAttribute('name', container, 'branch')
+    expect(branchInput).toHaveValue('main')
+  })
+
+  test('Rendering GitSyncForm while create pre-populated with settings with FF on', async () => {
+    jest.spyOn(cdNg, 'useGetSettingsList').mockImplementation((): any => {
+      return { data: gitXSettingMock, refetch: () => Promise.resolve(gitXSettingMock) }
+    })
+    const { container, getByText } = render(
+      <TestWrapper
+        path={routes.toPipelineStudio({
+          ...projectPathProps,
+          ...pipelinePathProps,
+          ...modulePathProps
+        })}
+        pathParams={{ ...pathParams, pipelineIdentifier: '-1' }}
+        queryParams={{ storeType: 'REMOTE' }}
+        defaultFeatureFlagValues={{ CODE_ENABLED: true }}
+      >
+        <Formik<GitSyncFormFields>
+          initialValues={{
+            identifier: '',
+            connectorRef: '',
+            repo: '',
+            branch: '',
+            filePath: ''
+          }}
+          onSubmit={() => undefined}
+          formName="GitSyncForm"
+        >
+          {formikProps => (
+            <FormikForm>
+              <GitSyncForm formikProps={formikProps} isEdit={false} />
+            </FormikForm>
+          )}
+        </Formik>
+      </TestWrapper>
+    )
+
+    fireEvent.click(getByText('common.thirdPartyGitProvider'))
+    await waitFor(() => expect(getGitConnector).toBeCalled())
+    expect(getByText('ValidGithubRepo')).toBeInTheDocument()
+    const repoInput = queryByAttribute('name', container, 'repo')
+    await waitFor(() => expect(repoInput).toHaveValue('gitX2'))
+    await waitFor(() => expect(fetchRepos).toBeCalledTimes(3))
     await waitFor(() => expect(fetchBranches).toBeCalledTimes(1))
     const branchInput = queryByAttribute('name', container, 'branch')
     expect(branchInput).toHaveValue('main')
@@ -238,9 +376,54 @@ describe('GitSyncForm test', () => {
     // Connector should get auto filled but not repo and branch
     const repoInput = queryByAttribute('name', container, 'repo')
     expect(repoInput).toHaveValue('')
-    await waitFor(() => expect(fetchRepos).toBeCalledTimes(1))
+    await waitFor(() => expect(fetchRepos).toBeCalledTimes(2))
     await waitFor(() => expect(fetchBranches).toBeCalledTimes(0))
     const branchInput = queryByAttribute('name', container, 'branch')
     expect(branchInput).not.toHaveValue('')
+  })
+
+  test('Rendering GitSyncForm in edit mode with FF on', async () => {
+    const { container } = render(
+      <TestWrapper
+        path={routes.toPipelineStudio({
+          ...projectPathProps,
+          ...pipelinePathProps,
+          ...modulePathProps
+        })}
+        pathParams={{ ...pathParams, pipelineIdentifier: 'demo' }}
+        queryParams={{ storeType: 'REMOTE' }}
+        defaultFeatureFlagValues={{ CODE_ENABLED: true }}
+      >
+        <Formik<GitSyncFormFields>
+          initialValues={{
+            identifier: '',
+            connectorRef: '',
+            repo: 'gitX2',
+            branch: 'main',
+            filePath: '.harness/demo.yaml'
+          }}
+          onSubmit={() => undefined}
+          formName="GitSyncForm"
+        >
+          {formikProps => (
+            <FormikForm>
+              <GitSyncForm formikProps={formikProps} isEdit />
+            </FormikForm>
+          )}
+        </Formik>
+      </TestWrapper>
+    )
+
+    const disabledCards = container.querySelectorAll('.Card--disabled')
+    expect(disabledCards).toHaveLength(1)
+    const repoInput = queryByAttribute('name', container, 'repo')
+    expect(repoInput).toBeDisabled()
+    await waitFor(() => expect(repoInput).toHaveValue('gitX2'))
+    const branchInput = queryByAttribute('name', container, 'branch')
+    expect(branchInput).toBeDisabled()
+    expect(branchInput).toHaveValue('main')
+    const filePathInput = queryByAttribute('name', container, 'filePath')
+    await waitFor(() => expect(filePathInput).toHaveValue('.harness/demo.yaml'))
+    expect(filePathInput).toBeDisabled()
   })
 })

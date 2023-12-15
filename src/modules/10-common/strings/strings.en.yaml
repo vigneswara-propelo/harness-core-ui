@@ -431,6 +431,7 @@ gitSync:
 git:
   branchName: 'Branch name'
   gitSHACommit: Git Commit SHA
+  gitRepositoryLocation: Where is your Git Repository?
   selectBranchPlaceholder: Select or enter a branch name
   selectRepositoryPlaceholder: Select or enter a repository name
   urlType: 'URL Type'

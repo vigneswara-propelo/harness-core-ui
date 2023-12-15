@@ -53,6 +53,7 @@ import {
 import { SettingType } from '@common/constants/Utils'
 import { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { getGitProviderCards } from '@modules/10-common/components/GitProviderSelect/GitProviderSelect'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import factory from '../PipelineSteps/PipelineStepFactory'
@@ -83,6 +84,7 @@ const OMITTED_FIELDS = [
   'repo',
   'branch',
   'outdated',
+  'provider',
   'connectorRef',
   'repoName',
   'filePath',
@@ -342,7 +344,8 @@ export function FormikInputSetForm(props: FormikInputSetFormProps): React.ReactE
     const initialValues = getPipelineData()
     formikRef.current?.setValues({
       ...initialValues,
-      ...storeMetadata
+      ...storeMetadata,
+      provider: connectorRef ? getGitProviderCards(getString)[1] : getGitProviderCards(getString)[0]
     })
   }, [inputSet, isEdit, resolvedPipeline])
 
@@ -437,6 +440,7 @@ export function FormikInputSetForm(props: FormikInputSetFormProps): React.ReactE
                                   disableFields={
                                     shouldDisableGitDetailsFields(isEdit, allowDifferentRepoSettings?.data?.value)
                                       ? {
+                                          provider: true,
                                           connectorRef: true,
                                           repoName: true,
                                           branch: true,
@@ -444,6 +448,7 @@ export function FormikInputSetForm(props: FormikInputSetFormProps): React.ReactE
                                         }
                                       : {}
                                   }
+                                  differentRepoAllowedSettings={allowDifferentRepoSettings?.data?.value === 'true'}
                                 ></GitSyncForm>
                               </Container>
                             )}

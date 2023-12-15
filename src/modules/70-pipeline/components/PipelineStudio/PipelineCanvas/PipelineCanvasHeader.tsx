@@ -54,6 +54,7 @@ import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 
 import { useQueryParams } from '@common/hooks'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { getGitProviderCards } from '@modules/10-common/components/GitProviderSelect/GitProviderSelect'
 import StudioGitPopover from '../StudioGitPopover'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
@@ -349,6 +350,11 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
             {isPipelineRemote && (
               <div className={css.gitRemoteDetailsWrapper}>
                 <GitRemoteDetails
+                  gitProvider={
+                    isEmpty(connectorRef)
+                      ? getGitProviderCards(getString)[0].type
+                      : getGitProviderCards(getString)[1].type
+                  }
                   connectorRef={connectorRef}
                   repoName={defaultTo(
                     defaultTo(defaultTo(repoName, gitDetails.repoName), gitDetails.repoIdentifier),

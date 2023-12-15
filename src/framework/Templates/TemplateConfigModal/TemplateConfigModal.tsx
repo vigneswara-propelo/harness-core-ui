@@ -307,6 +307,7 @@ const BasicTemplateDetails = (
         'repo',
         'branch',
         'comment',
+        'provider',
         'connectorRef',
         'storeType',
         'filePath',

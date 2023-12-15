@@ -13,6 +13,7 @@ import * as Yup from 'yup'
 import cx from 'classnames'
 import { Container, FormInput, Layout, SelectOption, useToaster, Radio, Icon, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
+import { Divider } from '@blueprintjs/core'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import {
   ConnectorReferenceField,
@@ -39,10 +40,17 @@ import {
 } from 'services/cd-ng'
 import { SettingType } from '@common/constants/Utils'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import {
+  CardSelectInterface,
+  GitProviderSelect,
+  getGitProviderCards
+} from '@modules/10-common/components/GitProviderSelect/GitProviderSelect'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from './GitSyncForm.module.scss'
 
 export interface GitSyncFormFields {
   identifier?: string
+  provider?: CardSelectInterface
   connectorRef?: ConnectorSelectedValue | string
   repo?: string
   branch?: string
@@ -54,6 +62,7 @@ interface GitSyncFormProps<T> {
   formikProps: FormikContextType<T>
   isEdit: boolean
   disableFields?: {
+    provider?: boolean
     connectorRef?: boolean
     repoName?: boolean
     branch?: boolean
@@ -64,6 +73,7 @@ interface GitSyncFormProps<T> {
   entityScope?: Scope
   className?: string
   filePathPrefix?: string
+  differentRepoAllowedSettings?: boolean
   skipDefaultConnectorSetting?: boolean
   skipBranch?: boolean
   supportNewBranch?: boolean
@@ -89,8 +99,8 @@ export const gitSyncFormSchema = (
     is: StoreType.REMOTE,
     then: Yup.string().trim().required(getString('common.git.validation.branchRequired'))
   }),
-  connectorRef: Yup.mixed().when('storeType', {
-    is: StoreType.REMOTE,
+  connectorRef: Yup.mixed().when(['storeType', 'provider'], {
+    is: (storeType, provider) => storeType === StoreType.REMOTE && provider?.type !== Connectors.Harness,
     then: Yup.string().trim().required(getString('validation.sshConnectorRequired'))
   }),
   filePath: Yup.mixed().when('storeType', {
@@ -211,11 +221,13 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
     className = '',
     filePathPrefix,
     skipDefaultConnectorSetting = false,
+    differentRepoAllowedSettings,
     skipBranch = false,
     supportNewBranch = false
   } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { connectorRef, branch, repoName } = useQueryParams<GitQueryParams>()
+  const { CODE_ENABLED } = useFeatureFlags()
   const { getString } = useStrings()
   const { showError } = useToaster()
   const [errorResponse, setErrorResponse] = useState<ResponseMessage[]>(errorData ?? [])
@@ -268,7 +280,8 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
         showError(gitXSettingError.message)
       } else if (
         getSettingValue(gitXSetting, SettingType.DEFAULT_CONNECTOR_FOR_GIT_EXPERIENCE) &&
-        !(formikConnectorRef || connectorRef)
+        !(formikConnectorRef || connectorRef) &&
+        formikProps.values.provider?.type !== Connectors.Harness
       ) {
         defaultSettingConnector.current =
           getSettingValue(gitXSetting, SettingType.DEFAULT_CONNECTOR_FOR_GIT_EXPERIENCE) || ''
@@ -279,7 +292,7 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gitXSettingError, loadingSetting])
+  }, [gitXSettingError, loadingSetting, formikProps.values.provider?.type])
 
   const preSelectedConnector =
     connectorRef ||
@@ -304,6 +317,16 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
       return
     }
   }
+
+  useEffect(() => {
+    if (!formikProps.values.provider) {
+      if (CODE_ENABLED && isEmpty(formikConnectorRef)) {
+        formikProps.setFieldValue('provider', getGitProviderCards(getString)[0])
+      } else {
+        formikProps.setFieldValue('provider', getGitProviderCards(getString)[1])
+      }
+    }
+  }, [])
 
   useEffect(() => {
     if (!loadingDefaultConnector && connectorData?.data?.connector) {
@@ -349,41 +372,67 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
 
   return (
     <Container padding={{ top: 'large' }} className={cx(css.gitSyncForm, className)}>
+      {CODE_ENABLED ? (
+        <>
+          <Divider />
+          <Text font={{ variation: FontVariation.H6 }} className={css.gitRepoLocationHeader}>
+            {getString('common.git.gitRepositoryLocation')}
+          </Text>
+          <GitProviderSelect
+            gitProvider={formikProps.values.provider}
+            setFieldValue={formikProps.setFieldValue}
+            connectorFieldName={'connectorRef'}
+            repoNameFieldName={'repo'}
+            branchFieldName={'branch'}
+            showDescription
+            className={css.gitProviderCardWrapper}
+            getCardDisabledStatus={(current, selected) => {
+              if (differentRepoAllowedSettings && !isEdit) {
+                return false
+              }
+              return (isEdit || !!disableFields.provider) && current !== selected
+            }}
+          />
+        </>
+      ) : null}
       <Layout.Horizontal>
         <Layout.Vertical>
-          <ConnectorReferenceField
-            name="connectorRef"
-            width={350}
-            type={getSupportedProviders()}
-            selected={defaultTo(formikProps.values.connectorRef, connectorRef)}
-            error={formikProps.submitCount > 0 ? (formikProps?.errors?.connectorRef as string) : undefined}
-            label={getString('platform.connectors.title.gitConnector')}
-            placeholder={
-              loadingSetting
-                ? getString('platform.defaultSettings.fetchingDefaultConnector')
-                : `- ${getString('select')} -`
-            }
-            accountIdentifier={accountId}
-            {...(entityScope === Scope.ACCOUNT ? {} : { orgIdentifier })}
-            {...(entityScope === Scope.PROJECT ? { projectIdentifier } : {})}
-            onChange={(value, scope) => {
-              const connectorRefWithScope = getConnectorIdentifierWithScope(scope, value?.identifier)
+          {formikProps.values.provider?.type !== Connectors.Harness ? (
+            <ConnectorReferenceField
+              name="connectorRef"
+              width={350}
+              type={getSupportedProviders()}
+              selected={defaultTo(formikProps.values.connectorRef, connectorRef)}
+              error={formikProps.submitCount > 0 ? (formikProps?.errors?.connectorRef as string) : undefined}
+              label={getString('platform.connectors.title.gitConnector')}
+              placeholder={
+                loadingSetting
+                  ? getString('platform.defaultSettings.fetchingDefaultConnector')
+                  : `- ${getString('select')} -`
+              }
+              accountIdentifier={accountId}
+              {...(entityScope === Scope.ACCOUNT ? {} : { orgIdentifier })}
+              {...(entityScope === Scope.PROJECT ? { projectIdentifier } : {})}
+              onChange={(value, scope) => {
+                const connectorRefWithScope = getConnectorIdentifierWithScope(scope, value?.identifier)
 
-              formikProps.setFieldValue('connectorRef', {
-                label: defaultTo(value.name, ''),
-                value: connectorRefWithScope,
-                scope: scope,
-                live: value?.status?.status === 'SUCCESS',
-                connector: value
-              })
-              formikProps.setFieldValue?.('repo', '')
-              formikProps.setFieldValue?.('branch', '')
-            }}
-            disabled={isEdit || disableFields.connectorRef || loadingSetting}
-          />
+                formikProps.setFieldValue('connectorRef', {
+                  label: defaultTo(value.name, ''),
+                  value: connectorRefWithScope,
+                  scope: scope,
+                  live: value?.status?.status === 'SUCCESS',
+                  connector: value
+                })
+                formikProps.setFieldValue?.('repo', '')
+                formikProps.setFieldValue?.('branch', '')
+              }}
+              disabled={isEdit || disableFields.connectorRef || loadingSetting}
+            />
+          ) : null}
 
           <RepositorySelect
             formikProps={formikProps}
+            gitProvider={formikProps.values.provider?.type}
             connectorRef={formikConnectorRef || preSelectedConnector}
             onChange={() => {
               if (errorResponse?.length === 0) {
@@ -399,6 +448,7 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
           ) : (
             <RepoBranchSelectV2
               key={formikProps?.values?.repo}
+              gitProvider={formikProps.values.provider?.type}
               connectorIdentifierRef={formikConnectorRef || preSelectedConnector}
               repoName={formikProps?.values?.repo}
               onChange={(selected: SelectOption) => {

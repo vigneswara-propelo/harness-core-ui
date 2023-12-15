@@ -67,7 +67,6 @@ import {
 } from '@pipeline/utils/CIUtils'
 import type { StageSelectionData } from '@pipeline/utils/runPipelineUtils'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import { getGitProviderCards } from '@modules/10-common/components/GitProviderSelect/GitProviderSelect'
 import { getSelectedStagesFromPipeline } from '../PipelineStudio/CommonUtils/CommonUtils'
 import { StepViewType } from '../AbstractSteps/Step'
 import css from './CICodebaseInputSetForm.module.scss'
@@ -549,17 +548,6 @@ function CICodebaseInputSetFormInternal({
 
       setConnectorRef(ctrRef)
       setConnectorId(getIdentifierFromValue(ctrRef))
-    }
-  }, [formik?.values])
-
-  useEffect(() => {
-    if (!get(formik?.values, 'provider')) {
-      const ctrRef = get(originalPipeline, 'properties.ci.codebase.connectorRef') as string
-      if (!ctrRef) {
-        formik?.setFieldValue('provider', getGitProviderCards(getString)[0])
-      } else {
-        formik?.setFieldValue('provider', getGitProviderCards(getString)[1])
-      }
     }
   }, [formik?.values])
 

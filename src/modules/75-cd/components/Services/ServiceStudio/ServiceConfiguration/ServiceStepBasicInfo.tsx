@@ -139,6 +139,7 @@ function ServiceStepBasicInfo(): React.ReactElement {
                     isServiceCreateModalView
                       ? {}
                       : {
+                          provider: true,
                           connectorRef: true,
                           repoName: true,
                           filePath: false

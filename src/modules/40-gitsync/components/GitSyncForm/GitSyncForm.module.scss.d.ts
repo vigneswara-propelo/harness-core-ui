@@ -8,6 +8,8 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly branchSection: string
+  readonly gitProviderCardWrapper: string
+  readonly gitRepoLocationHeader: string
   readonly gitSyncForm: string
 }
 export default styles
