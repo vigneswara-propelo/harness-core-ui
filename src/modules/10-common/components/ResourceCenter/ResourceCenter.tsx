@@ -19,7 +19,6 @@ import { useGetCommunity } from '@common/utils/utils'
 import { getButton } from './ResourceCenterUtil'
 import resourceImage from './images/resource-center.png'
 import {
-  getReleaseNodeLink,
   openWhatsNew,
   openEarlyAccess,
   openZendeskSupport,
@@ -31,7 +30,8 @@ import {
   HARNESS_API_DOCS_LINK,
   SITE_STATUS_LINK,
   HARNESS_TUTORIALS,
-  cannySupportShareYourIdeas
+  cannySupportShareYourIdeas,
+  getReleaseNotesLink
 } from './utils'
 import { CommunitySubmitTicket } from './MenuItems'
 import { useReleaseNotesModal } from './ReleaseNotesModal/useReleaseNotesModal'
@@ -78,8 +78,6 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link, isOpen: di
   useEffect(() => {
     setShow(Boolean(display))
   }, [display])
-
-  const releaseNodeLink = getReleaseNodeLink()
 
   const getContactUsTiles = React.useMemo((): Resource[] => {
     const refinerSurvey = (): void => {
@@ -308,7 +306,11 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link, isOpen: di
                   HARNESS_DOCS_LINK
                 )}
                 {getButton(getString('common.resourceCenter.bottomlayout.apiDocs'), 'api-docs', HARNESS_API_DOCS_LINK)}
-                {getButton(getString('common.resourceCenter.bottomlayout.releaseNote'), 'change-log', releaseNodeLink)}
+                {getButton(
+                  getString('common.resourceCenter.bottomlayout.releaseNote'),
+                  'change-log',
+                  getReleaseNotesLink()
+                )}
                 {getButton(
                   getString('common.resourceCenter.bottomlayout.sitestatus'),
                   'right-bar-notification',

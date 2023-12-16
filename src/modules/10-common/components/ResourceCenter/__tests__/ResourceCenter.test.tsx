@@ -18,8 +18,7 @@ import {
   HARNESS_SEARCH_LINK,
   HARNESS_TUTORIALS,
   HARNESS_UNIVERISITY_LINK,
-  ON_PREM_RELEASE_NODE_LINK,
-  SAAS_RELEASE_NODE_LINK,
+  ON_PREM_RELEASE_NOTE_LINK,
   SITE_STATUS_LINK
 } from '../utils'
 
@@ -34,6 +33,9 @@ const zendeskCreate = {
     }
   }
 }
+
+const SAAS_RELEASE_NODE_LINK = 'test_saas_link'
+window.releaseNotesLink = SAAS_RELEASE_NODE_LINK
 
 jest.mock('services/cd-ng')
 jest.mock('services/resourcegroups', () => ({
@@ -159,7 +161,7 @@ describe('ResourceCenter', () => {
     })
 
     test('release note for on prem', async () => {
-      window.deploymentType = 'ON_PREM'
+      window.releaseNotesLink = ON_PREM_RELEASE_NOTE_LINK
       const { getByTestId, getByText } = render(
         <TestWrapper>
           <ResourceCenter />
@@ -168,7 +170,7 @@ describe('ResourceCenter', () => {
       fireEvent.click(getByTestId('question'))
       const releaseNote = getByText('common.resourceCenter.bottomlayout.releaseNote').closest('a')
       await waitFor(() => {
-        expect(releaseNote).toHaveAttribute('href', ON_PREM_RELEASE_NODE_LINK)
+        expect(releaseNote).toHaveAttribute('href', ON_PREM_RELEASE_NOTE_LINK)
       })
     })
 

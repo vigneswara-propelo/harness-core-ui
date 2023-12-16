@@ -92,6 +92,8 @@ declare interface Window {
   getIP?: (ipJson: { ip: string }) => void
   currentIP?: string | undefined
   publicAccessOnAccount?: boolean
+  releaseNotesLink: string
+  Canny: any
 }
 
 declare interface WindowEventMap {

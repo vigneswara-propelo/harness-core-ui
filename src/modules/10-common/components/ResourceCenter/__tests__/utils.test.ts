@@ -6,8 +6,11 @@
  */
 
 import {
+  cannySupportShareYourIdeas,
   EARLY_ACCESS_LINK,
+  getReleaseNotesLink,
   HARNESS_SUPPORT_LINK,
+  ON_PREM_RELEASE_NOTE_LINK,
   openEarlyAccess,
   openWhatsNew,
   openZendeskSupport,
@@ -40,5 +43,31 @@ describe('utility test', () => {
     openEarlyAccess({ stopPropagation: jest.fn, preventDefault: jest.fn })
     expect(window.open).toHaveBeenCalledTimes(1)
     expect(window.open).toHaveBeenCalledWith(EARLY_ACCESS_LINK)
+  })
+
+  test('test default release notes link', () => {
+    expect(getReleaseNotesLink()).toEqual(ON_PREM_RELEASE_NOTE_LINK)
+  })
+
+  test('test default release notes link', () => {
+    window.releaseNotesLink = 'test'
+    expect(getReleaseNotesLink()).toEqual('test')
+  })
+
+  test('test cannySupportShareYourIdeas', () => {
+    const windowOpenMock = jest.fn()
+    const cannyMock = jest.fn()
+    window.open = windowOpenMock
+    window.Canny = cannyMock
+    cannySupportShareYourIdeas(
+      { stopPropagation: jest.fn, preventDefault: jest.fn } as any,
+      {
+        uuid: 'testuuid',
+        name: 'testName'
+      },
+      { identifier: 'accountIdentifier', cannyUsernameAbbreviationEnabled: true }
+    )
+    expect(cannyMock).toBeCalled()
+    expect(windowOpenMock).toBeCalledTimes(1)
   })
 })

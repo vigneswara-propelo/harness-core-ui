@@ -8,8 +8,7 @@
 import moment from 'moment'
 import type { AccountDTO, UserInfo } from 'services/cd-ng'
 
-export const ON_PREM_RELEASE_NODE_LINK = 'https://ngdocs.harness.io/article/556wy85kbo-harness-on-prem-release-notes'
-export const SAAS_RELEASE_NODE_LINK = 'https://ngdocs.harness.io/article/7zkchy5lhj-harness-saa-s-release-notes-2022'
+export const ON_PREM_RELEASE_NOTE_LINK = 'https://ngdocs.harness.io/article/556wy85kbo-harness-on-prem-release-notes'
 
 export const HARNESS_SEARCH_LINK = 'https://harness.io/search/'
 export const HARNESS_UNIVERISITY_LINK = 'https://developer.harness.io/certifications/'
@@ -80,24 +79,18 @@ export const cannySupportShareYourIdeas = (
   window.open(CANNY_SUPPORT_LINK)
 }
 
-export function getReleaseNodeLink(): string {
-  switch (window.deploymentType) {
-    case 'COMMUNITY':
-    case 'ON_PREM': {
-      return ON_PREM_RELEASE_NODE_LINK
-    }
-    default:
-      return SAAS_RELEASE_NODE_LINK
-  }
-}
-
 export const openWhatsNew = (e: React.MouseEvent<Element, MouseEvent>): void => {
   e.stopPropagation()
   e.preventDefault()
   window.open(WHATS_NEW_LINK)
 }
+
 export const openEarlyAccess = (e: React.MouseEvent<Element, MouseEvent>): void => {
   e.stopPropagation()
   e.preventDefault()
   window.open(EARLY_ACCESS_LINK)
+}
+
+export const getReleaseNotesLink = () => {
+  return window.releaseNotesLink || ON_PREM_RELEASE_NOTE_LINK
 }
