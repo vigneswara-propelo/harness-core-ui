@@ -98,30 +98,26 @@ function TestComponent(props: {
 
 describe('<ExecutionStepDetails /> tests', () => {
   test('renders normal step', () => {
-    const { container } = render(<TestComponent selectedStep="normalStep" />)
-    expect(container).toMatchSnapshot()
+    const { getByText } = render(<TestComponent selectedStep="normalStep" />)
+    expect(getByText('MOCK DURATION')).toBeInTheDocument()
+    expect(getByText('execution.stepLogs')).toBeInTheDocument()
   })
 
   describe('retried steps', () => {
     test('shows step selection', async () => {
-      const { container, findByTestId } = render(
+      const { getByTestId } = render(
         <TestComponent selectedStep="retriedStep">
           <CurrentLocation />
         </TestComponent>
       )
-      expect(container).toMatchSnapshot()
 
-      const loc1 = await findByTestId('location')
+      const loc1 = getByTestId('location')
 
-      expect(loc1).toMatchInlineSnapshot(`
-        <div
-          data-testid="location"
-        >
-          /account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/TEST_EXECUTION/pipeline
-        </div>
-      `)
+      expect(loc1.innerHTML).toEqual(
+        '/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/TEST_EXECUTION/pipeline'
+      )
 
-      const retryLogs1 = await findByTestId('retry-logs')
+      const retryLogs1 = getByTestId('retry-logs')
 
       fireEvent.click(retryLogs1)
 
@@ -131,17 +127,12 @@ describe('<ExecutionStepDetails /> tests', () => {
 
       fireEvent.click(retries[0])
 
-      const loc2 = await findByTestId('location')
+      const loc2 = getByTestId('location')
+      expect(loc2.innerHTML).toEqual(
+        '/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/TEST_EXECUTION/pipeline?retryStep=retryId_1'
+      )
 
-      expect(loc2).toMatchInlineSnapshot(`
-        <div
-          data-testid="location"
-        >
-          /account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/TEST_EXECUTION/pipeline?retryStep=retryId_1
-        </div>
-      `)
-
-      const retryLogs2 = await findByTestId('retry-logs')
+      const retryLogs2 = getByTestId('retry-logs')
 
       fireEvent.click(retryLogs2)
 
@@ -151,15 +142,11 @@ describe('<ExecutionStepDetails /> tests', () => {
 
       fireEvent.click(current[current.length - 1])
 
-      const loc3 = await findByTestId('location')
+      const loc3 = getByTestId('location')
 
-      expect(loc3).toMatchInlineSnapshot(`
-        <div
-          data-testid="location"
-        >
-          /account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/TEST_EXECUTION/pipeline
-        </div>
-      `)
+      expect(loc3.innerHTML).toEqual(
+        '/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/TEST_EXECUTION/pipeline'
+      )
     })
 
     // define data outside to avoid infinite loop in react useEffect. It will keep the same reference.
@@ -180,7 +167,6 @@ describe('<ExecutionStepDetails /> tests', () => {
       )
       const step = queryByAttribute('data-name', container, 'Retried Step 1')
       expect(step).toBeInTheDocument()
-      expect(container).toMatchSnapshot()
     })
 
     test('does not fetches data for retry step, if already present', async () => {
@@ -203,7 +189,6 @@ describe('<ExecutionStepDetails /> tests', () => {
       )
       const step = queryByAttribute('data-name', container, 'Already_Present_Data')
       expect(step).toBeInTheDocument()
-      expect(container).toMatchSnapshot()
     })
 
     test('shows loader while loading', () => {

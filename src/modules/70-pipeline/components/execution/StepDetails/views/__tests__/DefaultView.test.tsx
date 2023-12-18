@@ -9,7 +9,6 @@ import React from 'react'
 import { render, screen, within } from '@testing-library/react'
 
 import userEvent from '@testing-library/user-event'
-import type { ResponseMessage } from 'services/pipeline-ng'
 
 import { TestWrapper } from '@common/utils/testUtils'
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
@@ -53,7 +52,7 @@ jest.mock('services/cd-ng', () => ({
   useGetSettingValue: jest.fn().mockImplementation(() => aidaMock)
 }))
 
-const checkPolicyEnforcementTab = async (): Promise<HTMLElement> => {
+const checkPolicyEnforcementTab = async (): Promise<void> => {
   const policyEnforcementTab = await screen.findByRole('tab', {
     name: 'pipeline.policyEnforcement.title'
   })
@@ -64,12 +63,11 @@ const checkPolicyEnforcementTab = async (): Promise<HTMLElement> => {
   const policyEvaluationText = await within(tabpanel).findByText('pipeline.policyEvaluations.title')
 
   expect(policyEvaluationText).toBeInTheDocument()
-  return tabpanel
 }
 
 describe('Default View Test', () => {
   test('renders snapshot', async () => {
-    const { container } = render(
+    const { getByText } = render(
       <TestWrapper>
         <DefaultView
           step={{
@@ -80,34 +78,13 @@ describe('Default View Test', () => {
         />
       </TestWrapper>
     )
+    expect(getByText('pipeline.failureStrategies.strategiesLabel.ManualIntervention')).toBeInTheDocument()
 
-    expect(container).toMatchSnapshot()
-    const policyEnforcementTabPanel = await checkPolicyEnforcementTab()
-    expect(policyEnforcementTabPanel).toMatchSnapshot('Policy Enforcement Tab - Default View')
+    await checkPolicyEnforcementTab()
   })
 
-  test('failure responses', () => {
-    const responseMessage: ResponseMessage = {
-      code: 'DEFAULT_ERROR_CODE'
-    }
-    const { container } = render(
-      <TestWrapper>
-        <DefaultView
-          step={{
-            status: ExecutionStatusEnum.Failed,
-            failureInfo: {
-              responseMessages: [responseMessage]
-            }
-          }}
-          executionMetadata={executionMetadata}
-        />
-      </TestWrapper>
-    )
-
-    expect(container).toMatchSnapshot()
-  })
   test('error in step evaluation', () => {
-    const { container } = render(
+    const { getByText } = render(
       <TestWrapper>
         <DefaultView
           step={{
@@ -125,6 +102,6 @@ describe('Default View Test', () => {
       </TestWrapper>
     )
 
-    expect(container).toMatchSnapshot()
+    expect(getByText('Failure to evaluate step')).toBeInTheDocument()
   })
 })

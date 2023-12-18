@@ -278,8 +278,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     }
   })
 
-  const { CI_YAML_VERSIONING, SPG_LOG_SERVICE_ENABLE_DOWNLOAD_LOGS, CDS_MERGED_RUN_AND_RETRY_PIPELINE_COMPONENT } =
-    useFeatureFlags()
+  const { CI_YAML_VERSIONING, CDS_MERGED_RUN_AND_RETRY_PIPELINE_COMPONENT } = useFeatureFlags()
 
   const { downloadLogsAction } = useDownloadLogs()
 
@@ -501,22 +500,20 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
                 />
               </>
             )}
-            {SPG_LOG_SERVICE_ENABLE_DOWNLOAD_LOGS && (
-              <MenuItem
-                text={getString('pipeline.downloadLogs.title')}
-                onClick={() =>
-                  downloadLogsAction({
-                    logsScope: LogsScope.Pipeline,
-                    runSequence,
-                    uniqueKey: pipelineIdentifier,
-                    logsToken,
-                    planExecId: executionIdentifier,
-                    shouldUseSimplifiedKey
-                  })
-                }
-                disabled={!isExecutionComplete(executionStatus)}
-              />
-            )}
+            <MenuItem
+              text={getString('pipeline.downloadLogs.title')}
+              onClick={() =>
+                downloadLogsAction({
+                  logsScope: LogsScope.Pipeline,
+                  runSequence,
+                  uniqueKey: pipelineIdentifier,
+                  logsToken,
+                  planExecId: executionIdentifier,
+                  shouldUseSimplifiedKey
+                })
+              }
+              disabled={!isExecutionComplete(executionStatus)}
+            />
           </Menu>
         </Popover>
       )}

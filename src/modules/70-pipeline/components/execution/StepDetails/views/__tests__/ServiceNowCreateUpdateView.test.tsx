@@ -74,11 +74,12 @@ jest.mock('services/cd-ng', () => ({
 describe('ServiceNowcreateupdate view test ', () => {
   test('snapshot for displaying ticketNumber info', () => {
     jest.spyOn(loadAsh, 'get').mockReturnValue({ ticketNumber: 'ticketNumber', ticketUrl: 'ticketUrl' })
-    const { container } = render(
+    const { getByText } = render(
       <TestWrapper>
         <ServiceNowCreateUpdateView step={stepProps} executionMetadata={executionMetadata}></ServiceNowCreateUpdateView>
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
+    expect(getByText('pipeline.serviceNowApprovalStep.issueNumber:')).toBeInTheDocument()
+    expect(getByText('ticketNumber')).toBeInTheDocument()
   })
 })

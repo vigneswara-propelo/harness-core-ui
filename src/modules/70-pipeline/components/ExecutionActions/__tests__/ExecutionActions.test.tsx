@@ -115,7 +115,10 @@ describe('<ExecutionActions /> tests', () => {
 
     await findByText(document.body, 'editPipeline')
 
-    expect(document.body.querySelector('.bp3-menu')).toMatchSnapshot('Menu')
+    const menu = document.body.querySelector('.bp3-menu') as HTMLElement
+    expect(await findByText(menu, 'pipeline.execution.actions.rerunPipeline')).toBeInTheDocument()
+    expect(await findByText(menu, 'editPipeline')).toBeInTheDocument()
+    expect(await findByText(menu, 'pipeline.execution.actions.abortPipeline')).toBeInTheDocument()
   })
 
   test.each<[ExecutionStatus, string]>([

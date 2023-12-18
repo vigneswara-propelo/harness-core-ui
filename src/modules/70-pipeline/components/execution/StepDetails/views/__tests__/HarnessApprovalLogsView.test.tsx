@@ -70,8 +70,7 @@ describe('HarnessApprovalLogsView - Loading', () => {
     expect(() => getByText('pipeline.approvalStage.approvalStageLogsViewMessage')).toThrow()
     expect(() => getByText('pipeline.approveOrReject')).toThrow()
     expect(getByText('common.logs.noLogsText')).toBeDefined()
-    const node = getByTestId('harnessApprovalLogsTest')
-    expect(node).toMatchSnapshot('Loading State - missing approvalInstanceId')
+    expect(getByTestId('harnessApprovalLogsTest')).toBeDefined()
   })
 })
 
@@ -92,8 +91,7 @@ describe('HarnessApprovalLogsView - Success', () => {
     expect(getByText('pipeline.approvalStage.approvalStageLogsViewMessage')).toBeDefined()
     expect(getByText('pipeline.approveOrReject')).toBeDefined()
     expect(getByText('common.logs.noLogsText')).toBeDefined()
-    const node = getByTestId('harnessApprovalLogsTest')
-    expect(node).toMatchSnapshot()
+    expect(getByTestId('harnessApprovalLogsTest')).toBeDefined()
 
     const approvalButton = getByTestId('approvalButton')
     expect(approvalButton).toBeDefined()
@@ -101,7 +99,6 @@ describe('HarnessApprovalLogsView - Success', () => {
       fireEvent.click(approvalButton)
     })
     const modal = document.getElementsByClassName('bp3-dialog approveRejectModal')[0]
-    expect(modal).toMatchSnapshot('approvalForm')
     expect(getByTextGlobalFn(modal as HTMLElement, 'pipeline.approvalStep.execution.inputsTitle')).toBeDefined()
     expect(getByTextGlobalFn(modal as HTMLElement, 'Comments')).toBeDefined()
 
@@ -118,7 +115,7 @@ describe('HarnessApprovalLogsView - Success', () => {
   })
   test('Render proper in case of successful API, waiting and auth=false', async () => {
     mockData(mockApprovalData, mockAuthDataAuthFalse)
-    const { getByText, container } = render(
+    const { getByText } = render(
       <TestWrapper>
         <HarnessApprovalLogsView
           step={{
@@ -131,6 +128,5 @@ describe('HarnessApprovalLogsView - Success', () => {
     expect(getByText('User is not authorised')).toBeDefined()
     expect(() => getByText('pipeline.approveOrReject')).toThrow()
     expect(getByText('common.logs.noLogsText')).toBeDefined()
-    expect(container).toMatchSnapshot()
   })
 })

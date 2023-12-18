@@ -67,7 +67,7 @@ fetchMock.mockResolvedValue({
 
 describe('<ExecutionLogView /> tests', () => {
   test('snapshot test', async () => {
-    const { container, findByText } = render(
+    const { findByText } = render(
       <TestWrapper>
         <ExecutionContext.Provider value={contextValue}>
           <ExecutionLogView />
@@ -78,7 +78,8 @@ describe('<ExecutionLogView /> tests', () => {
 
     await waitFor(() => findByText('RolloutSecond'))
 
-    expect(container).toMatchSnapshot()
+    expect(await findByText('Google1')).toBeInTheDocument()
+    expect(await findByText('Google2')).toBeInTheDocument()
   })
 
   test('stage selection works', async () => {

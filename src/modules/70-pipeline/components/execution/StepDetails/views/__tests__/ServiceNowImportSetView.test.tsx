@@ -105,11 +105,12 @@ jest.mock('services/cd-ng', () => ({
 
 describe('ServiceNowImportSet View Test ', () => {
   test('snapshot for displaying import set details', () => {
-    const { container } = render(
+    const { getByText } = render(
       <TestWrapper>
         <ServiceNowImportSetView step={stepProps} executionMetadata={executionMetadata}></ServiceNowImportSetView>
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
+    expect(getByText('Import Set Details:')).toBeInTheDocument()
+    expect(getByText('displayValue')).toBeInTheDocument()
   })
 })

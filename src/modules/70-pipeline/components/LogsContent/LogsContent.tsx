@@ -177,7 +177,7 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
   const hasLogs = state.units.length > 0
   const isSingleSectionLogs = state.units.length === 1
   const { openDialog } = useLogSettings()
-  const { CI_AI_ENHANCED_REMEDIATIONS, SPG_LOG_SERVICE_ENABLE_DOWNLOAD_LOGS } = useFeatureFlags()
+  const { CI_AI_ENHANCED_REMEDIATIONS } = useFeatureFlags()
   const { copyToClipboard } = useCopyToClipboard()
 
   const virtuosoRef = React.useRef<null | GroupedVirtuosoHandle | VirtuosoHandle>(null)
@@ -338,25 +338,23 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
               <StrTemplate stringID="consoleView" />
             </Link>
           ) : null}
-          {SPG_LOG_SERVICE_ENABLE_DOWNLOAD_LOGS && (
-            <Button
-              icon={'import'}
-              iconProps={{ size: 14 }}
-              className={css.fullScreen}
-              variation={ButtonVariation.ICON}
-              withoutCurrentColor
-              disabled={!isExecutionComplete(currentStep?.status)}
-              onClick={async () => {
-                await downloadLogsAction?.({
-                  logsScope: LogsScope.Step,
-                  state,
-                  uniqueKey: currentStepId,
-                  logBaseKey: currentStep?.logBaseKey,
-                  logsToken
-                })
-              }}
-            />
-          )}
+          <Button
+            icon={'import'}
+            iconProps={{ size: 14 }}
+            className={css.fullScreen}
+            variation={ButtonVariation.ICON}
+            withoutCurrentColor
+            disabled={!isExecutionComplete(currentStep?.status)}
+            onClick={async () => {
+              await downloadLogsAction?.({
+                logsScope: LogsScope.Step,
+                state,
+                uniqueKey: currentStepId,
+                logBaseKey: currentStep?.logBaseKey,
+                logsToken
+              })
+            }}
+          />
         </div>
       </div>
       <LogsContentWrapper

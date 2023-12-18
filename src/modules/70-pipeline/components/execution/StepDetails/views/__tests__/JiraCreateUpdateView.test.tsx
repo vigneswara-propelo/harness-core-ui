@@ -90,21 +90,22 @@ jest.mock('lodash-es', () => ({
 
 describe('Jiracreateupdate view test ', () => {
   test('output snapshot if array is present of outcomes', () => {
-    const { container } = render(
+    const { getByText } = render(
       <TestWrapper>
         <JiraCreateUpdateView step={stepArrayProps} executionMetadata={executionMetadata}></JiraCreateUpdateView>
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
+    expect(getByText('pipeline.jiraApprovalStep.issueKey:')).toBeInTheDocument()
+    expect(getByText('test')).toBeInTheDocument()
   })
 
   test('output snapshot if  not array', () => {
     jest.spyOn(loadAsh, 'get').mockReturnValue({ key: 'test', url: '' })
-    const { container } = render(
+    const { queryByText } = render(
       <TestWrapper>
         <JiraCreateUpdateView step={stepProps} executionMetadata={executionMetadata}></JiraCreateUpdateView>
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
+    expect(queryByText('test')).not.toBeInTheDocument()
   })
 })

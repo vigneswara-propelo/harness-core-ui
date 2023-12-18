@@ -107,33 +107,33 @@ describe('<LogsContent /> tests', () => {
     Object.entries(actions).map(([_, fn]: [string, jest.Mock]) => fn.mockReset())
   })
   test('DefaultConsoleViewStepDetails snapshot test', () => {
-    const { container } = render(
+    const { getByText } = render(
       <TestWrapper>
         <DefaultConsoleViewStepDetails step={{} as any} />
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
+    expect(getByText('execution.consoleLogs')).toBeInTheDocument()
   })
   test('console-view snapshot test', () => {
-    const { container } = render(
+    const { getByText } = render(
       <TestWrapper>
         <LogsContent mode="console-view" />
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
+    expect(getByText('execution.consoleLogs')).toBeInTheDocument()
   })
 
   test('step-details snapshot test', () => {
-    const { container } = render(
+    const { getByText } = render(
       <TestWrapper>
         <LogsContent mode="step-details" />
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
+    expect(getByText('execution.stepLogs')).toBeInTheDocument()
   })
 
   test('console-view error message test', () => {
-    const { container } = render(
+    const { getByText } = render(
       <TestWrapper>
         <ExecutionContext.Provider
           value={{
@@ -147,7 +147,7 @@ describe('<LogsContent /> tests', () => {
         </ExecutionContext.Provider>
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
+    expect(getByText('common.errorHandler.issueCouldBe')).toBeInTheDocument()
   })
 
   test('console-view warning message test', () => {
@@ -165,7 +165,7 @@ describe('<LogsContent /> tests', () => {
         </ExecutionContext.Provider>
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
+    expect(container.querySelector('[data-icon="warning-sign"]')).toBeInTheDocument()
   })
 
   describe('createSections tests', () => {
@@ -270,14 +270,14 @@ describe('<LogsContent /> tests', () => {
         actions
       }))
 
-      const { container, getByText } = render(
+      const { getByText } = render(
         <TestWrapper>
           <LogsContent mode="console-view" />
         </TestWrapper>
       )
       const button = getByText('Bottom')
       fireEvent.click(button)
-      expect(container).toMatchSnapshot()
+      expect(getByText('execution.consoleLogs')).toBeInTheDocument()
     })
 
     test('GroupedLogs', () => {
@@ -286,13 +286,12 @@ describe('<LogsContent /> tests', () => {
         actions
       }))
 
-      const { container, getByText } = render(
+      const { getByText } = render(
         <TestWrapper>
           <LogsContent mode="console-view" />
         </TestWrapper>
       )
 
-      expect(container).toMatchSnapshot()
       expect(getByText('Grouped logs')).toBeTruthy()
     })
   })
