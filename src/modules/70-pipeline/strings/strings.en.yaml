@@ -512,6 +512,7 @@ manifestType:
     title: Artifact Bundle
     artifactBundleType: Artifact Bundle Type
     deployableArtifactPath: Deployable Artifact Path
+    artifactPathPlaceholder: the relative path of the artifact present in the bundle
 manifestTypeLabels:
   K8sManifest: K8s Manifest
   ValuesYaml: Values YAML

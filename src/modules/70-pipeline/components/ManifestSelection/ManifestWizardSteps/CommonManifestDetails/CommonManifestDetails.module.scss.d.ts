@@ -25,6 +25,7 @@ declare const styles: {
   readonly pathLabel: string
   readonly runtimeInput: string
   readonly saveBtn: string
+  readonly tasManifestWidth60: string
   readonly text: string
   readonly tooltip: string
   readonly tooltipCls: string

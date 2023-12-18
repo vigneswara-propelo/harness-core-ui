@@ -202,7 +202,7 @@ export function TasManifestWithArtifactBundle({
                 className={css.manifestForm}
               >
                 <div className={css.manifestStepWidth}>
-                  <div className={css.halfWidth}>
+                  <div className={css.tasManifestWidth60}>
                     <FormInput.Text
                       name="identifier"
                       label={getString('pipeline.manifestType.manifestIdentifier')}
@@ -210,7 +210,7 @@ export function TasManifestWithArtifactBundle({
                       isIdentifier={true}
                     />
                   </div>
-                  <div className={css.halfWidth}>
+                  <div className={css.tasManifestWidth60}>
                     <FormInput.Select
                       name="cfCliVersion"
                       label={getString('pipeline.manifestType.cfCliVersion')}
@@ -219,7 +219,7 @@ export function TasManifestWithArtifactBundle({
                     />
                   </div>
 
-                  <div className={css.halfWidth}>
+                  <div className={css.tasManifestWidth60}>
                     <FormInput.Select
                       name="artifactBundleType"
                       label={getString('pipeline.manifestType.artifactBundle.artifactBundleType')}
@@ -229,7 +229,7 @@ export function TasManifestWithArtifactBundle({
                   </div>
 
                   <div
-                    className={cx(css.halfWidth, {
+                    className={cx(css.tasManifestWidth60, {
                       [css.runtimeInput]:
                         getMultiTypeFromValue(formik.values?.deployableUnitPath) === MultiTypeInputType.RUNTIME
                     })}
@@ -238,7 +238,7 @@ export function TasManifestWithArtifactBundle({
                       name="deployableUnitPath"
                       label={getString('pipeline.manifestType.artifactBundle.deployableArtifactPath')}
                       placeholder={getString('common.enterPlaceholder', {
-                        name: getString('pipeline.manifestType.artifactBundle.deployableArtifactPath')
+                        name: getString('pipeline.manifestType.artifactBundle.artifactPathPlaceholder')
                       })}
                       multiTextInputProps={{
                         allowableTypes,
@@ -261,7 +261,7 @@ export function TasManifestWithArtifactBundle({
                   </div>
 
                   <div
-                    className={cx(css.halfWidth, {
+                    className={cx(css.tasManifestWidth60, {
                       [css.runtimeInput]:
                         getMultiTypeFromValue(formik.values?.manifestPath) === MultiTypeInputType.RUNTIME
                     })}

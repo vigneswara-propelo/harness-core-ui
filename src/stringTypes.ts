@@ -4933,6 +4933,7 @@ export interface StringsMap {
   'pipeline.manifestType.addValuesYamlPath': string
   'pipeline.manifestType.addVarsYAMLPath': string
   'pipeline.manifestType.artifactBundle.artifactBundleType': string
+  'pipeline.manifestType.artifactBundle.artifactPathPlaceholder': string
   'pipeline.manifestType.artifactBundle.deployableArtifactPath': string
   'pipeline.manifestType.artifactBundle.title': string
   'pipeline.manifestType.associatedValues': string
