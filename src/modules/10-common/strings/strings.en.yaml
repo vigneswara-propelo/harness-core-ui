@@ -84,6 +84,7 @@ readOnly: Read Only
 editYaml: Edit YAML
 provisioner: Provisioner
 templates: Templates
+selectProvider: Provider
 xAndY: '{{x}} and {{y}}'
 refreshDelegateLogs: Refresh Delegate Logs
 noDelegateLogs: Delegate Tasks Logs are not generated for this step

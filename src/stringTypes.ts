@@ -1169,6 +1169,7 @@ export interface StringsMap {
   'common.selectName': string
   'common.selectNameManually': string
   'common.selectProject': string
+  'common.selectProvider': string
   'common.selectRepository': string
   'common.selectScopeSubtitle': string
   'common.selectService': string

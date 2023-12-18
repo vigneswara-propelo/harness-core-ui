@@ -30,6 +30,7 @@ import {
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
@@ -37,6 +38,7 @@ import type { StringsMap } from 'stringTypes'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import ProviderSelect from './K8sProvider'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
@@ -66,6 +68,7 @@ function K8BGDeployWidget(props: K8BGDeployProps, formikRef: StepFormikFowardRef
   const { initialValues, onUpdate, isNewStep = true, readonly, onChange, stepViewType, allowableTypes } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { CDS_K8S_TRAFFIC_ROUTING_NG } = useFeatureFlags()
   return (
     <>
       <Formik<K8sBGDeployData>
@@ -111,6 +114,11 @@ function K8BGDeployWidget(props: K8BGDeployProps, formikRef: StepFormikFowardRef
                   }}
                 />
               </div>
+              {CDS_K8S_TRAFFIC_ROUTING_NG && (
+                <div className={cx(stepCss.formGroup, stepCss.sm)}>
+                  <ProviderSelect name="spec.trafficRouting.provider" />
+                </div>
+              )}
               <Accordion className={stepCss.accordion}>
                 <Accordion.Panel
                   id="optional-config"
