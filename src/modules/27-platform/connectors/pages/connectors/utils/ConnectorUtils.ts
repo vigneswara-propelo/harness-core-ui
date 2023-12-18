@@ -1442,8 +1442,7 @@ export const buildGcpSMPayload = (formData: FormData): ConnectorRequestBody => {
       ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
       credentialsRef: formData?.credentialsRef?.referenceString,
       assumeCredentialsOnDelegate: formData?.assumeCredentialsOnDelegate,
-      default: formData.default,
-      proxy: formData?.proxy
+      default: formData.default
     }
   }
   return { connector: savedData }
@@ -1828,7 +1827,8 @@ export const buildGcpPayload = (formData: FormData) => {
                 serviceAccountEmail: formData.serviceAccountEmail
               }
             : null
-      }
+      },
+      proxy: formData?.proxy
     }
   }
 
