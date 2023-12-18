@@ -306,9 +306,9 @@ describe('Inline Input Set Error Exp', () => {
 
     const reconcileDialog = findDialogContainer() as HTMLElement
     await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
-    const removeInvalidFieldBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
+    const updateInvalidFieldBtn = await screen.findByRole('button', { name: 'update' })
 
-    await userEvent.click(removeInvalidFieldBtn)
+    await userEvent.click(updateInvalidFieldBtn)
     await waitFor(() => expect(pipelineng.useUpdateInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(mockSuccessHandler).toHaveBeenCalled())
   })
@@ -417,8 +417,8 @@ describe('Inline Input Set Error Exp', () => {
 
     const reconcileDialog = findDialogContainer() as HTMLElement
     await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
-    const removeInvalidFieldBtn = screen.getByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
-    await userEvent.click(removeInvalidFieldBtn)
+    const updateInvalidFieldBtn = screen.getByRole('button', { name: 'update' })
+    await userEvent.click(updateInvalidFieldBtn)
     await waitFor(() => expect(pipelineng.useUpdateInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(mockErrorHandler).toHaveBeenCalled())
   })
@@ -433,9 +433,9 @@ describe('Inline Input Set Error Exp', () => {
 
     const reconcileDialog = findDialogContainer() as HTMLElement
     const retryBtn = await screen.findByRole('button', { name: /retry/i })
-    const removeInvalidFieldBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
+    const updateInvalidFieldBtn = await screen.findByRole('button', { name: 'update' })
 
-    expect(removeInvalidFieldBtn).toBeDisabled()
+    expect(updateInvalidFieldBtn).toBeDisabled()
     await userEvent.click(retryBtn)
     expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
     await waitFor(() => expect(reconcileDialog).toBeTruthy())
@@ -452,8 +452,8 @@ describe('Inline Input Set Error Exp', () => {
 
     const reconcileDialog = findDialogContainer() as HTMLElement
     await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
-    const removeInvalidFieldBtn = screen.getByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
-    await userEvent.click(removeInvalidFieldBtn)
+    const updateInvalidFieldBtn = screen.getByRole('button', { name: 'update' })
+    await userEvent.click(updateInvalidFieldBtn)
     expect(pipelineng.useUpdateInputSetForPipeline).toHaveBeenCalled()
     const loadingMessage = await findByTextBody(reconcileDialog, 'Loading, please wait...')
     await waitFor(() => expect(loadingMessage).toBeInTheDocument())
@@ -486,8 +486,8 @@ describe('Old Git Sync Input Set Error Exp', () => {
 
     const reconcileDialog = findDialogContainer() as HTMLElement
     await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
-    const removeInvalidFieldBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
-    await userEvent.click(removeInvalidFieldBtn)
+    const updateInvalidFieldBtn = await screen.findByRole('button', { name: 'update' })
+    await userEvent.click(updateInvalidFieldBtn)
     let gitSaveBtn: HTMLElement
     await waitFor(async () => {
       const portalDiv = findDialogContainer() as HTMLElement
@@ -569,8 +569,8 @@ describe('Remote Git Sync Input Set Error Exp', () => {
 
     const reconcileDialog = findDialogContainer() as HTMLElement
     await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
-    const removeInvalidFieldBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
-    await userEvent.click(removeInvalidFieldBtn)
+    const updateInvalidFieldBtn = await screen.findByRole('button', { name: 'update' })
+    await userEvent.click(updateInvalidFieldBtn)
     let gitSaveBtn: HTMLElement
     await waitFor(async () => {
       const portalDiv = findDialogContainer() as HTMLElement

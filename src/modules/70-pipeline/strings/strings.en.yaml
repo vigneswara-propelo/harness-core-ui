@@ -974,7 +974,6 @@ inputSets:
   noInputSetsCreated: There are no input sets created
   overlayISHelperText: Selected inputs will be applied in the order listed. Drag to reorder the input sets.
   invalidFields: Invalid Fields
-  removeInvalidFields: Remove Invalid Fields
   editInYamlView: Edit in YAML view
   invalidInputSetDesc1: Your input set is not valid anymore because you do not have any pipeline runtime inputs. You may delete this input set, update your pipeline or go back to the Input Set list.
   invalidInputSetDesc2: Your input set is not valid anymore because you do not have any pipeline runtime inputs. You can either delete this input set or navigate to the Input Set list.

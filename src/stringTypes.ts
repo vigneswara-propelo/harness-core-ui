@@ -4822,7 +4822,6 @@ export interface StringsMap {
   'pipeline.inputSets.noRuntimeInputsWhileExecution': string
   'pipeline.inputSets.overlayISHelperText': string
   'pipeline.inputSets.overlayISUpdated': string
-  'pipeline.inputSets.removeInvalidFields': string
   'pipeline.inputSets.selectPlaceholder': string
   'pipeline.inputSets.selectedOutOf': string
   'pipeline.inputs.description': string

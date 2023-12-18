@@ -80,11 +80,11 @@ describe('INPUT SET SELECTOR -> Input Sets Error Exp', () => {
 
     const reconcileDialog = findDialogContainer() as HTMLElement
     await findByText(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
-    const removeInvalidFieldBtn = await screen.findAllByRole('button', {
-      name: 'pipeline.inputSets.removeInvalidFields'
+    const updateInvalidFieldBtn = await screen.findAllByRole('button', {
+      name: 'update'
     })
     expect(reconcileDialog).toMatchSnapshot('Reconcile Dialog - Input Set')
-    await userEvent.click(removeInvalidFieldBtn[0])
+    await userEvent.click(updateInvalidFieldBtn[0])
     await waitFor(() => expect(pipelineng.useUpdateInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(screen.getByText('is1')).toBeDefined())
   })
@@ -109,11 +109,11 @@ describe('INPUT SET SELECTOR -> Input Sets Error Exp', () => {
 
     const reconcileDialog = findDialogContainer() as HTMLElement
     await findByText(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
-    const removeInvalidFieldBtn = await screen.findAllByRole('button', {
-      name: 'pipeline.inputSets.removeInvalidFields'
+    const updateInvalidFieldBtn = await screen.findAllByRole('button', {
+      name: 'update'
     })
     expect(reconcileDialog).toMatchSnapshot('Reconcile Dialog - Overlay IS')
-    await userEvent.click(removeInvalidFieldBtn[0])
+    await userEvent.click(updateInvalidFieldBtn[0])
     await waitFor(() => expect(pipelineng.useUpdateOverlayInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(screen.getByText('is1')).toBeDefined())
   })

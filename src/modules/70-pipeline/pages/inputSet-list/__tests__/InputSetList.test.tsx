@@ -394,10 +394,10 @@ describe('Input Set List - Reconcile Button', () => {
 
     const reconcileDialog = findDialogContainer() as HTMLElement
     await findByText(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
-    const removeInvalidFieldBtn = await findByRole(reconcileDialog, 'button', {
-      name: 'pipeline.inputSets.removeInvalidFields'
+    const updateInvalidFieldBtn = await findByRole(reconcileDialog, 'button', {
+      name: 'update'
     })
-    await userEvent.click(removeInvalidFieldBtn)
+    await userEvent.click(updateInvalidFieldBtn)
     await waitFor(() => expect(pipelineng.useUpdateInputSetForPipeline).toHaveBeenCalled())
   })
 
@@ -412,10 +412,10 @@ describe('Input Set List - Reconcile Button', () => {
     expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
 
     await screen.findAllByText('pipeline.inputSetErrorStrip.reconcileDialogTitle')
-    const removeInvalidFieldBtn = await screen.findAllByRole('button', {
-      name: 'pipeline.inputSets.removeInvalidFields'
+    const updateInvalidFieldBtn = await screen.findAllByRole('button', {
+      name: 'update'
     })
-    await userEvent.click(removeInvalidFieldBtn[0])
+    await userEvent.click(updateInvalidFieldBtn[0])
     await waitFor(() => expect(pipelineng.useUpdateOverlayInputSetForPipeline).toHaveBeenCalled())
   })
 

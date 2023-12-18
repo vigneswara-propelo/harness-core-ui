@@ -257,15 +257,14 @@ exports[`Old Git Sync Input Set Error Exp should open reconcile dialog on clicki
                 class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-bottom StyledProps--padding-top-large StyledProps--padding-right-xxxlarge StyledProps--padding-bottom-large StyledProps--padding-left-xxxlarge"
               >
                 <button
-                  aria-label="pipeline.inputSets.removeInvalidFields"
-                  class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-danger Button--with-current-color"
-                  style="width: 232px;"
+                  aria-label="update"
+                  class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
                   type="button"
                 >
                   <span
                     class="bp3-button-text"
                   >
-                    pipeline.inputSets.removeInvalidFields
+                    update
                   </span>
                 </button>
               </div>

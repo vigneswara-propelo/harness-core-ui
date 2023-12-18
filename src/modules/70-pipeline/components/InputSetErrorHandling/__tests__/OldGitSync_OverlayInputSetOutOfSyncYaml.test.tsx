@@ -231,10 +231,10 @@ describe('Old Git Sync Input Set Error Exp', () => {
 
     const reconcileDialog = document.getElementsByClassName('bp3-portal')[2] as HTMLElement
     await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
-    const removeInvalidFieldBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
+    const updateInvalidFieldBtn = await screen.findByRole('button', { name: 'update' })
     expect(reconcileDialog).toMatchSnapshot('Reconcile Dialog - Old Git Sync')
 
-    await userEvent.click(removeInvalidFieldBtn)
+    await userEvent.click(updateInvalidFieldBtn)
     let gitSaveBtn: HTMLElement
     await waitFor(async () => {
       const portalDiv = document.getElementsByClassName('bp3-portal')[2] as HTMLElement
@@ -265,8 +265,8 @@ describe('Old Git Sync Input Set Error Exp', () => {
 
     const reconcileDialog = document.getElementsByClassName('bp3-portal')[2] as HTMLElement
     await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
-    const removeInvalidFieldBtn = screen.getByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
-    await userEvent.click(removeInvalidFieldBtn)
+    const updateInvalidFieldBtn = screen.getByRole('button', { name: 'update' })
+    await userEvent.click(updateInvalidFieldBtn)
     await waitFor(() => expect(pipelineng.useUpdateOverlayInputSetForPipeline).toHaveBeenCalled())
   })
 

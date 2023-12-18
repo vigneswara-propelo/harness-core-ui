@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { Container, Layout, PageSpinner, Text } from '@harness/uicore'
-import { Color, FontVariation } from '@harness/design-system'
+import { Color, FontVariation, Intent } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
@@ -122,9 +122,8 @@ export function ReconcileInputSetDialog({
           padding={{ top: 'large', right: 'xxxlarge', bottom: 'large', left: 'xxxlarge' }}
         >
           <RbacButton
-            text={getString('pipeline.inputSets.removeInvalidFields')}
-            width={232}
-            intent="danger"
+            text={getString('update')}
+            intent={Intent.PRIMARY}
             disabled={!!error}
             permission={{
               resourceScope: {

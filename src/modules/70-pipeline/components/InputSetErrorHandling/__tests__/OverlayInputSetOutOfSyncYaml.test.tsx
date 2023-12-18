@@ -217,8 +217,8 @@ describe('Inline Overlay Input Set Error Exp', () => {
     await clickOnReconcileButton()
 
     await screen.findByText('pipeline.inputSetErrorStrip.reconcileDialogTitle')
-    const removeInvalidFieldBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
-    await userEvent.click(removeInvalidFieldBtn)
+    const updateInvalidFieldBtn = await screen.findByRole('button', { name: 'update' })
+    await userEvent.click(updateInvalidFieldBtn)
     await waitFor(() => expect(pipelineng.useUpdateOverlayInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(mockSuccessHandler).toHaveBeenCalled())
   })
