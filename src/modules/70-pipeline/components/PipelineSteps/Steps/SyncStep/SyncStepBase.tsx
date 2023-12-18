@@ -42,6 +42,7 @@ import { SyncStepFormContentInterface, SyncStepData, ApplicationFilters, policyO
 import { useApplicationsFilter } from './useApplicationsFilter'
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import css from './SyncStep.module.scss'
 
 function FormContent({
   formik,
@@ -150,7 +151,7 @@ function FormContent({
                 />
               </div>
               <div className={stepCss.grid2Coloumns}>
-                <div className={cx(stepCss.md, stepCss.flex)}>
+                <div className={stepCss.flex}>
                   <FormMultiTypeCheckboxField
                     name="spec.prune"
                     style={{ flex: 1 }}
@@ -166,7 +167,7 @@ function FormContent({
                     multiTypeTextbox={{ expressions, allowableTypes }}
                   />
                 </div>
-                <div className={cx(stepCss.md, stepCss.flex)}>
+                <div className={stepCss.flex}>
                   <FormMultiTypeCheckboxField
                     name="spec.dryRun"
                     style={{ flex: 1 }}
@@ -182,7 +183,7 @@ function FormContent({
                     multiTypeTextbox={{ expressions, allowableTypes }}
                   />
                 </div>
-                <div className={cx(stepCss.md, stepCss.flex)}>
+                <div className={stepCss.flex}>
                   <FormMultiTypeCheckboxField
                     name="spec.applyOnly"
                     style={{ flex: 1 }}
@@ -198,7 +199,7 @@ function FormContent({
                     multiTypeTextbox={{ expressions, allowableTypes }}
                   />
                 </div>
-                <div className={cx(stepCss.md, stepCss.flex)}>
+                <div className={stepCss.flex}>
                   <FormMultiTypeCheckboxField
                     name="spec.forceApply"
                     style={{ flex: 1 }}
@@ -215,74 +216,74 @@ function FormContent({
                   />
                 </div>
               </div>
-              <div className={stepCss.md}>
-                <Label style={{ marginBottom: '10px' }}>{getString('pipeline.syncStep.syncOptionsLabel')}</Label>
-                <div className={stepCss.grid2Coloumns}>
-                  <div className={cx(stepCss.md, stepCss.flex)}>
-                    <FormMultiTypeCheckboxField
-                      name="spec.syncOptions.skipSchemaValidation"
-                      style={{ flex: 1 }}
-                      onChange={(value, _valueType, type) => {
-                        if (type === MultiTypeInputType.FIXED) {
-                          formik.setFieldValue('spec.syncOptions.skipSchemaValidation', value || false)
-                        } else {
-                          formik.setFieldValue('spec.syncOptions.skipSchemaValidation', value)
-                        }
-                      }}
-                      label={getString('pipeline.syncStep.skipSchemaValidation')}
-                      disabled={readonly}
-                      multiTypeTextbox={{ expressions, allowableTypes }}
-                    />
-                  </div>
-                  <div className={cx(stepCss.md, stepCss.flex)}>
-                    <FormMultiTypeCheckboxField
-                      name="spec.syncOptions.autoCreateNamespace"
-                      label={getString('pipeline.syncStep.autoCreateNamespace')}
-                      onChange={(value, _valueType, type) => {
-                        if (type === MultiTypeInputType.FIXED) {
-                          formik.setFieldValue('spec.syncOptions.autoCreateNamespace', value || false)
-                        } else {
-                          formik.setFieldValue('spec.syncOptions.autoCreateNamespace', value)
-                        }
-                      }}
-                      style={{ flex: 1 }}
-                      disabled={readonly}
-                      multiTypeTextbox={{ expressions, allowableTypes }}
-                    />
-                  </div>
-                  <div className={cx(stepCss.md, stepCss.flex)}>
-                    <FormMultiTypeCheckboxField
-                      name="spec.syncOptions.pruneResourcesAtLast"
-                      label={getString('pipeline.syncStep.pruneResourcesAtLast')}
-                      onChange={(value, _valueType, type) => {
-                        if (type === MultiTypeInputType.FIXED) {
-                          formik.setFieldValue('spec.syncOptions.pruneResourcesAtLast', value || false)
-                        } else {
-                          formik.setFieldValue('spec.syncOptions.pruneResourcesAtLast', value)
-                        }
-                      }}
-                      style={{ flex: 1 }}
-                      disabled={readonly}
-                      multiTypeTextbox={{ expressions, allowableTypes }}
-                    />
-                  </div>
-                  <div className={cx(stepCss.md, stepCss.flex)}>
-                    <FormMultiTypeCheckboxField
-                      name="spec.syncOptions.applyOutOfSyncOnly"
-                      label={getString('pipeline.syncStep.applyOutOfSyncOnly')}
-                      onChange={(value, _valueType, type) => {
-                        if (type === MultiTypeInputType.FIXED) {
-                          formik.setFieldValue('spec.syncOptions.applyOutOfSyncOnly', value || false)
-                        } else {
-                          formik.setFieldValue('spec.syncOptions.applyOutOfSyncOnly', value)
-                        }
-                      }}
-                      style={{ flex: 1 }}
-                      disabled={readonly}
-                      multiTypeTextbox={{ expressions, allowableTypes }}
-                    />
-                  </div>
+              <Label style={{ marginBottom: '10px' }}>{getString('pipeline.syncStep.syncOptionsLabel')}</Label>
+              <div className={stepCss.grid2Coloumns}>
+                <div className={stepCss.flex}>
+                  <FormMultiTypeCheckboxField
+                    name="spec.syncOptions.skipSchemaValidation"
+                    style={{ flex: 1 }}
+                    onChange={(value, _valueType, type) => {
+                      if (type === MultiTypeInputType.FIXED) {
+                        formik.setFieldValue('spec.syncOptions.skipSchemaValidation', value || false)
+                      } else {
+                        formik.setFieldValue('spec.syncOptions.skipSchemaValidation', value)
+                      }
+                    }}
+                    label={getString('pipeline.syncStep.skipSchemaValidation')}
+                    disabled={readonly}
+                    multiTypeTextbox={{ expressions, allowableTypes }}
+                  />
                 </div>
+                <div className={stepCss.flex}>
+                  <FormMultiTypeCheckboxField
+                    name="spec.syncOptions.autoCreateNamespace"
+                    label={getString('pipeline.syncStep.autoCreateNamespace')}
+                    onChange={(value, _valueType, type) => {
+                      if (type === MultiTypeInputType.FIXED) {
+                        formik.setFieldValue('spec.syncOptions.autoCreateNamespace', value || false)
+                      } else {
+                        formik.setFieldValue('spec.syncOptions.autoCreateNamespace', value)
+                      }
+                    }}
+                    style={{ flex: 1 }}
+                    disabled={readonly}
+                    multiTypeTextbox={{ expressions, allowableTypes }}
+                  />
+                </div>
+                <div className={stepCss.flex}>
+                  <FormMultiTypeCheckboxField
+                    name="spec.syncOptions.pruneResourcesAtLast"
+                    label={getString('pipeline.syncStep.pruneResourcesAtLast')}
+                    onChange={(value, _valueType, type) => {
+                      if (type === MultiTypeInputType.FIXED) {
+                        formik.setFieldValue('spec.syncOptions.pruneResourcesAtLast', value || false)
+                      } else {
+                        formik.setFieldValue('spec.syncOptions.pruneResourcesAtLast', value)
+                      }
+                    }}
+                    style={{ flex: 1 }}
+                    disabled={readonly}
+                    multiTypeTextbox={{ expressions, allowableTypes }}
+                  />
+                </div>
+                <div className={stepCss.flex}>
+                  <FormMultiTypeCheckboxField
+                    name="spec.syncOptions.applyOutOfSyncOnly"
+                    label={getString('pipeline.syncStep.applyOutOfSyncOnly')}
+                    onChange={(value, _valueType, type) => {
+                      if (type === MultiTypeInputType.FIXED) {
+                        formik.setFieldValue('spec.syncOptions.applyOutOfSyncOnly', value || false)
+                      } else {
+                        formik.setFieldValue('spec.syncOptions.applyOutOfSyncOnly', value)
+                      }
+                    }}
+                    style={{ flex: 1 }}
+                    disabled={readonly}
+                    multiTypeTextbox={{ expressions, allowableTypes }}
+                  />
+                </div>
+              </div>
+              <div>
                 <FormInput.Select
                   usePortal
                   label={getString('pipeline.syncStep.prunePropagationPolicy')}
@@ -291,7 +292,7 @@ function FormContent({
                   placeholder={getString('pipeline.syncStep.pruneProgrationPolicyPlaceholder')}
                   items={policyOptions}
                 />
-                <div className={cx(stepCss.formGroup, stepCss.md, stepCss.flex)}>
+                <div className={cx(stepCss.formGroup, stepCss.md, stepCss.flex, css.paddingRight40)}>
                   <FormMultiTypeCheckboxField
                     name="spec.syncOptions.replaceResources"
                     label={getString('pipeline.syncStep.replaceResources')}
@@ -307,7 +308,7 @@ function FormContent({
                     multiTypeTextbox={{ expressions, allowableTypes }}
                   />
                 </div>
-                <div className={cx(stepCss.formGroup, stepCss.md, stepCss.flex)}>
+                <div className={cx(stepCss.formGroup, stepCss.md, stepCss.flex, css.paddingRight40)}>
                   <FormMultiTypeCheckboxField
                     name="spec.retry"
                     label={getString('retry')}
@@ -321,7 +322,7 @@ function FormContent({
                 </div>
                 {formik.values.spec?.retry === true && (
                   <div className={cx(stepCss.grid2Coloumns, stepCss.rowGap)}>
-                    <div className={cx(stepCss.md, stepCss.flex)}>
+                    <div className={stepCss.flex}>
                       <FormInput.MultiTextInput
                         label={getString('pipeline.syncStep.limit')}
                         style={{ flexGrow: 1, marginBottom: 0 }}
@@ -344,7 +345,7 @@ function FormContent({
                         />
                       )}
                     </div>
-                    <div className={cx(stepCss.md, stepCss.flex)}>
+                    <div className={stepCss.flex}>
                       <FormInput.MultiTextInput
                         label={getString('pipeline.syncStep.increaseBackoffByFactor')}
                         style={{ flexGrow: 1, marginBottom: 0 }}
@@ -367,7 +368,7 @@ function FormContent({
                         />
                       )}
                     </div>
-                    <div className={stepCss.md}>
+                    <div>
                       <FormMultiTypeDurationField
                         name={'spec.retryStrategy.baseBackoffDuration'}
                         shallAppendSpace={false}
@@ -380,7 +381,7 @@ function FormContent({
                         }}
                       />
                     </div>
-                    <div className={stepCss.md}>
+                    <div>
                       <FormMultiTypeDurationField
                         name={'spec.retryStrategy.maxBackoffDuration'}
                         shallAppendSpace={false}
