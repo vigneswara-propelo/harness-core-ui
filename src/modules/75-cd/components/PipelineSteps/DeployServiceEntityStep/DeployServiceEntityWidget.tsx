@@ -260,7 +260,9 @@ export default function DeployServiceEntityWidget({
         }}
         initialValues={getInitialValues(initialValues)}
         validationSchema={setupModeType === setupMode.DIFFERENT && getValidationSchema(getString)}
-        enableReinitialize
+        // !Do not add enableReinitialize to deployService form - enableReinitialize causes form to update multiple times
+        //  when expressions are added for service fields which results in flipping/erase behaviour
+        // Ticket Ref -> https://harness.atlassian.net/browse/CDS-85866
       >
         {formik => {
           window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.SERVICE }))
