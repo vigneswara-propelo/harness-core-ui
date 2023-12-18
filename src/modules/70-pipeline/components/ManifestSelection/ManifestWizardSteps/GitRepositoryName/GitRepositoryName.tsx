@@ -10,6 +10,7 @@ import { isEmpty } from 'lodash-es'
 import { AllowedTypes, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { String, useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
 
@@ -31,11 +32,16 @@ function GitRepositoryName({
   isReadonly = false
 }: GitRepositoryNameProps): React.ReactElement {
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   return (
     <div className={helmcss.repoNameSection}>
       <div className={helmcss.repoName}>
         <FormInput.MultiTextInput
-          multiTextInputProps={{ expressions, allowableTypes }}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
           placeholder={getString('pipeline.manifestType.repoNamePlaceholder')}
           label={getString('common.repositoryName')}
           name="repoName"

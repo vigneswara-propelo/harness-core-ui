@@ -14,6 +14,7 @@ import { Layout, FormInput, getMultiTypeFromValue, MultiTypeInputType, StepProps
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ServiceDefinition } from 'services/cd-ng'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { CommonManifestDataType, ManifestTypes } from '../../ManifestInterface'
 import { gitFetchTypeList, GitFetchTypes, GitRepoName, ManifestDataType, ManifestStoreMap } from '../../Manifesthelper'
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
@@ -58,6 +59,7 @@ export function ManifestDetailsCoreSection({
       : GitRepoName.Account
 
   const accountUrl = connectionType === GitRepoName.Account ? getAccountUrl(prevStepData) : ''
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const isOnlyFileTypeManifest =
     selectedManifest &&
@@ -103,7 +105,11 @@ export function ManifestDetailsCoreSection({
             })}
           >
             <FormInput.MultiTextInput
-              multiTextInputProps={{ expressions, allowableTypes }}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+              }}
               label={getString('pipelineSteps.deploy.inputSet.branch')}
               placeholder={getString('pipeline.manifestType.branchPlaceholder')}
               name="branch"
@@ -130,7 +136,11 @@ export function ManifestDetailsCoreSection({
             })}
           >
             <FormInput.MultiTextInput
-              multiTextInputProps={{ expressions, allowableTypes }}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+              }}
               label={getString('pipeline.manifestType.commitId')}
               placeholder={getString('pipeline.manifestType.commitPlaceholder')}
               name="commitId"

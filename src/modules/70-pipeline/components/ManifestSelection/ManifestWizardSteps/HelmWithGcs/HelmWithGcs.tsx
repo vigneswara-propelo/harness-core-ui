@@ -34,6 +34,7 @@ import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/Config
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useToaster } from '@common/components'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
@@ -86,6 +87,7 @@ function HelmWithGcs({
   const [selectedHelmVersion, setHelmVersion] = useState(initialValues?.spec?.helmVersion ?? 'V3')
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
   const { chartVersions, loadingChartVersions, chartVersionsError, fetchChartVersions, setLastQueryData } =
@@ -288,7 +290,11 @@ function HelmWithGcs({
                       label={getString('pipeline.manifestType.bucketName')}
                       placeholder={getString('pipeline.manifestType.bucketNamePlaceholder')}
                       name="bucketName"
-                      multiTextInputProps={{ expressions, allowableTypes }}
+                      multiTextInputProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                     />
                     {getMultiTypeFromValue(formik.values?.bucketName) === MultiTypeInputType.RUNTIME && (
                       <ConfigureOptions
@@ -323,6 +329,7 @@ function HelmWithGcs({
                           items: bucketOptions,
                           allowCreatingNewItems: true
                         },
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                         onFocus: onBucketNameFocus,
                         onChange: () => {
                           resetFieldValue(formik, 'chartVersion')
@@ -353,7 +360,11 @@ function HelmWithGcs({
                 >
                   <FormInput.MultiTextInput
                     label={getString('chartPath')}
-                    multiTextInputProps={{ expressions, allowableTypes }}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     placeholder={getString('pipeline.manifestType.chartPathPlaceholder')}
                     name="folderPath"
                     isOptional={true}
@@ -383,7 +394,11 @@ function HelmWithGcs({
                 >
                   <FormInput.MultiTextInput
                     name="chartName"
-                    multiTextInputProps={{ expressions, allowableTypes }}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     label={getString('pipeline.manifestType.http.chartName')}
                     placeholder={getString('pipeline.manifestType.http.chartNamePlaceHolder')}
                     onChange={() => {
@@ -426,6 +441,7 @@ function HelmWithGcs({
                     multiTypeInputProps={{
                       expressions,
                       disabled: isReadonly,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       allowableTypes,
                       selectProps: {
                         noResults: (
@@ -501,7 +517,11 @@ function HelmWithGcs({
                     label={getString('pipeline.manifestType.subChart')}
                     placeholder={getString('pipeline.manifestType.subChartPlaceholder')}
                     name="subChartPath"
-                    multiTextInputProps={{ expressions, allowableTypes }}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     isOptional
                   />
                   {getMultiTypeFromValue(formik.values?.subChartPath) === MultiTypeInputType.RUNTIME && (

@@ -14,6 +14,7 @@ import { useStrings } from 'framework/strings'
 import type { ManifestConfig } from 'services/cd-ng'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeCheckboxField } from '@common/components'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { CommonManifestDataType, HarnessFileStoreDataType, ManifestTypes } from '../../ManifestInterface'
 import { allowedManifestForDeclarativeRollback } from '../../Manifesthelper'
 import css from './CommonManifestDetails.module.scss'
@@ -39,6 +40,7 @@ export function ManifestDetailsAdvancedSection({
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning
   const isSkipVersioningDisabled =
     isBoolean(formik?.values?.enableDeclarativeRollback) && !!formik?.values?.enableDeclarativeRollback
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <Accordion activeId={isActiveAdvancedStep ? getString('advancedTitle') : ''} className={css.advancedStepOpen}>
@@ -61,7 +63,11 @@ export function ManifestDetailsAdvancedSection({
                 <FormMultiTypeCheckboxField
                   name="enableDeclarativeRollback"
                   label={getString('pipeline.manifestType.enableDeclarativeRollback')}
-                  multiTypeTextbox={{ expressions, allowableTypes }}
+                  multiTypeTextbox={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   className={cx(css.checkbox, css.marginTop)}
                 />
                 {getMultiTypeFromValue(formik.values?.enableDeclarativeRollback) === MultiTypeInputType.RUNTIME && (
@@ -84,7 +90,12 @@ export function ManifestDetailsAdvancedSection({
                 key={isSkipVersioningDisabled.toString()}
                 name="skipResourceVersioning"
                 label={getString('skipResourceVersion')}
-                multiTypeTextbox={{ expressions, allowableTypes, disabled: isSkipVersioningDisabled }}
+                multiTypeTextbox={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
+                  disabled: isSkipVersioningDisabled
+                }}
                 className={css.checkbox}
                 disabled={isSkipVersioningDisabled}
               />

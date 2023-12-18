@@ -61,7 +61,7 @@ function HelmAdvancedStepSection({
   const isSkipVersioningDisabled =
     isBoolean(formik?.values?.enableDeclarativeRollback) && !!formik?.values?.enableDeclarativeRollback
 
-  const { CDS_HELM_FETCH_CHART_METADATA_NG } = useFeatureFlags()
+  const { CDS_HELM_FETCH_CHART_METADATA_NG, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const { data: commandFlags, refetch: refetchCommandFlags } = useHelmCmdFlags({
     queryParams: {
@@ -107,7 +107,7 @@ function HelmAdvancedStepSection({
             name="enableDeclarativeRollback"
             label={getString('pipeline.manifestType.enableDeclarativeRollback')}
             className={cx(helmcss.checkbox, helmcss.halfWidth)}
-            multiTypeTextbox={{ expressions, allowableTypes }}
+            multiTypeTextbox={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           />
           {getMultiTypeFromValue(formik.values?.enableDeclarativeRollback) === MultiTypeInputType.RUNTIME && (
             <ConfigureOptions
@@ -130,7 +130,12 @@ function HelmAdvancedStepSection({
           name="skipResourceVersioning"
           label={getString('skipResourceVersion')}
           className={cx(helmcss.checkbox, helmcss.halfWidth)}
-          multiTypeTextbox={{ expressions, allowableTypes, disabled: isSkipVersioningDisabled }}
+          multiTypeTextbox={{
+            expressions,
+            allowableTypes,
+            disabled: isSkipVersioningDisabled,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
           disabled={isSkipVersioningDisabled}
         />
         {getMultiTypeFromValue(formik.values?.skipResourceVersioning) === MultiTypeInputType.RUNTIME && (
@@ -158,7 +163,12 @@ function HelmAdvancedStepSection({
               name="fetchHelmChartMetadata"
               label={getString('pipeline.manifestType.fetchHelmChartMetadata')}
               className={cx(helmcss.checkbox, helmcss.halfWidth)}
-              multiTypeTextbox={{ expressions, allowableTypes, disabled: isSkipVersioningDisabled }}
+              multiTypeTextbox={{
+                expressions,
+                allowableTypes,
+                disabled: isSkipVersioningDisabled,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+              }}
               disabled={isSkipVersioningDisabled}
             />
             {getMultiTypeFromValue(formik.values?.skipResourceVersioning) === MultiTypeInputType.RUNTIME && (

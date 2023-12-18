@@ -24,6 +24,7 @@ import { isBoolean } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { FormMultiTypeCheckboxField } from '@common/components'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useKustomizeCmdFlags } from 'services/cd-ng'
 import { useDeepCompareEffect } from '@common/hooks'
@@ -53,6 +54,7 @@ function KustomizeAdvancedStepSelection({
   const [commandFlagOptions, setCommandFlagOptions] = useState<SelectOption[]>([])
   const isSkipVersioningDisabled =
     isBoolean(formik?.values?.enableDeclarativeRollback) && !!formik?.values?.enableDeclarativeRollback
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const { data: commandFlags, refetch: refetchCommandFlags } = useKustomizeCmdFlags({
     lazy: true
@@ -98,7 +100,11 @@ function KustomizeAdvancedStepSelection({
                 label={getString('pipeline.manifestType.kustomizeYamlFolderPath')}
                 placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
                 name="kustomizeYamlFolderPath"
-                multiTextInputProps={{ expressions, allowableTypes }}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
               />
               {getMultiTypeFromValue(formik.values?.kustomizeYamlFolderPath) === MultiTypeInputType.RUNTIME && (
                 <ConfigureOptions
@@ -120,7 +126,7 @@ function KustomizeAdvancedStepSelection({
         <FormMultiTypeCheckboxField
           name="enableDeclarativeRollback"
           label={getString('pipeline.manifestType.enableDeclarativeRollback')}
-          multiTypeTextbox={{ expressions, allowableTypes }}
+          multiTypeTextbox={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           tooltipProps={{
             dataTooltipId: 'kustomizeEnableDeclarativeRollback'
           }}
@@ -145,7 +151,12 @@ function KustomizeAdvancedStepSelection({
           key={isSkipVersioningDisabled.toString()}
           name="skipResourceVersioning"
           label={getString('skipResourceVersion')}
-          multiTypeTextbox={{ expressions, allowableTypes, disabled: isSkipVersioningDisabled }}
+          multiTypeTextbox={{
+            expressions,
+            allowableTypes,
+            disabled: isSkipVersioningDisabled,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
           tooltipProps={{
             dataTooltipId: 'helmSkipResourceVersion'
           }}

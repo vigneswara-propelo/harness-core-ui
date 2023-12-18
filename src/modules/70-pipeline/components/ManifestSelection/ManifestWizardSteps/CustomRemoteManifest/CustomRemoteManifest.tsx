@@ -34,6 +34,7 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type {
   CustomManifestManifestDataType,
   CustomRemoteManifestManifestLastStepPrevStepData,
@@ -104,6 +105,7 @@ function CustomRemoteManifest({
   const { projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
   const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const getInitialValues = (): CustomManifestManifestDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
@@ -111,6 +113,7 @@ function CustomRemoteManifest({
     const paramsPaths = get(initialValues, 'spec.paramsPaths')
     const varsPaths = get(initialValues, 'spec.varsPaths')
     const autoScalerPath = get(initialValues, 'spec.autoScalerPath')
+
     if (specValues) {
       return {
         ...specValues,
@@ -385,7 +388,11 @@ function CustomRemoteManifest({
                     })}
                   >
                     <FormInput.MultiTextInput
-                      multiTextInputProps={{ expressions, allowableTypes }}
+                      multiTextInputProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                       label={getString('pipeline.manifestType.customRemoteExtractedFileLocation')}
                       placeholder={getString('pipeline.manifestType.customRemoteExtractedFileLocationPlaceholder')}
                       name="filePath"

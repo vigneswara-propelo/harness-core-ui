@@ -35,6 +35,7 @@ import { useQueryParams } from '@common/hooks'
 import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { usePermission } from '@rbac/hooks/usePermission'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { SelectOciHelmConnector } from './HelmWithOCI/HelmWithOCIEcr'
@@ -83,6 +84,7 @@ function ManifestStore({
   const [isLoadingConnectors, setIsLoadingConnectors] = useState<boolean>(true)
   const [selectedStore, setSelectedStore] = useState(prevStepData?.store ?? initialValues.store)
   const [multitypeInputValue, setMultiTypeValue] = useState<MultiTypeInputType | undefined>(undefined)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   function isValidConnectorStore(): boolean {
     return !!selectedStore && !doesStorehasConnector(selectedStore)
@@ -260,7 +262,11 @@ function ManifestStore({
                         projectIdentifier={projectIdentifier}
                         orgIdentifier={orgIdentifier}
                         width={400}
-                        multiTypeProps={{ expressions, allowableTypes }}
+                        multiTypeProps={{
+                          expressions,
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                        }}
                         isNewConnectorLabelVisible={
                           !(
                             getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME &&

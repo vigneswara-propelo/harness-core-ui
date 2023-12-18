@@ -44,6 +44,7 @@ import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/Rout
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   checkIfQueryParamsisNotEmpty,
   shouldFetchFieldOptions
@@ -93,6 +94,7 @@ export function ECSWithS3({
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const [lastQueryData, setLastQueryData] = React.useState({ region: '' })
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
 
@@ -327,6 +329,7 @@ export function ECSWithS3({
           multiTypeInputProps={{
             expressions,
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             selectProps: {
               noResults: (
                 <Text lineClamp={1} width={400} height={100} padding="small">
@@ -434,6 +437,7 @@ export function ECSWithS3({
                     multiTypeInputProps={{
                       expressions,
                       allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       onChange: selectedValue => {
                         const selectedValueString =
                           typeof selectedValue === 'string'

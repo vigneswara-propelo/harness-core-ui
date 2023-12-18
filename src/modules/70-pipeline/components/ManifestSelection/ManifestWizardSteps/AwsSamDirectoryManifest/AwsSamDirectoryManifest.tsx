@@ -28,6 +28,7 @@ import { FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper, ServiceDefinition } from 'services/cd-ng'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { AcceptableValue } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import type {
@@ -72,6 +73,7 @@ export function AwsSamDirectoryManifest({
   const { getString } = useStrings()
 
   const modifiedPrevStepData = defaultTo(prevStepData, editManifestModePrevStepData)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const gitConnectionType: string = modifiedPrevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
   const connectionType =
@@ -247,7 +249,11 @@ export function AwsSamDirectoryManifest({
                           })}
                         >
                           <FormInput.MultiTextInput
-                            multiTextInputProps={{ expressions, allowableTypes }}
+                            multiTextInputProps={{
+                              expressions,
+                              allowableTypes,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                            }}
                             label={getString('optionalField', {
                               name: getString('pipeline.manifestType.awsSamDirectory.samTemplateFile')
                             })}
