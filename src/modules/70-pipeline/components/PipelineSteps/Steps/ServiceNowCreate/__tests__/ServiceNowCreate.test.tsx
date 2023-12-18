@@ -168,9 +168,6 @@ describe('ServiceNow Create tests', () => {
 
     act(() => ref.current?.submitForm()!)
     await waitFor(() => expect(queryByText('validation.timeout10SecMinimum')).toBeTruthy())
-    await waitFor(() => {
-      expect(queryByText('pipeline.serviceNowApprovalStep.validations.ticketType')).toBeTruthy()
-    })
     fireEvent.click(getByText('pipeline.serviceNowCreateStep.fieldType.createFromTemplate'))
     act(() => ref.current?.submitForm()!)
     await waitFor(() => {

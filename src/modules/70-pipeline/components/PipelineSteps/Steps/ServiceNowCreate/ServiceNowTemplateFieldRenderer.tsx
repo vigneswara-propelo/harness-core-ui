@@ -85,7 +85,9 @@ export function ServiceNowTemplateFieldsRenderer(props: ServiceNowTemplateFields
   return templateFields && templateFields.length > 0 ? (
     <>
       {templateFields?.map((selectedField: ServiceNowFieldValueNG, index: number) => {
-        const ticketField = ticketFieldList?.find(item => item.key === selectedField.displayValue)
+        const ticketField: ServiceNowFieldNG | undefined = ticketFieldList?.find(
+          item => item.key === selectedField.displayValue
+        )
         const editableFieldIndex = editableFields?.findIndex(field => field.displayValue === selectedField.displayValue)
         return (
           <Layout.Horizontal className={css.alignCenter} key={selectedField.displayValue}>

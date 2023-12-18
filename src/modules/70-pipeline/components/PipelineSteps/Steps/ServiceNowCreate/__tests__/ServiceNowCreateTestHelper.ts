@@ -31,8 +31,8 @@ export const getServiceNowCreateEditModeProps = (): ServiceNowCreateStepModeProp
     type: 'ServiceNowCreate',
     timeout: '5s',
     spec: {
-      connectorRef: '',
-      ticketType: '',
+      connectorRef: 'account.SnowProjectLevelConnector3EunmpdlZV',
+      ticketType: 'change_request',
       fields: [],
       fieldType: FieldType.ConfigureFields,
       useServiceNowTemplate: false

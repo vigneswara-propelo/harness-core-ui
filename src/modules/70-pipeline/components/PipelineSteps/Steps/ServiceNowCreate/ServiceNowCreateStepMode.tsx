@@ -30,7 +30,7 @@ import {
   Text
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { IItemRendererProps, ItemListRenderer } from '@blueprintjs/select'
+import { IItemRendererProps } from '@blueprintjs/select'
 import produce from 'immer'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { String, StringKeys, useStrings } from 'framework/strings'
@@ -148,8 +148,10 @@ function FormContent({
 
   const [templates, setTemplates] = useState<SelectOption[]>([])
   const [isFetchingTemplateNextTime, setIsFetchingTemplateNextTime] = useState(true)
+  const [itemListVisible, setItemListVisible] = useState(true)
   const fieldType = getGenuineValue(get(formik, 'values.spec.fieldType'))
   const selectedTemplateName = get(formik, 'values.spec.templateName')
+
   const {
     items: templateResponse,
     error: fetchTemplateError,
@@ -496,44 +498,89 @@ function FormContent({
     )
   }
 
-  const itemListRenderer: ItemListRenderer<SelectOption> = itemListProps => (
-    <Menu>
-      {isEmptyContent ? (
-        <Layout.Vertical flex={{ align: 'center-center' }} width={'100%'} height={'100%'}>
-          {getString('pipeline.noTemplateAvailable')}
-          {searchTerm && (
-            <Text
-              padding={{ top: 'medium', bottom: 'medium' }}
-              icon="plus"
-              style={{ cursor: 'pointer' }}
-              iconProps={{ color: Color.PRIMARY_7 }}
-              color={Color.PRIMARY_7}
-              onClick={() => {
-                formik.setFieldValue('spec.templateName', searchTerm)
-              }}
-            >
-              {searchTerm}
+  const itemListRenderer: any = (itemListProps: any) => {
+    if (!itemListVisible) {
+      return null
+    }
+    return (
+      <Menu>
+        {isEmptyContent ? (
+          <Layout.Vertical flex={{ align: 'center-center' }} width={'100%'} height={'100%'}>
+            {getString('pipeline.noTemplateAvailable')}
+            {searchTerm && (
+              <Text
+                padding={{ top: 'small', bottom: 'small' }}
+                icon="plus"
+                style={{ cursor: 'pointer' }}
+                iconProps={{ color: Color.PRIMARY_7 }}
+                color={Color.PRIMARY_7}
+                onClick={() => {
+                  formik.setFieldValue('spec.templateName', searchTerm)
+                  setItemListVisible(false)
+                  if (
+                    connectorRefFixedValue &&
+                    connectorValueType === MultiTypeInputType.FIXED &&
+                    ticketTypeKeyFixedValue &&
+                    ticketValueType === MultiTypeInputType.FIXED
+                  ) {
+                    setFetchingReadonlyFields(true)
+
+                    getServiceNowTemplateMetadataV2Promise({
+                      queryParams: {
+                        ...commonParams,
+                        connectorRef: defaultTo(connectorRefFixedValue?.toString(), ''),
+                        ticketType: ticketTypeKeyFixedValue?.toString(),
+                        templateType:
+                          fieldType === FieldType.CreateFromStandardTemplate
+                            ? TEMPLATE_TYPE.STANDARD
+                            : TEMPLATE_TYPE.FORM,
+                        size: 1,
+                        page: 0,
+                        templateName: searchTerm
+                      }
+                    })
+                      .then((response: ResponsePageServiceNowTemplate) => {
+                        if (response?.data?.content?.length) {
+                          const convertedSelectedTemplateValue = convertTemplateFieldsForDisplay(
+                            response?.data?.content?.[0]?.fields || {}
+                          )
+
+                          formik.setFieldValue('spec.templateFields', convertedSelectedTemplateValue)
+                        }
+                      })
+                      .finally(() => {
+                        setFetchingReadonlyFields(false)
+                      })
+                  }
+                }}
+              >
+                {searchTerm}
+              </Text>
+            )}
+          </Layout.Vertical>
+        ) : (
+          itemListProps.items.map((item: SelectOption, i: number) => itemListProps.renderItem(item, i))
+        )}
+        {isFetchingTemplateNextTime && (
+          <Container padding={'large'}>
+            <Text icon="loading" iconProps={{ size: 20 }} font={{ align: 'center' }}>
+              {getString('pipeline.fetchNextTemplates')}
             </Text>
-          )}
-        </Layout.Vertical>
-      ) : (
-        itemListProps.items.map((item, i) => itemListProps.renderItem(item, i))
-      )}
-      {isFetchingTemplateNextTime && (
-        <Container padding={'large'}>
-          <Text icon="loading" iconProps={{ size: 20 }} font={{ align: 'center' }}>
-            {getString('pipeline.fetchNextTemplates')}
-          </Text>
-        </Container>
-      )}
-    </Menu>
-  )
+          </Container>
+        )}
+      </Menu>
+    )
+  }
 
   const getTemplates = () => {
     if (fetchingTemplate && !isFetchingTemplateNextTime) {
       return [{ label: 'Loading Templates...', value: 'Loading Templates...' }]
     }
     return defaultTo(templates, [])
+  }
+
+  const isFormTemplateButtonDisabled = () => {
+    if (!ticketTypeKeyFixedValue || !isTemplateSectionAvailable) return true
   }
 
   return (
@@ -588,6 +635,7 @@ function FormContent({
             setConnectorValueType(multiType)
             if (value?.record?.identifier !== connectorRefFixedValue) {
               resetForm(formik, 'connectorRef')
+              setTemplates([])
               setCount(count + 1)
               if (multiType !== MultiTypeInputType.FIXED) {
                 setServiceNowTicketTypesOptions([])
@@ -655,17 +703,15 @@ function FormContent({
               },
               allowableTypes,
               expressions,
-              onChange: (value: unknown, _valueType, type) => {
+              onChange: (value, _valueType, type) => {
                 setTicketValueType(type)
                 // Clear dependent fields
-                if (
-                  type === MultiTypeInputType.FIXED &&
-                  !isEmpty(value) &&
-                  (value as ServiceNowTicketTypeSelectOption) !== ticketTypeKeyFixedValue
-                ) {
+                if (!isEmpty(value) && (value as ServiceNowTicketTypeSelectOption) !== ticketTypeKeyFixedValue) {
                   resetForm(formik, 'ticketType')
+                  setTemplates([])
                   setCount(count + 1)
                 }
+                formik.setFieldValue('spec.ticketType', defaultTo((value as SelectOption)?.value, value))
                 if (
                   formik.values.spec.fieldType === FieldType.CreateFromStandardTemplate &&
                   value !== 'change_request'
@@ -679,7 +725,7 @@ function FormContent({
         <div className={stepCss.noLookDivider} />
       </React.Fragment>
       <div className={stepCss.divider} />
-      <React.Fragment>
+      <React.Fragment key={formik.values.spec.fieldType}>
         <FormInput.RadioGroup
           disabled={isApprovalStepFieldDisabled(readonly)}
           radioGroup={{ inline: true }}
@@ -692,7 +738,7 @@ function FormContent({
             {
               label: getString('pipeline.serviceNowCreateStep.fieldType.createFromTemplate'),
               value: FieldType.CreateFromTemplate,
-              disabled: !isTemplateSectionAvailable
+              disabled: isFormTemplateButtonDisabled()
             },
 
             ...(isTicketTypeChangeRequest && CDS_GET_SERVICENOW_STANDARD_TEMPLATE
@@ -718,6 +764,8 @@ function FormContent({
                 }
               })
             }
+            setTemplates([])
+            setSearchTerm('')
             formik.setValues(
               produce(formik.values, draft => {
                 if (CDS_GET_SERVICENOW_STANDARD_TEMPLATE) {
@@ -871,7 +919,7 @@ function FormContent({
         )}
         {formik.values.spec.fieldType === FieldType.CreateFromTemplate && (
           <div>
-            {serviceNowTemplateMetaDataQuery?.loading ? (
+            {serviceNowTemplateMetaDataQuery?.loading || fetchingReadonlyFields ? (
               <PageSpinner
                 message={getString('pipeline.serviceNowCreateStep.fetchingFields')}
                 className={css.fetching}
@@ -912,6 +960,10 @@ function FormContent({
                                 set(draft, `spec.templateName`, defaultTo((value as SelectOption)?.value, value))
                               })
                             )
+                          },
+                          onFocus: () => {
+                            setItemListVisible(true)
+                            setSearchTerm('')
                           },
                           onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.build', type),
                           expressions,
@@ -1069,6 +1121,10 @@ function FormContent({
                           formik.setFieldValue('spec.editableFields', [])
                         }
                       },
+                      onFocus: () => {
+                        setItemListVisible(true)
+                        setSearchTerm('')
+                      },
                       onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.build', type),
                       expressions,
                       selectProps: {
@@ -1079,6 +1135,7 @@ function FormContent({
                         items: defaultTo(getTemplates(), []),
                         loadingItems: fetchingTemplate,
                         itemRenderer: serviceItemRenderer,
+                        itemListRenderer,
                         noResults: (
                           <Text lineClamp={1} width={384} margin="small">
                             {getString('common.filters.noResultsFound')}

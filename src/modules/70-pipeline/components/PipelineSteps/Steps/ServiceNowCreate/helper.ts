@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import type { MultiSelectOption, SelectOption } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiSelectOption, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { defaultTo, isEmpty } from 'lodash-es'
 import type { ServiceNowFieldAllowedValueNG, ServiceNowFieldNG, ServiceNowFieldValueNG } from 'services/cd-ng'
@@ -30,6 +30,7 @@ export const resetForm = (
     formik.setFieldValue('spec.editableFields', [])
     formik.setFieldValue('spec.templateFields', [])
     formik.setFieldValue('spec.templateName', '')
+    formik.setFieldValue('spec.fieldType', FieldType.ConfigureFields)
   }
 
   if (parent === 'ticketType') {
@@ -37,6 +38,7 @@ export const resetForm = (
     formik.setFieldValue('spec.editableFields', [])
     formik.setFieldValue('spec.templateFields', [])
     formik.setFieldValue('spec.templateName', '')
+    formik.setFieldValue('spec.fieldType', FieldType.ConfigureFields)
   }
   if (parent === 'templateName') {
     formik.setFieldValue('spec.templateFields', [])
@@ -91,6 +93,9 @@ export const getInitialValueForSelectedField = (
   if (typeof savedValue === 'number') {
     return savedValue as number
   } else if (typeof savedValue === 'string') {
+    if (getMultiTypeFromValue(savedValue) === MultiTypeInputType.RUNTIME) {
+      return savedValue as string
+    }
     if (serviceNowFieldNG.allowedValues && serviceNowFieldNG.schema?.type === 'option') {
       const labelOfSelectedDropDown: ServiceNowFieldAllowedValueNG | undefined = serviceNowFieldNG.allowedValues.find(
         field => field.id === savedValue
@@ -215,16 +220,19 @@ export const getSelectedFieldsToBeAddedInForm = (
     if (!alreadyPresent && !alreadyPresentKVField) {
       toReturn.push({
         ...field,
-        value: !isEmpty(field.allowedValues)
-          ? field.value
-            ? {
-                label: (field.value as ServiceNowFieldValueNG).displayValue,
-                value: (field.value as ServiceNowFieldValueNG).value
-              }
-            : []
-          : field.value
-          ? (field.value as ServiceNowFieldValueNG).value
-          : ''
+        value:
+          getMultiTypeFromValue(field.value as any) === MultiTypeInputType.FIXED
+            ? !isEmpty(field.allowedValues)
+              ? field.value
+                ? {
+                    label: (field.value as ServiceNowFieldValueNG).displayValue,
+                    value: (field.value as ServiceNowFieldValueNG).value
+                  }
+                : []
+              : field.value
+              ? (field.value as ServiceNowFieldValueNG).value
+              : ''
+            : field.value
       })
     } else {
       toReturn.push({
@@ -232,9 +240,11 @@ export const getSelectedFieldsToBeAddedInForm = (
         value:
           alreadyPresent !== undefined
             ? alreadyPresent?.value
+            : getMultiTypeFromValue(field.value as any) === MultiTypeInputType.FIXED
+            ? field.value
+              ? (field.value as ServiceNowFieldValueNG).value
+              : ''
             : field.value
-            ? (field.value as ServiceNowFieldValueNG).value
-            : ''
       })
     }
   })

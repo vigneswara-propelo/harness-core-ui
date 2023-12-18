@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { debounce, defaultTo, get, isEmpty } from 'lodash-es'
+import { debounce, defaultTo, get, isEmpty, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Dialog } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -28,6 +28,7 @@ import {
   useToaster
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
+import produce from 'immer'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { String, StringKeys, useStrings } from 'framework/strings'
@@ -747,14 +748,18 @@ function FormContent({
                     formik.setFieldValue('spec.fields', customFields)
                   }}
                   onRefresh={(index, selectedField, valueObjToUpdate) => {
-                    if (isEmpty(selectedField.allowedValues)) {
-                      formik.setFieldValue(`spec.selectedFields[${index}].value`, valueObjToUpdate.value)
-                    } else {
-                      formik.setFieldValue(`spec.selectedFields[${index}].value`, {
-                        value: valueObjToUpdate.value,
-                        label: valueObjToUpdate.displayValue
+                    formik.setValues(
+                      produce(formik.values, draft => {
+                        if (isEmpty(selectedField.allowedValues)) {
+                          set(draft, `spec.selectedFields[${index}].value`, valueObjToUpdate.value)
+                        } else {
+                          set(draft, `spec.selectedFields[${index}].value`, {
+                            value: valueObjToUpdate.value,
+                            label: valueObjToUpdate.displayValue
+                          })
+                        }
                       })
-                    }
+                    )
                   }}
                   serviceNowType={SERVICENOW_TYPE.UPDATE}
                   allowableTypes={allowableTypes}

@@ -8,7 +8,15 @@
 import React, { useCallback } from 'react'
 import cx from 'classnames'
 import { defaultTo, isEmpty, isNull, isUndefined } from 'lodash-es'
-import { Button, FormInput, Layout, AllowedTypes, SelectOption } from '@harness/uicore'
+import {
+  Button,
+  FormInput,
+  Layout,
+  AllowedTypes,
+  SelectOption,
+  getMultiTypeFromValue,
+  MultiTypeInputType
+} from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { ServiceNowFieldValueNG } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -34,7 +42,7 @@ export interface ServiceNowFieldsRendererProps {
 }
 
 interface MappedComponentInterface {
-  selectedField: ServiceNowFieldNG
+  selectedField: ServiceNowFieldNGWithValue
   props: ServiceNowFieldsRendererProps
   expressions: string[]
   index: number
@@ -145,18 +153,19 @@ export function ServiceNowFieldsRenderer(props: ServiceNowFieldsRendererProps) {
               data-testid={`remove-selectedField-${index}`}
               onClick={() => onDelete?.(index, selectedField)}
             />
-            {isFieldUpdatedComparedToServiceNow && (
-              <Button
-                intent="primary"
-                icon="refresh"
-                onClick={() =>
-                  onRefresh?.(index, selectedField, existingValueObjFromServiceNow as ServiceNowFieldValueNG)
-                }
-                minimal
-                tooltipProps={{ isDark: true }}
-                tooltip={getString('pipeline.serviceNowUpdateStep.refreshFieldInfo')}
-              />
-            )}
+            {isFieldUpdatedComparedToServiceNow &&
+              getMultiTypeFromValue(selectedField?.value as SelectOption) === MultiTypeInputType.FIXED && (
+                <Button
+                  intent="primary"
+                  icon="refresh"
+                  onClick={() =>
+                    onRefresh?.(index, selectedField, existingValueObjFromServiceNow as ServiceNowFieldValueNG)
+                  }
+                  minimal
+                  tooltipProps={{ isDark: true }}
+                  tooltip={getString('pipeline.serviceNowUpdateStep.refreshFieldInfo')}
+                />
+              )}
           </Layout.Horizontal>
         )
       })}
