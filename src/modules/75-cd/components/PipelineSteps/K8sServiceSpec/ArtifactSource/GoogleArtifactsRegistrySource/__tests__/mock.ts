@@ -46,6 +46,24 @@ export const repoListData = {
   }
 }
 
+export const packageListData = {
+  status: 'SUCCESS',
+  data: {
+    garRepositoryDTOList: [
+      {
+        packageName: 'testPackage',
+        createTime: '2022-09-14T03:10:05.836970Z',
+        updateTime: '2022-09-14T03:10:05.836970Z'
+      },
+      {
+        packageName: 'testPackage 1',
+        createTime: '2022-09-14T03:10:05.836970Z',
+        updateTime: '2022-09-14T03:10:05.836970Z'
+      }
+    ]
+  }
+}
+
 export const buildData = {
   status: 'SUCCESS',
   data: {
@@ -106,6 +124,17 @@ export const templateGoogleArtifactRegistryWithRepositoryNameRuntime: ServiceSpe
     primary: {
       spec: {
         repositoryName: '<+input>'
+      },
+      type: 'GoogleArtifactRegistry'
+    }
+  }
+}
+
+export const templateGoogleArtifactRegistryWithPackageRuntime: ServiceSpec = {
+  artifacts: {
+    primary: {
+      spec: {
+        package: '<+input>'
       },
       type: 'GoogleArtifactRegistry'
     }

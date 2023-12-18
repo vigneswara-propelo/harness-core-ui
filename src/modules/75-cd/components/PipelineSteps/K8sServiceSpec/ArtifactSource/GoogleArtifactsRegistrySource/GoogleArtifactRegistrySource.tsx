@@ -19,11 +19,14 @@ import { FormMultiTypeConnectorField } from '@platform/connectors/components/Con
 import {
   ArtifactSource,
   GARBuildDetailsDTO,
+  GARPackageDTO,
   GarRepositoryDTO,
   RegionGar,
   SidecarArtifact,
   useGetBuildDetailsForGoogleArtifactRegistry,
   useGetBuildDetailsForGoogleArtifactRegistryV2,
+  useGetPackagesForGoogleArtifactRegistry,
+  useGetPackagesForGoogleArtifactRegistryV2,
   useGetRegionsForGoogleArtifactRegistry,
   useGetRepositoriesForGoogleArtifactRegistry,
   useGetRepositoriesForGoogleArtifactRegistryV2
@@ -36,9 +39,11 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import {
+  isAllFieldsAreFixedForFetchingPackages,
   isAllFieldsAreFixedForFetchRepos,
   isAllFieldsAreFixedInGAR,
-  isArtifactInMultiService
+  isArtifactInMultiService,
+  isFieldFixedAndNonEmpty
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { useIsTagRegex } from '@pipeline/hooks/useIsTagRegex'
 import ItemRendererWithMenuItem from '@modules/10-common/components/ItemRenderer/ItemRendererWithMenuItem'
@@ -90,6 +95,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   const { getString } = useStrings()
   const [regions, setRegions] = useState<SelectOption[]>([])
   const [repoSelectItems, setRepoSelectItems] = useState<SelectOption[]>([])
+  const [packageSelectItems, setPackageSelectItems] = useState<SelectOption[]>([])
   const { expressions } = useVariablesExpression()
   const commonParams = {
     accountIdentifier: accountId,
@@ -172,6 +178,22 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     }
   })
 
+  const {
+    data: packagesV1Detail,
+    refetch: refetchPackagesV1Details,
+    loading: fetchingV1Packages,
+    error: fetchingV1PackagesError
+  } = useGetPackagesForGoogleArtifactRegistry({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
+      project: getFinalQueryParamValue(projectValue),
+      region: getFinalQueryParamValue(regionValue),
+      repositoryName: getFinalQueryParamValue(repositoryNameValue)
+    }
+  })
+
   const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
   const pipelineRuntimeYaml = getYamlData(formik?.values, stepViewType as StepViewType, path as string)
 
@@ -251,6 +273,44 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     }
   })
 
+  const {
+    data: packagesV2Detail,
+    refetch: refetchPackagesV2Details,
+    loading: fetchingV2Packages,
+    error: fetchingV2PackagesError
+  } = useMutateAsGet(useGetPackagesForGoogleArtifactRegistryV2, {
+    lazy: true,
+    body: pipelineRuntimeYaml,
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
+    queryParams: {
+      ...commonParams,
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
+      project: getFinalQueryParamValue(projectValue),
+      region: getFinalQueryParamValue(regionValue),
+      repositoryName: getFinalQueryParamValue(repositoryNameValue),
+      pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
+      serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+      fqnPath: getFqnPath(
+        path as string,
+        !!isPropagatedStage,
+        stageIdentifier,
+        defaultTo(
+          isSidecar
+            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+            : artifactPath,
+          ''
+        ),
+        'package',
+        serviceIdentifier as string,
+        isMultiService
+      )
+    }
+  })
+
   const { refetchBuildDetails, fetchingBuilds, error, buildsDetail } = useArtifactV1Data
     ? {
         refetchBuildDetails: refetchBuildV1Details,
@@ -277,6 +337,20 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
         fetchingRepos: fetchingV2Repos,
         errorFetchingRepos: fetchingV2ReposError,
         reposDetail: reposV2Detail
+      }
+
+  const { refetchPackageDetails, fetchingPackages, errorFetchingPackages, packageDetails } = useArtifactV1Data
+    ? {
+        refetchPackageDetails: refetchPackagesV1Details,
+        fetchingPackages: fetchingV1Packages,
+        errorFetchingPackages: fetchingV1PackagesError,
+        packageDetails: packagesV1Detail
+      }
+    : {
+        refetchPackageDetails: refetchPackagesV2Details,
+        fetchingPackages: fetchingV2Packages,
+        errorFetchingPackages: fetchingV2PackagesError,
+        packageDetails: packagesV2Detail
       }
 
   const {
@@ -309,7 +383,13 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     stepViewType
   })
 
-  const itemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+  const itemRendererForRepo = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingRepos} />
+  ))
+  const itemRendererForPackage = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingPackages} />
+  ))
+  const itemRendererForBuild = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingBuilds} />
   ))
 
@@ -349,20 +429,49 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     setRepoSelectItems(repoItems)
   }, [reposDetail?.data, errorFetchingRepos])
 
+  useEffect(() => {
+    if (errorFetchingPackages) {
+      setPackageSelectItems([])
+      return
+    }
+    const packageItems =
+      packageDetails?.data?.garPackageDTOList?.map((repo: GARPackageDTO) => ({
+        value: defaultTo(repo.packageName, ''),
+        label: defaultTo(repo.packageName, '')
+      })) || []
+    setPackageSelectItems(packageItems)
+  }, [packageDetails?.data, errorFetchingPackages])
+
   const getRepoDetails = (): SelectOption[] => {
     if (fetchingRepos) {
       return [
         {
-          label: getString('common.loadingFieldOptions', {
-            fieldName: getString('repository')
+          label: getString('common.loadingFieldOptionsSingular', {
+            fieldName: getString('repositories')
           }),
-          value: getString('common.loadingFieldOptions', {
-            fieldName: getString('repository')
+          value: getString('common.loadingFieldOptionsSingular', {
+            fieldName: getString('repositories')
           })
         }
       ]
     }
     return defaultTo(repoSelectItems, [])
+  }
+
+  const getPackageDetails = (): SelectOption[] => {
+    if (fetchingPackages) {
+      return [
+        {
+          label: getString('common.loadingFieldOptionsSingular', {
+            fieldName: getString('packagesLabel')
+          }),
+          value: getString('common.loadingFieldOptionsSingular', {
+            fieldName: getString('packagesLabel')
+          })
+        }
+      ]
+    }
+    return defaultTo(packageSelectItems, [])
   }
 
   const { data: regionData } = useGetRegionsForGoogleArtifactRegistry({})
@@ -443,6 +552,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                   })
                 )
                 setRepoSelectItems([])
+                setPackageSelectItems([])
               }}
               multiTextInputProps={{
                 expressions,
@@ -462,6 +572,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               multiTypeInputProps={{
                 onChange: value => {
                   setRepoSelectItems([])
+                  setPackageSelectItems([])
                   formik.setValues(
                     produce(formik.values, (draft: any) => {
                       set(
@@ -469,7 +580,16 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                         `${path}.artifacts.${artifactPath}.spec.region`,
                         defaultTo((value as SelectOption)?.value, value)
                       )
-                      set(draft, `${path}.artifacts.${artifactPath}.spec.repositoryName`, '')
+                      if (
+                        isFieldRuntime(`artifacts.${artifactPath}.spec.repositoryName`, template) &&
+                        isFieldFixedAndNonEmpty(repositoryNameValue)
+                      )
+                        set(draft, `${path}.artifacts.${artifactPath}.spec.repositoryName`, '')
+                      if (
+                        isFieldRuntime(`artifacts.${artifactPath}.spec.package`, template) &&
+                        isFieldFixedAndNonEmpty(packageValue)
+                      )
+                        set(draft, `${path}.artifacts.${artifactPath}.spec.package`, '')
                     })
                   )
                 },
@@ -497,6 +617,23 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               useValue
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.repositoryName`)}
               multiTypeInputProps={{
+                onChange: value => {
+                  setPackageSelectItems([])
+                  formik.setValues(
+                    produce(formik.values, (draft: any) => {
+                      set(
+                        draft,
+                        `${path}.artifacts.${artifactPath}.spec.repositoryName`,
+                        defaultTo((value as SelectOption)?.value, value)
+                      )
+                      if (
+                        isFieldRuntime(`artifacts.${artifactPath}.spec.package`, template) &&
+                        isFieldFixedAndNonEmpty(packageValue)
+                      )
+                        set(draft, `${path}.artifacts.${artifactPath}.spec.package`, '')
+                    })
+                  )
+                },
                 expressions,
                 allowableTypes,
                 selectProps: {
@@ -507,7 +644,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                       defaultErrorText={getString('pipeline.artifactsSelection.validation.noRepo')}
                     />
                   ),
-                  itemRenderer: itemRenderer,
+                  itemRenderer: itemRendererForRepo,
                   items: getRepoDetails(),
                   allowCreatingNewItems: true
                 },
@@ -525,16 +662,47 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.package`, template) && (
-            <TextFieldInputSetView
+            <SelectInputSetView
               fieldPath={`artifacts.${artifactPath}.spec.package`}
               template={template}
+              selectItems={getPackageDetails()}
               name={`${path}.artifacts.${artifactPath}.spec.package`}
               label={getString('pipeline.testsReports.callgraphField.package')}
               placeholder={getString('pipeline.manifestType.packagePlaceholder')}
+              useValue
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.package`)}
-              multiTextInputProps={{
+              multiTypeInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                selectProps: {
+                  noResults: (
+                    <NoTagResults
+                      tagError={errorFetchingPackages}
+                      isServerlessDeploymentTypeSelected={false}
+                      defaultErrorText={getString('pipeline.artifactsSelection.validation.noPackage')}
+                    />
+                  ),
+                  itemRenderer: itemRendererForPackage,
+                  items: getPackageDetails(),
+                  allowCreatingNewItems: true
+                },
+                onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                  if (
+                    e?.target?.type !== 'text' ||
+                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                  ) {
+                    return
+                  }
+                  if (
+                    isAllFieldsAreFixedForFetchingPackages(
+                      projectValue,
+                      regionValue,
+                      repositoryNameValue,
+                      connectorRefValue
+                    )
+                  )
+                    refetchPackageDetails()
+                }
               }}
             />
           )}
@@ -559,7 +727,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                       defaultErrorText={getString('pipeline.artifactsSelection.validation.noBuild')}
                     />
                   ),
-                  itemRenderer: itemRenderer,
+                  itemRenderer: itemRendererForBuild,
                   items: getBuildDetails(),
                   allowCreatingNewItems: true
                 },

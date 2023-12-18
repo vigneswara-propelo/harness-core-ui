@@ -20,6 +20,8 @@ export const getArtifactsECRGetImages = ({ connectorId, region }): string =>
   `ng/api/artifacts/ecr/getImages?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&connectorRef=${connectorId}&region=${region}`
 export const getGARRepo = ({ connectorId, region, project }): string =>
   `ng/api/artifacts/gar/getRepositories?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorId}&project=${project}&region=${region}`
+export const getGARPackage = ({ connectorId, region, project, repositoryName }): string =>
+  `ng/api/artifacts/gar/getPackages?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorId}&project=${project}&region=${region}&repositoryName=${repositoryName}`
 export const getS3BucketsV2 = ({ connectorId, region }): string =>
   `ng/api/buckets/s3/getBucketsV2?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&connectorRef=${connectorId}&region=${region}`
 export const getArtifactsArtifactoryRepositoriesDetails = ({ connectorId, repositoryType }): string =>

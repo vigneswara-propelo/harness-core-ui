@@ -654,6 +654,20 @@ export const isAllFieldsAreFixedForFetchRepos = (
   )
 }
 
+export const isAllFieldsAreFixedForFetchingPackages = (
+  project: string | undefined,
+  region: string | undefined,
+  repositoryName: string | undefined,
+  connectorRefValue: string | undefined
+): boolean => {
+  return (
+    isFieldFixedAndNonEmpty(defaultTo(project, '')) &&
+    isFieldFixedAndNonEmpty(defaultTo(region, '')) &&
+    isFieldFixedAndNonEmpty(defaultTo(repositoryName, '')) &&
+    isFieldFixedAndNonEmpty(defaultTo(connectorRefValue, ''))
+  )
+}
+
 export const formFillingMethod = {
   MANUAL: 'manual',
   SCRIPT: 'script'

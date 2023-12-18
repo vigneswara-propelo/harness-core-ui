@@ -1315,6 +1315,7 @@ freezeActiveBannerTextPrefix: Global deployment freeze enabled on this
 freezeActiveBannerTimeframe: from <b>{{startTime}}</b> to <b>{{endTime}}</b>
 freezeListActiveBannerText: There are {{count}} ongoing global deployment freeze windows
 loadingFieldOptions: Loading {{fieldName}}s...
+loadingFieldOptionsSingular: Loading {{fieldName}}...
 freezeListActiveBannerExpandedTextPrefix: On the
 resourceIdentifier: Resource Identifier
 configureNav: Or configure your nav!

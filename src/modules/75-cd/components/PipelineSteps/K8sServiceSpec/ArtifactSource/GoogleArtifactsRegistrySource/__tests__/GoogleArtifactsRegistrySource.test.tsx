@@ -24,7 +24,9 @@ import {
   templateGoogleArtifactRegistryWithVersionRuntime,
   buildData,
   repoListData,
-  templateGoogleArtifactRegistryWithRepositoryNameRuntime
+  templateGoogleArtifactRegistryWithRepositoryNameRuntime,
+  packageListData,
+  templateGoogleArtifactRegistryWithPackageRuntime
 } from './mock'
 
 // Mock API and Functions
@@ -47,6 +49,7 @@ const regionData = {
 const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
 const fetchBuilds = jest.fn().mockReturnValue(buildData)
 const fetchRepos = jest.fn().mockReturnValue(repoListData)
+const fetchPackages = jest.fn().mockReturnValue(packageListData)
 jest.mock('@common/hooks/useMutateAsGet', () => ({
   useMutateAsGet: jest.fn().mockImplementation(fn => {
     return fn()
@@ -61,6 +64,12 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetRepositoriesForGoogleArtifactRegistry: jest.fn().mockImplementation(() => {
     return { data: repoListData, refetch: fetchRepos, error: null, loading: false }
+  }),
+  useGetPackagesForGoogleArtifactRegistryV2: jest.fn().mockImplementation(() => {
+    return { data: packageListData, refetch: fetchPackages, error: null, loading: false }
+  }),
+  useGetPackagesForGoogleArtifactRegistry: jest.fn().mockImplementation(() => {
+    return { data: packageListData, refetch: fetchPackages, error: null, loading: false }
   }),
   useGetBuildDetailsForGoogleArtifactRegistryV2: jest.fn().mockImplementation(() => {
     return { data: buildData, refetch: fetchBuilds, error: null, loading: false }
@@ -296,6 +305,43 @@ describe('GoogleArtifactRegistrySource tests', () => {
 
     await waitFor(() => {
       expect(fetchRepos).toHaveBeenCalled()
+    })
+  })
+
+  test(`clicking on package should fetch package names`, async () => {
+    const { container } = renderComponent({
+      ...props,
+      artifact: {
+        identifier: '',
+        type: 'GoogleArtifactRegistry',
+        spec: {
+          connectorRef: 'AWSX',
+          project: 'testProject',
+          region: 'us-east',
+          repositoryName: 'testRepo',
+          package: '<+input>',
+          version: 'latest'
+        }
+      },
+      template: templateGoogleArtifactRegistryWithPackageRuntime
+    })
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+    const packageInput = queryByNameAttribute(
+      `${artifactCommonPath}.artifacts.primary.spec.package`
+    ) as HTMLInputElement
+    expect(packageInput).not.toBeNull()
+    expect(packageInput).not.toBeDisabled()
+    expect(packageInput.value).toBe('')
+    const portalDivs = document.getElementsByClassName('bp3-portal')
+    expect(portalDivs.length).toBe(0)
+    const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
+    const packageDropDownIcon = dropdownIcons[0]
+    act(() => {
+      fireEvent.click(packageDropDownIcon)
+    })
+
+    await waitFor(() => {
+      expect(fetchPackages).toHaveBeenCalled()
     })
   })
 })

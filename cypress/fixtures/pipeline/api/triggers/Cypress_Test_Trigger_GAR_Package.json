@@ -1,0 +1,14 @@
+{
+    "status": "SUCCESS",
+    "data": {
+        "garPackageDTOList": [
+            {
+                "packageName": "test-package",
+                "createTime": "2022-08-17T08:56:53.139215Z",
+                "updateTime": "2022-08-17T09:09:46.141240Z"
+            }
+        ]
+    },
+    "metaData": null,
+    "correlationId": "8b3f8160-33f8-440e-b8b0-9bbffb01faa1"
+}

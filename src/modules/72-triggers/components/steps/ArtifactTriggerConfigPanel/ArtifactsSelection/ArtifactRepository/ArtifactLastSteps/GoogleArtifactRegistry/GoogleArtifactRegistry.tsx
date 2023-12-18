@@ -24,18 +24,21 @@ import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { defaultTo, memoize } from 'lodash-es'
-import { Menu } from '@blueprintjs/core'
+import { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
 import {
   ConnectorConfigDTO,
+  GARPackageDTO,
   GarRepositoryDTO,
   RegionGar,
+  useGetPackagesForGoogleArtifactRegistry,
   useGetRegionsForGoogleArtifactRegistry,
   useGetRepositoriesForGoogleArtifactRegistry
 } from 'services/cd-ng'
 import type { GarSpec } from 'services/pipeline-ng'
 import {
   getConnectorIdValue,
+  isAllFieldsAreFixedForFetchingPackages,
   isAllFieldsAreFixedForFetchRepos,
   resetFieldValue
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
@@ -43,6 +46,7 @@ import { NoTagResults } from '@modules/70-pipeline/components/ArtifactsSelection
 import { GitQueryParams, ProjectPathProps } from '@modules/10-common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@modules/10-common/hooks'
 import { EXPRESSION_STRING } from '@modules/70-pipeline/utils/constants'
+import ItemRendererWithMenuItem from '@modules/10-common/components/ItemRenderer/ItemRendererWithMenuItem'
 import type { ImagePathProps } from '../../../ArtifactInterface'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -64,6 +68,7 @@ function FormComponent(
   const [regions, setRegions] = useState<SelectOption[]>([])
   const { data: regionsData } = useGetRegionsForGoogleArtifactRegistry({})
   const [repoSelectItems, setRepoSelectItems] = useState<SelectOption[]>([])
+  const [packageSelectItems, setPackageSelectItems] = useState<SelectOption[]>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
@@ -78,6 +83,7 @@ function FormComponent(
   const connectorRefValue = getConnectorIdValue(prevStepData)
   const projectValue = defaultTo(formik.values.project, initialValues?.project)
   const regionValue = defaultTo(formik.values.region, initialValues?.region)
+  const repositoryNameValue = defaultTo(formik.values?.repositoryName, initialValues?.repositoryName)
 
   const {
     data: repoDetails,
@@ -91,6 +97,22 @@ function FormComponent(
       connectorRef: connectorRefValue,
       project: projectValue,
       region: regionValue
+    }
+  })
+
+  const {
+    data: packageDetails,
+    refetch: refetchPackageDetails,
+    loading: fetchingPackages,
+    error: fetchPackagesError
+  } = useGetPackagesForGoogleArtifactRegistry({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      connectorRef: connectorRefValue,
+      project: projectValue,
+      region: regionValue,
+      repositoryName: repositoryNameValue
     }
   })
 
@@ -117,15 +139,28 @@ function FormComponent(
     setRepoSelectItems(repoItems)
   }, [repoDetails?.data, fetchRepoError])
 
+  useEffect(() => {
+    if (fetchPackagesError) {
+      setPackageSelectItems([])
+      return
+    }
+    const packageItems =
+      packageDetails?.data?.garPackageDTOList?.map((repo: GARPackageDTO) => ({
+        value: defaultTo(repo.packageName, ''),
+        label: defaultTo(repo.packageName, '')
+      })) || []
+    setPackageSelectItems(packageItems)
+  }, [packageDetails?.data, fetchPackagesError])
+
   const getRepos = (): SelectOption[] => {
     if (fetchingRepos) {
       return [
         {
-          label: getString('common.loadingFieldOptions', {
-            fieldName: getString('repository')
+          label: getString('common.loadingFieldOptionsSingular', {
+            fieldName: getString('repositories')
           }),
-          value: getString('common.loadingFieldOptions', {
-            fieldName: getString('repository')
+          value: getString('common.loadingFieldOptionsSingular', {
+            fieldName: getString('repositories')
           })
         }
       ]
@@ -133,18 +168,27 @@ function FormComponent(
     return defaultTo(repoSelectItems, [])
   }
 
-  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
-    <div key={item.label.toString()}>
-      <Menu.Item
-        text={
-          <Layout.Horizontal spacing="small">
-            <Text>{item.label}</Text>
-          </Layout.Horizontal>
+  const getPackages = (): SelectOption[] => {
+    if (fetchingPackages) {
+      return [
+        {
+          label: getString('common.loadingFieldOptionsSingular', {
+            fieldName: getString('packagesLabel')
+          }),
+          value: getString('common.loadingFieldOptionsSingular', {
+            fieldName: getString('packagesLabel')
+          })
         }
-        disabled={fetchingRepos}
-        onClick={handleClick}
-      />
-    </div>
+      ]
+    }
+    return defaultTo(packageSelectItems, [])
+  }
+
+  const itemRendererForRepo = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingRepos} />
+  ))
+  const itemRendererForPackage = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingPackages} />
   ))
 
   return (
@@ -194,7 +238,7 @@ function FormComponent(
                     defaultErrorText={getString('pipeline.artifactsSelection.validation.noRepo')}
                   />
                 ),
-                itemRenderer: itemRenderer,
+                itemRenderer: itemRendererForRepo,
                 items: getRepos(),
                 allowCreatingNewItems: true
               },
@@ -223,12 +267,53 @@ function FormComponent(
           />
         </div>
         <div className={css.jenkinsFieldContainer}>
-          <FormInput.MultiTextInput
+          <FormInput.MultiTypeInput
+            selectItems={getPackages()}
             name="package"
             label={getString('pipeline.testsReports.callgraphField.package')}
             placeholder={getString('pipeline.manifestType.packagePlaceholder')}
-            multiTextInputProps={{
-              allowableTypes: [MultiTypeInputType.FIXED]
+            useValue
+            multiTypeInputProps={{
+              allowableTypes: [MultiTypeInputType.FIXED],
+
+              selectProps: {
+                noResults: (
+                  <NoTagResults
+                    tagError={fetchPackagesError}
+                    isServerlessDeploymentTypeSelected={false}
+                    defaultErrorText={getString('pipeline.artifactsSelection.validation.noPackage')}
+                  />
+                ),
+                itemRenderer: itemRendererForPackage,
+                items: getPackages(),
+                allowCreatingNewItems: true
+              },
+              onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                if (
+                  e?.target?.type !== 'text' ||
+                  (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                ) {
+                  return
+                }
+                if (
+                  isAllFieldsAreFixedForFetchingPackages(
+                    projectValue,
+                    regionValue,
+                    repositoryNameValue,
+                    connectorRefValue
+                  )
+                ) {
+                  refetchPackageDetails({
+                    queryParams: {
+                      ...commonParams,
+                      connectorRef: connectorRefValue,
+                      project: projectValue,
+                      region: regionValue,
+                      repositoryName: repositoryNameValue
+                    }
+                  })
+                }
+              }
             }}
           />
         </div>

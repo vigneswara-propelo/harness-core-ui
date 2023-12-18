@@ -664,6 +664,7 @@ export interface StringsMap {
   'common.loadBalancer': string
   'common.loading': string
   'common.loadingFieldOptions': string
+  'common.loadingFieldOptionsSingular': string
   'common.local': string
   'common.login': string
   'common.logs.delayWarning': string
