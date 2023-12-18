@@ -2077,6 +2077,8 @@ webhooks:
   searchEventId: Search by Event ID
   searchWebhooks: Search by Webhook ID
   gitRepo: Git Repository
+  trackedFolders: Tracked Folders
+  allFolders: All Folders
 eventStatus:
   processing: Processing
   queued: Queued

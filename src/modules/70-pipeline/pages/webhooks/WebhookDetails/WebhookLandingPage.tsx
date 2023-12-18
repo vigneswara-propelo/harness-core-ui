@@ -41,6 +41,7 @@ import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import routesv1 from '@common/RouteDefinitions'
 import routesv2 from '@common/RouteDefinitionsV2'
 import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
+import { StringsMap } from 'stringTypes'
 import NewWebhookModal from '../NewWebhookModal'
 import { processFolderPaths } from '../utils'
 import css from './WebhookLandingPage.module.scss'
@@ -77,7 +78,15 @@ const getOverviewContent = ({
     value: repo
   }
 ]
-const getDetailsContent = ({ folderPaths, repoName }: { folderPaths?: string[]; repoName?: string }): Content[] => {
+const getDetailsContent = ({
+  folderPaths,
+  repoName,
+  getString
+}: {
+  folderPaths?: string[]
+  repoName?: string
+  getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
+}): Content[] => {
   return [
     {
       label: '',
@@ -88,7 +97,7 @@ const getDetailsContent = ({ folderPaths, repoName }: { folderPaths?: string[]; 
             folderPaths?.map((folderPath, index) => {
               let folderPathContent = folderPath
               if (index === 0 && isEmpty(folderPath)) {
-                folderPathContent = defaultTo(repoName, '')
+                folderPathContent = getString('pipeline.webhooks.allFolders')
               }
               return (
                 <Text color={Color.BLACK} lineClamp={1} margin={{ bottom: 'small' }} key={folderPath}>
@@ -98,7 +107,7 @@ const getDetailsContent = ({ folderPaths, repoName }: { folderPaths?: string[]; 
             })
           ) : (
             <Text color={Color.BLACK} lineClamp={1} margin={{ bottom: 'small' }} key={repoName}>
-              {`1. ${repoName}`}
+              {`1. ${getString('pipeline.webhooks.allFolders')}`}
             </Text>
           )}
         </Layout.Vertical>
@@ -324,10 +333,11 @@ export default function WebhookLandingPage(): JSX.Element {
               />
               <DetailPageCard
                 classname={css.inputSet}
-                title={getString('common.git.folderPath')}
+                title={getString('pipeline.webhooks.trackedFolders')}
                 content={getDetailsContent({
                   folderPaths: webhookResponse?.content?.folder_paths,
-                  repoName: webhookResponse?.content.repo_name
+                  repoName: webhookResponse?.content.repo_name,
+                  getString
                 })}
               />
             </Layout.Horizontal>

@@ -161,7 +161,7 @@ export default function WebhooksList({
         Cell: withWebhook(WebhookRepo)
       },
       {
-        Header: getString('common.git.folderPath').toUpperCase(),
+        Header: getString('pipeline.webhooks.trackedFolders').toUpperCase(),
         id: 'folder_paths',
         width: '24%',
         Cell: withWebhook(FolderPath)

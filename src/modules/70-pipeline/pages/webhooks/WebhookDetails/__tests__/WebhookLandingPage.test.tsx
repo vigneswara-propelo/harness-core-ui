@@ -51,7 +51,7 @@ describe('Webhook Landing Page tests', () => {
     expect(getByText('account.DoNotDeleteVikrantGithubConnector')).toBeInTheDocument()
     expect(getByText('repository')).toBeInTheDocument()
     expect(getByText('vikrant-gitsync')).toBeInTheDocument()
-    expect(getByText('1. vikrant-gitsync')).toBeInTheDocument()
+    expect(getByText('1. pipeline.webhooks.allFolders')).toBeInTheDocument()
   })
 
   test('render folderPaths with empty array', () => {
@@ -65,7 +65,7 @@ describe('Webhook Landing Page tests', () => {
       </TestWrapper>
     )
     expect(getByText('vikrant-gitsync')).toBeInTheDocument()
-    expect(getByText('1. vikrant-gitsync')).toBeInTheDocument()
+    expect(getByText('1. pipeline.webhooks.allFolders')).toBeInTheDocument()
   })
 
   test('route back to webhooks list page if the get API errors out', () => {

@@ -5842,6 +5842,7 @@ export interface StringsMap {
   'pipeline.webhookEvents.selectEventPayload': string
   'pipeline.webhookEvents.timestamp': string
   'pipeline.webhookEvents.viewAll': string
+  'pipeline.webhooks.allFolders': string
   'pipeline.webhooks.createSubtitle': string
   'pipeline.webhooks.delete': string
   'pipeline.webhooks.deleteConfirmation': string
@@ -5857,6 +5858,7 @@ export interface StringsMap {
   'pipeline.webhooks.successMessage': string
   'pipeline.webhooks.successSubtitle': string
   'pipeline.webhooks.successUpdateMessage': string
+  'pipeline.webhooks.trackedFolders': string
   'pipeline.webhooks.webhooksListing': string
   'pipeline.yamlVersion.v0': string
   'pipeline.yamlVersion.v1': string

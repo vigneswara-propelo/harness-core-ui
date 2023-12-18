@@ -79,12 +79,13 @@ export function FolderPath({
 }): JSX.Element {
   const popoverDisplayCount = folderPath.length - 2
   const _folderPaths = [...folderPath].slice(2)
+  const { getString } = useStrings()
 
   return (
     <Layout.Vertical>
       {(folderPath?.[0] || repoName) && (
         <Text color={Color.BLACK} lineClamp={1} margin={{ ...(folderPath?.[1]?.length > 0 && { bottom: 'small' }) }}>
-          {isEmpty(folderPath?.[0]) ? repoName : folderPath?.[0]}
+          {isEmpty(folderPath?.[0]) ? getString('pipeline.webhooks.allFolders') : folderPath?.[0]}
         </Text>
       )}
       {folderPath?.[1] && (

@@ -203,7 +203,7 @@ export default function NewWebhookModal(props: NewWebhookModalProps): JSX.Elemen
                     customClassName={css.width}
                   />
                   <Text tooltipProps={{ dataTooltipId: 'webhook-folder-path' }}>{`${getString(
-                    'common.git.folderPath'
+                    'pipeline.webhooks.trackedFolders'
                   )} ${getString('optionalField')}`}</Text>
                   <FieldArray
                     name="folderPaths"
