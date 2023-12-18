@@ -357,6 +357,7 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
 function ProvideFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   return (
     <Formik<JiraCreateFieldType[]>
       onSubmit={values => {
@@ -392,6 +393,7 @@ function ProvideFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
                           placeholder={getString('common.valuePlaceholder')}
                           multiTextInputProps={{
                             allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                             expressions
                           }}
                         />

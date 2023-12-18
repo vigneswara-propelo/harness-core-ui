@@ -154,7 +154,11 @@ export default function AddEditCustomVariable(props: AddEditCustomVariableProps)
                 label={getString('valueLabel')}
                 placeholder={getString('common.entityPlaceholderText')}
                 accountIdentifier={accountId}
-                multiTypeProps={{ expressions, allowableTypes }}
+                multiTypeProps={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
                 projectIdentifier={projectIdentifier}
                 orgIdentifier={orgIdentifier}
                 gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}

@@ -241,7 +241,12 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                                 placeholder={getString('common.entityPlaceholderText')}
                                 disabled={readonly}
                                 accountIdentifier={accountId}
-                                multiTypeProps={{ expressions, disabled: readonly, allowableTypes }}
+                                multiTypeProps={{
+                                  expressions,
+                                  disabled: readonly,
+                                  allowableTypes,
+                                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                                }}
                                 projectIdentifier={projectIdentifier}
                                 orgIdentifier={orgIdentifier}
                                 gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}

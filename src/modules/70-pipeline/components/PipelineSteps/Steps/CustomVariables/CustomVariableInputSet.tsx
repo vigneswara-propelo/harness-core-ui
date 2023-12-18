@@ -225,7 +225,12 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
                   placeholder={getString('common.entityPlaceholderText')}
                   disabled={inputSetData?.readonly}
                   accountIdentifier={accountId}
-                  multiTypeProps={{ expressions, disabled: inputSetData?.readonly, allowableTypes }}
+                  multiTypeProps={{
+                    expressions,
+                    disabled: inputSetData?.readonly,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   projectIdentifier={projectIdentifier}
                   orgIdentifier={orgIdentifier}
                   gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}

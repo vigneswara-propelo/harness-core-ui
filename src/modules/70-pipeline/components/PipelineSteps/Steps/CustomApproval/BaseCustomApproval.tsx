@@ -75,7 +75,13 @@ export default function BaseCustomApproval(props: {
         <FormMultiTypeDurationField
           name="timeout"
           label={getString('pipelineSteps.timeoutLabel')}
-          multiTypeDurationProps={{ enableConfigureOptions: true, expressions, disabled: readonly, allowableTypes }}
+          multiTypeDurationProps={{
+            enableConfigureOptions: true,
+            expressions,
+            disabled: readonly,
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
           className={stepCss.duration}
           disabled={readonly}
         />
@@ -137,7 +143,13 @@ export default function BaseCustomApproval(props: {
         <FormMultiTypeDurationField
           name="spec.retryInterval"
           label={getString('pipeline.customApprovalStep.retryInterval')}
-          multiTypeDurationProps={{ enableConfigureOptions: true, expressions, disabled: readonly, allowableTypes }}
+          multiTypeDurationProps={{
+            enableConfigureOptions: true,
+            expressions,
+            disabled: readonly,
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
           className={stepCss.duration}
           disabled={readonly}
         />
@@ -146,7 +158,13 @@ export default function BaseCustomApproval(props: {
         <FormMultiTypeDurationField
           name="spec.scriptTimeout"
           label={getString('pipeline.customApprovalStep.scriptTimeout')}
-          multiTypeDurationProps={{ enableConfigureOptions: true, expressions, disabled: readonly, allowableTypes }}
+          multiTypeDurationProps={{
+            enableConfigureOptions: true,
+            expressions,
+            disabled: readonly,
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
           className={stepCss.duration}
           disabled={readonly}
         />

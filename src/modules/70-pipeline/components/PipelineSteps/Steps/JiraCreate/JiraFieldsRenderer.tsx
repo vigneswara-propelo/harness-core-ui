@@ -89,7 +89,7 @@ function GetMappedFieldComponent({
   index,
   renderRequiredFields
 }: MappedComponentInterface): React.ReactElement | null {
-  const { ALLOW_USER_TYPE_FIELDS_JIRA } = useFeatureFlags()
+  const { ALLOW_USER_TYPE_FIELDS_JIRA, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { getString } = useStrings()
   const formikFieldPath = props.fieldPrefix
     ? `${props.fieldPrefix}spec.fields[${index}].value`
@@ -129,6 +129,7 @@ function GetMappedFieldComponent({
         className={className}
         multiTextInputProps={{
           allowableTypes: allowableTypes,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
           expressions
         }}
         fieldPath={`spec.fields[${index}].value`}
@@ -193,7 +194,8 @@ function GetMappedFieldComponent({
         multiTypeInputProps={{
           expressions,
           value: selectTypeInputValue,
-          allowableTypes: allowableTypes
+          allowableTypes: allowableTypes,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
         }}
         useValue
       />

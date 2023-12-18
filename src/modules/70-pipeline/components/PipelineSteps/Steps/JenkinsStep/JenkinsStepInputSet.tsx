@@ -31,6 +31,7 @@ import { JobDetails, useGetJobDetailsForJenkins, useGetJobParametersForJenkins }
 import { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { ConnectorRefType, getScopedConnectorValue } from '@pipeline/utils/stepUtils'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import type { jobParameterInterface } from './types'
@@ -72,6 +73,7 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
   const [jobDetailsType, setJobDetailsType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue(get(formik, `values.${prefix}spec.jobName`))
   )
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const [childJob, setChildJob] = useState<SelectWithBiLevelOption>({} as SelectWithBiLevelOption)
   const getJobItems = (jobs: JobDetails[]): SelectWithBiLevelOption[] => {
     return jobs?.map(job => {
@@ -231,6 +233,7 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
                 isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
               },
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               expressions,
               disabled: readonly
             }}
@@ -255,6 +258,7 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
             setRefValue
             multiTypeProps={{
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               expressions
             }}
             configureOptionsProps={{
@@ -285,6 +289,7 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
                 isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
               },
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               expressions,
               disabled: readonly
             }}
@@ -354,6 +359,7 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
 
                   onTypeChange: (type: MultiTypeInputType) => setJobDetailsType(type),
                   expressions,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   selectProps: {
                     allowCreatingNewItems: true,
                     items: jobDetails,
@@ -480,6 +486,7 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
                                 multiTextInputProps={{
                                   allowableTypes,
                                   expressions,
+                                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                                   disabled: readonly
                                 }}
                                 label=""

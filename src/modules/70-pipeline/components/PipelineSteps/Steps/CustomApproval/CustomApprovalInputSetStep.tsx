@@ -54,6 +54,7 @@ export default function CustomApprovalInputSetStep(props: CustomApprovalInputSet
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             },
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             expressions,
             disabled: readonly
           }}
@@ -111,6 +112,7 @@ export default function CustomApprovalInputSetStep(props: CustomApprovalInputSet
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             },
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             expressions,
             disabled: readonly
           }}
@@ -130,6 +132,7 @@ export default function CustomApprovalInputSetStep(props: CustomApprovalInputSet
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             },
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             expressions,
             disabled: readonly
           }}
@@ -210,6 +213,7 @@ export default function CustomApprovalInputSetStep(props: CustomApprovalInputSet
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             },
             expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             allowableTypes
           }}
         />
@@ -281,6 +285,7 @@ export default function CustomApprovalInputSetStep(props: CustomApprovalInputSet
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             },
             expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             allowableTypes
           }}
         />

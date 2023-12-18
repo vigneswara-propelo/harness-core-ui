@@ -51,6 +51,7 @@ import { FormMultiTypeConnectorField } from '@platform/connectors/components/Con
 import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { Connectors } from '@platform/connectors/constants'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { JenkinsStepProps } from './JenkinsStep'
 import { getGenuineValue } from '../JiraApproval/helper'
 import type { JenkinsFormContentInterface, JenkinsStepData, jobParameterInterface } from './types'
@@ -86,6 +87,7 @@ function FormContent({
   const [jobDetailsType, setJobDetailsType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue(formValues.spec.jobName)
   )
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const [showJobParameterWarning, setShowJobParameterWarning] = useState<boolean>(true)
   const [childJobDetails, setChildJobDetails] = useState<SelectWithBiLevelOption[]>([])
   const [childJob, setChildJob] = useState<SelectWithBiLevelOption>(
@@ -367,7 +369,8 @@ function FormContent({
           multiTypeDurationProps={{
             expressions,
             enableConfigureOptions: true,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
       </div>
@@ -383,7 +386,7 @@ function FormContent({
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          multiTypeProps={{ expressions, allowableTypes }}
+          multiTypeProps={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           type="Jenkins"
           enableConfigureOptions={false}
           selected={formik?.values?.spec.connectorRef as string}
@@ -436,6 +439,7 @@ function FormContent({
           multiTypeDurationProps={{
             expressions,
             enableConfigureOptions: true,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             allowableTypes,
             isExecutionTimeFieldDisabled: false,
             configureOptionsProps: {
@@ -453,6 +457,7 @@ function FormContent({
           placeholder={jobNamePlaceholder}
           multiTypeInputProps={{
             width: '100%',
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             onChange: (primaryValue: any) => {
               if (primaryValue?.hasSubmenuItems) {
                 setShowChildJobField(true)
@@ -531,6 +536,7 @@ function FormContent({
             value={childJob}
             placeholder={childJobNamePlaceholder}
             multiTypeInputProps={{
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               width: 390,
               onChange: (primaryValue: any) => {
                 if (getMultiTypeFromValue(primaryValue) === MultiTypeInputType.FIXED && primaryValue?.label?.length) {
@@ -632,6 +638,7 @@ function FormContent({
                               placeholder={getString('valueLabel')}
                               multiTextInputProps={{
                                 allowableTypes,
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                                 expressions,
                                 defaultValueToReset: '',
                                 disabled: readonly

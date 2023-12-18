@@ -51,6 +51,7 @@ import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/S
 import { ApprovalRejectionCriteriaType } from '@pipeline/components/PipelineSteps/Steps/Common/types'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type {
   JiraApprovalData,
   JiraApprovalStepModeProps,
@@ -93,6 +94,7 @@ function FormContent({
   const [projectMetadata, setProjectMetadata] = useState<JiraProjectNG>()
   const [connectorValueType, setConnectorValueType] = useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
   const [issueMetadata, setIssueMetadata] = useState<JiraProjectNG>()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const commonParams = {
     accountIdentifier: accountId,
@@ -235,7 +237,8 @@ function FormContent({
           multiTypeDurationProps={{
             expressions,
             enableConfigureOptions: true,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
       </div>
@@ -253,7 +256,7 @@ function FormContent({
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          multiTypeProps={{ expressions, allowableTypes }}
+          multiTypeProps={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           type="Jira"
           enableConfigureOptions={false}
           selected={formik?.values?.spec.connectorRef as string}
@@ -404,6 +407,7 @@ function FormContent({
           multiTextInputProps={{
             expressions,
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             multitypeInputValue: getMultiTypeFromValue(formik.values.spec.issueKey)
           }}
         />
@@ -423,7 +427,13 @@ function FormContent({
         <FormMultiTypeDurationField
           name="spec.retryInterval"
           label={getString('pipeline.customApprovalStep.retryInterval')}
-          multiTypeDurationProps={{ enableConfigureOptions: true, expressions, disabled: readonly, allowableTypes }}
+          multiTypeDurationProps={{
+            enableConfigureOptions: true,
+            expressions,
+            disabled: readonly,
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
           className={stepCss.duration}
           disabled={readonly}
         />

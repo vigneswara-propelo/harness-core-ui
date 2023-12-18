@@ -29,6 +29,7 @@ import {
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { getGenuineValue, setIssueTypeOptions } from '../JiraApproval/helper'
 import { getInitialValueForSelectedField } from './helper'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
@@ -81,6 +82,7 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
   const [issueMetadata, setIssueMetadata] = useState<JiraProjectNG>()
   const [selectedProjectValue, setSelectedProjectValue] = useState<JiraProjectSelectOption>()
   const [selectedIssueTypeValue, setSelectedIssueTypeValue] = useState<JiraProjectSelectOption>()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const connectorRefFixedValue =
     template?.spec?.connectorRef === EXECUTION_TIME_INPUT_VALUE
@@ -212,6 +214,7 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             },
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             expressions,
             disabled: isApprovalStepFieldDisabled(readonly)
           }}
@@ -235,6 +238,7 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTypeProps={{
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             expressions
           }}
           configureOptionsProps={{
@@ -264,6 +268,7 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
           }
           multiTypeInputProps={{
             expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             allowableTypes,
             selectProps: {
               defaultSelectedItem: selectedProjectValue,
@@ -297,6 +302,7 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
           multiTypeInputProps={{
             expressions,
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             selectProps: {
               defaultSelectedItem: selectedIssueTypeValue,
               items: setIssueTypeOptions(projectMetadata?.issuetypes)

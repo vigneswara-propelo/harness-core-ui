@@ -147,7 +147,7 @@ function FormContent({
 
   const requiredFields = get(formik.values, 'spec.selectedRequiredFields', []) as JiraFieldNGWithValue[]
 
-  const { ALLOW_USER_TYPE_FIELDS_JIRA } = useFeatureFlags()
+  const { ALLOW_USER_TYPE_FIELDS_JIRA, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   useDeepCompareEffect(() => {
     if (isEmpty(requiredFields)) {
@@ -428,6 +428,7 @@ function FormContent({
           multiTypeDurationProps={{
             expressions,
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             enableConfigureOptions: true
           }}
         />
@@ -445,7 +446,7 @@ function FormContent({
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          multiTypeProps={{ expressions, allowableTypes }}
+          multiTypeProps={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           type="Jira"
           enableConfigureOptions={false}
           selected={formik?.values?.spec.connectorRef as string}
@@ -508,6 +509,7 @@ function FormContent({
             multiTypeInputProps={{
               expressions,
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               onChange: (value: unknown, _unused, multiType) => {
                 // Clear dependent fields
                 setProjectValueType(multiType)
@@ -571,6 +573,7 @@ function FormContent({
             multiTypeInputProps={{
               expressions,
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               onChange: (value: unknown, _unused, multiType) => {
                 setIssueValueType(multiType)
                 // Clear dependent fields

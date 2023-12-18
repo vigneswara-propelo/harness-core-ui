@@ -10,6 +10,7 @@ import { FieldArray, FormikProps } from 'formik'
 import { AllowedTypes, Button, FormInput, MultiTypeInputType } from '@harness/uicore'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type {
   JiraCreateData,
   JiraCreateFieldType,
@@ -35,6 +36,7 @@ export function JiraKVFieldsRenderer<T = JiraCreateData | JiraUpdateData>(
 ): React.ReactElement | null {
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const {
     formik,
     allowableTypes,
@@ -96,6 +98,7 @@ export function JiraKVFieldsRenderer<T = JiraCreateData | JiraUpdateData>(
                     allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                       item => !isMultiTypeRuntime(item)
                     ) as AllowedTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     expressions
                   }}
                 />
