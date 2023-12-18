@@ -419,7 +419,10 @@ export default function Configurations(
       {(loadingGetMonitoredService || loadingFetchMonitoredServiceYAML || loadingUpdateMonitoredService) && (
         <PageSpinner />
       )}
-      <ConfigurationContextProvider fetchMonitoredService={fetchMonitoredService}>
+      <ConfigurationContextProvider
+        fetchMonitoredService={fetchMonitoredService}
+        isTemplateByReference={Boolean(initialValues?.template?.isTemplateByReference)}
+      >
         <ServiceComponent
           value={initialValues}
           {...ServiceProps}

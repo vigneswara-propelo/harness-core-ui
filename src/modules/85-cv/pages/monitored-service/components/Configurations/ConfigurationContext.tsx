@@ -9,11 +9,15 @@ import React from 'react'
 
 export const ConfigurationContext = React.createContext({})
 
-export const useConfigurationContext = (): { fetchMonitoredService?: () => void | unknown } =>
-  React.useContext(ConfigurationContext)
+interface ConfigurationContextValue {
+  fetchMonitoredService?: () => void
+  isTemplateByReference?: boolean
+}
+
+export const useConfigurationContext = (): ConfigurationContextValue => React.useContext(ConfigurationContext)
 
 export const ConfigurationContextProvider = (
-  props: React.PropsWithChildren<{ fetchMonitoredService?: () => void | unknown }>
+  props: React.PropsWithChildren<ConfigurationContextValue>
 ): JSX.Element => {
   return <ConfigurationContext.Provider value={{ ...props }}>{props.children}</ConfigurationContext.Provider>
 }

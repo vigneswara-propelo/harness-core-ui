@@ -7,8 +7,10 @@
 
 import React from 'react'
 import { FooterCTA, FooterCTAProps } from '@cv/components/CVSetupSourcesView/SetupSourceLayout/SetupSourceLayout'
+import { useConfigurationContext } from '@modules/85-cv/pages/monitored-service/components/Configurations/ConfigurationContext'
 import css from './DrawerFooter.module.scss'
 
 export default function DrawerFooter(props: FooterCTAProps): JSX.Element {
-  return <FooterCTA className={css.footer} {...props} />
+  const { isTemplateByReference } = useConfigurationContext()
+  return <FooterCTA className={css.footer} {...props} disabled={isTemplateByReference} />
 }

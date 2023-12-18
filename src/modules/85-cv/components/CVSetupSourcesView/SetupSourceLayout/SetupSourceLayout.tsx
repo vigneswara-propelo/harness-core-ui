@@ -21,6 +21,7 @@ export interface FooterCTAProps {
   onPrevious?: () => Promise<void> | void
   isSubmit?: boolean
   className?: string
+  disabled?: boolean
 }
 
 export interface SetupSourceLayoutProps {
@@ -32,7 +33,7 @@ export interface SetupSourceLayoutProps {
 }
 
 export function FooterCTA(props: FooterCTAProps): JSX.Element {
-  const { onNext, onPrevious, isSubmit, className } = props
+  const { onNext, onPrevious, isSubmit, className, disabled } = props
   const { getString } = useStrings()
   const { projectIdentifier } = useParams<ProjectPathProps>()
   return (
@@ -55,6 +56,7 @@ export function FooterCTA(props: FooterCTAProps): JSX.Element {
             }
           }}
           onClick={() => onNext()}
+          disabled={disabled && isSubmit}
         >
           {isSubmit ? getString('submit') : getString('next')}
         </RbacButton>

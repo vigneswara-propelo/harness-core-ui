@@ -22,6 +22,7 @@ import HealthSources from '@cv/components/PipelineSteps/ContinousVerification/co
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import type { RowData } from '../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { getIconBySourceType, getTypeByFeature } from './HealthSourceTable.utils'
+import { useConfigurationContext } from '../../monitored-service/components/Configurations/ConfigurationContext'
 import css from './HealthSourceTable.module.scss'
 
 export default function HealthSourceTable({
@@ -44,6 +45,7 @@ export default function HealthSourceTable({
   const tableData = cloneDeep(value)
   const { showError } = useToaster()
   const { getString } = useStrings()
+  const { isTemplateByReference } = useConfigurationContext()
 
   const { projectIdentifier } = useParams<ProjectPathProps>()
 
@@ -174,6 +176,7 @@ export default function HealthSourceTable({
           {renderHealthSourceTableInCV(healthSourceTableData)}
           <RbacButton
             icon="plus"
+            disabled={isTemplateByReference}
             text={getString('cv.healthSource.addHealthSource')}
             variation={ButtonVariation.LINK}
             onClick={onAddNewHealthSource}

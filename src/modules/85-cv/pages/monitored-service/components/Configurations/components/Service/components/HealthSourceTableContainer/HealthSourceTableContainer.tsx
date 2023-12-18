@@ -14,6 +14,10 @@ import HealthSourceTable from '@cv/pages/health-source/HealthSourceTable/HealthS
 import { createHealthsourceList } from '@cv/pages/health-source/HealthSourceTable/HealthSourceTable.utils'
 import HealthSourceDrawerHeader from '@cv/pages/health-source/HealthSourceDrawer/component/HealthSourceDrawerHeader/HealthSourceDrawerHeader'
 import HealthSourceDrawerContent from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent'
+import {
+  useConfigurationContext,
+  ConfigurationContextProvider
+} from '@modules/85-cv/pages/monitored-service/components/Configurations/ConfigurationContext'
 import type {
   RowData,
   UpdatedHealthSource
@@ -35,6 +39,8 @@ export default function HealthSourceTableContainer({
   expressions?: string[]
   onSave: (data: any) => void | Promise<void>
 }): JSX.Element {
+  const { isTemplateByReference } = useConfigurationContext()
+
   const {
     showDrawer: showHealthSourceDrawer,
     hideDrawer: hideHealthSourceDrawer,
@@ -42,7 +48,9 @@ export default function HealthSourceTableContainer({
   } = useDrawer({
     createHeader: props => <HealthSourceDrawerHeader {...props} />,
     createDrawerContent: props => (
-      <HealthSourceDrawerContent {...props} isTemplate={isTemplate} expressions={expressions} />
+      <ConfigurationContextProvider isTemplateByReference={isTemplateByReference}>
+        <HealthSourceDrawerContent {...props} isTemplate={isTemplate} expressions={expressions} />
+      </ConfigurationContextProvider>
     )
   })
 
