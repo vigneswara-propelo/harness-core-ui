@@ -16,7 +16,11 @@ export const shouldIgnoreEvent = (event: any): boolean => {
   }
 
   // Ignore errors from monaco-editor workers caused due to network issues.
-  if (/editorsimpleworker|yaml\.worker/i.test(get(event, 'originalError.stack'))) {
+
+  const isMonacoWorkerError = [get(event, 'originalError.stack'), get(event, 'errors.0.errorMessage')].some(text =>
+    /editorsimpleworker|yaml\.worker/i.test(text)
+  )
+  if (isMonacoWorkerError) {
     return true
   }
 

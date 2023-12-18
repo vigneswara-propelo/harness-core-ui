@@ -24,6 +24,17 @@ describe('shouldIgnoreEvent function', () => {
     expect(shouldIgnoreEvent(event)).toBe(true)
   })
 
+  test('should return true when errors.0.errorMessage includes monaco worker filenames', () => {
+    const event = {
+      errors: [
+        {
+          errorMessage: 'Sample error message with yaml.worker.foo123 mentioned'
+        }
+      ]
+    }
+    expect(shouldIgnoreEvent(event)).toBe(true)
+  })
+
   test('should return false when errors array does not include ignored error class', () => {
     const event = {
       errors: [{ errorClass: 'SomeOtherError' }]

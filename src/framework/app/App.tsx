@@ -17,7 +17,6 @@ import { setAutoFreeze, enableMapSet } from 'immer'
 import { debounce } from 'lodash-es'
 import SessionToken from 'framework/utils/SessionToken'
 import useOpenApiClients from 'framework/hooks/useOpenAPIClients'
-import { useNetworkEvents } from 'framework/hooks/useNetworkEvents'
 import { queryClient } from 'services/queryClient'
 import { AppStoreProvider } from 'framework/AppStore/AppStoreContext'
 import { PreferenceStoreProvider, PREFERENCES_TOP_LEVEL_KEY } from 'framework/PreferenceStore/PreferenceStoreContext'
@@ -303,8 +302,6 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
     }
     return removeEventListners
   }, [])
-
-  useNetworkEvents()
 
   useGlobalEventListener('PROMISE_API_RESPONSE', ({ detail }) => {
     if (detail && detail.response) {
