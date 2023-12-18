@@ -434,11 +434,7 @@ describe('Create Github connector Wizard', () => {
 
   test('should render form for edit http and authtype github app', async () => {
     const { container, getByText } = render(
-      <TestWrapper
-        path="/account/:accountId/resources/connectors"
-        pathParams={{ accountId: 'dummy' }}
-        defaultFeatureFlagValues={{ CDS_GITHUB_APP_AUTHENTICATION: true }}
-      >
+      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
         <CreateGithubConnector
           {...commonProps}
           isEditMode={true}

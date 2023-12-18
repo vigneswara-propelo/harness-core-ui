@@ -48,7 +48,6 @@ import { ConnectViaOAuth } from '@common/components/ConnectViaOAuth/ConnectViaOA
 import { Connectors } from '@platform/connectors/constants'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { handleOAuthEventProcessing, OAuthEventProcessingResponse } from '@common/components/ConnectViaOAuth/OAuthUtils'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import commonStyles from '@platform/connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './StepGithubAuthentication.module.scss'
@@ -223,8 +222,6 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
     const [forceFailOAuthTimeoutId, setForceFailOAuthTimeoutId] = useState<NodeJS.Timeout>()
     const [oAuthResponse, setOAuthResponse] = useState<OAuthEventProcessingResponse>()
 
-    const { CDS_GITHUB_APP_AUTHENTICATION } = useFeatureFlags()
-
     const scope: ScopedObjectDTO | undefined = props.isEditMode
       ? {
           orgIdentifier: prevStepData?.orgIdentifier,
@@ -239,18 +236,15 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
       {
         label: getString('usernameToken'),
         value: GitAuthTypes.USER_TOKEN
+      },
+      {
+        label: getString('common.git.gitHubApp'),
+        value: GitAuthTypes.GITHUB_APP
       }
     ]
 
     if (enabledHostedBuildsForFreeUsers) {
       authOptions.push({ label: getString('common.oAuthLabel'), value: GitAuthTypes.OAUTH })
-    }
-
-    if (CDS_GITHUB_APP_AUTHENTICATION) {
-      authOptions.push({
-        label: getString('common.git.gitHubApp'),
-        value: GitAuthTypes.GITHUB_APP
-      })
     }
 
     //#region  OAuth setup and processing
