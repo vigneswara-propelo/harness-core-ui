@@ -92,7 +92,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
   const { CDS_HELM_FETCH_CHART_METADATA_NG } = useFeatureFlags()
   const manifestStoreType = get(template, `${manifestPath}.spec.store.type`, null)
   const [chartVersions, setChartVersions] = React.useState<SelectOption[]>([])
-
   const isOciHelmChart = React.useMemo(() => {
     return manifest?.spec?.store?.type === OciHelmTypes.Chart
   }, [manifest])
@@ -111,6 +110,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
   const branchPath = isOciHelmChart
     ? `${manifestPath}.spec.store.spec.config.spec.branch`
     : `${manifestPath}.spec.store.spec.branch`
+
   const { data: regionData } = useListAwsRegions({
     queryParams: {
       accountId
@@ -366,6 +366,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
   }
 
   // this OR condition is for OCI helm connector
+
   return (
     <Layout.Vertical
       data-name="manifest"
@@ -384,10 +385,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             multiTypeProps={{
               allowableTypes,
               expressions
-            }}
-            onChange={() => {
-              setChartVersions([])
-              formik.setFieldValue(`${path}.${manifestPath}.spec.chartVersion`, '')
             }}
             width={400}
             accountIdentifier={accountId}
