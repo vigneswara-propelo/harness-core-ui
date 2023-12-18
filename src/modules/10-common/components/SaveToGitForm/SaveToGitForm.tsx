@@ -74,6 +74,7 @@ export interface SaveToGitFormInterface {
   identifier?: string
   repoIdentifier?: string
   repoName?: string
+  isHarnessCodeRepo?: boolean
   rootFolder?: string
   filePath?: string
   isNewBranch: boolean

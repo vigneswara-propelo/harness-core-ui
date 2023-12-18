@@ -19,7 +19,7 @@ import {
   ButtonVariation,
   ButtonSize
 } from '@harness/uicore'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams, Link, useHistory } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
 import ReactTimeago from 'react-timeago'
@@ -169,7 +169,11 @@ export const CodeSourceCell: CellType = ({ row }) => {
         content={
           <Layout.Vertical spacing="small" padding="large" style={{ maxWidth: 400 }}>
             <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'start' }}>
-              <Icon name="github" size={14} color={Color.GREY_200} />
+              {isEmpty(data.connectorRef) ? (
+                <Icon name="code" size={17} />
+              ) : (
+                <Icon name="github" size={14} color={Color.GREY_200} />
+              )}
               <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
                 {gitDetails?.repoName || gitDetails?.repoIdentifier}
               </Text>

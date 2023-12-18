@@ -31,6 +31,7 @@ import { useStrings } from 'framework/strings'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { clearNullUndefined } from '@pipeline/utils/inputSetUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { Connectors } from '@modules/27-platform/connectors/constants'
 import { getUpdatedGitDetails } from './utils'
 
 interface UseSaveInputSetReturnType {
@@ -151,7 +152,8 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
                   }
                 : {}),
               ...initialStoreMetadataPayload,
-              ...updatedGitDetails
+              ...updatedGitDetails,
+              isHarnessCodeRepo: inputSetObj.provider?.type === Connectors.Harness
             }
           })
         }

@@ -276,7 +276,7 @@ describe('PipelineCreate test', () => {
         stages: []
       },
       { connectorRef: 'testConnector', storeType: 'REMOTE' },
-      { repoName: 'sunnykesh-gitSync', branch: 'master', filePath: './test.yaml' },
+      { repoName: 'sunnykesh-gitSync', branch: 'master', filePath: './test.yaml', isHarnessCodeRepo: false },
       undefined,
       '1'
     )
@@ -307,8 +307,10 @@ describe('PipelineCreate test', () => {
       identifier: 'pipeline1',
       name: 'Pipeline 1',
       description: 'abc',
+      connectorRef: 'testConn',
       repo: 'repo',
       branch: 'branch',
+      storeType: StoreType.REMOTE,
       stages: []
     }
     const { getByText } = render(
@@ -318,7 +320,7 @@ describe('PipelineCreate test', () => {
           accountId: 'dummy',
           ordIdentifier: 'testOrg',
           projectIdentifier: 'testProject',
-          pipelineIdentifier: DefaultNewPipelineId,
+          pipelineIdentifier: 'pipeline1',
           module: 'cd'
         }}
         defaultAppStoreValues={{ isGitSyncEnabled: true }}
@@ -351,19 +353,20 @@ describe('PipelineCreate test', () => {
         stages: []
       },
       {
-        connectorRef: undefined,
-        storeType: undefined
+        connectorRef: 'testConn',
+        storeType: StoreType.REMOTE
       },
       {
         repoIdentifier: 'identifier',
-        branch: 'branch'
+        branch: 'branch',
+        isHarnessCodeRepo: false
       },
       undefined,
       '1'
     )
   })
 
-  test('when git exp is enabled - pipeline edit modal should display repo and branch to save pipeline to', async () => {
+  test('when git exp is enabled - pipeline edit modal should display repo and branch to save pipeline to with Git simplification on', async () => {
     afterSave.mockReset()
     const initialPipelineCreateData = {
       identifier: 'pipeline1',
@@ -449,7 +452,8 @@ describe('PipelineCreate test', () => {
       {
         repoName: 'testRepo',
         branch: 'testBranch',
-        filePath: '.harness/pipeline1.yaml'
+        filePath: '.harness/pipeline1.yaml',
+        isHarnessCodeRepo: false
       },
       undefined,
       '1'

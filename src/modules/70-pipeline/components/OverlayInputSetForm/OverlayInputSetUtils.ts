@@ -17,6 +17,7 @@ import type {
 import type { InputSetDTO } from '@pipeline/utils/types'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import { Connectors } from '@modules/27-platform/connectors/constants'
 import type { InputSetValue } from '../InputSetSelector/utils'
 
 export const constructInputSetYamlObject = (item: InputSetSummaryResponse) => ({
@@ -77,7 +78,8 @@ export const getCreateUpdateRequestBodyOptions = ({
           ...commonQueryParams,
           ...(initialStoreMetadata?.storeType === StoreType.REMOTE ? initialStoreMetadata : {}),
           ...(gitDetails ?? {}),
-          ...(gitDetails && gitDetails.isNewBranch ? { baseBranch: initialGitDetails.branch } : {})
+          ...(gitDetails && gitDetails.isNewBranch ? { baseBranch: initialGitDetails.branch } : {}),
+          isHarnessCodeRepo: inputSetObj.provider?.type === Connectors.Harness
         }
       }
 }

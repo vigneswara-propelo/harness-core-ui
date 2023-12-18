@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { get, isNull, isUndefined, omitBy } from 'lodash-es'
+import { get, isEmpty, isNull, isUndefined, omitBy } from 'lodash-es'
 import {
   Container,
   Button,
@@ -412,7 +412,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       defaultBranch
     }: {
       shouldSavePipelineToGit: boolean
-      gitParams: GitQueryParams
+      gitParams: GitQueryParams & { isHarnessCodeRepo?: boolean }
       yamlPath: string
       isGitSaveRetry?: boolean
       defaultBranch: string
@@ -442,12 +442,14 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       branch,
       repo,
       connectorRef,
+      isHarnessCodeRepo,
       triggerType
     }: {
       pipelineIdentifier: string
       branch: string
       repo: string
       connectorRef?: string
+      isHarnessCodeRepo?: boolean
       triggerType: BuildCodebaseType
     }): Promise<ResponseInputSetResponse> => {
       const inputSetName =
@@ -466,6 +468,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           projectIdentifier,
           pipelineBranch: branch,
           connectorRef,
+          isHarnessCodeRepo,
           repoName: repo,
           branch,
           filePath: yamlPath,
@@ -502,6 +505,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         configuredGitConnector && configuredGitConnector.type !== Connectors.Harness
           ? getScopedValueFromDTO(configuredGitConnector as ScopedValueObjectDTO)
           : ''
+      const isHarnessCodeRepo = isEmpty(connectorRef)
       if (
         (selectRepositoryRef.current?.repository || (CODE_ENABLED && selectRepositoryRef.current?.gitnessRepository)) &&
         configuredGitConnector
@@ -551,7 +555,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             shouldSavePipelineToGit,
             defaultBranch,
             isGitSaveRetry,
-            gitParams: commonGitParams,
+            gitParams: { ...commonGitParams, isHarnessCodeRepo },
             yamlPath
           }),
           requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
@@ -574,6 +578,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                     pipelineIdentifier: createdPipelineIdentifier,
                     repo: fullRepoName,
                     connectorRef,
+                    isHarnessCodeRepo,
                     triggerType: BuildCodebaseType.PR
                   })
                 if (createInputSetStatus === Status.SUCCESS && createInputSetResponse?.identifier) {
@@ -619,6 +624,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                           pipelineIdentifier: createdPipelineIdentifier,
                           repo: fullRepoName,
                           connectorRef,
+                          isHarnessCodeRepo,
                           triggerType: BuildCodebaseType.branch
                         })
                       if (_createInputSetStatus === Status.SUCCESS && _createInputSetResponse?.identifier) {

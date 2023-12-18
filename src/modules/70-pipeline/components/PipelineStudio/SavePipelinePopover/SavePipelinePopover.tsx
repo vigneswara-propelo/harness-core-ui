@@ -266,7 +266,8 @@ function SavePipelinePopover(
           : {}),
         ...(isPublicAccessEnabledOnResources
           ? { public: !!pipelineMetadataConfig?.modifiedMetadata?.publicAccessResponse?.public }
-          : {})
+          : {}),
+        isHarnessCodeRepo: updatedGitDetails?.isHarnessCodeRepo
       },
       omit(latestPipeline, 'repo', 'branch'),
       isEdit
@@ -386,7 +387,8 @@ function SavePipelinePopover(
       {
         ...updatedGitDetails,
         repoName: gitDetails.repoName,
-        filePath: isGitSyncEnabled ? updatedGitDetails.filePath : defaultTo(gitDetails.filePath, '')
+        filePath: isGitSyncEnabled ? updatedGitDetails.filePath : defaultTo(gitDetails.filePath, ''),
+        isHarnessCodeRepo: gitDetails.isHarnessCodeRepo
       },
       pipelineIdentifier !== DefaultNewPipelineId ? { lastObjectId: objectId, lastCommitId: commitId } : {}
     )

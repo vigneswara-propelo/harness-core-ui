@@ -227,6 +227,7 @@ export interface AccessControlCheckError {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
+    | 'AZURE_KEY_VAULT_INTERRUPT_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -448,6 +449,9 @@ export interface AccessControlCheckError {
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
     | 'ABORT_ALL_ALREADY_NG'
+    | 'WEBHOOK_EXCEPTION'
+    | 'INVALID_OIDC_CONFIGURATION'
+    | 'INVALID_CREDENTIALS'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -966,6 +970,36 @@ export interface BuildStoreTypeSpec {
   [key: string]: any
 }
 
+export interface BulkTriggerDetail {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  pipelineIdentifier?: string
+  projectIdentifier?: string
+  triggerIdentifier?: string
+  type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiRegionArtifact'
+}
+
+export interface BulkTriggersDataRequest {
+  enable?: boolean
+}
+
+export interface BulkTriggersFilterRequest {
+  orgIdentifier?: string
+  pipelineIdentifier?: string
+  projectIdentifier?: string
+  type?: string
+}
+
+export interface BulkTriggersRequest {
+  data: BulkTriggersDataRequest
+  filters: BulkTriggersFilterRequest
+}
+
+export interface BulkTriggersResponse {
+  bulkTriggerDetailDTOList?: BulkTriggerDetail[]
+  count?: number
+}
+
 export interface CIProperties {
   codebase?: CodeBase
 }
@@ -1110,7 +1144,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'TICKETING'
   )[]
   ccmConnectorFilter?: CcmConnectorFilter
-  connectivityStatuses?: ('SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN')[]
+  connectivityStatuses?: ('SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN' | 'PENDING')[]
   connectorConnectivityModes?: ('DELEGATE' | 'MANAGER')[]
   connectorIdentifiers?: string[]
   connectorIds?: string[]
@@ -1174,7 +1208,7 @@ export type ConnectorFilterProperties = FilterProperties & {
 export type ConnectorInternalFilterProperties = FilterProperties & {
   accountIdentifiers?: string[]
   ccmConnectorFilter?: CcmConnectorFilter
-  connectivityStatuses?: ('SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN')[]
+  connectivityStatuses?: ('SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN' | 'PENDING')[]
   types?: (
     | 'K8sCluster'
     | 'Git'
@@ -1508,6 +1542,7 @@ export interface EmptyDirYamlSpec {
 }
 
 export interface EnforcementPolicy {
+  policySets?: string[]
   store?: PolicyStore
 }
 
@@ -1516,6 +1551,7 @@ export interface EntityGitDetails {
   commitId?: string
   filePath?: string
   fileUrl?: string
+  isHarnessCodeRepo?: boolean
   objectId?: string
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
@@ -1693,6 +1729,7 @@ export interface Error {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
+    | 'AZURE_KEY_VAULT_INTERRUPT_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -1914,6 +1951,9 @@ export interface Error {
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
     | 'ABORT_ALL_ALREADY_NG'
+    | 'WEBHOOK_EXCEPTION'
+    | 'INVALID_OIDC_CONFIGURATION'
+    | 'INVALID_CREDENTIALS'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2080,6 +2120,7 @@ export interface ErrorMetadata {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
+    | 'AZURE_KEY_VAULT_INTERRUPT_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -2301,6 +2342,9 @@ export interface ErrorMetadata {
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
     | 'ABORT_ALL_ALREADY_NG'
+    | 'WEBHOOK_EXCEPTION'
+    | 'INVALID_OIDC_CONFIGURATION'
+    | 'INVALID_CREDENTIALS'
   errorMessage?: string
 }
 
@@ -2715,6 +2759,7 @@ export interface Failure {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
+    | 'AZURE_KEY_VAULT_INTERRUPT_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -2936,6 +2981,9 @@ export interface Failure {
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
     | 'ABORT_ALL_ALREADY_NG'
+    | 'WEBHOOK_EXCEPTION'
+    | 'INVALID_OIDC_CONFIGURATION'
+    | 'INVALID_CREDENTIALS'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -3120,6 +3168,7 @@ export type GitCloneStepInfo = StepSpecType & {
   connectorRef: string
   depth?: number
   outputFilePathsContent?: string[]
+  privileged?: boolean
   projectName?: string
   repoName?: string
   resources?: ContainerResource
@@ -3342,6 +3391,7 @@ export type HarnessApprovalStepInfo = StepSpecType & {
   approverInputs?: ApproverInputInfo[]
   approvers: Approvers
   autoApproval?: AutoApprovalParams
+  callbackId?: string
   includePipelineExecutionHistory: boolean
   isAutoRejectEnabled?: boolean
 }
@@ -3449,7 +3499,7 @@ export type HttpStepInfoV1 = StepSpecType & {
   body?: ParameterFieldString
   cert?: ParameterFieldString
   cert_key?: ParameterFieldString
-  delegate?: ParameterFieldListTaskSelectorYaml
+  delegates?: ParameterFieldListTaskSelectorYaml
   headers?: HttpHeaderConfig[]
   input_vars?: NGVariableV1Wrapper
   metadata?: string
@@ -4429,6 +4479,18 @@ export interface ParameterFieldDouble {
   value?: number
 }
 
+export interface ParameterFieldExecutionTarget {
+  defaultValue?: ExecutionTarget
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: ExecutionTarget
+}
+
 export interface ParameterFieldListObject {
   defaultValue?: { [key: string]: any }[]
   executionInput?: boolean
@@ -5257,6 +5319,8 @@ export interface ResourceDTO {
     | 'API_KEY'
     | 'TOKEN'
     | 'DELEGATE_TOKEN'
+    | 'DASHBOARD'
+    | 'DASHBOARD_FOLDER'
     | 'GOVERNANCE_POLICY'
     | 'GOVERNANCE_POLICY_SET'
     | 'VARIABLE'
@@ -5307,6 +5371,7 @@ export interface ResourceDTO {
     | 'GITOPS_PROJECT_MAPPING'
     | 'GITOPS_APPLICATION'
     | 'CODE_REPOSITORY'
+    | 'MODULE_LICENSE'
   uniqueId?: string
 }
 
@@ -5349,6 +5414,13 @@ export interface ResponseBarrierInfo {
 export interface ResponseBoolean {
   correlationId?: string
   data?: boolean
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseBulkTriggersResponse {
+  correlationId?: string
+  data?: BulkTriggersResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -5815,6 +5887,7 @@ export interface ResponseMessage {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
+    | 'AZURE_KEY_VAULT_INTERRUPT_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -6036,6 +6109,9 @@ export interface ResponseMessage {
     | 'SERVICENOW_REFRESH_TOKEN_ERROR'
     | 'PARAMETER_FIELD_CAST_ERROR'
     | 'ABORT_ALL_ALREADY_NG'
+    | 'WEBHOOK_EXCEPTION'
+    | 'INVALID_OIDC_CONFIGURATION'
+    | 'INVALID_CREDENTIALS'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -6915,7 +6991,7 @@ export interface ShellScriptSourceWrapperV1 {
 export type ShellScriptStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   environmentVariables?: NGVariable[]
-  executionTarget?: ExecutionTarget
+  executionTarget?: ParameterFieldExecutionTarget
   includeInfraSelectors?: boolean
   metadata?: string
   onDelegate: boolean
@@ -6926,7 +7002,7 @@ export type ShellScriptStepInfo = StepSpecType & {
 }
 
 export type ShellScriptStepInfoV1 = StepSpecType & {
-  delegate?: ParameterFieldListTaskSelectorYaml
+  delegates?: ParameterFieldListTaskSelectorYaml
   env_vars?: NGVariableV1Wrapper
   execution_target?: ExecutionTargetV1
   include_infra_selectors?: ParameterFieldBoolean
@@ -7294,6 +7370,7 @@ export interface TemplateResponse {
   icon?: string
   identifier: string
   lastUpdatedAt?: number
+  mergedYaml?: string
   name: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -7413,6 +7490,7 @@ export interface TriggerCatalogItem {
   triggerCatalogType: (
     | 'Github'
     | 'Gitlab'
+    | 'Harness'
     | 'Bitbucket'
     | 'AzureRepo'
     | 'Custom'
@@ -7433,7 +7511,6 @@ export interface TriggerCatalogItem {
     | 'GoogleCloudStorage'
     | 'HelmChart'
     | 'Cron'
-    | 'Harness'
   )[]
 }
 
@@ -8856,6 +8933,7 @@ export interface CreateInputSetForPipelineQueryParams {
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
   repoName?: string
+  isHarnessCodeRepo?: boolean
 }
 
 export type CreateInputSetForPipelineProps = Omit<
@@ -9634,6 +9712,7 @@ export interface CreateOverlayInputSetForPipelineQueryParams {
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
   repoName?: string
+  isHarnessCodeRepo?: boolean
 }
 
 export type CreateOverlayInputSetForPipelineProps = Omit<
@@ -9826,6 +9905,7 @@ export interface UpdateOverlayInputSetForPipelineQueryParams {
   storeType?: 'INLINE' | 'REMOTE'
   lastCommitId?: string
   isNewBranch?: boolean
+  isHarnessCodeRepo?: boolean
 }
 
 export interface UpdateOverlayInputSetForPipelinePathParams {
@@ -10182,6 +10262,7 @@ export interface UpdateInputSetForPipelineQueryParams {
   storeType?: 'INLINE' | 'REMOTE'
   lastCommitId?: string
   isNewBranch?: boolean
+  isHarnessCodeRepo?: boolean
 }
 
 export interface UpdateInputSetForPipelinePathParams {
@@ -10289,6 +10370,7 @@ export interface SanitiseInputSetQueryParams {
   storeType?: 'INLINE' | 'REMOTE'
   lastCommitId?: string
   isNewBranch?: boolean
+  isHarnessCodeRepo?: boolean
 }
 
 export interface SanitiseInputSetPathParams {
@@ -10493,6 +10575,7 @@ export interface YamlDiffForInputSetQueryParams {
   storeType?: 'INLINE' | 'REMOTE'
   lastCommitId?: string
   isNewBranch?: boolean
+  isHarnessCodeRepo?: boolean
 }
 
 export interface YamlDiffForInputSetPathParams {
@@ -12835,7 +12918,7 @@ export type RunStagesWithRuntimeInputYamlProps = Omit<
   RunStagesWithRuntimeInputYamlPathParams
 
 /**
- * Execute a pipeline with inputSet pipeline yaml
+ * Execute given Stages of a Pipeline with inputSet pipeline yaml
  */
 export const RunStagesWithRuntimeInputYaml = ({ identifier, ...props }: RunStagesWithRuntimeInputYamlProps) => (
   <Mutate<
@@ -12865,7 +12948,7 @@ export type UseRunStagesWithRuntimeInputYamlProps = Omit<
   RunStagesWithRuntimeInputYamlPathParams
 
 /**
- * Execute a pipeline with inputSet pipeline yaml
+ * Execute given Stages of a Pipeline with inputSet pipeline yaml
  */
 export const useRunStagesWithRuntimeInputYaml = ({ identifier, ...props }: UseRunStagesWithRuntimeInputYamlProps) =>
   useMutate<
@@ -12881,7 +12964,7 @@ export const useRunStagesWithRuntimeInputYaml = ({ identifier, ...props }: UseRu
   )
 
 /**
- * Execute a pipeline with inputSet pipeline yaml
+ * Execute given Stages of a Pipeline with inputSet pipeline yaml
  */
 export const runStagesWithRuntimeInputYamlPromise = (
   {
@@ -13393,6 +13476,7 @@ export interface CreatePipelineQueryParams {
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
   repoName?: string
+  isHarnessCodeRepo?: boolean
 }
 
 export type CreatePipelineProps = Omit<
@@ -13460,6 +13544,7 @@ export interface ClonePipelineQueryParams {
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
   repoName?: string
+  isHarnessCodeRepo?: boolean
 }
 
 export type ClonePipelineProps = Omit<
@@ -15695,6 +15780,7 @@ export interface CreatePipelineV2QueryParams {
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
   repoName?: string
+  isHarnessCodeRepo?: boolean
   public?: boolean
 }
 
@@ -15915,6 +16001,7 @@ export interface PutPipelineV2QueryParams {
   storeType?: 'INLINE' | 'REMOTE'
   lastCommitId?: string
   isNewBranch?: boolean
+  isHarnessCodeRepo?: boolean
   public?: boolean
 }
 
@@ -16429,6 +16516,7 @@ export interface PutPipelineQueryParams {
   storeType?: 'INLINE' | 'REMOTE'
   lastCommitId?: string
   isNewBranch?: boolean
+  isHarnessCodeRepo?: boolean
 }
 
 export interface PutPipelinePathParams {
@@ -16725,6 +16813,7 @@ export interface RefreshAndUpdateTemplateInputsQueryParams {
   storeType?: 'INLINE' | 'REMOTE'
   lastCommitId?: string
   isNewBranch?: boolean
+  isHarnessCodeRepo?: boolean
 }
 
 export type RefreshAndUpdateTemplateInputsProps = Omit<
@@ -16791,6 +16880,7 @@ export interface RefreshAllQueryParams {
   storeType?: 'INLINE' | 'REMOTE'
   lastCommitId?: string
   isNewBranch?: boolean
+  isHarnessCodeRepo?: boolean
 }
 
 export type RefreshAllProps = Omit<
@@ -17159,6 +17249,60 @@ export const createTriggerPromise = (
     UpdateTriggerBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/triggers`, props, signal)
+
+export interface BulkToggleTriggers1QueryParams {
+  accountIdentifier: string
+}
+
+export type BulkToggleTriggers1Props = Omit<
+  MutateProps<ResponseBulkTriggersResponse, Failure | Error, BulkToggleTriggers1QueryParams, BulkTriggersRequest, void>,
+  'path' | 'verb'
+>
+
+export const BulkToggleTriggers1 = (props: BulkToggleTriggers1Props) => (
+  <Mutate<ResponseBulkTriggersResponse, Failure | Error, BulkToggleTriggers1QueryParams, BulkTriggersRequest, void>
+    verb="PATCH"
+    path={`/triggers/bulk-toggle`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseBulkToggleTriggers1Props = Omit<
+  UseMutateProps<
+    ResponseBulkTriggersResponse,
+    Failure | Error,
+    BulkToggleTriggers1QueryParams,
+    BulkTriggersRequest,
+    void
+  >,
+  'path' | 'verb'
+>
+
+export const useBulkToggleTriggers1 = (props: UseBulkToggleTriggers1Props) =>
+  useMutate<ResponseBulkTriggersResponse, Failure | Error, BulkToggleTriggers1QueryParams, BulkTriggersRequest, void>(
+    'PATCH',
+    `/triggers/bulk-toggle`,
+    { base: getConfig('pipeline/api'), ...props }
+  )
+
+export const bulkToggleTriggers1Promise = (
+  props: MutateUsingFetchProps<
+    ResponseBulkTriggersResponse,
+    Failure | Error,
+    BulkToggleTriggers1QueryParams,
+    BulkTriggersRequest,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseBulkTriggersResponse,
+    Failure | Error,
+    BulkToggleTriggers1QueryParams,
+    BulkTriggersRequest,
+    void
+  >('PATCH', getConfig('pipeline/api'), `/triggers/bulk-toggle`, props, signal)
 
 export interface GetTriggerCatalogQueryParams {
   accountIdentifier: string
@@ -19615,7 +19759,15 @@ export interface GetSchemaYamlQueryParams {
     | 'AquaSecurity'
     | 'IDPStage'
     | 'ChaosHub'
-    | 'IdpCookieCutter'
+    | 'CookieCutter'
+    | 'CreateRepo'
+    | 'DownloadAwsS3'
+    | 'DirectPush'
+    | 'RegisterCatalog'
+    | 'K8sTrafficRouting'
+    | 'DownloadHarnessStore'
+    | 'CreateCatalog'
+    | 'SlackNotify'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
