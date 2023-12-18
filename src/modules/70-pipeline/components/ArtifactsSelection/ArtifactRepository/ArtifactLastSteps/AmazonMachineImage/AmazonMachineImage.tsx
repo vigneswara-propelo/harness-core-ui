@@ -44,6 +44,7 @@ import {
   TagTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { useListAwsRegions } from 'services/portal'
 import MultiTypeArrayTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeArrayTagSelector'
 import { useMutateAsGet } from '@common/hooks'
@@ -73,6 +74,7 @@ function FormComponent({
   const [regions, setRegions] = React.useState<SelectOption[]>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [tags, setTags] = useState<SelectOption[]>([])
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
@@ -319,6 +321,7 @@ function FormComponent({
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 selectProps: {
                   noResults: (
                     <NoTagResults
@@ -377,7 +380,8 @@ function FormComponent({
               disabled={isReadonly}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
             />
             {getMultiTypeFromValue(formik.values.spec?.versionRegex) === MultiTypeInputType.RUNTIME && (

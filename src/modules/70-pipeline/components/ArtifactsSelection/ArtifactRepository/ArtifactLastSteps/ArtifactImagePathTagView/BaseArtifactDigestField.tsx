@@ -26,6 +26,7 @@ import type { ArtifactDigestWrapperDetails } from '@pipeline/components/Artifact
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from '../../ArtifactConnector.module.scss'
 
 export function NoDigestResults({
@@ -90,6 +91,7 @@ function BaseArtifactDigestField({
 }: ArtifactDigestFieldProps): React.ReactElement {
   const { getString } = useStrings()
   const loadingPlaceholderText = getString('pipeline.artifactsSelection.loadingDigest')
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const digestItems: SelectOption[] = React.useMemo(() => {
     const options = []
@@ -132,7 +134,8 @@ function BaseArtifactDigestField({
             }}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
           />
           {getMultiTypeFromValue(digestDetails.formikDigestValueField as any) === MultiTypeInputType.RUNTIME && (
@@ -162,6 +165,7 @@ function BaseArtifactDigestField({
             multiTypeInputProps={{
               expressions,
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               selectProps: {
                 defaultSelectedItem: digestDetails.formikDigestValueField as SelectOption,
                 noResults: !isLastBuildRegexType ? (

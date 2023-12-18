@@ -165,7 +165,11 @@ function ArtifactImagePathTagView({
             label={getString('pipeline.artifactPathLabel')}
             name="artifactPath"
             placeholder={getString('pipeline.artifactsSelection.artifactPathPlaceholder')}
-            multiTextInputProps={{ expressions, allowableTypes }}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
             onChange={onChangeImageArtifactPath}
           />
           {getMultiTypeFromValue(formik?.values?.artifactPath) === MultiTypeInputType.RUNTIME && (
@@ -193,7 +197,11 @@ function ArtifactImagePathTagView({
               label={getString('pipeline.imagePathLabel')}
               name="imagePath"
               placeholder={getString('pipeline.artifactsSelection.existingDocker.imageNamePlaceholder')}
-              multiTextInputProps={{ expressions, allowableTypes }}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+              }}
               onChange={() => {
                 onChangeImageArtifactPath()
                 resetDigestValue()

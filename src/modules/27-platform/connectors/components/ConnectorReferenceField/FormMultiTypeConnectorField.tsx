@@ -155,7 +155,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     selected: false,
     inlineModalClosed: false
   })
-  const { PL_FAVORITES } = useFeatureFlags()
+  const { PL_FAVORITES, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const scopeFromSelected =
     typeof selectedValue === 'string' && selectedValue.length > 0
       ? getScopeFromValue(selectedValue || '')
@@ -442,6 +442,11 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     isFavoritesEnabled: PL_FAVORITES
   })
 
+  const inputProps = {
+    ...multiTypeProps,
+    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+  }
+
   const component = (
     <FormGroup {...rest} labelFor={name} helperText={helperText} intent={intent} style={{ marginBottom: 0 }}>
       <MultiTypeReferenceInput<ConnectorReferenceDTO>
@@ -521,7 +526,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
         }}
         value={selectedValue}
         multitypeInputValue={multitypeInputValue}
-        {...multiTypeProps}
+        {...inputProps}
       />
     </FormGroup>
   )

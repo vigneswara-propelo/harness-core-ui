@@ -135,7 +135,7 @@ function Artifactory({
   const isCustomDeploymentTypeSelected = isCustomDeploymentType(selectedDeploymentType)
   const isTasDeploymentTypeSelected = isTASDeploymentType(selectedDeploymentType)
   const isAWSLambdaDeploymentTypeSelected = isAWSLambdaDeploymentType(selectedDeploymentType)
-  const { CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY } = useFeatureFlags()
+  const { CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const showRepositoryFormatForAllowedTypes =
     isSSHWinRmDeploymentType ||
@@ -679,7 +679,8 @@ function Artifactory({
                           placeholder={getString('pipeline.artifactsSelection.artifactDirectoryPlaceholder')}
                           multiTextInputProps={{
                             expressions,
-                            allowableTypes
+                            allowableTypes,
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                           }}
                           onChange={() => {
                             resetTag(formik)
@@ -710,7 +711,8 @@ function Artifactory({
                           placeholder={getString('pipeline.artifactsSelection.artifactFilterPlaceholder')}
                           multiTextInputProps={{
                             expressions,
-                            allowableTypes
+                            allowableTypes,
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                           }}
                           onChange={() => {
                             resetTag(formik)
@@ -759,6 +761,7 @@ function Artifactory({
                         },
                         expressions,
                         allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                         selectProps: {
                           items: artifactPaths,
                           addClearBtn: true,
@@ -816,7 +819,8 @@ function Artifactory({
                       placeholder={getString('pipeline.repositoryUrlPlaceholder')}
                       multiTextInputProps={{
                         expressions,
-                        allowableTypes
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                       }}
                       isOptional={!CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY}
                     />
@@ -868,6 +872,7 @@ function Artifactory({
                       multiTypeInputProps={{
                         expressions,
                         allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                         selectProps: {
                           defaultSelectedItem: formik.values?.tag,
                           noResults: (

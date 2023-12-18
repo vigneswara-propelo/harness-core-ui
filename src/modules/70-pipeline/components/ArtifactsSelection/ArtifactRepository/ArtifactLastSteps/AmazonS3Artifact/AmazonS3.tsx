@@ -46,6 +46,7 @@ import {
   AmazonS3InitialValuesType,
   TagTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   ArtifactIdentifierValidation,
   ModalViewFor,
@@ -94,6 +95,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   const [bucketList, setBucketList] = React.useState<BucketResponse[] | undefined>([])
   const [filePathList, setFilePathList] = React.useState<FilePaths[] | undefined>([])
   const fileFilterValue = get(formikRef, 'current.values.fileFilter')
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   // Region related code
   const {
     data: regionData,
@@ -379,7 +381,11 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
             label={getString('pipeline.manifestType.bucketName')}
             placeholder={getString('pipeline.manifestType.bucketNamePlaceholder')}
             name="bucketName"
-            multiTextInputProps={{ expressions, allowableTypes }}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
           />
           {getMultiTypeFromValue(formik.values?.bucketName) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
@@ -410,6 +416,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
           multiTypeInputProps={{
             expressions,
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             onChange: selected => {
               if (formik.values.bucketName !== (selected as unknown as any)?.value) {
                 resetFieldValue(formik, 'filePath')
@@ -491,7 +498,8 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
               }}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
             />
             {getMultiTypeFromValue(formik.values.fileFilter) === MultiTypeInputType.RUNTIME && (
@@ -519,7 +527,8 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
               placeholder={getString('pipeline.manifestType.pathPlaceholder')}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
             />
             {getMultiTypeFromValue(formik.values.filePath) === MultiTypeInputType.RUNTIME && (
@@ -562,7 +571,8 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
             }}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
           />
           {getMultiTypeFromValue(formik.values.fileFilter) === MultiTypeInputType.RUNTIME && (
@@ -594,6 +604,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
             multiTypeInputProps={{
               expressions,
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               selectProps: {
                 noResults: (
                   <Text lineClamp={1} width={384} margin="small">
@@ -673,6 +684,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                     selectItems={regions}
                     useValue
                     multiTypeInputProps={{
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       onChange: selected => {
                         if (formik.values.region !== (selected as unknown as any)?.value) {
                           resetFieldValue(formik, 'bucketName')
@@ -752,7 +764,8 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                       placeholder={getString('pipeline.artifactsSelection.filePathRegexPlaceholder')}
                       multiTextInputProps={{
                         expressions,
-                        allowableTypes
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                       }}
                     />
                     {getMultiTypeFromValue(formik.values.filePathRegex) === MultiTypeInputType.RUNTIME && (

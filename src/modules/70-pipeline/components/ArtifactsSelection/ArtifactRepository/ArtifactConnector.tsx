@@ -26,6 +26,7 @@ import { defaultTo, set } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -71,6 +72,7 @@ export function ArtifactConnector(props: StepProps<ConnectorConfigDTO> & Artifac
   const connectorType = ArtifactToConnectorMap[selectedArtifact as ArtifactType]
   const selectedConnectorLabel = ArtifactConnectorLabelMap[selectedArtifact as ArtifactType]
   const selectedConnectorTooltip = ArtifactToConnectorMap[selectedArtifact as ArtifactType]
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const newConnectorLabel = `${getString('newLabel')} ${selectedConnectorLabel} ${getString('connector')}`
 
@@ -129,7 +131,11 @@ export function ArtifactConnector(props: StepProps<ConnectorConfigDTO> & Artifac
                   projectIdentifier={projectIdentifier}
                   orgIdentifier={orgIdentifier}
                   width={400}
-                  multiTypeProps={{ expressions, allowableTypes }}
+                  multiTypeProps={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   isNewConnectorLabelVisible={
                     !(
                       getMultiTypeFromValue(formik.values.connectorId) === MultiTypeInputType.RUNTIME &&

@@ -27,6 +27,7 @@ import type { Item } from '@harness/uicore/dist/components/ThumbnailSelect/Thumb
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { ConnectorSelectedValue } from '@platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
@@ -64,6 +65,7 @@ function ApplicationConfigWizardStepOne({
   const [isLoadingConnectors, setIsLoadingConnectors] = React.useState<boolean>(true)
   const [selectedStore, setSelectedStore] = useState(prevStepData?.selectedStore ?? initialValues.selectedStore)
   const [multitypeInputValue, setMultiTypeValue] = useState<MultiTypeInputType | undefined>(undefined)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const isHarness = (store?: string): boolean => {
     return store === 'Harness'
@@ -196,7 +198,11 @@ function ApplicationConfigWizardStepOne({
                       projectIdentifier={projectIdentifier}
                       orgIdentifier={orgIdentifier}
                       width={400}
-                      multiTypeProps={{ expressions, allowableTypes }}
+                      multiTypeProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                       isNewConnectorLabelVisible={
                         !(
                           getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME &&

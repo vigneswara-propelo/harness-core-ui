@@ -60,6 +60,7 @@ import type {
   ArtifactType,
   ACRArtifactProps
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
@@ -92,6 +93,7 @@ export function ACRArtifact({
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const connectorRef = defaultTo(modifiedPrevStepData?.connectorId?.value, modifiedPrevStepData?.identifier)
   const isConnectorUndefinedOrRunTime = !connectorRef || connectorRef === RUNTIME_INPUT_VALUE
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const loadingItems = [{ label: getString('loading'), value: '' }]
 
@@ -548,6 +550,7 @@ export function ACRArtifact({
                     selectItems={subscriptions}
                     multiTypeInputProps={{
                       expressions,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                         if (
                           e?.target?.type !== 'text' ||
@@ -627,6 +630,7 @@ export function ACRArtifact({
                     placeholder={getString('pipeline.ACR.registryPlaceholder')}
                     multiTypeInputProps={{
                       expressions,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       disabled: isReadonly,
                       onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                         const subscriptionId = getValue(formik?.values?.subscriptionId)
@@ -715,6 +719,7 @@ export function ACRArtifact({
                     placeholder={getString('pipeline.ACR.repositoryPlaceholder')}
                     multiTypeInputProps={{
                       expressions,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       disabled: isReadonly,
                       onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                         const subscriptionId = getValue(formik?.values?.subscriptionId)
@@ -821,6 +826,7 @@ export function ACRArtifact({
                       multiTypeInputProps={{
                         expressions,
                         allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                         selectProps: {
                           defaultSelectedItem: formik.values?.tag as SelectOption,
                           noResults: (
@@ -879,7 +885,11 @@ export function ACRArtifact({
                       label={getString('tagRegex')}
                       name="tagRegex"
                       placeholder={getString('pipeline.artifactsSelection.existingDocker.enterTagRegex')}
-                      multiTextInputProps={{ expressions, allowableTypes }}
+                      multiTextInputProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                     />
                     {getMultiTypeFromValue(formik.values.tagRegex) === MultiTypeInputType.RUNTIME && (
                       <div className={css.configureOptions}>
