@@ -57,7 +57,8 @@ export function useReconcile({ storeMetadata }: UseReconcileProps): UseReconcile
       }
     },
     {
-      enabled: false
+      enabled: false,
+      cacheTime: 0
     }
   )
 
