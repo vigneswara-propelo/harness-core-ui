@@ -241,7 +241,6 @@ function FormComponent({
         <div className={css.imagePathContainer}>
           <MultiTypeArrayTagSelector
             name="spec.tags"
-            className="tags-select"
             expressions={expressions}
             allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
             tags={tags}
@@ -270,7 +269,6 @@ function FormComponent({
         <div className={css.imagePathContainer}>
           <MultiTypeArrayTagSelector
             name="spec.filters"
-            className="tags-select"
             expressions={expressions}
             allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
             tags={amiFilters}

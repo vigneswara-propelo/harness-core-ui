@@ -1059,7 +1059,7 @@ exports[`TanzuCommandStep tests should render edit view as edit step with all ru
       </div>
       <div>
         <div
-          class="bp3-form-group bp3-disabled formGroup"
+          class="bp3-form-group bp3-disabled"
         >
           <label
             class="bp3-label"

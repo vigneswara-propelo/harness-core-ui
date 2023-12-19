@@ -91,7 +91,7 @@ export interface InputRowProps {
 
 export function InputRow(props: InputRowProps): React.ReactElement {
   const { input, readonly, manageInputsActive, selected, setSelected, rowDisabled } = props
-  const { name, type, description } = input
+  const { name, type, desc } = input
 
   return (
     <div className={cx(css.inputRow, { [css.manageInputs]: manageInputsActive, [css.rowDisabled]: rowDisabled })}>
@@ -108,13 +108,13 @@ export function InputRow(props: InputRowProps): React.ReactElement {
           <Text lineClamp={1} color={Color.BLACK}>
             {name}
           </Text>
-          {!isEmpty(description) && (
+          {!isEmpty(desc) && (
             <Text
               icon="description"
               inline
               padding={'small'}
               iconProps={{ size: 16 }}
-              tooltip={description}
+              tooltip={desc}
               tooltipProps={{
                 position: Position.TOP,
                 isDark: true

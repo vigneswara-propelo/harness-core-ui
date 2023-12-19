@@ -1669,7 +1669,7 @@ exports[`Test K8sApplyStep should render edit view as edit step with all runtime
       class="formGroup"
     >
       <div
-        class="bp3-form-group formGroup"
+        class="bp3-form-group"
       >
         <label
           class="bp3-label"

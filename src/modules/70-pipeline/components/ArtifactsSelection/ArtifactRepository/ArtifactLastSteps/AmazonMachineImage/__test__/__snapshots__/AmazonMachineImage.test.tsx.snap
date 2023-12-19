@@ -926,7 +926,7 @@ exports[`AMI Artifact tests should render the runtime fields correctly 1`] = `
               class="imagePathContainer"
             >
               <div
-                class="bp3-form-group formGroup"
+                class="bp3-form-group"
                 data-id="spec.tags-1"
                 style="flex-grow: 1; margin-bottom: 0px;"
               >
@@ -1653,7 +1653,7 @@ exports[`AMI Artifact tests should render when versiontype is regex 1`] = `
               class="imagePathContainer"
             >
               <div
-                class="bp3-form-group formGroup"
+                class="bp3-form-group"
                 data-id="spec.tags-1"
                 style="flex-grow: 1; margin-bottom: 0px;"
               >
@@ -1785,7 +1785,7 @@ exports[`AMI Artifact tests should render when versiontype is regex 1`] = `
               class="imagePathContainer"
             >
               <div
-                class="bp3-form-group formGroup"
+                class="bp3-form-group"
                 data-id="spec.filters-3"
                 style="flex-grow: 1; margin-bottom: 0px;"
               >

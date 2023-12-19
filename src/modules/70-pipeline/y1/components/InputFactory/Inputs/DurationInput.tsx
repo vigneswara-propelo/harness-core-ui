@@ -7,13 +7,16 @@
 
 import React from 'react'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { useRuntimeInput } from '@modules/70-pipeline/y1/hooks/useRuntimeInput'
 import { InputsFormValues } from '../../InputsForm/InputsForm'
 import { InputComponent, InputProps } from '../InputComponent'
 import { PrimitiveInputType } from '../InputComponentType'
+import { RuntimeInputType } from '../../InputsForm/types'
 
 function DurationInputInternal(props: InputProps<InputsFormValues>): JSX.Element {
   const { allowableTypes, readonly, path, input } = props
   const { label = '' } = input
+  const { renderRuntimeInput } = useRuntimeInput({ type: RuntimeInputType.string })
 
   return (
     <FormMultiTypeDurationField
@@ -21,10 +24,11 @@ function DurationInputInternal(props: InputProps<InputsFormValues>): JSX.Element
       label={label}
       disabled={readonly}
       multiTypeDurationProps={{
-        enableConfigureOptions: true,
+        enableConfigureOptions: false,
         expressions: [],
         disabled: readonly,
-        allowableTypes
+        allowableTypes,
+        renderRuntimeInput
       }}
     />
   )

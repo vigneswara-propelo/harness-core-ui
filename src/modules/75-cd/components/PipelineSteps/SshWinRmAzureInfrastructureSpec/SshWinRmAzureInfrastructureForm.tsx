@@ -574,7 +574,6 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                     tags={azureTags}
                     isLoadingTags={loadingSubscriptionTags}
                     initialTags={initialValues?.tags}
-                    className="tags-select"
                     expressions={expressions}
                     errorMessage={
                       get(subscriptionTagsError, errorMessage, '') ||

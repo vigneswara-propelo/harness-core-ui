@@ -68,7 +68,7 @@ export const pipelineInputsSchema1UI = {
           isFixedValue: true
         }
       ],
-      description: '',
+      desc: '',
       hasMultiUsage: false,
       metadata: {
         internal_type: 'jira_projects',

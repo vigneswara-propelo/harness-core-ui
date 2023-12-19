@@ -299,7 +299,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
           {isFieldRuntime(`artifacts.${artifactPath}.spec.tags`, template) && (
             <MultiTypeArrayTagSelector
               name={`${path}.artifacts.${artifactPath}.spec.tags`}
-              className="tags-select"
               expressions={expressions}
               allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
               tags={tags}
@@ -312,7 +311,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
           {isFieldRuntime(`artifacts.${artifactPath}.spec.filters`, template) && (
             <MultiTypeArrayTagSelector
               name={`${path}.artifacts.${artifactPath}.spec.filters`}
-              className="tags-select"
               expressions={expressions}
               allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
               label={getString('pipeline.amiFilters')}

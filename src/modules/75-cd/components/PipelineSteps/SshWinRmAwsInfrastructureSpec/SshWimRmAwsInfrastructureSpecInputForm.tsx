@@ -205,7 +205,6 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
           isLoadingTags={loadingTags}
           initialTags={initialValues?.awsInstanceFilter?.tags}
           errorMessage={get(tagsError, 'data.message', '')}
-          className="tags-select"
         />
       )}
       {getMultiTypeFromValue(get(template, 'credentialsRef', '')) === MultiTypeInputType.RUNTIME && (

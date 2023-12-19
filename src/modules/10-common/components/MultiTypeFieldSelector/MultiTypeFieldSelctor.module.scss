@@ -5,22 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.formGroup {
-  :global {
-    .bp3-label {
-      margin-bottom: 0 !important;
-    }
-  }
-}
-
 .formLabel {
   display: flex;
   align-items: center;
 }
 
 .runtimeDisabled {
-  margin-top: var(--spacing-2);
-
   :global {
     .bp3-input {
       background-color: var(--grey-50);

@@ -31,13 +31,12 @@ import { CopyToClipBoard } from '@common/components'
 import { String, useStrings } from 'framework/strings'
 import { MAX_LENGTH } from '@pipeline/components/CommonPipelineStages/PipelineStage/PipelineStageOutputSection/utils'
 import { illegalIdentifiers } from '@common/utils/StringUtils'
-import { Validation } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import { PipelineInfoConfig } from 'services/pipeline-ng'
 import { RuntimeInputField, PipelineInputs } from '../InputsForm/types'
 import AddEditRuntimeInputs from './AddEditRuntimeInputs/AddEditRuntimeInputs'
-import { DEFAULT_RUNTIME_INPUT } from './AddEditRuntimeInputs/utils'
 import { generateInputsFromPipelineInputs, getInputDotNotations } from '../InputsForm/utils'
 import References from './AddEditRuntimeInputs/References'
+import { DEFAULT_RUNTIME_INPUT, getDefaultSchema, getValidationTypeFromValidator, getValidatorSchema } from './Utils'
 import css from './RuntimeInputs.module.scss'
 
 export interface RuntimeInputsFormData {
@@ -50,17 +49,17 @@ interface ValidateOptionsExtended {
   }
 }
 
-interface RuntimeInputsListWithRefProps {
-  formikRef: React.MutableRefObject<FormikProps<RuntimeInputsFormData> | undefined>
-  pipeline: PipelineInfoConfig
-  isReadonly: boolean
-}
-
 const SEARCH_DEBOUNCE_DELAY = 300
 
 export enum RuntimeInputDataTab {
   Overview = 'Overview',
   Reference = 'References'
+}
+
+interface RuntimeInputsListWithRefProps {
+  formikRef: React.MutableRefObject<FormikProps<RuntimeInputsFormData> | undefined>
+  pipeline: PipelineInfoConfig
+  isReadonly: boolean
 }
 
 export function RuntimeInputList(props: RuntimeInputsListWithRefProps): JSX.Element {
@@ -77,19 +76,13 @@ export function RuntimeInputList(props: RuntimeInputsListWithRefProps): JSX.Elem
     return {
       inputs: generateInputsFromPipelineInputs(pipelineInputs).inputs.map(input => {
         const { validator } = input
-        const validationType =
-          validator?.allowed && validator.allowed.length > 0
-            ? Validation.AllowedValues
-            : validator?.regex && validator.regex.length > 0
-            ? Validation.Regex
-            : Validation.None
 
         return {
           ...input,
           selected: false,
           id: nanoid(10),
           validator: {
-            validation: validationType,
+            validation: getValidationTypeFromValidator(validator),
             allowed: defaultTo(validator?.allowed, []),
             regex: defaultTo(validator?.regex, '')
           }
@@ -149,76 +142,8 @@ export function RuntimeInputList(props: RuntimeInputsListWithRefProps): JSX.Elem
             getString('common.invalidNames', { names: illegalIdentifiers.join(', ') }),
             value => !illegalIdentifiers.includes(value)
           ),
-        validator: Yup.object().shape({
-          validation: Yup.string().required(),
-          regex: Yup.string().when('validation', {
-            is: Validation.Regex,
-            then: Yup.string()
-              .trim()
-              .test({
-                test(val: string): boolean | Yup.ValidationError {
-                  if (isEmpty(val)) {
-                    return this.createError({
-                      message: getString('common.configureOptions.validationErrors.regExIsRequired')
-                    })
-                  }
-                  let isValid = true
-                  try {
-                    val?.length > 0 && new RegExp(val)
-                  } catch (_e) {
-                    isValid = false
-                  }
-                  if (!isValid) {
-                    return this.createError({
-                      message: getString('common.configureOptions.validationErrors.regExNotValid')
-                    })
-                  }
-                  return true
-                }
-              })
-          }),
-          allowed: Yup.array(Yup.string()).when('validation', {
-            is: Validation.AllowedValues,
-            then: Yup.array(Yup.string()).min(
-              1,
-              getString('common.configureOptions.validationErrors.minOneAllowedValue')
-            )
-          })
-        }),
-        default: Yup.string()
-          .trim()
-          .when('validator.validation', {
-            is: Validation.Regex,
-            then: Yup.string()
-              .trim()
-              .test(
-                'matchesRegex',
-                getString('common.configureOptions.validationErrors.defaultRegExValid'),
-                function (value) {
-                  try {
-                    const regex = new RegExp(this.parent.validator.regex)
-                    if (!regex.test(value)) {
-                      return this.createError({
-                        message: getString('common.configureOptions.validationErrors.defaultRegExValid')
-                      })
-                    }
-                  } catch (_e) {
-                    // Do nothing
-                  }
-                  return true
-                }
-              )
-          })
-          .when('validator.validation', {
-            is: Validation.AllowedValues,
-            then: Yup.string().test(
-              'isAllowedValue',
-              getString('common.configureOptions.validationErrors.defaultAllowedValid'),
-              function (value) {
-                return this.parent.validator.allowed.includes(value)
-              }
-            )
-          })
+        validator: getValidatorSchema(getString),
+        default: getDefaultSchema(getString)
       })
     )
   })
@@ -389,7 +314,7 @@ export function RuntimeInputList(props: RuntimeInputsListWithRefProps): JSX.Elem
                                   </Text>
                                 </div>
                                 <div className={css.dataCell}>
-                                  {!!input.description && <DescriptionPopover text={input.description} />}
+                                  {!!input.desc && <DescriptionPopover text={input.desc} />}
                                 </div>
                                 <div className={cx(css.dataCell, css.defaultCell)}>
                                   <Text font={{ variation: FontVariation.BODY2 }} lineClamp={2}>

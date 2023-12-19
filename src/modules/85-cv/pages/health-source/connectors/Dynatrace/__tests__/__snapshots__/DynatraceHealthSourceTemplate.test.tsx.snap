@@ -585,7 +585,7 @@ exports[`Validate DynatraceHealthSource should render DynatraceMetricPacksToServ
                                 class="Layout--horizontal Layout--layout-spacing-small StyledProps--main queryIcons"
                               />
                               <div
-                                class="bp3-form-group formGroup"
+                                class="bp3-form-group"
                               >
                                 <label
                                   class="bp3-label"

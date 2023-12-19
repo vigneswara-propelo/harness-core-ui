@@ -18,10 +18,10 @@ import {
   EXECUTION_TIME_INPUT_VALUE,
   AllowedTypes,
   AllowedTypesWithExecutionTime,
-  Layout
+  Layout,
+  RuntimeTypeComponentProps
 } from '@harness/uicore'
 import { IFormGroupProps, Intent, FormGroup } from '@blueprintjs/core'
-import cx from 'classnames'
 import { FormikContextType, connect } from 'formik'
 import { get } from 'lodash-es'
 import { errorCheck } from '@common/utils/formikHelpers'
@@ -50,6 +50,7 @@ export interface MultiTypeFieldSelectorProps extends Omit<IFormGroupProps, 'labe
   supportListOfExpressions?: boolean
   enableConfigureOptions?: boolean
   configureOptionsProps?: Omit<ConfigureOptionsProps, 'value' | 'type' | 'variableName' | 'onChange'>
+  renderRuntimeInput?: (props: RuntimeTypeComponentProps) => JSX.Element
 }
 
 export interface ConnectedMultiTypeFieldSelectorProps extends MultiTypeFieldSelectorProps {
@@ -75,6 +76,7 @@ export function MultiTypeFieldSelector(props: ConnectedMultiTypeFieldSelectorPro
     supportListOfExpressions,
     enableConfigureOptions = false,
     configureOptionsProps,
+    renderRuntimeInput,
     ...restProps
   } = props
   const error = get(formik?.errors, name)
@@ -122,7 +124,6 @@ export function MultiTypeFieldSelector(props: ConnectedMultiTypeFieldSelectorPro
   return (
     <FormGroup
       {...rest}
-      className={cx({ [css.formGroup]: isMultiTypeRuntime(type) })}
       labelFor={name}
       helperText={helperText}
       intent={intent}
@@ -146,24 +147,33 @@ export function MultiTypeFieldSelector(props: ConnectedMultiTypeFieldSelectorPro
       ) : type === MultiTypeInputType.EXPRESSION && typeof expressionRender === 'function' ? (
         expressionRender()
       ) : isMultiTypeRuntime(type) && typeof value === 'string' ? (
-        <Layout.Horizontal>
-          <FormInput.Text style={{ flexGrow: 1 }} className={css.runtimeDisabled} name={name} disabled label="" />
-          {enableConfigureOptions && (
-            <ConfigureOptions
-              value={value}
-              type={'String'}
-              variableName={name}
-              showRequiredField={false}
-              showDefaultField={false}
-              onChange={val => {
-                formik?.setFieldValue(name, val)
-              }}
-              style={{ marginTop: 'var(--spacing-2)' }}
-              {...configureOptionsProps}
-              isReadonly={disabled}
-            />
+        <>
+          {renderRuntimeInput ? (
+            renderRuntimeInput({
+              disabled,
+              value,
+              onChange: val => formik?.setFieldValue(name, val)
+            })
+          ) : (
+            <Layout.Horizontal>
+              <FormInput.Text style={{ flexGrow: 1 }} className={css.runtimeDisabled} name={name} disabled label="" />
+              {enableConfigureOptions && (
+                <ConfigureOptions
+                  value={value}
+                  type={'String'}
+                  variableName={name}
+                  showRequiredField={false}
+                  showDefaultField={false}
+                  onChange={val => {
+                    formik?.setFieldValue(name, val)
+                  }}
+                  {...configureOptionsProps}
+                  isReadonly={disabled}
+                />
+              )}
+            </Layout.Horizontal>
           )}
-        </Layout.Horizontal>
+        </>
       ) : null}
     </FormGroup>
   )

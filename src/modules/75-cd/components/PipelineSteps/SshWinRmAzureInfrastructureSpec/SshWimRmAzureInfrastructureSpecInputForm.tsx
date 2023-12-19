@@ -452,7 +452,6 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
         {getMultiTypeFromValue(template?.tags) === MultiTypeInputType.RUNTIME && (
           <MultiTypeTagSelector
             name={`${path}.tags`}
-            className="tags-select"
             expressions={expressions}
             allowableTypes={allowableTypes}
             tags={azureTags}

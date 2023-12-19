@@ -347,7 +347,6 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                   <Layout.Vertical className={css.inputWidth} margin={{ bottom: 'medium' }}>
                     <MultiTypeTagSelector
                       name="awsInstanceFilter.tags"
-                      className="tags-select"
                       expressions={expressions}
                       allowableTypes={
                         canTagsHaveFixedValue

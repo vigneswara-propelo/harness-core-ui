@@ -1,0 +1,121 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.input {
+  --left-element-width: 70px;
+  --right-element-width: 24px;
+  --multi-type-btn-width: 28px;
+
+  &.standalone {
+    --multi-type-btn-width: 0px;
+  }
+
+  &.withSettings {
+    --right-element-width: 52px;
+  }
+
+  :global(.bp3-input-left-container) {
+    margin: 0 !important;
+    height: calc(100% - 2px) !important;
+    top: 1px !important;
+    left: 1px !important;
+  }
+
+  :global(.bp3-input-action) {
+    opacity: 1;
+    z-index: 1;
+    right: var(--multi-type-btn-width) !important;
+  }
+
+  input[type='text'],
+  :global(.bp3-input) {
+    padding-left: var(--left-element-width) !important;
+    padding-right: calc(var(--right-element-width) + var(--multi-type-btn-width)) !important;
+  }
+}
+
+.inputsPopover {
+  :global(.bp3-menu) {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.inputItem {
+  padding: 12px 24px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+
+  &.active,
+  &:hover {
+    background: var(--primary-1);
+  }
+
+  &.disabled {
+    color: var(--grey-400);
+    cursor: not-allowed;
+  }
+}
+
+.noInputs {
+  padding: 12px 24px;
+}
+
+.divider {
+  border-top: 1px solid #0000001a;
+  display: block;
+  margin: 0 24px;
+}
+
+.createInput {
+  padding: 12px 24px;
+  cursor: pointer;
+}
+
+.runtimePrefix {
+  height: 100%;
+  border-top-left-radius: var(--spacing-2);
+  border-bottom-left-radius: var(--spacing-2);
+  padding-left: 4px;
+  padding-right: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--grey-50) !important;
+  color: var(--grey-500);
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.rightElement {
+  display: flex;
+  flex-direction: row;
+
+  .chevronBtn {
+    padding: 0 !important;
+    color: var(--grey-400) !important;
+    min-width: auto !important;
+    width: 24px !important;
+
+    &:hover {
+      box-shadow: none !important;
+    }
+  }
+
+  .settingsBtn {
+    padding: 0 !important;
+    color: var(--grey-700) !important;
+    width: 28px !important;
+
+    &:hover {
+      box-shadow: none !important;
+    }
+  }
+}

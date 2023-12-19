@@ -368,7 +368,7 @@ exports[`DatadogLogsHealthSource unit tests Datadog log renders when values are 
                         class="StyledProps--font StyledProps--main main validationContainer"
                       >
                         <div
-                          class="bp3-form-group formGroup"
+                          class="bp3-form-group"
                           data-id="query-3"
                         >
                           <label

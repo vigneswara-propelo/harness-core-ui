@@ -7,15 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly btn: string
-  readonly btnText: string
-  readonly expression: string
-  readonly fixed: string
-  readonly icon: string
-  readonly popover: string
-  readonly runtime: string
-  readonly runtimev1: string
-  readonly typeSelector: string
-  readonly typeSelectorWrapper: string
+  readonly divider: string
+  readonly labels: string
 }
 export default styles

@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useMemo } from 'react'
 import { useFormikContext } from 'formik'
 import { get, noop } from 'lodash-es'
@@ -9,7 +16,9 @@ import { InputComponent, InputProps } from '@pipeline/y1/components/InputFactory
 import { InputsFormValues } from '@pipeline/y1/components/InputsForm/InputsForm'
 import { DerivedInputType } from '@pipeline/y1/components/InputFactory/InputComponentType'
 import { ErrorType, Strategy } from '@modules/70-pipeline/utils/FailureStrategyUtils'
+import { useRuntimeInput } from '@modules/70-pipeline/y1/hooks/useRuntimeInput'
 import { toFailureStrategies, toFailureStrategiesY1 } from './utils'
+import { RuntimeInputType } from '../../../InputsForm/types'
 
 function FailureStrategyInputInternal(props: InputProps<InputsFormValues>): JSX.Element {
   const { allowableTypes, readonly, path } = props
@@ -24,9 +33,11 @@ function FailureStrategyInputInternal(props: InputProps<InputsFormValues>): JSX.
   )
   const errorTypes = useMemo(() => Object.values(ErrorType), [])
   const allowedTypes = (allowableTypes as AllowedTypesWithRunTime[]).filter(allowedType =>
-    [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME].includes(allowedType)
+    [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIMEV1].includes(allowedType)
   )
   const fieldName = 'failure'
+
+  const { renderRuntimeInput } = useRuntimeInput({ type: RuntimeInputType.array, standalone: true })
 
   return (
     <Formik
@@ -44,6 +55,7 @@ function FailureStrategyInputInternal(props: InputProps<InputsFormValues>): JSX.
             allowedTypes={allowedTypes}
             disableTypeSelection={readonly}
             defaultValueToReset={[]}
+            renderRuntimeInput={renderRuntimeInput}
           >
             <FailureStrategyPanelWrapper
               isReadonly={!!readonly}

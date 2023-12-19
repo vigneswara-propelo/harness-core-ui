@@ -40,7 +40,8 @@ export function generateInputsFromMetadataResponse(data: PipelineInputSchemaDeta
     )
     return {
       name: runtimeInput.details?.name ?? '',
-      description: runtimeInput.details?.description,
+      // TODO: read description from `desc` instead of `description`
+      desc: runtimeInput.details?.description,
       type: (runtimeInput.details?.type as string) ?? defaultInputMetadata.type,
       required: runtimeInput.details?.required,
       dependencies: processDependencies(runtimeInput.metadata?.dependencies),
@@ -115,13 +116,12 @@ export function getInputDotNotations(obj: JsonNode, path = '', result = {} as UI
 
 export function transformDataToUIInput(inputObject?: RuntimeInputField[]): PipelineInputs {
   const uiInput = (inputObject || []).reduce((acc, input) => {
-    const { name, type, description, required, runtime, validator, default: defaultValue } = input
+    const { name, type, desc, required, validator, default: defaultValue } = input
     const transformedInput = {
       type,
-      description,
+      desc,
       required,
       default: defaultValue,
-      runtime,
       ...(validator?.validation !== Validation.None && {
         validator: {
           ...(!isEmpty(validator?.allowed) && { allowed: validator?.allowed }),

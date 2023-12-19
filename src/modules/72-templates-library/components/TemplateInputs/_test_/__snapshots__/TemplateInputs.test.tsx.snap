@@ -438,7 +438,7 @@ exports[`<TemplateInputs /> tests snapshot test for step template 1`] = `
                     class="deploymentViewMedium"
                   >
                     <div
-                      class="bp3-form-group formGroup"
+                      class="bp3-form-group"
                       style="flex-grow: 1; margin-bottom: 0px;"
                     >
                       <label
@@ -674,7 +674,7 @@ exports[`<TemplateInputs /> tests snapshot test for step template 1`] = `
                       pipeline.policyEnforcement.title
                     </p>
                     <div
-                      class="bp3-form-group formGroup"
+                      class="bp3-form-group"
                     >
                       <label
                         class="bp3-label"

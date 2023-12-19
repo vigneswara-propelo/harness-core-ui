@@ -14,7 +14,7 @@ import { FormValues, Validation } from '@common/components/ConfigureOptions/Conf
 import AllowedValuesFields from '@common/components/ConfigureOptions/AllowedValuesField'
 import { usePipelineContextY1 } from '../../PipelineContext/PipelineContextY1'
 import { RuntimeInputsFormData } from '../RuntimeInputList'
-import { RuntimeInputType } from './utils'
+import { RuntimeInputType } from '../../InputsForm/types'
 import css from './AddEditRuntimeInputs.module.scss'
 
 export default function OptionalConfiguration({ index }: { index: number }): JSX.Element {

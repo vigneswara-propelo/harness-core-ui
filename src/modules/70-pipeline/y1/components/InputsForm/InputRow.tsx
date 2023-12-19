@@ -22,7 +22,7 @@ export interface InputRowProps {
 }
 
 export function InputRow({ input }: InputRowProps): React.ReactElement {
-  const { name, type, description } = input
+  const { name, type, desc } = input
 
   return (
     <div className={css.inputRow}>
@@ -31,13 +31,13 @@ export function InputRow({ input }: InputRowProps): React.ReactElement {
           <Text lineClamp={1} color={Color.BLACK}>
             {name}
           </Text>
-          {!isEmpty(description) && (
+          {!isEmpty(desc) && (
             <Text
               icon="description"
               inline
               padding={'small'}
               iconProps={{ size: 16 }}
-              tooltip={description}
+              tooltip={desc}
               tooltipProps={{
                 position: Position.TOP,
                 isDark: true

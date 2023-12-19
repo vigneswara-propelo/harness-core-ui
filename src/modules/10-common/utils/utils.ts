@@ -128,7 +128,7 @@ export function isValueFixed(
 }
 
 export function isMultiTypeRuntime(type: MultiTypeInputType): boolean {
-  return [MultiTypeInputType.EXECUTION_TIME, MultiTypeInputType.RUNTIME].includes(type)
+  return [MultiTypeInputType.EXECUTION_TIME, MultiTypeInputType.RUNTIME, MultiTypeInputType.RUNTIMEV1].includes(type)
 }
 
 export function isValueRuntimeInput(

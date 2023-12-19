@@ -82,7 +82,7 @@ exports[`<MultiTypeFieldSelector /> tests "disableTypeSelection" does not render
     action="#"
   >
     <div
-      class="bp3-form-group formGroup"
+      class="bp3-form-group"
     >
       <label
         class="bp3-label"
@@ -125,7 +125,7 @@ exports[`<MultiTypeFieldSelector /> tests Change from "Fixed value" to "Runtime 
     action="#"
   >
     <div
-      class="bp3-form-group formGroup"
+      class="bp3-form-group"
     >
       <label
         class="bp3-label"
@@ -296,7 +296,7 @@ exports[`<MultiTypeFieldSelector /> tests Detects "Runtime input" correctly: inp
     action="#"
   >
     <div
-      class="bp3-form-group formGroup"
+      class="bp3-form-group"
     >
       <label
         class="bp3-label"

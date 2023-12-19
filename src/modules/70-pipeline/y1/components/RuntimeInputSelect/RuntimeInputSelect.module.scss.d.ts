@@ -7,15 +7,19 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly btn: string
-  readonly btnText: string
-  readonly expression: string
-  readonly fixed: string
-  readonly icon: string
-  readonly popover: string
-  readonly runtime: string
-  readonly runtimev1: string
-  readonly typeSelector: string
-  readonly typeSelectorWrapper: string
+  readonly active: string
+  readonly chevronBtn: string
+  readonly createInput: string
+  readonly disabled: string
+  readonly divider: string
+  readonly input: string
+  readonly inputItem: string
+  readonly inputsPopover: string
+  readonly noInputs: string
+  readonly rightElement: string
+  readonly runtimePrefix: string
+  readonly settingsBtn: string
+  readonly standalone: string
+  readonly withSettings: string
 }
 export default styles

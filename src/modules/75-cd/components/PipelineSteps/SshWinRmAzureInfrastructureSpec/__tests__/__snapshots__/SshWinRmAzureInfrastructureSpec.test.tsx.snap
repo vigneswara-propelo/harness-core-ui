@@ -3374,7 +3374,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with ru
               class="Layout--vertical Layout--layout-spacing-small StyledProps--main inputWidth"
             >
               <div
-                class="bp3-form-group formGroup"
+                class="bp3-form-group"
                 data-id="tags-2"
                 style="flex-grow: 1; margin-bottom: 0px;"
               >

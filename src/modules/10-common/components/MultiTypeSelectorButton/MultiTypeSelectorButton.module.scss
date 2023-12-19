@@ -51,7 +51,8 @@
         color: var(--primary-7) !important;
       }
 
-      &.runtime {
+      &.runtime,
+      &.runtimev1 {
         color: var(--purple-600) !important;
       }
 

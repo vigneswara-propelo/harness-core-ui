@@ -3999,6 +3999,7 @@ export interface StringsMap {
   'pipeline.abortedDetails': string
   'pipeline.aboutYourStage.stageNamePlaceholder': string
   'pipeline.addDeploymenteRepo': string
+  'pipeline.addOrSelectInput': string
   'pipeline.addReleaseRepo': string
   'pipeline.addRuntimeInput': string
   'pipeline.addStage.description': string
@@ -4349,6 +4350,7 @@ export interface StringsMap {
   'pipeline.configSource': string
   'pipeline.configureArtifactSource': string
   'pipeline.configureLogSettings': string
+  'pipeline.configureOptionsTitle': string
   'pipeline.copilot.aidaFullText': string
   'pipeline.copilot.analyzeFailure': string
   'pipeline.copilot.analyzing': string
@@ -4778,6 +4780,7 @@ export interface StringsMap {
   'pipeline.infraSpecifications.serviceAccountNamePlaceholder': string
   'pipeline.infraSpecifications.validation.requiredExistingStage': string
   'pipeline.infrastructurePropagatedFrom': string
+  'pipeline.inputDoesNotExist': string
   'pipeline.inputListInfo': string
   'pipeline.inputSetDiffTitle': string
   'pipeline.inputSetErrorStrip.errorInfo': string
@@ -4828,6 +4831,7 @@ export interface StringsMap {
   'pipeline.inputs.inputNamePlaceholder': string
   'pipeline.inputs.name': string
   'pipeline.inputs.value': string
+  'pipeline.inputsDoNotExist': string
   'pipeline.invalidRequest': string
   'pipeline.jenkinsBuild': string
   'pipeline.jenkinsStep.addJobParameters': string

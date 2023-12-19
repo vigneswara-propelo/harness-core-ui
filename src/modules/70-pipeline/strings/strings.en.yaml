@@ -2113,6 +2113,10 @@ noRuntimeInputsCreated: There are no Runtime Inputs created.
 addRuntimeInput: Add Runtime Input
 editInput: Edit Runtime Input
 removeRuntimeInput: Remove Runtime Input
+inputDoesNotExist: Input does not exist
+inputsDoNotExist: Inputs do not exist
+addOrSelectInput: Add or Select Input
+configureOptionsTitle: Configure runtime input options
 referencedIn: Referenced In
 location: Location
 totalVariableCount: 'There are a total of {{ count }} variables referencing to this input.'

@@ -14,10 +14,9 @@ export interface UIInputs {
 
 export interface RuntimeInput {
   type: string
-  description?: string
+  desc?: string
   required?: boolean
   default?: string
-  runtime?: boolean
   validator?: {
     allowed?: string[] | number[] | boolean[]
     regex?: string
@@ -71,4 +70,13 @@ export interface UIInputReferences {
 // TODO: temporary interface for inputs in the pipeline
 export type PipelineInputs = {
   [key: string]: RuntimeInput
+}
+
+export enum RuntimeInputType {
+  string = 'string',
+  number = 'number',
+  boolean = 'boolean',
+  object = 'object',
+  secret = 'secret',
+  array = 'array'
 }

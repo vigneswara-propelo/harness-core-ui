@@ -459,7 +459,7 @@ exports[`Unit tests for PrometheusHealthSource Load in editmode for template wit
                           class="StyledProps--font StyledProps--main main"
                         >
                           <div
-                            class="bp3-form-group formGroup"
+                            class="bp3-form-group"
                             data-id="query-2"
                           >
                             <label
@@ -1339,7 +1339,7 @@ exports[`Unit tests for PrometheusHealthSource load in edit case with fixed valu
                     class="StyledProps--font StyledProps--main main"
                   >
                     <div
-                      class="bp3-form-group formGroup"
+                      class="bp3-form-group"
                       data-id="query-2"
                     >
                       <label
@@ -2287,7 +2287,7 @@ exports[`Unit tests for PrometheusHealthSource should render in create mode 1`] 
                     class="StyledProps--font StyledProps--main main"
                   >
                     <div
-                      class="bp3-form-group formGroup"
+                      class="bp3-form-group"
                       data-id="query-2"
                     >
                       <label

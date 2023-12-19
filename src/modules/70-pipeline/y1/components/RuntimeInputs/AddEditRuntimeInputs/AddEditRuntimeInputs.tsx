@@ -9,7 +9,7 @@ import React from 'react'
 import { Accordion, Container, FormInput, Layout } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import OptionalConfiguration from './OptionalConfiguration'
-import { RuntimeInputType } from './utils'
+import { RuntimeInputType } from '../../InputsForm/types'
 import css from './AddEditRuntimeInputs.module.scss'
 
 interface AddEditRuntimeInputsProps {
@@ -23,7 +23,9 @@ export default function AddEditRuntimeInputs({ index }: AddEditRuntimeInputsProp
     RuntimeInputType.string,
     RuntimeInputType.number,
     RuntimeInputType.boolean,
-    RuntimeInputType.object
+    RuntimeInputType.object,
+    RuntimeInputType.array,
+    RuntimeInputType.secret
   ]
 
   return (

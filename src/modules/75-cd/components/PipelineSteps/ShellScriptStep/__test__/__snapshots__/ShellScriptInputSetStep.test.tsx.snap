@@ -130,7 +130,7 @@ exports[`ShellScriptInputSetStep tests renders input sets 1`] = `
           class="formGroup alignStart md"
         >
           <div
-            class="bp3-form-group formGroup"
+            class="bp3-form-group"
             data-id="spec.source.spec.script-1"
           >
             <label

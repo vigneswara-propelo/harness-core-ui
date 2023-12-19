@@ -1426,7 +1426,7 @@ exports[`Test Policy Step render runtime inputs in edit step 1`] = `
       class="formGroup alignStart"
     >
       <div
-        class="bp3-form-group formGroup"
+        class="bp3-form-group"
       >
         <label
           class="bp3-label"

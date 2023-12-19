@@ -1295,7 +1295,7 @@ exports[`Run Step Edit View renders runtime inputs 1`] = `
           class="fieldsGroup withoutSpacing topPadding3 bottomPadding3"
         >
           <div
-            class="bp3-form-group formGroup"
+            class="bp3-form-group"
             data-id="spec.command-5"
             style="flex-grow: 1; margin-bottom: 0px;"
           >
