@@ -61,6 +61,7 @@ import { getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import DelegateSelectorPanel from '@pipeline/components/PipelineSteps/AdvancedSteps/DelegateSelectorPanel/DelegateSelectorPanel'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -92,6 +93,7 @@ function FormContent({
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const commonParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -208,7 +210,8 @@ function FormContent({
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
             />
 
@@ -239,7 +242,8 @@ function FormContent({
                 multiTypeDurationProps={{
                   expressions,
                   enableConfigureOptions: true,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
               />
             </div>
@@ -306,7 +310,8 @@ function FormContent({
                 disabled={isReadonly}
                 multiTextInputProps={{
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
               />
               {getMultiTypeFromValue(formik.values?.spec?.scripts?.fetchAllArtifacts?.artifactsArrayPath) ===
@@ -332,7 +337,8 @@ function FormContent({
                 disabled={isReadonly}
                 multiTextInputProps={{
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
               />
               {getMultiTypeFromValue(formik.values?.spec?.scripts?.fetchAllArtifacts?.versionPath) ===
@@ -361,6 +367,7 @@ function FormContent({
                 multiTypeInputProps={{
                   expressions,
                   allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   selectProps: {
                     noResults: (
                       <NoTagResults
@@ -449,6 +456,7 @@ function FormContent({
                                         placeholder={getString('valueLabel')}
                                         multiTextInputProps={{
                                           allowableTypes,
+                                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                                           expressions,
                                           disabled: isReadonly
                                         }}
@@ -521,6 +529,7 @@ function FormContent({
                                           placeholder={getString('valueLabel')}
                                           multiTextInputProps={{
                                             allowableTypes,
+                                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                                             expressions,
                                             disabled: isReadonly
                                           }}

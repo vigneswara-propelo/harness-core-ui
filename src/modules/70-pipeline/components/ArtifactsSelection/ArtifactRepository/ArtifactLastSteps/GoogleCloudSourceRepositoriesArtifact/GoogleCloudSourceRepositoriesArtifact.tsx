@@ -36,6 +36,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type {
   GoogleCloudSourceRepositoriesArtifactProps,
   GoogleCloudSourceRepositoriesInitialValuesType
@@ -101,6 +102,7 @@ export function GoogleCloudSourceRepositories(
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
@@ -320,7 +322,11 @@ export function GoogleCloudSourceRepositories(
         })}
       >
         <FormInput.MultiTextInput
-          multiTextInputProps={{ expressions, allowableTypes }}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
           label={fieldLabel}
           placeholder={fieldPlaceholder}
           name={fieldName}
@@ -375,6 +381,7 @@ export function GoogleCloudSourceRepositories(
                   useValue
                   helperText={getProjectHelperText(formik)}
                   multiTypeInputProps={{
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     selectProps: {
                       items: projectOptions,
                       noResults: (
@@ -427,7 +434,8 @@ export function GoogleCloudSourceRepositories(
                   disabled={isReadonly}
                   multiTextInputProps={{
                     expressions,
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                 />
                 {getMultiTypeFromValue(formik.values?.repository) === MultiTypeInputType.RUNTIME && (
@@ -488,7 +496,8 @@ export function GoogleCloudSourceRepositories(
                   disabled={isReadonly}
                   multiTextInputProps={{
                     expressions,
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                 />
                 {getMultiTypeFromValue(formik.values.sourceDirectory) === MultiTypeInputType.RUNTIME && (

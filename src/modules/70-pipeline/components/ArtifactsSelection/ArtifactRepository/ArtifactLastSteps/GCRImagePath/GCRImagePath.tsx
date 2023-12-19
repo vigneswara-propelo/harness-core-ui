@@ -29,6 +29,7 @@ import { ConnectorConfigDTO, useGetBuildDetailsForGcr } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   checkIfQueryParamsisNotEmpty,
   getArtifactFormData,
@@ -70,6 +71,7 @@ export function GCRImagePath({
   const { getString } = useStrings()
 
   const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const schemaObject = {
     imagePath: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.imagePath')),
@@ -237,6 +239,7 @@ export function GCRImagePath({
                     },
                     expressions,
                     allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     selectProps: {
                       allowCreatingNewItems: true,
                       addClearBtn: true,

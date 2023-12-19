@@ -56,6 +56,7 @@ import {
   useGetRepositoriesForGoogleArtifactRegistry
 } from 'services/cd-ng'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { useQueryParams } from '@common/hooks'
 import { getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
@@ -117,6 +118,7 @@ function FormComponent(
   const repositoryNameValue = defaultTo(formik.values?.spec.repositoryName, initialValues?.spec?.repositoryName)
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const isTemplateContext = context === ModalViewFor.Template
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const {
     data: repoDetails,
@@ -315,7 +317,8 @@ function FormComponent(
             onChange={clearRepoAndProjectField}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
           />
           {getMultiTypeFromValue(formik.values.spec.project) === MultiTypeInputType.RUNTIME && (
@@ -348,7 +351,8 @@ function FormComponent(
                 items: regions,
                 usePortal: isTemplateContext
               },
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             selectItems={regions}
           />
@@ -381,6 +385,7 @@ function FormComponent(
             multiTypeInputProps={{
               expressions,
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               selectProps: {
                 noResults: (
                   <NoTagResults
@@ -445,6 +450,7 @@ function FormComponent(
             multiTypeInputProps={{
               expressions,
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               selectProps: {
                 noResults: (
                   <NoTagResults
@@ -531,6 +537,7 @@ function FormComponent(
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 selectProps: {
                   noResults: (
                     <NoTagResults
@@ -601,6 +608,7 @@ function FormComponent(
               disabled={isReadonly}
               multiTextInputProps={{
                 expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 allowableTypes
               }}
             />

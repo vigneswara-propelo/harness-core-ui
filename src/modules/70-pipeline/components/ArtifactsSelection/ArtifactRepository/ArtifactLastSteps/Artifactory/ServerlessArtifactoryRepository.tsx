@@ -23,6 +23,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ImagePathTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { useMutateAsGet } from '@common/hooks'
 import { usePrevious } from '@common/hooks/usePrevious'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
@@ -208,6 +209,7 @@ export default function ServerlessArtifactoryRepository(
   const repositoryFormValue = get(formik?.values, fieldName)
   const [repositoryValue, setRepositoryValue] = React.useState(repositoryFormValue)
   const [inputKeyCount, setInputKeyCount] = React.useState(0)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   useEffect(() => {
     if (repositoryValue !== repositoryFormValue) {
@@ -245,6 +247,7 @@ export default function ServerlessArtifactoryRepository(
       multiTypeInputProps={{
         expressions,
         allowableTypes,
+        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
         selectProps: {
           defaultSelectedItem: repositoryValue as SelectOption,
           noResults: <NoRepositoryResults error={artifactRepoError} />,

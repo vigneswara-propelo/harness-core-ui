@@ -51,6 +51,7 @@ import type {
   ImagePathProps,
   Nexus2InitialValuesType
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { nexus2RepositoryFormatTypes, RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
@@ -87,6 +88,7 @@ export function Nexus2Artifact({
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const [groupIds, setGroupIds] = useState<SelectOption[]>([
     {
@@ -518,6 +520,7 @@ export function Nexus2Artifact({
                     multiTypeInputProps={{
                       expressions,
                       allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       selectProps: {
                         noResults: (
                           <NoTagResults
@@ -596,6 +599,7 @@ export function Nexus2Artifact({
                           multiTypeInputProps={{
                             expressions,
                             allowableTypes,
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                             selectProps: {
                               allowCreatingNewItems: true,
                               itemRenderer: (item, props) => itemRenderer(item, props, fetchingGroupIds),
@@ -672,6 +676,7 @@ export function Nexus2Artifact({
                           multiTypeInputProps={{
                             expressions,
                             allowableTypes,
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                             selectProps: {
                               noResults: (
                                 <NoTagResults
@@ -746,7 +751,11 @@ export function Nexus2Artifact({
                         label={getString('pipeline.artifactsSelection.extension')}
                         name="spec.extension"
                         placeholder={getString('pipeline.artifactsSelection.extensionPlaceholder')}
-                        multiTextInputProps={{ expressions, allowableTypes }}
+                        multiTextInputProps={{
+                          expressions,
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                        }}
                       />
                       {getMultiTypeFromValue(formik.values?.spec?.extension) === MultiTypeInputType.RUNTIME && (
                         <div className={css.configureOptions}>
@@ -769,7 +778,11 @@ export function Nexus2Artifact({
                         label={getString('pipeline.artifactsSelection.classifier')}
                         name="spec.classifier"
                         placeholder={getString('pipeline.artifactsSelection.classifierPlaceholder')}
-                        multiTextInputProps={{ expressions, allowableTypes }}
+                        multiTextInputProps={{
+                          expressions,
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                        }}
                       />
                       {getMultiTypeFromValue(formik.values?.spec?.classifier) === MultiTypeInputType.RUNTIME && (
                         <div className={css.configureOptions}>
@@ -794,7 +807,11 @@ export function Nexus2Artifact({
                       label={getString('pipeline.artifactsSelection.packageName')}
                       name="spec.packageName"
                       placeholder={getString('pipeline.manifestType.packagePlaceholder')}
-                      multiTextInputProps={{ expressions, allowableTypes }}
+                      multiTextInputProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                     />
                     {getMultiTypeFromValue(formik.values?.spec?.packageName) === MultiTypeInputType.RUNTIME && (
                       <div className={css.configureOptions}>

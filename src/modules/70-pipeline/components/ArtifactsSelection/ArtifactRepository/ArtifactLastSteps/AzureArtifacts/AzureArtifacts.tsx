@@ -61,6 +61,7 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { isValueFixed } from '@common/utils/utils'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { ArtifactIdentifierValidation, ModalViewFor, scopeOptions, tagOptions } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -97,6 +98,7 @@ function FormComponent(
   const [feedsData, setFeedsData] = React.useState<SelectOption[]>([])
   const [packageData, setPackageData] = React.useState<SelectOption[]>([])
   const [versionData, setVersionData] = React.useState<SelectOption[]>([])
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const commonParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -319,6 +321,7 @@ function FormComponent(
               useValue
               multiTypeInputProps={{
                 expressions,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 allowableTypes,
                 selectProps: {
                   itemRenderer: projectItemRenderer,
@@ -384,6 +387,7 @@ function FormComponent(
             multiTypeInputProps={{
               expressions,
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               selectProps: {
                 noResults: (
                   <NoTagResults
@@ -469,6 +473,7 @@ function FormComponent(
             multiTypeInputProps={{
               expressions,
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               selectProps: {
                 noResults: (
                   <NoTagResults
@@ -555,6 +560,7 @@ function FormComponent(
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 selectProps: {
                   noResults: (
                     <NoTagResults
@@ -614,7 +620,8 @@ function FormComponent(
               disabled={isReadonly}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
             />
             {getMultiTypeFromValue(formik.values.versionRegex) === MultiTypeInputType.RUNTIME && (

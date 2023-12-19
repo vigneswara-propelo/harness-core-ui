@@ -39,6 +39,7 @@ import type {
   GoogleCloudStorageArtifactProps,
   GoogleCloudStorageInitialValuesType
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   ArtifactIdentifierValidation,
   ENABLED_ARTIFACT_TYPES,
@@ -88,6 +89,7 @@ export function GoogleCloudStorage(
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
@@ -351,6 +353,7 @@ export function GoogleCloudStorage(
                   multiTypeInputProps={{
                     allowableTypes,
                     expressions,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     onChange: selected => {
                       if (formik.values.project !== (selected as unknown as any)?.value) {
                         resetFieldValue(formik, 'bucket')
@@ -410,6 +413,7 @@ export function GoogleCloudStorage(
                   multiTypeInputProps={{
                     expressions,
                     allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     selectProps: {
                       noResults: (
                         <Text lineClamp={1} width={400} height={32} padding="small">
@@ -458,6 +462,7 @@ export function GoogleCloudStorage(
                   placeholder={getString('pipeline.artifactsSelection.artifactPathPlaceholder')}
                   multiTextInputProps={{
                     expressions,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     allowableTypes
                   }}
                 />

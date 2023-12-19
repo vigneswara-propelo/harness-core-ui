@@ -57,6 +57,7 @@ import type {
   ImagePathTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import ArtifactImagePathTagView from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
@@ -82,6 +83,7 @@ export function ECRArtifact({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getRBACErrorMessage } = useRBACError()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const [tagList, setTagList] = React.useState([])
   const [lastQueryData, setLastQueryData] = React.useState<{ imagePath: string; region: any; registryId: string }>({
@@ -357,6 +359,7 @@ export function ECRArtifact({
                   selectItems={regions}
                   useValue
                   multiTypeInputProps={{
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     onChange: () => {
                       tagList.length && setTagList([])
                       resetFieldValue(formik, `imagePath`)
@@ -397,7 +400,11 @@ export function ECRArtifact({
                   placeholder={getString('pipeline.artifactsSelection.registryIdPlaceholder')}
                   disabled={isReadonly}
                   isOptional={true}
-                  multiTextInputProps={{ expressions, allowableTypes }}
+                  multiTextInputProps={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   onChange={() => {
                     resetFieldValue(formik, 'imagePath')
                     resetFieldValue(formik, 'tag')
@@ -430,6 +437,7 @@ export function ECRArtifact({
                   helperText={getImagePathHelperText(formik)}
                   useValue
                   multiTypeInputProps={{
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     expressions,
                     allowableTypes,
                     onChange: selected => {

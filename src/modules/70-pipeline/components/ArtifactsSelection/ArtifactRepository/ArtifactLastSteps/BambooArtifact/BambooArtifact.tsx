@@ -56,6 +56,7 @@ import type {
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { isTASDeploymentType } from '@pipeline/utils/stageHelpers'
 import { AcceptableValue } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
@@ -87,6 +88,7 @@ function FormComponent({
   const [errText, setPlanErrText] = useState<GetDataError<Failure | Error> | null>(null)
   const [artifactPaths, setFilePath] = useState<SelectOption[]>([])
   const [builds, setBambooBuilds] = useState<SelectOption[]>([])
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const commonParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -305,7 +307,8 @@ function FormComponent({
                 onFocus(e, refetchPlans)
               },
 
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
           />
           {getMultiTypeFromValue(formik.values.spec?.planKey) === MultiTypeInputType.RUNTIME && (
@@ -378,7 +381,8 @@ function FormComponent({
                 }
                 onFocus(e, refetchBambooBuild)
               },
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             selectItems={builds || []}
           />

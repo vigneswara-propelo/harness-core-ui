@@ -58,6 +58,7 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { useQueryParams } from '@common/hooks'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { isSshOrWinrmDeploymentType, getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   ArtifactIdentifierValidation,
   ModalViewFor,
@@ -112,6 +113,7 @@ function FormComponent({
   }, [deploymentType])
   const packageNameValue = getGenuineValue(formik.values.spec.packageName || get(initialValues, 'spec.packageName'))
   const orgValue = getGenuineValue(formik.values.spec.org)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const defaultPackageType = React.useMemo(
     () => ({ label: getString('pipeline.artifactsSelection.container'), value: 'container' }),
@@ -285,7 +287,8 @@ function FormComponent({
               }}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
             />
             {getMultiTypeFromValue(formik.values?.spec?.org) === MultiTypeInputType.RUNTIME && (
@@ -330,7 +333,11 @@ function FormComponent({
                     label={getString('orgLabel')}
                     name="spec.org"
                     placeholder={getString('pipeline.artifactsSelection.organizationPlaceholder')}
-                    multiTextInputProps={{ expressions, allowableTypes }}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                   />
                   {getMultiTypeFromValue(formik.values?.spec?.org) === MultiTypeInputType.RUNTIME && (
                     <div className={css.configureOptions}>
@@ -354,7 +361,11 @@ function FormComponent({
                     label={getString('common.userLabel')}
                     name="spec.user"
                     placeholder={getString('pipeline.artifactsSelection.userPlaceholder')}
-                    multiTextInputProps={{ expressions, allowableTypes }}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                   />
                   {getMultiTypeFromValue(formik.values?.spec?.user) === MultiTypeInputType.RUNTIME && (
                     <div className={css.configureOptions}>
@@ -387,6 +398,7 @@ function FormComponent({
             multiTypeInputProps={{
               expressions,
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               selectProps: {
                 noResults: (
                   <NoTagResults
@@ -450,7 +462,11 @@ function FormComponent({
                   label={getString('pipeline.artifactsSelection.groupId')}
                   name="spec.groupId"
                   placeholder={getString('pipeline.artifactsSelection.groupIdPlaceholder')}
-                  multiTextInputProps={{ expressions, allowableTypes }}
+                  multiTextInputProps={{
+                    expressions,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
+                    allowableTypes
+                  }}
                 />
                 {getMultiTypeFromValue(formik.values?.spec?.groupId) === MultiTypeInputType.RUNTIME && (
                   <div className={css.configureOptions}>
@@ -475,7 +491,11 @@ function FormComponent({
                   label={getString('pipeline.artifactsSelection.artifactId')}
                   name="spec.artifactId"
                   placeholder={getString('pipeline.artifactsSelection.artifactIdPlaceholder')}
-                  multiTextInputProps={{ expressions, allowableTypes }}
+                  multiTextInputProps={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                 />
                 {getMultiTypeFromValue(formik.values?.spec?.artifactId) === MultiTypeInputType.RUNTIME && (
                   <div className={css.configureOptions}>
@@ -500,7 +520,11 @@ function FormComponent({
                 name="spec.extension"
                 isOptional={true}
                 placeholder={getString('pipeline.artifactsSelection.extensionPlaceholder')}
-                multiTextInputProps={{ expressions, allowableTypes }}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
               />
               {getMultiTypeFromValue(formik.values?.spec?.extension) === MultiTypeInputType.RUNTIME && (
                 <div className={css.configureOptions}>
@@ -548,6 +572,7 @@ function FormComponent({
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                 selectProps: {
                   noResults: (
                     <NoTagResults
@@ -597,7 +622,8 @@ function FormComponent({
               disabled={isReadonly}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
             />
             {getMultiTypeFromValue(formik.values?.spec?.versionRegex) === MultiTypeInputType.RUNTIME && (
