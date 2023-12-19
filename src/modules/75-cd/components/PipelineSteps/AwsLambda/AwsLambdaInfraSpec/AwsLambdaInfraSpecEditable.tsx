@@ -39,6 +39,7 @@ import { connectorTypes } from '@pipeline/utils/constants'
 import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { getAwsLambdaInfraValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from './AwsLambdaInfraSpec.module.scss'
 
 export interface AwsLambdaInfraSpecEditableProps {
@@ -65,6 +66,7 @@ export const AwsLambdaInfraSpecEditable: React.FC<AwsLambdaInfraSpecEditableProp
   const { getRBACErrorMessage } = useRBACError()
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   React.useEffect(() => {
     subscribeForm({ tab: DeployTabs.INFRASTRUCTURE, form: formikRef })
@@ -125,7 +127,11 @@ export const AwsLambdaInfraSpecEditable: React.FC<AwsLambdaInfraSpecEditableProp
                   tooltipProps={{
                     dataTooltipId: 'awsConnector'
                   }}
-                  multiTypeProps={{ expressions, allowableTypes }}
+                  multiTypeProps={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   projectIdentifier={projectIdentifier}
                   orgIdentifier={orgIdentifier}
                   width={450}
@@ -174,6 +180,7 @@ export const AwsLambdaInfraSpecEditable: React.FC<AwsLambdaInfraSpecEditableProp
                   multiTypeInputProps={{
                     expressions,
                     allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     selectProps: {
                       items: regions,
                       popoverClassName: css.regionPopover,

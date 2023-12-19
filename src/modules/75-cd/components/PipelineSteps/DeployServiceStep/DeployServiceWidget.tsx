@@ -37,6 +37,7 @@ import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { getServiceRefSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import RbacButton from '@rbac/components/Button/Button'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { DeployServiceData, DeployServiceProps, DeployServiceState } from './DeployServiceInterface'
 import { flexStart, isEditService } from './DeployServiceUtils'
 import { NewEditServiceModal } from './NewEditServiceModal'
@@ -69,6 +70,7 @@ function DeployServiceWidget({
   const [state, setState] = useState<DeployServiceState>({ isEdit: false, isService: false })
   const [type, setType] = useState<MultiTypeInputType>(getMultiTypeFromValue(serviceRef))
   const [showOverlay, setShowOverlay] = useState(false)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
@@ -292,6 +294,7 @@ function DeployServiceWidget({
                     onTypeChange: setType,
                     width: 300,
                     expressions,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     onChange: val => onServiceChange(val as SelectOption, values, setFieldValue),
                     selectProps: {
                       addClearBtn: !readonly,

@@ -29,12 +29,14 @@ import type {
   MultiTypeMapValue
 } from '@pipeline/components/StartupScriptSelection/MultiConfigSelectField'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from './ShellScriptProvision.module.scss'
 
 export function ShellScriptProvisionConfig(props: MultiTypeMapProps): React.ReactElement {
   const { name, configureOptionsProps, formik, expressions, multiTypeFieldSelectorProps } = props
 
   const value = get(formik?.values, name, '') as MultiTypeMapValue
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const { getString } = useStrings()
   const errorCheck = /* istanbul ignore next */ (): boolean =>
@@ -70,6 +72,7 @@ export function ShellScriptProvisionConfig(props: MultiTypeMapProps): React.Reac
                 name={name}
                 value={get(formik?.values, name)}
                 disabled={false}
+                newExpressionComponent={NG_EXPRESSIONS_NEW_INPUT_ELEMENT}
                 inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
                 items={expressions}
                 onChange={val => formik?.setFieldValue(name, val)}

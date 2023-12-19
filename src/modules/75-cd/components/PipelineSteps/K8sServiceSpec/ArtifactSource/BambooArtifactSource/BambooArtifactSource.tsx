@@ -43,6 +43,7 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useMutateAsGet } from '@common/hooks'
 import { MultiSelectInputSetView } from '@pipeline/components/InputSetView/MultiSelectInputSetView/MultiSelectInputSetView'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -90,6 +91,7 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
   const [planDetails, setPlanDetails] = useState<SelectOption[]>([])
   const [artifactPaths, setArtifactPaths] = useState<MultiSelectOption[]>([])
   const [builds, setBambooBuilds] = useState<SelectOption[]>([])
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   // const serviceId = isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined
   const commonParams = {
     accountIdentifier: accountId,
@@ -452,6 +454,7 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                 multiSelectProps: {
                   items: defaultTo(artifactPaths, [])
                 },
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
 
                 onChange(value: any) {
                   const filteredValArr = value.filter((val: any) => val !== '')

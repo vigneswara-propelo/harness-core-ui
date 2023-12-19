@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useEffect, useRef, useState } from 'react'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
@@ -45,7 +52,7 @@ export default function AsgBGStageSetupLoadBalancer(props: {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-  const { CDS_ASG_SHIFT_TRAFFIC_STEP_NG } = useFeatureFlags()
+  const { CDS_ASG_SHIFT_TRAFFIC_STEP_NG, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const loadBalancersErrors = isEmpty(path)
     ? defaultTo(formik.errors?.spec?.loadBalancers, [])
@@ -415,6 +422,7 @@ export default function AsgBGStageSetupLoadBalancer(props: {
                     loadingItems: loadingLoadBalancers
                   },
                   width: 400,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
                   onChange: selectedValue => {
                     const selectedValueString =
@@ -449,6 +457,7 @@ export default function AsgBGStageSetupLoadBalancer(props: {
                     loadingItems: loadingListeners
                   },
                   width: 400,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
                   onChange: selectedValue => {
                     const selectedValueString =
@@ -490,6 +499,7 @@ export default function AsgBGStageSetupLoadBalancer(props: {
                     loadingItems: prodListenerRulesLoading
                   },
                   width: 400,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
                   onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                     const listener = defaultTo(loadBalancersValue[index]?.prodListener, '')
@@ -525,6 +535,7 @@ export default function AsgBGStageSetupLoadBalancer(props: {
                         loadingItems: loadingListeners
                       },
                       width: 400,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
                       onChange: selectedValue => {
                         const selectedValueString =
@@ -566,6 +577,7 @@ export default function AsgBGStageSetupLoadBalancer(props: {
                         loadingItems: stageListenerRulesLoading
                       },
                       width: 400,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
                       onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                         fetchStageListenerRules(

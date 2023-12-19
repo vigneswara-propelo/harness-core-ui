@@ -38,6 +38,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import InfrastructureModal from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfrastructureModal'
 
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { DeployEnvironmentEntityFormState, InfrastructureYaml } from '../types'
 
 import css from './DeployInfrastructure.module.scss'
@@ -96,6 +97,7 @@ export default function InfrastructureSelection({
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
   const { getTemplate } = useTemplateSelector()
   const isFixed = isMultiTypeFixed(infrastructureRefType)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const selectOptions = useMemo(() => {
     /* istanbul ignore else */
@@ -179,7 +181,8 @@ export default function InfrastructureSelection({
           }}
           multiTypeProps={{
             width: 280,
-            allowableTypes: getAllowableTypesWithoutExpression(allowableTypes)
+            allowableTypes: getAllowableTypesWithoutExpression(allowableTypes),
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
       ) : (
@@ -196,6 +199,7 @@ export default function InfrastructureSelection({
             selectProps: { items: selectOptions },
             allowableTypes,
             defaultValueToReset: '',
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             onChange: item => {
               if (item) {
                 setSelectedInfrastructures(getSelectedInfrastructuresFromOptions([item as SelectOption]))

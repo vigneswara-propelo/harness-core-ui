@@ -17,6 +17,7 @@ import { FormMultiTypeKVTagInput } from '@common/components/MutliTypeKVTagInput/
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   getExistingFilterIdentifiers,
   getEntitySelectOptions,
@@ -43,6 +44,7 @@ export default function AddEditEntityFilterModal({
 }: AddEditEntityFilterModalProps): React.ReactElement {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const entityItems = useMemo(() => {
     return getEntitySelectOptions(entities, getString, entityTypeStringsMap)
@@ -158,7 +160,8 @@ export default function AddEditEntityFilterModal({
                     }}
                     multiTypeInputProps={{
                       allowableTypes,
-                      expressions
+                      expressions,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                     }}
                   />
                   <FormMultiTypeKVTagInput
@@ -166,7 +169,8 @@ export default function AddEditEntityFilterModal({
                     tagsProps={{ placeholder: getString('common.filterOnName', { name: getString('tagsLabel') }) }}
                     multiTypeProps={{
                       allowableTypes,
-                      expressions
+                      expressions,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                     }}
                     label={getString('common.condition')}
                     className={css.tagInput}

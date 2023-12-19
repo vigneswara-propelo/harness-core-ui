@@ -37,6 +37,7 @@ import { connectorTypes } from '@pipeline/utils/constants'
 import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { getAsgInfraValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from './AsgInfraSpec.module.scss'
 
 export interface AsgInfraSpecEditableProps {
@@ -107,6 +108,7 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
   }, [error])
 
   const validationSchema = getAsgInfraValidationSchema(getString)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const getItems = (isFetching: boolean, items: SelectOption[]): SelectOption[] => {
     if (isFetching) {
@@ -218,7 +220,8 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
                         setAsgBaseNames([])
                         formik.setFieldValue('baseAsgName', '')
                       }
-                    }
+                    },
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                   label={getString('regionLabel')}
                   placeholder={getString('pipeline.regionPlaceholder')}
@@ -247,6 +250,7 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
                   useValue
                   multiTypeInputProps={{
                     expressions,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     selectProps: {
                       items: asgBaseNames,
                       popoverClassName: css.regionPopover,

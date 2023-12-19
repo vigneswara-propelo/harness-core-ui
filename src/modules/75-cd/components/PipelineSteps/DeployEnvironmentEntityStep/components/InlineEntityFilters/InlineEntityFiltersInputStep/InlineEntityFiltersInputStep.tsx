@@ -19,6 +19,7 @@ import { isValueExpression, isValueRuntimeInput } from '@common/utils/utils'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   entityFilterMatchTypeStringsMap,
   EntityFilterMatchType
@@ -40,6 +41,7 @@ export default function InlineEntityFiltersInputStep({
 }: InlineEntityFiltersInputStepProps): React.ReactElement {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const stageTemplate = inputSetData.template
   const stageValues = inputSetData.allValues
@@ -69,7 +71,8 @@ export default function InlineEntityFiltersInputStep({
                   ]}
                   label=""
                   multiTypeInputProps={{
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                   disabled={readonly}
                 />
@@ -87,7 +90,8 @@ export default function InlineEntityFiltersInputStep({
                   tagsProps={{ placeholder: getString('common.filterOnName', { name: getString('tagsLabel') }) }}
                   multiTypeProps={{
                     allowableTypes,
-                    expressions
+                    expressions,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                   disabled={readonly}
                 />

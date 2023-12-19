@@ -63,6 +63,7 @@ import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/Depl
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { InfraDeploymentType, getValue } from '../PipelineStepsUtil'
 import { SshWimRmAwsInfrastructureSpecInputForm } from './SshWimRmAwsInfrastructureSpecInputForm'
 import css from './SshWinRmAwsInfrastructureSpec.module.scss'
@@ -114,6 +115,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
   }>()
   const formikRef = useRef<FormikContextType<any> | null>(null)
   const delayedOnUpdate = useRef(debounce(onUpdate || noop, 300)).current
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
 
@@ -303,6 +305,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                       multiTypeInputProps={{
                         allowableTypes,
                         expressions,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                         className: `regionId-select ${css.regionInput}`,
                         onTypeChange: type => {
                           setCanTagsHaveFixedValue(

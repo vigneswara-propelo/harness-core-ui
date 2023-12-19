@@ -13,6 +13,7 @@ import type { SelectOption } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useAgentRepositoryServiceGetHelmCharts, useAgentRepositoryServiceListRefs } from 'services/gitops'
 import { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   ApplicationOption,
   FIELD_KEYS,
@@ -61,6 +62,7 @@ export const TargetRevision = ({
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const isSourceTypeUnset = app ? app.sourceType === SOURCE_TYPE_UNSET : true
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const {
     data: charts,
@@ -148,7 +150,8 @@ export const TargetRevision = ({
             allowCreatingNewItems: true,
             addClearBtn: false,
             items: chartVersions
-          }
+          },
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
         }}
       />
     )
@@ -171,7 +174,8 @@ export const TargetRevision = ({
             allowCreatingNewItems: true,
             addClearBtn: false,
             items: revisionType === RevisionType.Branch ? revisionsBranchesArr : revisionsTagsArr
-          }
+          },
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
         }}
       />
       <FormInput.Select

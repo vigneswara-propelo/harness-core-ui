@@ -39,6 +39,7 @@ import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { useGetInfrastructuresData } from '../DeployEnvironmentEntityStep/DeployInfrastructure/useGetInfrastructuresData'
 import type { DeployEnvironmentEntityConfig } from '../DeployEnvironmentEntityStep/types'
 import type { DeployInfrastructureEntityCustomInputStepProps } from './types'
@@ -83,6 +84,7 @@ export default function DeployInfrastructureEntityInputStep({
   const formik = useFormikContext<DeployEnvironmentEntityConfig>()
   const { getStageFormTemplate, updateStageFormTemplate } = useStageFormContext()
   const uniquePath = useRef(`_pseudo_field_${uuid()}`)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   // This is the full path that is part of the outer formik
   const fullPathPrefix = isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
@@ -415,6 +417,7 @@ export default function DeployInfrastructureEntityInputStep({
             useValue
             multiTypeInputProps={{
               expressions,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               allowableTypes: (allowableTypes as MultiTypeInputType[])?.filter(
                 item => item !== MultiTypeInputType.EXECUTION_TIME
               ) as AllowedTypes,
@@ -449,6 +452,7 @@ export default function DeployInfrastructureEntityInputStep({
             multiTypeProps={{
               width: 300,
               height: 32,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               allowableTypes: (allowableTypes as MultiTypeInputType[])?.filter(
                 item => item !== MultiTypeInputType.EXPRESSION && item !== MultiTypeInputType.EXECUTION_TIME
               ) as AllowedTypes

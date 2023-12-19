@@ -30,6 +30,7 @@ import {
   useGetManagementGroups
 } from 'services/cd-ng'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { ResourceGroup, Subscription, ManagementGroup, Tenant, ScopeTypes, ScopeTypeLabels } from './AzureArm.types'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -58,6 +59,7 @@ export const Scopes = ({ formik, readonly, expressions, allowableTypes, connecto
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { setFieldValue, values } = formik
   const {
     spec: {
@@ -299,6 +301,7 @@ export const Scopes = ({ formik, readonly, expressions, allowableTypes, connecto
             allowCreatingNewItems: true,
             items: items
           },
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
           expressions,
           allowableTypes
         }}

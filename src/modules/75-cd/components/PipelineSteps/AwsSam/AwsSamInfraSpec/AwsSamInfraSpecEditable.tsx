@@ -39,6 +39,7 @@ import { connectorTypes } from '@pipeline/utils/constants'
 import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { getAwsSamInfraValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from './AwsSamInfraSpec.module.scss'
 
 export interface AwsSamInfraSpecEditableProps {
@@ -62,6 +63,7 @@ export const AwsSamInfraSpecEditable: React.FC<AwsSamInfraSpecEditableProps> = (
   const { getRBACErrorMessage } = useRBACError()
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   React.useEffect(() => {
     subscribeForm({ tab: DeployTabs.INFRASTRUCTURE, form: formikRef })
@@ -120,7 +122,11 @@ export const AwsSamInfraSpecEditable: React.FC<AwsSamInfraSpecEditableProps> = (
                   tooltipProps={{
                     dataTooltipId: 'awsConnector'
                   }}
-                  multiTypeProps={{ expressions, allowableTypes }}
+                  multiTypeProps={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   projectIdentifier={projectIdentifier}
                   orgIdentifier={orgIdentifier}
                   width={450}
@@ -169,6 +175,7 @@ export const AwsSamInfraSpecEditable: React.FC<AwsSamInfraSpecEditableProps> = (
                   multiTypeInputProps={{
                     expressions,
                     allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     selectProps: {
                       items: regions,
                       popoverClassName: css.regionPopover,

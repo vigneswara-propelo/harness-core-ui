@@ -48,6 +48,7 @@ import MultiTypeTagSelector from '@common/components/MultiTypeTagSelector/MultiT
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   AzureInfrastructureSpecEditableProps,
   getValidationSchema,
@@ -87,6 +88,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
   const [resourceGroups, setResourceGroups] = React.useState<SelectOption[]>([])
   const [renderCount, setRenderCount] = React.useState<boolean>(true)
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const [azureTags, setAzureTags] = useState([])
 
@@ -419,6 +421,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                         setResourceGroups([])
                         setAzureTags([])
                       },
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       onTypeChange: type => {
                         setCanTagsHaveFixedValue(
                           type === MultiTypeInputType.FIXED &&
@@ -494,6 +497,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                     multiTypeInputProps={{
                       expressions,
                       disabled: readonly,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       onFocus: /* istanbul ignore next */ () => {
                         const connectorValue = getValue(formik.values?.connectorRef)
                         const subscriptionId = getValue(formik.values?.subscriptionId)

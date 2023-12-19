@@ -31,7 +31,7 @@ import {
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { Connectors } from '@platform/connectors/constants'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
@@ -73,6 +73,7 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
   const { expressions } = useVariablesExpression()
   const [renderCount, setRenderCount] = React.useState<boolean>(true)
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const formikRef = React.useRef<FormikProps<AzureWebAppInfrastructureUI> | null>(null)
 
@@ -258,7 +259,11 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                   placeholder={getString('common.entityPlaceholderText')}
                   disabled={readonly}
                   accountIdentifier={accountId}
-                  multiTypeProps={{ expressions, allowableTypes }}
+                  multiTypeProps={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   projectIdentifier={projectIdentifier}
                   orgIdentifier={orgIdentifier}
                   width={450}
@@ -328,6 +333,7 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                       setResourceGroups([])
                     },
                     expressions,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     disabled: readonly,
                     onFocus: /* istanbul ignore next */ () => {
                       const connectorValue = getValue(formik.values?.connectorRef)
@@ -393,6 +399,7 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                   multiTypeInputProps={{
                     expressions,
                     disabled: readonly,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     onFocus: /* istanbul ignore next */ () => {
                       if (getMultiTypeFromValue(formik.values?.resourceGroup) === MultiTypeInputType.FIXED) {
                         refetchResourceGroups({

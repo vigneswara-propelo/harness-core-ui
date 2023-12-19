@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
@@ -29,6 +36,7 @@ import { FormMultiTypeConnectorField } from '@platform/connectors/components/Con
 import { Connectors } from '@platform/connectors/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { isFieldFixed } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { TerraformProviderCredential, ConnectorValue, TerraformData } from '../TerraformInterfaces'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -66,6 +74,7 @@ const TerraformSelectArn = (props: TerraformSelectArnProps): React.ReactElement 
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const values = formik?.values
   const roleValue = isFieldFixed(defaultTo(get(values, roleName), '')) ? defaultTo(get(values, roleName), '') : ''
   const [regions, setRegions] = useState<MultiSelectOption[]>([])
@@ -147,7 +156,7 @@ const TerraformSelectArn = (props: TerraformSelectArnProps): React.ReactElement 
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
             style={{ marginBottom: 10 }}
-            multiTypeProps={{ expressions, allowableTypes }}
+            multiTypeProps={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
             disabled={readonly}
             width={300}
             setRefValue
@@ -194,6 +203,7 @@ const TerraformSelectArn = (props: TerraformSelectArnProps): React.ReactElement 
                 items: regions
               },
               expressions,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               allowableTypes,
               width: 300
             }}
@@ -234,6 +244,7 @@ const TerraformSelectArn = (props: TerraformSelectArnProps): React.ReactElement 
               onSelect: () => refetch(),
               expressions,
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               width: 300
             }}
             selectItems={awsRoles}

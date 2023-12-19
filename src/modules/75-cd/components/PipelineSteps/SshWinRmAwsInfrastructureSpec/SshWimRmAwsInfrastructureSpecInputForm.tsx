@@ -30,6 +30,7 @@ import MultiTypeSecretInput, {
 } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import MultiTypeTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeTagSelector'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { SshWinRmAwsInfrastructureTemplate } from './SshWinRmAwsInfrastructureSpec'
 import css from './SshWinRmAwsInfrastructureSpec.module.scss'
 
@@ -64,6 +65,7 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
   const [tags, setTags] = useState<SelectOption[]>([])
   const { expressions } = useVariablesExpression()
   const formik = useFormikContext()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const provisionerName = isEmpty(path) ? 'provisioner' : `${path}.provisioner`
 
@@ -146,7 +148,7 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
           enableConfigureOptions={false}
           placeholder={getString('common.entityPlaceholderText')}
           disabled={readonly}
-          multiTypeProps={{ allowableTypes, expressions }}
+          multiTypeProps={{ allowableTypes, expressions, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           type={Connectors.AWS}
           setRefValue
           gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
@@ -189,6 +191,7 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
               )
             },
             expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             allowableTypes
           }}
         />

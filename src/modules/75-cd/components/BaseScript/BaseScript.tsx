@@ -30,6 +30,7 @@ import { FileUsage } from '@platform/filestore/interfaces/FileStore'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import type { ShellScriptFormData } from '@cd/components/PipelineSteps/ShellScriptStep/shellScriptTypes'
 import MultiTypeConfigFileSelect from '@pipeline/components/StartupScriptSelection/MultiTypeConfigFileSelect'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { LocationType } from '../PipelineSteps/CommandScripts/CommandScriptsTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../PipelineSteps/ShellScriptStep/ShellScript.module.scss'
@@ -47,6 +48,7 @@ export default function BaseScript(props: {
   const { formik, readonly, allowableTypes } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { values: formValues, setValues } = formik
   const scriptType: ScriptType = formValues.spec.shell || 'Bash'
 
@@ -176,6 +178,7 @@ export default function BaseScript(props: {
                 name={'spec.source.spec.file'}
                 value={get(formValues, 'spec.source.spec.file')}
                 disabled={false}
+                newExpressionComponent={NG_EXPRESSIONS_NEW_INPUT_ELEMENT}
                 inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
                 items={expressions}
                 onChange={val => {

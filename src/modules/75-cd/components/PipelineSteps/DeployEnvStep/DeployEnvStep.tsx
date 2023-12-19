@@ -79,7 +79,7 @@ import { useSaveToGitDialog } from '@modules/10-common/modals/SaveToGitDialog/us
 import { SaveToGitFormInterface } from '@modules/10-common/components/SaveToGitForm/SaveToGitForm'
 import { StoreType } from '@modules/10-common/constants/GitSyncTypes'
 import { ConnectorSelectedValue } from '@modules/27-platform/connectors/components/ConnectorReferenceField/ConnectorReferenceField'
-import { useFeatureFlag } from '@modules/10-common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { GitSyncFormFields, gitSyncFormSchema } from '@modules/40-gitsync/components/GitSyncForm/GitSyncForm'
 import { NewEnvironmentForm } from './NewEnvironmentForm'
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
@@ -581,6 +581,7 @@ export const DeployEnvironmentWidget: React.FC<DeployEnvironmentProps> = ({
   }
 
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const [canEdit] = usePermission({
     resource: {
@@ -656,6 +657,7 @@ export const DeployEnvironmentWidget: React.FC<DeployEnvironmentProps> = ({
                   multiTypeInputProps={{
                     onTypeChange: setType,
                     width: 300,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     onChange: val => {
                       if (
                         values.environment?.identifier &&

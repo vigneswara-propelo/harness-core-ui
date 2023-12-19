@@ -33,6 +33,7 @@ import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/compo
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
 import type {
   ECSBlueGreenCreateServiceStepInitialValues,
@@ -72,6 +73,7 @@ const ECSBlueGreenCreateServiceStepEdit = (
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const [listenerList, setListenerList] = useState<SelectOption[]>([])
   const [prodListenerRules, setProdListenerRules] = useState<SelectOption[]>([])
@@ -396,6 +398,7 @@ const ECSBlueGreenCreateServiceStepEdit = (
                       allowCreatingNewItems: true,
                       loadingItems: loadingLoadBalancers
                     },
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     onChange: selectedValue => {
                       const selectedValueString =
                         typeof selectedValue === 'string'
@@ -441,6 +444,7 @@ const ECSBlueGreenCreateServiceStepEdit = (
                       allowCreatingNewItems: true,
                       loadingItems: loadingListeners
                     },
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     onChange: selectedValue => {
                       if (selectedValue) {
                         const selectedValueString =
@@ -498,6 +502,7 @@ const ECSBlueGreenCreateServiceStepEdit = (
                       allowCreatingNewItems: true,
                       loadingItems: prodListenerRulesLoading
                     },
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                       fetchProdListenerRules(formik.values.spec.loadBalancer, formik.values.spec.prodListener, e)
                     }
@@ -538,6 +543,7 @@ const ECSBlueGreenCreateServiceStepEdit = (
                       allowCreatingNewItems: true,
                       loadingItems: loadingListeners
                     },
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     onChange: selectedValue => {
                       if (selectedValue) {
                         const selectedValueString =
@@ -595,6 +601,7 @@ const ECSBlueGreenCreateServiceStepEdit = (
                       allowCreatingNewItems: true,
                       loadingItems: stageListenerRulesLoading
                     },
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                       fetchStageListenerRules(formik.values.spec.loadBalancer, formik.values.spec.stageListener, e)
                     }
@@ -628,7 +635,8 @@ const ECSBlueGreenCreateServiceStepEdit = (
                   multiTypeTextbox={{
                     expressions,
                     allowableTypes,
-                    defaultValueToReset: false
+                    defaultValueToReset: false,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                 />
               </Container>
@@ -642,7 +650,8 @@ const ECSBlueGreenCreateServiceStepEdit = (
                   multiTypeTextbox={{
                     expressions,
                     allowableTypes,
-                    defaultValueToReset: false
+                    defaultValueToReset: false,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                 />
               </Container>
@@ -656,7 +665,8 @@ const ECSBlueGreenCreateServiceStepEdit = (
                   multiTypeTextbox={{
                     expressions,
                     allowableTypes,
-                    defaultValueToReset: false
+                    defaultValueToReset: false,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                 />
               </Container>

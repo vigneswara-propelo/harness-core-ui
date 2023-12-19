@@ -24,6 +24,7 @@ import { useApplications } from '@cd/components/PipelineSteps/UpdateGitOpsAppSte
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { UpdateGitOpsAppProps, UpdateGitOpsAppStepData, ApplicationOption } from './helper'
 import { SOURCE_TYPE_UNSET, FIELD_KEYS, gitopsAllowableTypes, isHelmApp } from './helper'
 import { renderFormByType } from './FieldRenderers'
@@ -42,6 +43,7 @@ function UpdateGitOpsAppStep(
   const { data } = useApplications()
   const { expressions } = useVariablesExpression()
   const [valueFileOptions, setValueFileOptions] = React.useState<SelectOption[]>([])
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const {
     data: appDetails,
@@ -220,7 +222,8 @@ function UpdateGitOpsAppStep(
                       formik.setFieldValue(FIELD_KEYS.targetRevision, undefined)
                       formik.setFieldValue(FIELD_KEYS.valueFiles, [])
                     }
-                  }
+                  },
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
                 placeholder={getString('selectApplication')}
                 label={getString('common.application')}

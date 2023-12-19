@@ -17,6 +17,7 @@ import { FormMultiTypeConnectorField } from '@platform/connectors/components/Con
 import { Connectors } from '@platform/connectors/constants'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { regionValues } from '@platform/connectors/components/CreateConnector/AWSConnector/StepAuth/StepAuthConstants'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { ElastigroupBGStageSetupData } from './ElastigroupBGStageSetupStepTypes'
 import ElastigroupBGStageSetupLoadBalancer from './ElastigroupBGStageSetupLoadbalancers'
 
@@ -33,6 +34,7 @@ export default function ElastigroupBGStageSetupSource(props: {
   const { formik, readonly } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
   return (
@@ -48,7 +50,11 @@ export default function ElastigroupBGStageSetupSource(props: {
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
           style={{ marginBottom: 10 }}
-          multiTypeProps={{ expressions, allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION] }}
+          multiTypeProps={{
+            expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
+            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+          }}
           disabled={readonly}
           width={384}
           setRefValue
@@ -62,6 +68,7 @@ export default function ElastigroupBGStageSetupSource(props: {
             useValue
             multiTypeInputProps={{
               expressions,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
               selectProps: {
                 items: regionValues,

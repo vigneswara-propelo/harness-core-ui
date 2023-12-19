@@ -42,6 +42,7 @@ import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 import { resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { getGoogleCloudFunctionInfraValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { GoogleCloudFunctionInfrastructure } from './GoogleCloudFunctionInfraSpec'
 import css from './GoogleCloudFunctionInfraSpec.module.scss'
 
@@ -66,6 +67,7 @@ export const GoogleCloudFunctionInfraSpecEditable: React.FC<GoogleCloudFunctionI
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
 
@@ -195,7 +197,11 @@ export const GoogleCloudFunctionInfraSpecEditable: React.FC<GoogleCloudFunctionI
                   placeholder={getString('common.entityPlaceholderText')}
                   disabled={readonly}
                   accountIdentifier={accountId}
-                  multiTypeProps={{ expressions, allowableTypes }}
+                  multiTypeProps={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   projectIdentifier={projectIdentifier}
                   orgIdentifier={orgIdentifier}
                   width={450}
@@ -249,6 +255,7 @@ export const GoogleCloudFunctionInfraSpecEditable: React.FC<GoogleCloudFunctionI
                   multiTypeInputProps={{
                     expressions,
                     allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     selectProps: {
                       items: projectOptions,
                       popoverClassName: css.regionPopover,
@@ -309,6 +316,7 @@ export const GoogleCloudFunctionInfraSpecEditable: React.FC<GoogleCloudFunctionI
                   multiTypeInputProps={{
                     expressions,
                     allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     selectProps: {
                       items: regions,
                       popoverClassName: css.regionPopover,

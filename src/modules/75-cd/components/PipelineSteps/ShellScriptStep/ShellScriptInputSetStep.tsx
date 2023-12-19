@@ -186,6 +186,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                   name={`${prefix}spec.source.spec.file`}
                   value={get(formik?.values, `${prefix}spec.source.spec.file`)}
                   disabled={false}
+                  newExpressionComponent={NG_EXPRESSIONS_NEW_INPUT_ELEMENT}
                   inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
                   items={expressions}
                   onChange={val =>

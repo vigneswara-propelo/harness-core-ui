@@ -35,6 +35,7 @@ import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { TASInfrastructureUI } from './TASInfrastructureStep'
 import {
   TASInfrastructureSpecEditableProps,
@@ -64,6 +65,7 @@ const TASInfrastructureSpecEditableNew: React.FC<TASInfrastructureSpecEditablePr
   const { expressions } = useVariablesExpression()
   const [renderCount, setRenderCount] = React.useState<boolean>(true)
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const formikRef = React.useRef<FormikProps<TASInfrastructureUI> | null>(null)
 
@@ -303,6 +305,7 @@ const TASInfrastructureSpecEditableNew: React.FC<TASInfrastructureSpecEditablePr
                     },
                     expressions,
                     disabled: readonly,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     onFocus: /* istanbul ignore next */ () => {
                       const connectorValue = getValue(formik.values?.connectorRef)
                       if (getMultiTypeFromValue(formik.values?.organization) === MultiTypeInputType.FIXED) {
@@ -361,6 +364,7 @@ const TASInfrastructureSpecEditableNew: React.FC<TASInfrastructureSpecEditablePr
                   multiTypeInputProps={{
                     expressions,
                     disabled: readonly,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     onFocus: /* istanbul ignore next */ () => {
                       if (getMultiTypeFromValue(formik.values?.space) === MultiTypeInputType.FIXED) {
                         refetchSpaces({

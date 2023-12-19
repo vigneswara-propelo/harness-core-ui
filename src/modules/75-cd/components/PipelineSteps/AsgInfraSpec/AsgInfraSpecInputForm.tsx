@@ -29,6 +29,7 @@ import { FormMultiTypeConnectorField } from '@platform/connectors/components/Con
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { connectorTypes } from '@pipeline/utils/constants'
 import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { AsgInfraSpecCustomStepProps } from './AsgInfraSpec'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -51,6 +52,7 @@ const AsgInfraSpecInputForm = (props: AsgInfraSpecInputFormProps) => {
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
   const [asgBaseNames, setAsgBaseNames] = React.useState<SelectOption[]>([])
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const connectorFieldName = isEmpty(path) ? 'connectorRef' : `${path}.connectorRef`
   const regionFieldName = isEmpty(path) ? 'region' : `${path}.region`
@@ -152,6 +154,7 @@ const AsgInfraSpecInputForm = (props: AsgInfraSpecInputFormProps) => {
                 items: regions,
                 popoverClassName: cx(stepCss.formGroup, stepCss.md)
               },
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               onChange: () => {
                 formik?.setFieldValue(baseAsgName, '')
                 setAsgBaseNames([])
@@ -182,6 +185,7 @@ const AsgInfraSpecInputForm = (props: AsgInfraSpecInputFormProps) => {
                   </Text>
                 )
               },
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
 
               onClick: () => {
                 refetch({

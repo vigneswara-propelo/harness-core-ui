@@ -29,6 +29,7 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { listenerRulesPromise, ResponseListString, useElasticLoadBalancers, useListeners } from 'services/cd-ng'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { shouldFetchFieldData } from '../PipelineStepsUtil'
 
 import type { ElastigroupBGStageSetupData } from './ElastigroupBGStageSetupStepTypes'
@@ -53,6 +54,7 @@ export default function ElastigroupBGStageSetupLoadBalancer(props: {
   const { formik, readonly, index, remove } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
   const [showInputs, setShow] = useState(!isEmpty(formik.errors.spec?.loadBalancers?.[index]))
@@ -389,6 +391,7 @@ export default function ElastigroupBGStageSetupLoadBalancer(props: {
                 useValue
                 multiTypeInputProps={{
                   expressions,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   selectProps: {
                     items: loadBalancerOptions,
                     popoverClassName: css.dropdownMenu,
@@ -423,6 +426,7 @@ export default function ElastigroupBGStageSetupLoadBalancer(props: {
                 useValue
                 multiTypeInputProps={{
                   expressions,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   selectProps: {
                     items: listenerList,
                     popoverClassName: css.dropdownMenu,
@@ -464,6 +468,7 @@ export default function ElastigroupBGStageSetupLoadBalancer(props: {
                 useValue
                 multiTypeInputProps={{
                   expressions,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   selectProps: {
                     items: prodListenerRules,
                     popoverClassName: css.dropdownMenu,
@@ -498,6 +503,7 @@ export default function ElastigroupBGStageSetupLoadBalancer(props: {
                 useValue
                 multiTypeInputProps={{
                   expressions,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   selectProps: {
                     items: listenerList,
                     popoverClassName: css.dropdownMenu,
@@ -539,6 +545,7 @@ export default function ElastigroupBGStageSetupLoadBalancer(props: {
                 useValue
                 multiTypeInputProps={{
                   expressions,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   selectProps: {
                     items: stageListenerRules,
                     popoverClassName: css.dropdownMenu,
