@@ -20,6 +20,7 @@ import {
 import { useStrings } from 'framework/strings'
 import { ServiceNowFieldValueNG } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import type { ServiceNowFieldNG } from 'services/cd-ng'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
@@ -68,6 +69,7 @@ function GetMappedFieldComponent({ selectedField, props, expressions, index }: M
   const showMultiTypeField = useCallback(() => {
     return selectedField.allowedValues && selectedField.schema?.type === 'option'
   }, [selectedField])
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const showExpandableTextField = () => defaultTo(selectedField?.schema?.multilineText, false)
   const isFieldDisabled = isApprovalStepFieldDisabled(
@@ -83,7 +85,11 @@ function GetMappedFieldComponent({ selectedField, props, expressions, index }: M
         placeholder={selectedField.name}
         disabled={isFieldDisabled}
         className={cx(css.multiSelect, css.md)}
-        multiTypeInputProps={{ allowableTypes: props.allowableTypes, expressions }}
+        multiTypeInputProps={{
+          allowableTypes: props.allowableTypes,
+          expressions,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+        }}
       />
     )
   } else if (showExpandableTextField()) {
@@ -92,7 +98,12 @@ function GetMappedFieldComponent({ selectedField, props, expressions, index }: M
         label={selectedField.name}
         name={`spec.selectedFields[${index}].value`}
         placeholder={selectedField.name}
-        multiTypeTextArea={{ enableConfigureOptions: false, expressions, allowableTypes: props.allowableTypes }}
+        multiTypeTextArea={{
+          enableConfigureOptions: false,
+          expressions,
+          allowableTypes: props.allowableTypes,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+        }}
         disabled={isFieldDisabled}
         className={css.md}
       />
@@ -107,7 +118,8 @@ function GetMappedFieldComponent({ selectedField, props, expressions, index }: M
         className={css.deploymentViewMedium}
         multiTextInputProps={{
           allowableTypes: props.allowableTypes,
-          expressions
+          expressions,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
         }}
       />
     )

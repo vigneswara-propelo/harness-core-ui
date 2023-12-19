@@ -25,6 +25,7 @@ import {
   useGetServiceNowTicketTypes,
   useGetServiceNowTicketTypesV2
 } from 'services/cd-ng'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
@@ -45,6 +46,7 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
   const runTimeTicketType = get(formik?.values, `${prefix}spec.ticketType`)
   const fixedTicketType = inputSetData?.allValues?.spec?.ticketType
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -132,6 +134,7 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
           items: selectOptions
         },
         allowableTypes,
+        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
         expressions
       }
     }
@@ -151,6 +154,7 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             },
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             expressions,
             disabled: isApprovalStepFieldDisabled(readonly)
           }}
@@ -174,6 +178,7 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTypeProps={{
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             expressions
           }}
           configureOptionsProps={{
@@ -218,7 +223,8 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
                 ? [{ label: getString(fetchingTicketTypesPlaceholder), value: '' }]
                 : serviceNowTicketTypesOptions
             },
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
       ) : null}
@@ -230,7 +236,8 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
           multiTextInputProps={{
             disabled: isApprovalStepFieldDisabled(readonly),
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -248,6 +255,7 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             },
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             expressions,
             disabled: readonly
           }}

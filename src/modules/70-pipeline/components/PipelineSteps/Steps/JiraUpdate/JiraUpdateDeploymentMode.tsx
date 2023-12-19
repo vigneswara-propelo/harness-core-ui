@@ -77,7 +77,7 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps & GitQueryParams>>()
-  const { CDS_JIRA_TRANSITION_LIST } = useFeatureFlags()
+  const { CDS_JIRA_TRANSITION_LIST, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const { getRBACErrorMessage } = useRBACError()
   const { expressions } = useVariablesExpression()
@@ -214,6 +214,7 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             },
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             expressions,
             disabled: isApprovalStepFieldDisabled(readonly)
           }}
@@ -237,6 +238,7 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTypeProps={{
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             expressions
           }}
           configureOptionsProps={{
@@ -258,7 +260,11 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
           name={`${prefix}spec.issueKey`}
           disabled={isApprovalStepFieldDisabled(readonly)}
           placeholder={getString('pipeline.jiraApprovalStep.issueKeyPlaceholder')}
-          multiTextInputProps={{ expressions, allowableTypes }}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
@@ -287,6 +293,7 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
 
             expressions,
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             selectProps: {
               addClearBtn: !readonly,
               itemRenderer: statusItemRenderer,
@@ -335,6 +342,7 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
             width: 400,
             expressions,
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             selectProps: {
               addClearBtn: !readonly,
               itemRenderer: transitionItemRenderer,

@@ -33,6 +33,7 @@ import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/Servic
 import { useStrings } from 'framework/strings'
 import { ConnectorRefSchema } from '@common/utils/Validation'
 import { useGetServiceNowStagingTables } from 'services/cd-ng'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { Connectors } from '@platform/connectors/constants'
@@ -63,6 +64,7 @@ function FormContent({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [count, setCount] = useState(0)
   const [connectorValueType, setConnectorValueType] = useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const commonParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -148,6 +150,7 @@ function FormContent({
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTypeDurationProps={{
             expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             enableConfigureOptions: true,
             allowableTypes
           }}
@@ -167,7 +170,7 @@ function FormContent({
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          multiTypeProps={{ expressions, allowableTypes }}
+          multiTypeProps={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           setRefValue
           type="ServiceNow"
           enableConfigureOptions={false}
@@ -234,6 +237,7 @@ function FormContent({
                   : serviceNowStagingTablesOptions
               },
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               expressions,
               onChange: /* istanbul ignore next */ (value: unknown, _valueType, type) => {
                 if (

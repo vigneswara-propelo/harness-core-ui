@@ -59,6 +59,7 @@ import {
 import { StringKeys, useStrings } from 'framework/strings'
 import { ConnectorRefSchema } from '@common/utils/Validation'
 import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { Connectors } from '@platform/connectors/constants'
 import { ServiceNowApprovalRejectionCriteria } from './ServiceNowApprovalRejectionCriteria'
 import { ServiceNowApprovalChangeWindow } from './ServiceNowApprovalChangeWindow'
@@ -86,6 +87,7 @@ function FormContent({
   const [count, setCount] = useState(0)
   const [fieldList, setFieldList] = useState<ServiceNowFieldNG[]>([])
   const [connectorValueType, setConnectorValueType] = useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const commonParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -175,7 +177,8 @@ function FormContent({
           multiTypeDurationProps={{
             expressions,
             enableConfigureOptions: true,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
       </div>
@@ -193,7 +196,7 @@ function FormContent({
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          multiTypeProps={{ expressions, allowableTypes }}
+          multiTypeProps={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           setRefValue
           type="ServiceNow"
           enableConfigureOptions={false}
@@ -261,6 +264,7 @@ function FormContent({
                   : serviceNowTicketTypesOptions
               },
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               expressions,
               onChange: (value: unknown, _valueType, type) => {
                 // When ticketType value is fixed and changed we refetch the createMetadata call to get latest data
@@ -297,7 +301,8 @@ function FormContent({
             disabled={isApprovalStepFieldDisabled(readonly)}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
           />
           {getMultiTypeFromValue(formik.values.spec.ticketNumber) === MultiTypeInputType.RUNTIME && (
@@ -317,7 +322,13 @@ function FormContent({
           <FormMultiTypeDurationField
             name="spec.retryInterval"
             label={getString('pipeline.customApprovalStep.retryInterval')}
-            multiTypeDurationProps={{ enableConfigureOptions: true, expressions, disabled: readonly, allowableTypes }}
+            multiTypeDurationProps={{
+              enableConfigureOptions: true,
+              expressions,
+              disabled: readonly,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
             className={stepCss.duration}
             disabled={readonly}
           />

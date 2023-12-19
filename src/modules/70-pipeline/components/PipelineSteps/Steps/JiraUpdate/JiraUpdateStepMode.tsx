@@ -117,7 +117,7 @@ function FormContent({
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
-  const { CDS_JIRA_TRANSITION_LIST } = useFeatureFlags()
+  const { CDS_JIRA_TRANSITION_LIST, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const [issueMetadata, setIssueMetadata] = useState<JiraProjectNG>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -506,7 +506,8 @@ function FormContent({
           multiTypeDurationProps={{
             expressions,
             allowableTypes,
-            enableConfigureOptions: true
+            enableConfigureOptions: true,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
       </div>
@@ -560,7 +561,11 @@ function FormContent({
         <FormInput.MultiTextInput
           label={getString('pipeline.jiraApprovalStep.issueKey')}
           name="spec.issueKey"
-          multiTextInputProps={{ expressions, allowableTypes }}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
           placeholder={getString('pipeline.jiraApprovalStep.issueKeyPlaceholder')}
           onChange={(value, _valueType, type) => {
             const formikValues = cloneDeep(formik.values)
@@ -614,6 +619,7 @@ function FormContent({
                   multiTypeInputProps={{
                     expressions,
                     allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     selectProps: {
                       addClearBtn: !readonly,
                       itemRenderer: statusItemRenderer,
@@ -709,6 +715,7 @@ function FormContent({
                   multiTypeInputProps={{
                     expressions,
                     allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     selectProps: {
                       addClearBtn: !readonly,
                       itemRenderer: transitionItemRenderer,

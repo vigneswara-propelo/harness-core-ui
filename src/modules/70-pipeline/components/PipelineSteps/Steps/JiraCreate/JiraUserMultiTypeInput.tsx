@@ -15,6 +15,7 @@ import type {
   PipelinePathProps,
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import { useJiraUserSearch } from 'services/cd-ng'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
@@ -43,6 +44,7 @@ export function JiraUserMultiTypeInput({
   const [searchTerm, setSearchTerm] = React.useState<string>(defaultTo(selectedField.value, ''))
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps & GitQueryParams>>()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { data: userData, loading: fetchUsers } = useJiraUserSearch({
     queryParams: {
       accountIdentifier: accountId,
@@ -83,7 +85,8 @@ export function JiraUserMultiTypeInput({
           resetOnSelect: false,
           loadingItems: fetchUsers
         },
-        allowableTypes: allowableTypes
+        allowableTypes: allowableTypes,
+        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
       }}
       fieldPath={`spec.fields[${index}].value`}
       template={props.template}

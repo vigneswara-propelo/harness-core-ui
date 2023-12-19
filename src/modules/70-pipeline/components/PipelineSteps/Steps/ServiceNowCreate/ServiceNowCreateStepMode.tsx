@@ -119,7 +119,7 @@ function FormContent({
   )
   const [isTemplateSectionAvailable, setIsTemplateSectionAvailable] = useState<boolean>(false)
   const [templateName, setTemplateName] = useState<string>(formik.values.spec.templateName || '')
-  const { CDS_GET_SERVICENOW_STANDARD_TEMPLATE } = useFeatureFlags()
+  const { CDS_GET_SERVICENOW_STANDARD_TEMPLATE, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const [fetchingReadonlyFields, setFetchingReadonlyFields] = useState<boolean>(false)
   const pageSize = useRef(12)
   const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined)
@@ -606,6 +606,7 @@ function FormContent({
           multiTypeDurationProps={{
             expressions,
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             enableConfigureOptions: true
           }}
         />
@@ -624,7 +625,7 @@ function FormContent({
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          multiTypeProps={{ expressions, allowableTypes }}
+          multiTypeProps={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           type="ServiceNow"
           setRefValue
           enableConfigureOptions={false}
@@ -702,6 +703,7 @@ function FormContent({
                   : serviceNowTicketTypesOptions
               },
               allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
               expressions,
               onChange: (value, _valueType, type) => {
                 setTicketValueType(type)
@@ -806,7 +808,12 @@ function FormContent({
                     label={getString('description')}
                     name="spec.description"
                     placeholder={getString('pipeline.serviceNowCreateStep.descriptionPlaceholder')}
-                    multiTypeTextArea={{ enableConfigureOptions: false, expressions, allowableTypes }}
+                    multiTypeTextArea={{
+                      enableConfigureOptions: false,
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     disabled={isApprovalStepFieldDisabled(readonly)}
                   />
                   {getMultiTypeFromValue(formik.values.spec.description) === MultiTypeInputType.RUNTIME && (
@@ -826,7 +833,12 @@ function FormContent({
                     label={getString('pipeline.serviceNowCreateStep.shortDescription')}
                     name="spec.shortDescription"
                     placeholder={getString('pipeline.serviceNowCreateStep.shortDescriptionPlaceholder')}
-                    multiTypeTextArea={{ enableConfigureOptions: false, expressions, allowableTypes }}
+                    multiTypeTextArea={{
+                      enableConfigureOptions: false,
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     disabled={isApprovalStepFieldDisabled(readonly)}
                   />
                   {getMultiTypeFromValue(formik.values.spec.shortDescription) === MultiTypeInputType.RUNTIME && (
@@ -967,6 +979,7 @@ function FormContent({
                           },
                           onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.build', type),
                           expressions,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                           selectProps: {
                             onQueryChange: query => {
                               if (query) debouncedSetSearchTerm?.(query)
@@ -1029,7 +1042,8 @@ function FormContent({
                                   }
                                 }
                               },
-                              allowableTypes: allowableTypes
+                              allowableTypes: allowableTypes,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                             }}
                           />
                           {getMultiTypeFromValue(formik.values.spec.templateName) === MultiTypeInputType.RUNTIME && (
@@ -1127,6 +1141,7 @@ function FormContent({
                       },
                       onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.build', type),
                       expressions,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       selectProps: {
                         onQueryChange: query => {
                           if (query) debouncedSetSearchTerm?.(query)

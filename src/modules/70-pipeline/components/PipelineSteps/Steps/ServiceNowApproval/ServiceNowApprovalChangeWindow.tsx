@@ -18,6 +18,7 @@ import type {
   ResponseListServiceNowFieldNG,
   ServiceNowFieldNG
 } from 'services/cd-ng'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { ServiceNowApprovalData } from './types'
 import css from '../Common/ApprovalRejectionCriteria.module.scss'
 
@@ -51,6 +52,7 @@ export function ServiceNowApprovalChangeWindow({
 }: ServiceNowApprovalChangeWindowProps): ReactElement {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const selectOptions = useMemo(() => {
     return getDateTimeOptions(fieldList)
@@ -64,6 +66,7 @@ export function ServiceNowApprovalChangeWindow({
       : getServiceNowIssueCreateMetadataQuery.error?.message || `${getString('select')} ${placeholder}`,
     useValue: true,
     multiTypeInputProps: {
+      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
       selectProps: {
         addClearBtn: true,
         items: selectOptions

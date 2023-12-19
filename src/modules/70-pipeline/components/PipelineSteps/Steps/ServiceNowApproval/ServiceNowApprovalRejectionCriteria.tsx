@@ -28,6 +28,7 @@ import {
   ApprovalRejectionCriteriaType
 } from '@pipeline/components/PipelineSteps/Steps/Common/types'
 import { useDeepCompareEffect } from '@common/hooks'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { ServiceNowFieldNG } from 'services/cd-ng'
 import { errorCheck } from '@common/utils/formikHelpers'
 import { handleOperatorChange, operatorValues, setAllowedValuesOptions } from '../JiraApproval/helper'
@@ -62,6 +63,7 @@ function RenderValueSelects({
   readonly?: boolean
 }): JSX.Element {
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const name = `spec.${mode}.spec.conditions`
   if (condition.operator === 'in' || condition.operator === 'not in') {
     return (
@@ -73,7 +75,8 @@ function RenderValueSelects({
         placeholder={getString(valuePlaceholder)}
         multiSelectTypeInputProps={{
           allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
-          expressions
+          expressions,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
         }}
         disabled={isApprovalStepFieldDisabled(readonly)}
       />
@@ -87,7 +90,8 @@ function RenderValueSelects({
       placeholder={getString(valuePlaceholder)}
       multiTypeInputProps={{
         allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
-        expressions
+        expressions,
+        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
       }}
       disabled={isApprovalStepFieldDisabled(readonly)}
     />
@@ -107,6 +111,7 @@ export function Conditions({
 }: ServiceNowConditionsInterface): JSX.Element {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const name = `spec.${mode}.spec.conditions`
   const approvalRejectionCriteriaError = get(formik?.errors, name)
 
@@ -186,7 +191,8 @@ export function Conditions({
                         disabled={isApprovalStepFieldDisabled(readonly)}
                         multiTextInputProps={{
                           expressions,
-                          allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+                          allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                         }}
                       />
                     )}

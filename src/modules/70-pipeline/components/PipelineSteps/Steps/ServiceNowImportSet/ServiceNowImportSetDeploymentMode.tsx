@@ -22,6 +22,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useGetServiceNowStagingTables } from 'services/cd-ng'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/helper'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
@@ -39,6 +40,7 @@ export default function ServiceNowImportSetDeploymentMode(props: ServiceNowImpor
   const prefix = isEmpty(path) ? '' : `${path}.`
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -97,6 +99,7 @@ export default function ServiceNowImportSetDeploymentMode(props: ServiceNowImpor
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             },
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             expressions,
             disabled: isApprovalStepFieldDisabled(readonly)
           }}
@@ -120,7 +123,8 @@ export default function ServiceNowImportSetDeploymentMode(props: ServiceNowImpor
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTypeProps={{
             allowableTypes,
-            expressions
+            expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -159,7 +163,8 @@ export default function ServiceNowImportSetDeploymentMode(props: ServiceNowImpor
                 ? [{ label: fetchingStagingTableNamePlaceholder, value: fetchingStagingTableNamePlaceholder }]
                 : serviceNowStagingTablesOptions
             },
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
       )}

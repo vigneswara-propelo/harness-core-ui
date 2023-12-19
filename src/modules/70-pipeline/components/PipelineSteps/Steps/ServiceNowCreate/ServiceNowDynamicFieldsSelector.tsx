@@ -12,6 +12,7 @@ import { String, useStrings } from 'framework/strings'
 import type { ServiceNowFieldNG } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { removeServiceNowMandatoryFields } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/helper'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { ServiceNowFieldSelector } from './ServiceNowFieldSelector'
 import {
   ServiceNowCreateFieldType,
@@ -92,6 +93,7 @@ function SelectFieldList(props: ServiceNowDynamicFieldsSelectorInterface) {
 function ProvideFieldList(props: ServiceNowDynamicFieldsSelectorInterface) {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   return (
     <Formik<ServiceNowCreateFieldType[]>
       onSubmit={values => {
@@ -127,6 +129,7 @@ function ProvideFieldList(props: ServiceNowDynamicFieldsSelectorInterface) {
                           placeholder={getString('common.valuePlaceholder')}
                           multiTextInputProps={{
                             allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                             expressions
                           }}
                         />

@@ -44,6 +44,7 @@ import {
   getInitialValueForSelectedField,
   setServiceNowFieldAllowedValuesOptions
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/helper'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
@@ -70,6 +71,7 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps & GitQueryParams>>()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const commonParams = {
     accountIdentifier: accountId,
@@ -180,6 +182,7 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             },
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             expressions,
             disabled: isApprovalStepFieldDisabled(readonly)
           }}
@@ -203,6 +206,7 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTypeProps={{
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             expressions
           }}
           configureOptionsProps={{
@@ -251,7 +255,8 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
                 ? [{ label: getString(fetchingTicketTypesPlaceholder), value: '' }]
                 : serviceNowTicketTypesOptions
             },
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
       ) : null}
@@ -298,7 +303,8 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTextInputProps={{
             placeholder: getString('pipeline.serviceNowCreateStep.templateNamePlaceholder'),
-            allowableTypes: allowableTypes
+            allowableTypes: allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{ isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType) }}
           className={css.deploymentViewMedium}
@@ -350,7 +356,11 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
                     placeholder={customFields[fieldIndex].name}
                     disabled={isApprovalStepFieldDisabled(readonly)}
                     className={css.deploymentViewMedium}
-                    multiTypeInputProps={{ allowableTypes: allowableTypes, expressions }}
+                    multiTypeInputProps={{
+                      allowableTypes: allowableTypes,
+                      expressions,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     useValue
                   />
                 )
@@ -382,7 +392,8 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
                     className={css.deploymentViewMedium}
                     multiTextInputProps={{
                       allowableTypes: allowableTypes,
-                      expressions
+                      expressions,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                     }}
                   />
                 )
