@@ -8,6 +8,7 @@
 import React from 'react'
 import { render, fireEvent, act, waitFor, screen } from '@testing-library/react'
 
+import userEvent from '@testing-library/user-event'
 import * as GitSyncStoreContext from 'framework/GitRepoStore/GitSyncStoreContext'
 import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
 import { StoreType } from '@common/constants/GitSyncTypes'
@@ -287,7 +288,7 @@ describe('PipelineCreate test', () => {
   })
   test('initializes ok new pipeline', async () => {
     closeModal.mockReset()
-    const { container, getByText } = render(
+    const { getByText } = render(
       <TestWrapper
         path="/account/:accountId/ci/orgs/default/projects/gitx/pipelines/:pipelineIdentifier/pipeline-studio/"
         pathParams={{
@@ -298,8 +299,10 @@ describe('PipelineCreate test', () => {
         <PipelineCreate {...getEditProps(DefaultNewPipelineId)} primaryButtonText="start" />
       </TestWrapper>
     )
-    await waitFor(() => getByText('start'))
-    expect(container).toMatchSnapshot()
+    const startBtn = getByText('start')
+    await waitFor(() => expect(startBtn).toBeInTheDocument())
+    await userEvent.click(startBtn)
+    expect(getByText('validation.identifierRequired')).toBeInTheDocument()
   })
 
   test('when git exp is enabled - pipeline edit modal should display repo and branch to save pipeline to', async () => {

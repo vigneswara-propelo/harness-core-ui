@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { get, omit, pick } from 'lodash-es'
@@ -15,6 +15,7 @@ import { Container, Formik, FormikForm, Button, ButtonVariation, Text } from '@h
 import { FontVariation } from '@harness/design-system'
 import { Divider } from '@blueprintjs/core'
 
+import { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -111,6 +112,7 @@ export default function CreatePipelines({
   const oldGitSyncEnabled = isGitSyncEnabled && !gitSyncEnabledOnlyForFF
   const { trackEvent } = useTelemetry()
   const [yamlVersion, setYamlVersion] = React.useState<YamlVersion>(YamlVersion[1])
+  const formikRef = useRef<FormikProps<CreatePipelinesValue>>()
 
   const newInitialValues = React.useMemo(() => {
     return produce(initialValues, draft => {
@@ -186,6 +188,10 @@ export default function CreatePipelines({
     )
   }
 
+  useEffect(() => {
+    formikRef.current?.setFieldValue('storeType', initialValues.storeType)
+  }, [initialValues.storeType])
+
   return (
     <Container className={css.pipelineCreateForm}>
       <Formik<CreatePipelinesValue>
@@ -194,124 +200,127 @@ export default function CreatePipelines({
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {formikProps => (
-          <FormikForm>
-            <NameIdDescriptionTags
-              formikProps={formikProps}
-              identifierProps={{
-                isIdentifierEditable: resolvedPipelineIdentifier === DefaultNewPipelineId
-              }}
-              tooltipProps={{ dataTooltipId: 'pipelineCreate' }}
-              inputGroupProps={{
-                ...(!(errorCheck('name', formikProps) || get(formikProps, `errors.identifier`)) && {
-                  className: css.zeroMargin
-                }),
-                disabled: isReadonly
-              }}
-              descriptionProps={{
-                disabled: isReadonly
-              }}
-              tagsProps={{
-                disabled: isReadonly
-              }}
-            />
-            {(canSelectVersion || yamlVersionValue === YamlVersion[1]) && (
-              <VersionSelector
-                selectedVersion={yamlVersion}
-                onChange={setYamlVersion}
-                disabled={modalMode === 'edit'}
+        {formikProps => {
+          formikRef.current = formikProps
+          return (
+            <FormikForm>
+              <NameIdDescriptionTags
+                formikProps={formikProps}
+                identifierProps={{
+                  isIdentifierEditable: resolvedPipelineIdentifier === DefaultNewPipelineId
+                }}
+                tooltipProps={{ dataTooltipId: 'pipelineCreate' }}
+                inputGroupProps={{
+                  ...(!(errorCheck('name', formikProps) || get(formikProps, `errors.identifier`)) && {
+                    className: css.zeroMargin
+                  }),
+                  disabled: isReadonly
+                }}
+                descriptionProps={{
+                  disabled: isReadonly
+                }}
+                tagsProps={{
+                  disabled: isReadonly
+                }}
               />
-            )}
-            {oldGitSyncEnabled && (
-              <GitSyncStoreProvider>
-                <GitContextForm formikProps={formikProps as any} gitDetails={gitDetails} />
-              </GitSyncStoreProvider>
-            )}
-
-            {supportingGitSimplification ? (
-              <>
-                <Divider />
-                <Text
-                  font={{ variation: FontVariation.H6 }}
-                  className={css.choosePipelineSetupHeader}
-                  data-tooltip-id="pipeline-InlineRemoteSelect-label"
-                >
-                  {getString('pipeline.createPipeline.choosePipelineSetupHeader')}
-                </Text>
-                <InlineRemoteSelect
-                  className={css.pipelineCardWrapper}
-                  selected={storeTypeParam}
-                  getCardDisabledStatus={(current, selected) => {
-                    return resolvedPipelineIdentifier !== DefaultNewPipelineId
-                      ? current !== selected
-                      : Boolean(isGitXEnforced && current === StoreType.INLINE)
-                  }}
-                  onChange={item => {
-                    if (resolvedPipelineIdentifier === DefaultNewPipelineId) {
-                      formikProps?.setFieldValue('storeType', item.type)
-                      updateQueryParams({ storeType: item.type })
-                    }
-                  }}
+              {(canSelectVersion || yamlVersionValue === YamlVersion[1]) && (
+                <VersionSelector
+                  selectedVersion={yamlVersion}
+                  onChange={setYamlVersion}
+                  disabled={modalMode === 'edit'}
                 />
-              </>
-            ) : null}
-            {storeTypeParam === StoreType.REMOTE ? (
-              <GitSyncForm
-                formikProps={formikProps as any}
-                isEdit={isEdit}
-                initialValues={pick(newInitialValues, 'repo', 'branch', 'filePath', 'connectorRef')}
-              />
-            ) : null}
+              )}
+              {oldGitSyncEnabled && (
+                <GitSyncStoreProvider>
+                  <GitContextForm formikProps={formikProps as any} gitDetails={gitDetails} />
+                </GitSyncStoreProvider>
+              )}
 
-            {supportingGitSimplification ? (
-              <Divider className={cx({ [css.gitSimplificationDivider]: storeTypeParam === StoreType.INLINE })} />
-            ) : null}
+              {supportingGitSimplification ? (
+                <>
+                  <Divider />
+                  <Text
+                    font={{ variation: FontVariation.H6 }}
+                    className={css.choosePipelineSetupHeader}
+                    data-tooltip-id="pipeline-InlineRemoteSelect-label"
+                  >
+                    {getString('pipeline.createPipeline.choosePipelineSetupHeader')}
+                  </Text>
+                  <InlineRemoteSelect
+                    className={css.pipelineCardWrapper}
+                    selected={storeTypeParam}
+                    getCardDisabledStatus={(current, selected) => {
+                      return resolvedPipelineIdentifier !== DefaultNewPipelineId
+                        ? current !== selected
+                        : Boolean(isGitXEnforced && current === StoreType.INLINE)
+                    }}
+                    onChange={item => {
+                      if (resolvedPipelineIdentifier === DefaultNewPipelineId) {
+                        formikProps?.setFieldValue('storeType', item.type)
+                        updateQueryParams({ storeType: item.type })
+                      }
+                    }}
+                  />
+                </>
+              ) : null}
+              {storeTypeParam === StoreType.REMOTE ? (
+                <GitSyncForm
+                  formikProps={formikProps as any}
+                  isEdit={isEdit}
+                  initialValues={pick(newInitialValues, 'repo', 'branch', 'filePath', 'connectorRef')}
+                />
+              ) : null}
 
-            {(!isEdit || canSelectVersion) && (
-              <Container padding={{ top: 'large' }}>
-                <RbacButton
-                  text={getString('common.templateStartLabel')}
-                  icon={'template-library'}
-                  iconProps={{
-                    size: 12
-                  }}
-                  variation={ButtonVariation.SECONDARY}
+              {supportingGitSimplification ? (
+                <Divider className={cx({ [css.gitSimplificationDivider]: storeTypeParam === StoreType.INLINE })} />
+              ) : null}
+
+              {(!isEdit || canSelectVersion) && (
+                <Container padding={{ top: 'large' }}>
+                  <RbacButton
+                    text={getString('common.templateStartLabel')}
+                    icon={'template-library'}
+                    iconProps={{
+                      size: 12
+                    }}
+                    variation={ButtonVariation.SECONDARY}
+                    onClick={() => {
+                      formikProps.setFieldValue('useTemplate', true)
+                      window.requestAnimationFrame(() => {
+                        formikProps.submitForm()
+                      })
+                    }}
+                    featuresProps={{
+                      featuresRequest: {
+                        featureNames: [FeatureIdentifier.TEMPLATE_SERVICE]
+                      }
+                    }}
+                  />
+                </Container>
+              )}
+
+              <Container className={css.createPipelineButtons}>
+                <Button
+                  variation={ButtonVariation.PRIMARY}
+                  type="submit"
+                  text={primaryButtonText}
+                  disabled={gitDetails?.remoteFetchFailed}
+                />
+                &nbsp; &nbsp;
+                <Button
+                  variation={ButtonVariation.TERTIARY}
+                  text={getString('cancel')}
                   onClick={() => {
-                    formikProps.setFieldValue('useTemplate', true)
-                    window.requestAnimationFrame(() => {
-                      formikProps.submitForm()
+                    trackEvent(PipelineActions.CancelCreateNewPipeline, {
+                      category: Category.PIPELINE
                     })
-                  }}
-                  featuresProps={{
-                    featuresRequest: {
-                      featureNames: [FeatureIdentifier.TEMPLATE_SERVICE]
-                    }
+                    closeModal?.()
                   }}
                 />
               </Container>
-            )}
-
-            <Container className={css.createPipelineButtons}>
-              <Button
-                variation={ButtonVariation.PRIMARY}
-                type="submit"
-                text={primaryButtonText}
-                disabled={gitDetails?.remoteFetchFailed}
-              />
-              &nbsp; &nbsp;
-              <Button
-                variation={ButtonVariation.TERTIARY}
-                text={getString('cancel')}
-                onClick={() => {
-                  trackEvent(PipelineActions.CancelCreateNewPipeline, {
-                    category: Category.PIPELINE
-                  })
-                  closeModal?.()
-                }}
-              />
-            </Container>
-          </FormikForm>
-        )}
+            </FormikForm>
+          )
+        }}
       </Formik>
     </Container>
   )
