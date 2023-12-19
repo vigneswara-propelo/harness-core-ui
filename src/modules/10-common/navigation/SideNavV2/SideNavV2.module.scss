@@ -22,8 +22,8 @@
   }
 
   &.expanded {
-    width: 232px;
-    padding: var(--spacing-medium);
+    width: 232px !important;
+    padding: var(--spacing-medium) !important;
   }
 
   &.collapsed {
