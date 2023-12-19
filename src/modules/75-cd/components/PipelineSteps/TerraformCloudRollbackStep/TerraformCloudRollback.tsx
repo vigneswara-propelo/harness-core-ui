@@ -29,6 +29,7 @@ import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/Time
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { validateGenericFields } from '../Common/GenericExecutionStep/utils'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
 import {
@@ -49,6 +50,8 @@ function TerraformCloudRollbackWidget(
   const { initialValues, onUpdate, isNewStep, readonly, allowableTypes, stepViewType, onChange } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
+
   return (
     <>
       <Formik<TerraformCloudRollbackData>
@@ -89,7 +92,8 @@ function TerraformCloudRollbackWidget(
                     expressions,
                     disabled: readonly,
                     allowableTypes,
-                    textAreaProps: { growVertically: true }
+                    textAreaProps: { growVertically: true },
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                 />
                 {getMultiTypeFromValue(runMessage) === MultiTypeInputType.RUNTIME && (
@@ -110,7 +114,11 @@ function TerraformCloudRollbackWidget(
                   name="spec.provisionerIdentifier"
                   placeholder={getString('pipeline.terraformStep.provisionerIdentifier')}
                   label={getString('pipelineSteps.provisionerIdentifier')}
-                  multiTextInputProps={{ expressions, allowableTypes }}
+                  multiTextInputProps={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   disabled={readonly}
                   className={css.addMarginTop}
                 />
@@ -137,7 +145,11 @@ function TerraformCloudRollbackWidget(
                   name="spec.discardPendingRuns"
                   label={getString('pipeline.terraformStep.discardPendingRuns')}
                   disabled={readonly}
-                  multiTypeTextbox={{ expressions, allowableTypes }}
+                  multiTypeTextbox={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   className={css.addMarginTop}
                 />
                 {getMultiTypeFromValue(discardPendingRuns) === MultiTypeInputType.RUNTIME && (
@@ -160,7 +172,11 @@ function TerraformCloudRollbackWidget(
                   name="spec.overridePolicies"
                   label={getString('pipeline.terraformStep.overridePoliciesLabel')}
                   disabled={readonly}
-                  multiTypeTextbox={{ expressions, allowableTypes }}
+                  multiTypeTextbox={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   className={css.addMarginTop}
                 />
                 {getMultiTypeFromValue(overridePolicies) === MultiTypeInputType.RUNTIME && (
@@ -194,6 +210,7 @@ const TerraformCloudRollbackInputStep: React.FC<TerraformCloudRollbackProps> = (
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const prefix = isEmpty(path) ? '' : `${path}.`
   return (
     <>
@@ -205,7 +222,8 @@ const TerraformCloudRollbackInputStep: React.FC<TerraformCloudRollbackProps> = (
             },
             allowableTypes,
             expressions,
-            disabled: readonly
+            disabled: readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           label={getString('pipelineSteps.timeoutLabel')}
           name={`${prefix}timeout`}
@@ -225,7 +243,8 @@ const TerraformCloudRollbackInputStep: React.FC<TerraformCloudRollbackProps> = (
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             },
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           className={css.deploymentViewMedium}
         />
@@ -238,7 +257,8 @@ const TerraformCloudRollbackInputStep: React.FC<TerraformCloudRollbackProps> = (
           template={template}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           className={cx(stepCss.formGroup, stepCss.md)}
           configureOptionsProps={{
@@ -254,7 +274,8 @@ const TerraformCloudRollbackInputStep: React.FC<TerraformCloudRollbackProps> = (
           <FormMultiTypeCheckboxField
             multiTypeTextbox={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             name={`${prefix}spec.discardPendingRuns`}
             label={getString('pipeline.terraformStep.discardPendingRuns')}
@@ -269,7 +290,8 @@ const TerraformCloudRollbackInputStep: React.FC<TerraformCloudRollbackProps> = (
           <FormMultiTypeCheckboxField
             multiTypeTextbox={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             name={`${prefix}spec.overridePolicies`}
             label={getString('pipeline.terraformStep.overridePoliciesLabel')}

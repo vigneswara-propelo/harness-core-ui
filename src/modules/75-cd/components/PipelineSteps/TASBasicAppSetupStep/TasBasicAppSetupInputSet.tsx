@@ -17,6 +17,7 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import { FormMultiTypeKVTagInput } from '@common/components/MutliTypeKVTagInput/MultiTypeKVTagInput'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { TASBasicAppSetupTemplate } from './TASBasicAppSetupTypes'
 import { getResizeStrategies } from '../TasCanaryAppSetup/TasCanaryAppSetupWidget'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -35,6 +36,7 @@ export default function TasBasicAppSetupInputSet<T>(props: TasBasicAppSetupInput
   const { template, path, readonly, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const prefix = isEmpty(path) ? '' : `${path}.`
   const isTemplateUsageView = stepViewType === StepViewType.TemplateUsage
 
@@ -46,7 +48,8 @@ export default function TasBasicAppSetupInputSet<T>(props: TasBasicAppSetupInput
             enableConfigureOptions: false,
             allowableTypes,
             expressions,
-            disabled: readonly
+            disabled: readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           label={getString('pipelineSteps.timeoutLabel')}
           name={`${prefix}timeout`}
@@ -64,7 +67,8 @@ export default function TasBasicAppSetupInputSet<T>(props: TasBasicAppSetupInput
           multiTextInputProps={{
             expressions,
             allowableTypes,
-            textProps: { type: 'number' }
+            textProps: { type: 'number' },
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           template={template}
           fieldPath={'spec.existingVersionToKeep'}
@@ -85,7 +89,8 @@ export default function TasBasicAppSetupInputSet<T>(props: TasBasicAppSetupInput
             allowableTypes,
             selectProps: {
               items: getResizeStrategies(getString)
-            }
+            },
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -101,7 +106,8 @@ export default function TasBasicAppSetupInputSet<T>(props: TasBasicAppSetupInput
             tagsProps={{ placeholder: getString('cd.steps.tas.typeAndEnterForRouteAdd') }}
             multiTypeProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             type={getString('tagLabel')}
             label={getString('cd.steps.tas.additionalRoutes')}
@@ -118,7 +124,8 @@ export default function TasBasicAppSetupInputSet<T>(props: TasBasicAppSetupInput
             tagsProps={{ placeholder: getString('cd.steps.tas.typeAndEnterForRouteAdd') }}
             multiTypeProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             type={getString('tagLabel')}
             label={getString('cd.steps.tas.tempRoutes')}

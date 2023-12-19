@@ -38,6 +38,7 @@ import { Connectors } from '@platform/connectors/constants'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { FormMultiTypeCheckboxField, FormMultiTypeTextAreaField } from '@common/components'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import OptionalConfiguration from './OptionalConfiguration'
 import { CommandTypes } from '../Common/Terraform/TerraformInterfaces'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
@@ -64,6 +65,7 @@ export function TerraformCloudRunEdit(
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { getString } = useStrings()
   const terraformConnectorRef = get(formik, 'values.spec.spec.connectorRef', '')
   const terraformOrganization =
@@ -184,7 +186,11 @@ export function TerraformCloudRunEdit(
                     formik={formikValues}
                     name={'spec.spec.discardPendingRuns'}
                     label={getString('pipeline.terraformStep.discardPendingRuns')}
-                    multiTypeTextbox={{ expressions, allowableTypes }}
+                    multiTypeTextbox={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     disabled={readonly}
                   />
                   {getMultiTypeFromValue(discardPendingRuns) === MultiTypeInputType.RUNTIME && (
@@ -213,6 +219,7 @@ export function TerraformCloudRunEdit(
                       expressions,
                       disabled: readonly,
                       allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       textAreaProps: { growVertically: true }
                     }}
                   />
@@ -236,7 +243,12 @@ export function TerraformCloudRunEdit(
                     placeholder={getString('select')}
                     disabled={readonly}
                     accountIdentifier={accountId}
-                    multiTypeProps={{ expressions, allowableTypes, disabled: readonly }}
+                    multiTypeProps={{
+                      expressions,
+                      allowableTypes,
+                      disabled: readonly,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     projectIdentifier={projectIdentifier}
                     orgIdentifier={orgIdentifier}
                     enableConfigureOptions={false}
@@ -294,6 +306,7 @@ export function TerraformCloudRunEdit(
                       },
                       expressions,
                       disabled: readonly,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       onFocus: /* istanbul ignore next */ () => {
                         if (getMultiTypeFromValue(organization) === MultiTypeInputType.FIXED) {
                           refetchOrganizations({
@@ -354,6 +367,7 @@ export function TerraformCloudRunEdit(
                     multiTypeInputProps={{
                       expressions,
                       disabled: readonly,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                       onFocus: /* istanbul ignore next */ () => {
                         if (getMultiTypeFromValue(specValues.workspace) === MultiTypeInputType.FIXED) {
                           refetchWorkspaces({
@@ -422,7 +436,11 @@ export function TerraformCloudRunEdit(
                   name="spec.spec.terraformVersion"
                   placeholder={getString('pipeline.terraformStep.terraformVersionPlaceholder')}
                   label={getString('pipeline.terraformStep.terraformVersion')}
-                  multiTextInputProps={{ expressions, allowableTypes }}
+                  multiTextInputProps={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   disabled={readonly}
                 />
                 {getMultiTypeFromValue(terraformVersion) === MultiTypeInputType.RUNTIME && (
@@ -447,7 +465,11 @@ export function TerraformCloudRunEdit(
                   name="spec.spec.provisionerIdentifier"
                   placeholder={getString('pipeline.terraformStep.provisionerIdentifier')}
                   label={getString('pipelineSteps.provisionerIdentifier')}
-                  multiTextInputProps={{ expressions, allowableTypes }}
+                  multiTextInputProps={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   disabled={readonly}
                 />
                 {getMultiTypeFromValue(provisionerIdentifier) === MultiTypeInputType.RUNTIME && (

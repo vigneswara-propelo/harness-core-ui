@@ -78,6 +78,7 @@ export const FixedExecTargetGroup = ({
   const executionTargetPath = prefix ? `${prefix}spec.executionTarget` : 'spec.executionTarget'
   const onDelegateVal = get(formValues, delegateFieldPath)
   const executionTargetVal = get(formValues, executionTargetPath)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const showExecutionTarget = getShowExecutionTarget(onDelegateVal, executionTargetVal)
 
@@ -90,7 +91,12 @@ export const FixedExecTargetGroup = ({
             placeholder={getString('cd.specifyTargetHost')}
             label={getString('targetHost')}
             style={{ marginTop: 'var(--spacing-small)' }}
-            multiTextInputProps={{ expressions, disabled: readonly, allowableTypes }}
+            multiTextInputProps={{
+              expressions,
+              disabled: readonly,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
             disabled={readonly}
           />
           {getMultiTypeFromValue(formValues.spec?.executionTarget?.host) === MultiTypeInputType.RUNTIME && (
@@ -141,7 +147,12 @@ export const FixedExecTargetGroup = ({
             label={getString('workingDirectory')}
             style={{ marginTop: 'var(--spacing-medium)' }}
             disabled={readonly}
-            multiTextInputProps={{ expressions, disabled: readonly, allowableTypes }}
+            multiTextInputProps={{
+              expressions,
+              disabled: readonly,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
           />
           {getMultiTypeFromValue(formValues.spec?.executionTarget?.workingDirectory) === MultiTypeInputType.RUNTIME && (
             <ConfigureOptions

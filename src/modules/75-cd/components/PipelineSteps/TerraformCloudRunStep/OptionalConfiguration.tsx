@@ -16,6 +16,7 @@ import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { TerraformCloudRunFormData } from './types'
 import { RunTypes } from './helper'
 
@@ -31,6 +32,7 @@ export default function OptionalConfiguration(props: {
   const { formik, readonly, allowableTypes } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const runTypeValue = formik.values.spec?.runType
 
   return (
@@ -43,7 +45,8 @@ export default function OptionalConfiguration(props: {
               expressions,
               allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                 item => !isMultiTypeRuntime(item)
-              ) as AllowedTypes
+              ) as AllowedTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             multiTypeFieldSelectorProps={{
               disableTypeSelection: true,
@@ -66,7 +69,8 @@ export default function OptionalConfiguration(props: {
                 expressions,
                 allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                   item => !isMultiTypeRuntime(item)
-                ) as AllowedTypes
+                ) as AllowedTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               multiTypeFieldSelectorProps={{
                 label: (
@@ -91,7 +95,11 @@ export default function OptionalConfiguration(props: {
               formik={formik}
               name={'spec.spec.exportTerraformPlanJson'}
               label={getString('cd.exportTerraformPlanJson')}
-              multiTypeTextbox={{ expressions, allowableTypes }}
+              multiTypeTextbox={{
+                expressions,
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+              }}
               disabled={readonly}
             />
             {
@@ -118,7 +126,11 @@ export default function OptionalConfiguration(props: {
               formik={formik}
               name={'spec.spec.overridePolicies'}
               label={getString('pipeline.terraformStep.overridePoliciesLabel')}
-              multiTypeTextbox={{ expressions, allowableTypes }}
+              multiTypeTextbox={{
+                expressions,
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+              }}
               disabled={readonly}
             />
             {

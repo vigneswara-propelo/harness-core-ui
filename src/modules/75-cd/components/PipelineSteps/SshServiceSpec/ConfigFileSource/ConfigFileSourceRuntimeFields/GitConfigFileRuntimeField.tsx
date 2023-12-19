@@ -19,6 +19,7 @@ import { isFieldRuntime } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sS
 import { isFieldfromTriggerTabDisabled } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/artifactSourceUtils'
 import MultiTypeListOrFileSelectList from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/MultiTypeListOrFileSelectList'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from './GitConfigFileRuntimeField.module.scss'
 
 const GitConfigFileStoreRuntimeFields = (props: ConfigFileSourceRenderProps): React.ReactElement => {
@@ -43,6 +44,8 @@ const GitConfigFileStoreRuntimeFields = (props: ConfigFileSourceRenderProps): Re
     configFile
   } = props
 
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
+
   const isFieldDisabled = (fieldName: string): boolean => {
     // /* instanbul ignore else */
     if (readonly) {
@@ -63,7 +66,8 @@ const GitConfigFileStoreRuntimeFields = (props: ConfigFileSourceRenderProps): Re
             setRefValue
             multiTypeProps={{
               allowableTypes,
-              expressions
+              expressions,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             width={400}
             accountIdentifier={accountId}
@@ -86,7 +90,8 @@ const GitConfigFileStoreRuntimeFields = (props: ConfigFileSourceRenderProps): Re
           disabled={isFieldDisabled(`${configFilePath}.spec.store.spec.repoName`)}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           fieldPath={`${configFilePath}.spec.store.spec.repoName`}
           template={template}
@@ -102,7 +107,8 @@ const GitConfigFileStoreRuntimeFields = (props: ConfigFileSourceRenderProps): Re
           name={`${path}.${configFilePath}.spec.store.spec.branch`}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           label={getString('pipelineSteps.deploy.inputSet.branch')}
           fieldPath={`${configFilePath}.spec.store.spec.branch`}
@@ -118,7 +124,8 @@ const GitConfigFileStoreRuntimeFields = (props: ConfigFileSourceRenderProps): Re
           disabled={isFieldDisabled(`${configFilePath}.spec.store.spec.commitId`)}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           fieldPath={`${configFilePath}.spec.store.spec.commitId`}
           template={template}

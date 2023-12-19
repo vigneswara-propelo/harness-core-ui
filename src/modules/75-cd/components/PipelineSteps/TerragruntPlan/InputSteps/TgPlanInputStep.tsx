@@ -27,6 +27,7 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import TgPlanConfigSection from './TgPlanConfigSection'
 import TgPlanVarFiles from './TgPlanVarFiles'
 import type { TerragruntPlanProps } from '../../Common/Terragrunt/TerragruntInterface'
@@ -37,6 +38,7 @@ function TgPlanInputStep(props: TerragruntPlanProps & { formik?: FormikContextTy
   const { getString } = useStrings()
   const { inputSetData, readonly, initialValues, allowableTypes, stepViewType } = props
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const template = inputSetData?.template
@@ -55,7 +57,8 @@ function TgPlanInputStep(props: TerragruntPlanProps & { formik?: FormikContextTy
           template={template}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -75,7 +78,8 @@ function TgPlanInputStep(props: TerragruntPlanProps & { formik?: FormikContextTy
             },
             allowableTypes,
             expressions,
-            disabled: readonly
+            disabled: readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           className={cx(stepCss.formGroup, stepCss.sm)}
         />
@@ -88,7 +92,7 @@ function TgPlanInputStep(props: TerragruntPlanProps & { formik?: FormikContextTy
           selected={get(initialValues, 'spec.configuration.secretManagerRef', '')}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          multiTypeProps={{ allowableTypes, expressions }}
+          multiTypeProps={{ allowableTypes, expressions, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
@@ -121,7 +125,8 @@ function TgPlanInputStep(props: TerragruntPlanProps & { formik?: FormikContextTy
           fieldPath={'spec.configuration.moduleConfig.path'}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
       )}
@@ -186,7 +191,8 @@ function TgPlanInputStep(props: TerragruntPlanProps & { formik?: FormikContextTy
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -211,7 +217,7 @@ function TgPlanInputStep(props: TerragruntPlanProps & { formik?: FormikContextTy
         <FormMultiTypeCheckboxField
           name={`${pathPrefix}spec.configuration.exportTerraformPlanJson`}
           label={getString('cd.exportTerraformPlanJson')}
-          multiTypeTextbox={{ expressions, allowableTypes }}
+          multiTypeTextbox={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           enableConfigureOptions={true}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -228,7 +234,8 @@ function TgPlanInputStep(props: TerragruntPlanProps & { formik?: FormikContextTy
                 name={`${pathPrefix}spec.configuration.commandFlags[${terragruntFlagIdx}].flag`}
                 multiTextInputProps={{
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
                 label={`${terragruntCommandFlag.commandType}: ${getString('flag')}`}
                 fieldPath={`spec.configuration.commandFlags[${terragruntFlagIdx}].flag`}

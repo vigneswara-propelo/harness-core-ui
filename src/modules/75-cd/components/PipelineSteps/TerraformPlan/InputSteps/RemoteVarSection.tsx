@@ -32,6 +32,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { TerraformPlanProps } from '../../Common/Terraform/TerraformInterfaces'
 import { AmazonS3RuntimeView } from '../../Common/ConfigFileStore/AmazonS3Store/AmazonS3StoreRuntimeView'
 import { ConnectorMap } from '../../Common/ConfigFileStore/ConfigFileStoreHelper'
@@ -46,6 +47,7 @@ function TFRemoteSectionRef(
   const { remoteVar, index, allowableTypes, formik, inputSetData, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const { readonly, initialValues, path } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -138,7 +140,7 @@ function TFRemoteSectionRef(
           disabled={readonly}
           setRefValue
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-          multiTypeProps={{ expressions, allowableTypes }}
+          multiTypeProps={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
         />
       )}
 
@@ -150,7 +152,8 @@ function TFRemoteSectionRef(
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -166,7 +169,8 @@ function TFRemoteSectionRef(
           label={getString('pipelineSteps.deploy.inputSet.branch')}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
       )}
@@ -176,7 +180,8 @@ function TFRemoteSectionRef(
           label={getString('pipeline.manifestType.commitId')}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
       )}
@@ -184,7 +189,7 @@ function TFRemoteSectionRef(
         <FormMultiTypeCheckboxField
           name={`${path}.spec.${fieldPath}.spec.varFiles[${index}].varFile.spec.optional`}
           label={getString('projectsOrgs.optional')}
-          multiTypeTextbox={{ expressions, allowableTypes }}
+          multiTypeTextbox={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           enableConfigureOptions={true}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -229,7 +234,8 @@ function TFRemoteSectionRef(
               items: connectorRepos ? connectorRepos : []
             },
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           selectItems={connectorRepos ? connectorRepos : []}
         />

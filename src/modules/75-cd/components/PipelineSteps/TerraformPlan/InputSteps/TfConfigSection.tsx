@@ -25,6 +25,7 @@ import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
 import { fileTypes } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { TerraformPlanProps } from '../../Common/Terraform/TerraformInterfaces'
 import { ConnectorMap, getPath } from '../../Common/ConfigFileStore/ConfigFileStoreHelper'
 import { AmazonS3RuntimeView } from '../../Common/ConfigFileStore/AmazonS3Store/AmazonS3StoreRuntimeView'
@@ -57,6 +58,7 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
   }>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const [connectorRepos, setConnectorRepos] = useState<SelectOption[]>()
   let connectorVal = get(formik.values, `${path}.${configPath}.store.spec.connectorRef`)
   if (!connectorVal) {
@@ -124,7 +126,7 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
           selected={get(initialValues, `${configPath}.store.spec.connectorRef`, '')}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          multiTypeProps={{ allowableTypes, expressions }}
+          multiTypeProps={{ allowableTypes, expressions, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
@@ -145,7 +147,8 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -163,7 +166,8 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -181,7 +185,8 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -216,7 +221,8 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -240,7 +246,8 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
               items: connectorRepos ? connectorRepos : []
             },
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -259,7 +266,8 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             configureOptionsProps={{
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)

@@ -27,6 +27,7 @@ import type { TerraformBackendConfigSpec } from 'services/cd-ng'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { TFMonaco } from '../Common/Terraform/Editview/TFMonacoEditor'
 import type { TerraformPlanProps, TerraformData } from '../Common/Terraform/TerraformInterfaces'
 import ConfigInputs from './InputSteps/TfConfigSection'
@@ -41,6 +42,7 @@ export default function TfPlanInputStep(
   const { getString } = useStrings()
   const { inputSetData, readonly, initialValues, allowableTypes, stepViewType, formik } = props
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
     orgIdentifier: string
@@ -71,7 +73,8 @@ export default function TfPlanInputStep(
           template={inputSetData?.template}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -91,7 +94,8 @@ export default function TfPlanInputStep(
             },
             allowableTypes,
             expressions,
-            disabled: readonly
+            disabled: readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
       )}
@@ -104,7 +108,7 @@ export default function TfPlanInputStep(
           selected={get(initialValues, 'spec.configuration.secretManagerRef', '')}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          multiTypeProps={{ allowableTypes, expressions }}
+          multiTypeProps={{ allowableTypes, expressions, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
           }}
@@ -136,7 +140,8 @@ export default function TfPlanInputStep(
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -241,7 +246,7 @@ export default function TfPlanInputStep(
             isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
           }spec.configuration.exportTerraformPlanJson`}
           label={getString('cd.exportTerraformPlanJson')}
-          multiTypeTextbox={{ expressions, allowableTypes }}
+          multiTypeTextbox={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           enableConfigureOptions={true}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -255,7 +260,7 @@ export default function TfPlanInputStep(
             isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
           }spec.configuration.exportTerraformHumanReadablePlan`}
           label={getString('cd.exportTerraformHumanReadablePlan')}
-          multiTypeTextbox={{ expressions, allowableTypes }}
+          multiTypeTextbox={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           enableConfigureOptions={true}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -267,7 +272,7 @@ export default function TfPlanInputStep(
         <FormMultiTypeCheckboxField
           name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.${fieldPath}.skipStateStorage`}
           label={getString('cd.skipStateStorage')}
-          multiTypeTextbox={{ expressions, allowableTypes }}
+          multiTypeTextbox={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           enableConfigureOptions={true}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -279,7 +284,7 @@ export default function TfPlanInputStep(
         <FormMultiTypeCheckboxField
           name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.configuration.skipRefreshCommand`}
           label={getString('cd.skipRefreshCommand')}
-          multiTypeTextbox={{ expressions, allowableTypes }}
+          multiTypeTextbox={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           enableConfigureOptions={true}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -299,7 +304,8 @@ export default function TfPlanInputStep(
                 }spec.${fieldPath}.commandFlags[${terraformFlagIdx}].flag`}
                 multiTextInputProps={{
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
                 label={`${terraformCommandFlag.commandType}: ${getString('flag')}`}
               />

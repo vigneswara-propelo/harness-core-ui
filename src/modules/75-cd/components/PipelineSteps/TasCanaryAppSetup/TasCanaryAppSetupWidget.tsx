@@ -31,6 +31,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeKVTagInput } from '@common/components/MutliTypeKVTagInput/MultiTypeKVTagInput'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { TasCanaryAppSetupData } from './TasCanaryAppSetup'
 import { InstancesType, ResizeStrategyType } from '../TASBasicAppSetupStep/TASBasicAppSetupTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -70,6 +71,7 @@ export function TasCanaryAppSetupWidget(
 ): JSX.Element {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   function commonValidation(this: Yup.TestContext, value: any, valueString: string): boolean | Yup.ValidationError {
     if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED && typeof value !== 'number') {
@@ -153,7 +155,8 @@ export function TasCanaryAppSetupWidget(
                   enableConfigureOptions: true,
                   expressions,
                   disabled: readonly,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
                 className={stepCss.duration}
                 disabled={readonly}
@@ -188,6 +191,7 @@ export function TasCanaryAppSetupWidget(
                 multiTypeInputProps={{
                   expressions,
                   allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   selectProps: {
                     items: getResizeStrategies(getString)
                   }
@@ -218,6 +222,7 @@ export function TasCanaryAppSetupWidget(
                 multiTextInputProps={{
                   expressions,
                   disabled: readonly,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   allowableTypes,
                   textProps: { type: 'number' }
                 }}
@@ -242,7 +247,8 @@ export function TasCanaryAppSetupWidget(
                 tagsProps={{ placeholder: getString('cd.steps.tas.typeAndEnterForRouteAdd') }}
                 multiTypeProps={{
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
                 type={getString('tagLabel')}
                 label={getString('cd.steps.tas.additionalRoutes')}

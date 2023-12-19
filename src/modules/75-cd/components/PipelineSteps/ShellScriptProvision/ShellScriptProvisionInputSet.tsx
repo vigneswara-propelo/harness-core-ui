@@ -20,6 +20,7 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import ShellScriptProvisionConfig from './ShellScriptProvisionConfig'
 
 import {
@@ -50,6 +51,7 @@ export default function ShellScriptProvisionInputSetStep(
   const { template, path, readonly, allowableTypes, initialValues, formikRef, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const scriptType = 'Bash'
   const prefix = isEmpty(path) ? '' : `${path}.`
 
@@ -63,7 +65,8 @@ export default function ShellScriptProvisionInputSetStep(
             },
             allowableTypes,
             expressions,
-            disabled: readonly
+            disabled: readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           label={getString('pipelineSteps.timeoutLabel')}
           name={`${prefix}timeout`}
@@ -172,7 +175,8 @@ export default function ShellScriptProvisionInputSetStep(
                             multiTextInputProps={{
                               allowableTypes,
                               expressions,
-                              disabled: readonly
+                              disabled: readonly,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                             }}
                             label=""
                             disabled={readonly}

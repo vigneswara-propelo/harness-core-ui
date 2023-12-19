@@ -19,6 +19,7 @@ import { FormMultiTypeConnectorField } from '@platform/connectors/components/Con
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { TerragruntPlanProps } from '../../Common/Terragrunt/TerragruntInterface'
 
 function TgPlanRemoteSectionRef(
@@ -31,6 +32,7 @@ function TgPlanRemoteSectionRef(
   const { remoteVar, index, allowableTypes, readonly, initialValues, path, inputSetData, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const isRepoRuntime = isValueRuntimeInput(get(remoteVar.varFile, 'spec.store.spec.repoName'))
 
@@ -66,7 +68,7 @@ function TgPlanRemoteSectionRef(
           disabled={readonly}
           setRefValue
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-          multiTypeProps={{ expressions, allowableTypes }}
+          multiTypeProps={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
         />
       )}
 
@@ -78,7 +80,8 @@ function TgPlanRemoteSectionRef(
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -94,7 +97,8 @@ function TgPlanRemoteSectionRef(
           label={getString('pipelineSteps.deploy.inputSet.branch')}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -111,7 +115,8 @@ function TgPlanRemoteSectionRef(
             label={getString('pipeline.manifestType.commitId')}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             configureOptionsProps={{
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)

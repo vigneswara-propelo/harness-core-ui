@@ -18,6 +18,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
 import { FormMultiTypeKVTagInput } from '@common/components/MutliTypeKVTagInput/MultiTypeKVTagInput'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { InstancesType } from './TASBasicAppSetupTypes'
 import type { TASBasicAppSetupData } from './TASBasicAppSetupStep'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -38,6 +39,7 @@ export default function TasSetupSource(props: {
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <React.Fragment>
@@ -62,7 +64,8 @@ export default function TasSetupSource(props: {
             enableConfigureOptions: true,
             expressions,
             disabled: readonly,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           className={stepCss.duration}
           disabled={readonly}
@@ -99,7 +102,8 @@ export default function TasSetupSource(props: {
             expressions,
             disabled: readonly,
             allowableTypes,
-            textProps: { type: 'number' }
+            textProps: { type: 'number' },
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
         {getMultiTypeFromValue(formValues.spec.existingVersionToKeep) === MultiTypeInputType.RUNTIME && (
@@ -122,7 +126,8 @@ export default function TasSetupSource(props: {
           tagsProps={{ placeholder: getString('cd.steps.tas.typeAndEnterForRouteAdd') }}
           multiTypeProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           type={getString('tagLabel')}
           label={getString('cd.steps.tas.additionalRoutes')}

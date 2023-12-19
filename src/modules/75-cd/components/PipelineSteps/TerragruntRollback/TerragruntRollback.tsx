@@ -33,6 +33,7 @@ import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/S
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { TFRollbackData } from '../Common/Terraform/TerraformInterfaces'
 import type {
   TerragruntRollbackProps,
@@ -51,6 +52,7 @@ function TerragruntRollbackWidget(
   const { initialValues, onUpdate, onChange, allowableTypes, stepViewType, isNewStep, readonly = false } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <>
@@ -106,7 +108,12 @@ function TerragruntRollbackWidget(
                 <FormMultiTypeDurationField
                   name="timeout"
                   label={getString('pipelineSteps.timeoutLabel')}
-                  multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
+                  multiTypeDurationProps={{
+                    enableConfigureOptions: true,
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   disabled={readonly}
                 />
               </div>
@@ -116,7 +123,11 @@ function TerragruntRollbackWidget(
                   name="spec.provisionerIdentifier"
                   placeholder={getString('pipeline.terraformStep.provisionerIdentifier')}
                   label={getString('pipelineSteps.provisionerIdentifier')}
-                  multiTextInputProps={{ expressions, allowableTypes }}
+                  multiTextInputProps={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   disabled={readonly}
                 />
                 {getMultiTypeFromValue(values.spec.provisionerIdentifier) === MultiTypeInputType.RUNTIME && (
@@ -167,6 +178,7 @@ const TerragruntRollbackInputStep: React.FC<TerragruntRollbackProps> = ({
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   return (
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
@@ -180,7 +192,8 @@ const TerragruntRollbackInputStep: React.FC<TerragruntRollbackProps> = ({
               },
               allowableTypes,
               expressions,
-              disabled: readonly
+              disabled: readonly,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             label={getString('pipelineSteps.timeoutLabel')}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
@@ -200,7 +213,8 @@ const TerragruntRollbackInputStep: React.FC<TerragruntRollbackProps> = ({
             multiTextInputProps={{
               expressions,
               disabled: readonly,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             configureOptionsProps={{
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)

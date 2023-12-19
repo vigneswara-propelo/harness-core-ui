@@ -80,6 +80,7 @@ import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/con
 
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import StepAWSAuthentication from '@platform/connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   BackendConfigurationTypes,
   CommandTypes,
@@ -127,6 +128,7 @@ function TerraformPlanWidget(
   const { initialValues, onUpdate, onChange, allowableTypes, isNewStep, readonly = false, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const [connectorView, setConnectorView] = useState(false)
   const [selectedConnector, setSelectedConnector] = useState<ConnectorTypes | ''>('')
   const formikRefValues = React.useRef<FormikProps<unknown> | null>(null)
@@ -536,7 +538,12 @@ function TerraformPlanWidget(
                 <FormMultiTypeDurationField
                   name="timeout"
                   label={getString('pipelineSteps.timeoutLabel')}
-                  multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
+                  multiTypeDurationProps={{
+                    enableConfigureOptions: true,
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   disabled={readonly}
                 />
               </div>
@@ -568,7 +575,11 @@ function TerraformPlanWidget(
                   name="spec.provisionerIdentifier"
                   placeholder={getString('pipeline.terraformStep.provisionerIdentifier')}
                   label={getString('pipelineSteps.provisionerIdentifier')}
-                  multiTextInputProps={{ expressions, allowableTypes }}
+                  multiTextInputProps={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   disabled={readonly}
                 />
                 {getMultiTypeFromValue(values.spec?.provisionerIdentifier) === MultiTypeInputType.RUNTIME && (
@@ -601,7 +612,11 @@ function TerraformPlanWidget(
                     projectIdentifier={projectIdentifier}
                     orgIdentifier={orgIdentifier}
                     style={{ marginBottom: 10 }}
-                    multiTypeProps={{ expressions, allowableTypes }}
+                    multiTypeProps={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                     disabled={readonly}
                     isRecordDisabled={selectedRecord => (selectedRecord as any)?.spec?.readOnly}
@@ -673,7 +688,11 @@ function TerraformPlanWidget(
                                 name={`spec.${fieldPath}.workspace`}
                                 placeholder={getString('pipeline.terraformStep.workspace')}
                                 label={getString('pipelineSteps.workspace')}
-                                multiTextInputProps={{ expressions, allowableTypes }}
+                                multiTextInputProps={{
+                                  expressions,
+                                  allowableTypes,
+                                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                                }}
                                 isOptional={true}
                                 disabled={readonly}
                               />
@@ -801,7 +820,8 @@ function TerraformPlanWidget(
                             expressions,
                             allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                               item => !isMultiTypeRuntime(item)
-                            ) as AllowedTypes
+                            ) as AllowedTypes,
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                           }}
                           multiTypeFieldSelectorProps={{
                             label: (
@@ -822,7 +842,8 @@ function TerraformPlanWidget(
                             expressions,
                             allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                               item => !isMultiTypeRuntime(item)
-                            ) as AllowedTypes
+                            ) as AllowedTypes,
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                           }}
                           multiTypeFieldSelectorProps={{
                             disableTypeSelection: true,
@@ -842,7 +863,11 @@ function TerraformPlanWidget(
                               formik={formik as FormikProps<unknown>}
                               name={'spec.configuration.exportTerraformPlanJson'}
                               label={getString('cd.exportTerraformPlanJson')}
-                              multiTypeTextbox={{ expressions, allowableTypes }}
+                              multiTypeTextbox={{
+                                expressions,
+                                allowableTypes,
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                              }}
                               disabled={readonly}
                             />
                             {getMultiTypeFromValue(formik.values?.spec?.configuration?.exportTerraformPlanJson) ===
@@ -867,7 +892,11 @@ function TerraformPlanWidget(
                               formik={formik as FormikProps<unknown>}
                               name={'spec.configuration.exportTerraformHumanReadablePlan'}
                               label={getString('cd.exportTerraformHumanReadablePlan')}
-                              multiTypeTextbox={{ expressions, allowableTypes }}
+                              multiTypeTextbox={{
+                                expressions,
+                                allowableTypes,
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                              }}
                               disabled={readonly}
                             />
                             {getMultiTypeFromValue(
@@ -899,7 +928,11 @@ function TerraformPlanWidget(
                             formik={formik as FormikProps<unknown>}
                             name={skipStateStoragePath}
                             label={getString('cd.skipStateStorage')}
-                            multiTypeTextbox={{ expressions, allowableTypes }}
+                            multiTypeTextbox={{
+                              expressions,
+                              allowableTypes,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                            }}
                             disabled={readonly}
                           />
                           {getMultiTypeFromValue(skipStateStorageValue) === MultiTypeInputType.RUNTIME && (
@@ -933,7 +966,11 @@ function TerraformPlanWidget(
                             formik={formik as FormikProps<unknown>}
                             name={'spec.configuration.skipRefreshCommand'}
                             label={getString('cd.skipRefreshCommand')}
-                            multiTypeTextbox={{ expressions, allowableTypes }}
+                            multiTypeTextbox={{
+                              expressions,
+                              allowableTypes,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                            }}
                             disabled={readonly}
                             setToFalseWhenEmpty
                           />

@@ -14,6 +14,7 @@ import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { scriptInputType, ShellScriptProvisionFormData, ShellScriptProvisionStepVariable } from './types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ShellScriptProvision.module.scss'
@@ -27,6 +28,7 @@ export default function OptionalConfigShellScriptProvision(props: {
   const { values: formValues } = formik
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <FormikForm>
@@ -72,7 +74,8 @@ export default function OptionalConfigShellScriptProvision(props: {
                                 multiTextInputProps={{
                                   allowableTypes,
                                   expressions,
-                                  disabled: readonly
+                                  disabled: readonly,
+                                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                                 }}
                                 label=""
                                 disabled={readonly}

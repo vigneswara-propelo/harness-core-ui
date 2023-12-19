@@ -31,6 +31,7 @@ import { FormMultiTypeCheckboxField } from '@common/components'
 import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { TerraformCloudRunInputStepProps } from './types'
 import { organizationLabel, workspaceLabel } from './helper'
 
@@ -44,6 +45,7 @@ export default function TerraformCloudRunInputStep(props: TerraformCloudRunInput
   const { template, path, readonly, initialValues, allowableTypes, stepViewType, allValues } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const prefix = isEmpty(path) ? '' : `${path}.`
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -124,7 +126,8 @@ export default function TerraformCloudRunInputStep(props: TerraformCloudRunInput
             },
             allowableTypes,
             expressions,
-            disabled: readonly
+            disabled: readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           label={getString('pipelineSteps.timeoutLabel')}
           name={`${prefix}timeout`}
@@ -139,7 +142,7 @@ export default function TerraformCloudRunInputStep(props: TerraformCloudRunInput
           <FormMultiTypeCheckboxField
             name={`${prefix}spec.spec.discardPendingRuns`}
             label={getString('pipeline.terraformStep.discardPendingRuns')}
-            multiTypeTextbox={{ expressions, allowableTypes }}
+            multiTypeTextbox={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
             enableConfigureOptions={true}
             configureOptionsProps={{
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -158,7 +161,8 @@ export default function TerraformCloudRunInputStep(props: TerraformCloudRunInput
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             },
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
       )}
@@ -178,7 +182,7 @@ export default function TerraformCloudRunInputStep(props: TerraformCloudRunInput
             enableConfigureOptions={false}
             placeholder={getString('platform.connectors.selectConnector')}
             disabled={readonly}
-            multiTypeProps={{ allowableTypes, expressions }}
+            multiTypeProps={{ allowableTypes, expressions, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
             type={Connectors.TERRAFORM_CLOUD}
             setRefValue
             onChange={
@@ -251,7 +255,8 @@ export default function TerraformCloudRunInputStep(props: TerraformCloudRunInput
               )
             },
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           fieldPath="organization"
           template={template}
@@ -304,7 +309,8 @@ export default function TerraformCloudRunInputStep(props: TerraformCloudRunInput
               )
             },
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           fieldPath="workspace"
           template={template}
@@ -316,7 +322,7 @@ export default function TerraformCloudRunInputStep(props: TerraformCloudRunInput
           <FormMultiTypeCheckboxField
             name={`${prefix}spec.spec.overridePolicies`}
             label={getString('pipeline.terraformStep.overridePoliciesLabel')}
-            multiTypeTextbox={{ expressions, allowableTypes }}
+            multiTypeTextbox={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
             enableConfigureOptions={true}
             configureOptionsProps={{
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -334,7 +340,8 @@ export default function TerraformCloudRunInputStep(props: TerraformCloudRunInput
           template={template}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -360,7 +367,7 @@ export default function TerraformCloudRunInputStep(props: TerraformCloudRunInput
           <FormMultiTypeCheckboxField
             name={`${prefix}spec.spec.exportTerraformPlanJson`}
             label={getString('cd.exportTerraformPlanJson')}
-            multiTypeTextbox={{ expressions, allowableTypes }}
+            multiTypeTextbox={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
             enableConfigureOptions={true}
             configureOptionsProps={{
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)

@@ -53,7 +53,7 @@ import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScri
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { FileUsage } from '@filestore/interfaces/FileStore'
 import { ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import { useFeatureFlag } from '@modules/10-common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   MultiSelectVariableAllowedValues,
   concatValuesWithQuotes,
@@ -123,6 +123,7 @@ function TanzuCommandWidget(
   const { initialValues, onUpdate, isNewStep, readonly, allowableTypes, onChange, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const scriptWidgetTitle = React.useMemo(
     (): JSX.Element => (
@@ -271,7 +272,8 @@ function TanzuCommandWidget(
                   enableConfigureOptions: true,
                   expressions,
                   disabled: readonly,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
               />
             </div>
@@ -530,6 +532,7 @@ const TanzuCommandInputStep: React.FC<TanzuCommandProps> = props => {
   const isExecutionTimeFieldDisabledForStep = isExecutionTimeFieldDisabled(stepViewType)
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   /* istanbul ignore next */
   const getNameEntity = (fieldName: string): string =>
     `${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}${fieldName}`
@@ -548,7 +551,8 @@ const TanzuCommandInputStep: React.FC<TanzuCommandProps> = props => {
             },
             allowableTypes: allowableTypes,
             expressions,
-            disabled: inputSetData?.readonly
+            disabled: inputSetData?.readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           disabled={inputSetData?.readonly}
           fieldPath={'timeout'}
@@ -687,7 +691,8 @@ const TanzuCommandInputStep: React.FC<TanzuCommandProps> = props => {
                                 allowableTypes,
                                 expressions,
                                 disabled: readonly,
-                                defaultValueToReset: ''
+                                defaultValueToReset: '',
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                               }}
                               label=""
                               placeholder={getString('valueLabel')}
@@ -786,7 +791,8 @@ const TanzuCommandInputStep: React.FC<TanzuCommandProps> = props => {
                                 allowableTypes,
                                 expressions,
                                 disabled: readonly,
-                                defaultValueToReset: ''
+                                defaultValueToReset: '',
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                               }}
                               label=""
                               placeholder={getString('valueLabel')}

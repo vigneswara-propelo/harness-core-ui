@@ -80,6 +80,7 @@ import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/con
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   ConnectorMap,
   ConnectorTypes,
@@ -116,6 +117,7 @@ function TerragruntPlanWidget(
   const { initialValues, onUpdate, onChange, allowableTypes, isNewStep, readonly = false, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const [connectorView, setConnectorView] = useState(false)
   const [selectedConnector, setSelectedConnector] = useState<ConnectorTypes | ''>('')
 
@@ -505,7 +507,12 @@ function TerragruntPlanWidget(
                 <FormMultiTypeDurationField
                   name="timeout"
                   label={getString('pipelineSteps.timeoutLabel')}
-                  multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
+                  multiTypeDurationProps={{
+                    enableConfigureOptions: true,
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   disabled={readonly}
                 />
               </div>
@@ -527,7 +534,11 @@ function TerragruntPlanWidget(
                   name="spec.provisionerIdentifier"
                   placeholder={getString('pipeline.terraformStep.provisionerIdentifier')}
                   label={getString('pipelineSteps.provisionerIdentifier')}
-                  multiTextInputProps={{ expressions, allowableTypes }}
+                  multiTextInputProps={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   disabled={readonly}
                 />
                 {
@@ -563,7 +574,11 @@ function TerragruntPlanWidget(
                   projectIdentifier={projectIdentifier}
                   orgIdentifier={orgIdentifier}
                   style={{ marginBottom: 10 }}
-                  multiTypeProps={{ expressions, allowableTypes }}
+                  multiTypeProps={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                   disabled={readonly}
                   isRecordDisabled={selectedRecord => (selectedRecord as any)?.spec?.readOnly}
@@ -636,7 +651,11 @@ function TerragruntPlanWidget(
                     name="spec.configuration.moduleConfig.path"
                     placeholder={'Enter path'}
                     label={getString('common.path')}
-                    multiTextInputProps={{ expressions, allowableTypes }}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     disabled={readonly}
                   />
                   {
@@ -672,7 +691,11 @@ function TerragruntPlanWidget(
                           name="spec.configuration.workspace"
                           placeholder={getString('pipeline.terraformStep.workspace')}
                           label={getString('pipelineSteps.workspace')}
-                          multiTextInputProps={{ expressions, allowableTypes }}
+                          multiTextInputProps={{
+                            expressions,
+                            allowableTypes,
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                          }}
                           isOptional={true}
                           disabled={readonly}
                         />
@@ -797,7 +820,8 @@ function TerragruntPlanWidget(
                             expressions,
                             allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                               item => !isMultiTypeRuntime(item)
-                            ) as AllowedTypes
+                            ) as AllowedTypes,
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                           }}
                           multiTypeFieldSelectorProps={{
                             label: (
@@ -822,7 +846,8 @@ function TerragruntPlanWidget(
                             expressions,
                             allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                               item => !isMultiTypeRuntime(item)
-                            ) as AllowedTypes
+                            ) as AllowedTypes,
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                           }}
                           multiTypeFieldSelectorProps={{
                             disableTypeSelection: true,
@@ -841,7 +866,11 @@ function TerragruntPlanWidget(
                             formik={formik as FormikProps<unknown>}
                             name={'spec.configuration.exportTerragruntPlanJson'}
                             label={getString('cd.exportTerragruntPlanJson')}
-                            multiTypeTextbox={{ expressions, allowableTypes }}
+                            multiTypeTextbox={{
+                              expressions,
+                              allowableTypes,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                            }}
                             disabled={readonly}
                           />
                           {
