@@ -41,6 +41,7 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
 import DragnDropPaths from '@pipeline/components/ManifestSelection/DragnDropPaths'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   AmazonS3StoreDataType,
   amazonS3ValidationSchema,
@@ -83,6 +84,7 @@ export function AmazonS3Store(props: StepProps<ConnectorConfigDTO> & AmazonS3For
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const specFieldPathName = getFieldPathName(specFieldPath, isConfig, isBackendConfig)
 
@@ -207,7 +209,11 @@ export function AmazonS3Store(props: StepProps<ConnectorConfigDTO> & AmazonS3For
             label={getString('pipeline.manifestType.bucketName')}
             placeholder={getString('pipeline.manifestType.bucketNamePlaceholder')}
             name={`${specFieldPathName}.bucketName`}
-            multiTextInputProps={{ expressions, allowableTypes }}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
           />
           {getMultiTypeFromValue(get(formik.values, `${specFieldPathName}.bucketName`)) ===
             MultiTypeInputType.RUNTIME && (
@@ -238,6 +244,7 @@ export function AmazonS3Store(props: StepProps<ConnectorConfigDTO> & AmazonS3For
           multiTypeInputProps={{
             expressions,
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             onChange: selected => {
               if (get(formik.values, `${specFieldPathName}.bucketName`) !== (selected as unknown as any)?.value) {
                 resetFieldValue(formik, `${specFieldPathName}.filePath`)
@@ -359,7 +366,8 @@ export function AmazonS3Store(props: StepProps<ConnectorConfigDTO> & AmazonS3For
                           {getRBACErrorMessage(errorRegions as RBACError) || getString('pipeline.noRegions')}
                         </Text>
                       )
-                    }
+                    },
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                   label={getString('regionLabel')}
                   placeholder={loadingRegions ? getString('loading') : getString('select')}
@@ -395,7 +403,8 @@ export function AmazonS3Store(props: StepProps<ConnectorConfigDTO> & AmazonS3For
                     name={`${specFieldPathName}.folderPath`}
                     multiTextInputProps={{
                       expressions,
-                      allowableTypes
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                     }}
                   />
                   {getMultiTypeFromValue(get(formik.values, `${specFieldPathName}.folderPath`)) ===

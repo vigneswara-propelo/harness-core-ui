@@ -60,7 +60,7 @@ export const RemoteWizard: React.FC<StepProps<any> & RemoteWizardProps> = ({
   allowableTypes
 }) => {
   const { getString } = useStrings()
-  const { CDS_TERRAFORM_SUPPORT_OPTIONAL_VAR_FILE_PATHS_NG } = useFeatureFlags()
+  const { CDS_TERRAFORM_SUPPORT_OPTIONAL_VAR_FILE_PATHS_NG, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const prevStepDataSpec = prevStepData?.varFile?.spec?.store?.spec
   const initialValues = isEditMode
     ? {
@@ -220,7 +220,11 @@ export const RemoteWizard: React.FC<StepProps<any> & RemoteWizardProps> = ({
                       label={getString('pipelineSteps.repoName')}
                       name="varFile.spec.store.spec.repoName"
                       placeholder={getString('pipelineSteps.repoName')}
-                      multiTextInputProps={{ expressions, allowableTypes }}
+                      multiTextInputProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                     />
                     {getMultiTypeFromValue(varFileSpec?.repoName) === MultiTypeInputType.RUNTIME && (
                       <ConfigureOptions
@@ -253,7 +257,11 @@ export const RemoteWizard: React.FC<StepProps<any> & RemoteWizardProps> = ({
                       label={getString('pipelineSteps.deploy.inputSet.branch')}
                       placeholder={getString('pipeline.manifestType.branchPlaceholder')}
                       name="varFile.spec.store.spec.branch"
-                      multiTextInputProps={{ expressions, allowableTypes }}
+                      multiTextInputProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                     />
                     {getMultiTypeFromValue(varFileSpec?.branch) === MultiTypeInputType.RUNTIME && (
                       <ConfigureOptions
@@ -278,7 +286,11 @@ export const RemoteWizard: React.FC<StepProps<any> & RemoteWizardProps> = ({
                       label={getString('pipeline.manifestType.commitId')}
                       placeholder={getString('pipeline.manifestType.commitPlaceholder')}
                       name="varFile.spec.store.spec.commitId"
-                      multiTextInputProps={{ expressions, allowableTypes }}
+                      multiTextInputProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                     />
                     {getMultiTypeFromValue(varFileSpec?.commitId) === MultiTypeInputType.RUNTIME && (
                       <ConfigureOptions
@@ -355,7 +367,8 @@ export const RemoteWizard: React.FC<StepProps<any> & RemoteWizardProps> = ({
                                                   expressions,
                                                   allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                                                     item => !isMultiTypeRuntime(item)
-                                                  ) as AllowedTypes
+                                                  ) as AllowedTypes,
+                                                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                                                 }}
                                                 style={{ width: 320 }}
                                               />
@@ -412,7 +425,8 @@ export const RemoteWizard: React.FC<StepProps<any> & RemoteWizardProps> = ({
                       multiTypeTextbox={{
                         expressions,
                         allowableTypes,
-                        disabled: isReadonly
+                        disabled: isReadonly,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                       }}
                       tooltipProps={{
                         dataTooltipId: 'varFileOptional'

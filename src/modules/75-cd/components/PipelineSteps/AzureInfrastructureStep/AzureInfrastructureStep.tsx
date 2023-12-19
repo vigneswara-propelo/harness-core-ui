@@ -66,6 +66,7 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { getNameSpaceSchema, getReleaseNameSchema, getValue } from '../PipelineStepsUtil'
 import {
   AzureInfrastructureSpecEditableProps,
@@ -125,6 +126,7 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
     defaultTo(initialValues.cluster, allValues?.cluster)
   )
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const { getString } = useStrings()
 
@@ -330,7 +332,7 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
             enableConfigureOptions={false}
             placeholder={getString('common.entityPlaceholderText')}
             disabled={readonly}
-            multiTypeProps={{ allowableTypes, expressions }}
+            multiTypeProps={{ allowableTypes, expressions, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
             configureOptionsProps={{
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
@@ -415,7 +417,8 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
               )
             },
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -480,7 +483,8 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
               )
             },
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -545,7 +549,8 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
               )
             },
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -564,7 +569,8 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
           disabled={readonly}
           multiTextInputProps={{
             allowableTypes,
-            expressions
+            expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -583,7 +589,8 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
           }}
           multiTextInputProps={{
             allowableTypes,
-            expressions
+            expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -618,6 +625,7 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
   const [resourceGroups, setResourceGroups] = React.useState<SelectOption[]>([])
   const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 300)).current
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { getString } = useStrings()
 
   const formikRef = React.useRef<FormikProps<AzureInfrastructureUI> | null>(null)
@@ -849,7 +857,11 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                   placeholder={getString('common.entityPlaceholderText')}
                   disabled={readonly}
                   accountIdentifier={accountId}
-                  multiTypeProps={{ expressions, allowableTypes }}
+                  multiTypeProps={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   projectIdentifier={projectIdentifier}
                   orgIdentifier={orgIdentifier}
                   width={450}
@@ -931,6 +943,7 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                     },
                     expressions,
                     disabled: readonly,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     selectProps: {
                       items: subscriptions,
                       allowCreatingNewItems: true,
@@ -1015,7 +1028,8 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                         </Text>
                       )
                     },
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                   label={getString(resourceGroupLabel)}
                 />
@@ -1084,7 +1098,8 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                         </Text>
                       )
                     },
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                   label={getString(clusterLabel)}
                 />
@@ -1113,7 +1128,12 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                   className={css.inputWidth}
                   label={getString('common.namespace')}
                   placeholder={getString('pipeline.infraSpecifications.namespacePlaceholder')}
-                  multiTextInputProps={{ expressions, textProps: { disabled: readonly }, allowableTypes }}
+                  multiTextInputProps={{
+                    expressions,
+                    textProps: { disabled: readonly },
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   disabled={readonly}
                 />
                 {getMultiTypeFromValue(formik.values.namespace) === MultiTypeInputType.RUNTIME && !readonly && (
@@ -1149,7 +1169,12 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                         className={css.inputWidth}
                         label={getString('common.releaseName')}
                         placeholder={getString('cd.steps.common.releaseNamePlaceholder')}
-                        multiTextInputProps={{ expressions, textProps: { disabled: readonly }, allowableTypes }}
+                        multiTextInputProps={{
+                          expressions,
+                          textProps: { disabled: readonly },
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                        }}
                         disabled={readonly}
                       />
                       {getMultiTypeFromValue(formik.values.releaseName) === MultiTypeInputType.RUNTIME && !readonly && (

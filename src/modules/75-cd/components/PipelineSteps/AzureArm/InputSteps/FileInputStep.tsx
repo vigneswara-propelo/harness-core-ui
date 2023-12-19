@@ -25,6 +25,7 @@ import {
   ConnectorTypes,
   ConnectorMap
 } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { AzureArmProps } from '../AzureArm.types'
 import css from './FileInputStep.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -33,6 +34,7 @@ export const FileInputStep = (props: AzureArmProps & { formik?: FormikContextTyp
   const { inputSetData, readonly, path, allowableTypes, isParam = false, formik } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [isAccount, setIsAccount] = useState<boolean>(false)
   const type = isParam ? 'parameters' : 'template'
@@ -59,7 +61,7 @@ export const FileInputStep = (props: AzureArmProps & { formik?: FormikContextTyp
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
             style={{ marginBottom: 10 }}
-            multiTypeProps={{ expressions, allowableTypes }}
+            multiTypeProps={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
             disabled={readonly}
             setRefValue
             onChange={(value: any, _unused, _notUsed) => {
@@ -76,7 +78,8 @@ export const FileInputStep = (props: AzureArmProps & { formik?: FormikContextTyp
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           fieldPath={`spec.configuration.${type}.store.spec.repoName`}
           template={undefined}
@@ -90,7 +93,8 @@ export const FileInputStep = (props: AzureArmProps & { formik?: FormikContextTyp
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           fieldPath={`spec.configuration.${type}.store.spec.branch`}
           template={undefined}
@@ -104,7 +108,8 @@ export const FileInputStep = (props: AzureArmProps & { formik?: FormikContextTyp
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           fieldPath={`spec.configuration.${type}.store.spec.commitId`}
           template={undefined}
@@ -118,7 +123,8 @@ export const FileInputStep = (props: AzureArmProps & { formik?: FormikContextTyp
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           fieldPath={`spec.configuration.${type}.store.spec.paths[0]`}
           template={undefined}

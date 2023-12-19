@@ -27,6 +27,7 @@ import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/Time
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { DeleteStackData, DeleteStackProps } from '../CloudFormationInterfaces.types'
 import { isRuntime } from '../CloudFormationHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -37,6 +38,7 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
   const { inputSetData, readonly, path, allowableTypes, allValues, formik, initialValues, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [regions, setRegions] = useState<MultiSelectOption[]>([])
   const [awsRoles, setAwsRoles] = useState<MultiSelectOption[]>([])
@@ -128,7 +130,8 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
               },
               allowableTypes,
               expressions,
-              disabled: readonly
+              disabled: readonly,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             template={inputSetData?.template}
             fieldPath={'timeout'}
@@ -145,7 +148,8 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             configureOptionsProps={{
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -169,7 +173,7 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
               projectIdentifier={projectIdentifier}
               orgIdentifier={orgIdentifier}
               style={{ marginBottom: 10 }}
-              multiTypeProps={{ expressions, allowableTypes }}
+              multiTypeProps={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
               configureOptionsProps={{
                 isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
               }}
@@ -226,7 +230,8 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
                 items: regions ? regions : []
               },
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             configureOptionsProps={{
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -253,7 +258,8 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
                 items: awsRoles ? awsRoles : []
               },
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             configureOptionsProps={{
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -271,7 +277,8 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             configureOptionsProps={{
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)

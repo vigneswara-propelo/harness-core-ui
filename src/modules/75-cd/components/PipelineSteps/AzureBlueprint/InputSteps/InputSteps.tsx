@@ -21,6 +21,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { AzureBlueprintProps } from '../AzureBlueprintTypes.types'
 import { TemplateInputStep } from './TemplateInput'
 
@@ -30,6 +31,7 @@ const InputStepRef = (props: AzureBlueprintProps & { formik?: FormikContextType<
   const { inputSetData, readonly, path, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
   return (
@@ -47,7 +49,8 @@ const InputStepRef = (props: AzureBlueprintProps & { formik?: FormikContextType<
               },
               allowableTypes,
               expressions,
-              disabled: readonly
+              disabled: readonly,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             fieldPath={'timeout'}
             template={inputSetData?.template}
@@ -68,7 +71,7 @@ const InputStepRef = (props: AzureBlueprintProps & { formik?: FormikContextType<
               projectIdentifier={projectIdentifier}
               orgIdentifier={orgIdentifier}
               style={{ marginBottom: 10 }}
-              multiTypeProps={{ expressions, allowableTypes }}
+              multiTypeProps={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
               configureOptionsProps={{
                 isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
               }}
@@ -88,7 +91,8 @@ const InputStepRef = (props: AzureBlueprintProps & { formik?: FormikContextType<
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             configureOptionsProps={{
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)

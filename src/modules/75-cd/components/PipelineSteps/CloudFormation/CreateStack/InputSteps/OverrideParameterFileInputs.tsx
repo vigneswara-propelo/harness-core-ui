@@ -11,6 +11,7 @@ import type { FormikContextType } from 'formik'
 import { FormInput, Text, Container, Layout } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { CreateStackData, CreateStackProps } from '../../CloudFormationInterfaces.types'
 import css from '../../CloudFormation.module.scss'
 
@@ -21,6 +22,7 @@ export default function OverrideParameterFileInputs<T extends CreateStackData = 
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   /* istanbul ignore next */
   const overrideParams = inputSetData?.template?.spec?.configuration?.parameterOverrides
 
@@ -51,7 +53,11 @@ export default function OverrideParameterFileInputs<T extends CreateStackData = 
           <FormInput.MultiTextInput
             name={`${path}.spec.configuration.parameterOverrides[${i}].value`}
             label={''}
-            multiTextInputProps={{ expressions, allowableTypes }}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
             disabled={readonly}
           />
         </Layout.Horizontal>

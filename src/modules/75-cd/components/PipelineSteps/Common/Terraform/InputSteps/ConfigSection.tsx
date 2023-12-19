@@ -34,6 +34,7 @@ import { useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
 import { fileTypes } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { TerraformData, TerraformProps } from '../TerraformInterfaces'
 import { ConnectorMap, getPath } from '../../ConfigFileStore/ConfigFileStoreHelper'
 
@@ -47,6 +48,7 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const {
     inputSetData,
     readonly,
@@ -141,7 +143,7 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
           selected={get(initialValues, `${configPath}.store.spec.connectorRef`, '')}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          multiTypeProps={{ allowableTypes, expressions }}
+          multiTypeProps={{ allowableTypes, expressions, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           type={ConnectorMap[store?.type]}
           name={`${path}.${configPath}.store.spec.connectorRef`}
           label={getString('connector')}
@@ -159,7 +161,8 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -177,7 +180,8 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
       )}
@@ -190,7 +194,8 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
       )}
@@ -222,7 +227,8 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           fieldPath={`${configPath}.store.spec.folderPath`}
           template={inputSetData?.template}
@@ -242,7 +248,8 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
               items: connectorRepos ? connectorRepos : []
             },
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           selectItems={connectorRepos ? connectorRepos : []}
         />
@@ -257,7 +264,8 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             onChange={value => {
               formik?.setFieldValue(`${path}.${configPath}.store.spec.artifactPaths`, [value])

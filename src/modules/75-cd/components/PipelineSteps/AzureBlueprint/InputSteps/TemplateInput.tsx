@@ -25,6 +25,7 @@ import {
   ConnectorTypes,
   ConnectorMap
 } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { AzureBlueprintProps } from '../AzureBlueprintTypes.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './Template.module.scss'
@@ -33,6 +34,7 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
   const { inputSetData, readonly, path, allowableTypes, formik, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   /* istanbul ignore next */
   const connectorType = get(inputSetData, `template.spec.configuration.template.store.type`)
@@ -60,7 +62,7 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
               projectIdentifier={projectIdentifier}
               orgIdentifier={orgIdentifier}
               style={{ marginBottom: 10 }}
-              multiTypeProps={{ expressions, allowableTypes }}
+              multiTypeProps={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
               configureOptionsProps={{
                 isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
               }}
@@ -83,7 +85,8 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             configureOptionsProps={{
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -103,7 +106,8 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             configureOptionsProps={{
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -123,7 +127,8 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             configureOptionsProps={{
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -143,7 +148,8 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             configureOptionsProps={{
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)

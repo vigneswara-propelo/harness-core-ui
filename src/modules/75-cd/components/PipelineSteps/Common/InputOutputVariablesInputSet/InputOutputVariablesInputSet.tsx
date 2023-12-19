@@ -14,6 +14,7 @@ import type { StepElementConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { scriptInputType, scriptOutputType } from '../../ShellScriptStep/shellScriptTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './InputOutputVariablesInputSet.module.scss'
@@ -30,6 +31,7 @@ export function InputOutputVariablesInputSet(props: InputOutputVariablesInputSet
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const prefix = isEmpty(path) ? '' : `${path}.`
 
   return (
@@ -71,7 +73,8 @@ export function InputOutputVariablesInputSet(props: InputOutputVariablesInputSet
                             multiTextInputProps={{
                               allowableTypes,
                               expressions,
-                              disabled: readonly
+                              disabled: readonly,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                             }}
                             label=""
                             disabled={readonly}
@@ -125,7 +128,8 @@ export function InputOutputVariablesInputSet(props: InputOutputVariablesInputSet
                             multiTextInputProps={{
                               allowableTypes,
                               expressions,
-                              disabled: readonly
+                              disabled: readonly,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                             }}
                             label=""
                             disabled={readonly}

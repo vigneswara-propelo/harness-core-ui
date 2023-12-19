@@ -17,6 +17,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useListAwsRegions } from 'services/portal'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { ConnectorMap, ConnectorLabelMap, ConnectorTypes, isRuntime } from '../../CloudFormationHelper'
 import type { CreateStackData, CreateStackProps } from '../../CloudFormationInterfaces.types'
 import { onDragStart, onDragEnd, onDragLeave, onDragOver, onDrop } from '../../DragHelper'
@@ -33,6 +34,7 @@ export default function ParameterFileInputs<T extends CreateStackData = CreateSt
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [isAccount, setIsAccount] = useState<boolean>(false)
   const [regions, setRegions] = useState<MultiSelectOption[]>([])
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const {
     data: regionData,
@@ -88,7 +90,11 @@ export default function ParameterFileInputs<T extends CreateStackData = CreateSt
                     projectIdentifier={projectIdentifier}
                     orgIdentifier={orgIdentifier}
                     style={{ marginBottom: 10 }}
-                    multiTypeProps={{ expressions, allowableTypes }}
+                    multiTypeProps={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     disabled={readonly}
                     onChange={(value: any, _unused, _notUsed) => {
                       /* istanbul ignore next */
@@ -118,7 +124,8 @@ export default function ParameterFileInputs<T extends CreateStackData = CreateSt
                       items: regions
                     },
                     expressions,
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                   selectItems={regions}
                 />
@@ -138,7 +145,8 @@ export default function ParameterFileInputs<T extends CreateStackData = CreateSt
                   disabled={readonly}
                   multiTextInputProps={{
                     expressions,
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                 />
               </div>
@@ -151,7 +159,8 @@ export default function ParameterFileInputs<T extends CreateStackData = CreateSt
                   disabled={readonly}
                   multiTextInputProps={{
                     expressions,
-                    allowableTypes
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                 />
               </div>
@@ -166,7 +175,8 @@ export default function ParameterFileInputs<T extends CreateStackData = CreateSt
                     disabled={readonly}
                     multiTextInputProps={{
                       expressions,
-                      allowableTypes
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                     }}
                   />
                 </div>
@@ -211,7 +221,8 @@ export default function ParameterFileInputs<T extends CreateStackData = CreateSt
                                 label=""
                                 multiTextInputProps={{
                                   expressions,
-                                  allowableTypes
+                                  allowableTypes,
+                                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                                 }}
                                 style={{ width: 320 }}
                               />

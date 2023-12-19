@@ -24,6 +24,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { useGetAzureWebAppDeploymentSlotsV2, useGetAzureWebAppNamesV2 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { AzureSlotDeploymentProps } from './AzureSlotDeploymentInterface.types'
 import {
   getEnvId,
@@ -72,6 +73,7 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
   const [dynamicSlots, setDynamicSlots] = useState<SelectOption[]>([])
   const infraIdRuntime = getInfraIdRuntime(stageIdentifier, formik?.values, 'infrastructure')
   const envIdRuntime = getEnvIdRuntime(stageIdentifier, formik?.values)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const infraDefinitionId = getInfraParamsFixedValue([
     get(formik?.values, 'template.templateInputs.spec.environment.infrastructureDefinitions[0].identifier'),
@@ -202,6 +204,7 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
           multiTypeInputProps={{
             defaultValue: getFieldValue(webAppNamePath),
             expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             allowableTypes: getAllowableTypes(selectedStage) as AllowedTypes,
             selectProps: {
               defaultSelectedItem: {
@@ -245,6 +248,7 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
           useValue
           multiTypeInputProps={{
             expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             allowableTypes: getAllowableTypes(selectedStage) as AllowedTypes,
             selectProps: {
               defaultSelectedItem: {
@@ -287,7 +291,8 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
           multiTextInputProps={{
             expressions,
             allowableTypes: getAllowableTypes(selectedStage) as AllowedTypes,
-            multitypeInputValue: MultiTypeInputType.EXPRESSION
+            multitypeInputValue: MultiTypeInputType.EXPRESSION,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           disabled={readonly}
         />
@@ -316,7 +321,8 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
           multiTextInputProps={{
             expressions,
             multitypeInputValue: MultiTypeInputType.EXPRESSION,
-            allowableTypes: getAllowableTypes(selectedStage) as AllowedTypes
+            allowableTypes: getAllowableTypes(selectedStage) as AllowedTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           disabled={readonly}
         />

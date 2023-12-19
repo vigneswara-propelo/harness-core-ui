@@ -59,6 +59,7 @@ import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   ConnectorMap,
   ConnectorTypes,
@@ -92,6 +93,7 @@ export default function TerragruntEditView(
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   let configurationTypes: SelectOption[]
 
@@ -476,7 +478,12 @@ export default function TerragruntEditView(
                 <FormMultiTypeDurationField
                   name="timeout"
                   label={getString('pipelineSteps.timeoutLabel')}
-                  multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
+                  multiTypeDurationProps={{
+                    enableConfigureOptions: true,
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   disabled={readonly}
                 />
               </div>
@@ -498,7 +505,11 @@ export default function TerragruntEditView(
                   name="spec.provisionerIdentifier"
                   placeholder={getString('pipeline.terraformStep.provisionerIdentifier')}
                   label={getString('pipelineSteps.provisionerIdentifier')}
-                  multiTextInputProps={{ expressions, allowableTypes }}
+                  multiTextInputProps={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   disabled={readonly}
                 />
                 {getMultiTypeFromValue(values.spec?.provisionerIdentifier) === MultiTypeInputType.RUNTIME && (
@@ -577,7 +588,11 @@ export default function TerragruntEditView(
                         name="spec.configuration.spec.moduleConfig.path"
                         placeholder={'Enter path'}
                         label={getString('common.path')}
-                        multiTextInputProps={{ expressions, allowableTypes }}
+                        multiTextInputProps={{
+                          expressions,
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                        }}
                         disabled={readonly}
                       />
                       {getMultiTypeFromValue(values.spec.configuration.spec?.moduleConfig?.path) ===
@@ -610,7 +625,11 @@ export default function TerragruntEditView(
                                 name="spec.configuration.spec.workspace"
                                 placeholder={getString('pipeline.terraformStep.workspace')}
                                 label={getString('pipelineSteps.workspace')}
-                                multiTextInputProps={{ expressions, allowableTypes }}
+                                multiTextInputProps={{
+                                  expressions,
+                                  allowableTypes,
+                                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                                }}
                                 isOptional={true}
                                 disabled={readonly}
                               />
@@ -729,7 +748,8 @@ export default function TerragruntEditView(
                                 expressions,
                                 allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                                   item => !isMultiTypeRuntime(item)
-                                ) as AllowedTypes
+                                ) as AllowedTypes,
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                               }}
                               name="spec.configuration.spec.targets"
                               placeholder={getString('cd.enterTragets')}
@@ -755,7 +775,8 @@ export default function TerragruntEditView(
                                 expressions,
                                 allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                                   item => !isMultiTypeRuntime(item)
-                                ) as AllowedTypes
+                                ) as AllowedTypes,
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                               }}
                               name="spec.configuration.spec.environmentVariables"
                               multiTypeFieldSelectorProps={{

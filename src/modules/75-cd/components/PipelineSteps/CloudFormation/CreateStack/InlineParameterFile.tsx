@@ -29,6 +29,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useStrings } from 'framework/strings'
 import { useCFParametersForAws } from 'services/cd-ng'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from '../CloudFormation.module.scss'
 
 interface GitDetails {
@@ -82,6 +83,7 @@ export const InlineParameterFile = ({
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [remoteParams, setRemoteParams] = useState<MultiSelectOption[]>()
   const queryParams = useMemo(() => {
@@ -201,7 +203,11 @@ export const InlineParameterFile = ({
                           <FormInput.MultiTextInput
                             name={`parameterOverrides[${index}].value`}
                             label={''}
-                            multiTextInputProps={{ expressions, allowableTypes }}
+                            multiTextInputProps={{
+                              expressions,
+                              allowableTypes,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                            }}
                             disabled={readonly}
                           />
                           <Button

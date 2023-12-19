@@ -20,6 +20,7 @@ import { Connectors } from '@platform/connectors/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
 import { isValueRuntimeInput } from '@common/utils/utils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { FileInputStep } from './FileInputStep'
 import { ScopeInputStep } from './ScopeInputStep'
 import type { AzureArmProps } from '../AzureArm.types'
@@ -30,6 +31,7 @@ const InputStepRef = (props: AzureArmProps & { formik?: FormikContextType<any> }
   const { inputSetData, readonly, path, allowableTypes, formik, allValues } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const connectorRef =
     get(formik?.values, `${path}.spec.configuration.connectorRef`) || get(allValues, 'spec.configuration.connectorRef')
@@ -46,7 +48,8 @@ const InputStepRef = (props: AzureArmProps & { formik?: FormikContextType<any> }
               enableConfigureOptions: false,
               allowableTypes,
               expressions,
-              disabled: readonly
+              disabled: readonly,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
           />
         </div>
@@ -59,7 +62,8 @@ const InputStepRef = (props: AzureArmProps & { formik?: FormikContextType<any> }
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             data-testid={`${path}.spec.provisionerIdentifier`}
           />
@@ -76,7 +80,7 @@ const InputStepRef = (props: AzureArmProps & { formik?: FormikContextType<any> }
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
             style={{ marginBottom: 10 }}
-            multiTypeProps={{ expressions, allowableTypes }}
+            multiTypeProps={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
             disabled={readonly}
             width={300}
             setRefValue

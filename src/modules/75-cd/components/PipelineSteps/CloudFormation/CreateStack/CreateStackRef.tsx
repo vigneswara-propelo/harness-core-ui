@@ -49,6 +49,7 @@ import { useQueryParams } from '@common/hooks'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { TFMonaco } from '../../Common/Terraform/Editview/TFMonacoEditor'
 import CFRemoteWizard from './RemoteFilesForm/CFRemoteWizard'
 import { InlineParameterFile } from './InlineParameterFile'
@@ -81,6 +82,7 @@ export const CreateStack = (
   const { getRBACErrorMessage } = useRBACError()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const [showModal, setShowModal] = useState(false)
   const [showInlineParams, setInlineParams] = useState(false)
   const [paramIndex, setParamIndex] = useState<number | undefined>()
@@ -364,7 +366,12 @@ export const CreateStack = (
               <FormMultiTypeDurationField
                 name="timeout"
                 label={getString('pipelineSteps.timeoutLabel')}
-                multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
+                multiTypeDurationProps={{
+                  enableConfigureOptions: true,
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
                 disabled={readonly}
               />
             </div>
@@ -373,7 +380,11 @@ export const CreateStack = (
               <FormInput.MultiTextInput
                 name="spec.provisionerIdentifier"
                 label={getString('pipelineSteps.provisionerIdentifier')}
-                multiTextInputProps={{ expressions, allowableTypes }}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
                 disabled={readonly}
                 className={css.inputWidth}
               />
@@ -406,7 +417,11 @@ export const CreateStack = (
                 projectIdentifier={projectIdentifier}
                 orgIdentifier={orgIdentifier}
                 style={{ marginBottom: 10 }}
-                multiTypeProps={{ expressions, allowableTypes }}
+                multiTypeProps={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
                 disabled={readonly}
                 width={300}
                 setRefValue
@@ -454,7 +469,8 @@ export const CreateStack = (
                     },
                     expressions,
                     allowableTypes,
-                    width: 300
+                    width: 300,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                   }}
                   selectItems={regions}
                   placeholder={regionLoading ? getString('loading') : getString('select')}
@@ -608,7 +624,11 @@ export const CreateStack = (
               <FormInput.MultiTextInput
                 name="spec.configuration.stackName"
                 label={getString('cd.cloudFormation.stackName')}
-                multiTextInputProps={{ expressions, allowableTypes }}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
                 disabled={readonly}
                 className={css.inputWidth}
               />
@@ -761,7 +781,8 @@ export const CreateStack = (
                           },
                           expressions,
                           allowableTypes,
-                          width: 300
+                          width: 300,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                         }}
                         selectItems={awsRoles}
                         style={{ color: 'rgb(11, 11, 13)' }}

@@ -17,6 +17,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useListAwsRegions } from 'services/portal'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { ConnectorMap, isRuntime, ConnectorLabelMap, ConnectorTypes } from '../../CloudFormationHelper'
 import type { CreateStackData, CreateStackProps, Tags } from '../../CloudFormationInterfaces.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -27,6 +28,7 @@ export default function TagsInputs<T extends CreateStackData = CreateStackData>(
   const { inputSetData, readonly, path, allowableTypes, formik } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [isAccount, setIsAccount] = useState<boolean>(false)
   const [regions, setRegions] = useState<MultiSelectOption[]>([])
@@ -82,7 +84,11 @@ export default function TagsInputs<T extends CreateStackData = CreateStackData>(
                 projectIdentifier={projectIdentifier}
                 orgIdentifier={orgIdentifier}
                 style={{ marginBottom: 10 }}
-                multiTypeProps={{ expressions, allowableTypes }}
+                multiTypeProps={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
                 disabled={readonly}
                 setRefValue
                 onChange={(value: any, _unused, _multiType) => {
@@ -117,7 +123,8 @@ export default function TagsInputs<T extends CreateStackData = CreateStackData>(
                   items: regions
                 },
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               selectItems={regions}
             />
@@ -140,7 +147,8 @@ export default function TagsInputs<T extends CreateStackData = CreateStackData>(
                 disabled={readonly}
                 multiTextInputProps={{
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
               />
             </div>
@@ -155,7 +163,8 @@ export default function TagsInputs<T extends CreateStackData = CreateStackData>(
               disabled={readonly}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
             />
           </div>
@@ -170,7 +179,8 @@ export default function TagsInputs<T extends CreateStackData = CreateStackData>(
               disabled={readonly}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
             />
           </div>
@@ -185,7 +195,8 @@ export default function TagsInputs<T extends CreateStackData = CreateStackData>(
               disabled={readonly}
               multiTextInputProps={{
                 expressions,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
             />
           </div>

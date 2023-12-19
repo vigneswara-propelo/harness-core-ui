@@ -20,6 +20,7 @@ import { useQueryParams } from '@common/hooks'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { TerragruntData, TerragruntProps } from '../TerragruntInterface'
 
 function TgRemoteSectionRef<T extends TerragruntData>(
@@ -32,6 +33,7 @@ function TgRemoteSectionRef<T extends TerragruntData>(
   const { remoteVar, index, allowableTypes, readonly, initialValues, path, inputSetData, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const template = inputSetData?.template
@@ -74,7 +76,8 @@ function TgRemoteSectionRef<T extends TerragruntData>(
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -90,7 +93,8 @@ function TgRemoteSectionRef<T extends TerragruntData>(
           label={getString('pipelineSteps.deploy.inputSet.branch')}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -105,7 +109,8 @@ function TgRemoteSectionRef<T extends TerragruntData>(
           label={getString('pipeline.manifestType.commitId')}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)

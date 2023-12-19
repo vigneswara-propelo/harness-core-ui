@@ -38,6 +38,7 @@ import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/Time
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { TFMonaco } from '../../../Common/Terraform/Editview/TFMonacoEditor'
 import TemplateFileInputs from './TemplateFile'
 import ParameterFileInputs from './ParameterInputs'
@@ -54,6 +55,7 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [regions, setRegions] = useState<MultiSelectOption[]>([])
   const [awsRoles, setAwsRoles] = useState<MultiSelectOption[]>([])
@@ -237,7 +239,8 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
               },
               allowableTypes,
               expressions,
-              disabled: readonly
+              disabled: readonly,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             fieldPath={'timeout'}
             template={inputSetData?.template}
@@ -252,7 +255,8 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -277,7 +281,7 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
             style={{ marginBottom: 10 }}
-            multiTypeProps={{ expressions, allowableTypes }}
+            multiTypeProps={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
             disabled={readonly}
             width={300}
             setRefValue
@@ -326,7 +330,8 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
               items: regions ? regions : []
             },
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -346,7 +351,8 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -370,7 +376,8 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
               items: awsRoles
             },
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           enableConfigureOptions={true}
           configureOptionsProps={{

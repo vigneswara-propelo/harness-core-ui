@@ -18,6 +18,7 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { CommandScriptsData, CopyCommandUnit, CustomScriptCommandUnit } from './CommandScriptsTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './CommandListInputSet.module.scss'
@@ -36,6 +37,7 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
   const { getString } = useStrings()
   const prefix = isEmpty(path) ? '' : `${path}.`
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const scriptType: ScriptType = get(initialValues, 'spec.shell', 'Bash')
 
   return (
@@ -74,6 +76,7 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
                             expressions,
                             allowableTypes,
                             disabled: readonly,
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                             placeholder: getString('cd.steps.commands.destinationPathPlaceholder')
                           }}
                           configureOptionsProps={{
@@ -103,7 +106,8 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
                             expressions,
                             allowableTypes,
                             disabled: readonly,
-                            placeholder: getString('cd.enterWorkDirectory')
+                            placeholder: getString('cd.enterWorkDirectory'),
+                            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                           }}
                           configureOptionsProps={{
                             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)

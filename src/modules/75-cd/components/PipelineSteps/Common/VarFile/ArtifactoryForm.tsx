@@ -35,6 +35,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   formatInitialValues,
   tfArtifactoryFormInputNames,
@@ -112,6 +113,7 @@ export const ArtifactoryForm: React.FC<StepProps<any> & ArtifactoryFormProps> = 
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const initialValues = formatInitialValues(
     isConfig,
     isBackendConfig,
@@ -261,7 +263,8 @@ export const ArtifactoryForm: React.FC<StepProps<any> & ArtifactoryFormProps> = 
                       disabled={ArtifactRepoLoading}
                       multiTypeInputProps={{
                         expressions,
-                        allowableTypes
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                       }}
                     />
                   ) : (
@@ -273,7 +276,8 @@ export const ArtifactoryForm: React.FC<StepProps<any> & ArtifactoryFormProps> = 
                         expressions,
                         allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(item =>
                           isMultiTypeRuntime(item)
-                        ) as AllowedTypes
+                        ) as AllowedTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                       }}
                     />
                   )}
@@ -321,7 +325,8 @@ export const ArtifactoryForm: React.FC<StepProps<any> & ArtifactoryFormProps> = 
                           expressions,
                           allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(item =>
                             isMultiTypeRuntime(item)
-                          ) as AllowedTypes
+                          ) as AllowedTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                         }}
                       />
                     ) : (
@@ -361,7 +366,8 @@ export const ArtifactoryForm: React.FC<StepProps<any> & ArtifactoryFormProps> = 
                                         expressions,
                                         allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(item =>
                                           isMultiTypeRuntime(item)
-                                        ) as AllowedTypes
+                                        ) as AllowedTypes,
+                                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                                       }}
                                       style={{ width: 320 }}
                                     />

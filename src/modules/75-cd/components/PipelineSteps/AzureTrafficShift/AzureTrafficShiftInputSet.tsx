@@ -15,6 +15,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { AzureTrafficShiftData, AzureTrafficShiftProps } from './AzureTrafficShiftInterface.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -26,6 +27,7 @@ export function AzureTrafficShiftInputSetRef<T extends AzureTrafficShiftData = A
   const { inputSetData, readonly, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <FormikForm>
@@ -42,7 +44,8 @@ export function AzureTrafficShiftInputSetRef<T extends AzureTrafficShiftData = A
               },
               allowableTypes,
               expressions,
-              disabled: readonly
+              disabled: readonly,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             template={inputSetData?.template}
             fieldPath={'timeout'}
@@ -60,7 +63,8 @@ export function AzureTrafficShiftInputSetRef<T extends AzureTrafficShiftData = A
             multiTextInputProps={{
               expressions,
               disabled: readonly,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             configureOptionsProps={{
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)

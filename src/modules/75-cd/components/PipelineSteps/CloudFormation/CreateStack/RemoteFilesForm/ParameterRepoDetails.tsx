@@ -19,6 +19,7 @@ import {
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 const Account = 'Account'
@@ -38,6 +39,7 @@ export const ParameterRepoDetails: React.FC<StepProps<any> & CFFileStoreProps> =
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const gitFetchTypes: SelectOption[] = [
     { label: getString('gitFetchTypes.fromBranch'), value: getString('pipelineSteps.deploy.inputSet.branch') },
     { label: getString('gitFetchTypes.fromCommit'), value: getString('pipelineSteps.commitIdValue') }
@@ -76,7 +78,11 @@ export const ParameterRepoDetails: React.FC<StepProps<any> & CFFileStoreProps> =
             label={getString('pipelineSteps.repoName')}
             name={fieldNames(isNumber(index)).repoName}
             placeholder={getString('pipelineSteps.repoName')}
-            multiTextInputProps={{ expressions, allowableTypes }}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
           />
 
           {getMultiTypeFromValue(param?.store?.spec?.repoName) === MultiTypeInputType.RUNTIME && (
@@ -108,7 +114,11 @@ export const ParameterRepoDetails: React.FC<StepProps<any> & CFFileStoreProps> =
             label={getString('pipelineSteps.deploy.inputSet.branch')}
             placeholder={getString('pipeline.manifestType.branchPlaceholder')}
             name={fieldNames(isNumber(index)).branch}
-            multiTextInputProps={{ expressions, allowableTypes }}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
           />
 
           {
@@ -135,7 +145,11 @@ export const ParameterRepoDetails: React.FC<StepProps<any> & CFFileStoreProps> =
             label={getString('pipeline.manifestType.commitId')}
             placeholder={getString('pipeline.manifestType.commitPlaceholder')}
             name={fieldNames(isNumber(index)).commitId}
-            multiTextInputProps={{ expressions, allowableTypes }}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+            }}
           />
 
           {

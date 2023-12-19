@@ -40,6 +40,7 @@ import { FormMultiTypeCheckboxField } from '@common/components'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useQueryParams } from '@common/hooks'
 import { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { TerraformData, TerraformProps, TerraformStoreTypes } from './TerraformInterfaces'
 import ConfigInputs from './InputSteps/ConfigSection'
 import TFRemoteSection from './InputSteps/TFRemoteSection'
@@ -54,6 +55,7 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
   const { getString } = useStrings()
   const { inputSetData, readonly, path, allowableTypes, onUpdate, onChange, stepViewType } = props
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   /* istanbul ignore next */
   const onUpdateRef = (arg: TerraformData): void => {
     onUpdate?.(arg as T)
@@ -95,7 +97,8 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -115,7 +118,8 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
             },
             allowableTypes,
             expressions,
-            disabled: readonly
+            disabled: readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           fieldPath={'timeout'}
           template={inputSetData?.template}
@@ -163,7 +167,8 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -250,7 +255,7 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
         <FormMultiTypeCheckboxField
           name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.configuration.skipRefreshCommand`}
           label={getString('cd.skipRefreshCommand')}
-          multiTypeTextbox={{ expressions, allowableTypes }}
+          multiTypeTextbox={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           enableConfigureOptions={true}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -262,7 +267,7 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
         <FormMultiTypeCheckboxField
           name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.configuration.skipStateStorage`}
           label={getString('cd.skipStateStorage')}
-          multiTypeTextbox={{ expressions, allowableTypes }}
+          multiTypeTextbox={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           enableConfigureOptions={true}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -282,7 +287,8 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
                 }spec.${fieldPath}.commandFlags[${terraformFlagIdx}].flag`}
                 multiTextInputProps={{
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
                 label={`${terraformCommandFlag.commandType}: ${getString('flag')}`}
               />
@@ -309,7 +315,7 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
             enableConfigureOptions={false}
             placeholder={getString('select')}
             disabled={readonly}
-            multiTypeProps={{ allowableTypes, expressions }}
+            multiTypeProps={{ allowableTypes, expressions, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
             gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
           />
           <Icon

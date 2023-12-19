@@ -33,6 +33,7 @@ import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelp
 import type { ConnectorTypes } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
 import { HarnessOption } from '@pipeline/components/StartupScriptSelection/HarnessOption'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { gitFetchTypeList, GitFetchTypes, StartupScriptDataType } from '../AzureArm.types'
 
 import css from './ScriptWizard.module.scss'
@@ -62,6 +63,7 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
   isParam
 }) => {
   const { getString } = useStrings()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   /* istanbul ignore next */
   const gitConnectionType: string = prevStepData?.store === Connectors.GIT ? 'connectionType' : 'type'
@@ -214,7 +216,11 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
                   ) && (
                     <div className={cx(stepCss.formGroup, stepCss.md)}>
                       <FormInput.MultiTextInput
-                        multiTextInputProps={{ expressions, allowableTypes }}
+                        multiTextInputProps={{
+                          expressions,
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                        }}
                         label={getString('common.repositoryName')}
                         placeholder={getString('common.repositoryName')}
                         name="repoName"
@@ -244,7 +250,11 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
                   {values?.gitFetchType === GitFetchTypes.Branch && (
                     <div className={cx(stepCss.formGroup, stepCss.md)}>
                       <FormInput.MultiTextInput
-                        multiTextInputProps={{ expressions, allowableTypes }}
+                        multiTextInputProps={{
+                          expressions,
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                        }}
                         label={getString('pipelineSteps.deploy.inputSet.branch')}
                         placeholder={getString('pipeline.manifestType.branchPlaceholder')}
                         name="branch"
@@ -268,7 +278,11 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
                   {values?.gitFetchType === GitFetchTypes.Commit && (
                     <div className={cx(stepCss.formGroup, stepCss.md)}>
                       <FormInput.MultiTextInput
-                        multiTextInputProps={{ expressions, allowableTypes }}
+                        multiTextInputProps={{
+                          expressions,
+                          allowableTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                        }}
                         label={getString('pipeline.manifestType.commitId')}
                         placeholder={getString('pipeline.manifestType.commitPlaceholder')}
                         name="commitId"
@@ -295,7 +309,11 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
                         isParam ? 'cd.azureArm.paramFilePath' : 'pipeline.manifestType.osTemplatePath'
                       )}
                       name={'paths'}
-                      multiTextInputProps={{ expressions, allowableTypes }}
+                      multiTextInputProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                     />
                     {getMultiTypeFromValue(values?.paths as string) === MultiTypeInputType.RUNTIME && (
                       <ConfigureOptions

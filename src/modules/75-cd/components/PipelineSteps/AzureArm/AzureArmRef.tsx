@@ -35,6 +35,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { Connectors } from '@platform/connectors/constants'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { Scopes } from './Scopes'
 import { ScriptWizard } from './ScriptWizard/ScriptWizard'
 import { AzureArmProps, ScopeTypes } from './AzureArm.types'
@@ -52,6 +53,7 @@ export const AzureArmRef = (
   const [isParam, setIsParam] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [connectorView, setConnectorView] = useState(false)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   /* istanbul ignore next */
   const handleConnectorViewChange = (isConnectorView: boolean): void => {
@@ -193,7 +195,12 @@ export const AzureArmRef = (
               <FormMultiTypeDurationField
                 name="timeout"
                 label={getString('pipelineSteps.timeoutLabel')}
-                multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
+                multiTypeDurationProps={{
+                  enableConfigureOptions: true,
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
                 disabled={readonly}
               />
             </div>
@@ -202,7 +209,11 @@ export const AzureArmRef = (
               <FormInput.MultiTextInput
                 name="spec.provisionerIdentifier"
                 label={getString('pipelineSteps.provisionerIdentifier')}
-                multiTextInputProps={{ expressions, allowableTypes }}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
                 disabled={readonly}
               />
               {
@@ -234,7 +245,11 @@ export const AzureArmRef = (
                 projectIdentifier={projectIdentifier}
                 orgIdentifier={orgIdentifier}
                 style={{ marginBottom: 10 }}
-                multiTypeProps={{ expressions, allowableTypes }}
+                multiTypeProps={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
                 disabled={readonly}
                 width={384}
                 setRefValue

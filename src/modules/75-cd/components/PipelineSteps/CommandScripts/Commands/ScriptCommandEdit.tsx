@@ -28,6 +28,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import FileStoreSelectField from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
 import { FileUsage } from '@filestore/interfaces/FileStore'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { CommandUnitType, CustomScriptCommandUnit, LocationType } from '../CommandScriptsTypes'
 import { TailFilesEdit } from './TailFilesEdit'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -49,6 +50,7 @@ export function ScriptCommandEdit(props: ScriptCommandEditProps): React.ReactEle
   const [locationType, setLocationType] = useState<LocationType>(
     (formik.values as CustomScriptCommandUnit).spec.source.type as LocationType
   )
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const scriptType: ScriptType = defaultTo((formik.values as CustomScriptCommandUnit).spec?.shell, defaultScriptType)
 
@@ -73,7 +75,8 @@ export function ScriptCommandEdit(props: ScriptCommandEditProps): React.ReactEle
           multiTextInputProps={{
             multiTextInputProps: {
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             },
             disabled: readonly,
             placeholder: getString('cd.enterWorkDirectory')

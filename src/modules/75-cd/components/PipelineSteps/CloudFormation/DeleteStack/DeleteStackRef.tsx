@@ -37,6 +37,7 @@ import { useQueryParams } from '@common/hooks'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { Connectors } from '@platform/connectors/constants'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { DeleteStackTypes, CloudFormationDeleteStackProps } from '../CloudFormationInterfaces.types'
 import { isRuntime } from '../CloudFormationHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -57,6 +58,7 @@ export const CloudFormationDeleteStack = (
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const [regions, setRegions] = useState<MultiSelectOption[]>([])
   const [awsRoles, setAwsRoles] = useState<MultiSelectOption[]>([])
   const [awsRef, setAwsRef] = useState<string>('')
@@ -202,7 +204,12 @@ export const CloudFormationDeleteStack = (
               <FormMultiTypeDurationField
                 name="timeout"
                 label={getString('pipelineSteps.timeoutLabel')}
-                multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
+                multiTypeDurationProps={{
+                  enableConfigureOptions: true,
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
                 disabled={readonly}
               />
             </div>
@@ -224,7 +231,11 @@ export const CloudFormationDeleteStack = (
                 <FormInput.MultiTextInput
                   name="spec.configuration.spec.provisionerIdentifier"
                   label={getString('pipelineSteps.provisionerIdentifier')}
-                  multiTextInputProps={{ expressions, allowableTypes }}
+                  multiTextInputProps={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   disabled={readonly}
                   className={css.inputWidth}
                 />
@@ -258,7 +269,11 @@ export const CloudFormationDeleteStack = (
                       projectIdentifier={projectIdentifier}
                       orgIdentifier={orgIdentifier}
                       style={{ marginBottom: 10 }}
-                      multiTypeProps={{ expressions, allowableTypes }}
+                      multiTypeProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                       disabled={readonly}
                       width={300}
                       onChange={(value: any, _unused, _multiType) => {
@@ -309,6 +324,7 @@ export const CloudFormationDeleteStack = (
                         },
                         expressions,
                         allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                         width: 300
                       }}
                       selectItems={regions || []}
@@ -341,7 +357,8 @@ export const CloudFormationDeleteStack = (
                         },
                         expressions,
                         allowableTypes,
-                        width: 300
+                        width: 300,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                       }}
                       disabled={readonly || rolesLoading}
                       selectItems={awsRoles || []}
@@ -369,7 +386,11 @@ export const CloudFormationDeleteStack = (
                     <FormInput.MultiTextInput
                       name="spec.configuration.spec.stackName"
                       label={getString('cd.cloudFormation.stackName')}
-                      multiTextInputProps={{ expressions, allowableTypes }}
+                      multiTextInputProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                       disabled={readonly}
                       className={css.inputWidth}
                     />

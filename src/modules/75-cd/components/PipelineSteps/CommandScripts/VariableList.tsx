@@ -15,6 +15,7 @@ import type { NGVariable } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { CommandScriptsData, scriptInputType } from './CommandScriptsTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './VariableList.module.scss'
@@ -34,6 +35,7 @@ export const VariableList = (props: VariableListProps): React.ReactElement => {
   const { getString } = useStrings()
 
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <div className={stepCss.formGroup} data-testid={fieldName}>
@@ -75,7 +77,8 @@ export const VariableList = (props: VariableListProps): React.ReactElement => {
                         multiTextInputProps={{
                           allowableTypes,
                           expressions,
-                          disabled: readonly
+                          disabled: readonly,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                         }}
                         label=""
                         disabled={readonly}

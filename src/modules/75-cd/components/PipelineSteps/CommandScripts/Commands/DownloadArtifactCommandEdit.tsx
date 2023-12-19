@@ -12,6 +12,7 @@ import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import css from './CommandEdit.module.scss'
 
 interface DownloadArtifactCommandEditProps {
@@ -24,6 +25,7 @@ export function DownloadArtifactCommandEdit(props: DownloadArtifactCommandEditPr
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <>
@@ -42,7 +44,8 @@ export function DownloadArtifactCommandEdit(props: DownloadArtifactCommandEditPr
           multiTextInputProps={{
             multiTextInputProps: {
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             },
             disabled: readonly,
             placeholder: getString('cd.steps.commands.destinationPathPlaceholder')

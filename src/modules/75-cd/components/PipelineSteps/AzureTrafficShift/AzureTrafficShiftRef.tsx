@@ -40,7 +40,8 @@ export const AzureTrafficShiftRef = (props: AzureTrafficShiftProps, formikRef: S
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const query = useQueryParams()
-  const { CDS_AZURE_WEBAPP_NG_LISTING_APP_NAMES_AND_SLOTS } = useFeatureFlags()
+  const { CDS_AZURE_WEBAPP_NG_LISTING_APP_NAMES_AND_SLOTS, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const sectionId = (query as any).sectionId || ''
 
@@ -90,7 +91,12 @@ export const AzureTrafficShiftRef = (props: AzureTrafficShiftProps, formikRef: S
               <FormMultiTypeDurationField
                 name="timeout"
                 label={getString('pipelineSteps.timeoutLabel')}
-                multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
+                multiTypeDurationProps={{
+                  enableConfigureOptions: true,
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
                 disabled={readonly}
               />
             </div>
@@ -106,7 +112,8 @@ export const AzureTrafficShiftRef = (props: AzureTrafficShiftProps, formikRef: S
                   allowableTypes:
                     CDS_AZURE_WEBAPP_NG_LISTING_APP_NAMES_AND_SLOTS && isMultiEnv(selectedStage)
                       ? (getAllowableTypes(selectedStage) as AllowedTypes)
-                      : allowableTypes
+                      : allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
                 disabled={readonly}
               />

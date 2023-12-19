@@ -41,7 +41,8 @@ export const AzureSlotDeploymentRef = (
   const { allowableTypes, isNewStep = true, readonly, initialValues, onUpdate, onChange, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { CDS_AZURE_WEBAPP_NG_LISTING_APP_NAMES_AND_SLOTS } = useFeatureFlags()
+  const { CDS_AZURE_WEBAPP_NG_LISTING_APP_NAMES_AND_SLOTS, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
+
   const query = useQueryParams()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const sectionId = (query as any).sectionId || ''
@@ -104,7 +105,12 @@ export const AzureSlotDeploymentRef = (
               <FormMultiTypeDurationField
                 name="timeout"
                 label={getString('pipelineSteps.timeoutLabel')}
-                multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
+                multiTypeDurationProps={{
+                  enableConfigureOptions: true,
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
                 disabled={readonly}
               />
             </div>
@@ -115,7 +121,8 @@ export const AzureSlotDeploymentRef = (
                 multiTypeTextbox={{
                   expressions,
                   allowableTypes,
-                  disabled: readonly
+                  disabled: readonly,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
                 disabled={readonly}
                 configureOptionsProps={{ hideExecutionTimeField: true }}
@@ -131,7 +138,11 @@ export const AzureSlotDeploymentRef = (
                     name="spec.webApp"
                     placeholder={getString('cd.steps.azureWebAppInfra.webAppPlaceholder')}
                     label={getString('cd.serviceDashboard.webApp')}
-                    multiTextInputProps={{ expressions, allowableTypes }}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     disabled={readonly}
                   />
                   {getMultiTypeFromValue(get(formik, 'values.spec.webApp')) === MultiTypeInputType.RUNTIME && (
@@ -155,7 +166,11 @@ export const AzureSlotDeploymentRef = (
                     name="spec.deploymentSlot"
                     placeholder={getString('cd.steps.azureWebAppInfra.deploymentSlotPlaceHolder')}
                     label={getString('cd.serviceDashboard.deploymentSlotTitle')}
-                    multiTextInputProps={{ expressions, allowableTypes }}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     disabled={readonly}
                   />
                   {getMultiTypeFromValue(get(formik, 'values.spec.deploymentSlot')) === MultiTypeInputType.RUNTIME && (

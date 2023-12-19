@@ -27,6 +27,7 @@ import type {
   AwsSamDeployStepInitialValues,
   ServerlessAwsLambdaPrepareRollbackV2StepInitialValues
 } from '@pipeline/utils/types'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export type AwsSamServerlessStepInitialValues =
@@ -53,6 +54,7 @@ export function AwsSamServerlessStepCommonOptionalFieldsInputSet(
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const prefix = isEmpty(path) ? '' : `${path}.`
 
@@ -80,7 +82,8 @@ export function AwsSamServerlessStepCommonOptionalFieldsInputSet(
         name={fieldName}
         valueMultiTextInputProps={{
           allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
-          expressions
+          expressions,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
         }}
         multiTypeFieldSelectorProps={{
           label: getString('optionalField', { name: getString(fieldLabel) }),
@@ -110,7 +113,8 @@ export function AwsSamServerlessStepCommonOptionalFieldsInputSet(
               expressions,
               allowableTypes,
               disabled: readonly,
-              width: 416.5
+              width: 416.5,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             tooltipProps={{ dataTooltipId: 'privileged' }}
             disabled={readonly}
@@ -130,7 +134,8 @@ export function AwsSamServerlessStepCommonOptionalFieldsInputSet(
             multiTypeInputProps={{
               expressions,
               allowableTypes,
-              selectProps: { addClearBtn: true, items: getImagePullPolicyOptions(getString) }
+              selectProps: { addClearBtn: true, items: getImagePullPolicyOptions(getString) },
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             template={template}
             fieldPath={`spec.imagePullPolicy`}
@@ -147,7 +152,8 @@ export function AwsSamServerlessStepCommonOptionalFieldsInputSet(
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             fieldPath={`spec.runAsUser`}
             template={template}
@@ -164,7 +170,8 @@ export function AwsSamServerlessStepCommonOptionalFieldsInputSet(
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             fieldPath={`spec.resources.limits.memory`}
             template={template}
@@ -181,7 +188,8 @@ export function AwsSamServerlessStepCommonOptionalFieldsInputSet(
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             fieldPath={`spec.resources.limits.cpu`}
             template={template}

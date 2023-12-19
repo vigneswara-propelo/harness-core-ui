@@ -20,6 +20,7 @@ import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/Config
 import { useQueryParams } from '@common/hooks'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { RollbackStackProps } from './AzureArmRollback.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './AzureArmRollback.module.scss'
@@ -38,6 +39,7 @@ export const RollbackStack = (
 ): JSX.Element => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const query = useQueryParams()
   const sectionId = (query as any).sectionId || ''
   return (
@@ -92,7 +94,12 @@ export const RollbackStack = (
               <FormMultiTypeDurationField
                 name="timeout"
                 label={getString('pipelineSteps.timeoutLabel')}
-                multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
+                multiTypeDurationProps={{
+                  enableConfigureOptions: true,
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
                 disabled={readonly}
               />
             </div>
@@ -101,7 +108,11 @@ export const RollbackStack = (
               <FormInput.MultiTextInput
                 name="spec.provisionerIdentifier"
                 label={getString('pipelineSteps.provisionerIdentifier')}
-                multiTextInputProps={{ expressions, allowableTypes }}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
                 disabled={readonly}
               />
               {getMultiTypeFromValue(provisionerIdentifier) === MultiTypeInputType.RUNTIME && (

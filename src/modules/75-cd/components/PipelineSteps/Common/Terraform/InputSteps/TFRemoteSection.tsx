@@ -32,6 +32,7 @@ import { FormMultiTypeConnectorField } from '@platform/connectors/components/Con
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { isValueRuntimeInput } from '@common/utils/utils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { TerraformData, TerraformProps } from '../TerraformInterfaces'
 import { AmazonS3RuntimeView } from '../../ConfigFileStore/AmazonS3Store/AmazonS3StoreRuntimeView'
 import { ConnectorMap } from '../../ConfigFileStore/ConfigFileStoreHelper'
@@ -48,6 +49,7 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
   const { expressions } = useVariablesExpression()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [connectorRepos, setConnectorRepos] = useState<SelectOption[]>()
   const { readonly, initialValues, path } = props
@@ -129,7 +131,7 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
             `${path}.${fieldPath}?.spec?.varFiles[${index}].varFile.spec.store.spec.connectorRef`,
             ''
           )}
-          multiTypeProps={{ allowableTypes, expressions }}
+          multiTypeProps={{ allowableTypes, expressions, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
           width={388}
@@ -151,7 +153,8 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -167,7 +170,8 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
           label={getString('pipelineSteps.deploy.inputSet.branch')}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
       )}
@@ -175,7 +179,7 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
         <FormMultiTypeCheckboxField
           name={`${path}.spec.${fieldPath}.spec.varFiles[${index}].varFile.spec.optional`}
           label={getString('projectsOrgs.optional')}
-          multiTypeTextbox={{ expressions, allowableTypes }}
+          multiTypeTextbox={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           enableConfigureOptions={true}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -191,7 +195,8 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
           label={getString('pipeline.manifestType.commitId')}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
       )}
@@ -232,7 +237,8 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
               items: connectorRepos ? connectorRepos : []
             },
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           selectItems={connectorRepos ? connectorRepos : []}
         />

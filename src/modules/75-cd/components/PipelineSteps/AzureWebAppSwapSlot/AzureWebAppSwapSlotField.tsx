@@ -30,6 +30,7 @@ import { useGetAzureWebAppDeploymentSlotsV2, useGetAzureWebAppNamesV2 } from 'se
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import {
   getEnvId,
   getInfraId,
@@ -74,6 +75,7 @@ const AzureSwapSlotDeploymentDynamic = (props: AzureSwapSlotDeploymentDynamicPro
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
 
   const getFieldValue = (name: string) => {
@@ -221,6 +223,7 @@ const AzureSwapSlotDeploymentDynamic = (props: AzureSwapSlotDeploymentDynamicPro
                 multiTypeInputProps={{
                   defaultValue: webAppName,
                   expressions,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   allowableTypes: [MultiTypeInputType.FIXED],
                   selectProps: {
                     defaultSelectedItem: {
@@ -263,7 +266,7 @@ const AzureSwapSlotDeploymentDynamic = (props: AzureSwapSlotDeploymentDynamicPro
                     getFieldValue(webAppNamePath) === RUNTIME_INPUT_VALUE ? MultiTypeInputType.RUNTIME : undefined,
                   expressions,
                   allowableTypes: [MultiTypeInputType.FIXED],
-
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   selectProps: {
                     defaultSelectedItem: {
                       label: slotName,
@@ -399,7 +402,8 @@ const AzureSwapSlotDeploymentDynamic = (props: AzureSwapSlotDeploymentDynamicPro
               : getMultiTypeFromValue(getFieldValue(webAppSwapSlotPath)),
             allowableTypes: isMultiEnvs
               ? ([MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME] as AllowedTypes)
-              : (getAllowableTypes(selectedStage) as AllowedTypes)
+              : (getAllowableTypes(selectedStage) as AllowedTypes),
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           disabled={readonly}
         />

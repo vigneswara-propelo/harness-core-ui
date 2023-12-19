@@ -47,6 +47,7 @@ import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 import css from './CommonKuberetesInfraSpecEditable.module.scss'
@@ -92,6 +93,7 @@ export function CommonKuberetesInfraInputForm({
   }>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const regionFieldName = isEmpty(path) ? 'region' : `${path}.region`
@@ -135,7 +137,7 @@ export function CommonKuberetesInfraInputForm({
             label={getString('connector')}
             placeholder={getString('common.entityPlaceholderText')}
             disabled={readonly}
-            multiTypeProps={{ allowableTypes, expressions }}
+            multiTypeProps={{ allowableTypes, expressions, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
             type={connectorType}
             setRefValue
             onChange={
@@ -171,7 +173,8 @@ export function CommonKuberetesInfraInputForm({
               selectProps: {
                 items: regions,
                 popoverClassName: cx(stepCss.formGroup, stepCss.md)
-              }
+              },
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             label={getString('optionalField', { name: getString('regionLabel') })}
             placeholder={getString('pipeline.regionPlaceholder')}
@@ -212,6 +215,7 @@ export function CommonKuberetesInfraInputForm({
               )
             },
             expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             allowableTypes,
             onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
               if (
@@ -239,7 +243,8 @@ export function CommonKuberetesInfraInputForm({
           disabled={readonly}
           multiTextInputProps={{
             allowableTypes,
-            expressions
+            expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -255,7 +260,8 @@ export function CommonKuberetesInfraInputForm({
           name={`${path}.releaseName`}
           multiTextInputProps={{
             allowableTypes,
-            expressions
+            expressions,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)

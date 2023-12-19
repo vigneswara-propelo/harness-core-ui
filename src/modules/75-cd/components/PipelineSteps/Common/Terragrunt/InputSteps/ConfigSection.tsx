@@ -18,6 +18,7 @@ import { isValueRuntimeInput } from '@common/utils/utils'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { TerragruntData, TerragruntProps } from '../TerragruntInterface'
 import { getPath } from '../../ConfigFileStore/ConfigFileStoreHelper'
 import css from '../../Terraform/TerraformStep.module.scss'
@@ -34,6 +35,7 @@ function ConfigSectionRef<T extends TerragruntData>(
   const store = configSpec?.store
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const isRepoRuntime = isValueRuntimeInput(store?.spec?.repoName)
 
@@ -51,7 +53,7 @@ function ConfigSectionRef<T extends TerragruntData>(
           selected={get(initialValues, `${configPath}.store.spec.connectorRef`, '')}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          multiTypeProps={{ allowableTypes, expressions }}
+          multiTypeProps={{ allowableTypes, expressions, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           width={388}
           type={store?.type}
           name={`${path}.${configPath}.store.spec.connectorRef`}
@@ -71,7 +73,8 @@ function ConfigSectionRef<T extends TerragruntData>(
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -89,7 +92,8 @@ function ConfigSectionRef<T extends TerragruntData>(
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -107,7 +111,8 @@ function ConfigSectionRef<T extends TerragruntData>(
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -125,7 +130,8 @@ function ConfigSectionRef<T extends TerragruntData>(
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)

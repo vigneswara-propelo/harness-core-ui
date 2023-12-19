@@ -41,6 +41,7 @@ import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { getConnectorSchema, getNameSpaceSchema, getReleaseNameSchema, getValue } from '../../PipelineStepsUtil'
 import css from './CommonKuberetesInfraSpecEditable.module.scss'
 
@@ -131,6 +132,7 @@ export function CommonKuberetesInfraSpecEditable(props: CommonKuberetesInfraSpec
   const connectorConfigureLabel = connectorDependentFields[connectorType]
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
 
@@ -157,7 +159,7 @@ export function CommonKuberetesInfraSpecEditable(props: CommonKuberetesInfraSpec
           tooltipProps={{
             dataTooltipId: `${connectorTypeLowerCase}InfraConnector`
           }}
-          multiTypeProps={{ expressions, allowableTypes }}
+          multiTypeProps={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
           width={450}
@@ -226,7 +228,8 @@ export function CommonKuberetesInfraSpecEditable(props: CommonKuberetesInfraSpec
                     {getRBACErrorMessage(regionError as RBACError) || getString('pipeline.noRegions')}
                   </Text>
                 )
-              }
+              },
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             label={getString('optionalField', { name: getString('regionLabel') })}
             placeholder={regionLoading ? getString('loading') : getString('select')}
@@ -282,6 +285,7 @@ export function CommonKuberetesInfraSpecEditable(props: CommonKuberetesInfraSpec
               )
             },
             allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
             onFocus: /* istanbul ignore next */ () => {
               const connectorValue = getValue(formik.values?.connectorRef)
               if (getMultiTypeFromValue(formik.values?.cluster) === MultiTypeInputType.FIXED) {
@@ -320,7 +324,12 @@ export function CommonKuberetesInfraSpecEditable(props: CommonKuberetesInfraSpec
           className={css.inputWidth}
           label={getString('common.namespace')}
           placeholder={getString('pipeline.infraSpecifications.namespacePlaceholder')}
-          multiTextInputProps={{ expressions, textProps: { disabled: readonly }, allowableTypes }}
+          multiTextInputProps={{
+            expressions,
+            textProps: { disabled: readonly },
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+          }}
           disabled={readonly}
         />
         {getMultiTypeFromValue(formik.values?.namespace) === MultiTypeInputType.RUNTIME && !readonly && (
@@ -355,7 +364,12 @@ export function CommonKuberetesInfraSpecEditable(props: CommonKuberetesInfraSpec
                 className={css.inputWidth}
                 label={getString('common.releaseName')}
                 placeholder={getString('cd.steps.common.releaseNamePlaceholder')}
-                multiTextInputProps={{ expressions, textProps: { disabled: readonly }, allowableTypes }}
+                multiTextInputProps={{
+                  expressions,
+                  textProps: { disabled: readonly },
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
                 disabled={readonly}
               />
               {getMultiTypeFromValue(formik.values?.releaseName) === MultiTypeInputType.RUNTIME && !readonly && (

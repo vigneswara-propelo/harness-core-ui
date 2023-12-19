@@ -29,6 +29,7 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { FormatRemoteTagsData } from '../../CloudFormationHelper'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -50,6 +51,7 @@ const TagsStepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const pathSchema = Yup.lazy((value): Yup.Schema<unknown> => {
     /* istanbul ignore next */
     if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
@@ -128,7 +130,11 @@ const TagsStepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                             label={getString('pipelineSteps.repoName')}
                             name="spec.store.spec.repoName"
                             placeholder={getString('pipelineSteps.repoName')}
-                            multiTextInputProps={{ expressions, allowableTypes }}
+                            multiTextInputProps={{
+                              expressions,
+                              allowableTypes,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                            }}
                           />
 
                           {
@@ -164,7 +170,11 @@ const TagsStepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                             label={getString('pipelineSteps.deploy.inputSet.branch')}
                             placeholder={getString('pipeline.manifestType.branchPlaceholder')}
                             name="spec.store.spec.branch"
-                            multiTextInputProps={{ expressions, allowableTypes }}
+                            multiTextInputProps={{
+                              expressions,
+                              allowableTypes,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                            }}
                           />
 
                           {
@@ -192,7 +202,11 @@ const TagsStepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                             label={getString('pipeline.manifestType.commitId')}
                             placeholder={getString('pipeline.manifestType.commitPlaceholder')}
                             name="spec.store.spec.commitId"
-                            multiTextInputProps={{ expressions, allowableTypes }}
+                            multiTextInputProps={{
+                              expressions,
+                              allowableTypes,
+                              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                            }}
                           />
 
                           {
@@ -238,7 +252,8 @@ const TagsStepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                         expressions,
                         allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                           item => !isMultiTypeRuntime(item)
-                        ) as AllowedTypes
+                        ) as AllowedTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                       }}
                     />
                   </MultiTypeFieldSelector>

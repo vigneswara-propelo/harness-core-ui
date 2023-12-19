@@ -28,6 +28,7 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { FormatFilePaths, AllowedTypes, StepTwoTitle, RemoteFileStorePath } from '../../CloudFormationHelper'
 import { onDragStart, onDragEnd, onDragLeave, onDragOver, onDrop } from '../../DragHelper'
 import { ParameterRepoDetails } from './ParameterRepoDetails'
@@ -53,6 +54,7 @@ const StepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const title = getString(StepTwoTitle(isNumber(index)))
   const templateTitle = getString(RemoteFileStorePath(isNumber(index), prevStepData?.selectedConnector === S3))
   const pathSchema = Yup.lazy((value): Yup.Schema<unknown> => {
@@ -173,7 +175,8 @@ const StepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                           expressions,
                           allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                             item => !isMultiTypeRuntime(item)
-                          ) as MultiTypeAllowedTypes
+                          ) as MultiTypeAllowedTypes,
+                          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                         }}
                       />
                     ) : (
@@ -214,7 +217,8 @@ const StepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                                       expressions,
                                       allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                                         item => !isMultiTypeRuntime(item)
-                                      ) as MultiTypeAllowedTypes
+                                      ) as MultiTypeAllowedTypes,
+                                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                                     }}
                                     style={{ width: 320 }}
                                   />

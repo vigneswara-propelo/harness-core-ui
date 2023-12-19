@@ -34,7 +34,7 @@ export function AzureSlotDeploymentInputSetRef<T extends AzureSlotDeploymentData
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
-  const { CDS_AZURE_WEBAPP_NG_LISTING_APP_NAMES_AND_SLOTS } = useFeatureFlags()
+  const { CDS_AZURE_WEBAPP_NG_LISTING_APP_NAMES_AND_SLOTS, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <FormikForm>
@@ -55,7 +55,8 @@ export function AzureSlotDeploymentInputSetRef<T extends AzureSlotDeploymentData
               multiTextInputProps={{
                 expressions,
                 disabled: readonly,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               configureOptionsProps={{
                 isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -73,7 +74,8 @@ export function AzureSlotDeploymentInputSetRef<T extends AzureSlotDeploymentData
               multiTextInputProps={{
                 expressions,
                 disabled: readonly,
-                allowableTypes
+                allowableTypes,
+                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
               }}
               configureOptionsProps={{
                 isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -98,7 +100,8 @@ export function AzureSlotDeploymentInputSetRef<T extends AzureSlotDeploymentData
               },
               allowableTypes,
               expressions,
-              disabled: readonly
+              disabled: readonly,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             template={inputSetData?.template}
             fieldPath={'timeout'}
@@ -115,7 +118,8 @@ export function AzureSlotDeploymentInputSetRef<T extends AzureSlotDeploymentData
               expressions,
               allowableTypes,
               disabled: readonly,
-              width: 416.5
+              width: 416.5,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             tooltipProps={{ dataTooltipId: 'cleanAzureSlotDeployment' }}
             disabled={readonly}

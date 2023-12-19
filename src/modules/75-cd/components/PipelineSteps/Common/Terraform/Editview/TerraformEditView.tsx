@@ -66,6 +66,7 @@ import { FormMultiTypeCheckboxField } from '@common/components'
 import StepAWSAuthentication from '@platform/connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { TFMonaco } from './TFMonacoEditor'
 
 import {
@@ -115,6 +116,7 @@ export default function TerraformEditView(
   const { getString } = useStrings()
 
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
     orgIdentifier: string
@@ -458,7 +460,7 @@ export default function TerraformEditView(
           formik={formik}
           name={'spec.configuration.skipRefreshCommand'}
           label={getString('cd.skipRefreshCommand')}
-          multiTypeTextbox={{ expressions, allowableTypes }}
+          multiTypeTextbox={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           disabled={readonly}
           setToFalseWhenEmpty
         />
@@ -532,7 +534,7 @@ export default function TerraformEditView(
         projectIdentifier={projectIdentifier}
         orgIdentifier={orgIdentifier}
         style={{ marginBottom: 10 }}
-        multiTypeProps={{ expressions, allowableTypes }}
+        multiTypeProps={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
         gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
         disabled={readonly}
       />
@@ -603,7 +605,12 @@ export default function TerraformEditView(
                 <FormMultiTypeDurationField
                   name="timeout"
                   label={getString('pipelineSteps.timeoutLabel')}
-                  multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
+                  multiTypeDurationProps={{
+                    enableConfigureOptions: true,
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   disabled={readonly}
                 />
               </div>
@@ -635,7 +642,11 @@ export default function TerraformEditView(
                   name="spec.provisionerIdentifier"
                   placeholder={getString('pipeline.terraformStep.provisionerIdentifier')}
                   label={getString('pipelineSteps.provisionerIdentifier')}
-                  multiTextInputProps={{ expressions, allowableTypes }}
+                  multiTextInputProps={{
+                    expressions,
+                    allowableTypes,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                  }}
                   disabled={readonly}
                 />
                 {getMultiTypeFromValue(values.spec?.provisionerIdentifier) === MultiTypeInputType.RUNTIME && (
@@ -712,7 +723,11 @@ export default function TerraformEditView(
                                   name="spec.configuration.spec.workspace"
                                   placeholder={getString('pipeline.terraformStep.workspace')}
                                   label={getString('pipelineSteps.workspace')}
-                                  multiTextInputProps={{ expressions, allowableTypes }}
+                                  multiTextInputProps={{
+                                    expressions,
+                                    allowableTypes,
+                                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                                  }}
                                   isOptional={true}
                                   disabled={readonly}
                                 />
@@ -837,7 +852,8 @@ export default function TerraformEditView(
                                 expressions,
                                 allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                                   item => !isMultiTypeRuntime(item)
-                                ) as AllowedTypes
+                                ) as AllowedTypes,
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                               }}
                               name={`spec.${fieldPath}.spec.targets`}
                               placeholder={getString('cd.enterTragets')}
@@ -859,7 +875,8 @@ export default function TerraformEditView(
                                 expressions,
                                 allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                                   item => !isMultiTypeRuntime(item)
-                                ) as AllowedTypes
+                                ) as AllowedTypes,
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                               }}
                               name={`spec.${fieldPath}.spec.environmentVariables`}
                               multiTypeFieldSelectorProps={{
@@ -885,7 +902,11 @@ export default function TerraformEditView(
                               formik={formik as FormikProps<unknown>}
                               name={skipStateStoragePath}
                               label={getString('cd.skipStateStorage')}
-                              multiTypeTextbox={{ expressions, allowableTypes }}
+                              multiTypeTextbox={{
+                                expressions,
+                                allowableTypes,
+                                newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                              }}
                               disabled={readonly}
                             />
                             {getMultiTypeFromValue(skipStateStorageValue) === MultiTypeInputType.RUNTIME && (

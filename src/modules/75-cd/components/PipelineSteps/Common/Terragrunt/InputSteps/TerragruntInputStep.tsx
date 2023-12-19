@@ -21,6 +21,7 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { TerragruntData, TerragruntProps } from '../TerragruntInterface'
 import ConfigInputs from './ConfigSection'
 import { TerraformStoreTypes } from '../../Terraform/TerraformInterfaces'
@@ -35,6 +36,7 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
   const { getString } = useStrings()
   const { inputSetData, readonly, path, allowableTypes, stepViewType, onUpdate, onChange } = props
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const template = get(inputSetData, 'template')
   const config = get(template, 'spec.configuration')
   /* istanbul ignore next */
@@ -59,7 +61,8 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
               },
               allowableTypes,
               expressions,
-              disabled: readonly
+              disabled: readonly,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             fieldPath={'timeout'}
             template={template}
@@ -75,7 +78,8 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -95,7 +99,8 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
           fieldPath={'spec.configuration.spec.moduleConfig.path'}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
       )}
@@ -137,7 +142,8 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           configureOptionsProps={{
             isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -213,7 +219,8 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
                 name={`${path}.spec.configuration.commandFlags[${terragruntFlagIdx}].flag`}
                 multiTextInputProps={{
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
                 label={`${terragruntCommandFlag.commandType}: ${getString('flag')}`}
                 fieldPath={`spec.configuration.commandFlags[${terragruntFlagIdx}].flag`}

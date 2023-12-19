@@ -35,6 +35,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { Connectors } from '@platform/connectors/constants'
 import { isValueRuntimeInput } from '@common/utils/utils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { ScriptWizard } from './ScriptWizard/ScriptWizard'
 import { ScopeTypes, AzureBlueprintProps } from './AzureBlueprintTypes.types'
 
@@ -52,6 +53,7 @@ export const AzureBlueprintRef = (
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [showModal, setShowModal] = useState(false)
   const [connectorView, setConnectorView] = useState(false)
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   /* istanbul ignore next */
   const handleConnectorViewChange = (isConnectorView: boolean): void => {
@@ -130,7 +132,12 @@ export const AzureBlueprintRef = (
               <FormMultiTypeDurationField
                 name="timeout"
                 label={getString('pipelineSteps.timeoutLabel')}
-                multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
+                multiTypeDurationProps={{
+                  enableConfigureOptions: true,
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
                 disabled={readonly}
               />
             </div>
@@ -148,7 +155,11 @@ export const AzureBlueprintRef = (
                 projectIdentifier={projectIdentifier}
                 orgIdentifier={orgIdentifier}
                 style={{ marginBottom: 10 }}
-                multiTypeProps={{ expressions, allowableTypes }}
+                multiTypeProps={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
                 disabled={readonly}
                 width={384}
                 setRefValue
@@ -171,7 +182,7 @@ export const AzureBlueprintRef = (
                 disabled={readonly}
                 name="spec.configuration.assignmentName"
                 label={getString('cd.azureBlueprint.assignmentName')}
-                multiTextInputProps={{ expressions }}
+                multiTextInputProps={{ expressions, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
               />
               {
                 /* istanbul ignore next */

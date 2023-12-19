@@ -24,6 +24,7 @@ import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { ConnectorConfigureOptions } from '@platform/connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { AwsSamDeployStepFormikValues } from '../../AwsSam/AwsSamDeployStep/AwsSamDeployStepEdit'
 import type { AwsSamBuildStepFormikValues } from '../../AwsSam/AwsSamBuildStep/AwsSamBuildStepEdit'
 import type { ServerlessAwsLambdaPrepareRollbackV2StepFormikValues } from '../../ServerlessAwsLambda/ServerlessAwsLambdaPrepareRollbackV2Step/ServerlessAwsLambdaPrepareRollbackV2StepEdit'
@@ -67,6 +68,7 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const renderConnectorField = (fieldName: string, fieldLabel: string): React.ReactElement => {
     return (
@@ -79,7 +81,7 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          multiTypeProps={{ expressions, allowableTypes }}
+          multiTypeProps={{ expressions, allowableTypes, newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT }}
           type={serverlessStepAllowedConnectorTypes}
           enableConfigureOptions={false}
           selected={get(formik?.values, fieldName) as string}
@@ -123,7 +125,8 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
           multiTextInputProps={{
             expressions,
             disabled: readonly,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
         {getMultiTypeFromValue(get(formik.values, versionFieldName)) === MultiTypeInputType.RUNTIME && !readonly && (
@@ -147,7 +150,8 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
             name={commandOptionsFieldName}
             multiTextInputProps={{
               expressions,
-              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             multiTypeFieldSelectorProps={{
               label: defaultTo(commandOptionsFieldLabel, ''),
@@ -172,7 +176,8 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
           multiTypeTextbox={{
             expressions,
             allowableTypes,
-            disabled: readonly
+            disabled: readonly,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           disabled={readonly}
           configureOptionsProps={{ hideExecutionTimeField: true }}
@@ -190,7 +195,8 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
           multiTypeInputProps={{
             expressions,
             allowableTypes,
-            selectProps: { addClearBtn: true, items: getImagePullPolicyOptions(getString) }
+            selectProps: { addClearBtn: true, items: getImagePullPolicyOptions(getString) },
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
         {getMultiTypeFromValue(formik.values.spec.imagePullPolicy) === MultiTypeInputType.RUNTIME && (
@@ -216,7 +222,8 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
           multiTextInputProps={{
             expressions,
             disabled: readonly,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
         {getMultiTypeFromValue(formik.values.spec?.runAsUser) === MultiTypeInputType.RUNTIME && !readonly && (
@@ -243,7 +250,8 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
           multiTextInputProps={{
             expressions,
             disabled: readonly,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
         {getMultiTypeFromValue(formik.values.spec?.resources?.limits?.memory) === MultiTypeInputType.RUNTIME &&
@@ -271,7 +279,8 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
           multiTextInputProps={{
             expressions,
             disabled: readonly,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
         />
         {getMultiTypeFromValue(formik.values.spec?.resources?.limits?.cpu) === MultiTypeInputType.RUNTIME && !readonly && (
@@ -291,7 +300,11 @@ export function AwsSamServerlessStepCommonOptionalFieldsEdit(
 
       <MultiTypeMap
         name={'spec.envVariables'}
-        valueMultiTextInputProps={{ expressions, allowableTypes }}
+        valueMultiTextInputProps={{
+          expressions,
+          allowableTypes,
+          newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+        }}
         multiTypeFieldSelectorProps={{
           label: getString('environmentVariables'),
           disableTypeSelection: true

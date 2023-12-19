@@ -32,6 +32,7 @@ import { useStrings } from 'framework/strings'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { HarnessOption } from '@pipeline/components/StartupScriptSelection/HarnessOption'
 import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { formInputNames, formikOnChangeNames, stepTwoValidationSchema, getPath } from './ConfigFileStoreHelper'
 import type { Connector } from './ConfigFileStoreHelper'
 import css from './ConfigFileStore.module.scss'
@@ -61,6 +62,7 @@ export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreSt
 }) => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const gitFetchTypes: SelectOption[] = [
     { label: getString('gitFetchTypes.fromBranch'), value: getString('pipelineSteps.deploy.inputSet.branch') },
     { label: getString('gitFetchTypes.fromCommit'), value: getString('pipelineSteps.commitIdValue') }
@@ -137,7 +139,11 @@ export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreSt
                       label={getString('pipelineSteps.repoName')}
                       name={formInputNames(path).repoName}
                       placeholder={getString('pipelineSteps.repoName')}
-                      multiTextInputProps={{ expressions, allowableTypes }}
+                      multiTextInputProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                     />
                     {
                       /* istanbul ignore next */
@@ -172,7 +178,11 @@ export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreSt
                       label={getString('pipelineSteps.deploy.inputSet.branch')}
                       placeholder={getString('pipeline.manifestType.branchPlaceholder')}
                       name={formInputNames(path).branch}
-                      multiTextInputProps={{ expressions, allowableTypes }}
+                      multiTextInputProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                     />
                     {
                       /* istanbul ignore next */
@@ -201,7 +211,11 @@ export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreSt
                       label={getString('pipeline.manifestType.commitId')}
                       placeholder={getString('pipeline.manifestType.commitPlaceholder')}
                       name={formInputNames(path).commitId}
-                      multiTextInputProps={{ expressions, allowableTypes }}
+                      multiTextInputProps={{
+                        expressions,
+                        allowableTypes,
+                        newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                      }}
                     />
                     {
                       /* istanbul ignore next */
@@ -229,7 +243,11 @@ export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreSt
                     label={getString('common.git.folderPath')}
                     placeholder={getString('pipeline.manifestType.folderPathPlaceholder')}
                     name={formInputNames(path).folderPath}
-                    multiTextInputProps={{ expressions, allowableTypes }}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes,
+                      newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                    }}
                     tooltipProps={{ dataTooltipId: 'configFolderPath' }}
                   />
                   {

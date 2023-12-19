@@ -15,6 +15,7 @@ import { useStrings } from 'framework/strings'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { isWinRmDeploymentType } from '@pipeline/utils/stageHelpers'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { CommandUnitType, SourceType, sourceTypeOptions } from '../CommandScriptsTypes'
 import css from './CommandEdit.module.scss'
 
@@ -30,6 +31,7 @@ export function CopyCommandEdit(props: CopyCommandEditProps): React.ReactElement
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   const sourceOptions = React.useMemo(() => {
     return isWinRmDeploymentType(deploymentType)
@@ -73,7 +75,8 @@ export function CopyCommandEdit(props: CopyCommandEditProps): React.ReactElement
           multiTextInputProps={{
             multiTextInputProps: {
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             },
             disabled: readonly,
             placeholder: getString('cd.steps.commands.destinationPathPlaceholder')

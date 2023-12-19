@@ -46,7 +46,7 @@ export const AzureWebAppSwapSlotRef = (
   const query = useQueryParams()
   const sectionId = (query as any).sectionId || ''
   const { expressions } = useVariablesExpression()
-  const { CDS_AZURE_WEBAPP_NG_LISTING_APP_NAMES_AND_SLOTS } = useFeatureFlags()
+  const { CDS_AZURE_WEBAPP_NG_LISTING_APP_NAMES_AND_SLOTS, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <Formik
@@ -98,7 +98,12 @@ export const AzureWebAppSwapSlotRef = (
               <FormMultiTypeDurationField
                 name="timeout"
                 label={getString('pipelineSteps.timeoutLabel')}
-                multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
+                multiTypeDurationProps={{
+                  enableConfigureOptions: true,
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
                 disabled={readonly}
               />
             </div>
@@ -113,6 +118,7 @@ export const AzureWebAppSwapSlotRef = (
                   label={getString('cd.steps.azureWebAppInfra.targetSlotTitle')}
                   multiTextInputProps={{
                     expressions,
+                    newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                     multitypeInputValue:
                       CDS_AZURE_WEBAPP_NG_LISTING_APP_NAMES_AND_SLOTS && isMultiEnv(selectedStage)
                         ? MultiTypeInputType.EXPRESSION

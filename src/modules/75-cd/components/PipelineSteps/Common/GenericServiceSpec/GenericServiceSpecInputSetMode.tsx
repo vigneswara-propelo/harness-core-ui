@@ -37,6 +37,7 @@ import manifestSourceBaseFactory from '@cd/factory/ManifestSourceFactory/Manifes
 import type { ChildPipelineMetadataType } from '@pipeline/components/PipelineInputSetForm/ChainedPipelineInputSetUtils'
 import serviceHookSourceBaseFactory from '@cd/factory/ServiceHookSourceFactory/ServiceHookSourceFactory'
 import { StoreMetadata } from '@modules/10-common/constants/GitSyncTypes'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import type { K8SDirectServiceStep } from '../../K8sServiceSpec/K8sServiceSpecInterface'
 import { KubernetesArtifacts } from '../../K8sServiceSpec/KubernetesArtifacts/KubernetesArtifacts'
 import { KubernetesManifests } from '../../K8sServiceSpec/KubernetesManifests/KubernetesManifests'
@@ -98,6 +99,7 @@ const GenericServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const commonProps = {
     stepViewType,
     formik,
@@ -147,7 +149,8 @@ const GenericServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           fieldPath={`ecsTaskDefinitionArn`}
           template={template}
@@ -163,7 +166,8 @@ const GenericServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps
           disabled={readonly}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
           }}
           fieldPath={`release.name`}
           template={template}

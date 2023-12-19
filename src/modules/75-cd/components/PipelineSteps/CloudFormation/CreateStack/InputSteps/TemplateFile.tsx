@@ -16,6 +16,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { TFMonaco } from '../../../Common/Terraform/Editview/TFMonacoEditor'
 import { ConnectorMap, isRuntime, ConnectorLabelMap, ConnectorTypes } from '../../CloudFormationHelper'
 import type { CreateStackData, CreateStackProps } from '../../CloudFormationInterfaces.types'
@@ -27,6 +28,7 @@ export default function TemplateFileInputs<T extends CreateStackData = CreateSta
   const { inputSetData, readonly, path, allowableTypes, formik } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [isAccount, setIsAccount] = useState<boolean>(false)
   /* istanbul ignore next */
@@ -55,7 +57,11 @@ export default function TemplateFileInputs<T extends CreateStackData = CreateSta
                 projectIdentifier={projectIdentifier}
                 orgIdentifier={orgIdentifier}
                 style={{ marginBottom: 10 }}
-                multiTypeProps={{ expressions, allowableTypes }}
+                multiTypeProps={{
+                  expressions,
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
+                }}
                 disabled={readonly}
                 onChange={(value: any, _unused, _notUsed) => {
                   /* istanbul ignore next */
@@ -90,7 +96,8 @@ export default function TemplateFileInputs<T extends CreateStackData = CreateSta
                 disabled={readonly}
                 multiTextInputProps={{
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
               />
             </div>
@@ -106,7 +113,8 @@ export default function TemplateFileInputs<T extends CreateStackData = CreateSta
                 disabled={readonly}
                 multiTextInputProps={{
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
               />
             </div>
@@ -124,7 +132,8 @@ export default function TemplateFileInputs<T extends CreateStackData = CreateSta
                 disabled={readonly}
                 multiTextInputProps={{
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
               />
             </div>
@@ -140,7 +149,8 @@ export default function TemplateFileInputs<T extends CreateStackData = CreateSta
                 disabled={readonly}
                 multiTextInputProps={{
                   expressions,
-                  allowableTypes
+                  allowableTypes,
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
               />
             </div>

@@ -15,6 +15,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { useFeatureFlags } from '@modules/10-common/hooks/useFeatureFlag'
 import { isRuntime } from '../CloudFormationHelper'
 import type { RollbackStackData, RollbackStackProps } from '../CloudFormationInterfaces.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -25,6 +26,7 @@ export function RollbackStackInputStepRef<T extends RollbackStackData = Rollback
   const { inputSetData, readonly, path, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
 
   return (
     <FormikForm>
@@ -41,7 +43,8 @@ export function RollbackStackInputStepRef<T extends RollbackStackData = Rollback
               },
               allowableTypes,
               expressions,
-              disabled: readonly
+              disabled: readonly,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             template={inputSetData?.template}
             fieldPath={'timeout'}
@@ -58,7 +61,8 @@ export function RollbackStackInputStepRef<T extends RollbackStackData = Rollback
             disabled={readonly}
             multiTextInputProps={{
               expressions,
-              allowableTypes
+              allowableTypes,
+              newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
             }}
             configureOptionsProps={{
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
