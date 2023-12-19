@@ -59,7 +59,7 @@ const authAccessIdValidation = (
 
 export const editViewValidateFieldsConfig = (data: AWSSecurityHubStepData) => {
   const editViewValidationConfig = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
     ...authFieldsValidationConfig(data),
     ...additionalFieldsValidationConfigEitView,
@@ -71,7 +71,7 @@ export const editViewValidateFieldsConfig = (data: AWSSecurityHubStepData) => {
 
 export function getInputSetViewValidateFieldsConfig(data: AWSSecurityHubStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data, StepViewType.InputSet),
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     ...additionalFieldsValidationConfigInputSet,
     ...authAccessIdValidation(data, StepViewType.InputSet)

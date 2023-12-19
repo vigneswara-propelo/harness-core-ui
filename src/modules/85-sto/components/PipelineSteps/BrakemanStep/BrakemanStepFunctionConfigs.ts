@@ -24,7 +24,7 @@ export const transformValuesFieldsConfig = (data: BrakemanStepData): Field[] => 
 
 export const editViewValidateFieldsConfig = (data: BrakemanStepData) => {
   const editViewValidationConfig = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
     ...additionalFieldsValidationConfigEitView
   ]
@@ -34,7 +34,7 @@ export const editViewValidateFieldsConfig = (data: BrakemanStepData) => {
 
 export function getInputSetViewValidateFieldsConfig(data: BrakemanStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data, StepViewType.InputSet),
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     ...additionalFieldsValidationConfigInputSet
   ]

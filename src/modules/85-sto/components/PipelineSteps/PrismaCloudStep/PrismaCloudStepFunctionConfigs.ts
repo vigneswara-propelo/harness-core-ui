@@ -94,7 +94,7 @@ export const transformValuesFieldsConfig = (data: PrismaCloudStepData): Field[] 
 
 export const editViewValidateFieldsConfig = (data: PrismaCloudStepData): InputSetViewValidateFieldsConfig[] => {
   const editViewValidationConfig = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data),
     ...authFieldsValidationConfig(data),
     ...extraAuthFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
@@ -108,7 +108,7 @@ export const editViewValidateFieldsConfig = (data: PrismaCloudStepData): InputSe
 
 export function getInputSetViewValidateFieldsConfig(data: PrismaCloudStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data, StepViewType.InputSet),
     ...authFieldsValidationConfig(data, StepViewType.InputSet),
     ...extraAuthFieldsValidationConfig(data, StepViewType.InputSet),
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),

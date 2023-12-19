@@ -41,6 +41,7 @@ stepField:
   config: Scan Configuration
   target:
     variant: Variant
+    detection: Target and Variant Detection
   image:
     fieldsHeading: Container Image
   authAccessId: Access Id
@@ -104,6 +105,8 @@ trial:
 sbom:
   fieldsHeading: Software Bill of Materials
   generateSbom: Generate SBOM
+auto: Auto
+manual: Manual
 re2RegularExpression: RE2-compatible Regular Expression
 defaultBaselineRegExForTargets: Default Baseline RegEx for Targets
 codeRepositories: Code repositories

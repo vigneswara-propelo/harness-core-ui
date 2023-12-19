@@ -25,7 +25,7 @@ export const transformValuesFieldsConfig = (data: GrypeStepData): Field[] => {
 
 export const editViewValidateFieldsConfig = (data: GrypeStepData) => {
   const editViewValidationConfig = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
     ...imageFieldsValidationConfig(data),
     ...additionalFieldsValidationConfigEitView
@@ -36,7 +36,7 @@ export const editViewValidateFieldsConfig = (data: GrypeStepData) => {
 
 export function getInputSetViewValidateFieldsConfig(data: GrypeStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data, StepViewType.InputSet),
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     ...imageFieldsValidationConfig(data, StepViewType.InputSet),
     ...additionalFieldsValidationConfigInputSet

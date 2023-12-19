@@ -10872,6 +10872,7 @@ export interface StringsMap {
   'sto.Critical': string
   'sto.Info': string
   'sto.Unassigned': string
+  'sto.auto': string
   'sto.codeRepositories': string
   'sto.containerImages': string
   'sto.continuous': string
@@ -10882,6 +10883,7 @@ export interface StringsMap {
   'sto.gettingStarted': string
   'sto.infrastructureConfigurations': string
   'sto.issues': string
+  'sto.manual': string
   'sto.noSecurityIssues': string
   'sto.noSecurityResults': string
   'sto.processingSecurityResults': string
@@ -10945,6 +10947,7 @@ export interface StringsMap {
   'sto.stepField.ingestion.file': string
   'sto.stepField.mode': string
   'sto.stepField.optionLabels.logLevel.debug': string
+  'sto.stepField.target.detection': string
   'sto.stepField.target.variant': string
   'sto.stepField.tool.context': string
   'sto.stepField.tool.exclude': string

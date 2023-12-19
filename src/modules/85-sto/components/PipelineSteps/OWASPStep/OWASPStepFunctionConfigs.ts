@@ -24,7 +24,7 @@ export const transformValuesFieldsConfig = (data: OWASPStepData): Field[] => {
 
 export const editViewValidateFieldsConfig = (data: OWASPStepData) => {
   const editViewValidationConfig = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
     ...additionalFieldsValidationConfigEitView
   ]
@@ -34,7 +34,7 @@ export const editViewValidateFieldsConfig = (data: OWASPStepData) => {
 
 export function getInputSetViewValidateFieldsConfig(data: OWASPStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data, StepViewType.InputSet),
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     ...additionalFieldsValidationConfigInputSet
   ]

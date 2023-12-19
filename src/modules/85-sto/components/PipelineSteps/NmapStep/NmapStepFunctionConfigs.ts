@@ -28,7 +28,7 @@ export const transformValuesFieldsConfig = (data: NmapStepData): Field[] => {
 
 export const editViewValidateFieldsConfig = (data: NmapStepData) => {
   const editViewValidationConfig = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
     ...additionalFieldsValidationConfigEitView,
     ...instanceFieldsValidationConfig(data)
@@ -39,7 +39,7 @@ export const editViewValidateFieldsConfig = (data: NmapStepData) => {
 
 export function getInputSetViewValidateFieldsConfig(data: NmapStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data, StepViewType.InputSet),
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     ...additionalFieldsValidationConfigInputSet,
     ...instanceFieldsValidationConfig(data, StepViewType.InputSet)

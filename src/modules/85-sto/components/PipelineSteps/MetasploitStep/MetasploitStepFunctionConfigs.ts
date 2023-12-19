@@ -73,7 +73,7 @@ export const transformValuesFieldsConfig = (data: MetasploitStepData): Field[] =
 
 export const editViewValidateFieldsConfig = (data: MetasploitStepData) => {
   const editViewValidationConfig = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
     ...additionalFieldsValidationConfigEitView,
     ...instanceFieldsValidationConfig
@@ -84,7 +84,7 @@ export const editViewValidateFieldsConfig = (data: MetasploitStepData) => {
 
 export function getInputSetViewValidateFieldsConfig(data: MetasploitStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data, StepViewType.InputSet),
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     ...additionalFieldsValidationConfigInputSet,
     ...instanceFieldsValidationConfig

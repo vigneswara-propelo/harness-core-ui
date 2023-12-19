@@ -19,7 +19,7 @@ export const transformValuesFieldsConfig = (data: GitleaksStepData): Field[] => 
 
 export const editViewValidateFieldsConfig = (data: GitleaksStepData) => {
   const editViewValidationConfig = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
     {
       name: 'spec.limitMemory',
@@ -36,7 +36,7 @@ export const editViewValidateFieldsConfig = (data: GitleaksStepData) => {
 
 export function getInputSetViewValidateFieldsConfig(data: GitleaksStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data, StepViewType.InputSet),
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     {
       name: 'spec.resources.limits.memory',

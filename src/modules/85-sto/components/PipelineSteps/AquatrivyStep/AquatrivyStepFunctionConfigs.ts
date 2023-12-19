@@ -27,7 +27,7 @@ export const transformValuesFieldsConfig = (data: AquatrivyStepData): Field[] =>
 
 export const editViewValidateFieldsConfig = (data: AquatrivyStepData) => {
   const editViewValidationConfig = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
     ...imageFieldsValidationConfig(data),
     ...sbomFieldValidationConfig(),
@@ -39,7 +39,7 @@ export const editViewValidateFieldsConfig = (data: AquatrivyStepData) => {
 
 export function getInputSetViewValidateFieldsConfig(data: AquatrivyStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data, StepViewType.InputSet),
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     ...imageFieldsValidationConfig(data, StepViewType.InputSet),
     ...sbomFieldValidationConfig(),

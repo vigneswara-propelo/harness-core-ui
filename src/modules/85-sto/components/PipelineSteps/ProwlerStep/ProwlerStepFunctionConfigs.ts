@@ -85,7 +85,7 @@ export const editViewValidateFieldsConfig = (data: ProwlerStepData) => {
   })
 
   const editViewValidationConfig = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data),
     ...authFieldsValidationConfig(data),
     ...extraAuthFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
@@ -97,7 +97,7 @@ export const editViewValidateFieldsConfig = (data: ProwlerStepData) => {
 
 export function getInputSetViewValidateFieldsConfig(data: ProwlerStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data, StepViewType.InputSet),
     ...authFieldsValidationConfig(data, StepViewType.InputSet),
     ...extraAuthFieldsValidationConfig(data, StepViewType.InputSet),
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),

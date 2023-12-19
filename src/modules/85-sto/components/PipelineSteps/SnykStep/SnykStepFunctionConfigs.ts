@@ -33,7 +33,7 @@ export const transformValuesFieldsConfig = (data: SnykStepData): Field[] => {
 
 export const editViewValidateFieldsConfig = (data: SnykStepData) => {
   const editViewValidationConfig = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data),
     ...authFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
     ...imageFieldsValidationConfig(data),
@@ -46,7 +46,7 @@ export const editViewValidateFieldsConfig = (data: SnykStepData) => {
 
 export function getInputSetViewValidateFieldsConfig(data: SnykStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data, StepViewType.InputSet),
     ...authFieldsValidationConfig(data, StepViewType.InputSet),
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     ...imageFieldsValidationConfig(data, StepViewType.InputSet),

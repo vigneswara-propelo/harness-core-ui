@@ -64,7 +64,7 @@ const toolFieldsValidationConfig = (
 
 export const editViewValidateFieldsConfig = (data: ZapStepData) => {
   const editViewValidationConfig = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
     ...imageFieldsValidationConfig(data),
     ...additionalFieldsValidationConfigEitView,
@@ -77,7 +77,7 @@ export const editViewValidateFieldsConfig = (data: ZapStepData) => {
 
 export function getInputSetViewValidateFieldsConfig(data: ZapStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data, StepViewType.InputSet),
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     ...imageFieldsValidationConfig(data, StepViewType.InputSet),
     ...additionalFieldsValidationConfigInputSet,

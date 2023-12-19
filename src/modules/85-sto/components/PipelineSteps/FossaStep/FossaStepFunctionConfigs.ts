@@ -19,7 +19,7 @@ export const transformValuesFieldsConfig = (data: FossaStepData): Field[] => tra
 
 export const editViewValidateFieldsConfig = (data: FossaStepData) => {
   const editViewValidationConfig = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
     {
       name: 'spec.limitMemory',
@@ -36,7 +36,7 @@ export const editViewValidateFieldsConfig = (data: FossaStepData) => {
 
 export function getInputSetViewValidateFieldsConfig(data: FossaStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data, StepViewType.InputSet),
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     {
       name: 'spec.resources.limits.memory',

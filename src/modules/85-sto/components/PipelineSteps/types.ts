@@ -28,9 +28,10 @@ export type InputSetViewValidateFieldsConfig = {
 type TargetType = 'repository' | 'container' | 'instance' | 'configuration'
 
 type Target = {
+  detection?: 'auto' | 'manual'
   type: TargetType
-  name: string
-  variant: string
+  name?: string
+  variant?: string
   workspace?: string
 }
 

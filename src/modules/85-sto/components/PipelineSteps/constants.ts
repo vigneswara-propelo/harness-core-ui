@@ -5,12 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { UseStringsReturn } from 'framework/strings'
+import { IOptionProps } from '@blueprintjs/core'
+import { UseStringsReturn } from 'framework/strings'
 import { Types as ValidationFieldTypes } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { Types as TransformValuesTypes } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { StringsMap } from 'stringTypes'
 import type { InputSetViewValidateFieldsConfig, SecurityStepData, SecurityStepSpec } from './types'
 import type { SecurityFieldProps } from './SecurityField'
 
@@ -240,6 +242,14 @@ export const severityOptions = (getString: getStringProp) => [
   }
 ]
 
+export const detectionModeRadioOptions = (
+  getString: getStringProp,
+  props?: { autoDisabled?: boolean }
+): IOptionProps[] => [
+  { label: getString('sto.auto' as keyof StringsMap), value: 'auto', disabled: props?.autoDisabled },
+  { label: getString('sto.manual' as keyof StringsMap), value: 'manual' }
+]
+
 export const specPrivileged = 'spec.privileged'
 export const specSettings = 'spec.settings'
 export const specRunAsUser = 'spec.runAsUser'
@@ -277,15 +287,7 @@ export const commonFieldsTransformConfig = (data: SecurityStepData<SecurityStepS
       type: TransformValuesTypes.Text
     },
     {
-      name: 'spec.target.name',
-      type: TransformValuesTypes.Text
-    },
-    {
       name: 'spec.target.type',
-      type: TransformValuesTypes.Text
-    },
-    {
-      name: 'spec.target.variant',
       type: TransformValuesTypes.Text
     },
     {
@@ -393,6 +395,26 @@ export const commonFieldsTransformConfig = (data: SecurityStepData<SecurityStepS
       name: 'spec.target.workspace',
       type: TransformValuesTypes.Text
     })
+  }
+
+  if (['repository', 'container', 'instance'].includes(data.spec.target?.type)) {
+    transformValuesFieldsConfigValues.push({
+      name: 'spec.target.detection',
+      type: TransformValuesTypes.Text
+    })
+  }
+
+  if (data.spec.target?.detection !== 'auto') {
+    transformValuesFieldsConfigValues.push(
+      {
+        name: 'spec.target.name',
+        type: TransformValuesTypes.Text
+      },
+      {
+        name: 'spec.target.variant',
+        type: TransformValuesTypes.Text
+      }
+    )
   }
 
   return transformValuesFieldsConfigValues
@@ -527,105 +549,123 @@ export const instanceFieldsValidationConfig = (data: SecurityStepData<SecuritySt
       ] as InputSetViewValidateFieldsConfig[])
     : []
 
-export const commonFieldsValidationConfig: InputSetViewValidateFieldsConfig[] = [
-  {
-    name: 'identifier',
-    type: ValidationFieldTypes.Identifier,
-    label: 'identifier',
-    isRequired: true
-  },
-  {
-    name: 'name',
-    type: ValidationFieldTypes.Name,
-    label: 'pipelineSteps.stepNameLabel',
-    isRequired: true
-  },
-  {
-    name: 'spec.mode',
-    type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.mode',
-    isRequired: true
-  },
-  {
-    name: 'spec.config',
-    type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.config',
-    isRequired: true
-  },
-  {
-    name: 'spec.target.name',
-    type: ValidationFieldTypes.Text,
-    label: 'name',
-    isRequired: true
-  },
-  {
-    name: 'spec.target.type',
-    type: ValidationFieldTypes.Text,
-    label: 'typeLabel',
-    isRequired: true
-  },
-  {
-    name: 'spec.target.variant',
-    type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.target.variant',
-    isRequired: true
-  },
-  {
-    name: 'spec.target.workspace',
-    type: ValidationFieldTypes.Text,
-    label: 'pipelineSteps.workspace'
-  },
-  {
-    name: 'spec.advanced.log.level',
-    type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.advanced.logLevel'
-  },
-  {
-    name: 'spec.advanced.log.serializer',
-    type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.advanced.serializer'
-  },
-  {
-    name: 'spec.advanced.args.cli',
-    type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.advanced.cli'
-  },
-  {
-    name: 'spec.advanced.fail_on_severity',
-    type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.advanced.failOnSeverity'
-  },
-  {
-    name: 'spec.advanced.include_raw',
-    type: ValidationFieldTypes.Boolean,
-    label: 'sto.stepField.advanced.includeRaw'
-  },
-  {
-    name: specSettings,
-    type: ValidationFieldTypes.Map
-  },
-  {
-    name: specRunAsUser,
-    type: ValidationFieldTypes.Numeric
-  },
-  {
-    name: specPrivileged,
-    type: ValidationFieldTypes.Boolean,
-    label: 'pipeline.buildInfra.privileged'
-  },
-  {
-    name: 'timeout',
-    type: ValidationFieldTypes.Timeout
-  },
-  {
-    name: 'spec.limitMemory',
-    type: ValidationFieldTypes.LimitMemory
-  },
-  {
-    name: 'spec.limitCPU',
-    type: ValidationFieldTypes.LimitCPU
-  }
-]
+export const commonFieldsValidationConfig = (
+  data: SecurityStepData<SecurityStepSpec>,
+  stepViewType?: StepViewType
+): InputSetViewValidateFieldsConfig[] => {
+  const config: InputSetViewValidateFieldsConfig[] = [
+    {
+      name: 'identifier',
+      type: ValidationFieldTypes.Identifier,
+      label: 'identifier',
+      isRequired: true
+    },
+    {
+      name: 'name',
+      type: ValidationFieldTypes.Name,
+      label: 'pipelineSteps.stepNameLabel',
+      isRequired: true
+    },
+    {
+      name: 'spec.mode',
+      type: ValidationFieldTypes.Text,
+      label: 'sto.stepField.mode',
+      isRequired: true
+    },
+    {
+      name: 'spec.config',
+      type: ValidationFieldTypes.Text,
+      label: 'sto.stepField.config',
+      isRequired: true
+    },
+    {
+      name: 'spec.target.detection',
+      type: ValidationFieldTypes.Text,
+      label: 'sto.stepField.target.detection',
+      isRequired: stepViewType === StepViewType.InputSet
+    },
+    {
+      name: 'spec.target.name',
+      type: ValidationFieldTypes.Text,
+      label: 'name',
+      isRequired: data.spec.target?.detection === 'manual' || data.spec.target?.type === 'configuration'
+    },
+    {
+      name: 'spec.target.type',
+      type: ValidationFieldTypes.Text,
+      label: 'typeLabel',
+      isRequired: true
+    },
+    {
+      name: 'spec.target.variant',
+      type: ValidationFieldTypes.Text,
+      label: 'sto.stepField.target.variant',
+      isRequired: data.spec.target?.detection === 'manual' || data.spec.target?.type === 'configuration'
+    },
+    {
+      name: 'spec.target.workspace',
+      type: ValidationFieldTypes.Text,
+      label: 'pipelineSteps.workspace'
+    },
+    {
+      name: 'spec.advanced.log.level',
+      type: ValidationFieldTypes.Text,
+      label: 'sto.stepField.advanced.logLevel'
+    },
+    {
+      name: 'spec.advanced.log.serializer',
+      type: ValidationFieldTypes.Text,
+      label: 'sto.stepField.advanced.serializer'
+    },
+    {
+      name: 'spec.advanced.args.cli',
+      type: ValidationFieldTypes.Text,
+      label: 'sto.stepField.advanced.cli'
+    },
+    {
+      name: 'spec.advanced.fail_on_severity',
+      type: ValidationFieldTypes.Text,
+      label: 'sto.stepField.advanced.failOnSeverity'
+    },
+    {
+      name: 'spec.advanced.include_raw',
+      type: ValidationFieldTypes.Boolean,
+      label: 'sto.stepField.advanced.includeRaw'
+    },
+    {
+      name: specSettings,
+      type: ValidationFieldTypes.Map
+    },
+    {
+      name: specRunAsUser,
+      type: ValidationFieldTypes.Numeric
+    },
+    {
+      name: specPrivileged,
+      type: ValidationFieldTypes.Boolean,
+      label: 'pipeline.buildInfra.privileged'
+    },
+    {
+      name: 'timeout',
+      type: ValidationFieldTypes.Timeout
+    },
+    {
+      name: 'spec.limitMemory',
+      type: ValidationFieldTypes.LimitMemory
+    },
+    {
+      name: 'spec.limitCPU',
+      type: ValidationFieldTypes.LimitCPU
+    },
+    {
+      name: 'spec.target.detection',
+      type: ValidationFieldTypes.Text,
+      label: 'sto.stepField.target.detection'
+    }
+  ]
+
+  return config
+}
 
 export const additionalFieldsValidationConfigEitView = [
   {
@@ -674,23 +714,49 @@ export const inputSetScanFields = (
       }
     : {}
 
+const getTargetDetectionModeToolTip = (template?: SecurityStepData<SecurityStepSpec>) => {
+  switch (template?.spec.target?.type) {
+    case 'repository':
+      return tooltipIds.targetDetectionModeRepo
+    case 'container':
+      return tooltipIds.targetDetectionModeContainer
+    case 'instance':
+      return tooltipIds.targetDetectionModeInstance
+    default:
+      return tooltipIds.targetDetectionMode
+  }
+}
+
 export const inputSetTargetFields = (
   prefix: string,
+  getString: getStringProp,
   template?: SecurityStepData<SecurityStepSpec>
-): SecurityFieldProps<SecurityStepSpec>['enableFields'] =>
-  template?.spec
+): SecurityFieldProps<SecurityStepSpec>['enableFields'] => {
+  return template?.spec
     ? {
         // Target fields
-        ...(shouldRenderRunTimeInputView(template?.spec.target?.name) && {
-          [getInputSetFieldName(prefix, 'spec.target.name')]: {
-            label: 'name',
-            tooltipId: tooltipIds.targetName
-          }
-        }),
         ...(shouldRenderRunTimeInputView(template?.spec.target?.type) && {
           [getInputSetFieldName(prefix, 'spec.target.type')]: {
             label: 'typeLabel',
             tooltipId: tooltipIds.targetType
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.target?.detection) && {
+          [getInputSetFieldName(prefix, 'spec.target.detection')]: {
+            label: 'sto.stepField.target.detection',
+            tooltipId: getTargetDetectionModeToolTip(template),
+            fieldType: 'radio',
+            radioItems: detectionModeRadioOptions(getString, {
+              autoDisabled:
+                (template.spec.target?.type === 'instance' || template.spec.target?.type === 'container') &&
+                template.spec?.mode === 'ingestion'
+            })
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.target?.name) && {
+          [getInputSetFieldName(prefix, 'spec.target.name')]: {
+            label: 'name',
+            tooltipId: tooltipIds.targetName
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.target?.variant) && {
@@ -707,6 +773,7 @@ export const inputSetTargetFields = (
         })
       }
     : {}
+}
 
 export const inputSetIngestionFields = (
   prefix: string,
@@ -1089,6 +1156,10 @@ export const tooltipIds = {
   mode: getTooltipName('Mode'),
   config: getTooltipName('Config'),
   targetType: getTooltipName('TargetType'),
+  targetDetectionMode: getTooltipName('TargetDetectionMode'),
+  targetDetectionModeRepo: getTooltipName('TargetDetectionModeRepo'),
+  targetDetectionModeContainer: getTooltipName('TargetDetectionModeContainer'),
+  targetDetectionModeInstance: getTooltipName('TargetDetectionModeInstance'),
   targetName: getTooltipName('TargetName'),
   targetVariant: getTooltipName('TargetVariant'),
   targetWorkspace: getTooltipName('TargetWorkspace'),

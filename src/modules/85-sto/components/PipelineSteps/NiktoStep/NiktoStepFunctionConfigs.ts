@@ -28,7 +28,7 @@ export const transformValuesFieldsConfig = (data: NiktoStepData): Field[] => {
 
 export const editViewValidateFieldsConfig = (data: NiktoStepData) => {
   const editViewValidationConfig = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
     ...additionalFieldsValidationConfigEitView,
     ...instanceFieldsValidationConfig(data)
@@ -39,7 +39,7 @@ export const editViewValidateFieldsConfig = (data: NiktoStepData) => {
 
 export function getInputSetViewValidateFieldsConfig(data: NiktoStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data, StepViewType.InputSet),
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     ...additionalFieldsValidationConfigInputSet,
     ...instanceFieldsValidationConfig(data, StepViewType.InputSet)

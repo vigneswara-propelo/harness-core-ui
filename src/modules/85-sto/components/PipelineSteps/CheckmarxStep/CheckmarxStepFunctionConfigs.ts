@@ -120,7 +120,7 @@ export const editViewValidateFieldsConfig = (data: CheckmarxStepData) => {
   })
 
   const editViewValidationConfig = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data),
     ...authFieldsValidationConfig(data),
     ...extraAuthFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
@@ -134,7 +134,7 @@ export const editViewValidateFieldsConfig = (data: CheckmarxStepData) => {
 
 export function getInputSetViewValidateFieldsConfig(data: CheckmarxStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data, StepViewType.InputSet),
     ...authFieldsValidationConfig(data, StepViewType.InputSet),
     ...extraAuthFieldsValidationConfig(data, StepViewType.InputSet),
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),

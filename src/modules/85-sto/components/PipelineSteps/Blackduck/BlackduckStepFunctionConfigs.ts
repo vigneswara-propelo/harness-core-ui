@@ -137,7 +137,7 @@ const extraAuthFieldsValidationConfig = (
 
 export const editViewValidateFieldsConfig = (data: BlackduckStepData) => {
   const editViewValidationConfig = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data),
     ...authFieldsValidationConfig(data),
     ...toolFieldsValidationConfig(data),
     ...extraAuthFieldsValidationConfig(data),
@@ -152,7 +152,7 @@ export const editViewValidateFieldsConfig = (data: BlackduckStepData) => {
 
 export function getInputSetViewValidateFieldsConfig(data: BlackduckStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data, StepViewType.InputSet),
     ...authFieldsValidationConfig(data, StepViewType.InputSet),
     ...toolFieldsValidationConfig(data, StepViewType.InputSet),
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),

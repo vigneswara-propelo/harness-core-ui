@@ -19,7 +19,7 @@ export const transformValuesFieldsConfig = (data: BanditStepData): Field[] => tr
 
 export const editViewValidateFieldsConfig = (data: BanditStepData) => {
   const editViewValidationConfig = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
     {
       name: 'spec.limitMemory',
@@ -36,7 +36,7 @@ export const editViewValidateFieldsConfig = (data: BanditStepData) => {
 
 export function getInputSetViewValidateFieldsConfig(data: BanditStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data, StepViewType.InputSet),
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     {
       name: 'spec.resources.limits.memory',

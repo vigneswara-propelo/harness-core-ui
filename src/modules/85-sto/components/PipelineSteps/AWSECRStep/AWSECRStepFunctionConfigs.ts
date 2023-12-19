@@ -82,7 +82,7 @@ export const transformValuesFieldsConfig = (data: AWSECRStepData): Field[] => {
 
 export const editViewValidateFieldsConfig = (data: AWSECRStepData) => {
   const editViewValidationConfig = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data),
     ...authFieldsValidationConfig(data),
     ...imageFieldsValidationConfig(data, StepViewType.InputSet),
     ...additionalFieldsValidationConfigEitView,
@@ -94,7 +94,7 @@ export const editViewValidateFieldsConfig = (data: AWSECRStepData) => {
 
 export function getInputSetViewValidateFieldsConfig(data: AWSECRStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data, StepViewType.InputSet),
     ...authFieldsValidationConfig(data, StepViewType.InputSet),
     ...imageFieldsValidationConfig(data, StepViewType.InputSet),
     ...additionalFieldsValidationConfigInputSet,

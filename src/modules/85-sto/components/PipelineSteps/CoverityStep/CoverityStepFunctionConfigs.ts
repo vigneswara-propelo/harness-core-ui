@@ -21,7 +21,7 @@ export const transformValuesFieldsConfig = (data: CoverityStepData): Field[] =>
 
 export const editViewValidateFieldsConfig = (data: CoverityStepData): InputSetViewValidateFieldsConfig[] => {
   const editViewValidationConfig = [
-    ...commonFieldsValidationConfig.filter(field => !nonIngestionOnlyFields.includes(field.name)),
+    ...commonFieldsValidationConfig(data).filter(field => !nonIngestionOnlyFields.includes(field.name)),
     ...ingestionFieldValidationConfig(data),
     {
       name: 'spec.limitMemory',
@@ -38,7 +38,7 @@ export const editViewValidateFieldsConfig = (data: CoverityStepData): InputSetVi
 
 export function getInputSetViewValidateFieldsConfig(data: CoverityStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig.filter(field => !nonIngestionOnlyFields.includes(field.name)),
+    ...commonFieldsValidationConfig(data).filter(field => !nonIngestionOnlyFields.includes(field.name)),
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     {
       name: 'spec.resources.limits.memory',

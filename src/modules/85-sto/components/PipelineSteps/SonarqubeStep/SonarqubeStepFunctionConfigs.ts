@@ -126,7 +126,7 @@ export const editViewValidateFieldsConfig = (data: SonarqubeStepData) => {
   })
 
   const editViewValidationConfig = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data),
     ...authFieldsValidationConfig(data),
     ...extraAuthFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
@@ -149,7 +149,7 @@ export const editViewValidateFieldsConfig = (data: SonarqubeStepData) => {
 
 export function getInputSetViewValidateFieldsConfig(data: SonarqubeStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data, StepViewType.InputSet),
     ...authFieldsValidationConfig(data, StepViewType.InputSet),
     ...extraAuthFieldsValidationConfig(data, StepViewType.InputSet),
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),

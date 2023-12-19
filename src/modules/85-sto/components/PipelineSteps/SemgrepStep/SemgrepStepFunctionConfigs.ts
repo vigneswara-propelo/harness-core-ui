@@ -19,7 +19,7 @@ export const transformValuesFieldsConfig = (data: SemgrepStepData): Field[] => t
 
 export const editViewValidateFieldsConfig = (data: SemgrepStepData) => {
   const editViewValidationConfig = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
     {
       name: 'spec.limitMemory',
@@ -36,7 +36,7 @@ export const editViewValidateFieldsConfig = (data: SemgrepStepData) => {
 
 export function getInputSetViewValidateFieldsConfig(data: SemgrepStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data, StepViewType.InputSet),
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     {
       name: 'spec.resources.limits.memory',

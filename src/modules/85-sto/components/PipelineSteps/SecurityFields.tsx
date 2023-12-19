@@ -26,6 +26,7 @@ import {
   API_VERSION_4_1_0,
   API_VERSION_4_2_0,
   API_VERSION_5_0_2,
+  detectionModeRadioOptions,
   AWS_ECR_CONTAINER_TYPE,
   dividerBottomMargin,
   DOCKER_V2_CONTAINER_TYPE,
@@ -104,7 +105,53 @@ export function SecurityScanFields(props: ISecurityScanFields) {
 }
 
 export function SecurityTargetFields(props: ISecurityTargetFields) {
+  const { getString } = useStrings()
   const { allowableTypes, formik, targetTypeSelectItems, toolTipOverrides } = props
+  const detectionFeatureOn = useFeatureFlag(FeatureFlag.STO_AUTO_TARGET_NAME_VARIANT)
+
+  // Target Type dependant Auto Detect support
+  // Add more target types as they become supported
+  const supportsDetectionMode = (): boolean => {
+    return (
+      detectionFeatureOn &&
+      (formik.values.spec.target.type === 'repository' ||
+        formik.values.spec.target.type === 'container' ||
+        formik.values.spec.target.type === 'instance')
+    )
+  }
+
+  // Set detection to false if name and variant are set in order to be backwards compatible
+  if (supportsDetectionMode()) {
+    if (
+      !formik.values.spec.target?.name &&
+      !formik.values.spec.target?.variant &&
+      formik.values.spec.target?.detection === undefined
+    ) {
+      formik.setFieldValue('spec.target.detection', 'auto')
+    }
+  }
+
+  if (
+    (formik.values.spec.target?.type === 'instance' || formik.values.spec.target?.type === 'container') &&
+    formik.values.spec.mode === 'ingestion' &&
+    formik.values.spec.target?.detection === 'auto'
+  ) {
+    formik.setFieldValue('spec.target.detection', 'manual')
+  }
+
+  const getDetectionModeToolTip = () => {
+    switch (formik.values.spec.target.type) {
+      case 'repository':
+        return tooltipIds.targetDetectionModeRepo
+      case 'container':
+        return tooltipIds.targetDetectionModeContainer
+      case 'instance':
+        return tooltipIds.targetDetectionModeInstance
+      default:
+        return tooltipIds.targetDetectionMode
+    }
+  }
+
   return (
     <>
       <SecurityField
@@ -123,13 +170,26 @@ export function SecurityTargetFields(props: ISecurityTargetFields) {
             tooltipId: tooltipIds.targetType,
             hide: !targetTypeSelectItems?.length
           },
+          'spec.target.detection': {
+            label: 'sto.stepField.target.detection',
+            fieldType: 'radio',
+            hide: !supportsDetectionMode(),
+            tooltipId: getDetectionModeToolTip(),
+            radioItems: detectionModeRadioOptions(getString, {
+              autoDisabled:
+                (formik.values.spec.target?.type === 'instance' || formik.values.spec.target?.type === 'container') &&
+                formik.values.spec.mode === 'ingestion'
+            })
+          },
           'spec.target.name': {
             label: 'name',
-            tooltipId: tooltipIds.targetName
+            tooltipId: tooltipIds.targetName,
+            hide: formik.values.spec.target?.detection === 'auto'
           },
           'spec.target.variant': {
             label: 'sto.stepField.target.variant',
-            tooltipId: tooltipIds.targetVariant
+            tooltipId: tooltipIds.targetVariant,
+            hide: formik.values.spec.target?.detection === 'auto'
           },
           'spec.target.workspace': {
             optional: true,
@@ -525,7 +585,7 @@ export function InputSetFields(props: InputSetFieldsProps<SecurityStepData<Secur
             label: 'pipelineSteps.targetLabel',
             hide: !template?.spec?.target
           },
-          ...inputSetTargetFields(prefix, template)
+          ...inputSetTargetFields(prefix, getString, template)
         }}
       />
 

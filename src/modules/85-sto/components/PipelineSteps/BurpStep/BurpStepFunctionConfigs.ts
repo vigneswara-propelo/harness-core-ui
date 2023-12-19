@@ -136,7 +136,7 @@ export const editViewValidateFieldsConfig = (data: BurpStepData) => {
     ...authFieldsValidationConfig(data),
     ...toolFieldsValidationConfig(data),
     ...extraAuthFieldsValidationConfig(data),
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
     ...additionalFieldsValidationConfigEitView,
     ...instanceFieldsValidationConfig(data),
@@ -148,7 +148,7 @@ export const editViewValidateFieldsConfig = (data: BurpStepData) => {
 
 export function getInputSetViewValidateFieldsConfig(data: BurpStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig,
+    ...commonFieldsValidationConfig(data, StepViewType.InputSet),
     ...authFieldsValidationConfig(data, StepViewType.InputSet),
     ...toolFieldsValidationConfig(data, StepViewType.InputSet),
     ...extraAuthFieldsValidationConfig(data, StepViewType.InputSet),

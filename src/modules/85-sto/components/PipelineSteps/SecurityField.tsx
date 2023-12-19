@@ -13,7 +13,8 @@ import type { FormikProps } from 'formik'
 import { capitalize } from 'lodash-es'
 import { MultiTypeTextField, MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
-import { FormMultiTypeCheckboxField } from '@common/components'
+import { FormMultiTypeCheckboxField, FormMultiTypeRadioGroupField } from '@common/components'
+import { FormMultiTypeRadioGroupProps } from '@modules/10-common/components/MultiTypeRadioGroup/MultiTypeRadioGroup'
 import type { StringsMap } from 'stringTypes'
 import { renderOptionalWrapper } from '@ci/components/PipelineSteps/CIStep/StepUtils'
 import { useStrings, UseStringsReturn } from 'framework/strings'
@@ -44,7 +45,8 @@ export interface SecurityFieldProps<T> {
       hide?: boolean
       tooltipId?: string
       readonly?: boolean
-      fieldType?: 'input' | 'checkbox' | 'dropdown'
+      fieldType?: 'input' | 'checkbox' | 'dropdown' | 'radio'
+      radioItems?: FormMultiTypeRadioGroupProps['options']
     }
   }
   formik?: FormikProps<T>
@@ -108,7 +110,8 @@ function SecurityField<T>(props: SecurityFieldProps<T>) {
           tooltipId: _tooltipId = '',
           inputProps,
           fieldType,
-          readonly
+          readonly,
+          radioItems
         } = fieldProps
 
         const tooltipId = customTooltipFields?.fields[fieldName]
@@ -158,6 +161,29 @@ function SecurityField<T>(props: SecurityFieldProps<T>) {
                   newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
                   expressions,
                   allowableTypes
+                }}
+              />
+            </Container>
+          )
+        }
+
+        if (fieldType === 'radio' && radioItems) {
+          return (
+            <Container key={fieldName} className={cx(stepCss.formGroup, stepCss.lg)}>
+              <FormMultiTypeRadioGroupField
+                name={fieldName}
+                options={radioItems}
+                label={getString(label)}
+                formik={formik}
+                tooltipProps={{
+                  dataTooltipId: tooltipId
+                }}
+                multiTypeRadioGroup={{
+                  name: fieldName,
+                  expressions,
+                  disabled: readonly,
+                  allowableTypes: [],
+                  newExpressionComponent: NG_EXPRESSIONS_NEW_INPUT_ELEMENT
                 }}
               />
             </Container>
