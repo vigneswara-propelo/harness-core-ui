@@ -15,6 +15,7 @@ declare const styles: {
   readonly buttons: string
   readonly cdLogo: string
   readonly cdTitleBanner: string
+  readonly codeBlock: string
   readonly commandBlock: string
   readonly commandGap: string
   readonly copyButton: string
@@ -24,8 +25,10 @@ declare const styles: {
   readonly deploymentStrategyCards: string
   readonly deploymentStrategyStep: string
   readonly deploymentStrategySteps: string
+  readonly downloadButton: string
   readonly dropdownBg: string
   readonly flowcards: string
+  readonly hide: string
   readonly infraCards: string
   readonly inputLength: string
   readonly inputMargins: string
@@ -40,6 +43,7 @@ declare const styles: {
   readonly rotateButton: string
   readonly secretInput: string
   readonly serviceTypeCards: string
+  readonly subHeading: string
   readonly tabsLine: string
   readonly textbox: string
   readonly verificationItem: string

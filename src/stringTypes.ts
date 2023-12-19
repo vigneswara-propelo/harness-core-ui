@@ -6588,6 +6588,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.disconnected': string
   'cd.getStartedWithCD.docLink': string
   'cd.getStartedWithCD.doesntHaveGitRepo': string
+  'cd.getStartedWithCD.downloadHelmChart': string
+  'cd.getStartedWithCD.downloadHelmChartButton': string
   'cd.getStartedWithCD.downloadZipFile': string
   'cd.getStartedWithCD.ensureFullConnectivity': string
   'cd.getStartedWithCD.entityCreationTitle': string
@@ -6699,6 +6701,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.deploymentStrategies.blueGreen.subtitle': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.deploymentStrategies.canary.subtitle': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.deploymentStrategies.rolling.subtitle': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.downloadedFileApplycmd': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitops.createApplication': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitops.createCluster': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitops.createRepo': string
@@ -6917,6 +6920,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.restore': string
   'cd.getStartedWithCD.retryProvisioningHostedCluster': string
   'cd.getStartedWithCD.runDelegateSubtitle': string
+  'cd.getStartedWithCD.runToDownload': string
   'cd.getStartedWithCD.sampleAppOnDockerRegistry': string
   'cd.getStartedWithCD.sampleManifest': string
   'cd.getStartedWithCD.sampleManifests': string

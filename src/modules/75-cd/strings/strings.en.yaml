@@ -689,6 +689,9 @@ getStartedWithCD:
   docLink: View documentation
   connectHarness: Connect Harness to your cluster
   prefilghtText: '[optional] Run the preflight script to check your cluster resources or set up a temporary local cluster.'
+  downloadHelmChart: 1. Download Helm Chart and GitOps Agent for Argo CD
+  downloadHelmChartButton: Download Helm Chart
+  runToDownload: 2. Run command to apply the file you downloaded
   preflightScript: 'bash <(curl -fsSL https://raw.githubusercontent.com/harness-community/scripts/main/delegate-preflight-checks/cluster-preflight-checks.sh)'
   createGitopsAgent: Install GitOps Agent
   updateGitopsAgent: Update GitOps Agent
@@ -752,7 +755,7 @@ getStartedWithCD:
           title: GitOps Workflow
           heading: CD GitOps
           subtitle: Connect with a GitOps agent
-          description: <a target="_blank"  rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/continuous-delivery/gitops/get-started/harness-git-ops-basics/">Harness GitOps</a>  monitors your app's state in a git repo, pulling changes into your Kubernetes cluster. The <a target="_blank" rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/continuous-delivery/gitops/get-started/harness-git-ops-basics/#agent">GitOps Agent</a> in your environment connects securely to Harness, executing your GitOps tasks.
+          description: <a target="_blank"  rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/continuous-delivery/gitops/get-started/harness-git-ops-basics/">Harness GitOps</a>  automatically pulls changes to your app from declarative configurations stored in Git.This workflow deploys a  <a target="_blank"  rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/continuous-delivery/gitops/get-started/harness-git-ops-basics/">GitOps Agent</a> to your cluster and levarages ArgoCD to continuously monitor and reconcile your application state.Harness generally supports Argo or Flux as GitOps operators.
           agentInfo: A Harness GitOps Agent is a worker process that runs in your environment, makes secure, outbound connections to Harness, and performs all the GitOps tasks you request in Harness
           verificationSuccess: Harness GitOps agent was successfully installed.
     deploymentSteps:
@@ -765,7 +768,7 @@ getStartedWithCD:
         configureSsh: '2. Configure SSH'
         configureWinRM: '2. Configure WinRM'
       createEntitytitle: 'Run these commands to create the Harness entities necessary to deploy your pipeline. <a rel="noreferrer noopener nofollow" href="https://developer.harness.io/docs/category/cli" target="_blank">Learn more </a>'
-      title: Set up your deployment
+      title: Here are the steps to deploy
       stepsTitle: Here are the steps you can run to start deploying with Harness CD in a pipeline
       stepsTitleGitops: Here are the steps you can run to start deploying with Harness GitOps
       stepsIntro: 'To set up the deployment, follow the steps below using the sample application located at  <a target="_blank" rel="noreferrer noopener nofollow" href="{{sampleAppURL}}">{{sampleAppURL}} </a>. If you prefer to deploy your own application, make sure to edit the sample YAMLs provided to point to your application manifests and artifacts'
@@ -881,6 +884,7 @@ getStartedWithCD:
             cloneDefaultCmd: 'git clone https://github.com/harness-community/harnesscd-example-apps.git'
             cddir: cd harnesscd-example-apps
             logincmd: 'harness login --api-key {{apiKey}} --account-id {{accId}}'
+            downloadedFileApplycmd: 'helm install gitops-agent ./gitops-agent.tgz --namespace harness-gitops --create-namespace'
             createsecret: 'harness secret  --token {{gitPat}} apply'
             k8s:
               createGithubcon: 'harness connector --file {{{type}}}/harnesscd-pipeline/github-connector.yml apply --git-user {{gitUser}} '

@@ -32,6 +32,7 @@ export default function GitopsFlow({
   const { trackEvent } = useTelemetry()
   const { stepsProgress } = useOnboardingStore()
   const [isVisible, toggleVisible] = useToggle()
+  const [isVerificationVisible, toggleVerificationVisible] = useState<boolean>(false)
 
   const [isSuccess, setSuccess] = useState(false)
 
@@ -52,6 +53,8 @@ export default function GitopsFlow({
       <CreateGitopsAgentModal
         agentInfo={agentInfo}
         toggleVisible={toggleVisible}
+        isVerificationVisible={isVerificationVisible}
+        toggleVerificationVisible={toggleVerificationVisible}
         isVisible={isVisible}
         onAgentCreated={updateAgentInfo}
       />
@@ -90,7 +93,7 @@ export default function GitopsFlow({
           />
         </Layout.Vertical>
       )}
-      {!isVisible && agentInfo && !isSuccess && (
+      {isVerificationVisible && agentInfo && !isSuccess && (
         <AgentVerificationStep
           stepsProgress={stepsProgress}
           onFail={onVerificationFail}
