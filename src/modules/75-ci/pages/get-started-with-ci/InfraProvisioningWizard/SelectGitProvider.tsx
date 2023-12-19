@@ -894,6 +894,7 @@ const SelectGitProviderRef = (
                           size={30}
                           flex
                           className={cx(
+                            { [css.codeIcon]: item.icon === GitProviderIcons.get(Connectors.Harness) },
                             { [css.githubIcon]: item.icon === GitProviderIcons.get(Connectors.GITHUB) },
                             { [css.gitlabIcon]: item.icon === GitProviderIcons.get(Connectors.GITLAB) },
                             { [css.bitbucketIcon]: item.icon === GitProviderIcons.get(Connectors.BITBUCKET) }

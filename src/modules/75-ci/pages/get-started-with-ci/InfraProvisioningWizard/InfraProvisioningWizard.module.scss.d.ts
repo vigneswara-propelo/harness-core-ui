@@ -14,6 +14,7 @@ declare const styles: {
   readonly borderBottom: string
   readonly branchSelector: string
   readonly card: string
+  readonly codeIcon: string
   readonly comingSoonPill: string
   readonly configOptionCard: string
   readonly connectorSelect: string
